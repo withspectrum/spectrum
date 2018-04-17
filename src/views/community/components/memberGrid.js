@@ -2,7 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import InfiniteList from 'react-infinite-scroller-with-scroll-element';
+import InfiniteList from 'src/components/infiniteScroll';
 import Icon from 'src/components/icons';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { withRouter } from 'react-router';
@@ -15,7 +15,6 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { MessageIconContainer, UserListItemContainer } from '../style';
 import GranularUserProfile from 'src/components/granularUserProfile';
-import { fetchMoreOnInfiniteScrollLoad } from 'src/helpers/infiniteScroll';
 
 type Props = {
   data: {
@@ -57,36 +56,6 @@ class CommunityMemberGrid extends React.Component<Props, State> {
     return true;
   }
 
-  componentDidUpdate(prevProps) {
-    const curr = this.props;
-    const scrollElement = document.getElementById('scroller-for-thread-feed');
-
-    if (
-      curr.data &&
-      curr.data.community &&
-      curr.data.community.members &&
-      curr.data.community.members.edges.length > 0 &&
-      prevProps.data &&
-      prevProps.data.community &&
-      prevProps.data.community.members &&
-      prevProps.data.community.members.edges.length > 0 &&
-      curr.data.community.members.edges.length >
-        prevProps.data.community.members.edges.length
-    ) {
-      const hasNextPage = curr.data.community.members.pageInfo.hasNextPage;
-      if (
-        fetchMoreOnInfiniteScrollLoad(
-          scrollElement,
-          'scroller-for-community-members-list'
-        ) &&
-        this.props.data.fetchMore &&
-        hasNextPage
-      ) {
-        return this.props.data.fetchMore();
-      }
-    }
-  }
-
   render() {
     const { data: { community }, isLoading, currentUser } = this.props;
     const { scrollElement } = this.state;
@@ -100,6 +69,7 @@ class CommunityMemberGrid extends React.Component<Props, State> {
         <InfiniteList
           pageStart={0}
           loadMore={this.props.data.fetchMore}
+          isLoadingMore={this.props.isFetchingMore}
           hasMore={hasNextPage}
           loader={
             <UserListItemContainer>

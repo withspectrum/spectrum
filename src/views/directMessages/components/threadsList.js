@@ -1,10 +1,9 @@
 // @flow
 import * as React from 'react';
 import ListCardItemDirectMessageThread from './messageThreadListItem';
-import InfiniteList from 'react-infinite-scroller-with-scroll-element';
+import InfiniteList from 'src/components/infiniteScroll';
 import { LoadingDM } from 'src/components/loading';
 import { ThreadsListScrollContainer } from './style';
-import { fetchMoreOnInfiniteScrollLoad } from 'src/helpers/infiniteScroll';
 
 type Props = {
   threads: Array<?Object>,
@@ -34,26 +33,6 @@ class ThreadsList extends React.Component<Props, State> {
     });
   }
 
-  componentDidUpdate(prevProps: Props) {
-    const scrollElement = document.getElementById('scroller-for-dm-threads');
-    const curr = this.props;
-
-    // prevents duplicate queries with the same cursor id
-    if (curr.threads.length === prevProps.threads.length) return;
-
-    if (
-      fetchMoreOnInfiniteScrollLoad(
-        scrollElement,
-        'scroller-for-community-dm-threads-list'
-      ) &&
-      curr.fetchMore &&
-      curr.hasNextPage &&
-      !curr.isFetchingMore
-    ) {
-      return curr.fetchMore();
-    }
-  }
-
   render() {
     const {
       threads,
@@ -62,6 +41,7 @@ class ThreadsList extends React.Component<Props, State> {
       fetchMore,
       hasNextPage,
       isLoading,
+      isFetchingMore,
     } = this.props;
     const { scrollElement } = this.state;
 
@@ -92,6 +72,7 @@ class ThreadsList extends React.Component<Props, State> {
         <InfiniteList
           pageStart={0}
           loadMore={fetchMore}
+          isLoadingMore={isFetchingMore}
           hasMore={hasNextPage}
           loader={<LoadingDM />}
           useWindow={false}

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import compose from 'recompose/compose';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
-import InfiniteList from 'react-infinite-scroller-with-scroll-element';
+import InfiniteList from 'src/components/infiniteScroll';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
 import Icon from 'src/components/icons';
@@ -14,7 +14,6 @@ import { LoadingInboxThread } from '../loading';
 import NewActivityIndicator from '../newActivityIndicator';
 import ViewError from '../viewError';
 import { Upsell, UpsellHeader, UpsellFooter } from './style';
-import { fetchMoreOnInfiniteScrollLoad } from 'src/helpers/infiniteScroll';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 
 const NullState = ({ viewContext, search }) => {
@@ -208,25 +207,6 @@ class ThreadFeedPure extends React.Component<Props, State> {
         curr.hasNoThreads();
       }
     }
-
-    const scrollElement = document.getElementById('scroller-for-thread-feed');
-
-    if (
-      curr.data.threads &&
-      curr.data.threads.length > 0 &&
-      (!prevProps.data.threads || prevProps.data.threads.length === 0) &&
-      curr.data.hasNextPage
-    ) {
-      if (
-        fetchMoreOnInfiniteScrollLoad(
-          scrollElement,
-          'threadfeed-infinite-scroll-div'
-        ) &&
-        curr.data.fetchMore
-      ) {
-        return curr.data.fetchMore();
-      }
-    }
   }
 
   render() {
@@ -312,6 +292,7 @@ class ThreadFeedPure extends React.Component<Props, State> {
           <InfiniteList
             pageStart={0}
             loadMore={this.props.data.fetchMore}
+            isLoadingMore={this.props.data.networkStatus === 3}
             hasMore={this.props.data.hasNextPage}
             loader={<LoadingInboxThread />}
             useWindow={false}

@@ -4,8 +4,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
-import InfiniteList from 'react-infinite-scroller-with-scroll-element';
-import { withInfiniteScroll } from '../../components/infiniteScroll';
+import InfiniteList from 'src/components/infiniteScroll';
 import { parseNotification, getDistinctNotifications } from './utils';
 import { NewMessageNotification } from './components/newMessageNotification';
 import { NewReactionNotification } from './components/newReactionNotification';
@@ -37,13 +36,14 @@ import { UpsellSignIn, UpsellNullNotifications } from '../../components/upsell';
 import ViewError from '../../components/viewError';
 import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
-import { fetchMoreOnInfiniteScrollLoad } from 'src/helpers/infiniteScroll';
+import viewNetworkHandler from '../../components/viewNetworkHandler';
 
 type Props = {
   markAllNotificationsSeen?: Function,
   subscribeToWebPush: Function,
   dispatch: Function,
   currentUser: Object,
+  isFetchingMore: boolean,
   data: {
     networkStatus: number,
     fetchMore: Function,
@@ -160,28 +160,6 @@ class NotificationsPure extends React.Component<Props, State> {
     track('browser push notifications', 'dismissed');
   };
 
-  componentDidUpdate(prevProps) {
-    const curr = this.props;
-    const scrollElement = document.getElementById('scroller-for-thread-feed');
-
-    if (
-      curr.data.notifications &&
-      curr.data.notifications.edges.length > 0 &&
-      !prevProps.data.notifications &&
-      curr.data.hasNextPage
-    ) {
-      if (
-        fetchMoreOnInfiniteScrollLoad(
-          scrollElement,
-          'scroller-for-notifications'
-        ) &&
-        this.props.data.fetchMore
-      ) {
-        return this.props.data.fetchMore();
-      }
-    }
-  }
-
   render() {
     const { currentUser, data } = this.props;
     if (!currentUser) {
@@ -244,6 +222,7 @@ class NotificationsPure extends React.Component<Props, State> {
             <InfiniteList
               pageStart={0}
               loadMore={data.fetchMore}
+              isLoadingMore={this.props.isFetchingMore}
               hasMore={data.hasNextPage}
               loader={<LoadingThread />}
               useWindow={false}
@@ -368,5 +347,5 @@ export default compose(
   markNotificationsSeenMutation,
   // $FlowIssue
   connect(mapStateToProps),
-  withInfiniteScroll
+  viewNetworkHandler
 )(NotificationsPure);

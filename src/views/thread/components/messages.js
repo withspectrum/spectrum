@@ -2,7 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
-import InfiniteList from 'react-infinite-scroller-with-scroll-element';
+import InfiniteList from 'src/components/infiniteScroll';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
 import ChatMessages from '../../../components/messageGroup';
 import { LoadingChat } from '../../../components/loading';
@@ -215,12 +215,14 @@ class MessagesWithData extends React.Component<Props, State> {
           <InfiniteList
             pageStart={0}
             loadMore={loadNextPage}
+            isLoadingMore={this.props.isFetchingMore}
             hasMore={pageInfo.hasNextPage}
             loader={<LoadingChat size="small" />}
             useWindow={false}
             initialLoad={false}
             scrollElement={scrollContainer}
             threshold={750}
+            className={'scroller-for-messages'}
           >
             <ChatMessages
               threadId={data.thread.id}
