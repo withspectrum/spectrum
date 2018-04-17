@@ -19,6 +19,7 @@ import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import type { ViewNetworkHandlerType } from '../../../components/viewNetworkHandler';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import type { GetCommunityThreadConnectionType } from 'shared/graphql/queries/community/getCommunityThreadConnection';
+import { fetchMoreOnInfiniteScrollLoad } from 'src/helpers/infiniteScroll';
 
 type Node = {
   node: {
@@ -94,6 +95,23 @@ class ThreadFeed extends React.Component<Props, State> {
     const isDesktop = window.innerWidth > 768;
     const { scrollElement } = this.state;
     const { mountedWithActiveThread, isFetchingMore, queryString } = this.props;
+
+    if (
+      !prevProps.data.threads &&
+      this.props.data.threads &&
+      this.props.data.threads.length > 0 &&
+      this.props.data.hasNextPage
+    ) {
+      if (
+        fetchMoreOnInfiniteScrollLoad(
+          scrollElement,
+          'scroller-for-dashboard-threads'
+        ) &&
+        this.props.data.fetchMore
+      ) {
+        this.props.data.fetchMore();
+      }
+    }
 
     // user is searching, don't select anything
     if (queryString) {
@@ -202,11 +220,14 @@ class ThreadFeed extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    const scrollElement = document.getElementById('scroller-for-inbox');
+
     this.setState({
       // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
       // the AppViewWrapper which is the scrolling part of the site.
-      scrollElement: document.getElementById('scroller-for-inbox'),
+      scrollElement,
     });
+
     this.subscribe();
   }
 
@@ -311,6 +332,7 @@ class ThreadFeed extends React.Component<Props, State> {
           initialLoad={false}
           scrollElement={scrollElement}
           threshold={750}
+          className={'scroller-for-dashboard-threads'}
         >
           <FlipMove duration={350}>
             {uniqueThreads.map(thread => {

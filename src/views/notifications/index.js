@@ -37,6 +37,7 @@ import { UpsellSignIn, UpsellNullNotifications } from '../../components/upsell';
 import ViewError from '../../components/viewError';
 import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
+import { fetchMoreOnInfiniteScrollLoad } from 'src/helpers/infiniteScroll';
 
 type Props = {
   markAllNotificationsSeen?: Function,
@@ -77,11 +78,12 @@ class NotificationsPure extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    const scrollElement = document.getElementById('scroller-for-thread-feed');
     this.markAllNotificationsSeen();
     this.setState({
       // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
       // the AppViewWrapper which is the scrolling part of the site.
-      scrollElement: document.getElementById('scroller-for-thread-feed'),
+      scrollElement,
     });
 
     WebPushManager.getPermissionState()
@@ -158,6 +160,28 @@ class NotificationsPure extends React.Component<Props, State> {
     track('browser push notifications', 'dismissed');
   };
 
+  componentDidUpdate(prevProps) {
+    const curr = this.props;
+    const scrollElement = document.getElementById('scroller-for-thread-feed');
+
+    if (
+      curr.data.notifications &&
+      curr.data.notifications.edges.length > 0 &&
+      !prevProps.data.notifications &&
+      curr.data.hasNextPage
+    ) {
+      if (
+        fetchMoreOnInfiniteScrollLoad(
+          scrollElement,
+          'scroller-for-notifications'
+        ) &&
+        this.props.data.fetchMore
+      ) {
+        return this.props.data.fetchMore();
+      }
+    }
+  }
+
   render() {
     const { currentUser, data } = this.props;
     if (!currentUser) {
@@ -226,6 +250,7 @@ class NotificationsPure extends React.Component<Props, State> {
               initialLoad={false}
               scrollElement={scrollElement}
               threshold={750}
+              className={'scroller-for-notifications'}
             >
               {notifications.map(notification => {
                 switch (notification.event) {
