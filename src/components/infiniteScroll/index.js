@@ -142,9 +142,10 @@ export default class InfiniteScroll extends React.Component<Props> {
       let scrollTop =
         scrollEl.pageYOffset !== undefined
           ? scrollEl.pageYOffset
-          : // prettier-ignore $FlowFixMe
+          : //$FlowFixMe
             (
               document.documentElement ||
+              //$FlowFixMe
               document.body.parentNode ||
               document.body
             ).scrollTop;
