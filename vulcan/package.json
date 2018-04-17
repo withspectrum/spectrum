@@ -5,14 +5,16 @@
   "dependencies": {
     "algoliasearch": "^3.24.7",
     "debug": "^2.6.8",
+    "draft-js": "^0.10.3",
     "emoji-regex": "^6.1.1",
     "node-env-file": "^0.1.8",
-    "draft-js": "^0.10.3",
-    "raven": "^2.1.1",
-    "rethinkdbdash": "^2.3.29",
     "now-env": "^3.0.1",
+    "raven": "^2.1.1",
+    "rethinkdb-changefeed-reconnect": "^0.3.2",
+    "rethinkdbdash": "^2.3.29",
     "source-map-support": "^0.4.15",
-    "stopword": "^0.1.9"
+    "stopword": "^0.1.9",
+    "toobusy-js": "^0.5.1"
   },
   "devDependencies": {
     "json-stringify-pretty-compact": "^1.0.4"
