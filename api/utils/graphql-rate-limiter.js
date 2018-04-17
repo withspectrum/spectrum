@@ -3,6 +3,7 @@
  * GraphQL rate limiting validation rule
  *
  */
+import { visit, parse } from 'graphql';
 import type {
   OperationDefinitionNode,
   ValidationContext,
@@ -41,30 +42,64 @@ const getRateLimitedFields = (
         return false;
       return true;
     })
-    .map(field => fields[field.name.value]);
+    .map(({ name }) => {
+      const field = fields[name.value];
+      const directive = field.astNode.directives.find(
+        ({ name }) => name.value === 'rateLimit'
+      );
+      const { limit, window } = directive.arguments.reduce((obj, arg) => {
+        if (arg.name.value === 'limit')
+          obj.limit = parseInt(arg.value.value, 10);
+        if (arg.name.value === 'window')
+          obj.window = parseInt(arg.value.value, 10);
+        return obj;
+      }, {});
+      return { limit, window, field };
+    });
 };
 
-export default (options?: {}) => (context: ValidationContext) => {
-  return {
+type Timestamp = number;
+
+type Records = {
+  [userId: string | number]: {
+    [fieldName: string]: Array<Timestamp>,
+  },
+};
+
+const records: Records = {};
+
+export default async ({
+  doc,
+  schema,
+  id,
+}: {
+  doc: $Call<parse>,
+  schema: Schema,
+  id: string | number,
+}) => {
+  return visit(doc, {
     OperationDefinition: {
       enter: (operation: OperationDefinitionNode) => {
-        const schema = context.getSchema();
         const fields = getFieldsByType(schema, operation);
-        const rateLimitedFields = getRateLimitedFields(fields, operation).map(
-          field => {
-            const directive = field.astNode.directives.find(
-              ({ name }) => name.value === 'rateLimit'
+        const rateLimitedFields = getRateLimitedFields(fields, operation);
+        rateLimitedFields.forEach(
+          ({ field, limit, window: rateLimitingWindow }) => {
+            if (!records[id]) records[id] = {};
+            if (!records[id][field.name]) records[id][field.name] = [];
+            const calls = records[id][field.name];
+            records[id][field.name] = calls.filter(
+              timestamp => timestamp + rateLimitingWindow > Date.now()
             );
-            const { limit, window } = directive.arguments.reduce((obj, arg) => {
-              if (arg.name.value === 'limit') obj.limit = arg.value.value;
-              if (arg.name.value === 'window') obj.window = arg.value.value;
-              return obj;
-            }, {});
-            return { limit, window, field };
+            if (calls.length > limit)
+              throw new Error(
+                `You've sent too many requests to ${
+                  field.name
+                }, please take a break.`
+              );
+            records[id][field.name].push(Date.now());
           }
         );
-        console.log(rateLimitedFields);
       },
     },
-  };
+  });
 };

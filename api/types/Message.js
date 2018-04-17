@@ -51,7 +51,7 @@ const Message = /* GraphQL */ `
 
 
 	extend type Mutation {
-    addMessage(message: MessageInput!): Message @rateLimit(limit: 20, window: 60000)
+    addMessage(message: MessageInput!): Message @rateLimit(limit: 2, window: 60000)
 		deleteMessage(id: ID!): Boolean
 	}
 
