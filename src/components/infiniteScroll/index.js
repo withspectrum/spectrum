@@ -102,8 +102,6 @@ export default class InfiniteScroll extends React.Component<Props> {
       ...props
     } = this.props;
 
-    console.log(this.props);
-
     if (scrollElement) {
       // $FlowFixMe
       props.ref = node => {
