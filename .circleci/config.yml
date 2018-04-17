@@ -39,6 +39,7 @@ aliases:
     name: Setup and build
     command:
       |
+        cp now-secrets.example.json now-secrets.json
         yarn run build:web
         yarn run build:api
 
