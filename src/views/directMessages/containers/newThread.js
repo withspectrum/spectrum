@@ -10,7 +10,7 @@ import Messages from '../components/messages';
 import Header from '../components/header';
 import ChatInput from '../../../components/chatInput';
 import { NullState } from '../../../components/upsell';
-import { MessagesContainer, ViewContent } from '../style';
+import { MessagesContainer, ViewContent, NoThreads } from '../style';
 import { getDirectMessageThreadQuery } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import { throttle } from '../../../helpers/utils';
@@ -835,11 +835,13 @@ class NewThread extends React.Component<Props, State> {
           {!existingThreadBasedOnSelectedUsers && (
             <Grow>
               {!existingThreadWithMessages.id && (
-                <NullState
-                  icon="private"
-                  heading={`Sometimes you want a little privacy...`}
-                  copy={`We know that not everything you want to say should be public. Direct Messages are private chat conversations between you and any other user(s) on Spectrum - even groups!`}
-                />
+                <NoThreads>
+                  <NullState
+                    icon="message"
+                    heading={`Sometimes you want a little privacy...`}
+                    copy={`We know that not everything you want to say should be public. Direct Messages are private chat conversations between you and anyone else, including groups. Search for a person above to send your first message`}
+                  />
+                </NoThreads>
               )}
               {loadingExistingThreadMessages && (
                 <Spinner size={16} color={'brand.default'} />

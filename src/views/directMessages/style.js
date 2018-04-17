@@ -1,6 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
 import { FlexCol, FlexRow } from '../../components/globals';
+import { NullState } from '../../components/upsell';
 
 export const View = styled.main`
   display: flex;
@@ -66,6 +67,12 @@ export const MessagesContainer = styled(FlexCol)`
         display: none;
       `};
   }
+`;
+
+export const NoThreads = MessagesContainer.extend`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 `;
 
 export const ComposeHeader = styled(FlexRow)`
