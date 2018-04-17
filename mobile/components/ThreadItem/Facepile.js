@@ -12,7 +12,14 @@ const messageAvatars = list => {
     if (!participant) {
       return null;
     }
-    return <Avatar src={participant.profilePhoto} size={30} radius={15} />;
+    return (
+      <Avatar
+        key={participant.id}
+        src={participant.profilePhoto}
+        size={30}
+        radius={15}
+      />
+    );
   });
 };
 

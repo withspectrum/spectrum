@@ -3,6 +3,7 @@ import React from 'react';
 import { View } from 'react-native';
 import ViewNetworkHandler from '../ViewNetworkHandler';
 import Text from '../Text';
+import Message from '../Message';
 import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
 
 import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection.js';
@@ -79,9 +80,12 @@ class Messages extends React.Component<Props> {
                 <View>
                   {group.map(message => {
                     return (
-                      <Text key={message.id} type="body">
-                        {message.content.body}
-                      </Text>
+                      // TODO(@mxstbr): Figure out message types
+                      <Message
+                        key={message.id}
+                        message={message}
+                        type="draftjs"
+                      />
                     );
                     // return (
                     //   <Message
