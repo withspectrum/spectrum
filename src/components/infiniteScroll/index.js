@@ -51,10 +51,18 @@ export default class InfiniteScroll extends React.Component<Props> {
   componentDidUpdate(prevProps: Props) {
     const curr = this.props;
 
+    /*
+      if the outer query is fetching more, there's no reason to re-check the scroll
+      position or re-attach a scroll listener - a refetch is already running!
+    */
     if (curr.isLoadingMore) {
       return;
     }
 
+    /*
+      if the outer query is fetching more, there's no reason to re-check the scroll
+      position or re-attach a scroll listener - a refetch is already running!
+    */
     if (
       Array.isArray(prevProps.children) &&
       Array.isArray(curr.children) &&
@@ -63,6 +71,21 @@ export default class InfiniteScroll extends React.Component<Props> {
       return;
     }
 
+    /*
+      There are edge cases where a fetchMore in the parent container can trigger
+      twice in a row instantly with the same cursor, causing 2 requests to the api
+      both returning the same results; this causes key errors and duplicates
+      items in lists. The following React.Children sections check to see if there
+      are matching children lengths.
+      
+      Hwever, in some cases like the dashboard inbox, there is only one child - 
+      the FlipMove component. In this case, we need to make sure that this single
+      components children lengths match.
+
+      Overall this is pretty hacky, but does solve the problem; the real solution
+      here which I'm unable to tackle right now (@brian) is to entirely make sure
+      that apollo never runs a fetchMore with the same cursor back to back.
+    */
     if (
       React.Children.toArray(curr.children).length === 1 &&
       React.Children.toArray(curr.children)[0].type.name ===
