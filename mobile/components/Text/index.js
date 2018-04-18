@@ -1,7 +1,7 @@
 // @flow
 import React, { type Node } from 'react';
 import { Platform } from 'react-native';
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { human } from 'react-native-typography';
 import type { ComponentType } from 'react';
 
@@ -24,6 +24,7 @@ export type Props = {
   italic?: boolean,
   underline?: boolean,
   fontFamily?: 'monospace',
+  color?: string | Function,
   children: Node,
 };
 
@@ -37,6 +38,11 @@ const Text: ComponentType<Props> = styled.Text`
   ${(props: Props) => props.bold && 'font-weight: bold;'}
   ${(props: Props) => props.italic && 'font-style: italic;'}
   ${(props: Props) => props.underline && 'text-decoration-line: underline;'}
+  ${(props: Props) =>
+    props.color &&
+    css`
+      color: ${props.color};
+    `}
   ${(props: Props) =>
     props.fontFamily === 'monospace' && `font-family: ${monospaceFont};`}
 `;

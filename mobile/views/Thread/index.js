@@ -16,13 +16,18 @@ import { getCurrentUserQuery } from '../../../shared/graphql/queries/user/getUse
 import sendMessageMutation, {
   type SendMessageType,
 } from '../../../shared/graphql/mutations/message/sendMessage';
+import {
+  getLinkPreviewFromUrl,
+  timeDifference,
+  convertTimestampToDate,
+} from '../../../src/helpers/utils';
 
 import CommunityHeader from './components/CommunityHeader';
 import Byline from './components/Byline';
 
 import type { GetThreadType } from '../../../shared/graphql/queries/thread/getThread';
 
-import { Wrapper } from './style';
+import { Wrapper, ThreadMargin } from './style';
 
 const ThreadMessages = getThreadMessageConnection(Messages);
 
@@ -58,20 +63,30 @@ class Thread extends React.Component<Props> {
     const { data, isLoading, hasError } = this.props;
 
     if (data.thread) {
+      const createdAt = new Date(data.thread.createdAt).getTime();
+      // NOTE(@mxstbr): For some reason this is necessary to make flow understand that the thread is defined
+      // not sure why, but the new Date() call above breaks its inference and it thinks data.thread could be
+      // undefined below
+      const thread = ((data.thread: any): GetThreadType);
       return (
         <Wrapper>
           <ScrollView style={{ flex: 1 }} testID="e2e-thread">
-            <CommunityHeader community={data.thread.community} />
-            <Byline author={data.thread.author} />
-            <Text bold type="title1">
-              {data.thread.content.title}
-            </Text>
-            {data.thread.content.body && (
-              <ThreadContent
-                rawContentState={JSON.parse(data.thread.content.body)}
-              />
-            )}
-            <ThreadMessages id={data.thread.id} />
+            <CommunityHeader community={thread.community} />
+            <ThreadMargin>
+              <Byline author={thread.author} />
+              <Text bold type="title1">
+                {thread.content.title}
+              </Text>
+              <Text color={props => props.theme.text.alt} type="subhead">
+                {convertTimestampToDate(createdAt)}
+              </Text>
+              {thread.content.body && (
+                <ThreadContent
+                  rawContentState={JSON.parse(thread.content.body)}
+                />
+              )}
+            </ThreadMargin>
+            <ThreadMessages id={thread.id} />
           </ScrollView>
           <Query query={getCurrentUserQuery}>
             {({ data }) =>

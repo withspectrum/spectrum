@@ -8,8 +8,14 @@ import type { ThreadParticipantType } from '../../../../shared/graphql/fragments
 const BylineWrapper = styled.View`
   flex: 1;
   width: 100%;
+`;
+
+const Row = styled.View`
   flex-direction: row;
-  margin: 16px;
+`;
+
+const Column = styled.View`
+  flex-direction: column;
 `;
 
 type Props = {
@@ -17,15 +23,31 @@ type Props = {
 };
 
 // TODO(@mxstbr): Make touchable and link to user profile
-export default ({ author }: Props) => {
+const Byline = ({ author }: Props) => {
   return (
     <BylineWrapper>
-      <Avatar src={author.user.profilePhoto} size={40} radius={20} />
-      <Text type="body" bold>
-        {author.user.name}{' '}
-      </Text>
-      <Text type="body">@{author.user.username} </Text>
-      <Text type="body">{author.reputation} </Text>
+      <Row>
+        <Avatar src={author.user.profilePhoto} size={40} radius={20} />
+        <Column>
+          <Row>
+            <Text style={{ marginTop: 0 }} type="body" bold>
+              {author.user.name}{' '}
+            </Text>
+            <Text style={{ marginTop: 0 }} type="body">
+              @{author.user.username}
+            </Text>
+          </Row>
+          <Text
+            style={{ marginTop: 0 }}
+            type="body"
+            color={props => props.theme.text.alt}
+          >
+            Rep: {author.reputation}
+          </Text>
+        </Column>
+      </Row>
     </BylineWrapper>
   );
 };
+
+export default Byline;
