@@ -38,7 +38,7 @@ class Splash extends React.Component<Props> {
     const { authentication } = this.props;
     return (
       <Wrapper>
-        <View testID="welcome">
+        <View testID="welcome" style={{ flex: 1 }}>
           {!authentication.token ? <Login /> : <EverythingThreadFeed />}
         </View>
       </Wrapper>

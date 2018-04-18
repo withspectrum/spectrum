@@ -1,6 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { zIndex, Transition, monoStack, hexa } from '../globals';
+import { Gradient, zIndex, Transition, monoStack, hexa } from '../globals';
 
 const Bubble = styled.div`
   display: inline-block;
@@ -33,15 +33,16 @@ const Bubble = styled.div`
   code {
     border: 1px solid
       ${props =>
-        props.me ? hexa(props.theme.bg.default, 0.2) : props.theme.bg.border};
+        props.me
+          ? hexa(props.theme.brand.border, 0.5)
+          : props.theme.bg.default};
     border-radius: 4px;
-    padding: 1px 4px;
+    padding: 2px 4px;
     background: ${props =>
-      props.me
-        ? hexa(props.theme.bg.default, 0.1)
-        : hexa(props.theme.bg.default, 0.3)};
+      props.me ? hexa(props.theme.brand.wash, 0.15) : props.theme.bg.border};
     color: ${props =>
-      props.me ? props.theme.text.reverse : props.theme.warn.alt};
+      props.me ? props.theme.text.reverse : props.theme.text.default};
+    box-shadow: 0 0 8px ${props => hexa(props.theme.bg.reverse, 0.1)};
   }
 
   pre {
@@ -50,13 +51,13 @@ const Bubble = styled.div`
     width: calc(100% + 32px);
     border: 1px solid
       ${props =>
-        props.me ? hexa(props.theme.bg.default, 0.2) : props.theme.bg.border};
+        props.me
+          ? hexa(props.theme.brand.border, 0.5)
+          : props.theme.bg.default};
     border-left: 0;
     border-right: 0;
     background: ${props =>
-      props.me
-        ? hexa(props.theme.bg.default, 0.1)
-        : hexa(props.theme.bg.default, 0.3)};
+      props.me ? hexa(props.theme.brand.wash, 0.15) : props.theme.bg.border};
     color: ${props =>
       props.me ? props.theme.text.reverse : props.theme.text.default};
   }
@@ -244,6 +245,10 @@ export const Text = styled(Bubble)`
   line-height: 1.4;
   background-color: ${props =>
     props.me ? props.theme.brand.default : props.theme.generic.default};
+  background-image: ${props =>
+    props.me
+      ? Gradient(props.theme.brand.alt, props.theme.brand.default)
+      : Gradient(props.theme.generic.alt, props.theme.generic.default)};
   color: ${props =>
     props.me ? props.theme.text.reverse : props.theme.text.default};
   font-weight: ${props => (props.me ? `500` : `400`)};

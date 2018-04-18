@@ -3,7 +3,7 @@ import * as React from 'react';
 import { TouchableHighlight, Image, View } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
-// import Facepile from './Facepile'
+import Facepile from './Facepile';
 import ThreadCommunityInfo from './ThreadCommunityInfo';
 import Text from '../Text';
 import {
@@ -38,14 +38,20 @@ class ThreadItem extends React.Component<Props> {
       >
         <InboxThreadItem>
           <InboxThreadContent>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 5,
+              }}
+            >
               <Image
                 source={{ uri: thread.community.profilePhoto }}
                 style={{
-                  height: 15,
-                  width: 15,
+                  height: 20,
+                  width: 20,
                   marginRight: 8,
-                  borderRadius: 4,
+                  borderRadius: 5,
                 }}
               />
               <Text type="subhead" style={{ marginTop: 0 }}>
@@ -55,10 +61,10 @@ class ThreadItem extends React.Component<Props> {
             <Text type="headline">{thread.content.title}</Text>
 
             <ThreadMeta>
-              {/*<Facepile
+              <Facepile
                 participants={thread.participants}
-                creator={thread.creator}
-              />*/}
+                creator={thread.author.user}
+              />
 
               {thread.messageCount > 0 ? (
                 <Text type="caption1">
@@ -67,9 +73,11 @@ class ThreadItem extends React.Component<Props> {
                     : `${thread.messageCount} message`}
                 </Text>
               ) : (
-                <MetaTextPill offset={thread.participants.length} new>
-                  New thread!
-                </MetaTextPill>
+                <View>
+                  <MetaTextPill offset={thread.participants.length} new>
+                    {'New thread!'.toUpperCase()}
+                  </MetaTextPill>
+                </View>
               )}
             </ThreadMeta>
           </InboxThreadContent>
