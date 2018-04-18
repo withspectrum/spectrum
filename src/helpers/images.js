@@ -22,3 +22,6 @@ export const FREE_USER_MAX_IMAGE_SIZE_STRING = `${Math.floor(
 export const PRO_USER_MAX_IMAGE_SIZE_STRING = `${Math.floor(
   PRO_USER_MAX_IMAGE_SIZE_BYTES / 1000000
 )}mb`;
+
+export const generateHeaderImageFromImgix = (imageSrc: string): string =>
+  `${imageSrc}?txtsize=60.6&txtalign=center&txtfont=Helvetica,Bold`;
