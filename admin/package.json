@@ -44,11 +44,8 @@
     "subscriptions-transport-ws": "^0.9.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "now build"
+    "start": "NODE_PATH=../ react-scripts start",
+    "build": "NODE_PATH=../ react-scripts build",
+    "test": "NODE_PATH=../ react-scripts test --env=jsdom"
   }
 }
