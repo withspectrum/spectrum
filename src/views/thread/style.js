@@ -379,6 +379,29 @@ export const NullCopy = styled.h5`
   max-width: 600px;
 `;
 
+export const ScrollDownOfferWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  flex: 1;
+  color: ${props => props.theme.text.alt};
+  flex-direction: column;
+  opacity: 0.8;
+
+  .icon {
+    opacity: 0.4;
+  }
+`;
+export const ScrollDownOffer = styled.h5`
+  font-size: 18px;
+  font-weight: 400;
+  color: ${props => props.theme.text.alt};
+  margin-top: 16px;
+  text-align: center;
+  max-width: 600px;
+`;
+
 export const ThreadTitle = {
   fontSize: '32px',
   padding: '0',
