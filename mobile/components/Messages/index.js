@@ -1,12 +1,26 @@
 // @flow
-import React from 'react';
+import React, { Fragment } from 'react';
+import styled from 'styled-components/native';
 import { View } from 'react-native';
 import ViewNetworkHandler from '../ViewNetworkHandler';
 import Text from '../Text';
 import Message from '../Message';
 import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
+import { convertTimestampToDate } from '../../../src/helpers/utils';
 
 import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection.js';
+
+const TimestampWrapper = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Hr = styled.View`
+  height: 1px;
+  flex: 1;
+  background-color: ${props => props.theme.bg.border};
+`;
 
 type Props = {
   isLoading: boolean,
@@ -43,37 +57,47 @@ class Messages extends React.Component<Props> {
             // const canModerate =
             //   threadType !== 'directMessageThread' && (me || isModerator);
 
-            // if (roboText) {
-            //   if (initialMessage.message.type === 'timestamp') {
-            //     return (
-            //       <Timestamp key={initialMessage.timestamp}>
-            //         <hr />
-            //         <Time>
-            //           {convertTimestampToDate(initialMessage.timestamp)}
-            //         </Time>
-            //         <hr />
-            //       </Timestamp>
-            //     );
-            //   } else if (
-            //     initialMessage.message.type === 'unseen-messages-below' &&
-            //     messages[i + 1] &&
-            //     messages[i + 1].length > 0 &&
-            //     messages[i + 1][0].author.id !== currentUser.id
-            //   ) {
-            //     return (
-            //       <UnseenRobotext key={`unseen-${initialMessage.timestamp}`}>
-            //         <hr />
-            //         <UnseenTime>New messages</UnseenTime>
-            //         <hr />
-            //       </UnseenRobotext>
-            //     );
-            //     // Ignore any unknown robo type messages
-            //   } else {
-            //     return null;
-            //   }
-            // }
+            if (roboText) {
+              if (initialMessage.message.type === 'timestamp') {
+                return (
+                  <TimestampWrapper key={initialMessage.timestamp}>
+                    <Hr />
+                    <Text
+                      style={{ marginRight: 8, marginLeft: 8 }}
+                      color={props => props.theme.text.alt}
+                      key={initialMessage.timestamp}
+                    >
+                      {convertTimestampToDate(initialMessage.timestamp)}
+                    </Text>
+                    <Hr />
+                  </TimestampWrapper>
+                );
+              } else {
+                // Ignore unknown robo messages
+                return null;
+              }
+            }
 
-            if (roboText) return null;
+            // let unseenRobo = null;
+            // // If the last message in the group was sent after the thread was seen mark the entire
+            // // group as last seen in the UI
+            // // NOTE(@mxstbr): Maybe we should split the group eventually
+            // if (
+            //   !!lastSeen &&
+            //   new Date(group[group.length - 1].timestamp).getTime() >
+            //     new Date(lastSeen).getTime() &&
+            //   !me &&
+            //   !hasInjectedUnseenRobo
+            // ) {
+            //   hasInjectedUnseenRobo = true;
+            //   unseenRobo = (
+            //     <UnseenRobotext key={`unseen${initialMessage.timestamp}`}>
+            //       <hr />
+            //       <UnseenTime>New messages</UnseenTime>
+            //       <hr />
+            //     </UnseenRobotext>
+            //   );
+            // }
 
             return (
               <View key={initialMessage.id || 'robo'}>
