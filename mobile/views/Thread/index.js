@@ -1,8 +1,9 @@
 // @flow
 import * as React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Image } from 'react-native';
 import compose from 'recompose/compose';
 import connect from 'react-redux';
+import { Query } from 'react-apollo';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import withSafeView from '../../components/SafeAreaView';
@@ -11,9 +12,14 @@ import ThreadContent from '../../components/ThreadContent';
 import Messages from '../../components/Messages';
 import ChatInput from '../../components/ChatInput';
 import getThreadMessageConnection from '../../../shared/graphql/queries/thread/getThreadMessageConnection';
+import { getCurrentUserQuery } from '../../../shared/graphql/queries/user/getUser';
 import sendMessageMutation, {
   type SendMessageType,
 } from '../../../shared/graphql/mutations/message/sendMessage';
+
+import CommunityHeader from './components/CommunityHeader';
+import Byline from './components/Byline';
+
 import type { GetThreadType } from '../../../shared/graphql/queries/thread/getThread';
 
 import { Wrapper } from './style';
@@ -55,8 +61,10 @@ class Thread extends React.Component<Props> {
       return (
         <Wrapper>
           <ScrollView style={{ flex: 1 }} testID="e2e-thread">
-            <Text type="title1">
-              {data.thread.content.title} by {data.thread.author.user.name}
+            <CommunityHeader community={data.thread.community} />
+            <Byline author={data.thread.author} />
+            <Text bold type="title1">
+              {data.thread.content.title}
             </Text>
             {data.thread.content.body && (
               <ThreadContent
@@ -64,8 +72,14 @@ class Thread extends React.Component<Props> {
               />
             )}
             <ThreadMessages id={data.thread.id} />
-            <ChatInput onSubmit={this.sendMessage} />
           </ScrollView>
+          <Query query={getCurrentUserQuery}>
+            {({ data }) =>
+              data && data.user ? (
+                <ChatInput onSubmit={this.sendMessage} />
+              ) : null
+            }
+          </Query>
         </Wrapper>
       );
     }

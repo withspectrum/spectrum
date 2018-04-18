@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { TextInput, View, Button } from 'react-native';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 type Props = {
   onSubmit: (text: string) => void,
@@ -37,6 +38,8 @@ class ChatInput extends React.Component<Props, State> {
           onSubmitEditing={this.submit}
         />
         <Button onPress={this.submit} title="Send" />
+        {/* NOTE(@mxstbr): Magic number, otherwise the chatinput is way above the keyboard */}
+        <KeyboardSpacer topSpacing={-75} />
       </View>
     );
   }
