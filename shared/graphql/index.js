@@ -11,12 +11,9 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import introspectionQueryResultData from './schema.json';
 import getSharedApolloClientOptions from './apollo-client-options';
+import { IS_PROD, API_URI, WS_URI } from './constants';
 
-const IS_PROD = process.env.NODE_ENV === 'production';
-// In production the API is at the same URL, in development it's at a different port
-const API_URI = IS_PROD ? '/api' : 'http://localhost:3001/api';
-
-// @see: https://github.com/facebook/react-native/issues/9599
+// Fixes a bug with ReactNative, see https://github.com/facebook/react-native/issues/9599
 if (typeof global.self === 'undefined') {
   global.self = global;
 }
@@ -27,10 +24,7 @@ type CreateClientOptions = {
 
 // Websocket link for subscriptions
 export const wsLink = new WebSocketLink({
-  uri: `${
-    // eslint-disable-next-line
-    IS_PROD ? `wss://${window.location.host}` : 'ws://localhost:3001'
-  }/websocket`,
+  uri: WS_URI,
   options: {
     reconnect: true,
   },
