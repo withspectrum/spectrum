@@ -6,7 +6,8 @@ import ViewNetworkHandler from '../ViewNetworkHandler';
 import Text from '../Text';
 import Message from '../Message';
 import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
-import { convertTimestampToDate } from '../../../src/helpers/utils';
+
+import RoboTimestamp from './RoboTimestamp';
 
 import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection.js';
 
@@ -60,17 +61,10 @@ class Messages extends React.Component<Props> {
             if (roboText) {
               if (initialMessage.message.type === 'timestamp') {
                 return (
-                  <TimestampWrapper key={initialMessage.timestamp}>
-                    <Hr />
-                    <Text
-                      style={{ marginRight: 8, marginLeft: 8 }}
-                      color={props => props.theme.text.alt}
-                      key={initialMessage.timestamp}
-                    >
-                      {convertTimestampToDate(initialMessage.timestamp)}
-                    </Text>
-                    <Hr />
-                  </TimestampWrapper>
+                  <RoboTimestamp
+                    timestamp={initialMessage.timestamp}
+                    key={initialMessage.timestamp}
+                  />
                 );
               } else {
                 // Ignore unknown robo messages
