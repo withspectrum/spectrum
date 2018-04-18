@@ -6,6 +6,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { handleWebhooks } from './webhooks';
 import startChangefeeds from './changefeeds';
+import addSecurityMiddleware from 'shared/middlewares/security';
 import {
   PROCESS_STRIPE_SUBSCRIPTION_WEBHOOK_EVENT,
   PROCESS_STRIPE_SOURCE_WEBHOOK_EVENT,
@@ -73,6 +74,9 @@ const app = express();
 
 // Trust the now proxy
 app.set('trust proxy', true);
+
+// Security middleware.
+addSecurityMiddleware(app);
 
 // Parse incoming request bodies for webhooks
 app.use(require('body-parser').raw({ type: '*/*' }));
