@@ -53,6 +53,14 @@ class ExistingThread extends React.Component<Props> {
     ) {
       this.chatInput.triggerFocus();
     }
+    // as soon as the direct message thread is loaded, refocus the chat input
+    if (
+      this.props.data.directMessageThread &&
+      !prevProps.data.directMessageThread &&
+      this.chatInput
+    ) {
+      this.chatInput.triggerFocus();
+    }
     if (prevProps.match.params.threadId !== this.props.match.params.threadId) {
       const threadId = this.props.match.params.threadId;
       this.props.setActiveThread(threadId);
