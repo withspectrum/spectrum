@@ -3,6 +3,7 @@ import requestIp from 'request-ip';
 import ms from 'ms';
 import Limiter from 'ratelimiter';
 import createRedis from '../bull/create-redis';
+import Raven from 'shared/raven';
 
 const debug = debugCreator('shared:middlewares:rateLimiter');
 
@@ -34,8 +35,9 @@ const rateLimiter = (keyPrefix, max, duration) => {
     limiterObj.get(function(err, limit) {
       if (err) return next(err);
 
+      const remaining = limit.remaining - 1;
       res.set('X-RateLimit-Limit', limit.total);
-      res.set('X-RateLimit-Remaining', limit.remaining - 1);
+      res.set('X-RateLimit-Remaining', remaining);
       res.set('X-RateLimit-Reset', limit.reset);
 
       // all good
@@ -43,7 +45,7 @@ const rateLimiter = (keyPrefix, max, duration) => {
       const remainingTime = ms(after * 1000, { long: true });
       debug(
         'remaining requests %s/%s in (%s) for userId: %s',
-        limit.remaining - 1,
+        remaining,
         limit.total,
         remainingTime,
         id
@@ -51,6 +53,14 @@ const rateLimiter = (keyPrefix, max, duration) => {
       if (limit.remaining) return next();
 
       // not good
+      Raven.captureMessage('Rate limit exceeded', {
+        level: 'warning',
+        extra: {
+          requestUrl: req.url,
+          userId: req.isAuthenticated() ? req.user.id : 'unauthenticated',
+          ipAddress: requestIp.getClientIp(req),
+        },
+      });
       const delta = (limit.reset * 1000 - Date.now()) | 0;
       res.set('Retry-After', after);
       res
