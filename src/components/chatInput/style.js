@@ -18,13 +18,6 @@ export const ChatInputContainer = styled(FlexRow)`
   width: 100%;
   margin: 0;
 
-  @media (max-width: 768px) {
-    bottom: ${props => (props.focus ? '0' : 'auto')};
-    position: relative;
-    z-index: ${zIndex.mobileInput};
-    padding: 8px;
-  }
-
   a {
     text-decoration: underline;
   }
@@ -41,6 +34,13 @@ export const ChatInputWrapper = styled.div`
   border-top: 1px solid ${({ theme }) => theme.bg.border};
   box-shadow: -1px 0 0 ${props => props.theme.bg.border},
     1px 0 0 ${props => props.theme.bg.border};
+
+  @media (max-width: 768px) {
+    bottom: ${props => (props.focus ? '0' : 'auto')};
+    position: relative;
+    z-index: ${zIndex.mobileInput};
+    padding: 8px;
+  }
 `;
 
 export const Form = styled.form`
