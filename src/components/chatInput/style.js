@@ -10,18 +10,13 @@ import {
 } from 'src/components/globals';
 import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
 
-export const ChatInputWrapper = styled(FlexRow)`
-  flex: none;
-  align-items: center;
+export const ChatInputContainer = styled(FlexRow)`
+  display: flex;
+  flex-direction: column;
   z-index: inherit;
   position: relative;
   width: 100%;
   margin: 0;
-  padding: 16px 16px 0px;
-  background-color: ${props => props.theme.bg.default};
-  border-top: 1px solid ${({ theme }) => theme.bg.border};
-  box-shadow: -1px 0 0 ${props => props.theme.bg.border},
-    1px 0 0 ${props => props.theme.bg.border};
 
   @media (max-width: 768px) {
     bottom: ${props => (props.focus ? '0' : 'auto')};
@@ -33,6 +28,19 @@ export const ChatInputWrapper = styled(FlexRow)`
   a {
     text-decoration: underline;
   }
+`;
+
+export const ChatInputWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 16px 16px 0px;
+  background-color: ${props => props.theme.bg.default};
+  border-top: 1px solid ${({ theme }) => theme.bg.border};
+  box-shadow: -1px 0 0 ${props => props.theme.bg.border},
+    1px 0 0 ${props => props.theme.bg.border};
 `;
 
 export const Form = styled.form`
@@ -176,6 +184,7 @@ export const PhotoSizeError = styled.div`
   align-items: center;
   align-content: center;
   padding: 8px 16px;
+  width: 100%;
   background: #fff1cc;
   border-top: 1px solid #ffd566;
 
