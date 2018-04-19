@@ -5,11 +5,9 @@
 // $FlowIssue
 import Constants from '../../mobile/node_modules/expo/src/Constants';
 
-console.log(Constants.manifest);
-
 // TODO(@mxstbr): Make this BASE_URI be based on the computer's IP address
 // so you can query your local API from a device
-const DEV_BASE_URI = Constants.isDevice
+export const DEV_BASE_URI = Constants.isDevice
   ? Constants.manifest.debuggerHost.replace(/:\d+/, ':3001')
   : 'localhost:3001';
 

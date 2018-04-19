@@ -4,11 +4,12 @@ import { connect } from 'react-redux';
 import { Text, View, Button } from 'react-native';
 import { AuthSession, SecureStore } from 'expo';
 import { authenticate } from '../../actions/authentication';
+import { DEV_BASE_URI } from '../../../shared/graphql/constants.native';
 
 const API_URL =
   process.env.NODE_ENV === 'production'
     ? 'https://spectrum.chat'
-    : 'http://localhost:3001';
+    : `http://${DEV_BASE_URI}`;
 
 type Props = {
   dispatch: Function,
