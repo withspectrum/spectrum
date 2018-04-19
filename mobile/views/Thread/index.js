@@ -24,6 +24,7 @@ import {
 
 import CommunityHeader from './components/CommunityHeader';
 import Byline from './components/Byline';
+import ActionBar from './components/ActionBar';
 
 import type { GetThreadType } from '../../../shared/graphql/queries/thread/getThread';
 
@@ -87,6 +88,13 @@ class Thread extends React.Component<Props> {
                 />
               )}
             </ThreadMargin>
+            <ActionBar
+              content={{
+                url: `https://spectrum.chat/thread/${thread.id}`,
+                message: `https://spectrum.chat/thread/${thread.id}`,
+                title: 'Look at this thread I found on Spectrum',
+              }}
+            />
             <ThreadMessages id={thread.id} />
           </ScrollView>
           <Query query={getCurrentUserQuery}>
