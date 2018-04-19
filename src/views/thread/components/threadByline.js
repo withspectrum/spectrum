@@ -33,6 +33,7 @@ class ThreadByline extends React.Component<Props> {
           isOnline={user.isOnline}
           src={user.profilePhoto}
           link={user.username ? `/users/${user.username}` : false}
+          showProfile={true}
         />
         <BylineMeta>
           {user.username ? (
