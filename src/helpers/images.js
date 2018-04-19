@@ -3,6 +3,18 @@ type QueryParams = {
   [key: string]: string,
 };
 
+type ImgixImageParams = {
+  imageText: string,
+  imageHeight: number,
+  imageWidth: number,
+  txtsize: number,
+  txtpad: number,
+  txtalign: string,
+  txtcolor: string,
+  txtfont: string,
+  imageSrc: string,
+};
+
 /**
  * Optimize an image
  */
@@ -23,10 +35,27 @@ export const PRO_USER_MAX_IMAGE_SIZE_STRING = `${Math.floor(
   PRO_USER_MAX_IMAGE_SIZE_BYTES / 1000000
 )}mb`;
 
-export const generateHeaderImageFromImgix = (
-  imageSrc: string,
-  txtsize: number = 60,
-  txtalign: string = 'center',
-  txtfont: string = 'Helvetica,Bold'
+export const generateImageFromImgix = (
+  {
+    imageText,
+    imageSrc,
+    imageHeight,
+    imageWidth,
+    txtsize,
+    txtpad,
+    txtalign,
+    txtcolor,
+    txtfont,
+  }: ImgixImageParams = {
+    imageText: '',
+    imageHeight: 144,
+    imageWidth: 144,
+    txtsize: 12,
+    txtpad: 4,
+    txtalign: 'center,middle',
+    txtcolor: 'ffffff',
+    txtfont: 'Helvetica,Bold',
+    imageSrc: 'https://spectrum.imgix.net/default_images/cover-violet.png',
+  }
 ): string =>
-  `${imageSrc}?txtsize=${txtsize}&txtalign=${txtalign}&txtfont=${txtfont}`;
+  `${imageSrc}?txtfit=max&txtcolor=${txtcolor}&txtpad=${txtpad}&h=${imageHeight}&w=${imageWidth}&txtsize=${txtsize}&txtalign=${txtalign}&txtfont=${txtfont}&txt=${imageText}`;

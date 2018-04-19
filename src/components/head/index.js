@@ -1,6 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet-async';
-import { generateHeaderImageFromImgix } from '../../helpers/images';
+import { generateImageFromImgix } from '../../helpers/images';
 
 type Props = {
   title?: string,
@@ -12,9 +12,9 @@ type Props = {
 export default ({ title, description, image, children }: Props) => {
   const metaImage =
     image ||
-    generateHeaderImageFromImgix(
-      'https://spectrum.chat/img/apple-icon-144x144-precomposed.png'
-    );
+    generateImageFromImgix({
+      imageText: title,
+    });
 
   return (
     <Helmet>
