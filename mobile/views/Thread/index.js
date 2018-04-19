@@ -71,7 +71,7 @@ class Thread extends React.Component<Props> {
       const thread = ((data.thread: any): GetThreadType);
       return (
         <Wrapper>
-          <ScrollView style={{ flex: 1 }} testID="e2e-thread">
+          <ScrollView style={{ flex: 1, width: '100%' }} testID="e2e-thread">
             <CommunityHeader community={thread.community} />
             <ThreadMargin>
               <Byline author={thread.author} />
