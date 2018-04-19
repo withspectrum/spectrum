@@ -1,0 +1,1 @@
+FROM withspectrum/mercury:latest

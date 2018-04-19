@@ -4,7 +4,7 @@ const fs = require('fs');
 const DEFAULT_CONFIG = {
   driver: 'rethinkdbdash',
   db: process.env.NODE_ENV === 'test' ? 'testing' : 'spectrum',
-  host: 'localhost',
+  host: 'rethinkdb',
   port: 28015,
   migrationsDirectory: 'api/migrations',
 };

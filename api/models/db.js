@@ -5,6 +5,8 @@
 const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
 const DEFAULT_CONFIG = {
+  host: 'rethinkdb',
+  port: 28015,
   // Connect to the test database when, well, testing
   db: !process.env.TEST_DB ? 'spectrum' : 'testing',
   max: 500, // Maximum number of connections, default is 1000

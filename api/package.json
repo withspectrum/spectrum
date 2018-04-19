@@ -1,4 +1,7 @@
 {
+  "name": "@spectrum/api",
+  "private": true,
+  "version": "0.0.0",
   "dependencies": {
     "algoliasearch": "^3.24.7",
     "apollo-engine": "1.x",
@@ -123,8 +126,5 @@
     "toobusy-js": "^0.5.1",
     "validator": "^9.0.0",
     "web-push": "^3.2.5"
-  },
-  "scripts": {
-    "start": "NODE_ENV=production node main.js"
   }
 }

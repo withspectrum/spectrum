@@ -1,0 +1,63 @@
+# Ignore as many files as possible. This keeps the build context small.
+*
+
+# White-list package definitions.
+!/api/package.json
+!/athena/package.json
+!/chronos/package.json
+!/hermes/package.json
+!/mercury/package.json
+!/pluto/package.json
+!/vulcan/package.json
+
+# White-list shared files.
+!/shared/
+
+# White-list workspace root.
+!/yarn.lock
+!/package.json
+!/backpack.config.js
+!/now.json
+!/.babelrc
+
+# TODO: Move this into src directories.
+!/api/loaders/
+!/api/migrations/
+!/api/models/
+!/api/mutations/
+!/api/queries/
+!/api/routes/
+!/api/subscriptions/
+!/api/types/
+!/api/utils/
+!/api/authentication.js
+!/api/schema.js
+!/api/index.js
+!/athena/listeners/
+!/athena/models/
+!/athena/queues/
+!/athena/utils/
+!/athena/index.js
+!/chronos/jobs/
+!/chronos/models/
+!/chronos/queues/
+!/chronos/index.js
+!/hermes/models/
+!/hermes/queues/
+!/hermes/utils/
+!/hermes/index.js
+!/hermes/send-email.js
+!/mercury/functions/
+!/mercury/models/
+!/mercury/queues/
+!/mercury/constants.js
+!/mercury/index.js
+!/pluto/changefeeds/
+!/pluto/models/
+!/pluto/queues/
+!/pluto/webhooks/
+!/pluto/create-worker-with-express.js
+!/pluto/index.js
+!/vulcan/models/
+!/vulcan/index.js
+!/vulcan/server.js

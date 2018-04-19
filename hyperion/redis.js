@@ -8,7 +8,10 @@ const config =
         host: process.env.REDIS_CACHE_URL,
         password: process.env.REDIS_CACHE_PASSWORD,
       }
-    : undefined;
+    : {
+        port: 6379,
+        host: 'redis',
+      };
 
 // Turn the NOW_URL into the deployment ID
 // https://spectrum-asdf123.now.sh -> spectrum-asdf123

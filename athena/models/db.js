@@ -4,6 +4,8 @@
 const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
 const DEFAULT_CONFIG = {
+  host: 'rethinkdb',
+  port: 28015,
   db: 'spectrum',
   max: 100, // Maximum number of connections, default is 1000
   buffer: 10, // Minimum number of connections open at any given moment, default is 50

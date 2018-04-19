@@ -1,0 +1,31 @@
+FROM withspectrum/installer:latest AS installer
+
+# -----------------------------------------------------------------------------
+# development
+# -----------------------------------------------------------------------------
+FROM node:9.7.0-alpine as development
+WORKDIR /app
+
+COPY --from=installer /app/node_modules /app/node_modules
+COPY --from=installer /app/mercury/node_modules /app/mercury/node_modules
+
+CMD ["yarn", "dev:mercury"]
+
+# -----------------------------------------------------------------------------
+# build
+# -----------------------------------------------------------------------------
+FROM development as builder
+
+COPY . /app
+RUN yarn build:mercury
+
+# -----------------------------------------------------------------------------
+# production
+# -----------------------------------------------------------------------------
+FROM node:9.7.0-alpine
+WORKDIR /app
+
+COPY --from=builder /app/build-mercury /app
+
+ENV NODE_ENV=production
+CMD ["node", "main.js"]

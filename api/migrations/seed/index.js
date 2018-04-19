@@ -150,6 +150,8 @@ messages.map(message => {
 debug('Connecting to db...');
 // $FlowFixMe
 const db = require('rethinkdbdash')({
+  host: 'rethinkdb',
+  port: 28015,
   db: 'spectrum',
 });
 

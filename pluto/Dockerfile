@@ -1,0 +1,1 @@
+FROM withspectrum/pluto:latest

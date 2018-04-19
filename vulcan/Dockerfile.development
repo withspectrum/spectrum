@@ -1,0 +1,31 @@
+FROM withspectrum/installer:latest AS installer
+
+# -----------------------------------------------------------------------------
+# development
+# -----------------------------------------------------------------------------
+FROM node:9.7.0-alpine as development
+WORKDIR /app
+
+COPY --from=installer /app/node_modules /app/node_modules
+COPY --from=installer /app/vulcan/node_modules /app/vulcan/node_modules
+
+CMD ["yarn", "dev:vulcan"]
+
+# -----------------------------------------------------------------------------
+# build
+# -----------------------------------------------------------------------------
+FROM development as builder
+
+COPY . /app
+RUN yarn build:vulcan
+
+# -----------------------------------------------------------------------------
+# production
+# -----------------------------------------------------------------------------
+FROM node:9.7.0-alpine
+WORKDIR /app
+
+COPY --from=builder /app/build-vulcan /app
+
+ENV NODE_ENV=production
+CMD ["node", "main.js"]

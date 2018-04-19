@@ -1,7 +1,7 @@
 {
-  "name": "pluto",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "@spectrum/pluto",
+  "private": true,
+  "version": "0.0.0",
   "dependencies": {
     "aws-sdk": "^2.213.1",
     "body-parser": "^1.18.2",
@@ -19,8 +19,5 @@
     "source-map-support": "^0.5.4",
     "stripe": "^5.4.0",
     "toobusy-js": "^0.5.1"
-  },
-  "scripts": {
-    "start": "NODE_ENV=production node main.js"
   }
 }

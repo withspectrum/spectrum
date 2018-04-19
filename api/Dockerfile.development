@@ -1,0 +1,31 @@
+FROM withspectrum/installer:latest AS installer
+
+# -----------------------------------------------------------------------------
+# development
+# -----------------------------------------------------------------------------
+FROM node:9.7.0-alpine as development
+WORKDIR /app
+
+COPY --from=installer /app/node_modules /app/node_modules
+COPY --from=installer /app/api/node_modules /app/api/node_modules
+
+CMD ["yarn", "dev:api"]
+
+# -----------------------------------------------------------------------------
+# build
+# -----------------------------------------------------------------------------
+FROM development as builder
+
+COPY . /app
+RUN yarn build:api
+
+# -----------------------------------------------------------------------------
+# production
+# -----------------------------------------------------------------------------
+FROM node:9.7.0-alpine
+WORKDIR /app
+
+COPY --from=builder /app/build-api /app
+
+ENV NODE_ENV=production
+CMD ["node", "main.js"]

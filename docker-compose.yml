@@ -1,0 +1,249 @@
+version: "3.4"
+
+# Volume definitions for common workspace root dependencies.
+x-workspace-package: &workspace-package ./package.json:/app/package.json:delegated
+x-workspace-babelrc: &workspace-babelrc ./.babelrc:/app/.babelrc:delegated
+x-workspace-backpack-config: &workspace-backpack-config ./backpack.config.js:/app/backpack.config.js:delegated
+x-workspace-now: &workspace-now ./now.json:/app/now.json:delegated
+x-workspace-now-secrets: &workspace-now-secrets ./now-secrets.json:/app/now-secrets.json:delegated
+x-workspace-shared: &workspace-shared ./shared:/app/shared:delegated
+
+# Volume definitions for common linked packages.
+x-package-api: &package-api ./api:/app/api:delegated
+x-package-athena: &package-athena ./athena:/app/athena:delegated
+x-package-chronos: &package-chronos ./chronos:/app/chronos:delegated
+x-package-hermes: &package-hermes ./hermes:/app/hermes:delegated
+x-package-mercury: &package-mercury ./mercury:/app/mercury:delegated
+x-package-pluto: &package-pluto ./pluto:/app/pluto:delegated
+x-package-vulcan: &package-vulcan ./vulcan:/app/vulcan:delegated
+
+services:
+  redis:
+    image: redis:3.2.11
+    ports:
+      - 6379:6379
+    networks:
+      - spectrum
+
+  rethinkdb:
+    image: rethinkdb:2.3.6
+    ports:
+      - 28015:28015
+      - 8080:8080
+    networks:
+      - spectrum
+
+  api:
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile.development
+      target: development
+    volumes:
+      - *workspace-package
+      - *workspace-babelrc
+      - *workspace-backpack-config
+      - *workspace-now
+      - *workspace-now-secrets
+      - *workspace-shared
+      - *package-athena
+      - *package-hermes
+      - *package-mercury
+      - *package-pluto
+      - *package-api
+    environment:
+      - TEST_DB=${TEST_DB}
+    ports:
+      - "3001:3001"
+    networks:
+      - spectrum
+    depends_on:
+      - redis
+      - rethinkdb
+
+  athena:
+    build:
+      context: .
+      dockerfile: ./athena/Dockerfile.development
+      target: development
+    volumes:
+      - *workspace-package
+      - *workspace-babelrc
+      - *workspace-backpack-config
+      - *workspace-now
+      - *workspace-now-secrets
+      - *workspace-shared
+      - *package-hermes
+      - *package-mercury
+      - *package-pluto
+      - *package-api
+      - *package-athena
+    ports:
+      - "3003:3003"
+    networks:
+      - spectrum
+    depends_on:
+      - redis
+      - rethinkdb
+
+  chronos:
+    build:
+      context: .
+      dockerfile: ./chronos/Dockerfile.development
+      target: development
+    volumes:
+      - *workspace-package
+      - *workspace-babelrc
+      - *workspace-backpack-config
+      - *workspace-now
+      - *workspace-now-secrets
+      - *workspace-shared
+      - *package-chronos
+    ports:
+      - "3004:3004"
+    networks:
+      - spectrum
+    depends_on:
+      - redis
+
+  hermes:
+    build:
+      context: .
+      dockerfile: ./hermes/Dockerfile.development
+      target: development
+    volumes:
+      - *workspace-package
+      - *workspace-babelrc
+      - *workspace-backpack-config
+      - *workspace-now
+      - *workspace-now-secrets
+      - *workspace-shared
+      - *package-pluto
+      - *package-hermes
+    ports:
+      - "3002:3002"
+    networks:
+      - spectrum
+    depends_on:
+      - redis
+
+  mercury:
+    build:
+      context: .
+      dockerfile: ./mercury/Dockerfile.development
+      target: development
+    volumes:
+      - *workspace-package
+      - *workspace-babelrc
+      - *workspace-backpack-config
+      - *workspace-now
+      - *workspace-now-secrets
+      - *workspace-shared
+      - *package-mercury
+    ports:
+      - "3005:3005"
+    networks:
+      - spectrum
+    depends_on:
+      - redis
+      - rethinkdb
+
+  pluto:
+    build:
+      context: .
+      dockerfile: ./pluto/Dockerfile.development
+      target: development
+    volumes:
+      - *workspace-package
+      - *workspace-babelrc
+      - *workspace-backpack-config
+      - *workspace-now
+      - *workspace-now-secrets
+      - *workspace-shared
+      - *package-api
+      - *package-athena
+      - *package-hermes
+      - *package-mercury
+      - *package-pluto
+    ports:
+      - "3008:3008"
+    networks:
+      - spectrum
+    depends_on:
+      - redis
+      - rethinkdb
+
+  vulcan:
+    build:
+      context: .
+      dockerfile: ./vulcan/Dockerfile.development
+      target: development
+    volumes:
+      - *workspace-package
+      - *workspace-babelrc
+      - *workspace-backpack-config
+      - *workspace-now
+      - *workspace-now-secrets
+      - *workspace-shared
+      - *package-vulcan
+    ports:
+      - "3007:3007"
+    networks:
+      - spectrum
+    depends_on:
+      - redis
+
+  # These services are not meant to be spinned up. They are just here to benefit from the
+  # layer caching of this docker-compose file since the layer cache is not shared between
+  # docker and docker-compose.
+  api-prod:
+    command: "/bin/sh -c 'trap : TERM INT; sleep 365d & wait'"
+    image: "withspectrum/api:latest"
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile.development
+
+  athena-prod:
+    command: "/bin/sh -c 'trap : TERM INT; sleep 365d & wait'"
+    image: "withspectrum/athena:latest"
+    build:
+      context: .
+      dockerfile: ./athena/Dockerfile.development
+
+  chronos-prod:
+    command: "/bin/sh -c 'trap : TERM INT; sleep 365d & wait'"
+    image: "withspectrum/chronos:latest"
+    build:
+      context: .
+      dockerfile: ./chronos/Dockerfile.development
+
+  hermes-prod:
+    command: "/bin/sh -c 'trap : TERM INT; sleep 365d & wait'"
+    image: "withspectrum/hermes:latest"
+    build:
+      context: .
+      dockerfile: ./hermes/Dockerfile.development
+
+  mercury-prod:
+    command: "/bin/sh -c 'trap : TERM INT; sleep 365d & wait'"
+    image: "withspectrum/mercury:latest"
+    build:
+      context: .
+      dockerfile: ./mercury/Dockerfile.development
+
+  pluto-prod:
+    command: "/bin/sh -c 'trap : TERM INT; sleep 365d & wait'"
+    image: "withspectrum/pluto:latest"
+    build:
+      context: .
+      dockerfile: ./pluto/Dockerfile.development
+
+  vulcan-prod:
+    command: "/bin/sh -c 'trap : TERM INT; sleep 365d & wait'"
+    image: "withspectrum/vulcan:latest"
+    build:
+      context: .
+      dockerfile: ./vulcan/Dockerfile.development
+
+networks:
+  spectrum:
+    external: true
