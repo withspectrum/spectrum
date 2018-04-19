@@ -40,20 +40,21 @@ type Props = {
   },
 };
 class Thread extends React.Component<Props> {
-  sendMessage = (body: string) => {
+  sendMessage = (body: string, user: Object) => {
     const { thread } = this.props.data;
     if (!thread) return;
     this.props
-      .sendMessage({
-        threadId: thread.id,
-        threadType: 'story',
-        messageType: 'text',
-        // TODO(@mxstbr): Pass current user here
-        user: {},
-        content: {
-          body,
+      .sendMessage(
+        {
+          threadId: thread.id,
+          threadType: 'story',
+          messageType: 'text',
+          content: {
+            body,
+          },
         },
-      })
+        user
+      )
       .then(() => {
         console.log('message sent successfully');
       });
@@ -89,9 +90,9 @@ class Thread extends React.Component<Props> {
             <ThreadMessages id={thread.id} />
           </ScrollView>
           <Query query={getCurrentUserQuery}>
-            {({ data }) =>
-              data && data.user ? (
-                <ChatInput onSubmit={this.sendMessage} />
+            {({ data: { user } }) =>
+              user ? (
+                <ChatInput onSubmit={text => this.sendMessage(text, user)} />
               ) : null
             }
           </Query>

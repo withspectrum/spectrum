@@ -99,11 +99,7 @@ class Messages extends React.Component<Props> {
                   {group.map(message => {
                     return (
                       // TODO(@mxstbr): Figure out message types
-                      <Message
-                        key={message.id}
-                        message={message}
-                        type="draftjs"
-                      />
+                      <Message key={message.id} message={message} />
                     );
                     // return (
                     //   <Message

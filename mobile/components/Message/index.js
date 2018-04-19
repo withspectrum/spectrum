@@ -7,11 +7,10 @@ import type { MessageInfoType } from '../../../shared/graphql/fragments/message/
 
 type Props = {
   message: MessageInfoType,
-  type: string,
 };
 
-const Message = ({ message, type }: Props) => {
-  switch (type) {
+const Message = ({ message }: Props) => {
+  switch (message.messageType) {
     case 'text':
       return <Text type="body">{message.content.body}</Text>;
     // case 'media': {
