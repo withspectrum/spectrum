@@ -74,7 +74,9 @@ export default async (
   // user is neither a community or channel owner, they don't have permission
   if (
     currentUserChannelPermissions.isOwner ||
-    currentUserCommunityPermissions.isOwner
+    currentUserCommunityPermissions.isOwner ||
+    currentUserChannelPermissions.isModerator ||
+    currentUserCommunityPermissions.isModerator
   ) {
     // all checks passed
     // determine whether to approve or block them
@@ -113,6 +115,6 @@ export default async (
   }
 
   return new UserError(
-    "You don't have permission to make changes to this channel."
+    "You don't have permission to manage users in this channel."
   );
 };
