@@ -20,6 +20,9 @@ export default async (job: Job<UserThreadLastSeenJobData>) => {
     );
     return;
   }
+  // Timestamp will be serialized to Redis, so it's either a string date "Thu 20 Nov 2017" or a
+  // string timestamp. "1835463856" We gotta make sure to handle both those cases, so we try and
+  // parse to int first, and if that fails (i.e. returns NaN) we assume it's a string date.
   let parsedTimestamp =
     typeof timestamp === 'string' ? parseInt(timestamp, 10) : timestamp;
   if (isNaN(parsedTimestamp)) parsedTimestamp = timestamp;
