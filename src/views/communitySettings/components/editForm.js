@@ -240,7 +240,7 @@ class EditForm extends React.Component<Props, State> {
           isLoading: false,
         });
 
-        this.props.dispatch(addToastWithTimeout('error', err));
+        this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
