@@ -146,14 +146,14 @@ class Navbar extends React.Component<Props, State> {
                 rel="shortcut icon"
                 id="dynamic-favicon"
                 // $FlowIssue
-                href={`${process.env.PUBLIC_URL}/img/favicon_unread.ico`}
+                href="img/favicon_unread.ico"
               />
             ) : (
               <link
                 rel="shortcut icon"
                 id="dynamic-favicon"
                 // $FlowIssue
-                href={`${process.env.PUBLIC_URL}/img/favicon.ico`}
+                href="/img/favicon.ico"
               />
             )}
           </Head>
