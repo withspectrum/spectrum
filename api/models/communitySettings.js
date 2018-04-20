@@ -56,7 +56,7 @@ export const getCommunitiesSettings = (
           if (record) return record;
           return {
             ...defaultSettings,
-            communityId:,
+            communityId,
           };
         });
       }
