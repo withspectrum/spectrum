@@ -51,23 +51,23 @@ export const getCommunitiesSettings = (
       }
 
       if (data.length < communityIds.length) {
-        return communityIds.map(community => {
-          const record = data.find(o => o.communityId === community);
+        return communityIds.map(communityId => {
+          const record = data.find(o => o.communityId === communityId);
           if (record) return record;
           return {
             ...defaultSettings,
-            communityId: community,
+            communityId:,
           };
         });
       }
 
       if (data.length > communityIds.length) {
-        return communityIds.map(community => {
-          const record = data.find(o => o.communityId === community);
+        return communityIds.map(communityId => {
+          const record = data.find(o => o.communityId === communityId);
           if (record) return record;
           return {
             ...defaultSettings,
-            communityId: community,
+            communityId,
           };
         });
       }
