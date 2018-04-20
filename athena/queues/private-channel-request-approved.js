@@ -10,16 +10,12 @@ import { getUsers } from '../models/user';
 import { fetchPayload } from '../utils/payloads';
 import isEmail from 'validator/lib/isEmail';
 import { sendPrivateChannelRequestApprovedEmailQueue } from 'shared/bull/queues';
+import type {
+  Job,
+  PrivateChannelRequestApprovedJobData,
+} from 'shared/bull/types';
 
-type JobData = {
-  data: {
-    userId: string,
-    channelId: string,
-    communityId: string,
-    moderatorId: string,
-  },
-};
-export default async (job: JobData) => {
+export default async (job: Job<PrivateChannelRequestApprovedJobData>) => {
   const { userId, channelId, communityId, moderatorId } = job.data;
   debug(`user request to join channel ${channelId} approved`);
 

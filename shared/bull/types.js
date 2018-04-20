@@ -220,6 +220,13 @@ export type PrivateChannelRequestJobData = {
   channel: DBChannel,
 };
 
+export type PrivateChannelRequestApprovedJobData = {
+  userId: string,
+  channelId: string,
+  communityId: string,
+  moderatorId: string,
+};
+
 export type PrivateChannelInviteNotificationJobData = {
   recipient: { email: string, firstName?: ?string, lastName?: ?string },
   channelId: string,
@@ -361,6 +368,9 @@ export type Queues = {
   sendCommunityInvoicePaidNotificationQueue: BullQueue<InvoiceJobData>,
   sendReactionNotificationQueue: BullQueue<ReactionNotificationJobData>,
   sendPrivateChannelRequestQueue: BullQueue<PrivateChannelRequestJobData>,
+  sendPrivateChannelRequestApprovedQueue: BullQueue<
+    PrivateChannelRequestApprovedJobData
+  >,
   sendPrivateChannelInviteNotificationQueue: BullQueue<
     PrivateChannelInviteNotificationJobData
   >,
