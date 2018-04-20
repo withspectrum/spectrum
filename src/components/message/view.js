@@ -13,36 +13,41 @@ import {
   Time,
 } from './style';
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
+import { toPlainText, toState } from 'shared/draft-utils';
+import { onlyContainsEmoji } from '../../helpers/utils';
 import type { Node } from 'react';
+import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
 
 export const Body = (props: {
-  me: boolean,
-  type: 'text' | 'media' | 'emoji' | 'draftjs',
   openGallery: Function,
-  message: Object,
-  data: Object,
+  me: boolean,
+  message: MessageInfoType,
 }) => {
-  const { message, openGallery, type, me, data } = props;
-  switch (type) {
+  const { message, openGallery, me } = props;
+  const parsedMessage =
+    message.messageType &&
+    message.messageType === 'draftjs' &&
+    toPlainText(toState(JSON.parse(message.content.body)));
+  const emojiOnly = parsedMessage && onlyContainsEmoji(parsedMessage);
+  if (emojiOnly) return <Emoji>{parsedMessage}</Emoji>;
+  switch (message.messageType) {
     case 'text':
     default:
-      return <Text me={me}>{message.body}</Text>;
+      return <Text me={me}>{message.content.body}</Text>;
     case 'media': {
       // don't apply imgix url params to optimistic image messages
       const src = props.id
-        ? message.body
-        : `${message.body}?max-w=${window.innerWidth * 0.6}`;
-      if (typeof data.id === 'number' && data.id < 0) {
+        ? message.content.body
+        : `${message.content.body}?max-w=${window.innerWidth * 0.6}`;
+      if (typeof message.id === 'number' && message.id < 0) {
         return null;
       }
       return <Image onClick={openGallery} src={src} />;
     }
-    case 'emoji':
-      return <Emoji>{message}</Emoji>;
     case 'draftjs': {
       return (
         <Text me={me}>
-          {redraft(JSON.parse(message.body), messageRenderer)}
+          {redraft(JSON.parse(message.content.body), messageRenderer)}
         </Text>
       );
     }

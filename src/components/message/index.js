@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { openGallery } from '../../actions/gallery';
-import { onlyContainsEmoji } from '../../helpers/utils';
 import Reaction from '../reaction';
 import { Body, Actions } from './view';
 import { Wrapper } from './style';
 import { openModal } from '../../actions/modals';
-import { toPlainText, toState } from 'shared/draft-utils';
 
 class Message extends Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -55,11 +53,6 @@ class Message extends Component {
       pending,
     } = this.props;
 
-    const parsedMessage =
-      message.messageType &&
-      message.messageType === 'draftjs' &&
-      toPlainText(toState(JSON.parse(message.content.body)));
-    const emojiOnly = parsedMessage && onlyContainsEmoji(parsedMessage);
     const actionable = context !== 'notification';
     const shareable = message.threadType !== 'directMessageThread';
     return (
@@ -69,12 +62,9 @@ class Message extends Component {
         onClick={() => changeSelection && changeSelection(message.id)}
       >
         <Body
-          id={message.id}
           me={me}
-          type={emojiOnly ? 'emoji' : message.messageType}
           openGallery={() => this.toggleOpenGallery(message.id)}
-          message={emojiOnly ? parsedMessage : message.content}
-          data={message}
+          message={message}
         />
         {actionable && (
           <Actions
