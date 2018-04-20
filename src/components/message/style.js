@@ -345,4 +345,8 @@ export const Paragraph = styled.p`
   &:not(:empty) ~ &:not(:empty) {
     margin-top: 1em;
   }
+`
+
+export const QuoteWrapper = styled.div`
+  background-color: ${props => props.theme.bg.default};
 `;

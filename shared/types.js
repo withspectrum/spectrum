@@ -99,6 +99,7 @@ export type DBMessage = {
   threadId: string,
   threadType: 'story' | 'directMessageThread',
   timestamp: Date,
+  quotedMessageId?: string,
 };
 
 export type NotificationPayloadType =

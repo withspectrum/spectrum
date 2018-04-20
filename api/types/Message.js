@@ -24,6 +24,7 @@ const Message = /* GraphQL */ `
 		id: ID!
 		timestamp: Date!
 		thread: Thread
+        quotedMessage: Message
 		content: MessageContent!
     author: ThreadParticipant! @cost(complexity: 2)
     reactions: ReactionData @cost(complexity: 1)
@@ -42,6 +43,7 @@ const Message = /* GraphQL */ `
 		messageType: MessageTypes!
 		content: MessageContentInput!
 		file: Upload
+    quotedMessageId: ID
 	}
 
 	extend type Query {
