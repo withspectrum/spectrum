@@ -130,7 +130,7 @@ class BrandedLogin extends React.Component<Props, State> {
                 }}
               >
                 <Button
-                  style={{ alignSelf: 'flex-start' }}
+                  style={{ alignSelf: 'flex-start', marginLeft: '8px' }}
                   onSubmit={this.saveCustomMessage}
                   onClick={this.saveCustomMessage}
                   disabled={messageLengthError}
