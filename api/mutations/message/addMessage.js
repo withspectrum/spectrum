@@ -25,6 +25,7 @@ type AddMessageInput = {
     content: {
       body: string,
     },
+    parentId?: string,
     file?: FileUpload,
   },
 };
