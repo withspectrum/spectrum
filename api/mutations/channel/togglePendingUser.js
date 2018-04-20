@@ -12,6 +12,7 @@ import {
   getUserPermissionsInCommunity,
   createMemberInCommunity,
 } from '../../models/usersCommunities';
+import { sendPrivateChannelRequestApprovedQueue } from 'shared/bull/queues';
 
 type TogglePendingUserInput = {
   input: {
@@ -92,6 +93,13 @@ export default async (
         input.channelId,
         input.userId
       );
+
+      sendPrivateChannelRequestApprovedQueue.add({
+        userId: input.userId,
+        channelId: input.channelId,
+        communityId: channelToEvaluate.communityId,
+        moderatorId: currentUser.id,
+      });
 
       // if the user is a member of the parent community, we can return
       if (evaluatedUserCommunityPermissions.isMember) {
