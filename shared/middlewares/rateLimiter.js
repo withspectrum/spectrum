@@ -24,7 +24,7 @@ const redis = createRedis({
 const rateLimiter = (keyPrefix, max, duration) => {
   return (req, res, next) => {
     debug('request ', req.url);
-    // if user is logged in than use his id, otherwise his ip address
+    // if user is logged in than use their id, otherwise use their ip address
     const id = req.isAuthenticated() ? req.user.id : requestIp.getClientIp(req);
     const limiterObj = new Limiter({
       id: `${keyPrefix}:${id}`,
