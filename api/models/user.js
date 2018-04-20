@@ -1,6 +1,6 @@
 // @flow
 const { db } = require('./db');
-import { uploadImage } from '../utils/s3';
+import { uploadImage } from '../utils/file-storage';
 import { createNewUsersSettings } from './usersSettings';
 import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
 import type { PaginationOptions } from '../utils/paginate-arrays';

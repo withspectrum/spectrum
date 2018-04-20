@@ -36,7 +36,7 @@ const generateImageUrl = path => {
   return imgixBase + '/' + newPath;
 };
 
-const upload = async (
+export const uploadImage = async (
   file: FileUpload,
   entity: EntityTypes,
   id: string
@@ -60,15 +60,5 @@ const upload = async (
         res(encodeURI(url));
       }
     );
-  });
-};
-
-export const uploadImage = async (
-  file: FileUpload,
-  entity: EntityTypes,
-  id: string
-): Promise<string> => {
-  return await upload(file, entity, id).catch(err => {
-    throw new Error(err);
   });
 };
