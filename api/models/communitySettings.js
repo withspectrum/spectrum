@@ -59,6 +59,17 @@ export const getCommunitiesSettings = (
           };
         });
       }
+
+      if (data.length > communityIds.length) {
+        return communityIds.map(community => {
+          const record = data.find(o => o.communityId === community);
+          if (record) return record;
+          return {
+            ...defaultSettings,
+            communityId: community,
+          };
+        });
+      }
     });
 };
 
