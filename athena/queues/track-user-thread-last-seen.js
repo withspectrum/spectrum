@@ -20,7 +20,10 @@ export default async (job: Job<UserThreadLastSeenJobData>) => {
     );
     return;
   }
-  const date = new Date(parseInt(timestamp, 10));
+  let parsedTimestamp =
+    typeof timestamp === 'string' ? parseInt(timestamp, 10) : timestamp;
+  if (isNaN(parsedTimestamp)) parsedTimestamp = timestamp;
+  const date = new Date(parsedTimestamp);
   debug(
     `new job\nthreadId: ${threadId}\nuserId: ${userId}\ntimestamp: ${new Date(
       timestamp
