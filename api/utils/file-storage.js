@@ -1,6 +1,8 @@
 // @flow
 require('now-env');
 
+import type { FileUpload, EntityTypes } from 'shared/types';
+
 const { FILE_STORAGE } = process.env;
 
 const getUploadImageFn = () => {

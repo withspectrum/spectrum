@@ -4,8 +4,7 @@ import AWS from 'aws-sdk';
 import shortid from 'shortid';
 const IS_PROD = process.env.NODE_ENV === 'production';
 
-import type { FileUpload } from 'shared/types';
-type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';
+import type { FileUpload, EntityTypes } from 'shared/types';
 
 let S3_TOKEN = process.env.S3_TOKEN;
 let S3_SECRET = process.env.S3_SECRET;

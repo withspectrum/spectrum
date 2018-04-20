@@ -2,14 +2,17 @@
 import shortid from 'shortid';
 import fs from 'fs';
 
+import type { FileUpload, EntityTypes } from 'shared/types';
+
 const STORAGE_DIR = 'public/uploads';
+const READ_WRITE_MODE = 0o777;
 
 const dirExists = (path: string): Promise<boolean> =>
-  new Promise(res => fs.access(path, err => res(!!!err)));
+  new Promise(res => fs.access(path, fs.constants.F_OK, err => res(!!!err)));
 
 const createUploadsDir = (path: string): Promise<void> =>
   new Promise(res =>
-    fs.mkdir(path, err => {
+    fs.mkdir(path, READ_WRITE_MODE, err => {
       if (err) throw new Error(err);
       res();
     })
