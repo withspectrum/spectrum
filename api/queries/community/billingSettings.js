@@ -29,6 +29,8 @@ export default async (
     loaders.stripeCustomers.load(stripeCustomerId),
   ]);
 
+  if (!permissions) return defaultResult;
+
   const { isOwner, isModerator } = permissions;
   const customer =
     stripeCustomer && stripeCustomer.reduction.length > 0
