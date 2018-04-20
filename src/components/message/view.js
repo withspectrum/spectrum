@@ -108,7 +108,6 @@ const Action = props => {
 
 export const Actions = (props: {
   me: boolean,
-  reaction: Object,
   canModerate: boolean,
   deleteMessage: Function,
   isOptimisticMessage: boolean,
@@ -117,7 +116,6 @@ export const Actions = (props: {
 }) => {
   const {
     me,
-    reaction,
     canModerate,
     deleteMessage,
     isOptimisticMessage,
@@ -131,12 +129,11 @@ export const Actions = (props: {
   return (
     <ActionUI me={me}>
       {props.children}
-      {/* {props.shareable && <Action me={me} action={'share'} /> } */}
       {canModerate &&
         !isOptimisticMessage && (
           <Action me={me} action={'delete'} deleteMessage={deleteMessage} />
         )}
-      <Indicator reaction={reaction} me={me} />
+      <Indicator me={me} />
     </ActionUI>
   );
 };

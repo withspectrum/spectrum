@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
@@ -7,7 +8,26 @@ import { Body, Actions } from './view';
 import { Wrapper } from './style';
 import { openModal } from '../../actions/modals';
 
-class Message extends Component {
+import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
+
+type Props = {
+  message: MessageInfoType,
+  threadId: string,
+  threadType: string,
+  selectedId: string,
+  dispatch: Function,
+  canModerate: boolean,
+  currentUser: UserInfoType,
+  me: boolean,
+  reaction: $PropertyType<MessageInfoType, 'reactions'>,
+  toggleReaction: Function,
+  context?: 'notificition',
+  changeSelection: Function,
+  pending: boolean,
+};
+
+class Message extends Component<Props> {
   shouldComponentUpdate(nextProps, nextState) {
     const newMessage = nextProps.message.id !== this.props.message.id;
     const newSelection = nextProps.selectedId !== this.props.selectedId;
@@ -54,7 +74,6 @@ class Message extends Component {
     } = this.props;
 
     const actionable = context !== 'notification';
-    const shareable = message.threadType !== 'directMessageThread';
     return (
       <Wrapper
         me={me}
@@ -69,7 +88,6 @@ class Message extends Component {
         {actionable && (
           <Actions
             me={me}
-            shareable={shareable}
             currentUser={currentUser}
             canModerate={canModerate}
             deleteMessage={this.deleteMessage}
