@@ -31,11 +31,12 @@ export const getCommunitiesSettings = (
     .getAll(...communityIds, { index: 'communityId' })
     .run()
     .then(data => {
-      if (!data || data.length === 0)
+      if (!data || data.length === 0) {
         return Array.from({ length: communityIds.length }, (_, index) => ({
           ...defaultSettings,
           communityId: communityIds[index],
         }));
+      }
 
       if (data.length === communityIds.length) {
         return data.map(
