@@ -121,6 +121,12 @@ if (process.env.NODE_ENV === 'development') {
 import cache from './cache';
 app.use(cache);
 
+// rate limiter middleware to reduce API calls to server within time frame
+import rateLimiter from 'shared/middlewares/rateLimiter';
+const REQUESTS_ALLOWED = 50;
+const TIMEFRAME = 20000;
+app.use(rateLimiter('hyperion', REQUESTS_ALLOWED, TIMEFRAME));
+
 import renderer from './renderer';
 app.get('*', renderer);
 

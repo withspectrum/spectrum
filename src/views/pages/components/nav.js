@@ -52,7 +52,7 @@ class Nav extends React.Component<Props, State> {
             rel="shortcut icon"
             id="dynamic-favicon"
             // $FlowIssue
-            href={`${process.env.PUBLIC_URL}/img/favicon.ico`}
+            href="/img/favicon.ico"
           />
         </Head>
         <Tabs>

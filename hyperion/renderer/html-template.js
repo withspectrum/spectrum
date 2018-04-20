@@ -37,6 +37,7 @@ export const getHeader = ({ metaTags }: { metaTags: string }) => {
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width,initial-scale=1">
           <link rel="mask-icon" href="/img/pinned-tab.svg" color="#171A21">
+          <link rel="shortcut icon" href="/img/favicon.ico">
           <meta name="theme-color" content="#171A21">
           <link rel="manifest" href="/manifest.json">
           <meta name="og:type" content="website">

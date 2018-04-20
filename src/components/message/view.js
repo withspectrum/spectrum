@@ -11,7 +11,9 @@ import {
   ActionWrapper,
   ModActionWrapper,
   Time,
+  QuoteWrapper,
 } from './style';
+import { Byline } from '../messageGroup/style';
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
 import type { Node } from 'react';
 
@@ -21,8 +23,9 @@ export const Body = (props: {
   openGallery: Function,
   message: Object,
   data: Object,
+  showQuoted?: boolean,
 }) => {
-  const { message, openGallery, type, me, data } = props;
+  const { message, openGallery, type, me, data, showQuoted } = props;
   switch (type) {
     case 'text':
     default:
@@ -42,12 +45,29 @@ export const Body = (props: {
     case 'draftjs': {
       return (
         <Text me={me}>
+          {message.quotedMessage && showQuoted !== false && <Quote message={message.quotedMessage} />}
           {redraft(JSON.parse(message.body), messageRenderer)}
         </Text>
       );
     }
   }
 };
+
+const Quote = ({ message }) => (
+  <QuoteWrapper>
+    <Byline>{message.sender}</Byline>
+    <Body
+      id={message.id}
+      // type={emojiOnly ? 'text' : message.messageType}
+      // message={emojiOnly ? parsedMessage : message.content}
+      type={message.messageType}
+      message={message.content}
+      data={message}
+      openGallery={() => {}}
+      showQuoted={false}
+    />
+  </QuoteWrapper>
+);
 
 const Action = props => {
   const { me, action, deleteMessage } = props;
@@ -58,6 +78,12 @@ const Action = props => {
       return (
         <ActionWrapper>
           <Icon glyph="share" tipText={'Share'} tipLocation={'top'} size={20} />
+        </ActionWrapper>
+      );
+    case 'reply':
+      return (
+        <ActionWrapper>
+          <Icon glyph="reply" tipText={`Reply`} tipLocation={'top'} size={20} />
         </ActionWrapper>
       );
     case 'delete':
@@ -87,6 +113,7 @@ export const Actions = (props: {
   const {
     me,
     reaction,
+    quotable,
     canModerate,
     deleteMessage,
     isOptimisticMessage,
@@ -100,6 +127,7 @@ export const Actions = (props: {
   return (
     <ActionUI me={me}>
       {props.children}
+      {quotable && <Action me={me} action={'reply'} />}
       {/* {props.shareable && <Action me={me} action={'share'} /> } */}
       {canModerate &&
         !isOptimisticMessage && (
