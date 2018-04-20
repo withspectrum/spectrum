@@ -86,7 +86,7 @@ class BrandedLogin extends React.Component<Props, State> {
       })
       .catch(err => {
         this.setState({ messageLengthError: false, isLoading: false });
-        return this.props.dispatch(addToastWithTimeout('error', err));
+        return this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
