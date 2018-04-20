@@ -161,14 +161,6 @@ export const Profile = styled.div`
   }
 `;
 
-export const LargeEmoji = styled.div`
-  display: flex;
-  text-align: center;
-  flex: 1;
-  padding: 16px 0 32px;
-  font-size: 48px;
-`;
-
 export const UpsellIconContainer = styled.div`
   display: flex;
   align-items: center;
