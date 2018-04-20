@@ -14,7 +14,7 @@
     "electron-builder": "^20.8.1"
   },
   "scripts": {
-    "dev": "electron ./desktop/src/main.js",
+    "dev": "electron ./src/main.js",
     "package": "build --dir",
     "package:mac": "build --mac",
     "package:linux": "build --linux",
