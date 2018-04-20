@@ -1,8 +1,19 @@
+//@flow
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { Tooltip } from '../globals';
 
 /* eslint no-eval: 0 */
+
+type Props = {
+  glyph?: string,
+  size?: number,
+  tipText?: string,
+  tipLocation?: string,
+  withCount?: number,
+  onClick?: Function,
+  onboarding?: string,
+};
 
 export const InlineSvg = styled.svg`
   position: absolute;
@@ -612,7 +623,7 @@ export const Glyph = ({ glyph }) => {
   }
 };
 
-class Icon extends React.Component {
+class Icon extends React.Component<Props> {
   render() {
     const {
       size,

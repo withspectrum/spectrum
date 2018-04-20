@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment } from 'react';
+import React from 'react';
 import redraft from 'redraft';
 import Icon from '../icons';
 import {
@@ -13,7 +13,6 @@ import {
   Time,
   QuoteWrapper,
   QuotedParagraph,
-  Paragraph,
 } from './style';
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
 import { toPlainText, toState } from 'shared/draft-utils';
