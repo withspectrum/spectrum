@@ -7,7 +7,7 @@ import { Tooltip } from '../globals';
 
 type Props = {
   glyph?: string,
-  size?: number,
+  size?: number | string,
   tipText?: string,
   tipLocation?: string,
   withCount?: number,
@@ -65,7 +65,7 @@ export const SvgWrapper = styled.div`
     `};
 `;
 
-export const Glyph = ({ glyph }) => {
+export const Glyph = ({ glyph }: string) => {
   switch (glyph) {
     case 'analytics':
       return (
