@@ -346,3 +346,15 @@ export const Paragraph = styled.p`
     margin-top: 1em;
   }
 `;
+
+export const QuoteWrapper = styled.div`
+  background: ${props => props.theme.bg.default};
+  border-radius: 14px;
+  color: ${props => props.theme.text.default};
+  padding: 8px 12px;
+  /* Position it with little margin to the surrounding bubble */
+  width: calc(100% + 24px);
+  margin-left: -12px;
+  margin-top: -4px;
+  margin-bottom: 8px;
+`;
