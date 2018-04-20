@@ -48,6 +48,7 @@ describe('Community settings overview tab', () => {
       .type(website);
     // Submit changes
     cy.get('button[type="submit"]').click();
+    cy.visit(`/${community.slug}`);
     cy.location('pathname').should('eq', `/${community.slug}`);
     // Make sure changes were applied
     cy.contains(description);
@@ -68,14 +69,14 @@ describe('Community settings overview tab', () => {
       .clear()
       .type(community.website);
     cy.get('button[type="submit"]').click();
+    cy.visit(`/${community.slug}`);
     cy.location('pathname').should('eq', `/${community.slug}`);
     cy.contains(community.name);
     cy.contains(community.description);
     cy.contains(community.website);
   });
 
-  // TODO: FIXME
-  it.skip('should allow managing branded login settings', () => {
+  it('should allow managing branded login settings', () => {
     const brandedLoginString = 'Testing branded login custom message';
 
     // click the enable custom branded login toggle
