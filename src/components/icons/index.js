@@ -628,13 +628,9 @@ export const Glyph = ({ glyph }: GlyphProps) => {
 };
 
 class Icon extends React.Component<Props> {
-  defaultProps = {
-    size: 32,
-  };
-
   render() {
     const {
-      size,
+      size = 32,
       tipText,
       tipLocation,
       onboarding,
