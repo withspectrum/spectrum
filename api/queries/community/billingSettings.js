@@ -51,8 +51,9 @@ export default async (
       : subscriptions;
 
   return {
-    pendingAdministratorEmail: isOwner ? pendingAdministratorEmail : null,
-    administratorEmail: isOwner ? administratorEmail : null,
+    pendingAdministratorEmail:
+      isOwner || isModerator ? pendingAdministratorEmail : null,
+    administratorEmail: isOwner || isModerator ? administratorEmail : null,
     sources: sources,
     invoices: cleanInvoices,
     subscriptions: subscriptions,
