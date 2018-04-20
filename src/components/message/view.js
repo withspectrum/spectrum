@@ -12,12 +12,13 @@ import {
   ModActionWrapper,
   Time,
   QuoteWrapper,
+  QuotedParagraph,
   Paragraph,
 } from './style';
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { onlyContainsEmoji } from '../../helpers/utils';
-import { Byline } from '../messageGroup/style';
+import { Byline, Name, Username } from '../messageGroup/style';
 import type { Node } from 'react';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
 
@@ -35,7 +36,7 @@ export const Body = (props: {
     toPlainText(toState(JSON.parse(message.content.body)));
   const emojiOnly = parsedMessage && onlyContainsEmoji(parsedMessage);
   if (emojiOnly) return <Emoji>{parsedMessage}</Emoji>;
-  const WrapperComponent = bubble ? Text : Paragraph;
+  const WrapperComponent = bubble ? Text : QuotedParagraph;
   switch (message.messageType) {
     case 'text':
     default:
@@ -59,9 +60,9 @@ export const Body = (props: {
             showParent && (
               <QuoteWrapper>
                 <Byline>
-                  {message.parent.author.user.name} @{
-                    message.parent.author.user.username
-                  }
+                  <Icon glyph="reply" size={16} />
+                  <Name>{message.parent.author.user.name}</Name>
+                  <Username>@{message.parent.author.user.username}</Username>
                 </Byline>
                 <Body
                   // $FlowIssue
@@ -95,7 +96,7 @@ const Action = (props: ActionProps) => {
     default:
       return (
         <ActionWrapper>
-          <Icon glyph="share" tipText={'Share'} tipLocation={'top'} size={20} />
+          <Icon glyph="share" tipText={'Share'} tipLocation={'top'} size={24} />
         </ActionWrapper>
       );
     case 'reply':
@@ -105,7 +106,7 @@ const Action = (props: ActionProps) => {
             glyph="reply"
             tipText={`Reply`}
             tipLocation={'top'}
-            size={20}
+            size={24}
             onClick={replyToMessage}
           />
         </ActionWrapper>
@@ -117,7 +118,7 @@ const Action = (props: ActionProps) => {
             glyph="delete"
             tipText={'Delete'}
             tipLocation={'top'}
-            size={20}
+            size={24}
             onClick={deleteMessage}
           />
         </ModActionWrapper>
@@ -150,11 +151,11 @@ export const Actions = (props: {
   return (
     <ActionUI me={me}>
       {props.children}
+      <Action me={me} action="reply" replyToMessage={replyToMessage} />
       {canModerate &&
         !isOptimisticMessage && (
           <Action me={me} action={'delete'} deleteMessage={deleteMessage} />
         )}
-      <Action me={me} action="reply" replyToMessage={replyToMessage} />
       <Indicator me={me} />
     </ActionUI>
   );
