@@ -5,7 +5,6 @@ import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import createMarkdownPlugin from 'draft-js-markdown-plugin';
 import Prism from 'prismjs';
-import debounce from 'debounce';
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-scala';
 import 'prismjs/components/prism-go';
@@ -18,7 +17,6 @@ import 'prismjs/components/prism-perl';
 import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-swift';
 import createPrismPlugin from 'draft-js-prism-plugin';
-import { isAndroid } from 'shared/draft-utils';
 import { customStyleMap } from 'src/components/rich-text-editor/style';
 import type { DraftEditorState } from 'draft-js/lib/EditorState';
 
@@ -61,7 +59,7 @@ class Input extends React.Component<Props, State> {
         createMarkdownPlugin({
           features: {
             inline: ['BOLD', 'ITALIC', 'CODE'],
-            block: ['CODE', 'ordered-list-item', 'unordered-list-item'],
+            block: ['CODE'],
           },
           renderLanguageSelect: () => null,
         }),

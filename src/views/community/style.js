@@ -232,6 +232,11 @@ export const ColumnHeading = styled.div`
 
 export const ChannelListItemRow = styled.div`
   display: flex;
+
+  a {
+    display: flex;
+    flex: auto;
+  }
 `;
 
 export const ToggleNotificationsContainer = styled.div`

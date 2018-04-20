@@ -144,6 +144,7 @@ class ChatInput extends React.Component<Props, State> {
   };
 
   toggleMarkdownHint = state => {
+    // eslint-disable-next-line
     let hasText = false;
     // NOTE(@mxstbr): This throws an error on focus, so we just ignore that
     try {
