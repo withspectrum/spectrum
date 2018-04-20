@@ -11,6 +11,7 @@ import express from 'express';
 import Raven from 'shared/raven';
 import { ApolloEngine } from 'apollo-engine';
 import toobusy from 'shared/middlewares/toobusy';
+import addSecurityMiddleware from 'shared/middlewares/security';
 import { init as initPassport } from './authentication.js';
 import type { DBUser } from 'shared/types';
 
@@ -27,6 +28,9 @@ app.set('trust proxy', true);
 
 // Return the request if the server is too busy
 app.use(toobusy);
+
+// Security middleware.
+addSecurityMiddleware(app);
 
 // Send all responses as gzip
 app.use(compression());

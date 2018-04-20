@@ -10,6 +10,7 @@ import path from 'path';
 import { getUser } from 'api/models/user';
 import Raven from 'shared/raven';
 import toobusy from 'shared/middlewares/toobusy';
+import addSecurityMiddleware from 'shared/middlewares/security';
 
 const PORT = process.env.PORT || 3006;
 
@@ -19,6 +20,9 @@ const app = express();
 app.set('trust proxy', true);
 
 app.use(toobusy);
+
+// Security middleware.
+addSecurityMiddleware(app);
 
 if (process.env.NODE_ENV === 'development') {
   const logging = require('shared/middlewares/logging');
