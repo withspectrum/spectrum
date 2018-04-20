@@ -80,8 +80,15 @@ export const Body = (props: {
   }
 };
 
-const Action = props => {
-  const { me, action, deleteMessage } = props;
+type ActionProps = {
+  me: boolean,
+  action: string,
+  deleteMessage?: Function,
+  replyToMessage?: Function,
+};
+
+const Action = (props: ActionProps) => {
+  const { me, action, deleteMessage, replyToMessage } = props;
 
   switch (action) {
     case 'share':
@@ -89,6 +96,18 @@ const Action = props => {
       return (
         <ActionWrapper>
           <Icon glyph="share" tipText={'Share'} tipLocation={'top'} size={20} />
+        </ActionWrapper>
+      );
+    case 'reply':
+      return (
+        <ActionWrapper>
+          <Icon
+            glyph="reply"
+            tipText={`Reply`}
+            tipLocation={'top'}
+            size={20}
+            onClick={replyToMessage}
+          />
         </ActionWrapper>
       );
     case 'delete':
@@ -109,7 +128,8 @@ const Action = props => {
 export const Actions = (props: {
   me: boolean,
   canModerate: boolean,
-  deleteMessage: Function,
+  deleteMessage?: Function,
+  replyToMessage?: Function,
   isOptimisticMessage: boolean,
   children: Node,
   message: Object,
@@ -118,6 +138,7 @@ export const Actions = (props: {
     me,
     canModerate,
     deleteMessage,
+    replyToMessage,
     isOptimisticMessage,
     message,
   } = props;
@@ -133,6 +154,7 @@ export const Actions = (props: {
         !isOptimisticMessage && (
           <Action me={me} action={'delete'} deleteMessage={deleteMessage} />
         )}
+      <Action me={me} action="reply" replyToMessage={replyToMessage} />
       <Indicator me={me} />
     </ActionUI>
   );

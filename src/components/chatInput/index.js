@@ -60,6 +60,7 @@ type Props = {
   networkOnline: boolean,
   threadData?: Object,
   refetchThread?: Function,
+  quotedMessage: ?string,
 };
 
 const LS_KEY = 'last-chat-input-content';
@@ -107,6 +108,8 @@ class ChatInput extends React.Component<Props, State> {
 
     if (curr.networkOnline !== next.networkOnline) return true;
     if (curr.websocketConnection !== next.websocketConnection) return true;
+
+    if (curr.quotedMessage !== next.quotedMessage) return true;
 
     // State changed
     if (curr.state !== next.state) return true;
@@ -182,6 +185,7 @@ class ChatInput extends React.Component<Props, State> {
       currentUser,
       threadData,
       refetchThread,
+      quotedMessage,
     } = this.props;
 
     const isSendingMessageAsNonMember =
@@ -252,6 +256,7 @@ class ChatInput extends React.Component<Props, State> {
         threadId: thread,
         messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
+        parentId: quotedMessage,
         content: {
           body: !isAndroid()
             ? JSON.stringify(toJSON(state))
@@ -270,6 +275,7 @@ class ChatInput extends React.Component<Props, State> {
         threadId: thread,
         messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
+        parentId: quotedMessage,
         content: {
           body: !isAndroid()
             ? JSON.stringify(toJSON(state))
@@ -356,6 +362,7 @@ class ChatInput extends React.Component<Props, State> {
       sendMessage,
       websocketConnection,
       networkOnline,
+      quotedMessage,
     } = this.props;
 
     if (!networkOnline) {
@@ -400,6 +407,7 @@ class ChatInput extends React.Component<Props, State> {
           threadId: thread,
           messageType: 'media',
           threadType,
+          parentId: quotedMessage,
           content: {
             body: reader.result,
           },
@@ -426,6 +434,7 @@ class ChatInput extends React.Component<Props, State> {
           threadId: thread,
           messageType: 'media',
           threadType,
+          parentId: quotedMessage,
           content: {
             body: reader.result,
           },
@@ -514,6 +523,7 @@ class ChatInput extends React.Component<Props, State> {
       currentUser,
       networkOnline,
       websocketConnection,
+      quotedMessage,
     } = this.props;
     const {
       isFocused,
@@ -598,6 +608,7 @@ const map = state => ({
   currentUser: state.users.currentUser,
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
+  quotedMessage: state.message.quotedMessage,
 });
 export default compose(
   sendMessage,

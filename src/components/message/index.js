@@ -7,6 +7,7 @@ import Reaction from '../reaction';
 import { Body, Actions } from './view';
 import { Wrapper } from './style';
 import { openModal } from '../../actions/modals';
+import { replyToMessage } from '../../actions/message';
 
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
@@ -58,6 +59,10 @@ class Message extends Component<Props> {
     );
   };
 
+  replyToMessage = () => {
+    return this.props.dispatch(replyToMessage(this.props.message.id));
+  };
+
   render() {
     const {
       canModerate,
@@ -91,6 +96,7 @@ class Message extends Component<Props> {
             currentUser={currentUser}
             canModerate={canModerate}
             deleteMessage={this.deleteMessage}
+            replyToMessage={this.replyToMessage}
             isOptimisticMessage={pending}
             message={message}
           >
