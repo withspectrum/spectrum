@@ -119,9 +119,9 @@ app.use(cache);
 
 // rate limiter middleware to reduce API calls to server within time frame
 import rateLimiter from 'shared/middlewares/rateLimiter';
-const FIFTY_REQUESTS = 50;
-const TWENTY_SECONDS = 20000;
-app.use(rateLimiter('hyperion', FIFTY_REQUESTS, TWENTY_SECONDS));
+const REQUESTS_ALLOWED = 50;
+const TIMEFRAME = 20000;
+app.use(rateLimiter('hyperion', REQUESTS_ALLOWED, TIMEFRAME));
 
 import renderer from './renderer';
 app.get('*', renderer);

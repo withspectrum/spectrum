@@ -52,9 +52,9 @@ middlewares.use(passport.session());
 
 // rate limiter middleware to reduce API calls to server within time frame
 import rateLimiter from 'shared/middlewares/rateLimiter';
-const THREE_HUNDRED = 300;
-const TEN_SECONDS = 10000;
-middlewares.use(rateLimiter('api', THREE_HUNDRED, TEN_SECONDS));
+const REQUESTS_ALLOWED = 300;
+const TIMEFRAME = 10000;
+middlewares.use(rateLimiter('api', REQUESTS_ALLOWED, TIMEFRAME));
 
 // This needs to come after passport otherwise we'll always redirect logged-in users
 import threadParamRedirect from 'shared/middlewares/thread-param';
