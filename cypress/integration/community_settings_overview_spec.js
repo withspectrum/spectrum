@@ -76,7 +76,7 @@ describe('Community settings overview tab', () => {
     cy.contains(community.website);
   });
 
-  it('should allow managing branded login settings', () => {
+  it.skip('should allow managing branded login settings', () => {
     const brandedLoginString = 'Testing branded login custom message';
 
     // click the enable custom branded login toggle
