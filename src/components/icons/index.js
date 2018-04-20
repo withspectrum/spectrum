@@ -6,11 +6,11 @@ import { Tooltip } from '../globals';
 /* eslint no-eval: 0 */
 
 type Props = {
-  glyph?: string,
+  glyph: string,
   size?: number | string,
   tipText?: string,
   tipLocation?: string,
-  withCount?: number,
+  count?: ?string,
   onClick?: Function,
   onboarding?: string,
 };
@@ -65,7 +65,11 @@ export const SvgWrapper = styled.div`
     `};
 `;
 
-export const Glyph = ({ glyph }: string) => {
+type GlyphProps = {
+  glyph: string,
+};
+
+export const Glyph = ({ glyph }: GlyphProps) => {
   switch (glyph) {
     case 'analytics':
       return (
@@ -624,13 +628,17 @@ export const Glyph = ({ glyph }: string) => {
 };
 
 class Icon extends React.Component<Props> {
+  defaultProps = {
+    size: 32,
+  };
+
   render() {
     const {
       size,
       tipText,
       tipLocation,
       onboarding,
-      withCount,
+      count,
       onClick,
       glyph,
     } = this.props;
@@ -641,7 +649,7 @@ class Icon extends React.Component<Props> {
         tipText={tipText}
         tipLocation={tipLocation}
         onboarding={onboarding}
-        count={withCount}
+        count={count}
         className={'icon'}
         onClick={onClick}
       >
@@ -664,9 +672,5 @@ class Icon extends React.Component<Props> {
     );
   }
 }
-
-Icon.defaultProps = {
-  size: 32,
-};
 
 export default Icon;
