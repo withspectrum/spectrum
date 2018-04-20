@@ -184,17 +184,8 @@ export const DropWrap = styled(FlexCol)`
   }
 
   .flyout {
-    display: none;
     position: absolute;
-    top: 100%;
-    right: 0;
-    transition: ${Transition.hover.off};
-  }
-
-  &:hover .flyout,
-  &.open > .flyout {
-    display: inline-block;
-    transition: ${Transition.hover.on};
+    right: auto;
   }
 `;
 
