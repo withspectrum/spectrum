@@ -114,6 +114,14 @@ export const RequiredSelector = styled(Selector)`
   background-color: ${props => props.theme.bg.default};
 `;
 
+export const TextTags = styled.div`
+  padding: 8px 12px;
+  border: 2px solid ${props => props.theme.bg.border};
+  border-radius: 8px;
+  color: ${props => props.theme.text.default};
+  background-color: ${props => props.theme.bg.default};
+`;
+
 export const OptionalSelector = styled(Selector)`
   color: ${props => props.theme.text.alt};
   margin-left: 16px;
