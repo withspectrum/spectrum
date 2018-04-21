@@ -6,7 +6,7 @@ import LoadingThread from './components/loading';
 /* prettier-ignore */
 const Thread = Loadable({
   loader: () => import('./container'/* webpackChunkName: "Thread" */),
-  loading: ({ isLoading }) => isLoading && <LoadingThread />,
+  loading: ({ isLoading }) => isLoading && <LoadingThread threadViewContext="inbox"  />,
 });
 
 export default Thread;
