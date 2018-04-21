@@ -194,6 +194,8 @@ class ComposerWithData extends Component<Props, State> {
     this.setState({
       availableCommunities: communities,
       availableChannels: channels,
+      activeCommunity: '',
+      activeChannel: '',
     });
   };
 
@@ -364,11 +366,7 @@ class ComposerWithData extends Component<Props, State> {
     const isActiveCommunity =
       newActiveCommunityData &&
       this.props.activeCommunity === newActiveCommunityData.slug;
-    const newActiveChannel = getDefaultActiveChannel(
-      activeCommunityChannels,
-      isActiveCommunity ? this.props.activeChannel : ''
-    );
-
+    const newActiveChannel = '';
     this.setState({
       activeCommunity: newActiveCommunity,
       activeChannel: newActiveChannel && newActiveChannel.id,
@@ -600,26 +598,29 @@ class ComposerWithData extends Component<Props, State> {
       !networkOnline ||
       (websocketConnection !== 'connected' &&
         websocketConnection !== 'reconnected');
-    console.log('is : ' + activeChannel);
     return (
       <Container>
         <Titlebar provideBack title={'New conversation'} noComposer />
         <Dropdowns>
           <span>To:</span>
-          <TextTags>
-            {availableCommunities.length !== 0 && activeCommunity !== ''
-              ? availableCommunities.filter(
+          {activeCommunity.length > 0 && (
+            <TextTags>
+              {
+                availableCommunities.filter(
                   community => community.id === activeCommunity
                 )[0].name
-              : null}
-          </TextTags>
-          <TextTags>
-            {availableChannels.length !== 0 && activeChannel !== ''
-              ? availableChannels.filter(
+              }
+            </TextTags>
+          )}
+          {activeChannel.length > 0 && (
+            <TextTags>
+              {
+                availableChannels.filter(
                   channel => channel.id === activeChannel
                 )[0].name
-              : null}
-          </TextTags>
+              }
+            </TextTags>
+          )}
         </Dropdowns>
         <ThreadInputs>
           <Textarea
@@ -667,6 +668,9 @@ class ComposerWithData extends Component<Props, State> {
                 onChange={this.setActiveCommunity}
                 value={activeCommunity}
               >
+                <option key={-1} value="">
+                  Communities
+                </option>
                 {availableCommunities.map(community => {
                   return (
                     <option key={community.id} value={community.id}>
@@ -684,8 +688,11 @@ class ComposerWithData extends Component<Props, State> {
                 onChange={this.setActiveChannel}
                 value={activeChannel}
               >
+                <option key={-1} value="">
+                  Channels
+                </option>
                 {availableChannels
-                  //.filter(channel => channel.community.id === activeCommunity)
+                  .filter(channel => channel.community.id === activeCommunity)
                   .map(channel => {
                     return (
                       <option key={channel.id} value={channel.id}>
