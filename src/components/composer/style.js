@@ -86,6 +86,7 @@ export const RequiredSelector = styled(Selector)`
 
 export const TextTags = styled.div`
   padding: 8px 12px;
+  margin: 0.2%;
   border: 2px solid ${props => props.theme.bg.border};
   border-radius: 8px;
   color: ${props => props.theme.text.default};

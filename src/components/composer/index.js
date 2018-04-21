@@ -642,6 +642,7 @@ class ComposerWithData extends Component<Props, State> {
               >
                 <option key={-1} value="">
                   Select community
+                  Communities
                 </option>
                 {availableCommunities.map(community => {
                   return (
@@ -662,6 +663,7 @@ class ComposerWithData extends Component<Props, State> {
               >
                 <option key={-1} value="">
                   Select channel
+                  Channels
                 </option>
                 {availableChannels
                   .filter(channel => channel.community.id === activeCommunity)
