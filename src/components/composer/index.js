@@ -37,6 +37,7 @@ import {
   Dropdowns,
   RequiredSelector,
   DisabledWarning,
+  TextTags,
 } from './style';
 import {
   sortCommunities,
@@ -193,8 +194,6 @@ class ComposerWithData extends Component<Props, State> {
     this.setState({
       availableCommunities: communities,
       availableChannels: channels,
-      activeCommunity: community ? community.id : null,
-      activeChannel: activeChannel ? activeChannel.id : null,
     });
   };
 
@@ -386,7 +385,11 @@ class ComposerWithData extends Component<Props, State> {
 
   publishThread = () => {
     // if no title and no channel is set, don't allow a thread to be published
-    if (!this.state.title || !this.state.activeChannel) {
+    if (
+      !this.state.title ||
+      !this.state.activeChannel ||
+      !this.state.activeCommunity
+    ) {
       return;
     }
 
@@ -597,48 +600,26 @@ class ComposerWithData extends Component<Props, State> {
       !networkOnline ||
       (websocketConnection !== 'connected' &&
         websocketConnection !== 'reconnected');
-
+    console.log('is : ' + activeChannel);
     return (
       <Container>
         <Titlebar provideBack title={'New conversation'} noComposer />
         <Dropdowns>
           <span>To:</span>
-          {!dataExists ? (
-            <LoadingSelect />
-          ) : (
-            <RequiredSelector
-              data-cy="composer-community-selector"
-              onChange={this.setActiveCommunity}
-              value={activeCommunity}
-            >
-              {availableCommunities.map(community => {
-                return (
-                  <option key={community.id} value={community.id}>
-                    {community.name}
-                  </option>
-                );
-              })}
-            </RequiredSelector>
-          )}
-          {!dataExists ? (
-            <LoadingSelect />
-          ) : (
-            <RequiredSelector
-              data-cy="composer-channel-selector"
-              onChange={this.setActiveChannel}
-              value={activeChannel}
-            >
-              {availableChannels
-                .filter(channel => channel.community.id === activeCommunity)
-                .map(channel => {
-                  return (
-                    <option key={channel.id} value={channel.id}>
-                      {channel.name}
-                    </option>
-                  );
-                })}
-            </RequiredSelector>
-          )}
+          <TextTags>
+            {availableCommunities.length !== 0 && activeCommunity !== ''
+              ? availableCommunities.filter(
+                  community => community.id === activeCommunity
+                )[0].name
+              : null}
+          </TextTags>
+          <TextTags>
+            {availableChannels.length !== 0 && activeChannel !== ''
+              ? availableChannels.filter(
+                  channel => channel.id === activeChannel
+                )[0].name
+              : null}
+          </TextTags>
         </Dropdowns>
         <ThreadInputs>
           <Textarea
@@ -678,6 +659,42 @@ class ComposerWithData extends Component<Props, State> {
           )}
 
           <FlexRow>
+            {!dataExists ? (
+              <LoadingSelect />
+            ) : (
+              <RequiredSelector
+                data-cy="composer-community-selector"
+                onChange={this.setActiveCommunity}
+                value={activeCommunity}
+              >
+                {availableCommunities.map(community => {
+                  return (
+                    <option key={community.id} value={community.id}>
+                      {community.name}
+                    </option>
+                  );
+                })}
+              </RequiredSelector>
+            )}
+            {!dataExists ? (
+              <LoadingSelect />
+            ) : (
+              <RequiredSelector
+                data-cy="composer-channel-selector"
+                onChange={this.setActiveChannel}
+                value={activeChannel}
+              >
+                {availableChannels
+                  //.filter(channel => channel.community.id === activeCommunity)
+                  .map(channel => {
+                    return (
+                      <option key={channel.id} value={channel.id}>
+                        {channel.name}
+                      </option>
+                    );
+                  })}
+              </RequiredSelector>
+            )}
             <TextButton hoverColor="warn.alt" onClick={this.onCancelClick}>
               Cancel
             </TextButton>
@@ -688,6 +705,8 @@ class ComposerWithData extends Component<Props, State> {
               disabled={
                 !title ||
                 title.trim().length === 0 ||
+                activeCommunity.length === 0 ||
+                activeChannel.length === 0 ||
                 isPublishing ||
                 networkDisabled
               }

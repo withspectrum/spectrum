@@ -741,8 +741,6 @@ class ThreadComposerWithData extends React.Component<Props, State> {
                         })}
                     </select>
                   </Dropdowns>
-                </FlexRow>
-                <FlexRow>
                   <TextButton
                     hoverColor="warn.alt"
                     onClick={this.closeComposer}
