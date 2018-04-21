@@ -228,18 +228,6 @@ No matter what you're trying to do though, you'll want to have the API running, 
 yarn run dev:api
 ```
 
-##### Using file system storage for image uploads
-
-By default images are uploaded to an AWS S3 bucket which requires an AWS key and secret. For contributors without AWS credentials, images can be uploaded to your file system by setting the `FILE_STORAGE` environment variable to `local`.
-
-```
-FILE_STORAGE=local yarn run dev:api
-```
-
-File storage options:
-- local
-- s3
-
 #### Develop the web UI
 
 To develop the frontend and web UI run
