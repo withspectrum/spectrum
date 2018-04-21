@@ -30,7 +30,7 @@ app.set('trust proxy', true);
 app.use(toobusy);
 
 // Security middleware.
-addSecurityMiddleware(app);
+addSecurityMiddleware(app, { enableNonce: false, enableCSP: false });
 
 // Send all responses as gzip
 app.use(compression());

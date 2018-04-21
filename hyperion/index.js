@@ -22,7 +22,7 @@ app.set('trust proxy', true);
 app.use(toobusy);
 
 // Security middleware.
-addSecurityMiddleware(app);
+addSecurityMiddleware(app, { enableNonce: true, enableCSP: true });
 
 if (process.env.NODE_ENV === 'development') {
   const logging = require('shared/middlewares/logging');
