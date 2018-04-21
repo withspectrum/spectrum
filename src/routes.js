@@ -28,11 +28,7 @@ import Navbar from './views/navbar';
 import Status from './views/status';
 import Login from './views/login';
 
-/* prettier-ignore */
-const DirectMessages = Loadable({
-  loader: () => import('./views/directMessages'/* webpackChunkName: "DirectMessages" */),
-  loading: ({ isLoading }) => isLoading && <LoadingDMs />,
-});
+import DirectMessages from './views/directMessages';
 
 /* prettier-ignore */
 const Explore = Loadable({
