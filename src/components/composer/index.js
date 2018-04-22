@@ -340,7 +340,7 @@ class ComposerWithData extends Component<Props, State> {
   };
 
   handleTitleBodyChange = titleOrBody => {
-    if ((titleOrBody = 'body')) {
+    if (titleOrBody === 'body') {
       localStorage.setItem(
         LS_BODY_KEY,
         JSON.stringify(toJSON(this.state.body))

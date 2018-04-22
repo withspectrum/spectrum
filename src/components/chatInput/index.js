@@ -91,7 +91,7 @@ if (localStorage) {
   }
 
   try {
-    const expireTimeDM = localStorage.getItem(LS_KEY_EXPIRE);
+    const expireTimeDM = localStorage.getItem(LS_DM_KEY_EXPIRE);
 
     /////if current time is greater than valid till of text then please expire text back to ''
     if (currTime > expireTimeDM) {
