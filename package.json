@@ -239,7 +239,7 @@
     "jest": "cross-env NODE_PATH=./ jest",
     "test": "npm run jest -- --runInBand --watch",
     "test:ci": "npm run jest -- --forceExit --outputFile test-results.json --json",
-    "test:e2e": "cypress run",
+    "test:e2e": "DEBUG=cypress:* cypress run",
     "start:api:test": "TEST_DB=true FORCE_DEV=true DEBUG=api*,shared* forever build-api/main.js",
     "start:test": "DISABLE_CACHE=true TEST_DB=true FORCE_DEV=true DEBUG=hyperion*,shared* forever build-hyperion/main.js",
     "cypress:open": "cypress open",
