@@ -195,7 +195,7 @@ class ChatInput extends React.Component<Props, State> {
     const { onChange, threadType } = this.props;
 
     this.toggleMarkdownHint(state);
-    persistContent(state), threadType;
+    persistContent(state, threadType);
     onChange(state, ...rest);
   };
 
