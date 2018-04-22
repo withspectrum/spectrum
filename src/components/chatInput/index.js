@@ -141,13 +141,9 @@ class ChatInput extends React.Component<Props, State> {
     photoSizeError: '',
     code: false,
     isSendingMediaMessage: false,
-<<<<<<< HEAD
     mediaPreview: '',
     mediaPreviewFile: null,
     markdownHint: false,
-=======
-    text: '',
->>>>>>> seperated DM and other chats
   };
 
   editor: any;
@@ -196,18 +192,12 @@ class ChatInput extends React.Component<Props, State> {
   };
 
   onChange = (state, ...rest) => {
-<<<<<<< HEAD
-    const { onChange } = this.props;
-
-    this.toggleMarkdownHint(state);
-    persistContent(state);
-    onChange(state, ...rest);
-  };
-=======
     const { onChange, threadType } = this.props;
 
-    persistContent(state, threadType);
->>>>>>> seperated DM and other chats
+    this.toggleMarkdownHint(state);
+    persistContent(state), threadType;
+    onChange(state, ...rest);
+  };
 
   toggleMarkdownHint = state => {
     // eslint-disable-next-line
@@ -230,30 +220,6 @@ class ChatInput extends React.Component<Props, State> {
     }, 0);
   };
 
-<<<<<<< HEAD
-=======
-  toggleCodeMessage = (keepCurrentText?: boolean = true) => {
-    const { onChange, state } = this.props;
-
-    const { code } = this.state;
-    this.setState(
-      {
-        code: !code,
-      },
-      () => {
-        onChange(
-          changeCurrentBlockType(
-            state,
-            code ? 'unstyled' : 'code-block',
-            keepCurrentText ? toPlainText(state) : ''
-          )
-        );
-        setTimeout(() => this.triggerFocus());
-      }
-    );
-  };
-
->>>>>>> seperated DM and other chats
   submit = e => {
     if (e) e.preventDefault();
 
@@ -316,16 +282,7 @@ class ChatInput extends React.Component<Props, State> {
     }
 
     // If the input is empty don't do anything
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (!state.getCurrentContent().hasText()) return 'handled';
-
-=======
-    if (toPlainText(state(threadType)).trim() === '') return 'handled';
->>>>>>> seperated DM and other chats
-=======
-    if (toPlainText(state).trim() === '') return 'handled';
->>>>>>> seperated DM and other chats- fixed code
     // do one last persist before sending
     forcePersist(state, threadType);
 
@@ -351,17 +308,9 @@ class ChatInput extends React.Component<Props, State> {
         messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
         content: {
-<<<<<<< HEAD
-<<<<<<< HEAD
           body: !isAndroid()
             ? JSON.stringify(toJSON(state))
             : toPlainText(state),
-=======
-          body: JSON.stringify(toJSON(state(threadType))),
->>>>>>> seperated DM and other chats
-=======
-          body: JSON.stringify(toJSON(state)),
->>>>>>> seperated DM and other chats- fixed code
         },
       })
         .then(() => {
@@ -378,17 +327,9 @@ class ChatInput extends React.Component<Props, State> {
         messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
         content: {
-<<<<<<< HEAD
-<<<<<<< HEAD
           body: !isAndroid()
             ? JSON.stringify(toJSON(state))
             : toPlainText(state),
-=======
-          body: JSON.stringify(toJSON(state(threadType))),
->>>>>>> seperated DM and other chats
-=======
-          body: JSON.stringify(toJSON(state)),
->>>>>>> seperated DM and other chats- fixed code
         },
       })
         .then(() => {
