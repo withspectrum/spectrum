@@ -145,8 +145,8 @@ class ComposerWithData extends Component<Props, State> {
       return this.setState({
         availableCommunities: [],
         availableChannels: [],
-        activeCommunity: null,
-        activeChannel: null,
+        activeCommunity: '',
+        activeChannel: '',
       });
     }
 
