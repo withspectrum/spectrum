@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
 
 export const Container = styled(FlexCol)`
@@ -84,13 +84,25 @@ export const RequiredSelector = styled(Selector)`
   background-color: ${props => props.theme.bg.default};
 `;
 
+const pulse = keyframes`
+  25% {
+		transform: scale(1.1);
+  }
+	
+	100% {
+		transform: scale(1);
+	}
+`;
+
 export const TextTags = styled.div`
   padding: 8px 12px;
   margin: 0.2%;
   border: 2px solid ${props => props.theme.bg.border};
   border-radius: 8px;
-  color: ${props => props.theme.text.default};
-  background-color: ${props => props.theme.bg.default};
+  color: ${props => props.theme.text.reverse};
+  background-color: ${props => props.theme.success.alt};
+  animation: ${pulse} 1.5s ease-in;
+  transform: scale(0.9) 0.5s ease-out;
 `;
 
 export const OptionalSelector = styled(Selector)`
