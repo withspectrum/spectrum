@@ -1,6 +1,6 @@
 {
   "name": "Spectrum",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -106,9 +106,11 @@
     "graphql-subscriptions": "0.5.6",
     "graphql-tag": "^2.6.1",
     "graphql-tools": "1.2.3",
+    "helmet": "^3.12.0",
     "highlight.js": "^9.10.0",
     "history": "^4.6.1",
     "hoist-non-react-statics": "^2.3.1",
+    "hpp": "^0.2.2",
     "imgix-core-js": "^1.0.6",
     "ioredis": "3.1.4",
     "isomorphic-fetch": "^2.2.1",
@@ -199,7 +201,7 @@
     "start:pluto": "cross-env NODE_ENV=production node build-pluto/main.js",
     "start:api": "cross-env NODE_ENV=production node build-api/main.js",
     "dev:web": "cross-env NODE_PATH=./ react-app-rewired start",
-    "dev:api": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,api*,shared:middlewares*,-api:resolvers cross-env DIR=api backpack",
+    "dev:api": "cross-env FILE_STORAGE=local cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,api*,shared:middlewares*,-api:resolvers cross-env DIR=api backpack",
     "dev:athena": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,athena*,shared:middlewares*,-athena:resolvers cross-env DIR=athena backpack",
     "dev:hermes": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,hermes*,shared:middlewares*,-hermes:resolvers cross-env DIR=hermes backpack",
     "dev:chronos": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,chronos*,shared:middlewares*,-chronos:resolvers cross-env DIR=chronos backpack",
@@ -255,7 +257,7 @@
   },
   "lint-staged": {
     "*.js": [
-      "prettier --write --single-quote --trailing-comma es5",
+      "prettier --write",
       "eslint --fix",
       "git add"
     ]

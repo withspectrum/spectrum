@@ -72,7 +72,7 @@ class ChannelList extends React.Component<Props> {
                   })
                 )
               }
-              dataCy="create-channel-button"
+              data-cy="create-channel-button"
             >
               Create Channel
             </Button>

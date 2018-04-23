@@ -14,9 +14,13 @@ const ToastsPure = ({ toasts }): React$Element<any> => {
         const { kind, timeout, message, id } = toast;
         switch (kind) {
           case 'error': {
+            let cleanedMessage = message;
+            if (message.indexOf('GraphQL error: ') >= 0) {
+              cleanedMessage = message.replace('GraphQL error: ', '');
+            }
             return (
               <ErrorToast key={id} timeout={timeout}>
-                {message}
+                {cleanedMessage}
               </ErrorToast>
             );
           }

@@ -16,6 +16,8 @@ import type { ThreadConnectionType } from '../../../shared/graphql/fragments/com
   See 'gql/community/communityThreads.js' for an example of the prop mapping in action
 */
 
+import { CenteredView } from './style';
+
 type State = {
   subscription: ?Function,
 };
@@ -109,7 +111,7 @@ class ThreadFeed extends React.Component<Props, State> {
 
     if (threadConnection && threadConnection.edges.length > 0) {
       return (
-        <View data-cy="thread-feed">
+        <View data-cy="thread-feed" style={{ flex: 1 }}>
           <InfiniteList
             data={threadConnection.edges}
             renderItem={({ item }) => (
@@ -125,24 +127,24 @@ class ThreadFeed extends React.Component<Props, State> {
 
     if (isLoading) {
       return (
-        <View>
+        <CenteredView>
           <Text type="body">Loading...</Text>
-        </View>
+        </CenteredView>
       );
     }
 
     if (hasError) {
       return (
-        <View>
+        <CenteredView>
           <Text type="body">Error!</Text>
-        </View>
+        </CenteredView>
       );
     }
 
     return (
-      <View>
+      <CenteredView>
         <Text type="body">Nothing here yet!</Text>
-      </View>
+      </CenteredView>
     );
   }
 }

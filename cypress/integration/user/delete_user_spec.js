@@ -1,7 +1,7 @@
 import data from '../../../shared/testing/data';
 const user = data.users[0];
 
-describe('can view delete controls in settings', () => {
+describe.skip('can view delete controls in settings', () => {
   beforeEach(() => {
     cy.auth(user.id);
     cy.visit(`/users/${user.username}/settings`);

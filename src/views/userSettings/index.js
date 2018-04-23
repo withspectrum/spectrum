@@ -110,7 +110,7 @@ class UserSettings extends React.Component<Props> {
       ];
 
       const subheading = {
-        to: `/users/${user.name}`,
+        to: `/users/${user.username}`,
         label: `Return to profile`,
       };
 
