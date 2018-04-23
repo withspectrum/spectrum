@@ -1,6 +1,11 @@
 // @flow
 import * as React from 'react';
-import { parseEvent, parseNotificationDate, parseContext } from '../utils';
+import {
+  parseActors,
+  parseEvent,
+  parseNotificationDate,
+  parseContext,
+} from '../utils';
 import { ActorsRow } from './actorsRow';
 import { NotificationCard, TextContent, JoinContext, Content } from '../style';
 import Icon from '../../../components/icons';
