@@ -57,27 +57,37 @@ export const Body = (props: {
         <WrapperComponent me={me}>
           {message.parent &&
             showParent && (
-              <QuoteWrapper>
-                <Byline>
-                  <Icon glyph="reply" size={16} />
-                  <Name>{message.parent.author.user.name}</Name>
-                  <Username>@{message.parent.author.user.username}</Username>
-                </Byline>
-                <Body
-                  // $FlowIssue
-                  message={message.parent}
-                  showParent={false}
-                  me={false}
-                  openGallery={openGallery}
-                  bubble={false}
-                />
-              </QuoteWrapper>
+              // $FlowIssue
+              <QuotedMessage message={message.parent} />
             )}
           {redraft(JSON.parse(message.content.body), messageRenderer)}
         </WrapperComponent>
       );
     }
   }
+};
+
+export const QuotedMessage = (props: {
+  message: MessageInfoType,
+  openGallery?: Function,
+}) => {
+  const { message, openGallery } = props;
+  return (
+    <QuoteWrapper>
+      <Byline>
+        <Icon glyph="reply" size={16} />
+        <Name>{message.author.user.name}</Name>
+        <Username>@{message.author.user.username}</Username>
+      </Byline>
+      <Body
+        message={message}
+        showParent={false}
+        me={false}
+        openGallery={openGallery ? openGallery : () => {}}
+        bubble={false}
+      />
+    </QuoteWrapper>
+  );
 };
 
 type ActionProps = {

@@ -32,6 +32,7 @@ type Props = {
   editorRef?: any => void,
   networkDisabled: boolean,
   mediaPreview?: string,
+  children?: React$Node,
   onRemoveMedia: Object => void,
 };
 
@@ -88,6 +89,7 @@ class Input extends React.Component<Props, State> {
       networkDisabled,
       mediaPreview,
       onRemoveMedia,
+      children,
       ...rest
     } = this.props;
     const { plugins } = this.state;
@@ -100,6 +102,7 @@ class Input extends React.Component<Props, State> {
             <button onClick={onRemoveMedia} />
           </MediaPreview>
         )}
+        {children}
         <DraftEditor
           editorState={editorState}
           onChange={onChange}

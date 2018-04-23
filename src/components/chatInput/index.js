@@ -30,7 +30,15 @@ import {
 import Input from './input';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
 import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
+import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
+import { QuotedMessage as QuotedMessageComponent } from '../message/view';
+
+const QuotedMessage = getMessageById(props => {
+  if (props.data && props.data.message)
+    return <QuotedMessageComponent message={props.data.message} />;
+  return null;
+});
 
 type State = {
   isFocused: boolean,
@@ -585,7 +593,9 @@ class ChatInput extends React.Component<Props, State> {
               editorKey="chat-input"
               decorators={[mentionsDecorator, linksDecorator]}
               networkDisabled={networkDisabled}
-            />
+            >
+              {quotedMessage && <QuotedMessage id={quotedMessage} />}
+            </Input>
             <SendButton
               data-cy="chat-input-send-button"
               glyph="send-fill"
