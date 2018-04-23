@@ -12,7 +12,7 @@ import { AddedModeratorNotificationJobData } from 'shared/bull/types';
 
 export default async (job: AddedModeratorNotificationJobData) => {
   const { moderatorId, communityId, userId } = job.data;
-  debug(`user request to join channel ${communityId} approved`);
+  debug(`added user to community ${communityId}`);
 
   const [actor, context, entity] = await Promise.all([
     fetchPayload('USER', userId),
@@ -48,16 +48,8 @@ export default async (job: AddedModeratorNotificationJobData) => {
 
   // for each owner,send an email
   const community = await getCommunityById(communityId);
-  // const usersEmailPromises = filteredRecipients.map(recipient =>
-  //   sendAddedModeratorNotificationQueue.add({
-  //     // $FlowIssue
-  //     recipient,
-  //     community,
-  //   })
-  // );
 
   return await Promise.all([
-    // ...usersEmailPromises, // handle emails separately
     ...usersNotificationPromises, // update or store usersNotifications in-app
   ]).catch(err => {
     debug('❌ Error in job:\n');

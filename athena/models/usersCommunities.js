@@ -23,6 +23,17 @@ export const getOwnersInCommunity = (
     .then(users => users.map(user => user.userId));
 };
 
+export const getModeratorsInCommunity = (
+  communityId: string
+): Promise<Array<string>> => {
+  return db
+    .table('usersCommunities')
+    .getAll(communityId, { index: 'communityId' })
+    .filter({ isModerator: true })
+    .run()
+    .then(users => users.map(user => user.userId));
+};
+
 export const getUserPermissionsInCommunity = (
   communityId: string,
   userId: string

@@ -190,6 +190,11 @@ yarn run db:seed
 # ⚠️ To empty the database (e.g. if there's faulty data) run yarn run db:drop
 ```
 
+There's a shortcut for dropping, migrating and seeding the database too:
+```sh
+yarn run db:reset
+```
+
 #### Getting the secrets
 
 While the app will run without any secrets set up, you won't be able to sign in locally. To get that set up, copy the provided example secrets file to the real location:

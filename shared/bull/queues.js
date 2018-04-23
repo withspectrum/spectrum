@@ -64,6 +64,7 @@ import {
   COMMUNITY_INVOICE_PAID_NOTIFICATION,
   REACTION_NOTIFICATION,
   PRIVATE_CHANNEL_REQUEST_SENT,
+  PRIVATE_CHANNEL_REQUEST_APPROVED,
   COMMUNITY_INVITE_NOTIFICATION,
   CHANNEL_NOTIFICATION,
   DIRECT_MESSAGE_NOTIFICATION,
@@ -85,6 +86,7 @@ exports.QUEUE_NAMES = {
   sendCommunityInvoicePaidNotificationQueue: COMMUNITY_INVOICE_PAID_NOTIFICATION,
   sendReactionNotificationQueue: REACTION_NOTIFICATION,
   sendPrivateChannelRequestQueue: PRIVATE_CHANNEL_REQUEST_SENT,
+  sendPrivateChannelRequestApprovedQueue: PRIVATE_CHANNEL_REQUEST_APPROVED,
   sendPrivateChannelInviteNotificationQueue:
     'private channel invite notification',
   sendCommunityInviteNotificationQueue: COMMUNITY_INVITE_NOTIFICATION,

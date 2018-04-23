@@ -4,8 +4,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
-import InfiniteList from 'react-infinite-scroller-with-scroll-element';
-import { withInfiniteScroll } from '../../components/infiniteScroll';
+import InfiniteList from 'src/components/infiniteScroll';
 import { parseNotification, getDistinctNotifications } from './utils';
 import { NewMessageNotification } from './components/newMessageNotification';
 import { NewReactionNotification } from './components/newReactionNotification';
@@ -38,12 +37,14 @@ import { UpsellSignIn, UpsellNullNotifications } from '../../components/upsell';
 import ViewError from '../../components/viewError';
 import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
+import viewNetworkHandler from '../../components/viewNetworkHandler';
 
 type Props = {
   markAllNotificationsSeen?: Function,
   subscribeToWebPush: Function,
   dispatch: Function,
   currentUser: Object,
+  isFetchingMore: boolean,
   data: {
     networkStatus: number,
     fetchMore: Function,
@@ -78,11 +79,12 @@ class NotificationsPure extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    const scrollElement = document.getElementById('scroller-for-thread-feed');
     this.markAllNotificationsSeen();
     this.setState({
       // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
       // the AppViewWrapper which is the scrolling part of the site.
-      scrollElement: document.getElementById('scroller-for-thread-feed'),
+      scrollElement,
     });
 
     WebPushManager.getPermissionState()
@@ -221,12 +223,14 @@ class NotificationsPure extends React.Component<Props, State> {
             <InfiniteList
               pageStart={0}
               loadMore={data.fetchMore}
+              isLoadingMore={this.props.isFetchingMore}
               hasMore={data.hasNextPage}
               loader={<LoadingThread />}
               useWindow={false}
               initialLoad={false}
               scrollElement={scrollElement}
               threshold={750}
+              className={'scroller-for-notifications'}
             >
               {notifications.map(notification => {
                 switch (notification.event) {
@@ -353,5 +357,5 @@ export default compose(
   markNotificationsSeenMutation,
   // $FlowIssue
   connect(mapStateToProps),
-  withInfiniteScroll
+  viewNetworkHandler
 )(NotificationsPure);

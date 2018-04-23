@@ -59,7 +59,9 @@ export default async (
   // if a user owns the community or owns the channel, they can make this change
   if (
     currentUserChannelPermissions.isOwner ||
-    currentUserCommunityPermissions.isOwner
+    currentUserCommunityPermissions.isOwner ||
+    currentUserChannelPermissions.isModerator ||
+    currentUserCommunityPermissions.isModerator
   ) {
     return unblockMemberInChannel(input.channelId, input.userId).then(
       () => channelToEvaluate
