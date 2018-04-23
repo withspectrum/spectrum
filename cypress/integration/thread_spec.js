@@ -25,8 +25,11 @@ const privateAuthor = data.users.find(
 
 describe('Thread View', () => {
   describe('Public', () => {
-    it('should render', () => {
+    beforeEach(() => {
       cy.visit(`/thread/${thread.id}`);
+    });
+
+    it('should render', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
       cy.contains(thread.content.title);
       cy.contains(
@@ -44,7 +47,6 @@ describe('Thread View', () => {
     });
 
     it('should prompt logged-out users to log in', () => {
-      cy.visit(`/thread/${thread.id}`);
       const newMessage = 'A new message!';
       cy.get('[data-cy="thread-view"]').should('be.visible');
       cy.get('[contenteditable="true"]').type(newMessage);
@@ -53,28 +55,45 @@ describe('Thread View', () => {
       cy.get('[data-cy="chat-input-send-button"]').click();
       cy.contains('Sign in');
     });
+  });
 
-    describe('authenticated', () => {
-      it('should allow logged-in users to send public messages', () => {
-        cy.auth(author.id);
-        cy.visit(`/thread/${thread.id}`);
-        const newMessage = 'A new message!';
-        cy.get('[data-cy="thread-view"]').should('be.visible');
-        cy.get('[contenteditable="true"]').type(newMessage);
-        // Wait for the messages to be loaded before sending new message
-        cy.get('[data-cy="message-group"]').should('be.visible');
-        cy.get('[data-cy="chat-input-send-button"]').click();
-        // Clear the chat input and make sure the message was sent by matching the text
-        cy.get('[contenteditable="true"]').type('');
-        cy.contains(newMessage);
-      });
+  describe('Public (authenticated)', () => {
+    beforeEach(() => {
+      cy.auth(author.id);
+      cy.visit(`/thread/${thread.id}`);
+    });
+
+    it('should allow logged-in users to send public messages', () => {
+      const newMessage = 'A new message!';
+      cy.get('[data-cy="thread-view"]').should('be.visible');
+      cy.get('[contenteditable="true"]').type(newMessage);
+      // Wait for the messages to be loaded before sending new message
+      cy.get('[data-cy="message-group"]').should('be.visible');
+      cy.get('[data-cy="chat-input-send-button"]').click();
+      // Clear the chat input and make sure the message was sent by matching the text
+      cy.get('[contenteditable="true"]').type('');
+      cy.contains(newMessage);
     });
   });
 
   describe('Private', () => {
-    it('should allow logged-in users to send private messages if they have permission', () => {
+    beforeEach(() => {
+      cy.auth(QUIET_USER_ID);
+      cy.visit(`/thread/${privateThread.id}`);
+    });
+
+    it("should not allow logged-in users to send private messages if they don't have permission", () => {
+      cy.get('[data-cy="null-thread-view"]').should('be.visible');
+    });
+  });
+
+  describe('Private (with permissions)', () => {
+    beforeEach(() => {
       cy.auth(privateAuthor.id);
       cy.visit(`/thread/${privateThread.id}`);
+    });
+
+    it('should allow logged-in users to send private messages if they have permission', () => {
       const newMessage = 'A new private message!';
       cy.get('[data-cy="thread-view"]').should('be.visible');
       cy.get('[contenteditable="true"]').type(newMessage);
@@ -82,12 +101,6 @@ describe('Thread View', () => {
       // Clear the chat input and make sure the message was sent by matching the text
       cy.get('[contenteditable="true"]').type('');
       cy.contains(newMessage);
-    });
-
-    it("should not allow logged-in users to send private messages if they don't have permission", () => {
-      cy.auth(QUIET_USER_ID);
-      cy.visit(`/thread/${privateThread.id}`);
-      cy.get('[data-cy="null-thread-view"]').should('be.visible');
     });
   });
 });
