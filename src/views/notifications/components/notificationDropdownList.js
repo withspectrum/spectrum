@@ -13,6 +13,7 @@ import { MiniMentionMessageNotification } from './mentionMessageNotification';
 import { MiniMentionThreadNotification } from './mentionThreadNotification';
 import { MiniPrivateChannelRequestSent } from './privateChannelRequestSentNotification';
 import { MiniPrivateChannelRequestApproved } from './privateChannelRequestApprovedNotification';
+import { MiniAddedModerator } from './addedModeratorNotification';
 
 type Props = {
   rawNotifications: Array<Object>,
@@ -157,6 +158,15 @@ export class NotificationDropdownList extends React.Component<Props> {
                   markSingleNotificationAsSeenInState={
                     markSingleNotificationAsSeenInState
                   }
+                />
+              );
+            }
+            case 'ADDED_MODERATOR': {
+              return (
+                <MiniAddedModerator
+                  key={notification.id}
+                  notification={notification}
+                  currentUser={currentUser}
                 />
               );
             }
