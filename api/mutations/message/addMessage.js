@@ -3,7 +3,7 @@ import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { EditorState } from 'draft-js';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { uploadImage } from '../../utils/s3';
+import { uploadImage } from '../../utils/file-storage';
 import { storeMessage, getMessage } from '../../models/message';
 import { setDirectMessageThreadLastActive } from '../../models/directMessageThread';
 import { setUserLastSeenInDirectMessageThread } from '../../models/usersDirectMessageThreads';
