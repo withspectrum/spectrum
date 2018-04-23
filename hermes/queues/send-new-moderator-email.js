@@ -13,8 +13,12 @@ export default (job: Job<SendAddedModeratorEmailJobData>) => {
   const { recipient, community } = job.data;
   debug(`\nsending notification to user: ${recipient.email}`);
 
-  const subject = `You are now a moderator of the ${community.name} community!`;
-  const preheader = ``; //TODO(@littlestudent)
+  const subject = `You have been added as a moderator in the ${
+    community.name
+  } community on Spectrum`;
+  const preheader = `Go to the ${
+    community.name
+  } community to get started with moderation`;
 
   try {
     return sendEmail({
