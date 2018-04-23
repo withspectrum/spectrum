@@ -838,7 +838,7 @@ class NewThread extends React.Component<Props, State> {
                 <NoThreads>
                   <NullState
                     icon="message"
-                    heading={`Create private direct and group messages`}
+                    heading={`Send direct messages`}
                     copy={`Direct messages are private conversations between you and anyone else, including groups. Search for a person above to send your first message.`}
                   />
                 </NoThreads>
