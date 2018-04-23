@@ -5,7 +5,7 @@ const stringify = require('json-stringify-pretty-compact');
 import { deactiveUserEmailNotifications } from './models/usersSettings';
 
 let client;
-if (process.env.POSTMARK_SERVER_KEY) {
+if (process.env.POSTMARK_SERVER_KEY !== 'undefined') {
   client = new postmark.Client(process.env.POSTMARK_SERVER_KEY);
 } else {
   debug(

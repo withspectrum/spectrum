@@ -110,6 +110,16 @@ export type SendPrivateChannelRequestEmailJobData = {
   },
 };
 
+export type SendAddedModeratorEmailJobData = {
+  recipient: {
+    email: string,
+  },
+  community: {
+    name: string,
+    slug: string,
+  },
+};
+
 export type SendNewMessageMentionEmailJobData = {
   recipient: DBUser,
   sender: DBUser,
@@ -199,6 +209,12 @@ export type ThreadNotificationJobData = { thread: DBThread };
 
 export type CommunityNotificationJobData = {
   communityId: string,
+  userId: string,
+};
+
+export type AddedModeratorNotificationJobData = {
+  communityId: string,
+  moderatorId: string,
   userId: string,
 };
 
@@ -360,6 +376,10 @@ export type Queues = {
   sendProInvoicePaidNotificationQueue: BullQueue<InvoiceJobData>,
   sendCommunityInvoicePaidNotificationQueue: BullQueue<InvoiceJobData>,
   sendReactionNotificationQueue: BullQueue<ReactionNotificationJobData>,
+  sendAddedModeratorNotificationQueue: BullQueue<
+    AddedModeratorNotificationJobData
+  >,
+  sendAddedModeratorEmailQueue: BullQueue<SendAddedModeratorEmailJobData>,
   sendPrivateChannelRequestQueue: BullQueue<PrivateChannelRequestJobData>,
   sendPrivateChannelInviteNotificationQueue: BullQueue<
     PrivateChannelInviteNotificationJobData

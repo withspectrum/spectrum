@@ -2,6 +2,11 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { getCommunityById } from '../../models/community';
+import { getUserById } from '../../models/user';
+import {
+  sendAddedModeratorNotificationQueue,
+  sendAddedModeratorEmailQueue,
+} from 'shared/bull/queues';
 import {
   makeMemberModeratorInCommunity,
   checkUserPermissionsInCommunity,
@@ -28,10 +33,12 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
     currentUserPermissions,
     userToEvaluatePermissions,
     community,
+    recipient,
   ] = await Promise.all([
     checkUserPermissionsInCommunity(communityId, currentUser.id),
     checkUserPermissionsInCommunity(communityId, userToEvaluateId),
     getCommunityById(communityId),
+    getUserById(userToEvaluateId),
   ]);
 
   if (!community) {
@@ -87,10 +94,17 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
 
   // all checks pass
   if (currentUserPermission.isOwner || currentUserPermission.isModerator) {
-    return await makeMemberModeratorInCommunity(
-      communityId,
-      userToEvaluateId
-    ).catch(err => new UserError(err));
+    return await makeMemberModeratorInCommunity(communityId, userToEvaluateId)
+      .then(a => {
+        sendAddedModeratorNotificationQueue.add({
+          communityId: communityId,
+          moderatorId: userToEvaluateId,
+          userId: currentUser.id,
+        });
+        sendAddedModeratorEmailQueue.add({ recipient, community });
+        return a;
+      })
+      .catch(err => new UserError(err));
   }
 
   return new UserError(

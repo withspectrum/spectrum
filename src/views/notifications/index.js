@@ -16,6 +16,7 @@ import { MentionMessageNotification } from './components/mentionMessageNotificat
 import { MentionThreadNotification } from './components/mentionThreadNotification';
 import { NewUserInCommunityNotification } from './components/newUserInCommunityNotification';
 import { PrivateChannelRequestApproved } from './components/privateChannelRequestApprovedNotification';
+import { AddedModerator } from './components/addedModeratorNotification';
 import { PrivateChannelRequestSent } from './components/privateChannelRequestSentNotification';
 import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
@@ -313,6 +314,15 @@ class NotificationsPure extends React.Component<Props, State> {
                   case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
                     return (
                       <PrivateChannelRequestApproved
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'ADDED_MODERATOR': {
+                    return (
+                      <AddedModerator
                         key={notification.id}
                         notification={notification}
                         currentUser={currentUser}

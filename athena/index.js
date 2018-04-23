@@ -19,6 +19,7 @@ import processAdminThreadModeration from './queues/moderationEvents/thread';
 import processUserRequestedJoinPrivateChannel from './queues/private-channel-request-sent';
 import processUserRequestPrivateChannelApproved from './queues/private-channel-request-approved';
 import processPushNotifications from './queues/send-push-notifications';
+import addedModeratorNotification from './queues/added-moderator-notification';
 import startNotificationsListener from './listeners/notifications';
 import {
   MESSAGE_NOTIFICATION,
@@ -38,6 +39,7 @@ import {
   PRIVATE_CHANNEL_REQUEST_APPROVED,
   SEND_PUSH_NOTIFICATIONS,
   TRACK_USER_LAST_SEEN,
+  ADDED_MODERATOR_NOTIFICATION,
 } from './queues/constants';
 
 const PORT = process.env.PORT || 3003;
@@ -64,6 +66,7 @@ const server = createWorker({
   [PRIVATE_CHANNEL_REQUEST_SENT]: processUserRequestedJoinPrivateChannel,
   [PRIVATE_CHANNEL_REQUEST_APPROVED]: processUserRequestPrivateChannelApproved,
   [SEND_PUSH_NOTIFICATIONS]: processPushNotifications,
+  [ADDED_MODERATOR_NOTIFICATION]: addedModeratorNotification,
 });
 
 startNotificationsListener();
