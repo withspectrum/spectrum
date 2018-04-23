@@ -1,7 +1,7 @@
 // @flow
 const { db } = require('./db');
 import { parseRange } from './utils';
-import { uploadImage } from '../utils/s3';
+import { uploadImage } from '../utils/file-storage';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';
 import {
   sendNewCommunityWelcomeEmailQueue,

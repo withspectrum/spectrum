@@ -6,12 +6,18 @@ import Raven from 'shared/raven';
 import { getCommunityById } from '../models/community';
 import { storeNotification } from '../models/notification';
 import { storeUsersNotifications } from '../models/usersNotifications';
-import { getOwnersInChannel } from '../models/usersChannels';
+import {
+  getOwnersInChannel,
+  getModeratorsInChannel,
+} from '../models/usersChannels';
+import {
+  getOwnersInCommunity,
+  getModeratorsInCommunity,
+} from '../models/usersCommunities';
 import { getUsers } from '../models/user';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import isEmail from 'validator/lib/isEmail';
 import { sendPrivateChannelRequestEmailQueue } from 'shared/bull/queues';
-import type { DBChannel } from 'shared/types';
 import type { Job, PrivateChannelRequestJobData } from 'shared/bull/types';
 
 export default async (job: Job<PrivateChannelRequestJobData>) => {
@@ -45,12 +51,29 @@ export default async (job: Job<PrivateChannelRequestJobData>) => {
   const updatedNotification = await storeNotification(nextNotificationRecord);
 
   // get the owners of the channel
-  const recipients = await getOwnersInChannel(channel.id);
+  const [
+    ownersInCommunity,
+    moderatorsInCommunity,
+    ownersInChannel,
+    moderatorsInChannel,
+  ] = await Promise.all([
+    getOwnersInCommunity(channel.communityId),
+    getModeratorsInCommunity(channel.communityId),
+    getOwnersInChannel(channel.id),
+    getModeratorsInChannel(channel.id),
+  ]);
+
+  const uniqueRecipientIds = [
+    ...ownersInCommunity,
+    ...moderatorsInCommunity,
+    ...ownersInChannel,
+    ...moderatorsInChannel,
+  ].filter((item, i, ar) => ar.indexOf(item) === i);
 
   // get all the user data for the owners
-  const recipientsWithUserData = await getUsers([...recipients]);
+  const recipientsWithUserData = await getUsers([...uniqueRecipientIds]);
 
-  // only get owners with emails
+  // only get owners + moderators with emails
   const filteredRecipients = recipientsWithUserData.filter(
     owner => owner.email && isEmail(owner.email)
   );

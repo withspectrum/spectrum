@@ -9,10 +9,14 @@ export default async (
 ) => {
   if (!stripeCustomerId || !user) return false;
 
-  const {
-    isOwner,
-    isModerator,
-  } = await loaders.userPermissionsInCommunity.load([user.id, id]);
+  const permissions = await loaders.userPermissionsInCommunity.load([
+    user.id,
+    id,
+  ]);
+
+  if (!permissions) return null;
+
+  const { isOwner, isModerator } = permissions;
 
   if (!isOwner && !isModerator) return null;
   return loaders.stripeCustomers.load(stripeCustomerId).then(results => {

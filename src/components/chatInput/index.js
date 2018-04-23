@@ -21,6 +21,7 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
 import {
   Form,
+  ChatInputContainer,
   ChatInputWrapper,
   SendButton,
   PhotoSizeError,
@@ -113,6 +114,7 @@ class ChatInput extends React.Component<Props, State> {
     if (currState.isSendingMediaMessage !== nextState.isSendingMediaMessage)
       return true;
     if (currState.mediaPreview !== nextState.mediaPreview) return true;
+    if (currState.photoSizeError !== nextState.photoSizeError) return true;
 
     return false;
   }
@@ -530,7 +532,7 @@ class ChatInput extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <ChatInputWrapper focus={isFocused} onClick={this.triggerFocus}>
+        <ChatInputContainer focus={isFocused} onClick={this.triggerFocus}>
           {photoSizeError && (
             <PhotoSizeError>
               <p
@@ -550,39 +552,41 @@ class ChatInput extends React.Component<Props, State> {
               />
             </PhotoSizeError>
           )}
-          {currentUser && (
-            <MediaUploader
-              isSendingMediaMessage={isSendingMediaMessage}
-              currentUser={currentUser}
-              onValidated={this.previewMedia}
-              onError={this.setMediaMessageError}
-              inputFocused={isFocused}
-            />
-          )}
-          <Form focus={isFocused}>
-            <Input
-              mediaPreview={mediaPreview}
-              onRemoveMedia={this.removeMediaPreview}
-              focus={isFocused}
-              placeholder={`Your message here...`}
-              editorState={state}
-              handleReturn={this.handleReturn}
-              onChange={this.onChange}
-              onFocus={this.onFocus}
-              onBlur={this.onBlur}
-              code={false}
-              editorRef={editor => (this.editor = editor)}
-              editorKey="chat-input"
-              decorators={[mentionsDecorator, linksDecorator]}
-              networkDisabled={networkDisabled}
-            />
-            <SendButton
-              data-cy="chat-input-send-button"
-              glyph="send-fill"
-              onClick={this.submit}
-            />
-          </Form>
-        </ChatInputWrapper>
+          <ChatInputWrapper>
+            {currentUser && (
+              <MediaUploader
+                isSendingMediaMessage={isSendingMediaMessage}
+                currentUser={currentUser}
+                onValidated={this.previewMedia}
+                onError={this.setMediaMessageError}
+                inputFocused={isFocused}
+              />
+            )}
+            <Form focus={isFocused}>
+              <Input
+                mediaPreview={mediaPreview}
+                onRemoveMedia={this.removeMediaPreview}
+                focus={isFocused}
+                placeholder={`Your message here...`}
+                editorState={state}
+                handleReturn={this.handleReturn}
+                onChange={this.onChange}
+                onFocus={this.onFocus}
+                onBlur={this.onBlur}
+                code={false}
+                editorRef={editor => (this.editor = editor)}
+                editorKey="chat-input"
+                decorators={[mentionsDecorator, linksDecorator]}
+                networkDisabled={networkDisabled}
+              />
+              <SendButton
+                data-cy="chat-input-send-button"
+                glyph="send-fill"
+                onClick={this.submit}
+              />
+            </Form>
+          </ChatInputWrapper>
+        </ChatInputContainer>
         <MarkdownHint showHint={markdownHint} data-cy="markdownHint">
           <b>**bold**</b>
           <i>*italics*</i>
