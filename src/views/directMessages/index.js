@@ -12,7 +12,6 @@ import NewThread from './containers/newThread';
 import ExistingThread from './containers/existingThread';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import ViewError from '../../components/viewError';
-import { LoadingDM } from '../../components/loading';
 import Titlebar from '../titlebar';
 import { View, MessagesList, ComposeHeader } from './style';
 
@@ -23,6 +22,8 @@ type Props = {
   match: Object,
   currentUser?: Object,
   hasError: boolean,
+  isFetchingMore: boolean,
+  isLoading: boolean,
   fetchMore: Function,
   data: {
     user: GetCurrentUserDMThreadConnectionType,
@@ -57,14 +58,6 @@ class DirectMessages extends React.Component<Props, State> {
     }
   };
 
-  shouldComponentUpdate(nextProps) {
-    const curr = this.props;
-    // fetching more
-    if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
-      return false;
-    return true;
-  }
-
   componentDidMount() {
     this.props.markDirectMessageNotificationsSeen();
     this.subscribe();
@@ -81,7 +74,15 @@ class DirectMessages extends React.Component<Props, State> {
   };
 
   render() {
-    const { match, currentUser, data, hasError, fetchMore } = this.props;
+    const {
+      match,
+      currentUser,
+      data,
+      hasError,
+      fetchMore,
+      isFetchingMore,
+      isLoading,
+    } = this.props;
 
     // Only logged-in users can view DM threads
     if (!currentUser) return null;
@@ -109,7 +110,7 @@ class DirectMessages extends React.Component<Props, State> {
               const val = parseInt(y, 10) - parseInt(x, 10);
               return val;
             })
-        : null;
+        : [];
 
     if (hasError) return <ViewError />;
 
@@ -135,29 +136,15 @@ class DirectMessages extends React.Component<Props, State> {
             </ComposeHeader>
           </Link>
 
-          {dataExists ? (
-            <ThreadsList
-              hasNextPage={hasNextPage}
-              fetchMore={fetchMore}
-              active={activeThread}
-              threads={threads}
-              currentUser={currentUser}
-            />
-          ) : (
-            <div>
-              <LoadingDM />
-              <LoadingDM />
-              <LoadingDM />
-              <LoadingDM />
-              <LoadingDM />
-              <LoadingDM />
-              <LoadingDM />
-              <LoadingDM />
-              <LoadingDM />
-              <LoadingDM />
-              <LoadingDM />
-            </div>
-          )}
+          <ThreadsList
+            hasNextPage={hasNextPage}
+            fetchMore={fetchMore}
+            active={activeThread}
+            threads={threads}
+            currentUser={currentUser}
+            isFetchingMore={isFetchingMore}
+            isLoading={isLoading}
+          />
         </MessagesList>
 
         {dataExists && (

@@ -10,11 +10,23 @@ import {
 } from 'src/components/globals';
 import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
 
-export const ChatInputWrapper = styled(FlexRow)`
-  flex: none;
-  align-items: center;
+export const ChatInputContainer = styled(FlexRow)`
+  display: flex;
+  flex-direction: column;
   z-index: inherit;
   position: relative;
+  width: 100%;
+  margin: 0;
+
+  a {
+    text-decoration: underline;
+  }
+`;
+
+export const ChatInputWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   width: 100%;
   margin: 0;
   padding: 16px 16px 0px;
@@ -28,10 +40,6 @@ export const ChatInputWrapper = styled(FlexRow)`
     position: relative;
     z-index: ${zIndex.mobileInput};
     padding: 8px;
-  }
-
-  a {
-    text-decoration: underline;
   }
 `;
 
@@ -176,6 +184,7 @@ export const PhotoSizeError = styled.div`
   align-items: center;
   align-content: center;
   padding: 8px 16px;
+  width: 100%;
   background: #fff1cc;
   border-top: 1px solid #ffd566;
 

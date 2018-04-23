@@ -31,7 +31,7 @@ class BrandedLoginToggle extends React.Component<Props> {
         );
       })
       .catch(err => {
-        return this.props.dispatch(addToastWithTimeout('error', err));
+        return this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
@@ -44,7 +44,7 @@ class BrandedLoginToggle extends React.Component<Props> {
         );
       })
       .catch(err => {
-        return this.props.dispatch(addToastWithTimeout('error', err));
+        return this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
