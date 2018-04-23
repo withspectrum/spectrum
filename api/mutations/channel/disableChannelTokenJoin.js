@@ -22,12 +22,28 @@ export default async (
     return new UserError('You must be signed in to manage this channel.');
   }
 
-  const [permissions, settings] = await Promise.all([
+  const [channelPermissions, channel, settings] = await Promise.all([
     loaders.userPermissionsInChannel.load([currentUser.id, channelId]),
+    loaders.channel.load(channelId),
     loaders.channelSettings.load(channelId),
   ]);
 
-  if (!permissions.isOwner) {
+  const communityPermissions = await loaders.userPermissionsInCommunity.load([
+    currentUser.id,
+    channel.communityId,
+  ]);
+
+  if (!channelPermissions || !communityPermissions) {
+    return new UserError("You don't have permission to do this.");
+  }
+
+  const canEdit =
+    channelPermissions.isOwner ||
+    channelPermissions.isModerator ||
+    communityPermissions.isOwner ||
+    communityPermissions.isModerator;
+
+  if (!canEdit) {
     return new UserError("You don't have permission to do this.");
   }
 

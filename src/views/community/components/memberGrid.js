@@ -2,7 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import InfiniteList from 'react-infinite-scroller-with-scroll-element';
+import InfiniteList from 'src/components/infiniteScroll';
 import Icon from 'src/components/icons';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { withRouter } from 'react-router';
@@ -14,7 +14,7 @@ import { Loading, LoadingListItem } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { MessageIconContainer, UserListItemContainer } from '../style';
-import GranularUserProfile from '../../../components/granularUserProfile';
+import GranularUserProfile from 'src/components/granularUserProfile';
 
 type Props = {
   data: {
@@ -69,6 +69,7 @@ class CommunityMemberGrid extends React.Component<Props, State> {
         <InfiniteList
           pageStart={0}
           loadMore={this.props.data.fetchMore}
+          isLoadingMore={this.props.isFetchingMore}
           hasMore={hasNextPage}
           loader={
             <UserListItemContainer>
@@ -79,6 +80,7 @@ class CommunityMemberGrid extends React.Component<Props, State> {
           initialLoad={false}
           scrollElement={scrollElement}
           threshold={750}
+          className={'scroller-for-community-members-list'}
         >
           {nodes.map(node => {
             if (!node) return null;

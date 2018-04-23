@@ -7,15 +7,15 @@ import { hexa, FlexCol, zIndex } from '../globals';
 import Link from 'src/components/link';
 
 const containerFadeIn = keyframes`
-	0%{
-  	opacity: 0;
-	}
+  0%{
+    opacity: 0;
+  }
   99% {
     opacity: 0;
   }
-	100%{
-			opacity: 1
-	}
+  100%{
+    opacity: 1
+  }
 `;
 
 export const LoadingScreenContainer = styled.div`
@@ -246,16 +246,16 @@ export const ShimmerSelect = styled.div`
 `;
 
 const placeHolderShimmer = keyframes`
-	0%{
-			transform: translateX(-100%) translateY(0%);
-			background-size: 100%;
-			opacity: 1;
-	}
-	100%{
-			transform: translateX(200%) translateY(0%);
-			background-size: 500%;
-			opacity: 0;
-	}
+  0%{
+    transform: translateX(-100%) translateY(0%);
+    background-size: 100%;
+    opacity: 1;
+  }
+  100%{
+    transform: translateX(200%) translateY(0%);
+    background-size: 500%;
+    opacity: 0;
+  }
 `;
 
 export const ShimmerBase = styled.section`

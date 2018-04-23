@@ -68,10 +68,19 @@ export default class Toolbar extends React.Component<Props, State> {
         return;
       }
       if (!editor || typeof editor.getBoundingClientRect !== 'function') return;
+      const topPosition = top + scrollY;
+      const leftPosition = editor.getBoundingClientRect().left - 48;
+      // If the position hasn't changed, don't re-render
+      if (
+        this.state.position &&
+        topPosition === this.state.position.top &&
+        leftPosition === this.state.position.left
+      )
+        return;
       this.setState({
         position: {
-          top: top + scrollY,
-          left: editor.getBoundingClientRect().left - 48,
+          top: topPosition,
+          left: leftPosition,
         },
       });
     }, 0);

@@ -12,6 +12,7 @@
 - mercury
 - hermes
 - chronos
+- pluto
 - mobile
 
 **Run database migrations (delete if no migration was added)**
