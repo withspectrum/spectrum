@@ -51,11 +51,11 @@ export const generateImageFromImgix = (
     imageHeight: 144,
     imageWidth: 144,
     txtsize: 12,
-    txtpad: 4,
+    txtpad: 12,
     txtalign: 'center,middle',
     txtcolor: 'ffffff',
     txtfont: 'Helvetica,Bold',
-    imageSrc: 'https://spectrum.imgix.net/default_images/cover-violet.png',
+    imageSrc: 'http://spectrum.imgix.net/default_images/twitter-share-card.png',
   }
 ): string =>
   `${imageSrc}?txtfit=max&txtcolor=${txtcolor}&txtpad=${txtpad}&h=${imageHeight}&w=${imageWidth}&txtsize=${txtsize}&txtalign=${txtalign}&txtfont=${txtfont}&txt=${imageText}`;
