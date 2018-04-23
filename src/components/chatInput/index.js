@@ -64,21 +64,75 @@ type Props = {
 };
 
 const LS_KEY = 'last-chat-input-content';
+const LS_KEY_EXPIRE = 'last-chat-input-content-expire';
+const LS_DM_KEY = 'last-chat-input-content-dm';
+const LS_DM_KEY_EXPIRE = 'last-chat-input-content-dm-expire';
+
+const ONE_DAY = () => new Date().getTime() + 60 * 60 * 24 * 1000;
 let storedContent;
+let storedContentDM;
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
+const currTime = new Date().getTime();
 if (localStorage) {
   try {
-    storedContent = toState(JSON.parse(localStorage.getItem(LS_KEY) || ''));
+    const expireTime = localStorage.getItem(LS_KEY_EXPIRE);
+
+    /////if current time is greater than valid till of text then please expire text back to ''
+    if (currTime > expireTime) {
+      localStorage.removeItem(LS_KEY);
+      localStorage.removeItem(LS_KEY_EXPIRE);
+    } else {
+      storedContent = toState(JSON.parse(localStorage.getItem(LS_KEY) || ''));
+    }
   } catch (err) {
     localStorage.removeItem(LS_KEY);
+    localStorage.removeItem(LS_KEY_EXPIRE);
+  }
+
+  try {
+    const expireTimeDM = localStorage.getItem(LS_DM_KEY_EXPIRE);
+
+    /////if current time is greater than valid till of text then please expire text back to ''
+    if (currTime > expireTimeDM) {
+      localStorage.removeItem(LS_DM_KEY);
+      localStorage.removeItem(LS_DM_KEY_EXPIRE);
+    } else {
+      storedContentDM = toState(
+        JSON.parse(localStorage.getItem(LS_DM_KEY) || '')
+      );
+    }
+  } catch (err) {
+    localStorage.removeItem(LS_DM_KEY);
+    localStorage.removeItem(LS_DM_KEY_EXPIRE);
   }
 }
 
-const forcePersist = content =>
-  localStorage && localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
-const persistContent = debounce(content => {
-  localStorage && localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
+const returnText = (type = '') => {
+  if (type === 'directMessageThread') {
+    return storedContentDM;
+  } else {
+    return storedContent;
+  }
+};
+
+const setText = (content, threadType = '') => {
+  if (threadType === 'directMessageThread') {
+    localStorage &&
+      localStorage.setItem(LS_DM_KEY, JSON.stringify(toJSON(content)));
+    localStorage && localStorage.setItem(LS_DM_KEY_EXPIRE, ONE_DAY());
+  } else {
+    localStorage &&
+      localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
+    localStorage && localStorage.setItem(LS_KEY_EXPIRE, ONE_DAY());
+  }
+};
+
+const forcePersist = (content, threadType = '') => {
+  setText(content, threadType);
+};
+const persistContent = debounce((content, threadType = '') => {
+  setText(content, threadType);
 }, 500);
 
 class ChatInput extends React.Component<Props, State> {
@@ -138,10 +192,10 @@ class ChatInput extends React.Component<Props, State> {
   };
 
   onChange = (state, ...rest) => {
-    const { onChange } = this.props;
+    const { onChange, threadType } = this.props;
 
     this.toggleMarkdownHint(state);
-    persistContent(state);
+    persistContent(state, threadType);
     onChange(state, ...rest);
   };
 
@@ -229,9 +283,8 @@ class ChatInput extends React.Component<Props, State> {
 
     // If the input is empty don't do anything
     if (!state.getCurrentContent().hasText()) return 'handled';
-
     // do one last persist before sending
-    forcePersist(state);
+    forcePersist(state, threadType);
 
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
@@ -261,7 +314,8 @@ class ChatInput extends React.Component<Props, State> {
         },
       })
         .then(() => {
-          localStorage.removeItem(LS_KEY);
+          localStorage.removeItem(LS_DM_KEY);
+          localStorage.removeItem(LS_DM_KEY_EXPIRE);
           return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
@@ -289,6 +343,7 @@ class ChatInput extends React.Component<Props, State> {
           }
 
           localStorage.removeItem(LS_KEY);
+          localStorage.removeItem(LS_KEY_EXPIRE);
           return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
@@ -524,7 +579,6 @@ class ChatInput extends React.Component<Props, State> {
       mediaPreview,
       markdownHint,
     } = this.state;
-
     const networkDisabled =
       !networkOnline ||
       (websocketConnection !== 'connected' &&
@@ -608,7 +662,9 @@ export default compose(
   sendDirectMessage,
   // $FlowIssue
   connect(map),
-  withState('state', 'changeState', () => storedContent || fromPlainText('')),
+  withState('state', 'changeState', props => {
+    return returnText(props.threadType) || fromPlainText('');
+  }),
   withHandlers({
     onChange: ({ changeState }) => state => changeState(state),
     clear: ({ changeState }) => () => changeState(fromPlainText('')),
