@@ -598,30 +598,15 @@ class ComposerWithData extends Component<Props, State> {
       !networkOnline ||
       (websocketConnection !== 'connected' &&
         websocketConnection !== 'reconnected');
+    const showSelectedCommunity = activeCommunity
+      ? activeCommunity.length > 0
+      : false;
+    const showSelectedChannel = activeChannel
+      ? activeChannel.length > 0
+      : false;
     return (
       <Container>
         <Titlebar provideBack title={'New conversation'} noComposer />
-        <Dropdowns>
-          <span>To:</span>
-          {activeCommunity.length > 0 && (
-            <TextTags>
-              {
-                availableCommunities.filter(
-                  community => community.id === activeCommunity
-                )[0].name
-              }
-            </TextTags>
-          )}
-          {activeChannel.length > 0 && (
-            <TextTags>
-              {
-                availableChannels.filter(
-                  channel => channel.id === activeChannel
-                )[0].name
-              }
-            </TextTags>
-          )}
-        </Dropdowns>
         <ThreadInputs>
           <Textarea
             data-cy="composer-title-input"
