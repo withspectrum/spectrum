@@ -16,6 +16,11 @@ const IS_PROD = process.env.NODE_ENV === 'production';
 // In production the API is at the same URL, in development it's at a different port
 const API_URI = IS_PROD ? '/api' : 'http://localhost:3001/api';
 
+// @see: https://github.com/facebook/react-native/issues/9599
+if (typeof global.self === 'undefined') {
+  global.self = global;
+}
+
 type CreateClientOptions = {
   token?: ?string,
 };

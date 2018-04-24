@@ -6,18 +6,6 @@
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
 
-bull@3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/bull/-/bull-3.3.1.tgz#6a15daf08ccfd5bf0e543eeb4544323157c0e1db"
-  dependencies:
-    bluebird "^3.5.0"
-    cron-parser "^2.4.1"
-    debuglog "^1.0.0"
-    ioredis "^3.1.4"
-    lodash "^4.17.4"
-    semver "^5.4.1"
-    uuid "^3.1.0"
-
 bull@^3.3.10:
   version "3.3.10"
   resolved "https://registry.yarnpkg.com/bull/-/bull-3.3.10.tgz#32e76281902070b4720bc37b3793f09db635f646"
@@ -214,6 +202,10 @@ ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
 
+now-env@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/now-env/-/now-env-3.0.4.tgz#f9ed88884bff8d208ad3eaf39cc3437dd1a591ad"
+
 object-keys@^1.0.8:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.0.11.tgz#c54601778ad560f1142ce0e01bcca8b56d13426d"
@@ -263,6 +255,10 @@ stack-trace@0.0.9:
 timed-out@4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/timed-out/-/timed-out-4.0.1.tgz#f32eacac5a175bea25d7fab565ab3ed8741ef56f"
+
+toobusy-js@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/toobusy-js/-/toobusy-js-0.5.1.tgz#5511f78f6a87a6a512d44fdb0efa13672217f659"
 
 uuid@3.0.0:
   version "3.0.0"

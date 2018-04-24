@@ -1,6 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { Gradient, zIndex, Transition, monoStack } from '../globals';
+import { Gradient, zIndex, Transition, monoStack, hexa } from '../globals';
 
 const Bubble = styled.div`
   display: inline-block;
@@ -28,6 +28,38 @@ const Bubble = styled.div`
   &::selection {
     background-color: ${props =>
       props.me ? props.theme.text.default : props.theme.brand.alt};
+  }
+
+  code {
+    border: 1px solid
+      ${props =>
+        props.me
+          ? hexa(props.theme.brand.border, 0.5)
+          : props.theme.bg.default};
+    border-radius: 4px;
+    padding: 2px 4px;
+    background: ${props =>
+      props.me ? hexa(props.theme.brand.wash, 0.15) : props.theme.bg.border};
+    color: ${props =>
+      props.me ? props.theme.text.reverse : props.theme.text.default};
+    box-shadow: 0 0 8px ${props => hexa(props.theme.bg.reverse, 0.1)};
+  }
+
+  pre {
+    margin: 4px -16px;
+    padding: 8px 16px;
+    width: calc(100% + 32px);
+    border: 1px solid
+      ${props =>
+        props.me
+          ? hexa(props.theme.brand.border, 0.5)
+          : props.theme.bg.default};
+    border-left: 0;
+    border-right: 0;
+    background: ${props =>
+      props.me ? hexa(props.theme.brand.wash, 0.15) : props.theme.bg.border};
+    color: ${props =>
+      props.me ? props.theme.text.reverse : props.theme.text.default};
   }
 `;
 
@@ -284,6 +316,7 @@ export const Image = styled.img`
           props.theme.brand.default
         }`
       : ''};
+  cursor: pointer;
 `;
 
 export const Code = styled(Bubble)`

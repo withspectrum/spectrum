@@ -1,11 +1,12 @@
+// @flow
 import styled from 'styled-components';
 import Card from '../../components/card';
-import { FlexCol, Transition, zIndex } from '../../components/globals';
+import { Transition, zIndex } from '../../components/globals';
 import { SegmentedControl } from '../../components/segmentedControl';
 import { FullProfile, FullDescription } from 'src/components/profile/style';
 import { ListContainer } from 'src/components/listItems/style';
 
-export const Grid = styled.div`
+export const Grid = styled.main`
   display: grid;
   grid-template-columns: minmax(320px, 1fr) 3fr minmax(240px, 2fr);
   grid-template-rows: 160px 1fr;
@@ -14,11 +15,10 @@ export const Grid = styled.div`
   width: 100%;
   min-width: 100%;
   max-width: 100%;
-  height: 100%;
   min-height: 100vh;
   background-color: ${props => props.theme.bg.default};
 
-  @media (max-width: 1028px) {
+  @media (max-width: 1280px) {
     grid-template-columns: 240px 1fr;
     grid-template-rows: 80px 1fr;
     grid-template-areas: 'cover cover' 'meta content';
@@ -96,9 +96,10 @@ export const Meta = styled(Column)`
     }
   }
 `;
-
 export const Content = styled(Column)`
   grid-area: content;
+  min-width: 0;
+  align-items: stretch;
 
   @media (max-width: 1280px) and (min-width: 768px) {
     padding-right: 32px;
@@ -113,17 +114,6 @@ export const Content = styled(Column)`
 
 export const Extras = styled(Column)`
   grid-area: extras;
-
-  > ${FlexCol} > div {
-    border-top: 0;
-    padding: 0;
-    padding-top: 24px;
-
-    h3 {
-      font-size: 16px;
-      line-height: 1.2;
-    }
-  }
 
   @media (max-width: 1280px) {
     display: none;
@@ -178,4 +168,20 @@ export const SearchInput = styled.input`
   margin-left: 8px;
   width: 97%;
   border-radius: 12px;
+`;
+
+export const MessageIconContainer = styled.div`
+  color: ${props => props.theme.text.alt};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    color: ${props => props.theme.brand.alt};
+  }
+`;
+
+export const UserListItemContainer = styled.div`
+  border-bottom: 1px solid ${props => props.theme.bg.wash};
 `;

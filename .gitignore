@@ -5,6 +5,7 @@ build
 .DS_Store
 src/config/FirebaseConfig.js
 npm-debug.log
+yarn-error.log
 rethinkdb_data
 debug
 now-secrets.json
@@ -30,3 +31,4 @@ api/.env
 .expo
 mobile/.expo
 test-results.json
+public/uploads

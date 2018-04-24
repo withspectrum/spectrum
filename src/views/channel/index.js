@@ -99,8 +99,12 @@ class ChannelView extends React.Component<Props, State> {
       isMember: isChannelMember,
     } = channel.channelPermissions;
     const { communityPermissions } = channel.community;
-    const { isOwner: isCommunityOwner } = communityPermissions;
+    const {
+      isOwner: isCommunityOwner,
+      isModerator: isCommunityModerator,
+    } = communityPermissions;
     const isGlobalOwner = isChannelOwner || isCommunityOwner;
+    const isGlobalModerator = isCommunityModerator;
 
     const loginUrl = channel.community.brandedLogin.isEnabled
       ? `/${channel.community.slug}/login?r=${CLIENT_URL}/${
@@ -134,6 +138,36 @@ class ChannelView extends React.Component<Props, State> {
               Settings
             </LoginButton>
           </Link>
+        );
+      }
+
+      if (isGlobalModerator) {
+        return (
+          <React.Fragment>
+            <ToggleChannelMembership
+              channel={channel}
+              render={state => (
+                <LoginButton
+                  isMember={isChannelMember}
+                  icon={isChannelMember ? 'checkmark' : null}
+                  loading={state.isLoading}
+                  dataCy="channel-join-button"
+                >
+                  {isChannelMember ? 'Joined' : `Join ${channel.name}`}
+                </LoginButton>
+              )}
+            />
+
+            <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
+              <LoginButton
+                icon={'settings'}
+                isMember
+                data-cy="channel-settings-button"
+              >
+                Settings
+              </LoginButton>
+            </Link>
+          </React.Fragment>
         );
       }
 
@@ -282,7 +316,7 @@ class ChannelView extends React.Component<Props, State> {
             backRoute={`/${communitySlug}`}
             noComposer={!isMember}
           />
-          <Grid>
+          <Grid id="main">
             <CoverPhoto src={channel.community.coverPhoto} />
             <Meta>
               <ChannelProfile data={{ channel }} profileSize="full" />

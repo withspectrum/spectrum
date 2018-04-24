@@ -1,25 +1,27 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
-import { track } from '../../helpers/events';
-import AppViewWrapper from '../../components/appViewWrapper';
-import { Loading } from '../../components/loading';
-import { addToastWithTimeout } from '../../actions/toasts';
-import { Upsell404Channel } from '../../components/upsell';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
+import { track } from 'src/helpers/events';
+import AppViewWrapper from 'src/components/appViewWrapper';
+import { Loading } from 'src/components/loading';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { Upsell404Channel } from 'src/components/upsell';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import togglePendingUserInChannelMutation from 'shared/graphql/mutations/channel/toggleChannelPendingUser';
 import type { ToggleChannelPendingUserType } from 'shared/graphql/mutations/channel/toggleChannelPendingUser';
 import unblockUserInChannelMutation from 'shared/graphql/mutations/channel/unblockChannelBlockedUser';
 import type { UnblockChannelBlockedUserType } from 'shared/graphql/mutations/channel/unblockChannelBlockedUser';
 import Titlebar from '../titlebar';
-import ViewError from '../../components/viewError';
-import { View } from '../../components/settingsViews/style';
-import Header from '../../components/settingsViews/header';
+import ViewError from 'src/components/viewError';
+import { View } from 'src/components/settingsViews/style';
+import Header from 'src/components/settingsViews/header';
 import Overview from './components/overview';
-import Subnav from '../../components/settingsViews/subnav';
+import Subnav from 'src/components/settingsViews/subnav';
+import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 
 type Props = {
   data: {
@@ -32,9 +34,15 @@ type Props = {
   dispatch: Function,
   togglePendingUser: Function,
   unblockUser: Function,
+  history: Object,
 };
 
 class ChannelSettings extends React.Component<Props> {
+  initMessage = user => {
+    this.props.dispatch(initNewThreadWithUser(user));
+    return this.props.history.push('/messages/new');
+  };
+
   togglePending = (userId, action) => {
     const { data: { channel }, dispatch } = this.props;
     const input = {
@@ -144,6 +152,7 @@ class ChannelSettings extends React.Component<Props> {
                 communitySlug={communitySlug}
                 togglePending={this.togglePending}
                 unblock={this.unblock}
+                initMessage={this.initMessage}
               />
             );
           default:
@@ -174,7 +183,7 @@ class ChannelSettings extends React.Component<Props> {
             noComposer
           />
 
-          <View>
+          <View id="main">
             <Header
               subheading={subheading}
               heading={`${channel.name} Settings ${
@@ -232,6 +241,7 @@ class ChannelSettings extends React.Component<Props> {
 export default compose(
   // $FlowIssue
   connect(),
+  withRouter,
   getChannelByMatch,
   togglePendingUserInChannelMutation,
   unblockUserInChannelMutation,

@@ -8,7 +8,7 @@ import { track } from '../../../helpers/events';
 import { closeComposer } from '../../../actions/composer';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import Editor from '../../draftjs-editor';
+import Editor from '../../rich-text-editor';
 import {
   toPlainText,
   fromPlainText,
@@ -88,13 +88,17 @@ if (localStorage) {
   }
 }
 
-const persistTitle = debounce((title: string) => {
-  localStorage.setItem(LS_TITLE_KEY, title);
-}, 500);
+const persistTitle =
+  localStorage &&
+  debounce((title: string) => {
+    localStorage.setItem(LS_TITLE_KEY, title);
+  }, 500);
 
-const persistBody = debounce(body => {
-  localStorage.setItem(LS_BODY_KEY, JSON.stringify(toJSON(body)));
-}, 500);
+const persistBody =
+  localStorage &&
+  debounce(body => {
+    localStorage.setItem(LS_BODY_KEY, JSON.stringify(toJSON(body)));
+  }, 500);
 
 class ThreadComposerWithData extends React.Component<Props, State> {
   constructor(props) {

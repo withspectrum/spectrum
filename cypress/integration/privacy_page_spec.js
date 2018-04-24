@@ -1,6 +1,6 @@
 describe('Privacy View', () => {
   describe('Loads page', () => {
-    before(() => {
+    beforeEach(() => {
       cy.visit('/privacy');
     });
 
@@ -10,7 +10,7 @@ describe('Privacy View', () => {
   });
 
   describe('Loads page', () => {
-    before(() => {
+    beforeEach(() => {
       cy.visit('/privacy.html');
     });
 

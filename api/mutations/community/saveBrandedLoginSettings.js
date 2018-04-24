@@ -34,7 +34,13 @@ export default async (
     loaders.communitySettings.load(communityId),
   ]);
 
-  if (!permissions.isOwner) {
+  if (!permissions) {
+    return new UserError("You don't have permission to do this.");
+  }
+
+  const { isOwner, isModerator } = permissions;
+
+  if (!isOwner && !isModerator) {
     return new UserError("You don't have permission to do this.");
   }
 

@@ -12,6 +12,7 @@ import {
   getUserPermissionsInCommunity,
   createMemberInCommunity,
 } from '../../models/usersCommunities';
+import { sendPrivateChannelRequestApprovedQueue } from 'shared/bull/queues';
 
 type TogglePendingUserInput = {
   input: {
@@ -74,7 +75,9 @@ export default async (
   // user is neither a community or channel owner, they don't have permission
   if (
     currentUserChannelPermissions.isOwner ||
-    currentUserCommunityPermissions.isOwner
+    currentUserCommunityPermissions.isOwner ||
+    currentUserChannelPermissions.isModerator ||
+    currentUserCommunityPermissions.isModerator
   ) {
     // all checks passed
     // determine whether to approve or block them
@@ -90,6 +93,13 @@ export default async (
         input.channelId,
         input.userId
       );
+
+      sendPrivateChannelRequestApprovedQueue.add({
+        userId: input.userId,
+        channelId: input.channelId,
+        communityId: channelToEvaluate.communityId,
+        moderatorId: currentUser.id,
+      });
 
       // if the user is a member of the parent community, we can return
       if (evaluatedUserCommunityPermissions.isMember) {
@@ -113,6 +123,6 @@ export default async (
   }
 
   return new UserError(
-    "You don't have permission to make changes to this channel."
+    "You don't have permission to manage users in this channel."
   );
 };

@@ -20,7 +20,6 @@ class SearchViewInput extends React.Component<Props, State> {
   close = () => {
     if (this.state.value.length === 0) {
       this.setState({ isOpen: false, searchQueryString: '' });
-      this.setState({ searchQueryString: '' });
     }
     this.searchInput.blur();
   };

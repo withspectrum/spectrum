@@ -3,15 +3,21 @@ const debug = require('debug')(
   'athena:queue:user-requested-join-private-channel'
 );
 import Raven from 'shared/raven';
-import addQueue from '../utils/addQueue';
 import { getCommunityById } from '../models/community';
 import { storeNotification } from '../models/notification';
 import { storeUsersNotifications } from '../models/usersNotifications';
-import { getOwnersInChannel } from '../models/usersChannels';
+import {
+  getOwnersInChannel,
+  getModeratorsInChannel,
+} from '../models/usersChannels';
+import {
+  getOwnersInCommunity,
+  getModeratorsInCommunity,
+} from '../models/usersCommunities';
 import { getUsers } from '../models/user';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import isEmail from 'validator/lib/isEmail';
-import type { DBChannel } from 'shared/types';
+import { sendPrivateChannelRequestEmailQueue } from 'shared/bull/queues';
 import type { Job, PrivateChannelRequestJobData } from 'shared/bull/types';
 
 export default async (job: Job<PrivateChannelRequestJobData>) => {
@@ -45,33 +51,49 @@ export default async (job: Job<PrivateChannelRequestJobData>) => {
   const updatedNotification = await storeNotification(nextNotificationRecord);
 
   // get the owners of the channel
-  const recipients = await getOwnersInChannel(channel.id);
+  const [
+    ownersInCommunity,
+    moderatorsInCommunity,
+    ownersInChannel,
+    moderatorsInChannel,
+  ] = await Promise.all([
+    getOwnersInCommunity(channel.communityId),
+    getModeratorsInCommunity(channel.communityId),
+    getOwnersInChannel(channel.id),
+    getModeratorsInChannel(channel.id),
+  ]);
+
+  const uniqueRecipientIds = [
+    ...ownersInCommunity,
+    ...moderatorsInCommunity,
+    ...ownersInChannel,
+    ...moderatorsInChannel,
+  ].filter((item, i, ar) => ar.indexOf(item) === i);
 
   // get all the user data for the owners
-  const recipientsWithUserData = await getUsers([...recipients]);
+  const recipientsWithUserData = await getUsers([...uniqueRecipientIds]);
 
-  // only get owners with emails
-  const filteredRecipients = recipientsWithUserData.filter(owner =>
-    isEmail(owner.email)
+  // only get owners + moderators with emails
+  const filteredRecipients = recipientsWithUserData.filter(
+    owner => owner.email && isEmail(owner.email)
   );
 
   // for each owner, create a notification for the app
-  const usersNotificationPromises = filteredRecipients.map(
-    async recipient =>
-      await storeUsersNotifications(updatedNotification.id, recipient.id)
+  const usersNotificationPromises = filteredRecipients.map(recipient =>
+    storeUsersNotifications(updatedNotification.id, recipient.id)
   );
 
   // for each owner,send an email
   const userPayload = JSON.parse(actor.payload);
   const community = await getCommunityById(channel.communityId);
-  const usersEmailPromises = filteredRecipients.map(
-    async recipient =>
-      await addQueue('send request join private channel email', {
-        user: userPayload,
-        recipient,
-        channel,
-        community,
-      })
+  const usersEmailPromises = filteredRecipients.map(recipient =>
+    sendPrivateChannelRequestEmailQueue.add({
+      user: userPayload,
+      // $FlowIssue
+      recipient,
+      channel,
+      community,
+    })
   );
 
   return Promise.all([
@@ -81,6 +103,5 @@ export default async (job: Job<PrivateChannelRequestJobData>) => {
     debug('❌ Error in job:\n');
     debug(err);
     Raven.captureException(err);
-    console.log(err);
   });
 };

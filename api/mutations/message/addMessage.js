@@ -1,7 +1,9 @@
 // @flow
+import { stateFromMarkdown } from 'draft-js-import-markdown';
+import { EditorState } from 'draft-js';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { uploadImage } from '../../utils/s3';
+import { uploadImage } from '../../utils/file-storage';
 import { storeMessage } from '../../models/message';
 import { setDirectMessageThreadLastActive } from '../../models/directMessageThread';
 import { setUserLastSeenInDirectMessageThread } from '../../models/usersDirectMessageThreads';
@@ -12,6 +14,7 @@ import {
 } from '../../models/usersThreads';
 import addCommunityMember from '../communityMember/addCommunityMember';
 import { trackUserThreadLastSeenQueue } from 'shared/bull/queues';
+import { toJSON } from 'shared/draft-utils';
 import type { FileUpload } from 'shared/types';
 
 type AddMessageInput = {
@@ -49,6 +52,38 @@ export default async (
         message.messageType
       }".`
     );
+  }
+
+  if (message.messageType === 'text') {
+    const contentState = stateFromMarkdown(message.content.body);
+    const editorState = EditorState.createWithContent(contentState);
+    message.content.body = JSON.stringify(toJSON(editorState));
+    message.messageType = 'draftjs';
+  }
+
+  if (message.messageType === 'draftjs') {
+    let body;
+    try {
+      body = JSON.parse(message.content.body);
+    } catch (err) {
+      throw new UserError(
+        'Please provide serialized raw DraftJS content state as content.body'
+      );
+    }
+    if (!body.blocks || !Array.isArray(body.blocks) || !body.entityMap) {
+      throw new UserError(
+        'Please provide serialized raw DraftJS content state as content.body'
+      );
+    }
+    if (
+      body.blocks.some(
+        ({ type }) => !type || (type !== 'unstyled' && type !== 'code-block')
+      )
+    ) {
+      throw new UserError(
+        'Invalid DraftJS block type specified. Supported block types: "unstyled", "code-block".'
+      );
+    }
   }
 
   // construct the shape of the object to be stored in the db

@@ -1,13 +1,12 @@
 // @flow
-const debug = require('debug')('athena:queue:channel-notification');
+const debug = require('debug')('athena:queue:moderation-events:thread');
 import { getUserById } from '../../models/user';
 import { getCommunityById } from '../../models/community';
 import { getChannelById } from '../../models/channel';
-import { addQueue } from '../../utils/addQueue';
-import type { DBThread } from 'shared/types';
 import { toState, toPlainText } from 'shared/draft-utils';
 import getSpectrumScore from './spectrum';
 import getPerspectiveScore from './perspective';
+import { _adminSendToxicContentEmailQueue } from 'shared/bull/queues';
 import type { Job, AdminToxicThreadJobData } from 'shared/bull/types';
 
 export default async (job: Job<AdminToxicThreadJobData>) => {
@@ -29,7 +28,7 @@ export default async (job: Job<AdminToxicThreadJobData>) => {
     getSpectrumScore(text, thread.id, thread.creatorId),
     getPerspectiveScore(text),
   ]).catch(err =>
-    console.log('Error getting thread moderation scores from providers', err)
+    console.error('Error getting thread moderation scores from providers', err)
   );
 
   const spectrumScore = scores && scores[0];
@@ -44,21 +43,16 @@ export default async (job: Job<AdminToxicThreadJobData>) => {
     getChannelById(thread.channelId),
   ]);
 
-  try {
-    return addQueue('admin toxic content email', {
-      type: 'message',
-      text,
-      user,
-      thread,
-      community,
-      channel,
-      toxicityConfidence: {
-        spectrumScore,
-        perspectiveScore,
-      },
-    });
-  } catch (err) {
-    console.log('\n\nerror getting message toxicity', err);
-    return;
-  }
+  return _adminSendToxicContentEmailQueue.add({
+    type: 'message',
+    text,
+    user,
+    thread,
+    community,
+    channel,
+    toxicityConfidence: {
+      spectrumScore,
+      perspectiveScore,
+    },
+  });
 };

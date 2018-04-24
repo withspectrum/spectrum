@@ -4,23 +4,30 @@ import compose from 'recompose/compose';
 import withState from 'recompose/withState';
 import withHandlers from 'recompose/withHandlers';
 import { connect } from 'react-redux';
-import changeCurrentBlockType from 'draft-js-markdown-plugin/lib/modifiers/changeCurrentBlockType';
 import { KeyBindingUtil } from 'draft-js';
 import debounce from 'debounce';
 import Icon from '../../components/icons';
-import { IconButton } from '../../components/buttons';
 import { track } from '../../helpers/events';
 import {
   toJSON,
   toState,
   fromPlainText,
   toPlainText,
+  isAndroid,
 } from 'shared/draft-utils';
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
 import linksDecorator from 'shared/clients/draft-js/links-decorator/index.web.js';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
-import { Form, ChatInputWrapper, SendButton, PhotoSizeError } from './style';
+import {
+  Form,
+  ChatInputContainer,
+  ChatInputWrapper,
+  SendButton,
+  PhotoSizeError,
+  MarkdownHint,
+  Preformated,
+} from './style';
 import Input from './input';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
 import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
@@ -29,8 +36,10 @@ import MediaUploader from './components/mediaUploader';
 type State = {
   isFocused: boolean,
   photoSizeError: string,
-  code: boolean,
   isSendingMediaMessage: boolean,
+  mediaPreview: string,
+  mediaPreviewFile: ?Blob,
+  markdownHint: boolean,
 };
 
 type Props = {
@@ -67,9 +76,9 @@ if (localStorage) {
 }
 
 const forcePersist = content =>
-  localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
+  localStorage && localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
 const persistContent = debounce(content => {
-  localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
+  localStorage && localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
 }, 500);
 
 class ChatInput extends React.Component<Props, State> {
@@ -78,11 +87,15 @@ class ChatInput extends React.Component<Props, State> {
     photoSizeError: '',
     code: false,
     isSendingMediaMessage: false,
+    mediaPreview: '',
+    mediaPreviewFile: null,
+    markdownHint: false,
   };
 
   editor: any;
 
   componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDown, true);
     this.props.onRef(this);
   }
 
@@ -100,24 +113,48 @@ class ChatInput extends React.Component<Props, State> {
     if (curr.state !== next.state) return true;
     if (currState.isSendingMediaMessage !== nextState.isSendingMediaMessage)
       return true;
+    if (currState.mediaPreview !== nextState.mediaPreview) return true;
+    if (currState.photoSizeError !== nextState.photoSizeError) return true;
 
     return false;
   }
 
   componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown);
     this.props.onRef(undefined);
   }
+
+  handleKeyDown = (event: any) => {
+    const key = event.keyCode || event.charCode;
+    // Detect esc key or backspace key (and empty message) to remove
+    // the previewed image
+    if (
+      key === 27 ||
+      ((key === 8 || key === 46) &&
+        !this.props.state.getCurrentContent().hasText())
+    ) {
+      this.removeMediaPreview();
+    }
+  };
 
   onChange = (state, ...rest) => {
     const { onChange } = this.props;
 
+    this.toggleMarkdownHint(state);
     persistContent(state);
+    onChange(state, ...rest);
+  };
 
-    if (toPlainText(state).trim() === '```') {
-      this.toggleCodeMessage(false);
-    } else if (onChange) {
-      onChange(state, ...rest);
-    }
+  toggleMarkdownHint = state => {
+    // eslint-disable-next-line
+    let hasText = false;
+    // NOTE(@mxstbr): This throws an error on focus, so we just ignore that
+    try {
+      hasText = state.getCurrentContent().hasText();
+    } catch (err) {}
+    this.setState({
+      markdownHint: state.getCurrentContent().hasText() ? true : false,
+    });
   };
 
   triggerFocus = () => {
@@ -127,26 +164,6 @@ class ChatInput extends React.Component<Props, State> {
     setTimeout(() => {
       this.editor && this.editor.focus();
     }, 0);
-  };
-
-  toggleCodeMessage = (keepCurrentText?: boolean = true) => {
-    const { onChange, state } = this.props;
-    const { code } = this.state;
-    this.setState(
-      {
-        code: !code,
-      },
-      () => {
-        onChange(
-          changeCurrentBlockType(
-            state,
-            code ? 'unstyled' : 'code-block',
-            keepCurrentText ? toPlainText(state) : ''
-          )
-        );
-        setTimeout(() => this.triggerFocus());
-      }
-    );
   };
 
   submit = e => {
@@ -206,23 +223,25 @@ class ChatInput extends React.Component<Props, State> {
       forceScrollToBottom();
     }
 
+    if (this.state.mediaPreview.length) {
+      this.sendMediaMessage(this.state.mediaPreviewFile);
+    }
+
     // If the input is empty don't do anything
-    if (toPlainText(state).trim() === '') return 'handled';
+    if (!state.getCurrentContent().hasText()) return 'handled';
 
     // do one last persist before sending
     forcePersist(state);
-
-    this.setState({
-      code: false,
-    });
 
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
     // in views/directMessages/containers/newThread.js
     if (thread === 'newDirectMessageThread') {
       createThread({
-        messageBody: JSON.stringify(toJSON(state)),
-        messageType: 'draftjs',
+        messageBody: !isAndroid()
+          ? JSON.stringify(toJSON(state))
+          : toPlainText(state),
+        messageType: !isAndroid() ? 'draftjs' : 'text',
       });
       clear();
       return 'handled';
@@ -233,10 +252,12 @@ class ChatInput extends React.Component<Props, State> {
     if (threadType === 'directMessageThread') {
       sendDirectMessage({
         threadId: thread,
-        messageType: 'draftjs',
+        messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
         content: {
-          body: JSON.stringify(toJSON(state)),
+          body: !isAndroid()
+            ? JSON.stringify(toJSON(state))
+            : toPlainText(state),
         },
       })
         .then(() => {
@@ -249,10 +270,12 @@ class ChatInput extends React.Component<Props, State> {
     } else {
       sendMessage({
         threadId: thread,
-        messageType: 'draftjs',
+        messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
         content: {
-          body: JSON.stringify(toJSON(state)),
+          body: !isAndroid()
+            ? JSON.stringify(toJSON(state))
+            : toPlainText(state),
         },
       })
         .then(() => {
@@ -288,15 +311,40 @@ class ChatInput extends React.Component<Props, State> {
       return this.submit(e);
     }
 
-    // Also submit non-code messages on ENTER
-    if (!this.state.code && !e.shiftKey) {
-      return this.submit(e);
+    // SHIFT+Enter should always add a new line
+    if (e.shiftKey) return 'not-handled';
+
+    const currentContent = this.props.state.getCurrentContent();
+    const selection = this.props.state.getSelection();
+    const key = selection.getStartKey();
+    const blockMap = currentContent.getBlockMap();
+    const block = blockMap.get(key);
+
+    // If we're in a code block or starting one don't submit on enter
+    if (
+      block.get('type') === 'code-block' ||
+      block.get('text').indexOf('```') === 0
+    ) {
+      return 'not-handled';
     }
 
-    return 'not-handled';
+    return this.submit(e);
   };
 
-  sendMediaMessage = file => {
+  removeMediaPreview = () => {
+    this.setState({
+      mediaPreview: '',
+      mediaPreviewFile: null,
+    });
+  };
+
+  sendMediaMessage = (file: ?Blob) => {
+    if (file == null) {
+      return;
+    }
+
+    this.removeMediaPreview();
+
     // eslint-disable-next-line
     let reader = new FileReader();
 
@@ -445,6 +493,23 @@ class ChatInput extends React.Component<Props, State> {
     });
   };
 
+  previewMedia = blob => {
+    if (this.state.isSendingMediaMessage) {
+      return;
+    }
+    this.setState({
+      isSendingMediaMessage: true,
+      mediaPreviewFile: blob,
+    });
+    const reader = new FileReader();
+    reader.onload = () =>
+      this.setState({
+        mediaPreview: reader.result.toString(),
+        isSendingMediaMessage: false,
+      });
+    reader.readAsDataURL(blob);
+  };
+
   render() {
     const {
       state,
@@ -455,8 +520,9 @@ class ChatInput extends React.Component<Props, State> {
     const {
       isFocused,
       photoSizeError,
-      code,
       isSendingMediaMessage,
+      mediaPreview,
+      markdownHint,
     } = this.state;
 
     const networkDisabled =
@@ -465,65 +531,69 @@ class ChatInput extends React.Component<Props, State> {
         websocketConnection !== 'reconnected');
 
     return (
-      <ChatInputWrapper focus={isFocused} onClick={this.triggerFocus}>
-        {photoSizeError && (
-          <PhotoSizeError>
-            <p
-              onClick={() =>
-                this.props.dispatch(
-                  openModal('UPGRADE_MODAL', { user: currentUser })
-                )
-              }
-            >
-              {photoSizeError}
-            </p>
-            <Icon
-              onClick={() => this.clearError()}
-              glyph="view-close"
-              size={16}
-              color={'warn.default'}
-            />
-          </PhotoSizeError>
-        )}
-        {currentUser && (
-          <MediaUploader
-            isSendingMediaMessage={isSendingMediaMessage}
-            currentUser={currentUser}
-            onValidated={this.sendMediaMessage}
-            onError={this.setMediaMessageError}
-          />
-        )}
-        <IconButton
-          glyph={'code'}
-          onClick={this.toggleCodeMessage}
-          tipText={'Write code'}
-          tipLocation={'top'}
-          style={{ margin: '0 4px' }}
-          color={code ? 'brand.alt' : 'text.placeholder'}
-          hoverColor={'brand.alt'}
-        />
-        <Form focus={isFocused}>
-          <Input
-            focus={isFocused}
-            placeholder={`Your ${code ? 'code' : 'message'} here...`}
-            editorState={state}
-            handleReturn={this.handleReturn}
-            onChange={this.onChange}
-            onFocus={this.onFocus}
-            onBlur={this.onBlur}
-            code={code}
-            editorRef={editor => (this.editor = editor)}
-            editorKey="chat-input"
-            decorators={[mentionsDecorator, linksDecorator]}
-            networkDisabled={networkDisabled}
-          />
-          <SendButton
-            data-cy="chat-input-send-button"
-            glyph="send-fill"
-            onClick={this.submit}
-          />
-        </Form>
-      </ChatInputWrapper>
+      <React.Fragment>
+        <ChatInputContainer focus={isFocused} onClick={this.triggerFocus}>
+          {photoSizeError && (
+            <PhotoSizeError>
+              <p
+                onClick={() =>
+                  this.props.dispatch(
+                    openModal('UPGRADE_MODAL', { user: currentUser })
+                  )
+                }
+              >
+                {photoSizeError}
+              </p>
+              <Icon
+                onClick={() => this.clearError()}
+                glyph="view-close"
+                size={16}
+                color={'warn.default'}
+              />
+            </PhotoSizeError>
+          )}
+          <ChatInputWrapper>
+            {currentUser && (
+              <MediaUploader
+                isSendingMediaMessage={isSendingMediaMessage}
+                currentUser={currentUser}
+                onValidated={this.previewMedia}
+                onError={this.setMediaMessageError}
+                inputFocused={isFocused}
+              />
+            )}
+            <Form focus={isFocused}>
+              <Input
+                mediaPreview={mediaPreview}
+                onRemoveMedia={this.removeMediaPreview}
+                focus={isFocused}
+                placeholder={`Your message here...`}
+                editorState={state}
+                handleReturn={this.handleReturn}
+                onChange={this.onChange}
+                onFocus={this.onFocus}
+                onBlur={this.onBlur}
+                code={false}
+                editorRef={editor => (this.editor = editor)}
+                editorKey="chat-input"
+                decorators={[mentionsDecorator, linksDecorator]}
+                networkDisabled={networkDisabled}
+              />
+              <SendButton
+                data-cy="chat-input-send-button"
+                glyph="send-fill"
+                onClick={this.submit}
+              />
+            </Form>
+          </ChatInputWrapper>
+        </ChatInputContainer>
+        <MarkdownHint showHint={markdownHint} data-cy="markdownHint">
+          <b>**bold**</b>
+          <i>*italics*</i>
+          <Preformated>`code`</Preformated>
+          <Preformated>```preformatted```</Preformated>
+        </MarkdownHint>
+      </React.Fragment>
     );
   }
 }

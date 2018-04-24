@@ -1,5 +1,5 @@
 // @flow
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { IconButton } from '../buttons';
 import {
   FlexRow,
@@ -8,16 +8,28 @@ import {
   zIndex,
   monoStack,
 } from 'src/components/globals';
-import { Wrapper as EditorWrapper } from '../draftjs-editor/style';
+import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
 
-export const ChatInputWrapper = styled(FlexRow)`
-  flex: none;
-  align-items: center;
+export const ChatInputContainer = styled(FlexRow)`
+  display: flex;
+  flex-direction: column;
   z-index: inherit;
   position: relative;
   width: 100%;
   margin: 0;
-  padding: 8px;
+
+  a {
+    text-decoration: underline;
+  }
+`;
+
+export const ChatInputWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 16px 16px 0px;
   background-color: ${props => props.theme.bg.default};
   border-top: 1px solid ${({ theme }) => theme.bg.border};
   box-shadow: -1px 0 0 ${props => props.theme.bg.border},
@@ -27,10 +39,7 @@ export const ChatInputWrapper = styled(FlexRow)`
     bottom: ${props => (props.focus ? '0' : 'auto')};
     position: relative;
     z-index: ${zIndex.mobileInput};
-  }
-
-  a {
-    text-decoration: underline;
+    padding: 8px;
   }
 `;
 
@@ -109,14 +118,16 @@ export const InputWrapper = styled(EditorWrapper)`
     transition: border-color 0.2s ease-in;
   }
 
-  ${props =>
-    props.code &&
-    css`
-      ${monoStack};
-      font-size: 14px;
-      font-weight: 500;
-      background-color: #f5f8fc;
-    `};
+  pre {
+    ${monoStack};
+    font-size: 14px;
+    font-weight: 500;
+    background-color: #f5f8fc;
+    border: 1px solid ${props => props.theme.bg.border};
+    border-radius: 2px;
+    padding: 4px;
+    margin-right: 16px;
+  }
 `;
 
 export const SendButton = styled(IconButton)`
@@ -173,6 +184,7 @@ export const PhotoSizeError = styled.div`
   align-items: center;
   align-content: center;
   padding: 8px 16px;
+  width: 100%;
   background: #fff1cc;
   border-top: 1px solid #ffd566;
 
@@ -193,5 +205,78 @@ export const PhotoSizeError = styled.div`
 
   div {
     align-self: center;
+  }
+`;
+
+export const MediaPreview = styled.div`
+  padding-top: 8px;
+  padding-bottom: 10px;
+
+  & > img {
+    border-radius: 16px;
+    max-width: 37%;
+  }
+
+  button {
+    position: relative;
+    top: -5px;
+    left: -25px;
+    vertical-align: top;
+    background: #16171a;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease-in-out;
+    border: none;
+    border-radius: 40px;
+    outline: none;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+  }
+
+  button:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    content: '\\d7';
+    font-size: 21px;
+    color: #fff;
+    line-height: 28px;
+    text-align: center;
+  }
+
+  button:hover {
+    box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.15);
+  }
+`;
+
+export const Preformated = styled.code`
+  background-color: #f7f7f9;
+  border: 1px solid #e1e1e8;
+  white-space: nowrap;
+`;
+
+export const MarkdownHint = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 12px;
+  font-size: 11px;
+  color: ${props => props.theme.text.alt};
+  line-height: 1;
+  padding: 6px 0;
+  opacity: ${({ showHint }) => (showHint ? 1 : 0)};
+  transition: opacity 200ms ease-in-out;
+  b {
+    font-weight: 600;
+  }
+  i,
+  b,
+  code {
+    margin-right: 3px;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;

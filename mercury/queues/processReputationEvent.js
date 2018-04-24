@@ -7,6 +7,7 @@ import processReactionCreated from '../functions/processReactionCreated';
 import processReactionDeleted from '../functions/processReactionDeleted';
 import processMessageDeleted from '../functions/processMessageDeleted';
 import processThreadDeletedByModeration from '../functions/processThreadDeletedByModeration';
+import Raven from 'shared/raven';
 import {
   THREAD_CREATED,
   THREAD_DELETED,
@@ -61,6 +62,8 @@ export default async (job: Job) => {
       }
     }
   } catch (err) {
-    debug('❌ Error processing reputation event: ', err);
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
   }
 };

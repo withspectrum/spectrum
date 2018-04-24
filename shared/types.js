@@ -205,7 +205,7 @@ type DBThreadEdits = {
     photos: Array<DBThreadAttachment>,
   },
   content: {
-    body?: string,
+    body?: any,
     title: string,
   },
   timestamp: Date,
@@ -216,7 +216,7 @@ export type DBThread = {
   channelId: string,
   communityId: string,
   content: {
-    body?: string,
+    body?: any,
     title: string,
   },
   createdAt: Date,
@@ -328,14 +328,7 @@ export type DBUsersThreads = {
   receiveNotifications: boolean,
   threadId: string,
   userId: string,
-};
-
-export type Mention = {
-  threadId: string,
-  messageId?: string,
-  senderId: string,
-  username: string,
-  type: 'thread' | 'message',
+  lastSeen?: Date | number,
 };
 
 export type SearchThread = {
@@ -394,3 +387,5 @@ export type FileUpload = {
   encoding: string,
   stream: any,
 };
+
+export type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';

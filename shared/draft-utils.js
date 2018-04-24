@@ -56,10 +56,15 @@ var toState = function toState(json /*: Object */) /*: typeof EditorState */ {
   return EditorState.createWithContent(convertFromRaw(json));
 };
 
+var isAndroid = function isAndroid() /*: bool */ {
+  return navigator.userAgent.toLowerCase().indexOf('android') > -1;
+};
+
 module.exports = {
   toJSON: toJSON,
   toState: toState,
   toPlainText: toPlainText,
   fromPlainText: fromPlainText,
   emptyContentState: emptyContentState,
+  isAndroid: isAndroid,
 };

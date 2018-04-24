@@ -16,9 +16,8 @@ import {
 } from '../models/usersNotifications';
 import { getDirectMessageThreadMembers } from '../models/usersDirectMessageThreads';
 import sentencify from '../utils/sentencify';
-import addQueue from '../utils/addQueue';
-import { SEND_NEW_DIRECT_MESSAGE_EMAIL } from './constants';
 import { toPlainText, toState } from 'shared/draft-utils';
+import { sendNewDirectMessageEmailQueue } from 'shared/bull/queues';
 import type { Job, DirectMessageNotificationJobData } from 'shared/bull/types';
 
 export default async (job: Job<DirectMessageNotificationJobData>) => {
@@ -93,7 +92,7 @@ export default async (job: Job<DirectMessageNotificationJobData>) => {
     : storeUsersNotifications;
 
   const addToQueue = recipient => {
-    return addQueue(SEND_NEW_DIRECT_MESSAGE_EMAIL, {
+    return sendNewDirectMessageEmailQueue.add({
       recipient,
       thread: {
         content: {
@@ -166,6 +165,5 @@ export default async (job: Job<DirectMessageNotificationJobData>) => {
     debug('❌ Error in job:\n');
     debug(err);
     Raven.captureException(err);
-    console.log(err);
   });
 };

@@ -17,7 +17,8 @@
     "rethinkdbdash": "^2.3.31",
     "shortid": "^2.2.8",
     "source-map-support": "^0.5.4",
-    "stripe": "^5.4.0"
+    "stripe": "^5.4.0",
+    "toobusy-js": "^0.5.1"
   },
   "scripts": {
     "start": "NODE_ENV=production node main.js"

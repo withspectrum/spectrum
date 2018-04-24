@@ -96,8 +96,11 @@ module.exports = function override(config, env) {
     plugin => !isServiceWorkerPlugin(plugin)
   );
   // Get all public files so they're cached by the SW
-  let externals = ['./public/install-raven.js'];
-  walkFolder('./public/img/', file => {
+  let externals = [];
+  walkFolder('./public/', file => {
+    // HOTFIX: Don't cache images
+    if (file.indexOf('img') > -1 && file.indexOf('homescreen-icon') === -1)
+      return;
     externals.push(file.replace(/public/, ''));
   });
   config.plugins.push(

@@ -64,7 +64,7 @@ const general = /* GraphQL */ `
 	}
 	
 	input EmailInviteContactInput {
-		email: String!
+		email: LowercaseString!
 		firstName: String
 		lastName: String
 	}

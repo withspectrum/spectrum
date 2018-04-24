@@ -3,9 +3,13 @@ import styled from 'styled-components';
 import { zIndex } from '../globals';
 
 export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-gap: 16px;
+  align-items: flex-end;
   padding: 16px 0;
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 export const A = styled.a`
@@ -27,9 +31,9 @@ export const SigninButton = styled.div`
   font-size: 15px;
   font-weight: 600;
   position: relative;
-  margin: 8px 0;
   width: 100%;
-  margin-top: ${props => (props.showAfter ? '40px' : '8px')};
+  cursor: pointer;
+  ${props => props.showAfter && `margin-top: 32px`};
 
   ${props =>
     props.showAfter &&
@@ -48,20 +52,6 @@ export const SigninButton = styled.div`
 			}
 		`} svg {
     fill: currentColor !important;
-  }
-
-  @media (max-width: 768px) {
-    margin: 16px 0;
-
-    ${props =>
-      props.showAfter &&
-      `
-        margin: 48px 0 16px 0;
-      `};
-  }
-
-  &:hover {
-    cursor: pointer;
   }
 `;
 

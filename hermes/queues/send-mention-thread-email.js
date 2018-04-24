@@ -9,20 +9,9 @@ import {
   TYPE_MUTE_THREAD,
   SEND_NEW_MENTION_THREAD_EMAIL,
 } from './constants';
-import type { DBThread, DBUser } from 'shared/types';
+import type { SendNewMessageMentionEmailJobData, Job } from 'shared/bull/types';
 
-type SendNewMentionEmailJobData = {
-  recipient: DBUser,
-  sender: DBUser,
-  thread: DBThread,
-};
-
-type SendNewMentionEmailJob = {
-  data: SendNewMentionEmailJobData,
-  id: string,
-};
-
-export default async (job: SendNewMentionEmailJob) => {
+export default async (job: Job<SendNewMessageMentionEmailJobData>) => {
   debug(`\nnew job: ${job.id}`);
 
   const { recipient, sender, thread } = job.data;
@@ -57,6 +46,5 @@ export default async (job: SendNewMentionEmailJob) => {
     debug('❌ Error in job:\n');
     debug(err);
     Raven.captureException(err);
-    console.log(err);
   }
 };

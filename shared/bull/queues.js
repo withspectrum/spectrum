@@ -35,40 +35,85 @@ import {
   SEND_COMMUNITY_PAYMENT_SUCCEEDED_EMAIL,
   SEND_COMMUNITY_PAYMENT_FAILED_EMAIL,
   SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL,
+  SEND_NEW_DIRECT_MESSAGE_EMAIL,
+  SEND_NEW_MESSAGE_EMAIL,
+  SEND_NEW_MENTION_MESSAGE_EMAIL,
+  SEND_NEW_MENTION_THREAD_EMAIL,
+  SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
+  SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
+  SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
+  SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
+  SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
+  SEND_ADMIN_USER_SPAMMING_THREADS_NOTIFICATION_EMAIL,
+  SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
+  SEND_ADMINISTRATOR_EMAIL_VALIDATION_EMAIL,
+  SEND_EMAIL_VALIDATION_EMAIL,
+  SEND_NEW_COMMUNITY_WELCOME_EMAIL,
+  SEND_NEW_USER_WELCOME_EMAIL,
 } from 'hermes/queues/constants';
+
+import {
+  MENTION_NOTIFICATION,
+  THREAD_NOTIFICATION,
+  PROCESS_ADMIN_TOXIC_MESSAGE,
+  COMMUNITY_NOTIFICATION,
+  PROCESS_ADMIN_TOXIC_THREAD,
+  TRACK_USER_LAST_SEEN,
+  PRO_INVOICE_PAID_NOTIFICATION,
+  COMMUNITY_INVOICE_PAID_NOTIFICATION,
+  REACTION_NOTIFICATION,
+  PRIVATE_CHANNEL_REQUEST_SENT,
+  PRIVATE_CHANNEL_REQUEST_APPROVED,
+  COMMUNITY_INVITE_NOTIFICATION,
+  CHANNEL_NOTIFICATION,
+  DIRECT_MESSAGE_NOTIFICATION,
+  MESSAGE_NOTIFICATION,
+  SEND_PUSH_NOTIFICATIONS,
+  SLACK_IMPORT,
+} from 'athena/queues/constants';
+
+import { PROCESS_REPUTATION_EVENT } from 'mercury/constants';
 
 // Normalize our (inconsistent) queue names to a set of JS compatible names
 exports.QUEUE_NAMES = {
   // athena - notifications
-  sendThreadNotificationQueue: 'thread notification',
-  sendCommunityNotificationQueue: 'community notification',
-  trackUserThreadLastSeenQueue: 'track user thread last seen',
-  sendProInvoicePaidNotificationQueue: 'pro invoice paid notification',
-  sendCommunityInvoicePaidNotificationQueue:
-    'community invoice paid notification',
-  sendReactionNotificationQueue: 'reaction notification',
-  sendPrivateChannelRequestQueue: 'private channel request sent',
+  sendThreadNotificationQueue: THREAD_NOTIFICATION,
+  sendCommunityNotificationQueue: COMMUNITY_NOTIFICATION,
+  trackUserThreadLastSeenQueue: TRACK_USER_LAST_SEEN,
+  sendProInvoicePaidNotificationQueue: PRO_INVOICE_PAID_NOTIFICATION,
+  sendCommunityInvoicePaidNotificationQueue: COMMUNITY_INVOICE_PAID_NOTIFICATION,
+  sendReactionNotificationQueue: REACTION_NOTIFICATION,
+  sendPrivateChannelRequestQueue: PRIVATE_CHANNEL_REQUEST_SENT,
+  sendPrivateChannelRequestApprovedQueue: PRIVATE_CHANNEL_REQUEST_APPROVED,
   sendPrivateChannelInviteNotificationQueue:
     'private channel invite notification',
-  sendCommunityInviteNotificationQueue: 'community invite notification',
-  sendChannelNotificationQueue: 'channel notification',
-  sendDirectMessageNotificationQueue: 'direct message notification',
-  sendMessageNotificationQueue: 'message notification',
-  sendNotificationAsPushQueue: 'push notifications',
-  slackImportQueue: 'slack import',
+  sendCommunityInviteNotificationQueue: COMMUNITY_INVITE_NOTIFICATION,
+  sendChannelNotificationQueue: CHANNEL_NOTIFICATION,
+  sendDirectMessageNotificationQueue: DIRECT_MESSAGE_NOTIFICATION,
+  sendMessageNotificationQueue: MESSAGE_NOTIFICATION,
+  sendMentionNotificationQueue: MENTION_NOTIFICATION,
+  sendNotificationAsPushQueue: SEND_PUSH_NOTIFICATIONS,
+  slackImportQueue: SLACK_IMPORT,
 
   // hermes - emails
-  sendNewUserWelcomeEmailQueue: 'send new user welcome email',
-  sendNewCommunityWelcomeEmailQueue: 'send new community welcome email',
-  sendEmailValidationEmailQueue: 'send email validation email',
-  sendAdministratorEmailValidationEmailQueue:
-    'send administrator email validation email',
+  sendNewUserWelcomeEmailQueue: SEND_NEW_USER_WELCOME_EMAIL,
+  sendNewCommunityWelcomeEmailQueue: SEND_NEW_COMMUNITY_WELCOME_EMAIL,
+  sendEmailValidationEmailQueue: SEND_EMAIL_VALIDATION_EMAIL,
+  sendAdministratorEmailValidationEmailQueue: SEND_ADMINISTRATOR_EMAIL_VALIDATION_EMAIL,
   sendCommunityPaymentSucceededEmailQueue: SEND_COMMUNITY_PAYMENT_SUCCEEDED_EMAIL,
   sendCommunityPaymentFailedEmailQueue: SEND_COMMUNITY_PAYMENT_FAILED_EMAIL,
   sendCommunityCardExpiringWarningEmailQueue: SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL,
+  sendNewMessageEmailQueue: SEND_NEW_MESSAGE_EMAIL,
+  bufferNewMessageEmailQueue: 'buffer new message email queue',
+  sendNewDirectMessageEmailQueue: SEND_NEW_DIRECT_MESSAGE_EMAIL,
+  sendNewMentionMessageEmailQueue: SEND_NEW_MENTION_MESSAGE_EMAIL,
+  sendNewMentionThreadEmailQueue: SEND_NEW_MENTION_THREAD_EMAIL,
+  sendPrivateChannelRequestEmailQueue: SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
+  sendPrivateChannelRequestApprovedEmailQueue: SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
+  sendThreadCreatedNotificationEmailQueue: SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
 
   // mercury - reputation
-  processReputationEventQueue: 'process reputation event',
+  processReputationEventQueue: PROCESS_REPUTATION_EVENT,
 
   stripeChargeWebhookEventQueue: PROCESS_STRIPE_CHARGE_WEBHOOK_EVENT,
   stripeCustomerWebhookEventQueue: PROCESS_STRIPE_CUSTOMER_WEBHOOK_EVENT,
@@ -95,10 +140,12 @@ exports.QUEUE_NAMES = {
   stripePaymentFailedQueue: PROCESS_STRIPE_PAYMENT_FAILED,
   stripeCardExpiringWarningQueue: PROCESS_STRIPE_CARD_EXPIRING_WARNING,
 
-  _adminSendCommunityCreatedEmailQueue: 'admin community created',
-  _adminProcessToxicMessageQueue: 'process admin toxic message',
-  _adminProcessToxicThreadQueue: 'process admin toxic thread',
-  _adminProcessSlackImportQueue: 'admin slack import process email',
+  _adminSendCommunityCreatedEmailQueue: SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
+  _adminProcessToxicMessageQueue: PROCESS_ADMIN_TOXIC_MESSAGE,
+  _adminProcessToxicThreadQueue: PROCESS_ADMIN_TOXIC_THREAD,
+  _adminProcessSlackImportQueue: SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
+  _adminSendToxicContentEmailQueue: SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
+  _adminProcessUserSpammingThreadsQueue: SEND_ADMIN_USER_SPAMMING_THREADS_NOTIFICATION_EMAIL,
 };
 
 // We add one error listener per queue, so we have to set the max listeners

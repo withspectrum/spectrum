@@ -2,18 +2,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { Checkbox } from '../../../components/formElements';
-import WebPushManager from '../../../helpers/web-push-manager';
-import { track } from '../../../helpers/events';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { Checkbox } from 'src/components/formElements';
+import WebPushManager from 'src/helpers/web-push-manager';
+import { track } from 'src/helpers/events';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import { subscribeToWebPush } from 'shared/graphql/subscriptions';
-import {
-  StyledCard,
-  LargeListHeading,
-  ListHeader,
-  ListContainer,
-  Notice,
-} from '../../../components/listItems/style';
+import { ListContainer, Notice } from 'src/components/listItems/style';
+import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import { EmailListItem } from '../style';
 
 type State = {
@@ -106,13 +101,11 @@ class NotificationSettings extends React.Component<Props, State> {
       : this.unsubscribeFromWebPush;
 
     return (
-      <StyledCard
+      <SectionCard
         smallOnly={this.props.smallOnly}
         largeOnly={this.props.largeOnly}
       >
-        <ListHeader>
-          <LargeListHeading>Notification Preferences</LargeListHeading>
-        </ListHeader>
+        <SectionTitle>Notification Preferences</SectionTitle>
         <ListContainer>
           <EmailListItem>
             {subscription !== null && (
@@ -137,7 +130,7 @@ class NotificationSettings extends React.Component<Props, State> {
             )}
           </EmailListItem>
         </ListContainer>
-      </StyledCard>
+      </SectionCard>
     );
   }
 }

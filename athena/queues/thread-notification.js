@@ -21,6 +21,7 @@ import { getUserById, getUsers } from '../models/user';
 import { getCommunityById } from '../models/community';
 import { getMembersInChannelWithNotifications } from '../models/usersChannels';
 import createThreadNotificationEmail from './create-thread-notification-email';
+import { sendMentionNotificationQueue } from 'shared/bull/queues';
 import type { DBThread } from 'shared/types';
 import type { Job, ThreadNotificationJobData } from 'shared/bull/types';
 
@@ -100,7 +101,7 @@ export default async (job: Job<ThreadNotificationJobData>) => {
   // if people were mentioned in the thread, let em know
   if (mentions && mentions.length > 0) {
     mentions.forEach(username => {
-      addQueue('mention notification', {
+      sendMentionNotificationQueue.add({
         threadId: incomingThread.id, // thread where the mention happened
         senderId: incomingThread.creatorId, // user who created the mention
         username: username,

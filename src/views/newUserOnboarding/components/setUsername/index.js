@@ -5,12 +5,9 @@ import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
 import { Error, Success } from '../../../../components/formElements';
-import { Spinner } from '../../../../components/globals';
+import UsernameSearch from '../../../../components/usernameSearch';
 import { addToastWithTimeout } from '../../../../actions/toasts';
-import { Form, Input, Loading, Row, InputLabel, InputSubLabel } from './style';
-import { throttle } from '../../../../helpers/utils';
-import { getUserByUsernameQuery } from 'shared/graphql/queries/user/getUser';
-import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+import { Form, Row, InputLabel, InputSubLabel } from './style';
 import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import { ContinueButton } from '../../style';
 
@@ -26,7 +23,6 @@ type State = {
   username: string,
   error: string,
   success: string,
-  isSearching: boolean,
   isLoading: boolean,
 };
 
@@ -47,105 +43,16 @@ class SetUsername extends React.Component<Props, State> {
       username: username,
       error: '',
       success: '',
-      isSearching: false,
       isLoading: false,
     };
-
-    this.search = throttle(this.search, 500);
   }
 
-  componentDidMount() {
-    const { username } = this.state;
-    // if no username was able to be suggested, don't kick off a search
-    // with an empty string
-    if (username.length === 0) return;
-
-    // $FlowIssue
-    this.search(username);
-  }
-
-  handleChange = e => {
-    let username = e.target.value.trim();
-    username = slugg(username);
-
+  handleUsernameValidation = ({ error, success, username }) => {
     this.setState({
-      error: '',
-      success: '',
+      error,
+      success,
       username,
     });
-
-    if (username.length > 20) {
-      return this.setState({
-        error: 'Usernames can be up to 20 characters',
-      });
-    } else if (username.length === 0) {
-      return this.setState({
-        error: 'Be sure to set a username so that people can find you!',
-        success: '',
-      });
-    } else {
-      this.setState({
-        error: '',
-      });
-    }
-
-    // $FlowIssue
-    return this.search(username);
-  };
-
-  search = (username: string) => {
-    if (username.length > 20) {
-      return this.setState({
-        error: 'Usernames can be up to 20 characters',
-        success: '',
-        isSearching: false,
-      });
-    } else if (username.length === 0) {
-      return this.setState({
-        error: "Your username can't be nothing...",
-        success: '',
-        isSearching: false,
-      });
-    } else {
-      this.setState({
-        error: '',
-        isSearching: true,
-      });
-
-      // check the db to see if this channel slug exists
-      this.props.client
-        .query({
-          query: getUserByUsernameQuery,
-          variables: {
-            username,
-          },
-        })
-        .then(({ data: { user } }: { data: { user: GetUserType } }) => {
-          if (this.state.username.length > 20) {
-            return this.setState({
-              error: 'Usernames can be up to 20 characters because of reasons.',
-              success: '',
-              isSearching: false,
-            });
-          } else if (user && user.id) {
-            return this.setState({
-              error:
-                'Someone already swooped this username – not feeling too original today, huh?',
-              isSearching: false,
-              success: '',
-            });
-          } else {
-            return this.setState({
-              error: '',
-              isSearching: false,
-              success: 'That username is available!',
-            });
-          }
-        })
-        .catch(err => {
-          console.error('Error looking up username: ', err);
-        });
-    }
   };
 
   saveUsername = e => {
@@ -183,7 +90,7 @@ class SetUsername extends React.Component<Props, State> {
   };
 
   render() {
-    const { username, isSearching, isLoading, error, success } = this.state;
+    const { username, isLoading, error, success } = this.state;
 
     return (
       <Form onSubmit={this.saveUsername}>
@@ -191,18 +98,12 @@ class SetUsername extends React.Component<Props, State> {
         <InputSubLabel>You can change this later - no pressure!</InputSubLabel>
 
         <Row>
-          <Input
+          <UsernameSearch
             placeholder={'Set a username...'}
-            defaultValue={username}
-            onChange={this.handleChange}
             autoFocus={true}
+            username={username}
+            onValidationResult={this.handleUsernameValidation}
           />
-
-          {isSearching && (
-            <Loading>
-              <Spinner size={16} color={'brand.default'} />
-            </Loading>
-          )}
         </Row>
         <Row>
           <Error>{error ? error : <span>&nbsp;</span>}</Error>
