@@ -1,6 +1,7 @@
 // @flow
 import styled from 'styled-components';
 import { IconButton } from '../buttons';
+import { QuoteWrapper } from '../message/style';
 import {
   FlexRow,
   hexa,
@@ -133,11 +134,12 @@ export const InputWrapper = styled(EditorWrapper)`
 export const SendButton = styled(IconButton)`
   position: absolute;
   right: 12px;
+  bottom: 4px;
   height: 32px;
   width: 32px;
   background-color: transparent;
   transition: ${Transition.hover.off};
-  top: calc(50% - 16px);
+  align-self: flex-end;
 `;
 
 export const MediaInput = styled.input`
@@ -210,8 +212,17 @@ export const PhotoSizeError = styled.div`
 
 export const PreviewWrapper = styled.div`
   position: relative;
-  padding-top: 8px;
-  padding-bottom: 10px;
+  width: calc(100% + 56px);
+  margin: 0 -16px;
+  padding: 6px 16px 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+
+  ${QuoteWrapper} {
+    margin: 0;
+    margin-top: -6px;
+    margin-left: -12px;
+  }
 
   & > img {
     border-radius: 16px;
@@ -221,8 +232,8 @@ export const PreviewWrapper = styled.div`
 
 export const RemovePreviewButton = styled.button`
   position: absolute;
-  top: -5px;
-  right: -25px;
+  top: 0px;
+  right: 8px;
   vertical-align: top;
   background: #16171a;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
