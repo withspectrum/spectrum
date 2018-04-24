@@ -52,6 +52,7 @@ function securityMiddleware(server, { enableNonce, enableCSP }) {
       // Defines valid sources of JavaScript.
       scriptSrc: [
         "'self'",
+        "'unsafe-eval'",
         'www.google-analytics.com',
         'cdn.ravenjs.com',
         'cdn.polyfill.io',
