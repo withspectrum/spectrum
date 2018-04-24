@@ -208,7 +208,8 @@ export const PhotoSizeError = styled.div`
   }
 `;
 
-export const MediaPreview = styled.div`
+export const PreviewWrapper = styled.div`
+  position: relative;
   padding-top: 8px;
   padding-bottom: 10px;
 
@@ -216,24 +217,25 @@ export const MediaPreview = styled.div`
     border-radius: 16px;
     max-width: 37%;
   }
+`;
 
-  button {
-    position: relative;
-    top: -5px;
-    left: -25px;
-    vertical-align: top;
-    background: #16171a;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
-    transition: box-shadow 0.3s ease-in-out;
-    border: none;
-    border-radius: 40px;
-    outline: none;
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-  }
+export const RemovePreviewButton = styled.button`
+  position: absolute;
+  top: -5px;
+  right: -25px;
+  vertical-align: top;
+  background: #16171a;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.3s ease-in-out;
+  border: none;
+  border-radius: 40px;
+  outline: none;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  z-index: 1;
 
-  button:after {
+  &:after {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -246,7 +248,7 @@ export const MediaPreview = styled.div`
     text-align: center;
   }
 
-  button:hover {
+  &:hover {
     box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.15);
   }
 `;

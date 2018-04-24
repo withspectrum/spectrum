@@ -28,7 +28,8 @@ import {
   PhotoSizeError,
   MarkdownHint,
   Preformated,
-  MediaPreview,
+  PreviewWrapper,
+  RemovePreviewButton,
 } from './style';
 import Input from './input';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
@@ -146,9 +147,13 @@ class ChatInput extends React.Component<Props, State> {
       ((key === 8 || key === 46) &&
         !this.props.state.getCurrentContent().hasText())
     ) {
-      this.removeMediaPreview();
-      this.props.dispatch(replyToMessage(null));
+      this.removePreviewWrapper();
+      this.removeQuotedMessage();
     }
+  };
+
+  removeQuotedMessage = () => {
+    if (this.props.quotedMessage) this.props.dispatch(replyToMessage(null));
   };
 
   onChange = (state, ...rest) => {
@@ -247,7 +252,7 @@ class ChatInput extends React.Component<Props, State> {
 
     // do one last persist before sending
     forcePersist(state);
-    this.props.dispatch(replyToMessage(null));
+    this.removeQuotedMessage();
 
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
@@ -349,7 +354,7 @@ class ChatInput extends React.Component<Props, State> {
     return this.submit(e);
   };
 
-  removeMediaPreview = () => {
+  removePreviewWrapper = () => {
     this.setState({
       mediaPreview: '',
       mediaPreviewFile: null,
@@ -361,7 +366,7 @@ class ChatInput extends React.Component<Props, State> {
       return;
     }
 
-    this.removeMediaPreview();
+    this.removePreviewWrapper();
 
     // eslint-disable-next-line
     let reader = new FileReader();
@@ -600,12 +605,17 @@ class ChatInput extends React.Component<Props, State> {
                 networkDisabled={networkDisabled}
               >
                 {mediaPreview && (
-                  <MediaPreview>
+                  <PreviewWrapper>
                     <img src={mediaPreview} alt="" />
-                    <button onClick={this.removeMediaPreview} />
-                  </MediaPreview>
+                    <RemovePreviewButton onClick={this.removePreviewWrapper} />
+                  </PreviewWrapper>
                 )}
-                {quotedMessage && <QuotedMessage id={quotedMessage} />}
+                {quotedMessage && (
+                  <PreviewWrapper>
+                    <QuotedMessage id={quotedMessage} />
+                    <RemovePreviewButton onClick={this.removeQuotedMessage} />
+                  </PreviewWrapper>
+                )}
               </Input>
               <SendButton
                 data-cy="chat-input-send-button"
