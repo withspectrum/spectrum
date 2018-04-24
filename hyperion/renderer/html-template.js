@@ -74,14 +74,12 @@ export const getFooter = ({
   bundles: Array<string>,
   nonce: string,
 }) => {
-  return (
-    console.log(nonce) ||
-    html`</div>
+  return html`</div>
       <script defer="defer" src="https://cdn.ravenjs.com/3.14.0/raven.min.js" crossorigin="anonymous"></script>
       <script defer="defer" src="/install-raven.js"></script>
       <script nonce="${nonce}">window.__SERVER_STATE__=${serialize(
-      state
-    )}</script>
+    state
+  )}</script>
       <script nonce="${nonce}">window.__DATA__=${serialize(data)}</script>
       <script defer="defer" type="text/javascript" src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
       <script type="text/javascript" src="/static/js/bootstrap.js"></script>
@@ -89,6 +87,5 @@ export const getFooter = ({
       ${createScriptTag({ src: `/static/js/${mainBundle}` })}
     </body>
     </html>
-  `
-  );
+  `;
 };
