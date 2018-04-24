@@ -19,6 +19,7 @@ import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.
 import linksDecorator from 'shared/clients/draft-js/links-decorator/index.web.js';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
+import { replyToMessage } from '../../actions/message';
 import {
   Form,
   ChatInputContainer,
@@ -244,6 +245,7 @@ class ChatInput extends React.Component<Props, State> {
 
     // do one last persist before sending
     forcePersist(state);
+    this.props.dispatch(replyToMessage(null));
 
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
