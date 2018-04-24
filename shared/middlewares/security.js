@@ -79,7 +79,8 @@ function securityMiddleware(server, { enableNonce, enableCSP }) {
       // lists the URLs for workers and embedded frame contents.
       // For example: child-src https://youtube.com would enable
       // embedding videos from YouTube but not from other origins.
-      childSrc: ["'self'"],
+      // @note: we allow users to embed any page they want.
+      childSrc: ['https:', 'http:'],
 
       // allows control over Flash and other plugins.
       objectSrc: ["'none'"],
