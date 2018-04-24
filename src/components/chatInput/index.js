@@ -28,6 +28,7 @@ import {
   PhotoSizeError,
   MarkdownHint,
   Preformated,
+  MediaPreview,
 } from './style';
 import Input from './input';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
@@ -139,13 +140,14 @@ class ChatInput extends React.Component<Props, State> {
   handleKeyDown = (event: any) => {
     const key = event.keyCode || event.charCode;
     // Detect esc key or backspace key (and empty message) to remove
-    // the previewed image
+    // the previewed image and quoted message
     if (
       key === 27 ||
       ((key === 8 || key === 46) &&
         !this.props.state.getCurrentContent().hasText())
     ) {
       this.removeMediaPreview();
+      this.props.dispatch(replyToMessage(null));
     }
   };
 
@@ -584,8 +586,6 @@ class ChatInput extends React.Component<Props, State> {
             )}
             <Form focus={isFocused}>
               <Input
-                mediaPreview={mediaPreview}
-                onRemoveMedia={this.removeMediaPreview}
                 focus={isFocused}
                 placeholder={`Your message here...`}
                 editorState={state}
@@ -599,6 +599,12 @@ class ChatInput extends React.Component<Props, State> {
                 decorators={[mentionsDecorator, linksDecorator]}
                 networkDisabled={networkDisabled}
               >
+                {mediaPreview && (
+                  <MediaPreview>
+                    <img src={mediaPreview} alt="" />
+                    <button onClick={this.removeMediaPreview} />
+                  </MediaPreview>
+                )}
                 {quotedMessage && <QuotedMessage id={quotedMessage} />}
               </Input>
               <SendButton

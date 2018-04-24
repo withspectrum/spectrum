@@ -20,7 +20,7 @@ import createPrismPlugin from 'draft-js-prism-plugin';
 import { customStyleMap } from 'src/components/rich-text-editor/style';
 import type { DraftEditorState } from 'draft-js/lib/EditorState';
 
-import { InputWrapper, MediaPreview } from './style';
+import { InputWrapper } from './style';
 
 type Props = {
   editorState: DraftEditorState,
@@ -31,9 +31,7 @@ type Props = {
   readOnly?: boolean,
   editorRef?: any => void,
   networkDisabled: boolean,
-  mediaPreview?: string,
   children?: React$Node,
-  onRemoveMedia: Object => void,
 };
 
 type State = {
@@ -87,8 +85,6 @@ class Input extends React.Component<Props, State> {
       readOnly,
       editorRef,
       networkDisabled,
-      mediaPreview,
-      onRemoveMedia,
       children,
       ...rest
     } = this.props;
@@ -96,12 +92,6 @@ class Input extends React.Component<Props, State> {
 
     return (
       <InputWrapper focus={focus} networkDisabled={networkDisabled}>
-        {mediaPreview && (
-          <MediaPreview>
-            <img src={mediaPreview} alt="" />
-            <button onClick={onRemoveMedia} />
-          </MediaPreview>
-        )}
         {children}
         <DraftEditor
           editorState={editorState}
