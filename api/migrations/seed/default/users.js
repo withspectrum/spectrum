@@ -9,6 +9,8 @@ const {
   PREVIOUS_MEMBER_USER_ID,
   CHANNEL_MODERATOR_USER_ID,
   COMMUNITY_MODERATOR_USER_ID,
+  CONTRIBUTOR_USER_ID,
+  NOT_A_CONTRIBUTOR_USER_ID,
   DATE,
 } = constants;
 
@@ -125,6 +127,35 @@ module.exports = [
     coverPhoto:
       'https://pbs.twimg.com/profile_banners/17106008/1491444958/1500x500',
     email: 'hi@communitymoderatorboy.io',
+    createdAt: new Date(DATE),
+    lastSeen: new Date(DATE),
+  },
+  {
+    id: CONTRIBUTOR_USER_ID,
+    name: 'Spectrum Contributor',
+    description: 'I love contribute for Spectrum',
+    website: '',
+    username: 'contributor-user',
+    isContributor: true,
+    profilePhoto:
+      'https://pbs.twimg.com/profile_images/848823167699230721/-9CbPtto_bigger.jpg',
+    coverPhoto:
+      'https://pbs.twimg.com/profile_banners/17106008/1491444958/1500x500',
+    email: 'hi@contributorboy.io',
+    createdAt: new Date(DATE),
+    lastSeen: new Date(DATE),
+  },
+  {
+    id: NOT_A_CONTRIBUTOR_USER_ID,
+    name: 'Normal User',
+    description: "I'm not a contributor",
+    website: '',
+    username: 'not-a-contributor-user',
+    profilePhoto:
+      'https://pbs.twimg.com/profile_images/848823167699230721/-9CbPtto_bigger.jpg',
+    coverPhoto:
+      'https://pbs.twimg.com/profile_banners/17106008/1491444958/1500x500',
+    email: 'hi@notacontributorboy.io',
     createdAt: new Date(DATE),
     lastSeen: new Date(DATE),
   },

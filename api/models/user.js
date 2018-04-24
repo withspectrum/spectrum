@@ -5,6 +5,7 @@ import { createNewUsersSettings } from './usersSettings';
 import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBUser, FileUpload } from 'shared/types';
+import { isContributor } from 'shared/githubIntegration';
 
 type GetUserInput = {
   id?: string,
@@ -166,6 +167,10 @@ const createOrFindUser = (
         }
       }
 
+      // if no user exist check if a new one is contributor
+      if (providerMethod === 'githubProviderId') {
+        return storeUserWithContributionInfo(user);
+      }
       // if no user exists, create a new one with the oauth profile data
       return storeUser(user);
     })
@@ -174,9 +179,26 @@ const createOrFindUser = (
         console.error(err);
         return new Error(`No user found for id ${user.id}.`);
       }
+
+      // if no user exist check if a new one is contributor
+      if (providerMethod === 'githubProviderId') {
+        return storeUserWithContributionInfo(user);
+      }
       return storeUser(user);
     });
 };
+
+const storeUserWithContributionInfo = user =>
+  isContributor(user.githubUsername, user.githubProviderId)
+    .then(isContributor => {
+      user.isContributor = isContributor;
+      console.log(
+        'User not exist, creating new, isContributor: ',
+        isContributor
+      );
+      return storeUser(user);
+    })
+    .catch(err => storeUser(user)); // something happens wrong with github API, we still want to save user
 
 const getEverything = (
   userId: string,

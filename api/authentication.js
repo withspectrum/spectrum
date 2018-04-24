@@ -346,6 +346,7 @@ const init = () => {
           googleProviderId: null,
           githubProviderId: profile.id,
           githubUsername: githubUsername,
+          isContributor: false,
           username: null,
           name: name,
           description: profile._json.bio,

@@ -35,6 +35,7 @@
     "flow-bin": "0.66",
     "forever": "^0.15.3",
     "is-html": "^1.1.0",
+    "jest-mock-axios": "^2.1.11",
     "lint-staged": "^3.3.0",
     "micromatch": "^3.0.4",
     "prettier": "^1.0.0",

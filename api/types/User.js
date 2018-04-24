@@ -100,7 +100,8 @@ const User = /* GraphQL */ `
 		# non-schema fields
     threadCount: Int @cost(complexity: 1)
 		isAdmin: Boolean
-    isPro: Boolean! @cost(complexity: 1)
+		isPro: Boolean! @cost(complexity: 1)
+		isContributor: Boolean
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!
 		directMessageThreadsConnection(first: Int = 15, after: String): UserDirectMessageThreadsConnection! @cost(complexity: 1, multiplier: "first")

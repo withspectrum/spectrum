@@ -243,6 +243,7 @@ export type DBUser = {
   providerId?: ?string,
   githubProviderId?: ?string,
   githubUsername?: ?string,
+  isContributor?: boolean,
   fbProviderId?: ?string,
   googleProviderId?: ?string,
   username: ?string,

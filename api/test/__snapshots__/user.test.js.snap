@@ -1,5 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`queries should fetch a contributor user 1`] = `
+Object {
+  "data": Object {
+    "user": Object {
+      "id": "10",
+      "isContributor": true,
+      "name": "Spectrum Contributor",
+    },
+  },
+}
+`;
+
+exports[`queries should fetch a normal user who is not a contributor 1`] = `
+Object {
+  "data": Object {
+    "user": Object {
+      "id": "11",
+      "isContributor": null,
+      "name": "Normal User",
+      "username": "not-a-contributor-user",
+    },
+  },
+}
+`;
+
 exports[`queries should fetch a user 1`] = `
 Object {
   "data": Object {

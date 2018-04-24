@@ -1,6 +1,10 @@
 // @flow
 import { request } from './utils';
-import { MAX_ID } from '../migrations/seed/default/constants';
+import {
+  MAX_ID,
+  CONTRIBUTOR_USER_ID,
+  NOT_A_CONTRIBUTOR_USER_ID,
+} from '../migrations/seed/default/constants';
 
 describe('queries', () => {
   it('should fetch a user', async () => {
@@ -31,6 +35,41 @@ describe('queries', () => {
 				user(id: "non-existant") {
 					id
           username
+				}
+			}
+		`;
+
+    expect.assertions(1);
+    const result = await request(query);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  it('should fetch a contributor user', async () => {
+    const query = /* GraphQL */ `
+			{
+				user(id: "${CONTRIBUTOR_USER_ID}") {
+          id
+          name
+          isContributor
+				}
+			}
+		`;
+
+    expect.assertions(1);
+    const result = await request(query);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  it('should fetch a normal user who is not a contributor', async () => {
+    const query = /* GraphQL */ `
+			{
+				user(id: "${NOT_A_CONTRIBUTOR_USER_ID}") {
+          id
+          name
+          username
+          isContributor
 				}
 			}
 		`;
