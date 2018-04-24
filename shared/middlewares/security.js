@@ -66,7 +66,8 @@ function securityMiddleware(server, { enableNonce, enableCSP }) {
       ],
 
       // Defines the origins from which images can be loaded.
-      imgSrc: ["'self'", 'www.google-analytics.com', 'spectrum.imgix.net'],
+      // @note: Leave open to all images, too much image coming from different servers.
+      imgSrc: ['https:', 'http:'],
 
       // Defines valid sources of stylesheets.
       styleSrc: ["'self'", "'unsafe-inline'"],
