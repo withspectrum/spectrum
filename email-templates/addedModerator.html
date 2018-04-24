@@ -22,7 +22,7 @@
       margin: 0;
       line-height: 1.4;
       background-color: #F5F8FC;
-      color: #16171A;
+      c: #16171A;
       -webkit-text-size-adjust: none;
     }
 
@@ -63,7 +63,10 @@
     }
 
     /* Layout ------------------------------ */
-
+    .content-cell ul li {
+      line-height: 1.6;
+      color: #828C99;
+    }
     .email-wrapper {
       width: 100%;
       margin: 0;
@@ -371,8 +374,8 @@
                   <td class="content-cell">
                     <p class="emoji large">👑</p>
                     <p>
-                      <b>You have been added as a moderator in the
-                        <a href="https://spectrum.chat/{{data.community.slug}}">{{data.community.name}} community</a> community on Spectrum!</b>
+                      You have been added as a moderator in the
+                        <a href="https://spectrum.chat/{{data.community.slug}}">{{data.community.name}} community</a> on Spectrum!
                     </p>
                   </td>
                 </tr>
@@ -403,7 +406,7 @@
                       </tr>
                       <tr width="100%" cellpadding="0" cellspacing="0">
                         <td valign="middle">
-                          <a href="https://spectrum.chat/{{data.community.slug}}/settings" class="button">
+                          <a href="https://spectrum.chat/{{data.community.slug}}/settings" class="button outline">
                             View community settings
                           </a>
                         </td>

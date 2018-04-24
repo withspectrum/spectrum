@@ -50,7 +50,7 @@ export class AddedModerator extends React.Component<Props> {
         <Content>
           <TextContent pointer={false}>
             {' '}
-            {actors.asString} {event} {context.asString} {date}{' '}
+            {actors.asString} {event} {context.asString} community {date}{' '}
           </TextContent>
         </Content>
       </NotificationCard>
@@ -94,7 +94,7 @@ class MiniAddedModeratorWithMutation extends React.Component<Props> {
         <Content>
           <TextContent pointer={false}>
             {' '}
-            {actors.asString} {event} {context.asString} {date}{' '}
+            {actors.asString} {event} {context.asString} community {date}{' '}
           </TextContent>
         </Content>
       </NotificationListRow>
