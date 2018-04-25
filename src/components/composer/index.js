@@ -172,8 +172,6 @@ class ComposerWithData extends Component<Props, State> {
       community = communities.find(
         community => community.slug.toLowerCase() === activeSlug.toLowerCase()
       );
-    } else {
-      community = communities && communities.length > 0 ? communities[0] : null;
     }
 
     if (!community || !community.id) return props.data.refetch();
