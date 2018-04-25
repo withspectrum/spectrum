@@ -8,6 +8,7 @@ x-workspace-now: &workspace-now ./now.json:/app/now.json:delegated
 x-workspace-now-secrets: &workspace-now-secrets ./now-secrets.json:/app/now-secrets.json:delegated
 x-workspace-shared: &workspace-shared ./shared:/app/shared:delegated
 x-workspace-node-modules: &workspace-node-modules ./node_modules:/app/node_modules:delegated
+x-workspace-node-modules-cache: &workspace-node-modules-cache node_modules_cache:/app/node_modules/.cache
 
 # Volume definitions for common linked packages.
 x-package-api: &package-api ./api:/app/api:delegated
@@ -17,6 +18,9 @@ x-package-hermes: &package-hermes ./hermes:/app/hermes:delegated
 x-package-mercury: &package-mercury ./mercury:/app/mercury:delegated
 x-package-pluto: &package-pluto ./pluto:/app/pluto:delegated
 x-package-vulcan: &package-vulcan ./vulcan:/app/vulcan:delegated
+
+volumes:
+  node_modules_cache:
 
 services:
   redis:
@@ -47,6 +51,7 @@ services:
       - *workspace-now-secrets
       - *workspace-shared
       - *workspace-node-modules
+      - *workspace-node-modules-cache
       - *package-athena
       - *package-hermes
       - *package-mercury
@@ -75,6 +80,7 @@ services:
       - *workspace-now-secrets
       - *workspace-shared
       - *workspace-node-modules
+      - *workspace-node-modules-cache
       - *package-hermes
       - *package-mercury
       - *package-pluto
@@ -101,6 +107,7 @@ services:
       - *workspace-now-secrets
       - *workspace-shared
       - *workspace-node-modules
+      - *workspace-node-modules-cache
       - *package-chronos
     ports:
       - "3004:3004"
@@ -122,6 +129,7 @@ services:
       - *workspace-now-secrets
       - *workspace-shared
       - *workspace-node-modules
+      - *workspace-node-modules-cache
       - *package-pluto
       - *package-hermes
     ports:
@@ -144,6 +152,7 @@ services:
       - *workspace-now-secrets
       - *workspace-shared
       - *workspace-node-modules
+      - *workspace-node-modules-cache
       - *package-mercury
     ports:
       - "3005:3005"
@@ -166,6 +175,7 @@ services:
       - *workspace-now-secrets
       - *workspace-shared
       - *workspace-node-modules
+      - *workspace-node-modules-cache
       - *package-api
       - *package-athena
       - *package-hermes
@@ -192,6 +202,7 @@ services:
       - *workspace-now-secrets
       - *workspace-shared
       - *workspace-node-modules
+      - *workspace-node-modules-cache
       - *package-vulcan
     ports:
       - "3007:3007"
