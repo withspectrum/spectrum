@@ -3,10 +3,8 @@ import * as React from 'react';
 import EditForm from './editForm';
 import ChannelList from './channelList';
 import BrandedLogin from './brandedLogin';
-import {
-  SectionsContainer,
-  Column,
-} from '../../../components/settingsViews/style';
+import { SectionsContainer, Column } from 'src/components/settingsViews/style';
+import SlackSettings from './slack';
 
 type Props = {
   communitySlug: string,
@@ -22,6 +20,7 @@ class Overview extends React.Component<Props> {
           <EditForm community={community} />
         </Column>
         <Column>
+          <SlackSettings id={community.id} />
           <BrandedLogin id={community.id} />
           <ChannelList id={community.id} communitySlug={communitySlug} />
         </Column>

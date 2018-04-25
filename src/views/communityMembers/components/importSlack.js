@@ -3,10 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import getSlackImport from 'shared/graphql/queries/slackImport/getSlackImport';
 import { Loading } from 'src/components/loading';
-import type { GetSlackImportType } from 'shared/graphql/queries/slackImport/getSlackImport';
-import sendSlackInvitationsMutation from 'shared/graphql/mutations/slackImport/sendSlackInvitations';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import {
   SectionCard,
@@ -14,11 +11,10 @@ import {
   SectionTitle,
 } from 'src/components/settingsViews/style';
 import { Description } from 'src/components/listItems/style';
-import MembersImport from './importMembers';
 
 type Props = {
   data: {
-    community: GetSlackImportType,
+    community: Object,
     startPolling: Function,
     stopPolling: Function,
   },
@@ -119,18 +115,7 @@ class ImportSlack extends React.Component<Props, State> {
               ? `Connected to the "${teamName}" Slack team`
               : `Slack Integration`}
           </SectionTitle>
-          {connected ? (
-            <MembersImport
-              isSendingInvites={isSendingInvites}
-              sendInvites={this.sendInvites}
-              status={status}
-              communityId={community.id}
-              startPolling={startPolling}
-              stopPolling={stopPolling}
-              teamName={teamName}
-              count={count || 0}
-            />
-          ) : (
+          {connected ? null : (
             <React.Fragment>
               <Description>
                 Easily invite your existing Slack team to Spectrum and get
@@ -169,16 +154,10 @@ const ImportSlackCard = props => (
 
 const ImportSlackNoCard = props => <ImportSlack {...props} />;
 
-export const ImportSlackWithoutCard = compose(
-  sendSlackInvitationsMutation,
-  getSlackImport,
-  connect(),
-  viewNetworkHandler
-)(ImportSlackNoCard);
-export const ImportSlackWithCard = compose(
-  sendSlackInvitationsMutation,
-  getSlackImport,
-  connect(),
-  viewNetworkHandler
-)(ImportSlackCard);
+export const ImportSlackWithoutCard = compose(connect(), viewNetworkHandler)(
+  ImportSlackNoCard
+);
+export const ImportSlackWithCard = compose(connect(), viewNetworkHandler)(
+  ImportSlackCard
+);
 export default ImportSlackWithCard;
