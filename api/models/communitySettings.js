@@ -2,6 +2,8 @@
 const { db } = require('./db');
 import type { DBCommunitySettings, DBCommunity } from 'shared/types';
 import { getCommunityById } from './community';
+import axios from 'axios';
+const querystring = require('querystring');
 
 const defaultSettings = {
   brandedLogin: {
@@ -209,4 +211,26 @@ export const markInitialSlackInvitationsSent = async (
     })
     .run()
     .then(async () => await getCommunityById(communityId));
+};
+
+export const getSlackChannelList = (communityId: string, token: string) => {
+  console.log(token);
+  return axios
+    .get(
+      `https://slack.com/api/channels.list?token=${token}&exclude_archived=true&exclude_members=true`
+    )
+    .then(response => {
+      console.log('made req to slack');
+      if (response.data && response.data.ok) {
+        return response.data.channels.map(channel => ({
+          id: channel.id,
+          name: channel.name,
+        }));
+      }
+      return [];
+    })
+    .catch(error => {
+      console.error('\n\nerror', error);
+      return [];
+    });
 };
