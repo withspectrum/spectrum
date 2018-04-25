@@ -1,6 +1,6 @@
 // @flow
 const { db } = require('./db');
-import type { DBCommunitySettings } from 'shared/types';
+import type { DBCommunitySettings, DBCommunity } from 'shared/types';
 import { getCommunityById } from './community';
 
 const defaultSettings = {
@@ -8,9 +8,22 @@ const defaultSettings = {
     isEnabled: false,
     message: null,
   },
+  slackSettings: {
+    connectedAt: null,
+    connectedBy: null,
+    teamName: null,
+    teamId: null,
+    scope: null,
+    token: null,
+    invitesSentAt: null,
+    invitesMemberCount: null,
+    invitesCustomMessage: null,
+  },
 };
 
-export const getCommunitySettings = (id: string) => {
+export const getCommunitySettings = (
+  id: string
+): Promise<DBCommunitySettings> => {
   return db
     .table('communitySettings')
     .getAll(id, { index: 'communityId' })
@@ -62,7 +75,7 @@ export const getCommunitiesSettings = (
     });
 };
 
-export const createCommunitySettings = (id: string) => {
+export const createCommunitySettings = (id: string): Promise<DBCommunity> => {
   return db
     .table('communitySettings')
     .insert({
@@ -71,12 +84,25 @@ export const createCommunitySettings = (id: string) => {
         isEnabled: false,
         message: null,
       },
+      slackSettings: {
+        connectedAt: null,
+        connectedBy: null,
+        invitesSentAt: null,
+        teamName: null,
+        teamId: null,
+        invitesMemberCount: null,
+        invitesCustomMessage: null,
+        scope: null,
+        token: null,
+      },
     })
     .run()
     .then(async () => await getCommunityById(id));
 };
 
-export const enableCommunityBrandedLogin = (id: string) => {
+export const enableCommunityBrandedLogin = (
+  id: string
+): Promise<DBCommunity> => {
   return db
     .table('communitySettings')
     .getAll(id, { index: 'communityId' })
@@ -89,7 +115,9 @@ export const enableCommunityBrandedLogin = (id: string) => {
     .then(async () => await getCommunityById(id));
 };
 
-export const disableCommunityBrandedLogin = (id: string) => {
+export const disableCommunityBrandedLogin = (
+  id: string
+): Promise<DBCommunity> => {
   return db
     .table('communitySettings')
     .getAll(id, { index: 'communityId' })
@@ -105,7 +133,7 @@ export const disableCommunityBrandedLogin = (id: string) => {
 export const updateCommunityBrandedLoginMessage = (
   id: string,
   message: ?string
-) => {
+): Promise<DBCommunity> => {
   return db
     .table('communitySettings')
     .getAll(id, { index: 'communityId' })
@@ -116,4 +144,69 @@ export const updateCommunityBrandedLoginMessage = (
     })
     .run()
     .then(async () => await getCommunityById(id));
+};
+
+type UpdateSlackSettingsInput = {
+  token: string,
+  teamName: string,
+  teamId: string,
+  connectedBy: string,
+  scope: string,
+};
+export const updateSlackSettingsAfterConnection = async (
+  communityId: string,
+  input: UpdateSlackSettingsInput
+): Promise<DBCommunity> => {
+  const settings = await db
+    .table('communitySettings')
+    .getAll(communityId, { index: 'communityId' })
+    .run();
+
+  if (!settings || settings.length === 0) {
+    return await createCommunitySettings(communityId)
+      .then(() => {
+        return db
+          .table('communitySettings')
+          .getAll(communityId, { index: 'communityId' })
+          .update({
+            slackSettings: {
+              ...defaultSettings.slackSettings,
+              ...input,
+              connectedAt: new Date(),
+            },
+          })
+          .run();
+      })
+      .then(async () => await getCommunityById(communityId));
+  }
+
+  return await db
+    .table('communitySettings')
+    .getAll(communityId, { index: 'communityId' })
+    .update({
+      slackSettings: {
+        ...defaultSettings.slackSettings,
+        ...input,
+        connectedAt: new Date(),
+      },
+    })
+    .run()
+    .then(async () => await getCommunityById(communityId));
+};
+
+export const markInitialSlackInvitationsSent = async (
+  communityId: string,
+  inviteCustomMessage: ?string
+): Promise<DBCommunity> => {
+  return db
+    .table('communitySettings')
+    .getAll(communityId, { index: 'communityId' })
+    .update({
+      slackSettings: {
+        invitesSentAt: new Date(),
+        invitesCustomMessage: inviteCustomMessage,
+      },
+    })
+    .run()
+    .then(async () => await getCommunityById(communityId));
 };
