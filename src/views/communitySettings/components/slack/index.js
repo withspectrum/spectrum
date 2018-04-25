@@ -26,7 +26,7 @@ type Props = {
 export class Slack extends React.Component<Props> {
   render() {
     const { isLoading, data, type } = this.props;
-
+    console.log('slack root', data);
     if (data.community) {
       const { slackSettings } = data.community;
 
@@ -44,7 +44,7 @@ export class Slack extends React.Component<Props> {
 
       return (
         <React.Fragment>
-          <ChannelConnection community={data.community} />
+          <ChannelConnection id={data.community.id} />
           <SendInvitations community={data.community} />
         </React.Fragment>
       );
