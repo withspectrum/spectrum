@@ -20,7 +20,7 @@ all: install build
 
 .PHONY: build
 build:
-	@docker-compose build --no-cache
+	@docker-compose build
 
 # -----------------------------------------------------------------------------
 # SCRIPTS

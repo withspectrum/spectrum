@@ -1,4 +1,5 @@
 {
+  "name": "@spectrum/spectrum",
   "private": true,
   "workspaces": [
     "api",
