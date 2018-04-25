@@ -1,4 +1,6 @@
 {
+  "name": "vulcan",
+  "version": "2.1.6",
   "scripts": {
     "start": "NODE_ENV=production node main.js"
   },

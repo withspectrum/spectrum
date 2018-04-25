@@ -1,4 +1,6 @@
 {
+  "name": "mobile",
+  "version": "2.1.6",
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "dependencies": {

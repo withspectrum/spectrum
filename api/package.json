@@ -1,4 +1,6 @@
 {
+  "name": "api",
+  "version": "2.1.6",
   "dependencies": {
     "algoliasearch": "^3.24.7",
     "apollo-engine": "1.x",

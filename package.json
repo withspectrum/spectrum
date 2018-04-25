@@ -1,7 +1,20 @@
 {
-  "name": "Spectrum",
+  "name": "spectrum",
+  "private": true,
   "version": "2.1.6",
   "license": "BSD-3-Clause",
+  "workspaces": [
+    "./",
+    "api",
+    "vulcan",
+    "mercury",
+    "hermes",
+    "pluto",
+    "mobile",
+    "cronos",
+    "athena",
+    "admin"
+  ],
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-eslint": "^8.2.2",
