@@ -169,7 +169,9 @@ const createOrFindUser = (
 
       // if no user exist check if a new one is contributor
       if (providerMethod === 'githubProviderId') {
-        return storeUserWithContributionInfo(user);
+        return addContributionInfoToUser(user)
+          .then(storeUser)
+          .catch(err => storeUser(user)); // if something happened wrong with github API, we still want to save user
       }
       // if no user exists, create a new one with the oauth profile data
       return storeUser(user);
@@ -182,23 +184,21 @@ const createOrFindUser = (
 
       // if no user exist check if a new one is contributor
       if (providerMethod === 'githubProviderId') {
-        return storeUserWithContributionInfo(user);
+        return addContributionInfoToUser(user)
+          .then(storeUser)
+          .catch(err => storeUser(user)); // if something happened wrong with github API, we still want to save user
       }
       return storeUser(user);
     });
 };
 
-const storeUserWithContributionInfo = user =>
-  isContributor(user.githubUsername, user.githubProviderId)
-    .then(isContributor => {
+const addContributionInfoToUser = user =>
+  isContributor(user.githubUsername, user.githubProviderId).then(
+    isContributor => {
       user.isContributor = isContributor;
-      console.log(
-        'User not exist, creating new, isContributor: ',
-        isContributor
-      );
-      return storeUser(user);
-    })
-    .catch(err => storeUser(user)); // something happens wrong with github API, we still want to save user
+      return user;
+    }
+  );
 
 const getEverything = (
   userId: string,
