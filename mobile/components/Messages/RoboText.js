@@ -12,24 +12,26 @@ const RoboWrapper = styled.View`
 const Hr = styled.View`
   height: 1px;
   flex: 1;
-  background-color: ${props => props.theme.bg.border};
+  background-color: ${props => props.color || props.theme.bg.border};
 `;
 
 type Props = {
   children: string,
+  color?: string | Function,
+  style?: Object | number,
 };
 
-export default ({ children }: Props) => {
+export default ({ children, color, style }: Props) => {
   return (
-    <RoboWrapper>
-      <Hr />
+    <RoboWrapper style={style}>
+      <Hr color={color} />
       <Text
         style={{ marginRight: 8, marginLeft: 8 }}
-        color={props => props.theme.text.alt}
+        color={color || (props => props.theme.text.alt)}
       >
         {children}
       </Text>
-      <Hr />
+      <Hr color={color} />
     </RoboWrapper>
   );
 };

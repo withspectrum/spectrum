@@ -47,6 +47,8 @@ class Messages extends React.Component<Props> {
           .map(({ node }) => node)
       );
 
+      let hasInjectedUnseenRobo = false;
+
       return (
         <Query query={getCurrentUserQuery}>
           {({ data: { user: currentUser } }) => (
@@ -77,51 +79,58 @@ class Messages extends React.Component<Props> {
                   }
                 }
 
-                // let unseenRobo = null;
-                // // If the last message in the group was sent after the thread was seen mark the entire
-                // // group as last seen in the UI
-                // // NOTE(@mxstbr): Maybe we should split the group eventually
-                // if (
-                //   !!lastSeen &&
-                //   new Date(group[group.length - 1].timestamp).getTime() >
-                //     new Date(lastSeen).getTime() &&
-                //   !me &&
-                //   !hasInjectedUnseenRobo
-                // ) {
-                //   hasInjectedUnseenRobo = true;
-                //   unseenRobo = (
-                //     <UnseenRobotext key={`unseen${initialMessage.timestamp}`}>
-                //       <hr />
-                //       <UnseenTime>New messages</UnseenTime>
-                //       <hr />
-                //     </UnseenRobotext>
-                //   );
-                // }
+                let unseenRobo = null;
+                // TODO(@mxstbr): Figure out how to get lastSeen information
+                let lastSeen = new Date('April 15, 2018 12:00:00');
+                // If the last message in the group was sent after the thread was seen mark the entire
+                // group as last seen in the UI
+                // NOTE(@mxstbr): Maybe we should split the group eventually
+                if (
+                  !!lastSeen &&
+                  new Date(group[group.length - 1].timestamp).getTime() >
+                    new Date(lastSeen).getTime() &&
+                  !me &&
+                  !hasInjectedUnseenRobo
+                ) {
+                  hasInjectedUnseenRobo = true;
+                  unseenRobo = (
+                    <RoboText
+                      style={{ marginTop: 8 }}
+                      color={props => props.theme.warn.default}
+                      key="new-messages"
+                    >
+                      New Messages
+                    </RoboText>
+                  );
+                }
 
                 return (
-                  <ThreadMargin key={initialMessage.id || 'robo'}>
-                    {group.map(message => {
-                      return (
-                        <Message key={message.id} me={me} message={message} />
-                      );
-                      // return (
-                      //   <Message
-                      //     key={message.id}
-                      //     message={message}
-                      //     reaction={'like'}
-                      //     me={me}
-                      //     canModerate={canModerate}
-                      //     pending={message.id < 0}
-                      //     currentUser={currentUser}
-                      //     threadType={threadType}
-                      //     threadId={threadId}
-                      //     toggleReaction={toggleReaction}
-                      //     selectedId={this.state.selectedMessage}
-                      //     changeSelection={this.toggleSelectedMessage}
-                      //   />
-                      // );
-                    })}
-                  </ThreadMargin>
+                  <View key={initialMessage.id || 'robo'}>
+                    {unseenRobo}
+                    <ThreadMargin>
+                      {group.map(message => {
+                        return (
+                          <Message key={message.id} me={me} message={message} />
+                        );
+                        // return (
+                        //   <Message
+                        //     key={message.id}
+                        //     message={message}
+                        //     reaction={'like'}
+                        //     me={me}
+                        //     canModerate={canModerate}
+                        //     pending={message.id < 0}
+                        //     currentUser={currentUser}
+                        //     threadType={threadType}
+                        //     threadId={threadId}
+                        //     toggleReaction={toggleReaction}
+                        //     selectedId={this.state.selectedMessage}
+                        //     changeSelection={this.toggleSelectedMessage}
+                        //   />
+                        // );
+                      })}
+                    </ThreadMargin>
+                  </View>
                 );
               })}
             </Fragment>
