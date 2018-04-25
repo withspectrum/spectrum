@@ -387,3 +387,5 @@ export type FileUpload = {
   encoding: string,
   stream: any,
 };
+
+export type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';

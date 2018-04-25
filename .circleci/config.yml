@@ -108,10 +108,10 @@ jobs:
       - run:
           name: Danger
           when: always
-          command: test -z $DANGER_GITHUB_API_TOKEN && yarn run danger ci || echo "forks are not allowed to run danger"
+          command: test $DANGER_GITHUB_API_TOKEN && yarn run danger ci || echo "forks are not allowed to run danger"
       - run:
           name: Run E2E Tests
-          command: yarn run test:e2e
+          command: test $CYPRESS_RECORD_KEY && yarn run test:e2e -- --record || yarn run test:e2e
 
   # Run eslint, flow etc.
   test_static_js:
