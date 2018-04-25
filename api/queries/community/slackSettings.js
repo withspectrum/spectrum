@@ -13,7 +13,6 @@ export default async (
     return new UserError('You must be logged in to view community settings.');
   }
 
-  // only community owners should be able to query for their slack team
   const permissions = await loaders.userPermissionsInCommunity.load([
     currentUser.id,
     id,
@@ -23,15 +22,5 @@ export default async (
     return null;
   }
 
-  return await loaders.communitySettings.load(id).then(settings => {
-    const { slackSettings } = settings;
-
-    return {
-      isConnected: slackSettings ? slackSettings.connectedAt : null,
-      teamName: slackSettings ? slackSettings.teamName : null,
-      hasSentInvites: slackSettings
-        ? slackSettings.invitesSentAt ? slackSettings.invitesSentAt : false
-        : null,
-    };
-  });
+  return await loaders.communitySettings.load(id);
 };
