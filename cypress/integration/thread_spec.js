@@ -75,6 +75,7 @@ describe('/new/thread', () => {
     cy.get('[data-cy="rich-text-editor"]').should('be.visible');
     cy.get('[data-cy="composer-community-selector"]').should('be.visible');
     cy.get('[data-cy="composer-channel-selector"]').should('be.visible');
+    cy.get('[data-cy="composer-channel-selector"]').select('General');
     // Type title and body
     cy.get('[data-cy="composer-title-input"]').type(title);
     cy.get('[contenteditable="true"]').type(body);
