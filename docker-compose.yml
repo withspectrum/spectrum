@@ -21,6 +21,7 @@ x-package-vulcan: &package-vulcan ./vulcan:/app/vulcan:delegated
 
 volumes:
   node_modules_cache:
+  rethinkdb_data:
 
 services:
   redis:
@@ -32,6 +33,8 @@ services:
 
   rethinkdb:
     image: rethinkdb:2.3.6
+    volumes: 
+      - rethinkdb_data:/data      
     ports:
       - 28015:28015
       - 8080:8080
