@@ -32,6 +32,7 @@ type Props = {
   editorRef?: any => void,
   networkDisabled: boolean,
   children?: React$Node,
+  hasAttachment: boolean,
 };
 
 type State = {
@@ -86,12 +87,17 @@ class Input extends React.Component<Props, State> {
       editorRef,
       networkDisabled,
       children,
+      hasAttachment,
       ...rest
     } = this.props;
     const { plugins } = this.state;
 
     return (
-      <InputWrapper focus={focus} networkDisabled={networkDisabled}>
+      <InputWrapper
+        hasAttachment={hasAttachment}
+        focus={focus}
+        networkDisabled={networkDisabled}
+      >
         {children}
         <DraftEditor
           editorState={editorState}

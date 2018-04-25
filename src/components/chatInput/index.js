@@ -27,7 +27,7 @@ import {
   SendButton,
   PhotoSizeError,
   MarkdownHint,
-  Preformated,
+  Preformatted,
   PreviewWrapper,
   RemovePreviewButton,
 } from './style';
@@ -603,17 +603,22 @@ class ChatInput extends React.Component<Props, State> {
                 editorKey="chat-input"
                 decorators={[mentionsDecorator, linksDecorator]}
                 networkDisabled={networkDisabled}
+                hasAttachment={mediaPreview || quotedMessage}
               >
                 {mediaPreview && (
                   <PreviewWrapper>
                     <img src={mediaPreview} alt="" />
-                    <RemovePreviewButton onClick={this.removePreviewWrapper} />
+                    <RemovePreviewButton onClick={this.removePreviewWrapper}>
+                      <Icon glyph="view-close-small" size={'16'} />
+                    </RemovePreviewButton>
                   </PreviewWrapper>
                 )}
                 {quotedMessage && (
                   <PreviewWrapper>
                     <QuotedMessage id={quotedMessage} />
-                    <RemovePreviewButton onClick={this.removeQuotedMessage} />
+                    <RemovePreviewButton onClick={this.removeQuotedMessage}>
+                      <Icon glyph="view-close-small" size={'16'} />
+                    </RemovePreviewButton>
                   </PreviewWrapper>
                 )}
               </Input>
@@ -621,6 +626,7 @@ class ChatInput extends React.Component<Props, State> {
                 data-cy="chat-input-send-button"
                 glyph="send-fill"
                 onClick={this.submit}
+                hasAttachment={mediaPreview || quotedMessage ? true : false}
               />
             </Form>
           </ChatInputWrapper>
@@ -628,8 +634,8 @@ class ChatInput extends React.Component<Props, State> {
         <MarkdownHint showHint={markdownHint} data-cy="markdownHint">
           <b>**bold**</b>
           <i>*italics*</i>
-          <Preformated>`code`</Preformated>
-          <Preformated>```preformatted```</Preformated>
+          <Preformatted>`code`</Preformatted>
+          <Preformatted>```preformatted```</Preformatted>
         </MarkdownHint>
       </React.Fragment>
     );
