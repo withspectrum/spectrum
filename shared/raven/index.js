@@ -19,6 +19,7 @@ if (
   Raven = {
     captureException: noop,
     setUserContext: noop,
+    captureMessage: noop,
     config: () => ({ install: noop }),
     requestHandler: (req, res, next) => next(),
     parsers: {

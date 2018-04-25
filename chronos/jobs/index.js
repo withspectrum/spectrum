@@ -5,6 +5,7 @@ import {
   PROCESS_DAILY_DIGEST_EMAIL,
   PROCESS_DAILY_CORE_METRICS,
   PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
+  PROCESS_DAILY_NEW_CONTRIBUTORS,
 } from '../queues/constants';
 
 // weekly digest
@@ -43,9 +44,19 @@ const activeCommunityReport = () =>
     'daily'
   );
 
+// daily check on new contributors to Spectrum repository
+const dailyNewContributors = () =>
+  createJob(
+    PROCESS_DAILY_NEW_CONTRIBUTORS,
+    '0 0 * * *', // run at midnight every day
+    // '* * * * *', // for development purpose
+    'daily'
+  );
+
 module.exports = {
   weeklyDigest,
   dailyDigest,
   dailyCoreMetrics,
   activeCommunityReport,
+  dailyNewContributors,
 };

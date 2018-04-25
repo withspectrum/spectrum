@@ -5,18 +5,21 @@ import processDataForDigest from './queues/digests';
 import processSingleDigestEmail from './queues/digests/processDigestEmail';
 import processDailyCoreMetrics from './queues/coreMetrics';
 import processActiveCommunityAdminReport from './queues/coreMetrics/activeCommunityAdminReport';
+import processDailyNewContributors from './queues/processDailyNewContributors';
 import {
   PROCESS_WEEKLY_DIGEST_EMAIL,
   PROCESS_DAILY_DIGEST_EMAIL,
   PROCESS_INDIVIDUAL_DIGEST,
   PROCESS_DAILY_CORE_METRICS,
   PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
+  PROCESS_DAILY_NEW_CONTRIBUTORS,
 } from './queues/constants';
 import {
   weeklyDigest,
   dailyDigest,
   dailyCoreMetrics,
   activeCommunityReport,
+  dailyNewContributors,
 } from './jobs';
 
 const PORT = parseInt(process.env.PORT, 10) || 3004;
@@ -32,6 +35,7 @@ const server = createWorker(
     [PROCESS_INDIVIDUAL_DIGEST]: processSingleDigestEmail,
     [PROCESS_DAILY_CORE_METRICS]: processDailyCoreMetrics,
     [PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT]: processActiveCommunityAdminReport,
+    [PROCESS_DAILY_NEW_CONTRIBUTORS]: processDailyNewContributors,
   },
   {
     settings: {
@@ -47,6 +51,7 @@ weeklyDigest();
 dailyDigest();
 dailyCoreMetrics();
 activeCommunityReport();
+dailyNewContributors();
 
 // $FlowIssue
 console.log(

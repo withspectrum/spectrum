@@ -37,3 +37,4 @@ export const PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT =
   'process active community admin report';
 export const SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL =
   'send active community admin report email';
+export const PROCESS_DAILY_NEW_CONTRIBUTORS = 'process daily new contributors';
