@@ -31,8 +31,8 @@ export default {
       alt: '#ea4335',
     },
     github: {
-      default: '#1475DA',
-      alt: '#1475DA',
+      default: '#16171A',
+      alt: '#828C99',
     },
     ph: {
       default: '#D85537',
