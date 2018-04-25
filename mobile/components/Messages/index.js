@@ -2,12 +2,16 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components/native';
 import { View } from 'react-native';
-import ViewNetworkHandler from '../ViewNetworkHandler';
+import { Query } from 'react-apollo';
+import { getCurrentUserQuery } from '../../../shared/graphql/queries/user/getUser';
+import viewNetworkHandler from '../ViewNetworkHandler';
 import Text from '../Text';
 import Message from '../Message';
+import { ThreadMargin } from '../../views/Thread/style';
 import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
+import { convertTimestampToDate } from '../../../src/helpers/utils';
 
-import RoboTimestamp from './RoboTimestamp';
+import RoboText from './RoboText';
 
 import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection.js';
 
@@ -44,85 +48,85 @@ class Messages extends React.Component<Props> {
       );
 
       return (
-        <View>
-          {messages.map((group, i) => {
-            if (group.length === 0) return null;
-            // Since all messages in the group have the same Author and same initial timestamp, we only need to pull that data from the first message in the group. So let's get that message and then check who sent it.
-            const initialMessage = group[0];
-            const { author } = initialMessage;
+        <Query query={getCurrentUserQuery}>
+          {({ data: { user: currentUser } }) => (
+            <Fragment>
+              {messages.map((group, i) => {
+                if (group.length === 0) return null;
+                // Since all messages in the group have the same Author and same initial timestamp, we only need to pull that data from the first message in the group. So let's get that message and then check who sent it.
+                const initialMessage = group[0];
+                const { author } = initialMessage;
 
-            const roboText = author.user.id === 'robo';
-            // const me = currentUser
-            //   ? author.user && author.user.id === currentUser.id
-            //   : false;
-            // const canModerate =
-            //   threadType !== 'directMessageThread' && (me || isModerator);
+                const roboText = author.user.id === 'robo';
+                const me = currentUser
+                  ? author.user && author.user.id === currentUser.id
+                  : false;
+                // const canModerate =
+                //   threadType !== 'directMessageThread' && (me || isModerator);
 
-            if (roboText) {
-              if (initialMessage.message.type === 'timestamp') {
-                return (
-                  <RoboTimestamp
-                    timestamp={initialMessage.timestamp}
-                    key={initialMessage.timestamp}
-                  />
-                );
-              } else {
-                // Ignore unknown robo messages
-                return null;
-              }
-            }
-
-            // let unseenRobo = null;
-            // // If the last message in the group was sent after the thread was seen mark the entire
-            // // group as last seen in the UI
-            // // NOTE(@mxstbr): Maybe we should split the group eventually
-            // if (
-            //   !!lastSeen &&
-            //   new Date(group[group.length - 1].timestamp).getTime() >
-            //     new Date(lastSeen).getTime() &&
-            //   !me &&
-            //   !hasInjectedUnseenRobo
-            // ) {
-            //   hasInjectedUnseenRobo = true;
-            //   unseenRobo = (
-            //     <UnseenRobotext key={`unseen${initialMessage.timestamp}`}>
-            //       <hr />
-            //       <UnseenTime>New messages</UnseenTime>
-            //       <hr />
-            //     </UnseenRobotext>
-            //   );
-            // }
-
-            return (
-              <View key={initialMessage.id || 'robo'}>
-                <View>
-                  {group.map(message => {
+                if (roboText) {
+                  if (initialMessage.message.type === 'timestamp') {
                     return (
-                      // TODO(@mxstbr): Figure out message types
-                      <Message key={message.id} message={message} />
+                      <RoboText key={initialMessage.timestamp}>
+                        {convertTimestampToDate(initialMessage.timestamp)}
+                      </RoboText>
                     );
-                    // return (
-                    //   <Message
-                    //     key={message.id}
-                    //     message={message}
-                    //     reaction={'like'}
-                    //     me={me}
-                    //     canModerate={canModerate}
-                    //     pending={message.id < 0}
-                    //     currentUser={currentUser}
-                    //     threadType={threadType}
-                    //     threadId={threadId}
-                    //     toggleReaction={toggleReaction}
-                    //     selectedId={this.state.selectedMessage}
-                    //     changeSelection={this.toggleSelectedMessage}
-                    //   />
-                    // );
-                  })}
-                </View>
-              </View>
-            );
-          })}
-        </View>
+                  } else {
+                    // Ignore unknown robo messages
+                    return null;
+                  }
+                }
+
+                // let unseenRobo = null;
+                // // If the last message in the group was sent after the thread was seen mark the entire
+                // // group as last seen in the UI
+                // // NOTE(@mxstbr): Maybe we should split the group eventually
+                // if (
+                //   !!lastSeen &&
+                //   new Date(group[group.length - 1].timestamp).getTime() >
+                //     new Date(lastSeen).getTime() &&
+                //   !me &&
+                //   !hasInjectedUnseenRobo
+                // ) {
+                //   hasInjectedUnseenRobo = true;
+                //   unseenRobo = (
+                //     <UnseenRobotext key={`unseen${initialMessage.timestamp}`}>
+                //       <hr />
+                //       <UnseenTime>New messages</UnseenTime>
+                //       <hr />
+                //     </UnseenRobotext>
+                //   );
+                // }
+
+                return (
+                  <ThreadMargin key={initialMessage.id || 'robo'}>
+                    {group.map(message => {
+                      return (
+                        <Message key={message.id} me={me} message={message} />
+                      );
+                      // return (
+                      //   <Message
+                      //     key={message.id}
+                      //     message={message}
+                      //     reaction={'like'}
+                      //     me={me}
+                      //     canModerate={canModerate}
+                      //     pending={message.id < 0}
+                      //     currentUser={currentUser}
+                      //     threadType={threadType}
+                      //     threadId={threadId}
+                      //     toggleReaction={toggleReaction}
+                      //     selectedId={this.state.selectedMessage}
+                      //     changeSelection={this.toggleSelectedMessage}
+                      //   />
+                      // );
+                    })}
+                  </ThreadMargin>
+                );
+              })}
+            </Fragment>
+          )}
+        </Query>
       );
     }
 
@@ -138,4 +142,4 @@ class Messages extends React.Component<Props> {
   }
 }
 
-export default ViewNetworkHandler(Messages);
+export default viewNetworkHandler(Messages);

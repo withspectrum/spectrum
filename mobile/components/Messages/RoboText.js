@@ -2,9 +2,8 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import Text from '../Text';
-import { convertTimestampToDate } from '../../../src/helpers/utils';
 
-const TimestampWrapper = styled.View`
+const RoboWrapper = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -17,21 +16,20 @@ const Hr = styled.View`
 `;
 
 type Props = {
-  timestamp: Date | number,
+  children: string,
 };
 
-export default ({ timestamp }: Props) => {
+export default ({ children }: Props) => {
   return (
-    <TimestampWrapper key={timestamp}>
+    <RoboWrapper>
       <Hr />
       <Text
         style={{ marginRight: 8, marginLeft: 8 }}
         color={props => props.theme.text.alt}
-        key={timestamp}
       >
-        {convertTimestampToDate(timestamp)}
+        {children}
       </Text>
       <Hr />
-    </TimestampWrapper>
+    </RoboWrapper>
   );
 };
