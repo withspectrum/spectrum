@@ -1,10 +1,9 @@
 // @flow
 const { db } = require('./db');
-import type { DBUser } from 'shared/types';
 
 export const getUserWhoIsNotContributorByGithubProviderId = async (
   githubUserId: string
-): Promise<?DBUser> => {
+) => {
   return await db
     .table('users')
     .getAll(githubUserId, { index: 'githubProviderId' })
