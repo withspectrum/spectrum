@@ -127,13 +127,6 @@ const Community = /* GraphQL */ `
 		message: String
 	}
 
-	type SlackSettings {
-		isConnected: Boolean
-		hasSentInvites: Boolean
-		teamName: String
-		memberCount: Int
-	}
-
 	type Community {
 		id: ID!
 		createdAt: Date!
@@ -160,7 +153,7 @@ const Community = /* GraphQL */ `
     topAndNewThreads: TopAndNewThreads @cost(complexity: 4)
 		watercooler: Thread
 		brandedLogin: BrandedLogin
-		slackSettings: SlackSettings @cost(complexity: 2)
+		slackSettings: CommunitySlackSettings @cost(complexity: 2)
 
 		hasFeatures: Features
 		hasChargeableSource: Boolean

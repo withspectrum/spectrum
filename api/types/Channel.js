@@ -63,6 +63,15 @@ const Channel = /* GraphQL */ `
 		token: String
 	}
 
+	type BotConnection {
+		eventType: String
+		slackChannelId: String
+	}
+
+	type ChannelSlackSettings {
+		botConnection: [ BotConnection ]
+	}
+
 	type Channel {
 		id: ID!
 		createdAt: Date!
@@ -85,6 +94,7 @@ const Channel = /* GraphQL */ `
 		moderators: [User] @cost(complexity: 3)
 		owners: [User] @cost(complexity: 3)
 		joinSettings: JoinSettings
+		slackSettings: ChannelSlackSettings
 
 	}
 
