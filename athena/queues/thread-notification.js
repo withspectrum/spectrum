@@ -2,7 +2,6 @@
 const debug = require('debug')('athena:queue:new-thread-notification');
 import Raven from 'shared/raven';
 import axios from 'axios';
-import addQueue from '../utils/addQueue';
 import getMentions from 'shared/get-mentions';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { fetchPayload, createPayload } from '../utils/payloads';
@@ -16,24 +15,23 @@ import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
-import { getSlackImport } from '../models/slackImports';
 import { getUserById, getUsers } from '../models/user';
 import { getCommunityById } from '../models/community';
 import { getMembersInChannelWithNotifications } from '../models/usersChannels';
 import createThreadNotificationEmail from './create-thread-notification-email';
 import { sendMentionNotificationQueue } from 'shared/bull/queues';
-import type { DBThread } from 'shared/types';
 import type { Job, ThreadNotificationJobData } from 'shared/bull/types';
+import { getCommunitySettings } from '../models/communitySettings';
 
 export default async (job: Job<ThreadNotificationJobData>) => {
   const { thread: incomingThread } = job.data;
   debug(`new job for a thread by ${incomingThread.creatorId}`);
 
-  const [actor, context, entity, communitySlackImport] = await Promise.all([
+  const [actor, context, entity, communitySlackSettings] = await Promise.all([
     fetchPayload('USER', incomingThread.creatorId),
     fetchPayload('CHANNEL', incomingThread.channelId),
     createPayload('THREAD', incomingThread),
-    getSlackImport(incomingThread.communityId),
+    getCommunitySettings(incomingThread.communityId),
   ]);
   const eventType = 'THREAD_CREATED';
 
@@ -125,9 +123,10 @@ export default async (job: Job<ThreadNotificationJobData>) => {
   let slackNotificationPromise;
   if (
     process.env.NODE_ENV === 'production' &&
-    communitySlackImport &&
-    communitySlackImport.scope &&
-    communitySlackImport.scope.indexOf('chat:write:bot') > -1
+    communitySlackSettings &&
+    communitySlackSettings.slackSettings &&
+    communitySlackSettings.slackSettings.scope &&
+    communitySlackSettings.slackSettings.scope.indexOf('chat:write:bot') > -1
   ) {
     const [author, community] = await Promise.all([
       // $FlowIssue
@@ -138,7 +137,7 @@ export default async (job: Job<ThreadNotificationJobData>) => {
       method: 'post',
       url: 'https://slack.com/api/chat.postMessage',
       headers: {
-        Authorization: `Bearer ${communitySlackImport.token}`,
+        Authorization: `Bearer ${communitySlackSettings.slackSettings.token}`,
       },
       data: {
         channel: '#general',
