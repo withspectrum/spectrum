@@ -166,15 +166,13 @@ class ComposerWithData extends Component<Props, State> {
     );
 
     const activeSlug = props.activeCommunity || this.state.activeCommunity;
-    let community;
+    let community = null;
 
     // User is viewing a community/channel? Use the community from the URL
     if (activeSlug) {
       community = communities.find(
         community => community.slug.toLowerCase() === activeSlug.toLowerCase()
       );
-    } else {
-      community = communities && communities.length > 0 ? communities[0] : null;
     }
 
     if (!community || !community.id) return props.data.refetch();
@@ -186,15 +184,10 @@ class ComposerWithData extends Component<Props, State> {
       )
       .filter(channel => channel && !channel.isArchived);
 
-    const activeChannel = getDefaultActiveChannel(
-      communityChannels,
-      props.activeChannel
-    );
-
     this.setState({
       availableCommunities: communities,
       availableChannels: channels,
-      activeCommunity: '',
+      activeCommunity: community ? community.id : '',
       activeChannel: '',
     });
   };
@@ -654,7 +647,7 @@ class ComposerWithData extends Component<Props, State> {
                 value={activeCommunity}
               >
                 <option key={-1} value="">
-                  Communities
+                  Select Communities
                 </option>
                 {availableCommunities.map(community => {
                   return (
@@ -674,7 +667,7 @@ class ComposerWithData extends Component<Props, State> {
                 value={activeChannel}
               >
                 <option key={-1} value="">
-                  Channels
+                  Select Channels
                 </option>
                 {availableChannels
                   .filter(channel => channel.community.id === activeCommunity)
