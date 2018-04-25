@@ -27,6 +27,11 @@ module.exports = {
         ])
       );
     }
+    if (process.env.NODE_ENV === 'production') {
+      config.plugins = config.plugins.filter(
+        plugin => !(plugin instanceof webpack.BannerPlugin)
+      );
+    }
     // Tell Sentry which server the errors are coming from
     config.plugins.push(
       new webpack.DefinePlugin({
