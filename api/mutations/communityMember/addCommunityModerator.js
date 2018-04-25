@@ -101,7 +101,12 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
           moderatorId: userToEvaluateId,
           userId: currentUser.id,
         });
-        sendAddedModeratorEmailQueue.add({ recipient, community });
+        if (recipient.email) {
+          sendAddedModeratorEmailQueue.add({
+            recipient: { email: recipient.email },
+            community,
+          });
+        }
         return a;
       })
       .catch(err => new UserError(err));

@@ -8,9 +8,9 @@ import { getUsers } from '../models/user';
 import { fetchPayload } from '../utils/payloads';
 import isEmail from 'validator/lib/isEmail';
 import { sendAddedModeratorNotificationQueue } from 'shared/bull/queues';
-import { AddedModeratorNotificationJobData } from 'shared/bull/types';
+import type { AddedModeratorNotificationJobData, Job } from 'shared/bull/types';
 
-export default async (job: AddedModeratorNotificationJobData) => {
+export default async (job: Job<AddedModeratorNotificationJobData>) => {
   const { moderatorId, communityId, userId } = job.data;
   debug(`added user to community ${communityId}`);
 
