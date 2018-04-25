@@ -3,16 +3,20 @@ import React from 'react';
 import redraft from 'redraft';
 import Text from '../Text';
 import { messageRenderer } from '../../../shared/clients/draft-js/message/renderer.native';
+import { Bubble } from './style';
 import type { MessageInfoType } from '../../../shared/graphql/fragments/message/messageInfo';
 
 type Props = {
   message: MessageInfoType,
+  me: boolean,
 };
 
-const Message = ({ message }: Props) => {
+const Message = ({ message, me }: Props) => {
+  let body =
+    message.messageType === 'draftjs'
+      ? redraft(JSON.parse(message.content.body), messageRenderer)
+      : message.content.body;
   switch (message.messageType) {
-    case 'text':
-      return <Text type="body">{message.content.body}</Text>;
     // case 'media': {
     //   // don't apply imgix url params to optimistic image messages
     //   const src = props.id
@@ -25,11 +29,12 @@ const Message = ({ message }: Props) => {
     // }
     // case 'emoji':
     //   return <Text type="body">{message.content.body}</Text>;
+    case 'text':
     case 'draftjs': {
       return (
-        <Text>
-          {redraft(JSON.parse(message.content.body), messageRenderer)}
-        </Text>
+        <Bubble me={me}>
+          <Text color={me ? '#FFFFFF' : '#000000'}>{body}</Text>
+        </Bubble>
       );
     }
     default:

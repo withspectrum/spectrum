@@ -44,21 +44,17 @@ class Thread extends React.Component<Props> {
   sendMessage = (body: string, user: Object) => {
     const { thread } = this.props.data;
     if (!thread) return;
-    this.props
-      .sendMessage(
-        {
-          threadId: thread.id,
-          threadType: 'story',
-          messageType: 'text',
-          content: {
-            body,
-          },
+    this.props.sendMessage(
+      {
+        threadId: thread.id,
+        threadType: 'story',
+        messageType: 'text',
+        content: {
+          body,
         },
-        user
-      )
-      .then(() => {
-        console.log('message sent successfully');
-      });
+      },
+      user
+    );
   };
 
   render() {
