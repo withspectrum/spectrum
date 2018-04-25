@@ -590,12 +590,6 @@ class ComposerWithData extends Component<Props, State> {
       !networkOnline ||
       (websocketConnection !== 'connected' &&
         websocketConnection !== 'reconnected');
-    const showSelectedCommunity = activeCommunity
-      ? activeCommunity.length > 0
-      : false;
-    const showSelectedChannel = activeChannel
-      ? activeChannel.length > 0
-      : false;
     return (
       <Container>
         <ThreadInputs>
