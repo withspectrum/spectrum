@@ -48,6 +48,14 @@ it('should extract mention before newline', () => {
   expect(getMentions('@mxstbr\n@bryn')).toEqual(['mxstbr', 'bryn']);
 });
 
+it('should not extract username from medium link with @', () => {
+  expect(
+    getMentions(
+      'https://medium.com/@probablyup/introducing-buttermilk-fc0b8c6d92af'
+    )
+  ).toEqual([]);
+});
+
 describe.skip('failing tests', () => {
   it('should not extract username preceded by !', () => {
     expect(getMentions('f!@kn')).toEqual([]);
