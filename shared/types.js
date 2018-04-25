@@ -47,6 +47,17 @@ export type DBCommunitySettings = {
   brandedLogin: ?{
     customMessage: ?string,
   },
+  slackSettings: ?{
+    connectedAt: ?string,
+    connectedBy: ?string,
+    invitesSentAt: ?string,
+    teamName: ?string,
+    teamId: ?string,
+    scope: ?string,
+    token: ?string,
+    invitesMemberCount: ?string,
+    invitesCustomMessage: ?string,
+  },
 };
 
 export type DBChannelSettings = {
