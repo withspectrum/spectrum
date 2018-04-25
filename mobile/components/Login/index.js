@@ -4,20 +4,30 @@ import { connect } from 'react-redux';
 import { Text, View, Button } from 'react-native';
 import { AuthSession, SecureStore } from 'expo';
 import { authenticate } from '../../actions/authentication';
+import {
+  Container,
+  Emoji,
+  Title,
+  Subtitle,
+  FacebookButton,
+  GithubButton,
+  GoogleButton,
+  TwitterButton,
+} from './style';
 
 const API_URL =
   process.env.NODE_ENV === 'production'
     ? 'https://spectrum.chat'
     : 'http://localhost:3001';
 
+export type Provier = 'twitter' | 'facebook' | 'google' | 'github';
+
 type Props = {
   dispatch: Function,
 };
 
 class Login extends React.Component<Props> {
-  authenticate = (
-    provider: 'twitter' | 'facebook' | 'google' | 'github'
-  ) => async () => {
+  authenticate = (provider: Provider) => async () => {
     const redirectUrl = AuthSession.getRedirectUrl();
     const result = await AuthSession.startAsync({
       authUrl: `${API_URL}/auth/${provider}?r=${redirectUrl}&authType=token`,
@@ -37,24 +47,18 @@ class Login extends React.Component<Props> {
 
   render() {
     return (
-      <View testID="login">
-        <Button
-          title="Login/Signup with Twitter"
-          onPress={this.authenticate('twitter')}
-        />
-        <Button
-          title="Login/Signup with Google"
-          onPress={this.authenticate('google')}
-        />
-        <Button
-          title="Login/Signup with Facebook"
-          onPress={this.authenticate('facebook')}
-        />
-        <Button
-          title="Login/Signup with Github"
-          onPress={this.authenticate('github')}
-        />
-      </View>
+      <Container testID="login">
+        <Emoji />
+        <Title>Sign in to get started</Title>
+        <Subtitle>
+          Spectrum is a place where communities can share, discuss, and grow
+          together. Sign in below to get in on the conversation.
+        </Subtitle>
+        <TwitterButton onPress={this.authenticate('twitter')} />
+        <GoogleButton onPress={this.authenticate('google')} />
+        <FacebookButton onPress={this.authenticate('facebook')} />
+        <GithubButton onPress={this.authenticate('github')} />
+      </Container>
     );
   }
 }
