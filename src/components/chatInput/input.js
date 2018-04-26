@@ -32,7 +32,7 @@ type Props = {
   editorRef?: any => void,
   networkDisabled: boolean,
   children?: React$Node,
-  hasAttachment: boolean,
+  hasAttachment?: boolean,
 };
 
 type State = {

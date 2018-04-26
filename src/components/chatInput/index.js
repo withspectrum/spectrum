@@ -603,7 +603,7 @@ class ChatInput extends React.Component<Props, State> {
                 editorKey="chat-input"
                 decorators={[mentionsDecorator, linksDecorator]}
                 networkDisabled={networkDisabled}
-                hasAttachment={mediaPreview || quotedMessage}
+                hasAttachment={!!mediaPreview || !!quotedMessage}
               >
                 {mediaPreview && (
                   <PreviewWrapper>
