@@ -36,6 +36,7 @@ export const Title = styled.Text`
   font-size: 40px;
   font-weight: 900;
   text-align: center;
+  margin-bottom: 16px;
 `;
 
 export const Subtitle = styled.Text`
