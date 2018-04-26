@@ -9,16 +9,14 @@ import {
   SectionCard,
   SectionTitle,
   SectionSubtitle,
-  SectionCardFooter,
 } from 'src/components/settingsViews/style';
-import { Button } from 'src/components/buttons';
 import updateChannelSlackSettingsMutation from 'shared/graphql/mutations/channel/updateSlackSettings';
-import { addToastWithTimeout } from 'src/actions/toasts';
 import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from 'src/components/viewNetworkHandler';
 import { Loading } from 'src/components/loading';
 import ViewError from 'src/components/viewError';
+import ChannelSlackManager from './channelSlackManager';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerType>,
@@ -27,14 +25,43 @@ type Props = {
   },
   updateChannelSlackSettings: Function,
   dispatch: Function,
+  channelFilter?: string,
 };
 
 class SlackChannelConnection extends React.Component<Props> {
   render() {
-    const { data, isLoading } = this.props;
-    console.log(data);
+    const { data, isLoading, channelFilter } = this.props;
+
     if (data.community) {
-      return <SectionCard>Got data!</SectionCard>;
+      let channels = data.community.channelConnection.edges.map(
+        e => e && e.node
+      );
+      if (channelFilter) {
+        channels = channels.filter(c => c && c.id === channelFilter);
+      }
+      const slackChannels = data.community.slackSettings.slackChannelList;
+
+      return (
+        <SectionCard>
+          <SectionTitle>Spectrum Slack Bot</SectionTitle>
+          <SectionSubtitle>
+            When a new conversation is started in your community, it can be
+            cross posted to any of your Slack channels.
+          </SectionSubtitle>
+
+          {channels.map(channel => {
+            if (!channel) return null;
+
+            return (
+              <ChannelSlackManager
+                key={channel.id}
+                channel={channel}
+                slackChannels={slackChannels}
+              />
+            );
+          })}
+        </SectionCard>
+      );
     }
 
     if (isLoading) {

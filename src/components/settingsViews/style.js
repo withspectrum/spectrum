@@ -58,9 +58,9 @@ export const SectionCard = styled.div`
 
 export const SectionCardFooter = styled.div`
   border-top: 1px solid ${props => props.theme.bg.border};
-  width: 100%;
-  padding: 16px 0 0;
-  margin-top: 16px;
+  width: calc(100% + 32px);
+  margin: 16px -16px 0;
+  padding: 16px 16px 0;
   display: flex;
   align-items: center;
   justify-content: flex-end;
