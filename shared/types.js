@@ -63,9 +63,14 @@ export type DBCommunitySettings = {
 export type DBChannelSettings = {
   id: string,
   channelId: string,
-  joinSettings: {
+  joinSettings?: {
     tokenJoinEnabled: boolean,
     token: string,
+  },
+  slackSettings?: {
+    botConnection: {
+      threadCreated: ?string,
+    },
   },
 };
 
