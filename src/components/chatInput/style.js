@@ -12,6 +12,7 @@ import {
 import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
 
 export const ChatInputContainer = styled(FlexRow)`
+  flex: none;
   display: flex;
   flex-direction: column;
   z-index: inherit;
