@@ -22,19 +22,12 @@ export default async (
   { channelId }: { channelId: string },
   { user }: GraphQLContext
 ) => {
-  const currentUser = user;
-
-  // user must be authed to join a channel
-  if (!currentUser) {
-    return new UserError('You must be signed in to follow this channel.');
-  }
-
   // get the channel to evaluate
   const channels = await getChannels([channelId]);
 
   const currentUserChannelPermissions = await getUserPermissionsInChannel(
     channelId,
-    currentUser.id
+    user.id
   );
 
   // select the channel
@@ -61,7 +54,7 @@ export default async (
   // get the current user's permissions in the community
   const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
     channelToEvaluate.communityId,
-    currentUser.id
+    user.id
   );
 
   if (
@@ -75,7 +68,7 @@ export default async (
   // to leave the channel
   if (currentUserChannelPermissions.isMember) {
     // remove the relationship of the user to the channel
-    const removeRelationship = removeMemberInChannel(channelId, currentUser.id);
+    const removeRelationship = removeMemberInChannel(channelId, user.id);
 
     return (
       Promise.all([channelToEvaluate, removeRelationship])
@@ -87,7 +80,7 @@ export default async (
           // should also be removed from the parent community itself
           const isMemberOfAnotherChannel = userIsMemberOfAnyChannelInCommunity(
             channelToEvaluate.communityId,
-            currentUser.id
+            user.id
           );
 
           return Promise.all([channelToEvaluate, isMemberOfAnotherChannel]);
@@ -102,10 +95,7 @@ export default async (
             // the community
             return Promise.all([
               channelToEvaluate,
-              removeMemberInCommunity(
-                channelToEvaluate.communityId,
-                currentUser.id
-              ),
+              removeMemberInCommunity(channelToEvaluate.communityId, user.id),
             ]);
           }
         })
@@ -123,7 +113,7 @@ export default async (
 
     // 1. user has already requested to join, so remove them from pending
     if (currentUserChannelPermissions.isPending) {
-      return removeMemberInChannel(channelId, currentUser.id);
+      return removeMemberInChannel(channelId, user.id);
     }
 
     // 2. if the channel is private, request to join - since this action
@@ -133,15 +123,15 @@ export default async (
     // owner approves the user
     if (channelToEvaluate.isPrivate) {
       sendPrivateChannelRequestQueue.add({
-        userId: currentUser.id,
+        userId: user.id,
         channel: channelToEvaluate,
       });
-      return createOrUpdatePendingUserInChannel(channelId, currentUser.id);
+      return createOrUpdatePendingUserInChannel(channelId, user.id);
     }
 
     // otherwise the channel is not private so the user can just join.
     // we'll create new usersChannels relationship
-    const join = createMemberInChannel(channelId, currentUser.id);
+    const join = createMemberInChannel(channelId, user.id);
 
     // we also need to see if the user is a member of the parent community.
     // if they are, we can just continue
@@ -161,14 +151,8 @@ export default async (
             // join the community and the community's default channels
             return Promise.all([
               joinedChannel,
-              createMemberInCommunity(
-                joinedChannel.communityId,
-                currentUser.id
-              ),
-              createMemberInDefaultChannels(
-                joinedChannel.communityId,
-                currentUser.id
-              ),
+              createMemberInCommunity(joinedChannel.communityId, user.id),
+              createMemberInDefaultChannels(joinedChannel.communityId, user.id),
             ]);
           }
         })

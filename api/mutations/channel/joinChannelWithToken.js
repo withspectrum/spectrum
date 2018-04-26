@@ -12,7 +12,7 @@ import {
   getUserPermissionsInCommunity,
   createMemberInCommunity,
 } from '../../models/usersCommunities';
-import { getChannelSettings } from '../../models/channelSettings';
+import { getOrCreateChannelSettings } from '../../models/channelSettings';
 
 type JoinChannelWithTokenInput = {
   input: {
@@ -27,12 +27,6 @@ export default async (
   { input }: JoinChannelWithTokenInput,
   { user }: GraphQLContext
 ) => {
-  const currentUser = user;
-
-  if (!currentUser) {
-    return new UserError('You must be signed in to to join this channel.');
-  }
-
   const { communitySlug, channelSlug, token } = input;
 
   const channel = await getChannelBySlug(channelSlug, communitySlug);
@@ -48,9 +42,9 @@ export default async (
     channelPermissions,
     settings,
   ] = await Promise.all([
-    getUserPermissionsInCommunity(channel.communityId, currentUser.id),
-    getUserPermissionsInChannel(channel.id, currentUser.id),
-    getChannelSettings(channel.id),
+    getUserPermissionsInCommunity(channel.communityId, user.id),
+    getUserPermissionsInChannel(channel.id, user.id),
+    getOrCreateChannelSettings(channel.id),
   ]);
 
   if (
@@ -65,7 +59,7 @@ export default async (
     return new UserError("You don't have permission to view this channel");
   }
 
-  if (!settings.joinSettings.tokenJoinEnabled) {
+  if (!settings.joinSettings || !settings.joinSettings.tokenJoinEnabled) {
     return new UserError(
       "You can't join at this time, the token may have changed"
     );
@@ -81,25 +75,25 @@ export default async (
 
   if (!communityPermissions.isMember) {
     return await Promise.all([
-      createMemberInCommunity(channel.communityId, currentUser.id),
-      createMemberInDefaultChannels(channel.communityId, currentUser.id),
+      createMemberInCommunity(channel.communityId, user.id),
+      createMemberInDefaultChannels(channel.communityId, user.id),
     ])
       .then(async () => {
         if (channelPermissions.isPending) {
-          return await approvePendingUserInChannel(channel.id, currentUser.id);
+          return await approvePendingUserInChannel(channel.id, user.id);
         } else {
-          return await createMemberInChannel(channel.id, currentUser.id);
+          return await createMemberInChannel(channel.id, user.id);
         }
       })
       .then(joinedChannel => joinedChannel);
   }
 
   if (channelPermissions.isPending) {
-    return await approvePendingUserInChannel(channel.id, currentUser.id);
+    return await approvePendingUserInChannel(channel.id, user.id);
   }
 
   if (!channelPermissions.isMember) {
-    return await createMemberInChannel(channel.id, currentUser.id);
+    return await createMemberInChannel(channel.id, user.id);
   }
 
   return new UserError("Couldn't authenticate this request to join a channel");

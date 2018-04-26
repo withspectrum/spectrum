@@ -1,6 +1,6 @@
 // @flow
 const { db } = require('./db');
-import type { DBChannelSettings } from 'shared/types';
+import type { DBChannelSettings, DBChannel } from 'shared/types';
 import { getChannelById } from './channel';
 import shortid from 'shortid';
 
@@ -9,19 +9,36 @@ const defaultSettings = {
     tokenJoinEnabled: false,
     message: null,
   },
+  slackSettings: {
+    botConnection: {
+      threadCreated: null,
+    },
+  },
 };
 
-export const getChannelSettings = (id: string) => {
-  return db
+export const getOrCreateChannelSettings = async (
+  channelId: string
+): Promise<DBChannelSettings> => {
+  const settings = await db
     .table('channelSettings')
-    .getAll(id, { index: 'channelId' })
-    .run()
-    .then(data => {
-      if (!data || data.length === 0) {
-        return defaultSettings;
-      }
-      return data[0];
-    });
+    .getAll(channelId, { index: 'channelId' })
+    .run();
+
+  if (!settings || settings.length === 0) {
+    return await db
+      .table('channelSettings')
+      .insert(
+        {
+          ...defaultSettings,
+          channelId,
+        },
+        { returnChanges: true }
+      )
+      .run()
+      .then(results => results.changes[0].new_val);
+  }
+
+  return settings[0];
 };
 
 export const getChannelsSettings = (
@@ -48,20 +65,6 @@ export const getChannelsSettings = (
               }
       );
     });
-};
-
-export const createChannelSettings = (id: string) => {
-  return db
-    .table('channelSettings')
-    .insert({
-      channelId: id,
-      joinSettings: {
-        token: null,
-        tokenJoinEnabled: false,
-      },
-    })
-    .run()
-    .then(async () => await getChannelById(id));
 };
 
 export const enableChannelTokenJoin = (id: string) => {
@@ -103,4 +106,57 @@ export const resetChannelJoinToken = (id: string) => {
     })
     .run()
     .then(async () => await getChannelById(id));
+};
+
+type UpdateInput = {
+  channelId: string,
+  slackChannelId: ?string,
+  eventType: 'THREAD_CREATED',
+};
+export const updateChannelSlackBotConnection = async ({
+  channelId,
+  slackChannelId,
+  eventType,
+}: UpdateInput): Promise<DBChannel> => {
+  const settings: DBChannelSettings = await getOrCreateChannelSettings(
+    channelId
+  );
+
+  const botConnectionKey = () => {
+    switch (eventType) {
+      case 'THREAD_CREATED': {
+        return 'threadCreated';
+      }
+      default: {
+        return '';
+      }
+    }
+  };
+
+  let newSettings;
+  if (!settings.slackSettings) {
+    settings.slackSettings = {
+      botConnection: {
+        [botConnectionKey()]: slackChannelId,
+      },
+    };
+    newSettings = Object.assign({}, settings);
+  } else {
+    newSettings = Object.assign({}, settings, {
+      slackSettings: {
+        botConnection: {
+          [botConnectionKey()]: slackChannelId,
+        },
+      },
+    });
+  }
+
+  return db
+    .table('channelSettings')
+    .getAll(channelId, { index: 'channelId' })
+    .update({
+      ...newSettings,
+    })
+    .run()
+    .then(() => getChannelById(channelId));
 };
