@@ -2,7 +2,8 @@
 import { MENTIONS } from './regexps';
 
 export const getMentions = (text: string): Array<string> => {
-  const mentions = text.match(MENTIONS) || [];
+  const mentions =
+    text.match(MENTIONS).filter(mention => !mention.startsWith('/')) || [];
   if (!mentions || mentions.length === 0) return [];
   // " @Mxstbr" => "@Mxstbr"
   const trimmed = mentions.map(
