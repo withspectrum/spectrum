@@ -69,46 +69,47 @@ const LS_DM_KEY = 'last-chat-input-content-dm';
 const LS_DM_KEY_EXPIRE = 'last-chat-input-content-dm-expire';
 
 const ONE_DAY = () => new Date().getTime() + 60 * 60 * 24 * 1000;
-let storedContent;
-let storedContentDM;
+
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
-const currTime = new Date().getTime();
-if (localStorage) {
-  try {
-    const expireTime = localStorage.getItem(LS_KEY_EXPIRE);
+const returnText = (type = '') => {
+  let storedContent;
+  let storedContentDM;
+  const currTime = new Date().getTime();
+  if (localStorage) {
+    try {
+      const expireTime = localStorage.getItem(LS_KEY_EXPIRE);
 
-    /////if current time is greater than valid till of text then please expire text back to ''
-    if (currTime > expireTime) {
+      /////if current time is greater than valid till of text then please expire text back to ''
+      if (currTime > expireTime) {
+        localStorage.removeItem(LS_KEY);
+        localStorage.removeItem(LS_KEY_EXPIRE);
+      } else {
+        storedContent = toState(JSON.parse(localStorage.getItem(LS_KEY) || ''));
+      }
+    } catch (err) {
       localStorage.removeItem(LS_KEY);
       localStorage.removeItem(LS_KEY_EXPIRE);
-    } else {
-      storedContent = toState(JSON.parse(localStorage.getItem(LS_KEY) || ''));
     }
-  } catch (err) {
-    localStorage.removeItem(LS_KEY);
-    localStorage.removeItem(LS_KEY_EXPIRE);
-  }
 
-  try {
-    const expireTimeDM = localStorage.getItem(LS_DM_KEY_EXPIRE);
+    try {
+      const expireTimeDM = localStorage.getItem(LS_DM_KEY_EXPIRE);
 
-    /////if current time is greater than valid till of text then please expire text back to ''
-    if (currTime > expireTimeDM) {
+      /////if current time is greater than valid till of text then please expire text back to ''
+      if (currTime > expireTimeDM) {
+        localStorage.removeItem(LS_DM_KEY);
+        localStorage.removeItem(LS_DM_KEY_EXPIRE);
+      } else {
+        storedContentDM = toState(
+          JSON.parse(localStorage.getItem(LS_DM_KEY) || '')
+        );
+      }
+    } catch (err) {
       localStorage.removeItem(LS_DM_KEY);
       localStorage.removeItem(LS_DM_KEY_EXPIRE);
-    } else {
-      storedContentDM = toState(
-        JSON.parse(localStorage.getItem(LS_DM_KEY) || '')
-      );
     }
-  } catch (err) {
-    localStorage.removeItem(LS_DM_KEY);
-    localStorage.removeItem(LS_DM_KEY_EXPIRE);
   }
-}
 
-const returnText = (type = '') => {
   if (type === 'directMessageThread') {
     return storedContentDM;
   } else {
@@ -156,7 +157,6 @@ class ChatInput extends React.Component<Props, State> {
   shouldComponentUpdate(next, nextState) {
     const curr = this.props;
     const currState = this.state;
-
     // User changed
     if (curr.currentUser !== next.currentUser) return true;
 
@@ -193,7 +193,6 @@ class ChatInput extends React.Component<Props, State> {
 
   onChange = (state, ...rest) => {
     const { onChange, threadType } = this.props;
-
     this.toggleMarkdownHint(state);
     persistContent(state, threadType);
     onChange(state, ...rest);
