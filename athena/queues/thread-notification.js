@@ -21,19 +21,32 @@ import { getMembersInChannelWithNotifications } from '../models/usersChannels';
 import createThreadNotificationEmail from './create-thread-notification-email';
 import { sendMentionNotificationQueue } from 'shared/bull/queues';
 import type { Job, ThreadNotificationJobData } from 'shared/bull/types';
+import { getChannelSettings } from '../models/channelSettings';
+import { getChannelById } from '../models/channel';
 import { getCommunitySettings } from '../models/communitySettings';
+import { truncateString } from '../utils/truncateString';
 
 export default async (job: Job<ThreadNotificationJobData>) => {
   const { thread: incomingThread } = job.data;
   debug(`new job for a thread by ${incomingThread.creatorId}`);
 
-  const [actor, context, entity, communitySlackSettings] = await Promise.all([
+  const [
+    actor,
+    context,
+    entity,
+    channelSlackSettings,
+    communitySlackSettings,
+  ] = await Promise.all([
     fetchPayload('USER', incomingThread.creatorId),
     fetchPayload('CHANNEL', incomingThread.channelId),
     createPayload('THREAD', incomingThread),
+    getChannelSettings(incomingThread.channelId),
     getCommunitySettings(incomingThread.communityId),
   ]);
   const eventType = 'THREAD_CREATED';
+
+  console.log('channelSlackSettings', channelSlackSettings);
+  console.log('communitySlackSettings', communitySlackSettings);
 
   // determine if a notification already exists
   const existing = await checkForExistingNotification(
@@ -122,17 +135,26 @@ export default async (job: Job<ThreadNotificationJobData>) => {
 
   let slackNotificationPromise;
   if (
-    process.env.NODE_ENV === 'production' &&
+    // process.env.NODE_ENV === 'production' &&
     communitySlackSettings &&
     communitySlackSettings.slackSettings &&
-    communitySlackSettings.slackSettings.scope &&
-    communitySlackSettings.slackSettings.scope.indexOf('chat:write:bot') > -1
+    communitySlackSettings.slackSettings.token &&
+    channelSlackSettings &&
+    channelSlackSettings.slackSettings &&
+    channelSlackSettings.slackSettings.botConnection &&
+    channelSlackSettings.slackSettings.botConnection.threadCreated
   ) {
-    const [author, community] = await Promise.all([
+    console.log('Met all requirements, sending a slack notification!');
+    const slackChannel =
+      channelSlackSettings.slackSettings.botConnection.threadCreated;
+
+    const [author, community, channel] = await Promise.all([
       // $FlowIssue
       getUserById(incomingThread.creatorId),
       getCommunityById(incomingThread.communityId),
+      getChannelById(incomingThread.channelId),
     ]);
+
     slackNotificationPromise = axios({
       method: 'post',
       url: 'https://slack.com/api/chat.postMessage',
@@ -140,23 +162,38 @@ export default async (job: Job<ThreadNotificationJobData>) => {
         Authorization: `Bearer ${communitySlackSettings.slackSettings.token}`,
       },
       data: {
-        channel: '#general',
+        channel: slackChannel,
         attachments: [
           {
+            fallback: `New conversation published in ${community.name} #${
+              channel.name
+            }:`,
             author_name: `${author.name} (@${author.username})`,
             author_link: `https://spectrum.chat/users/${author.username}`,
             author_icon: author.profilePhoto,
-            pretext: `A new thread was published in the ${
-              community.name
-            } community!`,
-            title: incomingThread.content.title,
+            pretext: `New conversation published in ${community.name} #${
+              channel.name
+            }:`,
+            title: truncateString(incomingThread.content.title, 80),
             title_link: `https://spectrum.chat/thread/${incomingThread.id}`,
-            text: plainTextBody,
+            text: truncateString(plainTextBody, 140),
             footer: 'Spectrum',
             footer_icon:
               'https://spectrum.chat/img/apple-icon-57x57-precomposed.png',
-            ts: 1509529611,
+            ts: incomingThread.createdAt,
             color: '#4400CC',
+            actions: [
+              {
+                type: 'button',
+                text: 'View conversation',
+                url: `https://spectrum.chat/thread/${incomingThread.id}`,
+              },
+              {
+                type: 'button',
+                text: `Message ${author.name}`,
+                url: `https://spectrum.chat/users/${author.username}`,
+              },
+            ],
           },
         ],
       },
