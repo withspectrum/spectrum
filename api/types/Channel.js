@@ -63,15 +63,6 @@ const Channel = /* GraphQL */ `
 		token: String
 	}
 
-	type BotConnection {
-		eventType: String
-		slackChannelId: String
-	}
-
-	type ChannelSlackSettings {
-		botConnection: [ BotConnection ]
-	}
-
 	type Channel {
 		id: ID!
 		createdAt: Date!
@@ -89,13 +80,12 @@ const Channel = /* GraphQL */ `
     memberConnection(first: Int = 10, after: String): ChannelMembersConnection! @cost(complexity: 1, multiplier: "first")
 		memberCount: Int!
     metaData: ChannelMetaData @cost(complexity: 1)
-    pendingUsers: [User] @cost(complexity: 3)
-		blockedUsers: [User] @cost(complexity: 3)
+    pendingUsers: [User] @cost(complexity: 3) @isAuthed
+		blockedUsers: [User] @cost(complexity: 3) @isAuthed
 		moderators: [User] @cost(complexity: 3)
 		owners: [User] @cost(complexity: 3)
-		joinSettings: JoinSettings
-		slackSettings: ChannelSlackSettings
-
+		joinSettings: JoinSettings 
+		slackSettings: ChannelSlackSettings @isAuthed
 	}
 
 	extend type Query {
@@ -129,20 +119,19 @@ const Channel = /* GraphQL */ `
 	}
 
 	extend type Mutation {
-		createChannel(input: CreateChannelInput!): Channel
-		editChannel(input: EditChannelInput!): Channel
-		deleteChannel(channelId: ID!): Boolean
-		toggleChannelSubscription(channelId: ID!): Channel
-		joinChannelWithToken(input: JoinChannelWithTokenInput!): Channel
-		toggleChannelNotifications(channelId: ID!): Channel
-		togglePendingUser(input: TogglePendingUserInput!): Channel
-		unblockUser(input: UnblockUserInput!): Channel
-		sendChannelEmailInvites(input: EmailInvitesInput!): Boolean
-		archiveChannel(input: ArchiveChannelInput!): Channel
-		restoreChannel(input: RestoreChannelInput!): Channel
-		enableChannelTokenJoin(input: EnableChannelTokenJoinInput!): Channel
-		disableChannelTokenJoin(input: DisableChannelTokenJoinInput!): Channel
-		resetChannelJoinToken(input: ResetChannelJoinTokenInput!): Channel
+		createChannel(input: CreateChannelInput!): Channel @isAuthed
+		editChannel(input: EditChannelInput!): Channel @isAuthed
+		deleteChannel(channelId: ID!): Boolean @isAuthed
+		toggleChannelSubscription(channelId: ID!): Channel @isAuthed
+		joinChannelWithToken(input: JoinChannelWithTokenInput!): Channel @isAuthed
+		toggleChannelNotifications(channelId: ID!): Channel @isAuthed
+		togglePendingUser(input: TogglePendingUserInput!): Channel @isAuthed
+		unblockUser(input: UnblockUserInput!): Channel @isAuthed
+		archiveChannel(input: ArchiveChannelInput!): Channel @isAuthed
+		restoreChannel(input: RestoreChannelInput!): Channel @isAuthed
+		enableChannelTokenJoin(input: EnableChannelTokenJoinInput!): Channel @isAuthed
+		disableChannelTokenJoin(input: DisableChannelTokenJoinInput!): Channel @isAuthed
+		resetChannelJoinToken(input: ResetChannelJoinTokenInput!): Channel @isAuthed
 	}
 `;
 

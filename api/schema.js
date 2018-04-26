@@ -17,9 +17,11 @@ import UserError from './utils/UserError';
 
 const scalars = require('./types/scalars');
 const generalTypes = require('./types/general');
+const directiveResolvers = require('./directiveResolvers');
 
 const Thread = require('./types/Thread');
 const Channel = require('./types/Channel');
+const ChannelSlackSettings = require('./types/ChannelSlackSettings');
 const Community = require('./types/Community');
 const CommunitySlackSettings = require('./types/CommunitySlackSettings');
 const Message = require('./types/Message');
@@ -45,6 +47,7 @@ const metaQueries = require('./queries/meta');
 const searchQueries = require('./queries/search');
 const communityMemberQueries = require('./queries/communityMember');
 const communitySlackSettingsQueries = require('./queries/communitySlackSettings');
+const channelSlackSettingsQueries = require('./queries/channelSlackSettings');
 
 const messageMutations = require('./mutations/message');
 const threadMutations = require('./mutations/thread');
@@ -103,6 +106,7 @@ const resolvers = merge(
   searchQueries,
   communityMemberQueries,
   communitySlackSettingsQueries,
+  channelSlackSettingsQueries,
   // mutations
   messageMutations,
   threadMutations,
@@ -137,6 +141,7 @@ const schema = makeExecutableSchema({
     CommunitySlackSettings,
     CommunityMember,
     Channel,
+    ChannelSlackSettings,
     Thread,
     ThreadParticipant,
     Message,
@@ -149,6 +154,7 @@ const schema = makeExecutableSchema({
     Search,
   ],
   resolvers,
+  directiveResolvers,
 });
 
 if (process.env.REACT_APP_MAINTENANCE_MODE === 'enabled') {
