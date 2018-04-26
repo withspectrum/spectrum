@@ -7,8 +7,16 @@ import communityChannelConnectionWithSlackSettingsFragment, {
   type CommunityChannelConnectionWithSlackSettingsType,
 } from '../../fragments/community/communityChannelConnectionWithSlackSettings';
 
+type SlackChannel = {
+  id: string,
+  name: string,
+};
+
 export type GetCommunityChannelsSlackSettings = {
   ...$Exact<CommunityInfoType>,
+  slackSettings: {
+    slackChannelList: Array<SlackChannel>,
+  },
   ...$Exact<CommunityChannelConnectionWithSlackSettingsType>,
 };
 

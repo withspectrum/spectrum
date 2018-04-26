@@ -6,20 +6,17 @@ import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
 type Edge = {
   node: {
     ...$Exact<ChannelInfoType>,
+    slackSettings: {
+      botConnection: {
+        threadCreated: ?string,
+      },
+    },
   },
-};
-
-type Connection = {
-  eventType: string,
-  slackChannelId: ?string,
 };
 
 export type CommunityChannelConnectionWithSlackSettingsType = {
   channelConnection: {
     edges: Array<?Edge>,
-    slackSettings: {
-      botConnection: Array<Connection>,
-    },
   },
 };
 
@@ -31,8 +28,7 @@ export default gql`
           ...channelInfo
           slackSettings {
             botConnection {
-              eventType
-              slackChannelId
+              threadCreated
             }
           }
         }
