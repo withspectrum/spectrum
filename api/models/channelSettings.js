@@ -110,7 +110,7 @@ export const resetChannelJoinToken = (id: string) => {
 
 type UpdateInput = {
   channelId: string,
-  slackChannelId: ?string,
+  slackChannelId: string,
   eventType: 'THREAD_CREATED',
 };
 export const updateChannelSlackBotConnection = async ({
@@ -137,7 +137,7 @@ export const updateChannelSlackBotConnection = async ({
   if (!settings.slackSettings) {
     settings.slackSettings = {
       botConnection: {
-        [botConnectionKey()]: slackChannelId,
+        [botConnectionKey()]: slackChannelId.length > 0 ? slackChannelId : null,
       },
     };
     newSettings = Object.assign({}, settings);
@@ -145,7 +145,8 @@ export const updateChannelSlackBotConnection = async ({
     newSettings = Object.assign({}, settings, {
       slackSettings: {
         botConnection: {
-          [botConnectionKey()]: slackChannelId,
+          [botConnectionKey()]:
+            slackChannelId.length > 0 ? slackChannelId : null,
         },
       },
     });
