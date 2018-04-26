@@ -1,14 +1,22 @@
 // @flow
 import type { DBCommunitySettings } from 'shared/types';
 import type { GraphQLContext } from '../../';
-import { getSlackChannelList } from '../../models/communitySettings';
+import {
+  getSlackPublicChannelList,
+  getSlackPrivateChannelList,
+} from '../../models/communitySettings';
 
 export default async (
   { slackSettings, communityId }: DBCommunitySettings,
   _: any,
   { loaders }: GraphQLContext
 ) => {
-  return slackSettings && slackSettings.token
-    ? await getSlackChannelList(communityId, slackSettings.token)
-    : [];
+  if (!slackSettings || !slackSettings.token) return [];
+
+  const [publicChannelList, privateChannelList] = await Promise.all([
+    getSlackPublicChannelList(communityId, slackSettings.token),
+    getSlackPrivateChannelList(communityId, slackSettings.token),
+  ]);
+
+  return [...publicChannelList, ...privateChannelList];
 };

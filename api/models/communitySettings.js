@@ -213,7 +213,10 @@ export const markInitialSlackInvitationsSent = async (
     .then(async () => await getCommunityById(communityId));
 };
 
-export const getSlackChannelList = (communityId: string, token: string) => {
+export const getSlackPublicChannelList = (
+  communityId: string,
+  token: string
+) => {
   console.log(token);
   return axios
     .get(
@@ -225,6 +228,32 @@ export const getSlackChannelList = (communityId: string, token: string) => {
         return response.data.channels.map(channel => ({
           id: channel.id,
           name: channel.name,
+        }));
+      }
+      return [];
+    })
+    .catch(error => {
+      console.error('\n\nerror', error);
+      return [];
+    });
+};
+
+export const getSlackPrivateChannelList = (
+  communityId: string,
+  token: string
+) => {
+  console.log(token);
+  return axios
+    .get(
+      `https://slack.com/api/groups.list?token=${token}&exclude_archived=true&exclude_members=true`
+    )
+    .then(response => {
+      console.log('made req to slack');
+      console.log('private groups', response.data);
+      if (response.data && response.data.ok) {
+        return response.data.groups.map(group => ({
+          id: group.id,
+          name: group.name,
         }));
       }
       return [];
