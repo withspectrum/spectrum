@@ -51,7 +51,12 @@ export const Nav = styled.nav`
         grid-template-areas: 'home explore support pricing';
       }
     `} ${props =>
-      props.hideOnMobile && css`@media (max-width: 768px) {display: none;}`};
+    props.hideOnMobile &&
+    css`
+      @media (max-width: 768px) {
+        display: none;
+      }
+    `};
 `;
 
 export const Label = styled.span`
@@ -60,7 +65,10 @@ export const Label = styled.span`
   margin-left: 12px;
 
   ${props =>
-    props.hideOnDesktop && css`display: none;`} @media (max-width: 768px) {
+    props.hideOnDesktop &&
+    css`
+      display: none;
+    `} @media (max-width: 768px) {
     font-size: 10px;
     font-weight: 700;
     margin: 0;
@@ -158,7 +166,11 @@ export const DropTab = styled(FlexRow)`
   @media (max-width: 768px) {
     flex: auto;
     justify-content: center;
-    ${props => props.hideOnMobile && css`display: none;`};
+    ${props =>
+      props.hideOnMobile &&
+      css`
+        display: none;
+      `};
   }
 
   .dropdown {
@@ -200,17 +212,29 @@ export const Logo = styled(Tab)`
     display: none;
   }
 
-  ${props => props.isHidden && css`display: none;`}
-`
+  ${props =>
+    props.isHidden &&
+    css`
+      display: none;
+    `};
+`;
 
-export const HomeTab = styled(Tab)`grid-area: home;`;
+export const HomeTab = styled(Tab)`
+  grid-area: home;
+`;
 
-export const MessageTab = styled(Tab)`grid-area: messages;`;
+export const MessageTab = styled(Tab)`
+  grid-area: messages;
+`;
 
 export const ExploreTab = styled(Tab)`
   grid-area: explore;
 
-  ${props => props.loggedOut && css`grid-area: explore;`} ${Label} {
+  ${props =>
+    props.loggedOut &&
+    css`
+      grid-area: explore;
+    `} ${Label} {
     @media (max-width: 768px) {
       display: flex;
     }
@@ -221,9 +245,13 @@ export const ExploreTab = styled(Tab)`
   }
 `;
 
-export const SupportTab = styled(Tab)`grid-area: support;`;
+export const SupportTab = styled(Tab)`
+  grid-area: support;
+`;
 
-export const PricingTab = styled(MessageTab)`grid-area: pricing;`;
+export const PricingTab = styled(MessageTab)`
+  grid-area: pricing;
+`;
 
 export const NotificationTab = styled(DropTab)`
   grid-area: notifications;
@@ -251,7 +279,9 @@ export const ProfileDrop = styled(DropTab)`
   }
 `;
 
-export const ProfileTab = styled(Tab)`grid-area: profile;`;
+export const ProfileTab = styled(Tab)`
+  grid-area: profile;
+`;
 
 export const Navatar = styled(Avatar)`
   margin-top: 0;
