@@ -20,7 +20,7 @@ const API_URL =
     ? 'https://spectrum.chat'
     : 'http://localhost:3001';
 
-export type Provier = 'twitter' | 'facebook' | 'google' | 'github';
+type Provider = 'twitter' | 'facebook' | 'google' | 'github';
 
 type Props = {
   dispatch: Function,

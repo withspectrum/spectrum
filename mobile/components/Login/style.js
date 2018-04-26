@@ -5,9 +5,8 @@ import { View, TouchableOpacity } from 'react-native';
 import { Svg } from 'expo';
 const { Path, G } = Svg;
 import theme from '../theme';
-import type { Provider } from './';
 
-export const Container = props => {
+export const Container = (props: any) => {
   const Container = styled.View`
     padding: 32px 16px;
     display: flex;
@@ -50,6 +49,7 @@ export const Subtitle = styled.Text`
 
 type SigninButtonProps = {
   color: string,
+  children: React$Node,
 };
 const SigninButton = (props: SigninButtonProps) => {
   const Container = styled.TouchableOpacity`
@@ -98,7 +98,7 @@ SigninButton.Icon = (props: IconProps) => {
   );
 };
 
-export const TwitterButton = props => {
+export const TwitterButton = (props: any) => {
   const { Container, Icon, Title } = SigninButton;
 
   return (
@@ -111,7 +111,7 @@ export const TwitterButton = props => {
   );
 };
 
-export const FacebookButton = props => {
+export const FacebookButton = (props: any) => {
   const { Container, Icon, Title } = SigninButton;
 
   return (
@@ -124,7 +124,7 @@ export const FacebookButton = props => {
   );
 };
 
-export const GoogleButton = props => {
+export const GoogleButton = (props: any) => {
   const { Container, Icon, Title } = SigninButton;
 
   return (
@@ -137,7 +137,7 @@ export const GoogleButton = props => {
   );
 };
 
-export const GithubButton = props => {
+export const GithubButton = (props: any) => {
   const { Container, Icon, Title } = SigninButton;
 
   return (
