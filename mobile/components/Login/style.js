@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components/native';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, ScrollView } from 'react-native';
 import { Svg } from 'expo';
 const { Path, G } = Svg;
 import theme from '../theme';
@@ -14,7 +14,11 @@ export const Container = (props: any) => {
     align-items: center;
   `;
 
-  return <Container>{props.children}</Container>;
+  return (
+    <ScrollView>
+      <Container>{props.children}</Container>
+    </ScrollView>
+  );
 };
 
 export const Emoji = () => (
