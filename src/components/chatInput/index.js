@@ -614,9 +614,12 @@ class ChatInput extends React.Component<Props, State> {
                   </PreviewWrapper>
                 )}
                 {quotedMessage && (
-                  <PreviewWrapper>
+                  <PreviewWrapper data-cy="staged-quoted-message">
                     <QuotedMessage id={quotedMessage} />
-                    <RemovePreviewButton onClick={this.removeQuotedMessage}>
+                    <RemovePreviewButton
+                      data-cy="remove-staged-quoted-message"
+                      onClick={this.removeQuotedMessage}
+                    >
                       <Icon glyph="view-close-small" size={'16'} />
                     </RemovePreviewButton>
                   </PreviewWrapper>

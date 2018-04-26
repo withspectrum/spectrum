@@ -84,6 +84,7 @@ class Message extends Component<Props> {
         me={me}
         selected={selectedId === message.id}
         onClick={() => changeSelection && changeSelection(message.id)}
+        data-cy="message"
       >
         <Body
           me={me}

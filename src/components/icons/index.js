@@ -13,6 +13,7 @@ type Props = {
   count?: ?string,
   onClick?: Function,
   onboarding?: string,
+  dataCy?: string,
 };
 
 export const InlineSvg = styled.svg`
@@ -646,10 +647,12 @@ class Icon extends React.Component<Props> {
       count,
       onClick,
       glyph,
+      dataCy,
     } = this.props;
 
     return (
       <SvgWrapper
+        data-cy={dataCy}
         size={size}
         tipText={tipText}
         tipLocation={tipLocation}

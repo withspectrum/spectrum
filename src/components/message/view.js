@@ -73,7 +73,7 @@ export const QuotedMessage = (props: {
 }) => {
   const { message, openGallery } = props;
   return (
-    <QuoteWrapper>
+    <QuoteWrapper data-cy="quoted-message">
       <Byline>
         <Icon glyph="reply" size={16} />
         <Name>{message.author.user.name}</Name>
@@ -112,6 +112,7 @@ const Action = (props: ActionProps) => {
       return (
         <ActionWrapper>
           <Icon
+            dataCy="reply-to-message"
             glyph="reply"
             tipText={`Reply`}
             tipLocation={'top'}
@@ -124,6 +125,7 @@ const Action = (props: ActionProps) => {
       return (
         <ModActionWrapper me={me}>
           <Icon
+            dataCy="delete-message"
             glyph="delete"
             tipText={'Delete'}
             tipLocation={'top'}
