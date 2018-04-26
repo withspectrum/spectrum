@@ -101,8 +101,10 @@ export const GoogleButton = styled(SigninButton)`
 `;
 
 export const GithubButton = styled(SigninButton)`
-  background: ${props => (props.preferred ? props.theme.text.default : 'none')};
-  color: ${props => (props.preferred ? '#fff' : props.theme.text.default)};
+  background: ${props =>
+    props.preferred ? props.theme.social.github.default : 'none'};
+  color: ${props =>
+    props.preferred ? '#fff' : props.theme.social.github.default};
 
   &:after {
     color: ${props => props.theme.text.default};
