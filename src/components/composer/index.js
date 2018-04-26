@@ -641,7 +641,7 @@ class ComposerWithData extends Component<Props, State> {
                 value={activeCommunity}
               >
                 <option key={-1} value="">
-                  Select Communities
+                  Select community
                 </option>
                 {availableCommunities.map(community => {
                   return (
@@ -661,7 +661,7 @@ class ComposerWithData extends Component<Props, State> {
                 value={activeChannel}
               >
                 <option key={-1} value="">
-                  Select Channels
+                  Select channel
                 </option>
                 {availableChannels
                   .filter(channel => channel.community.id === activeCommunity)
@@ -684,8 +684,8 @@ class ComposerWithData extends Component<Props, State> {
               disabled={
                 !title ||
                 title.trim().length === 0 ||
-                activeCommunity.length === 0 ||
-                activeChannel.length === 0 ||
+                !activeCommunity ||
+                !activeChannel ||
                 isPublishing ||
                 networkDisabled
               }
