@@ -353,6 +353,10 @@ export const QuotedParagraph = styled(Paragraph)`
   border-left: 4px solid ${props => props.theme.bg.border};
   margin: 4px 0;
   color: ${props => props.theme.text.alt};
+
+  code {
+    color: ${props => props.theme.text.alt};
+  }
 `;
 
 export const QuoteWrapper = styled.div`
