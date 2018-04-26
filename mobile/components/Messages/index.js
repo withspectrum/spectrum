@@ -12,8 +12,10 @@ import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
 import { convertTimestampToDate } from '../../../src/helpers/utils';
 
 import RoboText from './RoboText';
+import Author from './Author';
 
 import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection.js';
+import type { ThreadParticipantType } from '../../../shared/graphql/fragments/thread/threadParticipant';
 
 const TimestampWrapper = styled.View`
   flex-direction: row;
@@ -55,36 +57,36 @@ class Messages extends React.Component<Props> {
             <Fragment>
               {messages.map((group, i) => {
                 if (group.length === 0) return null;
-                // Since all messages in the group have the same Author and same initial timestamp, we only need to pull that data from the first message in the group. So let's get that message and then check who sent it.
-                const initialMessage = group[0];
-                const { author } = initialMessage;
 
-                const roboText = author.user.id === 'robo';
+                const initialMessage = group[0];
                 const me = currentUser
-                  ? author.user && author.user.id === currentUser.id
+                  ? initialMessage.author.user.id === currentUser.id
                   : false;
                 // const canModerate =
                 //   threadType !== 'directMessageThread' && (me || isModerator);
 
-                if (roboText) {
+                if (initialMessage.author.user.id === 'robo') {
                   if (initialMessage.message.type === 'timestamp') {
                     return (
                       <RoboText key={initialMessage.timestamp}>
                         {convertTimestampToDate(initialMessage.timestamp)}
                       </RoboText>
                     );
-                  } else {
-                    // Ignore unknown robo messages
-                    return null;
                   }
+
+                  // Ignore unknown robo messages
+                  return null;
                 }
+
+                // Flow doesn't seem to understand that we filter the robo authors
+                // (which have incorrect information, obviously) above, so this
+                // has to be a thread participant
+                // $FlowIssue
+                const author: ThreadParticipantType = initialMessage.author;
 
                 let unseenRobo = null;
                 // TODO(@mxstbr): Figure out how to get lastSeen information
                 let lastSeen = new Date('April 15, 2018 12:00:00');
-                // If the last message in the group was sent after the thread was seen mark the entire
-                // group as last seen in the UI
-                // NOTE(@mxstbr): Maybe we should split the group eventually
                 if (
                   !!lastSeen &&
                   new Date(group[group.length - 1].timestamp).getTime() >
@@ -108,27 +110,18 @@ class Messages extends React.Component<Props> {
                   <View key={initialMessage.id || 'robo'}>
                     {unseenRobo}
                     <ThreadMargin>
-                      {group.map(message => {
-                        return (
-                          <Message key={message.id} me={me} message={message} />
-                        );
-                        // return (
-                        //   <Message
-                        //     key={message.id}
-                        //     message={message}
-                        //     reaction={'like'}
-                        //     me={me}
-                        //     canModerate={canModerate}
-                        //     pending={message.id < 0}
-                        //     currentUser={currentUser}
-                        //     threadType={threadType}
-                        //     threadId={threadId}
-                        //     toggleReaction={toggleReaction}
-                        //     selectedId={this.state.selectedMessage}
-                        //     changeSelection={this.toggleSelectedMessage}
-                        //   />
-                        // );
-                      })}
+                      <Author author={author} me={me} />
+                      <View>
+                        {group.map(message => {
+                          return (
+                            <Message
+                              key={message.id}
+                              me={me}
+                              message={message}
+                            />
+                          );
+                        })}
+                      </View>
                     </ThreadMargin>
                   </View>
                 );

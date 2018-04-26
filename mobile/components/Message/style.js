@@ -6,8 +6,8 @@ export const Bubble = styled.View`
   align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)};
   /* Android */
   elevation: 10;
-  margin-top: 4px;
-  margin-bottom: 4px;
+  margin-top: 2px;
+  margin-bottom: 2px;
   padding: 8px 16px;
   background-color: ${props =>
     props.me ? props.theme.brand.default : props.theme.generic.default};
