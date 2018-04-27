@@ -95,20 +95,23 @@ const LS_KEY_EXPIRE = 'last-chat-input-content-expire';
 const LS_DM_KEY = 'last-chat-input-content-dm';
 const LS_DM_KEY_EXPIRE = 'last-chat-input-content-dm-expire';
 
-const ONE_DAY = () => new Date().getTime() + 60 * 60 * 24 * 1000;
+const ONE_DAY = (): string => {
+  const time = new Date().getTime() + 60 * 60 * 24 * 1000;
+  return time.toString();
+};
 
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
 const returnText = (type = '') => {
   let storedContent;
   let storedContentDM;
-  const currTime = new Date().getTime();
+  const currTime = new Date().getTime().toString();
   if (localStorage) {
     try {
       const expireTime = localStorage.getItem(LS_KEY_EXPIRE);
 
-      /////if current time is greater than valid till of text then please expire text back to ''
-      if (currTime > expireTime) {
+      // if current time is greater than valid till of text then please expire text back to ''
+      if (expireTime && currTime > expireTime) {
         localStorage.removeItem(LS_KEY);
         localStorage.removeItem(LS_KEY_EXPIRE);
       } else {
@@ -122,8 +125,8 @@ const returnText = (type = '') => {
     try {
       const expireTimeDM = localStorage.getItem(LS_DM_KEY_EXPIRE);
 
-      /////if current time is greater than valid till of text then please expire text back to ''
-      if (currTime > expireTimeDM) {
+      // if current time is greater than valid till of text then please expire text back to ''
+      if (expireTimeDM && currTime > expireTimeDM) {
         localStorage.removeItem(LS_DM_KEY);
         localStorage.removeItem(LS_DM_KEY_EXPIRE);
       } else {
