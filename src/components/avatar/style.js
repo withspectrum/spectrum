@@ -4,15 +4,12 @@ import Link from 'src/components/link';
 import { ProfileHeaderAction } from '../profile/style';
 
 export const HoverWrapper = styled.div`
-  display: none;
   position: absolute;
-  top: ${props => (props.bottom ? '100%' : 'auto')};
-  bottom: ${props => (props.top ? '100%' : 'auto')};
-  right: ${props => (props.left ? '0' : 'auto')};
-  left: ${props => (props.right ? '0' : 'auto')};
   z-index: ${zIndex.tooltip};
   width: 256px;
   padding-bottom: 12px;
+  padding-top: 12px;
+  ${props => props.popperStyle};
 
   &:hover {
     display: inline-block;

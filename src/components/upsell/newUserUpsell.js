@@ -168,7 +168,7 @@ class UpsellNewUser extends Component {
                 icon="facebook"
                 gradientTheme={'none'}
                 color={'social.facebook.default'}
-                onClick={() => this.clickShareLink('twitter')}
+                onClick={() => this.clickShareLink('facebook')}
               >
                 Share on Facebook
               </Button>

@@ -2,20 +2,17 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Icon from '../../../components/icons';
-import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
+import Icon from 'src/components/icons';
+import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import compose from 'recompose/compose';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { Loading } from '../../../components/loading';
-import ViewError from '../../../components/viewError';
-import { UserListItem } from '../../../components/listItems';
-import {
-  MessageIcon,
-  SectionCard,
-  SectionTitle,
-} from '../../../components/settingsViews/style';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import { Loading } from 'src/components/loading';
+import ViewError from 'src/components/viewError';
+import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
+import GranularUserProfile from 'src/components/granularUserProfile';
 import getCommunityTopMembers from 'shared/graphql/queries/community/getCommunityTopMembers';
 import type { GetCommunityTopMembersType } from 'shared/graphql/queries/community/getCommunityTopMembers';
+import { UserListItemContainer, MessageIconContainer } from '../style';
 
 type Props = {
   isLoading: boolean,
@@ -24,6 +21,7 @@ type Props = {
   },
   dispatch: Function,
   history: Object,
+  currentUser: ?Object,
 };
 
 class ConversationGrowth extends React.Component<Props> {
@@ -33,29 +31,49 @@ class ConversationGrowth extends React.Component<Props> {
   };
 
   render() {
-    const { data: { community }, isLoading } = this.props;
+    const { data: { community }, isLoading, currentUser } = this.props;
 
     if (community && community.topMembers.length > 0) {
       const sortedTopMembers = community.topMembers.slice().sort((a, b) => {
-        const bc = b && parseInt(b.contextPermissions.reputation, 10);
-        const ac = a && parseInt(a.contextPermissions.reputation, 10);
+        const bc = b && parseInt(b.reputation, 10);
+        const ac = a && parseInt(a.reputation, 10);
         return bc && ac && bc <= ac ? -1 : 1;
       });
+
       return (
         <SectionCard>
           <SectionTitle>Top members this week</SectionTitle>
-          {sortedTopMembers.map(user => {
-            if (!user) return null;
+          {sortedTopMembers.map(member => {
+            if (!member) return null;
             return (
-              <UserListItem key={user.id} user={user}>
-                <MessageIcon
-                  tipText={`Message ${user.name}`}
-                  tipLocation={'top-left'}
-                  onClick={() => this.initMessage(user)}
+              <UserListItemContainer key={member.user.id}>
+                <GranularUserProfile
+                  userObject={member.user}
+                  id={member.user.id}
+                  name={member.user.name}
+                  username={member.user.username}
+                  description={member.user.description}
+                  isCurrentUser={
+                    currentUser && member.user.id === currentUser.id
+                  }
+                  isOnline={member.user.isOnline}
+                  onlineSize={'small'}
+                  reputation={member.reputation}
+                  profilePhoto={member.user.profilePhoto}
+                  avatarSize={'40'}
+                  badges={member.roles}
                 >
-                  <Icon glyph="message-new" size={32} />
-                </MessageIcon>
-              </UserListItem>
+                  {currentUser &&
+                    member.user.id !== currentUser.id && (
+                      <MessageIconContainer>
+                        <Icon
+                          glyph={'message'}
+                          onClick={() => this.initMessage(member.user)}
+                        />
+                      </MessageIconContainer>
+                    )}
+                </GranularUserProfile>
+              </UserListItemContainer>
             );
           })}
         </SectionCard>
@@ -86,8 +104,10 @@ class ConversationGrowth extends React.Component<Props> {
   }
 }
 
+const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  connect(),
+  // $FlowIssue
+  connect(map),
   withRouter,
   getCommunityTopMembers,
   viewNetworkHandler

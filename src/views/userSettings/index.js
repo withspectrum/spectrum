@@ -2,29 +2,30 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { track } from '../../helpers/events';
-import AppViewWrapper from '../../components/appViewWrapper';
-import Column from '../../components/column';
-import { Loading } from '../../components/loading';
-import { UserEditForm } from '../../components/editForm';
-import RecurringPaymentsList from './components/recurringPaymentsList';
-import EmailSettings from './components/emailSettings';
-import NotificationSettings from './components/notificationSettings';
-import Invoices from './components/invoices';
-import GetCurrentUserSettings from 'shared/graphql/queries/user/getCurrentUserSettings';
-import type { GetCurrentUserSettingsType } from 'shared/graphql/queries/user/getCurrentUserSettings';
-import { FlexCol } from '../../components/globals';
-import ViewError from '../../components/viewError';
+import { Route } from 'react-router-dom';
+import getCurrentUserSettings, {
+  type GetCurrentUserSettingsType,
+} from 'shared/graphql/queries/user/getCurrentUserSettings';
+import { Loading } from 'src/components/loading';
+import AppViewWrapper from 'src/components/appViewWrapper';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import Head from 'src/components/head';
+import ViewError from 'src/components/viewError';
+import { View } from './style';
+import Overview from './components/overview';
 import Titlebar from '../titlebar';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
+import Header from 'src/components/settingsViews/header';
+import Subnav from 'src/components/settingsViews/subnav';
+import type { ContextRouter } from 'react-router';
+import { track } from 'src/helpers/events';
 
 type Props = {
-  currentUser: Object,
   data: {
     user: GetCurrentUserSettingsType,
   },
   isLoading: boolean,
   hasError: boolean,
+  ...$Exact<ContextRouter>,
 };
 
 class UserSettings extends React.Component<Props> {
@@ -33,16 +34,28 @@ class UserSettings extends React.Component<Props> {
   }
 
   render() {
-    const { data: { user }, data, isLoading, currentUser } = this.props;
+    const {
+      data: { user },
+      location,
+      match,
+      isLoading,
+      hasError,
+      currentUser,
+    } = this.props;
+
+    // this is hacky, but will tell us if we're viewing analytics or the root settings view
+    const pathname = location.pathname;
+    const lastIndex = pathname.lastIndexOf('/');
+    const activeTab = pathname.substr(lastIndex + 1);
 
     if (isLoading) {
       return <Loading />;
     }
 
-    // if the user has data in the store, but no user was returned from the query, we likely have a mismatch in their localstorage data and session cookie. In this case, when they hit the error view we'll automatically clear the user's localstorage so that on refresh they will be prompted to log in again
-    if (currentUser && !user) {
+    // the user is logged in but somehow a user wasnt fetched from the server prompt a refresh to reauth the user
+    if ((currentUser && !user) || (currentUser && !user && !user.id)) {
       return (
-        <FlexCol style={{ flex: 'auto' }}>
+        <React.Fragment>
           <Titlebar
             title={'No User Found'}
             provideBack={true}
@@ -59,35 +72,17 @@ class UserSettings extends React.Component<Props> {
               refresh
             />
           </AppViewWrapper>
-        </FlexCol>
-      );
-    }
-
-    // if no data was found but the user is logged in, it means the person was trying to view a user settings page for a user that doesn't exist in the db
-    if (currentUser && !user && !user.id) {
-      return (
-        <FlexCol style={{ flex: 'auto' }}>
-          <Titlebar
-            title={'User not found'}
-            provideBack={true}
-            backRoute={'/'}
-            noComposer
-          />
-          <AppViewWrapper>
-            <ViewError
-              heading={'We couldn’t find a user with this username.'}
-            />
-          </AppViewWrapper>
-        </FlexCol>
+        </React.Fragment>
       );
     }
 
     // if the user isn't logged in, or for some reason the user settings that were returned don't match the user id in the store, we show a warning error state
     if (!currentUser || user.id !== currentUser.id) {
       return (
-        <FlexCol style={{ flex: 'auto' }}>
+        <React.Fragment>
+          >
           <Titlebar
-            title={'No Permission'}
+            title={'No User Found'}
             provideBack={true}
             backRoute={'/'}
             noComposer
@@ -100,45 +95,93 @@ class UserSettings extends React.Component<Props> {
               }
             />
           </AppViewWrapper>
-        </FlexCol>
+        </React.Fragment>
+      );
+    }
+
+    // user is viewing their own settings, validated on the server
+    if (user && user.id && currentUser.id === user.id) {
+      const subnavItems = [
+        {
+          to: `/users/${user.username}/settings`,
+          label: 'Overview',
+          activeLabel: 'settings',
+        },
+      ];
+
+      const subheading = {
+        to: `/users/${user.username}`,
+        label: `Return to profile`,
+      };
+
+      const avatar = {
+        profilePhoto: user.profilePhoto,
+        user,
+      };
+
+      return (
+        <AppViewWrapper data-cy="user-settings">
+          <Titlebar
+            title={'Settings'}
+            subtitle={user.name}
+            provideBack={true}
+            backRoute={`/users/${user.username}`}
+            noComposer
+          />
+          <Head title={`Settings for ${user.name}`} />
+
+          <View id="main">
+            <Header
+              avatar={avatar}
+              subheading={subheading}
+              heading={'My Settings'}
+            />
+
+            <Subnav items={subnavItems} activeTab={activeTab} />
+
+            <Route path={`${match.url}`}>
+              {() => <Overview user={user} />}
+            </Route>
+          </View>
+        </AppViewWrapper>
+      );
+    }
+
+    if (hasError) {
+      return (
+        <AppViewWrapper>
+          <Titlebar
+            title={'Error fetching user'}
+            provideBack={true}
+            backRoute={`/`}
+            noComposer
+          />
+          <ViewError
+            refresh
+            heading={'There was an error fetching this user’s settings.'}
+          />
+        </AppViewWrapper>
       );
     }
 
     return (
-      <FlexCol style={{ flex: 'auto' }}>
+      <AppViewWrapper>
         <Titlebar
-          title={user.name}
-          subtitle={'Settings'}
+          title={'No User Found'}
           provideBack={true}
-          backRoute={`/${user.username}`}
+          backRoute={`/`}
           noComposer
         />
-        <AppViewWrapper>
-          <Column type="secondary">
-            <UserEditForm user={data} />
-            <EmailSettings smallOnly currentUser={user} />
-          </Column>
-
-          <Column type="primary">
-            <RecurringPaymentsList data={data} currentUser={user} />
-            <EmailSettings largeOnly currentUser={user} />
-            {'serviceWorker' in navigator &&
-              'PushManager' in window && <NotificationSettings largeOnly />}
-            <Invoices />
-          </Column>
-        </AppViewWrapper>
-      </FlexCol>
+        <ViewError heading={'We weren’t able to find this user’s settings.'} />
+      </AppViewWrapper>
     );
   }
 }
 
-const map = state => ({
-  currentUser: state.users.currentUser,
-});
-
+const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
   // $FlowIssue
   connect(map),
-  GetCurrentUserSettings,
+  getCurrentUserSettings,
   viewNetworkHandler
 )(UserSettings);

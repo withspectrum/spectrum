@@ -14,7 +14,7 @@ import {
   Gradient,
 } from '../../components/globals';
 
-export const Page = styled.div`
+export const Page = styled.main`
   position: relative;
   display: grid;
   grid-template-rows: 1fr;
@@ -189,7 +189,7 @@ export const SignInButton = styled.a`
   ${props =>
     props.after &&
     `
-			margin: 24px 0;
+  		margin: 24px 0;
 
 			&:after {
 				content: 'Previously signed in with';

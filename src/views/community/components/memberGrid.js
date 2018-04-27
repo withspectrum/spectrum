@@ -2,7 +2,8 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import InfiniteList from 'react-infinite-scroller-with-scroll-element';
+import InfiniteList from 'src/components/infiniteScroll';
+import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import Icon from 'src/components/icons';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { withRouter } from 'react-router';
@@ -14,7 +15,7 @@ import { Loading, LoadingListItem } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { MessageIconContainer, UserListItemContainer } from '../style';
-import GranularUserProfile from '../../../components/granularUserProfile';
+import GranularUserProfile from 'src/components/granularUserProfile';
 
 type Props = {
   data: {
@@ -63,12 +64,14 @@ class CommunityMemberGrid extends React.Component<Props, State> {
     if (community) {
       const { edges: members } = community.members;
       const nodes = members.map(member => member && member.node);
+      const uniqueNodes = deduplicateChildren(nodes, 'id');
       const hasNextPage = community.members.pageInfo.hasNextPage;
 
       return (
         <InfiniteList
           pageStart={0}
           loadMore={this.props.data.fetchMore}
+          isLoadingMore={this.props.isFetchingMore}
           hasMore={hasNextPage}
           loader={
             <UserListItemContainer>
@@ -79,36 +82,36 @@ class CommunityMemberGrid extends React.Component<Props, State> {
           initialLoad={false}
           scrollElement={scrollElement}
           threshold={750}
+          className={'scroller-for-community-members-list'}
         >
-          {nodes.map(node => {
+          {uniqueNodes.map(node => {
             if (!node) return null;
+
+            const { user, roles, reputation } = node;
             return (
-              <UserListItemContainer key={node.user.id}>
-                <GranularUserProfile
-                  userObject={node.user}
-                  id={node.user.id}
-                  name={node.user.name}
-                  username={node.user.username}
-                  description={node.user.description}
-                  isCurrentUser={currentUser && node.user.id === currentUser.id}
-                  isOnline={node.user.isOnline}
-                  onlineSize={'small'}
-                  reputation={node.reputation}
-                  profilePhoto={node.user.profilePhoto}
-                  avatarSize={'40'}
-                  badges={node.roles}
-                >
-                  {currentUser &&
-                    node.user.id !== currentUser.id && (
-                      <MessageIconContainer>
-                        <Icon
-                          glyph={'message'}
-                          onClick={() => this.initMessage(node.user)}
-                        />
-                      </MessageIconContainer>
-                    )}
-                </GranularUserProfile>
-              </UserListItemContainer>
+              <GranularUserProfile
+                key={user.id}
+                userObject={user}
+                name={user.name}
+                username={user.username}
+                profilePhoto={user.profilePhoto}
+                description={user.description}
+                isCurrentUser={currentUser && user.id === currentUser.id}
+                isOnline={user.isOnline}
+                onlineSize={'small'}
+                badges={roles}
+                reputation={reputation}
+              >
+                {currentUser &&
+                  user.id !== currentUser.id && (
+                    <MessageIconContainer>
+                      <Icon
+                        glyph={'message'}
+                        onClick={() => this.initMessage(user)}
+                      />
+                    </MessageIconContainer>
+                  )}
+              </GranularUserProfile>
             );
           })}
         </InfiniteList>

@@ -231,7 +231,6 @@ class EditForm extends React.Component<Props, State> {
           this.props.dispatch(
             addToastWithTimeout('success', 'Community saved!')
           );
-          window.location.href = `/${this.props.community.slug}`;
         }
         return;
       })
@@ -240,7 +239,7 @@ class EditForm extends React.Component<Props, State> {
           isLoading: false,
         });
 
-        this.props.dispatch(addToastWithTimeout('error', err));
+        this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
 

@@ -97,7 +97,8 @@ export default class Embed extends Component {
       blockStyleFn,
       ...elementProps
     } = otherProps;
-    const data = Entity.get(block.getEntityAt(0)).getData();
+    const entity = block.getEntityAt(0);
+    const data = contentState.getEntity(entity).getData();
     const { aspectRatio, src, width = '100%', height = 200, ...rest } = data;
 
     if (!src) return null;

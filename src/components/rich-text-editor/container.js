@@ -25,6 +25,7 @@ import OutsideClickHandler from '../outsideClickHandler';
 import Icon from '../icons';
 import { IconButton } from '../buttons';
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
+import { renderLanguageSelect } from './LanguageSelect';
 
 import Image from './Image';
 import Embed, { addEmbed, parseEmbedUrl } from './Embed';
@@ -37,18 +38,9 @@ import {
   Expander,
   Action,
   EmbedUI,
+  customStyleMap,
 } from './style';
 import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
-
-const customStyleMap = {
-  CODE: {
-    border: '1px solid #DFE7EF',
-    borderRadius: '4px',
-    backgroundColor: '#F5F8FC',
-    padding: '1px 4px',
-    fontFamily: 'monospace',
-  },
-};
 
 type Props = {
   state: Object,
@@ -79,6 +71,25 @@ class Editor extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const pluginState = this.getPluginState(props);
+
+    this.state = {
+      ...pluginState,
+      inserting: false,
+      embedding: false,
+      embedUrl: '',
+    };
+  }
+
+  componentDidUpdate(prev: Props) {
+    if (prev.readOnly !== this.props.readOnly) {
+      this.setState({
+        ...this.getPluginState(this.props),
+      });
+    }
+  }
+
+  getPluginState = (props: Props) => {
     const focusPlugin = createFocusPlugin();
     const dndPlugin = createBlockDndPlugin();
     const linkifyPlugin = createLinkifyPlugin({
@@ -102,24 +113,25 @@ class Editor extends React.Component<Props, State> {
       imageComponent: Image,
     });
 
-    this.state = {
+    return {
       plugins: [
         imagePlugin,
         prismPlugin,
         embedPlugin,
-        createMarkdownPlugin(),
+        createMarkdownPlugin({
+          renderLanguageSelect: props.readOnly
+            ? () => null
+            : renderLanguageSelect,
+        }),
         codePlugin,
         linkifyPlugin,
         dndPlugin,
         focusPlugin,
       ],
-      addEmbed: addEmbed,
       addImage: imagePlugin.addImage,
-      inserting: false,
-      embedding: false,
-      embedUrl: '',
+      addEmbed: addEmbed,
     };
-  }
+  };
 
   changeEmbedUrl = (evt: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({

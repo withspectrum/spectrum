@@ -16,6 +16,8 @@ import type { ThreadConnectionType } from '../../../shared/graphql/fragments/com
   See 'gql/community/communityThreads.js' for an example of the prop mapping in action
 */
 
+import { CenteredView } from './style';
+
 type State = {
   subscription: ?Function,
 };
@@ -26,6 +28,8 @@ type Props = {
   isRefetching: boolean,
   hasError: boolean,
   navigation: Object,
+  // This is necessary so we can listen to updates
+  channels?: string[],
   data: {
     subscribeToUpdatedThreads: Function,
     fetchMore: () => Promise<any>,
@@ -49,11 +53,23 @@ class ThreadFeed extends React.Component<Props, State> {
     this.subscribe();
   }
 
+  componentDidUpdate(prev) {
+    const curr = this.props;
+    if (
+      !this.state.subscription &&
+      JSON.stringify(prev.channels) !== JSON.stringify(curr.channels)
+    ) {
+      this.subscribe();
+    }
+  }
+
   subscribe = () => {
+    const { channels } = this.props;
+    if (!channels) return;
     this.setState({
       subscription:
         this.props.data.subscribeToUpdatedThreads &&
-        this.props.data.subscribeToUpdatedThreads(),
+        this.props.data.subscribeToUpdatedThreads(channels),
     });
   };
 
@@ -95,7 +111,7 @@ class ThreadFeed extends React.Component<Props, State> {
 
     if (threadConnection && threadConnection.edges.length > 0) {
       return (
-        <View data-cy="thread-feed">
+        <View data-cy="thread-feed" style={{ flex: 1 }}>
           <InfiniteList
             data={threadConnection.edges}
             renderItem={({ item }) => (
@@ -111,24 +127,24 @@ class ThreadFeed extends React.Component<Props, State> {
 
     if (isLoading) {
       return (
-        <View>
+        <CenteredView>
           <Text type="body">Loading...</Text>
-        </View>
+        </CenteredView>
       );
     }
 
     if (hasError) {
       return (
-        <View>
+        <CenteredView>
           <Text type="body">Error!</Text>
-        </View>
+        </CenteredView>
       );
     }
 
     return (
-      <View>
+      <CenteredView>
         <Text type="body">Nothing here yet!</Text>
-      </View>
+      </CenteredView>
     );
   }
 }

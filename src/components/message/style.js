@@ -1,6 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { Gradient, zIndex, Transition, monoStack } from '../globals';
+import { SvgWrapper } from '../icons';
+import { Gradient, zIndex, Transition, monoStack, hexa } from '../globals';
 
 const Bubble = styled.div`
   display: inline-block;
@@ -28,6 +29,38 @@ const Bubble = styled.div`
   &::selection {
     background-color: ${props =>
       props.me ? props.theme.text.default : props.theme.brand.alt};
+  }
+
+  code {
+    border: 1px solid
+      ${props =>
+        props.me
+          ? hexa(props.theme.brand.border, 0.5)
+          : props.theme.bg.default};
+    border-radius: 4px;
+    padding: 2px 4px;
+    background: ${props =>
+      props.me ? hexa(props.theme.brand.wash, 0.15) : props.theme.bg.border};
+    color: ${props =>
+      props.me ? props.theme.text.reverse : props.theme.text.default};
+    box-shadow: 0 0 8px ${props => hexa(props.theme.bg.reverse, 0.1)};
+  }
+
+  pre {
+    margin: 4px -16px;
+    padding: 8px 16px;
+    width: calc(100% + 32px);
+    border: 1px solid
+      ${props =>
+        props.me
+          ? hexa(props.theme.brand.border, 0.5)
+          : props.theme.bg.default};
+    border-left: 0;
+    border-right: 0;
+    background: ${props =>
+      props.me ? hexa(props.theme.brand.wash, 0.15) : props.theme.bg.border};
+    color: ${props =>
+      props.me ? props.theme.text.reverse : props.theme.text.default};
   }
 `;
 
@@ -284,6 +317,7 @@ export const Image = styled.img`
           props.theme.brand.default
         }`
       : ''};
+  cursor: pointer;
 `;
 
 export const Code = styled(Bubble)`
@@ -311,5 +345,34 @@ export const Paragraph = styled.p`
 
   &:not(:empty) ~ &:not(:empty) {
     margin-top: 1em;
+  }
+`;
+
+export const QuotedParagraph = Paragraph.withComponent('div').extend`
+  padding-left: 12px;
+  border-left: 4px solid ${props => props.theme.bg.border};
+  margin: 4px 0;
+  color: ${props => props.theme.text.alt};
+
+  code,
+  pre {
+    color: ${props => props.theme.text.alt};
+  }
+`;
+
+export const QuoteWrapper = styled.div`
+  background: ${props => props.theme.bg.default};
+  border-radius: 12px;
+  color: ${props => props.theme.text.default};
+  padding: 8px 12px;
+  /* Position it with little margin to the surrounding bubble */
+  width: calc(100% + 24px);
+  margin-left: -12px;
+  margin-top: -4px;
+  margin-bottom: 8px;
+
+  ${SvgWrapper} {
+    margin-left: -3px;
+    margin-right: 2px;
   }
 `;

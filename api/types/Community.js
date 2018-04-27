@@ -110,8 +110,8 @@ const Community = /* GraphQL */ `
 	}
 
 	type CommunityBillingSettings {
-		pendingAdministratorEmail: String
-		administratorEmail: String
+		pendingAdministratorEmail: LowercaseString
+		administratorEmail: LowercaseString
 		sources: [StripeSource]
 		invoices: [StripeInvoice]
 		subscriptions: [StripeSubscription]
@@ -131,7 +131,7 @@ const Community = /* GraphQL */ `
 		id: ID!
 		createdAt: Date!
 		name: String!
-		slug: String!
+		slug: LowercaseString!
 		description: String!
 		website: String
 		profilePhoto: String
@@ -150,7 +150,7 @@ const Community = /* GraphQL */ `
     isPro: Boolean @cost(complexity: 1)
     memberGrowth: GrowthData @cost(complexity: 10)
     conversationGrowth: GrowthData @cost(complexity: 3)
-    topMembers: [User] @cost(complexity: 10)
+    topMembers: [CommunityMember] @cost(complexity: 10)
     topAndNewThreads: TopAndNewThreads @cost(complexity: 4)
 		watercooler: Thread
 		brandedLogin: BrandedLogin
@@ -164,8 +164,8 @@ const Community = /* GraphQL */ `
 	}
 
 	extend type Query {
-		community(id: ID, slug: String): Community
-		communities(slugs: [String], ids: [ID], curatedContentType: String): [Community]
+		community(id: ID, slug: LowercaseString): Community
+		communities(slugs: [LowercaseString], ids: [ID], curatedContentType: String): [Community]
 		communityMember(userId: String, communityId: String): CommunityMember
     topCommunities(amount: Int = 20): [Community!] @cost(complexity: 4, multiplier: "amount")
 		recentCommunities: [Community!]
@@ -192,7 +192,7 @@ const Community = /* GraphQL */ `
 
 	input CreateCommunityInput {
 		name: String!
-		slug: String!
+		slug: LowercaseString!
 		description: String!
 		website: String
 		file: Upload
@@ -225,7 +225,7 @@ const Community = /* GraphQL */ `
 
 	input UpdateAdministratorEmailInput {
 		id: ID!
-		email: String!
+		email: LowercaseString!
 	}
 
 	input AddPaymentSourceInput {

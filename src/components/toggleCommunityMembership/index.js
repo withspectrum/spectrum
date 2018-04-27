@@ -94,7 +94,11 @@ class ToggleCommunityMembership extends React.Component<Props, State> {
   };
 
   render() {
-    return <div onClick={this.init}>{this.props.render(this.state)}</div>;
+    return (
+      <div className={'member-button'} onClick={this.init}>
+        {this.props.render(this.state)}
+      </div>
+    );
   }
 }
 

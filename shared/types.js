@@ -99,6 +99,7 @@ export type DBMessage = {
   threadId: string,
   threadType: 'story' | 'directMessageThread',
   timestamp: Date,
+  parentId?: string,
 };
 
 export type NotificationPayloadType =
@@ -205,7 +206,7 @@ type DBThreadEdits = {
     photos: Array<DBThreadAttachment>,
   },
   content: {
-    body?: string,
+    body?: any,
     title: string,
   },
   timestamp: Date,
@@ -216,7 +217,7 @@ export type DBThread = {
   channelId: string,
   communityId: string,
   content: {
-    body?: string,
+    body?: any,
     title: string,
   },
   createdAt: Date,
@@ -387,3 +388,5 @@ export type FileUpload = {
   encoding: string,
   stream: any,
 };
+
+export type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';

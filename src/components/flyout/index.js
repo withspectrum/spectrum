@@ -14,7 +14,7 @@ const StyledFlyout = styled(FlexRow)`
   top: 36px;
   z-index: ${zIndex.flyout};
   color: ${({ theme }) => theme.text.default};
-  transition: ${Transition.dropdown.off};
+  ${props => props.style};
 `;
 
 const StyledRow = styled(FlexCol)`

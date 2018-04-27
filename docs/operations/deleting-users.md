@@ -1,4 +1,4 @@
-[Table of contents](../readme.md)
+[Table of contents](../readme.md) / [Operations](./index.md)
 
 # Deleting users
 
@@ -13,7 +13,7 @@ Follow these steps to safely delete a user from Spectrum:
   2a. If the user owns communities, please try to convince them not to delete their account.
   2b. If they *really* want to delete their account, reach out to @brian to handle this
 3. When it's confirmed that they don't own any communities, clear all necessary fields from the user record, and add a `deletedAt` field - this will trigger Vulcan to remove the user from search indexes
-```
+```javascript
 r.db('spectrum')
 .table('users')
 .get(ID)
@@ -27,14 +27,25 @@ r.db('spectrum')
   githubProviderId: null,
   githubUsername: null,
   profilePhoto: null,
+  description: null,
+  website: null,
+  timezone: null,
+  lastSeen: null,
+  modifiedAt: null,
+  firstName: null,
+  lastName: null,
+  pendingEmail: null,
+  name: 'Deleted',
 })
 ```
 4. Remove that user as a member from all communities and channels:
-```
+```javascript
 // usersCommunities
 .table('usersCommunities')
 .getAll(ID, { index: 'userId' })
 .update({
+  isOwner: false,
+  isModerator: false,
   isMember: false,
   receiveNotifications: false
 })
@@ -43,12 +54,14 @@ r.db('spectrum')
 .table('usersChannels')
 .getAll(ID, { index: 'userId' })
 .update({
+  isOwner: false,
+  isModerator: false,
   isMember: false,
   receiveNotifications: false,
 })
 ```
 5. Remove all notifications from threads to save worker processing:
-```
+```javascript
 // usersThreads
 .table('usersThreads')
 .getAll(ID, { index: 'userId' })

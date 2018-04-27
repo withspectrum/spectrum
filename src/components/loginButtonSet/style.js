@@ -3,9 +3,13 @@ import styled from 'styled-components';
 import { zIndex } from '../globals';
 
 export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-gap: 16px;
+  align-items: flex-end;
   padding: 16px 0;
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 export const A = styled.a`
@@ -27,41 +31,27 @@ export const SigninButton = styled.div`
   font-size: 15px;
   font-weight: 600;
   position: relative;
-  margin: 8px 0;
   width: 100%;
-  margin-top: ${props => (props.showAfter ? '40px' : '8px')};
+  cursor: pointer;
+  ${props => props.showAfter && `margin-top: 32px`};
 
   ${props =>
     props.showAfter &&
     `
-			&:after {
-				content: 'Previously signed in with';
-				position: absolute;
-				top: -32px;
-				font-size: 14px;
-				font-weight: 600;
-				left: 50%;
-				transform: translateX(-50%);
-				width: 100%;
-				text-align: center;
-				color: ${props.theme.text.alt};
-			}
-		`} svg {
+    &:after {
+        content: 'Previously signed in with';
+        position: absolute;
+        top: -32px;
+        font-size: 14px;
+        font-weight: 600;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        text-align: center;
+        color: ${props.theme.text.alt};
+      }
+    `} svg {
     fill: currentColor !important;
-  }
-
-  @media (max-width: 768px) {
-    margin: 16px 0;
-
-    ${props =>
-      props.showAfter &&
-      `
-        margin: 48px 0 16px 0;
-      `};
-  }
-
-  &:hover {
-    cursor: pointer;
   }
 `;
 
@@ -111,8 +101,10 @@ export const GoogleButton = styled(SigninButton)`
 `;
 
 export const GithubButton = styled(SigninButton)`
-  background: ${props => (props.preferred ? props.theme.text.default : 'none')};
-  color: ${props => (props.preferred ? '#fff' : props.theme.text.default)};
+  background: ${props =>
+    props.preferred ? props.theme.social.github.default : 'none'};
+  color: ${props =>
+    props.preferred ? '#fff' : props.theme.social.github.default};
 
   &:after {
     color: ${props => props.theme.text.default};

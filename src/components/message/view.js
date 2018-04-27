@@ -11,70 +11,125 @@ import {
   ActionWrapper,
   ModActionWrapper,
   Time,
-  Code,
+  QuoteWrapper,
+  QuotedParagraph,
 } from './style';
-import {
-  codeRenderer,
-  messageRenderer,
-} from 'shared/clients/draft-js/message/renderer.web';
+import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
+import { toPlainText, toState } from 'shared/draft-utils';
+import { onlyContainsEmoji } from '../../helpers/utils';
+import { Byline, Name, Username } from '../messageGroup/style';
 import type { Node } from 'react';
+import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
 
 export const Body = (props: {
-  me: boolean,
-  type: 'text' | 'media' | 'emoji' | 'draftjs',
   openGallery: Function,
-  message: Object,
-  data: Object,
+  me: boolean,
+  message: MessageInfoType,
+  bubble?: boolean,
+  showParent?: boolean,
 }) => {
-  const { message, openGallery, type, me, data } = props;
-  switch (type) {
+  const { showParent = true, message, openGallery, me, bubble = true } = props;
+  const parsedMessage =
+    message.messageType &&
+    message.messageType === 'draftjs' &&
+    toPlainText(toState(JSON.parse(message.content.body)));
+  const emojiOnly = parsedMessage && onlyContainsEmoji(parsedMessage);
+  if (emojiOnly) return <Emoji>{parsedMessage}</Emoji>;
+  const WrapperComponent = bubble ? Text : QuotedParagraph;
+  switch (message.messageType) {
     case 'text':
     default:
-      return <Text me={me}>{message.body}</Text>;
+      return (
+        <WrapperComponent me={me}>{message.content.body}</WrapperComponent>
+      );
     case 'media': {
       // don't apply imgix url params to optimistic image messages
       const src = props.id
-        ? message.body
-        : `${message.body}?max-w=${window.innerWidth * 0.6}`;
-      if (typeof data.id === 'number' && data.id < 0) {
+        ? message.content.body
+        : `${message.content.body}?max-w=${window.innerWidth * 0.6}`;
+      if (typeof message.id === 'number' && message.id < 0) {
         return null;
       }
       return <Image onClick={openGallery} src={src} />;
     }
-    case 'emoji':
-      return <Emoji>{message}</Emoji>;
     case 'draftjs': {
-      const body = JSON.parse(message.body);
-      const isCode = body.blocks[0].type === 'code-block';
-
-      if (isCode) {
-        return <Code>{redraft(body, codeRenderer)}</Code>;
-      } else {
-        return <Text me={me}>{redraft(body, messageRenderer)}</Text>;
-      }
+      return (
+        <WrapperComponent me={me}>
+          {message.parent &&
+            showParent && (
+              // $FlowIssue
+              <QuotedMessage message={message.parent} />
+            )}
+          {redraft(JSON.parse(message.content.body), messageRenderer)}
+        </WrapperComponent>
+      );
     }
   }
 };
 
-const Action = props => {
-  const { me, action, deleteMessage } = props;
+export const QuotedMessage = (props: {
+  message: MessageInfoType,
+  openGallery?: Function,
+}) => {
+  const { message, openGallery } = props;
+  return (
+    <QuoteWrapper data-cy="quoted-message">
+      <Byline>
+        <Icon glyph="reply" size={16} />
+        <Name>{message.author.user.name}</Name>
+        <Username>@{message.author.user.username}</Username>
+      </Byline>
+      <Body
+        message={message}
+        showParent={false}
+        me={false}
+        openGallery={openGallery ? openGallery : () => {}}
+        bubble={false}
+      />
+    </QuoteWrapper>
+  );
+};
+
+type ActionProps = {
+  me: boolean,
+  action: string,
+  deleteMessage?: Function,
+  replyToMessage?: Function,
+};
+
+const Action = (props: ActionProps) => {
+  const { me, action, deleteMessage, replyToMessage } = props;
 
   switch (action) {
     case 'share':
     default:
       return (
         <ActionWrapper>
-          <Icon glyph="share" tipText={'Share'} tipLocation={'top'} size={20} />
+          <Icon glyph="share" tipText={'Share'} tipLocation={'top'} size={24} />
+        </ActionWrapper>
+      );
+    case 'reply':
+      return (
+        <ActionWrapper>
+          <Icon
+            dataCy="reply-to-message"
+            glyph="reply"
+            tipText={`Reply`}
+            tipLocation={'top'}
+            size={24}
+            onClick={replyToMessage}
+          />
         </ActionWrapper>
       );
     case 'delete':
       return (
         <ModActionWrapper me={me}>
           <Icon
+            dataCy="delete-message"
             glyph="delete"
             tipText={'Delete'}
             tipLocation={'top'}
-            size={20}
+            size={24}
             onClick={deleteMessage}
           />
         </ModActionWrapper>
@@ -84,18 +139,18 @@ const Action = props => {
 
 export const Actions = (props: {
   me: boolean,
-  reaction: Object,
   canModerate: boolean,
-  deleteMessage: Function,
+  deleteMessage?: Function,
+  replyToMessage?: Function,
   isOptimisticMessage: boolean,
   children: Node,
   message: Object,
 }) => {
   const {
     me,
-    reaction,
     canModerate,
     deleteMessage,
+    replyToMessage,
     isOptimisticMessage,
     message,
   } = props;
@@ -107,12 +162,12 @@ export const Actions = (props: {
   return (
     <ActionUI me={me}>
       {props.children}
-      {/* {props.shareable && <Action me={me} action={'share'} /> } */}
+      <Action me={me} action="reply" replyToMessage={replyToMessage} />
       {canModerate &&
         !isOptimisticMessage && (
           <Action me={me} action={'delete'} deleteMessage={deleteMessage} />
         )}
-      <Indicator reaction={reaction} me={me} />
+      <Indicator me={me} />
     </ActionUI>
   );
 };

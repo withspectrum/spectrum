@@ -3,7 +3,7 @@ import { URL } from 'url';
 import { RELATIVE_URL } from 'shared/regexps';
 const IS_PROD = process.env.NODE_ENV === 'production';
 
-const EXPO_URL = /^https:\/\/auth\.expo\.io\/@(mxstbr|uberbryn|brianlovin)\//;
+const EXPO_URL = /^https:\/\/auth\.expo\.io\//;
 
 /**
  * Make a URL string is a spectrum.chat URL

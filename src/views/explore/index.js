@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
@@ -21,7 +22,7 @@ const ExplorePure = props => {
 
   return (
     <AppViewWrapper>
-      <Wrapper data-cy="explore-page">
+      <Wrapper data-cy="explore-page" id="main">
         <Head title={title} description={description} />
         <Titlebar title={'Explore'} noComposer />
         <CommunitySearchWrapper
@@ -37,4 +38,7 @@ const ExplorePure = props => {
 };
 
 const map = state => ({ currentUser: state.users.currentUser });
-export default compose(connect(map))(ExplorePure);
+export default compose(
+  // $FlowIssue
+  connect(map)
+)(ExplorePure);

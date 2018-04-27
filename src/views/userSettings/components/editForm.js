@@ -1,49 +1,43 @@
 // @flow
 import * as React from 'react';
 import { withRouter } from 'react-router';
-import slugg from 'slugg';
 import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
-import { track } from '../../helpers/events';
-import { throttle } from '../../helpers/utils';
-import { Button } from '../buttons';
-import Icon from '../../components/icons';
-import { SERVER_URL, CLIENT_URL } from '../../api/constants';
-import GithubProfile from '../../components/githubProfile';
-import { GithubSigninButton } from '../../components/loginButtonSet/github';
+import { track } from 'src/helpers/events';
+import { Button } from 'src/components/buttons';
+import Icon from 'src/components/icons';
+import { SERVER_URL, CLIENT_URL } from 'src/api/constants';
+import GithubProfile from 'src/components/githubProfile';
+import { GithubSigninButton } from 'src/components/loginButtonSet/github';
 import {
   Input,
   TextArea,
   Error,
   PhotoInput,
   CoverInput,
-} from '../formElements';
-import { StyledLabel } from '../formElements/style';
+} from 'src/components/formElements';
+import UsernameSearch from 'src/components/usernameSearch';
+import { StyledLabel } from 'src/components/formElements/style';
 import {
-  StyledCard,
   Form,
-  FormTitle,
   Actions,
   ImageInputWrapper,
   Location,
-  Loading,
   GithubSignin,
-} from './style';
-import { Spinner } from '../../components/globals';
-import { getUserByUsernameQuery } from 'shared/graphql/queries/user/getUser';
-import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+} from '../style';
 import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import type { EditUserType } from 'shared/graphql/mutations/user/editUser';
-import { addToastWithTimeout } from '../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
   PRO_USER_MAX_IMAGE_SIZE_BYTES,
   FREE_USER_MAX_IMAGE_SIZE_BYTES,
   FREE_USER_MAX_IMAGE_SIZE_STRING,
-} from '../../helpers/images';
-import { Notice } from '../../components/listItems/style';
+} from 'src/helpers/images';
+import { Notice } from 'src/components/listItems/style';
+import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 
 type State = {
   website: ?string,
@@ -61,7 +55,6 @@ type State = {
   photoSizeError: string,
   proGifError: boolean,
   usernameError: string,
-  isUsernameSearching: boolean,
 };
 
 type Props = {
@@ -93,10 +86,7 @@ class UserWithData extends React.Component<Props, State> {
       photoSizeError: '',
       proGifError: false,
       usernameError: '',
-      isUsernameSearching: false,
     };
-
-    this.search = throttle(this.search, 500);
   }
 
   changeName = e => {
@@ -295,7 +285,6 @@ class UserWithData extends React.Component<Props, State> {
           this.setState({
             file: null,
           });
-          window.location.href = `/users/${user.username}`;
         }
 
         return;
@@ -309,80 +298,18 @@ class UserWithData extends React.Component<Props, State> {
       });
   };
 
-  changeUsername = e => {
-    let username = e.target.value.trim();
-    username = slugg(username);
-
+  handleUsernameValidation = ({ error, username }) => {
+    const { currentUser } = this.props;
+    // we want to reset error if was typed same username which was set before
+    const usernameError = currentUser.username === username ? '' : error;
     this.setState({
-      usernameError: '',
+      usernameError,
       username,
     });
-
-    if (username.length > 20) {
-      return this.setState({
-        usernameError: 'Usernames can be up to 20 characters',
-      });
-    } else if (username.length === 0) {
-      this.setState({
-        usernameError: 'Be sure to set a username so that people can find you!',
-      });
-    } else {
-      this.setState({
-        usernameError: '',
-      });
-    }
-
-    // $FlowIssue
-    this.search(username);
   };
 
-  search = (username: string) => {
-    if (username.length > 20) {
-      return this.setState({
-        usernameError: 'Usernames can be up to 20 characters',
-        isUsernameSearching: false,
-      });
-    } else if (username.length === 0) {
-      return this.setState({
-        usernameError: 'Be sure to set a username so that people can find you!',
-        isUsernameSearching: false,
-      });
-    } else {
-      this.setState({
-        usernameError: '',
-        isUsernameSearching: true,
-      });
-
-      // check the db to see if this channel slug exists
-      this.props.client
-        .query({
-          query: getUserByUsernameQuery,
-          variables: {
-            username,
-          },
-        })
-        .then(({ data: { user } }: { data: { user: GetUserType } }) => {
-          if (this.state.username.length > 20) {
-            return this.setState({
-              usernameError: 'Usernames can be up to 20 characters',
-              isUsernameSearching: false,
-            });
-          } else if (user && user.id) {
-            return this.setState({
-              usernameError: 'This username is already taken, sorry!',
-              isUsernameSearching: false,
-            });
-          } else {
-            return this.setState({
-              usernameError: '',
-              isUsernameSearching: false,
-            });
-          }
-        })
-        .catch(err =>
-          this.props.dispatch(addToastWithTimeout('error', err.message))
-        );
-    }
+  handleOnError = err => {
+    this.props.dispatch(addToastWithTimeout('error', err.message));
   };
 
   render() {
@@ -401,18 +328,17 @@ class UserWithData extends React.Component<Props, State> {
       photoSizeError,
       proGifError,
       usernameError,
-      isUsernameSearching,
     } = this.state;
 
     const postAuthRedirectPath = `?r=${CLIENT_URL}/users/${username}/settings`;
 
     return (
-      <StyledCard>
+      <SectionCard>
         <Location>
           <Icon glyph="view-back" size={16} />
           <Link to={`/users/${username}`}>Return to Profile</Link>
         </Location>
-        <FormTitle>Profile Settings</FormTitle>
+        <SectionTitle>Profile Settings</SectionTitle>
         <Form onSubmit={this.save}>
           <ImageInputWrapper>
             <CoverInput
@@ -442,6 +368,8 @@ class UserWithData extends React.Component<Props, State> {
             </Notice>
           )}
 
+          <div style={{ height: '8px' }} />
+
           <Input
             type="text"
             defaultValue={name}
@@ -453,18 +381,14 @@ class UserWithData extends React.Component<Props, State> {
 
           {nameError && <Error>Names can be up to 50 characters.</Error>}
 
-          <Input
+          <UsernameSearch
             type={'text'}
-            defaultValue={username}
-            onChange={this.changeUsername}
-          >
-            Username
-            {isUsernameSearching && (
-              <Loading>
-                <Spinner size={16} color={'brand.default'} />
-              </Loading>
-            )}
-          </Input>
+            label="Username"
+            size={'small'}
+            username={username}
+            onValidationResult={this.handleUsernameValidation}
+            onError={this.handleOnError}
+          />
 
           {usernameError && (
             <Notice style={{ marginTop: '16px' }}>{usernameError}</Notice>
@@ -515,7 +439,9 @@ class UserWithData extends React.Component<Props, State> {
 
           <Actions>
             <Button
-              disabled={!name || nameError || !username || usernameError}
+              disabled={
+                !name || nameError || !username || usernameError || isLoading
+              }
               loading={isLoading}
               onClick={this.save}
             >
@@ -527,7 +453,7 @@ class UserWithData extends React.Component<Props, State> {
             <Error>Please fix any errors above to save your profile.</Error>
           )}
         </Form>
-      </StyledCard>
+      </SectionCard>
     );
   }
 }

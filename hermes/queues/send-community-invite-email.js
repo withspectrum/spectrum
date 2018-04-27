@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('hermes:queue:send-new-message-email');
+const debug = require('debug')('hermes:queue:send-community-invite-email');
 import Raven from 'shared/raven';
 import sendEmail from '../send-email';
 import {

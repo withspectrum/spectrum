@@ -3,7 +3,7 @@ import data from '../../shared/testing/data';
 const user = data.users[0];
 
 describe('User View', () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit(`/users/${user.username}`);
   });
 

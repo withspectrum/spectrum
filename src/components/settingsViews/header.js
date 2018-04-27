@@ -7,7 +7,8 @@ import Avatar from '../avatar';
 type Props = {
   avatar?: {
     profilePhoto: string,
-    community: Object,
+    community?: Object,
+    user?: Object,
   },
   subheading: {
     to: string,
@@ -23,10 +24,11 @@ class Header extends React.Component<Props> {
       <StyledHeader>
         {avatar && (
           <Avatar
-            community={avatar.community}
+            community={avatar.community ? avatar.community : null}
+            user={avatar.user ? avatar.user : null}
             src={avatar.profilePhoto}
             size={'48'}
-            radius={8}
+            radius={avatar.user ? 48 : 8}
           />
         )}
         <HeaderText>

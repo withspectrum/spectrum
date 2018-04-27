@@ -1,6 +1,6 @@
 describe('Terms View', () => {
   describe('Loads page', () => {
-    before(() => {
+    beforeEach(() => {
       cy.visit('/terms');
     });
 
@@ -10,7 +10,7 @@ describe('Terms View', () => {
   });
 
   describe('Loads page', () => {
-    before(() => {
+    beforeEach(() => {
       cy.visit('/terms.html');
     });
 

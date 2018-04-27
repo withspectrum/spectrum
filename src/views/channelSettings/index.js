@@ -183,7 +183,7 @@ class ChannelSettings extends React.Component<Props> {
             noComposer
           />
 
-          <View>
+          <View id="main">
             <Header
               subheading={subheading}
               heading={`${channel.name} Settings ${

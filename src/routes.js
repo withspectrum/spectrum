@@ -15,8 +15,6 @@ import ModalRoot from './components/modals/modalRoot';
 import Gallery from './components/gallery';
 import Toasts from './components/toasts';
 import Maintenance from './components/maintenance';
-import LoadingDMs from './views/directMessages/components/loading';
-import LoadingThread from './views/thread/components/loading';
 import { Loading, LoadingScreen } from './components/loading';
 import LoadingDashboard from './views/dashboard/components/dashboardLoading';
 import Composer from './components/composer';
@@ -28,22 +26,13 @@ import Navbar from './views/navbar';
 import Status from './views/status';
 import Login from './views/login';
 
-/* prettier-ignore */
-const DirectMessages = Loadable({
-  loader: () => import('./views/directMessages'/* webpackChunkName: "DirectMessages" */),
-  loading: ({ isLoading }) => isLoading && <LoadingDMs />,
-});
+import DirectMessages from './views/directMessages';
+import Thread from './views/thread';
 
 /* prettier-ignore */
 const Explore = Loadable({
   loader: () => import('./views/explore'/* webpackChunkName: "Explore" */),
   loading: ({ isLoading }) => isLoading && <Loading />,
-});
-
-/* prettier-ignore */
-const Thread = Loadable({
-  loader: () => import('./views/thread'/* webpackChunkName: "Thread" */),
-  loading: ({ isLoading }) => isLoading && <LoadingThread />,
 });
 
 /* prettier-ignore */
@@ -128,12 +117,8 @@ const Body = styled(FlexCol)`
   display: flex;
   width: 100vw;
   height: 100vh;
+  max-height: 100vh;
   background: ${props => props.theme.bg.wash};
-
-  @media (max-width: 768px) {
-    height: 100vh;
-    max-height: 100vh;
-  }
 `;
 
 const DashboardFallback = signedOutFallback(Dashboard, Pages);
@@ -203,9 +188,9 @@ class Routes extends React.Component<{}> {
               <Route component={ThreadSlider} />
 
               {/*
-                Switch only renders the first match. Subrouting happens downstream
-                https://reacttraining.com/react-router/web/api/Switch
-              */}
+                  Switch only renders the first match. Subrouting happens downstream
+                  https://reacttraining.com/react-router/web/api/Switch
+                */}
               <Switch>
                 <Route exact path="/" component={DashboardFallback} />
                 <Route exact path="/home" component={HomeFallback} />
@@ -221,6 +206,7 @@ class Routes extends React.Component<{}> {
                 <Route path="/pricing" component={Pages} />
                 <Route path="/support" component={Pages} />
                 <Route path="/features" component={Pages} />
+                <Route path="/faq" component={Pages} />
 
                 {/* App Pages */}
                 <Route path="/new/community" component={NewCommunityFallback} />
@@ -255,10 +241,10 @@ class Routes extends React.Component<{}> {
                 />
 
                 {/*
-                  We check communitySlug last to ensure none of the above routes
-                  pass. We handle null communitySlug values downstream by either
-                  redirecting to home or showing a 404
-                */}
+                    We check communitySlug last to ensure none of the above routes
+                    pass. We handle null communitySlug values downstream by either
+                    redirecting to home or showing a 404
+                  */}
                 <Route
                   path="/:communitySlug/:channelSlug/settings"
                   component={ChannelSettingsFallback}

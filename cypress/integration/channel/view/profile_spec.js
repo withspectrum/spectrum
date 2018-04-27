@@ -18,7 +18,7 @@ const { userId: memberInPrivateChannelId } = data.usersChannels.find(
 );
 
 describe('public channel', () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit(`/${community.slug}/${publicChannel.slug}`);
   });
 
@@ -35,7 +35,7 @@ describe('public channel', () => {
 });
 
 describe('archived channel', () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit(`/${community.slug}/${archivedChannel.slug}`);
   });
 
@@ -50,7 +50,7 @@ describe('archived channel', () => {
 });
 
 describe('deleted channel', () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit(`/${community.slug}/${deletedChannel.slug}`);
   });
 
@@ -61,7 +61,7 @@ describe('deleted channel', () => {
 });
 
 describe('blocked in public channel', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(blockedInChannelId);
     cy.visit(`/${community.slug}/${publicChannel.slug}`);
   });
@@ -73,7 +73,7 @@ describe('blocked in public channel', () => {
 });
 
 describe('member in private channel', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(memberInPrivateChannelId);
     cy.visit(`/${community.slug}/${privateChannel.slug}`);
   });
@@ -84,7 +84,7 @@ describe('member in private channel', () => {
 });
 
 describe('blocked in private channel', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(blockedInChannelId);
     cy.visit(`/${community.slug}/${privateChannel.slug}`);
   });
@@ -95,7 +95,7 @@ describe('blocked in private channel', () => {
 });
 
 describe('is not logged in', () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit(`/${community.slug}/${privateChannel.slug}`);
   });
 
