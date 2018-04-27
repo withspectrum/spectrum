@@ -25,7 +25,7 @@ export const sendMessageMutation = gql`
 
 const sendMessageOptions = {
   props: ({ ownProps, mutate }) => ({
-    sendMessage: message => {
+    sendMessage: (message, author) => {
       const fakeId = Math.round(Math.random() * -1000000);
       return mutate({
         variables: {
@@ -44,7 +44,7 @@ const sendMessageOptions = {
             messageType: message.messageType,
             author: {
               user: {
-                ...ownProps.currentUser,
+                ...(ownProps.currentUser || author),
                 __typename: 'User',
               },
               isMember: true,
@@ -78,7 +78,7 @@ const sendMessageOptions = {
           const data = store.readQuery({
             query: getThreadMessageConnectionQuery,
             variables: {
-              id: ownProps.thread,
+              id: message.threadId,
             },
           });
 
@@ -124,7 +124,7 @@ const sendMessageOptions = {
             query: getThreadMessageConnectionQuery,
             data,
             variables: {
-              id: ownProps.thread,
+              id: message.threadId,
             },
           });
         },

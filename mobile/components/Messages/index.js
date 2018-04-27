@@ -1,11 +1,33 @@
 // @flow
-import React from 'react';
+import React, { Fragment } from 'react';
+import styled from 'styled-components/native';
 import { View } from 'react-native';
-import ViewNetworkHandler from '../ViewNetworkHandler';
+import { Query } from 'react-apollo';
+import { getCurrentUserQuery } from '../../../shared/graphql/queries/user/getUser';
+import viewNetworkHandler from '../ViewNetworkHandler';
 import Text from '../Text';
+import Message from '../Message';
+import { ThreadMargin } from '../../views/Thread/style';
 import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
+import { convertTimestampToDate } from '../../../src/helpers/utils';
+
+import RoboText from './RoboText';
+import Author from './Author';
 
 import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection.js';
+import type { ThreadParticipantType } from '../../../shared/graphql/fragments/thread/threadParticipant';
+
+const TimestampWrapper = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Hr = styled.View`
+  height: 1px;
+  flex: 1;
+  background-color: ${props => props.theme.bg.border};
+`;
 
 type Props = {
   isLoading: boolean,
@@ -27,84 +49,86 @@ class Messages extends React.Component<Props> {
           .map(({ node }) => node)
       );
 
+      let hasInjectedUnseenRobo = false;
+
       return (
-        <View>
-          {messages.map((group, i) => {
-            if (group.length === 0) return null;
-            // Since all messages in the group have the same Author and same initial timestamp, we only need to pull that data from the first message in the group. So let's get that message and then check who sent it.
-            const initialMessage = group[0];
-            const { author } = initialMessage;
+        <Query query={getCurrentUserQuery}>
+          {({ data: { user: currentUser } }) => (
+            <Fragment>
+              {messages.map((group, i) => {
+                if (group.length === 0) return null;
 
-            const roboText = author.user.id === 'robo';
-            // const me = currentUser
-            //   ? author.user && author.user.id === currentUser.id
-            //   : false;
-            // const canModerate =
-            //   threadType !== 'directMessageThread' && (me || isModerator);
+                const initialMessage = group[0];
+                const me = currentUser
+                  ? initialMessage.author.user.id === currentUser.id
+                  : false;
+                // const canModerate =
+                //   threadType !== 'directMessageThread' && (me || isModerator);
 
-            // if (roboText) {
-            //   if (initialMessage.message.type === 'timestamp') {
-            //     return (
-            //       <Timestamp key={initialMessage.timestamp}>
-            //         <hr />
-            //         <Time>
-            //           {convertTimestampToDate(initialMessage.timestamp)}
-            //         </Time>
-            //         <hr />
-            //       </Timestamp>
-            //     );
-            //   } else if (
-            //     initialMessage.message.type === 'unseen-messages-below' &&
-            //     messages[i + 1] &&
-            //     messages[i + 1].length > 0 &&
-            //     messages[i + 1][0].author.id !== currentUser.id
-            //   ) {
-            //     return (
-            //       <UnseenRobotext key={`unseen-${initialMessage.timestamp}`}>
-            //         <hr />
-            //         <UnseenTime>New messages</UnseenTime>
-            //         <hr />
-            //       </UnseenRobotext>
-            //     );
-            //     // Ignore any unknown robo type messages
-            //   } else {
-            //     return null;
-            //   }
-            // }
-
-            if (roboText) return null;
-
-            return (
-              <View key={initialMessage.id || 'robo'}>
-                <View>
-                  {group.map(message => {
+                if (initialMessage.author.user.id === 'robo') {
+                  if (initialMessage.message.type === 'timestamp') {
                     return (
-                      <Text key={message.id} type="body">
-                        {message.content.body}
-                      </Text>
+                      <RoboText key={initialMessage.timestamp}>
+                        {convertTimestampToDate(initialMessage.timestamp)}
+                      </RoboText>
                     );
-                    // return (
-                    //   <Message
-                    //     key={message.id}
-                    //     message={message}
-                    //     reaction={'like'}
-                    //     me={me}
-                    //     canModerate={canModerate}
-                    //     pending={message.id < 0}
-                    //     currentUser={currentUser}
-                    //     threadType={threadType}
-                    //     threadId={threadId}
-                    //     toggleReaction={toggleReaction}
-                    //     selectedId={this.state.selectedMessage}
-                    //     changeSelection={this.toggleSelectedMessage}
-                    //   />
-                    // );
-                  })}
-                </View>
-              </View>
-            );
-          })}
-        </View>
+                  }
+
+                  // Ignore unknown robo messages
+                  return null;
+                }
+
+                // Flow doesn't seem to understand that we filter the robo authors
+                // (which have incorrect information, obviously) above, so this
+                // has to be a thread participant
+                // $FlowIssue
+                const author: ThreadParticipantType = initialMessage.author;
+
+                let unseenRobo = null;
+                // TODO(@mxstbr): Figure out how to get lastSeen information
+                let lastSeen = new Date('April 15, 2018 12:00:00');
+                if (
+                  !!lastSeen &&
+                  new Date(group[group.length - 1].timestamp).getTime() >
+                    new Date(lastSeen).getTime() &&
+                  !me &&
+                  !hasInjectedUnseenRobo
+                ) {
+                  hasInjectedUnseenRobo = true;
+                  unseenRobo = (
+                    <RoboText
+                      style={{ marginTop: 8 }}
+                      color={props => props.theme.warn.default}
+                      key="new-messages"
+                    >
+                      New Messages
+                    </RoboText>
+                  );
+                }
+
+                return (
+                  <View key={initialMessage.id || 'robo'}>
+                    {unseenRobo}
+                    <ThreadMargin>
+                      <Author author={author} me={me} />
+                      <View>
+                        {group.map(message => {
+                          return (
+                            <Message
+                              key={message.id}
+                              me={me}
+                              message={message}
+                            />
+                          );
+                        })}
+                      </View>
+                    </ThreadMargin>
+                  </View>
+                );
+              })}
+            </Fragment>
+          )}
+        </Query>
       );
     }
 
@@ -120,4 +144,4 @@ class Messages extends React.Component<Props> {
   }
 }
 
-export default ViewNetworkHandler(Messages);
+export default viewNetworkHandler(Messages);
