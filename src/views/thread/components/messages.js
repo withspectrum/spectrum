@@ -13,7 +13,13 @@ import { NullState } from '../../../components/upsell';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import Head from '../../../components/head';
 import NextPageButton from '../../../components/nextPageButton';
-import { ChatWrapper, NullMessagesWrapper, NullCopy } from '../style';
+import {
+  ChatWrapper,
+  NullMessagesWrapper,
+  NullCopy,
+  ScrollDownOffer,
+  ScrollDownOfferWrapper,
+} from '../style';
 import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
 
@@ -62,7 +68,15 @@ type Props = {
 class MessagesWithData extends React.Component<Props, State> {
   state = {
     subscription: null,
+    offerScrollDown: false,
   };
+
+  makeScrollDownOffer() {
+    const { scrollHeight, clientHeight } = this.props.scrollContainer;
+    if (scrollHeight > clientHeight + 200) {
+      this.setState({ offerScrollDown: true });
+    }
+  }
 
   componentDidUpdate(prev = {}) {
     const curr = this.props;
@@ -86,9 +100,15 @@ class MessagesWithData extends React.Component<Props, State> {
       prev.data.thread.messageConnection.edges.length + 1 ===
         curr.data.thread.messageConnection.edges.length;
 
+    if (isDifferentThread) {
+      this.setState({ offerScrollDown: true });
+    }
     // force scroll to bottom if the user is a participant/creator, after the messages load in for the first time
     if (!newMessageSent && isFirstLoad && curr.shouldForceScrollOnMessageLoad) {
-      setTimeout(() => curr.forceScrollToBottom());
+      setTimeout(() => {
+        this.setState({ offerScrollDown: false });
+        curr.forceScrollToBottom();
+      });
     }
 
     // force scroll to top if the user is a participant/creator, after the messages load in for the first time
@@ -102,6 +122,7 @@ class MessagesWithData extends React.Component<Props, State> {
 
     // force scroll to bottom when a message is sent in the same thread
     if (newMessageSent && !prev.isFetchingMore) {
+      this.setState({ offerScrollDown: false });
       curr.contextualScrollToBottom();
     }
 
@@ -138,6 +159,13 @@ class MessagesWithData extends React.Component<Props, State> {
       // This unsubscribes the subscription
       return Promise.resolve(subscription());
     }
+  };
+
+  scrollToBottom = () => {
+    this.props.forceScrollToBottom();
+    this.setState({
+      offerScrollDown: false,
+    });
   };
 
   render() {
@@ -225,6 +253,13 @@ class MessagesWithData extends React.Component<Props, State> {
             threshold={750}
             className={'scroller-for-messages'}
           >
+            {this.state.offerScrollDown && (
+              <ScrollDownOfferWrapper>
+                <ScrollDownOffer onClick={this.scrollToBottom}>
+                  You're viewing old messages, click here to jump to the newest
+                </ScrollDownOffer>
+              </ScrollDownOfferWrapper>
+            )}
             <ChatMessages
               threadId={data.thread.id}
               thread={data.thread}
