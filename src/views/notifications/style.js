@@ -14,7 +14,9 @@ import { HorizontalRule } from '../../components/globals';
 import Card from '../../components/card';
 import { IconButton } from '../../components/buttons';
 
-export const HzRule = styled(HorizontalRule)`margin: 0;`;
+export const HzRule = styled(HorizontalRule)`
+  margin: 0;
+`;
 
 export const NotificationCard = styled(Card)`
   padding: 16px;
@@ -151,9 +153,13 @@ export const ActorPhotosContainer = styled(FlexRow)`
   max-width: 100%;
 `;
 
-export const ActorPhotoItem = styled.div`margin-right: 4px;`;
+export const ActorPhotoItem = styled.div`
+  margin-right: 4px;
+`;
 
-export const ActorPhoto = styled.img`width: 100%;`;
+export const ActorPhoto = styled.img`
+  width: 100%;
+`;
 
 export const ContextRow = styled(FlexRow)`
   align-items: center;
