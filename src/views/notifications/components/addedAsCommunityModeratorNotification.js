@@ -29,7 +29,7 @@ type Props = {
   markSingleNotificationAsSeenInState?: Function,
 };
 
-export class AddedModerator extends React.Component<Props> {
+export class AddedAsCommunityModerator extends React.Component<Props> {
   render() {
     const { notification, currentUser } = this.props;
 
@@ -58,7 +58,7 @@ export class AddedModerator extends React.Component<Props> {
   }
 }
 
-class MiniAddedModeratorWithMutation extends React.Component<Props> {
+class MiniAddedAsCommunityModeratorWithMutation extends React.Component<Props> {
   markAsSeen = () => {
     const {
       markSingleNotificationSeen,
@@ -102,6 +102,6 @@ class MiniAddedModeratorWithMutation extends React.Component<Props> {
   }
 }
 
-export const MiniAddedModerator = compose(markSingleNotificationSeenMutation)(
-  MiniAddedModeratorWithMutation
-);
+export const MiniAddedAsCommunityModerator = compose(
+  markSingleNotificationSeenMutation
+)(MiniAddedAsCommunityModeratorWithMutation);

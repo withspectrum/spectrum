@@ -22,7 +22,8 @@ export const PRIVATE_CHANNEL_REQUEST_SENT = 'private channel request sent';
 export const PRIVATE_CHANNEL_REQUEST_APPROVED =
   'private channel request approved';
 export const SEND_PUSH_NOTIFICATIONS = 'push notifications';
-export const ADDED_MODERATOR_NOTIFICATION = 'added moderator notification';
+export const ADDED_AS_COMMUNITY_MODERATOR_NOTIFICATION =
+  'added as community moderator notification';
 
 // invoices and recurring payments
 export const PRO_INVOICE_PAID_NOTIFICATION = 'pro invoice paid notification';

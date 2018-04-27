@@ -110,7 +110,7 @@ export type SendPrivateChannelRequestEmailJobData = {
   },
 };
 
-export type SendAddedModeratorEmailJobData = {
+export type SendAddedAsCommunityModeratorEmailJobData = {
   recipient: {
     email: string,
   },
@@ -212,7 +212,7 @@ export type CommunityNotificationJobData = {
   userId: string,
 };
 
-export type AddedModeratorNotificationJobData = {
+export type AddedAsCommunityModeratorNotificationJobData = {
   communityId: string,
   moderatorId: string,
   userId: string,
@@ -383,10 +383,9 @@ export type Queues = {
   sendProInvoicePaidNotificationQueue: BullQueue<InvoiceJobData>,
   sendCommunityInvoicePaidNotificationQueue: BullQueue<InvoiceJobData>,
   sendReactionNotificationQueue: BullQueue<ReactionNotificationJobData>,
-  sendAddedModeratorNotificationQueue: BullQueue<
-    AddedModeratorNotificationJobData
+  sendAddedAsCommunityModeratorNotificationQueue: BullQueue<
+    AddedAsCommunityModeratorNotificationJobData
   >,
-  sendAddedModeratorEmailQueue: BullQueue<SendAddedModeratorEmailJobData>,
   sendPrivateChannelRequestQueue: BullQueue<PrivateChannelRequestJobData>,
   sendPrivateChannelRequestApprovedQueue: BullQueue<
     PrivateChannelRequestApprovedJobData
@@ -433,6 +432,9 @@ export type Queues = {
   >,
   sendThreadCreatedNotificationEmailQueue: BullQueue<
     SendNewThreadNotificationEmailJobData
+  >,
+  sendAddedAsCommunityModeratorEmailQueue: BullQueue<
+    SendAddedAsCommunityModeratorEmailJobData
   >,
 
   // mercury

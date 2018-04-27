@@ -26,7 +26,7 @@ import processSendAdminUserSpammingThreadsNotificationEmail from './queues/send-
 import processSendAdminActiveCommunityReportEmail from './queues/send-admin-active-community-report-email';
 import processSendRequestJoinPrivateChannelEmail from './queues/send-private-channel-request-sent-email';
 import processSendPrivateChannelRequestApprovedEmail from './queues/send-private-channel-request-approved-email';
-import processSendNewModeratorEmail from './queues/send-new-moderator-email';
+import processSendAddedAsCommunityModeratorEmail from './queues/send-added-as-community-moderator-email';
 
 import {
   SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL,
@@ -52,7 +52,7 @@ import {
   SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
   SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
   SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
-  SEND_NEW_MODERATOR_WELCOME_EMAIL,
+  SEND_ADDED_AS_COMMUNITY_MODERATOR_EMAIL,
 } from './queues/constants';
 
 const PORT = process.env.PORT || 3002;
@@ -87,7 +87,7 @@ const server = createWorker({
   [SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL]: processSendAdminActiveCommunityReportEmail,
   [SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL]: processSendRequestJoinPrivateChannelEmail,
   [SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL]: processSendPrivateChannelRequestApprovedEmail,
-  [SEND_NEW_MODERATOR_WELCOME_EMAIL]: processSendNewModeratorEmail,
+  [SEND_ADDED_AS_COMMUNITY_MODERATOR_EMAIL]: processSendAddedAsCommunityModeratorEmail,
 });
 
 debug(
