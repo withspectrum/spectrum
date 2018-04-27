@@ -1,0 +1,21 @@
+// @flow
+import { resetCommunitySlackSettings } from '../../models/communitySettings';
+export const handleSlackChannelResponse = async (
+  data: Object,
+  communityId: string
+) => {
+  const errorsToTriggerRest = [
+    'token_revoked',
+    'not_authed',
+    'invalid_auth',
+    'account_inactive',
+    'no_permission',
+  ];
+
+  if (data.error && errorsToTriggerRest.indexOf(data.error) >= 0) {
+    console.log('resetting slack settings');
+    return resetCommunitySlackSettings(communityId);
+  }
+
+  return [];
+};

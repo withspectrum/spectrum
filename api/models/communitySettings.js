@@ -213,6 +213,19 @@ export const markInitialSlackInvitationsSent = async (
     .then(async () => await getCommunityById(communityId));
 };
 
+const resetSlackSettings = async (communityId: string) => {
+  return db
+    .table('communitySettings')
+    .getAll(communityId, { index: 'communityId' })
+    .update({
+      slackSettings: {
+        ...defaultSettings.slackSettings,
+      },
+    })
+    .run()
+    .then(() => []);
+};
+
 export const getSlackPublicChannelList = (
   communityId: string,
   token: string
@@ -223,14 +236,7 @@ export const getSlackPublicChannelList = (
       `https://slack.com/api/channels.list?token=${token}&exclude_archived=true&exclude_members=true`
     )
     .then(response => {
-      console.log('made req to slack');
-      if (response.data && response.data.ok) {
-        return response.data.channels.map(channel => ({
-          id: channel.id,
-          name: channel.name,
-        }));
-      }
-      return [];
+      return handleSlackChannelResponse(response.data, communityId);
     })
     .catch(error => {
       console.error('\n\nerror', error);
@@ -248,18 +254,53 @@ export const getSlackPrivateChannelList = (
       `https://slack.com/api/groups.list?token=${token}&exclude_archived=true&exclude_members=true`
     )
     .then(response => {
-      console.log('made req to slack');
-      console.log('private groups', response.data);
-      if (response.data && response.data.ok) {
-        return response.data.groups.map(group => ({
-          id: group.id,
-          name: group.name,
-        }));
-      }
-      return [];
+      return handleSlackChannelResponse(response.data, communityId);
     })
     .catch(error => {
       console.error('\n\nerror', error);
       return [];
     });
+};
+
+const handleSlackChannelResponse = async (
+  data: Object,
+  communityId: string
+) => {
+  const mapData = (arr: Array<any>) =>
+    arr &&
+    arr.length > 0 &&
+    arr.map(
+      o =>
+        o && {
+          id: o.id,
+          name: o.name,
+        }
+    );
+
+  if (data && data.ok) {
+    if (data.groups) {
+      return mapData(data.groups) || [];
+    }
+
+    if (data.channels) {
+      return mapData(data.channels) || [];
+    }
+  }
+
+  console.log('response failed for some reason', data);
+
+  const errorsToTriggerRest = [
+    'token_revoked',
+    'not_authed',
+    'invalid_auth',
+    'account_inactive',
+    'no_permission',
+  ];
+
+  if (data.error && errorsToTriggerRest.indexOf(data.error) >= 0) {
+    console.log('resetting slack settings');
+    return resetSlackSettings(communityId);
+  }
+
+  return [];
 };

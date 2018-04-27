@@ -25,6 +25,7 @@ import { getChannelSettings } from '../models/channelSettings';
 import { getChannelById } from '../models/channel';
 import { getCommunitySettings } from '../models/communitySettings';
 import { truncateString } from '../utils/truncateString';
+import { handleSlackChannelResponse } from '../utils/slack';
 
 export default async (job: Job<ThreadNotificationJobData>) => {
   const { thread: incomingThread } = job.data;
@@ -197,6 +198,11 @@ export default async (job: Job<ThreadNotificationJobData>) => {
           },
         ],
       },
+    }).then(response => {
+      return handleSlackChannelResponse(
+        response.data,
+        incomingThread.communityId
+      );
     });
   }
 
