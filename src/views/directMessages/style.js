@@ -28,6 +28,7 @@ export const ViewContent = styled(FlexCol)`
 `;
 
 export const MessagesList = styled(FlexCol)`
+  position: relative;
   overflow-y: auto;
   overflow-x: hidden;
   max-width: 400px;
@@ -72,6 +73,7 @@ export const MessagesContainer = styled(FlexCol)`
 export const NoThreads = MessagesContainer.extend`
   position: absolute;
   top: 50%;
+  width: 100%;
   transform: translateY(-50%);
 `;
 

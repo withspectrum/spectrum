@@ -247,6 +247,7 @@ export const ComposerInputWrapper = styled.div`
 `;
 
 export const Grow = styled.div`
+  position: relative;
   flex: 1 1 auto;
   justify-content: center;
   align-items: stretch;

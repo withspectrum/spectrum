@@ -718,8 +718,6 @@ class NewThread extends React.Component<Props, State> {
     } = this.state;
     const { currentUser, hideOnMobile } = this.props;
 
-    console.log(this.state);
-
     const { title, description } = generateMetaInfo({
       type: 'directMessage',
       data: {
