@@ -230,6 +230,7 @@ export const getSlackPublicChannelList = (
   communityId: string,
   token: string
 ) => {
+  if (!token) return [];
   return axios
     .get(
       `https://slack.com/api/channels.list?token=${token}&exclude_archived=true&exclude_members=true`
@@ -245,8 +246,9 @@ export const getSlackPublicChannelList = (
 
 export const getSlackPrivateChannelList = (
   communityId: string,
-  token: string
+  token: ?string
 ) => {
+  if (!token) return [];
   return axios
     .get(
       `https://slack.com/api/groups.list?token=${token}&exclude_archived=true&exclude_members=true`
