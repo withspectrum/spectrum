@@ -186,6 +186,7 @@ export const DropWrap = styled(FlexCol)`
   .flyout {
     position: absolute;
     right: auto;
+    width: 200px;
   }
 `;
 

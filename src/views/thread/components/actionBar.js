@@ -403,10 +403,6 @@ class ActionBar extends React.Component<Props, State> {
                               data-cy="thread-actions-dropdown"
                               innerRef={ref}
                               style={style}
-                              onClick={() => {
-                                flyoutOpen && this.toggleFlyout();
-                                this.toggleHover();
-                              }}
                             >
                               <FlyoutRow hideAbove={768}>
                                 <TextButton
