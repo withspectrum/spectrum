@@ -61,6 +61,11 @@ class ActionBar extends React.Component<Props, State> {
     }
   };
 
+  toggleEdit = () => {
+    this.toggleFlyout();
+    this.props.toggleEdit();
+  };
+
   triggerChangeChannel = () => {
     const { thread, dispatch } = this.props;
     dispatch(openModal('CHANGE_CHANNEL', { thread }));
@@ -378,7 +383,7 @@ class ActionBar extends React.Component<Props, State> {
                     <FlyoutRow>
                       <TextButton
                         icon="edit"
-                        onClick={this.props.toggleEdit}
+                        onClick={this.toggleEdit}
                         hoverColor={'space.default'}
                         dataCy={'thread-dropdown-edit'}
                       >
