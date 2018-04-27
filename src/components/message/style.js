@@ -354,7 +354,8 @@ export const QuotedParagraph = styled(Paragraph)`
   margin: 4px 0;
   color: ${props => props.theme.text.alt};
 
-  code {
+  code,
+  pre {
     color: ${props => props.theme.text.alt};
   }
 `;
