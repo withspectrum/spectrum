@@ -20,8 +20,8 @@ export type GetCommunityChannelsSlackSettings = {
   ...$Exact<CommunityChannelConnectionWithSlackSettingsType>,
 };
 
-export const getCommunityChannelConnectionQuery = gql`
-  query getCommunityChannels($id: ID) {
+export const getCommunityChannelConnectionSlackSettingsQuery = gql`
+  query getCommunityChannelsWithSlackSettings($id: ID) {
     community(id: $id) {
       ...communityInfo
       slackSettings {
@@ -37,7 +37,7 @@ export const getCommunityChannelConnectionQuery = gql`
   ${communityChannelConnectionWithSlackSettingsFragment}
 `;
 
-const getCommunityChannelConnectionOptions = {
+const getCommunityChannelConnectionSlackSettingsOptions = {
   options: ({ id }) => ({
     variables: {
       id,
@@ -47,6 +47,6 @@ const getCommunityChannelConnectionOptions = {
 };
 
 export default graphql(
-  getCommunityChannelConnectionQuery,
-  getCommunityChannelConnectionOptions
+  getCommunityChannelConnectionSlackSettingsQuery,
+  getCommunityChannelConnectionSlackSettingsOptions
 );
