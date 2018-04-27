@@ -79,7 +79,7 @@ export const PRIVATE_CHANNEL_REQUEST_APPROVED_TEMPLATE = IS_PROD
   : 4543861;
 
 export const ADDED_AS_COMMUNITY_MODERATOR_EMAIL_TEMPLATE = IS_PROD
-  ? 6098022
+  ? 6098042
   : 6098022;
 
 // types used to generate unsubscribe tokens
