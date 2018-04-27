@@ -157,6 +157,7 @@ export const SendButton = styled(IconButton)`
   background-color: transparent;
   transition: ${Transition.hover.off};
   align-self: flex-end;
+  z-index: ${zIndex.chatInput};
 `;
 
 export const MediaInput = styled.input`
