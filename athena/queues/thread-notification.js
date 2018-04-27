@@ -46,9 +46,6 @@ export default async (job: Job<ThreadNotificationJobData>) => {
   ]);
   const eventType = 'THREAD_CREATED';
 
-  console.log('channelSlackSettings', channelSlackSettings);
-  console.log('communitySlackSettings', communitySlackSettings);
-
   // determine if a notification already exists
   const existing = await checkForExistingNotification(
     eventType,
@@ -145,7 +142,6 @@ export default async (job: Job<ThreadNotificationJobData>) => {
     channelSlackSettings.slackSettings.botConnection &&
     channelSlackSettings.slackSettings.botConnection.threadCreated
   ) {
-    console.log('Met all requirements, sending a slack notification!');
     const slackChannel =
       channelSlackSettings.slackSettings.botConnection.threadCreated;
 

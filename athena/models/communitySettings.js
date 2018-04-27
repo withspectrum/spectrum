@@ -65,10 +65,6 @@ export const getSlackUserListData = (token: string, scope: string) => {
         return response.data.members;
       }
 
-      return;
-    })
-    .catch(error => {
-      console.log('\n\nerror', error);
       return null;
     });
 };

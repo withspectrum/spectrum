@@ -46,41 +46,38 @@ const processJob = async (job: Job<SendSlackInvitationsJobData>) => {
   }
 
   // Send an API request to Slack using the generated token to return an array of members
-  const members = await getSlackUserListData(token, scope).then(results => {
-    if (!results) {
-      debug('found no members in slack team');
-      return resetCommunitySlackSettings(communityId);
-    }
+  const members = await getSlackUserListData(token, scope);
 
-    debug('got members in slack team');
+  if (!members) {
+    debug('found no members in slack team');
+    return resetCommunitySlackSettings(communityId);
+  }
 
-    return (
-      results
-        // filter out any restricted members
-        .filter(member => !member.is_restricted || !member.is_ultra_restricted)
-        // filter out bots
-        .filter(member => !member.is_bot)
-        // filter out deleted members
-        .filter(member => !member.deleted)
-        // only save members with valid email
-        .filter(member => member.profile.email && isEmail(member.profile.email))
-        // format output data
-        .map(member => ({
-          firstName: member.profile.first_name,
-          lastName: member.profile.last_name,
-          email: member.profile.email,
-        }))
-    );
-  });
+  debug('got members in slack team');
+  const filteredMembers = members
+    // filter out any restricted members
+    .filter(member => !member.is_restricted || !member.is_ultra_restricted)
+    // filter out bots
+    .filter(member => !member.is_bot)
+    // filter out deleted members
+    .filter(member => !member.deleted)
+    // only save members with valid email
+    .filter(member => member.profile.email && isEmail(member.profile.email))
+    // format output data
+    .map(member => ({
+      firstName: member.profile.first_name,
+      lastName: member.profile.last_name,
+      email: member.profile.email,
+    }));
 
-  if (!members || members.length === 0) {
+  if (!filteredMembers || filteredMembers.length === 0) {
     debug(`no available members to handle notifications`);
     return resetCommunitySlackSettings(communityId);
   }
 
-  const membersCount = members.length;
+  const membersCount = filteredMembers.length;
 
-  const invitePromises = members.map(member =>
+  const invitePromises = filteredMembers.map(member =>
     sendCommunityInviteNotificationQueue.add({
       recipient: {
         email: member.email,

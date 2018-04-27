@@ -1,7 +1,5 @@
 // @flow
-const debug = require('debug')(
-  'api:mutations:community:remove-payment-source'
-);
+const debug = require('debug')('api:mutations:community:remove-payment-source');
 import { replaceStripeCustomer } from '../../models/stripeCustomers';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
@@ -58,13 +56,9 @@ export default async (
     .then(async () => await StripeUtil.getCustomer(customer.id))
     .then(
       async newCustomer =>
-        console.log('newCustomer', newCustomer) ||
-        (await replaceStripeCustomer(newCustomer.id, newCustomer))
+        await replaceStripeCustomer(newCustomer.id, newCustomer)
     )
-    .then(
-      replacedCustomer =>
-        console.log('replacedCustomer', replacedCustomer) || community
-    )
+    .then(() => community)
     .catch(err => {
       return new UserError(`Error removing payment method: ${err.message}`);
     });

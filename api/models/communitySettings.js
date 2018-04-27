@@ -230,7 +230,6 @@ export const getSlackPublicChannelList = (
   communityId: string,
   token: string
 ) => {
-  console.log(token);
   return axios
     .get(
       `https://slack.com/api/channels.list?token=${token}&exclude_archived=true&exclude_members=true`
@@ -248,7 +247,6 @@ export const getSlackPrivateChannelList = (
   communityId: string,
   token: string
 ) => {
-  console.log(token);
   return axios
     .get(
       `https://slack.com/api/groups.list?token=${token}&exclude_archived=true&exclude_members=true`
@@ -287,8 +285,6 @@ const handleSlackChannelResponse = async (
     }
   }
 
-  console.log('response failed for some reason', data);
-
   const errorsToTriggerRest = [
     'token_revoked',
     'not_authed',
@@ -298,7 +294,6 @@ const handleSlackChannelResponse = async (
   ];
 
   if (data.error && errorsToTriggerRest.indexOf(data.error) >= 0) {
-    console.log('resetting slack settings');
     return resetSlackSettings(communityId);
   }
 

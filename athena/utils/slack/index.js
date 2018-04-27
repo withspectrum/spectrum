@@ -13,9 +13,8 @@ export const handleSlackChannelResponse = async (
   ];
 
   if (data.error && errorsToTriggerRest.indexOf(data.error) >= 0) {
-    console.log('resetting slack settings');
-    return resetCommunitySlackSettings(communityId);
+    return await resetCommunitySlackSettings(communityId);
   }
 
-  return [];
+  return null;
 };
