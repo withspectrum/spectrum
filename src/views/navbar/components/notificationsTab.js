@@ -391,7 +391,7 @@ class NotificationsTab extends React.Component<Props, State> {
         >
           <Icon
             glyph={count > 0 ? 'notification-fill' : 'notification'}
-            withCount={count > 10 ? '10+' : count > 0 ? count : false}
+            count={count > 10 ? '10+' : count > 0 ? count.toString() : null}
           />
           <Label hideOnDesktop>Notifications</Label>
         </Tab>
