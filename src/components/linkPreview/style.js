@@ -99,12 +99,12 @@ export const LinkPreviewSkeleton = styled.div`
 `;
 
 const placeHolderShimmer = keyframes`
-	0%{
-			background-position: -600px 0
-	}
-	100%{
-			background-position: 600px 0
-	}
+  0%{
+      background-position: -600px 0
+  }
+  100%{
+      background-position: 600px 0
+  }
 `;
 
 export const AnimatedBackground = styled.div`
