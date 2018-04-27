@@ -18,11 +18,11 @@ class Overview extends React.Component<Props> {
       <SectionsContainer>
         <Column>
           <EditForm community={community} />
+          <ChannelList id={community.id} communitySlug={communitySlug} />
         </Column>
         <Column>
           <SlackSettings id={community.id} />
           <BrandedLogin id={community.id} />
-          <ChannelList id={community.id} communitySlug={communitySlug} />
         </Column>
       </SectionsContainer>
     );
