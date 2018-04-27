@@ -23,7 +23,9 @@ const createMentionsDecorator = (
     // -> "@brian_lovin, what's up with @mxstbr?"
     const text = contentBlock.getText();
     // -> ["@brian_lovin", " @mxstbr"];
-    const matches = text.match(MENTIONS);
+    const matches = text
+      .match(MENTIONS)
+      .filter(mention => !mention.startsWith('/'));
     if (!matches || matches.length === 0) return;
 
     matches.forEach(match => {
