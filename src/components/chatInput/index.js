@@ -38,7 +38,7 @@ import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
 
-const QuotedMessage = compose(connect())(
+const QuotedMessage = connect()(
   getMessageById(props => {
     if (props.data && props.data.message) {
       return <QuotedMessageComponent message={props.data.message} />;
