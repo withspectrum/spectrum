@@ -50,3 +50,14 @@ export const DefaultPaymentMethodBadge = styled(Span)`
     cursor: pointer;
   }
 `;
+
+export const ContributorBadge = styled(Span)`
+  background-color: ${props => props.theme.space.default};
+  background-image: ${props =>
+    Gradient(props.theme.space.alt, props.theme.space.default)};
+  cursor: pointer;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;

@@ -45,7 +45,7 @@ export const AuthorByline = (props: {
   user: Object,
   roles?: Array<string>,
 }) => {
-  const { user, roles } = props;
+  const { me, user, roles } = props;
   return (
     <Byline>
       <Link to={`/users/${user.username}`}>
@@ -54,6 +54,7 @@ export const AuthorByline = (props: {
       </Link>
       {roles && roles.map((role, index) => <Badge type={role} key={index} />)}
       {user.isPro && <Badge type="pro" />}
+      {!me && user.isContributor && <Badge type="oss" />}
     </Byline>
   );
 };

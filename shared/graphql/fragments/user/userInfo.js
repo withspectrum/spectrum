@@ -29,6 +29,7 @@ export default gql`
     isOnline
     timezone
     isPro
+    isContributor
     totalReputation
   }
 `;

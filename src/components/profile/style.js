@@ -95,8 +95,6 @@ export const Subtitle = styled.div`
   overflow: visible;
 
   > ${ReputationWrapper} {
-    margin-left: 8px;
-
     span {
       font-size: 16px;
     }
@@ -239,8 +237,12 @@ export const CoverTitle = styled(Title)`
 
 export const CoverSubtitle = styled(Subtitle)`
   text-align: center;
-  margin-bottom: 16px;
+  margin: 0 8px 16px 8px;
   justify-content: center;
+  flex-wrap: wrap;
+  > span:first-of-type {
+    margin-right: 8px;
+  }
 `;
 
 export const CoverDescription = styled(Description)`

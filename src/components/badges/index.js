@@ -8,6 +8,7 @@ import {
   ProBadge,
   BlockedBadge,
   DefaultPaymentMethodBadge,
+  ContributorBadge,
 } from './style';
 
 type Props = {
@@ -62,6 +63,16 @@ class Badge extends React.Component<Props> {
           >
             {this.props.type}
           </BlockedBadge>
+        );
+      case 'oss':
+        return (
+          <ContributorBadge
+            type={this.props.type}
+            tipText={this.props.tipText}
+            tipLocation={'top-left'}
+          >
+            {this.props.type}
+          </ContributorBadge>
         );
       default:
         return (

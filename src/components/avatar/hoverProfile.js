@@ -96,8 +96,9 @@ class HoverProfile extends Component<ProfileProps> {
               <CoverTitle>{user.name}</CoverTitle>
             </CoverLink>
             <CoverSubtitle center>
-              @{user.username}
+              <span>@{user.username}</span>
               {user.isPro && <Badge type="pro" />}
+              {user.isContributor && <Badge type="oss" />}
               <Reputation
                 tipText={'Total rep across all communities'}
                 size={'large'}

@@ -42,6 +42,7 @@ type UserProps = {
   website: string,
   isOnline: string,
   totalReputation: number,
+  isContributor?: boolean,
 };
 
 type CurrentUserProps = {
@@ -96,6 +97,7 @@ const UserWithData = ({
           <Subtitle>
             @{user.username}
             {user.isPro && <Badge type="pro" />}
+            {user.isContributor && <Badge type="oss" />}
           </Subtitle>
           {(user.description || user.website) && (
             <FullDescription>
@@ -172,6 +174,7 @@ const UserWithData = ({
           <CoverSubtitle center>
             {user.username && `@${user.username}`}
             {user.isPro && <Badge type="pro" />}
+            {user.isContributor && <Badge type="oss" />}
             <Reputation
               tipText={'Total rep across all communities'}
               size={'large'}
@@ -212,6 +215,7 @@ const UserWithData = ({
                     <Subtitle>
                       @{user.username}
                       {user.isPro && <Badge type="pro" />}
+                      {user.isContributor && <Badge type="oss" />}
                     </Subtitle>
                   )}
                 </ProfileHeaderMeta>
@@ -233,6 +237,7 @@ const UserWithData = ({
                     <Subtitle>
                       @{user.username}
                       {user.isPro && <Badge type="pro" />}
+                      {user.isContributor && <Badge type="oss" />}
                       <Reputation
                         tipText={'Total rep across all communities'}
                         size={'large'}
