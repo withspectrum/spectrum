@@ -1,14 +1,16 @@
 // @flow
 import styled from 'styled-components';
+import { hexa } from 'src/components/globals';
 
 export const SlackChannelRow = styled.div`
   display: flex;
   align-items: center;
-  padding: 12px 0;
+  margin: 0 -16px;
+  width: calc(100% + 32px);
+  padding: 12px 16px;
 
-  &:nth-of-type(2n) {
-    border-top: 1px solid ${props => props.theme.bg.border};
-    border-bottom: 1px solid ${props => props.theme.bg.border};
+  &:nth-of-type(odd) {
+    background: ${props => hexa(props.theme.bg.wash, 0.8)};
   }
 `;
 
@@ -30,10 +32,21 @@ export const Select = styled.select`
   width: 130%;
   border: none;
   box-shadow: none;
-  background: transparent;
+  background: ${props => props.theme.bg.default};
   background-image: none;
   -webkit-appearance: none;
   font-weight: 400;
   font-size: 14px;
+  color: ${props => props.theme.text.default};
+`;
+
+export const SendsTo = styled.div`
+  font-size: 14px;
   color: ${props => props.theme.text.alt};
+  flex: none;
+  margin-right: 12px;
+`;
+export const ChannelListContainer = styled.div`
+  margin-top: 16px;
+  margin-bottom: -16px;
 `;

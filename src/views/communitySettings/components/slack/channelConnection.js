@@ -17,6 +17,7 @@ import viewNetworkHandler, {
 import { Loading } from 'src/components/loading';
 import ViewError from 'src/components/viewError';
 import ChannelSlackManager from './channelSlackManager';
+import { ChannelListContainer } from './style';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerType>,
@@ -43,23 +44,25 @@ class SlackChannelConnection extends React.Component<Props> {
 
       return (
         <SectionCard>
-          <SectionTitle>Spectrum Slack Bot</SectionTitle>
+          <SectionTitle>Send notifications to Slack</SectionTitle>
           <SectionSubtitle>
-            When a new conversation is started in your community, it can be
-            cross posted to any of your Slack channels.
+            Connect the Spectrum bot to your Slack team in order to send
+            notifications whenever new conversations are created.
           </SectionSubtitle>
 
-          {channels.map(channel => {
-            if (!channel) return null;
+          <ChannelListContainer>
+            {channels.map(channel => {
+              if (!channel) return null;
 
-            return (
-              <ChannelSlackManager
-                key={channel.id}
-                channel={channel}
-                slackChannels={slackChannels}
-              />
-            );
-          })}
+              return (
+                <ChannelSlackManager
+                  key={channel.id}
+                  channel={channel}
+                  slackChannels={slackChannels}
+                />
+              );
+            })}
+          </ChannelListContainer>
         </SectionCard>
       );
     }

@@ -3,7 +3,13 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
-import { SlackChannelRow, ChannelName, StyledSelect, Select } from './style';
+import {
+  SlackChannelRow,
+  ChannelName,
+  StyledSelect,
+  Select,
+  SendsTo,
+} from './style';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import updateChannelSlackBotConnectionMutation from 'shared/graphql/mutations/channel/updateChannelSlackBotConnection';
 
@@ -55,15 +61,16 @@ class ChannelSlackManager extends React.Component<Props> {
       <SlackChannelRow>
         <ChannelName>{channel.name}</ChannelName>
 
+        <SendsTo>send notifications to &rarr;</SendsTo>
         <StyledSelect>
           <Select
             onChange={this.handleSlackChannelChange}
             defaultValue={selectedSlackChannelId}
           >
-            <option value={''}>--</option>
+            <option value={''}>{'# '}</option>
             {slackChannels.map(channel => (
               <option key={channel.id} value={channel.id}>
-                #{channel.name}
+                # {channel.name}
               </option>
             ))}
           </Select>
