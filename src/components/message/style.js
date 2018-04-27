@@ -348,7 +348,7 @@ export const Paragraph = styled.p`
   }
 `;
 
-export const QuotedParagraph = styled(Paragraph)`
+export const QuotedParagraph = Paragraph.withComponent('div').extend`
   padding-left: 12px;
   border-left: 4px solid ${props => props.theme.bg.border};
   margin: 4px 0;
