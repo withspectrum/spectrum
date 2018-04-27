@@ -238,6 +238,7 @@ class ThreadContainer extends React.Component<Props, State> {
     if (isBlockedInChannelOrCommunity) return null;
 
     const LS_KEY = 'last-chat-input-content';
+    const LS_KEY_EXPIRE = 'last-chat-input-content-expire';
     let storedContent;
     // We persist the body and title to localStorage
     // so in case the app crashes users don't loose content
@@ -246,6 +247,7 @@ class ThreadContainer extends React.Component<Props, State> {
         storedContent = toState(JSON.parse(localStorage.getItem(LS_KEY) || ''));
       } catch (err) {
         localStorage.removeItem(LS_KEY);
+        localStorage.removeItem(LS_KEY_EXPIRE);
       }
     }
 
