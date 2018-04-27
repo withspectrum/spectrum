@@ -22,11 +22,13 @@ type Props = {
   },
   type: 'import-only' | 'bot-only',
   isOnboarding: boolean,
+  channelFilter?: string,
 };
 
 export class Slack extends React.Component<Props> {
   render() {
-    const { isLoading, data, type, isOnboarding } = this.props;
+    const { isLoading, data, type, isOnboarding, channelFilter } = this.props;
+
     if (data.community) {
       const { slackSettings } = data.community;
 
@@ -40,16 +42,26 @@ export class Slack extends React.Component<Props> {
       }
 
       if (type === 'import-only') {
-        return <SendInvitations community={data.community} />;
+        return (
+          <SendInvitations id={data.community.id} community={data.community} />
+        );
       }
 
       if (type === 'bot-only') {
-        return <ChannelConnection community={data.community} />;
+        return (
+          <ChannelConnection
+            id={data.community.id}
+            channelFilter={channelFilter}
+          />
+        );
       }
 
       return (
         <React.Fragment>
-          <ChannelConnection id={data.community.id} />
+          <ChannelConnection
+            id={data.community.id}
+            channelFilter={channelFilter}
+          />
           <SendInvitations community={data.community} />
         </React.Fragment>
       );
