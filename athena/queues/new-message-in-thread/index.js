@@ -110,8 +110,13 @@ export default async (job: Job<MessageNotificationJobData>) => {
     (parent: DBMessage);
     if (parent) {
       const parentAuthor = await getUserById(parent.senderId);
-      if (parentAuthor && parentAuthor.username)
+      if (
+        parentAuthor &&
+        parentAuthor.username &&
+        mentions.indexOf(parentAuthor.username) < 0
+      ) {
         mentions.push(parentAuthor.username);
+      }
     }
   }
   if (mentions && mentions.length > 0) {
