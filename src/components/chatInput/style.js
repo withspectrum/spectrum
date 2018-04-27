@@ -275,6 +275,7 @@ export const Preformatted = styled.code`
 
 export const MarkdownHint = styled.div`
   display: flex;
+  flex: 0 0 auto;
   justify-content: flex-end;
   margin-right: 12px;
   font-size: 11px;
