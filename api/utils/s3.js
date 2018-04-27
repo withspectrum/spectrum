@@ -4,8 +4,7 @@ import AWS from 'aws-sdk';
 import shortid from 'shortid';
 const IS_PROD = process.env.NODE_ENV === 'production';
 
-import type { FileUpload } from 'shared/types';
-type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';
+import type { FileUpload, EntityTypes } from 'shared/types';
 
 let S3_TOKEN = process.env.S3_TOKEN;
 let S3_SECRET = process.env.S3_SECRET;
@@ -36,7 +35,7 @@ const generateImageUrl = path => {
   return imgixBase + '/' + newPath;
 };
 
-const upload = async (
+export const uploadImage = async (
   file: FileUpload,
   entity: EntityTypes,
   id: string
@@ -60,15 +59,5 @@ const upload = async (
         res(encodeURI(url));
       }
     );
-  });
-};
-
-export const uploadImage = async (
-  file: FileUpload,
-  entity: EntityTypes,
-  id: string
-): Promise<string> => {
-  return await upload(file, entity, id).catch(err => {
-    throw new Error(err);
   });
 };

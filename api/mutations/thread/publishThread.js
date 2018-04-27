@@ -3,7 +3,7 @@ const debug = require('debug')('api:mutations:thread:publish-thread');
 import stringSimilarity from 'string-similarity';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { uploadImage } from '../../utils/s3';
+import { uploadImage } from '../../utils/file-storage';
 import {
   publishThread,
   editThread,

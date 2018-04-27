@@ -3,8 +3,8 @@ import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { EditorState } from 'draft-js';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { uploadImage } from '../../utils/s3';
-import { storeMessage } from '../../models/message';
+import { uploadImage } from '../../utils/file-storage';
+import { storeMessage, getMessage } from '../../models/message';
 import { setDirectMessageThreadLastActive } from '../../models/directMessageThread';
 import { setUserLastSeenInDirectMessageThread } from '../../models/usersDirectMessageThreads';
 import { createMemberInChannel } from '../../models/usersChannels';
@@ -25,6 +25,7 @@ type AddMessageInput = {
     content: {
       body: string,
     },
+    parentId?: string,
     file?: FileUpload,
   },
 };
@@ -84,6 +85,12 @@ export default async (
         'Invalid DraftJS block type specified. Supported block types: "unstyled", "code-block".'
       );
     }
+  }
+
+  if (message.parentId) {
+    const parent = await getMessage(message.parentId);
+    if (parent.threadId !== message.threadId)
+      throw new UserError('You can only quote messages from the same thread.');
   }
 
   // construct the shape of the object to be stored in the db

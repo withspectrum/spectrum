@@ -4,10 +4,7 @@ import mentionsDecorator from '../mentions-decorator/index.web';
 import linksDecorator from '../links-decorator/index.web';
 import { Line, Paragraph } from 'src/components/message/style';
 import type { Node } from 'react';
-
-type KeyObj = {
-  key: string,
-};
+import type { KeyObj, KeysObj } from './types';
 
 const messageRenderer = {
   inline: {
@@ -24,14 +21,11 @@ const messageRenderer = {
     ),
   },
   blocks: {
-    unstyled: (children: Array<Node>, { keys }: { keys: Array<string> }) =>
+    unstyled: (children: Array<Node>, { keys }: KeysObj) =>
       children.map((child, index) => (
         <Paragraph key={keys[index] || index}>{child}</Paragraph>
       )),
-    'code-block': (
-      children: Array<Node>,
-      { keys }: { keys: Array<string> }
-    ) => (
+    'code-block': (children: Array<Node>, { keys }: KeysObj) => (
       <Line key={keys.join('|')}>
         {children.map((child, i) => [child, <br key={i} />])}
       </Line>

@@ -17,10 +17,18 @@ const createMentionsDecorator = (
     contentBlock: ContentBlock,
     callback: (...args?: Array<any>) => any
   ) => {
+    // This prevents the search for mentions when we're inside of a code-block
+    if (contentBlock.type === 'code-block') return;
+
     // -> "@brian_lovin, what's up with @mxstbr?"
     const text = contentBlock.getText();
     // -> ["@brian_lovin", " @mxstbr"];
-    const matches = text.match(MENTIONS);
+    let matches = text.match(MENTIONS);
+
+    if (!matches || matches.length === 0) return;
+
+    matches = matches.filter(mention => !mention.startsWith('/'));
+
     if (!matches || matches.length === 0) return;
 
     matches.forEach(match => {

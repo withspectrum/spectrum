@@ -99,6 +99,7 @@ export type DBMessage = {
   threadId: string,
   threadType: 'story' | 'directMessageThread',
   timestamp: Date,
+  parentId?: string,
 };
 
 export type NotificationPayloadType =
@@ -387,3 +388,5 @@ export type FileUpload = {
   encoding: string,
   stream: any,
 };
+
+export type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';
