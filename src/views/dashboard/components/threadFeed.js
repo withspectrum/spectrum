@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
 import InfiniteList from 'src/components/infiniteScroll';
+import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import FlipMove from 'react-flip-move';
 import { sortByDate } from '../../../helpers/utils';
 import { LoadingInboxThread } from '../../../components/loading';
@@ -259,9 +260,7 @@ class ThreadFeed extends React.Component<Props, State> {
       );
     }
 
-    const uniqueThreads = filteredThreads.filter(
-      (val, i, self) => self.indexOf(val) === i
-    );
+    const uniqueThreads = deduplicateChildren(filteredThreads, 'id');
 
     return (
       <div

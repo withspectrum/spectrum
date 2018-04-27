@@ -2,6 +2,7 @@
 import * as React from 'react';
 import ListCardItemDirectMessageThread from './messageThreadListItem';
 import InfiniteList from 'src/components/infiniteScroll';
+import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { LoadingDM } from 'src/components/loading';
 import { ThreadsListScrollContainer } from './style';
 
@@ -67,6 +68,8 @@ class ThreadsList extends React.Component<Props, State> {
       return null;
     }
 
+    const uniqueThreads = deduplicateChildren(threads, 'id');
+
     return (
       <ThreadsListScrollContainer id={'scroller-for-dm-threads'}>
         <InfiniteList
@@ -81,7 +84,7 @@ class ThreadsList extends React.Component<Props, State> {
           threshold={30}
           className={'scroller-for-community-dm-threads-list'}
         >
-          {threads.map(thread => {
+          {uniqueThreads.map(thread => {
             if (!thread) return null;
             return (
               <ListCardItemDirectMessageThread

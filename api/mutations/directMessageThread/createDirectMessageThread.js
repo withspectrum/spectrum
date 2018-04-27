@@ -6,7 +6,7 @@ import {
   getDirectMessageThread,
   createDirectMessageThread,
 } from '../../models/directMessageThread';
-import { uploadImage } from '../../utils/s3';
+import { uploadImage } from '../../utils/file-storage';
 import { storeMessage } from '../../models/message';
 import {
   setUserLastSeenInDirectMessageThread,

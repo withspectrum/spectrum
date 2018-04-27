@@ -3,6 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import InfiniteList from 'src/components/infiniteScroll';
+import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
 import ChatMessages from '../../../components/messageGroup';
 import { LoadingChat } from '../../../components/loading';
@@ -181,7 +182,7 @@ class MessagesWithData extends React.Component<Props, State> {
         return array;
       };
 
-      const uniqueMessages = unique(unsortedMessages);
+      const uniqueMessages = deduplicateChildren(unsortedMessages, 'id');
       const sortedMessages = sortAndGroupMessages(uniqueMessages);
 
       return (
