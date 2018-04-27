@@ -1,3 +1,4 @@
+// @flow
 import styled from 'styled-components';
 import Avatar from '../../../components/avatar';
 import {
