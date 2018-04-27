@@ -214,7 +214,10 @@ class NewCommunity extends React.Component<Props, State> {
                 community.id && (
                   <ContentContainer>
                     <Divider />
-                    <SlackConnection id={community.id || existingId} />
+                    <SlackConnection
+                      isOnboarding={true}
+                      id={community.id || existingId}
+                    />
                     <Divider />
                     <CommunityInvitationForm id={community.id} />
                   </ContentContainer>

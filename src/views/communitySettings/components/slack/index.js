@@ -21,16 +21,22 @@ type Props = {
     community: GetSlackSettingsType,
   },
   type: 'import-only' | 'bot-only',
+  isOnboarding: boolean,
 };
 
 export class Slack extends React.Component<Props> {
   render() {
-    const { isLoading, data, type } = this.props;
+    const { isLoading, data, type, isOnboarding } = this.props;
     if (data.community) {
       const { slackSettings } = data.community;
 
       if (!slackSettings || !slackSettings.isConnected) {
-        return <ConnectSlack community={data.community} isOnboarding={false} />;
+        return (
+          <ConnectSlack
+            community={data.community}
+            isOnboarding={isOnboarding}
+          />
+        );
       }
 
       if (type === 'import-only') {
