@@ -11,6 +11,7 @@ import {
   H3,
   Transition,
   zIndex,
+  Gradient,
   Tooltip,
 } from '../../components/globals';
 
@@ -380,26 +381,28 @@ export const NullCopy = styled.h5`
 `;
 
 export const ScrollDownOfferWrapper = styled.div`
+  position: absolute;
+  right: 50%;
+  bottom: ${props => (props.visible ? '72px' : '60px')};
+  background: ${props =>
+    Gradient(props.theme.brand.alt, props.theme.brand.default)};
+  z-index: 10000;
+  padding: 4px 16px 6px;
+  transform: translateX(50%);
+  opacity: ${props => (props.visible ? '1' : '0')};
+  border-radius: 80px;
+  font-size: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px;
-  flex: 1;
-  color: ${props => props.theme.text.alt};
-  flex-direction: column;
-  opacity: 0.8;
-
-  .icon {
-    opacity: 0.4;
-  }
-`;
-export const ScrollDownOffer = styled.h5`
-  font-size: 18px;
-  font-weight: 400;
-  color: ${props => props.theme.text.alt};
-  margin-top: 16px;
-  text-align: center;
-  max-width: 600px;
+  pointer-events: ${props => (props.visible ? 'auto' : 'none')};
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-size: 14px;
+  color: ${props => props.theme.text.reverse};
+  font-weight: 500;
+  line-height: 1.5;
 `;
 
 export const ThreadTitle = {

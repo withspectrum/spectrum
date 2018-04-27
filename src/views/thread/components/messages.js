@@ -16,7 +16,6 @@ import {
   ChatWrapper,
   NullMessagesWrapper,
   NullCopy,
-  ScrollDownOffer,
   ScrollDownOfferWrapper,
 } from '../style';
 import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
@@ -24,6 +23,7 @@ import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReac
 
 type State = {
   subscription: ?Function,
+  offerScrollDown: boolean,
 };
 
 type MessageType = {
@@ -213,62 +213,65 @@ class MessagesWithData extends React.Component<Props, State> {
       const sortedMessages = sortAndGroupMessages(uniqueMessages);
 
       return (
-        <ChatWrapper>
-          {pageInfo.hasPreviousPage && (
-            <div>
-              <NextPageButton
-                isFetchingMore={isFetchingMore}
-                fetchMore={loadPreviousPage}
-              />
+        <React.Fragment>
+          <ScrollDownOfferWrapper
+            visible={this.state.offerScrollDown}
+            onClick={this.scrollToBottom}
+          >
+            Scroll to bottom &darr;
+          </ScrollDownOfferWrapper>
+
+          <ChatWrapper>
+            {pageInfo.hasPreviousPage && (
+              <div>
+                <NextPageButton
+                  isFetchingMore={isFetchingMore}
+                  fetchMore={loadPreviousPage}
+                />
+                <Head>
+                  <link
+                    rel="prev"
+                    href={`${location.pathname}?msgsbefore=${edges[0].cursor}`}
+                  />
+                  <link rel="canonical" href={`/thread/${data.thread.id}`} />
+                </Head>
+              </div>
+            )}
+            {pageInfo.hasNextPage && (
               <Head>
                 <link
-                  rel="prev"
-                  href={`${location.pathname}?msgsbefore=${edges[0].cursor}`}
+                  rel="next"
+                  href={`${location.pathname}?msgsafter=${
+                    edges[edges.length - 1].cursor
+                  }`}
                 />
                 <link rel="canonical" href={`/thread/${data.thread.id}`} />
               </Head>
-            </div>
-          )}
-          {pageInfo.hasNextPage && (
-            <Head>
-              <link
-                rel="next"
-                href={`${location.pathname}?msgsafter=${
-                  edges[edges.length - 1].cursor
-                }`}
-              />
-              <link rel="canonical" href={`/thread/${data.thread.id}`} />
-            </Head>
-          )}
-          <InfiniteList
-            pageStart={0}
-            loadMore={loadNextPage}
-            hasMore={pageInfo.hasNextPage}
-            loader={<LoadingChat size="small" />}
-            useWindow={false}
-            initialLoad={false}
-            scrollElement={scrollContainer}
-            threshold={750}
-          >
-            {this.state.offerScrollDown && (
-              <ScrollDownOfferWrapper>
-                <ScrollDownOffer onClick={this.scrollToBottom}>
-                  You're viewing old messages, click here to jump to the newest
-                </ScrollDownOffer>
-              </ScrollDownOfferWrapper>
             )}
-            <ChatMessages
-              threadId={data.thread.id}
-              thread={data.thread}
-              toggleReaction={toggleReaction}
-              messages={sortedMessages}
-              threadType={'story'}
-              forceScrollToBottom={forceScrollToBottom}
-              isModerator={isModerator}
-              lastSeen={lastSeen}
-            />
-          </InfiniteList>
-        </ChatWrapper>
+
+            <InfiniteList
+              pageStart={0}
+              loadMore={loadNextPage}
+              hasMore={pageInfo.hasNextPage}
+              loader={<LoadingChat size="small" />}
+              useWindow={false}
+              initialLoad={false}
+              scrollElement={scrollContainer}
+              threshold={750}
+            >
+              <ChatMessages
+                threadId={data.thread.id}
+                thread={data.thread}
+                toggleReaction={toggleReaction}
+                messages={sortedMessages}
+                threadType={'story'}
+                forceScrollToBottom={forceScrollToBottom}
+                isModerator={isModerator}
+                lastSeen={lastSeen}
+              />
+            </InfiniteList>
+          </ChatWrapper>
+        </React.Fragment>
       );
     }
 
