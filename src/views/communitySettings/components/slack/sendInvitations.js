@@ -43,7 +43,6 @@ class SendSlackInvitations extends React.Component<Props, State> {
       customMessage,
     })
       .then(result => {
-        console.log('result', result);
         this.setState({
           isLoading: false,
         });

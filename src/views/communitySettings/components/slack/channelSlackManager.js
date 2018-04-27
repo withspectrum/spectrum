@@ -45,7 +45,6 @@ class ChannelSlackManager extends React.Component<Props> {
   };
 
   render() {
-    console.log('channel slack manager', this.props.channel);
     const { slackChannels, channel } = this.props;
     const selectedSlackChannelId =
       channel.slackSettings &&
