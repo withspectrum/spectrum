@@ -389,7 +389,7 @@ class ActionBar extends React.Component<Props, State> {
                       <Popper
                         placement="bottom-end"
                         modifiers={{
-                          preventOverflow: { enabled: false },
+                          preventOverflow: { enabled: true },
                           flip: {
                             boundariesElement: 'scrollParent',
                             behavior: ['top', 'bottom', 'top'],
