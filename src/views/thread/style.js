@@ -582,6 +582,10 @@ export const ActionBarContainer = styled.div`
   }
 `;
 
+export const WatercoolerActionBarContainer = styled(ActionBarContainer)`
+  margin-bottom: 16px;
+`;
+
 export const FollowButton = styled(Button)`
   background: ${props => props.theme.bg.default};
   border: 1px solid ${props => props.theme.bg.border};
@@ -749,7 +753,6 @@ export const WatercoolerIntroContainer = styled.div`
   align-items: center;
   justify-content: center;
   padding: 32px 32px 36px;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
   background: ${props => props.theme.bg.default};
   flex: auto;
   flex-direction: column;

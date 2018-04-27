@@ -36,6 +36,7 @@ import {
   WatercoolerTitle,
   WatercoolerAvatar,
 } from './style';
+import WatercoolerActionBar from './components/watercoolerActionBar';
 
 type Props = {
   data: {
@@ -410,6 +411,12 @@ class ThreadContainer extends React.Component<Props, State> {
                       Jump in to the conversation below or introduce yourself!
                     </WatercoolerDescription>
                   </WatercoolerIntroContainer>
+
+                  <WatercoolerActionBar
+                    thread={thread}
+                    currentUser={currentUser}
+                  />
+
                   {!isEditing && (
                     <Messages
                       threadMessageCount={thread.messageCount}
