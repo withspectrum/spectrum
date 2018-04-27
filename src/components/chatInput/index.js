@@ -38,11 +38,26 @@ import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
 
-const QuotedMessage = getMessageById(props => {
-  if (props.data && props.data.message)
-    return <QuotedMessageComponent message={props.data.message} />;
-  return null;
-});
+const QuotedMessage = compose(connect())(
+  getMessageById(props => {
+    if (props.data && props.data.message) {
+      return <QuotedMessageComponent message={props.data.message} />;
+    }
+
+    // if the query is done loading and no message was returned, clear the input
+    if (props.data && props.data.networkStatus === 7 && !props.data.message) {
+      props.dispatch(
+        addToastWithTimeout(
+          'error',
+          'The message you are replying to was deleted or could not be fetched.'
+        )
+      );
+      props.dispatch(replyToMessage(null));
+    }
+
+    return null;
+  })
+);
 
 type State = {
   isFocused: boolean,
