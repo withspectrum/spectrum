@@ -8,7 +8,7 @@ export type UpdateChannelSlackBotConnectionInput = {
   input: {
     channelId: string,
     slackChannelId: ?string,
-    eventType: 'THREAD_CREATED',
+    eventType: 'threadCreated',
   },
 };
 

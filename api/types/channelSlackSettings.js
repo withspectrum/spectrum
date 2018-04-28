@@ -1,7 +1,7 @@
 // @flow
 const ChannelSlackSettings = /* GraphQL */ `
   enum BotConnectionEventType {
-    THREAD_CREATED
+    threadCreated
   }
   
   type BotConnection {

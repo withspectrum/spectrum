@@ -38,7 +38,7 @@ class ChannelSlackManager extends React.Component<Props> {
   handleSlackChannelChange = e => {
     const { value } = e.target;
     const { channel, dispatch, updateChannelSlackBotConnection } = this.props;
-    const type = 'THREAD_CREATED';
+    const type = 'threadCreated';
     const input = {
       slackChannelId: value,
       channelId: channel.id,
