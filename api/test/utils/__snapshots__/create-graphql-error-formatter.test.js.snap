@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createGraphQLErrorFormatter logs error path 1`] = `
+Array [
+  "---GraphQL Error---",
+  "GraphQLError: Cannot return null for non-nullable field Thread.channel.",
+  "path community.threadConnection.edges[0].node.channel",
+  "-------------------
+",
+]
+`;
+
+exports[`createGraphQLErrorFormatter logs query and variables 1`] = `
+Array [
+  "---GraphQL Error---",
+  "GraphQLError: Cannot return null for non-nullable field Thread.channel.",
+  "query getCommunityThreadConnection( $id: ID )",
+  "variables [object Object]",
+  "path community.threadConnection.edges[0].node.channel",
+  "-------------------
+",
+]
+`;
