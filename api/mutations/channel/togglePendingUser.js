@@ -13,7 +13,6 @@ import {
   createMemberInCommunity,
 } from '../../models/usersCommunities';
 import { sendPrivateChannelRequestApprovedQueue } from 'shared/bull/queues';
-import { userCanManageChannel } from './utils';
 
 type TogglePendingUserInput = {
   input: {
@@ -28,7 +27,7 @@ export default async (
   { input }: TogglePendingUserInput,
   { user }: GraphQLContext
 ) => {
-  if (await !userCanManageChannel(user.id, input.channelId)) {
+  if (!await user.canManageChannel(input.channelId)) {
     return new UserError('You don’t have permission to manage this channel');
   }
 

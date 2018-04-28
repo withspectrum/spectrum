@@ -2,14 +2,13 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { getChannelById, archiveChannel } from '../../models/channel';
-import { userCanManageChannel } from './utils';
 
 export default async (
   _: any,
   { input: { channelId } }: { input: { channelId: string } },
-  { user, loaders }: GraphQLContext
+  { user }: GraphQLContext
 ) => {
-  if (await !userCanManageChannel(user.id, channelId)) {
+  if (!await user.canManageChannel(channelId)) {
     return new UserError('You don’t have permission to manage this channel');
   }
 

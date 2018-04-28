@@ -6,7 +6,6 @@ import {
   unblockMemberInChannel,
 } from '../../models/usersChannels';
 import { getChannelById } from '../../models/channel';
-import { userCanManageChannel } from './utils';
 
 type UnblockUserInput = {
   input: {
@@ -20,7 +19,7 @@ export default async (
   { input }: UnblockUserInput,
   { user }: GraphQLContext
 ) => {
-  if (await !userCanManageChannel(user.id, input.channelId)) {
+  if (!await user.canManageChannel(input.channelId)) {
     return new UserError('You don’t have permission to manage this channel');
   }
 

@@ -4,14 +4,13 @@ import UserError from '../../utils/UserError';
 import { removeMembersInChannel } from '../../models/usersChannels';
 import { getChannelById, deleteChannel } from '../../models/channel';
 import { getThreadsByChannelToDelete, deleteThread } from '../../models/thread';
-import { userCanManageChannel } from './utils';
 
 export default async (
   _: any,
   { channelId }: { channelId: string },
   { user }: GraphQLContext
 ) => {
-  if (await !userCanManageChannel(user.id, channelId)) {
+  if (!await user.canManageChannel(channelId)) {
     return new UserError('You don’t have permission to manage this channel');
   }
 

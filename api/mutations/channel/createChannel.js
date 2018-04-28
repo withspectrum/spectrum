@@ -6,14 +6,13 @@ import { channelSlugIsBlacklisted } from '../../utils/permissions';
 import { getCommunityById } from '../../models/community';
 import { getChannelBySlug, createChannel } from '../../models/channel';
 import { createOwnerInChannel } from '../../models/usersChannels';
-import { userCanCreateChannel } from './utils';
 
 export default async (
   _: any,
   args: CreateChannelInput,
   { user }: GraphQLContext
 ) => {
-  if (await !userCanCreateChannel(user.id, args.input.communityId)) {
+  if (!await user.canCreateChannel(args.input.communityId)) {
     return new UserError('You don’t have permission to manage this channel');
   }
 

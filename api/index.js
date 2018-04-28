@@ -76,7 +76,13 @@ app.use('/', (req: express$Request, res: express$Response) => {
 
 import type { Loader } from './loaders/types';
 export type GraphQLContext = {
-  user: DBUser,
+  user: {
+    ...$Exact<DBUser>,
+    canManageChannel: (id: string) => Promise<boolean>,
+    canCreateChannel: (id: string) => Promise<boolean>,
+    communityPermission: (id: string) => Promise<boolean>,
+    channelPermissions: (id: string) => Promise<boolean>,
+  },
   loaders: {
     [key: string]: Loader,
   },

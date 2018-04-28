@@ -4,14 +4,13 @@ import type { EditChannelInput } from '../../models/channel';
 import UserError from '../../utils/UserError';
 import { approvePendingUsersInChannel } from '../../models/usersChannels';
 import { editChannel, getChannelById } from '../../models/channel';
-import { userCanManageChannel } from './utils';
 
 export default async (
   _: any,
   args: EditChannelInput,
   { user }: GraphQLContext
 ) => {
-  if (await !userCanManageChannel(user.id, args.input.channelId)) {
+  if (!await user.canManageChannel(args.input.channelId)) {
     return new UserError('You don’t have permission to manage this channel');
   }
 

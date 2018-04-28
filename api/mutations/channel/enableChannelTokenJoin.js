@@ -5,7 +5,6 @@ import {
   getOrCreateChannelSettings,
   enableChannelTokenJoin,
 } from '../../models/channelSettings';
-import { userCanManageChannel } from './utils';
 
 type EnableTokenJoinInput = {
   input: {
@@ -16,9 +15,9 @@ type EnableTokenJoinInput = {
 export default async (
   _: any,
   { input: { id: channelId } }: EnableTokenJoinInput,
-  { user, loaders }: GraphQLContext
+  { user }: GraphQLContext
 ) => {
-  if (await !userCanManageChannel(user.id, channelId)) {
+  if (!await user.canManageChannel(user.id)) {
     return new UserError('You don’t have permission to manage this channel');
   }
 

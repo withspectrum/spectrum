@@ -5,7 +5,6 @@ import {
   getOrCreateChannelSettings,
   resetChannelJoinToken,
 } from '../../models/channelSettings';
-import { userCanManageChannel } from './utils';
 
 type ResetJoinTokenInput = {
   input: {
@@ -16,9 +15,9 @@ type ResetJoinTokenInput = {
 export default async (
   _: any,
   { input: { id: channelId } }: ResetJoinTokenInput,
-  { user, loaders }: GraphQLContext
+  { user }: GraphQLContext
 ) => {
-  if (await !userCanManageChannel(user.id, channelId)) {
+  if (!await user.canManageChannel(channelId)) {
     return new UserError('You don’t have permission to manage this channel');
   }
 

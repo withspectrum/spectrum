@@ -1,7 +1,6 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { userCanManageChannel } from './utils';
 import { updateChannelSlackBotConnection } from '../../models/channelSettings';
 
 export type UpdateChannelSlackBotConnectionInput = {
@@ -17,7 +16,7 @@ export default async (
   { input }: UpdateChannelSlackBotConnectionInput,
   { user }: GraphQLContext
 ) => {
-  if (await !userCanManageChannel(user.id, input.channelId)) {
+  if (!await user.canManageChannel(input.channelId)) {
     return new UserError('You don’t have permission to manage this channel');
   }
 
