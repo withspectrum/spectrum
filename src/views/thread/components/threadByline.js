@@ -20,6 +20,16 @@ type Props = {
   },
 };
 class ThreadByline extends React.Component<Props> {
+  renderBadges = (roles, user) => {
+    return (
+      <React.Fragment>
+        {roles.map((role, index) => <Badge type={role} key={index} />)}
+        {user.isPro && <Badge type={'pro'} />}
+        {user.isContributor && <Badge type={'oss'} />}
+      </React.Fragment>
+    );
+  };
+
   render() {
     const { author } = this.props;
     const { user, reputation, roles } = author;
@@ -39,12 +49,12 @@ class ThreadByline extends React.Component<Props> {
             <AuthorNameLink to={`/users/${user.username}`}>
               <AuthorName>{user.name}</AuthorName>
               <AuthorUsername>@{user.username}</AuthorUsername>
-              {roles.map((role, index) => <Badge type={role} key={index} />)}
+              {this.renderBadges(roles, user)}
             </AuthorNameLink>
           ) : (
             <AuthorNameNoLink>
               <AuthorName>{user.name}</AuthorName>
-              {roles.map((role, index) => <Badge type={role} key={index} />)}
+              {this.renderBadges(roles, user)}
             </AuthorNameNoLink>
           )}
 
