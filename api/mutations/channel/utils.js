@@ -33,6 +33,7 @@ export const userCanCreateChannel = async (
     userId,
     communityId,
   ]);
-  if (!permissions || !permissions.isOwner) return false;
-  return true;
+  if (!permissions) return false;
+  if (permissions.isOwner || permissions.isModerator) return true;
+  return false;
 };
