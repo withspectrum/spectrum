@@ -126,4 +126,21 @@ describe('/new/thread', () => {
     cy.contains(title);
     cy.contains(body);
   });
+
+  it('should allow to continue composing thread incase of crash or reload', () => {
+    const title = 'Persist Title';
+    const body = 'with some persisting content';
+    cy.get('[data-cy="rich-text-editor"]').should('be.visible');
+    cy.get('[data-cy="composer-community-selector"]').should('be.visible');
+    cy.get('[data-cy="composer-channel-selector"]').should('be.visible');
+    // Type title and body
+    cy.get('[data-cy="composer-title-input"]').type(title);
+    cy.get('[contenteditable="true"]').type(body);
+    /////need time as our localstorage is not set
+    cy.wait(1000);
+    cy.reload();
+
+    cy.get('[data-cy="composer-title-input"]').contains(title);
+    cy.get('[contenteditable="true"]').contains(body);
+  });
 });

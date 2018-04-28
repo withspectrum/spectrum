@@ -1,6 +1,7 @@
 // @flow
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { IconButton } from '../buttons';
+import { QuoteWrapper } from '../message/style';
 import {
   FlexRow,
   hexa,
@@ -27,10 +28,10 @@ export const ChatInputContainer = styled(FlexRow)`
 export const ChatInputWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   width: 100%;
   margin: 0;
-  padding: 16px 16px 0px;
+  padding: 8px 8px 0 4px;
   background-color: ${props => props.theme.bg.default};
   border-top: 1px solid ${({ theme }) => theme.bg.border};
   box-shadow: -1px 0 0 ${props => props.theme.bg.border},
@@ -57,13 +58,17 @@ export const Form = styled.form`
 `;
 
 export const InputWrapper = styled(EditorWrapper)`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   flex: auto;
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
   min-height: 40px;
   max-width: 100%;
-  padding: 8px 40px 8px 16px;
+  padding: ${props => (props.hasAttachment ? '16px' : '8px 16px')};
+  transition: padding 0.2s ease-in-out;
   border-radius: 24px;
   border: 1px solid
     ${props =>
@@ -123,22 +128,36 @@ export const InputWrapper = styled(EditorWrapper)`
     ${monoStack};
     font-size: 14px;
     font-weight: 500;
-    background-color: #f5f8fc;
+    background-color: ${props => props.theme.bg.wash};
     border: 1px solid ${props => props.theme.bg.border};
     border-radius: 2px;
     padding: 4px;
     margin-right: 16px;
   }
+
+  ${props =>
+    props.hasAttachment &&
+    css`
+      > div:not(:first-of-type) {
+        margin-top: 16px;
+      }
+
+      > div:last-of-type {
+        margin-right: 32px;
+      }
+    `};
 `;
 
 export const SendButton = styled(IconButton)`
   position: absolute;
-  right: 12px;
+  right: ${props => (props.hasAttachment ? '12px' : '8px')};
+  bottom: ${props => (props.hasAttachment ? '12px' : '4px')};
   height: 32px;
   width: 32px;
   background-color: transparent;
   transition: ${Transition.hover.off};
-  top: calc(50% - 16px);
+  align-self: flex-end;
+  z-index: ${zIndex.chatInput};
 `;
 
 export const MediaInput = styled.input`
@@ -186,8 +205,8 @@ export const PhotoSizeError = styled.div`
   align-content: center;
   padding: 8px 16px;
   width: 100%;
-  background: #fff1cc;
-  border-top: 1px solid #ffd566;
+  background: ${props => props.theme.special.wash};
+  border-top: 1px solid ${props => props.theme.special.border};
 
   &:hover {
     cursor: pointer;
@@ -200,7 +219,7 @@ export const PhotoSizeError = styled.div`
   p {
     font-size: 14px;
     line-height: 1.4;
-    color: #715818;
+    color: ${props => props.theme.special.default};
     max-width: calc(100% - 48px);
   }
 
@@ -209,57 +228,54 @@ export const PhotoSizeError = styled.div`
   }
 `;
 
-export const MediaPreview = styled.div`
-  padding-top: 8px;
-  padding-bottom: 10px;
+export const RemovePreviewButton = styled.button`
+  position: absolute;
+  top: 0;
+  right: 0;
+  vertical-align: top;
+  background-color: ${props => props.theme.text.placeholder};
+  color: ${props => props.theme.text.reverse};
+  border: none;
+  border-radius: 100%;
+  outline: none;
+  padding: 4px;
+  max-height: 24px;
+  max-width: 24px;
+  cursor: pointer;
+  z-index: 1;
 
-  & > img {
-    border-radius: 16px;
-    max-width: 37%;
-  }
-
-  button {
-    position: relative;
-    top: -5px;
-    left: -25px;
-    vertical-align: top;
-    background: #16171a;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
-    transition: box-shadow 0.3s ease-in-out;
-    border: none;
-    border-radius: 40px;
-    outline: none;
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-  }
-
-  button:after {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    content: '\\d7';
-    font-size: 21px;
-    color: #fff;
-    line-height: 28px;
-    text-align: center;
-  }
-
-  button:hover {
-    box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.15);
+  &:hover {
+    background-color: ${props => props.theme.warn.alt};
   }
 `;
 
-export const Preformated = styled.code`
-  background-color: #f7f7f9;
-  border: 1px solid #e1e1e8;
+export const PreviewWrapper = styled.div`
+  position: relative;
+  padding: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+
+  ${QuoteWrapper} {
+    margin: 0;
+    margin-top: -6px;
+    margin-left: -12px;
+  }
+
+  & > img {
+    border-radius: 8px;
+    max-width: 37%;
+  }
+`;
+
+export const Preformatted = styled.code`
+  background-color: ${props => props.theme.bg.wash};
+  border: 1px solid ${props => props.theme.bg.border};
   white-space: nowrap;
 `;
 
 export const MarkdownHint = styled.div`
   display: flex;
+  flex: 0 0 auto;
   justify-content: flex-end;
   margin-right: 12px;
   font-size: 11px;
