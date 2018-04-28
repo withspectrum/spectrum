@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import Link from 'src/components/link';
 import Card from '../card';

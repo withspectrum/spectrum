@@ -1,3 +1,4 @@
+// @flow
 import axios from 'axios';
 
 const GITHUB_API_URL = 'https://api.github.com';
@@ -14,7 +15,7 @@ export const isContributor = (githubLogin: string, githubId: string) => {
     })
     .catch(err => {
       const message = `Error when trying to check if user ${githubLogin} is contributor`;
-      console.log(message, err);
+      console.error(message, err);
       return new Error(message);
     });
 };

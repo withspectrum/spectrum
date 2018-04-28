@@ -1,3 +1,4 @@
+// @flow
 import mockAxios from 'jest-mock-axios';
 import { isContributor, getContributorStats } from '../githubIntegration';
 

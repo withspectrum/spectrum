@@ -1,3 +1,4 @@
+// @flow
 require('now-env');
 const debug = require('debug')('shared:raven');
 
