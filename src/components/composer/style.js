@@ -4,9 +4,9 @@ import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
 export const Container = styled(FlexCol)`
   background-color: ${props => props.theme.bg.default};
   display: grid;
-  grid-template-rows: 60px 1fr 64px;
+  grid-template-rows: 1fr 64px;
   grid-template-columns: 100%;
-  grid-template-areas: 'header' 'body' 'footer';
+  grid-template-areas: 'body' 'footer';
   align-self: stretch;
   flex: auto;
   overflow: hidden;
@@ -14,7 +14,7 @@ export const Container = styled(FlexCol)`
 
   @media (max-width: 768px) {
     grid-template-rows: 48px 64px 1fr 64px;
-    grid-template-areas: 'title' 'header' 'body' 'footer';
+    grid-template-areas: 'title' 'body' 'footer';
     max-width: 100vw;
     height: 100vh;
   }
@@ -52,36 +52,6 @@ export const Actions = styled(FlexCol)`
         width: 100%;
       }
     }
-  }
-`;
-
-export const Dropdowns = styled(FlexRow)`
-  display: flex;
-  align-items: center;
-  grid-area: header;
-  background-color: ${props => props.theme.bg.wash};
-  box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
-  z-index: ${zIndex.composer};
-  grid-area: header;
-
-  span {
-    font-size: 14px;
-    font-weight: 500;
-    color: ${props => props.theme.text.alt};
-    margin-left: 16px;
-    line-height: 1;
-    vertical-align: middle;
-    position: relative;
-    top: 1px;
-
-    @media (max-width: 768px) {
-      display: none;
-    }
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
-    justify-content: flex-start;
   }
 `;
 
@@ -123,7 +93,7 @@ export const OptionalSelector = styled(Selector)`
 export const ThreadInputs = styled(FlexCol)`
   grid-area: body;
   overflow-y: scroll;
-  padding: 64px;
+  padding: 20px 0px 64px 64px;
   padding-left: 80px;
   background-color: ${props => props.theme.bg.default};
 

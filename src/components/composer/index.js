@@ -34,7 +34,6 @@ import {
   ThreadTitle,
   ThreadInputs,
   Actions,
-  Dropdowns,
   RequiredSelector,
   DisabledWarning,
   TextTags,
@@ -173,6 +172,8 @@ class ComposerWithData extends Component<Props, State> {
       community = communities.find(
         community => community.slug.toLowerCase() === activeSlug.toLowerCase()
       );
+    } else {
+      community = communities && communities.length > 0 ? communities[0] : null;
     }
 
     if (!community || !community.id) return props.data.refetch();
@@ -593,7 +594,6 @@ class ComposerWithData extends Component<Props, State> {
         websocketConnection !== 'reconnected');
     return (
       <Container>
-        <Titlebar provideBack title={'New conversation'} noComposer />
         <ThreadInputs>
           <Textarea
             data-cy="composer-title-input"
