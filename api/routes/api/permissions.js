@@ -50,7 +50,8 @@ const canAdministerChannel = async (
   ]);
 
   if (!communityPermissions) return false;
-  if (communityPermissions.isOwner) return true;
+  if (communityPermissions.isOwner || communityPermissions.isModerator)
+    return true;
   if (!channelPermissions) return false;
   if (channelPermissions.isOwner) return true;
 
