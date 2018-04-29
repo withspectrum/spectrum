@@ -8,7 +8,7 @@ export default async (
   _: any,
   { user, loaders }: GraphQLContext
 ) => {
-  if (!await user.canManageChannel(id)) {
+  if (!await user.canModerateChannel(id)) {
     return new UserError('You don’t have permission to manage this channel');
   }
 

@@ -17,7 +17,7 @@ export default async (
   { input: { id: channelId } }: EnableTokenJoinInput,
   { user }: GraphQLContext
 ) => {
-  if (!await user.canManageChannel(user.id)) {
+  if (!await user.canModerateChannel(user.id)) {
     return new UserError('You don’t have permission to manage this channel');
   }
 

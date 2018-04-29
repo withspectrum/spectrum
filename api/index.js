@@ -78,8 +78,10 @@ import type { Loader } from './loaders/types';
 export type GraphQLContext = {
   user: {
     ...$Exact<DBUser>,
-    canManageChannel: (id: string) => Promise<boolean>,
-    canCreateChannel: (id: string) => Promise<boolean>,
+    canAdministerChannel: (id: string) => Promise<boolean>,
+    canModerateChannel: (id: string) => Promise<boolean>,
+    canAdministerCommunity: (id: string) => Promise<boolean>,
+    canModerateCommunity: (id: string) => Promise<boolean>,
     communityPermission: (id: string) => Promise<boolean>,
     channelPermissions: (id: string) => Promise<boolean>,
   },

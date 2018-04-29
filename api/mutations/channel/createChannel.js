@@ -12,7 +12,7 @@ export default async (
   args: CreateChannelInput,
   { user }: GraphQLContext
 ) => {
-  if (!await user.canCreateChannel(args.input.communityId)) {
+  if (!await user.canModerateCommunity(args.input.communityId)) {
     return new UserError('You don’t have permission to manage this channel');
   }
 

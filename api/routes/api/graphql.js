@@ -20,15 +20,19 @@ export default graphqlExpress(req => {
     const {
       communityPermissions,
       channelPermissions,
-      canManageChannel,
-      canCreateChannel,
+      canAdministerChannel,
+      canModerateChannel,
+      canAdministerCommunity,
+      canModerateCommunity,
     } = permissions(req.user.id, loaders);
 
     currentUser = Object.assign({}, currentUser, {
       communityPermissions,
       channelPermissions,
-      canManageChannel,
-      canCreateChannel,
+      canAdministerChannel,
+      canModerateChannel,
+      canAdministerCommunity,
+      canModerateCommunity,
     });
   }
 
