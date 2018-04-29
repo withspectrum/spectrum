@@ -14,25 +14,30 @@ import schema from '../../schema';
 export default graphqlExpress(req => {
   const loaders = createLoaders();
 
+  let currentUser = req.user && !req.user.bannedAt ? req.user : null;
+
+  if (currentUser) {
+    const {
+      communityPermissions,
+      channelPermissions,
+      canManageChannel,
+      canCreateChannel,
+    } = permissions(req.user.id, loaders);
+
+    currentUser = Object.assign({}, currentUser, {
+      communityPermissions,
+      channelPermissions,
+      canManageChannel,
+      canCreateChannel,
+    });
+  }
+
   return {
     schema,
     formatError: createErrorFormatter(req),
     context: {
       loaders,
-      user:
-        !req.user || req.user.bannedAt
-          ? null
-          : {
-              ...req.user,
-              communityPermissions: permissions(req.user.id, { loaders })
-                .communityPermissions,
-              channelPermissions: permissions(req.user.id, { loaders })
-                .channelPermissions,
-              canManageChannel: permissions(req.user.id, { loaders })
-                .canManageChannel,
-              canCreateChannel: permissions(req.user.id, { loaders })
-                .canCreateChannel,
-            },
+      user: currentUser,
     },
     validationRules: [
       depthLimit(10),

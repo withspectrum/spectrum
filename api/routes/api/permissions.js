@@ -1,5 +1,5 @@
 // @flow
-export default (userId: string, { loaders }: any) => ({
+export default (userId: string, loaders: any) => ({
   communityPermissions: (communityId: string) =>
     loaders.userPermissionsInCommunity.load([userId, communityId]),
   channelPermissions: (channelId: string) =>
