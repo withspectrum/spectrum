@@ -9,7 +9,7 @@ Our asynchronos background job processing is powered by a series of worker serve
 - [Hermes](hermes/intro.md): sends emails
 - [Mercury](mercury/intro.md): processes reputation events
 - [Pluto](pluto/intro.md): processes payments events
-- [Vulan](vulcan/intro.md): indexes content for search
+- [Vulcan](vulcan/intro.md): indexes content for search
 
 Each one of these can be run and developed independently with matching `npm run dev:x` and `npm run build:x` commands. (where `x` is the name of the server)
 
