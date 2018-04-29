@@ -3,6 +3,7 @@ require('now-env');
 import AWS from 'aws-sdk';
 import shortid from 'shortid';
 import _ from 'lodash';
+import Raven from 'shared/raven';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 
@@ -50,7 +51,11 @@ export const uploadImage = async (
   return new Promise(res => {
     // mimetype not in the validMediaType collection
     if (_.indexOf(validMediaTypes, _.toLower(mimetype)) < 0) {
-      throw new Error(`Unsupported media type ${mimetype}`);
+      const unsupportedMediaTypeError = new Error(
+        `Unsupported media type ${mimetype}`
+      );
+      Raven.captureException(unsupportedMediaTypeError);
+      throw unsupportedMediaTypeError;
     }
 
     const path = `spectrum-chat/${entity}/${id}`;
