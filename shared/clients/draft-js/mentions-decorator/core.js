@@ -9,16 +9,18 @@ export type MentionComponentPropsType = {
   children: Node,
 };
 
-// 1. Get all the position of the mentions from start to finish
-//  "Hello @ale @ange @ale @ange" should return => [[6, 9], [11, 15], [17, 20], [22, 26]]
-// 2. With that array we can call the callback function.
+type MentionsPosition = {
+  startPos: string,
+  endPos: string,
+};
+
+// Get all the position of the mentions from start to finish. With that array we can call the callback function.
 export const getMentionsPositionsFromMessage = (
   message: string
-): Array<{ startPos: number, endPos: number }> => {
+): Array<MentionsPosition> => {
   const mentionCoordinates = [];
   const newMessage = message;
 
-  // $FlowFix
   newMessage.replace(MENTIONS, (match, position) => {
     mentionCoordinates.push({
       startPos: position,
