@@ -15,7 +15,7 @@ Array [
   "---GraphQL Error---",
   "GraphQLError: Cannot return null for non-nullable field Thread.channel.",
   "query getCommunityThreadConnection( $id: ID )",
-  "variables [object Object]",
+  "variables {\\"id\\":1}",
   "path community.threadConnection.edges[0].node.channel",
   "-------------------
 ",

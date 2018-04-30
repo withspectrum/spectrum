@@ -33,7 +33,7 @@ const logGraphQLError = (req, error) => {
   debug(error);
   if (req) {
     debug(collectQueries(req.body.query));
-    debug('variables', req.body.variables);
+    debug('variables', JSON.stringify(req.body.variables || {}));
   }
   const path = errorPath(error);
   path && debug('path', path);
