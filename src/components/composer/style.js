@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
+import { hexa, FlexCol, zIndex } from '../globals';
 
 export const Container = styled(FlexCol)`
   background-color: ${props => props.theme.bg.default};
@@ -82,6 +82,7 @@ export const RequiredSelector = styled(Selector)`
   border-radius: 8px;
   color: ${props => props.theme.text.default};
   background-color: ${props => props.theme.bg.default};
+  margin-right: 8px;
 `;
 
 export const OptionalSelector = styled(Selector)`

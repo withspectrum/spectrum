@@ -27,7 +27,6 @@ import { getLinkPreviewFromUrl } from '../../helpers/utils';
 import { TextButton, Button } from '../buttons';
 import { FlexRow } from '../../components/globals';
 import { LoadingSelect } from '../loading';
-import Titlebar from '../../views/titlebar';
 import {
   Container,
   ThreadDescription,
@@ -36,13 +35,8 @@ import {
   Actions,
   RequiredSelector,
   DisabledWarning,
-  TextTags,
 } from './style';
-import {
-  sortCommunities,
-  sortChannels,
-  getDefaultActiveChannel,
-} from './utils';
+import { sortCommunities, sortChannels } from './utils';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
@@ -172,11 +166,7 @@ class ComposerWithData extends Component<Props, State> {
       community = communities.find(
         community => community.slug.toLowerCase() === activeSlug.toLowerCase()
       );
-    } else {
-      community = communities && communities.length > 0 ? communities[0] : null;
     }
-
-    if (!community || !community.id) return props.data.refetch();
 
     // get the channels for the active community
     const communityChannels = channels
@@ -187,8 +177,9 @@ class ComposerWithData extends Component<Props, State> {
 
     this.setState({
       availableCommunities: communities,
-      availableChannels: channels,
-      activeCommunity: community ? community.id : '',
+      availableChannels:
+        communityChannels.length > 0 ? communityChannels : channels,
+      activeCommunity: !community ? '' : community.id,
       activeChannel: '',
     });
   };
@@ -351,19 +342,12 @@ class ComposerWithData extends Component<Props, State> {
 
   setActiveCommunity = e => {
     const newActiveCommunity = e.target.value;
-    const activeCommunityChannels = this.state.availableChannels.filter(
-      channel => channel.community.id === newActiveCommunity
-    );
     const newActiveCommunityData = this.state.availableCommunities.find(
       community => community.id === newActiveCommunity
     );
-    const isActiveCommunity =
-      newActiveCommunityData &&
-      this.props.activeCommunity === newActiveCommunityData.slug;
-    const newActiveChannel = '';
     this.setState({
-      activeCommunity: newActiveCommunity,
-      activeChannel: newActiveChannel && newActiveChannel.id,
+      activeCommunity: newActiveCommunityData.id,
+      activeChannel: '',
     });
   };
 
@@ -632,6 +616,9 @@ class ComposerWithData extends Component<Props, State> {
           )}
 
           <FlexRow>
+            <TextButton hoverColor="warn.alt" onClick={this.onCancelClick}>
+              Cancel
+            </TextButton>
             {!dataExists ? (
               <LoadingSelect />
             ) : (
@@ -674,9 +661,6 @@ class ComposerWithData extends Component<Props, State> {
                   })}
               </RequiredSelector>
             )}
-            <TextButton hoverColor="warn.alt" onClick={this.onCancelClick}>
-              Cancel
-            </TextButton>
             <Button
               data-cy="composer-publish-button"
               onClick={this.publishThread}
