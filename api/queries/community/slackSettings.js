@@ -8,18 +8,8 @@ export default async (
   _: any,
   { user, loaders }: GraphQLContext
 ) => {
-  const currentUser = user;
-  if (!currentUser) {
-    return new UserError('You must be logged in to view community settings.');
-  }
-
-  const permissions = await loaders.userPermissionsInCommunity.load([
-    currentUser.id,
-    id,
-  ]);
-
-  if (!permissions || !permissions.isOwner) {
-    return null;
+  if (!await user.canModerateCommunity(id)) {
+    return new UserError('You don’t have permission to manage this channel');
   }
 
   return await loaders.communitySettings.load(id);
