@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
 import InfiniteList from 'src/components/infiniteScroll';
-import { parseNotification, getDistinctNotifications } from './utils';
+import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
+import { parseNotification } from './utils';
 import { NewMessageNotification } from './components/newMessageNotification';
 import { NewReactionNotification } from './components/newReactionNotification';
 import { NewChannelNotification } from './components/newChannelNotification';
@@ -201,7 +202,7 @@ class NotificationsPure extends React.Component<Props, State> {
         notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
       );
 
-    notifications = getDistinctNotifications(notifications);
+    notifications = deduplicateChildren(notifications, 'id');
     notifications = sortByDate(notifications, 'modifiedAt', 'desc');
 
     const { scrollElement } = this.state;
