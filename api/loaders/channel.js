@@ -7,7 +7,6 @@ import {
 import { getChannelsSettings } from '../models/channelSettings';
 import createLoader from './create-loader';
 import { getPendingUsersInChannels } from '../models/usersChannels';
-import type { Loader } from './types';
 
 export const __createChannelLoader = createLoader(channels =>
   getChannels(channels)
