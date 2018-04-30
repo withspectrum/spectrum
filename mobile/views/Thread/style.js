@@ -7,3 +7,8 @@ export const Wrapper = styled.View`
   align-items: center;
   justify-content: center;
 `;
+
+export const ThreadMargin = styled.View`
+  padding: 16px;
+  flex: 1;
+`;

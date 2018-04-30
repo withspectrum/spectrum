@@ -82,6 +82,13 @@ type Props = {
 
 const LS_BODY_KEY = 'last-thread-composer-body';
 const LS_TITLE_KEY = 'last-thread-composer-title';
+const LS_COMPOSER_EXPIRE = 'last-thread-composer-expire';
+
+const ONE_DAY = (): string => {
+  const time = new Date().getTime() + 60 * 60 * 24 * 1000;
+  return time.toString();
+};
+
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
 class ComposerWithData extends Component<Props, State> {
@@ -90,19 +97,7 @@ class ComposerWithData extends Component<Props, State> {
   constructor(props) {
     super(props);
 
-    let storedBody;
-    let storedTitle;
-    if (localStorage) {
-      try {
-        storedBody = toState(
-          JSON.parse(localStorage.getItem(LS_BODY_KEY) || '')
-        );
-        storedTitle = localStorage.getItem(LS_TITLE_KEY);
-      } catch (err) {
-        localStorage.removeItem(LS_BODY_KEY);
-        localStorage.removeItem(LS_TITLE_KEY);
-      }
-    }
+    let { storedBody, storedTitle } = this.getTitleAndBody();
 
     this.state = {
       title: storedTitle || '',
@@ -128,6 +123,39 @@ class ComposerWithData extends Component<Props, State> {
       500
     );
   }
+
+  removeStorage = () => {
+    localStorage.removeItem(LS_BODY_KEY);
+    localStorage.removeItem(LS_TITLE_KEY);
+    localStorage.removeItem(LS_COMPOSER_EXPIRE);
+  };
+
+  getTitleAndBody = () => {
+    let storedBody;
+    let storedTitle;
+
+    if (localStorage) {
+      try {
+        const expireTime = localStorage.getItem(LS_COMPOSER_EXPIRE);
+        const currTime = new Date().getTime().toString();
+        /////if current time is greater than valid till of text then please expire title/body back to ''
+        if (expireTime && currTime > expireTime) {
+          this.removeStorage();
+        } else {
+          storedBody = toState(
+            JSON.parse(localStorage.getItem(LS_BODY_KEY) || '')
+          );
+          storedTitle = localStorage.getItem(LS_TITLE_KEY);
+        }
+      } catch (err) {
+        this.removeStorage();
+      }
+    }
+    return {
+      storedBody,
+      storedTitle,
+    };
+  };
 
   handleIncomingProps = props => {
     const { user } = props.data;
@@ -199,20 +227,7 @@ class ComposerWithData extends Component<Props, State> {
   };
 
   componentWillMount() {
-    let storedBody;
-    let storedTitle;
-    if (localStorage) {
-      try {
-        storedBody = toState(
-          JSON.parse(localStorage.getItem(LS_BODY_KEY) || '')
-        );
-        storedTitle = localStorage.getItem(LS_TITLE_KEY);
-      } catch (err) {
-        localStorage.removeItem(LS_BODY_KEY);
-        localStorage.removeItem(LS_TITLE_KEY);
-      }
-    }
-
+    let { storedBody, storedTitle } = this.getTitleAndBody();
     this.setState({
       title: this.state.title || storedTitle || '',
       body: this.state.body || storedBody || '',
@@ -317,8 +332,7 @@ class ComposerWithData extends Component<Props, State> {
 
   clearEditorStateAfterPublish = () => {
     try {
-      localStorage.removeItem(LS_BODY_KEY);
-      localStorage.removeItem(LS_TITLE_KEY);
+      this.removeStorage();
     } catch (err) {
       console.error(err);
     }
@@ -328,30 +342,36 @@ class ComposerWithData extends Component<Props, State> {
     this.activateLastThread();
   };
 
+  handleTitleBodyChange = titleOrBody => {
+    if (titleOrBody === 'body') {
+      localStorage.setItem(
+        LS_BODY_KEY,
+        JSON.stringify(toJSON(this.state.body))
+      );
+    } else {
+      localStorage.setItem(LS_TITLE_KEY, this.state.title);
+    }
+    localStorage.setItem(LS_COMPOSER_EXPIRE, ONE_DAY());
+  };
+
   persistBodyToLocalStorageWithDebounce = body => {
     if (!localStorage) return;
-    return localStorage.setItem(
-      LS_BODY_KEY,
-      JSON.stringify(toJSON(this.state.body))
-    );
+    this.handleTitleBodyChange('body');
   };
 
   persistTitleToLocalStorageWithDebounce = title => {
     if (!localStorage) return;
-    return localStorage.setItem(LS_TITLE_KEY, this.state.title);
+    this.handleTitleBodyChange('title');
   };
 
   persistTitleToLocalStorage = title => {
     if (!localStorage) return;
-    return localStorage.setItem(LS_TITLE_KEY, this.state.title);
+    this.handleTitleBodyChange('title');
   };
 
   persistBodyToLocalStorage = body => {
     if (!localStorage) return;
-    return localStorage.setItem(
-      LS_BODY_KEY,
-      JSON.stringify(toJSON(this.state.body))
-    );
+    this.handleTitleBodyChange('body');
   };
 
   setActiveCommunity = e => {

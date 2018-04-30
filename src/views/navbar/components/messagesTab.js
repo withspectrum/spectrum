@@ -210,7 +210,7 @@ class MessagesTab extends React.Component<Props, State> {
       >
         <Icon
           glyph={count > 0 ? 'message-fill' : 'message'}
-          withCount={count > 10 ? '10+' : count > 0 ? count : false}
+          count={count > 10 ? '10+' : count > 0 ? count.toString() : null}
         />
         <Label>Messages</Label>
       </Tab>

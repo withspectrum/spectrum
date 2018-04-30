@@ -46,11 +46,12 @@ export const getCommunitiesSettings = (
     .getAll(...communityIds, { index: 'communityId' })
     .run()
     .then(data => {
-      if (!data || data.length === 0)
+      if (!data || data.length === 0) {
         return Array.from({ length: communityIds.length }, (_, index) => ({
           ...defaultSettings,
           communityId: communityIds[index],
         }));
+      }
 
       if (data.length === communityIds.length) {
         return data.map(
@@ -65,12 +66,23 @@ export const getCommunitiesSettings = (
       }
 
       if (data.length < communityIds.length) {
-        return communityIds.map(community => {
-          const record = data.find(o => o.communityId === community);
+        return communityIds.map(communityId => {
+          const record = data.find(o => o.communityId === communityId);
           if (record) return record;
           return {
             ...defaultSettings,
-            communityId: community,
+            communityId,
+          };
+        });
+      }
+
+      if (data.length > communityIds.length) {
+        return communityIds.map(communityId => {
+          const record = data.find(o => o.communityId === communityId);
+          if (record) return record;
+          return {
+            ...defaultSettings,
+            communityId,
           };
         });
       }
