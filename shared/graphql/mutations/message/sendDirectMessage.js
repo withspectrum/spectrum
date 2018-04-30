@@ -50,6 +50,13 @@ const sendDirectMessageOptions = {
               roles: [],
               __typename: 'ThreadParticipant',
             },
+            parent: message.parentId
+              ? {
+                  __typename: 'Message',
+                  id: message.parentId,
+                  // TODO(@mxstbr): Get the rest of information
+                }
+              : null,
             content: {
               ...message.content,
               __typename: 'MessageContent',
