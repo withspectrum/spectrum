@@ -11,6 +11,8 @@ export type EnableBrandedLoginType = {
       teamName: string,
       isConnected: boolean,
       hasSentInvites: boolean,
+      memberCount: number,
+      invitesSentAt: number,
     },
   },
 };
@@ -23,6 +25,8 @@ export const sendSlackInvitesMutation = gql`
         teamName
         isConnected
         hasSentInvites
+        memberCount
+        invitesSentAt
       }
     }
   }

@@ -13,6 +13,7 @@ import { Button } from 'src/components/buttons';
 import { TextArea, Error } from 'src/components/formElements';
 import sendSlackInvitesMutation from 'shared/graphql/mutations/community/sendSlackInvites';
 import { addToastWithTimeout } from 'src/actions/toasts';
+import { timeDifference } from 'src/helpers/utils';
 
 type Props = {
   community: GetSlackSettingsType,
@@ -64,11 +65,29 @@ class SendSlackInvitations extends React.Component<Props, State> {
     const { customMessage, isLoading } = this.state;
     const customMessageError = customMessage && customMessage.length > 500;
 
+    console.log('invites sent', community);
+
     if (community.slackSettings.hasSentInvites) {
+      const { memberCount, teamName, invitesSentAt } = community.slackSettings;
+      const now = new Date().getTime();
+      const then = new Date(invitesSentAt).getTime();
       return (
         <SectionCard>
-          <SectionTitle>Invite your team</SectionTitle>
-          <SectionSubtitle />
+          <SectionTitle style={{ marginTop: '-4px' }}>
+            <img
+              alt={'slack icon'}
+              src={'/img/slack_colored.png'}
+              width={48}
+              height={48}
+              style={{ marginLeft: '-8px', marginRight: '4px' }}
+            />
+            Invitations sent
+          </SectionTitle>
+          <SectionSubtitle>
+            You sent {memberCount} invitations to the {teamName} Slack team{' '}
+            {timeDifference(now, then).toLowerCase()}. Teams can only be invited
+            once.
+          </SectionSubtitle>
 
           <SectionCardFooter>
             <Button disabled>Invites sent!</Button>
@@ -79,12 +98,20 @@ class SendSlackInvitations extends React.Component<Props, State> {
 
     return (
       <SectionCard>
-        <SectionTitle>
-          Invite the {community.slackSettings.teamName} Slack team
+        <SectionTitle style={{ marginTop: '-4px' }}>
+          <img
+            alt={'slack icon'}
+            src={'/img/slack_colored.png'}
+            width={48}
+            height={48}
+            style={{ marginLeft: '-8px', marginRight: '4px' }}
+          />
+          Invite your Slack community
         </SectionTitle>
         <SectionSubtitle>
-          Your Slack team has been connected! Invite your Slack team to your
-          community.
+          Send your Slack team an invitation to join the {community.name}{' '}
+          community. Add an optional message to customize the invitation. Slack
+          teams can only be invited once.
         </SectionSubtitle>
 
         <TextArea

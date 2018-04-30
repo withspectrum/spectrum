@@ -10,6 +10,8 @@ export type GetSlackSettingsType = {
     teamName: string,
     isConnected: boolean,
     hasSentInvites: boolean,
+    memberCount: number,
+    invitesSentAt: number,
   },
 };
 
@@ -21,6 +23,8 @@ export const getSlackSettingsQuery = gql`
         teamName
         isConnected
         hasSentInvites
+        memberCount
+        invitesSentAt
       }
     }
   }

@@ -36,10 +36,19 @@ class ImportSlackTeam extends React.Component<Props> {
 
     return (
       <SectionCard>
-        <SectionTitle>Connect a Slack team</SectionTitle>
+        <SectionTitle style={{ marginTop: '-4px' }}>
+          <img
+            alt={'slack icon'}
+            src={'/img/slack_colored.png'}
+            width={48}
+            height={48}
+            style={{ marginLeft: '-8px', marginRight: '4px' }}
+          />
+          Connect a Slack team
+        </SectionTitle>
         <SectionSubtitle>
-          Connect a Slack team to your community to invite your community or
-          post new threads into a Slack channel.
+          Invite your Slack team to your community or get notified when new
+          conversations are created.
         </SectionSubtitle>
 
         <SectionCardFooter>

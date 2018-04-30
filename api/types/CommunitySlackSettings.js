@@ -10,6 +10,7 @@ const CommunitySlackSettings = /* GraphQL */ `
 		hasSentInvites: Boolean
 		teamName: String
 		memberCount: Int
+		invitesSentAt: Date
 		slackChannelList: [ SlackChannel ]
 	}
 `;

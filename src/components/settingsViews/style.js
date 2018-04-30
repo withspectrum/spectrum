@@ -82,6 +82,8 @@ export const SectionTitle = styled.h3`
   font-weight: 700;
   color: ${props => props.theme.text.default};
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
 `;
 
 export const Heading = styled.h1`

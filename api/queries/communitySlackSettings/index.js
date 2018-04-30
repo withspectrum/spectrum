@@ -3,6 +3,8 @@ import isConnected from './isConnected';
 import teamName from './teamName';
 import hasSentInvites from './hasSentInvites';
 import slackChannelList from './slackChannelList';
+import memberCount from './memberCount';
+import invitesSentAt from './invitesSentAt';
 
 module.exports = {
   CommunitySlackSettings: {
@@ -10,5 +12,7 @@ module.exports = {
     isConnected,
     hasSentInvites,
     slackChannelList,
+    memberCount,
+    invitesSentAt,
   },
 };

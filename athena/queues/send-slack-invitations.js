@@ -36,7 +36,7 @@ const processJob = async (job: Job<SendSlackInvitationsJobData>) => {
     token,
     scope,
     connectedBy,
-    inviteCustomMessage,
+    invitesCustomMessage,
     teamName,
   } = settings.slackSettings;
 
@@ -86,7 +86,7 @@ const processJob = async (job: Job<SendSlackInvitationsJobData>) => {
       },
       communityId: communityId,
       senderId: connectedBy,
-      customMessage: inviteCustomMessage,
+      customMessage: invitesCustomMessage,
     })
   );
 

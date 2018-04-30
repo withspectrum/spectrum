@@ -44,10 +44,19 @@ class SlackChannelConnection extends React.Component<Props> {
 
       return (
         <SectionCard>
-          <SectionTitle>Send notifications to Slack</SectionTitle>
+          <SectionTitle style={{ marginTop: '-4px' }}>
+            <img
+              alt={'slack icon'}
+              src={'/img/slack_colored.png'}
+              width={48}
+              height={48}
+              style={{ marginLeft: '-8px', marginRight: '4px' }}
+            />
+            Get conversation notifications in Slack
+          </SectionTitle>
           <SectionSubtitle>
-            Connect the Spectrum bot to your Slack team in order to send
-            notifications whenever new conversations are created.
+            Keep up with your community by sending notifications about new
+            conversations to individual channels in Slack.
           </SectionSubtitle>
 
           <ChannelListContainer>
