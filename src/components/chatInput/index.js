@@ -19,6 +19,7 @@ import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.
 import linksDecorator from 'shared/clients/draft-js/links-decorator/index.web.js';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
+import { replyToMessage } from '../../actions/message';
 import {
   Form,
   ChatInputContainer,
@@ -26,12 +27,37 @@ import {
   SendButton,
   PhotoSizeError,
   MarkdownHint,
-  Preformated,
+  Preformatted,
+  PreviewWrapper,
+  RemovePreviewButton,
 } from './style';
 import Input from './input';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
 import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
+import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
+import { QuotedMessage as QuotedMessageComponent } from '../message/view';
+
+const QuotedMessage = connect()(
+  getMessageById(props => {
+    if (props.data && props.data.message) {
+      return <QuotedMessageComponent message={props.data.message} />;
+    }
+
+    // if the query is done loading and no message was returned, clear the input
+    if (props.data && props.data.networkStatus === 7 && !props.data.message) {
+      props.dispatch(
+        addToastWithTimeout(
+          'error',
+          'The message you are replying to was deleted or could not be fetched.'
+        )
+      );
+      props.dispatch(replyToMessage(null));
+    }
+
+    return null;
+  })
+);
 
 type State = {
   isFocused: boolean,
@@ -61,6 +87,7 @@ type Props = {
   networkOnline: boolean,
   threadData?: Object,
   refetchThread?: Function,
+  quotedMessage: ?string,
 };
 
 const LS_KEY = 'last-chat-input-content';
@@ -68,47 +95,51 @@ const LS_KEY_EXPIRE = 'last-chat-input-content-expire';
 const LS_DM_KEY = 'last-chat-input-content-dm';
 const LS_DM_KEY_EXPIRE = 'last-chat-input-content-dm-expire';
 
-const ONE_DAY = () => new Date().getTime() + 60 * 60 * 24 * 1000;
-let storedContent;
-let storedContentDM;
+const ONE_DAY = (): string => {
+  const time = new Date().getTime() + 60 * 60 * 24 * 1000;
+  return time.toString();
+};
+
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
-const currTime = new Date().getTime();
-if (localStorage) {
-  try {
-    const expireTime = localStorage.getItem(LS_KEY_EXPIRE);
+const returnText = (type = '') => {
+  let storedContent;
+  let storedContentDM;
+  const currTime = new Date().getTime().toString();
+  if (localStorage) {
+    try {
+      const expireTime = localStorage.getItem(LS_KEY_EXPIRE);
 
-    /////if current time is greater than valid till of text then please expire text back to ''
-    if (currTime > expireTime) {
+      // if current time is greater than valid till of text then please expire text back to ''
+      if (expireTime && currTime > expireTime) {
+        localStorage.removeItem(LS_KEY);
+        localStorage.removeItem(LS_KEY_EXPIRE);
+      } else {
+        storedContent = toState(JSON.parse(localStorage.getItem(LS_KEY) || ''));
+      }
+    } catch (err) {
       localStorage.removeItem(LS_KEY);
       localStorage.removeItem(LS_KEY_EXPIRE);
-    } else {
-      storedContent = toState(JSON.parse(localStorage.getItem(LS_KEY) || ''));
     }
-  } catch (err) {
-    localStorage.removeItem(LS_KEY);
-    localStorage.removeItem(LS_KEY_EXPIRE);
-  }
 
-  try {
-    const expireTimeDM = localStorage.getItem(LS_DM_KEY_EXPIRE);
+    try {
+      const expireTimeDM = localStorage.getItem(LS_DM_KEY_EXPIRE);
 
-    /////if current time is greater than valid till of text then please expire text back to ''
-    if (currTime > expireTimeDM) {
+      // if current time is greater than valid till of text then please expire text back to ''
+      if (expireTimeDM && currTime > expireTimeDM) {
+        localStorage.removeItem(LS_DM_KEY);
+        localStorage.removeItem(LS_DM_KEY_EXPIRE);
+      } else {
+        storedContentDM = toState(
+          JSON.parse(localStorage.getItem(LS_DM_KEY) || '')
+        );
+      }
+    } catch (err) {
       localStorage.removeItem(LS_DM_KEY);
       localStorage.removeItem(LS_DM_KEY_EXPIRE);
-    } else {
-      storedContentDM = toState(
-        JSON.parse(localStorage.getItem(LS_DM_KEY) || '')
-      );
     }
-  } catch (err) {
-    localStorage.removeItem(LS_DM_KEY);
-    localStorage.removeItem(LS_DM_KEY_EXPIRE);
   }
-}
 
-const returnText = (type = '') => {
   if (type === 'directMessageThread') {
     return storedContentDM;
   } else {
@@ -156,12 +187,13 @@ class ChatInput extends React.Component<Props, State> {
   shouldComponentUpdate(next, nextState) {
     const curr = this.props;
     const currState = this.state;
-
     // User changed
     if (curr.currentUser !== next.currentUser) return true;
 
     if (curr.networkOnline !== next.networkOnline) return true;
     if (curr.websocketConnection !== next.websocketConnection) return true;
+
+    if (curr.quotedMessage !== next.quotedMessage) return true;
 
     // State changed
     if (curr.state !== next.state) return true;
@@ -181,19 +213,23 @@ class ChatInput extends React.Component<Props, State> {
   handleKeyDown = (event: any) => {
     const key = event.keyCode || event.charCode;
     // Detect esc key or backspace key (and empty message) to remove
-    // the previewed image
+    // the previewed image and quoted message
     if (
       key === 27 ||
       ((key === 8 || key === 46) &&
         !this.props.state.getCurrentContent().hasText())
     ) {
-      this.removeMediaPreview();
+      this.removePreviewWrapper();
+      this.removeQuotedMessage();
     }
+  };
+
+  removeQuotedMessage = () => {
+    if (this.props.quotedMessage) this.props.dispatch(replyToMessage(null));
   };
 
   onChange = (state, ...rest) => {
     const { onChange, threadType } = this.props;
-
     this.toggleMarkdownHint(state);
     persistContent(state, threadType);
     onChange(state, ...rest);
@@ -238,6 +274,7 @@ class ChatInput extends React.Component<Props, State> {
       currentUser,
       threadData,
       refetchThread,
+      quotedMessage,
     } = this.props;
 
     const isSendingMessageAsNonMember =
@@ -285,6 +322,7 @@ class ChatInput extends React.Component<Props, State> {
     if (!state.getCurrentContent().hasText()) return 'handled';
     // do one last persist before sending
     forcePersist(state, threadType);
+    this.removeQuotedMessage();
 
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
@@ -307,6 +345,7 @@ class ChatInput extends React.Component<Props, State> {
         threadId: thread,
         messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
+        parentId: quotedMessage,
         content: {
           body: !isAndroid()
             ? JSON.stringify(toJSON(state))
@@ -326,6 +365,7 @@ class ChatInput extends React.Component<Props, State> {
         threadId: thread,
         messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
+        parentId: quotedMessage,
         content: {
           body: !isAndroid()
             ? JSON.stringify(toJSON(state))
@@ -386,7 +426,7 @@ class ChatInput extends React.Component<Props, State> {
     return this.submit(e);
   };
 
-  removeMediaPreview = () => {
+  removePreviewWrapper = () => {
     this.setState({
       mediaPreview: '',
       mediaPreviewFile: null,
@@ -398,7 +438,7 @@ class ChatInput extends React.Component<Props, State> {
       return;
     }
 
-    this.removeMediaPreview();
+    this.removePreviewWrapper();
 
     // eslint-disable-next-line
     let reader = new FileReader();
@@ -413,6 +453,7 @@ class ChatInput extends React.Component<Props, State> {
       sendMessage,
       websocketConnection,
       networkOnline,
+      quotedMessage,
     } = this.props;
 
     if (!networkOnline) {
@@ -457,6 +498,7 @@ class ChatInput extends React.Component<Props, State> {
           threadId: thread,
           messageType: 'media',
           threadType,
+          parentId: quotedMessage,
           content: {
             body: reader.result,
           },
@@ -483,6 +525,7 @@ class ChatInput extends React.Component<Props, State> {
           threadId: thread,
           messageType: 'media',
           threadType,
+          parentId: quotedMessage,
           content: {
             body: reader.result,
           },
@@ -571,6 +614,7 @@ class ChatInput extends React.Component<Props, State> {
       currentUser,
       networkOnline,
       websocketConnection,
+      quotedMessage,
     } = this.props;
     const {
       isFocused,
@@ -618,8 +662,6 @@ class ChatInput extends React.Component<Props, State> {
             )}
             <Form focus={isFocused}>
               <Input
-                mediaPreview={mediaPreview}
-                onRemoveMedia={this.removeMediaPreview}
                 focus={isFocused}
                 placeholder={`Your message here...`}
                 editorState={state}
@@ -632,11 +674,33 @@ class ChatInput extends React.Component<Props, State> {
                 editorKey="chat-input"
                 decorators={[mentionsDecorator, linksDecorator]}
                 networkDisabled={networkDisabled}
-              />
+                hasAttachment={!!mediaPreview || !!quotedMessage}
+              >
+                {mediaPreview && (
+                  <PreviewWrapper>
+                    <img src={mediaPreview} alt="" />
+                    <RemovePreviewButton onClick={this.removePreviewWrapper}>
+                      <Icon glyph="view-close-small" size={'16'} />
+                    </RemovePreviewButton>
+                  </PreviewWrapper>
+                )}
+                {quotedMessage && (
+                  <PreviewWrapper data-cy="staged-quoted-message">
+                    <QuotedMessage id={quotedMessage} />
+                    <RemovePreviewButton
+                      data-cy="remove-staged-quoted-message"
+                      onClick={this.removeQuotedMessage}
+                    >
+                      <Icon glyph="view-close-small" size={'16'} />
+                    </RemovePreviewButton>
+                  </PreviewWrapper>
+                )}
+              </Input>
               <SendButton
                 data-cy="chat-input-send-button"
                 glyph="send-fill"
                 onClick={this.submit}
+                hasAttachment={mediaPreview || quotedMessage ? true : false}
               />
             </Form>
           </ChatInputWrapper>
@@ -644,8 +708,8 @@ class ChatInput extends React.Component<Props, State> {
         <MarkdownHint showHint={markdownHint} data-cy="markdownHint">
           <b>**bold**</b>
           <i>*italics*</i>
-          <Preformated>`code`</Preformated>
-          <Preformated>```preformatted```</Preformated>
+          <Preformatted>`code`</Preformatted>
+          <Preformatted>```preformatted```</Preformatted>
         </MarkdownHint>
       </React.Fragment>
     );
@@ -656,6 +720,7 @@ const map = state => ({
   currentUser: state.users.currentUser,
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
+  quotedMessage: state.message.quotedMessage,
 });
 export default compose(
   sendMessage,

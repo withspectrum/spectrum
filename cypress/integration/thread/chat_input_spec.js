@@ -97,6 +97,39 @@ describe('chat input', () => {
     });
   });
 
+  describe('message attachments', () => {
+    beforeEach(() => {
+      cy.auth(memberInChannelUser.id);
+      cy.visit(`/thread/${publicThread.id}`);
+    });
+
+    it('should allow quoting a message', () => {
+      // Quote a message
+      cy.get('[data-cy="staged-quoted-message"]').should('not.be.visible');
+      cy
+        .get('[data-cy="message"]')
+        .first()
+        .should('be.visible')
+        .click();
+      cy
+        .get('[data-cy="reply-to-message"]')
+        .first()
+        .should('be.visible')
+        .click();
+      cy
+        .get('[data-cy="reply-to-message"]')
+        .first()
+        .should('not.be.visible');
+      cy.get('[data-cy="staged-quoted-message"]').should('be.visible');
+      // Remove quoted message again
+      cy
+        .get('[data-cy="remove-staged-quoted-message"]')
+        .should('be.visible')
+        .click();
+      cy.get('[data-cy="staged-quoted-message"]').should('not.be.visible');
+    });
+  });
+
   // NOTE(@mxstbr): This fails in CI, but not locally for some reason
   // we should fix This
   // FIXME

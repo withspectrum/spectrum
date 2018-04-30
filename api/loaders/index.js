@@ -37,6 +37,7 @@ import {
 } from './directMessageThread';
 import { __createReactionLoader } from './reaction';
 import { __createStripeCustomersLoader } from './stripe';
+import { __createMessageLoader } from './message';
 import type { DataLoaderOptions } from './types';
 
 // Create all the necessary loaders to be attached to the GraphQL context for each request
@@ -70,6 +71,7 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   directMessageThread: __createDirectMessageThreadLoader(options),
   directMessageParticipants: __createDirectMessageParticipantsLoader(options),
   directMessageSnippet: __createDirectMessageSnippetLoader(options),
+  message: __createMessageLoader(options),
   messageReaction: __createReactionLoader(options),
 });
 

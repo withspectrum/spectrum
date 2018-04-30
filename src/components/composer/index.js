@@ -84,7 +84,10 @@ const LS_BODY_KEY = 'last-thread-composer-body';
 const LS_TITLE_KEY = 'last-thread-composer-title';
 const LS_COMPOSER_EXPIRE = 'last-thread-composer-expire';
 
-const ONE_DAY = () => new Date().getTime() + 60 * 60 * 24 * 1000;
+const ONE_DAY = (): string => {
+  const time = new Date().getTime() + 60 * 60 * 24 * 1000;
+  return time.toString();
+};
 
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
@@ -134,9 +137,9 @@ class ComposerWithData extends Component<Props, State> {
     if (localStorage) {
       try {
         const expireTime = localStorage.getItem(LS_COMPOSER_EXPIRE);
-        const currTime = new Date().getTime();
+        const currTime = new Date().getTime().toString();
         /////if current time is greater than valid till of text then please expire title/body back to ''
-        if (currTime > expireTime) {
+        if (expireTime && currTime > expireTime) {
           this.removeStorage();
         } else {
           storedBody = toState(

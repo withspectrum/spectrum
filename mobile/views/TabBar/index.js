@@ -29,4 +29,7 @@ const tabBarConfiguration = {
   },
 };
 
+// NOTE(@mxstbr): I figured this out manually by simply inspecting in the simulator
+export const TAB_BAR_HEIGHT = 375;
+
 export default TabNavigator(routeConfiguration, tabBarConfiguration);

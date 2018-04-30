@@ -11,7 +11,6 @@ import { createChangefeed } from 'shared/changefeed-utils';
 import { setThreadLastActive } from './thread';
 
 export type MessageTypes = 'text' | 'media';
-// TODO: Fix this
 export type Message = Object;
 
 export const getMessage = (messageId: string): Promise<Message> => {
@@ -22,6 +21,16 @@ export const getMessage = (messageId: string): Promise<Message> => {
     .then(message => {
       if (!message || message.deletedAt) return null;
       return message;
+    });
+};
+
+export const getManyMessages = (messageIds: string[]): Promise<Message[]> => {
+  return db
+    .table('messages')
+    .getAll(...messageIds)
+    .run()
+    .then(messages => {
+      return messages.filter(message => message && !message.deletedAt);
     });
 };
 
