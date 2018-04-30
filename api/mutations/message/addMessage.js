@@ -101,7 +101,12 @@ export default async (
       type: file.mimetype,
     };
 
-    const url = await uploadImage(file, 'threads', message.threadId);
+    let url;
+    try {
+      url = await uploadImage(file, 'threads', message.threadId);
+    } catch (err) {
+      return new UserError(err.message);
+    }
 
     if (!url)
       return new UserError(
