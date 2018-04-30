@@ -178,8 +178,7 @@ class Messages extends Component<MessageGroupProps, State> {
           const me = currentUser
             ? author.user && author.user.id === currentUser.id
             : false;
-          const canModerate =
-            threadType !== 'directMessageThread' && (me || isModerator);
+          const canModerate = threadType !== (me || isModerator);
 
           if (roboText) {
             if (initialMessage.message.type === 'timestamp') {
