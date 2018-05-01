@@ -4,13 +4,23 @@ exports[`should fetch pending users if moderates channel 1`] = `
 Object {
   "data": Object {
     "channel": Object {
-      "blockedUsers": null,
+      "blockedUsers": Array [
+        Object {
+          "coverPhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_banners%2F17106008%2F1491444958%2F1500x500?w=640&h=192&ixlib=js-1.1.1&s=f544283ec86a42694f40b2d6c462d695",
+          "description": "I am blocked in the Spectrum community",
+          "firstName": null,
+          "id": "4",
+          "isOnline": null,
+          "name": "Blocked user",
+          "profilePhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F848823167699230721%2F-9CbPtto_bigger.jpg?w=128&h=128&ixlib=js-1.1.1&s=fc14b0aafec83958dc1896b0c899b68c",
+          "timezone": null,
+          "username": "blocked-user",
+          "website": "",
+        },
+      ],
       "id": "2",
     },
   },
-  "errors": Array [
-    [GraphQLError: user.canModerateChannel is not a function],
-  ],
 }
 `;
 
@@ -18,13 +28,23 @@ exports[`should fetch pending users if moderates community 1`] = `
 Object {
   "data": Object {
     "channel": Object {
-      "blockedUsers": null,
+      "blockedUsers": Array [
+        Object {
+          "coverPhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_banners%2F17106008%2F1491444958%2F1500x500?w=640&h=192&ixlib=js-1.1.1&s=f544283ec86a42694f40b2d6c462d695",
+          "description": "I am blocked in the Spectrum community",
+          "firstName": null,
+          "id": "4",
+          "isOnline": null,
+          "name": "Blocked user",
+          "profilePhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F848823167699230721%2F-9CbPtto_bigger.jpg?w=128&h=128&ixlib=js-1.1.1&s=fc14b0aafec83958dc1896b0c899b68c",
+          "timezone": null,
+          "username": "blocked-user",
+          "website": "",
+        },
+      ],
       "id": "2",
     },
   },
-  "errors": Array [
-    [GraphQLError: user.canModerateChannel is not a function],
-  ],
 }
 `;
 
@@ -32,13 +52,23 @@ exports[`should fetch pending users if owns community 1`] = `
 Object {
   "data": Object {
     "channel": Object {
-      "blockedUsers": null,
+      "blockedUsers": Array [
+        Object {
+          "coverPhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_banners%2F17106008%2F1491444958%2F1500x500?w=640&h=192&ixlib=js-1.1.1&s=f544283ec86a42694f40b2d6c462d695",
+          "description": "I am blocked in the Spectrum community",
+          "firstName": null,
+          "id": "4",
+          "isOnline": null,
+          "name": "Blocked user",
+          "profilePhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F848823167699230721%2F-9CbPtto_bigger.jpg?w=128&h=128&ixlib=js-1.1.1&s=fc14b0aafec83958dc1896b0c899b68c",
+          "timezone": null,
+          "username": "blocked-user",
+          "website": "",
+        },
+      ],
       "id": "2",
     },
   },
-  "errors": Array [
-    [GraphQLError: user.canModerateChannel is not a function],
-  ],
 }
 `;
 
@@ -51,7 +81,7 @@ Object {
     },
   },
   "errors": Array [
-    [GraphQLError: user.canModerateChannel is not a function],
+    [GraphQLError: You don’t have permission to manage this channel],
   ],
 }
 `;
@@ -65,7 +95,7 @@ Object {
     },
   },
   "errors": Array [
-    [GraphQLError: Cannot read property 'canModerateChannel' of undefined],
+    [GraphQLError: You must be signed in to do this],
   ],
 }
 `;

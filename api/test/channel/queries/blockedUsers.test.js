@@ -19,7 +19,7 @@ const noPermissionUser = data.users.find(
   ({ id }) => id === PREVIOUS_MEMBER_USER_ID
 );
 
-it.only('should not fetch blocked users if not authed', async () => {
+it('should not fetch blocked users if not authed', async () => {
   const query = /* GraphQL */ `
     {
       channel(id: "${SPECTRUM_GENERAL_CHANNEL_ID}") {

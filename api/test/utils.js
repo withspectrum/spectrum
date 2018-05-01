@@ -2,7 +2,7 @@
 import { graphql } from 'graphql';
 import createLoaders from '../loaders';
 import schema from '../schema';
-import permissions from '../routes/api/graphql';
+import permissions from '../routes/api/permissions';
 
 type Options = {
   context?: {
@@ -13,8 +13,6 @@ type Options = {
 
 // Nice little helper function for tests
 export const request = (query: mixed, { context, variables }: Options = {}) => {
-  console.log('CONTEXT', context);
-
   const loaders = createLoaders();
 
   let currentUser =
@@ -22,8 +20,6 @@ export const request = (query: mixed, { context, variables }: Options = {}) => {
 
   if (context && context.user && context.user.id && !context.user.bannedAt) {
     const thisPermissions = permissions(context.user.id, loaders);
-
-    console.log('PERMISSIONS', thisPermissions);
 
     const {
       communityPermissions,
@@ -45,9 +41,11 @@ export const request = (query: mixed, { context, variables }: Options = {}) => {
   }
 
   const newContext = Object.assign({}, context, {
-    user: {
-      ...currentUser,
-    },
+    user: currentUser
+      ? {
+          ...currentUser,
+        }
+      : null,
   });
 
   return graphql(
