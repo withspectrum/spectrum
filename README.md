@@ -195,6 +195,12 @@ There's a shortcut for dropping, migrating and seeding the database too:
 yarn run db:reset
 ```
 
+#### Generating migrations
+You can run
+```sh
+yarn run rethinkdb:migrate:generate migration-name
+```
+
 #### Getting the secrets
 
 While the app will run without any secrets set up, you won't be able to sign in locally. To get that set up, copy the provided example secrets file to the real location:
