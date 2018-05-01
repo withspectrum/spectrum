@@ -6,7 +6,7 @@ exports.up = function(r, conn) {
         members: r.literal(),
       })
       .run(conn),
-  ]).catch(err => console.log(err));
+  ]).catch(err => console.error(err));
 };
 
 exports.down = function(r, conn) {
