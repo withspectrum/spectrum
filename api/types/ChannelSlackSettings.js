@@ -19,7 +19,7 @@ const ChannelSlackSettings = /* GraphQL */ `
   }
 
   extend type Mutation {
-		updateChannelSlackBotConnection(input: UpdateChannelSlackBotConnectionInput): Channel @isAuthed
+		updateChannelSlackBotConnection(input: UpdateChannelSlackBotConnectionInput): Channel
 	}
 `;
 

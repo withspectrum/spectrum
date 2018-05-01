@@ -5,6 +5,7 @@ import {
   getOrCreateChannelSettings,
   disableChannelTokenJoin,
 } from '../../models/channelSettings';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 type DisableChannelTokenJoinInput = {
   input: {
@@ -12,16 +13,18 @@ type DisableChannelTokenJoinInput = {
   },
 };
 
-export default async (
-  _: any,
-  { input: { id: channelId } }: DisableChannelTokenJoinInput,
-  { user }: GraphQLContext
-) => {
-  if (!await user.canModerateChannel(channelId)) {
-    return new UserError('You don’t have permission to manage this channel');
-  }
+export default requireAuth(
+  async (
+    _: any,
+    { input: { id: channelId } }: DisableChannelTokenJoinInput,
+    { user }: GraphQLContext
+  ) => {
+    if (!await user.canModerateChannel(channelId)) {
+      return new UserError('You don’t have permission to manage this channel');
+    }
 
-  return await getOrCreateChannelSettings(channelId).then(
-    async () => await disableChannelTokenJoin(channelId)
-  );
-};
+    return await getOrCreateChannelSettings(channelId).then(
+      async () => await disableChannelTokenJoin(channelId)
+    );
+  }
+);

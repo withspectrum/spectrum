@@ -4,21 +4,20 @@ import type { EditChannelInput } from '../../models/channel';
 import UserError from '../../utils/UserError';
 import { approvePendingUsersInChannel } from '../../models/usersChannels';
 import { editChannel, getChannelById } from '../../models/channel';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-export default async (
-  _: any,
-  args: EditChannelInput,
-  { user }: GraphQLContext
-) => {
-  if (!await user.canModerateChannel(args.input.channelId)) {
-    return new UserError('You don’t have permission to manage this channel');
+export default requireAuth(
+  async (_: any, args: EditChannelInput, { user }: GraphQLContext) => {
+    if (!await user.canModerateChannel(args.input.channelId)) {
+      return new UserError('You don’t have permission to manage this channel');
+    }
+
+    const channel = await getChannelById(args.input.channelId);
+
+    if (channel.isPrivate && !args.input.isPrivate) {
+      approvePendingUsersInChannel(args.input.channelId);
+    }
+
+    return editChannel(args);
   }
-
-  const channel = await getChannelById(args.input.channelId);
-
-  if (channel.isPrivate && !args.input.isPrivate) {
-    approvePendingUsersInChannel(args.input.channelId);
-  }
-
-  return editChannel(args);
-};
+);
