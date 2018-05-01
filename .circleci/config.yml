@@ -214,8 +214,7 @@ workflows:
       - deploy_alpha:
           requires:
             - test_static_js
-          # TODO(@mxstbr): UNCOMMENT BEFORE MERGE
-            # - test_web
-          # filters:
-            # branches:
-            #   only: alpha
+            - test_web
+          filters:
+            branches:
+              only: alpha
