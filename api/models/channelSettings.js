@@ -16,6 +16,7 @@ const defaultSettings = {
   },
 };
 
+// prettier-disable
 export const getOrCreateChannelSettings = async (
   channelId: string
 ): Promise<DBChannelSettings> => {
@@ -41,6 +42,7 @@ export const getOrCreateChannelSettings = async (
   return settings[0];
 };
 
+// prettier-disable
 export const getChannelsSettings = (
   channelIds: Array<string>
 ): Promise<?DBChannelSettings> => {
@@ -113,6 +115,8 @@ type UpdateInput = {
   slackChannelId: ?string,
   eventType: 'threadCreated',
 };
+
+// prettier-disable
 export const updateChannelSlackBotConnection = async ({
   channelId,
   slackChannelId,
