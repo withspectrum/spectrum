@@ -51,7 +51,7 @@ const tabBarConfiguration = {
   tabBarComponent: TabBarBottom,
   tabBarPosition: 'bottom',
   animationEnabled: false,
-  swipeEnabled: false,
+  swipeEnabled: true,
   tabBarOptions: {
     // tint color is passed to text and icons (if enabled) on the tab bar
     activeTintColor: theme.bg.default,
