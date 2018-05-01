@@ -59,6 +59,10 @@ const tabBarConfiguration = {
     // background color is for the tab component
     activeBackgroundColor: theme.bg.reverse,
     inactiveBackgroundColor: theme.bg.reverse,
+    labelStyle: {
+      fontWeight: 'bold',
+      marginBottom: 3,
+    },
   },
 };
 
