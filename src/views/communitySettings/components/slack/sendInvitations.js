@@ -65,8 +65,6 @@ class SendSlackInvitations extends React.Component<Props, State> {
     const { customMessage, isLoading } = this.state;
     const customMessageError = customMessage && customMessage.length > 500;
 
-    console.log('invites sent', community);
-
     if (community.slackSettings.hasSentInvites) {
       const { memberCount, teamName, invitesSentAt } = community.slackSettings;
       const now = new Date().getTime();
