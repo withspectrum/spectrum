@@ -346,7 +346,7 @@ class ComposerWithData extends Component<Props, State> {
       community => community.id === newActiveCommunity
     );
     this.setState({
-      activeCommunity: newActiveCommunityData.id,
+      activeCommunity: !newActiveCommunityData ? '' : newActiveCommunityData.id,
       activeChannel: '',
     });
   };
