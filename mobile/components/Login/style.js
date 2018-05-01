@@ -5,6 +5,7 @@ import { View, TouchableOpacity, ScrollView } from 'react-native';
 import { Svg } from 'expo';
 const { Path, G } = Svg;
 import theme from '../theme';
+import Anchor from '../Anchor';
 
 export const Container = (props: any) => {
   const Container = styled.View`
@@ -159,3 +160,15 @@ export const GithubButton = ({ onPress }: SocialButtonProps) => {
     </SigninButton>
   );
 };
+
+export const CodeOfConduct = styled.Text`
+  padding-top: 32px;
+  color: ${props => props.theme.text.alt};
+  font-size: 14px;
+  font-weight: 500;
+`;
+
+export const Link = styled(Anchor)`
+  color: rgb(68, 0, 204);
+  font-weight: 600;
+`;

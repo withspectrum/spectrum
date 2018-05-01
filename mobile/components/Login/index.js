@@ -13,6 +13,8 @@ import {
   GithubButton,
   GoogleButton,
   TwitterButton,
+  CodeOfConduct,
+  Link,
 } from './style';
 
 const API_URL =
@@ -58,6 +60,10 @@ class Login extends React.Component<Props> {
         <GoogleButton onPress={this.authenticate('google')} />
         <FacebookButton onPress={this.authenticate('facebook')} />
         <GithubButton onPress={this.authenticate('github')} />
+        <CodeOfConduct>By using Spectrum, you agree to our</CodeOfConduct>
+        <Link href="https://github.com/withspectrum/code-of-conduct">
+          Code of Conduct
+        </Link>
       </Container>
     );
   }
