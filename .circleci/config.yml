@@ -131,8 +131,11 @@ jobs:
       - run:
           name: Deploy and alias API
           command: |
-            (cd build-api && now --token $ZEIT_TOKEN --team spaceprogram)
-            (cd build-api && now --token $ZEIT_TOKEN --team spaceprogram alias api.alpha.spectrum.chat)
+            cd build-api
+            now --token $ZEIT_TOKEN --team spaceprogram
+            sleep 1 # This might fix the problem where now aliases the old deploy from hyperion
+            now --token $ZEIT_TOKEN --team spaceprogram alias api.alpha.spectrum.chat
+            cd ..
       - run:
           name: Deploy and alias Hyperion
           command: |
