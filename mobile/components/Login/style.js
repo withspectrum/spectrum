@@ -22,6 +22,7 @@ export const Container = (props: any) => {
 };
 
 export const Emoji = () => (
+  // TODO(@ryota-murakami) Emoji doesn't show correctly. following Code is workaround. @see https://github.com/withspectrum/spectrum/pull/2880
   <Svg width="64" height="64" viewBox="0 0 32 32">
     <G>
       <Path
