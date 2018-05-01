@@ -39,13 +39,13 @@ export const Title = styled.Text`
   font-size: 40px;
   font-weight: 900;
   text-align: center;
-  margin-bottom: 16px;
 `;
 
 export const Subtitle = styled.Text`
   color: ${props => props.theme.text.alt};
   font-weight: 500;
   font-size: 16px;
+  margin-top: 16px;
   margin-bottom: 16px;
   text-align: center;
   padding: 0px 32px;
