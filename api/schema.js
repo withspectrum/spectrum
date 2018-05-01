@@ -17,7 +17,7 @@ import UserError from './utils/UserError';
 
 const scalars = require('./types/scalars');
 const generalTypes = require('./types/general');
-const directiveResolvers = require('./directiveResolvers');
+const schemaDirectives = require('./schemaDirectives');
 
 const Thread = require('./types/Thread');
 const Channel = require('./types/Channel');
@@ -154,7 +154,7 @@ const schema = makeExecutableSchema({
     Search,
   ],
   resolvers,
-  directiveResolvers,
+  schemaDirectives,
 });
 
 if (process.env.REACT_APP_MAINTENANCE_MODE === 'enabled') {
