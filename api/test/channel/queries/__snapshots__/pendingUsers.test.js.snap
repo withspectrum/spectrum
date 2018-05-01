@@ -1,12 +1,71 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should fetch a channels pending users 1`] = `
+exports[`should fetch pending users if moderates channel 1`] = `
 Object {
   "data": Object {
     "channel": Object {
+      "blockedUsers": null,
       "id": "2",
-      "pendingUsers": Array [],
     },
   },
+  "errors": Array [
+    [GraphQLError: user.canModerateChannel is not a function],
+  ],
+}
+`;
+
+exports[`should fetch pending users if moderates community 1`] = `
+Object {
+  "data": Object {
+    "channel": Object {
+      "blockedUsers": null,
+      "id": "2",
+    },
+  },
+  "errors": Array [
+    [GraphQLError: user.canModerateChannel is not a function],
+  ],
+}
+`;
+
+exports[`should fetch pending users if owns community 1`] = `
+Object {
+  "data": Object {
+    "channel": Object {
+      "blockedUsers": null,
+      "id": "2",
+    },
+  },
+  "errors": Array [
+    [GraphQLError: user.canModerateChannel is not a function],
+  ],
+}
+`;
+
+exports[`should not fetch pending users if no permissions 1`] = `
+Object {
+  "data": Object {
+    "channel": Object {
+      "blockedUsers": null,
+      "id": "2",
+    },
+  },
+  "errors": Array [
+    [GraphQLError: user.canModerateChannel is not a function],
+  ],
+}
+`;
+
+exports[`should not fetch pending users if not authed 1`] = `
+Object {
+  "data": Object {
+    "channel": Object {
+      "blockedUsers": null,
+      "id": "2",
+    },
+  },
+  "errors": Array [
+    [GraphQLError: Cannot read property 'canModerateChannel' of undefined],
+  ],
 }
 `;

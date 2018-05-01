@@ -80,8 +80,8 @@ const Channel = /* GraphQL */ `
     memberConnection(first: Int = 10, after: String): ChannelMembersConnection! @cost(complexity: 1, multiplier: "first")
 		memberCount: Int!
     metaData: ChannelMetaData @cost(complexity: 1)
-    pendingUsers: [User] @cost(complexity: 3) @isAuthed
-		blockedUsers: [User] @cost(complexity: 3) @isAuthed
+    pendingUsers: [User] @isAuthed @cost(complexity: 3)
+		blockedUsers: [User] @isAuthed @cost(complexity: 3)
 		moderators: [User] @cost(complexity: 3)
 		owners: [User] @cost(complexity: 3)
 		joinSettings: JoinSettings 
