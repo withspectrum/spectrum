@@ -2,7 +2,10 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { updateChannelSlackBotConnection } from '../../models/channelSettings';
-import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateChannel,
+} from '../../utils/permissions';
 
 export type UpdateChannelSlackBotConnectionInput = {
   input: {
@@ -16,9 +19,9 @@ export default requireAuth(
   async (
     _: any,
     { input }: UpdateChannelSlackBotConnectionInput,
-    { user }: GraphQLContext
+    { user, loaders }: GraphQLContext
   ) => {
-    if (!await user.canModerateChannel(input.channelId)) {
+    if (!await canModerateChannel(user.id, input.channelId, loaders)) {
       return new UserError('You don’t have permission to manage this channel');
     }
 

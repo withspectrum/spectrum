@@ -6,11 +6,18 @@ import { channelSlugIsBlacklisted } from '../../utils/permissions';
 import { getCommunityById } from '../../models/community';
 import { getChannelBySlug, createChannel } from '../../models/channel';
 import { createOwnerInChannel } from '../../models/usersChannels';
-import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateCommunity,
+} from '../../utils/permissions';
 
 export default requireAuth(
-  async (_: any, args: CreateChannelInput, { user }: GraphQLContext) => {
-    if (!await user.canModerateCommunity(args.input.communityId)) {
+  async (
+    _: any,
+    args: CreateChannelInput,
+    { user, loaders }: GraphQLContext
+  ) => {
+    if (!await canModerateCommunity(user.id, args.input.communityId, loaders)) {
       return new UserError('You don’t have permission to manage this channel');
     }
 

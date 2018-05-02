@@ -4,15 +4,18 @@ import UserError from '../../utils/UserError';
 import { removeMembersInChannel } from '../../models/usersChannels';
 import { getChannelById, deleteChannel } from '../../models/channel';
 import { getThreadsByChannelToDelete, deleteThread } from '../../models/thread';
-import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateChannel,
+} from '../../utils/permissions';
 
 export default requireAuth(
   async (
     _: any,
     { channelId }: { channelId: string },
-    { user }: GraphQLContext
+    { user, loaders }: GraphQLContext
   ) => {
-    if (!await user.canModerateChannel(channelId)) {
+    if (!await canModerateChannel(user.id, channelId, loaders)) {
       return new UserError('You don’t have permission to manage this channel');
     }
 

@@ -5,7 +5,10 @@ import {
   getOrCreateChannelSettings,
   resetChannelJoinToken,
 } from '../../models/channelSettings';
-import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateChannel,
+} from '../../utils/permissions';
 
 type ResetJoinTokenInput = {
   input: {
@@ -17,9 +20,9 @@ export default requireAuth(
   async (
     _: any,
     { input: { id: channelId } }: ResetJoinTokenInput,
-    { user }: GraphQLContext
+    { user, loaders }: GraphQLContext
   ) => {
-    if (!await user.canModerateChannel(channelId)) {
+    if (!await canModerateChannel(user.id, channelId, loaders)) {
       return new UserError('You don’t have permission to manage this channel');
     }
 

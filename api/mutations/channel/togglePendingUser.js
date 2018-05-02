@@ -13,7 +13,10 @@ import {
   createMemberInCommunity,
 } from '../../models/usersCommunities';
 import { sendPrivateChannelRequestApprovedQueue } from 'shared/bull/queues';
-import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateChannel,
+} from '../../utils/permissions';
 
 type TogglePendingUserInput = {
   input: {
@@ -27,9 +30,9 @@ export default requireAuth(
   async (
     _: any,
     { input }: TogglePendingUserInput,
-    { user }: GraphQLContext
+    { user, loaders }: GraphQLContext
   ) => {
-    if (!await user.canModerateChannel(input.channelId)) {
+    if (!await canModerateChannel(user.id, input.channelId, loaders)) {
       return new UserError('You don’t have permission to manage this channel');
     }
 

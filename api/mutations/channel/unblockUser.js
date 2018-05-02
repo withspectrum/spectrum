@@ -6,7 +6,10 @@ import {
   unblockMemberInChannel,
 } from '../../models/usersChannels';
 import { getChannelById } from '../../models/channel';
-import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateChannel,
+} from '../../utils/permissions';
 
 type UnblockUserInput = {
   input: {
@@ -16,8 +19,12 @@ type UnblockUserInput = {
 };
 
 export default requireAuth(
-  async (_: any, { input }: UnblockUserInput, { user }: GraphQLContext) => {
-    if (!await user.canModerateChannel(input.channelId)) {
+  async (
+    _: any,
+    { input }: UnblockUserInput,
+    { user, loaders }: GraphQLContext
+  ) => {
+    if (!await canModerateChannel(user.id, input.channelId, loaders)) {
       return new UserError('You don’t have permission to manage this channel');
     }
 
