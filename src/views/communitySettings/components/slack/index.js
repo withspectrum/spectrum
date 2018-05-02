@@ -27,9 +27,20 @@ type Props = {
 
 export class Slack extends React.Component<Props> {
   render() {
-    const { isLoading, data, type, isOnboarding, channelFilter } = this.props;
+    const {
+      isLoading,
+      hasError,
+      data,
+      type,
+      isOnboarding,
+      channelFilter,
+    } = this.props;
 
-    if (data.community) {
+    if (
+      data.community &&
+      (data.community.communityPermissions.isOwner ||
+        data.community.communityPermissions.isModerator)
+    ) {
       const { slackSettings } = data.community;
 
       if (!slackSettings || !slackSettings.isConnected) {
@@ -75,11 +86,15 @@ export class Slack extends React.Component<Props> {
       );
     }
 
-    return (
-      <SectionCard>
-        <ViewError />
-      </SectionCard>
-    );
+    if (hasError) {
+      return (
+        <SectionCard>
+          <ViewError />
+        </SectionCard>
+      );
+    }
+
+    return null;
   }
 }
 
