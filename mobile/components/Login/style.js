@@ -56,22 +56,25 @@ type SigninButtonProps = {
   children: React$Node,
   onPress: Function,
 };
+const SigninButtonContainer = styled.TouchableOpacity`
+  background-color: ${props => props.color};
+  width: 220px;
+  height: 51px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  padding: 8px;
+  margin-top: 16px;
+  padding-right: 16px;
+`;
 const SigninButton = ({ color, children, onPress }: SigninButtonProps) => {
-  const Container = styled.TouchableOpacity`
-    width: 220px;
-    height: 51px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    padding: 8px;
-    margin-top: 16px;
-    padding-right: 16px;
-    background-color: ${color};
-  `;
-
-  return <Container onPress={onPress}>{children}</Container>;
+  return (
+    <SigninButtonContainer onPress={onPress} color={color}>
+      {children}
+    </SigninButtonContainer>
+  );
 };
 
 SigninButton.Container = styled.View`
