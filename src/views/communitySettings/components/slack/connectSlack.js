@@ -9,6 +9,7 @@ import {
 } from 'src/components/settingsViews/style';
 import { Button } from 'src/components/buttons';
 import Icon from 'src/components/icons';
+import { CLIENT_URL } from 'src/api/constants';
 
 type Props = {
   community: GetSlackSettingsType,
@@ -22,17 +23,17 @@ class ImportSlackTeam extends React.Component<Props> {
     const url = isOnboarding
       ? `https://slack.com/oauth/authorize?client_id=201769987287.271382863153&scope=users:read.email%20users:read%20chat:write:bot%20groups:read%20channels:read&state=${
           community.id
-        }&redirect_uri=${
+        }&clientUrl=${CLIENT_URL}&redirect_uri=${
           process.env.NODE_ENV === 'development'
             ? 'http://localhost:3001/api/slack/onboarding'
-            : 'https://spectrum.chat/api/slack/onboarding'
+            : `${CLIENT_URL}/api/slack/onboarding`
         }`
       : `https://slack.com/oauth/authorize?client_id=201769987287.271382863153&scope=users:read.email%20users:read%20chat:write:bot%20groups:read%20channels:read&state=${
           community.id
-        }&redirect_uri=${
+        }&clientUrl=${CLIENT_URL}&redirect_uri=${
           process.env.NODE_ENV === 'development'
             ? 'http://localhost:3001/api/slack'
-            : 'https://spectrum.chat/api/slack'
+            : `${CLIENT_URL}/api/slack`
         }`;
 
     return (
