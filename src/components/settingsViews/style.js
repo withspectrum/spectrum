@@ -86,6 +86,12 @@ export const SectionTitle = styled.h3`
   align-items: center;
 `;
 
+export const SectionTitleWithIcon = styled(SectionTitle)`
+  .icon {
+    margin-right: 12px;
+  }
+`;
+
 export const Heading = styled.h1`
   margin-left: 16px;
   font-size: 32px;
