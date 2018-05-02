@@ -66,20 +66,12 @@ export const ComposeHeader = styled(FlexRow)`
   padding: 0 8px;
   border-bottom: 1px solid ${props => props.theme.bg.border};
   color: ${props => props.theme.brand.default};
-
-  @media (max-width: 768px) {
-    display: none;
-  }
 `;
 
 export const TabsContainer = styled(FlexRow)`
   justify-content: space-between;
   margin-top: 1px;
   padding-top: 15px;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
 `;
 
 export const TabsLink = styled(Link)`
@@ -98,4 +90,8 @@ export const TabsLink = styled(Link)`
 
 export const NewMessageLink = styled(Link)`
   line-height: 0;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;

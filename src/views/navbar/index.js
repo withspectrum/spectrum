@@ -125,7 +125,9 @@ class Navbar extends React.Component<Props, State> {
     const parts = history.location.pathname.split('/');
     const isViewingThread = parts[1] === 'thread';
     const isViewingDm =
-      parts[1] === 'messages' && parts[2] && parts[2] !== 'new';
+      parts[1] === 'messages' &&
+      parts[2] &&
+      (parts[2] !== 'new' && parts[2] !== 'archived');
     const isComposingDm = history.location.pathname === '/messages/new';
     const isComposingThread = history.location.pathname === '/new/thread';
     const isViewingThreadSlider = threadParam !== undefined;
