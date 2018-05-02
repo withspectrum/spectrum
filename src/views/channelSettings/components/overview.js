@@ -10,6 +10,7 @@ import BlockedUsers from './blockedUsers';
 import ChannelMembers from './channelMembers';
 import ArchiveForm from './archiveForm';
 import LoginTokenSettings from './loginTokenSettings';
+import SlackConnection from '../../communitySettings/components/slack';
 
 type Props = {
   community: Object,
@@ -21,12 +22,17 @@ type Props = {
 };
 class Overview extends React.Component<Props> {
   render() {
-    const { channel, initMessage } = this.props;
+    const { channel, initMessage, community } = this.props;
 
     return (
       <SectionsContainer data-cy="channel-overview">
         <Column>
           <EditForm channel={channel} />
+          <SlackConnection
+            type={'bot-only'}
+            id={community.id}
+            channelFilter={channel.id}
+          />
           {channel.slug !== 'general' && <ArchiveForm channel={channel} />}
           {channel.isPrivate && (
             <LoginTokenSettings id={channel.id} channel={channel} />

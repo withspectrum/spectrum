@@ -103,7 +103,7 @@ export default (
       .then(() => getCommunities([input.id]))
       .then(communities => communities[0])
       .catch(err => {
-        console.log('Error downgrading a community: ', err.message);
+        console.error('Error downgrading a community: ', err.message);
         return new UserError(
           "We weren't able to downgrade your community: " + err.message
         );

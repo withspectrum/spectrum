@@ -133,7 +133,7 @@ export default (
     .then(() => getCommunities([args.input.communityId]))
     .then(communities => communities[0])
     .catch(err => {
-      console.log('Error upgrading a community: ', err.message);
+      console.error('Error upgrading a community: ', err.message);
       return new UserError(
         "We weren't able to upgrade your community: " + err.message
       );

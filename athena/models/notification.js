@@ -32,7 +32,7 @@ export const checkForExistingNotification = (
       return notifications[0];
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       return null;
     });
 };

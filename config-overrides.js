@@ -167,5 +167,14 @@ module.exports = function override(config, env) {
       children: true,
     })
   );
+  if (process.env.NODE_ENV === 'production') {
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'process.env': {
+          SENTRY_DSN_CLIENT: `"${process.env.SENTRY_DSN_CLIENT}"`,
+        },
+      })
+    );
+  }
   return rewireStyledComponents(config, env, { ssr: true });
 };

@@ -2,15 +2,15 @@
 import * as React from 'react';
 import { Button } from 'react-native';
 import { StackNavigator } from 'react-navigation';
-import Splash from '../Splash';
+import Dashboard from '../Dashboard';
 import BaseStack from './BaseStack';
 import { store } from '../../App';
 import { logout } from '../../actions/authentication';
 
 const HomeStack = StackNavigator(
   {
-    Splash: {
-      screen: Splash,
+    Dashboard: {
+      screen: Dashboard,
       navigationOptions: {
         headerTitle: 'Home',
         headerRight: (
@@ -21,7 +21,7 @@ const HomeStack = StackNavigator(
     ...BaseStack,
   },
   {
-    initialRouteName: 'Splash',
+    initialRouteName: 'Dashboard',
   }
 );
 
