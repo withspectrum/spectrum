@@ -11,7 +11,6 @@ exports.up = function(r, conn) {
       })
       .run(conn)
       .catch(err => {
-        console.log(err);
         throw err;
       }),
   ]);
@@ -25,7 +24,6 @@ exports.down = function(r, conn) {
     })
     .run(conn)
     .catch(err => {
-      console.log(err);
       throw err;
     });
 };
