@@ -22,6 +22,7 @@ const createMemberInDirectMessageThread = (
       {
         threadId,
         userId,
+        isArchived: false,
         createdAt: new Date(),
         lastActive: setActive ? new Date() : null,
         lastSeen: setActive ? new Date() : null,
@@ -103,6 +104,30 @@ const updateDirectMessageThreadNotificationStatusForUser = (
 ===========================================================
 */
 
+// TODO: Add method to update if the thread is archived or not.
+// TODO: Add method to get if the thread is archived or not.
+const updateIsDirectMessageThreadArchived = (
+  userDirectMessageThreadId: string,
+  isArchived: boolean
+): Promise<Object> => {
+  return db
+    .table('usersDirectMessageThreads')
+    .get(userDirectMessageThreadId)
+    .update({ isArchived })
+    .run();
+};
+
+const getDirectMessageThread = (
+  threadId: string,
+  userId: string
+): Promise<Object> => {
+  return db
+    .table('usersDirectMessageThreads')
+    .filter({ threadId })
+    .filter({ userId })
+    .run();
+};
+
 const getMembersInDirectMessageThread = (
   threadId: string
 ): Promise<Array<Object>> => {
@@ -143,7 +168,9 @@ module.exports = {
   removeMembersInDirectMessageThread,
   setUserLastSeenInDirectMessageThread,
   updateDirectMessageThreadNotificationStatusForUser,
+  updateIsDirectMessageThreadArchived,
   // get
+  getDirectMessageThread,
   getMembersInDirectMessageThread,
   getMembersInDirectMessageThreads,
   isMemberOfDirectMessageThread,

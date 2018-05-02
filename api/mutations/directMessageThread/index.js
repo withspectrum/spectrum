@@ -14,10 +14,12 @@
 
 import createDirectMessageThread from './createDirectMessageThread';
 import setLastSeen from './setLastSeen';
+import changeIsArchivedDirectMessageThread from './changeIsArchivedDirectMessageThread';
 
 module.exports = {
   Mutation: {
     createDirectMessageThread,
     setLastSeen,
+    changeIsArchivedDirectMessageThread,
   },
 };
