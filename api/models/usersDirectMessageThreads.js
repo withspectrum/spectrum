@@ -123,7 +123,7 @@ const getDirectMessageThread = (
 ): Promise<Object> => {
   return db
     .table('usersDirectMessageThreads')
-    .filter({ threadId })
+    .getAll(threadId, { index: 'threadId' })
     .filter({ userId })
     .run();
 };

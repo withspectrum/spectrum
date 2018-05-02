@@ -63,7 +63,7 @@ const DirectMessageThread = /* GraphQL */ `
 	extend type Mutation {
 		createDirectMessageThread(input: DirectMessageThreadInput!): DirectMessageThread
     setLastSeen(id: ID!): DirectMessageThread
-    changeIsArchivedDirectMessageThread(input: isArchivedDMThreadInput!): DirectMessageThread
+    archiveDirectMessageThread(input: isArchivedDMThreadInput!): DirectMessageThread
 	}
 
 	extend type Subscription {
