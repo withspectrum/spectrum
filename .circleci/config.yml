@@ -125,11 +125,11 @@ jobs:
           name: Deploy and alias API
           command: |
             cd build-api
-            npx now-cd --alias "alpha=api.alpha.spectrum.chat" --team spaceprogram
+            npx now-cd --alias "alpha=api.alpha.spectrum.chat" --alias="fix-cd-for-realz=api.alpha.spectrum.chat" --team spaceprogram
             cd ..
       - run:
           name: Deploy and alias Hyperion
-          command: npx now-cd --alias "alpha=hyperion.alpha.spectrum.chat" --team spaceprogram
+          command: npx now-cd --alias "alpha=hyperion.alpha.spectrum.chat" --alias="fix-cd-for-realz=hyperion.alpha.spectrum.chat" --team spaceprogram
 
 
   # Run eslint, flow etc.
