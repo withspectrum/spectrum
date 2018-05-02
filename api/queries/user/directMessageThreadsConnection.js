@@ -6,7 +6,7 @@ import { getDirectMessageThreadsByUser } from '../../models/directMessageThread'
 
 export default async (
   _: any,
-  { first = 15, after, isArchived }: PaginationOptions,
+  { first = 15, after, isArchived = false }: PaginationOptions,
   { user }: GraphQLContext
 ) => {
   const cursor = decode(after);
