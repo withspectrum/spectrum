@@ -58,9 +58,9 @@ export const SectionCard = styled.div`
 
 export const SectionCardFooter = styled.div`
   border-top: 1px solid ${props => props.theme.bg.border};
-  width: 100%;
-  padding: 16px 0 0;
-  margin-top: 16px;
+  width: calc(100% + 32px);
+  margin: 16px -16px 0;
+  padding: 16px 16px 0;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -82,6 +82,14 @@ export const SectionTitle = styled.h3`
   font-weight: 700;
   color: ${props => props.theme.text.default};
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+`;
+
+export const SectionTitleWithIcon = styled(SectionTitle)`
+  .icon {
+    margin-right: 12px;
+  }
 `;
 
 export const Heading = styled.h1`

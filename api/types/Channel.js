@@ -84,8 +84,8 @@ const Channel = /* GraphQL */ `
 		blockedUsers: [User] @cost(complexity: 3)
 		moderators: [User] @cost(complexity: 3)
 		owners: [User] @cost(complexity: 3)
-		joinSettings: JoinSettings
-
+		joinSettings: JoinSettings 
+		slackSettings: ChannelSlackSettings
 	}
 
 	extend type Query {
@@ -127,7 +127,6 @@ const Channel = /* GraphQL */ `
 		toggleChannelNotifications(channelId: ID!): Channel
 		togglePendingUser(input: TogglePendingUserInput!): Channel
 		unblockUser(input: UnblockUserInput!): Channel
-		sendChannelEmailInvites(input: EmailInvitesInput!): Boolean
 		archiveChannel(input: ArchiveChannelInput!): Channel
 		restoreChannel(input: RestoreChannelInput!): Channel
 		enableChannelTokenJoin(input: EnableChannelTokenJoinInput!): Channel

@@ -125,20 +125,20 @@ class Sidebar extends React.Component<Props> {
               src={thread.community.profilePhoto}
             />
             <SidebarCommunityName>{thread.community.name}</SidebarCommunityName>
-
-            <SidebarChannelPill>
-              <PillLink to={`/${thread.community.slug}/${thread.channel.slug}`}>
-                {thread.channel.isPrivate && (
-                  <Lock>
-                    <Icon glyph="private" size={12} />
-                  </Lock>
-                )}
-                <PillLabel isPrivate={thread.channel.isPrivate}>
-                  {thread.channel.name}
-                </PillLabel>
-              </PillLink>
-            </SidebarChannelPill>
           </Link>
+
+          <SidebarChannelPill>
+            <PillLink to={`/${thread.community.slug}/${thread.channel.slug}`}>
+              {thread.channel.isPrivate && (
+                <Lock>
+                  <Icon glyph="private" size={12} />
+                </Lock>
+              )}
+              <PillLabel isPrivate={thread.channel.isPrivate}>
+                {thread.channel.name}
+              </PillLabel>
+            </PillLink>
+          </SidebarChannelPill>
 
           <SidebarCommunityDescription>
             {renderDescriptionWithLinks(thread.community.description)}

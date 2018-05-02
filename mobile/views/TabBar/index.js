@@ -1,17 +1,50 @@
 // @flow
+import React from 'react';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
 import theme from '../../components/theme';
 
 // Stacks for the individual views
 import HomeStack from './HomeStack';
 import NotificationsStack from './NotificationsStack';
+import {
+  ExploreIcon,
+  HomeIcon,
+  MessageIcon,
+  NotificationIcon,
+  ProfileIcon,
+} from './style';
 
 const routeConfiguration = {
-  Home: { screen: HomeStack },
-  Messages: { screen: HomeStack },
-  Explore: { screen: HomeStack },
-  Notifications: { screen: NotificationsStack },
-  Profile: { screen: HomeStack },
+  Home: {
+    screen: HomeStack,
+    navigationOptions: {
+      tabBarIcon: ({ tintColor }) => <HomeIcon color={tintColor} />,
+    },
+  },
+  Messages: {
+    screen: HomeStack,
+    navigationOptions: {
+      tabBarIcon: ({ tintColor }) => <MessageIcon color={tintColor} />,
+    },
+  },
+  Explore: {
+    screen: HomeStack,
+    navigationOptions: {
+      tabBarIcon: ({ tintColor }) => <ExploreIcon color={tintColor} />,
+    },
+  },
+  Notifications: {
+    screen: NotificationsStack,
+    navigationOptions: {
+      tabBarIcon: ({ tintColor }) => <NotificationIcon color={tintColor} />,
+    },
+  },
+  Profile: {
+    screen: HomeStack,
+    navigationOptions: {
+      tabBarIcon: ({ tintColor }) => <ProfileIcon color={tintColor} />,
+    },
+  },
 };
 
 const tabBarConfiguration = {
@@ -26,6 +59,10 @@ const tabBarConfiguration = {
     // background color is for the tab component
     activeBackgroundColor: theme.bg.reverse,
     inactiveBackgroundColor: theme.bg.reverse,
+    labelStyle: {
+      fontWeight: 'bold',
+      marginBottom: 3,
+    },
   },
 };
 

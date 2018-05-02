@@ -39,7 +39,7 @@ middlewares.use(bodyParser.json());
 import { apolloUploadExpress } from 'apollo-upload-server';
 middlewares.use(
   apolloUploadExpress({
-    maxFileSize: 52428800, // 50mb
+    maxFileSize: 25 * 1024 * 1024, // 25MB
   })
 );
 

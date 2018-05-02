@@ -323,13 +323,18 @@ export default async (
     return dbThread;
   }
 
-  // if the original mutation input contained files to upload
-  const urls = await Promise.all(
-    // upload each of the files to s3
-    thread.filesToUpload.map(
-      file => file && uploadImage(file, 'threads', dbThread.id)
-    )
-  );
+  let urls;
+  try {
+    // if the original mutation input contained files to upload
+    urls = await Promise.all(
+      // upload each of the files to s3
+      thread.filesToUpload.map(
+        file => file && uploadImage(file, 'threads', dbThread.id)
+      )
+    );
+  } catch (err) {
+    return new UserError(err.message);
+  }
 
   // Replace the local image srcs with the remote image src
   const body = dbThread.content.body && JSON.parse(dbThread.content.body);
