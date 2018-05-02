@@ -76,9 +76,7 @@ app.use('/', (req: express$Request, res: express$Response) => {
 
 import type { Loader } from './loaders/types';
 export type GraphQLContext = {
-  user: {
-    ...$Exact<DBUser>,
-  },
+  user: DBUser,
   loaders: {
     [key: string]: Loader,
   },
