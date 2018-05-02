@@ -1,3 +1,5 @@
+// @flow
+
 import * as channel from '../channel';
 
 const queries = channel.__forQueryTests;
