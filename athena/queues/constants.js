@@ -22,6 +22,7 @@ export const PRIVATE_CHANNEL_REQUEST_SENT = 'private channel request sent';
 export const PRIVATE_CHANNEL_REQUEST_APPROVED =
   'private channel request approved';
 export const SEND_PUSH_NOTIFICATIONS = 'push notifications';
+export const SEND_SLACK_INVITIATIONS = 'send slack invitations';
 
 // invoices and recurring payments
 export const PRO_INVOICE_PAID_NOTIFICATION = 'pro invoice paid notification';

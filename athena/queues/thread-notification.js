@@ -1,6 +1,7 @@
 // @flow
 const debug = require('debug')('athena:queue:new-thread-notification');
 import Raven from 'shared/raven';
+import axios from 'axios';
 import getMentions from 'shared/get-mentions';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { fetchPayload, createPayload } from '../utils/payloads';
@@ -14,21 +15,34 @@ import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
-import { getUsers } from '../models/user';
+import { getUserById, getUsers } from '../models/user';
+import { getCommunityById } from '../models/community';
 import { getMembersInChannelWithNotifications } from '../models/usersChannels';
 import createThreadNotificationEmail from './create-thread-notification-email';
 import { sendMentionNotificationQueue } from 'shared/bull/queues';
-import type { DBThread } from 'shared/types';
 import type { Job, ThreadNotificationJobData } from 'shared/bull/types';
+import { getChannelSettings } from '../models/channelSettings';
+import { getChannelById } from '../models/channel';
+import { getCommunitySettings } from '../models/communitySettings';
+import { truncateString } from '../utils/truncateString';
+import { handleSlackChannelResponse } from '../utils/slack';
 
 export default async (job: Job<ThreadNotificationJobData>) => {
   const { thread: incomingThread } = job.data;
   debug(`new job for a thread by ${incomingThread.creatorId}`);
 
-  const [actor, context, entity] = await Promise.all([
+  const [
+    actor,
+    context,
+    entity,
+    channelSlackSettings,
+    communitySlackSettings,
+  ] = await Promise.all([
     fetchPayload('USER', incomingThread.creatorId),
     fetchPayload('CHANNEL', incomingThread.channelId),
     createPayload('THREAD', incomingThread),
+    getChannelSettings(incomingThread.channelId),
+    getCommunitySettings(incomingThread.communityId),
   ]);
   const eventType = 'THREAD_CREATED';
 
@@ -88,12 +102,11 @@ export default async (job: Job<ThreadNotificationJobData>) => {
     r => r.id !== incomingThread.creatorId
   );
 
+  const plainTextBody = incomingThread.content.body
+    ? toPlainText(toState(JSON.parse(incomingThread.content.body)))
+    : '';
   // see if anyone was mentioned in the thread
-  const mentions = getMentions(
-    incomingThread.content.body
-      ? toPlainText(toState(JSON.parse(incomingThread.content.body)))
-      : ''
-  );
+  const mentions = getMentions(plainTextBody);
   // if people were mentioned in the thread, let em know
   if (mentions && mentions.length > 0) {
     mentions.forEach(username => {
@@ -112,21 +125,91 @@ export default async (job: Job<ThreadNotificationJobData>) => {
     return r.username && mentions.indexOf(r.username) < 0;
   });
 
-  if (!recipientsWithoutMentions || recipientsWithoutMentions.length === 0)
-    return;
-
   // for each recipient that *wasn't* mentioned, create a notification in the db
   const usersNotificationPromises = recipientsWithoutMentions.map(
     async recipient =>
       await handleUsersNotificationRecord(updatedNotification.id, recipient.id)
   );
 
+  let slackNotificationPromise;
+  if (
+    // process.env.NODE_ENV === 'production' &&
+    communitySlackSettings &&
+    communitySlackSettings.slackSettings &&
+    communitySlackSettings.slackSettings.token &&
+    channelSlackSettings &&
+    channelSlackSettings.slackSettings &&
+    channelSlackSettings.slackSettings.botLinks &&
+    channelSlackSettings.slackSettings.botLinks.threadCreated
+  ) {
+    const slackChannel =
+      channelSlackSettings.slackSettings.botLinks.threadCreated;
+
+    const [author, community, channel] = await Promise.all([
+      // $FlowIssue
+      getUserById(incomingThread.creatorId),
+      getCommunityById(incomingThread.communityId),
+      getChannelById(incomingThread.channelId),
+    ]);
+
+    slackNotificationPromise = axios({
+      method: 'post',
+      url: 'https://slack.com/api/chat.postMessage',
+      headers: {
+        Authorization: `Bearer ${communitySlackSettings.slackSettings.token}`,
+      },
+      data: {
+        channel: slackChannel,
+        attachments: [
+          {
+            fallback: `New conversation published in ${community.name} #${
+              channel.name
+            }:`,
+            author_name: `${author.name} (@${author.username})`,
+            author_link: `https://spectrum.chat/users/${author.username}`,
+            author_icon: author.profilePhoto,
+            pretext: `New conversation published in ${community.name} #${
+              channel.name
+            }:`,
+            title: truncateString(incomingThread.content.title, 80),
+            title_link: `https://spectrum.chat/thread/${incomingThread.id}`,
+            text: truncateString(plainTextBody, 140),
+            footer: 'Spectrum',
+            footer_icon:
+              'https://spectrum.chat/img/apple-icon-57x57-precomposed.png',
+            ts: incomingThread.createdAt,
+            color: '#4400CC',
+            actions: [
+              {
+                type: 'button',
+                text: 'View conversation',
+                url: `https://spectrum.chat/thread/${incomingThread.id}`,
+              },
+              {
+                type: 'button',
+                text: `Message ${author.name}`,
+                url: `https://spectrum.chat/users/${author.username}`,
+              },
+            ],
+          },
+        ],
+      },
+    }).then(response => {
+      return handleSlackChannelResponse(
+        response.data,
+        incomingThread.communityId
+      );
+    });
+  }
+
   return Promise.all([
     createThreadNotificationEmail(incomingThread, recipientsWithoutMentions), // handle emails separately
-    usersNotificationPromises, // update or store usersNotifications in-app
+    ...usersNotificationPromises, // update or store usersNotifications in-app
+    slackNotificationPromise,
   ]).catch(err => {
     debug('❌ Error in job:\n');
     debug(err);
     Raven.captureException(err);
+    console.error(err);
   });
 };

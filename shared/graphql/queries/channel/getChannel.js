@@ -27,7 +27,7 @@ const getChannelByIdOptions = {
     variables: {
       id,
     },
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-and-network',
   }),
 };
 
@@ -62,7 +62,7 @@ const getChannelBySlugAndCommunitySlugOptions = {
       channelSlug: channelSlug,
       communitySlug: communitySlug,
     },
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-and-network',
   }),
 };
 
@@ -77,7 +77,7 @@ const getChannelByMatchOptions = {
       channelSlug: channelSlug,
       communitySlug: communitySlug,
     },
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-and-network',
   }),
 };
 

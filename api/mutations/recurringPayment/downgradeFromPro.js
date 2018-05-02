@@ -68,7 +68,7 @@ export default (_: any, __: any, { user }: GraphQLContext) => {
   return handleProDowngrade()
     .then(() => getUserById(currentUser.id))
     .catch(err => {
-      console.log('Error downgrading from Pro: ', err.message);
+      console.error('Error downgrading from Pro: ', err.message);
       return new UserError(
         "We weren't able to cancel your subsciption: " + err.message
       );

@@ -31,6 +31,7 @@
 		"GOOGLE_OAUTH_CLIENT_SECRET_DEVELOPMENT": "@google-oauth-client-secret-development",
 		"GITHUB_OAUTH_CLIENT_SECRET_DEVELOPMENT": "@github-oauth-client-secret-development",
 		"SLACK_SECRET": "@slack-secret",
+    "SLACK_SECRET_DEVELOPMENT": "@slack-secret-development",
 		"POSTMARK_SERVER_KEY": "@postmark-server-key",
 		"EMAIL_JWT_SIGNATURE": "@email-jwt-signature",
 		"PERSPECTIVE_API_KEY": "@perspective-api-key",
