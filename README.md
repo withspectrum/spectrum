@@ -198,7 +198,7 @@ yarn run db:reset
 #### Generating migrations
 You can run
 ```sh
-yarn run rethinkdb:migrate:generate migration-name
+yarn run rethinkdb:migrate:create migration-name
 ```
 
 #### Getting the secrets
