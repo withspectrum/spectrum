@@ -24,7 +24,7 @@ const LoadMoreDirectMessageThreads = gql`
 `;
 
 export const getCurrentUserDMThreadConnectionQuery = gql`
-  query currentUserDirectMessageThreads($after: String) {
+  query currentUserDirectMessageThreads($after: String, $isArchived: Boolean) {
     user: currentUser {
       ...userInfo
       ...userDirectMessageThreadConnection
@@ -35,12 +35,13 @@ export const getCurrentUserDMThreadConnectionQuery = gql`
 `;
 
 export const getCurrentUserDMThreadConnectionOptions = {
-  options: {
+  options: ({ match: { path } }: string) => ({
     variables: {
       after: '',
+      isArchived: path === '/messages/archived',
     },
     fetchPolicy: 'cache-and-network',
-  },
+  }),
   // $FlowFixMe
   props: props => ({
     ...props,
@@ -52,6 +53,7 @@ export const getCurrentUserDMThreadConnectionOptions = {
             props.data.user.directMessageThreadsConnection.edges[
               props.data.user.directMessageThreadsConnection.edges.length - 1
             ].cursor,
+          isArchived: props.match.path === '/messages/archived',
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult.user) {

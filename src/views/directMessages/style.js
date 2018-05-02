@@ -62,7 +62,6 @@ export const MessagesContainer = styled(FlexCol)`
 `;
 
 export const ComposeHeader = styled(FlexRow)`
-  /* height: 40px; */
   justify-content: space-between;
   padding: 0 8px;
   border-bottom: 1px solid ${props => props.theme.bg.border};

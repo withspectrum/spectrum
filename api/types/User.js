@@ -103,7 +103,7 @@ const User = /* GraphQL */ `
     isPro: Boolean! @cost(complexity: 1)
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!
-		directMessageThreadsConnection(first: Int = 15, after: String): UserDirectMessageThreadsConnection! @cost(complexity: 1, multiplier: "first")
+		directMessageThreadsConnection(first: Int = 15, after: String, isArchived: Boolean): UserDirectMessageThreadsConnection! @cost(complexity: 1, multiplier: "first")
 		threadConnection(first: Int = 20, after: String, kind: ThreadConnectionType): UserThreadsConnection! @cost(complexity: 1, multiplier: "first")
     everything(first: Int = 20, after: String): EverythingThreadsConnection! @cost(complexity: 1, multiplier: "first")
 		recurringPayments: [RecurringPayment]

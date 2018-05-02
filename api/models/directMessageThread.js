@@ -31,11 +31,13 @@ const getDirectMessageThreads = (
 const getDirectMessageThreadsByUser = (
   userId: string,
   // $FlowFixMe
-  { first, after }
+  { first, after },
+  isArchived: boolean
 ): Promise<Array<DBDirectMessageThread>> => {
   return db
     .table('usersDirectMessageThreads')
     .getAll(userId, { index: 'userId' })
+    .filter({ isArchived })
     .eqJoin('threadId', db.table('directMessageThreads'))
     .without({
       left: ['id', 'createdAt', 'threadId', 'userId', 'lastActive', 'lastSeen'],

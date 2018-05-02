@@ -22,7 +22,7 @@ export type UserDirectMessageThreadsConnectionType = {
 
 export default gql`
   fragment userDirectMessageThreadConnection on User {
-    directMessageThreadsConnection(after: $after) {
+    directMessageThreadsConnection(after: $after, isArchived: $isArchived) {
       pageInfo {
         hasNextPage
         hasPreviousPage

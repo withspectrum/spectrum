@@ -6,7 +6,7 @@ import { getDirectMessageThreadsByUser } from '../../models/directMessageThread'
 
 export default async (
   _: any,
-  { first = 15, after }: PaginationOptions,
+  { first = 15, after, isArchived }: PaginationOptions,
   { user }: GraphQLContext
 ) => {
   const cursor = decode(after);
@@ -14,11 +14,14 @@ export default async (
   const lastDigits = cursor.match(/-(\d+)$/);
   const lastThreadIndex =
     lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
-
-  const threads = await getDirectMessageThreadsByUser(user.id, {
-    first,
-    after: lastThreadIndex,
-  });
+  const threads = await getDirectMessageThreadsByUser(
+    user.id,
+    {
+      first,
+      after: lastThreadIndex,
+    },
+    isArchived
+  );
 
   return {
     pageInfo: {
