@@ -1,5 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
+import Link from 'src/components/link';
 import { FlexCol, FlexRow } from '../../components/globals';
 
 export const View = styled.main`
@@ -61,12 +62,41 @@ export const MessagesContainer = styled(FlexCol)`
 `;
 
 export const ComposeHeader = styled(FlexRow)`
-  justify-content: flex-end;
-  padding: 8px;
+  /* height: 40px; */
+  justify-content: space-between;
+  padding: 0 8px;
   border-bottom: 1px solid ${props => props.theme.bg.border};
   color: ${props => props.theme.brand.default};
 
   @media (max-width: 768px) {
     display: none;
   }
+`;
+
+export const TabsContainer = styled(FlexRow)`
+  justify-content: space-between;
+  margin-top: 1px;
+  padding-top: 15px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const TabsLink = styled(Link)`
+  color: ${props =>
+    props.isActive ? props.theme.text.default : props.theme.text.alt};
+  border-bottom: ${props =>
+    props.isActive
+      ? `3px solid ${props.theme.text.default}`
+      : `3px solid transparent`};
+  padding: 0 7px 5px;
+
+  &:first-child {
+    margin-right: 12px;
+  }
+`;
+
+export const NewMessageLink = styled(Link)`
+  line-height: 0;
 `;

@@ -6,14 +6,21 @@ import { connect } from 'react-redux';
 import getCurrentUserDirectMessageThreads from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
 import type { GetCurrentUserDMThreadConnectionType } from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
 import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
-import Icon from '../../../components/icons';
+import Icon from 'src/components/icons';
 import ThreadsList from '../components/threadsList';
 import NewThread from './newThread';
 import ExistingThread from './existingThread';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import ViewError from '../../../components/viewError';
 import Titlebar from '../../titlebar';
-import { View, MessagesList, ComposeHeader } from '../style';
+import {
+  View,
+  MessagesList,
+  ComposeHeader,
+  TabsContainer,
+  TabsLink,
+  NewMessageLink,
+} from '../style';
 
 type Props = {
   subscribeToUpdatedDirectMessageThreads: Function,
@@ -120,6 +127,9 @@ class DirectMessages extends React.Component<Props, State> {
       data.user.directMessageThreadsConnection.pageInfo &&
       data.user.directMessageThreadsConnection.pageInfo.hasNextPage;
 
+    const isInActiveMessages = this.props.match.path === '/messages';
+    const isInArchivedMessages = this.props.match.path === '/messages/archived';
+
     return (
       <View>
         <Titlebar
@@ -130,11 +140,30 @@ class DirectMessages extends React.Component<Props, State> {
           messageComposer={!isComposing && !isViewingThread}
         />
         <MessagesList isViewingThread={isViewingThread || isComposing}>
-          <Link to="/messages/new" onClick={() => this.setActiveThread('new')}>
-            <ComposeHeader>
+          <ComposeHeader>
+            <TabsContainer>
+              <TabsLink
+                to="/messages"
+                onClick={() => this.setActiveThread('new')}
+                isActive={isInActiveMessages}
+              >
+                Inbox
+              </TabsLink>
+              <TabsLink
+                to="/messages/archived"
+                onClick={() => this.setActiveThread('new')}
+                isActive={isInArchivedMessages}
+              >
+                Archived
+              </TabsLink>
+            </TabsContainer>
+            <NewMessageLink
+              to="/messages/new"
+              onClick={() => this.setActiveThread('new')}
+            >
               <Icon glyph="message-new" />
-            </ComposeHeader>
-          </Link>
+            </NewMessageLink>
+          </ComposeHeader>
 
           <ThreadsList
             hasNextPage={hasNextPage}
