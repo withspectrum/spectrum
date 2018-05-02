@@ -19,6 +19,37 @@ export const ThreadsListScrollContainer = styled.div`
   max-height: 100%;
 `;
 
+export const Timestamp = styled.span`
+  font-size: 12px;
+  text-align: right;
+  color: ${props => (props.isUnread ? props.theme.brand.default : '#909aa7')};
+  padding-right: 4px;
+  display: inline-block;
+  flex: 1 0 auto;
+  margin-left: 8px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const GearButton = styled.span`
+  background-color: ${props => props.theme.brand.alt};
+  border-radius: 50%;
+  display: none;
+  flex: 1 0 auto;
+  height: 18px;
+  margin-left: 8px;
+  padding-right: 4px;
+  width: 18px;
+
+  @media (max-width: 768px) {
+    display: inline-block;
+    height: 22px;
+    width: 22px;
+  }
+`;
+
 export const Wrapper = styled(FlexCol)`
   flex: 0 0 auto;
   justify-content: center;
@@ -57,6 +88,14 @@ export const Wrapper = styled(FlexCol)`
   &:hover {
     cursor: pointer;
     background: ${props => props.theme.bg.wash};
+  }
+
+  &:hover ${Timestamp} {
+    display: none;
+  }
+
+  &:hover ${GearButton} {
+    display: inline-block;
   }
 `;
 
@@ -105,7 +144,7 @@ export const MessageGroupByline = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
 `;
 
 export const Usernames = styled.span`
@@ -117,7 +156,7 @@ export const Usernames = styled.span`
   overflow: hidden;
   color: ${({ theme }) => theme.text.default};
   font-weight: ${props => (props.isUnread ? 800 : 600)};
-  line-height: 1.1;
+  line-height: 1.2;
   margin-bottom: 1px;
   font-size: 14px;
   flex: 1 1 100%;
@@ -125,16 +164,6 @@ export const Usernames = styled.span`
   p {
     ${Truncate()};
   }
-`;
-
-export const Timestamp = styled.span`
-  font-size: 12px;
-  text-align: right;
-  color: ${props => (props.isUnread ? props.theme.brand.default : '#909aa7')};
-  padding-right: 4px;
-  display: inline-block;
-  flex: 1 0 auto;
-  margin-left: 8px;
 `;
 
 export const Snippet = styled.p`

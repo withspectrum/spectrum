@@ -11,9 +11,14 @@ import {
   MessageGroupByline,
   Usernames,
   Timestamp,
+  GearButton,
 } from './style';
 
 class ListCardItemDirectMessageThread extends Component {
+  handleGearClick = e => {
+    e.stopPropagation(); // We need this since the whole wrapper is clickable
+    e.preventDefault();
+  };
   render() {
     const { thread, currentUser, active } = this.props;
 
@@ -59,9 +64,10 @@ class ListCardItemDirectMessageThread extends Component {
                 <Usernames isUnread={isUnread}>
                   <p>{participantsArray}</p>
                 </Usernames>
-                <Timestamp isUnread={isUnread}>
+                <Timestamp className="message-thread-item" isUnread={isUnread}>
                   {threadTimeDifference}
                 </Timestamp>
+                <GearButton onClick={this.handleGearClick} />
               </MessageGroupByline>
               <Meta isUnread={isUnread} nowrap>
                 {thread.snippet}
