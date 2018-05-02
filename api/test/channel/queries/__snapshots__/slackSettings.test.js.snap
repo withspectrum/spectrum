@@ -6,7 +6,7 @@ Object {
     "channel": Object {
       "id": "1",
       "slackSettings": Object {
-        "botConnection": Object {
+        "botLinks": Object {
           "threadCreated": null,
         },
       },
@@ -21,7 +21,7 @@ Object {
     "channel": Object {
       "id": "1",
       "slackSettings": Object {
-        "botConnection": Object {
+        "botLinks": Object {
           "threadCreated": null,
         },
       },
@@ -36,7 +36,7 @@ Object {
     "channel": Object {
       "id": "1",
       "slackSettings": Object {
-        "botConnection": Object {
+        "botLinks": Object {
           "threadCreated": null,
         },
       },

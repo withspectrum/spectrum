@@ -1,8 +1,8 @@
 // @flow
-import botConnection from './botConnection';
+import botLinks from './botLinks';
 
 module.exports = {
   ChannelSlackSettings: {
-    botConnection,
+    botLinks,
   },
 };

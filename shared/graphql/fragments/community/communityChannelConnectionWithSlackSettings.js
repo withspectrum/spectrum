@@ -7,7 +7,7 @@ type Edge = {
   node: {
     ...$Exact<ChannelInfoType>,
     slackSettings: {
-      botConnection: {
+      botLinks: {
         threadCreated: ?string,
       },
     },
@@ -27,7 +27,7 @@ export default gql`
         node {
           ...channelInfo
           slackSettings {
-            botConnection {
+            botLinks {
               threadCreated
             }
           }

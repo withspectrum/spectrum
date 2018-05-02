@@ -4,12 +4,12 @@ import { graphql } from 'react-apollo';
 import channelInfoFragment from 'shared/graphql/fragments/channel/channelInfo';
 import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
 
-export type UpdateChannelSlackBotConnectionType = {
+export type UpdateChannelSlackBotLinksType = {
   data: {
-    updateChannelSlackBotConnection: {
+    updateChannelSlackBotLinks: {
       ...$Exact<ChannelInfoType>,
       slackSettings: {
-        botConnection: {
+        botLinks: {
           threadCreated: ?string,
         },
       },
@@ -17,14 +17,12 @@ export type UpdateChannelSlackBotConnectionType = {
   },
 };
 
-export const updateChannelSlackBotConnectionMutation = gql`
-  mutation updateChannelSlackBotConnection(
-    $input: UpdateChannelSlackBotConnectionInput
-  ) {
-    updateChannelSlackBotConnection(input: $input) {
+export const updateChannelSlackBotLinksMutation = gql`
+  mutation updateChannelSlackBotLinks($input: UpdateChannelSlackBotLinksInput) {
+    updateChannelSlackBotLinks(input: $input) {
       ...channelInfo
       slackSettings {
-        botConnection {
+        botLinks {
           threadCreated
         }
       }
@@ -33,9 +31,9 @@ export const updateChannelSlackBotConnectionMutation = gql`
   ${channelInfoFragment}
 `;
 
-const updateChannelSlackBotConnectionOptions = {
+const updateChannelSlackBotLinksOptions = {
   props: ({ mutate }) => ({
-    updateChannelSlackBotConnection: (input: Object) =>
+    updateChannelSlackBotLinks: (input: Object) =>
       mutate({
         variables: {
           input,
@@ -45,6 +43,6 @@ const updateChannelSlackBotConnectionOptions = {
 };
 
 export default graphql(
-  updateChannelSlackBotConnectionMutation,
-  updateChannelSlackBotConnectionOptions
+  updateChannelSlackBotLinksMutation,
+  updateChannelSlackBotLinksOptions
 );

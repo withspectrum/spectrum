@@ -7,5 +7,6 @@ export default async (
   _: any,
   { loaders }: GraphQLContext
 ) => {
-  return slackSettings ? slackSettings.botConnection : null;
+  console.log('slack settings', slackSettings);
+  return slackSettings ? slackSettings.botLinks : null;
 };

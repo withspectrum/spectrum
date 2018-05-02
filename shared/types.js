@@ -68,7 +68,7 @@ export type DBChannelSettings = {
     token: string,
   },
   slackSettings?: {
-    botConnection: {
+    botLinks: {
       threadCreated: ?string,
     },
   },

@@ -10,7 +10,7 @@ const defaultSettings = {
     message: null,
   },
   slackSettings: {
-    botConnection: {
+    botLinks: {
       threadCreated: null,
     },
   },
@@ -113,7 +113,7 @@ type UpdateInput = {
 };
 
 // prettier-ignore
-export const updateChannelSlackBotConnection = async ({ channelId, slackChannelId, eventType }: UpdateInput): Promise<DBChannel> => {
+export const updateChannelSlackBotLinks = async ({ channelId, slackChannelId, eventType }: UpdateInput): Promise<DBChannel> => {
   const settings: DBChannelSettings = await getOrCreateChannelSettings(
     channelId
   );
@@ -121,7 +121,7 @@ export const updateChannelSlackBotConnection = async ({ channelId, slackChannelI
   let newSettings;
   if (!settings.slackSettings) {
     settings.slackSettings = {
-      botConnection: {
+      botLinks: {
         [eventType]:
           slackChannelId && slackChannelId.length > 0 ? slackChannelId : null,
       },
@@ -130,7 +130,7 @@ export const updateChannelSlackBotConnection = async ({ channelId, slackChannelI
   } else {
     newSettings = Object.assign({}, settings, {
       slackSettings: {
-        botConnection: {
+        botLinks: {
           [eventType]:
             slackChannelId && slackChannelId.length > 0 ? slackChannelId : null,
         },

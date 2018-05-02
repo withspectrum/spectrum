@@ -139,11 +139,11 @@ export default async (job: Job<ThreadNotificationJobData>) => {
     communitySlackSettings.slackSettings.token &&
     channelSlackSettings &&
     channelSlackSettings.slackSettings &&
-    channelSlackSettings.slackSettings.botConnection &&
-    channelSlackSettings.slackSettings.botConnection.threadCreated
+    channelSlackSettings.slackSettings.botLinks &&
+    channelSlackSettings.slackSettings.botLinks.threadCreated
   ) {
     const slackChannel =
-      channelSlackSettings.slackSettings.botConnection.threadCreated;
+      channelSlackSettings.slackSettings.botLinks.threadCreated;
 
     const [author, community, channel] = await Promise.all([
       // $FlowIssue

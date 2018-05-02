@@ -25,7 +25,7 @@ it('should not fetch slack settings if not authed', async () => {
       channel(id: "${SPECTRUM_GENERAL_CHANNEL_ID}") {
         id
         slackSettings {
-          botConnection {
+          botLinks {
             threadCreated
           }
         }
@@ -45,7 +45,7 @@ it('should not fetch slack settings if no permissions', async () => {
       channel(id: "${SPECTRUM_GENERAL_CHANNEL_ID}") {
         id
         slackSettings {
-          botConnection {
+          botLinks {
             threadCreated
           }
         }
@@ -67,7 +67,7 @@ it('should fetch slack settings if moderates channel', async () => {
       channel(id: "${SPECTRUM_GENERAL_CHANNEL_ID}") {
         id
         slackSettings {
-          botConnection {
+          botLinks {
             threadCreated
           }
         }
@@ -89,7 +89,7 @@ it('should fetch slack settings if moderates community', async () => {
       channel(id: "${SPECTRUM_GENERAL_CHANNEL_ID}") {
         id
         slackSettings {
-          botConnection {
+          botLinks {
             threadCreated
           }
         }
@@ -111,7 +111,7 @@ it('should fetch slack settings if owns community', async () => {
       channel(id: "${SPECTRUM_GENERAL_CHANNEL_ID}") {
         id
         slackSettings {
-          botConnection {
+          botLinks {
             threadCreated
           }
         }

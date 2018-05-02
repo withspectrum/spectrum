@@ -1,25 +1,25 @@
 // @flow
 const ChannelSlackSettings = /* GraphQL */ `
-  enum BotConnectionEventType {
+  enum BotLinksEventType {
     threadCreated
   }
   
-  type BotConnection {
+  type BotLinks {
     threadCreated: String
   }
 
 	type ChannelSlackSettings {
-		botConnection: BotConnection
+		botLinks: BotLinks
 	}
 
-  input UpdateChannelSlackBotConnectionInput {
+  input UpdateChannelSlackBotLinksInput {
     channelId: String
     slackChannelId: String
-    eventType: BotConnectionEventType
+    eventType: BotLinksEventType
   }
 
   extend type Mutation {
-		updateChannelSlackBotConnection(input: UpdateChannelSlackBotConnectionInput): Channel
+		updateChannelSlackBotLinks(input: UpdateChannelSlackBotLinksInput): Channel
 	}
 `;
 

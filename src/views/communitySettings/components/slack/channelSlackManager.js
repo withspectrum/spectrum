@@ -11,7 +11,7 @@ import {
   SendsTo,
 } from './style';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import updateChannelSlackBotConnectionMutation from 'shared/graphql/mutations/channel/updateChannelSlackBotConnection';
+import updateChannelSlackBotLinksMutation from 'shared/graphql/mutations/channel/updateChannelSlackBotLinks';
 
 type SlackChannel = {
   id: string,
@@ -21,7 +21,7 @@ type SlackChannel = {
 type ChannelWithSlackSettings = {
   ...$Exact<ChannelInfoType>,
   slackSettings: {
-    botConnection: {
+    botLinks: {
       threadCreated: ?string,
     },
   },
@@ -30,14 +30,14 @@ type ChannelWithSlackSettings = {
 type Props = {
   slackChannels: Array<SlackChannel>,
   channel: ChannelWithSlackSettings,
-  updateChannelSlackBotConnection: Function,
+  updateChannelSlackBotLinks: Function,
   dispatch: Function,
 };
 
 class ChannelSlackManager extends React.Component<Props> {
   handleSlackChannelChange = e => {
     const { value } = e.target;
-    const { channel, dispatch, updateChannelSlackBotConnection } = this.props;
+    const { channel, dispatch, updateChannelSlackBotLinks } = this.props;
     const type = 'threadCreated';
     const input = {
       slackChannelId: value,
@@ -45,7 +45,7 @@ class ChannelSlackManager extends React.Component<Props> {
       eventType: type,
     };
 
-    return updateChannelSlackBotConnection(input)
+    return updateChannelSlackBotLinks(input)
       .then(() => dispatch(addToastWithTimeout('success', 'Settings saved')))
       .catch(err => dispatch(addToastWithTimeout('error', err.message)));
   };
@@ -54,8 +54,8 @@ class ChannelSlackManager extends React.Component<Props> {
     const { slackChannels, channel } = this.props;
     const selectedSlackChannelId =
       channel.slackSettings &&
-      channel.slackSettings.botConnection &&
-      channel.slackSettings.botConnection.threadCreated;
+      channel.slackSettings.botLinks &&
+      channel.slackSettings.botLinks.threadCreated;
 
     return (
       <SlackChannelRow>
@@ -80,6 +80,6 @@ class ChannelSlackManager extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), updateChannelSlackBotConnectionMutation)(
+export default compose(connect(), updateChannelSlackBotLinksMutation)(
   ChannelSlackManager
 );
