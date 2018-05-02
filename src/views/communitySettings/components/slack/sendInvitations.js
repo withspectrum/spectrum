@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import type { GetSlackSettingsType } from 'shared/graphql/queries/community/getCommunitySlackSettings';
 import {
   SectionCard,
-  SectionTitle,
+  SectionTitleWithIcon,
   SectionSubtitle,
   SectionCardFooter,
 } from 'src/components/settingsViews/style';
@@ -14,6 +14,7 @@ import { TextArea, Error } from 'src/components/formElements';
 import sendSlackInvitesMutation from 'shared/graphql/mutations/community/sendSlackInvites';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { timeDifference } from 'src/helpers/utils';
+import Icon from 'src/components/icons';
 
 type Props = {
   community: GetSlackSettingsType,
@@ -71,16 +72,10 @@ class SendSlackInvitations extends React.Component<Props, State> {
       const then = new Date(invitesSentAt).getTime();
       return (
         <SectionCard>
-          <SectionTitle style={{ marginTop: '-4px' }}>
-            <img
-              alt={'slack icon'}
-              src={'/img/slack_colored.png'}
-              width={48}
-              height={48}
-              style={{ marginLeft: '-8px', marginRight: '4px' }}
-            />
+          <SectionTitleWithIcon>
+            <Icon glyph={'slack-colored'} size={32} />
             Invitations sent
-          </SectionTitle>
+          </SectionTitleWithIcon>
           <SectionSubtitle>
             You sent {memberCount} invitations to the {teamName} Slack team{' '}
             {timeDifference(now, then).toLowerCase()}. Teams can only be invited
@@ -96,16 +91,10 @@ class SendSlackInvitations extends React.Component<Props, State> {
 
     return (
       <SectionCard>
-        <SectionTitle style={{ marginTop: '-4px' }}>
-          <img
-            alt={'slack icon'}
-            src={'/img/slack_colored.png'}
-            width={48}
-            height={48}
-            style={{ marginLeft: '-8px', marginRight: '4px' }}
-          />
+        <SectionTitleWithIcon>
+          <Icon glyph={'slack-colored'} size={32} />
           Invite your Slack community
-        </SectionTitle>
+        </SectionTitleWithIcon>
         <SectionSubtitle>
           Send your Slack team an invitation to join the {community.name}{' '}
           community. Add an optional message to customize the invitation. Slack

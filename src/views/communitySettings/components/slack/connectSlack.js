@@ -3,11 +3,12 @@ import * as React from 'react';
 import type { GetSlackSettingsType } from 'shared/graphql/queries/community/getCommunitySlackSettings';
 import {
   SectionCard,
-  SectionTitle,
+  SectionTitleWithIcon,
   SectionSubtitle,
   SectionCardFooter,
 } from 'src/components/settingsViews/style';
 import { Button } from 'src/components/buttons';
+import Icon from 'src/components/icons';
 
 type Props = {
   community: GetSlackSettingsType,
@@ -36,16 +37,10 @@ class ImportSlackTeam extends React.Component<Props> {
 
     return (
       <SectionCard>
-        <SectionTitle style={{ marginTop: '-4px' }}>
-          <img
-            alt={'slack icon'}
-            src={'/img/slack_colored.png'}
-            width={48}
-            height={48}
-            style={{ marginLeft: '-8px', marginRight: '4px' }}
-          />
+        <SectionTitleWithIcon>
+          <Icon glyph={'slack-colored'} size={32} />
           Connect a Slack team
-        </SectionTitle>
+        </SectionTitleWithIcon>
         <SectionSubtitle>
           Invite your Slack team to your community or get notified when new
           conversations are created.

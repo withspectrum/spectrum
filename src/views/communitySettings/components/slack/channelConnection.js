@@ -7,7 +7,7 @@ import getCommunityChannelsSlackSettingsQuery, {
 } from 'shared/graphql/queries/community/getCommunityChannelsSlackSettings';
 import {
   SectionCard,
-  SectionTitle,
+  SectionTitleWithIcon,
   SectionSubtitle,
 } from 'src/components/settingsViews/style';
 import updateChannelSlackSettingsMutation from 'shared/graphql/mutations/channel/updateSlackSettings';
@@ -18,6 +18,7 @@ import { Loading } from 'src/components/loading';
 import ViewError from 'src/components/viewError';
 import ChannelSlackManager from './channelSlackManager';
 import { ChannelListContainer } from './style';
+import Icon from 'src/components/icons';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerType>,
@@ -44,16 +45,10 @@ class SlackChannelConnection extends React.Component<Props> {
 
       return (
         <SectionCard>
-          <SectionTitle style={{ marginTop: '-4px' }}>
-            <img
-              alt={'slack icon'}
-              src={'/img/slack_colored.png'}
-              width={48}
-              height={48}
-              style={{ marginLeft: '-8px', marginRight: '4px' }}
-            />
+          <SectionTitleWithIcon>
+            <Icon glyph={'slack-colored'} size={32} />
             Get conversation notifications in Slack
-          </SectionTitle>
+          </SectionTitleWithIcon>
           <SectionSubtitle>
             Keep up with your community by sending notifications about new
             conversations to individual channels in Slack.
