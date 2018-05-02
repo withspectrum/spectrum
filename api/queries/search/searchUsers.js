@@ -21,6 +21,6 @@ export default (args: Args, { loaders }: GraphQLContext) => {
     })
     .then(data => data.filter(Boolean))
     .catch(err => {
-      console.log('err', err);
+      console.error('err', err);
     });
 };

@@ -8,10 +8,7 @@ import { storeMessage, getMessage } from '../../models/message';
 import { setDirectMessageThreadLastActive } from '../../models/directMessageThread';
 import { setUserLastSeenInDirectMessageThread } from '../../models/usersDirectMessageThreads';
 import { createMemberInChannel } from '../../models/usersChannels';
-import {
-  createParticipantInThread,
-  createParticipantWithoutNotificationsInThread,
-} from '../../models/usersThreads';
+import { createParticipantInThread } from '../../models/usersThreads';
 import addCommunityMember from '../communityMember/addCommunityMember';
 import { trackUserThreadLastSeenQueue } from 'shared/bull/queues';
 import { toJSON } from 'shared/draft-utils';
@@ -104,7 +101,12 @@ export default async (
       type: file.mimetype,
     };
 
-    const url = await uploadImage(file, 'threads', message.threadId);
+    let url;
+    try {
+      url = await uploadImage(file, 'threads', message.threadId);
+    } catch (err) {
+      return new UserError(err.message);
+    }
 
     if (!url)
       return new UserError(
@@ -179,17 +181,6 @@ export default async (
     );
   }
 
-  const participantPromise = async () => {
-    if (thread.watercooler) {
-      return await createParticipantWithoutNotificationsInThread(
-        message.threadId,
-        currentUser.id
-      );
-    } else {
-      return await createParticipantInThread(message.threadId, currentUser.id);
-    }
-  };
-
   // dummy async function that will run if the user is already a member of the
   // channel where the message is being sent
   let membershipPromise = async () => await {};
@@ -220,7 +211,7 @@ export default async (
   }
 
   return membershipPromise()
-    .then(() => participantPromise())
+    .then(() => createParticipantInThread(message.threadId, currentUser.id))
     .then(() => messagePromise())
     .then(dbMessage => {
       const contextPermissions = {
