@@ -18,6 +18,11 @@ const Pageviews = /* GraphQL */ `
     views: Int!
   }
 
+  type PageViewRefererData {
+    refererDomain: String!
+    views: Int!
+  }
+
   enum PageViewResolution {
     day
     week
@@ -26,6 +31,7 @@ const Pageviews = /* GraphQL */ `
   type PageViewResult {
     resolution: PageViewResolution!
     data: [PageViewData]!
+    refererData: [PageViewRefererData]!
   }
 
   extend type Mutation {

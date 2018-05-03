@@ -5,6 +5,7 @@ import type {
   PageViewType,
   PageViewData,
   PageViewResult,
+  PageViewRefererData,
 } from '../../shared/types';
 
 type AddPageViewParam = {
@@ -44,11 +45,15 @@ export const getAggregatedViews = async ({
   startDate,
   endDate,
 }: GetAggregatedViewsParams): Promise<PageViewResult> => {
-  type Result = {
+  type PlainResult = {
     group: [number, number, number],
     reduction: number,
   };
-  const results: Result[] = await db
+  type RefererResult = {
+    group: [string],
+    reduction: number,
+  };
+  const plainPageViewCountQuery = db
     .table('pageviews')
     .getAll([id, pageviewType.toLowerCase()], { index: 'refId_refType' })
     .group([
@@ -58,10 +63,22 @@ export const getAggregatedViews = async ({
     ])
     .count()
     .run();
+  const refererPageViewCountQuery = db
+    .table('pageviews')
+    .getAll([id, pageviewType.toLowerCase()], { index: 'refId_refType' })
+    .group([db.row('refererDomain')])
+    .count()
+    .run();
+  const [results, refererResults]: [
+    PlainResult[],
+    RefererResult[],
+  ] = await Promise.all([plainPageViewCountQuery, refererPageViewCountQuery]);
   const pageViewData = results.map(toPageViewData);
+  const refererData = refererResults.map(toRefererData);
   return {
     resolution: 'day',
     data: pageViewData,
+    refererData,
   };
 };
 
@@ -74,6 +91,13 @@ function toPageViewData({ group, reduction }): PageViewData {
   const paddedDay = padStart(`${day}`, 2, '0');
   return {
     date: `${year}/${paddedMonth}/${paddedDay}`,
+    views: reduction,
+  };
+}
+
+function toRefererData({ group, reduction }): PageViewRefererData {
+  return {
+    refererDomain: group[0],
     views: reduction,
   };
 }

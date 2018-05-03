@@ -416,7 +416,13 @@ export type PageViewData = {
   views: number,
 };
 
+export type PageViewRefererData = {
+  refererDomain: string,
+  views: number,
+};
+
 export type PageViewResult = {
   resolution: PageViewResolution,
   data: PageViewData[],
+  refererData: PageViewRefererData[],
 };
