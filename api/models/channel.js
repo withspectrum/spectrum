@@ -3,14 +3,38 @@ const { db } = require('./db');
 import { sendChannelNotificationQueue } from 'shared/bull/queues';
 import type { DBChannel } from 'shared/types';
 
+// reusable query parts -- begin
+
+const channelsByCommunitiesQuery = (...communityIds: string[]) =>
+  db
+    .table('channels')
+    .getAll(...communityIds, { index: 'communityId' })
+    .filter(channel => db.not(channel.hasFields('deletedAt')));
+
+const channelsByIdsQuery = (...channelIds: string[]) =>
+  db
+    .table('channels')
+    .getAll(...channelIds)
+    .filter(channel => db.not(channel.hasFields('deletedAt')));
+
+const threadsByChannelsQuery = (...channelIds: string[]) =>
+  channelsByIdsQuery(...channelIds)
+    .eqJoin('id', db.table('threads'), { index: 'channelId' })
+    .map(row => row('right'))
+    .filter(thread => db.not(thread.hasFields('deletedAt')));
+
+const membersByChannelsQuery = (...channelIds: string[]) =>
+  channelsByIdsQuery(...channelIds)
+    .eqJoin('id', db.table('usersChannels'), { index: 'channelId' })
+    .map(row => row('right'))
+    .filter({ isBlocked: false, isPending: false, isMember: true });
+
+// reusable query parts -- end
+
 const getChannelsByCommunity = (
   communityId: string
 ): Promise<Array<DBChannel>> => {
-  return db
-    .table('channels')
-    .getAll(communityId, { index: 'communityId' })
-    .filter(channel => db.not(channel.hasFields('deletedAt')))
-    .run();
+  return channelsByCommunitiesQuery(communityId).run();
 };
 
 /*
@@ -21,10 +45,7 @@ const getChannelsByCommunity = (
 const getPublicChannelsByCommunity = (
   communityId: string
 ): Promise<Array<string>> => {
-  return db
-    .table('channels')
-    .getAll(communityId, { index: 'communityId' })
-    .filter(channel => db.not(channel.hasFields('deletedAt')))
+  return channelsByCommunitiesQuery(communityId)
     .filter({ isPrivate: false })
     .map(c => c('id'))
     .run();
@@ -41,10 +62,7 @@ const getChannelsByUserAndCommunity = async (
   communityId: string,
   userId: string
 ): Promise<Array<string>> => {
-  const channels = await db
-    .table('channels')
-    .getAll(communityId, { index: 'communityId' })
-    .run();
+  const channels = await getChannelsByCommunity(communityId);
 
   const channelIds = channels.map(c => c.id);
   const publicChannels = channels.filter(c => !c.isPrivate).map(c => c.id);
@@ -106,11 +124,8 @@ const getChannelBySlug = (
     });
 };
 
-const getChannelById = (id: string) => {
-  return db
-    .table('channels')
-    .get(id)
-    .run();
+const getChannelById = async (id: string) => {
+  return (await channelsByIdsQuery(id).run())[0] || null;
 };
 
 type GetChannelByIdArgs = {|
@@ -125,24 +140,17 @@ type GetChannelBySlugArgs = {|
 export type GetChannelArgs = GetChannelByIdArgs | GetChannelBySlugArgs;
 
 const getChannels = (channelIds: Array<string>): Promise<Array<DBChannel>> => {
-  return db
-    .table('channels')
-    .getAll(...channelIds)
-    .filter(channel => db.not(channel.hasFields('deletedAt')))
-    .run();
+  return channelsByIdsQuery(...channelIds).run();
 };
 
-const getChannelMetaData = (channelId: string): Promise<Array<number>> => {
-  const getThreadCount = db
-    .table('threads')
-    .getAll(channelId, { index: 'channelId' })
+const getChannelMetaData = async (
+  channelId: string
+): Promise<Array<number>> => {
+  const getThreadCount = threadsByChannelsQuery(channelId)
     .count()
     .run();
 
-  const getMemberCount = db
-    .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ isBlocked: false, isPending: false })
+  const getMemberCount = membersByChannelsQuery(channelId)
     .count()
     .run();
 
@@ -157,9 +165,7 @@ type GroupedCount = {
 const getChannelsThreadCounts = (
   channelIds: Array<string>
 ): Promise<Array<GroupedCount>> => {
-  return db
-    .table('threads')
-    .getAll(...channelIds, { index: 'channelId' })
+  return threadsByChannelsQuery(...channelIds)
     .group('channelId')
     .count()
     .run();
@@ -168,10 +174,7 @@ const getChannelsThreadCounts = (
 const getChannelsMemberCounts = (
   channelIds: Array<string>
 ): Promise<Array<GroupedCount>> => {
-  return db
-    .table('usersChannels')
-    .getAll(...channelIds, { index: 'channelId' })
-    .filter({ isBlocked: false, isPending: false, isMember: true })
+  return membersByChannelsQuery(...channelIds)
     .group('channelId')
     .count()
     .run();
@@ -360,4 +363,10 @@ module.exports = {
   archiveChannel,
   restoreChannel,
   archiveAllPrivateChannels,
+  __forQueryTests: {
+    channelsByCommunitiesQuery,
+    channelsByIdsQuery,
+    threadsByChannelsQuery,
+    membersByChannelsQuery,
+  },
 };
