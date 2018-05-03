@@ -7,6 +7,7 @@
 import React from 'react';
 import DraftEditor from 'draft-js-plugins-editor';
 import debounce from 'debounce';
+import Textarea from 'react-textarea-autosize';
 import { isAndroid, toPlainText, fromPlainText } from 'shared/draft-utils';
 import type DraftEditorProps from 'draft-js/lib/DraftEditorProps';
 
@@ -62,9 +63,8 @@ class AndroidFallbackInput extends React.Component<Props, FallbackState> {
     return (
       <div className="DraftEditor-root">
         <div className="DraftEditor-editorContainer">
-          <input
+          <Textarea
             {...this.props}
-            type="text"
             value={this.state.value}
             onChange={this.onChange}
             className={'DraftEditor-content ' + (this.props.className || '')}
