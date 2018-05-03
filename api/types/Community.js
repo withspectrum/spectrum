@@ -272,11 +272,6 @@ const Community = /* GraphQL */ `
 		id: ID!
 		customMessage: String
 	}
-	
-	input AddPageViewInput {
-		id: String!
-		referrerDomain: String
-	}
 
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
@@ -287,7 +282,6 @@ const Community = /* GraphQL */ `
 		importSlackMembers(input: ImportSlackMembersInput!): Boolean @deprecated(reason:"Importing slack members is deprecated")
 		sendEmailInvites(input: EmailInvitesInput!): Boolean
 		pinThread(threadId: ID!, communityId: ID!, value: String): Community
-		addCommunityPageView(input: AddPageViewInput!): Boolean
 		upgradeCommunity(input: UpgradeCommunityInput!): Community @deprecated(reason:"Use feature level upgrade mutations like enableCommunityAnalytics")
 		downgradeCommunity(input: DowngradeCommunityInput!): Community @deprecated(reason:"Use feature level downgrade mutations like disableCommunityAnalytics")
 		updateAdministratorEmail(input: UpdateAdministratorEmailInput!): Community

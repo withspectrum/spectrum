@@ -17,7 +17,6 @@ import enableBrandedLogin from './enableBrandedLogin';
 import disableBrandedLogin from './disableBrandedLogin';
 import saveBrandedLoginSettings from './saveBrandedLoginSettings';
 import importSlackMembers from './importSlackMembers';
-import addCommunityPageView from './addCommunityPageView';
 
 module.exports = {
   Mutation: {
@@ -39,6 +38,5 @@ module.exports = {
     disableBrandedLogin,
     saveBrandedLoginSettings,
     importSlackMembers,
-    addCommunityPageView,
   },
 };
