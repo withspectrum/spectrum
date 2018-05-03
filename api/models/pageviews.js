@@ -6,7 +6,7 @@ export const addCommunityPageView = (
   referrerDomain: string
 ) => {
   return db
-    .table('pageview')
+    .table('pageviews')
     .insert({
       createdAt: new Date(),
       refType: 'community',

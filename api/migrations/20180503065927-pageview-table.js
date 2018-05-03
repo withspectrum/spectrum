@@ -1,6 +1,6 @@
 exports.up = function(r, conn) {
   return r
-    .tableCreate('pageview')
+    .tableCreate('pageviews')
     .run(conn)
     .catch(err => {
       console.error(err);
@@ -9,5 +9,5 @@ exports.up = function(r, conn) {
 };
 
 exports.down = function(r, conn) {
-  return r.tableDrop('pageview').run(conn);
+  return r.tableDrop('pageviews').run(conn);
 };

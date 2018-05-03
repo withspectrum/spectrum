@@ -1,6 +1,6 @@
 // @flow
 
-import { addCommunityPageView } from '../../models/pageview';
+import { addCommunityPageView } from '../../models/pageviews';
 
 type AddPageViewInput = {
   id: string,
