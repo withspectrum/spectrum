@@ -23,3 +23,14 @@ export const addPageView = ({
     })
     .run();
 };
+
+type GetPageViewParam = {
+  id: string,
+  pageviewType: PageViewType,
+};
+export const getPageViews = ({ id, pageviewType }: GetPageViewParam) => {
+  return db
+    .table('pageviews')
+    .filter({ refId: id, refType: pageviewType.toLowerCase() })
+    .run();
+};

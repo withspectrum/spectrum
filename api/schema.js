@@ -33,7 +33,7 @@ const Invoice = require('./types/Invoice');
 const Search = require('./types/Search');
 const CommunityMember = require('./types/CommunityMember');
 const ThreadParticipant = require('./types/ThreadParticipant');
-const PageViews = require('./types/Pageviews');
+const PageView = require('./types/Pageviews');
 
 const ThreadQueries = require('./queries/thread');
 const channelQueries = require('./queries/channel');
@@ -154,7 +154,7 @@ const schema = makeExecutableSchema({
     Meta,
     Invoice,
     Search,
-    PageViews,
+    PageView,
   ],
   resolvers,
 });
