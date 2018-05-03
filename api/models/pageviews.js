@@ -1,17 +1,25 @@
 // @flow
 const { db } = require('./db');
+import type { PageViewType } from '../../shared/types';
 
-export const addCommunityPageView = (
-  communityId: string,
-  referrerDomain: string
-) => {
+type AddPageViewPaam = {
+  id: string,
+  refererDomain?: string,
+  pageviewType: PageViewType,
+};
+
+export const addPageView = ({
+  id,
+  refererDomain,
+  pageviewType,
+}: AddPageViewPaam) => {
   return db
     .table('pageviews')
     .insert({
       createdAt: new Date(),
-      refType: 'community',
-      refId: communityId,
-      referrerDomain,
+      refType: pageviewType.toLowerCase(),
+      refId: id,
+      refererDomain,
     })
     .run();
 };
