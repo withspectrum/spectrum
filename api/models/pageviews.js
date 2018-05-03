@@ -2,7 +2,7 @@
 const { db } = require('./db');
 import type { PageViewType } from '../../shared/types';
 
-type AddPageViewPaam = {
+type AddPageViewParam = {
   id: string,
   refererDomain?: string,
   pageviewType: PageViewType,
@@ -12,7 +12,7 @@ export const addPageView = ({
   id,
   refererDomain,
   pageviewType,
-}: AddPageViewPaam) => {
+}: AddPageViewParam) => {
   return db
     .table('pageviews')
     .insert({
