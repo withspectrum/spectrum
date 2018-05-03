@@ -56,7 +56,7 @@ export const getAggregatedViews = ({
 }: GetAggregatedViewsParams): Promise<GetAggregatedViewsReturn[]> => {
   return db
     .table('pageviews')
-    .filter({ refId: id, refType: pageviewType.toLowerCase() })
+    .getAll([id, pageviewType.toLowerCase()], { index: 'refId_refType' })
     .group([
       db.row('createdAt').year(),
       db.row('createdAt').month(),
