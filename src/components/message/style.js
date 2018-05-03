@@ -1,5 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
+import { SvgWrapper } from '../icons';
 import { Gradient, zIndex, Transition, monoStack, hexa } from '../globals';
 
 const Bubble = styled.div`
@@ -344,5 +345,34 @@ export const Paragraph = styled.p`
 
   &:not(:empty) ~ &:not(:empty) {
     margin-top: 1em;
+  }
+`;
+
+export const QuotedParagraph = Paragraph.withComponent('div').extend`
+  padding-left: 12px;
+  border-left: 4px solid ${props => props.theme.bg.border};
+  margin: 4px 0;
+  color: ${props => props.theme.text.alt};
+
+  code,
+  pre {
+    color: ${props => props.theme.text.alt};
+  }
+`;
+
+export const QuoteWrapper = styled.div`
+  background: ${props => props.theme.bg.default};
+  border-radius: 12px;
+  color: ${props => props.theme.text.default};
+  padding: 8px 12px;
+  /* Position it with little margin to the surrounding bubble */
+  width: calc(100% + 24px);
+  margin-left: -12px;
+  margin-top: -4px;
+  margin-bottom: 8px;
+
+  ${SvgWrapper} {
+    margin-left: -3px;
+    margin-right: 2px;
   }
 `;

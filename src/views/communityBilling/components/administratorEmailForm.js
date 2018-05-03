@@ -3,7 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
-import { isEmail } from 'validator';
+import isEmail from 'validator/lib/isEmail';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { Input, Error } from '../../../components/formElements';
 import { Notice } from '../../../components/listItems/style';

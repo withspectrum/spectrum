@@ -9,7 +9,7 @@ import { Button, TextButton } from '../../components/buttons';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import { Loading } from '../../components/loading';
-import { ImportSlackWithoutCard } from '../communityMembers/components/importSlack';
+import SlackConnection from '../communitySettings/components/slack';
 import { CommunityInvitationForm } from '../../components/emailInvitationForm';
 import CreateCommunityForm from './components/createCommunityForm';
 import EditCommunityForm from './components/editCommunityForm';
@@ -214,11 +214,9 @@ class NewCommunity extends React.Component<Props, State> {
                 community.id && (
                   <ContentContainer>
                     <Divider />
-                    <ImportSlackWithoutCard
-                      community={community}
+                    <SlackConnection
+                      isOnboarding={true}
                       id={community.id || existingId}
-                      isOnboarding
-                      hasInvitedPeople={this.hasInvitedPeople}
                     />
                     <Divider />
                     <CommunityInvitationForm id={community.id} />

@@ -7,7 +7,7 @@ import type { GetCommunityType } from 'shared/graphql/queries/community/getCommu
 import ViewError from '../../components/viewError';
 import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
 import { CommunityInvitationForm } from '../../components/emailInvitationForm';
-import ImportSlack from './components/importSlack';
+import SlackConnection from '../communitySettings/components/slack';
 import CommunityMembers from './components/communityMembers';
 import {
   SectionsContainer,
@@ -40,7 +40,7 @@ class CommunityMembersSettings extends React.Component<Props> {
           </Column>
 
           <Column>
-            <ImportSlack community={community} id={community.id} />
+            <SlackConnection type={'import-only'} id={community.id} />
             <SectionCard>
               <SectionTitle>Invite by email</SectionTitle>
               <CommunityInvitationForm id={community.id} />

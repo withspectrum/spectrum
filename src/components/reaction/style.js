@@ -19,14 +19,14 @@ export const ReactionWrapper = styled.b`
       ? `background-color: ${
           props.active ? props.theme.warn.default : props.theme.text.alt
         };
-		background-image: ${
+    background-image: ${
       props.active
         ? Gradient(props.theme.warn.alt, props.theme.warn.default)
         : 'none'
     }
-			`
+      `
       : `background-color: ${props.theme.bg.border};
-		background-image: none;`};
+    background-image: none;`};
 
   padding: ${props => (props.hasCount ? '0 10px 0 6px' : '0')};
   display: flex;

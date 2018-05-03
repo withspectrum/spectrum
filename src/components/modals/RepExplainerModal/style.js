@@ -77,4 +77,6 @@ export const IconContainer = styled.div`
   color: ${props => props.theme.brand.alt};
 `;
 
-export const RepWrapper = styled.span`margin-left: 8px;`;
+export const RepWrapper = styled.span`
+  margin-left: 8px;
+`;

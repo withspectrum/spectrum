@@ -41,7 +41,7 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
         }));
       })
       .catch(err => {
-        console.log('err', err);
+        console.error('err', err);
       });
 
   const IS_AUTHED_USER = user && user.id;

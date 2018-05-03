@@ -18,18 +18,18 @@ export const Container = styled.div`
 `;
 
 const toastFade = keyframes`
-	0% {
-		opacity: 0;
+  0% {
+    opacity: 0;
     top: 8px;
-	}
-	5% {
-		opacity: 1;
+  }
+  5% {
+    opacity: 1;
     top: 0;
-	}
+  }
   95% {
-		opacity: 1;
+    opacity: 1;
     top: 0;
-	}
+  }
   100% {
     opacity: 0;
     top: -4px;

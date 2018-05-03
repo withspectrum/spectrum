@@ -7,7 +7,7 @@ import { SecureStore } from 'expo';
 import Text from '../../components/Text';
 import InfiniteList from '../../components/InfiniteList';
 import withSafeView from '../../components/SafeAreaView';
-import { Wrapper } from '../Splash/style';
+import { Wrapper } from '../Dashboard/style';
 import getNotifications, {
   type GetNotificationsType,
 } from '../../../shared/graphql/queries/notification/getNotifications';

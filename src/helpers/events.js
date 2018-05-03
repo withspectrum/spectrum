@@ -10,22 +10,6 @@ if (process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN_CLIENT) {
 
 const ga = window.ga;
 
-export const set = id => {
-  /**
-   *
-   * This get sets on login or on authentication. This helps us track the UID in GA
-   * which will allow for us to have more meaningful understanding of future experiments
-   *
-   */
-
-  if (!ga) return;
-  try {
-    ga('set', 'userId', id); // Set the user ID using signed-in user_id.
-  } catch (err) {
-    console.error('error logging user event', err);
-  }
-};
-
 export const track = (category, action, label) => {
   /**
   *

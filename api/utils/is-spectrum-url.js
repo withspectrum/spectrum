@@ -25,8 +25,8 @@ export default (url: string): boolean => {
     }
   } catch (err) {
     // Swallow URL parsing errors (when an invalid URL is passed) and redirect to the standard one
-    console.log(`Invalid URL ("${url}") passed. Full error:`);
-    console.log(err);
+    console.error(`Invalid URL ("${url}") passed. Full error:`);
+    console.error(err);
   }
   return false;
 };
