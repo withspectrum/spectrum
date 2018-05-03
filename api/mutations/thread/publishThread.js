@@ -1,7 +1,7 @@
 // @flow
 const debug = require('debug')('api:mutations:thread:publish-thread');
 import stringSimilarity from 'string-similarity';
-import { stateFromMarkdown } from 'draft-js-import-markdown';
+import { markdownToDraft } from 'markdown-draft-js';
 import { EditorState } from 'draft-js';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
@@ -75,9 +75,9 @@ export default async (
   if (type === 'TEXT') {
     type = 'DRAFTJS';
     if (thread.content.body) {
-      const contentState = stateFromMarkdown(thread.content.body);
-      const editorState = EditorState.createWithContent(contentState);
-      thread.content.body = JSON.stringify(toJSON(editorState));
+      thread.content.body = JSON.stringify(
+        markdownToDraft(thread.content.body)
+      );
     }
   }
 

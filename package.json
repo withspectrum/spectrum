@@ -115,6 +115,7 @@
     "linkify-it": "^2.0.3",
     "lodash": "^4.17.4",
     "lodash.intersection": "^4.4.0",
+    "markdown-draft-js": "^0.6.3",
     "moment": "^2.18.1",
     "node-env-file": "^0.1.8",
     "now-env": "^3.0.1",
