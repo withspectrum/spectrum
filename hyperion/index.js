@@ -1,6 +1,6 @@
 // @flow
-console.log('Hyperion starting...');
 const debug = require('debug')('hyperion');
+debug('Hyperion starting...');
 debug('logging with debug enabled');
 import express from 'express';
 import Loadable from 'react-loadable';
@@ -146,7 +146,7 @@ process.on('uncaughtException', async err => {
 
 Loadable.preloadAll().then(() => {
   app.listen(PORT);
-  console.log(
+  debug(
     `Hyperion, the server-side renderer, running at http://localhost:${PORT}`
   );
 });
