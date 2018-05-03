@@ -406,3 +406,5 @@ export type FileUpload = {
 };
 
 export type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';
+
+export type PageViewType = 'COMMUNITY' | 'THREAD' | 'CHANNEL';
