@@ -154,7 +154,7 @@ const Community = /* GraphQL */ `
 		watercooler: Thread
 		brandedLogin: BrandedLogin
 		slackSettings: CommunitySlackSettings @cost(complexity: 2)
-		pageviews: [PageView]
+		pageviews: [PageViewData]
 
 		hasFeatures: Features
 		hasChargeableSource: Boolean

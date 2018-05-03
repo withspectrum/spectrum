@@ -34,3 +34,34 @@ export const getPageViews = ({ id, pageviewType }: GetPageViewParam) => {
     .filter({ refId: id, refType: pageviewType.toLowerCase() })
     .run();
 };
+
+/**
+ * Gets the pageviews in an aggregated form
+ */
+type GetAggregatedViewsParams = {
+  id: string,
+  pageviewType: PageViewType,
+  startDate?: string,
+  endDate?: string,
+};
+type GetAggregatedViewsReturn = {
+  group: [number, number, number],
+  reduction: number,
+};
+export const getAggregatedViews = ({
+  id,
+  pageviewType,
+  startDate,
+  endDate,
+}: GetAggregatedViewsParams): Promise<GetAggregatedViewsReturn[]> => {
+  return db
+    .table('pageviews')
+    .filter({ refId: id, refType: pageviewType.toLowerCase() })
+    .group([
+      db.row('createdAt').year(),
+      db.row('createdAt').month(),
+      db.row('createdAt').day(),
+    ])
+    .count()
+    .run();
+};

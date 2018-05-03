@@ -13,11 +13,9 @@ const Pageviews = /* GraphQL */ `
     pageviewType: PageViewType!
   }
   
-  type PageView {
-    createdAt: Date
-    refType: PageViewType!
-    refId: ID!
-    refererDomain: String
+  type PageViewData {
+    date: String!
+    views: Int!
   }
 
   extend type Mutation {
