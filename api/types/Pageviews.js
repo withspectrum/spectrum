@@ -12,10 +12,20 @@ const Pageviews = /* GraphQL */ `
     refererURL: String
     pageviewType: PageViewType!
   }
-  
+
   type PageViewData {
     date: String!
     views: Int!
+  }
+
+  enum PageViewResolution {
+    day
+    week
+  }
+  
+  type PageViewResult {
+    resolution: PageViewResolution!
+    data: [PageViewData]!
   }
 
   extend type Mutation {

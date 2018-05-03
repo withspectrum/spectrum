@@ -17,5 +17,8 @@ function toPageViewData({ group, reduction }) {
 export default async ({ id }: DBCommunity, _: any) => {
   const results = await getAggregatedViews({ id, pageviewType: 'community' });
   const pageViewData = results.map(toPageViewData);
-  return pageViewData;
+  return {
+    resolution: 'day',
+    data: pageViewData,
+  };
 };
