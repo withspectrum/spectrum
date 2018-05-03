@@ -86,6 +86,7 @@ const Channel = /* GraphQL */ `
 		owners: [User] @cost(complexity: 3)
 		joinSettings: JoinSettings 
 		slackSettings: ChannelSlackSettings
+		pageviews: PageViewResult!
 	}
 
 	extend type Query {
