@@ -79,7 +79,7 @@ class AndroidFallbackInput extends React.Component<Props, FallbackState> {
 
 class CustomDraftJSPluginsEditor extends React.Component<Props> {
   render() {
-    if (!isAndroid())
+    if (!isAndroid() || this.props.readOnly)
       return <DraftEditor {...this.props} ref={this.props.editorRef} />;
     return <AndroidFallbackInput {...this.props} />;
   }

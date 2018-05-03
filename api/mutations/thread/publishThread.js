@@ -1,6 +1,8 @@
 // @flow
 const debug = require('debug')('api:mutations:thread:publish-thread');
 import stringSimilarity from 'string-similarity';
+import { stateFromMarkdown } from 'draft-js-import-markdown';
+import { EditorState } from 'draft-js';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';
@@ -13,7 +15,7 @@ import { createParticipantInThread } from '../../models/usersThreads';
 import { StripeUtil } from 'shared/stripe/utils';
 import type { FileUpload, DBThread } from 'shared/types';
 import { PRIVATE_CHANNEL, FREE_PRIVATE_CHANNEL } from 'pluto/queues/constants';
-import { toPlainText, toState } from 'shared/draft-utils';
+import { toPlainText, toState, toJSON } from 'shared/draft-utils';
 import {
   processReputationEventQueue,
   sendThreadNotificationQueue,
@@ -41,7 +43,7 @@ type PublishThreadInput = {
   thread: {
     channelId: string,
     communityId: string,
-    type: 'SLATE' | 'DRAFTJS',
+    type: 'SLATE' | 'DRAFTJS' | 'TEXT',
     content: {
       title: string,
       body?: string,
@@ -62,11 +64,24 @@ export default async (
     return new UserError('You must be signed in to publish a new thread.');
   }
 
-  if (thread.type === 'SLATE') {
+  let { type } = thread;
+
+  if (type === 'SLATE') {
     throw new UserError(
       "You're on an old version of Spectrum, please refresh your browser."
     );
   }
+
+  if (type === 'TEXT') {
+    type = 'DRAFTJS';
+    if (thread.content.body) {
+      const contentState = stateFromMarkdown(thread.content.body);
+      const editorState = EditorState.createWithContent(contentState);
+      thread.content.body = JSON.stringify(toJSON(editorState));
+    }
+  }
+
+  thread.type = type;
 
   const [
     currentUserChannelPermissions,
@@ -155,6 +170,7 @@ export default async (
       _adminProcessUserSpammingThreadsQueue.add({
         user: currentUser,
         threads: usersPreviousPublishedThreads,
+        // $FlowIssue
         publishing: thread,
         community: community,
         channel: channel,
@@ -203,6 +219,7 @@ export default async (
       _adminProcessUserSpammingThreadsQueue.add({
         user: currentUser,
         threads: usersPreviousPublishedThreads,
+        // $FlowIssue
         publishing: thread,
         community: community,
         channel: channel,
