@@ -408,3 +408,15 @@ export type FileUpload = {
 export type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';
 
 export type PageViewType = 'community' | 'thread' | 'channel';
+
+export type PageViewResolution = 'day' | 'week';
+
+export type PageViewData = {
+  date: string,
+  views: number,
+};
+
+export type PageViewResult = {
+  resolution: PageViewResolution,
+  data: PageViewData[],
+};
