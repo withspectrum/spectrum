@@ -2,8 +2,8 @@
 import axios from 'axios';
 
 const GITHUB_API_URL = 'https://api.github.com';
-const SPECTRUM_OWNER = 'withspectrum';
-const SPECTRUM_REPOSITORY = 'spectrum';
+export const SPECTRUM_OWNER = 'withspectrum';
+export const SPECTRUM_REPOSITORY = 'spectrum';
 
 export const isContributor = (githubLogin: string, githubId: string) => {
   return getContributorStats()
@@ -33,7 +33,7 @@ export const getContributorStats = () =>
 
 const getRepositoryUrl = (owner, repositoryName) =>
   `${GITHUB_API_URL}/repos/${owner}/${repositoryName}`;
-const getContributorStatsUrl = (owner, repositoryName) =>
+export const getContributorStatsUrl = (owner, repositoryName) =>
   `${getRepositoryUrl(owner, repositoryName)}/stats/contributors`;
 const isSameUser = (author, username, id) =>
   author.login === username && author.id === parseInt(id);
