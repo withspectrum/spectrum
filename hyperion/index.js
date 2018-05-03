@@ -2,8 +2,6 @@
 console.log('Hyperion starting...');
 const debug = require('debug')('hyperion');
 debug('logging with debug enabled');
-// $FlowFixMe
-require('isomorphic-fetch');
 import express from 'express';
 import Loadable from 'react-loadable';
 import path from 'path';

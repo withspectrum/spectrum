@@ -56,7 +56,6 @@
     "hpp": "^0.2.2",
     "imgix-core-js": "^1.0.6",
     "immutability-helper": "^2.2.0",
-    "isomorphic-fetch": "^2.2.1",
     "iterall": "^1.2.2",
     "jest": "^21.2.1",
     "json-stringify-pretty-compact": "^1.0.4",
