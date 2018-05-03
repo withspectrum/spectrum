@@ -1,6 +1,6 @@
 // @flow
 
-import { parse as parseURL } from 'url';
+import { URL } from 'url';
 import { addPageView } from '../../models/pageviews';
 import type { PageViewType } from '../../../shared/types';
 
@@ -18,7 +18,7 @@ type AddPageViewInput = {
  */
 function getCleanHostName(url?: string): string | void {
   if (!url) return undefined;
-  const parsedURL = parseURL(url);
+  const parsedURL = new URL(url);
   if (!parsedURL.hostname) return undefined;
   const longHostname = parsedURL.hostname;
   // removes www. from the front of a hostname
