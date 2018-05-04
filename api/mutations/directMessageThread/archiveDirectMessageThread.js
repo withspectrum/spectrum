@@ -21,7 +21,7 @@ export default async (
   const currentUser = user;
 
   if (!currentUser) {
-    return new UserError('You must be signed in to send a direct message.');
+    return new UserError('You must be signed in to archive a message.');
   }
 
   if (!input.threadId) {
