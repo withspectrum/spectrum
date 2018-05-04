@@ -48,11 +48,12 @@ export const TertiaryActionContainer = styled(FlexRow)`
 `;
 
 export const Actions = styled(FlexRow)`
-  margin-top: 24px;
+  margin: 24px -16px 0;
+  width: calc(100% + 32px);
+  padding: 16px 16px 0;
   justify-content: flex-start;
   flex-direction: row-reverse;
   border-top: 1px solid ${props => props.theme.bg.border};
-  padding-top: 16px;
 
   button + button {
     margin-left: 8px;

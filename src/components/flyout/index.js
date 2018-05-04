@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import { FlexCol, FlexRow, Transition, zIndex } from '../globals';
+import { FlexCol, FlexRow, zIndex } from '../globals';
 
 const StyledFlyout = styled(FlexRow)`
   background-color: ${props => props.theme.bg.default};

@@ -120,23 +120,16 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/spectrum
-      - run:
-          name: Install now
-          command: sudo npm install --global --unsafe-perm now
       - run: *build-api
       - run:
           name: Deploy and alias API
           command: |
             cd build-api
-            now --token $ZEIT_TOKEN --team spaceprogram
-            sleep 1 # This might fix the problem where now aliases the old deploy from hyperion
-            now --token $ZEIT_TOKEN --team spaceprogram alias api.alpha.spectrum.chat
+            npx now-cd --alias "alpha=api.alpha.spectrum.chat" --team spaceprogram
             cd ..
       - run:
           name: Deploy and alias Hyperion
-          command: |
-            now --token $ZEIT_TOKEN --team spaceprogram
-            now --token $ZEIT_TOKEN --team spaceprogram alias hyperion.alpha.spectrum.chat
+          command: npx now-cd --alias "alpha=hyperion.alpha.spectrum.chat" --team spaceprogram
 
 
   # Run eslint, flow etc.
