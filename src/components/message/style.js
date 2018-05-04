@@ -2,6 +2,7 @@
 import styled, { css } from 'styled-components';
 import { SvgWrapper } from '../icons';
 import { Gradient, zIndex, Transition, monoStack, hexa } from '../globals';
+import { Byline, Name, Username } from '../messageGroup/style';
 
 const Bubble = styled.div`
   display: inline-block;
@@ -391,5 +392,12 @@ export const QuoteWrapper = styled.div`
   ${SvgWrapper} {
     margin-left: -3px;
     margin-right: 2px;
+  }
+
+  /* Don't change the color of the name and username on hover since they aren't clickable in quotes */
+  ${Name}:hover,
+  ${Username}:hover,
+  ${Byline}:hover {
+    color: ${props => props.theme.text.alt};
   }
 `;
