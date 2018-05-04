@@ -1,6 +1,5 @@
 // @flow
 require('now-env');
-var Crypto = require('crypto-js');
 
 var ENCRYPTION_KEY =
   process.env.NODE_ENV === 'development'
@@ -13,26 +12,23 @@ if (!ENCRYPTION_KEY) {
   );
 }
 
+var Cryptr = require('cryptr'),
+  cryptr = new Cryptr(ENCRYPTION_KEY);
+
 function encryptString(text /*: string */) /*: string */ {
-  return Crypto.AES.encrypt(text, ENCRYPTION_KEY);
+  return cryptr.encrypt(text);
 }
 
 function decryptString(text /*: string */) /*: string */ {
-  var bytes = Crypto.AES.decrypt(text, ENCRYPTION_KEY);
-  var plaintext = bytes.toString(Crypto.enc.Utf8);
-
-  return plaintext;
+  return cryptr.decrypt(text);
 }
 
 function encryptObject(object /*: Object */) /*: Object */ {
-  return Crypto.AES.encrypt(JSON.stringify(object), ENCRYPTION_KEY);
+  return cryptr.encrypt(JSON.stringify(object));
 }
 
 function decryptObject(text /*: string */) /*: Object */ {
-  var bytes = Crypto.AES.decrypt(text.toString(), ENCRYPTION_KEY);
-  var decryptedObject = JSON.parse(bytes.toString(Crypto.enc.Utf8));
-
-  return decryptedObject;
+  return JSON.parse(cryptr.decrypt(text));
 }
 
 module.exports = { decryptString, encryptString, decryptObject, encryptObject };
