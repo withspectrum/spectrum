@@ -3,6 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
+import { throttle } from 'lodash';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
 import ChatMessages from '../../../components/messageGroup';
 import { LoadingChat } from '../../../components/loading';
@@ -70,15 +71,26 @@ class MessagesWithData extends React.Component<Props, State> {
     offerScrollDown: false,
   };
 
-  makeScrollDownOffer() {
-    const { scrollHeight, clientHeight } = this.props.scrollContainer;
-    if (scrollHeight > clientHeight + 200) {
-      this.setState({ offerScrollDown: true });
+  showScrollDown(scrollHeight, clientHeight, scrollTop) {
+    return scrollTop + clientHeight + 200 < scrollHeight;
+  }
+
+  handleScroll(e) {
+    const { scrollHeight, clientHeight, scrollTop } = e.target;
+    if (this.showScrollDown(scrollHeight, clientHeight, scrollTop)) {
+      this.setState && this.setState({ offerScrollDown: true });
+    } else {
+      this.setState && this.setState({ offerScrollDown: false });
     }
   }
 
   componentDidUpdate(prev = {}) {
     const curr = this.props;
+
+    this.props.scrollContainer.onscroll = throttle(
+      this.handleScroll.bind(this),
+      500
+    );
 
     if (!curr.data.thread) return;
 
@@ -99,13 +111,9 @@ class MessagesWithData extends React.Component<Props, State> {
       prev.data.thread.messageConnection.edges.length + 1 ===
         curr.data.thread.messageConnection.edges.length;
 
-    if (isDifferentThread) {
-      this.setState({ offerScrollDown: true });
-    }
     // force scroll to bottom if the user is a participant/creator, after the messages load in for the first time
     if (!newMessageSent && isFirstLoad && curr.shouldForceScrollOnMessageLoad) {
       setTimeout(() => {
-        this.setState({ offerScrollDown: false });
         curr.forceScrollToBottom();
       });
     }
@@ -121,7 +129,6 @@ class MessagesWithData extends React.Component<Props, State> {
 
     // force scroll to bottom when a message is sent in the same thread
     if (newMessageSent && !prev.isFetchingMore) {
-      this.setState({ offerScrollDown: false });
       curr.contextualScrollToBottom();
     }
 
@@ -162,9 +169,6 @@ class MessagesWithData extends React.Component<Props, State> {
 
   scrollToBottom = () => {
     this.props.forceScrollToBottom();
-    this.setState({
-      offerScrollDown: false,
-    });
   };
 
   render() {
