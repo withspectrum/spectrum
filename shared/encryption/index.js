@@ -1,55 +1,38 @@
 // @flow
 require('now-env');
-var crypto = require('crypto');
+var Crypto = require('crypto-js');
 
 var ENCRYPTION_KEY =
   process.env.NODE_ENV === 'development'
     ? 'abcdefghijklmnopqrstuvwxyzasdfjk'
     : process.env.ENCRYPTION_KEY; // Must be 256 bytes (32 characters)
-if (!ENCRYPTION_KEY)
+
+if (!ENCRYPTION_KEY) {
   throw new Error(
     'Looks like youre missing an encryption key for sensitive data!'
   );
-
-var IV_LENGTH = 16; // For AES, this is always 16
-
-function encrypt(text /*: string */) /*: string */ {
-  if (!text || text.length === 0) return text;
-
-  var iv = crypto.randomBytes(IV_LENGTH);
-
-  var cipher = crypto.createCipheriv(
-    'aes-256-cbc',
-    // $FlowFixMe
-    new Buffer(ENCRYPTION_KEY),
-    iv
-  );
-  // $FlowFixMe
-  var encrypted = cipher.update(text);
-
-  encrypted = Buffer.concat([encrypted, cipher.final()]);
-
-  return iv.toString('hex') + ':' + encrypted.toString('hex');
 }
 
-function decrypt(text /*: string */) /*: string */ {
-  if (!text || text.length === 0) return text;
-
-  var textParts = text.split(':');
-  var iv = new Buffer(textParts.shift(), 'hex');
-  var encryptedText = new Buffer(textParts.join(':'), 'hex');
-
-  var decipher = crypto.createDecipheriv(
-    'aes-256-cbc',
-    // $FlowFixMe
-    new Buffer(ENCRYPTION_KEY),
-    iv
-  );
-  var decrypted = decipher.update(encryptedText);
-
-  decrypted = Buffer.concat([decrypted, decipher.final()]);
-
-  return decrypted.toString();
+function encryptString(text /*: string */) /*: string */ {
+  return Crypto.AES.encrypt(text, ENCRYPTION_KEY);
 }
 
-module.exports = { decrypt, encrypt };
+function decryptString(text /*: string */) /*: string */ {
+  var bytes = Crypto.AES.decrypt(text, ENCRYPTION_KEY);
+  var plaintext = bytes.toString(Crypto.enc.Utf8);
+
+  return plaintext;
+}
+
+function encryptObject(object /*: Object */) /*: Object */ {
+  return Crypto.AES.encrypt(JSON.stringify(object), ENCRYPTION_KEY);
+}
+
+function decryptObject(text /*: string */) /*: Object */ {
+  var bytes = Crypto.AES.decrypt(text.toString(), ENCRYPTION_KEY);
+  var decryptedObject = JSON.parse(bytes.toString(Crypto.enc.Utf8));
+
+  return decryptedObject;
+}
+
+module.exports = { decryptString, encryptString, decryptObject, encryptObject };
