@@ -71,16 +71,15 @@ class MessagesWithData extends React.Component<Props, State> {
     offerScrollDown: false,
   };
 
-  showScrollDown(scrollHeight, clientHeight, scrollTop) {
-    return scrollTop + clientHeight + 200 < scrollHeight;
-  }
-
   handleScroll(e) {
     const { scrollHeight, clientHeight, scrollTop } = e.target;
-    if (this.showScrollDown(scrollHeight, clientHeight, scrollTop)) {
-      this.setState && this.setState({ offerScrollDown: true });
+    if (
+      scrollTop + clientHeight + 200 < scrollHeight &&
+      !this.props.isLoading
+    ) {
+      this.setState({ offerScrollDown: true });
     } else {
-      this.setState && this.setState({ offerScrollDown: false });
+      this.setState({ offerScrollDown: false });
     }
   }
 
