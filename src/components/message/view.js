@@ -74,6 +74,7 @@ type QuotedMessageProps = {
 };
 
 type QuotedMessageState = {
+  isShort: boolean,
   isExpanded: boolean,
 };
 
@@ -81,17 +82,35 @@ export class QuotedMessage extends React.Component<
   QuotedMessageProps,
   QuotedMessageState
 > {
-  state = {
-    isExpanded: false,
-  };
+  constructor(props: QuotedMessageProps) {
+    super(props);
+
+    const jsonBody = JSON.parse(props.message.content.body);
+    const isShort =
+      jsonBody.blocks.length === 1 ||
+      toPlainText(toState(jsonBody)).length <= 170;
+
+    this.state = {
+      isShort,
+      isExpanded: isShort,
+    };
+  }
+
+  shouldComponentUpdate(
+    nextProps: QuotedMessageProps,
+    nextState: QuotedMessageState
+  ) {
+    return nextState.isExpanded !== this.state.isExpanded;
+  }
 
   toggle = () => {
+    if (this.state.isShort) return;
     this.setState(prev => ({ isExpanded: !prev.isExpanded }));
   };
 
   render() {
     const { message, openGallery } = this.props;
-    const { isExpanded } = this.state;
+    const { isExpanded, isShort } = this.state;
     return (
       <QuoteWrapper
         expanded={isExpanded}
