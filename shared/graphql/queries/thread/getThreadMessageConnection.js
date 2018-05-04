@@ -69,6 +69,13 @@ export const getThreadMessageConnectionOptions = {
       }
     }
 
+    if (props.isWatercooler) {
+      variables.before = null;
+      variables.after = null;
+      //$FlowFixMe
+      variables.last = 50;
+    }
+
     return {
       variables,
       fetchPolicy: 'cache-and-network',
