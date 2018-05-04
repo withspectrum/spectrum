@@ -372,6 +372,7 @@ export const QuoteWrapperGradient = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
+  border-radius: 0 0 12px 12px;
 `;
 
 export const QuoteWrapper = styled.div`
