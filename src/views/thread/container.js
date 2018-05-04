@@ -326,9 +326,10 @@ class ThreadContainer extends React.Component<Props, State> {
         isCommunityOwner ||
         isChannelModerator ||
         isCommunityModerator;
-      const isParticipantOrAuthor =
+      const hasViewedThreadBefore =
         currentUser &&
-        (isAuthor ||
+        (thread.currentUserLastSeen ||
+          isAuthor ||
           (participants &&
             participants.length > 0 &&
             participants.some(
@@ -507,8 +508,8 @@ class ThreadContainer extends React.Component<Props, State> {
                     forceScrollToBottom={this.forceScrollToBottom}
                     forceScrollToTop={this.forceScrollToTop}
                     contextualScrollToBottom={this.contextualScrollToBottom}
-                    shouldForceScrollOnMessageLoad={isParticipantOrAuthor}
-                    shouldForceScrollToTopOnMessageLoad={!isParticipantOrAuthor}
+                    shouldForceScrollOnMessageLoad={hasViewedThreadBefore}
+                    shouldForceScrollToTopOnMessageLoad={!hasViewedThreadBefore}
                     hasMessagesToLoad={thread.messageCount > 0}
                     isModerator={isModerator}
                     threadIsLocked={isLocked}
