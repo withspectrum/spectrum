@@ -3,7 +3,7 @@ const { db } = require('./db');
 import type { DBCommunitySettings, DBCommunity } from 'shared/types';
 import { getCommunityById } from './community';
 import axios from 'axios';
-import { decrypt } from 'shared/encryption';
+import { decryptString } from 'shared/encryption';
 
 const defaultSettings = {
   brandedLogin: {
@@ -243,7 +243,7 @@ export const getSlackPublicChannelList = (
   token: string
 ) => {
   if (!token) return [];
-  const decryptedToken = decrypt(token);
+  const decryptedToken = decryptString(token);
 
   return axios
     .get(
@@ -263,7 +263,7 @@ export const getSlackPrivateChannelList = (
   token: ?string
 ) => {
   if (!token) return [];
-  const decryptedToken = decrypt(token);
+  const decryptedToken = decryptString(token);
 
   return axios
     .get(

@@ -3,17 +3,17 @@ import { Router } from 'express';
 import UserError from '../../utils/UserError';
 import { generateOAuthToken } from '../../models/slackImport';
 import { updateSlackSettingsAfterConnection } from '../../models/communitySettings';
-import { encrypt } from 'shared/encryption';
+import { encryptString } from 'shared/encryption';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 
 const slackRouter = Router();
 
 const constructInput = (data: any, connectedBy: string) => {
-  const token = encrypt(data.access_token);
-  const teamName = encrypt(data.team_name);
-  const teamId = encrypt(data.team_id);
-  const scope = encrypt(data.scope);
+  const token = encryptString(data.access_token);
+  const teamName = encryptString(data.team_name);
+  const teamId = encryptString(data.team_id);
+  const scope = encryptString(data.scope);
 
   return {
     token,

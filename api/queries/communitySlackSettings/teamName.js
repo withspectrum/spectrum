@@ -1,7 +1,7 @@
 // @flow
 import type { DBCommunitySettings } from 'shared/types';
 import type { GraphQLContext } from '../../';
-import { decrypt } from 'shared/encryption';
+import { decryptString } from 'shared/encryption';
 
 export default async (
   { slackSettings }: DBCommunitySettings,
@@ -9,6 +9,6 @@ export default async (
   { loaders }: GraphQLContext
 ) => {
   return slackSettings && slackSettings.teamName
-    ? decrypt(slackSettings.teamName)
+    ? decryptString(slackSettings.teamName)
     : null;
 };
