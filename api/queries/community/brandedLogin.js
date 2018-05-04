@@ -8,6 +8,7 @@ export default async (
   { loaders }: GraphQLContext
 ) => {
   return await loaders.communitySettings.load(id).then(settings => {
+    if (!settings) return null;
     return settings.brandedLogin;
   });
 };
