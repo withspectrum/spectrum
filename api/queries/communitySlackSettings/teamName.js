@@ -8,5 +8,7 @@ export default async (
   _: any,
   { loaders }: GraphQLContext
 ) => {
-  return slackSettings ? decrypt(slackSettings.teamName) : null;
+  return slackSettings && slackSettings.teamName
+    ? decrypt(slackSettings.teamName)
+    : null;
 };

@@ -244,6 +244,7 @@ export const getSlackPublicChannelList = (
 ) => {
   if (!token) return [];
   const decryptedToken = decrypt(token);
+
   return axios
     .get(
       `https://slack.com/api/channels.list?token=${decryptedToken}&exclude_archived=true&exclude_members=true`
@@ -263,6 +264,7 @@ export const getSlackPrivateChannelList = (
 ) => {
   if (!token) return [];
   const decryptedToken = decrypt(token);
+
   return axios
     .get(
       `https://slack.com/api/groups.list?token=${decryptedToken}&exclude_archived=true&exclude_members=true`
