@@ -2,7 +2,15 @@
 require('now-env');
 var crypto = require('crypto');
 
-var ENCRYPTION_KEY = process.env.ENCRYPTION_KEY; // Must be 256 bytes (32 characters)
+var ENCRYPTION_KEY =
+  process.env.NODE_ENV === 'development'
+    ? 'abcdefghijklmnopqrstuvwxyzasdfjk'
+    : process.env.ENCRYPTION_KEY; // Must be 256 bytes (32 characters)
+if (!ENCRYPTION_KEY)
+  throw new Error(
+    'Looks like youre missing an encryption key for sensitive data!'
+  );
+
 var IV_LENGTH = 16; // For AES, this is always 16
 
 function encrypt(text /*: string */) /*: string */ {
