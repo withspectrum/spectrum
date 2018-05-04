@@ -3,10 +3,26 @@ import { Router } from 'express';
 import UserError from '../../utils/UserError';
 import { generateOAuthToken } from '../../models/slackImport';
 import { updateSlackSettingsAfterConnection } from '../../models/communitySettings';
+import { encrypt } from 'shared/encryption';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 
 const slackRouter = Router();
+
+const constructInput = (data: any, connectedBy: string) => {
+  const token = encrypt(data.access_token);
+  const teamName = encrypt(data.team_name);
+  const teamId = encrypt(data.team_id);
+  const scope = encrypt(data.scope);
+
+  return {
+    token,
+    teamName,
+    teamId,
+    connectedBy,
+    scope,
+  };
+};
 
 // TODO: Figure out how to type this properly
 slackRouter.get('/', (req: any, res: any) => {
@@ -21,17 +37,7 @@ slackRouter.get('/', (req: any, res: any) => {
   return generateOAuthToken(code, returnURI)
     .then(data => {
       if (!data) return new UserError('No token generated for this Slack team');
-      const token = data.access_token;
-      const teamName = data.team_name;
-      const teamId = data.team_id;
-      const scope = data.scope;
-      const input = {
-        token,
-        teamName,
-        teamId,
-        connectedBy,
-        scope,
-      };
+      const input = constructInput(data, connectedBy);
       return updateSlackSettingsAfterConnection(communityId, input);
     })
     .then(community => community.slug)
@@ -55,17 +61,7 @@ slackRouter.get('/onboarding', (req: any, res: any) => {
   return generateOAuthToken(code, returnURI)
     .then(data => {
       if (!data) return new UserError('No token generated for this Slack team');
-      const token = data.access_token;
-      const teamName = data.team_name;
-      const teamId = data.team_id;
-      const scope = data.scope;
-      const input = {
-        token,
-        teamName,
-        teamId,
-        connectedBy,
-        scope,
-      };
+      const input = constructInput(data, connectedBy);
       return updateSlackSettingsAfterConnection(communityId, input);
     })
     .then(community => community.id)
