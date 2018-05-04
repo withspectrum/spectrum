@@ -1,4 +1,4 @@
-const { encrypt } = require('../../shared/encryption');
+const { encryptString } = require('../../shared/encryption');
 
 exports.up = async (r, conn) => {
   const encryptOldSlackImportData = async () => {
@@ -8,9 +8,9 @@ exports.up = async (r, conn) => {
       .then(cursor => cursor.toArray());
 
     const recordPromises = records.map(async record => {
-      const teamId = encrypt(record.teamId);
-      const teamName = encrypt(record.teamName);
-      const token = encrypt(record.token);
+      const teamId = encryptString(record.teamId);
+      const teamName = encryptString(record.teamName);
+      const token = encryptString(record.token);
 
       return await r
         .table('slackImports')
@@ -34,10 +34,10 @@ exports.up = async (r, conn) => {
       .then(cursor => cursor.toArray());
 
     const recordPromises = records.map(async record => {
-      const teamId = encrypt(record.slackSettings.teamId);
-      const teamName = encrypt(record.slackSettings.teamName);
-      const token = encrypt(record.slackSettings.token);
-      const scope = encrypt(record.slackSettings.scope);
+      const teamId = encryptString(record.slackSettings.teamId);
+      const teamName = encryptString(record.slackSettings.teamName);
+      const token = encryptString(record.slackSettings.token);
+      const scope = encryptString(record.slackSettings.scope);
 
       return await r
         .table('communitySettings')
