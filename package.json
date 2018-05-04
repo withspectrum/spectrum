@@ -109,7 +109,6 @@
     "hpp": "^0.2.2",
     "imgix-core-js": "^1.0.6",
     "ioredis": "3.1.4",
-    "isomorphic-fetch": "^2.2.1",
     "jest": "22.4.3",
     "json-stringify-pretty-compact": "^1.0.4",
     "jsonwebtoken": "^8.0.1",
