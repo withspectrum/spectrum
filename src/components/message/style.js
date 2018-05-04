@@ -360,6 +360,19 @@ export const QuotedParagraph = Paragraph.withComponent('div').extend`
   }
 `;
 
+export const QuoteWrapperGradient = styled.div`
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0)
+  );
+  height: 2em;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+`;
+
 export const QuoteWrapper = styled.div`
   background: ${props => props.theme.bg.default};
   border-radius: 12px;
@@ -370,6 +383,10 @@ export const QuoteWrapper = styled.div`
   margin-left: -12px;
   margin-top: -4px;
   margin-bottom: 8px;
+  max-height: ${props => (props.expanded ? 'none' : '7em')};
+  overflow-y: hidden;
+  cursor: pointer;
+  position: relative;
 
   ${SvgWrapper} {
     margin-left: -3px;

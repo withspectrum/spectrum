@@ -12,6 +12,7 @@ import {
   ModActionWrapper,
   Time,
   QuoteWrapper,
+  QuoteWrapperGradient,
   QuotedParagraph,
 } from './style';
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
@@ -67,28 +68,53 @@ export const Body = (props: {
   }
 };
 
-export const QuotedMessage = (props: {
+type QuotedMessageProps = {
   message: MessageInfoType,
   openGallery?: Function,
-}) => {
-  const { message, openGallery } = props;
-  return (
-    <QuoteWrapper data-cy="quoted-message">
-      <Byline>
-        <Icon glyph="reply" size={16} />
-        <Name>{message.author.user.name}</Name>
-        <Username>@{message.author.user.username}</Username>
-      </Byline>
-      <Body
-        message={message}
-        showParent={false}
-        me={false}
-        openGallery={openGallery ? openGallery : () => {}}
-        bubble={false}
-      />
-    </QuoteWrapper>
-  );
 };
+
+type QuotedMessageState = {
+  isExpanded: boolean,
+};
+
+export class QuotedMessage extends React.Component<
+  QuotedMessageProps,
+  QuotedMessageState
+> {
+  state = {
+    isExpanded: false,
+  };
+
+  toggle = () => {
+    this.setState(prev => ({ isExpanded: !prev.isExpanded }));
+  };
+
+  render() {
+    const { message, openGallery } = this.props;
+    const { isExpanded } = this.state;
+    return (
+      <QuoteWrapper
+        expanded={isExpanded}
+        onClick={this.toggle}
+        data-cy="quoted-message"
+      >
+        <Byline>
+          <Icon glyph="reply" size={16} />
+          <Name>{message.author.user.name}</Name>
+          <Username>@{message.author.user.username}</Username>
+        </Byline>
+        <Body
+          message={message}
+          showParent={false}
+          me={false}
+          openGallery={openGallery ? openGallery : () => {}}
+          bubble={false}
+        />
+        {!isExpanded && <QuoteWrapperGradient />}
+      </QuoteWrapper>
+    );
+  }
+}
 
 type ActionProps = {
   me: boolean,
