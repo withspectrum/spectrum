@@ -27,6 +27,7 @@ type Props = {
 };
 type State = {
   communityName: string,
+  threadWasDeleted: boolean,
 };
 
 const sortThreads = (entities, currentUser) => {
@@ -65,19 +66,22 @@ const ThreadCreated = compose(getThreadById, displayLoadingCard)(
 */
 
 export class NewThreadNotification extends React.Component<Props, State> {
-  constructor() {
-    super();
-
-    this.state = {
-      communityName: '',
-    };
-  }
+  state = {
+    communityName: '',
+    threadWasDeleted: false,
+  };
 
   setCommunityName = (name: string) => this.setState({ communityName: name });
 
+  markAsDeleted = () => {
+    this.setState({ threadWasDeleted: true });
+  };
+
   render() {
     const { notification, currentUser } = this.props;
-    const { communityName } = this.state;
+    const { communityName, threadWasDeleted } = this.state;
+
+    if (threadWasDeleted) return null;
 
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context);
@@ -104,6 +108,7 @@ export class NewThreadNotification extends React.Component<Props, State> {
                 return (
                   <ThreadCreated
                     setName={this.setCommunityName}
+                    markAsDeleted={this.markAsDeleted}
                     key={thread.id}
                     id={thread.id}
                   />
@@ -123,13 +128,15 @@ class MiniNewThreadNotificationWithMutation extends React.Component<
   Props,
   State
 > {
-  constructor() {
-    super();
+  state = {
+    communityName: '',
+    threadWasDeleted: false,
+  };
 
-    this.state = {
-      communityName: '',
-    };
-  }
+  markAsDeleted = () => {
+    this.setState({ threadWasDeleted: true });
+    this.markAsSeen();
+  };
 
   markAsSeen = () => {
     const {
@@ -147,7 +154,9 @@ class MiniNewThreadNotificationWithMutation extends React.Component<
 
   render() {
     const { notification, currentUser } = this.props;
-    const { communityName } = this.state;
+    const { communityName, threadWasDeleted } = this.state;
+
+    if (threadWasDeleted) return null;
 
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context);
@@ -175,6 +184,7 @@ class MiniNewThreadNotificationWithMutation extends React.Component<
               {threads.map(thread => {
                 return (
                   <ThreadCreated
+                    markAsDeleted={this.markAsDeleted}
                     setName={this.setCommunityName}
                     key={thread.id}
                     id={thread.id}
