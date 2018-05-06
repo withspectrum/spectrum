@@ -1,7 +1,9 @@
 // @flow
+console.log('Hyperion starting...');
 const debug = require('debug')('hyperion');
-debug('Hyperion starting...');
 debug('logging with debug enabled');
+// $FlowFixMe
+require('isomorphic-fetch');
 import express from 'express';
 import Loadable from 'react-loadable';
 import path from 'path';
@@ -146,7 +148,7 @@ process.on('uncaughtException', async err => {
 
 Loadable.preloadAll().then(() => {
   app.listen(PORT);
-  debug(
+  console.log(
     `Hyperion, the server-side renderer, running at http://localhost:${PORT}`
   );
 });
