@@ -120,7 +120,7 @@ export const Spinner = styled.span`
           : props.theme.brand.alt};
     border-top-color: transparent;
     border-right-color: ${props =>
-      props.color ? `props.theme.${props.color}` : props.theme.brand.alt};
+      props.color ? eval(`props.theme.${props.color}`) : props.theme.brand.alt};
     border-bottom-color: transparent;
     animation: ${spin} 2s linear infinite;
   }
