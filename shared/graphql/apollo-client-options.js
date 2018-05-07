@@ -1,7 +1,8 @@
+// @flow
 var apollo = require('apollo-utilities'),
   toIdValue = apollo.toIdValue;
 
-function dataIdFromObject(result) {
+function dataIdFromObject(result: any) {
   if (result.__typename) {
     // Custom Community cache key based on slug
     if (result.__typename === 'Community' && !!result.slug) {
@@ -35,17 +36,17 @@ var getSharedApolloClientOptions = function getSharedApolloClientOptions() {
     dataIdFromObject: dataIdFromObject,
     cacheRedirects: {
       Query: {
-        thread: function thread(_, _ref) {
+        thread: function thread(_: any, _ref: any) {
           var id = _ref.id;
           return toIdValue(dataIdFromObject({ __typename: 'Thread', id: id }));
         },
-        community: function community(_, _ref2) {
+        community: function community(_: any, _ref2: any) {
           var slug = _ref2.slug;
           return toIdValue(
             dataIdFromObject({ __typename: 'Community', slug: slug })
           );
         },
-        channel: function channel(_, _ref3) {
+        channel: function channel(_: any, _ref3: any) {
           var channelSlug = _ref3.channelSlug,
             communitySlug = _ref3.communitySlug;
           return toIdValue(
