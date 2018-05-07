@@ -3,10 +3,18 @@ import * as React from 'react';
 import { track } from 'src/helpers/events';
 import Section from 'src/components/themedSection';
 import PageFooter from '../components/footer';
+import Link from 'src/components/link';
 import Icon from 'src/components/icons';
-import { Discover } from 'src/components/illustrations';
+import {
+  Discover,
+  Easy,
+  Happy,
+  Impact,
+  Ideas,
+} from 'src/components/illustrations';
 import { Wrapper } from '../style';
 import { Content, Heading, Subhead, Copy } from '../pricing/style';
+import { Button } from 'src/components/buttons';
 import {
   Intro,
   TextContent,
@@ -17,6 +25,9 @@ import {
   FeatureName,
   FeatureCopy,
   Topic,
+  EtcFeature,
+  EtcGrid,
+  EtcName,
 } from './style';
 import type { ContextRouter } from 'react-router';
 
@@ -46,11 +57,14 @@ class Features extends React.Component<Props, State> {
                 Spectrum was built from the ground up to make building an online
                 community easy.
               </Copy>
-              <Copy>
+              <Copy style={{ marginBottom: '32px' }}>
                 We give you a powerful set of tools to grow your community
                 organically, moderate it effectively, and measure its ROI for
                 your organization.
               </Copy>
+              <Link to={`/new/community`}>
+                <Button icon="welcome">Get started</Button>
+              </Link>
             </TextContent>
             <Waterfall src="https://spectrum.imgix.net/marketing/waterfall.png?h=0.25&dpr=2&auto=compress,format" />
           </Intro>
@@ -58,21 +72,21 @@ class Features extends React.Component<Props, State> {
         <Section background={'brand'} goop={3} color={'space.alt'}>
           <SectionGrid reverse>
             <Topic>
-              <Discover />
+              <Easy />
             </Topic>
             <FeatureList>
               <Heading reverse>
                 Growing your community has never been so easy.
               </Heading>
               <Feature>
-                <Icon glyph="message-fill" size="48" />
-                <FeatureName>Finally, chat that scales with you</FeatureName>
+                <Icon glyph="message" size="48" />
+                <FeatureName>Finally, chat that scales</FeatureName>
                 <FeatureCopy>
-                  <p>
+                  {/* <p>
                     Live chat has become the obvious solution for building
                     communities, but most platforms quickly get noisy and
                     distracting when they start to grow.
-                  </p>
+                  </p> */}
                   <p>
                     We've taken the best features of modern chat platforms and
                     old-school forums and smashed them together into a format
@@ -82,25 +96,29 @@ class Features extends React.Component<Props, State> {
                 </FeatureCopy>
               </Feature>
               <Feature>
-                <Icon glyph="view-fill" size="48" />
-                <FeatureName>
-                  Search, share, or save threads for later
-                </FeatureName>
+                <Icon glyph="link" size="48" />
+                <FeatureName>Location, location, location</FeatureName>
                 <FeatureCopy>
-                  Conversations on Spectrum are public by default which makes it
-                  easy for new members to find your community right when they
-                  need it.
+                  <p>
+                    Conversations and communities on Spectrum are public,
+                    permalinked, and search engine optimized by default which
+                    makes it easy for new members to find and join your
+                    community.
+                  </p>
+                  {/* <p>
+                    It's easy to drive growth by sharing on social media, getting discovered through a search engine, or linking to your community from your app or website.
+                  </p> */}
                 </FeatureCopy>
               </Feature>
               <Feature>
-                <Icon glyph="profile-fill" size="48" />
+                <Icon glyph="profile" size="48" />
                 <FeatureName>Every community, only one account</FeatureName>
                 <FeatureCopy>
-                  <p>
+                  {/* <p>
                     Communities built on forums and team chat tend to require a
                     unique account for each community you join, increasing
                     friction for new members.
-                  </p>
+                  </p> */}
                   <p>
                     Skip managing multiple credentials and playing whack-a-mole
                     with DMs and notifications, Spectrum lets you join as many
@@ -114,20 +132,24 @@ class Features extends React.Component<Props, State> {
         <Section background={'bright'} goop={2} color={'bg.default'}>
           <SectionGrid>
             <Topic>
-              <Discover />
+              <Happy />
             </Topic>
             <FeatureList>
-              <Heading reverse>
-                Efficient, powerful moderation tools for any size of community
-              </Heading>
+              <Heading reverse>Keep your community happy and healthy.</Heading>
               <Feature>
-                <Icon glyph="like-fill" size="48" />
-                <FeatureName>Granular controls</FeatureName>
+                <Icon glyph="controls" size="48" />
+                <FeatureName>
+                  Granular controls for nuanced situations
+                </FeatureName>
                 <FeatureCopy>
                   <p>
                     We give you fine-grained solutions to moderation issues via
                     individual locking, blocking, and deletion controls for each
                     thread, message, and member in your community.
+                  </p>
+                  <p>
+                    We also give every community automated toxicity monitoring
+                    and spam prevention by default.
                   </p>
                 </FeatureCopy>
               </Feature>
@@ -150,10 +172,6 @@ class Features extends React.Component<Props, State> {
                 </FeatureName>
                 <FeatureCopy>
                   <p>
-                    Every community gets built-in toxicity monitoring and spam
-                    prevention by default.
-                  </p>
-                  <p>
                     Identifying a problem is one thing, but it can still be hard
                     to know how to act on a moderation issue. SAM (Spectrum
                     Assistant Moderator) helps you make those decisions by
@@ -169,12 +187,12 @@ class Features extends React.Component<Props, State> {
         <Section goop={6} color={'bg.reverse'}>
           <SectionGrid reverse>
             <Topic>
-              <Discover />
+              <Impact />
             </Topic>
             <FeatureList>
-              <Heading>Measure your impact, not your usage.</Heading>
+              <Heading>Focus on impact, not usage.</Heading>
               <Feature>
-                <Icon glyph="view-fill" size="48" />
+                <Icon glyph="like" size="48" />
                 <FeatureName>Understand your community's health</FeatureName>
                 <FeatureCopy>
                   <p>
@@ -190,8 +208,10 @@ class Features extends React.Component<Props, State> {
                 </FeatureCopy>
               </Feature>
               <Feature>
-                <Icon glyph="profile-fill" size="48" />
-                <FeatureName comingSoon>Connect the dots</FeatureName>
+                <Icon glyph="view" size="48" />
+                <FeatureName comingSoon bright>
+                  Connect the dots
+                </FeatureName>
                 <FeatureCopy>
                   <p>
                     With Spectrum integrations, your community can go beyond
@@ -201,15 +221,15 @@ class Features extends React.Component<Props, State> {
                 </FeatureCopy>
               </Feature>
               <Feature>
-                <Icon glyph="view-fill" size="48" />
-                <FeatureName comingSoon>
+                <Icon glyph="analytics" size="48" />
+                <FeatureName comingSoon bright>
                   Visualize your community's ROI
                 </FeatureName>
                 <FeatureCopy>
                   <p>
-                    With Business Analytics, you can connect your user data to
-                    your community's member IDs and correlate member activity to
-                    customer success metrics.
+                    With Business Analytics, you can connect your user accounts
+                    to your community and correlate member activity directly to
+                    key customer success metrics.
                   </p>
                   <p>
                     See how member engagement directly impacts customer LTV,
@@ -223,29 +243,29 @@ class Features extends React.Component<Props, State> {
         <Section background={'reverse'} goop={5} color={'bg.default'}>
           <SectionGrid>
             <Topic>
-              <Discover />
+              <Ideas />
             </Topic>
             <FeatureList>
-              <Heading reverse>Build a direct pipeline to your users.</Heading>
+              <Heading reverse>
+                Connect with your customers on a whole new level
+              </Heading>
               <Feature>
-                <Icon glyph="message-fill" size="48" />
+                <Icon glyph="support" size="48" />
                 <FeatureName>A support center with no off switch</FeatureName>
                 <FeatureCopy>
                   <p>
-                    Support chat and ticket systems can make it hard to provide
-                    support efficiently - especially at scale.
+                    1:1 support chat and ticket systems can make it hard to
+                    provide help to users efficiently - especially at scale.
                   </p>
                   <p>
-                    Spectrum helps you and your users address issues globally
-                    and searchably without the extra duplicated effort.
+                    Spectrum enables you and your users to address issues
+                    globally and searchably without the extra duplicated effort.
                   </p>
                 </FeatureCopy>
               </Feature>
               <Feature>
-                <Icon glyph="view-fill" size="48" />
-                <FeatureName>
-                  Actionable feedback that doesn't expire
-                </FeatureName>
+                <Icon glyph="idea" size="48" />
+                <FeatureName>Collect actionable feedback and ideas</FeatureName>
                 <FeatureCopy>
                   <p>
                     Spectrum's great for collecting feature requests and user
@@ -260,7 +280,7 @@ class Features extends React.Component<Props, State> {
                 </FeatureCopy>
               </Feature>
               <Feature>
-                <Icon glyph="profile-fill" size="48" />
+                <Icon glyph="friend" size="48" />
                 <FeatureName>
                   Develop and support your strongest advocates
                 </FeatureName>
@@ -275,30 +295,58 @@ class Features extends React.Component<Props, State> {
             </FeatureList>
           </SectionGrid>
         </Section>
-        <Section background={'illustrated'} goop={4} color={'bg.reverse'}>
-          <Content>
-            <Heading>Safety first.</Heading>
-            <Copy>
-              Every single community agrees to moderate according to Spectrum's
-              open-source{' '}
-              <a href="https://github.com/withspectrum/code-of-conduct">
-                Code of Conduct
-              </a>{' '}
-              right off the bat. Keeping our members safe and our conversations
-              constructive is key to our mission.
-            </Copy>
-            <Copy>
-              We're not ad-driven, so we don't need to allow bots and troll
-              accounts like other platforms. We're happy to help you figure out
-              the best solution to any moderation issue and we provide granular
-              locking, blocking, and deletion controls.
-            </Copy>
-            <Subhead>Get the whole team involved.</Subhead>
-            <Copy>
-              Need an extra set of hands to help your community grow or stay on
-              top of user activity? We offer additional moderator seats as well.
-            </Copy>
-          </Content>
+        <Section background={'default'} goop={4} color={'bg.reverse'}>
+          <EtcGrid>
+            <Heading>...and a whole lot more</Heading>
+            <EtcFeature color="success.alt">
+              <Icon glyph="thread" />
+              <EtcName>Unlimited chat</EtcName>
+            </EtcFeature>
+            <EtcFeature color="space.default">
+              <Icon glyph="member-add" />
+              <EtcName>Unlimited members</EtcName>
+            </EtcFeature>
+            <EtcFeature color="brand.alt">
+              <Icon glyph="search" />
+              <EtcName>Search-indexed threads</EtcName>
+            </EtcFeature>
+            <EtcFeature color="text.alt">
+              <Icon glyph="welcome" />
+              <EtcName>Brandable signup page</EtcName>
+            </EtcFeature>
+            <EtcFeature color="special.default">
+              <Icon glyph="community" />
+              <EtcName>Public community</EtcName>
+            </EtcFeature>
+            <EtcFeature color="warn.alt">
+              <Icon glyph="private-outline" />
+              <EtcName>Secure, private channels</EtcName>
+            </EtcFeature>
+            <EtcFeature color="special.alt">
+              <Icon glyph="slack" />
+              <EtcName>Slack bot + team import</EtcName>
+            </EtcFeature>
+            <EtcFeature color="success.default">
+              <Icon glyph="email" />
+              <EtcName>Email member invitations</EtcName>
+            </EtcFeature>
+            <EtcFeature color="brand.alt">
+              <Icon glyph="home" />
+              <EtcName>Unified Home feed</EtcName>
+            </EtcFeature>
+            <EtcFeature color="success.default">
+              <Icon glyph="message" />
+              <EtcName>Single DM inbox</EtcName>
+            </EtcFeature>
+            <EtcFeature color="space.default">
+              <Icon glyph="notification" />
+              <EtcName>Combined notification feed</EtcName>
+            </EtcFeature>
+            <EtcFeature color="warn.default">
+              <Icon glyph="explore" />
+              <EtcName>Curated Explore page</EtcName>
+            </EtcFeature>
+          </EtcGrid>
         </Section>
         <PageFooter />
       </Wrapper>
