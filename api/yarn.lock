@@ -3191,6 +3191,10 @@ graphql-cost-analysis@^0.1.1:
   dependencies:
     selectn "^1.1.2"
 
+graphql-crunch@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/graphql-crunch/-/graphql-crunch-1.1.2.tgz#8c8e686d1cb92b55f779fdf902c99ac644280c15"
+
 graphql-date@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/graphql-date/-/graphql-date-1.0.3.tgz#31ce05ae40ed8c8ceb040364060109771e712e91"

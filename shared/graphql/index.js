@@ -6,15 +6,16 @@ import {
   InMemoryCache,
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory';
-import { split } from 'apollo-link';
+import { split, ApolloLink } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
+import { uncrunch } from 'graphql-crunch';
 import introspectionQueryResultData from './schema.json';
 import getSharedApolloClientOptions from './apollo-client-options';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 // In production the API is at the same URL, in development it's at a different port
-const API_URI = IS_PROD ? '/api' : 'http://localhost:3001/api';
+const API_URI = IS_PROD ? '/api?crunch' : 'http://localhost:3001/api?crunch';
 
 // @see: https://github.com/facebook/react-native/issues/9599
 if (typeof global.self === 'undefined') {
@@ -76,13 +77,28 @@ export const createClient = (options?: CreateClientOptions = {}) => {
     },
   });
 
-  // HTTP Link for queries and mutations including file uploads
-  const httpLink = retryLink.concat(
-    createUploadLink({
-      uri: API_URI,
-      credentials: 'include',
-      headers,
+  const uncruncher = new ApolloLink((operation, forward) =>
+    forward(operation).map(response => {
+      const { data } = response;
+      try {
+        response.data = uncrunch(data);
+      } catch (err) {
+        console.error(err);
+        response.data = data;
+      }
+      return response;
     })
+  );
+
+  // HTTP Link for queries and mutations including file uploads
+  const httpLink = uncruncher.concat(
+    retryLink.concat(
+      createUploadLink({
+        uri: API_URI,
+        credentials: 'include',
+        headers,
+      })
+    )
   );
 
   // Switch between the two links based on operation
