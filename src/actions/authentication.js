@@ -1,4 +1,4 @@
-import { track } from '../helpers/events';
+import { track, setUser, unsetUser } from '../helpers/events';
 import { removeItemFromStorage, storeItem } from '../helpers/localStorage';
 import Raven from 'raven-js';
 
@@ -6,6 +6,10 @@ export const logout = dispatch => {
   track('user', 'sign out', null);
   // clear localStorage
   removeItemFromStorage('spectrum');
+
+  // no longer track analytics
+  unsetUser();
+
   import('shared/graphql')
     .then(module => module.clearApolloStore)
     .then(clearApolloStore => {
@@ -39,6 +43,9 @@ export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
     website: user.website,
     totalReputation: user.totalReputation,
   };
+
+  // logs user id to analytics
+  setUser(user.id);
 
   // logs the user id to sentry errors
   Raven.setUserContext({ id: user.id });

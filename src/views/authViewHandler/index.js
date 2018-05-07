@@ -8,6 +8,7 @@ import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
 import { removeItemFromStorage } from '../../helpers/localStorage';
 import NewUserOnboarding from '../../views/newUserOnboarding';
+import { unsetUser } from 'src/helpers/events';
 
 type Props = {
   currentUser?: Object,
@@ -41,6 +42,7 @@ class AuthViewHandler extends React.Component<Props, State> {
 
     if (!user) {
       // clear localstorage first
+      unsetUser();
       return removeItemFromStorage('spectrum');
     }
 
