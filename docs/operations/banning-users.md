@@ -49,7 +49,7 @@ r.db('spectrum')
     .getAll(ID, { index: 'userId' })
     .filter(function (userCommunity) {
       return userCommunity('communityId').eq(channel('communityId'))
-        .and(userCommunity('isMember').eq(true))
+        .and(userCommunity('isOwner').eq(true))
     })
     .count().gt(0)
     .and(channel('isPrivate').eq(true))
