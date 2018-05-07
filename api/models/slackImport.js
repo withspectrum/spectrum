@@ -3,22 +3,32 @@ require('now-env');
 import axios from 'axios';
 const querystring = require('querystring');
 const { db } = require('./db');
-import { slackImportQueue } from 'shared/bull/queues';
 const IS_PROD = process.env.NODE_ENV === 'production';
 
 let SLACK_SECRET = process.env.SLACK_SECRET;
-if (!IS_PROD) {
-  SLACK_SECRET = SLACK_SECRET || 'asdf123';
+if (!SLACK_SECRET) {
+  SLACK_SECRET = process.env.SLACK_SECRET_DEVELOPMENT || 'asdf123';
 }
 
-export const generateOAuthToken = (code: string, redirect_uri: string) => {
+type SlackData = {
+  access_token: string,
+  team_id: string,
+  team_name: string,
+  scope: string,
+};
+
+export const generateOAuthToken = (
+  code: string,
+  redirect_uri: string
+): Promise<?SlackData> => {
   return axios
     .post(
       'https://slack.com/api/oauth.access',
       querystring.stringify({
         code: code,
-        scope: 'users:read.email,users:read,admin,chat:write',
-        client_id: '201769987287.200380534417',
+        scope:
+          'users:read.email,users:read,chat:write,bot,chat:write:bot,channels:read,groups:read',
+        client_id: '201769987287.271382863153',
         client_secret: SLACK_SECRET,
         redirect_uri,
       })
@@ -30,11 +40,12 @@ export const generateOAuthToken = (code: string, redirect_uri: string) => {
           access_token: response.data.access_token,
           team_id: response.data.team_id,
           team_name: response.data.team_name,
+          scope: response.data.scope,
         };
       }
     })
     .catch(error => {
-      console.log('\n\nerror', error);
+      console.error('\n\nerror', error);
       return null;
     });
 };
@@ -70,11 +81,6 @@ export const createSlackImportRecord = (input: CreateSlackImportType) => {
         .then(result => {
           // kick off a queue worker to get the member data from slack
           const data = result.changes[0].new_val;
-          const token = data.token;
-          const importId = data.id;
-
-          slackImportQueue.add({ token, importId });
-
           return data;
         });
     });

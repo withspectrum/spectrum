@@ -5,6 +5,7 @@ import channelInfoFragment, {
   type ChannelInfoType,
 } from '../../fragments/channel/channelInfo';
 import { getCommunityChannelConnectionQuery } from '../../queries/community/getCommunityChannelConnection';
+import { getCommunityChannelConnectionSlackSettingsQuery } from '../../queries/community/getCommunityChannelsSlackSettings';
 
 type CreateChannelInput = {
   communityId: string,
@@ -42,6 +43,12 @@ const createChannelOptions = {
         refetchQueries: [
           {
             query: getCommunityChannelConnectionQuery,
+            variables: {
+              id: input.communityId,
+            },
+          },
+          {
+            query: getCommunityChannelConnectionSlackSettingsQuery,
             variables: {
               id: input.communityId,
             },

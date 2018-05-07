@@ -96,6 +96,7 @@ describe('Community settings billing tab', () => {
       // create channel modal
       cy
         .get('[data-cy="create-channel-button"]')
+        .scrollIntoView()
         .should('be.visible')
         .click();
 
@@ -122,6 +123,7 @@ describe('Community settings billing tab', () => {
       // go to members tab
       cy
         .get(`[href="/${community.slug}/settings/members"]`)
+        .scrollIntoView()
         .should('be.visible')
         .click();
 
@@ -196,12 +198,14 @@ describe('Community settings billing tab', () => {
       // go to overview tab
       cy
         .get(`[href="/${community.slug}/settings"]`)
+        .scrollIntoView()
         .should('be.visible')
         .click();
 
       // create channel modal
       cy
         .get('[data-cy="create-channel-button"]')
+        .scrollIntoView()
         .should('be.visible')
         .click();
 
@@ -230,6 +234,7 @@ describe('Community settings billing tab', () => {
       // go to members tab
       cy
         .get(`[href="/${community.slug}/settings/members"]`)
+        .scrollIntoView()
         .should('be.visible')
         .click();
 
@@ -273,6 +278,7 @@ describe('Community settings billing tab', () => {
       cy.visit(`/${community.slug}/settings`);
       cy
         .get(`[href="/${community.slug}/settings/billing"]`)
+        .scrollIntoView()
         .should('be.visible')
         .click();
       cy

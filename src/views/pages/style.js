@@ -189,7 +189,7 @@ export const SignInButton = styled.a`
   ${props =>
     props.after &&
     `
-			margin: 24px 0;
+  		margin: 24px 0;
 
 			&:after {
 				content: 'Previously signed in with';

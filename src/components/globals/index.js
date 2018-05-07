@@ -343,8 +343,8 @@ const returnTooltip = props => {
             bottom: 100%;
             right: 0;
             transform: translateX(-100%);
-      	    border-bottom-width: 0;
-      	    border-top-color: ${
+            border-bottom-width: 0;
+            border-top-color: ${
               props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
             };
           }
@@ -359,8 +359,8 @@ const returnTooltip = props => {
             bottom: 100%;
             left: 0;
             transform: translateX(100%);
-      	    border-bottom-width: 0;
-      	    border-top-color: ${
+            border-bottom-width: 0;
+            border-top-color: ${
               props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
             };
           }
@@ -409,8 +409,8 @@ const returnTooltip = props => {
             top: 100%;
             right: 0;
             transform: translateX(-100%);
-      	    border-top-width: 0;
-      	    border-bottom-color: ${
+            border-top-width: 0;
+            border-bottom-color: ${
               props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
             };
           }
@@ -425,8 +425,8 @@ const returnTooltip = props => {
             top: 100%;
             left: 0;
             transform: translateX(100%);
-      	    border-top-width: 0;
-      	    border-bottom-color: ${
+            border-top-width: 0;
+            border-bottom-color: ${
               props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
             };
           }

@@ -359,6 +359,11 @@ export type StripeCardExpiringWarningJobData = {
   record: Object,
 };
 
+export type SendSlackInvitationsJobData = {
+  communityId: string,
+  userId: string,
+};
+
 export type Queues = {
   // athena
   sendThreadNotificationQueue: BullQueue<ThreadNotificationJobData>,
@@ -385,6 +390,7 @@ export type Queues = {
   sendMentionNotificationQueue: BullQueue<MentionNotificationJobData>,
   sendNotificationAsPushQueue: BullQueue<PushNotificationsJobData>,
   slackImportQueue: BullQueue<SlackImportJobData>,
+  sendSlackInvitationsQueue: BullQueue<SendSlackInvitationsJobData>,
 
   // hermes
   sendNewUserWelcomeEmailQueue: BullQueue<NewUserWelcomeEmailJobData>,

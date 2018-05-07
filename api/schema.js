@@ -20,7 +20,9 @@ const generalTypes = require('./types/general');
 
 const Thread = require('./types/Thread');
 const Channel = require('./types/Channel');
+const ChannelSlackSettings = require('./types/ChannelSlackSettings');
 const Community = require('./types/Community');
+const CommunitySlackSettings = require('./types/CommunitySlackSettings');
 const Message = require('./types/Message');
 const Reaction = require('./types/Reaction');
 const User = require('./types/User');
@@ -43,6 +45,8 @@ const notificationQueries = require('./queries/notification');
 const metaQueries = require('./queries/meta');
 const searchQueries = require('./queries/search');
 const communityMemberQueries = require('./queries/communityMember');
+const communitySlackSettingsQueries = require('./queries/communitySlackSettings');
+const channelSlackSettingsQueries = require('./queries/channelSlackSettings');
 
 const messageMutations = require('./mutations/message');
 const threadMutations = require('./mutations/thread');
@@ -100,6 +104,8 @@ const resolvers = merge(
   metaQueries,
   searchQueries,
   communityMemberQueries,
+  communitySlackSettingsQueries,
+  channelSlackSettingsQueries,
   // mutations
   messageMutations,
   threadMutations,
@@ -131,8 +137,10 @@ const schema = makeExecutableSchema({
     generalTypes,
     Root,
     Community,
+    CommunitySlackSettings,
     CommunityMember,
     Channel,
+    ChannelSlackSettings,
     Thread,
     ThreadParticipant,
     Message,
@@ -148,7 +156,7 @@ const schema = makeExecutableSchema({
 });
 
 if (process.env.REACT_APP_MAINTENANCE_MODE === 'enabled') {
-  console.log('\n\n⚠️ ----MAINTENANCE MODE ENABLED----⚠️\n\n');
+  console.error('\n\n⚠️ ----MAINTENANCE MODE ENABLED----⚠️\n\n');
   addSchemaLevelResolveFunction(schema, () => {
     throw new UserError(
       "We're currently undergoing planned maintenance. We'll be back by 3pm UTC, please check https://twitter.com/withspectrum for ongoing updates!"

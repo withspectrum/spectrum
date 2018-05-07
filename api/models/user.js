@@ -266,70 +266,82 @@ const editUser = (input: EditUserInput, userId: string): Promise<DBUser> => {
 
       if (file || coverFile) {
         if (file && !coverFile) {
-          return uploadImage(file, 'users', user.id).then(profilePhoto => {
-            // update the user with the profilePhoto
-            return (
-              db
-                .table('users')
-                .get(user.id)
-                .update(
-                  {
-                    ...user,
-                    profilePhoto,
-                  },
-                  { returnChanges: 'always' }
-                )
-                .run()
-                // return the resulting user with the profilePhoto set
-                .then(result => {
-                  // if an update happened
-                  if (result.replaced === 1) {
-                    return result.changes[0].new_val;
-                  }
+          return uploadImage(file, 'users', user.id)
+            .then(profilePhoto => {
+              // update the user with the profilePhoto
+              return (
+                db
+                  .table('users')
+                  .get(user.id)
+                  .update(
+                    {
+                      ...user,
+                      profilePhoto,
+                    },
+                    { returnChanges: 'always' }
+                  )
+                  .run()
+                  // return the resulting user with the profilePhoto set
+                  .then(result => {
+                    // if an update happened
+                    if (result.replaced === 1) {
+                      return result.changes[0].new_val;
+                    }
 
-                  // an update was triggered from the client, but no data was changed
-                  if (result.unchanged === 1) {
-                    return result.changes[0].old_val;
-                  }
-                })
-            );
-          });
+                    // an update was triggered from the client, but no data was changed
+                    if (result.unchanged === 1) {
+                      return result.changes[0].old_val;
+                    }
+                  })
+              );
+            })
+            .catch(err => {
+              console.error(err);
+            });
         } else if (!file && coverFile) {
-          return uploadImage(coverFile, 'users', user.id).then(coverPhoto => {
-            // update the user with the profilePhoto
-            return (
-              db
-                .table('users')
-                .get(user.id)
-                .update(
-                  {
-                    ...user,
-                    coverPhoto,
-                  },
-                  { returnChanges: 'always' }
-                )
-                .run()
-                // return the resulting user with the profilePhoto set
-                .then(result => {
-                  // if an update happened
-                  if (result.replaced === 1) {
-                    return result.changes[0].new_val;
-                  }
+          return uploadImage(coverFile, 'users', user.id)
+            .then(coverPhoto => {
+              // update the user with the profilePhoto
+              return (
+                db
+                  .table('users')
+                  .get(user.id)
+                  .update(
+                    {
+                      ...user,
+                      coverPhoto,
+                    },
+                    { returnChanges: 'always' }
+                  )
+                  .run()
+                  // return the resulting user with the profilePhoto set
+                  .then(result => {
+                    // if an update happened
+                    if (result.replaced === 1) {
+                      return result.changes[0].new_val;
+                    }
 
-                  // an update was triggered from the client, but no data was changed
-                  if (result.unchanged === 1) {
-                    return result.changes[0].old_val;
-                  }
-                })
-            );
-          });
+                    // an update was triggered from the client, but no data was changed
+                    if (result.unchanged === 1) {
+                      return result.changes[0].old_val;
+                    }
+                  })
+              );
+            })
+            .catch(err => {
+              console.error(err);
+            });
         } else if (file && coverFile) {
           const uploadFile = file => {
-            return uploadImage(file, 'users', user.id);
+            return uploadImage(file, 'users', user.id).catch(err => {
+              console.error(err);
+            });
           };
 
           const uploadCoverFile = coverFile => {
-            return uploadImage(coverFile, 'users', user.id);
+            return uploadImage(coverFile, 'users', user.id).catch(err => {
+              console.error(err);
+            });
           };
 
           return Promise.all([
