@@ -716,7 +716,7 @@ class NewThread extends React.Component<Props, State> {
       loadingExistingThreadMessages,
       existingThreadWithMessages,
     } = this.state;
-    const { currentUser, hideOnMobile } = this.props;
+    const { currentUser, hideOnMobile, threads } = this.props;
 
     const { title, description } = generateMetaInfo({
       type: 'directMessage',
@@ -725,6 +725,8 @@ class NewThread extends React.Component<Props, State> {
         description: null,
       },
     });
+
+    const haveThreads = threads && threads.length > 0;
 
     return (
       <MessagesContainer hideOnMobile={hideOnMobile}>
@@ -832,12 +834,17 @@ class NewThread extends React.Component<Props, State> {
 
           {!existingThreadBasedOnSelectedUsers && (
             <Grow>
-              {!existingThreadWithMessages.id && (
+              {haveThreads && (
+                <NoThreads>
+                  <NullState icon="message" heading={`Send direct messages`} />
+                </NoThreads>
+              )}
+              {!haveThreads && (
                 <NoThreads>
                   <NullState
                     icon="message"
                     heading={`Send direct messages`}
-                    copy={`Direct messages are private conversations between you and anyone else, including groups. Search for a person above to send your first message.`}
+                    copy={`Direct messages are private conversations between you and anyone else, including groups. Search for a person above to start a new conversation.`}
                   />
                 </NoThreads>
               )}
