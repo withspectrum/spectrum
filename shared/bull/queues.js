@@ -72,6 +72,7 @@ import {
   SEND_PUSH_NOTIFICATIONS,
   SLACK_IMPORT,
   ADDED_AS_COMMUNITY_MODERATOR_NOTIFICATION,
+  SEND_SLACK_INVITIATIONS,
 } from 'athena/queues/constants';
 
 import { PROCESS_REPUTATION_EVENT } from 'mercury/constants';
@@ -97,6 +98,7 @@ exports.QUEUE_NAMES = {
   sendNotificationAsPushQueue: SEND_PUSH_NOTIFICATIONS,
   slackImportQueue: SLACK_IMPORT,
   sendAddedAsCommunityModeratorNotificationQueue: ADDED_AS_COMMUNITY_MODERATOR_NOTIFICATION,
+  sendSlackInvitationsQueue: SEND_SLACK_INVITIATIONS,
 
   // hermes - emails
   sendNewUserWelcomeEmailQueue: SEND_NEW_USER_WELCOME_EMAIL,

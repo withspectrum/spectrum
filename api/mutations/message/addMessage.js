@@ -1,17 +1,14 @@
 // @flow
-import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { EditorState } from 'draft-js';
+import { markdownToDraft } from 'markdown-draft-js';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';
-import { storeMessage } from '../../models/message';
+import { storeMessage, getMessage } from '../../models/message';
 import { setDirectMessageThreadLastActive } from '../../models/directMessageThread';
 import { setUserLastSeenInDirectMessageThread } from '../../models/usersDirectMessageThreads';
 import { createMemberInChannel } from '../../models/usersChannels';
-import {
-  createParticipantInThread,
-  createParticipantWithoutNotificationsInThread,
-} from '../../models/usersThreads';
+import { createParticipantInThread } from '../../models/usersThreads';
 import addCommunityMember from '../communityMember/addCommunityMember';
 import { trackUserThreadLastSeenQueue } from 'shared/bull/queues';
 import { toJSON } from 'shared/draft-utils';
@@ -25,6 +22,7 @@ type AddMessageInput = {
     content: {
       body: string,
     },
+    parentId?: string,
     file?: FileUpload,
   },
 };
@@ -55,9 +53,9 @@ export default async (
   }
 
   if (message.messageType === 'text') {
-    const contentState = stateFromMarkdown(message.content.body);
-    const editorState = EditorState.createWithContent(contentState);
-    message.content.body = JSON.stringify(toJSON(editorState));
+    message.content.body = JSON.stringify(
+      markdownToDraft(message.content.body)
+    );
     message.messageType = 'draftjs';
   }
 
@@ -86,6 +84,12 @@ export default async (
     }
   }
 
+  if (message.parentId) {
+    const parent = await getMessage(message.parentId);
+    if (parent.threadId !== message.threadId)
+      throw new UserError('You can only quote messages from the same thread.');
+  }
+
   // construct the shape of the object to be stored in the db
   let messageForDb = Object.assign({}, message);
   if (message.file && message.messageType === 'media') {
@@ -97,7 +101,12 @@ export default async (
       type: file.mimetype,
     };
 
-    const url = await uploadImage(file, 'threads', message.threadId);
+    let url;
+    try {
+      url = await uploadImage(file, 'threads', message.threadId);
+    } catch (err) {
+      return new UserError(err.message);
+    }
 
     if (!url)
       return new UserError(
@@ -172,17 +181,6 @@ export default async (
     );
   }
 
-  const participantPromise = async () => {
-    if (thread.watercooler) {
-      return await createParticipantWithoutNotificationsInThread(
-        message.threadId,
-        currentUser.id
-      );
-    } else {
-      return await createParticipantInThread(message.threadId, currentUser.id);
-    }
-  };
-
   // dummy async function that will run if the user is already a member of the
   // channel where the message is being sent
   let membershipPromise = async () => await {};
@@ -213,7 +211,7 @@ export default async (
   }
 
   return membershipPromise()
-    .then(() => participantPromise())
+    .then(() => createParticipantInThread(message.threadId, currentUser.id))
     .then(() => messagePromise())
     .then(dbMessage => {
       const contextPermissions = {

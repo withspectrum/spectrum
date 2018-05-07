@@ -152,8 +152,8 @@ export default (
   if (!promise) return Promise.resolve(generateMetaInfo());
 
   return promise.catch(err => {
-    console.log(`⚠️ Failed to load metadata for ${url}! ⚠️`);
-    console.log(err);
+    console.error(`⚠️ Failed to load metadata for ${url}! ⚠️`);
+    console.error(err);
     return generateMetaInfo();
   });
 };

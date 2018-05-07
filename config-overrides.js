@@ -16,6 +16,7 @@ const WriteFilePlugin = require('write-file-webpack-plugin');
 const { ReactLoadablePlugin } = require('react-loadable/webpack');
 const OfflinePlugin = require('offline-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const BundleBuddyWebpackPlugin = require('bundle-buddy-webpack-plugin');
 
 // Recursively walk a folder and get all file paths
 function walkFolder(currentDirPath, callback) {
@@ -147,11 +148,31 @@ module.exports = function override(config, env) {
       })
     );
   }
+  if (process.env.BUNDLE_BUDDY === 'true') {
+    config.plugins.push(new BundleBuddyWebpackPlugin());
+  }
   if (process.env.NODE_ENV === 'development') {
     config.plugins.push(
       WriteFilePlugin({
         // Don't match hot-update files
         test: /^((?!(hot-update)).)*$/g,
+      })
+    );
+  }
+  config.plugins.push(
+    new webpack.optimize.CommonsChunkPlugin({
+      minChunks: 3,
+      name: 'main',
+      async: 'commons',
+      children: true,
+    })
+  );
+  if (process.env.NODE_ENV === 'production') {
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'process.env': {
+          SENTRY_DSN_CLIENT: `"${process.env.SENTRY_DSN_CLIENT}"`,
+        },
       })
     );
   }

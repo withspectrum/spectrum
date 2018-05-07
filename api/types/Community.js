@@ -44,7 +44,7 @@ const Community = /* GraphQL */ `
 		channels: Int
 	}
 
-	type SlackImport {
+	type SlackImport @deprecated(reason: "Use the slack settings field instead") {
 		members: String
 		teamName: String
 		sent: Date
@@ -144,7 +144,6 @@ const Community = /* GraphQL */ `
     members(first: Int = 10, after: String, filter: MembersFilter): CommunityMembers! @cost(complexity: 5, multiplier: "first")
     threadConnection(first: Int = 10, after: String): CommunityThreadsConnection! @cost(complexity: 2, multiplier: "first")
     metaData: CommunityMetaData @cost(complexity: 10)
-    slackImport: SlackImport @cost(complexity: 2)
     invoices: [Invoice] @cost(complexity: 1)
 		recurringPayments: [RecurringPayment]
     isPro: Boolean @cost(complexity: 1)
@@ -154,11 +153,13 @@ const Community = /* GraphQL */ `
     topAndNewThreads: TopAndNewThreads @cost(complexity: 4)
 		watercooler: Thread
 		brandedLogin: BrandedLogin
+		slackSettings: CommunitySlackSettings @cost(complexity: 2)
 
 		hasFeatures: Features
 		hasChargeableSource: Boolean
 		billingSettings: CommunityBillingSettings
 
+		slackImport: SlackImport @cost(complexity: 2) @deprecated(reason: "Use slack settings field instead")
 		memberConnection(first: Int = 10, after: String, filter: MemberConnectionFilter): CommunityMembersConnection! @deprecated(reason:"Use the new Community.members type")
 		contextPermissions: ContextPermissions @deprecated(reason:"Use the new CommunityMember type to get permissions")
 	}
@@ -206,11 +207,6 @@ const Community = /* GraphQL */ `
 		file: Upload
 		coverFile: Upload
 		communityId: ID!
-	}
-
-	input SendSlackInvitesInput {
-		id: ID!
-		customMessage: String
 	}
 
 	input UpgradeCommunityInput {
@@ -268,12 +264,22 @@ const Community = /* GraphQL */ `
 		message: String
 	}
 
+	input ImportSlackMembersInput @deprecated(reason: "Slack imports are no longer used, invites sent directly with sendSlackInvites") {
+    id: String!
+  }
+
+	input SendSlackInvitesInput {
+		id: ID!
+		customMessage: String
+	}
+
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
 		editCommunity(input: EditCommunityInput!): Community
 		deleteCommunity(communityId: ID!): Boolean
 		toggleCommunityMembership(communityId: ID!): Community @deprecated(reason:"Use the new addCommunityMember or removeCommunityMember mutations")
 		sendSlackInvites(input: SendSlackInvitesInput!): Community
+		importSlackMembers(input: ImportSlackMembersInput!): Boolean @deprecated(reason:"Importing slack members is deprecated")
 		sendEmailInvites(input: EmailInvitesInput!): Boolean
 		pinThread(threadId: ID!, communityId: ID!, value: String): Community
 		upgradeCommunity(input: UpgradeCommunityInput!): Community @deprecated(reason:"Use feature level upgrade mutations like enableCommunityAnalytics")

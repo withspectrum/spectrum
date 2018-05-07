@@ -1,6 +1,5 @@
 // @flow
 import type { DBCommunity } from 'shared/types';
-import { getCommunitySettings } from '../../models/communitySettings';
 import type { GraphQLContext } from '../../';
 
 export default async (
@@ -9,6 +8,7 @@ export default async (
   { loaders }: GraphQLContext
 ) => {
   return await loaders.communitySettings.load(id).then(settings => {
+    if (!settings) return { isEnabled: null, message: null };
     return settings.brandedLogin;
   });
 };

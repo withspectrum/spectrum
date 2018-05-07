@@ -170,18 +170,6 @@ class MessagesWithData extends React.Component<Props, State> {
       const { edges, pageInfo } = data.thread.messageConnection;
       const unsortedMessages = edges.map(message => message.node);
 
-      const unique = array => {
-        const processed = [];
-        for (let i = array.length - 1; i >= 0; i--) {
-          if (processed.indexOf(array[i].id) < 0) {
-            processed.push(array[i].id);
-          } else {
-            array.splice(i, 1);
-          }
-        }
-        return array;
-      };
-
       const uniqueMessages = deduplicateChildren(unsortedMessages, 'id');
       const sortedMessages = sortAndGroupMessages(uniqueMessages);
 

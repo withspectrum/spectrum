@@ -146,7 +146,7 @@ const getStory = gql`
       ...frequencyInfo
     }
   }
-  ${userInfoFragment}
+  ${storyInfoFragment}
   ${frequencyInfoFragment}
 `;
 ```

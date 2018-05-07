@@ -14,6 +14,7 @@ import {
   fromPlainText,
   toJSON,
   toState,
+  isAndroid,
 } from 'shared/draft-utils';
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
@@ -74,17 +75,33 @@ type State = {
 
 const LS_BODY_KEY = 'last-thread-composer-body';
 const LS_TITLE_KEY = 'last-thread-composer-title';
+const LS_COMPOSER_EXPIRE = 'last-thread-composer-expire';
+
+const ONE_DAY = () => new Date().getTime() + 60 * 60 * 24 * 1000;
+
+const REMOVE_STORAGE = () => {
+  localStorage.removeItem(LS_BODY_KEY);
+  localStorage.removeItem(LS_TITLE_KEY);
+  localStorage.removeItem(LS_COMPOSER_EXPIRE);
+};
+
 let storedBody;
 let storedTitle;
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
 if (localStorage) {
   try {
-    storedBody = toState(JSON.parse(localStorage.getItem(LS_BODY_KEY) || ''));
-    storedTitle = localStorage.getItem(LS_TITLE_KEY);
+    const expireTime = localStorage.getItem(LS_COMPOSER_EXPIRE);
+    const currTime = new Date().getTime();
+    /////if current time is greater than valid till of text then please expire title/body back to ''
+    if (currTime > expireTime) {
+      REMOVE_STORAGE();
+    } else {
+      storedBody = toState(JSON.parse(localStorage.getItem(LS_BODY_KEY) || ''));
+      storedTitle = localStorage.getItem(LS_TITLE_KEY);
+    }
   } catch (err) {
-    localStorage.removeItem(LS_BODY_KEY);
-    localStorage.removeItem(LS_TITLE_KEY);
+    REMOVE_STORAGE();
   }
 }
 
@@ -92,12 +109,14 @@ const persistTitle =
   localStorage &&
   debounce((title: string) => {
     localStorage.setItem(LS_TITLE_KEY, title);
+    localStorage.setItem(LS_COMPOSER_EXPIRE, ONE_DAY());
   }, 500);
 
 const persistBody =
   localStorage &&
   debounce(body => {
     localStorage.setItem(LS_BODY_KEY, JSON.stringify(toJSON(body)));
+    localStorage.setItem(LS_COMPOSER_EXPIRE, ONE_DAY());
   }, 500);
 
 class ThreadComposerWithData extends React.Component<Props, State> {
@@ -506,7 +525,9 @@ class ThreadComposerWithData extends React.Component<Props, State> {
 
     const content = {
       title,
-      body: JSON.stringify(jsonBody),
+      // NOTE(@mxstbr): On Android we send the text as plain text and parse the raw
+      // markdown on the server
+      body: isAndroid() ? toPlainText(body) : JSON.stringify(jsonBody),
     };
 
     const attachments = [];
@@ -536,7 +557,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     const thread = {
       channelId,
       communityId,
-      type: 'DRAFTJS',
+      type: isAndroid() ? 'DRAFTJS' : 'TEXT',
       content,
       attachments,
       filesToUpload,
@@ -551,8 +572,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
         const id = data.publishThread.id;
 
         track('thread', 'published', null);
-        localStorage.removeItem(LS_TITLE_KEY);
-        localStorage.removeItem(LS_BODY_KEY);
+        REMOVE_STORAGE();
 
         // stop the loading spinner on the publish button
         this.setState({

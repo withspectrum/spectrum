@@ -28,6 +28,7 @@ const Message = /* GraphQL */ `
     author: ThreadParticipant! @cost(complexity: 2)
     reactions: ReactionData @cost(complexity: 1)
 		messageType: MessageTypes!
+    parent: Message
 
 		sender: User! @deprecated(reason:"Use Message.author field instead")
 	}
@@ -41,6 +42,7 @@ const Message = /* GraphQL */ `
 		threadType: ThreadTypes!
 		messageType: MessageTypes!
 		content: MessageContentInput!
+    parentId: String
 		file: Upload
 	}
 

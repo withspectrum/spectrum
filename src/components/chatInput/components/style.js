@@ -20,6 +20,7 @@ export const MediaLabel = styled.label`
   color: ${({ theme }) => theme.text.placeholder};
   height: 32px;
   width: 32px;
+  margin: 4px;
 
   &:hover {
     cursor: pointer;

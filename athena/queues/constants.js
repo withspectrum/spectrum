@@ -24,6 +24,7 @@ export const PRIVATE_CHANNEL_REQUEST_APPROVED =
 export const SEND_PUSH_NOTIFICATIONS = 'push notifications';
 export const ADDED_AS_COMMUNITY_MODERATOR_NOTIFICATION =
   'added as community moderator notification';
+export const SEND_SLACK_INVITIATIONS = 'send slack invitations';
 
 // invoices and recurring payments
 export const PRO_INVOICE_PAID_NOTIFICATION = 'pro invoice paid notification';
