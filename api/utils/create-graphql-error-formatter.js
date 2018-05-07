@@ -2,8 +2,8 @@
 const debug = require('debug')('api:utils:error-formatter');
 import Raven from 'shared/raven';
 import { IsUserError } from './UserError';
-import { print } from 'graphql';
 import type { GraphQLError } from 'graphql';
+import { getMessageFromErrorType } from 'shared/errors';
 
 const queryRe = /\s*(query|mutation)[^{]*/;
 
@@ -44,9 +44,11 @@ const createGraphQLErrorFormatter = (req?: express$Request) => (
   error: GraphQLError
 ) => {
   logGraphQLError(req, error);
+
   const isUserError = error.originalError
     ? error.originalError[IsUserError]
     : error[IsUserError];
+
   let sentryId = 'ID only generated in production';
   if (!isUserError) {
     if (process.env.NODE_ENV === 'production') {
@@ -56,8 +58,11 @@ const createGraphQLErrorFormatter = (req?: express$Request) => (
       );
     }
   }
+
   return {
-    message: isUserError ? error.message : `Internal server error: ${sentryId}`,
+    message: isUserError
+      ? getMessageFromErrorType(error.message)
+      : `Internal server error: ${sentryId}`,
     // Hide the stack trace in production mode
     stack:
       !process.env.NODE_ENV === 'production' ? error.stack.split('\n') : null,
