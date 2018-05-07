@@ -42,6 +42,8 @@
 		"API_TOKEN_SECRET": "@api-token-secret",
 		"SENTRY_DSN_CLIENT": "@sentry-dsn-client",
 		"SENTRY_DSN_SERVER": "@sentry-dsn-server",
-		"SPECTRUM_MODERATION_API_KEY": "@spectrum-moderation-api-key"
+		"SPECTRUM_MODERATION_API_KEY": "@spectrum-moderation-api-key",
+		"AMPLITUDE_API_KEY": "@amplitude-api-key",
+		"AMPLITUDE_API_KEY_DEVELOPMENT": "@amplitude-api-key-development"
 	}
 }
