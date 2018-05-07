@@ -154,6 +154,7 @@ class DirectMessages extends React.Component<Props, State> {
             setActiveThread={this.setActiveThread}
             hideOnMobile={!(isComposing || isViewingThread)}
             id={match.params.threadId && match.params.threadId}
+            threads={threads}
           />
         )}
       </View>

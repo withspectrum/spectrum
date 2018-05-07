@@ -1,7 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
 import { FlexCol, FlexRow } from '../../components/globals';
-import { NullState } from '../../components/upsell';
 
 export const View = styled.main`
   display: flex;
