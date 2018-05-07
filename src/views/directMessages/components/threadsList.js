@@ -73,7 +73,7 @@ class ThreadsList extends React.Component<Props, State> {
             <NullState
               icon="message"
               heading={`Send direct messages`}
-              copy={`Direct messages are private conversations between you and anyone else, including groups. Search for a person above to send your first message.`}
+              copy={`Direct messages are private conversations between you and anyone else, including groups. Search for a person above to start a new conversation.`}
             />
           </NoThreads>
           <NoThreads hideOnMobile>
