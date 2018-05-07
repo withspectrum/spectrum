@@ -2,7 +2,6 @@
 const debug = require('debug')('hyperion');
 debug('Hyperion starting...');
 debug('logging with debug enabled');
-// $FlowFixMe
 require('isomorphic-fetch'); // prevent https://github.com/withspectrum/spectrum/issues/3032
 import express from 'express';
 import Loadable from 'react-loadable';
