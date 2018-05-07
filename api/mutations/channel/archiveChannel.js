@@ -1,11 +1,20 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { getChannelById, archiveChannel } from '../../models/channel';
+import { archiveChannel } from '../../models/channel';
 import {
   isAuthedResolver as requireAuth,
   canModerateChannel,
 } from '../../utils/permissions';
+import { track, trackUserError } from 'shared/analytics';
+import * as events from 'shared/analytics/event-types';
+import * as errors from 'shared/errors/error-types';
+import {
+  analyticsChannel,
+  analyticsChannelPermissions,
+  analyticsCommunity,
+  analyticsCommunityPermissions,
+} from 'shared/analytics/transformations';
 
 export default requireAuth(
   async (
@@ -13,20 +22,62 @@ export default requireAuth(
     { input: { channelId } }: { input: { channelId: string } },
     { user, loaders }: GraphQLContext
   ) => {
+    // TODO: Figure out how to not have to do this - somehow combine forces with canModerateChannel function
+    // which is fetching most of the same data anyways
+    const channelToEvaluate = await loaders.channel.load(channelId);
+    const communityToEvaluate = await loaders.community.load(
+      channelToEvaluate.communityId
+    );
+    const [communityPermissions, channelPermissions] = await Promise.all([
+      loaders.userPermissionsInCommunity.load([
+        user.id,
+        communityToEvaluate.id,
+      ]),
+      loaders.userPermissionsInChannel.load([user.id, channelId]),
+    ]);
+
+    const eventProperties = {
+      channel: {
+        ...analyticsChannel(channelToEvaluate),
+        ...analyticsChannelPermissions(channelPermissions),
+      },
+      community: {
+        ...analyticsCommunity(communityToEvaluate),
+        ...analyticsCommunityPermissions(communityPermissions),
+      },
+    };
+
     if (!await canModerateChannel(user.id, channelId, loaders)) {
-      return new UserError('You don’t have permission to manage this channel');
+      trackUserError(
+        user.id,
+        errors.CHANNEL_ARCHIVED_FAILED_NO_PERMISSIONS,
+        eventProperties
+      );
+      return new UserError(errors.CHANNEL_ARCHIVED_FAILED_NO_PERMISSIONS);
     }
 
-    const channelToEvaluate = await getChannelById(channelId);
-
     if (channelToEvaluate.archivedAt) {
-      return new UserError('Channel already archived');
+      trackUserError(
+        user.id,
+        errors.CHANNEL_ARCHIVED_FAILED_ALREADY_ARCHIVED,
+        eventProperties
+      );
+      return new UserError(errors.CHANNEL_ARCHIVED_FAILED_ALREADY_ARCHIVED);
     }
 
     if (channelToEvaluate.slug === 'general') {
-      return new UserError("The general channel can't be archived");
+      trackUserError(
+        user.id,
+        errors.CHANNEL_ARCHIVED_FAILED_GENERAL,
+        eventProperties
+      );
+      return new UserError(errors.CHANNEL_ARCHIVED_FAILED_GENERAL);
     }
 
-    return await archiveChannel(channelId);
+    const archivedChannel = await archiveChannel(channelId);
+
+    track(user.id, events.CHANNEL_ARCHIVED, eventProperties);
+
+    return archivedChannel;
   }
 );

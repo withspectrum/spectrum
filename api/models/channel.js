@@ -317,7 +317,7 @@ const getChannelMemberCount = (channelId: string): number => {
     .run();
 };
 
-const archiveChannel = (channelId: string) => {
+const archiveChannel = (channelId: string): Promise<DBChannel> => {
   return db
     .table('channels')
     .get(channelId)
@@ -326,7 +326,7 @@ const archiveChannel = (channelId: string) => {
     .then(result => result.changes[0].new_val || result.changes[0].old_val);
 };
 
-const restoreChannel = (channelId: string) => {
+const restoreChannel = (channelId: string): Promise<DBChannel> => {
   return db
     .table('channels')
     .get(channelId)

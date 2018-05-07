@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
-import { track } from '../../../helpers/events';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import deleteCommunityMutation from 'shared/graphql/mutations/community/deleteCommunity';
@@ -23,6 +22,13 @@ import { modalStyles } from '../styles';
 import { Actions, Message } from './style';
 import cancelSubscription from 'shared/graphql/mutations/community/cancelSubscription';
 import disableCommunityAnalytics from 'shared/graphql/mutations/community/disableCommunityAnalytics';
+
+import { track } from 'src/helpers/events';
+import * as events from 'shared/analytics/event-types';
+import {
+  analyticsChannel,
+  analyticsCommunity,
+} from 'src/helpers/events/transformations';
 
 /*
   Generic component that should be used to confirm any 'delete' action.
@@ -50,6 +56,7 @@ type Props = {
     redirect?: ?string,
     message?: ?string,
     buttonLabel?: string,
+    extraProps?: Object,
   },
   deleteMessage: Function,
   deleteCommunity: Function,
@@ -229,6 +236,13 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
           });
       }
       case 'channel-archive': {
+        const { channel } = this.props.modalProps.extraProps;
+
+        track(events.CHANNEL_ARCHIVED, {
+          channel: analyticsChannel(channel),
+          community: analyticsCommunity(channel.community),
+        });
+
         return this.props
           .archiveChannel({ channelId: id })
           .then(() => {

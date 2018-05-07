@@ -11,6 +11,12 @@ import {
   SectionSubtitle,
   SectionCardFooter,
 } from '../../../components/settingsViews/style';
+import { track } from 'src/helpers/events';
+import * as events from 'shared/analytics/event-types';
+import {
+  analyticsChannel,
+  analyticsCommunity,
+} from 'src/helpers/events/transformations';
 
 type Props = {
   channel: GetChannelType,
@@ -19,6 +25,8 @@ type Props = {
 
 class Channel extends React.Component<Props> {
   initArchiveChannel = () => {
+    const { channel } = this.props;
+
     const message = (
       <div>
         <p>
@@ -28,17 +36,32 @@ class Channel extends React.Component<Props> {
       </div>
     );
 
+    track(events.CHANNEL_ARCHIVED_INITED, {
+      channel: analyticsChannel(channel),
+      community: analyticsCommunity(channel.community),
+    });
+
     return this.props.dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {
-        id: this.props.channel.id,
+        id: channel.id,
         entity: 'channel-archive',
         message,
         buttonLabel: 'Archive',
+        extraProps: {
+          channel,
+        },
       })
     );
   };
 
   initRestoreChannel = () => {
+    const { channel } = this.props;
+
+    track(events.CHANNEL_RESTORED_INITED, {
+      channel: analyticsChannel(channel),
+      community: analyticsCommunity(channel.community),
+    });
+
     return this.props.dispatch(
       openModal('RESTORE_CHANNEL_MODAL', {
         channel: this.props.channel,
