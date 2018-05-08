@@ -7,6 +7,8 @@ import ViewSegment from '../../../components/themedSection';
 import { Button } from '../../../components/buttons';
 import { CLIENT_URL } from '../../../api/constants';
 import { Tagline, Copy, Content } from '../../pages/style';
+import { track } from 'src/helpers/events';
+import * as events from 'shared/analytics/event-types';
 
 // $FlowFixMe
 const CommunitySearchWrapper = props => {
@@ -91,7 +93,10 @@ const CommunitySearchWrapper = props => {
             Building communities on Spectrum is easy and free!
           </SecondaryCopy>
           {props.currentUser ? (
-            <Link to={'/new/community'}>
+            <Link
+              to={'/new/community'}
+              onClick={() => track(events.EXPLORE_CREATE_COMMUNITY_CLICKED)}
+            >
               <PrimaryCTA>Get Started</PrimaryCTA>
             </Link>
           ) : (
