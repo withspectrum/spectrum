@@ -13,9 +13,13 @@ import {
   PlanPrice,
   PlanDescription,
 } from '../pricing/style';
+import * as events from 'shared/analytics/event-types';
+import { track } from 'src/helpers/events';
 
 class Support extends React.Component<{}> {
-  componentDidMount() {}
+  componentDidMount() {
+    track(events.SUPPORT_PAGE_VIEWED);
+  }
 
   render() {
     return (
@@ -39,7 +43,10 @@ class Support extends React.Component<{}> {
                 </PlanDescription>
               </div>
 
-              <Link to={'/spectrum/hugs-n-bugs'}>
+              <Link
+                to={'/spectrum/hugs-n-bugs'}
+                onClick={() => track(events.SUPPORT_PAGE_REPORT_BUG)}
+              >
                 <Button
                   gradientTheme={'warn'}
                   icon={'bug'}
@@ -59,7 +66,10 @@ class Support extends React.Component<{}> {
                 </PlanDescription>
               </div>
 
-              <Link to={'/spectrum/feature-requests'}>
+              <Link
+                to={'/spectrum/feature-requests'}
+                onClick={() => track(events.SUPPORT_PAGE_REQUEST_FEATURE)}
+              >
                 <Button
                   gradientTheme={'space'}
                   icon={'idea'}
@@ -88,6 +98,7 @@ class Support extends React.Component<{}> {
                   gradientTheme={'social.twitter'}
                   icon={'twitter'}
                   style={{ marginTop: '24px', width: '100%' }}
+                  onClick={() => track(events.SUPPORT_PAGE_FOLLOW_ON_TWITTER)}
                 >
                   Follow us on Twitter
                 </Button>
@@ -98,6 +109,9 @@ class Support extends React.Component<{}> {
                   gradientTheme={'brand'}
                   icon={'logo'}
                   style={{ marginTop: '12px', width: '100%' }}
+                  onClick={() =>
+                    track(events.SUPPORT_PAGE_JOIN_SPECTRUM_COMMUNITY)
+                  }
                 >
                   Join our community
                 </Button>
@@ -115,6 +129,7 @@ class Support extends React.Component<{}> {
 
               <a href={'mailto:hi@spectrum.chat'}>
                 <Button
+                  onClick={() => track(events.SUPPORT_PAGE_EMAIL_US)}
                   gradientTheme={'special'}
                   icon={'email'}
                   style={{ marginTop: '24px', width: '100%' }}

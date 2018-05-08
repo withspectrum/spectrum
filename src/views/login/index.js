@@ -10,6 +10,8 @@ import {
   FullscreenContent,
   CodeOfConduct,
 } from './style';
+import * as events from 'shared/analytics/event-types';
+import { track } from 'src/helpers/events';
 
 type Props = {
   redirectPath: ?string,
@@ -54,6 +56,9 @@ export class Login extends React.Component<Props> {
               href="https://github.com/withspectrum/code-of-conduct"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() =>
+                track(events.CODE_OF_CONDUCT_CLICKED, { location: 'login' })
+              }
             >
               Code of Conduct
             </a>

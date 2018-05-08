@@ -20,6 +20,8 @@ import {
   type GetCommunityType,
 } from 'shared/graphql/queries/community/getCommunity';
 import ViewError from 'src/components/viewError';
+import * as events from 'shared/analytics/event-types';
+import { track } from 'src/helpers/events';
 
 type Props = {
   data: {
@@ -72,6 +74,11 @@ export class Login extends React.Component<Props> {
                 href="https://github.com/withspectrum/code-of-conduct"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  track(events.CODE_OF_CONDUCT_CLICKED, {
+                    location: 'branded login',
+                  })
+                }
               >
                 Code of Conduct
               </a>

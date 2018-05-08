@@ -33,6 +33,8 @@ import {
   CommunitySuggestionsText,
 } from './style';
 import { FormContainer, Form, Actions } from '../../style';
+import * as events from 'shared/analytics/event-types';
+import { track } from 'src/helpers/events';
 
 type State = {
   name: ?string,
@@ -542,6 +544,11 @@ class CreateCommunityForm extends React.Component<Props, State> {
                 href="https://github.com/withspectrum/code-of-conduct"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  track(events.CODE_OF_CONDUCT_CLICKED, {
+                    location: 'community onboarding',
+                  })
+                }
               >
                 Spectrum Code of Conduct
               </a>{' '}
