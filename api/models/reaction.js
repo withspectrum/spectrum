@@ -4,6 +4,8 @@ import {
   sendReactionNotificationQueue,
   processReputationEventQueue,
 } from 'shared/bull/queues';
+import { track } from 'shared/analytics';
+import * as events from 'shared/analytics/event-types';
 
 type ReactionType = 'like';
 
@@ -38,19 +40,34 @@ export const getReaction = (reactionId: string): Promise<DBReaction> => {
     .run();
 };
 
-export const toggleReaction = (
+export const toggleReaction = async (
   reaction: ReactionInput,
   userId: string
 ): Promise<DBReaction> => {
+  const message = await db
+    .table('messages')
+    .get(reaction.messageId)
+    .run();
+
+  const eventProperties = {
+    type: 'like',
+    message: {
+      id: message.id,
+      parentId: message.parentId,
+    },
+  };
+
   return db
     .table('reactions')
     .getAll(reaction.messageId, { index: 'messageId' })
     .filter({ userId })
     .run()
-    .then(result => {
+    .then(async result => {
       // this user has already reacted to the message, remove the reaction
       if (result.length > 0) {
         const existing = result[0];
+
+        track(userId, events.REACTION_DELETED, eventProperties);
 
         processReputationEventQueue.add({
           userId,
@@ -64,6 +81,8 @@ export const toggleReaction = (
           .delete()
           .run();
       } else {
+        track(userId, events.REACTION_CREATED, eventProperties);
+
         processReputationEventQueue.add({
           userId,
           type: 'reaction created',
