@@ -19,6 +19,19 @@ const dictionary = {
     message: 'You don’t have permission to restore this channel',
     event: events.CHANNEL_RESTORED_FAILED,
   },
+  [errors.CHANNEL_CREATED_FAILED_NO_PERMISSIONS]: {
+    message: 'You don’t have permission to create channels in this community',
+    event: events.CHANNEL_CREATED_FAILED,
+  },
+  [errors.CHANNEL_CREATED_FAILED_NAME_RESERVED]: {
+    message: 'This channel name is reserved - try another url for this channel',
+    event: events.CHANNEL_CREATED_FAILED,
+  },
+  [errors.CHANNEL_CREATED_FAILED_SLUG_EXISTS]: {
+    message:
+      'This channel url has already been used - try another url for this channel',
+    event: events.CHANNEL_CREATED_FAILED,
+  },
 };
 
 export const getMessageFromErrorType = (errorType: string) => {
