@@ -22,6 +22,8 @@ import {
   Navatar,
   SkipLink,
 } from './style';
+import * as events from 'shared/analytics/event-types';
+import { track } from 'src/helpers/events';
 
 type Props = {
   isLoading: boolean,
@@ -94,6 +96,21 @@ class Navbar extends React.Component<Props, State> {
     };
   }
 
+  trackNavigationClick = (route: string) => {
+    switch (route) {
+      case 'logo':
+        return track(events.NAVIGATION_LOGO_CLICKED);
+      case 'home':
+        return track(events.NAVIGATION_HOME_CLICKED);
+      case 'explore':
+        return track(events.NAVIGATION_EXPLORE_CLICKED);
+      case 'profile':
+        return track(events.NAVIGATION_USER_PROFILE_CLICKED);
+      default:
+        return null;
+    }
+  };
+
   render() {
     const { history, match, currentUser, notificationCounts } = this.props;
 
@@ -163,6 +180,7 @@ class Navbar extends React.Component<Props, State> {
             aria-hidden
             tabIndex="-1"
             isHidden={this.state.isSkipLinkFocused}
+            onClick={() => this.trackNavigationClick('logo')}
           >
             <Icon glyph="logo" size={28} />
           </Logo>
@@ -178,6 +196,7 @@ class Navbar extends React.Component<Props, State> {
           <HomeTab
             {...this.getTabProps(match.url === '/' && match.isExact)}
             to="/"
+            onClick={() => this.trackNavigationClick('home')}
           >
             <Icon glyph="home" />
             <Label>Home</Label>
@@ -190,12 +209,14 @@ class Navbar extends React.Component<Props, State> {
           <ExploreTab
             {...this.getTabProps(history.location.pathname === '/explore')}
             to="/explore"
+            onClick={() => this.trackNavigationClick('explore')}
           >
             <Icon glyph="explore" />
             <Label>Explore</Label>
           </ExploreTab>
 
           <NotificationsTab
+            onClick={() => this.trackNavigationClick('notifications')}
             location={history.location}
             currentUser={loggedInUser}
             active={history.location.pathname.includes('/notifications')}
@@ -210,6 +231,7 @@ class Navbar extends React.Component<Props, State> {
               to={
                 loggedInUser.username ? `/users/${loggedInUser.username}` : '/'
               }
+              onClick={() => this.trackNavigationClick('profile')}
             >
               <Navatar
                 user={loggedInUser}
@@ -226,6 +248,7 @@ class Navbar extends React.Component<Props, State> {
               history.location.pathname === `/users/${loggedInUser.username}`
             )}
             to={loggedInUser.username ? `/users/${loggedInUser.username}` : '/'}
+            onClick={() => this.trackNavigationClick('profile')}
           >
             <Icon glyph="profile" />
             <Label>Profile</Label>
