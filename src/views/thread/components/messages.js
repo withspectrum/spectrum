@@ -238,7 +238,15 @@ class MessagesWithData extends React.Component<Props, State> {
 
     if (!messagesExist) {
       if (threadIsLocked) return null;
-      return <NullMessagesWrapper>something</NullMessagesWrapper>;
+      return (
+        <NullMessagesWrapper>
+          <Icon glyph={'emoji'} size={64} />
+          <NullCopy>
+            No messages have been sent in this conversation yet - why don’t you
+            kick things off below?
+          </NullCopy>
+        </NullMessagesWrapper>
+      );
     }
 
     return (
