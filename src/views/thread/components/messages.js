@@ -2,7 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
-import get from 'lodash.get';
+import idx from 'idx';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
@@ -14,7 +14,19 @@ import { NullState } from '../../../components/upsell';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import Head from '../../../components/head';
 import NextPageButton from '../../../components/nextPageButton';
-import { ChatWrapper, NullMessagesWrapper, NullCopy } from '../style';
+import {
+  ChatWrapper,
+  NullMessagesWrapper,
+  NullCopy,
+  EmptyThreadHeading,
+  EmptyThreadDescription,
+  TwitterButton,
+  SocialButtonLabel,
+  SocialIcon,
+  FacebookButton,
+  SocialShareWrapper,
+  A,
+} from '../style';
 import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
 
@@ -142,7 +154,55 @@ class MessagesWithData extends React.Component<Props, State> {
     }
   };
 
-  getIsAuthor = () => get(this, 'props.data.thread.isAuthor', false);
+  getIsAuthor = () => idx(this.props, _ => _.data.thread.isAuthor);
+
+  getNonAuthorEmptyMessage = () => {
+    return (
+      <NullMessagesWrapper>
+        <Icon glyph={'emoji'} size={64} />
+        <NullCopy>
+          No messages have been sent in this conversation yet - why don’t you
+          kick things off below?
+        </NullCopy>
+      </NullMessagesWrapper>
+    );
+  };
+
+  getAuthorEmptyMessage = () => {
+    const threadTitle = idx(this.props, _ => _.data.thread.content.title);
+    const threadId = idx(this.props, _ => _.data.thread.id);
+
+    return (
+      <NullMessagesWrapper>
+        <EmptyThreadHeading>No replies yet</EmptyThreadHeading>
+        <EmptyThreadDescription>
+          Share your post on other social media sites
+        </EmptyThreadDescription>
+        <SocialShareWrapper>
+          <A
+            href={`https://twitter.com/share?text=${threadTitle} on @withspectrum&url=https://spectrum.chat/thread/${threadId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <TwitterButton>
+              <SocialIcon glyph={'twitter'} />
+              <SocialButtonLabel>Share on Twitter</SocialButtonLabel>
+            </TwitterButton>
+          </A>
+          <A
+            href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${threadId}&t=${threadTitle}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FacebookButton>
+              <SocialIcon glyph={'facebook'} />
+              <SocialButtonLabel>Share on Facebook</SocialButtonLabel>
+            </FacebookButton>
+          </A>
+        </SocialShareWrapper>
+      </NullMessagesWrapper>
+    );
+  };
 
   render() {
     const {
@@ -238,15 +298,10 @@ class MessagesWithData extends React.Component<Props, State> {
 
     if (!messagesExist) {
       if (threadIsLocked) return null;
-      return (
-        <NullMessagesWrapper>
-          <Icon glyph={'emoji'} size={64} />
-          <NullCopy>
-            No messages have been sent in this conversation yet - why don’t you
-            kick things off below?
-          </NullCopy>
-        </NullMessagesWrapper>
-      );
+
+      return this.getIsAuthor()
+        ? this.getAuthorEmptyMessage()
+        : this.getNonAuthorEmptyMessage();
     }
 
     return (
