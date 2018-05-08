@@ -20,8 +20,7 @@ import {
   type GetCommunityType,
 } from 'shared/graphql/queries/community/getCommunity';
 import ViewError from 'src/components/viewError';
-import * as events from 'shared/analytics/event-types';
-import { track } from 'src/helpers/analytics';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   data: {
