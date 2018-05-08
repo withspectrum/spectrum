@@ -24,6 +24,7 @@ import {
 } from './style';
 import * as events from 'shared/analytics/event-types';
 import { track } from 'src/helpers/events';
+import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
 
 type Props = {
   isLoading: boolean,
@@ -116,25 +117,9 @@ class Navbar extends React.Component<Props, State> {
 
     const loggedInUser = currentUser;
 
-    const viewing = history.location.pathname;
-
-    const isHome = viewing === '/' || viewing === '/home';
-
-    const isSplash =
-      viewing === '/about' ||
-      viewing === '/code-of-conduct' ||
-      viewing === '/contact' ||
-      viewing === '/pricing' ||
-      viewing === '/privacy' ||
-      viewing === '/privacy.html' ||
-      viewing === '/support' ||
-      viewing === '/terms' ||
-      viewing === '/terms.html' ||
-      viewing === '/faq' ||
-      viewing === '/features';
-
-    // Bail out if the splash page is showing
-    if ((!loggedInUser && isHome) || isSplash) return null;
+    if (isViewingMarketingPage(history, currentUser)) {
+      return null;
+    }
 
     // if the user is mobile and is viewing a thread or DM thread, don't
     // render a navbar - it will be replaced with a chat input

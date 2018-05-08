@@ -8,6 +8,7 @@ import { getMessageFromErrorType } from 'shared/errors';
 const queryRe = /\s*(query|mutation)[^{]*/;
 
 const collectQueries = query => {
+  if (!query) return 'No query';
   return query
     .split('\n')
     .map(line => {
