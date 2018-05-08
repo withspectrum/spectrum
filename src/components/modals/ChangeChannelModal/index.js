@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import { TextButton, Button } from '../../buttons';
 import moveThreadMutation from 'shared/graphql/mutations/thread/moveThread';
 import type { MoveThreadType } from 'shared/graphql/mutations/thread/moveThread';
-import { track } from '../../../helpers/events';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Icon from '../../icons';
 import { IconContainer } from '../RepExplainerModal/style';
@@ -51,7 +50,6 @@ class ChangeChannelModal extends React.Component<Props, State> {
       .then(({ data }: MoveThreadType) => {
         const { moveThread } = data;
         if (moveThread) {
-          track('thread', 'moved', null);
           dispatch(
             addToastWithTimeout('success', 'Channel changed successfully.')
           );

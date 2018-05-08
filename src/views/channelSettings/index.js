@@ -5,7 +5,6 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
-import { track } from 'src/helpers/events';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import { Loading } from 'src/components/loading';
 import { addToastWithTimeout } from 'src/actions/toasts';
@@ -58,11 +57,9 @@ class ChannelSettings extends React.Component<Props> {
         const { togglePendingUser } = data;
         if (togglePendingUser !== undefined) {
           if (action === 'block') {
-            track('channel', 'blocked pending user', null);
           }
 
           if (action === 'approve') {
-            track('channel', 'approved pending user', null);
           }
 
           dispatch(addToastWithTimeout('success', 'Saved!'));
@@ -88,7 +85,6 @@ class ChannelSettings extends React.Component<Props> {
         const { unblockUser } = data;
         // the mutation returns a channel object. if it exists,
         if (unblockUser !== undefined) {
-          track('channel', 'unblocked user', null);
           dispatch(addToastWithTimeout('success', 'User was un-blocked.'));
         }
         return;

@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { track } from 'src/helpers/events';
 import { storeItem, getItemFromStorage } from 'src/helpers/localStorage';
 import { Overview, Centralized, CommunitySearch, Chat, Yours } from '../view';
 import PageFooter from '../components/footer';
@@ -21,12 +20,9 @@ class Splash extends React.Component<{}, State> {
     };
   }
 
-  componentDidMount() {
-    track('homepage', 'viewed', null);
-  }
+  componentDidMount() {}
 
   trackSignin = (type: string, method: string) => {
-    track('homepage', 'logged in', type);
     storeItem('preferred_signin_method', method);
   };
 

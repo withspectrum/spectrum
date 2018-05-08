@@ -4,7 +4,6 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Link from 'src/components/link';
-import { track } from '../../../helpers/events';
 import editChannelMutation from 'shared/graphql/mutations/channel/editChannel';
 import type { EditChannelType } from 'shared/graphql/mutations/channel/editChannel';
 import deleteChannelMutation from 'shared/graphql/mutations/channel/deleteChannel';
@@ -109,15 +108,12 @@ class ChannelWithData extends React.Component<Props, State> {
 
     // if privacy changed in this edit
     if (this.props.channel.isPrivate !== isPrivate) {
-      track('channel', `privacy changed to ${isPrivate.toString()}`, null);
     }
 
     this.props
       .editChannel(input)
       .then(({ data }: EditChannelType) => {
         const { editChannel: channel } = data;
-
-        track('channel', 'edited', null);
 
         this.setState({
           isLoading: false,
@@ -140,7 +136,6 @@ class ChannelWithData extends React.Component<Props, State> {
 
   triggerDeleteChannel = (e, channelId) => {
     e.preventDefault();
-    track('channel', 'delete inited', null);
     const { name, channelData } = this.state;
     const message = (
       <div>

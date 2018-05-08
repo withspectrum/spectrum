@@ -19,7 +19,6 @@ import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
-import { track } from '../../../helpers/events';
 import Editor from '../../../components/rich-text-editor';
 import { toJSON, toPlainText, toState } from 'shared/draft-utils';
 import Textarea from 'react-textarea-autosize';
@@ -151,10 +150,8 @@ class ThreadDetailPure extends React.Component<Props, State> {
           isLockingThread: false,
         });
         if (setThreadLock.isLocked) {
-          track('thread', 'locked', null);
           return dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
         } else {
-          track('thread', 'unlocked', null);
           return dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
         }
       })
@@ -169,8 +166,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
   triggerDelete = e => {
     e.preventDefault();
     const { thread, dispatch } = this.props;
-
-    track('thread', 'delete inited', null);
 
     const threadId = thread.id;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;

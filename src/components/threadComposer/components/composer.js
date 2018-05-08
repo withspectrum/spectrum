@@ -4,7 +4,6 @@ import Textarea from 'react-textarea-autosize';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import debounce from 'debounce';
-import { track } from '../../../helpers/events';
 import { closeComposer } from '../../../actions/composer';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -571,7 +570,6 @@ class ThreadComposerWithData extends React.Component<Props, State> {
         // get the thread id to redirect the user
         const id = data.publishThread.id;
 
-        track('thread', 'published', null);
         REMOVE_STORAGE();
 
         // stop the loading spinner on the publish button

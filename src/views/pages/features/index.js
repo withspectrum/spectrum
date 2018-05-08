@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { track } from 'src/helpers/events';
 import Section from 'src/components/themedSection';
 import PageFooter from '../components/footer';
 import { Wrapper } from '../style';
@@ -16,9 +15,7 @@ type State = {
 };
 
 class Features extends React.Component<Props, State> {
-  componentDidMount() {
-    track('features', 'viewed', null);
-  }
+  componentDidMount() {}
 
   render() {
     return (

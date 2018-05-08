@@ -92,7 +92,6 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
           .then(({ data }: DeleteMessageType) => {
             const { deleteMessage } = data;
             if (deleteMessage) {
-              track('message', 'deleted', null);
               dispatch(addToastWithTimeout('neutral', 'Message deleted.'));
               this.setState({
                 isLoading: false,
@@ -115,7 +114,6 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
           .then(({ data }: DeleteThreadType) => {
             const { deleteThread } = data;
             if (deleteThread) {
-              track('thread', 'deleted', null);
               // TODO: When we figure out the mutation reducers in apollo
               // client we can just history push and trust the store to update
               // eslint-disable-next-line
@@ -144,7 +142,6 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
           .then(({ data }: DeleteChannelType) => {
             const { deleteChannel } = data;
             if (deleteChannel) {
-              track('channel', 'deleted', null);
               // TODO: When we figure out the mutation reducers in apollo
               // client we can just history push and trust the store to update
               // eslint-disable-next-line
@@ -173,7 +170,6 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
           .then(({ data }: DeleteCommunityType) => {
             const { deleteCommunity } = data;
             if (deleteCommunity) {
-              track('community', 'deleted', null);
               // TODO: When we figure out the mutation reducers in apollo
               // client we can just history push and trust the store to update
               // eslint-disable-next-line
@@ -236,6 +232,7 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
           });
       }
       case 'channel-archive': {
+        // $FlowFixMe
         const { channel } = this.props.modalProps.extraProps;
 
         track(events.CHANNEL_ARCHIVED, {

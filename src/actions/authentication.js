@@ -1,9 +1,8 @@
-import { track, setUser, unsetUser } from '../helpers/events';
+import { setUser, unsetUser } from '../helpers/events';
 import { removeItemFromStorage, storeItem } from '../helpers/localStorage';
 import Raven from 'raven-js';
 
 export const logout = dispatch => {
-  track('user', 'sign out', null);
   // clear localStorage
   removeItemFromStorage('spectrum');
 

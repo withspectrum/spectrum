@@ -9,7 +9,6 @@ import Icon from '../../../components/icons';
 import compose from 'recompose/compose';
 import { Button, TextButton, IconButton } from '../../../components/buttons';
 import Flyout from '../../../components/flyout';
-import { track } from '../../../helpers/events';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import OutsideClickHandler from '../../../components/outsideClickHandler';
@@ -94,12 +93,10 @@ class ActionBar extends React.Component<Props, State> {
         });
 
         if (toggleThreadNotifications.receiveNotifications) {
-          track('thread', 'notifications turned on', null);
           return dispatch(
             addToastWithTimeout('success', 'Notifications activated!')
           );
         } else {
-          track('thread', 'notifications turned off', null);
           return dispatch(
             addToastWithTimeout('neutral', 'Notifications turned off')
           );

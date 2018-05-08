@@ -4,7 +4,6 @@ import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import ModalContainer from '../modalContainer';
 import { closeModal } from '../../../actions/modals';
-import { track } from '../../../helpers/events';
 import downgradeFromProMutation from 'shared/graphql/mutations/user/downgradeFromPro';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { connect } from 'react-redux';
@@ -43,14 +42,7 @@ class UpgradeModal extends React.Component<Props, State> {
     };
   }
 
-  componentDidMount() {
-    const { user } = this.props;
-    if (user.isPro) {
-      track('pro', 'downgrade inited', null);
-    } else {
-      track('pro', 'upgrade inited', null);
-    }
-  }
+  componentDidMount() {}
 
   closeModal = () => {
     this.props.dispatch(closeModal());
@@ -64,8 +56,6 @@ class UpgradeModal extends React.Component<Props, State> {
     this.props
       .downgradeFromPro()
       .then(() => {
-        track('pro', 'downgraded', null);
-
         this.props.dispatch(
           addToastWithTimeout(
             'neutral',

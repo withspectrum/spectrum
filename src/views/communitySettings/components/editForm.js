@@ -3,7 +3,6 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { track } from '../../../helpers/events';
 import editCommunityMutation from 'shared/graphql/mutations/community/editCommunity';
 import type { EditCommunityType } from 'shared/graphql/mutations/community/editCommunity';
 import { openModal } from '../../../actions/modals';
@@ -141,8 +140,6 @@ class EditForm extends React.Component<Props, State> {
     }
 
     reader.onloadend = () => {
-      track('community', 'profile photo uploaded', null);
-
       this.setState({
         file: file,
         // $FlowFixMe
@@ -173,8 +170,6 @@ class EditForm extends React.Component<Props, State> {
     }
 
     reader.onloadend = () => {
-      track('community', 'cover photo uploaded', null);
-
       this.setState({
         coverFile: file,
         // $FlowFixMe
@@ -226,8 +221,6 @@ class EditForm extends React.Component<Props, State> {
 
         // community was returned
         if (community !== undefined) {
-          track('community', 'edited', null);
-
           this.props.dispatch(
             addToastWithTimeout('success', 'Community saved!')
           );
@@ -245,7 +238,6 @@ class EditForm extends React.Component<Props, State> {
 
   triggerDeleteCommunity = (e, communityId) => {
     e.preventDefault();
-    track('community', 'delete inited', null);
     const { name, communityData } = this.state;
     const message = (
       <div>

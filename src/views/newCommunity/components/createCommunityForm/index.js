@@ -6,7 +6,6 @@ import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import slugg from 'slugg';
 import { withApollo } from 'react-apollo';
-import { track } from '../../../../helpers/events';
 import { Notice } from '../../../../components/listItems/style';
 import Avatar from '../../../../components/avatar';
 import { throttle } from '../../../../helpers/utils';
@@ -89,9 +88,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
     this.checkSlug = throttle(this.checkSlug, 500);
   }
 
-  componentDidMount() {
-    track('community', 'create inited', null);
-  }
+  componentDidMount() {}
 
   changeName = e => {
     const { communitySuggestions } = this.state;
@@ -301,7 +298,6 @@ class CreateCommunityForm extends React.Component<Props, State> {
     }
 
     reader.onloadend = () => {
-      track('community', 'profile photo uploaded', null);
       this.setState({
         file: file,
         // $FlowFixMe
@@ -324,7 +320,6 @@ class CreateCommunityForm extends React.Component<Props, State> {
     }
 
     reader.onloadend = () => {
-      track('community', 'cover photo uploaded', null);
       this.setState({
         coverFile: file,
         // $FlowFixMe
@@ -392,7 +387,6 @@ class CreateCommunityForm extends React.Component<Props, State> {
     this.props
       .createCommunity(input)
       .then(({ data }: CreateCommunityType) => {
-        track('community', 'created', null);
         const { createCommunity } = data;
         this.props.communityCreated(createCommunity);
         this.props.dispatch(

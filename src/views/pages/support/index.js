@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { track } from 'src/helpers/events';
 import PageFooter from '../components/footer';
 import Section from 'src/components/themedSection';
 import { Wrapper } from '../style';
@@ -16,9 +15,7 @@ import {
 } from '../pricing/style';
 
 class Support extends React.Component<{}> {
-  componentDidMount() {
-    track('support', 'viewed', null);
-  }
+  componentDidMount() {}
 
   render() {
     return (

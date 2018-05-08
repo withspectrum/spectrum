@@ -9,7 +9,6 @@ import debounce from 'debounce';
 import queryString from 'query-string';
 import { KeyBindingUtil } from 'draft-js';
 import { URLS } from '../../helpers/regexps';
-import { track } from '../../helpers/events';
 import { closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -500,7 +499,6 @@ class ComposerWithData extends Component<Props, State> {
         // get the thread id to redirect the user
         const id = data.publishThread.id;
 
-        track('thread', 'published', null);
         this.clearEditorStateAfterPublish();
 
         // stop the loading spinner on the publish button
