@@ -28,7 +28,6 @@ import {
 import { FlexCol } from '../../components/globals';
 import { sortByDate } from '../../helpers/utils';
 import WebPushManager from '../../helpers/web-push-manager';
-import { track } from '../../helpers/events';
 import { addToastWithTimeout } from '../../actions/toasts';
 import getNotifications from 'shared/graphql/queries/notification/getNotifications';
 import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
@@ -38,6 +37,8 @@ import ViewError from '../../components/viewError';
 import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
+import { track } from 'src/helpers/events';
+import * as events from 'shared/analytics/event-types';
 
 type Props = {
   markAllNotificationsSeen?: Function,
@@ -102,7 +103,9 @@ class NotificationsPure extends React.Component<Props, State> {
 
         WebPushManager.getSubscription()
           .then(subscription => {
-            if (!subscription) track('browser push notifications', 'prompted');
+            if (!subscription) {
+              track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_VIEWED);
+            }
             this.setState({
               showWebPushPrompt: !subscription,
             });
@@ -126,13 +129,13 @@ class NotificationsPure extends React.Component<Props, State> {
   }
 
   subscribeToWebPush = () => {
-    track('browser push notifications', 'prompt triggered');
+    track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_CLICKED);
     this.setState({
       webPushPromptLoading: true,
     });
     WebPushManager.subscribe()
       .then(subscription => {
-        track('browser push notifications', 'subscribed');
+        track(events.WEB_PUSH_NOTIFICATIONS_SUBSCRIBED);
         this.setState({
           webPushPromptLoading: false,
           showWebPushPrompt: false,
@@ -140,7 +143,7 @@ class NotificationsPure extends React.Component<Props, State> {
         return this.props.subscribeToWebPush(subscription);
       })
       .catch(err => {
-        track('browser push notifications', 'blocked');
+        track(events.WEB_PUSH_NOTIFICATIONS_BLOCKED);
         this.setState({
           webPushPromptLoading: false,
         });
@@ -158,7 +161,7 @@ class NotificationsPure extends React.Component<Props, State> {
     this.setState({
       showWebPushPrompt: false,
     });
-    track('browser push notifications', 'dismissed');
+    track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_DISMISSED);
   };
 
   render() {
