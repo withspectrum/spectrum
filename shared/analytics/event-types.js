@@ -192,7 +192,6 @@ export const INBOX_UPSELL_COMMUNITY_CLICKED = 'Inbox Upsell Community Clicked';
 export const EXPLORE_VIEWED = 'Explore Viewed';
 export const EXPLORE_CREATE_COMMUNITY_CLICKED =
   'Explore Create Community Clicked';
-export const EXPLORE_VIEWED_COMMUNITY = 'Explore Viewed Community';
 export const EXPLORE_JOINED_COMMUNITY = 'Explore Joined Community';
 export const EXPLORE_LEFT_COMMUNITY = 'Explore Left Community';
 export const EXPLORE_SUBCATEGORY_VIEWED = 'Explore Subcategory Viewed';
