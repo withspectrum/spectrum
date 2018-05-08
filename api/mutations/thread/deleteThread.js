@@ -5,6 +5,8 @@ import { processReputationEventQueue } from 'shared/bull/queues';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { deleteThread, getThreads } from '../../models/thread';
+import { track } from 'shared/analytics';
+import * as events from 'shared/analytics/event-types';
 
 export default async (
   _: any,
@@ -56,7 +58,11 @@ export default async (
       });
     }
 
-    return deleteThread(threadId);
+    const deletedThread = await deleteThread(threadId);
+
+    track(currentUser.id, events.THREAD_DELETED);
+
+    return deletedThread;
   }
 
   // if the user is not a channel or community owner, the thread can't be locked

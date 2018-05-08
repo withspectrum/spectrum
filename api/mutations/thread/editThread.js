@@ -6,6 +6,8 @@ import { uploadImage } from '../../utils/file-storage';
 import { getThreads, editThread } from '../../models/thread';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
+import { track } from 'shared/analytics';
+import * as events from 'shared/analytics/event-types';
 
 export default async (
   _: any,
@@ -103,6 +105,8 @@ export default async (
     if (!body.entityMap[imageKeys[index]]) return;
     body.entityMap[imageKeys[index]].data.src = url;
   });
+
+  track(currentUser.id, events.THREAD_EDITED);
 
   // Update the thread with the new links
   return editThread({

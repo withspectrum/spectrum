@@ -12,6 +12,13 @@ import Flyout from '../../../components/flyout';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import OutsideClickHandler from '../../../components/outsideClickHandler';
+import { track } from 'src/helpers/events';
+import * as events from 'shared/analytics/event-types';
+import {
+  analyticsThread,
+  analyticsChannel,
+  analyticsCommunity,
+} from 'src/helpers/events/transformations';
 
 import {
   FollowButton,
@@ -73,6 +80,13 @@ class ActionBar extends React.Component<Props, State> {
 
   triggerChangeChannel = () => {
     const { thread, dispatch } = this.props;
+
+    track(events.THREAD_MOVED_INITED, {
+      thread: analyticsThread(thread),
+      channel: analyticsChannel(thread.channel),
+      community: analyticsCommunity(thread.community),
+    });
+
     dispatch(openModal('CHANGE_CHANNEL', { thread }));
   };
 
@@ -82,6 +96,16 @@ class ActionBar extends React.Component<Props, State> {
 
     this.setState({
       notificationStateLoading: true,
+    });
+
+    const event = thread.receiveNotifications
+      ? events.THREAD_NOTIFICATIONS_DISABLED
+      : events.THREAD_NOTIFICATIONS_ENABLED;
+
+    track(event, {
+      thread: analyticsThread(thread),
+      channel: analyticsChannel(thread.channel),
+      community: analyticsCommunity(thread.community),
     });
 
     toggleThreadNotifications({
@@ -304,6 +328,9 @@ class ActionBar extends React.Component<Props, State> {
                   tipText={'Share'}
                   tipLocation={'top-left'}
                   data-cy="thread-facebook-button"
+                  onClick={() =>
+                    track(events.THREAD_SHARED, { method: 'facebook' })
+                  }
                 >
                   <a
                     href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${
@@ -321,6 +348,9 @@ class ActionBar extends React.Component<Props, State> {
                   tipText={'Tweet'}
                   tipLocation={'top-left'}
                   data-cy="thread-tweet-button"
+                  onClick={() =>
+                    track(events.THREAD_SHARED, { method: 'twitter' })
+                  }
                 >
                   <a
                     href={`https://twitter.com/share?text=${
@@ -340,11 +370,12 @@ class ActionBar extends React.Component<Props, State> {
                   data-clipboard-text={`https://spectrum.chat/thread/${
                     thread.id
                   }`}
-                  onSuccess={() =>
+                  onSuccess={() => {
+                    track(events.THREAD_SHARED, { method: 'link' });
                     this.props.dispatch(
                       addToastWithTimeout('success', 'Copied to clipboard')
-                    )
-                  }
+                    );
+                  }}
                 >
                   <ShareButton
                     tipText={'Copy link'}

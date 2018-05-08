@@ -26,6 +26,7 @@ import disableCommunityAnalytics from 'shared/graphql/mutations/community/disabl
 import { track } from 'src/helpers/events';
 import * as events from 'shared/analytics/event-types';
 import {
+  analyticsThread,
   analyticsChannel,
   analyticsCommunity,
 } from 'src/helpers/events/transformations';
@@ -109,6 +110,14 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
             );
           });
       case 'thread': {
+        // $FlowFixMe
+        const { thread } = this.props.modalProps.extraProps;
+
+        track(events.THREAD_DELETED, {
+          channel: analyticsChannel(thread.channel),
+          community: analyticsCommunity(thread.channel.community),
+        });
+
         return this.props
           .deleteThread(id)
           .then(({ data }: DeleteThreadType) => {

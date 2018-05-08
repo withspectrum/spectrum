@@ -31,6 +31,13 @@ import {
   Timestamp,
   Edited,
 } from '../style';
+import { track } from 'src/helpers/events';
+import * as events from 'shared/analytics/event-types';
+import {
+  analyticsThread,
+  analyticsChannel,
+  analyticsCommunity,
+} from 'src/helpers/events/transformations';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
@@ -83,6 +90,12 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
   setThreadState() {
     const { thread } = this.props;
+
+    track(events.THREAD_VIEWED, {
+      thread: analyticsThread(thread),
+      channel: analyticsChannel(thread.channel),
+      community: analyticsCommunity(thread.community),
+    });
 
     let rawLinkPreview =
       thread.attachments && thread.attachments.length > 0
@@ -141,6 +154,16 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isLockingThread: true,
     });
 
+    const event = thread.isLocked
+      ? events.THREAD_UNLOCKED
+      : events.THREAD_LOCKED;
+
+    track(event, {
+      thread: analyticsThread(thread),
+      channel: analyticsChannel(thread.channel),
+      community: analyticsCommunity(thread.community),
+    });
+
     setThreadLock({
       threadId,
       value,
@@ -187,20 +210,38 @@ class ThreadDetailPure extends React.Component<Props, State> {
       message = 'Are you sure you want to delete this thread?';
     }
 
+    track(events.THREAD_DELETED_INITED, {
+      thread: analyticsThread(thread),
+      channel: analyticsChannel(thread.channel),
+      community: analyticsCommunity(thread.community),
+    });
+
     return dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {
         id: threadId,
         entity: 'thread',
         message,
+        extraProps: {
+          thread,
+        },
       })
     );
   };
 
   toggleEdit = () => {
     const { isEditing } = this.state;
+    const { thread } = this.props;
+
     this.setState({
       isEditing: !isEditing,
     });
+
+    track(events.THREAD_EDITED_INITED, {
+      thread: analyticsThread(thread),
+      channel: analyticsChannel(thread.channel),
+      community: analyticsCommunity(thread.community),
+    });
+
     this.props.toggleEdit();
   };
 
@@ -255,6 +296,12 @@ class ThreadDetailPure extends React.Component<Props, State> {
       attachments,
       filesToUpload,
     };
+
+    track(events.THREAD_EDITED, {
+      thread: analyticsThread(thread),
+      channel: analyticsChannel(thread.channel),
+      community: analyticsCommunity(thread.community),
+    });
 
     editThread(input)
       .then(({ data: { editThread } }) => {
@@ -374,6 +421,12 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
     this.setState({
       isPinningThread: true,
+    });
+
+    track(events.THREAD_PINNED, {
+      thread: analyticsThread(thread),
+      channel: analyticsChannel(thread.channel),
+      community: analyticsCommunity(thread.community),
     });
 
     return pinThread({

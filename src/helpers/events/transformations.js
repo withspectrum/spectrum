@@ -23,6 +23,7 @@ type AnalyticsCommunity = {
 
 type AnalyticsThread = {
   id: string,
+  receiveNotifications: boolean,
   isLocked: boolean,
   isWatercooler: boolean,
 };
@@ -55,6 +56,7 @@ export const analyticsCommunity = (
 export const analyticsThread = (thread: ThreadInfoType): AnalyticsThread => {
   return {
     id: thread.id,
+    receiveNotifications: thread.receiveNotifications,
     isLocked: thread.isLocked,
     isWatercooler: thread.watercooler,
   };

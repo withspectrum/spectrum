@@ -4,6 +4,8 @@ import UserError from '../../utils/UserError';
 import { getThread, moveThread } from '../../models/thread';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getChannels } from '../../models/channel';
+import { track } from 'shared/analytics';
+import * as events from 'shared/analytics/event-types';
 
 export default async (
   _: any,
@@ -35,6 +37,8 @@ export default async (
   const [newChannel] = await getChannels([channelId]);
   if (newChannel.communityId !== thread.communityId)
     throw new UserError('You can only move threads within the same community.');
+
+  track(currentUser.id, events.THREAD_MOVED);
 
   return moveThread(threadId, channelId).then(res => {
     if (res) return res;

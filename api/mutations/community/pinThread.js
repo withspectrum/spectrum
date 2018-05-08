@@ -5,6 +5,8 @@ import { getThreads } from '../../models/thread';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { setPinnedThreadInCommunity } from '../../models/community';
 import { getChannels } from '../../models/channel';
+import { track } from 'shared/analytics';
+import * as events from 'shared/analytics/event-types';
 
 type PinThreadInput = {
   threadId: string,
@@ -41,5 +43,8 @@ export default async (
   if (channels && channels[0].isPrivate) {
     return new UserError('Only threads in public channels can be pinned.');
   }
+
+  track(currentUser.id, events.THREAD_PINNED);
+
   return setPinnedThreadInCommunity(communityId, value);
 };

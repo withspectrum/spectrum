@@ -5,6 +5,8 @@ import { getThreads, setThreadLock } from '../../models/thread';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import type { DBThread } from 'shared/types';
+import { track } from 'shared/analytics';
+import * as events from 'shared/analytics/event-types';
 
 export default async (
   _: any,
@@ -32,6 +34,10 @@ export default async (
   const authorCanLock =
     !thread.isLocked || thread.lockedBy === thread.creatorId;
   if (isAuthor && authorCanLock) {
+    const event = thread.lockedAt
+      ? events.THREAD_UNLOCKED
+      : events.THREAD_LOCKED;
+    track(currentUser.id, event);
     return setThreadLock(threadId, value, currentUser.id);
   }
 
@@ -57,6 +63,10 @@ export default async (
     currentUserCommunityPermissions.isOwner ||
     currentUserCommunityPermissions.isModerator
   ) {
+    const event = thread.lockedAt
+      ? events.THREAD_UNLOCKED_BY_MODERATOR
+      : events.THREAD_LOCKED_BY_MODERATOR;
+    track(currentUser.id, event);
     return setThreadLock(threadId, value, currentUser.id);
   }
 

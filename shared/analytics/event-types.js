@@ -127,6 +127,8 @@ export const REACTION_CREATED_FAILED = 'Reaction Created Failed';
 export const REACTION_DELETED = 'Reaction Deleted';
 export const REACTION_DELETED_FAILED = 'Reaction Deleted Failed';
 
+export const THREAD_FLAGGED_AS_TOXIC = 'Thread Flagged as Toxic';
+export const THREAD_FLAGGED_AS_SPAM = 'Thread Flaggad as Spam';
 export const THREAD_CREATED = 'Thread Created';
 export const THREAD_CREATED_FAILED = 'Thread Created Failed';
 export const THREAD_DELETED_INITED = 'Thread Deleted Inited';
@@ -138,8 +140,16 @@ export const THREAD_EDITED_FAILED = 'Thread Edited Failed';
 export const THREAD_MOVED_INITED = 'Thread Moved Inited';
 export const THREAD_MOVED = 'Thread Moved';
 export const THREAD_MOVED_FAILED = 'Thread Moved Failed';
+export const THREAD_LOCKED_BY_MODERATOR = 'Thread Locked by Moderator';
+export const THREAD_LOCKED_BY_MODERATOR_FAILED =
+  'Thread Locked by Moderator Failed';
+export const THREAD_UNLOCKED_BY_MODERATOR = 'Thread Unlocked by Moderator';
+export const THREAD_UNLOCKED_BY_MODERATOR_FAILED =
+  'Thread Unlocked by Moderator Failed';
 export const THREAD_LOCKED = 'Thread Locked';
 export const THREAD_LOCKED_FAILED = 'Thread Locked Failed';
+export const THREAD_UNLOCKED = 'Thread Unlocked';
+export const THREAD_UNLOCKED_FAILED = 'Thread Unlocked Failed';
 export const THREAD_PINNED = 'Thread Pinned';
 export const THREAD_PINNED_FAILED = 'Thread Pinned Failed';
 export const THREAD_NOTIFICATIONS_ENABLED = 'Thread Notifications Enabled';
@@ -149,9 +159,7 @@ export const THREAD_NOTIFICATIONS_DISABLED = 'Thread Notifications Disabled';
 export const THREAD_NOTIFICATIONS_DISABLED_FAILED =
   'Thread Notifications Disabled Failed';
 export const THREAD_VIEWED = 'Thread Viewed';
-export const THREAD_SHARED_TWITTER = 'Thread Shared Twitter';
-export const THREAD_SHARED_FACEBOOK = 'Thread Shared Facebook';
-export const THREAD_SHARED_LINK = 'Thread Shared Link';
+export const THREAD_SHARED = 'Thread Shared';
 
 export const USER_CREATED = 'User Created';
 export const USER_EDITED = 'User Edited';
