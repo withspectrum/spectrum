@@ -5,6 +5,7 @@ import type {
   DBCommunity,
   DBUsersCommunities,
   DBThread,
+  DBUser,
 } from 'shared/types';
 import { getTruthyValuesFromObject } from 'src/helpers/utils';
 
@@ -34,6 +35,20 @@ type AnalyticsThread = {
   id: string,
   isLocked: boolean,
   isWatercooler: boolean,
+};
+
+type AnalyticsUser = {
+  id: string,
+  createdAt: string,
+  name: string,
+  providerId: ?string,
+  githubProviderId: ?string,
+  githubUsername: ?string,
+  fbProviderId: ?string,
+  googleProviderId: ?string,
+  username: ?string,
+  lastSeen: ?string,
+  modifiedAt: ?string,
 };
 
 export const analyticsChannel = (channel: DBChannel): AnalyticsChannel => {
@@ -78,5 +93,21 @@ export const analyticsThread = (thread: DBThread): AnalyticsThread => {
     id: thread.id,
     isLocked: thread.isLocked,
     isWatercooler: thread.watercooler ? true : false,
+  };
+};
+
+export const analyticsUser = (user: DBUser): AnalyticsUser => {
+  return {
+    id: user.id,
+    createdAt: user.createdAt,
+    name: user.name,
+    providerId: user.providerId,
+    githubProviderId: user.githubProviderId,
+    githubUsername: user.githubUsername,
+    fbProviderId: user.fbProviderId,
+    googleProviderId: user.googleProviderId,
+    username: user.username ? user.username : null,
+    lastSeen: user.lastSeen ? user.lastSeen : null,
+    modifiedAt: user.modifiedAt,
   };
 };

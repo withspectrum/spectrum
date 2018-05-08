@@ -17,6 +17,8 @@ import Titlebar from '../titlebar';
 import Header from 'src/components/settingsViews/header';
 import Subnav from 'src/components/settingsViews/subnav';
 import type { ContextRouter } from 'react-router';
+import { track } from 'src/helpers/events';
+import * as events from 'shared/analytics/event-types';
 
 type Props = {
   data: {
@@ -28,7 +30,9 @@ type Props = {
 };
 
 class UserSettings extends React.Component<Props> {
-  componentDidMount() {}
+  componentDidMount() {
+    track(events.USER_SETTINGS_VIEWED);
+  }
 
   render() {
     const {

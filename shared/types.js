@@ -253,7 +253,7 @@ export type DBThread = {
 export type DBUser = {
   id: string,
   email?: string,
-  createdAt: Date,
+  createdAt: string,
   name: string,
   coverPhoto: string,
   profilePhoto: string,
@@ -265,10 +265,10 @@ export type DBUser = {
   username: ?string,
   timezone?: ?number,
   isOnline?: boolean,
-  lastSeen?: ?Date,
+  lastSeen?: ?string,
   description?: ?string,
   website?: ?string,
-  modifiedAt: ?Date,
+  modifiedAt: ?string,
 };
 
 export type DBUsersChannels = {

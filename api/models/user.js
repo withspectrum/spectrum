@@ -5,6 +5,9 @@ import { createNewUsersSettings } from './usersSettings';
 import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBUser, FileUpload } from 'shared/types';
+import { track, identify } from 'shared/analytics';
+import * as events from 'shared/analytics/event-types';
+import { analyticsUser } from 'shared/analytics/transformations';
 
 type GetUserInput = {
   id?: string,
@@ -70,8 +73,8 @@ const storeUser = (user: Object): Promise<DBUser> => {
     .then(result => {
       const user = result.changes[0].new_val;
 
-      // whenever a new user is created, create a usersSettings record
-      // and send a welcome email
+      identify(user.id, { ...analyticsUser(user) });
+      track(user.id, events.USER_CREATED);
       sendNewUserWelcomeEmailQueue.add({ user });
       return Promise.all([user, createNewUsersSettings(user.id)]);
     })
@@ -105,7 +108,18 @@ const saveUserProvider = (
           { returnChanges: true }
         )
         .run()
-        .then(result => result.changes[0].new_val);
+        .then(result => {
+          const user = result.changes[0].new_val;
+          track(user.id, events.USER_ADDED_PROVIDER, {
+            providerMethod,
+            providerId,
+            extraFields,
+          });
+          identify(user.id, {
+            ...analyticsUser(user),
+          });
+          return user;
+        });
     });
 };
 
@@ -417,7 +431,11 @@ const setUserOnline = (id: string, isOnline: boolean): DBUser => {
     .update(data, { returnChanges: 'always' })
     .run()
     .then(result => {
-      if (result.changes[0].new_val) return result.changes[0].new_val;
+      if (result.changes[0].new_val) {
+        const user = result.changes[0].new_val;
+        track(user.id, events.USER_LAST_SEEN_UPDATED);
+        return user;
+      }
       return result.changes[0].old_val;
     });
 };
@@ -433,7 +451,13 @@ const setUserPendingEmail = (
       pendingEmail,
     })
     .run()
-    .then(() => getUserById(userId));
+    .then(async () => {
+      const user = await getUserById(userId);
+      track(user.id, events.USER_ADDED_EMAIL);
+      identify(user.id, {
+        ...analyticsUser(user),
+      });
+    });
 };
 const updateUserEmail = (userId: string, email: string): Promise<Object> => {
   return db
@@ -444,7 +468,13 @@ const updateUserEmail = (userId: string, email: string): Promise<Object> => {
       pendingEmail: db.literal(),
     })
     .run()
-    .then(() => getUserById(userId));
+    .then(async () => {
+      const user = await getUserById(userId);
+      track(user.id, events.USER_VERIFIED_EMAIL);
+      identify(user.id, {
+        ...analyticsUser(user),
+      });
+    });
 };
 
 const deleteUser = (userId: string) => {
@@ -471,7 +501,14 @@ const deleteUser = (userId: string) => {
       pendingEmail: null,
       name: 'Deleted',
     })
-    .run();
+    .run()
+    .then(async () => {
+      const user = await getUserById(userId);
+      track(user.id, events.USER_DELETED);
+      identify(user.id, {
+        ...analyticsUser(user),
+      });
+    });
 };
 
 module.exports = {

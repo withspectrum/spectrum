@@ -4,6 +4,7 @@ import type { EditUserInput } from '../../models/user';
 import UserError from '../../utils/UserError';
 import { getUser, editUser } from '../../models/user';
 import { track, identify } from 'shared/analytics';
+import { analyticsUser } from 'shared/analytics/transformations';
 
 export default (_: any, args: EditUserInput, { user }: GraphQLContext) => {
   const currentUser = user;
@@ -24,18 +25,7 @@ export default (_: any, args: EditUserInput, { user }: GraphQLContext) => {
       if (!user || user.id === currentUser.id) {
         return editUser(args, currentUser.id).then(result => {
           track(result.id, 'user profile edited', {});
-          identify(result.id, {
-            createdAt: result.createdAt,
-            name: result.name,
-            providerId: result.providerId,
-            githubProviderId: result.githubProviderId,
-            githubUsername: result.githubUsername,
-            fbProviderId: result.fbProviderId,
-            googleProviderId: result.googleProviderId,
-            username: result.username,
-            lastSeen: result.lastSeen,
-            modifiedAt: result.modifiedAt,
-          });
+          identify(result.id, { ...analyticsUser(result) });
           return result;
         });
       }

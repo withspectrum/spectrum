@@ -37,6 +37,8 @@ import {
 } from 'src/helpers/images';
 import { Notice } from 'src/components/listItems/style';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
+import { track } from 'src/helpers/events';
+import * as events from 'shared/analytics/event-types';
 
 type State = {
   website: ?string,
@@ -261,6 +263,10 @@ class UserWithData extends React.Component<Props, State> {
 
     this.setState({
       isLoading: true,
+    });
+
+    track(events.USER_EDITED, {
+      ...input,
     });
 
     this.props
