@@ -100,7 +100,7 @@ class Navbar extends React.Component<Props, State> {
 
     const loggedInUser = currentUser;
 
-    if (isViewingMarketingPage(history)) {
+    if (isViewingMarketingPage(history, currentUser)) {
       return null;
     }
 
