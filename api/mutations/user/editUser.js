@@ -3,6 +3,7 @@ import type { GraphQLContext } from '../../';
 import type { EditUserInput } from '../../models/user';
 import UserError from '../../utils/UserError';
 import { getUser, editUser } from '../../models/user';
+import { track, identify } from 'shared/analytics';
 
 export default (_: any, args: EditUserInput, { user }: GraphQLContext) => {
   const currentUser = user;
@@ -20,10 +21,25 @@ export default (_: any, args: EditUserInput, { user }: GraphQLContext) => {
       throw new UserError('Nice try! 😉');
     }
     return getUser({ username: args.input.username }).then(user => {
-      // no user exists
-      if (!user) return editUser(args, currentUser.id);
-      // if the user is saving themselves, it's safe to edit
-      if (user.id === currentUser.id) return editUser(args, currentUser.id);
+      if (!user || user.id === currentUser.id) {
+        return editUser(args, currentUser.id).then(result => {
+          track(result.id, 'user profile edited', {});
+          identify(result.id, {
+            createdAt: result.createdAt,
+            name: result.name,
+            providerId: result.providerId,
+            githubProviderId: result.githubProviderId,
+            githubUsername: result.githubUsername,
+            fbProviderId: result.fbProviderId,
+            googleProviderId: result.googleProviderId,
+            username: result.username,
+            lastSeen: result.lastSeen,
+            modifiedAt: result.modifiedAt,
+          });
+          return result;
+        });
+      }
+
       return new UserError(
         'Looks like that username got swooped! Try another?'
       );
