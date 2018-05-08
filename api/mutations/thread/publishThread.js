@@ -24,9 +24,10 @@ import {
 } from 'shared/bull/queues';
 import getSpectrumScore from 'athena/queues/moderationEvents/spectrum';
 import getPerspectiveScore from 'athena/queues/moderationEvents/perspective';
+import type { RawDraftContentState } from 'draft-js/lib/RawDraftContentState';
 
 const threadBodyToPlainText = (body: any): string =>
-  toPlainText(toState(JSON.parse(body)));
+  typeof body === 'string' ? toPlainText(toState(JSON.parse(body))) : body;
 
 const OWNER_MODERATOR_SPAM_LIMIT = 5;
 const MEMBER_SPAM_LMIT = 3;
@@ -46,7 +47,7 @@ type PublishThreadInput = {
     type: 'SLATE' | 'DRAFTJS' | 'TEXT',
     content: {
       title: string,
-      body?: string,
+      body?: RawDraftContentState,
     },
     attachments?: ?Array<Attachment>,
     filesToUpload?: ?Array<File>,
@@ -153,6 +154,7 @@ export default async (
 
   // if user has published other threads in the last hour, check for spam
   if (
+    process.env.NODE_ENV === 'production' &&
     usersPreviousPublishedThreads &&
     usersPreviousPublishedThreads.length > 0
   ) {
@@ -195,7 +197,7 @@ export default async (
       if (titleSimilarity > 0.8) return true;
 
       if (thread.content.body) {
-        const incomingBody = threadBodyToPlainText(thread.content.body);
+        const incomingBody = thread.content.body;
         const thisBody = threadBodyToPlainText(t.content.body);
 
         if (incomingBody.length === 0 || thisBody.length === 0) return false;

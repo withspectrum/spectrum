@@ -13,7 +13,7 @@ const Thread = /* GraphQL */ `
 	# The contents of a thread
 	type ThreadContent {
 		title: String
-		body: String
+		body: RawDraftContentState
 		media: String
 	}
 
@@ -78,7 +78,7 @@ const Thread = /* GraphQL */ `
 
 	input ThreadContentInput {
 		title: String
-		body: String
+		body: RawDraftContentState
 	}
 
 	input EditThreadInput {
