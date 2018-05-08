@@ -170,7 +170,6 @@ export const USER_DELETED_FAILED = 'User Deleted Failed';
 export const USER_ADDED_EMAIL = 'User Added Email';
 export const USER_VERIFIED_EMAIL = 'User Verified Email';
 export const USER_ADDED_PROVIDER = 'User Added Provider';
-export const USER_LAST_SEEN_UPDATED = 'User Last Seen Updated';
 
 export const USER_JOINED_CHANNEL = 'User Joined Channel';
 export const USER_JOINED_CHANNEL_WITH_TOKEN = 'User Joined Channel With Token';

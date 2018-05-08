@@ -431,7 +431,7 @@ const setUserOnline = (id: string, isOnline: boolean): DBUser => {
     .then(result => {
       if (result.changes[0].new_val) {
         const user = result.changes[0].new_val;
-        track(user.id, events.USER_LAST_SEEN_UPDATED);
+        identify(user.id, { lastSeen: user.lastSeen });
         return user;
       }
       return result.changes[0].old_val;
