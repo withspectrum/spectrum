@@ -1,7 +1,7 @@
 // @flow
 export const isViewingMarketingPage = (
   history: Object,
-  currentUser: Object
+  currentUser: ?Object
 ) => {
   const viewing = history.location.pathname;
   const isRoot = viewing === '/';
