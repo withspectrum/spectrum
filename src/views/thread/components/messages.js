@@ -2,7 +2,8 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
-import InfiniteList from 'react-infinite-scroller-with-scroll-element';
+import InfiniteList from 'src/components/infiniteScroll';
+import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
 import ChatMessages from '../../../components/messageGroup';
 import { LoadingChat } from '../../../components/loading';
@@ -169,19 +170,7 @@ class MessagesWithData extends React.Component<Props, State> {
       const { edges, pageInfo } = data.thread.messageConnection;
       const unsortedMessages = edges.map(message => message.node);
 
-      const unique = array => {
-        const processed = [];
-        for (let i = array.length - 1; i >= 0; i--) {
-          if (processed.indexOf(array[i].id) < 0) {
-            processed.push(array[i].id);
-          } else {
-            array.splice(i, 1);
-          }
-        }
-        return array;
-      };
-
-      const uniqueMessages = unique(unsortedMessages);
+      const uniqueMessages = deduplicateChildren(unsortedMessages, 'id');
       const sortedMessages = sortAndGroupMessages(uniqueMessages);
 
       return (
@@ -215,12 +204,14 @@ class MessagesWithData extends React.Component<Props, State> {
           <InfiniteList
             pageStart={0}
             loadMore={loadNextPage}
+            isLoadingMore={this.props.isFetchingMore}
             hasMore={pageInfo.hasNextPage}
             loader={<LoadingChat size="small" />}
             useWindow={false}
             initialLoad={false}
             scrollElement={scrollContainer}
             threshold={750}
+            className={'scroller-for-messages'}
           >
             <ChatMessages
               threadId={data.thread.id}

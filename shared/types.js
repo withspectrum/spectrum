@@ -47,14 +47,30 @@ export type DBCommunitySettings = {
   brandedLogin: ?{
     customMessage: ?string,
   },
+  slackSettings: ?{
+    connectedAt: ?string,
+    connectedBy: ?string,
+    invitesSentAt: ?string,
+    teamName: ?string,
+    teamId: ?string,
+    scope: ?string,
+    token: ?string,
+    invitesMemberCount: ?string,
+    invitesCustomMessage: ?string,
+  },
 };
 
 export type DBChannelSettings = {
   id: string,
   channelId: string,
-  joinSettings: {
+  joinSettings?: {
     tokenJoinEnabled: boolean,
     token: string,
+  },
+  slackSettings?: {
+    botLinks: {
+      threadCreated: ?string,
+    },
   },
 };
 
@@ -99,6 +115,7 @@ export type DBMessage = {
   threadId: string,
   threadType: 'story' | 'directMessageThread',
   timestamp: Date,
+  parentId?: string,
 };
 
 export type NotificationPayloadType =
@@ -387,3 +404,5 @@ export type FileUpload = {
   encoding: string,
   stream: any,
 };
+
+export type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';

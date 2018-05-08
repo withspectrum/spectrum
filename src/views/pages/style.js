@@ -189,7 +189,7 @@ export const SignInButton = styled.a`
   ${props =>
     props.after &&
     `
-			margin: 24px 0;
+  		margin: 24px 0;
 
 			&:after {
 				content: 'Previously signed in with';
@@ -390,7 +390,7 @@ export const Tabs = styled.div`
   grid-template-columns: auto 1fr repeat(3, auto);
   grid-column-gap: 32px;
   grid-template-rows: auto;
-  grid-template-areas: 'logo . pricing support auth';
+  grid-template-areas: 'logo . features pricing support auth';
   align-items: center;
   justify-items: center;
   color: ${props =>
@@ -577,7 +577,7 @@ export const MenuContainer = styled.div`
   display: grid;
   grid-template-columns: auto;
   grid-template-rows: auto 16px repeat(3, auto) 1fr auto;
-  grid-template-areas: 'logo' '.' 'pricing' 'support' 'explore' '.' 'auth';
+  grid-template-areas: 'logo' '.' 'features' 'pricing' 'support' 'explore' '.' 'auth';
   align-content: start;
   left: 0;
   top: 0;

@@ -2,7 +2,7 @@
 import type { GraphQLContext } from '../../';
 import type { EditThreadInput } from '../../models/thread';
 import UserError from '../../utils/UserError';
-import { uploadImage } from '../../utils/s3';
+import { uploadImage } from '../../utils/file-storage';
 import { getThreads, editThread } from '../../models/thread';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
@@ -80,11 +80,16 @@ export default async (
 
   if (!input.filesToUpload) return editedThread;
 
-  const urls = await Promise.all(
-    input.filesToUpload.map(file =>
-      uploadImage(file, 'threads', editedThread.id)
-    )
-  );
+  let urls;
+  try {
+    urls = await Promise.all(
+      input.filesToUpload.map(file =>
+        uploadImage(file, 'threads', editedThread.id)
+      )
+    );
+  } catch (err) {
+    return new UserError(err.message);
+  }
 
   if (!urls || urls.length === 0) return editedThread;
 

@@ -7,11 +7,16 @@ import {
   approvePendingUserInChannel,
   createMemberInDefaultChannels,
 } from '../../models/usersChannels';
-import { getChannels } from '../../models/channel';
+import { getChannelById } from '../../models/channel';
 import {
   getUserPermissionsInCommunity,
   createMemberInCommunity,
 } from '../../models/usersCommunities';
+import { sendPrivateChannelRequestApprovedQueue } from 'shared/bull/queues';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateChannel,
+} from '../../utils/permissions';
 
 type TogglePendingUserInput = {
   input: {
@@ -21,98 +26,63 @@ type TogglePendingUserInput = {
   },
 };
 
-export default async (
-  _: any,
-  { input }: TogglePendingUserInput,
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+export default requireAuth(
+  async (
+    _: any,
+    { input }: TogglePendingUserInput,
+    { user, loaders }: GraphQLContext
+  ) => {
+    if (!await canModerateChannel(user.id, input.channelId, loaders)) {
+      return new UserError('You don’t have permission to manage this channel');
+    }
 
-  // user must be authed to edit a channel
-  if (!currentUser)
-    return new UserError(
-      'You must be signed in to make changes to this channel.'
-    );
+    const [evaluatedUserPermissions, channel] = await Promise.all([
+      getUserPermissionsInChannel(input.channelId, input.userId),
+      getChannelById(input.channelId),
+    ]);
 
-  const [
-    currentUserChannelPermissions,
-    evaluatedUserPermissions,
-    channels,
-  ] = await Promise.all([
-    getUserPermissionsInChannel(input.channelId, currentUser.id),
-    getUserPermissionsInChannel(input.channelId, input.userId),
-    getChannels([input.channelId]),
-  ]);
+    if (!evaluatedUserPermissions.isPending) {
+      return new UserError(
+        'This user is not currently pending access to this channel.'
+      );
+    }
 
-  // select the channel to be evaluated
-  const channelToEvaluate = channels && channels[0];
-
-  // if channel wasn't found or was deleted
-  if (!channelToEvaluate || channelToEvaluate.deletedAt) {
-    return new UserError("This channel doesn't exist");
-  }
-
-  // get the community parent of channel
-  const [
-    currentUserCommunityPermissions,
-    evaluatedUserCommunityPermissions,
-  ] = await Promise.all([
-    getUserPermissionsInCommunity(
-      channelToEvaluate.communityId,
-      currentUser.id
-    ),
-    getUserPermissionsInCommunity(channelToEvaluate.communityId, input.userId),
-  ]);
-
-  // if the user isn't on the pending list
-  if (!evaluatedUserPermissions.isPending) {
-    return new UserError(
-      'This user is not currently pending access to this channel.'
-    );
-  }
-
-  // user is neither a community or channel owner, they don't have permission
-  if (
-    currentUserChannelPermissions.isOwner ||
-    currentUserCommunityPermissions.isOwner
-  ) {
-    // all checks passed
-    // determine whether to approve or block them
     if (input.action === 'block') {
-      // remove the user from the pending list
       return blockUserInChannel(input.channelId, input.userId).then(
-        () => channelToEvaluate
+        () => channel
       );
     }
 
     if (input.action === 'approve') {
-      const approveUser = approvePendingUserInChannel(
-        input.channelId,
+      const evaluatedUserCommunityPermissions = await getUserPermissionsInCommunity(
+        channel.communityId,
         input.userId
       );
 
+      sendPrivateChannelRequestApprovedQueue.add({
+        userId: input.userId,
+        channelId: input.channelId,
+        communityId: channel.communityId,
+        moderatorId: user.id,
+      });
+
       // if the user is a member of the parent community, we can return
-      if (evaluatedUserCommunityPermissions.isMember) {
-        return Promise.all([channelToEvaluate, approveUser]).then(
-          () => channelToEvaluate
+      if (
+        evaluatedUserCommunityPermissions &&
+        evaluatedUserCommunityPermissions.isMember
+      ) {
+        return approvePendingUserInChannel(input.channelId, input.userId).then(
+          () => channel
         );
       } else {
         // if the user is not a member of the parent community,
         // join the community and the community's default channels
         return await Promise.all([
-          channelToEvaluate,
-          createMemberInCommunity(channelToEvaluate.communityId, input.userId),
-          createMemberInDefaultChannels(
-            channelToEvaluate.communityId,
-            input.userId
-          ),
-          approveUser,
-        ]).then(() => channelToEvaluate);
+          approvePendingUserInChannel(input.channelId, input.userId),
+          createMemberInCommunity(channel.communityId, input.userId),
+          createMemberInDefaultChannels(channel.communityId, input.userId),
+        ]).then(() => channel);
       }
     }
   }
-
-  return new UserError(
-    "You don't have permission to make changes to this channel."
-  );
-};
+);

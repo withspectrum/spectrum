@@ -6,7 +6,7 @@ import {
   getDirectMessageThread,
   createDirectMessageThread,
 } from '../../models/directMessageThread';
-import { uploadImage } from '../../utils/s3';
+import { uploadImage } from '../../utils/file-storage';
 import { storeMessage } from '../../models/message';
 import {
   setUserLastSeenInDirectMessageThread,
@@ -81,7 +81,12 @@ export default async (
 
       return await storeMessage(messageWithThread, currentUser.id);
     } else if (message.messageType === 'media' && message.file) {
-      const url = await uploadImage(message.file, 'threads', threadId);
+      let url;
+      try {
+        url = await uploadImage(message.file, 'threads', threadId);
+      } catch (err) {
+        return new UserError(err.message);
+      }
 
       // build a new message object with a new file field with metadata
       const newMessage = Object.assign({}, message, {

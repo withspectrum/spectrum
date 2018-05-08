@@ -63,7 +63,7 @@ export default async (
   ])
     .then(() => getCommunityById(communityId))
     .catch(err => {
-      console.log(err);
+      console.error(err);
       return new UserError(`Error canceling subscription: ${err.message}`);
     });
 };

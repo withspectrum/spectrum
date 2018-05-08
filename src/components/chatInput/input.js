@@ -5,7 +5,6 @@ import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import createMarkdownPlugin from 'draft-js-markdown-plugin';
 import Prism from 'prismjs';
-import debounce from 'debounce';
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-scala';
 import 'prismjs/components/prism-go';
@@ -18,11 +17,10 @@ import 'prismjs/components/prism-perl';
 import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-swift';
 import createPrismPlugin from 'draft-js-prism-plugin';
-import { isAndroid } from 'shared/draft-utils';
 import { customStyleMap } from 'src/components/rich-text-editor/style';
 import type { DraftEditorState } from 'draft-js/lib/EditorState';
 
-import { InputWrapper, MediaPreview } from './style';
+import { InputWrapper } from './style';
 
 type Props = {
   editorState: DraftEditorState,
@@ -33,8 +31,8 @@ type Props = {
   readOnly?: boolean,
   editorRef?: any => void,
   networkDisabled: boolean,
-  mediaPreview?: string,
-  onRemoveMedia: Object => void,
+  children?: React$Node,
+  hasAttachment?: boolean,
 };
 
 type State = {
@@ -61,7 +59,7 @@ class Input extends React.Component<Props, State> {
         createMarkdownPlugin({
           features: {
             inline: ['BOLD', 'ITALIC', 'CODE'],
-            block: ['CODE', 'ordered-list-item', 'unordered-list-item'],
+            block: ['CODE'],
           },
           renderLanguageSelect: () => null,
         }),
@@ -88,20 +86,19 @@ class Input extends React.Component<Props, State> {
       readOnly,
       editorRef,
       networkDisabled,
-      mediaPreview,
-      onRemoveMedia,
+      children,
+      hasAttachment,
       ...rest
     } = this.props;
     const { plugins } = this.state;
 
     return (
-      <InputWrapper focus={focus} networkDisabled={networkDisabled}>
-        {mediaPreview && (
-          <MediaPreview>
-            <img src={mediaPreview} alt="" />
-            <button onClick={onRemoveMedia} />
-          </MediaPreview>
-        )}
+      <InputWrapper
+        hasAttachment={hasAttachment}
+        focus={focus}
+        networkDisabled={networkDisabled}
+      >
+        {children}
         <DraftEditor
           editorState={editorState}
           onChange={onChange}

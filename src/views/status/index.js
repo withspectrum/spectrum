@@ -2,10 +2,14 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Bar } from './style';
+import { withRouter } from 'react-router';
+import compose from 'recompose/compose';
+import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
 
 type Props = {
   websocketConnection: string,
   dispatch: Function,
+  history: Object,
 };
 
 type State = {|
@@ -100,7 +104,13 @@ class Status extends React.Component<Props, State> {
   }
 
   render() {
+    const { history } = this.props;
     const { color, online, wsConnected, label, hidden } = this.state;
+
+    if (isViewingMarketingPage(history)) {
+      return null;
+    }
+
     if (hidden) return null;
     // if online and connected to the websocket, we don't need anything
     if (online && wsConnected) return null;
@@ -111,5 +121,9 @@ class Status extends React.Component<Props, State> {
 const map = state => ({
   websocketConnection: state.connectionStatus.websocketConnection,
 });
-// $FlowIssue
-export default connect(map)(Status);
+
+export default compose(
+  // $FlowIssue
+  connect(map),
+  withRouter
+)(Status);

@@ -32,7 +32,7 @@ export const recordExists = async (customerId: string): Promise<boolean> => {
         (result && result.length > 0)
     )
     .catch(err => {
-      console.log('ERROR: ', err);
+      console.error('ERROR: ', err);
       return new Error(err);
     });
 };
@@ -51,7 +51,7 @@ export const insertStripeCustomer = async (record: Object): Promise<any> => {
         result.changes[0].old_val
     )
     .catch(err => {
-      console.log('ERROR: ', err);
+      console.error('ERROR: ', err);
       return new Error(err);
     });
 };
@@ -73,7 +73,7 @@ export const replaceStripeCustomer = async (
         result.changes[0].old_val
     )
     .catch(err => {
-      console.log('ERROR: ', err);
+      console.error('ERROR: ', err);
       return new Error(err);
     });
 };

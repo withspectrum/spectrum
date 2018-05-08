@@ -1,0 +1,206 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`models/channel getChannelMetaData excludes deleted channels 1`] = `
+Array [
+  0,
+  0,
+]
+`;
+
+exports[`models/channel getChannelMetaData excludes deleted threads and non-members 1`] = `
+Array [
+  4,
+  5,
+]
+`;
+
+exports[`models/channel getChannels excludes deleted channels 1`] = `
+Array [
+  Object {
+    "communityId": "1",
+    "createdAt": 2016-12-31T23:00:00.000Z,
+    "description": "General chatter",
+    "id": "1",
+    "isDefault": true,
+    "isPrivate": false,
+    "name": "General",
+    "slug": "general",
+  },
+]
+`;
+
+exports[`models/channel getChannelsByCommunity returns correct set of channels 1`] = `
+Array [
+  Object {
+    "archivedAt": 2016-12-31T23:00:00.000Z,
+    "communityId": "1",
+    "createdAt": 2016-12-31T23:00:00.000Z,
+    "description": "Testing archiving",
+    "id": "5",
+    "isDefault": true,
+    "isPrivate": false,
+    "name": "Archived",
+    "slug": "archived",
+  },
+  Object {
+    "communityId": "1",
+    "createdAt": 2016-12-31T23:00:00.000Z,
+    "description": "General chatter",
+    "id": "1",
+    "isDefault": true,
+    "isPrivate": false,
+    "name": "General",
+    "slug": "general",
+  },
+  Object {
+    "communityId": "1",
+    "createdAt": 2016-12-31T23:00:00.000Z,
+    "description": "Private chatter",
+    "id": "2",
+    "isDefault": false,
+    "isPrivate": true,
+    "name": "Private",
+    "slug": "private",
+  },
+  Object {
+    "communityId": "1",
+    "createdAt": 2016-12-31T23:00:00.000Z,
+    "description": "Moderator created channel",
+    "id": "8",
+    "isDefault": false,
+    "isPrivate": false,
+    "name": "Moderator created",
+    "slug": "moderator-created",
+  },
+]
+`;
+
+exports[`models/channel getChannelsByUser returns correct set of channels 1`] = `
+Array [
+  Object {
+    "communityId": "2",
+    "createdAt": 2016-12-31T23:00:00.000Z,
+    "description": "Private chatter",
+    "id": "4",
+    "isBlocked": false,
+    "isDefault": false,
+    "isMember": true,
+    "isModerator": false,
+    "isOwner": false,
+    "isPending": false,
+    "isPrivate": true,
+    "name": "Private",
+    "receiveNotifications": true,
+    "slug": "private",
+  },
+  Object {
+    "communityId": "1",
+    "createdAt": 2016-12-31T23:00:00.000Z,
+    "description": "Private chatter",
+    "id": "2",
+    "isBlocked": false,
+    "isDefault": false,
+    "isMember": true,
+    "isModerator": false,
+    "isOwner": false,
+    "isPending": false,
+    "isPrivate": true,
+    "name": "Private",
+    "receiveNotifications": true,
+    "slug": "private",
+  },
+  Object {
+    "communityId": "1",
+    "createdAt": 2016-12-31T23:00:00.000Z,
+    "description": "General chatter",
+    "id": "1",
+    "isBlocked": false,
+    "isDefault": true,
+    "isMember": true,
+    "isModerator": false,
+    "isOwner": false,
+    "isPending": false,
+    "isPrivate": false,
+    "name": "General",
+    "receiveNotifications": true,
+    "slug": "general",
+  },
+  Object {
+    "communityId": "2",
+    "createdAt": 2016-12-31T23:00:00.000Z,
+    "description": "General chatter",
+    "id": "3",
+    "isBlocked": false,
+    "isDefault": true,
+    "isMember": true,
+    "isModerator": false,
+    "isOwner": false,
+    "isPending": false,
+    "isPrivate": false,
+    "name": "General",
+    "receiveNotifications": true,
+    "slug": "general",
+  },
+]
+`;
+
+exports[`models/channel getChannelsByUserAndCommunity returns correct set of channels 1`] = `
+Array [
+  "5",
+  "1",
+  "8",
+  "2",
+]
+`;
+
+exports[`models/channel getChannelsMemberCounts excludes deleted channels 1`] = `
+Array [
+  Object {
+    "group": "1",
+    "reduction": 5,
+  },
+]
+`;
+
+exports[`models/channel getChannelsMemberCounts excludes non-members 1`] = `
+Array [
+  Object {
+    "group": "1",
+    "reduction": 5,
+  },
+  Object {
+    "group": "2",
+    "reduction": 5,
+  },
+]
+`;
+
+exports[`models/channel getChannelsThreadCounts excludes deleted channels 1`] = `
+Array [
+  Object {
+    "group": "1",
+    "reduction": 4,
+  },
+]
+`;
+
+exports[`models/channel getChannelsThreadCounts excludes deleted threads 1`] = `
+Array [
+  Object {
+    "group": "1",
+    "reduction": 4,
+  },
+  Object {
+    "group": "2",
+    "reduction": 3,
+  },
+]
+`;
+
+exports[`models/channel getPublicChannelsByCommunity returns correct set of channels 1`] = `
+Array [
+  "5",
+  "1",
+  "8",
+]
+`;

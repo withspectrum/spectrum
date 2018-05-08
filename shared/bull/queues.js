@@ -63,12 +63,14 @@ import {
   COMMUNITY_INVOICE_PAID_NOTIFICATION,
   REACTION_NOTIFICATION,
   PRIVATE_CHANNEL_REQUEST_SENT,
+  PRIVATE_CHANNEL_REQUEST_APPROVED,
   COMMUNITY_INVITE_NOTIFICATION,
   CHANNEL_NOTIFICATION,
   DIRECT_MESSAGE_NOTIFICATION,
   MESSAGE_NOTIFICATION,
   SEND_PUSH_NOTIFICATIONS,
   SLACK_IMPORT,
+  SEND_SLACK_INVITIATIONS,
 } from 'athena/queues/constants';
 
 import { PROCESS_REPUTATION_EVENT } from 'mercury/constants';
@@ -83,6 +85,7 @@ exports.QUEUE_NAMES = {
   sendCommunityInvoicePaidNotificationQueue: COMMUNITY_INVOICE_PAID_NOTIFICATION,
   sendReactionNotificationQueue: REACTION_NOTIFICATION,
   sendPrivateChannelRequestQueue: PRIVATE_CHANNEL_REQUEST_SENT,
+  sendPrivateChannelRequestApprovedQueue: PRIVATE_CHANNEL_REQUEST_APPROVED,
   sendPrivateChannelInviteNotificationQueue:
     'private channel invite notification',
   sendCommunityInviteNotificationQueue: COMMUNITY_INVITE_NOTIFICATION,
@@ -92,6 +95,7 @@ exports.QUEUE_NAMES = {
   sendMentionNotificationQueue: MENTION_NOTIFICATION,
   sendNotificationAsPushQueue: SEND_PUSH_NOTIFICATIONS,
   slackImportQueue: SLACK_IMPORT,
+  sendSlackInvitationsQueue: SEND_SLACK_INVITIATIONS,
 
   // hermes - emails
   sendNewUserWelcomeEmailQueue: SEND_NEW_USER_WELCOME_EMAIL,

@@ -15,8 +15,6 @@ import ModalRoot from './components/modals/modalRoot';
 import Gallery from './components/gallery';
 import Toasts from './components/toasts';
 import Maintenance from './components/maintenance';
-import LoadingDMs from './views/directMessages/components/loading';
-import LoadingThread from './views/thread/components/loading';
 import { Loading, LoadingScreen } from './components/loading';
 import LoadingDashboard from './views/dashboard/components/dashboardLoading';
 import Composer from './components/composer';
@@ -28,22 +26,13 @@ import Navbar from './views/navbar';
 import Status from './views/status';
 import Login from './views/login';
 
-/* prettier-ignore */
-const DirectMessages = Loadable({
-  loader: () => import('./views/directMessages'/* webpackChunkName: "DirectMessages" */),
-  loading: ({ isLoading }) => isLoading && <LoadingDMs />,
-});
+import DirectMessages from './views/directMessages';
+import Thread from './views/thread';
 
 /* prettier-ignore */
 const Explore = Loadable({
   loader: () => import('./views/explore'/* webpackChunkName: "Explore" */),
   loading: ({ isLoading }) => isLoading && <Loading />,
-});
-
-/* prettier-ignore */
-const Thread = Loadable({
-  loader: () => import('./views/thread'/* webpackChunkName: "Thread" */),
-  loading: ({ isLoading }) => isLoading && <LoadingThread />,
 });
 
 /* prettier-ignore */

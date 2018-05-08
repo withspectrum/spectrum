@@ -4,12 +4,46 @@ import Raven from 'shared/raven';
 import { IsUserError } from './UserError';
 import type { GraphQLError } from 'graphql';
 
+const queryRe = /\s*(query|mutation)[^{]*/;
+
+const collectQueries = query => {
+  if (!query) return 'No query';
+  return query
+    .split('\n')
+    .map(line => {
+      const m = line.match(queryRe);
+      return m ? m[0].trim() : '';
+    })
+    .filter(line => !!line)
+    .join('\n');
+};
+
+const errorPath = error => {
+  if (!error.path) return '';
+  return error.path
+    .map((value, index) => {
+      if (!index) return value;
+      return typeof value === 'number' ? `[${value}]` : `.${value}`;
+    })
+    .join('');
+};
+
+const logGraphQLError = (req, error) => {
+  debug('---GraphQL Error---');
+  debug(error);
+  if (req) {
+    debug(collectQueries(req.body.query));
+    debug('variables', JSON.stringify(req.body.variables || {}));
+  }
+  const path = errorPath(error);
+  path && debug('path', path);
+  debug('-------------------\n');
+};
+
 const createGraphQLErrorFormatter = (req?: express$Request) => (
   error: GraphQLError
 ) => {
-  debug('---GraphQL Error---');
-  debug(error);
-  debug('-------------------\n');
+  logGraphQLError(req, error);
   const isUserError = error.originalError
     ? error.originalError[IsUserError]
     : error[IsUserError];

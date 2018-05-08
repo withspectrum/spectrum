@@ -5,18 +5,32 @@ import { Text, View, Button } from 'react-native';
 import { AuthSession, SecureStore } from 'expo';
 import { authenticate } from '../../actions/authentication';
 import { DEV_BASE_URI } from '../../../shared/graphql/constants.native';
+import {
+  Container,
+  Emoji,
+  Title,
+  Subtitle,
+  FacebookButton,
+  GithubButton,
+  GoogleButton,
+  TwitterButton,
+  CodeOfConduct,
+  Link,
+} from './style';
 
 const API_URL =
   process.env.NODE_ENV === 'production'
     ? 'https://spectrum.chat'
     : `http://${DEV_BASE_URI}`;
 
+type Provider = 'twitter' | 'facebook' | 'google' | 'github';
+
 type Props = {
   dispatch: Function,
 };
 
 class Login extends React.Component<Props> {
-  authenticate = (provider: 'twitter' | 'facebook' | 'google') => async () => {
+  authenticate = (provider: Provider) => async () => {
     const redirectUrl = AuthSession.getRedirectUrl();
     const result = await AuthSession.startAsync({
       authUrl: `${API_URL}/auth/${provider}?r=${redirectUrl}&authType=token`,
@@ -36,20 +50,22 @@ class Login extends React.Component<Props> {
 
   render() {
     return (
-      <View testID="login">
-        <Button
-          title="Login/Signup with Twitter"
-          onPress={this.authenticate('twitter')}
-        />
-        <Button
-          title="Login/Signup with Google"
-          onPress={this.authenticate('google')}
-        />
-        <Button
-          title="Login/Signup with Facebook"
-          onPress={this.authenticate('facebook')}
-        />
-      </View>
+      <Container testID="login">
+        <Emoji />
+        <Title>Sign in to get started</Title>
+        <Subtitle>
+          Spectrum is a place where communities can share, discuss, and grow
+          together. Sign in below to get in on the conversation.
+        </Subtitle>
+        <TwitterButton onPress={this.authenticate('twitter')} />
+        <GoogleButton onPress={this.authenticate('google')} />
+        <FacebookButton onPress={this.authenticate('facebook')} />
+        <GithubButton onPress={this.authenticate('github')} />
+        <CodeOfConduct>By using Spectrum, you agree to our</CodeOfConduct>
+        <Link href="https://github.com/withspectrum/code-of-conduct">
+          Code of Conduct
+        </Link>
+      </Container>
     );
   }
 }

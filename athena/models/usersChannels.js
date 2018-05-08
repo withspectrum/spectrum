@@ -48,3 +48,14 @@ export const getOwnersInChannel = (
     .map(user => user('userId'))
     .run();
 };
+
+export const getModeratorsInChannel = (
+  channelId: string
+): Promise<Array<string>> => {
+  return db
+    .table('usersChannels')
+    .getAll(channelId, { index: 'channelId' })
+    .filter({ isModerator: true })
+    .map(user => user('userId'))
+    .run();
+};

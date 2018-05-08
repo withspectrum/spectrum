@@ -220,6 +220,13 @@ export type PrivateChannelRequestJobData = {
   channel: DBChannel,
 };
 
+export type PrivateChannelRequestApprovedJobData = {
+  userId: string,
+  channelId: string,
+  communityId: string,
+  moderatorId: string,
+};
+
 export type PrivateChannelInviteNotificationJobData = {
   recipient: { email: string, firstName?: ?string, lastName?: ?string },
   channelId: string,
@@ -352,6 +359,11 @@ export type StripeCardExpiringWarningJobData = {
   record: Object,
 };
 
+export type SendSlackInvitationsJobData = {
+  communityId: string,
+  userId: string,
+};
+
 export type Queues = {
   // athena
   sendThreadNotificationQueue: BullQueue<ThreadNotificationJobData>,
@@ -361,6 +373,9 @@ export type Queues = {
   sendCommunityInvoicePaidNotificationQueue: BullQueue<InvoiceJobData>,
   sendReactionNotificationQueue: BullQueue<ReactionNotificationJobData>,
   sendPrivateChannelRequestQueue: BullQueue<PrivateChannelRequestJobData>,
+  sendPrivateChannelRequestApprovedQueue: BullQueue<
+    PrivateChannelRequestApprovedJobData
+  >,
   sendPrivateChannelInviteNotificationQueue: BullQueue<
     PrivateChannelInviteNotificationJobData
   >,
@@ -375,6 +390,7 @@ export type Queues = {
   sendMentionNotificationQueue: BullQueue<MentionNotificationJobData>,
   sendNotificationAsPushQueue: BullQueue<PushNotificationsJobData>,
   slackImportQueue: BullQueue<SlackImportJobData>,
+  sendSlackInvitationsQueue: BullQueue<SendSlackInvitationsJobData>,
 
   // hermes
   sendNewUserWelcomeEmailQueue: BullQueue<NewUserWelcomeEmailJobData>,

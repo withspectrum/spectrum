@@ -1,4 +1,4 @@
-import { track, set } from '../helpers/events';
+import { track } from '../helpers/events';
 import { removeItemFromStorage, storeItem } from '../helpers/localStorage';
 import Raven from 'raven-js';
 
@@ -42,9 +42,6 @@ export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
 
   // logs the user id to sentry errors
   Raven.setUserContext({ id: user.id });
-
-  // set user id context in google analytics
-  set(user.id);
 
   // save this object to localstorage. This will be used in the future to hydrate
   // the store when users visit the homepage

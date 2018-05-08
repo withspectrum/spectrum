@@ -2,10 +2,13 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import {
-  createChannelSettings,
-  enableChannelTokenJoin,
+  getOrCreateChannelSettings,
   resetChannelJoinToken,
 } from '../../models/channelSettings';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateChannel,
+} from '../../utils/permissions';
 
 type ResetJoinTokenInput = {
   input: {
@@ -13,33 +16,18 @@ type ResetJoinTokenInput = {
   },
 };
 
-export default async (
-  _: any,
-  { input: { id: channelId } }: ResetJoinTokenInput,
-  { user, loaders }: GraphQLContext
-) => {
-  const currentUser = user;
-  if (!currentUser) {
-    return new UserError('You must be signed in to manage this channel.');
-  }
+export default requireAuth(
+  async (
+    _: any,
+    { input: { id: channelId } }: ResetJoinTokenInput,
+    { user, loaders }: GraphQLContext
+  ) => {
+    if (!await canModerateChannel(user.id, channelId, loaders)) {
+      return new UserError('You don’t have permission to manage this channel');
+    }
 
-  const [permissions, settings] = await Promise.all([
-    loaders.userPermissionsInChannel.load([currentUser.id, channelId]),
-    loaders.channelSettings.load(channelId),
-  ]);
-
-  if (!permissions.isOwner) {
-    return new UserError("You don't have permission to do this.");
-  }
-
-  loaders.channelSettings.clear(channelId);
-
-  // settings.id tells us that a channelSettings record exists in the db
-  if (settings.id) {
-    return await resetChannelJoinToken(channelId);
-  } else {
-    return await createChannelSettings(channelId).then(
-      async () => await enableChannelTokenJoin(channelId)
+    return await getOrCreateChannelSettings(channelId).then(
+      async () => await resetChannelJoinToken(channelId)
     );
   }
-};
+);
