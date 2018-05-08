@@ -18,6 +18,7 @@ import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
 import Routes from './routes';
 import { track } from './helpers/events';
+import * as events from 'shared/analytics/event-types';
 import { wsLink } from 'shared/graphql';
 
 const { thread, t } = queryString.parse(history.location.search);
@@ -117,12 +118,12 @@ wsLink.subscriptionClient.on('reconnected', () =>
 // This fires when a user is prompted to add the app to their homescreen
 // We use it to track it happening in Google Analytics so we have those sweet metrics
 window.addEventListener('beforeinstallprompt', e => {
-  track('user', 'prompted to add to homescreen');
+  track(events.PWA_HOME_SCREEN_PROMPTED);
   e.userChoice.then(choiceResult => {
     if (choiceResult.outcome === 'dismissed') {
-      track('user', 'did not add to homescreen');
+      track(events.PWA_HOME_SCREEN_DISMISSED);
     } else {
-      track('user', 'added to homescreen');
+      track(events.PWA_HOME_SCREEN_ADDED);
     }
   });
 });
