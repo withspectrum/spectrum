@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { track } from 'src/helpers/events';
 import PageFooter from '../components/footer';
 import { Wrapper } from '../style';
 import Paid from './components/paid';
@@ -8,6 +7,8 @@ import Intro from './components/intro';
 import Discount from './components/discount';
 import Faq from './components/faq';
 import type { ContextRouter } from 'react-router';
+import * as events from 'shared/analytics/event-types';
+import { track } from 'src/helpers/events';
 
 type Props = {
   ...$Exact<ContextRouter>,
@@ -21,14 +22,8 @@ class Pricing extends React.Component<Props, State> {
   state = { ownsCommunities: false };
 
   componentDidMount() {
-    track('pricing', 'viewed', null);
+    track(events.PRICING_PAGE_VIEWED);
   }
-
-  setOwnsCommunities = () => {
-    return this.setState({
-      ownsCommunities: true,
-    });
-  };
 
   render() {
     return (
