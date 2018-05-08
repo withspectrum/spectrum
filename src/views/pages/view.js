@@ -38,6 +38,8 @@ import {
   SecondaryCTA,
   Content,
 } from './style';
+import * as events from 'shared/analytics/event-types';
+import { track } from 'src/helpers/events';
 
 type Props = Object;
 
@@ -155,10 +157,16 @@ export const Overview = (props: Props) => {
             that are built to last.
           </ThisCopy>
           <Actions>
-            <Link to="/login">
+            <Link
+              to="/login"
+              onClick={() => track(events.HOME_PAGE_JOIN_SPECTRUM_CLICKED)}
+            >
               <ThisPrimaryCTA icon="welcome">Join Spectrum</ThisPrimaryCTA>
             </Link>
-            <Link to="/new/community">
+            <Link
+              to="/new/community"
+              onClick={() => track(events.HOME_PAGE_CREATE_COMMUNITY_CLICKED)}
+            >
               <ThisSecondaryCTA icon="plus-fill">
                 Create your community
               </ThisSecondaryCTA>
@@ -254,7 +262,10 @@ export const Centralized = (props: Props) => {
           </ThisCopy>
           <Actions>
             <Link to="/explore">
-              <ThisPrimaryCTA icon="explore">
+              <ThisPrimaryCTA
+                icon="explore"
+                onClick={() => track(events.HOME_PAGE_EXPLORE_CLICKED)}
+              >
                 Explore communities
               </ThisPrimaryCTA>
             </Link>
@@ -379,7 +390,12 @@ export const Chat = (props: Props) => {
           </ThisCopy>
 
           <Actions>
-            <Link to="/thread/764331db-16dd-4fc4-a2c5-aabd735a64a9">
+            <Link
+              to="/thread/764331db-16dd-4fc4-a2c5-aabd735a64a9"
+              onClick={() =>
+                track(events.HOME_PAGE_EXAMPLE_CONVERSATION_CLICKED)
+              }
+            >
               <ThisPrimaryCTA icon="message-fill">
                 Check out a conversation
               </ThisPrimaryCTA>
@@ -460,7 +476,10 @@ export const Sell = (props: Props) => {
         </Text>
       </ThisContent>
       <Actions>
-        <Link to="/new/community">
+        <Link
+          to="/new/community"
+          onClick={() => track(events.HOME_PAGE_CREATE_COMMUNITY_CLICKED)}
+        >
           <PrimaryCTA icon="plus-fill">
             Start building your community
           </PrimaryCTA>
@@ -658,10 +677,16 @@ export const Yours = (props: Props) => {
             </Quote>
           </Quotes>
           <Actions>
-            <Link to="/login">
+            <Link
+              to="/login"
+              onClick={() => track(events.HOME_PAGE_JOIN_SPECTRUM_CLICKED)}
+            >
               <ThisPrimaryCTA icon="welcome">Join Spectrum</ThisPrimaryCTA>
             </Link>
-            <Link to="/explore">
+            <Link
+              to="/explore"
+              onClick={() => track(events.HOME_PAGE_CREATE_COMMUNITY_CLICKED)}
+            >
               <ThisSecondaryCTA icon="explore">
                 Explore communities
               </ThisSecondaryCTA>

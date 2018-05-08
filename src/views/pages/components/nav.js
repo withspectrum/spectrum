@@ -25,6 +25,8 @@ import {
   MenuContainer,
   MenuOverlay,
 } from '../style';
+import * as events from 'shared/analytics/event-types';
+import { track } from 'src/helpers/events';
 
 type Props = {
   currentUser: Object,
@@ -92,7 +94,10 @@ class Nav extends React.Component<Props, State> {
                 />
               </Link>
             ) : (
-              <Link to="/login">
+              <Link
+                to="/login"
+                onClick={() => track(events.HOME_PAGE_SIGN_IN_CLICKED)}
+              >
                 <Button
                   style={{
                     fontWeight: '700',
@@ -148,7 +153,10 @@ class Nav extends React.Component<Props, State> {
                   <Icon glyph="enter" />
                 </AuthLink>
               ) : (
-                <AuthLink to={'/login'}>
+                <AuthLink
+                  to={'/login'}
+                  onClick={() => track(events.HOME_PAGE_SIGN_IN_CLICKED)}
+                >
                   <Icon glyph="welcome" />
                   <span>Sign in</span>
                   <Icon glyph="enter" />
