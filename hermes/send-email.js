@@ -38,7 +38,7 @@ const sendEmail = (options: Options) => {
   );
 
   if (userId) {
-    track(userId, events.EMAIL_SENT, { tag: Tag });
+    track(userId, events.EMAIL_RECEIVED, { tag: Tag });
   }
 
   // $FlowFixMe
@@ -57,7 +57,7 @@ const sendEmail = (options: Options) => {
           // hard bounce or they marked as spam
           if (err.code === 406) {
             if (userId) {
-              track(userId, events.EMAIL_UNDELIVERED, { tag: Tag });
+              track(userId, events.EMAIL_BOUNCED, { tag: Tag });
             }
 
             return await deactiveUserEmailNotifications(To)
