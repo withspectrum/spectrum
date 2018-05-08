@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('api:analytics:trackUserError');
+import Raven from 'shared/raven';
 import { amplitude } from './amplitude';
 import { getEventTypeFromErrorType } from 'shared/errors';
 
@@ -23,5 +24,8 @@ export const trackUserError = (
     });
   };
 
-  return Promise.all([amplitudePromise()]);
+  return Promise.all([amplitudePromise()]).catch(err => {
+    console.error('Error tracking UserError: ', err);
+    Raven.captureException(err);
+  });
 };

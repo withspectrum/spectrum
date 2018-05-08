@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('api:analytics:identify');
+import Raven from 'shared/raven';
 import { amplitude } from './amplitude';
 
 export const identify = (userId: string, userProperties: Object) => {
@@ -11,5 +12,8 @@ export const identify = (userId: string, userProperties: Object) => {
     });
   };
 
-  return Promise.all([amplitudePromise()]);
+  return Promise.all([amplitudePromise()]).catch(err => {
+    console.error('Error Identifying event: ', err);
+    Raven.captureException(err);
+  });
 };

@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('api:analytics:track');
+import Raven from 'shared/raven';
 import { amplitude } from './amplitude';
 
 export const track = (
@@ -19,5 +20,8 @@ export const track = (
     });
   };
 
-  return Promise.all([amplitudePromise()]);
+  return Promise.all([amplitudePromise()]).catch(err => {
+    console.error('Error tracking event: ', err);
+    Raven.captureException(err);
+  });
 };
