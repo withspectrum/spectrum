@@ -43,6 +43,7 @@ export default async (job: Job<SendNewDirectMessageEmailJobData>) => {
         muteThreadToken,
         unsubscribeToken,
       },
+      userId: recipient.userId,
     });
   } catch (err) {
     debug('❌ Error in job:\n');

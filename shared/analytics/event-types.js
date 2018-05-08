@@ -270,3 +270,6 @@ export const WEB_PUSH_NOTIFICATIONS_SUBSCRIBED =
 export const WEB_PUSH_NOTIFICATIONS_BLOCKED = 'Web Push Notifications Blocked';
 export const WEB_PUSH_NOTIFICATIONS_UNSUBSCRIBED =
   'Web Push Notifications Unsubscribed';
+
+export const EMAIL_SENT = 'Email Sent';
+export const EMAIL_UNDELIVERED = 'Email Undelivered';
