@@ -115,6 +115,7 @@
     "keygrip": "^1.0.2",
     "linkify-it": "^2.0.3",
     "lodash": "^4.17.4",
+    "lodash.get": "^4.4.2",
     "lodash.intersection": "^4.4.0",
     "markdown-draft-js": "^0.6.3",
     "moment": "^2.18.1",

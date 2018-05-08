@@ -2,6 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
+import get from 'lodash.get';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
@@ -48,6 +49,7 @@ type Props = {
   data: {
     thread: {
       id: string,
+      isAuthor: boolean,
       currentUserLastSeen: Date | number,
       messageConnection: {
         pageInfo: {
@@ -139,6 +141,8 @@ class MessagesWithData extends React.Component<Props, State> {
       return Promise.resolve(subscription());
     }
   };
+
+  getIsAuthor = () => get(this, 'props.data.thread.isAuthor', false);
 
   render() {
     const {
@@ -234,15 +238,7 @@ class MessagesWithData extends React.Component<Props, State> {
 
     if (!messagesExist) {
       if (threadIsLocked) return null;
-      return (
-        <NullMessagesWrapper>
-          <Icon glyph={'emoji'} size={64} />
-          <NullCopy>
-            No messages have been sent in this conversation yet - why don’t you
-            kick things off below?
-          </NullCopy>
-        </NullMessagesWrapper>
-      );
+      return <NullMessagesWrapper>something</NullMessagesWrapper>;
     }
 
     return (
