@@ -33,6 +33,8 @@ import {
   SearchResultTextContainer,
   SearchResultImage,
 } from '../components/style';
+import { track } from 'src/helpers/events';
+import * as events from 'shared/analytics/event-types';
 
 type State = {
   searchString: string,
@@ -139,6 +141,8 @@ class NewThread extends React.Component<Props, State> {
     this.setState({
       searchIsLoading: true,
     });
+
+    track(events.DIRECT_MESSAGE_THREAD_COMPOSER_USER_SEARCHED);
 
     // trigger the query
     client
@@ -577,6 +581,8 @@ class NewThread extends React.Component<Props, State> {
     functions depending on the context or state of the composer
   */
   componentDidMount() {
+    track(events.DIRECT_MESSAGE_THREAD_COMPOSER_VIEWED);
+
     document.addEventListener('keydown', this.handleKeyPress, false);
 
     const { initNewThreadWithUser, threadSliderIsOpen } = this.props;
@@ -646,6 +652,8 @@ class NewThread extends React.Component<Props, State> {
     if (threadIsBeingCreated) {
       return;
     } else {
+      track(events.DIRECT_MESSAGE_THREAD_CREATED);
+
       this.setState({
         threadIsBeingCreated: true,
       });

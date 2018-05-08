@@ -14,6 +14,8 @@ import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import ViewError from '../../../components/viewError';
 import Titlebar from '../../titlebar';
 import { View, MessagesList, ComposeHeader } from '../style';
+import { track } from 'src/helpers/events';
+import * as events from 'shared/analytics/event-types';
 
 type Props = {
   subscribeToUpdatedDirectMessageThreads: Function,
@@ -61,6 +63,7 @@ class DirectMessages extends React.Component<Props, State> {
   componentDidMount() {
     this.props.markDirectMessageNotificationsSeen();
     this.subscribe();
+    track(events.DIRECT_MESSAGES_VIEWED);
   }
 
   componentWillUnmount() {
@@ -68,6 +71,12 @@ class DirectMessages extends React.Component<Props, State> {
   }
 
   setActiveThread = id => {
+    if (id === 'new') {
+      track(events.DIRECT_MESSAGE_THREAD_COMPOSER_VIEWED);
+    } else {
+      track(events.DIRECT_MESSAGE_THREAD_VIEWED);
+    }
+
     return this.setState({
       activeThread: id === 'new' ? '' : id,
     });

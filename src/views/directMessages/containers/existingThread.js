@@ -12,6 +12,8 @@ import getDirectMessageThread from 'shared/graphql/queries/directMessageThread/g
 import { MessagesContainer, ViewContent } from '../style';
 import { Loading } from '../../../components/loading';
 import ViewError from '../../../components/viewError';
+import { track } from 'src/helpers/events';
+import * as events from 'shared/analytics/event-types';
 
 type Props = {
   data: Object,
@@ -28,6 +30,7 @@ class ExistingThread extends React.Component<Props> {
   chatInput: ?ChatInput;
 
   componentDidMount() {
+    track(events.DIRECT_MESSAGE_THREAD_VIEWED);
     const threadId = this.props.id;
     this.props.setActiveThread(threadId);
     this.props.setLastSeen(threadId);

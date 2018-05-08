@@ -13,6 +13,8 @@ import {
   createMemberInDirectMessageThread,
 } from '../../models/usersDirectMessageThreads';
 import type { FileUpload } from 'shared/types';
+import { track } from 'shared/analytics';
+import * as events from 'shared/analytics/event-types';
 
 type DMThreadInput = {
   input: {
@@ -115,11 +117,14 @@ export default async (
     ]).then(() => threadToReturn);
   }
 
+  track(currentUser.id, events.DIRECT_MESSAGE_THREAD_CREATED);
+
   return await Promise.all([
     createMemberInDirectMessageThread(threadId, currentUser.id, true),
     handleStoreMessage(message),
-    participants.map(participant =>
-      createMemberInDirectMessageThread(threadId, participant, false)
-    ),
+    participants.map(participant => {
+      track(participant, events.DIRECT_MESSAGE_THREAD_RECEIVED);
+      return createMemberInDirectMessageThread(threadId, participant, false);
+    }),
   ]).then(() => threadToReturn);
 };

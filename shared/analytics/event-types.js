@@ -105,15 +105,22 @@ export const MESSAGE_SENT_FAILED = 'Message Sent Failed';
 export const MESSAGE_DELETED = 'Message Deleted';
 export const MESSAGE_DELETED_FAILED = 'Message Deleted Failed';
 
+export const DIRECT_MESSAGE_SENT_INITED = 'Direct Message Sent Inited';
 export const DIRECT_MESSAGE_SENT = 'Direct Message Sent';
 export const DIRECT_MESSAGE_SENT_FAILED = 'Direct Message Sent Failed';
 export const DIRECT_MESSAGE_DELETED = 'Direct Message Deleted';
 export const DIRECT_MESSAGE_DELETED_FAILED = 'Direct Message Deleted Failed';
 
+export const DIRECT_MESSAGES_VIEWED = 'Direct Messages Viewed';
 export const DIRECT_MESSAGE_THREAD_VIEWED = 'Direct Message Thread Viewed';
+export const DIRECT_MESSAGE_THREAD_COMPOSER_VIEWED =
+  'Direct Message Thread Composer Clicked';
+export const DIRECT_MESSAGE_THREAD_COMPOSER_USER_SEARCHED =
+  'Direct Message Thread Composer User Searched';
 export const DIRECT_MESSAGE_THREAD_CREATED = 'Direct Message Thread Created';
 export const DIRECT_MESSAGE_THREAD_CREATED_FAILED =
   'Direct Message Thread Created Failed';
+export const DIRECT_MESSAGE_THREAD_RECEIVED = 'Direct Message Thread RECEIVED';
 
 export const REACTION_CREATED = 'Reaction Created';
 export const REACTION_CREATED_FAILED = 'Reaction Created Failed';
