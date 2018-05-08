@@ -34,17 +34,16 @@ export const CHANNEL_NOTIFICATIONS_DISABLED_FAILED =
   'Channel Notifications Disabled Failed';
 export const CHANNEL_VIEWED = 'Channel Viewed';
 
-export const CHANNEL_COMPOSER_OPENED = 'Channel Composer Opened';
-export const CHANNEL_COMPOSER_CANCELED = 'Channel Composer Canceled';
-
 export const CHANNEL_SETTINGS_VIEWED = 'Channel Settings Viewed';
 
 export const CHANNEL_MEMBER_APPROVED = 'Channel Member Approved';
 export const CHANNEL_MEMBER_BLOCKED = 'Channel Member Blocked';
 export const CHANNEL_MEMBER_UNBLOCKED = 'Channel Member Unblocked';
 
+export const COMMUNITY_CREATED_INITED = 'Community Created Inited';
 export const COMMUNITY_CREATED = 'Community Created';
 export const COMMUNITY_CREATED_FAILED = 'Community Created Failed';
+export const COMMUNITY_DELETED_INITED = 'Community Deleted Inited';
 export const COMMUNITY_DELETED = 'Community Deleted';
 export const COMMUNITY_DELETED_FAILED = 'Community Deleted Failed';
 export const COMMUNITY_EDITED = 'Community Edited';
@@ -95,8 +94,7 @@ export const COMMUNITY_EMAIL_INVITE_SENT = 'Community Email Invite Sent';
 export const COMMUNITY_EMAIL_INVITE_SENT_FAILED =
   'Community Email Invite Sent Failed';
 export const COMMUNITY_VIEWED = 'Community Viewed';
-export const COMMUNITY_COMPOSER_OPENED = 'Community Composer Opened';
-export const COMMUNITY_COMPOSER_CANCELED = 'Community Composer Canceled';
+
 export const COMMUNITY_JOINED = 'Community Joined';
 export const COMMUNITY_JOINED_FAILED = 'Community Joined Failed';
 export const COMMUNITY_LEFT = 'Community Left';
@@ -124,10 +122,13 @@ export const REACTION_DELETED_FAILED = 'Reaction Deleted Failed';
 
 export const THREAD_CREATED = 'Thread Created';
 export const THREAD_CREATED_FAILED = 'Thread Created Failed';
+export const THREAD_DELETED_INITED = 'Thread Deleted Inited';
 export const THREAD_DELETED = 'Thread Deleted';
 export const THREAD_DELETED_FAILED = 'Thread Deleted Failed';
+export const THREAD_EDITED_INITED = 'Thread Edited Inited';
 export const THREAD_EDITED = 'Thread Edited';
 export const THREAD_EDITED_FAILED = 'Thread Edited Failed';
+export const THREAD_MOVED_INITED = 'Thread Moved Inited';
 export const THREAD_MOVED = 'Thread Moved';
 export const THREAD_MOVED_FAILED = 'Thread Moved Failed';
 export const THREAD_LOCKED = 'Thread Locked';
@@ -148,6 +149,7 @@ export const THREAD_SHARED_LINK = 'Thread Shared Link';
 export const USER_CREATED = 'User Created';
 export const USER_EDITED = 'User Edited';
 export const USER_EDITED_FAILED = 'User Edited Failed';
+export const USER_DELETED_INITED = 'User Deleted Inited';
 export const USER_DELETED = 'User Deleted';
 export const USER_DELETED_FAILED = 'User Deleted Failed';
 export const USER_EMAIL_ADDED = 'User Email Added';
@@ -178,11 +180,10 @@ export const INBOX_COMMUNITY_FILTERED = 'Inbox Community Filtered';
 export const INBOX_CHANNEL_FILTERED = 'Inbox Channel Filtered';
 export const INBOX_FIND_MORE_COMMUNITIES_CLICKED =
   'Inbox Find More Communities Clicked';
-export const INBOX_COMPOSER_OPENED = 'Inbox Composer Opened';
-export const INBOX_COMPOSER_CANCELED = 'Inbox Composer Canceled';
 
 export const EXPLORE_VIEWED = 'Explore Viewed';
-export const EXPLORE_COMMUNITY_CREATED = 'Explore Community Created';
+export const EXPLORE_CREATE_COMMUNITY_CLICKED =
+  'Explore Create Community Clicked';
 export const EXPLORE_VIEWED_COMMUNITY = 'Explore Viewed Community';
 export const EXPLORE_JOINED_COMMUNITY = 'Explore Joined Community';
 export const EXPLORE_LEFT_COMMUNITY = 'Explore Left Community';
@@ -205,6 +206,8 @@ export const PRICING_PAGE_CREATE_COMMUNITY_CLICKED =
   'Pricing Page Create Community Clicked';
 export const PRICING_PAGE_APPLY_FOR_DISCOUNT_CLICKED =
   'Pricing Page Apply For Discount Clicked';
+export const PRICING_PAGE_UPGRADE_COMMUNITY_CLICKED =
+  'Pricing Page Upgrade Community Clicked';
 
 export const SUPPORT_PAGE_VIEWED = 'Support Page Viewed';
 export const SUPPORT_PAGE_REPORT_BUG = 'Support Page Report Bug';
@@ -217,15 +220,11 @@ export const SUPPORT_PAGE_EMAIL_US = 'Support Page Email Us';
 export const CODE_OF_CONDUCT_CLICKED = 'Code Of Conduct Clicked';
 
 export const LOGIN_PAGE_VIEWED = 'Login Page Viewed';
-export const LOGIN_PAGE_FACEBOOK_AUTH_CLICKED =
-  'Login Page Facebook Auth Clicked';
-export const LOGIN_PAGE_TWITTER_AUTH_CLICKED =
-  'Login Page Twitter Auth Clicked';
-export const LOGIN_PAGE_GITHUB_AUTH_CLICKED = 'Login Page GitHub Auth Clicked';
-export const LOGIN_PAGE_GOOGLE_AUTH_CLICKED = 'Login Page Google Auth Clicked';
-export const LOGIN_CODE_OF_CONDUCT_CLICKED =
+export const LOGIN_PAGE_AUTH_CLICKED = 'Login page Auth Clicked';
+export const LOGIN_PAGE_CODE_OF_CONDUCT_CLICKED =
   'Login Page Code Of Conduct Clicked';
 
+export const NAVIGATION_LOGO_CLICKED = 'Navigation Logo Clicked';
 export const NAVIGATION_HOME_CLICKED = 'Navigation Home Clicked';
 export const NAVIGATION_MESSAGES_CLICKED = 'Navigation Messages Clicked';
 export const NAVIGATION_EXPLORE_CLICKED = 'Navigation Explore Clicked';
@@ -235,10 +234,22 @@ export const NAVIGATION_USER_PROFILE_CLICKED =
   'Navigation User Profile Clicked';
 
 export const SEARCHED_USERS = 'Searched Users';
-export const SEARCHED_COMMUNITIES = 'Searched Communtiies';
+export const SEARCHED_COMMUNITIES = 'Searched Communities';
 export const SEARCHED_COMMUNITY_MEMBERS = 'Searched Community Members';
 export const SEARCHED_CONVERSATIONS = 'Searched Conversations';
 
 export const PWA_HOME_SCREEN_PROMPTED = 'PWA Home Screen Prompted';
 export const PWA_HOME_SCREEN_DISMISSED = 'PWA Home Screen Dismissed';
 export const PWA_HOME_SCREEN_ADDED = 'PWA Home Screen Added';
+
+export const WEB_PUSH_NOTIFICATIONS_PROMPT_VIEWED =
+  'Web Push Notifications Prompt Viewed';
+export const WEB_PUSH_NOTIFICATIONS_PROMPT_CLICKED =
+  'Web Push Notifications Prompt Clicked';
+export const WEB_PUSH_NOTIFICATIONS_PROMPT_DISMISSED =
+  'Web Push Notifications Prompt Dismissed';
+export const WEB_PUSH_NOTIFICATIONS_SUBSCRIBED =
+  'Web Push Notifications Subscribed';
+export const WEB_PUSH_NOTIFICATIONS_BLOCKED = 'Web Push Notifications Blocked';
+export const WEB_PUSH_NOTIFICATIONS_UNSUBSCRIBED =
+  'Web Push Notifications Unsubscribed';
