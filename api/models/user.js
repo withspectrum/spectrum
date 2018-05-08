@@ -5,9 +5,7 @@ import { createNewUsersSettings } from './usersSettings';
 import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBUser, FileUpload } from 'shared/types';
-import { track, identify } from 'shared/analytics';
-import * as events from 'shared/analytics/event-types';
-import { analyticsUser } from 'shared/analytics/transformations';
+import { track, identify, events, transformations } from 'shared/analytics';
 
 type GetUserInput = {
   id?: string,
@@ -73,7 +71,7 @@ const storeUser = (user: Object): Promise<DBUser> => {
     .then(result => {
       const user = result.changes[0].new_val;
 
-      identify(user.id, { ...analyticsUser(user) });
+      identify(user.id, { ...transformations.analyticsUser(user) });
       track(user.id, events.USER_CREATED);
       sendNewUserWelcomeEmailQueue.add({ user });
       return Promise.all([user, createNewUsersSettings(user.id)]);
@@ -116,7 +114,7 @@ const saveUserProvider = (
             extraFields,
           });
           identify(user.id, {
-            ...analyticsUser(user),
+            ...transformations.analyticsUser(user),
           });
           return user;
         });
@@ -455,7 +453,7 @@ const setUserPendingEmail = (
       const user = await getUserById(userId);
       track(user.id, events.USER_ADDED_EMAIL);
       identify(user.id, {
-        ...analyticsUser(user),
+        ...transformations.analyticsUser(user),
       });
     });
 };
@@ -472,7 +470,7 @@ const updateUserEmail = (userId: string, email: string): Promise<Object> => {
       const user = await getUserById(userId);
       track(user.id, events.USER_VERIFIED_EMAIL);
       identify(user.id, {
-        ...analyticsUser(user),
+        ...transformations.analyticsUser(user),
       });
     });
 };
@@ -506,7 +504,7 @@ const deleteUser = (userId: string) => {
       const user = await getUserById(userId);
       track(user.id, events.USER_DELETED);
       identify(user.id, {
-        ...analyticsUser(user),
+        ...transformations.analyticsUser(user),
       });
     });
 };

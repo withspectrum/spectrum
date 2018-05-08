@@ -14,8 +14,7 @@ import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import ViewError from '../../../components/viewError';
 import Titlebar from '../../titlebar';
 import { View, MessagesList, ComposeHeader } from '../style';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   subscribeToUpdatedDirectMessageThreads: Function,

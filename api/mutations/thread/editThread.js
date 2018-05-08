@@ -6,8 +6,7 @@ import { uploadImage } from '../../utils/file-storage';
 import { getThreads, editThread } from '../../models/thread';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
-import { track } from 'shared/analytics';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'shared/analytics';
 
 export default async (
   _: any,
@@ -65,6 +64,8 @@ export default async (
         attachmentType: attachment.attachmentType,
         data: JSON.parse(attachment.data),
       });
+
+      return null;
     });
   }
 

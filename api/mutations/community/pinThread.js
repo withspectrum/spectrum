@@ -5,8 +5,7 @@ import { getThreads } from '../../models/thread';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { setPinnedThreadInCommunity } from '../../models/community';
 import { getChannels } from '../../models/channel';
-import { track } from 'shared/analytics';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'shared/analytics';
 
 type PinThreadInput = {
   threadId: string,

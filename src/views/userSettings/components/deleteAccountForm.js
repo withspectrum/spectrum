@@ -20,8 +20,7 @@ import deleteCurrentUserMutation from 'shared/graphql/mutations/user/deleteCurre
 import { SERVER_URL } from 'src/api/constants';
 import Link from 'src/components/link';
 import { Loading } from 'src/components/loading';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'src/helpers/analytics';
 
 type State = {
   isLoading: boolean,

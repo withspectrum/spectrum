@@ -7,8 +7,7 @@ import Intro from './components/intro';
 import Discount from './components/discount';
 import Faq from './components/faq';
 import type { ContextRouter } from 'react-router';
-import * as events from 'shared/analytics/event-types';
-import { track } from 'src/helpers/events';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   ...$Exact<ContextRouter>,

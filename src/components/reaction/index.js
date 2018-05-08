@@ -4,8 +4,7 @@ import Icon from '../icons';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { ReactionWrapper } from '../message/style';
 import type { GetMessageType } from 'shared/graphql/queries/message/getMessage';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   toggleReaction: Function,

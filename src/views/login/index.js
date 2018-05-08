@@ -10,8 +10,7 @@ import {
   FullscreenContent,
   CodeOfConduct,
 } from './style';
-import * as events from 'shared/analytics/event-types';
-import { track } from 'src/helpers/events';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   redirectPath: ?string,

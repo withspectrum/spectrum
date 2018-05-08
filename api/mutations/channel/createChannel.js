@@ -9,14 +9,13 @@ import {
   isAuthedResolver as requireAuth,
   canModerateCommunity,
 } from '../../utils/permissions';
-import { track, trackUserError } from 'shared/analytics';
-import * as events from 'shared/analytics/event-types';
-import * as errors from 'shared/errors/error-types';
 import {
-  analyticsChannel,
-  analyticsCommunity,
-  analyticsCommunityPermissions,
-} from 'shared/analytics/transformations';
+  track,
+  trackUserError,
+  events,
+  transformations,
+} from 'shared/analytics';
+import { errors } from 'shared/errors';
 
 export default requireAuth(
   async (
@@ -35,8 +34,8 @@ export default requireAuth(
     const eventProperties = {
       channel: args.input,
       community: {
-        ...analyticsCommunity(community),
-        ...analyticsCommunityPermissions(communityPermissions),
+        ...transformations.analyticsCommunity(community),
+        ...transformations.analyticsCommunityPermissions(communityPermissions),
       },
     };
 
@@ -75,7 +74,7 @@ export default requireAuth(
     const newChannel = await createChannel(args, user.id);
 
     const createdEventProperties = Object.assign({}, eventProperties, {
-      channel: analyticsChannel(newChannel),
+      channel: transformations.analyticsChannel(newChannel),
     });
 
     track(user.id, events.CHANNEL_CREATED, createdEventProperties);

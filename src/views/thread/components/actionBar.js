@@ -12,13 +12,7 @@ import Flyout from '../../../components/flyout';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import OutsideClickHandler from '../../../components/outsideClickHandler';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
-import {
-  analyticsThread,
-  analyticsChannel,
-  analyticsCommunity,
-} from 'src/helpers/events/transformations';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 import {
   FollowButton,
@@ -82,9 +76,9 @@ class ActionBar extends React.Component<Props, State> {
     const { thread, dispatch } = this.props;
 
     track(events.THREAD_MOVED_INITED, {
-      thread: analyticsThread(thread),
-      channel: analyticsChannel(thread.channel),
-      community: analyticsCommunity(thread.community),
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
     });
 
     dispatch(openModal('CHANGE_CHANNEL', { thread }));
@@ -103,9 +97,9 @@ class ActionBar extends React.Component<Props, State> {
       : events.THREAD_NOTIFICATIONS_ENABLED;
 
     track(event, {
-      thread: analyticsThread(thread),
-      channel: analyticsChannel(thread.channel),
-      community: analyticsCommunity(thread.community),
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
     });
 
     toggleThreadNotifications({

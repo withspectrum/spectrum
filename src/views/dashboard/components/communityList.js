@@ -23,8 +23,7 @@ import {
   changeActiveChannel,
 } from '../../../actions/dashboardFeed';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   dispatch: Function,

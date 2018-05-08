@@ -17,8 +17,7 @@ import { client } from 'shared/graphql';
 import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
 import Routes from './routes';
-import { track } from './helpers/events';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from './helpers/analytics';
 import { wsLink } from 'shared/graphql';
 
 const { thread, t } = queryString.parse(history.location.search);

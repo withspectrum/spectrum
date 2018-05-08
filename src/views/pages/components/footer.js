@@ -4,8 +4,7 @@ import { LinkBlock, LinkBlockA, Footer, Flexer } from '../style';
 import { FlexRow } from 'src/components/globals';
 import Link from 'src/components/link';
 import Icon from 'src/components/icons';
-import * as events from 'shared/analytics/event-types';
-import { track } from 'src/helpers/events';
+import { track, events } from 'src/helpers/analytics';
 
 export default () => {
   return (

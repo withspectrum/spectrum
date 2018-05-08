@@ -7,8 +7,7 @@ import {
   createNotifiedUserInThread,
 } from '../../models/usersThreads';
 import { getThread } from '../../models/thread';
-import { track } from 'shared/analytics';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'shared/analytics';
 
 export default (
   _: any,

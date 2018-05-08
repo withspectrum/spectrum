@@ -17,8 +17,7 @@ import Titlebar from '../titlebar';
 import Header from 'src/components/settingsViews/header';
 import Subnav from 'src/components/settingsViews/subnav';
 import type { ContextRouter } from 'react-router';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   data: {

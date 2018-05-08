@@ -2,8 +2,7 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { removeSubscription } from '../../models/web-push-subscription';
-import { track } from 'shared/analytics';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'shared/analytics';
 
 export default (_: any, endpoint: string, { user }: GraphQLContext) => {
   if (!user || !user.id)

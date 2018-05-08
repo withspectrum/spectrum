@@ -13,8 +13,7 @@ import {
   PlanPrice,
   PlanDescription,
 } from '../pricing/style';
-import * as events from 'shared/analytics/event-types';
-import { track } from 'src/helpers/events';
+import { track, events } from 'src/helpers/analytics';
 
 class Support extends React.Component<{}> {
   componentDidMount() {

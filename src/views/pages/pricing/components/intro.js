@@ -15,8 +15,7 @@ import {
   PlanDescription,
   PlanFeatures,
 } from '../style';
-import * as events from 'shared/analytics/event-types';
-import { track } from 'src/helpers/events';
+import { track, events } from 'src/helpers/analytics';
 
 const Intro = () => {
   return (

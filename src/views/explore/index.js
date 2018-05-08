@@ -10,8 +10,7 @@ import Search from './components/search';
 import CommunitySearchWrapper from './components/communitySearchWrapper';
 import { Wrapper } from './style';
 import { Charts } from './view';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   currentUser?: Object,

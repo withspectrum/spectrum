@@ -4,8 +4,7 @@ import UserError from '../../utils/UserError';
 import { getThread, moveThread } from '../../models/thread';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getChannels } from '../../models/channel';
-import { track } from 'shared/analytics';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'shared/analytics';
 
 export default async (
   _: any,

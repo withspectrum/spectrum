@@ -3,8 +3,7 @@ import type { GraphQLContext } from '../../';
 import type { EditUserInput } from '../../models/user';
 import UserError from '../../utils/UserError';
 import { getUser, editUser } from '../../models/user';
-import { track, identify } from 'shared/analytics';
-import { analyticsUser } from 'shared/analytics/transformations';
+import { track, identify, transformations } from 'shared/analytics';
 
 export default (_: any, args: EditUserInput, { user }: GraphQLContext) => {
   const currentUser = user;
@@ -25,7 +24,7 @@ export default (_: any, args: EditUserInput, { user }: GraphQLContext) => {
       if (!user || user.id === currentUser.id) {
         return editUser(args, currentUser.id).then(result => {
           track(result.id, 'user profile edited', {});
-          identify(result.id, { ...analyticsUser(result) });
+          identify(result.id, { ...transformations.analyticsUser(result) });
           return result;
         });
       }

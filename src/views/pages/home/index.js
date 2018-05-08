@@ -4,8 +4,7 @@ import { storeItem, getItemFromStorage } from 'src/helpers/localStorage';
 import { Overview, Centralized, CommunitySearch, Chat, Yours } from '../view';
 import PageFooter from '../components/footer';
 import { Wrapper } from '../style';
-import * as events from 'shared/analytics/event-types';
-import { track } from 'src/helpers/events';
+import { track, events } from 'src/helpers/analytics';
 
 type State = {
   preferredSigninMethod: string,

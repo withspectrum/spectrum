@@ -32,8 +32,7 @@ import {
   SearchStringHeader,
   Sidebar,
 } from './style';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'src/helpers/analytics';
 
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
   DashboardThreadFeed

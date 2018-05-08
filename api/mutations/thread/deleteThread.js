@@ -5,8 +5,7 @@ import { processReputationEventQueue } from 'shared/bull/queues';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { deleteThread, getThreads } from '../../models/thread';
-import { track } from 'shared/analytics';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'shared/analytics';
 
 export default async (
   _: any,

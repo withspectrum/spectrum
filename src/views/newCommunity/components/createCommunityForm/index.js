@@ -33,8 +33,7 @@ import {
   CommunitySuggestionsText,
 } from './style';
 import { FormContainer, Form, Actions } from '../../style';
-import * as events from 'shared/analytics/event-types';
-import { track } from 'src/helpers/events';
+import { track, events } from 'src/helpers/analytics';
 
 type State = {
   name: ?string,

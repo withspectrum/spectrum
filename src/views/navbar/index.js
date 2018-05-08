@@ -22,8 +22,7 @@ import {
   Navatar,
   SkipLink,
 } from './style';
-import * as events from 'shared/analytics/event-types';
-import { track } from 'src/helpers/events';
+import { track, events } from 'src/helpers/analytics';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
 
 type Props = {

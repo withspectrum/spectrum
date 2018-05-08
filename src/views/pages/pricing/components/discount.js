@@ -4,8 +4,7 @@ import Section from 'src/components/themedSection';
 import CommunityList from './communityList';
 import { PrimaryCTA } from '../../style';
 import { Content, Heading, Copy } from '../style';
-import * as events from 'shared/analytics/event-types';
-import { track } from 'src/helpers/events';
+import { track, events } from 'src/helpers/analytics';
 
 const Discount = () => {
   return (

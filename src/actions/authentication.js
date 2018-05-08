@@ -1,5 +1,5 @@
-import { setUser, unsetUser } from '../helpers/events';
-import { removeItemFromStorage, storeItem } from '../helpers/localStorage';
+import { setUser, unsetUser } from 'src/helpers/analytics';
+import { removeItemFromStorage, storeItem } from 'src/helpers/localStorage';
 import Raven from 'raven-js';
 
 export const logout = dispatch => {

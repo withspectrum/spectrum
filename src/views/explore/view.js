@@ -19,9 +19,7 @@ import { getCommunitiesByCuratedContentType } from 'shared/graphql/queries/commu
 import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCommunities';
 import { Loading } from '../../components/loading';
 import { SegmentedControl, Segment } from '../../components/segmentedControl';
-import { track } from 'src/helpers/events';
-import { analyticsCommunity } from 'src/helpers/events/transformations';
-import * as events from 'shared/analytics/event-types';
+import { track, transformations, events } from 'src/helpers/analytics';
 
 export const Charts = () => {
   const ChartGrid = styled.div`
@@ -116,13 +114,13 @@ type CategoryListProps = {
 class CategoryList extends React.Component<CategoryListProps> {
   onLeave = community => {
     track(events.EXPLORE_LEFT_COMMUNITY, {
-      community: analyticsCommunity(community),
+      community: transformations.analyticsCommunity(community),
     });
   };
 
   onJoin = community => {
     track(events.EXPLORE_JOINED_COMMUNITY, {
-      community: analyticsCommunity(community),
+      community: transformations.analyticsCommunity(community),
     });
   };
 

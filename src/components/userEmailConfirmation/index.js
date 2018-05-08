@@ -10,8 +10,7 @@ import isEmail from 'validator/lib/isEmail';
 import { EmailForm } from './style';
 import { Notice } from '../listItems/style';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   render: Function,

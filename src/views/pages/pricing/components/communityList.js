@@ -18,9 +18,7 @@ import {
   CommunityListCard,
   CardTitle,
 } from '../style';
-import * as events from 'shared/analytics/event-types';
-import { track } from 'src/helpers/events';
-import { analyticsCommunity } from 'src/helpers/events/transformations';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 type Props = {
   data: {
@@ -50,13 +48,13 @@ class CommunityList extends React.Component<Props, State> {
 
   upgrade = community => {
     track(events.PRICING_PAGE_UPGRADE_COMMUNITY_CLICKED, {
-      community: analyticsCommunity(community),
+      community: transformations.analyticsCommunity(community),
     });
   };
 
   applyForDiscount = community => {
     track(events.PRICING_PAGE_APPLY_FOR_DISCOUNT_CLICKED, {
-      community: analyticsCommunity(community),
+      community: transformations.analyticsCommunity(community),
     });
   };
 

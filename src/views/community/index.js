@@ -44,9 +44,7 @@ import {
 } from 'shared/graphql/queries/community/getCommunity';
 import ChannelList from './components/channelList';
 import ModeratorList from './components/moderatorList';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
-import { analyticsCommunity } from 'src/helpers/events/transformations';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 
@@ -91,7 +89,9 @@ class CommunityView extends React.Component<Props, State> {
         prevProps.data.community.id !== this.props.data.community.id)
     ) {
       track(events.COMMUNITY_VIEWED, {
-        community: analyticsCommunity(this.props.data.community),
+        community: transformations.analyticsCommunity(
+          this.props.data.community
+        ),
       });
 
       // if the user is new and signed up through a community page, push

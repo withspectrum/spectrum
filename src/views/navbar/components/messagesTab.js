@@ -9,8 +9,7 @@ import getUnreadDMQuery from 'shared/graphql/queries/notification/getDirectMessa
 import type { GetDirectMessageNotificationsType } from 'shared/graphql/queries/notification/getDirectMessageNotifications';
 import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
 import { Tab, Label } from '../style';
-import * as events from 'shared/analytics/event-types';
-import { track } from 'src/helpers/events';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   active: boolean,

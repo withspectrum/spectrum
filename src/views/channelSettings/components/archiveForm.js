@@ -11,12 +11,7 @@ import {
   SectionSubtitle,
   SectionCardFooter,
 } from '../../../components/settingsViews/style';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
-import {
-  analyticsChannel,
-  analyticsCommunity,
-} from 'src/helpers/events/transformations';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 type Props = {
   channel: GetChannelType,
@@ -37,8 +32,8 @@ class Channel extends React.Component<Props> {
     );
 
     track(events.CHANNEL_ARCHIVED_INITED, {
-      channel: analyticsChannel(channel),
-      community: analyticsCommunity(channel.community),
+      channel: transformations.analyticsChannel(channel),
+      community: transformations.analyticsCommunity(channel.community),
     });
 
     return this.props.dispatch(
@@ -58,8 +53,8 @@ class Channel extends React.Component<Props> {
     const { channel } = this.props;
 
     track(events.CHANNEL_RESTORED_INITED, {
-      channel: analyticsChannel(channel),
-      community: analyticsCommunity(channel.community),
+      channel: transformations.analyticsChannel(channel),
+      community: transformations.analyticsCommunity(channel.community),
     });
 
     return this.props.dispatch(

@@ -33,8 +33,7 @@ import {
   SearchResultTextContainer,
   SearchResultImage,
 } from '../components/style';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'src/helpers/analytics';
 
 type State = {
   searchString: string,

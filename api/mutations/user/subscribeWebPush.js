@@ -4,8 +4,7 @@ import type { WebPushSubscription } from './';
 import UserError from '../../utils/UserError';
 import { storeSubscription } from '../../models/web-push-subscription';
 import sendWebPushNotification from 'shared/send-web-push-notification';
-import { track } from 'shared/analytics';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'shared/analytics';
 
 export default (
   _: any,

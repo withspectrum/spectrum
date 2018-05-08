@@ -37,8 +37,7 @@ import ViewError from '../../components/viewError';
 import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   markAllNotificationsSeen?: Function,

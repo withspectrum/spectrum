@@ -13,13 +13,7 @@ import Icon from '../../icons';
 import { IconContainer } from '../RepExplainerModal/style';
 import { Actions, modalStyles, Section, Title, Subtitle } from './style';
 import ChannelSelector from './channelSelector';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
-import {
-  analyticsThread,
-  analyticsChannel,
-  analyticsCommunity,
-} from 'src/helpers/events/transformations';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 type Props = {
   thread: any,
@@ -51,9 +45,9 @@ class ChangeChannelModal extends React.Component<Props, State> {
     const { thread: { id }, thread, dispatch } = this.props;
 
     track(events.THREAD_MOVED, {
-      thread: analyticsThread(thread),
-      channel: analyticsChannel(thread.channel),
-      community: analyticsCommunity(thread.community),
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
     });
 
     this.setState({

@@ -1,12 +1,9 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { getThreads, setThreadLock } from '../../models/thread';
-import { getUserPermissionsInChannel } from '../../models/usersChannels';
-import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import { setThreadLock } from '../../models/thread';
 import type { DBThread } from 'shared/types';
-import { track } from 'shared/analytics';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'shared/analytics';
 
 export default async (
   _: any,

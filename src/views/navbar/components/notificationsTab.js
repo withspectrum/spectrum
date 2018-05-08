@@ -14,8 +14,7 @@ import markNotificationsSeenMutation from 'shared/graphql/mutations/notification
 import { markSingleNotificationSeenMutation } from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import { Tab, NotificationTab, Label } from '../style';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
-import * as events from 'shared/analytics/event-types';
-import { track } from 'src/helpers/events';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   active: boolean,

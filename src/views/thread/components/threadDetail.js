@@ -31,13 +31,7 @@ import {
   Timestamp,
   Edited,
 } from '../style';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
-import {
-  analyticsThread,
-  analyticsChannel,
-  analyticsCommunity,
-} from 'src/helpers/events/transformations';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
@@ -92,9 +86,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
     const { thread } = this.props;
 
     track(events.THREAD_VIEWED, {
-      thread: analyticsThread(thread),
-      channel: analyticsChannel(thread.channel),
-      community: analyticsCommunity(thread.community),
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
     });
 
     let rawLinkPreview =
@@ -159,9 +153,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
       : events.THREAD_LOCKED;
 
     track(event, {
-      thread: analyticsThread(thread),
-      channel: analyticsChannel(thread.channel),
-      community: analyticsCommunity(thread.community),
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
     });
 
     setThreadLock({
@@ -211,9 +205,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
     }
 
     track(events.THREAD_DELETED_INITED, {
-      thread: analyticsThread(thread),
-      channel: analyticsChannel(thread.channel),
-      community: analyticsCommunity(thread.community),
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
     });
 
     return dispatch(
@@ -237,9 +231,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
     });
 
     track(events.THREAD_EDITED_INITED, {
-      thread: analyticsThread(thread),
-      channel: analyticsChannel(thread.channel),
-      community: analyticsCommunity(thread.community),
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
     });
 
     this.props.toggleEdit();
@@ -298,9 +292,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
     };
 
     track(events.THREAD_EDITED, {
-      thread: analyticsThread(thread),
-      channel: analyticsChannel(thread.channel),
-      community: analyticsCommunity(thread.community),
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
     });
 
     editThread(input)
@@ -424,9 +418,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
     });
 
     track(events.THREAD_PINNED, {
-      thread: analyticsThread(thread),
-      channel: analyticsChannel(thread.channel),
-      community: analyticsCommunity(thread.community),
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
     });
 
     return pinThread({

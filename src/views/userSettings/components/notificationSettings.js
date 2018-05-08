@@ -9,8 +9,7 @@ import { subscribeToWebPush } from 'shared/graphql/subscriptions';
 import { ListContainer, Notice } from 'src/components/listItems/style';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import { EmailListItem } from '../style';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'src/helpers/analytics';
 
 type State = {
   webPushBlocked: boolean,

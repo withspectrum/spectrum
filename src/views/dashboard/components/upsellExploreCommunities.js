@@ -8,8 +8,7 @@ import Link from '../../../components/link';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { CommunityListAvatar, UpsellRow } from '../style';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'src/helpers/analytics';
 
 const getRandom = (arr, n) => {
   let result = new Array(n),

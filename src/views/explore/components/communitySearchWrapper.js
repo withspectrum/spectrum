@@ -7,8 +7,7 @@ import ViewSegment from '../../../components/themedSection';
 import { Button } from '../../../components/buttons';
 import { CLIENT_URL } from '../../../api/constants';
 import { Tagline, Copy, Content } from '../../pages/style';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'src/helpers/analytics';
 
 // $FlowFixMe
 const CommunitySearchWrapper = props => {

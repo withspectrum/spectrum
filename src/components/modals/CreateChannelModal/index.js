@@ -15,9 +15,7 @@ import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import createChannelMutation from 'shared/graphql/mutations/channel/createChannel';
 import StripeModalWell from 'src/components/stripeCardForm/modalWell';
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
-import { analyticsCommunity } from 'src/helpers/events/transformations';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
@@ -77,7 +75,7 @@ class CreateChannelModal extends React.Component<Props, State> {
   componentDidMount() {
     const { community } = this.props;
     track(events.CHANNEL_CREATED_INITED, {
-      community: analyticsCommunity(community),
+      community: transformations.analyticsCommunity(community),
     });
   }
 
@@ -246,7 +244,7 @@ class CreateChannelModal extends React.Component<Props, State> {
     };
 
     track(events.CHANNEL_CREATED, {
-      community: analyticsCommunity(community),
+      community: transformations.analyticsCommunity(community),
       channel: input,
     });
 

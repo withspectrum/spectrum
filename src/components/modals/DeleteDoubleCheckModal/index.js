@@ -22,14 +22,7 @@ import { modalStyles } from '../styles';
 import { Actions, Message } from './style';
 import cancelSubscription from 'shared/graphql/mutations/community/cancelSubscription';
 import disableCommunityAnalytics from 'shared/graphql/mutations/community/disableCommunityAnalytics';
-
-import { track } from 'src/helpers/events';
-import * as events from 'shared/analytics/event-types';
-import {
-  analyticsThread,
-  analyticsChannel,
-  analyticsCommunity,
-} from 'src/helpers/events/transformations';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 /*
   Generic component that should be used to confirm any 'delete' action.
@@ -114,8 +107,10 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
         const { thread } = this.props.modalProps.extraProps;
 
         track(events.THREAD_DELETED, {
-          channel: analyticsChannel(thread.channel),
-          community: analyticsCommunity(thread.channel.community),
+          channel: transformations.analyticsChannel(thread.channel),
+          community: transformations.analyticsCommunity(
+            thread.channel.community
+          ),
         });
 
         return this.props
@@ -245,8 +240,8 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
         const { channel } = this.props.modalProps.extraProps;
 
         track(events.CHANNEL_ARCHIVED, {
-          channel: analyticsChannel(channel),
-          community: analyticsCommunity(channel.community),
+          channel: transformations.analyticsChannel(channel),
+          community: transformations.analyticsCommunity(channel.community),
         });
 
         return this.props

@@ -13,8 +13,7 @@ import {
   createMemberInDirectMessageThread,
 } from '../../models/usersDirectMessageThreads';
 import type { FileUpload } from 'shared/types';
-import { track } from 'shared/analytics';
-import * as events from 'shared/analytics/event-types';
+import { track, events } from 'shared/analytics';
 
 type DMThreadInput = {
   input: {
