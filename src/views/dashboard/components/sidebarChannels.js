@@ -20,6 +20,8 @@ import {
   LoadingBar,
   SectionTitle,
 } from '../style';
+import { track } from 'src/helpers/events';
+import * as events from 'shared/analytics/event-types';
 
 type Props = {
   dispatch: Function,
@@ -38,6 +40,7 @@ type Props = {
 };
 class SidebarChannels extends React.Component<Props> {
   changeChannel = id => {
+    track(events.INBOX_CHANNEL_FILTERED);
     this.props.dispatch(changeActiveThread(''));
     this.props.dispatch(changeActiveChannel(id));
   };
