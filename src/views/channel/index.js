@@ -37,6 +37,12 @@ import { Grid, Meta, Content, Extras } from './style';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import { LoginButton, ColumnHeading, MidSegment } from '../community/style';
 import ToggleChannelMembership from '../../components/toggleChannelMembership';
+import { track } from 'src/helpers/events';
+import * as events from 'shared/analytics/event-types';
+import {
+  analyticsCommunity,
+  analyticsChannel,
+} from 'src/helpers/events/transformations';
 
 const ThreadFeedWithData = compose(connect(), getChannelThreadConnection)(
   ThreadFeed
@@ -68,15 +74,22 @@ class ChannelView extends React.Component<Props, State> {
   };
 
   componentDidUpdate(prevProps) {
-    // if the user is new and signed up through a channel page, push
-    // the channel's community data into the store to hydrate the new user experience
-    // with their first community they should join
-    if (this.props.currentUser) return;
     if (
       (!prevProps.data.channel && this.props.data.channel) ||
       (prevProps.data.channel &&
         prevProps.data.channel.id !== this.props.data.channel.id)
     ) {
+      const { channel } = this.props.data;
+
+      track(events.CHANNEL_VIEWED, {
+        channel: analyticsChannel(channel),
+        community: analyticsCommunity(channel.community),
+      });
+
+      // if the user is new and signed up through a community page, push
+      // the community data into the store to hydrate the new user experience
+      // with their first community they should join
+      if (this.props.currentUser) return;
       this.props.dispatch(
         addCommunityToOnboarding(this.props.data.channel.community)
       );
