@@ -6,7 +6,7 @@ import { getEventTypeFromErrorType } from 'shared/errors';
 export const track = (
   userId: string,
   eventType: string,
-  eventProperties: Object
+  eventProperties: Object = {}
 ) => {
   const amplitudePromise = () => {
     debug(`[Amplitude] Tracking ${eventType}`);
