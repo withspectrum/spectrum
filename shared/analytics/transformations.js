@@ -77,6 +77,6 @@ export const analyticsThread = (thread: DBThread): AnalyticsThread => {
   return {
     id: thread.id,
     isLocked: thread.isLocked,
-    isWatercooler: thread.watercooler,
+    isWatercooler: thread.watercooler ? true : false,
   };
 };
