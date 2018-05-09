@@ -19,7 +19,8 @@ export default requireAuth(
     { user, loaders, track }: GraphQLContext
   ) => {
     // TODO: Figure out how to not have to do this - somehow combine forces with canModerateChannel function which is fetching most of the same data anyways
-    const community = await loaders.channel.load(args.input.communityId);
+    const community = await loaders.community.load(args.input.communityId);
+
     const defaultTrackingData = await getEntityDataForAnalytics(loaders)({
       communityId: args.input.communityId,
       userId: user.id,
