@@ -1,8 +1,23 @@
 // @flow
+const debug = require('debug')('api:types:custom-scalars');
 import { GraphQLScalarType, Kind } from 'graphql';
 import UserError from '../../utils/UserError';
 
-const isRawDraftContentState = (contentState: mixed) => true;
+// Pretty dumb manual check to make sure a value is actual raw draft content state
+const isRawDraftContentState = (contentState: string) => {
+  let parsed;
+  try {
+    parsed = JSON.parse(contentState);
+  } catch (err) {
+    debug('error parsing raw draft content state');
+    return false;
+  }
+  if (!parsed.blocks || !Array.isArray(parsed.blocks) || !parsed.entityMap) {
+    debug('invalid raw draft content state');
+    return false;
+  }
+  return true;
+};
 
 const RawDraftContentState = new GraphQLScalarType({
   name: 'RawDraftContentState',
@@ -10,7 +25,7 @@ const RawDraftContentState = new GraphQLScalarType({
 
   // Input validation
   parseValue(value) {
-    if (isRawDraftContentState(value)) return JSON.parse(value);
+    if (isRawDraftContentState(value)) return value;
     throw new UserError('Please provide raw DraftJS ContentState as input.');
   },
   parseLiteral(ast) {
