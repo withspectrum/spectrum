@@ -6,6 +6,7 @@ import idx from 'idx';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
+import type { ThreadInfoType } from 'shared/graphql/thread/threadInfo';
 import ChatMessages from '../../../components/messageGroup';
 import { LoadingChat } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
@@ -59,17 +60,7 @@ type Props = {
   threadIsLocked: boolean,
   lastSeen: ?number | ?Date,
   data: {
-    thread: {
-      id: string,
-      isAuthor: boolean,
-      currentUserLastSeen: Date | number,
-      messageConnection: {
-        pageInfo: {
-          hasNextPage: boolean,
-        },
-        edges: Array<MessageType>,
-      },
-    },
+    thread: ThreadInfoType,
   },
 };
 
