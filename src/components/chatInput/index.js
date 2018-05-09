@@ -52,7 +52,9 @@ const QuotedMessage = connect()(
           'The message you are replying to was deleted or could not be fetched.'
         )
       );
-      props.dispatch(replyToMessage(null));
+      props.dispatch(
+        replyToMessage({ threadId: props.threadId, messageId: null })
+      );
     }
 
     return null;
@@ -87,7 +89,7 @@ type Props = {
   networkOnline: boolean,
   threadData?: Object,
   refetchThread?: Function,
-  quotedMessage: ?string,
+  quotedMessage: ?{ messageId: string, threadId: string },
 };
 
 const LS_KEY = 'last-chat-input-content';
@@ -225,7 +227,10 @@ class ChatInput extends React.Component<Props, State> {
   };
 
   removeQuotedMessage = () => {
-    if (this.props.quotedMessage) this.props.dispatch(replyToMessage(null));
+    if (this.props.quotedMessage)
+      this.props.dispatch(
+        replyToMessage({ threadId: this.props.thread, messageId: null })
+      );
   };
 
   onChange = (state, ...rest) => {
@@ -615,6 +620,7 @@ class ChatInput extends React.Component<Props, State> {
       networkOnline,
       websocketConnection,
       quotedMessage,
+      thread,
     } = this.props;
     const {
       isFocused,
@@ -686,7 +692,7 @@ class ChatInput extends React.Component<Props, State> {
                 )}
                 {quotedMessage && (
                   <PreviewWrapper data-cy="staged-quoted-message">
-                    <QuotedMessage id={quotedMessage} />
+                    <QuotedMessage id={quotedMessage} threadId={thread} />
                     <RemovePreviewButton
                       data-cy="remove-staged-quoted-message"
                       onClick={this.removeQuotedMessage}
@@ -716,11 +722,11 @@ class ChatInput extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({
+const map = (state, ownProps) => ({
   currentUser: state.users.currentUser,
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
-  quotedMessage: state.message.quotedMessage,
+  quotedMessage: state.message.quotedMessage[ownProps.thread] || null,
 });
 export default compose(
   sendMessage,

@@ -25,6 +25,7 @@ const Thread = /* GraphQL */ `
 	enum ThreadType {
 		SLATE
 		DRAFTJS
+    TEXT
 	}
 
 	type Attachment {

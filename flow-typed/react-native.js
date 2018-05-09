@@ -1,3 +1,3 @@
 declare module 'react-native' {
-	declare module.exports: any;
+  declare module.exports: any;
 }
