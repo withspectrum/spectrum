@@ -37,9 +37,8 @@ export type ThreadInfoType = {
   community: {
     ...$Exact<CommunityInfoType>,
   },
-  messageConnection: {
-    ...$Exact<ThreadMessageConnectionType>,
-  },
+  // $FlowFixMe: We need to remove `messageConnection` from ThreadMessageConnectionType. This works in the meantime.
+  ...$Exact<ThreadMessageConnectionType>,
   isPublished: boolean,
   isLocked: boolean,
   isAuthor: boolean,
