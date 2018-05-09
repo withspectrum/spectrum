@@ -417,12 +417,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isPinningThread: true,
     });
 
-    track(events.THREAD_PINNED, {
-      thread: transformations.analyticsThread(thread),
-      channel: transformations.analyticsChannel(thread.channel),
-      community: transformations.analyticsCommunity(thread.community),
-    });
-
     return pinThread({
       threadId: thread.id,
       communityId,

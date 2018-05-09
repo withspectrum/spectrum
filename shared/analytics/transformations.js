@@ -8,21 +8,22 @@ import type {
   DBUser,
   DBReaction,
   DBMessage,
+  DBUsersThreads,
 } from 'shared/types';
 import { getTruthyValuesFromObject } from 'src/helpers/utils';
 
 type AnalyticsChannel = {
-  id: string,
-  name: string,
-  slug: string,
-  isPrivate: boolean,
-  isArchived: boolean,
+  id: ?string,
+  name: ?string,
+  slug: ?string,
+  isPrivate: ?boolean,
+  isArchived: ?boolean,
 };
 
 type AnalyticsCommunity = {
-  id: string,
-  name: string,
-  slug: string,
+  id: ?string,
+  name: ?string,
+  slug: ?string,
 };
 
 type AnalyticsChannelPermissions = {
@@ -34,15 +35,20 @@ type AnalyticsCommunityPermissions = {
 };
 
 type AnalyticsThread = {
-  id: string,
-  isLocked: boolean,
-  isWatercooler: boolean,
+  id: ?string,
+  isLocked: ?boolean,
+  isWatercooler: ?boolean,
+};
+
+type AnalyticsThreadPermissions = {
+  isParticipant: ?boolean,
+  receiveNotifications: ?boolean,
 };
 
 type AnalyticsUser = {
-  id: string,
-  createdAt: string,
-  name: string,
+  id: ?string,
+  createdAt: ?string,
+  name: ?string,
   providerId: ?string,
   githubProviderId: ?string,
   githubUsername: ?string,
@@ -54,24 +60,37 @@ type AnalyticsUser = {
 };
 
 type AnalyticsReaction = {
-  id: string,
-  type: string,
+  id: ?string,
+  type: ?string,
 };
 
 type AnalyticsMessage = {
-  id: string,
-  threadType: string,
+  id: ?string,
+  threadType: ?string,
   parentId: ?string,
 };
 
-export const analyticsReaction = (reaction: DBReaction): AnalyticsReaction => {
+export const analyticsReaction = (reaction: ?DBReaction): AnalyticsReaction => {
+  if (!reaction)
+    return {
+      id: null,
+      type: null,
+    };
+
   return {
     id: reaction.id,
     type: reaction.type,
   };
 };
 
-export const analyticsMessage = (message: DBMessage): AnalyticsMessage => {
+export const analyticsMessage = (message: ?DBMessage): AnalyticsMessage => {
+  if (!message)
+    return {
+      id: null,
+      threadType: null,
+      parentId: null,
+    };
+
   return {
     id: message.id,
     threadType: message.threadType,
@@ -79,7 +98,16 @@ export const analyticsMessage = (message: DBMessage): AnalyticsMessage => {
   };
 };
 
-export const analyticsChannel = (channel: DBChannel): AnalyticsChannel => {
+export const analyticsChannel = (channel: ?DBChannel): AnalyticsChannel => {
+  if (!channel)
+    return {
+      id: null,
+      name: null,
+      slug: null,
+      isPrivate: null,
+      isArchived: null,
+    };
+
   return {
     id: channel.id,
     name: channel.name,
@@ -90,8 +118,13 @@ export const analyticsChannel = (channel: DBChannel): AnalyticsChannel => {
 };
 
 export const analyticsChannelPermissions = (
-  channelPermissions: DBUsersChannels
+  channelPermissions: ?DBUsersChannels
 ): AnalyticsChannelPermissions => {
+  if (!channelPermissions)
+    return {
+      roles: [],
+    };
+
   return {
     roles: getTruthyValuesFromObject(channelPermissions),
   };
@@ -100,6 +133,13 @@ export const analyticsChannelPermissions = (
 export const analyticsCommunity = (
   community: DBCommunity
 ): AnalyticsCommunity => {
+  if (!community)
+    return {
+      id: null,
+      name: null,
+      slug: null,
+    };
+
   return {
     id: community.id,
     name: community.name,
@@ -110,17 +150,46 @@ export const analyticsCommunity = (
 export const analyticsCommunityPermissions = (
   communityPermissions: DBUsersCommunities
 ): AnalyticsCommunityPermissions => {
+  if (!communityPermissions)
+    return {
+      roles: [],
+      reputation: 0,
+    };
+
   return {
     roles: getTruthyValuesFromObject(communityPermissions),
     reputation: communityPermissions.reputation,
   };
 };
 
-export const analyticsThread = (thread: DBThread): AnalyticsThread => {
+export const analyticsThread = (thread: ?DBThread): AnalyticsThread => {
+  if (!thread)
+    return {
+      id: null,
+      isLocked: null,
+      isWatercooler: null,
+    };
+
   return {
     id: thread.id,
     isLocked: thread.isLocked,
     isWatercooler: thread.watercooler ? true : false,
+  };
+};
+
+export const analyticsThreadPermissions = (
+  usersThread: ?DBUsersThreads
+): AnalyticsThreadPermissions => {
+  if (!usersThread) {
+    return {
+      isParticipant: false,
+      receiveNotifications: false,
+    };
+  }
+
+  return {
+    isParticipant: usersThread.isParticipant,
+    receiveNotifications: usersThread.receiveNotifications,
   };
 };
 

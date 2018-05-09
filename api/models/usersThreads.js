@@ -1,4 +1,5 @@
 // @flow
+import type { DBUsersThreads } from 'shared/types';
 const { db } = require('./db');
 
 // invoked only when a thread is created or a user leaves a message on a thread.
@@ -129,11 +130,15 @@ export const getParticipantsInThreads = (threadIds: Array<string>) => {
 export const getThreadNotificationStatusForUser = (
   threadId: string,
   userId: string
-): Promise<Array<Object>> => {
+): Promise<?DBUsersThreads> => {
   return db
     .table('usersThreads')
     .getAll([userId, threadId], { index: 'userIdAndThreadId' })
-    .run();
+    .run()
+    .then(results => {
+      if (!results || results.length === 0) return null;
+      return results[0];
+    });
 };
 
 type UserIdAndThreadId = [string, string];

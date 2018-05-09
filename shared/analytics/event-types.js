@@ -152,6 +152,8 @@ export const THREAD_UNLOCKED = 'Thread Unlocked';
 export const THREAD_UNLOCKED_FAILED = 'Thread Unlocked Failed';
 export const THREAD_PINNED = 'Thread Pinned';
 export const THREAD_PINNED_FAILED = 'Thread Pinned Failed';
+export const THREAD_UNPINNED = 'Thread Unpinned';
+export const THREAD_UNPINNED_FAILED = 'Thread Unpinned Failed';
 export const THREAD_NOTIFICATIONS_ENABLED = 'Thread Notifications Enabled';
 export const THREAD_NOTIFICATIONS_ENABLED_FAILED =
   'Thread Notifications Enabled Failed';

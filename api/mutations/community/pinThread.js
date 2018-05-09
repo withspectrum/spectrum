@@ -1,11 +1,12 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { getThreads } from '../../models/thread';
+import { getThreadById } from '../../models/thread';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { setPinnedThreadInCommunity } from '../../models/community';
 import { getChannels } from '../../models/channel';
-import { track, events } from 'shared/analytics';
+import { events } from 'shared/analytics';
+import { getEntityDataForAnalytics } from '../../utils/analytics';
 
 type PinThreadInput = {
   threadId: string,
@@ -16,7 +17,7 @@ type PinThreadInput = {
 export default async (
   _: any,
   { threadId, communityId, value }: PinThreadInput,
-  { user }: GraphQLContext
+  { user, loaders, track }: GraphQLContext
 ) => {
   const currentUser = user;
   if (!currentUser) {
@@ -25,16 +26,19 @@ export default async (
     );
   }
 
-  const [permissions, threads] = await Promise.all([
+  const defaultTrackingData = await getEntityDataForAnalytics(loaders)({
+    threadId,
+    userId: user.id,
+  });
+
+  const [permissions, threadToEvaluate] = await Promise.all([
     getUserPermissionsInCommunity(communityId, currentUser.id),
-    getThreads([threadId]),
+    getThreadById(threadId),
   ]);
 
   if (!permissions.isOwner && !permissions.isModerator) {
     return new UserError("You don't have permission to do this.");
   }
-
-  const threadToEvaluate = threads[0];
 
   // we have to ensure the thread isn't in a private channel
   const channels = await getChannels([threadToEvaluate.channelId]);
@@ -43,7 +47,9 @@ export default async (
     return new UserError('Only threads in public channels can be pinned.');
   }
 
-  track(currentUser.id, events.THREAD_PINNED);
+  const event = value ? events.THREAD_PINNED : events.THREAD_UNPINNED;
+
+  track(event, defaultTrackingData);
 
   return setPinnedThreadInCommunity(communityId, value);
 };

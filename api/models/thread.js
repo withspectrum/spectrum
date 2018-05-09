@@ -27,6 +27,18 @@ export const getThreads = (
     .run();
 };
 
+export const getThreadById = (threadId: string): Promise<?DBThread> => {
+  return db
+    .table('threads')
+    .getAll(threadId)
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .run()
+    .then(results => {
+      if (!results || results.length === 0) return null;
+      return results[0];
+    });
+};
+
 // this is used to get all threads that need to be marked as deleted whenever a channel is deleted
 export const getThreadsByChannelToDelete = (channelId: string) => {
   return db

@@ -25,9 +25,8 @@ export default (
 
   // check to see if a relationship between this user and this thread exists
   return getThreadNotificationStatusForUser(threadId, currentUser.id)
-    .then(threads => {
-      if (threads && threads.length > 0) {
-        const threadToEvaluate = threads[0];
+    .then(threadToEvaluate => {
+      if (threadToEvaluate) {
         // a relationship with this thread exists, we are going to update it
         let value;
         if (threadToEvaluate.receiveNotifications) {

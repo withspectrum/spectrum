@@ -22,6 +22,7 @@ export default requireAuth(
     const community = await loaders.channel.load(args.input.communityId);
     const defaultTrackingData = await getEntityDataForAnalytics(loaders)({
       communityId: args.input.communityId,
+      userId: user.id,
     });
 
     if (!await canModerateCommunity(user.id, args.input.communityId, loaders)) {

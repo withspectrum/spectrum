@@ -20,6 +20,7 @@ export default requireAuth(
 
     const defaultTrackingData = await getEntityDataForAnalytics(loaders)({
       channelId,
+      userId: user.id,
     });
 
     if (!await canModerateChannel(user.id, channelId, loaders)) {

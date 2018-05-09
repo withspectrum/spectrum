@@ -227,6 +227,7 @@ export default async (
 
       const eventData = await getEntityDataForAnalytics(loaders)({
         messageId: dbMessage.id,
+        userId: currentUser.id,
       });
       track(events.MESSAGE_SENT, eventData);
 
