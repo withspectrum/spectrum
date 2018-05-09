@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('api:analytics:identify');
+const debug = require('debug')('analytics:identify');
 import Raven from 'shared/raven';
 import { amplitude } from './amplitude';
 

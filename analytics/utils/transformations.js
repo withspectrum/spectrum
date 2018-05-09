@@ -11,6 +11,7 @@ import type {
   DBUsersThreads,
 } from 'shared/types';
 import { getTruthyValuesFromObject } from 'src/helpers/utils';
+import hash from './hash';
 
 type AnalyticsChannel = {
   id: ?string,
@@ -46,17 +47,14 @@ type AnalyticsThreadPermissions = {
 };
 
 type AnalyticsUser = {
-  id: ?string,
-  createdAt: ?string,
-  name: ?string,
-  providerId: ?string,
-  githubProviderId: ?string,
-  githubUsername: ?string,
-  fbProviderId: ?string,
-  googleProviderId: ?string,
-  username: ?string,
+  id: string,
+  createdAt: string,
+  twitterAuthed: boolean,
+  fbAuthed: boolean,
+  githubAuthed: boolean,
+  googleAuthed: boolean,
+  hasUsername: boolean,
   lastSeen: ?string,
-  modifiedAt: ?string,
 };
 
 type AnalyticsReaction = {
@@ -195,16 +193,13 @@ export const analyticsThreadPermissions = (
 
 export const analyticsUser = (user: DBUser): AnalyticsUser => {
   return {
-    id: user.id,
+    id: hash(user.id),
     createdAt: user.createdAt,
-    name: user.name,
-    providerId: user.providerId,
-    githubProviderId: user.githubProviderId,
-    githubUsername: user.githubUsername,
-    fbProviderId: user.fbProviderId,
-    googleProviderId: user.googleProviderId,
-    username: user.username ? user.username : null,
+    twitterAuthed: user.providerId ? true : false,
+    fbAuthed: user.fbProviderId ? true : false,
+    githubAuthed: user.githubProviderId ? true : false,
+    googleAuthed: user.googleProviderId ? true : false,
+    hasUsername: user.username ? true : false,
     lastSeen: user.lastSeen ? user.lastSeen : null,
-    modifiedAt: user.modifiedAt,
   };
 };
