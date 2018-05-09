@@ -145,7 +145,7 @@ export const getEntityDataForAnalytics = (loaders: any) => async (
       communityPermissions,
     ] = await Promise.all([
       loaders.community.load(channel.communityId),
-      loaders.userPermissionsInChannel.load([obj.userId, channel.channelId]),
+      loaders.userPermissionsInChannel.load([obj.userId, obj.channelId]),
       loaders.userPermissionsInCommunity.load([
         obj.userId,
         channel.communityId,
