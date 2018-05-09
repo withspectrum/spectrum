@@ -1,6 +1,6 @@
 // @flow
+import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { EditorState } from 'draft-js';
-import { markdownToDraft } from 'markdown-draft-js';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';
@@ -53,9 +53,9 @@ export default async (
   }
 
   if (message.messageType === 'text') {
-    message.content.body = JSON.stringify(
-      markdownToDraft(message.content.body)
-    );
+    const contentState = stateFromMarkdown(message.content.body);
+    const editorState = EditorState.createWithContent(contentState);
+    message.content.body = JSON.stringify(toJSON(editorState));
     message.messageType = 'draftjs';
   }
 

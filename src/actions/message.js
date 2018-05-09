@@ -1,16 +1,13 @@
 // @flow
 
-type ReplyInput = {|
-  threadId: string,
-  messageId: ?string,
-|};
-
-export const replyToMessage = (input: ReplyInput) => {
+export const replyToMessage = (messageId: string | null) => {
   return {
     type: 'REPLY_TO_MESSAGE',
-    messageId: input ? input.messageId : null,
-    threadId: input.threadId,
+    messageId,
   };
 };
 
-export type ReplyToMessageActionType = $Call<typeof replyToMessage, ReplyInput>;
+export type ReplyToMessageActionType = $Call<
+  typeof replyToMessage,
+  string | null
+>;

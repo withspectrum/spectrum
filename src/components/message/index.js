@@ -60,13 +60,7 @@ class Message extends Component<Props> {
   };
 
   replyToMessage = () => {
-    const { threadId, message } = this.props;
-    return this.props.dispatch(
-      replyToMessage({
-        threadId,
-        messageId: message.id,
-      })
-    );
+    return this.props.dispatch(replyToMessage(this.props.message.id));
   };
 
   render() {

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Text, View, Button } from 'react-native';
 import { AuthSession, SecureStore } from 'expo';
 import { authenticate } from '../../actions/authentication';
-import { DEV_BASE_URI } from '../../../shared/graphql/constants.native';
 import {
   Container,
   Emoji,
@@ -21,7 +20,7 @@ import {
 const API_URL =
   process.env.NODE_ENV === 'production'
     ? 'https://spectrum.chat'
-    : `http://${DEV_BASE_URI}`;
+    : 'http://localhost:3001';
 
 type Provider = 'twitter' | 'facebook' | 'google' | 'github';
 

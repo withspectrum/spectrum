@@ -7,6 +7,8 @@ import createLoaders from '../../loaders/';
 import createErrorFormatter from '../../utils/create-graphql-error-formatter';
 import schema from '../../schema';
 
+// const loaders = createLoaders()
+
 export default graphqlExpress(req => {
   const loaders = createLoaders();
 

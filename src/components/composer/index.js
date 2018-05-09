@@ -19,7 +19,6 @@ import {
   fromPlainText,
   toJSON,
   toState,
-  isAndroid,
 } from 'shared/draft-utils';
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
@@ -455,7 +454,7 @@ class ComposerWithData extends Component<Props, State> {
 
     const content = {
       title: title.trim(),
-      body: isAndroid() ? toPlainText(body) : JSON.stringify(jsonBody),
+      body: JSON.stringify(jsonBody),
     };
 
     const attachments = [];
@@ -480,9 +479,7 @@ class ComposerWithData extends Component<Props, State> {
     const thread = {
       channelId,
       communityId,
-      // NOTE(@mxstbr): On android we send plain text content
-      // which is parsed as markdown to draftjs on the server
-      type: isAndroid() ? 'TEXT' : 'DRAFTJS',
+      type: 'DRAFTJS',
       content,
       attachments,
       filesToUpload,

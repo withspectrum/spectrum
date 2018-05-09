@@ -2,7 +2,6 @@
 import * as React from 'react';
 import Nav from './components/nav';
 import Support from './support';
-import Features from './features';
 import Pricing from './pricing';
 import Home from './home';
 import Terms from './terms';
@@ -23,9 +22,9 @@ class Pages extends React.Component<Props> {
       case '/pricing': {
         return <Pricing {...this.props} />;
       }
-      case '/features': {
-        return <Features {...this.props} />;
-      }
+      // case '/features': {
+      //   return <Features {...this.props} />;
+      // }
       case '/terms':
       case '/terms.html': {
         return <Terms {...this.props} />;
