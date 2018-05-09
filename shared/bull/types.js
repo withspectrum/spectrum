@@ -364,6 +364,16 @@ export type SendSlackInvitationsJobData = {
   userId: string,
 };
 
+export type TrackAnalyticsData = {
+  userId: string,
+  event: string,
+  data: ?Object,
+};
+
+export type IdentifyAnalyticsData = {
+  userId: string,
+};
+
 export type Queues = {
   // athena
   sendThreadNotificationQueue: BullQueue<ThreadNotificationJobData>,
@@ -477,6 +487,10 @@ export type Queues = {
     StripePaymentSucceededOrFailedEventJobData
   >,
   stripeCardExpiringWarningQueue: BullQueue<StripeCardExpiringWarningJobData>,
+
+  // analytics
+  trackQueue: BullQueue<TrackAnalyticsData>,
+  identifyQueue: BullQueue<IdentifyAnalyticsData>,
 
   // admin
   _adminSendCommunityCreatedEmailQueue: BullQueue<
