@@ -272,3 +272,8 @@ export const WEB_PUSH_NOTIFICATIONS_UNSUBSCRIBED =
 
 export const EMAIL_RECEIVED = 'Email Received';
 export const EMAIL_BOUNCED = 'Email Bounced';
+
+export const NOTIFICATION_RECEIVED = 'Notification Received';
+export const NOTIFICATION_MARKED_AS_SEEN = 'Notification Marked as Seen';
+export const NOTIFICATIONS_MARKED_AS_SEEN = 'Notifications Marked as Read';
+export const WEB_PUSH_NOTIFICATION_RECEIVED = 'Web Push Notification Received';

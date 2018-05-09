@@ -2,6 +2,16 @@
 const { db } = require('./db');
 import { NEW_DOCUMENTS } from './utils';
 import { createChangefeed } from 'shared/changefeed-utils';
+import type { DBNotification } from 'shared/types';
+
+export const getNotification = (
+  notificationId: string
+): Promise<DBNotification> => {
+  return db
+    .table('notifications')
+    .get(notificationId)
+    .run();
+};
 
 export const getNotificationsByUser = (
   userId: string,
