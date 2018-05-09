@@ -4,6 +4,7 @@ import AWS from 'aws-sdk';
 import shortid from 'shortid';
 import _ from 'lodash';
 import Raven from 'shared/raven';
+import sanitize from 'sanitize-filename';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 
@@ -45,7 +46,7 @@ export const uploadImage = async (
 ): Promise<string> => {
   const result = await file;
   const { filename, stream, mimetype } = result;
-
+  const sanitized = sanitize(filename);
   const validMediaTypes = ['image/gif', 'image/jpeg', 'image/png', 'video/mp4'];
 
   return new Promise(res => {
@@ -59,7 +60,7 @@ export const uploadImage = async (
     }
 
     const path = `spectrum-chat/${entity}/${id}`;
-    const fileKey = `${shortid.generate()}-${filename}`;
+    const fileKey = `${shortid.generate()}-${sanitized}`;
     return s3.upload(
       {
         Bucket: path,

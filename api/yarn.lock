@@ -9,7 +9,7 @@
     core-js "^2.5.3"
     regenerator-runtime "^0.11.1"
 
-"@types/graphql@^0.9.0", "@types/graphql@^0.9.1":
+"@types/graphql@^0.9.1":
   version "0.9.4"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.9.4.tgz#cdeb6bcbef9b6c584374b81aa7f48ecf3da404fa"
 
@@ -192,6 +192,14 @@ apollo-link-http-common@^0.2.3:
   dependencies:
     apollo-link "^1.2.1"
 
+apollo-link@1.2.1, apollo-link@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.2.1.tgz#c120b16059f9bd93401b9f72b94d2f80f3f305d2"
+  dependencies:
+    "@types/node" "^9.4.6"
+    apollo-utilities "^1.0.0"
+    zen-observable-ts "^0.8.6"
+
 apollo-link@^1.0.0:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.0.7.tgz#42cd38a7378332fc3e41a214ff6a6e5e703a556f"
@@ -199,14 +207,6 @@ apollo-link@^1.0.0:
     "@types/zen-observable" "0.5.3"
     apollo-utilities "^1.0.0"
     zen-observable "^0.6.0"
-
-apollo-link@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.2.1.tgz#c120b16059f9bd93401b9f72b94d2f80f3f305d2"
-  dependencies:
-    "@types/node" "^9.4.6"
-    apollo-utilities "^1.0.0"
-    zen-observable-ts "^0.8.6"
 
 apollo-local-query@^0.3.0:
   version "0.3.1"
@@ -2259,20 +2259,6 @@ draft-js-image-plugin@2.0.0-rc8:
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
 
-draft-js-import-element@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/draft-js-import-element/-/draft-js-import-element-1.2.1.tgz#9a6a56d74690d48d35d8d089564e6d710b4926eb"
-  dependencies:
-    draft-js-utils "^1.2.0"
-    synthetic-dom "^1.2.0"
-
-draft-js-import-markdown@^1.2.0:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-1.2.1.tgz#ec18eb15008bab13d9878d65db50e181dd64a5ce"
-  dependencies:
-    draft-js-import-element "^1.2.1"
-    synthetic-dom "^1.2.0"
-
 draft-js-linkify-plugin@^2.0.0-beta1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/draft-js-linkify-plugin/-/draft-js-linkify-plugin-2.0.1.tgz#28978b53640ce64c639cd2821a54c24de9f79c3f"
@@ -2326,10 +2312,6 @@ draft-js-prism@ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb:
     extend "^3.0.0"
     immutable "*"
     prismjs "^1.5.0"
-
-draft-js-utils@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-1.2.0.tgz#f5cb23eb167325ffed3d79882fdc317721d2fd12"
 
 draft-js@0.x, draft-js@^0.10.0, draft-js@~0.10.0, draft-js@~0.10.1:
   version "0.10.4"
@@ -3260,14 +3242,15 @@ graphql-subscriptions@^0.5.6:
     es6-promise "^4.1.1"
     iterall "^1.1.3"
 
-graphql-tools@1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-1.2.3.tgz#079bf4d157e46c0a0bae9fec117e0eea6e03ba2c"
+graphql-tools@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-3.0.0.tgz#ff22ad15315fc268de8639d03936b911d78b9e9b"
   dependencies:
+    apollo-link "1.2.1"
+    apollo-utilities "^1.0.1"
     deprecated-decorator "^0.1.6"
-    uuid "^3.0.1"
-  optionalDependencies:
-    "@types/graphql" "^0.9.0"
+    iterall "^1.1.3"
+    uuid "^3.1.0"
 
 "graphql-tools@^1 || ^2":
   version "2.18.0"
@@ -4780,6 +4763,12 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
+markdown-draft-js@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/markdown-draft-js/-/markdown-draft-js-0.6.3.tgz#5847cd3d07d7b7e3d4d87c5d7e5928c3a71bddd4"
+  dependencies:
+    remarkable "1.7.1"
+
 "match-stream@>= 0.0.2 < 1":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/match-stream/-/match-stream-0.0.2.tgz#99eb050093b34dffade421b9ac0b410a9cfa17cf"
@@ -6165,7 +6154,7 @@ regjsparser@^0.1.4:
   dependencies:
     jsesc "~0.5.0"
 
-remarkable@^1.x:
+remarkable@1.7.1, remarkable@^1.x:
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/remarkable/-/remarkable-1.7.1.tgz#aaca4972100b66a642a63a1021ca4bac1be3bff6"
   dependencies:
@@ -6941,10 +6930,6 @@ symbol-tree@^3.2.1:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.2.tgz#ae27db38f660a7ae2e1c3b7d1bc290819b8519e6"
 
-synthetic-dom@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/synthetic-dom/-/synthetic-dom-1.2.0.tgz#f3589aafe2b5e299f337bb32973a9be42dd5625e"
-
 table@^4.0.1:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/table/-/table-4.0.2.tgz#a33447375391e766ad34d3486e6e2aedc84d2e36"
@@ -7366,7 +7351,7 @@ uuid@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.0.tgz#6728fc0459c450d796a99c31837569bdf672d728"
 
-uuid@3.1.0, uuid@^3.0.0, uuid@^3.0.1, uuid@^3.1.0:
+uuid@3.1.0, uuid@^3.0.0, uuid@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
 

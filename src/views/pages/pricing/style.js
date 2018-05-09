@@ -36,6 +36,7 @@ export const Heading = styled.h1`
   color: ${props =>
     props.reverse ? props.theme.text.reverse : props.theme.text.default};
   line-height: 1.2;
+  grid-area: heading;
 
   @media (max-width: 768px) {
     margin-top: 48px;

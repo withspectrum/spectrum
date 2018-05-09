@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import DraftEditor, { composeDecorators } from 'draft-js-plugins-editor';
+import DraftEditor from '../draft-js-plugins-editor';
+import { composeDecorators } from 'draft-js-plugins-editor';
 import createImagePlugin from 'draft-js-image-plugin';
 import createFocusPlugin from 'draft-js-focus-plugin';
 import createBlockDndPlugin from 'draft-js-drag-n-drop-plugin';
@@ -26,6 +27,7 @@ import Icon from '../icons';
 import { IconButton } from '../buttons';
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
 import { renderLanguageSelect } from './LanguageSelect';
+import { isAndroid } from 'shared/draft-utils';
 
 import Image from './Image';
 import Embed, { addEmbed, parseEmbedUrl } from './Embed';
@@ -237,44 +239,45 @@ class Editor extends React.Component<Props, State> {
             customStyleMap={customStyleMap}
             {...rest}
           />
-          {!readOnly && (
-            <OutsideClickHandler onOutsideClick={this.closeToolbar}>
-              <SideToolbar editorState={state} editorRef={this.editor}>
-                <Expander inserting={inserting}>
-                  <IconButton
-                    glyph={'inserter'}
-                    onClick={this.toggleToolbarDisplayState}
-                  />
-                  <Action>
-                    <MediaInput
-                      onChange={this.addImage}
-                      multiple
-                      tipLocation={'right'}
+          {!readOnly &&
+            !isAndroid() && (
+              <OutsideClickHandler onOutsideClick={this.closeToolbar}>
+                <SideToolbar editorState={state} editorRef={this.editor}>
+                  <Expander inserting={inserting}>
+                    <IconButton
+                      glyph={'inserter'}
+                      onClick={this.toggleToolbarDisplayState}
                     />
-                  </Action>
-                  <Action embedding={embedding}>
-                    <EmbedUI onSubmit={this.addEmbed} embedding={embedding}>
-                      <label htmlFor="embed-input">
-                        <Icon
-                          glyph={'embed'}
-                          tipText={'Embed a URL'}
-                          onClick={this.toggleEmbedInputState}
-                        />
-                        <input
-                          id="embed-input"
-                          type="url"
-                          placeholder="Enter a URL to embed"
-                          value={this.state.embedUrl}
-                          onChange={this.changeEmbedUrl}
-                        />
-                      </label>
-                      <button onClick={this.addEmbed}>Embed</button>
-                    </EmbedUI>
-                  </Action>
-                </Expander>
-              </SideToolbar>
-            </OutsideClickHandler>
-          )}
+                    <Action>
+                      <MediaInput
+                        onChange={this.addImage}
+                        multiple
+                        tipLocation={'right'}
+                      />
+                    </Action>
+                    <Action embedding={embedding}>
+                      <EmbedUI onSubmit={this.addEmbed} embedding={embedding}>
+                        <label htmlFor="embed-input">
+                          <Icon
+                            glyph={'embed'}
+                            tipText={'Embed a URL'}
+                            onClick={this.toggleEmbedInputState}
+                          />
+                          <input
+                            id="embed-input"
+                            type="url"
+                            placeholder="Enter a URL to embed"
+                            value={this.state.embedUrl}
+                            onChange={this.changeEmbedUrl}
+                          />
+                        </label>
+                        <button onClick={this.addEmbed}>Embed</button>
+                      </EmbedUI>
+                    </Action>
+                  </Expander>
+                </SideToolbar>
+              </OutsideClickHandler>
+            )}
           {showLinkPreview &&
             linkPreview &&
             linkPreview.loading && (

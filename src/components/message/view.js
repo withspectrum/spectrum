@@ -12,6 +12,7 @@ import {
   ModActionWrapper,
   Time,
   QuoteWrapper,
+  QuoteWrapperGradient,
   QuotedParagraph,
 } from './style';
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
@@ -67,28 +68,72 @@ export const Body = (props: {
   }
 };
 
-export const QuotedMessage = (props: {
+type QuotedMessageProps = {
   message: MessageInfoType,
   openGallery?: Function,
-}) => {
-  const { message, openGallery } = props;
-  return (
-    <QuoteWrapper data-cy="quoted-message">
-      <Byline>
-        <Icon glyph="reply" size={16} />
-        <Name>{message.author.user.name}</Name>
-        <Username>@{message.author.user.username}</Username>
-      </Byline>
-      <Body
-        message={message}
-        showParent={false}
-        me={false}
-        openGallery={openGallery ? openGallery : () => {}}
-        bubble={false}
-      />
-    </QuoteWrapper>
-  );
 };
+
+type QuotedMessageState = {
+  isShort: boolean,
+  isExpanded: boolean,
+};
+
+export class QuotedMessage extends React.Component<
+  QuotedMessageProps,
+  QuotedMessageState
+> {
+  constructor(props: QuotedMessageProps) {
+    super(props);
+
+    const jsonBody = JSON.parse(props.message.content.body);
+    const isShort =
+      !jsonBody.blocks.length > 1 ||
+      toPlainText(toState(jsonBody)).length <= 170;
+
+    this.state = {
+      isShort,
+      isExpanded: isShort,
+    };
+  }
+
+  shouldComponentUpdate(
+    nextProps: QuotedMessageProps,
+    nextState: QuotedMessageState
+  ) {
+    return nextState.isExpanded !== this.state.isExpanded;
+  }
+
+  toggle = () => {
+    if (this.state.isShort) return;
+    this.setState(prev => ({ isExpanded: !prev.isExpanded }));
+  };
+
+  render() {
+    const { message, openGallery } = this.props;
+    const { isExpanded, isShort } = this.state;
+    return (
+      <QuoteWrapper
+        expanded={isExpanded}
+        onClick={this.toggle}
+        data-cy="quoted-message"
+      >
+        <Byline>
+          <Icon glyph="reply" size={16} />
+          <Name>{message.author.user.name}</Name>
+          <Username>@{message.author.user.username}</Username>
+        </Byline>
+        <Body
+          message={message}
+          showParent={false}
+          me={false}
+          openGallery={openGallery ? openGallery : () => {}}
+          bubble={false}
+        />
+        {!isExpanded && <QuoteWrapperGradient />}
+      </QuoteWrapper>
+    );
+  }
+}
 
 type ActionProps = {
   me: boolean,
