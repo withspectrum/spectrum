@@ -9,52 +9,39 @@ import {
   isAuthedResolver as requireAuth,
   canModerateCommunity,
 } from '../../utils/permissions';
-import {
-  track,
-  trackUserError,
-  events,
-  transformations,
-} from 'shared/analytics';
-import { errors } from 'shared/errors';
+import { events, transformations } from 'shared/analytics';
 
 export default requireAuth(
   async (
     _: any,
     args: CreateChannelInput,
-    { user, loaders }: GraphQLContext
+    { user, loaders, track }: GraphQLContext
   ) => {
-    const [communityPermissions, community] = await Promise.all([
-      loaders.userPermissionsInCommunity.load([
-        user.id,
-        args.input.communityId,
-      ]),
-      loaders.community.load(args.input.communityId),
-    ]);
+    // TODO: Figure out how to not have to do this - somehow combine forces with canModerateChannel function which is fetching most of the same data anyways
+    const community = await loaders.channel.load(args.input.communityId);
 
-    const eventProperties = {
-      channel: args.input,
-      community: {
-        ...transformations.analyticsCommunity(community),
-        ...transformations.analyticsCommunityPermissions(communityPermissions),
-      },
+    const defaultTrackingData = {
+      community: transformations.analyticsCommunity(community),
     };
 
     if (!await canModerateCommunity(user.id, args.input.communityId, loaders)) {
-      trackUserError(
-        user.id,
-        errors.CHANNEL_CREATED_FAILED_NO_PERMISSIONS,
-        eventProperties
+      track(events.CHANNEL_CREATED_FAILED, {
+        ...defaultTrackingData,
+        reason: 'no permission',
+      });
+      return new UserError(
+        'You don’t have permission to create channels in this community'
       );
-      return new UserError(errors.CHANNEL_CREATED_FAILED_NO_PERMISSIONS);
     }
 
     if (channelSlugIsBlacklisted(args.input.slug)) {
-      trackUserError(
-        user.id,
-        errors.CHANNEL_CREATED_FAILED_NAME_RESERVED,
-        eventProperties
+      track(events.CHANNEL_CREATED_FAILED, {
+        ...defaultTrackingData,
+        reason: 'slug blacklisted',
+      });
+      return new UserError(
+        'This channel url is reserved - please try another name'
       );
-      return new UserError(errors.CHANNEL_CREATED_FAILED_NAME_RESERVED);
     }
 
     const channelWithSlug = await getChannelBySlug(
@@ -63,21 +50,21 @@ export default requireAuth(
     );
 
     if (channelWithSlug) {
-      trackUserError(
-        user.id,
-        errors.CHANNEL_CREATED_FAILED_SLUG_EXISTS,
-        eventProperties
+      track(events.CHANNEL_CREATED_FAILED, {
+        ...defaultTrackingData,
+        reason: 'slug taken',
+      });
+      return new UserError(
+        'A channel with this url already exists in this community - please try another name'
       );
-      return new UserError(errors.CHANNEL_CREATED_FAILED_SLUG_EXISTS);
     }
 
     const newChannel = await createChannel(args, user.id);
 
-    const createdEventProperties = Object.assign({}, eventProperties, {
+    track(events.CHANNEL_CREATED, {
+      ...defaultTrackingData,
       channel: transformations.analyticsChannel(newChannel),
     });
-
-    track(user.id, events.CHANNEL_CREATED, createdEventProperties);
 
     return await createOwnerInChannel(newChannel.id, user.id).then(
       () => newChannel
