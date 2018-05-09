@@ -6,6 +6,8 @@ import type {
   DBUsersCommunities,
   DBThread,
   DBUser,
+  DBReaction,
+  DBMessage,
 } from 'shared/types';
 import { getTruthyValuesFromObject } from 'src/helpers/utils';
 
@@ -49,6 +51,32 @@ type AnalyticsUser = {
   username: ?string,
   lastSeen: ?string,
   modifiedAt: ?string,
+};
+
+type AnalyticsReaction = {
+  id: string,
+  type: string,
+};
+
+type AnalyticsMessage = {
+  id: string,
+  threadType: string,
+  parentId: ?string,
+};
+
+export const analyticsReaction = (reaction: DBReaction): AnalyticsReaction => {
+  return {
+    id: reaction.id,
+    type: reaction.type,
+  };
+};
+
+export const analyticsMessage = (message: DBMessage): AnalyticsMessage => {
+  return {
+    id: message.id,
+    threadType: message.threadType,
+    parentId: message.parentId ? message.parentId : null,
+  };
 };
 
 export const analyticsChannel = (channel: DBChannel): AnalyticsChannel => {
