@@ -6,7 +6,8 @@ import {
   isAuthedResolver as requireAuth,
   canModerateChannel,
 } from '../../utils/permissions';
-import { events, transformations } from 'shared/analytics';
+import { events } from 'shared/analytics';
+import { getEntityDataForAnalytics } from '../../utils/analytics';
 
 export default requireAuth(
   async (
@@ -14,16 +15,11 @@ export default requireAuth(
     { input: { channelId } }: { input: { channelId: string } },
     { user, loaders, track }: GraphQLContext
   ) => {
-    // TODO: Figure out how to not have to do this - somehow combine forces with canModerateChannel function which is fetching most of the same data anyways
     const channelToEvaluate = await loaders.channel.load(channelId);
-    const communityToEvaluate = await loaders.community.load(
-      channelToEvaluate.communityId
-    );
 
-    const defaultTrackingData = {
-      channel: transformations.analyticsChannel(channelToEvaluate),
-      community: transformations.analyticsCommunity(communityToEvaluate),
-    };
+    const defaultTrackingData = await getEntityDataForAnalytics(loaders)({
+      channelId,
+    });
 
     if (!await canModerateChannel(user.id, channelId, loaders)) {
       track(events.CHANNEL_ARCHIVED_FAILED, {

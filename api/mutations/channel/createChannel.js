@@ -10,6 +10,7 @@ import {
   canModerateCommunity,
 } from '../../utils/permissions';
 import { events, transformations } from 'shared/analytics';
+import { getEntityDataForAnalytics } from '../../utils/analytics';
 
 export default requireAuth(
   async (
@@ -19,10 +20,9 @@ export default requireAuth(
   ) => {
     // TODO: Figure out how to not have to do this - somehow combine forces with canModerateChannel function which is fetching most of the same data anyways
     const community = await loaders.channel.load(args.input.communityId);
-
-    const defaultTrackingData = {
-      community: transformations.analyticsCommunity(community),
-    };
+    const defaultTrackingData = await getEntityDataForAnalytics(loaders)({
+      communityId: args.input.communityId,
+    });
 
     if (!await canModerateCommunity(user.id, args.input.communityId, loaders)) {
       track(events.CHANNEL_CREATED_FAILED, {

@@ -6,7 +6,8 @@ import {
   isAuthedResolver as requireAuth,
   canModerateChannel,
 } from '../../utils/permissions';
-import { events, transformations } from 'shared/analytics';
+import { events } from 'shared/analytics';
+import { getEntityDataForAnalytics } from '../../utils/analytics';
 
 export default requireAuth(
   async (
@@ -16,12 +17,10 @@ export default requireAuth(
   ) => {
     // TODO: Figure out how to not have to do this - somehow combine forces with canModerateChannel function which is fetching most of the same data anyways
     const channel = await loaders.channel.load(channelId);
-    const community = await loaders.community.load(channel.communityId);
 
-    const defaultTrackingData = {
-      channel: transformations.analyticsChannel(channel),
-      community: transformations.analyticsCommunity(community),
-    };
+    const defaultTrackingData = await getEntityDataForAnalytics(loaders)({
+      channelId,
+    });
 
     if (!await canModerateChannel(user.id, channelId, loaders)) {
       track(events.CHANNEL_RESTORED_FAILED, {
@@ -41,10 +40,7 @@ export default requireAuth(
 
     const restoredChannel = await restoreChannel(channelId);
 
-    track(events.CHANNEL_RESTORED, {
-      ...defaultTrackingData,
-      channel: transformations.analyticsChannel(restoredChannel),
-    });
+    track(events.CHANNEL_RESTORED, defaultTrackingData);
 
     return restoredChannel;
   }

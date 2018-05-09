@@ -13,6 +13,8 @@ import addCommunityMember from '../communityMember/addCommunityMember';
 import { trackUserThreadLastSeenQueue } from 'shared/bull/queues';
 import { toJSON } from 'shared/draft-utils';
 import type { FileUpload } from 'shared/types';
+import { getEntityDataForAnalytics } from '../../utils/analytics';
+import { events } from 'shared/analytics';
 
 type AddMessageInput = {
   message: {
@@ -213,7 +215,7 @@ export default async (
   return membershipPromise()
     .then(() => createParticipantInThread(message.threadId, currentUser.id))
     .then(() => messagePromise())
-    .then(dbMessage => {
+    .then(async dbMessage => {
       const contextPermissions = {
         communityId: thread.communityId,
         reputation: communityPermissions ? communityPermissions.reputation : 0,
@@ -222,6 +224,11 @@ export default async (
           : false,
         isOwner: communityPermissions ? communityPermissions.isOwner : false,
       };
+
+      const eventData = await getEntityDataForAnalytics(loaders)({
+        messageId: dbMessage.id,
+      });
+      track(events.MESSAGE_SENT, eventData);
 
       trackUserThreadLastSeenQueue.add({
         userId: currentUser.id,

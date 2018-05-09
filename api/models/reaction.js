@@ -39,6 +39,15 @@ export const getReaction = (reactionId: string): Promise<DBReaction> => {
     .run();
 };
 
+export const getReactionsByIds = (
+  reactionIds: Array<string>
+): Promise<Array<DBReaction>> => {
+  return db
+    .table('reactions')
+    .getAll(...reactionIds)
+    .run();
+};
+
 export const toggleReaction = async (
   reaction: ReactionInput,
   userId: string
