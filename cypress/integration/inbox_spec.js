@@ -4,8 +4,8 @@ const user = data.users[0];
 const channelIds = data.usersChannels
   .filter(({ userId }) => userId === user.id)
   .map(({ channelId }) => channelId);
-const dashboardThreads = data.threads.filter(
-  ({ deletedAt, channelId }) => !deletedAt && channelIds.includes(channelId)
+const dashboardThreads = data.threads.filter(({ channelId }) =>
+  channelIds.includes(channelId)
 );
 
 describe('Inbox View', () => {

@@ -14,7 +14,6 @@ import {
   fromPlainText,
   toJSON,
   toState,
-  isAndroid,
 } from 'shared/draft-utils';
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
@@ -525,9 +524,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
 
     const content = {
       title,
-      // NOTE(@mxstbr): On Android we send the text as plain text and parse the raw
-      // markdown on the server
-      body: isAndroid() ? toPlainText(body) : JSON.stringify(jsonBody),
+      body: JSON.stringify(jsonBody),
     };
 
     const attachments = [];
@@ -557,7 +554,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     const thread = {
       channelId,
       communityId,
-      type: isAndroid() ? 'DRAFTJS' : 'TEXT',
+      type: 'DRAFTJS',
       content,
       attachments,
       filesToUpload,

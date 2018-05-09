@@ -22,7 +22,6 @@ import {
   Navatar,
   SkipLink,
 } from './style';
-import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
 
 type Props = {
   isLoading: boolean,
@@ -100,9 +99,25 @@ class Navbar extends React.Component<Props, State> {
 
     const loggedInUser = currentUser;
 
-    if (isViewingMarketingPage(history, currentUser)) {
-      return null;
-    }
+    const viewing = history.location.pathname;
+
+    const isHome = viewing === '/' || viewing === '/home';
+
+    const isSplash =
+      viewing === '/about' ||
+      viewing === '/code-of-conduct' ||
+      viewing === '/contact' ||
+      viewing === '/pricing' ||
+      viewing === '/privacy' ||
+      viewing === '/privacy.html' ||
+      viewing === '/support' ||
+      viewing === '/terms' ||
+      viewing === '/terms.html' ||
+      viewing === '/faq' ||
+      viewing === '/features';
+
+    // Bail out if the splash page is showing
+    if ((!loggedInUser && isHome) || isSplash) return null;
 
     // if the user is mobile and is viewing a thread or DM thread, don't
     // render a navbar - it will be replaced with a chat input
@@ -123,7 +138,7 @@ class Navbar extends React.Component<Props, State> {
 
     if (loggedInUser) {
       return (
-        <Nav hideOnMobile={hideNavOnMobile} data-cy="navbar">
+        <Nav hideOnMobile={hideNavOnMobile}>
           <Head>
             {notificationCounts.directMessageNotifications > 0 ||
             notificationCounts.notifications > 0 ? (
@@ -148,7 +163,6 @@ class Navbar extends React.Component<Props, State> {
             aria-hidden
             tabIndex="-1"
             isHidden={this.state.isSkipLinkFocused}
-            data-cy="navbar-logo"
           >
             <Icon glyph="logo" size={28} />
           </Logo>
@@ -164,7 +178,6 @@ class Navbar extends React.Component<Props, State> {
           <HomeTab
             {...this.getTabProps(match.url === '/' && match.isExact)}
             to="/"
-            data-cy="navbar-home"
           >
             <Icon glyph="home" />
             <Label>Home</Label>
@@ -177,7 +190,6 @@ class Navbar extends React.Component<Props, State> {
           <ExploreTab
             {...this.getTabProps(history.location.pathname === '/explore')}
             to="/explore"
-            data-cy="navbar-explore"
           >
             <Icon glyph="explore" />
             <Label>Explore</Label>
@@ -203,7 +215,6 @@ class Navbar extends React.Component<Props, State> {
                 user={loggedInUser}
                 src={`${loggedInUser.profilePhoto}`}
                 size={24}
-                data-cy="navbar-profile"
               />
             </Tab>
             <ProfileDropdown user={loggedInUser} />
@@ -225,17 +236,12 @@ class Navbar extends React.Component<Props, State> {
 
     if (!loggedInUser) {
       return (
-        <Nav
-          hideOnMobile={hideNavOnMobile}
-          loggedOut={!loggedInUser}
-          data-cy="navbar"
-        >
+        <Nav hideOnMobile={hideNavOnMobile} loggedOut={!loggedInUser}>
           <Logo
             to="/"
             aria-hidden
             tabIndex="-1"
             isHidden={this.state.isSkipLinkFocused}
-            data-cy="navbar-logo"
           >
             <Icon glyph="logo" size={28} />
           </Logo>
@@ -260,7 +266,6 @@ class Navbar extends React.Component<Props, State> {
             {...this.getTabProps(history.location.pathname === '/explore')}
             to="/explore"
             loggedOut={!loggedInUser}
-            data-cy="navbar-explore"
           >
             <Icon glyph="explore" />
             <Label>Explore</Label>
@@ -268,7 +273,6 @@ class Navbar extends React.Component<Props, State> {
           <SupportTab
             {...this.getTabProps(history.location.pathname === '/support')}
             to="/support"
-            data-cy="navbar-support"
           >
             <Icon glyph="like" />
             <Label>Support</Label>
@@ -276,7 +280,6 @@ class Navbar extends React.Component<Props, State> {
           <PricingTab
             {...this.getTabProps(history.location.pathname === '/pricing')}
             to="/pricing"
-            data-cy="navbar-pricing"
           >
             <Icon glyph="payment" />
             <Label>Pricing</Label>

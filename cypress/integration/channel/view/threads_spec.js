@@ -18,7 +18,7 @@ describe('channel threads logged out', () => {
 
   it('should render list of threads', () => {
     data.threads
-      .filter(thread => !thread.deletedAt && thread.channelId === channel.id)
+      .filter(thread => thread.channelId === channel.id)
       .forEach(thread => {
         cy.contains(thread.content.title);
       });
@@ -33,7 +33,7 @@ describe('channel threads logged in', () => {
 
   it('should render list of threads', () => {
     data.threads
-      .filter(thread => !thread.deletedAt && thread.channelId === channel.id)
+      .filter(thread => thread.channelId === channel.id)
       .forEach(thread => {
         cy.contains(thread.content.title);
       });

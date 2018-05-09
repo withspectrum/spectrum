@@ -2,12 +2,12 @@
 const debug = require('debug')('api:utils:error-formatter');
 import Raven from 'shared/raven';
 import { IsUserError } from './UserError';
+import { print } from 'graphql';
 import type { GraphQLError } from 'graphql';
 
 const queryRe = /\s*(query|mutation)[^{]*/;
 
 const collectQueries = query => {
-  if (!query) return 'No query';
   return query
     .split('\n')
     .map(line => {

@@ -6,7 +6,6 @@ import EmailSettings from './emailSettings';
 import NotificationSettings from './notificationSettings';
 import Invoices from './invoices';
 import DeleteAccountForm from './deleteAccountForm';
-import DownloadDataForm from './downloadDataForm';
 import RecurringPaymentsList from './recurringPaymentsList';
 import { SectionsContainer, Column } from 'src/components/settingsViews/style';
 
@@ -23,7 +22,6 @@ class Overview extends React.Component<Props> {
         <Column>
           <UserEditForm user={user} />
           <DeleteAccountForm id={user.id} />
-          <DownloadDataForm user={user} />
         </Column>
         <Column>
           <RecurringPaymentsList user={user} />

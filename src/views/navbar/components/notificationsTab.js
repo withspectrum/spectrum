@@ -381,11 +381,7 @@ class NotificationsTab extends React.Component<Props, State> {
     const { notifications, shouldRenderDropdown } = this.state;
 
     return (
-      <NotificationTab
-        padOnHover
-        onMouseOver={this.setHover}
-        data-cy="navbar-notifications"
-      >
+      <NotificationTab padOnHover onMouseOver={this.setHover}>
         <Tab
           data-active={active}
           aria-current={active ? 'page' : undefined}

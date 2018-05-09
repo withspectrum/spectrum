@@ -3,7 +3,7 @@ const { db } = require('./db');
 import type { DBCommunitySettings, DBCommunity } from 'shared/types';
 import { getCommunityById } from './community';
 import axios from 'axios';
-import { decryptString } from 'shared/encryption';
+const querystring = require('querystring');
 
 const defaultSettings = {
   brandedLogin: {
@@ -243,11 +243,9 @@ export const getSlackPublicChannelList = (
   token: string
 ) => {
   if (!token) return [];
-  const decryptedToken = decryptString(token);
-
   return axios
     .get(
-      `https://slack.com/api/channels.list?token=${decryptedToken}&exclude_archived=true&exclude_members=true`
+      `https://slack.com/api/channels.list?token=${token}&exclude_archived=true&exclude_members=true`
     )
     .then(response => {
       return handleSlackChannelResponse(response.data, communityId);
@@ -263,11 +261,9 @@ export const getSlackPrivateChannelList = (
   token: ?string
 ) => {
   if (!token) return [];
-  const decryptedToken = decryptString(token);
-
   return axios
     .get(
-      `https://slack.com/api/groups.list?token=${decryptedToken}&exclude_archived=true&exclude_members=true`
+      `https://slack.com/api/groups.list?token=${token}&exclude_archived=true&exclude_members=true`
     )
     .then(response => {
       return handleSlackChannelResponse(response.data, communityId);

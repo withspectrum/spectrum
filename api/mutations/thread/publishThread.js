@@ -1,7 +1,6 @@
 // @flow
 const debug = require('debug')('api:mutations:thread:publish-thread');
 import stringSimilarity from 'string-similarity';
-import { markdownToDraft } from 'markdown-draft-js';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';
@@ -42,7 +41,7 @@ type PublishThreadInput = {
   thread: {
     channelId: string,
     communityId: string,
-    type: 'SLATE' | 'DRAFTJS' | 'TEXT',
+    type: 'SLATE' | 'DRAFTJS',
     content: {
       title: string,
       body?: string,
@@ -63,24 +62,11 @@ export default async (
     return new UserError('You must be signed in to publish a new thread.');
   }
 
-  let { type } = thread;
-
-  if (type === 'SLATE') {
+  if (thread.type === 'SLATE') {
     throw new UserError(
       "You're on an old version of Spectrum, please refresh your browser."
     );
   }
-
-  if (type === 'TEXT') {
-    type = 'DRAFTJS';
-    if (thread.content.body) {
-      thread.content.body = JSON.stringify(
-        markdownToDraft(thread.content.body)
-      );
-    }
-  }
-
-  thread.type = type;
 
   const [
     currentUserChannelPermissions,
@@ -169,7 +155,6 @@ export default async (
       _adminProcessUserSpammingThreadsQueue.add({
         user: currentUser,
         threads: usersPreviousPublishedThreads,
-        // $FlowIssue
         publishing: thread,
         community: community,
         channel: channel,
@@ -218,7 +203,6 @@ export default async (
       _adminProcessUserSpammingThreadsQueue.add({
         user: currentUser,
         threads: usersPreviousPublishedThreads,
-        // $FlowIssue
         publishing: thread,
         community: community,
         channel: channel,

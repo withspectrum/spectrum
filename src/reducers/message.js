@@ -2,7 +2,7 @@
 import type { ReplyToMessageActionType } from '../actions/message';
 
 const initialState = {
-  quotedMessage: {},
+  quotedMessage: null,
 };
 
 type Actions = ReplyToMessageActionType;
@@ -14,10 +14,7 @@ export default function message(
   switch (action.type) {
     case 'REPLY_TO_MESSAGE':
       return {
-        quotedMessage: {
-          ...state.quotedMessage,
-          [action.threadId]: action.messageId,
-        },
+        quotedMessage: action.messageId,
       };
     default:
       return state;

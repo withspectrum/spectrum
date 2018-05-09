@@ -5,7 +5,9 @@ import { html } from 'common-tags';
 import serialize from 'serialize-javascript';
 
 // Match main.asdf123.js in production mode or bundle.js in dev mode
-const mainBundleRegex = /(main|bundle)\.(?:.*\.)?js$/;
+const mainBundleRegex = new RegExp(
+  `${process.env.NODE_ENV === 'production' ? 'main' : 'bundle'}\.(?:.*\.)?js$`
+);
 
 let bundles;
 try {

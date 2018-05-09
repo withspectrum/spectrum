@@ -24,9 +24,7 @@ describe('Community View', () => {
       .should('be.visible');
 
     data.threads
-      .filter(
-        thread => !thread.deletedAt && thread.communityId === community.id
-      )
+      .filter(thread => thread.communityId === community.id)
       .forEach(thread => {
         cy.contains(thread.content.title).should('be.visible');
       });
