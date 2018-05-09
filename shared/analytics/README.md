@@ -2,10 +2,10 @@
 E.g. `Community Created`
 
 ### Modifiers can be added to event types to clarify meaning
-E.g. `Message Failed to Send`
+E.g. `Message Sent Failed`
 
 ### Events should contain as much metadata as possible for more comprehensive downstream analysis. 
-If an event can be evaluated in the context of a parent entity (community, channel, or thread), those ids should be included. Include timestamps, actors, entities, and contextually-revelant strings (e.g. when tracking search results with 0 results, be sure to track the query string itself).
+If an event can be evaluated in the context of a parent entity (community, channel, or thread), that parent data should be included. Include timestamps, actors, entities, and contextually-revelant strings (e.g. when tracking search results with 0 results, be sure to track the query string itself).
 
 ### The `userId` field on an event always signifies the user who performed the event
 
@@ -31,7 +31,7 @@ If an event can be evaluated in the context of a parent entity (community, chann
 - `lockedBy`
 - `movedBy`
 
-### If two entities are invloved in an event, create **two events**, each with the `userId` field indicating who the event belongs to. 
+### If two entities are involved in an event, create **two events**, each with the `userId` field indicating who the event belongs to. 
 
 #### Examples:
 If a user messages another user, two events will be created:
@@ -55,3 +55,12 @@ In some cases events may share the same name, but differ in that they were proce
 When building dashboards, this enables us to build granular funnels between events that are happening on the client and events that are persisted in the database. For example, if 100 users send a message from the client, but only 90 of them are persisted to the databse, we know that there is a high rate of failure - those failures can be learned about via Sentry error reporting or by looking at failure event reasons. For example, if we learn that the 10 messages sent from the client that were not persisted failed with the `reason` as `no permissions`, we know that we have a user experience problem where users are somehow able to send messages where they shouldn't have access to a chat input.
 
 Additionally, this requires that when building dashboards we always stay aware of the `client` event property otherwise our numbers will be artificially inflated. For example, if we want to build a chart of messages sent per day we should only have a graph of events where `client` equals `api`. Alternatively, we might have three graphs: messages sent from the client, message send failures, and messages persisted on the database. We can gain useful insights be tracking ratios of events like this to understand where our user experience may be confusing or broken.
+
+### In general, track notifications serverside
+For the best accuracy of analytics we should be tracking events on the server. There are cases, however, where it is beneficial to track clientside events:
+- content being viewed
+- onboarding funnels
+- product funnels
+
+For example, if we want to know how many people go to create a community but then don't end up creating it, we would want to track clientside events like:
+- viewed the community onboarding start screen
