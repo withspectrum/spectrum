@@ -9,6 +9,9 @@ type ToggleReactionType = {
 };
 
 export default requireAuth(
-  async (_: any, { reaction }: ToggleReactionType, { user }: GraphQLContext) =>
-    await toggleReaction(reaction, user.id)
+  async (
+    _: any,
+    { reaction }: ToggleReactionType,
+    { user, loaders }: GraphQLContext
+  ) => await toggleReaction(reaction, user.id, loaders)
 );

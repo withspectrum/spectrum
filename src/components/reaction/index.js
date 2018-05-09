@@ -4,7 +4,6 @@ import Icon from '../icons';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { ReactionWrapper } from '../message/style';
 import type { GetMessageType } from 'shared/graphql/queries/message/getMessage';
-import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   toggleReaction: Function,
@@ -42,18 +41,6 @@ class Reaction extends React.Component<Props, State> {
 
     const hasReacted = this.state.hasReacted;
     const count = this.state.count;
-
-    const eventType = hasReacted
-      ? events.REACTION_DELETED
-      : events.REACTION_CREATED;
-
-    track(eventType, {
-      type: 'like',
-      message: {
-        id: message.id,
-        parentId: message.parent ? message.parent.id : null,
-      },
-    });
 
     this.setState({
       hasReacted: !hasReacted,

@@ -5,6 +5,7 @@ import {
   processReputationEventQueue,
 } from 'shared/bull/queues';
 import { track, events } from 'shared/analytics';
+import { getEntityDataForAnalytics } from '../utils/analytics';
 
 type ReactionType = 'like';
 
@@ -48,23 +49,11 @@ export const getReactionsByIds = (
     .run();
 };
 
-export const toggleReaction = async (
+export const toggleReaction = (
   reaction: ReactionInput,
-  userId: string
+  userId: string,
+  loaders: any
 ): Promise<DBReaction> => {
-  const message = await db
-    .table('messages')
-    .get(reaction.messageId)
-    .run();
-
-  const eventProperties = {
-    type: 'like',
-    message: {
-      id: message.id,
-      parentId: message.parentId,
-    },
-  };
-
   return db
     .table('reactions')
     .getAll(reaction.messageId, { index: 'messageId' })
@@ -74,6 +63,11 @@ export const toggleReaction = async (
       // this user has already reacted to the message, remove the reaction
       if (result.length > 0) {
         const existing = result[0];
+
+        const eventProperties = await getEntityDataForAnalytics(loaders)({
+          reactionId: existing.id,
+          userId,
+        });
 
         track(userId, events.REACTION_DELETED, eventProperties);
 
@@ -89,8 +83,6 @@ export const toggleReaction = async (
           .delete()
           .run();
       } else {
-        track(userId, events.REACTION_CREATED, eventProperties);
-
         processReputationEventQueue.add({
           userId,
           type: 'reaction created',
@@ -109,7 +101,14 @@ export const toggleReaction = async (
           )
           .run()
           .then(result => result.changes[0].new_val)
-          .then(reaction => {
+          .then(async reaction => {
+            const eventProperties = await getEntityDataForAnalytics(loaders)({
+              reactionId: reaction.id,
+              userId,
+            });
+
+            track(userId, events.REACTION_CREATED, eventProperties);
+
             sendReactionNotificationQueue.add({ reaction, userId });
 
             return reaction;
