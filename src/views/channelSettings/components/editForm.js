@@ -6,6 +6,7 @@ import { withRouter } from 'react-router';
 import Link from 'src/components/link';
 import editChannelMutation from 'shared/graphql/mutations/channel/editChannel';
 import type { EditChannelType } from 'shared/graphql/mutations/channel/editChannel';
+import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import deleteChannelMutation from 'shared/graphql/mutations/channel/deleteChannel';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -29,11 +30,12 @@ import {
   GeneralNotice,
   Location,
 } from '../../../components/editForm/style';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 type State = {
   name: string,
   slug: string,
-  description: string,
+  description: ?string,
   isPrivate: boolean,
   channelId: string,
   channelData: Object,
@@ -43,16 +45,7 @@ type State = {
 type Props = {
   editChannel: Function,
   dispatch: Function,
-  channel: {
-    name: string,
-    slug: string,
-    description: string,
-    isPrivate: boolean,
-    id: string,
-    community: {
-      slug: string,
-    },
-  },
+  channel: GetChannelType,
 };
 class ChannelWithData extends React.Component<Props, State> {
   constructor(props) {
@@ -136,6 +129,7 @@ class ChannelWithData extends React.Component<Props, State> {
 
   triggerDeleteChannel = (e, channelId) => {
     e.preventDefault();
+    const { channel } = this.props;
     const { name, channelData } = this.state;
     const message = (
       <div>
@@ -161,6 +155,11 @@ class ChannelWithData extends React.Component<Props, State> {
         </p>
       </div>
     );
+
+    track(events.CHANNEL_DELETED_INITED, {
+      channel: transformations.analyticsChannel(channel),
+      community: transformations.analyticsCommunity(channel.community),
+    });
 
     return this.props.dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {

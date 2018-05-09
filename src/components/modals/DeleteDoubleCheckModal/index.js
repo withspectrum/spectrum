@@ -103,16 +103,6 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
             );
           });
       case 'thread': {
-        // $FlowFixMe
-        const { thread } = this.props.modalProps.extraProps;
-
-        track(events.THREAD_DELETED, {
-          channel: transformations.analyticsChannel(thread.channel),
-          community: transformations.analyticsCommunity(
-            thread.channel.community
-          ),
-        });
-
         return this.props
           .deleteThread(id)
           .then(({ data }: DeleteThreadType) => {
@@ -236,14 +226,6 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
           });
       }
       case 'channel-archive': {
-        // $FlowFixMe
-        const { channel } = this.props.modalProps.extraProps;
-
-        track(events.CHANNEL_ARCHIVED, {
-          channel: transformations.analyticsChannel(channel),
-          community: transformations.analyticsCommunity(channel.community),
-        });
-
         return this.props
           .archiveChannel({ channelId: id })
           .then(() => {
