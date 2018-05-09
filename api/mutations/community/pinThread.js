@@ -36,6 +36,10 @@ export default async (
     getThreadById(threadId),
   ]);
 
+  if (!threadToEvaluate) {
+    return new UserError('This thread has been deleted');
+  }
+
   if (!permissions.isOwner && !permissions.isModerator) {
     return new UserError("You don't have permission to do this.");
   }
