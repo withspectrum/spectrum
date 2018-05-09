@@ -39,8 +39,13 @@ export default async (
   if (!currentUser)
     return new UserError('You must be signed in to send a direct message.');
 
-  if (!input.participants)
+  if (!input.participants) {
+    track(currentUser.id, events.DIRECT_MESSAGE_THREAD_CREATED_FAILED, {
+      reason: 'no users selected',
+    });
+
     return new UserError('Nobody was selected to create a thread.');
+  }
 
   // if users and messages exist, continue
   const { participants, message } = input;
@@ -86,6 +91,9 @@ export default async (
       try {
         url = await uploadImage(message.file, 'threads', threadId);
       } catch (err) {
+        track(currentUser.id, events.DIRECT_MESSAGE_THREAD_CREATED_FAILED, {
+          reason: 'image upload failed',
+        });
         return new UserError(err.message);
       }
 
@@ -105,6 +113,9 @@ export default async (
 
       return await storeMessage(newMessage, currentUser.id);
     } else {
+      track(currentUser.id, events.DIRECT_MESSAGE_THREAD_CREATED_FAILED, {
+        reason: 'unknown message type',
+      });
       return new UserError('Unknown message type on this bad boy.');
     }
   };

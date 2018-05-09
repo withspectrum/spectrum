@@ -29,7 +29,6 @@ class ExistingThread extends React.Component<Props> {
   chatInput: ?ChatInput;
 
   componentDidMount() {
-    track(events.DIRECT_MESSAGE_THREAD_VIEWED);
     const threadId = this.props.id;
     this.props.setActiveThread(threadId);
     this.props.setLastSeen(threadId);
