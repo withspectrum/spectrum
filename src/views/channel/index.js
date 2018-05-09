@@ -68,6 +68,17 @@ class ChannelView extends React.Component<Props, State> {
     selectedView: 'threads',
   };
 
+  componentDidMount() {
+    if (this.props.data && this.props.data.channel) {
+      const { channel } = this.props.data;
+
+      track(events.CHANNEL_VIEWED, {
+        channel: transformations.analyticsChannel(channel),
+        community: transformations.analyticsCommunity(channel.community),
+      });
+    }
+  }
+
   componentDidUpdate(prevProps) {
     if (
       (!prevProps.data.channel && this.props.data.channel) ||
