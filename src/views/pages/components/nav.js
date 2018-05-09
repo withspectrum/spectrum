@@ -45,7 +45,7 @@ class Nav extends React.Component<Props, State> {
 
   render() {
     return (
-      <NavContainer>
+      <NavContainer data-cy="navbar-splash">
         <Head
           title={'Spectrum'}
           description={'The community platform for the future.'}
@@ -58,7 +58,11 @@ class Nav extends React.Component<Props, State> {
           />
         </Head>
         <Tabs>
-          <LogoTab dark={this.props.dark} to="/about">
+          <LogoTab
+            dark={this.props.dark}
+            to="/about"
+            data-cy="navbar-splash-about"
+          >
             <Logo />
             <Icon glyph={'logo'} />
           </LogoTab>
@@ -66,6 +70,7 @@ class Nav extends React.Component<Props, State> {
             dark={this.props.dark}
             selected={this.props.location === 'features'}
             to="/features"
+            data-cy="navbar-splash-features"
           >
             Features
           </FeaturesTab>
@@ -73,6 +78,7 @@ class Nav extends React.Component<Props, State> {
             dark={this.props.dark}
             selected={this.props.location === 'pricing'}
             to="/pricing"
+            data-cy="navbar-splash-pricing"
           >
             Pricing
           </PricingTab>
@@ -80,12 +86,13 @@ class Nav extends React.Component<Props, State> {
             dark={this.props.dark}
             selected={this.props.location === 'support'}
             to="/support"
+            data-cy="navbar-splash-support"
           >
             Support
           </SupportTab>
           <AuthTab dark={this.props.dark}>
             {this.props.currentUser ? (
-              <Link to={'/'}>
+              <Link to={'/'} data-cy="navbar-splash-profile">
                 <Avatar
                   src={this.props.currentUser.profilePhoto}
                   user={this.props.currentUser}
@@ -94,6 +101,7 @@ class Nav extends React.Component<Props, State> {
             ) : (
               <Link to="/login">
                 <Button
+                  data-cy="navbar-splash-signin"
                   style={{
                     fontWeight: '700',
                     fontSize: '16px',
