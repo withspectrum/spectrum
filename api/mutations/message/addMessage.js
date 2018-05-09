@@ -30,7 +30,7 @@ type AddMessageInput = {
 export default async (
   _: any,
   { message }: AddMessageInput,
-  { user, loaders }: GraphQLContext
+  { user, loaders, track }: GraphQLContext
 ) => {
   const currentUser = user;
 
@@ -206,7 +206,7 @@ export default async (
       await addCommunityMember(
         {},
         { input: { communityId: thread.communityId } },
-        { user: currentUser, loaders: loaders }
+        { user: currentUser, loaders: loaders, track: track }
       );
   }
 
