@@ -12,7 +12,6 @@ import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
 import { modalStyles, Description } from '../styles';
 import { Form, Actions } from './style';
-import { track, events, transformations } from 'src/helpers/analytics';
 
 type Props = {
   dispatch: Function,
@@ -38,11 +37,6 @@ class RestoreChannelModal extends React.Component<Props, State> {
 
   restore = () => {
     const { channel, dispatch } = this.props;
-
-    track(events.CHANNEL_RESTORED, {
-      channel: transformations.analyticsChannel(channel),
-      community: transformations.analyticsCommunity(channel.community),
-    });
 
     return this.props
       .restoreChannel({ channelId: channel.id })

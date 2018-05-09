@@ -243,11 +243,6 @@ class CreateChannelModal extends React.Component<Props, State> {
       isDefault,
     };
 
-    track(events.CHANNEL_CREATED, {
-      community: transformations.analyticsCommunity(community),
-      channel: input,
-    });
-
     this.props
       .createChannel(input)
       .then(() => {

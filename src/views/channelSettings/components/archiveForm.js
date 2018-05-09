@@ -42,9 +42,6 @@ class Channel extends React.Component<Props> {
         entity: 'channel-archive',
         message,
         buttonLabel: 'Archive',
-        extraProps: {
-          channel,
-        },
       })
     );
   };
