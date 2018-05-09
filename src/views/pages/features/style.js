@@ -34,9 +34,22 @@ export const Intro = styled.div`
 export const TextContent = styled.div`
   grid-area: copy;
   margin-left: 32px;
-  align-self: center;
+  align-self: flex-start;
   z-index: 1;
   text-shadow: 0 0 4px ${props => props.theme.bg.default};
+
+  > a {
+    display: inline-block;
+
+    > button {
+      padding: 8px 16px 8px 8px;
+
+      > span {
+        font-size: 16px;
+        margin-left: 16px;
+      }
+    }
+  }
 
   @media (max-width: 1080px) {
     padding-top: 20%;
@@ -142,6 +155,14 @@ export const Feature = styled.div`
   & + & {
     margin-top: 16px;
   }
+
+  @media (max-width: 640px) {
+    grid-template-areas: 'name name' 'copy copy';
+
+    ${SvgWrapper} {
+      display: none;
+    }
+  }
 `;
 
 export const EtcFeature = styled.div`
@@ -208,7 +229,7 @@ export const EtcGrid = styled.div`
   grid-template-rows: auto;
   grid-template-areas: 'heading heading heading';
   grid-gap: 32px;
-  padding: 10% 5%;
+  padding: 10% 5% 10%;
 
   @media (max-width: 960px) {
     grid-template-columns: repeat(2, 1fr);
@@ -222,6 +243,32 @@ export const EtcGrid = styled.div`
 
   > h1 {
     margin-bottom: 16px;
+  }
+`;
+
+export const EtcCTA = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  align-items: center;
+  padding-bottom: 5%;
+
+  > span {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  > a {
+    display: inline-block;
+
+    > button {
+      padding: 8px 16px 8px 8px;
+
+      > span {
+        font-size: 16px;
+        margin-left: 16px;
+      }
+    }
   }
 `;
 
