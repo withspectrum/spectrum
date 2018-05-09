@@ -390,7 +390,7 @@ export const Tabs = styled.div`
   grid-template-columns: auto 1fr repeat(3, auto);
   grid-column-gap: 32px;
   grid-template-rows: auto;
-  grid-template-areas: 'logo . pricing support auth';
+  grid-template-areas: 'logo . features pricing support auth';
   align-items: center;
   justify-items: center;
   color: ${props =>
@@ -521,12 +521,12 @@ export const LogoLink = styled(DropdownLink)`
 
 export const FeaturesLink = styled(DropdownLink)`
   grid-area: features;
-  border-top: 2px solid ${props => props.theme.bg.border};
+  border: none;
 `;
 
 export const PricingLink = styled(DropdownLink)`
   grid-area: pricing;
-  border: none;
+  border-top: 2px solid ${props => props.theme.bg.border};
 `;
 
 export const SupportLink = styled(DropdownLink)`
@@ -576,8 +576,8 @@ export const MenuContainer = styled.div`
   position: fixed;
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: auto 16px repeat(3, auto) 1fr auto;
-  grid-template-areas: 'logo' '.' 'pricing' 'support' 'explore' '.' 'auth';
+  grid-template-rows: auto 16px repeat(4, auto) 1fr auto;
+  grid-template-areas: 'logo' '.' 'features' 'pricing' 'support' 'explore' '.' 'auth';
   align-content: start;
   left: 0;
   top: 0;
