@@ -211,6 +211,7 @@ class MessagesTab extends React.Component<Props, State> {
           track(events.NAVIGATION_MESSAGES_CLICKED);
           this.markAllAsSeen();
         }}
+        data-cy="navbar-messages"
       >
         <Icon
           glyph={count > 0 ? 'message-fill' : 'message'}

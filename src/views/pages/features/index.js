@@ -27,6 +27,7 @@ import {
   EtcFeature,
   EtcGrid,
   EtcName,
+  EtcCTA,
 } from './style';
 import type { ContextRouter } from 'react-router';
 
@@ -50,10 +51,10 @@ class Features extends React.Component<Props, State> {
               <Heading>
                 Everything you need to build a great online community
               </Heading>
-              <Copy>
+              {/* <Copy>
                 Spectrum was built from the ground up to make building an online
                 community easy.
-              </Copy>
+              </Copy> */}
               <Copy style={{ marginBottom: '32px' }}>
                 We give you a powerful set of tools to grow your community
                 organically, moderate it effectively, and measure its ROI for
@@ -294,7 +295,7 @@ class Features extends React.Component<Props, State> {
         </Section>
         <Section background={'default'} goop={4} color={'bg.reverse'}>
           <EtcGrid>
-            <Heading>...and a whole lot more</Heading>
+            <Heading>And there's a whole lot more to love...</Heading>
             <EtcFeature color="success.alt">
               <Icon glyph="thread" />
               <EtcName>Unlimited chat</EtcName>
@@ -344,6 +345,12 @@ class Features extends React.Component<Props, State> {
               <EtcName>Curated Explore page</EtcName>
             </EtcFeature>
           </EtcGrid>
+          <EtcCTA>
+            <EtcName>What are you waiting for?</EtcName>
+            <Link to={`/new/community`}>
+              <Button icon="welcome">Get started</Button>
+            </Link>
+          </EtcCTA>
         </Section>
         <PageFooter />
       </Wrapper>

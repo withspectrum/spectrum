@@ -556,7 +556,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     const thread = {
       channelId,
       communityId,
-      type: isAndroid() ? 'DRAFTJS' : 'TEXT',
+      type: isAndroid() ? 'TEXT' : 'DRAFTJS',
       content,
       attachments,
       filesToUpload,

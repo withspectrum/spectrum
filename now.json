@@ -44,6 +44,7 @@
 		"SENTRY_DSN_SERVER": "@sentry-dsn-server",
 		"SPECTRUM_MODERATION_API_KEY": "@spectrum-moderation-api-key",
 		"AMPLITUDE_API_KEY": "@amplitude-api-key",
-		"AMPLITUDE_API_KEY_DEVELOPMENT": "@amplitude-api-key-development"
+		"AMPLITUDE_API_KEY_DEVELOPMENT": "@amplitude-api-key-development",
+		"ENCRYPTION_KEY": "@encryption-key"
 	}
 }
