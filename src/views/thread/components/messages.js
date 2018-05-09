@@ -6,7 +6,7 @@ import idx from 'idx';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
-import type { ThreadInfoType } from 'shared/graphql/thread/threadInfo';
+import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo';
 import ChatMessages from '../../../components/messageGroup';
 import { LoadingChat } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
