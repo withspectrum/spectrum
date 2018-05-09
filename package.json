@@ -169,6 +169,7 @@
     "sanitize-filename": "^1.6.1",
     "serialize-javascript": "^1.4.0",
     "session-rethinkdb": "^2.0.0",
+    "sha1": "^1.1.1",
     "shortid": "^2.2.8",
     "slate": "^0.20.1",
     "slate-markdown": "0.1.0",
