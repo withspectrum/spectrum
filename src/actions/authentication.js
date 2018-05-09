@@ -25,7 +25,7 @@ export const logout = dispatch => {
     });
 };
 
-export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
+export const saveUserDataToLocalStorage = (user: Object) => async dispatch => {
   const obj = {};
 
   if (!user) {
@@ -44,7 +44,11 @@ export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
   };
 
   // logs user id to analytics
-  setUser(user.id);
+  const response = await fetch(
+    `https://micro-anonymizomatic-woewfxwpkp.now.sh?text=${user.id}`
+  );
+  const { text } = await response.json();
+  setUser(text);
 
   // logs the user id to sentry errors
   Raven.setUserContext({ id: user.id });
