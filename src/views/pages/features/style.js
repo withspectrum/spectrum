@@ -155,6 +155,14 @@ export const Feature = styled.div`
   & + & {
     margin-top: 16px;
   }
+
+  @media (max-width: 640px) {
+    grid-template-areas: 'name name' 'copy copy';
+
+    ${SvgWrapper} {
+      display: none;
+    }
+  }
 `;
 
 export const EtcFeature = styled.div`
@@ -221,7 +229,7 @@ export const EtcGrid = styled.div`
   grid-template-rows: auto;
   grid-template-areas: 'heading heading heading';
   grid-gap: 32px;
-  padding: 10% 5% 5%;
+  padding: 10% 5% 10%;
 
   @media (max-width: 960px) {
     grid-template-columns: repeat(2, 1fr);
