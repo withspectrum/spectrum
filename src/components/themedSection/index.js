@@ -86,6 +86,10 @@ export const Reverse = styled(Default)`
   color: ${({ theme }) => theme.text.reverse};
 `;
 
+export const Blank = styled(Default)`
+  background-image: none;
+`;
+
 export const Illustrated = styled(Default)`
   > img {
     opacity: 0.15;
@@ -107,6 +111,13 @@ const Section = (props: ThemeProps) => {
           <ClusterTwo src="/img/cluster-2.svg" role="presentation" />
           <ClusterThree src="/img/cluster-5.svg" role="presentation" />
           <ClusterFour src="/img/cluster-4.svg" role="presentation" />
+          {props.children}
+          <Goop {...props} />
+        </Default>
+      );
+    case 'blank':
+      return (
+        <Default>
           {props.children}
           <Goop {...props} />
         </Default>
