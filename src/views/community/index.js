@@ -80,6 +80,16 @@ class CommunityView extends React.Component<Props, State> {
     };
   }
 
+  componentDidMount() {
+    if (this.props.data && this.props.data.community) {
+      track(events.COMMUNITY_VIEWED, {
+        community: transformations.analyticsCommunity(
+          this.props.data.community
+        ),
+      });
+    }
+  }
+
   componentDidUpdate(prevProps) {
     if (
       (!prevProps.data.community &&
