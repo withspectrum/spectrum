@@ -5,46 +5,44 @@ import UserError from '../../utils/UserError';
 import { getUser, editUser } from '../../models/user';
 import { events } from 'shared/analytics';
 import { trackQueue, identifyQueue } from 'shared/bull/queues';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-export default (_: any, args: EditUserInput, { user }: GraphQLContext) => {
-  const currentUser = user;
-
-  // user must be authed to edit a channel
-  if (!currentUser) {
-    return new UserError(
-      'You must be signed in to make changes to this profile.'
-    );
-  }
-
-  // if the user is changing their username, check for uniqueness on the server
-  if (args.input.username) {
-    if (args.input.username === 'null' || args.input.username === 'undefined') {
+export default requireAuth(
+  async (_: any, args: EditUserInput, { user }: GraphQLContext) => {
+    const track = () => {
       trackQueue.add({
-        userId: currentUser.id,
-        event: events.USER_EDITED_FAILED,
-        properties: {
-          reason: 'bad username input',
-        },
+        userId: user.id,
+        event: events.USER_EDITED,
       });
-      throw new UserError('Nice try! 😉');
-    }
-    return getUser({ username: args.input.username }).then(user => {
-      if (!user || user.id === currentUser.id) {
-        return editUser(args, currentUser.id).then(result => {
-          trackQueue.add({
-            userId: result.id,
-            event: events.USER_EDITED,
-          });
-          identifyQueue.add({ userId: result.id });
-          return result;
+      identifyQueue.add({ userId: user.id });
+    };
+
+    if (args.input.username) {
+      if (
+        args.input.username === 'null' ||
+        args.input.username === 'undefined'
+      ) {
+        trackQueue.add({
+          userId: user.id,
+          event: events.USER_EDITED_FAILED,
+          properties: {
+            reason: 'bad username input',
+          },
         });
+
+        return new UserError('Nice try! 😉');
       }
 
-      return new UserError(
-        'Looks like that username got swooped! Try another?'
-      );
-    });
-  } else {
-    return editUser(args, currentUser.id);
+      const dbUser = await getUser({ username: args.input.username });
+
+      if (dbUser && dbUser.id !== user.id) {
+        return new UserError(
+          'Looks like that username got swooped! Try another?'
+        );
+      }
+    }
+
+    track();
+    return editUser(args, user.id);
   }
-};
+);
