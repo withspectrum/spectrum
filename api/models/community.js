@@ -8,6 +8,8 @@ import {
   _adminSendCommunityCreatedEmailQueue,
 } from 'shared/bull/queues';
 import { removeMemberInChannel } from './usersChannels';
+import { trackQueue } from 'shared/bull/queues';
+import { events } from 'shared/analytics';
 import type { DBCommunity } from 'shared/types';
 import type { Timeframe } from './utils';
 
@@ -166,6 +168,12 @@ export const createCommunity = (
     .run()
     .then(result => result.changes[0].new_val)
     .then(community => {
+      trackQueue.add({
+        userId: user.id,
+        event: events.COMMUNITY_CREATED,
+        context: { communityId: community.id },
+      });
+
       // send a welcome email to the community creator
       sendNewCommunityWelcomeEmailQueue.add({ user, community });
       // email brian with info about the community and owner

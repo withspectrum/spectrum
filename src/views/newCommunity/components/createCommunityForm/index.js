@@ -89,7 +89,9 @@ class CreateCommunityForm extends React.Component<Props, State> {
     this.checkSlug = throttle(this.checkSlug, 500);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    track(events.COMMUNITY_CREATED_INITED);
+  }
 
   changeName = e => {
     const { communitySuggestions } = this.state;
