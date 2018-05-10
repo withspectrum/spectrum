@@ -9,6 +9,8 @@ import {
 import { NEW_DOCUMENTS } from './utils';
 import { createChangefeed } from 'shared/changefeed-utils';
 import { setThreadLastActive } from './thread';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 export type MessageTypes = 'text' | 'media';
 export type Message = Object;
@@ -142,17 +144,32 @@ export const storeMessage = (
     .then(result => result.changes[0].new_val)
     .then(message => {
       if (message.threadType === 'directMessageThread') {
+        trackQueue.add({
+          userId,
+          event: events.DIRECT_MESSAGE_SENT,
+          context: { messageId: message.id },
+        });
+
         sendDirectMessageNotificationQueue.add({ message, userId });
       }
 
       if (message.threadType === 'story') {
         sendMessageNotificationQueue.add({ message });
+
         _adminProcessToxicMessageQueue.add({ message });
+
         processReputationEventQueue.add({
           userId,
           type: 'message created',
           entityId: message.threadId,
         });
+
+        trackQueue.add({
+          userId,
+          event: events.MESSAGE_SENT,
+          context: { messageId: message.id },
+        });
+
         setThreadLastActive(message.threadId, message.timestamp);
       }
 
@@ -194,26 +211,62 @@ export const getMessageCountInThreads = (
     .run();
 };
 
-export const deleteMessage = (userId: string, id: string) => {
+export const deleteMessage = (userId: string, messageId: string) => {
   return db
     .table('messages')
-    .get(id)
-    .update({
-      deletedAt: new Date(),
-    })
+    .get(messageId)
+    .update(
+      {
+        deletedBy: userId,
+        deletedAt: new Date(),
+      },
+      { returnChanges: 'always' }
+    )
     .run()
-    .then(res => {
+    .then(result => result.changes[0].new_val || result.changes[0].old_val)
+    .then(message => {
+      trackQueue.add({
+        userId,
+        event:
+          message.threadType === 'story'
+            ? events.MESSAGE_DELETED
+            : events.DIRECT_MESSAGE_DELETED,
+        context: { messageId },
+      });
+
       processReputationEventQueue.add({
         userId,
         type: 'message deleted',
-        entityId: id,
+        entityId: messageId,
       });
-      return res;
+
+      return message;
     });
 };
 
-export const deleteMessagesInThread = (threadId: string, userId: string) => {
-  return db
+export const deleteMessagesInThread = async (
+  threadId: string,
+  userId: string
+) => {
+  const messages = await db
+    .table('messages')
+    .getAll(threadId, { index: 'threadId' })
+    .run();
+
+  if (!messages || messages.length === 0) return;
+
+  const trackingPromises = messages.map(message => {
+    return trackQueue.add({
+      userId,
+      event:
+        message.threadType === 'story'
+          ? events.MESSAGE_DELETED
+          : events.DIRECT_MESSAGE_DELETED,
+      context: { messageId: message.id },
+    });
+  });
+
+  const deletePromise = db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
     .update({
@@ -221,6 +274,8 @@ export const deleteMessagesInThread = (threadId: string, userId: string) => {
       deletedAt: new Date(),
     })
     .run();
+
+  return await Promise.all([...trackingPromises, deletePromise]);
 };
 
 export const userHasMessagesInThread = (threadId: string, userId: string) => {

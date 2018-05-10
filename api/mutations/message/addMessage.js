@@ -196,10 +196,6 @@ export default requireAuth(
     if (message.threadType === 'directMessageThread') {
       setDirectMessageThreadLastActive(message.threadId);
       setUserLastSeenInDirectMessageThread(message.threadId, user.id);
-      trackQueue.add({
-        userId: user.id,
-        event: events.DIRECT_MESSAGE_SENT,
-      });
       return await messagePromise();
     }
 
@@ -341,12 +337,6 @@ export default requireAuth(
             : false,
           isOwner: communityPermissions ? communityPermissions.isOwner : false,
         };
-
-        trackQueue.add({
-          userId: user.id,
-          event: events.MESSAGE_SENT,
-          context: { messageId: dbMessage.id },
-        });
 
         trackUserThreadLastSeenQueue.add({
           userId: user.id,
