@@ -46,26 +46,14 @@ export default requireAuth(
 
     const [allThreadsInChannel] = await Promise.all([
       getThreadsByChannelToDelete(channelId),
-      deleteChannel(channelId),
+      deleteChannel(channelId, user.id),
       removeMembersInChannel(channelId),
     ]);
 
-    trackQueue.add({
-      userId: user.id,
-      event: events.CHANNEL_DELETED,
-      context: { channelId },
-    });
-
     if (allThreadsInChannel.length === 0) return true;
 
-    return allThreadsInChannel.map(async thread => {
-      trackQueue.add({
-        userId: user.id,
-        event: events.THREAD_DELETED,
-        context: { channelId },
-      });
-
-      return deleteThread(thread.id);
-    });
+    return allThreadsInChannel.map(
+      async thread => await deleteThread(thread.id, user.id)
+    );
   }
 );

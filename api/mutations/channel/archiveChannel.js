@@ -55,14 +55,6 @@ export default requireAuth(
       );
     }
 
-    const archivedChannel = await archiveChannel(channelId);
-
-    trackQueue.add({
-      userId: user.id,
-      event: events.CHANNEL_ARCHIVED,
-      context: { channelId: archivedChannel.id },
-    });
-
-    return archivedChannel;
+    return await archiveChannel(channelId, user.id);
   }
 );

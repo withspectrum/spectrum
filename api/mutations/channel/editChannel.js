@@ -32,12 +32,6 @@ export default requireAuth(
       approvePendingUsersInChannel(args.input.channelId);
     }
 
-    trackQueue.add({
-      userId: user.id,
-      event: events.CHANNEL_EDITED,
-      context: { channelId: args.input.channelId },
-    });
-
-    return editChannel(args);
+    return editChannel(args, user.id);
   }
 );

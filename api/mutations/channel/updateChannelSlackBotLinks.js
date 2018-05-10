@@ -36,12 +36,6 @@ export default requireAuth(
       return new UserError('You don’t have permission to manage this channel');
     }
 
-    trackQueue.add({
-      userId: user.id,
-      event: events.CHANNEL_SLACK_BOT_LINK_UPDATED,
-      context: { channelId: input.channelId },
-    });
-
-    return await updateChannelSlackBotLinks(input);
+    return await updateChannelSlackBotLinks(input, user.id);
   }
 );

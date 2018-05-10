@@ -44,7 +44,7 @@ export default requireAuth(
     });
 
     return await getOrCreateChannelSettings(channelId).then(
-      async () => await resetChannelJoinToken(channelId)
+      async () => await resetChannelJoinToken(channelId, user.id)
     );
   }
 );

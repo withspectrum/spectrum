@@ -487,12 +487,16 @@ export const editCommunity = ({
   - run logs for deletions over time
   - etc
 */
-export const deleteCommunity = (communityId: string): Promise<DBCommunity> => {
+export const deleteCommunity = (
+  communityId: string,
+  userId: string
+): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
     .update(
       {
+        deletedBy: userId,
         deletedAt: new Date(),
         slug: db.uuid(),
       },
@@ -501,7 +505,14 @@ export const deleteCommunity = (communityId: string): Promise<DBCommunity> => {
         nonAtomic: true,
       }
     )
-    .run();
+    .run()
+    .then(() => {
+      trackQueue.add({
+        userId,
+        event: events.COMMUNITY_CREATED,
+        context: { communityId },
+      });
+    });
 };
 
 export const setPinnedThreadInCommunity = (

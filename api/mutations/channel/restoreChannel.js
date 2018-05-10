@@ -42,14 +42,6 @@ export default requireAuth(
       return new UserError('Channel already restored');
     }
 
-    const restoredChannel = await restoreChannel(channelId);
-
-    trackQueue.add({
-      userId: user.id,
-      event: events.CHANNEL_RESTORED,
-      context: { channelId },
-    });
-
-    return restoredChannel;
+    return await restoreChannel(channelId, user.id);
   }
 );

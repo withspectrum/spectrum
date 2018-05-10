@@ -212,11 +212,12 @@ export const deleteMessage = (userId: string, id: string) => {
     });
 };
 
-export const deleteMessagesInThread = (threadId: string) => {
+export const deleteMessagesInThread = (threadId: string, userId: string) => {
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
     .update({
+      deletedBy: userId,
       deletedAt: new Date(),
     })
     .run();

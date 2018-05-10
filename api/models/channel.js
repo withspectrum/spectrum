@@ -260,9 +260,12 @@ const createGeneralChannel = (
   );
 };
 
-const editChannel = async ({
-  input: { name, slug, description, isPrivate, channelId },
-}: EditChannelInput): Promise<DBChannel> => {
+const editChannel = async (
+  { input }: EditChannelInput,
+  userId: string
+): Promise<DBChannel> => {
+  const { name, slug, description, isPrivate, channelId } = input;
+
   const channelRecord = await db
     .table('channels')
     .get(channelId)
@@ -284,6 +287,12 @@ const editChannel = async ({
     .then(result => {
       // if an update happened
       if (result.replaced === 1) {
+        trackQueue.add({
+          userId,
+          event: events.CHANNEL_EDITED,
+          context: { channelId: channelId },
+        });
+
         return result.changes[0].new_val;
       }
 
@@ -300,12 +309,13 @@ const editChannel = async ({
   We delete data non-destructively, meaning the record does not get cleared
   from the db.
 */
-const deleteChannel = (channelId: string): Promise<Boolean> => {
+const deleteChannel = (channelId: string, userId: string): Promise<Boolean> => {
   return db
     .table('channels')
     .get(channelId)
     .update(
       {
+        deletedBy: userId,
         deletedAt: new Date(),
         slug: db.uuid(),
       },
@@ -314,7 +324,14 @@ const deleteChannel = (channelId: string): Promise<Boolean> => {
         nonAtomic: true,
       }
     )
-    .run();
+    .run()
+    .then(() => {
+      trackQueue.add({
+        userId,
+        event: events.CHANNEL_DELETED,
+        context: { channelId },
+      });
+    });
 };
 
 const getChannelMemberCount = (channelId: string): number => {
@@ -325,22 +342,44 @@ const getChannelMemberCount = (channelId: string): number => {
     .run();
 };
 
-const archiveChannel = (channelId: string): Promise<DBChannel> => {
+const archiveChannel = (
+  channelId: string,
+  userId: string
+): Promise<DBChannel> => {
   return db
     .table('channels')
     .get(channelId)
     .update({ archivedAt: new Date() }, { returnChanges: 'always' })
     .run()
-    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+    .then(result => {
+      trackQueue.add({
+        userId: userId,
+        event: events.CHANNEL_ARCHIVED,
+        context: { channelId },
+      });
+
+      return result.changes[0].new_val || result.changes[0].old_val;
+    });
 };
 
-const restoreChannel = (channelId: string): Promise<DBChannel> => {
+const restoreChannel = (
+  channelId: string,
+  userId: string
+): Promise<DBChannel> => {
   return db
     .table('channels')
     .get(channelId)
     .update({ archivedAt: db.literal() }, { returnChanges: 'always' })
     .run()
-    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+    .then(result => {
+      trackQueue.add({
+        userId,
+        event: events.CHANNEL_RESTORED,
+        context: { channelId },
+      });
+
+      return result.changes[0].new_val || result.changes[0].old_val;
+    });
 };
 
 const archiveAllPrivateChannels = (communityId: string) => {

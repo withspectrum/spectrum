@@ -9,6 +9,8 @@ import { turnOffAllThreadNotifications } from '../models/usersThreads';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBThread, FileUpload } from 'shared/types';
 import type { Timeframe } from './utils';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 export const getThread = (threadId: string): Promise<DBThread> => {
   return db
@@ -381,12 +383,16 @@ export const setThreadLastActive = (threadId: string, value: Date) =>
   Non-destructively delete a thread by setting the `deletedAt` field to a date.
   After a thread is deleted, set `receiveNotifications` to false for all users who were participants or had subscribed to notifications.
 */
-export const deleteThread = (threadId: string): Promise<Boolean> => {
+export const deleteThread = (
+  threadId: string,
+  userId: string
+): Promise<Boolean> => {
   return db
     .table('threads')
     .get(threadId)
     .update(
       {
+        deletedBy: userId,
         deletedAt: new Date(),
       },
       {
@@ -399,11 +405,17 @@ export const deleteThread = (threadId: string): Promise<Boolean> => {
       Promise.all([
         result,
         turnOffAllThreadNotifications(threadId),
-        deleteMessagesInThread(threadId),
+        deleteMessagesInThread(threadId, userId),
       ])
     )
     .then(([result]) => {
       const thread = result.changes[0].new_val;
+
+      trackQueue.add({
+        userId,
+        event: events.THREAD_DELETED,
+        context: { threadId },
+      });
 
       processReputationEventQueue.add({
         userId: thread.creatorId,

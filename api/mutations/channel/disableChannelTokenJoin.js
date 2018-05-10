@@ -37,14 +37,8 @@ export default requireAuth(
       return new UserError('You don’t have permission to manage this channel');
     }
 
-    trackQueue.add({
-      userId: user.id,
-      event: events.CHANNEL_JOIN_TOKEN_DISABLED,
-      context: { channelId },
-    });
-
     return await getOrCreateChannelSettings(channelId).then(
-      async () => await disableChannelTokenJoin(channelId)
+      async () => await disableChannelTokenJoin(channelId, user.id)
     );
   }
 );
