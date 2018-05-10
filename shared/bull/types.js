@@ -367,7 +367,8 @@ export type SendSlackInvitationsJobData = {
 export type TrackAnalyticsData = {
   userId: string,
   event: string,
-  data: ?Object,
+  context?: Object,
+  properties?: Object,
 };
 
 export type IdentifyAnalyticsData = {

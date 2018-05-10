@@ -5,10 +5,18 @@ import type { Job, TrackAnalyticsData } from 'shared/bull/types';
 import { getContext, track, hash } from '../utils';
 
 const processJob = async (job: Job<TrackAnalyticsData>) => {
-  const { userId, event, data } = job.data;
-  const eventProperties = await getContext({ userId, ...data });
+  const { userId, event, context, properties = {} } = job.data;
 
-  return await track(hash(userId), event, eventProperties);
+  if (!context) {
+    return track(hash(userId), event, { ...properties });
+  }
+
+  const contextProperties = await getContext({ userId, ...context });
+
+  return await track(hash(userId), event, {
+    ...contextProperties,
+    ...properties,
+  });
 };
 
 export default async (job: Job<TrackAnalyticsData>) => {
