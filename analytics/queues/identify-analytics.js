@@ -8,8 +8,10 @@ import { identify, transformations, hash } from '../utils';
 const processJob = async (job: Job<IdentifyAnalyticsData>) => {
   const { userId } = job.data;
   const user = await getUserById(userId);
-  const analyticsUser = transformations.analyticsUser(user);
 
+  if (!user) return;
+
+  const analyticsUser = transformations.analyticsUser(user);
   return await identify(hash(userId), analyticsUser);
 };
 
