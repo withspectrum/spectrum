@@ -85,14 +85,18 @@ export class QuotedMessage extends React.Component<
   constructor(props: QuotedMessageProps) {
     super(props);
 
-    const jsonBody = JSON.parse(props.message.content.body);
-    const isShort =
-      !jsonBody.blocks.length > 1 ||
-      toPlainText(toState(jsonBody)).length <= 170;
+    const isShort = () => {
+      if (props.message.messageType === 'media') return false;
+      const jsonBody = JSON.parse(props.message.content.body);
+      return (
+        !jsonBody.blocks.length > 1 ||
+        toPlainText(toState(jsonBody)).length <= 170
+      );
+    };
 
     this.state = {
-      isShort,
-      isExpanded: isShort,
+      isShort: isShort(),
+      isExpanded: isShort(),
     };
   }
 
