@@ -32,6 +32,14 @@ export const getContext = async (obj: EntityObjType) => {
     const message = await getMessageById(reaction.messageId);
     const thread = await getThreadById(message.threadId);
 
+    // if no thread was found, we are in a dm
+    if (!thread) {
+      return {
+        reaction: transformations.analyticsReaction(reaction),
+        message: transformations.analyticsMessage(message),
+      };
+    }
+
     const [
       channel,
       community,
@@ -70,6 +78,13 @@ export const getContext = async (obj: EntityObjType) => {
   if (obj.messageId) {
     const message = await getMessageById(obj.messageId);
     const thread = await getThreadById(message.threadId);
+
+    // if no thread was found, we are in a dm
+    if (!thread) {
+      return {
+        message: transformations.analyticsMessage(message),
+      };
+    }
 
     const [
       channel,
