@@ -4,7 +4,8 @@ import UserError from '../../utils/UserError';
 import { getThread, moveThread } from '../../models/thread';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getChannels } from '../../models/channel';
-import { track, events } from 'shared/analytics';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 export default async (
   _: any,
@@ -37,7 +38,11 @@ export default async (
   if (newChannel.communityId !== thread.communityId)
     throw new UserError('You can only move threads within the same community.');
 
-  track(currentUser.id, events.THREAD_MOVED);
+  trackQueue.add({
+    userId: currentUser.id,
+    event: events.THREAD_MOVED,
+    context: { threadId: thread.id },
+  });
 
   return moveThread(threadId, channelId).then(res => {
     if (res) return res;

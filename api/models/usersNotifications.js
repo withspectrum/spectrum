@@ -1,6 +1,7 @@
 // @flow
 const { db } = require('./db');
-import { events, track } from 'shared/analytics';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 import { getNotification } from './notification';
 /*
 ===========================================================
@@ -15,9 +16,13 @@ const trackNotificationSeen = async (
   userId: string
 ) => {
   const notification = await getNotification(notificationId);
-  return track(userId, events.NOTIFICATION_MARKED_AS_SEEN, {
-    event: notification.event,
-    id: notification.id,
+  return trackQueue.add({
+    userId,
+    event: events.NOTIFICATION_MARKED_AS_SEEN,
+    properties: {
+      event: notification.event,
+      id: notification.id,
+    },
   });
 };
 
@@ -49,7 +54,10 @@ export const markNotificationsSeen = (
   userId: string,
   notifications: Array<string>
 ) => {
-  track(userId, events.NOTIFICATIONS_MARKED_AS_SEEN);
+  trackQueue.add({
+    userId,
+    event: events.NOTIFICATIONS_MARKED_AS_SEEN,
+  });
 
   return db
     .table('usersNotifications')

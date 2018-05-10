@@ -70,7 +70,7 @@ export const toggleReaction = (
           trackQueue.add({
             userId,
             event: events.REACTION_CREATED,
-            data: {
+            context: {
               reactionId: thisReaction.id,
             },
           });
@@ -94,7 +94,7 @@ export const toggleReaction = (
         trackQueue.add({
           userId,
           event: events.REACTION_DELETED,
-          data: {
+          context: {
             reactionId: thisReaction.id,
           },
         });
@@ -131,7 +131,7 @@ export const toggleReaction = (
           trackQueue.add({
             userId,
             event: events.REACTION_CREATED,
-            data: { reactionId: reaction.id },
+            context: { reactionId: reaction.id },
           });
 
           sendReactionNotificationQueue.add({ reaction, userId });

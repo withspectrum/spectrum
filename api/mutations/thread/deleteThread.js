@@ -5,7 +5,8 @@ import { processReputationEventQueue } from 'shared/bull/queues';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { deleteThread, getThreads } from '../../models/thread';
-import { track, events } from 'shared/analytics';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 export default async (
   _: any,
@@ -59,7 +60,11 @@ export default async (
 
     const deletedThread = await deleteThread(threadId);
 
-    track(currentUser.id, events.THREAD_DELETED);
+    trackQueue.add({
+      userId: currentUser.id,
+      event: events.THREAD_DELETED,
+      context: { theadId: threadId },
+    });
 
     return deletedThread;
   }

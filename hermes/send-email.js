@@ -3,7 +3,8 @@ import postmark from 'postmark';
 const debug = require('debug')('hermes:send-email');
 const stringify = require('json-stringify-pretty-compact');
 import { deactiveUserEmailNotifications } from './models/usersSettings';
-import { track, events } from 'shared/analytics';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 let client;
 if (process.env.POSTMARK_SERVER_KEY) {
@@ -38,7 +39,11 @@ const sendEmail = (options: Options) => {
   );
 
   if (userId) {
-    track(userId, events.EMAIL_RECEIVED, { tag: Tag });
+    trackQueue.add({
+      userId: userId,
+      event: events.EMAIL_RECEIVED,
+      properties: { tag: Tag },
+    });
   }
 
   // $FlowFixMe
@@ -57,7 +62,11 @@ const sendEmail = (options: Options) => {
           // hard bounce or they marked as spam
           if (err.code === 406) {
             if (userId) {
-              track(userId, events.EMAIL_BOUNCED, { tag: Tag });
+              trackQueue.add({
+                userId: userId,
+                event: events.EMAIL_BOUNCED,
+                properties: { tag: Tag },
+              });
             }
 
             return await deactiveUserEmailNotifications(To)

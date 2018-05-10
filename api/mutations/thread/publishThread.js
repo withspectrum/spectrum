@@ -23,7 +23,8 @@ import {
 } from 'shared/bull/queues';
 import getSpectrumScore from 'athena/queues/moderationEvents/spectrum';
 import getPerspectiveScore from 'athena/queues/moderationEvents/perspective';
-import { track, events } from 'shared/analytics';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 const threadBodyToPlainText = (body: any): string =>
   toPlainText(toState(JSON.parse(body)));
@@ -216,7 +217,10 @@ export default async (
     if (isSpamming) {
       debug('User is spamming similar content');
 
-      track(currentUser.id, events.THREAD_FLAGGED_AS_SPAM);
+      trackQueue.add({
+        userId: currentUser.id,
+        event: events.THREAD_FLAGGED_AS_SPAM,
+      });
 
       _adminProcessUserSpammingThreadsQueue.add({
         user: currentUser,
@@ -318,7 +322,11 @@ export default async (
       'Thread determined to be toxic, not sending notifications or adding rep'
     );
 
-    track(currentUser.id, events.THREAD_FLAGGED_AS_TOXIC);
+    trackQueue.add({
+      userId: currentUser.id,
+      event: events.THREAD_FLAGGED_AS_TOXIC,
+      context: { threadId: dbThread.id },
+    });
 
     // generate an alert for admins
     _adminProcessToxicThreadQueue.add({ thread: dbThread });
@@ -341,7 +349,11 @@ export default async (
   // create a relationship between the thread and the author
   await createParticipantInThread(dbThread.id, currentUser.id);
 
-  track(currentUser.id, events.THREAD_CREATED);
+  trackQueue.add({
+    userId: currentUser.id,
+    event: events.THREAD_CREATED,
+    context: { threadId: dbThread.id },
+  });
 
   if (!thread.filesToUpload || thread.filesToUpload.length === 0) {
     return dbThread;

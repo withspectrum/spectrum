@@ -5,7 +5,8 @@ import { createNewUsersSettings } from './usersSettings';
 import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBUser, FileUpload } from 'shared/types';
-import { track, identify, events, transformations } from 'shared/analytics';
+import { events } from 'shared/analytics';
+import { trackQueue, identifyQueue } from 'shared/bull/queues';
 
 type GetUserInput = {
   id?: string,
@@ -71,8 +72,8 @@ const storeUser = (user: Object): Promise<DBUser> => {
     .then(result => {
       const user = result.changes[0].new_val;
 
-      identify(user.id, { ...transformations.analyticsUser(user) });
-      track(user.id, events.USER_CREATED);
+      identifyQueue.add({ userId: user.id });
+      trackQueue.add({ userId: user.id, event: events.USER_CREATED });
       sendNewUserWelcomeEmailQueue.add({ user });
       return Promise.all([user, createNewUsersSettings(user.id)]);
     })
@@ -108,14 +109,18 @@ const saveUserProvider = (
         .run()
         .then(result => {
           const user = result.changes[0].new_val;
-          track(user.id, events.USER_ADDED_PROVIDER, {
-            providerMethod,
-            providerId,
-            extraFields,
+          trackQueue.add({
+            userId: user.id,
+            event: events.USER_ADDED_PROVIDER,
+            properties: {
+              providerMethod,
+              providerId,
+              extraFields,
+            },
           });
-          identify(user.id, {
-            ...transformations.analyticsUser(user),
-          });
+
+          identifyQueue.add({ userId: user.id });
+
           return user;
         });
     });
@@ -431,7 +436,7 @@ const setUserOnline = (id: string, isOnline: boolean): DBUser => {
     .then(result => {
       if (result.changes[0].new_val) {
         const user = result.changes[0].new_val;
-        identify(user.id, { lastSeen: user.lastSeen });
+        identifyQueue.add({ userId: user.id });
         return user;
       }
       return result.changes[0].old_val;
@@ -451,10 +456,12 @@ const setUserPendingEmail = (
     .run()
     .then(async () => {
       const user = await getUserById(userId);
-      track(user.id, events.USER_ADDED_EMAIL);
-      identify(user.id, {
-        ...transformations.analyticsUser(user),
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_ADDED_EMAIL,
       });
+
+      identifyQueue.add({ userId: user.id });
     });
 };
 const updateUserEmail = (userId: string, email: string): Promise<Object> => {
@@ -468,10 +475,12 @@ const updateUserEmail = (userId: string, email: string): Promise<Object> => {
     .run()
     .then(async () => {
       const user = await getUserById(userId);
-      track(user.id, events.USER_VERIFIED_EMAIL);
-      identify(user.id, {
-        ...transformations.analyticsUser(user),
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_VERIFIED_EMAIL,
       });
+
+      identifyQueue.add({ userId: user.id });
     });
 };
 
@@ -502,10 +511,12 @@ const deleteUser = (userId: string) => {
     .run()
     .then(async () => {
       const user = await getUserById(userId);
-      track(user.id, events.USER_DELETED);
-      identify(user.id, {
-        ...transformations.analyticsUser(user),
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_DELETED,
       });
+
+      identifyQueue.add({ userId: user.id });
     });
 };
 

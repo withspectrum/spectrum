@@ -7,7 +7,8 @@ import {
   createNotifiedUserInThread,
 } from '../../models/usersThreads';
 import { getThread } from '../../models/thread';
-import { track, events } from 'shared/analytics';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 export default (
   _: any,
@@ -32,7 +33,11 @@ export default (
         if (threadToEvaluate.receiveNotifications) {
           // if they are currently receiving notifications, turn them off
           value = false;
-          track(currentUser.id, events.THREAD_NOTIFICATIONS_DISABLED);
+          trackQueue.add({
+            userId: currentUser.id,
+            event: events.THREAD_NOTIFICATIONS_DISABLED,
+            context: { threadId },
+          });
           return updateThreadNotificationStatusForUser(
             threadId,
             currentUser.id,
@@ -41,7 +46,11 @@ export default (
         } else {
           // if they aren't receiving notifications, turn them on
           value = true;
-          track(currentUser.id, events.THREAD_NOTIFICATIONS_ENABLED);
+          trackQueue.add({
+            userId: currentUser.id,
+            event: events.THREAD_NOTIFICATIONS_ENABLED,
+            context: { threadId },
+          });
           return updateThreadNotificationStatusForUser(
             threadId,
             currentUser.id,

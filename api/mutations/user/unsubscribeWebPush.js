@@ -2,7 +2,8 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { removeSubscription } from '../../models/web-push-subscription';
-import { track, events } from 'shared/analytics';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 export default (_: any, endpoint: string, { user }: GraphQLContext) => {
   if (!user || !user.id)
@@ -10,7 +11,10 @@ export default (_: any, endpoint: string, { user }: GraphQLContext) => {
       'Can only unsubscribe from web push notifications when logged in.'
     );
 
-  track(user.id, events.WEB_PUSH_NOTIFICATIONS_UNSUBSCRIBED);
+  trackQueue.add({
+    userId: user.id,
+    event: events.WEB_PUSH_NOTIFICATIONS_UNSUBSCRIBED,
+  });
 
   return removeSubscription(endpoint)
     .then(() => true)

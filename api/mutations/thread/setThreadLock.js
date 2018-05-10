@@ -3,7 +3,8 @@ import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { setThreadLock } from '../../models/thread';
 import type { DBThread } from 'shared/types';
-import { track, events } from 'shared/analytics';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 export default async (
   _: any,
@@ -34,7 +35,11 @@ export default async (
     const event = thread.lockedAt
       ? events.THREAD_UNLOCKED
       : events.THREAD_LOCKED;
-    track(currentUser.id, event);
+    trackQueue.add({
+      userId: currentUser.id,
+      event,
+      context: { threadId },
+    });
     return setThreadLock(threadId, value, currentUser.id);
   }
 
@@ -63,7 +68,11 @@ export default async (
     const event = thread.lockedAt
       ? events.THREAD_UNLOCKED_BY_MODERATOR
       : events.THREAD_LOCKED_BY_MODERATOR;
-    track(currentUser.id, event);
+    trackQueue.add({
+      userId: currentUser.id,
+      event,
+      context: { threadId },
+    });
     return setThreadLock(threadId, value, currentUser.id);
   }
 

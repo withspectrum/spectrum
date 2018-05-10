@@ -4,7 +4,8 @@ import type { WebPushSubscription } from './';
 import UserError from '../../utils/UserError';
 import { storeSubscription } from '../../models/web-push-subscription';
 import sendWebPushNotification from 'shared/send-web-push-notification';
-import { track, events } from 'shared/analytics';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 export default (
   _: any,
@@ -16,7 +17,10 @@ export default (
       'Can only subscribe to web push notifications when logged in.'
     );
 
-  track(user.id, events.WEB_PUSH_NOTIFICATIONS_SUBSCRIBED);
+  trackQueue.add({
+    userId: user.id,
+    event: events.WEB_PUSH_NOTIFICATIONS_SUBSCRIBED,
+  });
 
   return storeSubscription(subscription, user.id)
     .then(() => {
