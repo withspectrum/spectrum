@@ -1,6 +1,8 @@
 // @flow
 const { db } = require('./db');
 import { sendChannelNotificationQueue } from 'shared/bull/queues';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 import type { DBChannel } from 'shared/types';
 
 // reusable query parts -- begin
@@ -224,6 +226,12 @@ const createChannel = (
     .run()
     .then(result => result.changes[0].new_val)
     .then(channel => {
+      trackQueue.add({
+        userId: userId,
+        event: events.CHANNEL_CREATED,
+        context: { channelId: channel.id },
+      });
+
       // only trigger a new channel notification is the channel is public
       if (!channel.isPrivate) {
         sendChannelNotificationQueue.add({ channel, userId });

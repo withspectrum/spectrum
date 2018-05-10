@@ -70,12 +70,6 @@ export default requireAuth(
 
     const newChannel = await createChannel(args, user.id);
 
-    trackQueue.add({
-      userId: user.id,
-      event: events.CHANNEL_CREATED,
-      context: { channelId: newChannel.id },
-    });
-
     return await createOwnerInChannel(newChannel.id, user.id).then(
       () => newChannel
     );
