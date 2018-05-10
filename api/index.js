@@ -80,7 +80,6 @@ export type GraphQLContext = {
   loaders: {
     [key: string]: Loader,
   },
-  track: (event: string, props: Object) => void,
 };
 
 const server = createServer(app);
