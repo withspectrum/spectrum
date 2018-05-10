@@ -90,8 +90,7 @@ export class QuotedMessage extends React.Component<
       const jsonBody = JSON.parse(props.message.content.body);
       return (
         !jsonBody.blocks.length > 1 ||
-        toPlainText(toState(jsonBody)).length <= 170 ||
-        false
+        toPlainText(toState(jsonBody)).length <= 170
       );
     };
 
