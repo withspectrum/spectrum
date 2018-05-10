@@ -9,25 +9,20 @@ import {
   canModerateChannel,
 } from '../../utils/permissions';
 import { events } from 'shared/analytics';
-import { getEntityDataForAnalytics } from '../../utils/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 export default requireAuth(
-  async (
-    _: any,
-    args: EditChannelInput,
-    { user, track, loaders }: GraphQLContext
-  ) => {
+  async (_: any, args: EditChannelInput, { user, loaders }: GraphQLContext) => {
     const channel = await loaders.channel.load(args.input.channelId);
 
-    const defaultTrackingData = await getEntityDataForAnalytics(loaders)({
-      channelId: args.input.channelId,
-      userId: user.id,
-    });
-
     if (!await canModerateChannel(user.id, args.input.channelId, loaders)) {
-      track(events.CHANNEL_EDITED_FAILED, {
-        ...defaultTrackingData,
-        reason: 'no permission',
+      trackQueue.add({
+        userId: user.id,
+        event: events.CHANNEL_EDITED_FAILED,
+        context: { channelId: args.input.channelId },
+        properties: {
+          reason: 'no permission',
+        },
       });
 
       return new UserError('You don’t have permission to manage this channel');
@@ -37,7 +32,11 @@ export default requireAuth(
       approvePendingUsersInChannel(args.input.channelId);
     }
 
-    track(events.CHANNEL_EDITED, defaultTrackingData);
+    trackQueue.add({
+      userId: user.id,
+      event: events.CHANNEL_EDITED,
+      context: { channelId: args.input.channelId },
+    });
 
     return editChannel(args);
   }

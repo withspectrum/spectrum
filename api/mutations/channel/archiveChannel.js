@@ -7,41 +7,48 @@ import {
   canModerateChannel,
 } from '../../utils/permissions';
 import { events } from 'shared/analytics';
-import { getEntityDataForAnalytics } from '../../utils/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 export default requireAuth(
   async (
     _: any,
     { input: { channelId } }: { input: { channelId: string } },
-    { user, loaders, track }: GraphQLContext
+    { user, loaders }: GraphQLContext
   ) => {
     const channelToEvaluate = await loaders.channel.load(channelId);
 
-    const defaultTrackingData = await getEntityDataForAnalytics(loaders)({
-      channelId,
-      userId: user.id,
-    });
-
     if (!await canModerateChannel(user.id, channelId, loaders)) {
-      track(events.CHANNEL_ARCHIVED_FAILED, {
-        ...defaultTrackingData,
-        reason: 'no permission',
+      trackQueue.add({
+        userId: user.id,
+        event: events.CHANNEL_ARCHIVED_FAILED,
+        context: { channelId },
+        properties: {
+          reason: 'no permission',
+        },
       });
       return new UserError('You don’t have permission to archive this channel');
     }
 
     if (channelToEvaluate.archivedAt) {
-      track(events.CHANNEL_ARCHIVED_FAILED, {
-        ...defaultTrackingData,
-        reason: 'channel already archived',
+      trackQueue.add({
+        userId: user.id,
+        event: events.CHANNEL_ARCHIVED_FAILED,
+        context: { channelId },
+        properties: {
+          reason: 'channel already archived',
+        },
       });
       return new UserError('This channel is already archived');
     }
 
     if (channelToEvaluate.slug === 'general') {
-      track(events.CHANNEL_ARCHIVED_FAILED, {
-        ...defaultTrackingData,
-        reason: 'general channel',
+      trackQueue.add({
+        userId: user.id,
+        event: events.CHANNEL_ARCHIVED_FAILED,
+        context: { channelId },
+        properties: {
+          reason: 'general channel',
+        },
       });
       return new UserError(
         'The general channel in a community can’t be archived'
@@ -50,7 +57,11 @@ export default requireAuth(
 
     const archivedChannel = await archiveChannel(channelId);
 
-    track(events.CHANNEL_ARCHIVED, defaultTrackingData);
+    trackQueue.add({
+      userId: user.id,
+      event: events.CHANNEL_ARCHIVED,
+      context: { channelId: archivedChannel.id },
+    });
 
     return archivedChannel;
   }

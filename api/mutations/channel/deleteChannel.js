@@ -9,23 +9,22 @@ import {
   canModerateChannel,
 } from '../../utils/permissions';
 import { events } from 'shared/analytics';
-import { getEntityDataForAnalytics } from '../../utils/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 export default requireAuth(
   async (
     _: any,
     { channelId }: { channelId: string },
-    { user, loaders, track }: GraphQLContext
+    { user, loaders }: GraphQLContext
   ) => {
-    const defaultTrackingData = await getEntityDataForAnalytics(loaders)({
-      channelId,
-      userId: user.id,
-    });
-
     if (!await canModerateChannel(user.id, channelId, loaders)) {
-      track(events.CHANNEL_DELETED_FAILED, {
-        ...defaultTrackingData,
-        reason: 'no permission',
+      trackQueue.add({
+        userId: user.id,
+        event: events.CHANNEL_DELETED_FAILED,
+        context: { channelId },
+        properties: {
+          reason: 'no permission',
+        },
       });
       return new UserError('You don’t have permission to manage this channel');
     }
@@ -33,9 +32,13 @@ export default requireAuth(
     const channel = await getChannelById(channelId);
 
     if (channel.slug === 'general') {
-      track(events.CHANNEL_DELETED_FAILED, {
-        ...defaultTrackingData,
-        reason: 'general channel',
+      trackQueue.add({
+        userId: user.id,
+        event: events.CHANNEL_DELETED_FAILED,
+        context: { channelId },
+        properties: {
+          reason: 'general channel',
+        },
       });
 
       return new UserError("The general channel can't be deleted");
@@ -47,17 +50,20 @@ export default requireAuth(
       removeMembersInChannel(channelId),
     ]);
 
-    track(events.CHANNEL_DELETED, defaultTrackingData);
+    trackQueue.add({
+      userId: user.id,
+      event: events.CHANNEL_DELETED,
+      context: { channelId },
+    });
 
     if (allThreadsInChannel.length === 0) return true;
 
     return allThreadsInChannel.map(async thread => {
-      const threadTrackingData = await getEntityDataForAnalytics(loaders)({
-        threadId: thread.id,
+      trackQueue.add({
         userId: user.id,
+        event: events.THREAD_DELETED,
+        context: { channelId },
       });
-
-      track(events.THREAD_DELETED, threadTrackingData);
 
       return deleteThread(thread.id);
     });

@@ -11,9 +11,9 @@ import { createParticipantInThread } from '../../models/usersThreads';
 import addCommunityMember from '../communityMember/addCommunityMember';
 import { trackUserThreadLastSeenQueue } from 'shared/bull/queues';
 import type { FileUpload } from 'shared/types';
-import { getEntityDataForAnalytics } from '../../utils/analytics';
 import { events } from 'shared/analytics';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { trackQueue } from 'shared/bull/queues';
 
 type AddMessageInput = {
   message: {
@@ -32,18 +32,16 @@ export default requireAuth(
   async (
     _: any,
     { message }: AddMessageInput,
-    { user, loaders, track }: GraphQLContext
+    { user, loaders }: GraphQLContext
   ) => {
-    const currentUser = user;
-
-    if (!currentUser) {
-      return new UserError('You must be signed in to send a message.');
-    }
-
     if (message.messageType === 'media' && !message.file) {
-      track(events.MESSAGE_SENT_FAILED, {
-        reason: 'media message without file',
-        message,
+      trackQueue.add({
+        userId: user.id,
+        event: events.MESSAGE_SENT_FAILED,
+        properties: {
+          reason: 'media message without file',
+          message,
+        },
       });
 
       return new UserError(
@@ -52,9 +50,13 @@ export default requireAuth(
     }
 
     if (message.messageType !== 'media' && message.file) {
-      track(events.MESSAGE_SENT_FAILED, {
-        reason: 'non media message with file',
-        message,
+      trackQueue.add({
+        userId: user.id,
+        event: events.MESSAGE_SENT_FAILED,
+        properties: {
+          reason: 'non media message with file',
+          message,
+        },
       });
       return new UserError(
         `To send an image, please use messageType: "media" instead of "${
@@ -75,9 +77,13 @@ export default requireAuth(
       try {
         body = JSON.parse(message.content.body);
       } catch (err) {
-        track(events.MESSAGE_SENT_FAILED, {
-          reason: 'invalid draftjs data',
-          message,
+        trackQueue.add({
+          userId: user.id,
+          event: events.MESSAGE_SENT_FAILED,
+          properties: {
+            reason: 'invalid draftjs data',
+            message,
+          },
         });
 
         throw new UserError(
@@ -85,9 +91,13 @@ export default requireAuth(
         );
       }
       if (!body.blocks || !Array.isArray(body.blocks) || !body.entityMap) {
-        track(events.MESSAGE_SENT_FAILED, {
-          reason: 'invalid draftjs data',
-          message,
+        trackQueue.add({
+          userId: user.id,
+          event: events.MESSAGE_SENT_FAILED,
+          properties: {
+            reason: 'invalid draftjs data',
+            message,
+          },
         });
 
         throw new UserError(
@@ -99,9 +109,13 @@ export default requireAuth(
           ({ type }) => !type || (type !== 'unstyled' && type !== 'code-block')
         )
       ) {
-        track(events.MESSAGE_SENT_FAILED, {
-          reason: 'invalid draftjs data',
-          message,
+        trackQueue.add({
+          userId: user.id,
+          event: events.MESSAGE_SENT_FAILED,
+          properties: {
+            reason: 'invalid draftjs data',
+            message,
+          },
         });
 
         throw new UserError(
@@ -113,9 +127,13 @@ export default requireAuth(
     if (message.parentId) {
       const parent = await getMessage(message.parentId);
       if (parent.threadId !== message.threadId)
-        track(events.MESSAGE_SENT_FAILED, {
-          reason: 'quoted message in different thread',
-          message,
+        trackQueue.add({
+          userId: user.id,
+          event: events.MESSAGE_SENT_FAILED,
+          properties: {
+            reason: 'quoted message in different thread',
+            message,
+          },
         });
 
       throw new UserError('You can only quote messages from the same thread.');
@@ -136,18 +154,26 @@ export default requireAuth(
       try {
         url = await uploadImage(file, 'threads', message.threadId);
       } catch (err) {
-        track(events.MESSAGE_SENT_FAILED, {
-          reason: 'media upload failed',
-          message,
+        trackQueue.add({
+          userId: user.id,
+          event: events.MESSAGE_SENT_FAILED,
+          properties: {
+            reason: 'media upload failed',
+            message,
+          },
         });
 
         return new UserError(err.message);
       }
 
       if (!url) {
-        track(events.MESSAGE_SENT_FAILED, {
-          reason: 'media upload failed',
-          message,
+        trackQueue.add({
+          userId: user.id,
+          event: events.MESSAGE_SENT_FAILED,
+          properties: {
+            reason: 'media upload failed',
+            message,
+          },
         });
 
         return new UserError(
@@ -164,13 +190,16 @@ export default requireAuth(
     }
 
     const messagePromise = async () =>
-      await storeMessage(messageForDb, currentUser.id);
+      await storeMessage(messageForDb, user.id);
 
     // handle DM thread messages up front
     if (message.threadType === 'directMessageThread') {
       setDirectMessageThreadLastActive(message.threadId);
-      setUserLastSeenInDirectMessageThread(message.threadId, currentUser.id);
-      track(events.DIRECT_MESSAGE_SENT, {});
+      setUserLastSeenInDirectMessageThread(message.threadId, user.id);
+      trackQueue.add({
+        userId: user.id,
+        event: events.DIRECT_MESSAGE_SENT,
+      });
       return await messagePromise();
     }
 
@@ -178,15 +207,23 @@ export default requireAuth(
     const thread = await loaders.thread.load(message.threadId);
 
     if (thread.isDeleted) {
-      track(events.MESSAGE_SENT_FAILED, {
-        reason: 'thread deleted',
+      trackQueue.add({
+        userId: user.id,
+        event: events.MESSAGE_SENT_FAILED,
+        properties: {
+          reason: 'thread deleted',
+        },
       });
       return new UserError("Can't reply in a deleted thread.");
     }
 
     if (thread.isLocked) {
-      track(events.MESSAGE_SENT_FAILED, {
-        reason: 'thread locked',
+      trackQueue.add({
+        userId: user.id,
+        event: events.MESSAGE_SENT_FAILED,
+        properties: {
+          reason: 'thread locked',
+        },
       });
       return new UserError("Can't reply in a locked thread.");
     }
@@ -196,24 +233,29 @@ export default requireAuth(
       channelPermissions,
       channel,
     ] = await Promise.all([
-      loaders.userPermissionsInCommunity.load([
-        currentUser.id,
-        thread.communityId,
-      ]),
-      loaders.userPermissionsInChannel.load([currentUser.id, thread.channelId]),
+      loaders.userPermissionsInCommunity.load([user.id, thread.communityId]),
+      loaders.userPermissionsInChannel.load([user.id, thread.channelId]),
       loaders.channel.load(thread.channelId),
     ]);
 
     if (!channel || channel.deletedAt) {
-      track(events.MESSAGE_SENT_FAILED, {
-        reason: 'channel deleted',
+      trackQueue.add({
+        userId: user.id,
+        event: events.MESSAGE_SENT_FAILED,
+        properties: {
+          reason: 'channel deleted',
+        },
       });
       return new UserError('This channel doesn’t exist');
     }
 
     if (channel.archivedAt) {
-      track(events.MESSAGE_SENT_FAILED, {
-        reason: 'channel archived',
+      trackQueue.add({
+        userId: user.id,
+        event: events.MESSAGE_SENT_FAILED,
+        properties: {
+          reason: 'channel archived',
+        },
       });
 
       return new UserError('This channel has been archived');
@@ -226,8 +268,12 @@ export default requireAuth(
 
     // user can't post if blocked at any level
     if (isBlockedInCommunity || isBlockedInChannel) {
-      track(events.MESSAGE_SENT_FAILED, {
-        reason: 'no permission',
+      trackQueue.add({
+        userId: user.id,
+        event: events.MESSAGE_SENT_FAILED,
+        properties: {
+          reason: 'no permission',
+        },
       });
 
       return new UserError(
@@ -239,8 +285,12 @@ export default requireAuth(
       channel.isPrivate &&
       (!channelPermissions || !channelPermissions.isMember)
     ) {
-      track(events.MESSAGE_SENT_FAILED, {
-        reason: 'no permission',
+      trackQueue.add({
+        userId: user.id,
+        event: events.MESSAGE_SENT_FAILED,
+        properties: {
+          reason: 'no permission',
+        },
       });
 
       return new UserError(
@@ -260,7 +310,7 @@ export default requireAuth(
       (!channelPermissions || !channelPermissions.isMember)
     ) {
       membershipPromise = async () =>
-        await createMemberInChannel(thread.channelId, currentUser.id);
+        await createMemberInChannel(thread.channelId, user.id);
     }
 
     // if the user is not a member of the community, or has previously joined
@@ -273,12 +323,12 @@ export default requireAuth(
         await addCommunityMember(
           {},
           { input: { communityId: thread.communityId } },
-          { user: currentUser, loaders: loaders, track: track }
+          { user: user, loaders: loaders }
         );
     }
 
     return membershipPromise()
-      .then(() => createParticipantInThread(message.threadId, currentUser.id))
+      .then(() => createParticipantInThread(message.threadId, user.id))
       .then(() => messagePromise())
       .then(async dbMessage => {
         const contextPermissions = {
@@ -292,15 +342,14 @@ export default requireAuth(
           isOwner: communityPermissions ? communityPermissions.isOwner : false,
         };
 
-        const eventData = await getEntityDataForAnalytics(loaders)({
-          messageId: dbMessage.id,
-          userId: currentUser.id,
+        trackQueue.add({
+          userId: user.id,
+          event: events.MESSAGE_SENT,
+          context: { messageId: dbMessage.id },
         });
 
-        track(events.MESSAGE_SENT, eventData);
-
         trackUserThreadLastSeenQueue.add({
-          userId: currentUser.id,
+          userId: user.id,
           threadId: message.threadId,
           timestamp: Date.now(),
         });
@@ -311,9 +360,13 @@ export default requireAuth(
         };
       })
       .catch(err => {
-        track(events.MESSAGE_SENT_FAILED, {
-          message,
-          reason: 'unknown error',
+        trackQueue.add({
+          userId: user.id,
+          event: events.MESSAGE_SENT_FAILED,
+          properties: {
+            message,
+            reason: 'unknown error',
+          },
         });
         console.error('Error sending message', err);
         return new UserError('Error sending message, please try again');

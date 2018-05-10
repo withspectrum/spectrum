@@ -6,7 +6,7 @@ import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { setPinnedThreadInCommunity } from '../../models/community';
 import { getChannels } from '../../models/channel';
 import { events } from 'shared/analytics';
-import { getEntityDataForAnalytics } from '../../utils/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type PinThreadInput = {
   threadId: string,
@@ -17,7 +17,7 @@ type PinThreadInput = {
 export default async (
   _: any,
   { threadId, communityId, value }: PinThreadInput,
-  { user, loaders, track }: GraphQLContext
+  { user, loaders }: GraphQLContext
 ) => {
   const currentUser = user;
   if (!currentUser) {
@@ -25,11 +25,6 @@ export default async (
       'You must be signed in to pin a thread in this community.'
     );
   }
-
-  const defaultTrackingData = await getEntityDataForAnalytics(loaders)({
-    threadId,
-    userId: user.id,
-  });
 
   const [permissions, threadToEvaluate] = await Promise.all([
     getUserPermissionsInCommunity(communityId, currentUser.id),
@@ -53,7 +48,11 @@ export default async (
 
   const event = value ? events.THREAD_PINNED : events.THREAD_UNPINNED;
 
-  track(event, defaultTrackingData);
+  trackQueue.add({
+    userId: user.id,
+    event: event,
+    context: { threadId },
+  });
 
   return setPinnedThreadInCommunity(communityId, value);
 };

@@ -10,7 +10,7 @@ import {
   canModerateChannel,
 } from '../../utils/permissions';
 import { events } from 'shared/analytics';
-import { getEntityDataForAnalytics } from '../../utils/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type EnableTokenJoinInput = {
   input: {
@@ -22,23 +22,26 @@ export default requireAuth(
   async (
     _: any,
     { input: { id: channelId } }: EnableTokenJoinInput,
-    { user, loaders, track }: GraphQLContext
+    { user, loaders }: GraphQLContext
   ) => {
-    const defaultTrackingData = await getEntityDataForAnalytics(loaders)({
-      channelId,
-      userId: user.id,
-    });
-
     if (!await canModerateChannel(user.id, channelId, loaders)) {
-      track(events.CHANNEL_JOIN_TOKEN_ENABLED_FAILED, {
-        ...defaultTrackingData,
-        reason: 'no permission',
+      trackQueue.add({
+        userId: user.id,
+        event: events.CHANNEL_JOIN_TOKEN_ENABLED_FAILED,
+        context: { channelId },
+        properties: {
+          reason: 'no permission',
+        },
       });
 
       return new UserError('You don’t have permission to manage this channel');
     }
 
-    track(events.CHANNEL_JOIN_TOKEN_ENABLED, defaultTrackingData);
+    trackQueue.add({
+      userId: user.id,
+      event: events.CHANNEL_JOIN_TOKEN_ENABLED,
+      context: { channelId },
+    });
 
     return await getOrCreateChannelSettings(channelId).then(
       async () => await enableChannelTokenJoin(channelId)
