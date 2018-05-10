@@ -2,7 +2,7 @@
 import postmark from 'postmark';
 const debug = require('debug')('hermes:send-email');
 const stringify = require('json-stringify-pretty-compact');
-import { deactiveUserEmailNotifications } from './models/usersSettings';
+import { deactivateUserEmailNotifications } from './models/usersSettings';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 
@@ -69,7 +69,7 @@ const sendEmail = (options: Options) => {
               });
             }
 
-            return await deactiveUserEmailNotifications(To)
+            return await deactivateUserEmailNotifications(To)
               .then(() => rej(err))
               .catch(e => rej(e));
           }
