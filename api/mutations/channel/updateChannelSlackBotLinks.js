@@ -9,7 +9,7 @@ import {
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 
-export type UpdateChannelSlackBotLinksInput = {
+export type Input = {
   input: {
     channelId: string,
     slackChannelId: ?string,
@@ -17,25 +17,22 @@ export type UpdateChannelSlackBotLinksInput = {
   },
 };
 
-export default requireAuth(
-  async (
-    _: any,
-    { input }: UpdateChannelSlackBotLinksInput,
-    { user, loaders }: GraphQLContext
-  ) => {
-    if (!await canModerateChannel(user.id, input.channelId, loaders)) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.CHANNEL_SLACK_BOT_LINK_UPDATED_FAILED,
-        context: { channelId: input.channelId },
-        properties: {
-          reason: 'no permission',
-        },
-      });
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { input, input: { channelId } } = args;
+  const { user, loaders } = ctx;
 
-      return new UserError('You don’t have permission to manage this channel');
-    }
+  if (!await canModerateChannel(user.id, channelId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.CHANNEL_SLACK_BOT_LINK_UPDATED_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
 
-    return await updateChannelSlackBotLinks(input, user.id);
+    return new UserError('You don’t have permission to manage this channel');
   }
-);
+
+  return await updateChannelSlackBotLinks(input, user.id);
+});

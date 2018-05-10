@@ -25,6 +25,7 @@ import getSpectrumScore from 'athena/queues/moderationEvents/spectrum';
 import getPerspectiveScore from 'athena/queues/moderationEvents/perspective';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 const threadBodyToPlainText = (body: any): string =>
   toPlainText(toState(JSON.parse(body)));
@@ -40,7 +41,7 @@ type Attachment = {
 
 type File = FileUpload;
 
-type PublishThreadInput = {
+type Input = {
   thread: {
     channelId: string,
     communityId: string,
@@ -54,16 +55,9 @@ type PublishThreadInput = {
   },
 };
 
-export default async (
-  _: any,
-  { thread }: PublishThreadInput,
-  { user, loaders }: GraphQLContext
-) => {
-  const currentUser = user;
-
-  if (!currentUser) {
-    return new UserError('You must be signed in to publish a new thread.');
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { user, loaders } = ctx;
+  const { thread } = args;
 
   let { type } = thread;
 
@@ -91,14 +85,11 @@ export default async (
     community,
     usersPreviousPublishedThreads,
   ] = await Promise.all([
-    loaders.userPermissionsInChannel.load([currentUser.id, thread.channelId]),
-    loaders.userPermissionsInCommunity.load([
-      currentUser.id,
-      thread.communityId,
-    ]),
+    loaders.userPermissionsInChannel.load([user.id, thread.channelId]),
+    loaders.userPermissionsInCommunity.load([user.id, thread.communityId]),
     loaders.channel.load(thread.channelId),
     loaders.community.load(thread.communityId),
-    getThreadsByUserAsSpamCheck(currentUser.id, SPAM_TIMEFRAME),
+    getThreadsByUserAsSpamCheck(user.id, SPAM_TIMEFRAME),
   ]);
 
   if (!community || community.deletedAt) {
@@ -169,7 +160,7 @@ export default async (
     ) {
       debug('User has posted at least 3 times in the previous 10m');
       _adminProcessUserSpammingThreadsQueue.add({
-        user: currentUser,
+        user: user,
         threads: usersPreviousPublishedThreads,
         // $FlowIssue
         publishing: thread,
@@ -218,12 +209,12 @@ export default async (
       debug('User is spamming similar content');
 
       trackQueue.add({
-        userId: currentUser.id,
+        userId: user.id,
         event: events.THREAD_FLAGGED_AS_SPAM,
       });
 
       _adminProcessUserSpammingThreadsQueue.add({
-        user: currentUser,
+        user: user,
         threads: usersPreviousPublishedThreads,
         // $FlowIssue
         publishing: thread,
@@ -238,15 +229,15 @@ export default async (
   }
 
   /*
-  If the thread has attachments, we have to iterate through each attachment and JSON.parse() the data payload. This is because we want a generic data shape in the graphQL layer like this:
+    If the thread has attachments, we have to iterate through each attachment and JSON.parse() the data payload. This is because we want a generic data shape in the graphQL layer like this:
 
-  {
-    attachmentType: enum String
-    data: String
-  }
+    {
+      attachmentType: enum String
+      data: String
+    }
 
-  But when we get the data onto the client we JSON.parse the `data` field so that we can have any generic shape for attachments in the future.
-*/
+    But when we get the data onto the client we JSON.parse the `data` field so that we can have any generic shape for attachments in the future.
+  */
 
   let threadObject = Object.assign(
     {},
@@ -275,7 +266,7 @@ export default async (
   }
 
   // $FlowFixMe
-  const dbThread: DBThread = await publishThread(threadObject, currentUser.id);
+  const dbThread: DBThread = await publishThread(threadObject, user.id);
 
   // we check for toxicity here only to determine whether or not to send
   // email notifications - the thread will be published regardless, but we can
@@ -323,7 +314,7 @@ export default async (
     );
 
     trackQueue.add({
-      userId: currentUser.id,
+      userId: user.id,
       event: events.THREAD_FLAGGED_AS_TOXIC,
       context: { threadId: dbThread.id },
     });
@@ -331,7 +322,7 @@ export default async (
     // generate an alert for admins
     _adminProcessToxicThreadQueue.add({ thread: dbThread });
     processReputationEventQueue.add({
-      userId: currentUser.id,
+      userId: user.id,
       type: 'thread created',
       entityId: dbThread.id,
     });
@@ -340,17 +331,17 @@ export default async (
     // thread is clean, send notifications and process reputation
     sendThreadNotificationQueue.add({ thread: dbThread });
     processReputationEventQueue.add({
-      userId: currentUser.id,
+      userId: user.id,
       type: 'thread created',
       entityId: dbThread.id,
     });
   }
 
   // create a relationship between the thread and the author
-  await createParticipantInThread(dbThread.id, currentUser.id);
+  await createParticipantInThread(dbThread.id, user.id);
 
   trackQueue.add({
-    userId: currentUser.id,
+    userId: user.id,
     event: events.THREAD_CREATED,
     context: { threadId: dbThread.id },
   });
@@ -397,4 +388,4 @@ export default async (
     },
     false
   );
-};
+});

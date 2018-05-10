@@ -2,47 +2,37 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { getThreadById } from '../../models/thread';
-import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { setPinnedThreadInCommunity } from '../../models/community';
-import { getChannels } from '../../models/channel';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateCommunity,
+} from '../../utils/permissions';
 
-type PinThreadInput = {
+type Input = {
   threadId: string,
   communityId: string,
   value: string,
 };
 
-export default async (
-  _: any,
-  { threadId, communityId, value }: PinThreadInput,
-  { user, loaders }: GraphQLContext
-) => {
-  const currentUser = user;
-  if (!currentUser) {
-    return new UserError(
-      'You must be signed in to pin a thread in this community.'
-    );
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { threadId, communityId, value } = args;
+  const { user, loaders } = ctx;
 
-  const [permissions, threadToEvaluate] = await Promise.all([
-    getUserPermissionsInCommunity(communityId, currentUser.id),
-    getThreadById(threadId),
-  ]);
-
-  if (!threadToEvaluate) {
-    return new UserError('This thread has been deleted');
-  }
-
-  if (!permissions.isOwner && !permissions.isModerator) {
+  if (!await canModerateCommunity(user.id, communityId, loaders)) {
     return new UserError("You don't have permission to do this.");
   }
 
-  // we have to ensure the thread isn't in a private channel
-  const channels = await getChannels([threadToEvaluate.channelId]);
+  const thread = await getThreadById(threadId);
 
-  if (channels && channels[0].isPrivate) {
+  if (!thread) {
+    return new UserError('This thread has been deleted');
+  }
+
+  const channel = await loaders.channel.load(thread.channelId);
+
+  if (channel.isPrivate) {
     return new UserError('Only threads in public channels can be pinned.');
   }
 
@@ -55,4 +45,4 @@ export default async (
   });
 
   return setPinnedThreadInCommunity(communityId, value);
-};
+});

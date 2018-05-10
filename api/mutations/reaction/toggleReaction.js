@@ -4,14 +4,12 @@ import { toggleReaction } from '../../models/reaction';
 import type { ReactionInput } from '../../models/reaction';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-type ToggleReactionType = {
+type Input = {
   reaction: ReactionInput,
 };
 
 export default requireAuth(
-  async (
-    _: any,
-    { reaction }: ToggleReactionType,
-    { user, loaders }: GraphQLContext
-  ) => await toggleReaction(reaction, user.id, loaders)
+  async (_: any, { reaction }: Input, { user, loaders }: GraphQLContext) => {
+    return await toggleReaction(reaction, user.id);
+  }
 );

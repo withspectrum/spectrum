@@ -52,8 +52,7 @@ export const getReactionsByIds = (
 
 export const toggleReaction = (
   reaction: ReactionInput,
-  userId: string,
-  loaders: any
+  userId: string
 ): Promise<DBReaction> => {
   return db
     .table('reactions')

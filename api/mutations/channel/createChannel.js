@@ -13,11 +13,9 @@ import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 
 export default requireAuth(
-  async (
-    _: any,
-    args: CreateChannelInput,
-    { user, loaders }: GraphQLContext
-  ) => {
+  async (_: any, args: CreateChannelInput, ctx: GraphQLContext) => {
+    const { user, loaders } = ctx;
+
     // TODO: Figure out how to not have to do this - somehow combine forces with canModerateChannel function which is fetching most of the same data anyways
     const community = await loaders.community.load(args.input.communityId);
 

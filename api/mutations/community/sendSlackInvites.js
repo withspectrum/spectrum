@@ -1,44 +1,32 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { markInitialSlackInvitationsSent } from '../../models/communitySettings';
 import { getCommunityById } from '../../models/community';
 import { sendSlackInvitationsQueue } from 'shared/bull/queues';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateCommunity,
+} from '../../utils/permissions';
 
-type SendSlackInvitesInput = {
+type Input = {
   input: {
     id: string,
     customMessage?: ?string,
   },
 };
 
-export default async (
-  _: any,
-  { input }: SendSlackInvitesInput,
-  { user, loaders }: GraphQLContext
-) => {
-  const currentUser = user;
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { id: communityId, customMessage } = args.input;
+  const { user, loaders } = ctx;
 
-  if (!currentUser) {
-    return new UserError(
-      'You must be signed in to invite people to this community.'
-    );
-  }
-
-  // make sure the user is the owner of the community
-  const permissions = await getUserPermissionsInCommunity(
-    input.id,
-    currentUser.id
-  );
-
-  if (!permissions.isOwner && !permissions.isModerator) {
+  if (!await canModerateCommunity(user.id, communityId, loaders)) {
     return new UserError(
       "You don't have permission to invite a Slack team to this community."
     );
   }
 
-  const settings = await loaders.communitySettings.load(input.id);
+  const settings = await loaders.communitySettings.load(communityId);
 
   if (!settings || !settings.slackSettings || !settings.slackSettings.scope) {
     return new UserError(
@@ -52,15 +40,14 @@ export default async (
     );
   }
 
-  return await markInitialSlackInvitationsSent(
-    input.id,
-    input.customMessage
-  ).then(async () => {
-    loaders.communitySettings.clear(input.id);
-    sendSlackInvitationsQueue.add({
-      communityId: input.id,
-      userId: currentUser.id,
-    });
-    return await getCommunityById(input.id);
-  });
-};
+  return await markInitialSlackInvitationsSent(communityId, customMessage).then(
+    async () => {
+      loaders.communitySettings.clear(communityId);
+      sendSlackInvitationsQueue.add({
+        communityId,
+        userId: user.id,
+      });
+      return await getCommunityById(communityId);
+    }
+  );
+});

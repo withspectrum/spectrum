@@ -5,37 +5,26 @@ import {
   createCommunitySettings,
   enableCommunityBrandedLogin,
 } from '../../models/communitySettings';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateCommunity,
+} from '../../utils/permissions';
 
-type EnableBrandedLoginInput = {
+type Input = {
   input: {
     id: string,
   },
 };
 
-export default async (
-  _: any,
-  { input: { id: communityId } }: EnableBrandedLoginInput,
-  { user, loaders }: GraphQLContext
-) => {
-  const currentUser = user;
-  if (!currentUser) {
-    return new UserError('You must be signed in to manage this community.');
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { id: communityId } = args.input;
+  const { user, loaders } = ctx;
 
-  const [permissions, settings] = await Promise.all([
-    loaders.userPermissionsInCommunity.load([currentUser.id, communityId]),
-    loaders.communitySettings.load(communityId),
-  ]);
-
-  if (!permissions) {
+  if (!await canModerateCommunity(user.id, communityId, loaders)) {
     return new UserError("You don't have permission to do this.");
   }
 
-  const { isOwner, isModerator } = permissions;
-
-  if (!isOwner && !isModerator) {
-    return new UserError("You don't have permission to do this.");
-  }
+  const settings = await loaders.communitySettings.load(communityId);
 
   loaders.communitySettings.clear(communityId);
 
@@ -47,4 +36,4 @@ export default async (
       async () => await enableCommunityBrandedLogin(communityId)
     );
   }
-};
+});

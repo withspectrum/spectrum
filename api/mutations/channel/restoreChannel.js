@@ -9,39 +9,42 @@ import {
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 
-export default requireAuth(
-  async (
-    _: any,
-    { input: { channelId } }: { input: { channelId: string } },
-    { user, loaders }: GraphQLContext
-  ) => {
-    // TODO: Figure out how to not have to do this - somehow combine forces with canModerateChannel function which is fetching most of the same data anyways
-    const channel = await loaders.channel.load(channelId);
+type Input = {
+  input: {
+    channelId: string,
+  },
+};
 
-    if (!await canModerateChannel(user.id, channelId, loaders)) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.CHANNEL_RESTORED_FAILED,
-        context: { channelId },
-        properties: {
-          reason: 'no permission',
-        },
-      });
-      return new UserError('You don’t have permission to manage this channel');
-    }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { channelId } = args.input;
+  const { user, loaders } = ctx;
 
-    if (!channel.archivedAt) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.CHANNEL_RESTORED_FAILED,
-        context: { channelId },
-        properties: {
-          reason: 'channel already restored',
-        },
-      });
-      return new UserError('Channel already restored');
-    }
+  // TODO: Figure out how to not have to do this - somehow combine forces with canModerateChannel function which is fetching most of the same data anyways
+  const channel = await loaders.channel.load(channelId);
 
-    return await restoreChannel(channelId, user.id);
+  if (!await canModerateChannel(user.id, channelId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.CHANNEL_RESTORED_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+    return new UserError('You don’t have permission to manage this channel');
   }
-);
+
+  if (!channel.archivedAt) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.CHANNEL_RESTORED_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'channel already restored',
+      },
+    });
+    return new UserError('Channel already restored');
+  }
+
+  return await restoreChannel(channelId, user.id);
+});

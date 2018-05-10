@@ -6,16 +6,15 @@ import { storeSubscription } from '../../models/web-push-subscription';
 import sendWebPushNotification from 'shared/send-web-push-notification';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-export default (
-  _: any,
-  { subscription }: { subscription: WebPushSubscription },
-  { user }: GraphQLContext
-) => {
-  if (!user || !user.id)
-    throw new UserError(
-      'Can only subscribe to web push notifications when logged in.'
-    );
+type Input = {
+  subscription: WebPushSubscription,
+};
+
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { user } = ctx;
+  const { subscription } = args;
 
   trackQueue.add({
     userId: user.id,
@@ -43,4 +42,4 @@ export default (
     .catch(err => {
       throw new UserError("Couldn't store web push subscription.");
     });
-};
+});

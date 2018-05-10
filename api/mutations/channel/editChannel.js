@@ -12,7 +12,9 @@ import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 
 export default requireAuth(
-  async (_: any, args: EditChannelInput, { user, loaders }: GraphQLContext) => {
+  async (_: any, args: EditChannelInput, ctx: GraphQLContext) => {
+    const { user, loaders } = ctx;
+
     const channel = await loaders.channel.load(args.input.channelId);
 
     if (!await canModerateChannel(user.id, args.input.channelId, loaders)) {

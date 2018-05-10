@@ -12,33 +12,30 @@ import {
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 
-type DisableChannelTokenJoinInput = {
+type Input = {
   input: {
     id: string,
   },
 };
 
-export default requireAuth(
-  async (
-    _: any,
-    { input: { id: channelId } }: DisableChannelTokenJoinInput,
-    { user, loaders }: GraphQLContext
-  ) => {
-    if (!await canModerateChannel(user.id, channelId, loaders)) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.CHANNEL_JOIN_TOKEN_DISABLED_FAILED,
-        context: { channelId },
-        properties: {
-          reason: 'no permission',
-        },
-      });
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { id: channelId } = args.input;
+  const { user, loaders } = ctx;
 
-      return new UserError('You don’t have permission to manage this channel');
-    }
+  if (!await canModerateChannel(user.id, channelId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.CHANNEL_JOIN_TOKEN_DISABLED_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
 
-    return await getOrCreateChannelSettings(channelId).then(
-      async () => await disableChannelTokenJoin(channelId, user.id)
-    );
+    return new UserError('You don’t have permission to manage this channel');
   }
-);
+
+  return await getOrCreateChannelSettings(channelId).then(
+    async () => await disableChannelTokenJoin(channelId, user.id)
+  );
+});

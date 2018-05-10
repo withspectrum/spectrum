@@ -10,7 +10,7 @@ import {
 import { removeMemberInChannel } from './usersChannels';
 import { trackQueue } from 'shared/bull/queues';
 import { events } from 'shared/analytics';
-import type { DBCommunity } from 'shared/types';
+import type { DBCommunity, DBUser } from 'shared/types';
 import type { Timeframe } from './utils';
 
 export const getCommunityById = (id: string): Promise<DBCommunity> => {
@@ -24,9 +24,8 @@ export const getCommunityById = (id: string): Promise<DBCommunity> => {
     });
 };
 
-export const getCommunities = (
-  communityIds: Array<string>
-): Promise<Array<DBCommunity>> => {
+// prettier-ignore
+export const getCommunities = (communityIds: Array<string>): Promise<Array<DBCommunity>> => {
   return db
     .table('communities')
     .getAll(...communityIds)
@@ -34,9 +33,8 @@ export const getCommunities = (
     .run();
 };
 
-export const getCommunitiesBySlug = (
-  slugs: Array<string>
-): Promise<Array<DBCommunity>> => {
+// prettier-ignore
+export const getCommunitiesBySlug = (slugs: Array<string>): Promise<Array<DBCommunity>> => {
   return db
     .table('communities')
     .getAll(...slugs, { index: 'slug' })
@@ -44,9 +42,8 @@ export const getCommunitiesBySlug = (
     .run();
 };
 
-export const getCommunitiesByUser = (
-  userId: string
-): Promise<Array<DBCommunity>> => {
+// prettier-ignore
+export const getCommunitiesByUser = (userId: string): Promise<Array<DBCommunity>> => {
   return (
     db
       .table('usersCommunities')
@@ -86,9 +83,8 @@ export const getCommunitiesMemberCounts = (communityIds: Array<string>) => {
     .run();
 };
 
-export const getCommunityMetaData = (
-  communityId: string
-): Promise<Array<number>> => {
+// prettier-ignore
+export const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
   const getChannelCount = db
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
@@ -138,15 +134,10 @@ export type EditCommunityInput = {
   },
 };
 
-// TODO(@mxstbr): Use DBUser type
-type CommunityCreator = Object;
+// prettier-ignore
+export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): Promise<DBCommunity> => {
+  const { name, slug, description, website, file, coverFile } = input
 
-export const createCommunity = (
-  {
-    input: { name, slug, description, website, file, coverFile },
-  }: CreateCommunityInput,
-  user: CommunityCreator
-): Promise<DBCommunity> => {
   return db
     .table('communities')
     .insert(
@@ -329,9 +320,10 @@ export const createCommunity = (
     });
 };
 
-export const editCommunity = ({
-  input: { name, slug, description, website, file, coverFile, communityId },
-}: EditCommunityInput): Promise<DBCommunity> => {
+// prettier-ignore
+export const editCommunity = ({ input }: EditCommunityInput, userId: string): Promise<DBCommunity> => {
+  const { name, slug, description, website, file, coverFile, communityId } = input
+
   return db
     .table('communities')
     .get(communityId)

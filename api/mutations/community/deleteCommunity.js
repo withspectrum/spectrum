@@ -1,44 +1,32 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import {
-  getUserPermissionsInCommunity,
-  removeMembersInCommunity,
-} from '../../models/usersCommunities';
-import { getCommunities, deleteCommunity } from '../../models/community';
+import { removeMembersInCommunity } from '../../models/usersCommunities';
+import { deleteCommunity } from '../../models/community';
 import { getChannelsByCommunity, deleteChannel } from '../../models/channel';
 import { getThreadsByCommunity } from '../../models/thread';
 import { removeMembersInChannel } from '../../models/usersChannels';
 import { deleteThread } from '../../models/thread';
+import {
+  isAuthedResolver as requireAuth,
+  canAdministerCommunity,
+} from '../../utils/permissions';
 
-export default async (
-  _: any,
-  { communityId }: { communityId: string },
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+type Input = {
+  communityId: string,
+};
 
-  // user must be authed to delete a community
-  if (!currentUser) {
-    return new UserError(
-      'You must be signed in to make changes to this community.'
-    );
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { communityId } = args;
+  const { user, loaders } = ctx;
 
-  const [currentUserCommunityPermissions, communities] = await Promise.all([
-    getUserPermissionsInCommunity(communityId, currentUser.id),
-    getCommunities([communityId]),
-  ]);
+  const communityToEvaluate = await loaders.community.load(communityId);
 
-  const communityToEvaluate = communities && communities[0];
-
-  // if no community was found or was deleted
   if (!communityToEvaluate || communityToEvaluate.deletedAt) {
     return new UserError("This community doesn't exist.");
   }
 
-  // user must own the community to delete the community
-  if (!currentUserCommunityPermissions.isOwner) {
+  if (!await canAdministerCommunity(user.id, communityId, loaders)) {
     return new UserError(
       "You don't have permission to make changes to this community."
     );
@@ -56,10 +44,12 @@ export default async (
   const removeAllChannels = allChannelsInCommunity.map(channel =>
     deleteChannel(channel.id, user.id)
   );
+
   // and remove all relationships to the deleted channels
   const removeAllRelationshipsToChannels = allChannelsInCommunity.map(channel =>
     removeMembersInChannel(channel.id)
   );
+
   // and mark all the threads in that community as deleted
   const removeAllThreadsInCommunity = allThreadsInCommunity.map(thread =>
     deleteThread(thread.id, user.id)
@@ -70,4 +60,4 @@ export default async (
     removeAllRelationshipsToChannels,
     removeAllThreadsInCommunity,
   ]).then(() => communityToEvaluate);
-};
+});

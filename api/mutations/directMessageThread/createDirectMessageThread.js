@@ -15,8 +15,9 @@ import {
 import type { FileUpload } from 'shared/types';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-type DMThreadInput = {
+type Input = {
   input: {
     participants: Array<string>,
     message: {
@@ -30,19 +31,13 @@ type DMThreadInput = {
   },
 };
 
-export default async (
-  _: any,
-  { input }: DMThreadInput,
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
-
-  if (!currentUser)
-    return new UserError('You must be signed in to send a direct message.');
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { user } = ctx;
+  const { input } = args;
 
   if (!input.participants) {
     trackQueue.add({
-      userId: currentUser.id,
+      userId: user.id,
       event: events.DIRECT_MESSAGE_THREAD_CREATED_FAILED,
       properties: {
         reason: 'no users selected',
@@ -66,7 +61,7 @@ export default async (
   // collect all participant ids and the current user id into an array - we
   // use this to determine if an existing DM thread with this exact
   // set of participants already exists or not
-  const allMemberIds = [...participants, currentUser.id];
+  const allMemberIds = [...participants, user.id];
 
   // placeholder
   let threadId, threadToReturn;
@@ -90,14 +85,14 @@ export default async (
         threadId,
       };
 
-      return await storeMessage(messageWithThread, currentUser.id);
+      return await storeMessage(messageWithThread, user.id);
     } else if (message.messageType === 'media' && message.file) {
       let url;
       try {
         url = await uploadImage(message.file, 'threads', threadId);
       } catch (err) {
         trackQueue.add({
-          userId: currentUser.id,
+          userId: user.id,
           event: events.DIRECT_MESSAGE_THREAD_CREATED_FAILED,
           properties: {
             reason: 'image upload failed',
@@ -120,10 +115,10 @@ export default async (
         },
       });
 
-      return await storeMessage(newMessage, currentUser.id);
+      return await storeMessage(newMessage, user.id);
     } else {
       trackQueue.add({
-        userId: currentUser.id,
+        userId: user.id,
         event: events.DIRECT_MESSAGE_THREAD_CREATED_FAILED,
         properties: {
           reason: 'unknown message type',
@@ -135,18 +130,18 @@ export default async (
 
   if (existingThread) {
     return await Promise.all([
-      setUserLastSeenInDirectMessageThread(threadId, currentUser.id),
+      setUserLastSeenInDirectMessageThread(threadId, user.id),
       handleStoreMessage(message),
     ]).then(() => threadToReturn);
   }
 
   trackQueue.add({
-    userId: currentUser.id,
+    userId: user.id,
     event: events.DIRECT_MESSAGE_THREAD_CREATED,
   });
 
   return await Promise.all([
-    createMemberInDirectMessageThread(threadId, currentUser.id, true),
+    createMemberInDirectMessageThread(threadId, user.id, true),
     handleStoreMessage(message),
     participants.map(participant => {
       trackQueue.add({
@@ -156,4 +151,4 @@ export default async (
       return createMemberInDirectMessageThread(threadId, participant, false);
     }),
   ]).then(() => threadToReturn);
-};
+});

@@ -8,20 +8,15 @@ import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-export default async (
-  _: any,
-  { input }: { input: EditThreadInput },
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+type Input = {
+  input: EditThreadInput,
+};
 
-  // user must be authed to edit a thread
-  if (!currentUser) {
-    return new UserError(
-      'You must be signed in to make changes to this thread.'
-    );
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { input } = args;
+  const { user } = ctx;
 
   if (input.type === 'SLATE') {
     throw new UserError(
@@ -40,14 +35,14 @@ export default async (
   }
 
   const [communityPermissions, channelPermissions] = await Promise.all([
-    getUserPermissionsInCommunity(threadToEvaluate.communityId, currentUser.id),
-    getUserPermissionsInChannel(threadToEvaluate.channelId, currentUser.id),
+    getUserPermissionsInCommunity(threadToEvaluate.communityId, user.id),
+    getUserPermissionsInChannel(threadToEvaluate.channelId, user.id),
   ]);
 
   // only the thread creator can edit the thread
   // also prevent deletion if the user was blocked
   if (
-    threadToEvaluate.creatorId !== currentUser.id ||
+    threadToEvaluate.creatorId !== user.id ||
     channelPermissions.isBlocked ||
     communityPermissions.isBlocked
   ) {
@@ -109,7 +104,7 @@ export default async (
   });
 
   trackQueue.add({
-    userId: currentUser.id,
+    userId: user.id,
     event: events.THREAD_EDITED,
     context: { threadId: editedThread.id },
   });
@@ -122,4 +117,4 @@ export default async (
       body: JSON.stringify(body),
     },
   });
-};
+});

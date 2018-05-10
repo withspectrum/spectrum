@@ -11,36 +11,29 @@ import {
   canModerateChannel,
 } from '../../utils/permissions';
 
-type UnblockUserInput = {
+type Input = {
   input: {
     channelId: string,
     userId: string,
   },
 };
 
-export default requireAuth(
-  async (
-    _: any,
-    { input }: UnblockUserInput,
-    { user, loaders }: GraphQLContext
-  ) => {
-    if (!await canModerateChannel(user.id, input.channelId, loaders)) {
-      return new UserError('You don’t have permission to manage this channel');
-    }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { channelId, userId } = args.input;
+  const { user, loaders } = ctx;
 
-    const [channel, evaluatedUserChannelPermissions] = await Promise.all([
-      getChannelById(input.channelId),
-      getUserPermissionsInChannel(input.channelId, input.userId),
-    ]);
-
-    if (!evaluatedUserChannelPermissions.isBlocked) {
-      return new UserError(
-        'This user is not currently blocked in this channel.'
-      );
-    }
-
-    return unblockMemberInChannel(input.channelId, input.userId).then(
-      () => channel
-    );
+  if (!await canModerateChannel(user.id, channelId, loaders)) {
+    return new UserError('You don’t have permission to manage this channel');
   }
-);
+
+  const [channel, evaluatedUserChannelPermissions] = await Promise.all([
+    getChannelById(channelId),
+    getUserPermissionsInChannel(channelId, userId),
+  ]);
+
+  if (!evaluatedUserChannelPermissions.isBlocked) {
+    return new UserError('This user is not currently blocked in this channel.');
+  }
+
+  return unblockMemberInChannel(channelId, userId).then(() => channel);
+});

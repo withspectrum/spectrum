@@ -6,14 +6,12 @@ import { removeUsersCommunityMemberships } from '../../models/usersCommunities';
 import { removeUsersChannelMemberships } from '../../models/usersChannels';
 import { disableAllThreadNotificationsForUser } from '../../models/usersThreads';
 import { getUserRecurringPayments } from '../../models/recurringPayment';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-export default async (_: any, __: any, { user }: GraphQLContext) => {
-  const currentUser = user;
-  if (!currentUser) {
-    return new UserError('You must be signed in to delete your account');
-  }
+export default requireAuth(async (_: any, __: any, ctx: GraphQLContext) => {
+  const { user } = ctx;
 
-  const rPayments = await getUserRecurringPayments(currentUser.id);
+  const rPayments = await getUserRecurringPayments(user.id);
   const isPro = rPayments && rPayments.some(pmt => pmt.planId === 'beta-pro');
 
   if (isPro) {
@@ -23,11 +21,11 @@ export default async (_: any, __: any, { user }: GraphQLContext) => {
   }
 
   return Promise.all([
-    deleteUser(currentUser.id),
-    removeUsersCommunityMemberships(currentUser.id),
-    removeUsersChannelMemberships(currentUser.id),
-    disableAllThreadNotificationsForUser(currentUser.id),
+    deleteUser(user.id),
+    removeUsersCommunityMemberships(user.id),
+    removeUsersChannelMemberships(user.id),
+    disableAllThreadNotificationsForUser(user.id),
   ])
     .then(() => true)
     .catch(err => new UserError(err.message));
-};
+});

@@ -9,29 +9,24 @@ import {
 import { archiveAllPrivateChannels } from '../../models/channel';
 import UserError from '../../utils/UserError';
 import { StripeUtil } from 'shared/stripe/utils';
-import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import {
+  isAuthedResolver as requireAuth,
+  canAdministerCommunity,
+} from '../../utils/permissions';
 
-export default async (
-  _: any,
-  { input }: { input: { communityId: string } },
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+type Input = {
+  input: {
+    communityId: string,
+  },
+};
 
-  if (!currentUser) {
-    return new UserError('You must be signed in to manage this community');
-  }
-
-  const { communityId } = input;
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { communityId } = args.input;
+  const { user, loaders } = ctx;
 
   const { customer, community } = await StripeUtil.jobPreflight(communityId);
 
-  const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
-    communityId,
-    currentUser.id
-  );
-
-  if (!currentUserCommunityPermissions.isOwner) {
+  if (!await canAdministerCommunity(user.id, communityId, loaders)) {
     return new UserError(
       'You must own this community to manage payment sources'
     );
@@ -66,4 +61,4 @@ export default async (
       console.error(err);
       return new UserError(`Error canceling subscription: ${err.message}`);
     });
-};
+});

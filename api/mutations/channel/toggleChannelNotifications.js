@@ -6,48 +6,49 @@ import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 
-export default requireAuth(
-  async (
-    _: any,
-    { channelId }: { channelId: string },
-    { user, loaders }: GraphQLContext
-  ) => {
-    const [channel, permissions] = await Promise.all([
-      loaders.channel.load(channelId),
-      loaders.userPermissionsInChannel.load([user.id, channelId]),
-    ]);
+type Input = {
+  channelId: string,
+};
 
-    if (!permissions || permissions.isBlocked || !permissions.isMember) {
-      let event = !permissions
-        ? events.CHANNEL_NOTIFICATIONS_ENABLED_FAILED
-        : permissions.receiveNotifications
-          ? events.CHANNEL_NOTIFICATIONS_DISABLED_FAILED
-          : events.CHANNEL_NOTIFICATIONS_ENABLED_FAILED;
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { channelId } = args;
+  const { user, loaders } = ctx;
 
-      trackQueue.add({
-        userId: user.id,
-        event,
-        context: { channelId },
-        properties: {
-          reason: 'no permission',
-        },
-      });
-      return new UserError("You don't have permission to do that.");
-    }
+  const [channel, permissions] = await Promise.all([
+    loaders.channel.load(channelId),
+    loaders.userPermissionsInChannel.load([user.id, channelId]),
+  ]);
 
-    const value = !permissions.receiveNotifications;
-    const event = permissions.receiveNotifications
-      ? events.CHANNEL_NOTIFICATIONS_DISABLED
-      : events.CHANNEL_NOTIFICATIONS_ENABLED;
+  if (!permissions || permissions.isBlocked || !permissions.isMember) {
+    let event = !permissions
+      ? events.CHANNEL_NOTIFICATIONS_ENABLED_FAILED
+      : permissions.receiveNotifications
+        ? events.CHANNEL_NOTIFICATIONS_DISABLED_FAILED
+        : events.CHANNEL_NOTIFICATIONS_ENABLED_FAILED;
 
     trackQueue.add({
       userId: user.id,
       event,
       context: { channelId },
+      properties: {
+        reason: 'no permission',
+      },
     });
-
-    return toggleUserChannelNotifications(user.id, channelId, value).then(
-      () => channel
-    );
+    return new UserError("You don't have permission to do that.");
   }
-);
+
+  const value = !permissions.receiveNotifications;
+  const event = permissions.receiveNotifications
+    ? events.CHANNEL_NOTIFICATIONS_DISABLED
+    : events.CHANNEL_NOTIFICATIONS_ENABLED;
+
+  trackQueue.add({
+    userId: user.id,
+    event,
+    context: { channelId },
+  });
+
+  return toggleUserChannelNotifications(user.id, channelId, value).then(
+    () => channel
+  );
+});

@@ -8,6 +8,7 @@ import {
 } from '../../models/usersCommunities';
 import { removeMemberInChannel } from '../../models/usersChannels';
 import { getChannelsByUserAndCommunity } from '../../models/channel';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 type Input = {
   input: {
@@ -15,16 +16,12 @@ type Input = {
   },
 };
 
-export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
-  const currentUser = user;
-  const { communityId } = input;
-
-  if (!currentUser) {
-    return new UserError('You must be signed in to leave this community.');
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { communityId } = args.input;
+  const { user } = ctx;
 
   const [permissions, community] = await Promise.all([
-    checkUserPermissionsInCommunity(communityId, currentUser.id),
+    checkUserPermissionsInCommunity(communityId, user.id),
     getCommunityById(communityId),
   ]);
 
@@ -59,14 +56,14 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
   if (permission.isMember || permission.isModerator) {
     const allChannelsInCommunity = await getChannelsByUserAndCommunity(
       communityId,
-      currentUser.id
+      user.id
     );
     const leaveChannelsPromises = allChannelsInCommunity.map(channel =>
-      removeMemberInChannel(channel, currentUser.id)
+      removeMemberInChannel(channel, user.id)
     );
 
     return await Promise.all([
-      removeMemberInCommunity(communityId, currentUser.id),
+      removeMemberInCommunity(communityId, user.id),
       ...leaveChannelsPromises,
     ]).then(() => community);
   }
@@ -74,4 +71,4 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
   return new UserError(
     "We weren't able to process your request to leave this community."
   );
-};
+});

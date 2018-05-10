@@ -6,15 +6,16 @@ import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getChannels } from '../../models/channel';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-export default async (
-  _: any,
-  { threadId, channelId }: { threadId: string, channelId: string },
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
-  if (!currentUser)
-    throw new UserError('You must be signed in to move a thread.');
+type Input = {
+  threadId: string,
+  channelId: string,
+};
+
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { user } = ctx;
+  const { threadId, channelId } = args;
 
   const thread = await getThread(threadId);
   if (!thread) throw new UserError('Cannot move a non-existant thread.');
@@ -23,13 +24,13 @@ export default async (
     isOwner,
     isModerator,
     isBlocked,
-  } = await getUserPermissionsInCommunity(thread.communityId, currentUser.id);
+  } = await getUserPermissionsInCommunity(thread.communityId, user.id);
 
   if (isBlocked) {
     throw new UserError("You don't have permission to post in that channel.");
   }
 
-  if (thread.creatorId !== currentUser.id && (!isOwner && !isModerator))
+  if (thread.creatorId !== user.id && (!isOwner && !isModerator))
     throw new UserError(
       'You have to be a moderator or owner of the community to move a thread.'
     );
@@ -39,7 +40,7 @@ export default async (
     throw new UserError('You can only move threads within the same community.');
 
   trackQueue.add({
-    userId: currentUser.id,
+    userId: user.id,
     event: events.THREAD_MOVED,
     context: { threadId: thread.id },
   });
@@ -51,4 +52,4 @@ export default async (
       'Oops, something went wrong with moving the thread. Please try again!'
     );
   });
-};
+});

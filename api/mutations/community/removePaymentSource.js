@@ -4,20 +4,21 @@ import { replaceStripeCustomer } from '../../models/stripeCustomers';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { StripeUtil } from 'shared/stripe/utils';
-import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import {
+  isAuthedResolver as requireAuth,
+  canAdministerCommunity,
+} from '../../utils/permissions';
 
-export default async (
-  _: any,
-  { input }: { input: { sourceId: string, communityId: string } },
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+type Input = {
+  input: {
+    communityId: string,
+    sourceId: string,
+  },
+};
 
-  if (!currentUser) {
-    return new UserError('You must be signed in to manage this community');
-  }
-
-  const { sourceId, communityId } = input;
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { sourceId, communityId } = args.input;
+  const { user, loaders } = ctx;
 
   const { customer, community } = await StripeUtil.jobPreflight(communityId);
 
@@ -35,12 +36,7 @@ export default async (
     );
   }
 
-  const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
-    communityId,
-    currentUser.id
-  );
-
-  if (!currentUserCommunityPermissions.isOwner) {
+  if (!await canAdministerCommunity(user.id, communityId, loaders)) {
     return new UserError(
       'You must own this community to manage payment sources'
     );
@@ -62,4 +58,4 @@ export default async (
     .catch(err => {
       return new UserError(`Error removing payment method: ${err.message}`);
     });
-};
+});

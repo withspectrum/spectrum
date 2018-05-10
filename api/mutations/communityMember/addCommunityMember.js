@@ -7,6 +7,7 @@ import {
   checkUserPermissionsInCommunity,
 } from '../../models/usersCommunities';
 import { createMemberInDefaultChannels } from '../../models/usersChannels';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 type Input = {
   input: {
@@ -14,16 +15,12 @@ type Input = {
   },
 };
 
-export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
-  const currentUser = user;
-  const { communityId } = input;
-
-  if (!currentUser) {
-    return new UserError('You must be signed in to join this community.');
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { user } = ctx;
+  const { communityId } = args.input;
 
   const [permissions, community] = await Promise.all([
-    checkUserPermissionsInCommunity(communityId, currentUser.id),
+    checkUserPermissionsInCommunity(communityId, user.id),
     getCommunityById(communityId),
   ]);
 
@@ -34,8 +31,8 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
   // if no permissions exist, join them to the community!
   if (!permissions || permissions.length === 0) {
     return await Promise.all([
-      createMemberInCommunity(communityId, currentUser.id),
-      createMemberInDefaultChannels(communityId, currentUser.id),
+      createMemberInCommunity(communityId, user.id),
+      createMemberInDefaultChannels(communityId, user.id),
     ])
       // return the community to fulfill the resolver
       .then(() => community);
@@ -63,8 +60,8 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
   // they are trying to re-join the community.
   if (!permission.isMember) {
     return await Promise.all([
-      createMemberInCommunity(communityId, currentUser.id),
-      createMemberInDefaultChannels(communityId, currentUser.id),
+      createMemberInCommunity(communityId, user.id),
+      createMemberInDefaultChannels(communityId, user.id),
     ])
       // return the community to fulfill the resolver
       .then(() => community);
@@ -73,4 +70,4 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
   return new UserError(
     "We weren't able to process your request to join this community."
   );
-};
+});
