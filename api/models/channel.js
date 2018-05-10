@@ -204,11 +204,11 @@ export type EditChannelInput = {
 };
 
 const createChannel = (
-  {
-    input: { communityId, name, slug, description, isPrivate, isDefault },
-  }: CreateChannelInput,
+  { input }: CreateChannelInput,
   userId: string
 ): Promise<DBChannel> => {
+  const { communityId, name, slug, description, isPrivate, isDefault } = input;
+
   return db
     .table('channels')
     .insert(
@@ -298,6 +298,15 @@ const editChannel = async (
 
       // an update was triggered from the client, but no data was changed
       if (result.unchanged === 1) {
+        trackQueue.add({
+          userId,
+          event: events.CHANNEL_EDITED_FAILED,
+          context: { channelId: channelId },
+          properties: {
+            reason: 'no changes',
+          },
+        });
+
         return result.changes[0].old_val;
       }
 
@@ -305,10 +314,6 @@ const editChannel = async (
     });
 };
 
-/*
-  We delete data non-destructively, meaning the record does not get cleared
-  from the db.
-*/
 const deleteChannel = (channelId: string, userId: string): Promise<Boolean> => {
   return db
     .table('channels')
@@ -382,13 +387,34 @@ const restoreChannel = (
     });
 };
 
-const archiveAllPrivateChannels = (communityId: string) => {
-  return db
+const archiveAllPrivateChannels = async (
+  communityId: string,
+  userId: string
+) => {
+  const channels = await db
+    .table('channels')
+    .getAll(communityId, { index: 'communityId' })
+    .filter({ isPrivate: true })
+    .run();
+
+  if (!channels || channels.length === 0) return;
+
+  const trackingPromises = channels.map(channel => {
+    return trackQueue.add({
+      userId,
+      event: events.CHANNEL_ARCHIVED,
+      context: { channelId: channel.id },
+    });
+  });
+
+  const archivePromise = db
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
     .filter({ isPrivate: true })
     .update({ archivedAt: new Date() })
     .run();
+
+  return await Promise.all([...trackingPromises, archivePromise]);
 };
 
 module.exports = {

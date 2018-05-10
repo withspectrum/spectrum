@@ -59,7 +59,7 @@ export default async (
   return await Promise.all([
     removeModeratorsInCommunity(communityId),
     disablePaidFeatureFlags(communityId),
-    archiveAllPrivateChannels(communityId),
+    archiveAllPrivateChannels(communityId, user.id),
   ])
     .then(() => getCommunityById(communityId))
     .catch(err => {
