@@ -10,6 +10,7 @@ export const track = (
 ) => {
   const amplitudePromise = () => {
     debug(`[Amplitude] Tracking ${eventType}`);
+
     return amplitude.track({
       userId,
       eventType,
@@ -21,7 +22,7 @@ export const track = (
   };
 
   return Promise.all([amplitudePromise()]).catch(err => {
-    console.error('Error tracking event: ', err);
+    console.error('Error tracking event: ', err.message);
     Raven.captureException(err);
   });
 };

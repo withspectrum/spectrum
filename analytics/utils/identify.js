@@ -13,7 +13,7 @@ export const identify = (userId: string, userProperties: Object) => {
   };
 
   return Promise.all([amplitudePromise()]).catch(err => {
-    console.error('Error Identifying event: ', err);
+    console.error('Error Identifying event: ', err.message);
     Raven.captureException(err);
   });
 };
