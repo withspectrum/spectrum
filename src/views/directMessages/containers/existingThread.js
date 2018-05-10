@@ -12,7 +12,6 @@ import getDirectMessageThread from 'shared/graphql/queries/directMessageThread/g
 import { MessagesContainer, ViewContent } from '../style';
 import { Loading } from '../../../components/loading';
 import ViewError from '../../../components/viewError';
-import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   data: Object,

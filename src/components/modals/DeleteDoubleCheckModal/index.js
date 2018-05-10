@@ -22,7 +22,6 @@ import { modalStyles } from '../styles';
 import { Actions, Message } from './style';
 import cancelSubscription from 'shared/graphql/mutations/community/cancelSubscription';
 import disableCommunityAnalytics from 'shared/graphql/mutations/community/disableCommunityAnalytics';
-import { track, events, transformations } from 'src/helpers/analytics';
 
 /*
   Generic component that should be used to confirm any 'delete' action.
