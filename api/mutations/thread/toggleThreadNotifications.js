@@ -6,8 +6,6 @@ import {
   createNotifiedUserInThread,
 } from '../../models/usersThreads';
 import { getThread } from '../../models/thread';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 type Input = {
@@ -27,11 +25,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         if (threadToEvaluate.receiveNotifications) {
           // if they are currently receiving notifications, turn them off
           value = false;
-          trackQueue.add({
-            userId: user.id,
-            event: events.THREAD_NOTIFICATIONS_DISABLED,
-            context: { threadId },
-          });
           return updateThreadNotificationStatusForUser(
             threadId,
             user.id,
@@ -40,11 +33,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         } else {
           // if they aren't receiving notifications, turn them on
           value = true;
-          trackQueue.add({
-            userId: user.id,
-            event: events.THREAD_NOTIFICATIONS_ENABLED,
-            context: { threadId },
-          });
           return updateThreadNotificationStatusForUser(
             threadId,
             user.id,

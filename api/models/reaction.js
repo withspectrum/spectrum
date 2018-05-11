@@ -4,27 +4,19 @@ import {
   sendReactionNotificationQueue,
   processReputationEventQueue,
 } from 'shared/bull/queues';
+import type { DBReaction } from 'shared/types';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 
 type ReactionType = 'like';
-
-type DBReaction = {
-  id: string,
-  messageId: string,
-  timestamp: Date,
-  type: ReactionType,
-  userId: string,
-};
 
 export type ReactionInput = {
   messageId: string,
   type: ReactionType,
 };
 
-export const getReactions = (
-  messageIds: Array<string>
-): Promise<Array<DBReaction>> => {
+// prettier-ignore
+export const getReactions = (messageIds: Array<string>): Promise<Array<DBReaction>> => {
   const distinctMessageIds = messageIds.filter((x, i, a) => a.indexOf(x) == i);
   return db
     .table('reactions')
@@ -41,19 +33,16 @@ export const getReaction = (reactionId: string): Promise<DBReaction> => {
     .run();
 };
 
-export const getReactionsByIds = (
-  reactionIds: Array<string>
-): Promise<Array<DBReaction>> => {
+// prettier-ignore
+export const getReactionsByIds = (reactionIds: Array<string>): Promise<Array<DBReaction>> => {
   return db
     .table('reactions')
     .getAll(...reactionIds)
     .run();
 };
 
-export const toggleReaction = (
-  reaction: ReactionInput,
-  userId: string
-): Promise<DBReaction> => {
+// prettier-ignore
+export const toggleReaction = (reaction: ReactionInput, userId: string): Promise<DBReaction> => {
   return db
     .table('reactions')
     .getAll(reaction.messageId, { index: 'messageId' })

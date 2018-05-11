@@ -24,6 +24,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   if (!community) {
     debug('Error getting community in preflight');
+
     return new UserError(
       'We had trouble processing this request - please try again later'
     );

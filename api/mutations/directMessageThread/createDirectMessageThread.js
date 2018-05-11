@@ -73,7 +73,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     threadId = existingThread;
     threadToReturn = await getDirectMessageThread(threadId);
   } else {
-    threadToReturn = await createDirectMessageThread(isGroup);
+    threadToReturn = await createDirectMessageThread(isGroup, user.id);
     threadId = threadToReturn.id;
   }
 

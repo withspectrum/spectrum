@@ -28,7 +28,8 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   return await updateCommunityPaidFeature(
     communityId,
     'analyticsEnabled',
-    false
+    false,
+    user.id
   ).catch(err => {
     return new UserError('We had trouble saving your card', err.message);
   });

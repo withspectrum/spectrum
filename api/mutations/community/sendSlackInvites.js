@@ -40,14 +40,16 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     );
   }
 
-  return await markInitialSlackInvitationsSent(communityId, customMessage).then(
-    async () => {
-      loaders.communitySettings.clear(communityId);
-      sendSlackInvitationsQueue.add({
-        communityId,
-        userId: user.id,
-      });
-      return await getCommunityById(communityId);
-    }
-  );
+  return await markInitialSlackInvitationsSent(
+    communityId,
+    customMessage,
+    user.id
+  ).then(async () => {
+    loaders.communitySettings.clear(communityId);
+    sendSlackInvitationsQueue.add({
+      communityId,
+      userId: user.id,
+    });
+    return await getCommunityById(communityId);
+  });
 });

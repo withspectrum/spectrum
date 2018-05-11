@@ -8,6 +8,7 @@ import { getChannelById } from '../models/channel';
 import { getCommunityById } from '../models/community';
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
+import { getNotificationById } from '../models/notification';
 /*
 
   Given an entityId, return structured data to track in internal analytics
@@ -23,6 +24,7 @@ type EntityObjType = {
   threadId?: string,
   channelId?: string,
   communityId?: string,
+  notificationId?: string,
   userId: string,
 };
 
@@ -192,6 +194,14 @@ export const getContext = async (obj: EntityObjType) => {
         ...transformations.analyticsCommunity(community),
         ...transformations.analyticsCommunityPermissions(communityPermissions),
       },
+    };
+  }
+
+  if (obj.notificationId) {
+    const notificationId = obj.notificationId;
+    const notification = await getNotificationById(notificationId);
+    return {
+      event: notification.event,
     };
   }
 };

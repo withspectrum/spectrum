@@ -45,7 +45,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     context: { threadId: thread.id },
   });
 
-  return moveThread(threadId, channelId).then(res => {
+  return moveThread(threadId, channelId, user.id).then(res => {
     if (res) return res;
 
     throw new UserError(

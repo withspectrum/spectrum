@@ -2,7 +2,6 @@
 const { db } = require('./db');
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
-import { getNotification } from './notification';
 /*
 ===========================================================
 
@@ -11,27 +10,14 @@ import { getNotification } from './notification';
 ===========================================================
 */
 
-const trackNotificationSeen = async (
-  notificationId: string,
-  userId: string
-) => {
-  const notification = await getNotification(notificationId);
-  return trackQueue.add({
+// marks one notification as read
+// prettier-ignore
+export const markSingleNotificationSeen = (notificationId: string, userId: string): Promise<Object> => {
+  trackQueue.add({
     userId,
     event: events.NOTIFICATION_MARKED_AS_SEEN,
-    properties: {
-      event: notification.event,
-      id: notification.id,
-    },
+    context: { notificationId },
   });
-};
-
-// marks one notification as read
-export const markSingleNotificationSeen = (
-  notificationId: string,
-  userId: string
-): Promise<Object> => {
-  trackNotificationSeen(notificationId, userId);
 
   return db
     .table('usersNotifications')
@@ -50,10 +36,8 @@ export const markSingleNotificationSeen = (
     .catch(err => false);
 };
 
-export const markNotificationsSeen = (
-  userId: string,
-  notifications: Array<string>
-) => {
+// prettier-ignore
+export const markNotificationsSeen = (userId: string, notifications: Array<string>) => {
   trackQueue.add({
     userId,
     event: events.NOTIFICATIONS_MARKED_AS_SEEN,

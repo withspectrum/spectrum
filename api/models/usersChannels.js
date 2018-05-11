@@ -1,6 +1,8 @@
 // @flow
 const { db } = require('./db');
 import type { DBUsersChannels, DBChannel } from 'shared/types';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 /*
 ===========================================================
@@ -12,10 +14,12 @@ import type { DBUsersChannels, DBChannel } from 'shared/types';
 
 // invoked only when a new channel is being created. the user who is doing
 // the creation is automatically an owner and a member
-const createOwnerInChannel = (
-  channelId: string,
-  userId: string
-): Promise<DBChannel> => {
+// prettier-ignore
+const createOwnerInChannel = (channelId: string, userId: string): Promise<DBChannel> => {
+  trackQueue.add({
+    userId,
+    event: events
+  })
   return db
     .table('usersChannels')
     .insert(
@@ -35,16 +39,13 @@ const createOwnerInChannel = (
     .run()
     .then(result => {
       const join = result.changes[0].new_val;
-      return db.table('channels').get(join.channelId);
+      return db.table('channels').get(join.channelId).run();
     });
 };
 
-// creates a single member in a channel. invoked when a user joins a public
-// channel
-const createMemberInChannel = (
-  channelId: string,
-  userId: string
-): Promise<DBChannel> => {
+// creates a single member in a channel. invoked when a user joins a public channel
+// prettier-ignore
+const createMemberInChannel = ( channelId: string, userId: string): Promise<DBChannel> => {
   return db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
@@ -88,12 +89,9 @@ const createMemberInChannel = (
     .then(() => db.table('channels').get(channelId));
 };
 
-// removes a single member from a channel. will be invoked if a user leaves
-// a channel
-const removeMemberInChannel = (
-  channelId: string,
-  userId: string
-): Promise<?DBChannel> => {
+// removes a single member from a channel. will be invoked if a user leaves a channel
+// prettier-ignore
+const removeMemberInChannel = (channelId: string, userId: string): Promise<?DBChannel> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -111,17 +109,15 @@ const removeMemberInChannel = (
     .then(result => {
       if (result && result.changes && result.changes.length > 0) {
         const join = result.changes[0].old_val;
-        return db.table('channels').get(join.channelId);
+        return db.table('channels').get(join.channelId).run();
       } else {
-        return;
+        return null;
       }
     });
 };
 
-const unblockMemberInChannel = (
-  channelId: string,
-  userId: string
-): Promise<?DBChannel> => {
+// prettier-ignore
+const unblockMemberInChannel = (channelId: string, userId: string): Promise<?DBChannel> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -145,6 +141,7 @@ const unblockMemberInChannel = (
 // removes all the user relationships to a channel. will be invoked when a
 // channel is deleted, at which point we don't want any records in the
 // database to show a user relationship to the deleted channel
+/// prettier-ignore
 const removeMembersInChannel = (
   channelId: string
 ): Promise<Array<?DBUsersChannels>> => {
@@ -160,10 +157,8 @@ const removeMembersInChannel = (
 
 // creates a single pending user in channel. invoked only when a user is requesting
 // to join a private channel
-const createOrUpdatePendingUserInChannel = (
-  channelId: string,
-  userId: string
-): Promise<DBChannel> => {
+// prettier-ignore
+const createOrUpdatePendingUserInChannel = (channelId: string, userId: string): Promise<DBChannel> => {
   return db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })

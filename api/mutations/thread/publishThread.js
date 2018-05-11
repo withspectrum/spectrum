@@ -386,6 +386,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         body: JSON.stringify(body),
       },
     },
+    user.id,
     false
   );
 });

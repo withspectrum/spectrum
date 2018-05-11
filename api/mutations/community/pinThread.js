@@ -36,13 +36,5 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     return new UserError('Only threads in public channels can be pinned.');
   }
 
-  const event = value ? events.THREAD_PINNED : events.THREAD_UNPINNED;
-
-  trackQueue.add({
-    userId: user.id,
-    event: event,
-    context: { threadId },
-  });
-
-  return setPinnedThreadInCommunity(communityId, value);
+  return setPinnedThreadInCommunity(communityId, value, user.id);
 });

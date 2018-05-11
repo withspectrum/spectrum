@@ -32,7 +32,11 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     deliveryMethod
   ] = !oldVal;
 
-  return await updateUsersNotificationSettings(user.id, newSettings).then(() =>
-    getUserById(user.id)
-  );
+  return await updateUsersNotificationSettings(
+    user.id,
+    newSettings,
+    notificationType,
+    deliveryMethod,
+    oldVal
+  ).then(() => getUserById(user.id));
 });

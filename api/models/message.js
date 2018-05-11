@@ -38,10 +38,8 @@ export const getManyMessages = (messageIds: string[]): Promise<Message[]> => {
 
 type BackwardsPaginationOptions = { last?: number, before?: number | Date };
 
-const getBackwardsMessages = (
-  threadId: string,
-  { last, before }: BackwardsPaginationOptions
-) => {
+// prettier-ignore
+const getBackwardsMessages = (threadId: string, { last, before }: BackwardsPaginationOptions) => {
   return db
     .table('messages')
     .between(
@@ -57,10 +55,8 @@ const getBackwardsMessages = (
 
 type ForwardsPaginationOptions = { first?: number, after?: number | Date };
 
-const getForwardMessages = (
-  threadId: string,
-  { first, after }: ForwardsPaginationOptions
-) => {
+// prettier-ignore
+const getForwardMessages = (threadId: string, { first, after }: ForwardsPaginationOptions) => {
   return db
     .table('messages')
     .between(
@@ -108,9 +104,8 @@ export const getLastMessages = (threadIds: Array<string>): Promise<Object> => {
     .run();
 };
 
-export const getMediaMessagesForThread = (
-  threadId: string
-): Promise<Array<Message>> => {
+// prettier-ignore
+export const getMediaMessagesForThread = (threadId: string): Promise<Array<Message>> => {
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
@@ -119,10 +114,8 @@ export const getMediaMessagesForThread = (
     .run();
 };
 
-export const storeMessage = (
-  message: Message,
-  userId: string
-): Promise<Message> => {
+// prettier-ignore
+export const storeMessage = (message: Message, userId: string): Promise<Message> => {
   // Insert a message
   return db
     .table('messages')
@@ -199,9 +192,8 @@ export const getMessageCount = (threadId: string): Promise<number> => {
     .run();
 };
 
-export const getMessageCountInThreads = (
-  threadIds: Array<string>
-): Promise<Array<mixed>> => {
+// prettier-ignore
+export const getMessageCountInThreads = (threadIds: Array<string>): Promise<Array<mixed>> => {
   return db
     .table('messages')
     .getAll(...threadIds, { index: 'threadId' })
@@ -225,12 +217,14 @@ export const deleteMessage = (userId: string, messageId: string) => {
     .run()
     .then(result => result.changes[0].new_val || result.changes[0].old_val)
     .then(message => {
+      const event =
+        message.threadType === 'story'
+          ? events.MESSAGE_DELETED
+          : events.DIRECT_MESSAGE_DELETED;
+
       trackQueue.add({
         userId,
-        event:
-          message.threadType === 'story'
-            ? events.MESSAGE_DELETED
-            : events.DIRECT_MESSAGE_DELETED,
+        event,
         context: { messageId },
       });
 
@@ -244,10 +238,8 @@ export const deleteMessage = (userId: string, messageId: string) => {
     });
 };
 
-export const deleteMessagesInThread = async (
-  threadId: string,
-  userId: string
-) => {
+// prettier-ignore
+export const deleteMessagesInThread = async (threadId: string, userId: string) => {
   const messages = await db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
@@ -256,12 +248,12 @@ export const deleteMessagesInThread = async (
   if (!messages || messages.length === 0) return;
 
   const trackingPromises = messages.map(message => {
+    const event = message.threadType === 'story'
+      ? events.MESSAGE_DELETED
+      : events.DIRECT_MESSAGE_DELETED
     return trackQueue.add({
       userId,
-      event:
-        message.threadType === 'story'
-          ? events.MESSAGE_DELETED
-          : events.DIRECT_MESSAGE_DELETED,
+      event,
       context: { messageId: message.id },
     });
   });

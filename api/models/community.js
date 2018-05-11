@@ -7,7 +7,6 @@ import {
   sendNewCommunityWelcomeEmailQueue,
   _adminSendCommunityCreatedEmailQueue,
 } from 'shared/bull/queues';
-import { removeMemberInChannel } from './usersChannels';
 import { trackQueue } from 'shared/bull/queues';
 import { events } from 'shared/analytics';
 import type { DBCommunity, DBUser } from 'shared/types';
@@ -348,11 +347,24 @@ export const editCommunity = ({ input }: EditCommunityInput, userId: string): Pr
           .then(result => {
             // if an update happened
             if (result.replaced === 1) {
+              trackQueue.add({
+                userId,
+                event: events.COMMUNITY_EDITED,
+                context: { communityId }
+              })
               return result.changes[0].new_val;
             }
 
             // an update was triggered from the client, but no data was changed
             if (result.unchanged === 1) {
+              trackQueue.add({
+                userId,
+                event: events.COMMUNITY_EDITED_FAILED,
+                context: { communityId },
+                properties: {
+                  reason: 'no changes'
+                }
+              })
               return result.changes[0].old_val;
             }
           });
@@ -468,21 +480,8 @@ export const editCommunity = ({ input }: EditCommunityInput, userId: string): Pr
     });
 };
 
-/*
-  We delete data non-destructively, meaning the record does not get cleared
-  from the db. Instead, we set a 'deleted' field on the object with a value
-  of the current time on the db.
-
-  We set the value as a timestamp so that in the future we have option value
-  to perform actions like:
-  - permanantely delete records that were deleted > X days ago
-  - run logs for deletions over time
-  - etc
-*/
-export const deleteCommunity = (
-  communityId: string,
-  userId: string
-): Promise<DBCommunity> => {
+// prettier-ignore
+export const deleteCommunity = (communityId: string, userId: string): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
@@ -501,16 +500,14 @@ export const deleteCommunity = (
     .then(() => {
       trackQueue.add({
         userId,
-        event: events.COMMUNITY_CREATED,
+        event: events.COMMUNITY_DELETED,
         context: { communityId },
       });
     });
 };
 
-export const setPinnedThreadInCommunity = (
-  communityId: string,
-  value: string
-): Promise<DBCommunity> => {
+// prettier-ignore
+export const setPinnedThreadInCommunity = (communityId: string, value: string, userId: string): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
@@ -521,39 +518,22 @@ export const setPinnedThreadInCommunity = (
       { returnChanges: 'always' }
     )
     .run()
-    .then(result => result.changes[0].new_val);
-};
+    .then(result => {
+      // prettier-ignore
+      const event = value ? events.THREAD_PINNED : events.THREAD_UNPINNED;
 
-export const unsubscribeFromAllChannelsInCommunity = (
-  communityId: string,
-  userId: string
-): Promise<Array<Object>> => {
-  return db
-    .table('channels')
-    .getAll(communityId, { index: 'communityId' })
-    .run()
-    .then(channels => {
-      return channels.map(channel => removeMemberInChannel(channel.id, userId));
+      trackQueue.add({
+        userId,
+        event: event,
+        context: { threadId: value },
+      });
+
+      return result.changes[0].new_val
     });
 };
 
-export const userIsMemberOfCommunity = (
-  communityId: string,
-  userId: string
-): Promise<Boolean> => {
-  return db
-    .table('communities')
-    .get(communityId)
-    .run()
-    .then(community => {
-      return community.members.indexOf(userId) > -1;
-    });
-};
-
-export const userIsMemberOfAnyChannelInCommunity = (
-  communityId: string,
-  userId: string
-): Promise<Boolean> => {
+// prettier-ignore
+export const userIsMemberOfAnyChannelInCommunity = (communityId: string, userId: string): Promise<Boolean> => {
   return db('spectrum')
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
@@ -562,10 +542,7 @@ export const userIsMemberOfAnyChannelInCommunity = (
     .filter({ userId })
     .pluck('isMember')
     .run()
-    .then(channels => {
-      // if any of the channels return true for isMember, we return true
-      return channels.some(channel => channel.isMember);
-    });
+    .then(channels => channels.some(channel => channel.isMember));
 };
 
 export const getRecentCommunities = (): Array<DBCommunity> => {
@@ -574,32 +551,6 @@ export const getRecentCommunities = (): Array<DBCommunity> => {
     .orderBy({ index: db.desc('createdAt') })
     .filter(community => db.not(community.hasFields('deletedAt')))
     .limit(100)
-    .run();
-};
-
-export const getCommunitiesBySearchString = (
-  string: string,
-  amount: number
-): Promise<Array<DBCommunity>> => {
-  return db
-    .table('communities')
-    .filter(community => community.coerceTo('string').match(`(?i)${string}`))
-    .filter(community => db.not(community.hasFields('deletedAt')))
-    .limit(amount)
-    .run();
-};
-
-// TODO(@mxstbr): Replace Array<Object> with Array<DBThread>
-export const searchThreadsInCommunity = (
-  channels: Array<string>,
-  searchString: string
-): Promise<Array<Object>> => {
-  return db
-    .table('threads')
-    .getAll(...channels, { index: 'channelId' })
-    .filter(thread => thread.coerceTo('string').match(`(?i)${searchString}`))
-    .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(db.desc('lastActive'))
     .run();
 };
 
@@ -644,33 +595,44 @@ export const getCommunityGrowth = async (
   };
 };
 
-export const setCommunityPendingAdministratorEmail = (
-  communityId: string,
-  pendingAdministratorEmail: string
-): Promise<Object> => {
+// prettier-ignore
+export const setCommunityPendingAdministratorEmail = (communityId: string, email: string, userId: string): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
     .update({
-      pendingAdministratorEmail,
+      pendingAdministratorEmail: email,
     })
     .run()
-    .then(() => getCommunityById(communityId));
+    .then(async () => {
+      trackQueue.add({
+        userId,
+        event: events.COMMUNITY_ADMINISTRATOR_EMAIL_ADDED,
+        context: { communityId },
+      });
+
+      return await getCommunityById(communityId)
+    });
 };
 
-export const updateCommunityAdministratorEmail = (
-  communityId: string,
-  administratorEmail: string
-): Promise<Object> => {
+// prettier-ignore
+export const updateCommunityAdministratorEmail = (communityId: string, email: string, userId: string): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
     .update({
-      administratorEmail,
+      administratorEmail: email,
       pendingAdministratorEmail: db.literal(),
     })
     .run()
-    .then(() => getCommunityById(communityId));
+    .then(async () => {
+      trackQueue.add({
+        userId,
+        event: events.COMMUNITY_ADMINISTRATOR_EMAIL_VERIFIED,
+        context: { communityId },
+      });
+      return await getCommunityById(communityId)
+    });
 };
 
 export const resetCommunityAdministratorEmail = (communityId: string) => {
@@ -684,10 +646,8 @@ export const resetCommunityAdministratorEmail = (communityId: string) => {
     .run();
 };
 
-export const setStripeCustomerId = (
-  communityId: string,
-  stripeCustomerId: string
-): Promise<DBCommunity> => {
+// prettier-ignore
+export const setStripeCustomerId = (communityId: string, stripeCustomerId: string): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
@@ -703,7 +663,8 @@ export const setStripeCustomerId = (
     .then(result => result.changes[0].new_val || result.changes[0].old_val);
 };
 
-export const disablePaidFeatureFlags = (communityId: string) => {
+// prettier-ignore
+export const disablePaidFeatureFlags = (communityId: string, userId: string): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
@@ -711,14 +672,30 @@ export const disablePaidFeatureFlags = (communityId: string) => {
       analyticsEnabled: false,
       prioritySupportEnabled: false,
     })
-    .run();
+    .run()
+    .then(async () => {
+      trackQueue.add({
+        userId,
+        event: events.COMMUNITY_ANALYTICS_DISABLED,
+        context: { communityId }
+      })
+
+      trackQueue.add({
+        userId,
+        event: events.COMMUNITY_PRIORITY_SUPPORT_DISABLED,
+        context: { communityId }
+      })
+
+      return await getCommunityById(communityId)
+    })
 };
 
 export const updateCommunityPaidFeature = (
   communityId: string,
   feature: string,
-  value: boolean
-) => {
+  value: boolean,
+  userId: string
+): Promise<DBCommunity> => {
   const obj = { [feature]: value };
   return db
     .table('communities')
@@ -727,6 +704,31 @@ export const updateCommunityPaidFeature = (
     .run()
     .then(result => {
       if (result && result.changes.length > 0) {
+        switch (feature) {
+          case 'analyticsEnabled': {
+            trackQueue.add({
+              userId,
+              event: value
+                ? events.COMMUNITY_ANALYTICS_ENABLED
+                : events.COMMUNITY_ANALYTICS_DISABLED,
+              context: { communityId },
+            });
+            break;
+          }
+          case 'prioritySupportEnabled': {
+            trackQueue.add({
+              userId,
+              event: value
+                ? events.COMMUNITY_PRIORITY_SUPPORT_ENABLED
+                : events.COMMUNITY_PRIORITY_SUPPORT_DISABLED,
+              context: { communityId },
+            });
+          }
+          default: {
+            break;
+          }
+        }
+
         return result.changes[0].new_val || result.changes[0].old_val;
       }
       return { id: communityId };

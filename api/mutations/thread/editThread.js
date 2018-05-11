@@ -110,11 +110,14 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   });
 
   // Update the thread with the new links
-  return editThread({
-    threadId: editedThread.id,
-    content: {
-      ...editedThread.content,
-      body: JSON.stringify(body),
+  return editThread(
+    {
+      threadId: editedThread.id,
+      content: {
+        ...editedThread.content,
+        body: JSON.stringify(body),
+      },
     },
-  });
+    user.id
+  );
 });

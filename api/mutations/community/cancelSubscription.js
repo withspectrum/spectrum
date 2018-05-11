@@ -53,7 +53,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   // have been removed
   return await Promise.all([
     removeModeratorsInCommunity(communityId),
-    disablePaidFeatureFlags(communityId),
+    disablePaidFeatureFlags(communityId, user.id),
     archiveAllPrivateChannels(communityId, user.id),
   ])
     .then(() => getCommunityById(communityId))

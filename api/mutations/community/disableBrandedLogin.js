@@ -30,7 +30,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   // settings.id tells us that a channelSettings record exists in the db
   if (settings.id) {
-    return await disableCommunityBrandedLogin(communityId);
+    return await disableCommunityBrandedLogin(communityId, user.id);
   } else {
     return await createCommunitySettings(communityId);
   }

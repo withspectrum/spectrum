@@ -28,7 +28,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     return new UserError('You don’t have permission to manage this community');
   }
 
-  return setCommunityPendingAdministratorEmail(communityId, email)
+  return setCommunityPendingAdministratorEmail(communityId, email, user.id)
     .then(community => {
       sendAdministratorEmailValidationEmailQueue.add({
         email,
