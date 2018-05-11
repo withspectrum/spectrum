@@ -7,6 +7,8 @@ import { getThreads, editThread } from '../../models/thread';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   input: EditThreadInput,
@@ -17,7 +19,16 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { user } = ctx;
 
   if (input.type === 'SLATE') {
-    throw new UserError(
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_EDITED_FAILED,
+      context: { threadId: input.threadId },
+      properties: {
+        reason: 'slate type',
+      },
+    });
+
+    return new UserError(
       "You're on an old version of Spectrum, please refresh your browser."
     );
   }
@@ -29,6 +40,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   // if the thread doesn't exist
   if (!threads || !threadToEvaluate) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_EDITED_FAILED,
+      context: { threadId: input.threadId },
+      properties: {
+        reason: 'thread does not exist',
+      },
+    });
+
     return new UserError("This thread doesn't exist");
   }
 
@@ -44,6 +64,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     channelPermissions.isBlocked ||
     communityPermissions.isBlocked
   ) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_EDITED_FAILED,
+      context: { threadId: input.threadId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
     return new UserError(
       "You don't have permission to make changes to this thread."
     );
@@ -85,6 +114,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       )
     );
   } catch (err) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_EDITED_FAILED,
+      context: { threadId: input.threadId },
+      properties: {
+        reason: 'images failed to upload',
+      },
+    });
+
     return new UserError(err.message);
   }
 

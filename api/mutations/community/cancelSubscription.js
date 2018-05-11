@@ -29,6 +29,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { customer, community } = await StripeUtil.jobPreflight(communityId);
 
   if (!await canAdministerCommunity(user.id, communityId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_SUBSCRIPTION_CANCELED_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
     return new UserError(
       'You must own this community to manage payment sources'
     );
@@ -36,6 +45,16 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   if (!community) {
     debug('Error getting community in preflight');
+
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_SUBSCRIPTION_CANCELED_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'community not fetched in preflight',
+      },
+    });
+
     return new UserError(
       'We had trouble processing this request - please try again later'
     );
@@ -43,6 +62,16 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   if (!customer) {
     debug('Error getting customer in preflight');
+
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_SUBSCRIPTION_CANCELED_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'customer not fetched in preflight',
+      },
+    });
+
     return new UserError(
       'We had trouble processing this request - please try again later'
     );
@@ -57,18 +86,13 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     removeModeratorsInCommunity(communityId),
     disablePaidFeatureFlags(communityId, user.id),
     archiveAllPrivateChannels(communityId, user.id),
-  ])
-    .then(async () => {
-      trackQueue.add({
-        userId: user.id,
-        event: events.COMMUNITY_SUBSCRIPTION_CANCELED,
-        context: { communityId },
-      });
-
-      return await getCommunityById(communityId);
-    })
-    .catch(err => {
-      console.error(err);
-      return new UserError(`Error canceling subscription: ${err.message}`);
+  ]).then(async () => {
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_SUBSCRIPTION_CANCELED,
+      context: { communityId },
     });
+
+    return await getCommunityById(communityId);
+  });
 });

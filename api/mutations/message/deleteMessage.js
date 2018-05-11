@@ -36,12 +36,17 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     return new UserError('This message does not exist.');
   }
 
+  const eventFailed =
+    message.threadType === 'story'
+      ? events.MESSAGE_DELETED_FAILED
+      : events.DIRECT_MESSAGE_DELETED_FAILED;
+
   if (message.senderId !== user.id) {
     // Only the sender can delete a directMessageThread message
     if (message.threadType === 'directMessageThread') {
       trackQueue.add({
         userId: user.id,
-        event: events.DIRECT_MESSAGE_DELETED_FAILED,
+        event: eventFailed,
         context: { messageId: id },
         properties: {
           reason: 'message not sent by user',
@@ -66,7 +71,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     if (!canModerate) {
       trackQueue.add({
         userId: user.id,
-        event: events.MESSAGE_DELETED_FAILED,
+        event: eventFailed,
         context: { messageId: id },
         properties: {
           reason: 'no permission',

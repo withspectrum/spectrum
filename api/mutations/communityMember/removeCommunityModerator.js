@@ -12,6 +12,8 @@ import {
   isAuthedResolver as requireAuth,
   canModerateCommunity,
 } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -25,6 +27,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { user, loaders } = ctx;
 
   if (!await canModerateCommunity(user.id, communityId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_REMOVED_MODERATOR_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
     return new UserError('You must own this community to manage moderators.');
   }
 
@@ -34,10 +45,28 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   ]);
 
   if (!community) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_REMOVED_MODERATOR_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no community',
+      },
+    });
+
     return new UserError("We couldn't find that community.");
   }
 
   if (!userToEvaluatePermissions || userToEvaluatePermissions === 0) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_REMOVED_MODERATOR_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'user not member of community',
+      },
+    });
+
     return new UserError('This person is not a member of the community.');
   }
 
@@ -52,10 +81,28 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     !userToEvaluatePermission.isMember &&
     !userToEvaluatePermission.isBlocked
   ) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_REMOVED_MODERATOR_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'user not member of community',
+      },
+    });
+
     return new UserError('This person is not a member of your community.');
   }
 
   if (!userToEvaluatePermission.isModerator) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_REMOVED_MODERATOR_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'user not moderator of community',
+      },
+    });
+
     return new UserError('This person is not a moderator in your community.');
   }
 
@@ -65,14 +112,41 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     userToEvaluateId
   );
 
-  const removeChannelModeratorPromises = allChannelsInCommunity.map(channel =>
-    removeModeratorInChannel(channel, userToEvaluateId)
+  const removeChannelModeratorPromises = allChannelsInCommunity.map(
+    channelId => {
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_REMOVED_MODERATOR_IN_CHANNEL,
+        context: { channelId },
+      });
+
+      return removeModeratorInChannel(channelId, userToEvaluateId);
+    }
   );
 
   return await Promise.all([
     removeModeratorInCommunity(communityId, userToEvaluateId),
     ...removeChannelModeratorPromises,
   ])
-    .then(([newPermissions]) => newPermissions)
-    .catch(err => new UserError(err));
+    .then(([newPermissions]) => {
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_REMOVED_MODERATOR_IN_COMMUNITY,
+        context: { communityId },
+      });
+      return newPermissions;
+    })
+    .catch(err => {
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_REMOVED_MODERATOR_IN_COMMUNITY_FAILED,
+        context: { communityId },
+        properties: {
+          reason: 'unknown error',
+          error: err.message,
+        },
+      });
+
+      return new UserError(err);
+    });
 });

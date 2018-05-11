@@ -14,6 +14,8 @@ import {
 } from './utils';
 import { getUserById } from '../../models/user';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -25,6 +27,14 @@ type Input = {
 export default requireAuth(
   async (_: any, args: Input, { user }: GraphQLContext) => {
     if (!user.email) {
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_UPGRADED_TO_PRO_FAILED,
+        properties: {
+          reason: 'no email address',
+        },
+      });
+
       return new UserError(
         'Please add an email address in your settings before upgrading to Pro'
       );
@@ -33,6 +43,14 @@ export default requireAuth(
     // gql should have caught this, but just in case not token or plan
     // was specified, return an error
     if (!args.input.plan || !args.input.token) {
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_UPGRADED_TO_PRO_FAILED,
+        properties: {
+          reason: 'no token provided',
+        },
+      });
+
       return new UserError(
         'Something went wrong upgrading you to Pro. Please try again.'
       );
@@ -81,6 +99,14 @@ export default requireAuth(
         recurringPaymentToEvaluate &&
         recurringPaymentToEvaluate.status === 'active'
       ) {
+        trackQueue.add({
+          userId: user.id,
+          event: events.USER_UPGRADED_TO_PRO_FAILED,
+          properties: {
+            reason: 'already pro',
+          },
+        });
+
         return new UserError("You're already a Pro member - thank you!");
       }
 
@@ -96,6 +122,12 @@ export default requireAuth(
           plan,
           1
         );
+
+        trackQueue.add({
+          userId: user.id,
+          event: events.USER_UPGRADED_TO_PRO,
+        });
+
         return await updateRecurringPayment({
           id: recurringPaymentToEvaluate.id,
           stripeData: {
@@ -114,6 +146,16 @@ export default requireAuth(
         .then(() => getUserById(user.id))
         .catch(err => {
           console.error('Error upgrading to Pro: ', err.message);
+
+          trackQueue.add({
+            userId: user.id,
+            event: events.USER_UPGRADED_TO_PRO_FAILED,
+            properties: {
+              reason: 'unknown error',
+              error: err.message,
+            },
+          });
+
           return new UserError(
             "We weren't able to upgrade you to Pro: " + err.message
           );

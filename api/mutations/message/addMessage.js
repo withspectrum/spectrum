@@ -32,13 +32,17 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { message } = args;
   const { user, loaders } = ctx;
 
+  const eventFailed =
+    message.threadType === 'story'
+      ? events.MESSAGE_SENT_FAILED
+      : events.DIRECT_MESSAGE_SENT_FAILED;
+
   if (message.messageType === 'media' && !message.file) {
     trackQueue.add({
       userId: user.id,
-      event: events.MESSAGE_SENT_FAILED,
+      event: eventFailed,
       properties: {
         reason: 'media message without file',
-        message,
       },
     });
 
@@ -50,10 +54,9 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   if (message.messageType !== 'media' && message.file) {
     trackQueue.add({
       userId: user.id,
-      event: events.MESSAGE_SENT_FAILED,
+      event: eventFailed,
       properties: {
         reason: 'non media message with file',
-        message,
       },
     });
     return new UserError(
@@ -77,28 +80,28 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     } catch (err) {
       trackQueue.add({
         userId: user.id,
-        event: events.MESSAGE_SENT_FAILED,
+        event: eventFailed,
         properties: {
           reason: 'invalid draftjs data',
           message,
         },
       });
 
-      throw new UserError(
+      return new UserError(
         'Please provide serialized raw DraftJS content state as content.body'
       );
     }
     if (!body.blocks || !Array.isArray(body.blocks) || !body.entityMap) {
       trackQueue.add({
         userId: user.id,
-        event: events.MESSAGE_SENT_FAILED,
+        event: eventFailed,
         properties: {
           reason: 'invalid draftjs data',
           message,
         },
       });
 
-      throw new UserError(
+      return new UserError(
         'Please provide serialized raw DraftJS content state as content.body'
       );
     }
@@ -109,14 +112,14 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     ) {
       trackQueue.add({
         userId: user.id,
-        event: events.MESSAGE_SENT_FAILED,
+        event: eventFailed,
         properties: {
           reason: 'invalid draftjs data',
           message,
         },
       });
 
-      throw new UserError(
+      return new UserError(
         'Invalid DraftJS block type specified. Supported block types: "unstyled", "code-block".'
       );
     }
@@ -127,14 +130,14 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     if (parent.threadId !== message.threadId)
       trackQueue.add({
         userId: user.id,
-        event: events.MESSAGE_SENT_FAILED,
+        event: eventFailed,
         properties: {
           reason: 'quoted message in different thread',
           message,
         },
       });
 
-    throw new UserError('You can only quote messages from the same thread.');
+    return new UserError('You can only quote messages from the same thread.');
   }
 
   // construct the shape of the object to be stored in the db
@@ -154,7 +157,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     } catch (err) {
       trackQueue.add({
         userId: user.id,
-        event: events.MESSAGE_SENT_FAILED,
+        event: eventFailed,
         properties: {
           reason: 'media upload failed',
           message,
@@ -167,7 +170,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     if (!url) {
       trackQueue.add({
         userId: user.id,
-        event: events.MESSAGE_SENT_FAILED,
+        event: eventFailed,
         properties: {
           reason: 'media upload failed',
           message,
@@ -202,7 +205,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   if (thread.isDeleted) {
     trackQueue.add({
       userId: user.id,
-      event: events.MESSAGE_SENT_FAILED,
+      event: eventFailed,
       properties: {
         reason: 'thread deleted',
       },
@@ -213,7 +216,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   if (thread.isLocked) {
     trackQueue.add({
       userId: user.id,
-      event: events.MESSAGE_SENT_FAILED,
+      event: eventFailed,
       properties: {
         reason: 'thread locked',
       },
@@ -232,7 +235,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   if (!channel || channel.deletedAt) {
     trackQueue.add({
       userId: user.id,
-      event: events.MESSAGE_SENT_FAILED,
+      event: eventFailed,
       properties: {
         reason: 'channel deleted',
       },
@@ -243,7 +246,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   if (channel.archivedAt) {
     trackQueue.add({
       userId: user.id,
-      event: events.MESSAGE_SENT_FAILED,
+      event: eventFailed,
       properties: {
         reason: 'channel archived',
       },
@@ -260,7 +263,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   if (isBlockedInCommunity || isBlockedInChannel) {
     trackQueue.add({
       userId: user.id,
-      event: events.MESSAGE_SENT_FAILED,
+      event: eventFailed,
       properties: {
         reason: 'no permission',
       },
@@ -277,7 +280,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   ) {
     trackQueue.add({
       userId: user.id,
-      event: events.MESSAGE_SENT_FAILED,
+      event: eventFailed,
       properties: {
         reason: 'no permission',
       },
@@ -344,10 +347,11 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     .catch(err => {
       trackQueue.add({
         userId: user.id,
-        event: events.MESSAGE_SENT_FAILED,
+        event: eventFailed,
         properties: {
           message,
           reason: 'unknown error',
+          error: err.message,
         },
       });
       console.error('Error sending message', err);

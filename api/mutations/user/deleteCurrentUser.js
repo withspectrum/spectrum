@@ -7,6 +7,8 @@ import { removeUsersChannelMemberships } from '../../models/usersChannels';
 import { disableAllThreadNotificationsForUser } from '../../models/usersThreads';
 import { getUserRecurringPayments } from '../../models/recurringPayment';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 export default requireAuth(async (_: any, __: any, ctx: GraphQLContext) => {
   const { user } = ctx;
@@ -15,6 +17,13 @@ export default requireAuth(async (_: any, __: any, ctx: GraphQLContext) => {
   const isPro = rPayments && rPayments.some(pmt => pmt.planId === 'beta-pro');
 
   if (isPro) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_DELETED_FAILED,
+      properties: {
+        reason: 'user is pro',
+      },
+    });
     return new UserError(
       'Please downgrade from Pro before deleting your account'
     );

@@ -33,13 +33,13 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
           TTL: 300, // If the user doesn't go online for five minutes don't send him this notification anymore
         }
       ).catch(err => {
-        throw new UserError(
+        return new UserError(
           "It seems like we can't send you web push notifications. Please ping @mxstbr with your browser and OS versions and he'll take a look!"
         );
       });
     })
     .then(() => true)
     .catch(err => {
-      throw new UserError("Couldn't store web push subscription.");
+      return new UserError("Couldn't store web push subscription.");
     });
 });

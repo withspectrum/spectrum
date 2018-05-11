@@ -26,6 +26,16 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   if (!community) {
     debug('Error getting community in preflight');
+
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_PAYMENT_SOURCE_REMOVED_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'community not fetched in preflight',
+      },
+    });
+
     return new UserError(
       'We had trouble processing this request - please try again later'
     );
@@ -33,12 +43,31 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   if (!customer) {
     debug('Error creating customer in preflight');
+
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_PAYMENT_SOURCE_REMOVED_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'customer not fetched in preflight',
+      },
+    });
+
     return new UserError(
       'We had trouble processing this request - please try again later'
     );
   }
 
   if (!await canAdministerCommunity(user.id, communityId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_PAYMENT_SOURCE_REMOVED_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
     return new UserError(
       'You must own this community to manage payment sources'
     );
@@ -64,8 +93,5 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       async newCustomer =>
         await replaceStripeCustomer(newCustomer.id, newCustomer)
     )
-    .then(() => community)
-    .catch(err => {
-      return new UserError(`Error removing payment method: ${err.message}`);
-    });
+    .then(() => community);
 });

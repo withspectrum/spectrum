@@ -305,6 +305,8 @@ const editUser = (args: EditUserInput, userId: string): Promise<DBUser> => {
                         event: events.USER_EDITED,
                       });
 
+                      identifyQueue.add({ userId: user.id });
+
                       return result.changes[0].new_val;
                     }
 
@@ -350,6 +352,9 @@ const editUser = (args: EditUserInput, userId: string): Promise<DBUser> => {
                         userId,
                         event: events.USER_EDITED,
                       });
+
+                      identifyQueue.add({ userId: user.id });
+
                       return result.changes[0].new_val;
                     }
 
@@ -362,6 +367,7 @@ const editUser = (args: EditUserInput, userId: string): Promise<DBUser> => {
                           reason: 'no changes',
                         },
                       });
+
                       return result.changes[0].old_val;
                     }
                   })
@@ -409,6 +415,8 @@ const editUser = (args: EditUserInput, userId: string): Promise<DBUser> => {
                       event: events.USER_EDITED,
                     });
 
+                    identifyQueue.add({ userId: user.id });
+
                     return result.changes[0].new_val;
                   }
 
@@ -446,6 +454,9 @@ const editUser = (args: EditUserInput, userId: string): Promise<DBUser> => {
                 userId,
                 event: events.USER_EDITED,
               });
+
+              identifyQueue.add({ userId: user.id });
+
               return result.changes[0].new_val;
             }
 
@@ -482,7 +493,6 @@ const setUserOnline = (id: string, isOnline: boolean): DBUser => {
     .then(result => {
       if (result.changes[0].new_val) {
         const user = result.changes[0].new_val;
-        identifyQueue.add({ userId: user.id });
         return user;
       }
       return result.changes[0].old_val;
@@ -505,8 +515,6 @@ const setUserPendingEmail = (userId: string, pendingEmail: string): Promise<Obje
         event: events.USER_ADDED_EMAIL,
       });
 
-      identifyQueue.add({ userId: user.id });
-
       return user
     });
 };
@@ -526,8 +534,6 @@ const updateUserEmail = (userId: string, email: string): Promise<Object> => {
         userId: user.id,
         event: events.USER_VERIFIED_EMAIL,
       });
-
-      identifyQueue.add({ userId: user.id });
     });
 };
 

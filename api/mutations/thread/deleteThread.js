@@ -6,6 +6,8 @@ import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { deleteThread, getThreads } from '../../models/thread';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   threadId: string,
@@ -22,6 +24,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   // if the thread doesn't exist
   if (!threadToEvaluate || threadToEvaluate.deletedAt) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_DELETED_FAILED,
+      context: { threadId },
+      properties: {
+        reason: 'thread does not exist',
+      },
+    });
+
     return new UserError("This thread doesn't exist");
   }
 
@@ -55,6 +66,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   }
 
   // if the user is not a channel or community owner, the thread can't be locked
+  trackQueue.add({
+    userId: user.id,
+    event: events.THREAD_DELETED_FAILED,
+    context: { threadId },
+    properties: {
+      reason: 'no permission',
+    },
+  });
+
   return new UserError(
     "You don't have permission to make changes to this thread."
   );

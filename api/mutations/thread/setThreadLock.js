@@ -4,6 +4,8 @@ import UserError from '../../utils/UserError';
 import { setThreadLock } from '../../models/thread';
 import type { DBThread } from 'shared/types';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   threadId: string,
@@ -18,6 +20,14 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   // if the thread doesn't exist
   if (!thread || thread.deletedAt) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_LOCKED_FAILED,
+      properties: {
+        reason: 'thread not found',
+      },
+    });
+
     return new UserError(`Could not find thread with ID '${threadId}'.`);
   }
 
@@ -55,10 +65,29 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   // if the user is not a channel or community owner, the thread can't be locked
   if (isAuthor) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_LOCKED_FAILED,
+      context: { threadId },
+      properties: {
+        reason: 'previously locked by moderator',
+      },
+    });
+
     return new UserError(
       "You don't have permission to unlock this thread as it was locked by a moderator."
     );
   }
+
+  trackQueue.add({
+    userId: user.id,
+    event: events.THREAD_LOCKED_FAILED,
+    context: { threadId },
+    properties: {
+      reason: 'no permission',
+    },
+  });
+
   return new UserError(
     "You don't have permission to make changes to this thread."
   );

@@ -15,7 +15,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   return storeExpoSubscription(token, user.id)
     .then(() => true)
     .catch(err => {
-      throw new UserError(
+      return new UserError(
         "Couldn't enable push notifications, please try again."
       );
     });

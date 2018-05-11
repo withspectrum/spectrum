@@ -29,6 +29,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { user: currentUser, loaders } = ctx;
 
   if (!await canModerateCommunity(currentUser.id, communityId, loaders)) {
+    trackQueue.add({
+      userId: currentUser.id,
+      event: events.COMMUNITY_EMAIL_INVITE_SENT_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
     return new UserError(
       "You don't have permission to invite people to this community."
     );

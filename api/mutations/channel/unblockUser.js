@@ -25,6 +25,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { user, loaders } = ctx;
 
   if (!await canModerateChannel(user.id, channelId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_UNBLOCKED_MEMBER_IN_CHANNEL_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
     return new UserError('You don’t have permission to manage this channel');
   }
 
@@ -34,6 +43,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   ]);
 
   if (!evaluatedUserChannelPermissions.isBlocked) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_UNBLOCKED_MEMBER_IN_CHANNEL_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'not blocked',
+      },
+    });
+
     return new UserError('This user is not currently blocked in this channel.');
   }
 

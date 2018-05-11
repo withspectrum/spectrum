@@ -27,6 +27,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   if (!community) {
     debug('Error getting community in preflight');
 
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_PAYMENT_SOURCE_ADDED_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'community not fetched in preflight',
+      },
+    });
+
     return new UserError(
       'We had trouble processing this request - please try again later'
     );
@@ -34,12 +43,31 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   if (!customer) {
     debug('Error creating customer in preflight');
+
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_PAYMENT_SOURCE_ADDED_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'customer not fetched in preflight',
+      },
+    });
+
     return new UserError(
       'We had trouble processing this request - please try again later'
     );
   }
 
   if (!await canAdministerCommunity(user.id, communityId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_PAYMENT_SOURCE_ADDED_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
     return new UserError(
       'You must own this community to manage payment sources'
     );
@@ -52,6 +80,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       sourceId: sourceId,
     });
   } catch (err) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_PAYMENT_SOURCE_ADDED_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'failed to attach source',
+      },
+    });
+
     return new UserError(err.message);
   }
 
@@ -62,6 +99,14 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     });
   } catch (err) {
     console.error('Could not update default payment method');
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_PAYMENT_SOURCE_ADDED_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'failed to change default source',
+      },
+    });
   }
 
   const newCustomer = await StripeUtil.getCustomer(changedSource.customer);
@@ -76,9 +121,5 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   // is in sync with stripe. Normally we defer this to webhooks, but since
   // this event needs updated data to respond to something the user is doing
   // *right now* we manually update the Stripe customer record in our db
-  return await insertOrReplaceStripeCustomer(newCustomer)
-    .then(() => community)
-    .catch(err => {
-      return new UserError('We had trouble saving your card', err.message);
-    });
+  return await insertOrReplaceStripeCustomer(newCustomer).then(() => community);
 });

@@ -33,7 +33,6 @@ import {
   SearchResultTextContainer,
   SearchResultImage,
 } from '../components/style';
-import { track, events } from 'src/helpers/analytics';
 
 type State = {
   searchString: string,
@@ -141,9 +140,6 @@ class NewThread extends React.Component<Props, State> {
       searchIsLoading: true,
     });
 
-    track(events.DIRECT_MESSAGE_THREAD_COMPOSER_USER_SEARCHED);
-
-    // trigger the query
     client
       .query({
         query: searchUsersQuery,

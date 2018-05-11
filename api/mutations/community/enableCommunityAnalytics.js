@@ -6,6 +6,8 @@ import {
   isAuthedResolver as requireAuth,
   canModerateCommunity,
 } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -18,6 +20,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { user, loaders } = ctx;
 
   if (!await canModerateCommunity(user.id, communityId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_ANALYTICS_ENABLED_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
     return new UserError(
       'You must own or moderate this community to enable analytics'
     );
@@ -28,7 +39,5 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     'analyticsEnabled',
     true,
     user.id
-  ).catch(err => {
-    return new UserError('We had trouble saving your card', err.message);
-  });
+  );
 });

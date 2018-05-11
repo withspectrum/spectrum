@@ -18,7 +18,7 @@ export default requireAuth(
     return await removeSubscription(endpoint)
       .then(() => true)
       .catch(err => {
-        throw new UserError("Couldn't remove web push subscription.");
+        return new UserError("Couldn't remove web push subscription.");
       });
   }
 );

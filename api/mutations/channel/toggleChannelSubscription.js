@@ -17,6 +17,8 @@ import {
 } from '../../models/usersCommunities';
 import { sendPrivateChannelRequestQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { trackQueue } from 'shared/bull/queues';
+import { events } from 'shared/analytics';
 
 type Input = {
   channelId: string,
@@ -33,17 +35,44 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   // if channel wasn't found or was deleted
   if (!channelToEvaluate || channelToEvaluate.deletedAt) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_CHANNEL_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'no channel',
+      },
+    });
+
     return new UserError("This channel doesn't exist");
   }
 
   // user is blocked, they can't join the channel
   if (currentUserChannelPermissions.isBlocked) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_CHANNEL_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
     return new UserError("You don't have permission to do that.");
   }
 
   // if the person owns the channel, they have accidentally triggered
   // a join or leave action, which isn't allowed
   if (currentUserChannelPermissions.isOwner) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_CHANNEL_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'owner in channel',
+      },
+    });
+
     return new UserError(
       "Owners of a community can't join or leave their own channel."
     );
@@ -59,6 +88,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     currentUserCommunityPermissions &&
     currentUserCommunityPermissions.isBlocked
   ) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_CHANNEL_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'blocked',
+      },
+    });
+
     return new UserError('You have been blocked in this community');
   }
 

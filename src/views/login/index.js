@@ -19,14 +19,13 @@ type Props = {
   redirectPath: ?string,
   signinType?: ?string,
   close?: Function,
-  location: Object,
+  location?: Object,
 };
 
 export class Login extends React.Component<Props> {
   componentDidMount() {
-    const { location } = this.props;
     let redirectPath;
-    if (location) {
+    if (this.props.location) {
       const searchObj = queryString.parse(this.props.location.search);
       redirectPath = searchObj.r;
     }

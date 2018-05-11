@@ -37,6 +37,7 @@ import {
   Dropdowns,
   DisconnectedWarning,
 } from '../style';
+import { events, track } from 'src/helpers/analytics';
 
 type Props = {
   isOpen: boolean,
@@ -287,6 +288,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    track(events.THREAD_CREATED_INITED);
     this.setState({ isMounted: true });
     this.props.data
       .refetch()

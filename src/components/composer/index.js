@@ -43,6 +43,7 @@ import {
   sortChannels,
   getDefaultActiveChannel,
 } from './utils';
+import { events, track } from 'src/helpers/analytics';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
@@ -236,6 +237,7 @@ class ComposerWithData extends Component<Props, State> {
 
   componentDidMount() {
     this.handleIncomingProps(this.props);
+    track(events.THREAD_CREATED_INITED);
     // $FlowIssue
     document.addEventListener('keydown', this.handleKeyPress, false);
   }

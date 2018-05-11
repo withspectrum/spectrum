@@ -32,7 +32,21 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { userId, action, channelId } = args.input;
   const { user, loaders } = ctx;
 
+  const eventFailed =
+    action === 'block'
+      ? events.USER_UNBLOCKED_MEMBER_IN_CHANNEL_FAILED
+      : events.USER_BLOCKED_MEMBER_IN_CHANNEL_FAILED;
+
   if (!await canModerateChannel(user.id, channelId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: eventFailed,
+      context: { channelId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
     return new UserError('You don’t have permission to manage this channel');
   }
 
@@ -42,6 +56,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   ]);
 
   if (!evaluatedUserPermissions.isPending) {
+    trackQueue.add({
+      userId: user.id,
+      event: eventFailed,
+      context: { channelId },
+      properties: {
+        reason: 'not pending',
+      },
+    });
+
     return new UserError(
       'This user is not currently pending access to this channel.'
     );
@@ -85,6 +108,12 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     } else {
       // if the user is not a member of the parent community,
       // join the community and the community's default channels
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_APPROVED_MEMBER_IN_CHANNEL,
+        context: { channelId },
+      });
+
       return await Promise.all([
         approvePendingUserInChannel(channelId, userId),
         createMemberInCommunity(channel.communityId, userId),

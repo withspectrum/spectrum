@@ -62,7 +62,16 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   let { type } = thread;
 
   if (type === 'SLATE') {
-    throw new UserError(
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_CREATED_FAILED,
+      context: { channelId: thread.channelId },
+      properties: {
+        reason: 'slate type',
+      },
+    });
+
+    return new UserError(
       "You're on an old version of Spectrum, please refresh your browser."
     );
   }
@@ -93,15 +102,42 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   ]);
 
   if (!community || community.deletedAt) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_CREATED_FAILED,
+      context: { channelId: thread.channelId },
+      properties: {
+        reason: 'community doesn’t exist',
+      },
+    });
+
     return new UserError('This community doesn’t exist');
   }
 
   // if channel wasn't found or is deleted
   if (!channel || channel.deletedAt) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_CREATED_FAILED,
+      context: { channelId: thread.channelId },
+      properties: {
+        reason: 'channel doesn’t exist',
+      },
+    });
+
     return new UserError("This channel doesn't exist");
   }
 
   if (channel.isArchived) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_CREATED_FAILED,
+      context: { channelId: thread.channelId },
+      properties: {
+        reason: 'channel archived',
+      },
+    });
+
     return new UserError('This channel has been archived');
   }
 
@@ -111,6 +147,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     currentUserChannelPermissions.isBlocked ||
     currentUserCommunityPermissions.isBlocked
   ) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_CREATED_FAILED,
+      context: { channelId: thread.channelId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
     return new UserError(
       "You don't have permission to create threads in this channel."
     );
@@ -120,6 +165,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     const { customer } = await StripeUtil.jobPreflight(community.id);
 
     if (!customer) {
+      trackQueue.add({
+        userId: user.id,
+        event: events.THREAD_CREATED_FAILED,
+        context: { channelId: thread.channelId },
+        properties: {
+          reason: 'no customer for private channel',
+        },
+      });
+
       return new UserError(
         'We could not verify the billing status for this channel, please try again'
       );
@@ -131,6 +185,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     ]);
 
     if (!hasPaidPrivateChannel && !hasFreePrivateChannel) {
+      trackQueue.add({
+        userId: user.id,
+        event: events.THREAD_CREATED_FAILED,
+        context: { channelId: thread.channelId },
+        properties: {
+          reason: 'private channel without subscription',
+        },
+      });
+
       return new UserError(
         'This private channel does not have an active subscription'
       );
@@ -166,6 +229,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         publishing: thread,
         community: community,
         channel: channel,
+      });
+
+      trackQueue.add({
+        userId: user.id,
+        event: events.THREAD_CREATED_FAILED,
+        context: { channelId: thread.channelId },
+        properties: {
+          reason: 'user spamming threads',
+        },
       });
 
       return new UserError(
@@ -211,6 +283,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       trackQueue.add({
         userId: user.id,
         event: events.THREAD_FLAGGED_AS_SPAM,
+        context: { channelId: thread.channelId },
       });
 
       _adminProcessUserSpammingThreadsQueue.add({
@@ -354,6 +427,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       )
     );
   } catch (err) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_CREATED_FAILED,
+      context: { channelId: thread.channelId },
+      properties: {
+        reason: 'images failed to upload',
+      },
+    });
+
     return new UserError(err.message);
   }
 

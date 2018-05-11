@@ -17,6 +17,7 @@ import {
   Subheading,
   Padding,
 } from './style';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   dispatch: Function,
@@ -42,7 +43,13 @@ class UpgradeModal extends React.Component<Props, State> {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    const { user } = this.props;
+    const event = user.isPro
+      ? events.USER_DOWNGRADED_FROM_PRO_INITED
+      : events.USER_UPGRADED_TO_PRO_INITED;
+    track(event);
+  }
 
   closeModal = () => {
     this.props.dispatch(closeModal());

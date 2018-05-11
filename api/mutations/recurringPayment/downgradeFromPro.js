@@ -8,6 +8,8 @@ import {
 import { getStripeCustomer, deleteStripeSubscription } from './utils';
 import { getUserById } from '../../models/user';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 export default requireAuth(
   async (_: any, __: any, { user }: GraphQLContext) => {
@@ -27,6 +29,14 @@ export default requireAuth(
 
       // if the result is null, we don't have a record of the recurringPayment
       if (!recurringPaymentToEvaluate) {
+        trackQueue.add({
+          userId: user.id,
+          event: events.USER_DOWNGRADED_FROM_PRO_FAILED,
+          properties: {
+            reason: 'pro subscription not found',
+          },
+        });
+
         return new UserError(
           "We couldn't find a record of a Pro subscription."
         );
@@ -37,6 +47,14 @@ export default requireAuth(
 
       // if we can't find a customer record on stripe, we will have nobody to downgrade
       if (!customer || !customer.id) {
+        trackQueue.add({
+          userId: user.id,
+          event: events.USER_DOWNGRADED_FROM_PRO_FAILED,
+          properties: {
+            reason: 'subscription record not found',
+          },
+        });
+
         return new UserError("We couldn't find a record of this subscription.");
       }
 
@@ -47,6 +65,11 @@ export default requireAuth(
 
       // delete the subscription on stripe
       const stripeData = await deleteStripeSubscription(subscriptionId);
+
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_DOWNGRADED_FROM_PRO,
+      });
 
       // update the recurringPayment record in the database
       return await updateRecurringPayment({
@@ -64,6 +87,16 @@ export default requireAuth(
       .then(() => getUserById(user.id))
       .catch(err => {
         console.error('Error downgrading from Pro: ', err.message);
+
+        trackQueue.add({
+          userId: user.id,
+          event: events.USER_DOWNGRADED_FROM_PRO_FAILED,
+          properties: {
+            reason: 'unknown error',
+            error: err.message,
+          },
+        });
+
         return new UserError(
           "We weren't able to cancel your subsciption: " + err.message
         );
