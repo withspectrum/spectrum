@@ -80,7 +80,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         if (channelPermissions.isPending) {
           return await approvePendingUserInChannel(channel.id, user.id);
         } else {
-          return await createMemberInChannel(channel.id, user.id);
+          return await createMemberInChannel(channel.id, user.id, true);
         }
       })
       .then(joinedChannel => joinedChannel);
@@ -91,7 +91,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   }
 
   if (!channelPermissions.isMember) {
-    return await createMemberInChannel(channel.id, user.id);
+    return await createMemberInChannel(channel.id, user.id, true);
   }
 
   return new UserError("Couldn't authenticate this request to join a channel");

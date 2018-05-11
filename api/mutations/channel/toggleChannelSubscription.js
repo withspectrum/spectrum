@@ -129,7 +129,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
     // otherwise the channel is not private so the user can just join.
     // we'll create new usersChannels relationship
-    const join = createMemberInChannel(channelId, user.id);
+    const join = createMemberInChannel(channelId, user.id, false);
 
     // we also need to see if the user is a member of the parent community.
     // if they are, we can just continue

@@ -92,16 +92,6 @@ class ActionBar extends React.Component<Props, State> {
       notificationStateLoading: true,
     });
 
-    const event = thread.receiveNotifications
-      ? events.THREAD_NOTIFICATIONS_DISABLED
-      : events.THREAD_NOTIFICATIONS_ENABLED;
-
-    track(event, {
-      thread: transformations.analyticsThread(thread),
-      channel: transformations.analyticsChannel(thread.channel),
-      community: transformations.analyticsCommunity(thread.community),
-    });
-
     toggleThreadNotifications({
       threadId,
     })
@@ -322,9 +312,6 @@ class ActionBar extends React.Component<Props, State> {
                   tipText={'Share'}
                   tipLocation={'top-left'}
                   data-cy="thread-facebook-button"
-                  onClick={() =>
-                    track(events.THREAD_SHARED, { method: 'facebook' })
-                  }
                 >
                   <a
                     href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${
@@ -333,7 +320,13 @@ class ActionBar extends React.Component<Props, State> {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Icon glyph={'facebook'} size={24} />
+                    <Icon
+                      glyph={'facebook'}
+                      size={24}
+                      onClick={() =>
+                        track(events.THREAD_SHARED, { method: 'facebook' })
+                      }
+                    />
                   </a>
                 </ShareButton>
 
@@ -342,9 +335,6 @@ class ActionBar extends React.Component<Props, State> {
                   tipText={'Tweet'}
                   tipLocation={'top-left'}
                   data-cy="thread-tweet-button"
-                  onClick={() =>
-                    track(events.THREAD_SHARED, { method: 'twitter' })
-                  }
                 >
                   <a
                     href={`https://twitter.com/share?text=${
@@ -355,7 +345,13 @@ class ActionBar extends React.Component<Props, State> {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Icon glyph={'twitter'} size={24} />
+                    <Icon
+                      glyph={'twitter'}
+                      size={24}
+                      onClick={() =>
+                        track(events.THREAD_SHARED, { method: 'twitter' })
+                      }
+                    />
                   </a>
                 </ShareButton>
 
@@ -364,12 +360,11 @@ class ActionBar extends React.Component<Props, State> {
                   data-clipboard-text={`https://spectrum.chat/thread/${
                     thread.id
                   }`}
-                  onSuccess={() => {
-                    track(events.THREAD_SHARED, { method: 'link' });
+                  onSuccess={() =>
                     this.props.dispatch(
                       addToastWithTimeout('success', 'Copied to clipboard')
-                    );
-                  }}
+                    )
+                  }
                 >
                   <ShareButton
                     tipText={'Copy link'}
@@ -377,7 +372,13 @@ class ActionBar extends React.Component<Props, State> {
                     data-cy="thread-copy-link-button"
                   >
                     <a>
-                      <Icon glyph={'link'} size={24} />
+                      <Icon
+                        glyph={'link'}
+                        size={24}
+                        onClick={() =>
+                          track(events.THREAD_SHARED, { method: 'link' })
+                        }
+                      />
                     </a>
                   </ShareButton>
                 </Clipboard>

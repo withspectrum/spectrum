@@ -6,8 +6,6 @@ import { uploadImage } from '../../utils/file-storage';
 import { getThreads, editThread } from '../../models/thread';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 type Input = {
@@ -75,7 +73,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   });
 
   // $FlowIssue
-  const editedThread = await editThread(newInput);
+  const editedThread = await editThread(newInput, user.id);
 
   if (!input.filesToUpload) return editedThread;
 
@@ -101,12 +99,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   urls.forEach((url, index) => {
     if (!body.entityMap[imageKeys[index]]) return;
     body.entityMap[imageKeys[index]].data.src = url;
-  });
-
-  trackQueue.add({
-    userId: user.id,
-    event: events.THREAD_EDITED,
-    context: { threadId: editedThread.id },
   });
 
   // Update the thread with the new links

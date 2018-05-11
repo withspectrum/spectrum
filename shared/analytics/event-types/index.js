@@ -1,3 +1,4 @@
+// @flow
 import * as channelEvents from './channel'
 import * as communityEvents from './community'
 import * as directMessageEvents from './directMessage'
@@ -18,6 +19,7 @@ import * as reactionEvents from './reaction'
 import * as searchEvents from './search'
 import * as threadEvents from './thread'
 import * as userEvents from './user'
+import * as userOnboardingEvents from './userOnboarding'
 import * as webPushNotificationEvents from './web-push-notification'
 
 export const events = {
@@ -42,5 +44,6 @@ export const events = {
   ...searchEvents,
   ...threadEvents,
   ...userEvents,
-  ...webPushNotificationEvents
+  ...userOnboardingEvents,
+  ...webPushNotificationEvents,
 }

@@ -148,16 +148,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isLockingThread: true,
     });
 
-    const event = thread.isLocked
-      ? events.THREAD_UNLOCKED
-      : events.THREAD_LOCKED;
-
-    track(event, {
-      thread: transformations.analyticsThread(thread),
-      channel: transformations.analyticsChannel(thread.channel),
-      community: transformations.analyticsCommunity(thread.community),
-    });
-
     setThreadLock({
       threadId,
       value,
@@ -230,11 +220,13 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isEditing: !isEditing,
     });
 
-    track(events.THREAD_EDITED_INITED, {
-      thread: transformations.analyticsThread(thread),
-      channel: transformations.analyticsChannel(thread.channel),
-      community: transformations.analyticsCommunity(thread.community),
-    });
+    if (!isEditing) {
+      track(events.THREAD_EDITED_INITED, {
+        thread: transformations.analyticsThread(thread),
+        channel: transformations.analyticsChannel(thread.channel),
+        community: transformations.analyticsCommunity(thread.community),
+      });
+    }
 
     this.props.toggleEdit();
   };
@@ -290,12 +282,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
       attachments,
       filesToUpload,
     };
-
-    track(events.THREAD_EDITED, {
-      thread: transformations.analyticsThread(thread),
-      channel: transformations.analyticsChannel(thread.channel),
-      community: transformations.analyticsCommunity(thread.community),
-    });
 
     editThread(input)
       .then(({ data: { editThread } }) => {

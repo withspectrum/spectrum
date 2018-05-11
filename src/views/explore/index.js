@@ -18,7 +18,7 @@ type Props = {
 
 class Explore extends React.Component<Props> {
   componentDidMount() {
-    track(events.EXPLORE_VIEWED);
+    track(events.EXPLORE_PAGE_VIEWED);
   }
 
   render() {

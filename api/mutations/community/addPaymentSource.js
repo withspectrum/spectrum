@@ -8,6 +8,8 @@ import {
   isAuthedResolver as requireAuth,
   canAdministerCommunity,
 } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -63,6 +65,12 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   }
 
   const newCustomer = await StripeUtil.getCustomer(changedSource.customer);
+
+  trackQueue.add({
+    userId: user.id,
+    event: events.COMMUNITY_PAYMENT_SOURCE_ADDED,
+    context: { communityId },
+  });
 
   // we only want to return from this mutation as soon as our db record
   // is in sync with stripe. Normally we defer this to webhooks, but since

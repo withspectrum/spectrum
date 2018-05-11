@@ -18,7 +18,8 @@ import { trackQueue } from 'shared/bull/queues';
 const createOwnerInChannel = (channelId: string, userId: string): Promise<DBChannel> => {
   trackQueue.add({
     userId,
-    event: events
+    event: events.USER_WAS_ADDED_AS_OWNER_IN_CHANNEL,
+    context: { channelId }
   })
   return db
     .table('usersChannels')
@@ -45,7 +46,15 @@ const createOwnerInChannel = (channelId: string, userId: string): Promise<DBChan
 
 // creates a single member in a channel. invoked when a user joins a public channel
 // prettier-ignore
-const createMemberInChannel = ( channelId: string, userId: string): Promise<DBChannel> => {
+const createMemberInChannel = (channelId: string, userId: string, token: boolean): Promise<DBChannel> => {
+  const event = token ? events.USER_JOINED_CHANNEL_WITH_TOKEN : events.USER_JOINED_CHANNEL
+
+  trackQueue.add({
+    userId,
+    event,
+    context: { channelId }
+  })
+
   return db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
@@ -109,6 +118,20 @@ const removeMemberInChannel = (channelId: string, userId: string): Promise<?DBCh
     .then(result => {
       if (result && result.changes && result.changes.length > 0) {
         const join = result.changes[0].old_val;
+        if (join.isPending) {
+          trackQueue.add({
+            userId,
+            event: events.USER_CANCELED_REQUEST_TO_JOIN_CHANNEL,
+            context: { channelId }
+          })
+        } else {
+          trackQueue.add({
+            userId,
+            event: events.USER_LEFT_CHANNEL,
+            context: { channelId }
+          })
+        }
+        
         return db.table('channels').get(join.channelId).run();
       } else {
         return null;
@@ -118,6 +141,13 @@ const removeMemberInChannel = (channelId: string, userId: string): Promise<?DBCh
 
 // prettier-ignore
 const unblockMemberInChannel = (channelId: string, userId: string): Promise<?DBChannel> => {
+
+  trackQueue.add({
+    userId,
+    event: events.USER_WAS_UNBLOCKED_IN_CHANNEL,
+    context: { channelId }
+  })
+
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -141,10 +171,8 @@ const unblockMemberInChannel = (channelId: string, userId: string): Promise<?DBC
 // removes all the user relationships to a channel. will be invoked when a
 // channel is deleted, at which point we don't want any records in the
 // database to show a user relationship to the deleted channel
-/// prettier-ignore
-const removeMembersInChannel = (
-  channelId: string
-): Promise<Array<?DBUsersChannels>> => {
+// prettier-ignore
+const removeMembersInChannel = (channelId: string): Promise<Array<?DBUsersChannels>> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -159,6 +187,13 @@ const removeMembersInChannel = (
 // to join a private channel
 // prettier-ignore
 const createOrUpdatePendingUserInChannel = (channelId: string, userId: string): Promise<DBChannel> => {
+
+  trackQueue.add({
+    userId,
+    event: events.USER_REQUESTED_TO_JOIN_CHANNEL,
+    context: { channelId }
+  })
+
   return db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
@@ -225,10 +260,15 @@ const removePendingUsersInChannel = (channelId: string): Promise<DBChannel> => {
 // toggles user to blocked in a channel. invoked by a channel or community
 // owner when managing a private channel. sets pending to false to handle
 // private channels modifying pending users to be blocked
-const blockUserInChannel = (
-  channelId: string,
-  userId: string
-): Promise<DBUsersChannels> => {
+// prettier-ignore
+const blockUserInChannel = (channelId: string, userId: string): Promise<DBUsersChannels> => {
+
+  trackQueue.add({
+    userId,
+    event: events.USER_WAS_BLOCKED_IN_CHANNEL,
+    context: { channelId }
+  })
+
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -247,10 +287,15 @@ const blockUserInChannel = (
 
 // toggles a pending user to member in a channel. invoked by a channel or community
 // owner when managing a private channel
-const approvePendingUserInChannel = (
-  channelId: string,
-  userId: string
-): Promise<DBUsersChannels> => {
+// prettier-ignore
+const approvePendingUserInChannel = (channelId: string, userId: string): Promise<DBUsersChannels> => {
+
+  trackQueue.add({
+    userId,
+    event: events.USER_WAS_APPROVED_IN_CHANNEL,
+    context: { channelId }
+  })
+
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -272,9 +317,8 @@ const approvePendingUserInChannel = (
 // toggles all pending users to make them a member in a channel. invoked by a
 // channel or community owner when turning a private channel into a public
 // channel
-const approvePendingUsersInChannel = (
-  channelId: string
-): Promise<DBUsersChannels> => {
+// prettier-ignore
+const approvePendingUsersInChannel = (channelId: string): Promise<DBUsersChannels> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -294,10 +338,15 @@ const approvePendingUsersInChannel = (
 // unblocks a blocked user in a channel. invoked by a channel or community
 // owner when managing a private channel. this *does* add the user
 // as a member
-const approveBlockedUserInChannel = (
-  channelId: string,
-  userId: string
-): Promise<DBUsersChannels> => {
+// prettier-ignore
+const approveBlockedUserInChannel = (channelId: string, userId: string): Promise<DBUsersChannels> => {
+  
+  trackQueue.add({
+    userId,
+    event: events.USER_WAS_UNBLOCKED_IN_CHANNEL,
+    context: { channelId }
+  })
+
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -316,10 +365,8 @@ const approveBlockedUserInChannel = (
 // adds a *new* user to a channel as both a moderator and member. this will be invoked
 // when a community owner invites teammates or moderators to the channel before those
 // people have joined the channel themselves
-const createModeratorInChannel = (
-  channelId: string,
-  userId: string
-): Promise<DBUsersChannels> => {
+// prettier-ignore
+const createModeratorInChannel = (channelId: string, userId: string): Promise<DBUsersChannels> => {
   return db
     .table('usersChannels')
     .insert(
@@ -341,10 +388,8 @@ const createModeratorInChannel = (
 };
 
 // moves an *existing* user in a channel to be a moderator
-const makeMemberModeratorInChannel = (
-  channelId: string,
-  userId: string
-): Promise<DBUsersChannels> => {
+// prettier-ignore
+const makeMemberModeratorInChannel = (channelId: string, userId: string): Promise<DBUsersChannels> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -379,10 +424,8 @@ const removeModeratorInChannel = (
 
 // creates a new relationship between the user and all of a community's
 // default channels, skipping over any relationships that already exist
-const createMemberInDefaultChannels = (
-  communityId: string,
-  userId: string
-): Promise<Array<Object>> => {
+// prettier-ignore
+const createMemberInDefaultChannels = (communityId: string, userId: string): Promise<Array<Object>> => {
   // get the default channels for the community being joined
   const defaultChannels = db
     .table('channels')
@@ -414,18 +457,23 @@ const createMemberInDefaultChannels = (
       // create all the necessary relationships
       return Promise.all(
         defaultChannelsTheUserHasNotJoined.map(channel =>
-          createMemberInChannel(channel, userId)
+          createMemberInChannel(channel, userId, false)
         )
       );
     }
   );
 };
 
-const toggleUserChannelNotifications = (
-  userId: string,
-  channelId: string,
-  value: boolean
-): Promise<DBChannel> => {
+// prettier-ignore
+const toggleUserChannelNotifications = (userId: string, channelId: string, value: boolean): Promise<DBChannel> => {
+  const event = value ? events.CHANNEL_NOTIFICATIONS_ENABLED : events.CHANNEL_NOTIFICATIONS_DISABLED
+
+  trackQueue.add({
+    userId,
+    event,
+    context: { channelId }
+  })
+
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -434,8 +482,23 @@ const toggleUserChannelNotifications = (
     .run();
 };
 
-const removeUsersChannelMemberships = (userId: string) => {
-  return db
+const removeUsersChannelMemberships = async (userId: string) => {
+  const channels = await db
+    .table('usersChannels')
+    .getAll(userId, { index: 'userId' })
+    .run();
+
+  if (!channels || channels.length === 0) return;
+
+  const trackingPromises = channels.map(channel => {
+    return trackQueue.add({
+      userId,
+      event: events.USER_LEFT_CHANNEL,
+      context: { channelId: channel.id },
+    });
+  });
+
+  const channelPromise = db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
     .update({
@@ -445,6 +508,8 @@ const removeUsersChannelMemberships = (userId: string) => {
       receiveNotifications: false,
     })
     .run();
+
+  return await Promise.all([...trackingPromises, channelPromise]);
 };
 
 /*
@@ -455,10 +520,11 @@ const removeUsersChannelMemberships = (userId: string) => {
 ===========================================================
 */
 
-const getMembersInChannel = (
-  channelId: string,
-  { first, after }: { first: number, after: number }
-): Promise<Array<string>> => {
+type Options = { first: number, after: number };
+// prettier-ignore
+const getMembersInChannel = (channelId: string, options: Options): Promise<Array<string>> => {
+  const { first, after } = options
+
   return (
     db
       .table('usersChannels')
@@ -472,9 +538,8 @@ const getMembersInChannel = (
   );
 };
 
-const getPendingUsersInChannel = (
-  channelId: string
-): Promise<Array<string>> => {
+// prettier-ignore
+const getPendingUsersInChannel = (channelId: string): Promise<Array<string>> => {
   return (
     db
       .table('usersChannels')
@@ -495,9 +560,8 @@ const getPendingUsersInChannels = (channelIds: Array<string>) => {
     .run();
 };
 
-const getBlockedUsersInChannel = (
-  channelId: string
-): Promise<Array<string>> => {
+// prettier-ignore
+const getBlockedUsersInChannel = (channelId: string): Promise<Array<string>> => {
   return (
     db
       .table('usersChannels')
@@ -542,10 +606,8 @@ const DEFAULT_USER_CHANNEL_PERMISSIONS = {
   receiveNotifications: false,
 };
 
-const getUserPermissionsInChannel = (
-  channelId: string,
-  userId: string
-): Promise<DBUsersChannels> => {
+// prettier-ignore
+const getUserPermissionsInChannel = (channelId: string, userId: string): Promise<DBUsersChannels> => {
   return db
     .table('usersChannels')
     .getAll([userId, channelId], { index: 'userIdAndChannelId' })
@@ -564,9 +626,8 @@ const getUserPermissionsInChannel = (
 
 type UserIdAndChannelId = [string, string];
 
-const getUsersPermissionsInChannels = (
-  input: Array<UserIdAndChannelId>
-): Promise<Array<DBUsersChannels>> => {
+// prettier-ignore
+const getUsersPermissionsInChannels = (input: Array<UserIdAndChannelId>): Promise<Array<DBUsersChannels>> => {
   return db
     .table('usersChannels')
     .getAll(...input, { index: 'userIdAndChannelId' })

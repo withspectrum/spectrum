@@ -94,7 +94,9 @@ const CommunitySearchWrapper = props => {
           {props.currentUser ? (
             <Link
               to={'/new/community'}
-              onClick={() => track(events.EXPLORE_CREATE_COMMUNITY_CLICKED)}
+              onClick={() =>
+                track(events.EXPLORE_PAGE_CREATE_COMMUNITY_CLICKED)
+              }
             >
               <PrimaryCTA>Get Started</PrimaryCTA>
             </Link>

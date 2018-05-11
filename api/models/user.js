@@ -506,6 +506,8 @@ const setUserPendingEmail = (userId: string, pendingEmail: string): Promise<Obje
       });
 
       identifyQueue.add({ userId: user.id });
+
+      return user
     });
 };
 

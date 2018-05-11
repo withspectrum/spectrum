@@ -300,7 +300,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     (!channelPermissions || !channelPermissions.isMember)
   ) {
     membershipPromise = async () =>
-      await createMemberInChannel(thread.channelId, user.id);
+      await createMemberInChannel(thread.channelId, user.id, false);
   }
 
   // if the user is not a member of the community, or has previously joined

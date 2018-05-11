@@ -8,6 +8,8 @@ import {
   isAuthedResolver as requireAuth,
   canAdministerCommunity,
 } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -49,7 +51,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     });
 
   return detachSource()
-    .then(async () => await StripeUtil.getCustomer(customer.id))
+    .then(async () => {
+      trackQueue.add({
+        userId: user.id,
+        event: events.COMMUNITY_PAYMENT_SOURCE_REMOVED,
+        context: { communityId },
+      });
+
+      return await StripeUtil.getCustomer(customer.id);
+    })
     .then(
       async newCustomer =>
         await replaceStripeCustomer(newCustomer.id, newCustomer)

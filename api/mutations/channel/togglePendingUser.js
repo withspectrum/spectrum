@@ -17,6 +17,8 @@ import {
   isAuthedResolver as requireAuth,
   canModerateChannel,
 } from '../../utils/permissions';
+import { trackQueue } from 'shared/bull/queues';
+import { events } from 'shared/analytics';
 
 type Input = {
   input: {
@@ -46,6 +48,12 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   }
 
   if (action === 'block') {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_BLOCKED_MEMBER_IN_CHANNEL,
+      context: { channelId },
+    });
+
     return blockUserInChannel(channelId, userId).then(() => channel);
   }
 
@@ -67,6 +75,12 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       evaluatedUserCommunityPermissions &&
       evaluatedUserCommunityPermissions.isMember
     ) {
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_APPROVED_MEMBER_IN_CHANNEL,
+        context: { channelId },
+      });
+
       return approvePendingUserInChannel(channelId, userId).then(() => channel);
     } else {
       // if the user is not a member of the parent community,

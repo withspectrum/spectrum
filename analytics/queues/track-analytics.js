@@ -7,6 +7,8 @@ import { getContext, track, hash } from '../utils';
 const processJob = async (job: Job<TrackAnalyticsData>) => {
   const { userId, event, context, properties = {} } = job.data;
 
+  debug(`Incoming job: ${event}`);
+
   if (!context) {
     return track(hash(userId), event, { ...properties });
   }

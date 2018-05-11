@@ -21,7 +21,6 @@ import { onlyContainsEmoji } from '../../helpers/utils';
 import { Byline, Name, Username } from '../messageGroup/style';
 import type { Node } from 'react';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
-import { track, events } from 'src/helpers/analytics';
 
 export const Body = (props: {
   openGallery: Function,
@@ -180,10 +179,7 @@ const Action = (props: ActionProps) => {
             tipText={'Delete'}
             tipLocation={'top'}
             size={24}
-            onClick={() => {
-              track(events.MESSAGE_DELETED_INITED);
-              deleteMessage && deleteMessage();
-            }}
+            onClick={() => deleteMessage && deleteMessage()}
           />
         </ModActionWrapper>
       );

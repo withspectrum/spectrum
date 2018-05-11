@@ -38,15 +38,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   }
 
   const value = !permissions.receiveNotifications;
-  const event = permissions.receiveNotifications
-    ? events.CHANNEL_NOTIFICATIONS_DISABLED
-    : events.CHANNEL_NOTIFICATIONS_ENABLED;
-
-  trackQueue.add({
-    userId: user.id,
-    event,
-    context: { channelId },
-  });
 
   return toggleUserChannelNotifications(user.id, channelId, value).then(
     () => channel

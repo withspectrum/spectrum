@@ -4,8 +4,6 @@ import UserError from '../../utils/UserError';
 import { getThread, moveThread } from '../../models/thread';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getChannels } from '../../models/channel';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 type Input = {
@@ -38,12 +36,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const [newChannel] = await getChannels([channelId]);
   if (newChannel.communityId !== thread.communityId)
     throw new UserError('You can only move threads within the same community.');
-
-  trackQueue.add({
-    userId: user.id,
-    event: events.THREAD_MOVED,
-    context: { threadId: thread.id },
-  });
 
   return moveThread(threadId, channelId, user.id).then(res => {
     if (res) return res;

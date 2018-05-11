@@ -13,6 +13,8 @@ import {
   isAuthedResolver as requireAuth,
   canAdministerCommunity,
 } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -56,7 +58,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     disablePaidFeatureFlags(communityId, user.id),
     archiveAllPrivateChannels(communityId, user.id),
   ])
-    .then(() => getCommunityById(communityId))
+    .then(async () => {
+      trackQueue.add({
+        userId: user.id,
+        event: events.COMMUNITY_SUBSCRIPTION_CANCELED,
+        context: { communityId },
+      });
+
+      return await getCommunityById(communityId);
+    })
     .catch(err => {
       console.error(err);
       return new UserError(`Error canceling subscription: ${err.message}`);

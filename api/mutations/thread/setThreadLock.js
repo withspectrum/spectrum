@@ -3,8 +3,6 @@ import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { setThreadLock } from '../../models/thread';
 import type { DBThread } from 'shared/types';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 type Input = {
@@ -30,15 +28,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const authorCanLock =
     !thread.isLocked || thread.lockedBy === thread.creatorId;
   if (isAuthor && authorCanLock) {
-    const event = thread.lockedAt
-      ? events.THREAD_UNLOCKED
-      : events.THREAD_LOCKED;
-    trackQueue.add({
-      userId: user.id,
-      event,
-      context: { threadId },
-    });
-    return setThreadLock(threadId, value, user.id);
+    return setThreadLock(threadId, value, user.id, false);
   }
 
   // get the channel permissions
@@ -60,15 +50,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     currentUserCommunityPermissions.isOwner ||
     currentUserCommunityPermissions.isModerator
   ) {
-    const event = thread.lockedAt
-      ? events.THREAD_UNLOCKED_BY_MODERATOR
-      : events.THREAD_LOCKED_BY_MODERATOR;
-    trackQueue.add({
-      userId: user.id,
-      event,
-      context: { threadId },
-    });
-    return setThreadLock(threadId, value, user.id);
+    return setThreadLock(threadId, value, user.id, true);
   }
 
   // if the user is not a channel or community owner, the thread can't be locked

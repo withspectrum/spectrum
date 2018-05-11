@@ -340,12 +340,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   // create a relationship between the thread and the author
   await createParticipantInThread(dbThread.id, user.id);
 
-  trackQueue.add({
-    userId: user.id,
-    event: events.THREAD_CREATED,
-    context: { threadId: dbThread.id },
-  });
-
   if (!thread.filesToUpload || thread.filesToUpload.length === 0) {
     return dbThread;
   }

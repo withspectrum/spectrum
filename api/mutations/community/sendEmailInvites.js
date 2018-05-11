@@ -7,6 +7,8 @@ import {
   isAuthedResolver as requireAuth,
   canModerateCommunity,
 } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type Contact = {
   email: string,
@@ -36,6 +38,12 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     .filter(user => user.email !== currentUser.email)
     .filter(user => user && user.email && isEmail(user.email))
     .map(user => {
+      trackQueue.add({
+        userId: currentUser.id,
+        event: events.COMMUNITY_EMAIL_INVITE_SENT,
+        context: { communityId },
+      });
+
       return sendCommunityInviteNotificationQueue.add({
         recipient: {
           email: user.email,

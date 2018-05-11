@@ -336,7 +336,7 @@ export const publishThread = (
 };
 
 // prettier-ignore
-export const setThreadLock = (threadId: string, value: boolean, userId: string): Promise<DBThread> => {
+export const setThreadLock = (threadId: string, value: boolean, userId: string, byModerator: boolean = false): Promise<DBThread> => {
   return (
     db
       .table('threads')
@@ -354,10 +354,18 @@ export const setThreadLock = (threadId: string, value: boolean, userId: string):
       .run()
       .then(async () => {
         const thread = await getThreadById(threadId)
+        
+        const event = value 
+          ? byModerator 
+            ? events.THREAD_LOCKED_BY_MODERATOR 
+            : events.THREAD_LOCKED
+          : byModerator
+            ? events.THREAD_UNLOCKED_BY_MODERATOR
+            : events.THREAD_UNLOCKED
 
         trackQueue.add({
           userId,
-          event: events.THREAD_LOCKED,
+          event,
           context: { threadId }
         })
 

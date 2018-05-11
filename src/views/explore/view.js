@@ -44,7 +44,7 @@ class CollectionSwitcher extends React.Component<Props, State> {
   handleSegmentClick(selectedView) {
     if (this.state.selectedView === selectedView) return;
 
-    track(events.EXPLORE_SUBCATEGORY_VIEWED, {
+    track(events.EXPLORE_PAGE_SUBCATEGORY_VIEWED, {
       collection: selectedView,
     });
 
@@ -113,13 +113,13 @@ type CategoryListProps = {
 };
 class CategoryList extends React.Component<CategoryListProps> {
   onLeave = community => {
-    track(events.EXPLORE_LEFT_COMMUNITY, {
+    track(events.EXPLORE_PAGE_LEFT_COMMUNITY, {
       community: transformations.analyticsCommunity(community),
     });
   };
 
   onJoin = community => {
-    track(events.EXPLORE_JOINED_COMMUNITY, {
+    track(events.EXPLORE_PAGE_JOINED_COMMUNITY, {
       community: transformations.analyticsCommunity(community),
     });
   };

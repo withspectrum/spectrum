@@ -10,6 +10,8 @@ import {
   isAuthedResolver as requireAuth,
   canModerateChannel,
 } from '../../utils/permissions';
+import { trackQueue } from 'shared/bull/queues';
+import { events } from 'shared/analytics';
 
 type Input = {
   input: {
@@ -34,6 +36,12 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   if (!evaluatedUserChannelPermissions.isBlocked) {
     return new UserError('This user is not currently blocked in this channel.');
   }
+
+  trackQueue.add({
+    userId: user.id,
+    event: events.USER_UNBLOCKED_MEMBER_IN_CHANNEL,
+    context: { channelId },
+  });
 
   return unblockMemberInChannel(channelId, userId).then(() => channel);
 });

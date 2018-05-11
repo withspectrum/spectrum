@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import { withRouter } from 'react-router';
+import compose from 'recompose/compose';
 import Icon from '../../components/icons';
 import FullscreenView from '../../components/fullscreenView';
 import LoginButtonSet from '../../components/loginButtonSet';
@@ -10,15 +12,28 @@ import {
   FullscreenContent,
   CodeOfConduct,
 } from './style';
+import queryString from 'query-string';
 import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   redirectPath: ?string,
   signinType?: ?string,
   close?: Function,
+  location: Object,
 };
 
 export class Login extends React.Component<Props> {
+  componentDidMount() {
+    const { location } = this.props;
+    let redirectPath;
+    if (location) {
+      const searchObj = queryString.parse(this.props.location.search);
+      redirectPath = searchObj.r;
+    }
+
+    track(events.LOGIN_PAGE_VIEWED, { redirectPath });
+  }
+
   render() {
     const { redirectPath, signinType = 'signin' } = this.props;
 
@@ -68,4 +83,4 @@ export class Login extends React.Component<Props> {
   }
 }
 
-export default Login;
+export default compose(withRouter)(Login);
