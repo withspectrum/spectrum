@@ -8,23 +8,22 @@ export const Intro = styled.div`
   grid-template-rows: 40% 1fr;
   grid-template-columns: minmax(33%, 560px) 1fr;
   grid-template-areas: 'copy .' 'copy illo';
-  padding: 160px 5% 80px;
+  margin: 80px 5%;
 
   @media (max-width: 1080px) {
-    grid-template-rows: 1fr 40%;
+    grid-template-rows: 1fr auto;
     grid-template-columns: 1fr minmax(33%, 560px);
     grid-template-areas: 'illo copy' '. copy';
   }
 
   @media (max-width: 800px) {
-    padding: 96px 32px 48px;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: 240px 1fr;
     grid-template-columns: 1fr;
     grid-template-areas: 'illo' 'copy';
   }
 
   @media (max-width: 400px) {
-    padding: 48px 16px 48px;
+    margin: 80px 16px;
     grid-template-rows: 1fr;
     grid-template-columns: 1fr;
     grid-template-areas: 'copy';
@@ -52,13 +51,18 @@ export const TextContent = styled.div`
   }
 
   @media (max-width: 1080px) {
-    padding-top: 20%;
     align-self: flex-end;
+    margin-bottom: 80px;
   }
 
   @media (max-width: 800px) {
     padding-top: 0;
     margin-left: 0;
+    margin-bottom: 0;
+
+    > h1 {
+      margin-top: 0;
+    }
   }
 `;
 
@@ -72,7 +76,7 @@ export const Waterfall = styled.img`
   @media (max-width: 1080px) {
     opacity: 0.25;
     max-width: 250%;
-    margin: -40% -20% -80% -40%;
+    margin: -10% 0% 0% -50%;
   }
 
   @media (max-width: 800px) {
@@ -92,7 +96,7 @@ export const Topic = styled.div`
   align-items: center;
   justify-content: center;
 
-  img {
+  > div {
     margin-top: 32px;
   }
 `;
@@ -104,13 +108,14 @@ export const SectionGrid = styled.div`
   grid-column-gap: 2.5%;
   grid-template-areas: ${props =>
     props.reverse ? `'copy topic'` : `'topic copy'`};
-  padding: 5%;
+  margin: 80px 5% 40px;
 
   @media (max-width: 1080px) {
     grid-template-columns: '50% 50%';
   }
 
   @media (max-width: 800px) {
+    margin: 40px 5%;
     grid-template-columns: 1fr;
     grid-template-rows: 320px 1fr;
     grid-template-areas: 'topic' 'copy';
@@ -131,6 +136,7 @@ export const FeatureList = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 15%;
 
   > h1 {
     margin-bottom: 32px;
@@ -226,10 +232,10 @@ export const EtcName = styled(FeatureName)`
 export const EtcGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto;
+  grid-template-rows: 1fr;
   grid-template-areas: 'heading heading heading';
   grid-gap: 32px;
-  padding: 10% 5% 10%;
+  margin: 80px 5% 40px;
 
   @media (max-width: 960px) {
     grid-template-columns: repeat(2, 1fr);
@@ -248,12 +254,14 @@ export const EtcGrid = styled.div`
 
 export const EtcCTA = styled.div`
   display: flex;
+  flex: none;
   flex-direction: column;
   align-self: stretch;
   align-items: center;
-  padding-bottom: 5%;
+  margin-bottom: 80px;
 
   > span {
+    margin-top: 32px;
     font-size: 24px;
     margin-bottom: 16px;
   }
