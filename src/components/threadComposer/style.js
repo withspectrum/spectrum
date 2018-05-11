@@ -53,7 +53,7 @@ export const Overlay = styled.div`
       height: 100%;
       z-index: ${props.isInbox ? '3000' : zIndex.composer - 1};
       background: #000;
-      pointer-events: auto;
+      pointer-events: none;
       opacity: 0.4;
     `
       : `
