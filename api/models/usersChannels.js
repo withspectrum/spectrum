@@ -483,18 +483,18 @@ const toggleUserChannelNotifications = (userId: string, channelId: string, value
 };
 
 const removeUsersChannelMemberships = async (userId: string) => {
-  const channels = await db
+  const usersChannels = await db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
     .run();
 
-  if (!channels || channels.length === 0) return;
+  if (!usersChannels || usersChannels.length === 0) return;
 
-  const trackingPromises = channels.map(channel => {
+  const trackingPromises = usersChannels.map(usersChannel => {
     return trackQueue.add({
       userId,
       event: events.USER_LEFT_CHANNEL,
-      context: { channelId: channel.id },
+      context: { channelId: usersChannel.channelId },
     });
   });
 

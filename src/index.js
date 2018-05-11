@@ -131,7 +131,6 @@ const AMPLITUDE_API_KEY =
   process.env.NODE_ENV === 'production'
     ? process.env.AMPLITUDE_API_KEY
     : process.env.AMPLITUDE_API_KEY_DEVELOPMENT;
-console.log(AMPLITUDE_API_KEY);
 if (AMPLITUDE_API_KEY) {
   window.amplitude.getInstance().init('9ed9fb2afc54225b0c83684bbf628a54');
   // amplitude.getInstance().setOptOut(navigator.doNotTrack === '1')

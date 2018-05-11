@@ -130,12 +130,14 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   // all checks pass
   return await makeMemberModeratorInCommunity(communityId, userToEvaluateId)
-    .then(() => {
+    .then(result => {
       trackQueue.add({
         userId: user.id,
         event: events.USER_ADDED_MODERATOR_IN_COMMUNITY,
         context: { communityId },
       });
+
+      return result;
     })
     .catch(err => {
       trackQueue.add({
