@@ -1,3 +1,4 @@
+// @flow
 /**
  * Database setup is done here
  */

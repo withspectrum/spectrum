@@ -1,3 +1,4 @@
+// @flow
 import Raven from 'raven-js';
 if (process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN_CLIENT) {
   Raven.config(process.env.SENTRY_DSN_CLIENT, {
