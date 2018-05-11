@@ -5,7 +5,10 @@ import UserError from '../../utils/UserError';
 import { communitySlugIsBlacklisted } from '../../utils/permissions';
 import { getCommunitiesBySlug, createCommunity } from '../../models/community';
 import { createOwnerInCommunity } from '../../models/usersCommunities';
-import { createGeneralChannel } from '../../models/channel';
+import {
+  createGeneralChannel,
+  createOffTopicChannel,
+} from '../../models/channel';
 import { createOwnerInChannel } from '../../models/usersChannels';
 
 export default async (
@@ -72,19 +75,25 @@ export default async (
     currentUser.id
   );
 
-  // create a default 'general' channel
-  const generalChannel = await createGeneralChannel(
-    community.id,
-    currentUser.id
-  );
+  // create a default 'general' and 'offtopic' channels
+  const [generalChannel, offTopicChannel] = await Promise.all([
+    createGeneralChannel(community.id, currentUser.id),
+    createOffTopicChannel(community.id, currentUser.id),
+  ]);
 
-  // create a new relationship with the general channel
+  // create a new relationship with the channels
   const generalChannelRelationship = createOwnerInChannel(
     generalChannel.id,
     currentUser.id
   );
-
-  return Promise.all([communityRelationship, generalChannelRelationship]).then(
-    () => community
+  const offTopicChannelRelationship = createOwnerInChannel(
+    offTopicChannel.id,
+    currentUser.id
   );
+
+  return Promise.all([
+    communityRelationship,
+    generalChannelRelationship,
+    offTopicChannelRelationship,
+  ]).then(() => community);
 };

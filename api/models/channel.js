@@ -252,6 +252,22 @@ const createGeneralChannel = (
   );
 };
 
+const createOffTopicChannel = (communityId: string, userId: string) => {
+  return createChannel(
+    {
+      input: {
+        name: 'Off Topic',
+        slug: 'offtopic',
+        description: 'Random banter and off-topic discussions',
+        communityId,
+        isPrivate: false,
+        isDefault: false,
+      },
+    },
+    userId
+  );
+};
+
 const editChannel = async ({
   input: { name, slug, description, isPrivate, channelId },
 }: EditChannelInput): Promise<DBChannel> => {
@@ -354,6 +370,7 @@ module.exports = {
   getChannelsByUserAndCommunity,
   createChannel,
   createGeneralChannel,
+  createOffTopicChannel,
   editChannel,
   deleteChannel,
   getChannelMemberCount,
