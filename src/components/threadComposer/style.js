@@ -1,3 +1,4 @@
+// @flow
 import styled, { keyframes } from 'styled-components';
 import { hexa, Transition, FlexRow, FlexCol, zIndex } from '../globals';
 
