@@ -5,8 +5,9 @@ import {
   getMessage,
   deleteMessage,
   userHasMessagesInThread,
+  getMessages,
 } from '../../models/message';
-import { getThread } from '../../models/thread';
+import { getThread, setThreadLastActive } from '../../models/thread';
 import { deleteParticipantInThread } from '../../models/usersThreads';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
@@ -14,7 +15,7 @@ import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 export default async (
   _: any,
   { id }: { id: string },
-  { user }: GraphQLContext
+  { user, loaders }: GraphQLContext
 ) => {
   const currentUser = user;
   if (!currentUser)
@@ -29,7 +30,7 @@ export default async (
       throw new UserError('You can only delete your own messages.');
     }
 
-    const thread = await getThread(message.threadId);
+    const thread = await loaders.thread.load(message.threadId);
     const communityPermissions = await getUserPermissionsInCommunity(
       thread.communityId,
       currentUser.id
@@ -52,6 +53,22 @@ export default async (
     .then(async () => {
       // We don't need to delete participants of direct message threads
       if (message.threadType === 'directMessageThread') return true;
+
+      const thread = await loaders.thread.load(message.threadId);
+      // If it was the last message in the thread, reset thread.lastActive to
+      // the previous messages timestamp
+      if (
+        new Date(thread.lastActive).getTime() ===
+        new Date(message.timestamp).getTime()
+      ) {
+        const messages = await getMessages(message.threadId, { last: 1 });
+        await setThreadLastActive(
+          message.threadId,
+          messages && messages.length > 0
+            ? messages[0].timestamp
+            : thread.createdAt
+        );
+      }
 
       const hasMoreMessages = await userHasMessagesInThread(
         message.threadId,
