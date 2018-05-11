@@ -4,6 +4,65 @@ import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import { Transition, zIndex } from '../globals';
 import { theme } from 'src/components/theme';
+import { Manager, Reference, Popper } from 'react-popper';
+import HoverProfile from 'src/components/avatar/hoverProfile';
+import { getUserByUsername } from 'shared/graphql/queries/user/getUser';
+
+const MentionHoverProfile = getUserByUsername(
+  props =>
+    console.log(props) ||
+    (!props.data.user ? null : (
+      <HoverProfile
+        source={props.data.user.profilePhoto}
+        user={props.data.user}
+      />
+    ))
+);
+
+type MentionProps = {
+  children: Node,
+  username: string,
+};
+
+export class Mention extends React.Component<
+  MentionProps,
+  { hovered: boolean }
+> {
+  state = { hovered: false };
+  hover = (val: boolean) => () => this.setState({ hovered: val });
+  render() {
+    const { username, children } = this.props;
+    return (
+      <div onMouseEnter={this.hover(true)} onMouseLeave={this.hover(false)}>
+        <Manager>
+          <Reference>
+            {({ ref }) => <Link to={`/users/${username}`}>{children}</Link>}
+          </Reference>
+          {this.state.hovered && (
+            <Popper
+              placement="top-start"
+              modifiers={{
+                preventOverflow: { enabled: false },
+                flip: {
+                  behavior: ['top', 'bottom', 'top'],
+                },
+                hide: { enabled: false },
+              }}
+            >
+              {({ style, ref }) => (
+                <MentionHoverProfile
+                  username={username}
+                  ref={ref}
+                  style={style}
+                />
+              )}
+            </Popper>
+          )}
+        </Manager>
+      </div>
+    );
+  }
+}
 
 export const customStyleMap = {
   CODE: {
@@ -183,10 +242,6 @@ export const EmbedUI = styled.form`
       }
     `};
 `;
-
-export const Mention = (props: any) => {
-  return <Link to={`/users/${props.username}`}>{props.children}</Link>;
-};
 
 export const EmbedContainer = styled.div`
   position: relative;
