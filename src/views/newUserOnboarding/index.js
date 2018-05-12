@@ -1,8 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import FullscreenView from '../../components/fullscreenView';
 import { UpsellCreateCommunity } from '../../components/upsell';
