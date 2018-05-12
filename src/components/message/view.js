@@ -89,7 +89,7 @@ export class QuotedMessage extends React.Component<
       if (props.message.messageType === 'media') return false;
       const jsonBody = JSON.parse(props.message.content.body);
       return (
-        !jsonBody.blocks.length > 1 ||
+        jsonBody.blocks.length < 1 ||
         toPlainText(toState(jsonBody)).length <= 170
       );
     };
