@@ -207,6 +207,7 @@ class MessagesTab extends React.Component<Props, State> {
         to="/messages"
         rel="nofollow"
         onClick={this.markAllAsSeen}
+        data-cy="navbar-messages"
       >
         <Icon
           glyph={count > 0 ? 'message-fill' : 'message'}
