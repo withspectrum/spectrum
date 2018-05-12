@@ -176,7 +176,6 @@ class NewUserOnboarding extends Component {
   }
 }
 
-//
 const map = state => ({
   community: state.newUserOnboarding.community,
 });
