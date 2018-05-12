@@ -79,6 +79,12 @@ const User = /* GraphQL */ `
 		username: String
 	}
 
+	enum StatusType {
+		offline
+		online
+		idle
+	}
+
 	type User {
 		id: ID!
 		name: String
@@ -93,6 +99,7 @@ const User = /* GraphQL */ `
 		createdAt: Date!
 		lastSeen: Date!
 		isOnline: Boolean
+		status: StatusType
 		timezone: Int
 		totalReputation: Int
 		pendingEmail: LowercaseString
@@ -160,6 +167,7 @@ const User = /* GraphQL */ `
     subscribeExpoPush(token: String!): Boolean
 		deleteCurrentUser: Boolean
 		updateUserEmail(email: LowercaseString!): User
+		updateUserStatus(status: LowercaseString!): User
 	}
 `;
 

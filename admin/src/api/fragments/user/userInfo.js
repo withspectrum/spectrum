@@ -13,6 +13,7 @@ export const userInfoFragment = gql`
     isAdmin
     isPro
     isOnline
+    status
     totalReputation
   }
 `;

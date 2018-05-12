@@ -1,6 +1,8 @@
 // @flow
 import gql from 'graphql-tag';
 
+export type UserStatus = 'online' | 'offline' | 'idle';
+
 export type UserInfoType = {
   id: string,
   profilePhoto: string,

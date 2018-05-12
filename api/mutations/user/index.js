@@ -12,6 +12,7 @@ import toggleNotificationSettings from './toggleNotificationSettings';
 import subscribeWebPush from './subscribeWebPush';
 import unsubscribeWebPush from './unsubscribeWebPush';
 import updateUserEmail from './updateUserEmail';
+import updateUserStatus from './updateUserStatus';
 import deleteCurrentUser from './deleteCurrentUser';
 
 module.exports = {
@@ -21,6 +22,7 @@ module.exports = {
     subscribeWebPush,
     unsubscribeWebPush,
     updateUserEmail,
+    updateUserStatus,
     deleteCurrentUser,
   },
 };

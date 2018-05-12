@@ -406,11 +406,26 @@ const setUserOnline = (id: string, isOnline: boolean): DBUser => {
   let data = {};
 
   data.isOnline = isOnline;
+  data.status = isOnline ? 'online' : 'offline';
 
   // If a user is going offline, store their lastSeen
   if (isOnline === false) {
     data.lastSeen = new Date();
   }
+  return db
+    .table('users')
+    .get(id)
+    .update(data, { returnChanges: 'always' })
+    .run()
+    .then(result => {
+      if (result.changes[0].new_val) return result.changes[0].new_val;
+      return result.changes[0].old_val;
+    });
+};
+
+const updateUserStatus = (id: string, status: string): DBUser => {
+  const data = { status };
+
   return db
     .table('users')
     .get(id)
@@ -489,6 +504,7 @@ module.exports = {
   editUser,
   getEverything,
   setUserOnline,
+  updateUserStatus,
   setUserPendingEmail,
   updateUserEmail,
   deleteUser,

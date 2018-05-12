@@ -265,6 +265,7 @@ export type DBUser = {
   username: ?string,
   timezone?: ?number,
   isOnline?: boolean,
+  status: 'online' | 'offline' | 'idle',
   lastSeen?: ?Date,
   description?: ?string,
   website?: ?string,
