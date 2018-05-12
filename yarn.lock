@@ -8938,6 +8938,10 @@ react-helmet-async@^0.0.4:
     prop-types "^15.6.0"
     shallowequal "^1.0.2"
 
+react-idle@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-idle/-/react-idle-3.0.0.tgz#d0e25abcc7192e64b49c21749920c6feae61dab2"
+
 react-infinite-scroller-with-scroll-element@2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/react-infinite-scroller-with-scroll-element/-/react-infinite-scroller-with-scroll-element-2.0.2.tgz#1a59ee022cd798260593c1322794ed809cd5e2a5"

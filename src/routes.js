@@ -28,6 +28,7 @@ import Login from './views/login';
 
 import DirectMessages from './views/directMessages';
 import Thread from './views/thread';
+import IdleManager from './helpers/idleManager';
 
 /* prettier-ignore */
 const Explore = Loadable({
@@ -168,6 +169,7 @@ class Routes extends React.Component<{}> {
     return (
       <ThemeProvider theme={theme}>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <IdleManager />
           <ScrollManager>
             <Body>
               {/* Default meta tags, get overriden by anything further down the tree */}

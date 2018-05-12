@@ -143,6 +143,7 @@
     "react-error-boundary": "^1.2.1",
     "react-flip-move": "^2.10.1",
     "react-helmet-async": "^0.0.4",
+    "react-idle": "^3.0.0",
     "react-infinite-scroller-with-scroll-element": "2.0.2",
     "react-loadable": "5.3.1",
     "react-modal": "3.x",
