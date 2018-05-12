@@ -19,8 +19,8 @@ const getEmailStatus = (
         return false;
       }
 
-      if (user.isOnline) {
-        debug(`user#${userId} is online, not sending email`);
+      if (user.status && user.status !== 'offline') {
+        debug(`user#${userId} is not offline, not sending email`);
         return false;
       }
 
