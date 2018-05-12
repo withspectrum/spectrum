@@ -1,7 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
-import Icon from 'src/components/icons';
 import Avatar from '../../components/avatar';
 import { Button } from '../../components/buttons';
 import Column from '../../components/column';
@@ -179,44 +178,6 @@ export const EmptyThreadDescription = styled(P)`
   color: ${({ theme }) => theme.text.alt};
 `;
 
-export const SocialButtonLabel = styled.span`
-  display: flex;
-  flex: 1 0 auto;
-  justify-content: center;
-  margin-top: -1px;
-  margin-left: 8px;
-  line-height: 2.45;
-  word-break: keep-all;
-  white-space: nowrap;
-  color: ${({ theme }) => theme.text.reverse};
-`;
-
-export const BaseButton = styled.div`
-  display: flex;
-  flex: 1;
-  z-index: ${zIndex.card + 1};
-  flex-direction: flex-row;
-  align-self: flex-start;
-  align-items: center;
-  justify-content: flex-start;
-  border-radius: 8px;
-  padding: 8px;
-  padding-right: 16px;
-  font-size: 15px;
-  font-weight: 600;
-  position: relative;
-  width: 100%;
-  cursor: pointer;
-
-  .icon {
-    opacity: 1 !important;
-  }
-
-  svg {
-    fill: ${({ theme }) => theme.bg.default};
-  }
-`;
-
 export const A = styled.a`
   display: flex;
 `;
@@ -230,16 +191,22 @@ export const SocialShareWrapper = styled(FlexRow)`
   }
 `;
 
-export const SocialIcon = styled(Icon)``;
-
-export const TwitterButton = styled(BaseButton)`
+export const TwitterButton = styled(Button)`
   background: ${props => props.theme.social.twitter.default};
   color: ${props => props.theme.reverse};
+
+  &:hover {
+    background: ${props => props.theme.social.twitter.default};
+  }
 `;
 
-export const FacebookButton = styled(BaseButton)`
+export const FacebookButton = styled(Button)`
   background: ${props => props.theme.social.facebook.default};
   color: ${props => props.theme.reverse};
+
+  &:hover {
+    background: ${props => props.theme.social.facebook.default};
+  }
 `;
 
 export const ContextRow = styled(FlexRow)`

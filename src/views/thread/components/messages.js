@@ -22,8 +22,6 @@ import {
   EmptyThreadHeading,
   EmptyThreadDescription,
   TwitterButton,
-  SocialButtonLabel,
-  SocialIcon,
   FacebookButton,
   SocialShareWrapper,
   A,
@@ -175,20 +173,14 @@ class MessagesWithData extends React.Component<Props, State> {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <TwitterButton>
-              <SocialIcon glyph={'twitter'} />
-              <SocialButtonLabel>Share on Twitter</SocialButtonLabel>
-            </TwitterButton>
+            <TwitterButton icon="twitter">Share on Twitter</TwitterButton>
           </A>
           <A
             href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${threadId}&t=${threadTitle}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FacebookButton>
-              <SocialIcon glyph={'facebook'} />
-              <SocialButtonLabel>Share on Facebook</SocialButtonLabel>
-            </FacebookButton>
+            <FacebookButton icon="facebook">Share on Facebook</FacebookButton>
           </A>
         </SocialShareWrapper>
       </NullMessagesWrapper>
