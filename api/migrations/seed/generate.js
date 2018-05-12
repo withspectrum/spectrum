@@ -34,6 +34,7 @@ const generateUser = () => {
     createdAt,
     // Make sure lastSeen is > createdAt
     lastSeen: faker.date.between(createdAt, new Date()),
+    status: 'offline',
   };
 };
 
