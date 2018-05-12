@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
