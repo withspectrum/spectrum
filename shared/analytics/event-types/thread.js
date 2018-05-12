@@ -6,6 +6,7 @@ export const THREAD_FLAGGED_AS_SPAM = 'Thread Flaggad as Spam';
 export const THREAD_CREATED_INITED = 'Thread Created Inited'
 export const THREAD_CREATED = 'Thread Created';
 export const THREAD_CREATED_FAILED = 'Thread Created Failed';
+export const THREAD_SENT_TO_SLACK = 'Thread Sent to Slack'
 
 export const THREAD_DELETED_INITED = 'Thread Deleted Inited';
 export const THREAD_DELETED = 'Thread Deleted';
