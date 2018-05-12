@@ -21,8 +21,6 @@ import {
   NullCopy,
   EmptyThreadHeading,
   EmptyThreadDescription,
-  TwitterButton,
-  FacebookButton,
   SocialShareWrapper,
   A,
 } from '../style';
@@ -173,14 +171,18 @@ class MessagesWithData extends React.Component<Props, State> {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <TwitterButton icon="twitter">Share on Twitter</TwitterButton>
+            <Button gradientTheme={'social.twitter'} icon="twitter">
+              Share on Twitter
+            </Button>
           </A>
           <A
             href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${threadId}&t=${threadTitle}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FacebookButton icon="facebook">Share on Facebook</FacebookButton>
+            <Button gradientTheme={'social.facebook'} icon="facebook">
+              Share on Facebook
+            </Button>
           </A>
         </SocialShareWrapper>
       </NullMessagesWrapper>

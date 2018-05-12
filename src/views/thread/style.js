@@ -191,24 +191,6 @@ export const SocialShareWrapper = styled(FlexRow)`
   }
 `;
 
-export const TwitterButton = styled(Button)`
-  background: ${props => props.theme.social.twitter.default};
-  color: ${props => props.theme.reverse};
-
-  &:hover {
-    background: ${props => props.theme.social.twitter.default};
-  }
-`;
-
-export const FacebookButton = styled(Button)`
-  background: ${props => props.theme.social.facebook.default};
-  color: ${props => props.theme.reverse};
-
-  &:hover {
-    background: ${props => props.theme.social.facebook.default};
-  }
-`;
-
 export const ContextRow = styled(FlexRow)`
   justify-content: space-between;
   align-items: flex-start;
