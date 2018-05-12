@@ -13,7 +13,7 @@ const ga = window.ga;
 export const track = (category, action, label) => {
   /**
   *
-  *	Category: the object interacted with (user, channel, thread, message, etc)
+  * Category: the object interacted with (user, channel, thread, message, etc)
   * Action: the type of interaction (sign out, joined channel, published thread, sent message, etc)
   * Label: used to organize events (experiment variant A vs B)
 
@@ -25,11 +25,10 @@ export const track = (category, action, label) => {
   * * * e.g. closeModal() => track('modal', 'closed', null)
   * * * e.g. sendMessage() => track('message', 'sent', null)
 
-	* Some examples:
-	* track('user', 'signed out') => User category, sign out action
-	* track('channel', 'created') => Channel category, created action
-	* track('thread', 'deleted') => Thread category, deleted action
-
+  * Some examples:
+  * track('user', 'signed out') => User category, sign out action
+  * track('channel', 'created') => Channel category, created action
+  * track('thread', 'deleted') => Thread category, deleted action
   */
 
   // console log tracking events locally so that we can quickly make sure things are firing properly
