@@ -8,8 +8,8 @@ import Idle from 'react-idle';
 
 import updateUserStatusMutation from 'shared/graphql/mutations/user/updateUserStatus';
 
-const IDLE_TIMEOUT_MINUTES = 0.2;
-const BLURRED_TIMEOUT_MINUTES = 0.2;
+const IDLE_TIMEOUT_MINUTES = 3;
+const BLURRED_TIMEOUT_MINUTES = 0.5;
 
 type Props = {
   currentUser?: Object,
@@ -56,7 +56,6 @@ class IdleManagerWithData extends React.Component<Props, State> {
   }
 
   render() {
-    console.log('rendering the idle manager');
     return (
       <Idle
         timeout={
