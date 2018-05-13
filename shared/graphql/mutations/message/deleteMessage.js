@@ -2,8 +2,7 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { getThreadMessageConnectionQuery } from '../../queries/thread/getThreadMessageConnection';
-import { getDirectMessageThreadQuery } from '../../queries/directMessageThread/getDirectMessageThread';
-
+import { getDMThreadMessageConnectionQuery } from '../../queries/directMessageThread/getDirectMessageThreadMessageConnection';
 export type DeleteMessageType = {
   data: {
     deleteMessage: boolean,
@@ -52,18 +51,18 @@ const deleteMessageOptions = {
           } else if (ownProps.threadType === 'directMessageThread') {
             // Read the data from our cache for this query.
             const data = store.readQuery({
-              query: getDirectMessageThreadQuery,
+              query: getDMThreadMessageConnectionQuery,
               variables: {
                 id: ownProps.threadId,
               },
             });
 
             data.directMessageThread.messageConnection.edges = data.directMessageThread.messageConnection.edges.filter(
-              message => message.id !== id
+              ({ node }) => node.id !== id
             );
             // Write our data back to the cache.
             store.writeQuery({
-              query: getDirectMessageThreadQuery,
+              query: getDMThreadMessageConnectionQuery,
               data,
               variables: {
                 id: ownProps.threadId,

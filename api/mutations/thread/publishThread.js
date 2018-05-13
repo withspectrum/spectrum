@@ -2,7 +2,6 @@
 const debug = require('debug')('api:mutations:thread:publish-thread');
 import stringSimilarity from 'string-similarity';
 import { markdownToDraft } from 'markdown-draft-js';
-import { EditorState } from 'draft-js';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';
@@ -15,7 +14,7 @@ import { createParticipantInThread } from '../../models/usersThreads';
 import { StripeUtil } from 'shared/stripe/utils';
 import type { FileUpload, DBThread } from 'shared/types';
 import { PRIVATE_CHANNEL, FREE_PRIVATE_CHANNEL } from 'pluto/queues/constants';
-import { toPlainText, toState, toJSON } from 'shared/draft-utils';
+import { toPlainText, toState } from 'shared/draft-utils';
 import {
   processReputationEventQueue,
   sendThreadNotificationQueue,

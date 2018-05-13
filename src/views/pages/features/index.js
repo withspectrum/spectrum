@@ -3,8 +3,33 @@ import * as React from 'react';
 import { track } from 'src/helpers/events';
 import Section from 'src/components/themedSection';
 import PageFooter from '../components/footer';
+import Link from 'src/components/link';
+import Icon from 'src/components/icons';
+import {
+  Discover,
+  Easy,
+  Happy,
+  Impact,
+  Ideas,
+} from 'src/components/illustrations';
 import { Wrapper } from '../style';
 import { Content, Heading, Subhead, Copy } from '../pricing/style';
+import { Button } from 'src/components/buttons';
+import {
+  Intro,
+  TextContent,
+  Waterfall,
+  SectionGrid,
+  FeatureList,
+  Feature,
+  FeatureName,
+  FeatureCopy,
+  Topic,
+  EtcFeature,
+  EtcGrid,
+  EtcName,
+  EtcCTA,
+} from './style';
 import type { ContextRouter } from 'react-router';
 
 type Props = {
@@ -23,116 +48,312 @@ class Features extends React.Component<Props, State> {
   render() {
     return (
       <Wrapper data-cy="features-page">
-        <Section background={'illustrated'} goop={1} color={'brand.alt'}>
-          <Content>
-            <Heading>
-              Everything you need to build a great online community.
-            </Heading>
-            <Copy>
-              Our whole platform was built from the ground up to make building
-              an online community simple.
-            </Copy>
-            <Copy>
-              Spectrum makes it easy to grow your community organically,
-              moderate efficiently to keep conversations safe and constructive,
-              and measure your community's value to your organization.
-            </Copy>
-          </Content>
+        <Section background={'blank'} goop={1} color={'brand.alt'}>
+          <Intro>
+            <TextContent>
+              <Heading>
+                Everything you need to build a great online community
+              </Heading>
+              {/* <Copy>
+                Spectrum was built from the ground up to make building an online
+                community easy.
+              </Copy> */}
+              <Copy style={{ marginBottom: '32px' }}>
+                We give you a powerful set of tools to grow your community
+                organically, moderate it effectively, and measure its ROI for
+                your organization.
+              </Copy>
+              <Link to={`/new/community`}>
+                <Button icon="welcome">Get started</Button>
+              </Link>
+            </TextContent>
+            <Waterfall src="https://spectrum.imgix.net/marketing/waterfall.png?h=0.25&dpr=2&auto=compress,format" />
+          </Intro>
         </Section>
         <Section background={'brand'} goop={3} color={'space.alt'}>
-          <Content>
-            <Heading reverse>
-              Growing a community has never been so easy.
-            </Heading>
-            <Copy reverse>
-              Every community is public by default and customizable to suit your
-              brand. Once your community is up and running, it can easily be
-              linked to from your website or discovered organically.
-            </Copy>
-            <Subhead reverse>Need to lock something down?</Subhead>
-            <Copy reverse>
-              You can also quickly spin up private, invite-only channels for
-              sensitive conversations that need to be kept secure.
-            </Copy>
-          </Content>
+          <SectionGrid reverse>
+            <Topic>
+              <Easy />
+            </Topic>
+            <FeatureList>
+              <Heading reverse>
+                Growing your community has never been so easy.
+              </Heading>
+              <Feature>
+                <Icon glyph="message" size="48" />
+                <FeatureName>Finally, chat that scales</FeatureName>
+                <FeatureCopy>
+                  {/* <p>
+                    Live chat has become the obvious solution for building
+                    communities, but most platforms quickly get noisy and
+                    distracting when they start to grow.
+                  </p> */}
+                  <p>
+                    We've taken the best features of modern chat platforms and
+                    old-school forums and smashed them together into a format
+                    that makes it easy scale to any size - even across
+                    timezones.
+                  </p>
+                </FeatureCopy>
+              </Feature>
+              <Feature>
+                <Icon glyph="link" size="48" />
+                <FeatureName>Location, location, location</FeatureName>
+                <FeatureCopy>
+                  <p>
+                    Conversations and communities on Spectrum are public,
+                    permalinked, and search engine optimized by default which
+                    makes it easy for new members to find and join your
+                    community.
+                  </p>
+                  {/* <p>
+                    It's easy to drive growth by sharing on social media, getting discovered through a search engine, or linking to your community from your app or website.
+                  </p> */}
+                </FeatureCopy>
+              </Feature>
+              <Feature>
+                <Icon glyph="profile" size="48" />
+                <FeatureName>Every community, only one account</FeatureName>
+                <FeatureCopy>
+                  {/* <p>
+                    Communities built on forums and team chat tend to require a
+                    unique account for each community you join, increasing
+                    friction for new members.
+                  </p> */}
+                  <p>
+                    Skip managing multiple credentials and playing whack-a-mole
+                    with DMs and notifications, Spectrum lets you join as many
+                    communities as you want with only one account.
+                  </p>
+                </FeatureCopy>
+              </Feature>
+            </FeatureList>
+          </SectionGrid>
         </Section>
         <Section background={'bright'} goop={2} color={'bg.default'}>
-          <Content>
-            <Heading reverse>
-              Realtime conversations with longterm value.
-            </Heading>
-            <Copy reverse>
-              Chat is becoming the de facto standard for online communities for
-              good reason. Static forums often feel dead and static, while
-              communities need to feel alive and vibrant to flourish.
-            </Copy>
-            <Copy reverse>
-              On Spectrum, every conversation is realtime chat organized into
-              focused, topical threads. Each thread is search indexed and
-              linkable making them easy to save for later, share on social
-              media, or discover via search.
-            </Copy>
-          </Content>
+          <SectionGrid>
+            <Topic>
+              <Happy />
+            </Topic>
+            <FeatureList>
+              <Heading reverse>Keep your community happy and healthy.</Heading>
+              <Feature>
+                <Icon glyph="controls" size="48" />
+                <FeatureName>
+                  Granular controls for nuanced situations
+                </FeatureName>
+                <FeatureCopy>
+                  <p>
+                    We give you fine-grained solutions to moderation issues via
+                    individual locking, blocking, and deletion controls for each
+                    thread, message, and member in your community.
+                  </p>
+                  <p>
+                    We also give every community automated toxicity monitoring
+                    and spam prevention by default.
+                  </p>
+                </FeatureCopy>
+              </Feature>
+              <Feature>
+                <Icon glyph="rep" size="48" />
+                <FeatureName>Real members. Real reputation.</FeatureName>
+                <FeatureCopy>
+                  <p>
+                    With Spectrum's Rep system, you can see how active and
+                    constructive a member is in your community - and globally
+                    across communities - which makes it simple to figure out if
+                    an issue is a trend or an isolated incident.
+                  </p>
+                </FeatureCopy>
+              </Feature>
+              <Feature>
+                <Icon glyph="sam" size="48" />
+                <FeatureName comingSoon>
+                  Everyone could use a little help
+                </FeatureName>
+                <FeatureCopy>
+                  <p>
+                    Identifying a problem is one thing, but it can still be hard
+                    to know how to act on a moderation issue. SAM (Spectrum
+                    Assistant Moderator) helps you make those decisions by
+                    recommending proven solutions, automatically flagging toxic
+                    messages for removal, and even addressing issues with
+                    problematic members (all with your permission of course).
+                  </p>
+                </FeatureCopy>
+              </Feature>
+            </FeatureList>
+          </SectionGrid>
         </Section>
         <Section goop={6} color={'bg.reverse'}>
-          <Content>
-            <Heading>Measure your community's impact.</Heading>
-            <Copy>
-              Communities are notoriously difficult to measure impact. Everyone
-              knows that having a community is useful, but it's hard to prove
-              their exact value to your company.
-            </Copy>
-            <Copy>
-              We're building community analytics to help track down how your
-              community is helping your business from support and product
-              feedback to conversion and customer success.
-            </Copy>
-          </Content>
+          <SectionGrid reverse>
+            <Topic>
+              <Impact />
+            </Topic>
+            <FeatureList>
+              <Heading>Focus on impact, not usage.</Heading>
+              <Feature>
+                <Icon glyph="like" size="48" />
+                <FeatureName>Understand your community's health</FeatureName>
+                <FeatureCopy>
+                  <p>
+                    When you add Community Analytics to your community, you'll
+                    get a bird's eye view of your community's overall growth and
+                    user engagement.
+                  </p>
+                  <p>
+                    You'll also get a heads up of what types of conversations
+                    are most active as well as a list of any that have gone
+                    unanswered.
+                  </p>
+                </FeatureCopy>
+              </Feature>
+              <Feature>
+                <Icon glyph="view" size="48" />
+                <FeatureName comingSoon bright>
+                  Connect the dots
+                </FeatureName>
+                <FeatureCopy>
+                  <p>
+                    With Spectrum integrations, your community can go beyond
+                    engagement to provide a convenient first-touch experience to
+                    organically onboard and convert new users.
+                  </p>
+                </FeatureCopy>
+              </Feature>
+              <Feature>
+                <Icon glyph="analytics" size="48" />
+                <FeatureName comingSoon bright>
+                  Visualize your community's ROI
+                </FeatureName>
+                <FeatureCopy>
+                  <p>
+                    With Business Analytics, you can connect your user accounts
+                    to your community and correlate member activity directly to
+                    key customer success metrics.
+                  </p>
+                  <p>
+                    See how member engagement directly impacts customer LTV,
+                    retention, and more.
+                  </p>
+                </FeatureCopy>
+              </Feature>
+            </FeatureList>
+          </SectionGrid>
         </Section>
         <Section background={'reverse'} goop={5} color={'bg.default'}>
-          <Content>
-            <Heading reverse>One account. Every community.</Heading>
-            <Copy reverse>
-              No one enjoys having dozens of accounts for different communities
-              and forums. Setting the same preferences over and over, playing
-              whack-a-mole with notifications, and keeping track of where you
-              direct messaged someone shouldn't be required to get involved.
-            </Copy>
-            <Copy reverse>
-              On Spectrum, everyone gets a single account with a single profile,
-              a single set of preferences, a single DM inbox, and a home feed
-              that brings all your communities to you.
-            </Copy>
-            <Copy reverse>
-              You can easily tweak your notifications at a global level or
-              individually follow or unfollow conversations and channels.
-            </Copy>
-          </Content>
+          <SectionGrid>
+            <Topic>
+              <Ideas />
+            </Topic>
+            <FeatureList>
+              <Heading reverse>
+                Connect with your customers on a whole new level
+              </Heading>
+              <Feature>
+                <Icon glyph="support" size="48" />
+                <FeatureName>A support center with no off switch</FeatureName>
+                <FeatureCopy>
+                  <p>
+                    1:1 support chat and ticket systems can make it hard to
+                    provide help to users efficiently - especially at scale.
+                  </p>
+                  <p>
+                    Spectrum enables you and your users to address issues
+                    globally and searchably without the extra duplicated effort.
+                  </p>
+                </FeatureCopy>
+              </Feature>
+              <Feature>
+                <Icon glyph="idea" size="48" />
+                <FeatureName>Collect actionable feedback and ideas</FeatureName>
+                <FeatureCopy>
+                  <p>
+                    Spectrum's great for collecting feature requests and user
+                    feedback, and the realtime nature makes it easy for the
+                    requests to adapt as you update your product.
+                  </p>
+                  <p>
+                    Want feedback on an upcoming release? Spin up a private
+                    channel for your beta testers alongside the rest of your
+                    community!
+                  </p>
+                </FeatureCopy>
+              </Feature>
+              <Feature>
+                <Icon glyph="friend" size="48" />
+                <FeatureName>
+                  Develop and support your strongest advocates
+                </FeatureName>
+                <FeatureCopy>
+                  <p>
+                    When your users love your product, they want to tell others.
+                    Give them the support they need to help other members with
+                    custom roles and integrations.
+                  </p>
+                </FeatureCopy>
+              </Feature>
+            </FeatureList>
+          </SectionGrid>
         </Section>
-        <Section background={'illustrated'} goop={4} color={'bg.reverse'}>
-          <Content>
-            <Heading>Safety first.</Heading>
-            <Copy>
-              Every single community agrees to moderate according to Spectrum's
-              open-source{' '}
-              <a href="https://github.com/withspectrum/code-of-conduct">
-                Code of Conduct
-              </a>{' '}
-              right off the bat. Keeping our members safe and our conversations
-              constructive is key to our mission.
-            </Copy>
-            <Copy>
-              We're not ad-driven, so we don't need to allow bots and troll
-              accounts like other platforms. We're happy to help you figure out
-              the best solution to any moderation issue and we provide granular
-              locking, blocking, and deletion controls.
-            </Copy>
-            <Subhead>Get the whole team involved.</Subhead>
-            <Copy>
-              Need an extra set of hands to help your community grow or stay on
-              top of user activity? We offer additional moderator seats as well.
-            </Copy>
-          </Content>
+        <Section background={'default'} goop={4} color={'bg.reverse'}>
+          <EtcGrid>
+            <Heading>And there's a whole lot more to love...</Heading>
+            <EtcFeature color="success.alt">
+              <Icon glyph="thread" />
+              <EtcName>Unlimited chat</EtcName>
+            </EtcFeature>
+            <EtcFeature color="space.default">
+              <Icon glyph="member-add" />
+              <EtcName>Unlimited members</EtcName>
+            </EtcFeature>
+            <EtcFeature color="brand.alt">
+              <Icon glyph="search" />
+              <EtcName>Search-indexed threads</EtcName>
+            </EtcFeature>
+            <EtcFeature color="text.alt">
+              <Icon glyph="welcome" />
+              <EtcName>Brandable signup page</EtcName>
+            </EtcFeature>
+            <EtcFeature color="special.default">
+              <Icon glyph="community" />
+              <EtcName>Public community</EtcName>
+            </EtcFeature>
+            <EtcFeature color="warn.alt">
+              <Icon glyph="private-outline" />
+              <EtcName>Secure, private channels</EtcName>
+            </EtcFeature>
+            <EtcFeature color="special.alt">
+              <Icon glyph="slack" />
+              <EtcName>Slack bot + team import</EtcName>
+            </EtcFeature>
+            <EtcFeature color="success.default">
+              <Icon glyph="email" />
+              <EtcName>Email member invitations</EtcName>
+            </EtcFeature>
+            <EtcFeature color="brand.alt">
+              <Icon glyph="home" />
+              <EtcName>Unified Home feed</EtcName>
+            </EtcFeature>
+            <EtcFeature color="success.default">
+              <Icon glyph="message" />
+              <EtcName>Single DM inbox</EtcName>
+            </EtcFeature>
+            <EtcFeature color="space.default">
+              <Icon glyph="notification" />
+              <EtcName>Combined notification feed</EtcName>
+            </EtcFeature>
+            <EtcFeature color="warn.default">
+              <Icon glyph="explore" />
+              <EtcName>Curated Explore page</EtcName>
+            </EtcFeature>
+          </EtcGrid>
+          <EtcCTA>
+            <EtcName>What are you waiting for?</EtcName>
+            <Link to={`/new/community`}>
+              <Button icon="welcome">Get started</Button>
+            </Link>
+          </EtcCTA>
         </Section>
         <PageFooter />
       </Wrapper>

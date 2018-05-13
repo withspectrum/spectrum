@@ -2,6 +2,7 @@
 import styled, { css } from 'styled-components';
 import { SvgWrapper } from '../icons';
 import { Gradient, zIndex, Transition, monoStack, hexa } from '../globals';
+import { Byline, Name, Username } from '../messageGroup/style';
 
 const Bubble = styled.div`
   display: inline-block;
@@ -360,6 +361,20 @@ export const QuotedParagraph = Paragraph.withComponent('div').extend`
   }
 `;
 
+export const QuoteWrapperGradient = styled.div`
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0)
+  );
+  height: 2em;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 0 0 12px 12px;
+`;
+
 export const QuoteWrapper = styled.div`
   background: ${props => props.theme.bg.default};
   border-radius: 12px;
@@ -370,9 +385,20 @@ export const QuoteWrapper = styled.div`
   margin-left: -12px;
   margin-top: -4px;
   margin-bottom: 8px;
+  max-height: ${props => (props.expanded ? 'none' : '7em')};
+  overflow-y: hidden;
+  cursor: pointer;
+  position: relative;
 
   ${SvgWrapper} {
     margin-left: -3px;
     margin-right: 2px;
+  }
+
+  /* Don't change the color of the name and username on hover since they aren't clickable in quotes */
+  ${Name}:hover,
+  ${Username}:hover,
+  ${Byline}:hover {
+    color: ${props => props.theme.text.alt};
   }
 `;
