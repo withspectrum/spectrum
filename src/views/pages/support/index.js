@@ -23,7 +23,7 @@ class Support extends React.Component<{}> {
   render() {
     return (
       <Wrapper data-cy="support-page">
-        <Section>
+        <Section goop={2} color={'bg.reverse'}>
           <FourUp>
             <div style={{ gridArea: 'copy' }}>
               <Heading>What can we help you with?</Heading>
@@ -35,23 +35,20 @@ class Support extends React.Component<{}> {
             </div>
             <PlanSection style={{ gridArea: 'one' }}>
               <div>
-                <PlanPrice>Found a bug?</PlanPrice>
+                <PlanPrice>Found an issue?</PlanPrice>
                 <PlanDescription>
                   Join our Hugs n Bugs channel to check if there’s already a fix
                   or report a new issue.
                 </PlanDescription>
               </div>
 
-              <Link
-                to={'/spectrum/hugs-n-bugs'}
-                onClick={() => track(events.SUPPORT_PAGE_REPORT_BUG)}
-              >
+              <Link to={'/spectrum/hugs-n-bugs'}>
                 <Button
                   gradientTheme={'warn'}
                   icon={'bug'}
-                  style={{ marginTop: '24px', width: '100%' }}
+                  onClick={() => track(events.SUPPORT_PAGE_REPORT_BUG)}
                 >
-                  Report a bug
+                  Join Hugs-n-Bugs
                 </Button>
               </Link>
             </PlanSection>
@@ -65,14 +62,11 @@ class Support extends React.Component<{}> {
                 </PlanDescription>
               </div>
 
-              <Link
-                to={'/spectrum/feature-requests'}
-                onClick={() => track(events.SUPPORT_PAGE_REQUEST_FEATURE)}
-              >
+              <Link to={'/spectrum/feature-requests'}>
                 <Button
                   gradientTheme={'space'}
                   icon={'idea'}
-                  style={{ marginTop: '24px', width: '100%' }}
+                  onClick={() => track(events.SUPPORT_PAGE_REQUEST_FEATURE)}
                 >
                   Request a feature
                 </Button>
@@ -96,7 +90,6 @@ class Support extends React.Component<{}> {
                 <Button
                   gradientTheme={'social.twitter'}
                   icon={'twitter'}
-                  style={{ marginTop: '24px', width: '100%' }}
                   onClick={() => track(events.SUPPORT_PAGE_FOLLOW_ON_TWITTER)}
                 >
                   Follow us on Twitter
@@ -107,7 +100,6 @@ class Support extends React.Component<{}> {
                 <Button
                   gradientTheme={'brand'}
                   icon={'logo'}
-                  style={{ marginTop: '12px', width: '100%' }}
                   onClick={() =>
                     track(events.SUPPORT_PAGE_JOIN_SPECTRUM_COMMUNITY)
                   }
@@ -128,10 +120,9 @@ class Support extends React.Component<{}> {
 
               <a href={'mailto:hi@spectrum.chat'}>
                 <Button
-                  onClick={() => track(events.SUPPORT_PAGE_EMAIL_US)}
                   gradientTheme={'special'}
                   icon={'email'}
-                  style={{ marginTop: '24px', width: '100%' }}
+                  onClick={() => track(events.SUPPORT_PAGE_EMAIL_US)}
                 >
                   Email us
                 </Button>

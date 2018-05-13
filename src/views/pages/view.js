@@ -46,6 +46,11 @@ export const Overview = (props: Props) => {
   const ThisContent = styled(Content)`
     max-width: 100vw;
     margin-top: 92px;
+    margin-bottom: 80px;
+
+    @media (max-width: 640px) {
+      margin-bottom: 40px;
+    }
   `;
 
   const Text = styled(FlexCol)`
@@ -232,7 +237,7 @@ export const Centralized = (props: Props) => {
     align-items: center;
     flex-wrap: wrap;
     z-index: 2;
-    margin-bottom: 40px;
+    margin-bottom: 80px;
 
     img {
       margin-top: 32px;
@@ -293,12 +298,11 @@ export const CommunitySearch = (props: Props) => {
     align-content: center;
     align-self: center;
     margin-top: 40px;
-    margin-bottom: 40px;
+    margin-bottom: 80px;
     padding: 16px;
 
     @media (max-width: 640px) {
       margin-top: 80px;
-      margin-bottom: 0;
       width: 100%;
     }
   `;
@@ -335,10 +339,10 @@ export const CommunitySearch = (props: Props) => {
 export const Chat = (props: Props) => {
   const ThisContent = styled(Content)`
     overflow: hidden;
-    margin: 40px 16px;
+    margin: 40px 16px 80px;
 
     @media (max-width: 768px) {
-      margin-bottom: 0;
+      margin-bottom: 40px;
     }
   `;
 
@@ -412,7 +416,9 @@ export const Sell = (props: Props) => {
     margin: 40px 0;
   `;
 
-  const ThisContent = styled(Content)``;
+  const ThisContent = styled(Content)`
+    margin-bottom: 80px;
+  `;
 
   const ThisTagline = styled(Tagline)`
     margin-bottom: 0;
@@ -490,7 +496,7 @@ export const Sell = (props: Props) => {
 
 export const Yours = (props: Props) => {
   const ThisContent = styled(Content)`
-    margin: 60px 16px 16px;
+    margin: 60px 16px 80px;
     font-size: 18px;
     align-items: center;
     text-align: left;

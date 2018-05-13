@@ -1,39 +1,68 @@
 // @flow
 import * as React from 'react';
-import { LinkBlock, LinkBlockA, Footer, Flexer } from '../style';
-import { FlexRow } from 'src/components/globals';
+import {
+  Footer,
+  FooterGrid,
+  Masthead,
+  Support,
+  Safety,
+  SocialLinks,
+} from '../style';
 import Link from 'src/components/link';
-import Icon from 'src/components/icons';
+import { IconButton } from 'src/components/buttons';
+import { Logo } from 'src/components/logo';
 import { track, events } from 'src/helpers/analytics';
 
 export default () => {
   return (
     <Footer>
-      <FlexRow>
-        <Link to="/">
-          <Icon glyph="logo" size={32} />
-        </Link>
-      </FlexRow>
-      <Flexer>
-        <LinkBlock to="/privacy">
-          <div>Privacy</div>
-        </LinkBlock>
-        <LinkBlock to="/terms">
-          <div>Terms</div>
-        </LinkBlock>
-        <LinkBlockA
-          href="https://github.com/withspectrum/code-of-conduct"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() =>
-            track(events.CODE_OF_CONDUCT_CLICKED, {
-              location: 'splash page footer',
-            })
-          }
-        >
-          <div>Code of Conduct</div>
-        </LinkBlockA>
-      </Flexer>
+      <FooterGrid>
+        <Masthead>
+          <Link to="/">
+            <Logo />
+          </Link>
+          <SocialLinks>
+            <a
+              href="https://github.com/withspectrum"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <IconButton glyph="github" hoverColor={'text.reverse'} />
+            </a>
+            <a
+              href="https://twitter.com/withspectrum"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <IconButton glyph="twitter" hoverColor={'text.reverse'} />
+            </a>
+          </SocialLinks>
+        </Masthead>
+        <Support>
+          <span>Support</span>
+          <Link to={`/spectrum`}>Community</Link>
+          <Link to={`/spectrum/hugs-n-bugs`}>Bug reports</Link>
+          <Link to={`/spectrum/feature-requests`}>Feature requests</Link>
+          <a href="mailto:hi@spectrum.chat">Email support</a>
+        </Support>
+        <Safety>
+          <span>Safety</span>
+          <a
+            href="https://github.com/withspectrum/code-of-conduct"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              track(events.CODE_OF_CONDUCT_CLICKED, {
+                location: 'splash page footer',
+              })
+            }
+          >
+            Code of Conduct
+          </a>
+          <Link to="/privacy">Privacy Policy</Link>
+          <Link to="/terms">Terms of Service</Link>
+        </Safety>
+      </FooterGrid>
     </Footer>
   );
 };
