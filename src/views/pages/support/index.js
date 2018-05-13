@@ -23,7 +23,7 @@ class Support extends React.Component<{}> {
   render() {
     return (
       <Wrapper data-cy="support-page">
-        <Section>
+        <Section goop={2} color={'bg.reverse'}>
           <FourUp>
             <div style={{ gridArea: 'copy' }}>
               <Heading>What can we help you with?</Heading>
@@ -35,7 +35,7 @@ class Support extends React.Component<{}> {
             </div>
             <PlanSection style={{ gridArea: 'one' }}>
               <div>
-                <PlanPrice>Found a bug?</PlanPrice>
+                <PlanPrice>Found an issue?</PlanPrice>
                 <PlanDescription>
                   Join our Hugs n Bugs channel to check if there’s already a fix
                   or report a new issue.
@@ -43,12 +43,8 @@ class Support extends React.Component<{}> {
               </div>
 
               <Link to={'/spectrum/hugs-n-bugs'}>
-                <Button
-                  gradientTheme={'warn'}
-                  icon={'bug'}
-                  style={{ marginTop: '24px', width: '100%' }}
-                >
-                  Report a bug
+                <Button gradientTheme={'warn'} icon={'bug'}>
+                  Join Hugs-n-Bugs
                 </Button>
               </Link>
             </PlanSection>
@@ -63,11 +59,7 @@ class Support extends React.Component<{}> {
               </div>
 
               <Link to={'/spectrum/feature-requests'}>
-                <Button
-                  gradientTheme={'space'}
-                  icon={'idea'}
-                  style={{ marginTop: '24px', width: '100%' }}
-                >
+                <Button gradientTheme={'space'} icon={'idea'}>
                   Request a feature
                 </Button>
               </Link>
@@ -87,21 +79,13 @@ class Support extends React.Component<{}> {
                 target={'_blank'}
                 rel={'noopener noreferrer'}
               >
-                <Button
-                  gradientTheme={'social.twitter'}
-                  icon={'twitter'}
-                  style={{ marginTop: '24px', width: '100%' }}
-                >
+                <Button gradientTheme={'social.twitter'} icon={'twitter'}>
                   Follow us on Twitter
                 </Button>
               </a>
 
               <Link to={'/spectrum'}>
-                <Button
-                  gradientTheme={'brand'}
-                  icon={'logo'}
-                  style={{ marginTop: '12px', width: '100%' }}
-                >
+                <Button gradientTheme={'brand'} icon={'logo'}>
                   Join our community
                 </Button>
               </Link>
@@ -117,11 +101,7 @@ class Support extends React.Component<{}> {
               </div>
 
               <a href={'mailto:hi@spectrum.chat'}>
-                <Button
-                  gradientTheme={'special'}
-                  icon={'email'}
-                  style={{ marginTop: '24px', width: '100%' }}
-                >
+                <Button gradientTheme={'special'} icon={'email'}>
                   Email us
                 </Button>
               </a>
