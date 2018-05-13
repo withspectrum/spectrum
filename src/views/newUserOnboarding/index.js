@@ -20,8 +20,8 @@ import {
   StickyRow,
   ContinueButton,
 } from './style';
-import type { UserInfoType } from '../../../shared/graphql/fragments/user/userInfo';
-import type { CommunityInfoType } from '../../../shared/graphql/fragments/community/communityInfo';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
+import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 
 type StateProps = {|
   community: CommunityInfoType,
