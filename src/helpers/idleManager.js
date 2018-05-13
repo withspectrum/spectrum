@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { withRouter } from 'react-router';
 import { withApollo } from 'react-apollo';
@@ -12,6 +13,7 @@ const BLURRED_TIMEOUT_MINUTES = 0.5;
 
 type Props = {
   currentUser?: Object,
+  updateStatus: Function,
 };
 
 type State = {
@@ -25,7 +27,7 @@ class IdleManagerWithData extends React.Component<Props, State> {
     isIdle: false,
   };
 
-  updateStatus = isIdle => {
+  updateStatus = (isIdle: boolean) => {
     if (this.state.isIdle === isIdle) return;
 
     this.setState({ isIdle }, () => {

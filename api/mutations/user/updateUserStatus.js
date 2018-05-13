@@ -4,7 +4,7 @@ import UserError from '../../utils/UserError';
 import { updateUserStatus } from '../../models/user';
 import Raven from 'shared/raven';
 
-import { UserStatus } from 'shared/graphql/fragments/user/userInfo';
+import type { UserStatus } from 'shared/graphql/fragments/user/userInfo';
 
 export default async (
   _: any,

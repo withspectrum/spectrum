@@ -423,7 +423,7 @@ const setUserOnline = (id: string, isOnline: boolean): DBUser => {
     });
 };
 
-const updateUserStatus = (id: string, status: string): DBUser => {
+const updateUserStatus = (id: string, status: string): Promise<DBUser> => {
   const data = { status };
 
   return db
