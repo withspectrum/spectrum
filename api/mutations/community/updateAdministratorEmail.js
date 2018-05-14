@@ -5,10 +5,10 @@ import { setCommunityPendingAdministratorEmail } from '../../models/community';
 import isEmail from 'validator/lib/isEmail';
 import { sendAdministratorEmailValidationEmailQueue } from 'shared/bull/queues';
 
-export default (
+export default async (
   _: any,
   { input }: { input: { id: string, email: string } },
-  { user }: GraphQLContext
+  { user, loaders }: GraphQLContext
 ) => {
   const currentUser = user;
 
@@ -23,6 +23,14 @@ export default (
   if (!isEmail(email)) {
     return new UserError('Please enter a working email address');
   }
+
+  const permissions = await loaders.userPermissionsInCommunity.load([
+    currentUser.id,
+    id,
+  ]);
+
+  if (!permissions || !permissions.isOwner)
+    return new UserError('Only owners can change the community admin email.');
 
   return setCommunityPendingAdministratorEmail(id, email)
     .then(community => {
