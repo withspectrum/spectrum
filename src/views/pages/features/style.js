@@ -5,37 +5,30 @@ import { SvgWrapper } from 'src/components/icons';
 
 export const Intro = styled.div`
   display: grid;
-  grid-template-rows: 40% 1fr;
-  grid-template-columns: minmax(33%, 560px) 1fr;
-  grid-template-areas: 'copy .' 'copy illo';
-  margin: 80px 5%;
+  grid-template-rows: auto 40vh;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-areas: 'copy copy .' '. illo illo';
+  margin: 160px 5% 80px;
 
-  @media (max-width: 1080px) {
-    grid-template-rows: 1fr auto;
-    grid-template-columns: 1fr minmax(33%, 560px);
-    grid-template-areas: 'illo copy' '. copy';
+  @media (max-width: 1152px) {
+    grid-template-rows: auto 33vh;
+    grid-template-areas: 'copy copy copy' 'illo illo illo';
   }
 
   @media (max-width: 800px) {
-    grid-template-rows: 240px 1fr;
-    grid-template-columns: 1fr;
-    grid-template-areas: 'illo' 'copy';
   }
 
-  @media (max-width: 400px) {
-    margin: 80px 16px;
-    grid-template-rows: 1fr;
-    grid-template-columns: 1fr;
-    grid-template-areas: 'copy';
+  @media (max-width: 460px) {
+    grid-template-rows: 1fr auto;
   }
 `;
 
 export const TextContent = styled.div`
   grid-area: copy;
-  margin-left: 32px;
-  align-self: flex-start;
+  justify-self: center;
   z-index: 1;
   text-shadow: 0 0 4px ${props => props.theme.bg.default};
+  max-width: 560px;
 
   > a {
     display: inline-block;
@@ -50,9 +43,8 @@ export const TextContent = styled.div`
     }
   }
 
-  @media (max-width: 1080px) {
-    align-self: flex-end;
-    margin-bottom: 80px;
+  @media (max-width: 1152px) {
+    justify-self: flex-start;
   }
 
   @media (max-width: 800px) {
@@ -68,23 +60,27 @@ export const TextContent = styled.div`
 
 export const Waterfall = styled.img`
   grid-area: illo;
-  max-width: 150%;
-  margin: 0 -10% -50% -15%;
+  position: relative;
+  justify-self: center;
+  top: -25vh;
+  height: 100vh;
+  max-height: 100vw;
   z-index: 0;
   transition: all 0.2s ease-in-out;
 
-  @media (max-width: 1080px) {
-    opacity: 0.25;
-    max-width: 250%;
-    margin: -10% 0% 0% -50%;
+  @media (max-width: 1152px) {
+    top: -12vh;
+    height: 80vh;
+    left: 20vw;
   }
 
   @media (max-width: 800px) {
-    max-width: 150%;
-    margin: -40% -80% -60% -20%;
+    top: -8vh;
+    left: 8px;
+    height: 66vh;
   }
 
-  @media (max-width: 400px) {
+  @media (max-width: 460px) {
     display: none;
   }
 `;
