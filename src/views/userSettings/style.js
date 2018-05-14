@@ -5,6 +5,7 @@ import { SectionTitle } from 'src/components/settingsViews/style';
 
 export const NotificationListItem = styled.div`
   display: flex;
+  flex-wrap: ${props => (props.wrapContent ? 'wrap' : 'nowrap')};
   padding: 8px 0 16px;
   border-bottom: 2px solid ${props => props.theme.bg.wash};
 
@@ -24,18 +25,18 @@ export const NotificationSectionTitle = styled(SectionTitle)`
 
 export const NotificationSectionSubTitleGroup = styled.div`
   display: flex;
+  margin-top: 12px;
 `;
 
 export const NotificationSectionSubTitleItem = styled.div`
   width: 60px;
+  color: #16171a;
+  font-weight: 500;
   font-size: 14px;
-  margin-left: -6px;
-  margin-right: 6px;
 `;
 
 export const CheckboxGroup = styled.div`
   display: flex;
-  margin-left: 36px;
 `;
 
 export const CheckboxGroupItem = styled.div`
@@ -45,8 +46,12 @@ export const CheckboxGroupItem = styled.div`
 export const CheckboxContent = styled.div`
   flex: 1;
   display: flex;
+  margin-top: 16px;
   flex-direction: column;
-  margin-top: 12px;
+  align-items: flex-start;
+  color: rgb(130, 140, 153);
+  line-height: 1.4;
+  font-size: 14px;
 `;
 
 export const View = styled.div`

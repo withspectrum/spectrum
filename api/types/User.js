@@ -50,7 +50,7 @@ const User = /* GraphQL */ `
 
 	type NotificationKindSettings {
 		email: Boolean
-		push: Boolean
+		web: Boolean
 	}
 
 	type NotificationSettingsType {

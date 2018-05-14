@@ -2,8 +2,8 @@
 import * as React from 'react';
 import type { GetCurrentUserSettingsType } from 'shared/graphql/queries/user/getCurrentUserSettings';
 import UserEditForm from './editForm';
-import EmailSettings from './emailSettings';
 import NotificationSettings from './notificationSettings';
+import WebPushSettings from './webPushSettings';
 import Invoices from './invoices';
 import DeleteAccountForm from './deleteAccountForm';
 import DownloadDataForm from './downloadDataForm';
@@ -27,9 +27,7 @@ class Overview extends React.Component<Props> {
         </Column>
         <Column>
           <RecurringPaymentsList user={user} />
-          <EmailSettings user={user} />
-          {'serviceWorker' in navigator &&
-            'PushManager' in window && <NotificationSettings largeOnly />}
+          <NotificationSettings user={user} />
           <Invoices />
         </Column>
       </SectionsContainer>
