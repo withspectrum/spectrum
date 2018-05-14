@@ -20,7 +20,7 @@ class ListCardItemDirectMessageThread extends Component {
     e.preventDefault();
   };
   render() {
-    const { thread, currentUser, active } = this.props;
+    const { thread, currentUser, active, archivedAt } = this.props;
 
     // convert the server time to an iso timestamp
     const timestamp = new Date(thread.threadLastActive).getTime();
@@ -67,6 +67,8 @@ class ListCardItemDirectMessageThread extends Component {
                 <Timestamp className="message-thread-item" isUnread={isUnread}>
                   {threadTimeDifference}
                 </Timestamp>
+                {!Boolean(archivedAt) && 'Unarchive'}
+                {Boolean(archivedAt) && 'Archive'}
                 <GearButton onClick={this.handleGearClick} />
               </MessageGroupByline>
               <Meta isUnread={isUnread} nowrap>
