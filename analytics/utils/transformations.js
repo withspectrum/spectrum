@@ -11,7 +11,6 @@ import type {
   DBUsersThreads,
 } from 'shared/types';
 import { getTruthyValuesFromObject } from 'src/helpers/utils';
-import hash from './hash';
 
 type AnalyticsChannel = {
   id: ?string,
@@ -47,7 +46,6 @@ type AnalyticsThreadPermissions = {
 };
 
 type AnalyticsUser = {
-  id: string,
   createdAt: string,
   twitterAuthed: boolean,
   fbAuthed: boolean,
@@ -193,7 +191,6 @@ export const analyticsThreadPermissions = (
 
 export const analyticsUser = (user: DBUser): AnalyticsUser => {
   return {
-    id: hash(user.id),
     createdAt: user.createdAt,
     twitterAuthed: user.providerId ? true : false,
     fbAuthed: user.fbProviderId ? true : false,

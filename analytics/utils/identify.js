@@ -2,12 +2,13 @@
 const debug = require('debug')('analytics:identify');
 import Raven from 'shared/raven';
 import { amplitude } from './amplitude';
+import { hash } from './';
 
 export const identify = (userId: string, userProperties: Object) => {
   const amplitudePromise = () => {
     debug(`[Amplitude] Identify ${userId}`);
     return amplitude.identify({
-      userId,
+      userId: hash(userId),
       userProperties,
     });
   };

@@ -2,6 +2,7 @@
 const debug = require('debug')('analytics:track');
 import Raven from 'shared/raven';
 import { amplitude } from './amplitude';
+import { hash } from './';
 
 export const track = (
   userId: string,
@@ -12,7 +13,7 @@ export const track = (
     debug(`[Amplitude] Tracking ${eventType}`);
 
     return amplitude.track({
-      userId,
+      userId: hash(userId),
       eventType,
       eventProperties: {
         ...eventProperties,

@@ -2,7 +2,7 @@
 const debug = require('debug')('analytics:queues:track');
 import Raven from 'shared/raven';
 import type { Job, TrackAnalyticsData } from 'shared/bull/types';
-import { getContext, track, hash } from '../utils';
+import { getContext, track } from '../utils';
 
 const processJob = async (job: Job<TrackAnalyticsData>) => {
   const { userId, event, context, properties = {} } = job.data;
@@ -10,12 +10,12 @@ const processJob = async (job: Job<TrackAnalyticsData>) => {
   debug(`Incoming job: ${event}`);
 
   if (!context) {
-    return track(hash(userId), event, { ...properties });
+    return track(userId, event, { ...properties });
   }
 
   const contextProperties = await getContext({ userId, ...context });
 
-  return await track(hash(userId), event, {
+  return await track(userId, event, {
     ...contextProperties,
     ...properties,
   });

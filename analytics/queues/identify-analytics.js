@@ -3,7 +3,7 @@ const debug = require('debug')('analytics:queues:identify');
 import Raven from 'shared/raven';
 import type { Job, IdentifyAnalyticsData } from 'shared/bull/types';
 import { getUserById } from '../models/user';
-import { identify, transformations, hash } from '../utils';
+import { identify, transformations } from '../utils';
 
 const processJob = async (job: Job<IdentifyAnalyticsData>) => {
   const { userId } = job.data;
@@ -12,7 +12,7 @@ const processJob = async (job: Job<IdentifyAnalyticsData>) => {
   if (!user) return;
 
   const analyticsUser = transformations.analyticsUser(user);
-  return await identify(hash(userId), analyticsUser);
+  return await identify(userId, analyticsUser);
 };
 
 export default async (job: Job<IdentifyAnalyticsData>) => {
