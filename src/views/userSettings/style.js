@@ -1,8 +1,10 @@
 // @flow
 import styled from 'styled-components';
 import { FlexRow, FlexCol } from 'src/components/globals';
+import { SectionTitle } from 'src/components/settingsViews/style';
 
-export const EmailListItem = styled.div`
+export const NotificationListItem = styled.div`
+  display: flex;
   padding: 8px 0 16px;
   border-bottom: 2px solid ${props => props.theme.bg.wash};
 
@@ -15,9 +17,36 @@ export const EmailListItem = styled.div`
   }
 `;
 
+export const NotificationSectionTitle = styled(SectionTitle)`
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const NotificationSectionSubTitleGroup = styled.div`
+  display: flex;
+`;
+
+export const NotificationSectionSubTitleItem = styled.div`
+  width: 60px;
+  font-size: 14px;
+  margin-left: -6px;
+  margin-right: 6px;
+`;
+
+export const CheckboxGroup = styled.div`
+  display: flex;
+  margin-left: 36px;
+`;
+
+export const CheckboxGroupItem = styled.div`
+  width: 60px;
+`;
+
 export const CheckboxContent = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
+  margin-top: 12px;
 `;
 
 export const View = styled.div`

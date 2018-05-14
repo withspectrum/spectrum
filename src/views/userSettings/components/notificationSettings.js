@@ -9,7 +9,7 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import { subscribeToWebPush } from 'shared/graphql/subscriptions';
 import { ListContainer, Notice } from 'src/components/listItems/style';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
-import { EmailListItem } from '../style';
+import { NotificationListItem } from '../style';
 
 type State = {
   webPushBlocked: boolean,
@@ -107,7 +107,7 @@ class NotificationSettings extends React.Component<Props, State> {
       >
         <SectionTitle>Notification Preferences</SectionTitle>
         <ListContainer>
-          <EmailListItem>
+          <NotificationListItem>
             {subscription !== null && (
               <Checkbox
                 checked={!!subscription}
@@ -128,7 +128,7 @@ class NotificationSettings extends React.Component<Props, State> {
                 </a>.
               </Notice>
             )}
-          </EmailListItem>
+          </NotificationListItem>
         </ListContainer>
       </SectionCard>
     );
