@@ -2,7 +2,6 @@
 export type PaginationOptions = {
   first: number,
   after?: string,
-  isArchived?: boolean,
 };
 
 type Input = any;
