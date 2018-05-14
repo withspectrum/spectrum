@@ -2,7 +2,9 @@
 import postmark from 'postmark';
 const debug = require('debug')('hermes:send-email');
 const stringify = require('json-stringify-pretty-compact');
-import { deactiveUserEmailNotifications } from './models/usersSettings';
+import { deactivateUserEmailNotifications } from './models/usersSettings';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 let client;
 if (process.env.POSTMARK_SERVER_KEY) {
@@ -25,15 +27,25 @@ type Options = {
   To: string,
   TemplateModel: Object,
   Tag: string,
+  userId?: string,
 };
 
 const sendEmail = (options: Options) => {
-  const { TemplateId, To, TemplateModel, Tag } = options;
+  const { TemplateId, To, TemplateModel, Tag, userId } = options;
   debug(
     `--Send email with template ${TemplateId}--\nTo: ${To}\nRe: ${
       TemplateModel.subject
     }\nTemplateModel: ${stringify(TemplateModel)}`
   );
+
+  if (userId) {
+    trackQueue.add({
+      userId: userId,
+      event: events.EMAIL_RECEIVED,
+      properties: { tag: Tag },
+    });
+  }
+
   // $FlowFixMe
   return new Promise((res, rej) => {
     client.sendEmailWithTemplate(
@@ -49,7 +61,15 @@ const sendEmail = (options: Options) => {
           // 406 means the user became inactive, either by having an email
           // hard bounce or they marked as spam
           if (err.code === 406) {
-            return await deactiveUserEmailNotifications(To)
+            if (userId) {
+              trackQueue.add({
+                userId: userId,
+                event: events.EMAIL_BOUNCED,
+                properties: { tag: Tag },
+              });
+            }
+
+            return await deactivateUserEmailNotifications(To)
               .then(() => rej(err))
               .catch(e => rej(e));
           }

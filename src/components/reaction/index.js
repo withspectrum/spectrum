@@ -1,16 +1,25 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import Icon from '../icons';
-import { track } from '../../helpers/events';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { ReactionWrapper } from '../message/style';
+import type { GetMessageType } from 'shared/graphql/queries/message/getMessage';
 
-class Reaction extends Component {
-  state: {
-    count: number,
-    hasReacted: boolean,
-  };
+type Props = {
+  toggleReaction: Function,
+  dispatch: Function,
+  currentUser?: Object,
+  me: boolean,
+  message: GetMessageType,
+};
 
-  constructor(props) {
+type State = {
+  count: number,
+  hasReacted: boolean,
+};
+
+class Reaction extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -32,8 +41,6 @@ class Reaction extends Component {
 
     const hasReacted = this.state.hasReacted;
     const count = this.state.count;
-
-    track('reaction', hasReacted ? 'removed' : 'created', null);
 
     this.setState({
       hasReacted: !hasReacted,

@@ -11,6 +11,7 @@ import {
 import Link from 'src/components/link';
 import { IconButton } from 'src/components/buttons';
 import { Logo } from 'src/components/logo';
+import { track, events } from 'src/helpers/analytics';
 
 export default () => {
   return (
@@ -50,6 +51,11 @@ export default () => {
             href="https://github.com/withspectrum/code-of-conduct"
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() =>
+              track(events.CODE_OF_CONDUCT_CLICKED, {
+                location: 'splash page footer',
+              })
+            }
           >
             Code of Conduct
           </a>

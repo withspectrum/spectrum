@@ -1,19 +1,12 @@
 // @flow
 import * as React from 'react';
-import { track } from 'src/helpers/events';
 import Section from 'src/components/themedSection';
 import PageFooter from '../components/footer';
 import Link from 'src/components/link';
 import Icon from 'src/components/icons';
-import {
-  Discover,
-  Easy,
-  Happy,
-  Impact,
-  Ideas,
-} from 'src/components/illustrations';
+import { Easy, Happy, Impact, Ideas } from 'src/components/illustrations';
 import { Wrapper } from '../style';
-import { Content, Heading, Subhead, Copy } from '../pricing/style';
+import { Heading, Copy } from '../pricing/style';
 import { Button } from 'src/components/buttons';
 import {
   Intro,
@@ -41,9 +34,7 @@ type State = {
 };
 
 class Features extends React.Component<Props, State> {
-  componentDidMount() {
-    track('features', 'viewed', null);
-  }
+  componentDidMount() {}
 
   render() {
     return (

@@ -73,6 +73,11 @@ import {
   SEND_SLACK_INVITIATIONS,
 } from 'athena/queues/constants';
 
+import {
+  TRACK_ANALYTICS,
+  IDENTIFY_ANALYTICS,
+} from 'analytics/queues/constants';
+
 import { PROCESS_REPUTATION_EVENT } from 'mercury/constants';
 
 // Normalize our (inconsistent) queue names to a set of JS compatible names
@@ -142,6 +147,11 @@ exports.QUEUE_NAMES = {
   stripePaymentFailedQueue: PROCESS_STRIPE_PAYMENT_FAILED,
   stripeCardExpiringWarningQueue: PROCESS_STRIPE_CARD_EXPIRING_WARNING,
 
+  // analytics
+  trackQueue: TRACK_ANALYTICS,
+  identifyQueue: IDENTIFY_ANALYTICS,
+
+  // admin
   _adminSendCommunityCreatedEmailQueue: SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
   _adminProcessToxicMessageQueue: PROCESS_ADMIN_TOXIC_MESSAGE,
   _adminProcessToxicThreadQueue: PROCESS_ADMIN_TOXIC_THREAD,
