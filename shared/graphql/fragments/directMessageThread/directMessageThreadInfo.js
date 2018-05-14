@@ -22,6 +22,7 @@ export type DirectMessageThreadInfoType = {
 export default gql`
   fragment directMessageThreadInfo on DirectMessageThread {
     id
+    archivedAt
     snippet
     threadLastActive
     participants {
