@@ -56,7 +56,6 @@ const DirectMessageThread = /* GraphQL */ `
   }
 
   input isArchivedDMThreadInput {
-    isArchived: Boolean!
     threadId: ID!
   }
 
@@ -64,6 +63,7 @@ const DirectMessageThread = /* GraphQL */ `
 		createDirectMessageThread(input: DirectMessageThreadInput!): DirectMessageThread
     setLastSeen(id: ID!): DirectMessageThread
     archiveDirectMessageThread(input: isArchivedDMThreadInput!): DirectMessageThread
+    unarchiveDirectMessageThread(input: isArchivedDMThreadInput!): DirectMessageThread
 	}
 
 	extend type Subscription {

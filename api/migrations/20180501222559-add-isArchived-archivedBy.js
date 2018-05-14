@@ -1,13 +1,13 @@
 exports.up = function(r, conn) {
   /**
-    We're adding `isArchived` and defaulting it to `false` in `usersDirectMessageThreads`
+    We're adding `isArchived` and defaulting it to `undefined` in `usersDirectMessageThreads`
     All DMThreads are not archived
   */
   return Promise.all([
     r
       .table('usersDirectMessageThreads')
       .update({
-        isArchived: false,
+        isArchived: undefined,
       })
       .run(conn)
       .catch(err => {

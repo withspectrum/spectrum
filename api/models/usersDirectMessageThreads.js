@@ -106,6 +106,26 @@ const updateDirectMessageThreadNotificationStatusForUser = (
 
 // TODO: Add method to update if the thread is archived or not.
 // TODO: Add method to get if the thread is archived or not.
+const archiveDirectMessageThread = (
+  userDirectMessageThreadId: string
+): Promise<Object> => {
+  return db
+    .table('usersDirectMessageThreads')
+    .get(userDirectMessageThreadId)
+    .update({ archivedAt: new Date() }, { returnChanges: true })
+    .run();
+};
+
+const unarchiveDirectMessageThread = (
+  userDirectMessageThreadId: string
+): Promise<Object> => {
+  return db
+    .table('usersDirectMessageThreads')
+    .get(userDirectMessageThreadId)
+    .update({ archivedAt: db.literal() }, { returnChanges: true })
+    .run();
+};
+
 const updateIsDirectMessageThreadArchived = (
   userDirectMessageThreadId: string,
   isArchived: boolean
@@ -169,6 +189,8 @@ module.exports = {
   setUserLastSeenInDirectMessageThread,
   updateDirectMessageThreadNotificationStatusForUser,
   updateIsDirectMessageThreadArchived,
+  unarchiveDirectMessageThread,
+  archiveDirectMessageThread,
   // get
   getDirectMessageThread,
   getMembersInDirectMessageThread,

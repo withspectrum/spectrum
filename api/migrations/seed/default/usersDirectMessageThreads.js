@@ -11,7 +11,6 @@ module.exports = [
     lastActive: new Date(DATE),
     lastSeen: new Date(DATE),
     receiveNotifications: true,
-    isArchived: false,
   },
   {
     id: '2',
@@ -21,7 +20,6 @@ module.exports = [
     lastActive: new Date(DATE),
     lastSeen: new Date(DATE),
     receiveNotifications: true,
-    isArchived: false,
   },
   {
     id: '3',
@@ -31,6 +29,5 @@ module.exports = [
     lastActive: new Date(DATE),
     lastSeen: new Date(DATE),
     receiveNotifications: true,
-    isArchived: false,
   },
 ];
