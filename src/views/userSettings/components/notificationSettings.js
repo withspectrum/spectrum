@@ -141,6 +141,8 @@ class NotificationSettings extends React.Component<Props, State> {
         type => type !== '__typename' && notifications.types[type].web
       );
 
+      this.setState({ webPushEnabled: value });
+
       try {
         while (updateQueue.length > 0) {
           const [notificationType] = updateQueue;
@@ -153,8 +155,6 @@ class NotificationSettings extends React.Component<Props, State> {
           updateQueue.shift();
         }
 
-        this.setState({ webPushEnabled: value });
-
         return this.props.dispatch(
           addToastWithTimeout('success', 'Settings saved!')
         );
@@ -164,7 +164,6 @@ class NotificationSettings extends React.Component<Props, State> {
         this.props.dispatch(addToastWithTimeout('error', err.message));
       }
     }
-
     this.setState({ webPushEnabled: value });
   };
 
