@@ -102,7 +102,11 @@ type Props = {
   user: GetCurrentUserSettingsType,
 };
 
-class NotificationSettings extends React.Component<Props> {
+type State = {
+  webPushEnabled: boolean,
+};
+
+class NotificationSettings extends React.Component<Props, State> {
   state = {
     webPushEnabled: false,
   };

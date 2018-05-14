@@ -19,6 +19,8 @@ type State = {
 type Props = {
   subscribeToWebPush: Function,
   dispatch: Function,
+  onInit: Function,
+  onChange: Function,
   smallOnly?: boolean,
   largeOnly?: boolean,
 };
