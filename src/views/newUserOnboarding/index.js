@@ -1,7 +1,6 @@
+// @flow
 import React, { Component } from 'react';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import FullscreenView from '../../components/fullscreenView';
 import { UpsellCreateCommunity } from '../../components/upsell';
@@ -21,13 +20,27 @@ import {
   StickyRow,
   ContinueButton,
 } from './style';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
+import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 
-class NewUserOnboarding extends Component {
-  state: {
-    activeStep: string,
-    joinedCommunities: number,
-  };
+type StateProps = {|
+  community: CommunityInfoType,
+|};
 
+type Props = StateProps & {|
+  currentUser: UserInfoType,
+  close: Function,
+  noCloseButton: boolean,
+|};
+
+type ActiveStep = 'discoverCommunities' | 'setUsername' | 'joinFirstCommunity';
+
+type State = {|
+  activeStep: ActiveStep,
+  joinedCommunities: number,
+|};
+
+class NewUserOnboarding extends Component<Props, State> {
   constructor(props) {
     super(props);
 
@@ -70,7 +83,7 @@ class NewUserOnboarding extends Component {
     return this.toStep('joinFirstCommunity');
   };
 
-  toStep = (step: string) => {
+  toStep = (step: ActiveStep) => {
     return this.setState({
       activeStep: step,
     });
@@ -176,8 +189,7 @@ class NewUserOnboarding extends Component {
   }
 }
 
-//
-const map = state => ({
+const map = (state): StateProps => ({
   community: state.newUserOnboarding.community,
 });
 export default compose(connect(map))(NewUserOnboarding);
