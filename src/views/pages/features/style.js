@@ -69,7 +69,7 @@ export const Waterfall = styled.img`
   transition: all 0.2s ease-in-out;
 
   @media (max-width: 1152px) {
-    top: -12vh;
+    top: -20vh;
     height: 80vh;
     left: 20vw;
   }
@@ -131,7 +131,7 @@ export const SectionGrid = styled.div`
 export const FeatureList = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 15%;
 
   > h1 {
