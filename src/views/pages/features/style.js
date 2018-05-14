@@ -10,12 +10,13 @@ export const Intro = styled.div`
   grid-template-areas: 'copy copy .' '. illo illo';
   margin: 160px 5% 80px;
 
-  @media (max-width: 1152px) {
+  @media (max-width: 1480px) {
     grid-template-rows: auto 33vh;
     grid-template-areas: 'copy copy copy' 'illo illo illo';
   }
 
-  @media (max-width: 800px) {
+  @media (max-width: 960px) {
+    grid-template-rows: auto 25vh;
   }
 
   @media (max-width: 460px) {
@@ -43,7 +44,7 @@ export const TextContent = styled.div`
     }
   }
 
-  @media (max-width: 1152px) {
+  @media (max-width: 1480px) {
     justify-self: flex-start;
   }
 
@@ -64,20 +65,31 @@ export const Waterfall = styled.img`
   justify-self: center;
   top: -25vh;
   height: 100vh;
-  max-height: 100vw;
+  max-height: 90vw;
   z-index: 0;
   transition: all 0.2s ease-in-out;
 
-  @media (max-width: 1152px) {
+  @media (max-width: 1480px) {
     top: -20vh;
     height: 80vh;
+    max-height: 75vw;
     left: 20vw;
   }
 
+  @media (max-width: 1080px) {
+    top: -12vh;
+    max-height: 66vw;
+  }
+
   @media (max-width: 800px) {
-    top: -8vh;
+    top: -6vh;
     left: 8px;
     height: 66vh;
+    max-height: 100vw;
+  }
+
+  @media (max-width: 640px) {
+    top: -2vh;
   }
 
   @media (max-width: 460px) {
