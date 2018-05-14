@@ -8,6 +8,7 @@ import type { ThreadParticipantType } from '../../../shared/graphql/fragments/th
 type Props = {
   author: ThreadParticipantType,
   me: boolean,
+  avatar: boolean,
 };
 
 const AuthorWrapper = styled.View`
@@ -17,10 +18,10 @@ const AuthorWrapper = styled.View`
   align-items: flex-end;
 `;
 
-export default ({ author, me }: Props) => {
+export default ({ author, me, avatar }: Props) => {
   return (
     <AuthorWrapper me={me}>
-      {!me && <Avatar src={author.user.profilePhoto} size={16} radius={8} />}
+      {avatar && <Avatar src={author.user.profilePhoto} size={16} radius={8} />}
       <Text type="footnote" color={props => props.theme.text.alt}>
         <Text bold>{author.user.name}</Text> (@{author.user.username})
       </Text>

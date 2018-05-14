@@ -110,7 +110,7 @@ class Messages extends React.Component<Props> {
                   <View key={initialMessage.id || 'robo'}>
                     {unseenRobo}
                     <ThreadMargin>
-                      <Author author={author} me={me} />
+                      <Author author={author} avatar={!me} me={me} />
                       <View>
                         {group.map(message => {
                           return (
