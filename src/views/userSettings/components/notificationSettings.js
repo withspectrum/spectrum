@@ -163,8 +163,9 @@ class NotificationSettings extends React.Component<Props, State> {
 
         this.props.dispatch(addToastWithTimeout('error', err.message));
       }
+    } else {
+      this.setState({ webPushEnabled: value });
     }
-    this.setState({ webPushEnabled: value });
   };
 
   handleWebPushSettingInit = value => this.setState({ webPushEnabled: value });
