@@ -10,7 +10,7 @@ import type {
   DBMessage,
   DBUsersThreads,
 } from 'shared/types';
-import { getTruthyValuesFromObject } from 'src/helpers/utils';
+import { getTruthyValuesFromObject } from './truthy-values';
 
 type AnalyticsChannel = {
   id: ?string,
