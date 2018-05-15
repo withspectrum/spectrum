@@ -92,15 +92,19 @@ const updateDirectMessageThreadNotificationStatusForUser = (threadId: string, us
 ===========================================================
 */
 
-// TODO: Add method to update if the thread is archived or not.
-// TODO: Add method to get if the thread is archived or not.
 const archiveDirectMessageThread = (
   userDirectMessageThreadId: string
 ): Promise<Object> => {
   return db
     .table('usersDirectMessageThreads')
     .get(userDirectMessageThreadId)
-    .update({ archivedAt: new Date() }, { returnChanges: true })
+    .update(
+      {
+        archivedAt: new Date(),
+        receiveNotifications: false,
+      },
+      { returnChanges: true }
+    )
     .run();
 };
 
@@ -110,7 +114,13 @@ const unarchiveDirectMessageThread = (
   return db
     .table('usersDirectMessageThreads')
     .get(userDirectMessageThreadId)
-    .update({ archivedAt: db.literal() }, { returnChanges: true })
+    .update(
+      {
+        archivedAt: db.literal(),
+        receiveNotifications: true,
+      },
+      { returnChanges: true }
+    )
     .run();
 };
 
