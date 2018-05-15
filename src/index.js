@@ -126,15 +126,3 @@ window.addEventListener('beforeinstallprompt', e => {
     }
   });
 });
-
-const AMPLITUDE_API_KEY =
-  process.env.NODE_ENV === 'production'
-    ? process.env.AMPLITUDE_API_KEY
-    : process.env.AMPLITUDE_API_KEY_DEVELOPMENT;
-if (AMPLITUDE_API_KEY) {
-  window.amplitude.getInstance().init(AMPLITUDE_API_KEY);
-  // amplitude.getInstance().setOptOut(navigator.doNotTrack === '1')
-  window.amplitude.getInstance().setOptOut(false);
-} else {
-  console.warn('No amplitude api key, tracking in development mode');
-}
