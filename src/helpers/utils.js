@@ -66,13 +66,6 @@ export const draftOnlyContainsEmoji = (raw: Object) =>
   raw.blocks.length === 1 &&
   raw.blocks[0].type === 'unstyled' &&
   onlyContainsEmoji(raw.blocks[0].text);
-/**
- * Encode a string to base64 (using the Node built-in Buffer)
- *
- * Stolen from http://stackoverflow.com/a/38237610/2115623
- */
-export const encode = (string: string) =>
-  Buffer.from(string).toString('base64');
 
 /*
   Best guess at if user is on a mobile device. Used in the modal components
@@ -280,4 +273,8 @@ export const renderMarkdownLinks = (text: string) => {
       {text}
     </a>
   ));
+};
+
+export const getTruthyValuesFromObject = (object: Object): Array<?string> => {
+  return Object.keys(object).filter(key => object[key] === true);
 };

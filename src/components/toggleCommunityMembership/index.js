@@ -6,7 +6,6 @@ import addCommunityMemberMutation from 'shared/graphql/mutations/communityMember
 import removeCommunityMemberMutation from 'shared/graphql/mutations/communityMember/removeCommunityMember';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { track } from '../../helpers/events';
 import type { AddCommunityMemberType } from 'shared/graphql/mutations/communityMember/addCommunityMember';
 import type { RemoveCommunityMemberType } from 'shared/graphql/mutations/communityMember/removeCommunityMember';
 
@@ -54,7 +53,6 @@ class ToggleCommunityMembership extends React.Component<Props, State> {
     return this.props
       .removeCommunityMember({ input })
       .then(({ data }: RemoveCommunityMemberType) => {
-        track('community', 'unjoined', null);
         this.props.dispatch(
           addToastWithTimeout('neutral', `Left ${community.name}.`)
         );
@@ -74,8 +72,6 @@ class ToggleCommunityMembership extends React.Component<Props, State> {
     return this.props
       .addCommunityMember({ input })
       .then(({ data }: AddCommunityMemberType) => {
-        track('community', 'joined', null);
-
         this.props.dispatch(
           addToastWithTimeout(
             'success',
@@ -94,7 +90,11 @@ class ToggleCommunityMembership extends React.Component<Props, State> {
   };
 
   render() {
-    return <div onClick={this.init}>{this.props.render(this.state)}</div>;
+    return (
+      <div className={'member-button'} onClick={this.init}>
+        {this.props.render(this.state)}
+      </div>
+    );
   }
 }
 

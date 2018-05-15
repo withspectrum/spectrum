@@ -2,9 +2,8 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { MessageIconContainer, UserListItemContainer } from '../style';
+import { UserListItemContainer } from '../style';
 import GranularUserProfile from 'src/components/granularUserProfile';
-import { TextButton } from 'src/components/buttons';
 import { Loading } from 'src/components/loading';
 import getBlockedUsersQuery from 'shared/graphql/queries/channel/getChannelBlockedUsers';
 import type { GetChannelBlockedUsersType } from 'shared/graphql/queries/channel/getChannelBlockedUsers';
@@ -16,6 +15,16 @@ import {
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { ListContainer, Notice } from 'src/components/listItems/style';
+import EditDropdown from './editDropdown';
+import {
+  Dropdown,
+  DropdownSectionDivider,
+  DropdownSection,
+  DropdownSectionSubtitle,
+  DropdownSectionText,
+  DropdownSectionTitle,
+  DropdownAction,
+} from 'src/components/settingsViews/style';
 import Icon from 'src/components/icons';
 
 type Props = {
@@ -30,7 +39,7 @@ type Props = {
 
 class BlockedUsers extends React.Component<Props> {
   render() {
-    const { data, unblock, isLoading, currentUser, initMessage } = this.props;
+    const { data, isLoading, currentUser, unblock, initMessage } = this.props;
 
     if (data && data.channel) {
       const { blockedUsers } = data.channel;
@@ -38,22 +47,24 @@ class BlockedUsers extends React.Component<Props> {
       return (
         <SectionCard>
           <SectionTitle>Blocked Users</SectionTitle>
-          {blockedUsers.length > 0 && (
-            <SectionSubtitle>
-              Blocked users can not see threads or messages posted in this
-              channel. They will still be able to join any other public channels
-              in the Spectrum community and request access to other private
-              channels.
-            </SectionSubtitle>
-          )}
+          {blockedUsers &&
+            blockedUsers.length > 0 && (
+              <SectionSubtitle>
+                Blocked users can not see threads or messages posted in this
+                channel. They will still be able to join any other public
+                channels in the Spectrum community and request access to other
+                private channels.
+              </SectionSubtitle>
+            )}
 
-          {blockedUsers.length > 0 && (
-            <Notice>
-              Unblocking a user will <b>not</b> add them to this channel. It
-              will only allow them to re-request access in the future as long as
-              this channel remains private.
-            </Notice>
-          )}
+          {blockedUsers &&
+            blockedUsers.length > 0 && (
+              <Notice>
+                Unblocking a user will <b>not</b> add them to this channel. It
+                will only allow them to re-request access in the future as long
+                as this channel remains private.
+              </Notice>
+            )}
 
           <ListContainer>
             {blockedUsers &&
@@ -74,34 +85,55 @@ class BlockedUsers extends React.Component<Props> {
                       avatarSize={'32'}
                       description={user.description}
                     >
-                      <div style={{ display: 'flex' }}>
-                        <TextButton
-                          onClick={() => user && unblock(user.id)}
-                          hoverColor={'warn.alt'}
-                        >
-                          Unblock
-                        </TextButton>
+                      <EditDropdown
+                        render={() => (
+                          <Dropdown>
+                            <DropdownSection
+                              style={{ borderBottom: '0' }}
+                              onClick={() => initMessage(user)}
+                            >
+                              <DropdownAction>
+                                <Icon glyph={'message'} size={'32'} />
+                              </DropdownAction>
+                              <DropdownSectionText>
+                                <DropdownSectionTitle>
+                                  Send Direct Message
+                                </DropdownSectionTitle>
+                              </DropdownSectionText>
+                            </DropdownSection>
 
-                        {currentUser &&
-                          user.id !== currentUser.id && (
-                            <MessageIconContainer>
-                              <Icon
-                                glyph={'message'}
-                                onClick={() => initMessage(user)}
-                              />
-                            </MessageIconContainer>
-                          )}
-                      </div>
+                            <DropdownSectionDivider />
+
+                            <DropdownSection onClick={() => unblock(user.id)}>
+                              <DropdownAction>
+                                <Icon glyph={'minus'} size={'32'} />
+                              </DropdownAction>
+
+                              <DropdownSectionText>
+                                <DropdownSectionTitle>
+                                  Unblock
+                                </DropdownSectionTitle>
+                                <DropdownSectionSubtitle>
+                                  Allow this user to re-request access in the
+                                  future. They will not be joined to the
+                                  channel.
+                                </DropdownSectionSubtitle>
+                              </DropdownSectionText>
+                            </DropdownSection>
+                          </Dropdown>
+                        )}
+                      />
                     </GranularUserProfile>
                   </UserListItemContainer>
                 );
               })}
 
-            {blockedUsers.length <= 0 && (
-              <SectionSubtitle>
-                There are no blocked users in this channel.
-              </SectionSubtitle>
-            )}
+            {blockedUsers &&
+              blockedUsers.length <= 0 && (
+                <SectionSubtitle>
+                  There are no blocked users in this channel.
+                </SectionSubtitle>
+              )}
           </ListContainer>
         </SectionCard>
       );

@@ -3,7 +3,6 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
-import { track } from '../../../helpers/events';
 import setLastSeenMutation from 'shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';
 import Messages from '../components/messages';
 import Header from '../components/header';
@@ -38,8 +37,6 @@ class ExistingThread extends React.Component<Props> {
     if (window && window.innerWidth > 768 && this.chatInput) {
       this.chatInput.triggerFocus();
     }
-
-    track('direct message thread', 'viewed', null);
   }
 
   componentDidUpdate(prevProps) {
@@ -49,6 +46,14 @@ class ExistingThread extends React.Component<Props> {
     if (
       prevProps.threadSliderIsOpen &&
       !this.props.threadSliderIsOpen &&
+      this.chatInput
+    ) {
+      this.chatInput.triggerFocus();
+    }
+    // as soon as the direct message thread is loaded, refocus the chat input
+    if (
+      this.props.data.directMessageThread &&
+      !prevProps.data.directMessageThread &&
       this.chatInput
     ) {
       this.chatInput.triggerFocus();

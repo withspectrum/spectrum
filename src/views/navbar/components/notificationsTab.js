@@ -14,7 +14,8 @@ import type { GetNotificationsType } from 'shared/graphql/queries/notification/g
 import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
 import { markSingleNotificationSeenMutation } from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import { Tab, NotificationTab, Label } from '../style';
-import { getDistinctNotifications } from '../../notifications/utils';
+import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   active: boolean,
@@ -255,7 +256,7 @@ class NotificationsTab extends React.Component<Props, State> {
     if (!nodes || nodes.length === 0) return this.setCount();
 
     // get distinct notifications by id
-    const distinct = getDistinctNotifications(nodes);
+    const distinct = deduplicateChildren(nodes, 'id');
 
     /*
       1. If the user is viewing a ?thread= url, don't display a notification
@@ -333,7 +334,7 @@ class NotificationsTab extends React.Component<Props, State> {
       return curr.dispatch(updateNotificationsCount('notifications', 0));
     }
 
-    const distinct = getDistinctNotifications(notifications);
+    const distinct = deduplicateChildren(notifications, 'id');
     // set to 0 if no notifications exist yet
     if (!distinct || distinct.length === 0) {
       return curr.dispatch(updateNotificationsCount('notifications', 0));
@@ -388,16 +389,24 @@ class NotificationsTab extends React.Component<Props, State> {
     }
 
     return (
-      <NotificationTab padOnHover onMouseOver={this.setHover}>
+      <NotificationTab
+        padOnHover
+        onMouseOver={this.setHover}
+        data-cy="navbar-notifications"
+      >
         <Tab
           data-active={active}
+          aria-current={active ? 'page' : undefined}
           to="/notifications"
           rel="nofollow"
-          onClick={this.markAllAsSeen}
+          onClick={() => {
+            this.markAllAsSeen();
+            track(events.NAVIGATION_NOTIFICATIONS_CLICKED);
+          }}
         >
           <Icon
             glyph={count > 0 ? 'notification-fill' : 'notification'}
-            withCount={count > 10 ? '10+' : count > 0 ? count : false}
+            count={count > 10 ? '10+' : count > 0 ? count.toString() : null}
           />
           <Label hideOnDesktop>Notifications</Label>
         </Tab>

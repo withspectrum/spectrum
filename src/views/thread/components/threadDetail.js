@@ -19,8 +19,7 @@ import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
-import { track } from '../../../helpers/events';
-import Editor from '../../../components/draftjs-editor';
+import Editor from '../../../components/rich-text-editor';
 import { toJSON, toPlainText, toState } from 'shared/draft-utils';
 import Textarea from 'react-textarea-autosize';
 import ActionBar from './actionBar';
@@ -32,6 +31,7 @@ import {
   Timestamp,
   Edited,
 } from '../style';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
@@ -84,6 +84,12 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
   setThreadState() {
     const { thread } = this.props;
+
+    track(events.THREAD_VIEWED, {
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
+    });
 
     let rawLinkPreview =
       thread.attachments && thread.attachments.length > 0
@@ -151,10 +157,8 @@ class ThreadDetailPure extends React.Component<Props, State> {
           isLockingThread: false,
         });
         if (setThreadLock.isLocked) {
-          track('thread', 'locked', null);
           return dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
         } else {
-          track('thread', 'unlocked', null);
           return dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
         }
       })
@@ -169,8 +173,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
   triggerDelete = e => {
     e.preventDefault();
     const { thread, dispatch } = this.props;
-
-    track('thread', 'delete inited', null);
 
     const threadId = thread.id;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
@@ -192,20 +194,40 @@ class ThreadDetailPure extends React.Component<Props, State> {
       message = 'Are you sure you want to delete this thread?';
     }
 
+    track(events.THREAD_DELETED_INITED, {
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
+    });
+
     return dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {
         id: threadId,
         entity: 'thread',
         message,
+        extraProps: {
+          thread,
+        },
       })
     );
   };
 
   toggleEdit = () => {
     const { isEditing } = this.state;
+    const { thread } = this.props;
+
     this.setState({
       isEditing: !isEditing,
     });
+
+    if (!isEditing) {
+      track(events.THREAD_EDITED_INITED, {
+        thread: transformations.analyticsThread(thread),
+        channel: transformations.analyticsChannel(thread.channel),
+        community: transformations.analyticsCommunity(thread.community),
+      });
+    }
+
     this.props.toggleEdit();
   };
 

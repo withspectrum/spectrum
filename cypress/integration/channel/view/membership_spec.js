@@ -58,7 +58,7 @@ const join = () => {
 };
 
 describe('logged out channel membership', () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit(`/${community.slug}/${publicChannel.slug}`);
   });
 
@@ -68,7 +68,7 @@ describe('logged out channel membership', () => {
 });
 
 describe('channel profile as member', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(memberInChannelId);
     cy.visit(`/${community.slug}/${publicChannel.slug}`);
   });
@@ -80,7 +80,7 @@ describe('channel profile as member', () => {
 });
 
 describe('channel profile as non-member', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(QUIET_USER_ID);
     cy.visit(`/${community.slug}/${publicChannel.slug}`);
   });
@@ -92,7 +92,7 @@ describe('channel profile as non-member', () => {
 });
 
 describe('channel profile as owner', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(ownerInChannelId);
     cy.visit(`/${community.slug}/${publicChannel.slug}`);
   });
@@ -107,7 +107,7 @@ describe('channel profile as owner', () => {
 
 describe('private channel profile', () => {
   describe('private channel as member', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(memberInPrivateChannelId);
       cy.visit(`/${community.slug}/${privateChannel.slug}`);
     });
@@ -118,7 +118,7 @@ describe('private channel profile', () => {
   });
 
   describe('private channel as non-member', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(QUIET_USER_ID);
       cy.visit(`/${community.slug}/${privateChannel.slug}`);
     });

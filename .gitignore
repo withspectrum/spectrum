@@ -5,6 +5,7 @@ build
 .DS_Store
 src/config/FirebaseConfig.js
 npm-debug.log
+yarn-error.log
 rethinkdb_data
 debug
 now-secrets.json
@@ -18,6 +19,7 @@ build-vulcan
 build-hyperion
 build-pluto
 build-electron
+build-analytics
 package-lock.json
 .vscode
 dump.rdb
@@ -32,3 +34,4 @@ api/.env
 mobile/.expo
 test-results.json
 desktop/release
+public/uploads

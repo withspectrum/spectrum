@@ -2,63 +2,38 @@
 import type { GraphQLContext } from '../../';
 import type { EditChannelInput } from '../../models/channel';
 import UserError from '../../utils/UserError';
+import { approvePendingUsersInChannel } from '../../models/usersChannels';
+import { editChannel } from '../../models/channel';
 import {
-  getUserPermissionsInChannel,
-  approvePendingUsersInChannel,
-} from '../../models/usersChannels';
-import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
-import { editChannel, getChannels } from '../../models/channel';
+  isAuthedResolver as requireAuth,
+  canModerateChannel,
+} from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
-export default async (
-  _: any,
-  args: EditChannelInput,
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+export default requireAuth(
+  async (_: any, args: EditChannelInput, ctx: GraphQLContext) => {
+    const { user, loaders } = ctx;
 
-  // user must be authed to edit a channel
-  if (!currentUser) {
-    return new UserError(
-      'You must be signed in to make changes to this channel.'
-    );
-  }
+    const channel = await loaders.channel.load(args.input.channelId);
 
-  const [channels, currentUserChannelPermissions] = await Promise.all([
-    getChannels([args.input.channelId]),
-    getUserPermissionsInChannel(args.input.channelId, currentUser.id),
-  ]);
+    if (!await canModerateChannel(user.id, args.input.channelId, loaders)) {
+      trackQueue.add({
+        userId: user.id,
+        event: events.CHANNEL_EDITED_FAILED,
+        context: { channelId: args.input.channelId },
+        properties: {
+          reason: 'no permission',
+        },
+      });
 
-  // select the channel to evaluate
-  const channelToEvaluate = channels && channels[0];
+      return new UserError('You don’t have permission to manage this channel');
+    }
 
-  // if a channel wasn't found or was deleted
-  if (!channelToEvaluate || channelToEvaluate.deletedAt) {
-    return new UserError("This channel doesn't exist");
-  }
-
-  // get the community parent of the channel being deleted
-  const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
-    channelToEvaluate.communityId,
-    currentUser.id
-  );
-
-  if (
-    currentUserCommunityPermissions.isOwner ||
-    currentUserChannelPermissions.isOwner ||
-    currentUserCommunityPermissions.isModerator ||
-    currentUserChannelPermissions.isModerator
-  ) {
-    // all checks passed
-    // if a channel is being converted from private to public, make
-    // all the pending users members in the channel
-    if (channelToEvaluate.isPrivate && !args.input.isPrivate) {
+    if (channel.isPrivate && !args.input.isPrivate) {
       approvePendingUsersInChannel(args.input.channelId);
     }
 
-    return editChannel(args);
+    return editChannel(args, user.id);
   }
-
-  return new UserError(
-    "You don't have permission to make changes to this channel."
-  );
-};
+);

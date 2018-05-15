@@ -11,6 +11,7 @@ export type DBChannel = {
   communityId: string,
   createdAt: Date,
   deletedAt?: Date,
+  deletedBy?: string,
   description: string,
   id: string,
   isDefault: boolean,
@@ -30,6 +31,7 @@ export type DBCommunity = {
   slug: string,
   website?: ?string,
   deletedAt?: Date,
+  deletedBy?: string,
   pinnedThreadId?: string,
   watercoolerId?: string,
   creatorId: string,
@@ -47,14 +49,30 @@ export type DBCommunitySettings = {
   brandedLogin: ?{
     customMessage: ?string,
   },
+  slackSettings: ?{
+    connectedAt: ?string,
+    connectedBy: ?string,
+    invitesSentAt: ?string,
+    teamName: ?string,
+    teamId: ?string,
+    scope: ?string,
+    token: ?string,
+    invitesMemberCount: ?string,
+    invitesCustomMessage: ?string,
+  },
 };
 
 export type DBChannelSettings = {
   id: string,
   channelId: string,
-  joinSettings: {
+  joinSettings?: {
     tokenJoinEnabled: boolean,
     token: string,
+  },
+  slackSettings?: {
+    botLinks: {
+      threadCreated: ?string,
+    },
   },
 };
 
@@ -96,9 +114,11 @@ export type DBMessage = {
   messageType: 'text' | 'media' | 'draftjs',
   senderId: string,
   deletedAt?: Date,
+  deletedBy?: string,
   threadId: string,
   threadType: 'story' | 'directMessageThread',
   timestamp: Date,
+  parentId?: string,
 };
 
 export type NotificationPayloadType =
@@ -205,7 +225,7 @@ type DBThreadEdits = {
     photos: Array<DBThreadAttachment>,
   },
   content: {
-    body?: string,
+    body?: any,
     title: string,
   },
   timestamp: Date,
@@ -216,7 +236,7 @@ export type DBThread = {
   channelId: string,
   communityId: string,
   content: {
-    body?: string,
+    body?: any,
     title: string,
   },
   createdAt: Date,
@@ -227,6 +247,8 @@ export type DBThread = {
   lockedAt?: Date,
   lastActive: Date,
   modifiedAt?: Date,
+  deletedAt?: string,
+  deletedBy: ?string,
   attachments?: Array<DBThreadAttachment>,
   edits?: Array<DBThreadEdits>,
   watercooler?: boolean,
@@ -236,7 +258,7 @@ export type DBThread = {
 export type DBUser = {
   id: string,
   email?: string,
-  createdAt: Date,
+  createdAt: string,
   name: string,
   coverPhoto: string,
   profilePhoto: string,
@@ -248,10 +270,10 @@ export type DBUser = {
   username: ?string,
   timezone?: ?number,
   isOnline?: boolean,
-  lastSeen?: ?Date,
+  lastSeen?: ?string,
   description?: ?string,
   website?: ?string,
-  modifiedAt: ?Date,
+  modifiedAt: ?string,
 };
 
 export type DBUsersChannels = {
@@ -387,3 +409,5 @@ export type FileUpload = {
   encoding: string,
   stream: any,
 };
+
+export type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';

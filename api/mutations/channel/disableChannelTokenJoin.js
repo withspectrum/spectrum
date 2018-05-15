@@ -2,41 +2,40 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import {
-  createChannelSettings,
+  getOrCreateChannelSettings,
   disableChannelTokenJoin,
 } from '../../models/channelSettings';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateChannel,
+} from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
-type DisableChannelTokenJoinInput = {
+type Input = {
   input: {
     id: string,
   },
 };
 
-export default async (
-  _: any,
-  { input: { id: channelId } }: DisableChannelTokenJoinInput,
-  { user, loaders }: GraphQLContext
-) => {
-  const currentUser = user;
-  if (!currentUser) {
-    return new UserError('You must be signed in to manage this channel.');
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { id: channelId } = args.input;
+  const { user, loaders } = ctx;
+
+  if (!await canModerateChannel(user.id, channelId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.CHANNEL_JOIN_TOKEN_DISABLED_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
+    return new UserError('You don’t have permission to manage this channel');
   }
 
-  const [permissions, settings] = await Promise.all([
-    loaders.userPermissionsInChannel.load([currentUser.id, channelId]),
-    loaders.channelSettings.load(channelId),
-  ]);
-
-  if (!permissions.isOwner) {
-    return new UserError("You don't have permission to do this.");
-  }
-
-  loaders.channelSettings.clear(channelId);
-
-  // settings.id tells us that a channelSettings record exists in the db
-  if (settings.id) {
-    return await disableChannelTokenJoin(channelId);
-  } else {
-    return await createChannelSettings(channelId);
-  }
-};
+  return await getOrCreateChannelSettings(channelId).then(
+    async () => await disableChannelTokenJoin(channelId, user.id)
+  );
+});

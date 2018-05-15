@@ -13,6 +13,10 @@ const channels = data.channels.filter(
   ({ communityId }) => community.id === communityId
 );
 
+const verify = () => {
+  cy.visit(`http://localhost:3001/api/email/validate/test-payments/verify`);
+};
+
 describe('Community settings billing tab', () => {
   beforeEach(() => {
     cy.auth(ownerId);
@@ -92,6 +96,7 @@ describe('Community settings billing tab', () => {
       // create channel modal
       cy
         .get('[data-cy="create-channel-button"]')
+        .scrollIntoView()
         .should('be.visible')
         .click();
 
@@ -118,6 +123,7 @@ describe('Community settings billing tab', () => {
       // go to members tab
       cy
         .get(`[href="/${community.slug}/settings/members"]`)
+        .scrollIntoView()
         .should('be.visible')
         .click();
 
@@ -153,12 +159,14 @@ describe('Community settings billing tab', () => {
 
   describe('should force verification of administration email', () => {
     it('should verify email address', () => {
-      cy.visit(`http://localhost:3001/api/email/validate/test-payments/verify`);
+      verify();
     });
   });
 
   describe('should be able to view billing settings with save administrator email', () => {
     it('should load community billing settings', () => {
+      verify();
+
       cy.visit(`/${community.slug}/settings`);
       cy
         .get(`[href="/${community.slug}/settings/billing"]`)
@@ -190,12 +198,14 @@ describe('Community settings billing tab', () => {
       // go to overview tab
       cy
         .get(`[href="/${community.slug}/settings"]`)
+        .scrollIntoView()
         .should('be.visible')
         .click();
 
       // create channel modal
       cy
         .get('[data-cy="create-channel-button"]')
+        .scrollIntoView()
         .should('be.visible')
         .click();
 
@@ -224,6 +234,7 @@ describe('Community settings billing tab', () => {
       // go to members tab
       cy
         .get(`[href="/${community.slug}/settings/members"]`)
+        .scrollIntoView()
         .should('be.visible')
         .click();
 
@@ -267,6 +278,7 @@ describe('Community settings billing tab', () => {
       cy.visit(`/${community.slug}/settings`);
       cy
         .get(`[href="/${community.slug}/settings/billing"]`)
+        .scrollIntoView()
         .should('be.visible')
         .click();
       cy

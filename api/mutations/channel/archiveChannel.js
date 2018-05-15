@@ -1,61 +1,63 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { getUserPermissionsInChannel } from '../../models/usersChannels';
-import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
-import { getChannelById, archiveChannel } from '../../models/channel';
+import { archiveChannel } from '../../models/channel';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateChannel,
+} from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
-export default async (
-  _: any,
-  { input: { channelId } }: { input: { channelId: string } },
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+type Input = {
+  input: {
+    channelId: string,
+  },
+};
 
-  // user must be authed to delete a channel
-  if (!currentUser) {
-    return new UserError(
-      'You must be signed in to make changes to this channel.'
-    );
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { channelId } = args.input;
+  const { user, loaders } = ctx;
 
-  const [channelToEvaluate, currentUserChannelPermissions] = await Promise.all([
-    // get the channel to evaluate
-    getChannelById(channelId),
-    // get the channel's permissions
-    getUserPermissionsInChannel(channelId, currentUser.id),
-  ]);
+  const channelToEvaluate = await loaders.channel.load(channelId);
 
-  // if channel wasn't found or was previously deleted, something
-  // has gone wrong and we need to escape
-  if (!channelToEvaluate || channelToEvaluate.deletedAt) {
-    return new UserError("Channel doesn't exist");
+  if (!await canModerateChannel(user.id, channelId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.CHANNEL_ARCHIVED_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+    return new UserError('You don’t have permission to archive this channel');
   }
 
   if (channelToEvaluate.archivedAt) {
-    return new UserError('Channel already archived');
+    trackQueue.add({
+      userId: user.id,
+      event: events.CHANNEL_ARCHIVED_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'channel already archived',
+      },
+    });
+    return new UserError('This channel is already archived');
   }
 
   if (channelToEvaluate.slug === 'general') {
-    return new UserError("The general channel can't be archived");
+    trackQueue.add({
+      userId: user.id,
+      event: events.CHANNEL_ARCHIVED_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'general channel',
+      },
+    });
+    return new UserError(
+      'The general channel in a community can’t be archived'
+    );
   }
 
-  // get the community parent of the channel being deleted
-  const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
-    channelToEvaluate.communityId,
-    currentUser.id
-  );
-
-  if (
-    currentUserCommunityPermissions.isOwner ||
-    currentUserChannelPermissions.isOwner ||
-    currentUserCommunityPermissions.isModerator ||
-    currentUserChannelPermissions.isModerator
-  ) {
-    return await archiveChannel(channelId);
-  }
-
-  return new UserError(
-    "You don't have permission to make changes to this channel"
-  );
-};
+  return await archiveChannel(channelId, user.id);
+});

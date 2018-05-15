@@ -3,9 +3,9 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { track } from '../../../helpers/events';
 import editCommunityMutation from 'shared/graphql/mutations/community/editCommunity';
 import type { EditCommunityType } from 'shared/graphql/mutations/community/editCommunity';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { Button, IconButton } from '../../../components/buttons';
@@ -30,6 +30,7 @@ import {
   SectionCard,
   SectionTitle,
 } from '../../../components/settingsViews/style';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 type State = {
   name: string,
@@ -48,18 +49,7 @@ type State = {
 };
 
 type Props = {
-  community: {
-    name: string,
-    slug: string,
-    description: string,
-    id: string,
-    profilePhoto: string,
-    coverPhoto: string,
-    website: ?string,
-    communityPermissions: {
-      isOwner: boolean,
-    },
-  },
+  community: GetCommunityType,
   dispatch: Function,
   editCommunity: Function,
 };
@@ -72,7 +62,7 @@ class EditForm extends React.Component<Props, State> {
     this.state = {
       name: community.name,
       slug: community.slug,
-      description: community.description,
+      description: community.description ? community.description : '',
       communityId: community.id,
       website: community.website ? community.website : '',
       image: community.profilePhoto,
@@ -141,8 +131,6 @@ class EditForm extends React.Component<Props, State> {
     }
 
     reader.onloadend = () => {
-      track('community', 'profile photo uploaded', null);
-
       this.setState({
         file: file,
         // $FlowFixMe
@@ -173,8 +161,6 @@ class EditForm extends React.Component<Props, State> {
     }
 
     reader.onloadend = () => {
-      track('community', 'cover photo uploaded', null);
-
       this.setState({
         coverFile: file,
         // $FlowFixMe
@@ -226,12 +212,9 @@ class EditForm extends React.Component<Props, State> {
 
         // community was returned
         if (community !== undefined) {
-          track('community', 'edited', null);
-
           this.props.dispatch(
             addToastWithTimeout('success', 'Community saved!')
           );
-          window.location.href = `/${this.props.community.slug}`;
         }
         return;
       })
@@ -240,13 +223,13 @@ class EditForm extends React.Component<Props, State> {
           isLoading: false,
         });
 
-        this.props.dispatch(addToastWithTimeout('error', err));
+        this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
   triggerDeleteCommunity = (e, communityId) => {
     e.preventDefault();
-    track('community', 'delete inited', null);
+    const { community } = this.props;
     const { name, communityData } = this.state;
     const message = (
       <div>
@@ -266,6 +249,10 @@ class EditForm extends React.Component<Props, State> {
         <p>This cannot be undone.</p>
       </div>
     );
+
+    track(events.COMMUNITY_DELETED_INITED, {
+      community: transformations.analyticsCommunity(community),
+    });
 
     return this.props.dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {

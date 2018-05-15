@@ -10,7 +10,7 @@
 import passport from 'passport';
 import { URL } from 'url';
 import isSpectrumUrl from '../../utils/is-spectrum-url';
-import { signCookie } from 'shared/cookie-utils';
+import { signCookie, getCookies } from 'shared/cookie-utils';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 const FALLBACK_URL = IS_PROD
@@ -59,22 +59,23 @@ export const createSigninRoutes = (
         if (
           // $FlowIssue
           req.session.authType === 'token' &&
-          req.cookies &&
-          req.cookies.session &&
-          req.cookies['session.sig']
+          req.session.passport &&
+          req.session.passport.user
         ) {
+          const cookies = getCookies({ userId: req.session.passport.user });
+
           redirectUrl.searchParams.append(
             'accessToken',
             signCookie(
-              `session=${req.cookies.session}; session.sig=${
-                req.cookies['session.sig']
+              `session=${cookies.session}; session.sig=${
+                cookies['session.sig']
               }`
             )
           );
-          // $FlowIssue
-          req.session.authType = undefined;
         }
 
+        // $FlowIssue
+        req.session.authType = undefined;
         // Delete the redirectURL from the session again so we don't redirect
         // to the old URL the next time around
         // $FlowIssue

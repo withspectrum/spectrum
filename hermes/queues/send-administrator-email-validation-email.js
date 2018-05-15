@@ -2,6 +2,7 @@
 const debug = require('debug')(
   'hermes:queue:send-administrator-email-validation-email'
 );
+import Raven from 'shared/raven';
 import sendEmail from '../send-email';
 import {
   ADMINISTRATOR_EMAIL_VALIDATION_TEMPLATE,
@@ -50,9 +51,12 @@ export default async (job: Job<AdministratorEmailValidationEmailJobData>) => {
           validateToken,
           community,
         },
+        userId,
       });
     } catch (err) {
-      console.log(err);
+      debug('❌ Error in job:\n');
+      debug(err);
+      Raven.captureException(err);
     }
   }
 };

@@ -108,6 +108,10 @@ cron-parser@^2.4.1:
     is-nan "^1.2.1"
     moment-timezone "^0.5.0"
 
+cryptr@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/cryptr/-/cryptr-3.0.0.tgz#4cdb1ac8b0b292c6ac1dcdf503bb27a05e4eba10"
+
 css-select@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/css-select/-/css-select-1.2.0.tgz#2b3a110539c5355f1cd8d314623e870b121ec858"
@@ -708,6 +712,10 @@ string_decoder@~1.0.3:
 timed-out@4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/timed-out/-/timed-out-4.0.1.tgz#f32eacac5a175bea25d7fab565ab3ed8741ef56f"
+
+toobusy-js@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/toobusy-js/-/toobusy-js-0.5.1.tgz#5511f78f6a87a6a512d44fdb0efa13672217f659"
 
 ua-parser-js@^0.7.9:
   version "0.7.14"

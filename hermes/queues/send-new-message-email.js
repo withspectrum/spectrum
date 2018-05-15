@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-new-message-email');
+import Raven from 'shared/raven';
 import sendEmail from '../send-email';
 import { generateUnsubscribeToken } from '../utils/generate-jwt';
 import {
@@ -54,7 +55,11 @@ export default async (job: Job<SendNewMessageEmailJobData>) => {
           : `${restNames.length} others`
       }...`
     : '';
-  const preheader = `View ${newMessagesLength === 1 ? `1 new message from ` : `${newMessagesLength} new messages from `}${firstName}${preheaderSubtext}`;
+  const preheader = `View ${
+    newMessagesLength === 1
+      ? `1 new message from `
+      : `${newMessagesLength} new messages from `
+  }${firstName}${preheaderSubtext}`;
 
   const unsubscribeToken = await generateUnsubscribeToken(
     recipient.userId,
@@ -93,8 +98,11 @@ export default async (job: Job<SendNewMessageEmailJobData>) => {
           })),
         },
       },
+      userId: recipient.userId,
     });
   } catch (err) {
-    console.error(err);
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
   }
 };

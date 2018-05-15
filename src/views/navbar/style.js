@@ -51,7 +51,12 @@ export const Nav = styled.nav`
         grid-template-areas: 'home explore support pricing';
       }
     `} ${props =>
-      props.hideOnMobile && css`@media (max-width: 768px) {display: none;}`};
+    props.hideOnMobile &&
+    css`
+      @media (max-width: 768px) {
+        display: none;
+      }
+    `};
 `;
 
 export const Label = styled.span`
@@ -60,7 +65,10 @@ export const Label = styled.span`
   margin-left: 12px;
 
   ${props =>
-    props.hideOnDesktop && css`display: none;`} @media (max-width: 768px) {
+    props.hideOnDesktop &&
+    css`
+      display: none;
+    `} @media (max-width: 768px) {
     font-size: 10px;
     font-weight: 700;
     margin: 0;
@@ -100,13 +108,15 @@ export const Tab = styled(Link)`
       color: ${props => props.theme.text.reverse};
       transition: ${Transition.hover.on};
 
-      &:hover {
+      &:hover,
+      &:focus {
         box-shadow: inset 0 -6px 0 ${({ theme }) => theme.text.reverse};
         transition: ${Transition.hover.on};
       }
     }
 
-    &:hover {
+    &:hover,
+    &:focus {
       box-shadow: inset 0 -4px 0 ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.placeholder : theme.warn.border)};
       color: ${props => props.theme.text.reverse};
       transition: ${Transition.hover.on};
@@ -156,7 +166,11 @@ export const DropTab = styled(FlexRow)`
   @media (max-width: 768px) {
     flex: auto;
     justify-content: center;
-    ${props => props.hideOnMobile && css`display: none;`};
+    ${props =>
+      props.hideOnMobile &&
+      css`
+        display: none;
+      `};
   }
 
   .dropdown {
@@ -197,16 +211,30 @@ export const Logo = styled(Tab)`
   @media (max-width: 768px) {
     display: none;
   }
+
+  ${props =>
+    props.isHidden &&
+    css`
+      display: none;
+    `};
 `;
 
-export const HomeTab = styled(Tab)`grid-area: home;`;
+export const HomeTab = styled(Tab)`
+  grid-area: home;
+`;
 
-export const MessageTab = styled(Tab)`grid-area: messages;`;
+export const MessageTab = styled(Tab)`
+  grid-area: messages;
+`;
 
 export const ExploreTab = styled(Tab)`
   grid-area: explore;
 
-  ${props => props.loggedOut && css`grid-area: explore;`} ${Label} {
+  ${props =>
+    props.loggedOut &&
+    css`
+      grid-area: explore;
+    `} ${Label} {
     @media (max-width: 768px) {
       display: flex;
     }
@@ -217,9 +245,13 @@ export const ExploreTab = styled(Tab)`
   }
 `;
 
-export const SupportTab = styled(Tab)`grid-area: support;`;
+export const SupportTab = styled(Tab)`
+  grid-area: support;
+`;
 
-export const PricingTab = styled(MessageTab)`grid-area: pricing;`;
+export const PricingTab = styled(MessageTab)`
+  grid-area: pricing;
+`;
 
 export const NotificationTab = styled(DropTab)`
   grid-area: notifications;
@@ -247,7 +279,9 @@ export const ProfileDrop = styled(DropTab)`
   }
 `;
 
-export const ProfileTab = styled(Tab)`grid-area: profile;`;
+export const ProfileTab = styled(Tab)`
+  grid-area: profile;
+`;
 
 export const Navatar = styled(Avatar)`
   margin-top: 0;
@@ -344,5 +378,19 @@ export const MarkAllSeen = styled.span`
   &:hover {
     color: ${props =>
       props.isActive ? props.theme.brand.default : props.theme.text.alt};
+  }
+`;
+
+// We make it a real link element because anchor links don’t work properly with React Router.
+// Ref: https://github.com/ReactTraining/react-router/issues/394.
+export const SkipLink = Tab.withComponent('a').extend`
+  grid-area: logo;
+  overflow: hidden;
+  height: 1px;
+  width: 1px;
+
+  &:focus {
+    height: auto;
+    width: auto;
   }
 `;

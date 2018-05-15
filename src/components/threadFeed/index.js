@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-//$FlowFixMe
+// @flow
+import * as React from 'react';
 import styled from 'styled-components';
-//$FlowFixMe
 import compose from 'recompose/compose';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
-import InfiniteList from 'react-infinite-scroller-with-scroll-element';
+import InfiniteList from 'src/components/infiniteScroll';
+import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
 import Icon from 'src/components/icons';
@@ -15,6 +15,7 @@ import { LoadingInboxThread } from '../loading';
 import NewActivityIndicator from '../newActivityIndicator';
 import ViewError from '../viewError';
 import { Upsell, UpsellHeader, UpsellFooter } from './style';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 
 const NullState = ({ viewContext, search }) => {
   let hd;
@@ -43,14 +44,11 @@ const NullState = ({ viewContext, search }) => {
   return <NullCard bg="post" heading={hd} copy={cp} />;
 };
 
-const UpsellState = ({ community, user }) => (
+const UpsellState = ({ community }) => (
   <Upsell>
     <UpsellHeader>
       <Icon glyph={'welcome'} size={48} />
-      <h3>
-        Welcome to your new community,{' '}
-        {user.firstName ? user.firstName : `@${user.username}`}!
-      </h3>
+      <h3>Welcome to your new community!</h3>
     </UpsellHeader>
     <p>
       You've already taken a huge step, but there's one problem - there's no one
@@ -113,26 +111,41 @@ const Threads = styled.div`
   }
 `;
 
-/*
-  The thread feed always expects a prop of 'threads' - this means that in
-  the Apollo query contructor, you will need to map a new prop called 'threads'
-  to return whatever threads we're fetching (community -> threadsConnection)
+type Props = {
+  data: {
+    subscribeToUpdatedThreads: Function,
+    fetchMore: Function,
+    networkStatus: number,
+    hasNextPage: boolean,
+    error: ?Object,
+    community?: any,
+    channel?: any,
+    threads?: Array<any>,
+  },
+  community: GetCommunityType,
+  setThreadsStatus: Function,
+  hasThreads: Function,
+  hasNoThreads: Function,
+  currentUser: ?Object,
+  viewContext: 'community' | 'channel',
+  slug: string,
+  pinnedThreadId: ?string,
+  isNewAndOwned: ?boolean,
+  newActivityIndicator: ?boolean,
+  dispatch: Function,
+  search?: boolean,
+};
 
-  See 'views/community/queries.js' for an example of the prop mapping in action
-*/
-class ThreadFeedPure extends Component {
-  state: {
-    scrollElement: any,
-    subscription: ?Function,
+type State = {
+  scrollElement: any,
+  subscription: ?Function,
+};
+
+class ThreadFeedPure extends React.Component<Props, State> {
+  state = {
+    scrollElement: null,
+    subscription: null,
   };
-
-  constructor() {
-    super();
-    this.state = {
-      scrollElement: null,
-      subscription: null,
-    };
-  }
 
   subscribe = () => {
     this.setState({
@@ -163,31 +176,36 @@ class ThreadFeedPure extends Component {
   }
 
   componentDidMount() {
+    const scrollElement = document.getElementById('scroller-for-thread-feed');
+
     this.setState({
       // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
       // the AppViewWrapper which is the scrolling part of the site.
-      scrollElement: document.getElementById('scroller-for-thread-feed'),
+      scrollElement,
     });
+
     this.subscribe();
   }
 
   componentDidUpdate(prevProps) {
+    const curr = this.props;
+
     if (
       !prevProps.data.thread &&
-      this.props.data.threads &&
-      this.props.data.threads.length === 0
+      curr.data.threads &&
+      curr.data.threads.length === 0
     ) {
       // if there are no threads, tell the parent container so that we can render upsells to community owners in the parent container
-      if (this.props.setThreadsStatus) {
-        this.props.setThreadsStatus();
+      if (curr.setThreadsStatus) {
+        curr.setThreadsStatus();
       }
 
-      if (this.props.hasThreads) {
-        this.props.hasThreads();
+      if (curr.hasThreads) {
+        curr.hasThreads();
       }
 
-      if (this.props.hasNoThreads) {
-        this.props.hasNoThreads();
+      if (curr.hasNoThreads) {
+        curr.hasNoThreads();
       }
     }
   }
@@ -195,7 +213,6 @@ class ThreadFeedPure extends Component {
   render() {
     const {
       data: { threads, networkStatus, error },
-      currentUser,
       viewContext,
       newActivityIndicator,
     } = this.props;
@@ -203,16 +220,17 @@ class ThreadFeedPure extends Component {
     const { scrollElement } = this.state;
     const dataExists = threads && threads.length > 0;
 
-    const threadNodes = dataExists
-      ? threads
-          .slice()
-          .map(thread => thread.node)
-          .filter(
-            thread =>
-              !thread.channel.channelPermissions.isBlocked &&
-              !thread.community.communityPermissions.isBlocked
-          )
-      : [];
+    const threadNodes =
+      threads && threads.length > 0
+        ? threads
+            .slice()
+            .map(thread => thread.node)
+            .filter(
+              thread =>
+                !thread.channel.channelPermissions.isBlocked &&
+                !thread.community.communityPermissions.isBlocked
+            )
+        : [];
 
     let filteredThreads = threadNodes;
     if (
@@ -221,6 +239,7 @@ class ThreadFeedPure extends Component {
       this.props.data.community.watercooler.id
     ) {
       filteredThreads = filteredThreads.filter(
+        // $FlowIssue
         t => t.id !== this.props.data.community.watercooler.id
       );
     }
@@ -230,13 +249,12 @@ class ThreadFeedPure extends Component {
       this.props.data.community.pinnedThread.id
     ) {
       filteredThreads = filteredThreads.filter(
+        // $FlowIssue
         t => t.id !== this.props.data.community.pinnedThread.id
       );
     }
 
-    const uniqueThreads = filteredThreads.filter(
-      (val, i, self) => self.indexOf(val) === i
-    );
+    const uniqueThreads = deduplicateChildren(filteredThreads, 'id');
 
     if (dataExists) {
       return (
@@ -273,12 +291,14 @@ class ThreadFeedPure extends Component {
           <InfiniteList
             pageStart={0}
             loadMore={this.props.data.fetchMore}
+            isLoadingMore={this.props.data.networkStatus === 3}
             hasMore={this.props.data.hasNextPage}
             loader={<LoadingInboxThread />}
             useWindow={false}
             initialLoad={false}
             scrollElement={scrollElement}
             threshold={750}
+            className={'threadfeed-infinite-scroll-div'}
           >
             {uniqueThreads.map(thread => {
               return (
@@ -330,9 +350,7 @@ class ThreadFeedPure extends Component {
     }
 
     if (this.props.isNewAndOwned) {
-      return (
-        <UpsellState community={this.props.community} user={currentUser} />
-      );
+      return <UpsellState community={this.props.community} />;
     } else {
       return <NullState search={this.props.search} viewContext={viewContext} />;
     }
@@ -343,6 +361,9 @@ const map = state => ({
   currentUser: state.users.currentUser,
   newActivityIndicator: state.newActivityIndicator.hasNew,
 });
-const ThreadFeed = compose(connect(map))(ThreadFeedPure);
+const ThreadFeed = compose(
+  // $FlowIssue
+  connect(map)
+)(ThreadFeedPure);
 
 export default ThreadFeed;

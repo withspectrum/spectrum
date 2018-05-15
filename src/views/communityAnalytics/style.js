@@ -65,3 +65,20 @@ export const ThreadListItemSubtitle = styled.h5`
     color: ${props => props.theme.text.default};
   }
 `;
+
+export const MessageIconContainer = styled.div`
+  color: ${props => props.theme.text.alt};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    color: ${props => props.theme.brand.alt};
+  }
+`;
+
+export const UserListItemContainer = styled.div`
+  padding: 0 16px;
+  border-bottom: 1px solid ${props => props.theme.bg.wash};
+`;

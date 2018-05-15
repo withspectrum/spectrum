@@ -14,9 +14,8 @@ export const storeExpoSubscription = (token: string, userId: string) => {
     .run();
 };
 
-export const getExpoSubscriptions = (
-  userId: string
-): Promise<Array<DBExpoPushSubscription>> => {
+// prettier-ignore
+export const getExpoSubscriptions = (userId: string): Promise<Array<DBExpoPushSubscription>> => {
   debug(`get subscriptions for user#${userId}`);
   return db
     .table('expoPushSubscriptions')

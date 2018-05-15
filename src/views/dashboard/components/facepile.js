@@ -55,9 +55,9 @@ const Facepile = ({ participants, author, active }) => {
     );
   }
 
-  const participantList = participants.filter(
-    participant => participant.id !== author.id
-  );
+  const participantList = participants
+    .filter(participant => participant.id !== author.id)
+    .sort((a, b) => (a.username <= b.username ? -1 : 1));
   const participantCount = participants.length;
 
   const hasOverflow = participantCount > NUM_TO_DISPLAY;

@@ -5,7 +5,6 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
-import { track } from 'src/helpers/events';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import { Loading } from 'src/components/loading';
 import { addToastWithTimeout } from 'src/actions/toasts';
@@ -22,6 +21,7 @@ import Header from 'src/components/settingsViews/header';
 import Overview from './components/overview';
 import Subnav from 'src/components/settingsViews/subnav';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 type Props = {
   data: {
@@ -38,6 +38,28 @@ type Props = {
 };
 
 class ChannelSettings extends React.Component<Props> {
+  componentDidMount() {
+    if (this.props.data && this.props.data.channel) {
+      const { channel } = this.props.data;
+
+      track(events.CHANNEL_SETTINGS_VIEWED, {
+        channel: transformations.analyticsChannel(channel),
+        community: transformations.analyticsCommunity(channel.community),
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.data.channel && this.props.data.channel) {
+      const { channel } = this.props.data;
+
+      track(events.CHANNEL_SETTINGS_VIEWED, {
+        channel: transformations.analyticsChannel(channel),
+        community: transformations.analyticsCommunity(channel.community),
+      });
+    }
+  }
+
   initMessage = user => {
     this.props.dispatch(initNewThreadWithUser(user));
     return this.props.history.push('/messages/new');
@@ -58,11 +80,9 @@ class ChannelSettings extends React.Component<Props> {
         const { togglePendingUser } = data;
         if (togglePendingUser !== undefined) {
           if (action === 'block') {
-            track('channel', 'blocked pending user', null);
           }
 
           if (action === 'approve') {
-            track('channel', 'approved pending user', null);
           }
 
           dispatch(addToastWithTimeout('success', 'Saved!'));
@@ -88,7 +108,6 @@ class ChannelSettings extends React.Component<Props> {
         const { unblockUser } = data;
         // the mutation returns a channel object. if it exists,
         if (unblockUser !== undefined) {
-          track('channel', 'unblocked user', null);
           dispatch(addToastWithTimeout('success', 'User was un-blocked.'));
         }
         return;
@@ -183,7 +202,7 @@ class ChannelSettings extends React.Component<Props> {
             noComposer
           />
 
-          <View>
+          <View id="main">
             <Header
               subheading={subheading}
               heading={`${channel.name} Settings ${

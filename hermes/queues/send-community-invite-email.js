@@ -1,5 +1,6 @@
 // @flow
-const debug = require('debug')('hermes:queue:send-new-message-email');
+const debug = require('debug')('hermes:queue:send-community-invite-email');
+import Raven from 'shared/raven';
 import sendEmail from '../send-email';
 import {
   COMMUNITY_INVITE_TEMPLATE,
@@ -13,6 +14,7 @@ type SendCommunityInviteJobData = {
     firstName: string,
     lastName: string,
     email: string,
+    userId?: string,
   },
   community: Object,
   customMessage: string,
@@ -26,8 +28,9 @@ type SendCommunityInviteEmailJob = {
 export default (job: SendCommunityInviteEmailJob) => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending community invite to: ${job.data.to}`);
-  const subject = `${job.data.sender.name} has invited you to join the ${job
-    .data.community.name} community on Spectrum`;
+  const subject = `${job.data.sender.name} has invited you to join the ${
+    job.data.community.name
+  } community on Spectrum`;
 
   try {
     return sendEmail({
@@ -41,8 +44,11 @@ export default (job: SendCommunityInviteEmailJob) => {
         community: job.data.community,
         customMessage: job.data.customMessage,
       },
+      userId: job.data.recipient.userId,
     });
   } catch (err) {
-    console.log(err);
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
   }
 };

@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('chronos:queue:process-individual-digest');
+import Raven from 'shared/raven';
 import { addQueue } from '../../jobs/utils';
 import getReputationString from './processReputation';
 import {
@@ -81,5 +82,9 @@ export default async (job: Job) => {
     }
   )
     .then(() => debug('\n ✅ Sent a daily digest'))
-    .catch(err => console.log('Error sending an individual digest:', err));
+    .catch(err => {
+      debug('❌ Error in job:\n');
+      debug(err);
+      Raven.captureException(err);
+    });
 };

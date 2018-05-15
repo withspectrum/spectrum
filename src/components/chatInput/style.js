@@ -1,6 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
 import { IconButton } from '../buttons';
+import { QuoteWrapper } from '../message/style';
 import {
   FlexRow,
   hexa,
@@ -8,16 +9,29 @@ import {
   zIndex,
   monoStack,
 } from 'src/components/globals';
-import { Wrapper as EditorWrapper } from '../draftjs-editor/style';
+import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
 
-export const ChatInputWrapper = styled(FlexRow)`
+export const ChatInputContainer = styled(FlexRow)`
   flex: none;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
   z-index: inherit;
   position: relative;
   width: 100%;
   margin: 0;
-  padding: 8px;
+
+  a {
+    text-decoration: underline;
+  }
+`;
+
+export const ChatInputWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  width: 100%;
+  margin: 0;
+  padding: 8px 8px 0 4px;
   background-color: ${props => props.theme.bg.default};
   border-top: 1px solid ${({ theme }) => theme.bg.border};
   box-shadow: -1px 0 0 ${props => props.theme.bg.border},
@@ -27,10 +41,7 @@ export const ChatInputWrapper = styled(FlexRow)`
     bottom: ${props => (props.focus ? '0' : 'auto')};
     position: relative;
     z-index: ${zIndex.mobileInput};
-  }
-
-  a {
-    text-decoration: underline;
+    padding: 8px;
   }
 `;
 
@@ -47,13 +58,17 @@ export const Form = styled.form`
 `;
 
 export const InputWrapper = styled(EditorWrapper)`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   flex: auto;
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
   min-height: 40px;
-  max-width: 100%;
-  padding: 8px 40px 8px 16px;
+  max-width: calc(100% - 32px);
+  padding: ${props => (props.hasAttachment ? '16px' : '8px 16px')};
+  transition: padding 0.2s ease-in-out;
   border-radius: 24px;
   border: 1px solid
     ${props =>
@@ -109,24 +124,39 @@ export const InputWrapper = styled(EditorWrapper)`
     transition: border-color 0.2s ease-in;
   }
 
+  pre {
+    ${monoStack};
+    font-size: 14px;
+    font-weight: 500;
+    background-color: ${props => props.theme.bg.wash};
+    border: 1px solid ${props => props.theme.bg.border};
+    border-radius: 2px;
+    padding: 4px;
+    margin-right: 16px;
+  }
+
   ${props =>
-    props.code &&
+    props.hasAttachment &&
     css`
-      ${monoStack};
-      font-size: 14px;
-      font-weight: 500;
-      background-color: #f5f8fc;
+      > div:not(:first-of-type) {
+        margin-top: 16px;
+      }
+
+      > div:last-of-type {
+        margin-right: 32px;
+      }
     `};
 `;
 
 export const SendButton = styled(IconButton)`
-  position: absolute;
-  right: 12px;
   height: 32px;
   width: 32px;
+  bottom: 4px;
+  margin-left: 4px;
   background-color: transparent;
   transition: ${Transition.hover.off};
-  top: calc(50% - 16px);
+  align-self: flex-end;
+  z-index: ${zIndex.chatInput};
 `;
 
 export const MediaInput = styled.input`
@@ -173,8 +203,9 @@ export const PhotoSizeError = styled.div`
   align-items: center;
   align-content: center;
   padding: 8px 16px;
-  background: #fff1cc;
-  border-top: 1px solid #ffd566;
+  width: 100%;
+  background: ${props => props.theme.special.wash};
+  border-top: 1px solid ${props => props.theme.special.border};
 
   &:hover {
     cursor: pointer;
@@ -187,11 +218,81 @@ export const PhotoSizeError = styled.div`
   p {
     font-size: 14px;
     line-height: 1.4;
-    color: #715818;
+    color: ${props => props.theme.special.default};
     max-width: calc(100% - 48px);
   }
 
   div {
     align-self: center;
+  }
+`;
+
+export const RemovePreviewButton = styled.button`
+  position: absolute;
+  top: 0;
+  right: 0;
+  vertical-align: top;
+  background-color: ${props => props.theme.text.placeholder};
+  color: ${props => props.theme.text.reverse};
+  border: none;
+  border-radius: 100%;
+  outline: none;
+  padding: 4px;
+  max-height: 24px;
+  max-width: 24px;
+  cursor: pointer;
+  z-index: 1;
+
+  &:hover {
+    background-color: ${props => props.theme.warn.alt};
+  }
+`;
+
+export const PreviewWrapper = styled.div`
+  position: relative;
+  padding: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+
+  ${QuoteWrapper} {
+    margin: 0;
+    margin-top: -6px;
+    margin-left: -12px;
+  }
+
+  & > img {
+    border-radius: 8px;
+    max-width: 37%;
+  }
+`;
+
+export const Preformatted = styled.code`
+  background-color: ${props => props.theme.bg.wash};
+  border: 1px solid ${props => props.theme.bg.border};
+  white-space: nowrap;
+`;
+
+export const MarkdownHint = styled.div`
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: flex-end;
+  margin-right: 12px;
+  font-size: 11px;
+  color: ${props => props.theme.text.alt};
+  line-height: 1;
+  padding: 6px 0;
+  opacity: ${({ showHint }) => (showHint ? 1 : 0)};
+  transition: opacity 200ms ease-in-out;
+  b {
+    font-weight: 600;
+  }
+  i,
+  b,
+  code {
+    margin-right: 3px;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;

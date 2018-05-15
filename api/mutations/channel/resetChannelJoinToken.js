@@ -2,44 +2,40 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import {
-  createChannelSettings,
-  enableChannelTokenJoin,
+  getOrCreateChannelSettings,
   resetChannelJoinToken,
 } from '../../models/channelSettings';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateChannel,
+} from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
-type ResetJoinTokenInput = {
+type Input = {
   input: {
     id: string,
   },
 };
 
-export default async (
-  _: any,
-  { input: { id: channelId } }: ResetJoinTokenInput,
-  { user, loaders }: GraphQLContext
-) => {
-  const currentUser = user;
-  if (!currentUser) {
-    return new UserError('You must be signed in to manage this channel.');
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { id: channelId } = args.input;
+  const { user, loaders } = ctx;
+
+  if (!await canModerateChannel(user.id, channelId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.CHANNEL_JOIN_TOKEN_RESET_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
+    return new UserError('You don’t have permission to manage this channel');
   }
 
-  const [permissions, settings] = await Promise.all([
-    loaders.userPermissionsInChannel.load([currentUser.id, channelId]),
-    loaders.channelSettings.load(channelId),
-  ]);
-
-  if (!permissions.isOwner) {
-    return new UserError("You don't have permission to do this.");
-  }
-
-  loaders.channelSettings.clear(channelId);
-
-  // settings.id tells us that a channelSettings record exists in the db
-  if (settings.id) {
-    return await resetChannelJoinToken(channelId);
-  } else {
-    return await createChannelSettings(channelId).then(
-      async () => await enableChannelTokenJoin(channelId)
-    );
-  }
-};
+  return await getOrCreateChannelSettings(channelId).then(
+    async () => await resetChannelJoinToken(channelId, user.id)
+  );
+});

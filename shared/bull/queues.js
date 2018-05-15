@@ -44,6 +44,7 @@ import {
   SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
   SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
   SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
+  SEND_ADMIN_USER_SPAMMING_THREADS_NOTIFICATION_EMAIL,
   SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
   SEND_ADMINISTRATOR_EMAIL_VALIDATION_EMAIL,
   SEND_EMAIL_VALIDATION_EMAIL,
@@ -62,13 +63,20 @@ import {
   COMMUNITY_INVOICE_PAID_NOTIFICATION,
   REACTION_NOTIFICATION,
   PRIVATE_CHANNEL_REQUEST_SENT,
+  PRIVATE_CHANNEL_REQUEST_APPROVED,
   COMMUNITY_INVITE_NOTIFICATION,
   CHANNEL_NOTIFICATION,
   DIRECT_MESSAGE_NOTIFICATION,
   MESSAGE_NOTIFICATION,
   SEND_PUSH_NOTIFICATIONS,
   SLACK_IMPORT,
+  SEND_SLACK_INVITIATIONS,
 } from 'athena/queues/constants';
+
+import {
+  TRACK_ANALYTICS,
+  IDENTIFY_ANALYTICS,
+} from 'analytics/queues/constants';
 
 import { PROCESS_REPUTATION_EVENT } from 'mercury/constants';
 
@@ -82,6 +90,7 @@ exports.QUEUE_NAMES = {
   sendCommunityInvoicePaidNotificationQueue: COMMUNITY_INVOICE_PAID_NOTIFICATION,
   sendReactionNotificationQueue: REACTION_NOTIFICATION,
   sendPrivateChannelRequestQueue: PRIVATE_CHANNEL_REQUEST_SENT,
+  sendPrivateChannelRequestApprovedQueue: PRIVATE_CHANNEL_REQUEST_APPROVED,
   sendPrivateChannelInviteNotificationQueue:
     'private channel invite notification',
   sendCommunityInviteNotificationQueue: COMMUNITY_INVITE_NOTIFICATION,
@@ -91,6 +100,7 @@ exports.QUEUE_NAMES = {
   sendMentionNotificationQueue: MENTION_NOTIFICATION,
   sendNotificationAsPushQueue: SEND_PUSH_NOTIFICATIONS,
   slackImportQueue: SLACK_IMPORT,
+  sendSlackInvitationsQueue: SEND_SLACK_INVITIATIONS,
 
   // hermes - emails
   sendNewUserWelcomeEmailQueue: SEND_NEW_USER_WELCOME_EMAIL,
@@ -137,11 +147,17 @@ exports.QUEUE_NAMES = {
   stripePaymentFailedQueue: PROCESS_STRIPE_PAYMENT_FAILED,
   stripeCardExpiringWarningQueue: PROCESS_STRIPE_CARD_EXPIRING_WARNING,
 
+  // analytics
+  trackQueue: TRACK_ANALYTICS,
+  identifyQueue: IDENTIFY_ANALYTICS,
+
+  // admin
   _adminSendCommunityCreatedEmailQueue: SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
   _adminProcessToxicMessageQueue: PROCESS_ADMIN_TOXIC_MESSAGE,
   _adminProcessToxicThreadQueue: PROCESS_ADMIN_TOXIC_THREAD,
   _adminProcessSlackImportQueue: SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
   _adminSendToxicContentEmailQueue: SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
+  _adminProcessUserSpammingThreadsQueue: SEND_ADMIN_USER_SPAMMING_THREADS_NOTIFICATION_EMAIL,
 };
 
 // We add one error listener per queue, so we have to set the max listeners

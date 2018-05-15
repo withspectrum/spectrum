@@ -2,11 +2,12 @@
 import React from 'react';
 import { View, Button } from 'react-native';
 import compose from 'recompose/compose';
+import { connect } from 'react-redux';
 import { SecureStore } from 'expo';
 import Text from '../../components/Text';
 import InfiniteList from '../../components/InfiniteList';
 import withSafeView from '../../components/SafeAreaView';
-import { Wrapper } from '../Splash/style';
+import { Wrapper } from '../Dashboard/style';
 import getNotifications, {
   type GetNotificationsType,
 } from '../../../shared/graphql/queries/notification/getNotifications';
@@ -15,10 +16,13 @@ import viewNetworkHandler, {
 } from '../../components/ViewNetworkHandler';
 import subscribeExpoPush from '../../../shared/graphql/mutations/user/subscribeExpoPush';
 import getPushNotificationToken from '../../utils/get-push-notification-token';
+import type { State as ReduxState } from '../../reducers';
+import type { AuthenticationState } from '../../reducers/authentication';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
   mutate: (token: any) => Promise<any>,
+  authentication: AuthenticationState,
   data: {
     subscribeToNewNotifications: Function,
     fetchMore: Function,
@@ -37,6 +41,10 @@ type State = {
   pushNotifications: ?PushNotificationsDecision,
 };
 
+const mapStateToProps = (state: ReduxState): * => ({
+  authentication: state.authentication,
+});
+
 class Notifications extends React.Component<Props, State> {
   constructor() {
     super();
@@ -51,7 +59,7 @@ class Notifications extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.subscribe();
+    if (this.props.authentication.token) this.subscribe();
     SecureStore.getItemAsync('pushNotificationsDecision').then(data => {
       if (!data) {
         this.setState({
@@ -67,6 +75,16 @@ class Notifications extends React.Component<Props, State> {
         });
       } catch (err) {}
     });
+  }
+
+  componentDidUpdate(prev) {
+    const curr = this.props;
+    if (
+      prev.authentication.token !== curr.authentication.token &&
+      curr.authentication.token
+    ) {
+      this.subscribe();
+    }
   }
 
   enablePushNotifications = async () => {
@@ -165,5 +183,6 @@ export default compose(
   withSafeView,
   getNotifications,
   subscribeExpoPush,
-  viewNetworkHandler
+  viewNetworkHandler,
+  connect(mapStateToProps)
 )(Notifications);

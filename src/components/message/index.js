@@ -1,15 +1,35 @@
+// @flow
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { openGallery } from '../../actions/gallery';
-import { onlyContainsEmoji } from '../../helpers/utils';
 import Reaction from '../reaction';
 import { Body, Actions } from './view';
 import { Wrapper } from './style';
 import { openModal } from '../../actions/modals';
-import { toPlainText, toState } from 'shared/draft-utils';
+import { replyToMessage } from '../../actions/message';
+import { track, events } from 'src/helpers/analytics';
 
-class Message extends Component {
+import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
+
+type Props = {
+  message: MessageInfoType,
+  threadId: string,
+  threadType: string,
+  selectedId: string,
+  dispatch: Function,
+  canModerate: boolean,
+  currentUser: UserInfoType,
+  me: boolean,
+  reaction: $PropertyType<MessageInfoType, 'reactions'>,
+  toggleReaction: Function,
+  context?: 'notificition',
+  changeSelection: Function,
+  pending: boolean,
+};
+
+class Message extends Component<Props> {
   shouldComponentUpdate(nextProps, nextState) {
     const newMessage = nextProps.message.id !== this.props.message.id;
     const newSelection = nextProps.selectedId !== this.props.selectedId;
@@ -29,6 +49,12 @@ class Message extends Component {
   deleteMessage = () => {
     const message = 'Are you sure you want to delete this message?';
 
+    track(
+      this.props.threadType === 'story'
+        ? events.MESSAGE_DELETED_INITED
+        : events.DIRECT_MESSAGE_DELETED_INITED
+    );
+
     return this.props.dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {
         id: this.props.message.id,
@@ -36,6 +62,16 @@ class Message extends Component {
         message,
         threadType: this.props.threadType,
         threadId: this.props.threadId,
+      })
+    );
+  };
+
+  replyToMessage = () => {
+    const { threadId, message } = this.props;
+    return this.props.dispatch(
+      replyToMessage({
+        threadId,
+        messageId: message.id,
       })
     );
   };
@@ -55,34 +91,26 @@ class Message extends Component {
       pending,
     } = this.props;
 
-    const parsedMessage =
-      message.messageType &&
-      message.messageType === 'draftjs' &&
-      toPlainText(toState(JSON.parse(message.content.body)));
-    const emojiOnly = parsedMessage && onlyContainsEmoji(parsedMessage);
     const actionable = context !== 'notification';
-    const shareable = message.threadType !== 'directMessageThread';
     return (
       <Wrapper
         me={me}
         selected={selectedId === message.id}
         onClick={() => changeSelection && changeSelection(message.id)}
+        data-cy="message"
       >
         <Body
-          id={message.id}
           me={me}
-          type={emojiOnly ? 'emoji' : message.messageType}
           openGallery={() => this.toggleOpenGallery(message.id)}
-          message={emojiOnly ? parsedMessage : message.content}
-          data={message}
+          message={message}
         />
         {actionable && (
           <Actions
             me={me}
-            shareable={shareable}
             currentUser={currentUser}
             canModerate={canModerate}
             deleteMessage={this.deleteMessage}
+            replyToMessage={this.replyToMessage}
             isOptimisticMessage={pending}
             message={message}
           >

@@ -23,7 +23,7 @@ import Header from './components/threadSelectorHeader';
 import CommunityList from './components/communityList';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import {
-  Wrapper,
+  DashboardWrapper,
   InboxWrapper,
   InboxScroller,
   FeedHeaderContainer,
@@ -32,6 +32,7 @@ import {
   SearchStringHeader,
   Sidebar,
 } from './style';
+import { track, events } from 'src/helpers/analytics';
 
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
   DashboardThreadFeed
@@ -48,8 +49,6 @@ const ChannelThreadFeed = compose(connect(), getChannelThreadConnection)(
 const SearchThreadFeed = compose(connect(), searchThreadsQuery)(
   DashboardThreadFeed
 );
-
-const DashboardWrapper = props => <Wrapper {...props} />;
 
 type State = {
   isHovered: boolean,
@@ -94,6 +93,10 @@ class Dashboard extends React.Component<Props, State> {
       activeChannelObject: channel,
     });
   };
+
+  componentDidMount() {
+    track(events.INBOX_EVERYTHING_VIEWED);
+  }
 
   render() {
     const {
@@ -146,7 +149,7 @@ class Dashboard extends React.Component<Props, State> {
       )[0];
 
       return (
-        <DashboardWrapper data-cy="inbox-view">
+        <DashboardWrapper data-cy="inbox-view" id="main">
           <Head title={title} description={description} />
           <Titlebar hasChildren hasSearch filter={searchFilter}>
             <Menu darkContext hasTabBar>

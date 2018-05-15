@@ -51,7 +51,7 @@ class ChannelMemberGrid extends React.Component<Props> {
 
       return (
         <FlexCol
-          style={{ padding: '0 16px', flex: 'none', backgroundColor: '#fff' }}
+          style={{ padding: '0', flex: 'none', backgroundColor: '#fff' }}
           data-cy="channel-members-list"
         >
           {members &&
@@ -84,11 +84,15 @@ class ChannelMemberGrid extends React.Component<Props> {
               );
             })}
 
-          {channel.memberConnection.pageInfo.hasNextPage && (
-            <StyledButton loading={isFetchingMore} onClick={() => fetchMore()}>
-              View more...
-            </StyledButton>
-          )}
+          {channel.memberConnection &&
+            channel.memberConnection.pageInfo.hasNextPage && (
+              <StyledButton
+                loading={isFetchingMore}
+                onClick={() => fetchMore()}
+              >
+                View more...
+              </StyledButton>
+            )}
         </FlexCol>
       );
     }

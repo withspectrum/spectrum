@@ -20,7 +20,10 @@ import {
   Tab,
   Label,
   Navatar,
+  SkipLink,
 } from './style';
+import { track, events } from 'src/helpers/analytics';
+import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
 
 type Props = {
   isLoading: boolean,
@@ -36,9 +39,21 @@ type Props = {
   activeInboxThread: ?string,
 };
 
-class Navbar extends React.Component<Props> {
-  shouldComponentUpdate(nextProps) {
+type State = {
+  isSkipLinkFocused: boolean,
+};
+
+class Navbar extends React.Component<Props, State> {
+  state = {
+    isSkipLinkFocused: false,
+  };
+
+  shouldComponentUpdate(nextProps, nextState) {
     const currProps = this.props;
+
+    // If the update was caused by the focus on the skip link
+    if (nextState.isSkipLinkFocused !== this.state.isSkipLinkFocused)
+      return true;
 
     // if route changes
     if (currProps.location.pathname !== nextProps.location.pathname)
@@ -50,14 +65,13 @@ class Navbar extends React.Component<Props> {
     // Had no user, now have user or user changed
     if (nextProps.currentUser !== currProps.currentUser) return true;
 
-    // if the badge counts change
-    const thisBadgeSum =
-      currProps.notificationCounts.notifications +
-      currProps.notificationCounts.directMessageNotifications;
-    const prevBadgeSum =
-      nextProps.notificationCounts.notifications +
+    const newDMNotifications =
+      currProps.notificationCounts.directMessageNotifications !==
       nextProps.notificationCounts.directMessageNotifications;
-    if (thisBadgeSum !== prevBadgeSum) return true;
+    const newNotifications =
+      currProps.notificationCounts.notifications !==
+      nextProps.notificationCounts.notifications;
+    if (newDMNotifications || newNotifications) return true;
 
     // if the user is mobile and is viewing a thread or DM thread, re-render
     // the navbar when they exit the thread
@@ -72,29 +86,39 @@ class Navbar extends React.Component<Props> {
     return false;
   }
 
+  handleSkipLinkFocus = () => this.setState({ isSkipLinkFocused: true });
+  handleSkipLinkBlur = () => this.setState({ isSkipLinkFocused: false });
+
+  getTabProps(isActive: boolean) {
+    return {
+      'data-active': isActive,
+      'aria-current': isActive ? 'page' : undefined,
+    };
+  }
+
+  trackNavigationClick = (route: string) => {
+    switch (route) {
+      case 'logo':
+        return track(events.NAVIGATION_LOGO_CLICKED);
+      case 'home':
+        return track(events.NAVIGATION_HOME_CLICKED);
+      case 'explore':
+        return track(events.NAVIGATION_EXPLORE_CLICKED);
+      case 'profile':
+        return track(events.NAVIGATION_USER_PROFILE_CLICKED);
+      default:
+        return null;
+    }
+  };
+
   render() {
     const { history, match, currentUser, notificationCounts } = this.props;
 
     const loggedInUser = currentUser;
 
-    const viewing = history.location.pathname;
-
-    const isHome = viewing === '/' || viewing === '/home';
-
-    const isSplash =
-      viewing === '/about' ||
-      viewing === '/code-of-conduct' ||
-      viewing === '/contact' ||
-      viewing === '/pricing' ||
-      viewing === '/privacy' ||
-      viewing === '/privacy.html' ||
-      viewing === '/support' ||
-      viewing === '/terms' ||
-      viewing === '/terms.html' ||
-      viewing === '/features';
-
-    // Bail out if the splash page is showing
-    if ((!loggedInUser && isHome) || isSplash) return null;
+    if (isViewingMarketingPage(history, currentUser)) {
+      return null;
+    }
 
     // if the user is mobile and is viewing a thread or DM thread, don't
     // render a navbar - it will be replaced with a chat input
@@ -115,7 +139,7 @@ class Navbar extends React.Component<Props> {
 
     if (loggedInUser) {
       return (
-        <Nav hideOnMobile={hideNavOnMobile}>
+        <Nav hideOnMobile={hideNavOnMobile} data-cy="navbar">
           <Head>
             {notificationCounts.directMessageNotifications > 0 ||
             notificationCounts.notifications > 0 ? (
@@ -135,11 +159,31 @@ class Navbar extends React.Component<Props> {
             )}
           </Head>
 
-          <Logo to="/">
+          <Logo
+            to="/"
+            aria-hidden
+            tabIndex="-1"
+            isHidden={this.state.isSkipLinkFocused}
+            onClick={() => this.trackNavigationClick('logo')}
+            data-cy="navbar-logo"
+          >
             <Icon glyph="logo" size={28} />
           </Logo>
 
-          <HomeTab data-active={match.url === '/' && match.isExact} to="/">
+          <SkipLink
+            href="#main"
+            onFocus={this.handleSkipLinkFocus}
+            onBlur={this.handleSkipLinkBlur}
+          >
+            Skip to content
+          </SkipLink>
+
+          <HomeTab
+            {...this.getTabProps(match.url === '/' && match.isExact)}
+            to="/"
+            onClick={() => this.trackNavigationClick('home')}
+            data-cy="navbar-home"
+          >
             <Icon glyph="home" />
             <Label>Home</Label>
           </HomeTab>
@@ -149,14 +193,17 @@ class Navbar extends React.Component<Props> {
           />
 
           <ExploreTab
-            data-active={history.location.pathname === '/explore'}
+            {...this.getTabProps(history.location.pathname === '/explore')}
             to="/explore"
+            onClick={() => this.trackNavigationClick('explore')}
+            data-cy="navbar-explore"
           >
             <Icon glyph="explore" />
             <Label>Explore</Label>
           </ExploreTab>
 
           <NotificationsTab
+            onClick={() => this.trackNavigationClick('notifications')}
             location={history.location}
             currentUser={loggedInUser}
             active={history.location.pathname.includes('/notifications')}
@@ -165,17 +212,19 @@ class Navbar extends React.Component<Props> {
           <ProfileDrop>
             <Tab
               className={'hideOnMobile'}
-              data-active={
+              {...this.getTabProps(
                 history.location.pathname === `/users/${loggedInUser.username}`
-              }
+              )}
               to={
                 loggedInUser.username ? `/users/${loggedInUser.username}` : '/'
               }
+              onClick={() => this.trackNavigationClick('profile')}
             >
               <Navatar
                 user={loggedInUser}
                 src={`${loggedInUser.profilePhoto}`}
                 size={24}
+                data-cy="navbar-profile"
               />
             </Tab>
             <ProfileDropdown user={loggedInUser} />
@@ -183,10 +232,11 @@ class Navbar extends React.Component<Props> {
 
           <ProfileTab
             className={'hideOnDesktop'}
-            data-active={
+            {...this.getTabProps(
               history.location.pathname === `/users/${loggedInUser.username}`
-            }
+            )}
             to={loggedInUser.username ? `/users/${loggedInUser.username}` : '/'}
+            onClick={() => this.trackNavigationClick('profile')}
           >
             <Icon glyph="profile" />
             <Label>Profile</Label>
@@ -197,36 +247,58 @@ class Navbar extends React.Component<Props> {
 
     if (!loggedInUser) {
       return (
-        <Nav hideOnMobile={hideNavOnMobile} loggedOut={!loggedInUser}>
-          <Logo to="/">
+        <Nav
+          hideOnMobile={hideNavOnMobile}
+          loggedOut={!loggedInUser}
+          data-cy="navbar"
+        >
+          <Logo
+            to="/"
+            aria-hidden
+            tabIndex="-1"
+            isHidden={this.state.isSkipLinkFocused}
+            data-cy="navbar-logo"
+          >
             <Icon glyph="logo" size={28} />
           </Logo>
+
+          <SkipLink
+            href="#main"
+            onFocus={this.handleSkipLinkFocus}
+            onBlur={this.handleSkipLinkBlur}
+          >
+            Skip to content
+          </SkipLink>
+
           <HomeTab
             className={'hideOnDesktop'}
-            data-active={match.url === '/' && match.isExact}
+            {...this.getTabProps(match.url === '/' && match.isExact)}
             to="/"
           >
             <Icon glyph="logo" />
             <Label>About</Label>
           </HomeTab>
           <ExploreTab
-            data-active={history.location.pathname === '/explore'}
+            {...this.getTabProps(history.location.pathname === '/explore')}
             to="/explore"
             loggedOut={!loggedInUser}
+            data-cy="navbar-explore"
           >
             <Icon glyph="explore" />
             <Label>Explore</Label>
           </ExploreTab>
           <SupportTab
-            data-active={history.location.pathname === '/support'}
+            {...this.getTabProps(history.location.pathname === '/support')}
             to="/support"
+            data-cy="navbar-support"
           >
             <Icon glyph="like" />
             <Label>Support</Label>
           </SupportTab>
           <PricingTab
-            data-active={history.location.pathname === '/pricing'}
+            {...this.getTabProps(history.location.pathname === '/pricing')}
             to="/pricing"
+            data-cy="navbar-pricing"
           >
             <Icon glyph="payment" />
             <Label>Pricing</Label>

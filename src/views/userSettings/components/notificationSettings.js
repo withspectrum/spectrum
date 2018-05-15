@@ -2,19 +2,14 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { Checkbox } from '../../../components/formElements';
-import WebPushManager from '../../../helpers/web-push-manager';
-import { track } from '../../../helpers/events';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { Checkbox } from 'src/components/formElements';
+import WebPushManager from 'src/helpers/web-push-manager';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import { subscribeToWebPush } from 'shared/graphql/subscriptions';
-import {
-  StyledCard,
-  LargeListHeading,
-  ListHeader,
-  ListContainer,
-  Notice,
-} from '../../../components/listItems/style';
+import { ListContainer, Notice } from 'src/components/listItems/style';
+import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import { EmailListItem } from '../style';
+import { track, events } from 'src/helpers/analytics';
 
 type State = {
   webPushBlocked: boolean,
@@ -35,6 +30,7 @@ class NotificationSettings extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_VIEWED);
     WebPushManager.getPermissionState().then(result => {
       if (result === 'denied') {
         this.setState({
@@ -50,10 +46,10 @@ class NotificationSettings extends React.Component<Props, State> {
   }
 
   subscribeToWebPush = () => {
-    track('browser push notifications', 'prompt triggered');
+    track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_CLICKED);
     WebPushManager.subscribe()
       .then(subscription => {
-        track('browser push notifications', 'subscribed');
+        track(events.WEB_PUSH_NOTIFICATIONS_SUBSCRIBED);
         this.setState({
           subscription,
           webPushBlocked: false,
@@ -61,7 +57,7 @@ class NotificationSettings extends React.Component<Props, State> {
         return this.props.subscribeToWebPush(subscription);
       })
       .catch(err => {
-        track('browser push notifications', 'blocked');
+        track(events.WEB_PUSH_NOTIFICATIONS_BLOCKED);
         return this.props.dispatch(
           addToastWithTimeout(
             'error',
@@ -72,11 +68,11 @@ class NotificationSettings extends React.Component<Props, State> {
   };
 
   unsubscribeFromWebPush = () => {
-    track('browser push notifications', 'unsubscription triggered');
+    track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_CLICKED);
     WebPushManager.unsubscribe()
       .then(result => {
         if (result) {
-          track('browser push notifications', 'unsubscribe');
+          track(events.WEB_PUSH_NOTIFICATIONS_UNSUBSCRIBED);
           this.setState({
             subscription: false,
           });
@@ -106,13 +102,11 @@ class NotificationSettings extends React.Component<Props, State> {
       : this.unsubscribeFromWebPush;
 
     return (
-      <StyledCard
+      <SectionCard
         smallOnly={this.props.smallOnly}
         largeOnly={this.props.largeOnly}
       >
-        <ListHeader>
-          <LargeListHeading>Notification Preferences</LargeListHeading>
-        </ListHeader>
+        <SectionTitle>Notification Preferences</SectionTitle>
         <ListContainer>
           <EmailListItem>
             {subscription !== null && (
@@ -137,7 +131,7 @@ class NotificationSettings extends React.Component<Props, State> {
             )}
           </EmailListItem>
         </ListContainer>
-      </StyledCard>
+      </SectionCard>
     );
   }
 }

@@ -9,6 +9,7 @@ import type {
   DBCommunity,
   DBNotification,
   DBNotificationsJoin,
+  FileUpload,
 } from '../types';
 import type { RawSource } from '../stripe/types/source';
 import type { RawCharge } from '../stripe/types/charge';
@@ -219,6 +220,13 @@ export type PrivateChannelRequestJobData = {
   channel: DBChannel,
 };
 
+export type PrivateChannelRequestApprovedJobData = {
+  userId: string,
+  channelId: string,
+  communityId: string,
+  moderatorId: string,
+};
+
 export type PrivateChannelInviteNotificationJobData = {
   recipient: { email: string, firstName?: ?string, lastName?: ?string },
   channelId: string,
@@ -296,6 +304,33 @@ export type AdminSlackImportJobData = {
   teamName: string,
 };
 
+type Attachment = {
+  attachmentType: string,
+  data: string,
+};
+
+type File = FileUpload;
+
+type PublishingThreadType = {
+  channelId: string,
+  communityId: string,
+  type: 'SLATE' | 'DRAFTJS',
+  content: {
+    title: string,
+    body?: string,
+  },
+  attachments?: ?Array<Attachment>,
+  filesToUpload?: ?Array<File>,
+};
+
+export type AdminUserSpammingThreadsJobData = {
+  user: DBUser,
+  threads: Array<?DBThread>,
+  publishing: PublishingThreadType,
+  community: DBCommunity,
+  channel: DBChannel,
+};
+
 export type PushNotificationsJobData = {
   // This gets passed a join of the userNotification and the notification record
   notification: DBNotificationsJoin,
@@ -324,6 +359,22 @@ export type StripeCardExpiringWarningJobData = {
   record: Object,
 };
 
+export type SendSlackInvitationsJobData = {
+  communityId: string,
+  userId: string,
+};
+
+export type TrackAnalyticsData = {
+  userId: string,
+  event: string,
+  context?: Object,
+  properties?: Object,
+};
+
+export type IdentifyAnalyticsData = {
+  userId: string,
+};
+
 export type Queues = {
   // athena
   sendThreadNotificationQueue: BullQueue<ThreadNotificationJobData>,
@@ -333,6 +384,9 @@ export type Queues = {
   sendCommunityInvoicePaidNotificationQueue: BullQueue<InvoiceJobData>,
   sendReactionNotificationQueue: BullQueue<ReactionNotificationJobData>,
   sendPrivateChannelRequestQueue: BullQueue<PrivateChannelRequestJobData>,
+  sendPrivateChannelRequestApprovedQueue: BullQueue<
+    PrivateChannelRequestApprovedJobData
+  >,
   sendPrivateChannelInviteNotificationQueue: BullQueue<
     PrivateChannelInviteNotificationJobData
   >,
@@ -347,6 +401,7 @@ export type Queues = {
   sendMentionNotificationQueue: BullQueue<MentionNotificationJobData>,
   sendNotificationAsPushQueue: BullQueue<PushNotificationsJobData>,
   slackImportQueue: BullQueue<SlackImportJobData>,
+  sendSlackInvitationsQueue: BullQueue<SendSlackInvitationsJobData>,
 
   // hermes
   sendNewUserWelcomeEmailQueue: BullQueue<NewUserWelcomeEmailJobData>,
@@ -434,6 +489,10 @@ export type Queues = {
   >,
   stripeCardExpiringWarningQueue: BullQueue<StripeCardExpiringWarningJobData>,
 
+  // analytics
+  trackQueue: BullQueue<TrackAnalyticsData>,
+  identifyQueue: BullQueue<IdentifyAnalyticsData>,
+
   // admin
   _adminSendCommunityCreatedEmailQueue: BullQueue<
     AdminCommunityCreatedEmailJobData
@@ -443,4 +502,7 @@ export type Queues = {
   _adminProcessSlackImportQueue: BullQueue<AdminSlackImportJobData>,
   // TODO: Properly type this
   _adminSendToxicContentEmailQueue: BullQueue<any>,
+  _adminProcessUserSpammingThreadsQueue: BullQueue<
+    AdminUserSpammingThreadsJobData
+  >,
 };

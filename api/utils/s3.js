@@ -2,10 +2,13 @@
 require('now-env');
 import AWS from 'aws-sdk';
 import shortid from 'shortid';
+import _ from 'lodash';
+import Raven from 'shared/raven';
+import sanitize from 'sanitize-filename';
+
 const IS_PROD = process.env.NODE_ENV === 'production';
 
-import type { FileUpload } from 'shared/types';
-type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';
+import type { FileUpload, EntityTypes } from 'shared/types';
 
 let S3_TOKEN = process.env.S3_TOKEN;
 let S3_SECRET = process.env.S3_SECRET;
@@ -36,16 +39,28 @@ const generateImageUrl = path => {
   return imgixBase + '/' + newPath;
 };
 
-const upload = async (
+export const uploadImage = async (
   file: FileUpload,
   entity: EntityTypes,
   id: string
 ): Promise<string> => {
   const result = await file;
-  const { filename, stream } = result;
+  const { filename, stream, mimetype } = result;
+  const sanitized = sanitize(filename);
+  const validMediaTypes = ['image/gif', 'image/jpeg', 'image/png', 'video/mp4'];
+
   return new Promise(res => {
+    // mimetype not in the validMediaType collection
+    if (_.indexOf(validMediaTypes, _.toLower(mimetype)) < 0) {
+      const unsupportedMediaTypeError = new Error(
+        `Unsupported media type ${mimetype}`
+      );
+      Raven.captureException(unsupportedMediaTypeError);
+      throw unsupportedMediaTypeError;
+    }
+
     const path = `spectrum-chat/${entity}/${id}`;
-    const fileKey = `${shortid.generate()}-${filename}`;
+    const fileKey = `${shortid.generate()}-${sanitized}`;
     return s3.upload(
       {
         Bucket: path,
@@ -60,15 +75,5 @@ const upload = async (
         res(encodeURI(url));
       }
     );
-  });
-};
-
-export const uploadImage = async (
-  file: FileUpload,
-  entity: EntityTypes,
-  id: string
-): Promise<string> => {
-  return await upload(file, entity, id).catch(err => {
-    throw new Error(err);
   });
 };

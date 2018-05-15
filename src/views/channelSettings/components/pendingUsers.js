@@ -2,9 +2,8 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { MessageIconContainer, UserListItemContainer } from '../style';
+import { UserListItemContainer } from '../style';
 import GranularUserProfile from 'src/components/granularUserProfile';
-import { TextButton } from 'src/components/buttons';
 import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import getPendingUsersQuery from 'shared/graphql/queries/channel/getChannelPendingUsers';
@@ -15,6 +14,16 @@ import {
   SectionCard,
   SectionTitle,
   SectionSubtitle,
+} from 'src/components/settingsViews/style';
+import EditDropdown from './editDropdown';
+import {
+  Dropdown,
+  DropdownSectionDivider,
+  DropdownSection,
+  DropdownSectionSubtitle,
+  DropdownSectionText,
+  DropdownSectionTitle,
+  DropdownAction,
 } from 'src/components/settingsViews/style';
 import Icon from 'src/components/icons';
 
@@ -33,8 +42,8 @@ class PendingUsers extends React.Component<Props> {
     const {
       data,
       isLoading,
-      togglePending,
       currentUser,
+      togglePending,
       initMessage,
     } = this.props;
 
@@ -44,13 +53,14 @@ class PendingUsers extends React.Component<Props> {
       return (
         <SectionCard>
           <SectionTitle>Pending Members</SectionTitle>
-          {pendingUsers.length > 0 && (
-            <SectionSubtitle>
-              Approving requests will allow a person to view all threads and
-              messages in this channel, as well as allow them to post their own
-              threads.
-            </SectionSubtitle>
-          )}
+          {pendingUsers &&
+            pendingUsers.length > 0 && (
+              <SectionSubtitle>
+                Approving requests will allow a person to view all threads and
+                messages in this channel, as well as allow them to post their
+                own threads.
+              </SectionSubtitle>
+            )}
 
           <ListContainer>
             {pendingUsers &&
@@ -70,47 +80,75 @@ class PendingUsers extends React.Component<Props> {
                       avatarSize={'32'}
                       description={user.description}
                     >
-                      <div style={{ display: 'flex' }}>
-                        <TextButton
-                          onClick={() =>
-                            user && togglePending(user.id, 'block')
-                          }
-                          hoverColor={'warn.alt'}
-                          icon="minus"
-                        >
-                          Block
-                        </TextButton>
+                      <EditDropdown
+                        render={() => (
+                          <Dropdown>
+                            <DropdownSection
+                              style={{ borderBottom: '0' }}
+                              onClick={() => initMessage(user)}
+                            >
+                              <DropdownAction>
+                                <Icon glyph={'message'} size={'32'} />
+                              </DropdownAction>
+                              <DropdownSectionText>
+                                <DropdownSectionTitle>
+                                  Send Direct Message
+                                </DropdownSectionTitle>
+                              </DropdownSectionText>
+                            </DropdownSection>
 
-                        <TextButton
-                          onClick={() =>
-                            user && togglePending(user.id, 'approve')
-                          }
-                          hoverColor={'brand.default'}
-                          icon="plus"
-                        >
-                          Approve
-                        </TextButton>
+                            <DropdownSectionDivider />
 
-                        {currentUser &&
-                          user.id !== currentUser.id && (
-                            <MessageIconContainer>
-                              <Icon
-                                glyph={'message'}
-                                onClick={() => initMessage(user)}
-                              />
-                            </MessageIconContainer>
-                          )}
-                      </div>
+                            <DropdownSection
+                              onClick={() => togglePending(user.id, 'approve')}
+                            >
+                              <DropdownAction>
+                                <Icon glyph={'plus'} size={'32'} />
+                              </DropdownAction>
+
+                              <DropdownSectionText>
+                                <DropdownSectionTitle>
+                                  Approve
+                                </DropdownSectionTitle>
+                                <DropdownSectionSubtitle>
+                                  This user will be able to see and join all
+                                  conversations in this channel
+                                </DropdownSectionSubtitle>
+                              </DropdownSectionText>
+                            </DropdownSection>
+
+                            <DropdownSection
+                              onClick={() =>
+                                user && togglePending(user.id, 'block')
+                              }
+                            >
+                              <DropdownAction>
+                                <Icon glyph={'minus'} size={'32'} />
+                              </DropdownAction>
+
+                              <DropdownSectionText>
+                                <DropdownSectionTitle>
+                                  Block
+                                </DropdownSectionTitle>
+                                <DropdownSectionSubtitle>
+                                  Block this user from joining this channel
+                                </DropdownSectionSubtitle>
+                              </DropdownSectionText>
+                            </DropdownSection>
+                          </Dropdown>
+                        )}
+                      />
                     </GranularUserProfile>
                   </UserListItemContainer>
                 );
               })}
 
-            {pendingUsers.length <= 0 && (
-              <SectionSubtitle>
-                There are no pending requests to join this channel.
-              </SectionSubtitle>
-            )}
+            {pendingUsers &&
+              pendingUsers.length <= 0 && (
+                <SectionSubtitle>
+                  There are no pending requests to join this channel.
+                </SectionSubtitle>
+              )}
           </ListContainer>
         </SectionCard>
       );

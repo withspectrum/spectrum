@@ -2,6 +2,7 @@
 const debug = require('debug')(
   'hermes:queue:send-request-join-private-channel'
 );
+import Raven from 'shared/raven';
 import sendEmail from '../send-email';
 import {
   SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
@@ -40,6 +41,8 @@ export default (job: Job<SendPrivateChannelRequestApprovedEmailJobData>) => {
       },
     });
   } catch (err) {
-    console.error(err);
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
   }
 };

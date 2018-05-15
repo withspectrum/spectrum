@@ -2,15 +2,16 @@
 /**
  * The entry point for the server, this is where everything starts
  */
-console.log('Server starting...');
 const compression = require('compression');
 const debug = require('debug')('api');
+debug('Server starting...');
 debug('logging with debug enabled!');
 import { createServer } from 'http';
 import express from 'express';
 import Raven from 'shared/raven';
 import { ApolloEngine } from 'apollo-engine';
 import toobusy from 'shared/middlewares/toobusy';
+import addSecurityMiddleware from 'shared/middlewares/security';
 import { init as initPassport } from './authentication.js';
 import type { DBUser } from 'shared/types';
 
@@ -27,6 +28,9 @@ app.set('trust proxy', true);
 
 // Return the request if the server is too busy
 app.use(toobusy);
+
+// Security middleware.
+addSecurityMiddleware(app);
 
 // Send all responses as gzip
 app.use(compression());
@@ -62,6 +66,14 @@ app.use(
   }
 );
 
+app.use('/', (req: express$Request, res: express$Response) => {
+  res.redirect(
+    process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV
+      ? 'https://spectrum.chat'
+      : 'http://localhost:3000'
+  );
+});
+
 import type { Loader } from './loaders/types';
 export type GraphQLContext = {
   user: DBUser,
@@ -96,7 +108,7 @@ const subscriptionsServer = createSubscriptionsServer(server, '/websocket');
 //   graphqlPaths: ['/api'],
 // });
 server.listen(PORT);
-console.log(`GraphQL server running at http://localhost:${PORT}/api`);
+debug(`GraphQL server running at http://localhost:${PORT}/api`);
 
 process.on('unhandledRejection', async err => {
   console.error('Unhandled rejection', err);

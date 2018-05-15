@@ -16,6 +16,7 @@ const WriteFilePlugin = require('write-file-webpack-plugin');
 const { ReactLoadablePlugin } = require('react-loadable/webpack');
 const OfflinePlugin = require('offline-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const BundleBuddyWebpackPlugin = require('bundle-buddy-webpack-plugin');
 
 // Recursively walk a folder and get all file paths
 function walkFolder(currentDirPath, callback) {
@@ -98,6 +99,9 @@ module.exports = function override(config, env) {
   // Get all public files so they're cached by the SW
   let externals = [];
   walkFolder('./public/', file => {
+    // HOTFIX: Don't cache images
+    if (file.indexOf('img') > -1 && file.indexOf('homescreen-icon') === -1)
+      return;
     externals.push(file.replace(/public/, ''));
   });
   config.plugins.push(
@@ -144,11 +148,32 @@ module.exports = function override(config, env) {
       })
     );
   }
+  if (process.env.BUNDLE_BUDDY === 'true') {
+    config.plugins.push(new BundleBuddyWebpackPlugin());
+  }
   if (process.env.NODE_ENV === 'development') {
     config.plugins.push(
       WriteFilePlugin({
         // Don't match hot-update files
         test: /^((?!(hot-update)).)*$/g,
+      })
+    );
+  }
+  config.plugins.push(
+    new webpack.optimize.CommonsChunkPlugin({
+      minChunks: 3,
+      name: 'main',
+      async: 'commons',
+      children: true,
+    })
+  );
+  if (process.env.NODE_ENV === 'production') {
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'process.env': {
+          SENTRY_DSN_CLIENT: `"${process.env.SENTRY_DSN_CLIENT}"`,
+          AMPLITUDE_API_KEY: `"${process.env.AMPLITUDE_API_KEY}"`,
+        },
       })
     );
   }

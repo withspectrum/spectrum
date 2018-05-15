@@ -37,6 +37,7 @@ class RestoreChannelModal extends React.Component<Props, State> {
 
   restore = () => {
     const { channel, dispatch } = this.props;
+
     return this.props
       .restoreChannel({ channelId: channel.id })
       .then(() => {
@@ -91,7 +92,9 @@ class RestoreChannelModal extends React.Component<Props, State> {
             )}
 
             <Actions>
-              <TextButton color={'warn.alt'}>Cancel</TextButton>
+              <TextButton onClick={this.close} color={'warn.alt'}>
+                Cancel
+              </TextButton>
               <Button
                 disabled={channel.isPrivate && !hasChargeableSource}
                 loading={isLoading}

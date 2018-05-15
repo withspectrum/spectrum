@@ -10,9 +10,8 @@ export const getStripeCustomer = (customerId: string): Promise<Object> => {
     .run();
 };
 
-export const getStripeCustomersByCustomerIds = (
-  customerIds: Array<string>
-): Promise<Array<Object>> => {
+// prettier-ignore
+export const getStripeCustomersByCustomerIds = (customerIds: Array<string>): Promise<Array<Object>> => {
   return db
     .table('stripeCustomers')
     .getAll(...customerIds)
@@ -32,7 +31,7 @@ export const recordExists = async (customerId: string): Promise<boolean> => {
         (result && result.length > 0)
     )
     .catch(err => {
-      console.log('ERROR: ', err);
+      console.error('ERROR: ', err);
       return new Error(err);
     });
 };
@@ -51,15 +50,13 @@ export const insertStripeCustomer = async (record: Object): Promise<any> => {
         result.changes[0].old_val
     )
     .catch(err => {
-      console.log('ERROR: ', err);
+      console.error('ERROR: ', err);
       return new Error(err);
     });
 };
 
-export const replaceStripeCustomer = async (
-  customerId: string,
-  record: Object
-): Promise<any> => {
+// prettier-ignore
+export const replaceStripeCustomer = async (customerId: string, record: Object): Promise<any> => {
   const expanded = Object.assign({}, record, { customerId: record.id });
   return await db
     .table('stripeCustomers')
@@ -73,7 +70,7 @@ export const replaceStripeCustomer = async (
         result.changes[0].old_val
     )
     .catch(err => {
-      console.log('ERROR: ', err);
+      console.error('ERROR: ', err);
       return new Error(err);
     });
 };
