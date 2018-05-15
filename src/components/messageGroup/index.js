@@ -86,10 +86,16 @@ type MessageGroupProps = {
   This means we will need a nested map in order to get each group, and then within
   each group render each bubble.
 */
-class Messages extends Component<MessageGroupProps> {
+class Messages extends Component<
+  MessageGroupProps,
+  { selectedMessage?: string }
+> {
+  state = {};
   shouldComponentUpdate(next, nextState) {
     const current = this.props;
-    const newSelection = next.location.hash !== current.location.hash;
+    const newSelection =
+      next.location.hash !== current.location.hash ||
+      nextState.selectedMessage !== this.state.selectedMessage;
 
     if (newSelection) return true;
 
@@ -123,14 +129,14 @@ class Messages extends Component<MessageGroupProps> {
   }
 
   toggleSelectedMessage = messageId => {
-    if (
-      this.props.location.hash &&
-      this.props.location.hash.substr(1) === messageId
-    ) {
-      this.props.history.replace(`#`);
+    const { pathname, search, hash } = this.props.location;
+    if (hash && hash.substr(1) === messageId) {
+      this.props.history.replace(`${pathname}${search}#`);
     } else {
-      this.props.history.replace(`#${messageId}`);
+      this.props.history.replace(`${pathname}${search}#${messageId}`);
     }
+    // Note: This is necessary to force a re-render
+    this.setState({ selectedMessage: messageId });
   };
 
   render() {
@@ -143,6 +149,7 @@ class Messages extends Component<MessageGroupProps> {
       isModerator,
       lastSeen,
     } = this.props;
+    const { selectedMessage } = this.state;
 
     let hasInjectedUnseenRobo;
     return (
@@ -230,8 +237,9 @@ class Messages extends Component<MessageGroupProps> {
                         threadId={threadId}
                         toggleReaction={toggleReaction}
                         selectedId={
-                          this.props.location.hash &&
-                          this.props.location.hash.substr(1)
+                          selectedMessage ||
+                          (this.props.location.hash &&
+                            this.props.location.hash.substr(1))
                         }
                         changeSelection={this.toggleSelectedMessage}
                       />
