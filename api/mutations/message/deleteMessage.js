@@ -7,7 +7,7 @@ import {
   userHasMessagesInThread,
   getMessages,
 } from '../../models/message';
-import { getThread, setThreadLastActive } from '../../models/thread';
+import { setThreadLastActive } from '../../models/thread';
 import { deleteParticipantInThread } from '../../models/usersThreads';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
@@ -21,7 +21,7 @@ type Input = {
 
 export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { id } = args;
-  const { user } = ctx;
+  const { user, loaders } = ctx;
 
   const message = await getMessage(id);
 
@@ -42,6 +42,8 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       ? events.MESSAGE_DELETED_FAILED
       : events.DIRECT_MESSAGE_DELETED_FAILED;
 
+  const thread = await loaders.thread.load(message.threadId);
+
   if (message.senderId !== user.id) {
     // Only the sender can delete a directMessageThread message
     if (message.threadType === 'directMessageThread') {
@@ -56,8 +58,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
       return new UserError('You can only delete your own messages.');
     }
-
-    const thread = await loaders.thread.load(message.threadId);
 
     const [communityPermissions, channelPermissions] = await Promise.all([
       getUserPermissionsInCommunity(thread.communityId, user.id),
