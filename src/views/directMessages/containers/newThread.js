@@ -13,7 +13,6 @@ import { MessagesContainer, ViewContent } from '../style';
 import { getDirectMessageThreadQuery } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import { throttle } from '../../../helpers/utils';
-import { track } from '../../../helpers/events';
 import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
 import { Spinner } from '../../../components/globals';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -141,7 +140,6 @@ class NewThread extends React.Component<Props, State> {
       searchIsLoading: true,
     });
 
-    // trigger the query
     client
       .query({
         query: searchUsersQuery,
@@ -644,8 +642,6 @@ class NewThread extends React.Component<Props, State> {
       },
     };
 
-    const isPrivate = selectedUsersForNewThread.length > 1 ? true : false;
-
     if (threadIsBeingCreated) {
       return;
     } else {
@@ -665,11 +661,6 @@ class NewThread extends React.Component<Props, State> {
             );
             return;
           }
-          track(
-            'direct message thread',
-            `${isPrivate ? 'private thread' : 'group thread'} created`,
-            null
-          );
 
           this.setState({
             threadIsBeingCreated: false,

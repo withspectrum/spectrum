@@ -8,6 +8,9 @@ import {
 } from '../../models/usersCommunities';
 import { removeMemberInChannel } from '../../models/usersChannels';
 import { getChannelsByUserAndCommunity } from '../../models/channel';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -15,24 +18,38 @@ type Input = {
   },
 };
 
-export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
-  const currentUser = user;
-  const { communityId } = input;
-
-  if (!currentUser) {
-    return new UserError('You must be signed in to leave this community.');
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { communityId } = args.input;
+  const { user } = ctx;
 
   const [permissions, community] = await Promise.all([
-    checkUserPermissionsInCommunity(communityId, currentUser.id),
+    checkUserPermissionsInCommunity(communityId, user.id),
     getCommunityById(communityId),
   ]);
 
   if (!community) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_LEFT_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no community',
+      },
+    });
+
     return new UserError("We couldn't find that community.");
   }
 
   if (!permissions || permissions.length === 0) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_LEFT_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'not member',
+      },
+    });
+
     return new UserError("You're not a member of this community.");
   }
 
@@ -40,6 +57,15 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
 
   // they've already left the community
   if (!permission.isMember) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_LEFT_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'not member',
+      },
+    });
+
     return new UserError("You're not a member of this community.");
   }
 
@@ -48,10 +74,28 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
   // anyways, but we protect this regardless because we want to retain the
   // usersCommunities record forever that indicates this user is blocked
   if (permission.isBlocked) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_LEFT_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'blocked',
+      },
+    });
+
     return new UserError("You aren't able to leave this community.");
   }
 
   if (permission.isOwner) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_LEFT_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'is owner',
+      },
+    });
+
     return new UserError('Community owners cannot leave their own community.');
   }
 
@@ -59,19 +103,28 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
   if (permission.isMember || permission.isModerator) {
     const allChannelsInCommunity = await getChannelsByUserAndCommunity(
       communityId,
-      currentUser.id
+      user.id
     );
     const leaveChannelsPromises = allChannelsInCommunity.map(channel =>
-      removeMemberInChannel(channel, currentUser.id)
+      removeMemberInChannel(channel, user.id)
     );
 
     return await Promise.all([
-      removeMemberInCommunity(communityId, currentUser.id),
+      removeMemberInCommunity(communityId, user.id),
       ...leaveChannelsPromises,
     ]).then(() => community);
   }
 
+  trackQueue.add({
+    userId: user.id,
+    event: events.USER_LEFT_COMMUNITY_FAILED,
+    context: { communityId },
+    properties: {
+      reason: 'unknown error',
+    },
+  });
+
   return new UserError(
     "We weren't able to process your request to leave this community."
   );
-};
+});

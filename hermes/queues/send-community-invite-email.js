@@ -14,6 +14,7 @@ type SendCommunityInviteJobData = {
     firstName: string,
     lastName: string,
     email: string,
+    userId?: string,
   },
   community: Object,
   customMessage: string,
@@ -43,6 +44,7 @@ export default (job: SendCommunityInviteEmailJob) => {
         community: job.data.community,
         customMessage: job.data.customMessage,
       },
+      userId: job.data.recipient.userId,
     });
   } catch (err) {
     debug('❌ Error in job:\n');

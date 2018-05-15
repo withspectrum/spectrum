@@ -14,15 +14,18 @@ import {
   MenuTab,
   PricingTab,
   SupportTab,
+  FeaturesTab,
   AuthTab,
   LogoLink,
   AuthLink,
   PricingLink,
   SupportLink,
+  FeaturesLink,
   ExploreLink,
   MenuContainer,
   MenuOverlay,
 } from '../style';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   currentUser: Object,
@@ -43,7 +46,7 @@ class Nav extends React.Component<Props, State> {
 
   render() {
     return (
-      <NavContainer>
+      <NavContainer data-cy="navbar-splash">
         <Head
           title={'Spectrum'}
           description={'The community platform for the future.'}
@@ -56,21 +59,27 @@ class Nav extends React.Component<Props, State> {
           />
         </Head>
         <Tabs>
-          <LogoTab dark={this.props.dark} to="/about">
+          <LogoTab
+            dark={this.props.dark}
+            to="/about"
+            data-cy="navbar-splash-about"
+          >
             <Logo />
             <Icon glyph={'logo'} />
           </LogoTab>
-          {/* <FeaturesTab
+          <FeaturesTab
             dark={this.props.dark}
             selected={this.props.location === 'features'}
             to="/features"
+            data-cy="navbar-splash-features"
           >
             Features
-          </FeaturesTab> */}
+          </FeaturesTab>
           <PricingTab
             dark={this.props.dark}
             selected={this.props.location === 'pricing'}
             to="/pricing"
+            data-cy="navbar-splash-pricing"
           >
             Pricing
           </PricingTab>
@@ -78,20 +87,25 @@ class Nav extends React.Component<Props, State> {
             dark={this.props.dark}
             selected={this.props.location === 'support'}
             to="/support"
+            data-cy="navbar-splash-support"
           >
             Support
           </SupportTab>
           <AuthTab dark={this.props.dark}>
             {this.props.currentUser ? (
-              <Link to={'/'}>
+              <Link to={'/'} data-cy="navbar-splash-profile">
                 <Avatar
                   src={this.props.currentUser.profilePhoto}
                   user={this.props.currentUser}
                 />
               </Link>
             ) : (
-              <Link to="/login">
+              <Link
+                to="/login"
+                onClick={() => track(events.HOME_PAGE_SIGN_IN_CLICKED)}
+              >
                 <Button
+                  data-cy="navbar-splash-signin"
                   style={{
                     fontWeight: '700',
                     fontSize: '16px',
@@ -112,12 +126,12 @@ class Nav extends React.Component<Props, State> {
               <LogoLink to="/">
                 <Logo />
               </LogoLink>
-              {/* <FeaturesLink
+              <FeaturesLink
                 to="/features"
                 selected={this.props.location === 'features'}
               >
                 <Icon glyph="checkmark" />Features<Icon glyph="enter" />
-              </FeaturesLink> */}
+              </FeaturesLink>
               <PricingLink
                 to="/pricing"
                 selected={this.props.location === 'pricing'}
@@ -146,7 +160,10 @@ class Nav extends React.Component<Props, State> {
                   <Icon glyph="enter" />
                 </AuthLink>
               ) : (
-                <AuthLink to={'/login'}>
+                <AuthLink
+                  to={'/login'}
+                  onClick={() => track(events.HOME_PAGE_SIGN_IN_CLICKED)}
+                >
                   <Icon glyph="welcome" />
                   <span>Sign in</span>
                   <Icon glyph="enter" />

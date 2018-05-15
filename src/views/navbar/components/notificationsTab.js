@@ -14,6 +14,7 @@ import markNotificationsSeenMutation from 'shared/graphql/mutations/notification
 import { markSingleNotificationSeenMutation } from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import { Tab, NotificationTab, Label } from '../style';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   active: boolean,
@@ -381,13 +382,20 @@ class NotificationsTab extends React.Component<Props, State> {
     const { notifications, shouldRenderDropdown } = this.state;
 
     return (
-      <NotificationTab padOnHover onMouseOver={this.setHover}>
+      <NotificationTab
+        padOnHover
+        onMouseOver={this.setHover}
+        data-cy="navbar-notifications"
+      >
         <Tab
           data-active={active}
           aria-current={active ? 'page' : undefined}
           to="/notifications"
           rel="nofollow"
-          onClick={this.markAllAsSeen}
+          onClick={() => {
+            this.markAllAsSeen();
+            track(events.NAVIGATION_NOTIFICATIONS_CLICKED);
+          }}
         >
           <Icon
             glyph={count > 0 ? 'notification-fill' : 'notification'}
