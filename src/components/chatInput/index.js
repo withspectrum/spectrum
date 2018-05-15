@@ -338,6 +338,9 @@ class ChatInput extends React.Component<Props, State> {
           : toPlainText(state),
         messageType: !isAndroid() ? 'draftjs' : 'text',
       });
+      localStorage.removeItem(LS_DM_KEY);
+      localStorage.removeItem(LS_DM_KEY_EXPIRE);
+
       clear();
       return 'handled';
     }
