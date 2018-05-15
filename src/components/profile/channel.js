@@ -4,7 +4,6 @@ import compose from 'recompose/compose';
 import replace from 'string-replace-to-array';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
-import { track } from '../../helpers/events';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -60,21 +59,18 @@ class ChannelWithData extends React.Component<Props, State> {
           toggleChannelSubscription.channelPermissions.isPending;
         let str = '';
         if (isPending) {
-          track('channel', 'requested to join', null);
           str = `Requested to join ${toggleChannelSubscription.name} in ${
             toggleChannelSubscription.community.name
           }`;
         }
 
         if (!isPending && isMember) {
-          track('channel', 'joined', null);
           str = `Joined ${toggleChannelSubscription.name} in ${
             toggleChannelSubscription.community.name
           }!`;
         }
 
         if (!isPending && !isMember) {
-          track('channel', 'unjoined', null);
           str = `Left the channel ${toggleChannelSubscription.name} in ${
             toggleChannelSubscription.community.name
           }.`;

@@ -9,6 +9,7 @@ import { TwitterSigninButton } from './twitter';
 import { FacebookSigninButton } from './facebook';
 import { GoogleSigninButton } from './google';
 import { GithubSigninButton } from './github';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   redirectPath: ?string,
@@ -24,6 +25,7 @@ export type ButtonProps = {
 
 class LoginButtonSet extends React.Component<Props> {
   saveLoginMethod = (type: string) => {
+    track(events.LOGIN_PAGE_AUTH_CLICKED, { provider: type });
     return storeItem('preferred_signin_method', type);
   };
 

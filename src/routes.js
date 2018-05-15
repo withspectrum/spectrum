@@ -145,7 +145,11 @@ const ComposerFallback = signedOutFallback(Composer, () => (
   <Redirect to="/login" />
 ));
 
-class Routes extends React.Component<{}> {
+type Props = {
+  maintenanceMode?: boolean,
+};
+
+class Routes extends React.Component<Props> {
   render() {
     const { title, description } = generateMetaInfo();
 

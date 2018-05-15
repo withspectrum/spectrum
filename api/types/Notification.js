@@ -64,7 +64,6 @@ const Notification = /* GraphQL */ `
 
 	extend type Mutation {
 		markAllNotificationsSeen: Boolean
-		markAllNotificationsRead: Boolean
 		markDirectMessageNotificationsSeen: Boolean
 		markSingleNotificationSeen(id: ID!): Boolean
 	}

@@ -93,6 +93,7 @@ export default async (job: SendNewThreadEmailJob) => {
           thread.community.id
         ),
       },
+      userId: recipient.id,
     });
   } catch (err) {
     debug('❌ Error in job:\n');

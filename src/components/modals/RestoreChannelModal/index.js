@@ -37,6 +37,7 @@ class RestoreChannelModal extends React.Component<Props, State> {
 
   restore = () => {
     const { channel, dispatch } = this.props;
+
     return this.props
       .restoreChannel({ channelId: channel.id })
       .then(() => {
