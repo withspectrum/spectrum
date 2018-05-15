@@ -50,6 +50,22 @@ export const GearButton = styled.span`
   }
 `;
 
+export const ArchiveUnarchiveCTA = styled.button`
+  background: none;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 export const Wrapper = styled(FlexCol)`
   flex: 0 0 auto;
   justify-content: center;
@@ -94,7 +110,7 @@ export const Wrapper = styled(FlexCol)`
     display: none;
   }
 
-  &:hover ${GearButton} {
+  &:hover ${ArchiveUnarchiveCTA} {
     display: inline-block;
   }
 `;

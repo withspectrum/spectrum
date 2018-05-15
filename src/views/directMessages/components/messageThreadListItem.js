@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
+import compose from 'recompose/compose';
+import { connect } from 'react-redux';
 // $FlowFixMe
+import { addToastWithTimeout } from 'src/actions/toasts';
 import Link from 'src/components/link';
 import { timeDifference } from '../../../helpers/utils';
 import { renderAvatars } from './avatars';
+import archiveDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/archiveDirectMessageThread';
+import unarchiveDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/unarchiveDirectMessageThread';
 import {
+  ArchiveUnarchiveCTA,
   Wrapper,
   Row,
   Meta,
@@ -19,6 +25,41 @@ class ListCardItemDirectMessageThread extends Component {
     e.stopPropagation(); // We need this since the whole wrapper is clickable
     e.preventDefault();
   };
+
+  handleArchiveDMThread = e => {
+    e.stopPropagation();
+    e.preventDefault();
+    const { thread: { id: threadId }, dispatch } = this.props;
+
+    this.props
+      .archiveDirectMessageThread(threadId)
+      .then(({ data }) => {
+        dispatch(addToastWithTimeout('success', 'Message archived!'));
+
+        return;
+      })
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
+  handleUnarchiveDMThread = e => {
+    e.stopPropagation();
+    e.preventDefault();
+    const { thread: { id: threadId }, dispatch } = this.props;
+
+    this.props
+      .unarchiveDirectMessageThread(threadId)
+      .then(({ data }) => {
+        dispatch(addToastWithTimeout('success', 'Message unarchived!'));
+
+        return;
+      })
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
   render() {
     const { thread, currentUser, active } = this.props;
 
@@ -54,6 +95,8 @@ class ListCardItemDirectMessageThread extends Component {
     let isUnread = currentParticipantLastActiveTimestamp < timestamp;
     isUnread = active ? false : isUnread;
 
+    const isArchived = Boolean(this.props.thread.archivedAt);
+
     return (
       <Wrapper active={active} isUnread={isUnread}>
         <Link to={`/messages/${thread.id}`}>
@@ -67,7 +110,21 @@ class ListCardItemDirectMessageThread extends Component {
                 <Timestamp className="message-thread-item" isUnread={isUnread}>
                   {threadTimeDifference}
                 </Timestamp>
-                <GearButton onClick={this.handleGearClick} />
+                {!isArchived && (
+                  <ArchiveUnarchiveCTA onClick={this.handleArchiveDMThread}>
+                    Archive
+                  </ArchiveUnarchiveCTA>
+                )}
+                {isArchived && (
+                  <ArchiveUnarchiveCTA onClick={this.handleUnarchiveDMThread}>
+                    Unarchive
+                  </ArchiveUnarchiveCTA>
+                )}
+                {/**
+                  Add this when we have the dropdown/popover component
+                  https://github.com/withspectrum/spectrum/pull/2992#issuecomment-388686504
+                  <GearButton onClick={this.handleGearClick} />
+                */}
               </MessageGroupByline>
               <Meta isUnread={isUnread} nowrap>
                 {thread.snippet}
@@ -80,4 +137,8 @@ class ListCardItemDirectMessageThread extends Component {
   }
 }
 
-export default ListCardItemDirectMessageThread;
+export default compose(
+  connect(),
+  archiveDirectMessageThreadMutation,
+  unarchiveDirectMessageThreadMutation
+)(ListCardItemDirectMessageThread);

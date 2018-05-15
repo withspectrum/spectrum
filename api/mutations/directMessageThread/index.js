@@ -15,11 +15,13 @@
 import createDirectMessageThread from './createDirectMessageThread';
 import setLastSeen from './setLastSeen';
 import archiveDirectMessageThread from './archiveDirectMessageThread';
+import unarchiveDirectMessageThread from './unarchiveDirectMessageThread';
 
 module.exports = {
   Mutation: {
     createDirectMessageThread,
     setLastSeen,
     archiveDirectMessageThread,
+    unarchiveDirectMessageThread,
   },
 };

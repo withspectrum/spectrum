@@ -2,11 +2,11 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import {
-  archiveDirectMessageThread,
+  unarchiveDirectMessageThread,
   getDirectMessageThread,
 } from '../../models/usersDirectMessageThreads';
 
-type archiveDMThreadInput = {
+type unarchiveDMThreadInput = {
   input: {
     threadId: string,
   },
@@ -14,13 +14,13 @@ type archiveDMThreadInput = {
 
 export default async (
   _: any,
-  { input }: archiveDMThreadInput,
+  { input }: unarchiveDMThreadInput,
   { user }: GraphQLContext
 ) => {
   const currentUser = user;
 
   if (!currentUser) {
-    return new UserError('You must be signed in to archive a message.');
+    return new UserError('You must be signed in to unarchive a message.');
   }
 
   if (!input.threadId) {
@@ -37,12 +37,16 @@ export default async (
   }
 
   try {
-    const { changes } = await archiveDirectMessageThread(
+    const { changes } = await unarchiveDirectMessageThread(
       directMessageThread.id
     );
 
+    console.log(changes);
+
     return changes[0].new_val;
   } catch (e) {
-    return new UserError('We could not archive your message. Please try again');
+    return new UserError(
+      'We could not unarchive your message. Please try again'
+    );
   }
 };

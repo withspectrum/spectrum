@@ -22,7 +22,8 @@ const DirectMessageThread = /* GraphQL */ `
 	}
 
 	type DirectMessageThread {
-		id: ID!
+    id: ID!
+    archivedAt: Date
     messageConnection(first: Int = 20, after: String): DirectMessagesConnection! @cost(complexity: 1, multiplier: "first")
     participants: [ParticipantInfo]! @cost(complexity: 1)
     snippet: String! @cost(complexity: 2)
@@ -55,15 +56,19 @@ const DirectMessageThread = /* GraphQL */ `
 		message: DirectMessageContentInput!
   }
 
-  input isArchivedDMThreadInput {
-    isArchived: Boolean!
+  input archiveDMThreadInput {
+    threadId: ID!
+  }
+
+  input unarchiveDMThreadInput {
     threadId: ID!
   }
 
 	extend type Mutation {
 		createDirectMessageThread(input: DirectMessageThreadInput!): DirectMessageThread
     setLastSeen(id: ID!): DirectMessageThread
-    archiveDirectMessageThread(input: isArchivedDMThreadInput!): DirectMessageThread
+    archiveDirectMessageThread(input: archiveDMThreadInput!): DirectMessageThread
+    unarchiveDirectMessageThread(input: unarchiveDMThreadInput!): DirectMessageThread
 	}
 
 	extend type Subscription {

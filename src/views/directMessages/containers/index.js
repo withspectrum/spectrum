@@ -150,18 +150,10 @@ class DirectMessages extends React.Component<Props, State> {
         <MessagesList isViewingThread={isViewingThread || isComposing}>
           <ComposeHeader>
             <TabsContainer>
-              <TabsLink
-                to="/messages"
-                onClick={() => this.setActiveThread('new')}
-                isActive={isInActiveMessages}
-              >
+              <TabsLink to="/messages" isActive={isInActiveMessages}>
                 Inbox
               </TabsLink>
-              <TabsLink
-                to="/messages/archived"
-                onClick={() => this.setActiveThread('new')}
-                isActive={isInArchivedMessages}
-              >
+              <TabsLink to="/messages/archived" isActive={isInArchivedMessages}>
                 Archived
               </TabsLink>
             </TabsContainer>
