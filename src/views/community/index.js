@@ -38,9 +38,13 @@ import {
   ColumnHeading,
 } from './style';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
-import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
+import {
+  getCommunityByMatch,
+  type GetCommunityType,
+} from 'shared/graphql/queries/community/getCommunity';
 import ChannelList from './components/channelList';
 import ModeratorList from './components/moderatorList';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 
@@ -55,7 +59,7 @@ type Props = {
     },
   },
   data: {
-    community: Object,
+    community: GetCommunityType,
   },
 };
 
@@ -76,16 +80,35 @@ class CommunityView extends React.Component<Props, State> {
     };
   }
 
+  componentDidMount() {
+    if (this.props.data && this.props.data.community) {
+      track(events.COMMUNITY_VIEWED, {
+        community: transformations.analyticsCommunity(
+          this.props.data.community
+        ),
+      });
+    }
+  }
+
   componentDidUpdate(prevProps) {
-    // if the user is new and signed up through a community page, push
-    // the community data into the store to hydrate the new user experience
-    // with their first community they should join
-    if (this.props.currentUser) return;
     if (
-      (!prevProps.data.community && this.props.data.community) ||
+      (!prevProps.data.community &&
+        this.props.data.community &&
+        this.props.data.community.id) ||
       (prevProps.data.community &&
         prevProps.data.community.id !== this.props.data.community.id)
     ) {
+      track(events.COMMUNITY_VIEWED, {
+        community: transformations.analyticsCommunity(
+          this.props.data.community
+        ),
+      });
+
+      // if the user is new and signed up through a community page, push
+      // the community data into the store to hydrate the new user experience
+      // with their first community they should join
+      if (this.props.currentUser) return;
+
       this.props.dispatch(addCommunityToOnboarding(this.props.data.community));
     }
   }

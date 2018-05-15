@@ -85,14 +85,18 @@ export class QuotedMessage extends React.Component<
   constructor(props: QuotedMessageProps) {
     super(props);
 
-    const jsonBody = JSON.parse(props.message.content.body);
-    const isShort =
-      jsonBody.blocks.length === 1 ||
-      toPlainText(toState(jsonBody)).length <= 170;
+    const isShort = () => {
+      if (props.message.messageType === 'media') return false;
+      const jsonBody = JSON.parse(props.message.content.body);
+      return (
+        !jsonBody.blocks.length > 1 ||
+        toPlainText(toState(jsonBody)).length <= 170
+      );
+    };
 
     this.state = {
-      isShort,
-      isExpanded: isShort,
+      isShort: isShort(),
+      isExpanded: isShort(),
     };
   }
 
@@ -110,7 +114,7 @@ export class QuotedMessage extends React.Component<
 
   render() {
     const { message, openGallery } = this.props;
-    const { isExpanded, isShort } = this.state;
+    const { isExpanded } = this.state;
     return (
       <QuoteWrapper
         expanded={isExpanded}
@@ -126,7 +130,7 @@ export class QuotedMessage extends React.Component<
           message={message}
           showParent={false}
           me={false}
-          openGallery={openGallery ? openGallery : () => {}}
+          openGallery={openGallery ? openGallery() : () => {}}
           bubble={false}
         />
         {!isExpanded && <QuoteWrapperGradient />}
@@ -175,7 +179,7 @@ const Action = (props: ActionProps) => {
             tipText={'Delete'}
             tipLocation={'top'}
             size={24}
-            onClick={deleteMessage}
+            onClick={() => deleteMessage && deleteMessage()}
           />
         </ModActionWrapper>
       );

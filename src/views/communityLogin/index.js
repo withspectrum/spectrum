@@ -20,6 +20,8 @@ import {
   type GetCommunityType,
 } from 'shared/graphql/queries/community/getCommunity';
 import ViewError from 'src/components/viewError';
+import queryString from 'query-string';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   data: {
@@ -27,6 +29,7 @@ type Props = {
   },
   ...$Exact<ViewNetworkHandlerType>,
   history: Object,
+  location: Object,
   match: Object,
   redirectPath: ?string,
 };
@@ -35,6 +38,18 @@ export class Login extends React.Component<Props> {
   escape = () => {
     this.props.history.push(`/${this.props.match.params.communitySlug}`);
   };
+
+  componentDidMount() {
+    const { location } = this.props;
+    let redirectPath;
+    if (location) {
+      const searchObj = queryString.parse(this.props.location.search);
+      redirectPath = searchObj.r;
+    }
+
+    track(events.LOGIN_PAGE_VIEWED, { redirectPath });
+  }
+
   render() {
     const { data: { community }, isLoading, redirectPath } = this.props;
 
@@ -72,6 +87,11 @@ export class Login extends React.Component<Props> {
                 href="https://github.com/withspectrum/code-of-conduct"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  track(events.CODE_OF_CONDUCT_CLICKED, {
+                    location: 'branded login',
+                  })
+                }
               >
                 Code of Conduct
               </a>

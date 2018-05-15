@@ -17,7 +17,7 @@ import { client } from 'shared/graphql';
 import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
 import Routes from './routes';
-import { track } from './helpers/events';
+import { track, events } from './helpers/analytics';
 import { wsLink } from 'shared/graphql';
 
 const { thread, t } = queryString.parse(history.location.search);
@@ -117,12 +117,24 @@ wsLink.subscriptionClient.on('reconnected', () =>
 // This fires when a user is prompted to add the app to their homescreen
 // We use it to track it happening in Google Analytics so we have those sweet metrics
 window.addEventListener('beforeinstallprompt', e => {
-  track('user', 'prompted to add to homescreen');
+  track(events.PWA_HOME_SCREEN_PROMPTED);
   e.userChoice.then(choiceResult => {
     if (choiceResult.outcome === 'dismissed') {
-      track('user', 'did not add to homescreen');
+      track(events.PWA_HOME_SCREEN_DISMISSED);
     } else {
-      track('user', 'added to homescreen');
+      track(events.PWA_HOME_SCREEN_ADDED);
     }
   });
 });
+
+const AMPLITUDE_API_KEY =
+  process.env.NODE_ENV === 'production'
+    ? process.env.AMPLITUDE_API_KEY
+    : process.env.AMPLITUDE_API_KEY_DEVELOPMENT;
+if (AMPLITUDE_API_KEY) {
+  window.amplitude.getInstance().init(AMPLITUDE_API_KEY);
+  // amplitude.getInstance().setOptOut(navigator.doNotTrack === '1')
+  window.amplitude.getInstance().setOptOut(false);
+} else {
+  console.warn('No amplitude api key, tracking in development mode');
+}

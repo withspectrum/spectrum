@@ -26,6 +26,9 @@ import { getChannelById } from '../models/channel';
 import { getCommunitySettings } from '../models/communitySettings';
 import { truncateString } from '../utils/truncateString';
 import { handleSlackChannelResponse } from '../utils/slack';
+import { decryptString } from 'shared/encryption';
+import { trackQueue } from 'shared/bull/queues';
+import { events } from 'shared/analytics';
 
 export default async (job: Job<ThreadNotificationJobData>) => {
   const { thread: incomingThread } = job.data;
@@ -152,11 +155,15 @@ export default async (job: Job<ThreadNotificationJobData>) => {
       getChannelById(incomingThread.channelId),
     ]);
 
+    const decryptedToken = decryptString(
+      communitySlackSettings.slackSettings.token
+    );
+
     slackNotificationPromise = axios({
       method: 'post',
       url: 'https://slack.com/api/chat.postMessage',
       headers: {
-        Authorization: `Bearer ${communitySlackSettings.slackSettings.token}`,
+        Authorization: `Bearer ${decryptedToken}`,
       },
       data: {
         channel: slackChannel,
@@ -195,6 +202,12 @@ export default async (job: Job<ThreadNotificationJobData>) => {
         ],
       },
     }).then(response => {
+      trackQueue.add({
+        userId: author.id,
+        event: events.THREAD_SENT_TO_SLACK,
+        context: { threadId: incomingThread.id },
+      });
+
       return handleSlackChannelResponse(
         response.data,
         incomingThread.communityId

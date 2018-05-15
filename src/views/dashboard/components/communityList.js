@@ -23,6 +23,7 @@ import {
   changeActiveChannel,
 } from '../../../actions/dashboardFeed';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   dispatch: Function,
@@ -35,6 +36,7 @@ type Props = {
 
 class CommunityList extends React.Component<Props> {
   changeCommunity = id => {
+    track(events.INBOX_COMMUNITY_FILTERED);
     this.props.dispatch(changeActiveCommunity(id));
     this.props.history.replace('/');
     this.props.dispatch(changeActiveThread(''));
@@ -135,7 +137,10 @@ class CommunityList extends React.Component<Props> {
         </CommunityListScroller>
 
         <Fixed>
-          <Link to={'/explore'}>
+          <Link
+            to={'/explore'}
+            onClick={() => events.INBOX_FIND_MORE_COMMUNITIES_CLICKED}
+          >
             <CommunityListItem>
               <Icon glyph={'explore'} />
               <CommunityListName>Find more communities</CommunityListName>

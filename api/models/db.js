@@ -38,7 +38,7 @@ if (process.env.TEST_DB) {
   });
 }
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' && process.env.TRACK_DB_PERF) {
   const fs = require('fs');
   const inspect = require('rethinkdb-inspector');
   const queries = [];

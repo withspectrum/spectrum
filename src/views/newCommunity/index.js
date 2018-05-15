@@ -3,7 +3,6 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
-import { track } from '../../helpers/events';
 import queryString from 'query-string';
 import { Button, TextButton } from '../../components/buttons';
 import AppViewWrapper from '../../components/appViewWrapper';
@@ -72,8 +71,6 @@ class NewCommunity extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    track('community', 'create inited', null);
-
     const { existingId } = this.state;
     if (!existingId) return;
 

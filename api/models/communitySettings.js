@@ -3,7 +3,9 @@ const { db } = require('./db');
 import type { DBCommunitySettings, DBCommunity } from 'shared/types';
 import { getCommunityById } from './community';
 import axios from 'axios';
-const querystring = require('querystring');
+import { decryptString } from 'shared/encryption';
+import { trackQueue } from 'shared/bull/queues';
+import { events } from 'shared/analytics';
 
 const defaultSettings = {
   brandedLogin: {
@@ -23,9 +25,8 @@ const defaultSettings = {
   },
 };
 
-export const getCommunitySettings = (
-  id: string
-): Promise<DBCommunitySettings> => {
+// prettier-ignore
+export const getCommunitySettings = (id: string): Promise<DBCommunitySettings> => {
   return db
     .table('communitySettings')
     .getAll(id, { index: 'communityId' })
@@ -38,9 +39,8 @@ export const getCommunitySettings = (
     });
 };
 
-export const getCommunitiesSettings = (
-  communityIds: Array<string>
-): Promise<?DBCommunitySettings> => {
+// prettier-ignore
+export const getCommunitiesSettings = (communityIds: Array<string>): Promise<?DBCommunitySettings> => {
   return db
     .table('communitySettings')
     .getAll(...communityIds, { index: 'communityId' })
@@ -89,6 +89,7 @@ export const getCommunitiesSettings = (
     });
 };
 
+// prettier-ignore
 export const createCommunitySettings = (id: string): Promise<DBCommunity> => {
   return db
     .table('communitySettings')
@@ -114,50 +115,67 @@ export const createCommunitySettings = (id: string): Promise<DBCommunity> => {
     .then(async () => await getCommunityById(id));
 };
 
-export const enableCommunityBrandedLogin = (
-  id: string
-): Promise<DBCommunity> => {
+// prettier-ignore
+export const enableCommunityBrandedLogin = (communityId: string, userId: string): Promise<DBCommunity> => {
   return db
     .table('communitySettings')
-    .getAll(id, { index: 'communityId' })
+    .getAll(communityId, { index: 'communityId' })
     .update({
       brandedLogin: {
         isEnabled: true,
       },
     })
     .run()
-    .then(async () => await getCommunityById(id));
+    .then(async () => {
+      trackQueue.add({
+        userId,
+        event: events.COMMUNITY_BRANDED_LOGIN_ENABLED,
+        context: { communityId }
+      })
+      return await getCommunityById(communityId)
+    });
 };
 
-export const disableCommunityBrandedLogin = (
-  id: string
-): Promise<DBCommunity> => {
+// prettier-ignore
+export const disableCommunityBrandedLogin = (communityId: string, userId: string): Promise<DBCommunity> => {
   return db
     .table('communitySettings')
-    .getAll(id, { index: 'communityId' })
+    .getAll(communityId, { index: 'communityId' })
     .update({
       brandedLogin: {
         isEnabled: false,
       },
     })
     .run()
-    .then(async () => await getCommunityById(id));
+    .then(async () => {
+      trackQueue.add({
+        userId,
+        event: events.COMMUNITY_BRANDED_LOGIN_DISABLED,
+        context: { communityId }
+      })
+      return await getCommunityById(communityId)
+    });
 };
 
-export const updateCommunityBrandedLoginMessage = (
-  id: string,
-  message: ?string
-): Promise<DBCommunity> => {
+// prettier-ignore
+export const updateCommunityBrandedLoginMessage = (communityId: string, message: ?string, userId: string): Promise<DBCommunity> => {
   return db
     .table('communitySettings')
-    .getAll(id, { index: 'communityId' })
+    .getAll(communityId, { index: 'communityId' })
     .update({
       brandedLogin: {
         message: message,
       },
     })
     .run()
-    .then(async () => await getCommunityById(id));
+    .then(async () => {
+      trackQueue.add({
+        userId,
+        event: events.COMMUNITY_BRANDED_LOGIN_SETTINGS_SAVED,
+        context: { communityId }
+      })
+      return await getCommunityById(communityId)
+    });
 };
 
 type UpdateSlackSettingsInput = {
@@ -169,7 +187,8 @@ type UpdateSlackSettingsInput = {
 };
 export const updateSlackSettingsAfterConnection = async (
   communityId: string,
-  input: UpdateSlackSettingsInput
+  input: UpdateSlackSettingsInput,
+  userId: string
 ): Promise<DBCommunity> => {
   const settings = await db
     .table('communitySettings')
@@ -191,7 +210,15 @@ export const updateSlackSettingsAfterConnection = async (
           })
           .run();
       })
-      .then(async () => await getCommunityById(communityId));
+      .then(async () => {
+        trackQueue.add({
+          userId,
+          event: events.COMMUNITY_SLACK_TEAM_CONNECTED,
+          context: { communityId },
+        });
+
+        return await getCommunityById(communityId);
+      });
   }
 
   return await db
@@ -205,12 +232,21 @@ export const updateSlackSettingsAfterConnection = async (
       },
     })
     .run()
-    .then(async () => await getCommunityById(communityId));
+    .then(async () => {
+      trackQueue.add({
+        userId,
+        event: events.COMMUNITY_SLACK_TEAM_CONNECTED,
+        context: { communityId },
+      });
+
+      return await getCommunityById(communityId);
+    });
 };
 
 export const markInitialSlackInvitationsSent = async (
   communityId: string,
-  inviteCustomMessage: ?string
+  inviteCustomMessage: ?string,
+  userId: string
 ): Promise<DBCommunity> => {
   return db
     .table('communitySettings')
@@ -222,7 +258,15 @@ export const markInitialSlackInvitationsSent = async (
       },
     })
     .run()
-    .then(async () => await getCommunityById(communityId));
+    .then(async () => {
+      trackQueue.add({
+        userId,
+        event: events.COMMUNITY_SLACK_TEAM_INVITES_SENT,
+        context: { communityId },
+      });
+
+      return await getCommunityById(communityId);
+    });
 };
 
 const resetSlackSettings = async (communityId: string) => {
@@ -238,14 +282,14 @@ const resetSlackSettings = async (communityId: string) => {
     .then(() => []);
 };
 
-export const getSlackPublicChannelList = (
-  communityId: string,
-  token: string
-) => {
+// prettier-ignore
+export const getSlackPublicChannelList = (communityId: string, token: string) => {
   if (!token) return [];
+  const decryptedToken = decryptString(token);
+
   return axios
     .get(
-      `https://slack.com/api/channels.list?token=${token}&exclude_archived=true&exclude_members=true`
+      `https://slack.com/api/channels.list?token=${decryptedToken}&exclude_archived=true&exclude_members=true`
     )
     .then(response => {
       return handleSlackChannelResponse(response.data, communityId);
@@ -256,14 +300,14 @@ export const getSlackPublicChannelList = (
     });
 };
 
-export const getSlackPrivateChannelList = (
-  communityId: string,
-  token: ?string
-) => {
+// prettier-ignore
+export const getSlackPrivateChannelList = (communityId: string, token: ?string) => {
   if (!token) return [];
+  const decryptedToken = decryptString(token);
+
   return axios
     .get(
-      `https://slack.com/api/groups.list?token=${token}&exclude_archived=true&exclude_members=true`
+      `https://slack.com/api/groups.list?token=${decryptedToken}&exclude_archived=true&exclude_members=true`
     )
     .then(response => {
       return handleSlackChannelResponse(response.data, communityId);
@@ -274,10 +318,8 @@ export const getSlackPrivateChannelList = (
     });
 };
 
-const handleSlackChannelResponse = async (
-  data: Object,
-  communityId: string
-) => {
+// prettier-ignore
+const handleSlackChannelResponse = async (data: Object, communityId: string) => {
   const mapData = (arr: Array<any>) =>
     arr &&
     arr.length > 0 &&
@@ -308,6 +350,15 @@ const handleSlackChannelResponse = async (
   ];
 
   if (data.error && errorsToTriggerRest.indexOf(data.error) >= 0) {
+    trackQueue.add({
+      userId: 'ADMIN',
+      event: events.COMMUNITY_SLACK_TEAM_RESET,
+      context: { communityId },
+      properties: {
+        error: data.error
+      }
+    })
+    
     return resetSlackSettings(communityId);
   }
 
