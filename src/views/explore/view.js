@@ -19,6 +19,7 @@ import { getCommunitiesByCuratedContentType } from 'shared/graphql/queries/commu
 import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCommunities';
 import { Loading } from '../../components/loading';
 import { SegmentedControl, Segment } from '../../components/segmentedControl';
+import { track, transformations, events } from 'src/helpers/analytics';
 
 export const Charts = () => {
   const ChartGrid = styled.div`
@@ -42,6 +43,11 @@ class CollectionSwitcher extends React.Component<Props, State> {
 
   handleSegmentClick(selectedView) {
     if (this.state.selectedView === selectedView) return;
+
+    track(events.EXPLORE_PAGE_SUBCATEGORY_VIEWED, {
+      collection: selectedView,
+    });
+
     return this.setState({ selectedView });
   }
 
@@ -106,6 +112,18 @@ type CategoryListProps = {
   categories?: Array<any>,
 };
 class CategoryList extends React.Component<CategoryListProps> {
+  onLeave = community => {
+    track(events.EXPLORE_PAGE_LEFT_COMMUNITY, {
+      community: transformations.analyticsCommunity(community),
+    });
+  };
+
+  onJoin = community => {
+    track(events.EXPLORE_PAGE_JOINED_COMMUNITY, {
+      community: transformations.analyticsCommunity(community),
+    });
+  };
+
   render() {
     const {
       data: { communities },
@@ -138,6 +156,8 @@ class CategoryList extends React.Component<CategoryListProps> {
                   profileSize={'upsell'}
                   data={{ community }}
                   currentUser={currentUser}
+                  onLeave={this.onLeave}
+                  onJoin={this.onJoin}
                 />
               ))}
             </ListWrapper>

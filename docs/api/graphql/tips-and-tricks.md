@@ -16,5 +16,5 @@ Sometimes you want to show the user an error though, for example for permissions
 import UserError from '../utils/UserError';
 
 // The user will see this full error message
-throw new UserError('You do not have permission to access this!')
+return new UserError('You do not have permission to access this!')
 ```

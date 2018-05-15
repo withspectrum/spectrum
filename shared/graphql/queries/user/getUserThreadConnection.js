@@ -60,7 +60,8 @@ const getUserThreadConnectionOptions = {
         return subscribeToMore({
           document: subscribeToUpdatedThreads,
           updateQuery: (prev, { subscriptionData }) => {
-            const updatedThread = subscriptionData.data.threadUpdated;
+            const updatedThread =
+              subscriptionData.data && subscriptionData.data.threadUpdated;
             if (!updatedThread) return prev;
 
             const thisUserId = ownProps.userId;

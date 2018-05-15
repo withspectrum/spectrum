@@ -124,7 +124,10 @@ export default async (job: Job<CommunityInviteNotificationJobData>) => {
 
     const updatedNotification = await storeNotification(newNotification);
     const sendInvite = await addToSendCommunityInviteEmailQueue(
-      inboundRecipient,
+      {
+        ...inboundRecipient,
+        userId: existingUser.id,
+      },
       communityToInvite,
       sender,
       customMessage
