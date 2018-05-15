@@ -1,19 +1,12 @@
 // @flow
 import * as React from 'react';
-import { track } from 'src/helpers/events';
 import Section from 'src/components/themedSection';
 import PageFooter from '../components/footer';
 import Link from 'src/components/link';
 import Icon from 'src/components/icons';
-import {
-  Discover,
-  Easy,
-  Happy,
-  Impact,
-  Ideas,
-} from 'src/components/illustrations';
+import { Easy, Happy, Impact, Ideas } from 'src/components/illustrations';
 import { Wrapper } from '../style';
-import { Content, Heading, Subhead, Copy } from '../pricing/style';
+import { Heading, Copy } from '../pricing/style';
 import { Button } from 'src/components/buttons';
 import {
   Intro,
@@ -41,9 +34,7 @@ type State = {
 };
 
 class Features extends React.Component<Props, State> {
-  componentDidMount() {
-    track('features', 'viewed', null);
-  }
+  componentDidMount() {}
 
   render() {
     return (
@@ -54,10 +45,6 @@ class Features extends React.Component<Props, State> {
               <Heading>
                 Everything you need to build a great online community
               </Heading>
-              {/* <Copy>
-                Spectrum was built from the ground up to make building an online
-                community easy.
-              </Copy> */}
               <Copy style={{ marginBottom: '32px' }}>
                 We give you a powerful set of tools to grow your community
                 organically, moderate it effectively, and measure its ROI for
@@ -83,11 +70,6 @@ class Features extends React.Component<Props, State> {
                 <Icon glyph="message" size="48" />
                 <FeatureName>Finally, chat that scales</FeatureName>
                 <FeatureCopy>
-                  {/* <p>
-                    Live chat has become the obvious solution for building
-                    communities, but most platforms quickly get noisy and
-                    distracting when they start to grow.
-                  </p> */}
                   <p>
                     We've taken the best features of modern chat platforms and
                     old-school forums and smashed them together into a format
@@ -106,20 +88,12 @@ class Features extends React.Component<Props, State> {
                     makes it easy for new members to find and join your
                     community.
                   </p>
-                  {/* <p>
-                    It's easy to drive growth by sharing on social media, getting discovered through a search engine, or linking to your community from your app or website.
-                  </p> */}
                 </FeatureCopy>
               </Feature>
               <Feature>
                 <Icon glyph="profile" size="48" />
                 <FeatureName>Every community, only one account</FeatureName>
                 <FeatureCopy>
-                  {/* <p>
-                    Communities built on forums and team chat tend to require a
-                    unique account for each community you join, increasing
-                    friction for new members.
-                  </p> */}
                   <p>
                     Skip managing multiple credentials and playing whack-a-mole
                     with DMs and notifications, Spectrum lets you join as many

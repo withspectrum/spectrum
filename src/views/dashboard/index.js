@@ -32,6 +32,7 @@ import {
   SearchStringHeader,
   Sidebar,
 } from './style';
+import { track, events } from 'src/helpers/analytics';
 
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
   DashboardThreadFeed
@@ -92,6 +93,10 @@ class Dashboard extends React.Component<Props, State> {
       activeChannelObject: channel,
     });
   };
+
+  componentDidMount() {
+    track(events.INBOX_EVERYTHING_VIEWED);
+  }
 
   render() {
     const {

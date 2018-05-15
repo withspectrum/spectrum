@@ -1,5 +1,4 @@
 // @flow
-const debug = require('debug')('api:models:utils');
 import { db } from './db';
 
 export const NEW_DOCUMENTS = db
@@ -60,12 +59,8 @@ export const getAu = (range: Timeframe) => {
     .run();
 };
 
-export const getGrowth = async (
-  table: string,
-  range: Timeframe,
-  field: string,
-  filter: ?mixed
-) => {
+// prettier-ignore
+export const getGrowth = async (table: string, range: Timeframe, field: string, filter: ?mixed) => {
   const { current, previous } = parseRange(range);
   const currentPeriodCount = await db
     .table(table)

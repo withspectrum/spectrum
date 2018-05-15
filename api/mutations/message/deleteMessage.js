@@ -11,45 +11,80 @@ import { getThread, setThreadLastActive } from '../../models/thread';
 import { deleteParticipantInThread } from '../../models/usersThreads';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import { events } from 'shared/analytics';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { trackQueue } from 'shared/bull/queues';
 
-export default async (
-  _: any,
-  { id }: { id: string },
-  { user, loaders }: GraphQLContext
-) => {
-  const currentUser = user;
-  if (!currentUser)
-    throw new UserError('You must be signed in to delete a message.');
+type Input = {
+  id: string,
+};
+
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { id } = args;
+  const { user } = ctx;
 
   const message = await getMessage(id);
-  if (!message) throw new UserError('This message does not exist.');
 
-  if (message.senderId !== currentUser.id) {
+  if (!message) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.MESSAGE_DELETED_FAILED,
+      properties: {
+        reason: 'message not found',
+      },
+    });
+
+    return new UserError('This message does not exist.');
+  }
+
+  const eventFailed =
+    message.threadType === 'story'
+      ? events.MESSAGE_DELETED_FAILED
+      : events.DIRECT_MESSAGE_DELETED_FAILED;
+
+  if (message.senderId !== user.id) {
     // Only the sender can delete a directMessageThread message
     if (message.threadType === 'directMessageThread') {
-      throw new UserError('You can only delete your own messages.');
+      trackQueue.add({
+        userId: user.id,
+        event: eventFailed,
+        context: { messageId: id },
+        properties: {
+          reason: 'message not sent by user',
+        },
+      });
+
+      return new UserError('You can only delete your own messages.');
     }
 
     const thread = await loaders.thread.load(message.threadId);
-    const communityPermissions = await getUserPermissionsInCommunity(
-      thread.communityId,
-      currentUser.id
-    );
-    const channelPermissions = await getUserPermissionsInChannel(
-      thread.channelId,
-      currentUser.id
-    );
+
+    const [communityPermissions, channelPermissions] = await Promise.all([
+      getUserPermissionsInCommunity(thread.communityId, user.id),
+      getUserPermissionsInChannel(thread.channelId, user.id),
+    ]);
+
     const canModerate =
       channelPermissions.isOwner ||
       communityPermissions.isOwner ||
       channelPermissions.isModerator ||
       communityPermissions.isModerator;
-    if (!canModerate)
-      throw new UserError("You don't have permission to delete this message.");
+    if (!canModerate) {
+      trackQueue.add({
+        userId: user.id,
+        event: eventFailed,
+        context: { messageId: id },
+        properties: {
+          reason: 'no permission',
+        },
+      });
+
+      return new UserError("You don't have permission to delete this message.");
+    }
   }
 
   // Delete message and remove participant from thread if it's the only message from that person
-  return deleteMessage(currentUser.id, id)
+  return deleteMessage(user.id, id)
     .then(async () => {
       // We don't need to delete participants of direct message threads
       if (message.threadType === 'directMessageThread') return true;
@@ -83,4 +118,4 @@ export default async (
       );
     })
     .then(() => true);
-};
+});

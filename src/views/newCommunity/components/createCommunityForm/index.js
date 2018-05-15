@@ -6,7 +6,6 @@ import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import slugg from 'slugg';
 import { withApollo } from 'react-apollo';
-import { track } from '../../../../helpers/events';
 import { Notice } from '../../../../components/listItems/style';
 import Avatar from '../../../../components/avatar';
 import { throttle } from '../../../../helpers/utils';
@@ -34,6 +33,7 @@ import {
   CommunitySuggestionsText,
 } from './style';
 import { FormContainer, Form, Actions } from '../../style';
+import { track, events } from 'src/helpers/analytics';
 
 type State = {
   name: ?string,
@@ -90,7 +90,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    track('community', 'create inited', null);
+    track(events.COMMUNITY_CREATED_INITED);
   }
 
   changeName = e => {
@@ -301,7 +301,6 @@ class CreateCommunityForm extends React.Component<Props, State> {
     }
 
     reader.onloadend = () => {
-      track('community', 'profile photo uploaded', null);
       this.setState({
         file: file,
         // $FlowFixMe
@@ -324,7 +323,6 @@ class CreateCommunityForm extends React.Component<Props, State> {
     }
 
     reader.onloadend = () => {
-      track('community', 'cover photo uploaded', null);
       this.setState({
         coverFile: file,
         // $FlowFixMe
@@ -392,7 +390,6 @@ class CreateCommunityForm extends React.Component<Props, State> {
     this.props
       .createCommunity(input)
       .then(({ data }: CreateCommunityType) => {
-        track('community', 'created', null);
         const { createCommunity } = data;
         this.props.communityCreated(createCommunity);
         this.props.dispatch(
@@ -548,6 +545,11 @@ class CreateCommunityForm extends React.Component<Props, State> {
                 href="https://github.com/withspectrum/code-of-conduct"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  track(events.CODE_OF_CONDUCT_CLICKED, {
+                    location: 'community onboarding',
+                  })
+                }
               >
                 Spectrum Code of Conduct
               </a>{' '}

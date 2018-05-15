@@ -1,8 +1,6 @@
-import { track } from '../helpers/events';
+// @flow
 
 export const openComposer = () => {
-  track('composer', 'opened', null);
-
   return {
     type: 'OPEN_COMPOSER',
   };

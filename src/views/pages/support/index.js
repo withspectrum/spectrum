@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { track } from 'src/helpers/events';
 import PageFooter from '../components/footer';
 import Section from 'src/components/themedSection';
 import { Wrapper } from '../style';
@@ -14,16 +13,17 @@ import {
   PlanPrice,
   PlanDescription,
 } from '../pricing/style';
+import { track, events } from 'src/helpers/analytics';
 
 class Support extends React.Component<{}> {
   componentDidMount() {
-    track('support', 'viewed', null);
+    track(events.SUPPORT_PAGE_VIEWED);
   }
 
   render() {
     return (
       <Wrapper data-cy="support-page">
-        <Section>
+        <Section goop={2} color={'bg.reverse'}>
           <FourUp>
             <div style={{ gridArea: 'copy' }}>
               <Heading>What can we help you with?</Heading>
@@ -35,7 +35,7 @@ class Support extends React.Component<{}> {
             </div>
             <PlanSection style={{ gridArea: 'one' }}>
               <div>
-                <PlanPrice>Found a bug?</PlanPrice>
+                <PlanPrice>Found an issue?</PlanPrice>
                 <PlanDescription>
                   Join our Hugs n Bugs channel to check if there’s already a fix
                   or report a new issue.
@@ -46,9 +46,9 @@ class Support extends React.Component<{}> {
                 <Button
                   gradientTheme={'warn'}
                   icon={'bug'}
-                  style={{ marginTop: '24px', width: '100%' }}
+                  onClick={() => track(events.SUPPORT_PAGE_REPORT_BUG)}
                 >
-                  Report a bug
+                  Join Hugs-n-Bugs
                 </Button>
               </Link>
             </PlanSection>
@@ -66,7 +66,7 @@ class Support extends React.Component<{}> {
                 <Button
                   gradientTheme={'space'}
                   icon={'idea'}
-                  style={{ marginTop: '24px', width: '100%' }}
+                  onClick={() => track(events.SUPPORT_PAGE_REQUEST_FEATURE)}
                 >
                   Request a feature
                 </Button>
@@ -90,7 +90,7 @@ class Support extends React.Component<{}> {
                 <Button
                   gradientTheme={'social.twitter'}
                   icon={'twitter'}
-                  style={{ marginTop: '24px', width: '100%' }}
+                  onClick={() => track(events.SUPPORT_PAGE_FOLLOW_ON_TWITTER)}
                 >
                   Follow us on Twitter
                 </Button>
@@ -100,7 +100,9 @@ class Support extends React.Component<{}> {
                 <Button
                   gradientTheme={'brand'}
                   icon={'logo'}
-                  style={{ marginTop: '12px', width: '100%' }}
+                  onClick={() =>
+                    track(events.SUPPORT_PAGE_JOIN_SPECTRUM_COMMUNITY)
+                  }
                 >
                   Join our community
                 </Button>
@@ -120,7 +122,7 @@ class Support extends React.Component<{}> {
                 <Button
                   gradientTheme={'special'}
                   icon={'email'}
-                  style={{ marginTop: '24px', width: '100%' }}
+                  onClick={() => track(events.SUPPORT_PAGE_EMAIL_US)}
                 >
                   Email us
                 </Button>
