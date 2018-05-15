@@ -89,7 +89,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       // We don't need to delete participants of direct message threads
       if (message.threadType === 'directMessageThread') return true;
 
-      const thread = await loaders.thread.load(message.threadId);
       // If it was the last message in the thread, reset thread.lastActive to
       // the previous messages timestamp
       if (
