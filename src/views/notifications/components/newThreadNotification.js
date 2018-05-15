@@ -3,12 +3,13 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { getThreadById } from 'shared/graphql/queries/thread/getThread';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
-import { sortByDate } from '../../../helpers/utils';
-import { displayLoadingCard } from '../../../components/loading';
+import { sortByDate } from 'src/helpers/utils';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { parseNotificationDate, parseContext } from '../utils';
 import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
-import Icon from '../../../components/icons';
-import { ThreadProfile } from '../../../components/profile';
+import Icon from 'src/components/icons';
+import { ThreadProfile } from 'src/components/profile';
+import { LoadingCard } from 'src/components/loading';
 import {
   SegmentedNotificationCard,
   TextContent,
@@ -27,7 +28,7 @@ type Props = {
 };
 type State = {
   communityName: string,
-  threadWasDeleted: boolean,
+  deletedThreads: Array<?string>,
 };
 
 const sortThreads = (entities, currentUser) => {
@@ -51,10 +52,11 @@ const ThreadCreatedComponent = ({
 }: {
   data: { thread: GetThreadType },
 }) => {
+  if (rest.isLoading) return <LoadingCard />;
   return <ThreadProfile profileSize="mini" data={data} {...rest} />;
 };
 
-const ThreadCreated = compose(getThreadById, displayLoadingCard)(
+const ThreadCreated = compose(getThreadById, viewNetworkHandler)(
   ThreadCreatedComponent
 );
 
@@ -68,26 +70,29 @@ const ThreadCreated = compose(getThreadById, displayLoadingCard)(
 export class NewThreadNotification extends React.Component<Props, State> {
   state = {
     communityName: '',
-    threadWasDeleted: false,
+    deletedThreads: [],
   };
 
   setCommunityName = (name: string) => this.setState({ communityName: name });
 
-  markAsDeleted = () => {
-    this.setState({ threadWasDeleted: true });
+  markAsDeleted = (id: string) => {
+    const newArr = this.state.deletedThreads.concat(id);
+    setTimeout(() => {
+      this.setState({ deletedThreads: newArr });
+    }, 0);
   };
 
   render() {
     const { notification, currentUser } = this.props;
-    const { communityName, threadWasDeleted } = this.state;
-
-    if (threadWasDeleted) return null;
+    const { communityName, deletedThreads } = this.state;
 
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context);
 
     // sort and order the threads
-    const threads = sortThreads(notification.entities, currentUser);
+    const threads = sortThreads(notification.entities, currentUser).filter(
+      thread => deletedThreads.indexOf(thread.id) < 0
+    );
 
     const newThreadCount =
       threads.length > 1 ? 'New threads were' : 'A new thread was';
@@ -130,11 +135,14 @@ class MiniNewThreadNotificationWithMutation extends React.Component<
 > {
   state = {
     communityName: '',
-    threadWasDeleted: false,
+    deletedThreads: [],
   };
 
-  markAsDeleted = () => {
-    this.setState({ threadWasDeleted: true });
+  markAsDeleted = (id: string) => {
+    const newArr = this.state.deletedThreads.concat(id);
+    setTimeout(() => {
+      this.setState({ deletedThreads: newArr });
+    }, 0);
     this.markAsSeen();
   };
 
@@ -154,14 +162,14 @@ class MiniNewThreadNotificationWithMutation extends React.Component<
 
   render() {
     const { notification, currentUser } = this.props;
-    const { communityName, threadWasDeleted } = this.state;
-
-    if (threadWasDeleted) return null;
+    const { communityName, deletedThreads } = this.state;
 
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context);
 
-    const threads = sortThreads(notification.entities, currentUser);
+    const threads = sortThreads(notification.entities, currentUser).filter(
+      thread => deletedThreads.indexOf(thread.id) < 0
+    );
 
     const newThreadCount =
       threads.length > 1 ? 'New threads were' : 'A new thread was';

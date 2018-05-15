@@ -15,11 +15,12 @@ type Props = {
   },
   setName: Function,
   markAsDeleted: Function,
+  id: string,
 };
 
 class ThreadWithData extends React.Component<Props> {
   componentWillMount() {
-    const { data: { thread }, data, setName, markAsDeleted } = this.props;
+    const { data: { thread }, data, setName, markAsDeleted, id } = this.props;
 
     if (setName && thread) {
       setName(thread.community.name);
@@ -28,7 +29,7 @@ class ThreadWithData extends React.Component<Props> {
     // if the query finished loading but no thread was returned,
     // clear this notification out
     if (data.networkStatus === 7 && !data.thread && markAsDeleted) {
-      markAsDeleted();
+      markAsDeleted(id);
     }
   }
   render() {
