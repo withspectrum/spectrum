@@ -1,6 +1,5 @@
 // @flow
 import React, { Fragment } from 'react';
-import styled from 'styled-components/native';
 import { View } from 'react-native';
 import { Query } from 'react-apollo';
 import { getCurrentUserQuery } from '../../../shared/graphql/queries/user/getUser';
@@ -16,18 +15,6 @@ import Author from './Author';
 
 import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection.js';
 import type { ThreadParticipantType } from '../../../shared/graphql/fragments/thread/threadParticipant';
-
-const TimestampWrapper = styled.View`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Hr = styled.View`
-  height: 1px;
-  flex: 1;
-  background-color: ${props => props.theme.bg.border};
-`;
 
 type Props = {
   isLoading: boolean,

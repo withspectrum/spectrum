@@ -28,7 +28,8 @@ type FacepileProps = {
   creator: UserInfoType,
 };
 
-const Facepile = ({ participants, creator }: FacepileProps) => {
+const Facepile = ({ participants, creator, ...rest }: FacepileProps) => {
+  console.log('rest', rest);
   if (!participants || participants.length === 0) {
     return (
       <FacepileContainer>

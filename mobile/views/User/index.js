@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Text, View, FlatList, Button, ScrollView } from 'react-native';
+import { Text, View, Button } from 'react-native';
 import compose from 'recompose/compose';
 import { getUserById } from '../../../shared/graphql/queries/user/getUser';
 import getUserThreadConnection from '../../../shared/graphql/queries/user/getUserThreadConnection';
@@ -54,7 +54,6 @@ class User extends React.Component<Props, State> {
 
   render() {
     const { data, isLoading, hasError, navigation } = this.props;
-    const { feed } = this.state;
 
     if (data.user) {
       return (

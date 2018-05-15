@@ -1,6 +1,5 @@
 // @flow
 import styled from 'styled-components/native';
-import { Stylesheet } from 'react-native';
 
 export const InboxThreadItem = styled.View`
   display: flex;

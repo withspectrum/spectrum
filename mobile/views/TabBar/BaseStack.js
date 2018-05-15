@@ -1,8 +1,6 @@
 // @flow
 // The basic view stack that's used on all of our screens
 // Any view that's added here can be visited from any of our tabs
-import * as React from 'react';
-import { StackNavigator } from 'react-navigation';
 import Thread from '../Thread';
 import Community from '../Community';
 import Channel from '../Channel';

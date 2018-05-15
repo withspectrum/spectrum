@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import { Text, View, Button } from 'react-native';
 import { AuthSession, SecureStore } from 'expo';
 import { authenticate } from '../../actions/authentication';
 import { DEV_BASE_URI } from '../../../shared/graphql/constants.native';

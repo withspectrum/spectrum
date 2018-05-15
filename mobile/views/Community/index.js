@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Text, View, FlatList, ScrollView } from 'react-native';
+import { Text, View } from 'react-native';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import {

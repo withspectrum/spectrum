@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { View, FlatList } from 'react-native';
+import { View } from 'react-native';
 import Text from '../Text';
 import ViewNetworkHandler from '../ViewNetworkHandler';
 import ThreadItem from '../ThreadItem';
@@ -104,7 +104,6 @@ class ThreadFeed extends React.Component<Props, State> {
     const {
       data: { threadConnection },
       isLoading,
-      isFetchingMore,
       hasError,
       navigation,
     } = this.props;

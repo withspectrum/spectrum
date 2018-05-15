@@ -4,17 +4,13 @@ import { TouchableHighlight, Image, View } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
 import Facepile from './Facepile';
-import ThreadCommunityInfo from './ThreadCommunityInfo';
 import Text from '../Text';
 import {
   InboxThreadItem,
   InboxThreadContent,
-  ThreadTitle,
   ThreadMeta,
-  MetaText,
   MetaTextPill,
 } from './style';
-import { truncate } from './utils';
 import type { ThreadInfoType } from '../../../shared/graphql/fragments/thread/threadInfo';
 
 type Props = {
@@ -64,6 +60,7 @@ class ThreadItem extends React.Component<Props> {
               <Facepile
                 participants={thread.participants}
                 creator={thread.author.user}
+                navigation={this.props.navigation}
               />
 
               {thread.messageCount > 0 ? (
