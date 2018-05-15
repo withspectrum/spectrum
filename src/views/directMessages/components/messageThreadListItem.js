@@ -4,6 +4,7 @@ import Link from 'src/components/link';
 import { timeDifference } from '../../../helpers/utils';
 import { renderAvatars } from './avatars';
 import {
+  ArchiveUnarchiveCTA,
   Wrapper,
   Row,
   Meta,
@@ -20,7 +21,7 @@ class ListCardItemDirectMessageThread extends Component {
     e.preventDefault();
   };
   render() {
-    const { thread, currentUser, active, archivedAt } = this.props;
+    const { thread, currentUser, active } = this.props;
 
     // convert the server time to an iso timestamp
     const timestamp = new Date(thread.threadLastActive).getTime();
@@ -54,6 +55,8 @@ class ListCardItemDirectMessageThread extends Component {
     let isUnread = currentParticipantLastActiveTimestamp < timestamp;
     isUnread = active ? false : isUnread;
 
+    const isArchived = Boolean(this.props.thread.archivedAt);
+
     return (
       <Wrapper active={active} isUnread={isUnread}>
         <Link to={`/messages/${thread.id}`}>
@@ -67,9 +70,33 @@ class ListCardItemDirectMessageThread extends Component {
                 <Timestamp className="message-thread-item" isUnread={isUnread}>
                   {threadTimeDifference}
                 </Timestamp>
-                {!Boolean(archivedAt) && 'Unarchive'}
-                {Boolean(archivedAt) && 'Archive'}
-                <GearButton onClick={this.handleGearClick} />
+                {!isArchived && (
+                  <ArchiveUnarchiveCTA
+                    onClick={e => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('archiving');
+                    }}
+                  >
+                    Archive
+                  </ArchiveUnarchiveCTA>
+                )}
+                {isArchived && (
+                  <ArchiveUnarchiveCTA
+                    onClick={e => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('unarchiving');
+                    }}
+                  >
+                    Unarchive
+                  </ArchiveUnarchiveCTA>
+                )}
+                {/**
+                  Add this when we have the dropdown/popover component
+                  https://github.com/withspectrum/spectrum/pull/2992#issuecomment-388686504
+                  <GearButton onClick={this.handleGearClick} />
+                */}
               </MessageGroupByline>
               <Meta isUnread={isUnread} nowrap>
                 {thread.snippet}

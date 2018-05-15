@@ -41,6 +41,8 @@ export default async (
       directMessageThread.id
     );
 
+    console.log(changes);
+
     return changes[0].new_val;
   } catch (e) {
     return new UserError(

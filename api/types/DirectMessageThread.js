@@ -56,15 +56,19 @@ const DirectMessageThread = /* GraphQL */ `
 		message: DirectMessageContentInput!
   }
 
-  input isArchivedDMThreadInput {
+  input archiveDMThreadInput {
+    threadId: ID!
+  }
+
+  input unarchiveDMThreadInput {
     threadId: ID!
   }
 
 	extend type Mutation {
 		createDirectMessageThread(input: DirectMessageThreadInput!): DirectMessageThread
     setLastSeen(id: ID!): DirectMessageThread
-    archiveDirectMessageThread(input: isArchivedDMThreadInput!): DirectMessageThread
-    unarchiveDirectMessageThread(input: isArchivedDMThreadInput!): DirectMessageThread
+    archiveDirectMessageThread(input: archiveDMThreadInput!): DirectMessageThread
+    unarchiveDirectMessageThread(input: unarchiveDMThreadInput!): DirectMessageThread
 	}
 
 	extend type Subscription {
