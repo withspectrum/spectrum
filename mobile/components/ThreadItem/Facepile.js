@@ -3,7 +3,6 @@ import * as React from 'react';
 import Avatar from '../Avatar';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
-import { TouchableHighlight } from 'react-native';
 import type { Navigation } from '../../utils/types';
 import type { UserInfoType } from '../../../shared/graphql/fragments/user/userInfo';
 import { FacepileContainer, EmptyParticipantHead } from './style';
@@ -17,12 +16,13 @@ const messageAvatars = (list, navigation) => {
       return null;
     }
     return (
-      <TouchableHighlight
-        onPress={() => navigation.navigate(`User`, { id: participant.id })}
+      <Avatar
+        src={participant.profilePhoto}
+        size={30}
+        radius={15}
+        navigate={() => navigation.navigate(`User`, { id: participant.id })}
         key={participant.id}
-      >
-        <Avatar src={participant.profilePhoto} size={30} radius={15} />
-      </TouchableHighlight>
+      />
     );
   });
 };
@@ -37,7 +37,12 @@ const Facepile = ({ participants, creator, navigation }: FacepileProps) => {
   if (!participants || participants.length === 0) {
     return (
       <FacepileContainer>
-        <Avatar src={creator.profilePhoto} size={30} radius={15} />;
+        <Avatar
+          navigate={() => navigation.navigate(`User`, { id: creator.id })}
+          src={creator.profilePhoto}
+          size={30}
+          radius={15}
+        />;
       </FacepileContainer>
     );
   }
@@ -55,11 +60,13 @@ const Facepile = ({ participants, creator, navigation }: FacepileProps) => {
 
   return (
     <FacepileContainer>
-      <TouchableHighlight
-        onPress={() => navigation.navigate(`User`, { id: creator.id })}
-      >
-        <Avatar src={creator.profilePhoto} size={30} radius={15} />
-      </TouchableHighlight>
+      <Avatar
+        navigate={() => navigation.navigate(`User`, { id: creator.id })}
+        src={creator.profilePhoto}
+        size={30}
+        radius={15}
+      />
+
       {messageAvatars(participantList, navigation)}
       {hasOverflow && (
         <EmptyParticipantHead adjustsFontSizeToFit>
