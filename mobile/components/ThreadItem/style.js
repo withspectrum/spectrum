@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { Stylesheet } from 'react-native';
 import Avatar from '../Avatar';
 
@@ -64,14 +64,16 @@ export const EmptyParticipantHead = styled.Text`
   overflow: hidden;
 `;
 
-const stackizeHeads = (
-  component,
-  { marginRight = '-10px', borderWidth = '2px', borderColor = '#FFFFFF' } = {}
-) => styled(component)`
-  margin-right: ${marginRight};
-  border-width: ${borderWidth};
-  border-color: ${borderColor};
+const stackingStyles = css`
+  margin-right: -10px;
+  border-width: 2px;
+  border-color: #ffffff;
 `;
 
-export const StackedEmptyParticipantHead = stackizeHeads(EmptyParticipantHead);
-export const StackedAvatar = stackizeHeads(Avatar);
+export const StackedEmptyParticipantHead = styled(EmptyParticipantHead)`
+  ${stackingStyles};
+`;
+
+export const StackedAvatar = styled(Avatar)`
+  ${stackingStyles};
+`;
