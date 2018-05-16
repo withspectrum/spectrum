@@ -4,7 +4,7 @@ import redraft from 'redraft';
 import Text from '../Text';
 import { messageRenderer } from '../../../shared/clients/draft-js/message/renderer.native';
 import { Bubble, QuoteWrapper, QuotedParagraph, TextWrapper } from './style';
-import { toState, toPlainText } from '../../../shared/draft-utils';
+import { isShort } from '../../../shared/clients/draft-js/utils/isShort';
 import Author from '../Messages/Author';
 import type { MessageInfoType } from '../../../shared/graphql/fragments/message/messageInfo';
 
@@ -68,18 +68,10 @@ export class QuotedMessage extends React.Component<
   constructor(props: QuotedMessageProps) {
     super(props);
 
-    const isShort = () => {
-      if (props.message.messageType === 'media') return false;
-      const jsonBody = JSON.parse(props.message.content.body);
-      return (
-        !jsonBody.blocks.length > 1 ||
-        toPlainText(toState(jsonBody)).length <= 170
-      );
-    };
-
+    const short = isShort(props.message);
     this.state = {
-      isShort: isShort(),
-      isExpanded: isShort(),
+      isShort: short,
+      isExpanded: short,
     };
   }
 

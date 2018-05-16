@@ -19,6 +19,7 @@ import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { onlyContainsEmoji } from '../../helpers/utils';
 import { Byline, Name, Username } from '../messageGroup/style';
+import { isShort } from 'shared/clients/draft-js/utils/isShort';
 import type { Node } from 'react';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
 
@@ -85,18 +86,10 @@ export class QuotedMessage extends React.Component<
   constructor(props: QuotedMessageProps) {
     super(props);
 
-    const isShort = () => {
-      if (props.message.messageType === 'media') return false;
-      const jsonBody = JSON.parse(props.message.content.body);
-      return (
-        !jsonBody.blocks.length > 1 ||
-        toPlainText(toState(jsonBody)).length <= 170
-      );
-    };
-
+    const short = isShort(props.message);
     this.state = {
-      isShort: isShort(),
-      isExpanded: isShort(),
+      isShort: short,
+      isExpanded: short,
     };
   }
 
