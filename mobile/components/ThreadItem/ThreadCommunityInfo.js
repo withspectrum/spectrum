@@ -40,7 +40,7 @@ class ThreadCommunityInfo extends React.Component<Props> {
               src={community.profilePhoto}
               size={20}
               radius={4}
-              navigate={() =>
+              onPress={() =>
                 navigation.navigate(`Community`, { id: community.id })
               }
             />

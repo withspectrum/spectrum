@@ -29,7 +29,7 @@ class CommunityHeader extends React.Component<Props> {
           src={thread.community.profilePhoto}
           size={32}
           radius={6}
-          navigate={() =>
+          onPress={() =>
             navigation.navigate(`Community`, { id: thread.community.id })
           }
         />

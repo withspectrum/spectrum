@@ -20,7 +20,7 @@ const messageAvatars = (list, navigation) => {
         src={participant.profilePhoto}
         size={30}
         radius={15}
-        navigate={() => navigation.navigate(`User`, { id: participant.id })}
+        onPress={() => navigation.navigate(`User`, { id: participant.id })}
         key={participant.id}
       />
     );
@@ -38,7 +38,7 @@ const Facepile = ({ participants, creator, navigation }: FacepileProps) => {
     return (
       <FacepileContainer>
         <Avatar
-          navigate={() => navigation.navigate(`User`, { id: creator.id })}
+          onPress={() => navigation.navigate(`User`, { id: creator.id })}
           src={creator.profilePhoto}
           size={30}
           radius={15}
@@ -61,7 +61,7 @@ const Facepile = ({ participants, creator, navigation }: FacepileProps) => {
   return (
     <FacepileContainer>
       <Avatar
-        navigate={() => navigation.navigate(`User`, { id: creator.id })}
+        onPress={() => navigation.navigate(`User`, { id: creator.id })}
         src={creator.profilePhoto}
         size={30}
         radius={15}
