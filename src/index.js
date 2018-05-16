@@ -17,7 +17,7 @@ import { client } from 'shared/graphql';
 import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
 import Routes from './routes';
-import { track, events } from './helpers/analytics';
+import { track, events, init as initAnalytics } from './helpers/analytics';
 import { wsLink } from 'shared/graphql';
 
 const { thread, t } = queryString.parse(history.location.search);
@@ -126,3 +126,5 @@ window.addEventListener('beforeinstallprompt', e => {
     }
   });
 });
+
+initAnalytics();

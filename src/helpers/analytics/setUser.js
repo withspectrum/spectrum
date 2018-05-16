@@ -1,13 +1,7 @@
 // @flow
+import { buffer } from './buffer';
 
-const amplitude = window.amplitude;
-
-export const setUser = (userId: string) => {
-  if (!amplitude) {
-    console.warn('No amplitude function attached to window');
-    return;
-  }
-
+export const setUser = buffer((userId: string) => {
   const AMPLITUDE_API_KEY =
     process.env.NODE_ENV === 'production'
       ? process.env.AMPLITUDE_API_KEY
@@ -18,10 +12,6 @@ export const setUser = (userId: string) => {
     return;
   }
 
-  const amplitudePromise = () => {
-    console.warn(`[Amplitude] Set user ${userId}`);
-    return amplitude.getInstance().setUserId(userId);
-  };
-
-  return Promise.all([amplitudePromise()]);
-};
+  console.warn(`[Amplitude] Set user ${userId}`);
+  return window.amplitude.getInstance().setUserId(userId);
+});
