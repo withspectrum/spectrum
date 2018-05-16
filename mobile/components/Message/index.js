@@ -3,7 +3,7 @@ import React from 'react';
 import redraft from 'redraft';
 import Text from '../Text';
 import { messageRenderer } from '../../../shared/clients/draft-js/message/renderer.native';
-import { Bubble, QuoteWrapper, QuotedParagraph } from './style';
+import { Bubble, QuoteWrapper, QuotedParagraph, TextWrapper } from './style';
 import { toState, toPlainText } from '../../../shared/draft-utils';
 import Author from '../Messages/Author';
 import type { MessageInfoType } from '../../../shared/graphql/fragments/message/messageInfo';
@@ -39,7 +39,9 @@ const Message = ({ message, me, bubble }: Props) => {
           <Bubble me={me}>
             {/* $FlowIssue */}
             {message.parent ? <QuotedMessage message={message.parent} /> : null}
-            <Text color={me ? '#FFFFFF' : '#000000'}>{body}</Text>
+            <TextWrapper>
+              <Text color={me ? '#FFFFFF' : '#000000'}>{body}</Text>
+            </TextWrapper>
           </Bubble>
         );
       }
