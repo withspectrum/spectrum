@@ -1,9 +1,16 @@
 // @flow
 import React from 'react';
 import redraft from 'redraft';
+import { TouchableOpacity } from 'react-native';
 import Text from '../Text';
 import { messageRenderer } from '../../../shared/clients/draft-js/message/renderer.native';
-import { Bubble, QuoteWrapper, QuotedParagraph, TextWrapper } from './style';
+import {
+  Bubble,
+  QuoteWrapper,
+  QuotedParagraph,
+  TextWrapper,
+  QuoteGradient,
+} from './style';
 import { isShort } from '../../../shared/clients/draft-js/utils/isShort';
 import Author from '../Messages/Author';
 import type { MessageInfoType } from '../../../shared/graphql/fragments/message/messageInfo';
@@ -90,14 +97,17 @@ export class QuotedMessage extends React.Component<
   render() {
     const { message } = this.props;
     const { isExpanded, isShort } = this.state;
+    // TODO(@mxstbr): Use <ConditionalWrap> to only add TouchableOpacity to long messages
     return (
-      <QuoteWrapper expanded={isExpanded} onPress={this.toggle}>
-        <Author me={false} avatar={false} author={message.author} />
-        <QuotedParagraph>
-          <Message bubble={false} message={message} me={false} />
-        </QuotedParagraph>
-        {/* {!isExpanded && <QuoteWrapperGradient />} */}
-      </QuoteWrapper>
+      <TouchableOpacity onPress={this.toggle}>
+        <QuoteWrapper expanded={isExpanded}>
+          <Author me={false} avatar={false} author={message.author} />
+          <QuotedParagraph>
+            <Message bubble={false} message={message} me={false} />
+          </QuotedParagraph>
+          {!isExpanded && <QuoteGradient />}
+        </QuoteWrapper>
+      </TouchableOpacity>
     );
   }
 }

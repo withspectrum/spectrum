@@ -1,5 +1,6 @@
 // @flow
 import styled from 'styled-components/native';
+import { LinearGradient } from 'expo';
 
 export const Bubble = styled.View`
   border-radius: 16px;
@@ -33,5 +34,19 @@ export const QuoteWrapper = styled.View`
   margin-right: 4px;
   margin-bottom: 0px;
   margin-top: 4px;
+  overflow: hidden;
   ${props => (props.expanded ? '' : 'max-height: 100px;')};
+`;
+
+export const QuoteGradient = styled(LinearGradient).attrs({
+  colors: ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)'],
+})`
+  width: 107.5%; /* NOTE(@mxstbr): Magic number, for some reason 100% is too short */
+  height: 32px;
+  position: absolute;
+  bottom: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 `;
