@@ -52,8 +52,6 @@ class User extends React.Component<Props, State> {
     const { data, isLoading, hasError, navigation } = this.props;
     const { feed } = this.state;
 
-    console.log('this props', this.props);
-
     if (data.user) {
       return (
         <Wrapper>
