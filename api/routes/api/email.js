@@ -2,7 +2,10 @@
 require('now-env');
 const IS_PROD = process.env.NODE_ENV === 'production';
 const IS_TESTING = process.env.TEST_DB;
-import { PAYMENTS_COMMUNITY_ID } from '../../migrations/seed/default/constants';
+import {
+  PAYMENTS_COMMUNITY_ID,
+  BRIAN_ID,
+} from '../../migrations/seed/default/constants';
 import { Router } from 'express';
 const jwt = require('jsonwebtoken');
 const emailRouter = Router();
@@ -168,7 +171,7 @@ emailRouter.get('/validate', (req, res) => {
   // validate a new administrator email address
   if (communityId) {
     try {
-      return updateCommunityAdministratorEmail(communityId, email).then(
+      return updateCommunityAdministratorEmail(communityId, email, userId).then(
         community =>
           IS_PROD
             ? res.redirect(
@@ -215,7 +218,8 @@ if (IS_TESTING) {
   emailRouter.get('/validate/test-payments/verify', (req, res) => {
     return updateCommunityAdministratorEmail(
       PAYMENTS_COMMUNITY_ID,
-      'briandlovin@gmail.com'
+      'briandlovin@gmail.com',
+      BRIAN_ID
     ).then(() =>
       res.redirect('http://localhost:3000/payments/settings/billing')
     );

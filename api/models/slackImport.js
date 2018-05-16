@@ -3,7 +3,6 @@ require('now-env');
 import axios from 'axios';
 const querystring = require('querystring');
 const { db } = require('./db');
-const IS_PROD = process.env.NODE_ENV === 'production';
 
 let SLACK_SECRET = process.env.SLACK_SECRET;
 if (!SLACK_SECRET) {
@@ -17,10 +16,8 @@ type SlackData = {
   scope: string,
 };
 
-export const generateOAuthToken = (
-  code: string,
-  redirect_uri: string
-): Promise<?SlackData> => {
+// prettier-ignore
+export const generateOAuthToken = (code: string, redirect_uri: string): Promise<?SlackData> => {
   return axios
     .post(
       'https://slack.com/api/oauth.access',
@@ -94,21 +91,5 @@ export const getSlackImport = (communityId: string) => {
     .then(results => {
       if (!results || results.length === 0) return null;
       return results[0];
-    });
-};
-
-export const markSlackImportAsSent = (communityId: string) => {
-  return db
-    .table('slackImports')
-    .getAll(communityId, { index: 'communityId' })
-    .update(
-      {
-        sent: new Date(),
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(results => {
-      return results.changes[0].new_val;
     });
 };

@@ -1,11 +1,14 @@
 // @flow
 const { db } = require('./db');
 import type { DBUsersNotifications } from 'shared/types';
+import { trackNotification } from '../utils/trackNotifications';
 
 export const storeUsersNotifications = (
   notificationId: string,
   userId: string
 ): Promise<DBUsersNotifications> => {
+  trackNotification(notificationId, userId);
+
   return db
     .table('usersNotifications')
     .insert({
@@ -35,6 +38,8 @@ export const markUsersNotificationsAsNew = (
 				So in this section we check to see if an existing usersNotifications row exists, otherwise we create a new one. All users passed into this function should return an updated or new usersNotifications record.
 			*/
       if (result && result.length > 0) {
+        trackNotification(notificationId, userId);
+
         return db
           .table('usersNotifications')
           .getAll(notificationId, { index: 'notificationId' })

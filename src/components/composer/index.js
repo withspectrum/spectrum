@@ -9,7 +9,6 @@ import debounce from 'debounce';
 import queryString from 'query-string';
 import { KeyBindingUtil } from 'draft-js';
 import { URLS } from '../../helpers/regexps';
-import { track } from '../../helpers/events';
 import { closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -44,6 +43,7 @@ import {
   sortChannels,
   getDefaultActiveChannel,
 } from './utils';
+import { events, track } from 'src/helpers/analytics';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
@@ -237,6 +237,7 @@ class ComposerWithData extends Component<Props, State> {
 
   componentDidMount() {
     this.handleIncomingProps(this.props);
+    track(events.THREAD_CREATED_INITED);
     // $FlowIssue
     document.addEventListener('keydown', this.handleKeyPress, false);
   }
@@ -500,7 +501,6 @@ class ComposerWithData extends Component<Props, State> {
         // get the thread id to redirect the user
         const id = data.publishThread.id;
 
-        track('thread', 'published', null);
         this.clearEditorStateAfterPublish();
 
         // stop the loading spinner on the publish button
