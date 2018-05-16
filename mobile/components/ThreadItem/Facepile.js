@@ -1,11 +1,14 @@
 // @flow
 import * as React from 'react';
 import Avatar from '../Avatar';
+import compose from 'recompose/compose';
+import { withNavigation } from 'react-navigation';
+import { TouchableHighlight } from 'react-native';
 import type { UserInfoType } from '../../../shared/graphql/fragments/user/userInfo';
 import { FacepileContainer, EmptyParticipantHead } from './style';
 const NUM_TO_DISPLAY = 5;
 
-const messageAvatars = list => {
+const messageAvatars = (list, navigation) => {
   const avatarList = list.slice(0, NUM_TO_DISPLAY);
 
   return avatarList.map((participant, i) => {
@@ -13,12 +16,12 @@ const messageAvatars = list => {
       return null;
     }
     return (
-      <Avatar
+      <TouchableHighlight
+        onPress={() => navigation.navigate(`User`, { id: participant.id })}
         key={participant.id}
-        src={participant.profilePhoto}
-        size={30}
-        radius={15}
-      />
+      >
+        <Avatar src={participant.profilePhoto} size={30} radius={15} />
+      </TouchableHighlight>
     );
   });
 };
@@ -26,10 +29,10 @@ const messageAvatars = list => {
 type FacepileProps = {
   participants: Array<?UserInfoType>,
   creator: UserInfoType,
+  navigation: Object,
 };
 
-const Facepile = ({ participants, creator, ...rest }: FacepileProps) => {
-  console.log('rest', rest);
+const Facepile = ({ participants, creator, navigation }: FacepileProps) => {
   if (!participants || participants.length === 0) {
     return (
       <FacepileContainer>
@@ -51,8 +54,12 @@ const Facepile = ({ participants, creator, ...rest }: FacepileProps) => {
 
   return (
     <FacepileContainer>
-      <Avatar src={creator.profilePhoto} size={30} radius={15} />
-      {messageAvatars(participantList)}
+      <TouchableHighlight
+        onPress={() => navigation.navigate(`User`, { id: creator.id })}
+      >
+        <Avatar src={creator.profilePhoto} size={30} radius={15} />
+      </TouchableHighlight>
+      {messageAvatars(participantList, navigation)}
       {hasOverflow && (
         <EmptyParticipantHead adjustsFontSizeToFit>
           {overflowAmount}
@@ -62,4 +69,4 @@ const Facepile = ({ participants, creator, ...rest }: FacepileProps) => {
   );
 };
 
-export default Facepile;
+export default compose(withNavigation)(Facepile);
