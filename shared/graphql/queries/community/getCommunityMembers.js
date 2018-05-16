@@ -117,6 +117,7 @@ const getcommunityMembersOptions = {
       first,
     },
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   }),
 };
 

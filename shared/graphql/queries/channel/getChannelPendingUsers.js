@@ -34,6 +34,7 @@ const getChannelPendingUsersOptions = {
       id,
     },
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   }),
 };
 

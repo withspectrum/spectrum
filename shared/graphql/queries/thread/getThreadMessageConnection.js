@@ -79,6 +79,7 @@ export const getThreadMessageConnectionOptions = {
     return {
       variables,
       fetchPolicy: 'cache-and-network',
+      notifyOnNetworkStatusChange: true,
     };
   },
   // $FlowFixMe

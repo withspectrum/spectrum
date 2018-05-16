@@ -41,6 +41,7 @@ export const getDMThreadMessageConnectionOptions = {
       id,
     },
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   }),
   // $FlowFixMe
   props: ({ data: { directMessageThread }, data, ownProps, ...rest }) => ({

@@ -31,6 +31,7 @@ const getCommunityTopMembersOptions = {
       id,
     },
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   }),
 };
 

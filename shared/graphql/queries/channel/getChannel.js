@@ -28,6 +28,7 @@ const getChannelByIdOptions = {
       id,
     },
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   }),
 };
 
@@ -63,6 +64,7 @@ const getChannelBySlugAndCommunitySlugOptions = {
       communitySlug: communitySlug,
     },
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   }),
 };
 
@@ -78,6 +80,7 @@ const getChannelByMatchOptions = {
       communitySlug: communitySlug,
     },
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   }),
 };
 

@@ -141,6 +141,7 @@ const getCommunityThreadConnectionOptions = {
       after: after || null,
     },
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   }),
 };
 
