@@ -1,9 +1,11 @@
 // @flow
 import React, { Component } from 'react';
-import { AvatarImage } from './style';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import { TouchableHighlight } from 'react-native';
+
+import ConditionalWrap from '../ConditionalWrap';
+import { AvatarImage } from './style';
 
 type AvatarProps = {
   src: string,
@@ -17,15 +19,16 @@ class Avatar extends Component<AvatarProps> {
     const { src, size, radius, navigate } = this.props;
     let source = src ? { uri: src } : {};
 
-    if (navigate) {
-      return (
-        <TouchableHighlight onPress={() => navigate()}>
-          <AvatarImage source={source} size={size} radius={radius} />
-        </TouchableHighlight>
-      );
-    }
-
-    return <AvatarImage source={source} size={size} radius={radius} />;
+    return (
+      <ConditionalWrap
+        condition={!!navigate}
+        wrap={children => (
+          <TouchableHighlight onPress={navigate}>{children}</TouchableHighlight>
+        )}
+      >
+        <AvatarImage source={source} size={size} radius={radius} />
+      </ConditionalWrap>
+    );
   }
 }
 
