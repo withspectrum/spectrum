@@ -2,32 +2,52 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import Avatar from '../../../components/Avatar';
+import { TouchableOpacity } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import type { Navigation } from '../../../utils/types';
-import type { CommunityInfoType } from '../../../../shared/graphql/fragments/community/communityInfo';
+import type { ThreadInfoType } from '../../../../shared/graphql/fragments/thread/threadInfo';
 import {
-  CommunityHeaderTouchableWrapper,
   CommunityHeaderContainer,
   CommunityName,
+  ThreadChannelName,
+  ThreadChannelPill,
 } from '../style';
 
 type Props = {
-  community: CommunityInfoType,
+  thread: ThreadInfoType,
   navigation: Navigation,
 };
 
 class CommunityHeader extends React.Component<Props> {
   render() {
-    const { community, navigation } = this.props;
+    const { thread, navigation } = this.props;
+    const { channel, community } = thread;
+    const isGeneral = channel.slug === 'general';
     return (
-      <CommunityHeaderTouchableWrapper
-        onPress={() => navigation.navigate(`Community`, { id: community.id })}
-      >
-        <CommunityHeaderContainer>
-          <Avatar src={community.profilePhoto} size={32} radius={6} />
+      <CommunityHeaderContainer>
+        <Avatar
+          src={thread.community.profilePhoto}
+          size={32}
+          radius={6}
+          navigate={() =>
+            navigation.navigate(`Community`, { id: thread.community.id })
+          }
+        />
+
+        <TouchableOpacity
+          onPress={() => navigation.navigate(`Community`, { id: community.id })}
+        >
           <CommunityName>{community.name}</CommunityName>
-        </CommunityHeaderContainer>
-      </CommunityHeaderTouchableWrapper>
+        </TouchableOpacity>
+
+        {!isGeneral && (
+          <ThreadChannelPill
+            onPress={() => navigation.navigate(`Channel`, { id: channel.id })}
+          >
+            <ThreadChannelName>{channel.name}</ThreadChannelName>
+          </ThreadChannelPill>
+        )}
+      </CommunityHeaderContainer>
     );
   }
 }

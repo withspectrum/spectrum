@@ -33,7 +33,16 @@ const BaseStack = {
   Channel: {
     screen: withMappedNavigationProps(Channel),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: navigation.state.params.title || 'Channel',
+      headerTitle: null,
+      headerStyle: {
+        backgroundColor: 'transparent',
+        right: 0,
+        left: 0,
+        top: 0,
+        position: 'absolute',
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
     }),
   },
   User: {

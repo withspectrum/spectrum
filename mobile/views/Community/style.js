@@ -44,11 +44,10 @@ export const ProfilePhotoContainer = styled.View`
 export const ProfilePhoto = styled.Image`
   width: 72px;
   height: 72px;
-  border-radius: 36px;
+  border-radius: 12px;
   border-width: 3px;
   border-color: ${props => props.theme.bg.default};
   shadow-color: ${props => props.theme.bg.default};
-  shadow-offset: { width: 0, height: 2 };
   shadow-opacity: 1;
   shadow-radius: 4;
 `;

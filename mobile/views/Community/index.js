@@ -84,7 +84,11 @@ class Community extends React.Component<Props> {
               <RemoteThreadItem id={community.watercoolerId} />
             )}
 
-            <CommunityThreadFeed navigation={navigation} id={community.id} />
+            <CommunityThreadFeed
+              navigation={navigation}
+              id={community.id}
+              activeCommunity={community.id}
+            />
           </ScrollView>
         </Wrapper>
       );

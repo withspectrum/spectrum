@@ -62,7 +62,7 @@ class Thread extends React.Component<Props> {
       return (
         <Wrapper>
           <ScrollView style={{ flex: 1, width: '100%' }} testID="e2e-thread">
-            <CommunityHeader community={thread.community} />
+            <CommunityHeader thread={thread} />
             <ThreadMargin>
               <Byline author={thread.author} />
               <Text bold type="title1">

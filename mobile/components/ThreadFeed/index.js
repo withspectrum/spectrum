@@ -29,6 +29,8 @@ type Props = {
   isRefetching: boolean,
   hasError: boolean,
   navigation: Object,
+  activeChannel?: string,
+  activeCommunity?: string,
   // This is necessary so we can listen to updates
   channels?: string[],
   data: {
@@ -107,6 +109,8 @@ class ThreadFeed extends React.Component<Props, State> {
       isLoading,
       hasError,
       navigation,
+      activeChannel,
+      activeCommunity,
     } = this.props;
 
     if (isLoading) {
@@ -119,7 +123,12 @@ class ThreadFeed extends React.Component<Props, State> {
           <InfiniteList
             data={threadConnection.edges}
             renderItem={({ item }) => (
-              <ThreadItem navigation={navigation} thread={item.node} />
+              <ThreadItem
+                navigation={navigation}
+                thread={item.node}
+                activeChannel={activeChannel}
+                activeCommunity={activeCommunity}
+              />
             )}
             loadingIndicator={<Text>Loading...</Text>}
             fetchMore={this.fetchMore}
