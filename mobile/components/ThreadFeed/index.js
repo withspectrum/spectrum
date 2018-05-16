@@ -6,6 +6,7 @@ import Text from '../Text';
 import ViewNetworkHandler from '../ViewNetworkHandler';
 import ThreadItem from '../ThreadItem';
 import InfiniteList from '../InfiniteList';
+import Loading from '../Loading';
 import type { ThreadConnectionType } from '../../../shared/graphql/fragments/community/communityThreadConnection';
 
 /*
@@ -108,6 +109,10 @@ class ThreadFeed extends React.Component<Props, State> {
       navigation,
     } = this.props;
 
+    if (isLoading) {
+      return <Loading />;
+    }
+
     if (threadConnection && threadConnection.edges.length > 0) {
       return (
         <View data-cy="thread-feed" style={{ flex: 1 }}>
@@ -121,14 +126,6 @@ class ThreadFeed extends React.Component<Props, State> {
             hasNextPage={threadConnection.pageInfo.hasNextPage}
           />
         </View>
-      );
-    }
-
-    if (isLoading) {
-      return (
-        <CenteredView>
-          <Text type="body">Loading...</Text>
-        </CenteredView>
       );
     }
 

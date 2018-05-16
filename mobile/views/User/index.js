@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Text, View, StatusBar } from 'react-native';
+import { Text, View, StatusBar, ScrollView } from 'react-native';
 import compose from 'recompose/compose';
 import { getUserById } from '../../../shared/graphql/queries/user/getUser';
 import getUserThreadConnection from '../../../shared/graphql/queries/user/getUserThreadConnection';
@@ -58,43 +58,45 @@ class User extends React.Component<Props, State> {
         <Wrapper>
           <StatusBar barStyle="light-content" />
 
-          <CoverPhotoContainer>
-            <CoverPhoto
-              resizeMode={'cover'}
-              source={{ uri: data.user.coverPhoto }}
+          <ScrollView>
+            <CoverPhotoContainer>
+              <CoverPhoto
+                resizeMode={'cover'}
+                source={{ uri: data.user.coverPhoto }}
+              />
+            </CoverPhotoContainer>
+
+            <ProfilePhotoContainer>
+              <ProfilePhoto source={{ uri: data.user.profilePhoto }} />
+            </ProfilePhotoContainer>
+
+            <ProfileDetailsContainer>
+              <Name>{data.user.name}</Name>
+              <Username>@{data.user.username}</Username>
+              <Description>{data.user.description}</Description>
+            </ProfileDetailsContainer>
+
+            <ThreadFeedTabContainer>
+              <ThreadFeedTab
+                onPress={() => this.toggleFeed('participant')}
+                isActive={feed === 'participant'}
+              >
+                <TabLabel isActive={feed === 'participant'}>Replies</TabLabel>
+              </ThreadFeedTab>
+              <ThreadFeedTab
+                onPress={() => this.toggleFeed('creator')}
+                isActive={feed === 'creator'}
+              >
+                <TabLabel isActive={feed === 'creator'}>Threads</TabLabel>
+              </ThreadFeedTab>
+            </ThreadFeedTabContainer>
+
+            <UserThreadFeed
+              navigation={navigation}
+              kind={this.state.feed}
+              id={data.user.id}
             />
-          </CoverPhotoContainer>
-
-          <ProfilePhotoContainer>
-            <ProfilePhoto source={{ uri: data.user.profilePhoto }} />
-          </ProfilePhotoContainer>
-
-          <ProfileDetailsContainer>
-            <Name>{data.user.name}</Name>
-            <Username>@{data.user.username}</Username>
-            <Description>{data.user.description}</Description>
-          </ProfileDetailsContainer>
-
-          <ThreadFeedTabContainer>
-            <ThreadFeedTab
-              onPress={() => this.toggleFeed('participant')}
-              isActive={feed === 'participant'}
-            >
-              <TabLabel isActive={feed === 'participant'}>Replies</TabLabel>
-            </ThreadFeedTab>
-            <ThreadFeedTab
-              onPress={() => this.toggleFeed('creator')}
-              isActive={feed === 'creator'}
-            >
-              <TabLabel isActive={feed === 'creator'}>Threads</TabLabel>
-            </ThreadFeedTab>
-          </ThreadFeedTabContainer>
-
-          <UserThreadFeed
-            navigation={navigation}
-            kind={this.state.feed}
-            id={data.user.id}
-          />
+          </ScrollView>
         </Wrapper>
       );
     }

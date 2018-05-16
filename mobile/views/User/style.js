@@ -75,7 +75,6 @@ export const ThreadFeedTabContainer = styled.View`
   flex-direction: row;
   width: ${width};
   margin-top: 24px;
-  margin-bottom: 8px;
   border-bottom-color: ${props => props.theme.bg.border};
   border-bottom-width: 1px;
 `;
