@@ -4,6 +4,7 @@ import Avatar from '../Avatar';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import { TouchableHighlight } from 'react-native';
+import type { Navigation } from '../../utils/types';
 import type { UserInfoType } from '../../../shared/graphql/fragments/user/userInfo';
 import { FacepileContainer, EmptyParticipantHead } from './style';
 const NUM_TO_DISPLAY = 5;
@@ -29,7 +30,7 @@ const messageAvatars = (list, navigation) => {
 type FacepileProps = {
   participants: Array<?UserInfoType>,
   creator: UserInfoType,
-  navigation: Object,
+  navigation: Navigation,
 };
 
 const Facepile = ({ participants, creator, navigation }: FacepileProps) => {
