@@ -40,12 +40,6 @@ const UserThreadFeed = compose(getUserThreadConnection)(ThreadFeed);
 class User extends React.Component<Props, State> {
   state = { feed: 'participant' };
 
-  componentDidUpdate() {
-    const { data: { user }, navigation } = this.props;
-    if (!user || navigation.state.params.title) return;
-    navigation.setParams({ title: `${user.name} (@${user.username})` });
-  }
-
   toggleFeed = (feed: string) => this.setState({ feed });
 
   render() {

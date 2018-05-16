@@ -47,6 +47,10 @@ export const ProfilePhoto = styled.Image`
   border-radius: 36px;
   border-width: 4px;
   border-color: ${props => props.theme.bg.default};
+  shadow-color: ${props => props.theme.bg.default};
+  shadow-offset: { width: 0, height: 2 };
+  shadow-opacity: 1;
+  shadow-radius: 4;
 `;
 
 export const ProfileDetailsContainer = styled.View`

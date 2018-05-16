@@ -18,7 +18,16 @@ const BaseStack = {
   Community: {
     screen: withMappedNavigationProps(Community),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: navigation.state.params.title || 'Community',
+      headerTitle: null,
+      headerStyle: {
+        backgroundColor: 'transparent',
+        right: 0,
+        left: 0,
+        top: 0,
+        position: 'absolute',
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
     }),
   },
   Channel: {
