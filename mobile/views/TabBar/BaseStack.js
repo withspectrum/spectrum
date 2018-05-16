@@ -30,7 +30,16 @@ const BaseStack = {
   User: {
     screen: withMappedNavigationProps(User),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: navigation.state.params.title || 'User',
+      headerTitle: null,
+      headerStyle: {
+        backgroundColor: 'transparent',
+        right: 0,
+        left: 0,
+        top: 0,
+        position: 'absolute',
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
     }),
   },
 };

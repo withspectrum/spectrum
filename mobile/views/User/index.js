@@ -1,42 +1,39 @@
 // @flow
 import * as React from 'react';
-import { Text, View, Button } from 'react-native';
+import { Text, View, StatusBar } from 'react-native';
 import compose from 'recompose/compose';
 import { getUserById } from '../../../shared/graphql/queries/user/getUser';
 import getUserThreadConnection from '../../../shared/graphql/queries/user/getUserThreadConnection';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
-import withSafeView from '../../components/SafeAreaView';
 import ThreadFeed from '../../components/ThreadFeed';
+import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 
-import { Wrapper } from './style';
-
-type UserType = {
-  id: string,
-  name: string,
-  username: string,
-  threadConnection: {
-    pageInfo: {
-      hasNextPage: boolean,
-    },
-    edges: {
-      node: {
-        id: string,
-      },
-    },
-  },
-};
+import {
+  Wrapper,
+  CoverPhoto,
+  CoverPhotoContainer,
+  ProfilePhoto,
+  ProfilePhotoContainer,
+  ProfileDetailsContainer,
+  Name,
+  Username,
+  Description,
+  ThreadFeedTabContainer,
+  ThreadFeedTab,
+  TabLabel,
+} from './style';
 
 type Props = {
   isLoading: boolean,
   hasError: boolean,
   navigation: Object,
   data: {
-    user?: UserType,
+    user?: GetUserType,
   },
 };
 
 type State = {
-  feed: string,
+  feed: 'participant' | 'creator',
 };
 
 const UserThreadFeed = compose(getUserThreadConnection)(ThreadFeed);
@@ -50,25 +47,48 @@ class User extends React.Component<Props, State> {
     navigation.setParams({ title: `${user.name} (@${user.username})` });
   }
 
-  toggleFeed = (feed: string) => this.setState({ feed });
+  toggleFeed = feed => this.setState({ feed });
 
   render() {
     const { data, isLoading, hasError, navigation } = this.props;
+    const { feed } = this.state;
 
     if (data.user) {
       return (
         <Wrapper>
-          <Button
-            title={'View active conversations'}
-            onPress={() => this.toggleFeed('participant')}
-          />
+          <StatusBar barStyle="light-content" />
 
-          <Button
-            title={'View created conversations'}
-            onPress={() => this.toggleFeed('creator')}
-          />
+          <CoverPhotoContainer>
+            <CoverPhoto
+              resizeMode={'cover'}
+              source={{ uri: data.user.coverPhoto }}
+            />
+          </CoverPhotoContainer>
 
-          <Text>Viewing {this.state.feed} thread feed</Text>
+          <ProfilePhotoContainer>
+            <ProfilePhoto source={{ uri: data.user.profilePhoto }} />
+          </ProfilePhotoContainer>
+
+          <ProfileDetailsContainer>
+            <Name>{data.user.name}</Name>
+            <Username>@{data.user.username}</Username>
+            <Description>{data.user.description}</Description>
+          </ProfileDetailsContainer>
+
+          <ThreadFeedTabContainer>
+            <ThreadFeedTab
+              onPress={() => this.toggleFeed('participant')}
+              isActive={feed === 'participant'}
+            >
+              <TabLabel isActive={feed === 'participant'}>Replies</TabLabel>
+            </ThreadFeedTab>
+            <ThreadFeedTab
+              onPress={() => this.toggleFeed('creator')}
+              isActive={feed === 'creator'}
+            >
+              <TabLabel isActive={feed === 'creator'}>Threads</TabLabel>
+            </ThreadFeedTab>
+          </ThreadFeedTabContainer>
 
           <UserThreadFeed
             navigation={navigation}
@@ -103,4 +123,4 @@ class User extends React.Component<Props, State> {
   }
 }
 
-export default compose(withSafeView, getUserById, ViewNetworkHandler)(User);
+export default compose(getUserById, ViewNetworkHandler)(User);
