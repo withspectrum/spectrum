@@ -1,7 +1,13 @@
 // @flow
-import { buffer } from './buffer';
 
-export const unsetUser = buffer(() => {
+const amplitude = window.amplitude;
+
+export const unsetUser = () => {
+  if (!amplitude) {
+    console.warn('No amplitude function attached to window');
+    return;
+  }
+
   const AMPLITUDE_API_KEY =
     process.env.NODE_ENV === 'production'
       ? process.env.AMPLITUDE_API_KEY
@@ -12,6 +18,10 @@ export const unsetUser = buffer(() => {
     return;
   }
 
-  console.warn('[Amplitude] Unset user');
-  return window.amplitude.getInstance().setUserId(null);
-});
+  const amplitudePromise = () => {
+    console.warn('[Amplitude] Unset user');
+    return amplitude.getInstance().setUserId(null);
+  };
+
+  return Promise.all([amplitudePromise()]);
+};
