@@ -5,38 +5,31 @@ import { SvgWrapper } from 'src/components/icons';
 
 export const Intro = styled.div`
   display: grid;
-  grid-template-rows: 40% 1fr;
-  grid-template-columns: minmax(33%, 560px) 1fr;
-  grid-template-areas: 'copy .' 'copy illo';
-  padding: 160px 5% 80px;
+  grid-template-rows: auto 40vh;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-areas: 'copy copy .' '. illo illo';
+  margin: 160px 5% 80px;
 
-  @media (max-width: 1080px) {
-    grid-template-rows: 1fr 40%;
-    grid-template-columns: 1fr minmax(33%, 560px);
-    grid-template-areas: 'illo copy' '. copy';
+  @media (max-width: 1480px) {
+    grid-template-rows: auto 33vh;
+    grid-template-areas: 'copy copy copy' 'illo illo illo';
   }
 
-  @media (max-width: 800px) {
-    padding: 96px 32px 48px;
-    grid-template-rows: auto 1fr;
-    grid-template-columns: 1fr;
-    grid-template-areas: 'illo' 'copy';
+  @media (max-width: 960px) {
+    grid-template-rows: auto 25vh;
   }
 
-  @media (max-width: 400px) {
-    padding: 48px 16px 48px;
-    grid-template-rows: 1fr;
-    grid-template-columns: 1fr;
-    grid-template-areas: 'copy';
+  @media (max-width: 460px) {
+    grid-template-rows: 1fr auto;
   }
 `;
 
 export const TextContent = styled.div`
   grid-area: copy;
-  margin-left: 32px;
-  align-self: flex-start;
+  justify-self: center;
   z-index: 1;
   text-shadow: 0 0 4px ${props => props.theme.bg.default};
+  max-width: 560px;
 
   > a {
     display: inline-block;
@@ -51,36 +44,55 @@ export const TextContent = styled.div`
     }
   }
 
-  @media (max-width: 1080px) {
-    padding-top: 20%;
-    align-self: flex-end;
+  @media (max-width: 1480px) {
+    justify-self: flex-start;
   }
 
   @media (max-width: 800px) {
     padding-top: 0;
     margin-left: 0;
+    margin-bottom: 0;
+
+    > h1 {
+      margin-top: 0;
+    }
   }
 `;
 
 export const Waterfall = styled.img`
   grid-area: illo;
-  max-width: 150%;
-  margin: 0 -10% -50% -15%;
+  position: relative;
+  justify-self: center;
+  top: -25vh;
+  height: 100vh;
+  max-height: 90vw;
   z-index: 0;
   transition: all 0.2s ease-in-out;
 
+  @media (max-width: 1480px) {
+    top: -20vh;
+    height: 80vh;
+    max-height: 75vw;
+    left: 20vw;
+  }
+
   @media (max-width: 1080px) {
-    opacity: 0.25;
-    max-width: 250%;
-    margin: -40% -20% -80% -40%;
+    top: -12vh;
+    max-height: 66vw;
   }
 
   @media (max-width: 800px) {
-    max-width: 150%;
-    margin: -40% -80% -60% -20%;
+    top: -6vh;
+    left: 8px;
+    height: 66vh;
+    max-height: 100vw;
   }
 
-  @media (max-width: 400px) {
+  @media (max-width: 640px) {
+    top: -2vh;
+  }
+
+  @media (max-width: 460px) {
     display: none;
   }
 `;
@@ -92,7 +104,7 @@ export const Topic = styled.div`
   align-items: center;
   justify-content: center;
 
-  img {
+  > div {
     margin-top: 32px;
   }
 `;
@@ -104,13 +116,14 @@ export const SectionGrid = styled.div`
   grid-column-gap: 2.5%;
   grid-template-areas: ${props =>
     props.reverse ? `'copy topic'` : `'topic copy'`};
-  padding: 5%;
+  margin: 80px 5% 40px;
 
   @media (max-width: 1080px) {
     grid-template-columns: '50% 50%';
   }
 
   @media (max-width: 800px) {
+    margin: 40px 5%;
     grid-template-columns: 1fr;
     grid-template-rows: 320px 1fr;
     grid-template-areas: 'topic' 'copy';
@@ -130,7 +143,8 @@ export const SectionGrid = styled.div`
 export const FeatureList = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  margin-bottom: 15%;
 
   > h1 {
     margin-bottom: 32px;
@@ -226,10 +240,10 @@ export const EtcName = styled(FeatureName)`
 export const EtcGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto;
+  grid-template-rows: 1fr;
   grid-template-areas: 'heading heading heading';
   grid-gap: 32px;
-  padding: 10% 5% 10%;
+  margin: 80px 5% 40px;
 
   @media (max-width: 960px) {
     grid-template-columns: repeat(2, 1fr);
@@ -248,12 +262,14 @@ export const EtcGrid = styled.div`
 
 export const EtcCTA = styled.div`
   display: flex;
+  flex: none;
   flex-direction: column;
   align-self: stretch;
   align-items: center;
-  padding-bottom: 5%;
+  margin-bottom: 80px;
 
   > span {
+    margin-top: 32px;
     font-size: 24px;
     margin-bottom: 16px;
   }

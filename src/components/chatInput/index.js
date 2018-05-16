@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import { KeyBindingUtil } from 'draft-js';
 import debounce from 'debounce';
 import Icon from '../../components/icons';
-import { track } from '../../helpers/events';
 import {
   toJSON,
   toState,
@@ -339,6 +338,9 @@ class ChatInput extends React.Component<Props, State> {
           : toPlainText(state),
         messageType: !isAndroid() ? 'draftjs' : 'text',
       });
+      localStorage.removeItem(LS_DM_KEY);
+      localStorage.removeItem(LS_DM_KEY_EXPIRE);
+
       clear();
       return 'handled';
     }
@@ -360,7 +362,6 @@ class ChatInput extends React.Component<Props, State> {
         .then(() => {
           localStorage.removeItem(LS_DM_KEY);
           localStorage.removeItem(LS_DM_KEY_EXPIRE);
-          return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
           dispatch(addToastWithTimeout('error', err.message));
@@ -389,7 +390,6 @@ class ChatInput extends React.Component<Props, State> {
 
           localStorage.removeItem(LS_KEY);
           localStorage.removeItem(LS_KEY_EXPIRE);
-          return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
           dispatch(addToastWithTimeout('error', err.message));
@@ -513,11 +513,6 @@ class ChatInput extends React.Component<Props, State> {
             this.setState({
               isSendingMediaMessage: false,
             });
-            return track(
-              `${threadType} message`,
-              'media message created',
-              null
-            );
           })
           .catch(err => {
             this.setState({
@@ -540,11 +535,6 @@ class ChatInput extends React.Component<Props, State> {
             this.setState({
               isSendingMediaMessage: false,
             });
-            return track(
-              `${threadType} message`,
-              'media message created',
-              null
-            );
           })
           .catch(err => {
             this.setState({

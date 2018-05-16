@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { track } from 'src/helpers/events';
 import PageFooter from '../components/footer';
 import { Wrapper } from '../style';
 import {
@@ -13,9 +12,7 @@ import {
 import { PrivacyTermsList } from '../terms/style';
 
 class FAQ extends React.Component<{}> {
-  componentDidMount() {
-    track('FAQ page', 'viewed', null);
-  }
+  componentDidMount() {}
 
   render() {
     return (

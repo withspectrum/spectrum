@@ -7,7 +7,6 @@ npm-debug.log
 build
 .DS_Store
 src/config/FirebaseConfig.js
-npm-debug.log
 rethinkdb_data
 debug
 now-secrets.json
