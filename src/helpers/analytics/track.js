@@ -14,12 +14,12 @@ export const track = (eventType: string, eventProperties?: Object = {}) => {
       : process.env.AMPLITUDE_API_KEY_DEVELOPMENT;
 
   if (!AMPLITUDE_API_KEY) {
-    console.warn(`[Amplitude Dev] Tracking ${eventType}`);
+    // console.warn(`[Amplitude Dev] Tracking ${eventType}`);
     return;
   }
 
   const amplitudePromise = () => {
-    console.warn(`[Amplitude] Tracking ${eventType}`);
+    // console.warn(`[Amplitude] Tracking ${eventType}`);
     return amplitude.getInstance().logEvent(eventType, {
       ...eventProperties,
       client: 'web',

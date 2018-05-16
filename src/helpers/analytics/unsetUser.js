@@ -14,12 +14,12 @@ export const unsetUser = () => {
       : process.env.AMPLITUDE_API_KEY_DEVELOPMENT;
 
   if (!AMPLITUDE_API_KEY) {
-    console.warn(`[Amplitude Dev] Unset user`);
+    // console.warn(`[Amplitude Dev] Unset user`);
     return;
   }
 
   const amplitudePromise = () => {
-    console.warn('[Amplitude] Unset user');
+    // console.warn('[Amplitude] Unset user');
     return amplitude.getInstance().setUserId(null);
   };
 
