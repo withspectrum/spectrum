@@ -35,6 +35,7 @@ export const getCurrentUserEverythingQuery = gql`
 const getCurrentUserEverythingOptions = {
   options: () => ({
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   }),
   props: ({
     ownProps,

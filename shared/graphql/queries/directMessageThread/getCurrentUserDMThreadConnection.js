@@ -40,6 +40,7 @@ export const getCurrentUserDMThreadConnectionOptions = {
       after: '',
     },
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   },
   // $FlowFixMe
   props: props => ({

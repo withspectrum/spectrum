@@ -33,6 +33,7 @@ const getCommunitySettingsOptions = {
       id,
     },
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   }),
 };
 
@@ -55,6 +56,7 @@ const getCommunitySettingsByMatchOptions = {
       slug: communitySlug,
     },
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   }),
 };
 

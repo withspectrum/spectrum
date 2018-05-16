@@ -36,6 +36,7 @@ const getChannelBlockedUsersOptions = {
       id,
     },
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   }),
 };
 

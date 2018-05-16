@@ -93,6 +93,7 @@ const getChannelMemberConnectionOptions = {
       first,
     },
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   }),
 };
 

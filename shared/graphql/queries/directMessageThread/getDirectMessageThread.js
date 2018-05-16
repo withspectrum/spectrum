@@ -23,6 +23,7 @@ export const getDirectMessageThreadOptions = {
       id,
     },
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   }),
 };
 

@@ -53,6 +53,7 @@ const getCommunityMemerGrowthOptions = {
       id,
     },
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   }),
 };
 
