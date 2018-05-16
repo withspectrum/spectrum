@@ -25,6 +25,12 @@ export const CoverPhoto = styled.Image`
   height: 124px;
 `;
 
+export const CoverPhotoFill = styled.View`
+  width: ${width};
+  height: 124px;
+  background: ${props => props.theme.brand.alt};
+`;
+
 export const ProfilePhotoContainer = styled.View`
   width: ${width};
   display: flex;
@@ -74,7 +80,7 @@ export const ThreadFeedTabContainer = styled.View`
   display: flex;
   flex-direction: row;
   width: ${width};
-  margin-top: 24px;
+  margin-top: 16px;
   border-bottom-color: ${props => props.theme.bg.border};
   border-bottom-width: 1px;
 `;

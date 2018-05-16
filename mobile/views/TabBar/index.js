@@ -5,6 +5,7 @@ import theme from '../../components/theme';
 
 // Stacks for the individual views
 import HomeStack from './HomeStack';
+import ProfileStack from './ProfileStack';
 import NotificationsStack from './NotificationsStack';
 import {
   ExploreIcon,
@@ -40,7 +41,7 @@ const routeConfiguration = {
     },
   },
   Profile: {
-    screen: HomeStack,
+    screen: ProfileStack,
     navigationOptions: {
       tabBarIcon: ({ tintColor }) => <ProfileIcon color={tintColor} />,
     },
