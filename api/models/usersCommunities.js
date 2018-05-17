@@ -1,7 +1,7 @@
 // @flow
 const { db } = require('./db');
 import { sendCommunityNotificationQueue } from 'shared/bull/queues';
-import type { DBUsersCommunities } from 'shared/types';
+import type { DBUsersCommunities, DBCommunity } from 'shared/types';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 
@@ -16,7 +16,7 @@ import { trackQueue } from 'shared/bull/queues';
 // invoked only when a new community is being created. the user who is doing
 // the creation is automatically an owner and a member
 // prettier-ignore
-const createOwnerInCommunity = (communityId: string, userId: string): Promise<Object> => {
+export const createOwnerInCommunity = (communityId: string, userId: string): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
     .insert(
@@ -28,6 +28,7 @@ const createOwnerInCommunity = (communityId: string, userId: string): Promise<Ob
         isMember: true,
         isModerator: false,
         isBlocked: false,
+        isPending: false,
         receiveNotifications: true,
         reputation: 0,
       },
@@ -47,7 +48,7 @@ const createOwnerInCommunity = (communityId: string, userId: string): Promise<Ob
 // creates a single member in a community. invoked when a user joins a public
 // community
 // prettier-ignore
-const createMemberInCommunity = (communityId: string, userId: string): Promise<Object> => {
+export const createMemberInCommunity = (communityId: string, userId: string): Promise<DBUsersCommunities> => {
 
   trackQueue.add({
     userId,
@@ -93,6 +94,7 @@ const createMemberInCommunity = (communityId: string, userId: string): Promise<O
               isOwner: false,
               isModerator: false,
               isBlocked: false,
+              isPending: false,
               receiveNotifications: true,
               reputation: 0,
             },
@@ -109,7 +111,7 @@ const createMemberInCommunity = (communityId: string, userId: string): Promise<O
 
 // removes a single member from a community. will be invoked if a user leaves a community
 // prettier-ignore
-const removeMemberInCommunity = (communityId: string, userId: string): Promise<Object> => {
+export const removeMemberInCommunity = (communityId: string, userId: string): Promise<DBCommunity> => {
 
   trackQueue.add({
     userId,
@@ -139,7 +141,7 @@ const removeMemberInCommunity = (communityId: string, userId: string): Promise<O
 // community is deleted, at which point we don't want any records in the
 // database to show a user relationship to the deleted community
 // prettier-ignore
-const removeMembersInCommunity = async (communityId: string): Promise<?Object> => {
+export const removeMembersInCommunity = async (communityId: string): Promise<?Object> => {
 
   const usersCommunities = await db
     .table('usersCommunities')
@@ -175,7 +177,7 @@ const removeMembersInCommunity = async (communityId: string): Promise<?Object> =
 // owner when managing a private community. sets pending to false to handle
 // private communitys modifying pending users to be blocked
 // prettier-ignore
-const blockUserInCommunity = (communityId: string, userId: string): Promise<DBUsersCommunities> => {
+export const blockUserInCommunity = (communityId: string, userId: string): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
@@ -205,7 +207,7 @@ const blockUserInCommunity = (communityId: string, userId: string): Promise<DBUs
 // owner when managing a private community. this *does* add the user
 // as a member
 // prettier-ignore
-const unblockUserInCommunity = (communityId: string, userId: string): Promise<DBUsersCommunities> => {
+export const unblockUserInCommunity = (communityId: string, userId: string): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
@@ -215,6 +217,7 @@ const unblockUserInCommunity = (communityId: string, userId: string): Promise<DB
         isModerator: false,
         isMember: true,
         isBlocked: false,
+        isPending: false,
         receiveNotifications: true,
       },
       { returnChanges: true }
@@ -234,7 +237,7 @@ const unblockUserInCommunity = (communityId: string, userId: string): Promise<DB
 
 // moves an *existing* user in a community to be a moderator
 // prettier-ignore
-const makeMemberModeratorInCommunity = (communityId: string, userId: string): Promise<DBUsersCommunities> => {
+export const makeMemberModeratorInCommunity = (communityId: string, userId: string): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
@@ -263,7 +266,7 @@ const makeMemberModeratorInCommunity = (communityId: string, userId: string): Pr
 
 // moves a moderator to be only a member in a community. does not remove them from the community
 // prettier-ignore
-const removeModeratorInCommunity = (communityId: string, userId: string): Promise<Object> => {
+export const removeModeratorInCommunity = (communityId: string, userId: string): Promise<Object> => {
   return db
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
@@ -289,7 +292,7 @@ const removeModeratorInCommunity = (communityId: string, userId: string): Promis
 
 // changes all moderators in a community to members
 // prettier-ignore
-const removeModeratorsInCommunity = async (communityId: string): Promise<?Object> => {
+export const removeModeratorsInCommunity = async (communityId: string): Promise<?Object> => {
   const moderators = await db
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
@@ -319,7 +322,8 @@ const removeModeratorsInCommunity = async (communityId: string): Promise<?Object
   ])
 };
 
-const removeUsersCommunityMemberships = async (userId: string) => {
+// invoked when a user is deleting their account
+export const removeUsersCommunityMemberships = async (userId: string) => {
   const memberships = await db
     .table('usersCommunities')
     .getAll(userId, { index: 'userId' })
@@ -342,11 +346,146 @@ const removeUsersCommunityMemberships = async (userId: string) => {
       isOwner: false,
       isModerator: false,
       isMember: false,
+      isPending: false,
       receiveNotifications: false,
     })
     .run();
 
   return Promise.all([...trackingPromises, removeMembershipsPromise]);
+};
+
+// prettier-ignore
+export const createPendingMemberInCommunity = async (communityId: string, userId: string): Promise<DBUsersCommunities> => {
+  return db
+    .table('usersCommunities')
+    .getAll(userId, { index: 'userId' })
+    .filter({ communityId })
+    .run()
+    .then(result => {
+      if (result && result.length > 0) {
+        // if the result exists, it means the user has a previous relationship
+        // with this community - we handle blocked logic upstream in the mutation,
+        // so in this case we can just update the record to be pending
+
+        return db
+          .table('usersCommunities')
+          .getAll(userId, { index: 'userId' })
+          .filter({ communityId })
+          .update(
+            {
+              createdAt: new Date(),
+              isPending: true
+            },
+            { returnChanges: 'always' }
+          )
+          .run();
+      } else {
+        // if no relationship exists, we can create a new one from scratch
+        return db
+          .table('usersCommunities')
+          .insert(
+            {
+              communityId,
+              userId,
+              createdAt: new Date(),
+              isMember: true,
+              isOwner: false,
+              isModerator: false,
+              isBlocked: false,
+              isPending: true,
+              receiveNotifications: true,
+              reputation: 0,
+            },
+            { returnChanges: true }
+          )
+          .run();
+      }
+    })
+    .then(result => {
+      trackQueue.add({
+        userId,
+        event: events.USER_REQUESTED_TO_JOIN_COMMUNITY,
+        context: { communityId }
+      })
+
+      // TODO@PRIVATE_COMMUNITIES
+      // add queue for sending notification to community owner
+
+      return result.changes[0].new_val;
+    });
+}
+
+// prettier-ignore
+export const removePendingMemberInCommunity = async (communityId: string, userId: string): Promise<Object> => {
+  trackQueue.add({
+    userId,
+    event: events.USER_CANCELED_REQUEST_TO_JOIN_COMMUNITY,
+    context: { communityId }
+  })
+
+  return db
+    .table('usersCommunities')
+    .getAll(communityId, { index: 'communityId' })
+    .filter({ userId })
+    .update({
+      isPending: false,
+    })
+    .run()
+}
+
+export const approvePendingMemberInCommunity = async (
+  communityId: string,
+  userId: string
+): Promise<DBUsersCommunities> => {
+  return db
+    .table('usersCommunities')
+    .getAll(communityId, { index: 'communityId' })
+    .filter({ userId })
+    .update(
+      {
+        isMember: true,
+        isPending: false,
+        receiveNotifications: true,
+      },
+      { returnChanges: 'always' }
+    )
+    .run()
+    .then(result => {
+      trackQueue.add({
+        userId,
+        event: events.USER_WAS_APPROVED_IN_COMMUNITY,
+        context: { communityId },
+      });
+
+      return result.changes[0].new_val;
+    });
+};
+
+export const blockPendingMemberInCommunity = async (
+  communityId: string,
+  userId: string
+): Promise<DBUsersCommunities> => {
+  return db
+    .table('usersCommunities')
+    .getAll(communityId, { index: 'communityId' })
+    .filter({ userId })
+    .update(
+      {
+        isPending: false,
+        isBlocked: true,
+      },
+      { returnChanges: 'always' }
+    )
+    .run()
+    .then(result => {
+      trackQueue.add({
+        userId,
+        event: events.USER_WAS_BLOCKED_IN_COMMUNITY,
+        context: { communityId },
+      });
+
+      return result.changes[0].new_val;
+    });
 };
 
 /*
@@ -360,7 +499,7 @@ const removeUsersCommunityMemberships = async (userId: string) => {
 type Options = { first: number, after: number };
 
 // prettier-ignore
-const getMembersInCommunity = (communityId: string, options: Options, filter: Object): Promise<Array<string>> => {
+export const getMembersInCommunity = (communityId: string, options: Options, filter: Object): Promise<Array<string>> => {
   const { first, after } = options
   return db
     .table('usersCommunities')
@@ -375,7 +514,7 @@ const getMembersInCommunity = (communityId: string, options: Options, filter: Ob
 };
 
 // prettier-ignore
-const getBlockedUsersInCommunity = (communityId: string): Promise<Array<string>> => {
+export const getBlockedUsersInCommunity = (communityId: string): Promise<Array<string>> => {
   return (
     db
       .table('usersCommunities')
@@ -388,7 +527,20 @@ const getBlockedUsersInCommunity = (communityId: string): Promise<Array<string>>
 };
 
 // prettier-ignore
-const getModeratorsInCommunity = (communityId: string): Promise<Array<string>> => {
+export const getPendingUsersInCommunity = (communityId: string): Promise<Array<string>> => {
+  return (
+    db
+      .table('usersCommunities')
+      .getAll(communityId, { index: 'communityId' })
+      .filter({ isPending: true })
+      // return an array of the userIds to be loaded by gql
+      .map(userCommunity => userCommunity('userId'))
+      .run()
+  );
+};
+
+// prettier-ignore
+export const getModeratorsInCommunity = (communityId: string): Promise<Array<string>> => {
   return (
     db
       .table('usersCommunities')
@@ -400,7 +552,9 @@ const getModeratorsInCommunity = (communityId: string): Promise<Array<string>> =
   );
 };
 
-const getOwnersInCommunity = (communityId: string): Promise<Array<string>> => {
+export const getOwnersInCommunity = (
+  communityId: string
+): Promise<Array<string>> => {
   return (
     db
       .table('usersCommunities')
@@ -412,18 +566,19 @@ const getOwnersInCommunity = (communityId: string): Promise<Array<string>> => {
   );
 };
 
-const DEFAULT_USER_COMMUNITY_PERMISSIONS = {
+export const DEFAULT_USER_COMMUNITY_PERMISSIONS = {
   isOwner: false,
   isMember: false,
   isModerator: false,
   isBlocked: false,
+  isPending: false,
   receiveNotifications: false,
   reputation: 0,
 };
 
 // NOTE @BRIAN: DEPRECATED - DONT USE IN THE FUTURE
 // prettier-ignore
-const getUserPermissionsInCommunity = (communityId: string, userId: string): Promise<Object> => {
+export const getUserPermissionsInCommunity = (communityId: string, userId: string): Promise<Object> => {
   return db
     .table('usersCommunities')
     .getAll([userId, communityId], {
@@ -447,7 +602,7 @@ const getUserPermissionsInCommunity = (communityId: string, userId: string): Pro
 };
 
 // prettier-ignore
-const checkUserPermissionsInCommunity = (communityId: string, userId: string): Promise<DBUsersCommunities> => {
+export const checkUserPermissionsInCommunity = (communityId: string, userId: string): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
     .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
@@ -457,7 +612,7 @@ const checkUserPermissionsInCommunity = (communityId: string, userId: string): P
 type UserIdAndCommunityId = [string, string];
 
 // prettier-ignore
-const getUsersPermissionsInCommunities = (input: Array<UserIdAndCommunityId>) => {
+export const getUsersPermissionsInCommunities = (input: Array<UserIdAndCommunityId>) => {
   return db
     .table('usersCommunities')
     .getAll(...input, { index: 'userIdAndCommunityId' })
@@ -483,7 +638,7 @@ const getUsersPermissionsInCommunities = (input: Array<UserIdAndCommunityId>) =>
     });
 };
 
-const getReputationByUser = (userId: string): Promise<Number> => {
+export const getReputationByUser = (userId: string): Promise<Number> => {
   return db
     .table('usersCommunities')
     .getAll(userId, { index: 'userId' })
@@ -495,7 +650,7 @@ const getReputationByUser = (userId: string): Promise<Number> => {
 };
 
 // prettier-ignore
-const getUsersTotalReputation = (userIds: Array<string>): Promise<Array<number>> => {
+export const getUsersTotalReputation = (userIds: Array<string>): Promise<Array<number>> => {
   return db
     .table('usersCommunities')
     .getAll(...userIds, { index: 'userId' })
@@ -514,29 +669,4 @@ const getUsersTotalReputation = (userIds: Array<string>): Promise<Array<number>>
           }
       )
     );
-};
-
-module.exports = {
-  // modify and create
-  createOwnerInCommunity,
-  createMemberInCommunity,
-  removeMemberInCommunity,
-  removeMembersInCommunity,
-  blockUserInCommunity,
-  unblockUserInCommunity,
-  makeMemberModeratorInCommunity,
-  removeModeratorInCommunity,
-  removeModeratorsInCommunity,
-  removeUsersCommunityMemberships,
-  // get
-  DEFAULT_USER_COMMUNITY_PERMISSIONS,
-  getMembersInCommunity,
-  getBlockedUsersInCommunity,
-  getModeratorsInCommunity,
-  getOwnersInCommunity,
-  getUserPermissionsInCommunity,
-  checkUserPermissionsInCommunity,
-  getReputationByUser,
-  getUsersTotalReputation,
-  getUsersPermissionsInCommunities,
 };
