@@ -45,6 +45,9 @@ import {
 import ChannelList from './components/channelList';
 import ModeratorList from './components/moderatorList';
 import { track, events, transformations } from 'src/helpers/analytics';
+import RequestToJoinCommunity from './components/requestToJoinCommunity';
+import CommunityLogin from 'src/views/communityLogin';
+import Login from 'src/views/login';
 
 const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 
@@ -138,6 +141,7 @@ class CommunityView extends React.Component<Props, State> {
       currentUser,
       isLoading,
       hasError,
+      match,
     } = this.props;
     const { communitySlug } = params;
 
@@ -156,6 +160,7 @@ class CommunityView extends React.Component<Props, State> {
         isMember,
         isOwner,
         isModerator,
+        isPending,
         isBlocked,
       } = community.communityPermissions;
       const userHasPermissions = isMember || isOwner || isModerator;
@@ -188,6 +193,54 @@ class CommunityView extends React.Component<Props, State> {
               <Link to={'/'}>
                 <Button large>Take me home</Button>
               </Link>
+            </ViewError>
+          </AppViewWrapper>
+        );
+      }
+
+      const redirectPath = `${CLIENT_URL}/${community.slug}`;
+
+      if (!currentUser && community.isPrivate) {
+        if (community.brandedLogin.isEnabled) {
+          return <CommunityLogin redirectPath={redirectPath} match={match} />;
+        } else {
+          return <Login redirectPath={redirectPath} />;
+        }
+      }
+
+      if (community.isPrivate && !userHasPermissions) {
+        return (
+          <AppViewWrapper data-cy="community-view">
+            <Head
+              title={title}
+              description={`The ${community.name} community on Spectrum`}
+              image={community.profilePhoto}
+            />
+
+            <Titlebar
+              title={community.name}
+              provideBack={true}
+              backRoute={'/'}
+              noComposer
+            />
+
+            <ViewError
+              emoji={isPending ? '🕓' : '🔑'}
+              heading={
+                isPending
+                  ? 'Your request to join this community is pending'
+                  : 'This community is private'
+              }
+              subheading={
+                isPending
+                  ? `Return home until you hear back.`
+                  : `Request to join this community and the admins of ${
+                      community.name
+                    } will be notified.`
+              }
+              dataCy={'community-view-is-restricted'}
+            >
+              <RequestToJoinCommunity community={community} />
             </ViewError>
           </AppViewWrapper>
         );
