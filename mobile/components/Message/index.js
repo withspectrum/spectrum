@@ -61,6 +61,7 @@ const Message = ({ message, me, bubble }: Props) => {
 
 type QuotedMessageProps = {
   message: MessageInfoType,
+  noPadding?: boolean,
 };
 
 type QuotedMessageState = {
@@ -95,12 +96,12 @@ export class QuotedMessage extends React.Component<
   };
 
   render() {
-    const { message } = this.props;
+    const { message, noPadding = false } = this.props;
     const { isExpanded, isShort } = this.state;
     // TODO(@mxstbr): Use <ConditionalWrap> to only add TouchableOpacity to long messages
     return (
       <TouchableOpacity onPress={this.toggle}>
-        <QuoteWrapper expanded={isExpanded}>
+        <QuoteWrapper noPadding={noPadding} expanded={isExpanded}>
           <Author me={false} avatar={false} author={message.author} />
           <QuotedParagraph>
             <Message bubble={false} message={message} me={false} />

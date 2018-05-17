@@ -28,8 +28,8 @@ export const QuotedParagraph = styled.View`
 
 export const QuoteWrapper = styled.View`
   background: ${props => props.theme.bg.default};
-  border-radius: 12px;
-  padding: 8px 12px;
+  border-radius: ${props => (props.noPadding ? '0' : '12px')};
+  padding: ${props => (props.noPadding ? '0' : '8px 12px')};
   margin-left: 4px;
   margin-right: 4px;
   margin-bottom: 0px;

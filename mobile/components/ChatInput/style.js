@@ -19,6 +19,7 @@ export const ChatInputWrapper = styled.View`
 
 export const ChatInputTextInputWrapper = styled.View`
   flex: 1;
+  flex-direction: column;
   min-height: 40px;
   padding: ${props => (props.hasAttachment ? '16px' : '8px 16px')};
   border-radius: 24px;
