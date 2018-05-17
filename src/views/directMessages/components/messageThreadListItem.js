@@ -121,7 +121,7 @@ class ListCardItemDirectMessageThread extends Component {
                   </ArchiveUnarchiveCTA>
                 )}
                 {/**
-                  Add this when we have the dropdown/popover component
+                  Add this when we have the dropdown/popover component and remove line 113-122
                   https://github.com/withspectrum/spectrum/pull/2992#issuecomment-388686504
                   <GearButton onClick={this.handleGearClick} />
                 */}

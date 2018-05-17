@@ -135,8 +135,10 @@ class DirectMessages extends React.Component<Props, State> {
       data.user.directMessageThreadsConnection.pageInfo &&
       data.user.directMessageThreadsConnection.pageInfo.hasNextPage;
 
-    const isInActiveMessages = this.props.match.path === '/messages';
-    const isInArchivedMessages = this.props.match.path === '/messages/archived';
+    const isInActiveMessages =
+      this.props.match && this.props.match.path === '/messages';
+    const isInArchivedMessages =
+      this.props.match && this.props.match.path === '/messages/archived';
 
     return (
       <View>

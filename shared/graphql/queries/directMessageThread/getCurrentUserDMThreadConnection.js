@@ -53,7 +53,8 @@ export const getCurrentUserDMThreadConnectionOptions = {
             props.data.user.directMessageThreadsConnection.edges[
               props.data.user.directMessageThreadsConnection.edges.length - 1
             ].cursor,
-          isArchived: props.match.path === '/messages/archived',
+          isArchived:
+            props && props.match && props.match.path === '/messages/archived',
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult.user) {
