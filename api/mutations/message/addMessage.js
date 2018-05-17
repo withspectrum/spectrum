@@ -127,7 +127,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   if (message.parentId) {
     const parent = await getMessage(message.parentId);
-    if (parent.threadId !== message.threadId)
+    if (parent.threadId !== message.threadId) {
       trackQueue.add({
         userId: user.id,
         event: eventFailed,
@@ -137,7 +137,8 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         },
       });
 
-    return new UserError('You can only quote messages from the same thread.');
+      return new UserError('You can only quote messages from the same thread.');
+    }
   }
 
   // construct the shape of the object to be stored in the db
