@@ -50,6 +50,7 @@ export const analyticsCommunity = (
     slug: community.slug,
     roles: getTruthyValuesFromObject(community.communityPermissions),
     reputation: community.communityPermissions.reputation || 0,
+    isPrivate: community.isPrivate,
   };
 };
 

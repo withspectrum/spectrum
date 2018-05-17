@@ -41,7 +41,7 @@ export type DBCommunity = {
   stripeCustomerId: ?string,
   pendingAdministratorEmail?: string,
   ossVerified?: boolean,
-  isPrivate: Boolean,
+  isPrivate: boolean,
 };
 
 export type DBCommunitySettings = {
