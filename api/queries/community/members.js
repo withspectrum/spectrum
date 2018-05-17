@@ -3,6 +3,7 @@ import type { DBCommunity } from 'shared/types';
 import type { GraphQLContext } from '../../';
 import type { PaginationOptions } from '../../utils/paginate-arrays';
 import { encode, decode } from '../../utils/base64';
+import { canViewCommunity } from '../../utils/permissions';
 const { getMembersInCommunity } = require('../../models/usersCommunities');
 
 type MembersFilterType = {
@@ -13,15 +14,25 @@ type MembersFilterType = {
   isBlocked?: boolean,
 };
 
-export default (
-  { id }: DBCommunity,
-  {
-    first = 10,
-    after,
-    filter,
-  }: { ...$Exact<PaginationOptions>, filter: MembersFilterType },
-  { loaders }: GraphQLContext
-) => {
+type Args = {
+  ...$Exact<PaginationOptions>,
+  filter: MembersFilterType,
+};
+
+export default async (root: DBCommunity, args: Args, ctx: GraphQLContext) => {
+  const { id } = root;
+  const { user, loaders } = ctx;
+
+  if (!user || !await canViewCommunity(user.id, id, loaders)) {
+    return {
+      pageInfo: {
+        hasNextPage: false,
+      },
+      edges: [],
+    };
+  }
+
+  const { first = 10, after, filter } = args;
   const cursor = decode(after);
   // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
   const lastDigits = cursor.match(/-(\d+)$/);
