@@ -47,7 +47,7 @@ class App extends React.Component<{}, State> {
       token = await SecureStore.getItemAsync('token');
     } catch (err) {
       // TODO: Sentry
-      console.log(err);
+      console.error(err);
       this.setState({
         authLoaded: true,
       });
