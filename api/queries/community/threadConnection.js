@@ -8,12 +8,23 @@ import {
   getPublicChannelsByCommunity,
 } from '../../models/channel';
 import { getThreadsByChannels } from '../../models/thread';
+import { canViewCommunity } from '../../utils/permissions';
 
-export default async (
-  { id }: DBCommunity,
-  { first = 10, after }: PaginationOptions,
-  { user }: GraphQLContext
-) => {
+// prettier-ignore
+export default async (root: DBCommunity, args: PaginationOptions, ctx: GraphQLContext) => {
+  const { first = 10, after } = args
+  const { user, loaders } = ctx
+  const { id } = root
+
+  if (!await canViewCommunity(user.id, id, loaders)) {
+    return {
+      pageInfo: {
+        hasNextPage: false,
+      },
+      edges: []
+    }
+  }
+
   const cursor = decode(after);
   // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
   const lastDigits = cursor.match(/-(\d+)$/);
