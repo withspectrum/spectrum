@@ -30,6 +30,7 @@ const Hr = styled.View`
 `;
 
 type Props = {
+  id: string,
   isLoading: boolean,
   hasError: boolean,
   data: {
@@ -118,6 +119,7 @@ class Messages extends React.Component<Props> {
                               key={message.id}
                               me={me}
                               message={message}
+                              threadId={this.props.id}
                             />
                           );
                         })}

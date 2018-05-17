@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withNavigation } from 'react-navigation';
 import { replyToMessage } from '../../../src/actions/message';
 import Input, { type InputProps } from './input';
-import { QuotedMessage } from '../Message';
+import { QuotedMessage } from '../Message/QuotedMessage';
 import { getMessageById } from '../../../shared/graphql/queries/message/getMessage';
 import type { Node } from 'react';
 

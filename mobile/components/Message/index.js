@@ -1,27 +1,34 @@
 // @flow
 import React from 'react';
 import redraft from 'redraft';
+import compose from 'recompose/compose';
+import { connect } from 'react-redux';
 import { TouchableOpacity } from 'react-native';
+import { connectActionSheet } from '@expo/react-native-action-sheet';
 import Text from '../Text';
 import { messageRenderer } from '../../../shared/clients/draft-js/message/renderer.native';
-import {
-  Bubble,
-  QuoteWrapper,
-  QuotedParagraph,
-  TextWrapper,
-  QuoteGradient,
-} from './style';
-import { isShort } from '../../../shared/clients/draft-js/utils/isShort';
-import Author from '../Messages/Author';
+import { Bubble, TextWrapper } from './style';
+import { QuotedMessage } from './QuotedMessage';
+import { replyToMessage } from '../../../src/actions/message';
 import type { MessageInfoType } from '../../../shared/graphql/fragments/message/messageInfo';
 
 type Props = {
   message: MessageInfoType,
   me: boolean,
+  threadId?: string,
   bubble?: boolean,
+  dispatch: Function,
+  showActionSheetWithOptions: Function,
 };
 
-const Message = ({ message, me, bubble }: Props) => {
+const Message = ({
+  message,
+  me,
+  bubble,
+  showActionSheetWithOptions,
+  dispatch,
+  threadId,
+}: Props) => {
   let body =
     message.messageType === 'draftjs'
       ? redraft(JSON.parse(message.content.body), messageRenderer)
@@ -42,14 +49,33 @@ const Message = ({ message, me, bubble }: Props) => {
     case 'text':
     case 'draftjs': {
       if (bubble !== false) {
+        const onPress = () =>
+          threadId &&
+          showActionSheetWithOptions(
+            {
+              options: ['Quote', 'Cancel'],
+              cancelButtonIndex: 1,
+            },
+            pressedIndex => {
+              if (pressedIndex === 0) {
+                dispatch(
+                  replyToMessage({ threadId: threadId, messageId: message.id })
+                );
+              }
+            }
+          );
         return (
-          <Bubble me={me}>
-            {/* $FlowIssue */}
-            {message.parent ? <QuotedMessage message={message.parent} /> : null}
-            <TextWrapper>
-              <Text color={me ? '#FFFFFF' : '#000000'}>{body}</Text>
-            </TextWrapper>
-          </Bubble>
+          <TouchableOpacity onPress={onPress}>
+            <Bubble me={me}>
+              {/* $FlowIssue */}
+              {message.parent ? (
+                <QuotedMessage message={message.parent} />
+              ) : null}
+              <TextWrapper>
+                <Text color={me ? '#FFFFFF' : '#000000'}>{body}</Text>
+              </TextWrapper>
+            </Bubble>
+          </TouchableOpacity>
         );
       }
       return <Text color={me ? '#FFFFFF' : '#000000'}>{body}</Text>;
@@ -59,58 +85,4 @@ const Message = ({ message, me, bubble }: Props) => {
   }
 };
 
-type QuotedMessageProps = {
-  message: MessageInfoType,
-  noPadding?: boolean,
-};
-
-type QuotedMessageState = {
-  isShort: boolean,
-  isExpanded: boolean,
-};
-
-export class QuotedMessage extends React.Component<
-  QuotedMessageProps,
-  QuotedMessageState
-> {
-  constructor(props: QuotedMessageProps) {
-    super(props);
-
-    const short = isShort(props.message);
-    this.state = {
-      isShort: short,
-      isExpanded: short,
-    };
-  }
-
-  shouldComponentUpdate(
-    nextProps: QuotedMessageProps,
-    nextState: QuotedMessageState
-  ) {
-    return nextState.isExpanded !== this.state.isExpanded;
-  }
-
-  toggle = () => {
-    if (this.state.isShort) return;
-    this.setState(prev => ({ isExpanded: !prev.isExpanded }));
-  };
-
-  render() {
-    const { message, noPadding = false } = this.props;
-    const { isExpanded, isShort } = this.state;
-    // TODO(@mxstbr): Use <ConditionalWrap> to only add TouchableOpacity to long messages
-    return (
-      <TouchableOpacity onPress={this.toggle}>
-        <QuoteWrapper noPadding={noPadding} expanded={isExpanded}>
-          <Author me={false} avatar={false} author={message.author} />
-          <QuotedParagraph>
-            <Message bubble={false} message={message} me={false} />
-          </QuotedParagraph>
-          {!isExpanded && <QuoteGradient />}
-        </QuoteWrapper>
-      </TouchableOpacity>
-    );
-  }
-}
-
-export default Message;
+export default compose(connectActionSheet, connect())(Message);

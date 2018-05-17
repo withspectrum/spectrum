@@ -45,6 +45,7 @@
     "write-file-webpack-plugin": "^4.1.0"
   },
   "dependencies": {
+    "@expo/react-native-action-sheet": "^1.0.2",
     "abab": "^1.0.4",
     "algoliasearch": "^3.24.7",
     "apollo-cache-inmemory": "^1.1.5",
