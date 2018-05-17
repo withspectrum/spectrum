@@ -129,20 +129,21 @@ const Community = /* GraphQL */ `
 
 	type Community {
 		id: ID!
-		createdAt: Date!
+		createdAt: Date
 		name: String!
 		slug: LowercaseString!
-		description: String!
+		description: String
 		website: String
 		profilePhoto: String
 		coverPhoto: String
 		reputation: Int
 		pinnedThreadId: String
 		pinnedThread: Thread
+		isPrivate: Boolean
     communityPermissions: CommunityPermissions @cost(complexity: 1)
-    channelConnection: CommunityChannelsConnection! @cost(complexity: 1)
-    members(first: Int = 10, after: String, filter: MembersFilter): CommunityMembers! @cost(complexity: 5, multiplier: "first")
-    threadConnection(first: Int = 10, after: String): CommunityThreadsConnection! @cost(complexity: 2, multiplier: "first")
+    channelConnection: CommunityChannelsConnection @cost(complexity: 1)
+    members(first: Int = 10, after: String, filter: MembersFilter): CommunityMembers @cost(complexity: 5, multiplier: "first")
+    threadConnection(first: Int = 10, after: String): CommunityThreadsConnection @cost(complexity: 2, multiplier: "first")
     metaData: CommunityMetaData @cost(complexity: 10)
     invoices: [Invoice] @cost(complexity: 1)
 		recurringPayments: [RecurringPayment]
@@ -198,6 +199,7 @@ const Community = /* GraphQL */ `
 		website: String
 		file: Upload
 		coverFile: Upload
+		isPrivate: Boolean
 	}
 
 	input EditCommunityInput {

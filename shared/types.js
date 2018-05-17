@@ -41,6 +41,7 @@ export type DBCommunity = {
   stripeCustomerId: ?string,
   pendingAdministratorEmail?: string,
   ossVerified?: boolean,
+  isPrivate: Boolean,
 };
 
 export type DBCommunitySettings = {
@@ -297,6 +298,7 @@ export type DBUsersCommunities = {
   isMember: boolean,
   isModerator: boolean,
   isOwner: boolean,
+  isPending: boolean,
   receiveNotifications: boolean,
   reputation: number,
   userId: string,

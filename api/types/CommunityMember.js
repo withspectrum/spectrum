@@ -8,6 +8,7 @@ const CommunityMember = /* GraphQL */ `
     isModerator: Boolean
     isOwner: Boolean
     isBlocked: Boolean
+    isPending: Boolean
     reputation: Int
   }
 
@@ -43,8 +44,30 @@ const CommunityMember = /* GraphQL */ `
     communityId: ID!
   }
 
+  input AddPendingCommunityMemberInput {
+    communityId: ID!
+  }
+
+  input RemovePendingCommunityMemberInput {
+    communityId: ID!
+  }
+
+  input ApprovePendingCommunityMemberInput {
+    userId: ID!
+    communityId: ID!
+  }
+
+  input BlockPendingCommunityMemberInput {
+    userId: ID!
+    communityId: ID!
+  }
+
   extend type Mutation {
     addCommunityMember(input: AddCommunityMemberInput!): Community
+    addPendingCommunityMember(input: AddPendingCommunityMemberInput!): Community
+    removePendingCommunityMember(input: RemovePendingCommunityMemberInput!): Community
+    approvePendingCommunityMember(input: ApprovePendingCommunityMemberInput!): Community
+    blockPendingCommunityMember(input: BlockPendingCommunityMemberInput!): Community
     removeCommunityMember(input: RemoveCommunityMemberInput!): Community
     addCommunityModerator(input: AddCommunityModeratorInput!): CommunityMember
     removeCommunityModerator(input: RemoveCommunityModeratorInput!): CommunityMember

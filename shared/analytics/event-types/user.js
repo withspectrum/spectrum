@@ -52,10 +52,23 @@ export const USER_LEFT_CHANNEL_FAILED = 'User Left Channel Failed'
 export const USER_REQUESTED_TO_JOIN_CHANNEL = 'User Requested to Join Channel'
 export const USER_REQUESTED_TO_JOIN_CHANNEL_FAILED = 'User Requested to Join Channel Failed'
 export const USER_CANCELED_REQUEST_TO_JOIN_CHANNEL = 'User Canceled Request to Join Channel'
+export const USER_CANCELED_REQUEST_TO_JOIN_CHANNEL_FAILED = 'User Canceled Request to Join Channel Failed'
+
+export const USER_REQUESTED_TO_JOIN_COMMUNITY = 'User Requested to Join Community'
+export const USER_REQUESTED_TO_JOIN_COMMUNITY_FAILED = 'User Requested to Join Community Failed'
+export const USER_CANCELED_REQUEST_TO_JOIN_COMMUNITY = 'User Canceled Request to Join Community'
+export const USER_CANCELED_REQUEST_TO_JOIN_COMMUNITY_FAILED = 'User Canceled Request to Join Community Failed'
 
 export const USER_BLOCKED_MEMBER_IN_COMMUNITY = 'User Blocked Member in Community'
 export const USER_BLOCKED_MEMBER_IN_COMMUNITY_FAILED = 'User Blocked Member in Community Failed'
 export const USER_WAS_BLOCKED_IN_COMMUNITY = 'User Was Blocked in Community'
+
+export const USER_APPROVED_PENDING_MEMBER_IN_COMMUNITY = 'User Approved Pending Member in Community'
+export const USER_APPROVED_PENDING_MEMBER_IN_COMMUNITY_FAILED = 'User Approved Pending Member in Community Failed'
+export const USER_WAS_APPROVED_IN_COMMUNITY = 'User Was Approved in Community'
+
+export const USER_BLOCKED_PENDING_MEMBER_IN_COMMUNITY = 'User Blocked Pending Member in Community'
+export const USER_BLOCKED_PENDING_MEMBER_IN_COMMUNITY_FAILED = 'User Blocked Pending Member in Community Failed'
 
 export const USER_UNBLOCKED_MEMBER_IN_COMMUNITY = 'User Unblocked Member in Community'
 export const USER_UNBLOCKED_MEMBER_IN_COMMUNITY_FAILED = 'User Unblocked Member in Community Failed'
