@@ -23,6 +23,7 @@ const general = /* GraphQL */ `
 		isBlocked: Boolean
 		isOwner: Boolean
 		isModerator: Boolean
+		isPending: Boolean
 		receiveNotifications: Boolean
 		reputation: Int
 	}
