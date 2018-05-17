@@ -1,4 +1,5 @@
-const IS_PROD = process.env.NODE_ENV === 'production';
+// @flow
+export const IS_PROD = process.env.NODE_ENV === 'production';
 
 export const SERVER_URL = IS_PROD
   ? // In production we want to redirect to /whatever

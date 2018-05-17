@@ -36,7 +36,7 @@ export default (
       ' before:',
       before
     );
-    throw new UserError(
+    return new UserError(
       'Cannot paginate back- and forwards at the same time. Please only ask for the first messages after a certain point or the last messages before a certain point.'
     );
   }
@@ -48,7 +48,7 @@ export default (
     if (cursor) cursor = parseInt(cursor, 10);
   } catch (err) {
     debug(err);
-    throw new UserError('Invalid cursor passed to thread.messageConnection.');
+    return new UserError('Invalid cursor passed to thread.messageConnection.');
   }
   if (cursor) debug(`cursor: ${cursor}`);
 

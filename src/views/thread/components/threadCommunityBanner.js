@@ -9,7 +9,6 @@ import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Avatar from '../../../components/avatar';
-import { track } from '../../../helpers/events';
 import { CLIENT_URL } from 'src/api/constants';
 import {
   CommunityHeader,
@@ -64,7 +63,6 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
 
         let str = '';
         if (isPending) {
-          track('channel', 'requested to join', null);
           str = `Your request to join the ${
             toggleChannelSubscription.name
           } channel in ${
@@ -73,14 +71,12 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
         }
 
         if (!isPending && isMember) {
-          track('channel', 'joined', null);
           str = `Joined the ${
             toggleChannelSubscription.community.name
           } community!`;
         }
 
         if (!isPending && !isMember) {
-          track('channel', 'unjoined', null);
           str = `Left the channel ${toggleChannelSubscription.name} in ${
             toggleChannelSubscription.community.name
           }.`;

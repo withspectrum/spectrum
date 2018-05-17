@@ -1,6 +1,7 @@
 // @flow
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { Stylesheet } from 'react-native';
+import Avatar from '../Avatar';
 
 export const InboxThreadItem = styled.View`
   display: flex;
@@ -53,11 +54,26 @@ export const FacepileContainer = styled.View`
 export const EmptyParticipantHead = styled.Text`
   color: ${props => props.theme.text.alt};
   background: ${props => props.theme.bg.wash};
-  border-radius: 15px;
+  border-radius: ${props => (props.radius ? `${props.radius}px` : '15px')};
   text-align: center;
   text-align-vertical: center;
   font-size: 12px;
   font-weight: 600;
-  width: 30px;
+  height: ${props => (props.size ? `${props.size}px` : '30px')};
+  width: ${props => (props.size ? `${props.size}px` : '30px')};
   overflow: hidden;
+`;
+
+const stackingStyles = css`
+  margin-right: -10px;
+  border-width: 2px;
+  border-color: #ffffff;
+`;
+
+export const StackedEmptyParticipantHead = styled(EmptyParticipantHead)`
+  ${stackingStyles};
+`;
+
+export const StackedAvatar = styled(Avatar)`
+  ${stackingStyles};
 `;

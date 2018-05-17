@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { track } from 'src/helpers/events';
 import PageFooter from '../components/footer';
 import Section from 'src/components/themedSection';
 import { Wrapper } from '../style';
@@ -14,10 +13,11 @@ import {
   PlanPrice,
   PlanDescription,
 } from '../pricing/style';
+import { track, events } from 'src/helpers/analytics';
 
 class Support extends React.Component<{}> {
   componentDidMount() {
-    track('support', 'viewed', null);
+    track(events.SUPPORT_PAGE_VIEWED);
   }
 
   render() {
@@ -43,7 +43,11 @@ class Support extends React.Component<{}> {
               </div>
 
               <Link to={'/spectrum/hugs-n-bugs'}>
-                <Button gradientTheme={'warn'} icon={'bug'}>
+                <Button
+                  gradientTheme={'warn'}
+                  icon={'bug'}
+                  onClick={() => track(events.SUPPORT_PAGE_REPORT_BUG)}
+                >
                   Join Hugs-n-Bugs
                 </Button>
               </Link>
@@ -59,7 +63,11 @@ class Support extends React.Component<{}> {
               </div>
 
               <Link to={'/spectrum/feature-requests'}>
-                <Button gradientTheme={'space'} icon={'idea'}>
+                <Button
+                  gradientTheme={'space'}
+                  icon={'idea'}
+                  onClick={() => track(events.SUPPORT_PAGE_REQUEST_FEATURE)}
+                >
                   Request a feature
                 </Button>
               </Link>
@@ -79,13 +87,23 @@ class Support extends React.Component<{}> {
                 target={'_blank'}
                 rel={'noopener noreferrer'}
               >
-                <Button gradientTheme={'social.twitter'} icon={'twitter'}>
+                <Button
+                  gradientTheme={'social.twitter'}
+                  icon={'twitter'}
+                  onClick={() => track(events.SUPPORT_PAGE_FOLLOW_ON_TWITTER)}
+                >
                   Follow us on Twitter
                 </Button>
               </a>
 
               <Link to={'/spectrum'}>
-                <Button gradientTheme={'brand'} icon={'logo'}>
+                <Button
+                  gradientTheme={'brand'}
+                  icon={'logo'}
+                  onClick={() =>
+                    track(events.SUPPORT_PAGE_JOIN_SPECTRUM_COMMUNITY)
+                  }
+                >
                   Join our community
                 </Button>
               </Link>
@@ -101,7 +119,11 @@ class Support extends React.Component<{}> {
               </div>
 
               <a href={'mailto:hi@spectrum.chat'}>
-                <Button gradientTheme={'special'} icon={'email'}>
+                <Button
+                  gradientTheme={'special'}
+                  icon={'email'}
+                  onClick={() => track(events.SUPPORT_PAGE_EMAIL_US)}
+                >
                   Email us
                 </Button>
               </a>

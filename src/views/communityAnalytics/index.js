@@ -15,6 +15,7 @@ import {
   SectionsContainer,
   Column,
 } from '../../components/settingsViews/style';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 type Props = {
   currentUser: Object,
@@ -29,6 +30,24 @@ type State = {
 };
 
 class CommunityAnalytics extends React.Component<Props, State> {
+  componentDidMount() {
+    const { community } = this.props;
+    if (
+      community &&
+      (!community.hasFeatures || !community.hasFeatures.analytics)
+    ) {
+      track(events.COMMUNITY_ANALYTICS_VIEWED_UPSELL, {
+        community: transformations.analyticsCommunity(community),
+      });
+    }
+
+    if (community && community.hasFeatures && community.hasFeatures.analytics) {
+      track(events.COMMUNITY_ANALYTICS_VIEWED, {
+        community: transformations.analyticsCommunity(community),
+      });
+    }
+  }
+
   render() {
     const { community } = this.props;
 

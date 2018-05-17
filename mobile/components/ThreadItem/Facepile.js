@@ -2,7 +2,11 @@
 import * as React from 'react';
 import Avatar from '../Avatar';
 import type { UserInfoType } from '../../../shared/graphql/fragments/user/userInfo';
-import { FacepileContainer, EmptyParticipantHead } from './style';
+import {
+  FacepileContainer,
+  StackedEmptyParticipantHead,
+  StackedAvatar,
+} from './style';
 const NUM_TO_DISPLAY = 5;
 
 const messageAvatars = list => {
@@ -13,7 +17,7 @@ const messageAvatars = list => {
       return null;
     }
     return (
-      <Avatar
+      <StackedAvatar
         key={participant.id}
         src={participant.profilePhoto}
         size={30}
@@ -50,12 +54,12 @@ const Facepile = ({ participants, creator }: FacepileProps) => {
 
   return (
     <FacepileContainer>
-      <Avatar src={creator.profilePhoto} size={30} radius={15} />
+      <StackedAvatar src={creator.profilePhoto} size={30} radius={15} />
       {messageAvatars(participantList)}
       {hasOverflow && (
-        <EmptyParticipantHead adjustsFontSizeToFit>
+        <StackedEmptyParticipantHead size={30} adjustsFontSizeToFit>
           {overflowAmount}
-        </EmptyParticipantHead>
+        </StackedEmptyParticipantHead>
       )}
     </FacepileContainer>
   );

@@ -6,13 +6,16 @@ type AvatarProps = {
   src: string,
   size: number,
   radius: number,
+  style?: Object,
 };
 
 export default class Avatar extends Component<AvatarProps> {
   render() {
-    const { src, size, radius } = this.props;
+    const { src, size, radius, style } = this.props;
     let source = src ? { uri: src } : {};
 
-    return <AvatarImage source={source} size={size} radius={radius} />;
+    return (
+      <AvatarImage source={source} size={size} radius={radius} style={style} />
+    );
   }
 }

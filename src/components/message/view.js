@@ -107,7 +107,7 @@ export class QuotedMessage extends React.Component<
 
   render() {
     const { message, openGallery } = this.props;
-    const { isExpanded, isShort } = this.state;
+    const { isExpanded } = this.state;
     return (
       <QuoteWrapper
         expanded={isExpanded}
@@ -123,7 +123,7 @@ export class QuotedMessage extends React.Component<
           message={message}
           showParent={false}
           me={false}
-          openGallery={openGallery ? openGallery : () => {}}
+          openGallery={openGallery ? openGallery() : () => {}}
           bubble={false}
         />
         {!isExpanded && <QuoteWrapperGradient />}
@@ -172,7 +172,7 @@ const Action = (props: ActionProps) => {
             tipText={'Delete'}
             tipLocation={'top'}
             size={24}
-            onClick={deleteMessage}
+            onClick={() => deleteMessage && deleteMessage()}
           />
         </ModActionWrapper>
       );

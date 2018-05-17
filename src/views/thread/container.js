@@ -3,7 +3,6 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
-import { track } from '../../helpers/events';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import Titlebar from '../../views/titlebar';
@@ -160,8 +159,6 @@ class ThreadContainer extends React.Component<Props, State> {
       this.props.data.thread &&
       prevProps.data.thread.id !== this.props.data.thread.id
     ) {
-      track('thread', 'viewed', null);
-
       // if the user is new and signed up through a thread view, push
       // the thread's community data into the store to hydrate the new user experience
       // with their first community they should join
@@ -434,6 +431,7 @@ class ThreadContainer extends React.Component<Props, State> {
                       shouldForceScrollToTopOnMessageLoad={false}
                       hasMessagesToLoad={thread.messageCount > 0}
                       isModerator={isModerator}
+                      isWatercooler={true}
                     />
                   )}
 
