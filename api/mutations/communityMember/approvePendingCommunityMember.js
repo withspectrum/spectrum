@@ -105,7 +105,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   return await Promise.all([
     approvePendingMemberInCommunity(communityId, userToEvaluateId),
-    createMemberInDefaultChannels(communityId, user.id),
+    createMemberInDefaultChannels(communityId, userToEvaluateId),
   ])
     .then(([newPermissions]) => {
       trackQueue.add({

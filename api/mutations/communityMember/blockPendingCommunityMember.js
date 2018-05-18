@@ -74,7 +74,10 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   const userToEvaluatePermission = userToEvaluatePermissions[0];
 
-  if (!userToEvaluatePermission.isMember) {
+  if (
+    !userToEvaluatePermission.isMember &&
+    !userToEvaluatePermission.isPending
+  ) {
     trackQueue.add({
       userId: user.id,
       event: events.USER_BLOCKED_PENDING_MEMBER_IN_COMMUNITY_FAILED,

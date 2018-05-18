@@ -66,8 +66,8 @@ const CommunityMember = /* GraphQL */ `
     addCommunityMember(input: AddCommunityMemberInput!): Community
     addPendingCommunityMember(input: AddPendingCommunityMemberInput!): Community
     removePendingCommunityMember(input: RemovePendingCommunityMemberInput!): Community
-    approvePendingCommunityMember(input: ApprovePendingCommunityMemberInput!): Community
-    blockPendingCommunityMember(input: BlockPendingCommunityMemberInput!): Community
+    approvePendingCommunityMember(input: ApprovePendingCommunityMemberInput!): CommunityMember
+    blockPendingCommunityMember(input: BlockPendingCommunityMemberInput!): CommunityMember
     removeCommunityMember(input: RemoveCommunityMemberInput!): Community
     addCommunityModerator(input: AddCommunityModeratorInput!): CommunityMember
     removeCommunityModerator(input: RemoveCommunityModeratorInput!): CommunityMember

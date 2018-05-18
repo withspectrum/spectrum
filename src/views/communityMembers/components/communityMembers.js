@@ -66,6 +66,13 @@ class CommunityMembers extends React.Component<Props, State> {
     });
   };
 
+  viewPending = () => {
+    return this.setState({
+      filter: { isPending: true },
+      searchIsFocused: false,
+    });
+  };
+
   viewModerators = () => {
     return this.setState({
       filter: { isModerator: true },
@@ -159,7 +166,7 @@ class CommunityMembers extends React.Component<Props, State> {
             onClick={this.viewModerators}
             active={filter && filter.isModerator ? true : false}
           >
-            Moderators
+            Mods
           </Filter>
           <Filter
             onClick={this.viewBlocked}
@@ -167,6 +174,15 @@ class CommunityMembers extends React.Component<Props, State> {
           >
             Blocked
           </Filter>
+
+          {community.isPrivate && (
+            <Filter
+              onClick={this.viewPending}
+              active={filter && filter.isPending ? true : false}
+            >
+              Pending
+            </Filter>
+          )}
 
           <SearchFilter onClick={this.initSearch}>
             <SearchForm onSubmit={this.search}>
@@ -253,7 +269,8 @@ class CommunityMembers extends React.Component<Props, State> {
                 return (
                   <ListContainer data-cy="community-settings-members-list">
                     {filter &&
-                      filter.isBlocked && (
+                      filter.isBlocked &&
+                      !community.isPrivate && (
                         <Notice>
                           <strong>A note about blocked users:</strong> Your
                           community is publicly viewable (except for private
@@ -322,6 +339,18 @@ class CommunityMembers extends React.Component<Props, State> {
                       heading={'No moderators found'}
                       subheading={
                         "We couldn't find any moderators in your community."
+                      }
+                    />
+                  );
+                }
+
+                if (filter && filter.isPending) {
+                  return (
+                    <ViewError
+                      emoji={' '}
+                      heading={'No pending members found'}
+                      subheading={
+                        'There are no pending members in your community.'
                       }
                     />
                   );

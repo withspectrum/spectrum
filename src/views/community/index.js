@@ -185,10 +185,8 @@ class CommunityView extends React.Component<Props, State> {
             <ViewError
               id="main"
               emoji={'✋'}
-              heading={`You are blocked from ${community.name}`}
-              subheading={
-                'You have been blocked from joining and viewing conversations in this community.'
-              }
+              heading={`You don’t have permission to view ${community.name}`}
+              subheading={'Head back home to get on track.'}
             >
               <Link to={'/'}>
                 <Button large>Take me home</Button>
