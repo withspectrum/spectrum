@@ -130,6 +130,7 @@ export type CreateCommunityInput = {
     website: string,
     file: Object,
     coverFile: Object,
+    isPrivate: boolean,
   },
 };
 
@@ -147,7 +148,7 @@ export type EditCommunityInput = {
 
 // prettier-ignore
 export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): Promise<DBCommunity> => {
-  const { name, slug, description, website, file, coverFile } = input
+  const { name, slug, description, website, file, coverFile, isPrivate } = input
 
   return db
     .table('communities')
@@ -164,6 +165,7 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
         creatorId: user.id,
         administratorEmail: user.email,
         stripeCustomerId: null,
+        isPrivate
       },
       { returnChanges: true }
     )

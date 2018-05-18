@@ -31,6 +31,10 @@ import {
   CommunitySuggestionsWrapper,
   CommunitySuggestion,
   CommunitySuggestionsText,
+  PrivacySelector,
+  PrivacyOption,
+  PrivacyOptionLabel,
+  PrivacyOptionText,
 } from './style';
 import { FormContainer, Form, Actions } from '../../style';
 import { track, events } from 'src/helpers/analytics';
@@ -53,6 +57,7 @@ type State = {
   agreeCoC: boolean,
   photoSizeError: boolean,
   communitySuggestions: ?Array<Object>,
+  isPrivate: boolean,
 };
 
 type Props = {
@@ -84,6 +89,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       agreeCoC: false,
       photoSizeError: false,
       communitySuggestions: null,
+      isPrivate: false,
     };
 
     this.checkSlug = throttle(this.checkSlug, 500);
@@ -349,6 +355,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       descriptionError,
       photoSizeError,
       agreeCoC,
+      isPrivate,
     } = this.state;
 
     // if an error is present, ensure the client cant submit the form
@@ -384,6 +391,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       website,
       file,
       coverFile,
+      isPrivate,
     };
 
     // create the community
@@ -405,6 +413,18 @@ class CreateCommunityForm extends React.Component<Props, State> {
       });
   };
 
+  setPrivate = () => {
+    return this.setState({
+      isPrivate: true,
+    });
+  };
+
+  setPublic = () => {
+    return this.setState({
+      isPrivate: false,
+    });
+  };
+
   render() {
     const {
       name,
@@ -422,6 +442,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       agreeCoC,
       photoSizeError,
       communitySuggestions,
+      isPrivate,
     } = this.state;
 
     const suggestionString = slugTaken
@@ -537,6 +558,44 @@ class CreateCommunityForm extends React.Component<Props, State> {
           <Input defaultValue={website} onChange={this.changeWebsite}>
             Optional: Add your community’s website
           </Input>
+
+          <PrivacySelector>
+            <PrivacyOption selected={!isPrivate} onClick={this.setPublic}>
+              <PrivacyOptionLabel>
+                <input
+                  type="radio"
+                  value="public"
+                  checked={!isPrivate}
+                  onChange={this.setPublic}
+                />
+                Public
+              </PrivacyOptionLabel>
+              <PrivacyOptionText>
+                Anyone can join and view conversations. Public communities will
+                appear in search results, and can appear as suggested
+                communities to non-members. Conversations will be search
+                indexed.
+              </PrivacyOptionText>
+            </PrivacyOption>
+
+            <PrivacyOption selected={isPrivate} onClick={this.setPrivate}>
+              <PrivacyOptionLabel>
+                <input
+                  type="radio"
+                  checked={isPrivate}
+                  value="private"
+                  onChange={this.setPrivate}
+                />
+                Private
+              </PrivacyOptionLabel>
+              <PrivacyOptionText>
+                All members must be approved before they can view or join
+                conversations. Private communities will not appear in search
+                results or suggested communities. Conversations will not be
+                search indexed.
+              </PrivacyOptionText>
+            </PrivacyOption>
+          </PrivacySelector>
 
           <Checkbox id="isPrivate" checked={agreeCoC} onChange={this.changeCoC}>
             <span>
