@@ -9,6 +9,7 @@ import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
 import { CommunityInvitationForm } from '../../components/emailInvitationForm';
 import SlackConnection from '../communitySettings/components/slack';
 import CommunityMembers from './components/communityMembers';
+import JoinTokenSettings from './components/joinTokenSettings';
 import {
   SectionsContainer,
   SectionCard,
@@ -41,6 +42,7 @@ class CommunityMembersSettings extends React.Component<Props> {
 
           <Column>
             <SlackConnection type={'import-only'} id={community.id} />
+            <JoinTokenSettings id={community.id} community={community} />
             <SectionCard>
               <SectionTitle>Invite by email</SectionTitle>
               <CommunityInvitationForm id={community.id} />

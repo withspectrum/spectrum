@@ -15,7 +15,7 @@ import {
   SectionTitle,
   SectionSubtitle,
 } from 'src/components/settingsViews/style';
-import LoginTokenToggle from './loginTokenToggle';
+import LoginTokenToggle from './joinTokenToggle';
 import ResetJoinToken from './resetJoinToken';
 import { Input } from 'src/components/formElements';
 import { addToastWithTimeout } from 'src/actions/toasts';
