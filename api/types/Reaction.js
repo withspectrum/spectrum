@@ -1,30 +1,30 @@
 // @flow
 const Reaction = /* GraphQL */ `
-	enum ReactionTypes {
-		like
-	}
+  enum ReactionTypes {
+    like
+  }
 
-	type Reaction {
-		id: ID!
-		timestamp: Date!
-		message: Message!
-		user: User!
-		type: ReactionTypes!
-	}
+  type Reaction {
+    id: ID!
+    timestamp: Date!
+    message: Message!
+    user: User!
+    type: ReactionTypes!
+  }
 
-	input ReactionInput {
-		messageId: ID!
-		type: ReactionTypes!
-	}
+  input ReactionInput {
+    messageId: ID!
+    type: ReactionTypes!
+  }
 
-	extend type Query {
-		reaction(id: String!): Reaction
-	}
+  extend type Query {
+    reaction(id: String!): Reaction
+  }
 
-	extend type Mutation {
-		# Returns true if toggling completed successfully
-		toggleReaction(reaction: ReactionInput!): Message
-	}
+  extend type Mutation {
+    # Returns true if toggling completed successfully
+    toggleReaction(reaction: ReactionInput!): Message
+  }
 `;
 
 module.exports = Reaction;
