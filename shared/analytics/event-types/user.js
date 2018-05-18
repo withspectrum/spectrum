@@ -84,6 +84,8 @@ export const USER_WAS_REMOVED_AS_MODERATOR_IN_COMMUNITY = 'User Was Removed as M
 
 export const USER_JOINED_COMMUNITY = 'User Joined Community'
 export const USER_JOINED_COMMUNITY_FAILED = 'User Joined Community Failed'
+export const USER_JOINED_COMMUNITY_WITH_TOKEN = 'User Joined Community With Token'
+export const USER_JOINED_COMMUNITY_WITH_TOKEN_FAILED = 'User Joined Community With Token Failed'
 export const USER_LEFT_COMMUNITY = 'User Left Community'
 export const USER_LEFT_COMMUNITY_FAILED = 'User Left Community Failed'
 
