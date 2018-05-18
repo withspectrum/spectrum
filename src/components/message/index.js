@@ -96,9 +96,13 @@ class Message extends Component<Props> {
       <Wrapper
         me={me}
         selected={selectedId === message.id}
+        id={message.id} // anchor link @see https://github.com/withspectrum/spectrum/pull/3093
         onClick={() => changeSelection && changeSelection(message.id)}
         data-cy="message"
       >
+        {/* empty link for simulate anchor link when input such as URL directory to browser */}
+        {/* e.g. http://localhost:3000/?t=thread-3#8c541093-93dd-447d-a55c-00bd25f77599 */}
+        <a href={'#' + message.id} data-message-parmalink={message.id} />
         <Body
           me={me}
           openGallery={() => this.toggleOpenGallery(message.id)}

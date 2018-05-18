@@ -16,6 +16,7 @@ import NextPageButton from '../../../components/nextPageButton';
 import { ChatWrapper, NullMessagesWrapper, NullCopy } from '../style';
 import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
+import type { Location } from 'react-router';
 
 type State = {
   subscription: ?Function,
@@ -31,7 +32,7 @@ type MessageType = {
 type Props = {
   toggleReaction: Function,
   isLoading: boolean,
-  location: Object,
+  location: Location,
   forceScrollToBottom: Function,
   forceScrollToTop: Function,
   contextualScrollToBottom: Function,
@@ -86,9 +87,30 @@ class MessagesWithData extends React.Component<Props, State> {
       prev.data.thread.messageConnection.edges.length + 1 ===
         curr.data.thread.messageConnection.edges.length;
 
+    // if browser recived specified message permalink, scroll to exact specified message @see https://github.com/withspectrum/spectrum/pull/3093
+    let isMessageParmalink = false;
+    const hash = this.props.location.hash;
+    if (hash.length !== 0) {
+      // hash = "" or "#8c541093-93dd-447d-a55c-00bd25f77599" like
+      // scroll destination component defined in spectrum/src/components/message/index.js
+      const messageLink = document.querySelector(
+        `a[data-message-parmalink="${hash.substr(1)}"]`
+      );
+      if (messageLink) {
+        isMessageParmalink = true;
+        // sumulate click empty <a href="#8c541093-93dd-447d-a55c-00bd25f77599"></> and then we've got scroll to the message
+        setTimeout(() => messageLink.click());
+      } else {
+        // messageId not exist
+        // TODO(@ryota-murakami) how to handle the case? scrollBottom | show threadTop | show popup message etc...
+      }
+    }
+
     // force scroll to bottom if the user is a participant/creator, after the messages load in for the first time
     if (!newMessageSent && isFirstLoad && curr.shouldForceScrollOnMessageLoad) {
-      setTimeout(() => curr.forceScrollToBottom());
+      if (!isMessageParmalink) {
+        setTimeout(() => curr.forceScrollToBottom());
+      }
     }
 
     // force scroll to top if the user is a participant/creator, after the messages load in for the first time
@@ -157,6 +179,8 @@ class MessagesWithData extends React.Component<Props, State> {
       threadIsLocked,
       lastSeen,
     } = this.props;
+
+    // TODO locationのhashの中にmesssageIDがあればScrollToMessageを起動する
 
     const dataExists =
       data &&
