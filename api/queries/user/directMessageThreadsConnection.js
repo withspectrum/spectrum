@@ -4,9 +4,14 @@ import type { PaginationOptions } from '../../utils/paginate-arrays';
 import { encode, decode } from '../../utils/base64';
 import { getDirectMessageThreadsByUser } from '../../models/directMessageThread';
 
+type DMThreadConnectionOptions = {
+  ...$Exact<PaginationOptions>,
+  isArchived: boolean,
+};
+
 export default async (
   _: any,
-  { first = 15, after, isArchived = false }: PaginationOptions,
+  { first = 15, after, isArchived = false }: DMThreadConnectionOptions,
   { user }: GraphQLContext
 ) => {
   const cursor = decode(after);
