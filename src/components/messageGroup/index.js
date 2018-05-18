@@ -2,6 +2,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
+import { withRouter, type ContextRouter } from 'react-router';
 import { convertTimestampToDate } from '../../helpers/utils';
 import Badge from '../badges';
 import Avatar from '../avatar';
@@ -74,10 +75,7 @@ type MessageGroupProps = {
   selectedId: string,
   changeSelection: Function,
   lastSeen?: number | Date,
-};
-
-type State = {
-  selectedMessage: ?string,
+  ...$Exact<ContextRouter>,
 };
 
 /*
@@ -88,26 +86,15 @@ type State = {
   This means we will need a nested map in order to get each group, and then within
   each group render each bubble.
 */
-class Messages extends Component<MessageGroupProps, State> {
-  constructor() {
-    super();
-
-    const hash = window.location.hash.substr(1);
-
-    let initialSelection = null;
-
-    if (hash && hash.length > 1) {
-      initialSelection = hash;
-    }
-
-    this.state = {
-      selectedMessage: initialSelection,
-    };
-  }
-
+class Messages extends Component<
+  MessageGroupProps,
+  { selectedMessage?: string }
+> {
+  state = {};
   shouldComponentUpdate(next, nextState) {
     const current = this.props;
     const newSelection =
+      next.location.hash !== current.location.hash ||
       nextState.selectedMessage !== this.state.selectedMessage;
 
     if (newSelection) return true;
@@ -142,15 +129,14 @@ class Messages extends Component<MessageGroupProps, State> {
   }
 
   toggleSelectedMessage = messageId => {
-    if (this.state.selectedMessage === messageId) {
-      this.setState({
-        selectedMessage: null,
-      });
+    const { pathname, search, hash } = this.props.location;
+    if (hash && hash.substr(1) === messageId) {
+      this.props.history.replace(`${pathname}${search}#`);
     } else {
-      this.setState({
-        selectedMessage: messageId,
-      });
+      this.props.history.replace(`${pathname}${search}#${messageId}`);
     }
+    // Note: This is necessary to force a re-render
+    this.setState({ selectedMessage: messageId });
   };
 
   render() {
@@ -163,6 +149,7 @@ class Messages extends Component<MessageGroupProps, State> {
       isModerator,
       lastSeen,
     } = this.props;
+    const { selectedMessage } = this.state;
 
     let hasInjectedUnseenRobo;
     return (
@@ -249,7 +236,11 @@ class Messages extends Component<MessageGroupProps, State> {
                         threadType={threadType}
                         threadId={threadId}
                         toggleReaction={toggleReaction}
-                        selectedId={this.state.selectedMessage}
+                        selectedId={
+                          selectedMessage ||
+                          (this.props.location.hash &&
+                            this.props.location.hash.substr(1))
+                        }
                         changeSelection={this.toggleSelectedMessage}
                       />
                     );
@@ -265,7 +256,8 @@ class Messages extends Component<MessageGroupProps, State> {
 }
 
 // get the current user from the store for evaulation of message bubbles
-const mapStateToProps = state => ({ currentUser: state.users.currentUser });
+const mapStateToProps: (*) => * = state => ({
+  currentUser: state.users.currentUser,
+});
 
-// $FlowIssue
-export default connect(mapStateToProps)(Messages);
+export default withRouter(connect(mapStateToProps)(Messages));
