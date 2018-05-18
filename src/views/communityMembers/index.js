@@ -42,7 +42,9 @@ class CommunityMembersSettings extends React.Component<Props> {
 
           <Column>
             <SlackConnection type={'import-only'} id={community.id} />
-            <JoinTokenSettings id={community.id} community={community} />
+            {community.isPrivate && (
+              <JoinTokenSettings id={community.id} community={community} />
+            )}
             <SectionCard>
               <SectionTitle>Invite by email</SectionTitle>
               <CommunityInvitationForm id={community.id} />
