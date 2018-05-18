@@ -159,7 +159,7 @@ export const SearchInput = styled.input`
   font-size: 16px;
   border-bottom: 1px solid transparent;
   flex: 1;
-  padding: 4px 24px 15px;
+  padding: 4px 0 15px 24px;
   margin-bottom: -13px;
   background: transparent;
 

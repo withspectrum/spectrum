@@ -192,10 +192,6 @@ class CommunityMembers extends React.Component<Props, State> {
                 type={'text'}
                 placeholder={'Search'}
               />
-              {searchString &&
-                searchIsFocused && (
-                  <Icon glyph={'send-fill'} size={28} onClick={this.search} />
-                )}
             </SearchForm>
           </SearchFilter>
         </Filters>
