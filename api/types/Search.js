@@ -30,8 +30,8 @@ const Search = /* GraphQL */ `
     searchResultsConnection: SearchResultsConnection
   }
 
-	extend type Query {
-		search (
+  extend type Query {
+    search (
       # Returns the first *n* results from the list
       first: Int,
       # Returns the elements in the list that come after the specified ID
@@ -47,7 +47,7 @@ const Search = /* GraphQL */ `
       # Optional ID to be used to filter search results by community, channel, user, etc.
       filter: SearchFilter
     ): SearchResults @cost(complexity: 2, multiplier: "first")
-	}
+  }
 `;
 
 module.exports = Search;

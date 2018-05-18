@@ -12,7 +12,7 @@ const CommunityMember = /* GraphQL */ `
   }
 
   extend type Query {
-    communityMember(userId: ID!, communityId: ID!): CommunityMember		
+    communityMember(userId: ID!, communityId: ID!): CommunityMember    
   }
 
   input AddCommunityMemberInput {

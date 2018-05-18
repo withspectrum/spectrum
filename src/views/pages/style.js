@@ -189,23 +189,23 @@ export const SignInButton = styled.a`
   ${props =>
     props.after &&
     `
-  		margin: 24px 0;
+      margin: 24px 0;
 
-			&:after {
-				content: 'Previously signed in with';
-				position: absolute;
-				top: -23px;
-				font-size: 10px;
-				font-weight: 500;
-				text-transform: uppercase;
-				opacity: 0.8;
-				left: 50%;
-				transform: translateX(-50%);
-				width: 100%;
-				text-align: center;
-				color: #fff;
-			}
-		`} span {
+      &:after {
+        content: 'Previously signed in with';
+        position: absolute;
+        top: -23px;
+        font-size: 10px;
+        font-weight: 500;
+        text-transform: uppercase;
+        opacity: 0.8;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        text-align: center;
+        color: #fff;
+      }
+    `} span {
     display: inline-block;
     flex: 0 0 auto;
     margin-top: -1px;

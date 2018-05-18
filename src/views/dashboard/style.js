@@ -138,16 +138,16 @@ export const ChannelListItem = styled.div`
 export const ChannelListDivider = styled.div``;
 
 const placeHolderShimmer = keyframes`
-	0%{
-			transform: translateX(-200%) translateY(0%);
-			background-size: 100%;
-			opacity: 1;
-	}
-	100%{
-			transform: translateX(200%) translateY(0%);
-			background-size: 500%;
-			opacity: 0;
-	}
+  0%{
+      transform: translateX(-200%) translateY(0%);
+      background-size: 100%;
+      opacity: 1;
+  }
+  100%{
+      transform: translateX(200%) translateY(0%);
+      background-size: 500%;
+      opacity: 0;
+  }
 `;
 
 export const LoadingContainer = styled.div`

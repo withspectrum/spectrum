@@ -3,12 +3,12 @@
 
 declare module 'rimraf' {
   declare type Options = {
-	  maxBusyTries?: number,
-	  emfileWait?: number,
-	  glob?: boolean,
-	  disableGlob?: boolean
+    maxBusyTries?: number,
+    emfileWait?: number,
+    glob?: boolean,
+    disableGlob?: boolean
   };
-  
+
   declare type Callback = (err: ?Error, path: ?string) => void;
 
   declare module.exports: {
