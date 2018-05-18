@@ -75,6 +75,11 @@ const general = /* GraphQL */ `
 		contacts: [ EmailInviteContactInput ]
 		customMessage: String
 	}
+
+	type JoinSettings {
+		tokenJoinEnabled: Boolean
+		token: String
+	}
 `;
 
 module.exports = general;

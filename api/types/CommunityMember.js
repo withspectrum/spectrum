@@ -62,8 +62,14 @@ const CommunityMember = /* GraphQL */ `
     communityId: ID!
   }
 
+  input AddCommunityMemberWithTokenInput {
+		communitySlug: LowercaseString!
+		token: String!
+	}
+
   extend type Mutation {
     addCommunityMember(input: AddCommunityMemberInput!): Community
+    addCommunityMemberWithToken(input: AddCommunityMemberWithTokenInput!): Community
     addPendingCommunityMember(input: AddPendingCommunityMemberInput!): Community
     removePendingCommunityMember(input: RemovePendingCommunityMemberInput!): Community
     approvePendingCommunityMember(input: ApprovePendingCommunityMemberInput!): CommunityMember

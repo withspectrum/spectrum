@@ -61,6 +61,10 @@ export type DBCommunitySettings = {
     invitesMemberCount: ?string,
     invitesCustomMessage: ?string,
   },
+  joinSettings: {
+    tokenJoinEnabled: boolean,
+    token: ?string,
+  },
 };
 
 export type DBChannelSettings = {

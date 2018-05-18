@@ -154,6 +154,7 @@ const Community = /* GraphQL */ `
     topAndNewThreads: TopAndNewThreads @cost(complexity: 4)
 		watercooler: Thread
 		brandedLogin: BrandedLogin
+		joinSettings: JoinSettings
 		slackSettings: CommunitySlackSettings @cost(complexity: 2)
 
 		hasFeatures: Features
@@ -275,6 +276,18 @@ const Community = /* GraphQL */ `
 		customMessage: String
 	}
 
+	input EnableCommunityTokenJoinInput {
+		id: ID!
+	}
+
+	input DisableCommunityTokenJoinInput {
+		id: ID!
+	}
+
+	input ResetCommunityJoinTokenInput {
+		id: ID!
+	}
+
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
 		editCommunity(input: EditCommunityInput!): Community
@@ -296,6 +309,9 @@ const Community = /* GraphQL */ `
 		enableBrandedLogin(input: EnableBrandedLoginInput!): Community
 		disableBrandedLogin(input: DisableBrandedLoginInput!): Community
 		saveBrandedLoginSettings(input: SaveBrandedLoginSettingsInput!): Community
+		enableCommunityTokenJoin(input: EnableCommunityTokenJoinInput!): Community
+		disableCommunityTokenJoin(input: DisableCommunityTokenJoinInput!): Community
+		resetCommunityJoinToken(input: ResetCommunityJoinTokenInput!): Community
 	}
 `;
 
