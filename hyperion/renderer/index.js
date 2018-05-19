@@ -37,7 +37,7 @@ import { initStore } from '../../src/store';
 const IS_PROD = process.env.NODE_ENV === 'production';
 const FORCE_DEV = process.env.FORCE_DEV;
 
-if (!IS_PROD || FORCE_DEV) console.log('Querying API at localhost:3001/api');
+if (!IS_PROD || FORCE_DEV) debug('Querying API at localhost:3001/api');
 
 const renderer = (req: express$Request, res: express$Response) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
