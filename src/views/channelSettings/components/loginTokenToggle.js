@@ -6,6 +6,7 @@ import compose from 'recompose/compose';
 import enableTokenJoinMutation from 'shared/graphql/mutations/channel/enableChannelTokenJoin';
 import disableTokenJoinMutation from 'shared/graphql/mutations/channel/disableChannelTokenJoin';
 import { addToastWithTimeout } from '../../../actions/toasts';
+import type { Dispatch } from 'redux';
 
 type Props = {
   id: string,
@@ -14,7 +15,7 @@ type Props = {
   },
   enableChannelTokenJoin: Function,
   disableChannelTokenJoin: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 class TokenJoinToggle extends React.Component<Props> {

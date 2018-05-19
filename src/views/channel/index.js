@@ -38,6 +38,7 @@ import { CoverPhoto } from '../../components/profile/coverPhoto';
 import { LoginButton, ColumnHeading, MidSegment } from '../community/style';
 import ToggleChannelMembership from '../../components/toggleChannelMembership';
 import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 const ThreadFeedWithData = compose(connect(), getChannelThreadConnection)(
   ThreadFeed
@@ -56,7 +57,7 @@ type Props = {
   currentUser: Object,
   isLoading: boolean,
   hasError: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {
