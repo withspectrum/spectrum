@@ -38,10 +38,11 @@ import {
   DisconnectedWarning,
 } from '../style';
 import { events, track } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   isOpen: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isLoading: boolean,
   activeChannel?: string,
   activeCommunity?: string,

@@ -4,10 +4,11 @@ import Icon from '../icons';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { ReactionWrapper } from '../message/style';
 import type { GetMessageType } from 'shared/graphql/queries/message/getMessage';
+import type { Dispatch } from 'redux';
 
 type Props = {
   toggleReaction: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   currentUser?: Object,
   me: boolean,
   message: GetMessageType,

@@ -17,6 +17,7 @@ import {
 import Icon from '../icons';
 import { Button } from '../buttons';
 import { LoadingListItem } from '../loading';
+import type { Dispatch } from 'redux';
 import { FullTitle, FullDescription, ProfileCard, FullProfile } from './style';
 
 type State = {
@@ -24,7 +25,7 @@ type State = {
 };
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   toggleChannelSubscription: Function,
   profileSize: string,
   currentUser: Object,
