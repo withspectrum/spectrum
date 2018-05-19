@@ -13,10 +13,11 @@ import Icon from '../../icons';
 import { IconContainer } from '../RepExplainerModal/style';
 import { Actions, modalStyles, Section, Title, Subtitle } from './style';
 import ChannelSelector from './channelSelector';
+import type { Dispatch } from 'redux';
 
 type Props = {
   thread: any,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isOpen: boolean,
   moveThread: Function,
 };
