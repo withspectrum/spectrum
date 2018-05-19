@@ -89,7 +89,6 @@ export const Input = styled(FlexRow)`
   grid-area: footer;
   max-width: 100%;
   align-self: stretch;
-  overflow: hidden;
 
   @media (max-width: 768px) {
     z-index: ${zIndex.mobileInput};
