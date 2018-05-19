@@ -20,6 +20,7 @@ import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import type { ViewNetworkHandlerType } from '../../../components/viewNetworkHandler';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import type { GetCommunityThreadConnectionType } from 'shared/graphql/queries/community/getCommunityThreadConnection';
+import type { Dispatch } from 'redux';
 
 type Node = {
   node: {
@@ -42,7 +43,7 @@ type Props = {
     feed: string,
   },
   history: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   selectedId: string,
   activeCommunity: ?string,
   hasActiveCommunity: boolean,

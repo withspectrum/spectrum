@@ -18,6 +18,7 @@ import { Spinner } from '../../../components/globals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { clearDirectMessagesComposer } from '../../../actions/directMessageThreads';
 import createDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/createDirectMessageThread';
+import type { Dispatch } from 'redux';
 import {
   ComposerInputWrapper,
   Grow,
@@ -54,7 +55,7 @@ type Props = {
   initNewThreadWithUser: Array<?any>,
   threads: Array<Object>,
   hideOnMobile: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   createDirectMessageThread: Function,
   threadSliderIsOpen: boolean,
   history: Object,
