@@ -50,7 +50,7 @@ class JoinTokenSettings extends React.Component<Props, State> {
           <SectionTitle>Join community via link</SectionTitle>
           <SectionSubtitle>
             Allow people to join this private community by visiting a unique
-            link. Anyone with this link will be able to join this channel.
+            link. Anyone with this link will be able to join this community.
           </SectionSubtitle>
 
           <LoginTokenToggle settings={joinSettings} id={community.id} />
