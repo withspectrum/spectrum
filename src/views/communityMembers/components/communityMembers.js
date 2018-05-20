@@ -2,11 +2,13 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { withApollo } from 'react-apollo';
 import { Loading } from '../../../components/loading';
 import GetMembers from './getMembers';
 import EditDropdown from './editDropdown';
 import Search from './search';
+import queryString from 'query-string';
 import {
   SectionCard,
   SectionTitle,
@@ -34,6 +36,7 @@ type Props = {
   currentUser: Object,
   dispatch: Dispatch<Object>,
   history: Object,
+  location: Object,
   community: Object,
 };
 
@@ -59,6 +62,23 @@ class CommunityMembers extends React.Component<Props, State> {
   };
 
   state = this.initialState;
+
+  componentDidMount() {
+    const { filter } = queryString.parse(this.props.location.search);
+    if (!filter) return;
+
+    if (filter === 'pending') {
+      return this.viewPending();
+    }
+
+    if (filter === 'moderators') {
+      return this.viewModerators();
+    }
+
+    if (filter === 'blocked') {
+      return this.viewBlocked();
+    }
+  }
 
   viewMembers = () => {
     return this.setState({
@@ -368,5 +388,6 @@ const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
   // $FlowIssue
   connect(map),
-  withApollo
+  withApollo,
+  withRouter
 )(CommunityMembers);

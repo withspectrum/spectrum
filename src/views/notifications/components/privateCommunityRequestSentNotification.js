@@ -36,7 +36,9 @@ export class PrivateCommunityRequestSent extends React.Component<Props> {
     return (
       <NotificationCard>
         <CardLink
-          to={`/${notification.context.payload.slug}/settings/members`}
+          to={`/${
+            notification.context.payload.slug
+          }/settings/members?filter=pending`}
         />
         <CardContent>
           <JoinContext>
@@ -87,7 +89,9 @@ class MiniPrivateCommunityRequestSentWithMutation extends React.Component<
         onClick={this.markAsSeen}
       >
         <CardLink
-          to={`/${notification.context.payload.slug}/settings/members`}
+          to={`/${
+            notification.context.payload.slug
+          }/settings/members?filter=pending`}
         />
         <CardContent>
           <JoinContext>
