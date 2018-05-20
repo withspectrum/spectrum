@@ -21,11 +21,12 @@ import Subscription from './components/subscription';
 import AdministratorEmailForm from './components/administratorEmailForm';
 import Source from './components/source';
 import Invoice from './components/invoice';
+import type { Dispatch } from 'redux';
 
 type Props = {
   currentUser: Object,
   community: GetCommunitySettingsType,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   match: Object,
   history: Object,
 };

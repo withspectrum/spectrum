@@ -8,6 +8,7 @@ import Icon from '../../../components/icons';
 import compose from 'recompose/compose';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
+import type { Dispatch } from 'redux';
 import {
   FollowButton,
   ShareButtons,
@@ -18,7 +19,7 @@ import {
 type Props = {
   thread: GetThreadType,
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   toggleThreadNotifications: Function,
 };
 

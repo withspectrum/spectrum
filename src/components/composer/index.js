@@ -28,6 +28,7 @@ import { TextButton, Button } from '../buttons';
 import { FlexRow } from '../../components/globals';
 import { LoadingSelect } from '../loading';
 import Titlebar from '../../views/titlebar';
+import type { Dispatch } from 'redux';
 import {
   Container,
   ThreadDescription,
@@ -69,7 +70,7 @@ type Props = {
     loading: boolean,
   },
   isOpen: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   publishThread: Function,
   history: Object,
   location: Object,

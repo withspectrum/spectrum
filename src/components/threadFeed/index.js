@@ -16,6 +16,7 @@ import NewActivityIndicator from '../newActivityIndicator';
 import ViewError from '../viewError';
 import { Upsell, UpsellHeader, UpsellFooter } from './style';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
+import type { Dispatch } from 'redux';
 
 const NullState = ({ viewContext, search }) => {
   let hd;
@@ -132,7 +133,7 @@ type Props = {
   pinnedThreadId: ?string,
   isNewAndOwned: ?boolean,
   newActivityIndicator: ?boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   search?: boolean,
 };
 

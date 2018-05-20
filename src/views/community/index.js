@@ -53,7 +53,7 @@ const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 
 type Props = {
   ...$Exact<ViewNetworkHandlerType>,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   toggleCommunityMembership: Function,
   currentUser: Object,
   match: {

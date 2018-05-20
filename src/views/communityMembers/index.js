@@ -10,6 +10,7 @@ import { CommunityInvitationForm } from '../../components/emailInvitationForm';
 import SlackConnection from '../communitySettings/components/slack';
 import CommunityMembers from './components/communityMembers';
 import JoinTokenSettings from './components/joinTokenSettings';
+import type { Dispatch } from 'redux';
 import {
   SectionsContainer,
   SectionCard,
@@ -20,7 +21,7 @@ import {
 type Props = {
   currentUser: Object,
   community: GetCommunityType,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   match: Object,
   history: Object,
 };

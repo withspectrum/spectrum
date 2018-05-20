@@ -38,6 +38,7 @@ import {
 } from './style';
 import { FormContainer, Form, Actions } from '../../style';
 import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type State = {
   name: ?string,
@@ -64,7 +65,7 @@ type Props = {
   client: Object,
   createCommunity: Function,
   communityCreated: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   name: string,
 };
 class CreateCommunityForm extends React.Component<Props, State> {

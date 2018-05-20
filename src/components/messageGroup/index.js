@@ -6,6 +6,7 @@ import { convertTimestampToDate } from '../../helpers/utils';
 import Badge from '../badges';
 import Avatar from '../avatar';
 import Message from '../message';
+import type { Dispatch } from 'redux';
 
 import {
   Byline,
@@ -70,7 +71,7 @@ type MessageGroupProps = {
   thread: Object, // TODO: Refine type
   isModerator: boolean,
   toggleReaction: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   selectedId: string,
   changeSelection: Function,
   lastSeen?: number | Date,

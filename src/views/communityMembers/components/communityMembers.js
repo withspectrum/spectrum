@@ -26,12 +26,13 @@ import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
 import ViewError from '../../../components/viewError';
 import GranularUserProfile from '../../../components/granularUserProfile';
 import { Notice } from '../../../components/listItems/style';
+import type { Dispatch } from 'redux';
 
 type Props = {
   id: string,
   client: Object,
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   history: Object,
   community: Object,
 };

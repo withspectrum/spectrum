@@ -15,11 +15,12 @@ import ViewError from '../../../components/viewError';
 import Titlebar from '../../titlebar';
 import { View, MessagesList, ComposeHeader } from '../style';
 import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   subscribeToUpdatedDirectMessageThreads: Function,
   markDirectMessageNotificationsSeen: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   match: Object,
   currentUser?: Object,
   hasError: boolean,

@@ -29,6 +29,7 @@ import blockPendingCommunityMember from 'shared/graphql/mutations/communityMembe
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 import MutationWrapper from './mutationWrapper';
 import { getCardImage } from '../../communityBilling/utils';
+import type { Dispatch } from 'redux';
 
 type Props = {
   blockCommunityMember: Function,
@@ -38,6 +39,7 @@ type Props = {
   approvePendingCommunityMember: Function,
   blockPendingCommunityMember: Function,
   dispatch: Function,
+  dispatch: Dispatch<Object>,
   community: GetCommunitySettingsType,
   history: Object,
   user: {
