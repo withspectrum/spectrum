@@ -3,6 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { openModal } from '../../actions/modals';
+import type { Dispatch } from 'redux';
 import {
   Span,
   ProBadge,
@@ -15,7 +16,7 @@ type Props = {
   onClick?: Function,
   tipText: string,
   currentUser: ?Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 class Badge extends React.Component<Props> {

@@ -22,6 +22,7 @@ import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import { LoginButton } from '../community/style';
+import type { Dispatch } from 'redux';
 import {
   Grid,
   Meta,
@@ -54,7 +55,7 @@ type Props = {
   isLoading: boolean,
   hasError: boolean,
   queryVarIsChanging: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   history: Object,
 };
 

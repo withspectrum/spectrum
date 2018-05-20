@@ -16,12 +16,13 @@ import {
   Column,
 } from '../../components/settingsViews/style';
 import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   currentUser: Object,
   community: GetCommunitySettingsType,
   communitySlug: string,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   match: Object,
 };
 

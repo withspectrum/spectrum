@@ -12,9 +12,10 @@ import type { GetCurrentUserRecurringPaymentsType } from 'shared/graphql/queries
 import { displayLoadingCard } from 'src/components/loading';
 import { ListContainer } from 'src/components/listItems/style';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
+import type { Dispatch } from 'redux';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   data: {
     user: GetCurrentUserRecurringPaymentsType,
   },

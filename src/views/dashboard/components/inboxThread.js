@@ -9,6 +9,7 @@ import truncate from 'shared/truncate';
 import ThreadCommunityInfo, { WaterCoolerPill } from './threadCommunityInfo';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
 import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo';
+import type { Dispatch } from 'redux';
 import {
   InboxThreadItem,
   InboxLinkWrapper,
@@ -26,7 +27,7 @@ import {
 
 type Props = {
   active: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   hasActiveChannel: ?string,
   hasActiveCommunity: ?string,
   history: Object,
