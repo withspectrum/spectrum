@@ -19,7 +19,9 @@ import {
   LoadingContainer,
   LoadingBar,
   SectionTitle,
+  PendingBadge,
 } from '../style';
+import GetMembers from 'src/views/communityMembers/components/getMembers';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
@@ -103,6 +105,34 @@ class SidebarChannels extends React.Component<Props> {
                 <CommunityListName>Settings</CommunityListName>
               </ChannelListItem>
             </Link>
+          )}
+
+          {community.isPrivate && (
+            <GetMembers
+              filter={{ isPending: true }}
+              id={community.id}
+              render={({ isLoading, community, isFetchingMore, fetchMore }) => {
+                const members =
+                  community &&
+                  community.members &&
+                  community.members.edges.map(member => member && member.node);
+
+                if (members && members.length > 0) {
+                  return (
+                    <Link
+                      to={`/${community.slug}/settings/members?filter=pending`}
+                    >
+                      <ChannelListItem>
+                        <PendingBadge>{members.length}</PendingBadge>
+                        <CommunityListName>Pending requests</CommunityListName>
+                      </ChannelListItem>
+                    </Link>
+                  );
+                }
+
+                return null;
+              }}
+            />
           )}
 
           {(isOwner || isModerator) &&
