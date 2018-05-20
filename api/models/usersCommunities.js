@@ -58,8 +58,7 @@ export const createMemberInCommunity = (communityId: string, userId: string): Pr
 
   return db
     .table('usersCommunities')
-    .getAll(userId, { index: 'userId' })
-    .filter({ communityId })
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
     .run()
     .then(result => {
       if (result && result.length > 0) {
@@ -70,8 +69,7 @@ export const createMemberInCommunity = (communityId: string, userId: string): Pr
 
         return db
           .table('usersCommunities')
-          .getAll(userId, { index: 'userId' })
-          .filter({ communityId })
+          .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
           .update(
             {
               createdAt: new Date(),
@@ -121,8 +119,7 @@ export const removeMemberInCommunity = (communityId: string, userId: string): Pr
 
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ userId })
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId'})
     .update({
       isModerator: false,
       isMember: false,
@@ -180,8 +177,7 @@ export const removeMembersInCommunity = async (communityId: string): Promise<?Ob
 export const blockUserInCommunity = (communityId: string, userId: string): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ userId })
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId'})
     .update(
       {
         isMember: false,
@@ -210,8 +206,8 @@ export const blockUserInCommunity = (communityId: string, userId: string): Promi
 export const unblockUserInCommunity = (communityId: string, userId: string): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ userId, isBlocked: true })
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
+    .filter({ isBlocked: true })
     .update(
       {
         isModerator: false,
@@ -240,8 +236,7 @@ export const unblockUserInCommunity = (communityId: string, userId: string): Pro
 export const makeMemberModeratorInCommunity = (communityId: string, userId: string): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ userId })
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId'})
     .update(
       {
         isBlocked: false,
@@ -269,8 +264,7 @@ export const makeMemberModeratorInCommunity = (communityId: string, userId: stri
 export const removeModeratorInCommunity = (communityId: string, userId: string): Promise<Object> => {
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ userId })
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId'})
     .update(
       {
         isModerator: false,
@@ -358,8 +352,7 @@ export const removeUsersCommunityMemberships = async (userId: string) => {
 export const createPendingMemberInCommunity = async (communityId: string, userId: string): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
-    .getAll(userId, { index: 'userId' })
-    .filter({ communityId })
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
     .run()
     .then(result => {
       if (result && result.length > 0) {
@@ -369,8 +362,7 @@ export const createPendingMemberInCommunity = async (communityId: string, userId
 
         return db
           .table('usersCommunities')
-          .getAll(userId, { index: 'userId' })
-          .filter({ communityId })
+          .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
           .update(
             {
               createdAt: new Date(),
@@ -425,8 +417,7 @@ export const removePendingMemberInCommunity = async (communityId: string, userId
 
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ userId })
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId'})
     .update({
       isPending: false,
     })
@@ -439,8 +430,7 @@ export const approvePendingMemberInCommunity = async (
 ): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ userId })
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
     .update(
       {
         isMember: true,
@@ -467,8 +457,7 @@ export const blockPendingMemberInCommunity = async (
 ): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ userId })
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
     .update(
       {
         isPending: false,
