@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>You've been invited to join {{community.name}} on Spectrum</title>
+    <title>{{subject}}</title>
     <!--
     The style block is collapsed on page load to save you some scrolling.
     Postmark automatically inlines all CSS properties for maximum email client
@@ -326,7 +326,7 @@
   </head>
   <body>
     <div style="display: none; max-height: 0px; overflow: hidden;">
-      Come join the conversation with {{sender.name}}!
+      {{preheader}}
     </div>
 
     <!-- Insert &zwnj;&nbsp; hack after hidden preview text -->
@@ -402,7 +402,7 @@
 
                   <tr>
                     <td class="footer-cell">
-                      <a class="button" href="https://spectrum.chat/{{community.slug}}">Join {{community.name}}</a>
+                      <a class="button" href="https://spectrum.chat/{{joinPath}}">Join {{community.name}}</a>
                     </td>
                   </tr>
                   <tr>
