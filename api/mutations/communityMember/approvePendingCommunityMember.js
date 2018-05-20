@@ -12,7 +12,10 @@ import {
   canModerateCommunity,
 } from '../../utils/permissions';
 import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
+import {
+  trackQueue,
+  sendPrivateCommunityRequestApprovedQueue,
+} from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -108,6 +111,12 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     createMemberInDefaultChannels(communityId, userToEvaluateId),
   ])
     .then(([newPermissions]) => {
+      sendPrivateCommunityRequestApprovedQueue.add({
+        userId: userToEvaluateId,
+        communityId,
+        moderatorId: user.id,
+      });
+
       trackQueue.add({
         userId: user.id,
         event: events.USER_APPROVED_PENDING_MEMBER_IN_COMMUNITY,

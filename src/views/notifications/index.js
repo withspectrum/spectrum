@@ -17,6 +17,8 @@ import { MentionThreadNotification } from './components/mentionThreadNotificatio
 import { NewUserInCommunityNotification } from './components/newUserInCommunityNotification';
 import { PrivateChannelRequestApproved } from './components/privateChannelRequestApprovedNotification';
 import { PrivateChannelRequestSent } from './components/privateChannelRequestSentNotification';
+import { PrivateCommunityRequestApproved } from './components/privateCommunityRequestApprovedNotification';
+import { PrivateCommunityRequestSent } from './components/privateCommunityRequestSentNotification';
 import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
@@ -321,6 +323,24 @@ class NotificationsPure extends React.Component<Props, State> {
                   case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
                     return (
                       <PrivateChannelRequestApproved
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
+                    return (
+                      <PrivateCommunityRequestSent
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
+                    return (
+                      <PrivateCommunityRequestApproved
                         key={notification.id}
                         notification={notification}
                         currentUser={currentUser}

@@ -356,7 +356,7 @@
                   <!-- Body content -->
                   <tr>
                     <td class="content-cell">
-                      <p><a href="https://spectrum.chat/users/{{data.user.username}}">{{data.user.name}}</a> has requested to join the <a href="https://spectrum.chat/{{data.community.slug}}/{{data.channel.slug}}">{{data.channel.name}} channel</a> in the <a href="https://spectrum.chat/{{data.community.slug}}">{{data.community.name}} community</a>. You can approve or block this request in your channel settings.</p>
+                      <p><a href="https://spectrum.chat/users/{{data.user.username}}">{{data.user.name}}</a> has requested to join the <a href="https://spectrum.chat/{{data.community.slug}}">{{data.community.name}} community</a>. You can approve or block this request in your community settings.</p>
                     </td>
                   </tr>
 
@@ -365,8 +365,8 @@
                       <table width="100%" cellpadding="0" cellspacing="0" class="thread-actions multi">
                         <tr width="100%" cellpadding="0" cellspacing="0">
                           <td valign="middle">
-                            <a href="https://spectrum.chat/{{data.community.slug}}/{{data.channel.slug}}/settings" class="button">
-                              Go to channel settings
+                            <a href="https://spectrum.chat/{{data.community.slug}}/settings/members" class="button">
+                              Go to community settings
                             </a>
                           </td>
                         </tr>
@@ -393,9 +393,6 @@
                 </p>
 
                 <ul>
-                  <li>
-                    <a href="https://spectrum.chat/{{data.community.slug}}/{{data.channel.slug}}/settings">View settings for the {{data.channel.name}} channel</a>
-                  </li>
                   <li>
                     <a href="https://spectrum.chat/{{data.community.slug}}/settings">View settings for the {{data.community.name}} community</a>
                   </li>

@@ -380,7 +380,7 @@ export const createPendingMemberInCommunity = async (communityId: string, userId
               communityId,
               userId,
               createdAt: new Date(),
-              isMember: true,
+              isMember: false,
               isOwner: false,
               isModerator: false,
               isBlocked: false,

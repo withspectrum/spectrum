@@ -21,6 +21,9 @@ export const PROCESS_ADMIN_TOXIC_THREAD = 'process admin toxic thread';
 export const PRIVATE_CHANNEL_REQUEST_SENT = 'private channel request sent';
 export const PRIVATE_CHANNEL_REQUEST_APPROVED =
   'private channel request approved';
+export const PRIVATE_COMMUNITY_REQUEST_SENT = 'private community request sent';
+export const PRIVATE_COMMUNITY_REQUEST_APPROVED =
+  'private community request approved';
 export const SEND_PUSH_NOTIFICATIONS = 'push notifications';
 export const SEND_SLACK_INVITIATIONS = 'send slack invitations';
 

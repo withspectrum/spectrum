@@ -13,6 +13,8 @@ import { MiniMentionMessageNotification } from './mentionMessageNotification';
 import { MiniMentionThreadNotification } from './mentionThreadNotification';
 import { MiniPrivateChannelRequestSent } from './privateChannelRequestSentNotification';
 import { MiniPrivateChannelRequestApproved } from './privateChannelRequestApprovedNotification';
+import { MiniPrivateCommunityRequestSent } from './privateCommunityRequestSentNotification';
+import { MiniPrivateCommunityRequestApproved } from './privateCommunityRequestApprovedNotification';
 
 type Props = {
   rawNotifications: Array<Object>,
@@ -150,6 +152,32 @@ export class NotificationDropdownList extends React.Component<Props> {
             case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
               return (
                 <MiniPrivateChannelRequestApproved
+                  key={notification.id}
+                  notification={notification}
+                  currentUser={currentUser}
+                  history={history}
+                  markSingleNotificationAsSeenInState={
+                    markSingleNotificationAsSeenInState
+                  }
+                />
+              );
+            }
+            case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
+              return (
+                <MiniPrivateCommunityRequestSent
+                  key={notification.id}
+                  notification={notification}
+                  currentUser={currentUser}
+                  history={history}
+                  markSingleNotificationAsSeenInState={
+                    markSingleNotificationAsSeenInState
+                  }
+                />
+              );
+            }
+            case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
+              return (
+                <MiniPrivateCommunityRequestApproved
                   key={notification.id}
                   notification={notification}
                   currentUser={currentUser}

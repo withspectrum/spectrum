@@ -10,7 +10,10 @@ import {
 import { createMemberInDefaultChannels } from '../../models/usersChannels';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
+import {
+  trackQueue,
+  sendPrivateCommunityRequestQueue,
+} from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -39,6 +42,9 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
     return new UserError("We couldn't find that community.");
   }
+
+  console.log('community', community);
+  console.log('permissions', permissions);
 
   // shouldn't happen, but handle this case anyways
   if (!community.isPrivate) {
@@ -89,7 +95,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   const permission = permissions[0];
 
-  if (permission.isBlocked) {
+  if (permission && permission.isBlocked) {
     trackQueue.add({
       userId: user.id,
       event: events.USER_REQUESTED_TO_JOIN_COMMUNITY_FAILED,
@@ -102,7 +108,10 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     return new UserError("You aren't able to join this community.");
   }
 
-  if (permission.isOwner || permission.isModerator || permissions.isMember) {
+  if (
+    permission &&
+    (permission.isOwner || permission.isModerator || permissions.isMember)
+  ) {
     trackQueue.add({
       userId: user.id,
       event: events.USER_REQUESTED_TO_JOIN_COMMUNITY_FAILED,
@@ -115,7 +124,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     return new UserError("You're already a member of this community.");
   }
 
-  if (permission.isPending) {
+  if (permission && permission.isPending) {
     trackQueue.add({
       userId: user.id,
       event: events.USER_REQUESTED_TO_JOIN_COMMUNITY_FAILED,
@@ -127,6 +136,11 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
     return new UserError('You have already requested to join this community.');
   }
+
+  sendPrivateCommunityRequestQueue.add({
+    userId: user.id,
+    communityId,
+  });
 
   return await createPendingMemberInCommunity(communityId, user.id).then(
     () => community
