@@ -23,7 +23,7 @@ export default async (root: DBCommunity, args: Args, ctx: GraphQLContext) => {
   const { id } = root;
   const { user, loaders } = ctx;
 
-  if (!user || !await canViewCommunity(user.id, id, loaders)) {
+  if (!await canViewCommunity(user, id, loaders)) {
     return {
       pageInfo: {
         hasNextPage: false,

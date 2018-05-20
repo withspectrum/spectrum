@@ -1,7 +1,7 @@
 // @flow
 import UserError from './UserError';
 import type { GraphQLContext } from '../';
-import type { DBChannel, DBCommunity } from 'shared/types';
+import type { DBChannel, DBCommunity, DBUser } from 'shared/types';
 import {
   COMMUNITY_SLUG_BLACKLIST,
   CHANNEL_SLUG_BLACKLIST,
@@ -128,8 +128,8 @@ export const canModerateCommunity = async (
 };
 
 // prettier-ignore
-export const canViewCommunity = async (userId: string, communityId: string, loaders: any) => {
-  if (!userId || !communityId) return false;
+export const canViewCommunity = async (user: DBUser, communityId: string, loaders: any) => {
+  if (!communityId) return false;
 
   const community = await communityExists(communityId, loaders);
   if (!community) return false;
@@ -137,7 +137,7 @@ export const canViewCommunity = async (userId: string, communityId: string, load
   if (!community.isPrivate) return true
 
   const communityPermissions = await loaders.userPermissionsInCommunity.load([
-    userId,
+    user.id,
     communityId,
   ]);
 

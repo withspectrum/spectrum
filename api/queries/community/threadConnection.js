@@ -16,7 +16,7 @@ export default async (root: DBCommunity, args: PaginationOptions, ctx: GraphQLCo
   const { user, loaders } = ctx
   const { id } = root
 
-  if (!user || !await canViewCommunity(user.id, id, loaders)) {
+  if (!await canViewCommunity(user, id, loaders)) {
     return {
       pageInfo: {
         hasNextPage: false,

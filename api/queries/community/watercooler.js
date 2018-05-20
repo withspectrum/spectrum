@@ -9,7 +9,7 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
   const { user, loaders } = ctx;
   if (!watercoolerId) return null;
 
-  if (!user || !await canViewCommunity(user.id, id, loaders)) {
+  if (!await canViewCommunity(user, id, loaders)) {
     return null;
   }
 

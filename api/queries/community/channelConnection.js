@@ -7,7 +7,7 @@ import { canViewCommunity } from '../../utils/permissions';
 export default async ({ id }: DBCommunity, _: any, ctx: GraphQLContext) => {
   const { user, loaders } = ctx;
 
-  if (!user || !await canViewCommunity(user.id, id, loaders)) {
+  if (!await canViewCommunity(user, id, loaders)) {
     return {
       pageInfo: {
         hasNextPage: false,

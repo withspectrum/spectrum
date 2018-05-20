@@ -7,7 +7,7 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
   const { user, loaders } = ctx;
   const { id } = root;
 
-  if (!user || !await canViewCommunity(user.id, id, loaders)) {
+  if (!await canViewCommunity(user, id, loaders)) {
     return {
       channels: 0,
       members: 0,
