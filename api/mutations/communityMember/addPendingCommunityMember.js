@@ -43,9 +43,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     return new UserError("We couldn't find that community.");
   }
 
-  console.log('community', community);
-  console.log('permissions', permissions);
-
   // shouldn't happen, but handle this case anyways
   if (!community.isPrivate) {
     if (!permissions || permissions.length === 0) {
