@@ -12,6 +12,7 @@ import addProtocolToString from 'shared/normalize-url';
 import { Card } from '../card';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import AvatarImage from './image';
+import type { Dispatch } from 'redux';
 import {
   Container,
   CoverLink,
@@ -27,7 +28,7 @@ import { HoverWrapper } from './style';
 type ProfileProps = {
   user: Object,
   community: ?Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   source: string,
   currentUser: ?Object,
   top: ?Boolean,

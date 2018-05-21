@@ -21,9 +21,10 @@ import {
   SectionTitle,
 } from '../style';
 import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isLoading: boolean,
   queryVarIsChanging: boolean,
   activeChannel: ?string,

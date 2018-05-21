@@ -5,6 +5,7 @@ import compose from 'recompose/compose';
 import resetJoinTokenMutation from 'shared/graphql/mutations/channel/resetChannelJoinToken';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { OutlineButton } from 'src/components/buttons';
+import type { Dispatch } from 'redux';
 
 type Props = {
   id: string,
@@ -12,7 +13,7 @@ type Props = {
     tokenJoinEnabled: boolean,
   },
   resetChannelJoinToken: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {

@@ -19,11 +19,12 @@ import {
 import Link from 'src/components/link';
 import { Button, TextButton } from 'src/components/buttons';
 import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   community: GetCommunitySettingsType,
   enableCommunityAnalytics: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {

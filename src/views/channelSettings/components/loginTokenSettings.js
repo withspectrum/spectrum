@@ -21,6 +21,7 @@ import { Input } from 'src/components/formElements';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { TokenInputWrapper } from '../style';
 import { CLIENT_URL } from 'src/api/constants';
+import type { Dispatch } from 'redux';
 
 type Props = {
   data: {
@@ -28,7 +29,7 @@ type Props = {
   },
   ...$Exact<ViewNetworkHandlerType>,
   saveBrandedLoginSettings: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {

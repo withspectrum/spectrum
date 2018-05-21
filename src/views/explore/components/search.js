@@ -39,7 +39,7 @@ type State = {
 type Props = {
   client: Object,
   history: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 class Search extends React.Component<Props, State> {

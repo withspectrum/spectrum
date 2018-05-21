@@ -24,9 +24,10 @@ import {
 } from '../../../actions/dashboardFeed';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   history: Object,
   activeCommunity: ?string,
   activeChannel: ?string,
