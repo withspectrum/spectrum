@@ -67,7 +67,7 @@ describe('creating a public community', () => {
   });
 });
 
-describe('creating a private community', () => {
+describe.only('creating a private community', () => {
   beforeEach(() => {
     cy.auth(user.id);
     cy.visit(`/new/community`);
@@ -84,7 +84,7 @@ describe('creating a private community', () => {
       .scrollIntoView()
       .should('be.visible')
       .click()
-      .type('my private community');
+      .type('private community');
 
     cy
       .get('[data-cy="community-description-input"]')
