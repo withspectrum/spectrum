@@ -189,6 +189,14 @@ export const JoinContext = styled(ContextRow)`
   color: ${({ theme }) => theme.space.default};
 `;
 
+export const RequestContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.special.alt};
+`;
+
+export const ApprovedContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.success.default};
+`;
+
 export const ThreadContext = styled(ContextRow)`
   color: ${({ theme }) => theme.brand.alt};
   margin: 0 16px;

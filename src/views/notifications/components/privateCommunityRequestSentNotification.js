@@ -7,7 +7,7 @@ import {
   NotificationCard,
   TextContent,
   NotificationListRow,
-  JoinContext,
+  RequestContext,
   Content,
 } from '../style';
 import Icon from '../../../components/icons';
@@ -41,10 +41,10 @@ export class PrivateCommunityRequestSent extends React.Component<Props> {
           }/settings/members?filter=pending`}
         />
         <CardContent>
-          <JoinContext>
-            <Icon glyph="member-add" />
+          <RequestContext>
+            <Icon glyph="person" />
             <ActorsRow actors={actors.asObjects} />
-          </JoinContext>
+          </RequestContext>
         </CardContent>
         <Content>
           <TextContent pointer={false}>
@@ -94,10 +94,10 @@ class MiniPrivateCommunityRequestSentWithMutation extends React.Component<
           }/settings/members?filter=pending`}
         />
         <CardContent>
-          <JoinContext>
-            <Icon glyph="member-add" />
+          <RequestContext>
+            <Icon glyph="person" />
             <ActorsRow actors={actors.asObjects} />
-          </JoinContext>
+          </RequestContext>
         </CardContent>
         <Content>
           <TextContent pointer={false}>

@@ -7,7 +7,7 @@ import {
   NotificationCard,
   TextContent,
   NotificationListRow,
-  JoinContext,
+  ApprovedContext,
   Content,
 } from '../style';
 import Icon from '../../../components/icons';
@@ -37,10 +37,10 @@ export class PrivateCommunityRequestApproved extends React.Component<Props> {
       <NotificationCard>
         <CardLink to={`/${notification.context.payload.slug}/`} />
         <CardContent>
-          <JoinContext>
+          <ApprovedContext>
             <Icon glyph="member-add" />
             <ActorsRow actors={actors.asObjects} />
-          </JoinContext>
+          </ApprovedContext>
         </CardContent>
         <Content>
           <TextContent pointer={false}>
@@ -86,10 +86,10 @@ class MiniPrivateCommunityRequestApprovedWithMutation extends React.Component<
       >
         <CardLink to={`/${notification.context.payload.slug}/`} />
         <CardContent>
-          <JoinContext>
+          <ApprovedContext>
             <Icon glyph="member-add" />
             <ActorsRow actors={actors.asObjects} />
-          </JoinContext>
+          </ApprovedContext>
         </CardContent>
         <Content>
           <TextContent pointer={false}>
