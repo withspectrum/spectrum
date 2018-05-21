@@ -9,6 +9,7 @@ import DeleteAccountForm from './deleteAccountForm';
 import DownloadDataForm from './downloadDataForm';
 import RecurringPaymentsList from './recurringPaymentsList';
 import { SectionsContainer, Column } from 'src/components/settingsViews/style';
+import { SentryErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
   user: GetCurrentUserSettingsType,
@@ -21,16 +22,35 @@ class Overview extends React.Component<Props> {
     return (
       <SectionsContainer>
         <Column>
-          <UserEditForm user={user} />
-          <DeleteAccountForm id={user.id} />
-          <DownloadDataForm user={user} />
+          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+            <UserEditForm user={user} />
+          </SentryErrorBoundary>
+
+          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+            <DeleteAccountForm id={user.id} />
+          </SentryErrorBoundary>
+
+          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+            <DownloadDataForm user={user} />
+          </SentryErrorBoundary>
         </Column>
         <Column>
-          <RecurringPaymentsList user={user} />
-          <EmailSettings user={user} />
-          {'serviceWorker' in navigator &&
-            'PushManager' in window && <NotificationSettings largeOnly />}
-          <Invoices />
+          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+            <RecurringPaymentsList user={user} />
+          </SentryErrorBoundary>
+
+          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+            <EmailSettings user={user} />
+          </SentryErrorBoundary>
+
+          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+            {'serviceWorker' in navigator &&
+              'PushManager' in window && <NotificationSettings largeOnly />}
+          </SentryErrorBoundary>
+
+          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+            <Invoices />
+          </SentryErrorBoundary>
         </Column>
       </SectionsContainer>
     );

@@ -17,6 +17,7 @@ import {
 } from '../../components/settingsViews/style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
+import { SentryErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
   currentUser: Object,
@@ -54,18 +55,32 @@ class CommunityAnalytics extends React.Component<Props, State> {
 
     if (community && community.id) {
       if (!community.hasFeatures || !community.hasFeatures.analytics) {
-        return <AnalyticsUpsell community={community} />;
+        return (
+          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+            <AnalyticsUpsell community={community} />
+          </SentryErrorBoundary>
+        );
       }
 
       return (
         <SectionsContainer>
           <Column>
-            <MemberGrowth id={community.id} />
-            <TopMembers id={community.id} />
+            <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+              <MemberGrowth id={community.id} />
+            </SentryErrorBoundary>
+
+            <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+              <TopMembers id={community.id} />
+            </SentryErrorBoundary>
           </Column>
           <Column>
-            <ConversationGrowth id={community.id} />
-            <TopAndNewThreads id={community.id} />
+            <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+              <ConversationGrowth id={community.id} />
+            </SentryErrorBoundary>
+
+            <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+              <TopAndNewThreads id={community.id} />
+            </SentryErrorBoundary>
           </Column>
         </SectionsContainer>
       );

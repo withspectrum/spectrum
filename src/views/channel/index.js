@@ -39,6 +39,7 @@ import { LoginButton, ColumnHeading, MidSegment } from '../community/style';
 import ToggleChannelMembership from '../../components/toggleChannelMembership';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
+import { SentryErrorBoundary } from 'src/components/error';
 
 const ThreadFeedWithData = compose(connect(), getChannelThreadConnection)(
   ThreadFeed
@@ -339,23 +340,32 @@ class ChannelView extends React.Component<Props, State> {
           <Grid id="main">
             <CoverPhoto src={channel.community.coverPhoto} />
             <Meta>
-              <ChannelProfile data={{ channel }} profileSize="full" />
+              <SentryErrorBoundary fallbackComponent={null}>
+                <ChannelProfile data={{ channel }} profileSize="full" />
+              </SentryErrorBoundary>
 
               {actionButton}
 
               {isLoggedIn &&
                 userHasPermissions &&
                 !channel.isArchived && (
-                  <NotificationsToggle
-                    value={channel.channelPermissions.receiveNotifications}
-                    channel={channel}
-                  />
+                  <SentryErrorBoundary fallbackComponent={null}>
+                    <NotificationsToggle
+                      value={channel.channelPermissions.receiveNotifications}
+                      channel={channel}
+                    />
+                  </SentryErrorBoundary>
                 )}
 
               {/* user is signed in and has permissions to view pending users */}
               {isLoggedIn &&
                 (isOwner || isGlobalOwner) && (
-                  <PendingUsersNotification channel={channel} id={channel.id} />
+                  <SentryErrorBoundary fallbackComponent={null}>
+                    <PendingUsersNotification
+                      channel={channel}
+                      id={channel.id}
+                    />
+                  </SentryErrorBoundary>
                 )}
             </Meta>
             <Content>
@@ -408,10 +418,12 @@ class ChannelView extends React.Component<Props, State> {
                 userHasPermissions &&
                 ((channel.isPrivate && !channel.isArchived) ||
                   !channel.isPrivate) && (
-                  <ThreadComposer
-                    activeCommunity={communitySlug}
-                    activeChannel={channelSlug}
-                  />
+                  <SentryErrorBoundary fallbackComponent={null}>
+                    <ThreadComposer
+                      activeCommunity={communitySlug}
+                      activeChannel={channelSlug}
+                    />
+                  </SentryErrorBoundary>
                 )}
 
               {// thread list
@@ -425,16 +437,24 @@ class ChannelView extends React.Component<Props, State> {
               )}
 
               {//search
-              selectedView === 'search' && <Search channel={channel} />}
+              selectedView === 'search' && (
+                <SentryErrorBoundary>
+                  <Search channel={channel} />
+                </SentryErrorBoundary>
+              )}
 
               {// members grid
               selectedView === 'members' && (
-                <ChannelMemberGrid id={channel.id} />
+                <SentryErrorBoundary>
+                  <ChannelMemberGrid id={channel.id} />
+                </SentryErrorBoundary>
               )}
             </Content>
             <Extras>
-              <ColumnHeading>Members</ColumnHeading>
-              <ChannelMemberGrid first={5} id={channel.id} />
+              <SentryErrorBoundary fallbackComponent={null}>
+                <ColumnHeading>Members</ColumnHeading>
+                <ChannelMemberGrid first={5} id={channel.id} />
+              </SentryErrorBoundary>
             </Extras>
           </Grid>
         </AppViewWrapper>

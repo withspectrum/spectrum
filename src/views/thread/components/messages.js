@@ -5,17 +5,18 @@ import { withRouter } from 'react-router';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
-import ChatMessages from '../../../components/messageGroup';
-import { LoadingChat } from '../../../components/loading';
-import { Button } from '../../../components/buttons';
-import Icon from '../../../components/icons';
-import { NullState } from '../../../components/upsell';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import Head from '../../../components/head';
-import NextPageButton from '../../../components/nextPageButton';
+import ChatMessages from 'src/components/messageGroup';
+import { LoadingChat } from 'src/components/loading';
+import { Button } from 'src/components/buttons';
+import Icon from 'src/components/icons';
+import { NullState } from 'src/components/upsell';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import Head from 'src/components/head';
+import NextPageButton from 'src/components/nextPageButton';
 import { ChatWrapper, NullMessagesWrapper, NullCopy } from '../style';
 import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
+import { SentryErrorBoundary } from 'src/components/error';
 
 type State = {
   subscription: ?Function,
@@ -175,55 +176,57 @@ class MessagesWithData extends React.Component<Props, State> {
 
       return (
         <ChatWrapper>
-          {pageInfo.hasPreviousPage && (
-            <div>
-              <NextPageButton
-                isFetchingMore={isFetchingMore}
-                fetchMore={loadPreviousPage}
-              />
+          <SentryErrorBoundary>
+            {pageInfo.hasPreviousPage && (
+              <div>
+                <NextPageButton
+                  isFetchingMore={isFetchingMore}
+                  fetchMore={loadPreviousPage}
+                />
+                <Head>
+                  <link
+                    rel="prev"
+                    href={`${location.pathname}?msgsbefore=${edges[0].cursor}`}
+                  />
+                  <link rel="canonical" href={`/thread/${data.thread.id}`} />
+                </Head>
+              </div>
+            )}
+            {pageInfo.hasNextPage && (
               <Head>
                 <link
-                  rel="prev"
-                  href={`${location.pathname}?msgsbefore=${edges[0].cursor}`}
+                  rel="next"
+                  href={`${location.pathname}?msgsafter=${
+                    edges[edges.length - 1].cursor
+                  }`}
                 />
                 <link rel="canonical" href={`/thread/${data.thread.id}`} />
               </Head>
-            </div>
-          )}
-          {pageInfo.hasNextPage && (
-            <Head>
-              <link
-                rel="next"
-                href={`${location.pathname}?msgsafter=${
-                  edges[edges.length - 1].cursor
-                }`}
+            )}
+            <InfiniteList
+              pageStart={0}
+              loadMore={loadNextPage}
+              isLoadingMore={this.props.isFetchingMore}
+              hasMore={pageInfo.hasNextPage}
+              loader={<LoadingChat size="small" />}
+              useWindow={false}
+              initialLoad={false}
+              scrollElement={scrollContainer}
+              threshold={750}
+              className={'scroller-for-messages'}
+            >
+              <ChatMessages
+                threadId={data.thread.id}
+                thread={data.thread}
+                toggleReaction={toggleReaction}
+                messages={sortedMessages}
+                threadType={'story'}
+                forceScrollToBottom={forceScrollToBottom}
+                isModerator={isModerator}
+                lastSeen={lastSeen}
               />
-              <link rel="canonical" href={`/thread/${data.thread.id}`} />
-            </Head>
-          )}
-          <InfiniteList
-            pageStart={0}
-            loadMore={loadNextPage}
-            isLoadingMore={this.props.isFetchingMore}
-            hasMore={pageInfo.hasNextPage}
-            loader={<LoadingChat size="small" />}
-            useWindow={false}
-            initialLoad={false}
-            scrollElement={scrollContainer}
-            threshold={750}
-            className={'scroller-for-messages'}
-          >
-            <ChatMessages
-              threadId={data.thread.id}
-              thread={data.thread}
-              toggleReaction={toggleReaction}
-              messages={sortedMessages}
-              threadType={'story'}
-              forceScrollToBottom={forceScrollToBottom}
-              isModerator={isModerator}
-              lastSeen={lastSeen}
-            />
-          </InfiniteList>
+            </InfiniteList>
+          </SentryErrorBoundary>
         </ChatWrapper>
       );
     }

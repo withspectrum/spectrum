@@ -5,6 +5,7 @@ import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { LoadingDM } from 'src/components/loading';
 import { ThreadsListScrollContainer } from './style';
+import { SentryErrorBoundary } from 'src/components/error';
 
 type Props = {
   threads: Array<?Object>,
@@ -87,12 +88,14 @@ class ThreadsList extends React.Component<Props, State> {
           {uniqueThreads.map(thread => {
             if (!thread) return null;
             return (
-              <ListCardItemDirectMessageThread
-                thread={thread}
-                key={thread.id}
-                currentUser={currentUser}
-                active={active === thread.id}
-              />
+              <SentryErrorBoundary fallbackComponent={null}>
+                <ListCardItemDirectMessageThread
+                  thread={thread}
+                  key={thread.id}
+                  currentUser={currentUser}
+                  active={active === thread.id}
+                />
+              </SentryErrorBoundary>
             );
           })}
         </InfiniteList>

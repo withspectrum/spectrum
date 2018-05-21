@@ -13,6 +13,7 @@ import { MiniMentionMessageNotification } from './mentionMessageNotification';
 import { MiniMentionThreadNotification } from './mentionThreadNotification';
 import { MiniPrivateChannelRequestSent } from './privateChannelRequestSentNotification';
 import { MiniPrivateChannelRequestApproved } from './privateChannelRequestApprovedNotification';
+import { SentryErrorBoundary } from 'src/components/error';
 
 type Props = {
   rawNotifications: Array<Object>,
@@ -44,120 +45,140 @@ export class NotificationDropdownList extends React.Component<Props> {
           switch (notification.event) {
             case 'MESSAGE_CREATED': {
               return (
-                <MiniNewMessageNotification
-                  key={notification.id}
-                  notification={notification}
-                  currentUser={currentUser}
-                  history={history}
-                />
+                <SentryErrorBoundary fallbackComponent={null}>
+                  <MiniNewMessageNotification
+                    key={notification.id}
+                    notification={notification}
+                    currentUser={currentUser}
+                    history={history}
+                  />
+                </SentryErrorBoundary>
               );
             }
             case 'REACTION_CREATED': {
               return (
-                <MiniNewReactionNotification
-                  key={notification.id}
-                  notification={notification}
-                  currentUser={currentUser}
-                  history={history}
-                />
+                <SentryErrorBoundary fallbackComponent={null}>
+                  <MiniNewReactionNotification
+                    key={notification.id}
+                    notification={notification}
+                    currentUser={currentUser}
+                    history={history}
+                  />
+                </SentryErrorBoundary>
               );
             }
             case 'CHANNEL_CREATED': {
               return (
-                <MiniNewChannelNotification
-                  key={notification.id}
-                  notification={notification}
-                  currentUser={currentUser}
-                  history={history}
-                  markSingleNotificationAsSeenInState={
-                    markSingleNotificationAsSeenInState
-                  }
-                />
+                <SentryErrorBoundary fallbackComponent={null}>
+                  <MiniNewChannelNotification
+                    key={notification.id}
+                    notification={notification}
+                    currentUser={currentUser}
+                    history={history}
+                    markSingleNotificationAsSeenInState={
+                      markSingleNotificationAsSeenInState
+                    }
+                  />
+                </SentryErrorBoundary>
               );
             }
             case 'USER_JOINED_COMMUNITY': {
               return (
-                <MiniNewUserInCommunityNotification
-                  key={notification.id}
-                  notification={notification}
-                  currentUser={currentUser}
-                  history={history}
-                  markSingleNotificationAsSeenInState={
-                    markSingleNotificationAsSeenInState
-                  }
-                />
+                <SentryErrorBoundary fallbackComponent={null}>
+                  <MiniNewUserInCommunityNotification
+                    key={notification.id}
+                    notification={notification}
+                    currentUser={currentUser}
+                    history={history}
+                    markSingleNotificationAsSeenInState={
+                      markSingleNotificationAsSeenInState
+                    }
+                  />
+                </SentryErrorBoundary>
               );
             }
             case 'THREAD_CREATED': {
               return (
-                <MiniNewThreadNotification
-                  key={notification.id}
-                  notification={notification}
-                  currentUser={currentUser}
-                  history={history}
-                  markSingleNotificationAsSeenInState={
-                    markSingleNotificationAsSeenInState
-                  }
-                />
+                <SentryErrorBoundary fallbackComponent={null}>
+                  <MiniNewThreadNotification
+                    key={notification.id}
+                    notification={notification}
+                    currentUser={currentUser}
+                    history={history}
+                    markSingleNotificationAsSeenInState={
+                      markSingleNotificationAsSeenInState
+                    }
+                  />
+                </SentryErrorBoundary>
               );
             }
             case 'COMMUNITY_INVITE': {
               return (
-                <MiniCommunityInviteNotification
-                  key={notification.id}
-                  notification={notification}
-                  currentUser={currentUser}
-                  history={history}
-                  markSingleNotificationAsSeenInState={
-                    markSingleNotificationAsSeenInState
-                  }
-                />
+                <SentryErrorBoundary fallbackComponent={null}>
+                  <MiniCommunityInviteNotification
+                    key={notification.id}
+                    notification={notification}
+                    currentUser={currentUser}
+                    history={history}
+                    markSingleNotificationAsSeenInState={
+                      markSingleNotificationAsSeenInState
+                    }
+                  />
+                </SentryErrorBoundary>
               );
             }
             case 'MENTION_THREAD': {
               return (
-                <MiniMentionThreadNotification
-                  key={notification.id}
-                  notification={notification}
-                  currentUser={currentUser}
-                  history={history}
-                />
+                <SentryErrorBoundary fallbackComponent={null}>
+                  <MiniMentionThreadNotification
+                    key={notification.id}
+                    notification={notification}
+                    currentUser={currentUser}
+                    history={history}
+                  />
+                </SentryErrorBoundary>
               );
             }
             case 'MENTION_MESSAGE': {
               return (
-                <MiniMentionMessageNotification
-                  key={notification.id}
-                  notification={notification}
-                  currentUser={currentUser}
-                  history={history}
-                />
+                <SentryErrorBoundary fallbackComponent={null}>
+                  <MiniMentionMessageNotification
+                    key={notification.id}
+                    notification={notification}
+                    currentUser={currentUser}
+                    history={history}
+                  />
+                </SentryErrorBoundary>
               );
             }
             case 'PRIVATE_CHANNEL_REQUEST_SENT': {
               return (
-                <MiniPrivateChannelRequestSent
-                  key={notification.id}
-                  notification={notification}
-                  currentUser={currentUser}
-                  history={history}
-                  markSingleNotificationAsSeenInState={
-                    markSingleNotificationAsSeenInState
-                  }
-                />
+                <SentryErrorBoundary fallbackComponent={null}>
+                  <MiniPrivateChannelRequestSent
+                    key={notification.id}
+                    notification={notification}
+                    currentUser={currentUser}
+                    history={history}
+                    markSingleNotificationAsSeenInState={
+                      markSingleNotificationAsSeenInState
+                    }
+                  />
+                </SentryErrorBoundary>
               );
             }
             case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
               return (
-                <MiniPrivateChannelRequestApproved
-                  key={notification.id}
-                  notification={notification}
-                  currentUser={currentUser}
-                  history={history}
-                  markSingleNotificationAsSeenInState={
-                    markSingleNotificationAsSeenInState
-                  }
-                />
+                <SentryErrorBoundary fallbackComponent={null}>
+                  <MiniPrivateChannelRequestApproved
+                    key={notification.id}
+                    notification={notification}
+                    currentUser={currentUser}
+                    history={history}
+                    markSingleNotificationAsSeenInState={
+                      markSingleNotificationAsSeenInState
+                    }
+                  />
+                </SentryErrorBoundary>
               );
             }
             default: {

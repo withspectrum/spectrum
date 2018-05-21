@@ -45,6 +45,7 @@ import {
 import ChannelList from './components/channelList';
 import ModeratorList from './components/moderatorList';
 import { track, events, transformations } from 'src/helpers/analytics';
+import { SentryErrorBoundary } from 'src/components/error';
 
 const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 
@@ -217,7 +218,9 @@ class CommunityView extends React.Component<Props, State> {
           <Grid id="main">
             <CoverPhoto src={community.coverPhoto} />
             <Meta>
-              <CommunityProfile data={{ community }} profileSize="full" />
+              <SentryErrorBoundary fallbackComponent={null}>
+                <CommunityProfile data={{ community }} profileSize="full" />
+              </SentryErrorBoundary>
 
               {!isLoggedIn ? (
                 <Link to={loginUrl}>
@@ -303,10 +306,12 @@ class CommunityView extends React.Component<Props, State> {
               isLoggedIn &&
                 selectedView === 'threads' &&
                 userHasPermissions && (
-                  <ThreadComposer
-                    activeCommunity={communitySlug}
-                    showComposerUpsell={showComposerUpsell}
-                  />
+                  <SentryErrorBoundary fallbackComponent={null}>
+                    <ThreadComposer
+                      activeCommunity={communitySlug}
+                      showComposerUpsell={showComposerUpsell}
+                    />
+                  </SentryErrorBoundary>
                 )}
 
               {// thread list
@@ -327,27 +332,38 @@ class CommunityView extends React.Component<Props, State> {
 
               {// members grid
               selectedView === 'members' && (
-                <CommunityMemberGrid
-                  id={community.id}
-                  filter={{ isMember: true, isBlocked: false }}
-                />
+                <SentryErrorBoundary>
+                  <CommunityMemberGrid
+                    id={community.id}
+                    filter={{ isMember: true, isBlocked: false }}
+                  />
+                </SentryErrorBoundary>
               )}
 
               {//search
-              selectedView === 'search' && <Search community={community} />}
+              selectedView === 'search' && (
+                <SentryErrorBoundary>
+                  <Search community={community} />
+                </SentryErrorBoundary>
+              )}
             </Content>
             <Extras>
-              <ColumnHeading>Channels</ColumnHeading>
-              <ChannelList
-                id={community.id}
-                communitySlug={communitySlug.toLowerCase()}
-              />
-              <ColumnHeading>Team</ColumnHeading>
-              <ModeratorList
-                id={community.id}
-                first={20}
-                filter={{ isModerator: true, isOwner: true }}
-              />
+              <SentryErrorBoundary fallbackComponent={null}>
+                <ColumnHeading>Channels</ColumnHeading>
+                <ChannelList
+                  id={community.id}
+                  communitySlug={communitySlug.toLowerCase()}
+                />
+              </SentryErrorBoundary>
+
+              <SentryErrorBoundary fallbackComponent={null}>
+                <ColumnHeading>Team</ColumnHeading>
+                <ModeratorList
+                  id={community.id}
+                  first={20}
+                  filter={{ isModerator: true, isOwner: true }}
+                />
+              </SentryErrorBoundary>
             </Extras>
           </Grid>
         </AppViewWrapper>

@@ -36,6 +36,7 @@ import {
   DesktopSegment,
   MobileSegment,
 } from '../../components/segmentedControl';
+import { SentryErrorBoundary } from 'src/components/error';
 
 const ThreadFeedWithData = compose(connect(), getUserThreads)(ThreadFeed);
 const ThreadParticipantFeedWithData = compose(connect(), getUserThreads)(
@@ -151,11 +152,13 @@ class UserView extends React.Component<Props, State> {
           <Grid id="main">
             <CoverPhoto src={user.coverPhoto} />
             <Meta>
-              <UserProfile
-                data={{ user }}
-                username={username}
-                profileSize="full"
-              />
+              <SentryErrorBoundary fallbackComponent={null}>
+                <UserProfile
+                  data={{ user }}
+                  username={username}
+                  profileSize="full"
+                />
+              </SentryErrorBoundary>
 
               {currentUser &&
                 user.id !== currentUser.id && (
@@ -169,14 +172,17 @@ class UserView extends React.Component<Props, State> {
                     <LoginButton isMember>My settings</LoginButton>
                   </Link>
                 )}
-              <MetaMemberships>
-                <ColumnHeading>Member of</ColumnHeading>
-                <CommunityList
-                  currentUser={currentUser}
-                  user={user}
-                  id={user.id}
-                />
-              </MetaMemberships>
+
+              <SentryErrorBoundary fallbackComponent={null}>
+                <MetaMemberships>
+                  <ColumnHeading>Member of</ColumnHeading>
+                  <CommunityList
+                    currentUser={currentUser}
+                    user={user}
+                    id={user.id}
+                  />
+                </MetaMemberships>
+              </SentryErrorBoundary>
             </Meta>
             <Content>
               <SegmentedControl style={{ margin: '16px 0 0 0' }}>
@@ -245,12 +251,14 @@ class UserView extends React.Component<Props, State> {
               {!hasThreads && <NullState bg="null" heading={nullHeading} />}
             </Content>
             <Extras>
-              <ColumnHeading>Member of</ColumnHeading>
-              <CommunityList
-                currentUser={currentUser}
-                user={user}
-                id={user.id}
-              />
+              <SentryErrorBoundary fallbackComponent={null}>
+                <ColumnHeading>Member of</ColumnHeading>
+                <CommunityList
+                  currentUser={currentUser}
+                  user={user}
+                  id={user.id}
+                />
+              </SentryErrorBoundary>
             </Extras>
           </Grid>
         </AppViewWrapper>

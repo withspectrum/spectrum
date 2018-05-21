@@ -33,6 +33,7 @@ import {
   Sidebar,
 } from './style';
 import { track, events } from 'src/helpers/analytics';
+import { SentryErrorBoundary } from 'src/components/error';
 
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
   DashboardThreadFeed
@@ -153,34 +154,40 @@ class Dashboard extends React.Component<Props, State> {
           <Head title={title} description={description} />
           <Titlebar hasChildren hasSearch filter={searchFilter}>
             <Menu darkContext hasTabBar>
+              <SentryErrorBoundary>
+                <CommunityList
+                  communities={communities}
+                  user={user}
+                  activeCommunity={activeCommunity}
+                  activeChannel={activeChannel}
+                />
+              </SentryErrorBoundary>
+            </Menu>
+          </Titlebar>
+          <Sidebar>
+            <SentryErrorBoundary>
               <CommunityList
                 communities={communities}
                 user={user}
                 activeCommunity={activeCommunity}
                 activeChannel={activeChannel}
+                setActiveChannelObject={this.setActiveChannelObject}
               />
-            </Menu>
-          </Titlebar>
-          <Sidebar>
-            <CommunityList
-              communities={communities}
-              user={user}
-              activeCommunity={activeCommunity}
-              activeChannel={activeChannel}
-              setActiveChannelObject={this.setActiveChannelObject}
-            />
+            </SentryErrorBoundary>
           </Sidebar>
           <InboxWrapper>
             <FeedHeaderContainer>
-              <Header
-                filter={searchFilter}
-                communities={communities}
-                user={user}
-                activeCommunity={activeCommunity}
-                activeCommunityObject={activeCommunityObject}
-                activeChannel={activeChannel}
-                activeChannelObject={activeChannelObject}
-              />
+              <SentryErrorBoundary>
+                <Header
+                  filter={searchFilter}
+                  communities={communities}
+                  user={user}
+                  activeCommunity={activeCommunity}
+                  activeCommunityObject={activeCommunityObject}
+                  activeChannel={activeChannel}
+                  activeChannelObject={activeChannelObject}
+                />
+              </SentryErrorBoundary>
             </FeedHeaderContainer>
             {newActivityIndicator && (
               <NewActivityIndicator elem="scroller-for-inbox" />
@@ -195,64 +202,74 @@ class Dashboard extends React.Component<Props, State> {
               {searchQueryString &&
                 searchQueryString.length > 0 &&
                 searchFilter && (
-                  <SearchThreadFeed
-                    queryString={searchQueryString}
-                    filter={searchFilter}
-                    selectedId={activeThread}
-                  />
+                  <SentryErrorBoundary>
+                    <SearchThreadFeed
+                      queryString={searchQueryString}
+                      filter={searchFilter}
+                      selectedId={activeThread}
+                    />
+                  </SentryErrorBoundary>
                 )}
 
               {// no community, no search results
               !activeCommunity &&
                 !searchQueryString && (
-                  <EverythingThreadFeed selectedId={activeThread} />
+                  <SentryErrorBoundary>
+                    <EverythingThreadFeed selectedId={activeThread} />
+                  </SentryErrorBoundary>
                 )}
 
               {// community, no channel, no search results
               activeCommunity &&
                 !activeChannel &&
                 !searchQueryString && (
-                  <CommunityThreadFeed
-                    id={activeCommunity}
-                    selectedId={activeThread}
-                    hasActiveCommunity={activeCommunity}
-                    community={activeCommunityObject}
-                    pinnedThreadId={
-                      activeCommunityObject &&
-                      activeCommunityObject.pinnedThreadId
-                    }
-                  />
+                  <SentryErrorBoundary>
+                    <CommunityThreadFeed
+                      id={activeCommunity}
+                      selectedId={activeThread}
+                      hasActiveCommunity={activeCommunity}
+                      community={activeCommunityObject}
+                      pinnedThreadId={
+                        activeCommunityObject &&
+                        activeCommunityObject.pinnedThreadId
+                      }
+                    />
+                  </SentryErrorBoundary>
                 )}
 
               {// channel and community, no search results
               activeChannel &&
                 activeCommunity &&
                 !searchQueryString && (
-                  <ChannelThreadFeed
-                    id={activeChannel}
-                    selectedId={activeThread}
-                    hasActiveCommunity={activeCommunity}
-                    hasActiveChannel={activeChannel}
-                    community={activeCommunityObject}
-                    pinnedThreadId={
-                      activeCommunityObject &&
-                      activeCommunityObject.pinnedThreadId
-                    }
-                    channelId={activeChannel}
-                  />
+                  <SentryErrorBoundary>
+                    <ChannelThreadFeed
+                      id={activeChannel}
+                      selectedId={activeThread}
+                      hasActiveCommunity={activeCommunity}
+                      hasActiveChannel={activeChannel}
+                      community={activeCommunityObject}
+                      pinnedThreadId={
+                        activeCommunityObject &&
+                        activeCommunityObject.pinnedThreadId
+                      }
+                      channelId={activeChannel}
+                    />
+                  </SentryErrorBoundary>
                 )}
             </InboxScroller>
           </InboxWrapper>
 
           <ThreadWrapper>
             <ThreadScroller id="scroller-for-inbox-thread-view">
-              <DashboardThread
-                threadId={activeThread}
-                activeCommunity={
-                  activeCommunityObject && activeCommunityObject.slug
-                }
-                activeChannel={activeChannel}
-              />
+              <SentryErrorBoundary>
+                <DashboardThread
+                  threadId={activeThread}
+                  activeCommunity={
+                    activeCommunityObject && activeCommunityObject.slug
+                  }
+                  activeChannel={activeChannel}
+                />
+              </SentryErrorBoundary>
             </ThreadScroller>
           </ThreadWrapper>
         </DashboardWrapper>
