@@ -310,9 +310,8 @@ class ThreadFeed extends React.Component<Props, State> {
           <FlipMove duration={350}>
             {uniqueThreads.map(thread => {
               return (
-                <SentryErrorBoundary fallbackComponent={null}>
+                <SentryErrorBoundary fallbackComponent={null} key={thread.id}>
                   <InboxThread
-                    key={thread.id}
                     data={thread}
                     active={selectedId === thread.id}
                     hasActiveCommunity={this.props.hasActiveCommunity}

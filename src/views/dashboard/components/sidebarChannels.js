@@ -124,9 +124,8 @@ class SidebarChannels extends React.Component<Props> {
             sortedChannels.length > 1 &&
             sortedChannels.map(channel => {
               return (
-                <SentryErrorBoundary fallbackComponent={null}>
+                <SentryErrorBoundary fallbackComponent={null} key={channel.id}>
                   <ChannelListItem
-                    key={channel.id}
                     active={activeChannel === channel.id}
                     onClick={evt => {
                       evt.stopPropagation();

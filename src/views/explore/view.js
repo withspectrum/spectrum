@@ -152,9 +152,8 @@ class CategoryList extends React.Component<CategoryListProps> {
             <ListWrapper>
               {filteredCommunities.map((community, i) => (
                 // $FlowFixMe
-                <SentryErrorBoundary fallbackComponent={null}>
+                <SentryErrorBoundary fallbackComponent={null} key={i}>
                   <CommunityProfile
-                    key={i}
                     profileSize={'upsell'}
                     data={{ community }}
                     currentUser={currentUser}

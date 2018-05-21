@@ -105,9 +105,8 @@ class CommunityList extends React.Component<Props> {
             <CommunityListName>Everything</CommunityListName>
           </CommunityListItem>
           {sortedCommunities.map(c => (
-            <SentryErrorBoundary fallbackComponent={null}>
+            <SentryErrorBoundary fallbackComponent={null} key={c.id}>
               <CommunityListItem
-                key={c.id}
                 onClick={() => this.handleOnClick(c.id)}
                 active={c.id === activeCommunity}
               >

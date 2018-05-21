@@ -11,7 +11,6 @@ import sendCommunityEmailInvitations from 'shared/graphql/mutations/community/se
 import { Button } from '../buttons';
 import { Error } from '../formElements';
 import { SectionCardFooter } from '../settingsViews/style';
-import type { Dispatch } from 'redux';
 import {
   EmailInviteForm,
   EmailInviteInput,

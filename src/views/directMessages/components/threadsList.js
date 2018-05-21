@@ -88,10 +88,9 @@ class ThreadsList extends React.Component<Props, State> {
           {uniqueThreads.map(thread => {
             if (!thread) return null;
             return (
-              <SentryErrorBoundary fallbackComponent={null}>
+              <SentryErrorBoundary fallbackComponent={null} key={thread.id}>
                 <ListCardItemDirectMessageThread
                   thread={thread}
-                  key={thread.id}
                   currentUser={currentUser}
                   active={active === thread.id}
                 />

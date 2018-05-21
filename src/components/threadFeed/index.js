@@ -308,9 +308,8 @@ class ThreadFeedPure extends React.Component<Props, State> {
           >
             {uniqueThreads.map(thread => {
               return (
-                <SentryErrorBoundary fallbackComponent={null}>
+                <SentryErrorBoundary fallbackComponent={null} key={thread.id}>
                   <InboxThread
-                    key={thread.id}
                     data={thread}
                     viewContext={viewContext}
                     hasActiveCommunity={
