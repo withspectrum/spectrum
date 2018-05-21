@@ -270,3 +270,25 @@ export const CloseRequest = styled(IconButton)`
   margin-left: 8px;
   color: ${props => props.theme.text.placeholder};
 `;
+
+export const ButtonsRow = styled.div`
+  display: flex;
+  align-items: center;
+  align-content: stretch;
+  padding: 0 16px;
+
+  div {
+    display: flex;
+    flex: 1 0 auto;
+    margin-right: 8px;
+  }
+
+  div:last-child {
+    margin-right: 0;
+  }
+
+  button {
+    display: flex;
+    flex: 1 0 auto;
+  }
+`;
