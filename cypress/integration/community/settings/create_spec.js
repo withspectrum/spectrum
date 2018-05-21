@@ -60,10 +60,14 @@ describe('creating a public community', () => {
       .should('be.visible')
       .should('not.be.disabled')
       .click();
+
+    cy
+      .get('[data-cy="community-creation-invitation-step"]')
+      .should('be.visible');
   });
 });
 
-describe.only('creating a private community', () => {
+describe('creating a private community', () => {
   beforeEach(() => {
     cy.auth(user.id);
     cy.visit(`/new/community`);
@@ -80,14 +84,14 @@ describe.only('creating a private community', () => {
       .scrollIntoView()
       .should('be.visible')
       .click()
-      .type('my public community');
+      .type('my private community');
 
     cy
       .get('[data-cy="community-description-input"]')
       .scrollIntoView()
       .should('be.visible')
       .click()
-      .type('my public description');
+      .type('my private description');
 
     cy
       .get('[data-cy="community-website-input"]')
@@ -133,5 +137,9 @@ describe.only('creating a private community', () => {
       .should('be.visible')
       .should('not.be.disabled')
       .click();
+
+    cy
+      .get('[data-cy="community-creation-invitation-step"]')
+      .should('be.visible');
   });
 });
