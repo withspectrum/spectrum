@@ -10,6 +10,7 @@ import { ListContainer, Notice } from 'src/components/listItems/style';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import { EmailListItem } from '../style';
 import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type State = {
   webPushBlocked: boolean,
@@ -18,7 +19,7 @@ type State = {
 
 type Props = {
   subscribeToWebPush: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   smallOnly?: boolean,
   largeOnly?: boolean,
 };

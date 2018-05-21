@@ -16,13 +16,14 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { MessageIconContainer, UserListItemContainer } from '../style';
 import GranularUserProfile from 'src/components/granularUserProfile';
+import type { Dispatch } from 'redux';
 
 type Props = {
   data: {
     community: GetCommunityMembersType,
     fetchMore: Function,
   },
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isLoading: boolean,
   isFetchingMore: boolean,
   history: Object,

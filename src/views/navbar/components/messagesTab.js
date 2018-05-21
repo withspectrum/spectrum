@@ -10,6 +10,7 @@ import type { GetDirectMessageNotificationsType } from 'shared/graphql/queries/n
 import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
 import { Tab, Label } from '../style';
 import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   active: boolean,
@@ -23,7 +24,7 @@ type Props = {
   subscribeToDMs: Function,
   refetch: Function,
   count: number,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {

@@ -11,6 +11,7 @@ import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import ViewError from '../../../components/viewError';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
+import type { Dispatch } from 'redux';
 import { ListContainer } from '../style';
 import {
   SectionCard,
@@ -23,7 +24,7 @@ type Props = {
     community: GetCommunityChannelConnectionType,
   },
   isLoading: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   communitySlug: string,
 };
 

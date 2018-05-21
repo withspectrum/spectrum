@@ -19,6 +19,7 @@ import {
 } from '../../../../components/formElements';
 import { ImageInputWrapper } from '../../../../components/editForm/style';
 import { Actions, FormContainer, Form } from '../../style';
+import type { Dispatch } from 'redux';
 
 type State = {
   name: string,
@@ -38,7 +39,7 @@ type State = {
 
 type Props = {
   community: GetCommunityType,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   communityUpdated: Function,
   editCommunity: Function,
 };

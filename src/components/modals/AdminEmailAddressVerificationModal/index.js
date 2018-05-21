@@ -15,9 +15,10 @@ import getCommunitySettings, {
 import AdministratorEmailForm from 'src/views/communityBilling/components/administratorEmailForm';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
+import type { Dispatch } from 'redux';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isOpen: boolean,
   currentUser: Object,
   input: Object,
