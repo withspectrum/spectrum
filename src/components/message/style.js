@@ -358,6 +358,7 @@ export const QuotedParagraph = Paragraph.withComponent('div').extend`
   code {
     color: ${props => props.theme.text.alt};
   }
+  /* overrides Bubble component styles to fix #3098 */
   pre {
     margin: 0;
     width: 100%;
