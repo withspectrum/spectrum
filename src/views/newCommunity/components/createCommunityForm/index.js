@@ -453,7 +453,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       : "This community name and url are available! We also found communities that might be similar to what you're trying to create, just in case you would rather join an existing community instead!";
 
     return (
-      <FormContainer>
+      <FormContainer data-cy="create-community-form">
         <Form>
           <ImageInputWrapper>
             <CoverInput
@@ -485,6 +485,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
             onChange={this.changeName}
             autoFocus={!window.innerWidth < 768}
             onBlur={this.checkSuggestedCommunities}
+            dataCy="community-name-input"
           >
             What is your community called?
           </Input>
@@ -497,6 +498,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
             defaultValue={slug}
             onChange={this.changeSlug}
             onBlur={this.checkSuggestedCommunities}
+            dataCy="community-slug-input"
           >
             spectrum.chat/
           </UnderlineInput>
@@ -546,6 +548,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
           <TextArea
             defaultValue={description}
             onChange={this.changeDescription}
+            dataCy="community-description-input"
           >
             Describe it in 140 characters or less
           </TextArea>
@@ -556,7 +559,11 @@ class CreateCommunityForm extends React.Component<Props, State> {
             </Error>
           )}
 
-          <Input defaultValue={website} onChange={this.changeWebsite}>
+          <Input
+            defaultValue={website}
+            onChange={this.changeWebsite}
+            dataCy="community-website-input"
+          >
             Optional: Add your community’s website
           </Input>
 
@@ -568,6 +575,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
                   value="public"
                   checked={!isPrivate}
                   onChange={this.setPublic}
+                  data-cy="community-public-selector-input"
                 />
                 Public
               </PrivacyOptionLabel>
@@ -586,6 +594,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
                   checked={isPrivate}
                   value="private"
                   onChange={this.setPrivate}
+                  data-cy="community-private-selector-input"
                 />
                 Private
               </PrivacyOptionLabel>
@@ -598,7 +607,12 @@ class CreateCommunityForm extends React.Component<Props, State> {
             </PrivacyOption>
           </PrivacySelector>
 
-          <Checkbox id="isPrivate" checked={agreeCoC} onChange={this.changeCoC}>
+          <Checkbox
+            id="isPrivate"
+            checked={agreeCoC}
+            onChange={this.changeCoC}
+            dataCy="community-coc-input"
+          >
             <span>
               I have read the{' '}
               <a
@@ -639,6 +653,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
               !agreeCoC
             }
             loading={isLoading}
+            dataCy="community-create-button"
           >
             Create Community & Continue
           </Button>

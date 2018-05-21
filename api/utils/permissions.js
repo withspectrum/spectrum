@@ -136,6 +136,8 @@ export const canViewCommunity = async (user: DBUser, communityId: string, loader
 
   if (!community.isPrivate) return true
 
+  if (!user) return false
+
   const communityPermissions = await loaders.userPermissionsInCommunity.load([
     user.id,
     communityId,

@@ -206,9 +206,9 @@ class CommunityView extends React.Component<Props, State> {
         }
       }
 
-      if (community.isPrivate && !userHasPermissions) {
+      if (community.isPrivate && (!isLoggedIn || !userHasPermissions)) {
         return (
-          <AppViewWrapper data-cy="community-view">
+          <AppViewWrapper data-cy="community-view-blocked">
             <Head
               title={title}
               description={`The ${community.name} community on Spectrum`}
@@ -272,7 +272,9 @@ class CommunityView extends React.Component<Props, State> {
 
               {!isLoggedIn ? (
                 <Link to={loginUrl}>
-                  <LoginButton>Join {community.name}</LoginButton>
+                  <LoginButton dataCy={'join-community-button-login'}>
+                    Join {community.name}
+                  </LoginButton>
                 </Link>
               ) : !isOwner ? (
                 <ToggleCommunityMembership
@@ -284,6 +286,7 @@ class CommunityView extends React.Component<Props, State> {
                       color={isMember ? 'text.alt' : null}
                       icon={isMember ? 'checkmark' : null}
                       loading={state.isLoading}
+                      dataCy={'join-community-button'}
                     >
                       {isMember ? 'Member' : `Join ${community.name}`}
                     </LoginButton>
