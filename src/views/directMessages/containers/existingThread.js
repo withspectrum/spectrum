@@ -12,7 +12,7 @@ import getDirectMessageThread from 'shared/graphql/queries/directMessageThread/g
 import { MessagesContainer, ViewContent } from '../style';
 import { Loading } from 'src/components/loading';
 import ViewError from 'src/components/viewError';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   data: Object,
@@ -97,9 +97,9 @@ class ExistingThread extends React.Component<Props> {
             <ViewContent
               innerRef={scrollBody => (this.scrollBody = scrollBody)}
             >
-              <SentryErrorBoundary>
+              <ErrorBoundary>
                 <Header thread={thread} currentUser={currentUser} />
-              </SentryErrorBoundary>
+              </ErrorBoundary>
 
               <Messages
                 id={id}

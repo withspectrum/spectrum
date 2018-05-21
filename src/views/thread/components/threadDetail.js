@@ -33,7 +33,7 @@ import {
 } from '../style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
@@ -446,9 +446,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
       <ThreadWrapper>
         <ThreadContent isEditing={isEditing}>
           {/* $FlowFixMe */}
-          <SentryErrorBoundary fallbackComponent={null}>
+          <ErrorBoundary fallbackComponent={null}>
             <ThreadByline author={thread.author} />
-          </SentryErrorBoundary>
+          </ErrorBoundary>
 
           {isEditing ? (
             <Textarea
@@ -495,7 +495,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
           />
         </ThreadContent>
 
-        <SentryErrorBoundary fallbackComponent={null}>
+        <ErrorBoundary fallbackComponent={null}>
           <ActionBar
             toggleEdit={this.toggleEdit}
             currentUser={currentUser}
@@ -510,7 +510,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
             isLockingThread={isLockingThread}
             isPinningThread={isPinningThread}
           />
-        </SentryErrorBoundary>
+        </ErrorBoundary>
       </ThreadWrapper>
     );
   }

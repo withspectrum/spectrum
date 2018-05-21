@@ -22,7 +22,7 @@ import AdministratorEmailForm from './components/administratorEmailForm';
 import Source from './components/source';
 import Invoice from './components/invoice';
 import type { Dispatch } from 'redux';
-import { SentryErrorBoundary, SettingsFallback } from 'src/components/error';
+import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
   currentUser: Object,
@@ -58,13 +58,13 @@ class CommunityMembersSettings extends React.Component<Props> {
         return (
           <SectionsContainer data-cy="community-settings-billing-admin-email-form">
             <Column>
-              <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+              <ErrorBoundary fallbackComponent={SettingsFallback}>
                 <AdministratorEmailForm
                   community={community}
                   id={community.id}
                   data
                 />
-              </SentryErrorBoundary>
+              </ErrorBoundary>
             </Column>
           </SectionsContainer>
         );
@@ -73,7 +73,7 @@ class CommunityMembersSettings extends React.Component<Props> {
       return (
         <SectionsContainer data-cy="community-settings-billing">
           <Column>
-            <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
               <SectionCard>
                 <SectionTitle>Your subscription</SectionTitle>
                 {(community.billingSettings.subscriptions.length === 0 ||
@@ -105,11 +105,11 @@ class CommunityMembersSettings extends React.Component<Props> {
                     )
                 )}
               </SectionCard>
-            </SentryErrorBoundary>
+            </ErrorBoundary>
           </Column>
 
           <Column>
-            <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
               <SectionCard>
                 <SectionTitle>Payment methods</SectionTitle>
                 <SectionSubtitle>
@@ -141,9 +141,9 @@ class CommunityMembersSettings extends React.Component<Props> {
                   />
                 </AddCardSection>
               </SectionCard>
-            </SentryErrorBoundary>
+            </ErrorBoundary>
 
-            <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
               <SectionCard>
                 <SectionTitle>Payment history</SectionTitle>
                 {community.billingSettings.invoices.length === 0 && (
@@ -156,9 +156,9 @@ class CommunityMembersSettings extends React.Component<Props> {
                     invoice && <Invoice key={invoice.id} invoice={invoice} />
                 )}
               </SectionCard>
-            </SentryErrorBoundary>
+            </ErrorBoundary>
 
-            <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
               {community.billingSettings.subscriptions.length > 0 &&
                 community.billingSettings.subscriptions[0].items.length > 0 && (
                   <SectionCard>
@@ -178,7 +178,7 @@ class CommunityMembersSettings extends React.Component<Props> {
                     </SectionCardFooter>
                   </SectionCard>
                 )}
-            </SentryErrorBoundary>
+            </ErrorBoundary>
           </Column>
         </SectionsContainer>
       );

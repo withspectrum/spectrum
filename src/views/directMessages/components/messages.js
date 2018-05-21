@@ -11,7 +11,7 @@ import type { GetDirectMessageThreadMessageConnectionType } from 'shared/graphql
 import setLastSeenMutation from 'shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';
 import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
 import { MessagesScrollWrapper } from './style';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   id: string,
@@ -124,7 +124,7 @@ class MessagesWithData extends React.Component<Props, State> {
 
       return (
         <MessagesScrollWrapper>
-          <SentryErrorBoundary>
+          <ErrorBoundary>
             {hasNextPage && (
               <NextPageButton
                 isFetchingMore={isFetchingMore}
@@ -139,7 +139,7 @@ class MessagesWithData extends React.Component<Props, State> {
               threadId={this.props.id}
               threadType={'directMessageThread'}
             />
-          </SentryErrorBoundary>
+          </ErrorBoundary>
         </MessagesScrollWrapper>
       );
     }

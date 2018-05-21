@@ -11,7 +11,7 @@ import CommunitySearchWrapper from './components/communitySearchWrapper';
 import { Wrapper } from './style';
 import { Charts } from './view';
 import { track, events } from 'src/helpers/analytics';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   currentUser?: Object,
@@ -36,18 +36,18 @@ class Explore extends React.Component<Props> {
         <Wrapper data-cy="explore-page" id="main">
           <Head title={title} description={description} />
           <Titlebar title={'Explore'} noComposer />
-          <SentryErrorBoundary fallbackComponent={null}>
+          <ErrorBoundary fallbackComponent={null}>
             <CommunitySearchWrapper
               currentUser={this.props.currentUser}
               redirectPath={window.location}
             >
               <Search />
             </CommunitySearchWrapper>
-          </SentryErrorBoundary>
+          </ErrorBoundary>
 
-          <SentryErrorBoundary>
+          <ErrorBoundary>
             <Charts />
-          </SentryErrorBoundary>
+          </ErrorBoundary>
         </Wrapper>
       </AppViewWrapper>
     );

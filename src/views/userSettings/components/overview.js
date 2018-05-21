@@ -9,7 +9,7 @@ import DeleteAccountForm from './deleteAccountForm';
 import DownloadDataForm from './downloadDataForm';
 import RecurringPaymentsList from './recurringPaymentsList';
 import { SectionsContainer, Column } from 'src/components/settingsViews/style';
-import { SentryErrorBoundary, SettingsFallback } from 'src/components/error';
+import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
   user: GetCurrentUserSettingsType,
@@ -22,35 +22,35 @@ class Overview extends React.Component<Props> {
     return (
       <SectionsContainer>
         <Column>
-          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
             <UserEditForm user={user} />
-          </SentryErrorBoundary>
+          </ErrorBoundary>
 
-          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
             <DeleteAccountForm id={user.id} />
-          </SentryErrorBoundary>
+          </ErrorBoundary>
 
-          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
             <DownloadDataForm user={user} />
-          </SentryErrorBoundary>
+          </ErrorBoundary>
         </Column>
         <Column>
-          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
             <RecurringPaymentsList user={user} />
-          </SentryErrorBoundary>
+          </ErrorBoundary>
 
-          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
             <EmailSettings user={user} />
-          </SentryErrorBoundary>
+          </ErrorBoundary>
 
-          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
             {'serviceWorker' in navigator &&
               'PushManager' in window && <NotificationSettings largeOnly />}
-          </SentryErrorBoundary>
+          </ErrorBoundary>
 
-          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
             <Invoices />
-          </SentryErrorBoundary>
+          </ErrorBoundary>
         </Column>
       </SectionsContainer>
     );

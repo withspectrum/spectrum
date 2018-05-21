@@ -7,7 +7,7 @@ import Badge from '../badges';
 import Avatar from '../avatar';
 import Message from '../message';
 import type { Dispatch } from 'redux';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 import MessageErrorFallback from '../message/messageErrorFallback';
 
 import {
@@ -241,7 +241,7 @@ class Messages extends Component<MessageGroupProps, State> {
                   />
                   {group.map(message => {
                     return (
-                      <SentryErrorBoundary
+                      <ErrorBoundary
                         fallbackComponent={() => (
                           <MessageErrorFallback me={me} />
                         )}
@@ -260,7 +260,7 @@ class Messages extends Component<MessageGroupProps, State> {
                           selectedId={this.state.selectedMessage}
                           changeSelection={this.toggleSelectedMessage}
                         />
-                      </SentryErrorBoundary>
+                      </ErrorBoundary>
                     );
                   })}
                 </MessageGroup>

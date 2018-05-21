@@ -24,7 +24,7 @@ import {
   MiniLinkPreview,
   EllipsisText,
 } from '../style';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   active: boolean,
@@ -140,7 +140,7 @@ class InboxThread extends React.Component<Props> {
     }
 
     return (
-      <SentryErrorBoundary fallbackComponent={null}>
+      <ErrorBoundary fallbackComponent={null}>
         <InboxThreadItem active={active}>
           <InboxLinkWrapper
             to={{
@@ -158,7 +158,7 @@ class InboxThread extends React.Component<Props> {
             }
           />
           <InboxThreadContent>
-            <SentryErrorBoundary fallbackComponent={null}>
+            <ErrorBoundary fallbackComponent={null}>
               <ThreadCommunityInfo
                 thread={data}
                 active={active}
@@ -166,13 +166,13 @@ class InboxThread extends React.Component<Props> {
                 activeChannel={hasActiveChannel}
                 isPinned={isPinned}
               />
-            </SentryErrorBoundary>
+            </ErrorBoundary>
 
             <ThreadTitle active={active}>
               {truncate(data.content.title, 80)}
             </ThreadTitle>
 
-            <SentryErrorBoundary fallbackComponent={null}>
+            <ErrorBoundary fallbackComponent={null}>
               {attachmentsExist &&
                 attachments
                   .filter(att => att && att.attachmentType === 'linkPreview')
@@ -191,24 +191,24 @@ class InboxThread extends React.Component<Props> {
                       </AttachmentsContainer>
                     );
                   })}
-            </SentryErrorBoundary>
+            </ErrorBoundary>
 
             <ThreadMeta>
               {(participantsExist || author) && (
-                <SentryErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null}>
                   <Facepile
                     active={active}
                     participants={participants}
                     author={data.author.user}
                   />
-                </SentryErrorBoundary>
+                </ErrorBoundary>
               )}
 
               {this.generatePillOrMessageCount()}
             </ThreadMeta>
           </InboxThreadContent>
         </InboxThreadItem>
-      </SentryErrorBoundary>
+      </ErrorBoundary>
     );
   }
 }
@@ -225,7 +225,7 @@ class WatercoolerThreadPure extends React.Component<Props> {
     const participantsExist = participants && participants.length > 0;
 
     return (
-      <SentryErrorBoundary fallbackComponent={null}>
+      <ErrorBoundary fallbackComponent={null}>
         <InboxThreadItem active={active}>
           <InboxLinkWrapper
             to={{
@@ -248,13 +248,13 @@ class WatercoolerThreadPure extends React.Component<Props> {
 
             <ThreadMeta>
               {(participantsExist || author) && (
-                <SentryErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null}>
                   <Facepile
                     active={active}
                     participants={participants}
                     author={author.user}
                   />
-                </SentryErrorBoundary>
+                </ErrorBoundary>
               )}
 
               {messageCount > 0 && (
@@ -267,7 +267,7 @@ class WatercoolerThreadPure extends React.Component<Props> {
             </ThreadMeta>
           </InboxThreadContent>
         </InboxThreadItem>
-      </SentryErrorBoundary>
+      </ErrorBoundary>
     );
   }
 }

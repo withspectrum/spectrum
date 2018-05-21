@@ -2,7 +2,7 @@
 // This component is shown as a full replacement for the entire app in production whenever an error happens that would otherwise crash the app
 import React from 'react';
 import ViewError from '../viewError';
-import SentryErrorBoundary from './SentryErrorBoundary';
+import ErrorBoundary from './ErrorBoundary';
 import SettingsFallback from './SettingsFallback';
 
 const BlueScreen = () => {
@@ -17,5 +17,5 @@ const BlueScreen = () => {
   );
 };
 
-export { SentryErrorBoundary, SettingsFallback };
+export { ErrorBoundary, SettingsFallback };
 export default BlueScreen;

@@ -39,7 +39,7 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   markAllNotificationsSeen?: Function,
@@ -240,112 +240,112 @@ class NotificationsPure extends React.Component<Props, State> {
                 switch (notification.event) {
                   case 'MESSAGE_CREATED': {
                     return (
-                      <SentryErrorBoundary fallbackComponent={null}>
+                      <ErrorBoundary fallbackComponent={null}>
                         <NewMessageNotification
                           key={notification.id}
                           notification={notification}
                           currentUser={currentUser}
                         />
-                      </SentryErrorBoundary>
+                      </ErrorBoundary>
                     );
                   }
                   case 'REACTION_CREATED': {
                     return (
-                      <SentryErrorBoundary fallbackComponent={null}>
+                      <ErrorBoundary fallbackComponent={null}>
                         <NewReactionNotification
                           key={notification.id}
                           notification={notification}
                           currentUser={currentUser}
                         />
-                      </SentryErrorBoundary>
+                      </ErrorBoundary>
                     );
                   }
                   case 'CHANNEL_CREATED': {
                     return (
-                      <SentryErrorBoundary fallbackComponent={null}>
+                      <ErrorBoundary fallbackComponent={null}>
                         <NewChannelNotification
                           key={notification.id}
                           notification={notification}
                           currentUser={currentUser}
                         />
-                      </SentryErrorBoundary>
+                      </ErrorBoundary>
                     );
                   }
                   case 'USER_JOINED_COMMUNITY': {
                     return (
-                      <SentryErrorBoundary fallbackComponent={null}>
+                      <ErrorBoundary fallbackComponent={null}>
                         <NewUserInCommunityNotification
                           key={notification.id}
                           notification={notification}
                           currentUser={currentUser}
                         />
-                      </SentryErrorBoundary>
+                      </ErrorBoundary>
                     );
                   }
                   case 'THREAD_CREATED': {
                     return (
-                      <SentryErrorBoundary fallbackComponent={null}>
+                      <ErrorBoundary fallbackComponent={null}>
                         <NewThreadNotification
                           key={notification.id}
                           notification={notification}
                           currentUser={currentUser}
                         />
-                      </SentryErrorBoundary>
+                      </ErrorBoundary>
                     );
                   }
                   case 'COMMUNITY_INVITE': {
                     return (
-                      <SentryErrorBoundary fallbackComponent={null}>
+                      <ErrorBoundary fallbackComponent={null}>
                         <CommunityInviteNotification
                           key={notification.id}
                           notification={notification}
                           currentUser={currentUser}
                         />
-                      </SentryErrorBoundary>
+                      </ErrorBoundary>
                     );
                   }
                   case 'MENTION_MESSAGE': {
                     return (
-                      <SentryErrorBoundary fallbackComponent={null}>
+                      <ErrorBoundary fallbackComponent={null}>
                         <MentionMessageNotification
                           key={notification.id}
                           notification={notification}
                           currentUser={currentUser}
                         />
-                      </SentryErrorBoundary>
+                      </ErrorBoundary>
                     );
                   }
                   case 'MENTION_THREAD': {
                     return (
-                      <SentryErrorBoundary fallbackComponent={null}>
+                      <ErrorBoundary fallbackComponent={null}>
                         <MentionThreadNotification
                           key={notification.id}
                           notification={notification}
                           currentUser={currentUser}
                         />
-                      </SentryErrorBoundary>
+                      </ErrorBoundary>
                     );
                   }
                   case 'PRIVATE_CHANNEL_REQUEST_SENT': {
                     return (
-                      <SentryErrorBoundary fallbackComponent={null}>
+                      <ErrorBoundary fallbackComponent={null}>
                         <PrivateChannelRequestSent
                           key={notification.id}
                           notification={notification}
                           currentUser={currentUser}
                         />
-                      </SentryErrorBoundary>
+                      </ErrorBoundary>
                     );
                   }
                   case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
                     return (
-                      <SentryErrorBoundary fallbackComponent={null}>
+                      <ErrorBoundary fallbackComponent={null}>
                         <PrivateChannelRequestApproved
                           key={notification.id}
                           notification={notification}
                           currentUser={currentUser}
                         />
-                      </SentryErrorBoundary>
+                      </ErrorBoundary>
                     );
                   }
                   default: {

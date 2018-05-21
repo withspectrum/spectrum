@@ -37,7 +37,7 @@ import {
   WatercoolerAvatar,
 } from './style';
 import WatercoolerActionBar from './components/watercoolerActionBar';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   data: {
@@ -338,7 +338,7 @@ class ThreadContainer extends React.Component<Props, State> {
 
       if (channelPermissions.isBlocked || communityPermissions.isBlocked) {
         return (
-          <SentryErrorBoundary>
+          <ErrorBoundary>
             <ThreadViewContainer
               threadViewContext={threadViewContext}
               constrain={
@@ -357,13 +357,13 @@ class ThreadContainer extends React.Component<Props, State> {
                 />
               </ThreadContentView>
             </ThreadViewContainer>
-          </SentryErrorBoundary>
+          </ErrorBoundary>
         );
       }
 
       if (thread.watercooler)
         return (
-          <SentryErrorBoundary>
+          <ErrorBoundary>
             <ThreadViewContainer
               data-cy="thread-view"
               constrain={
@@ -454,11 +454,11 @@ class ThreadContainer extends React.Component<Props, State> {
                 {this.renderChatInputOrUpsell()}
               </ThreadContentView>
             </ThreadViewContainer>
-          </SentryErrorBoundary>
+          </ErrorBoundary>
         );
 
       return (
-        <SentryErrorBoundary>
+        <ErrorBoundary>
           <ThreadViewContainer
             data-cy="thread-view"
             constrain={
@@ -537,7 +537,7 @@ class ThreadContainer extends React.Component<Props, State> {
               {this.renderChatInputOrUpsell()}
             </ThreadContentView>
           </ThreadViewContainer>
-        </SentryErrorBoundary>
+        </ErrorBoundary>
       );
     }
 
@@ -546,7 +546,7 @@ class ThreadContainer extends React.Component<Props, State> {
     }
 
     return (
-      <SentryErrorBoundary>
+      <ErrorBoundary>
         <ThreadViewContainer
           threadViewContext={threadViewContext}
           data-cy="null-thread-view"
@@ -566,7 +566,7 @@ class ThreadContainer extends React.Component<Props, State> {
             />
           </ThreadContentView>
         </ThreadViewContainer>
-      </SentryErrorBoundary>
+      </ErrorBoundary>
     );
   }
 }

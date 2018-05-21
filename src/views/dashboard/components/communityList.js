@@ -25,7 +25,7 @@ import {
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   dispatch: Dispatch<Object>,
@@ -105,7 +105,7 @@ class CommunityList extends React.Component<Props> {
             <CommunityListName>Everything</CommunityListName>
           </CommunityListItem>
           {sortedCommunities.map(c => (
-            <SentryErrorBoundary fallbackComponent={null} key={c.id}>
+            <ErrorBoundary fallbackComponent={null} key={c.id}>
               <CommunityListItem
                 onClick={() => this.handleOnClick(c.id)}
                 active={c.id === activeCommunity}
@@ -125,7 +125,7 @@ class CommunityList extends React.Component<Props> {
                 </CommunityListMeta>
 
                 {c.id === activeCommunity && (
-                  <SentryErrorBoundary>
+                  <ErrorBoundary>
                     <SidebarChannels
                       activeChannel={activeChannel}
                       communitySlug={c.slug}
@@ -134,10 +134,10 @@ class CommunityList extends React.Component<Props> {
                       id={c.id}
                       setActiveChannelObject={this.props.setActiveChannelObject}
                     />
-                  </SentryErrorBoundary>
+                  </ErrorBoundary>
                 )}
               </CommunityListItem>
-            </SentryErrorBoundary>
+            </ErrorBoundary>
           ))}
         </CommunityListScroller>
 
@@ -153,14 +153,14 @@ class CommunityList extends React.Component<Props> {
           </Link>
           {// if user has joined less than 5 communities, upsell some popular ones
           communities.length < 5 && (
-            <SentryErrorBoundary fallbackComponent={null}>
+            <ErrorBoundary fallbackComponent={null}>
               <UpsellExploreCommunities
                 activeCommunity={activeCommunity}
                 communities={communities}
                 handleOnClick={this.handleOnClick}
                 curatedContentType={'top-communities-by-members'}
               />
-            </SentryErrorBoundary>
+            </ErrorBoundary>
           )}
         </Fixed>
       </CommunityListWrapper>

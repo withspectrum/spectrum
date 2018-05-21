@@ -33,7 +33,7 @@ import {
   Sidebar,
 } from './style';
 import { track, events } from 'src/helpers/analytics';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
   DashboardThreadFeed
@@ -154,18 +154,18 @@ class Dashboard extends React.Component<Props, State> {
           <Head title={title} description={description} />
           <Titlebar hasChildren hasSearch filter={searchFilter}>
             <Menu darkContext hasTabBar>
-              <SentryErrorBoundary>
+              <ErrorBoundary>
                 <CommunityList
                   communities={communities}
                   user={user}
                   activeCommunity={activeCommunity}
                   activeChannel={activeChannel}
                 />
-              </SentryErrorBoundary>
+              </ErrorBoundary>
             </Menu>
           </Titlebar>
           <Sidebar>
-            <SentryErrorBoundary>
+            <ErrorBoundary>
               <CommunityList
                 communities={communities}
                 user={user}
@@ -173,11 +173,11 @@ class Dashboard extends React.Component<Props, State> {
                 activeChannel={activeChannel}
                 setActiveChannelObject={this.setActiveChannelObject}
               />
-            </SentryErrorBoundary>
+            </ErrorBoundary>
           </Sidebar>
           <InboxWrapper>
             <FeedHeaderContainer>
-              <SentryErrorBoundary>
+              <ErrorBoundary>
                 <Header
                   filter={searchFilter}
                   communities={communities}
@@ -187,7 +187,7 @@ class Dashboard extends React.Component<Props, State> {
                   activeChannel={activeChannel}
                   activeChannelObject={activeChannelObject}
                 />
-              </SentryErrorBoundary>
+              </ErrorBoundary>
             </FeedHeaderContainer>
             {newActivityIndicator && (
               <NewActivityIndicator elem="scroller-for-inbox" />
@@ -202,28 +202,28 @@ class Dashboard extends React.Component<Props, State> {
               {searchQueryString &&
                 searchQueryString.length > 0 &&
                 searchFilter && (
-                  <SentryErrorBoundary>
+                  <ErrorBoundary>
                     <SearchThreadFeed
                       queryString={searchQueryString}
                       filter={searchFilter}
                       selectedId={activeThread}
                     />
-                  </SentryErrorBoundary>
+                  </ErrorBoundary>
                 )}
 
               {// no community, no search results
               !activeCommunity &&
                 !searchQueryString && (
-                  <SentryErrorBoundary>
+                  <ErrorBoundary>
                     <EverythingThreadFeed selectedId={activeThread} />
-                  </SentryErrorBoundary>
+                  </ErrorBoundary>
                 )}
 
               {// community, no channel, no search results
               activeCommunity &&
                 !activeChannel &&
                 !searchQueryString && (
-                  <SentryErrorBoundary>
+                  <ErrorBoundary>
                     <CommunityThreadFeed
                       id={activeCommunity}
                       selectedId={activeThread}
@@ -234,14 +234,14 @@ class Dashboard extends React.Component<Props, State> {
                         activeCommunityObject.pinnedThreadId
                       }
                     />
-                  </SentryErrorBoundary>
+                  </ErrorBoundary>
                 )}
 
               {// channel and community, no search results
               activeChannel &&
                 activeCommunity &&
                 !searchQueryString && (
-                  <SentryErrorBoundary>
+                  <ErrorBoundary>
                     <ChannelThreadFeed
                       id={activeChannel}
                       selectedId={activeThread}
@@ -254,14 +254,14 @@ class Dashboard extends React.Component<Props, State> {
                       }
                       channelId={activeChannel}
                     />
-                  </SentryErrorBoundary>
+                  </ErrorBoundary>
                 )}
             </InboxScroller>
           </InboxWrapper>
 
           <ThreadWrapper>
             <ThreadScroller id="scroller-for-inbox-thread-view">
-              <SentryErrorBoundary>
+              <ErrorBoundary>
                 <DashboardThread
                   threadId={activeThread}
                   activeCommunity={
@@ -269,7 +269,7 @@ class Dashboard extends React.Component<Props, State> {
                   }
                   activeChannel={activeChannel}
                 />
-              </SentryErrorBoundary>
+              </ErrorBoundary>
             </ThreadScroller>
           </ThreadWrapper>
         </DashboardWrapper>

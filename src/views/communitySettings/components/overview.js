@@ -5,7 +5,7 @@ import ChannelList from './channelList';
 import BrandedLogin from './brandedLogin';
 import { SectionsContainer, Column } from 'src/components/settingsViews/style';
 import SlackSettings from './slack';
-import { SentryErrorBoundary, SettingsFallback } from 'src/components/error';
+import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
   communitySlug: string,
@@ -19,22 +19,22 @@ class Overview extends React.Component<Props> {
     return (
       <SectionsContainer>
         <Column>
-          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
             <EditForm community={community} />
-          </SentryErrorBoundary>
+          </ErrorBoundary>
 
-          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
             <ChannelList id={community.id} communitySlug={communitySlug} />
-          </SentryErrorBoundary>
+          </ErrorBoundary>
         </Column>
         <Column>
-          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
             <SlackSettings id={community.id} />
-          </SentryErrorBoundary>
+          </ErrorBoundary>
 
-          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
             <BrandedLogin id={community.id} />
-          </SentryErrorBoundary>
+          </ErrorBoundary>
         </Column>
       </SectionsContainer>
     );

@@ -12,7 +12,7 @@ type Props = {
   fallbackComponent?: ?any,
 };
 
-class SentryErrorBoundary extends React.Component<Props, State> {
+class ErrorBoundary extends React.Component<Props, State> {
   state = { error: null };
 
   componentDidCatch = (error: any, errorInfo: any) => {
@@ -41,4 +41,4 @@ class SentryErrorBoundary extends React.Component<Props, State> {
   }
 }
 
-export default SentryErrorBoundary;
+export default ErrorBoundary;

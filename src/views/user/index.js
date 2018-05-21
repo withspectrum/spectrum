@@ -36,7 +36,7 @@ import {
   DesktopSegment,
   MobileSegment,
 } from '../../components/segmentedControl';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 
 const ThreadFeedWithData = compose(connect(), getUserThreads)(ThreadFeed);
 const ThreadParticipantFeedWithData = compose(connect(), getUserThreads)(
@@ -152,13 +152,13 @@ class UserView extends React.Component<Props, State> {
           <Grid id="main">
             <CoverPhoto src={user.coverPhoto} />
             <Meta>
-              <SentryErrorBoundary fallbackComponent={null}>
+              <ErrorBoundary fallbackComponent={null}>
                 <UserProfile
                   data={{ user }}
                   username={username}
                   profileSize="full"
                 />
-              </SentryErrorBoundary>
+              </ErrorBoundary>
 
               {currentUser &&
                 user.id !== currentUser.id && (
@@ -173,7 +173,7 @@ class UserView extends React.Component<Props, State> {
                   </Link>
                 )}
 
-              <SentryErrorBoundary fallbackComponent={null}>
+              <ErrorBoundary fallbackComponent={null}>
                 <MetaMemberships>
                   <ColumnHeading>Member of</ColumnHeading>
                   <CommunityList
@@ -182,7 +182,7 @@ class UserView extends React.Component<Props, State> {
                     id={user.id}
                   />
                 </MetaMemberships>
-              </SentryErrorBoundary>
+              </ErrorBoundary>
             </Meta>
             <Content>
               <SegmentedControl style={{ margin: '16px 0 0 0' }}>
@@ -251,14 +251,14 @@ class UserView extends React.Component<Props, State> {
               {!hasThreads && <NullState bg="null" heading={nullHeading} />}
             </Content>
             <Extras>
-              <SentryErrorBoundary fallbackComponent={null}>
+              <ErrorBoundary fallbackComponent={null}>
                 <ColumnHeading>Member of</ColumnHeading>
                 <CommunityList
                   currentUser={currentUser}
                   user={user}
                   id={user.id}
                 />
-              </SentryErrorBoundary>
+              </ErrorBoundary>
             </Extras>
           </Grid>
         </AppViewWrapper>

@@ -17,7 +17,7 @@ import {
 } from './style';
 import Icon from '../../components/icons';
 import ThreadContainer from '../thread';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 
 const ANIMATION_DURATION = 50;
 
@@ -61,7 +61,7 @@ class ThreadSlider extends Component {
     const threadId = parsed.thread;
 
     return (
-      <SentryErrorBoundary>
+      <ErrorBoundary>
         <div>
           <Transition in={!!threadId} timeout={ANIMATION_DURATION}>
             {state => (
@@ -105,7 +105,7 @@ class ThreadSlider extends Component {
             )}
           </Transition>
         </div>
-      </SentryErrorBoundary>
+      </ErrorBoundary>
     );
   }
 }

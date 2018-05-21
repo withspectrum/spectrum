@@ -22,7 +22,7 @@ import {
 } from '../style';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   dispatch: Dispatch<Object>,
@@ -124,7 +124,7 @@ class SidebarChannels extends React.Component<Props> {
             sortedChannels.length > 1 &&
             sortedChannels.map(channel => {
               return (
-                <SentryErrorBoundary fallbackComponent={null} key={channel.id}>
+                <ErrorBoundary fallbackComponent={null} key={channel.id}>
                   <ChannelListItem
                     active={activeChannel === channel.id}
                     onClick={evt => {
@@ -141,7 +141,7 @@ class SidebarChannels extends React.Component<Props> {
 
                     <CommunityListName>{channel.name}</CommunityListName>
                   </ChannelListItem>
-                </SentryErrorBoundary>
+                </ErrorBoundary>
               );
             })}
         </ChannelsContainer>

@@ -35,7 +35,7 @@ import {
   Lock,
   SidebarChannelPill,
 } from '../style';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 
 type RecommendedThread = {
   node: GetThreadType,
@@ -97,7 +97,7 @@ class Sidebar extends React.Component<Props> {
     return (
       <ThreadSidebarView>
         {!currentUser && (
-          <SentryErrorBoundary fallbackComponent={null}>
+          <ErrorBoundary fallbackComponent={null}>
             <SidebarSection data-cy="thread-sidebar-login">
               <SidebarSectionTitle>Join the conversation</SidebarSectionTitle>
               <SidebarSectionBody>
@@ -117,10 +117,10 @@ class Sidebar extends React.Component<Props> {
                 </Link>
               </SidebarSectionAuth>
             </SidebarSection>
-          </SentryErrorBoundary>
+          </ErrorBoundary>
         )}
 
-        <SentryErrorBoundary fallbackComponent={null}>
+        <ErrorBoundary fallbackComponent={null}>
           <SidebarSection data-cy="thread-sidebar-community-info">
             <Link to={`/${thread.community.slug}`}>
               <SidebarCommunityCover src={thread.community.coverPhoto} />
@@ -185,17 +185,17 @@ class Sidebar extends React.Component<Props> {
               )}
             </SidebarSectionActions>
           </SidebarSection>
-        </SentryErrorBoundary>
+        </ErrorBoundary>
 
         {threadsToRender &&
           threadsToRender.length > 0 && (
-            <SentryErrorBoundary fallbackComponent={null}>
+            <ErrorBoundary fallbackComponent={null}>
               <SidebarSection data-cy="thread-sidebar-more-threads">
                 <SidebarSectionTitle>More conversations</SidebarSectionTitle>
                 <SidebarRelatedThreadList>
                   {threadsToRender.map(t => {
                     return (
-                      <SentryErrorBoundary fallbackComponent={null}>
+                      <ErrorBoundary fallbackComponent={null}>
                         <SidebarRelatedThread key={t.id}>
                           <Link
                             to={{
@@ -210,12 +210,12 @@ class Sidebar extends React.Component<Props> {
                             </RelatedCount>
                           </Link>
                         </SidebarRelatedThread>
-                      </SentryErrorBoundary>
+                      </ErrorBoundary>
                     );
                   })}
                 </SidebarRelatedThreadList>
               </SidebarSection>
-            </SentryErrorBoundary>
+            </ErrorBoundary>
           )}
       </ThreadSidebarView>
     );

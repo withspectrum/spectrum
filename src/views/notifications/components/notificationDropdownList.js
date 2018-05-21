@@ -13,7 +13,7 @@ import { MiniMentionMessageNotification } from './mentionMessageNotification';
 import { MiniMentionThreadNotification } from './mentionThreadNotification';
 import { MiniPrivateChannelRequestSent } from './privateChannelRequestSentNotification';
 import { MiniPrivateChannelRequestApproved } from './privateChannelRequestApprovedNotification';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   rawNotifications: Array<Object>,
@@ -45,31 +45,31 @@ export class NotificationDropdownList extends React.Component<Props> {
           switch (notification.event) {
             case 'MESSAGE_CREATED': {
               return (
-                <SentryErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null}>
                   <MiniNewMessageNotification
                     key={notification.id}
                     notification={notification}
                     currentUser={currentUser}
                     history={history}
                   />
-                </SentryErrorBoundary>
+                </ErrorBoundary>
               );
             }
             case 'REACTION_CREATED': {
               return (
-                <SentryErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null}>
                   <MiniNewReactionNotification
                     key={notification.id}
                     notification={notification}
                     currentUser={currentUser}
                     history={history}
                   />
-                </SentryErrorBoundary>
+                </ErrorBoundary>
               );
             }
             case 'CHANNEL_CREATED': {
               return (
-                <SentryErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null}>
                   <MiniNewChannelNotification
                     key={notification.id}
                     notification={notification}
@@ -79,12 +79,12 @@ export class NotificationDropdownList extends React.Component<Props> {
                       markSingleNotificationAsSeenInState
                     }
                   />
-                </SentryErrorBoundary>
+                </ErrorBoundary>
               );
             }
             case 'USER_JOINED_COMMUNITY': {
               return (
-                <SentryErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null}>
                   <MiniNewUserInCommunityNotification
                     key={notification.id}
                     notification={notification}
@@ -94,12 +94,12 @@ export class NotificationDropdownList extends React.Component<Props> {
                       markSingleNotificationAsSeenInState
                     }
                   />
-                </SentryErrorBoundary>
+                </ErrorBoundary>
               );
             }
             case 'THREAD_CREATED': {
               return (
-                <SentryErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null}>
                   <MiniNewThreadNotification
                     key={notification.id}
                     notification={notification}
@@ -109,12 +109,12 @@ export class NotificationDropdownList extends React.Component<Props> {
                       markSingleNotificationAsSeenInState
                     }
                   />
-                </SentryErrorBoundary>
+                </ErrorBoundary>
               );
             }
             case 'COMMUNITY_INVITE': {
               return (
-                <SentryErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null}>
                   <MiniCommunityInviteNotification
                     key={notification.id}
                     notification={notification}
@@ -124,36 +124,36 @@ export class NotificationDropdownList extends React.Component<Props> {
                       markSingleNotificationAsSeenInState
                     }
                   />
-                </SentryErrorBoundary>
+                </ErrorBoundary>
               );
             }
             case 'MENTION_THREAD': {
               return (
-                <SentryErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null}>
                   <MiniMentionThreadNotification
                     key={notification.id}
                     notification={notification}
                     currentUser={currentUser}
                     history={history}
                   />
-                </SentryErrorBoundary>
+                </ErrorBoundary>
               );
             }
             case 'MENTION_MESSAGE': {
               return (
-                <SentryErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null}>
                   <MiniMentionMessageNotification
                     key={notification.id}
                     notification={notification}
                     currentUser={currentUser}
                     history={history}
                   />
-                </SentryErrorBoundary>
+                </ErrorBoundary>
               );
             }
             case 'PRIVATE_CHANNEL_REQUEST_SENT': {
               return (
-                <SentryErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null}>
                   <MiniPrivateChannelRequestSent
                     key={notification.id}
                     notification={notification}
@@ -163,12 +163,12 @@ export class NotificationDropdownList extends React.Component<Props> {
                       markSingleNotificationAsSeenInState
                     }
                   />
-                </SentryErrorBoundary>
+                </ErrorBoundary>
               );
             }
             case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
               return (
-                <SentryErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null}>
                   <MiniPrivateChannelRequestApproved
                     key={notification.id}
                     notification={notification}
@@ -178,7 +178,7 @@ export class NotificationDropdownList extends React.Component<Props> {
                       markSingleNotificationAsSeenInState
                     }
                   />
-                </SentryErrorBoundary>
+                </ErrorBoundary>
               );
             }
             default: {

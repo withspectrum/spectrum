@@ -17,7 +17,7 @@ import ViewError from '../viewError';
 import { Upsell, UpsellHeader, UpsellFooter } from './style';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import type { Dispatch } from 'redux';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 
 const NullState = ({ viewContext, search }) => {
   let hd;
@@ -268,7 +268,7 @@ class ThreadFeedPure extends React.Component<Props, State> {
           {this.props.data.community &&
             this.props.data.community.pinnedThread &&
             this.props.data.community.pinnedThread.id && (
-              <SentryErrorBoundary fallbackComponent={null}>
+              <ErrorBoundary fallbackComponent={null}>
                 <InboxThread
                   data={this.props.data.community.pinnedThread}
                   viewContext={viewContext}
@@ -277,13 +277,13 @@ class ThreadFeedPure extends React.Component<Props, State> {
                     viewContext === 'community' && this.props.data.community
                   }
                 />
-              </SentryErrorBoundary>
+              </ErrorBoundary>
             )}
 
           {this.props.data.community &&
             this.props.data.community.watercooler &&
             this.props.data.community.watercooler.id && (
-              <SentryErrorBoundary fallbackComponent={null}>
+              <ErrorBoundary fallbackComponent={null}>
                 <InboxThread
                   data={this.props.data.community.watercooler}
                   viewContext={viewContext}
@@ -291,7 +291,7 @@ class ThreadFeedPure extends React.Component<Props, State> {
                     viewContext === 'community' && this.props.data.community
                   }
                 />
-              </SentryErrorBoundary>
+              </ErrorBoundary>
             )}
 
           <InfiniteList
@@ -308,7 +308,7 @@ class ThreadFeedPure extends React.Component<Props, State> {
           >
             {uniqueThreads.map(thread => {
               return (
-                <SentryErrorBoundary fallbackComponent={null} key={thread.id}>
+                <ErrorBoundary fallbackComponent={null} key={thread.id}>
                   <InboxThread
                     data={thread}
                     viewContext={viewContext}
@@ -319,7 +319,7 @@ class ThreadFeedPure extends React.Component<Props, State> {
                       viewContext === 'channel' && this.props.data.channel
                     }
                   />
-                </SentryErrorBoundary>
+                </ErrorBoundary>
               );
             })}
           </InfiniteList>

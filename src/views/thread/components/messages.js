@@ -16,7 +16,7 @@ import NextPageButton from 'src/components/nextPageButton';
 import { ChatWrapper, NullMessagesWrapper, NullCopy } from '../style';
 import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
-import { SentryErrorBoundary } from 'src/components/error';
+import { ErrorBoundary } from 'src/components/error';
 
 type State = {
   subscription: ?Function,
@@ -176,7 +176,7 @@ class MessagesWithData extends React.Component<Props, State> {
 
       return (
         <ChatWrapper>
-          <SentryErrorBoundary>
+          <ErrorBoundary>
             {pageInfo.hasPreviousPage && (
               <div>
                 <NextPageButton
@@ -226,7 +226,7 @@ class MessagesWithData extends React.Component<Props, State> {
                 lastSeen={lastSeen}
               />
             </InfiniteList>
-          </SentryErrorBoundary>
+          </ErrorBoundary>
         </ChatWrapper>
       );
     }

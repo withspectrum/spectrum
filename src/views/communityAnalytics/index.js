@@ -17,7 +17,7 @@ import {
 } from '../../components/settingsViews/style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
-import { SentryErrorBoundary, SettingsFallback } from 'src/components/error';
+import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
   currentUser: Object,
@@ -56,31 +56,31 @@ class CommunityAnalytics extends React.Component<Props, State> {
     if (community && community.id) {
       if (!community.hasFeatures || !community.hasFeatures.analytics) {
         return (
-          <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
             <AnalyticsUpsell community={community} />
-          </SentryErrorBoundary>
+          </ErrorBoundary>
         );
       }
 
       return (
         <SectionsContainer>
           <Column>
-            <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
               <MemberGrowth id={community.id} />
-            </SentryErrorBoundary>
+            </ErrorBoundary>
 
-            <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
               <TopMembers id={community.id} />
-            </SentryErrorBoundary>
+            </ErrorBoundary>
           </Column>
           <Column>
-            <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
               <ConversationGrowth id={community.id} />
-            </SentryErrorBoundary>
+            </ErrorBoundary>
 
-            <SentryErrorBoundary fallbackComponent={SettingsFallback}>
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
               <TopAndNewThreads id={community.id} />
-            </SentryErrorBoundary>
+            </ErrorBoundary>
           </Column>
         </SectionsContainer>
       );
