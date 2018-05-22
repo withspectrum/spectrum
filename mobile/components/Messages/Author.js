@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 import Text from '../Text';
 import Avatar from '../Avatar';
+import ConditionalWrap from '../ConditionalWrap';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import type { ThreadParticipantType } from '../../../shared/graphql/fragments/thread/threadParticipant';
@@ -13,6 +14,7 @@ type Props = {
   author: ThreadParticipantType,
   me: boolean,
   navigation: Navigation,
+  onPress?: Function,
 };
 
 const AuthorWrapper = styled.View`
@@ -22,10 +24,13 @@ const AuthorWrapper = styled.View`
   align-items: flex-end;
 `;
 
-const Byline = ({ author, me, navigation }: Props) => {
+const Author = ({ author, me, navigation, onPress }: Props) => {
   return (
-    <TouchableHighlight
-      onPress={() => navigation.navigate(`User`, { id: author.user.id })}
+    <ConditionalWrap
+      condition={!!onPress}
+      wrap={children => (
+        <TouchableHighlight onPress={onPress}>{children}</TouchableHighlight>
+      )}
     >
       <AuthorWrapper me={me}>
         {!me && <Avatar src={author.user.profilePhoto} size={16} radius={8} />}
@@ -33,8 +38,8 @@ const Byline = ({ author, me, navigation }: Props) => {
           <Text bold>{author.user.name}</Text> (@{author.user.username})
         </Text>
       </AuthorWrapper>
-    </TouchableHighlight>
+    </ConditionalWrap>
   );
 };
 
-export default compose(withNavigation)(Byline);
+export default compose(withNavigation)(Author);

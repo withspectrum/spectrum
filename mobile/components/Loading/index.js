@@ -1,17 +1,18 @@
 // @flow
 import * as React from 'react';
+import { withTheme } from 'styled-components';
 import { ActivityIndicator } from 'react-native';
 import { Container } from './style';
-import theme from '../theme';
 
 type Props = {
   size?: 'small' | 'large',
   color?: string,
+  theme: Object,
 };
 
 class Loading extends React.Component<Props> {
   render() {
-    const { size = 'small', color = theme.text.alt } = this.props;
+    const { size = 'small', color = this.props.theme.text.alt } = this.props;
     return (
       <Container>
         <ActivityIndicator size={size} color={color} />
@@ -20,4 +21,4 @@ class Loading extends React.Component<Props> {
   }
 }
 
-export default Loading;
+export default withTheme(Loading);
