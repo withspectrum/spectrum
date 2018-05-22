@@ -1,6 +1,6 @@
 // @flow
 import React, { type Node } from 'react';
-import { Linking, Text, Share } from 'react-native';
+import { Text, Share } from 'react-native';
 import { WebBrowser } from 'expo';
 
 type LinkProps = {

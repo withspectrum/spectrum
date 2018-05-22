@@ -1,5 +1,5 @@
 // @flow
-import React, { type Node } from 'react';
+import type { Node } from 'react';
 import { Platform } from 'react-native';
 import styled, { css } from 'styled-components/native';
 import { human } from 'react-native-typography';
