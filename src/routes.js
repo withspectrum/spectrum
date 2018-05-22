@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Route, Switch, Redirect } from 'react-router';
 import styled, { ThemeProvider } from 'styled-components';
 import Loadable from 'react-loadable';
-import ErrorBoundary from 'react-error-boundary';
+import { ErrorBoundary } from 'src/components/error';
 import { CLIENT_URL } from './api/constants';
 import generateMetaInfo from 'shared/generate-meta-info';
 import './reset.css.js';
@@ -21,6 +21,7 @@ import Composer from './components/composer';
 import signedOutFallback from './helpers/signed-out-fallback';
 import AuthViewHandler from './views/authViewHandler';
 import PrivateChannelJoin from './views/privateChannelJoin';
+import PrivateCommunityJoin from './views/privateCommunityJoin';
 import ThreadSlider from './views/threadSlider';
 import Navbar from './views/navbar';
 import Status from './views/status';
@@ -188,7 +189,7 @@ class Routes extends React.Component<Props> {
 
     return (
       <ThemeProvider theme={theme}>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <ErrorBoundary fallbackComponent={ErrorFallback}>
           <ScrollManager>
             <Body>
               {/* Default meta tags, get overriden by anything further down the tree */}
@@ -281,6 +282,10 @@ class Routes extends React.Component<Props> {
                 <Route
                   path="/:communitySlug/settings"
                   component={CommunitySettingsFallback}
+                />
+                <Route
+                  path="/:communitySlug/join/:token"
+                  component={PrivateCommunityJoin}
                 />
                 <Route
                   path="/:communitySlug/login"

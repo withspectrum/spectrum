@@ -23,6 +23,7 @@ const general = /* GraphQL */ `
 		isBlocked: Boolean
 		isOwner: Boolean
 		isModerator: Boolean
+		isPending: Boolean
 		receiveNotifications: Boolean
 		reputation: Int
 	}
@@ -73,6 +74,11 @@ const general = /* GraphQL */ `
 		id: ID!
 		contacts: [ EmailInviteContactInput ]
 		customMessage: String
+	}
+
+	type JoinSettings {
+		tokenJoinEnabled: Boolean
+		token: String
 	}
 `;
 

@@ -36,6 +36,10 @@ export const SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL =
   'send request join private channel email';
 export const SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL =
   'send private channel request approved email';
+export const SEND_PRIVATE_COMMUNITY_REQUEST_SENT_EMAIL =
+  'send request join private community email';
+export const SEND_PRIVATE_COMMUNITY_REQUEST_APPROVED_EMAIL =
+  'send private community request approved email';
 export const SEND_ADMIN_USER_SPAMMING_THREADS_NOTIFICATION_EMAIL =
   'send admin user spamming threads notification email';
 
@@ -75,6 +79,13 @@ export const PRIVATE_CHANNEL_REQUEST_SENT_TEMPLATE = IS_PROD
 export const PRIVATE_CHANNEL_REQUEST_APPROVED_TEMPLATE = IS_PROD
   ? 4550804
   : 4543861;
+
+export const PRIVATE_COMMUNITY_REQUEST_SENT_TEMPLATE = IS_PROD
+  ? 6511303
+  : 6504063;
+export const PRIVATE_COMMUNITY_REQUEST_APPROVED_TEMPLATE = IS_PROD
+  ? 6511302
+  : 6504064;
 
 // types used to generate unsubscribe tokens
 export const TYPE_DAILY_DIGEST = 'dailyDigest';

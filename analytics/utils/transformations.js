@@ -24,6 +24,7 @@ type AnalyticsCommunity = {
   id: ?string,
   name: ?string,
   slug: ?string,
+  isPrivate: boolean,
 };
 
 type AnalyticsChannelPermissions = {
@@ -134,12 +135,14 @@ export const analyticsCommunity = (
       id: null,
       name: null,
       slug: null,
+      isPrivate: false,
     };
 
   return {
     id: community.id,
     name: community.name,
     slug: community.slug,
+    isPrivate: community.isPrivate,
   };
 };
 

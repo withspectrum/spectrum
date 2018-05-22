@@ -4,9 +4,7 @@ import { View } from 'react-native';
 import compose from 'recompose/compose';
 import withSafeView from '../../components/SafeAreaView';
 import ThreadFeed from '../../components/ThreadFeed';
-import getCurrentUserEverythingFeed, {
-  type GetCurrentUserEverythingFeedType,
-} from '../../../shared/graphql/queries/user/getCurrentUserEverythingFeed';
+import getCurrentUserEverythingFeed from '../../../shared/graphql/queries/user/getCurrentUserEverythingFeed';
 import {
   getCurrentUser,
   type GetUserType,

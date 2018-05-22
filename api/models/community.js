@@ -41,6 +41,18 @@ export const getCommunitiesBySlug = (slugs: Array<string>): Promise<Array<DBComm
     .run();
 };
 
+export const getCommunityBySlug = (slug: string): Promise<?DBCommunity> => {
+  return db
+    .table('communities')
+    .getAll(slug, { index: 'slug' })
+    .filter(community => db.not(community.hasFields('deletedAt')))
+    .run()
+    .then(results => {
+      if (!results || results.length === 0) return null;
+      return results[0];
+    });
+};
+
 // prettier-ignore
 export const getCommunitiesByUser = (userId: string): Promise<Array<DBCommunity>> => {
   return (
@@ -118,6 +130,7 @@ export type CreateCommunityInput = {
     website: string,
     file: Object,
     coverFile: Object,
+    isPrivate: boolean,
   },
 };
 
@@ -135,7 +148,7 @@ export type EditCommunityInput = {
 
 // prettier-ignore
 export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): Promise<DBCommunity> => {
-  const { name, slug, description, website, file, coverFile } = input
+  const { name, slug, description, website, file, coverFile, isPrivate } = input
 
   return db
     .table('communities')
@@ -152,6 +165,7 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
         creatorId: user.id,
         administratorEmail: user.email,
         stripeCustomerId: null,
+        isPrivate
       },
       { returnChanges: true }
     )
