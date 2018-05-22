@@ -45,9 +45,8 @@ export class NotificationDropdownList extends React.Component<Props> {
           switch (notification.event) {
             case 'MESSAGE_CREATED': {
               return (
-                <ErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null} key={notification.id}>
                   <MiniNewMessageNotification
-                    key={notification.id}
                     notification={notification}
                     currentUser={currentUser}
                     history={history}
@@ -57,9 +56,8 @@ export class NotificationDropdownList extends React.Component<Props> {
             }
             case 'REACTION_CREATED': {
               return (
-                <ErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null} key={notification.id}>
                   <MiniNewReactionNotification
-                    key={notification.id}
                     notification={notification}
                     currentUser={currentUser}
                     history={history}
@@ -69,9 +67,8 @@ export class NotificationDropdownList extends React.Component<Props> {
             }
             case 'CHANNEL_CREATED': {
               return (
-                <ErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null} key={notification.id}>
                   <MiniNewChannelNotification
-                    key={notification.id}
                     notification={notification}
                     currentUser={currentUser}
                     history={history}
@@ -84,9 +81,8 @@ export class NotificationDropdownList extends React.Component<Props> {
             }
             case 'USER_JOINED_COMMUNITY': {
               return (
-                <ErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null} key={notification.id}>
                   <MiniNewUserInCommunityNotification
-                    key={notification.id}
                     notification={notification}
                     currentUser={currentUser}
                     history={history}
@@ -99,9 +95,8 @@ export class NotificationDropdownList extends React.Component<Props> {
             }
             case 'THREAD_CREATED': {
               return (
-                <ErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null} key={notification.id}>
                   <MiniNewThreadNotification
-                    key={notification.id}
                     notification={notification}
                     currentUser={currentUser}
                     history={history}
@@ -114,9 +109,8 @@ export class NotificationDropdownList extends React.Component<Props> {
             }
             case 'COMMUNITY_INVITE': {
               return (
-                <ErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null} key={notification.id}>
                   <MiniCommunityInviteNotification
-                    key={notification.id}
                     notification={notification}
                     currentUser={currentUser}
                     history={history}
@@ -129,9 +123,8 @@ export class NotificationDropdownList extends React.Component<Props> {
             }
             case 'MENTION_THREAD': {
               return (
-                <ErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null} key={notification.id}>
                   <MiniMentionThreadNotification
-                    key={notification.id}
                     notification={notification}
                     currentUser={currentUser}
                     history={history}
@@ -141,9 +134,8 @@ export class NotificationDropdownList extends React.Component<Props> {
             }
             case 'MENTION_MESSAGE': {
               return (
-                <ErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null} key={notification.id}>
                   <MiniMentionMessageNotification
-                    key={notification.id}
                     notification={notification}
                     currentUser={currentUser}
                     history={history}
@@ -153,9 +145,8 @@ export class NotificationDropdownList extends React.Component<Props> {
             }
             case 'PRIVATE_CHANNEL_REQUEST_SENT': {
               return (
-                <ErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null} key={notification.id}>
                   <MiniPrivateChannelRequestSent
-                    key={notification.id}
                     notification={notification}
                     currentUser={currentUser}
                     history={history}
@@ -168,9 +159,8 @@ export class NotificationDropdownList extends React.Component<Props> {
             }
             case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
               return (
-                <ErrorBoundary fallbackComponent={null}>
+                <ErrorBoundary fallbackComponent={null} key={notification.id}>
                   <MiniPrivateChannelRequestApproved
-                    key={notification.id}
                     notification={notification}
                     currentUser={currentUser}
                     history={history}
