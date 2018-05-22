@@ -16,14 +16,16 @@ export default (args: Args, { loaders, user }: GraphQLContext) => {
   return usersSearchIndex
     .search({ query: queryString, hitsPerPage })
     .then(content => {
-      trackQueue.add({
-        userId: user.id,
-        event: events.SEARCHED_COMMUNITY_MEMBERS,
-        properties: {
-          queryString,
-          hitsCount: content.hits ? content.hits.length : 0,
-        },
-      });
+      if (user && user.id) {
+        trackQueue.add({
+          userId: user.id,
+          event: events.SEARCHED_COMMUNITY_MEMBERS,
+          properties: {
+            queryString,
+            hitsCount: content.hits ? content.hits.length : 0,
+          },
+        });
+      }
 
       if (!content.hits || content.hits.length === 0) return [];
       // if no search filter was passed, there's no way to be searching for
