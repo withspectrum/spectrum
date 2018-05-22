@@ -4,13 +4,16 @@ import { LinearGradient } from 'expo';
 
 export const Bubble = styled.View`
   border-radius: 16px;
-  align-self: ${props => (props.me ? `flex-end` : `flex-start`)};
   /* Android */
   elevation: 10;
   margin-top: 2px;
   margin-bottom: 2px;
   background-color: ${props =>
     props.me ? props.theme.brand.default : props.theme.generic.default};
+`;
+
+export const Align = styled.View`
+  align-self: ${props => (props.me ? `flex-end` : `flex-start`)};
 `;
 
 export const TextWrapper = styled.View`
