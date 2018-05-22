@@ -38,15 +38,17 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
     threadsSearchIndex
       .search({ query: queryString, filters })
       .then(content => {
-        trackQueue.add({
-          userId: user.id,
-          event: events.SEARCHED_CONVERSATIONS,
-          properties: {
-            queryString,
-            filters,
-            hitsCount: content.hits ? content.hits.length : 0,
-          },
-        });
+        if (user && user.id) {
+          trackQueue.add({
+            userId: user.id,
+            event: events.SEARCHED_CONVERSATIONS,
+            properties: {
+              queryString,
+              filters,
+              hitsCount: content.hits ? content.hits.length : 0,
+            },
+          });
+        }
 
         if (!content.hits || content.hits.length === 0) return null;
         return content.hits.map(o => ({
