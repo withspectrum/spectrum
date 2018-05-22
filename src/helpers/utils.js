@@ -1,9 +1,5 @@
 // @flow
 import React from 'react';
-// NOTE (@mxstbr): The /dist here is a bug in a specific version of emoji-regex
-// Can be removed after the next release: https://github.com/mathiasbynens/emoji-regex/pull/12
-// $FlowFixMe
-import createEmojiRegex from 'emoji-regex';
 import replace from 'string-replace-to-array';
 
 export const convertTimestampToDate = (timestamp: number) => {
@@ -53,19 +49,6 @@ export const convertTimestampToTime = (timestamp: Date) => {
   let ampm = hours >= 12 ? 'pm' : 'am'; // todo: support 24hr time
   return `${cleanHours}:${minutes}${ampm}`;
 };
-
-// This regex matches every string with any emoji in it, not just strings that only have emojis
-const originalEmojiRegex = createEmojiRegex();
-// Make sure we match strings that only contain emojis (and whitespace)
-const regex = new RegExp(
-  `^(${originalEmojiRegex.toString().replace(/\/g$/, '')}|\\s)+$`
-);
-export const onlyContainsEmoji = (text: string) => regex.test(text);
-
-export const draftOnlyContainsEmoji = (raw: Object) =>
-  raw.blocks.length === 1 &&
-  raw.blocks[0].type === 'unstyled' &&
-  onlyContainsEmoji(raw.blocks[0].text);
 
 /*
   Best guess at if user is on a mobile device. Used in the modal components

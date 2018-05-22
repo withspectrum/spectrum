@@ -17,7 +17,9 @@ import {
 } from './style';
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
 import { toPlainText, toState } from 'shared/draft-utils';
-import { onlyContainsEmoji } from '../../helpers/utils';
+import onlyContainsEmoji, {
+  draftOnlyContainsEmoji,
+} from 'shared/only-contains-emoji';
 import { Byline, Name, Username } from '../messageGroup/style';
 import { isShort } from 'shared/clients/draft-js/utils/isShort';
 import type { Node } from 'react';
@@ -31,12 +33,13 @@ export const Body = (props: {
   showParent?: boolean,
 }) => {
   const { showParent = true, message, openGallery, me, bubble = true } = props;
-  const parsedMessage =
-    message.messageType &&
+  const emojiOnly =
     message.messageType === 'draftjs' &&
-    toPlainText(toState(JSON.parse(message.content.body)));
-  const emojiOnly = parsedMessage && onlyContainsEmoji(parsedMessage);
-  if (emojiOnly) return <Emoji>{parsedMessage}</Emoji>;
+    draftOnlyContainsEmoji(JSON.parse(message.content.body));
+  if (emojiOnly)
+    return (
+      <Emoji>{toPlainText(toState(JSON.parse(message.content.body)))}</Emoji>
+    );
   const WrapperComponent = bubble ? Text : QuotedParagraph;
   switch (message.messageType) {
     case 'text':
