@@ -12,14 +12,16 @@ export default (args: Args, { loaders, user }: GraphQLContext) => {
   return communitySearchIndex
     .search({ query: queryString })
     .then(content => {
-      trackQueue.add({
-        userId: user.id,
-        event: events.SEARCHED_COMMUNITIES,
-        properties: {
-          queryString,
-          hitsCount: content.hits ? content.hits.length : 0,
-        },
-      });
+      if (user && user.id) {
+        trackQueue.add({
+          userId: user.id,
+          event: events.SEARCHED_COMMUNITIES,
+          properties: {
+            queryString,
+            hitsCount: content.hits ? content.hits.length : 0,
+          },
+        });
+      }
 
       if (!content.hits || content.hits.length === 0) return [];
       const communityIds = content.hits.map(o => o.objectID);
