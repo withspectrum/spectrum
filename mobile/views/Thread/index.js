@@ -1,8 +1,7 @@
 // @flow
 import * as React from 'react';
-import { View, ScrollView, Image } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import compose from 'recompose/compose';
-import connect from 'react-redux';
 import { Query } from 'react-apollo';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
@@ -13,14 +12,8 @@ import Messages from '../../components/Messages';
 import ChatInput from '../../components/ChatInput';
 import getThreadMessageConnection from '../../../shared/graphql/queries/thread/getThreadMessageConnection';
 import { getCurrentUserQuery } from '../../../shared/graphql/queries/user/getUser';
-import sendMessageMutation, {
-  type SendMessageType,
-} from '../../../shared/graphql/mutations/message/sendMessage';
-import {
-  getLinkPreviewFromUrl,
-  timeDifference,
-  convertTimestampToDate,
-} from '../../../src/helpers/utils';
+import sendMessageMutation from '../../../shared/graphql/mutations/message/sendMessage';
+import { convertTimestampToDate } from '../../../src/helpers/utils';
 
 import CommunityHeader from './components/CommunityHeader';
 import Byline from './components/Byline';
@@ -69,7 +62,7 @@ class Thread extends React.Component<Props> {
       return (
         <Wrapper>
           <ScrollView style={{ flex: 1, width: '100%' }} testID="e2e-thread">
-            <CommunityHeader community={thread.community} />
+            <CommunityHeader thread={thread} />
             <ThreadMargin>
               <Byline author={thread.author} />
               <Text bold type="title1">

@@ -173,7 +173,7 @@ export const MediaLabel = styled.label`
   outline: 0;
   display: inline-block;
   background: transparent;
-  transition: all 0.3s ease-out;
+  transition: color 0.3s ease-out;
   border-radius: 4px;
   padding: 4px;
   position: relative;

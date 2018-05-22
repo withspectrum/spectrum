@@ -124,7 +124,7 @@ class Notifications extends React.Component<Props, State> {
       isLoading,
       hasError,
       isRefetching,
-      data: { fetchMore, notifications },
+      data: { fetchMore },
     } = this.props;
     if (!isFetchingMore && !isLoading && !hasError && !isRefetching) {
       fetchMore();
