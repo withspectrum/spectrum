@@ -26,6 +26,7 @@ export default (args: Args, { loaders, user }: GraphQLContext) => {
       return loaders.community.loadMany(communityIds);
     })
     .then(data => data.filter(Boolean))
+    .then(data => data.filter(community => !community.isPrivate))
     .catch(err => {
       console.error('err', err);
     });

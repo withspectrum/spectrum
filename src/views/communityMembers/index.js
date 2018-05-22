@@ -9,6 +9,7 @@ import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
 import { CommunityInvitationForm } from '../../components/emailInvitationForm';
 import SlackConnection from '../communitySettings/components/slack';
 import CommunityMembers from './components/communityMembers';
+import JoinTokenSettings from './components/joinTokenSettings';
 import type { Dispatch } from 'redux';
 import {
   SectionsContainer,
@@ -44,9 +45,16 @@ class CommunityMembersSettings extends React.Component<Props> {
           </Column>
 
           <Column>
+
             <ErrorBoundary fallbackComponent={SettingsFallback}>
               <SlackConnection type={'import-only'} id={community.id} />
             </ErrorBoundary>
+        
+            {community.isPrivate && (
+              <ErrorBoundary fallbackComponent={SettingsFallback}>
+                <JoinTokenSettings id={community.id} community={community} />
+              </ErrorBoundary>
+            )}
 
             <ErrorBoundary fallbackComponent={SettingsFallback}>
               <SectionCard>

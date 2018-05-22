@@ -10,6 +10,7 @@ export type CommunityMemberInfoType = {
   isModerator: boolean,
   isBlocked: boolean,
   isOwner: boolean,
+  isPending: boolean,
   roles: Array<string>,
   reputation: number,
 };
@@ -24,6 +25,7 @@ export default gql`
     isModerator
     isBlocked
     isOwner
+    isPending
     roles
     reputation
   }

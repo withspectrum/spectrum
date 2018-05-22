@@ -11,10 +11,12 @@ export type CommunityInfoType = {
   profilePhoto: string,
   coverPhoto: string,
   pinnedThreadId: ?string,
+  isPrivate: boolean,
   communityPermissions: {
     isMember: boolean,
     isBlocked: boolean,
     isOwner: boolean,
+    isPending: boolean,
     isModerator: boolean,
     reputation: number,
   },
@@ -35,10 +37,12 @@ export default gql`
     profilePhoto
     coverPhoto
     pinnedThreadId
+    isPrivate
     communityPermissions {
       isMember
       isBlocked
       isOwner
+      isPending
       isModerator
       reputation
     }

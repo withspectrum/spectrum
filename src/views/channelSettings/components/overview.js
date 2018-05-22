@@ -9,7 +9,7 @@ import PendingUsers from './pendingUsers';
 import BlockedUsers from './blockedUsers';
 import ChannelMembers from './channelMembers';
 import ArchiveForm from './archiveForm';
-import LoginTokenSettings from './loginTokenSettings';
+import LoginTokenSettings from './joinTokenSettings';
 import SlackConnection from '../../communitySettings/components/slack';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 

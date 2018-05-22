@@ -8,6 +8,7 @@ import {
   Span,
   ProBadge,
   BlockedBadge,
+  PendingBadge,
   DefaultPaymentMethodBadge,
 } from './style';
 
@@ -63,6 +64,16 @@ class Badge extends React.Component<Props> {
           >
             {this.props.type}
           </BlockedBadge>
+        );
+      case 'pending':
+        return (
+          <PendingBadge
+            type={this.props.type}
+            tipText={this.props.tipText}
+            tipLocation={'top-left'}
+          >
+            {this.props.type}
+          </PendingBadge>
         );
       default:
         return (

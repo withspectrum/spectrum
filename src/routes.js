@@ -21,6 +21,7 @@ import Composer from './components/composer';
 import signedOutFallback from './helpers/signed-out-fallback';
 import AuthViewHandler from './views/authViewHandler';
 import PrivateChannelJoin from './views/privateChannelJoin';
+import PrivateCommunityJoin from './views/privateCommunityJoin';
 import ThreadSlider from './views/threadSlider';
 import Navbar from './views/navbar';
 import Status from './views/status';
@@ -281,6 +282,10 @@ class Routes extends React.Component<Props> {
                 <Route
                   path="/:communitySlug/settings"
                   component={CommunitySettingsFallback}
+                />
+                <Route
+                  path="/:communitySlug/join/:token"
+                  component={PrivateCommunityJoin}
                 />
                 <Route
                   path="/:communitySlug/login"

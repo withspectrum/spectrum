@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { ErrorBoundary } from 'src/components/error';
 import { NotificationListContainer } from '../style';
 import { parseNotification } from '../utils';
 import { sortByDate } from '../../../helpers/utils';
@@ -13,7 +14,8 @@ import { MiniMentionMessageNotification } from './mentionMessageNotification';
 import { MiniMentionThreadNotification } from './mentionThreadNotification';
 import { MiniPrivateChannelRequestSent } from './privateChannelRequestSentNotification';
 import { MiniPrivateChannelRequestApproved } from './privateChannelRequestApprovedNotification';
-import { ErrorBoundary } from 'src/components/error';
+import { MiniPrivateCommunityRequestSent } from './privateCommunityRequestSentNotification';
+import { MiniPrivateCommunityRequestApproved } from './privateCommunityRequestApprovedNotification';
 
 type Props = {
   rawNotifications: Array<Object>,
@@ -161,6 +163,34 @@ export class NotificationDropdownList extends React.Component<Props> {
               return (
                 <ErrorBoundary fallbackComponent={null} key={notification.id}>
                   <MiniPrivateChannelRequestApproved
+                    notification={notification}
+                    currentUser={currentUser}
+                    history={history}
+                    markSingleNotificationAsSeenInState={
+                      markSingleNotificationAsSeenInState
+                    }
+                  />
+                </ErrorBoundary>
+              );
+            }
+            case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
+              return (
+                <ErrorBoundary fallbackComponent={null} key={notification.id}>
+                  <MiniPrivateCommunityRequestSent
+                    notification={notification}
+                    currentUser={currentUser}
+                    history={history}
+                    markSingleNotificationAsSeenInState={
+                      markSingleNotificationAsSeenInState
+                    }
+                  />
+                 </ErrorBoundary>
+              );
+            }
+            case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
+              return (
+                <ErrorBoundary fallbackComponent={null} key={notification.id}>
+                  <MiniPrivateCommunityRequestApproved
                     notification={notification}
                     currentUser={currentUser}
                     history={history}
