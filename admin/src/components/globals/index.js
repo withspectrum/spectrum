@@ -305,8 +305,8 @@ const returnTooltip = props => {
           &:before {
             right: calc(50% - 5px);
             bottom: 100%
-      	    border-bottom-width: 0;
-      	    border-top-color: ${
+            border-bottom-width: 0;
+            border-top-color: ${
               props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
             };
           }
@@ -320,8 +320,8 @@ const returnTooltip = props => {
           &:before {
             left: calc(50% - 5px);
             bottom: 100%;
-      	    border-bottom-width: 0;
-      	    border-top-color: ${
+            border-bottom-width: 0;
+            border-top-color: ${
               props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
             };
           }
@@ -352,8 +352,8 @@ const returnTooltip = props => {
           &:before {
             right: calc(50% - 5px);
             top: 100%
-      	    border-top-width: 0;
-      	    border-bottom-color: ${
+            border-top-width: 0;
+            border-bottom-color: ${
               props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
             };
           }
@@ -367,8 +367,8 @@ const returnTooltip = props => {
           &:before {
             right: calc(50% - 5px);
             top: 100%;
-      	    border-top-width: 0;
-      	    border-bottom-color: ${
+            border-top-width: 0;
+            border-bottom-color: ${
               props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
             };
           }

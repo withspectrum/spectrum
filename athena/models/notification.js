@@ -5,7 +5,7 @@ import { TIME_BUFFER } from '../queues/constants';
 import { NEW_DOCUMENTS } from 'api/models/utils';
 
 /*
-	Given an event type, the context of that event, and a time range, see if an existing notification exists. If it does, we will bundle the new incoming notification on the server. If no existing notification is found, we create a new one
+  Given an event type, the context of that event, and a time range, see if an existing notification exists. If it does, we will bundle the new incoming notification on the server. If no existing notification is found, we create a new one
 */
 export const checkForExistingNotification = (
   event: NotificationEventType,
