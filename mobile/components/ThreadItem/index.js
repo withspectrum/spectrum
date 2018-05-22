@@ -1,30 +1,30 @@
 // @flow
 import * as React from 'react';
-import { TouchableHighlight, Image, View } from 'react-native';
+import { TouchableHighlight, View } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
 import Facepile from './Facepile';
 import ThreadCommunityInfo from './ThreadCommunityInfo';
-import Text from '../Text';
 import {
   InboxThreadItem,
   InboxThreadContent,
   ThreadTitle,
   ThreadMeta,
-  MetaText,
   MetaTextPill,
+  MessageCount,
 } from './style';
-import { truncate } from './utils';
 import type { ThreadInfoType } from '../../../shared/graphql/fragments/thread/threadInfo';
 
 type Props = {
   thread: ThreadInfoType,
   navigation: Object,
+  activeChannel?: string,
+  activeCommunity?: string,
 };
 
 class ThreadItem extends React.Component<Props> {
   render() {
-    const { thread } = this.props;
+    const { thread, activeChannel, activeCommunity } = this.props;
 
     if (!thread.id) return null;
 
@@ -38,40 +38,27 @@ class ThreadItem extends React.Component<Props> {
       >
         <InboxThreadItem>
           <InboxThreadContent>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginBottom: 5,
-              }}
-            >
-              <Image
-                source={{ uri: thread.community.profilePhoto }}
-                style={{
-                  height: 20,
-                  width: 20,
-                  marginRight: 8,
-                  borderRadius: 5,
-                }}
-              />
-              <Text type="subhead" style={{ marginTop: 0 }}>
-                {thread.community.name} / {thread.channel.name}
-              </Text>
-            </View>
-            <Text type="headline">{thread.content.title}</Text>
+            <ThreadCommunityInfo
+              activeChannel={activeChannel}
+              activeCommunity={activeCommunity}
+              thread={thread}
+            />
+
+            <ThreadTitle>{thread.content.title}</ThreadTitle>
 
             <ThreadMeta>
               <Facepile
                 participants={thread.participants}
                 creator={thread.author.user}
+                navigation={this.props.navigation}
               />
 
               {thread.messageCount > 0 ? (
-                <Text type="caption1">
+                <MessageCount>
                   {thread.messageCount > 1
                     ? `${thread.messageCount} messages`
                     : `${thread.messageCount} message`}
-                </Text>
+                </MessageCount>
               ) : (
                 <View>
                   <MetaTextPill offset={thread.participants.length} new>

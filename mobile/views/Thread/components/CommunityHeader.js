@@ -1,33 +1,55 @@
 // @flow
-import React from 'react';
-import styled from 'styled-components/native';
-import { Image } from 'react-native';
-import Text from '../../../components/Text';
-import type { CommunityInfoType } from '../../../../shared/graphql/fragments/community/communityInfo';
-
-const CommunityHeaderWrapper = styled.View`
-  flex: 1;
-  flex-direction: row;
-  padding: 14px 14px;
-  border-bottom-width: 1px;
-  border-bottom-color: ${props => props.theme.bg.border};
-`;
+import * as React from 'react';
+import compose from 'recompose/compose';
+import Avatar from '../../../components/Avatar';
+import { TouchableOpacity } from 'react-native';
+import { withNavigation } from 'react-navigation';
+import type { Navigation } from '../../../utils/types';
+import type { ThreadInfoType } from '../../../../shared/graphql/fragments/thread/threadInfo';
+import {
+  CommunityHeaderContainer,
+  CommunityName,
+  ThreadChannelName,
+  ThreadChannelPill,
+} from '../style';
 
 type Props = {
-  community: CommunityInfoType,
+  thread: ThreadInfoType,
+  navigation: Navigation,
 };
 
-// TODO(@mxstbr): Make touchable and link to community view
-export default ({ community }: Props) => {
-  return (
-    <CommunityHeaderWrapper>
-      <Image
-        source={{ uri: community.profilePhoto }}
-        style={{ height: 40, width: 40, marginRight: 8 }}
-      />
-      <Text bold type="title3">
-        {community.name}
-      </Text>
-    </CommunityHeaderWrapper>
-  );
-};
+class CommunityHeader extends React.Component<Props> {
+  render() {
+    const { thread, navigation } = this.props;
+    const { channel, community } = thread;
+    const isGeneral = channel.slug === 'general';
+    return (
+      <CommunityHeaderContainer>
+        <Avatar
+          src={thread.community.profilePhoto}
+          size={32}
+          radius={6}
+          onPress={() =>
+            navigation.navigate(`Community`, { id: thread.community.id })
+          }
+        />
+
+        <TouchableOpacity
+          onPress={() => navigation.navigate(`Community`, { id: community.id })}
+        >
+          <CommunityName>{community.name}</CommunityName>
+        </TouchableOpacity>
+
+        {!isGeneral && (
+          <ThreadChannelPill
+            onPress={() => navigation.navigate(`Channel`, { id: channel.id })}
+          >
+            <ThreadChannelName>{channel.name}</ThreadChannelName>
+          </ThreadChannelPill>
+        )}
+      </CommunityHeaderContainer>
+    );
+  }
+}
+
+export default compose(withNavigation)(CommunityHeader);

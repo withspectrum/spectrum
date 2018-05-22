@@ -1,8 +1,9 @@
 // @flow
 import React, { Fragment } from 'react';
-import styled from 'styled-components/native';
 import { View } from 'react-native';
 import { Query } from 'react-apollo';
+import { withNavigation } from 'react-navigation';
+import compose from 'recompose/compose';
 import { getCurrentUserQuery } from '../../../shared/graphql/queries/user/getUser';
 import viewNetworkHandler from '../ViewNetworkHandler';
 import Text from '../Text';
@@ -14,25 +15,15 @@ import { convertTimestampToDate } from '../../../src/helpers/utils';
 import RoboText from './RoboText';
 import Author from './Author';
 
+import type { Navigation } from 'react-navigation';
 import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection.js';
 import type { ThreadParticipantType } from '../../../shared/graphql/fragments/thread/threadParticipant';
-
-const TimestampWrapper = styled.View`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Hr = styled.View`
-  height: 1px;
-  flex: 1;
-  background-color: ${props => props.theme.bg.border};
-`;
 
 type Props = {
   id: string,
   isLoading: boolean,
   hasError: boolean,
+  navigation: Navigation,
   data: {
     ...$Exact<ThreadMessageConnectionType>,
   },
@@ -40,7 +31,7 @@ type Props = {
 
 class Messages extends React.Component<Props> {
   render() {
-    const { data, isLoading, hasError } = this.props;
+    const { data, isLoading, hasError, navigation } = this.props;
 
     if (data.messageConnection && data.messageConnection) {
       const messages = sortAndGroupMessages(
@@ -111,7 +102,14 @@ class Messages extends React.Component<Props> {
                   <View key={initialMessage.id || 'robo'}>
                     {unseenRobo}
                     <ThreadMargin>
-                      <Author author={author} avatar={!me} me={me} />
+                      <Author
+                        onPress={() =>
+                          navigation.navigate(`User`, { id: author.user.id })
+                        }
+                        avatar={!me}
+                        author={author}
+                        me={me}
+                      />
                       <View>
                         {group.map(message => {
                           return (
@@ -146,4 +144,4 @@ class Messages extends React.Component<Props> {
   }
 }
 
-export default viewNetworkHandler(Messages);
+export default compose(viewNetworkHandler, withNavigation)(Messages);
