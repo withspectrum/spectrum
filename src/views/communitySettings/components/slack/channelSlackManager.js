@@ -12,6 +12,7 @@ import {
 } from './style';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import updateChannelSlackBotLinksMutation from 'shared/graphql/mutations/channel/updateChannelSlackBotLinks';
+import type { Dispatch } from 'redux';
 
 type SlackChannel = {
   id: string,
@@ -31,7 +32,7 @@ type Props = {
   slackChannels: Array<SlackChannel>,
   channel: ChannelWithSlackSettings,
   updateChannelSlackBotLinks: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 class ChannelSlackManager extends React.Component<Props> {

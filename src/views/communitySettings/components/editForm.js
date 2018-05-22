@@ -31,6 +31,7 @@ import {
   SectionTitle,
 } from '../../../components/settingsViews/style';
 import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type State = {
   name: string,
@@ -50,7 +51,7 @@ type State = {
 
 type Props = {
   community: GetCommunityType,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   editCommunity: Function,
 };
 

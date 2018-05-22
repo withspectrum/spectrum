@@ -33,7 +33,7 @@ const Author = ({ author, me, navigation, onPress }: Props) => {
       )}
     >
       <AuthorWrapper me={me}>
-        {!me && <Avatar src={author.user.profilePhoto} size={16} radius={8} />}
+        {!me && <Avatar src={author.user.profilePhoto} size={16} radius={8} style={{ marginRight: 4 }} />}
         <Text type="footnote" color={props => props.theme.text.alt}>
           <Text bold>{author.user.name}</Text> (@{author.user.username})
         </Text>

@@ -8,10 +8,11 @@ import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
 import { removeItemFromStorage } from '../../helpers/localStorage';
 import NewUserOnboarding from '../../views/newUserOnboarding';
+import type { Dispatch } from 'redux';
 
 type Props = {
   currentUser?: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   match: Object,
   history: Object,
   editUser: Function,

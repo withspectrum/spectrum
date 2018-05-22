@@ -15,6 +15,7 @@ import { markSingleNotificationSeenMutation } from 'shared/graphql/mutations/not
 import { Tab, NotificationTab, Label } from '../style';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   active: boolean,
@@ -32,7 +33,7 @@ type Props = {
   },
   refetch: Function,
   client: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   count: number,
 };
 

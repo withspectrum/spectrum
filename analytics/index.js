@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('athena');
+const debug = require('debug')('analytics');
 import createWorker from '../shared/bull/create-worker';
 
 import trackAnalytics from './queues/track-analytics';

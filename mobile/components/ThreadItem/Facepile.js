@@ -5,7 +5,11 @@ import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import type { Navigation } from '../../utils/types';
 import type { UserInfoType } from '../../../shared/graphql/fragments/user/userInfo';
-import { FacepileContainer, EmptyParticipantHead } from './style';
+import {
+  FacepileContainer,
+  StackedEmptyParticipantHead,
+  StackedAvatar,
+} from './style';
 const NUM_TO_DISPLAY = 5;
 
 const messageAvatars = (list, navigation) => {
@@ -16,7 +20,8 @@ const messageAvatars = (list, navigation) => {
       return null;
     }
     return (
-      <Avatar
+      <StackedAvatar
+        key={participant.id}
         src={participant.profilePhoto}
         size={30}
         radius={15}
@@ -60,18 +65,12 @@ const Facepile = ({ participants, creator, navigation }: FacepileProps) => {
 
   return (
     <FacepileContainer>
-      <Avatar
-        onPress={() => navigation.navigate(`User`, { id: creator.id })}
-        src={creator.profilePhoto}
-        size={30}
-        radius={15}
-      />
-
+      <StackedAvatar onPress={() => navigation.navigate(`User`, { id: creator.id })} src={creator.profilePhoto} size={30} radius={15} />
       {messageAvatars(participantList, navigation)}
       {hasOverflow && (
-        <EmptyParticipantHead adjustsFontSizeToFit>
+        <StackedEmptyParticipantHead size={30} adjustsFontSizeToFit>
           {overflowAmount}
-        </EmptyParticipantHead>
+        </StackedEmptyParticipantHead>
       )}
     </FacepileContainer>
   );

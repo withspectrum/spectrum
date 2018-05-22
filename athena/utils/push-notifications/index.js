@@ -6,8 +6,6 @@ import formatNotification from './notification-formatting';
 import { sendWebPushNotification } from './send-web-push-notification';
 import { sendExpoPushNotifications } from './send-expo-push-notifications';
 import type { DBNotificationsJoin } from 'shared/types';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 
 const sendPushNotifications = async (notification: DBNotificationsJoin) => {
   debug('send notification as web push notification');
@@ -32,15 +30,6 @@ const sendPushNotifications = async (notification: DBNotificationsJoin) => {
 
   debug(`send push notifications`);
   const webPushNotifications = webPushSubscriptions.map(subscription => {
-    trackQueue.add({
-      userId: notification.userId,
-      event: events.WEB_PUSH_NOTIFICATION_RECEIVED,
-      properties: {
-        event: notification.event,
-        id: notification.id,
-      },
-    });
-
     return sendWebPushNotification(subscription, {
       tag: notification.id,
       ...payload,

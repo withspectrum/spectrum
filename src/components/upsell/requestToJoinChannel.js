@@ -8,13 +8,14 @@ import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/cha
 import { addToastWithTimeout } from '../../actions/toasts';
 import { Button, OutlineButton } from '../buttons';
 import { Actions } from './style';
+import type { Dispatch } from 'redux';
 
 type Props = {
   isPending: boolean,
   community: Object,
   channel: Object,
   toggleChannelSubscription: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {

@@ -22,6 +22,7 @@ import { modalStyles } from '../styles';
 import { Actions, Message } from './style';
 import cancelSubscription from 'shared/graphql/mutations/community/cancelSubscription';
 import disableCommunityAnalytics from 'shared/graphql/mutations/community/disableCommunityAnalytics';
+import type { Dispatch } from 'redux';
 
 /*
   Generic component that should be used to confirm any 'delete' action.
@@ -42,7 +43,7 @@ type State = {
 };
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   modalProps: {
     id: string,
     entity: string,
@@ -58,7 +59,7 @@ type Props = {
   cancelSubscription: Function,
   disableCommunityAnalytics: Function,
   archiveChannel: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isOpen: boolean,
 };
 

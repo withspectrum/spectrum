@@ -3,6 +3,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { SearchInput, SearchForm, SearchInputDiv } from '../style';
 import Icon from '../../../components/icons';
+import type { Dispatch } from 'redux';
 import {
   closeSearch,
   openSearch,
@@ -10,7 +11,7 @@ import {
 } from '../../../actions/dashboardFeed';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   filter: {
     communityId?: ?string,
     channelId?: ?string,

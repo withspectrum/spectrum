@@ -6,13 +6,14 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
+import type { Dispatch } from 'redux';
 
 type Props = {
   channel: {
     ...$Exact<GetChannelType>,
   },
   toggleSubscription: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   render: Function,
   onJoin?: Function,
   onLeave?: Function,

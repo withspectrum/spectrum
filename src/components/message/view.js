@@ -89,7 +89,8 @@ export class QuotedMessage extends React.Component<
       if (props.message.messageType === 'media') return false;
       const jsonBody = JSON.parse(props.message.content.body);
       return (
-        !jsonBody.blocks.length > 1 ||
+        // @see https://github.com/withspectrum/spectrum/pull/3075#discussion_r187942991
+        jsonBody.blocks.length <= 1 ||
         toPlainText(toState(jsonBody)).length <= 170
       );
     };

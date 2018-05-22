@@ -38,11 +38,12 @@ import BrowserNotificationRequest from './components/browserNotificationRequest'
 import generateMetaInfo from 'shared/generate-meta-info';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   markAllNotificationsSeen?: Function,
   subscribeToWebPush: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   currentUser: Object,
   isFetchingMore: boolean,
   data: {

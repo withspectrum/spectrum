@@ -13,6 +13,7 @@ import Avatar from '../avatar';
 import { Button, OutlineButton } from '../buttons';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import ToggleCommunityMembership from '../toggleCommunityMembership';
+import type { Dispatch } from 'redux';
 import {
   ProfileHeader,
   ProfileHeaderLink,
@@ -38,7 +39,7 @@ type Props = {
   onLeave: Function,
   joinedCommunity?: Function,
   joinedFirstCommunity?: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   data: {
     community: GetCommunityType,
     loading: boolean,

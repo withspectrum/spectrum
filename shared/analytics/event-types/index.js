@@ -9,6 +9,7 @@ import * as miscEvents from './misc'
 import * as navigationEvents from './navigation'
 import * as notificationsEvents from './notifications'
 import * as pageExploreEvents from './page-explore'
+import * as pageFeatureEvents from './page-features'
 import * as pageHomeEvents from './page-home'
 import * as pageInboxEvents from './page-inbox'
 import * as pageLoginEvents from './page-login'
@@ -33,6 +34,7 @@ export const events = {
   ...navigationEvents,
   ...notificationsEvents,
   ...pageExploreEvents,
+  ...pageFeatureEvents,
   ...pageHomeEvents,
   ...pageInboxEvents,
   ...pageLoginEvents,

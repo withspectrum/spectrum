@@ -338,14 +338,14 @@ export const LinkSection = styled(FooterSection)`
       width: 0%;
       opacity: 0;
       background-color: ${props => props.theme.text.reverse};
-      transition: all 0.2s ease-in-out;
+      transition: opacity 0.2s ease-in-out, width 0.2s ease-in-out;
     }
 
     &:hover {
       &:after {
         width: 100%;
         opacity: 1;
-        transition: all 0.2s ease-in-out;
+        transition: opacity 0.2s ease-in-out, width 0.2s ease-in-out;
       }
     }
   }

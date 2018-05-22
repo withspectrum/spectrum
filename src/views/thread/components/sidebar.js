@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { CLIENT_URL } from 'src/api/constants';
 import Icon from 'src/components/icons';
+import type { Dispatch } from 'redux';
 import {
   SidebarSection,
   SidebarSectionTitle,
@@ -45,7 +46,7 @@ type Props = {
     threads: Array<RecommendedThread>,
   },
   toggleCommunityMembership: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   threadViewLoading?: boolean,
 };
 

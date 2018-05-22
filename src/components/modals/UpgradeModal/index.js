@@ -9,6 +9,7 @@ import { addToastWithTimeout } from '../../../actions/toasts';
 import { connect } from 'react-redux';
 import { Button, OutlineButton } from '../../buttons';
 import { UpsellUpgradeToPro } from '../../upsell';
+import type { Dispatch } from 'redux';
 import {
   modalStyles,
   Section,
@@ -20,7 +21,7 @@ import {
 import { track, events } from 'src/helpers/analytics';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   downgradeFromPro: Function,
   isOpen: boolean,
   user: Object,

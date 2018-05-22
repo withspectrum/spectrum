@@ -12,11 +12,12 @@ type AvatarProps = {|
   size: number,
   radius: number,
   onPress?: Function,
+  style?: Object,
 |};
 
 class Avatar extends Component<AvatarProps> {
   render() {
-    const { src, size, radius, onPress } = this.props;
+    const { src, size, radius, onPress, style } = this.props;
     let source = src ? { uri: src } : {};
 
     return (
@@ -26,7 +27,7 @@ class Avatar extends Component<AvatarProps> {
           <TouchableHighlight onPress={onPress}>{children}</TouchableHighlight>
         )}
       >
-        <AvatarImage source={source} size={size} radius={radius} />
+        <AvatarImage source={source} size={size} radius={radius} style={style} />
       </ConditionalWrap>
     );
   }

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { AuthSession, SecureStore } from 'expo';
 import { authenticate } from '../../actions/authentication';
 import { DEV_BASE_URI } from '../../../shared/graphql/constants.native';
+import type { Dispatch } from 'redux';
 import {
   Container,
   Emoji,
@@ -25,7 +26,7 @@ const API_URL =
 type Provider = 'twitter' | 'facebook' | 'google' | 'github';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 class Login extends React.Component<Props> {

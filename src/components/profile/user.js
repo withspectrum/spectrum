@@ -14,6 +14,7 @@ import Avatar from '../avatar';
 import Badge from '../badges';
 import { displayLoadingCard } from '../loading';
 import Reputation from '../reputation';
+import type { Dispatch } from 'redux';
 import {
   FullProfile,
   ProfileHeader,
@@ -63,7 +64,7 @@ const UserWithData = ({
   data: { user: UserProps },
   profileSize: ProfileSizeProps,
   currentUser: CurrentUserProps,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   history: Object,
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
