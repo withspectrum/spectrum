@@ -52,10 +52,10 @@ export const MiniImg = styled.img`
   border-radius: 2px;
   margin: 0.25rem;
   opacity: ${props => (props.active ? 1 : 0.5)};
-  transition: all 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
 
   &:hover {
-    transition: all 0.2s ease-in-out;
+    transition: opacity 0.2s ease-in-out;
     cursor: pointer;
     opacity: ${props => (props.active ? 1 : 0.7)};
   }
