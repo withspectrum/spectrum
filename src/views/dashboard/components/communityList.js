@@ -25,6 +25,7 @@ import {
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   dispatch: Dispatch<Object>,
@@ -104,36 +105,39 @@ class CommunityList extends React.Component<Props> {
             <CommunityListName>Everything</CommunityListName>
           </CommunityListItem>
           {sortedCommunities.map(c => (
-            <CommunityListItem
-              key={c.id}
-              onClick={() => this.handleOnClick(c.id)}
-              active={c.id === activeCommunity}
-            >
-              <CommunityListAvatar
+            <ErrorBoundary fallbackComponent={null} key={c.id}>
+              <CommunityListItem
+                onClick={() => this.handleOnClick(c.id)}
                 active={c.id === activeCommunity}
-                src={c.profilePhoto}
-              />
-              <CommunityListMeta>
-                <CommunityListName>{c.name}</CommunityListName>
-                <Reputation
-                  ignoreClick
-                  size={'mini'}
-                  tipText={`Rep in ${c.name}`}
-                  reputation={c.communityPermissions.reputation}
+              >
+                <CommunityListAvatar
+                  active={c.id === activeCommunity}
+                  src={c.profilePhoto}
                 />
-              </CommunityListMeta>
+                <CommunityListMeta>
+                  <CommunityListName>{c.name}</CommunityListName>
+                  <Reputation
+                    ignoreClick
+                    size={'mini'}
+                    tipText={`Rep in ${c.name}`}
+                    reputation={c.communityPermissions.reputation}
+                  />
+                </CommunityListMeta>
 
-              {c.id === activeCommunity && (
-                <SidebarChannels
-                  activeChannel={activeChannel}
-                  communitySlug={c.slug}
-                  permissions={c.communityPermissions}
-                  slug={c.slug}
-                  id={c.id}
-                  setActiveChannelObject={this.props.setActiveChannelObject}
-                />
-              )}
-            </CommunityListItem>
+                {c.id === activeCommunity && (
+                  <ErrorBoundary>
+                    <SidebarChannels
+                      activeChannel={activeChannel}
+                      communitySlug={c.slug}
+                      permissions={c.communityPermissions}
+                      slug={c.slug}
+                      id={c.id}
+                      setActiveChannelObject={this.props.setActiveChannelObject}
+                    />
+                  </ErrorBoundary>
+                )}
+              </CommunityListItem>
+            </ErrorBoundary>
           ))}
         </CommunityListScroller>
 
@@ -149,12 +153,14 @@ class CommunityList extends React.Component<Props> {
           </Link>
           {// if user has joined less than 5 communities, upsell some popular ones
           communities.length < 5 && (
-            <UpsellExploreCommunities
-              activeCommunity={activeCommunity}
-              communities={communities}
-              handleOnClick={this.handleOnClick}
-              curatedContentType={'top-communities-by-members'}
-            />
+            <ErrorBoundary fallbackComponent={null}>
+              <UpsellExploreCommunities
+                activeCommunity={activeCommunity}
+                communities={communities}
+                handleOnClick={this.handleOnClick}
+                curatedContentType={'top-communities-by-members'}
+              />
+            </ErrorBoundary>
           )}
         </Fixed>
       </CommunityListWrapper>

@@ -24,6 +24,7 @@ import {
   MiniLinkPreview,
   EllipsisText,
 } from '../style';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   active: boolean,
@@ -139,67 +140,75 @@ class InboxThread extends React.Component<Props> {
     }
 
     return (
-      <InboxThreadItem active={active}>
-        <InboxLinkWrapper
-          to={{
-            pathname: window.location.pathname,
-            search:
-              window.innerWidth < 768 || viewContext
-                ? `?thread=${data.id}`
-                : `?t=${data.id}`,
-          }}
-          onClick={e =>
-            window.innerWidth > 768 &&
-            !viewContext &&
-            !e.metaKey &&
-            this.props.dispatch(changeActiveThread(data.id))
-          }
-        />
-        <InboxThreadContent>
-          <ThreadCommunityInfo
-            thread={data}
-            active={active}
-            activeCommunity={hasActiveCommunity}
-            activeChannel={hasActiveChannel}
-            isPinned={isPinned}
+      <ErrorBoundary fallbackComponent={null}>
+        <InboxThreadItem active={active}>
+          <InboxLinkWrapper
+            to={{
+              pathname: window.location.pathname,
+              search:
+                window.innerWidth < 768 || viewContext
+                  ? `?thread=${data.id}`
+                  : `?t=${data.id}`,
+            }}
+            onClick={e =>
+              window.innerWidth > 768 &&
+              !viewContext &&
+              !e.metaKey &&
+              this.props.dispatch(changeActiveThread(data.id))
+            }
           />
-
-          <ThreadTitle active={active}>
-            {truncate(data.content.title, 80)}
-          </ThreadTitle>
-
-          {attachmentsExist &&
-            attachments
-              .filter(att => att && att.attachmentType === 'linkPreview')
-              .map(att => {
-                if (!att) return null;
-                const attData = JSON.parse(att.data);
-                const url = attData.trueUrl || attData.url;
-                if (!url) return null;
-
-                return (
-                  <AttachmentsContainer active={active} key={url}>
-                    <MiniLinkPreview href={url} target="_blank">
-                      <Icon glyph="link" size={18} />
-                      <EllipsisText>{url}</EllipsisText>
-                    </MiniLinkPreview>
-                  </AttachmentsContainer>
-                );
-              })}
-
-          <ThreadMeta>
-            {(participantsExist || author) && (
-              <Facepile
+          <InboxThreadContent>
+            <ErrorBoundary fallbackComponent={null}>
+              <ThreadCommunityInfo
+                thread={data}
                 active={active}
-                participants={participants}
-                author={data.author.user}
+                activeCommunity={hasActiveCommunity}
+                activeChannel={hasActiveChannel}
+                isPinned={isPinned}
               />
-            )}
+            </ErrorBoundary>
 
-            {this.generatePillOrMessageCount()}
-          </ThreadMeta>
-        </InboxThreadContent>
-      </InboxThreadItem>
+            <ThreadTitle active={active}>
+              {truncate(data.content.title, 80)}
+            </ThreadTitle>
+
+            <ErrorBoundary fallbackComponent={null}>
+              {attachmentsExist &&
+                attachments
+                  .filter(att => att && att.attachmentType === 'linkPreview')
+                  .map(att => {
+                    if (!att) return null;
+                    const attData = JSON.parse(att.data);
+                    const url = attData.trueUrl || attData.url;
+                    if (!url) return null;
+
+                    return (
+                      <AttachmentsContainer active={active} key={url}>
+                        <MiniLinkPreview href={url} target="_blank">
+                          <Icon glyph="link" size={18} />
+                          <EllipsisText>{url}</EllipsisText>
+                        </MiniLinkPreview>
+                      </AttachmentsContainer>
+                    );
+                  })}
+            </ErrorBoundary>
+
+            <ThreadMeta>
+              {(participantsExist || author) && (
+                <ErrorBoundary fallbackComponent={null}>
+                  <Facepile
+                    active={active}
+                    participants={participants}
+                    author={data.author.user}
+                  />
+                </ErrorBoundary>
+              )}
+
+              {this.generatePillOrMessageCount()}
+            </ThreadMeta>
+          </InboxThreadContent>
+        </InboxThreadItem>
+      </ErrorBoundary>
     );
   }
 }
@@ -216,45 +225,49 @@ class WatercoolerThreadPure extends React.Component<Props> {
     const participantsExist = participants && participants.length > 0;
 
     return (
-      <InboxThreadItem active={active}>
-        <InboxLinkWrapper
-          to={{
-            pathname: window.location.pathname,
-            search:
-              window.innerWidth < 768 || viewContext
-                ? `?thread=${id}`
-                : `?t=${id}`,
-          }}
-          onClick={() =>
-            window.innerWidth > 768 &&
-            this.props.dispatch(changeActiveThread(id))
-          }
-        />
-        <InboxThreadContent>
-          <WaterCoolerPill active={active} />
-          <ThreadTitle active={active}>
-            {community.name} Watercooler
-          </ThreadTitle>
+      <ErrorBoundary fallbackComponent={null}>
+        <InboxThreadItem active={active}>
+          <InboxLinkWrapper
+            to={{
+              pathname: window.location.pathname,
+              search:
+                window.innerWidth < 768 || viewContext
+                  ? `?thread=${id}`
+                  : `?t=${id}`,
+            }}
+            onClick={() =>
+              window.innerWidth > 768 &&
+              this.props.dispatch(changeActiveThread(id))
+            }
+          />
+          <InboxThreadContent>
+            <WaterCoolerPill active={active} />
+            <ThreadTitle active={active}>
+              {community.name} Watercooler
+            </ThreadTitle>
 
-          <ThreadMeta>
-            {(participantsExist || author) && (
-              <Facepile
-                active={active}
-                participants={participants}
-                author={author.user}
-              />
-            )}
+            <ThreadMeta>
+              {(participantsExist || author) && (
+                <ErrorBoundary fallbackComponent={null}>
+                  <Facepile
+                    active={active}
+                    participants={participants}
+                    author={author.user}
+                  />
+                </ErrorBoundary>
+              )}
 
-            {messageCount > 0 && (
-              <StatusText offset={participants.length} active={active}>
-                {messageCount > 1
-                  ? `${messageCount} messages`
-                  : `${messageCount} message`}
-              </StatusText>
-            )}
-          </ThreadMeta>
-        </InboxThreadContent>
-      </InboxThreadItem>
+              {messageCount > 0 && (
+                <StatusText offset={participants.length} active={active}>
+                  {messageCount > 1
+                    ? `${messageCount} messages`
+                    : `${messageCount} message`}
+                </StatusText>
+              )}
+            </ThreadMeta>
+          </InboxThreadContent>
+        </InboxThreadItem>
+      </ErrorBoundary>
     );
   }
 }

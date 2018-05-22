@@ -11,6 +11,7 @@ import ChannelMembers from './channelMembers';
 import ArchiveForm from './archiveForm';
 import LoginTokenSettings from './loginTokenSettings';
 import SlackConnection from '../../communitySettings/components/slack';
+import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
   community: Object,
@@ -27,41 +28,63 @@ class Overview extends React.Component<Props> {
     return (
       <SectionsContainer data-cy="channel-overview">
         <Column>
-          <EditForm channel={channel} />
-          <SlackConnection
-            type={'bot-only'}
-            id={community.id}
-            channelFilter={channel.id}
-          />
-          {channel.slug !== 'general' && <ArchiveForm channel={channel} />}
-          {channel.isPrivate && (
-            <LoginTokenSettings id={channel.id} channel={channel} />
-          )}
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            <EditForm channel={channel} />
+          </ErrorBoundary>
+
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            <SlackConnection
+              type={'bot-only'}
+              id={community.id}
+              channelFilter={channel.id}
+            />
+          </ErrorBoundary>
+
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            {channel.slug !== 'general' && <ArchiveForm channel={channel} />}
+          </ErrorBoundary>
+
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            {channel.isPrivate && (
+              <LoginTokenSettings id={channel.id} channel={channel} />
+            )}
+          </ErrorBoundary>
         </Column>
 
         <Column>
           {channel.isPrivate && (
             <span>
-              <ChannelMembers
-                channel={channel}
-                id={channel.id}
-                initMessage={initMessage}
-              />
-              <PendingUsers
-                togglePending={this.props.togglePending}
-                channel={channel}
-                id={channel.id}
-                initMessage={initMessage}
-              />
-              <BlockedUsers
-                unblock={this.props.unblock}
-                channel={channel}
-                id={channel.id}
-                initMessage={initMessage}
-              />
+              <ErrorBoundary fallbackComponent={SettingsFallback}>
+                <ChannelMembers
+                  channel={channel}
+                  id={channel.id}
+                  initMessage={initMessage}
+                />
+              </ErrorBoundary>
+
+              <ErrorBoundary fallbackComponent={SettingsFallback}>
+                <PendingUsers
+                  togglePending={this.props.togglePending}
+                  channel={channel}
+                  id={channel.id}
+                  initMessage={initMessage}
+                />
+              </ErrorBoundary>
+
+              <ErrorBoundary fallbackComponent={SettingsFallback}>
+                <BlockedUsers
+                  unblock={this.props.unblock}
+                  channel={channel}
+                  id={channel.id}
+                  initMessage={initMessage}
+                />
+              </ErrorBoundary>
             </span>
           )}
-          {!channel.isPrivate && <ChannelMembers id={channel.id} />}
+
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            {!channel.isPrivate && <ChannelMembers id={channel.id} />}
+          </ErrorBoundary>
         </Column>
       </SectionsContainer>
     );

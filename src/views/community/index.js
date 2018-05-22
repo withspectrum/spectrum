@@ -45,6 +45,7 @@ import {
 import ChannelList from './components/channelList';
 import ModeratorList from './components/moderatorList';
 import { track, events, transformations } from 'src/helpers/analytics';
+import { ErrorBoundary } from 'src/components/error';
 
 const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 
@@ -217,7 +218,9 @@ class CommunityView extends React.Component<Props, State> {
           <Grid id="main">
             <CoverPhoto src={community.coverPhoto} />
             <Meta>
-              <CommunityProfile data={{ community }} profileSize="full" />
+              <ErrorBoundary fallbackComponent={null}>
+                <CommunityProfile data={{ community }} profileSize="full" />
+              </ErrorBoundary>
 
               {!isLoggedIn ? (
                 <Link to={loginUrl}>
@@ -303,10 +306,12 @@ class CommunityView extends React.Component<Props, State> {
               isLoggedIn &&
                 selectedView === 'threads' &&
                 userHasPermissions && (
-                  <ThreadComposer
-                    activeCommunity={communitySlug}
-                    showComposerUpsell={showComposerUpsell}
-                  />
+                  <ErrorBoundary fallbackComponent={null}>
+                    <ThreadComposer
+                      activeCommunity={communitySlug}
+                      showComposerUpsell={showComposerUpsell}
+                    />
+                  </ErrorBoundary>
                 )}
 
               {// thread list
@@ -327,27 +332,38 @@ class CommunityView extends React.Component<Props, State> {
 
               {// members grid
               selectedView === 'members' && (
-                <CommunityMemberGrid
-                  id={community.id}
-                  filter={{ isMember: true, isBlocked: false }}
-                />
+                <ErrorBoundary>
+                  <CommunityMemberGrid
+                    id={community.id}
+                    filter={{ isMember: true, isBlocked: false }}
+                  />
+                </ErrorBoundary>
               )}
 
               {//search
-              selectedView === 'search' && <Search community={community} />}
+              selectedView === 'search' && (
+                <ErrorBoundary>
+                  <Search community={community} />
+                </ErrorBoundary>
+              )}
             </Content>
             <Extras>
-              <ColumnHeading>Channels</ColumnHeading>
-              <ChannelList
-                id={community.id}
-                communitySlug={communitySlug.toLowerCase()}
-              />
-              <ColumnHeading>Team</ColumnHeading>
-              <ModeratorList
-                id={community.id}
-                first={20}
-                filter={{ isModerator: true, isOwner: true }}
-              />
+              <ErrorBoundary fallbackComponent={null}>
+                <ColumnHeading>Channels</ColumnHeading>
+                <ChannelList
+                  id={community.id}
+                  communitySlug={communitySlug.toLowerCase()}
+                />
+              </ErrorBoundary>
+
+              <ErrorBoundary fallbackComponent={null}>
+                <ColumnHeading>Team</ColumnHeading>
+                <ModeratorList
+                  id={community.id}
+                  first={20}
+                  filter={{ isModerator: true, isOwner: true }}
+                />
+              </ErrorBoundary>
             </Extras>
           </Grid>
         </AppViewWrapper>
