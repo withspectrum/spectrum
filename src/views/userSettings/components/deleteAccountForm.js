@@ -21,6 +21,7 @@ import { SERVER_URL } from 'src/api/constants';
 import Link from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type State = {
   isLoading: boolean,
@@ -31,7 +32,7 @@ type State = {
 type Props = {
   isLoading: boolean,
   deleteCurrentUser: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   data: {
     user: GetUserCommunityConnectionType,
   },

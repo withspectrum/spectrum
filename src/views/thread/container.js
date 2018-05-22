@@ -23,6 +23,7 @@ import LoadingView from './components/loading';
 import ThreadCommunityBanner from './components/threadCommunityBanner';
 import Sidebar from './components/sidebar';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
+import type { Dispatch } from 'redux';
 import {
   ThreadViewContainer,
   ThreadContentView,
@@ -45,7 +46,7 @@ type Props = {
   isLoading: boolean,
   hasError: boolean,
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   slider: boolean,
   threadViewContext: 'slider' | 'fullscreen' | 'inbox',
   threadSliderIsOpen: boolean,

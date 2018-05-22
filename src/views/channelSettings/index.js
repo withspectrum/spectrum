@@ -22,6 +22,7 @@ import Overview from './components/overview';
 import Subnav from 'src/components/settingsViews/subnav';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   data: {
@@ -31,7 +32,7 @@ type Props = {
   match: Object,
   isLoading: boolean,
   hasError: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   togglePendingUser: Function,
   unblockUser: Function,
   history: Object,

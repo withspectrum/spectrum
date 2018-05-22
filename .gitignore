@@ -33,3 +33,5 @@ api/.env
 mobile/.expo
 test-results.json
 public/uploads
+cypress/screenshots/
+cypress/videos/

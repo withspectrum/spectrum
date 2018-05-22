@@ -36,6 +36,7 @@ import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessag
 import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
+import type { Dispatch } from 'redux';
 
 const QuotedMessage = connect()(
   getMessageById(props => {
@@ -72,7 +73,7 @@ type State = {
 type Props = {
   onRef: Function,
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   onChange: Function,
   state: Object,
   createThread: Function,

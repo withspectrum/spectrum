@@ -37,6 +37,7 @@ import {
 } from 'src/helpers/images';
 import { Notice } from 'src/components/listItems/style';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
+import type { Dispatch } from 'redux';
 
 type State = {
   website: ?string,
@@ -58,7 +59,7 @@ type State = {
 
 type Props = {
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   client: Object,
   editUser: Function,
 };

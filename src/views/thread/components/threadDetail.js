@@ -32,6 +32,7 @@ import {
   Edited,
 } from '../style';
 import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
@@ -56,7 +57,7 @@ type Props = {
   setThreadLock: Function,
   pinThread: Function,
   editThread: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   currentUser: ?Object,
   toggleEdit: Function,
 };

@@ -27,13 +27,14 @@ import unblockCommunityMember from 'shared/graphql/mutations/communityMember/unb
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 import MutationWrapper from './mutationWrapper';
 import { getCardImage } from '../../communityBilling/utils';
+import type { Dispatch } from 'redux';
 
 type Props = {
   blockCommunityMember: Function,
   unblockCommunityMember: Function,
   addCommunityModerator: Function,
   removeCommunityModerator: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   community: GetCommunitySettingsType,
   history: Object,
   user: {
