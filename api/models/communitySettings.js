@@ -119,29 +119,15 @@ export const getCommunitiesSettings = (communityIds: Array<string>): Promise<?DB
 };
 
 // prettier-ignore
-export const createCommunitySettings = (id: string): Promise<DBCommunity> => {
+export const createCommunitySettings = (communityId: string): Promise<DBCommunity> => {
   return db
     .table('communitySettings')
     .insert({
-      communityId: id,
-      brandedLogin: {
-        isEnabled: false,
-        message: null,
-      },
-      slackSettings: {
-        connectedAt: null,
-        connectedBy: null,
-        invitesSentAt: null,
-        teamName: null,
-        teamId: null,
-        invitesMemberCount: null,
-        invitesCustomMessage: null,
-        scope: null,
-        token: null,
-      },
+      communityId,
+      ...defaultSettings
     })
     .run()
-    .then(async () => await getCommunityById(id));
+    .then(async () => await getCommunityById(communityId));
 };
 
 // prettier-ignore
