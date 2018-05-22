@@ -54,42 +54,43 @@ class Community extends React.Component<Props> {
         <Wrapper>
           <StatusBar barStyle="light-content" />
 
-          <ScrollView>
-            <CoverPhotoContainer>
-              {community.coverPhoto ? (
-                <CoverPhoto
-                  resizeMode={'cover'}
-                  source={{ uri: community.coverPhoto }}
-                />
-              ) : (
-                <CoverPhotoFill />
-              )}
-            </CoverPhotoContainer>
+          <CommunityThreadFeed
+            navigation={navigation}
+            id={community.id}
+            activeCommunity={community.id}
+            ListHeaderComponent={
+              <React.Fragment>
+                <CoverPhotoContainer>
+                  {community.coverPhoto ? (
+                    <CoverPhoto
+                      resizeMode={'cover'}
+                      source={{ uri: community.coverPhoto }}
+                    />
+                  ) : (
+                    <CoverPhotoFill />
+                  )}
+                </CoverPhotoContainer>
 
-            <ProfilePhotoContainer>
-              <ProfilePhoto source={{ uri: community.profilePhoto }} />
-            </ProfilePhotoContainer>
+                <ProfilePhotoContainer>
+                  <ProfilePhoto source={{ uri: community.profilePhoto }} />
+                </ProfilePhotoContainer>
 
-            <ProfileDetailsContainer>
-              <Name>{community.name}</Name>
-              <Description>{community.description}</Description>
-            </ProfileDetailsContainer>
+                <ProfileDetailsContainer>
+                  <Name>{community.name}</Name>
+                  <Description>{community.description}</Description>
+                </ProfileDetailsContainer>
 
-            <ThreadFeedDivider />
+                <ThreadFeedDivider />
 
-            {community.pinnedThreadId && (
-              <RemoteThreadItem id={community.pinnedThreadId} />
-            )}
-            {community.watercoolerId && (
-              <RemoteThreadItem id={community.watercoolerId} />
-            )}
-
-            <CommunityThreadFeed
-              navigation={navigation}
-              id={community.id}
-              activeCommunity={community.id}
-            />
-          </ScrollView>
+                {community.pinnedThreadId && (
+                  <RemoteThreadItem id={community.pinnedThreadId} />
+                )}
+                {community.watercoolerId && (
+                  <RemoteThreadItem id={community.watercoolerId} />
+                )}
+              </React.Fragment>
+            }
+          />
         </Wrapper>
       );
     }
