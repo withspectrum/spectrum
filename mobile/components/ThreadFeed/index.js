@@ -8,6 +8,7 @@ import ThreadItem from '../ThreadItem';
 import InfiniteList from '../InfiniteList';
 import Loading from '../Loading';
 import type { ThreadConnectionType } from '../../../shared/graphql/fragments/community/communityThreadConnection';
+import type { FlatListProps } from 'react-native';
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -24,6 +25,7 @@ type State = {
 };
 
 type Props = {
+  ...$Exact<FlatListProps>,
   isLoading: boolean,
   isFetchingMore: boolean,
   isRefetching: boolean,
@@ -105,12 +107,17 @@ class ThreadFeed extends React.Component<Props, State> {
 
   render() {
     const {
+      data,
       data: { threadConnection },
       isLoading,
       hasError,
       navigation,
       activeChannel,
       activeCommunity,
+      isFetchingMore,
+      isRefetching,
+      channels,
+      ...flatListProps
     } = this.props;
 
     if (isLoading) {
@@ -133,6 +140,7 @@ class ThreadFeed extends React.Component<Props, State> {
             loadingIndicator={<Text>Loading...</Text>}
             fetchMore={this.fetchMore}
             hasNextPage={threadConnection.pageInfo.hasNextPage}
+            {...flatListProps}
           />
         </View>
       );
