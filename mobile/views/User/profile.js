@@ -50,50 +50,52 @@ class User extends React.Component<Props, State> {
       return (
         <Wrapper>
           <StatusBar barStyle="light-content" />
+          <UserThreadFeed
+            navigation={navigation}
+            kind={this.state.feed}
+            id={data.user.id}
+            ListHeaderComponent={
+              <React.Fragment>
+                <CoverPhotoContainer>
+                  {data.user.coverPhoto ? (
+                    <CoverPhoto
+                      resizeMode={'cover'}
+                      source={{ uri: data.user.coverPhoto }}
+                    />
+                  ) : (
+                    <CoverPhotoFill />
+                  )}
+                </CoverPhotoContainer>
 
-          <ScrollView>
-            <CoverPhotoContainer>
-              {data.user.coverPhoto ? (
-                <CoverPhoto
-                  resizeMode={'cover'}
-                  source={{ uri: data.user.coverPhoto }}
-                />
-              ) : (
-                <CoverPhotoFill />
-              )}
-            </CoverPhotoContainer>
+                <ProfilePhotoContainer>
+                  <ProfilePhoto source={{ uri: data.user.profilePhoto }} />
+                </ProfilePhotoContainer>
 
-            <ProfilePhotoContainer>
-              <ProfilePhoto source={{ uri: data.user.profilePhoto }} />
-            </ProfilePhotoContainer>
+                <ProfileDetailsContainer>
+                  <Name>{data.user.name}</Name>
+                  <Username>@{data.user.username}</Username>
+                  <Description>{data.user.description}</Description>
+                </ProfileDetailsContainer>
 
-            <ProfileDetailsContainer>
-              <Name>{data.user.name}</Name>
-              <Username>@{data.user.username}</Username>
-              <Description>{data.user.description}</Description>
-            </ProfileDetailsContainer>
-
-            <ThreadFeedTabContainer>
-              <ThreadFeedTab
-                onPress={() => this.toggleFeed('participant')}
-                isActive={feed === 'participant'}
-              >
-                <TabLabel isActive={feed === 'participant'}>Replies</TabLabel>
-              </ThreadFeedTab>
-              <ThreadFeedTab
-                onPress={() => this.toggleFeed('creator')}
-                isActive={feed === 'creator'}
-              >
-                <TabLabel isActive={feed === 'creator'}>Threads</TabLabel>
-              </ThreadFeedTab>
-            </ThreadFeedTabContainer>
-
-            <UserThreadFeed
-              navigation={navigation}
-              kind={this.state.feed}
-              id={data.user.id}
-            />
-          </ScrollView>
+                <ThreadFeedTabContainer>
+                  <ThreadFeedTab
+                    onPress={() => this.toggleFeed('participant')}
+                    isActive={feed === 'participant'}
+                  >
+                    <TabLabel isActive={feed === 'participant'}>
+                      Replies
+                    </TabLabel>
+                  </ThreadFeedTab>
+                  <ThreadFeedTab
+                    onPress={() => this.toggleFeed('creator')}
+                    isActive={feed === 'creator'}
+                  >
+                    <TabLabel isActive={feed === 'creator'}>Threads</TabLabel>
+                  </ThreadFeedTab>
+                </ThreadFeedTabContainer>
+              </React.Fragment>
+            }
+          />
         </Wrapper>
       );
     }

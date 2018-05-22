@@ -45,37 +45,40 @@ class Channel extends React.Component<Props> {
         <Wrapper>
           <StatusBar barStyle="light-content" />
 
-          <ScrollView>
-            <CoverPhotoContainer>
-              {channel.community.coverPhoto ? (
-                <CoverPhoto
-                  resizeMode={'cover'}
-                  source={{ uri: channel.community.coverPhoto }}
-                />
-              ) : (
-                <CoverPhotoFill />
-              )}
-            </CoverPhotoContainer>
+          <ChannelThreadFeed
+            navigation={navigation}
+            id={channel.id}
+            activeChannel={channel.id}
+            activeCommunity={channel.community.id}
+            ListHeaderComponent={
+              <React.Fragment>
+                <CoverPhotoContainer>
+                  {channel.community.coverPhoto ? (
+                    <CoverPhoto
+                      resizeMode={'cover'}
+                      source={{ uri: channel.community.coverPhoto }}
+                    />
+                  ) : (
+                    <CoverPhotoFill />
+                  )}
+                </CoverPhotoContainer>
 
-            <ProfilePhotoContainer>
-              <ProfilePhoto source={{ uri: channel.community.profilePhoto }} />
-            </ProfilePhotoContainer>
+                <ProfilePhotoContainer>
+                  <ProfilePhoto
+                    source={{ uri: channel.community.profilePhoto }}
+                  />
+                </ProfilePhotoContainer>
 
-            <ProfileDetailsContainer>
-              <Username>{channel.community.name}</Username>
-              <Name>{channel.name}</Name>
-              <Description>{channel.description}</Description>
-            </ProfileDetailsContainer>
+                <ProfileDetailsContainer>
+                  <Username>{channel.community.name}</Username>
+                  <Name>{channel.name}</Name>
+                  <Description>{channel.description}</Description>
+                </ProfileDetailsContainer>
 
-            <ThreadFeedDivider />
-
-            <ChannelThreadFeed
-              navigation={navigation}
-              id={channel.id}
-              activeChannel={channel.id}
-              activeCommunity={channel.community.id}
-            />
-          </ScrollView>
+                <ThreadFeedDivider />
+              </React.Fragment>
+            }
+          />
         </Wrapper>
       );
     }
