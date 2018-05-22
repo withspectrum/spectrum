@@ -388,13 +388,13 @@ export const CommunityCardButton = styled.button`
   font-weight: 600;
   color: ${props => props.theme.text.alt};
   background: ${props => props.theme.bg.wash};
-  transition: all 0.2s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: color 0.2s cubic-bezier(0.77, 0, 0.175, 1);
   width: 100%;
 
   &:hover {
     color: ${props => props.theme.text.default};
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.77, 0, 0.175, 1);
+    transition: color 0.2s cubic-bezier(0.77, 0, 0.175, 1);
   }
 `;
 

@@ -33,6 +33,7 @@ import {
 } from '../style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
+import { ErrorBoundary } from 'src/components/error';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
@@ -445,7 +446,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
       <ThreadWrapper>
         <ThreadContent isEditing={isEditing}>
           {/* $FlowFixMe */}
-          <ThreadByline author={thread.author} />
+          <ErrorBoundary fallbackComponent={null}>
+            <ThreadByline author={thread.author} />
+          </ErrorBoundary>
 
           {isEditing ? (
             <Textarea
@@ -492,20 +495,22 @@ class ThreadDetailPure extends React.Component<Props, State> {
           />
         </ThreadContent>
 
-        <ActionBar
-          toggleEdit={this.toggleEdit}
-          currentUser={currentUser}
-          thread={thread}
-          saveEdit={this.saveEdit}
-          togglePinThread={this.togglePinThread}
-          isSavingEdit={isSavingEdit}
-          threadLock={this.threadLock}
-          triggerDelete={this.triggerDelete}
-          isEditing={isEditing}
-          title={this.state.title}
-          isLockingThread={isLockingThread}
-          isPinningThread={isPinningThread}
-        />
+        <ErrorBoundary fallbackComponent={null}>
+          <ActionBar
+            toggleEdit={this.toggleEdit}
+            currentUser={currentUser}
+            thread={thread}
+            saveEdit={this.saveEdit}
+            togglePinThread={this.togglePinThread}
+            isSavingEdit={isSavingEdit}
+            threadLock={this.threadLock}
+            triggerDelete={this.triggerDelete}
+            isEditing={isEditing}
+            title={this.state.title}
+            isLockingThread={isLockingThread}
+            isPinningThread={isPinningThread}
+          />
+        </ErrorBoundary>
       </ThreadWrapper>
     );
   }

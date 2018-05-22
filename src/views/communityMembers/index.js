@@ -17,6 +17,7 @@ import {
   SectionTitle,
   Column,
 } from '../../components/settingsViews/style';
+import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
   currentUser: Object,
@@ -34,22 +35,33 @@ class CommunityMembersSettings extends React.Component<Props> {
       return (
         <SectionsContainer>
           <Column>
-            <CommunityMembers
-              history={history}
-              id={community.id}
-              community={community}
-            />
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <CommunityMembers
+                history={history}
+                id={community.id}
+                community={community}
+              />
+            </ErrorBoundary>
           </Column>
 
           <Column>
-            <SlackConnection type={'import-only'} id={community.id} />
+
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <SlackConnection type={'import-only'} id={community.id} />
+            </ErrorBoundary>
+        
             {community.isPrivate && (
-              <JoinTokenSettings id={community.id} community={community} />
+              <ErrorBoundary fallbackComponent={SettingsFallback}>
+                <JoinTokenSettings id={community.id} community={community} />
+              </ErrorBoundary>
             )}
-            <SectionCard>
-              <SectionTitle>Invite by email</SectionTitle>
-              <CommunityInvitationForm id={community.id} />
-            </SectionCard>
+
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <SectionCard>
+                <SectionTitle>Invite by email</SectionTitle>
+                <CommunityInvitationForm id={community.id} />
+              </SectionCard>
+            </ErrorBoundary>
           </Column>
         </SectionsContainer>
       );

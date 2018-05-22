@@ -40,7 +40,7 @@ export const ActiveOverlay = styled.span`
   border-radius: 8px;
   border: 1px solid ${props => props.theme.brand.default};
   opacity: ${props => (props.active ? 1 : 0)};
-  transition: all 0.1s ease-in-out;
+  transition: opacity 0.1s ease-in-out;
 `;
 
 const Img = styled.img`

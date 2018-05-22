@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { View } from 'react-native';
-import styled from 'styled-components/native';
 import redraft from 'redraft';
 import Anchor from '../Anchor';
 import Text from '../Text';

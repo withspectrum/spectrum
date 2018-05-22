@@ -37,6 +37,7 @@ import {
   WatercoolerAvatar,
 } from './style';
 import WatercoolerActionBar from './components/watercoolerActionBar';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   data: {
@@ -337,29 +338,127 @@ class ThreadContainer extends React.Component<Props, State> {
 
       if (channelPermissions.isBlocked || communityPermissions.isBlocked) {
         return (
-          <ThreadViewContainer
-            threadViewContext={threadViewContext}
-            constrain={
-              threadViewContext === 'slider' ||
-              threadViewContext === 'fullscreen'
-            }
-            data-cy="blocked-thread-view"
-          >
-            <ThreadContentView slider={slider}>
-              <ViewError
-                emoji={'✋'}
-                heading={'You have been blocked'}
-                subheading={`You are blocked from viewing all conversations in the ${
-                  thread.community.name
-                } community`}
-              />
-            </ThreadContentView>
-          </ThreadViewContainer>
+          <ErrorBoundary>
+            <ThreadViewContainer
+              threadViewContext={threadViewContext}
+              constrain={
+                threadViewContext === 'slider' ||
+                threadViewContext === 'fullscreen'
+              }
+              data-cy="blocked-thread-view"
+            >
+              <ThreadContentView slider={slider}>
+                <ViewError
+                  emoji={'✋'}
+                  heading={'You have been blocked'}
+                  subheading={`You are blocked from viewing all conversations in the ${
+                    thread.community.name
+                  } community`}
+                />
+              </ThreadContentView>
+            </ThreadViewContainer>
+          </ErrorBoundary>
         );
       }
 
       if (thread.watercooler)
         return (
+          <ErrorBoundary>
+            <ThreadViewContainer
+              data-cy="thread-view"
+              constrain={
+                threadViewContext === 'slider' ||
+                threadViewContext === 'fullscreen'
+              }
+              threadViewContext={threadViewContext}
+            >
+              {shouldRenderThreadSidebar && (
+                <Sidebar
+                  thread={thread}
+                  currentUser={currentUser}
+                  slug={thread.community.slug}
+                  id={thread.community.id}
+                />
+              )}
+
+              <ThreadContentView slider={slider}>
+                <Head
+                  title={`The Watercooler · ${thread.community.name}`}
+                  description={`Watercooler chat for the ${
+                    thread.community.name
+                  } community`}
+                  image={thread.community.profilePhoto}
+                />
+                <Titlebar
+                  title={thread.content.title}
+                  subtitle={`${thread.community.name} / ${thread.channel.name}`}
+                  provideBack={true}
+                  backRoute={'/'}
+                  noComposer
+                  style={{ gridArea: 'header' }}
+                />
+                <Content innerRef={this.setMessagesContainer}>
+                  <Detail type={slider ? '' : 'only'}>
+                    <WatercoolerIntroContainer>
+                      <WatercoolerAvatar
+                        src={thread.community.profilePhoto}
+                        community
+                        size={44}
+                        radius={8}
+                      />
+                      <WatercoolerTitle>
+                        The {thread.community.name} watercooler
+                      </WatercoolerTitle>
+                      <WatercoolerDescription>
+                        Welcome to the {thread.community.name} watercooler, a
+                        new space for general chat with everyone in the
+                        community. Jump in to the conversation below or
+                        introduce yourself!
+                      </WatercoolerDescription>
+                    </WatercoolerIntroContainer>
+
+                    <WatercoolerActionBar
+                      thread={thread}
+                      currentUser={currentUser}
+                    />
+
+                    {!isEditing && (
+                      <Messages
+                        threadMessageCount={thread.messageCount}
+                        id={thread.id}
+                        scrollContainer={this.state.messagesContainer}
+                        currentUser={currentUser}
+                        lastSeen={lastSeen}
+                        lastActive={lastActive}
+                        forceScrollToBottom={this.forceScrollToBottom}
+                        forceScrollToTop={this.forceScrollToTop}
+                        contextualScrollToBottom={this.contextualScrollToBottom}
+                        shouldForceScrollOnMessageLoad={true}
+                        shouldForceScrollToTopOnMessageLoad={false}
+                        hasMessagesToLoad={thread.messageCount > 0}
+                        isModerator={isModerator}
+                        isWatercooler={true}
+                      />
+                    )}
+
+                    {!isEditing &&
+                      isLocked && (
+                        <NullState
+                          icon="private"
+                          copy="This conversation has been locked."
+                        />
+                      )}
+                  </Detail>
+                </Content>
+
+                {this.renderChatInputOrUpsell()}
+              </ThreadContentView>
+            </ThreadViewContainer>
+          </ErrorBoundary>
+        );
+
+      return (
+        <ErrorBoundary>
           <ThreadViewContainer
             data-cy="thread-view"
             constrain={
@@ -379,10 +478,8 @@ class ThreadContainer extends React.Component<Props, State> {
 
             <ThreadContentView slider={slider}>
               <Head
-                title={`The Watercooler · ${thread.community.name}`}
-                description={`Watercooler chat for the ${
-                  thread.community.name
-                } community`}
+                title={title}
+                description={description}
                 image={thread.community.profilePhoto}
               />
               <Titlebar
@@ -395,26 +492,15 @@ class ThreadContainer extends React.Component<Props, State> {
               />
               <Content innerRef={this.setMessagesContainer}>
                 <Detail type={slider ? '' : 'only'}>
-                  <WatercoolerIntroContainer>
-                    <WatercoolerAvatar
-                      src={thread.community.profilePhoto}
-                      community
-                      size={44}
-                      radius={8}
-                    />
-                    <WatercoolerTitle>
-                      The {thread.community.name} watercooler
-                    </WatercoolerTitle>
-                    <WatercoolerDescription>
-                      Welcome to the {thread.community.name} watercooler, a new
-                      space for general chat with everyone in the community.
-                      Jump in to the conversation below or introduce yourself!
-                    </WatercoolerDescription>
-                  </WatercoolerIntroContainer>
-
-                  <WatercoolerActionBar
+                  <ThreadCommunityBanner
+                    hide={threadViewContext === 'fullscreen'}
                     thread={thread}
-                    currentUser={currentUser}
+                  />
+
+                  <ThreadDetail
+                    toggleEdit={this.toggleEdit}
+                    thread={thread}
+                    slider={slider}
                   />
 
                   {!isEditing && (
@@ -428,11 +514,13 @@ class ThreadContainer extends React.Component<Props, State> {
                       forceScrollToBottom={this.forceScrollToBottom}
                       forceScrollToTop={this.forceScrollToTop}
                       contextualScrollToBottom={this.contextualScrollToBottom}
-                      shouldForceScrollOnMessageLoad={true}
-                      shouldForceScrollToTopOnMessageLoad={false}
+                      shouldForceScrollOnMessageLoad={isParticipantOrAuthor}
+                      shouldForceScrollToTopOnMessageLoad={
+                        !isParticipantOrAuthor
+                      }
                       hasMessagesToLoad={thread.messageCount > 0}
                       isModerator={isModerator}
-                      isWatercooler={true}
+                      threadIsLocked={isLocked}
                     />
                   )}
 
@@ -449,84 +537,7 @@ class ThreadContainer extends React.Component<Props, State> {
               {this.renderChatInputOrUpsell()}
             </ThreadContentView>
           </ThreadViewContainer>
-        );
-
-      return (
-        <ThreadViewContainer
-          data-cy="thread-view"
-          constrain={
-            threadViewContext === 'slider' || threadViewContext === 'fullscreen'
-          }
-          threadViewContext={threadViewContext}
-        >
-          {shouldRenderThreadSidebar && (
-            <Sidebar
-              thread={thread}
-              currentUser={currentUser}
-              slug={thread.community.slug}
-              id={thread.community.id}
-            />
-          )}
-
-          <ThreadContentView slider={slider}>
-            <Head
-              title={title}
-              description={description}
-              image={thread.community.profilePhoto}
-            />
-            <Titlebar
-              title={thread.content.title}
-              subtitle={`${thread.community.name} / ${thread.channel.name}`}
-              provideBack={true}
-              backRoute={'/'}
-              noComposer
-              style={{ gridArea: 'header' }}
-            />
-            <Content innerRef={this.setMessagesContainer}>
-              <Detail type={slider ? '' : 'only'}>
-                <ThreadCommunityBanner
-                  hide={threadViewContext === 'fullscreen'}
-                  thread={thread}
-                />
-
-                <ThreadDetail
-                  toggleEdit={this.toggleEdit}
-                  thread={thread}
-                  slider={slider}
-                />
-
-                {!isEditing && (
-                  <Messages
-                    threadMessageCount={thread.messageCount}
-                    id={thread.id}
-                    scrollContainer={this.state.messagesContainer}
-                    currentUser={currentUser}
-                    lastSeen={lastSeen}
-                    lastActive={lastActive}
-                    forceScrollToBottom={this.forceScrollToBottom}
-                    forceScrollToTop={this.forceScrollToTop}
-                    contextualScrollToBottom={this.contextualScrollToBottom}
-                    shouldForceScrollOnMessageLoad={isParticipantOrAuthor}
-                    shouldForceScrollToTopOnMessageLoad={!isParticipantOrAuthor}
-                    hasMessagesToLoad={thread.messageCount > 0}
-                    isModerator={isModerator}
-                    threadIsLocked={isLocked}
-                  />
-                )}
-
-                {!isEditing &&
-                  isLocked && (
-                    <NullState
-                      icon="private"
-                      copy="This conversation has been locked."
-                    />
-                  )}
-              </Detail>
-            </Content>
-
-            {this.renderChatInputOrUpsell()}
-          </ThreadContentView>
-        </ThreadViewContainer>
+        </ErrorBoundary>
       );
     }
 
@@ -535,25 +546,27 @@ class ThreadContainer extends React.Component<Props, State> {
     }
 
     return (
-      <ThreadViewContainer
-        threadViewContext={threadViewContext}
-        data-cy="null-thread-view"
-      >
-        <ThreadContentView
+      <ErrorBoundary>
+        <ThreadViewContainer
           threadViewContext={threadViewContext}
-          slider={slider}
+          data-cy="null-thread-view"
         >
-          <ViewError
-            heading={'We had trouble loading this thread.'}
-            subheading={
-              !hasError
-                ? 'It may be private, or may have been deleted by an author or moderator.'
-                : ''
-            }
-            refresh={hasError}
-          />
-        </ThreadContentView>
-      </ThreadViewContainer>
+          <ThreadContentView
+            threadViewContext={threadViewContext}
+            slider={slider}
+          >
+            <ViewError
+              heading={'We had trouble loading this thread.'}
+              subheading={
+                !hasError
+                  ? 'It may be private, or may have been deleted by an author or moderator.'
+                  : ''
+              }
+              refresh={hasError}
+            />
+          </ThreadContentView>
+        </ThreadViewContainer>
+      </ErrorBoundary>
     );
   }
 }

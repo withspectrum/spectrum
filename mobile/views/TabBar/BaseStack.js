@@ -1,8 +1,6 @@
 // @flow
 // The basic view stack that's used on all of our screens
 // Any view that's added here can be visited from any of our tabs
-import * as React from 'react';
-import { StackNavigator } from 'react-navigation';
 import Thread from '../Thread';
 import Community from '../Community';
 import Channel from '../Channel';
@@ -20,19 +18,46 @@ const BaseStack = {
   Community: {
     screen: withMappedNavigationProps(Community),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: navigation.state.params.title || 'Community',
+      headerTitle: null,
+      headerStyle: {
+        backgroundColor: 'transparent',
+        right: 0,
+        left: 0,
+        top: 0,
+        position: 'absolute',
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
     }),
   },
   Channel: {
     screen: withMappedNavigationProps(Channel),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: navigation.state.params.title || 'Channel',
+      headerTitle: null,
+      headerStyle: {
+        backgroundColor: 'transparent',
+        right: 0,
+        left: 0,
+        top: 0,
+        position: 'absolute',
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
     }),
   },
   User: {
     screen: withMappedNavigationProps(User),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: navigation.state.params.title || 'User',
+      headerTitle: null,
+      headerStyle: {
+        backgroundColor: 'transparent',
+        right: 0,
+        left: 0,
+        top: 0,
+        position: 'absolute',
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
     }),
   },
 };
