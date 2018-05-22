@@ -1,14 +1,18 @@
 // @flow
+import type { GraphQLContext } from '../../';
 import type { DBCommunity } from 'shared/types';
-import { getThreads } from '../../models/thread';
+import { getThreadById } from '../../models/thread';
+import { canViewCommunity } from '../../utils/permissions';
 
-export default async ({ pinnedThreadId }: DBCommunity) => {
-  let pinnedThread;
-  if (pinnedThreadId) {
-    pinnedThread = await getThreads([pinnedThreadId]);
+export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
+  const { user, loaders } = ctx;
+  const { pinnedThreadId, id } = root;
+
+  if (!pinnedThreadId) return null;
+
+  if (!await canViewCommunity(user, id, loaders)) {
+    return null;
   }
 
-  if (pinnedThread && Array.isArray(pinnedThread) && pinnedThread.length > 0)
-    return pinnedThread[0];
-  return null;
+  return await getThreadById(pinnedThreadId);
 };

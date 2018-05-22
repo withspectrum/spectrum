@@ -2,7 +2,6 @@
 const debug = require('debug')('api:queries:community:has-features');
 import type { GraphQLContext } from '../..';
 import type { DBCommunity } from 'shared/types';
-import UserError from '../../utils/UserError';
 import { StripeUtil } from 'shared/stripe/utils';
 import { COMMUNITY_ANALYTICS } from 'pluto/queues/constants';
 

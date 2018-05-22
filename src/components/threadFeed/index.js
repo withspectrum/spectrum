@@ -17,6 +17,7 @@ import ViewError from '../viewError';
 import { Upsell, UpsellHeader, UpsellFooter } from './style';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import type { Dispatch } from 'redux';
+import { ErrorBoundary } from 'src/components/error';
 
 const NullState = ({ viewContext, search }) => {
   let hd;
@@ -267,26 +268,30 @@ class ThreadFeedPure extends React.Component<Props, State> {
           {this.props.data.community &&
             this.props.data.community.pinnedThread &&
             this.props.data.community.pinnedThread.id && (
-              <InboxThread
-                data={this.props.data.community.pinnedThread}
-                viewContext={viewContext}
-                pinnedThreadId={this.props.data.community.pinnedThread.id}
-                hasActiveCommunity={
-                  viewContext === 'community' && this.props.data.community
-                }
-              />
+              <ErrorBoundary fallbackComponent={null}>
+                <InboxThread
+                  data={this.props.data.community.pinnedThread}
+                  viewContext={viewContext}
+                  pinnedThreadId={this.props.data.community.pinnedThread.id}
+                  hasActiveCommunity={
+                    viewContext === 'community' && this.props.data.community
+                  }
+                />
+              </ErrorBoundary>
             )}
 
           {this.props.data.community &&
             this.props.data.community.watercooler &&
             this.props.data.community.watercooler.id && (
-              <InboxThread
-                data={this.props.data.community.watercooler}
-                viewContext={viewContext}
-                hasActiveCommunity={
-                  viewContext === 'community' && this.props.data.community
-                }
-              />
+              <ErrorBoundary fallbackComponent={null}>
+                <InboxThread
+                  data={this.props.data.community.watercooler}
+                  viewContext={viewContext}
+                  hasActiveCommunity={
+                    viewContext === 'community' && this.props.data.community
+                  }
+                />
+              </ErrorBoundary>
             )}
 
           <InfiniteList
@@ -303,17 +308,18 @@ class ThreadFeedPure extends React.Component<Props, State> {
           >
             {uniqueThreads.map(thread => {
               return (
-                <InboxThread
-                  key={thread.id}
-                  data={thread}
-                  viewContext={viewContext}
-                  hasActiveCommunity={
-                    viewContext === 'community' && this.props.data.community
-                  }
-                  hasActiveChannel={
-                    viewContext === 'channel' && this.props.data.channel
-                  }
-                />
+                <ErrorBoundary fallbackComponent={null} key={thread.id}>
+                  <InboxThread
+                    data={thread}
+                    viewContext={viewContext}
+                    hasActiveCommunity={
+                      viewContext === 'community' && this.props.data.community
+                    }
+                    hasActiveChannel={
+                      viewContext === 'channel' && this.props.data.channel
+                    }
+                  />
+                </ErrorBoundary>
               );
             })}
           </InfiniteList>

@@ -209,7 +209,7 @@ class NewCommunity extends React.Component<Props, State> {
               {activeStep === 2 &&
                 community &&
                 community.id && (
-                  <ContentContainer>
+                  <ContentContainer data-cy="community-creation-invitation-step">
                     <Divider />
                     <SlackConnection
                       isOnboarding={true}

@@ -39,6 +39,7 @@ import { LoginButton, ColumnHeading, MidSegment } from '../community/style';
 import ToggleChannelMembership from '../../components/toggleChannelMembership';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
+import { ErrorBoundary } from 'src/components/error';
 
 const ThreadFeedWithData = compose(connect(), getChannelThreadConnection)(
   ThreadFeed
@@ -223,7 +224,7 @@ class ChannelView extends React.Component<Props, State> {
     const isLoggedIn = currentUser;
 
     if (channel && channel.id) {
-      // at this point the view is no longer loading, has not encountered an error, and has returned a community record
+      // at this point the view is no longer loading, has not encountered an error, and has returned a channel record
       const {
         isBlocked,
         isPending,
@@ -231,18 +232,19 @@ class ChannelView extends React.Component<Props, State> {
         isOwner,
         isModerator,
       } = channel.channelPermissions;
+      const { community } = channel;
       const userHasPermissions = isMember || isOwner || isModerator;
       const isRestricted = channel.isPrivate && !userHasPermissions;
+      const hasCommunityPermissions =
+        !community.isPrivate || community.communityPermissions.isMember;
       const isGlobalOwner =
         isOwner || channel.community.communityPermissions.isOwner;
 
-      const redirectPath = `${CLIENT_URL}/${channel.community.slug}/${
-        channel.slug
-      }`;
+      const redirectPath = `${CLIENT_URL}/${community.slug}/${channel.slug}`;
 
       // if the channel is private but the user isn't logged in, redirect to the login page
       if (!isLoggedIn && channel.isPrivate) {
-        if (channel.community.brandedLogin.isEnabled) {
+        if (community.brandedLogin.isEnabled) {
           return <CommunityLogin redirectPath={redirectPath} match={match} />;
         } else {
           return <Login redirectPath={redirectPath} />;
@@ -250,7 +252,11 @@ class ChannelView extends React.Component<Props, State> {
       }
 
       // user has explicitly been blocked from this channel
-      if (isBlocked || channel.community.communityPermissions.isBlocked) {
+      if (
+        isBlocked ||
+        community.communityPermissions.isBlocked ||
+        !hasCommunityPermissions
+      ) {
         return (
           <AppViewWrapper>
             <Titlebar
@@ -277,7 +283,7 @@ class ChannelView extends React.Component<Props, State> {
           <AppViewWrapper>
             <Titlebar
               title={channel.name}
-              subtitle={channel.community.name}
+              subtitle={community.name}
               provideBack={true}
               backRoute={`/${communitySlug}`}
               noComposer
@@ -292,17 +298,17 @@ class ChannelView extends React.Component<Props, State> {
               subheading={
                 isPending
                   ? `Return to the ${
-                      channel.community.name
+                      community.name
                     } community until you hear back.`
                   : `Request to join this channel and the admins of ${
-                      channel.community.name
+                      community.name
                     } will be notified.`
               }
               dataCy={'channel-view-is-restricted'}
             >
               <RequestToJoinChannel
                 channel={channel}
-                community={channel.community}
+                community={community}
                 isPending={isPending}
               />
             </ViewError>
@@ -315,7 +321,7 @@ class ChannelView extends React.Component<Props, State> {
         type: 'channel',
         data: {
           name: channel.name,
-          communityName: channel.community.name,
+          communityName: community.name,
           description: channel.description,
         },
       });
@@ -327,35 +333,44 @@ class ChannelView extends React.Component<Props, State> {
           <Head
             title={title}
             description={description}
-            image={channel.community.profilePhoto}
+            image={community.profilePhoto}
           />
           <Titlebar
             title={channel.name}
-            subtitle={channel.community.name}
+            subtitle={community.name}
             provideBack={true}
             backRoute={`/${communitySlug}`}
             noComposer={!isMember}
           />
           <Grid id="main">
-            <CoverPhoto src={channel.community.coverPhoto} />
+            <CoverPhoto src={community.coverPhoto} />
             <Meta>
-              <ChannelProfile data={{ channel }} profileSize="full" />
+              <ErrorBoundary fallbackComponent={null}>
+                <ChannelProfile data={{ channel }} profileSize="full" />
+              </ErrorBoundary>
 
               {actionButton}
 
               {isLoggedIn &&
                 userHasPermissions &&
                 !channel.isArchived && (
-                  <NotificationsToggle
-                    value={channel.channelPermissions.receiveNotifications}
-                    channel={channel}
-                  />
+                  <ErrorBoundary fallbackComponent={null}>
+                    <NotificationsToggle
+                      value={channel.channelPermissions.receiveNotifications}
+                      channel={channel}
+                    />
+                  </ErrorBoundary>
                 )}
 
               {/* user is signed in and has permissions to view pending users */}
               {isLoggedIn &&
                 (isOwner || isGlobalOwner) && (
-                  <PendingUsersNotification channel={channel} id={channel.id} />
+                  <ErrorBoundary fallbackComponent={null}>
+                    <PendingUsersNotification
+                      channel={channel}
+                      id={channel.id}
+                    />
+                  </ErrorBoundary>
                 )}
             </Meta>
             <Content>
@@ -408,10 +423,12 @@ class ChannelView extends React.Component<Props, State> {
                 userHasPermissions &&
                 ((channel.isPrivate && !channel.isArchived) ||
                   !channel.isPrivate) && (
-                  <ThreadComposer
-                    activeCommunity={communitySlug}
-                    activeChannel={channelSlug}
-                  />
+                  <ErrorBoundary fallbackComponent={null}>
+                    <ThreadComposer
+                      activeCommunity={communitySlug}
+                      activeChannel={channelSlug}
+                    />
+                  </ErrorBoundary>
                 )}
 
               {// thread list
@@ -425,16 +442,24 @@ class ChannelView extends React.Component<Props, State> {
               )}
 
               {//search
-              selectedView === 'search' && <Search channel={channel} />}
+              selectedView === 'search' && (
+                <ErrorBoundary>
+                  <Search channel={channel} />
+                </ErrorBoundary>
+              )}
 
               {// members grid
               selectedView === 'members' && (
-                <ChannelMemberGrid id={channel.id} />
+                <ErrorBoundary>
+                  <ChannelMemberGrid id={channel.id} />
+                </ErrorBoundary>
               )}
             </Content>
             <Extras>
-              <ColumnHeading>Members</ColumnHeading>
-              <ChannelMemberGrid first={5} id={channel.id} />
+              <ErrorBoundary fallbackComponent={null}>
+                <ColumnHeading>Members</ColumnHeading>
+                <ChannelMemberGrid first={5} id={channel.id} />
+              </ErrorBoundary>
             </Extras>
           </Grid>
         </AppViewWrapper>
