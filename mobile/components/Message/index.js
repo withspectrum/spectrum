@@ -67,8 +67,8 @@ const Message = ({
         return (
           <TouchableOpacity onPress={onPress}>
             <Bubble me={me}>
-              {/* $FlowIssue */}
               {message.parent ? (
+                /* $FlowIssue */
                 <QuotedMessage message={message.parent} />
               ) : null}
               <TextWrapper>
