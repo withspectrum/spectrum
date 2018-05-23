@@ -2,7 +2,9 @@
 import React, { Fragment } from 'react';
 import { View } from 'react-native';
 import compose from 'recompose/compose';
+import { Query } from 'react-apollo';
 import Text from '../../../components/Text';
+import ChatInput from '../../../components/ChatInput';
 import Messages from '../../../components/Messages';
 import ViewNetworkHandler, {
   type ViewNetworkHandlerProps,
@@ -12,6 +14,9 @@ import getDirectMessageThread, {
   type GetDirectMessageThreadType,
 } from '../../../../shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import getDirectMessageThreadMessageConnection from '../../../../shared/graphql/queries/directMessageThread/getDirectMessageThreadMessageConnection';
+import type { GetUserType } from '../../../../shared/graphql/queries/user/getUser';
+import sendDirectMessage from '../../../../shared/graphql/mutations/message/sendDirectMessage';
+
 import type { DirectMessageThreadInfoType } from '../../../../shared/graphql/fragments/directMessageThread/directMessageThreadInfo';
 
 const DirectMessageThreadMessages = getDirectMessageThreadMessageConnection(
@@ -19,8 +24,10 @@ const DirectMessageThreadMessages = getDirectMessageThreadMessageConnection(
 );
 
 type Props = {
-  id: string,
   ...$Exact<ViewNetworkHandlerProps>,
+  id: string,
+  sendDirectMessage: Function,
+  currentUser: GetUserType,
   data: {
     directMessageThread?: GetDirectMessageThreadType,
   },
@@ -29,9 +36,20 @@ type Props = {
 const DirectMessageThread = (props: Props) => {
   const { isLoading, hasError, data: { directMessageThread } } = props;
   if (directMessageThread) {
+    const sendMessage = text => {
+      props.sendDirectMessage({
+        threadId: directMessageThread.id,
+        threadType: 'directMessageThread',
+        messageType: 'text',
+        content: {
+          body: text,
+        },
+      });
+    };
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <DirectMessageThreadMessages id={directMessageThread.id} />
+        <ChatInput onSubmit={sendMessage} />
       </View>
     );
   }
@@ -41,6 +59,8 @@ const DirectMessageThread = (props: Props) => {
   return null;
 };
 
-export default compose(ViewNetworkHandler, getDirectMessageThread)(
-  DirectMessageThread
-);
+export default compose(
+  ViewNetworkHandler,
+  sendDirectMessage,
+  getDirectMessageThread
+)(DirectMessageThread);
