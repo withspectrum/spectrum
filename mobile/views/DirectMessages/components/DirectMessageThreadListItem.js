@@ -1,9 +1,9 @@
 // @flow
 import React, { Fragment } from 'react';
-import { TouchableHighlight } from 'react-native';
-import styled from 'styled-components/native';
+import { TouchableOpacity } from 'react-native';
+import styled, { css } from 'styled-components/native';
 import Text from '../../../components/Text';
-import { StackedAvatar } from '../../../components/ThreadItem/style';
+import Avatar from '../../../components/Avatar';
 import Row from '../../../components/Flex/Row';
 import Column from '../../../components/Flex/Column';
 import ConditionalWrap from '../../../components/ConditionalWrap';
@@ -12,10 +12,17 @@ import { timeDifference } from '../../../../shared/time-difference';
 
 import type { DirectMessageThreadInfoType } from '../../../../shared/graphql/fragments/directMessageThread/directMessageThreadInfo';
 
-const Wrapper = styled(Column)`
+const Wrapper = styled(Row)`
   padding: 16px 8px;
   border-bottom-color: ${props => props.theme.bg.border};
   border-bottom-width: 1px;
+`;
+
+const AvatarWrapper = styled(Column)`
+  margin-right: 8px;
+  justify-content: center;
+  width: 60px;
+  align-items: center;
 `;
 
 type Props = {
@@ -36,30 +43,37 @@ const DirectMessageThreadListItem = ({
     <ConditionalWrap
       condition={!!onPress}
       wrap={children => (
-        <TouchableHighlight onPress={onPress}>{children}</TouchableHighlight>
+        <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>
       )}
     >
       <Wrapper>
-        <Row style={{ justifyContent: 'space-between' }}>
-          <Text type="headline">
-            {sentencify(participants.map(({ name }) => name))}
-          </Text>
-          <Text type="subhead" color={props => props.theme.text.alt}>
-            {timeDifference(Date.now(), new Date(thread.threadLastActive))}
-          </Text>
-        </Row>
-        <Text
-          type="body"
-          numberOfLines={1}
-          color={props => props.theme.text.alt}
-        >
-          {thread.snippet}
-        </Text>
-        <Row style={{ marginTop: 8 }}>
+        <AvatarWrapper>
           {participants.map(({ profilePhoto, id }) => (
-            <StackedAvatar key={'avatar-' + id} src={profilePhoto} />
+            <Avatar
+              key={'avatar-' + id}
+              src={profilePhoto}
+              size={50 / participants.length}
+              radius={25 / participants.length}
+            />
           ))}
-        </Row>
+        </AvatarWrapper>
+        <Column style={{ flex: 1 }}>
+          <Row style={{ justifyContent: 'space-between' }}>
+            <Text type="headline">
+              {sentencify(participants.map(({ name }) => name))}
+            </Text>
+            <Text type="subhead" color={props => props.theme.text.alt}>
+              {timeDifference(Date.now(), new Date(thread.threadLastActive))}
+            </Text>
+          </Row>
+          <Text
+            type="body"
+            numberOfLines={1}
+            color={props => props.theme.text.alt}
+          >
+            {thread.snippet}
+          </Text>
+        </Column>
       </Wrapper>
     </ConditionalWrap>
   );

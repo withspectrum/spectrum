@@ -6,10 +6,14 @@ import { Query } from 'react-apollo';
 import Text from '../../../components/Text';
 import ChatInput from '../../../components/ChatInput';
 import Messages from '../../../components/Messages';
+import Avatar from '../../../components/Avatar';
+import Column from '../../../components/Flex/Column';
+import Row from '../../../components/Flex/Row';
 import ViewNetworkHandler, {
   type ViewNetworkHandlerProps,
 } from '../../../components/ViewNetworkHandler';
 
+import sentencify from '../../../../shared/sentencify';
 import getDirectMessageThread, {
   type GetDirectMessageThreadType,
 } from '../../../../shared/graphql/queries/directMessageThread/getDirectMessageThread';
@@ -33,31 +37,67 @@ type Props = {
   },
 };
 
-const DirectMessageThread = (props: Props) => {
-  const { isLoading, hasError, data: { directMessageThread } } = props;
-  if (directMessageThread) {
-    const sendMessage = text => {
-      props.sendDirectMessage({
-        threadId: directMessageThread.id,
-        threadType: 'directMessageThread',
-        messageType: 'text',
-        content: {
-          body: text,
-        },
-      });
-    };
-    return (
-      <View style={{ flex: 1 }}>
-        <DirectMessageThreadMessages id={directMessageThread.id} />
-        <ChatInput onSubmit={sendMessage} />
-      </View>
-    );
-  }
+class DirectMessageThread extends React.Component<Props> {
+  sendMessage = text => {
+    if (!this.props.data.directMessageThread) return;
+    this.props.sendDirectMessage({
+      threadId: this.props.data.directMessageThread.id,
+      threadType: 'directMessageThread',
+      messageType: 'text',
+      content: {
+        body: text,
+      },
+    });
+  };
 
-  if (isLoading) return <Text>Loading...</Text>;
-  if (hasError) return <Text>Error :(</Text>;
-  return null;
-};
+  render() {
+    const {
+      isLoading,
+      hasError,
+      data: { directMessageThread },
+      currentUser,
+    } = this.props;
+
+    if (directMessageThread) {
+      const participants = directMessageThread.participants.filter(
+        ({ userId }) => userId !== currentUser.id
+      );
+      return (
+        <View style={{ flex: 1 }}>
+          <Column
+            style={{
+              alignItems: 'center',
+              marginTop: 32,
+              marginBottom: 32,
+              marginRight: 8,
+              marginLeft: 8,
+            }}
+          >
+            <Row>
+              {participants.map(({ profilePhoto, id }) => (
+                <Avatar
+                  src={profilePhoto}
+                  key={id}
+                  size={60}
+                  style={{ marginRight: 4, marginLeft: 4 }}
+                />
+              ))}
+            </Row>
+            <Text type="title3" bold>
+              {sentencify(participants.map(({ name }) => name))}
+            </Text>
+          </Column>
+          <DirectMessageThreadMessages id={directMessageThread.id} />
+          <ChatInput onSubmit={this.sendMessage} />
+        </View>
+      );
+    }
+
+    if (isLoading) return <Text>Loading...</Text>;
+    if (hasError) return <Text>Error :(</Text>;
+    return null;
+  }
+}
 
 export default compose(
   ViewNetworkHandler,
