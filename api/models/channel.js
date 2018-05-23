@@ -75,7 +75,7 @@ const getChannelsByUserAndCommunity = async (communityId: string, userId: string
 
   const usersChannelsIds = usersChannels.map(c => c.channelId);
   const allPossibleChannels = [...publicChannels, ...usersChannelsIds];
-  const distinct = allPossibleChannels.filter((x, i, a) => a.indexOf(x) == i);
+  const distinct = allPossibleChannels.filter((x, i, a) => a.indexOf(x) === i);
   return distinct;
 };
 
