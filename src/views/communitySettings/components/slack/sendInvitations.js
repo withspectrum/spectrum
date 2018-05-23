@@ -13,7 +13,7 @@ import { Button } from 'src/components/buttons';
 import { TextArea, Error } from 'src/components/formElements';
 import sendSlackInvitesMutation from 'shared/graphql/mutations/community/sendSlackInvites';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import { timeDifference } from 'src/helpers/utils';
+import { timeDifference } from 'shared/time-difference';
 import Icon from 'src/components/icons';
 import type { Dispatch } from 'redux';
 
