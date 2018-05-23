@@ -33,7 +33,12 @@ const Message = ({ message, me }: Props) => {
     case 'draftjs': {
       return (
         <Bubble me={me}>
-          <Text color={me ? '#FFFFFF' : '#000000'}>{body}</Text>
+          <Text
+            style={{ marginTop: 0, marginBottom: 0 }}
+            color={me ? '#FFFFFF' : '#000000'}
+          >
+            {body}
+          </Text>
         </Bubble>
       );
     }
