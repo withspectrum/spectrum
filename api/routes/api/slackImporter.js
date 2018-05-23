@@ -24,8 +24,13 @@ const constructInput = (data: any, connectedBy: string) => {
   };
 };
 
-// TODO: Figure out how to type this properly
-slackRouter.get('/', (req: any, res: any) => {
+// @see https://github.com/flowtype/flow-typed/issues/114#issuecomment-308006263
+type User = { id: string };
+declare class Request extends express$Request {
+  user: User;
+}
+
+slackRouter.get('/', (req: Request, res: express$Response) => {
   const code = req.query.code;
   const communityId = req.query.state;
   const connectedBy = req.user.id;
@@ -52,8 +57,7 @@ slackRouter.get('/', (req: any, res: any) => {
     });
 });
 
-// TODO: Figure out how to type this properly
-slackRouter.get('/onboarding', (req: any, res: any) => {
+slackRouter.get('/onboarding', (req: Request, res: express$Response) => {
   const code = req.query.code;
   const communityId = req.query.state;
   const connectedBy = req.user.id;
