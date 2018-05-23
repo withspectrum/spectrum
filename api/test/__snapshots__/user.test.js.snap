@@ -25,11 +25,6 @@ Object {
         "edges": Array [
           Object {
             "node": Object {
-              "name": "Private community",
-            },
-          },
-          Object {
-            "node": Object {
               "name": "Payments",
             },
           },
