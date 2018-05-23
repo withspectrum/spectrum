@@ -64,30 +64,34 @@ class DirectMessageThread extends React.Component<Props> {
       );
       return (
         <View style={{ flex: 1 }}>
-          <Column
-            style={{
-              alignItems: 'center',
-              marginTop: 32,
-              marginBottom: 32,
-              marginRight: 8,
-              marginLeft: 8,
-            }}
-          >
-            <Row>
-              {participants.map(({ profilePhoto, id }) => (
-                <Avatar
-                  src={profilePhoto}
-                  key={id}
-                  size={60}
-                  style={{ marginRight: 4, marginLeft: 4 }}
-                />
-              ))}
-            </Row>
-            <Text type="title3" bold>
-              {sentencify(participants.map(({ name }) => name))}
-            </Text>
-          </Column>
-          <DirectMessageThreadMessages id={directMessageThread.id} />
+          <DirectMessageThreadMessages
+            id={directMessageThread.id}
+            ListHeaderComponent={() => (
+              <Column
+                style={{
+                  alignItems: 'center',
+                  marginTop: 32,
+                  marginBottom: 32,
+                  marginRight: 8,
+                  marginLeft: 8,
+                }}
+              >
+                <Row>
+                  {participants.map(({ profilePhoto, id }) => (
+                    <Avatar
+                      src={profilePhoto}
+                      key={id}
+                      size={60}
+                      style={{ marginRight: 4, marginLeft: 4 }}
+                    />
+                  ))}
+                </Row>
+                <Text type="title3" bold>
+                  {sentencify(participants.map(({ name }) => name))}
+                </Text>
+              </Column>
+            )}
+          />
           <ChatInput onSubmit={this.sendMessage} />
         </View>
       );

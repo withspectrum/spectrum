@@ -8,6 +8,7 @@ import { getCurrentUserQuery } from '../../../shared/graphql/queries/user/getUse
 import viewNetworkHandler from '../ViewNetworkHandler';
 import Text from '../Text';
 import Message from '../Message';
+import InfiniteList from '../InfiniteList';
 import { ThreadMargin } from '../../views/Thread/style';
 import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
 import { convertTimestampToDate } from '../../../src/helpers/utils';
@@ -15,11 +16,13 @@ import { convertTimestampToDate } from '../../../src/helpers/utils';
 import RoboText from './RoboText';
 import Author from './Author';
 
+import type { FlatListProps } from 'react-native';
 import type { Navigation } from 'react-navigation';
 import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection.js';
 import type { ThreadParticipantType } from '../../../shared/graphql/fragments/thread/threadParticipant';
 
 type Props = {
+  ...$Exact<FlatListProps>,
   isLoading: boolean,
   hasError: boolean,
   navigation: Navigation,
@@ -30,7 +33,13 @@ type Props = {
 
 class Messages extends React.Component<Props> {
   render() {
-    const { data, isLoading, hasError, navigation } = this.props;
+    const {
+      data,
+      isLoading,
+      hasError,
+      navigation,
+      ...flatListProps
+    } = this.props;
 
     if (data.messageConnection && data.messageConnection) {
       const messages = sortAndGroupMessages(
@@ -45,9 +54,11 @@ class Messages extends React.Component<Props> {
       return (
         <Query query={getCurrentUserQuery}>
           {({ data: { user: currentUser } }) => (
-            // TODO(@mxstbr): Replace this <ScrollView> with an <InfiniteList>
-            <ScrollView>
-              {messages.map((group, i) => {
+            <InfiniteList
+              {...flatListProps}
+              data={messages}
+              keyExtractor={item => item[0].id}
+              renderItem={({ item: group, index: i }) => {
                 if (group.length === 0) return null;
 
                 const initialMessage = group[0];
@@ -123,8 +134,8 @@ class Messages extends React.Component<Props> {
                     </ThreadMargin>
                   </View>
                 );
-              })}
-            </ScrollView>
+              }}
+            />
           )}
         </Query>
       );
