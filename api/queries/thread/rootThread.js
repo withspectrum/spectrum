@@ -38,8 +38,16 @@ export default async (
     ]);
 
     // if the thread is in a private channel where the user is not a member, don't return any thread data
-    if (channel.isPrivate && !channelPermissions.isMember) return null;
-    if (community.isPrivate && !communityPermissions.isMember) return null;
+    if (
+      channel.isPrivate &&
+      (!channelPermissions || !channelPermissions.isMember)
+    )
+      return null;
+    if (
+      community.isPrivate &&
+      (!communityPermissions || !communityPermissions.isMember)
+    )
+      return null;
     return thread;
   }
 };
