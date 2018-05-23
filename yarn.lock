@@ -3694,16 +3694,15 @@ draft-js-linkify-plugin@^2.0.0-beta1:
     tlds "^1.189.0"
     union-class-names "^1.0.0"
 
-draft-js-markdown-plugin@1.4.4:
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/draft-js-markdown-plugin/-/draft-js-markdown-plugin-1.4.4.tgz#d3ca991edbec40aebf70c51c4209aca80eb2fd4b"
+draft-js-markdown-plugin@^2.0.3-0:
+  version "2.0.3-0"
+  resolved "https://registry.yarnpkg.com/draft-js-markdown-plugin/-/draft-js-markdown-plugin-2.0.3-0.tgz#e568f7a394885890552b30c330b101bf5ce3dd7a"
   dependencies:
     decorate-component-with-props "^1.0.2"
     draft-js "^0.10.4"
     draft-js-checkable-list-item "^2.0.5"
     draft-js-prism-plugin "^0.1.1"
     immutable "~3.7.4"
-    react-click-outside "^3.0.1"
 
 draft-js-modifiers@^0.1.5:
   version "0.1.5"
@@ -5424,7 +5423,7 @@ hoist-non-react-statics@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
 
-hoist-non-react-statics@^2.1.1, hoist-non-react-statics@^2.3.0, hoist-non-react-statics@^2.3.1, hoist-non-react-statics@^2.5.0:
+hoist-non-react-statics@^2.3.0, hoist-non-react-statics@^2.3.1, hoist-non-react-statics@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.5.0.tgz#d2ca2dfc19c5a91c5a6615ce8e564ef0347e2a40"
 
@@ -8920,12 +8919,6 @@ react-app-rewired@^1.0.5, react-app-rewired@^1.2.0:
   dependencies:
     cross-spawn "^5.1.0"
     dotenv "^4.0.0"
-
-react-click-outside@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/react-click-outside/-/react-click-outside-3.0.1.tgz#6e77e84d2f17afaaac26dbad743cbbf909f5e24c"
-  dependencies:
-    hoist-non-react-statics "^2.1.1"
 
 react-clipboard.js@^1.1.3:
   version "1.1.3"
