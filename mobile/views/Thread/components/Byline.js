@@ -3,6 +3,8 @@ import React from 'react';
 import styled from 'styled-components/native';
 import Avatar from '../../../components/Avatar';
 import Text from '../../../components/Text';
+import Row from '../../../components/Flex/Row';
+import Column from '../../../components/Flex/Column';
 import compose from 'recompose/compose';
 import type { Navigation } from '../../../utils/types';
 import type { ThreadParticipantType } from '../../../../shared/graphql/fragments/thread/threadParticipant';
@@ -12,14 +14,6 @@ import { TouchableHighlight } from 'react-native';
 const BylineWrapper = styled.View`
   flex: 1;
   width: 100%;
-`;
-
-const Row = styled.View`
-  flex-direction: row;
-`;
-
-const Column = styled.View`
-  flex-direction: column;
 `;
 
 type Props = {
