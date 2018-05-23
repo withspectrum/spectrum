@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import Link from 'src/components/link';
-import { timeDifference } from '../../../helpers/utils';
+import { timeDifference } from 'shared/time-difference';
 import { renderAvatars } from './avatars';
 import {
   Wrapper,
