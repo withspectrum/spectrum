@@ -1,5 +1,6 @@
 // @flow
 const { db } = require('./db');
+import intersection from 'lodash.intersection';
 import { parseRange } from './utils';
 import { uploadImage } from '../utils/file-storage';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';
@@ -72,6 +73,76 @@ export const getCommunitiesByUser = (userId: string): Promise<Array<DBCommunity>
       .filter(community => db.not(community.hasFields('deletedAt')))
       .run()
   );
+};
+
+// prettier-ignore
+export const getVisibleCommunitiesByUser = async (evaluatingUserId: string, currentUserId: string) => {
+  const evaluatingUserMemberships = await db
+    .table('usersCommunities')
+    // get all the user's communities
+    .getAll(evaluatingUserId, { index: 'userId' })
+    // only return communities the user is a member of
+    .filter({ isMember: true })
+    // get the community objects for each community
+    .eqJoin('communityId', db.table('communities'))
+    // get rid of unnecessary info from the usersCommunities object on the left
+    .without({ left: ['id', 'communityId', 'userId', 'createdAt'] })
+    // zip the tables
+    .zip()
+    // ensure we don't return any deleted communities
+    .filter(community => db.not(community.hasFields('deletedAt')))
+    .run()
+
+  const currentUserMemberships = await db
+    .table('usersCommunities')
+    // get all the user's communities
+    .getAll(currentUserId, { index: 'userId' })
+    // only return communities the user is a member of
+    .filter({ isMember: true })
+    // get the community objects for each community
+    .eqJoin('communityId', db.table('communities'))
+    // get rid of unnecessary info from the usersCommunities object on the left
+    .without({ left: ['id', 'communityId', 'userId', 'createdAt'] })
+    // zip the tables
+    .zip()
+    // ensure we don't return any deleted communities
+    .filter(community => db.not(community.hasFields('deletedAt')))
+    .run()
+
+  const evaluatingUserCommunityIds = evaluatingUserMemberships.map(community => community.id)
+  const currentUserCommunityIds = currentUserMemberships.map(community => community.id)
+  const publicCommunityIds = evaluatingUserMemberships
+    .filter(community => !community.isPrivate)
+    .map(community => community.id)
+
+  const overlappingMemberships = intersection(evaluatingUserCommunityIds, currentUserCommunityIds)
+  const allVisibleCommunityIds = [...publicCommunityIds, ...overlappingMemberships]
+  const distinctCommunityIds = allVisibleCommunityIds.filter((x, i, a) => a.indexOf(x) === i)
+  
+  return await db
+    .table('communities')
+    .getAll(...distinctCommunityIds)
+    .run()
+}
+
+export const getPublicCommunitiesByUser = async (userId: string) => {
+  return await db
+    .table('usersCommunities')
+    // get all the user's communities
+    .getAll(userId, { index: 'userId' })
+    // only return communities the user is a member of
+    .filter({ isMember: true })
+    // get the community objects for each community
+    .eqJoin('communityId', db.table('communities'))
+    // only return public community ids
+    .filter(row => row('right')('isPrivate').eq(false))
+    // get rid of unnecessary info from the usersCommunities object on the left
+    .without({ left: ['id', 'communityId', 'userId', 'createdAt'] })
+    // zip the tables
+    .zip()
+    // ensure we don't return any deleted communities
+    .filter(community => db.not(community.hasFields('deletedAt')))
+    .run();
 };
 
 export const getCommunitiesChannelCounts = (communityIds: Array<string>) => {
