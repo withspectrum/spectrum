@@ -33,7 +33,7 @@ class ChatInput extends React.Component<Props, State> {
           onChangeText={this.onChangeText}
           placeholder="Your message here..."
           multiline
-          autoFocus
+          autoFocus={false}
           disableFullscreenUI
           onSubmitEditing={this.submit}
         />

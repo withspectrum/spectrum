@@ -14,6 +14,8 @@ import markNotificationsSeenMutation from 'shared/graphql/mutations/notification
 import { markSingleNotificationSeenMutation } from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import { Tab, NotificationTab, Label } from '../style';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
+import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   active: boolean,
@@ -31,7 +33,7 @@ type Props = {
   },
   refetch: Function,
   client: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   count: number,
 };
 
@@ -391,7 +393,10 @@ class NotificationsTab extends React.Component<Props, State> {
           aria-current={active ? 'page' : undefined}
           to="/notifications"
           rel="nofollow"
-          onClick={this.markAllAsSeen}
+          onClick={() => {
+            this.markAllAsSeen();
+            track(events.NAVIGATION_NOTIFICATIONS_CLICKED);
+          }}
         >
           <Icon
             glyph={count > 0 ? 'notification-fill' : 'notification'}

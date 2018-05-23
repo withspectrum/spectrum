@@ -9,6 +9,7 @@ import DeleteAccountForm from './deleteAccountForm';
 import DownloadDataForm from './downloadDataForm';
 import RecurringPaymentsList from './recurringPaymentsList';
 import { SectionsContainer, Column } from 'src/components/settingsViews/style';
+import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
   user: GetCurrentUserSettingsType,
@@ -21,16 +22,35 @@ class Overview extends React.Component<Props> {
     return (
       <SectionsContainer>
         <Column>
-          <UserEditForm user={user} />
-          <DeleteAccountForm id={user.id} />
-          <DownloadDataForm user={user} />
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            <UserEditForm user={user} />
+          </ErrorBoundary>
+
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            <DeleteAccountForm id={user.id} />
+          </ErrorBoundary>
+
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            <DownloadDataForm user={user} />
+          </ErrorBoundary>
         </Column>
         <Column>
-          <RecurringPaymentsList user={user} />
-          <EmailSettings user={user} />
-          {'serviceWorker' in navigator &&
-            'PushManager' in window && <NotificationSettings largeOnly />}
-          <Invoices />
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            <RecurringPaymentsList user={user} />
+          </ErrorBoundary>
+
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            <EmailSettings user={user} />
+          </ErrorBoundary>
+
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            {'serviceWorker' in navigator &&
+              'PushManager' in window && <NotificationSettings largeOnly />}
+          </ErrorBoundary>
+
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            <Invoices />
+          </ErrorBoundary>
         </Column>
       </SectionsContainer>
     );

@@ -2,11 +2,19 @@
 const { db } = require('./db');
 import { NEW_DOCUMENTS } from './utils';
 import { createChangefeed } from 'shared/changefeed-utils';
+import type { DBNotification } from 'shared/types';
 
-export const getNotificationsByUser = (
-  userId: string,
-  { first, after }: { first: number, after: Date }
-) => {
+// prettier-ignore
+export const getNotification = (notificationId: string): Promise<DBNotification> => {
+  return db
+    .table('notifications')
+    .get(notificationId)
+    .run();
+};
+
+type InputType = { first: number, after: Date };
+export const getNotificationsByUser = (userId: string, input: InputType) => {
+  const { first, after } = input;
   return db
     .table('usersNotifications')
     .between(
@@ -29,10 +37,10 @@ export const getNotificationsByUser = (
     .run();
 };
 
-export const getUnreadDirectMessageNotifications = (
-  userId: string,
-  { first, after }: { first: number, after: Date }
-): Promise<Array<Object>> => {
+// prettier-ignore
+export const getUnreadDirectMessageNotifications = (userId: string, input: InputType,): Promise<Array<Object>> => {
+  const { first, after } = input
+
   return db
     .table('usersNotifications')
     .between(

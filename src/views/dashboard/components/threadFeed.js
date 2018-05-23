@@ -20,6 +20,8 @@ import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import type { ViewNetworkHandlerType } from '../../../components/viewNetworkHandler';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import type { GetCommunityThreadConnectionType } from 'shared/graphql/queries/community/getCommunityThreadConnection';
+import type { Dispatch } from 'redux';
+import { ErrorBoundary } from 'src/components/error';
 
 type Node = {
   node: {
@@ -42,7 +44,7 @@ type Props = {
     feed: string,
   },
   history: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   selectedId: string,
   activeCommunity: ?string,
   hasActiveCommunity: boolean,
@@ -270,22 +272,28 @@ class ThreadFeed extends React.Component<Props, State> {
         {this.props.data.community &&
           this.props.data.community.watercooler &&
           this.props.data.community.watercooler.id && (
-            <WatercoolerThread
-              data={this.props.data.community.watercooler}
-              active={selectedId === this.props.data.community.watercooler.id}
-            />
+            <ErrorBoundary fallbackComponent={null}>
+              <WatercoolerThread
+                data={this.props.data.community.watercooler}
+                active={selectedId === this.props.data.community.watercooler.id}
+              />
+            </ErrorBoundary>
           )}
 
         {this.props.data.community &&
           this.props.data.community.pinnedThread &&
           this.props.data.community.pinnedThread.id && (
-            <InboxThread
-              data={this.props.data.community.pinnedThread}
-              active={selectedId === this.props.data.community.pinnedThread.id}
-              hasActiveCommunity={this.props.hasActiveCommunity}
-              hasActiveChannel={this.props.hasActiveChannel}
-              pinnedThreadId={this.props.data.community.pinnedThread.id}
-            />
+            <ErrorBoundary fallbackComponent={null}>
+              <InboxThread
+                data={this.props.data.community.pinnedThread}
+                active={
+                  selectedId === this.props.data.community.pinnedThread.id
+                }
+                hasActiveCommunity={this.props.hasActiveCommunity}
+                hasActiveChannel={this.props.hasActiveChannel}
+                pinnedThreadId={this.props.data.community.pinnedThread.id}
+              />
+            </ErrorBoundary>
           )}
         <InfiniteList
           pageStart={0}
@@ -302,13 +310,14 @@ class ThreadFeed extends React.Component<Props, State> {
           <FlipMove duration={350}>
             {uniqueThreads.map(thread => {
               return (
-                <InboxThread
-                  key={thread.id}
-                  data={thread}
-                  active={selectedId === thread.id}
-                  hasActiveCommunity={this.props.hasActiveCommunity}
-                  hasActiveChannel={this.props.hasActiveChannel}
-                />
+                <ErrorBoundary fallbackComponent={null} key={thread.id}>
+                  <InboxThread
+                    data={thread}
+                    active={selectedId === thread.id}
+                    hasActiveCommunity={this.props.hasActiveCommunity}
+                    hasActiveChannel={this.props.hasActiveChannel}
+                  />
+                </ErrorBoundary>
               );
             })}
           </FlipMove>

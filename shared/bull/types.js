@@ -110,6 +110,30 @@ export type SendPrivateChannelRequestEmailJobData = {
   },
 };
 
+export type SendPrivateCommunityRequestApprovedEmailJobData = {
+  recipient: {
+    email: string,
+  },
+  community: {
+    name: string,
+    slug: string,
+  },
+};
+
+export type SendPrivateCommunityRequestEmailJobData = {
+  recipient: {
+    email: string,
+  },
+  user: {
+    username: string,
+    name: string,
+  },
+  community: {
+    name: string,
+    slug: string,
+  },
+};
+
 export type SendNewMessageMentionEmailJobData = {
   recipient: DBUser,
   sender: DBUser,
@@ -223,6 +247,17 @@ export type PrivateChannelRequestJobData = {
 export type PrivateChannelRequestApprovedJobData = {
   userId: string,
   channelId: string,
+  communityId: string,
+  moderatorId: string,
+};
+
+export type PrivateCommunityRequestJobData = {
+  userId: string,
+  communityId: string,
+};
+
+export type PrivateCommunityRequestApprovedJobData = {
+  userId: string,
   communityId: string,
   moderatorId: string,
 };
@@ -364,6 +399,17 @@ export type SendSlackInvitationsJobData = {
   userId: string,
 };
 
+export type TrackAnalyticsData = {
+  userId: string,
+  event: string,
+  context?: Object,
+  properties?: Object,
+};
+
+export type IdentifyAnalyticsData = {
+  userId: string,
+};
+
 export type Queues = {
   // athena
   sendThreadNotificationQueue: BullQueue<ThreadNotificationJobData>,
@@ -375,6 +421,10 @@ export type Queues = {
   sendPrivateChannelRequestQueue: BullQueue<PrivateChannelRequestJobData>,
   sendPrivateChannelRequestApprovedQueue: BullQueue<
     PrivateChannelRequestApprovedJobData
+  >,
+  sendPrivateCommunityRequestQueue: BullQueue<PrivateCommunityRequestJobData>,
+  sendPrivateCommunityRequestApprovedQueue: BullQueue<
+    PrivateCommunityRequestApprovedJobData
   >,
   sendPrivateChannelInviteNotificationQueue: BullQueue<
     PrivateChannelInviteNotificationJobData
@@ -416,6 +466,12 @@ export type Queues = {
   >,
   sendPrivateChannelRequestApprovedEmailQueue: BullQueue<
     SendPrivateChannelRequestApprovedEmailJobData
+  >,
+  sendPrivateCommunityRequestEmailQueue: BullQueue<
+    SendPrivateCommunityRequestEmailJobData
+  >,
+  sendPrivateCommunityRequestApprovedEmailQueue: BullQueue<
+    SendPrivateCommunityRequestApprovedEmailJobData
   >,
   sendThreadCreatedNotificationEmailQueue: BullQueue<
     SendNewThreadNotificationEmailJobData
@@ -477,6 +533,10 @@ export type Queues = {
     StripePaymentSucceededOrFailedEventJobData
   >,
   stripeCardExpiringWarningQueue: BullQueue<StripeCardExpiringWarningJobData>,
+
+  // analytics
+  trackQueue: BullQueue<TrackAnalyticsData>,
+  identifyQueue: BullQueue<IdentifyAnalyticsData>,
 
   // admin
   _adminSendCommunityCreatedEmailQueue: BullQueue<

@@ -7,7 +7,6 @@ import Link from 'src/components/link';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import ThreadFeed from '../../components/threadFeed';
-import { track } from '../../helpers/events';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import { UserProfile } from '../../components/profile';
 import { LoadingScreen } from '../../components/loading';
@@ -23,6 +22,7 @@ import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import { LoginButton } from '../community/style';
+import type { Dispatch } from 'redux';
 import {
   Grid,
   Meta,
@@ -36,6 +36,7 @@ import {
   DesktopSegment,
   MobileSegment,
 } from '../../components/segmentedControl';
+import { ErrorBoundary } from 'src/components/error';
 
 const ThreadFeedWithData = compose(connect(), getUserThreads)(ThreadFeed);
 const ThreadParticipantFeedWithData = compose(connect(), getUserThreads)(
@@ -55,7 +56,7 @@ type Props = {
   isLoading: boolean,
   hasError: boolean,
   queryVarIsChanging: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   history: Object,
 };
 
@@ -72,15 +73,12 @@ class UserView extends React.Component<Props, State> {
     hasThreads: true,
   };
 
-  componentDidMount() {
-    track('user', 'profile viewed', null);
-  }
+  componentDidMount() {}
 
   componentDidUpdate(prevProps) {
     if (!prevProps.data.user) return;
     // track when a new profile is viewed without the component having been remounted
     if (prevProps.data.user.id !== this.props.data.user.id) {
-      track('user', 'profile viewed', null);
     }
   }
 
@@ -154,11 +152,13 @@ class UserView extends React.Component<Props, State> {
           <Grid id="main">
             <CoverPhoto src={user.coverPhoto} />
             <Meta>
-              <UserProfile
-                data={{ user }}
-                username={username}
-                profileSize="full"
-              />
+              <ErrorBoundary fallbackComponent={null}>
+                <UserProfile
+                  data={{ user }}
+                  username={username}
+                  profileSize="full"
+                />
+              </ErrorBoundary>
 
               {currentUser &&
                 user.id !== currentUser.id && (
@@ -172,14 +172,17 @@ class UserView extends React.Component<Props, State> {
                     <LoginButton isMember>My settings</LoginButton>
                   </Link>
                 )}
-              <MetaMemberships>
-                <ColumnHeading>Member of</ColumnHeading>
-                <CommunityList
-                  currentUser={currentUser}
-                  user={user}
-                  id={user.id}
-                />
-              </MetaMemberships>
+
+              <ErrorBoundary fallbackComponent={null}>
+                <MetaMemberships>
+                  <ColumnHeading>Member of</ColumnHeading>
+                  <CommunityList
+                    currentUser={currentUser}
+                    user={user}
+                    id={user.id}
+                  />
+                </MetaMemberships>
+              </ErrorBoundary>
             </Meta>
             <Content>
               <SegmentedControl style={{ margin: '16px 0 0 0' }}>
@@ -248,12 +251,14 @@ class UserView extends React.Component<Props, State> {
               {!hasThreads && <NullState bg="null" heading={nullHeading} />}
             </Content>
             <Extras>
-              <ColumnHeading>Member of</ColumnHeading>
-              <CommunityList
-                currentUser={currentUser}
-                user={user}
-                id={user.id}
-              />
+              <ErrorBoundary fallbackComponent={null}>
+                <ColumnHeading>Member of</ColumnHeading>
+                <CommunityList
+                  currentUser={currentUser}
+                  user={user}
+                  id={user.id}
+                />
+              </ErrorBoundary>
             </Extras>
           </Grid>
         </AppViewWrapper>

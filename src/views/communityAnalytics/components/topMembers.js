@@ -13,13 +13,14 @@ import GranularUserProfile from 'src/components/granularUserProfile';
 import getCommunityTopMembers from 'shared/graphql/queries/community/getCommunityTopMembers';
 import type { GetCommunityTopMembersType } from 'shared/graphql/queries/community/getCommunityTopMembers';
 import { UserListItemContainer, MessageIconContainer } from '../style';
+import type { Dispatch } from 'redux';
 
 type Props = {
   isLoading: boolean,
   data: {
     community: GetCommunityTopMembersType,
   },
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   history: Object,
   currentUser: ?Object,
 };

@@ -15,11 +15,12 @@ import sendSlackInvitesMutation from 'shared/graphql/mutations/community/sendSla
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { timeDifference } from 'src/helpers/utils';
 import Icon from 'src/components/icons';
+import type { Dispatch } from 'redux';
 
 type Props = {
   community: GetSlackSettingsType,
   sendSlackInvites: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 type State = { customMessage: ?string, isLoading: boolean };
 

@@ -122,6 +122,12 @@ export const parseEvent = event => {
     case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
       return <span>approved your request to join</span>;
     }
+    case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
+      return <span>requested to join</span>;
+    }
+    case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
+      return <span>approved your request to join</span>;
+    }
     default: {
       console.error('Not a valid event type');
     }

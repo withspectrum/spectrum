@@ -34,7 +34,7 @@ export const SearchInput = styled.input`
   font-size: 16px;
   display: flex;
   flex: 1;
-  transition: all 0.2s;
+  transition: color 0.2s;
   color: ${props => props.theme.text.alt};
   padding-right: 40px;
 
@@ -61,7 +61,7 @@ export const ClearSearch = styled.span`
   font-weight: 500;
   pointer-events: ${props => (props.isOpen ? 'auto' : 'none')};
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.2s, color 0.2s;
 
   &:hover {
     background: ${props => props.theme.text.alt};

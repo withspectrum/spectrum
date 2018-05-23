@@ -17,6 +17,8 @@ import { MentionThreadNotification } from './components/mentionThreadNotificatio
 import { NewUserInCommunityNotification } from './components/newUserInCommunityNotification';
 import { PrivateChannelRequestApproved } from './components/privateChannelRequestApprovedNotification';
 import { PrivateChannelRequestSent } from './components/privateChannelRequestSentNotification';
+import { PrivateCommunityRequestApproved } from './components/privateCommunityRequestApprovedNotification';
+import { PrivateCommunityRequestSent } from './components/privateCommunityRequestSentNotification';
 import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
@@ -28,7 +30,6 @@ import {
 import { FlexCol } from '../../components/globals';
 import { sortByDate } from '../../helpers/utils';
 import WebPushManager from '../../helpers/web-push-manager';
-import { track } from '../../helpers/events';
 import { addToastWithTimeout } from '../../actions/toasts';
 import getNotifications from 'shared/graphql/queries/notification/getNotifications';
 import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
@@ -38,11 +39,14 @@ import ViewError from '../../components/viewError';
 import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
+import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   markAllNotificationsSeen?: Function,
   subscribeToWebPush: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   currentUser: Object,
   isFetchingMore: boolean,
   data: {
@@ -102,7 +106,9 @@ class NotificationsPure extends React.Component<Props, State> {
 
         WebPushManager.getSubscription()
           .then(subscription => {
-            if (!subscription) track('browser push notifications', 'prompted');
+            if (!subscription) {
+              track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_VIEWED);
+            }
             this.setState({
               showWebPushPrompt: !subscription,
             });
@@ -126,13 +132,13 @@ class NotificationsPure extends React.Component<Props, State> {
   }
 
   subscribeToWebPush = () => {
-    track('browser push notifications', 'prompt triggered');
+    track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_CLICKED);
     this.setState({
       webPushPromptLoading: true,
     });
     WebPushManager.subscribe()
       .then(subscription => {
-        track('browser push notifications', 'subscribed');
+        track(events.WEB_PUSH_NOTIFICATIONS_SUBSCRIBED);
         this.setState({
           webPushPromptLoading: false,
           showWebPushPrompt: false,
@@ -140,7 +146,7 @@ class NotificationsPure extends React.Component<Props, State> {
         return this.props.subscribeToWebPush(subscription);
       })
       .catch(err => {
-        track('browser push notifications', 'blocked');
+        track(events.WEB_PUSH_NOTIFICATIONS_BLOCKED);
         this.setState({
           webPushPromptLoading: false,
         });
@@ -158,7 +164,7 @@ class NotificationsPure extends React.Component<Props, State> {
     this.setState({
       showWebPushPrompt: false,
     });
-    track('browser push notifications', 'dismissed');
+    track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_DISMISSED);
   };
 
   render() {
@@ -236,88 +242,146 @@ class NotificationsPure extends React.Component<Props, State> {
                 switch (notification.event) {
                   case 'MESSAGE_CREATED': {
                     return (
-                      <NewMessageNotification
+                      <ErrorBoundary
+                        fallbackComponent={null}
                         key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
+                      >
+                        <NewMessageNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
                     );
                   }
                   case 'REACTION_CREATED': {
                     return (
-                      <NewReactionNotification
+                      <ErrorBoundary
+                        fallbackComponent={null}
                         key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
+                      >
+                        <NewReactionNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
                     );
                   }
                   case 'CHANNEL_CREATED': {
                     return (
-                      <NewChannelNotification
+                      <ErrorBoundary
+                        fallbackComponent={null}
                         key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
+                      >
+                        <NewChannelNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
                     );
                   }
                   case 'USER_JOINED_COMMUNITY': {
                     return (
-                      <NewUserInCommunityNotification
+                      <ErrorBoundary
+                        fallbackComponent={null}
                         key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
+                      >
+                        <NewUserInCommunityNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
                     );
                   }
                   case 'THREAD_CREATED': {
                     return (
-                      <NewThreadNotification
+                      <ErrorBoundary
+                        fallbackComponent={null}
                         key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
+                      >
+                        <NewThreadNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
                     );
                   }
                   case 'COMMUNITY_INVITE': {
                     return (
-                      <CommunityInviteNotification
+                      <ErrorBoundary
+                        fallbackComponent={null}
                         key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
+                      >
+                        <CommunityInviteNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
                     );
                   }
                   case 'MENTION_MESSAGE': {
                     return (
-                      <MentionMessageNotification
+                      <ErrorBoundary
+                        fallbackComponent={null}
                         key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
+                      >
+                        <MentionMessageNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
                     );
                   }
                   case 'MENTION_THREAD': {
                     return (
-                      <MentionThreadNotification
+                      <ErrorBoundary
+                        fallbackComponent={null}
                         key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
+                      >
+                        <MentionThreadNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
                     );
                   }
                   case 'PRIVATE_CHANNEL_REQUEST_SENT': {
                     return (
-                      <PrivateChannelRequestSent
+                      <ErrorBoundary
+                        fallbackComponent={null}
+                        key={notification.id}
+                      >
+                        <PrivateChannelRequestSent
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
+                    );
+                  }
+                  case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
+                    return (
+                      <ErrorBoundary
+                        fallbackComponent={null}
+                        key={notification.id}
+                      >
+                        <PrivateChannelRequestApproved
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
+                    );
+                  }
+                  case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
+                    return (
+                      <PrivateCommunityRequestSent
                         key={notification.id}
                         notification={notification}
                         currentUser={currentUser}
                       />
                     );
                   }
-                  case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
+                  case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
                     return (
-                      <PrivateChannelRequestApproved
+                      <PrivateCommunityRequestApproved
                         key={notification.id}
                         notification={notification}
                         currentUser={currentUser}

@@ -9,6 +9,8 @@ import getUnreadDMQuery from 'shared/graphql/queries/notification/getDirectMessa
 import type { GetDirectMessageNotificationsType } from 'shared/graphql/queries/notification/getDirectMessageNotifications';
 import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
 import { Tab, Label } from '../style';
+import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   active: boolean,
@@ -22,7 +24,7 @@ type Props = {
   subscribeToDMs: Function,
   refetch: Function,
   count: number,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {
@@ -206,7 +208,10 @@ class MessagesTab extends React.Component<Props, State> {
         aria-current={active ? 'page' : undefined}
         to="/messages"
         rel="nofollow"
-        onClick={this.markAllAsSeen}
+        onClick={() => {
+          track(events.NAVIGATION_MESSAGES_CLICKED);
+          this.markAllAsSeen();
+        }}
         data-cy="navbar-messages"
       >
         <Icon

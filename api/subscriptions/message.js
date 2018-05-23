@@ -11,7 +11,6 @@ import Raven from 'shared/raven';
 
 const addMessageListener = asyncify(listenToNewMessages);
 
-import type { Message } from '../models/message';
 import type { GraphQLContext } from '../';
 import type { GraphQLResolveInfo } from 'graphql';
 
@@ -51,7 +50,7 @@ module.exports = {
           debug(
             `denying listener ${moniker}, tried listening to new messages in ${thread}`
           );
-          throw new UserError('Thread not found.');
+          return new UserError('Thread not found.');
         }
 
         debug(`${moniker} listening to new messages in ${thread}`);

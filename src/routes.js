@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Route, Switch, Redirect } from 'react-router';
 import styled, { ThemeProvider } from 'styled-components';
 import Loadable from 'react-loadable';
-import ErrorBoundary from 'react-error-boundary';
+import { ErrorBoundary } from 'src/components/error';
 import { CLIENT_URL } from './api/constants';
 import generateMetaInfo from 'shared/generate-meta-info';
 import './reset.css.js';
@@ -21,6 +21,7 @@ import Composer from './components/composer';
 import signedOutFallback from './helpers/signed-out-fallback';
 import AuthViewHandler from './views/authViewHandler';
 import PrivateChannelJoin from './views/privateChannelJoin';
+import PrivateCommunityJoin from './views/privateCommunityJoin';
 import ThreadSlider from './views/threadSlider';
 import Navbar from './views/navbar';
 import Status from './views/status';
@@ -145,7 +146,28 @@ const ComposerFallback = signedOutFallback(Composer, () => (
   <Redirect to="/login" />
 ));
 
-class Routes extends React.Component<{}> {
+type Props = {
+  maintenanceMode?: boolean,
+};
+
+class Routes extends React.Component<Props> {
+  componentDidMount() {
+    const AMPLITUDE_API_KEY =
+      process.env.NODE_ENV === 'production'
+        ? process.env.AMPLITUDE_API_KEY
+        : process.env.AMPLITUDE_API_KEY_DEVELOPMENT;
+    if (AMPLITUDE_API_KEY) {
+      try {
+        window.amplitude.getInstance().init(AMPLITUDE_API_KEY);
+        window.amplitude.getInstance().setOptOut(false);
+      } catch (err) {
+        console.warn('Unable to start tracking', err.message);
+      }
+    } else {
+      console.warn('No amplitude api key, tracking in development mode');
+    }
+  }
+
   render() {
     const { title, description } = generateMetaInfo();
 
@@ -167,7 +189,7 @@ class Routes extends React.Component<{}> {
 
     return (
       <ThemeProvider theme={theme}>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <ErrorBoundary fallbackComponent={ErrorFallback}>
           <ScrollManager>
             <Body>
               {/* Default meta tags, get overriden by anything further down the tree */}
@@ -260,6 +282,10 @@ class Routes extends React.Component<{}> {
                 <Route
                   path="/:communitySlug/settings"
                   component={CommunitySettingsFallback}
+                />
+                <Route
+                  path="/:communitySlug/join/:token"
+                  component={PrivateCommunityJoin}
                 />
                 <Route
                   path="/:communitySlug/login"

@@ -1,8 +1,14 @@
 // @flow
-const debug = require('debug')('iris:community:import-slack-members');
+
+/*
+
+Deprecated. We now send slack invitations directly by dispatching a job to 
+athena 'sendSlackInvites' in mutation
+
+*/
+
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { slackImportQueue } from 'shared/bull/queues';
 import { getSlackImport } from '../../models/slackImport';
 
