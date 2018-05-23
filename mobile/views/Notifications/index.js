@@ -1,6 +1,6 @@
 // @flow
-import React from 'react';
-import { View, Button } from 'react-native';
+import * as React from 'react';
+import { Button } from 'react-native';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { SecureStore } from 'expo';
@@ -18,11 +18,17 @@ import subscribeExpoPush from '../../../shared/graphql/mutations/user/subscribeE
 import getPushNotificationToken from '../../utils/get-push-notification-token';
 import type { State as ReduxState } from '../../reducers';
 import type { AuthenticationState } from '../../reducers/authentication';
+import Renderer from './renderer';
+import { parseNotification } from './renderUtils';
+import type { Navigation } from '../../utils/types';
+import type { CurrentUserState } from '../../reducers/currentUserId';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
   mutate: (token: any) => Promise<any>,
   authentication: AuthenticationState,
+  currentUserId: CurrentUserState,
+  navigation: Navigation,
   data: {
     subscribeToNewNotifications: Function,
     fetchMore: Function,
@@ -40,10 +46,6 @@ type State = {
   subscription: ?Function,
   pushNotifications: ?PushNotificationsDecision,
 };
-
-const mapStateToProps = (state: ReduxState): * => ({
-  authentication: state.authentication,
-});
 
 class Notifications extends React.Component<Props, State> {
   constructor() {
@@ -132,31 +134,39 @@ class Notifications extends React.Component<Props, State> {
   };
 
   render() {
-    const { isLoading, hasError, data: { notifications } } = this.props;
+    const {
+      isLoading,
+      hasError,
+      data: { notifications },
+      currentUserId,
+      navigation,
+    } = this.props;
     const { pushNotifications } = this.state;
     if (notifications) {
       return (
         <Wrapper>
-          <View>
-            {pushNotifications != null &&
-              pushNotifications.decision === undefined && (
-                <Button
-                  title="Enable push notifications"
-                  onPress={this.enablePushNotifications}
-                />
-              )}
-            <InfiniteList
-              data={notifications.edges}
-              renderItem={({ item: { node } }) => (
-                <Text type="body">{node.id}</Text>
-              )}
-              loadingIndicator={<Text>Loading...</Text>}
-              hasNextPage={notifications.pageInfo.hasNextPage}
-              fetchMore={this.fetchMore}
-              refetching={this.props.isRefetching}
-              refetch={this.props.data.refetch}
-            />
-          </View>
+          {pushNotifications != null &&
+            pushNotifications.decision === undefined && (
+              <Button
+                title="Enable push notifications"
+                onPress={this.enablePushNotifications}
+              />
+            )}
+          <InfiniteList
+            data={notifications.edges}
+            renderItem={({ item }) => (
+              <Renderer
+                currentUserId={currentUserId}
+                navigation={navigation}
+                notification={parseNotification(item.node)}
+              />
+            )}
+            loadingIndicator={<Text>Loading...</Text>}
+            hasNextPage={notifications.pageInfo.hasNextPage}
+            fetchMore={this.fetchMore}
+            refetching={this.props.isRefetching}
+            refetch={this.props.data.refetch}
+          />
         </Wrapper>
       );
     }
@@ -179,10 +189,15 @@ class Notifications extends React.Component<Props, State> {
   }
 }
 
+const map = (state: ReduxState): * => ({
+  authentication: state.authentication,
+  currentUserId: state.currentUserId,
+});
+
 export default compose(
   withSafeView,
   getNotifications,
   subscribeExpoPush,
   viewNetworkHandler,
-  connect(mapStateToProps)
+  connect(map)
 )(Notifications);
