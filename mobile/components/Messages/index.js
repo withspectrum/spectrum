@@ -1,6 +1,6 @@
 // @flow
 import React, { Fragment } from 'react';
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { Query } from 'react-apollo';
 import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
@@ -45,7 +45,8 @@ class Messages extends React.Component<Props> {
       return (
         <Query query={getCurrentUserQuery}>
           {({ data: { user: currentUser } }) => (
-            <Fragment>
+            // TODO(@mxstbr): Replace this <ScrollView> with an <InfiniteList>
+            <ScrollView>
               {messages.map((group, i) => {
                 if (group.length === 0) return null;
 
@@ -123,7 +124,7 @@ class Messages extends React.Component<Props> {
                   </View>
                 );
               })}
-            </Fragment>
+            </ScrollView>
           )}
         </Query>
       );
