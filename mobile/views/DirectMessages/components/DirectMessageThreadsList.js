@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment } from 'react';
+import * as React from 'react';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import InfiniteList from '../../../components/InfiniteList';
@@ -7,14 +7,10 @@ import Text from '../../../components/Text';
 import ViewNetworkHandler, {
   type ViewNetworkHandlerProps,
 } from '../../../components/ViewNetworkHandler';
-
 import DirectMessageThreadListItem from './DirectMessageThreadListItem';
-
-import { getCurrentUserQuery } from '../../../../shared/graphql/queries/user/getUser';
 import getCurrentUserDMThreadConnection, {
   type GetCurrentUserDMThreadConnectionType,
 } from '../../../../shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
-import type { ApolloQueryResult } from 'apollo-client';
 import type { NavigationProps } from 'react-navigation';
 
 type Props = {
@@ -31,25 +27,24 @@ const DirectMessageThreadsList = (props: Props) => {
   if (user) {
     const { pageInfo, edges } = user.directMessageThreadsConnection;
     return (
-      <Fragment>
-        <InfiniteList
-          data={edges}
-          renderItem={({ item: { node: thread } }) => (
-            <DirectMessageThreadListItem
-              thread={thread}
-              currentUserId={user.id}
-              onPress={() =>
-                props.navigation.navigate('DirectMessageThread', {
-                  id: thread.id,
-                })
-              }
-            />
-          )}
-          hasNextPage={pageInfo.hasNextPage}
-          fetchMore={props.data.fetchMore}
-          loadingIndicator={<Text>Loading...</Text>}
-        />
-      </Fragment>
+      <InfiniteList
+        data={edges}
+        renderItem={({ item: { node: thread } }) => (
+          <DirectMessageThreadListItem
+            thread={thread}
+            key={thread.id}
+            currentUserId={user.id}
+            onPress={() =>
+              props.navigation.navigate('DirectMessageThread', {
+                id: thread.id,
+              })
+            }
+          />
+        )}
+        hasNextPage={pageInfo.hasNextPage}
+        fetchMore={props.data.fetchMore}
+        loadingIndicator={<Text>Loading...</Text>}
+      />
     );
   }
   if (isLoading) return <Text>Loading...</Text>;
