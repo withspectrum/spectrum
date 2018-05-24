@@ -12,15 +12,14 @@ const DMStack = StackNavigator(
     DirectMessages: {
       screen: DirectMessages,
       navigationOptions: ({ navigation }) => ({
-        headerTitle:
-          idx(navigation, _ => _.state.params.title) || 'Direct Messages',
+        headerTitle: idx(navigation, _ => _.state.params.title) || 'Messages',
       }),
     },
     DirectMessageThread: {
       screen: DirectMessageThread,
       navigationOptions: ({ navigation }) => ({
-        headerTitle:
-          idx(navigation, _ => _.state.params.title) || 'Direct Message Thread',
+        headerTitle: idx(navigation, _ => _.state.params.title) || '',
+        tabBarVisible: false,
       }),
     },
     ...BaseStack,
