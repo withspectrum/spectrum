@@ -109,6 +109,7 @@
     "history": "^4.6.1",
     "hoist-non-react-statics": "^2.3.1",
     "hpp": "^0.2.2",
+    "idx": "^2.3.0",
     "imgix-core-js": "^1.0.6",
     "ioredis": "3.1.4",
     "isomorphic-fetch": "^2.2.1",
