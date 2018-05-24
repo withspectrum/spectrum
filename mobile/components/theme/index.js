@@ -4,7 +4,7 @@ export default {
     default: '#FFFFFF',
     reverse: '#16171A',
     wash: '#F5F8FC',
-    border: '#DFE7EF',
+    border: '#A3AFBF',
     inactive: '#DFE7EF',
   },
   brand: {
@@ -66,6 +66,7 @@ export default {
     alt: '#828C99',
     reverse: '#FFFFFF',
     placeholder: '#A3AFBF',
+    secondary: '#494C57',
   },
   warn: {
     default: '#C21F3A',
