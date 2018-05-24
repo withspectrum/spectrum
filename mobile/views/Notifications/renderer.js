@@ -114,8 +114,7 @@ class Renderer extends React.Component<Props> {
           <Avatar
             key={actor.id}
             user={actor}
-            size={'32'}
-            radius={'16'}
+            size={32}
             isOnline={actor.payload.isOnline}
             src={actor.payload.profilePhoto}
             onPress={() => navigation.navigate(`User`, { id: actor.id })}

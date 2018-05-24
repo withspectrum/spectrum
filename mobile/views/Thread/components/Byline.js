@@ -29,7 +29,7 @@ const Byline = ({ author, navigation }: Props) => {
     >
       <BylineWrapper>
         <Row>
-          <Avatar src={author.user.profilePhoto} size={40} radius={20} />
+          <Avatar src={author.user.profilePhoto} size={40} />
           <Column>
             <Row>
               <Text style={{ marginTop: 0 }} type="body" bold>

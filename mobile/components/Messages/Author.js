@@ -38,7 +38,6 @@ const Author = ({ author, avatar, me, navigation, onPress }: Props) => {
           <Avatar
             src={author.user.profilePhoto}
             size={16}
-            radius={8}
             style={{ marginRight: 4 }}
           />
         )}

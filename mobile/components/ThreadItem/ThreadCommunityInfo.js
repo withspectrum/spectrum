@@ -35,11 +35,11 @@ class ThreadCommunityInfo extends React.Component<Props> {
     return (
       <ThreadCommunityInfoWrapper>
         {!hideCommunityInfo && (
-          <View style={{ marginRight: 4 }}>
+          <View style={{ marginRight: 8 }}>
             <Avatar
               src={community.profilePhoto}
               size={20}
-              radius={4}
+              community
               onPress={() =>
                 navigation.navigate(`Community`, { id: community.id })
               }

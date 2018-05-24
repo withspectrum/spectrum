@@ -28,7 +28,6 @@ class CommunityHeader extends React.Component<Props> {
         <Avatar
           src={thread.community.profilePhoto}
           size={32}
-          radius={6}
           onPress={() =>
             navigation.navigate(`Community`, { id: thread.community.id })
           }

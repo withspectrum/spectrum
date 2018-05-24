@@ -44,7 +44,6 @@ export class DirectMessageListItem extends React.Component<
           key={'avatar-' + participants[0].id}
           src={participants[0].profilePhoto}
           size={44}
-          radius={22}
         />
       );
     }
@@ -56,7 +55,6 @@ export class DirectMessageListItem extends React.Component<
               key={'avatar-' + participants[0].id}
               src={participants[0].profilePhoto}
               size={36}
-              radius={18}
             />
           </DoubleAvatarFirst>
 
@@ -65,7 +63,6 @@ export class DirectMessageListItem extends React.Component<
               key={'avatar-' + participants[1].id}
               src={participants[1].profilePhoto}
               size={36}
-              radius={18}
             />
           </DoubleAvatarSecond>
         </MultiAvatarWrapper>
@@ -80,7 +77,6 @@ export class DirectMessageListItem extends React.Component<
               key={'avatar-' + participants[0].id}
               src={participants[0].profilePhoto}
               size={24}
-              radius={12}
             />
           </TripleAvatarFirst>
 
@@ -89,7 +85,6 @@ export class DirectMessageListItem extends React.Component<
               key={'avatar-' + participants[1].id}
               src={participants[1].profilePhoto}
               size={24}
-              radius={12}
             />
           </TripleAvatarSecond>
 
@@ -98,7 +93,6 @@ export class DirectMessageListItem extends React.Component<
               key={'avatar-' + participants[2].id}
               src={participants[2].profilePhoto}
               size={24}
-              radius={12}
             />
           </TripleAvatarThird>
         </MultiAvatarWrapper>
@@ -113,7 +107,6 @@ export class DirectMessageListItem extends React.Component<
               key={'avatar-' + participants[0].id}
               src={participants[0].profilePhoto}
               size={24}
-              radius={12}
             />
           </QuadrupleAvatarFirst>
 
@@ -122,7 +115,6 @@ export class DirectMessageListItem extends React.Component<
               key={'avatar-' + participants[1].id}
               src={participants[1].profilePhoto}
               size={24}
-              radius={12}
             />
           </QuadrupleAvatarSecond>
 
@@ -131,7 +123,6 @@ export class DirectMessageListItem extends React.Component<
               key={'avatar-' + participants[2].id}
               src={participants[2].profilePhoto}
               size={24}
-              radius={12}
             />
           </QuadrupleAvatarThird>
 
@@ -140,7 +131,6 @@ export class DirectMessageListItem extends React.Component<
               key={'avatar-' + participants[2].id}
               src={participants[2].profilePhoto}
               size={24}
-              radius={12}
             />
           </QuadrupleAvatarFourth>
         </MultiAvatarWrapper>
@@ -155,7 +145,6 @@ export class DirectMessageListItem extends React.Component<
               key={'avatar-' + participants[0].id}
               src={participants[0].profilePhoto}
               size={24}
-              radius={12}
             />
           </QuadrupleAvatarFirst>
 
@@ -164,7 +153,6 @@ export class DirectMessageListItem extends React.Component<
               key={'avatar-' + participants[1].id}
               src={participants[1].profilePhoto}
               size={24}
-              radius={12}
             />
           </QuadrupleAvatarSecond>
 
@@ -173,7 +161,6 @@ export class DirectMessageListItem extends React.Component<
               key={'avatar-' + participants[2].id}
               src={participants[2].profilePhoto}
               size={24}
-              radius={12}
             />
           </QuadrupleAvatarThird>
 

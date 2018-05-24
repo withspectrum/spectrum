@@ -24,7 +24,6 @@ const messageAvatars = (list, navigation) => {
         key={participant.id}
         src={participant.profilePhoto}
         size={30}
-        radius={15}
         onPress={() => navigation.navigate(`User`, { id: participant.id })}
         key={participant.id}
       />
@@ -65,7 +64,11 @@ const Facepile = ({ participants, creator, navigation }: FacepileProps) => {
 
   return (
     <FacepileContainer>
-      <StackedAvatar onPress={() => navigation.navigate(`User`, { id: creator.id })} src={creator.profilePhoto} size={30} radius={15} />
+      <StackedAvatar
+        onPress={() => navigation.navigate(`User`, { id: creator.id })}
+        src={creator.profilePhoto}
+        size={30}
+      />
       {messageAvatars(participantList, navigation)}
       {hasOverflow && (
         <StackedEmptyParticipantHead size={30} adjustsFontSizeToFit>
