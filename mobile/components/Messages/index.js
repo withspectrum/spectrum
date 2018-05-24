@@ -22,6 +22,7 @@ import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragme
 import type { ThreadParticipantType } from '../../../shared/graphql/fragments/thread/threadParticipant';
 
 type Props = {
+  id: string,
   ...$Exact<FlatListProps>,
   isLoading: boolean,
   hasError: boolean,
@@ -117,6 +118,7 @@ class Messages extends React.Component<Props> {
                         onPress={() =>
                           navigation.navigate(`User`, { id: author.user.id })
                         }
+                        avatar={!me}
                         author={author}
                         me={me}
                       />
@@ -127,6 +129,7 @@ class Messages extends React.Component<Props> {
                               key={message.id}
                               me={me}
                               message={message}
+                              threadId={this.props.id}
                             />
                           );
                         })}

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { View, ScrollView } from 'react-native';
 import compose from 'recompose/compose';
+import { connect } from 'react-redux';
 import { Query } from 'react-apollo';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
@@ -25,23 +26,32 @@ import { Wrapper, ThreadMargin } from './style';
 
 const ThreadMessages = getThreadMessageConnection(Messages);
 
+const mapStateToProps = (state, ownProps): * => ({
+  quotedMessage:
+    ownProps.data.thread && state.message.quotedMessage
+      ? state.message.quotedMessage[ownProps.data.thread.id]
+      : null,
+});
+
 type Props = {
   isLoading: boolean,
   hasError: boolean,
   sendMessage: Function,
+  quotedMessage: ?string,
   data: {
     thread?: GetThreadType,
   },
 };
 class Thread extends React.Component<Props> {
   sendMessage = (body: string, user: Object) => {
-    const { thread } = this.props.data;
+    const { quotedMessage, data: { thread } } = this.props;
     if (!thread) return;
     this.props.sendMessage(
       {
         threadId: thread.id,
         threadType: 'story',
         messageType: 'text',
+        parentId: quotedMessage,
         content: {
           body,
         },
@@ -124,6 +134,7 @@ class Thread extends React.Component<Props> {
 export default compose(
   withSafeView,
   getThreadById,
+  connect(mapStateToProps),
   sendMessageMutation,
   ViewNetworkHandler
 )(Thread);
