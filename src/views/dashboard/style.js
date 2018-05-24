@@ -906,3 +906,13 @@ export const ContextHeaderContainer = styled.div`
 export const EllipsisText = styled.div`
   ${Truncate};
 `;
+
+export const PendingBadge = styled.div`
+  background: ${props => props.theme.warn.alt};
+  color: ${props => props.theme.text.reverse};
+  padding: 0 8px;
+  border-radius: 24px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 2px;
+`;

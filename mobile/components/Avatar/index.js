@@ -9,15 +9,14 @@ import { AvatarImage } from './style';
 
 type AvatarProps = {|
   src: string,
-  size: number,
-  radius: number,
+  size?: number,
   onPress?: Function,
   style?: Object,
 |};
 
 class Avatar extends Component<AvatarProps> {
   render() {
-    const { src, size, radius, onPress, style } = this.props;
+    const { src, size, onPress, style } = this.props;
     let source = src ? { uri: src } : {};
 
     return (
@@ -27,7 +26,7 @@ class Avatar extends Component<AvatarProps> {
           <TouchableHighlight onPress={onPress}>{children}</TouchableHighlight>
         )}
       >
-        <AvatarImage source={source} size={size} radius={radius} style={style} />
+        <AvatarImage source={source} size={size} style={style} />
       </ConditionalWrap>
     );
   }

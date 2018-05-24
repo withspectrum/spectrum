@@ -31,6 +31,10 @@ import {
   CommunitySuggestionsWrapper,
   CommunitySuggestion,
   CommunitySuggestionsText,
+  PrivacySelector,
+  PrivacyOption,
+  PrivacyOptionLabel,
+  PrivacyOptionText,
 } from './style';
 import { FormContainer, Form, Actions } from '../../style';
 import { track, events } from 'src/helpers/analytics';
@@ -54,6 +58,7 @@ type State = {
   agreeCoC: boolean,
   photoSizeError: boolean,
   communitySuggestions: ?Array<Object>,
+  isPrivate: boolean,
 };
 
 type Props = {
@@ -85,6 +90,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       agreeCoC: false,
       photoSizeError: false,
       communitySuggestions: null,
+      isPrivate: false,
     };
 
     this.checkSlug = throttle(this.checkSlug, 500);
@@ -350,6 +356,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       descriptionError,
       photoSizeError,
       agreeCoC,
+      isPrivate,
     } = this.state;
 
     // if an error is present, ensure the client cant submit the form
@@ -385,6 +392,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       website,
       file,
       coverFile,
+      isPrivate,
     };
 
     // create the community
@@ -406,6 +414,18 @@ class CreateCommunityForm extends React.Component<Props, State> {
       });
   };
 
+  setPrivate = () => {
+    return this.setState({
+      isPrivate: true,
+    });
+  };
+
+  setPublic = () => {
+    return this.setState({
+      isPrivate: false,
+    });
+  };
+
   render() {
     const {
       name,
@@ -423,6 +443,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       agreeCoC,
       photoSizeError,
       communitySuggestions,
+      isPrivate,
     } = this.state;
 
     const suggestionString = slugTaken
@@ -432,7 +453,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       : "This community name and url are available! We also found communities that might be similar to what you're trying to create, just in case you would rather join an existing community instead!";
 
     return (
-      <FormContainer>
+      <FormContainer data-cy="create-community-form">
         <Form>
           <ImageInputWrapper>
             <CoverInput
@@ -464,6 +485,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
             onChange={this.changeName}
             autoFocus={!window.innerWidth < 768}
             onBlur={this.checkSuggestedCommunities}
+            dataCy="community-name-input"
           >
             What is your community called?
           </Input>
@@ -476,6 +498,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
             defaultValue={slug}
             onChange={this.changeSlug}
             onBlur={this.checkSuggestedCommunities}
+            dataCy="community-slug-input"
           >
             spectrum.chat/
           </UnderlineInput>
@@ -525,6 +548,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
           <TextArea
             defaultValue={description}
             onChange={this.changeDescription}
+            dataCy="community-description-input"
           >
             Describe it in 140 characters or less
           </TextArea>
@@ -535,11 +559,60 @@ class CreateCommunityForm extends React.Component<Props, State> {
             </Error>
           )}
 
-          <Input defaultValue={website} onChange={this.changeWebsite}>
+          <Input
+            defaultValue={website}
+            onChange={this.changeWebsite}
+            dataCy="community-website-input"
+          >
             Optional: Add your community’s website
           </Input>
 
-          <Checkbox id="isPrivate" checked={agreeCoC} onChange={this.changeCoC}>
+          <PrivacySelector>
+            <PrivacyOption selected={!isPrivate} onClick={this.setPublic}>
+              <PrivacyOptionLabel>
+                <input
+                  type="radio"
+                  value="public"
+                  checked={!isPrivate}
+                  onChange={this.setPublic}
+                  data-cy="community-public-selector-input"
+                />
+                Public
+              </PrivacyOptionLabel>
+              <PrivacyOptionText>
+                Anyone can join and view conversations. Public communities will
+                appear in search results, and can appear as suggested
+                communities to non-members. Conversations will be search
+                indexed.
+              </PrivacyOptionText>
+            </PrivacyOption>
+
+            <PrivacyOption selected={isPrivate} onClick={this.setPrivate}>
+              <PrivacyOptionLabel>
+                <input
+                  type="radio"
+                  checked={isPrivate}
+                  value="private"
+                  onChange={this.setPrivate}
+                  data-cy="community-private-selector-input"
+                />
+                Private
+              </PrivacyOptionLabel>
+              <PrivacyOptionText>
+                All members must be approved before they can view or join
+                conversations. Private communities will not appear in search
+                results or suggested communities. Conversations will not be
+                search indexed.
+              </PrivacyOptionText>
+            </PrivacyOption>
+          </PrivacySelector>
+
+          <Checkbox
+            id="isPrivate"
+            checked={agreeCoC}
+            onChange={this.changeCoC}
+            dataCy="community-coc-input"
+          >
             <span>
               I have read the{' '}
               <a
@@ -580,6 +653,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
               !agreeCoC
             }
             loading={isLoading}
+            dataCy="community-create-button"
           >
             Create Community & Continue
           </Button>

@@ -9,6 +9,7 @@ import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
 import { CommunityInvitationForm } from '../../components/emailInvitationForm';
 import SlackConnection from '../communitySettings/components/slack';
 import CommunityMembers from './components/communityMembers';
+import JoinTokenSettings from './components/joinTokenSettings';
 import type { Dispatch } from 'redux';
 import {
   SectionsContainer,
@@ -16,6 +17,7 @@ import {
   SectionTitle,
   Column,
 } from '../../components/settingsViews/style';
+import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
   currentUser: Object,
@@ -33,19 +35,33 @@ class CommunityMembersSettings extends React.Component<Props> {
       return (
         <SectionsContainer>
           <Column>
-            <CommunityMembers
-              history={history}
-              id={community.id}
-              community={community}
-            />
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <CommunityMembers
+                history={history}
+                id={community.id}
+                community={community}
+              />
+            </ErrorBoundary>
           </Column>
 
           <Column>
-            <SlackConnection type={'import-only'} id={community.id} />
-            <SectionCard>
-              <SectionTitle>Invite by email</SectionTitle>
-              <CommunityInvitationForm id={community.id} />
-            </SectionCard>
+
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <SlackConnection type={'import-only'} id={community.id} />
+            </ErrorBoundary>
+        
+            {community.isPrivate && (
+              <ErrorBoundary fallbackComponent={SettingsFallback}>
+                <JoinTokenSettings id={community.id} community={community} />
+              </ErrorBoundary>
+            )}
+
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <SectionCard>
+                <SectionTitle>Invite by email</SectionTitle>
+                <CommunityInvitationForm id={community.id} />
+              </SectionCard>
+            </ErrorBoundary>
           </Column>
         </SectionsContainer>
       );

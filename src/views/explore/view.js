@@ -20,6 +20,7 @@ import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCom
 import { Loading } from '../../components/loading';
 import { SegmentedControl, Segment } from '../../components/segmentedControl';
 import { track, transformations, events } from 'src/helpers/analytics';
+import { ErrorBoundary } from 'src/components/error';
 
 export const Charts = () => {
   const ChartGrid = styled.div`
@@ -151,14 +152,15 @@ class CategoryList extends React.Component<CategoryListProps> {
             <ListWrapper>
               {filteredCommunities.map((community, i) => (
                 // $FlowFixMe
-                <CommunityProfile
-                  key={i}
-                  profileSize={'upsell'}
-                  data={{ community }}
-                  currentUser={currentUser}
-                  onLeave={this.onLeave}
-                  onJoin={this.onJoin}
-                />
+                <ErrorBoundary fallbackComponent={null} key={i}>
+                  <CommunityProfile
+                    profileSize={'upsell'}
+                    data={{ community }}
+                    currentUser={currentUser}
+                    onLeave={this.onLeave}
+                    onJoin={this.onJoin}
+                  />
+                </ErrorBoundary>
               ))}
             </ListWrapper>
           </ListWithTitle>
@@ -181,12 +183,14 @@ class CategoryList extends React.Component<CategoryListProps> {
                 <ListWrapper>
                   {filteredCommunities.map((community, i) => (
                     // $FlowFixMe
-                    <CommunityProfile
-                      key={i}
-                      profileSize={'upsell'}
-                      data={{ community }}
-                      currentUser={currentUser}
-                    />
+                    <ErrorBoundary fallbackComponent={null}>
+                      <CommunityProfile
+                        key={i}
+                        profileSize={'upsell'}
+                        data={{ community }}
+                        currentUser={currentUser}
+                      />
+                    </ErrorBoundary>
                   ))}
                 </ListWrapper>
               </ListWithTitle>

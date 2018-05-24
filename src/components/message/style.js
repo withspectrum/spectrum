@@ -255,7 +255,16 @@ export const Text = styled(Bubble)`
     props.me ? props.theme.text.reverse : props.theme.text.default};
   font-weight: ${props => (props.me ? `500` : `400`)};
 
-  & + & {
+  ${props =>
+    props.error &&
+    css`
+      background-color: ${props.theme.warn.default} !important;
+      background-image: ${Gradient(
+        props.theme.warn.alt,
+        props.theme.warn.default
+      )} !important;
+      color: ${props => props.theme.text.reverse} !important;
+    `} & + & {
     margin-top: 2px;
   }
 

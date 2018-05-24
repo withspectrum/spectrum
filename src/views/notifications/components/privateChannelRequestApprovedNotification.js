@@ -12,7 +12,7 @@ import {
   NotificationCard,
   TextContent,
   NotificationListRow,
-  JoinContext,
+  ApprovedContext,
   Content,
 } from '../style';
 import Icon from '../../../components/icons';
@@ -48,10 +48,10 @@ export class PrivateChannelRequestApproved extends React.Component<Props> {
           }`}
         />
         <CardContent>
-          <JoinContext>
+          <ApprovedContext>
             <Icon glyph="member-add" />
             <ActorsRow actors={actors.asObjects} />
-          </JoinContext>
+          </ApprovedContext>
         </CardContent>
         <Content>
           <TextContent pointer={false}>
@@ -101,10 +101,10 @@ class MiniPrivateChannelRequestApprovedWithMutation extends React.Component<
           }`}
         />
         <CardContent>
-          <JoinContext>
+          <ApprovedContext>
             <Icon glyph="member-add" />
             <ActorsRow actors={actors.asObjects} />
-          </JoinContext>
+          </ApprovedContext>
         </CardContent>
         <Content>
           <TextContent pointer={false}>
