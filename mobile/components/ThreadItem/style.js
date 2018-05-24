@@ -1,18 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components/native';
 import { TouchableOpacity } from 'react-native';
-import { Stylesheet } from 'react-native';
 import Avatar from '../Avatar';
-
-export const InboxThreadItem = styled.View`
-  display: flex;
-  flex-direction: column;
-  border-bottom-color: ${props => props.theme.bg.border};
-  border-bottom-width: 1px;
-  background: ${props => props.theme.bg.default};
-  position: relative;
-  padding: 16px;
-`;
 
 export const InboxThreadContent = styled.View``;
 

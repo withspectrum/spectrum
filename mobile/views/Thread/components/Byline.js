@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 import Avatar from '../../../components/Avatar';
 import Text from '../../../components/Text';
-import Row from '../../../components/Flex/Row';
+import { Row } from '../../../components/Flex';
 import Column from '../../../components/Flex/Column';
 import compose from 'recompose/compose';
 import type { Navigation } from '../../../utils/types';

@@ -1,12 +1,12 @@
 // @flow
 import * as React from 'react';
-import { TouchableHighlight, View } from 'react-native';
+import { View } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
 import Facepile from './Facepile';
+import { ListItem } from '../Lists';
 import ThreadCommunityInfo from './ThreadCommunityInfo';
 import {
-  InboxThreadItem,
   InboxThreadContent,
   ThreadTitle,
   ThreadMeta,
@@ -29,47 +29,45 @@ class ThreadItem extends React.Component<Props> {
     if (!thread.id) return null;
 
     return (
-      <TouchableHighlight
+      <ListItem
         onPress={() =>
           this.props.navigation.navigate(`Thread`, {
             id: thread.id,
           })
         }
       >
-        <InboxThreadItem>
-          <InboxThreadContent>
-            <ThreadCommunityInfo
-              activeChannel={activeChannel}
-              activeCommunity={activeCommunity}
-              thread={thread}
+        <InboxThreadContent>
+          <ThreadCommunityInfo
+            activeChannel={activeChannel}
+            activeCommunity={activeCommunity}
+            thread={thread}
+          />
+
+          <ThreadTitle>{thread.content.title}</ThreadTitle>
+
+          <ThreadMeta>
+            <Facepile
+              participants={thread.participants}
+              creator={thread.author.user}
+              navigation={this.props.navigation}
             />
 
-            <ThreadTitle>{thread.content.title}</ThreadTitle>
-
-            <ThreadMeta>
-              <Facepile
-                participants={thread.participants}
-                creator={thread.author.user}
-                navigation={this.props.navigation}
-              />
-
-              {thread.messageCount > 0 ? (
-                <MessageCount>
-                  {thread.messageCount > 1
-                    ? `${thread.messageCount} messages`
-                    : `${thread.messageCount} message`}
-                </MessageCount>
-              ) : (
-                <View>
-                  <MetaTextPill offset={thread.participants.length} new>
-                    {'New thread!'.toUpperCase()}
-                  </MetaTextPill>
-                </View>
-              )}
-            </ThreadMeta>
-          </InboxThreadContent>
-        </InboxThreadItem>
-      </TouchableHighlight>
+            {thread.messageCount > 0 ? (
+              <MessageCount>
+                {thread.messageCount > 1
+                  ? `${thread.messageCount} messages`
+                  : `${thread.messageCount} message`}
+              </MessageCount>
+            ) : (
+              <View>
+                <MetaTextPill offset={thread.participants.length} new>
+                  {'New thread!'.toUpperCase()}
+                </MetaTextPill>
+              </View>
+            )}
+          </ThreadMeta>
+        </InboxThreadContent>
+      </ListItem>
     );
   }
 }
