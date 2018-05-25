@@ -23,8 +23,15 @@ export type ParsedNotificationType = {
   modifiedAt: ?string,
 };
 
+const isUnsupportedNotificationType = (event: string) => {
+  return event === 'THREAD_CREATED';
+};
+
 // prettier-ignore
-export const parseNotification = (notification: NotificationInfoType): ParsedNotificationType => {
+export const parseNotification = (notification: NotificationInfoType): ?ParsedNotificationType => {
+  
+  if (isUnsupportedNotificationType(notification.event)) return null
+
   return Object.assign({}, notification, {
     actors: notification.actors.map(actor => {
       return {

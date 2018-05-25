@@ -15,13 +15,15 @@ import viewNetworkHandler, {
   type ViewNetworkHandlerProps,
 } from '../../components/ViewNetworkHandler';
 import subscribeExpoPush from '../../../shared/graphql/mutations/user/subscribeExpoPush';
+import sortByDate from '../../../shared/sort-by-date';
 import getPushNotificationToken from '../../utils/get-push-notification-token';
 import type { State as ReduxState } from '../../reducers';
 import type { AuthenticationState } from '../../reducers/authentication';
-import Renderer from './renderer';
-import { parseNotification } from './renderUtils';
+import { parseNotification } from './parseNotification';
 import type { Navigation } from '../../utils/types';
 import type { CurrentUserState } from '../../reducers/currentUserId';
+import { deduplicateChildren } from '../../utils/deduplicate-children';
+import { NotificationListItem } from '../../components/Lists';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
@@ -142,7 +144,13 @@ class Notifications extends React.Component<Props, State> {
       navigation,
     } = this.props;
     const { pushNotifications } = this.state;
-    if (notifications) {
+
+    if (notifications && currentUserId) {
+      const edges = notifications.edges.map(edge => edge && edge.node);
+      const unique = deduplicateChildren(edges, 'id');
+      const sorted = sortByDate(unique, 'modifiedAt', 'desc');
+      const parsed = sorted.map(n => parseNotification(n)).filter(Boolean);
+
       return (
         <Wrapper>
           {pushNotifications != null &&
@@ -153,12 +161,12 @@ class Notifications extends React.Component<Props, State> {
               />
             )}
           <InfiniteList
-            data={notifications.edges}
+            data={parsed}
             renderItem={({ item }) => (
-              <Renderer
-                currentUserId={currentUserId}
+              <NotificationListItem
                 navigation={navigation}
-                notification={parseNotification(item.node)}
+                notification={item}
+                currentUserId={currentUserId}
               />
             )}
             loadingIndicator={<Text>Loading...</Text>}

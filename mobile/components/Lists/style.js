@@ -20,6 +20,12 @@ export const AvatarWrapper = styled(Column)`
   align-items: center;
 `;
 
+export const IconWrapper = styled(Column)`
+  margin-right: 16px;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
 export const TextColumnContainer = styled(Column)`
   flex: 1;
   align-items: stretch;
@@ -43,14 +49,21 @@ export const Title = styled.Text`
   font-size: 16px;
   font-weight: 700;
   color: ${props => props.theme.text.default};
+  margin-bottom: 4px;
 `;
 
 export const Subtitle = styled.Text`
   font-size: 15px;
   font-weight: 500;
   color: ${props => props.theme.text.alt};
-  margin-top: 4px;
   line-height: 21;
+`;
+
+export const Link = styled.Text`
+  font-size: 15px;
+  line-height: 21;
+  font-weight: 700;
+  color: ${props => props.theme.text.secondary};
 `;
 
 export const Timestamp = styled.Text`
@@ -206,4 +219,8 @@ export const OverflowAvatarLabel = styled.Text`
   color: ${props => props.theme.text.alt};
   line-height: 17;
   margin-top: -2px;
+`;
+
+export const FacepileContainer = styled.View`
+  margin-bottom: 4px;
 `;
