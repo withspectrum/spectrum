@@ -67,7 +67,7 @@ const DirectMessageThreadsList = (props: Props) => {
 };
 
 export default compose(
-  ViewNetworkHandler,
+  withNavigation,
   getCurrentUserDMThreadConnection,
-  withNavigation
+  ViewNetworkHandler
 )(DirectMessageThreadsList);

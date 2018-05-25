@@ -23,13 +23,15 @@ import { parseNotification } from './parseNotification';
 import type { Navigation } from '../../utils/types';
 import { deduplicateChildren } from '../../utils/deduplicate-children';
 import { NotificationListItem } from '../../components/Lists';
-import WithCurrentUser from '../../components/WithCurrentUser';
+import { withCurrentUser } from '../../components/WithCurrentUser';
+import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
   mutate: (token: any) => Promise<any>,
   authentication: AuthenticationState,
   navigation: Navigation,
+  currentUser: GetUserType,
   data: {
     subscribeToNewNotifications: Function,
     fetchMore: Function,
@@ -138,46 +140,43 @@ class Notifications extends React.Component<Props, State> {
     const {
       isLoading,
       hasError,
+      currentUser,
       data: { notifications },
       navigation,
     } = this.props;
     const { pushNotifications } = this.state;
-
-    if (notifications) {
+    console.log('currentUser', currentUser);
+    if (notifications && currentUser) {
       const edges = notifications.edges.map(edge => edge && edge.node);
       const unique = deduplicateChildren(edges, 'id');
       const sorted = sortByDate(unique, 'modifiedAt', 'desc');
       const parsed = sorted.map(n => parseNotification(n)).filter(Boolean);
 
       return (
-        <WithCurrentUser
-          render={({ currentUser }) => (
-            <Wrapper>
-              {pushNotifications != null &&
-                pushNotifications.decision === undefined && (
-                  <Button
-                    title="Enable push notifications"
-                    onPress={this.enablePushNotifications}
-                  />
-                )}
-              <InfiniteList
-                data={parsed}
-                renderItem={({ item }) => (
-                  <NotificationListItem
-                    navigation={navigation}
-                    notification={item}
-                    currentUserId={currentUser.id}
-                  />
-                )}
-                loadingIndicator={<Text>Loading...</Text>}
-                hasNextPage={notifications.pageInfo.hasNextPage}
-                fetchMore={this.fetchMore}
-                refetching={this.props.isRefetching}
-                refetch={this.props.data.refetch}
+        <Wrapper>
+          {pushNotifications != null &&
+            pushNotifications.decision === undefined && (
+              <Button
+                title="Enable push notifications"
+                onPress={this.enablePushNotifications}
               />
-            </Wrapper>
-          )}
-        />
+            )}
+          <InfiniteList
+            data={parsed}
+            renderItem={({ item }) => (
+              <NotificationListItem
+                navigation={navigation}
+                notification={item}
+                currentUserId={currentUser.id}
+              />
+            )}
+            loadingIndicator={<Text>Loading...</Text>}
+            hasNextPage={notifications.pageInfo.hasNextPage}
+            fetchMore={this.fetchMore}
+            refetching={this.props.isRefetching}
+            refetch={this.props.data.refetch}
+          />
+        </Wrapper>
       );
     }
 
@@ -204,6 +203,7 @@ const map = (state: ReduxState): * => ({
 });
 
 export default compose(
+  withCurrentUser,
   withSafeView,
   getNotifications,
   subscribeExpoPush,

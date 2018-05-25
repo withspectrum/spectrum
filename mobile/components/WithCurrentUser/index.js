@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import hoistStatics from 'hoist-non-react-statics';
 import compose from 'recompose/compose';
 import {
   getCurrentUser,
@@ -8,15 +9,49 @@ import {
 
 type Props = {
   render: Function,
+  children: ?any,
   data: {
     user?: GetUserType,
   },
 };
 
-class WithCurrentUser extends React.Component<Props> {
+class CurrentUserComponent extends React.Component<Props> {
   render() {
-    return this.props.render({ currentUser: this.props.data.user });
+    const { data: { user: currentUser }, children, render } = this.props;
+
+    return children ? children({ currentUser }) : render({ currentUser });
   }
 }
 
-export default compose(getCurrentUser)(WithCurrentUser);
+export const CurrentUser = compose(getCurrentUser)(CurrentUserComponent);
+
+export type WithCurrentUserProps = {
+  currentUser: ?GetUserType,
+};
+
+export const withCurrentUser = (
+  Component: React.ComponentType<Props>
+): React.ComponentType<$Diff<Props, WithCurrentUserProps>> => {
+  const C = props => {
+    const { wrappedComponentRef, ...remainingProps } = props;
+    return (
+      <CurrentUser>
+        {({ currentUser }) => {
+          if (!currentUser)
+            return <Component {...remainingProps} ref={wrappedComponentRef} />;
+
+          return (
+            <Component
+              {...remainingProps}
+              currentUser={currentUser}
+              ref={wrappedComponentRef}
+            />
+          );
+        }}
+      </CurrentUser>
+    );
+  };
+
+  C.WrappedComponent = Component;
+  return hoistStatics(C, Component);
+};

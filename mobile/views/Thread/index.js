@@ -13,13 +13,12 @@ import ChatInput from '../../components/ChatInput';
 import getThreadMessageConnection from '../../../shared/graphql/queries/thread/getThreadMessageConnection';
 import sendMessageMutation from '../../../shared/graphql/mutations/message/sendMessage';
 import { convertTimestampToDate } from '../../../src/helpers/utils';
-import WithCurrentUser from '../../components/WithCurrentUser';
+import { withCurrentUser } from '../../components/WithCurrentUser';
 import CommunityHeader from './components/CommunityHeader';
 import Byline from './components/Byline';
 import ActionBar from './components/ActionBar';
-
 import type { GetThreadType } from '../../../shared/graphql/queries/thread/getThread';
-
+import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import { Wrapper, ThreadMargin } from './style';
 
 const ThreadMessages = getThreadMessageConnection(Messages);
@@ -36,6 +35,7 @@ type Props = {
   hasError: boolean,
   sendMessage: Function,
   quotedMessage: ?string,
+  currentUser: GetUserType,
   data: {
     thread?: GetThreadType,
   },
@@ -59,7 +59,7 @@ class Thread extends React.Component<Props> {
   };
 
   render() {
-    const { data, isLoading, hasError } = this.props;
+    const { data, isLoading, hasError, currentUser } = this.props;
 
     if (data.thread) {
       const createdAt = new Date(data.thread.createdAt).getTime();
@@ -94,16 +94,10 @@ class Thread extends React.Component<Props> {
             />
             <ThreadMessages id={thread.id} />
           </ScrollView>
-          <WithCurrentUser
-            render={({ currentUser }) => {
-              if (!currentUser) return null;
-              return (
-                <ChatInput
-                  onSubmit={text => this.sendMessage(text, currentUser)}
-                />
-              );
-            }}
-          />
+
+          {currentUser && (
+            <ChatInput onSubmit={text => this.sendMessage(text, currentUser)} />
+          )}
         </Wrapper>
       );
     }
@@ -137,5 +131,6 @@ export default compose(
   getThreadById,
   connect(mapStateToProps),
   sendMessageMutation,
+  withCurrentUser,
   ViewNetworkHandler
 )(Thread);
