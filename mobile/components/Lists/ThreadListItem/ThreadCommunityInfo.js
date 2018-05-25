@@ -3,13 +3,13 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import { View } from 'react-native';
-import TouchableOpacity from '../TouchableOpacity';
-import Avatar from '../Avatar';
-import type { Navigation } from '../../utils/types';
-import type { ThreadInfoType } from '../../../shared/graphql/fragments/thread/threadInfo';
+import TouchableOpacity from '../../TouchableOpacity';
+import Avatar from '../../Avatar';
+import type { Navigation } from '../../../utils/types';
+import type { ThreadInfoType } from '../../../../shared/graphql/fragments/thread/threadInfo';
+import { Subtitle } from '../style';
 import {
   ThreadCommunityInfoWrapper,
-  ThreadCommunityName,
   ThreadChannelPill,
   ThreadChannelName,
 } from './style';
@@ -29,8 +29,6 @@ class ThreadCommunityInfo extends Component<Props> {
     const hideCommunityInfo =
       activeCommunity && activeCommunity === community.id;
     const hideChannelInfo = activeChannel && activeChannel === channel.id;
-
-    if (hideCommunityInfo && !activeChannel) return null;
     if (hideChannelInfo && hideCommunityInfo) return null;
 
     return (
@@ -62,7 +60,7 @@ class ThreadCommunityInfo extends Component<Props> {
               })
             }
           >
-            <ThreadCommunityName>{community.name}</ThreadCommunityName>
+            <Subtitle>{community.name}</Subtitle>
           </TouchableOpacity>
         )}
 

@@ -1,16 +1,18 @@
 // @flow
 import React, { Component } from 'react';
-import Avatar from '../Avatar';
-import { ListItem } from './ListItem';
+import Avatar from '../../Avatar';
+import { ListItem } from '../ListItem';
 import {
   TextColumnContainer,
   TextRowContainer,
   TitleTextContainer,
-  TimestampTextContainer,
   Title,
-  Timestamp,
   Subtitle,
   AvatarWrapper,
+  TimestampTextContainer,
+  Timestamp,
+} from '../style';
+import {
   MultiAvatarWrapper,
   DoubleAvatarFirst,
   DoubleAvatarSecond,

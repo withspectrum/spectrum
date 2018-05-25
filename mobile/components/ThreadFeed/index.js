@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 import { View } from 'react-native';
 import Text from '../Text';
 import ViewNetworkHandler from '../ViewNetworkHandler';
-import ThreadItem from '../ThreadItem';
+import { ThreadListItem } from '../Lists';
 import InfiniteList from '../InfiniteList';
 import Loading from '../Loading';
 import type { ThreadConnectionType } from '../../../shared/graphql/fragments/community/communityThreadConnection';
@@ -132,7 +132,7 @@ class ThreadFeed extends Component<Props, State> {
           <InfiniteList
             data={threadConnection.edges}
             renderItem={({ item }) => (
-              <ThreadItem
+              <ThreadListItem
                 navigation={navigation}
                 thread={item.node}
                 activeChannel={activeChannel}
