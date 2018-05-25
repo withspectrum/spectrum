@@ -99,7 +99,8 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/spectrum
-      - run: node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"
+      - run: yarn run db:migrate
+      - run: yarn run db:seed
       - run: *setup-and-build-web
       - run: *build-api
       - run: *start-api

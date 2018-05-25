@@ -247,7 +247,7 @@
     "build:web": "cross-env NODE_PATH=./ react-app-rewired build",
     "jest": "cross-env NODE_PATH=./ jest",
     "test": "npm run jest -- --runInBand --watch",
-    "test:ci": "npm run jest -- --forceExit --outputFile test-results.json --json",
+    "test:ci": "npm run jest -- --forceExit --outputFile test-results.json --json --maxWorkers=2",
     "test:e2e": "cypress run",
     "prestart:api:test": "node -e \"require('./shared/testing/setup.js')().then(() => process.exit())\"",
     "start:api:test": "TEST_DB=true FORCE_DEV=true DEBUG=api*,shared* forever build-api/main.js",
