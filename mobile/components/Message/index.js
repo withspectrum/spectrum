@@ -3,7 +3,7 @@ import React from 'react';
 import redraft from 'redraft';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { TouchableOpacity } from 'react-native';
+import TouchableOpacity from '../TouchableOpacity';
 import { connectActionSheet } from '@expo/react-native-action-sheet';
 import Text from '../Text';
 import ConditionalWrap from '../ConditionalWrap';

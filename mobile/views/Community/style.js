@@ -1,6 +1,6 @@
 // @flow
 import styled from 'styled-components/native';
-import { Dimensions, TouchableOpacity } from 'react-native';
+import { Dimensions } from 'react-native';
 
 const width = Dimensions.get('window').width;
 

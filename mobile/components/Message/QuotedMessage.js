@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import TouchableOpacity from '../TouchableOpacity';
 import Message from './';
 import Author from '../Messages/Author';
 import { QuoteWrapper, QuotedParagraph, QuoteGradient } from './style';

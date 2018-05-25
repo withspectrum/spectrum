@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment } from 'react';
+import * as React from 'react';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import InfiniteList from '../../../components/InfiniteList';
@@ -7,15 +7,13 @@ import Text from '../../../components/Text';
 import ViewNetworkHandler, {
   type ViewNetworkHandlerProps,
 } from '../../../components/ViewNetworkHandler';
-
-import DirectMessageThreadListItem from './DirectMessageThreadListItem';
-
-import { getCurrentUserQuery } from '../../../../shared/graphql/queries/user/getUser';
 import getCurrentUserDMThreadConnection, {
   type GetCurrentUserDMThreadConnectionType,
 } from '../../../../shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
-import type { ApolloQueryResult } from 'apollo-client';
 import type { NavigationProps } from 'react-navigation';
+import sentencify from '../../../../shared/sentencify';
+import { timeDifferenceShort } from '../../../../shared/time-difference';
+import { DirectMessageListItem } from '../../../components/Lists';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
@@ -23,6 +21,7 @@ type Props = {
   data: {
     fetchMore: Function,
     user?: $Exact<GetCurrentUserDMThreadConnectionType>,
+    refetch: Function,
   },
 };
 
@@ -31,25 +30,35 @@ const DirectMessageThreadsList = (props: Props) => {
   if (user) {
     const { pageInfo, edges } = user.directMessageThreadsConnection;
     return (
-      <Fragment>
-        <InfiniteList
-          data={edges}
-          renderItem={({ item: { node: thread } }) => (
-            <DirectMessageThreadListItem
-              thread={thread}
-              currentUserId={user.id}
+      <InfiniteList
+        data={edges}
+        renderItem={({ item: { node: thread } }) => {
+          const participants = thread.participants.filter(
+            ({ userId }) => userId !== user.id
+          );
+
+          return (
+            <DirectMessageListItem
+              key={thread.id}
               onPress={() =>
                 props.navigation.navigate('DirectMessageThread', {
                   id: thread.id,
                 })
               }
+              participants={participants}
+              title={sentencify(participants.map(({ name }) => name))}
+              subtitle={thread.snippet}
+              timestamp={timeDifferenceShort(
+                Date.now(),
+                new Date(thread.threadLastActive)
+              )}
             />
-          )}
-          hasNextPage={pageInfo.hasNextPage}
-          fetchMore={props.data.fetchMore}
-          loadingIndicator={<Text>Loading...</Text>}
-        />
-      </Fragment>
+          );
+        }}
+        hasNextPage={pageInfo.hasNextPage}
+        fetchMore={props.data.fetchMore}
+        loadingIndicator={<Text>Loading...</Text>}
+      />
     );
   }
   if (isLoading) return <Text>Loading...</Text>;
@@ -58,7 +67,7 @@ const DirectMessageThreadsList = (props: Props) => {
 };
 
 export default compose(
-  ViewNetworkHandler,
+  withNavigation,
   getCurrentUserDMThreadConnection,
-  withNavigation
+  ViewNetworkHandler
 )(DirectMessageThreadsList);
