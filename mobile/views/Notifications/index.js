@@ -145,7 +145,6 @@ class Notifications extends React.Component<Props, State> {
       navigation,
     } = this.props;
     const { pushNotifications } = this.state;
-    console.log('currentUser', currentUser);
     if (notifications && currentUser) {
       const edges = notifications.edges.map(edge => edge && edge.node);
       const unique = deduplicateChildren(edges, 'id');
