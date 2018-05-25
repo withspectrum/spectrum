@@ -40,7 +40,7 @@ class ThreadCommunityInfo extends React.Component<Props> {
             <Avatar
               src={community.profilePhoto}
               size={20}
-              radius={5}
+              variant="square"
               onPress={() =>
                 navigation.navigate(`Community`, { id: community.id })
               }

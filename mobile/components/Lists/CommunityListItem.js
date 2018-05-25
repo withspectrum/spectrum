@@ -14,7 +14,7 @@ export class CommunityListItem extends React.Component<CommunityListItemType> {
       <ListItemWithAvatar
         onPress={() => navigation.navigate(`Community`, { id: community.id })}
         AvatarComponent={() => (
-          <Avatar src={community.profilePhoto} size={40} radius={10} />
+          <Avatar src={community.profilePhoto} size={40} variant="square" />
         )}
       >
         <TextColumnContainer>

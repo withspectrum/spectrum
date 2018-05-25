@@ -10,14 +10,14 @@ import { AvatarImage } from './style';
 type AvatarProps = {
   src: string,
   size: number,
+  variant?: 'square' | 'circle',
   onPress?: Function,
   style?: Object,
-  radius?: number,
 };
 
 class Avatar extends Component<AvatarProps> {
   render() {
-    const { src, size, onPress, style, radius } = this.props;
+    const { src, size, onPress, style, variant = 'circle' } = this.props;
     let source = src ? { uri: src } : {};
 
     return (
@@ -31,7 +31,7 @@ class Avatar extends Component<AvatarProps> {
           source={source}
           size={size}
           style={style}
-          radius={radius || size / 2}
+          radius={variant === 'circle' ? size / 2 : size / 4}
         />
       </ConditionalWrap>
     );
