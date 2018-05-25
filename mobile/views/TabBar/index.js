@@ -8,8 +8,9 @@ import HomeStack from './HomeStack';
 import ProfileStack from './ProfileStack';
 import NotificationsStack from './NotificationsStack';
 import DMStack from './DirectMessageStack';
+import SearchStack from './SearchStack';
 import {
-  ExploreIcon,
+  SearchIcon,
   HomeIcon,
   MessageIcon,
   NotificationIcon,
@@ -29,10 +30,10 @@ const routeConfiguration = {
       tabBarIcon: ({ tintColor }) => <MessageIcon color={tintColor} />,
     },
   },
-  Explore: {
-    screen: HomeStack,
+  Search: {
+    screen: SearchStack,
     navigationOptions: {
-      tabBarIcon: ({ tintColor }) => <ExploreIcon color={tintColor} />,
+      tabBarIcon: ({ tintColor }) => <SearchIcon color={tintColor} />,
     },
   },
   Notifications: {
