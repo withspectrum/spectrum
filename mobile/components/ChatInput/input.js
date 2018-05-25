@@ -1,12 +1,9 @@
 // @flow
 import React from 'react';
-import { TextInput, View, Button } from 'react-native';
+import { TextInput, View } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import {
-  ChatInputWrapper,
-  ChatInputTextInputWrapper,
-  SendButton,
-} from './style';
+import { ChatInputWrapper, ChatInputTextInputWrapper } from './style';
+import Icon from '../Icon';
 
 import type { Node } from 'react';
 
@@ -49,7 +46,7 @@ class ChatInput extends React.Component<InputProps, State> {
               onSubmitEditing={this.submit}
             />
           </ChatInputTextInputWrapper>
-          <SendButton onPress={this.submit} size={32} />
+          <Icon glyph={'send'} onPress={this.submit} size={32} />
         </ChatInputWrapper>
         {/* NOTE(@mxstbr): Magic number, otherwise the chatinput is way above the keyboard */}
         <KeyboardSpacer topSpacing={-75} />

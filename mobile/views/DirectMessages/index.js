@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment } from 'react';
+import * as React from 'react';
 import DirectMessageThreadsList from './components/DirectMessageThreadsList';
 import { Wrapper } from './style';
 

@@ -5,6 +5,7 @@ import compose from 'recompose/compose';
 import withSafeView from '../../components/SafeAreaView';
 import ThreadFeed from '../../components/ThreadFeed';
 import getCurrentUserEverythingFeed from '../../../shared/graphql/queries/user/getCurrentUserEverythingFeed';
+import type { Navigation } from '../../utils/types';
 import {
   getCurrentUser,
   type GetUserType,
@@ -15,7 +16,7 @@ import { Wrapper } from './style';
 const EverythingThreadFeed = compose(getCurrentUserEverythingFeed)(ThreadFeed);
 
 type Props = {
-  navigation: Object,
+  navigation: Navigation,
   data: {
     user?: GetUserType,
   },

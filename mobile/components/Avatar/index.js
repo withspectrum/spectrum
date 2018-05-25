@@ -2,21 +2,22 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
-import { TouchableHighlight } from 'react-native';
+import TouchableHighlight from '../TouchableHighlight';
 
 import ConditionalWrap from '../ConditionalWrap';
 import { AvatarImage } from './style';
 
-type AvatarProps = {|
+type AvatarProps = {
   src: string,
-  size?: number,
+  size: number,
+  variant?: 'square' | 'circle',
   onPress?: Function,
   style?: Object,
-|};
+};
 
 class Avatar extends Component<AvatarProps> {
   render() {
-    const { src, size, onPress, style } = this.props;
+    const { src, size, onPress, style, variant = 'circle' } = this.props;
     let source = src ? { uri: src } : {};
 
     return (
@@ -26,7 +27,12 @@ class Avatar extends Component<AvatarProps> {
           <TouchableHighlight onPress={onPress}>{children}</TouchableHighlight>
         )}
       >
-        <AvatarImage source={source} size={size} style={style} />
+        <AvatarImage
+          source={source}
+          size={size}
+          style={style}
+          radius={variant === 'circle' ? size / 2 : size / 4}
+        />
       </ConditionalWrap>
     );
   }
