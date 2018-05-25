@@ -55,6 +55,8 @@ class Thread extends Component<Props> {
   render() {
     const { data, isLoading, hasError, currentUser } = this.props;
 
+    console.log(this.props);
+
     if (data.thread) {
       const createdAt = new Date(data.thread.createdAt).getTime();
       // NOTE(@mxstbr): For some reason this is necessary to make flow understand that the thread is defined

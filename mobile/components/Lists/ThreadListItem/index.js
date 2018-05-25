@@ -3,21 +3,25 @@ import React, { Component } from 'react';
 import { ListItem } from '../ListItem';
 import { TextColumnContainer, Title, Subtitle } from '../style';
 import { MetaTextPill, ThreadFacepileRowContainer } from './style';
-import type { Navigation } from '../../../utils/types';
 import type { GetThreadType } from '../../../../shared/graphql/queries/thread/getThread';
 import ThreadCommunityInfo from './ThreadCommunityInfo';
 import Facepile from '../../Facepile';
 
 type ThreadListItemType = {
   thread: GetThreadType,
-  navigation: Navigation,
   activeChannel?: string,
   activeCommunity?: string,
+  onPress: Function,
 };
 
 export class ThreadListItem extends Component<ThreadListItemType> {
   render() {
-    const { thread, activeChannel, activeCommunity, navigation } = this.props;
+    const {
+      thread,
+      activeChannel,
+      activeCommunity,
+      onPress = () => {},
+    } = this.props;
 
     if (!thread.id) return null;
     const facepileUsers = [
@@ -28,15 +32,7 @@ export class ThreadListItem extends Component<ThreadListItemType> {
     ];
 
     return (
-      <ListItem
-        onPress={() =>
-          navigation.navigate({
-            routeName: `Thread`,
-            key: thread.id,
-            params: { id: thread.id },
-          })
-        }
-      >
+      <ListItem onPress={onPress}>
         <TextColumnContainer>
           <ThreadCommunityInfo
             activeChannel={activeChannel}

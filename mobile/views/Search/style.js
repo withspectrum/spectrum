@@ -1,7 +1,6 @@
 // @flow
 import styled from 'styled-components/native';
-import { Animated, Dimensions, TextInput, StyleSheet } from 'react-native';
-import { Constants } from 'expo';
+import { Animated, StyleSheet } from 'react-native';
 
 export const TabLabel = styled(Animated.Text)`
   flex: 1;
@@ -15,20 +14,6 @@ export const TabLabel = styled(Animated.Text)`
     props.active ? props.theme.text.default : props.theme.text.alt};
   position: relative;
   z-index: 100;
-`;
-
-export const SearchBar = styled(TextInput)`
-  position: absolute;
-  top: ${Constants.statusBarHeight + 16};
-  width: ${Dimensions.get('window').width - 32};
-  height: 40px;
-  left: 16px;
-  border-radius: 8px;
-  background: ${props => props.theme.bg.wash};
-  z-index: 100;
-  padding: 4px 0px 4px 12px;
-  font-size: 16px;
-  font-weight: 600;
 `;
 
 export const SearchView = styled.View`
