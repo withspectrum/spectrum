@@ -3,9 +3,13 @@ import * as React from 'react';
 import Avatar from '../Avatar';
 import { ListItemWithAvatar } from './ListItemWithAvatar';
 import { TextColumnContainer, Title, Subtitle } from './style';
+import type { GetCommunityType } from '../../../shared/graphql/queries/community/getCommunity';
 import type { Navigation } from '../../utils/types';
 
-type CommunityListItemType = { community: Object, navigation: Navigation };
+type CommunityListItemType = {
+  community: GetCommunityType,
+  navigation: Navigation,
+};
 
 export class CommunityListItem extends React.Component<CommunityListItemType> {
   render() {

@@ -18,7 +18,7 @@ import Icon from '../Icon';
 
 type Props = {
   notification: ParsedNotificationType,
-  children?: React.ChildrenArray<any>,
+  children?: React.Node,
   currentUserId: string,
   navigation: Navigation,
 };
