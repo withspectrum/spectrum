@@ -13,6 +13,7 @@ import {
 import type { ParsedNotificationType } from '../../views/notifications/parseNotification';
 import type { Navigation } from '../../utils/types';
 import { timeDifferenceShort } from '../../../shared/time-difference';
+import sentencify from '../../../shared/sentencify';
 import Facepile from '../Facepile';
 import Icon from '../Icon';
 
@@ -24,39 +25,6 @@ type Props = {
 };
 
 export class NotificationListItem extends React.Component<Props> {
-  renderActorsString = () => {
-    let actors = this.getActors();
-
-    if (!actors || actors.length === 0) return null;
-
-    const names = actors.map(actor => actor.payload.name).reverse();
-    actors = actors.map(actor => actor.payload).reverse();
-
-    if (actors.length === 1) {
-      return <React.Fragment>{names[0]}</React.Fragment>;
-    } else if (actors.length === 2) {
-      return (
-        <React.Fragment>
-          {names[0]} and {names[1]}
-        </React.Fragment>
-      );
-    } else if (actors.length === 3) {
-      return (
-        <React.Fragment>
-          {names[0]}, {names[1]} and {names[2]}
-        </React.Fragment>
-      );
-    } else if (actors.length >= 4) {
-      return (
-        <React.Fragment>
-          {names[0]} and {names.length - 1} others
-        </React.Fragment>
-      );
-    } else {
-      return null;
-    }
-  };
-
   getActors = () => {
     return this.props.notification.actors.filter(
       actor => actor.id !== this.props.currentUserId
@@ -317,7 +285,11 @@ export class NotificationListItem extends React.Component<Props> {
           </TextRowContainer>
 
           <Subtitle numberOfLines={3}>
-            {this.renderActorsString()}
+            {sentencify(
+              this.getActors()
+                .map(({ payload }) => payload.name)
+                .reverse()
+            )}
             {this.renderEventString()}
             {this.renderContextString()}
           </Subtitle>
