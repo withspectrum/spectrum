@@ -183,7 +183,7 @@ export class NotificationListItem extends React.Component<Props> {
         return <Icon glyph={'mention'} size={32} color={'special.default'} />;
       }
       default: {
-        console.log('unsupported', this.props.notification.event);
+        console.warn('unsupported', this.props.notification.event);
         return null;
       }
     }
