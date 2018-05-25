@@ -255,7 +255,16 @@ export const Text = styled(Bubble)`
     props.me ? props.theme.text.reverse : props.theme.text.default};
   font-weight: ${props => (props.me ? `500` : `400`)};
 
-  & + & {
+  ${props =>
+    props.error &&
+    css`
+      background-color: ${props.theme.warn.default} !important;
+      background-image: ${Gradient(
+        props.theme.warn.alt,
+        props.theme.warn.default
+      )} !important;
+      color: ${props => props.theme.text.reverse} !important;
+    `} & + & {
     margin-top: 2px;
   }
 
@@ -355,8 +364,14 @@ export const QuotedParagraph = Paragraph.withComponent('div').extend`
   margin: 4px 0;
   color: ${props => props.theme.text.alt};
 
-  code,
+  code {
+    color: ${props => props.theme.text.alt};
+  }
+  /* overrides Bubble component styles to fix #3098 */
   pre {
+    margin: 0;
+    width: 100%;
+    border: 1px solid ${props => hexa(props.theme.brand.border, 0.5)};
     color: ${props => props.theme.text.alt};
   }
 `;

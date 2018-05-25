@@ -36,6 +36,7 @@ import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessag
 import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
+import type { Dispatch } from 'redux';
 
 const QuotedMessage = connect()(
   getMessageById(props => {
@@ -72,7 +73,7 @@ type State = {
 type Props = {
   onRef: Function,
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   onChange: Function,
   state: Object,
   createThread: Function,
@@ -338,6 +339,9 @@ class ChatInput extends React.Component<Props, State> {
           : toPlainText(state),
         messageType: !isAndroid() ? 'draftjs' : 'text',
       });
+      localStorage.removeItem(LS_DM_KEY);
+      localStorage.removeItem(LS_DM_KEY_EXPIRE);
+
       clear();
       return 'handled';
     }
@@ -699,10 +703,10 @@ class ChatInput extends React.Component<Props, State> {
           </ChatInputWrapper>
         </ChatInputContainer>
         <MarkdownHint showHint={markdownHint} data-cy="markdownHint">
-          <b>**bold**</b>
-          <i>*italics*</i>
+          <b>*bold*</b>
+          <i>_italic_</i>
           <Preformatted>`code`</Preformatted>
-          <Preformatted>```preformatted```</Preformatted>
+          <Preformatted>```codeblock```</Preformatted>
         </MarkdownHint>
       </React.Fragment>
     );

@@ -2,9 +2,9 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import getChannelSettings, {
-  type GetChannelSettingsType,
-} from 'shared/graphql/queries/channel/getChannelSettings';
+import getCommunitySettings, {
+  type GetCommunitySettingsType,
+} from 'shared/graphql/queries/community/getCommunitySettings';
 import Clipboard from 'react-clipboard.js';
 import { Loading } from 'src/components/loading';
 import viewNetworkHandler, {
@@ -15,7 +15,7 @@ import {
   SectionTitle,
   SectionSubtitle,
 } from 'src/components/settingsViews/style';
-import LoginTokenToggle from './loginTokenToggle';
+import LoginTokenToggle from './joinTokenToggle';
 import ResetJoinToken from './resetJoinToken';
 import { Input } from 'src/components/formElements';
 import { addToastWithTimeout } from 'src/actions/toasts';
@@ -24,10 +24,9 @@ import { CLIENT_URL } from 'src/api/constants';
 
 type Props = {
   data: {
-    channel: GetChannelSettingsType,
+    community: GetCommunitySettingsType,
   },
   ...$Exact<ViewNetworkHandlerType>,
-  saveBrandedLoginSettings: Function,
   dispatch: Function,
 };
 
@@ -35,33 +34,33 @@ type State = {
   isLoading: boolean,
 };
 
-class LoginTokenSettings extends React.Component<Props, State> {
+class JoinTokenSettings extends React.Component<Props, State> {
   state = {
     isLoading: false,
   };
 
   render() {
-    const { data: { channel }, isLoading } = this.props;
+    const { data: { community }, isLoading } = this.props;
 
-    if (channel) {
-      const { joinSettings } = channel;
+    if (community) {
+      const { joinSettings } = community;
 
       return (
         <SectionCard data-cy="login-with-token-settings">
-          <SectionTitle>Join channel via link</SectionTitle>
+          <SectionTitle>Join community via link</SectionTitle>
           <SectionSubtitle>
-            Allow people to join this private channel by visiting a unique link.
-            Anyone with this link will be able to join this channel.
+            Allow people to join this private community by visiting a unique
+            link. Anyone with this link will be able to join this community.
           </SectionSubtitle>
 
-          <LoginTokenToggle settings={joinSettings} id={channel.id} />
+          <LoginTokenToggle settings={joinSettings} id={community.id} />
 
           {joinSettings.tokenJoinEnabled && (
             <Clipboard
               style={{ background: 'none' }}
-              data-clipboard-text={`${CLIENT_URL}/${channel.community.slug}/${
-                channel.slug
-              }/join/${joinSettings.token}`}
+              data-clipboard-text={`${CLIENT_URL}/${community.slug}/join/${
+                joinSettings.token
+              }`}
               onSuccess={() =>
                 this.props.dispatch(
                   addToastWithTimeout('success', 'Copied to clipboard')
@@ -70,9 +69,9 @@ class LoginTokenSettings extends React.Component<Props, State> {
             >
               <TokenInputWrapper>
                 <Input
-                  value={`${CLIENT_URL}/${channel.community.slug}/${
-                    channel.slug
-                  }/join/${joinSettings.token}`}
+                  value={`${CLIENT_URL}/${community.slug}/join/${
+                    joinSettings.token
+                  }`}
                   onChange={() => {}}
                   dataCy={'join-link-input'}
                 />
@@ -80,7 +79,9 @@ class LoginTokenSettings extends React.Component<Props, State> {
             </Clipboard>
           )}
 
-          {joinSettings.tokenJoinEnabled && <ResetJoinToken id={channel.id} />}
+          {joinSettings.tokenJoinEnabled && (
+            <ResetJoinToken id={community.id} />
+          )}
         </SectionCard>
       );
     }
@@ -97,6 +98,6 @@ class LoginTokenSettings extends React.Component<Props, State> {
   }
 }
 
-export default compose(getChannelSettings, viewNetworkHandler, connect())(
-  LoginTokenSettings
+export default compose(getCommunitySettings, viewNetworkHandler, connect())(
+  JoinTokenSettings
 );

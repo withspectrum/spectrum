@@ -22,7 +22,7 @@ import {
 
 type Props = {
   id: string,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   currentUser: Object,
   sendEmailInvites: Function,
 };

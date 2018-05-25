@@ -3,10 +3,12 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { openModal } from '../../actions/modals';
+import type { Dispatch } from 'redux';
 import {
   Span,
   ProBadge,
   BlockedBadge,
+  PendingBadge,
   DefaultPaymentMethodBadge,
 } from './style';
 
@@ -15,7 +17,7 @@ type Props = {
   onClick?: Function,
   tipText: string,
   currentUser: ?Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 class Badge extends React.Component<Props> {
@@ -62,6 +64,16 @@ class Badge extends React.Component<Props> {
           >
             {this.props.type}
           </BlockedBadge>
+        );
+      case 'pending':
+        return (
+          <PendingBadge
+            type={this.props.type}
+            tipText={this.props.tipText}
+            tipLocation={'top-left'}
+          >
+            {this.props.type}
+          </PendingBadge>
         );
       default:
         return (

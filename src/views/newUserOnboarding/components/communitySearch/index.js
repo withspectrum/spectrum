@@ -10,6 +10,7 @@ import ToggleCommunityMembership from '../../../../components/toggleCommunityMem
 import { throttle } from '../../../../helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
 import { Spinner } from '../../../../components/globals';
+import type { Dispatch } from 'redux';
 import {
   SearchWrapper,
   SearchInput,
@@ -36,7 +37,7 @@ type State = {
 
 type Props = {
   toggleCommunityMembership: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   client: Object,
   joinedCommunity: Function,
 };

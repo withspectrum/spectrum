@@ -24,6 +24,7 @@ import {
   EtcCTA,
 } from './style';
 import type { ContextRouter } from 'react-router';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   ...$Exact<ContextRouter>,
@@ -34,7 +35,9 @@ type State = {
 };
 
 class Features extends React.Component<Props, State> {
-  componentDidMount() {}
+  componentDidMount() {
+    track(events.FEATURES_PAGE_VIEWED);
+  }
 
   render() {
     return (
@@ -51,7 +54,14 @@ class Features extends React.Component<Props, State> {
                 your organization.
               </Copy>
               <Link to={`/new/community`}>
-                <Button icon="welcome">Get started</Button>
+                <Button
+                  icon="welcome"
+                  onClick={() =>
+                    track(events.FEATURES_PAGE_GET_STARTED_CLICKED)
+                  }
+                >
+                  Get started
+                </Button>
               </Link>
             </TextContent>
             <Waterfall src="https://spectrum.imgix.net/marketing/waterfall.png?h=0.25&dpr=2&auto=compress,format" />
@@ -325,7 +335,12 @@ class Features extends React.Component<Props, State> {
           <EtcCTA>
             <EtcName>What are you waiting for?</EtcName>
             <Link to={`/new/community`}>
-              <Button icon="welcome">Get started</Button>
+              <Button
+                icon="welcome"
+                onClick={() => track(events.FEATURES_PAGE_GET_STARTED_CLICKED)}
+              >
+                Get started
+              </Button>
             </Link>
           </EtcCTA>
         </Section>

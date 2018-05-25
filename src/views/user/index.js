@@ -22,6 +22,7 @@ import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import { LoginButton } from '../community/style';
+import type { Dispatch } from 'redux';
 import {
   Grid,
   Meta,
@@ -35,6 +36,7 @@ import {
   DesktopSegment,
   MobileSegment,
 } from '../../components/segmentedControl';
+import { ErrorBoundary } from 'src/components/error';
 
 const ThreadFeedWithData = compose(connect(), getUserThreads)(ThreadFeed);
 const ThreadParticipantFeedWithData = compose(connect(), getUserThreads)(
@@ -54,7 +56,7 @@ type Props = {
   isLoading: boolean,
   hasError: boolean,
   queryVarIsChanging: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   history: Object,
 };
 
@@ -150,11 +152,13 @@ class UserView extends React.Component<Props, State> {
           <Grid id="main">
             <CoverPhoto src={user.coverPhoto} />
             <Meta>
-              <UserProfile
-                data={{ user }}
-                username={username}
-                profileSize="full"
-              />
+              <ErrorBoundary fallbackComponent={null}>
+                <UserProfile
+                  data={{ user }}
+                  username={username}
+                  profileSize="full"
+                />
+              </ErrorBoundary>
 
               {currentUser &&
                 user.id !== currentUser.id && (
@@ -168,14 +172,17 @@ class UserView extends React.Component<Props, State> {
                     <LoginButton isMember>My settings</LoginButton>
                   </Link>
                 )}
-              <MetaMemberships>
-                <ColumnHeading>Member of</ColumnHeading>
-                <CommunityList
-                  currentUser={currentUser}
-                  user={user}
-                  id={user.id}
-                />
-              </MetaMemberships>
+
+              <ErrorBoundary fallbackComponent={null}>
+                <MetaMemberships>
+                  <ColumnHeading>Member of</ColumnHeading>
+                  <CommunityList
+                    currentUser={currentUser}
+                    user={user}
+                    id={user.id}
+                  />
+                </MetaMemberships>
+              </ErrorBoundary>
             </Meta>
             <Content>
               <SegmentedControl style={{ margin: '16px 0 0 0' }}>
@@ -244,12 +251,14 @@ class UserView extends React.Component<Props, State> {
               {!hasThreads && <NullState bg="null" heading={nullHeading} />}
             </Content>
             <Extras>
-              <ColumnHeading>Member of</ColumnHeading>
-              <CommunityList
-                currentUser={currentUser}
-                user={user}
-                id={user.id}
-              />
+              <ErrorBoundary fallbackComponent={null}>
+                <ColumnHeading>Member of</ColumnHeading>
+                <CommunityList
+                  currentUser={currentUser}
+                  user={user}
+                  id={user.id}
+                />
+              </ErrorBoundary>
             </Extras>
           </Grid>
         </AppViewWrapper>

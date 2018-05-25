@@ -58,11 +58,6 @@ const Channel = /* GraphQL */ `
 		userId: ID!
 	}
 
-	type JoinSettings {
-		tokenJoinEnabled: Boolean
-		token: String
-	}
-
 	type Channel {
 		id: ID!
 		createdAt: Date!

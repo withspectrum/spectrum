@@ -5,7 +5,9 @@ import theme from '../../components/theme';
 
 // Stacks for the individual views
 import HomeStack from './HomeStack';
+import ProfileStack from './ProfileStack';
 import NotificationsStack from './NotificationsStack';
+import DMStack from './DirectMessageStack';
 import {
   ExploreIcon,
   HomeIcon,
@@ -22,7 +24,7 @@ const routeConfiguration = {
     },
   },
   Messages: {
-    screen: HomeStack,
+    screen: DMStack,
     navigationOptions: {
       tabBarIcon: ({ tintColor }) => <MessageIcon color={tintColor} />,
     },
@@ -40,7 +42,7 @@ const routeConfiguration = {
     },
   },
   Profile: {
-    screen: HomeStack,
+    screen: ProfileStack,
     navigationOptions: {
       tabBarIcon: ({ tintColor }) => <ProfileIcon color={tintColor} />,
     },

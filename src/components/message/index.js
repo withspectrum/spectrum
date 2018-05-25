@@ -10,6 +10,7 @@ import { openModal } from '../../actions/modals';
 import { replyToMessage } from '../../actions/message';
 import { track, events } from 'src/helpers/analytics';
 
+import type { Dispatch } from 'redux';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 
@@ -18,7 +19,7 @@ type Props = {
   threadId: string,
   threadType: string,
   selectedId: string,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   canModerate: boolean,
   currentUser: UserInfoType,
   me: boolean,

@@ -11,6 +11,7 @@ import type { GetDirectMessageThreadMessageConnectionType } from 'shared/graphql
 import setLastSeenMutation from 'shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';
 import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
 import { MessagesScrollWrapper } from './style';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   id: string,
@@ -123,20 +124,22 @@ class MessagesWithData extends React.Component<Props, State> {
 
       return (
         <MessagesScrollWrapper>
-          {hasNextPage && (
-            <NextPageButton
-              isFetchingMore={isFetchingMore}
-              fetchMore={fetchMore}
+          <ErrorBoundary>
+            {hasNextPage && (
+              <NextPageButton
+                isFetchingMore={isFetchingMore}
+                fetchMore={fetchMore}
+              />
+            )}
+            <ChatMessages
+              toggleReaction={toggleReaction}
+              messages={sortedMessages}
+              forceScrollToBottom={this.props.forceScrollToBottom}
+              contextualScrollToBottom={this.props.contextualScrollToBottom}
+              threadId={this.props.id}
+              threadType={'directMessageThread'}
             />
-          )}
-          <ChatMessages
-            toggleReaction={toggleReaction}
-            messages={sortedMessages}
-            forceScrollToBottom={this.props.forceScrollToBottom}
-            contextualScrollToBottom={this.props.contextualScrollToBottom}
-            threadId={this.props.id}
-            threadType={'directMessageThread'}
-          />
+          </ErrorBoundary>
         </MessagesScrollWrapper>
       );
     }

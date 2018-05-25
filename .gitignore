@@ -35,3 +35,5 @@ mobile/.expo
 test-results.json
 desktop/release
 public/uploads
+cypress/screenshots/
+cypress/videos/
