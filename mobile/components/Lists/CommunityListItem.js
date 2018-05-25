@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import Avatar from '../Avatar';
 import { ListItem } from './ListItem';
 import { TextColumnContainer, Title, Subtitle, AvatarWrapper } from './style';
@@ -11,12 +11,18 @@ type CommunityListItemType = {
   navigation: Navigation,
 };
 
-export class CommunityListItem extends React.Component<CommunityListItemType> {
+export class CommunityListItem extends Component<CommunityListItemType> {
   render() {
     const { community, navigation } = this.props;
     return (
       <ListItem
-        onPress={() => navigation.navigate(`Community`, { id: community.id })}
+        onPress={() =>
+          navigation.navigate({
+            routeName: `Community`,
+            key: community.id,
+            params: { id: community.id },
+          })
+        }
       >
         <AvatarWrapper>
           <Avatar src={community.profilePhoto} size={40} variant="square" />

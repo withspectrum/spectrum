@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import Avatar from '../Avatar';
 import { ListItem } from './ListItem';
 import {
@@ -33,7 +33,7 @@ type DirectMessageListItemType = {
   timestamp: string,
 };
 
-export class DirectMessageListItem extends React.Component<
+export class DirectMessageListItem extends Component<
   DirectMessageListItemType
 > {
   renderParticipantAvatars = () => {

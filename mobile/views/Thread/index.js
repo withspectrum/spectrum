@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import { View, ScrollView } from 'react-native';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
@@ -23,13 +23,6 @@ import { Wrapper, ThreadMargin } from './style';
 
 const ThreadMessages = getThreadMessageConnection(Messages);
 
-const mapStateToProps = (state, ownProps): * => ({
-  quotedMessage:
-    ownProps.data.thread && state.message.quotedMessage
-      ? state.message.quotedMessage[ownProps.data.thread.id]
-      : null,
-});
-
 type Props = {
   isLoading: boolean,
   hasError: boolean,
@@ -40,7 +33,8 @@ type Props = {
     thread?: GetThreadType,
   },
 };
-class Thread extends React.Component<Props> {
+
+class Thread extends Component<Props> {
   sendMessage = (body: string, user: Object) => {
     const { quotedMessage, data: { thread } } = this.props;
     if (!thread) return;
@@ -126,10 +120,17 @@ class Thread extends React.Component<Props> {
   }
 }
 
+const map = (state, ownProps): * => ({
+  quotedMessage:
+    ownProps.data.thread && state.message.quotedMessage
+      ? state.message.quotedMessage[ownProps.data.thread.id]
+      : null,
+});
+
 export default compose(
   withSafeView,
   getThreadById,
-  connect(mapStateToProps),
+  connect(map),
   sendMessageMutation,
   withCurrentUser,
   ViewNetworkHandler

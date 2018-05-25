@@ -1,9 +1,9 @@
 // @flow
-import { StackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 import BaseStack from './BaseStack';
 import Search from '../Search';
 
-const DMStack = StackNavigator(
+const DMStack = createStackNavigator(
   {
     Search: {
       screen: Search,

@@ -1,6 +1,6 @@
 // @flow
-import * as React from 'react';
-import { Text, View, StatusBar, ScrollView } from 'react-native';
+import React, { Component, Fragment } from 'react';
+import { Text, View, StatusBar } from 'react-native';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import {
@@ -45,7 +45,7 @@ const RemoteThreadItem = compose(getThreadById, withNavigation)(
 
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 
-class Community extends React.Component<Props> {
+class Community extends Component<Props> {
   render() {
     const { data: { community }, isLoading, hasError, navigation } = this.props;
 
@@ -59,7 +59,7 @@ class Community extends React.Component<Props> {
             id={community.id}
             activeCommunity={community.id}
             ListHeaderComponent={
-              <React.Fragment>
+              <Fragment>
                 <CoverPhotoContainer>
                   {community.coverPhoto ? (
                     <CoverPhoto
@@ -88,7 +88,7 @@ class Community extends React.Component<Props> {
                 {community.watercoolerId && (
                   <RemoteThreadItem id={community.watercoolerId} />
                 )}
-              </React.Fragment>
+              </Fragment>
             }
           />
         </Wrapper>

@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import { View } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
@@ -22,7 +22,7 @@ type Props = {
   activeCommunity?: string,
 };
 
-class ThreadItem extends React.Component<Props> {
+class ThreadItem extends Component<Props> {
   render() {
     const { thread, activeChannel, activeCommunity } = this.props;
 
@@ -37,8 +37,9 @@ class ThreadItem extends React.Component<Props> {
     return (
       <ListItem
         onPress={() =>
-          this.props.navigation.navigate(`Thread`, {
-            id: thread.id,
+          this.props.navigation.navigate({
+            routeName: `Thread`,
+            params: { id: thread.id },
           })
         }
       >

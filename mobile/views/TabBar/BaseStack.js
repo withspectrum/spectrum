@@ -20,45 +20,18 @@ const BaseStack = {
     screen: withMappedNavigationProps(Community),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
       headerTitle: null,
-      headerStyle: {
-        backgroundColor: 'transparent',
-        right: 0,
-        left: 0,
-        top: 0,
-        position: 'absolute',
-        borderBottomWidth: 0,
-      },
-      headerTintColor: 'white',
     }),
   },
   Channel: {
     screen: withMappedNavigationProps(Channel),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
       headerTitle: null,
-      headerStyle: {
-        backgroundColor: 'transparent',
-        right: 0,
-        left: 0,
-        top: 0,
-        position: 'absolute',
-        borderBottomWidth: 0,
-      },
-      headerTintColor: 'white',
     }),
   },
   User: {
     screen: withMappedNavigationProps(User),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: null,
-      headerStyle: {
-        backgroundColor: 'transparent',
-        right: 0,
-        left: 0,
-        top: 0,
-        position: 'absolute',
-        borderBottomWidth: 0,
-      },
-      headerTintColor: 'white',
+      header: null,
     }),
   },
 };

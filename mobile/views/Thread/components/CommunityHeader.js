@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import Avatar from '../../../components/Avatar';
 import TouchableOpacity from '../../../components/TouchableOpacity';
@@ -18,7 +18,7 @@ type Props = {
   navigation: Navigation,
 };
 
-class CommunityHeader extends React.Component<Props> {
+class CommunityHeader extends Component<Props> {
   render() {
     const { thread, navigation } = this.props;
     const { channel, community } = thread;
@@ -30,19 +30,35 @@ class CommunityHeader extends React.Component<Props> {
           size={32}
           variant="square"
           onPress={() =>
-            navigation.navigate(`Community`, { id: thread.community.id })
+            navigation.navigate({
+              routeName: `Community`,
+              key: thread.community.id,
+              params: { id: thread.community.id },
+            })
           }
         />
 
         <TouchableOpacity
-          onPress={() => navigation.navigate(`Community`, { id: community.id })}
+          onPress={() =>
+            navigation.navigate({
+              routeName: `Community`,
+              key: community.id,
+              params: { id: community.id },
+            })
+          }
         >
           <CommunityName>{community.name}</CommunityName>
         </TouchableOpacity>
 
         {!isGeneral && (
           <ThreadChannelPill
-            onPress={() => navigation.navigate(`Channel`, { id: channel.id })}
+            onPress={() =>
+              navigation.navigate({
+                routeName: `Channel`,
+                key: channel.id,
+                params: { id: channel.id },
+              })
+            }
           >
             <ThreadChannelName>{channel.name}</ThreadChannelName>
           </ThreadChannelPill>

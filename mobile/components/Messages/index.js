@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import { View } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
@@ -32,7 +32,7 @@ type Props = {
   },
 };
 
-class Messages extends React.Component<Props> {
+class Messages extends Component<Props> {
   render() {
     const {
       data,
@@ -115,7 +115,11 @@ class Messages extends React.Component<Props> {
                 <ThreadMargin>
                   <Author
                     onPress={() =>
-                      navigation.navigate(`User`, { id: author.user.id })
+                      navigation.navigate({
+                        routeName: `User`,
+                        key: author.user.id,
+                        params: { id: author.user.id },
+                      })
                     }
                     avatar={!me}
                     author={author}

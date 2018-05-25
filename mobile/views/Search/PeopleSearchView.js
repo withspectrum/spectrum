@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import { Text } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
@@ -23,7 +23,7 @@ type Props = {
   navigation: Navigation,
 };
 
-class UsersSearchView extends React.Component<Props> {
+class UsersSearchView extends Component<Props> {
   render() {
     const { isLoading, data, navigation } = this.props;
 

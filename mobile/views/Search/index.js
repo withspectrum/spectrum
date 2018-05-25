@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component, type ComponentType } from 'react';
 import { withTheme } from 'styled-components';
 import { View, StyleSheet, Dimensions, TextInput } from 'react-native';
 import { TabViewAnimated, SceneMap, TabBar } from 'react-native-tab-view';
@@ -29,8 +29,8 @@ type Props = {
   theme: Object,
 };
 
-class Search extends React.Component<Props, State> {
-  searchInput: React.ComponentType<TextInput>;
+class Search extends Component<Props, State> {
+  searchInput: ComponentType<TextInput>;
 
   state = {
     searchString: '',

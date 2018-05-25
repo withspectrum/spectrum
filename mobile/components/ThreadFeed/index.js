@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { View } from 'react-native';
 import Text from '../Text';
@@ -42,7 +42,7 @@ type Props = {
   },
 };
 
-class ThreadFeed extends React.Component<Props, State> {
+class ThreadFeed extends Component<Props, State> {
   constructor() {
     super();
     this.state = {
