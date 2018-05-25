@@ -7,11 +7,13 @@ import Text from '../../../components/Text';
 import ViewNetworkHandler, {
   type ViewNetworkHandlerProps,
 } from '../../../components/ViewNetworkHandler';
-import DirectMessageThreadListItem from './DirectMessageThreadListItem';
 import getCurrentUserDMThreadConnection, {
   type GetCurrentUserDMThreadConnectionType,
 } from '../../../../shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
 import type { NavigationProps } from 'react-navigation';
+import sentencify from '../../../../shared/sentencify';
+import { timeDifferenceShort } from '../../../../shared/time-difference';
+import { DirectMessageListItem } from '../../../components/Lists';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
@@ -19,6 +21,7 @@ type Props = {
   data: {
     fetchMore: Function,
     user?: $Exact<GetCurrentUserDMThreadConnectionType>,
+    refetch: Function,
   },
 };
 
@@ -29,18 +32,29 @@ const DirectMessageThreadsList = (props: Props) => {
     return (
       <InfiniteList
         data={edges}
-        renderItem={({ item: { node: thread } }) => (
-          <DirectMessageThreadListItem
-            thread={thread}
-            key={thread.id}
-            currentUserId={user.id}
-            onPress={() =>
-              props.navigation.navigate('DirectMessageThread', {
-                id: thread.id,
-              })
-            }
-          />
-        )}
+        renderItem={({ item: { node: thread } }) => {
+          const participants = thread.participants.filter(
+            ({ userId }) => userId !== user.id
+          );
+
+          return (
+            <DirectMessageListItem
+              key={thread.id}
+              onPress={() =>
+                props.navigation.navigate('DirectMessageThread', {
+                  id: thread.id,
+                })
+              }
+              participants={participants}
+              title={sentencify(participants.map(({ name }) => name))}
+              subtitle={thread.snippet}
+              timestamp={timeDifferenceShort(
+                Date.now(),
+                new Date(thread.threadLastActive)
+              )}
+            />
+          );
+        }}
         hasNextPage={pageInfo.hasNextPage}
         fetchMore={props.data.fetchMore}
         loadingIndicator={<Text>Loading...</Text>}
