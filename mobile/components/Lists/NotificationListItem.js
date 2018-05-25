@@ -151,36 +151,74 @@ export class NotificationListItem extends React.Component<Props> {
   renderIcon = () => {
     switch (this.props.notification.event) {
       case 'MESSAGE_CREATED': {
-        return <Icon glyph={'message-fill'} size={32} color={'success.alt'} />;
+        return (
+          <Icon
+            glyph={'message-fill'}
+            size={32}
+            color={theme => theme.success.alt}
+          />
+        );
       }
       case 'REACTION_CREATED': {
-        return <Icon glyph={'like-fill'} size={32} color={'warn.alt'} />;
+        return (
+          <Icon glyph={'like-fill'} size={32} color={theme => theme.warn.alt} />
+        );
       }
       case 'CHANNEL_CREATED': {
-        return <Icon glyph={'community'} size={32} color={'brand.alt'} />;
+        return (
+          <Icon
+            glyph={'community'}
+            size={32}
+            color={theme => theme.brand.alt}
+          />
+        );
       }
       case 'USER_JOINED_COMMUNITY': {
-        return <Icon glyph={'member-add'} size={32} color={'space.default'} />;
+        return (
+          <Icon
+            glyph={'member-add'}
+            size={32}
+            color={theme => theme.space.default}
+          />
+        );
       }
       case 'PRIVATE_CHANNEL_REQUEST_SENT': {
-        return <Icon glyph={'person'} size={32} color={'special.alt'} />;
+        return (
+          <Icon glyph={'person'} size={32} color={theme => theme.special.alt} />
+        );
       }
       case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
         return (
-          <Icon glyph={'member-add'} size={32} color={'success.default'} />
+          <Icon
+            glyph={'member-add'}
+            size={32}
+            color={theme => theme.success.default}
+          />
         );
       }
       case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
-        return <Icon glyph={'person'} size={32} color={'special.alt'} />;
+        return (
+          <Icon glyph={'person'} size={32} color={theme => theme.special.alt} />
+        );
       }
       case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
         return (
-          <Icon glyph={'member-add'} size={32} color={'success.default'} />
+          <Icon
+            glyph={'member-add'}
+            size={32}
+            color={theme => theme.success.default}
+          />
         );
       }
       case 'MENTION_MESSAGE':
       case 'MENTION_THREAD': {
-        return <Icon glyph={'mention'} size={32} color={'special.default'} />;
+        return (
+          <Icon
+            glyph={'mention'}
+            size={32}
+            color={theme => theme.special.default}
+          />
+        );
       }
       default: {
         console.warn('unsupported', this.props.notification.event);

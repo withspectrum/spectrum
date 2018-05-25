@@ -12,14 +12,13 @@ type Props = {
   onPress?: Function,
   glyph: GlyphTypes,
   size?: number,
-  color?: string,
+  color?: (theme: Object) => string,
   theme: Object,
 };
 
 // prettier-ignore
-export default withTheme(({ size = 64, color = 'text.alt', glyph, theme, onPress }: Props) => {
-    const colorPaths = color.split('.')
-    const fill = theme[colorPaths[0]][colorPaths[1]]
+export default withTheme(({ size = 64, color, glyph, theme, onPress }: Props) => {
+    const fill = color ? color(theme) : theme.text.alt;
 
     return (
       <ConditionalWrap
