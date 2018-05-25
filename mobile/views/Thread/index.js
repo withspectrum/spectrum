@@ -3,7 +3,6 @@ import * as React from 'react';
 import { View, ScrollView } from 'react-native';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { Query } from 'react-apollo';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import withSafeView from '../../components/SafeAreaView';
@@ -12,10 +11,9 @@ import ThreadContent from '../../components/ThreadContent';
 import Messages from '../../components/Messages';
 import ChatInput from '../../components/ChatInput';
 import getThreadMessageConnection from '../../../shared/graphql/queries/thread/getThreadMessageConnection';
-import { getCurrentUserQuery } from '../../../shared/graphql/queries/user/getUser';
 import sendMessageMutation from '../../../shared/graphql/mutations/message/sendMessage';
 import { convertTimestampToDate } from '../../../src/helpers/utils';
-
+import WithCurrentUser from '../../components/WithCurrentUser';
 import CommunityHeader from './components/CommunityHeader';
 import Byline from './components/Byline';
 import ActionBar from './components/ActionBar';
@@ -96,13 +94,16 @@ class Thread extends React.Component<Props> {
             />
             <ThreadMessages id={thread.id} />
           </ScrollView>
-          <Query query={getCurrentUserQuery}>
-            {({ data: { user } }) =>
-              user ? (
-                <ChatInput onSubmit={text => this.sendMessage(text, user)} />
-              ) : null
-            }
-          </Query>
+          <WithCurrentUser
+            render={({ currentUser }) => {
+              if (!currentUser) return null;
+              return (
+                <ChatInput
+                  onSubmit={text => this.sendMessage(text, currentUser)}
+                />
+              );
+            }}
+          />
         </Wrapper>
       );
     }

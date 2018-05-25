@@ -1,10 +1,8 @@
 // @flow
-import React, { Fragment } from 'react';
-import { View, ScrollView } from 'react-native';
-import { Query } from 'react-apollo';
+import * as React from 'react';
+import { View } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
-import { getCurrentUserQuery } from '../../../shared/graphql/queries/user/getUser';
 import viewNetworkHandler from '../ViewNetworkHandler';
 import Text from '../Text';
 import Message from '../Message';
@@ -12,7 +10,7 @@ import InfiniteList from '../InfiniteList';
 import { ThreadMargin } from '../../views/Thread/style';
 import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
 import { convertTimestampToDate } from '../../../src/helpers/utils';
-
+import WithCurrentUser from '../../components/WithCurrentUser';
 import RoboText from './RoboText';
 import Author from './Author';
 
@@ -53,8 +51,8 @@ class Messages extends React.Component<Props> {
       let hasInjectedUnseenRobo = false;
 
       return (
-        <Query query={getCurrentUserQuery}>
-          {({ data: { user: currentUser } }) => (
+        <WithCurrentUser
+          render={({ currentUser }) => (
             <InfiniteList
               {...flatListProps}
               data={messages}
@@ -140,7 +138,7 @@ class Messages extends React.Component<Props> {
               }}
             />
           )}
-        </Query>
+        />
       );
     }
 
