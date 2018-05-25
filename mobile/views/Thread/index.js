@@ -121,7 +121,7 @@ class Thread extends React.Component<Props> {
       return (
         <Wrapper>
           <View testID="e2e-thread">
-            <Text type="body">Error!</Text>
+            <Text type="body">{this.props.data.error}</Text>
           </View>
         </Wrapper>
       );

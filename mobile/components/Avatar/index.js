@@ -7,17 +7,17 @@ import TouchableHighlight from '../TouchableHighlight';
 import ConditionalWrap from '../ConditionalWrap';
 import { AvatarImage } from './style';
 
-type AvatarProps = {|
+type AvatarProps = {
   src: string,
-  size?: number,
+  size: number,
   onPress?: Function,
   style?: Object,
-  community?: boolean,
-|};
+  radius?: number,
+};
 
 class Avatar extends Component<AvatarProps> {
   render() {
-    const { src, size, onPress, style, community = false } = this.props;
+    const { src, size, onPress, style, radius } = this.props;
     let source = src ? { uri: src } : {};
 
     return (
@@ -31,7 +31,7 @@ class Avatar extends Component<AvatarProps> {
           source={source}
           size={size}
           style={style}
-          community={community}
+          radius={radius || size / 2}
         />
       </ConditionalWrap>
     );
