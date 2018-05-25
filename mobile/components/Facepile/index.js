@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import Avatar from '../Avatar';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import type { Navigation } from '../../utils/types';
@@ -31,53 +30,18 @@ const messageAvatars = (list, navigation, maxCount) => {
 
 type FacepileProps = {
   users: Array<?UserInfoType>,
-  insertAtFirstPosition: UserInfoType,
   maxCount: number,
   navigation: Navigation,
 };
 
-const Facepile = ({
-  users,
-  insertAtFirstPosition,
-  maxCount = 5,
-  navigation,
-}: FacepileProps) => {
-  if (!users || users.length === 0) {
-    if (insertAtFirstPosition) {
-      return (
-        <FacepileContainer>
-          <Avatar
-            onPress={() =>
-              navigation.navigate(`User`, { id: insertAtFirstPosition.id })
-            }
-            src={insertAtFirstPosition.profilePhoto}
-            size={30}
-          />;
-        </FacepileContainer>
-      );
-    }
-
-    return null;
-  }
-
+const Facepile = ({ users, maxCount = 5, navigation }: FacepileProps) => {
   const participantCount = users.length;
-
   const hasOverflow = participantCount > maxCount;
   const overflowAmount =
     participantCount - maxCount > 9 ? '···' : `+${participantCount - maxCount}`;
 
   return (
     <FacepileContainer>
-      {insertAtFirstPosition && (
-        <StackedAvatar
-          onPress={() =>
-            navigation.navigate(`User`, { id: insertAtFirstPosition.id })
-          }
-          src={insertAtFirstPosition.profilePhoto}
-          size={30}
-        />
-      )}
-
       {messageAvatars(users, navigation, maxCount)}
 
       {hasOverflow && (

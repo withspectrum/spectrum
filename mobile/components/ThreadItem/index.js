@@ -27,6 +27,12 @@ class ThreadItem extends React.Component<Props> {
     const { thread, activeChannel, activeCommunity } = this.props;
 
     if (!thread.id) return null;
+    const facepileUsers = [
+      thread.author.user,
+      ...thread.participants.filter(
+        participant => participant && participant.id !== thread.author.user.id
+      ),
+    ];
 
     return (
       <ListItem
@@ -46,13 +52,7 @@ class ThreadItem extends React.Component<Props> {
           <ThreadTitle>{thread.content.title}</ThreadTitle>
 
           <ThreadMeta>
-            <Facepile
-              users={thread.participants.filter(
-                participant =>
-                  participant && participant.id !== thread.author.user.id
-              )}
-              insertAtFirstPosition={thread.author.user}
-            />
+            <Facepile users={facepileUsers} />
 
             {thread.messageCount > 0 ? (
               <MessageCount>
