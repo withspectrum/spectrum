@@ -8,7 +8,7 @@ import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import type { ThreadParticipantType } from '../../../shared/graphql/fragments/thread/threadParticipant';
 import type { Navigation } from '../../utils/types';
-import { TouchableHighlight } from 'react-native';
+import TouchableHighlight from '../TouchableHighlight';
 
 type Props = {
   author: ThreadParticipantType,

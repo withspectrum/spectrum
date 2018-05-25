@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
-import { TouchableHighlight } from 'react-native';
+import TouchableHighlight from '../TouchableHighlight';
 
 import ConditionalWrap from '../ConditionalWrap';
 import { AvatarImage } from './style';

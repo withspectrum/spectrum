@@ -2,7 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import Avatar from '../../../components/Avatar';
-import { TouchableOpacity } from 'react-native';
+import TouchableOpacity from '../../../components/TouchableOpacity';
 import { withNavigation } from 'react-navigation';
 import type { Navigation } from '../../../utils/types';
 import type { ThreadInfoType } from '../../../../shared/graphql/fragments/thread/threadInfo';

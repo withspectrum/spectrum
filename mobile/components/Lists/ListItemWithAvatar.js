@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { TouchableOpacity } from 'react-native';
+import TouchableOpacity from '../TouchableOpacity';
 import { Row } from '../Flex';
 import { ListItemView, AvatarWrapper } from './style';
 

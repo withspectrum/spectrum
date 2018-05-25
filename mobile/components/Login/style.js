@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components/native';
-import { View, TouchableOpacity, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
+import TouchableOpacity from '../TouchableOpacity';
 import { Svg } from 'expo';
 const { Path, G } = Svg;
 import theme from '../theme';
@@ -56,7 +57,7 @@ type SigninButtonProps = {
   children: React$Node,
   onPress: Function,
 };
-const SigninButtonContainer = styled.TouchableOpacity`
+const SigninButtonContainer = styled(TouchableOpacity)`
   background-color: ${props => props.color};
   width: 220px;
   height: 51px;

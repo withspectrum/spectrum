@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { TouchableOpacity } from 'react-native';
+import TouchableOpacity from '../TouchableOpacity';
 import { ListItemView } from './style';
 
 type ListItemProps = {
@@ -14,9 +14,7 @@ export class ListItem extends React.Component<ListItemProps> {
 
     return (
       <ListItemView>
-        <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
-          {children}
-        </TouchableOpacity>
+        <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>
       </ListItemView>
     );
   }
