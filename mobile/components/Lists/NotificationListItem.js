@@ -192,6 +192,7 @@ export class NotificationListItem extends React.Component<Props> {
   getOnPress = (): Function => {
     const { notification, navigation } = this.props;
     let type;
+    let id;
     switch (notification.event) {
       case 'MESSAGE_CREATED': {
         type = 'Thread';
@@ -199,6 +200,7 @@ export class NotificationListItem extends React.Component<Props> {
       }
       case 'REACTION_CREATED': {
         type = 'Thread';
+        id = notification.context.payload.threadId;
         break;
       }
       case 'CHANNEL_CREATED': {
@@ -239,8 +241,8 @@ export class NotificationListItem extends React.Component<Props> {
     }
 
     if (!type) return () => {};
-
-    return () => navigation.navigate(type, { id: notification.context.id });
+    return () =>
+      navigation.navigate(type, { id: id ? id : notification.context.id });
   };
 
   facepileDataFromActors = () => {
