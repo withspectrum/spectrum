@@ -99,6 +99,8 @@ class ThreadFeed extends React.Component<Props, State> {
       !isLoading &&
       !hasError &&
       !isRefetching &&
+      threadConnection &&
+      threadConnection.pageInfo &&
       threadConnection.pageInfo.hasNextPage
     ) {
       fetchMore();
@@ -139,7 +141,11 @@ class ThreadFeed extends React.Component<Props, State> {
             )}
             loadingIndicator={<Text>Loading...</Text>}
             fetchMore={this.fetchMore}
-            hasNextPage={threadConnection.pageInfo.hasNextPage}
+            hasNextPage={
+              threadConnection &&
+              threadConnection.pageInfo &&
+              threadConnection.pageInfo.hasNextPage
+            }
             refetching={this.props.isRefetching}
             refetch={this.props.data.refetch}
             {...flatListProps}
