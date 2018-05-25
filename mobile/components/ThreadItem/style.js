@@ -2,7 +2,10 @@
 import styled from 'styled-components/native';
 import TouchableOpacity from '../TouchableOpacity';
 
-export const InboxThreadContent = styled.View``;
+export const InboxThreadContent = styled.View`
+  display: flex;
+  flex: 1;
+`;
 
 export const ThreadTitle = styled.Text`
   font-size: 18px;
@@ -15,9 +18,11 @@ export const ThreadTitle = styled.Text`
 export const ThreadMeta = styled.View`
   display: flex;
   flex-direction: row;
+  flex: 1;
   justify-content: space-between;
   align-items: center;
   margin-top: 12px;
+  min-height: 40px;
 `;
 
 export const MetaText = styled.Text`
