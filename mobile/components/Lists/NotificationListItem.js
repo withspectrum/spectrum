@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { ListItemWithIcon } from './ListItemWithIcon';
+import { ListItem } from './ListItem';
 import {
   TextColumnContainer,
   TextRowContainer,
@@ -9,6 +9,7 @@ import {
   Subtitle,
   Link,
   FacepileContainer,
+  IconWrapper,
 } from './style';
 import type { ParsedNotificationType } from '../../views/notifications/parseNotification';
 import type { Navigation } from '../../utils/types';
@@ -267,10 +268,9 @@ export class NotificationListItem extends React.Component<Props> {
 
   render() {
     return (
-      <ListItemWithIcon
-        onPress={this.getOnPress()}
-        IconComponent={() => this.renderIcon()}
-      >
+      <ListItem onPress={this.getOnPress()}>
+        <IconWrapper>{this.renderIcon()}</IconWrapper>
+
         <TextColumnContainer>
           <TextRowContainer>
             <FacepileContainer>
@@ -294,7 +294,7 @@ export class NotificationListItem extends React.Component<Props> {
             {this.renderContextString()}
           </Subtitle>
         </TextColumnContainer>
-      </ListItemWithIcon>
+      </ListItem>
     );
   }
 }

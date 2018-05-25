@@ -1,11 +1,12 @@
 // @flow
 import * as React from 'react';
+import { Row } from '../Flex';
 import TouchableOpacity from '../TouchableOpacity';
 import { ListItemView } from './style';
 
 type ListItemProps = {
   onPress: Function,
-  children?: React.ChildrenArray<any>,
+  children?: any,
 };
 
 export class ListItem extends React.Component<ListItemProps> {
@@ -14,7 +15,9 @@ export class ListItem extends React.Component<ListItemProps> {
 
     return (
       <ListItemView>
-        <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>
+        <TouchableOpacity onPress={onPress}>
+          <Row>{children}</Row>
+        </TouchableOpacity>
       </ListItemView>
     );
   }

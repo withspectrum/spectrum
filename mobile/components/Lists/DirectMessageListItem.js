@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Avatar from '../Avatar';
-import { ListItemWithAvatar } from './ListItemWithAvatar';
+import { ListItem } from './ListItem';
 import {
   TextColumnContainer,
   TextRowContainer,
@@ -10,6 +10,7 @@ import {
   Title,
   Timestamp,
   Subtitle,
+  AvatarWrapper,
   MultiAvatarWrapper,
   DoubleAvatarFirst,
   DoubleAvatarSecond,
@@ -178,10 +179,9 @@ export class DirectMessageListItem extends React.Component<
     const { onPress, title, subtitle, timestamp } = this.props;
 
     return (
-      <ListItemWithAvatar
-        onPress={onPress}
-        AvatarComponent={() => this.renderParticipantAvatars()}
-      >
+      <ListItem onPress={onPress}>
+        <AvatarWrapper>{this.renderParticipantAvatars()}</AvatarWrapper>
+
         <TextColumnContainer>
           <TextRowContainer>
             <TitleTextContainer>
@@ -197,7 +197,7 @@ export class DirectMessageListItem extends React.Component<
 
           <Subtitle numberOfLines={2}>{subtitle}</Subtitle>
         </TextColumnContainer>
-      </ListItemWithAvatar>
+      </ListItem>
     );
   }
 }
