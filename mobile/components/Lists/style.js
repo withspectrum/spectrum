@@ -6,7 +6,7 @@ import styled from 'styled-components/native';
 export const ListItemView = styled.View`
   display: flex;
   flex-direction: column;
-  border-bottom-color: ${props => props.theme.bg.border};
+  border-bottom-color: ${props => props.theme.bg.hairline};
   border-bottom-width: ${StyleSheet.hairlineWidth};
   background: ${props => props.theme.bg.default};
   position: relative;

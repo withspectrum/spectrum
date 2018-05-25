@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native';
 import TouchableOpacity from '../TouchableOpacity';
 import { Svg } from 'expo';
 const { Path, G } = Svg;
-import theme from '../theme';
+import theme from '../../../shared/theme';
 import Anchor from '../Anchor';
 
 export const Container = (props: any) => {

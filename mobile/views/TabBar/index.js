@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
-import theme from '../../components/theme';
+import theme from '../../../shared/theme';
 
 // Stacks for the individual views
 import HomeStack from './HomeStack';

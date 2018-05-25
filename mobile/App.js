@@ -9,7 +9,7 @@ import { ThemeProvider } from 'styled-components';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { type ApolloClient } from 'apollo-client';
 
-import theme from './components/theme';
+import theme from '../shared/theme';
 import { createClient } from '../shared/graphql';
 import Login from './components/Login';
 import TabBar from './views/TabBar';

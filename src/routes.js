@@ -7,7 +7,7 @@ import { ErrorBoundary } from 'src/components/error';
 import { CLIENT_URL } from './api/constants';
 import generateMetaInfo from 'shared/generate-meta-info';
 import './reset.css.js';
-import { theme } from './components/theme';
+import { theme } from 'shared/theme';
 import { FlexCol } from './components/globals';
 import ScrollManager from './components/scrollManager';
 import Head from './components/head';

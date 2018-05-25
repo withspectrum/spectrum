@@ -1,15 +1,11 @@
 // @flow
-// export our theme to the provider
-// This is globally available in styled-components when interpolating a function like so:
-// ${(props) => props.theme}
-// Or using import { withTheme } from 'styled-components';
-
 export const theme = {
   bg: {
     default: '#FFFFFF',
     reverse: '#16171A',
     wash: '#F5F8FC',
     border: '#DFE7EF',
+    hairline: '#A3AFBF',
     inactive: '#DFE7EF',
   },
   brand: {
@@ -38,7 +34,7 @@ export const theme = {
     },
     github: {
       default: '#16171A',
-      alt: '#16171A',
+      alt: '#828C99',
     },
     ph: {
       default: '#D85537',
@@ -81,3 +77,5 @@ export const theme = {
     border: '#FFCCE5',
   },
 };
+
+export default theme;

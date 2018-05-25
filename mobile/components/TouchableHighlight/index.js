@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { TouchableHighlight } from 'react-native';
-import theme from '../theme';
+import theme from '../../../shared/theme';
 
 type Props = {
   children?: React.ChildrenArray<any>,

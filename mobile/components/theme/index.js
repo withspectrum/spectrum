@@ -1,10 +1,11 @@
 // @flow
-export default {
+export const theme = {
   bg: {
     default: '#FFFFFF',
     reverse: '#16171A',
     wash: '#F5F8FC',
-    border: '#A3AFBF',
+    border: '#DFE7EF',
+    hairline: '#A3AFBF',
     inactive: '#DFE7EF',
   },
   brand: {
@@ -76,3 +77,5 @@ export default {
     border: '#FFCCE5',
   },
 };
+
+export default theme;
