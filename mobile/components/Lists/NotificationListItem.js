@@ -11,7 +11,7 @@ import {
   FacepileContainer,
   IconWrapper,
 } from './style';
-import type { ParsedNotificationType } from '../../views/notifications/parseNotification';
+import type { ParsedNotificationType } from '../../views/Notifications/parseNotification';
 import type { Navigation } from '../../utils/types';
 import { timeDifferenceShort } from '../../../shared/time-difference';
 import sentencify from '../../../shared/sentencify';
