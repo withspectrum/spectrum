@@ -3,7 +3,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
-import Facepile from './Facepile';
+import Facepile from '../../components/Facepile';
 import { ListItem } from '../Lists';
 import ThreadCommunityInfo from './ThreadCommunityInfo';
 import {
@@ -47,9 +47,11 @@ class ThreadItem extends React.Component<Props> {
 
           <ThreadMeta>
             <Facepile
-              participants={thread.participants}
-              creator={thread.author.user}
-              navigation={this.props.navigation}
+              users={thread.participants.filter(
+                participant =>
+                  participant && participant.id !== thread.author.user.id
+              )}
+              insertAtFirstPosition={thread.author.user}
             />
 
             {thread.messageCount > 0 ? (
