@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import { Svg } from 'expo';
 const { Path, G } = Svg;
