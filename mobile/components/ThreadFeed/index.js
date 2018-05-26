@@ -1,14 +1,15 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { View } from 'react-native';
 import Text from '../Text';
 import ViewNetworkHandler from '../ViewNetworkHandler';
-import ThreadItem from '../ThreadItem';
+import { ThreadListItem } from '../Lists';
 import InfiniteList from '../InfiniteList';
 import Loading from '../Loading';
 import type { ThreadConnectionType } from '../../../shared/graphql/fragments/community/communityThreadConnection';
 import type { FlatListProps } from 'react-native';
+import { withNavigation } from 'react-navigation';
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -30,7 +31,6 @@ type Props = {
   isFetchingMore: boolean,
   isRefetching: boolean,
   hasError: boolean,
-  navigation: Object,
   activeChannel?: string,
   activeCommunity?: string,
   // This is necessary so we can listen to updates
@@ -42,7 +42,7 @@ type Props = {
   },
 };
 
-class ThreadFeed extends React.Component<Props, State> {
+class ThreadFeed extends Component<Props, State> {
   constructor() {
     super();
     this.state = {
@@ -132,11 +132,17 @@ class ThreadFeed extends React.Component<Props, State> {
           <InfiniteList
             data={threadConnection.edges}
             renderItem={({ item }) => (
-              <ThreadItem
-                navigation={navigation}
+              <ThreadListItem
                 thread={item.node}
                 activeChannel={activeChannel}
                 activeCommunity={activeCommunity}
+                onPress={() =>
+                  navigation.navigate({
+                    routeName: `Thread`,
+                    key: item.node.id,
+                    params: { id: item.node.id },
+                  })
+                }
               />
             )}
             loadingIndicator={<Text>Loading...</Text>}
@@ -170,4 +176,4 @@ class ThreadFeed extends React.Component<Props, State> {
   }
 }
 
-export default compose(ViewNetworkHandler)(ThreadFeed);
+export default compose(withNavigation, ViewNetworkHandler)(ThreadFeed);

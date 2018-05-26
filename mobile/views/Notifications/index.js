@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import { Button } from 'react-native';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
@@ -50,7 +50,7 @@ type State = {
   pushNotifications: ?PushNotificationsDecision,
 };
 
-class Notifications extends React.Component<Props, State> {
+class Notifications extends Component<Props, State> {
   constructor() {
     super();
     this.state = {

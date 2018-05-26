@@ -1,9 +1,9 @@
 // @flow
-import { StackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 import Notifications from '../Notifications';
 import BaseStack from './BaseStack';
 
-const NotificationsStack = StackNavigator(
+const NotificationsStack = createStackNavigator(
   {
     Notifications: {
       screen: Notifications,

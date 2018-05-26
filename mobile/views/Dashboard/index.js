@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import { View } from 'react-native';
 import compose from 'recompose/compose';
 import withSafeView from '../../components/SafeAreaView';
@@ -22,7 +22,7 @@ type Props = {
   },
 };
 
-class Dashboard extends React.Component<Props> {
+class Dashboard extends Component<Props> {
   render() {
     return (
       <Wrapper>

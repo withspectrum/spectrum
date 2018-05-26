@@ -4,6 +4,7 @@ import { DirectMessageListItem } from './DirectMessageListItem';
 import { NotificationListItem } from './NotificationListItem';
 import { UserListItem } from './UserListItem';
 import { CommunityListItem } from './CommunityListItem';
+import { ThreadListItem } from './ThreadListItem';
 
 export {
   ListItem,
@@ -11,4 +12,5 @@ export {
   NotificationListItem,
   UserListItem,
   CommunityListItem,
+  ThreadListItem,
 };

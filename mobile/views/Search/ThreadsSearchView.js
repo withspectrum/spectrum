@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import searchThreadsQuery from '../../../shared/graphql/queries/search/searchThreads';
 import { SearchView } from './style';
@@ -11,7 +11,7 @@ type Props = {
 
 const SearchThreadFeed = compose(searchThreadsQuery)(ThreadFeed);
 
-class ThreadsSearchView extends React.Component<Props> {
+class ThreadsSearchView extends Component<Props> {
   render() {
     const { queryString } = this.props;
     return (

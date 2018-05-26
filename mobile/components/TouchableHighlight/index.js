@@ -1,10 +1,10 @@
 // @flow
-import * as React from 'react';
+import React, { type ChildrenArray } from 'react';
 import { TouchableHighlight } from 'react-native';
 import theme from '../../../shared/theme';
 
 type Props = {
-  children?: React.ChildrenArray<any>,
+  children?: ChildrenArray<any>,
 };
 
 export default ({ children, ...props }: Props) => (

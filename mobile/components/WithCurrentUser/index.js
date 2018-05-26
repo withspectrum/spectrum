@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component, type ComponentType } from 'react';
 import hoistStatics from 'hoist-non-react-statics';
 import compose from 'recompose/compose';
 import {
@@ -15,7 +15,7 @@ type Props = {
   },
 };
 
-class CurrentUserComponent extends React.Component<Props> {
+class CurrentUserComponent extends Component<Props> {
   render() {
     const { data: { user: currentUser }, children, render } = this.props;
 
@@ -30,8 +30,8 @@ export type WithCurrentUserProps = {
 };
 
 export const withCurrentUser = (
-  Component: React.ComponentType<Props>
-): React.ComponentType<$Diff<Props, WithCurrentUserProps>> => {
+  Component: ComponentType<Props>
+): ComponentType<$Diff<Props, WithCurrentUserProps>> => {
   const C = props => {
     const { wrappedComponentRef, ...remainingProps } = props;
     return (

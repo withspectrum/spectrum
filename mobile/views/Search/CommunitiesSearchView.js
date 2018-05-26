@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import { Text } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
@@ -23,7 +23,7 @@ type Props = {
   navigation: Navigation,
 };
 
-class CommunitiesSearchView extends React.Component<Props> {
+class CommunitiesSearchView extends Component<Props> {
   render() {
     const { isLoading, data, navigation } = this.props;
 
@@ -46,7 +46,13 @@ class CommunitiesSearchView extends React.Component<Props> {
                 <CommunityListItem
                   key={item.id}
                   community={item}
-                  navigation={navigation}
+                  onPress={() =>
+                    navigation.navigate({
+                      routeName: `Community`,
+                      key: item.id,
+                      params: { id: item.id },
+                    })
+                  }
                 />
               )}
               loadingIndicator={<Loading />}

@@ -1,9 +1,9 @@
 // @flow
-import * as React from 'react';
+import React, { type ChildrenArray } from 'react';
 import { TouchableOpacity } from 'react-native';
 
 type Props = {
-  children?: React.ChildrenArray<any>,
+  children?: ChildrenArray<any>,
 };
 
 export default ({ children, ...props }: Props) => (
