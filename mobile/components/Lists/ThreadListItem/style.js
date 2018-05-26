@@ -1,6 +1,7 @@
 // @flow
 import styled from 'styled-components/native';
-import TouchableOpacity from '../TouchableOpacity';
+import TouchableOpacity from '../../TouchableOpacity';
+import { TextRowContainer } from '../style';
 
 export const InboxThreadContent = styled.View`
   display: flex;
@@ -72,4 +73,8 @@ export const ThreadChannelPill = styled(TouchableOpacity)`
 export const ThreadChannelName = styled.Text`
   color: ${props => props.theme.text.alt};
   font-size: 12px;
+`;
+
+export const ThreadFacepileRowContainer = styled(TextRowContainer)`
+  margin-top: 8px;
 `;

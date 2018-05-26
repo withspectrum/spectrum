@@ -25,7 +25,13 @@ type Props = {
 const Byline = ({ author, navigation }: Props) => {
   return (
     <TouchableHighlight
-      onPress={() => navigation.navigate(`User`, { id: author.user.id })}
+      onPress={() =>
+        navigation.navigate({
+          routeName: `User`,
+          key: author.user.id,
+          params: { id: author.user.id },
+        })
+      }
     >
       <BylineWrapper>
         <Row>

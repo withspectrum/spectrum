@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { TabNavigator, TabBarBottom } from 'react-navigation';
+import { createBottomTabNavigator } from 'react-navigation';
 import theme from '../../../shared/theme';
 
 // Stacks for the individual views
@@ -51,10 +51,6 @@ const routeConfiguration = {
 };
 
 const tabBarConfiguration = {
-  tabBarComponent: TabBarBottom,
-  tabBarPosition: 'bottom',
-  animationEnabled: false,
-  swipeEnabled: false,
   tabBarOptions: {
     // tint color is passed to text and icons (if enabled) on the tab bar
     activeTintColor: theme.bg.default,
@@ -72,4 +68,7 @@ const tabBarConfiguration = {
 // NOTE(@mxstbr): I figured this out manually by simply inspecting in the simulator
 export const TAB_BAR_HEIGHT = 375;
 
-export default TabNavigator(routeConfiguration, tabBarConfiguration);
+export default createBottomTabNavigator(
+  routeConfiguration,
+  tabBarConfiguration
+);

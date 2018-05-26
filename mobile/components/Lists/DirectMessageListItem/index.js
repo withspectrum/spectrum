@@ -1,16 +1,18 @@
 // @flow
-import * as React from 'react';
-import Avatar from '../Avatar';
-import { ListItem } from './ListItem';
+import React, { Component } from 'react';
+import Avatar from '../../Avatar';
+import { ListItem } from '../ListItem';
 import {
   TextColumnContainer,
   TextRowContainer,
   TitleTextContainer,
-  TimestampTextContainer,
   Title,
-  Timestamp,
   Subtitle,
   AvatarWrapper,
+  TimestampTextContainer,
+  Timestamp,
+} from '../style';
+import {
   MultiAvatarWrapper,
   DoubleAvatarFirst,
   DoubleAvatarSecond,
@@ -33,7 +35,7 @@ type DirectMessageListItemType = {
   timestamp: string,
 };
 
-export class DirectMessageListItem extends React.Component<
+export class DirectMessageListItem extends Component<
   DirectMessageListItemType
 > {
   renderParticipantAvatars = () => {

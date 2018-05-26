@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import TouchableOpacity from '../TouchableOpacity';
 import ConditionalWrap from '../ConditionalWrap';
 import { Svg } from 'expo';

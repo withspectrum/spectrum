@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component, Fragment, type Node } from 'react';
 import { ListItem } from './ListItem';
 import {
   TextColumnContainer,
@@ -20,12 +20,12 @@ import Icon from '../Icon';
 
 type Props = {
   notification: ParsedNotificationType,
-  children?: React.Node,
+  children?: Node,
   currentUserId: string,
   navigation: Navigation,
 };
 
-export class NotificationListItem extends React.Component<Props> {
+export class NotificationListItem extends Component<Props> {
   getActors = () => {
     return this.props.notification.actors.filter(
       actor => actor.id !== this.props.currentUserId
@@ -39,10 +39,10 @@ export class NotificationListItem extends React.Component<Props> {
     const str = isAuthor ? 'in your thread' : 'in';
 
     return (
-      <React.Fragment>
-        <React.Fragment>{str} </React.Fragment>
+      <Fragment>
+        <Fragment>{str} </Fragment>
         <Link>{notification.context.payload.content.title}</Link>
-      </React.Fragment>
+      </Fragment>
     );
   };
 
@@ -84,32 +84,32 @@ export class NotificationListItem extends React.Component<Props> {
   renderEventString = () => {
     switch (this.props.notification.event) {
       case 'MESSAGE_CREATED': {
-        return <React.Fragment> replied in </React.Fragment>;
+        return <Fragment> replied in </Fragment>;
       }
       case 'REACTION_CREATED': {
-        return <React.Fragment> liked </React.Fragment>;
+        return <Fragment> liked </Fragment>;
       }
       case 'CHANNEL_CREATED': {
-        return <React.Fragment> created a channel </React.Fragment>;
+        return <Fragment> created a channel </Fragment>;
       }
       case 'USER_JOINED_COMMUNITY': {
-        return <React.Fragment> joined </React.Fragment>;
+        return <Fragment> joined </Fragment>;
       }
       case 'PRIVATE_CHANNEL_REQUEST_SENT': {
-        return <React.Fragment> requested to join </React.Fragment>;
+        return <Fragment> requested to join </Fragment>;
       }
       case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
-        return <React.Fragment> approved your request to join </React.Fragment>;
+        return <Fragment> approved your request to join </Fragment>;
       }
       case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
-        return <React.Fragment> requested to join </React.Fragment>;
+        return <Fragment> requested to join </Fragment>;
       }
       case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
-        return <React.Fragment> approved your request to join </React.Fragment>;
+        return <Fragment> approved your request to join </Fragment>;
       }
       case 'MENTION_MESSAGE':
       case 'MENTION_THREAD': {
-        return <React.Fragment> mentioned you </React.Fragment>;
+        return <Fragment> mentioned you </Fragment>;
       }
       default: {
         return '';
@@ -248,8 +248,9 @@ export class NotificationListItem extends React.Component<Props> {
     }
 
     if (!type) return () => {};
+    const key = id ? id : notification.context.id;
     return () =>
-      navigation.navigate(type, { id: id ? id : notification.context.id });
+      navigation.navigate({ routeName: type, key, params: { id: key } });
   };
 
   facepileDataFromActors = () => {

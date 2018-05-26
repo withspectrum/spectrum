@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import type { Navigation } from '../../utils/types';
@@ -22,7 +22,13 @@ const messageAvatars = (list, navigation, maxCount) => {
         key={participant.id}
         src={participant.profilePhoto}
         size={30}
-        onPress={() => navigation.navigate(`User`, { id: participant.id })}
+        onPress={() =>
+          navigation.navigate({
+            routeName: `User`,
+            key: participant.id,
+            params: { id: participant.id },
+          })
+        }
       />
     );
   });

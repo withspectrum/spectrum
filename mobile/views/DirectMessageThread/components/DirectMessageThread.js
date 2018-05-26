@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import { View } from 'react-native';
 import compose from 'recompose/compose';
 import Text from '../../../components/Text';
@@ -34,7 +34,7 @@ type Props = {
   },
 };
 
-class DirectMessageThread extends React.Component<Props> {
+class DirectMessageThread extends Component<Props> {
   sendMessage = text => {
     if (!this.props.data.directMessageThread) return;
     this.props.sendDirectMessage({

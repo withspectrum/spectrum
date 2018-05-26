@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import { Row } from '../Flex';
 import TouchableOpacity from '../TouchableOpacity';
 import { ListItemView } from './style';
@@ -9,7 +9,7 @@ type ListItemProps = {
   children?: any,
 };
 
-export class ListItem extends React.Component<ListItemProps> {
+export class ListItem extends Component<ListItemProps> {
   render() {
     const { onPress, children } = this.props;
 

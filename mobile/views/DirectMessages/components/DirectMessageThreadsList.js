@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import InfiniteList from '../../../components/InfiniteList';
@@ -41,8 +41,12 @@ const DirectMessageThreadsList = (props: Props) => {
             <DirectMessageListItem
               key={thread.id}
               onPress={() =>
-                props.navigation.navigate('DirectMessageThread', {
-                  id: thread.id,
+                props.navigation.navigate({
+                  routeName: 'DirectMessageThread',
+                  key: thread.id,
+                  params: {
+                    id: thread.id,
+                  },
                 })
               }
               participants={participants}

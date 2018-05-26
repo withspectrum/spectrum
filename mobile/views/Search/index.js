@@ -1,10 +1,11 @@
 // @flow
-import * as React from 'react';
+import React, { Component, type ComponentType } from 'react';
 import { withTheme } from 'styled-components';
 import { View, StyleSheet, Dimensions, TextInput } from 'react-native';
 import { TabViewAnimated, SceneMap, TabBar } from 'react-native-tab-view';
-import { TabLabel, SearchBar, SearchView } from './style';
+import { TabLabel, SearchView } from './style';
 import { Constants } from 'expo';
+import SearchInput from '../../components/SearchInput';
 import ThreadsSearchView from './ThreadsSearchView';
 import CommunitiesSearchView from './CommunitiesSearchView';
 import PeopleSearchView from './PeopleSearchView';
@@ -29,8 +30,8 @@ type Props = {
   theme: Object,
 };
 
-class Search extends React.Component<Props, State> {
-  searchInput: React.ComponentType<TextInput>;
+class Search extends Component<Props, State> {
+  searchInput: ComponentType<TextInput>;
 
   state = {
     searchString: '',
@@ -94,14 +95,15 @@ class Search extends React.Component<Props, State> {
     const Tabs = () => this.renderTabs(props);
     return (
       <View>
-        <SearchBar
-          autoFocus
-          blurOnSubmit
+        <SearchInput
+          autoFocus={true}
+          blurOnSubmit={true}
           placeholder={`Search for ${this.state.routes[
             this.state.index
           ].title.toLowerCase()}`}
           returnKeyType={'search'}
           clearButtonMode={'always'}
+          onEndEditing={this.handleChange}
           onSubmitEditing={this.handleChange}
         />
         <Tabs />
