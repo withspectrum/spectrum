@@ -17,6 +17,8 @@ type ThreadListItemType = {
 export class ThreadListItem extends Component<ThreadListItemType> {
   generatePillOrMessageCount = (): React$Node => {
     const { thread, activeChannel, activeCommunity } = this.props;
+    const { currentUserLastSeen } = thread;
+
     if (thread.messageCount > 0) {
       return (
         <Subtitle>
@@ -25,7 +27,9 @@ export class ThreadListItem extends Component<ThreadListItemType> {
             : `${thread.messageCount} message`}
         </Subtitle>
       );
-    } else {
+    }
+
+    if (!currentUserLastSeen) {
       return (
         <MetaTextPill offset={thread.participants.length} new>
           {'New thread!'.toUpperCase()}
