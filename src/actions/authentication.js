@@ -1,6 +1,7 @@
 import { setUser, unsetUser } from 'src/helpers/analytics';
 import { removeItemFromStorage, storeItem } from 'src/helpers/localStorage';
 import Raven from 'raven-js';
+import type { GetUserType } from '../../shared/graphql/queries/user/getUser';
 
 export const logout = dispatch => {
   // clear localStorage
@@ -25,7 +26,9 @@ export const logout = dispatch => {
     });
 };
 
-export const saveUserDataToLocalStorage = (user: Object) => async dispatch => {
+export const saveUserDataToLocalStorage = (
+  user: GetUserType
+) => async dispatch => {
   const obj = {};
 
   if (!user) {
