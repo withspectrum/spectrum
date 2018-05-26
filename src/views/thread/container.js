@@ -571,9 +571,8 @@ class ThreadContainer extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
+const map = (state): Object => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowIssue
   connect(map),
   getThreadByMatch,
   viewNetworkHandler,
