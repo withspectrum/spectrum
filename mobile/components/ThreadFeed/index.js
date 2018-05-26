@@ -145,7 +145,6 @@ class ThreadFeed extends Component<Props, State> {
                 }
               />
             )}
-            loadingIndicator={<Text>Loading...</Text>}
             fetchMore={this.fetchMore}
             hasNextPage={
               threadConnection &&
