@@ -15,6 +15,25 @@ type ThreadListItemType = {
 };
 
 export class ThreadListItem extends Component<ThreadListItemType> {
+  generatePillOrMessageCount = (): React$Node => {
+    const { thread, activeChannel, activeCommunity } = this.props;
+    if (thread.messageCount > 0) {
+      return (
+        <Subtitle>
+          {thread.messageCount > 1
+            ? `${thread.messageCount} messages`
+            : `${thread.messageCount} message`}
+        </Subtitle>
+      );
+    } else {
+      return (
+        <MetaTextPill offset={thread.participants.length} new>
+          {'New thread!'.toUpperCase()}
+        </MetaTextPill>
+      );
+    }
+  };
+
   render() {
     const {
       thread,
@@ -45,17 +64,7 @@ export class ThreadListItem extends Component<ThreadListItemType> {
           <ThreadFacepileRowContainer>
             <Facepile users={facepileUsers} />
 
-            {thread.messageCount > 0 ? (
-              <Subtitle>
-                {thread.messageCount > 1
-                  ? `${thread.messageCount} messages`
-                  : `${thread.messageCount} message`}
-              </Subtitle>
-            ) : (
-              <MetaTextPill offset={thread.participants.length} new>
-                {'New thread!'.toUpperCase()}
-              </MetaTextPill>
-            )}
+            {this.generatePillOrMessageCount()}
           </ThreadFacepileRowContainer>
         </TextColumnContainer>
       </ListItem>
