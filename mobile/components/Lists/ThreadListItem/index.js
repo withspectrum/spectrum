@@ -2,7 +2,11 @@
 import React, { Component } from 'react';
 import { ListItem } from '../ListItem';
 import { TextColumnContainer, Title, Subtitle } from '../style';
-import { MetaTextPill, ThreadFacepileRowContainer } from './style';
+import {
+  MetaTextPill,
+  ThreadFacepileRowContainer,
+  NewMessagePill,
+} from './style';
 import type { GetThreadType } from '../../../../shared/graphql/queries/thread/getThread';
 import ThreadCommunityInfo from './ThreadCommunityInfo';
 import Facepile from '../../Facepile';
@@ -17,7 +21,7 @@ type ThreadListItemType = {
 export class ThreadListItem extends Component<ThreadListItemType> {
   generatePillOrMessageCount = (): React$Node => {
     const { thread, activeChannel, activeCommunity } = this.props;
-    const { currentUserLastSeen } = thread;
+    const { currentUserLastSeen, participants, lastActive } = thread;
 
     if (thread.messageCount > 0) {
       return (
@@ -34,6 +38,14 @@ export class ThreadListItem extends Component<ThreadListItemType> {
         <MetaTextPill offset={thread.participants.length} new>
           {'New thread!'.toUpperCase()}
         </MetaTextPill>
+      );
+    }
+
+    if (currentUserLastSeen && lastActive && currentUserLastSeen < lastActive) {
+      return (
+        <NewMessagePill offset={thread.participants.length}>
+          New messages!
+        </NewMessagePill>
       );
     }
   };
