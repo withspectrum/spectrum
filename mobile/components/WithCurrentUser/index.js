@@ -23,9 +23,9 @@ class CurrentUserComponent extends Component<Props> {
   }
 }
 
-export const CurrentUser = compose(getCurrentUser)(CurrentUserComponent);
+const CurrentUser = compose(getCurrentUser)(CurrentUserComponent);
 
-export type WithCurrentUserProps = {
+type WithCurrentUserProps = {
   currentUser: ?GetUserType,
 };
 
