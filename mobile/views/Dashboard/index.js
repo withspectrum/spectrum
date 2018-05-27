@@ -18,7 +18,7 @@ const EverythingThreadFeed = compose(getCurrentUserEverythingFeed)(ThreadFeed);
 type Props = {
   navigation: Navigation,
   data: {
-    currentUser: GetUserType,
+    user: GetUserType,
   },
 };
 
