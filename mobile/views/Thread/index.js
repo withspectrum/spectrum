@@ -37,7 +37,7 @@ type OwnProps = {
   sendMessage: Function,
   currentUser: GetUserType,
   data: {
-    thread?: GetThreadType,
+    thread: ?GetThreadType,
   },
 };
 
@@ -65,11 +65,9 @@ class Thread extends Component<Props> {
     const { data, isLoading, hasError, currentUser } = this.props;
 
     if (data.thread) {
-      const createdAt = new Date(data.thread.createdAt).getTime();
-      // NOTE(@mxstbr): For some reason this is necessary to make flow understand that the thread is defined
-      // not sure why, but the new Date() call above breaks its inference and it thinks data.thread could be
-      // undefined below
-      const thread = ((data.thread: any): GetThreadType);
+      const thread: GetThreadType = data.thread;
+      const createdAt = new Date(thread.createdAt).getTime();
+
       return (
         <Wrapper>
           <ScrollView style={{ flex: 1, width: '100%' }} testID="e2e-thread">
