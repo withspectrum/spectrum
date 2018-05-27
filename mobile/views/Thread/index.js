@@ -64,6 +64,18 @@ class Thread extends Component<Props> {
   render() {
     const { data, isLoading, hasError, currentUser } = this.props;
 
+    if (isLoading) return <Loading />;
+
+    if (hasError) {
+      return (
+        <Wrapper>
+          <View testID="e2e-thread">
+            <Text type="body">Error!</Text>
+          </View>
+        </Wrapper>
+      );
+    }
+
     if (data.thread) {
       const thread: GetThreadType = data.thread;
       const createdAt = new Date(thread.createdAt).getTime();
@@ -99,20 +111,6 @@ class Thread extends Component<Props> {
           {currentUser && (
             <ChatInput onSubmit={text => this.sendMessage(text, currentUser)} />
           )}
-        </Wrapper>
-      );
-    }
-
-    if (isLoading) {
-      return <Loading />;
-    }
-
-    if (hasError) {
-      return (
-        <Wrapper>
-          <View testID="e2e-thread">
-            <Text type="body">Error!</Text>
-          </View>
         </Wrapper>
       );
     }
