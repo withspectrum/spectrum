@@ -11,6 +11,7 @@ import type { ThreadConnectionType } from '../../../shared/graphql/fragments/com
 import type { FlatListProps } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { CenteredView } from './style';
+import type { ViewNetworkHandlerProps } from '../ViewNetworkHandler';
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -26,10 +27,7 @@ type State = {
 
 type Props = {
   ...$Exact<FlatListProps>,
-  isLoading: boolean,
-  isFetchingMore: boolean,
-  isRefetching: boolean,
-  hasError: boolean,
+  ...$Exact<ViewNetworkHandlerProps>,
   activeChannel?: string,
   activeCommunity?: string,
   // This is necessary so we can listen to updates
