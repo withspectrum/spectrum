@@ -422,3 +422,16 @@ export type FileUpload = {
 };
 
 export type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';
+
+/**
+ * Apollo Client/ React Apollo
+ */
+// @see https://www.apollographql.com/docs/react/essentials/mutations.html#render-prop
+export type MutationOptions = {
+  variables?: Object,
+  optimisticResponse: ?Object,
+  refetchQueries?: Object,
+  update?: Object,
+};
+
+export type Mutate = (options?: MutationOptions) => Promise<any>;
