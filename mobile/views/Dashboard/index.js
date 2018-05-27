@@ -27,7 +27,7 @@ type Props = {
 class Dashboard extends Component<Props> {
   render() {
     const { data } = this.props;
-    if (data.loading) <Loading />;
+    if (data.loading) return <Loading />;
 
     return (
       <Wrapper>
