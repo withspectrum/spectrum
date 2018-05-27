@@ -8,27 +8,16 @@ import { Wrapper } from './style';
 import ThreadFeed from '../../components/ThreadFeed';
 import getCurrentUserEverythingFeed from '../../../shared/graphql/queries/user/getCurrentUserEverythingFeed';
 import type { Navigation } from '../../utils/types';
-import {
-  getCurrentUser,
-  type GetUserType,
-} from '../../../shared/graphql/queries/user/getUser';
 import type { ViewNetworkHandlerProps } from '../../components/ViewNetworkHandler';
 
 const EverythingThreadFeed = compose(getCurrentUserEverythingFeed)(ThreadFeed);
 
 type Props = {
   navigation: Navigation,
-  data: {
-    user: GetUserType,
-    ...$Exact<ViewNetworkHandlerProps>,
-  },
 };
 
 class Dashboard extends Component<Props> {
   render() {
-    const { data } = this.props;
-    if (data.loading) return <Loading />;
-
     return (
       <Wrapper>
         <View testID="welcome" style={{ flex: 1 }}>
@@ -39,4 +28,4 @@ class Dashboard extends Component<Props> {
   }
 }
 
-export default compose(withSafeView, getCurrentUser)(Dashboard);
+export default compose(withSafeView)(Dashboard);
