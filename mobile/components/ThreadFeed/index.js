@@ -1,8 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import Sentry from 'sentry-expo';
 import compose from 'recompose/compose';
-import { withApollo } from 'react-apollo';
 import { View } from 'react-native';
 import Text from '../Text';
 import ViewNetworkHandler from '../ViewNetworkHandler';
@@ -12,10 +10,6 @@ import Loading from '../Loading';
 import type { ThreadConnectionType } from '../../../shared/graphql/fragments/community/communityThreadConnection';
 import type { FlatListProps } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { ApolloClient } from 'apollo-client';
-import { CenteredView } from './style';
-import { getThreadByMatchQuery } from '../../../shared/graphql/queries/thread/getThread';
-import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -24,6 +18,8 @@ import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 
   See 'gql/community/communityThreads.js' for an example of the prop mapping in action
 */
+
+import { CenteredView } from './style';
 
 type State = {
   subscription: ?Function,
@@ -39,8 +35,6 @@ type Props = {
   activeCommunity?: string,
   // This is necessary so we can listen to updates
   channels?: string[],
-  client: ApolloClient,
-  currentUser: GetUserType,
   data: {
     subscribeToUpdatedThreads: Function,
     fetchMore: () => Promise<any>,
@@ -113,39 +107,6 @@ class ThreadFeed extends Component<Props, State> {
     }
   };
 
-  // Locally update thread.currentUserLastSeen
-  updateThreadLastSeen = threadId => {
-    const { currentUser, client } = this.props;
-    // No currentUser, no reason to update currentUserLastSeen
-    if (!currentUser || !threadId) return;
-    try {
-      const threadData = client.readQuery({
-        query: getThreadByMatchQuery,
-        variables: {
-          id: threadId,
-        },
-      });
-
-      client.writeQuery({
-        query: getThreadByMatchQuery,
-        variables: {
-          id: threadId,
-        },
-        data: {
-          ...threadData,
-          thread: {
-            ...threadData.thread,
-            currentUserLastSeen: new Date(),
-            __typename: 'Thread',
-          },
-        },
-      });
-    } catch (err) {
-      // Errors that happen with this shouldn't crash the app
-      Sentry.captureException(err);
-    }
-  };
-
   render() {
     const {
       data,
@@ -160,7 +121,7 @@ class ThreadFeed extends Component<Props, State> {
       channels,
       ...flatListProps
     } = this.props;
-    console.log(data);
+
     if (isLoading) {
       return <Loading />;
     }
@@ -214,6 +175,4 @@ class ThreadFeed extends Component<Props, State> {
   }
 }
 
-export default compose(withNavigation, ViewNetworkHandler, withApollo)(
-  ThreadFeed
-);
+export default compose(withNavigation, ViewNetworkHandler)(ThreadFeed);
