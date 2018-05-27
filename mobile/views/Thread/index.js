@@ -28,15 +28,20 @@ import type { ReduxState } from '../../reducers';
 
 const ThreadMessages = getThreadMessageConnection(Messages);
 
-type Props = {
+type StateProps = {|
+  quotedMessage: ?string,
+|};
+
+type OwnProps = {
   ...$Exact<ViewNetworkHandlerProps>,
   sendMessage: Function,
-  quotedMessage: ?string,
   currentUser: GetUserType,
   data: {
     thread?: GetThreadType,
   },
 };
+
+type Props = StateProps & OwnProps;
 
 class Thread extends Component<Props> {
   sendMessage = (body: string, user: GetUserType) => {
@@ -118,7 +123,7 @@ class Thread extends Component<Props> {
   }
 }
 
-const map = (state: ReduxState, ownProps: Props): Object => ({
+const map = (state: ReduxState, ownProps: OwnProps): StateProps => ({
   quotedMessage:
     ownProps.data.thread && state.message.quotedMessage
       ? state.message.quotedMessage[ownProps.data.thread.id]
