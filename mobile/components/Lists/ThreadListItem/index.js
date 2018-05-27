@@ -65,6 +65,7 @@ export class ThreadListItem extends Component<ThreadListItemType> {
         participant => participant && participant.id !== thread.author.user.id
       ),
     ];
+    const pillOrMessageCount: React$Node = this.generatePillOrMessageCount();
 
     return (
       <ListItem onPress={onPress}>
@@ -79,8 +80,7 @@ export class ThreadListItem extends Component<ThreadListItemType> {
 
           <ThreadFacepileRowContainer>
             <Facepile users={facepileUsers} />
-
-            {this.generatePillOrMessageCount()}
+            {pillOrMessageCount}
           </ThreadFacepileRowContainer>
         </TextColumnContainer>
       </ListItem>
