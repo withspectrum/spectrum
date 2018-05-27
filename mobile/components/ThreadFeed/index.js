@@ -10,6 +10,7 @@ import Loading from '../Loading';
 import type { ThreadConnectionType } from '../../../shared/graphql/fragments/community/communityThreadConnection';
 import type { FlatListProps } from 'react-native';
 import { withNavigation } from 'react-navigation';
+import { CenteredView } from './style';
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -18,8 +19,6 @@ import { withNavigation } from 'react-navigation';
 
   See 'gql/community/communityThreads.js' for an example of the prop mapping in action
 */
-
-import { CenteredView } from './style';
 
 type State = {
   subscription: ?Function,
