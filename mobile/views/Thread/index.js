@@ -10,6 +10,7 @@ import Text from '../../components/Text';
 import ThreadContent from '../../components/ThreadContent';
 import Messages from '../../components/Messages';
 import ChatInput from '../../components/ChatInput';
+import Loading from '../../components/Loading';
 import getThreadMessageConnection from '../../../shared/graphql/queries/thread/getThreadMessageConnection';
 import sendMessageMutation from '../../../shared/graphql/mutations/message/sendMessage';
 import { convertTimestampToDate } from '../../../src/helpers/utils';
@@ -97,13 +98,7 @@ class Thread extends Component<Props> {
     }
 
     if (isLoading) {
-      return (
-        <Wrapper>
-          <View testID="e2e-thread">
-            <Text type="body">Loading...</Text>
-          </View>
-        </Wrapper>
-      );
+      return <Loading />;
     }
 
     if (hasError) {
