@@ -36,7 +36,7 @@ type Props = {
 };
 
 class Thread extends Component<Props> {
-  sendMessage = (body: string, user: Object) => {
+  sendMessage = (body: string, user: GetUserType) => {
     const { quotedMessage, data: { thread } } = this.props;
     if (!thread) return;
     this.props.sendMessage(
