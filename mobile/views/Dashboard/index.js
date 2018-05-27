@@ -32,7 +32,7 @@ class Dashboard extends Component<Props> {
     return (
       <Wrapper>
         <View testID="welcome" style={{ flex: 1 }}>
-          <EverythingThreadFeed currentUser={data.user} />
+          <EverythingThreadFeed />
         </View>
       </Wrapper>
     );
