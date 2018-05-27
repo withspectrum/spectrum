@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { View, ScrollView } from 'react-native';
+import Sentry from 'sentry-expo';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
@@ -115,7 +116,7 @@ class Thread extends Component<Props> {
   }
 }
 
-const map = (state, ownProps): * => ({
+const map = (state, ownProps): Object => ({
   quotedMessage:
     ownProps.data.thread && state.message.quotedMessage
       ? state.message.quotedMessage[ownProps.data.thread.id]
