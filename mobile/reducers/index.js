@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import authentication, { type AuthenticationState } from './authentication';
 import message from '../../src/reducers/message';
 
-export type State = {
+export type ReduxState = {
   +authentication: $Exact<AuthenticationState>,
   +message: $Exact<$Call<typeof message, {}>>,
 };
