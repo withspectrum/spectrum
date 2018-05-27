@@ -15,12 +15,14 @@ import Messages from '../../components/Messages';
 import ChatInput from '../../components/ChatInput';
 import Loading from '../../components/Loading';
 import getThreadMessageConnection from '../../../shared/graphql/queries/thread/getThreadMessageConnection';
-import sendMessageMutation from '../../../shared/graphql/mutations/message/sendMessage';
 import { convertTimestampToDate } from '../../../src/helpers/utils';
 import { withCurrentUser } from '../../components/WithCurrentUser';
 import CommunityHeader from './components/CommunityHeader';
 import Byline from './components/Byline';
 import ActionBar from './components/ActionBar';
+import sendMessageMutation, {
+  type SendMessageMutationFunc,
+} from '../../../shared/graphql/mutations/message/sendMessage';
 import type { GetThreadType } from '../../../shared/graphql/queries/thread/getThread';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import { Wrapper, ThreadMargin } from './style';
@@ -34,7 +36,7 @@ type StateProps = {|
 
 type OwnProps = {
   ...$Exact<ViewNetworkHandlerProps>,
-  sendMessage: Function,
+  sendMessage: SendMessageMutationFunc,
   currentUser: GetUserType,
   data: {
     thread: ?GetThreadType,
