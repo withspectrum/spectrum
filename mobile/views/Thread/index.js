@@ -22,6 +22,7 @@ import ActionBar from './components/ActionBar';
 import type { GetThreadType } from '../../../shared/graphql/queries/thread/getThread';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import { Wrapper, ThreadMargin } from './style';
+import type { ReduxState } from '../../reducers';
 
 const ThreadMessages = getThreadMessageConnection(Messages);
 
@@ -116,7 +117,7 @@ class Thread extends Component<Props> {
   }
 }
 
-const map = (state, ownProps): Object => ({
+const map = (state: ReduxState, ownProps: Props): Object => ({
   quotedMessage:
     ownProps.data.thread && state.message.quotedMessage
       ? state.message.quotedMessage[ownProps.data.thread.id]
