@@ -435,3 +435,16 @@ export type MutationOptions = {
 };
 
 export type Mutate = (options?: MutationOptions) => Promise<any>;
+
+export type ApolloClient = {
+  constructor(options?: Object): Function, // TODO (@ryota-murakami) to be imploved
+  watchQuery(option?: Object): Function, // TODO (@ryota-murakami) to be imploved
+  query(options?: Object): Function, // TODO (@ryota-murakami) to be imploved
+  mutate: Mutate,
+  readQuery(options: Object): () => any, // TODO (@ryota-murakami) to be imploved
+  readFragment(options: Object): () => any, // TODO (@ryota-murakami) to be imploved
+  writeQuery(options: Object): () => any, // TODO (@ryota-murakami) to be imploved
+  writeFragment(options: Object): () => any, // TODO (@ryota-murakami) to be imploved
+  resetStore(): () => Promise<any>, // TODO (@ryota-murakami) to be imploved
+  onResetStore(cb: Object): () => any, // TODO (@ryota-murakami) to be imploved
+};
