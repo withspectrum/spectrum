@@ -5,7 +5,9 @@ import Sentry from 'sentry-expo';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
-import ViewNetworkHandler from '../../components/ViewNetworkHandler';
+import ViewNetworkHandler, {
+  type ViewNetworkHandlerProps,
+} from '../../components/ViewNetworkHandler';
 import withSafeView from '../../components/SafeAreaView';
 import Text from '../../components/Text';
 import ThreadContent from '../../components/ThreadContent';
@@ -27,8 +29,7 @@ import type { ReduxState } from '../../reducers';
 const ThreadMessages = getThreadMessageConnection(Messages);
 
 type Props = {
-  isLoading: boolean,
-  hasError: boolean,
+  ...$Exact<ViewNetworkHandlerProps>,
   sendMessage: Function,
   quotedMessage: ?string,
   currentUser: GetUserType,
