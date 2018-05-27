@@ -1,7 +1,10 @@
 // @flow
 import type { ReplyToMessageActionType } from '../actions/message';
+export type MessageState = {
+  +quotedMessage: Object,
+};
 
-const initialState = {
+const initialState: MessageState = {
   quotedMessage: {},
 };
 

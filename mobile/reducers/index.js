@@ -1,11 +1,11 @@
 // @flow
 import { combineReducers } from 'redux';
 import authentication, { type AuthenticationState } from './authentication';
-import message from '../../src/reducers/message';
+import message, { type MessageState } from '../../src/reducers/message';
 
 export type ReduxState = {
   +authentication: $Exact<AuthenticationState>,
-  +message: $Exact<$Call<typeof message, {}>>,
+  +message: $Exact<MessageState>,
 };
 
 export default combineReducers({
