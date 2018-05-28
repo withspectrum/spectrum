@@ -71,7 +71,7 @@
       ]
     },
     "win": {
-      "target": "squirrel",
+      "target": "nsis",
       "icon": "resources/icons/win/icon.ico"
     }
   }
