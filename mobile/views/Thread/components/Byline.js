@@ -3,13 +3,13 @@ import React from 'react';
 import styled from 'styled-components/native';
 import Avatar from '../../../components/Avatar';
 import Text from '../../../components/Text';
-import Row from '../../../components/Flex/Row';
+import { Row } from '../../../components/Flex';
 import Column from '../../../components/Flex/Column';
 import compose from 'recompose/compose';
 import type { Navigation } from '../../../utils/types';
 import type { ThreadParticipantType } from '../../../../shared/graphql/fragments/thread/threadParticipant';
 import { withNavigation } from 'react-navigation';
-import { TouchableHighlight } from 'react-native';
+import TouchableHighlight from '../../../components/TouchableHighlight';
 
 const BylineWrapper = styled.View`
   flex: 1;
@@ -25,11 +25,17 @@ type Props = {
 const Byline = ({ author, navigation }: Props) => {
   return (
     <TouchableHighlight
-      onPress={() => navigation.navigate(`User`, { id: author.user.id })}
+      onPress={() =>
+        navigation.navigate({
+          routeName: `User`,
+          key: author.user.id,
+          params: { id: author.user.id },
+        })
+      }
     >
       <BylineWrapper>
         <Row>
-          <Avatar src={author.user.profilePhoto} size={40} radius={20} />
+          <Avatar src={author.user.profilePhoto} size={40} />
           <Column>
             <Row>
               <Text style={{ marginTop: 0 }} type="body" bold>

@@ -1,9 +1,9 @@
 // @flow
-import React, { Fragment } from 'react';
+import React, { Component } from 'react';
 import DirectMessageThreadsList from './components/DirectMessageThreadsList';
 import { Wrapper } from './style';
 
-class DirectMessages extends React.Component<{}> {
+class DirectMessages extends Component<{}> {
   render() {
     return (
       <Wrapper>

@@ -5,7 +5,7 @@ const MS_PER_HOUR = 3600000;
 const MS_PER_DAY = 86400000;
 const MS_PER_YEAR = 31536000000;
 
-export function timeDifferenceShort(current: Date, previous: Date) {
+export function timeDifferenceShort(current: number, previous: number) {
   const elapsed = current - previous;
 
   if (elapsed < MS_PER_MINUTE) {

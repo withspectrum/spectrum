@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import {
   getUserById,
@@ -19,7 +19,7 @@ type State = {
 const User = compose(getUserById, ViewNetworkHandler)(Profile);
 const CurrentUser = compose(getCurrentUser, ViewNetworkHandler)(Profile);
 
-class Container extends React.Component<Props, State> {
+class Container extends Component<Props, State> {
   render() {
     const { id, ...rest } = this.props;
 

@@ -1,26 +1,23 @@
 // @flow
-import * as React from 'react';
-import { Button } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 import idx from 'idx';
 import BaseStack from './BaseStack';
 import DirectMessages from '../DirectMessages';
 import DirectMessageThread from '../DirectMessageThread';
 
-const DMStack = StackNavigator(
+const DMStack = createStackNavigator(
   {
     DirectMessages: {
       screen: DirectMessages,
       navigationOptions: ({ navigation }) => ({
-        headerTitle:
-          idx(navigation, _ => _.state.params.title) || 'Direct Messages',
+        headerTitle: idx(navigation, _ => _.state.params.title) || 'Messages',
       }),
     },
     DirectMessageThread: {
       screen: DirectMessageThread,
       navigationOptions: ({ navigation }) => ({
-        headerTitle:
-          idx(navigation, _ => _.state.params.title) || 'Direct Message Thread',
+        headerTitle: idx(navigation, _ => _.state.params.title) || '',
+        tabBarVisible: false,
       }),
     },
     ...BaseStack,

@@ -1,15 +1,16 @@
 // @flow
 import React from 'react';
-import { TabNavigator, TabBarBottom } from 'react-navigation';
-import theme from '../../components/theme';
+import { createBottomTabNavigator } from 'react-navigation';
+import theme from '../../../shared/theme';
 
 // Stacks for the individual views
 import HomeStack from './HomeStack';
 import ProfileStack from './ProfileStack';
 import NotificationsStack from './NotificationsStack';
 import DMStack from './DirectMessageStack';
+import SearchStack from './SearchStack';
 import {
-  ExploreIcon,
+  SearchIcon,
   HomeIcon,
   MessageIcon,
   NotificationIcon,
@@ -29,10 +30,10 @@ const routeConfiguration = {
       tabBarIcon: ({ tintColor }) => <MessageIcon color={tintColor} />,
     },
   },
-  Explore: {
-    screen: HomeStack,
+  Search: {
+    screen: SearchStack,
     navigationOptions: {
-      tabBarIcon: ({ tintColor }) => <ExploreIcon color={tintColor} />,
+      tabBarIcon: ({ tintColor }) => <SearchIcon color={tintColor} />,
     },
   },
   Notifications: {
@@ -50,10 +51,6 @@ const routeConfiguration = {
 };
 
 const tabBarConfiguration = {
-  tabBarComponent: TabBarBottom,
-  tabBarPosition: 'bottom',
-  animationEnabled: false,
-  swipeEnabled: false,
   tabBarOptions: {
     // tint color is passed to text and icons (if enabled) on the tab bar
     activeTintColor: theme.bg.default,
@@ -71,4 +68,7 @@ const tabBarConfiguration = {
 // NOTE(@mxstbr): I figured this out manually by simply inspecting in the simulator
 export const TAB_BAR_HEIGHT = 375;
 
-export default TabNavigator(routeConfiguration, tabBarConfiguration);
+export default createBottomTabNavigator(
+  routeConfiguration,
+  tabBarConfiguration
+);
