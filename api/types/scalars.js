@@ -8,7 +8,7 @@ import { GraphQLUpload } from 'apollo-upload-server';
 import LowercaseString from './custom-scalars/LowercaseString';
 
 const typeDefs = /* GraphQL */ `
-  scalar Date
+	scalar Date
   scalar Upload
   scalar LowercaseString
 `;

@@ -23,10 +23,10 @@ export default async (job: Job<ReactionNotificationJobData>) => {
   debug(`new job for ${incomingReaction.id} by ${currentUserId}`);
 
   /*
-    These promises are used to create or modify a notification. The order is:
-    - actor
-    - context
-    - entity
+		These promises are used to create or modify a notification. The order is:
+		- actor
+		- context
+		- entity
   */
   const actor = await fetchPayload('USER', incomingReaction.userId);
   const context = await fetchPayload('MESSAGE', incomingReaction.messageId);

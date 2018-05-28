@@ -8,9 +8,9 @@ const ChannelSlackSettings = /* GraphQL */ `
     threadCreated: String
   }
 
-  type ChannelSlackSettings {
-    botLinks: BotLinks
-  }
+	type ChannelSlackSettings {
+		botLinks: BotLinks
+	}
 
   input UpdateChannelSlackBotLinksInput {
     channelId: String
@@ -19,8 +19,8 @@ const ChannelSlackSettings = /* GraphQL */ `
   }
 
   extend type Mutation {
-    updateChannelSlackBotLinks(input: UpdateChannelSlackBotLinksInput): Channel
-  }
+		updateChannelSlackBotLinks(input: UpdateChannelSlackBotLinksInput): Channel
+	}
 `;
 
 module.exports = ChannelSlackSettings;

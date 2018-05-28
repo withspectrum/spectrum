@@ -5,8 +5,8 @@ import { MAX_ID } from '../migrations/seed/default/constants';
 describe('queries', () => {
   it('should fetch a user', async () => {
     const query = /* GraphQL */ `
-      {
-        user(id: "${MAX_ID}") {
+			{
+				user(id: "${MAX_ID}") {
           id
           name
           description
@@ -15,9 +15,9 @@ describe('queries', () => {
           email
           providerId
           createdAt
-        }
-      }
-    `;
+				}
+			}
+		`;
 
     expect.assertions(1);
     const result = await request(query);
@@ -27,13 +27,13 @@ describe('queries', () => {
 
   it('should return null for a non-existant id', async () => {
     const query = /* GraphQL */ `
-      {
-        user(id: "non-existant") {
-          id
+			{
+				user(id: "non-existant") {
+					id
           username
-        }
-      }
-    `;
+				}
+			}
+		`;
 
     expect.assertions(1);
     const result = await request(query);
@@ -65,9 +65,9 @@ describe('queries', () => {
   describe.skip('everything', () => {
     it('should return the latest thread', async () => {
       const query = /* GraphQL */ `
-        {
-          user(id: "${MAX_ID}") {
-            everything(first: 1) {
+  			{
+  				user(id: "${MAX_ID}") {
+  					everything(first: 1) {
               pageInfo {
                 hasNextPage
               }
@@ -77,9 +77,9 @@ describe('queries', () => {
                 }
               }
             }
-          }
-        }
-      `;
+  				}
+  			}
+  		`;
       expect.assertions(1);
       const result = await graphql(schema, query);
 
@@ -88,9 +88,9 @@ describe('queries', () => {
 
     it('should paginate based on the after property', async () => {
       const query = /* GraphQL */ `
-        {
-          user(id: "${MAX_ID}") {
-            everything(first: 1, after: "c2Vjb25kLXN0b3J5") {
+  			{
+  				user(id: "${MAX_ID}") {
+  					everything(first: 1, after: "c2Vjb25kLXN0b3J5") {
               pageInfo {
                 hasNextPage
               }
@@ -100,9 +100,9 @@ describe('queries', () => {
                 }
               }
             }
-          }
-        }
-      `;
+  				}
+  			}
+  		`;
       expect.assertions(1);
       const result = await graphql(schema, query);
 
@@ -111,9 +111,9 @@ describe('queries', () => {
 
     it('should handle first being set to 0 correctly', async () => {
       const noCursorQuery = /* GraphQL */ `
-        {
-          user(id: "${MAX_ID}") {
-            everything(first: 0) {
+  			{
+  				user(id: "${MAX_ID}") {
+  					everything(first: 0) {
               pageInfo {
                 hasNextPage
               }
@@ -123,13 +123,13 @@ describe('queries', () => {
                 }
               }
             }
-          }
-        }
-      `;
+  				}
+  			}
+  		`;
       const cursorQuery = /* GraphQL */ `
-        {
-          user(id: "${MAX_ID}") {
-            everything(first: 0, after: "Zmlyc3Qtc3Rvcnk=") {
+  			{
+  				user(id: "${MAX_ID}") {
+  					everything(first: 0, after: "Zmlyc3Qtc3Rvcnk=") {
               pageInfo {
                 hasNextPage
               }
@@ -139,9 +139,9 @@ describe('queries', () => {
                 }
               }
             }
-          }
-        }
-      `;
+  				}
+  			}
+  		`;
       expect.assertions(2);
       const result = await graphql(schema, noCursorQuery);
 

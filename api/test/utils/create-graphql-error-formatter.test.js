@@ -8,31 +8,31 @@ import { makeExecutableSchema } from 'graphql-tools';
 import createErrorFormatter from '../../utils/create-graphql-error-formatter';
 
 const typeDefs = `
-  type Community {
-    id: ID!
+	type Community {
+		id: ID!
     threadConnection(first: Int = 10, after: String): CommunityThreadsConnection!
-  }
+	}
 
-  type CommunityThreadsConnection {
-    edges: [CommunityThreadEdge!]
-  }
+	type CommunityThreadsConnection {
+		edges: [CommunityThreadEdge!]
+	}
 
-  type CommunityThreadEdge {
-    node: Thread!
-  }
+	type CommunityThreadEdge {
+		node: Thread!
+	}
 
-  type Thread {
-    id: ID!
-    channel: Channel!
-  }
+	type Thread {
+		id: ID!
+		channel: Channel!
+	}
 
-  type Channel {
-    id: ID!
-  }
+	type Channel {
+		id: ID!
+	}
 
-  type Query {
-    community(id: ID): Community
-  }
+	type Query {
+		community(id: ID): Community
+	}
 `;
 
 const resolvers = {

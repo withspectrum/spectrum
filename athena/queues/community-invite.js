@@ -41,22 +41,22 @@ const addToSendCommunityInviteEmailQueue = (
 };
 
 /*
-  LOOSE OUTLINE:
+	LOOSE OUTLINE:
 
-  1. See if a user with that email already exists
-      1a. If user exists, see if user is a member of the community
-        1aa. If they are already a member of the community, skip
-        1ab. If they are not a member of the community, proceed to 2
-      1b. If the user does not exist, proceed to 3
-  2. For users who are already on Specrum and are not in the community, generate a new
-      notification with the invitation. We don't worry at all about bundling for this
-      type of notification since they will rarely overlap, and are high enough signal
-      that showing multiple community invitation notifications is fine.
-      For each of these users, proceed to 3
-  3. For users who are both on Spectrum but not a member of the community, and users who
-      are not on Spectrum, send an email invitation
-      3a. generate a communityInvitation record in the db
-      3b. send an email
+	1. See if a user with that email already exists
+			1a. If user exists, see if user is a member of the community
+				1aa. If they are already a member of the community, skip
+				1ab. If they are not a member of the community, proceed to 2
+			1b. If the user does not exist, proceed to 3
+	2. For users who are already on Specrum and are not in the community, generate a new
+			notification with the invitation. We don't worry at all about bundling for this
+			type of notification since they will rarely overlap, and are high enough signal
+			that showing multiple community invitation notifications is fine.
+			For each of these users, proceed to 3
+	3. For users who are both on Spectrum but not a member of the community, and users who
+			are not on Spectrum, send an email invitation
+			3a. generate a communityInvitation record in the db
+			3b. send an email
 */
 
 export default async (job: Job<CommunityInviteNotificationJobData>) => {
@@ -68,11 +68,11 @@ export default async (job: Job<CommunityInviteNotificationJobData>) => {
   } = job.data;
 
   /*
-    These promises are used to create or modify a notification. The order is:
-    - existingUser
-    - actor
-    - context
-    In this case the context and entity are the same
+		These promises are used to create or modify a notification. The order is:
+		- existingUser
+		- actor
+		- context
+		In this case the context and entity are the same
   */
 
   const existingUser = await getUserByEmail(inboundRecipient.email);

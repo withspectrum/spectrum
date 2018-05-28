@@ -16,8 +16,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "chat.spectrum.mobile"
+			"supportsTablet": true,
+			"bundleIdentifier": "chat.spectrum.mobile"
     },
     "packagerOpts": {
       "projectRoots": "",
