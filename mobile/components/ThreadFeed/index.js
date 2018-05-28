@@ -104,8 +104,7 @@ class ThreadFeed extends Component<Props, State> {
 
   render() {
     const {
-      data,
-      data: { threadConnection },
+      data: { threadConnection, refetch },
       isLoading,
       hasError,
       navigation,
@@ -145,8 +144,8 @@ class ThreadFeed extends Component<Props, State> {
               threadConnection.pageInfo &&
               threadConnection.pageInfo.hasNextPage
             }
-            refetching={this.props.isRefetching}
-            refetch={this.props.data.refetch}
+            refetching={isRefetching}
+            refetch={refetch}
           />
         </View>
       );
