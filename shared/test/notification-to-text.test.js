@@ -1,5 +1,5 @@
 // @flow
-import formatNotification from '../notification-formatting';
+import formatNotification from '../notification-to-text';
 import CHANNEL_CREATED_FIXTURE from './fixtures/CHANNEL_CREATED.json';
 import COMMUNITY_INVITE_FIXTURE from './fixtures/COMMUNITY_INVITE.json';
 import MESSAGE_CREATED_FIXTURE from './fixtures/MESSAGE_CREATED.json';
