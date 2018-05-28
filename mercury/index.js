@@ -5,21 +5,21 @@ import { PROCESS_REPUTATION_EVENT } from './constants';
 
 const PORT = process.env.PORT || 3005;
 
-console.log('\n✉️ Mercury, the reputation worker, is starting...');
+debug('\n✉️ Mercury, the reputation worker, is starting...');
 debug('Logging with debug enabled!');
 
 const server = createWorker({
   [PROCESS_REPUTATION_EVENT]: processReputationEvent,
 });
 
-console.log(
+debug(
   `🗄 Mercury open for business ${(process.env.NODE_ENV === 'production' &&
     `at ${process.env.COMPOSE_REDIS_URL}:${process.env.COMPOSE_REDIS_PORT}`) ||
     'locally'}`
 );
 
 server.listen(PORT, 'localhost', () => {
-  console.log(
+  debug(
     `💉 Healthcheck server running at ${server.address().address}:${
       server.address().port
     }`
