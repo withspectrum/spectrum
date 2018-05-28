@@ -1,4 +1,3 @@
-// $FlowFixMe
 const debug = require('debug')('mercury');
 const createWorker = require('../shared/bull/create-worker');
 import processReputationEvent from './queues/processReputationEvent';
@@ -22,7 +21,8 @@ console.log(
 
 server.listen(PORT, 'localhost', () => {
   console.log(
-    `💉 Healthcheck server running at ${server.address()
-      .address}:${server.address().port}`
+    `💉 Healthcheck server running at ${server.address().address}:${
+      server.address().port
+    }`
   );
 });
