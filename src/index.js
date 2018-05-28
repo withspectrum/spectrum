@@ -98,6 +98,10 @@ Loadable.preloadReady().then(render);
 // and show push notifications
 if (isElectron()) {
   const pushNotification = notification => {
+    // Don't send push notifications if the app is focused, duh
+    if (window.interop.isFocused()) {
+      return;
+    }
     const data = getItemFromStorage('spectrum');
     const { title, body, data: notificationData } = formatNotification(
       notification,

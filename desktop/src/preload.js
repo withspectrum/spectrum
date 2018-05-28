@@ -17,7 +17,12 @@ function init() {
   // user's computer. E.g. don't directly expose core Electron (even IPC) or node.js modules.
   window.interop = {
     setBadgeCount: setBadgeCount,
+    isFocused: isFocused,
   };
+}
+
+function isFocused() {
+  return remote.getCurrentWindow().isFocused();
 }
 
 function setBadgeCount(count) {
