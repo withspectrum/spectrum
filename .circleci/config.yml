@@ -110,7 +110,7 @@ jobs:
       - run:
           name: Run Unit Tests
           command: yarn run test:ci
-      -run:
+      - run:
           name: Build desktop apps
           command: yarn run build:desktop
       - run:
