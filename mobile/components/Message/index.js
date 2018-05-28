@@ -10,6 +10,7 @@ import ConditionalWrap from '../ConditionalWrap';
 import { messageRenderer } from '../../../shared/clients/draft-js/message/renderer.native';
 import { Bubble, TextWrapper, Align } from './style';
 import { QuotedMessage } from './QuotedMessage';
+import Reactions from './Reactions';
 import { replyToMessage } from '../../../src/actions/message';
 import { draftOnlyContainsEmoji } from '../../../shared/only-contains-emoji';
 import { toState, toPlainText } from '../../../shared/draft-utils';
@@ -40,7 +41,17 @@ const Message = ({
     return (
       <ConditionalWrap
         condition={bubble !== false}
-        wrap={children => <Align me={me}>{children}</Align>}
+        wrap={children => (
+          <Align me={me}>
+            {me && (
+              <Reactions style={{ marginRight: 8 }} {...message.reactions} />
+            )}
+            {children}
+            {!me && (
+              <Reactions style={{ marginLeft: 8 }} {...message.reactions} />
+            )}
+          </Align>
+        )}
       >
         <Text
           type="body"
@@ -75,14 +86,20 @@ const Message = ({
         threadId &&
         showActionSheetWithOptions(
           {
-            options: ['Quote', 'Cancel'],
-            cancelButtonIndex: 1,
+            options: ['Quote', 'Like', 'Cancel'],
+            cancelButtonIndex: 2,
           },
           pressedIndex => {
-            if (pressedIndex === 0) {
-              dispatch(
-                replyToMessage({ threadId: threadId, messageId: message.id })
-              );
+            switch (pressedIndex) {
+              case 0: {
+                dispatch(
+                  replyToMessage({ threadId: threadId, messageId: message.id })
+                );
+                return;
+              }
+              case 1: {
+                // TODO(@mxstbr): React to message
+              }
             }
           }
         );
@@ -92,6 +109,12 @@ const Message = ({
           wrap={children => (
             <TouchableOpacity onPress={onPress}>
               <Align me={me}>
+                {me && (
+                  <Reactions
+                    style={{ marginRight: 8 }}
+                    {...message.reactions}
+                  />
+                )}
                 <Bubble me={me}>
                   {message.parent ? (
                     /* $FlowIssue */
@@ -99,6 +122,9 @@ const Message = ({
                   ) : null}
                   <TextWrapper>{children}</TextWrapper>
                 </Bubble>
+                {!me && (
+                  <Reactions style={{ marginLeft: 8 }} {...message.reactions} />
+                )}
               </Align>
             </TouchableOpacity>
           )}
