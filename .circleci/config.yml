@@ -19,7 +19,8 @@ aliases:
   - &yarn
     |
       yarn
-      cd ./mobile && yarn && yarn setup
+      cd ./mobile && yarn && yarn setup && cd ..
+      cd ./desktop && yarn && cd ..
 
   - &install-rethinkdb
     name: Install RethinkDB 2.3.5
