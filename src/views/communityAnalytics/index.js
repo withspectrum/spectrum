@@ -16,12 +16,14 @@ import {
   Column,
 } from '../../components/settingsViews/style';
 import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
+import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
   currentUser: Object,
   community: GetCommunitySettingsType,
   communitySlug: string,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   match: Object,
 };
 
@@ -53,18 +55,32 @@ class CommunityAnalytics extends React.Component<Props, State> {
 
     if (community && community.id) {
       if (!community.hasFeatures || !community.hasFeatures.analytics) {
-        return <AnalyticsUpsell community={community} />;
+        return (
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            <AnalyticsUpsell community={community} />
+          </ErrorBoundary>
+        );
       }
 
       return (
         <SectionsContainer>
           <Column>
-            <MemberGrowth id={community.id} />
-            <TopMembers id={community.id} />
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <MemberGrowth id={community.id} />
+            </ErrorBoundary>
+
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <TopMembers id={community.id} />
+            </ErrorBoundary>
           </Column>
           <Column>
-            <ConversationGrowth id={community.id} />
-            <TopAndNewThreads id={community.id} />
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <ConversationGrowth id={community.id} />
+            </ErrorBoundary>
+
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <TopAndNewThreads id={community.id} />
+            </ErrorBoundary>
           </Column>
         </SectionsContainer>
       );

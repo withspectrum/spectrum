@@ -13,6 +13,7 @@ import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import OutsideClickHandler from '../../../components/outsideClickHandler';
 import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 import {
   FollowButton,
@@ -29,7 +30,7 @@ type Props = {
   thread: GetThreadType,
   currentUser: Object,
   isEditing: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   toggleThreadNotifications: Function,
   toggleEdit: Function,
   saveEdit: Function,

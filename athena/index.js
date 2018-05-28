@@ -17,6 +17,8 @@ import processAdminMessageModeration from './queues/moderationEvents/message';
 import processAdminThreadModeration from './queues/moderationEvents/thread';
 import processUserRequestedJoinPrivateChannel from './queues/private-channel-request-sent';
 import processUserRequestPrivateChannelApproved from './queues/private-channel-request-approved';
+import processUserRequestedJoinPrivateCommunity from './queues/private-community-request-sent';
+import processUserRequestPrivateCommunityApproved from './queues/private-community-request-approved';
 import processPushNotifications from './queues/send-push-notifications';
 import startNotificationsListener from './listeners/notifications';
 import processSendSlackInvitations from './queues/send-slack-invitations';
@@ -35,6 +37,8 @@ import {
   PROCESS_ADMIN_TOXIC_THREAD,
   PRIVATE_CHANNEL_REQUEST_SENT,
   PRIVATE_CHANNEL_REQUEST_APPROVED,
+  PRIVATE_COMMUNITY_REQUEST_SENT,
+  PRIVATE_COMMUNITY_REQUEST_APPROVED,
   SEND_PUSH_NOTIFICATIONS,
   TRACK_USER_LAST_SEEN,
   SEND_SLACK_INVITIATIONS,
@@ -63,6 +67,8 @@ const server = createWorker({
   [PROCESS_ADMIN_TOXIC_THREAD]: processAdminThreadModeration,
   [PRIVATE_CHANNEL_REQUEST_SENT]: processUserRequestedJoinPrivateChannel,
   [PRIVATE_CHANNEL_REQUEST_APPROVED]: processUserRequestPrivateChannelApproved,
+  [PRIVATE_COMMUNITY_REQUEST_SENT]: processUserRequestedJoinPrivateCommunity,
+  [PRIVATE_COMMUNITY_REQUEST_APPROVED]: processUserRequestPrivateCommunityApproved,
   [SEND_PUSH_NOTIFICATIONS]: processPushNotifications,
 });
 

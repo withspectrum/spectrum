@@ -14,9 +14,10 @@ import ThreadSearch from './threadSearch';
 import Menu from '../../../components/menu';
 import CommunityList from './communityList';
 import Link from 'src/components/link';
+import type { Dispatch } from 'redux';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   filter: Object,
   communities: Array<?Object>,
   user: Object,

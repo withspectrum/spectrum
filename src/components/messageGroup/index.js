@@ -6,6 +6,9 @@ import { convertTimestampToDate } from '../../helpers/utils';
 import Badge from '../badges';
 import Avatar from '../avatar';
 import Message from '../message';
+import type { Dispatch } from 'redux';
+import { ErrorBoundary } from 'src/components/error';
+import MessageErrorFallback from '../message/messageErrorFallback';
 
 import {
   Byline,
@@ -70,7 +73,7 @@ type MessageGroupProps = {
   thread: Object, // TODO: Refine type
   isModerator: boolean,
   toggleReaction: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   selectedId: string,
   changeSelection: Function,
   lastSeen?: number | Date,
@@ -238,20 +241,26 @@ class Messages extends Component<MessageGroupProps, State> {
                   />
                   {group.map(message => {
                     return (
-                      <Message
+                      <ErrorBoundary
+                        fallbackComponent={() => (
+                          <MessageErrorFallback me={me} />
+                        )}
                         key={message.id}
-                        message={message}
-                        reaction={'like'}
-                        me={me}
-                        canModerate={canModerate}
-                        pending={message.id < 0}
-                        currentUser={currentUser}
-                        threadType={threadType}
-                        threadId={threadId}
-                        toggleReaction={toggleReaction}
-                        selectedId={this.state.selectedMessage}
-                        changeSelection={this.toggleSelectedMessage}
-                      />
+                      >
+                        <Message
+                          message={message}
+                          reaction={'like'}
+                          me={me}
+                          canModerate={canModerate}
+                          pending={message.id < 0}
+                          currentUser={currentUser}
+                          threadType={threadType}
+                          threadId={threadId}
+                          toggleReaction={toggleReaction}
+                          selectedId={this.state.selectedMessage}
+                          changeSelection={this.toggleSelectedMessage}
+                        />
+                      </ErrorBoundary>
                     );
                   })}
                 </MessageGroup>

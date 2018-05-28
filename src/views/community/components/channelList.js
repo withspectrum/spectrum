@@ -19,13 +19,14 @@ import {
   ToggleNotificationsContainer,
 } from '../style';
 import ToggleChannelNotifications from 'src/components/toggleChannelNotifications';
+import type { Dispatch } from 'redux';
 
 type Props = {
   data: {
     community: GetCommunityChannelConnectionType,
   },
   isLoading: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   currentUser: Object,
   communitySlug: string,
 };

@@ -10,12 +10,13 @@ import { addToastWithTimeout } from '../../../../actions/toasts';
 import { Form, Row, InputLabel, InputSubLabel } from './style';
 import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import { ContinueButton } from '../../style';
+import type { Dispatch } from 'redux';
 
 type Props = {
   client: Object,
   editUser: Function,
   save: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   user: ?Object,
 };
 

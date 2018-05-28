@@ -10,6 +10,7 @@ import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Avatar from '../../../components/avatar';
 import { CLIENT_URL } from 'src/api/constants';
+import type { Dispatch } from 'redux';
 import {
   CommunityHeader,
   CommunityHeaderName,
@@ -22,7 +23,7 @@ import {
 } from '../style';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   toggleChannelSubscription: Function,
   currentUser: Object,
   hide: boolean,

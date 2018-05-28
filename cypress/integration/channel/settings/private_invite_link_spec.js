@@ -44,17 +44,12 @@ describe('private channel invite link settings', () => {
 
         cy.get('[data-cy="refresh-join-link-token"]').click();
 
-        cy.get('[data-cy="refresh-join-link-token"]').should('be.disabled');
-        cy.get('[data-cy="refresh-join-link-token"]').should('not.be.disabled');
-
         // grab the input again and compare its previous value
         // to the current value
         cy
           .get('[data-cy="join-link-input"]')
           .invoke('val')
-          .should(val2 => {
-            expect(val1).not.to.eq(val2);
-          });
+          .should('not.eq', val1);
       });
 
     // disable

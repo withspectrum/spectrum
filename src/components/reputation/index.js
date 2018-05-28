@@ -5,13 +5,14 @@ import { openModal } from '../../actions/modals';
 import { truncateNumber } from '../../helpers/utils';
 import Icon from '../icons';
 import { ReputationWrapper, ReputationLabel } from './style';
+import type { Dispatch } from 'redux';
 
 type Props = {
   size?: 'mini' | 'default' | 'large',
   reputation: number,
   tipText?: string,
   tipLocation?: string,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   ignoreClick?: boolean,
 };
 
