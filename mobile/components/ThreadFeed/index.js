@@ -8,7 +8,6 @@ import { ThreadListItem } from '../Lists';
 import InfiniteList from '../InfiniteList';
 import Loading from '../Loading';
 import type { ThreadConnectionType } from '../../../shared/graphql/fragments/community/communityThreadConnection';
-import type { FlatListProps } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { CenteredView } from './style';
 import type { ViewNetworkHandlerProps } from '../ViewNetworkHandler';
@@ -26,7 +25,6 @@ type State = {
 };
 
 type Props = {
-  ...$Exact<FlatListProps>,
   ...$Exact<ViewNetworkHandlerProps>,
   activeChannel?: string,
   activeCommunity?: string,
@@ -116,7 +114,6 @@ class ThreadFeed extends Component<Props, State> {
       isFetchingMore,
       isRefetching,
       channels,
-      ...flatListProps
     } = this.props;
 
     if (isLoading) {
@@ -150,7 +147,6 @@ class ThreadFeed extends Component<Props, State> {
             }
             refetching={this.props.isRefetching}
             refetch={this.props.data.refetch}
-            {...flatListProps}
           />
         </View>
       );
