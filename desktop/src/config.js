@@ -20,5 +20,5 @@ module.exports = {
   WINDOW_MIN_WIDTH: 425,
   WINDOW_BG_COLOR: '#FFFFFF',
 
-  ICON: resolve(__dirname, '../resources/icons/png/icon.png'),
+  ICON: resolve(__dirname, '../resources/icons/png/icon-512x512.png'),
 };

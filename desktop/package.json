@@ -1,6 +1,11 @@
 {
   "name": "Spectrum",
   "description": "The community platform for the future.",
+  "homepage": "https://spectrum.chat",
+  "author": {
+    "name": "Space Program Inc.",
+    "email": "hey@spectrum.chat"
+  },
   "version": "2.1.6",
   "main": "src/main.js",
   "private": true,
@@ -58,6 +63,8 @@
       ]
     },
     "linux": {
+      "icon": "resources/icons/png/icon-512x512.png",
+      "category": "Network",
       "target": [
         "AppImage",
         "deb"
