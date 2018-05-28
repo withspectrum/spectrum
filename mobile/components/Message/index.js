@@ -12,6 +12,7 @@ import { Bubble, TextWrapper, Align } from './style';
 import { QuotedMessage } from './QuotedMessage';
 import Reactions from './Reactions';
 import { replyToMessage } from '../../../src/actions/message';
+import toggleReaction from '../../../shared/graphql/mutations/reaction/toggleReaction';
 import { draftOnlyContainsEmoji } from '../../../shared/only-contains-emoji';
 import { toState, toPlainText } from '../../../shared/draft-utils';
 import type { MessageInfoType } from '../../../shared/graphql/fragments/message/messageInfo';
@@ -22,6 +23,7 @@ type Props = {
   threadId?: string,
   bubble?: boolean,
   dispatch: Function,
+  toggleReaction: ({ messageId: string, type: 'like' }) => Promise<any>,
   showActionSheetWithOptions: Function,
 };
 
@@ -32,6 +34,7 @@ const Message = ({
   showActionSheetWithOptions,
   dispatch,
   threadId,
+  toggleReaction,
 }: Props) => {
   const emojiOnly =
     message.messageType === 'draftjs'
@@ -98,7 +101,8 @@ const Message = ({
                 return;
               }
               case 1: {
-                // TODO(@mxstbr): React to message
+                toggleReaction({ messageId: message.id, type: 'like' });
+                return;
               }
             }
           }
@@ -144,4 +148,4 @@ const Message = ({
   }
 };
 
-export default compose(connectActionSheet, connect())(Message);
+export default compose(connectActionSheet, toggleReaction, connect())(Message);
