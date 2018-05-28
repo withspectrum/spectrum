@@ -27,125 +27,161 @@ type Props = {
   showActionSheetWithOptions: Function,
 };
 
-const Message = ({
-  message,
-  me,
-  bubble,
-  showActionSheetWithOptions,
-  dispatch,
-  threadId,
-  toggleReaction,
-}: Props) => {
-  const emojiOnly =
-    message.messageType === 'draftjs'
-      ? draftOnlyContainsEmoji(JSON.parse(message.content.body))
-      : false;
-  if (emojiOnly) {
-    return (
-      <ConditionalWrap
-        condition={bubble !== false}
-        wrap={children => (
-          <Align me={me}>
-            {me && (
-              <Reactions style={{ marginRight: 8 }} {...message.reactions} />
-            )}
-            {children}
-            {!me && (
-              <Reactions style={{ marginLeft: 8 }} {...message.reactions} />
-            )}
-          </Align>
-        )}
-      >
-        <Text
-          type="body"
-          style={{
-            fontSize: 32,
-            lineHeight: 34 /* Note(@mxstbr): magic number that makes sure emojis aren't cut off */,
-          }}
-        >
-          {toPlainText(toState(JSON.parse(message.content.body)))}
-        </Text>
-      </ConditionalWrap>
-    );
+type State = {
+  message: MessageInfoType,
+};
+
+class Message extends React.Component<Props, State> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      message: props.message,
+    };
   }
-  let body =
-    message.messageType === 'draftjs'
-      ? redraft(JSON.parse(message.content.body), messageRenderer)
-      : message.content.body;
-  switch (message.messageType) {
-    // case 'media': {
-    //   // don't apply imgix url params to optimistic image messages
-    //   const src = props.id
-    //     ? message.body
-    //     : `${message.body}?max-w=${window.innerWidth * 0.6}`;
-    //   if (typeof data.id === 'number' && data.id < 0) {
-    //     return null;
-    //   }
-    //   return <Image onClick={openGallery} src={src} />;
-    // }
-    case 'text':
-    case 'draftjs': {
-      const onPress = () =>
-        threadId &&
-        showActionSheetWithOptions(
-          {
-            options: ['Quote', 'Like', 'Cancel'],
-            cancelButtonIndex: 2,
-          },
-          pressedIndex => {
-            switch (pressedIndex) {
-              case 0: {
-                dispatch(
-                  replyToMessage({ threadId: threadId, messageId: message.id })
-                );
-                return;
-              }
-              case 1: {
-                toggleReaction({ messageId: message.id, type: 'like' });
-                return;
-              }
-            }
+
+  onPress = () => {
+    if (!this.props.threadId) return;
+    const { message } = this.state;
+    const { showActionSheetWithOptions, dispatch, threadId } = this.props;
+    showActionSheetWithOptions(
+      {
+        options: [
+          'Quote',
+          message.reactions.hasReacted ? 'Unlike' : 'Like',
+          'Cancel',
+        ],
+        cancelButtonIndex: 2,
+      },
+      pressedIndex => {
+        switch (pressedIndex) {
+          case 0: {
+            dispatch(
+              replyToMessage({ threadId: threadId, messageId: message.id })
+            );
+            return;
           }
-        );
+          case 1: {
+            this.setState(({ message }) => ({
+              message: {
+                ...message,
+                reactions: {
+                  count: message.reactions.hasReacted
+                    ? message.reactions.count - 1
+                    : message.reactions.count + 1,
+                  hasReacted: !message.reactions.hasReacted,
+                },
+              },
+            }));
+            toggleReaction({ messageId: message.id, type: 'like' });
+            return;
+          }
+        }
+      }
+    );
+  };
+
+  render() {
+    const { message } = this.state;
+    const {
+      me,
+      bubble,
+      showActionSheetWithOptions,
+      dispatch,
+      threadId,
+      toggleReaction,
+    } = this.props;
+    const emojiOnly =
+      message.messageType === 'draftjs'
+        ? draftOnlyContainsEmoji(JSON.parse(message.content.body))
+        : false;
+    if (emojiOnly) {
       return (
         <ConditionalWrap
           condition={bubble !== false}
           wrap={children => (
-            <TouchableOpacity onPress={onPress}>
-              <Align me={me}>
-                {me && (
-                  <Reactions
-                    style={{ marginRight: 8 }}
-                    {...message.reactions}
-                  />
-                )}
-                <Bubble me={me}>
-                  {message.parent ? (
-                    /* $FlowIssue */
-                    <QuotedMessage message={message.parent} />
-                  ) : null}
-                  <TextWrapper>{children}</TextWrapper>
-                </Bubble>
-                {!me && (
-                  <Reactions style={{ marginLeft: 8 }} {...message.reactions} />
-                )}
-              </Align>
-            </TouchableOpacity>
+            <Align me={me}>
+              {me && (
+                <Reactions style={{ marginRight: 8 }} {...message.reactions} />
+              )}
+              {children}
+              {!me && (
+                <Reactions style={{ marginLeft: 8 }} {...message.reactions} />
+              )}
+            </Align>
           )}
         >
           <Text
-            color={me ? '#FFFFFF' : '#000000'}
-            fontSize={emojiOnly ? 24 : undefined}
-            style={{ marginTop: 0, marginBottom: 0 }}
+            type="body"
+            style={{
+              fontSize: 32,
+              lineHeight: 34 /* Note(@mxstbr): magic number that makes sure emojis aren't cut off */,
+            }}
           >
-            {body}
+            {toPlainText(toState(JSON.parse(message.content.body)))}
           </Text>
         </ConditionalWrap>
       );
     }
-    default:
-      return null;
+    let body =
+      message.messageType === 'draftjs'
+        ? redraft(JSON.parse(message.content.body), messageRenderer)
+        : message.content.body;
+    switch (message.messageType) {
+      // case 'media': {
+      //   // don't apply imgix url params to optimistic image messages
+      //   const src = props.id
+      //     ? message.body
+      //     : `${message.body}?max-w=${window.innerWidth * 0.6}`;
+      //   if (typeof data.id === 'number' && data.id < 0) {
+      //     return null;
+      //   }
+      //   return <Image onClick={openGallery} src={src} />;
+      // }
+      case 'text':
+      case 'draftjs': {
+        return (
+          <ConditionalWrap
+            condition={bubble !== false}
+            wrap={children => (
+              <TouchableOpacity onPress={this.onPress}>
+                <Align me={me}>
+                  {me && (
+                    <Reactions
+                      style={{ marginRight: 8 }}
+                      {...message.reactions}
+                    />
+                  )}
+                  <Bubble me={me}>
+                    {message.parent ? (
+                      /* $FlowIssue */
+                      <QuotedMessage message={message.parent} />
+                    ) : null}
+                    <TextWrapper>{children}</TextWrapper>
+                  </Bubble>
+                  {!me && (
+                    <Reactions
+                      style={{ marginLeft: 8 }}
+                      {...message.reactions}
+                    />
+                  )}
+                </Align>
+              </TouchableOpacity>
+            )}
+          >
+            <Text
+              color={me ? '#FFFFFF' : '#000000'}
+              fontSize={emojiOnly ? 24 : undefined}
+              style={{ marginTop: 0, marginBottom: 0 }}
+            >
+              {body}
+            </Text>
+          </ConditionalWrap>
+        );
+      }
+      default:
+        return null;
+    }
   }
-};
+}
 
 export default compose(connectActionSheet, toggleReaction, connect())(Message);
