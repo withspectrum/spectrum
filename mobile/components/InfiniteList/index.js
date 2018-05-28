@@ -2,7 +2,6 @@
 import React, { type Node, type ElementType } from 'react';
 import { FlatList } from 'react-native';
 import Text from '../Text';
-import type { FlatListProps } from 'react-native';
 
 type ID = number | string;
 
@@ -26,7 +25,6 @@ type Props = {
   separator?: ElementType,
   emptyState?: ElementType,
   threshold?: number,
-  ...$Exact<FlatListProps>,
 };
 
 class InfiniteList extends React.Component<Props> {
