@@ -7,7 +7,6 @@ const PORT = process.env.PORT || 3005;
 
 console.log('\n✉️ Mercury, the reputation worker, is starting...');
 debug('Logging with debug enabled!');
-console.log('');
 
 const server = createWorker({
   [PROCESS_REPUTATION_EVENT]: processReputationEvent,
