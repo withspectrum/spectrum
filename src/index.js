@@ -11,6 +11,7 @@ import queryString from 'query-string';
 import Loadable from 'react-loadable';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import { HelmetProvider } from 'react-helmet-async';
+import isElectron from 'is-electron';
 import webPushManager from './helpers/web-push-manager';
 import { history } from './helpers/history';
 import { client } from 'shared/graphql';
@@ -19,6 +20,11 @@ import { getItemFromStorage } from './helpers/localStorage';
 import Routes from './routes';
 import { track, events } from './helpers/analytics';
 import { wsLink } from 'shared/graphql';
+import {
+  subscribeToNewNotifications,
+  subscribeToDirectMessageNotifications,
+} from 'shared/graphql/subscriptions';
+import formatNotification from 'shared/notification-to-text';
 
 const { thread, t } = queryString.parse(history.location.search);
 
@@ -87,6 +93,41 @@ function render() {
 }
 
 Loadable.preloadReady().then(render);
+
+// On Electron listen to new notifications outside the component tree
+// and show push notifications
+if (isElectron()) {
+  const pushNotification = notification => {
+    const data = getItemFromStorage('spectrum');
+    const { title, body, data: notificationData } = formatNotification(
+      notification,
+      data && data.currentUser.id
+    );
+    // $FlowIssue Flow doesn't understand the HTML5 Notifications API ref facebook/flow#3784
+    const push = new Notification(title, {
+      body,
+      icon: '/public/img/homescreen-icon-512x512.png',
+      tag: notification.id,
+      renotify: true,
+    });
+    push.onclick = () => {
+      if (notificationData && notificationData.href)
+        history.push(notificationData.href);
+    };
+  };
+
+  client.subscribe({ query: subscribeToDirectMessageNotifications }).subscribe({
+    next({ data: { dmNotificationAdded } }) {
+      pushNotification(dmNotificationAdded);
+    },
+  });
+
+  client.subscribe({ query: subscribeToNewNotifications }).subscribe({
+    next({ data: { notificationAdded } }) {
+      pushNotification(notificationAdded);
+    },
+  });
+}
 
 OfflinePluginRuntime.install({
   // Apply new updates immediately
