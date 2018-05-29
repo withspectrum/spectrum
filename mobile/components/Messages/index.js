@@ -39,8 +39,9 @@ type Props = {
 
 class Messages extends Component<Props> {
   // Locally update thread.currentUserLastSeen
-  updateThreadLastSeen = threadId => {
+  updateThreadLastSeen = () => {
     const { currentUser, client } = this.props;
+    const threadId = this.props.id;
     // No currentUser, no reason to update currentUserLastSeen
     if (!currentUser || !threadId) return;
     try {
