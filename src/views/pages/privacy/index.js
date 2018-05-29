@@ -416,6 +416,7 @@ class Privacy extends React.Component<{}> {
               <a
                 href="http://www.google.com/intl/en/policies/privacy/"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 Privacy &amp; Terms web page
               </a>.
@@ -424,7 +425,11 @@ class Privacy extends React.Component<{}> {
             <SectionDescription>
               We also use Amplitude for tracking internal product analytics
               tracking. You can learn about their privacy practices on their{' '}
-              <a href="https://amplitude.com/privacy" target="_blank">
+              <a
+                href="https://amplitude.com/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Privacy Policy web page
               </a>.
             </SectionDescription>
@@ -449,7 +454,11 @@ class Privacy extends React.Component<{}> {
             <SectionDescription>
               We use Stripe as a payment provider. You can find more information
               on their privacy practices on their{' '}
-              <a href="https://stripe.com/us/privacy" target="_blank">
+              <a
+                href="https://stripe.com/us/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Privacy Policy web page
               </a>.
             </SectionDescription>
