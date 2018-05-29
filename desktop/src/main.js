@@ -32,6 +32,8 @@ function createWindow() {
 
   // Create the main browser window.
   mainWindow = new BrowserWindow({
+    height: 800,
+    width: 1300,
     minHeight: CONFIG.WINDOW_MIN_HEIGHT,
     minWidth: CONFIG.WINDOW_MIN_WIDTH,
     backgroundColor: CONFIG.WINDOW_BG_COLOR,
@@ -47,9 +49,6 @@ function createWindow() {
     },
     show: false,
   });
-
-  // Maximize window on startup
-  mainWindow.maximize();
 
   // Load Remote Url
   mainWindow.loadURL(startUrl);

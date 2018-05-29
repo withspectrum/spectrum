@@ -16,8 +16,8 @@ module.exports = {
     'https://github.com/withspectrum/spectrum/blob/alpha/LICENSE',
   GITHUB_URL_ISSUES: 'https://github.com/withspectrum/spectrum/issues',
 
-  WINDOW_MIN_HEIGHT: 768,
-  WINDOW_MIN_WIDTH: 425,
+  WINDOW_MIN_HEIGHT: 500,
+  WINDOW_MIN_WIDTH: 770,
   WINDOW_BG_COLOR: '#FFFFFF',
 
   ICON: resolve(__dirname, '../resources/icons/png/icon-512x512.png'),
