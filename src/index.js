@@ -19,6 +19,7 @@ import { getItemFromStorage } from './helpers/localStorage';
 import Routes from './routes';
 import { track, events } from './helpers/analytics';
 import { wsLink } from 'shared/graphql';
+import { subscribeToDesktopPush } from './subscribe-to-desktop-push';
 
 const { thread, t } = queryString.parse(history.location.search);
 
@@ -121,4 +122,8 @@ window.addEventListener('beforeinstallprompt', e => {
       track(events.PWA_HOME_SCREEN_ADDED);
     }
   });
+});
+
+subscribeToDesktopPush(data => {
+  if (data && data.href) history.push(data.href);
 });

@@ -3694,9 +3694,9 @@ draft-js-linkify-plugin@^2.0.0-beta1:
     tlds "^1.189.0"
     union-class-names "^1.0.0"
 
-draft-js-markdown-plugin@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/draft-js-markdown-plugin/-/draft-js-markdown-plugin-2.0.3.tgz#411e50ffb70257bf4bfac0be9b982a6e562bd9f4"
+draft-js-markdown-plugin@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/draft-js-markdown-plugin/-/draft-js-markdown-plugin-2.1.0.tgz#cac9bb195d2e4140faac1ca18b1bf132fdb109c5"
   dependencies:
     decorate-component-with-props "^1.0.2"
     draft-js "^0.10.4"
@@ -5927,6 +5927,10 @@ is-directory@^0.3.1:
 is-dotfile@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/is-dotfile/-/is-dotfile-1.0.3.tgz#a6a2f32ffd2dfb04f5ca25ecd0f6b83cf798a1e1"
+
+is-electron@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/is-electron/-/is-electron-2.1.0.tgz#37dd2e9e7167efa8bafce86c0c25762bc4b851fa"
 
 is-empty@^1.0.0:
   version "1.2.0"

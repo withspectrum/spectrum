@@ -104,6 +104,7 @@ spectrum/
 ├── api        # API server
 ├── athena     # Worker server (notifications and general processing)
 ├── chronos    # Worker server (cron jobs)
+├── desktop    # desktop apps (build with electron)
 ├── docs
 ├── email-templates
 ├── hermes     # Worker server (email sending)
@@ -241,6 +242,14 @@ To develop the frontend and web UI run
 yarn run dev:web
 ```
 
+#### Develop the desktop app
+
+To develop the desktop app you have to have the dev web server running in the background (`yarn run dev:web`) and then, in another terminal tab, run:
+
+```
+yarn run dev:desktop
+```
+
 #### Develop the mobile apps
 
 To start the mobile apps run:
@@ -269,4 +278,3 @@ Refer to [the Expo documentation on how to install the simulators](https://docs.
 ## License
 
 BSD 3-Clause, see the [LICENSE](./LICENSE) file.
-

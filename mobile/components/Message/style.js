@@ -14,6 +14,8 @@ export const Bubble = styled.View`
 
 export const Align = styled.View`
   align-self: ${props => (props.me ? `flex-end` : `flex-start`)};
+  align-items: flex-end;
+  flex-direction: row;
 `;
 
 export const TextWrapper = styled.View`
