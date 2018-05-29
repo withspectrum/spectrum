@@ -385,7 +385,7 @@ class NotificationsTab extends React.Component<Props, State> {
 
     // Electron context
     // add a dock icon notification count indicator
-    if (isElectron()) {
+    if (isElectron() && window.interop) {
       window.interop.setBadgeCount(count);
     }
 
