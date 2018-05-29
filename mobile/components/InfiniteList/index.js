@@ -48,17 +48,6 @@ class InfiniteList extends React.Component<Props> {
     },
   };
 
-  shouldComponentUpdate(next: Props) {
-    const curr = this.props;
-    const currKeys = curr.data.map(curr.keyExtractor);
-    const nextKeys = next.data.map(next.keyExtractor);
-    if (currKeys.length !== nextKeys.length) return true;
-    // Simple way to check whether two arrays of strings are equal
-    if (JSON.stringify(currKeys) !== JSON.stringify(nextKeys)) return true;
-    if (next.refetching !== curr.refetching) return true;
-    return false;
-  }
-
   onEndReached = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
     // NOTE(@mxstbr): FlatList calls onEndReached 5 times synchronously on first render with a negative
     // distanceFromEnd for reasons I don't fully understand. This makes sure we don't overfetch.
@@ -87,7 +76,6 @@ class InfiniteList extends React.Component<Props> {
       ...rest
     } = this.props;
 
-    console.log('render');
     return (
       <FlatList
         {...rest}
