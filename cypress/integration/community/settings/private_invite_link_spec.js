@@ -41,9 +41,6 @@ describe('private community invite link settings', () => {
 
         cy.get('[data-cy="refresh-join-link-token"]').click();
 
-        cy.get('[data-cy="refresh-join-link-token"]').should('be.disabled');
-        cy.get('[data-cy="refresh-join-link-token"]').should('not.be.disabled');
-
         // grab the input again and compare its previous value
         // to the current value
         cy
