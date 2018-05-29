@@ -11,7 +11,6 @@ import queryString from 'query-string';
 import Loadable from 'react-loadable';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import { HelmetProvider } from 'react-helmet-async';
-import isElectron from 'is-electron';
 import webPushManager from './helpers/web-push-manager';
 import { history } from './helpers/history';
 import { client } from 'shared/graphql';
@@ -19,6 +18,7 @@ import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
 import Routes from './routes';
 import { track, events } from './helpers/analytics';
+import { isDesktopApp } from './helpers/is-desktop-app';
 import { wsLink } from 'shared/graphql';
 import {
   subscribeToNewNotifications,
@@ -96,7 +96,7 @@ Loadable.preloadReady().then(render);
 
 // On Electron listen to new notifications outside the component tree
 // and show push notifications
-if (isElectron()) {
+if (isDesktopApp()) {
   const pushNotification = notification => {
     // Don't send push notifications if the app is focused, duh
     if (window.interop.isFocused()) {
