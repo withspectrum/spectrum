@@ -71,13 +71,6 @@ class Messages extends Component<Props> {
     }
   };
 
-  componentDidUpdate(prevProps) {
-    // Update thread.currentUserLastSeen for the last thread when we switch away from it
-    if (prevProps.id) {
-      this.updateThreadLastSeen(prevProps.id);
-    }
-  }
-
   render() {
     const {
       data,
