@@ -10,6 +10,8 @@ const CONFIG = require('./config');
 // be closed automatically when the JavaScript object is garbage collected.
 // eslint-disable-next-line
 let win;
+let splash;
+let mainWindow;
 
 const startUrl = isDev ? CONFIG.APP_DEV_URL : CONFIG.APP_REMOTE_URL;
 
