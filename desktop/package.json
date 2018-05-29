@@ -6,7 +6,7 @@
     "name": "Space Program Inc.",
     "email": "hey@spectrum.chat"
   },
-  "version": "2.1.6",
+  "version": "1.0.0",
   "main": "src/main.js",
   "private": true,
   "dependencies": {
@@ -30,6 +30,7 @@
   "build": {
     "productName": "Spectrum",
     "appId": "chat.spectrum",
+    "copyright": "Copyright © 2018 Space Program Inc.",
     "files": [
       "src/**/*",
       "node_modules/**/*",
@@ -41,7 +42,7 @@
       "output": "release"
     },
     "mac": {
-      "category": "public.app-category.productivity",
+      "category": "public.app-category.social-networking",
       "target": "default",
       "icon": "resources/icons/mac/icon.icns"
     },
