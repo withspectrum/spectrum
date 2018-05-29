@@ -17,9 +17,7 @@ import {
 } from './style';
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
 import { toPlainText, toState } from 'shared/draft-utils';
-import onlyContainsEmoji, {
-  draftOnlyContainsEmoji,
-} from 'shared/only-contains-emoji';
+import { draftOnlyContainsEmoji } from 'shared/only-contains-emoji';
 import { Byline, Name, Username } from '../messageGroup/style';
 import { isShort } from 'shared/clients/draft-js/utils/isShort';
 import type { Node } from 'react';
