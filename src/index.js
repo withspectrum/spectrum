@@ -121,14 +121,16 @@ if (isElectron()) {
   };
 
   client.subscribe({ query: subscribeToDirectMessageNotifications }).subscribe({
-    next({ data: { dmNotificationAdded } }) {
-      pushNotification(dmNotificationAdded);
+    next({ data }) {
+      if (!data || !data.dmNotificationAdded) return;
+      pushNotification(data.dmNotificationAdded);
     },
   });
 
   client.subscribe({ query: subscribeToNewNotifications }).subscribe({
-    next({ data: { notificationAdded } }) {
-      pushNotification(notificationAdded);
+    next({ data }) {
+      if (!data || !data.notificationAdded) return;
+      pushNotification(data.notificationAdded);
     },
   });
 }
