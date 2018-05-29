@@ -5928,6 +5928,10 @@ is-dotfile@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/is-dotfile/-/is-dotfile-1.0.3.tgz#a6a2f32ffd2dfb04f5ca25ecd0f6b83cf798a1e1"
 
+is-electron@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/is-electron/-/is-electron-2.1.0.tgz#37dd2e9e7167efa8bafce86c0c25762bc4b851fa"
+
 is-empty@^1.0.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/is-empty/-/is-empty-1.2.0.tgz#de9bb5b278738a05a0b09a57e1fb4d4a341a9f6b"
