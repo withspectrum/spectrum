@@ -1,4 +1,5 @@
-const { app, dialog, Menu, shell } = require('electron');
+// @flow
+const { dialog, Menu, shell } = require('electron');
 
 const CONFIG = require('./config');
 
