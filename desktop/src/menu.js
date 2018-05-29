@@ -84,6 +84,11 @@ const template = [
         role: 'minimize',
       },
       {
+        label: 'Reload',
+        accelerator: 'CmdOrCtrl+R',
+        role: 'reload',
+      },
+      {
         label: 'Close',
         accelerator: 'CmdOrCtrl+W',
         role: 'close',

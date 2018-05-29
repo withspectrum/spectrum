@@ -242,21 +242,13 @@ To develop the frontend and web UI run
 yarn run dev:web
 ```
 
-#### Develop the desktop apps
+#### Develop the desktop app
 
-To develop the desktop app you must first run
-
-```
-yarn run dev:web
-```
-
-then in other tab
+To develop the desktop app you have to have the dev web server running in the background (`yarn run dev:web`) and then, in another terminal tab, run:
 
 ```
 yarn run dev:desktop
 ```
-
-_Actually desktop app is mostly just a wrapping of the frontend_
 
 #### Develop the mobile apps
 

@@ -19,7 +19,6 @@
     "backpack-core": "^0.4.1",
     "bundle-buddy-webpack-plugin": "^0.3.0",
     "cheerio": "^1.0.0-rc.2",
-    "concurrently": "^3.5.1",
     "cross-env": "^5.0.5",
     "cypress": "^2.1.0",
     "eslint": "^4.1.1",
