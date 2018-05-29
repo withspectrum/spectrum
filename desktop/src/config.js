@@ -1,3 +1,4 @@
+// @flow
 const { app } = require('electron');
 const { resolve } = require('path');
 
