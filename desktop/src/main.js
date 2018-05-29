@@ -1,8 +1,6 @@
-const { app, BrowserWindow, Menu, shell, ipcMain } = require('electron');
+// @flow
+const { app, BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev');
-const https = require('https');
-const path = require('path');
-const url = require('url');
 
 const checkForUpdates = require('./autoUpdate');
 const buildMenu = require('./menu');
@@ -10,6 +8,7 @@ const CONFIG = require('./config');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
+// eslint-disable-next-line
 let win;
 
 const startUrl = isDev ? CONFIG.APP_DEV_URL : CONFIG.APP_REMOTE_URL;
