@@ -18,13 +18,8 @@ import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
 import Routes from './routes';
 import { track, events } from './helpers/analytics';
-import { isDesktopApp } from './helpers/is-desktop-app';
 import { wsLink } from 'shared/graphql';
-import {
-  subscribeToNewNotifications,
-  subscribeToDirectMessageNotifications,
-} from 'shared/graphql/subscriptions';
-import formatNotification from 'shared/notification-to-text';
+import { subscribeToDesktopPush } from './subscribe-to-desktop-push';
 
 const { thread, t } = queryString.parse(history.location.search);
 
@@ -94,47 +89,6 @@ function render() {
 
 Loadable.preloadReady().then(render);
 
-// On Electron listen to new notifications outside the component tree
-// and show push notifications
-if (isDesktopApp()) {
-  const pushNotification = notification => {
-    // Don't send push notifications if the app is focused, duh
-    if (window.interop.isFocused()) {
-      return;
-    }
-    const data = getItemFromStorage('spectrum');
-    const { title, body, data: notificationData } = formatNotification(
-      notification,
-      data && data.currentUser.id
-    );
-    // $FlowIssue Flow doesn't understand the HTML5 Notifications API ref facebook/flow#3784
-    const push = new Notification(title, {
-      body,
-      icon: '/public/img/homescreen-icon-512x512.png',
-      tag: notification.id,
-      renotify: true,
-    });
-    push.onclick = () => {
-      if (notificationData && notificationData.href)
-        history.push(notificationData.href);
-    };
-  };
-
-  client.subscribe({ query: subscribeToDirectMessageNotifications }).subscribe({
-    next({ data }) {
-      if (!data || !data.dmNotificationAdded) return;
-      pushNotification(data.dmNotificationAdded);
-    },
-  });
-
-  client.subscribe({ query: subscribeToNewNotifications }).subscribe({
-    next({ data }) {
-      if (!data || !data.notificationAdded) return;
-      pushNotification(data.notificationAdded);
-    },
-  });
-}
-
 OfflinePluginRuntime.install({
   // Apply new updates immediately
   onUpdateReady: () => OfflinePluginRuntime.applyUpdate(),
@@ -172,4 +126,8 @@ window.addEventListener('beforeinstallprompt', e => {
       track(events.PWA_HOME_SCREEN_ADDED);
     }
   });
+});
+
+subscribeToDesktopPush(data => {
+  if (data && data.href) history.push(data.href);
 });
