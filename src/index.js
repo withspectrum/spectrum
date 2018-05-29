@@ -72,11 +72,7 @@ function render() {
       <HelmetProvider>
         <ApolloProvider client={client}>
           <Router history={history}>
-            <Routes
-              maintenanceMode={
-                process.env.REACT_APP_MAINTENANCE_MODE === 'enabled'
-              }
-            />
+            <Routes />
           </Router>
         </ApolloProvider>
       </HelmetProvider>

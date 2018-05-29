@@ -14,7 +14,6 @@ import Head from './components/head';
 import ModalRoot from './components/modals/modalRoot';
 import Gallery from './components/gallery';
 import Toasts from './components/toasts';
-import Maintenance from './components/maintenance';
 import { Loading, LoadingScreen } from './components/loading';
 import LoadingDashboard from './views/dashboard/components/dashboardLoading';
 import Composer from './components/composer';
@@ -146,11 +145,7 @@ const ComposerFallback = signedOutFallback(Composer, () => (
   <Redirect to="/login" />
 ));
 
-type Props = {
-  maintenanceMode?: boolean,
-};
-
-class Routes extends React.Component<Props> {
+class Routes extends React.Component<{||}> {
   componentDidMount() {
     const AMPLITUDE_API_KEY =
       process.env.NODE_ENV === 'production'
@@ -170,22 +165,6 @@ class Routes extends React.Component<Props> {
 
   render() {
     const { title, description } = generateMetaInfo();
-
-    if (this.props.maintenanceMode) {
-      return (
-        <ThemeProvider theme={theme}>
-          <ScrollManager>
-            <Body>
-              <Head
-                title="Ongoing Maintenance - Spectrum"
-                description="Spectrum is currently undergoing scheduled maintenance downtime. Please check https://twitter.com/withspectrum for ongoing updates."
-              />
-              <Maintenance />
-            </Body>
-          </ScrollManager>
-        </ThemeProvider>
-      );
-    }
 
     return (
       <ThemeProvider theme={theme}>
