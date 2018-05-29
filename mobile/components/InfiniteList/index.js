@@ -48,6 +48,22 @@ class InfiniteList extends React.Component<Props> {
     },
   };
 
+  shouldComponentUpdate(next: Props) {
+    const curr = this.props;
+
+    // State changed
+    if (curr.hasNextPage !== next.hasNextPage) return true;
+    if (curr.refetching !== next.refetching) return true;
+
+    // Data changed
+    if (curr.data.length !== next.data.length) return true;
+    const currKeys = curr.data.map(curr.keyExtractor);
+    const nextKeys = next.data.map(next.keyExtractor);
+    if (JSON.stringify(currKeys) !== JSON.stringify(nextKeys)) return true;
+
+    return false;
+  }
+
   onEndReached = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
     // NOTE(@mxstbr): FlatList calls onEndReached 5 times synchronously on first render with a negative
     // distanceFromEnd for reasons I don't fully understand. This makes sure we don't overfetch.
@@ -63,6 +79,7 @@ class InfiniteList extends React.Component<Props> {
   render() {
     const {
       refetching,
+      refreshing,
       refetch,
       renderItem,
       data,
@@ -73,13 +90,14 @@ class InfiniteList extends React.Component<Props> {
       separator,
       style = {},
       emptyState,
+      fetchMore,
       ...rest
     } = this.props;
 
     return (
       <FlatList
         {...rest}
-        refreshing={refetching}
+        refreshing={refetching || refreshing}
         keyExtractor={keyExtractor}
         onRefresh={refetch}
         data={data}
