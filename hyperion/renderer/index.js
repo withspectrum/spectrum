@@ -34,12 +34,10 @@ import './browser-shim';
 const Routes = require('../../src/routes').default;
 import { initStore } from '../../src/store';
 
-const IN_MAINTENANCE_MODE =
-  process.env.REACT_APP_MAINTENANCE_MODE === 'enabled';
 const IS_PROD = process.env.NODE_ENV === 'production';
 const FORCE_DEV = process.env.FORCE_DEV;
 
-if (!IS_PROD || FORCE_DEV) console.log('Querying API at localhost:3001/api');
+if (!IS_PROD || FORCE_DEV) debug('Querying API at localhost:3001/api');
 
 const renderer = (req: express$Request, res: express$Response) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -93,7 +91,7 @@ const renderer = (req: express$Request, res: express$Response) => {
         <HelmetProvider context={helmetContext}>
           <Provider store={store}>
             <StaticRouter location={req.url} context={routerContext}>
-              <Routes maintenanceMode={IN_MAINTENANCE_MODE} />
+              <Routes />
             </StaticRouter>
           </Provider>
         </HelmetProvider>
@@ -111,14 +109,9 @@ const renderer = (req: express$Request, res: express$Response) => {
         res.redirect(301, routerContext.url);
         return;
       }
-      // maintainance mode
-      if (IN_MAINTENANCE_MODE) {
-        debug('maintainance mode enabled, sending 503');
-        res.status(503);
-        res.set('Retry-After', '3600');
-      } else {
-        res.status(200);
-      }
+
+      res.status(200);
+
       const state = store.getState();
       const data = client.extract();
       const { helmet } = helmetContext;

@@ -228,26 +228,10 @@ describe('private community signed in without permission', () => {
       .click();
 
     cy
-      .get('[data-cy="request-to-join-private-community-button"]')
-      .should('be.disabled');
-
-    cy
-      .get('[data-cy="request-to-join-private-community-button"]')
-      .should('not.be.disabled');
-
-    cy
       .get('[data-cy="cancel-request-to-join-private-community-button"]')
       .should('be.visible')
       .contains('Cancel request')
       .click();
-
-    cy
-      .get('[data-cy="cancel-request-to-join-private-community-button"]')
-      .should('be.disabled');
-
-    cy
-      .get('[data-cy="cancel-request-to-join-private-community-button"]')
-      .should('not.be.disabled');
 
     cy
       .get('[data-cy="request-to-join-private-community-button"]')
