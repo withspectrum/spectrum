@@ -7,14 +7,13 @@ import { ErrorBoundary } from 'src/components/error';
 import { CLIENT_URL } from './api/constants';
 import generateMetaInfo from 'shared/generate-meta-info';
 import './reset.css.js';
-import { theme } from './components/theme';
+import { theme } from 'shared/theme';
 import { FlexCol } from './components/globals';
 import ScrollManager from './components/scrollManager';
 import Head from './components/head';
 import ModalRoot from './components/modals/modalRoot';
 import Gallery from './components/gallery';
 import Toasts from './components/toasts';
-import Maintenance from './components/maintenance';
 import { Loading, LoadingScreen } from './components/loading';
 import LoadingDashboard from './views/dashboard/components/dashboardLoading';
 import Composer from './components/composer';
@@ -146,11 +145,7 @@ const ComposerFallback = signedOutFallback(Composer, () => (
   <Redirect to="/login" />
 ));
 
-type Props = {
-  maintenanceMode?: boolean,
-};
-
-class Routes extends React.Component<Props> {
+class Routes extends React.Component<{||}> {
   componentDidMount() {
     const AMPLITUDE_API_KEY =
       process.env.NODE_ENV === 'production'
@@ -170,22 +165,6 @@ class Routes extends React.Component<Props> {
 
   render() {
     const { title, description } = generateMetaInfo();
-
-    if (this.props.maintenanceMode) {
-      return (
-        <ThemeProvider theme={theme}>
-          <ScrollManager>
-            <Body>
-              <Head
-                title="Ongoing Maintenance - Spectrum"
-                description="Spectrum is currently undergoing scheduled maintenance downtime. Please check https://twitter.com/withspectrum for ongoing updates."
-              />
-              <Maintenance />
-            </Body>
-          </ScrollManager>
-        </ThemeProvider>
-      );
-    }
 
     return (
       <ThemeProvider theme={theme}>

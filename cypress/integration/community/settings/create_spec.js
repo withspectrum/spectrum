@@ -67,7 +67,7 @@ describe('creating a public community', () => {
   });
 });
 
-describe.only('creating a private community', () => {
+describe('creating a private community', () => {
   beforeEach(() => {
     cy.auth(user.id);
     cy.visit(`/new/community`);

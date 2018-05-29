@@ -19,7 +19,8 @@ aliases:
   - &yarn
     |
       yarn
-      cd ./mobile && yarn && yarn setup
+      cd ./mobile && yarn && yarn setup && cd ..
+      cd ./desktop && yarn && cd ..
 
   - &install-rethinkdb
     name: Install RethinkDB 2.3.5
@@ -99,7 +100,8 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/spectrum
-      - run: node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"
+      - run: yarn run db:migrate
+      - run: yarn run db:seed
       - run: *setup-and-build-web
       - run: *build-api
       - run: *start-api
@@ -109,6 +111,9 @@ jobs:
       - run:
           name: Run Unit Tests
           command: yarn run test:ci
+      - run:
+          name: Build desktop apps
+          command: yarn run build:desktop
       - run:
           name: Run E2E Tests
           command: test $CYPRESS_RECORD_KEY && yarn run test:e2e -- --record || yarn run test:e2e

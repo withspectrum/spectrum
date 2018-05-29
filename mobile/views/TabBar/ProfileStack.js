@@ -1,8 +1,8 @@
 // @flow
-import { StackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 import BaseStack from './BaseStack';
 
-const ProfileStack = StackNavigator(
+const ProfileStack = createStackNavigator(
   {
     ...BaseStack,
   },

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import Icon from '../../../components/icons';
+import { isDesktopApp } from '../../../helpers/is-desktop-app';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { updateNotificationsCount } from '../../../actions/notifications';
 import getUnreadDMQuery from 'shared/graphql/queries/notification/getDirectMessageNotifications';
@@ -201,6 +202,11 @@ class MessagesTab extends React.Component<Props, State> {
 
   render() {
     const { active, count } = this.props;
+
+    // Keep the dock icon notification count indicator of the desktop app in sync
+    if (isDesktopApp()) {
+      window.interop.setBadgeCount(count);
+    }
 
     return (
       <Tab

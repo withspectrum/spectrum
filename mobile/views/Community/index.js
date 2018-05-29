@@ -1,6 +1,6 @@
 // @flow
-import * as React from 'react';
-import { Text, View, StatusBar, ScrollView } from 'react-native';
+import React, { Component, Fragment } from 'react';
+import { Text, View, StatusBar } from 'react-native';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import {
@@ -10,7 +10,7 @@ import {
 import getCommunityThreads from '../../../shared/graphql/queries/community/getCommunityThreadConnection';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import ThreadFeed from '../../components/ThreadFeed';
-import ThreadItem from '../../components/ThreadItem';
+import { ThreadListItem } from '../../components/Lists';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
 
 import {
@@ -39,15 +39,28 @@ const RemoteThreadItem = compose(getThreadById, withNavigation)(
   ({ data, navigation }) => {
     if (data.loading) return <Text>Loading...</Text>;
     if (!data.thread) return null;
-    return <ThreadItem thread={data.thread} navigation={navigation} />;
+    return (
+      <ThreadListItem
+        activeCommunity={data.thread.community.id}
+        thread={data.thread}
+        navigation={navigation}
+        onPress={() =>
+          navigation.navigate({
+            routeName: `Thread`,
+            key: data.thread.id,
+            params: { id: data.thread.id },
+          })
+        }
+      />
+    );
   }
 );
 
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 
-class Community extends React.Component<Props> {
+class Community extends Component<Props> {
   render() {
-    const { data: { community }, isLoading, hasError, navigation } = this.props;
+    const { data: { community }, isLoading, hasError } = this.props;
 
     if (community) {
       return (
@@ -55,11 +68,10 @@ class Community extends React.Component<Props> {
           <StatusBar barStyle="light-content" />
 
           <CommunityThreadFeed
-            navigation={navigation}
             id={community.id}
             activeCommunity={community.id}
             ListHeaderComponent={
-              <React.Fragment>
+              <Fragment>
                 <CoverPhotoContainer>
                   {community.coverPhoto ? (
                     <CoverPhoto
@@ -83,12 +95,18 @@ class Community extends React.Component<Props> {
                 <ThreadFeedDivider />
 
                 {community.pinnedThreadId && (
-                  <RemoteThreadItem id={community.pinnedThreadId} />
+                  <RemoteThreadItem
+                    id={community.pinnedThreadId}
+                    activeCommunity={community.id}
+                  />
                 )}
                 {community.watercoolerId && (
-                  <RemoteThreadItem id={community.watercoolerId} />
+                  <RemoteThreadItem
+                    id={community.watercoolerId}
+                    activeCommunity={community.id}
+                  />
                 )}
-              </React.Fragment>
+              </Fragment>
             }
           />
         </Wrapper>

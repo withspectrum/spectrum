@@ -1,13 +1,13 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import { Button } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 import Dashboard from '../Dashboard';
 import BaseStack from './BaseStack';
 import { store } from '../../App';
 import { logout } from '../../actions/authentication';
 
-const HomeStack = StackNavigator(
+const HomeStack = createStackNavigator(
   {
     Dashboard: {
       screen: Dashboard,

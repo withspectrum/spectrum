@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import { withTheme } from 'styled-components';
 import { ActivityIndicator } from 'react-native';
 import { Container } from './style';
@@ -10,7 +10,7 @@ type Props = {
   theme: Object,
 };
 
-class Loading extends React.Component<Props> {
+class Loading extends Component<Props> {
   render() {
     const { size = 'small', color = this.props.theme.text.alt } = this.props;
     return (
