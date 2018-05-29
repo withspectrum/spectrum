@@ -16,7 +16,6 @@ import { withCurrentUser } from '../../components/WithCurrentUser';
 import RoboText from './RoboText';
 import Author from './Author';
 
-import type { FlatListProps } from 'react-native';
 import type { Navigation } from '../../utils/types';
 import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection.js';
 import type { ThreadParticipantType } from '../../../shared/graphql/fragments/thread/threadParticipant';
@@ -27,7 +26,6 @@ import type { ApolloClient } from '../../../shared/types';
 
 type Props = {
   id: string, // threadId // TODO (@ryota-murakami) i'd like to refactor getThreadMessageConnection() to 'id' => 'threadId'
-  ...$Exact<FlatListProps>,
   ...$Exact<ViewNetworkHandlerProps>,
   client: ApolloClient,
   navigation: Navigation,
@@ -73,14 +71,7 @@ class Messages extends Component<Props> {
   };
 
   render() {
-    const {
-      data,
-      isLoading,
-      hasError,
-      navigation,
-      currentUser,
-      ...flatListProps
-    } = this.props;
+    const { data, isLoading, hasError, navigation, currentUser } = this.props;
     if (isLoading) return <Loading />;
 
     if (hasError) return <Text type="body">Error :(</Text>;
@@ -97,7 +88,6 @@ class Messages extends Component<Props> {
 
       return (
         <InfiniteList
-          {...flatListProps}
           data={messages}
           keyExtractor={item => item[0].id}
           renderItem={({ item: group, index: i }) => {
