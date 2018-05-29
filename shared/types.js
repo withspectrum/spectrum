@@ -425,9 +425,8 @@ export type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';
 
 /**
  * Apollo Client/ React Apollo
+ * @see https://github.com/apollographql/apollo-client/blob/765ba76c300ed4a05eba7b4989c75d1d3bff3bd9/packages/apollo-client/src/ApolloClient.ts
  */
-// @see https://github.com/apollographql/apollo-client/blob/765ba76c300ed4a05eba7b4989c75d1d3bff3bd9/packages/apollo-client/src/ApolloClient.ts
-
 export interface DefaultOptions {
   watchQuery?: Object;
   query?: Object;
