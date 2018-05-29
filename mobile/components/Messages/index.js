@@ -120,12 +120,10 @@ class Messages extends Component<Props> {
             const author: ThreadParticipantType = initialMessage.author;
 
             let unseenRobo = null;
-            // TODO(@mxstbr): Figure out how to get lastSeen information
-            let lastSeen = new Date('April 15, 2018 12:00:00');
             if (
-              !!lastSeen &&
+              !!currentUser.currentUserLastSeen &&
               new Date(group[group.length - 1].timestamp).getTime() >
-                new Date(lastSeen).getTime() &&
+                new Date(currentUser.currentUserLastSeen).getTime() &&
               !me &&
               !hasInjectedUnseenRobo
             ) {
