@@ -13,6 +13,12 @@ type Item = {
   },
 };
 
+// NOTE(@mxstbr): We store the data length and keys in state to make FlatList re-render and the right times
+type State = {
+  count: number,
+  keys: string,
+};
+
 type Props = {
   data: Array<mixed>,
   renderItem: Function,
@@ -29,7 +35,7 @@ type Props = {
   ...$Exact<FlatListProps>,
 };
 
-class InfiniteList extends React.Component<Props> {
+class InfiniteList extends React.Component<Props, State> {
   static defaultProps = {
     refreshing: false,
     threshold: 0.75,
@@ -48,18 +54,39 @@ class InfiniteList extends React.Component<Props> {
     },
   };
 
-  shouldComponentUpdate(next: Props) {
-    const curr = this.props;
+  constructor(props: Props) {
+    super(props);
 
-    // State changed
-    if (curr.hasNextPage !== next.hasNextPage) return true;
-    if (curr.refetching !== next.refetching) return true;
+    this.state = {
+      count: props.data.length,
+      keys: JSON.stringify(props.data.map(props.keyExtractor)),
+    };
+  }
+
+  static getDerivedStateFromProps(next: Props, state: State) {
+    if (
+      next.data.length !== state.count ||
+      next.data.map(next.keyExtractor) !== state.keys
+    ) {
+      return {
+        count: next.data.length,
+        keys: JSON.stringify(next.data.map(next.keyExtractor)),
+      };
+    }
+    return null;
+  }
+
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
+    const currProps = this.props;
+    const currState = this.state;
+    // Props changed
+    if (currProps.hasNextPage !== nextProps.hasNextPage) return true;
+    if (currProps.refetching !== nextProps.refetching) return true;
 
     // Data changed
-    if (curr.data.length !== next.data.length) return true;
-    const currKeys = curr.data.map(curr.keyExtractor);
-    const nextKeys = next.data.map(next.keyExtractor);
-    if (JSON.stringify(currKeys) !== JSON.stringify(nextKeys)) return true;
+    if (currState.count !== nextState.count) return true;
+    const nextKeys = nextProps.data.map(nextProps.keyExtractor);
+    if (currState.keys !== JSON.stringify(nextKeys)) return true;
 
     return false;
   }
@@ -102,7 +129,7 @@ class InfiniteList extends React.Component<Props> {
         onRefresh={refetch}
         data={data}
         // Need to pass this to make sure the list re-renders when new items are added
-        extraData={{ length: data ? data.length : 0 }}
+        extraData={this.state}
         renderItem={renderItem}
         onEndReached={this.onEndReached}
         onEndReachedThreshold={threshold}
