@@ -113,6 +113,8 @@ class ThreadFeed extends Component<Props, State> {
       isFetchingMore,
       isRefetching,
       channels,
+      isPolling,
+      queryVarIsChanging,
     } = this.props;
 
     if (isLoading) {
