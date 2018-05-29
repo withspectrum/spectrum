@@ -1,5 +1,4 @@
 // @flow
-//$FlowFixMe
 import DataLoader from 'dataloader';
 import unique from 'shared/unique-elements';
 import type { Loader, DataLoaderOptions } from './types';

@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'src/components/link';
-import { timeDifferenceShort } from '../../helpers/utils';
+import { timeDifferenceShort } from 'shared/time-difference';
 import { Timestamp } from './style';
 
 export const parseNotification = notification => {

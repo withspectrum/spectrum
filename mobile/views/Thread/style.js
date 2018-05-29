@@ -1,6 +1,6 @@
 // @flow
 import styled from 'styled-components/native';
-import { TouchableOpacity } from 'react-native';
+import TouchableOpacity from '../../components/TouchableOpacity';
 
 export const Wrapper = styled.View`
   background-color: ${props => props.theme.bg.default};

@@ -1,6 +1,6 @@
 // @flow
-import * as React from 'react';
-import { Text, View, StatusBar, ScrollView } from 'react-native';
+import React, { Component, Fragment } from 'react';
+import { Text, View, StatusBar } from 'react-native';
 import compose from 'recompose/compose';
 import {
   getChannelById,
@@ -35,9 +35,9 @@ type Props = {
 
 const ChannelThreadFeed = compose(getChannelThreadConnection)(ThreadFeed);
 
-class Channel extends React.Component<Props> {
+class Channel extends Component<Props> {
   render() {
-    const { data, isLoading, hasError, navigation } = this.props;
+    const { data, isLoading, hasError } = this.props;
     if (data.channel) {
       const { channel } = data;
 
@@ -46,12 +46,11 @@ class Channel extends React.Component<Props> {
           <StatusBar barStyle="light-content" />
 
           <ChannelThreadFeed
-            navigation={navigation}
             id={channel.id}
             activeChannel={channel.id}
             activeCommunity={channel.community.id}
             ListHeaderComponent={
-              <React.Fragment>
+              <Fragment>
                 <CoverPhotoContainer>
                   {channel.community.coverPhoto ? (
                     <CoverPhoto
@@ -76,7 +75,7 @@ class Channel extends React.Component<Props> {
                 </ProfileDetailsContainer>
 
                 <ThreadFeedDivider />
-              </React.Fragment>
+              </Fragment>
             }
           />
         </Wrapper>

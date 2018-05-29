@@ -4,6 +4,7 @@ import { withApollo } from 'react-apollo';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 import compose from 'recompose/compose';
+import { isDesktopApp } from '../../../helpers/is-desktop-app';
 import Icon from '../../../components/icons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { updateNotificationsCount } from '../../../actions/notifications';
@@ -381,6 +382,11 @@ class NotificationsTab extends React.Component<Props, State> {
   render() {
     const { active, currentUser, isLoading, count } = this.props;
     const { notifications, shouldRenderDropdown } = this.state;
+
+    // Keep the dock icon notification count indicator of the desktop app in sync
+    if (isDesktopApp()) {
+      window.interop.setBadgeCount(count);
+    }
 
     return (
       <NotificationTab

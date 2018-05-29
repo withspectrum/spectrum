@@ -1,3 +1,10 @@
 // @flow
+import React from 'react';
+import createLinksDecorator, {
+  type LinksDecoratorComponentProps,
+} from './core';
+import Anchor from '../../../../mobile/components/Anchor';
 
-// TODO: Make this happen
+export default createLinksDecorator((props: LinksDecoratorComponentProps) => (
+  <Anchor href={props.href}>{props.children}</Anchor>
+));

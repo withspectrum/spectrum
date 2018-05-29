@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-// $FlowFixMe
-import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import Link from 'src/components/link';
@@ -90,7 +88,4 @@ class Titlebar extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
-});
-export default compose(withRouter, connect(mapStateToProps))(Titlebar);
+export default compose(withRouter)(Titlebar);
