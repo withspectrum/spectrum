@@ -63,13 +63,14 @@ function createWindow() {
 
   mainWindow.on('closed', () => {
     win = null;
+    mainWindow = null;
   });
 
   // if main window is ready to show, then destroy the splash window and show up the main window
   mainWindow.once('ready-to-show', () => {
     splash.destroy();
-    mainWindow.maximize();
-    mainWindow.show();
+    mainWindow && mainWindow.maximize();
+    mainWindow && mainWindow.show();
   });
 }
 
@@ -90,7 +91,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
+  if (win === null && mainWindow === null) {
     createWindow();
   }
 });
