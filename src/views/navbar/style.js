@@ -1,7 +1,8 @@
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
-import { Transition, FlexRow, hexa, zIndex } from '../../components/globals';
-import Avatar from '../../components/avatar';
+import { Transition, FlexRow, hexa, zIndex } from 'src/components/globals';
+import Avatar from 'src/components/avatar';
+import { isDesktopApp } from 'src/helpers/is-desktop-app';
 
 export const Nav = styled.nav`
   display: grid;
@@ -200,11 +201,14 @@ export const DropTab = styled(FlexRow)`
 
 export const Logo = styled(Tab)`
   grid-area: logo;
-  padding: 0 24px 0 4px;
+  padding: ${isDesktopApp() ? '0 32px 0 4px' : '0 24px 0 4px'};
   color: ${({ theme }) => theme.text.reverse};
   opacity: 1;
 
-  &:hover {
+  ${isDesktopApp() &&
+    css`
+      visibility: hidden;
+    `} &:hover {
     box-shadow: none;
   }
 
