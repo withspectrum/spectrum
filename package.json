@@ -248,6 +248,7 @@
     "postbuild:hyperion": "cp now.json build-hyperion/now.json",
     "build:web": "cross-env NODE_PATH=./ react-app-rewired build",
     "build:desktop": "(cd desktop && yarn run package:all)",
+    "release:desktop": "(cd desktop && yarn run release)",
     "jest": "cross-env NODE_PATH=./ jest",
     "test": "npm run jest -- --runInBand --watch",
     "test:ci": "npm run jest -- --forceExit --outputFile test-results.json --json --maxWorkers=2",
