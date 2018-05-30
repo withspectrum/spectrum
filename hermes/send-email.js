@@ -1,4 +1,5 @@
 // @flow
+import isEmail from 'validator/lib/isEmail';
 import postmark from 'postmark';
 const debug = require('debug')('hermes:send-email');
 const stringify = require('json-stringify-pretty-compact');
@@ -46,6 +47,35 @@ const sendEmail = (options: Options) => {
     });
   }
 
+  if (!To) {
+    if (userId) {
+      trackQueue.add({
+        userId: userId,
+        event: events.EMAIL_BOUNCED,
+        properties: { tag: Tag, error: 'To field was not provided' },
+      });
+    }
+
+    return;
+  }
+
+  if (!isEmail(To)) {
+    if (userId) {
+      trackQueue.add({
+        userId: userId,
+        event: events.EMAIL_BOUNCED,
+        // we can safely log the To field because it's not a valid email, thus not PII
+        properties: {
+          tag: Tag,
+          to: To,
+          error: 'To field was not a valid email address',
+        },
+      });
+    }
+
+    return;
+  }
+
   // $FlowFixMe
   return new Promise((res, rej) => {
     client.sendEmailWithTemplate(
@@ -65,13 +95,24 @@ const sendEmail = (options: Options) => {
               trackQueue.add({
                 userId: userId,
                 event: events.EMAIL_BOUNCED,
-                properties: { tag: Tag },
+                properties: { tag: Tag, error: err.message },
               });
             }
 
             return await deactivateUserEmailNotifications(To)
               .then(() => rej(err))
               .catch(e => rej(e));
+          }
+
+          if (err.code === 422) {
+            if (userId) {
+              trackQueue.add({
+                userId: userId,
+                event: events.EMAIL_BOUNCED,
+                // we can safely log the To field as error 422 means the To field is malformed anyways and is not a valid email address
+                properties: { tag: Tag, error: err.message, to: To },
+              });
+            }
           }
 
           console.error('Error sending email:');
