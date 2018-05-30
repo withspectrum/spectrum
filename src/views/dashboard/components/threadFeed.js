@@ -60,7 +60,7 @@ type State = {
 };
 
 class ThreadFeed extends React.Component<Props, State> {
-  innerScrollElement: any;
+  innerScrollElement: ?HTMLElement;
 
   constructor() {
     super();
