@@ -11,7 +11,6 @@ const CONFIG = require('./config');
 // be closed automatically when the JavaScript object is garbage collected.
 // eslint-disable-next-line
 let win;
-let splash;
 let mainWindow;
 
 const startUrl = isDev ? CONFIG.APP_DEV_URL : CONFIG.APP_REMOTE_URL;
@@ -23,16 +22,6 @@ function createWindow() {
   }
 
   const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
-
-  // create a `splash` window
-  splash = new BrowserWindow({
-    width: 400,
-    height: 400,
-    alwaysOnTop: true,
-    frame: false,
-    transparent: true,
-  });
-  splash.loadURL(`file://${__dirname}/splash.html`);
 
   // Create the main browser window.
   mainWindow = new BrowserWindow({
@@ -66,9 +55,8 @@ function createWindow() {
     mainWindow = null;
   });
 
-  // if main window is ready to show, then destroy the splash window and show up the main window
+  // if main window is ready to show, show up the main window
   mainWindow.once('ready-to-show', () => {
-    splash.destroy();
     mainWindow && mainWindow.maximize();
     mainWindow && mainWindow.show();
   });
