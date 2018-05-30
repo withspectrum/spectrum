@@ -284,7 +284,7 @@ class ComposerWithData extends Component<Props, State> {
     const title = e.target.value;
     this.persistTitleToLocalStorageWithDebounce(title);
     if (/\n$/g.test(title)) {
-      this.bodyEditor.focus();
+      this.bodyEditor.focus && this.bodyEditor.focus();
       return;
     }
     this.setState({

@@ -19,7 +19,7 @@ module.exports = {
 
   WINDOW_MIN_HEIGHT: 500,
   WINDOW_MIN_WIDTH: 770,
-  WINDOW_BG_COLOR: '#FFFFFF',
+  WINDOW_BG_COLOR: '#F5F8FC',
 
   ICON: resolve(__dirname, '../resources/icons/png/icon-512x512.png'),
 };
