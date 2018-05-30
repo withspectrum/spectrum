@@ -31,7 +31,7 @@ const template = [
         click: function(item, focusedWindow) {
           if (focusedWindow) {
             focusedWindow.close();
-            // focusedWindow.blur();
+            focusedWindow.blur();
           }
         },
       },
