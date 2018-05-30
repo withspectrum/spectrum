@@ -35,6 +35,9 @@
     "appId": "chat.spectrum",
     "copyright": "Copyright © 2018 Space Program Inc.",
     "publish": "github",
+    "releaseInfo": {
+      "releaseName": "${name} Desktop App v${version}"
+    },
     "files": [
       "src/**/*",
       "node_modules/**/*",
