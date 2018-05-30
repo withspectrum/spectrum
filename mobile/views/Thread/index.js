@@ -28,7 +28,7 @@ import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import { Wrapper, ThreadMargin } from './style';
 import type { ReduxState } from '../../reducers';
 
-const ThreadMessages = getThreadMessageConnection(Messages);
+const ThreadMessages = compose(getThreadMessageConnection)(Messages);
 
 type StateProps = {|
   quotedMessage: ?string,
@@ -107,7 +107,7 @@ class Thread extends Component<Props> {
                 title: 'Look at this thread I found on Spectrum',
               }}
             />
-            <ThreadMessages id={thread.id} />
+            <ThreadMessages id={thread.id} thread={thread} />
           </ScrollView>
 
           {currentUser && (

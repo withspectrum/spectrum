@@ -23,9 +23,11 @@ import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import type { ViewNetworkHandlerProps } from '../ViewNetworkHandler';
 import { getThreadByMatchQuery } from '../../../shared/graphql/queries/thread/getThread';
 import type { ApolloClient } from '../../../shared/types';
+import type { ThreadInfoType } from '../../../shared/graphql/fragments/thread/threadInfo';
 
 type Props = {
-  id: string, // threadId // TODO (@ryota-murakami) i'd like to refactor getThreadMessageConnection() to 'id' => 'threadId'
+  id: $PropertyType<ThreadInfoType, 'id'>,
+  thread: ThreadInfoType,
   ...$Exact<ViewNetworkHandlerProps>,
   client: ApolloClient,
   navigation: Navigation,
@@ -71,7 +73,14 @@ class Messages extends Component<Props> {
   };
 
   render() {
-    const { data, isLoading, hasError, navigation, currentUser } = this.props;
+    const {
+      data,
+      isLoading,
+      hasError,
+      navigation,
+      currentUser,
+      thread,
+    } = this.props;
     if (isLoading) return <Loading />;
 
     if (hasError) return <Text type="body">Error :(</Text>;
@@ -121,9 +130,9 @@ class Messages extends Component<Props> {
 
             let unseenRobo = null;
             if (
-              !!currentUser.currentUserLastSeen &&
+              !!thread.currentUserLastSeen &&
               new Date(group[group.length - 1].timestamp).getTime() >
-                new Date(currentUser.currentUserLastSeen).getTime() &&
+                new Date(thread.currentUserLastSeen).getTime() &&
               !me &&
               !hasInjectedUnseenRobo
             ) {
