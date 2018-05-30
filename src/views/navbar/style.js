@@ -17,6 +17,11 @@ export const Nav = styled.nav`
   line-height: 1;
   box-shadow: 0 4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
   z-index: ${zIndex.navBar};
+  ${isDesktopApp() &&
+    css`
+      -webkit-app-region: drag;
+      user-select: none;
+    `}
   background: ${({ theme }) =>
     process.env.NODE_ENV === 'production' ? theme.bg.reverse : theme.warn.alt};
 
@@ -52,12 +57,12 @@ export const Nav = styled.nav`
         grid-template-areas: 'home explore support pricing';
       }
     `} ${props =>
-    props.hideOnMobile &&
-    css`
-      @media (max-width: 768px) {
-        display: none;
-      }
-    `};
+  props.hideOnMobile &&
+  css`
+    @media (max-width: 768px) {
+      display: none;
+    }
+  `};
 `;
 
 export const Label = styled.span`

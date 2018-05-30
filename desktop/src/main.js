@@ -27,7 +27,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width,
     height,
-    titleBarStyle: 'hidden',
+    titleBarStyle: 'hiddenInset',
     minHeight: CONFIG.WINDOW_MIN_HEIGHT,
     minWidth: CONFIG.WINDOW_MIN_WIDTH,
     backgroundColor: CONFIG.WINDOW_BG_COLOR,
