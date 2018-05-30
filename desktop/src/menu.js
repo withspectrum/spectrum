@@ -30,7 +30,8 @@ const template = [
         accelerator: 'CommandOrControl+H',
         click: function(item, focusedWindow) {
           if (focusedWindow) {
-            focusedWindow.hide();
+            focusedWindow.close();
+            // focusedWindow.blur();
           }
         },
       },
