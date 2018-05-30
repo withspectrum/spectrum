@@ -118,7 +118,16 @@ try {
   console.error(err);
 }
 app.use(
-  express.static(path.resolve(__dirname, '..', 'build'), { index: false })
+  express.static(path.resolve(__dirname, '..', 'build'), {
+    index: false,
+    setHeaders: (res, path) => {
+      // Don't cache the serviceworker in the browser
+      if (path.indexOf('sw.js')) {
+        res.setHeader('Cache-Control', 'no-store');
+        return;
+      }
+    },
+  })
 );
 app.get('/static/js/:name', (req: express$Request, res, next) => {
   if (!req.params.name) return next();

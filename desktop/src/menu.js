@@ -25,6 +25,7 @@ const template = [
         },
       },
       { type: 'separator' },
+      { role: 'hide' },
       { role: 'quit' },
     ],
   },

@@ -42,6 +42,7 @@ import viewNetworkHandler from '../../components/viewNetworkHandler';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
+import { isDesktopApp } from 'src/helpers/is-desktop-app';
 
 type Props = {
   markAllNotificationsSeen?: Function,
@@ -219,13 +220,14 @@ class NotificationsPure extends React.Component<Props, State> {
         <Titlebar title={'Notifications'} provideBack={false} noComposer />
         <AppViewWrapper>
           <Column type={'primary'}>
-            {this.state.showWebPushPrompt && (
-              <BrowserNotificationRequest
-                onSubscribe={this.subscribeToWebPush}
-                onDismiss={this.dismissWebPushRequest}
-                loading={this.state.webPushPromptLoading}
-              />
-            )}
+            {!isDesktopApp() &&
+              this.state.showWebPushPrompt && (
+                <BrowserNotificationRequest
+                  onSubscribe={this.subscribeToWebPush}
+                  onDismiss={this.dismissWebPushRequest}
+                  loading={this.state.webPushPromptLoading}
+                />
+              )}
             <InfiniteList
               pageStart={0}
               loadMore={data.fetchMore}

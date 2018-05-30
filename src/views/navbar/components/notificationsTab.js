@@ -4,10 +4,10 @@ import { withApollo } from 'react-apollo';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 import compose from 'recompose/compose';
-import { isDesktopApp } from '../../../helpers/is-desktop-app';
-import Icon from '../../../components/icons';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { updateNotificationsCount } from '../../../actions/notifications';
+import { isDesktopApp } from 'src/helpers/is-desktop-app';
+import Icon from 'src/components/icons';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import { updateNotificationsCount } from 'src/actions/notifications';
 import { NotificationDropdown } from './notificationDropdown';
 import getNotifications from 'shared/graphql/queries/notification/getNotifications';
 import type { GetNotificationsType } from 'shared/graphql/queries/notification/getNotifications';
@@ -407,6 +407,7 @@ class NotificationsTab extends React.Component<Props, State> {
           <Icon
             glyph={count > 0 ? 'notification-fill' : 'notification'}
             count={count > 10 ? '10+' : count > 0 ? count.toString() : null}
+            size={isDesktopApp() ? 28 : 32}
           />
           <Label hideOnDesktop>Notifications</Label>
         </Tab>
