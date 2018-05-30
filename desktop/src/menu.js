@@ -25,16 +25,7 @@ const template = [
         },
       },
       { type: 'separator' },
-      {
-        label: 'Hide',
-        accelerator: 'CommandOrControl+H',
-        click: function(item, focusedWindow) {
-          if (focusedWindow) {
-            focusedWindow.close();
-            focusedWindow.blur();
-          }
-        },
-      },
+      { role: 'hide' },
       { role: 'quit' },
     ],
   },
