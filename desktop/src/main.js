@@ -1,5 +1,6 @@
 // @flow
-const { app, BrowserWindow } = require('electron');
+const electron = require('electron');
+const { app, BrowserWindow } = electron;
 const isDev = require('electron-is-dev');
 
 const checkForUpdates = require('./autoUpdate');
@@ -21,20 +22,23 @@ function createWindow() {
     checkForUpdates();
   }
 
+  const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
+
   // create a `splash` window
   splash = new BrowserWindow({
-    width: 768,
-    height: 408,
-    transparent: true,
-    frame: false,
+    width: 400,
+    height: 400,
     alwaysOnTop: true,
+    frame: false,
+    transparent: true,
   });
   splash.loadURL(`file://${__dirname}/splash.html`);
 
   // Create the main browser window.
   mainWindow = new BrowserWindow({
-    height: 800,
-    width: 1300,
+    width,
+    height,
+    titleBarStyle: 'hidden',
     minHeight: CONFIG.WINDOW_MIN_HEIGHT,
     minWidth: CONFIG.WINDOW_MIN_WIDTH,
     backgroundColor: CONFIG.WINDOW_BG_COLOR,
@@ -64,6 +68,7 @@ function createWindow() {
   // if main window is ready to show, then destroy the splash window and show up the main window
   mainWindow.once('ready-to-show', () => {
     splash.destroy();
+    mainWindow.maximize();
     mainWindow.show();
   });
 }
