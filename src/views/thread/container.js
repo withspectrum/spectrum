@@ -38,20 +38,27 @@ import {
 } from './style';
 import WatercoolerActionBar from './components/watercoolerActionBar';
 import { ErrorBoundary } from 'src/components/error';
+import type { UserInfoType } from '../../../shared/graphql/fragments/user/userInfo';
+import type { ApolloClient } from '../../../shared/types';
+import type { ViewNetworkHandlerProps } from '../../../mobile/components/ViewNetworkHandler';
+import type { ThreadInfoType } from '../../../shared/graphql/fragments/thread/threadInfo';
 
-type Props = {
+type StateProps = {|
+  currentUser: $Exact<UserInfoType>,
+|};
+
+type Props = StateProps & {
+  ...$Exact<ViewNetworkHandlerProps>,
   data: {
-    thread: GetThreadType,
+    thread: $Exact<GetThreadType>,
     refetch: Function,
   },
-  isLoading: boolean,
-  hasError: boolean,
-  currentUser: Object,
+  threadId: $PropertyType<ThreadInfoType, 'id'>,
   dispatch: Dispatch<Object>,
   slider: boolean,
   threadViewContext: 'slider' | 'fullscreen' | 'inbox',
   threadSliderIsOpen: boolean,
-  client: Object,
+  client: ApolloClient,
 };
 
 type State = {
@@ -571,7 +578,7 @@ class ThreadContainer extends React.Component<Props, State> {
   }
 }
 
-const map = (state): Object => ({ currentUser: state.users.currentUser });
+const map = (state): StateProps => ({ currentUser: state.users.currentUser });
 export default compose(
   connect(map),
   getThreadByMatch,

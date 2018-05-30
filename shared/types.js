@@ -447,10 +447,10 @@ export type ApolloClient = {
   watchQuery(option?: Object): Function,
   query(options?: Object): Function,
   mutate: Mutate,
-  readQuery(options: Object): () => any,
-  readFragment(options: Object): () => any,
+  readQuery(options: Object): any,
+  readFragment(options: Object): any,
   writeQuery(options: Object): () => any,
-  writeFragment(options: Object): () => any,
+  writeFragment(options: Object): any,
   resetStore(): () => Promise<any>,
   onResetStore(cb: Object): () => any,
 };
