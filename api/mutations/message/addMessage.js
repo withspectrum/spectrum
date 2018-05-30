@@ -24,6 +24,7 @@ type Input = {
       body: string,
     },
     parentId?: string,
+    snippet?: string,
     file?: FileUpload,
   },
 };

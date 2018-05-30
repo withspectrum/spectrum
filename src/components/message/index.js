@@ -73,6 +73,7 @@ class Message extends Component<Props> {
       replyToMessage({
         threadId,
         messageId: message.id,
+        snippet: window.getSelection().toString() || null,
       })
     );
   };
