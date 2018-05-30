@@ -103,7 +103,7 @@ const Thread = /* GraphQL */ `
     setThreadLock(threadId: ID!, value: Boolean!): Thread
     toggleThreadNotifications(threadId: ID!): Thread
     deleteThread(threadId: ID!): Boolean
-        moveThread(threadId: ID!, channelId: ID!): Thread
+    moveThread(threadId: ID!, channelId: ID!): Thread
   }
 
   extend type Subscription {
