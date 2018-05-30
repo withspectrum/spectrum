@@ -351,7 +351,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
   changeTitle = e => {
     const title = e.target.value;
     if (/\n$/g.test(title)) {
-      this.bodyEditor.focus();
+      this.bodyEditor.focus && this.bodyEditor.focus();
       return;
     }
     persistTitle(title);

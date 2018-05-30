@@ -45,7 +45,9 @@ export default async (job: Job<PrivateChannelRequestApprovedJobData>) => {
   const recipients = await getUsers([userId]);
 
   // only get owners with emails
-  const filteredRecipients = recipients.filter(user => isEmail(user.email));
+  const filteredRecipients = recipients.filter(
+    user => user && isEmail(user.email)
+  );
 
   // for each owner, create a notification for the app
   const usersNotificationPromises = filteredRecipients.map(recipient =>
