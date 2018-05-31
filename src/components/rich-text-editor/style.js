@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { createPortal } from 'react-dom';
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import { Transition, zIndex } from '../globals';
@@ -12,8 +13,10 @@ const MentionHoverProfile = getUserByUsername(
   props =>
     !props.data.user ? null : (
       <HoverProfile
+        innerRef={props.innerRef}
         source={props.data.user.profilePhoto}
         user={props.data.user}
+        style={props.style}
       />
     )
 );
@@ -32,33 +35,30 @@ export class Mention extends React.Component<
   render() {
     const { username, children } = this.props;
     return (
-      <div onMouseEnter={this.hover(true)} onMouseLeave={this.hover(false)}>
+      <span onMouseEnter={this.hover(true)} onMouseLeave={this.hover(false)}>
         <Manager>
           <Reference>
-            {({ ref }) => <Link to={`/users/${username}`}>{children}</Link>}
+            {({ ref }) => (
+              <span ref={ref}>
+                <Link to={`/users/${username}`}>{children}</Link>
+              </span>
+            )}
           </Reference>
-          {this.state.hovered && (
-            <Popper
-              placement="top-start"
-              modifiers={{
-                preventOverflow: { enabled: false },
-                flip: {
-                  behavior: ['top', 'bottom', 'top'],
-                },
-                hide: { enabled: false },
-              }}
-            >
-              {({ style, ref }) => (
-                <MentionHoverProfile
-                  username={username}
-                  ref={ref}
-                  style={style}
-                />
-              )}
-            </Popper>
-          )}
+          {this.state.hovered &&
+            createPortal(
+              <Popper placement="top">
+                {({ style, ref }) => (
+                  <MentionHoverProfile
+                    username={username}
+                    innerRef={ref}
+                    style={style}
+                  />
+                )}
+              </Popper>,
+              document.body
+            )}
         </Manager>
-      </div>
+      </span>
     );
   }
 }
