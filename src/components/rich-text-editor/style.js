@@ -1,9 +1,69 @@
 // @flow
 import React from 'react';
+import { createPortal } from 'react-dom';
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import { Transition, zIndex } from '../globals';
-import { theme } from 'shared/theme';
+import theme from 'shared/theme';
+import { Manager, Reference, Popper } from 'react-popper';
+import HoverProfile from 'src/components/avatar/hoverProfile';
+import { getUserByUsername } from 'shared/graphql/queries/user/getUser';
+import type { Node } from 'react';
+
+const MentionHoverProfile = getUserByUsername(
+  props =>
+    !props.data.user ? null : (
+      <HoverProfile
+        innerRef={props.innerRef}
+        source={props.data.user.profilePhoto}
+        user={props.data.user}
+        style={props.style}
+      />
+    )
+);
+
+type MentionProps = {
+  children: Node,
+  username: string,
+};
+
+export class Mention extends React.Component<
+  MentionProps,
+  { hovered: boolean }
+> {
+  state = { hovered: false };
+  hover = (val: boolean) => () => this.setState({ hovered: val });
+  render() {
+    const { username, children } = this.props;
+    return (
+      <span onMouseEnter={this.hover(true)} onMouseLeave={this.hover(false)}>
+        <Manager>
+          <Reference>
+            {({ ref }) => (
+              <span ref={ref}>
+                <Link to={`/users/${username}`}>{children}</Link>
+              </span>
+            )}
+          </Reference>
+          {this.state.hovered &&
+            document.body &&
+            createPortal(
+              <Popper placement="top">
+                {({ style, ref }) => (
+                  <MentionHoverProfile
+                    username={username}
+                    innerRef={ref}
+                    style={style}
+                  />
+                )}
+              </Popper>,
+              document.body
+            )}
+        </Manager>
+      </span>
+    );
+  }
+}
 
 export const customStyleMap = {
   CODE: {
@@ -183,10 +243,6 @@ export const EmbedUI = styled.form`
       }
     `};
 `;
-
-export const Mention = (props: any) => {
-  return <Link to={`/users/${props.username}`}>{props.children}</Link>;
-};
 
 export const EmbedContainer = styled.div`
   position: relative;

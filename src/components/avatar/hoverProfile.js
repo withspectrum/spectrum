@@ -31,10 +31,6 @@ type ProfileProps = {
   dispatch: Dispatch<Object>,
   source: string,
   currentUser: ?Object,
-  top: ?Boolean,
-  left: ?Boolean,
-  bottom: ?Boolean,
-  right: ?Boolean,
   innerRef: (?HTMLElement) => void,
   style: CSSStyleDeclaration,
 };

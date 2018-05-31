@@ -123,6 +123,7 @@ const Body = styled(FlexCol)`
 
 const DashboardFallback = signedOutFallback(Dashboard, Pages);
 const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
+const LoginFallback = signedOutFallback(() => <Redirect to="/" />, Login);
 const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
   <Redirect to={`/login?r=${CLIENT_URL}/new/community`} />
 ));
@@ -219,7 +220,7 @@ class Routes extends React.Component<{||}> {
                   render={() => <Redirect to="/new/community" />}
                 />
 
-                <Route path="/login" component={Login} />
+                <Route path="/login" component={LoginFallback} />
                 <Route path="/explore" component={Explore} />
                 <Route path="/messages/new" component={MessagesFallback} />
                 <Route
