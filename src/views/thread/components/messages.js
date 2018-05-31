@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
@@ -17,16 +18,11 @@ import { ChatWrapper, NullMessagesWrapper, NullCopy } from '../style';
 import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
 import { ErrorBoundary } from 'src/components/error';
+import type { GetThreadMessageConnectionType } from 'shared/graphql/queries/thread/getThreadMessageConnection';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 
 type State = {
   subscription: ?Function,
-};
-
-type MessageType = {
-  cursor: string,
-  node: {
-    id: string,
-  },
 };
 
 type Props = {
@@ -36,28 +32,16 @@ type Props = {
   forceScrollToBottom: Function,
   forceScrollToTop: Function,
   contextualScrollToBottom: Function,
-  hasMessagesToLoad: boolean,
   id: string,
-  isModerator: boolean,
   isFetchingMore: boolean,
   loadPreviousPage: Function,
   loadNextPage: Function,
   scrollContainer: any,
   subscribeToNewMessages: Function,
-  threadIsLocked: boolean,
   lastSeen: ?number | ?Date,
-  data: {
-    thread: {
-      id: string,
-      currentUserLastSeen: Date | number,
-      messageConnection: {
-        pageInfo: {
-          hasNextPage: boolean,
-        },
-        edges: Array<MessageType>,
-      },
-    },
-  },
+  data: { thread: GetThreadMessageConnectionType },
+  thread: GetThreadType,
+  currentUser: ?Object,
 };
 
 class MessagesWithData extends React.Component<Props, State> {
@@ -70,35 +54,29 @@ class MessagesWithData extends React.Component<Props, State> {
 
     if (!curr.data.thread) return;
 
-    const isDifferentThread =
-      prev.data &&
-      prev.data.thread &&
-      prev.data.thread.id !== curr.data.thread.id;
-    const hadMessagesLoaded =
-      prev.data && prev.data.thread && !!prev.data.thread.messageConnection;
-    const hasMessagesLoaded =
-      curr.data && curr.data.thread && !!curr.data.thread.messageConnection;
-    const isFirstLoad =
-      isDifferentThread || (!hadMessagesLoaded && hasMessagesLoaded);
-    // Check if a single new message has been sent
-    const newMessageSent =
-      hadMessagesLoaded &&
-      hasMessagesLoaded &&
-      prev.data.thread.messageConnection.edges.length + 1 ===
-        curr.data.thread.messageConnection.edges.length;
+    const previousMessagesHaveLoaded =
+      prev.data.thread && !!prev.data.thread.messageConnection;
+    const newMessagesHaveLoaded =
+      curr.data.thread && !!curr.data.thread.messageConnection;
+    const threadChanged =
+      previousMessagesHaveLoaded &&
+      newMessagesHaveLoaded &&
+      curr.data.thread.id !== prev.data.thread.id;
 
-    // force scroll to bottom if the user is a participant/creator, after the messages load in for the first time
-    if (!newMessageSent && isFirstLoad && curr.shouldForceScrollOnMessageLoad) {
+    const previousMessageCount =
+      previousMessagesHaveLoaded &&
+      prev.data.thread.messageConnection.edges.length;
+    const newMessageCount =
+      newMessagesHaveLoaded && curr.data.thread.messageConnection.edges.length;
+    const newMessageSent = previousMessageCount < newMessageCount;
+    const messagesLoadedForFirstTime = !prev.data.thread && curr.data.thread;
+
+    if (messagesLoadedForFirstTime && this.shouldForceScrollToBottom()) {
       setTimeout(() => curr.forceScrollToBottom());
     }
 
-    // force scroll to top if the user is a participant/creator, after the messages load in for the first time
-    if (
-      !newMessageSent &&
-      isFirstLoad &&
-      curr.shouldForceScrollToTopOnMessageLoad
-    ) {
-      setTimeout(() => curr.forceScrollToTop());
+    if (threadChanged && this.shouldForceScrollToBottom()) {
+      setTimeout(() => curr.forceScrollToBottom());
     }
 
     // force scroll to bottom when a message is sent in the same thread
@@ -107,11 +85,7 @@ class MessagesWithData extends React.Component<Props, State> {
     }
 
     // if the thread changes in the inbox we have to update the subscription
-    if (
-      prev.data.thread &&
-      curr.data.thread &&
-      prev.data.thread.id !== curr.data.thread.id
-    ) {
+    if (threadChanged) {
       // $FlowFixMe
       this.unsubscribe()
         .then(() => this.subscribe())
@@ -121,7 +95,32 @@ class MessagesWithData extends React.Component<Props, State> {
 
   componentDidMount() {
     this.subscribe();
+
+    if (this.shouldForceScrollToBottom()) {
+      return setTimeout(() => this.props.forceScrollToBottom());
+    }
   }
+
+  shouldForceScrollToBottom = () => {
+    const { currentUser, data } = this.props;
+
+    if (!currentUser || !data.thread) return false;
+
+    const {
+      currentUserLastSeen,
+      isAuthor,
+      participants,
+      watercooler,
+    } = data.thread;
+    const isParticipant =
+      participants &&
+      participants.length > 0 &&
+      participants.some(
+        participant => participant && participant.id === currentUser.id
+      );
+
+    return !!(currentUserLastSeen || isAuthor || isParticipant || watercooler);
+  };
 
   componentWillUnmount() {
     this.unsubscribe();
@@ -147,32 +146,50 @@ class MessagesWithData extends React.Component<Props, State> {
       isLoading,
       toggleReaction,
       forceScrollToBottom,
-      hasMessagesToLoad,
       id,
-      isModerator,
       isFetchingMore,
       loadPreviousPage,
       loadNextPage,
       scrollContainer,
       location,
-      threadIsLocked,
       lastSeen,
+      thread,
+      currentUser,
     } = this.props;
 
-    const dataExists =
+    const hasMessagesToLoad = thread.messageCount > 0;
+    const { channelPermissions } = thread.channel;
+    const { communityPermissions } = thread.community;
+    const { isLocked } = thread;
+    const isChannelOwner = currentUser && channelPermissions.isOwner;
+    const isCommunityOwner = currentUser && communityPermissions.isOwner;
+    const isChannelModerator = currentUser && channelPermissions.isModerator;
+    const isCommunityModerator =
+      currentUser && communityPermissions.isModerator;
+    const isModerator =
+      isChannelOwner ||
+      isCommunityOwner ||
+      isChannelModerator ||
+      isCommunityModerator;
+
+    const messagesExist =
       data &&
       data.thread &&
       data.thread.id === id &&
-      data.thread.messageConnection;
-    const messagesExist =
-      dataExists && data.thread.messageConnection.edges.length > 0;
+      data.thread.messageConnection &&
+      data.thread.messageConnection.edges.length > 0;
 
     if (messagesExist) {
       const { edges, pageInfo } = data.thread.messageConnection;
-      const unsortedMessages = edges.map(message => message.node);
+      const unsortedMessages = edges.map(message => message && message.node);
 
       const uniqueMessages = deduplicateChildren(unsortedMessages, 'id');
       const sortedMessages = sortAndGroupMessages(uniqueMessages);
+
+      const prevCursor =
+        edges && edges.length > 0 && edges[0] && edges[0].cursor;
+      const lastEdge = edges && edges.length > 0 && edges[edges.length - 1];
+      const nextCursor = lastEdge && lastEdge.cursor;
 
       return (
         <ChatWrapper>
@@ -184,22 +201,24 @@ class MessagesWithData extends React.Component<Props, State> {
                   fetchMore={loadPreviousPage}
                 />
                 <Head>
-                  <link
-                    rel="prev"
-                    href={`${location.pathname}?msgsbefore=${edges[0].cursor}`}
-                  />
+                  {prevCursor && (
+                    <link
+                      rel="prev"
+                      href={`${location.pathname}?msgsbefore=${prevCursor}`}
+                    />
+                  )}
                   <link rel="canonical" href={`/thread/${data.thread.id}`} />
                 </Head>
               </div>
             )}
             {pageInfo.hasNextPage && (
               <Head>
-                <link
-                  rel="next"
-                  href={`${location.pathname}?msgsafter=${
-                    edges[edges.length - 1].cursor
-                  }`}
-                />
+                {nextCursor && (
+                  <link
+                    rel="next"
+                    href={`${location.pathname}?msgsafter=${nextCursor}`}
+                  />
+                )}
                 <link rel="canonical" href={`/thread/${data.thread.id}`} />
               </Head>
             )}
@@ -236,7 +255,7 @@ class MessagesWithData extends React.Component<Props, State> {
     }
 
     if (!messagesExist) {
-      if (threadIsLocked) return null;
+      if (isLocked) return null;
       return (
         <NullMessagesWrapper>
           <Icon glyph={'emoji'} size={64} />
@@ -261,7 +280,10 @@ class MessagesWithData extends React.Component<Props, State> {
   }
 }
 
+const map = state => ({ currentUser: state.users.currentUser });
 const Messages = compose(
+  // $FlowIssue
+  connect(map),
   toggleReactionMutation,
   withRouter,
   getThreadMessages,
