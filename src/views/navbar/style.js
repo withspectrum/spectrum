@@ -1,7 +1,8 @@
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
-import { Transition, FlexRow, hexa, zIndex } from '../../components/globals';
-import Avatar from '../../components/avatar';
+import { Transition, FlexRow, hexa, zIndex } from 'src/components/globals';
+import Avatar from 'src/components/avatar';
+import { isDesktopApp } from 'src/helpers/is-desktop-app';
 
 export const Nav = styled.nav`
   display: grid;
@@ -9,13 +10,17 @@ export const Nav = styled.nav`
   grid-template-rows: 1fr;
   grid-template-areas: 'logo home messages explore . notifications profile';
   align-items: stretch;
-  padding: 0 32px;
   width: 100%;
-  flex: 0 0 48px;
+  flex: 0 0 ${isDesktopApp() ? '38px' : '48px'};
   padding: 0 16px;
   line-height: 1;
   box-shadow: 0 4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
   z-index: ${zIndex.navBar};
+  ${isDesktopApp() &&
+    css`
+      -webkit-app-region: drag;
+      user-select: none;
+    `}
   background: ${({ theme }) =>
     process.env.NODE_ENV === 'production' ? theme.bg.reverse : theme.warn.alt};
 
@@ -51,16 +56,24 @@ export const Nav = styled.nav`
         grid-template-areas: 'home explore support pricing';
       }
     `} ${props =>
-      props.hideOnMobile && css`@media (max-width: 768px) {display: none;}`};
+  props.hideOnMobile &&
+  css`
+    @media (max-width: 768px) {
+      display: none;
+    }
+  `};
 `;
 
 export const Label = styled.span`
   font-size: 14px;
-  font-weight: 700;
+  font-weight: ${isDesktopApp() ? '500' : '700'};
   margin-left: 12px;
 
   ${props =>
-    props.hideOnDesktop && css`display: none;`} @media (max-width: 768px) {
+    props.hideOnDesktop &&
+    css`
+      display: none;
+    `} @media (max-width: 768px) {
     font-size: 10px;
     font-weight: 700;
     margin: 0;
@@ -79,7 +92,7 @@ export const Tab = styled(Link)`
   grid-template-areas: 'icon label';
   align-items: center;
   justify-items: center;
-  padding: 0 16px;
+  padding: ${isDesktopApp() ? '0 12px' : '0 16px'};
   color: ${({ theme }) =>
     process.env.NODE_ENV === 'production'
       ? theme.text.placeholder
@@ -96,20 +109,26 @@ export const Tab = styled(Link)`
 
   @media (min-width: 768px) {
     &[data-active~='true'] {
-      box-shadow: inset 0 -4px 0 ${({ theme }) => theme.text.reverse};
+      box-shadow: inset 0 ${isDesktopApp() ? '-2px' : '-4px'} 0
+        ${({ theme }) => theme.text.reverse};
       color: ${props => props.theme.text.reverse};
       transition: ${Transition.hover.on};
 
       &:hover,
       &:focus {
-        box-shadow: inset 0 -6px 0 ${({ theme }) => theme.text.reverse};
+        box-shadow: inset 0 ${isDesktopApp() ? '-2px' : '-4px'} 0
+          ${({ theme }) => theme.text.reverse};
         transition: ${Transition.hover.on};
       }
     }
 
     &:hover,
     &:focus {
-      box-shadow: inset 0 -4px 0 ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.placeholder : theme.warn.border)};
+      box-shadow: inset 0 ${isDesktopApp() ? '-2px' : '-4px'} 0
+        ${({ theme }) =>
+          process.env.NODE_ENV === 'production'
+            ? theme.text.placeholder
+            : theme.warn.border};
       color: ${props => props.theme.text.reverse};
       transition: ${Transition.hover.on};
     }
@@ -158,7 +177,11 @@ export const DropTab = styled(FlexRow)`
   @media (max-width: 768px) {
     flex: auto;
     justify-content: center;
-    ${props => props.hideOnMobile && css`display: none;`};
+    ${props =>
+      props.hideOnMobile &&
+      css`
+        display: none;
+      `};
   }
 
   .dropdown {
@@ -188,11 +211,14 @@ export const DropTab = styled(FlexRow)`
 
 export const Logo = styled(Tab)`
   grid-area: logo;
-  padding: 0 24px 0 4px;
+  padding: ${isDesktopApp() ? '0 32px 0 4px' : '0 24px 0 4px'};
   color: ${({ theme }) => theme.text.reverse};
   opacity: 1;
 
-  &:hover {
+  ${isDesktopApp() &&
+    css`
+      visibility: hidden;
+    `} &:hover {
     box-shadow: none;
   }
 
@@ -200,17 +226,29 @@ export const Logo = styled(Tab)`
     display: none;
   }
 
-  ${props => props.isHidden && css`display: none;`}
-`
+  ${props =>
+    props.isHidden &&
+    css`
+      display: none;
+    `};
+`;
 
-export const HomeTab = styled(Tab)`grid-area: home;`;
+export const HomeTab = styled(Tab)`
+  grid-area: home;
+`;
 
-export const MessageTab = styled(Tab)`grid-area: messages;`;
+export const MessageTab = styled(Tab)`
+  grid-area: messages;
+`;
 
 export const ExploreTab = styled(Tab)`
   grid-area: explore;
 
-  ${props => props.loggedOut && css`grid-area: explore;`} ${Label} {
+  ${props =>
+    props.loggedOut &&
+    css`
+      grid-area: explore;
+    `} ${Label} {
     @media (max-width: 768px) {
       display: flex;
     }
@@ -221,9 +259,13 @@ export const ExploreTab = styled(Tab)`
   }
 `;
 
-export const SupportTab = styled(Tab)`grid-area: support;`;
+export const SupportTab = styled(Tab)`
+  grid-area: support;
+`;
 
-export const PricingTab = styled(MessageTab)`grid-area: pricing;`;
+export const PricingTab = styled(MessageTab)`
+  grid-area: pricing;
+`;
 
 export const NotificationTab = styled(DropTab)`
   grid-area: notifications;
@@ -251,7 +293,9 @@ export const ProfileDrop = styled(DropTab)`
   }
 `;
 
-export const ProfileTab = styled(Tab)`grid-area: profile;`;
+export const ProfileTab = styled(Tab)`
+  grid-area: profile;
+`;
 
 export const Navatar = styled(Avatar)`
   margin-top: 0;

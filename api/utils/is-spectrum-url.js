@@ -3,7 +3,7 @@ import { URL } from 'url';
 import { RELATIVE_URL } from 'shared/regexps';
 const IS_PROD = process.env.NODE_ENV === 'production';
 
-const EXPO_URL = /^https:\/\/auth\.expo\.io\/@(mxstbr|uberbryn|brianlovin)\//;
+const EXPO_URL = /^https:\/\/auth\.expo\.io\//;
 
 /**
  * Make a URL string is a spectrum.chat URL
@@ -25,8 +25,8 @@ export default (url: string): boolean => {
     }
   } catch (err) {
     // Swallow URL parsing errors (when an invalid URL is passed) and redirect to the standard one
-    console.log(`Invalid URL ("${url}") passed. Full error:`);
-    console.log(err);
+    console.error(`Invalid URL ("${url}") passed. Full error:`);
+    console.error(err);
   }
   return false;
 };

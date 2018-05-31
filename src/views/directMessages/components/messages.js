@@ -11,6 +11,7 @@ import type { GetDirectMessageThreadMessageConnectionType } from 'shared/graphql
 import setLastSeenMutation from 'shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';
 import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
 import { MessagesScrollWrapper } from './style';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   id: string,
@@ -63,7 +64,7 @@ class MessagesWithData extends React.Component<Props, State> {
     // force scroll to bottom when a message is sent in the same thread
     if (prev.data.messages !== data.messages && contextualScrollToBottom) {
       // mark this thread as unread when new messages come in and i'm viewing it
-      setLastSeen(data.directMessageThread.id);
+      if (data.directMessageThread) setLastSeen(data.directMessageThread.id);
       contextualScrollToBottom();
     }
   }
@@ -123,20 +124,22 @@ class MessagesWithData extends React.Component<Props, State> {
 
       return (
         <MessagesScrollWrapper>
-          {hasNextPage && (
-            <NextPageButton
-              isFetchingMore={isFetchingMore}
-              fetchMore={fetchMore}
+          <ErrorBoundary>
+            {hasNextPage && (
+              <NextPageButton
+                isFetchingMore={isFetchingMore}
+                fetchMore={fetchMore}
+              />
+            )}
+            <ChatMessages
+              toggleReaction={toggleReaction}
+              messages={sortedMessages}
+              forceScrollToBottom={this.props.forceScrollToBottom}
+              contextualScrollToBottom={this.props.contextualScrollToBottom}
+              threadId={this.props.id}
+              threadType={'directMessageThread'}
             />
-          )}
-          <ChatMessages
-            toggleReaction={toggleReaction}
-            messages={sortedMessages}
-            forceScrollToBottom={this.props.forceScrollToBottom}
-            contextualScrollToBottom={this.props.contextualScrollToBottom}
-            threadId={this.props.id}
-            threadType={'directMessageThread'}
-          />
+          </ErrorBoundary>
         </MessagesScrollWrapper>
       );
     }

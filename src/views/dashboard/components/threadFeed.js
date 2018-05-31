@@ -5,7 +5,8 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
-import InfiniteList from 'react-infinite-scroller-with-scroll-element';
+import InfiniteList from 'src/components/infiniteScroll';
+import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import FlipMove from 'react-flip-move';
 import { sortByDate } from '../../../helpers/utils';
 import { LoadingInboxThread } from '../../../components/loading';
@@ -19,6 +20,8 @@ import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import type { ViewNetworkHandlerType } from '../../../components/viewNetworkHandler';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import type { GetCommunityThreadConnectionType } from 'shared/graphql/queries/community/getCommunityThreadConnection';
+import type { Dispatch } from 'redux';
+import { ErrorBoundary } from 'src/components/error';
 
 type Node = {
   node: {
@@ -41,7 +44,7 @@ type Props = {
     feed: string,
   },
   history: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   selectedId: string,
   activeCommunity: ?string,
   hasActiveCommunity: boolean,
@@ -93,7 +96,7 @@ class ThreadFeed extends React.Component<Props, State> {
   componentDidUpdate(prevProps) {
     const isDesktop = window.innerWidth > 768;
     const { scrollElement } = this.state;
-    const { mountedWithActiveThread, isFetchingMore, queryString } = this.props;
+    const { mountedWithActiveThread, queryString } = this.props;
 
     // user is searching, don't select anything
     if (queryString) {
@@ -106,23 +109,6 @@ class ThreadFeed extends React.Component<Props, State> {
         this.props.history.replace(`/?thread=${mountedWithActiveThread}`);
       }
       this.props.dispatch({ type: 'REMOVE_MOUNTED_THREAD_ID' });
-      return;
-    }
-
-    if (
-      // a thread has been selected
-      ((!prevProps.selectedId && this.props.selectedId) ||
-        prevProps.selectedId !== this.props.selectedId ||
-        prevProps.activeCommunity !== this.props.activeCommunity) &&
-      // elems exist
-      this.innerScrollElement &&
-      scrollElement &&
-      // the threads height is less than the container scroll area
-      this.innerScrollElement.offsetHeight < scrollElement.offsetHeight &&
-      // the component isn't currently fetching more
-      !isFetchingMore
-    ) {
-      this.props.data.hasNextPage && this.props.data.fetchMore();
       return;
     }
 
@@ -202,11 +188,14 @@ class ThreadFeed extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    const scrollElement = document.getElementById('scroller-for-inbox');
+
     this.setState({
       // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
       // the AppViewWrapper which is the scrolling part of the site.
-      scrollElement: document.getElementById('scroller-for-inbox'),
+      scrollElement,
     });
+
     this.subscribe();
   }
 
@@ -273,9 +262,7 @@ class ThreadFeed extends React.Component<Props, State> {
       );
     }
 
-    const uniqueThreads = filteredThreads.filter(
-      (val, i, self) => self.indexOf(val) === i
-    );
+    const uniqueThreads = deduplicateChildren(filteredThreads, 'id');
 
     return (
       <div
@@ -285,43 +272,52 @@ class ThreadFeed extends React.Component<Props, State> {
         {this.props.data.community &&
           this.props.data.community.watercooler &&
           this.props.data.community.watercooler.id && (
-            <WatercoolerThread
-              data={this.props.data.community.watercooler}
-              active={selectedId === this.props.data.community.watercooler.id}
-            />
+            <ErrorBoundary fallbackComponent={null}>
+              <WatercoolerThread
+                data={this.props.data.community.watercooler}
+                active={selectedId === this.props.data.community.watercooler.id}
+              />
+            </ErrorBoundary>
           )}
 
         {this.props.data.community &&
           this.props.data.community.pinnedThread &&
           this.props.data.community.pinnedThread.id && (
-            <InboxThread
-              data={this.props.data.community.pinnedThread}
-              active={selectedId === this.props.data.community.pinnedThread.id}
-              hasActiveCommunity={this.props.hasActiveCommunity}
-              hasActiveChannel={this.props.hasActiveChannel}
-              pinnedThreadId={this.props.data.community.pinnedThread.id}
-            />
+            <ErrorBoundary fallbackComponent={null}>
+              <InboxThread
+                data={this.props.data.community.pinnedThread}
+                active={
+                  selectedId === this.props.data.community.pinnedThread.id
+                }
+                hasActiveCommunity={this.props.hasActiveCommunity}
+                hasActiveChannel={this.props.hasActiveChannel}
+                pinnedThreadId={this.props.data.community.pinnedThread.id}
+              />
+            </ErrorBoundary>
           )}
         <InfiniteList
           pageStart={0}
           loadMore={this.props.data.fetchMore}
+          isLoadingMore={this.props.isFetchingMore}
           hasMore={this.props.data.hasNextPage}
           loader={<LoadingInboxThread />}
           useWindow={false}
           initialLoad={false}
           scrollElement={scrollElement}
           threshold={750}
+          className={'scroller-for-dashboard-threads'}
         >
           <FlipMove duration={350}>
             {uniqueThreads.map(thread => {
               return (
-                <InboxThread
-                  key={thread.id}
-                  data={thread}
-                  active={selectedId === thread.id}
-                  hasActiveCommunity={this.props.hasActiveCommunity}
-                  hasActiveChannel={this.props.hasActiveChannel}
-                />
+                <ErrorBoundary fallbackComponent={null} key={thread.id}>
+                  <InboxThread
+                    data={thread}
+                    active={selectedId === thread.id}
+                    hasActiveCommunity={this.props.hasActiveCommunity}
+                    hasActiveChannel={this.props.hasActiveChannel}
+                  />
+                </ErrorBoundary>
               );
             })}
           </FlipMove>

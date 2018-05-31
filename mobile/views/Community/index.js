@@ -1,6 +1,6 @@
 // @flow
-import * as React from 'react';
-import { Text, View, FlatList, ScrollView } from 'react-native';
+import React, { Component, Fragment } from 'react';
+import { Text, View, StatusBar } from 'react-native';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import {
@@ -9,12 +9,22 @@ import {
 } from '../../../shared/graphql/queries/community/getCommunity';
 import getCommunityThreads from '../../../shared/graphql/queries/community/getCommunityThreadConnection';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
-import withSafeView from '../../components/SafeAreaView';
 import ThreadFeed from '../../components/ThreadFeed';
-import ThreadItem from '../../components/ThreadItem';
+import { ThreadListItem } from '../../components/Lists';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
 
-import { Wrapper } from './style';
+import {
+  Wrapper,
+  CoverPhoto,
+  CoverPhotoFill,
+  CoverPhotoContainer,
+  ProfilePhoto,
+  ProfilePhotoContainer,
+  ProfileDetailsContainer,
+  Name,
+  Description,
+  ThreadFeedDivider,
+} from './style';
 
 type Props = {
   isLoading: boolean,
@@ -29,30 +39,76 @@ const RemoteThreadItem = compose(getThreadById, withNavigation)(
   ({ data, navigation }) => {
     if (data.loading) return <Text>Loading...</Text>;
     if (!data.thread) return null;
-    return <ThreadItem thread={data.thread} navigation={navigation} />;
+    return (
+      <ThreadListItem
+        activeCommunity={data.thread.community.id}
+        thread={data.thread}
+        navigation={navigation}
+        onPress={() =>
+          navigation.navigate({
+            routeName: `Thread`,
+            key: data.thread.id,
+            params: { id: data.thread.id },
+          })
+        }
+      />
+    );
   }
 );
-const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
-class Community extends React.Component<Props> {
-  componentDidUpdate() {
-    const { data: { community }, navigation } = this.props;
-    if (!community || navigation.state.params.title) return;
-    navigation.setParams({ title: community.name });
-  }
 
+const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
+
+class Community extends Component<Props> {
   render() {
-    const { data: { community }, isLoading, hasError, navigation } = this.props;
+    const { data: { community }, isLoading, hasError } = this.props;
 
     if (community) {
       return (
         <Wrapper>
-          {community.pinnedThreadId && (
-            <RemoteThreadItem id={community.pinnedThreadId} />
-          )}
-          {community.watercoolerId && (
-            <RemoteThreadItem id={community.watercoolerId} />
-          )}
-          <CommunityThreadFeed navigation={navigation} id={community.id} />
+          <StatusBar barStyle="light-content" />
+
+          <CommunityThreadFeed
+            id={community.id}
+            activeCommunity={community.id}
+            ListHeaderComponent={
+              <Fragment>
+                <CoverPhotoContainer>
+                  {community.coverPhoto ? (
+                    <CoverPhoto
+                      resizeMode={'cover'}
+                      source={{ uri: community.coverPhoto }}
+                    />
+                  ) : (
+                    <CoverPhotoFill />
+                  )}
+                </CoverPhotoContainer>
+
+                <ProfilePhotoContainer>
+                  <ProfilePhoto source={{ uri: community.profilePhoto }} />
+                </ProfilePhotoContainer>
+
+                <ProfileDetailsContainer>
+                  <Name>{community.name}</Name>
+                  <Description>{community.description}</Description>
+                </ProfileDetailsContainer>
+
+                <ThreadFeedDivider />
+
+                {community.pinnedThreadId && (
+                  <RemoteThreadItem
+                    id={community.pinnedThreadId}
+                    activeCommunity={community.id}
+                  />
+                )}
+                {community.watercoolerId && (
+                  <RemoteThreadItem
+                    id={community.watercoolerId}
+                    activeCommunity={community.id}
+                  />
+                )}
+              </Fragment>
+            }
+          />
         </Wrapper>
       );
     }
@@ -81,6 +137,4 @@ class Community extends React.Component<Props> {
   }
 }
 
-export default compose(withSafeView, getCommunityById, ViewNetworkHandler)(
-  Community
-);
+export default compose(getCommunityById, ViewNetworkHandler)(Community);

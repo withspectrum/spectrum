@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('hermes:queue:send-new-direct-message-email');
+const debug = require('debug')('hermes:queue:send-mention-message-email');
 import Raven from 'shared/raven';
 import sendEmail from '../send-email';
 import { generateUnsubscribeToken } from '../utils/generate-jwt';
@@ -48,6 +48,7 @@ export default async (job: Job<SendNewMessageMentionEmailJobData>) => {
         unsubscribeToken,
         muteThreadToken,
       },
+      userId: recipient.id,
     });
   } catch (err) {
     debug('❌ Error in job:\n');

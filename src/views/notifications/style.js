@@ -14,7 +14,9 @@ import { HorizontalRule } from '../../components/globals';
 import Card from '../../components/card';
 import { IconButton } from '../../components/buttons';
 
-export const HzRule = styled(HorizontalRule)`margin: 0;`;
+export const HzRule = styled(HorizontalRule)`
+  margin: 0;
+`;
 
 export const NotificationCard = styled(Card)`
   padding: 16px;
@@ -151,9 +153,13 @@ export const ActorPhotosContainer = styled(FlexRow)`
   max-width: 100%;
 `;
 
-export const ActorPhotoItem = styled.div`margin-right: 4px;`;
+export const ActorPhotoItem = styled.div`
+  margin-right: 4px;
+`;
 
-export const ActorPhoto = styled.img`width: 100%;`;
+export const ActorPhoto = styled.img`
+  width: 100%;
+`;
 
 export const ContextRow = styled(FlexRow)`
   align-items: center;
@@ -181,6 +187,14 @@ export const ReactionContext = styled(ContextRow)`
 
 export const JoinContext = styled(ContextRow)`
   color: ${({ theme }) => theme.space.default};
+`;
+
+export const RequestContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.special.alt};
+`;
+
+export const ApprovedContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.success.default};
 `;
 
 export const ThreadContext = styled(ContextRow)`
@@ -255,4 +269,26 @@ export const RequestCard = styled(Card)`
 export const CloseRequest = styled(IconButton)`
   margin-left: 8px;
   color: ${props => props.theme.text.placeholder};
+`;
+
+export const ButtonsRow = styled.div`
+  display: flex;
+  align-items: center;
+  align-content: stretch;
+  padding: 0 16px;
+
+  div {
+    display: flex;
+    flex: 1 0 auto;
+    margin-right: 8px;
+  }
+
+  div:last-child {
+    margin-right: 0;
+  }
+
+  button {
+    display: flex;
+    flex: 1 0 auto;
+  }
 `;

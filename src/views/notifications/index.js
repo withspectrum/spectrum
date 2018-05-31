@@ -4,9 +4,9 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
-import InfiniteList from 'react-infinite-scroller-with-scroll-element';
-import { withInfiniteScroll } from '../../components/infiniteScroll';
-import { parseNotification, getDistinctNotifications } from './utils';
+import InfiniteList from 'src/components/infiniteScroll';
+import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
+import { parseNotification } from './utils';
 import { NewMessageNotification } from './components/newMessageNotification';
 import { NewReactionNotification } from './components/newReactionNotification';
 import { NewChannelNotification } from './components/newChannelNotification';
@@ -17,6 +17,8 @@ import { MentionThreadNotification } from './components/mentionThreadNotificatio
 import { NewUserInCommunityNotification } from './components/newUserInCommunityNotification';
 import { PrivateChannelRequestApproved } from './components/privateChannelRequestApprovedNotification';
 import { PrivateChannelRequestSent } from './components/privateChannelRequestSentNotification';
+import { PrivateCommunityRequestApproved } from './components/privateCommunityRequestApprovedNotification';
+import { PrivateCommunityRequestSent } from './components/privateCommunityRequestSentNotification';
 import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
@@ -28,7 +30,6 @@ import {
 import { FlexCol } from '../../components/globals';
 import { sortByDate } from '../../helpers/utils';
 import WebPushManager from '../../helpers/web-push-manager';
-import { track } from '../../helpers/events';
 import { addToastWithTimeout } from '../../actions/toasts';
 import getNotifications from 'shared/graphql/queries/notification/getNotifications';
 import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
@@ -37,12 +38,18 @@ import { UpsellSignIn, UpsellNullNotifications } from '../../components/upsell';
 import ViewError from '../../components/viewError';
 import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
+import viewNetworkHandler from '../../components/viewNetworkHandler';
+import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
+import { ErrorBoundary } from 'src/components/error';
+import { isDesktopApp } from 'src/helpers/is-desktop-app';
 
 type Props = {
   markAllNotificationsSeen?: Function,
   subscribeToWebPush: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   currentUser: Object,
+  isFetchingMore: boolean,
   data: {
     networkStatus: number,
     fetchMore: Function,
@@ -77,11 +84,12 @@ class NotificationsPure extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    const scrollElement = document.getElementById('scroller-for-thread-feed');
     this.markAllNotificationsSeen();
     this.setState({
       // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
       // the AppViewWrapper which is the scrolling part of the site.
-      scrollElement: document.getElementById('scroller-for-thread-feed'),
+      scrollElement,
     });
 
     WebPushManager.getPermissionState()
@@ -99,7 +107,9 @@ class NotificationsPure extends React.Component<Props, State> {
 
         WebPushManager.getSubscription()
           .then(subscription => {
-            if (!subscription) track('browser push notifications', 'prompted');
+            if (!subscription) {
+              track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_VIEWED);
+            }
             this.setState({
               showWebPushPrompt: !subscription,
             });
@@ -123,13 +133,13 @@ class NotificationsPure extends React.Component<Props, State> {
   }
 
   subscribeToWebPush = () => {
-    track('browser push notifications', 'prompt triggered');
+    track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_CLICKED);
     this.setState({
       webPushPromptLoading: true,
     });
     WebPushManager.subscribe()
       .then(subscription => {
-        track('browser push notifications', 'subscribed');
+        track(events.WEB_PUSH_NOTIFICATIONS_SUBSCRIBED);
         this.setState({
           webPushPromptLoading: false,
           showWebPushPrompt: false,
@@ -137,7 +147,7 @@ class NotificationsPure extends React.Component<Props, State> {
         return this.props.subscribeToWebPush(subscription);
       })
       .catch(err => {
-        track('browser push notifications', 'blocked');
+        track(events.WEB_PUSH_NOTIFICATIONS_BLOCKED);
         this.setState({
           webPushPromptLoading: false,
         });
@@ -155,7 +165,7 @@ class NotificationsPure extends React.Component<Props, State> {
     this.setState({
       showWebPushPrompt: false,
     });
-    track('browser push notifications', 'dismissed');
+    track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_DISMISSED);
   };
 
   render() {
@@ -199,7 +209,7 @@ class NotificationsPure extends React.Component<Props, State> {
         notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
       );
 
-    notifications = getDistinctNotifications(notifications);
+    notifications = deduplicateChildren(notifications, 'id');
     notifications = sortByDate(notifications, 'modifiedAt', 'desc');
 
     const { scrollElement } = this.state;
@@ -210,109 +220,170 @@ class NotificationsPure extends React.Component<Props, State> {
         <Titlebar title={'Notifications'} provideBack={false} noComposer />
         <AppViewWrapper>
           <Column type={'primary'}>
-            {this.state.showWebPushPrompt && (
-              <BrowserNotificationRequest
-                onSubscribe={this.subscribeToWebPush}
-                onDismiss={this.dismissWebPushRequest}
-                loading={this.state.webPushPromptLoading}
-              />
-            )}
+            {!isDesktopApp() &&
+              this.state.showWebPushPrompt && (
+                <BrowserNotificationRequest
+                  onSubscribe={this.subscribeToWebPush}
+                  onDismiss={this.dismissWebPushRequest}
+                  loading={this.state.webPushPromptLoading}
+                />
+              )}
             <InfiniteList
               pageStart={0}
               loadMore={data.fetchMore}
+              isLoadingMore={this.props.isFetchingMore}
               hasMore={data.hasNextPage}
               loader={<LoadingThread />}
               useWindow={false}
               initialLoad={false}
               scrollElement={scrollElement}
               threshold={750}
+              className={'scroller-for-notifications'}
             >
               {notifications.map(notification => {
                 switch (notification.event) {
                   case 'MESSAGE_CREATED': {
                     return (
-                      <NewMessageNotification
+                      <ErrorBoundary
+                        fallbackComponent={null}
                         key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
+                      >
+                        <NewMessageNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
                     );
                   }
                   case 'REACTION_CREATED': {
                     return (
-                      <NewReactionNotification
+                      <ErrorBoundary
+                        fallbackComponent={null}
                         key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
+                      >
+                        <NewReactionNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
                     );
                   }
                   case 'CHANNEL_CREATED': {
                     return (
-                      <NewChannelNotification
+                      <ErrorBoundary
+                        fallbackComponent={null}
                         key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
+                      >
+                        <NewChannelNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
                     );
                   }
                   case 'USER_JOINED_COMMUNITY': {
                     return (
-                      <NewUserInCommunityNotification
+                      <ErrorBoundary
+                        fallbackComponent={null}
                         key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
+                      >
+                        <NewUserInCommunityNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
                     );
                   }
                   case 'THREAD_CREATED': {
                     return (
-                      <NewThreadNotification
+                      <ErrorBoundary
+                        fallbackComponent={null}
                         key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
+                      >
+                        <NewThreadNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
                     );
                   }
                   case 'COMMUNITY_INVITE': {
                     return (
-                      <CommunityInviteNotification
+                      <ErrorBoundary
+                        fallbackComponent={null}
                         key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
+                      >
+                        <CommunityInviteNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
                     );
                   }
                   case 'MENTION_MESSAGE': {
                     return (
-                      <MentionMessageNotification
+                      <ErrorBoundary
+                        fallbackComponent={null}
                         key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
+                      >
+                        <MentionMessageNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
                     );
                   }
                   case 'MENTION_THREAD': {
                     return (
-                      <MentionThreadNotification
+                      <ErrorBoundary
+                        fallbackComponent={null}
                         key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
+                      >
+                        <MentionThreadNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
                     );
                   }
                   case 'PRIVATE_CHANNEL_REQUEST_SENT': {
                     return (
-                      <PrivateChannelRequestSent
+                      <ErrorBoundary
+                        fallbackComponent={null}
+                        key={notification.id}
+                      >
+                        <PrivateChannelRequestSent
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
+                    );
+                  }
+                  case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
+                    return (
+                      <ErrorBoundary
+                        fallbackComponent={null}
+                        key={notification.id}
+                      >
+                        <PrivateChannelRequestApproved
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
+                    );
+                  }
+                  case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
+                    return (
+                      <PrivateCommunityRequestSent
                         key={notification.id}
                         notification={notification}
                         currentUser={currentUser}
                       />
                     );
                   }
-                  case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
+                  case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
                     return (
-                      <PrivateChannelRequestApproved
+                      <PrivateCommunityRequestApproved
                         key={notification.id}
                         notification={notification}
                         currentUser={currentUser}
@@ -343,5 +414,5 @@ export default compose(
   markNotificationsSeenMutation,
   // $FlowIssue
   connect(mapStateToProps),
-  withInfiniteScroll
+  viewNetworkHandler
 )(NotificationsPure);

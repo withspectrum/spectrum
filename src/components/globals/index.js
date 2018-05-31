@@ -120,7 +120,7 @@ export const Spinner = styled.span`
           : props.theme.brand.alt};
     border-top-color: transparent;
     border-right-color: ${props =>
-      props.color ? `props.theme.${props.color}` : props.theme.brand.alt};
+      props.color ? eval(`props.theme.${props.color}`) : props.theme.brand.alt};
     border-bottom-color: transparent;
     animation: ${spin} 2s linear infinite;
   }
@@ -343,8 +343,8 @@ const returnTooltip = props => {
             bottom: 100%;
             right: 0;
             transform: translateX(-100%);
-      	    border-bottom-width: 0;
-      	    border-top-color: ${
+            border-bottom-width: 0;
+            border-top-color: ${
               props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
             };
           }
@@ -359,8 +359,8 @@ const returnTooltip = props => {
             bottom: 100%;
             left: 0;
             transform: translateX(100%);
-      	    border-bottom-width: 0;
-      	    border-top-color: ${
+            border-bottom-width: 0;
+            border-top-color: ${
               props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
             };
           }
@@ -409,8 +409,8 @@ const returnTooltip = props => {
             top: 100%;
             right: 0;
             transform: translateX(-100%);
-      	    border-top-width: 0;
-      	    border-bottom-color: ${
+            border-top-width: 0;
+            border-bottom-color: ${
               props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
             };
           }
@@ -425,8 +425,8 @@ const returnTooltip = props => {
             top: 100%;
             left: 0;
             transform: translateX(100%);
-      	    border-top-width: 0;
-      	    border-bottom-color: ${
+            border-top-width: 0;
+            border-bottom-color: ${
               props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
             };
           }
@@ -512,7 +512,7 @@ export const Tooltip = props => css`
   &:hover:after,
   &:hover:before {
     opacity: 1;
-    transition: all 0.1s ease-in 0.1s;
+    transition: opacity 0.1s ease-in 0.1s;
   }
 `;
 
@@ -562,7 +562,7 @@ export const Onboarding = props => css`
   &:after,
   &:before {
     opacity: 1;
-    transition: all 0.1s ease-in 0.1s;
+    transition: opacity 0.1s ease-in 0.1s;
   }
 `;
 

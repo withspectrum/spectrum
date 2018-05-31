@@ -7,6 +7,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "bull": "3.3.10",
+    "cryptr": "^3.0.0",
     "draft-js": "^0.10.3",
     "emoji-regex": "^6.5.1",
     "expo-server-sdk": "^2.3.3",
@@ -15,6 +16,7 @@
     "raven": "^2.1.1",
     "rethinkdbdash": "^2.3.29",
     "source-map-support": "^0.4.15",
+    "toobusy-js": "^0.5.1",
     "validator": "^9.2.0",
     "web-push": "^3.2.2"
   }

@@ -28,6 +28,11 @@
       },
       {
         "kind": "SCALAR",
+        "name": "LowercaseString",
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
         "name": "Int",
         "possibleTypes": null
       },

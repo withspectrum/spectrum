@@ -1,13 +1,30 @@
 //@flow
 import { request } from '../../utils';
-import { SPECTRUM_PRIVATE_CHANNEL_ID } from '../../../migrations/seed/default/constants';
+import data from 'shared/testing/data';
+import {
+  SPECTRUM_PRIVATE_CHANNEL_ID,
+  CHANNEL_MODERATOR_USER_ID,
+  COMMUNITY_MODERATOR_USER_ID,
+  MAX_ID,
+  PREVIOUS_MEMBER_USER_ID,
+} from '../../../migrations/seed/default/constants';
+const channelModerator = data.users.find(
+  ({ id }) => id === CHANNEL_MODERATOR_USER_ID
+);
+const communityModerator = data.users.find(
+  ({ id }) => id === COMMUNITY_MODERATOR_USER_ID
+);
+const communityOwner = data.users.find(({ id }) => id === MAX_ID);
+const noPermissionUser = data.users.find(
+  ({ id }) => id === PREVIOUS_MEMBER_USER_ID
+);
 
-it('should fetch a channels pending users', async () => {
+it('should not fetch pending users if not authed', async () => {
   const query = /* GraphQL */ `
     {
       channel(id: "${SPECTRUM_PRIVATE_CHANNEL_ID}") {
         id
-        pendingUsers {
+        blockedUsers {
           id
           profilePhoto
           coverPhoto
@@ -25,6 +42,122 @@ it('should fetch a channels pending users', async () => {
 
   expect.assertions(1);
   const result = await request(query);
+
+  expect(result).toMatchSnapshot();
+});
+
+it('should not fetch pending users if no permissions', async () => {
+  const query = /* GraphQL */ `
+    {
+      channel(id: "${SPECTRUM_PRIVATE_CHANNEL_ID}") {
+        id
+        blockedUsers {
+          id
+          profilePhoto
+          coverPhoto
+          name
+          firstName
+          description
+          website
+          username
+          isOnline
+          timezone
+        }
+      }
+    }
+  `;
+
+  const context = { user: noPermissionUser };
+
+  expect.assertions(1);
+  const result = await request(query, { context });
+
+  expect(result).toMatchSnapshot();
+});
+
+it('should fetch pending users if moderates channel', async () => {
+  const query = /* GraphQL */ `
+    {
+      channel(id: "${SPECTRUM_PRIVATE_CHANNEL_ID}") {
+        id
+        blockedUsers {
+          id
+          profilePhoto
+          coverPhoto
+          name
+          firstName
+          description
+          website
+          username
+          isOnline
+          timezone
+        }
+      }
+    }
+  `;
+
+  const context = { user: channelModerator };
+
+  expect.assertions(1);
+  const result = await request(query, { context });
+
+  expect(result).toMatchSnapshot();
+});
+
+it('should fetch pending users if moderates community', async () => {
+  const query = /* GraphQL */ `
+    {
+      channel(id: "${SPECTRUM_PRIVATE_CHANNEL_ID}") {
+        id
+        blockedUsers {
+          id
+          profilePhoto
+          coverPhoto
+          name
+          firstName
+          description
+          website
+          username
+          isOnline
+          timezone
+        }
+      }
+    }
+  `;
+
+  const context = { user: communityModerator };
+
+  expect.assertions(1);
+  const result = await request(query, { context });
+
+  expect(result).toMatchSnapshot();
+});
+
+it('should fetch pending users if owns community', async () => {
+  const query = /* GraphQL */ `
+    {
+      channel(id: "${SPECTRUM_PRIVATE_CHANNEL_ID}") {
+        id
+        blockedUsers {
+          id
+          profilePhoto
+          coverPhoto
+          name
+          firstName
+          description
+          website
+          username
+          isOnline
+          timezone
+        }
+      }
+    }
+  `;
+
+  const context = { user: communityOwner };
+
+  expect.assertions(1);
+  const result = await request(query, { context });
 
   expect(result).toMatchSnapshot();
 });

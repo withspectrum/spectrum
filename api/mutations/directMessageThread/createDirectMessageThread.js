@@ -6,15 +6,18 @@ import {
   getDirectMessageThread,
   createDirectMessageThread,
 } from '../../models/directMessageThread';
-import { uploadImage } from '../../utils/s3';
+import { uploadImage } from '../../utils/file-storage';
 import { storeMessage } from '../../models/message';
 import {
   setUserLastSeenInDirectMessageThread,
   createMemberInDirectMessageThread,
 } from '../../models/usersDirectMessageThreads';
 import type { FileUpload } from 'shared/types';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-type DMThreadInput = {
+type Input = {
   input: {
     participants: Array<string>,
     message: {
@@ -28,18 +31,21 @@ type DMThreadInput = {
   },
 };
 
-export default async (
-  _: any,
-  { input }: DMThreadInput,
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { user } = ctx;
+  const { input } = args;
 
-  if (!currentUser)
-    return new UserError('You must be signed in to send a direct message.');
+  if (!input.participants) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.DIRECT_MESSAGE_THREAD_CREATED_FAILED,
+      properties: {
+        reason: 'no users selected',
+      },
+    });
 
-  if (!input.participants)
     return new UserError('Nobody was selected to create a thread.');
+  }
 
   // if users and messages exist, continue
   const { participants, message } = input;
@@ -55,7 +61,7 @@ export default async (
   // collect all participant ids and the current user id into an array - we
   // use this to determine if an existing DM thread with this exact
   // set of participants already exists or not
-  const allMemberIds = [...participants, currentUser.id];
+  const allMemberIds = [...participants, user.id];
 
   // placeholder
   let threadId, threadToReturn;
@@ -67,7 +73,7 @@ export default async (
     threadId = existingThread;
     threadToReturn = await getDirectMessageThread(threadId);
   } else {
-    threadToReturn = await createDirectMessageThread(isGroup);
+    threadToReturn = await createDirectMessageThread(isGroup, user.id);
     threadId = threadToReturn.id;
   }
 
@@ -79,9 +85,21 @@ export default async (
         threadId,
       };
 
-      return await storeMessage(messageWithThread, currentUser.id);
+      return await storeMessage(messageWithThread, user.id);
     } else if (message.messageType === 'media' && message.file) {
-      const url = await uploadImage(message.file, 'threads', threadId);
+      let url;
+      try {
+        url = await uploadImage(message.file, 'threads', threadId);
+      } catch (err) {
+        trackQueue.add({
+          userId: user.id,
+          event: events.DIRECT_MESSAGE_THREAD_CREATED_FAILED,
+          properties: {
+            reason: 'image upload failed',
+          },
+        });
+        return new UserError(err.message);
+      }
 
       // build a new message object with a new file field with metadata
       const newMessage = Object.assign({}, message, {
@@ -97,24 +115,40 @@ export default async (
         },
       });
 
-      return await storeMessage(newMessage, currentUser.id);
+      return await storeMessage(newMessage, user.id);
     } else {
+      trackQueue.add({
+        userId: user.id,
+        event: events.DIRECT_MESSAGE_THREAD_CREATED_FAILED,
+        properties: {
+          reason: 'unknown message type',
+        },
+      });
       return new UserError('Unknown message type on this bad boy.');
     }
   };
 
   if (existingThread) {
     return await Promise.all([
-      setUserLastSeenInDirectMessageThread(threadId, currentUser.id),
+      setUserLastSeenInDirectMessageThread(threadId, user.id),
       handleStoreMessage(message),
     ]).then(() => threadToReturn);
   }
 
+  trackQueue.add({
+    userId: user.id,
+    event: events.DIRECT_MESSAGE_THREAD_CREATED,
+  });
+
   return await Promise.all([
-    createMemberInDirectMessageThread(threadId, currentUser.id, true),
+    createMemberInDirectMessageThread(threadId, user.id, true),
     handleStoreMessage(message),
-    participants.map(participant =>
-      createMemberInDirectMessageThread(threadId, participant, false)
-    ),
+    participants.map(participant => {
+      trackQueue.add({
+        userId: participant,
+        event: events.DIRECT_MESSAGE_THREAD_RECEIVED,
+      });
+      return createMemberInDirectMessageThread(threadId, participant, false);
+    }),
   ]).then(() => threadToReturn);
-};
+});

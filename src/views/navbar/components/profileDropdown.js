@@ -5,7 +5,9 @@ import Link from 'src/components/link';
 import Dropdown from '../../../components/dropdown';
 import { SERVER_URL } from '../../../api/constants';
 
-const UserProfileDropdown = styled(Dropdown)`width: 200px;`;
+const UserProfileDropdown = styled(Dropdown)`
+  width: 200px;
+`;
 
 const UserProfileDropdownList = styled.ul`
   list-style-type: none;

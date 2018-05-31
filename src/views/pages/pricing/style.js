@@ -24,6 +24,7 @@ export const ContentContainer = styled.div`
 
 export const Content = styled(ContentContainer)`
   position: relative;
+  margin-bottom: 80px;
 
   > a > button {
     margin-top: 24px;
@@ -36,6 +37,7 @@ export const Heading = styled.h1`
   color: ${props =>
     props.reverse ? props.theme.text.reverse : props.theme.text.default};
   line-height: 1.2;
+  grid-area: heading;
 
   @media (max-width: 768px) {
     margin-top: 48px;
@@ -89,7 +91,8 @@ export const CTA = styled(Button)`
 export const TwoUp = styled(ContentContainer)`
   display: grid;
   max-width: 100%;
-  padding: 128px 5% 48px;
+  padding: 128px 5% 40px;
+  margin-bottom: 80px;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: min-content;
   grid-template-areas: 'left right';
@@ -249,12 +252,24 @@ export const PlanSection = styled.div`
   background-color: ${props => props.theme.bg.default};
   border-radius: 8px;
   max-width: 480px;
+  z-index: 1;
 
   @media (max-width: 768px) {
     max-width: 100%;
     padding: 18px 24px;
     border-radius: 0;
     box-shadow: none;
+  }
+
+  a {
+    display: inline-block;
+    align-self: center;
+
+    button {
+      margin-top: 24px;
+      padding: 8px 16px;
+      font-size: 16px;
+    }
   }
 `;
 
@@ -373,13 +388,13 @@ export const CommunityCardButton = styled.button`
   font-weight: 600;
   color: ${props => props.theme.text.alt};
   background: ${props => props.theme.bg.wash};
-  transition: all 0.2s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: color 0.2s cubic-bezier(0.77, 0, 0.175, 1);
   width: 100%;
 
   &:hover {
     color: ${props => props.theme.text.default};
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.77, 0, 0.175, 1);
+    transition: color 0.2s cubic-bezier(0.77, 0, 0.175, 1);
   }
 `;
 

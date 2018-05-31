@@ -1,10 +1,10 @@
 // @flow
 import type { GraphQLContext } from '../../';
-import UserError from '../../utils/UserError';
 import { markDirectMessageNotificationsSeen } from '../../models/usersNotifications';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-export default (_: any, __: any, { user }: GraphQLContext) => {
-  if (!user)
-    return new UserError('You must be logged in to view notifications');
-  return markDirectMessageNotificationsSeen(user.id);
-};
+export default requireAuth(
+  async (_: any, __: any, { user }: GraphQLContext) => {
+    return markDirectMessageNotificationsSeen(user.id);
+  }
+);

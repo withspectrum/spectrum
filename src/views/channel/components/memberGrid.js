@@ -24,7 +24,7 @@ type Props = {
   },
   isLoading: boolean,
   isFetchingMore: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   history: Object,
   currentUser: ?Object,
 };

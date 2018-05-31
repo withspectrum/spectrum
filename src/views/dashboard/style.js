@@ -241,6 +241,7 @@ export const CommunityListScroller = styled.div`
   overflow: hidden;
   overflow-y: auto;
   position: relative;
+  padding-top: 1px;
 `;
 
 export const CommunityListWrapper = styled.div`
@@ -770,7 +771,7 @@ export const ClearSearch = styled.span`
   font-weight: 500;
   pointer-events: ${props => (props.isOpen ? 'auto' : 'none')};
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.2s;
 
   &:hover {
     background: ${props => props.theme.text.alt};
@@ -905,4 +906,14 @@ export const ContextHeaderContainer = styled.div`
 
 export const EllipsisText = styled.div`
   ${Truncate};
+`;
+
+export const PendingBadge = styled.div`
+  background: ${props => props.theme.warn.alt};
+  color: ${props => props.theme.text.reverse};
+  padding: 0 8px;
+  border-radius: 24px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 2px;
 `;

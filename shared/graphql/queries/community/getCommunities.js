@@ -39,7 +39,7 @@ export const getCommunitiesByIds = graphql(
 );
 
 export const getCommunitiesBySlugsQuery = gql`
-  query getCommunitiesBySlugs($slugs: [String]) {
+  query getCommunitiesBySlugs($slugs: [LowercaseString]) {
     community(slugs: $slugs) {
       ...communityInfo
       ...communityMetaData
@@ -52,7 +52,7 @@ export const getCommunitiesBySlugsQuery = gql`
 const getCommunitiesBySlugOptions = {
   options: ({ slugs }: { slugs: Array<string> }) => ({
     variables: {
-      slugs: slugs.map(s => s.toLowerCase()),
+      slugs: slugs,
     },
     fetchPolicy: 'cache-first',
   }),

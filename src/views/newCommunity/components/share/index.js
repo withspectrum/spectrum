@@ -15,7 +15,11 @@ const Share = ({ community, history, onboarding }) => {
     <div>
       <ButtonRow>
         <a
-          href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/${community.slug}&t=Come hang out with me in the ${community.name} community on Spectrum!`}
+          href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/${
+            community.slug
+          }&t=Come hang out with me in the ${
+            community.name
+          } community on Spectrum!`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -29,7 +33,11 @@ const Share = ({ community, history, onboarding }) => {
           </Button>
         </a>
         <a
-          href={`https://twitter.com/share?text=Come hang out with me in the ${community.name} community on @withspectrum!&url=https://spectrum.chat/${community.slug}`}
+          href={`https://twitter.com/share?text=Come hang out with me in the ${
+            community.name
+          } community on @withspectrum!&url=https://spectrum.chat/${
+            community.slug
+          }`}
           target="_blank"
           rel="noopener noreferrer"
         >

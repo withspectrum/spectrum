@@ -1,12 +1,15 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import compose from 'recompose/compose';
-import { View, FlatList } from 'react-native';
+import { View } from 'react-native';
 import Text from '../Text';
 import ViewNetworkHandler from '../ViewNetworkHandler';
-import ThreadItem from '../ThreadItem';
+import { ThreadListItem } from '../Lists';
 import InfiniteList from '../InfiniteList';
+import Loading from '../Loading';
 import type { ThreadConnectionType } from '../../../shared/graphql/fragments/community/communityThreadConnection';
+import type { FlatListProps } from 'react-native';
+import { withNavigation } from 'react-navigation';
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -16,16 +19,20 @@ import type { ThreadConnectionType } from '../../../shared/graphql/fragments/com
   See 'gql/community/communityThreads.js' for an example of the prop mapping in action
 */
 
+import { CenteredView } from './style';
+
 type State = {
   subscription: ?Function,
 };
 
 type Props = {
+  ...$Exact<FlatListProps>,
   isLoading: boolean,
   isFetchingMore: boolean,
   isRefetching: boolean,
   hasError: boolean,
-  navigation: Object,
+  activeChannel?: string,
+  activeCommunity?: string,
   // This is necessary so we can listen to updates
   channels?: string[],
   data: {
@@ -35,7 +42,7 @@ type Props = {
   },
 };
 
-class ThreadFeed extends React.Component<Props, State> {
+class ThreadFeed extends Component<Props, State> {
   constructor() {
     super();
     this.state = {
@@ -92,6 +99,8 @@ class ThreadFeed extends React.Component<Props, State> {
       !isLoading &&
       !hasError &&
       !isRefetching &&
+      threadConnection &&
+      threadConnection.pageInfo &&
       threadConnection.pageInfo.hasNextPage
     ) {
       fetchMore();
@@ -100,51 +109,71 @@ class ThreadFeed extends React.Component<Props, State> {
 
   render() {
     const {
+      data,
       data: { threadConnection },
       isLoading,
-      isFetchingMore,
       hasError,
       navigation,
+      activeChannel,
+      activeCommunity,
+      isFetchingMore,
+      isRefetching,
+      channels,
+      ...flatListProps
     } = this.props;
+
+    if (isLoading) {
+      return <Loading />;
+    }
 
     if (threadConnection && threadConnection.edges.length > 0) {
       return (
-        <View data-cy="thread-feed">
+        <View data-cy="thread-feed" style={{ flex: 1 }}>
           <InfiniteList
             data={threadConnection.edges}
             renderItem={({ item }) => (
-              <ThreadItem navigation={navigation} thread={item.node} />
+              <ThreadListItem
+                thread={item.node}
+                activeChannel={activeChannel}
+                activeCommunity={activeCommunity}
+                onPress={() =>
+                  navigation.navigate({
+                    routeName: `Thread`,
+                    key: item.node.id,
+                    params: { id: item.node.id },
+                  })
+                }
+              />
             )}
             loadingIndicator={<Text>Loading...</Text>}
             fetchMore={this.fetchMore}
-            hasNextPage={threadConnection.pageInfo.hasNextPage}
+            hasNextPage={
+              threadConnection &&
+              threadConnection.pageInfo &&
+              threadConnection.pageInfo.hasNextPage
+            }
+            refetching={this.props.isRefetching}
+            refetch={this.props.data.refetch}
+            {...flatListProps}
           />
-        </View>
-      );
-    }
-
-    if (isLoading) {
-      return (
-        <View>
-          <Text type="body">Loading...</Text>
         </View>
       );
     }
 
     if (hasError) {
       return (
-        <View>
+        <CenteredView>
           <Text type="body">Error!</Text>
-        </View>
+        </CenteredView>
       );
     }
 
     return (
-      <View>
+      <CenteredView>
         <Text type="body">Nothing here yet!</Text>
-      </View>
+      </CenteredView>
     );
   }
 }
 
-export default compose(ViewNetworkHandler)(ThreadFeed);
+export default compose(withNavigation, ViewNetworkHandler)(ThreadFeed);

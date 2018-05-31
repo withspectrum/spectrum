@@ -2,11 +2,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { addToastWithTimeout } from '../../../actions/toasts';
+import type { Dispatch } from 'redux';
 
 type Props = {
   mutation: ?Function,
   variables: any,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   render: Function,
 };
 

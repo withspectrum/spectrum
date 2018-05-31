@@ -1,44 +1,41 @@
 // @flow
 import React, { Component } from 'react';
-import { optimize } from './utils';
-import AvatarImage from './image';
-import { Status } from './style';
+import compose from 'recompose/compose';
+import { withNavigation } from 'react-navigation';
+import TouchableHighlight from '../TouchableHighlight';
+
+import ConditionalWrap from '../ConditionalWrap';
+import { AvatarImage } from './style';
 
 type AvatarProps = {
   src: string,
-  community?: any,
-  user?: any,
   size: number,
-  link?: ?string,
-  noLink?: boolean,
+  variant?: 'square' | 'circle',
+  onPress?: Function,
+  style?: Object,
 };
 
-export default class Avatar extends Component<AvatarProps> {
+class Avatar extends Component<AvatarProps> {
   render() {
-    const { src, community, user, size } = this.props;
-
-    // $FlowFixMe
-    const optimizedAvatar = optimize(src, {
-      w: size,
-      dpr: '2',
-      format: 'png',
-    });
-
-    const communityFallback = './img/default_community.svg';
-    const userFallback = './img/default_avatar.svg';
-
-    let source;
-
-    if (community && !user) {
-      source = [optimizedAvatar, communityFallback];
-    } else {
-      source = [optimizedAvatar, userFallback];
-    }
+    const { src, size, onPress, style, variant = 'circle' } = this.props;
+    let source = src ? { uri: src } : {};
 
     return (
-      <Status size={size || 32} {...this.props}>
-        <AvatarImage src={source} size={size} community={community} />
-      </Status>
+      <ConditionalWrap
+        condition={!!onPress}
+        wrap={children => (
+          <TouchableHighlight onPress={onPress}>{children}</TouchableHighlight>
+        )}
+      >
+        <AvatarImage
+          source={source}
+          size={size}
+          style={style}
+          radius={variant === 'circle' ? size / 2 : size / 4}
+        />
+      </ConditionalWrap>
     );
   }
 }
+
+export default compose(withNavigation)(Avatar);

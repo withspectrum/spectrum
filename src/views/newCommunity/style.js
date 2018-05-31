@@ -52,7 +52,9 @@ export const Divider = styled.div`
   margin-bottom: 24px;
 `;
 
-export const ContentContainer = styled.div`padding: 0 24px 24px;`;
+export const ContentContainer = styled.div`
+  padding: 0 24px 24px;
+`;
 
 export const FormContainer = styled.div``;
 

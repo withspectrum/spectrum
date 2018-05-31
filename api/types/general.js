@@ -23,6 +23,7 @@ const general = /* GraphQL */ `
 		isBlocked: Boolean
 		isOwner: Boolean
 		isModerator: Boolean
+		isPending: Boolean
 		receiveNotifications: Boolean
 		reputation: Int
 	}
@@ -64,7 +65,7 @@ const general = /* GraphQL */ `
 	}
 	
 	input EmailInviteContactInput {
-		email: String!
+		email: LowercaseString!
 		firstName: String
 		lastName: String
 	}
@@ -73,6 +74,11 @@ const general = /* GraphQL */ `
 		id: ID!
 		contacts: [ EmailInviteContactInput ]
 		customMessage: String
+	}
+
+	type JoinSettings {
+		tokenJoinEnabled: Boolean
+		token: String
 	}
 `;
 

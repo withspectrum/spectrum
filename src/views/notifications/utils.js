@@ -1,19 +1,7 @@
 import React from 'react';
 import Link from 'src/components/link';
-import { timeDifferenceShort } from '../../helpers/utils';
+import { timeDifferenceShort } from 'shared/time-difference';
 import { Timestamp } from './style';
-
-export const getDistinctNotifications = array => {
-  let unique = {};
-  let distinct = [];
-  for (let i in array) {
-    if (typeof unique[array[i].id] === 'undefined') {
-      distinct.push(array[i]);
-    }
-    unique[array[i].id] = 0;
-  }
-  return distinct;
-};
 
 export const parseNotification = notification => {
   return Object.assign({}, notification, {
@@ -132,6 +120,12 @@ export const parseEvent = event => {
       return <span>requested to join</span>;
     }
     case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
+      return <span>approved your request to join</span>;
+    }
+    case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
+      return <span>requested to join</span>;
+    }
+    case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
       return <span>approved your request to join</span>;
     }
     default: {

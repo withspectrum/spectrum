@@ -27,7 +27,7 @@ const getChannelByIdOptions = {
     variables: {
       id,
     },
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-and-network',
   }),
 };
 
@@ -44,8 +44,8 @@ export const getChannelById = graphql(
 */
 export const getChannelBySlugAndCommunitySlugQuery = gql`
   query getChannelBySlugAndCommunitySlug(
-    $channelSlug: String
-    $communitySlug: String
+    $channelSlug: LowercaseString
+    $communitySlug: LowercaseString
   ) {
     channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
       ...channelInfo
@@ -59,10 +59,10 @@ export const getChannelBySlugAndCommunitySlugQuery = gql`
 const getChannelBySlugAndCommunitySlugOptions = {
   options: ({ channelSlug, communitySlug }) => ({
     variables: {
-      channelSlug: channelSlug.toLowerCase(),
-      communitySlug: communitySlug.toLowerCase(),
+      channelSlug: channelSlug,
+      communitySlug: communitySlug,
     },
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-and-network',
   }),
 };
 
@@ -74,10 +74,10 @@ export const getChannelBySlugAndCommunitySlug = graphql(
 const getChannelByMatchOptions = {
   options: ({ match: { params: { channelSlug, communitySlug } } }) => ({
     variables: {
-      channelSlug: channelSlug.toLowerCase(),
-      communitySlug: communitySlug.toLowerCase(),
+      channelSlug: channelSlug,
+      communitySlug: communitySlug,
     },
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-and-network',
   }),
 };
 

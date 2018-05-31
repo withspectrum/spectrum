@@ -1,55 +1,83 @@
 // @flow
-import * as React from 'react';
-import { Text, View } from 'react-native';
+import React, { Component, Fragment } from 'react';
+import { Text, View, StatusBar } from 'react-native';
 import compose from 'recompose/compose';
-import { getChannelById } from '../../../shared/graphql/queries/channel/getChannel';
+import {
+  getChannelById,
+  type GetChannelType,
+} from '../../../shared/graphql/queries/channel/getChannel';
 import getChannelThreadConnection from '../../../shared/graphql/queries/channel/getChannelThreadConnection';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
-import withSafeView from '../../components/SafeAreaView';
 import ThreadFeed from '../../components/ThreadFeed';
 
-import { Wrapper } from './style';
-
-type ChannelType = {
-  id: string,
-  name: string,
-  threadConnection: {
-    pageInfo: {
-      hasNextPage: boolean,
-    },
-    edges: {
-      node: {
-        id: string,
-      },
-    },
-  },
-};
+import {
+  Wrapper,
+  CoverPhoto,
+  CoverPhotoFill,
+  CoverPhotoContainer,
+  ProfilePhoto,
+  ProfilePhotoContainer,
+  ProfileDetailsContainer,
+  Name,
+  Username,
+  Description,
+  ThreadFeedDivider,
+} from './style';
 
 type Props = {
   isLoading: boolean,
   hasError: boolean,
   navigation: Object,
   data: {
-    channel?: ChannelType,
+    channel?: GetChannelType,
   },
 };
 
 const ChannelThreadFeed = compose(getChannelThreadConnection)(ThreadFeed);
 
-class Channel extends React.Component<Props> {
-  componentDidUpdate() {
-    const { data: { channel }, navigation } = this.props;
-    if (!channel || navigation.state.params.title) return;
-    navigation.setParams({ title: channel.name });
-  }
-
+class Channel extends Component<Props> {
   render() {
-    const { data, isLoading, hasError, navigation } = this.props;
-
+    const { data, isLoading, hasError } = this.props;
     if (data.channel) {
+      const { channel } = data;
+
       return (
         <Wrapper>
-          <ChannelThreadFeed navigation={navigation} id={data.channel.id} />
+          <StatusBar barStyle="light-content" />
+
+          <ChannelThreadFeed
+            id={channel.id}
+            activeChannel={channel.id}
+            activeCommunity={channel.community.id}
+            ListHeaderComponent={
+              <Fragment>
+                <CoverPhotoContainer>
+                  {channel.community.coverPhoto ? (
+                    <CoverPhoto
+                      resizeMode={'cover'}
+                      source={{ uri: channel.community.coverPhoto }}
+                    />
+                  ) : (
+                    <CoverPhotoFill />
+                  )}
+                </CoverPhotoContainer>
+
+                <ProfilePhotoContainer>
+                  <ProfilePhoto
+                    source={{ uri: channel.community.profilePhoto }}
+                  />
+                </ProfilePhotoContainer>
+
+                <ProfileDetailsContainer>
+                  <Username>{channel.community.name}</Username>
+                  <Name>{channel.name}</Name>
+                  <Description>{channel.description}</Description>
+                </ProfileDetailsContainer>
+
+                <ThreadFeedDivider />
+              </Fragment>
+            }
+          />
         </Wrapper>
       );
     }
@@ -78,6 +106,4 @@ class Channel extends React.Component<Props> {
   }
 }
 
-export default compose(withSafeView, getChannelById, ViewNetworkHandler)(
-  Channel
-);
+export default compose(getChannelById, ViewNetworkHandler)(Channel);

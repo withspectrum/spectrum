@@ -22,6 +22,7 @@ import { Button, OutlineButton } from 'src/components/buttons';
 import { TextArea, Error } from 'src/components/formElements';
 import saveBrandedLoginSettings from 'shared/graphql/mutations/community/saveBrandedLoginSettings';
 import { addToastWithTimeout } from '../../../actions/toasts';
+import type { Dispatch } from 'redux';
 
 type Props = {
   data: {
@@ -29,7 +30,7 @@ type Props = {
   },
   ...$Exact<ViewNetworkHandlerType>,
   saveBrandedLoginSettings: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {
@@ -86,7 +87,7 @@ class BrandedLogin extends React.Component<Props, State> {
       })
       .catch(err => {
         this.setState({ messageLengthError: false, isLoading: false });
-        return this.props.dispatch(addToastWithTimeout('error', err));
+        return this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
@@ -130,7 +131,7 @@ class BrandedLogin extends React.Component<Props, State> {
                 }}
               >
                 <Button
-                  style={{ alignSelf: 'flex-start' }}
+                  style={{ alignSelf: 'flex-start', marginLeft: '8px' }}
                   onSubmit={this.saveCustomMessage}
                   onClick={this.saveCustomMessage}
                   disabled={messageLengthError}
