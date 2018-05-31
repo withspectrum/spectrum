@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { View } from 'react-native';
+import idx from 'idx';
 import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
 import Loading from '../Loading';
@@ -48,7 +49,9 @@ class Messages extends Component<Props> {
 
     if (hasError) return <Text type="body">Error :(</Text>;
 
-    if (data.messageConnection && data.messageConnection) {
+    if (idx(data, _ => _.messageConnection.edges)) {
+      if (data.messageConnection.edges.length === 0) return null;
+
       const messages = sortAndGroupMessages(
         data.messageConnection.edges
           .slice()
