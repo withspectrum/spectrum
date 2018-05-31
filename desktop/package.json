@@ -18,10 +18,11 @@
   "devDependencies": {
     "electron": "^1.8.4",
     "electron-builder": "^20.8.1",
+    "nodemon": "^1.17.5",
     "rimraf": "^2.6.2"
   },
   "scripts": {
-    "dev": "electron ./src/main.js",
+    "dev": "nodemon --exec \"electron ./src/main.js\" -w ./src",
     "prepackage": "rimraf release",
     "package": "build",
     "package:mac": "yarn run package --mac",
@@ -34,7 +35,13 @@
     "productName": "Spectrum",
     "appId": "chat.spectrum",
     "copyright": "Copyright © 2018 Space Program Inc.",
-    "publish": "github",
+    "publish": [
+      {
+        "provider": "github",
+        "repo": "spectrum",
+        "owner": "withspectrum"
+      }
+    ],
     "releaseInfo": {
       "releaseName": "${name} Desktop App v${version}"
     },
