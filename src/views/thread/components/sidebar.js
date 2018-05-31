@@ -195,7 +195,7 @@ class Sidebar extends React.Component<Props> {
                 <SidebarRelatedThreadList>
                   {threadsToRender.map(t => {
                     return (
-                      <ErrorBoundary fallbackComponent={null}>
+                      <ErrorBoundary key={t.id} fallbackComponent={null}>
                         <SidebarRelatedThread key={t.id}>
                           <Link
                             to={{
