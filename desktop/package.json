@@ -6,7 +6,8 @@
     "name": "Space Program Inc.",
     "email": "hey@spectrum.chat"
   },
-  "version": "1.0.0",
+  "repository": "https://github.com/withspectrum/spectrum",
+  "version": "1.0.0-beta.2",
   "main": "src/main.js",
   "private": true,
   "dependencies": {
@@ -16,21 +17,27 @@
   },
   "devDependencies": {
     "electron": "^1.8.4",
-    "electron-builder": "^20.8.1"
+    "electron-builder": "^20.8.1",
+    "rimraf": "^2.6.2"
   },
   "scripts": {
     "dev": "electron ./src/main.js",
-    "package": "build --dir",
-    "package:mac": "build --mac",
-    "package:linux": "build --linux",
-    "package:win": "build --win --x64",
-    "package:all": "build -mwl",
-    "ship": "build -p always"
+    "prepackage": "rimraf release",
+    "package": "build",
+    "package:mac": "yarn run package --mac",
+    "package:linux": "yarn run package --linux",
+    "package:win": "yarn run package --win --x64",
+    "package:all": "yarn run package -mwl",
+    "release": "yarn run package:all --publish always"
   },
   "build": {
     "productName": "Spectrum",
     "appId": "chat.spectrum",
     "copyright": "Copyright © 2018 Space Program Inc.",
+    "publish": "github",
+    "releaseInfo": {
+      "releaseName": "${name} Desktop App v${version}"
+    },
     "files": [
       "src/**/*",
       "node_modules/**/*",

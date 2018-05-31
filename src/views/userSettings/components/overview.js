@@ -10,6 +10,7 @@ import DownloadDataForm from './downloadDataForm';
 import RecurringPaymentsList from './recurringPaymentsList';
 import { SectionsContainer, Column } from 'src/components/settingsViews/style';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';
+import { isDesktopApp } from 'src/helpers/is-desktop-app';
 
 type Props = {
   user: GetCurrentUserSettingsType,
@@ -44,7 +45,8 @@ class Overview extends React.Component<Props> {
           </ErrorBoundary>
 
           <ErrorBoundary fallbackComponent={SettingsFallback}>
-            {'serviceWorker' in navigator &&
+            {!isDesktopApp() &&
+              'serviceWorker' in navigator &&
               'PushManager' in window && <NotificationSettings largeOnly />}
           </ErrorBoundary>
 

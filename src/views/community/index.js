@@ -124,7 +124,7 @@ class CommunityView extends React.Component<Props, State> {
 
     const isNewAndOwned =
       community.communityPermissions.isOwner && community.metaData.members < 2;
-    return this.setState({ showComposerUpsell: isNewAndOwned ? true : false });
+    return this.setState({ showComposerUpsell: isNewAndOwned });
   };
 
   handleSegmentClick = label => {

@@ -13,7 +13,8 @@
     "raven": "^2.1.1",
     "rethinkdbdash": "^2.3.29",
     "source-map-support": "^0.4.15",
-    "toobusy-js": "^0.5.1"
+    "toobusy-js": "^0.5.1",
+    "validator": "^10.2.0"
   },
   "devDependencies": {
     "json-stringify-pretty-compact": "^1.0.4"

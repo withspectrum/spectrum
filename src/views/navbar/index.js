@@ -24,6 +24,7 @@ import {
 } from './style';
 import { track, events } from 'src/helpers/analytics';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
+import { isDesktopApp } from 'src/helpers/is-desktop-app';
 
 type Props = {
   isLoading: boolean,
@@ -184,7 +185,7 @@ class Navbar extends React.Component<Props, State> {
             onClick={() => this.trackNavigationClick('home')}
             data-cy="navbar-home"
           >
-            <Icon glyph="home" />
+            <Icon glyph="home" size={isDesktopApp() ? 28 : 32} />
             <Label>Home</Label>
           </HomeTab>
 
@@ -198,7 +199,7 @@ class Navbar extends React.Component<Props, State> {
             onClick={() => this.trackNavigationClick('explore')}
             data-cy="navbar-explore"
           >
-            <Icon glyph="explore" />
+            <Icon glyph="explore" size={isDesktopApp() ? 28 : 32} />
             <Label>Explore</Label>
           </ExploreTab>
 
