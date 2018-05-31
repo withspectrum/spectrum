@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
 import Loading from '../Loading';
 import viewNetworkHandler from '../ViewNetworkHandler';
