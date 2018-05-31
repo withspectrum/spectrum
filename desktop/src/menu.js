@@ -1,5 +1,5 @@
 // @flow
-const { dialog, Menu, MenuItem, shell } = require('electron');
+const { dialog, Menu, MenuItem, shell, clipboard } = require('electron');
 const checkForUpdates = require('./autoUpdate');
 
 const CONFIG = require('./config');
@@ -128,6 +128,21 @@ const template = [
         click() {
           shell.openExternal(CONFIG.GITHUB_URL_ISSUES);
         },
+      },
+    ],
+  },
+  {
+    label: 'Share',
+    submenu: [
+      {
+        label: 'Copy link to current page',
+        click: function(item, focusedWindow) {
+          const url = focusedWindow.webContents.getURL();
+          if (url) {
+            clipboard.writeText(url);
+          }
+        },
+        accelerator: 'CmdOrCtrl+S',
       },
     ],
   },
