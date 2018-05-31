@@ -58,10 +58,9 @@ type State = {
   scrollElement: any,
   isEditing: boolean,
   messagesContainer: any,
-  // Cache lastSeen and lastActive so it doesn't jump around
+  // Cache lastSeen so it doesn't jump around
   // while looking at a live thread
   lastSeen: ?number | ?string,
-  lastActive: ?number | ?string,
 };
 
 class ThreadContainer extends React.Component<Props, State> {
@@ -72,7 +71,6 @@ class ThreadContainer extends React.Component<Props, State> {
     scrollElement: null,
     isEditing: false,
     lastSeen: null,
-    lastActive: null,
   };
 
   componentWillReceiveProps(next: Props) {
@@ -87,9 +85,6 @@ class ThreadContainer extends React.Component<Props, State> {
       this.setState({
         lastSeen: next.data.thread.currentUserLastSeen
           ? next.data.thread.currentUserLastSeen
-          : null,
-        lastActive: next.data.thread.lastActive
-          ? next.data.thread.lastActive
           : null,
       });
     }
@@ -288,6 +283,56 @@ class ThreadContainer extends React.Component<Props, State> {
     );
   };
 
+  renderThreadHeader = () => {
+    const {
+      data: { thread },
+      slider,
+      threadViewContext = 'fullscreen',
+      currentUser,
+    } = this.props;
+    if (!thread || !thread.id) return null;
+
+    if (thread.watercooler) {
+      return (
+        <React.Fragment>
+          <WatercoolerIntroContainer>
+            <WatercoolerAvatar
+              src={thread.community.profilePhoto}
+              community
+              size={44}
+              radius={8}
+            />
+            <WatercoolerTitle>
+              The {thread.community.name} watercooler
+            </WatercoolerTitle>
+            <WatercoolerDescription>
+              Welcome to the {thread.community.name} watercooler, a new space
+              for general chat with everyone in the community. Jump in to the
+              conversation below or introduce yourself!
+            </WatercoolerDescription>
+          </WatercoolerIntroContainer>
+
+          <WatercoolerActionBar thread={thread} currentUser={currentUser} />
+        </React.Fragment>
+      );
+    }
+
+    return (
+      <React.Fragment>
+        <ThreadCommunityBanner
+          hide={threadViewContext === 'fullscreen'}
+          thread={thread}
+        />
+
+        <ThreadDetail
+          toggleEdit={this.toggleEdit}
+          thread={thread}
+          slider={slider}
+        />
+      </React.Fragment>
+    );
+  };
+
   render() {
     const {
       data: { thread },
@@ -297,7 +342,7 @@ class ThreadContainer extends React.Component<Props, State> {
       slider,
       threadViewContext = 'fullscreen',
     } = this.props;
-    const { isEditing, lastSeen, lastActive } = this.state;
+    const { isEditing, lastSeen } = this.state;
 
     if (thread && thread.id) {
       // successful network request to get a thread
@@ -314,27 +359,7 @@ class ThreadContainer extends React.Component<Props, State> {
       // get the data we need to render the view
       const { channelPermissions } = thread.channel;
       const { communityPermissions } = thread.community;
-      const { isLocked, isAuthor, participants } = thread;
-      const isChannelOwner = currentUser && channelPermissions.isOwner;
-      const isCommunityOwner = currentUser && communityPermissions.isOwner;
-      const isChannelModerator = currentUser && channelPermissions.isModerator;
-      const isCommunityModerator =
-        currentUser && communityPermissions.isModerator;
-      const isModerator =
-        isChannelOwner ||
-        isCommunityOwner ||
-        isChannelModerator ||
-        isCommunityModerator;
-      const hasViewedThreadBefore =
-        currentUser &&
-        (thread.currentUserLastSeen ||
-          isAuthor ||
-          (participants &&
-            participants.length > 0 &&
-            participants.some(
-              participant => participant && participant.id === currentUser.id
-            )));
-
+      const { isLocked } = thread;
       const shouldRenderThreadSidebar = threadViewContext === 'fullscreen';
 
       if (channelPermissions.isBlocked || communityPermissions.isBlocked) {
@@ -351,10 +376,8 @@ class ThreadContainer extends React.Component<Props, State> {
               <ThreadContentView slider={slider}>
                 <ViewError
                   emoji={'✋'}
-                  heading={'You have been blocked'}
-                  subheading={`You are blocked from viewing all conversations in the ${
-                    thread.community.name
-                  } community`}
+                  heading={'You don’t have permission to view this thread'}
+                  subheading={`This thread may have been deleted or does not exist.`}
                 />
               </ThreadContentView>
             </ThreadViewContainer>
@@ -362,101 +385,13 @@ class ThreadContainer extends React.Component<Props, State> {
         );
       }
 
-      if (thread.watercooler)
-        return (
-          <ErrorBoundary>
-            <ThreadViewContainer
-              data-cy="thread-view"
-              constrain={
-                threadViewContext === 'slider' ||
-                threadViewContext === 'fullscreen'
-              }
-              threadViewContext={threadViewContext}
-            >
-              {shouldRenderThreadSidebar && (
-                <Sidebar
-                  thread={thread}
-                  currentUser={currentUser}
-                  slug={thread.community.slug}
-                  id={thread.community.id}
-                />
-              )}
-
-              <ThreadContentView slider={slider}>
-                <Head
-                  title={`The Watercooler · ${thread.community.name}`}
-                  description={`Watercooler chat for the ${
-                    thread.community.name
-                  } community`}
-                  image={thread.community.profilePhoto}
-                />
-                <Titlebar
-                  title={thread.content.title}
-                  subtitle={`${thread.community.name} / ${thread.channel.name}`}
-                  provideBack={true}
-                  backRoute={'/'}
-                  noComposer
-                  style={{ gridArea: 'header' }}
-                />
-                <Content innerRef={this.setMessagesContainer}>
-                  <Detail type={slider ? '' : 'only'}>
-                    <WatercoolerIntroContainer>
-                      <WatercoolerAvatar
-                        src={thread.community.profilePhoto}
-                        community
-                        size={44}
-                        radius={8}
-                      />
-                      <WatercoolerTitle>
-                        The {thread.community.name} watercooler
-                      </WatercoolerTitle>
-                      <WatercoolerDescription>
-                        Welcome to the {thread.community.name} watercooler, a
-                        new space for general chat with everyone in the
-                        community. Jump in to the conversation below or
-                        introduce yourself!
-                      </WatercoolerDescription>
-                    </WatercoolerIntroContainer>
-
-                    <WatercoolerActionBar
-                      thread={thread}
-                      currentUser={currentUser}
-                    />
-
-                    {!isEditing && (
-                      <Messages
-                        threadMessageCount={thread.messageCount}
-                        id={thread.id}
-                        scrollContainer={this.state.messagesContainer}
-                        currentUser={currentUser}
-                        lastSeen={lastSeen}
-                        lastActive={lastActive}
-                        forceScrollToBottom={this.forceScrollToBottom}
-                        forceScrollToTop={this.forceScrollToTop}
-                        contextualScrollToBottom={this.contextualScrollToBottom}
-                        shouldForceScrollOnMessageLoad={true}
-                        shouldForceScrollToTopOnMessageLoad={false}
-                        hasMessagesToLoad={thread.messageCount > 0}
-                        isModerator={isModerator}
-                        isWatercooler={true}
-                      />
-                    )}
-
-                    {!isEditing &&
-                      isLocked && (
-                        <NullState
-                          icon="private"
-                          copy="This conversation has been locked."
-                        />
-                      )}
-                  </Detail>
-                </Content>
-
-                {this.renderChatInputOrUpsell()}
-              </ThreadContentView>
-            </ThreadViewContainer>
-          </ErrorBoundary>
-        );
+      const isWatercooler = thread.watercooler;
+      const headTitle = isWatercooler
+        ? `The Watercooler · ${thread.community.name}`
+        : title;
+      const headDescription = isWatercooler
+        ? `Watercooler chat for the ${thread.community.name} community`
+        : description;
 
       return (
         <ErrorBoundary>
@@ -479,10 +414,11 @@ class ThreadContainer extends React.Component<Props, State> {
 
             <ThreadContentView slider={slider}>
               <Head
-                title={title}
-                description={description}
+                title={headTitle}
+                description={headDescription}
                 image={thread.community.profilePhoto}
               />
+
               <Titlebar
                 title={thread.content.title}
                 subtitle={`${thread.community.name} / ${thread.channel.name}`}
@@ -493,35 +429,18 @@ class ThreadContainer extends React.Component<Props, State> {
               />
               <Content innerRef={this.setMessagesContainer}>
                 <Detail type={slider ? '' : 'only'}>
-                  <ThreadCommunityBanner
-                    hide={threadViewContext === 'fullscreen'}
-                    thread={thread}
-                  />
-
-                  <ThreadDetail
-                    toggleEdit={this.toggleEdit}
-                    thread={thread}
-                    slider={slider}
-                  />
+                  {this.renderThreadHeader()}
 
                   {!isEditing && (
                     <Messages
-                      threadMessageCount={thread.messageCount}
                       id={thread.id}
                       scrollContainer={this.state.messagesContainer}
-                      currentUser={currentUser}
                       lastSeen={lastSeen}
-                      lastActive={lastActive}
                       forceScrollToBottom={this.forceScrollToBottom}
                       forceScrollToTop={this.forceScrollToTop}
                       contextualScrollToBottom={this.contextualScrollToBottom}
-                      shouldForceScrollOnMessageLoad={isParticipantOrAuthor}
-                      shouldForceScrollToTopOnMessageLoad={
-                        !isParticipantOrAuthor
-                      }
-                      hasMessagesToLoad={thread.messageCount > 0}
-                      isModerator={isModerator}
-                      threadIsLocked={isLocked}
+                      thread={thread}
+                      isWatercooler={thread.watercooler} // used in the graphql query to always fetch the latest messages
                     />
                   )}
 
