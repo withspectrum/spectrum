@@ -1,5 +1,6 @@
 // @flow
 const electron = require('electron');
+const windowStateKeeper = require('electron-window-state');
 const { app, BrowserWindow } = electron;
 const isDev = require('electron-is-dev');
 
@@ -21,12 +22,19 @@ function createWindow() {
     checkForUpdates();
   }
 
-  const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
+  let mainWindowState = windowStateKeeper({
+    defaultWidth: CONFIG.WINDOW_DEFAULT_WIDTH,
+    defaultHeight: CONFIG.WINDOW_DEFAULT_HEIGHT,
+  });
+
+  const { width, height, x, y } = mainWindowState;
 
   // Create the main browser window.
   mainWindow = new BrowserWindow({
     width,
     height,
+    x,
+    y,
     titleBarStyle: 'hiddenInset',
     minHeight: CONFIG.WINDOW_MIN_HEIGHT,
     minWidth: CONFIG.WINDOW_MIN_WIDTH,
@@ -57,9 +65,10 @@ function createWindow() {
 
   // if main window is ready to show, show up the main window
   mainWindow.once('ready-to-show', () => {
-    mainWindow && mainWindow.maximize();
     mainWindow && mainWindow.show();
   });
+
+  mainWindowState.manage(mainWindow);
 }
 
 // This method will be called when Electron has finished
