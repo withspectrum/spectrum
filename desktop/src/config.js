@@ -17,6 +17,8 @@ module.exports = {
     'https://github.com/withspectrum/spectrum/blob/alpha/LICENSE',
   GITHUB_URL_ISSUES: 'https://github.com/withspectrum/spectrum/issues',
 
+  WINDOW_DEFAULT_HEIGHT: 800,
+  WINDOW_DEFAULT_WIDTH: 1300,
   WINDOW_MIN_HEIGHT: 500,
   WINDOW_MIN_WIDTH: 770,
   WINDOW_BG_COLOR: '#F5F8FC',
