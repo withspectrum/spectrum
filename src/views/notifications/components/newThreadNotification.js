@@ -3,12 +3,13 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { getThreadById } from 'shared/graphql/queries/thread/getThread';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
-import { sortByDate } from '../../../helpers/utils';
-import { displayLoadingCard } from '../../../components/loading';
+import { sortByDate } from 'src/helpers/utils';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { parseNotificationDate, parseContext } from '../utils';
 import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
-import Icon from '../../../components/icons';
-import { ThreadProfile } from '../../../components/profile';
+import Icon from 'src/components/icons';
+import { ThreadProfile } from 'src/components/profile';
+import { LoadingCard } from 'src/components/loading';
 import {
   SegmentedNotificationCard,
   TextContent,
@@ -27,6 +28,7 @@ type Props = {
 };
 type State = {
   communityName: string,
+  deletedThreads: Array<?string>,
 };
 
 const sortThreads = (entities, currentUser) => {
@@ -50,10 +52,11 @@ const ThreadCreatedComponent = ({
 }: {
   data: { thread: GetThreadType },
 }) => {
+  if (rest.isLoading) return <LoadingCard />;
   return <ThreadProfile profileSize="mini" data={data} {...rest} />;
 };
 
-const ThreadCreated = compose(getThreadById, displayLoadingCard)(
+const ThreadCreated = compose(getThreadById, viewNetworkHandler)(
   ThreadCreatedComponent
 );
 
@@ -65,25 +68,31 @@ const ThreadCreated = compose(getThreadById, displayLoadingCard)(
 */
 
 export class NewThreadNotification extends React.Component<Props, State> {
-  constructor() {
-    super();
-
-    this.state = {
-      communityName: '',
-    };
-  }
+  state = {
+    communityName: '',
+    deletedThreads: [],
+  };
 
   setCommunityName = (name: string) => this.setState({ communityName: name });
 
+  markAsDeleted = (id: string) => {
+    const newArr = this.state.deletedThreads.concat(id);
+    setTimeout(() => {
+      this.setState({ deletedThreads: newArr });
+    }, 0);
+  };
+
   render() {
     const { notification, currentUser } = this.props;
-    const { communityName } = this.state;
+    const { communityName, deletedThreads } = this.state;
 
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context);
 
     // sort and order the threads
-    const threads = sortThreads(notification.entities, currentUser);
+    const threads = sortThreads(notification.entities, currentUser).filter(
+      thread => deletedThreads.indexOf(thread.id) < 0
+    );
 
     const newThreadCount =
       threads.length > 1 ? 'New threads were' : 'A new thread was';
@@ -104,6 +113,7 @@ export class NewThreadNotification extends React.Component<Props, State> {
                 return (
                   <ThreadCreated
                     setName={this.setCommunityName}
+                    markAsDeleted={this.markAsDeleted}
                     key={thread.id}
                     id={thread.id}
                   />
@@ -123,13 +133,18 @@ class MiniNewThreadNotificationWithMutation extends React.Component<
   Props,
   State
 > {
-  constructor() {
-    super();
+  state = {
+    communityName: '',
+    deletedThreads: [],
+  };
 
-    this.state = {
-      communityName: '',
-    };
-  }
+  markAsDeleted = (id: string) => {
+    const newArr = this.state.deletedThreads.concat(id);
+    setTimeout(() => {
+      this.setState({ deletedThreads: newArr });
+    }, 0);
+    this.markAsSeen();
+  };
 
   markAsSeen = () => {
     const {
@@ -147,12 +162,14 @@ class MiniNewThreadNotificationWithMutation extends React.Component<
 
   render() {
     const { notification, currentUser } = this.props;
-    const { communityName } = this.state;
+    const { communityName, deletedThreads } = this.state;
 
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context);
 
-    const threads = sortThreads(notification.entities, currentUser);
+    const threads = sortThreads(notification.entities, currentUser).filter(
+      thread => deletedThreads.indexOf(thread.id) < 0
+    );
 
     const newThreadCount =
       threads.length > 1 ? 'New threads were' : 'A new thread was';
@@ -175,6 +192,7 @@ class MiniNewThreadNotificationWithMutation extends React.Component<
               {threads.map(thread => {
                 return (
                   <ThreadCreated
+                    markAsDeleted={this.markAsDeleted}
                     setName={this.setCommunityName}
                     key={thread.id}
                     id={thread.id}
