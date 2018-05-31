@@ -32,6 +32,8 @@ import {
   SearchStringHeader,
   Sidebar,
 } from './style';
+import { track, events } from 'src/helpers/analytics';
+import { ErrorBoundary } from 'src/components/error';
 
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
   DashboardThreadFeed
@@ -93,6 +95,10 @@ class Dashboard extends React.Component<Props, State> {
     });
   };
 
+  componentDidMount() {
+    track(events.INBOX_EVERYTHING_VIEWED);
+  }
+
   render() {
     const {
       data: { user },
@@ -148,34 +154,40 @@ class Dashboard extends React.Component<Props, State> {
           <Head title={title} description={description} />
           <Titlebar hasChildren hasSearch filter={searchFilter}>
             <Menu darkContext hasTabBar>
+              <ErrorBoundary>
+                <CommunityList
+                  communities={communities}
+                  user={user}
+                  activeCommunity={activeCommunity}
+                  activeChannel={activeChannel}
+                />
+              </ErrorBoundary>
+            </Menu>
+          </Titlebar>
+          <Sidebar>
+            <ErrorBoundary>
               <CommunityList
                 communities={communities}
                 user={user}
                 activeCommunity={activeCommunity}
                 activeChannel={activeChannel}
+                setActiveChannelObject={this.setActiveChannelObject}
               />
-            </Menu>
-          </Titlebar>
-          <Sidebar>
-            <CommunityList
-              communities={communities}
-              user={user}
-              activeCommunity={activeCommunity}
-              activeChannel={activeChannel}
-              setActiveChannelObject={this.setActiveChannelObject}
-            />
+            </ErrorBoundary>
           </Sidebar>
           <InboxWrapper>
             <FeedHeaderContainer>
-              <Header
-                filter={searchFilter}
-                communities={communities}
-                user={user}
-                activeCommunity={activeCommunity}
-                activeCommunityObject={activeCommunityObject}
-                activeChannel={activeChannel}
-                activeChannelObject={activeChannelObject}
-              />
+              <ErrorBoundary>
+                <Header
+                  filter={searchFilter}
+                  communities={communities}
+                  user={user}
+                  activeCommunity={activeCommunity}
+                  activeCommunityObject={activeCommunityObject}
+                  activeChannel={activeChannel}
+                  activeChannelObject={activeChannelObject}
+                />
+              </ErrorBoundary>
             </FeedHeaderContainer>
             {newActivityIndicator && (
               <NewActivityIndicator elem="scroller-for-inbox" />
@@ -190,64 +202,74 @@ class Dashboard extends React.Component<Props, State> {
               {searchQueryString &&
                 searchQueryString.length > 0 &&
                 searchFilter && (
-                  <SearchThreadFeed
-                    queryString={searchQueryString}
-                    filter={searchFilter}
-                    selectedId={activeThread}
-                  />
+                  <ErrorBoundary>
+                    <SearchThreadFeed
+                      queryString={searchQueryString}
+                      filter={searchFilter}
+                      selectedId={activeThread}
+                    />
+                  </ErrorBoundary>
                 )}
 
               {// no community, no search results
               !activeCommunity &&
                 !searchQueryString && (
-                  <EverythingThreadFeed selectedId={activeThread} />
+                  <ErrorBoundary>
+                    <EverythingThreadFeed selectedId={activeThread} />
+                  </ErrorBoundary>
                 )}
 
               {// community, no channel, no search results
               activeCommunity &&
                 !activeChannel &&
                 !searchQueryString && (
-                  <CommunityThreadFeed
-                    id={activeCommunity}
-                    selectedId={activeThread}
-                    hasActiveCommunity={activeCommunity}
-                    community={activeCommunityObject}
-                    pinnedThreadId={
-                      activeCommunityObject &&
-                      activeCommunityObject.pinnedThreadId
-                    }
-                  />
+                  <ErrorBoundary>
+                    <CommunityThreadFeed
+                      id={activeCommunity}
+                      selectedId={activeThread}
+                      hasActiveCommunity={activeCommunity}
+                      community={activeCommunityObject}
+                      pinnedThreadId={
+                        activeCommunityObject &&
+                        activeCommunityObject.pinnedThreadId
+                      }
+                    />
+                  </ErrorBoundary>
                 )}
 
               {// channel and community, no search results
               activeChannel &&
                 activeCommunity &&
                 !searchQueryString && (
-                  <ChannelThreadFeed
-                    id={activeChannel}
-                    selectedId={activeThread}
-                    hasActiveCommunity={activeCommunity}
-                    hasActiveChannel={activeChannel}
-                    community={activeCommunityObject}
-                    pinnedThreadId={
-                      activeCommunityObject &&
-                      activeCommunityObject.pinnedThreadId
-                    }
-                    channelId={activeChannel}
-                  />
+                  <ErrorBoundary>
+                    <ChannelThreadFeed
+                      id={activeChannel}
+                      selectedId={activeThread}
+                      hasActiveCommunity={activeCommunity}
+                      hasActiveChannel={activeChannel}
+                      community={activeCommunityObject}
+                      pinnedThreadId={
+                        activeCommunityObject &&
+                        activeCommunityObject.pinnedThreadId
+                      }
+                      channelId={activeChannel}
+                    />
+                  </ErrorBoundary>
                 )}
             </InboxScroller>
           </InboxWrapper>
 
           <ThreadWrapper>
             <ThreadScroller id="scroller-for-inbox-thread-view">
-              <DashboardThread
-                threadId={activeThread}
-                activeCommunity={
-                  activeCommunityObject && activeCommunityObject.slug
-                }
-                activeChannel={activeChannel}
-              />
+              <ErrorBoundary>
+                <DashboardThread
+                  threadId={activeThread}
+                  activeCommunity={
+                    activeCommunityObject && activeCommunityObject.slug
+                  }
+                  activeChannel={activeChannel}
+                />
+              </ErrorBoundary>
             </ThreadScroller>
           </ThreadWrapper>
         </DashboardWrapper>

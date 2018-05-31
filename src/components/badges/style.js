@@ -39,6 +39,17 @@ export const BlockedBadge = styled(Span)`
   }
 `;
 
+export const PendingBadge = styled(Span)`
+  background-color: ${props => props.theme.special.alt};
+  background-image: ${props =>
+    Gradient(props.theme.special.alt, props.theme.special.default)};
+  cursor: pointer;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 export const DefaultPaymentMethodBadge = styled(Span)`
   background-color: ${props => props.theme.space.default};
   background-image: ${props =>

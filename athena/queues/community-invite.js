@@ -7,6 +7,7 @@ import { storeNotification } from '../models/notification';
 import { getUserByEmail } from '../models/user';
 import createQueue from '../../shared/bull/create-queue';
 import { storeUsersNotifications } from '../models/usersNotifications';
+import { getCommunitySettings } from '../models/communitySettings';
 import { SEND_COMMUNITY_INVITE_EMAIL } from './constants';
 const sendCommunityInviteEmailQueue = createQueue(SEND_COMMUNITY_INVITE_EMAIL);
 import type {
@@ -17,6 +18,7 @@ import type {
 const addToSendCommunityInviteEmailQueue = (
   recipient,
   community,
+  communitySettings,
   sender,
   customMessage
 ) => {
@@ -31,6 +33,7 @@ const addToSendCommunityInviteEmailQueue = (
       recipient,
       sender,
       community,
+      communitySettings,
       customMessage,
     },
     {
@@ -80,6 +83,7 @@ export default async (job: Job<CommunityInviteNotificationJobData>) => {
   const context = await fetchPayload('COMMUNITY', communityId);
 
   const communityToInvite = JSON.parse(context.payload);
+  const communitySettings = await getCommunitySettings(communityId);
   const sender = JSON.parse(actor.payload);
 
   // if the recipient of the email is not a member of spectrum, pass their information along to the email queue
@@ -88,6 +92,7 @@ export default async (job: Job<CommunityInviteNotificationJobData>) => {
     return addToSendCommunityInviteEmailQueue(
       inboundRecipient,
       communityToInvite,
+      communitySettings,
       sender,
       customMessage
     ).catch(err => {
@@ -124,8 +129,12 @@ export default async (job: Job<CommunityInviteNotificationJobData>) => {
 
     const updatedNotification = await storeNotification(newNotification);
     const sendInvite = await addToSendCommunityInviteEmailQueue(
-      inboundRecipient,
+      {
+        ...inboundRecipient,
+        userId: existingUser.id,
+      },
       communityToInvite,
+      communitySettings,
       sender,
       customMessage
     );

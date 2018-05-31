@@ -16,6 +16,8 @@ const Notification = /* GraphQL */ `
 		MENTION_MESSAGE
 		PRIVATE_CHANNEL_REQUEST_SENT
 		PRIVATE_CHANNEL_REQUEST_APPROVED
+		PRIVATE_COMMUNITY_REQUEST_SENT
+		PRIVATE_COMMUNITY_REQUEST_APPROVED
 	}
 
 	enum EntityType {
@@ -64,7 +66,6 @@ const Notification = /* GraphQL */ `
 
 	extend type Mutation {
 		markAllNotificationsSeen: Boolean
-		markAllNotificationsRead: Boolean
 		markDirectMessageNotificationsSeen: Boolean
 		markSingleNotificationSeen(id: ID!): Boolean
 	}

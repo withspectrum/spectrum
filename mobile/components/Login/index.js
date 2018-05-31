@@ -1,9 +1,10 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import { Text, View, Button } from 'react-native';
 import { AuthSession, SecureStore } from 'expo';
 import { authenticate } from '../../actions/authentication';
+import { DEV_BASE_URI } from '../../../shared/graphql/constants.native';
+import type { Dispatch } from 'redux';
 import {
   Container,
   Emoji,
@@ -20,12 +21,12 @@ import {
 const API_URL =
   process.env.NODE_ENV === 'production'
     ? 'https://spectrum.chat'
-    : 'http://localhost:3001';
+    : `http://${DEV_BASE_URI}`;
 
 type Provider = 'twitter' | 'facebook' | 'google' | 'github';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 class Login extends React.Component<Props> {

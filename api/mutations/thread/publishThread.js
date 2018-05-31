@@ -2,7 +2,6 @@
 const debug = require('debug')('api:mutations:thread:publish-thread');
 import stringSimilarity from 'string-similarity';
 import { markdownToDraft } from 'markdown-draft-js';
-import { EditorState } from 'draft-js';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';
@@ -15,7 +14,7 @@ import { createParticipantInThread } from '../../models/usersThreads';
 import { StripeUtil } from 'shared/stripe/utils';
 import type { FileUpload, DBThread } from 'shared/types';
 import { PRIVATE_CHANNEL, FREE_PRIVATE_CHANNEL } from 'pluto/queues/constants';
-import { toPlainText, toState, toJSON } from 'shared/draft-utils';
+import { toPlainText, toState } from 'shared/draft-utils';
 import {
   processReputationEventQueue,
   sendThreadNotificationQueue,
@@ -24,6 +23,9 @@ import {
 } from 'shared/bull/queues';
 import getSpectrumScore from 'athena/queues/moderationEvents/spectrum';
 import getPerspectiveScore from 'athena/queues/moderationEvents/perspective';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 const threadBodyToPlainText = (body: any): string =>
   toPlainText(toState(JSON.parse(body)));
@@ -39,7 +41,7 @@ type Attachment = {
 
 type File = FileUpload;
 
-type PublishThreadInput = {
+type Input = {
   thread: {
     channelId: string,
     communityId: string,
@@ -53,21 +55,23 @@ type PublishThreadInput = {
   },
 };
 
-export default async (
-  _: any,
-  { thread }: PublishThreadInput,
-  { user, loaders }: GraphQLContext
-) => {
-  const currentUser = user;
-
-  if (!currentUser) {
-    return new UserError('You must be signed in to publish a new thread.');
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { user, loaders } = ctx;
+  const { thread } = args;
 
   let { type } = thread;
 
   if (type === 'SLATE') {
-    throw new UserError(
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_CREATED_FAILED,
+      context: { channelId: thread.channelId },
+      properties: {
+        reason: 'slate type',
+      },
+    });
+
+    return new UserError(
       "You're on an old version of Spectrum, please refresh your browser."
     );
   }
@@ -90,26 +94,50 @@ export default async (
     community,
     usersPreviousPublishedThreads,
   ] = await Promise.all([
-    loaders.userPermissionsInChannel.load([currentUser.id, thread.channelId]),
-    loaders.userPermissionsInCommunity.load([
-      currentUser.id,
-      thread.communityId,
-    ]),
+    loaders.userPermissionsInChannel.load([user.id, thread.channelId]),
+    loaders.userPermissionsInCommunity.load([user.id, thread.communityId]),
     loaders.channel.load(thread.channelId),
     loaders.community.load(thread.communityId),
-    getThreadsByUserAsSpamCheck(currentUser.id, SPAM_TIMEFRAME),
+    getThreadsByUserAsSpamCheck(user.id, SPAM_TIMEFRAME),
   ]);
 
   if (!community || community.deletedAt) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_CREATED_FAILED,
+      context: { channelId: thread.channelId },
+      properties: {
+        reason: 'community doesn’t exist',
+      },
+    });
+
     return new UserError('This community doesn’t exist');
   }
 
   // if channel wasn't found or is deleted
   if (!channel || channel.deletedAt) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_CREATED_FAILED,
+      context: { channelId: thread.channelId },
+      properties: {
+        reason: 'channel doesn’t exist',
+      },
+    });
+
     return new UserError("This channel doesn't exist");
   }
 
   if (channel.isArchived) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_CREATED_FAILED,
+      context: { channelId: thread.channelId },
+      properties: {
+        reason: 'channel archived',
+      },
+    });
+
     return new UserError('This channel has been archived');
   }
 
@@ -119,6 +147,15 @@ export default async (
     currentUserChannelPermissions.isBlocked ||
     currentUserCommunityPermissions.isBlocked
   ) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_CREATED_FAILED,
+      context: { channelId: thread.channelId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
     return new UserError(
       "You don't have permission to create threads in this channel."
     );
@@ -128,6 +165,15 @@ export default async (
     const { customer } = await StripeUtil.jobPreflight(community.id);
 
     if (!customer) {
+      trackQueue.add({
+        userId: user.id,
+        event: events.THREAD_CREATED_FAILED,
+        context: { channelId: thread.channelId },
+        properties: {
+          reason: 'no customer for private channel',
+        },
+      });
+
       return new UserError(
         'We could not verify the billing status for this channel, please try again'
       );
@@ -139,6 +185,15 @@ export default async (
     ]);
 
     if (!hasPaidPrivateChannel && !hasFreePrivateChannel) {
+      trackQueue.add({
+        userId: user.id,
+        event: events.THREAD_CREATED_FAILED,
+        context: { channelId: thread.channelId },
+        properties: {
+          reason: 'private channel without subscription',
+        },
+      });
+
       return new UserError(
         'This private channel does not have an active subscription'
       );
@@ -168,12 +223,21 @@ export default async (
     ) {
       debug('User has posted at least 3 times in the previous 10m');
       _adminProcessUserSpammingThreadsQueue.add({
-        user: currentUser,
+        user: user,
         threads: usersPreviousPublishedThreads,
         // $FlowIssue
         publishing: thread,
         community: community,
         channel: channel,
+      });
+
+      trackQueue.add({
+        userId: user.id,
+        event: events.THREAD_CREATED_FAILED,
+        context: { channelId: thread.channelId },
+        properties: {
+          reason: 'user spamming threads',
+        },
       });
 
       return new UserError(
@@ -216,8 +280,14 @@ export default async (
     if (isSpamming) {
       debug('User is spamming similar content');
 
+      trackQueue.add({
+        userId: user.id,
+        event: events.THREAD_FLAGGED_AS_SPAM,
+        context: { channelId: thread.channelId },
+      });
+
       _adminProcessUserSpammingThreadsQueue.add({
-        user: currentUser,
+        user: user,
         threads: usersPreviousPublishedThreads,
         // $FlowIssue
         publishing: thread,
@@ -232,15 +302,15 @@ export default async (
   }
 
   /*
-  If the thread has attachments, we have to iterate through each attachment and JSON.parse() the data payload. This is because we want a generic data shape in the graphQL layer like this:
+    If the thread has attachments, we have to iterate through each attachment and JSON.parse() the data payload. This is because we want a generic data shape in the graphQL layer like this:
 
-  {
-    attachmentType: enum String
-    data: String
-  }
+    {
+      attachmentType: enum String
+      data: String
+    }
 
-  But when we get the data onto the client we JSON.parse the `data` field so that we can have any generic shape for attachments in the future.
-*/
+    But when we get the data onto the client we JSON.parse the `data` field so that we can have any generic shape for attachments in the future.
+  */
 
   let threadObject = Object.assign(
     {},
@@ -269,7 +339,7 @@ export default async (
   }
 
   // $FlowFixMe
-  const dbThread: DBThread = await publishThread(threadObject, currentUser.id);
+  const dbThread: DBThread = await publishThread(threadObject, user.id);
 
   // we check for toxicity here only to determine whether or not to send
   // email notifications - the thread will be published regardless, but we can
@@ -315,10 +385,17 @@ export default async (
     debug(
       'Thread determined to be toxic, not sending notifications or adding rep'
     );
+
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_FLAGGED_AS_TOXIC,
+      context: { threadId: dbThread.id },
+    });
+
     // generate an alert for admins
     _adminProcessToxicThreadQueue.add({ thread: dbThread });
     processReputationEventQueue.add({
-      userId: currentUser.id,
+      userId: user.id,
       type: 'thread created',
       entityId: dbThread.id,
     });
@@ -327,14 +404,14 @@ export default async (
     // thread is clean, send notifications and process reputation
     sendThreadNotificationQueue.add({ thread: dbThread });
     processReputationEventQueue.add({
-      userId: currentUser.id,
+      userId: user.id,
       type: 'thread created',
       entityId: dbThread.id,
     });
   }
 
   // create a relationship between the thread and the author
-  await createParticipantInThread(dbThread.id, currentUser.id);
+  await createParticipantInThread(dbThread.id, user.id);
 
   if (!thread.filesToUpload || thread.filesToUpload.length === 0) {
     return dbThread;
@@ -350,6 +427,15 @@ export default async (
       )
     );
   } catch (err) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_CREATED_FAILED,
+      context: { channelId: thread.channelId },
+      properties: {
+        reason: 'images failed to upload',
+      },
+    });
+
     return new UserError(err.message);
   }
 
@@ -376,6 +462,7 @@ export default async (
         body: JSON.stringify(body),
       },
     },
+    user.id,
     false
   );
-};
+});

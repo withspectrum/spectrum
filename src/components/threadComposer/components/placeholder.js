@@ -5,9 +5,10 @@ import { openComposer } from '../../../actions/composer';
 import Icon from '../../icons';
 import { Container, Composer, Placeholder, PlaceholderLabel } from '../style';
 import Upsell from './upsell';
+import type { Dispatch } from 'redux';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isOpen: boolean,
   isInbox: boolean,
   showCommunityOwnerUpsell: boolean,

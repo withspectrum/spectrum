@@ -38,15 +38,23 @@ import {
   ColumnHeading,
 } from './style';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
-import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
+import {
+  getCommunityByMatch,
+  type GetCommunityType,
+} from 'shared/graphql/queries/community/getCommunity';
 import ChannelList from './components/channelList';
 import ModeratorList from './components/moderatorList';
+import { track, events, transformations } from 'src/helpers/analytics';
+import RequestToJoinCommunity from './components/requestToJoinCommunity';
+import CommunityLogin from 'src/views/communityLogin';
+import Login from 'src/views/login';
+import { ErrorBoundary } from 'src/components/error';
 
 const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 
 type Props = {
   ...$Exact<ViewNetworkHandlerType>,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   toggleCommunityMembership: Function,
   currentUser: Object,
   match: {
@@ -55,7 +63,7 @@ type Props = {
     },
   },
   data: {
-    community: Object,
+    community: GetCommunityType,
   },
 };
 
@@ -76,16 +84,35 @@ class CommunityView extends React.Component<Props, State> {
     };
   }
 
+  componentDidMount() {
+    if (this.props.data && this.props.data.community) {
+      track(events.COMMUNITY_VIEWED, {
+        community: transformations.analyticsCommunity(
+          this.props.data.community
+        ),
+      });
+    }
+  }
+
   componentDidUpdate(prevProps) {
-    // if the user is new and signed up through a community page, push
-    // the community data into the store to hydrate the new user experience
-    // with their first community they should join
-    if (this.props.currentUser) return;
     if (
-      (!prevProps.data.community && this.props.data.community) ||
+      (!prevProps.data.community &&
+        this.props.data.community &&
+        this.props.data.community.id) ||
       (prevProps.data.community &&
         prevProps.data.community.id !== this.props.data.community.id)
     ) {
+      track(events.COMMUNITY_VIEWED, {
+        community: transformations.analyticsCommunity(
+          this.props.data.community
+        ),
+      });
+
+      // if the user is new and signed up through a community page, push
+      // the community data into the store to hydrate the new user experience
+      // with their first community they should join
+      if (this.props.currentUser) return;
+
       this.props.dispatch(addCommunityToOnboarding(this.props.data.community));
     }
   }
@@ -115,6 +142,7 @@ class CommunityView extends React.Component<Props, State> {
       currentUser,
       isLoading,
       hasError,
+      match,
     } = this.props;
     const { communitySlug } = params;
 
@@ -133,6 +161,7 @@ class CommunityView extends React.Component<Props, State> {
         isMember,
         isOwner,
         isModerator,
+        isPending,
         isBlocked,
       } = community.communityPermissions;
       const userHasPermissions = isMember || isOwner || isModerator;
@@ -157,14 +186,60 @@ class CommunityView extends React.Component<Props, State> {
             <ViewError
               id="main"
               emoji={'✋'}
-              heading={`You are blocked from ${community.name}`}
-              subheading={
-                'You have been blocked from joining and viewing conversations in this community.'
-              }
+              heading={`You don’t have permission to view ${community.name}`}
+              subheading={'Head back home to get on track.'}
             >
               <Link to={'/'}>
                 <Button large>Take me home</Button>
               </Link>
+            </ViewError>
+          </AppViewWrapper>
+        );
+      }
+
+      const redirectPath = `${CLIENT_URL}/${community.slug}`;
+
+      if (!currentUser && community.isPrivate) {
+        if (community.brandedLogin.isEnabled) {
+          return <CommunityLogin redirectPath={redirectPath} match={match} />;
+        } else {
+          return <Login redirectPath={redirectPath} />;
+        }
+      }
+
+      if (community.isPrivate && (!isLoggedIn || !userHasPermissions)) {
+        return (
+          <AppViewWrapper data-cy="community-view-blocked">
+            <Head
+              title={title}
+              description={`The ${community.name} community on Spectrum`}
+              image={community.profilePhoto}
+            />
+
+            <Titlebar
+              title={community.name}
+              provideBack={true}
+              backRoute={'/'}
+              noComposer
+            />
+
+            <ViewError
+              emoji={isPending ? '🕓' : '🔑'}
+              heading={
+                isPending
+                  ? 'Your request to join this community is pending'
+                  : 'This community is private'
+              }
+              subheading={
+                isPending
+                  ? `Return home until you hear back.`
+                  : `Request to join this community and the admins of ${
+                      community.name
+                    } will be notified.`
+              }
+              dataCy={'community-view-is-restricted'}
+            >
+              <RequestToJoinCommunity community={community} />
             </ViewError>
           </AppViewWrapper>
         );
@@ -194,11 +269,15 @@ class CommunityView extends React.Component<Props, State> {
           <Grid id="main">
             <CoverPhoto src={community.coverPhoto} />
             <Meta>
-              <CommunityProfile data={{ community }} profileSize="full" />
+              <ErrorBoundary fallbackComponent={null}>
+                <CommunityProfile data={{ community }} profileSize="full" />
+              </ErrorBoundary>
 
               {!isLoggedIn ? (
                 <Link to={loginUrl}>
-                  <LoginButton>Join {community.name}</LoginButton>
+                  <LoginButton dataCy={'join-community-button-login'}>
+                    Join {community.name}
+                  </LoginButton>
                 </Link>
               ) : !isOwner ? (
                 <ToggleCommunityMembership
@@ -210,6 +289,7 @@ class CommunityView extends React.Component<Props, State> {
                       color={isMember ? 'text.alt' : null}
                       icon={isMember ? 'checkmark' : null}
                       loading={state.isLoading}
+                      dataCy={'join-community-button'}
                     >
                       {isMember ? 'Member' : `Join ${community.name}`}
                     </LoginButton>
@@ -280,10 +360,12 @@ class CommunityView extends React.Component<Props, State> {
               isLoggedIn &&
                 selectedView === 'threads' &&
                 userHasPermissions && (
-                  <ThreadComposer
-                    activeCommunity={communitySlug}
-                    showComposerUpsell={showComposerUpsell}
-                  />
+                  <ErrorBoundary fallbackComponent={null}>
+                    <ThreadComposer
+                      activeCommunity={communitySlug}
+                      showComposerUpsell={showComposerUpsell}
+                    />
+                  </ErrorBoundary>
                 )}
 
               {// thread list
@@ -304,27 +386,38 @@ class CommunityView extends React.Component<Props, State> {
 
               {// members grid
               selectedView === 'members' && (
-                <CommunityMemberGrid
-                  id={community.id}
-                  filter={{ isMember: true, isBlocked: false }}
-                />
+                <ErrorBoundary>
+                  <CommunityMemberGrid
+                    id={community.id}
+                    filter={{ isMember: true, isBlocked: false }}
+                  />
+                </ErrorBoundary>
               )}
 
               {//search
-              selectedView === 'search' && <Search community={community} />}
+              selectedView === 'search' && (
+                <ErrorBoundary>
+                  <Search community={community} />
+                </ErrorBoundary>
+              )}
             </Content>
             <Extras>
-              <ColumnHeading>Channels</ColumnHeading>
-              <ChannelList
-                id={community.id}
-                communitySlug={communitySlug.toLowerCase()}
-              />
-              <ColumnHeading>Team</ColumnHeading>
-              <ModeratorList
-                id={community.id}
-                first={20}
-                filter={{ isModerator: true, isOwner: true }}
-              />
+              <ErrorBoundary fallbackComponent={null}>
+                <ColumnHeading>Channels</ColumnHeading>
+                <ChannelList
+                  id={community.id}
+                  communitySlug={communitySlug.toLowerCase()}
+                />
+              </ErrorBoundary>
+
+              <ErrorBoundary fallbackComponent={null}>
+                <ColumnHeading>Team</ColumnHeading>
+                <ModeratorList
+                  id={community.id}
+                  first={20}
+                  filter={{ isModerator: true, isOwner: true }}
+                />
+              </ErrorBoundary>
             </Extras>
           </Grid>
         </AppViewWrapper>

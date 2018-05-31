@@ -35,10 +35,6 @@ const leave = () => {
 
   cy.get('[data-cy="channel-join-button"]').click();
 
-  cy.get('[data-cy="channel-join-button"]').should('be.disabled');
-
-  cy.get('[data-cy="channel-join-button"]').should('not.be.disabled');
-
   cy.get('[data-cy="channel-join-button"]').contains(`Join `);
 };
 
@@ -49,10 +45,6 @@ const join = () => {
     .contains('Join ');
 
   cy.get('[data-cy="channel-join-button"]').click();
-
-  cy.get('[data-cy="channel-join-button"]').should('be.disabled');
-
-  cy.get('[data-cy="channel-join-button"]').should('not.be.disabled');
 
   cy.get('[data-cy="channel-join-button"]').contains(`Joined`);
 };

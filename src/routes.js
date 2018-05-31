@@ -3,24 +3,24 @@ import * as React from 'react';
 import { Route, Switch, Redirect } from 'react-router';
 import styled, { ThemeProvider } from 'styled-components';
 import Loadable from 'react-loadable';
-import ErrorBoundary from 'react-error-boundary';
+import { ErrorBoundary } from 'src/components/error';
 import { CLIENT_URL } from './api/constants';
 import generateMetaInfo from 'shared/generate-meta-info';
 import './reset.css.js';
-import { theme } from './components/theme';
+import { theme } from 'shared/theme';
 import { FlexCol } from './components/globals';
 import ScrollManager from './components/scrollManager';
 import Head from './components/head';
 import ModalRoot from './components/modals/modalRoot';
 import Gallery from './components/gallery';
 import Toasts from './components/toasts';
-import Maintenance from './components/maintenance';
 import { Loading, LoadingScreen } from './components/loading';
 import LoadingDashboard from './views/dashboard/components/dashboardLoading';
 import Composer from './components/composer';
 import signedOutFallback from './helpers/signed-out-fallback';
 import AuthViewHandler from './views/authViewHandler';
 import PrivateChannelJoin from './views/privateChannelJoin';
+import PrivateCommunityJoin from './views/privateCommunityJoin';
 import ThreadSlider from './views/threadSlider';
 import Navbar from './views/navbar';
 import Status from './views/status';
@@ -145,29 +145,30 @@ const ComposerFallback = signedOutFallback(Composer, () => (
   <Redirect to="/login" />
 ));
 
-class Routes extends React.Component<{}> {
+class Routes extends React.Component<{||}> {
+  componentDidMount() {
+    const AMPLITUDE_API_KEY =
+      process.env.NODE_ENV === 'production'
+        ? process.env.AMPLITUDE_API_KEY
+        : process.env.AMPLITUDE_API_KEY_DEVELOPMENT;
+    if (AMPLITUDE_API_KEY) {
+      try {
+        window.amplitude.getInstance().init(AMPLITUDE_API_KEY);
+        window.amplitude.getInstance().setOptOut(false);
+      } catch (err) {
+        console.warn('Unable to start tracking', err.message);
+      }
+    } else {
+      console.warn('No amplitude api key, tracking in development mode');
+    }
+  }
+
   render() {
     const { title, description } = generateMetaInfo();
 
-    if (this.props.maintenanceMode) {
-      return (
-        <ThemeProvider theme={theme}>
-          <ScrollManager>
-            <Body>
-              <Head
-                title="Ongoing Maintenance - Spectrum"
-                description="Spectrum is currently undergoing scheduled maintenance downtime. Please check https://twitter.com/withspectrum for ongoing updates."
-              />
-              <Maintenance />
-            </Body>
-          </ScrollManager>
-        </ThemeProvider>
-      );
-    }
-
     return (
       <ThemeProvider theme={theme}>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <ErrorBoundary fallbackComponent={ErrorFallback}>
           <ScrollManager>
             <Body>
               {/* Default meta tags, get overriden by anything further down the tree */}
@@ -260,6 +261,10 @@ class Routes extends React.Component<{}> {
                 <Route
                   path="/:communitySlug/settings"
                   component={CommunitySettingsFallback}
+                />
+                <Route
+                  path="/:communitySlug/join/:token"
+                  component={PrivateCommunityJoin}
                 />
                 <Route
                   path="/:communitySlug/login"

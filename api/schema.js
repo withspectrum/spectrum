@@ -1,8 +1,7 @@
-//@flow
+// @flow
 /**
  * The combined schema out of types and resolvers (queries, mutations and subscriptions)
  */
-//$FlowFixMe
 const {
   makeExecutableSchema,
   addSchemaLevelResolveFunction,
@@ -11,7 +10,6 @@ const debug = require('debug')('api:resolvers');
 const logExecutions = require('graphql-log')({
   logger: debug,
 });
-//$FlowFixMe
 const { merge } = require('lodash');
 import UserError from './utils/UserError';
 
@@ -66,27 +64,27 @@ const directMessageThreadSubscriptions = require('./subscriptions/directMessageT
 const threadSubscriptions = require('./subscriptions/thread');
 
 const Root = /* GraphQL */ `
-	# The dummy queries and mutations are necessary because
-	# graphql-js cannot have empty root types and we only extend
-	# these types later on
-	# Ref: apollographql/graphql-tools#293
-	type Query {
-		dummy: String
-	}
+  # The dummy queries and mutations are necessary because
+  # graphql-js cannot have empty root types and we only extend
+  # these types later on
+  # Ref: apollographql/graphql-tools#293
+  type Query {
+    dummy: String
+  }
 
-	type Mutation {
-		dummy: String
-	}
+  type Mutation {
+    dummy: String
+  }
 
-	type Subscription {
-		dummy: String
-	}
+  type Subscription {
+    dummy: String
+  }
 
-	schema {
-		query: Query
-		mutation: Mutation
-		subscription: Subscription
-	}
+  schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+  }
 `;
 
 const resolvers = merge(
@@ -154,14 +152,5 @@ const schema = makeExecutableSchema({
   ],
   resolvers,
 });
-
-if (process.env.REACT_APP_MAINTENANCE_MODE === 'enabled') {
-  console.error('\n\n⚠️ ----MAINTENANCE MODE ENABLED----⚠️\n\n');
-  addSchemaLevelResolveFunction(schema, () => {
-    throw new UserError(
-      "We're currently undergoing planned maintenance. We'll be back by 3pm UTC, please check https://twitter.com/withspectrum for ongoing updates!"
-    );
-  });
-}
 
 module.exports = schema;

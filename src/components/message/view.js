@@ -17,8 +17,9 @@ import {
 } from './style';
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
 import { toPlainText, toState } from 'shared/draft-utils';
-import { onlyContainsEmoji } from '../../helpers/utils';
+import { draftOnlyContainsEmoji } from 'shared/only-contains-emoji';
 import { Byline, Name, Username } from '../messageGroup/style';
+import { isShort } from 'shared/clients/draft-js/utils/isShort';
 import type { Node } from 'react';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
 
@@ -30,12 +31,13 @@ export const Body = (props: {
   showParent?: boolean,
 }) => {
   const { showParent = true, message, openGallery, me, bubble = true } = props;
-  const parsedMessage =
-    message.messageType &&
+  const emojiOnly =
     message.messageType === 'draftjs' &&
-    toPlainText(toState(JSON.parse(message.content.body)));
-  const emojiOnly = parsedMessage && onlyContainsEmoji(parsedMessage);
-  if (emojiOnly) return <Emoji>{parsedMessage}</Emoji>;
+    draftOnlyContainsEmoji(JSON.parse(message.content.body));
+  if (emojiOnly)
+    return (
+      <Emoji>{toPlainText(toState(JSON.parse(message.content.body)))}</Emoji>
+    );
   const WrapperComponent = bubble ? Text : QuotedParagraph;
   switch (message.messageType) {
     case 'text':
@@ -85,14 +87,10 @@ export class QuotedMessage extends React.Component<
   constructor(props: QuotedMessageProps) {
     super(props);
 
-    const jsonBody = JSON.parse(props.message.content.body);
-    const isShort =
-      jsonBody.blocks.length === 1 ||
-      toPlainText(toState(jsonBody)).length <= 170;
-
+    const short = isShort(props.message);
     this.state = {
-      isShort,
-      isExpanded: isShort,
+      isShort: short,
+      isExpanded: short,
     };
   }
 
@@ -110,7 +108,7 @@ export class QuotedMessage extends React.Component<
 
   render() {
     const { message, openGallery } = this.props;
-    const { isExpanded, isShort } = this.state;
+    const { isExpanded } = this.state;
     return (
       <QuoteWrapper
         expanded={isExpanded}
@@ -126,7 +124,7 @@ export class QuotedMessage extends React.Component<
           message={message}
           showParent={false}
           me={false}
-          openGallery={openGallery ? openGallery : () => {}}
+          openGallery={openGallery ? openGallery() : () => {}}
           bubble={false}
         />
         {!isExpanded && <QuoteWrapperGradient />}
@@ -175,7 +173,7 @@ const Action = (props: ActionProps) => {
             tipText={'Delete'}
             tipLocation={'top'}
             size={24}
-            onClick={deleteMessage}
+            onClick={() => deleteMessage && deleteMessage()}
           />
         </ModActionWrapper>
       );

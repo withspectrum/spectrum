@@ -1,7 +1,7 @@
 // @flow
 import { db } from './db';
 
-export const deactiveUserEmailNotifications = async (email: string) => {
+export const deactivateUserEmailNotifications = async (email: string) => {
   const userId = await db
     .table('users')
     .getAll(email, { index: 'email' })

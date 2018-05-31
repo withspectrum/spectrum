@@ -11,6 +11,7 @@ export type DBChannel = {
   communityId: string,
   createdAt: Date,
   deletedAt?: Date,
+  deletedBy?: string,
   description: string,
   id: string,
   isDefault: boolean,
@@ -30,6 +31,7 @@ export type DBCommunity = {
   slug: string,
   website?: ?string,
   deletedAt?: Date,
+  deletedBy?: string,
   pinnedThreadId?: string,
   watercoolerId?: string,
   creatorId: string,
@@ -39,6 +41,7 @@ export type DBCommunity = {
   stripeCustomerId: ?string,
   pendingAdministratorEmail?: string,
   ossVerified?: boolean,
+  isPrivate: boolean,
 };
 
 export type DBCommunitySettings = {
@@ -57,6 +60,10 @@ export type DBCommunitySettings = {
     token: ?string,
     invitesMemberCount: ?string,
     invitesCustomMessage: ?string,
+  },
+  joinSettings: {
+    tokenJoinEnabled: boolean,
+    token: ?string,
   },
 };
 
@@ -112,6 +119,7 @@ export type DBMessage = {
   messageType: 'text' | 'media' | 'draftjs',
   senderId: string,
   deletedAt?: Date,
+  deletedBy?: string,
   threadId: string,
   threadType: 'story' | 'directMessageThread',
   timestamp: Date,
@@ -131,7 +139,6 @@ export type NotificationEventType =
   | 'REACTION_CREATED'
   | 'MESSAGE_CREATED'
   | 'THREAD_CREATED'
-  | 'THREAD_EDITED'
   | 'CHANNEL_CREATED'
   | 'DIRECT_MESSAGE_THREAD_CREATED'
   | 'USER_JOINED_COMMUNITY'
@@ -139,7 +146,13 @@ export type NotificationEventType =
   | 'USER_APPROVED_TO_JOIN_PRIVATE_CHANNEL'
   | 'THREAD_LOCKED_BY_OWNER'
   | 'THREAD_DELETED_BY_OWNER'
-  | 'COMMUNITY_INVITATION';
+  | 'COMMUNITY_INVITE'
+  | 'MENTION_THREAD'
+  | 'MENTION_MESSAGE'
+  | 'PRIVATE_CHANNEL_REQUEST_SENT'
+  | 'PRIVATE_CHANNEL_REQUEST_APPROVED'
+  | 'PRIVATE_COMMUNITY_REQUEST_SENT'
+  | 'PRIVATE_COMMUNITY_REQUEST_APPROVED';
 
 type NotificationPayload = {
   id: string,
@@ -244,6 +257,8 @@ export type DBThread = {
   lockedAt?: Date,
   lastActive: Date,
   modifiedAt?: Date,
+  deletedAt?: string,
+  deletedBy: ?string,
   attachments?: Array<DBThreadAttachment>,
   edits?: Array<DBThreadEdits>,
   watercooler?: boolean,
@@ -253,7 +268,7 @@ export type DBThread = {
 export type DBUser = {
   id: string,
   email?: string,
-  createdAt: Date,
+  createdAt: string,
   name: string,
   coverPhoto: string,
   profilePhoto: string,
@@ -265,10 +280,10 @@ export type DBUser = {
   username: ?string,
   timezone?: ?number,
   isOnline?: boolean,
-  lastSeen?: ?Date,
+  lastSeen?: ?string,
   description?: ?string,
   website?: ?string,
-  modifiedAt: ?Date,
+  modifiedAt: ?string,
 };
 
 export type DBUsersChannels = {
@@ -292,6 +307,7 @@ export type DBUsersCommunities = {
   isMember: boolean,
   isModerator: boolean,
   isOwner: boolean,
+  isPending: boolean,
   receiveNotifications: boolean,
   reputation: number,
   userId: string,

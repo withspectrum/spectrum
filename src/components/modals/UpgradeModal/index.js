@@ -4,12 +4,12 @@ import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import ModalContainer from '../modalContainer';
 import { closeModal } from '../../../actions/modals';
-import { track } from '../../../helpers/events';
 import downgradeFromProMutation from 'shared/graphql/mutations/user/downgradeFromPro';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { connect } from 'react-redux';
 import { Button, OutlineButton } from '../../buttons';
 import { UpsellUpgradeToPro } from '../../upsell';
+import type { Dispatch } from 'redux';
 import {
   modalStyles,
   Section,
@@ -18,9 +18,10 @@ import {
   Subheading,
   Padding,
 } from './style';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   downgradeFromPro: Function,
   isOpen: boolean,
   user: Object,
@@ -45,11 +46,10 @@ class UpgradeModal extends React.Component<Props, State> {
 
   componentDidMount() {
     const { user } = this.props;
-    if (user.isPro) {
-      track('pro', 'downgrade inited', null);
-    } else {
-      track('pro', 'upgrade inited', null);
-    }
+    const event = user.isPro
+      ? events.USER_DOWNGRADED_FROM_PRO_INITED
+      : events.USER_UPGRADED_TO_PRO_INITED;
+    track(event);
   }
 
   closeModal = () => {
@@ -64,8 +64,6 @@ class UpgradeModal extends React.Component<Props, State> {
     this.props
       .downgradeFromPro()
       .then(() => {
-        track('pro', 'downgraded', null);
-
         this.props.dispatch(
           addToastWithTimeout(
             'neutral',

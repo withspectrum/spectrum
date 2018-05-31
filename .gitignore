@@ -18,6 +18,8 @@ build-mercury
 build-vulcan
 build-hyperion
 build-pluto
+build-electron
+build-analytics
 package-lock.json
 .vscode
 dump.rdb
@@ -31,4 +33,7 @@ api/.env
 .expo
 mobile/.expo
 test-results.json
+desktop/release
 public/uploads
+cypress/screenshots/
+cypress/videos/

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import mentionsDecorator from '../mentions-decorator/index.native';
-// import linksDecorator from '../links-decorator/index.native';
+import linksDecorator from '../links-decorator/index.native';
 import Text from '../../../../mobile/components/Text';
 import Codeblock from '../../../../mobile/components/Codeblock';
 import type { Node } from 'react';
@@ -34,7 +34,7 @@ const messageRenderer = {
       <Codeblock key={keys.join('|')}>{children}</Codeblock>
     ),
   },
-  decorators: [mentionsDecorator],
+  decorators: [mentionsDecorator, linksDecorator],
 };
 
 export { messageRenderer };

@@ -3,16 +3,16 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
-import { track } from '../../../helpers/events';
 import setLastSeenMutation from 'shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';
 import Messages from '../components/messages';
 import Header from '../components/header';
-import ChatInput from '../../../components/chatInput';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
+import ChatInput from 'src/components/chatInput';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import getDirectMessageThread from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import { MessagesContainer, ViewContent } from '../style';
-import { Loading } from '../../../components/loading';
-import ViewError from '../../../components/viewError';
+import { Loading } from 'src/components/loading';
+import ViewError from 'src/components/viewError';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   data: Object,
@@ -38,8 +38,6 @@ class ExistingThread extends React.Component<Props> {
     if (window && window.innerWidth > 768 && this.chatInput) {
       this.chatInput.triggerFocus();
     }
-
-    track('direct message thread', 'viewed', null);
   }
 
   componentDidUpdate(prevProps) {
@@ -99,7 +97,10 @@ class ExistingThread extends React.Component<Props> {
             <ViewContent
               innerRef={scrollBody => (this.scrollBody = scrollBody)}
             >
-              <Header thread={thread} currentUser={currentUser} />
+              <ErrorBoundary>
+                <Header thread={thread} currentUser={currentUser} />
+              </ErrorBoundary>
+
               <Messages
                 id={id}
                 threadType={thread.threadType}

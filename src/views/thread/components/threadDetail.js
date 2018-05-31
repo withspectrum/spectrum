@@ -6,9 +6,9 @@ import { withRouter } from 'react-router';
 import Link from 'src/components/link';
 import {
   getLinkPreviewFromUrl,
-  timeDifference,
   convertTimestampToDate,
 } from '../../../helpers/utils';
+import { timeDifference } from 'shared/time-difference';
 import isURL from 'validator/lib/isURL';
 import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
@@ -19,7 +19,6 @@ import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
-import { track } from '../../../helpers/events';
 import Editor from '../../../components/rich-text-editor';
 import { toJSON, toPlainText, toState } from 'shared/draft-utils';
 import Textarea from 'react-textarea-autosize';
@@ -32,6 +31,9 @@ import {
   Timestamp,
   Edited,
 } from '../style';
+import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
+import { ErrorBoundary } from 'src/components/error';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
@@ -56,7 +58,7 @@ type Props = {
   setThreadLock: Function,
   pinThread: Function,
   editThread: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   currentUser: ?Object,
   toggleEdit: Function,
 };
@@ -84,6 +86,12 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
   setThreadState() {
     const { thread } = this.props;
+
+    track(events.THREAD_VIEWED, {
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
+    });
 
     let rawLinkPreview =
       thread.attachments && thread.attachments.length > 0
@@ -151,10 +159,8 @@ class ThreadDetailPure extends React.Component<Props, State> {
           isLockingThread: false,
         });
         if (setThreadLock.isLocked) {
-          track('thread', 'locked', null);
           return dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
         } else {
-          track('thread', 'unlocked', null);
           return dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
         }
       })
@@ -169,8 +175,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
   triggerDelete = e => {
     e.preventDefault();
     const { thread, dispatch } = this.props;
-
-    track('thread', 'delete inited', null);
 
     const threadId = thread.id;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
@@ -192,20 +196,40 @@ class ThreadDetailPure extends React.Component<Props, State> {
       message = 'Are you sure you want to delete this thread?';
     }
 
+    track(events.THREAD_DELETED_INITED, {
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
+    });
+
     return dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {
         id: threadId,
         entity: 'thread',
         message,
+        extraProps: {
+          thread,
+        },
       })
     );
   };
 
   toggleEdit = () => {
     const { isEditing } = this.state;
+    const { thread } = this.props;
+
     this.setState({
       isEditing: !isEditing,
     });
+
+    if (!isEditing) {
+      track(events.THREAD_EDITED_INITED, {
+        thread: transformations.analyticsThread(thread),
+        channel: transformations.analyticsChannel(thread.channel),
+        community: transformations.analyticsCommunity(thread.community),
+      });
+    }
+
     this.props.toggleEdit();
   };
 
@@ -290,7 +314,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
   changeTitle = e => {
     const title = e.target.value;
     if (/\n$/g.test(title)) {
-      this.bodyEditor.focus();
+      this.bodyEditor.focus && this.bodyEditor.focus();
       return;
     }
     this.setState({
@@ -422,7 +446,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
       <ThreadWrapper>
         <ThreadContent isEditing={isEditing}>
           {/* $FlowFixMe */}
-          <ThreadByline author={thread.author} />
+          <ErrorBoundary fallbackComponent={null}>
+            <ThreadByline author={thread.author} />
+          </ErrorBoundary>
 
           {isEditing ? (
             <Textarea
@@ -469,20 +495,22 @@ class ThreadDetailPure extends React.Component<Props, State> {
           />
         </ThreadContent>
 
-        <ActionBar
-          toggleEdit={this.toggleEdit}
-          currentUser={currentUser}
-          thread={thread}
-          saveEdit={this.saveEdit}
-          togglePinThread={this.togglePinThread}
-          isSavingEdit={isSavingEdit}
-          threadLock={this.threadLock}
-          triggerDelete={this.triggerDelete}
-          isEditing={isEditing}
-          title={this.state.title}
-          isLockingThread={isLockingThread}
-          isPinningThread={isPinningThread}
-        />
+        <ErrorBoundary fallbackComponent={null}>
+          <ActionBar
+            toggleEdit={this.toggleEdit}
+            currentUser={currentUser}
+            thread={thread}
+            saveEdit={this.saveEdit}
+            togglePinThread={this.togglePinThread}
+            isSavingEdit={isSavingEdit}
+            threadLock={this.threadLock}
+            triggerDelete={this.triggerDelete}
+            isEditing={isEditing}
+            title={this.state.title}
+            isLockingThread={isLockingThread}
+            isPinningThread={isPinningThread}
+          />
+        </ErrorBoundary>
       </ThreadWrapper>
     );
   }

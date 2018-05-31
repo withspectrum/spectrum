@@ -6,9 +6,10 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { ApolloProvider } from 'react-apollo';
 import { ThemeProvider } from 'styled-components';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { type ApolloClient } from 'apollo-client';
 
-import theme from './components/theme';
+import theme from '../shared/theme';
 import { createClient } from '../shared/graphql';
 import Login from './components/Login';
 import TabBar from './views/TabBar';
@@ -45,8 +46,7 @@ class App extends React.Component<{}, State> {
     try {
       token = await SecureStore.getItemAsync('token');
     } catch (err) {
-      // TODO: Sentry
-      console.log(err);
+      Sentry.captureException(err);
       this.setState({
         authLoaded: true,
       });
@@ -85,7 +85,9 @@ class App extends React.Component<{}, State> {
       <Provider store={store}>
         <ApolloProvider client={client}>
           <ThemeProvider theme={theme}>
-            {!token ? <Login /> : <TabBar />}
+            <ActionSheetProvider>
+              {!token ? <Login /> : <TabBar />}
+            </ActionSheetProvider>
           </ThemeProvider>
         </ApolloProvider>
       </Provider>

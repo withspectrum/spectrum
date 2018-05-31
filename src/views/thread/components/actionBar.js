@@ -9,10 +9,11 @@ import Icon from '../../../components/icons';
 import compose from 'recompose/compose';
 import { Button, TextButton, IconButton } from '../../../components/buttons';
 import Flyout from '../../../components/flyout';
-import { track } from '../../../helpers/events';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import OutsideClickHandler from '../../../components/outsideClickHandler';
+import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 import {
   FollowButton,
@@ -29,7 +30,7 @@ type Props = {
   thread: GetThreadType,
   currentUser: Object,
   isEditing: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   toggleThreadNotifications: Function,
   toggleEdit: Function,
   saveEdit: Function,
@@ -74,6 +75,13 @@ class ActionBar extends React.Component<Props, State> {
 
   triggerChangeChannel = () => {
     const { thread, dispatch } = this.props;
+
+    track(events.THREAD_MOVED_INITED, {
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
+    });
+
     dispatch(openModal('CHANGE_CHANNEL', { thread }));
   };
 
@@ -94,12 +102,10 @@ class ActionBar extends React.Component<Props, State> {
         });
 
         if (toggleThreadNotifications.receiveNotifications) {
-          track('thread', 'notifications turned on', null);
           return dispatch(
             addToastWithTimeout('success', 'Notifications activated!')
           );
         } else {
-          track('thread', 'notifications turned off', null);
           return dispatch(
             addToastWithTimeout('neutral', 'Notifications turned off')
           );
@@ -315,7 +321,13 @@ class ActionBar extends React.Component<Props, State> {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Icon glyph={'facebook'} size={24} />
+                    <Icon
+                      glyph={'facebook'}
+                      size={24}
+                      onClick={() =>
+                        track(events.THREAD_SHARED, { method: 'facebook' })
+                      }
+                    />
                   </a>
                 </ShareButton>
 
@@ -334,7 +346,13 @@ class ActionBar extends React.Component<Props, State> {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Icon glyph={'twitter'} size={24} />
+                    <Icon
+                      glyph={'twitter'}
+                      size={24}
+                      onClick={() =>
+                        track(events.THREAD_SHARED, { method: 'twitter' })
+                      }
+                    />
                   </a>
                 </ShareButton>
 
@@ -355,7 +373,13 @@ class ActionBar extends React.Component<Props, State> {
                     data-cy="thread-copy-link-button"
                   >
                     <a>
-                      <Icon glyph={'link'} size={24} />
+                      <Icon
+                        glyph={'link'}
+                        size={24}
+                        onClick={() =>
+                          track(events.THREAD_SHARED, { method: 'link' })
+                        }
+                      />
                     </a>
                   </ShareButton>
                 </Clipboard>

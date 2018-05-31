@@ -1,9 +1,8 @@
 // @flow
 import { db } from './db';
 
-export const getInvoices = (
-  invoices: Array<string>
-): Promise<Array<?Object>> => {
+// prettier-ignore
+export const getInvoices = (invoices: Array<string>): Promise<Array<?Object>> => {
   return db
     .table('stripeInvoices')
     .getAll(...invoices)

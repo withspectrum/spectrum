@@ -11,4 +11,6 @@ export const IFRAME_TAG = /(<iframe.*?src=['"](.*?)['"])/gi;
 // eslint-disable-next-line
 export const FRAMER_URLS = /(https?:\/\/(.+?\.)?framer\.cloud(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?)/gi;
 // eslint-disable-next-line
+export const CODEPEN_URLS = /(https?:\/\/)?(.+?\.)?codepen\.io(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
+// eslint-disable-next-line
 export const ENDS_IN_WHITESPACE = /(\s|\n)$/;

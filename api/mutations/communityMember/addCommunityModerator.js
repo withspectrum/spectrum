@@ -6,6 +6,12 @@ import {
   makeMemberModeratorInCommunity,
   checkUserPermissionsInCommunity,
 } from '../../models/usersCommunities';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateCommunity,
+} from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -14,49 +20,74 @@ type Input = {
   },
 };
 
-export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
-  const currentUser = user;
-  const { communityId, userId: userToEvaluateId } = input;
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { user, loaders } = ctx;
+  const { communityId, userId: userToEvaluateId } = args.input;
 
-  if (!currentUser) {
+  if (!await canModerateCommunity(user.id, communityId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_ADDED_MODERATOR_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
     return new UserError(
-      'You must be signed in to manage moderators in this community.'
+      'You must own or moderate this community to manage moderators.'
     );
   }
 
-  const [
-    currentUserPermissions,
-    userToEvaluatePermissions,
-    community,
-  ] = await Promise.all([
-    checkUserPermissionsInCommunity(communityId, currentUser.id),
+  const [userToEvaluatePermissions, community] = await Promise.all([
     checkUserPermissionsInCommunity(communityId, userToEvaluateId),
     getCommunityById(communityId),
   ]);
 
   if (!community) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_ADDED_MODERATOR_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no community',
+      },
+    });
+
     return new UserError("We couldn't find that community.");
   }
 
   const { stripeCustomerId } = community;
-  if (!stripeCustomerId)
+  if (!stripeCustomerId) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_ADDED_MODERATOR_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no payment method',
+      },
+    });
+
     return new UserError(
       'You must have a valid payment method for this community to add new moderators'
     );
-
-  // if no permissions exist, the user performing this mutation isn't even
-  // a member of this community
-  if (!currentUserPermissions || currentUserPermissions.length === 0) {
-    return new UserError('You must own this community to manage moderators.');
   }
 
-  if (!userToEvaluatePermissions || userToEvaluatePermissions === 0) {
+  if (!userToEvaluatePermissions || userToEvaluatePermissions.length === 0) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_ADDED_MODERATOR_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'user not member',
+      },
+    });
+
     return new UserError(
       'This person must be a member of the community before becoming a moderator.'
     );
   }
 
-  const currentUserPermission = currentUserPermissions[0];
   const userToEvaluatePermission = userToEvaluatePermissions[0];
 
   // it's possible for a member to be moving from blocked -> moderator
@@ -68,32 +99,57 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
     !userToEvaluatePermission.isMember &&
     !userToEvaluatePermission.isBlocked
   ) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_ADDED_MODERATOR_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'user not member or is blocked',
+      },
+    });
+
     return new UserError(
       'This person must be a member of the community before becoming a moderator.'
     );
   }
 
   if (userToEvaluatePermission.isModerator) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_ADDED_MODERATOR_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'already moderator',
+      },
+    });
+
     return new UserError(
       'This person is already a moderator in your community.'
     );
   }
 
-  if (!currentUserPermission.isOwner && !currentUserPermission.isModerator) {
-    return new UserError(
-      'You must own or moderate this community to manage moderators.'
-    );
-  }
-
   // all checks pass
-  if (currentUserPermission.isOwner || currentUserPermission.isModerator) {
-    return await makeMemberModeratorInCommunity(
-      communityId,
-      userToEvaluateId
-    ).catch(err => new UserError(err));
-  }
+  return await makeMemberModeratorInCommunity(communityId, userToEvaluateId)
+    .then(result => {
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_ADDED_MODERATOR_IN_COMMUNITY,
+        context: { communityId },
+      });
 
-  return new UserError(
-    "We weren't able to process your request to add a moderator to this community."
-  );
-};
+      return result;
+    })
+    .catch(err => {
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_ADDED_MODERATOR_IN_COMMUNITY_FAILED,
+        context: { communityId },
+        properties: {
+          reason: 'unknown error',
+          error: err.message,
+        },
+      });
+
+      return new UserError(err);
+    });
+});

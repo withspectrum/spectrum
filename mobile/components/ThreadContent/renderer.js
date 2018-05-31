@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { View } from 'react-native';
-import styled from 'styled-components/native';
 import redraft from 'redraft';
 import Anchor from '../Anchor';
 import Text from '../Text';
@@ -32,21 +31,21 @@ const renderer = {
   entities: {
     // key is the entity key value from raw
     LINK: (children, data, { key }) => (
-      <Anchor key={key} href={data.url}>
+      <Anchor key={`anchor-${key}`} href={data.url}>
         {children}
       </Anchor>
     ),
     embed: (children, { src }, { key }) => {
-      return <IFrame key={key} src={src} />;
+      return <IFrame key={`embed-${key}`} src={src} />;
     },
   },
   blocks: {
     fallback: (children, { keys }) => (
-      <View key={keys.join('|')}>{children}</View>
+      <View key={`fallback-${keys.join('|')}`}>{children}</View>
     ),
     unstyled: (children, { keys }) =>
       children.map((child, index) => (
-        <Text type="body" key={keys[index] || index}>
+        <Text type="body" key={keys[index] || `unstyled-${index}`}>
           {child}
         </Text>
       )),
@@ -55,33 +54,33 @@ const renderer = {
     // body has to be level 2
     'header-one': (children, { keys }) =>
       children.map((child, index) => (
-        <Text type="title2" key={keys[index] || index}>
+        <Text type="title2" key={keys[index] || `header-one-${index}`}>
           {child}
         </Text>
       )),
     'header-two': (children, { keys }) =>
       children.map((child, index) => (
-        <Text type="title3" key={keys[index] || index}>
+        <Text type="title3" key={keys[index] || `header-two-${index}`}>
           {child}
         </Text>
       )),
     // blockquote: (children, { keys }) =>
     'unordered-list-item': (children, { depth, keys }) => {
       return children.map((item, index) => (
-        <Text key={keys[index] || index} type="body">
+        <Text key={keys[index] || `uli-${index}`} type="body">
           {'\u2022'} {item}
         </Text>
       ));
     },
     'ordered-list-item': (children, { depth, keys }) => {
       return children.map((item, index) => (
-        <Text key={keys[index] || index} type="body">
+        <Text key={keys[index] || `oli-${index}`} type="body">
           {index}. {item}
         </Text>
       ));
     },
     'code-block': (children, { keys }) => (
-      <Codeblock key={keys.join('|')}>{children}</Codeblock>
+      <Codeblock key={`codeblock-${keys.join('|')}`}>{children}</Codeblock>
     ),
   },
 };

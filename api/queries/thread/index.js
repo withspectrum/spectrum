@@ -14,6 +14,7 @@ import author from './author';
 import creator from './creator';
 import messageCount from './messageCount';
 import currentUserLastSeen from './currentUserLastSeen';
+import content from './content';
 
 module.exports = {
   Query: {
@@ -33,5 +34,6 @@ module.exports = {
     creator, // deprecated
     messageCount,
     currentUserLastSeen,
+    content,
   },
 };

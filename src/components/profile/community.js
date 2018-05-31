@@ -13,6 +13,7 @@ import Avatar from '../avatar';
 import { Button, OutlineButton } from '../buttons';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import ToggleCommunityMembership from '../toggleCommunityMembership';
+import type { Dispatch } from 'redux';
 import {
   ProfileHeader,
   ProfileHeaderLink,
@@ -35,9 +36,10 @@ import {
 
 type Props = {
   onJoin: Function,
+  onLeave: Function,
   joinedCommunity?: Function,
   joinedFirstCommunity?: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   data: {
     community: GetCommunityType,
     loading: boolean,
@@ -48,13 +50,14 @@ type Props = {
 };
 
 class CommunityWithData extends React.Component<Props> {
-  onJoin = () => {
+  onJoin = community => {
     this.props.joinedCommunity && this.props.joinedCommunity(1, false);
-    this.props.onJoin && this.props.onJoin();
+    this.props.onJoin && this.props.onJoin(community);
   };
 
-  onLeave = () => {
+  onLeave = community => {
     this.props.joinedCommunity && this.props.joinedCommunity(-1, false);
+    this.props.onLeave && this.props.onLeave(community);
   };
 
   render() {

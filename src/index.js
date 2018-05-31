@@ -17,8 +17,9 @@ import { client } from 'shared/graphql';
 import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
 import Routes from './routes';
-import { track } from './helpers/events';
+import { track, events } from './helpers/analytics';
 import { wsLink } from 'shared/graphql';
+import { subscribeToDesktopPush } from './subscribe-to-desktop-push';
 
 const { thread, t } = queryString.parse(history.location.search);
 
@@ -72,11 +73,7 @@ function render() {
       <HelmetProvider>
         <ApolloProvider client={client}>
           <Router history={history}>
-            <Routes
-              maintenanceMode={
-                process.env.REACT_APP_MAINTENANCE_MODE === 'enabled'
-              }
-            />
+            <Routes />
           </Router>
         </ApolloProvider>
       </HelmetProvider>
@@ -117,12 +114,16 @@ wsLink.subscriptionClient.on('reconnected', () =>
 // This fires when a user is prompted to add the app to their homescreen
 // We use it to track it happening in Google Analytics so we have those sweet metrics
 window.addEventListener('beforeinstallprompt', e => {
-  track('user', 'prompted to add to homescreen');
+  track(events.PWA_HOME_SCREEN_PROMPTED);
   e.userChoice.then(choiceResult => {
     if (choiceResult.outcome === 'dismissed') {
-      track('user', 'did not add to homescreen');
+      track(events.PWA_HOME_SCREEN_DISMISSED);
     } else {
-      track('user', 'added to homescreen');
+      track(events.PWA_HOME_SCREEN_ADDED);
     }
   });
+});
+
+subscribeToDesktopPush(data => {
+  if (data && data.href) history.push(data.href);
 });
