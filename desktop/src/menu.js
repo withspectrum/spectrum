@@ -1,6 +1,7 @@
 // @flow
 const { dialog, Menu, MenuItem, shell } = require('electron');
 const checkForUpdates = require('./autoUpdate');
+const isDev = require('electron-is-dev');
 
 const CONFIG = require('./config');
 
@@ -39,6 +40,42 @@ const template = [
       { type: 'separator' },
       { role: 'hide' },
       { role: 'quit' },
+    ],
+  },
+  {
+    label: 'Go',
+    submenu: [
+      {
+        label: 'Home',
+        accelerator: 'CmdOrCtrl+Shift+H',
+        click: function(item, focusedWindow) {
+          if (focusedWindow) {
+            focusedWindow.webContents.loadURL(
+              isDev ? CONFIG.APP_DEV_HOME_URL : CONFIG.APP_REMOTE_HOME_URL
+            );
+          }
+        },
+      },
+      {
+        label: 'Forward',
+        accelerator: 'CmdOrCtrl+]',
+        click: function(item, focusedWindow) {
+          if (focusedWindow) {
+            const wc = focusedWindow.webContents;
+            if (wc && wc.canGoForward()) wc.goForward();
+          }
+        },
+      },
+      {
+        label: 'Back',
+        accelerator: 'CmdOrCtrl+[',
+        click: function(item, focusedWindow) {
+          if (focusedWindow) {
+            const wc = focusedWindow.webContents;
+            if (wc && wc.canGoBack()) wc.goBack();
+          }
+        },
+      },
     ],
   },
   {

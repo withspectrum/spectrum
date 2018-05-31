@@ -104,15 +104,3 @@ app.on('activate', () => {
     createWindow();
   }
 });
-
-app.on('web-contents-created', (event, wc) => {
-  wc.on('before-input-event', (event, input) => {
-    if (input.key === ']' && input.meta && !input.shift && !input.control) {
-      if (wc.canGoForward()) wc.goForward();
-    }
-
-    if (input.key === '[' && input.meta && !input.shift && !input.control) {
-      if (wc.canGoBack()) wc.goBack();
-    }
-  });
-});
