@@ -24,22 +24,22 @@ const NullState = ({ viewContext, search }) => {
   let cp;
 
   if (viewContext && viewContext === 'community') {
-    hd = "This community's just getting started...";
-    cp = "Why don't you kick things off?";
+    hd = 'This community’s just getting started...';
+    cp = 'Why don’t you kick things off?';
   }
 
   if (viewContext && viewContext === 'channel') {
-    hd = "There's nothing in this channel yet";
+    hd = 'There’s nothing in this channel yet';
     cp = 'But you could be the first person to post something here!';
   }
 
   if (viewContext && viewContext === 'profile') {
-    hd = "This user hasn't posted yet";
+    hd = 'This user hasn’t posted yet';
     cp = 'But you could message them!';
   }
 
   if (search) {
-    hd = "Sorry, doesn't ring a bell";
+    hd = 'Sorry, doesn’t ring a bell';
     cp = 'You can always try again, though!';
   }
 
@@ -53,28 +53,28 @@ const UpsellState = ({ community }) => (
       <h3>Welcome to your new community!</h3>
     </UpsellHeader>
     <p>
-      You've already taken a huge step, but there's one problem - there's no one
+      You’ve already taken a huge step, but there’s one problem - there’s no one
       here yet!
     </p>
     <p>
-      This is usually the hardest part for new communities, but don't worry!
-      We've got a few suggestions to help you get things started...
+      This is usually the hardest part for new communities, but don’t worry!
+      We’ve got a few suggestions to help you get things started...
     </p>
     <p>
-      First things first, you'll want to <b>start a couple threads</b>.
+      First things first, you’ll want to <b>start a couple threads</b>.
     </p>
     <p>
       Open-ended questions are a great start, for example:
       <ul>
         <li>ask new members to introduce themselves</li>
         <li>
-          ask people about their favorite tools or what they're working on
+          ask people about their favorite tools or what they’re working on
         </li>
-        <li>ask for suggestions on a problem you're facing</li>
+        <li>ask for suggestions on a problem you’re facing</li>
       </ul>
     </p>
     <p>
-      Once you've got a couple threads started, make sure to{' '}
+      Once you’ve got a couple threads started, make sure to{' '}
       <b>help people find your community</b>. Talking about your community on
       social media like Twitter or Facebook is a great start - or you could add
       our{' '}
@@ -94,7 +94,7 @@ const UpsellState = ({ community }) => (
     </p>
     <UpsellFooter>
       <p>
-        If you've encountered an issue, want a new feature, or just need some
+        If you’ve encountered an issue, want a new feature, or just need some
         help, you can always find the Spectrum team in the{' '}
         <Link to={'/spectrum'}>Spectrum Support</Link> community or on{' '}
         <a
@@ -104,7 +104,7 @@ const UpsellState = ({ community }) => (
         >
           Twitter
         </a>{' '}
-        and we'd be more than happy to give you a hand.
+        and we’d be more than happy to give you a hand.
       </p>
     </UpsellFooter>
   </Upsell>
