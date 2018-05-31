@@ -77,8 +77,15 @@ const UpsellState = ({ community }) => (
       Once you've got a couple threads started, make sure to{' '}
       <b>help people find your community</b>. Talking about your community on
       social media like Twitter or Facebook is a great start - or you could add
-      our <a href="https://github.com/withspectrum/badge">badge</a> to a project
-      repo or your website.
+      our{' '}
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://github.com/withspectrum/badge"
+      >
+        badge
+      </a>{' '}
+      to a project repo or your website.
     </p>
     <p>
       You can also <b>invite people by email</b> or{' '}
@@ -90,8 +97,14 @@ const UpsellState = ({ community }) => (
         If you've encountered an issue, want a new feature, or just need some
         help, you can always find the Spectrum team in the{' '}
         <Link to={'/spectrum'}>Spectrum Support</Link> community or on{' '}
-        <a href="https://twitter.com/withspectrum">Twitter</a> and we'd be more
-        than happy to give you a hand.
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://twitter.com/withspectrum"
+        >
+          Twitter
+        </a>{' '}
+        and we'd be more than happy to give you a hand.
       </p>
     </UpsellFooter>
   </Upsell>

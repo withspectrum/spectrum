@@ -184,7 +184,11 @@ class InboxThread extends React.Component<Props> {
 
                     return (
                       <AttachmentsContainer active={active} key={url}>
-                        <MiniLinkPreview href={url} target="_blank">
+                        <MiniLinkPreview
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           <Icon glyph="link" size={18} />
                           <EllipsisText>{url}</EllipsisText>
                         </MiniLinkPreview>
