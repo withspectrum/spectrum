@@ -8,9 +8,11 @@ import ModalContainer from '../modalContainer';
 import { modalStyles } from '../styles';
 import LoginButtonSet from 'src/components/loginButtonSet';
 import { Container } from './style';
+import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isOpen: boolean,
   modalProps: any,
 };
@@ -19,6 +21,11 @@ class ChatInputLoginModal extends React.Component<Props> {
   close = () => {
     this.props.dispatch(closeModal());
   };
+
+  componentDidMount() {
+    const redirectPath = `${window.location.href}`;
+    track(events.LOGIN_MODAL_VIEWED, { redirectPath });
+  }
 
   render() {
     const { isOpen } = this.props;

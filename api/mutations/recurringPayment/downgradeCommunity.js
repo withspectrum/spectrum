@@ -4,7 +4,6 @@ import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 const STRIPE_TOKEN = process.env.STRIPE_TOKEN;
 const stripe = require('stripe')(STRIPE_TOKEN);
-
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import {
   getUserRecurringPayments,
@@ -12,35 +11,25 @@ import {
 } from '../../models/recurringPayment';
 import { deleteStripeSubscription } from './utils';
 import { getCommunities } from '../../models/community';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-type DowngradeCommunityInput = {
+type Input = {
   input: {
     id: string,
   },
 };
 
-export default (
-  _: any,
-  { input }: DowngradeCommunityInput,
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
-
-  // user must be authed to create a community
-  if (!currentUser) {
-    return new UserError('You must be signed in to continue.');
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { user } = ctx;
+  const { id } = args.input;
 
   // one async function to handle all downgrade logic
   const handleCommunityDowngrade = async () => {
     // get the current user's permissions in the community being downgraded
-    const permissions = await getUserPermissionsInCommunity(
-      input.id,
-      currentUser.id
-    );
+    const permissions = await getUserPermissionsInCommunity(id, user.id);
 
     // get any recurringPayments records from the database matching this community
-    const rPayments = await getUserRecurringPayments(currentUser.id);
+    const rPayments = await getUserRecurringPayments(user.id);
 
     // if the current user doesn't own the community, break out
     if (!permissions.isOwner) {
@@ -54,7 +43,7 @@ export default (
       // if payments were found, make sure to select the first community-standard plan to update, otherwise return null and we will be creating a new payment
       rPayments &&
       rPayments
-        .filter(pmt => pmt.communityId === input.id)
+        .filter(pmt => pmt.communityId === id)
         .filter(pmt => pmt.planId === 'community-standard');
 
     const recurringPaymentToEvaluate =
@@ -97,16 +86,14 @@ export default (
   };
 
   // handle the entire downgrade flow
-  return (
-    handleCommunityDowngrade()
-      // return the community to update the client side cache for isPro
-      .then(() => getCommunities([input.id]))
-      .then(communities => communities[0])
-      .catch(err => {
-        console.error('Error downgrading a community: ', err.message);
-        return new UserError(
-          "We weren't able to downgrade your community: " + err.message
-        );
-      })
-  );
-};
+  return await handleCommunityDowngrade()
+    // return the community to update the client side cache for isPro
+    .then(() => getCommunities([id]))
+    .then(communities => communities[0])
+    .catch(err => {
+      console.error('Error downgrading a community: ', err.message);
+      return new UserError(
+        "We weren't able to downgrade your community: " + err.message
+      );
+    });
+});

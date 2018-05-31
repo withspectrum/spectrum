@@ -1,5 +1,5 @@
 // @flow
-import React, { type Node } from 'react';
+import type { Node } from 'react';
 import { Platform } from 'react-native';
 import styled, { css } from 'styled-components/native';
 import { human } from 'react-native-typography';
@@ -32,9 +32,10 @@ const monospaceFont = Platform.OS === 'android' ? 'monospace' : 'Menlo';
 
 const Text: ComponentType<Props> = styled.Text`
   ${(props: Props) => props.type && human[`${props.type}Object`]}
-  ${(props: Props) =>
-    props.type &&
-    `margin-top: ${human[`${props.type}Object`].lineHeight * 0.35};`}
+  ${(props: Props) => {
+    const type = props.type || 'body';
+    return `margin-top: ${human[`${type}Object`].lineHeight * 0.35};`;
+  }}
   ${(props: Props) => props.bold && 'font-weight: bold;'}
   ${(props: Props) => props.italic && 'font-style: italic;'}
   ${(props: Props) => props.underline && 'text-decoration-line: underline;'}

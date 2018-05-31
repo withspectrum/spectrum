@@ -15,7 +15,7 @@ type Props = {
     name: string,
   },
   toggleChannelNotifications: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {

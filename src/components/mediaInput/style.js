@@ -15,7 +15,7 @@ export const MediaLabel = styled.label`
   outline: 0;
   display: inline-block;
   background: transparent;
-  transition: all 0.3s ease-out;
+  transition: color 0.3s ease-out;
   color: ${({ theme }) => theme.text.placeholder};
   height: 32px;
   width: 32px;

@@ -1,11 +1,9 @@
 // @flow
-import * as React from 'react';
-import { StackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 import Notifications from '../Notifications';
 import BaseStack from './BaseStack';
-import { withMappedNavigationProps } from 'react-navigation-props-mapper';
 
-const NotificationsStack = StackNavigator(
+const NotificationsStack = createStackNavigator(
   {
     Notifications: {
       screen: Notifications,

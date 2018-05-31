@@ -66,7 +66,7 @@ export const InputWrapper = styled(EditorWrapper)`
   font-weight: 500;
   line-height: 20px;
   min-height: 40px;
-  max-width: 100%;
+  max-width: calc(100% - 32px);
   padding: ${props => (props.hasAttachment ? '16px' : '8px 16px')};
   transition: padding 0.2s ease-in-out;
   border-radius: 24px;
@@ -149,11 +149,10 @@ export const InputWrapper = styled(EditorWrapper)`
 `;
 
 export const SendButton = styled(IconButton)`
-  position: absolute;
-  right: ${props => (props.hasAttachment ? '12px' : '8px')};
-  bottom: ${props => (props.hasAttachment ? '12px' : '4px')};
   height: 32px;
   width: 32px;
+  bottom: 4px;
+  margin-left: 4px;
   background-color: transparent;
   transition: ${Transition.hover.off};
   align-self: flex-end;
@@ -174,7 +173,7 @@ export const MediaLabel = styled.label`
   outline: 0;
   display: inline-block;
   background: transparent;
-  transition: all 0.3s ease-out;
+  transition: color 0.3s ease-out;
   border-radius: 4px;
   padding: 4px;
   position: relative;

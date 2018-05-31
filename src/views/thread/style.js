@@ -87,8 +87,8 @@ export const Input = styled(FlexRow)`
   justify-content: center;
   z-index: ${zIndex.chatInput};
   grid-area: footer;
-  width: 100%;
-  max-width: 1024px;
+  max-width: 100%;
+  align-self: stretch;
 
   @media (max-width: 768px) {
     z-index: ${zIndex.mobileInput};
@@ -107,6 +107,7 @@ export const ChatInputWrapper = styled(FlexCol)`
   margin: 0;
   flex: auto;
   position: relative;
+  max-width: 100%;
 `;
 
 export const DetailViewWrapper = styled(FlexCol)`

@@ -1,11 +1,12 @@
 import { addActivityIndicator } from '../actions/newActivityIndicator';
+import type { Dispatch } from 'redux';
 
 // used to update feed caches with new threads in real time
 // takes an array of existing threads in the cache and figures out how to insert the newly updated thread
 export default (
   prevThreads: Array,
   updatedThread: Object,
-  dispatch: Function
+  dispatch: Dispatch<Object>
 ) => {
   // get an array of thread ids based on the threads already in cache
   const prevThreadIds = prevThreads.map(thread => thread.node.id);

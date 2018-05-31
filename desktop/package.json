@@ -1,0 +1,86 @@
+{
+  "name": "Spectrum",
+  "description": "The community platform for the future.",
+  "homepage": "https://spectrum.chat",
+  "author": {
+    "name": "Space Program Inc.",
+    "email": "hey@spectrum.chat"
+  },
+  "repository": "https://github.com/withspectrum/spectrum",
+  "version": "1.0.0-beta.2",
+  "main": "src/main.js",
+  "private": true,
+  "dependencies": {
+    "electron-is-dev": "^0.3.0",
+    "electron-log": "^2.2.14",
+    "electron-updater": "^2.21.4"
+  },
+  "devDependencies": {
+    "electron": "^1.8.4",
+    "electron-builder": "^20.8.1",
+    "rimraf": "^2.6.2"
+  },
+  "scripts": {
+    "dev": "electron ./src/main.js",
+    "prepackage": "rimraf release",
+    "package": "build",
+    "package:mac": "yarn run package --mac",
+    "package:linux": "yarn run package --linux",
+    "package:win": "yarn run package --win --x64",
+    "package:all": "yarn run package -mwl",
+    "release": "yarn run package:all --publish always"
+  },
+  "build": {
+    "productName": "Spectrum",
+    "appId": "chat.spectrum",
+    "copyright": "Copyright © 2018 Space Program Inc.",
+    "publish": "github",
+    "releaseInfo": {
+      "releaseName": "${name} Desktop App v${version}"
+    },
+    "files": [
+      "src/**/*",
+      "node_modules/**/*",
+      "resources/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "resources",
+      "output": "release"
+    },
+    "mac": {
+      "category": "public.app-category.social-networking",
+      "target": "default",
+      "icon": "resources/icons/mac/icon.icns"
+    },
+    "dmg": {
+      "background": "resources/background.tiff",
+      "iconTextSize": 14,
+      "contents": [
+        {
+          "x": 158,
+          "y": 213,
+          "type": "file"
+        },
+        {
+          "x": 385,
+          "y": 213,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "icon": "resources/icons/png/icon-512x512.png",
+      "category": "Network",
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "resources/icons/win/icon.ico"
+    }
+  }
+}

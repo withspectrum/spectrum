@@ -3,7 +3,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import { Transition, zIndex } from '../globals';
-import { theme } from 'src/components/theme';
+import theme from 'shared/theme';
 import { Manager, Reference, Popper } from 'react-popper';
 import HoverProfile from 'src/components/avatar/hoverProfile';
 import { getUserByUsername } from 'shared/graphql/queries/user/getUser';

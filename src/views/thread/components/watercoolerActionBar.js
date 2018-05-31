@@ -6,9 +6,9 @@ import { addToastWithTimeout } from '../../../actions/toasts';
 import { openModal } from '../../../actions/modals';
 import Icon from '../../../components/icons';
 import compose from 'recompose/compose';
-import { track } from '../../../helpers/events';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
+import type { Dispatch } from 'redux';
 import {
   FollowButton,
   ShareButtons,
@@ -19,7 +19,7 @@ import {
 type Props = {
   thread: GetThreadType,
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   toggleThreadNotifications: Function,
 };
 
@@ -47,12 +47,10 @@ class WatercoolerActionBar extends React.Component<Props, State> {
         });
 
         if (toggleThreadNotifications.receiveNotifications) {
-          track('thread', 'notifications turned on', null);
           return dispatch(
             addToastWithTimeout('success', 'Notifications activated!')
           );
         } else {
-          track('thread', 'notifications turned off', null);
           return dispatch(
             addToastWithTimeout('neutral', 'Notifications turned off')
           );

@@ -1,11 +1,14 @@
-import { track } from '../helpers/events';
-import { removeItemFromStorage, storeItem } from '../helpers/localStorage';
+import { setUser, unsetUser } from 'src/helpers/analytics';
+import { removeItemFromStorage, storeItem } from 'src/helpers/localStorage';
 import Raven from 'raven-js';
 
 export const logout = dispatch => {
-  track('user', 'sign out', null);
   // clear localStorage
   removeItemFromStorage('spectrum');
+
+  // no longer track analytics
+  unsetUser();
+
   import('shared/graphql')
     .then(module => module.clearApolloStore)
     .then(clearApolloStore => {
@@ -22,7 +25,7 @@ export const logout = dispatch => {
     });
 };
 
-export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
+export const saveUserDataToLocalStorage = (user: Object) => async dispatch => {
   const obj = {};
 
   if (!user) {
@@ -39,6 +42,13 @@ export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
     website: user.website,
     totalReputation: user.totalReputation,
   };
+
+  // logs user id to analytics
+  const response = await fetch(
+    `https://micro-anonymizomatic-woewfxwpkp.now.sh?text=${user.id}`
+  );
+  const { text } = await response.json();
+  setUser(text);
 
   // logs the user id to sentry errors
   Raven.setUserContext({ id: user.id });

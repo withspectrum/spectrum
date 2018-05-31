@@ -8,7 +8,9 @@ import { Body, Actions } from './view';
 import { Wrapper } from './style';
 import { openModal } from '../../actions/modals';
 import { replyToMessage } from '../../actions/message';
+import { track, events } from 'src/helpers/analytics';
 
+import type { Dispatch } from 'redux';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 
@@ -17,7 +19,7 @@ type Props = {
   threadId: string,
   threadType: string,
   selectedId: string,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   canModerate: boolean,
   currentUser: UserInfoType,
   me: boolean,
@@ -47,6 +49,12 @@ class Message extends Component<Props> {
 
   deleteMessage = () => {
     const message = 'Are you sure you want to delete this message?';
+
+    track(
+      this.props.threadType === 'story'
+        ? events.MESSAGE_DELETED_INITED
+        : events.DIRECT_MESSAGE_DELETED_INITED
+    );
 
     return this.props.dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {
