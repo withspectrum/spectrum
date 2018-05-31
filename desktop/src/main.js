@@ -1,6 +1,9 @@
 // @flow
-const { app, BrowserWindow } = require('electron');
+const electron = require('electron');
+const { app, BrowserWindow } = electron;
 const isDev = require('electron-is-dev');
+
+const FIFTEEN_MINUTES = 900000;
 
 const checkForUpdates = require('./autoUpdate');
 const buildMenu = require('./menu');
@@ -10,31 +13,26 @@ const CONFIG = require('./config');
 // be closed automatically when the JavaScript object is garbage collected.
 // eslint-disable-next-line
 let win;
-let splash;
 let mainWindow;
 
 const startUrl = isDev ? CONFIG.APP_DEV_URL : CONFIG.APP_REMOTE_URL;
 
 function createWindow() {
   if (!isDev) {
-    // trigger autoupdate check
+    // Check for updates on startup and then every 15 minutes
     checkForUpdates();
+    setInterval(() => {
+      checkForUpdates();
+    }, FIFTEEN_MINUTES);
   }
 
-  // create a `splash` window
-  splash = new BrowserWindow({
-    width: 768,
-    height: 408,
-    transparent: true,
-    frame: false,
-    alwaysOnTop: true,
-  });
-  splash.loadURL(`file://${__dirname}/splash.html`);
+  const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
 
   // Create the main browser window.
   mainWindow = new BrowserWindow({
-    height: 800,
-    width: 1300,
+    width,
+    height,
+    titleBarStyle: 'hiddenInset',
     minHeight: CONFIG.WINDOW_MIN_HEIGHT,
     minWidth: CONFIG.WINDOW_MIN_WIDTH,
     backgroundColor: CONFIG.WINDOW_BG_COLOR,
@@ -59,12 +57,13 @@ function createWindow() {
 
   mainWindow.on('closed', () => {
     win = null;
+    mainWindow = null;
   });
 
-  // if main window is ready to show, then destroy the splash window and show up the main window
+  // if main window is ready to show, show up the main window
   mainWindow.once('ready-to-show', () => {
-    splash.destroy();
-    mainWindow.show();
+    mainWindow && mainWindow.maximize();
+    mainWindow && mainWindow.show();
   });
 }
 
@@ -85,7 +84,21 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
+  if (mainWindow !== null) mainWindow.show();
+
+  if (win === null && mainWindow === null) {
     createWindow();
   }
+});
+
+app.on('web-contents-created', (event, wc) => {
+  wc.on('before-input-event', (event, input) => {
+    if (input.key === ']' && input.meta && !input.shift && !input.control) {
+      if (wc.canGoForward()) wc.goForward();
+    }
+
+    if (input.key === '[' && input.meta && !input.shift && !input.control) {
+      if (wc.canGoBack()) wc.goBack();
+    }
+  });
 });

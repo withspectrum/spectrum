@@ -1,16 +1,12 @@
 # Desktop
 
-**This folder contains all sources used to build spectrum desktop application.**
-
-The project uses [Electron](https://electronjs.org/) to build cross platform desktop apps with JavaScript, HTML, and CSS.
+This folder contains the [Electron](https://electronjs.org/)-based desktop app for Spectrum. Electron renders a web view, which renders the main `Spectrum.chat` webpage.
 
 ## Directory Structure
 
-* `release/` - the release build for each platform (mac, win, linux).
-* `resources/` - the resources folder (icons, images ...).
-* `src/` the source code of electron application.
-* `package.json` - dependencies & devdependencies.
-* `yarn.lock` - Yarn lockfile to get consistent installs across machine.
+* `release/` - the release build for each platform (mac, win, linux)
+* `resources/` - the resources folder (icons, images ...)
+* `src/` the source code of electron application
 
 ## Scripts
 

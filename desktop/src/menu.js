@@ -1,7 +1,18 @@
 // @flow
-const { dialog, Menu, shell } = require('electron');
+const { dialog, Menu, MenuItem, shell } = require('electron');
+const checkForUpdates = require('./autoUpdate');
 
 const CONFIG = require('./config');
+
+const UpdateMenuItem = new MenuItem({
+  label: 'Check for updates',
+  click() {
+    this.enabled = false;
+    checkForUpdates().then(() => {
+      this.enabled = true;
+    });
+  },
+});
 
 /**
  * Applications menu
@@ -24,7 +35,9 @@ const template = [
           shell.openExternal(CONFIG.GITHUB_URL_LICENSE);
         },
       },
+      UpdateMenuItem,
       { type: 'separator' },
+      { role: 'hide' },
       { role: 'quit' },
     ],
   },
@@ -88,6 +101,11 @@ const template = [
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         role: 'reload',
+      },
+      {
+        label: 'Force Reload',
+        accelerator: 'CmdOrCtrl+Shift+R',
+        role: 'forceReload',
       },
       {
         label: 'Close',

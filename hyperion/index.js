@@ -118,7 +118,16 @@ try {
   console.error(err);
 }
 app.use(
-  express.static(path.resolve(__dirname, '..', 'build'), { index: false })
+  express.static(path.resolve(__dirname, '..', 'build'), {
+    index: false,
+    setHeaders: (res, path) => {
+      // Don't cache the serviceworker in the browser
+      if (path.indexOf('sw.js')) {
+        res.setHeader('Cache-Control', 'no-store');
+        return;
+      }
+    },
+  })
 );
 app.get('/static/js/:name', (req: express$Request, res, next) => {
   if (!req.params.name) return next();
@@ -136,6 +145,14 @@ if (process.env.NODE_ENV === 'development') {
     express.static(path.resolve(__dirname, '..', 'public'), { index: false })
   );
 }
+
+app.get('*', (req: express$Request, res, next) => {
+  // Electron requests should only be client-side rendered
+  if (req.headers['user-agent'].indexOf('Electron') > -1) {
+    return res.sendFile(path.resolve(__dirname, '../build/index.html'));
+  }
+  next();
+});
 
 import cache from './cache';
 app.use(cache);

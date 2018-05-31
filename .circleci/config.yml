@@ -136,6 +136,16 @@ jobs:
           name: Deploy and alias Hyperion
           command: npx now-cd --alias "alpha=hyperion.alpha.spectrum.chat" --team spaceprogram
 
+  deploy_desktop:
+    <<: *js_defaults
+    docker:
+      - image: circleci/node:8
+    steps:
+      - attach_workspace:
+          at: ~/spectrum
+      - run:
+          name: Build and release desktop app
+          command: yarn run release:desktop
 
   # Run eslint, flow etc.
   test_static_js:
@@ -191,10 +201,11 @@ workflows:
   test:
     jobs:
       - checkout_environment
+
+      # Testing
       - test_mobile_js:
           requires:
             - checkout_environment
-
       # Disabled as Expo is fixing their critical issue with Detox
       # - test_mobile_native:
       #     requires:
@@ -205,7 +216,16 @@ workflows:
       - test_static_js:
           requires:
             - checkout_environment
+
+      # Deployment
       - deploy_alpha:
+          requires:
+            - test_static_js
+            - test_web
+          filters:
+            branches:
+              only: alpha
+      - deploy_desktop:
           requires:
             - test_static_js
             - test_web
