@@ -224,7 +224,7 @@ class Editor extends React.Component<Props, State> {
             onChange={onChange}
             plugins={this.state.plugins}
             handleDroppedFiles={this.handleDroppedFiles}
-            ref={editor => {
+            editorRef={editor => {
               this.editor = editor;
               if (editorRef) editorRef(editor);
             }}
@@ -310,7 +310,7 @@ class Editor extends React.Component<Props, State> {
               onChange={onChange}
               plugins={this.state.plugins}
               handleDroppedFiles={this.handleDroppedFiles}
-              ref={editor => {
+              editorRef={editor => {
                 this.editor = editor;
                 if (editorRef) editorRef(editor);
               }}
