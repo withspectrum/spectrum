@@ -22,14 +22,12 @@ import type { ThreadParticipantType } from '../../../shared/graphql/fragments/th
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import type { ViewNetworkHandlerProps } from '../ViewNetworkHandler';
 import { getThreadByMatchQuery } from '../../../shared/graphql/queries/thread/getThread';
-import type { ApolloClient } from '../../../shared/types';
 import type { ThreadInfoType } from '../../../shared/graphql/fragments/thread/threadInfo';
 
 type Props = {
   id: $PropertyType<ThreadInfoType, 'id'>,
   thread: ThreadInfoType,
   ...$Exact<ViewNetworkHandlerProps>,
-  client: ApolloClient,
   navigation: Navigation,
   currentUser: GetUserType,
   data: {
@@ -38,40 +36,6 @@ type Props = {
 };
 
 class Messages extends Component<Props> {
-  // Locally update thread.currentUserLastSeen
-  updateThreadLastSeen = () => {
-    const { currentUser, client } = this.props;
-    const threadId = this.props.id;
-    // No currentUser, no reason to update currentUserLastSeen
-    if (!currentUser || !threadId) return;
-    try {
-      const threadData = client.readQuery({
-        query: getThreadByMatchQuery,
-        variables: {
-          id: threadId,
-        },
-      });
-
-      client.writeQuery({
-        query: getThreadByMatchQuery,
-        variables: {
-          id: threadId,
-        },
-        data: {
-          ...threadData,
-          thread: {
-            ...threadData.thread,
-            currentUserLastSeen: new Date(),
-            __typename: 'Thread',
-          },
-        },
-      });
-    } catch (err) {
-      // Errors that happen with this shouldn't crash the app
-      console.error(err);
-    }
-  };
-
   render() {
     const {
       data,
@@ -188,9 +152,6 @@ class Messages extends Component<Props> {
   }
 }
 
-export default compose(
-  withApollo,
-  viewNetworkHandler,
-  withNavigation,
-  withCurrentUser
-)(Messages);
+export default compose(viewNetworkHandler, withNavigation, withCurrentUser)(
+  Messages
+);

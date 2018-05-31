@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
+import { connect } from 'react-redux';
 import { View } from 'react-native';
 import Text from '../Text';
 import ViewNetworkHandler from '../ViewNetworkHandler';
@@ -11,6 +12,8 @@ import type { ThreadConnectionType } from '../../../shared/graphql/fragments/com
 import { withNavigation } from 'react-navigation';
 import { CenteredView } from './style';
 import type { ViewNetworkHandlerProps } from '../ViewNetworkHandler';
+import type { ReduxState } from '../../reducers';
+import type { LastSeenMap } from '../../reducers/thread';
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -24,7 +27,11 @@ type State = {
   subscription: ?Function,
 };
 
-type Props = {
+type StateProps = {
+  lastSeenMap: LastSeenMap,
+};
+
+type Props = StateProps & {
   ...$Exact<ViewNetworkHandlerProps>,
   activeChannel?: string,
   activeCommunity?: string,
@@ -115,6 +122,7 @@ class ThreadFeed extends Component<Props, State> {
       channels,
       isPolling,
       queryVarIsChanging,
+      lastSeenMap,
     } = this.props;
 
     if (isLoading) {
@@ -128,6 +136,7 @@ class ThreadFeed extends Component<Props, State> {
             data={threadConnection.edges}
             renderItem={({ item }) => (
               <ThreadListItem
+                lastSeenMap={lastSeenMap}
                 thread={item.node}
                 activeChannel={activeChannel}
                 activeCommunity={activeCommunity}
@@ -169,4 +178,14 @@ class ThreadFeed extends Component<Props, State> {
   }
 }
 
-export default compose(withNavigation, ViewNetworkHandler)(ThreadFeed);
+const mapStateToProps = (state: ReduxState): StateProps => {
+  return {
+    lastSeenMap: state.thread.lastSeenMap,
+  };
+};
+
+export default compose(
+  withNavigation,
+  ViewNetworkHandler,
+  connect(mapStateToProps)
+)(ThreadFeed);

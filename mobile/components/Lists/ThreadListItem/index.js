@@ -10,28 +10,25 @@ import {
 import type { GetThreadType } from '../../../../shared/graphql/queries/thread/getThread';
 import ThreadCommunityInfo from './ThreadCommunityInfo';
 import Facepile from '../../Facepile';
+import { getThreadByMatchQuery } from '../../../../shared/graphql/queries/thread/getThread';
+import type { LastSeenMap } from '../../../reducers/thread';
 
-type ThreadListItemType = {
+type Props = {
+  lastSeenMap: LastSeenMap,
   thread: GetThreadType,
   activeChannel?: string,
   activeCommunity?: string,
   onPress: Function,
 };
 
-export class ThreadListItem extends Component<ThreadListItemType> {
+export class ThreadListItem extends Component<Props> {
   generatePillOrMessageCount = (): React$Node => {
-    const { thread, activeChannel, activeCommunity } = this.props;
-    const { currentUserLastSeen, participants, lastActive } = thread;
+    const { thread, activeChannel, activeCommunity, lastSeenMap } = this.props;
+    const { participants, lastActive } = thread;
 
-    if (thread.messageCount > 0) {
-      return (
-        <Subtitle>
-          {thread.messageCount > 1
-            ? `${thread.messageCount} messages`
-            : `${thread.messageCount} message`}
-        </Subtitle>
-      );
-    }
+    const currentUserLastSeen = lastSeenMap.has(thread.id)
+      ? lastSeenMap.get(thread.id)
+      : null;
 
     if (!currentUserLastSeen) {
       return (
@@ -41,13 +38,23 @@ export class ThreadListItem extends Component<ThreadListItemType> {
       );
     }
 
-    if (currentUserLastSeen && lastActive && currentUserLastSeen < lastActive) {
-      return (
-        <NewMessagePill offset={thread.participants.length}>
-          New messages!
-        </NewMessagePill>
-      );
+    if (currentUserLastSeen && lastActive) {
+      if (currentUserLastSeen < lastActive) {
+        return (
+          <NewMessagePill offset={thread.participants.length}>
+            New messages!
+          </NewMessagePill>
+        );
+      }
     }
+
+    return (
+      <Subtitle>
+        {thread.messageCount > 1
+          ? `${thread.messageCount} messages`
+          : `${thread.messageCount} message`}
+      </Subtitle>
+    );
   };
 
   render() {

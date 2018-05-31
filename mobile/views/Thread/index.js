@@ -4,7 +4,10 @@ import { View, ScrollView } from 'react-native';
 import Sentry from 'sentry-expo';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
+import {
+  getThreadById,
+  getThreadByMatchQuery,
+} from '../../../shared/graphql/queries/thread/getThread';
 import ViewNetworkHandler, {
   type ViewNetworkHandlerProps,
 } from '../../components/ViewNetworkHandler';
@@ -27,6 +30,12 @@ import type { GetThreadType } from '../../../shared/graphql/queries/thread/getTh
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import { Wrapper, ThreadMargin } from './style';
 import type { ReduxState } from '../../reducers';
+import { ThreadInfoType } from '../../../shared/graphql/fragments/thread/threadInfo';
+import type { Dispatch } from 'redux';
+import type {
+  ThreadAction,
+  UpdateCurrentUserLastSeenAction,
+} from '../../actions/thread';
 
 const ThreadMessages = compose(getThreadMessageConnection)(Messages);
 
@@ -38,6 +47,7 @@ type OwnProps = {
   ...$Exact<ViewNetworkHandlerProps>,
   sendMessage: SendMessageMutationFunc,
   currentUser: GetUserType,
+  dispatch: Dispatch<UpdateCurrentUserLastSeenAction>,
   data: {
     thread: ?GetThreadType,
   },
@@ -62,6 +72,18 @@ class Thread extends Component<Props> {
       user
     );
   };
+
+  componentDidMount() {
+    const thread: ?GetThreadType = this.props.data.thread;
+    if (thread) {
+      const action: UpdateCurrentUserLastSeenAction = {
+        type: 'UPDATE_CURRENTUSER_LASTSEEN',
+        threadId: thread.id,
+        currentUserLastSeen: new Date().toISOString(),
+      };
+      this.props.dispatch(action);
+    }
+  }
 
   render() {
     const { data, isLoading, hasError, currentUser } = this.props;
