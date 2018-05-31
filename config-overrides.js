@@ -88,7 +88,7 @@ module.exports = function override(config, env) {
   config.plugins.push(
     new webpack.optimize.CommonsChunkPlugin({
       names: ['bootstrap'],
-      filename: './static/js/[name].js',
+      filename: 'static/js/[name].js',
       minChunks: Infinity,
     })
   );
