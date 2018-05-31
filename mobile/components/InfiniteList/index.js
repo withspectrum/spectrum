@@ -19,13 +19,14 @@ type State = {
 };
 
 type Props = {
-  data: Array<mixed>,
+  data: Array<any>,
   renderItem: Function,
-  hasNextPage: boolean,
+  hasNextPage?: boolean,
   fetchMore: Function,
   loadingIndicator: Node,
   keyExtractor?: (item: any, index: number) => ID, // This defaults to using item.id or item.node.id. If your data doesn't have either of those you need to pass a custom keyExtractor function
   refetching?: boolean,
+  refreshing: boolean,
   refetch?: Function,
   style?: Object,
   separator?: ElementType,
@@ -57,6 +58,7 @@ class InfiniteList extends React.Component<Props, State> {
 
     this.state = {
       count: props.data.length,
+      // $FlowIssue
       keys: JSON.stringify(props.data.map(props.keyExtractor)),
     };
   }
@@ -64,10 +66,12 @@ class InfiniteList extends React.Component<Props, State> {
   static getDerivedStateFromProps(next: Props, state: State) {
     if (
       next.data.length !== state.count ||
+      // $FlowIssue
       next.data.map(next.keyExtractor) !== state.keys
     ) {
       return {
         count: next.data.length,
+        // $FlowIssue
         keys: JSON.stringify(next.data.map(next.keyExtractor)),
       };
     }
@@ -83,6 +87,7 @@ class InfiniteList extends React.Component<Props, State> {
 
     // Data changed
     if (currState.count !== nextState.count) return true;
+    // $FlowIssue
     const nextKeys = nextProps.data.map(nextProps.keyExtractor);
     if (currState.keys !== JSON.stringify(nextKeys)) return true;
 

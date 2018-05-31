@@ -30,7 +30,7 @@ import type { GetThreadType } from '../../../shared/graphql/queries/thread/getTh
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import { Wrapper, ThreadMargin } from './style';
 import type { ReduxState } from '../../reducers';
-import { ThreadInfoType } from '../../../shared/graphql/fragments/thread/threadInfo';
+import type { ThreadInfoType } from '../../../shared/graphql/fragments/thread/threadInfo';
 import type { Dispatch } from 'redux';
 import type {
   ThreadAction,

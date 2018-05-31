@@ -56,6 +56,7 @@ class CommunitiesSearchView extends Component<Props> {
                 />
               )}
               loadingIndicator={<Loading />}
+              fetchMore={f => f}
             />
           )}
         </SearchView>

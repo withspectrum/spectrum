@@ -63,6 +63,8 @@ class Messages extends Component<Props> {
 
       return (
         <InfiniteList
+          fetchMore={f => f}
+          loadingIndicator={<Loading />}
           data={messages}
           keyExtractor={item => item[0].id}
           renderItem={({ item: group, index: i }) => {
@@ -98,6 +100,7 @@ class Messages extends Component<Props> {
             if (
               !!thread.currentUserLastSeen &&
               new Date(group[group.length - 1].timestamp).getTime() >
+                // $FlowIssue
                 new Date(thread.currentUserLastSeen).getTime() &&
               !me &&
               !hasInjectedUnseenRobo

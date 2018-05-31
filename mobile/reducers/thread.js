@@ -6,8 +6,8 @@ import type { ThreadAction } from '../actions/thread';
 
 // Used to decide whether to display New Thread! message
 export type LastSeenMap = Map<
-  $Property<ThreadInfoType, 'id'>,
-  $Property<ThreadInfoType, 'currentUserLastSeen'>
+  $PropertyType<ThreadInfoType, 'id'>,
+  $PropertyType<ThreadInfoType, 'currentUserLastSeen'>
 >;
 
 export type ThreadState = {

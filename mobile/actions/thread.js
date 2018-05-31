@@ -4,8 +4,8 @@ import type { ThreadInfoType } from '../../shared/graphql/fragments/thread/threa
 
 export type UpdateCurrentUserLastSeenAction = {|
   type: 'UPDATE_CURRENTUSER_LASTSEEN',
-  threadId: $Property<ThreadInfoType, 'id'>,
-  currentUserLastSeen: $Property<ThreadInfoType, 'currentUserLastSeen'>,
+  threadId: $PropertyType<ThreadInfoType, 'id'>,
+  currentUserLastSeen: $PropertyType<ThreadInfoType, 'currentUserLastSeen'>,
 |};
 
 export type ThreadAction = UpdateCurrentUserLastSeenAction;

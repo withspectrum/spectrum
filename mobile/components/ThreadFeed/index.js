@@ -14,6 +14,7 @@ import { CenteredView } from './style';
 import type { ViewNetworkHandlerProps } from '../ViewNetworkHandler';
 import type { ReduxState } from '../../reducers';
 import type { LastSeenMap } from '../../reducers/thread';
+import type { Navigation } from '../../utils/types';
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -33,6 +34,7 @@ type StateProps = {
 
 type Props = StateProps & {
   ...$Exact<ViewNetworkHandlerProps>,
+  navigation: Navigation,
   activeChannel?: string,
   activeCommunity?: string,
   // This is necessary so we can listen to updates
@@ -41,6 +43,7 @@ type Props = StateProps & {
     subscribeToUpdatedThreads: Function,
     fetchMore: () => Promise<any>,
     threadConnection: ThreadConnectionType,
+    refetch: Function,
   },
 };
 
@@ -157,6 +160,7 @@ class ThreadFeed extends Component<Props, State> {
             }
             refetching={isRefetching}
             refetch={refetch}
+            loadingIndicator={<Loading />}
           />
         </View>
       );

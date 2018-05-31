@@ -56,6 +56,7 @@ class UsersSearchView extends Component<Props> {
                 />
               )}
               loadingIndicator={<Loading />}
+              fetchMore={f => f}
             />
           )}
         </SearchView>
