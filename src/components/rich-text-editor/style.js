@@ -8,6 +8,7 @@ import theme from 'shared/theme';
 import { Manager, Reference, Popper } from 'react-popper';
 import HoverProfile from 'src/components/avatar/hoverProfile';
 import { getUserByUsername } from 'shared/graphql/queries/user/getUser';
+import type { Node } from 'react';
 
 const MentionHoverProfile = getUserByUsername(
   props =>
@@ -45,6 +46,7 @@ export class Mention extends React.Component<
             )}
           </Reference>
           {this.state.hovered &&
+            document.body &&
             createPortal(
               <Popper placement="top">
                 {({ style, ref }) => (
