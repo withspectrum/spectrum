@@ -2,6 +2,7 @@
 const electron = require('electron');
 const { app, BrowserWindow } = electron;
 const isDev = require('electron-is-dev');
+const contextMenu = require('electron-context-menu');
 
 const checkForUpdates = require('./autoUpdate');
 const buildMenu = require('./menu');
@@ -10,7 +11,6 @@ const CONFIG = require('./config');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 // eslint-disable-next-line
-let win;
 let mainWindow;
 
 const startUrl = isDev ? CONFIG.APP_DEV_URL : CONFIG.APP_REMOTE_URL;
@@ -51,7 +51,6 @@ function createWindow() {
   buildMenu();
 
   mainWindow.on('closed', () => {
-    win = null;
     mainWindow = null;
   });
 
@@ -60,6 +59,8 @@ function createWindow() {
     mainWindow && mainWindow.maximize();
     mainWindow && mainWindow.show();
   });
+
+  contextMenu();
 }
 
 // This method will be called when Electron has finished
@@ -78,10 +79,10 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow !== null) mainWindow.show();
-
-  if (win === null && mainWindow === null) {
+  // dock icon is clicked and there are no other windows opene
+  if (mainWindow !== null) {
+    mainWindow.show();
+  } else {
     createWindow();
   }
 });
