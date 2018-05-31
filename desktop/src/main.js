@@ -1,7 +1,7 @@
 // @flow
 const electron = require('electron');
 const windowStateKeeper = require('electron-window-state');
-const { app, BrowserWindow } = electron;
+const { app, BrowserWindow, shell } = electron;
 const isDev = require('electron-is-dev');
 
 const FIFTEEN_MINUTES = 900000;
@@ -74,6 +74,11 @@ function createWindow() {
   });
 
   mainWindowState.manage(mainWindow);
+
+  mainWindow.webContents.on('new-window', (event, url) => {
+    event.preventDefault();
+    shell.openExternal(url);
+  });
 }
 
 // This method will be called when Electron has finished
