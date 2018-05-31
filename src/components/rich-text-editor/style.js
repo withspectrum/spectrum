@@ -10,13 +10,12 @@ import { getUserByUsername } from 'shared/graphql/queries/user/getUser';
 
 const MentionHoverProfile = getUserByUsername(
   props =>
-    console.log(props) ||
-    (!props.data.user ? null : (
+    !props.data.user ? null : (
       <HoverProfile
         source={props.data.user.profilePhoto}
         user={props.data.user}
       />
-    ))
+    )
 );
 
 type MentionProps = {
