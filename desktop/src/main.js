@@ -4,6 +4,8 @@ const { app, BrowserWindow } = electron;
 const isDev = require('electron-is-dev');
 const contextMenu = require('electron-context-menu');
 
+const FIFTEEN_MINUTES = 900000;
+
 const checkForUpdates = require('./autoUpdate');
 const buildMenu = require('./menu');
 const CONFIG = require('./config');
@@ -17,8 +19,11 @@ const startUrl = isDev ? CONFIG.APP_DEV_URL : CONFIG.APP_REMOTE_URL;
 
 function createWindow() {
   if (!isDev) {
-    // trigger autoupdate check
+    // Check for updates on startup and then every 15 minutes
     checkForUpdates();
+    setInterval(() => {
+      checkForUpdates();
+    }, FIFTEEN_MINUTES);
   }
 
   const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
