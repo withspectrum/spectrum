@@ -201,10 +201,11 @@ workflows:
   test:
     jobs:
       - checkout_environment
+
+      # Testing
       - test_mobile_js:
           requires:
             - checkout_environment
-
       # Disabled as Expo is fixing their critical issue with Detox
       # - test_mobile_native:
       #     requires:
@@ -215,6 +216,8 @@ workflows:
       - test_static_js:
           requires:
             - checkout_environment
+
+      # Deployment
       - deploy_alpha:
           requires:
             - test_static_js
@@ -228,4 +231,4 @@ workflows:
             - test_web
           filters:
             branches:
-              only: production
+              only: alpha
