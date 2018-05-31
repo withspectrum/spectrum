@@ -188,11 +188,7 @@ class MessagesWithData extends React.Component<Props, State> {
 
       const prevCursor =
         edges && edges.length > 0 && edges[0] && edges[0].cursor;
-      const lastEdge =
-        edges &&
-        edges.length > 0 &&
-        edges[edges.length - 1] !== (null || undefined) &&
-        edges[edges.length - 1];
+      const lastEdge = edges && edges.length > 0 && edges[edges.length - 1];
       const nextCursor = lastEdge && lastEdge.cursor;
 
       return (
