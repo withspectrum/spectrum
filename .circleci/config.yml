@@ -137,7 +137,7 @@ jobs:
           command: npx now-cd --alias "alpha=hyperion.alpha.spectrum.chat" --team spaceprogram
 
   deploy_desktop:
-    <<: *defaults
+    <<: *macos_defaults
     docker:
       - image: electronuserland/builder:wine # This is necessary for Windows builds to succeed, ref electron.build/multi-platform-build
     steps:
