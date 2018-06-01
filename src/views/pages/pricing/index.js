@@ -8,6 +8,7 @@ import Discount from './components/discount';
 import Faq from './components/faq';
 import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
+import Head from 'src/components/head';
 
 type Props = {
   ...$Exact<ContextRouter>,
@@ -27,6 +28,11 @@ class Pricing extends React.Component<Props, State> {
   render() {
     return (
       <Wrapper data-cy="pricing-page">
+        <Head
+          title={'Spectrum · Pricing'}
+          description={'Pricing built with your community in mind'}
+        />
+
         <Intro />
         <Paid />
         <Discount />

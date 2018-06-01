@@ -9,6 +9,7 @@ import { Button } from 'src/components/buttons';
 import { Intro, ActionsContainer, TextContent } from './style';
 import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
+import Head from 'src/components/head';
 
 type Props = {
   ...$Exact<ContextRouter>,
@@ -25,7 +26,11 @@ class Features extends React.Component<Props, State> {
 
   render() {
     return (
-      <Wrapper data-cy="features-page">
+      <Wrapper data-cy="apps-page">
+        <Head
+          title={'Spectrum · Apps'}
+          description={'Download Spectrum for Mac and Windows'}
+        />
         <Section>
           <Intro>
             <TextContent>

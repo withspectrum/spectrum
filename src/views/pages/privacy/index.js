@@ -11,6 +11,7 @@ import {
   SectionDescription,
 } from '../pricing/style';
 import { PrivacyTermsList } from '../terms/style';
+import Head from 'src/components/head';
 
 class Privacy extends React.Component<{}> {
   componentDidMount() {}
@@ -18,6 +19,8 @@ class Privacy extends React.Component<{}> {
   render() {
     return (
       <Wrapper data-cy="privacy-page">
+        <Head title={'Spectrum · Privacy'} />
+
         <ContentContainer>
           <Heading>Privacy Policy</Heading>
           <Copy>Effective date: May 24, 2018</Copy>

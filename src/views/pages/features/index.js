@@ -25,6 +25,7 @@ import {
 } from './style';
 import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
+import Head from 'src/components/head';
 
 type Props = {
   ...$Exact<ContextRouter>,
@@ -42,6 +43,8 @@ class Features extends React.Component<Props, State> {
   render() {
     return (
       <Wrapper data-cy="features-page">
+        <Head title={'Spectrum · Features'} />
+
         <Section background={'blank'} goop={1} color={'brand.alt'}>
           <Intro>
             <TextContent>

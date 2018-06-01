@@ -10,6 +10,7 @@ import {
   SectionDescription,
 } from '../pricing/style';
 import { PrivacyTermsList } from '../terms/style';
+import Head from 'src/components/head';
 
 class FAQ extends React.Component<{}> {
   componentDidMount() {}
@@ -17,6 +18,11 @@ class FAQ extends React.Component<{}> {
   render() {
     return (
       <Wrapper data-cy="faq-page">
+        <Head
+          title={'Spectrum · FAQ'}
+          description={'Frequently asked questions about Spectrum'}
+        />
+
         <ContentContainer>
           <Heading>Frequently Asked Questions</Heading>
 

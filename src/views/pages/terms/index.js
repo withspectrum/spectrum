@@ -11,12 +11,14 @@ import {
   SectionDescription,
 } from '../pricing/style';
 import { PrivacyTermsList } from './style';
+import Head from 'src/components/head';
 
 class Terms extends React.Component<{}> {
-  
   render() {
     return (
       <Wrapper data-cy="terms-page">
+        <Head title={'Spectrum · Terms'} />
+
         <ContentContainer>
           <Heading>Terms of Service</Heading>
 
