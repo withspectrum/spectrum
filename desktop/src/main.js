@@ -3,6 +3,7 @@ const electron = require('electron');
 const windowStateKeeper = require('electron-window-state');
 const { app, BrowserWindow, shell } = electron;
 const isDev = require('electron-is-dev');
+const contextMenu = require('electron-context-menu');
 
 const FIFTEEN_MINUTES = 900000;
 
@@ -73,6 +74,7 @@ function createWindow() {
     mainWindow && mainWindow.show();
   });
 
+  contextMenu();
   mainWindowState.manage(mainWindow);
 
   mainWindow.webContents.on('new-window', (event, url) => {
