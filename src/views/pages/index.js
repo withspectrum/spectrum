@@ -8,6 +8,7 @@ import Home from './home';
 import Terms from './terms';
 import Privacy from './privacy';
 import Faq from './faq';
+import Apps from './apps';
 import { Page } from './style';
 
 type Props = {
@@ -36,6 +37,9 @@ class Pages extends React.Component<Props> {
       }
       case '/faq': {
         return <Faq {...this.props} />;
+      }
+      case '/apps': {
+        return <Apps {...this.props} />;
       }
       case '/':
       case '/about':

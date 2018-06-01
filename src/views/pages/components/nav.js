@@ -15,12 +15,14 @@ import {
   PricingTab,
   SupportTab,
   FeaturesTab,
+  AppsTab,
   AuthTab,
   LogoLink,
   AuthLink,
   PricingLink,
   SupportLink,
   FeaturesLink,
+  AppsLink,
   ExploreLink,
   MenuContainer,
   MenuOverlay,
@@ -75,6 +77,14 @@ class Nav extends React.Component<Props, State> {
           >
             Features
           </FeaturesTab>
+          <AppsTab
+            dark={this.props.dark}
+            selected={this.props.location === 'apps'}
+            to="/apps"
+            data-cy="navbar-splash-apps"
+          >
+            Apps
+          </AppsTab>
           <PricingTab
             dark={this.props.dark}
             selected={this.props.location === 'pricing'}
@@ -132,6 +142,9 @@ class Nav extends React.Component<Props, State> {
               >
                 <Icon glyph="checkmark" />Features<Icon glyph="enter" />
               </FeaturesLink>
+              <AppsLink to="/apps" selected={this.props.location === 'apps'}>
+                <Icon glyph="plus" />Apps<Icon glyph="enter" />
+              </AppsLink>
               <PricingLink
                 to="/pricing"
                 selected={this.props.location === 'pricing'}

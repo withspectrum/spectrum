@@ -289,19 +289,19 @@ export const Footer = styled.div`
 export const FooterGrid = styled.div`
   flex: auto;
   display: grid;
-  grid-template-columns: auto 1fr repeat(2, minmax(160px, auto));
+  grid-template-columns: auto 1fr repeat(3, minmax(160px, auto));
   grid-template-rows: 1fr;
   grid-column-gap: 32px;
-  grid-template-areas: 'masthead . support safety';
+  grid-template-areas: 'masthead . apps support safety';
   align-items: flex-start;
   justify-items: flex-start;
 
-  @media (max-width: 640px) {
+  @media (max-width: 800px) {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr 1fr;
+    grid-template-rows: auto;
     grid-column-gap: 0;
     grid-row-gap: 32px;
-    grid-template-areas: 'masthead' 'support' 'safety';
+    grid-template-areas: 'masthead' 'apps' 'support' 'safety';
   }
 `;
 
@@ -358,6 +358,10 @@ export const LinkSection = styled(FooterSection)`
 
 export const Support = styled(LinkSection)`
   grid-area: support;
+`;
+
+export const Apps = styled(LinkSection)`
+  grid-area: apps;
 `;
 
 export const Safety = styled(LinkSection)`
@@ -480,7 +484,7 @@ export const Tabs = styled.div`
   grid-template-columns: auto 1fr repeat(3, auto);
   grid-column-gap: 32px;
   grid-template-rows: auto;
-  grid-template-areas: 'logo . features pricing support auth';
+  grid-template-areas: 'logo . features apps pricing support auth';
   align-items: center;
   justify-items: center;
   color: ${props =>
@@ -611,22 +615,22 @@ export const LogoLink = styled(DropdownLink)`
 
 export const FeaturesLink = styled(DropdownLink)`
   grid-area: features;
-  border: none;
+`;
+
+export const AppsLink = styled(DropdownLink)`
+  grid-area: apps;
 `;
 
 export const PricingLink = styled(DropdownLink)`
   grid-area: pricing;
-  border-top: 2px solid ${props => props.theme.bg.border};
 `;
 
 export const SupportLink = styled(DropdownLink)`
   grid-area: support;
-  border-top: 2px solid ${props => props.theme.bg.border};
 `;
 
 export const ExploreLink = styled(DropdownLink)`
   grid-area: explore;
-  border-top: 2px solid ${props => props.theme.bg.border};
 `;
 
 export const AuthLink = styled(DropdownLink)`
@@ -666,8 +670,8 @@ export const MenuContainer = styled.div`
   position: fixed;
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: auto 16px repeat(4, auto) 1fr auto;
-  grid-template-areas: 'logo' '.' 'features' 'pricing' 'support' 'explore' '.' 'auth';
+  grid-template-rows: auto 16px repeat(5, auto) 1fr auto;
+  grid-template-areas: 'logo' '.' 'features' 'apps' 'pricing' 'support' 'explore' '.' 'auth';
   align-content: start;
   left: 0;
   top: 0;
@@ -732,6 +736,14 @@ export const PricingTab = styled(Tab)`
 
 export const FeaturesTab = styled(Tab)`
   grid-area: features;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const AppsTab = styled(Tab)`
+  grid-area: apps;
 
   @media (max-width: 768px) {
     display: none;

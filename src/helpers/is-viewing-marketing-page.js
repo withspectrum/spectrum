@@ -20,6 +20,7 @@ export const isViewingMarketingPage = (
     viewing === '/terms' ||
     viewing === '/terms.html' ||
     viewing === '/faq' ||
-    viewing === '/features'
+    viewing === '/features' ||
+    viewing === '/apps'
   );
 };

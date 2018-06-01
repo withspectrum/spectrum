@@ -5,6 +5,7 @@ import {
   FooterGrid,
   Masthead,
   Support,
+  Apps,
   Safety,
   SocialLinks,
 } from '../style';
@@ -38,6 +39,10 @@ export default () => {
             </a>
           </SocialLinks>
         </Masthead>
+        <Apps>
+          <span>Apps</span>
+          <Link to={`/apps`}>Mac & Windows</Link>
+        </Apps>
         <Support>
           <span>Support</span>
           <Link to={`/spectrum`}>Community</Link>
