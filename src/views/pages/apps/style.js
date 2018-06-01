@@ -1,6 +1,5 @@
+// @flow
 import styled from 'styled-components';
-
-/* eslint no-eval: 0 */
 
 export const Intro = styled.div`
   display: grid;
