@@ -226,11 +226,11 @@ workflows:
           filters:
             branches:
               only: alpha
-      - deploy_desktop:
-          requires:
-            - test_static_js
-            - test_web
+      - deploy_desktop #:
           # TODO(@mxstbr): UNCOMMENT BEFORE MERGE
+          # requires:
+          #   - test_static_js
+          #   - test_web
           # filters:
           #   branches:
           #     only: alpha
