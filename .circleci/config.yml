@@ -140,6 +140,7 @@ jobs:
     <<: *js_defaults
     docker:
       - image: circleci/node:8
+      - image: electronuserland/builder:wine # This is necessary for Windows builds to succeed, ref electron.build/multi-platform-build
     steps:
       - attach_workspace:
           at: ~/spectrum
