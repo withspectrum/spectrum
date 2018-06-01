@@ -226,7 +226,9 @@ workflows:
           filters:
             branches:
               only: alpha
-      - deploy_desktop #:
+      - deploy_desktop:
+          requires:
+            - checkout_environment
           # TODO(@mxstbr): UNCOMMENT BEFORE MERGE
           # requires:
           #   - test_static_js
