@@ -422,3 +422,35 @@ export type FileUpload = {
 };
 
 export type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';
+
+/**
+ * Apollo Client/ React Apollo
+ * @see https://github.com/apollographql/apollo-client/blob/765ba76c300ed4a05eba7b4989c75d1d3bff3bd9/packages/apollo-client/src/ApolloClient.ts
+ */
+export interface DefaultOptions {
+  watchQuery?: Object;
+  query?: Object;
+  mutate?: Object;
+}
+
+export type MutationOptions = {
+  variables?: Object,
+  optimisticResponse: ?Object,
+  refetchQueries?: Object,
+  update?: Object,
+};
+
+export type Mutate = (options?: MutationOptions) => Promise<any>;
+
+export type ApolloClient = {
+  constructor(options?: Object): Function,
+  watchQuery(option?: Object): Function,
+  query(options?: Object): Function,
+  mutate: Mutate,
+  readQuery(options: Object): any,
+  readFragment(options: Object): any,
+  writeQuery(options: Object): () => any,
+  writeFragment(options: Object): any,
+  resetStore(): () => Promise<any>,
+  onResetStore(cb: Object): () => any,
+};

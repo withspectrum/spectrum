@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
+import { connect } from 'react-redux';
 import { View } from 'react-native';
 import Text from '../Text';
 import ViewNetworkHandler from '../ViewNetworkHandler';
@@ -8,8 +9,12 @@ import { ThreadListItem } from '../Lists';
 import InfiniteList from '../InfiniteList';
 import Loading from '../Loading';
 import type { ThreadConnectionType } from '../../../shared/graphql/fragments/community/communityThreadConnection';
-import type { FlatListProps } from 'react-native';
 import { withNavigation } from 'react-navigation';
+import { CenteredView } from './style';
+import type { ViewNetworkHandlerProps } from '../ViewNetworkHandler';
+import type { ReduxState } from '../../reducers';
+import type { LastSeenMap } from '../../reducers/thread';
+import type { Navigation } from '../../utils/types';
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -19,18 +24,17 @@ import { withNavigation } from 'react-navigation';
   See 'gql/community/communityThreads.js' for an example of the prop mapping in action
 */
 
-import { CenteredView } from './style';
-
 type State = {
   subscription: ?Function,
 };
 
-type Props = {
-  ...$Exact<FlatListProps>,
-  isLoading: boolean,
-  isFetchingMore: boolean,
-  isRefetching: boolean,
-  hasError: boolean,
+type StateProps = {
+  lastSeenMap: LastSeenMap,
+};
+
+type Props = StateProps & {
+  ...$Exact<ViewNetworkHandlerProps>,
+  navigation: Navigation,
   activeChannel?: string,
   activeCommunity?: string,
   // This is necessary so we can listen to updates
@@ -39,6 +43,7 @@ type Props = {
     subscribeToUpdatedThreads: Function,
     fetchMore: () => Promise<any>,
     threadConnection: ThreadConnectionType,
+    refetch: Function,
   },
 };
 
@@ -109,8 +114,7 @@ class ThreadFeed extends Component<Props, State> {
 
   render() {
     const {
-      data,
-      data: { threadConnection },
+      data: { threadConnection, refetch },
       isLoading,
       hasError,
       navigation,
@@ -119,7 +123,9 @@ class ThreadFeed extends Component<Props, State> {
       isFetchingMore,
       isRefetching,
       channels,
-      ...flatListProps
+      isPolling,
+      queryVarIsChanging,
+      lastSeenMap,
     } = this.props;
 
     if (isLoading) {
@@ -133,6 +139,7 @@ class ThreadFeed extends Component<Props, State> {
             data={threadConnection.edges}
             renderItem={({ item }) => (
               <ThreadListItem
+                lastSeenMap={lastSeenMap}
                 thread={item.node}
                 activeChannel={activeChannel}
                 activeCommunity={activeCommunity}
@@ -145,16 +152,15 @@ class ThreadFeed extends Component<Props, State> {
                 }
               />
             )}
-            loadingIndicator={<Text>Loading...</Text>}
             fetchMore={this.fetchMore}
             hasNextPage={
               threadConnection &&
               threadConnection.pageInfo &&
               threadConnection.pageInfo.hasNextPage
             }
-            refetching={this.props.isRefetching}
-            refetch={this.props.data.refetch}
-            {...flatListProps}
+            refetching={isRefetching}
+            refetch={refetch}
+            loadingIndicator={<Loading />}
           />
         </View>
       );
@@ -176,4 +182,14 @@ class ThreadFeed extends Component<Props, State> {
   }
 }
 
-export default compose(withNavigation, ViewNetworkHandler)(ThreadFeed);
+const mapStateToProps = (state: ReduxState): StateProps => {
+  return {
+    lastSeenMap: state.thread.lastSeenMap,
+  };
+};
+
+export default compose(
+  withNavigation,
+  ViewNetworkHandler,
+  connect(mapStateToProps)
+)(ThreadFeed);

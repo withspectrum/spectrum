@@ -1,16 +1,19 @@
 // @flow
 import type { ReplyToMessageActionType } from '../actions/message';
+export type MessageState = {
+  +quotedMessage: Object,
+};
 
-const initialState = {
+const initialState: MessageState = {
   quotedMessage: {},
 };
 
 type Actions = ReplyToMessageActionType;
 
 export default function message(
-  state: typeof initialState = initialState,
+  state: MessageState = initialState,
   action: Actions
-) {
+): MessageState {
   switch (action.type) {
     case 'REPLY_TO_MESSAGE':
       return {

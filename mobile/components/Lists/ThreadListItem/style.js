@@ -46,6 +46,10 @@ export const MetaTextPill = styled(MetaText)`
   overflow: hidden;
 `;
 
+export const NewMessagePill = styled(MetaText)`
+  color: ${props => props.theme.warn.alt};
+`;
+
 export const ThreadCommunityInfoWrapper = styled.View`
   display: flex;
   flex-direction: row;

@@ -14,12 +14,11 @@ const messageAvatars = (list, navigation, maxCount) => {
   const avatarList = list.slice(0, maxCount);
 
   return avatarList.map((participant, i) => {
-    if (!participant) {
-      return null;
-    }
+    if (!participant) return null;
+
     return (
       <StackedAvatar
-        key={participant.id}
+        key={i}
         src={participant.profilePhoto}
         size={30}
         onPress={() =>

@@ -1,8 +1,10 @@
 // @flow
 import React, { Component } from 'react';
 import { View } from 'react-native';
+import idx from 'idx';
 import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
+import Loading from '../Loading';
 import viewNetworkHandler from '../ViewNetworkHandler';
 import Text from '../Text';
 import Message from '../Message';
@@ -14,17 +16,18 @@ import { withCurrentUser } from '../../components/WithCurrentUser';
 import RoboText from './RoboText';
 import Author from './Author';
 
-import type { FlatListProps } from 'react-native';
-import type { Navigation } from 'react-navigation';
+import type { Navigation } from '../../utils/types';
 import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection.js';
 import type { ThreadParticipantType } from '../../../shared/graphql/fragments/thread/threadParticipant';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
+import type { ViewNetworkHandlerProps } from '../ViewNetworkHandler';
+import { getThreadByMatchQuery } from '../../../shared/graphql/queries/thread/getThread';
+import type { ThreadInfoType } from '../../../shared/graphql/fragments/thread/threadInfo';
 
 type Props = {
-  id: string,
-  ...$Exact<FlatListProps>,
-  isLoading: boolean,
-  hasError: boolean,
+  id: $PropertyType<ThreadInfoType, 'id'>,
+  thread: ThreadInfoType,
+  ...$Exact<ViewNetworkHandlerProps>,
   navigation: Navigation,
   currentUser: GetUserType,
   data: {
@@ -40,10 +43,15 @@ class Messages extends Component<Props> {
       hasError,
       navigation,
       currentUser,
-      ...flatListProps
+      thread,
     } = this.props;
+    if (isLoading) return <Loading />;
 
-    if (data.messageConnection && data.messageConnection) {
+    if (hasError) return <Text type="body">Error :(</Text>;
+
+    if (idx(data, _ => _.messageConnection.edges)) {
+      if (data.messageConnection.edges.length === 0) return null;
+
       const messages = sortAndGroupMessages(
         data.messageConnection.edges
           .slice()
@@ -55,7 +63,8 @@ class Messages extends Component<Props> {
 
       return (
         <InfiniteList
-          {...flatListProps}
+          fetchMore={f => f}
+          loadingIndicator={<Loading />}
           data={messages}
           keyExtractor={item => item[0].id}
           renderItem={({ item: group, index: i }) => {
@@ -88,12 +97,11 @@ class Messages extends Component<Props> {
             const author: ThreadParticipantType = initialMessage.author;
 
             let unseenRobo = null;
-            // TODO(@mxstbr): Figure out how to get lastSeen information
-            let lastSeen = new Date('April 15, 2018 12:00:00');
             if (
-              !!lastSeen &&
+              !!thread.currentUserLastSeen &&
               new Date(group[group.length - 1].timestamp).getTime() >
-                new Date(lastSeen).getTime() &&
+                // $FlowIssue
+                new Date(thread.currentUserLastSeen).getTime() &&
               !me &&
               !hasInjectedUnseenRobo
             ) {
@@ -143,14 +151,6 @@ class Messages extends Component<Props> {
           }}
         />
       );
-    }
-
-    if (isLoading) {
-      return <Text type="body">Loading...</Text>;
-    }
-
-    if (hasError) {
-      return <Text type="body">Error :(</Text>;
     }
 
     return null;

@@ -4,7 +4,9 @@ import { graphql } from 'react-apollo';
 import { btoa } from 'abab';
 import messageInfoFragment from '../../fragments/message/messageInfo';
 import type { MessageInfoType } from '../../fragments/message/messageInfo';
+import type { ThreadParticipantType } from '../../fragments/thread/threadParticipant';
 import { getThreadMessageConnectionQuery } from '../../queries/thread/getThreadMessageConnection';
+import type { Mutate } from '../../../types';
 
 export type SendMessageType = {
   data: {
@@ -23,7 +25,20 @@ export const sendMessageMutation = gql`
   ${messageInfoFragment}
 `;
 
-const sendMessageOptions = {
+export type SendMessageMutationFunc = (
+  message: Object,
+  author: Object
+) => $Call<Mutate>;
+
+type SendMessageOption = {
+  props: (
+    ownProps: Object,
+    mutate: Mutate
+  ) => {
+    sendMessage: SendMessageMutationFunc,
+  },
+};
+const sendMessageOptions: SendMessageOption = {
   props: ({ ownProps, mutate }) => ({
     sendMessage: (message, author) => {
       const fakeId = Math.round(Math.random() * -1000000);

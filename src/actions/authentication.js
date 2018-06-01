@@ -1,8 +1,11 @@
+// @flow
 import { setUser, unsetUser } from 'src/helpers/analytics';
 import { removeItemFromStorage, storeItem } from 'src/helpers/localStorage';
 import Raven from 'raven-js';
+import type { GetUserType } from '../../shared/graphql/queries/user/getUser';
+import type { Dispatch } from 'redux';
 
-export const logout = dispatch => {
+const logout = (dispatch: Dispatch<Object>) => {
   // clear localStorage
   removeItemFromStorage('spectrum');
 
@@ -25,10 +28,13 @@ export const logout = dispatch => {
     });
 };
 
-export const saveUserDataToLocalStorage = (user: Object) => async dispatch => {
+export const saveUserDataToLocalStorage = (user: GetUserType) => async (
+  dispatch: Dispatch<Object>
+) => {
   const obj = {};
 
   if (!user) {
+    // $FlowIssue
     logout();
   }
   // construct a clean object that doesn't include any metadata from apollo

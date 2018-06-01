@@ -1,14 +1,17 @@
 // @flow
 import { combineReducers } from 'redux';
 import authentication, { type AuthenticationState } from './authentication';
-import message from '../../src/reducers/message';
+import message, { type MessageState } from '../../src/reducers/message';
+import { threadReducer as thread, type ThreadState } from './thread';
 
-export type State = {
+export type ReduxState = {
   +authentication: $Exact<AuthenticationState>,
-  +message: $Exact<$Call<typeof message, {}>>,
+  +message: $Exact<MessageState>,
+  +thread: $Exact<ThreadState>,
 };
 
 export default combineReducers({
   authentication,
   message,
+  thread,
 });

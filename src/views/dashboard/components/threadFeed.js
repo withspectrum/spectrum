@@ -29,8 +29,12 @@ type Node = {
   },
 };
 
-type Props = {
+type StateProps = {|
   mountedWithActiveThread: ?string,
+  activeCommunity: ?string,
+|};
+
+type Props = {
   queryString?: ?string,
   ...$Exact<ViewNetworkHandlerType>,
   data: {
@@ -46,10 +50,9 @@ type Props = {
   history: Function,
   dispatch: Dispatch<Object>,
   selectedId: string,
-  activeCommunity: ?string,
   hasActiveCommunity: boolean,
   hasActiveChannel: boolean,
-};
+} & StateProps;
 
 type State = {
   scrollElement: any,
@@ -57,7 +60,7 @@ type State = {
 };
 
 class ThreadFeed extends React.Component<Props, State> {
-  innerScrollElement: any;
+  innerScrollElement: ?HTMLElement;
 
   constructor() {
     super();
@@ -326,13 +329,10 @@ class ThreadFeed extends React.Component<Props, State> {
     );
   }
 }
-const map = state => ({
+const map = (state): StateProps => ({
   mountedWithActiveThread: state.dashboardFeed.mountedWithActiveThread,
   activeCommunity: state.dashboardFeed.activeCommunity,
 });
-export default compose(
-  withRouter,
-  // $FlowIssue
-  connect(map),
-  viewNetworkHandler
-)(ThreadFeed);
+export default compose(withRouter, connect(map), viewNetworkHandler)(
+  ThreadFeed
+);

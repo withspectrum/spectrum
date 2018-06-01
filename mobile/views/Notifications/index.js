@@ -17,7 +17,7 @@ import viewNetworkHandler, {
 import subscribeExpoPush from '../../../shared/graphql/mutations/user/subscribeExpoPush';
 import sortByDate from '../../../shared/sort-by-date';
 import getPushNotificationToken from '../../utils/get-push-notification-token';
-import type { State as ReduxState } from '../../reducers';
+import type { ReduxState } from '../../reducers';
 import type { AuthenticationState } from '../../reducers/authentication';
 import { parseNotification } from './parseNotification';
 import type { Navigation } from '../../utils/types';

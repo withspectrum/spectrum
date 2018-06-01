@@ -1,6 +1,7 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import { Text, View, StatusBar } from 'react-native';
+import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import {
@@ -25,6 +26,8 @@ import {
   Description,
   ThreadFeedDivider,
 } from './style';
+import type { ReduxState } from '../../reducers';
+import type { LastSeenMap } from '../../reducers/thread';
 
 type Props = {
   isLoading: boolean,
@@ -35,26 +38,35 @@ type Props = {
   },
 };
 
-const RemoteThreadItem = compose(getThreadById, withNavigation)(
-  ({ data, navigation }) => {
-    if (data.loading) return <Text>Loading...</Text>;
-    if (!data.thread) return null;
-    return (
-      <ThreadListItem
-        activeCommunity={data.thread.community.id}
-        thread={data.thread}
-        navigation={navigation}
-        onPress={() =>
-          navigation.navigate({
-            routeName: `Thread`,
-            key: data.thread.id,
-            params: { id: data.thread.id },
-          })
-        }
-      />
-    );
-  }
-);
+const mapStateToProps = (state: ReduxState): Object => {
+  return {
+    lastSeenMap: state.thread.lastSeenMap,
+  };
+};
+
+const RemoteThreadItem = compose(
+  getThreadById,
+  withNavigation,
+  connect(mapStateToProps)
+)(({ data, navigation, lastSeenMap }) => {
+  if (data.loading) return <Text>Loading...</Text>;
+  if (!data.thread) return null;
+  return (
+    <ThreadListItem
+      lastSeenMap={lastSeenMap}
+      activeCommunity={data.thread.community.id}
+      thread={data.thread}
+      navigation={navigation}
+      onPress={() =>
+        navigation.navigate({
+          routeName: `Thread`,
+          key: data.thread.id,
+          params: { id: data.thread.id },
+        })
+      }
+    />
+  );
+});
 
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 
