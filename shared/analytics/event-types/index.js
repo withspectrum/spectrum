@@ -11,6 +11,7 @@ import * as notificationsEvents from './notifications'
 import * as pageExploreEvents from './page-explore'
 import * as pageFeatureEvents from './page-features'
 import * as pageHomeEvents from './page-home'
+import * as pageAppsEvents from './page-apps'
 import * as pageInboxEvents from './page-inbox'
 import * as pageLoginEvents from './page-login'
 import * as pagePricingEvents from './page-pricing'
@@ -36,6 +37,7 @@ export const events = {
   ...pageExploreEvents,
   ...pageFeatureEvents,
   ...pageHomeEvents,
+  ...pageAppsEvents,
   ...pageInboxEvents,
   ...pageLoginEvents,
   ...pagePricingEvents,

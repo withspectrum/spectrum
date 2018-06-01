@@ -20,7 +20,7 @@ type State = {
 
 class Features extends React.Component<Props, State> {
   componentDidMount() {
-    track(events.FEATURES_PAGE_VIEWED);
+    track(events.APPS_PAGE_VIEWED);
   }
 
   render() {
@@ -40,9 +40,7 @@ class Features extends React.Component<Props, State> {
                   <Button
                     large
                     icon="apple"
-                    onClick={() =>
-                      track(events.FEATURES_PAGE_GET_STARTED_CLICKED)
-                    }
+                    onClick={() => track(events.APPS_PAGE_DOWNLOAD_MAC_CLICKED)}
                   >
                     Download for Mac
                   </Button>
@@ -52,7 +50,7 @@ class Features extends React.Component<Props, State> {
                     large
                     icon="windows"
                     onClick={() =>
-                      track(events.FEATURES_PAGE_GET_STARTED_CLICKED)
+                      track(events.APPS_PAGE_DOWNLOAD_WINDOWS_CLICKED)
                     }
                   >
                     Download for Windows
