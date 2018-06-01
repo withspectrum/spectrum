@@ -7,6 +7,8 @@ const coreSplashPageNavbarLinksVisible = () => {
 
   cy.get('[data-cy="navbar-splash-features"]').should('be.visible');
 
+  cy.get('[data-cy="navbar-splash-apps"]').should('be.visible');
+
   cy.get('[data-cy="navbar-splash-pricing"]').should('be.visible');
 
   cy.get('[data-cy="navbar-splash-support"]').should('be.visible');
