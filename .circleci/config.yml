@@ -230,6 +230,7 @@ workflows:
           requires:
             - test_static_js
             - test_web
-          filters:
-            branches:
-              only: alpha
+          # TODO(@mxstbr): UNCOMMENT BEFORE MERGE
+          # filters:
+          #   branches:
+          #     only: alpha
