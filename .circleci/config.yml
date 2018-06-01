@@ -136,17 +136,6 @@ jobs:
           name: Deploy and alias Hyperion
           command: npx now-cd --alias "alpha=hyperion.alpha.spectrum.chat" --team spaceprogram
 
-  deploy_desktop:
-    <<: *macos_defaults
-    docker:
-      - image: electronuserland/builder:wine # This is necessary for Windows builds to succeed, ref electron.build/multi-platform-build
-    steps:
-      - attach_workspace:
-          at: ~/spectrum
-      - run:
-          name: Build and release desktop app
-          command: yarn run release:desktop
-
   # Run eslint, flow etc.
   test_static_js:
     <<: *js_defaults
@@ -225,13 +214,3 @@ workflows:
           filters:
             branches:
               only: alpha
-      - deploy_desktop:
-          requires:
-            - checkout_environment
-          # TODO(@mxstbr): UNCOMMENT BEFORE MERGE
-          # requires:
-          #   - test_static_js
-          #   - test_web
-          # filters:
-          #   branches:
-          #     only: alpha
