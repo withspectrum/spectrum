@@ -3,6 +3,7 @@
 type ReplyInput = {|
   threadId: string,
   messageId: ?string,
+  snippet: ?string,
 |};
 
 export const replyToMessage = (input: ReplyInput) => {
@@ -10,6 +11,7 @@ export const replyToMessage = (input: ReplyInput) => {
     type: 'REPLY_TO_MESSAGE',
     messageId: input ? input.messageId : null,
     threadId: input.threadId,
+    snippet: input.snippet,
   };
 };
 

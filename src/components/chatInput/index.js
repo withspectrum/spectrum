@@ -40,6 +40,7 @@ import type { Dispatch } from 'redux';
 
 const QuotedMessage = connect()(
   getMessageById(props => {
+    console.log('props :', props);
     if (props.data && props.data.message) {
       return <QuotedMessageComponent message={props.data.message} />;
     }
@@ -59,6 +60,10 @@ const QuotedMessage = connect()(
 
     return null;
   })
+);
+
+const QuotedSnippet = ({ snippet }) => (
+  <QuotedMessageComponent message={snippet} />
 );
 
 type State = {
@@ -89,7 +94,7 @@ type Props = {
   networkOnline: boolean,
   threadData?: Object,
   refetchThread?: Function,
-  quotedMessage: ?{ messageId: string, threadId: string },
+  quotedMessage: { messageId?: string, snippet?: string },
 };
 
 const LS_KEY = 'last-chat-input-content';
@@ -195,7 +200,8 @@ class ChatInput extends React.Component<Props, State> {
     if (curr.networkOnline !== next.networkOnline) return true;
     if (curr.websocketConnection !== next.websocketConnection) return true;
 
-    if (curr.quotedMessage !== next.quotedMessage) return true;
+    if (curr.quotedMessage.messageId !== next.quotedMessage.messageId)
+      return true;
 
     // State changed
     if (curr.state !== next.state) return true;
@@ -227,7 +233,7 @@ class ChatInput extends React.Component<Props, State> {
   };
 
   removeQuotedMessage = () => {
-    if (this.props.quotedMessage)
+    if (this.props.quotedMessage.messageId)
       this.props.dispatch(
         replyToMessage({ threadId: this.props.thread, messageId: null })
       );
@@ -353,7 +359,7 @@ class ChatInput extends React.Component<Props, State> {
         threadId: thread,
         messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
-        parentId: quotedMessage,
+        parentId: quotedMessage.messageId,
         content: {
           body: !isAndroid()
             ? JSON.stringify(toJSON(state))
@@ -372,7 +378,7 @@ class ChatInput extends React.Component<Props, State> {
         threadId: thread,
         messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
-        parentId: quotedMessage,
+        parentId: quotedMessage.messageId,
         content: {
           body: !isAndroid()
             ? JSON.stringify(toJSON(state))
@@ -504,7 +510,7 @@ class ChatInput extends React.Component<Props, State> {
           threadId: thread,
           messageType: 'media',
           threadType,
-          parentId: quotedMessage,
+          parentId: quotedMessage.messageId,
           content: {
             body: reader.result,
           },
@@ -526,7 +532,7 @@ class ChatInput extends React.Component<Props, State> {
           threadId: thread,
           messageType: 'media',
           threadType,
-          parentId: quotedMessage,
+          parentId: quotedMessage.messageId,
           content: {
             body: reader.result,
           },
@@ -671,7 +677,7 @@ class ChatInput extends React.Component<Props, State> {
                 editorKey="chat-input"
                 decorators={[mentionsDecorator, linksDecorator]}
                 networkDisabled={networkDisabled}
-                hasAttachment={!!mediaPreview || !!quotedMessage}
+                hasAttachment={!!mediaPreview || quotedMessage.messageId}
               >
                 {mediaPreview && (
                   <PreviewWrapper>
@@ -681,9 +687,16 @@ class ChatInput extends React.Component<Props, State> {
                     </RemovePreviewButton>
                   </PreviewWrapper>
                 )}
-                {quotedMessage && (
+                {quotedMessage.messageId && (
                   <PreviewWrapper data-cy="staged-quoted-message">
-                    <QuotedMessage id={quotedMessage} threadId={thread} />
+                    {quotedMessage.snippet ? (
+                      <QuotedSnippet snippet={quotedMessage.snippet} />
+                    ) : (
+                      <QuotedMessage
+                        id={quotedMessage.messageId}
+                        threadId={thread}
+                      />
+                    )}
                     <RemovePreviewButton
                       data-cy="remove-staged-quoted-message"
                       onClick={this.removeQuotedMessage}
@@ -697,7 +710,7 @@ class ChatInput extends React.Component<Props, State> {
                 data-cy="chat-input-send-button"
                 glyph="send-fill"
                 onClick={this.submit}
-                hasAttachment={mediaPreview || quotedMessage ? true : false}
+                hasAttachment={mediaPreview || !!quotedMessage.messageId}
               />
             </Form>
           </ChatInputWrapper>
@@ -717,7 +730,10 @@ const map = (state, ownProps) => ({
   currentUser: state.users.currentUser,
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
-  quotedMessage: state.message.quotedMessage[ownProps.thread] || null,
+  quotedMessage: state.message.quotedMessage[ownProps.thread] || {
+    messageId: null,
+    snippet: null,
+  },
 });
 export default compose(
   sendMessage,
