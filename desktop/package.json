@@ -7,14 +7,15 @@
     "email": "hey@spectrum.chat"
   },
   "repository": "https://github.com/withspectrum/spectrum",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.1",
   "main": "src/main.js",
   "private": true,
   "dependencies": {
     "electron-context-menu": "^0.9.1",
     "electron-is-dev": "^0.3.0",
     "electron-log": "^2.2.14",
-    "electron-updater": "^2.21.4"
+    "electron-updater": "^2.21.4",
+    "electron-window-state": "^4.1.1"
   },
   "devDependencies": {
     "electron": "^1.8.4",

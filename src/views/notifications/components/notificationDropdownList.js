@@ -184,7 +184,7 @@ export class NotificationDropdownList extends React.Component<Props> {
                       markSingleNotificationAsSeenInState
                     }
                   />
-                 </ErrorBoundary>
+                </ErrorBoundary>
               );
             }
             case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
