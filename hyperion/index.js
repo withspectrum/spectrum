@@ -11,6 +11,7 @@ import { getUser } from 'api/models/user';
 import Raven from 'shared/raven';
 import toobusy from 'shared/middlewares/toobusy';
 import addSecurityMiddleware from 'shared/middlewares/security';
+import { Request } from 'api/index';
 
 const PORT = process.env.PORT || 3006;
 
@@ -43,7 +44,7 @@ app.use(cors);
 // This allows deploy previews to work, as this route would only be called
 // if there's no path alias in Now for hyperionurl.com/api, which would only
 // happen on deploy previews
-app.use('/api', (req: express$Request, res: express$Response) => {
+app.use('/api', (req: Request, res: express$Response) => {
   const redirectUrl = `${req.baseUrl}${req.path}`;
   res.redirect(
     req.method === 'POST' || req.xhr ? 307 : 301,
@@ -51,7 +52,7 @@ app.use('/api', (req: express$Request, res: express$Response) => {
   );
 });
 
-app.use('/auth', (req: express$Request, res: express$Response) => {
+app.use('/auth', (req: Request, res: express$Response) => {
   const redirectUrl = `${req.baseUrl}${req.path}`;
   res.redirect(
     req.method === 'POST' || req.xhr ? 307 : 301,
@@ -59,7 +60,7 @@ app.use('/auth', (req: express$Request, res: express$Response) => {
   );
 });
 
-app.use('/websocket', (req: express$Request, res: express$Response) => {
+app.use('/websocket', (req: Request, res: express$Response) => {
   const redirectUrl = `${req.baseUrl}${req.path}`;
   res.redirect(
     req.method === 'POST' || req.xhr ? 307 : 301,
@@ -70,7 +71,7 @@ app.use('/websocket', (req: express$Request, res: express$Response) => {
 // In development the Webpack HMR server requests /sockjs-node constantly,
 // so let's patch that through to it!
 if (process.env.NODE_ENV === 'development') {
-  app.use('/sockjs-node', (req: express$Request, res: express$Response) => {
+  app.use('/sockjs-node', (req: Request, res: express$Response) => {
     res.redirect(301, `http://localhost:3000${req.path}`);
   });
 }
@@ -129,7 +130,7 @@ app.use(
     },
   })
 );
-app.get('/static/js/:name', (req: express$Request, res, next) => {
+app.get('/static/js/:name', (req: Request, res, next) => {
   if (!req.params.name) return next();
   const match = req.params.name.match(/(\w+?)\.(\w+?\.)?js/i);
   if (!match) return next();
@@ -146,7 +147,7 @@ if (process.env.NODE_ENV === 'development') {
   );
 }
 
-app.get('*', (req: express$Request, res, next) => {
+app.get('*', (req: Request, res, next) => {
   // Electron requests should only be client-side rendered
   if (req.headers['user-agent'].indexOf('Electron') > -1) {
     return res.sendFile(path.resolve(__dirname, '../build/index.html'));

@@ -2,6 +2,7 @@
 // Cache unauthenticated requests in Redis
 import redis from './redis';
 const debug = require('debug')('hyperion:cache');
+import { Request } from 'api/index';
 
 if (process.env.DISABLE_CACHE) {
   console.log(
@@ -10,7 +11,7 @@ if (process.env.DISABLE_CACHE) {
 }
 
 const cache = (
-  req: express$Request,
+  req: Request,
   res: express$Response,
   next: express$NextFunction
 ) => {

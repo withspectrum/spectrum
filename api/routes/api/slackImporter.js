@@ -4,6 +4,7 @@ import UserError from '../../utils/UserError';
 import { generateOAuthToken } from '../../models/slackImport';
 import { updateSlackSettingsAfterConnection } from '../../models/communitySettings';
 import { encryptString } from 'shared/encryption';
+import { Request } from '../../index';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 
@@ -23,12 +24,6 @@ const constructInput = (data: any, connectedBy: string) => {
     scope,
   };
 };
-
-// @see https://github.com/flowtype/flow-typed/issues/114#issuecomment-308006263
-type User = { id: string };
-declare class Request extends express$Request {
-  user: User;
-}
 
 slackRouter.get('/', (req: Request, res: express$Response) => {
   const code = req.query.code;

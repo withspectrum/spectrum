@@ -4,11 +4,11 @@ const userDataRouter = Router();
 import { getUserById } from '../../models/user';
 import { trackQueue } from 'shared/bull/queues';
 import { events } from 'shared/analytics';
+import { Request } from 'api/index';
 
-userDataRouter.get('/', async (req: express$Request, res: express$Response) => {
+userDataRouter.get('/', async (req: Request, res: express$Response) => {
   if (!req.user) return res.send('No logged-in user');
 
-  // $FlowIssue
   const user = await getUserById(req.user.id);
   if (!user) return res.send('User not found.');
 

@@ -3,6 +3,7 @@ const debug = require('debug')('api:utils:error-formatter');
 import Raven from 'shared/raven';
 import { IsUserError } from './UserError';
 import type { GraphQLError } from 'graphql';
+import { Request } from 'api/index';
 
 const queryRe = /\s*(query|mutation)[^{]*/;
 
@@ -40,7 +41,7 @@ const logGraphQLError = (req, error) => {
   debug('-------------------\n');
 };
 
-const createGraphQLErrorFormatter = (req?: express$Request) => (
+const createGraphQLErrorFormatter = (req?: Request) => (
   error: GraphQLError
 ) => {
   logGraphQLError(req, error);
