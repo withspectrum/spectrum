@@ -19,9 +19,15 @@ import type { DBUser } from 'shared/types';
  * patch for Flow Error: property `user` Property not found in express$Request
  * @see https://github.com/flowtype/flow-typed/issues/114#issuecomment-308006263
  */
-export type User = { id: string };
+type User = { id: string };
+type Sesson = {
+  redirectUrl: ?string,
+  authType: ?string,
+  passport: Object,
+};
 export class Request extends express$Request {
   user: User;
+  session: Sesson;
 }
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
@@ -55,7 +61,7 @@ app.use('/api', apiRoutes);
 
 app.use(
   (
-    err: Error,
+    err: ?Error,
     req: Request,
     res: express$Response,
     next: express$NextFunction
