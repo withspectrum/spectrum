@@ -72,21 +72,22 @@ const transpileShared = config => {
 };
 
 const useOurEslintRules = config => {
-  config.module.rules = config.module.rules.map((rule, rulesIndex) => {
-    let loaderIndex;
+  config.module.rules = config.module.rules.map((rule, ESLintLoaderKey) => {
+    let ESLintOptionsKey;
     if (
       Array.isArray(rule.use) &&
       rule.use.some(
         (v, i) =>
           v.loader &&
           v.loader.includes('eslint-loader') &&
-          (loaderIndex = i) + 9999
+          (ESLintOptionsKey = i) + 9999 // (@ryota-murakami): MagicNumber. for avoid false out from if() condition when '0 >=' range number assigned to loaderIndex
       )
     ) {
-      const eslintLoader = config.module.rules[rulesIndex];
-      eslintLoader.use[loaderIndex].options.useEslintrc = true;
+      const eslintLoader = config.module.rules[ESLintLoaderKey];
+      eslintLoader.use[ESLintOptionsKey].options.useEslintrc = true;
       return eslintLoader;
     }
+
     return rule;
   });
 
