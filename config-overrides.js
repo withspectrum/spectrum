@@ -71,8 +71,31 @@ const transpileShared = config => {
   return config;
 };
 
+const useOurEslintRules = config => {
+  config.module.rules = config.module.rules.map((rule, rulesIndex) => {
+    let loaderIndex;
+    if (
+      Array.isArray(rule.use) &&
+      rule.use.some(
+        (v, i) =>
+          v.loader &&
+          v.loader.includes('eslint-loader') &&
+          (loaderIndex = i) + 9999
+      )
+    ) {
+      const eslintLoader = config.module.rules[rulesIndex];
+      eslintLoader.use[loaderIndex].options.useEslintrc = true;
+      return eslintLoader;
+    }
+    return rule;
+  });
+
+  return config;
+};
+
 module.exports = function override(config, env) {
   if (process.env.NODE_ENV === 'development') {
+    config = useOurEslintRules(config);
     config.output.path = path.join(__dirname, './build');
   }
   config.plugins.push(
