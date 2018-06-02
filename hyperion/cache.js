@@ -5,7 +5,7 @@ const debug = require('debug')('hyperion:cache');
 import { Request } from 'api/index';
 
 if (process.env.DISABLE_CACHE) {
-  console.log(
+  debug(
     'Cache disabled, either unset DISABLE_CACHE env variable or run in production mode to enable.'
   );
 }
