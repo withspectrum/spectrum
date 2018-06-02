@@ -21,7 +21,6 @@ import {
   Label,
   Navatar,
   SkipLink,
-  DraggableRegion,
 } from './style';
 import { track, events } from 'src/helpers/analytics';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
@@ -142,7 +141,6 @@ class Navbar extends React.Component<Props, State> {
     if (loggedInUser) {
       return (
         <Nav hideOnMobile={hideNavOnMobile} data-cy="navbar">
-          {isDesktopApp() && <DraggableRegion />}
           <Head>
             {notificationCounts.directMessageNotifications > 0 ||
             notificationCounts.notifications > 0 ? (
@@ -255,7 +253,6 @@ class Navbar extends React.Component<Props, State> {
           loggedOut={!loggedInUser}
           data-cy="navbar"
         >
-          {isDesktopApp() && <DraggableRegion />}
           <Logo
             to="/"
             aria-hidden

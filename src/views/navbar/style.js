@@ -1,29 +1,14 @@
-import React from 'react';
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import { Transition, FlexRow, hexa, zIndex } from 'src/components/globals';
 import Avatar from 'src/components/avatar';
 import { isDesktopApp } from 'src/helpers/is-desktop-app';
 
-/**
- * For Desctop App Configuration
- * @see https://github.com/electron/electron/blob/master/docs/api/frameless-window.md#draggable-region
- */
-export const DraggableRegion = () => <div className="draggableRegion" />;
-
 export const Nav = styled.nav`
   display: grid;
   grid-template-columns: repeat(4, auto) 1fr repeat(2, auto);
   grid-template-rows: 1fr;
   grid-template-areas: 'logo home messages explore . notifications profile';
-  ${isDesktopApp() &&
-    css`
-      user-select: none;
-      grid-template-rows: 10px 1fr;
-      grid-template-areas:
-        'draggableRegion draggableRegion draggableRegion draggableRegion draggableRegion draggableRegion draggableRegion'
-        'logo home messages explore . notifications profile';
-    `};
   align-items: stretch;
   width: 100%;
   flex: 0 0 ${isDesktopApp() ? '38px' : '48px'};
@@ -31,14 +16,11 @@ export const Nav = styled.nav`
   line-height: 1;
   box-shadow: 0 4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
   z-index: ${zIndex.navBar};
-
-  .draggableRegion {
-    grid-area: draggableRegion;
-    width: 100%;
-    -webkit-app-region: drag;
-    user-select: none;
-  }
-
+  ${isDesktopApp() &&
+    css`
+      -webkit-app-region: drag;
+      user-select: none;
+    `}
   background: ${({ theme }) =>
     process.env.NODE_ENV === 'production' ? theme.bg.reverse : theme.warn.alt};
 
@@ -74,31 +56,12 @@ export const Nav = styled.nav`
         grid-template-areas: 'home explore support pricing';
       }
     `} ${props =>
-    props.hideOnMobile &&
-    css`
-      @media (max-width: 768px) {
-        display: none;
-      }
-    `};
-
-  ${props =>
-    props.loggedOut &&
-    isDesktopApp() &&
-    css`
-      grid-template-columns: auto auto auto auto 1fr;
-      grid-template-rows: 10px 1fr;
-      grid-template-areas:
-        'draggableRegion draggableRegion draggableRegion draggableRegion draggableRegion'
-        'logo explore support pricing .';
-
-      @media (max-width: 768px) {
-        grid-template-columns: auto auto auto auto;
-        grid-template-rows: 10px 1fr;
-        grid-template-areas:
-          'draggableRegion draggableRegion draggableRegion draggableRegion'
-          'home explore support pricing';
-      }
-    `};
+  props.hideOnMobile &&
+  css`
+    @media (max-width: 768px) {
+      display: none;
+    }
+  `};
 `;
 
 export const Label = styled.span`
@@ -249,10 +212,6 @@ export const DropTab = styled(FlexRow)`
 export const Logo = styled(Tab)`
   grid-area: logo;
   padding: ${isDesktopApp() ? '0 32px 0 4px' : '0 24px 0 4px'};
-  ${isDesktopApp() &&
-    css`
-      margin-top: -10px;
-    `};
   color: ${({ theme }) => theme.text.reverse};
   opacity: 1;
 
@@ -276,27 +235,14 @@ export const Logo = styled(Tab)`
 
 export const HomeTab = styled(Tab)`
   grid-area: home;
-  ${isDesktopApp() &&
-    css`
-      margin-top: -10px;
-    `};
 `;
 
 export const MessageTab = styled(Tab)`
   grid-area: messages;
-  ${isDesktopApp() &&
-    css`
-      margin-top: -10px;
-    `};
 `;
 
 export const ExploreTab = styled(Tab)`
   grid-area: explore;
-
-  ${isDesktopApp() &&
-    css`
-      margin-top: -10px;
-    `};
 
   ${props =>
     props.loggedOut &&
@@ -315,27 +261,14 @@ export const ExploreTab = styled(Tab)`
 
 export const SupportTab = styled(Tab)`
   grid-area: support;
-  ${isDesktopApp() &&
-    css`
-      margin-top: -10px;
-    `};
 `;
 
 export const PricingTab = styled(MessageTab)`
   grid-area: pricing;
-  ${isDesktopApp() &&
-    css`
-      margin-top: -10px;
-    `};
 `;
 
 export const NotificationTab = styled(DropTab)`
   grid-area: notifications;
-
-  ${isDesktopApp() &&
-    css`
-      margin-top: -10px;
-    `};
 
   > a {
     &:hover {
@@ -347,11 +280,6 @@ export const NotificationTab = styled(DropTab)`
 
 export const ProfileDrop = styled(DropTab)`
   grid-area: profile;
-
-  ${isDesktopApp() &&
-    css`
-      margin-top: -10px;
-    `};
 
   > a {
     &:hover {

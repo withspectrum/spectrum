@@ -9,7 +9,7 @@ import { updateNotificationsCount } from 'src/actions/notifications';
 import getUnreadDMQuery from 'shared/graphql/queries/notification/getDirectMessageNotifications';
 import type { GetDirectMessageNotificationsType } from 'shared/graphql/queries/notification/getDirectMessageNotifications';
 import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
-import { MessageTab, Label } from '../style';
+import { Tab, Label } from '../style';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
@@ -209,7 +209,7 @@ class MessagesTab extends React.Component<Props, State> {
     }
 
     return (
-      <MessageTab
+      <Tab
         data-active={active}
         aria-current={active ? 'page' : undefined}
         to="/messages"
@@ -226,7 +226,7 @@ class MessagesTab extends React.Component<Props, State> {
           size={isDesktopApp() ? 28 : 32}
         />
         <Label>Messages</Label>
-      </MessageTab>
+      </Tab>
     );
   }
 }
