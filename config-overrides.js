@@ -80,7 +80,7 @@ const useOurEslintRules = config => {
         (v, i) =>
           v.loader &&
           v.loader.includes('eslint-loader') &&
-          (ESLintOptionsKey = i) + 9999 // (@ryota-murakami): MagicNumber. for avoid false out from if() condition when '0 >=' range number assigned to loaderIndex
+          (ESLintOptionsKey = i) | true
       )
     ) {
       const eslintLoader = config.module.rules[ESLintLoaderKey];
