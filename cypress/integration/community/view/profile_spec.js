@@ -167,7 +167,6 @@ describe('public community signed in without permission', () => {
       .contains(`Join ${publicCommunity.name}`)
       .click();
 
-    cy.get('[data-cy="join-community-button"]').should('be.disabled');
     cy.get('[data-cy="join-community-button"]').should('not.be.disabled');
 
     cy
@@ -175,12 +174,10 @@ describe('public community signed in without permission', () => {
       .contains(`Member`)
       .click();
 
-    cy.get('[data-cy="join-community-button"]').should('be.disabled');
-    cy.get('[data-cy="join-community-button"]').should('not.be.disabled');
-
     cy
       .get('[data-cy="join-community-button"]')
-      .contains(`Join ${publicCommunity.name}`);
+      .contains(`Join ${publicCommunity.name}`)
+      .should('not.be.disabled');
   });
 });
 
@@ -228,26 +225,10 @@ describe('private community signed in without permission', () => {
       .click();
 
     cy
-      .get('[data-cy="request-to-join-private-community-button"]')
-      .should('be.disabled');
-
-    cy
-      .get('[data-cy="request-to-join-private-community-button"]')
-      .should('not.be.disabled');
-
-    cy
       .get('[data-cy="cancel-request-to-join-private-community-button"]')
       .should('be.visible')
       .contains('Cancel request')
       .click();
-
-    cy
-      .get('[data-cy="cancel-request-to-join-private-community-button"]')
-      .should('be.disabled');
-
-    cy
-      .get('[data-cy="cancel-request-to-join-private-community-button"]')
-      .should('not.be.disabled');
 
     cy
       .get('[data-cy="request-to-join-private-community-button"]')

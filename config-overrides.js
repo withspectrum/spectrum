@@ -88,7 +88,7 @@ module.exports = function override(config, env) {
   config.plugins.push(
     new webpack.optimize.CommonsChunkPlugin({
       names: ['bootstrap'],
-      filename: './static/js/[name].js',
+      filename: 'static/js/[name].js',
       minChunks: Infinity,
     })
   );
@@ -106,37 +106,19 @@ module.exports = function override(config, env) {
   });
   config.plugins.push(
     new OfflinePlugin({
-      // Don't cache anything in dev
+      appShell: '/index.html',
       caches: process.env.NODE_ENV === 'development' ? {} : 'all',
-      updateStrategy: 'all', // Update all files on update, seems safer than trying to only update changed files since we didn't write the webpack config
-      externals, // These files should be cached, but they're not emitted by webpack, so we gotta tell OfflinePlugin about 'em.
-      excludes: ['**/*.map'], // Don't cache any source maps, they're huge and unnecessary for clients
-      autoUpdate: true, // Automatically check for updates every hour
-      rewrites: arg => arg,
-      cacheMaps: [
-        {
-          match: url => {
-            // Don't return the cached index.html for API requests or /auth pages
-            if (url.pathname.indexOf('/api') === 0) return;
-            if (url.pathname.indexOf('/auth') === 0) return;
-            try {
-              return new URL('/index.html', url);
-              // TODO: Fix this properly instead of ignoring errors
-            } catch (err) {
-              return;
-            }
-          },
-          requestType: ['navigate'],
-        },
-      ],
+      externals,
+      autoUpdate: true,
       ServiceWorker: {
-        entry: './public/push-sw.js', // Add the push notification ServiceWorker
-        events: true, // Emit events from the ServiceWorker
+        entry: './public/push-sw.js',
+        events: true,
         prefetchRequest: {
-          credentials: 'include', // Include credentials when fetching files, just to make sure we don't get into any issues
+          mode: 'cors',
+          credentials: 'include',
         },
       },
-      AppCache: false, // Don't cache using AppCache, too buggy that thing
+      AppCache: false,
     })
   );
   if (process.env.ANALYZE_BUNDLE === 'true') {

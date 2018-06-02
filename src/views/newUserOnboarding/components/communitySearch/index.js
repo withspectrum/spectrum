@@ -5,11 +5,12 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
-import { Button, OutlineButton } from '../../../../components/buttons';
-import ToggleCommunityMembership from '../../../../components/toggleCommunityMembership';
-import { throttle } from '../../../../helpers/utils';
+import { Button, OutlineButton } from 'src/components/buttons';
+import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
+import { throttle } from 'src/helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
-import { Spinner } from '../../../../components/globals';
+import { Spinner } from 'src/components/globals';
+import OutsideClickHandler from 'src/components/outsideClickHandler';
 import type { Dispatch } from 'redux';
 import {
   SearchWrapper,
@@ -173,9 +174,7 @@ class Search extends React.Component<Props, State> {
     // if person presses escape
     if (e.keyCode === 27) {
       this.setState({
-        searchResults: [],
-        searchIsLoading: false,
-        searchString: '',
+        isFocused: false,
       });
 
       // $FlowFixMe
@@ -188,8 +187,11 @@ class Search extends React.Component<Props, State> {
       if (indexOfFocusedSearchResult === searchResults.length - 1) return;
       if (searchResults.length === 1) return;
 
+      const resultToFocus = searchResults[indexOfFocusedSearchResult + 1];
+      if (!resultToFocus) return;
+
       return this.setState({
-        focusedSearchResult: searchResults[indexOfFocusedSearchResult + 1].id,
+        focusedSearchResult: resultToFocus.id,
       });
     }
 
@@ -198,8 +200,11 @@ class Search extends React.Component<Props, State> {
       if (indexOfFocusedSearchResult === 0) return;
       if (searchResults.length === 1) return;
 
+      const resultToFocus = searchResults[indexOfFocusedSearchResult - 1];
+      if (!resultToFocus) return;
+
       return this.setState({
-        focusedSearchResult: searchResults[indexOfFocusedSearchResult - 1].id,
+        focusedSearchResult: resultToFocus.id,
       });
     }
   };
@@ -226,7 +231,7 @@ class Search extends React.Component<Props, State> {
   }
 
   onFocus = (e: any) => {
-    const val = e.target.val;
+    const val = e.target.value;
     if (!val || val.length === 0) return;
 
     const string = val.toLowerCase().trim();
@@ -236,6 +241,12 @@ class Search extends React.Component<Props, State> {
 
     return this.setState({
       isFocused: true,
+    });
+  };
+
+  hideSearchResults = () => {
+    return this.setState({
+      isFocused: false,
     });
   };
 
@@ -266,89 +277,92 @@ class Search extends React.Component<Props, State> {
             placeholder="Search for communities or topics..."
             onChange={this.handleChange}
             onFocus={this.onFocus}
-            autoFocus={window.innerWidth < 768}
+            autoFocus
           />
         </SearchInputWrapper>
 
         {// user has typed in a search string
-        searchString && (
-          <SearchResultsDropdown>
-            {searchResults.length > 0 &&
-              searchResults.map(community => {
-                return (
-                  <SearchResult
-                    focused={focusedSearchResult === community.id}
-                    key={community.id}
-                  >
-                    <SearchResultImage
-                      community={community}
-                      src={community.profilePhoto}
-                    />
-
-                    <SearchResultMetaWrapper>
-                      <SearchResultName>{community.name}</SearchResultName>
-                      {community.metaData && (
-                        <SearchResultMetadata>
-                          {community.metaData.members} members
-                        </SearchResultMetadata>
-                      )}
-                      <SearchResultDescription>
-                        {community.description}
-                      </SearchResultDescription>
-                    </SearchResultMetaWrapper>
-
-                    <div>
-                      {community.communityPermissions.isMember ? (
-                        <ToggleCommunityMembership
-                          onJoin={this.onJoinComplete}
-                          onLeave={this.onJoinComplete}
+        isFocused &&
+          searchString && (
+            <OutsideClickHandler onOutsideClick={this.hideSearchResults}>
+              <SearchResultsDropdown>
+                {searchResults.length > 0 &&
+                  searchResults.map(community => {
+                    return (
+                      <SearchResult
+                        focused={focusedSearchResult === community.id}
+                        key={community.id}
+                      >
+                        <SearchResultImage
                           community={community}
-                          render={({ isLoading }) => (
-                            <OutlineButton
-                              gradientTheme="none"
-                              color={'success.alt'}
-                              hoverColor={'success.default'}
-                              loading={isLoading}
-                            >
-                              Joined!
-                            </OutlineButton>
-                          )}
+                          src={community.profilePhoto}
                         />
-                      ) : (
-                        <ToggleCommunityMembership
-                          onJoin={this.onJoinComplete}
-                          onLeave={this.onJoinComplete}
-                          community={community}
-                          render={({ isLoading }) => (
-                            <Button
-                              loading={isLoading}
-                              gradientTheme={'success'}
-                              style={{ fontSize: '16px' }}
-                              icon={'plus'}
-                            >
-                              Join
-                            </Button>
-                          )}
-                        />
-                      )}
-                    </div>
-                  </SearchResult>
-                );
-              })}
 
-            {searchResults.length === 0 &&
-              isFocused && (
-                <SearchResult>
-                  <SearchResultNull>
-                    <p>No communities found matching “{searchString}”</p>
-                    <Link to={'/new/community'}>
-                      <Button>Create a Community</Button>
-                    </Link>
-                  </SearchResultNull>
-                </SearchResult>
-              )}
-          </SearchResultsDropdown>
-        )}
+                        <SearchResultMetaWrapper>
+                          <SearchResultName>{community.name}</SearchResultName>
+                          {community.metaData && (
+                            <SearchResultMetadata>
+                              {community.metaData.members} members
+                            </SearchResultMetadata>
+                          )}
+                          <SearchResultDescription>
+                            {community.description}
+                          </SearchResultDescription>
+                        </SearchResultMetaWrapper>
+
+                        <div>
+                          {community.communityPermissions.isMember ? (
+                            <ToggleCommunityMembership
+                              onJoin={this.onJoinComplete}
+                              onLeave={this.onJoinComplete}
+                              community={community}
+                              render={({ isLoading }) => (
+                                <OutlineButton
+                                  gradientTheme="none"
+                                  color={'success.alt'}
+                                  hoverColor={'success.default'}
+                                  loading={isLoading}
+                                >
+                                  Joined!
+                                </OutlineButton>
+                              )}
+                            />
+                          ) : (
+                            <ToggleCommunityMembership
+                              onJoin={this.onJoinComplete}
+                              onLeave={this.onJoinComplete}
+                              community={community}
+                              render={({ isLoading }) => (
+                                <Button
+                                  loading={isLoading}
+                                  gradientTheme={'success'}
+                                  style={{ fontSize: '16px' }}
+                                  icon={'plus'}
+                                >
+                                  Join
+                                </Button>
+                              )}
+                            />
+                          )}
+                        </div>
+                      </SearchResult>
+                    );
+                  })}
+
+                {searchResults.length === 0 &&
+                  isFocused && (
+                    <SearchResult>
+                      <SearchResultNull>
+                        <p>No communities found matching “{searchString}”</p>
+                        <Link to={'/new/community'}>
+                          <Button>Create a Community</Button>
+                        </Link>
+                      </SearchResultNull>
+                    </SearchResult>
+                  )}
+              </SearchResultsDropdown>
+            </OutsideClickHandler>
+          )}
       </SearchWrapper>
     );
   }

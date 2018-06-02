@@ -112,23 +112,12 @@ class Dashboard extends React.Component<Props, State> {
     } = this.props;
     const { activeChannelObject } = this.state;
 
-    let searchFilter = {};
-    if (activeChannel) {
-      searchFilter.everythingFeed = false;
-      searchFilter.communityId = null;
-      searchFilter.creatorId = null;
-      searchFilter.channelId = activeChannel;
-    } else if (activeCommunity) {
-      searchFilter.everythingFeed = false;
-      searchFilter.channelId = null;
-      searchFilter.creatorId = null;
-      searchFilter.communityId = activeCommunity;
-    } else {
-      searchFilter.channelId = null;
-      searchFilter.communityId = null;
-      searchFilter.creatorId = null;
-      searchFilter.everythingFeed = false;
-    }
+    const searchFilter = {
+      everythingFeed: false,
+      creatorId: null,
+      channelId: activeChannel || null,
+      communityId: activeChannel ? null : activeCommunity || null
+    };
     const { title, description } = generateMetaInfo();
 
     if (user) {
@@ -145,9 +134,9 @@ class Dashboard extends React.Component<Props, State> {
 
       // at this point we have succesfully validated a user, and the user has both a username and joined communities - we can show their thread feed!
       const communities = user.communityConnection.edges.map(c => c && c.node);
-      const activeCommunityObject = communities.filter(
+      const activeCommunityObject = communities.find(
         c => c && c.id === activeCommunity
-      )[0];
+      );
 
       return (
         <DashboardWrapper data-cy="inbox-view" id="main">

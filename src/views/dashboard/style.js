@@ -241,6 +241,7 @@ export const CommunityListScroller = styled.div`
   overflow: hidden;
   overflow-y: auto;
   position: relative;
+  padding-top: 1px;
 `;
 
 export const CommunityListWrapper = styled.div`

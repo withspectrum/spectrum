@@ -2,9 +2,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import Icon from '../../../components/icons';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { updateNotificationsCount } from '../../../actions/notifications';
+import Icon from 'src/components/icons';
+import { isDesktopApp } from 'src/helpers/is-desktop-app';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import { updateNotificationsCount } from 'src/actions/notifications';
 import getUnreadDMQuery from 'shared/graphql/queries/notification/getDirectMessageNotifications';
 import type { GetDirectMessageNotificationsType } from 'shared/graphql/queries/notification/getDirectMessageNotifications';
 import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
@@ -202,6 +203,11 @@ class MessagesTab extends React.Component<Props, State> {
   render() {
     const { active, count } = this.props;
 
+    // Keep the dock icon notification count indicator of the desktop app in sync
+    if (isDesktopApp()) {
+      window.interop.setBadgeCount(count);
+    }
+
     return (
       <Tab
         data-active={active}
@@ -217,6 +223,7 @@ class MessagesTab extends React.Component<Props, State> {
         <Icon
           glyph={count > 0 ? 'message-fill' : 'message'}
           count={count > 10 ? '10+' : count > 0 ? count.toString() : null}
+          size={isDesktopApp() ? 28 : 32}
         />
         <Label>Messages</Label>
       </Tab>

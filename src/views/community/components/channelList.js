@@ -32,7 +32,9 @@ type Props = {
 };
 
 class ChannelList extends React.Component<Props> {
-  sortChannels = (array: Array<any>): Array<any> => {
+  sortChannels = (array: Array<any>): Array<?any> => {
+    if (!array || array.length === 0) return [];
+
     const generalChannel = array.find(channel => channel.slug === 'general');
     const withoutGeneral = array.filter(channel => channel.slug !== 'general');
     const sortedWithoutGeneral = withoutGeneral.sort((a, b) => {

@@ -6,9 +6,9 @@ import { withRouter } from 'react-router';
 import Link from 'src/components/link';
 import {
   getLinkPreviewFromUrl,
-  timeDifference,
   convertTimestampToDate,
 } from '../../../helpers/utils';
+import { timeDifference } from 'shared/time-difference';
 import isURL from 'validator/lib/isURL';
 import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
@@ -314,7 +314,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
   changeTitle = e => {
     const title = e.target.value;
     if (/\n$/g.test(title)) {
-      this.bodyEditor.focus();
+      this.bodyEditor.focus && this.bodyEditor.focus();
       return;
     }
     this.setState({

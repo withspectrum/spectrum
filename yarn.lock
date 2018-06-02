@@ -257,8 +257,8 @@
     "@types/jquery" "*"
 
 "@types/chai@*":
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.1.2.tgz#f1af664769cfb50af805431c407425ed619daa21"
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.1.3.tgz#b8a74352977a23b604c01aa784f5b793443fb7dc"
 
 "@types/chai@4.0.8":
   version "4.0.8"
@@ -303,8 +303,8 @@
   resolved "https://registry.yarnpkg.com/@types/http-assert/-/http-assert-1.2.2.tgz#17dfe5a82184a8898935d96fe2eaedd37d22d9a4"
 
 "@types/jquery@*":
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.3.1.tgz#55758d44d422756d6329cbf54e6d41931d7ba28f"
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.3.2.tgz#8700226bdde24b6f98e3a60126dbaab3b2a3ab41"
 
 "@types/jquery@3.2.16":
   version "3.2.16"
@@ -385,8 +385,8 @@
     "@types/sinon" "*"
 
 "@types/sinon@*":
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-4.3.1.tgz#32458f9b166cd44c23844eee4937814276f35199"
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-5.0.1.tgz#a15b36ec42f1f53166617491feabd1734cb03e21"
 
 "@types/sinon@4.0.0":
   version "4.0.0"
@@ -3694,9 +3694,9 @@ draft-js-linkify-plugin@^2.0.0-beta1:
     tlds "^1.189.0"
     union-class-names "^1.0.0"
 
-draft-js-markdown-plugin@1.4.4:
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/draft-js-markdown-plugin/-/draft-js-markdown-plugin-1.4.4.tgz#d3ca991edbec40aebf70c51c4209aca80eb2fd4b"
+draft-js-markdown-plugin@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/draft-js-markdown-plugin/-/draft-js-markdown-plugin-2.1.0.tgz#cac9bb195d2e4140faac1ca18b1bf132fdb109c5"
   dependencies:
     decorate-component-with-props "^1.0.2"
     draft-js "^0.10.4"
@@ -5643,6 +5643,10 @@ icss-utils@^2.1.0:
   dependencies:
     postcss "^6.0.1"
 
+idx@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/idx/-/idx-2.3.0.tgz#4ae3fe3fca4c1baeccf2dde83d9d8b50b47cc465"
+
 ieee754@^1.1.4:
   version "1.1.11"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.11.tgz#c16384ffe00f5b7835824e67b6f2bd44a5229455"
@@ -5923,6 +5927,10 @@ is-directory@^0.3.1:
 is-dotfile@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/is-dotfile/-/is-dotfile-1.0.3.tgz#a6a2f32ffd2dfb04f5ca25ecd0f6b83cf798a1e1"
+
+is-electron@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/is-electron/-/is-electron-2.1.0.tgz#37dd2e9e7167efa8bafce86c0c25762bc4b851fa"
 
 is-empty@^1.0.0:
   version "1.2.0"
@@ -7805,9 +7813,9 @@ obuf@^1.0.0, obuf@^1.1.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/obuf/-/obuf-1.1.2.tgz#09bea3343d41859ebd446292d11c9d4db619084e"
 
-offline-plugin@^4.8.4:
-  version "4.9.0"
-  resolved "https://registry.yarnpkg.com/offline-plugin/-/offline-plugin-4.9.0.tgz#0874960c0cb0c249f96b7cfc674217934660ed5c"
+offline-plugin@^5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/offline-plugin/-/offline-plugin-5.0.3.tgz#61488c5c5842d8576aa677384b5bbd3e60949289"
   dependencies:
     deep-extend "^0.4.0"
     ejs "^2.3.4"

@@ -203,7 +203,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   // at this point we are only dealing with thread messages
   const thread = await loaders.thread.load(message.threadId);
 
-  if (thread.isDeleted) {
+  if (!thread || thread.deletedAt) {
     trackQueue.add({
       userId: user.id,
       event: eventFailed,

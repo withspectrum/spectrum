@@ -1,6 +1,6 @@
 // @flow
-import * as React from 'react';
-import { Text, View, StatusBar, ScrollView } from 'react-native';
+import React, { Component, Fragment } from 'react';
+import { Text, View, StatusBar } from 'react-native';
 import compose from 'recompose/compose';
 import getUserThreadConnection from '../../../shared/graphql/queries/user/getUserThreadConnection';
 import ThreadFeed from '../../components/ThreadFeed';
@@ -37,8 +37,17 @@ type State = {
 
 const UserThreadFeed = compose(getUserThreadConnection)(ThreadFeed);
 
-class User extends React.Component<Props, State> {
+class User extends Component<Props, State> {
   state = { feed: 'participant' };
+
+  componentDidUpdate() {
+    const { data: { user }, navigation } = this.props;
+    if (!user) return;
+    const title = navigation.getParam('title');
+    if (!title && user) return navigation.setParams({ title: user.name });
+    if (title && title !== user.name)
+      return navigation.setParams({ title: user.name });
+  }
 
   toggleFeed = (feed: string) => this.setState({ feed });
 
@@ -55,7 +64,7 @@ class User extends React.Component<Props, State> {
             kind={this.state.feed}
             id={data.user.id}
             ListHeaderComponent={
-              <React.Fragment>
+              <Fragment>
                 <CoverPhotoContainer>
                   {data.user.coverPhoto ? (
                     <CoverPhoto
@@ -93,7 +102,7 @@ class User extends React.Component<Props, State> {
                     <TabLabel isActive={feed === 'creator'}>Threads</TabLabel>
                   </ThreadFeedTab>
                 </ThreadFeedTabContainer>
-              </React.Fragment>
+              </Fragment>
             }
           />
         </Wrapper>

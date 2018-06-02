@@ -20,7 +20,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { id: communityId, email } = args.input;
   const { loaders, user } = ctx;
 
-  if (!isEmail(email)) {
+  if (!email || !isEmail(email)) {
     return new UserError('Please enter a working email address');
   }
 

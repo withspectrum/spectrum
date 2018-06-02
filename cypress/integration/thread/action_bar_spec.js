@@ -197,8 +197,6 @@ describe('action bar renders', () => {
         .clear()
         .type(title);
       cy.get('[data-cy="save-thread-edit-button"]').click();
-      cy.get('[data-cy="save-thread-edit-button"]').should('be.disabled');
-      cy.get('[data-cy="save-thread-edit-button"]').should('not.be.disabled');
       cy.get('[data-cy="thread-view"]');
       cy.contains(title);
 
@@ -212,8 +210,6 @@ describe('action bar renders', () => {
         .clear()
         .type(originalTitle);
       cy.get('[data-cy="save-thread-edit-button"]').click();
-      cy.get('[data-cy="save-thread-edit-button"]').should('be.disabled');
-      cy.get('[data-cy="save-thread-edit-button"]').should('not.be.disabled');
       cy.get('[data-cy="thread-view"]');
       cy.contains('The first thread! 🎉');
     });
