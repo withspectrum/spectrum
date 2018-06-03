@@ -170,7 +170,7 @@ const Action = (props: ActionProps) => {
             tipText={`Reply`}
             tipLocation={'top'}
             size={24}
-            onMouseDown={replyToMessage}
+            onMouseDown={replyToMessage} // onClick deselects selected text
           />
         </ActionWrapper>
       );
