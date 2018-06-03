@@ -13,7 +13,6 @@ const RUN_IN_PROD = !!process.env.AWS_RETHINKDB_PASSWORD;
 
 if (RUN_IN_PROD && process.argv[4] === 'down') {
   throw new Error('Do not drop the production database!!!!!');
-  process.exit(1);
 }
 
 if (RUN_IN_PROD) console.log('Running migration in production...');
