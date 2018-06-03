@@ -74,15 +74,15 @@ const transpileShared = config => {
 const useOurEslintRules = config => {
   config.module.rules = config.module.rules.map((rule, ESLintLoaderKey) => {
     let ESLintOptionsKey;
-    if (
+    const isESLintLoader =
       Array.isArray(rule.use) &&
       rule.use.some(
         (v, i) =>
           v.loader &&
           v.loader.includes('eslint-loader') &&
           (ESLintOptionsKey = i) | true
-      )
-    ) {
+      );
+    if (isESLintLoader) {
       const eslintLoader = config.module.rules[ESLintLoaderKey];
       eslintLoader.use[ESLintOptionsKey].options.useEslintrc = true;
       return eslintLoader;
