@@ -42,7 +42,12 @@ const QuotedMessage = connect()(
   getMessageById(props => {
     console.log('props :', props);
     if (props.data && props.data.message) {
-      return <QuotedMessageComponent message={props.data.message} />;
+      return (
+        <QuotedMessageComponent
+          message={props.data.message}
+          snippet={props.snippet}
+        />
+      );
     }
 
     // if the query is done loading and no message was returned, clear the input
@@ -60,10 +65,6 @@ const QuotedMessage = connect()(
 
     return null;
   })
-);
-
-const QuotedSnippet = ({ snippet }) => (
-  <QuotedMessageComponent message={snippet} />
 );
 
 type State = {
@@ -689,14 +690,11 @@ class ChatInput extends React.Component<Props, State> {
                 )}
                 {quotedMessage.messageId && (
                   <PreviewWrapper data-cy="staged-quoted-message">
-                    {quotedMessage.snippet ? (
-                      <QuotedSnippet snippet={quotedMessage.snippet} />
-                    ) : (
-                      <QuotedMessage
-                        id={quotedMessage.messageId}
-                        threadId={thread}
-                      />
-                    )}
+                    <QuotedMessage
+                      id={quotedMessage.messageId}
+                      threadId={thread}
+                      snippet={quotedMessage.snippet}
+                    />
                     <RemovePreviewButton
                       data-cy="remove-staged-quoted-message"
                       onClick={this.removeQuotedMessage}

@@ -67,7 +67,12 @@ class Message extends Component<Props> {
     );
   };
 
-  replyToMessage = () => {
+  replyToMessage = event => {
+    event.preventDefault();
+    console.log(
+      'window.getSelection().toString() :',
+      window.getSelection().toString()
+    );
     const { threadId, message } = this.props;
     return this.props.dispatch(
       replyToMessage({

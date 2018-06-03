@@ -12,6 +12,7 @@ type Props = {
   tipLocation?: string,
   count?: ?string,
   onClick?: Function,
+  onMouseDown?: Function,
   onboarding?: string,
   dataCy?: string,
 };
@@ -777,6 +778,7 @@ class Icon extends React.Component<Props> {
       onboarding,
       count,
       onClick,
+      onMouseDown,
       glyph,
       dataCy,
     } = this.props;
@@ -791,6 +793,7 @@ class Icon extends React.Component<Props> {
         count={count}
         className={'icon'}
         onClick={onClick}
+        onMouseDown={onMouseDown}
       >
         <InlineSvg
           fillRule="evenodd"

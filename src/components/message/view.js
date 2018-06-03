@@ -27,10 +27,18 @@ export const Body = (props: {
   openGallery: Function,
   me: boolean,
   message: MessageInfoType,
+  snippet?: string,
   bubble?: boolean,
   showParent?: boolean,
 }) => {
-  const { showParent = true, message, openGallery, me, bubble = true } = props;
+  const {
+    showParent = true,
+    message,
+    openGallery,
+    me,
+    snippet,
+    bubble = true,
+  } = props;
   const emojiOnly =
     message.messageType === 'draftjs' &&
     draftOnlyContainsEmoji(JSON.parse(message.content.body));
@@ -63,7 +71,8 @@ export const Body = (props: {
               // $FlowIssue
               <QuotedMessage message={message.parent} />
             )}
-          {redraft(JSON.parse(message.content.body), messageRenderer)}
+          {snippet ||
+            redraft(JSON.parse(message.content.body), messageRenderer)}
         </WrapperComponent>
       );
     }
@@ -107,7 +116,7 @@ export class QuotedMessage extends React.Component<
   };
 
   render() {
-    const { message, openGallery } = this.props;
+    const { message, openGallery, snippet } = this.props;
     const { isExpanded } = this.state;
     return (
       <QuoteWrapper
@@ -122,6 +131,7 @@ export class QuotedMessage extends React.Component<
         </Byline>
         <Body
           message={message}
+          snippet={snippet}
           showParent={false}
           me={false}
           openGallery={openGallery ? openGallery() : () => {}}
@@ -160,7 +170,7 @@ const Action = (props: ActionProps) => {
             tipText={`Reply`}
             tipLocation={'top'}
             size={24}
-            onClick={replyToMessage}
+            onMouseDown={replyToMessage}
           />
         </ActionWrapper>
       );
