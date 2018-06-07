@@ -81,7 +81,11 @@ function render() {
   );
 }
 
-Loadable.preloadReady().then(render);
+Loadable.preloadReady()
+  .then(render)
+  .catch(err => {
+    console.error(err);
+  });
 
 OfflinePluginRuntime.install({
   // Apply new updates immediately
