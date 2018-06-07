@@ -59,7 +59,11 @@ const QuotedMessage = connect()(
         )
       );
       props.dispatch(
-        replyToMessage({ threadId: props.threadId, messageId: null })
+        replyToMessage({
+          threadId: props.threadId,
+          messageId: null,
+          snippet: null,
+        })
       );
     }
 
@@ -236,7 +240,11 @@ class ChatInput extends React.Component<Props, State> {
   removeQuotedMessage = () => {
     if (this.props.quotedMessage.messageId)
       this.props.dispatch(
-        replyToMessage({ threadId: this.props.thread, messageId: null })
+        replyToMessage({
+          threadId: this.props.thread,
+          messageId: null,
+          snippet: null,
+        })
       );
   };
 
@@ -339,6 +347,7 @@ class ChatInput extends React.Component<Props, State> {
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
     // in views/directMessages/containers/newThread.js
+    console.log('thread :', thread);
     if (thread === 'newDirectMessageThread') {
       createThread({
         messageBody: !isAndroid()
@@ -678,7 +687,7 @@ class ChatInput extends React.Component<Props, State> {
                 editorKey="chat-input"
                 decorators={[mentionsDecorator, linksDecorator]}
                 networkDisabled={networkDisabled}
-                hasAttachment={!!mediaPreview || quotedMessage.messageId}
+                hasAttachment={!!mediaPreview || !!quotedMessage.messageId}
               >
                 {mediaPreview && (
                   <PreviewWrapper>
