@@ -1,9 +1,10 @@
 {
-  "baseUrl": "http://localhost:3000",
+  "baseUrl": "http://localhost:3006",
   "viewportWidth": 1300,
   "defaultCommandTimeout": 20000,
   "blacklistHosts": [
-    "*.google-analytics.com"
+    "*.google-analytics.com",
+    "*.amplitude.com"
   ],
   "env": {
     "DEBUG": "src*,testing*,build*"

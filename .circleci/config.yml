@@ -22,26 +22,13 @@ aliases:
       cd ./mobile && yarn && yarn setup && cd ..
       cd ./desktop && yarn && cd ..
 
-  - &install-rethinkdb
-    name: Install RethinkDB 2.3.5
-    command:
-      |
-        echo "deb http://download.rethinkdb.com/apt jessie main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
-        wget -qO- http://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
-        sudo apt-get update
-        sudo apt-get install rethinkdb=2.3.5~0jessie
-
-  - &start-rethinkdb
-    name: Start RethinkDB
-    command: rethinkdb --bind all
-    background: true
-
   - &setup-and-build-web
     name: Setup and build web
     command:
       |
         cp now-secrets.example.json now-secrets.json
         yarn run build:web
+        yarn run build:hyperion
 
   - &build-api
     name: Build API
@@ -54,7 +41,7 @@ aliases:
 
   - &start-web
     name: Start web client in the background
-    command: yarn run dev:web
+    command: yarn run start:test
     background: true
 
 defaults: &defaults
@@ -107,7 +94,7 @@ jobs:
       - run: *start-api
       - run: *start-web
       # Wait for the API and webserver to start
-      - run: ./node_modules/.bin/wait-on http://localhost:3000 http://localhost:3001
+      - run: ./node_modules/.bin/wait-on http://localhost:3006 http://localhost:3001
       - run:
           name: Run Unit Tests
           command: yarn run test:ci

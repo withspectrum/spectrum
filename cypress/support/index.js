@@ -17,11 +17,11 @@
 import './commands';
 
 before(() => {
-  cy.resetdb();
+  cy.task('resetdb');
   cy.clearLocalStorage();
 });
 
 beforeEach(() => {
-  cy.resetdb();
+  cy.task('resetdb');
   cy.clearLocalStorage();
 });
