@@ -45,11 +45,10 @@ class CommunityMembersSettings extends React.Component<Props> {
           </Column>
 
           <Column>
-
             <ErrorBoundary fallbackComponent={SettingsFallback}>
               <SlackConnection type={'import-only'} id={community.id} />
             </ErrorBoundary>
-        
+
             {community.isPrivate && (
               <ErrorBoundary fallbackComponent={SettingsFallback}>
                 <JoinTokenSettings id={community.id} community={community} />
