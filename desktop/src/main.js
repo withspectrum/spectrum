@@ -1,7 +1,11 @@
 // @flow
 const electron = require('electron');
-const { app, BrowserWindow } = electron;
+const windowStateKeeper = require('electron-window-state');
+const { app, BrowserWindow, shell } = electron;
 const isDev = require('electron-is-dev');
+const contextMenu = require('electron-context-menu');
+
+const FIFTEEN_MINUTES = 900000;
 
 const checkForUpdates = require('./autoUpdate');
 const buildMenu = require('./menu');
@@ -17,16 +21,26 @@ const startUrl = isDev ? CONFIG.APP_DEV_URL : CONFIG.APP_REMOTE_URL;
 
 function createWindow() {
   if (!isDev) {
-    // trigger autoupdate check
+    // Check for updates on startup and then every 15 minutes
     checkForUpdates();
+    setInterval(() => {
+      checkForUpdates();
+    }, FIFTEEN_MINUTES);
   }
 
-  const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
+  let mainWindowState = windowStateKeeper({
+    defaultWidth: CONFIG.WINDOW_DEFAULT_WIDTH,
+    defaultHeight: CONFIG.WINDOW_DEFAULT_HEIGHT,
+  });
+
+  const { width, height, x, y } = mainWindowState;
 
   // Create the main browser window.
   mainWindow = new BrowserWindow({
     width,
     height,
+    x,
+    y,
     titleBarStyle: 'hiddenInset',
     minHeight: CONFIG.WINDOW_MIN_HEIGHT,
     minWidth: CONFIG.WINDOW_MIN_WIDTH,
@@ -57,8 +71,15 @@ function createWindow() {
 
   // if main window is ready to show, show up the main window
   mainWindow.once('ready-to-show', () => {
-    mainWindow && mainWindow.maximize();
     mainWindow && mainWindow.show();
+  });
+
+  contextMenu();
+  mainWindowState.manage(mainWindow);
+
+  mainWindow.webContents.on('new-window', (event, url) => {
+    event.preventDefault();
+    shell.openExternal(url);
   });
 }
 
@@ -84,16 +105,4 @@ app.on('activate', () => {
   if (win === null && mainWindow === null) {
     createWindow();
   }
-});
-
-app.on('web-contents-created', (event, wc) => {
-  wc.on('before-input-event', (event, input) => {
-    if (input.key === ']' && input.meta && !input.shift && !input.control) {
-      if (wc.canGoForward()) wc.goForward();
-    }
-
-    if (input.key === '[' && input.meta && !input.shift && !input.control) {
-      if (wc.canGoBack()) wc.goBack();
-    }
-  });
 });

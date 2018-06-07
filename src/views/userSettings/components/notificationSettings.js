@@ -125,7 +125,11 @@ class NotificationSettings extends React.Component<Props, State> {
                   You have blocked browser push notifications on this device!
                 </strong>{' '}
                 Unblock them by following{' '}
-                <a href="https://support.sendpulse.com/456261-How-to-Unblock-Web-Push-Notifications">
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://support.sendpulse.com/456261-How-to-Unblock-Web-Push-Notifications"
+                >
                   these steps
                 </a>.
               </Notice>

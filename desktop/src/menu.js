@@ -1,7 +1,19 @@
 // @flow
-const { dialog, Menu, shell } = require('electron');
+const { dialog, Menu, MenuItem, shell, clipboard } = require('electron');
+const checkForUpdates = require('./autoUpdate');
+const isDev = require('electron-is-dev');
 
 const CONFIG = require('./config');
+
+const UpdateMenuItem = new MenuItem({
+  label: 'Check for updates',
+  click() {
+    this.enabled = false;
+    checkForUpdates().then(() => {
+      this.enabled = true;
+    });
+  },
+});
 
 /**
  * Applications menu
@@ -24,9 +36,46 @@ const template = [
           shell.openExternal(CONFIG.GITHUB_URL_LICENSE);
         },
       },
+      UpdateMenuItem,
       { type: 'separator' },
       { role: 'hide' },
       { role: 'quit' },
+    ],
+  },
+  {
+    label: 'Go',
+    submenu: [
+      {
+        label: 'Home',
+        accelerator: 'CmdOrCtrl+Shift+H',
+        click: function(item, focusedWindow) {
+          if (focusedWindow) {
+            focusedWindow.webContents.loadURL(
+              isDev ? CONFIG.APP_DEV_HOME_URL : CONFIG.APP_REMOTE_HOME_URL
+            );
+          }
+        },
+      },
+      {
+        label: 'Forward',
+        accelerator: 'CmdOrCtrl+]',
+        click: function(item, focusedWindow) {
+          if (focusedWindow) {
+            const wc = focusedWindow.webContents;
+            if (wc && wc.canGoForward()) wc.goForward();
+          }
+        },
+      },
+      {
+        label: 'Back',
+        accelerator: 'CmdOrCtrl+[',
+        click: function(item, focusedWindow) {
+          if (focusedWindow) {
+            const wc = focusedWindow.webContents;
+            if (wc && wc.canGoBack()) wc.goBack();
+          }
+        },
+      },
     ],
   },
   {
@@ -91,6 +140,11 @@ const template = [
         role: 'reload',
       },
       {
+        label: 'Force Reload',
+        accelerator: 'CmdOrCtrl+Shift+R',
+        role: 'forceReload',
+      },
+      {
         label: 'Close',
         accelerator: 'CmdOrCtrl+W',
         role: 'close',
@@ -111,6 +165,21 @@ const template = [
         click() {
           shell.openExternal(CONFIG.GITHUB_URL_ISSUES);
         },
+      },
+    ],
+  },
+  {
+    label: 'Share',
+    submenu: [
+      {
+        label: 'Copy link to current page',
+        click: function(item, focusedWindow) {
+          const url = focusedWindow.webContents.getURL();
+          if (url) {
+            clipboard.writeText(url);
+          }
+        },
+        accelerator: 'CmdOrCtrl+S',
       },
     ],
   },

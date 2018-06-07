@@ -142,6 +142,11 @@ app.use(
 );
 app.get('/static/js/:name', (req: express$Request, res, next) => {
   if (!req.params.name) return next();
+  const existingFile = jsFiles.find(file => file.startsWith(req.params.name));
+  if (existingFile)
+    return res.sendFile(
+      path.resolve(__dirname, '..', 'build', 'static', 'js', req.params.name)
+    );
   const match = req.params.name.match(/(\w+?)\.(\w+?\.)?js/i);
   if (!match) return next();
   const actualFilename = jsFiles.find(file => file.startsWith(match[1]));
@@ -156,6 +161,14 @@ if (process.env.NODE_ENV === 'development') {
     express.static(path.resolve(__dirname, '..', 'public'), { index: false })
   );
 }
+
+app.get('*', (req: express$Request, res, next) => {
+  // Electron requests should only be client-side rendered
+  if (req.headers['user-agent'].indexOf('Electron') > -1) {
+    return res.sendFile(path.resolve(__dirname, '../build/index.html'));
+  }
+  next();
+});
 
 import cache from './cache';
 app.use(cache);

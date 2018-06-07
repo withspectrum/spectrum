@@ -70,9 +70,18 @@ const renderer = (req: express$Request, res: express$Response) => {
     cache,
   });
   // Define the initial redux state
+  const { t } = req.query;
+
   const initialReduxState = {
     users: {
       currentUser: req.user ? req.user : null,
+    },
+    dashboardFeed: {
+      activeThread: t ? t : '',
+      mountedWithActiveThread: t ? t : '',
+      search: {
+        isOpen: false,
+      },
     },
   };
   // Create the Redux store
