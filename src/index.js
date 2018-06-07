@@ -62,7 +62,8 @@ if (t && (!existingUser || !existingUser.currentUser)) {
 const store = initStore(window.__SERVER_STATE__ || initialState);
 
 const renderMethod = !!window.__SERVER_STATE__
-  ? ReactDOM.hydrate
+  ? // $FlowIssue
+    ReactDOM.hydrate
   : ReactDOM.render;
 
 function render() {
