@@ -61,10 +61,8 @@ if (t && (!existingUser || !existingUser.currentUser)) {
 
 const store = initStore(window.__SERVER_STATE__ || initialState);
 
-// eslint-disable-next-line
 const renderMethod = !!window.__SERVER_STATE__
-  ? // $FlowIssue
-    ReactDOM.hydrate
+  ? ReactDOM.hydrate
   : ReactDOM.render;
 
 function render() {

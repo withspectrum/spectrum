@@ -75,6 +75,7 @@ export default class InfiniteScroll extends React.Component<Props> {
       useWindow,
       isReverse,
       scrollElement,
+      scrollComponent,
       isLoadingMore,
       ...props
     } = this.props;
