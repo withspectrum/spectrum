@@ -28,7 +28,6 @@ export default class InfiniteScroll extends React.Component<Props> {
     useWindow: true,
     isReverse: false,
     scrollElement: null,
-    scrollComponent: null,
   };
 
   scrollListener: Function;
@@ -75,7 +74,6 @@ export default class InfiniteScroll extends React.Component<Props> {
       useWindow,
       isReverse,
       scrollElement,
-      scrollComponent,
       isLoadingMore,
       ...props
     } = this.props;
