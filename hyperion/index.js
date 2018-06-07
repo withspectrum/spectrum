@@ -131,6 +131,11 @@ app.use(
 );
 app.get('/static/js/:name', (req: express$Request, res, next) => {
   if (!req.params.name) return next();
+  const existingFile = jsFiles.find(file => file.startsWith(req.params.name));
+  if (existingFile)
+    return res.sendFile(
+      path.resolve(__dirname, '..', 'build', 'static', 'js', req.params.name)
+    );
   const match = req.params.name.match(/(\w+?)\.(\w+?\.)?js/i);
   if (!match) return next();
   const actualFilename = jsFiles.find(file => file.startsWith(match[1]));
