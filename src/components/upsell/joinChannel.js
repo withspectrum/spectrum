@@ -105,7 +105,6 @@ class JoinChannel extends React.Component<Props, State> {
           loading={isLoading}
           onClick={this.toggleSubscription}
           icon="plus"
-          label
           dataCy="thread-join-channel-upsell-button"
         >
           Join
