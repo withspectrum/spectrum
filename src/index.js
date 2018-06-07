@@ -61,7 +61,6 @@ if (t && (!existingUser || !existingUser.currentUser)) {
 
 const store = initStore(window.__SERVER_STATE__ || initialState);
 
-// eslint-disable-next-line
 const renderMethod = !!window.__SERVER_STATE__
   ? // $FlowIssue
     ReactDOM.hydrate
@@ -83,7 +82,11 @@ function render() {
   );
 }
 
-Loadable.preloadReady().then(render);
+Loadable.preloadReady()
+  .then(render)
+  .catch(err => {
+    console.error(err);
+  });
 
 OfflinePluginRuntime.install({
   // Apply new updates immediately

@@ -85,13 +85,6 @@ module.exports = function override(config, env) {
   }
   config = injectBabelPlugin('react-loadable/babel', config);
   config = transpileShared(config);
-  config.plugins.push(
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['bootstrap'],
-      filename: 'static/js/[name].js',
-      minChunks: Infinity,
-    })
-  );
   // Filter the default serviceworker plugin, add offline plugin instead
   config.plugins = config.plugins.filter(
     plugin => !isServiceWorkerPlugin(plugin)
@@ -141,12 +134,11 @@ module.exports = function override(config, env) {
       })
     );
   }
-  config.plugins.push(
+  config.plugins.unshift(
     new webpack.optimize.CommonsChunkPlugin({
-      minChunks: 3,
-      name: 'main',
-      async: 'commons',
-      children: true,
+      names: ['bootstrap'],
+      filename: 'static/js/[name].js',
+      minChunks: Infinity,
     })
   );
   if (process.env.NODE_ENV === 'production') {
