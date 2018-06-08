@@ -1,6 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import { Text } from 'react-native';
 import compose from 'recompose/compose';
 import searchCommunitiesQuery, {
   type SearchCommunitiesType,
@@ -21,9 +20,18 @@ type Props = {
   },
   ...$Exact<ViewNetworkHandlerProps>,
   navigation: NavigationProps,
+  queryString: ?string,
 };
 
 class CommunitiesSearchView extends Component<Props> {
+  shouldComponentUpdate(nextProps: Props) {
+    const currProps = this.props;
+
+    if (nextProps.data !== currProps.data) return true;
+    if (nextProps.queryString !== currProps.queryString) return true;
+    return false;
+  }
+
   render() {
     const { isLoading, data, navigation, hasError } = this.props;
 
@@ -37,8 +45,13 @@ class CommunitiesSearchView extends Component<Props> {
 
       return (
         <SearchView>
-          {isLoading && <Loading />}
-          {!hasResults && <Text>No results</Text>}
+          {!hasResults && (
+            <FullscreenNullState
+              title={'No results found'}
+              subtitle={'Try searching for something else?'}
+              icon={'community'}
+            />
+          )}
           {hasResults && (
             <InfiniteList
               data={results}
