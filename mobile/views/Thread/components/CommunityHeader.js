@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 import Avatar from '../../../components/Avatar';
 import TouchableOpacity from '../../../components/TouchableOpacity';
 import { withNavigation } from 'react-navigation';
-import type { Navigation } from '../../../utils/types';
+import type { NavigationProps } from 'react-navigation';
 import type { ThreadInfoType } from '../../../../shared/graphql/fragments/thread/threadInfo';
 import {
   CommunityHeaderContainer,
@@ -15,7 +15,7 @@ import {
 
 type Props = {
   thread: ThreadInfoType,
-  navigation: Navigation,
+  navigation: NavigationProps,
 };
 
 class CommunityHeader extends Component<Props> {

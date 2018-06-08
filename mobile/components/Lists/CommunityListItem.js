@@ -5,16 +5,22 @@ import { ListItem } from './ListItem';
 import { TextColumnContainer, Title, Subtitle, AvatarWrapper } from './style';
 import type { GetCommunityType } from '../../../shared/graphql/queries/community/getCommunity';
 
-type CommunityListItemType = {
+type Props = {
   community: GetCommunityType,
-  onPress: Function,
+  onPressHandler: Function,
 };
 
-export class CommunityListItem extends Component<CommunityListItemType> {
+export class CommunityListItem extends Component<Props> {
+  shouldComponentUpdate(nextProps: Props) {
+    const currProps = this.props;
+    if (nextProps.community.id !== currProps.community.id) return true;
+    return false;
+  }
+
   render() {
-    const { community, onPress } = this.props;
+    const { community, onPressHandler } = this.props;
     return (
-      <ListItem onPress={onPress}>
+      <ListItem onPressHandler={onPressHandler}>
         <AvatarWrapper>
           <Avatar src={community.profilePhoto} size={40} variant="square" />
         </AvatarWrapper>

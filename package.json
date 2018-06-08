@@ -1,6 +1,6 @@
 {
   "name": "Spectrum",
-  "version": "2.4.5",
+  "version": "2.4.6",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -136,6 +136,7 @@
     "pre-commit": "^1.2.2",
     "prismjs": "^1.8.1",
     "query-string": "^5.0.0",
+    "raf": "^3.4.0",
     "raven": "^2.0.2",
     "raven-js": "^3.18.1",
     "react": "^16.4.0",

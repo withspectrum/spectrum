@@ -6,14 +6,14 @@ import { TextColumnContainer, Title, Subtitle, AvatarWrapper } from './style';
 
 type UserListItemType = {
   user: Object,
-  onPress: Function,
+  onPressHandler: Function,
 };
 
 export class UserListItem extends Component<UserListItemType> {
   render() {
-    const { user, onPress } = this.props;
+    const { user, onPressHandler } = this.props;
     return (
-      <ListItem onPress={onPress}>
+      <ListItem onPressHandler={onPressHandler}>
         <AvatarWrapper>
           <Avatar src={user.profilePhoto} size={40} />
         </AvatarWrapper>

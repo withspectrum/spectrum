@@ -4,7 +4,6 @@ import { Button } from 'react-native';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { SecureStore } from 'expo';
-import Text from '../../components/Text';
 import InfiniteList from '../../components/InfiniteList';
 import withSafeView from '../../components/SafeAreaView';
 import { Wrapper } from '../Dashboard/style';
@@ -20,17 +19,20 @@ import getPushNotificationToken from '../../utils/get-push-notification-token';
 import type { State as ReduxState } from '../../reducers';
 import type { AuthenticationState } from '../../reducers/authentication';
 import { parseNotification } from './parseNotification';
-import type { Navigation } from '../../utils/types';
 import { deduplicateChildren } from '../../utils/deduplicate-children';
 import { NotificationListItem } from '../../components/Lists';
 import { withCurrentUser } from '../../components/WithCurrentUser';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
+import type { NavigationProps } from 'react-navigation';
+import Loading from '../../components/Loading';
+import ErrorBoundary from '../../components/ErrorBoundary';
+import { FullscreenNullState } from '../../components/NullStates';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
   mutate: (token: any) => Promise<any>,
   authentication: AuthenticationState,
-  navigation: Navigation,
+  navigation: NavigationProps,
   currentUser: GetUserType,
   data: {
     subscribeToNewNotifications: Function,
@@ -163,13 +165,15 @@ class Notifications extends Component<Props, State> {
           <InfiniteList
             data={parsed}
             renderItem={({ item }) => (
-              <NotificationListItem
-                navigation={navigation}
-                notification={item}
-                currentUserId={currentUser.id}
-              />
+              <ErrorBoundary fallbackComponent={null}>
+                <NotificationListItem
+                  navigation={navigation}
+                  notification={item}
+                  currentUserId={currentUser.id}
+                />
+              </ErrorBoundary>
             )}
-            loadingIndicator={<Text>Loading...</Text>}
+            loadingIndicator={<Loading />}
             hasNextPage={notifications.pageInfo.hasNextPage}
             fetchMore={this.fetchMore}
             refetching={this.props.isRefetching}
@@ -179,19 +183,17 @@ class Notifications extends Component<Props, State> {
       );
     }
 
-    if (isLoading)
+    if (isLoading) {
       return (
         <Wrapper>
-          <Text type="body">Loading...</Text>
+          <Loading />
         </Wrapper>
       );
+    }
 
-    if (hasError)
-      return (
-        <Wrapper>
-          <Text type="body">Oh crap, error</Text>
-        </Wrapper>
-      );
+    if (hasError) {
+      return <FullscreenNullState />;
+    }
 
     return null;
   }

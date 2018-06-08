@@ -7,14 +7,14 @@ import ConditionalWrap from '../ConditionalWrap';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import type { ThreadParticipantType } from '../../../shared/graphql/fragments/thread/threadParticipant';
-import type { Navigation } from '../../utils/types';
 import TouchableHighlight from '../TouchableHighlight';
+import type { NavigationProps } from 'react-navigation';
 
 type Props = {
   author: ThreadParticipantType,
   me: boolean,
   avatar: boolean,
-  navigation: Navigation,
+  navigation: NavigationProps,
   onPress?: Function,
 };
 
