@@ -28,7 +28,7 @@ const Intro = (props: Props) => {
         <Left>
           <Heading>Spectrum Concierge</Heading>
           <Copy>
-            We'll take care of the hardest parts of building communities:
+            We’ll take care of the hardest parts of building communities:
             growing your audience, implementing an effective strategy,
             understanding and supporting your members, and analyzing your
             community’s impact on your business.
