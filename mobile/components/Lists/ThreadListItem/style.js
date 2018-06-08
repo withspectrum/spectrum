@@ -38,7 +38,8 @@ export const MessageCount = styled.Text`
 
 export const MetaTextPill = styled(MetaText)`
   color: ${props => props.theme.text.reverse};
-  background: ${props => props.theme.success.alt};
+  background: ${props =>
+    props.locked ? props.theme.text.placeholder : props.theme.success.alt};
   border-radius: 11px;
   font-size: 12px;
   font-weight: 800;

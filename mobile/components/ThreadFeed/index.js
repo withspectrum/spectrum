@@ -9,6 +9,8 @@ import Loading from '../Loading';
 import type { ThreadConnectionType } from '../../../shared/graphql/fragments/community/communityThreadConnection';
 import type { FlatListProps } from 'react-native';
 import ErrorBoundary from '../ErrorBoundary';
+import { withCurrentUser } from '../WithCurrentUser';
+import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -33,6 +35,7 @@ type Props = {|
   navigation: Object,
   activeChannel?: string,
   activeCommunity?: string,
+  currentUser: GetUserType,
   // This is necessary so we can listen to updates
   channels?: string[],
   noThreadsFallback?: any,
@@ -120,6 +123,7 @@ class ThreadFeed extends Component<Props, State> {
       isFetchingMore,
       isRefetching,
       channels,
+      currentUser,
       noThreadsFallback: NoThreadsFallback,
       ...flatListProps
     } = this.props;
@@ -134,9 +138,11 @@ class ThreadFeed extends Component<Props, State> {
             renderItem={({ item }) => (
               <ErrorBoundary fallbackComponent={null}>
                 <ThreadListItem
+                  refetch={this.props.data.refetch}
                   thread={item.node}
                   activeChannel={activeChannel}
                   activeCommunity={activeCommunity}
+                  currentUser={currentUser}
                   onPressHandler={() =>
                     navigation.navigate({
                       routeName: `Thread`,
@@ -184,4 +190,4 @@ class ThreadFeed extends Component<Props, State> {
   }
 }
 
-export default compose(ViewNetworkHandler)(ThreadFeed);
+export default compose(withCurrentUser, ViewNetworkHandler)(ThreadFeed);
