@@ -389,6 +389,7 @@ class ChatInput extends React.Component<Props, State> {
         messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
         parentId: quotedMessage.messageId,
+        snippet: quotedMessage.snippet,
         content: {
           body: !isAndroid()
             ? JSON.stringify(toJSON(state))
@@ -543,6 +544,7 @@ class ChatInput extends React.Component<Props, State> {
           messageType: 'media',
           threadType,
           parentId: quotedMessage.messageId,
+          snippet: quotedMessage.snippet,
           content: {
             body: reader.result,
           },
