@@ -13,6 +13,7 @@ import type { NavigationProps } from 'react-navigation';
 import sentencify from '../../../../shared/sentencify';
 import { timeDifferenceShort } from '../../../../shared/time-difference';
 import { DirectMessageListItem } from '../../../components/Lists';
+import Loading from '../../../components/Loading';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
@@ -60,11 +61,11 @@ const DirectMessageThreadsList = (props: Props) => {
         }}
         hasNextPage={pageInfo.hasNextPage}
         fetchMore={props.data.fetchMore}
-        loadingIndicator={<Text>Loading...</Text>}
+        loadingIndicator={<Loading />}
       />
     );
   }
-  if (isLoading) return <Text>Loading...</Text>;
+  if (isLoading) return <Loading />;
   if (hasError) return <Text>Error</Text>;
   return <Text>No DM Threads yet</Text>;
 };

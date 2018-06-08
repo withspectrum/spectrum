@@ -12,6 +12,7 @@ import { convertTimestampToDate } from '../../../src/helpers/utils';
 import { withCurrentUser } from '../../components/WithCurrentUser';
 import RoboText from './RoboText';
 import Author from './Author';
+import Loading from '../Loading';
 
 import type { NavigationProps } from 'react-navigation';
 import type { FlatListProps } from 'react-native';
@@ -145,7 +146,7 @@ class Messages extends Component<Props> {
     }
 
     if (isLoading) {
-      return <Text type="body">Loading...</Text>;
+      return <Loading />;
     }
 
     if (hasError) {

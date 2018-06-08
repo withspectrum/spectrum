@@ -11,6 +11,7 @@ import { Row } from '../../../components/Flex';
 import ViewNetworkHandler, {
   type ViewNetworkHandlerProps,
 } from '../../../components/ViewNetworkHandler';
+import Loading from '../../../components/Loading';
 
 import sentencify from '../../../../shared/sentencify';
 import getDirectMessageThread, {
@@ -98,7 +99,7 @@ class DirectMessageThread extends Component<Props> {
       );
     }
 
-    if (isLoading) return <Text>Loading...</Text>;
+    if (isLoading) return <Loading />;
     if (hasError) return <Text>Error :(</Text>;
     return null;
   }

@@ -25,6 +25,7 @@ import { NotificationListItem } from '../../components/Lists';
 import { withCurrentUser } from '../../components/WithCurrentUser';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import type { NavigationProps } from 'react-navigation';
+import Loading from '../../components/Loading';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
@@ -169,7 +170,7 @@ class Notifications extends Component<Props, State> {
                 currentUserId={currentUser.id}
               />
             )}
-            loadingIndicator={<Text>Loading...</Text>}
+            loadingIndicator={<Loading />}
             hasNextPage={notifications.pageInfo.hasNextPage}
             fetchMore={this.fetchMore}
             refetching={this.props.isRefetching}
@@ -182,7 +183,7 @@ class Notifications extends Component<Props, State> {
     if (isLoading)
       return (
         <Wrapper>
-          <Text type="body">Loading...</Text>
+          <Loading />
         </Wrapper>
       );
 

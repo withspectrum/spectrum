@@ -21,6 +21,7 @@ import type { GetThreadType } from '../../../shared/graphql/queries/thread/getTh
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import { Wrapper, ThreadMargin } from './style';
 import type { NavigationProps } from 'react-navigation';
+import Loading from '../../components/Loading';
 
 const ThreadMessages = getThreadMessageConnection(Messages);
 
@@ -101,9 +102,7 @@ class Thread extends Component<Props> {
     if (isLoading) {
       return (
         <Wrapper>
-          <View testID="e2e-thread">
-            <Text type="body">Loading...</Text>
-          </View>
+          <Loading />
         </Wrapper>
       );
     }
