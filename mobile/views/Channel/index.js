@@ -37,7 +37,7 @@ const ChannelThreadFeed = compose(getChannelThreadConnection)(ThreadFeed);
 
 class Channel extends Component<Props> {
   render() {
-    const { data, isLoading, hasError } = this.props;
+    const { data, isLoading, hasError, navigation } = this.props;
     if (data.channel) {
       const { channel } = data;
 
@@ -46,6 +46,7 @@ class Channel extends Component<Props> {
           <StatusBar barStyle="light-content" />
 
           <ChannelThreadFeed
+            navigation={navigation}
             id={channel.id}
             activeChannel={channel.id}
             activeCommunity={channel.community.id}

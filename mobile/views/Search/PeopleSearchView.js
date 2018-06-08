@@ -46,13 +46,7 @@ class UsersSearchView extends Component<Props> {
                 <UserListItem
                   key={item.id}
                   user={item}
-                  onPress={() =>
-                    navigation.navigate({
-                      routeName: `User`,
-                      key: item.id,
-                      params: { id: item.id },
-                    })
-                  }
+                  navigation={navigation}
                 />
               )}
               loadingIndicator={<Loading />}

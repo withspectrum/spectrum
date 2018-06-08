@@ -46,13 +46,7 @@ class CommunitiesSearchView extends Component<Props> {
                 <CommunityListItem
                   key={item.id}
                   community={item}
-                  onPress={() =>
-                    navigation.navigate({
-                      routeName: `Community`,
-                      key: item.id,
-                      params: { id: item.id },
-                    })
-                  }
+                  navigation={navigation}
                 />
               )}
               loadingIndicator={<Loading />}

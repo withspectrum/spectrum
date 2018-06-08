@@ -4,17 +4,26 @@ import Avatar from '../Avatar';
 import { ListItem } from './ListItem';
 import { TextColumnContainer, Title, Subtitle, AvatarWrapper } from './style';
 import type { GetCommunityType } from '../../../shared/graphql/queries/community/getCommunity';
+import type { Navigation } from '../../utils/types';
 
 type CommunityListItemType = {
   community: GetCommunityType,
-  onPress: Function,
+  navigation: Navigation,
 };
 
 export class CommunityListItem extends Component<CommunityListItemType> {
   render() {
-    const { community, onPress } = this.props;
+    const { community, navigation } = this.props;
     return (
-      <ListItem onPress={onPress}>
+      <ListItem
+        onPress={() =>
+          navigation.navigate({
+            routeName: `Community`,
+            key: community.id,
+            params: { id: community.id },
+          })
+        }
+      >
         <AvatarWrapper>
           <Avatar src={community.profilePhoto} size={40} variant="square" />
         </AvatarWrapper>
