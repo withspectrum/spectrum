@@ -14,6 +14,7 @@ import ErrorBoundary from '../../ErrorBoundary';
 import { withNavigation, type NavigationProps } from 'react-navigation';
 import type { GetUserType } from '../../../../shared/graphql/queries/user/getUser';
 import setThreadLockMutation from '../../../../shared/graphql/mutations/thread/lockThread';
+import toggleThreadNotificationsMutation from '../../../../shared/graphql/mutations/thread/toggleThreadNotifications';
 import deleteThreadMutation, {
   type DeleteThreadType,
 } from '../../../../shared/graphql/mutations/thread/deleteThread';
@@ -31,12 +32,14 @@ type Props = {
   setThreadLock: Function,
   pinThread: Function,
   deleteThread: Function,
+  toggleThreadNotifications: Function,
   // refetches the parent query that resolved this thread - used when
   // a thread is deleted and we want to refetch the parent query, regardless
   // of where that query was called from
   refetch: Function,
 };
 
+const CANCEL = 'Cancel';
 const SHARE = 'Share';
 const MESSAGE_AUTHOR = 'Message author';
 const PIN_CONVERSATION = 'Pin conversation';
@@ -44,6 +47,8 @@ const UNPIN_CONVERSATION = 'Unpin conversation';
 const LOCK_CONVERSATION = 'Lock conversation';
 const UNLOCK_CONVERSATION = 'Unlock conversation';
 const DELETE_CONVERSATION = 'Delete conversation';
+const SUBSCRIBE_CONVERSATION = 'Subscribe to conversation';
+const MUTE_CONVERSATION = 'Mute conversation';
 
 class ThreadListItemHandlers extends Component<Props> {
   shouldComponentUpdate(nextProps: Props) {
@@ -89,6 +94,14 @@ class ThreadListItemHandlers extends Component<Props> {
     });
   };
 
+  toggleNotifications = () => {
+    const { thread, toggleThreadNotifications } = this.props;
+
+    return toggleThreadNotifications({
+      threadId: thread.id,
+    });
+  };
+
   getActionSheetOptions = () => {
     const { thread, currentUser } = this.props;
     const {
@@ -111,6 +124,10 @@ class ThreadListItemHandlers extends Component<Props> {
     let options, cancelButtonIndex, destructiveButtonIndex;
     options = [SHARE, MESSAGE_AUTHOR];
 
+    options = options.concat(
+      thread.receiveNotifications ? MUTE_CONVERSATION : SUBSCRIBE_CONVERSATION
+    );
+
     if (canModerateCommunity) {
       options = options.concat(
         thread.community.pinnedThreadId === thread.id
@@ -129,7 +146,7 @@ class ThreadListItemHandlers extends Component<Props> {
       options = options.concat(DELETE_CONVERSATION);
     }
 
-    options = options.concat('Cancel');
+    options = options.concat(CANCEL);
     cancelButtonIndex = options.length - 1;
     destructiveButtonIndex = options.indexOf(DELETE_CONVERSATION);
 
@@ -146,7 +163,7 @@ class ThreadListItemHandlers extends Component<Props> {
     const isAuthor = currentUser.id === thread.author.user.id;
 
     const action = options[index];
-    if (action === 'Share') {
+    if (action === SHARE) {
       return this.shareThread();
     }
 
@@ -174,6 +191,14 @@ class ThreadListItemHandlers extends Component<Props> {
 
     if (action === LOCK_CONVERSATION) {
       return this.toggleLockThread();
+    }
+
+    if (action === SUBSCRIBE_CONVERSATION) {
+      return this.toggleNotifications();
+    }
+
+    if (action === MUTE_CONVERSATION) {
+      return this.toggleNotifications();
     }
 
     if (action === DELETE_CONVERSATION) {
@@ -274,5 +299,6 @@ export const ThreadListItem = compose(
   deleteThreadMutation,
   pinThreadMutation,
   connectActionSheet,
+  toggleThreadNotificationsMutation,
   withNavigation
 )(ThreadListItemHandlers);
