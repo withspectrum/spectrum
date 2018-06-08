@@ -4,7 +4,6 @@ import { Button } from 'react-native';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { SecureStore } from 'expo';
-import Text from '../../components/Text';
 import InfiniteList from '../../components/InfiniteList';
 import withSafeView from '../../components/SafeAreaView';
 import { Wrapper } from '../Dashboard/style';
@@ -27,6 +26,7 @@ import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import type { NavigationProps } from 'react-navigation';
 import Loading from '../../components/Loading';
 import ErrorBoundary from '../../components/ErrorBoundary';
+import { FullscreenNullState } from '../../components/NullStates';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
@@ -183,19 +183,17 @@ class Notifications extends Component<Props, State> {
       );
     }
 
-    if (isLoading)
+    if (isLoading) {
       return (
         <Wrapper>
           <Loading />
         </Wrapper>
       );
+    }
 
-    if (hasError)
-      return (
-        <Wrapper>
-          <Text type="body">Oh crap, error</Text>
-        </Wrapper>
-      );
+    if (hasError) {
+      return <FullscreenNullState />;
+    }
 
     return null;
   }

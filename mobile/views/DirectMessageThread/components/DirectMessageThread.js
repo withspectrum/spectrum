@@ -22,6 +22,7 @@ import getDirectMessageThreadMessageConnection from '../../../../shared/graphql/
 import type { GetUserType } from '../../../../shared/graphql/queries/user/getUser';
 import sendDirectMessage from '../../../../shared/graphql/mutations/message/sendDirectMessage';
 import type { NavigationProps } from 'react-navigation';
+import { FullscreenNullState } from '../../../components/NullStates';
 
 const DirectMessageThreadMessages = getDirectMessageThreadMessageConnection(
   Messages
@@ -106,7 +107,8 @@ class DirectMessageThread extends Component<Props> {
     }
 
     if (isLoading) return <Loading />;
-    if (hasError) return <Text>Error :(</Text>;
+    if (hasError) return <FullscreenNullState />;
+
     return null;
   }
 }

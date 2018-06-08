@@ -13,6 +13,7 @@ import { SearchView } from './style';
 import { UserListItem } from '../../components/Lists';
 import type { NavigationProps } from 'react-navigation';
 import InfiniteList from '../../components/InfiniteList';
+import { FullscreenNullState } from '../../components/NullStates';
 
 type Props = {
   data: {
@@ -24,7 +25,7 @@ type Props = {
 
 class UsersSearchView extends Component<Props> {
   render() {
-    const { isLoading, data, navigation } = this.props;
+    const { isLoading, data, navigation, hasError } = this.props;
 
     if (data.search) {
       const { search: { searchResultsConnection } } = data;
@@ -67,6 +68,10 @@ class UsersSearchView extends Component<Props> {
           <Loading />
         </SearchView>
       );
+    }
+
+    if (hasError) {
+      return <FullscreenNullState />;
     }
 
     return <SearchView />;

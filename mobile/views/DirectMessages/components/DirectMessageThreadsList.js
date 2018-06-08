@@ -15,6 +15,7 @@ import { timeDifferenceShort } from '../../../../shared/time-difference';
 import { DirectMessageListItem } from '../../../components/Lists';
 import Loading from '../../../components/Loading';
 import ErrorBoundary from '../../../components/ErrorBoundary';
+import { FullscreenNullState } from '../../../components/NullStates';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
@@ -69,7 +70,7 @@ const DirectMessageThreadsList = (props: Props) => {
     );
   }
   if (isLoading) return <Loading />;
-  if (hasError) return <Text>Error</Text>;
+  if (hasError) return <FullscreenNullState />;
   return <Text>No DM Threads yet</Text>;
 };
 

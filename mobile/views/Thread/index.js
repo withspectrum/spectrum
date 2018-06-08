@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { View, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
@@ -23,6 +23,7 @@ import { Wrapper, ThreadMargin } from './style';
 import type { NavigationProps } from 'react-navigation';
 import Loading from '../../components/Loading';
 import ErrorBoundary from '../../components/ErrorBoundary';
+import { FullscreenNullState } from '../../components/NullStates';
 
 const ThreadMessages = getThreadMessageConnection(Messages);
 
@@ -127,13 +128,7 @@ class Thread extends Component<Props> {
     }
 
     if (hasError) {
-      return (
-        <Wrapper>
-          <View testID="e2e-thread">
-            <Text type="body">Error!</Text>
-          </View>
-        </Wrapper>
-      );
+      return <FullscreenNullState />;
     }
 
     return null;

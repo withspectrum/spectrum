@@ -10,7 +10,6 @@ import {
   getCurrentUser,
   type GetUserType,
 } from '../../../shared/graphql/queries/user/getUser';
-
 import { Wrapper } from './style';
 import ErrorBoundary from '../../components/ErrorBoundary';
 

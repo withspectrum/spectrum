@@ -1,12 +1,13 @@
 // @flow
 import React, { Component } from 'react';
-import { Text, View, StatusBar } from 'react-native';
+import { StatusBar } from 'react-native';
 import compose from 'recompose/compose';
 import getUserThreadConnection from '../../../shared/graphql/queries/user/getUserThreadConnection';
 import ThreadFeed from '../../components/ThreadFeed';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import Loading from '../../components/Loading';
 import ErrorBoundary from '../../components/ErrorBoundary';
+import { FullscreenNullState } from '../../components/NullStates';
 
 import {
   Wrapper,
@@ -120,13 +121,7 @@ class User extends Component<Props, State> {
     }
 
     if (hasError) {
-      return (
-        <Wrapper>
-          <View testID="e2e-User">
-            <Text>Error!</Text>
-          </View>
-        </Wrapper>
-      );
+      return <FullscreenNullState />;
     }
 
     return null;

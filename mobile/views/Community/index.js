@@ -27,6 +27,7 @@ import {
   ThreadFeedDivider,
 } from './style';
 import ErrorBoundary from '../../components/ErrorBoundary';
+import { FullscreenNullState } from '../../components/NullStates';
 
 type Props = {
   isLoading: boolean,
@@ -124,13 +125,7 @@ class Community extends Component<Props> {
     }
 
     if (hasError) {
-      return (
-        <Wrapper>
-          <View testID="e2e-community">
-            <Text>Error!</Text>
-          </View>
-        </Wrapper>
-      );
+      return <FullscreenNullState />;
     }
 
     return null;
