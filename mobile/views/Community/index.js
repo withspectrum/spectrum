@@ -12,6 +12,7 @@ import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import ThreadFeed from '../../components/ThreadFeed';
 import { ThreadListItem } from '../../components/Lists';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
+import Loading from '../../components/Loading';
 
 import {
   Wrapper,
@@ -37,7 +38,7 @@ type Props = {
 
 const RemoteThreadItem = compose(getThreadById, withNavigation)(
   ({ data, navigation }) => {
-    if (data.loading) return <Text>Loading...</Text>;
+    if (data.loading) return <Loading />;
     if (!data.thread) return null;
     return (
       <ThreadListItem
@@ -116,9 +117,7 @@ class Community extends Component<Props> {
     if (isLoading) {
       return (
         <Wrapper>
-          <View testID="e2e-community">
-            <Text>Loading...</Text>
-          </View>
+          <Loading />
         </Wrapper>
       );
     }

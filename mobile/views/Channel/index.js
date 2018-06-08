@@ -9,6 +9,7 @@ import {
 import getChannelThreadConnection from '../../../shared/graphql/queries/channel/getChannelThreadConnection';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import ThreadFeed from '../../components/ThreadFeed';
+import Loading from '../../components/Loading';
 
 import {
   Wrapper,
@@ -86,9 +87,7 @@ class Channel extends Component<Props> {
     if (isLoading) {
       return (
         <Wrapper>
-          <View testID="e2e-channel">
-            <Text>Loading...</Text>
-          </View>
+          <Loading />
         </Wrapper>
       );
     }

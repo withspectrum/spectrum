@@ -5,6 +5,7 @@ import compose from 'recompose/compose';
 import getUserThreadConnection from '../../../shared/graphql/queries/user/getUserThreadConnection';
 import ThreadFeed from '../../components/ThreadFeed';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
+import Loading from '../../components/Loading';
 
 import {
   Wrapper,
@@ -112,9 +113,7 @@ class User extends Component<Props, State> {
     if (isLoading) {
       return (
         <Wrapper>
-          <View testID="e2e-User">
-            <Text>Loading...</Text>
-          </View>
+          <Loading />
         </Wrapper>
       );
     }
