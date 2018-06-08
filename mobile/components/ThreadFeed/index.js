@@ -119,6 +119,8 @@ class ThreadFeed extends Component<Props, State> {
       isFetchingMore,
       isRefetching,
       channels,
+      isPolling,
+      queryVarIsChanging,
       ...flatListProps
     } = this.props;
 
