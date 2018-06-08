@@ -25,6 +25,7 @@ const messageAvatars = (list, active) => {
         link={participant.username ? `/users/${participant.username}` : null}
         src={`${participant.profilePhoto}`}
         role="presentation"
+        showProfile={true}
       />
     </ParticipantHead>
   ));
@@ -49,6 +50,7 @@ const Facepile = ({ participants, author, active }) => {
             link={author.username ? `/users/${author.username}` : null}
             src={author.profilePhoto}
             role="presentation"
+            showProfile={true}
           />
         </ParticipantHead>
       </FacepileContainer>
@@ -83,6 +85,7 @@ const Facepile = ({ participants, author, active }) => {
           link={author.username ? `/users/${author.username}` : null}
           src={author.profilePhoto}
           role="presentation"
+          showProfile={true}
         />
       </ParticipantHead>
       {messageAvatars(participantList, active)}
