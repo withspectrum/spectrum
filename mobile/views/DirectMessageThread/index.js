@@ -22,14 +22,18 @@ type Props = {
 class DirectMessageThreadView extends React.Component<Props> {
   render() {
     const id = idx(this.props, props => props.navigation.state.params.id);
-    const { currentUser } = this.props;
+    const { currentUser, navigation } = this.props;
     if (!id) return <Text>Non-existant DM thread</Text>;
 
     if (!currentUser) return null;
 
     return (
       <Wrapper>
-        <DirectMessageThread currentUser={currentUser} id={id} />
+        <DirectMessageThread
+          navigation={navigation}
+          currentUser={currentUser}
+          id={id}
+        />
       </Wrapper>
     );
   }

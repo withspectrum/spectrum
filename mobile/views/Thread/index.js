@@ -88,7 +88,7 @@ class Thread extends Component<Props> {
                 title: 'Look at this thread I found on Spectrum',
               }}
             />
-            <ThreadMessages id={thread.id} />
+            <ThreadMessages navigation={navigation} id={thread.id} />
           </ScrollView>
 
           {currentUser && (

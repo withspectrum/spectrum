@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import { View } from 'react-native';
-import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../ViewNetworkHandler';
 import Text from '../Text';
@@ -157,6 +156,4 @@ class Messages extends Component<Props> {
   }
 }
 
-export default compose(viewNetworkHandler, withNavigation, withCurrentUser)(
-  Messages
-);
+export default compose(viewNetworkHandler, withCurrentUser)(Messages);
