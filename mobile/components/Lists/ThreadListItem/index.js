@@ -6,6 +6,7 @@ import { MetaTextPill, ThreadFacepileRowContainer } from './style';
 import type { GetThreadType } from '../../../../shared/graphql/queries/thread/getThread';
 import ThreadCommunityInfo from './ThreadCommunityInfo';
 import Facepile from '../../Facepile';
+import ErrorBoundary from '../../ErrorBoundary';
 
 type ThreadListItemType = {
   thread: GetThreadType,
@@ -34,29 +35,33 @@ export class ThreadListItem extends Component<ThreadListItemType> {
     return (
       <ListItem onPressHandler={onPressHandler}>
         <TextColumnContainer>
-          <ThreadCommunityInfo
-            activeChannel={activeChannel}
-            activeCommunity={activeCommunity}
-            thread={thread}
-          />
+          <ErrorBoundary fallbackComponent={null}>
+            <ThreadCommunityInfo
+              activeChannel={activeChannel}
+              activeCommunity={activeCommunity}
+              thread={thread}
+            />
+          </ErrorBoundary>
 
           <Title numberOfLines={2}>{thread.content.title}</Title>
 
-          <ThreadFacepileRowContainer>
-            <Facepile users={facepileUsers} />
+          <ErrorBoundary fallbackComponent={null}>
+            <ThreadFacepileRowContainer>
+              <Facepile users={facepileUsers} />
 
-            {thread.messageCount > 0 ? (
-              <Subtitle>
-                {thread.messageCount > 1
-                  ? `${thread.messageCount} messages`
-                  : `${thread.messageCount} message`}
-              </Subtitle>
-            ) : (
-              <MetaTextPill offset={thread.participants.length} new>
-                {'New thread!'.toUpperCase()}
-              </MetaTextPill>
-            )}
-          </ThreadFacepileRowContainer>
+              {thread.messageCount > 0 ? (
+                <Subtitle>
+                  {thread.messageCount > 1
+                    ? `${thread.messageCount} messages`
+                    : `${thread.messageCount} message`}
+                </Subtitle>
+              ) : (
+                <MetaTextPill offset={thread.participants.length} new>
+                  {'New thread!'.toUpperCase()}
+                </MetaTextPill>
+              )}
+            </ThreadFacepileRowContainer>
+          </ErrorBoundary>
         </TextColumnContainer>
       </ListItem>
     );

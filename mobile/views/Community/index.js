@@ -1,6 +1,6 @@
 // @flow
-import React, { Component, Fragment } from 'react';
-import { Text, View, StatusBar } from 'react-native';
+import React, { Component } from 'react';
+import { StatusBar } from 'react-native';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import {
@@ -26,6 +26,8 @@ import {
   Description,
   ThreadFeedDivider,
 } from './style';
+import ErrorBoundary from '../../components/ErrorBoundary';
+import { FullscreenNullState } from '../../components/NullStates';
 
 type Props = {
   isLoading: boolean,
@@ -72,7 +74,7 @@ class Community extends Component<Props> {
             id={community.id}
             activeCommunity={community.id}
             ListHeaderComponent={
-              <Fragment>
+              <ErrorBoundary alert>
                 <CoverPhotoContainer>
                   {community.coverPhoto ? (
                     <CoverPhoto
@@ -107,7 +109,7 @@ class Community extends Component<Props> {
                     activeCommunity={community.id}
                   />
                 )}
-              </Fragment>
+              </ErrorBoundary>
             }
           />
         </Wrapper>
@@ -123,13 +125,7 @@ class Community extends Component<Props> {
     }
 
     if (hasError) {
-      return (
-        <Wrapper>
-          <View testID="e2e-community">
-            <Text>Error!</Text>
-          </View>
-        </Wrapper>
-      );
+      return <FullscreenNullState />;
     }
 
     return null;

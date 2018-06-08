@@ -10,8 +10,8 @@ import {
   getCurrentUser,
   type GetUserType,
 } from '../../../shared/graphql/queries/user/getUser';
-
 import { Wrapper } from './style';
+import ErrorBoundary from '../../components/ErrorBoundary';
 
 const EverythingThreadFeed = compose(getCurrentUserEverythingFeed)(ThreadFeed);
 
@@ -29,7 +29,9 @@ class Dashboard extends Component<Props> {
     return (
       <Wrapper>
         <View testID="welcome" style={{ flex: 1 }}>
-          <EverythingThreadFeed navigation={navigation} />
+          <ErrorBoundary alert>
+            <EverythingThreadFeed navigation={navigation} />
+          </ErrorBoundary>
         </View>
       </Wrapper>
     );

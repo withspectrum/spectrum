@@ -1,6 +1,6 @@
 // @flow
-import React, { Component, Fragment } from 'react';
-import { Text, View, StatusBar } from 'react-native';
+import React, { Component } from 'react';
+import { StatusBar } from 'react-native';
 import compose from 'recompose/compose';
 import {
   getChannelById,
@@ -24,6 +24,8 @@ import {
   Description,
   ThreadFeedDivider,
 } from './style';
+import ErrorBoundary from '../../components/ErrorBoundary';
+import { FullscreenNullState } from '../../components/NullStates';
 
 type Props = {
   isLoading: boolean,
@@ -52,7 +54,7 @@ class Channel extends Component<Props> {
             activeChannel={channel.id}
             activeCommunity={channel.community.id}
             ListHeaderComponent={
-              <Fragment>
+              <ErrorBoundary alert>
                 <CoverPhotoContainer>
                   {channel.community.coverPhoto ? (
                     <CoverPhoto
@@ -77,7 +79,7 @@ class Channel extends Component<Props> {
                 </ProfileDetailsContainer>
 
                 <ThreadFeedDivider />
-              </Fragment>
+              </ErrorBoundary>
             }
           />
         </Wrapper>
@@ -93,13 +95,7 @@ class Channel extends Component<Props> {
     }
 
     if (hasError) {
-      return (
-        <Wrapper>
-          <View testID="e2e-channel">
-            <Text>Error!</Text>
-          </View>
-        </Wrapper>
-      );
+      return <FullscreenNullState />;
     }
 
     return null;
