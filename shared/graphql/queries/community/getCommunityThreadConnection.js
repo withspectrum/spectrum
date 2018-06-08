@@ -48,6 +48,7 @@ const getCommunityThreadConnectionOptions = {
       community,
       networkStatus,
       subscribeToMore,
+      refetch,
     },
   }) => ({
     data: {
@@ -55,6 +56,7 @@ const getCommunityThreadConnectionOptions = {
       loading,
       networkStatus,
       community,
+      refetch,
       threadConnection: community && community.threadConnection,
       threads:
         community && community.threadConnection

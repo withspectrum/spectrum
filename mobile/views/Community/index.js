@@ -43,6 +43,7 @@ const RemoteThreadItem = compose(getThreadById, withNavigation)(
     if (!data.thread) return null;
     return (
       <ThreadListItem
+        refetch={data.refetch}
         activeCommunity={data.thread.community.id}
         thread={data.thread}
         onPressHandler={() =>
