@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import { Text } from 'react-native';
-import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
 import searchCommunitiesQuery, {
   type SearchCommunitiesType,
@@ -12,15 +11,15 @@ import viewNetworkHandler, {
 import Loading from '../../components/Loading';
 import { SearchView } from './style';
 import { CommunityListItem } from '../../components/Lists';
-import type { Navigation } from '../../utils/types';
 import InfiniteList from '../../components/InfiniteList';
+import type { NavigationProps } from 'react-navigation';
 
 type Props = {
   data: {
     search: SearchCommunitiesType,
   },
   ...$Exact<ViewNetworkHandlerProps>,
-  navigation: Navigation,
+  navigation: NavigationProps,
 };
 
 class CommunitiesSearchView extends Component<Props> {
@@ -74,8 +73,6 @@ class CommunitiesSearchView extends Component<Props> {
   }
 }
 
-export default compose(
-  searchCommunitiesQuery,
-  withNavigation,
-  viewNetworkHandler
-)(CommunitiesSearchView);
+export default compose(searchCommunitiesQuery, viewNetworkHandler)(
+  CommunitiesSearchView
+);

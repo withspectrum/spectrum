@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import { Text } from 'react-native';
-import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
 import searchUsersQuery, {
   type SearchUsersType,
@@ -12,7 +11,7 @@ import viewNetworkHandler, {
 import Loading from '../../components/Loading';
 import { SearchView } from './style';
 import { UserListItem } from '../../components/Lists';
-import type { Navigation } from '../../utils/types';
+import type { NavigationProps } from 'react-navigation';
 import InfiniteList from '../../components/InfiniteList';
 
 type Props = {
@@ -20,7 +19,7 @@ type Props = {
     search: SearchUsersType,
   },
   ...$Exact<ViewNetworkHandlerProps>,
-  navigation: Navigation,
+  navigation: NavigationProps,
 };
 
 class UsersSearchView extends Component<Props> {
@@ -74,6 +73,4 @@ class UsersSearchView extends Component<Props> {
   }
 }
 
-export default compose(searchUsersQuery, withNavigation, viewNetworkHandler)(
-  UsersSearchView
-);
+export default compose(searchUsersQuery, viewNetworkHandler)(UsersSearchView);

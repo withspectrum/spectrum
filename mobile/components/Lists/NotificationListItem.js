@@ -12,7 +12,7 @@ import {
   IconWrapper,
 } from './style';
 import type { ParsedNotificationType } from '../../views/Notifications/parseNotification';
-import type { Navigation } from '../../utils/types';
+import type { NavigationProps } from 'react-navigation';
 import { timeDifferenceShort } from '../../../shared/time-difference';
 import sentencify from '../../../shared/sentencify';
 import Facepile from '../Facepile';
@@ -22,7 +22,7 @@ type Props = {
   notification: ParsedNotificationType,
   children?: Node,
   currentUserId: string,
-  navigation: Navigation,
+  navigation: NavigationProps,
 };
 
 export class NotificationListItem extends Component<Props> {

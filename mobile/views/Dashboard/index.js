@@ -5,7 +5,7 @@ import compose from 'recompose/compose';
 import withSafeView from '../../components/SafeAreaView';
 import ThreadFeed from '../../components/ThreadFeed';
 import getCurrentUserEverythingFeed from '../../../shared/graphql/queries/user/getCurrentUserEverythingFeed';
-import type { Navigation } from '../../utils/types';
+import type { NavigationProps } from 'react-navigation';
 import {
   getCurrentUser,
   type GetUserType,
@@ -16,7 +16,7 @@ import { Wrapper } from './style';
 const EverythingThreadFeed = compose(getCurrentUserEverythingFeed)(ThreadFeed);
 
 type Props = {
-  navigation: Navigation,
+  navigation: NavigationProps,
   data: {
     user?: GetUserType,
   },
@@ -24,10 +24,12 @@ type Props = {
 
 class Dashboard extends Component<Props> {
   render() {
+    const { navigation } = this.props;
+
     return (
       <Wrapper>
         <View testID="welcome" style={{ flex: 1 }}>
-          <EverythingThreadFeed />
+          <EverythingThreadFeed navigation={navigation} />
         </View>
       </Wrapper>
     );

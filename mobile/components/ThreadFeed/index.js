@@ -24,7 +24,7 @@ type State = {
   subscription: ?Function,
 };
 
-type Props = {
+type Props = {|
   ...$Exact<FlatListProps>,
   isLoading: boolean,
   isFetchingMore: boolean,
@@ -40,7 +40,7 @@ type Props = {
     fetchMore: () => Promise<any>,
     threadConnection: ThreadConnectionType,
   },
-};
+|};
 
 class ThreadFeed extends Component<Props, State> {
   constructor() {
