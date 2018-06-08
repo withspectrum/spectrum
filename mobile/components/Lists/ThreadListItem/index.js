@@ -8,14 +8,22 @@ import ThreadCommunityInfo from './ThreadCommunityInfo';
 import Facepile from '../../Facepile';
 import ErrorBoundary from '../../ErrorBoundary';
 
-type ThreadListItemType = {
+type Props = {
   thread: GetThreadType,
   activeChannel?: string,
   activeCommunity?: string,
   onPressHandler: Function,
 };
 
-export class ThreadListItem extends Component<ThreadListItemType> {
+export class ThreadListItem extends Component<Props> {
+  shouldComponentUpdate(nextProps: Props) {
+    const currProps = this.props;
+    if (nextProps.thread.id !== currProps.thread.id) return true;
+    if (nextProps.thread.lastActive !== currProps.thread.lastActive)
+      return true;
+    return false;
+  }
+
   render() {
     const {
       thread,

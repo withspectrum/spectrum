@@ -36,7 +36,7 @@ class FullscreenNullState extends React.Component<Props> {
               <Icon
                 glyph={icon ? icon : 'flag'}
                 size={96}
-                color={theme => theme.text.alt}
+                color={theme => theme.bg.border}
               />
             </FullscreenNullStateIcon>
           )}

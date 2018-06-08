@@ -2,9 +2,8 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { View } from 'react-native';
-import Text from '../Text';
 import ViewNetworkHandler from '../ViewNetworkHandler';
-import { ThreadListItem } from '../Lists';
+import { ThreadListItem, LoadingListItem } from '../Lists';
 import InfiniteList from '../InfiniteList';
 import Loading from '../Loading';
 import type { ThreadConnectionType } from '../../../shared/graphql/fragments/community/communityThreadConnection';
@@ -19,7 +18,7 @@ import ErrorBoundary from '../ErrorBoundary';
   See 'gql/community/communityThreads.js' for an example of the prop mapping in action
 */
 
-import { CenteredView } from './style';
+import { FullscreenNullState } from '../NullStates';
 
 type State = {
   subscription: ?Function,
@@ -36,6 +35,7 @@ type Props = {|
   activeCommunity?: string,
   // This is necessary so we can listen to updates
   channels?: string[],
+  noThreadsFallback?: any,
   data: {
     subscribeToUpdatedThreads: Function,
     fetchMore: () => Promise<any>,
@@ -120,16 +120,15 @@ class ThreadFeed extends Component<Props, State> {
       isFetchingMore,
       isRefetching,
       channels,
+      noThreadsFallback: NoThreadsFallback,
       ...flatListProps
     } = this.props;
-
-    if (isLoading) {
-      return <Loading />;
-    }
 
     if (threadConnection && threadConnection.edges.length > 0) {
       return (
         <View data-cy="thread-feed" style={{ flex: 1 }}>
+          {isRefetching && <LoadingListItem />}
+
           <InfiniteList
             data={threadConnection.edges}
             renderItem={({ item }) => (
@@ -163,18 +162,24 @@ class ThreadFeed extends Component<Props, State> {
       );
     }
 
+    if (isLoading) {
+      return <Loading />;
+    }
+
     if (hasError) {
-      return (
-        <CenteredView>
-          <Text type="body">Error!</Text>
-        </CenteredView>
-      );
+      return <FullscreenNullState />;
+    }
+
+    if (NoThreadsFallback) {
+      return <NoThreadsFallback />;
     }
 
     return (
-      <CenteredView>
-        <Text type="body">Nothing here yet!</Text>
-      </CenteredView>
+      <FullscreenNullState
+        title={'No threads were found'}
+        subtitle={''}
+        icon={'thread'}
+      />
     );
   }
 }
