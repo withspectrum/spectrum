@@ -4,6 +4,7 @@ import Nav from './components/nav';
 import Support from './support';
 import Features from './features';
 import Pricing from './pricing';
+import Concierge from './concierge';
 import Home from './home';
 import Terms from './terms';
 import Privacy from './privacy';
@@ -19,6 +20,9 @@ class Pages extends React.Component<Props> {
     switch (this.props.match.path) {
       case '/support': {
         return <Support {...this.props} />;
+      }
+      case '/pricing/concierge': {
+        return <Concierge {...this.props} />;
       }
       case '/pricing': {
         return <Pricing {...this.props} />;

@@ -205,6 +205,7 @@ class Routes extends React.Component<{||}> {
                 <Route path="/terms.html" component={Pages} />
                 <Route path="/privacy.html" component={Pages} />
                 <Route path="/code-of-conduct" component={Pages} />
+                <Route path="/pricing/concierge" component={Pages} />
                 <Route path="/pricing" component={Pages} />
                 <Route path="/support" component={Pages} />
                 <Route path="/features" component={Pages} />

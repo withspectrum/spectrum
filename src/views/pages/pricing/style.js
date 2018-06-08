@@ -2,6 +2,7 @@
 import styled, { css } from 'styled-components';
 import { Button } from 'src/components/buttons';
 import { hexa, zIndex } from 'src/components/globals';
+import Link from 'src/components/link';
 
 export const ContentContainer = styled.div`
   padding: 128px 32px 72px;
@@ -510,8 +511,8 @@ export const FeaturePrice = styled.span`
 export const FeatureWrapper = styled.div`
   display: grid;
   grid-template-columns: auto 1fr auto;
-  grid-template-rows: min-content;
-  grid-template-areas: 'icon title price' '. description description';
+  grid-template-rows: repeat(2, min-content);
+  grid-template-areas: 'icon title price' '. description description' '. render render';
   color: ${props => props.theme[props.color].default};
   padding: 16px 0;
   align-items: center;
@@ -532,6 +533,11 @@ export const FeatureWrapper = styled.div`
   }
 `;
 
+export const FeatureRender = styled.div`
+  grid-area: render;
+  margin-top: 16px;
+`;
+
 export const FeatureTitle = styled.p`
   grid-area: title;
   font-size: 17px;
@@ -549,4 +555,17 @@ export const FeatureDescription = styled.p`
   color: ${props => props.theme.text.alt};
   padding-right: 24px;
   margin-top: 8px;
+`;
+
+export const ConciergeLink = styled(Link)`
+  display: flex !important;
+  flex: 1 !important;
+
+  button {
+    display: flex;
+    flex: 1 0 auto;
+    width: 100%;
+    font-size: 16px;
+    margin-top: 0 !important;
+  }
 `;

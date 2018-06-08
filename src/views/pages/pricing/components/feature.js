@@ -6,6 +6,7 @@ import {
   FeatureTitle,
   FeatureDescription,
   FeaturePrice,
+  FeatureRender,
 } from '../style';
 
 type Props = {
@@ -15,6 +16,7 @@ type Props = {
   color?: string,
   priceLabel?: string,
   hideIconsOnMobile?: boolean,
+  render?: Function,
 };
 
 const Feature = (props: Props) => {
@@ -24,6 +26,7 @@ const Feature = (props: Props) => {
     icon = 'checkmark',
     color = 'success',
     priceLabel,
+    render,
   } = props;
 
   return (
@@ -32,6 +35,7 @@ const Feature = (props: Props) => {
       <FeatureTitle>{title}</FeatureTitle>
       {subtitle && <FeatureDescription>{subtitle}</FeatureDescription>}
       {priceLabel && <FeaturePrice color={color}>{priceLabel}</FeaturePrice>}
+      {render && <FeatureRender>{render()}</FeatureRender>}
     </FeatureWrapper>
   );
 };
