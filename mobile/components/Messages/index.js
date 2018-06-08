@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import { View } from 'react-native';
-import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../ViewNetworkHandler';
 import Text from '../Text';
@@ -14,8 +13,8 @@ import { withCurrentUser } from '../../components/WithCurrentUser';
 import RoboText from './RoboText';
 import Author from './Author';
 
+import type { NavigationProps } from 'react-navigation';
 import type { FlatListProps } from 'react-native';
-import type { Navigation } from 'react-navigation';
 import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection.js';
 import type { ThreadParticipantType } from '../../../shared/graphql/fragments/thread/threadParticipant';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
@@ -25,7 +24,7 @@ type Props = {
   ...$Exact<FlatListProps>,
   isLoading: boolean,
   hasError: boolean,
-  navigation: Navigation,
+  navigation: NavigationProps,
   currentUser: GetUserType,
   data: {
     ...$Exact<ThreadMessageConnectionType>,
@@ -157,6 +156,4 @@ class Messages extends Component<Props> {
   }
 }
 
-export default compose(viewNetworkHandler, withNavigation, withCurrentUser)(
-  Messages
-);
+export default compose(viewNetworkHandler, withCurrentUser)(Messages);

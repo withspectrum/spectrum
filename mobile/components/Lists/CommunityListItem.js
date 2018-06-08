@@ -7,14 +7,14 @@ import type { GetCommunityType } from '../../../shared/graphql/queries/community
 
 type CommunityListItemType = {
   community: GetCommunityType,
-  onPress: Function,
+  onPressHandler: Function,
 };
 
 export class CommunityListItem extends Component<CommunityListItemType> {
   render() {
-    const { community, onPress } = this.props;
+    const { community, onPressHandler } = this.props;
     return (
-      <ListItem onPress={onPress}>
+      <ListItem onPressHandler={onPressHandler}>
         <AvatarWrapper>
           <Avatar src={community.profilePhoto} size={40} variant="square" />
         </AvatarWrapper>

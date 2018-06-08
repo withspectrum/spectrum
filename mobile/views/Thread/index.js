@@ -20,6 +20,7 @@ import ActionBar from './components/ActionBar';
 import type { GetThreadType } from '../../../shared/graphql/queries/thread/getThread';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import { Wrapper, ThreadMargin } from './style';
+import type { NavigationProps } from 'react-navigation';
 
 const ThreadMessages = getThreadMessageConnection(Messages);
 
@@ -29,6 +30,7 @@ type Props = {
   sendMessage: Function,
   quotedMessage: ?string,
   currentUser: GetUserType,
+  navigation: NavigationProps,
   data: {
     thread?: GetThreadType,
   },
@@ -53,7 +55,7 @@ class Thread extends Component<Props> {
   };
 
   render() {
-    const { data, isLoading, hasError, currentUser } = this.props;
+    const { data, isLoading, hasError, currentUser, navigation } = this.props;
 
     if (data.thread) {
       const createdAt = new Date(data.thread.createdAt).getTime();
@@ -66,7 +68,7 @@ class Thread extends Component<Props> {
           <ScrollView style={{ flex: 1, width: '100%' }} testID="e2e-thread">
             <CommunityHeader thread={thread} />
             <ThreadMargin>
-              <Byline author={thread.author} />
+              <Byline navigation={navigation} author={thread.author} />
               <Text bold type="title1">
                 {thread.content.title}
               </Text>
@@ -86,7 +88,7 @@ class Thread extends Component<Props> {
                 title: 'Look at this thread I found on Spectrum',
               }}
             />
-            <ThreadMessages id={thread.id} />
+            <ThreadMessages navigation={navigation} id={thread.id} />
           </ScrollView>
 
           {currentUser && (

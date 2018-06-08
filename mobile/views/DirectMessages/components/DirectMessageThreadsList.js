@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import compose from 'recompose/compose';
-import { withNavigation } from 'react-navigation';
 import InfiniteList from '../../../components/InfiniteList';
 import Text from '../../../components/Text';
 import ViewNetworkHandler, {
@@ -26,7 +25,7 @@ type Props = {
 };
 
 const DirectMessageThreadsList = (props: Props) => {
-  const { isLoading, hasError, data: { user } } = props;
+  const { isLoading, hasError, data: { user }, navigation } = props;
   if (user) {
     const { pageInfo, edges } = user.directMessageThreadsConnection;
     return (
@@ -40,8 +39,8 @@ const DirectMessageThreadsList = (props: Props) => {
           return (
             <DirectMessageListItem
               key={thread.id}
-              onPress={() =>
-                props.navigation.navigate({
+              onPressHandler={() =>
+                navigation.navigate({
                   routeName: 'DirectMessageThread',
                   key: thread.id,
                   params: {
@@ -70,8 +69,6 @@ const DirectMessageThreadsList = (props: Props) => {
   return <Text>No DM Threads yet</Text>;
 };
 
-export default compose(
-  withNavigation,
-  getCurrentUserDMThreadConnection,
-  ViewNetworkHandler
-)(DirectMessageThreadsList);
+export default compose(getCurrentUserDMThreadConnection, ViewNetworkHandler)(
+  DirectMessageThreadsList
+);

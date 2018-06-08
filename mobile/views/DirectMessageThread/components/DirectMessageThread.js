@@ -19,6 +19,7 @@ import getDirectMessageThread, {
 import getDirectMessageThreadMessageConnection from '../../../../shared/graphql/queries/directMessageThread/getDirectMessageThreadMessageConnection';
 import type { GetUserType } from '../../../../shared/graphql/queries/user/getUser';
 import sendDirectMessage from '../../../../shared/graphql/mutations/message/sendDirectMessage';
+import type { NavigationProps } from 'react-navigation';
 
 const DirectMessageThreadMessages = getDirectMessageThreadMessageConnection(
   Messages
@@ -29,6 +30,7 @@ type Props = {
   id: string,
   sendDirectMessage: Function,
   currentUser: GetUserType,
+  navigation: NavigationProps,
   data: {
     directMessageThread?: GetDirectMessageThreadType,
   },
@@ -53,6 +55,7 @@ class DirectMessageThread extends Component<Props> {
       hasError,
       data: { directMessageThread },
       currentUser,
+      navigation,
     } = this.props;
 
     if (directMessageThread) {
@@ -62,6 +65,7 @@ class DirectMessageThread extends Component<Props> {
       return (
         <View style={{ flex: 1 }}>
           <DirectMessageThreadMessages
+            navigation={navigation}
             id={directMessageThread.id}
             ListHeaderComponent={() => (
               <Column

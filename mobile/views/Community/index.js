@@ -43,8 +43,7 @@ const RemoteThreadItem = compose(getThreadById, withNavigation)(
       <ThreadListItem
         activeCommunity={data.thread.community.id}
         thread={data.thread}
-        navigation={navigation}
-        onPress={() =>
+        onPressHandler={() =>
           navigation.navigate({
             routeName: `Thread`,
             key: data.thread.id,
@@ -60,7 +59,7 @@ const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 
 class Community extends Component<Props> {
   render() {
-    const { data: { community }, isLoading, hasError } = this.props;
+    const { data: { community }, isLoading, hasError, navigation } = this.props;
 
     if (community) {
       return (
@@ -68,6 +67,7 @@ class Community extends Component<Props> {
           <StatusBar barStyle="light-content" />
 
           <CommunityThreadFeed
+            navigation={navigation}
             id={community.id}
             activeCommunity={community.id}
             ListHeaderComponent={

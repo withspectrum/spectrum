@@ -11,7 +11,7 @@ type ThreadListItemType = {
   thread: GetThreadType,
   activeChannel?: string,
   activeCommunity?: string,
-  onPress: Function,
+  onPressHandler: Function,
 };
 
 export class ThreadListItem extends Component<ThreadListItemType> {
@@ -20,7 +20,7 @@ export class ThreadListItem extends Component<ThreadListItemType> {
       thread,
       activeChannel,
       activeCommunity,
-      onPress = () => {},
+      onPressHandler,
     } = this.props;
 
     if (!thread.id) return null;
@@ -32,7 +32,7 @@ export class ThreadListItem extends Component<ThreadListItemType> {
     ];
 
     return (
-      <ListItem onPress={onPress}>
+      <ListItem onPressHandler={onPressHandler}>
         <TextColumnContainer>
           <ThreadCommunityInfo
             activeChannel={activeChannel}

@@ -20,17 +20,17 @@ import getPushNotificationToken from '../../utils/get-push-notification-token';
 import type { State as ReduxState } from '../../reducers';
 import type { AuthenticationState } from '../../reducers/authentication';
 import { parseNotification } from './parseNotification';
-import type { Navigation } from '../../utils/types';
 import { deduplicateChildren } from '../../utils/deduplicate-children';
 import { NotificationListItem } from '../../components/Lists';
 import { withCurrentUser } from '../../components/WithCurrentUser';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
+import type { NavigationProps } from 'react-navigation';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
   mutate: (token: any) => Promise<any>,
   authentication: AuthenticationState,
-  navigation: Navigation,
+  navigation: NavigationProps,
   currentUser: GetUserType,
   data: {
     subscribeToNewNotifications: Function,
