@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { Text, View, StatusBar } from 'react-native';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
@@ -26,6 +26,7 @@ import {
   Description,
   ThreadFeedDivider,
 } from './style';
+import ErrorBoundary from '../../components/ErrorBoundary';
 
 type Props = {
   isLoading: boolean,
@@ -72,7 +73,7 @@ class Community extends Component<Props> {
             id={community.id}
             activeCommunity={community.id}
             ListHeaderComponent={
-              <Fragment>
+              <ErrorBoundary fallbackComponent={null}>
                 <CoverPhotoContainer>
                   {community.coverPhoto ? (
                     <CoverPhoto
@@ -107,7 +108,7 @@ class Community extends Component<Props> {
                     activeCommunity={community.id}
                   />
                 )}
-              </Fragment>
+              </ErrorBoundary>
             }
           />
         </Wrapper>

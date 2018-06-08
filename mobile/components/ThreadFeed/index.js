@@ -9,6 +9,7 @@ import InfiniteList from '../InfiniteList';
 import Loading from '../Loading';
 import type { ThreadConnectionType } from '../../../shared/graphql/fragments/community/communityThreadConnection';
 import type { FlatListProps } from 'react-native';
+import ErrorBoundary from '../ErrorBoundary';
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -132,18 +133,20 @@ class ThreadFeed extends Component<Props, State> {
           <InfiniteList
             data={threadConnection.edges}
             renderItem={({ item }) => (
-              <ThreadListItem
-                thread={item.node}
-                activeChannel={activeChannel}
-                activeCommunity={activeCommunity}
-                onPressHandler={() =>
-                  navigation.navigate({
-                    routeName: `Thread`,
-                    key: item.node.id,
-                    params: { id: item.node.id },
-                  })
-                }
-              />
+              <ErrorBoundary fallbackComponent={null}>
+                <ThreadListItem
+                  thread={item.node}
+                  activeChannel={activeChannel}
+                  activeCommunity={activeCommunity}
+                  onPressHandler={() =>
+                    navigation.navigate({
+                      routeName: `Thread`,
+                      key: item.node.id,
+                      params: { id: item.node.id },
+                    })
+                  }
+                />
+              </ErrorBoundary>
             )}
             loadingIndicator={<Loading />}
             fetchMore={this.fetchMore}

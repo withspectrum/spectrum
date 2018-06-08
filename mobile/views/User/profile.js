@@ -1,11 +1,12 @@
 // @flow
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { Text, View, StatusBar } from 'react-native';
 import compose from 'recompose/compose';
 import getUserThreadConnection from '../../../shared/graphql/queries/user/getUserThreadConnection';
 import ThreadFeed from '../../components/ThreadFeed';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import Loading from '../../components/Loading';
+import ErrorBoundary from '../../components/ErrorBoundary';
 
 import {
   Wrapper,
@@ -65,7 +66,7 @@ class User extends Component<Props, State> {
             kind={this.state.feed}
             id={data.user.id}
             ListHeaderComponent={
-              <Fragment>
+              <ErrorBoundary fallbackComponent={null}>
                 <CoverPhotoContainer>
                   {data.user.coverPhoto ? (
                     <CoverPhoto
@@ -103,7 +104,7 @@ class User extends Component<Props, State> {
                     <TabLabel isActive={feed === 'creator'}>Threads</TabLabel>
                   </ThreadFeedTab>
                 </ThreadFeedTabContainer>
-              </Fragment>
+              </ErrorBoundary>
             }
           />
         </Wrapper>

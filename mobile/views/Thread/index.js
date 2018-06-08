@@ -22,6 +22,7 @@ import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import { Wrapper, ThreadMargin } from './style';
 import type { NavigationProps } from 'react-navigation';
 import Loading from '../../components/Loading';
+import ErrorBoundary from '../../components/ErrorBoundary';
 
 const ThreadMessages = getThreadMessageConnection(Messages);
 
@@ -67,33 +68,51 @@ class Thread extends Component<Props> {
       return (
         <Wrapper>
           <ScrollView style={{ flex: 1, width: '100%' }} testID="e2e-thread">
-            <CommunityHeader thread={thread} />
+            <ErrorBoundary fallbackComponent={null}>
+              <CommunityHeader thread={thread} />
+            </ErrorBoundary>
+
             <ThreadMargin>
-              <Byline navigation={navigation} author={thread.author} />
+              <ErrorBoundary fallbackComponent={null}>
+                <Byline navigation={navigation} author={thread.author} />
+              </ErrorBoundary>
+
               <Text bold type="title1">
                 {thread.content.title}
               </Text>
+
               <Text color={props => props.theme.text.alt} type="subhead">
                 {convertTimestampToDate(createdAt)}
               </Text>
+
               {thread.content.body && (
                 <ThreadContent
                   rawContentState={JSON.parse(thread.content.body)}
                 />
               )}
             </ThreadMargin>
-            <ActionBar
-              content={{
-                url: `https://spectrum.chat/thread/${thread.id}`,
-                message: `https://spectrum.chat/thread/${thread.id}`,
-                title: 'Look at this thread I found on Spectrum',
-              }}
-            />
-            <ThreadMessages navigation={navigation} id={thread.id} />
+
+            <ErrorBoundary fallbackComponent={null}>
+              <ActionBar
+                content={{
+                  url: `https://spectrum.chat/thread/${thread.id}`,
+                  message: `https://spectrum.chat/thread/${thread.id}`,
+                  title: 'Look at this thread I found on Spectrum',
+                }}
+              />
+            </ErrorBoundary>
+
+            <ErrorBoundary>
+              <ThreadMessages navigation={navigation} id={thread.id} />
+            </ErrorBoundary>
           </ScrollView>
 
           {currentUser && (
-            <ChatInput onSubmit={text => this.sendMessage(text, currentUser)} />
+            <ErrorBoundary>
+              <ChatInput
+                onSubmit={text => this.sendMessage(text, currentUser)}
+              />
+            </ErrorBoundary>
           )}
         </Wrapper>
       );

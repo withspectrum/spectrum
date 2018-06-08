@@ -14,6 +14,7 @@ import sentencify from '../../../../shared/sentencify';
 import { timeDifferenceShort } from '../../../../shared/time-difference';
 import { DirectMessageListItem } from '../../../components/Lists';
 import Loading from '../../../components/Loading';
+import ErrorBoundary from '../../../components/ErrorBoundary';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
@@ -38,25 +39,27 @@ const DirectMessageThreadsList = (props: Props) => {
           );
 
           return (
-            <DirectMessageListItem
-              key={thread.id}
-              onPressHandler={() =>
-                navigation.navigate({
-                  routeName: 'DirectMessageThread',
-                  key: thread.id,
-                  params: {
-                    id: thread.id,
-                  },
-                })
-              }
-              participants={participants}
-              title={sentencify(participants.map(({ name }) => name))}
-              subtitle={thread.snippet}
-              timestamp={timeDifferenceShort(
-                Date.now(),
-                new Date(thread.threadLastActive)
-              )}
-            />
+            <ErrorBoundary fallbackComponent={null}>
+              <DirectMessageListItem
+                key={thread.id}
+                onPressHandler={() =>
+                  navigation.navigate({
+                    routeName: 'DirectMessageThread',
+                    key: thread.id,
+                    params: {
+                      id: thread.id,
+                    },
+                  })
+                }
+                participants={participants}
+                title={sentencify(participants.map(({ name }) => name))}
+                subtitle={thread.snippet}
+                timestamp={timeDifferenceShort(
+                  Date.now(),
+                  new Date(thread.threadLastActive)
+                )}
+              />
+            </ErrorBoundary>
           );
         }}
         hasNextPage={pageInfo.hasNextPage}

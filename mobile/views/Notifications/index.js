@@ -26,6 +26,7 @@ import { withCurrentUser } from '../../components/WithCurrentUser';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import type { NavigationProps } from 'react-navigation';
 import Loading from '../../components/Loading';
+import ErrorBoundary from '../../components/ErrorBoundary';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
@@ -164,11 +165,13 @@ class Notifications extends Component<Props, State> {
           <InfiniteList
             data={parsed}
             renderItem={({ item }) => (
-              <NotificationListItem
-                navigation={navigation}
-                notification={item}
-                currentUserId={currentUser.id}
-              />
+              <ErrorBoundary fallbackComponent={null}>
+                <NotificationListItem
+                  navigation={navigation}
+                  notification={item}
+                  currentUserId={currentUser.id}
+                />
+              </ErrorBoundary>
             )}
             loadingIndicator={<Loading />}
             hasNextPage={notifications.pageInfo.hasNextPage}
