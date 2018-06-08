@@ -269,7 +269,7 @@ export class NotificationListItem extends Component<Props> {
 
   render() {
     return (
-      <ListItem onPress={this.getOnPress()}>
+      <ListItem onPressHandler={this.getOnPress()}>
         <IconWrapper>{this.renderIcon()}</IconWrapper>
 
         <TextColumnContainer>

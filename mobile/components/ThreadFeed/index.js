@@ -133,10 +133,16 @@ class ThreadFeed extends Component<Props, State> {
             data={threadConnection.edges}
             renderItem={({ item }) => (
               <ThreadListItem
-                navigation={navigation}
                 thread={item.node}
                 activeChannel={activeChannel}
                 activeCommunity={activeCommunity}
+                onPressHandler={() =>
+                  navigation.navigate({
+                    routeName: `Thread`,
+                    key: item.node.id,
+                    params: { id: item.node.id },
+                  })
+                }
               />
             )}
             loadingIndicator={<Text>Loading...</Text>}

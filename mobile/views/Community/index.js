@@ -43,7 +43,13 @@ const RemoteThreadItem = compose(getThreadById, withNavigation)(
       <ThreadListItem
         activeCommunity={data.thread.community.id}
         thread={data.thread}
-        navigation={navigation}
+        onPressHandler={() =>
+          navigation.navigate({
+            routeName: `Thread`,
+            key: data.thread.id,
+            params: { id: data.thread.id },
+          })
+        }
       />
     );
   }

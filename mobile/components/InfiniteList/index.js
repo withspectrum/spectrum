@@ -13,6 +13,12 @@ type Item = {
   },
 };
 
+// NOTE(@mxstbr): We store the data length and keys in state to make FlatList re-render and the right times
+type State = {
+  count: number,
+  keys: string,
+};
+
 type Props = {
   data: Array<mixed>,
   renderItem: Function,
@@ -29,10 +35,10 @@ type Props = {
   ...$Exact<FlatListProps>,
 };
 
-class InfiniteList extends React.Component<Props> {
+class InfiniteList extends React.Component<Props, State> {
   static defaultProps = {
     refreshing: false,
-    threshold: 0.75,
+    threshold: 0.5,
     keyExtractor: (item: Item, index: number) => {
       const key = item.id || (item.node && item.node.id);
 
@@ -47,6 +53,43 @@ class InfiniteList extends React.Component<Props> {
       return key;
     },
   };
+
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      count: props.data.length,
+      keys: JSON.stringify(props.data.map(props.keyExtractor)),
+    };
+  }
+
+  static getDerivedStateFromProps(next: Props, state: State) {
+    if (
+      next.data.length !== state.count ||
+      next.data.map(next.keyExtractor) !== state.keys
+    ) {
+      return {
+        count: next.data.length,
+        keys: JSON.stringify(next.data.map(next.keyExtractor)),
+      };
+    }
+    return null;
+  }
+
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
+    const currProps = this.props;
+    const currState = this.state;
+    // Props changed
+    if (currProps.hasNextPage !== nextProps.hasNextPage) return true;
+    if (currProps.refetching !== nextProps.refetching) return true;
+
+    // Data changed
+    if (currState.count !== nextState.count) return true;
+    const nextKeys = nextProps.data.map(nextProps.keyExtractor);
+    if (currState.keys !== JSON.stringify(nextKeys)) return true;
+
+    return false;
+  }
 
   onEndReached = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
     // NOTE(@mxstbr): FlatList calls onEndReached 5 times synchronously on first render with a negative
@@ -63,6 +106,7 @@ class InfiniteList extends React.Component<Props> {
   render() {
     const {
       refetching,
+      refreshing,
       refetch,
       renderItem,
       data,
@@ -73,18 +117,19 @@ class InfiniteList extends React.Component<Props> {
       separator,
       style = {},
       emptyState,
+      fetchMore,
       ...rest
     } = this.props;
 
     return (
       <FlatList
         {...rest}
-        refreshing={refetching}
+        refreshing={refetching || refreshing}
         keyExtractor={keyExtractor}
         onRefresh={refetch}
         data={data}
         // Need to pass this to make sure the list re-renders when new items are added
-        extraData={{ length: data ? data.length : 0 }}
+        extraData={this.state}
         renderItem={renderItem}
         onEndReached={this.onEndReached}
         onEndReachedThreshold={threshold}

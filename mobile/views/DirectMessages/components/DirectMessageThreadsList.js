@@ -26,7 +26,7 @@ type Props = {
 };
 
 const DirectMessageThreadsList = (props: Props) => {
-  const { isLoading, hasError, data: { user } } = props;
+  const { isLoading, hasError, data: { user }, navigation } = props;
   if (user) {
     const { pageInfo, edges } = user.directMessageThreadsConnection;
     return (
@@ -40,8 +40,8 @@ const DirectMessageThreadsList = (props: Props) => {
           return (
             <DirectMessageListItem
               key={thread.id}
-              onPress={() =>
-                props.navigation.navigate({
+              onPressHandler={() =>
+                navigation.navigate({
                   routeName: 'DirectMessageThread',
                   key: thread.id,
                   params: {
