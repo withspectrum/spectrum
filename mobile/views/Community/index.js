@@ -1,6 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import { StatusBar } from 'react-native';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import {
@@ -67,8 +66,6 @@ class Community extends Component<Props> {
     if (community) {
       return (
         <Wrapper>
-          <StatusBar barStyle="light-content" />
-
           <CommunityThreadFeed
             navigation={navigation}
             id={community.id}

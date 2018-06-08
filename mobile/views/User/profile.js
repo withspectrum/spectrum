@@ -1,6 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import { StatusBar } from 'react-native';
 import compose from 'recompose/compose';
 import getUserThreadConnection from '../../../shared/graphql/queries/user/getUserThreadConnection';
 import ThreadFeed from '../../components/ThreadFeed';
@@ -61,7 +60,6 @@ class User extends Component<Props, State> {
     if (data.user) {
       return (
         <Wrapper>
-          <StatusBar barStyle="light-content" />
           <UserThreadFeed
             navigation={navigation}
             kind={this.state.feed}
