@@ -6,6 +6,7 @@ import Text from '../../components/Text';
 import { withCurrentUser } from '../../components/WithCurrentUser';
 import DirectMessageThread from './components/DirectMessageThread';
 import { Wrapper } from './style';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 
 type Props = {
@@ -29,11 +30,13 @@ class DirectMessageThreadView extends React.Component<Props> {
 
     return (
       <Wrapper>
-        <DirectMessageThread
-          navigation={navigation}
-          currentUser={currentUser}
-          id={id}
-        />
+        <ErrorBoundary alert>
+          <DirectMessageThread
+            navigation={navigation}
+            currentUser={currentUser}
+            id={id}
+          />
+        </ErrorBoundary>
       </Wrapper>
     );
   }

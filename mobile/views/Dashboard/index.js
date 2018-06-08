@@ -30,7 +30,7 @@ class Dashboard extends Component<Props> {
     return (
       <Wrapper>
         <View testID="welcome" style={{ flex: 1 }}>
-          <ErrorBoundary>
+          <ErrorBoundary alert>
             <EverythingThreadFeed navigation={navigation} />
           </ErrorBoundary>
         </View>

@@ -73,7 +73,7 @@ class Community extends Component<Props> {
             id={community.id}
             activeCommunity={community.id}
             ListHeaderComponent={
-              <ErrorBoundary fallbackComponent={null}>
+              <ErrorBoundary alert>
                 <CoverPhotoContainer>
                   {community.coverPhoto ? (
                     <CoverPhoto

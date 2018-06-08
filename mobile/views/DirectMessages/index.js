@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import DirectMessageThreadsList from './components/DirectMessageThreadsList';
 import { Wrapper } from './style';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import type { NavigationProps } from 'react-navigation';
 
 type Props = {
@@ -14,7 +15,9 @@ class DirectMessages extends Component<Props> {
 
     return (
       <Wrapper>
-        <DirectMessageThreadsList navigation={navigation} />
+        <ErrorBoundary alert>
+          <DirectMessageThreadsList navigation={navigation} />
+        </ErrorBoundary>
       </Wrapper>
     );
   }

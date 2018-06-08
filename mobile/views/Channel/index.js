@@ -53,7 +53,7 @@ class Channel extends Component<Props> {
             activeChannel={channel.id}
             activeCommunity={channel.community.id}
             ListHeaderComponent={
-              <ErrorBoundary fallbackComponent={null}>
+              <ErrorBoundary alert>
                 <CoverPhotoContainer>
                   {channel.community.coverPhoto ? (
                     <CoverPhoto
