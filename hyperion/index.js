@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('hyperion');
+import 'raf/polyfill';
 debug('Hyperion starting...');
 debug('logging with debug enabled');
 require('isomorphic-fetch'); // prevent https://github.com/withspectrum/spectrum/issues/3032
