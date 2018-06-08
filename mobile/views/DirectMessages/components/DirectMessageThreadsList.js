@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import compose from 'recompose/compose';
-import { withNavigation } from 'react-navigation';
 import InfiniteList from '../../../components/InfiniteList';
 import Text from '../../../components/Text';
 import ViewNetworkHandler, {
@@ -14,6 +13,9 @@ import type { NavigationProps } from 'react-navigation';
 import sentencify from '../../../../shared/sentencify';
 import { timeDifferenceShort } from '../../../../shared/time-difference';
 import { DirectMessageListItem } from '../../../components/Lists';
+import Loading from '../../../components/Loading';
+import ErrorBoundary from '../../../components/ErrorBoundary';
+import { FullscreenNullState } from '../../../components/NullStates';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
@@ -26,7 +28,7 @@ type Props = {
 };
 
 const DirectMessageThreadsList = (props: Props) => {
-  const { isLoading, hasError, data: { user } } = props;
+  const { isLoading, hasError, data: { user }, navigation } = props;
   if (user) {
     const { pageInfo, edges } = user.directMessageThreadsConnection;
     return (
@@ -38,40 +40,40 @@ const DirectMessageThreadsList = (props: Props) => {
           );
 
           return (
-            <DirectMessageListItem
-              key={thread.id}
-              onPress={() =>
-                props.navigation.navigate({
-                  routeName: 'DirectMessageThread',
-                  key: thread.id,
-                  params: {
-                    id: thread.id,
-                  },
-                })
-              }
-              participants={participants}
-              title={sentencify(participants.map(({ name }) => name))}
-              subtitle={thread.snippet}
-              timestamp={timeDifferenceShort(
-                Date.now(),
-                new Date(thread.threadLastActive)
-              )}
-            />
+            <ErrorBoundary fallbackComponent={null}>
+              <DirectMessageListItem
+                key={thread.id}
+                onPressHandler={() =>
+                  navigation.navigate({
+                    routeName: 'DirectMessageThread',
+                    key: thread.id,
+                    params: {
+                      id: thread.id,
+                    },
+                  })
+                }
+                participants={participants}
+                title={sentencify(participants.map(({ name }) => name))}
+                subtitle={thread.snippet}
+                timestamp={timeDifferenceShort(
+                  Date.now(),
+                  new Date(thread.threadLastActive)
+                )}
+              />
+            </ErrorBoundary>
           );
         }}
         hasNextPage={pageInfo.hasNextPage}
         fetchMore={props.data.fetchMore}
-        loadingIndicator={<Text>Loading...</Text>}
+        loadingIndicator={<Loading />}
       />
     );
   }
-  if (isLoading) return <Text>Loading...</Text>;
-  if (hasError) return <Text>Error</Text>;
+  if (isLoading) return <Loading />;
+  if (hasError) return <FullscreenNullState />;
   return <Text>No DM Threads yet</Text>;
 };
 
-export default compose(
-  withNavigation,
-  getCurrentUserDMThreadConnection,
-  ViewNetworkHandler
-)(DirectMessageThreadsList);
+export default compose(getCurrentUserDMThreadConnection, ViewNetworkHandler)(
+  DirectMessageThreadsList
+);

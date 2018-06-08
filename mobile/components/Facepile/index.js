@@ -1,8 +1,7 @@
 // @flow
 import React from 'react';
 import compose from 'recompose/compose';
-import { withNavigation } from 'react-navigation';
-import type { Navigation } from '../../utils/types';
+import { withNavigation, type NavigationProps } from 'react-navigation';
 import type { UserInfoType } from '../../../shared/graphql/fragments/user/userInfo';
 import {
   FacepileContainer,
@@ -37,7 +36,7 @@ const messageAvatars = (list, navigation, maxCount) => {
 type FacepileProps = {
   users: Array<?UserInfoType>,
   maxCount: number,
-  navigation: Navigation,
+  navigation: NavigationProps,
 };
 
 const Facepile = ({ users, maxCount = 5, navigation }: FacepileProps) => {

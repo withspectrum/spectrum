@@ -1,6 +1,7 @@
 // @flow
 import Sentry from 'sentry-expo';
-import React from 'react';
+import React, { Fragment } from 'react';
+import { StatusBar } from 'react-native';
 import { SecureStore, AppLoading } from 'expo';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
@@ -86,7 +87,10 @@ class App extends React.Component<{}, State> {
         <ApolloProvider client={client}>
           <ThemeProvider theme={theme}>
             <ActionSheetProvider>
-              {!token ? <Login /> : <TabBar />}
+              <Fragment>
+                <StatusBar barStyle={'default'} />
+                {!token ? <Login /> : <TabBar />}
+              </Fragment>
             </ActionSheetProvider>
           </ThemeProvider>
         </ApolloProvider>

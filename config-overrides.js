@@ -129,8 +129,8 @@ module.exports = function override(config, env) {
   if (process.env.NODE_ENV === 'development') {
     config.plugins.push(
       WriteFilePlugin({
-        // Don't match hot-update files
-        test: /^((?!(hot-update)).)*$/g,
+        log: true,
+        useHashIndex: false,
       })
     );
   }

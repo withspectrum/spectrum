@@ -5,17 +5,20 @@ import TouchableOpacity from '../TouchableOpacity';
 import { ListItemView } from './style';
 
 type ListItemProps = {
-  onPress: Function,
+  onPressHandler: Function,
+  onLongPressHandler?: Function,
   children?: any,
 };
 
 export class ListItem extends Component<ListItemProps> {
   render() {
-    const { onPress, children } = this.props;
-
+    const { onPressHandler, onLongPressHandler, children } = this.props;
     return (
       <ListItemView>
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity
+          onPress={onPressHandler}
+          onLongPress={onLongPressHandler ? onLongPressHandler : null}
+        >
           <Row>{children}</Row>
         </TouchableOpacity>
       </ListItemView>

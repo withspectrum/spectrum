@@ -52,12 +52,8 @@ const routeConfiguration = {
 
 const tabBarConfiguration = {
   tabBarOptions: {
-    // tint color is passed to text and icons (if enabled) on the tab bar
-    activeTintColor: theme.bg.default,
-    inactiveTintColor: theme.text.placeholder,
-    // background color is for the tab component
-    activeBackgroundColor: theme.bg.reverse,
-    inactiveBackgroundColor: theme.bg.reverse,
+    activeTintColor: theme.brand.alt,
+    inactiveTintColor: theme.text.alt,
     labelStyle: {
       fontWeight: 'bold',
       marginBottom: 3,

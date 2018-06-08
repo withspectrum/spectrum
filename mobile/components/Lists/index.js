@@ -5,6 +5,7 @@ import { NotificationListItem } from './NotificationListItem';
 import { UserListItem } from './UserListItem';
 import { CommunityListItem } from './CommunityListItem';
 import { ThreadListItem } from './ThreadListItem';
+import { LoadingListItem } from './LoadingListItem';
 
 export {
   ListItem,
@@ -13,4 +14,5 @@ export {
   UserListItem,
   CommunityListItem,
   ThreadListItem,
+  LoadingListItem,
 };

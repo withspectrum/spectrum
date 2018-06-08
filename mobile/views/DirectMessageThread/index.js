@@ -6,6 +6,7 @@ import Text from '../../components/Text';
 import { withCurrentUser } from '../../components/WithCurrentUser';
 import DirectMessageThread from './components/DirectMessageThread';
 import { Wrapper } from './style';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 
 type Props = {
@@ -22,14 +23,20 @@ type Props = {
 class DirectMessageThreadView extends React.Component<Props> {
   render() {
     const id = idx(this.props, props => props.navigation.state.params.id);
-    const { currentUser } = this.props;
+    const { currentUser, navigation } = this.props;
     if (!id) return <Text>Non-existant DM thread</Text>;
 
     if (!currentUser) return null;
 
     return (
       <Wrapper>
-        <DirectMessageThread currentUser={currentUser} id={id} />
+        <ErrorBoundary alert>
+          <DirectMessageThread
+            navigation={navigation}
+            currentUser={currentUser}
+            id={id}
+          />
+        </ErrorBoundary>
       </Wrapper>
     );
   }
