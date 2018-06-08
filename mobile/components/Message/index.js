@@ -81,7 +81,6 @@ class Message extends React.Component<Props, State> {
   };
 
   render() {
-    console.log('rendering message');
     const { message } = this.state;
     const {
       me,

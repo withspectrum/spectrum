@@ -12,7 +12,6 @@ type ListItemProps = {
 export class ListItem extends Component<ListItemProps> {
   render() {
     const { onPressHandler, children } = this.props;
-    console.log('is rendering list item');
     return (
       <ListItemView>
         <TouchableOpacity onPress={onPressHandler}>
