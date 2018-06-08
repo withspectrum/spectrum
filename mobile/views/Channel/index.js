@@ -1,6 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import { StatusBar } from 'react-native';
 import compose from 'recompose/compose';
 import {
   getChannelById,
@@ -46,8 +45,6 @@ class Channel extends Component<Props> {
 
       return (
         <Wrapper>
-          <StatusBar barStyle="light-content" />
-
           <ChannelThreadFeed
             navigation={navigation}
             id={channel.id}
