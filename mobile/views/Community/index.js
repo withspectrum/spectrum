@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { Text, View, StatusBar } from 'react-native';
+import { StatusBar } from 'react-native';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import {
