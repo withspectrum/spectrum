@@ -400,8 +400,8 @@ export const MarkAllSeen = styled.span`
 export const SkipLink = Tab.withComponent('a').extend`
   grid-area: logo;
   overflow: hidden;
-  height: 1px;
-  width: 1px;
+  height: 0;
+  width: 0;
 
   &:focus {
     height: auto;
