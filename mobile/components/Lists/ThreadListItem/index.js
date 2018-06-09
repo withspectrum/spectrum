@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Share } from 'react-native';
 import { connectActionSheet } from '@expo/react-native-action-sheet';
 import compose from 'recompose/compose';
@@ -20,6 +21,7 @@ import deleteThreadMutation, {
 } from '../../../../shared/graphql/mutations/thread/deleteThread';
 import pinThreadMutation from '../../../../shared/graphql/mutations/community/pinCommunityThread';
 import triggerDeleteAlert from '../../DeleteAlert';
+import { addToastWithTimeout } from '../../../actions/toasts';
 
 type Props = {
   thread: GetThreadType,
@@ -33,6 +35,7 @@ type Props = {
   pinThread: Function,
   deleteThread: Function,
   toggleThreadNotifications: Function,
+  dispatch: Function,
   // refetches the parent query that resolved this thread - used when
   // a thread is deleted and we want to refetch the parent query, regardless
   // of where that query was called from
@@ -75,7 +78,25 @@ class ThreadListItemHandlers extends Component<Props> {
   };
 
   toggleLockThread = () => {
-    const { thread, setThreadLock } = this.props;
+    const { thread, setThreadLock, dispatch, navigation } = this.props;
+
+    dispatch(
+      addToastWithTimeout({
+        type: thread.isLocked ? 'success' : 'error',
+        message: thread.isLocked
+          ? 'Conversation unlocked'
+          : 'Conversation locked',
+        onPressHandler: () =>
+          navigation.navigate({
+            routeName: 'Thread',
+            key: thread.id,
+            params: {
+              id: thread.id,
+            },
+          }),
+        icon: 'private',
+      })
+    );
 
     return setThreadLock({
       threadId: thread.id,
@@ -295,6 +316,7 @@ class ThreadListItemHandlers extends Component<Props> {
 }
 
 export const ThreadListItem = compose(
+  connect(),
   setThreadLockMutation,
   deleteThreadMutation,
   pinThreadMutation,
