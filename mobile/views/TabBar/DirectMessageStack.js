@@ -17,7 +17,6 @@ const DMStack = createStackNavigator(
       screen: DirectMessageThread,
       navigationOptions: ({ navigation }) => ({
         headerTitle: idx(navigation, _ => _.state.params.title) || '',
-        tabBarVisible: false,
       }),
     },
     ...BaseStack,

@@ -17,6 +17,20 @@ import {
   ProfileIcon,
 } from './style';
 
+const tabBarVisible = navigation => {
+  const { routes } = navigation.state;
+  const nonTabbarRoutes = ['Thread', 'DirectMessageThread'];
+
+  let showTabbar = true;
+  routes.forEach(route => {
+    if (nonTabbarRoutes.indexOf(route.routeName) >= 0) {
+      showTabbar = false;
+    }
+  });
+
+  return showTabbar;
+};
+
 const routeConfiguration = {
   Home: {
     screen: HomeStack,
@@ -59,6 +73,9 @@ const tabBarConfiguration = {
       marginBottom: 3,
     },
   },
+  navigationOptions: ({ navigation }) => ({
+    tabBarVisible: tabBarVisible(navigation),
+  }),
 };
 
 // NOTE(@mxstbr): I figured this out manually by simply inspecting in the simulator

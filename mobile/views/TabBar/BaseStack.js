@@ -13,7 +13,6 @@ const BaseStack = {
     screen: withMappedNavigationProps(Thread),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
       headerTitle: navigation.state.params.title || 'Thread',
-      tabBarVisible: false,
     }),
   },
   Community: {
