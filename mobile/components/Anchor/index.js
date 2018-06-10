@@ -1,6 +1,7 @@
 // @flow
 import React, { type Node } from 'react';
-import { Text, Share } from 'react-native';
+import { Share } from 'react-native';
+import { AnchorText } from './style';
 import { WebBrowser } from 'expo';
 
 type LinkProps = {
@@ -43,9 +44,9 @@ export default class Anchor extends React.Component<Props> {
 
   render() {
     return (
-      <Text {...this.props} onPress={this.handlePress}>
+      <AnchorText {...this.props} onPress={this.handlePress}>
         {this.props.children}
-      </Text>
+      </AnchorText>
     );
   }
 }

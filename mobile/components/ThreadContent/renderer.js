@@ -3,29 +3,29 @@ import React from 'react';
 import { View } from 'react-native';
 import redraft from 'redraft';
 import Anchor from '../Anchor';
-import Text from '../Text';
-import Codeblock from '../Codeblock';
+import { CodeBlock, InlineCode } from '../Codeblock';
 import IFrame from '../IFrame';
+import { BodyText, HeaderOne, HeaderTwo } from './style';
 
 const renderer = {
   inline: {
     BOLD: (children, { key }) => (
-      <Text bold key={`bold-${key}`}>
+      <BodyText bold key={`bold-${key}`}>
         {children}
-      </Text>
+      </BodyText>
     ),
     ITALIC: (children, { key }) => (
-      <Text italic key={`italic-${key}`}>
+      <BodyText italic key={`italic-${key}`}>
         {children}
-      </Text>
+      </BodyText>
     ),
     UNDERLINE: (children, { key }) => (
-      <Text underline key={`underline-${key}`}>
+      <BodyText underline key={`underline-${key}`}>
         {children}
-      </Text>
+      </BodyText>
     ),
     CODE: (children, { key }) => (
-      <Codeblock key={`codeblock-${key}`}>{children}</Codeblock>
+      <InlineCode key={`inline-code-${key}`}>{children}</InlineCode>
     ),
   },
   entities: {
@@ -45,42 +45,40 @@ const renderer = {
     ),
     unstyled: (children, { keys }) =>
       children.map((child, index) => (
-        <Text type="body" key={keys[index] || `unstyled-${index}`}>
-          {child}
-        </Text>
+        <BodyText key={keys[index] || `unstyled-${index}`}>{child}</BodyText>
       )),
     // Note: Headings are offset by one because we always assume the title
     // of the thread to be level 1, so a level 1 heading inside the thread
     // body has to be level 2
     'header-one': (children, { keys }) =>
       children.map((child, index) => (
-        <Text type="title2" key={keys[index] || `header-one-${index}`}>
+        <HeaderOne key={keys[index] || `header-one-${index}`}>
           {child}
-        </Text>
+        </HeaderOne>
       )),
     'header-two': (children, { keys }) =>
       children.map((child, index) => (
-        <Text type="title3" key={keys[index] || `header-two-${index}`}>
+        <HeaderTwo key={keys[index] || `header-two-${index}`}>
           {child}
-        </Text>
+        </HeaderTwo>
       )),
     // blockquote: (children, { keys }) =>
     'unordered-list-item': (children, { depth, keys }) => {
       return children.map((item, index) => (
-        <Text key={keys[index] || `uli-${index}`} type="body">
+        <BodyText key={keys[index] || `uli-${index}`}>
           {'\u2022'} {item}
-        </Text>
+        </BodyText>
       ));
     },
     'ordered-list-item': (children, { depth, keys }) => {
       return children.map((item, index) => (
-        <Text key={keys[index] || `oli-${index}`} type="body">
+        <BodyText key={keys[index] || `oli-${index}`}>
           {index}. {item}
-        </Text>
+        </BodyText>
       ));
     },
     'code-block': (children, { keys }) => (
-      <Codeblock key={`codeblock-${keys.join('|')}`}>{children}</Codeblock>
+      <CodeBlock key={`codeblock-${keys.join('|')}`}>{children}</CodeBlock>
     ),
   },
 };

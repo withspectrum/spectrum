@@ -48,7 +48,7 @@ const RemoteThreadItem = compose(getThreadById, withNavigation)(
         thread={data.thread}
         onPressHandler={() =>
           navigation.navigate({
-            routeName: `Thread`,
+            routeName: 'Thread',
             key: data.thread.id,
             params: { id: data.thread.id },
           })

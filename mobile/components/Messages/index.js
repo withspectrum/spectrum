@@ -6,7 +6,6 @@ import viewNetworkHandler from '../ViewNetworkHandler';
 import Text from '../Text';
 import Message from '../Message';
 import InfiniteList from '../InfiniteList';
-import { ThreadMargin } from '../../views/Thread/style';
 import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
 import { convertTimestampToDate } from '../../../src/helpers/utils';
 import { withCurrentUser } from '../../components/WithCurrentUser';
@@ -112,32 +111,30 @@ class Messages extends Component<Props> {
             return (
               <View key={initialMessage.id || 'robo'}>
                 {unseenRobo}
-                <ThreadMargin>
-                  <Author
-                    onPress={() =>
-                      navigation.navigate({
-                        routeName: `User`,
-                        key: author.user.id,
-                        params: { id: author.user.id },
-                      })
-                    }
-                    avatar={!me}
-                    author={author}
-                    me={me}
-                  />
-                  <View>
-                    {group.map(message => {
-                      return (
-                        <Message
-                          key={message.id}
-                          me={me}
-                          message={message}
-                          threadId={this.props.id}
-                        />
-                      );
-                    })}
-                  </View>
-                </ThreadMargin>
+                <Author
+                  onPress={() =>
+                    navigation.navigate({
+                      routeName: `User`,
+                      key: author.user.id,
+                      params: { id: author.user.id },
+                    })
+                  }
+                  avatar={!me}
+                  author={author}
+                  me={me}
+                />
+                <View>
+                  {group.map(message => {
+                    return (
+                      <Message
+                        key={message.id}
+                        me={me}
+                        message={message}
+                        threadId={this.props.id}
+                      />
+                    );
+                  })}
+                </View>
               </View>
             );
           }}

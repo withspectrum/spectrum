@@ -25,8 +25,11 @@ const QuotedMessageById = getMessageById(props => {
 // by combining the navigation state + the redux state
 const mapStateToProps = (state, ownProps): * => {
   const { state: navigationState } = ownProps.navigation;
+  const threadViews = ['Thread'];
   const threadId =
-    navigationState.routeName === 'Thread' ? navigationState.params.id : null;
+    threadViews.indexOf(navigationState.routeName) >= 0
+      ? navigationState.params.id
+      : null;
   return {
     quotedMessage: threadId ? state.message.quotedMessage[threadId] : null,
   };

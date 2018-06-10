@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import withSafeView from '../../components/SafeAreaView';
-import Text from '../../components/Text';
 import ThreadContent from '../../components/ThreadContent';
 import Messages from '../../components/Messages';
 import ChatInput from '../../components/ChatInput';
@@ -14,16 +13,19 @@ import getThreadMessageConnection from '../../../shared/graphql/queries/thread/g
 import sendMessageMutation from '../../../shared/graphql/mutations/message/sendMessage';
 import { convertTimestampToDate } from '../../../src/helpers/utils';
 import { withCurrentUser } from '../../components/WithCurrentUser';
-import CommunityHeader from './components/CommunityHeader';
-import Byline from './components/Byline';
-import ActionBar from './components/ActionBar';
 import type { GetThreadType } from '../../../shared/graphql/queries/thread/getThread';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
-import { Wrapper, ThreadMargin } from './style';
 import type { NavigationProps } from 'react-navigation';
 import Loading from '../../components/Loading';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import { FullscreenNullState } from '../../components/NullStates';
+import { UserListItem } from '../../components/Lists';
+import {
+  ThreadContentContainer,
+  ThreadTitle,
+  ThreadTimestamp,
+  Wrapper,
+} from './style';
 
 const ThreadMessages = getThreadMessageConnection(Messages);
 
@@ -69,39 +71,30 @@ class Thread extends Component<Props> {
       return (
         <Wrapper>
           <ScrollView style={{ flex: 1, width: '100%' }} testID="e2e-thread">
-            <ErrorBoundary fallbackComponent={null}>
-              <CommunityHeader thread={thread} />
-            </ErrorBoundary>
+            <UserListItem
+              onPressHandler={() =>
+                navigation.navigate({
+                  routeName: 'User',
+                  key: thread.author.user.id,
+                  params: { id: thread.author.user.id },
+                })
+              }
+              user={thread.author.user}
+            />
 
-            <ThreadMargin>
-              <ErrorBoundary fallbackComponent={null}>
-                <Byline navigation={navigation} author={thread.author} />
-              </ErrorBoundary>
+            <ThreadContentContainer>
+              <ThreadTitle>{thread.content.title}</ThreadTitle>
 
-              <Text bold type="title1">
-                {thread.content.title}
-              </Text>
-
-              <Text color={props => props.theme.text.alt} type="subhead">
+              <ThreadTimestamp>
                 {convertTimestampToDate(createdAt)}
-              </Text>
+              </ThreadTimestamp>
 
               {thread.content.body && (
                 <ThreadContent
                   rawContentState={JSON.parse(thread.content.body)}
                 />
               )}
-            </ThreadMargin>
-
-            <ErrorBoundary fallbackComponent={null}>
-              <ActionBar
-                content={{
-                  url: `https://spectrum.chat/thread/${thread.id}`,
-                  message: `https://spectrum.chat/thread/${thread.id}`,
-                  title: 'Look at this thread I found on Spectrum',
-                }}
-              />
-            </ErrorBoundary>
+            </ThreadContentContainer>
 
             <ErrorBoundary>
               <ThreadMessages navigation={navigation} id={thread.id} />
