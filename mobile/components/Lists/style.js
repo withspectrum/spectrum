@@ -2,16 +2,19 @@
 import { Row, Column } from '../Flex';
 import { StyleSheet } from 'react-native';
 import styled from 'styled-components/native';
+import TouchableOpacity from '../TouchableOpacity';
 
-export const ListItemView = styled.View`
+export const ListItemView = styled(TouchableOpacity)`
   display: flex;
   flex: 1;
   flex-grow: 1;
   flex-shrink: 0;
   flex-basis: 100%;
   flex-direction: column;
-  border-bottom-color: ${props => props.theme.bg.hairline};
-  border-bottom-width: ${StyleSheet.hairlineWidth};
+  border-bottom-color: ${props =>
+    props.noDivider ? 'transparent' : props.theme.bg.hairline};
+  border-bottom-width: ${props =>
+    props.noDivider ? 0 : StyleSheet.hairlineWidth};
   background: ${props => props.theme.bg.default};
   position: relative;
   padding: 12px 16px 12px 0;
@@ -48,10 +51,10 @@ export const TitleTextContainer = styled(Row)`
 `;
 
 export const Title = styled.Text`
-  font-size: 16px;
-  font-weight: 700;
-  color: ${props => props.theme.text.default};
-  margin-bottom: 4px;
+  font-size: 17px;
+  font-weight: 500;
+  color: ${props =>
+    props.color ? props.color(props.theme) : props.theme.text.default};
 `;
 
 export const Subtitle = styled.Text`
@@ -79,4 +82,20 @@ export const Timestamp = styled.Text`
 
 export const FacepileContainer = styled.View`
   margin-bottom: 4px;
+`;
+
+export const ViewForwardContainer = styled.View`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  right: -8px;
+`;
+
+export const LoadingSpinnerContainer = styled.View`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  right: -8px;
 `;
