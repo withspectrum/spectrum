@@ -19,7 +19,7 @@ import {
 
 const tabBarVisible = navigation => {
   const { routes } = navigation.state;
-  const nonTabbarRoutes = ['Thread', 'DirectMessageThread'];
+  const nonTabbarRoutes = ['Thread', 'ThreadDetail', 'DirectMessageThread'];
 
   let showTabbar = true;
   routes.forEach(route => {
