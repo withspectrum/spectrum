@@ -10,6 +10,15 @@ type Props = {
   theme: Object,
 };
 
+class LoadingSpinnerWithTheme extends React.Component<Props> {
+  render() {
+    const { size = 'small', color = this.props.theme.text.alt } = this.props;
+    return <ActivityIndicator size={size} color={color} />;
+  }
+}
+
+export const LoadingSpinner = withTheme(LoadingSpinnerWithTheme);
+
 class Loading extends Component<Props> {
   render() {
     const { size = 'small', color = this.props.theme.text.alt } = this.props;
