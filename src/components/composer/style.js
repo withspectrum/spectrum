@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { hexa, FlexCol, zIndex } from '../globals';
+import { hexa, FlexRow, FlexCol, zIndex } from '../globals';
 
 export const Container = styled(FlexCol)`
   background-color: ${props => props.theme.bg.default};
@@ -14,9 +14,16 @@ export const Container = styled(FlexCol)`
 
   @media (max-width: 768px) {
     grid-template-rows: 48px 64px 1fr 64px;
-    grid-template-areas: 'title' 'body' 'footer';
+    grid-template-areas: 'title' 'body' 'body' 'footer';
     max-width: 100vw;
     height: 100vh;
+  }
+`;
+
+export const ActionsContainer = styled(FlexRow)`
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-self: flex-end;
   }
 `;
 
@@ -29,29 +36,51 @@ export const Actions = styled(FlexCol)`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  align-items: center;
   position: relative;
   grid-area: footer;
-
   @media (max-width: 768px) {
-    padding: 8px;
     z-index: ${zIndex.chrome + 1};
     border-radius: 0;
     border: 0;
     box-shadow: none;
     background-color: transparent;
-
     > div {
       width: 100%;
-
       > button:first-of-type {
         display: none;
       }
-
       > button:last-of-type {
         width: 100%;
       }
     }
+  }
+`;
+
+export const Dropdowns = styled(FlexRow)`
+  display: flex;
+  align-items: center;
+  grid-area: header;
+  background-color: ${props => props.theme.bg.wash};
+  z-index: ${zIndex.composer};
+  span {
+    font-size: 14px;
+    font-weight: 500;
+    color: ${props => props.theme.text.alt};
+    margin-left: 16px;
+    line-height: 1;
+    vertical-align: middle;
+    position: relative;
+    top: 1px;
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    padding: 8px;
+    width: 100%;
+    justify-content: flex-start;
+    margin-bottom: 5%;
   }
 `;
 
@@ -72,7 +101,7 @@ const Selector = styled.select`
 
   @media (max-width: 768px) {
     flex: auto;
-    max-width: calc(50% - 12px);
+    max-width: 100%;
   }
 `;
 
@@ -101,12 +130,14 @@ export const ThreadInputs = styled(FlexCol)`
   @media (max-width: 768px) {
     max-width: 100vw;
     padding: 32px;
+    height: 100vh;
     padding-left: 48px;
   }
 
   @media (max-width: 480px) {
     max-width: 100vw;
     padding: 16px;
+    height: 100vh;
     padding-left: 48px;
   }
 `;

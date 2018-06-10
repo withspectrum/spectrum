@@ -25,14 +25,16 @@ import type { GetComposerType } from 'shared/graphql/queries/composer/getCompose
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
 import { getLinkPreviewFromUrl } from '../../helpers/utils';
 import { TextButton, Button } from '../buttons';
-import { FlexRow } from '../../components/globals';
 import { LoadingSelect } from '../loading';
+import Titlebar from '../../views/titlebar';
 import {
   Container,
   ThreadDescription,
   ThreadTitle,
   ThreadInputs,
+  ActionsContainer,
   Actions,
+  Dropdowns,
   RequiredSelector,
   DisabledWarning,
 } from './style';
@@ -578,6 +580,7 @@ class ComposerWithData extends Component<Props, State> {
         websocketConnection !== 'reconnected');
     return (
       <Container>
+        <Titlebar provideBack title={'New conversation'} noComposer />
         <ThreadInputs>
           <Textarea
             data-cy="composer-title-input"
@@ -615,52 +618,54 @@ class ComposerWithData extends Component<Props, State> {
             </DisabledWarning>
           )}
 
-          <FlexRow>
+          <ActionsContainer>
             <TextButton hoverColor="warn.alt" onClick={this.onCancelClick}>
               Cancel
             </TextButton>
-            {!dataExists ? (
-              <LoadingSelect />
-            ) : (
-              <RequiredSelector
-                data-cy="composer-community-selector"
-                onChange={this.setActiveCommunity}
-                value={activeCommunity}
-              >
-                <option key={-1} value="">
-                  Select community
-                </option>
-                {availableCommunities.map(community => {
-                  return (
-                    <option key={community.id} value={community.id}>
-                      {community.name}
-                    </option>
-                  );
-                })}
-              </RequiredSelector>
-            )}
-            {!dataExists ? (
-              <LoadingSelect />
-            ) : (
-              <RequiredSelector
-                data-cy="composer-channel-selector"
-                onChange={this.setActiveChannel}
-                value={activeChannel}
-              >
-                <option key={-1} value="">
-                  Select channel
-                </option>
-                {availableChannels
-                  .filter(channel => channel.community.id === activeCommunity)
-                  .map(channel => {
+            <Dropdowns>
+              {!dataExists ? (
+                <LoadingSelect />
+              ) : (
+                <RequiredSelector
+                  data-cy="composer-community-selector"
+                  onChange={this.setActiveCommunity}
+                  value={activeCommunity}
+                >
+                  <option key={-1} value="">
+                    Select community
+                  </option>
+                  {availableCommunities.map(community => {
                     return (
-                      <option key={channel.id} value={channel.id}>
-                        {channel.name}
+                      <option key={community.id} value={community.id}>
+                        {community.name}
                       </option>
                     );
                   })}
-              </RequiredSelector>
-            )}
+                </RequiredSelector>
+              )}
+              {!dataExists ? (
+                <LoadingSelect />
+              ) : (
+                <RequiredSelector
+                  data-cy="composer-channel-selector"
+                  onChange={this.setActiveChannel}
+                  value={activeChannel}
+                >
+                  <option key={-1} value="">
+                    Select channel
+                  </option>
+                  {availableChannels
+                    .filter(channel => channel.community.id === activeCommunity)
+                    .map(channel => {
+                      return (
+                        <option key={channel.id} value={channel.id}>
+                          {channel.name}
+                        </option>
+                      );
+                    })}
+                </RequiredSelector>
+              )}
+            </Dropdowns>
             <Button
               data-cy="composer-publish-button"
               onClick={this.publishThread}
@@ -677,7 +682,7 @@ class ComposerWithData extends Component<Props, State> {
             >
               Publish
             </Button>
-          </FlexRow>
+          </ActionsContainer>
         </Actions>
       </Container>
     );
