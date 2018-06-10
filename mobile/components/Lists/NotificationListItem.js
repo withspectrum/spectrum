@@ -202,11 +202,11 @@ export class NotificationListItem extends Component<Props> {
     let id;
     switch (notification.event) {
       case 'MESSAGE_CREATED': {
-        type = 'Thread';
+        type = 'ThreadPreviouslyViewed';
         break;
       }
       case 'REACTION_CREATED': {
-        type = 'Thread';
+        type = 'ThreadPreviouslyViewed';
         id = notification.context.payload.threadId;
         break;
       }

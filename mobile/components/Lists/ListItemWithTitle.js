@@ -11,24 +11,19 @@ import {
   ViewForwardContainer,
 } from './style';
 
-type UserListItemType = {
-  user: Object,
+type Props = {
+  title: string,
   onPressHandler: Function,
   noDivider?: boolean,
 };
 
-export class UserListItem extends Component<UserListItemType> {
+export class ListItemWithTitle extends Component<Props> {
   render() {
-    const { user, onPressHandler, noDivider = false } = this.props;
+    const { title, onPressHandler, noDivider = false } = this.props;
     return (
       <ListItem onPressHandler={onPressHandler} noDivider={noDivider}>
-        <AvatarWrapper>
-          <Avatar src={user.profilePhoto} size={40} />
-        </AvatarWrapper>
-
         <TextColumnContainer>
-          <Title numberOfLines={1}>{user.name}</Title>
-          <Subtitle numberOfLines={1}>@{user.username}</Subtitle>
+          <Title numberOfLines={1}>{title}</Title>
         </TextColumnContainer>
 
         <ViewForwardContainer>
