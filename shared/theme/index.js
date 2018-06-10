@@ -76,6 +76,16 @@ export const theme = {
     wash: '#FFEDF6',
     border: '#FFCCE5',
   },
+  ios: {
+    red: '#FF3B30',
+    orange: '#FF9500',
+    yellow: '#FFCC00',
+    green: '#4CD964',
+    tealBlue: '#5AC8FA',
+    blue: '#007AFF',
+    purple: '#5856D6',
+    pink: '#FF2D55',
+  },
 };
 
 export default theme;
