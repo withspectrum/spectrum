@@ -3,7 +3,7 @@ import React from 'react';
 import { View } from 'react-native';
 import redraft from 'redraft';
 import Anchor from '../Anchor';
-import { CodeBlock, InlineCode } from '../Codeblock';
+import { CodeBlock, InlineCodeBlock } from '../Codeblock';
 import IFrame from '../IFrame';
 import { BodyText, HeaderOne, HeaderTwo } from './style';
 
@@ -25,7 +25,7 @@ const renderer = {
       </BodyText>
     ),
     CODE: (children, { key }) => (
-      <InlineCode key={`inline-code-${key}`}>{children}</InlineCode>
+      <InlineCodeBlock key={`inline-code-${key}`}>{children}</InlineCodeBlock>
     ),
   },
   entities: {
