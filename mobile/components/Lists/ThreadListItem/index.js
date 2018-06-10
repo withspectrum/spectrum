@@ -231,6 +231,9 @@ class ThreadListItemHandlers extends Component<Props> {
       case 'Thread': {
         return navigation.goBack();
       }
+      case 'ThreadDetail': {
+        return navigation.pop(2);
+      }
       default: {
         return () => {};
       }
