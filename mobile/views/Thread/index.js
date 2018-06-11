@@ -24,6 +24,7 @@ import type { NavigationProps } from 'react-navigation';
 import Loading from '../../components/Loading';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import { FullscreenNullState } from '../../components/NullStates';
+import { track, events, transformations } from '../../utils/analytics';
 
 const ThreadMessages = getThreadMessageConnection(Messages);
 
@@ -40,6 +41,16 @@ type Props = {
 };
 
 class Thread extends Component<Props> {
+  trackView = () => {
+    const { data: { thread } } = this.props;
+    if (!thread) return;
+    track(events.THREAD_VIEWED, {
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
+    });
+  };
+
   setTitle = () => {
     const { data: { thread }, navigation } = this.props;
     let title;
@@ -53,10 +64,21 @@ class Thread extends Component<Props> {
   };
 
   componentDidMount() {
+    this.trackView();
     this.setTitle();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prev) {
+    const curr = this.props;
+    const first = !prev.data.thread && curr.data.thread;
+    const changed =
+      prev.data.thread &&
+      curr.data.thread &&
+      prev.data.thread.id !== curr.data.thread.id;
+    if (first || changed) {
+      this.trackView();
+    }
+
     this.setTitle();
   }
 

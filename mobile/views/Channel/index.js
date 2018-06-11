@@ -9,6 +9,7 @@ import getChannelThreadConnection from '../../../shared/graphql/queries/channel/
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import ThreadFeed from '../../components/ThreadFeed';
 import Loading from '../../components/Loading';
+import { track, transformations, events } from '../../utils/analytics';
 
 import {
   Wrapper,
@@ -39,6 +40,15 @@ type Props = {
 const ChannelThreadFeed = compose(getChannelThreadConnection)(ThreadFeed);
 
 class Channel extends Component<Props> {
+  trackView = () => {
+    const { data: { channel } } = this.props;
+    if (!channel) return;
+    track(events.CHANNEL_VIEWED, {
+      channel: transformations.analyticsChannel(channel),
+      community: transformations.analyticsCommunity(channel.community),
+    });
+  };
+
   setTitle = () => {
     const { data: { channel }, navigation } = this.props;
     let title;
@@ -50,12 +60,26 @@ class Channel extends Component<Props> {
     if (navigation.state.params.title === title) return;
     navigation.setParams({ title });
   };
-  componentDidUpdate() {
-    this.setTitle();
-  }
+
   componentDidMount() {
+    this.trackView();
     this.setTitle();
   }
+
+  componentDidUpdate(prev) {
+    const curr = this.props;
+    const first = !prev.data.channel && curr.data.channel;
+    const changed =
+      prev.data.channel &&
+      curr.data.channel &&
+      prev.data.channel.id !== curr.data.channel.id;
+    if (first || changed) {
+      this.trackView();
+    }
+
+    this.setTitle();
+  }
+
   render() {
     const { data, isLoading, hasError, navigation } = this.props;
     if (data.channel) {

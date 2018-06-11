@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import DirectMessageThreadsList from './components/DirectMessageThreadsList';
 import { Wrapper } from './style';
 import ErrorBoundary from '../../components/ErrorBoundary';
+import { track, events } from '../../utils/analytics';
 import type { NavigationProps } from 'react-navigation';
 
 type Props = {
@@ -10,6 +11,14 @@ type Props = {
 };
 
 class DirectMessages extends Component<Props> {
+  trackView = () => {
+    track(events.DIRECT_MESSAGES_VIEWED);
+  };
+
+  componentDidMount() {
+    this.trackView();
+  }
+
   render() {
     const { navigation } = this.props;
 

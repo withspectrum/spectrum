@@ -12,6 +12,7 @@ import ThreadFeed from '../../components/ThreadFeed';
 import { ThreadListItem } from '../../components/Lists';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
 import Loading from '../../components/Loading';
+import { track, events, transformations } from '../../utils/analytics';
 
 import {
   Wrapper,
@@ -61,6 +62,14 @@ const RemoteThreadItem = compose(getThreadById, withNavigation)(
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 
 class Community extends Component<Props> {
+  trackView = () => {
+    const { data: { community } } = this.props;
+    if (!community) return;
+    track(events.COMMUNITY_VIEWED, {
+      community: transformations.analyticsCommunity(community),
+    });
+  };
+
   setTitle = () => {
     const { data: { community }, navigation } = this.props;
     let title;
@@ -72,12 +81,26 @@ class Community extends Component<Props> {
     if (navigation.state.params.title === title) return;
     navigation.setParams({ title });
   };
-  componentDidUpdate() {
-    this.setTitle();
-  }
+
   componentDidMount() {
+    this.trackView();
     this.setTitle();
   }
+
+  componentDidUpdate(prev) {
+    const curr = this.props;
+    const first = !prev.data.community && curr.data.community;
+    const changed =
+      prev.data.community &&
+      curr.data.community &&
+      prev.data.community.id !== curr.data.community.id;
+    if (first || changed) {
+      this.trackView();
+    }
+
+    this.setTitle();
+  }
+
   render() {
     const { data: { community }, isLoading, hasError, navigation } = this.props;
 
