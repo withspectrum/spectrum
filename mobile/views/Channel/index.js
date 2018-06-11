@@ -25,11 +25,12 @@ import {
 } from './style';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import { FullscreenNullState } from '../../components/NullStates';
+import type { NavigationProps } from 'react-navigation';
 
 type Props = {
   isLoading: boolean,
   hasError: boolean,
-  navigation: Object,
+  navigation: NavigationProps,
   data: {
     channel?: GetChannelType,
   },
@@ -38,6 +39,23 @@ type Props = {
 const ChannelThreadFeed = compose(getChannelThreadConnection)(ThreadFeed);
 
 class Channel extends Component<Props> {
+  setTitle = () => {
+    const { data: { channel }, navigation } = this.props;
+    let title;
+    if (channel) {
+      title = channel.name;
+    } else {
+      title = 'Loading channel...';
+    }
+    if (navigation.state.params.title === title) return;
+    navigation.setParams({ title });
+  };
+  componentDidUpdate() {
+    this.setTitle();
+  }
+  componentDidMount() {
+    this.setTitle();
+  }
   render() {
     const { data, isLoading, hasError, navigation } = this.props;
     if (data.channel) {
