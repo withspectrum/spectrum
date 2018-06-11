@@ -14,7 +14,6 @@ type Props = {|
   message: string,
   onPressHandler: Function,
   icon?: ?GlyphTypes,
-  z: number,
 |};
 
 export default class Toast extends React.Component<Props> {
@@ -23,11 +22,10 @@ export default class Toast extends React.Component<Props> {
       message = 'Toasty! this a asjd al aisdj alsdkj alskdfj alsdkfj alskdfj alsdkf jalsdkf jasldfkj',
       icon,
       onPressHandler,
-      z,
     } = this.props;
 
     return (
-      <ToastWrapper z={z + 1} onPress={onPressHandler}>
+      <ToastWrapper onPress={onPressHandler}>
         <React.Fragment>
           {icon && (
             <IconContainer>

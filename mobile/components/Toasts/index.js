@@ -3,12 +3,14 @@ import * as React from 'react';
 import { withTheme } from 'styled-components';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { Animated } from 'react-native';
+import { Animated, Dimensions } from 'react-native';
 import { removeToast, type ToastType } from '../../actions/toasts';
 import type { State as ReduxState } from '../../reducers';
 import Toast from './Toast';
-import { Container } from './style';
+import { Container, ToastContainer } from './style';
 import { getToastColorFromType } from './utils';
+
+const width = Dimensions.get('window').width;
 
 type Props = {|
   toasts: Array<?ToastType>,
@@ -17,74 +19,75 @@ type Props = {|
 |};
 
 type State = {
-  activeToastColor: string,
+  activeToast: ?ToastType,
 };
 
 class Toasts extends React.Component<Props, State> {
-  animatedValue = new Animated.Value(0);
+  leftBlockPosition = new Animated.Value(-width);
   opacityValue = new Animated.Value(0);
-  containerTimeoutTiming = 4000;
-  animationDuration = 200;
+  containerTimeoutTiming = 3000;
+  animationDuration = 250;
   removeToastTimeoutTiming = this.containerTimeoutTiming +
     this.animationDuration;
+  hideContainerTimeout = undefined;
 
   state = {
-    activeToastColor: 'transparent',
+    activeToast: null,
   };
 
   componentDidUpdate(prevProps) {
-    console.log('toasts did update');
-
     const currProps = this.props;
-    const { theme, dispatch } = currProps;
+    const { dispatch } = currProps;
 
     const receivedNewToast = currProps.toasts.length > prevProps.toasts.length;
     const receivedFirstToast =
       prevProps.toasts.length === 0 && currProps.toasts.length === 1;
+    const lastToastRemoved =
+      currProps.toasts.length === 0 && prevProps.toasts.length > 0;
+
+    if (lastToastRemoved) {
+      return this.setState({ activeToast: null });
+    }
+
+    if (currProps.toasts.length === 0) return;
 
     const getActiveToast = () => {
       const toast = currProps.toasts[currProps.toasts.length - 1];
-
       if (!toast) return null;
-
       return {
         ...toast,
-        color: getToastColorFromType(toast.type, theme),
       };
     };
 
-    // received a new toast
-    if (receivedFirstToast) {
+    const setActiveToast = () => {
       const activeToast = getActiveToast();
       if (!activeToast) return;
-
-      this.setState({ activeToastColor: activeToast.color });
-      this.showContainer();
-      setTimeout(() => this.hideContainer(), this.containerTimeoutTiming);
+      this.setState({ activeToast });
       setTimeout(
         () => dispatch(removeToast(activeToast.id)),
         this.removeToastTimeoutTiming
+      );
+    };
+
+    if (receivedFirstToast) {
+      setActiveToast();
+      this.showContainer();
+      this.hideContainerTimeout = setTimeout(
+        () => this.hideContainer(),
+        this.containerTimeoutTiming
       );
       return;
     }
 
     if (receivedNewToast) {
-      const activeToast = getActiveToast();
-      if (!activeToast) return;
-
-      this.setState({ activeToastColor: activeToast.color });
-      setTimeout(() => this.hideContainer(), this.containerTimeoutTiming);
-      setTimeout(
-        () => dispatch(removeToast(activeToast.id)),
-        this.removeToastTimeoutTiming
-      );
-      return;
+      clearTimeout(this.hideContainerTimeout);
+      return setActiveToast();
     }
   }
 
-  animateContainer = (val: 'in' | 'out') => {
-    return Animated.timing(this.animatedValue, {
-      toValue: val === 'in' ? 1 : 0,
+  animateContainerPosition = (val: 'in' | 'out') => {
+    return Animated.timing(this.leftBlockPosition, {
+      toValue: val === 'in' ? 0 : width,
       duration: this.animationDuration,
       useNativeDriver: true,
     });
@@ -100,45 +103,40 @@ class Toasts extends React.Component<Props, State> {
 
   showContainer = () => {
     return Animated.parallel([
-      this.animateContainer('in'),
+      this.animateContainerPosition('in'),
       this.animateContainerOpacity('in'),
     ]).start();
   };
 
   hideContainer = () => {
     Animated.parallel([
-      this.animateContainer('out'),
+      this.animateContainerPosition('out'),
       this.animateContainerOpacity('out'),
     ]).start();
   };
 
   render() {
-    const { toasts } = this.props;
-    if (!toasts || toasts.length === 0) return null;
+    const { theme } = this.props;
+    const { activeToast } = this.state;
+
+    if (!activeToast) return null;
 
     return (
       <Container>
-        <Animated.View
+        <ToastContainer
           style={{
-            backgroundColor: this.state.activeToastColor,
+            backgroundColor: getToastColorFromType(activeToast.type, theme),
             opacity: this.opacityValue,
-            transform: [{ scaleX: this.animatedValue }],
+            transform: [{ translateX: this.leftBlockPosition }],
           }}
         >
-          {toasts.map(toast => {
-            if (!toast) return null;
-            return (
-              <Toast
-                key={toast.id}
-                z={toast.id}
-                icon={toast.icon ? toast.icon : null}
-                type={toast.type}
-                message={toast.message}
-                onPressHandler={toast.onPressHandler}
-              />
-            );
-          })}
-        </Animated.View>
+          <Toast
+            icon={activeToast.icon ? activeToast.icon : null}
+            type={activeToast.type}
+            message={activeToast.message}
+            onPressHandler={activeToast.onPressHandler}
+          />
+        </ToastContainer>
       </Container>
     );
   }

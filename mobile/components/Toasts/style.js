@@ -22,7 +22,6 @@ export const ToastWrapper = styled(TouchableHighlight)`
   justify-content: flex-start;
   flex-direction: row;
   position: relative;
-  z-index: ${props => props.z};
 `;
 
 export const IconContainer = styled.View`
@@ -42,4 +41,10 @@ export const ViewForwardContainer = styled.View`
   align-content: flex-end;
   justify-content: flex-end;
   margin-left: 4px;
+`;
+
+export const ToastContainer = styled(Animated.View)`
+  display: flex;
+  flex: 1;
+  height: 48px;
 `;

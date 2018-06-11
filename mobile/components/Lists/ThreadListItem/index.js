@@ -80,28 +80,46 @@ class ThreadListItemHandlers extends Component<Props> {
   toggleLockThread = () => {
     const { thread, setThreadLock, dispatch, navigation } = this.props;
 
-    dispatch(
-      addToast({
-        type: thread.isLocked ? 'success' : 'error',
-        message: thread.isLocked
-          ? 'Conversation unlocked'
-          : 'Conversation locked',
-        onPressHandler: () =>
-          navigation.navigate({
-            routeName: 'Thread',
-            key: thread.id,
-            params: {
-              id: thread.id,
-            },
-          }),
-        icon: 'private',
-      })
-    );
-
     return setThreadLock({
       threadId: thread.id,
       value: !thread.isLocked,
-    });
+    })
+      .then(() => {
+        return dispatch(
+          addToast({
+            type: 'neutral',
+            message: thread.isLocked
+              ? 'Conversation unlocked'
+              : 'Conversation locked',
+            onPressHandler: () =>
+              navigation.navigate({
+                routeName: 'Thread',
+                key: thread.id,
+                params: {
+                  id: thread.id,
+                },
+              }),
+            icon: 'checkmark',
+          })
+        );
+      })
+      .catch(err => {
+        return dispatch(
+          addToast({
+            type: 'error',
+            message: 'Unable to lock conversation',
+            onPressHandler: () =>
+              navigation.navigate({
+                routeName: 'Thread',
+                key: thread.id,
+                params: {
+                  id: thread.id,
+                },
+              }),
+            icon: 'checkmark',
+          })
+        );
+      });
   };
 
   togglePinThread = () => {
