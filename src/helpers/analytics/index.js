@@ -1,9 +1,12 @@
 // @flow
-import { events } from 'shared/analytics';
-import { track } from './track';
-import { setUser } from './setUser';
-import { unsetUser } from './unsetUser';
-import * as transformations from './transformations';
-require('./raven');
+import { createAmplitudeHelpers } from 'shared/clients/analytics';
+
+const {
+  events,
+  track,
+  setUser,
+  unsetUser,
+  transformations,
+} = createAmplitudeHelpers(window.amplitude);
 
 export { events, track, setUser, unsetUser, transformations };
