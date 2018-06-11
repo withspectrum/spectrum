@@ -6,7 +6,6 @@ export const BodyText = styled.Text`
   font-size: 16px;
   font-weight: ${props => (props.bold ? 700 : 500)};
   line-height: 24;
-  color: ${props => props.theme.text.default};
   font-style: ${props => (props.italic ? 'italic' : 'normal')};
   text-decoration-line: ${props => (props.underline ? 'underline' : 'none')};
 `;
