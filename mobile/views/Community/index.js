@@ -12,6 +12,7 @@ import ThreadFeed from '../../components/ThreadFeed';
 import { ThreadListItem } from '../../components/Lists';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
 import Loading from '../../components/Loading';
+import { track, events, transformations } from '../../utils/analytics';
 
 import {
   Wrapper,
@@ -61,6 +62,30 @@ const RemoteThreadItem = compose(getThreadById, withNavigation)(
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 
 class Community extends Component<Props> {
+  trackView = () => {
+    const { data: { community } } = this.props;
+    if (!community) return;
+    track(events.COMMUNITY_VIEWED, {
+      community: transformations.analyticsCommunity(community),
+    });
+  };
+
+  componentDidMount() {
+    this.trackView();
+  }
+
+  componentDidUpdate(prev) {
+    const curr = this.props;
+    const first = !prev.data.community && curr.data.community;
+    const changed =
+      prev.data.community &&
+      curr.data.community &&
+      prev.data.community.id !== curr.data.community.id;
+    if (first || changed) {
+      this.trackView();
+    }
+  }
+
   render() {
     const { data: { community }, isLoading, hasError, navigation } = this.props;
 
