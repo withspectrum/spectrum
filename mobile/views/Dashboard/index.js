@@ -12,6 +12,7 @@ import {
 } from '../../../shared/graphql/queries/user/getUser';
 import { Wrapper } from './style';
 import ErrorBoundary from '../../components/ErrorBoundary';
+import { track, events } from '../../utils/analytics';
 
 const EverythingThreadFeed = compose(getCurrentUserEverythingFeed)(ThreadFeed);
 
@@ -23,6 +24,10 @@ type Props = {
 };
 
 class Dashboard extends Component<Props> {
+  componentDidMount() {
+    track(events.INBOX_EVERYTHING_VIEWED);
+  }
+
   render() {
     const { navigation } = this.props;
 
