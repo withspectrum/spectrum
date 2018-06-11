@@ -61,6 +61,23 @@ const RemoteThreadItem = compose(getThreadById, withNavigation)(
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 
 class Community extends Component<Props> {
+  setTitle = () => {
+    const { data: { community }, navigation } = this.props;
+    let title;
+    if (community) {
+      title = community.name;
+    } else {
+      title = 'Loading community...';
+    }
+    if (navigation.state.params.title === title) return;
+    navigation.setParams({ title });
+  };
+  componentDidUpdate() {
+    this.setTitle();
+  }
+  componentDidMount() {
+    this.setTitle();
+  }
   render() {
     const { data: { community }, isLoading, hasError, navigation } = this.props;
 

@@ -2,7 +2,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
-import { convertTimestampToDate } from '../../helpers/utils';
+import { convertTimestampToDate } from 'shared/time-formatting';
 import Badge from '../badges';
 import Avatar from '../avatar';
 import Message from '../message';

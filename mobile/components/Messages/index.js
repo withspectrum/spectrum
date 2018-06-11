@@ -8,7 +8,7 @@ import Message from '../Message';
 import InfiniteList from '../InfiniteList';
 import { ThreadMargin } from '../../views/Thread/style';
 import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
-import { convertTimestampToDate } from '../../../src/helpers/utils';
+import { convertTimestampToDate } from '../../../shared/time-formatting';
 import { withCurrentUser } from '../../components/WithCurrentUser';
 import RoboText from './RoboText';
 import Author from './Author';

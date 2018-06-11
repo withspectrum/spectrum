@@ -12,26 +12,26 @@ const BaseStack = {
   Thread: {
     screen: withMappedNavigationProps(Thread),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: navigation.state.params.title || 'Thread',
+      headerTitle: navigation.state.params.title || null,
       tabBarVisible: false,
     }),
   },
   Community: {
     screen: withMappedNavigationProps(Community),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: null,
+      headerTitle: navigation.state.params.title || null,
     }),
   },
   Channel: {
     screen: withMappedNavigationProps(Channel),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: null,
+      headerTitle: navigation.state.params.title || null,
     }),
   },
   User: {
     screen: withMappedNavigationProps(User),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      header: null,
+      headerTitle: navigation.state.params.title || null,
     }),
   },
 };
