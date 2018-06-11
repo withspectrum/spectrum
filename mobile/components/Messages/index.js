@@ -78,22 +78,22 @@ class Messages extends Component<Props> {
               ? initialMessage.author.user.id === currentUser.id
               : false;
 
-            const {
-              isOwner: isChannelOwner,
-              isModerator: isChannelModerator,
-            } = thread.channel.channelPermissions;
-            const {
-              isOwner: isCommunityOwner,
-              isModerator: isCommunityModerator,
-            } = thread.community.communityPermissions;
-            const isModerator =
-              isChannelOwner ||
-              isChannelModerator ||
-              isCommunityOwner ||
-              isCommunityModerator;
-            const canModerate =
-              initialMessage.threadType !== 'directMessageThread' &&
-              (me || isModerator);
+            // const {
+            //   isOwner: isChannelOwner,
+            //   isModerator: isChannelModerator,
+            // } = thread.channel.channelPermissions;
+            // const {
+            //   isOwner: isCommunityOwner,
+            //   isModerator: isCommunityModerator,
+            // } = thread.community.communityPermissions;
+            // const isModerator =
+            //   isChannelOwner ||
+            //   isChannelModerator ||
+            //   isCommunityOwner ||
+            //   isCommunityModerator;
+            // const canModerate =
+            //   initialMessage.threadType !== 'directMessageThread' &&
+            //   (me || isModerator);
 
             if (initialMessage.author.user.id === 'robo') {
               if (initialMessage.message.type === 'timestamp') {

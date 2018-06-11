@@ -44,6 +44,7 @@ export const Username = styled.Text`
 
 export const RoboWrapper = styled.View`
   flex-direction: row;
+  flex: 1;
   justify-content: center;
   align-items: center;
   margin: 24px 0 16px;
