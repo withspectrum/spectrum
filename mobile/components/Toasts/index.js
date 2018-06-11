@@ -4,14 +4,14 @@ import { withTheme } from 'styled-components';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { Animated } from 'react-native';
-import { removeToast, type AddToastType } from '../../actions/toasts';
+import { removeToast, type ToastType } from '../../actions/toasts';
 import type { State as ReduxState } from '../../reducers';
 import Toast from './Toast';
 import { Container } from './style';
 import { getToastColorFromType } from './utils';
 
 type Props = {|
-  toasts: Array<?AddToastType>,
+  toasts: Array<?ToastType>,
   theme: Object,
   dispatch: Function,
 |};
@@ -33,6 +33,8 @@ class Toasts extends React.Component<Props, State> {
   };
 
   componentDidUpdate(prevProps) {
+    console.log('toasts did update');
+
     const currProps = this.props;
     const { theme, dispatch } = currProps;
 
@@ -43,6 +45,8 @@ class Toasts extends React.Component<Props, State> {
     const getActiveToast = () => {
       const toast = currProps.toasts[currProps.toasts.length - 1];
 
+      if (!toast) return null;
+
       return {
         ...toast,
         color: getToastColorFromType(toast.type, theme),
@@ -51,8 +55,9 @@ class Toasts extends React.Component<Props, State> {
 
     // received a new toast
     if (receivedFirstToast) {
-      console.log('FIRST');
       const activeToast = getActiveToast();
+      if (!activeToast) return;
+
       this.setState({ activeToastColor: activeToast.color });
       this.showContainer();
       setTimeout(() => this.hideContainer(), this.containerTimeoutTiming);
@@ -64,8 +69,9 @@ class Toasts extends React.Component<Props, State> {
     }
 
     if (receivedNewToast) {
-      console.log('NEW');
       const activeToast = getActiveToast();
+      if (!activeToast) return;
+
       this.setState({ activeToastColor: activeToast.color });
       setTimeout(() => this.hideContainer(), this.containerTimeoutTiming);
       setTimeout(
@@ -93,7 +99,6 @@ class Toasts extends React.Component<Props, State> {
   };
 
   showContainer = () => {
-    console.log('showing container');
     return Animated.parallel([
       this.animateContainer('in'),
       this.animateContainerOpacity('in'),
@@ -101,7 +106,6 @@ class Toasts extends React.Component<Props, State> {
   };
 
   hideContainer = () => {
-    console.log('hiding container');
     Animated.parallel([
       this.animateContainer('out'),
       this.animateContainerOpacity('out'),

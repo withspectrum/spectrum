@@ -5,43 +5,38 @@ import type { GlyphTypes } from '../components/Icon/types';
 type ToastTypes = 'notification' | 'success' | 'error' | 'neutral';
 
 export type AddToastType = {
-  id: number,
   type: ToastTypes,
   message: string,
   onPressHandler: Function,
-  timeout?: number,
   icon?: ?GlyphTypes,
 };
 
-const addToast = (payload: AddToastType) => {
-  return {
-    type: 'ADD_TOAST',
-    payload,
-  };
+export type ToastType = {
+  ...$Exact<AddToastType>,
+  id: number,
 };
 
-export const removeToast = (id: number) => {
-  console.log('removing toast', id);
-  return { type: 'REMOVE_TOAST', id };
-};
-
-type AddToastWithTimeoutType = {
-  type: ToastTypes,
-  message: string,
-  onPressHandler: Function,
-  icon?: GlyphTypes,
+export type AddToastActionType = {
+  type: 'ADD_TOAST',
+  payload: {
+    ...$Exact<ToastType>,
+  },
 };
 
 let nextToastId = 0;
-export const addToastWithTimeout = (input: AddToastWithTimeoutType) => (
+export const addToast = (payload: AddToastType) => (
   dispatch: Dispatch<Object>
 ) => {
-  const timeout = input.type === 'success' ? 2000 : 4000;
   const id = nextToastId++;
+  return dispatch({
+    type: 'ADD_TOAST',
+    payload: {
+      id,
+      ...payload,
+    },
+  });
+};
 
-  dispatch(addToast({ id, timeout, ...input }));
-
-  // setTimeout(() => {
-  //   dispatch(removeToast(id));
-  // }, timeout);
+export const removeToast = (id: number) => {
+  return { type: 'REMOVE_TOAST', payload: { id } };
 };

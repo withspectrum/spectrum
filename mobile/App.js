@@ -61,7 +61,9 @@ class App extends React.Component<{}, State> {
   };
 
   listen = () => {
-    const { authentication } = store.getState();
+    const storeState = store.getState();
+    // $FlowFixMe
+    const authentication = storeState && storeState.authentication;
     const { token: oldToken } = this.state;
     if (authentication.token !== oldToken) {
       this.setState({

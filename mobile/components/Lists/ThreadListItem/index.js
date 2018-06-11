@@ -21,7 +21,7 @@ import deleteThreadMutation, {
 } from '../../../../shared/graphql/mutations/thread/deleteThread';
 import pinThreadMutation from '../../../../shared/graphql/mutations/community/pinCommunityThread';
 import triggerDeleteAlert from '../../DeleteAlert';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { addToast } from '../../../actions/toasts';
 
 type Props = {
   thread: GetThreadType,
@@ -81,7 +81,7 @@ class ThreadListItemHandlers extends Component<Props> {
     const { thread, setThreadLock, dispatch, navigation } = this.props;
 
     dispatch(
-      addToastWithTimeout({
+      addToast({
         type: thread.isLocked ? 'success' : 'error',
         message: thread.isLocked
           ? 'Conversation unlocked'
