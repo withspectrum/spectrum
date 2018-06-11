@@ -24,9 +24,9 @@ export const CodeBlockView = styled.View`
 `;
 
 export const InlineCodeView = styled.View`
-  width: 100%;
-  flex: 1;
-  display: flex;
+  align-items: center;
+  height: 20px;
+  justify-content: center;
   background: ${props => props.theme.bg.wash};
   border-radius: 4px;
   border-bottom-color: ${props => props.theme.bg.hairline};
@@ -37,4 +37,9 @@ export const InlineCodeView = styled.View`
   border-left-width: ${StyleSheet.hairlineWidth};
   border-right-color: ${props => props.theme.bg.hairline};
   border-right-width: ${StyleSheet.hairlineWidth};
+`;
+
+export const InlineCodeText = styled(CodeText)`
+  padding: 0 4px 1px;
+  color: ${props => props.theme.text.secondary};
 `;

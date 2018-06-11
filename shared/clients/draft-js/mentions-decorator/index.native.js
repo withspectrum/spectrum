@@ -6,7 +6,7 @@ import React from 'react';
 import createMentionsDecorator, {
   type MentionComponentPropsType,
 } from './core';
-import Anchor from '../../../../mobile/components/Anchor';
+import { MessageAnchor } from '../../../../mobile/components/Anchor';
 
 type Props = {
   // ...NavigationProps,
@@ -21,7 +21,11 @@ class Mention extends React.Component<Props> {
   };
 
   render() {
-    return <Anchor onPress={this.openUser}>{this.props.children}</Anchor>;
+    return (
+      <MessageAnchor onPress={this.openUser}>
+        {this.props.children}
+      </MessageAnchor>
+    );
   }
 }
 

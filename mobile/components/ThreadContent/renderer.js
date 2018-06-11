@@ -2,7 +2,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import redraft from 'redraft';
-import Anchor from '../Anchor';
+import { ThreadAnchor } from '../Anchor';
 import { CodeBlock, InlineCodeBlock } from '../Codeblock';
 import IFrame from '../IFrame';
 import { BodyText, HeaderOne, HeaderTwo } from './style';
@@ -31,9 +31,9 @@ const renderer = {
   entities: {
     // key is the entity key value from raw
     LINK: (children, data, { key }) => (
-      <Anchor key={`anchor-${key}`} href={data.url}>
+      <ThreadAnchor key={`anchor-${key}`} href={data.url}>
         {children}
-      </Anchor>
+      </ThreadAnchor>
     ),
     embed: (children, { src }, { key }) => {
       return <IFrame key={`embed-${key}`} src={src} />;

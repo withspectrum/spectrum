@@ -1,21 +1,27 @@
 // @flow
 import React, { Component } from 'react';
-import { View } from 'react-native';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../ViewNetworkHandler';
-import Text from '../Text';
 import Message from '../Message';
 import InfiniteList from '../InfiniteList';
 import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
 import { convertTimestampToDate } from '../../../src/helpers/utils';
 import { withCurrentUser } from '../../components/WithCurrentUser';
-import RoboText from './RoboText';
-import Author from './Author';
+import { UnseenRoboText, TimestampRoboText } from './RoboText';
+import AuthorAvatar from './AuthorAvatar';
+import AuthorName from './AuthorName';
 import Loading from '../Loading';
+import { FullscreenNullState } from '../NullStates';
+import {
+  Container,
+  MessageGroupContainer,
+  BubbleGroupContainer,
+} from './style';
 
 import type { NavigationProps } from 'react-navigation';
 import type { FlatListProps } from 'react-native';
-import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection.js';
+import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection';
+import type { GetThreadMessageConnectionType } from '../../../shared/graphql/queries/thread/getThreadMessageConnection.js';
 import type { ThreadParticipantType } from '../../../shared/graphql/fragments/thread/threadParticipant';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 
@@ -27,7 +33,12 @@ type Props = {
   navigation: NavigationProps,
   currentUser: GetUserType,
   data: {
-    ...$Exact<ThreadMessageConnectionType>,
+    thread: {
+      ...$Exact<GetThreadMessageConnectionType>,
+    },
+    messageConnection: {
+      ...$Exact<ThreadMessageConnectionType>,
+    },
   },
 };
 
@@ -42,7 +53,9 @@ class Messages extends Component<Props> {
       ...flatListProps
     } = this.props;
 
-    if (data.messageConnection && data.messageConnection) {
+    if (data.messageConnection && data.messageConnection.edges.length > 0) {
+      const { thread } = data;
+
       const messages = sortAndGroupMessages(
         data.messageConnection.edges
           .slice()
@@ -64,15 +77,30 @@ class Messages extends Component<Props> {
             const me = currentUser
               ? initialMessage.author.user.id === currentUser.id
               : false;
-            // const canModerate =
-            //   threadType !== 'directMessageThread' && (me || isModerator);
+
+            const {
+              isOwner: isChannelOwner,
+              isModerator: isChannelModerator,
+            } = thread.channel.channelPermissions;
+            const {
+              isOwner: isCommunityOwner,
+              isModerator: isCommunityModerator,
+            } = thread.community.communityPermissions;
+            const isModerator =
+              isChannelOwner ||
+              isChannelModerator ||
+              isCommunityOwner ||
+              isCommunityModerator;
+            const canModerate =
+              initialMessage.threadType !== 'directMessageThread' &&
+              (me || isModerator);
 
             if (initialMessage.author.user.id === 'robo') {
               if (initialMessage.message.type === 'timestamp') {
                 return (
-                  <RoboText key={initialMessage.timestamp}>
+                  <TimestampRoboText key={initialMessage.timestamp}>
                     {convertTimestampToDate(initialMessage.timestamp)}
-                  </RoboText>
+                  </TimestampRoboText>
                 );
               }
 
@@ -98,44 +126,52 @@ class Messages extends Component<Props> {
             ) {
               hasInjectedUnseenRobo = true;
               unseenRobo = (
-                <RoboText
-                  style={{ marginTop: 8 }}
-                  color={props => props.theme.warn.default}
-                  key="new-messages"
-                >
-                  New Messages
-                </RoboText>
+                <UnseenRoboText key="new-messages">New Messages</UnseenRoboText>
               );
             }
 
             return (
-              <View key={initialMessage.id || 'robo'}>
+              <Container key={initialMessage.id || 'robo'} me={me}>
                 {unseenRobo}
-                <Author
-                  onPress={() =>
-                    navigation.navigate({
-                      routeName: `User`,
-                      key: author.user.id,
-                      params: { id: author.user.id },
-                    })
-                  }
-                  avatar={!me}
-                  author={author}
-                  me={me}
-                />
-                <View>
-                  {group.map(message => {
-                    return (
+
+                <MessageGroupContainer>
+                  <AuthorAvatar
+                    onPress={() =>
+                      navigation.navigate({
+                        routeName: 'User',
+                        key: author.user.id,
+                        params: { id: author.user.id },
+                      })
+                    }
+                    author={author}
+                    me={me}
+                  />
+
+                  <BubbleGroupContainer>
+                    {!me && (
+                      <AuthorName
+                        author={author}
+                        onPress={() =>
+                          navigation.navigate({
+                            routeName: 'User',
+                            key: author.user.id,
+                            params: { id: author.user.id },
+                          })
+                        }
+                      />
+                    )}
+
+                    {group.map(message => (
                       <Message
                         key={message.id}
                         me={me}
                         message={message}
                         threadId={this.props.id}
                       />
-                    );
-                  })}
-                </View>
-              </View>
+                    ))}
+                  </BubbleGroupContainer>
+                </MessageGroupContainer>
+              </Container>
             );
           }}
         />
@@ -147,7 +183,7 @@ class Messages extends Component<Props> {
     }
 
     if (hasError) {
-      return <Text type="body">Error :(</Text>;
+      return <FullscreenNullState />;
     }
 
     return null;

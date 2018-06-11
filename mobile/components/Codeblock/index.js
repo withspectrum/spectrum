@@ -1,6 +1,11 @@
 // @flow
 import React from 'react';
-import { CodeBlockView, InlineCodeView, CodeText } from './style';
+import {
+  CodeBlockView,
+  InlineCodeView,
+  InlineCodeText,
+  CodeText,
+} from './style';
 
 type Props = {
   children: string,
@@ -9,7 +14,7 @@ type Props = {
 export const InlineCodeBlock = (props: Props) => {
   return (
     <InlineCodeView>
-      <CodeText fontFamily="monospace">{props.children}</CodeText>
+      <InlineCodeText fontFamily="monospace">{props.children}</InlineCodeText>
     </InlineCodeView>
   );
 };

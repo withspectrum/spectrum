@@ -6,7 +6,7 @@ import TouchableOpacity from '../TouchableOpacity';
 import { Svg } from 'expo';
 const { Path, G } = Svg;
 import theme from '../../../shared/theme';
-import Anchor from '../Anchor';
+import { ThreadAnchor } from '../Anchor';
 
 export const Container = (props: any) => {
   const Container = styled.View`
@@ -170,7 +170,7 @@ export const CodeOfConduct = styled.Text`
   font-weight: 500;
 `;
 
-export const Link = styled(Anchor)`
+export const Link = styled(ThreadAnchor)`
   color: rgb(68, 0, 204);
   font-weight: 600;
 `;
