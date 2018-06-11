@@ -30,7 +30,7 @@ import { FullscreenNullState } from '../../components/NullStates';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
-  mutate: (token: any) => Promise<any>,
+  subscribeExpoPush: (token: any) => Promise<any>,
   authentication: AuthenticationState,
   navigation: NavigationProps,
   currentUser: GetUserType,
@@ -101,7 +101,7 @@ class Notifications extends Component<Props, State> {
       data = { decision: false, timestamp: new Date() };
     } else {
       data = { decision: true, timestamp: new Date() };
-      this.props.mutate(token);
+      this.props.subscribeExpoPush(token);
     }
     this.setState({
       pushNotifications: data,
