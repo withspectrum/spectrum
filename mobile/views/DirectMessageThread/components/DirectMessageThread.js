@@ -40,6 +40,23 @@ type Props = {
 };
 
 class DirectMessageThread extends Component<Props> {
+  setTitle = () => {
+    const { data: { directMessageThread }, navigation } = this.props;
+    let title = directMessageThread
+      ? sentencify(directMessageThread.participants.map(({ name }) => name))
+      : 'Loading thread...';
+    if (navigation.state.params.title === title) return;
+    navigation.setParams({ title });
+  };
+
+  componentDidMount() {
+    this.setTitle();
+  }
+
+  componentDidUpdate() {
+    this.setTitle();
+  }
+
   sendMessage = text => {
     if (!this.props.data.directMessageThread) return;
     this.props.sendDirectMessage({

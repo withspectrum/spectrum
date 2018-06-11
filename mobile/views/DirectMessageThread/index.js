@@ -8,16 +8,11 @@ import DirectMessageThread from './components/DirectMessageThread';
 import { Wrapper } from './style';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
+import type { NavigationProps } from 'react-navigation';
 
 type Props = {
   currentUser: ?GetUserType,
-  navigation?: {
-    state: {
-      params: {
-        id: string,
-      },
-    },
-  },
+  navigation: NavigationProps,
 };
 
 class DirectMessageThreadView extends React.Component<Props> {
