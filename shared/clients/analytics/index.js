@@ -1,5 +1,5 @@
 // @flow
-import { events } from 'shared/analytics';
+import { events } from '../../analytics';
 import { createTrack } from './track';
 import { createSetUser } from './setUser';
 import { createUnsetUser } from './unsetUser';
