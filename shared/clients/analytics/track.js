@@ -1,5 +1,4 @@
 // @flow
-import { isDesktopApp } from 'src/helpers/is-desktop-app';
 import type { AmplitudeClient, Amplitude } from './';
 
 export const createTrack = (amplitude: Amplitude, client: AmplitudeClient) => (
@@ -25,8 +24,7 @@ export const createTrack = (amplitude: Amplitude, client: AmplitudeClient) => (
     // console.warn(`[Amplitude] Tracking ${eventType}`);
     return amplitude.getInstance().logEvent(eventType, {
       ...eventProperties,
-      // TODO(@mxstbr): Pass this in dynamically
-      client: isDesktopApp() ? 'desktop' : 'web',
+      client,
     });
   };
 

@@ -1,5 +1,6 @@
 // @flow
 import { createAmplitudeHelpers } from 'shared/clients/analytics';
+import { isDesktopApp } from 'src/helpers/is-desktop-app';
 
 const {
   events,
@@ -7,6 +8,9 @@ const {
   setUser,
   unsetUser,
   transformations,
-} = createAmplitudeHelpers(window.amplitude);
+} = createAmplitudeHelpers({
+  amplitude: window.amplitude,
+  client: isDesktopApp() ? 'desktop' : 'web',
+});
 
 export { events, track, setUser, unsetUser, transformations };
