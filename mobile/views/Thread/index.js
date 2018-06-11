@@ -12,7 +12,7 @@ import Messages from '../../components/Messages';
 import ChatInput from '../../components/ChatInput';
 import getThreadMessageConnection from '../../../shared/graphql/queries/thread/getThreadMessageConnection';
 import sendMessageMutation from '../../../shared/graphql/mutations/message/sendMessage';
-import { convertTimestampToDate } from '../../../src/helpers/utils';
+import { convertTimestampToDate } from '../../../shared/time-formatting';
 import { withCurrentUser } from '../../components/WithCurrentUser';
 import CommunityHeader from './components/CommunityHeader';
 import Byline from './components/Byline';
@@ -51,8 +51,21 @@ class Thread extends Component<Props> {
     });
   };
 
+  setTitle = () => {
+    const { data: { thread }, navigation } = this.props;
+    let title;
+    if (thread) {
+      title = thread.content.title;
+    } else {
+      title = 'Loading thread...';
+    }
+    if (navigation.state.params.title === title) return;
+    navigation.setParams({ title });
+  };
+
   componentDidMount() {
     this.trackView();
+    this.setTitle();
   }
 
   componentDidUpdate(prev) {
@@ -65,7 +78,10 @@ class Thread extends Component<Props> {
     if (first || changed) {
       this.trackView();
     }
+
+    this.setTitle();
   }
+
   sendMessage = (body: string, user: Object) => {
     const { quotedMessage, data: { thread } } = this.props;
     if (!thread) return;

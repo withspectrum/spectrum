@@ -26,11 +26,12 @@ import {
 } from './style';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import { FullscreenNullState } from '../../components/NullStates';
+import type { NavigationProps } from 'react-navigation';
 
 type Props = {
   isLoading: boolean,
   hasError: boolean,
-  navigation: Object,
+  navigation: NavigationProps,
   data: {
     channel?: GetChannelType,
   },
@@ -48,8 +49,21 @@ class Channel extends Component<Props> {
     });
   };
 
+  setTitle = () => {
+    const { data: { channel }, navigation } = this.props;
+    let title;
+    if (channel) {
+      title = channel.name;
+    } else {
+      title = 'Loading channel...';
+    }
+    if (navigation.state.params.title === title) return;
+    navigation.setParams({ title });
+  };
+
   componentDidMount() {
     this.trackView();
+    this.setTitle();
   }
 
   componentDidUpdate(prev) {
@@ -62,6 +76,8 @@ class Channel extends Component<Props> {
     if (first || changed) {
       this.trackView();
     }
+
+    this.setTitle();
   }
 
   render() {

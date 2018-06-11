@@ -70,8 +70,21 @@ class Community extends Component<Props> {
     });
   };
 
+  setTitle = () => {
+    const { data: { community }, navigation } = this.props;
+    let title;
+    if (community) {
+      title = community.name;
+    } else {
+      title = 'Loading community...';
+    }
+    if (navigation.state.params.title === title) return;
+    navigation.setParams({ title });
+  };
+
   componentDidMount() {
     this.trackView();
+    this.setTitle();
   }
 
   componentDidUpdate(prev) {
@@ -84,6 +97,8 @@ class Community extends Component<Props> {
     if (first || changed) {
       this.trackView();
     }
+
+    this.setTitle();
   }
 
   render() {

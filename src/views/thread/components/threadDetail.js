@@ -4,10 +4,8 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Link from 'src/components/link';
-import {
-  getLinkPreviewFromUrl,
-  convertTimestampToDate,
-} from '../../../helpers/utils';
+import { getLinkPreviewFromUrl } from '../../../helpers/utils';
+import { convertTimestampToDate } from 'shared/time-formatting';
 import { timeDifference } from 'shared/time-difference';
 import isURL from 'validator/lib/isURL';
 import { URLS } from '../../../helpers/regexps';

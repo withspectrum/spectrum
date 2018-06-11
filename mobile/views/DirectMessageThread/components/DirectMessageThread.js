@@ -13,7 +13,7 @@ import ViewNetworkHandler, {
 } from '../../../components/ViewNetworkHandler';
 import Loading from '../../../components/Loading';
 import ErrorBoundary from '../../../components/ErrorBoundary';
-import { track, events, transformations } from '../../../utils/analytics';
+import { track, events } from '../../../utils/analytics';
 
 import sentencify from '../../../../shared/sentencify';
 import getDirectMessageThread, {
@@ -47,8 +47,18 @@ class DirectMessageThread extends Component<Props> {
     track(events.DIRECT_MESSAGE_THREAD_VIEWED);
   };
 
+  setTitle = () => {
+    const { data: { directMessageThread }, navigation } = this.props;
+    let title = directMessageThread
+      ? sentencify(directMessageThread.participants.map(({ name }) => name))
+      : 'Loading thread...';
+    if (navigation.state.params.title === title) return;
+    navigation.setParams({ title });
+  };
+
   componentDidMount() {
     this.trackView();
+    this.setTitle();
   }
 
   componentDidUpdate(prev) {
@@ -62,6 +72,8 @@ class DirectMessageThread extends Component<Props> {
     if (first || changed) {
       this.trackView();
     }
+
+    this.setTitle();
   }
 
   sendMessage = text => {
