@@ -12,7 +12,7 @@ import Messages from '../../components/Messages';
 import ChatInput from '../../components/ChatInput';
 import getThreadMessageConnection from '../../../shared/graphql/queries/thread/getThreadMessageConnection';
 import sendMessageMutation from '../../../shared/graphql/mutations/message/sendMessage';
-import { convertTimestampToDate } from '../../../src/helpers/utils';
+import { convertTimestampToDate } from '../../../shared/time-formatting';
 import { withCurrentUser } from '../../components/WithCurrentUser';
 import CommunityHeader from './components/CommunityHeader';
 import Byline from './components/Byline';

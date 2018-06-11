@@ -5,7 +5,7 @@ import compose from 'recompose/compose';
 import Icon from '../icons';
 import Badge from '../badges';
 import Avatar from '../avatar';
-import { convertTimestampToDate } from '../../helpers/utils';
+import { convertTimestampToDate } from 'shared/time-formatting';
 import Reputation from '../reputation';
 import {
   Wrapper,
