@@ -40,6 +40,26 @@ type Props = {
 };
 
 class Thread extends Component<Props> {
+  setTitle = () => {
+    const { data: { thread }, navigation } = this.props;
+    let title;
+    if (thread) {
+      title = thread.content.title;
+    } else {
+      title = 'Loading thread...';
+    }
+    if (navigation.state.params.title === title) return;
+    navigation.setParams({ title });
+  };
+
+  componentDidMount() {
+    this.setTitle();
+  }
+
+  componentDidUpdate() {
+    this.setTitle();
+  }
+
   sendMessage = (body: string, user: Object) => {
     const { quotedMessage, data: { thread } } = this.props;
     if (!thread) return;
