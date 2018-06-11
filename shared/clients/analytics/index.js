@@ -9,6 +9,8 @@ require('./raven');
 export type AmplitudeClient = 'web' | 'desktop' | 'mobile';
 
 export type Amplitude = {
+  // NOTE(@mxstbr): The web client has a .getInstance() method you have to call each time,
+  // but the mobile client doesn't, so we just manually add that on mobile
   getInstance: () => {
     setUserId: (userId: ?string) => Promise<void>,
     logEvent: (eventType: string, eventParams: Object) => Promise<void>,
