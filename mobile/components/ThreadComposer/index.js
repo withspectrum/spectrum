@@ -1,13 +1,18 @@
 // @flow
 import React, { Fragment } from 'react';
-import { TextInput, Button, Picker } from 'react-native';
+import { TextInput, Button } from 'react-native';
 import Wrapper from './components/Wrapper';
+import Select from '../../components/Select';
 
 type Props = {||};
 
 type State = {
   title: string,
   body: string,
+  selected: {
+    community: ?string,
+    channel: ?string,
+  },
 };
 
 class ThreadComposer extends React.Component<Props, State> {
@@ -19,6 +24,10 @@ class ThreadComposer extends React.Component<Props, State> {
   state = {
     title: '',
     body: '',
+    selected: {
+      community: null,
+      channel: null,
+    },
   };
 
   onChangeText = (field: 'title' | 'body') => (text: string) => {
@@ -27,21 +36,41 @@ class ThreadComposer extends React.Component<Props, State> {
     });
   };
 
+  onValueChange = (field: 'channel' | 'community') => (value: string) => {
+    this.setState(prev => ({
+      selected: {
+        ...prev.selected,
+        [field]: value,
+      },
+    }));
+  };
+
   focusBodyInput = () => {
     this.bodyInput && this.bodyInput.focus();
   };
 
   render() {
+    const { selected } = this.state;
     return (
       <Wrapper>
-        <Picker selectedValue="first">
-          <Picker.Item label="First community" value="first" />
-          <Picker.Item label="Second community" value="second" />
-        </Picker>
-        <Picker selectedValue="first">
-          <Picker.Item label="First channel" value="first" />
-          <Picker.Item label="Second channel" value="second" />
-        </Picker>
+        <Select
+          placeholder={{ label: 'Select a community', value: null }}
+          items={[
+            { label: 'First community', value: 'first' },
+            { label: 'Second community', value: 'second' },
+          ]}
+          value={selected.community}
+          onValueChange={this.onValueChange('community')}
+        />
+        <Select
+          placeholder={{ label: 'Select a channel', value: null }}
+          items={[
+            { label: 'First channel', value: 'first' },
+            { label: 'Second channel', value: 'second' },
+          ]}
+          value={selected.channel}
+          onValueChange={this.onValueChange('channel')}
+        />
         <TextInput
           onChangeText={this.onChangeText('title')}
           value={this.state.title}
