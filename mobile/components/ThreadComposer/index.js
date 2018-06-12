@@ -2,7 +2,7 @@
 import React, { Fragment } from 'react';
 import { TextInput, Button } from 'react-native';
 import Select from '../../components/Select';
-import Wrapper from './components/Wrapper';
+import Wrapper, { InputWrapper } from './components/Wrapper';
 import { TitleTextInput, BodyTextInput } from './components/TextInputs';
 import type { TextInputProps } from 'react-native';
 
@@ -73,22 +73,24 @@ class ThreadComposer extends React.Component<Props, State> {
           value={selected.channel}
           onValueChange={this.onValueChange('channel')}
         />
-        <TitleTextInput
-          onChangeText={this.onChangeText('title')}
-          value={this.state.title}
-          autoFocus
-          placeholder="What's up?"
-          // Called when "Return" is pressed
-          onSubmitEditing={this.focusBodyInput}
-        />
-        <BodyTextInput
-          innerRef={elem => (this.bodyInput = elem)}
-          onChangeText={this.onChangeText('body')}
-          value={this.state.body}
-          multiline
-          numberOfLines={5}
-          placeholder="Write more thoughts here..."
-        />
+        <InputWrapper>
+          <TitleTextInput
+            onChangeText={this.onChangeText('title')}
+            value={this.state.title}
+            autoFocus
+            placeholder="What's up?"
+            // Called when "Return" is pressed
+            onSubmitEditing={this.focusBodyInput}
+          />
+          <BodyTextInput
+            innerRef={elem => (this.bodyInput = elem)}
+            onChangeText={this.onChangeText('body')}
+            value={this.state.body}
+            multiline
+            numberOfLines={5}
+            placeholder="Write more thoughts here..."
+          />
+        </InputWrapper>
         <Button onPress={() => null} title="Publish" />
       </Wrapper>
     );
