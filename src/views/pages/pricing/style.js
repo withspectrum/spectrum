@@ -1,6 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { Button } from 'src/components/buttons';
+import { Button, TextButton } from 'src/components/buttons';
 import { hexa, zIndex } from 'src/components/globals';
 import Link from 'src/components/link';
 
@@ -89,6 +89,11 @@ export const CTA = styled(Button)`
   align-self: flex-start;
 `;
 
+export const TextCTA = styled(TextButton)`
+  padding: 16px 24px;
+  font-size: 18px;
+`;
+
 export const TwoUp = styled(ContentContainer)`
   display: grid;
   max-width: 100%;
@@ -112,14 +117,6 @@ export const TwoUp = styled(ContentContainer)`
     ${Heading}, ${Copy} {
       padding: 0px 32px;
     }
-
-    ${props =>
-      props.reverse &&
-      css`
-        & + .goop {
-          display: none;
-        }
-      `};
   }
 `;
 
@@ -257,7 +254,8 @@ export const PlanSection = styled.div`
 
   @media (max-width: 768px) {
     max-width: 100%;
-    padding: 18px 24px;
+    padding: 24px;
+    padding-bottom: 32px;
     border-radius: 0;
     box-shadow: none;
   }
@@ -378,6 +376,19 @@ export const CommunityListActions = styled.div`
 
   a:first-of-type {
     flex: auto;
+  }
+`;
+
+export const Actions = styled.div`
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 32px;
+  margin-left: 0;
+
+  @media (max-width: 768px) {
+    margin-left: 32px;
   }
 `;
 
@@ -558,14 +569,11 @@ export const FeatureDescription = styled.p`
 `;
 
 export const ConciergeLink = styled(Link)`
-  display: flex !important;
-  flex: 1 !important;
+  display: flex;
+  flex: none;
 
   button {
-    display: flex;
-    flex: 1 0 auto;
-    width: 100%;
-    font-size: 16px;
+    padding: 12px 16px;
     margin-top: 0 !important;
   }
 `;

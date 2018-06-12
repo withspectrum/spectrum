@@ -22,7 +22,7 @@ import Link from 'src/components/link';
 class Paid extends React.Component<{}> {
   render() {
     return (
-      <Section background={'brand'} goop={4} color={'bg.default'}>
+      <Section background={'brand'} goop={6} color={'bg.default'}>
         <TwoUp reverse>
           <Left>
             <PlanSection>
@@ -60,20 +60,6 @@ class Paid extends React.Component<{}> {
                   }
                   icon={'analytics'}
                   priceLabel={'$100/mo'}
-                />
-
-                <Feature
-                  title={'Concierge service'}
-                  color={'brand'}
-                  subtitle={
-                    "Need more support getting your community off the ground or managing it at scale? We're here to help."
-                  }
-                  icon={'plus'}
-                  render={() => (
-                    <ConciergeLink to={'/pricing/concierge'}>
-                      <Button>Learn more</Button>
-                    </ConciergeLink>
-                  )}
                 />
               </PlanFeatures>
             </PlanSection>
