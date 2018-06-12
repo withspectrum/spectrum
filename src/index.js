@@ -11,6 +11,7 @@ import queryString from 'query-string';
 import Loadable from 'react-loadable';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import { HelmetProvider } from 'react-helmet-async';
+import { hot } from 'react-hot-loader';
 import webPushManager from './helpers/web-push-manager';
 import { history } from './helpers/history';
 import { client } from 'shared/graphql';
@@ -61,13 +62,8 @@ if (t && (!existingUser || !existingUser.currentUser)) {
 
 const store = initStore(window.__SERVER_STATE__ || initialState);
 
-const renderMethod = !!window.__SERVER_STATE__
-  ? // $FlowIssue
-    ReactDOM.hydrate
-  : ReactDOM.render;
-
-function render() {
-  return renderMethod(
+const App = hot(module)(() => {
+  return (
     <Provider store={store}>
       <HelmetProvider>
         <ApolloProvider client={client}>
@@ -76,7 +72,18 @@ function render() {
           </Router>
         </ApolloProvider>
       </HelmetProvider>
-    </Provider>,
+    </Provider>
+  );
+});
+
+const renderMethod = !!window.__SERVER_STATE__
+  ? // $FlowIssue
+    ReactDOM.hydrate
+  : ReactDOM.render;
+
+function render() {
+  return renderMethod(
+    <App />,
     // $FlowIssue
     document.querySelector('#root')
   );

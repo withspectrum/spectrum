@@ -13,6 +13,7 @@ export const isViewingMarketingPage = (
     viewing === '/about' ||
     viewing === '/code-of-conduct' ||
     viewing === '/contact' ||
+    viewing === '/pricing/concierge' ||
     viewing === '/pricing' ||
     viewing === '/privacy' ||
     viewing === '/privacy.html' ||

@@ -12,7 +12,7 @@ import Messages from '../../components/Messages';
 import ChatInput from '../../components/ChatInput';
 import getThreadMessageConnection from '../../../shared/graphql/queries/thread/getThreadMessageConnection';
 import sendMessageMutation from '../../../shared/graphql/mutations/message/sendMessage';
-import { convertTimestampToDate } from '../../../src/helpers/utils';
+import { convertTimestampToDate } from '../../../shared/time-formatting';
 import { withCurrentUser } from '../../components/WithCurrentUser';
 import CommunityHeader from './components/CommunityHeader';
 import Byline from './components/Byline';
@@ -24,6 +24,7 @@ import type { NavigationProps } from 'react-navigation';
 import Loading from '../../components/Loading';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import { FullscreenNullState } from '../../components/NullStates';
+import { track, events, transformations } from '../../utils/analytics';
 
 const ThreadMessages = getThreadMessageConnection(Messages);
 
@@ -40,6 +41,47 @@ type Props = {
 };
 
 class Thread extends Component<Props> {
+  trackView = () => {
+    const { data: { thread } } = this.props;
+    if (!thread) return;
+    track(events.THREAD_VIEWED, {
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
+    });
+  };
+
+  setTitle = () => {
+    const { data: { thread }, navigation } = this.props;
+    let title;
+    if (thread) {
+      title = thread.content.title;
+    } else {
+      title = 'Loading thread...';
+    }
+    if (navigation.state.params.title === title) return;
+    navigation.setParams({ title });
+  };
+
+  componentDidMount() {
+    this.trackView();
+    this.setTitle();
+  }
+
+  componentDidUpdate(prev) {
+    const curr = this.props;
+    const first = !prev.data.thread && curr.data.thread;
+    const changed =
+      prev.data.thread &&
+      curr.data.thread &&
+      prev.data.thread.id !== curr.data.thread.id;
+    if (first || changed) {
+      this.trackView();
+    }
+
+    this.setTitle();
+  }
+
   sendMessage = (body: string, user: Object) => {
     const { quotedMessage, data: { thread } } = this.props;
     if (!thread) return;
