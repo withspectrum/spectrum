@@ -1,9 +1,16 @@
 // @flow
-import { events } from 'shared/analytics';
-import { track } from './track';
-import { setUser } from './setUser';
-import { unsetUser } from './unsetUser';
-import * as transformations from './transformations';
-require('./raven');
+import { createAmplitudeHelpers } from 'shared/clients/analytics';
+import { isDesktopApp } from 'src/helpers/is-desktop-app';
+
+const {
+  events,
+  track,
+  setUser,
+  unsetUser,
+  transformations,
+} = createAmplitudeHelpers({
+  amplitude: window.amplitude,
+  client: isDesktopApp() ? 'desktop' : 'web',
+});
 
 export { events, track, setUser, unsetUser, transformations };

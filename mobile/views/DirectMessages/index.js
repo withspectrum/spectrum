@@ -2,12 +2,31 @@
 import React, { Component } from 'react';
 import DirectMessageThreadsList from './components/DirectMessageThreadsList';
 import { Wrapper } from './style';
+import ErrorBoundary from '../../components/ErrorBoundary';
+import { track, events } from '../../utils/analytics';
+import type { NavigationProps } from 'react-navigation';
 
-class DirectMessages extends Component<{}> {
+type Props = {
+  navigation: NavigationProps,
+};
+
+class DirectMessages extends Component<Props> {
+  trackView = () => {
+    track(events.DIRECT_MESSAGES_VIEWED);
+  };
+
+  componentDidMount() {
+    this.trackView();
+  }
+
   render() {
+    const { navigation } = this.props;
+
     return (
       <Wrapper>
-        <DirectMessageThreadsList />
+        <ErrorBoundary alert>
+          <DirectMessageThreadsList navigation={navigation} />
+        </ErrorBoundary>
       </Wrapper>
     );
   }

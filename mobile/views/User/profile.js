@@ -1,10 +1,12 @@
 // @flow
-import React, { Component, Fragment } from 'react';
-import { Text, View, StatusBar } from 'react-native';
+import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import getUserThreadConnection from '../../../shared/graphql/queries/user/getUserThreadConnection';
 import ThreadFeed from '../../components/ThreadFeed';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
+import Loading from '../../components/Loading';
+import ErrorBoundary from '../../components/ErrorBoundary';
+import { FullscreenNullState } from '../../components/NullStates';
 
 import {
   Wrapper,
@@ -40,13 +42,24 @@ const UserThreadFeed = compose(getUserThreadConnection)(ThreadFeed);
 class User extends Component<Props, State> {
   state = { feed: 'participant' };
 
-  componentDidUpdate() {
+  setTitle = () => {
     const { data: { user }, navigation } = this.props;
-    if (!user) return;
-    const title = navigation.getParam('title');
-    if (!title && user) return navigation.setParams({ title: user.name });
-    if (title && title !== user.name)
-      return navigation.setParams({ title: user.name });
+    let title;
+    if (user) {
+      title = `${user.name} (@${user.username})`;
+    } else {
+      title = 'Loading user...';
+    }
+    if (navigation.state.params.title === title) return;
+    navigation.setParams({ title });
+  };
+
+  componentDidMount() {
+    this.setTitle();
+  }
+
+  componentDidUpdate() {
+    this.setTitle();
   }
 
   toggleFeed = (feed: string) => this.setState({ feed });
@@ -58,13 +71,12 @@ class User extends Component<Props, State> {
     if (data.user) {
       return (
         <Wrapper>
-          <StatusBar barStyle="light-content" />
           <UserThreadFeed
             navigation={navigation}
             kind={this.state.feed}
             id={data.user.id}
             ListHeaderComponent={
-              <Fragment>
+              <ErrorBoundary fallbackComponent={null}>
                 <CoverPhotoContainer>
                   {data.user.coverPhoto ? (
                     <CoverPhoto
@@ -102,7 +114,7 @@ class User extends Component<Props, State> {
                     <TabLabel isActive={feed === 'creator'}>Threads</TabLabel>
                   </ThreadFeedTab>
                 </ThreadFeedTabContainer>
-              </Fragment>
+              </ErrorBoundary>
             }
           />
         </Wrapper>
@@ -112,21 +124,13 @@ class User extends Component<Props, State> {
     if (isLoading) {
       return (
         <Wrapper>
-          <View testID="e2e-User">
-            <Text>Loading...</Text>
-          </View>
+          <Loading />
         </Wrapper>
       );
     }
 
     if (hasError) {
-      return (
-        <Wrapper>
-          <View testID="e2e-User">
-            <Text>Error!</Text>
-          </View>
-        </Wrapper>
-      );
+      return <FullscreenNullState />;
     }
 
     return null;

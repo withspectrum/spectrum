@@ -9,6 +9,8 @@ import SearchInput from '../../components/SearchInput';
 import ThreadsSearchView from './ThreadsSearchView';
 import CommunitiesSearchView from './CommunitiesSearchView';
 import PeopleSearchView from './PeopleSearchView';
+import type { NavigationProps } from 'react-navigation';
+import { FullscreenNullState } from '../../components/NullStates';
 
 const initialLayout = {
   height: 0,
@@ -28,6 +30,7 @@ type State = {
 
 type Props = {
   theme: Object,
+  navigation: NavigationProps,
 };
 
 class Search extends Component<Props, State> {
@@ -44,24 +47,65 @@ class Search extends Component<Props, State> {
   };
 
   renderThreadsRoute = () => {
-    const { index, routes } = this.state;
-    if (routes[index].key !== 'threads') return <SearchView />;
-    if (!this.state.searchString) return <SearchView />;
-    return <ThreadsSearchView queryString={this.state.searchString} />;
+    if (!this.state.searchString)
+      return (
+        <SearchView>
+          <FullscreenNullState
+            title={'Search for threads'}
+            subtitle={
+              'Find topics and conversations across all communities on Spectrum'
+            }
+            icon={'thread'}
+          />
+        </SearchView>
+      );
+
+    return (
+      <ThreadsSearchView
+        navigation={this.props.navigation}
+        queryString={this.state.searchString}
+      />
+    );
   };
 
   renderCommunitiesRoute = () => {
-    const { index, routes } = this.state;
-    if (routes[index].key !== 'communities') return <SearchView />;
-    if (!this.state.searchString) return <SearchView />;
-    return <CommunitiesSearchView queryString={this.state.searchString} />;
+    if (!this.state.searchString)
+      return (
+        <SearchView>
+          <FullscreenNullState
+            title={'Search for communities'}
+            subtitle={'Discover new communities and topics'}
+            icon={'community'}
+          />
+        </SearchView>
+      );
+
+    return (
+      <CommunitiesSearchView
+        navigation={this.props.navigation}
+        queryString={this.state.searchString}
+      />
+    );
   };
 
   renderPeopleRoute = () => {
-    const { index, routes } = this.state;
-    if (routes[index].key !== 'people') return <SearchView />;
-    if (!this.state.searchString) return <SearchView />;
-    return <PeopleSearchView queryString={this.state.searchString} />;
+    if (!this.state.searchString)
+      return (
+        <SearchView>
+          <FullscreenNullState
+            title={'Search for people'}
+            subtitle={'Connect with people on Spectrum'}
+            icon={'person'}
+          />
+        </SearchView>
+      );
+
+    return (
+      <PeopleSearchView
+        navigation={this.props.navigation}
+        queryString={this.state.searchString}
+      />
+    );
   };
 
   handleIndexChange = (index: number) => this.setState({ index });
@@ -96,7 +140,7 @@ class Search extends Component<Props, State> {
     return (
       <View>
         <SearchInput
-          autoFocus={true}
+          autoFocus={false}
           blurOnSubmit={true}
           placeholder={`Search for ${this.state.routes[
             this.state.index

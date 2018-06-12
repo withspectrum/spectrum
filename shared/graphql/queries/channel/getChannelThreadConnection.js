@@ -45,6 +45,7 @@ const getChannelThreadConnectionOptions = {
       channel,
       networkStatus,
       subscribeToMore,
+      refetch,
     },
   }) => ({
     data: {
@@ -52,6 +53,7 @@ const getChannelThreadConnectionOptions = {
       loading,
       networkStatus,
       channel,
+      refetch,
       threadConnection: channel && channel.threadConnection,
       threads:
         channel && channel.threadConnection

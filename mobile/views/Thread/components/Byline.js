@@ -5,11 +5,9 @@ import Avatar from '../../../components/Avatar';
 import Text from '../../../components/Text';
 import { Row } from '../../../components/Flex';
 import Column from '../../../components/Flex/Column';
-import compose from 'recompose/compose';
-import type { Navigation } from '../../../utils/types';
 import type { ThreadParticipantType } from '../../../../shared/graphql/fragments/thread/threadParticipant';
-import { withNavigation } from 'react-navigation';
 import TouchableHighlight from '../../../components/TouchableHighlight';
+import type { NavigationProps } from 'react-navigation';
 
 const BylineWrapper = styled.View`
   flex: 1;
@@ -18,7 +16,7 @@ const BylineWrapper = styled.View`
 
 type Props = {
   author: ThreadParticipantType,
-  navigation: Navigation,
+  navigation: NavigationProps,
 };
 
 // TODO(@mxstbr): Make touchable and link to user profile
@@ -59,4 +57,4 @@ const Byline = ({ author, navigation }: Props) => {
   );
 };
 
-export default compose(withNavigation)(Byline);
+export default Byline;
