@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import compose from 'recompose/compose';
-import idx from 'idx';
 import Text from '../../components/Text';
 import { withCurrentUser } from '../../components/WithCurrentUser';
 import DirectMessageThread from './components/DirectMessageThread';
@@ -17,8 +16,8 @@ type Props = {
 
 class DirectMessageThreadView extends React.Component<Props> {
   render() {
-    const id = idx(this.props, props => props.navigation.state.params.id);
     const { currentUser, navigation } = this.props;
+    const id = navigation.getParam('id', null);
     if (!id) return <Text>Non-existant DM thread</Text>;
 
     if (!currentUser) return null;

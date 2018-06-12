@@ -1,7 +1,6 @@
 // @flow
 // The basic view stack that's used on all of our screens
 // Any view that's added here can be visited from any of our tabs
-import idx from 'idx';
 import Thread from '../Thread';
 import Community from '../Community';
 import Channel from '../Channel';
@@ -13,26 +12,26 @@ const BaseStack = {
   Thread: {
     screen: withMappedNavigationProps(Thread),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: idx(navigation, _ => _.state.params.title) || null,
+      headerTitle: navigation.getParam('title', null),
       tabBarVisible: false,
     }),
   },
   Community: {
     screen: withMappedNavigationProps(Community),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: idx(navigation, _ => _.state.params.title) || null,
+      headerTitle: navigation.getParam('title', null),
     }),
   },
   Channel: {
     screen: withMappedNavigationProps(Channel),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: idx(navigation, _ => _.state.params.title) || null,
+      headerTitle: navigation.getParam('title', null),
     }),
   },
   User: {
     screen: withMappedNavigationProps(User),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: idx(navigation, _ => _.state.params.title) || null,
+      headerTitle: navigation.getParam('title', null),
     }),
   },
 };

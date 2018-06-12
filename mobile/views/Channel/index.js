@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
-import idx from 'idx';
 import {
   getChannelById,
   type GetChannelType,
@@ -58,7 +57,7 @@ class Channel extends Component<Props> {
     } else {
       title = 'Loading channel...';
     }
-    const oldTitle = idx(navigation, _ => _.state.params.title);
+    const oldTitle = navigation.getParam('title', null);
     if (oldTitle && oldTitle === title) return;
     navigation.setParams({ title });
   };

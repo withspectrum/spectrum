@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { ScrollView } from 'react-native';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import idx from 'idx';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import withSafeView from '../../components/SafeAreaView';
@@ -60,7 +59,7 @@ class Thread extends Component<Props> {
     } else {
       title = 'Loading thread...';
     }
-    const oldTitle = idx(navigation, _ => _.state.params.title);
+    const oldTitle = navigation.getParam('title', null);
     if (oldTitle && oldTitle === title) return;
     navigation.setParams({ title });
   };
