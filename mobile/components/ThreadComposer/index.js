@@ -5,7 +5,32 @@ import Wrapper from './components/Wrapper';
 
 type Props = {||};
 
-class ThreadComposer extends React.Component<Props> {
+type State = {
+  title: string,
+  body: string,
+};
+
+class ThreadComposer extends React.Component<Props, State> {
+  bodyInput: ?{
+    focus: Function,
+    clear: Function,
+  };
+
+  state = {
+    title: '',
+    body: '',
+  };
+
+  onChangeText = (field: 'title' | 'body') => (text: string) => {
+    this.setState({
+      [field]: text,
+    });
+  };
+
+  focusBodyInput = () => {
+    this.bodyInput && this.bodyInput.focus();
+  };
+
   render() {
     return (
       <Wrapper>
@@ -17,8 +42,22 @@ class ThreadComposer extends React.Component<Props> {
           <Picker.Item label="First channel" value="first" />
           <Picker.Item label="Second channel" value="second" />
         </Picker>
-        <TextInput autoFocus placeholder="What's up?" />
-        <TextInput multiline placeholder="Write more thoughts here..." />
+        <TextInput
+          onChangeText={this.onChangeText('title')}
+          value={this.state.title}
+          autoFocus
+          placeholder="What's up?"
+          // Called when "Return" is pressed
+          onSubmitEditing={this.focusBodyInput}
+        />
+        <TextInput
+          ref={elem => (this.bodyInput = elem)}
+          onChangeText={this.onChangeText('body')}
+          value={this.state.body}
+          multiline
+          numberOfLines={5}
+          placeholder="Write more thoughts here..."
+        />
         <Button onPress={() => null} title="Publish" />
       </Wrapper>
     );
