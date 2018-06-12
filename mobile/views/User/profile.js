@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
+import idx from 'idx';
 import getUserThreadConnection from '../../../shared/graphql/queries/user/getUserThreadConnection';
 import ThreadFeed from '../../components/ThreadFeed';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
@@ -50,7 +51,9 @@ class User extends Component<Props, State> {
     } else {
       title = 'Loading user...';
     }
-    if (navigation.state.params.title === title) return;
+
+    const oldTitle = idx(navigation, _ => _.state.params.title);
+    if (oldTitle && oldTitle === title) return;
     navigation.setParams({ title });
   };
 

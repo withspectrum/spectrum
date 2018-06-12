@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
+import idx from 'idx';
 import {
   getCommunityById,
   type GetCommunityType,
@@ -78,7 +79,8 @@ class Community extends Component<Props> {
     } else {
       title = 'Loading community...';
     }
-    if (navigation.state.params.title === title) return;
+    const oldTitle = idx(navigation, _ => _.state.params.title);
+    if (oldTitle && oldTitle === title) return;
     navigation.setParams({ title });
   };
 

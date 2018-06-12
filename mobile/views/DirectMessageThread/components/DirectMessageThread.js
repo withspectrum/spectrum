@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import compose from 'recompose/compose';
+import idx from 'idx';
 import Text from '../../../components/Text';
 import ChatInput from '../../../components/ChatInput';
 import Messages from '../../../components/Messages';
@@ -52,7 +53,8 @@ class DirectMessageThread extends Component<Props> {
     let title = directMessageThread
       ? sentencify(directMessageThread.participants.map(({ name }) => name))
       : 'Loading thread...';
-    if (navigation.state.params.title === title) return;
+    const oldTitle = idx(navigation, _ => _.state.params.title);
+    if (oldTitle && oldTitle === title) return;
     navigation.setParams({ title });
   };
 
