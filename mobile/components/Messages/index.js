@@ -54,8 +54,6 @@ class Messages extends Component<Props> {
     } = this.props;
 
     if (data.messageConnection && data.messageConnection.edges.length > 0) {
-      const { thread } = data;
-
       const messages = sortAndGroupMessages(
         data.messageConnection.edges
           .slice()

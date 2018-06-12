@@ -6,13 +6,14 @@ const width = Dimensions.get('window').width;
 
 export const Container = styled.View`
   padding: 8px 4px;
-  max-width: ${props => (props.me ? width : width - 32)};
+  width: 100%;
 `;
 
 export const MessageGroupContainer = styled.View`
   display: flex;
   flex-direction: row;
   align-items: flex-end;
+  max-width: ${props => (props.me ? width : width - 32)};
 `;
 
 export const BubbleGroupContainer = styled.View`
@@ -45,9 +46,12 @@ export const Username = styled.Text`
 export const RoboWrapper = styled.View`
   flex-direction: row;
   flex: 1;
+  flex-shrink: 0;
   justify-content: center;
+  width: 100%;
   align-items: center;
   margin: 24px 0 16px;
+  width: 100%;
 `;
 
 export const Hr = styled.View`
@@ -55,6 +59,10 @@ export const Hr = styled.View`
   border-bottom-color: ${props => props.color(props.theme)};
   border-bottom-width: ${props => StyleSheet.hairlineWidth};
   flex: 1;
+`;
+
+export const TextWrapper = styled.View`
+  display: flex;
 `;
 
 export const RoboText = styled.Text`

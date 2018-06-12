@@ -1,6 +1,7 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import { ScrollView } from 'react-native';
+import InvertedScrollView from './InvertedScrollView';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
@@ -42,7 +43,7 @@ type Props = {
   },
 };
 
-class Thread extends Component<Props> {
+class Thread extends React.Component<Props> {
   trackView = () => {
     const { data: { thread } } = this.props;
     if (!thread) return;
@@ -110,38 +111,47 @@ class Thread extends Component<Props> {
       // not sure why, but the new Date() call above breaks its inference and it thinks data.thread could be
       // undefined below
       const thread = ((data.thread: any): GetThreadType);
+
+      const ScrollComponent = thread.currentUserLastSeen
+        ? InvertedScrollView
+        : ScrollView;
+
+      const ScrollChildrenData = [
+        <ErrorBoundary>
+          <ThreadMessages navigation={navigation} id={thread.id} />
+        </ErrorBoundary>,
+        <ThreadContentContainer>
+          <ThreadTitle>{thread.content.title}</ThreadTitle>
+
+          <ThreadTimestamp>{convertTimestampToDate(createdAt)}</ThreadTimestamp>
+
+          {thread.content.body && (
+            <ThreadContent rawContentState={JSON.parse(thread.content.body)} />
+          )}
+        </ThreadContentContainer>,
+        <UserListItem
+          onPressHandler={() =>
+            navigation.navigate({
+              routeName: 'User',
+              key: thread.author.user.id,
+              params: { id: thread.author.user.id },
+            })
+          }
+          user={thread.author.user}
+        />,
+      ];
+
+      const ScrollChildrenRender = thread.currentUserLastSeen
+        ? ScrollChildrenData
+        : ScrollChildrenData.reverse();
+
       return (
         <Wrapper>
-          <ScrollView style={{ flex: 1, width: '100%' }} testID="e2e-thread">
-            <UserListItem
-              onPressHandler={() =>
-                navigation.navigate({
-                  routeName: 'User',
-                  key: thread.author.user.id,
-                  params: { id: thread.author.user.id },
-                })
-              }
-              user={thread.author.user}
-            />
-
-            <ThreadContentContainer>
-              <ThreadTitle>{thread.content.title}</ThreadTitle>
-
-              <ThreadTimestamp>
-                {convertTimestampToDate(createdAt)}
-              </ThreadTimestamp>
-
-              {thread.content.body && (
-                <ThreadContent
-                  rawContentState={JSON.parse(thread.content.body)}
-                />
-              )}
-            </ThreadContentContainer>
-
-            <ErrorBoundary>
-              <ThreadMessages navigation={navigation} id={thread.id} />
-            </ErrorBoundary>
-          </ScrollView>
+          <ScrollComponent testID="e2e-thread">
+            {ScrollChildrenRender.map((child, i) => (
+              <React.Fragment key={i}>{child}</React.Fragment>
+            ))}
+          </ScrollComponent>
 
           {currentUser && (
             <ErrorBoundary>

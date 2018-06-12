@@ -17,7 +17,8 @@ export const ThreadTitle = styled.Text`
 export const ThreadContentContainer = styled.View`
   margin: 24px 16px 32px;
   display: flex;
-  flex: 1;
+  flex-grow: 1;
+  flex-shrink: 0;
 `;
 
 export const ThreadTimestamp = styled.Text`
