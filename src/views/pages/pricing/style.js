@@ -256,8 +256,7 @@ export const PlanSection = styled.div`
     max-width: 100%;
     padding: 24px;
     padding-bottom: 32px;
-    border-radius: 0;
-    box-shadow: none;
+    margin: 0 8px;
   }
 
   a {
