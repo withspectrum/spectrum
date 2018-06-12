@@ -53,7 +53,11 @@ export const getAu = (range: Timeframe) => {
   const { current } = parseRange(range);
   return db
     .table('users')
-    .filter(db.row('lastSeen').during(db.now().sub(current), db.now()))
+    .filter(row =>
+      row
+        .hasFields('lastSeen')
+        .and(row('lastSeen').during(db.now().sub(current), db.now()))
+    )
     .count()
     .default(0)
     .run();
@@ -102,6 +106,8 @@ export const getCount = (table: string, filter: mixed) => {
 export const getCoreMetrics = () => {
   return db
     .table('coreMetrics')
+    .orderBy(db.desc('date'))
+    .limit(90)
     .orderBy('date')
     .run();
 };
