@@ -37,10 +37,10 @@ export default class InfiniteScroll extends React.Component<Props> {
   scrollComponent: Object;
   pageLoaded: number;
   _defaultLoader: React.Node;
+  pullToRefresh: any;
 
   constructor(props: Props) {
     super(props);
-
     this._defaultLoader = props.loader;
     this.scrollListener = this.scrollListener.bind(this);
     this.pullToRefresh = null;
@@ -53,9 +53,7 @@ export default class InfiniteScroll extends React.Component<Props> {
     if (this.props.showPTRBefore) {
       this.pullToRefresh = PullToRefresh.init({
         mainElement: this.props.showPTRBefore,
-        onRefresh: function() {
-          window.location.reload();
-        },
+        triggerElement: this.props.showPTRBefore,
       });
     }
   }
@@ -103,9 +101,13 @@ export default class InfiniteScroll extends React.Component<Props> {
       };
     }
 
+    const elementProps = { ...props };
+    // showPTRBefore prop not applicable for DOM element that is going to return
+    delete elementProps.showPTRBefore;
+
     return React.createElement(
       element,
-      props,
+      elementProps,
       children,
       hasMore && (loader || this._defaultLoader)
     );
