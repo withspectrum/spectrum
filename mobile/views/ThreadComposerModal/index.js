@@ -2,9 +2,14 @@
 import React from 'react';
 import { SafeAreaView } from 'react-native';
 import ThreadComposer from '../../components/ThreadComposer';
+import type { NavigationProps } from 'react-navigation';
 
-export default () => (
+type Props = {
+  ...$Exact<NavigationProps>,
+};
+
+export default (props: Props) => (
   <SafeAreaView>
-    <ThreadComposer />
+    <ThreadComposer {...props} />
   </SafeAreaView>
 );

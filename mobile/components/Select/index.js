@@ -11,8 +11,6 @@ const customInputStyles = {
   borderColor: 'rgb(223, 231, 239)',
   borderRadius: 8,
   borderWidth: 1,
-  maxWidth: '40%',
-  flex: 0,
   color: '#000',
 };
 
@@ -21,9 +19,8 @@ export default (props: PickerProps) => (
     hideIcon
     {...props}
     style={{
-      inputIOS: customInputStyles,
-      inputAndroid: customInputStyles,
-      ...props.style,
+      inputIOS: { ...customInputStyles, ...props.style },
+      inputAndroid: { ...customInputStyles, ...props.style },
     }}
   />
 );

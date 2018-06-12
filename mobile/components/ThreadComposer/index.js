@@ -3,18 +3,30 @@ import React, { Fragment } from 'react';
 import { TextInput, Button } from 'react-native';
 import Select from '../../components/Select';
 import Wrapper, { InputWrapper } from './components/Wrapper';
+import LocationPicker from './components/LocationPicker';
 import { TitleTextInput, BodyTextInput } from './components/TextInputs';
+import publishThread, {
+  type PublishThreadProps,
+  type PublishThreadResultType,
+  type PublishThreadInput,
+} from '../../../shared/graphql/mutations/thread/publishThread';
 import type { TextInputProps } from 'react-native';
+import type { NavigationProps } from 'react-navigation';
 
-type Props = {||};
+type Props = {|
+  ...$Exact<PublishThreadProps>,
+  ...$Exact<NavigationProps>,
+|};
+
+type SelectedState = {
+  community: ?string,
+  channel: ?string,
+};
 
 type State = {
   title: string,
   body: string,
-  selected: {
-    community: ?string,
-    channel: ?string,
-  },
+  selected: SelectedState,
 };
 
 class ThreadComposer extends React.Component<Props, State> {
@@ -38,45 +50,52 @@ class ThreadComposer extends React.Component<Props, State> {
     });
   };
 
-  onValueChange = (field: 'channel' | 'community') => (value: string) => {
-    this.setState(prev => ({
-      selected: {
-        ...prev.selected,
-        [field]: value,
-      },
-    }));
+  onSelectedChange = (selected: SelectedState) => {
+    this.setState({ selected });
   };
 
   focusBodyInput = () => {
     this.bodyInput && this.bodyInput.focus();
   };
 
+  publish = () => {
+    const { selected, title, body } = this.state;
+    if (!selected.community || !selected.channel || !title) return;
+    this.props
+      .publishThread({
+        channelId: selected.channel,
+        communityId: selected.community,
+        content: {
+          title,
+          body,
+        },
+        type: 'TEXT',
+      })
+      .then(result => {
+        this.props.navigation.navigate('Thread', {
+          id: result.data.publishThread.id,
+        });
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+
   render() {
-    const { selected } = this.state;
+    const { selected, title, body } = this.state;
+
+    const canPublish =
+      selected.community !== null && selected.channel !== null && title !== '';
     return (
       <Wrapper>
-        <Select
-          placeholder={{ label: 'Select a community', value: null }}
-          items={[
-            { label: 'First community', value: 'first' },
-            { label: 'Second community', value: 'second' },
-          ]}
-          value={selected.community}
-          onValueChange={this.onValueChange('community')}
-        />
-        <Select
-          placeholder={{ label: 'Select a channel', value: null }}
-          items={[
-            { label: 'First channel', value: 'first' },
-            { label: 'Second channel', value: 'second' },
-          ]}
-          value={selected.channel}
-          onValueChange={this.onValueChange('channel')}
+        <LocationPicker
+          selected={selected}
+          onSelectedChange={this.onSelectedChange}
         />
         <InputWrapper>
           <TitleTextInput
             onChangeText={this.onChangeText('title')}
-            value={this.state.title}
+            value={title}
             autoFocus
             placeholder="What's up?"
             // Called when "Return" is pressed
@@ -85,16 +104,16 @@ class ThreadComposer extends React.Component<Props, State> {
           <BodyTextInput
             innerRef={elem => (this.bodyInput = elem)}
             onChangeText={this.onChangeText('body')}
-            value={this.state.body}
+            value={body}
             multiline
             numberOfLines={5}
             placeholder="Write more thoughts here..."
           />
         </InputWrapper>
-        <Button onPress={() => null} title="Publish" />
+        <Button onPress={this.publish} title="Publish" disabled={!canPublish} />
       </Wrapper>
     );
   }
 }
 
-export default ThreadComposer;
+export default publishThread(ThreadComposer);
