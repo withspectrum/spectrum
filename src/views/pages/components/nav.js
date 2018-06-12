@@ -77,7 +77,10 @@ class Nav extends React.Component<Props, State> {
           </FeaturesTab>
           <PricingTab
             dark={this.props.dark}
-            selected={this.props.location === 'pricing'}
+            selected={
+              this.props.location === 'pricing' ||
+              this.props.location === 'pricing/concierge'
+            }
             to="/pricing"
             data-cy="navbar-splash-pricing"
           >
@@ -134,7 +137,10 @@ class Nav extends React.Component<Props, State> {
               </FeaturesLink>
               <PricingLink
                 to="/pricing"
-                selected={this.props.location === 'pricing'}
+                selected={
+                  this.props.location === 'pricing' ||
+                  this.props.location === 'pricing/concierge'
+                }
               >
                 <Icon glyph="payment" />Pricing<Icon glyph="enter" />
               </PricingLink>

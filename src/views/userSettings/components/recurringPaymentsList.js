@@ -6,7 +6,7 @@ import { BillingListItem } from 'src/components/listItems';
 import { IconButton } from 'src/components/buttons';
 import { UpsellUpgradeToPro } from 'src/components/upsell';
 import { openModal } from 'src/actions/modals';
-import { convertTimestampToDate } from 'src/helpers/utils';
+import { convertTimestampToDate } from 'shared/time-formatting';
 import getCurrentUserRecurringPayments from 'shared/graphql/queries/user/getCurrentUserRecurringPayments';
 import type { GetCurrentUserRecurringPaymentsType } from 'shared/graphql/queries/user/getCurrentUserRecurringPayments';
 import { displayLoadingCard } from 'src/components/loading';

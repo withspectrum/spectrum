@@ -17,6 +17,8 @@ import {
   ProfileIcon,
 } from './style';
 
+const IS_PROD = process.env.NODE_ENV === 'production';
+
 const routeConfiguration = {
   Home: {
     screen: HomeStack,
@@ -52,12 +54,13 @@ const routeConfiguration = {
 
 const tabBarConfiguration = {
   tabBarOptions: {
-    activeTintColor: theme.brand.alt,
-    inactiveTintColor: theme.text.alt,
+    activeTintColor: IS_PROD ? theme.brand.alt : theme.text.reverse,
+    inactiveTintColor: IS_PROD ? theme.text.alt : theme.warn.border,
     labelStyle: {
       fontWeight: 'bold',
       marginBottom: 3,
     },
+    style: IS_PROD ? {} : { backgroundColor: theme.warn.alt },
   },
 };
 

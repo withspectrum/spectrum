@@ -46,7 +46,7 @@ class ChatInput extends React.Component<InputProps, State> {
               onSubmitEditing={this.submit}
             />
           </ChatInputTextInputWrapper>
-          <Icon glyph={'send'} onPress={this.submit} size={32} />
+          <Icon glyph={'send-fill'} onPress={this.submit} size={32} />
         </ChatInputWrapper>
         {/* NOTE(@mxstbr): Magic number, otherwise the chatinput is way above the keyboard */}
         <KeyboardSpacer topSpacing={-75} />
