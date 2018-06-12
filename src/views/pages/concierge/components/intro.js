@@ -54,11 +54,11 @@ const Intro = (props: Props) => {
               <Feature title={'Content management pipeline'} />
               <Feature title={'Conversation and issue triage'} />
               <Feature title={'Notification filtering and prioritization'} />
-              <Feature title={'Dedicated moderation team'} />
+              <Feature title={'Experienced moderation team'} />
               <Feature
                 title={'Deep reports and customized community analytics'}
               />
-              <Feature title={'Accelerated growth'} />
+              <Feature title={'Proven growth strategies'} />
               <Feature title={'Migration assistance'} />
             </PlanFeatures>
           </PlanSection>
