@@ -4840,6 +4840,10 @@ lodash.isarray@^3.0.0:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/lodash.isarray/-/lodash.isarray-3.0.4.tgz#79e4eb88c36a8122af86f844aa9bcd851b5fbb55"
 
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+
 lodash.keys@^3.0.0:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/lodash.keys/-/lodash.keys-3.1.2.tgz#4dbc0472b156be50a0b286855d1bd0b0c656098a"
@@ -6169,6 +6173,12 @@ react-native-keyboard-spacer@^0.4.1:
   dependencies:
     babel-plugin-module-resolver "^2.3.0"
     babel-preset-react-native "1.9.0"
+
+react-native-picker-select@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-picker-select/-/react-native-picker-select-3.1.1.tgz#a99ee6726c58a9d05ae425577f2d28e32d8e1262"
+  dependencies:
+    lodash.isequal "^4.5.0"
 
 react-native-safe-area-view@^0.7.0:
   version "0.7.0"
