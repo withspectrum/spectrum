@@ -30,6 +30,7 @@ const tabBarVisible = navigation => {
 
   return showTabbar;
 };
+const IS_PROD = process.env.NODE_ENV === 'production';
 
 const routeConfiguration = {
   Home: {
@@ -66,12 +67,13 @@ const routeConfiguration = {
 
 const tabBarConfiguration = {
   tabBarOptions: {
-    activeTintColor: theme.brand.alt,
-    inactiveTintColor: theme.text.alt,
+    activeTintColor: IS_PROD ? theme.brand.alt : theme.text.reverse,
+    inactiveTintColor: IS_PROD ? theme.text.alt : theme.warn.border,
     labelStyle: {
       fontWeight: 'bold',
       marginBottom: 3,
     },
+    style: IS_PROD ? {} : { backgroundColor: theme.warn.alt },
   },
   navigationOptions: ({ navigation }) => ({
     tabBarVisible: tabBarVisible(navigation),
