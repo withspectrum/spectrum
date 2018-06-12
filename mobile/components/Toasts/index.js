@@ -3,7 +3,7 @@ import * as React from 'react';
 import { withTheme } from 'styled-components';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { Animated, Dimensions } from 'react-native';
+import { Animated, Dimensions, Easing } from 'react-native';
 import { removeToast, type ToastType } from '../../actions/toasts';
 import type { State as ReduxState } from '../../reducers';
 import Toast from './Toast';
@@ -26,7 +26,7 @@ class Toasts extends React.Component<Props, State> {
   leftBlockPosition = new Animated.Value(-width);
   opacityValue = new Animated.Value(0);
   containerTimeoutTiming = 3000;
-  animationDuration = 250;
+  animationDuration = 200;
   removeToastTimeoutTiming = this.containerTimeoutTiming +
     this.animationDuration;
   hideContainerTimeout = undefined;
@@ -86,10 +86,12 @@ class Toasts extends React.Component<Props, State> {
   }
 
   animateContainerPosition = (val: 'in' | 'out') => {
-    return Animated.timing(this.leftBlockPosition, {
-      toValue: val === 'in' ? 0 : width,
-      duration: this.animationDuration,
+    return Animated.spring(this.leftBlockPosition, {
+      toValue: val === 'in' ? -16 : width,
+      friction: 8,
+      tension: 54,
       useNativeDriver: true,
+      easing: Easing.inOut(Easing.ease),
     });
   };
 

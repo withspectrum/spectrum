@@ -2,7 +2,9 @@
 import styled from 'styled-components/native';
 import { isIPhoneX } from '../../utils/platform';
 import TouchableHighlight from '../TouchableHighlight';
-import { Animated } from 'react-native';
+import { Animated, Dimensions } from 'react-native';
+
+const width = Dimensions.get('window').width;
 
 export const Container = styled.View`
   position: absolute;
@@ -47,4 +49,6 @@ export const ToastContainer = styled(Animated.View)`
   display: flex;
   flex: 1;
   height: 48px;
+  width: ${width + 32}px;
+  padding: 0 16px;
 `;
