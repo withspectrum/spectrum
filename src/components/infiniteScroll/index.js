@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import PullToRefresh from 'pulltorefreshjs';
 import { fetchMoreOnInfiniteScrollLoad } from './tallViewports';
 
 type Props = {
@@ -14,6 +15,7 @@ type Props = {
   useWindow: boolean,
   isReverse: boolean,
   scrollElement: ?Object,
+  showPTRBefore: ?string,
   children: Array<?React.Node> | ?React.Node,
   className: string,
 };
@@ -28,6 +30,7 @@ export default class InfiniteScroll extends React.Component<Props> {
     useWindow: true,
     isReverse: false,
     scrollElement: null,
+    showPTRBefore: null,
   };
 
   scrollListener: Function;
@@ -40,11 +43,21 @@ export default class InfiniteScroll extends React.Component<Props> {
 
     this._defaultLoader = props.loader;
     this.scrollListener = this.scrollListener.bind(this);
+    this.pullToRefresh = null;
   }
 
   componentDidMount() {
     this.pageLoaded = this.props.pageStart;
     this.attachScrollListener();
+
+    if (this.props.showPTRBefore) {
+      this.pullToRefresh = PullToRefresh.init({
+        mainElement: this.props.showPTRBefore,
+        onRefresh: function() {
+          window.location.reload();
+        },
+      });
+    }
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -191,6 +204,9 @@ export default class InfiniteScroll extends React.Component<Props> {
 
   componentWillUnmount() {
     this.detachScrollListener();
+    if (this.pullToRefresh) {
+      this.pullToRefresh.destroy();
+    }
   }
 
   // Set a defaut loader for all your `InfiniteScroll` components

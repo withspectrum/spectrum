@@ -304,6 +304,7 @@ class ThreadFeed extends React.Component<Props, State> {
           useWindow={false}
           initialLoad={false}
           scrollElement={scrollElement}
+          showPTRBefore={'#scroller-for-inbox'}
           threshold={750}
           className={'scroller-for-dashboard-threads'}
         >
