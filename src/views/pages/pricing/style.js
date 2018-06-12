@@ -1,5 +1,5 @@
 // @flow
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Button, TextButton } from 'src/components/buttons';
 import { hexa, zIndex } from 'src/components/globals';
 import Link from 'src/components/link';

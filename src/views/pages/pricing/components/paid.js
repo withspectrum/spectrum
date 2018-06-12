@@ -13,9 +13,7 @@ import {
   PlanPrice,
   PlanDescription,
   PlanFeatures,
-  ConciergeLink,
 } from '../style';
-import { Button } from 'src/components/buttons';
 import Feature from './feature';
 import Link from 'src/components/link';
 
