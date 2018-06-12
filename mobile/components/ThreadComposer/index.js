@@ -1,8 +1,10 @@
 // @flow
 import React, { Fragment } from 'react';
 import { TextInput, Button } from 'react-native';
-import Wrapper from './components/Wrapper';
 import Select from '../../components/Select';
+import Wrapper from './components/Wrapper';
+import { TitleTextInput, BodyTextInput } from './components/TextInputs';
+import type { TextInputProps } from 'react-native';
 
 type Props = {||};
 
@@ -71,7 +73,7 @@ class ThreadComposer extends React.Component<Props, State> {
           value={selected.channel}
           onValueChange={this.onValueChange('channel')}
         />
-        <TextInput
+        <TitleTextInput
           onChangeText={this.onChangeText('title')}
           value={this.state.title}
           autoFocus
@@ -79,8 +81,8 @@ class ThreadComposer extends React.Component<Props, State> {
           // Called when "Return" is pressed
           onSubmitEditing={this.focusBodyInput}
         />
-        <TextInput
-          ref={elem => (this.bodyInput = elem)}
+        <BodyTextInput
+          innerRef={elem => (this.bodyInput = elem)}
           onChangeText={this.onChangeText('body')}
           value={this.state.body}
           multiline
