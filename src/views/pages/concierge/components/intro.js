@@ -61,7 +61,7 @@ const Intro = (props: Props) => {
 
             <Link
               onClick={() => track(events.CONCIERGE_PAGE_LEARN_MORE_CLICKED)}
-              to={`/t?=`}
+              to={`/thread/c5a6ea22-eb8f-4247-bed4-c322f6177c94`}
             >
               <TextCTA>Learn more</TextCTA>
             </Link>
