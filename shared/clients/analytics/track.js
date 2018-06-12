@@ -1,7 +1,10 @@
 // @flow
-import { isDesktopApp } from '../is-desktop-app';
-const amplitude = window.amplitude;
-export const track = (eventType: string, eventProperties?: Object = {}) => {
+import type { AmplitudeClient, Amplitude } from './';
+
+export const createTrack = (amplitude: Amplitude, client: AmplitudeClient) => (
+  eventType: string,
+  eventProperties?: Object = {}
+) => {
   if (!amplitude) {
     console.warn('No amplitude function attached to window');
     return;
@@ -21,7 +24,7 @@ export const track = (eventType: string, eventProperties?: Object = {}) => {
     // console.warn(`[Amplitude] Tracking ${eventType}`);
     return amplitude.getInstance().logEvent(eventType, {
       ...eventProperties,
-      client: isDesktopApp() ? 'desktop' : 'web',
+      client,
     });
   };
 

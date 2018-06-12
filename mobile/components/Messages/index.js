@@ -5,7 +5,7 @@ import viewNetworkHandler from '../ViewNetworkHandler';
 import Message from '../Message';
 import InfiniteList from '../InfiniteList';
 import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
-import { convertTimestampToDate } from '../../../src/helpers/utils';
+import { convertTimestampToDate } from '../../../shared/time-formatting';
 import { withCurrentUser } from '../../components/WithCurrentUser';
 import { UnseenRoboText, TimestampRoboText } from './RoboText';
 import AuthorAvatar from './AuthorAvatar';

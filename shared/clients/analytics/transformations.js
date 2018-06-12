@@ -2,7 +2,7 @@
 import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo';
-import { getTruthyValuesFromObject } from 'src/helpers/utils';
+import { getTruthyValuesFromObject } from '../../truthy-values';
 
 type AnalyticsChannel = {
   id: string,

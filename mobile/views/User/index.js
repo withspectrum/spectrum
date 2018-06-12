@@ -7,9 +7,11 @@ import {
 } from '../../../shared/graphql/queries/user/getUser';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import Profile from './profile';
+import type { NavigationProps } from 'react-navigation';
 
 type Props = {
   id: ?string,
+  navigation: NavigationProps,
 };
 
 type State = {

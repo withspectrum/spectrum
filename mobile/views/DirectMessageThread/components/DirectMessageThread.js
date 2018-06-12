@@ -13,6 +13,7 @@ import ViewNetworkHandler, {
 } from '../../../components/ViewNetworkHandler';
 import Loading from '../../../components/Loading';
 import ErrorBoundary from '../../../components/ErrorBoundary';
+import { track, events } from '../../../utils/analytics';
 
 import sentencify from '../../../../shared/sentencify';
 import getDirectMessageThread, {
@@ -40,6 +41,41 @@ type Props = {
 };
 
 class DirectMessageThread extends Component<Props> {
+  trackView = () => {
+    const { data: { directMessageThread } } = this.props;
+    if (!directMessageThread) return;
+    track(events.DIRECT_MESSAGE_THREAD_VIEWED);
+  };
+
+  setTitle = () => {
+    const { data: { directMessageThread }, navigation } = this.props;
+    let title = directMessageThread
+      ? sentencify(directMessageThread.participants.map(({ name }) => name))
+      : 'Loading thread...';
+    if (navigation.state.params.title === title) return;
+    navigation.setParams({ title });
+  };
+
+  componentDidMount() {
+    this.trackView();
+    this.setTitle();
+  }
+
+  componentDidUpdate(prev) {
+    const curr = this.props;
+    const first =
+      !prev.data.directMessageThread && curr.data.directMessageThread;
+    const changed =
+      prev.data.directMessageThread &&
+      curr.data.directMessageThread &&
+      prev.data.directMessageThread.id !== curr.data.directMessageThread.id;
+    if (first || changed) {
+      this.trackView();
+    }
+
+    this.setTitle();
+  }
+
   sendMessage = text => {
     if (!this.props.data.directMessageThread) return;
     this.props.sendDirectMessage({

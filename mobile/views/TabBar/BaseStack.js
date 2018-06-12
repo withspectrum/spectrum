@@ -28,19 +28,19 @@ const BaseStack = {
   Community: {
     screen: withMappedNavigationProps(Community),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: null,
+      headerTitle: navigation.state.params.title || null,
     }),
   },
   Channel: {
     screen: withMappedNavigationProps(Channel),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: null,
+      headerTitle: navigation.state.params.title || null,
     }),
   },
   User: {
     screen: withMappedNavigationProps(User),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      header: null,
+      headerTitle: navigation.state.params.title || null,
     }),
   },
 };
