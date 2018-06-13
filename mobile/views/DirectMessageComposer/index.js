@@ -2,19 +2,45 @@
 import React from 'react';
 import { TextInput, View } from 'react-native';
 import Text from '../../components/Text';
+import TouchableHighlight from '../../components/TouchableHighlight';
 import ChatInput from '../../components/ChatInput';
 import { FullscreenNullState } from '../../components/NullStates';
 import PeopleSearchView from '../Search/PeopleSearchView';
 import createDirectMessageThread, {
   type CreateDirectMessageThreadProps,
 } from '../../../shared/graphql/mutations/directMessageThread/createDirectMessageThread';
+import { getUserById } from '../../../shared/graphql/queries/user/getUser';
 import {
   ComposerWrapper,
   SearchInputArea,
   SelectedUsers,
-  SelectedUser,
+  SelectedUserPill,
 } from './style';
 import type { NavigationProps } from 'react-navigation';
+import type { ComponentType } from 'react';
+
+const SelectedUser: ComponentType<{
+  id: string,
+  onPressHandler: Function,
+}> = getUserById(({ data, onPressHandler }) => {
+  if (data.user)
+    return (
+      <TouchableHighlight onPress={onPressHandler}>
+        <SelectedUserPill>
+          <Text
+            type="body"
+            style={{ marginTop: 0, fontSize: 14 }}
+            color={props => props.theme.brand.default}
+          >
+            {data.user.name}
+            {'  ✕'}
+          </Text>
+        </SelectedUserPill>
+      </TouchableHighlight>
+    );
+
+  return null;
+});
 
 type Props = {
   ...$Exact<NavigationProps>,
