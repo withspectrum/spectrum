@@ -605,7 +605,7 @@ class ChatInput extends React.Component<Props, State> {
       });
 
     if (blob) {
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(blob);
     }
   };
 
