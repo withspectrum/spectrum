@@ -19,6 +19,12 @@ class ErrorBoundary extends React.Component<Props, State> {
   componentDidCatch = (error: any, errorInfo: any) => {
     this.setState({ error });
     Sentry.captureException(error, { extra: errorInfo });
+    if (this.props.alert) {
+      Alert.alert(
+        'Something went wrong',
+        'An error occured and our team has been notified - please restart the Spectrum app'
+      );
+    }
   };
 
   render() {
@@ -31,10 +37,6 @@ class ErrorBoundary extends React.Component<Props, State> {
 
     if (error) {
       if (alert) {
-        Alert.alert(
-          'Something went wrong',
-          'An error occured and our team has been notified - please restart the Spectrum app'
-        );
         return null;
       }
 
