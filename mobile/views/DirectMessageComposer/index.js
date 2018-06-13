@@ -93,7 +93,7 @@ class DirectMessageComposer extends React.Component<Props, State> {
     return (
       <ComposerWrapper>
         <SearchInputArea>
-          <SelectedUsers>
+          <SelectedUsers empty={this.state.selectedUsers.length === 0}>
             {this.state.selectedUsers.map(userId => (
               <SelectedUser
                 key={userId}
@@ -108,7 +108,8 @@ class DirectMessageComposer extends React.Component<Props, State> {
             onSubmitEditing={this.onFinishTyping}
             value={this.state.wipSearchString}
             returnKeyType="search"
-            style={{ flex: 1 }}
+            autoFocus
+            style={{ fontSize: 18, margin: 8 }}
           />
         </SearchInputArea>
         {!this.state.searchString ? (
