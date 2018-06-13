@@ -6,9 +6,12 @@ import ChatInput from '../../components/ChatInput';
 import { FullscreenNullState } from '../../components/NullStates';
 import PeopleSearchView from '../Search/PeopleSearchView';
 import { getUserById } from '../../../shared/graphql/queries/user/getUser';
-import styled from 'styled-components/native';
+import createDirectMessageThread, {
+  type CreateDirectMessageThreadProps,
+} from '../../../shared/graphql/mutations/directMessageThread/createDirectMessageThread';
 import type { NavigationProps } from 'react-navigation';
 
+import styled from 'styled-components/native';
 const ComposerWrapper = styled.View`
   flex-direction: column;
   height: 100%;
@@ -35,6 +38,7 @@ const SelectedUser = getUserById(({ data, onPressHandler }) => {
 
 type Props = {
   ...$Exact<NavigationProps>,
+  ...$Exact<CreateDirectMessageThreadProps>,
 };
 
 type State = {
@@ -82,7 +86,28 @@ class DirectMessageComposer extends React.Component<Props, State> {
     }));
   };
 
-  onSubmit = (text: string) => {};
+  onSubmit = (text: string) => {
+    if (this.state.selectedUsers.length === 0) return;
+    this.props
+      .createDirectMessageThread({
+        participants: this.state.selectedUsers,
+        message: {
+          messageType: 'text',
+          threadType: 'directMessageThread',
+          content: {
+            body: text,
+          },
+        },
+      })
+      .then(result => {
+        this.props.navigation.navigate('DirectMessageThread', {
+          id: result.data.createDirectMessageThread.id,
+        });
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
 
   render() {
     return (
@@ -126,4 +151,4 @@ class DirectMessageComposer extends React.Component<Props, State> {
   }
 }
 
-export default DirectMessageComposer;
+export default createDirectMessageThread(DirectMessageComposer);
