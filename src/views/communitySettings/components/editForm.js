@@ -152,6 +152,8 @@ class EditForm extends React.Component<Props, State> {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (!file) return;
+
     this.setState({
       isLoading: true,
     });
