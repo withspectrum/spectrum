@@ -6,7 +6,7 @@ import ConditionalWrap from '../ConditionalWrap';
 import Loading from '../Loading';
 import Icon from '../Icon';
 import { ButtonView, ButtonText } from './style';
-import type { GlyphTypes } from '../icon/types';
+import type { GlyphTypes } from '../Icon/types';
 import type { Node } from 'react';
 
 type Props = {
