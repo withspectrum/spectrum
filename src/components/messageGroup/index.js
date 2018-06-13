@@ -51,10 +51,14 @@ export const AuthorByline = (props: {
   const { user, roles } = props;
   return (
     <Byline>
-      <Link to={`/users/${user.username}`}>
-        <Name>{user.name}</Name>{' '}
-        <Username>{user.username && `@${user.username}`}</Username>
-      </Link>
+      {user.username ? (
+        <Link to={`/users/${user.username}`}>
+          <Name>{user.name}</Name>{' '}
+          <Username>{user.username && `@${user.username}`}</Username>
+        </Link>
+      ) : (
+        <Name>{user.name}</Name>
+      )}
       {roles && roles.map((role, index) => <Badge type={role} key={index} />)}
       {user.isPro && <Badge type="pro" />}
     </Byline>

@@ -109,6 +109,8 @@ class CommunityWithData extends React.Component<Props, State> {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (!file) return;
+
     this.setState({
       isLoading: true,
     });
@@ -130,12 +132,16 @@ class CommunityWithData extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   setCommunityCover = e => {
     let reader = new FileReader();
     let file = e.target.files[0];
+
+    if (!file) return;
 
     this.setState({
       isLoading: true,
@@ -158,7 +164,9 @@ class CommunityWithData extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   save = e => {
