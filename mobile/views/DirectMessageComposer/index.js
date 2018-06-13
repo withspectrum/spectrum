@@ -5,36 +5,16 @@ import Text from '../../components/Text';
 import ChatInput from '../../components/ChatInput';
 import { FullscreenNullState } from '../../components/NullStates';
 import PeopleSearchView from '../Search/PeopleSearchView';
-import { getUserById } from '../../../shared/graphql/queries/user/getUser';
 import createDirectMessageThread, {
   type CreateDirectMessageThreadProps,
 } from '../../../shared/graphql/mutations/directMessageThread/createDirectMessageThread';
+import {
+  ComposerWrapper,
+  SearchInputArea,
+  SelectedUsers,
+  SelectedUser,
+} from './style';
 import type { NavigationProps } from 'react-navigation';
-
-import styled from 'styled-components/native';
-const ComposerWrapper = styled.View`
-  flex-direction: column;
-  height: 100%;
-  background-color: ${props => props.theme.bg.wash};
-`;
-
-const SearchInputArea = styled.View`
-  flex-direction: row;
-  justify-content: flex-start;
-  background-color: ${props => props.theme.bg.default};
-  border-bottom-width: 1;
-  border-bottom-color: ${props => props.theme.bg.border};
-`;
-
-const SelectedUsers = styled.View`
-  flex-direction: row;
-`;
-
-const SelectedUser = getUserById(({ data, onPressHandler }) => {
-  if (data.user) return <Text>{data.user.name}</Text>;
-
-  return null;
-});
 
 type Props = {
   ...$Exact<NavigationProps>,
