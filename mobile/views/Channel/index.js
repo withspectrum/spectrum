@@ -9,6 +9,7 @@ import getChannelThreadConnection from '../../../shared/graphql/queries/channel/
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import ThreadFeed from '../../components/ThreadFeed';
 import Loading from '../../components/Loading';
+import JoinButton from './JoinButton';
 import { track, transformations, events } from '../../utils/analytics';
 
 import {
@@ -57,7 +58,8 @@ class Channel extends Component<Props> {
     } else {
       title = 'Loading channel...';
     }
-    if (navigation.state.params.title === title) return;
+    const oldTitle = navigation.getParam('title', null);
+    if (oldTitle && oldTitle === title) return;
     navigation.setParams({ title });
   };
 
@@ -82,6 +84,7 @@ class Channel extends Component<Props> {
 
   render() {
     const { data, isLoading, hasError, navigation } = this.props;
+
     if (data.channel) {
       const { channel } = data;
 
@@ -115,6 +118,7 @@ class Channel extends Component<Props> {
                   <Username>{channel.community.name}</Username>
                   <Name>{channel.name}</Name>
                   <Description>{channel.description}</Description>
+                  <JoinButton channel={channel} />
                 </ProfileDetailsContainer>
 
                 <ThreadFeedDivider />

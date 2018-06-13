@@ -20,7 +20,7 @@ import Link from 'src/components/link';
 class Paid extends React.Component<{}> {
   render() {
     return (
-      <Section background={'brand'} goop={4} color={'space.dark'}>
+      <Section background={'brand'} goop={6} color={'bg.default'}>
         <TwoUp reverse>
           <Left>
             <PlanSection>

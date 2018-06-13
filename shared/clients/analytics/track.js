@@ -6,7 +6,6 @@ export const createTrack = (amplitude: Amplitude, client: AmplitudeClient) => (
   eventProperties?: Object = {}
 ) => {
   if (!amplitude) {
-    console.warn('No amplitude function attached to window');
     return;
   }
 
@@ -16,12 +15,10 @@ export const createTrack = (amplitude: Amplitude, client: AmplitudeClient) => (
       : process.env.AMPLITUDE_API_KEY_DEVELOPMENT;
 
   if (!AMPLITUDE_API_KEY) {
-    // console.warn(`[Amplitude Dev] Tracking ${eventType}`);
     return;
   }
 
   const amplitudePromise = () => {
-    // console.warn(`[Amplitude] Tracking ${eventType}`);
     return amplitude.getInstance().logEvent(eventType, {
       ...eventProperties,
       client,

@@ -139,7 +139,7 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
       cy.get('[data-cy="thread-facebook-button"]').should('not.be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('not.be.visible');
-      cy.get('[data-cy="thread-copy-link-button"]').should('not.be.visible');
+      cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
       cy
         .get('[data-cy="thread-actions-dropdown-trigger"]')
         .should('not.be.visible');
