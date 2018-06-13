@@ -306,6 +306,85 @@ class ActionBar extends React.Component<Props, State> {
                 Notify me
               </FollowButton>
             )}
+            {!thread.channel.isPrivate && (
+              <ShareButtons>
+                <ShareButton
+                  facebook
+                  tipText={'Share'}
+                  tipLocation={'top-left'}
+                  data-cy="thread-facebook-button"
+                >
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${
+                      thread.id
+                    }&t=${thread.content.title}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon
+                      glyph={'facebook'}
+                      size={24}
+                      onClick={() =>
+                        track(events.THREAD_SHARED, { method: 'facebook' })
+                      }
+                    />
+                  </a>
+                </ShareButton>
+
+                <ShareButton
+                  twitter
+                  tipText={'Tweet'}
+                  tipLocation={'top-left'}
+                  data-cy="thread-tweet-button"
+                >
+                  <a
+                    href={`https://twitter.com/share?text=${
+                      thread.content.title
+                    } on @withspectrum&url=https://spectrum.chat/thread/${
+                      thread.id
+                    }`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon
+                      glyph={'twitter'}
+                      size={24}
+                      onClick={() =>
+                        track(events.THREAD_SHARED, { method: 'twitter' })
+                      }
+                    />
+                  </a>
+                </ShareButton>
+
+                <Clipboard
+                  style={{ background: 'none' }}
+                  data-clipboard-text={`https://spectrum.chat/thread/${
+                    thread.id
+                  }`}
+                  onSuccess={() =>
+                    this.props.dispatch(
+                      addToastWithTimeout('success', 'Copied to clipboard')
+                    )
+                  }
+                >
+                  <ShareButton
+                    tipText={'Copy link'}
+                    tipLocation={'top-left'}
+                    data-cy="thread-copy-link-button"
+                  >
+                    <a>
+                      <Icon
+                        glyph={'link'}
+                        size={24}
+                        onClick={() =>
+                          track(events.THREAD_SHARED, { method: 'link' })
+                        }
+                      />
+                    </a>
+                  </ShareButton>
+                </Clipboard>
+              </ShareButtons>
+            )}
             {thread.channel.isPrivate && (
               <ShareButtons>
                 <Clipboard
