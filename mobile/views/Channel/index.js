@@ -1,10 +1,14 @@
 // @flow
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
+import { Button } from 'react-native';
 import {
   getChannelById,
   type GetChannelType,
 } from '../../../shared/graphql/queries/channel/getChannel';
+import toggleChannelSubscription, {
+  type ToggleChannelSubscriptionProps,
+} from '../../../shared/graphql/mutations/channel/toggleChannelSubscription';
 import getChannelThreadConnection from '../../../shared/graphql/queries/channel/getChannelThreadConnection';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import ThreadFeed from '../../components/ThreadFeed';
@@ -29,6 +33,7 @@ import { FullscreenNullState } from '../../components/NullStates';
 import type { NavigationProps } from 'react-navigation';
 
 type Props = {
+  ...$Exact<ToggleChannelSubscriptionProps>,
   isLoading: boolean,
   hasError: boolean,
   navigation: NavigationProps,
@@ -37,9 +42,17 @@ type Props = {
   },
 };
 
+type State = {
+  loadingSubscriptionToggle: boolean,
+};
+
 const ChannelThreadFeed = compose(getChannelThreadConnection)(ThreadFeed);
 
-class Channel extends Component<Props> {
+class Channel extends Component<Props, State> {
+  state = {
+    loadingSubscriptionToggle: false,
+  };
+
   trackView = () => {
     const { data: { channel } } = this.props;
     if (!channel) return;
@@ -81,8 +94,31 @@ class Channel extends Component<Props> {
     this.setTitle();
   }
 
+  toggleChannelSubscription = () => {
+    const { data: { channel } } = this.props;
+    if (!channel) return;
+
+    this.setState({
+      loadingSubscriptionToggle: true,
+    });
+    this.props
+      .toggleChannelSubscription({ channelId: channel.id })
+      .then(() => {
+        this.setState({
+          loadingSubscriptionToggle: false,
+        });
+      })
+      .catch(() => {
+        this.setState({
+          loadingSubscriptionToggle: false,
+        });
+      });
+  };
+
   render() {
     const { data, isLoading, hasError, navigation } = this.props;
+    const { loadingSubscriptionToggle } = this.state;
+
     if (data.channel) {
       const { channel } = data;
 
@@ -116,6 +152,15 @@ class Channel extends Component<Props> {
                   <Username>{channel.community.name}</Username>
                   <Name>{channel.name}</Name>
                   <Description>{channel.description}</Description>
+                  <Button
+                    disabled={loadingSubscriptionToggle}
+                    onPress={this.toggleChannelSubscription}
+                    title={
+                      loadingSubscriptionToggle
+                        ? 'Loading...'
+                        : channel.channelPermissions.isMember ? 'Leave' : 'Join'
+                    }
+                  />
                 </ProfileDetailsContainer>
 
                 <ThreadFeedDivider />
@@ -142,4 +187,8 @@ class Channel extends Component<Props> {
   }
 }
 
-export default compose(getChannelById, ViewNetworkHandler)(Channel);
+export default compose(
+  toggleChannelSubscription,
+  getChannelById,
+  ViewNetworkHandler
+)(Channel);
