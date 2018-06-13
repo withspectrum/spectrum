@@ -9,7 +9,7 @@ import type { GlyphTypes } from '../Icon/types';
 
 type Props = {
   onPress: () => any,
-  label: string,
+  title: string,
   state?: 'disabled' | 'loading',
   size?: 'large',
   color?: (props: { ...Props, theme: Object }) => string,
@@ -19,7 +19,7 @@ type Props = {
 };
 
 const ButtonContent = (props: Props) => {
-  const { label, color, state, size, icon, theme } = props;
+  const { title, color, state, size, icon, theme } = props;
 
   if (state === 'loading')
     return <Loading padding={0} color={theme.text.reverse} />;
@@ -36,7 +36,7 @@ const ButtonContent = (props: Props) => {
         </ButtonIcon>
       )}
       <ButtonText color={color} state={state} size={size}>
-        {label}
+        {title}
       </ButtonText>
     </React.Fragment>
   );
