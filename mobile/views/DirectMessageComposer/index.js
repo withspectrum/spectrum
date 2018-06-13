@@ -16,6 +16,7 @@ import {
   SelectedUsers,
   SelectedUserPill,
 } from './style';
+import { events, track } from '../../utils/analytics';
 import type { NavigationProps } from 'react-navigation';
 import type { ComponentType } from 'react';
 
@@ -59,6 +60,10 @@ class DirectMessageComposer extends React.Component<Props, State> {
     searchString: '',
     selectedUsers: [],
   };
+
+  componentDidMount() {
+    track(events.DIRECT_MESSAGE_THREAD_COMPOSER_VIEWED);
+  }
 
   searchInput: ?{
     focus: () => void,
