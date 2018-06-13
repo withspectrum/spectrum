@@ -385,6 +385,37 @@ class ActionBar extends React.Component<Props, State> {
                 </Clipboard>
               </ShareButtons>
             )}
+            {thread.channel.isPrivate && (
+              <ShareButtons>
+                <Clipboard
+                  style={{ background: 'none' }}
+                  data-clipboard-text={`https://spectrum.chat/thread/${
+                    thread.id
+                  }`}
+                  onSuccess={() =>
+                    this.props.dispatch(
+                      addToastWithTimeout('success', 'Copied to clipboard')
+                    )
+                  }
+                >
+                  <ShareButton
+                    tipText={'Copy link'}
+                    tipLocation={'top-left'}
+                    data-cy="thread-copy-link-button"
+                  >
+                    <a>
+                      <Icon
+                        glyph={'link'}
+                        size={24}
+                        onClick={() =>
+                          track(events.THREAD_SHARED, { method: 'link' })
+                        }
+                      />
+                    </a>
+                  </ShareButton>
+                </Clipboard>
+              </ShareButtons>
+            )}
           </div>
 
           <div style={{ display: 'flex' }}>

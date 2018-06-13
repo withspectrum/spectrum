@@ -154,7 +154,10 @@ if (process.env.NODE_ENV === 'development') {
 
 app.get('*', (req: express$Request, res, next) => {
   // Electron requests should only be client-side rendered
-  if (req.headers['user-agent'].indexOf('Electron') > -1) {
+  if (
+    req.headers['user-agent'] &&
+    req.headers['user-agent'].indexOf('Electron') > -1
+  ) {
     return res.sendFile(path.resolve(__dirname, '../build/index.html'));
   }
   next();

@@ -23,6 +23,8 @@ export const NotificationCard = styled(Card)`
   padding-bottom: 24px;
   overflow: hidden;
   transition: ${Transition.hover.off};
+  border-radius: 8px;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 
   &:hover {
     transition: none;
@@ -34,6 +36,8 @@ export const SegmentedNotificationCard = styled(Card)`
   padding: 0;
   padding-top: 16px;
   transition: ${Transition.hover.off};
+  border-radius: 8px;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 
   &:hover {
     transition: none;
@@ -259,6 +263,8 @@ export const RequestCard = styled(Card)`
   align-items: center;
   justify-content: space-between;
   padding: 16px 16px 16px 24px;
+  border-radius: 8px;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 
   > p {
     font-weight: 700;

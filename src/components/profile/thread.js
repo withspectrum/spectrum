@@ -5,7 +5,7 @@ import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import { ThreadListItem } from '../listItems';
-import { ProfileCard } from './style';
+import { ThreadProfileCard } from './style';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 
 type Props = {
@@ -39,7 +39,7 @@ class ThreadWithData extends React.Component<Props> {
     }
 
     return (
-      <ProfileCard>
+      <ThreadProfileCard>
         <Link
           to={{
             search: `?thread=${thread.id}`,
@@ -53,7 +53,7 @@ class ThreadWithData extends React.Component<Props> {
             }`}
           />
         </Link>
-      </ProfileCard>
+      </ThreadProfileCard>
     );
   }
 }
