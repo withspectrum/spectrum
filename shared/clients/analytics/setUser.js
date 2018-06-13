@@ -3,7 +3,6 @@ import type { Amplitude } from './';
 
 export const createSetUser = (amplitude: Amplitude) => (userId: string) => {
   if (!amplitude) {
-    console.warn('No amplitude function attached to window');
     return;
   }
 
@@ -13,12 +12,10 @@ export const createSetUser = (amplitude: Amplitude) => (userId: string) => {
       : process.env.AMPLITUDE_API_KEY_DEVELOPMENT;
 
   if (!AMPLITUDE_API_KEY) {
-    // console.warn(`[Amplitude Dev] Set user ${userId}`);
     return;
   }
 
   const amplitudePromise = () => {
-    // console.warn(`[Amplitude] Set user ${userId}`);
     return amplitude.getInstance().setUserId(userId);
   };
 

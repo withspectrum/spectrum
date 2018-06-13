@@ -18,6 +18,12 @@ export type AddCommunityMemberType = {
   },
 };
 
+export type AddCommunityMemberProps = {
+  addCommunityMember: ({ input: { communityId: string } }) => Promise<
+    AddCommunityMemberType
+  >,
+};
+
 export const addCommunityMemberQuery = gql`
   mutation addCommunityMember($input: AddCommunityMemberInput!) {
     addCommunityMember(input: $input) {
