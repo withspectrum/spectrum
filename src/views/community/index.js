@@ -290,6 +290,7 @@ class CommunityView extends React.Component<Props, State> {
                       icon={isMember ? 'checkmark' : null}
                       loading={state.isLoading}
                       dataCy={'join-community-button'}
+                      style={{ marginTop: '16px' }}
                     >
                       {isMember ? 'Member' : `Join ${community.name}`}
                     </LoginButton>
