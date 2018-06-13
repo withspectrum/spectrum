@@ -50,8 +50,7 @@ const ModalStack = createStackNavigator(
       screen: withMappedNavigationProps(DirectMessageComposer),
       navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
         headerTitle: navigation.getParam('title', 'New Direct Message'),
-        // TODO(@mxstbr): Replace with X icon
-        headerLeft: ({ onPress }) => <Button onPress={onPress} title="X" />,
+        headerLeft: ({ onPress }) => <Button onPress={onPress} title="✕" />,
       }),
     },
   },
