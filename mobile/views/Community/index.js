@@ -1,11 +1,18 @@
 // @flow
 import React, { Component } from 'react';
+import { Button } from 'react-native';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import {
   getCommunityById,
   type GetCommunityType,
 } from '../../../shared/graphql/queries/community/getCommunity';
+import addCommunityMember, {
+  type AddCommunityMemberProps,
+} from '../../../shared/graphql/mutations/communityMember/addCommunityMember';
+import removeCommunityMember, {
+  type RemoveCommunityMemberProps,
+} from '../../../shared/graphql/mutations/communityMember/removeCommunityMember';
 import getCommunityThreads from '../../../shared/graphql/queries/community/getCommunityThreadConnection';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import ThreadFeed from '../../components/ThreadFeed';
@@ -30,6 +37,8 @@ import ErrorBoundary from '../../components/ErrorBoundary';
 import { FullscreenNullState } from '../../components/NullStates';
 
 type Props = {
+  ...$Exact<AddCommunityMemberProps>,
+  ...$Exact<RemoveCommunityMemberProps>,
   isLoading: boolean,
   hasError: boolean,
   navigation: Object,
@@ -61,7 +70,15 @@ const RemoteThreadItem = compose(getThreadById, withNavigation)(
 
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 
-class Community extends Component<Props> {
+type State = {
+  loadingMembershipToggle: boolean,
+};
+
+class Community extends Component<Props, State> {
+  state = {
+    loadingMembershipToggle: false,
+  };
+
   trackView = () => {
     const { data: { community } } = this.props;
     if (!community) return;
@@ -102,8 +119,47 @@ class Community extends Component<Props> {
     this.setTitle();
   }
 
+  toggleMembership = () => {
+    const { data: { community } } = this.props;
+    if (!community) return;
+
+    this.setState({
+      loadingMembershipToggle: true,
+    });
+    if (community.communityPermissions.isMember) {
+      this.props
+        .removeCommunityMember({ input: { communityId: community.id } })
+        .then(() => {
+          this.setState({
+            loadingMembershipToggle: false,
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          this.setState({
+            loadingMembershipToggle: false,
+          });
+        });
+    } else {
+      this.props
+        .addCommunityMember({ input: { communityId: community.id } })
+        .then(() => {
+          this.setState({
+            loadingMembershipToggle: false,
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          this.setState({
+            loadingMembershipToggle: false,
+          });
+        });
+    }
+  };
+
   render() {
     const { data: { community }, isLoading, hasError, navigation } = this.props;
+    const { loadingMembershipToggle } = this.state;
 
     if (community) {
       return (
@@ -132,6 +188,17 @@ class Community extends Component<Props> {
                 <ProfileDetailsContainer>
                   <Name>{community.name}</Name>
                   <Description>{community.description}</Description>
+                  <Button
+                    onPress={this.toggleMembership}
+                    disabled={loadingMembershipToggle}
+                    title={
+                      loadingMembershipToggle
+                        ? 'Loading...'
+                        : community.communityPermissions.isMember
+                          ? 'Leave'
+                          : 'Join'
+                    }
+                  />
                 </ProfileDetailsContainer>
 
                 <ThreadFeedDivider />
@@ -171,4 +238,9 @@ class Community extends Component<Props> {
   }
 }
 
-export default compose(getCommunityById, ViewNetworkHandler)(Community);
+export default compose(
+  addCommunityMember,
+  removeCommunityMember,
+  getCommunityById,
+  ViewNetworkHandler
+)(Community);
