@@ -31,7 +31,11 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context, currentUser);
   const unsortedMessages = notification.entities.map(notif => notif.payload);
-  const messages = sortAndGroupNotificationMessages(unsortedMessages);
+  let messages = sortAndGroupNotificationMessages(unsortedMessages);
+
+  if (messages.length > 3) {
+    messages = messages.splice(0, messages.length - 3);
+  }
 
   return (
     <NotificationCard isSeen={notification.isSeen}>
