@@ -21,7 +21,8 @@ export default async (
     ]);
 
     // if the channel is private, don't return any thread data
-    if (channel.isPrivate || community.isPrivate) return null;
+    if (!channel || !community || channel.isPrivate || community.isPrivate)
+      return null;
     return thread;
   } else {
     // if the user is signed in, we need to check if the channel is private as well as the user's permission in that channel
@@ -38,6 +39,7 @@ export default async (
     ]);
 
     // if the thread is in a private channel where the user is not a member, don't return any thread data
+    if (!channel || !community) return null;
     if (
       channel.isPrivate &&
       (!channelPermissions || !channelPermissions.isMember)
