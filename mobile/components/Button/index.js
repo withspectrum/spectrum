@@ -52,13 +52,13 @@ type Props = {
 };
 
 export const Button = withTheme((props: Props) => {
-  const { onPress, children, color, state, size, icon, theme } = props;
+  const { onPress, color, state, size, icon, theme } = props;
 
-  const render =
+  const children =
     state === 'loading' ? (
       <Loading padding={0} color={theme.text.reverse} />
     ) : (
-      children
+      props.children
     );
   return (
     <TouchableHighlight
@@ -67,14 +67,14 @@ export const Button = withTheme((props: Props) => {
     >
       <ButtonView color={color} state={state} size={size}>
         <ConditionalWrap
-          condition={typeof render === 'string'}
+          condition={typeof children === 'string'}
           wrap={children => (
             <ButtonText color={color} state={state} size={size}>
               {children}
             </ButtonText>
           )}
         >
-          {render}
+          {children}
         </ConditionalWrap>
       </ButtonView>
     </TouchableHighlight>
