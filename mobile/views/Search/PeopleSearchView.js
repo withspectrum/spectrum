@@ -19,8 +19,9 @@ type Props = {
     search: SearchUsersType,
   },
   ...$Exact<ViewNetworkHandlerProps>,
-  navigation: NavigationProps,
+  onPress: (userId: string) => any,
   queryString: ?string,
+  style: Object,
 };
 
 class UsersSearchView extends Component<Props> {
@@ -33,7 +34,7 @@ class UsersSearchView extends Component<Props> {
   }
 
   render() {
-    const { isLoading, data, navigation, hasError } = this.props;
+    const { isLoading, data, hasError, onPress } = this.props;
 
     if (data.search) {
       const { search: { searchResultsConnection } } = data;
@@ -44,7 +45,7 @@ class UsersSearchView extends Component<Props> {
         : [];
 
       return (
-        <SearchView>
+        <SearchView style={this.props.style}>
           {!hasResults && (
             <FullscreenNullState
               title={'No results found'}
@@ -59,13 +60,7 @@ class UsersSearchView extends Component<Props> {
                 <UserListItem
                   key={item.id}
                   user={item}
-                  onPressHandler={() =>
-                    navigation.navigate({
-                      routeName: `User`,
-                      key: item.id,
-                      params: { id: item.id },
-                    })
-                  }
+                  onPressHandler={() => onPress(item.id)}
                 />
               )}
               loadingIndicator={<Loading />}
@@ -77,17 +72,17 @@ class UsersSearchView extends Component<Props> {
 
     if (isLoading) {
       return (
-        <SearchView>
+        <SearchView style={this.props.style}>
           <Loading />
         </SearchView>
       );
     }
 
     if (hasError) {
-      return <FullscreenNullState />;
+      return <FullscreenNullState style={this.props.style} />;
     }
 
-    return <SearchView />;
+    return <SearchView style={this.props.style} />;
   }
 }
 

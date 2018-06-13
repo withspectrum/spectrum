@@ -102,7 +102,13 @@ class Search extends Component<Props, State> {
 
     return (
       <PeopleSearchView
-        navigation={this.props.navigation}
+        onPress={userId =>
+          this.props.navigation.navigate({
+            routeName: `User`,
+            key: userId,
+            params: { id: userId },
+          })
+        }
         queryString={this.state.searchString}
       />
     );
