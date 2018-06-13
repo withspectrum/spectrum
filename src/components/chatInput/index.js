@@ -546,7 +546,9 @@ class ChatInput extends React.Component<Props, State> {
       }
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   onFocus = () => {
@@ -601,7 +603,10 @@ class ChatInput extends React.Component<Props, State> {
         mediaPreview: reader.result.toString(),
         isSendingMediaMessage: false,
       });
-    reader.readAsDataURL(blob);
+
+    if (blob) {
+      reader.readAsDataURL(blob);
+    }
   };
 
   render() {
