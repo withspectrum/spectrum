@@ -9,6 +9,4 @@ if (
     whitelistUrls: [/spectrum\.chat/, /www\.spectrum\.chat/],
     environment: process.env.NODE_ENV,
   }).install();
-} else {
-  console.warn('Raven not enabled locally');
 }

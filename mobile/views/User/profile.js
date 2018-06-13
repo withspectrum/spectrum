@@ -50,7 +50,9 @@ class User extends Component<Props, State> {
     } else {
       title = 'Loading user...';
     }
-    if (navigation.state.params.title === title) return;
+
+    const oldTitle = navigation.getParam('title', null);
+    if (oldTitle && oldTitle === title) return;
     navigation.setParams({ title });
   };
 

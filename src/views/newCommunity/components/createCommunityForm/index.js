@@ -301,6 +301,8 @@ class CreateCommunityForm extends React.Component<Props, State> {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (!file) return;
+
     if (file.size > 3000000) {
       return this.setState({
         photoSizeError: true,
@@ -316,12 +318,16 @@ class CreateCommunityForm extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   setCommunityCover = e => {
     let reader = new FileReader();
     let file = e.target.files[0];
+
+    if (!file) return;
 
     if (file.size > 3000000) {
       return this.setState({
@@ -338,7 +344,9 @@ class CreateCommunityForm extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   create = e => {

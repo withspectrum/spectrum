@@ -51,7 +51,7 @@ if (thread) {
     history.replace(`/thread/${thread}`);
   }
 }
-if (t && (!existingUser || !existingUser.currentUser)) {
+if (t) {
   const hash = window.location.hash.substr(1);
   if (hash && hash.length > 1) {
     history.replace(`/thread/${t}#${hash}`);
