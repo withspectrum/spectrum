@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
+import { TextInput } from 'react-native';
 import Text from '../../components/Text';
 import ChatInput from '../../components/ChatInput';
-import SearchInput from '../../components/SearchInput';
 import { FullscreenNullState } from '../../components/NullStates';
 import PeopleSearchView from '../Search/PeopleSearchView';
 import { SearchView } from '../Search/style';
@@ -40,7 +40,7 @@ class DirectMessageComposer extends React.Component<Props, State> {
   render() {
     return (
       <ComposerWrapper>
-        <SearchInput
+        <TextInput
           onEndEditing={this.onFinishTyping}
           onSubmitEditing={this.onFinishTyping}
           returnKeyType="search"

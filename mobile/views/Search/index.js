@@ -5,7 +5,7 @@ import { View, StyleSheet, Dimensions, TextInput } from 'react-native';
 import { TabViewAnimated, SceneMap, TabBar } from 'react-native-tab-view';
 import { TabLabel, SearchView } from './style';
 import { Constants } from 'expo';
-import SearchInput from '../../components/SearchInput';
+import SearchBar from './SearchBar';
 import ThreadsSearchView from './ThreadsSearchView';
 import CommunitiesSearchView from './CommunitiesSearchView';
 import PeopleSearchView from './PeopleSearchView';
@@ -139,7 +139,7 @@ class Search extends Component<Props, State> {
     const Tabs = () => this.renderTabs(props);
     return (
       <View>
-        <SearchInput
+        <SearchBar
           autoFocus={false}
           blurOnSubmit={true}
           placeholder={`Search for ${this.state.routes[
