@@ -1,5 +1,5 @@
 // @flow
-import styled, { css, withTheme } from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 
 export const ButtonView = styled.View`
   flex-direction: row;
@@ -25,8 +25,8 @@ export const ButtonView = styled.View`
 
 export const ButtonText = styled.Text`
   font-weight: 600;
-  font-size: 14px;
-  line-height: 14px;
+  font-size: 16px;
+  line-height: 21;
   color: ${props => props.theme.text.reverse};
 
   ${props =>
@@ -35,4 +35,8 @@ export const ButtonText = styled.Text`
       font-size: 18px;
       line-height: 18px;
     `};
+`;
+
+export const ButtonIcon = styled.View`
+  margin-right: 12px;
 `;

@@ -1,17 +1,15 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { withTheme } from 'styled-components';
 import TouchableHighlight from '../TouchableHighlight';
-import ConditionalWrap from '../ConditionalWrap';
 import Loading from '../Loading';
 import Icon from '../Icon';
-import { ButtonView, ButtonText } from './style';
+import { ButtonView, ButtonText, ButtonIcon } from './style';
 import type { GlyphTypes } from '../Icon/types';
-import type { Node } from 'react';
 
 type Props = {
   onPress: () => any,
-  title: string,
+  label: string,
   state?: 'disabled' | 'loading',
   size?: 'large',
   color?: (props: { ...Props, theme: Object }) => string,
@@ -20,8 +18,32 @@ type Props = {
   theme: Object,
 };
 
+const ButtonContent = (props: Props) => {
+  const { label, color, state, size, icon, theme } = props;
+
+  if (state === 'loading')
+    return <Loading padding={0} color={theme.text.reverse} />;
+
+  return (
+    <React.Fragment>
+      {icon && (
+        <ButtonIcon>
+          <Icon
+            glyph={icon}
+            color={theme => theme.text.reverse}
+            size={size === 'large' ? 32 : 24}
+          />
+        </ButtonIcon>
+      )}
+      <ButtonText color={color} state={state} size={size}>
+        {label}
+      </ButtonText>
+    </React.Fragment>
+  );
+};
+
 const UnwrappedButton = (props: Props) => {
-  const { onPress, title, color, state, size, icon, theme } = props;
+  const { onPress, color, state, size, icon } = props;
 
   return (
     <TouchableHighlight
@@ -29,20 +51,7 @@ const UnwrappedButton = (props: Props) => {
       disabled={state === 'disabled' || state === 'loading'}
     >
       <ButtonView icon={icon} color={color} state={state} size={size}>
-        {icon && (
-          <Icon
-            glyph={icon}
-            color={theme => theme.text.reverse}
-            size={size === 'large' ? 26 : 22}
-          />
-        )}
-        {state === 'loading' ? (
-          <Loading padding={0} color={theme.text.reverse} />
-        ) : (
-          <ButtonText color={color} state={state} size={size}>
-            {title}
-          </ButtonText>
-        )}
+        <ButtonContent {...props} />
       </ButtonView>
     </TouchableHighlight>
   );
