@@ -11,7 +11,7 @@ import type { Node } from 'react';
 
 type Props = {
   onPress: () => any,
-  children: Node | string,
+  title: string,
   state?: 'disabled' | 'loading',
   size?: 'large',
   color?: (props: { ...Props, theme: Object }) => string,
@@ -21,14 +21,8 @@ type Props = {
 };
 
 const UnwrappedButton = (props: Props) => {
-  const { onPress, color, state, size, icon, theme } = props;
+  const { onPress, title, color, state, size, icon, theme } = props;
 
-  const children =
-    state === 'loading' ? (
-      <Loading padding={0} color={theme.text.reverse} />
-    ) : (
-      props.children
-    );
   return (
     <TouchableHighlight
       onPress={onPress}
@@ -42,16 +36,13 @@ const UnwrappedButton = (props: Props) => {
             size={size === 'large' ? 26 : 22}
           />
         )}
-        <ConditionalWrap
-          condition={typeof children === 'string'}
-          wrap={children => (
-            <ButtonText color={color} state={state} size={size}>
-              {children}
-            </ButtonText>
-          )}
-        >
-          {children}
-        </ConditionalWrap>
+        {state === 'loading' ? (
+          <Loading padding={0} color={theme.text.reverse} />
+        ) : (
+          <ButtonText color={color} state={state} size={size}>
+            {title}
+          </ButtonText>
+        )}
       </ButtonView>
     </TouchableHighlight>
   );
