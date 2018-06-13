@@ -3,12 +3,14 @@ import React from 'react';
 import TouchableHighlight from '../TouchableHighlight';
 import ConditionalWrap from '../ConditionalWrap';
 import Loading from '../Loading';
+import Icon from '../Icon';
 import type { GlyphTypes } from '../icon/types';
 import type { Node } from 'react';
 
 import styled, { css, withTheme } from 'styled-components/native';
 
 const ButtonView = styled.View`
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   border-radius: 8px;
@@ -16,11 +18,16 @@ const ButtonView = styled.View`
   background-color: ${props =>
     props.color ? props.color(props) : props.theme.brand.alt};
 
-  // States
   ${props =>
     props.state === 'disabled' &&
     css`
       background-color: ${props.theme.bg.inactive};
+    `};
+
+  ${props =>
+    props.size === 'large' &&
+    css`
+      padding: 16px 32px;
     `};
 `;
 
@@ -30,13 +37,11 @@ const ButtonText = styled.Text`
   line-height: 14px;
   color: ${props => props.theme.text.reverse};
 
-  // Sizes
   ${props =>
     props.size === 'large' &&
     css`
       font-size: 18px;
       line-height: 18px;
-      padding: 16px 32px;
     `};
 `;
 
@@ -65,7 +70,14 @@ export const Button = withTheme((props: Props) => {
       onPress={onPress}
       disabled={state === 'disabled' || state === 'loading'}
     >
-      <ButtonView color={color} state={state} size={size}>
+      <ButtonView icon={icon} color={color} state={state} size={size}>
+        {icon && (
+          <Icon
+            glyph={icon}
+            color={theme => theme.text.reverse}
+            size={size === 'large' ? 26 : 22}
+          />
+        )}
         <ConditionalWrap
           condition={typeof children === 'string'}
           wrap={children => (
