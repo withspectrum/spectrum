@@ -34,8 +34,8 @@ class DirectMessageComposer extends React.Component<Props, State> {
     selectedUsers: [],
   };
 
-  searchInput = {
-    clear: Function,
+  searchInput: {
+    focus: () => void,
   };
 
   onChangeText = (text: string) => {
@@ -56,6 +56,7 @@ class DirectMessageComposer extends React.Component<Props, State> {
       wipSearchString: '',
       searchString: '',
     }));
+    this.searchInput && this.searchInput.focus();
   };
 
   removeSelectedUser = (userId: string) => () => {
@@ -109,6 +110,7 @@ class DirectMessageComposer extends React.Component<Props, State> {
             value={this.state.wipSearchString}
             returnKeyType="search"
             autoFocus
+            ref={elem => (this.searchInput = elem)}
             style={{ fontSize: 18, margin: 8 }}
           />
         </SearchInputArea>
