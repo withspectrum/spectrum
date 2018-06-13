@@ -60,7 +60,7 @@ class DirectMessageComposer extends React.Component<Props, State> {
     selectedUsers: [],
   };
 
-  searchInput: {
+  searchInput: ?{
     focus: () => void,
   };
 
