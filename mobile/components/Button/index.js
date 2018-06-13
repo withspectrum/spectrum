@@ -11,12 +11,13 @@ import type { Node } from 'react';
 
 type Props = {
   onPress: () => any,
-  children: Node,
+  children: Node | string,
   state?: 'disabled' | 'loading',
-  color?: (props: Object) => string,
   size?: 'large',
-  theme: Object,
+  color?: (props: { ...Props, theme: Object }) => string,
   icon?: GlyphTypes,
+  // NOTE: Passed in via withTheme, no need to pass manually
+  theme: Object,
 };
 
 const UnwrappedButton = (props: Props) => {
