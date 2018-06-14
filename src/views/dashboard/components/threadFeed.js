@@ -37,6 +37,7 @@ type Props = {
     subscribeToUpdatedThreads: ?Function,
     threads: Array<?Node>,
     fetchMore: Function,
+    refetch: Function,
     loading: boolean,
     community?: GetCommunityThreadConnectionType,
     networkStatus: number,
@@ -300,6 +301,7 @@ class ThreadFeed extends React.Component<Props, State> {
           loadMore={this.props.data.fetchMore}
           isLoadingMore={this.props.isFetchingMore}
           hasMore={this.props.data.hasNextPage}
+          refetch={this.props.data.refetch}
           loader={<LoadingInboxThread />}
           useWindow={false}
           initialLoad={false}

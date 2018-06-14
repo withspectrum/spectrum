@@ -9,6 +9,7 @@ type Props = {
   initialLoad: boolean,
   loader: React.Node,
   loadMore: Function,
+  refetch: ?Function,
   isLoadingMore: boolean,
   pageStart: number,
   threshold: number,
@@ -24,6 +25,7 @@ export default class InfiniteScroll extends React.Component<Props> {
   static defaultProps = {
     element: 'div',
     hasMore: false,
+    refetch: null,
     initialLoad: true,
     pageStart: 0,
     threshold: 250,
@@ -48,12 +50,14 @@ export default class InfiniteScroll extends React.Component<Props> {
 
   componentDidMount() {
     this.pageLoaded = this.props.pageStart;
+    const { showPTRBefore, refetch } = this.props;
     this.attachScrollListener();
 
-    if (this.props.showPTRBefore) {
+    if (showPTRBefore) {
       this.pullToRefresh = PullToRefresh.init({
-        mainElement: this.props.showPTRBefore,
-        triggerElement: this.props.showPTRBefore,
+        mainElement: showPTRBefore,
+        triggerElement: showPTRBefore,
+        onRefresh: refetch ? refetch : () => window.location.reload(),
       });
     }
   }
@@ -77,33 +81,23 @@ export default class InfiniteScroll extends React.Component<Props> {
       children,
       element,
       hasMore,
-      initialLoad,
       loader,
-      loadMore,
-      pageStart,
-      threshold,
-      useWindow,
-      isReverse,
       scrollElement,
-      isLoadingMore,
-      ...props
+      className,
     } = this.props;
 
+    const elementProps = { className };
     if (scrollElement) {
       // $FlowFixMe
-      props.ref = node => {
+      elementProps.ref = node => {
         this.scrollComponent = scrollElement;
       };
     } else {
       // $FlowFixMe
-      props.ref = node => {
+      elementProps.ref = node => {
         this.scrollComponent = node;
       };
     }
-
-    const elementProps = { ...props };
-    // showPTRBefore prop not applicable for DOM element that is going to return
-    delete elementProps.showPTRBefore;
 
     return React.createElement(
       element,
