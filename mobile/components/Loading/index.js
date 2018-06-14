@@ -7,6 +7,7 @@ import { Container } from './style';
 type Props = {
   size?: 'small' | 'large',
   color?: string,
+  padding?: number,
   theme: Object,
 };
 
@@ -21,9 +22,13 @@ export const LoadingSpinner = withTheme(LoadingSpinnerWithTheme);
 
 class Loading extends Component<Props> {
   render() {
-    const { size = 'small', color = this.props.theme.text.alt } = this.props;
+    const {
+      size = 'small',
+      padding = 32,
+      color = this.props.theme.text.alt,
+    } = this.props;
     return (
-      <Container>
+      <Container padding={padding}>
         <ActivityIndicator size={size} color={color} />
       </Container>
     );

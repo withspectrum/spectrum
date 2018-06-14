@@ -13,6 +13,7 @@ import { ThreadListItem } from '../../components/Lists';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
 import Loading from '../../components/Loading';
 import { track, events, transformations } from '../../utils/analytics';
+import JoinButton from './JoinButton';
 
 import {
   Wrapper,
@@ -78,7 +79,8 @@ class Community extends Component<Props> {
     } else {
       title = 'Loading community...';
     }
-    if (navigation.state.params.title === title) return;
+    const oldTitle = navigation.getParam('title', null);
+    if (oldTitle && oldTitle === title) return;
     navigation.setParams({ title });
   };
 
@@ -131,6 +133,8 @@ class Community extends Component<Props> {
                 <ProfileDetailsContainer>
                   <Name>{community.name}</Name>
                   <Description>{community.description}</Description>
+
+                  <JoinButton community={community} />
                 </ProfileDetailsContainer>
 
                 <ThreadFeedDivider />

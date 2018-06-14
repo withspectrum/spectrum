@@ -10,13 +10,13 @@ const channelsByCommunitiesQuery = (...communityIds: string[]) =>
   db
     .table('channels')
     .getAll(...communityIds, { index: 'communityId' })
-    .filter(channel => db.not(channel.hasFields('deletedAt')));
+    .filter(channel => channel.hasFields('deletedAt').not());
 
 const channelsByIdsQuery = (...channelIds: string[]) =>
   db
     .table('channels')
     .getAll(...channelIds)
-    .filter(channel => db.not(channel.hasFields('deletedAt')));
+    .filter(channel => channel.hasFields('deletedAt').not());
 
 const threadsByChannelsQuery = (...channelIds: string[]) =>
   channelsByIdsQuery(...channelIds)

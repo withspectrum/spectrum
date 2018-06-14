@@ -5,7 +5,7 @@ import { View, StyleSheet, Dimensions, TextInput } from 'react-native';
 import { TabViewAnimated, SceneMap, TabBar } from 'react-native-tab-view';
 import { TabLabel, SearchView } from './style';
 import { Constants } from 'expo';
-import SearchInput from '../../components/SearchInput';
+import SearchBar from './SearchBar';
 import ThreadsSearchView from './ThreadsSearchView';
 import CommunitiesSearchView from './CommunitiesSearchView';
 import PeopleSearchView from './PeopleSearchView';
@@ -50,13 +50,7 @@ class Search extends Component<Props, State> {
     if (!this.state.searchString)
       return (
         <SearchView>
-          <FullscreenNullState
-            title={'Search for threads'}
-            subtitle={
-              'Find topics and conversations across all communities on Spectrum'
-            }
-            icon={'thread'}
-          />
+          <FullscreenNullState title={''} subtitle={''} />
         </SearchView>
       );
 
@@ -72,11 +66,7 @@ class Search extends Component<Props, State> {
     if (!this.state.searchString)
       return (
         <SearchView>
-          <FullscreenNullState
-            title={'Search for communities'}
-            subtitle={'Discover new communities and topics'}
-            icon={'community'}
-          />
+          <FullscreenNullState title={''} subtitle={''} />
         </SearchView>
       );
 
@@ -92,17 +82,19 @@ class Search extends Component<Props, State> {
     if (!this.state.searchString)
       return (
         <SearchView>
-          <FullscreenNullState
-            title={'Search for people'}
-            subtitle={'Connect with people on Spectrum'}
-            icon={'person'}
-          />
+          <FullscreenNullState title={''} subtitle={''} />
         </SearchView>
       );
 
     return (
       <PeopleSearchView
-        navigation={this.props.navigation}
+        onPress={userId =>
+          this.props.navigation.navigate({
+            routeName: `User`,
+            key: userId,
+            params: { id: userId },
+          })
+        }
         queryString={this.state.searchString}
       />
     );
@@ -139,7 +131,7 @@ class Search extends Component<Props, State> {
     const Tabs = () => this.renderTabs(props);
     return (
       <View>
-        <SearchInput
+        <SearchBar
           autoFocus={false}
           blurOnSubmit={true}
           placeholder={`Search for ${this.state.routes[

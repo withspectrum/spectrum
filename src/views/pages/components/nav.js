@@ -18,10 +18,7 @@ import {
   AuthTab,
   LogoLink,
   AuthLink,
-  PricingLink,
-  SupportLink,
-  FeaturesLink,
-  ExploreLink,
+  DropdownLink,
   MenuContainer,
   MenuOverlay,
 } from '../style';
@@ -77,7 +74,10 @@ class Nav extends React.Component<Props, State> {
           </FeaturesTab>
           <PricingTab
             dark={this.props.dark}
-            selected={this.props.location === 'pricing'}
+            selected={
+              this.props.location === 'pricing' ||
+              this.props.location === 'pricing/concierge'
+            }
             to="/pricing"
             data-cy="navbar-splash-pricing"
           >
@@ -126,47 +126,43 @@ class Nav extends React.Component<Props, State> {
               <LogoLink to="/">
                 <Logo />
               </LogoLink>
-              <FeaturesLink
+              <DropdownLink
                 to="/features"
                 selected={this.props.location === 'features'}
               >
-                <Icon glyph="checkmark" />Features<Icon glyph="enter" />
-              </FeaturesLink>
-              <PricingLink
+                <Icon glyph="checkmark" />Features
+              </DropdownLink>
+              <DropdownLink
                 to="/pricing"
-                selected={this.props.location === 'pricing'}
+                selected={
+                  this.props.location === 'pricing' ||
+                  this.props.location === 'pricing/concierge'
+                }
               >
-                <Icon glyph="payment" />Pricing<Icon glyph="enter" />
-              </PricingLink>
-              <SupportLink
+                <Icon glyph="payment" />Pricing
+              </DropdownLink>
+              <DropdownLink
                 to="/support"
                 selected={this.props.location === 'support'}
               >
-                <Icon glyph="like" />Support<Icon glyph="enter" />
-              </SupportLink>
-              <ExploreLink
+                <Icon glyph="like" />Support
+              </DropdownLink>
+              <DropdownLink
                 to="/explore"
                 selected={this.props.location === 'explore'}
               >
-                <Icon glyph="explore" />Explore<Icon glyph="enter" />
-              </ExploreLink>
+                <Icon glyph="explore" />Explore
+              </DropdownLink>
               {this.props.currentUser ? (
                 <AuthLink to={'/'}>
-                  <Avatar
-                    src={this.props.currentUser.profilePhoto}
-                    user={this.props.currentUser}
-                  />
-                  <span>{this.props.currentUser.name}</span>
-                  <Icon glyph="enter" />
+                  <span>Return home</span>
                 </AuthLink>
               ) : (
                 <AuthLink
                   to={'/login'}
                   onClick={() => track(events.HOME_PAGE_SIGN_IN_CLICKED)}
                 >
-                  <Icon glyph="welcome" />
-                  <span>Sign in</span>
-                  <Icon glyph="enter" />
+                  <span>Log in or sign up</span>
                 </AuthLink>
               )}
             </MenuContainer>

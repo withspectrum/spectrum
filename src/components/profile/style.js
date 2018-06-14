@@ -1,3 +1,4 @@
+// @flow
 import styled from 'styled-components';
 import Link from 'src/components/link';
 import {
@@ -259,6 +260,11 @@ export const ProfileCard = styled(Card)`
       text-decoration: underline;
     }
   }
+`;
+
+export const ThreadProfileCard = styled(ProfileCard)`
+  border-radius: 8px;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 `;
 
 export const ProUpgrade = styled.div`

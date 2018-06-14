@@ -62,7 +62,8 @@ class Thread extends React.Component<Props> {
     } else {
       title = 'Loading thread...';
     }
-    if (navigation.state.params.title === title) return;
+    const oldTitle = navigation.getParam('title', null);
+    if (oldTitle && oldTitle === title) return;
     navigation.setParams({ title });
   };
 

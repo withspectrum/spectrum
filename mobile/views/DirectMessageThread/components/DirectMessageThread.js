@@ -52,7 +52,8 @@ class DirectMessageThread extends Component<Props> {
     let title = directMessageThread
       ? sentencify(directMessageThread.participants.map(({ name }) => name))
       : 'Loading thread...';
-    if (navigation.state.params.title === title) return;
+    const oldTitle = navigation.getParam('title', null);
+    if (oldTitle && oldTitle === title) return;
     navigation.setParams({ title });
   };
 

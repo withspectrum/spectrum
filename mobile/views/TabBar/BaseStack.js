@@ -21,26 +21,25 @@ const BaseStack = {
   Thread: {
     screen: withMappedNavigationProps(Thread),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: navigation.state.params.title || 'Thread',
-      headerRight: <NavigateToThreadDetails navigation={navigation} />,
+      headerTitle: navigation.getParam('title', null),
     }),
   },
   Community: {
     screen: withMappedNavigationProps(Community),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: navigation.state.params.title || null,
+      headerTitle: navigation.getParam('title', null),
     }),
   },
   Channel: {
     screen: withMappedNavigationProps(Channel),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: navigation.state.params.title || null,
+      headerTitle: navigation.getParam('title', null),
     }),
   },
   User: {
     screen: withMappedNavigationProps(User),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      headerTitle: navigation.state.params.title || null,
+      headerTitle: navigation.getParam('title', null),
     }),
   },
 };
