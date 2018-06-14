@@ -22,7 +22,6 @@ type Props = {
   queryString: ?string,
   style: Object,
   keyboardShouldPersistTaps?: string,
-  keyboardShouldDismissOnScroll?: boolean,
 };
 
 class UsersSearchView extends Component<Props> {
@@ -41,7 +40,6 @@ class UsersSearchView extends Component<Props> {
       hasError,
       onPress,
       keyboardShouldPersistTaps = 'never',
-      keyboardShouldDismissOnScroll = true,
     } = this.props;
 
     if (data.search) {
@@ -54,18 +52,11 @@ class UsersSearchView extends Component<Props> {
 
       return (
         <SearchView style={this.props.style}>
-          {!hasResults && (
-            <FullscreenNullState
-              title={'No results found'}
-              subtitle={'Try searching for something else?'}
-              icon={'person'}
-            />
-          )}
+          {!hasResults && <FullscreenNullState title={''} subtitle={''} />}
           {hasResults && (
             <InfiniteList
               data={results}
               keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-              keyboardShouldDismissOnScroll={keyboardShouldDismissOnScroll}
               renderItem={({ item }) => (
                 <UserListItem
                   key={item.id}

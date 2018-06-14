@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import { TextInput } from 'react-native';
 import { throttle, debounce } from 'throttle-debounce';
 import Text from '../../components/Text';
 import TouchableHighlight from '../../components/TouchableHighlight';
@@ -15,6 +14,7 @@ import {
   SearchInputArea,
   SelectedUsers,
   SelectedUserPill,
+  UserSearchInput,
 } from './style';
 import { events, track } from '../../utils/analytics';
 import type { NavigationProps } from 'react-navigation';
@@ -62,6 +62,10 @@ class DirectMessageComposer extends React.Component<Props, State> {
     selectedUsers: [],
   };
 
+  searchInput: ?{
+    focus: () => void,
+  };
+
   constructor() {
     super();
     this.searchDebounced = debounce(300, this.searchDebounced);
@@ -71,10 +75,6 @@ class DirectMessageComposer extends React.Component<Props, State> {
   componentDidMount() {
     track(events.DIRECT_MESSAGE_THREAD_COMPOSER_VIEWED);
   }
-
-  searchInput: ?{
-    focus: () => void,
-  };
 
   onChangeText = (text: string) => {
     this.setState({
@@ -168,15 +168,14 @@ class DirectMessageComposer extends React.Component<Props, State> {
               />
             ))}
           </SelectedUsers>
-          <TextInput
+          <UserSearchInput
             onChangeText={this.onChangeText}
             onEndEditing={this.onFinishTyping}
             onSubmitEditing={this.onFinishTyping}
             value={this.state.wipSearchString}
             returnKeyType="search"
             autoFocus
-            ref={elem => (this.searchInput = elem)}
-            style={{ fontSize: 18, margin: 8 }}
+            innerRef={elem => (this.searchInput = elem)}
           />
         </SearchInputArea>
 

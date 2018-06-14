@@ -29,11 +29,7 @@ class ThreadsSearchView extends Component<Props> {
           navigation={navigation}
           queryString={queryString}
           noThreadsFallback={() => (
-            <FullscreenNullState
-              title={'No results found'}
-              subtitle={'Try searching for something else?'}
-              icon={'thread'}
-            />
+            <FullscreenNullState title={''} subtitle={''} />
           )}
         />
       </SearchView>

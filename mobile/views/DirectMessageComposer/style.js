@@ -1,6 +1,6 @@
 // @flow
-import React from 'react';
 import styled from 'styled-components/native';
+import { TextInput, StyleSheet } from 'react-native';
 
 export const SelectedUserPill = styled.View`
   background: ${props => props.theme.brand.wash};
@@ -18,11 +18,18 @@ export const ComposerWrapper = styled.View`
 export const SearchInputArea = styled.View`
   justify-content: flex-start;
   background-color: ${props => props.theme.bg.default};
-  border-bottom-width: 1;
-  border-bottom-color: ${props => props.theme.bg.border};
+  border-bottom-color: ${props => props.theme.bg.hairline};
+  border-bottom-width: ${StyleSheet.hairlineWidth};
 `;
 
 export const SelectedUsers = styled.View`
   flex-direction: row;
   ${props => !props.empty && 'margin: 8px;'};
+`;
+
+export const UserSearchInput = styled(TextInput)`
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
 `;

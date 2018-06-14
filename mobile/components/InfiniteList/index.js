@@ -60,11 +60,6 @@ class InfiniteList extends React.Component<Props> {
     }
   };
 
-  onScroll = () => {
-    const { keyboardShouldDismissOnScroll = true } = this.props;
-    if (keyboardShouldDismissOnScroll) return Keyboard.dismiss();
-  };
-
   render() {
     const {
       refetching,
@@ -87,7 +82,6 @@ class InfiniteList extends React.Component<Props> {
     return (
       <FlatList
         {...rest}
-        onScroll={this.onScroll}
         refreshing={refetching || refreshing}
         keyExtractor={keyExtractor}
         onRefresh={refetch}
@@ -102,6 +96,7 @@ class InfiniteList extends React.Component<Props> {
         ListEmptyComponent={emptyState || <Text type="body">Nothing here</Text>}
         removeClippedSubviews={true}
         keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+        keyboardDismissMode={'on-drag'}
         style={{ flex: 1, ...style }}
       />
     );
