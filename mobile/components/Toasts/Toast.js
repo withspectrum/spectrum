@@ -12,17 +12,18 @@ import Icon from '../Icon';
 type Props = {|
   type: 'notification' | 'success' | 'neutral' | 'error',
   message: string,
-  onPressHandler: Function,
+  onPressHandler?: ?Function,
   icon?: ?GlyphTypes,
 |};
 
 export default class Toast extends React.Component<Props> {
   render() {
-    const {
-      message = 'Toasty! this a asjd al aisdj alsdkj alskdfj alsdkfj alskdfj alsdkf jalsdkf jasldfkj',
-      icon,
-      onPressHandler,
-    } = this.props;
+    const { message = '', icon, onPressHandler } = this.props;
+
+    let cleanedMessage = message;
+    if (message.indexOf('GraphQL error: ') >= 0) {
+      cleanedMessage = message.replace('GraphQL error: ', '');
+    }
 
     return (
       <ToastWrapper onPress={onPressHandler}>
@@ -41,7 +42,7 @@ export default class Toast extends React.Component<Props> {
             numberOfLines={1}
             ellipsizeMode={'tail'}
           >
-            {message}
+            {cleanedMessage}
           </ToastLabel>
 
           {onPressHandler && (
