@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { Alert } from 'react-native';
 import compose from 'recompose/compose';
 import Wrapper, { InputWrapper } from './components/Wrapper';
 import LocationPicker from './components/LocationPicker';
@@ -28,6 +29,9 @@ type State = {
 class ThreadComposer extends React.Component<Props, State> {
   componentDidMount() {
     this.props.navigation.setParams({ onPublish: this.publish });
+    this.props.navigation.setParams({
+      onThreadComposerCancel: this.onThreadComposerCancel,
+    });
   }
 
   bodyInput: ?{
@@ -62,6 +66,27 @@ class ThreadComposer extends React.Component<Props, State> {
 
   onSelectedChange = (selected: SelectedState) => {
     this.setState({ selected }, () => this.setPublishDisabledState());
+  };
+
+  onThreadComposerCancel = () => {
+    const { navigation } = this.props;
+    const { title, body } = this.state;
+    if ((title && title.length > 0) || (body && body.length > 0)) {
+      return Alert.alert(
+        'Delete thread draft?',
+        'Your current draft will not be saved',
+        [
+          { text: 'Keep editing', onPress: () => {}, style: 'cancel' },
+          {
+            text: 'Delete draft',
+            onPress: () => navigation.goBack(),
+            style: 'destructive',
+          },
+        ]
+      );
+    }
+
+    return navigation.goBack();
   };
 
   focusBodyInput = () => {

@@ -49,8 +49,13 @@ const ModalStack = createStackNavigator(
       screen: withMappedNavigationProps(ThreadComposerModal),
       navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
         headerTitle: navigation.getParam('title', 'Compose'),
-        headerLeft: ({ onPress }) => (
-          <Button onPress={onPress} title="Cancel" />
+        headerLeft: () => (
+          <Button
+            onPress={navigation.getParam('onThreadComposerCancel', () =>
+              navigation.goBack()
+            )}
+            title="Cancel"
+          />
         ),
         headerRight: (
           <Button
