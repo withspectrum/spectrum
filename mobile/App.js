@@ -16,6 +16,7 @@ import theme from '../shared/theme';
 import { createClient } from '../shared/graphql';
 import Login from './components/Login';
 import TabBar from './views/TabBar';
+import UserOnboarding from './views/UserOnboarding';
 import { authenticate } from './actions/authentication';
 
 let sentry = Sentry.config(
@@ -98,9 +99,12 @@ class App extends React.Component<{}, State> {
                   <Login />
                 ) : (
                   <CurrentUser>
-                    {({ currentUser }) =>
-                      currentUser && currentUser.id ? <TabBar /> : <Login />
-                    }
+                    {({ currentUser, isLoading }) => {
+                      if (isLoading) return null;
+                      if (!currentUser) return <Login />;
+                      if (!currentUser.username) return <UserOnboarding />;
+                      return <TabBar />;
+                    }}
                   </CurrentUser>
                 )}
               </Fragment>
