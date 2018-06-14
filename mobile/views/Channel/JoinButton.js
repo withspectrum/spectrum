@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import { connect } from 'react-redux';
+import type { Dispatch } from 'redux';
 import { Button } from '../../components/Button';
 import compose from 'recompose/compose';
 import { type GetChannelType } from '../../../shared/graphql/queries/channel/getChannel';
@@ -8,15 +10,17 @@ import toggleChannelSubscription, {
   type ToggleChannelSubscriptionProps,
 } from '../../../shared/graphql/mutations/channel/toggleChannelSubscription';
 import { JoinButtonWrapper } from './style';
+import MutationWrapper from '../../components/MutationWrapper';
+import { addToast } from '../../actions/toasts';
 
 type Props = {
   ...$Exact<ToggleChannelSubscriptionProps>,
   channel: GetChannelType,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {
   joinedDuringSession: boolean,
-  isLoading: boolean,
 };
 
 class JoinButton extends React.Component<Props, State> {
@@ -25,44 +29,44 @@ class JoinButton extends React.Component<Props, State> {
     joinedDuringSession: false,
   };
 
-  toggleMembership = () => {
-    const { channel } = this.props;
-    if (!channel || !channel.id) return;
+  onComplete = (data: ToggleChannelSubscriptionType) => {
+    const joined =
+      data.data.toggleChannelSubscription.channelPermissions.isMember;
 
     this.setState({
-      isLoading: true,
+      joinedDuringSession: joined,
     });
+  };
 
-    this.props
-      .toggleChannelSubscription({ channelId: channel.id })
-      .then((result: ToggleChannelSubscriptionType) => {
-        const joined =
-          result.data.toggleChannelSubscription.channelPermissions.isMember;
-
-        this.setState({
-          joinedDuringSession: joined,
-          isLoading: false,
-        });
+  onError = (err: any) => {
+    return this.props.dispatch(
+      addToast({
+        type: 'error',
+        message: err.message,
       })
-      .catch(() => {
-        this.setState({
-          isLoading: false,
-        });
-      });
+    );
   };
 
   render() {
     const { channel } = this.props;
-    const { joinedDuringSession, isLoading } = this.state;
+    const { joinedDuringSession } = this.state;
 
     if (joinedDuringSession) {
       return (
         <JoinButtonWrapper>
-          <Button
-            onPress={this.toggleMembership}
-            state={isLoading ? 'loading' : null}
-            icon={'member-remove'}
-            title={'Leave channel'}
+          <MutationWrapper
+            mutation={this.props.toggleChannelSubscription}
+            variables={{ channelId: channel.id }}
+            onComplete={this.onComplete}
+            onError={this.onError}
+            render={({ isLoading, onPressHandler }) => (
+              <Button
+                onPress={onPressHandler}
+                state={isLoading ? 'loading' : null}
+                icon={'member-remove'}
+                title={'Leave channel'}
+              />
+            )}
           />
         </JoinButtonWrapper>
       );
@@ -72,15 +76,23 @@ class JoinButton extends React.Component<Props, State> {
 
     return (
       <JoinButtonWrapper>
-        <Button
-          onPress={this.toggleMembership}
-          state={isLoading ? 'loading' : null}
-          icon={'member-add'}
-          title={'Join channel'}
+        <MutationWrapper
+          mutation={this.props.toggleChannelSubscription}
+          variables={{ channelId: channel.id }}
+          onComplete={this.onComplete}
+          onError={this.onError}
+          render={({ isLoading, onPressHandler }) => (
+            <Button
+              onPress={onPressHandler}
+              state={isLoading ? 'loading' : null}
+              icon={'member-add'}
+              title={'Join channel'}
+            />
+          )}
         />
       </JoinButtonWrapper>
     );
   }
 }
 
-export default compose(toggleChannelSubscription)(JoinButton);
+export default compose(connect(), toggleChannelSubscription)(JoinButton);

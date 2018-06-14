@@ -145,7 +145,7 @@ class ThreadFeed extends Component<Props, State> {
                   currentUser={currentUser}
                   onPressHandler={() =>
                     navigation.navigate({
-                      routeName: `Thread`,
+                      routeName: 'Thread',
                       key: item.node.id,
                       params: { id: item.node.id },
                     })

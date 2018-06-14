@@ -17,6 +17,19 @@ import {
   ProfileIcon,
 } from './style';
 
+const tabBarVisible = navigation => {
+  const { routes } = navigation.state;
+  const nonTabbarRoutes = ['Thread', 'ThreadDetail', 'DirectMessageThread'];
+
+  let showTabbar = true;
+  routes.forEach(route => {
+    if (nonTabbarRoutes.indexOf(route.routeName) >= 0) {
+      showTabbar = false;
+    }
+  });
+
+  return showTabbar;
+};
 const IS_PROD = process.env.NODE_ENV === 'production';
 
 const routeConfiguration = {
@@ -62,6 +75,9 @@ const tabBarConfiguration = {
     },
     style: IS_PROD ? {} : { backgroundColor: theme.warn.alt },
   },
+  navigationOptions: ({ navigation }) => ({
+    tabBarVisible: tabBarVisible(navigation),
+  }),
 };
 
 // NOTE(@mxstbr): I figured this out manually by simply inspecting in the simulator

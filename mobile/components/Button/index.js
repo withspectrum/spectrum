@@ -21,8 +21,9 @@ type Props = {
 const ButtonContent = (props: Props) => {
   const { title, color, state, size, icon, theme } = props;
 
-  if (state === 'loading')
-    return <Loading padding={0} color={theme.text.reverse} />;
+  if (state === 'loading') {
+    return <Loading padding={2} color={theme.text.reverse} />;
+  }
 
   return (
     <React.Fragment>

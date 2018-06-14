@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import { connect } from 'react-redux';
+import type { Dispatch } from 'redux';
 import { Button } from '../../components/Button';
 import compose from 'recompose/compose';
 import addCommunityMember, {
@@ -10,92 +12,96 @@ import removeCommunityMember, {
 } from '../../../shared/graphql/mutations/communityMember/removeCommunityMember';
 import { type GetCommunityType } from '../../../shared/graphql/queries/community/getCommunity';
 import { JoinButtonWrapper } from './style';
+import MutationWrapper from '../../components/MutationWrapper';
+import { addToast } from '../../actions/toasts';
 
 type Props = {
   ...$Exact<AddCommunityMemberProps>,
   ...$Exact<RemoveCommunityMemberProps>,
   community: GetCommunityType,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {
   joinedDuringSession: boolean,
-  isLoading: boolean,
 };
 
 class JoinButton extends React.Component<Props, State> {
   state = {
-    isLoading: false,
     joinedDuringSession: false,
   };
 
-  toggleMembership = () => {
-    const { community, removeCommunityMember, addCommunityMember } = this.props;
-
-    if (!community || !community.id) return;
-
+  onJoin = () => {
     this.setState({
-      isLoading: true,
+      joinedDuringSession: true,
     });
+  };
 
-    if (community.communityPermissions.isMember) {
-      removeCommunityMember({ input: { communityId: community.id } })
-        .then(() => {
-          this.setState({
-            isLoading: false,
-            joinedDuringSession: false,
-          });
-        })
-        .catch(err => {
-          this.setState({
-            isLoading: false,
-          });
-        });
-    } else {
-      addCommunityMember({ input: { communityId: community.id } })
-        .then(() => {
-          this.setState({
-            isLoading: false,
-            joinedDuringSession: true,
-          });
-        })
-        .catch(err => {
-          this.setState({
-            isLoading: false,
-          });
-        });
-    }
+  onLeave = () => {
+    this.setState({
+      joinedDuringSession: false,
+    });
+  };
+
+  onError = (err: any) => {
+    return this.props.dispatch(
+      addToast({
+        type: 'error',
+        message: err.message,
+      })
+    );
   };
 
   render() {
     const { community } = this.props;
-    const { joinedDuringSession, isLoading } = this.state;
+    const { joinedDuringSession } = this.state;
+    const variables = { input: { communityId: community.id } };
+    const { isMember } = community.communityPermissions;
 
     if (joinedDuringSession) {
       return (
         <JoinButtonWrapper>
-          <Button
-            onPress={this.toggleMembership}
-            state={isLoading ? 'loading' : null}
-            icon={'member-remove'}
-            title={'Leave'}
+          <MutationWrapper
+            mutation={this.props.removeCommunityMember}
+            variables={variables}
+            onComplete={this.onLeave}
+            onError={this.onError}
+            render={({ isLoading, onPressHandler }) => (
+              <Button
+                onPress={onPressHandler}
+                state={isLoading ? 'loading' : null}
+                icon={'member-remove'}
+                title={'Leave community'}
+              />
+            )}
           />
         </JoinButtonWrapper>
       );
     }
 
-    if (community.communityPermissions.isMember) return null;
+    if (isMember) return null;
 
     return (
       <JoinButtonWrapper>
-        <Button
-          onPress={this.toggleMembership}
-          state={isLoading ? 'loading' : null}
-          icon={'member-add'}
-          title={'Join'}
+        <MutationWrapper
+          mutation={this.props.addCommunityMember}
+          variables={variables}
+          onComplete={this.onJoin}
+          onError={this.onError}
+          render={({ isLoading, onPressHandler }) => (
+            <Button
+              onPress={onPressHandler}
+              state={isLoading ? 'loading' : null}
+              icon={'member-add'}
+              title={'Join community'}
+            />
+          )}
         />
       </JoinButtonWrapper>
     );
   }
 }
 
-export default compose(addCommunityMember, removeCommunityMember)(JoinButton);
+export default compose(connect(), addCommunityMember, removeCommunityMember)(
+  JoinButton
+);
