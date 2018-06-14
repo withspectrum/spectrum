@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import { TextInput, View } from 'react-native';
+import { TextInput } from 'react-native';
+import { throttle, debounce } from 'throttle-debounce';
 import Text from '../../components/Text';
 import TouchableHighlight from '../../components/TouchableHighlight';
 import ChatInput from '../../components/ChatInput';
-import { FullscreenNullState } from '../../components/NullStates';
 import PeopleSearchView from '../Search/PeopleSearchView';
 import createDirectMessageThread, {
   type CreateDirectMessageThreadProps,
@@ -19,6 +19,7 @@ import {
 import { events, track } from '../../utils/analytics';
 import type { NavigationProps } from 'react-navigation';
 import type { ComponentType } from 'react';
+import { FullscreenNullState } from '../../components/NullStates';
 
 const SelectedUser: ComponentType<{
   id: string,
@@ -49,8 +50,8 @@ type Props = {
 };
 
 type State = {
-  wipSearchString: string,
-  searchString: string,
+  wipSearchString: ?string,
+  searchString: ?string,
   selectedUsers: string[],
 };
 
@@ -60,6 +61,12 @@ class DirectMessageComposer extends React.Component<Props, State> {
     searchString: '',
     selectedUsers: [],
   };
+
+  constructor() {
+    super();
+    this.searchDebounced = debounce(300, this.searchDebounced);
+    this.searchThrottled = throttle(300, this.searchThrottled);
+  }
 
   componentDidMount() {
     track(events.DIRECT_MESSAGE_THREAD_COMPOSER_VIEWED);
@@ -75,9 +82,36 @@ class DirectMessageComposer extends React.Component<Props, State> {
     });
   };
 
+  onChangeText = (text: string) => {
+    this.setState({ wipSearchString: text }, () => {
+      const { wipSearchString } = this.state;
+      if (wipSearchString && wipSearchString.length < 5) {
+        this.searchThrottled(wipSearchString);
+      } else {
+        this.searchDebounced(wipSearchString);
+      }
+    });
+  };
+
   onFinishTyping = (e: { nativeEvent: { text: string } }) => {
+    this.search(e.nativeEvent.text);
+  };
+
+  searchDebounced = (searchString: ?string) => {
     this.setState({
-      searchString: e.nativeEvent.text,
+      searchString,
+    });
+  };
+
+  searchThrottled = (searchString: ?string) => {
+    this.setState({
+      searchString,
+    });
+  };
+
+  search = (searchString: ?string) => {
+    this.setState({
+      searchString,
     });
   };
 
@@ -145,18 +179,16 @@ class DirectMessageComposer extends React.Component<Props, State> {
             style={{ fontSize: 18, margin: 8 }}
           />
         </SearchInputArea>
-        {!this.state.searchString ? (
-          <FullscreenNullState
-            title={'Send Direct Messages'}
-            subtitle={
-              'Direct messages are private conversations between you and anyone else, including groups. Search for a person above to get started.'
-            }
-            icon={'message-new'}
-          />
-        ) : (
+
+        {!this.state.searchString && (
+          <FullscreenNullState title={''} subtitle={''} />
+        )}
+
+        {this.state.searchString && (
           <PeopleSearchView
             onPress={this.selectUser}
             queryString={this.state.searchString}
+            keyboardShouldPersistTaps={'always'}
           />
         )}
         <ChatInput onSubmit={this.onSubmit} />

@@ -1,6 +1,6 @@
 // @flow
 import React, { type Node, type ElementType } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, Keyboard } from 'react-native';
 import Text from '../Text';
 import type { FlatListProps } from 'react-native';
 
@@ -60,6 +60,11 @@ class InfiniteList extends React.Component<Props> {
     }
   };
 
+  onScroll = () => {
+    const { keyboardShouldDismissOnScroll = true } = this.props;
+    if (keyboardShouldDismissOnScroll) return Keyboard.dismiss();
+  };
+
   render() {
     const {
       refetching,
@@ -75,12 +80,14 @@ class InfiniteList extends React.Component<Props> {
       style = {},
       emptyState,
       fetchMore,
+      keyboardShouldPersistTaps,
       ...rest
     } = this.props;
 
     return (
       <FlatList
         {...rest}
+        onScroll={this.onScroll}
         refreshing={refetching || refreshing}
         keyExtractor={keyExtractor}
         onRefresh={refetch}
@@ -94,6 +101,7 @@ class InfiniteList extends React.Component<Props> {
         ItemSeparatorComponent={separator}
         ListEmptyComponent={emptyState || <Text type="body">Nothing here</Text>}
         removeClippedSubviews={true}
+        keyboardShouldPersistTaps={keyboardShouldPersistTaps}
         style={{ flex: 1, ...style }}
       />
     );

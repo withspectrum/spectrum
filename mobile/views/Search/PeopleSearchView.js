@@ -10,7 +10,6 @@ import viewNetworkHandler, {
 import Loading from '../../components/Loading';
 import { SearchView } from './style';
 import { UserListItem } from '../../components/Lists';
-import type { NavigationProps } from 'react-navigation';
 import InfiniteList from '../../components/InfiniteList';
 import { FullscreenNullState } from '../../components/NullStates';
 
@@ -22,6 +21,8 @@ type Props = {
   onPress: (userId: string) => any,
   queryString: ?string,
   style: Object,
+  keyboardShouldPersistTaps?: string,
+  keyboardShouldDismissOnScroll?: boolean,
 };
 
 class UsersSearchView extends Component<Props> {
@@ -34,7 +35,14 @@ class UsersSearchView extends Component<Props> {
   }
 
   render() {
-    const { isLoading, data, hasError, onPress } = this.props;
+    const {
+      isLoading,
+      data,
+      hasError,
+      onPress,
+      keyboardShouldPersistTaps = 'never',
+      keyboardShouldDismissOnScroll = true,
+    } = this.props;
 
     if (data.search) {
       const { search: { searchResultsConnection } } = data;
@@ -56,6 +64,8 @@ class UsersSearchView extends Component<Props> {
           {hasResults && (
             <InfiniteList
               data={results}
+              keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+              keyboardShouldDismissOnScroll={keyboardShouldDismissOnScroll}
               renderItem={({ item }) => (
                 <UserListItem
                   key={item.id}
