@@ -5,24 +5,20 @@ import styled from 'styled-components/native';
 import TouchableOpacity from '../TouchableOpacity';
 
 export const ListItemView = styled(TouchableOpacity)`
-  display: flex;
-  flex: 1;
-  flex-grow: 1;
-  flex-shrink: 0;
-  flex-basis: 100%;
   flex-direction: column;
-  border-bottom-color: ${props =>
-    !props.divider ? 'transparent' : props.theme.bg.hairline};
-  border-bottom-width: ${props =>
-    !props.divider ? 0 : StyleSheet.hairlineWidth};
   background: ${props => props.theme.bg.default};
   position: relative;
-  padding: 12px 16px 12px 0;
-  margin-left: 16px;
+  padding: 12px 16px;
 `;
 
-export const ListItemBackgroundWrapper = styled.View`
-  background: ${props => props.theme.bg.default};
+export const Divider = styled.View`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 16px;
+  height: 0px;
+  border-bottom-color: ${props => props.theme.bg.hairline};
+  border-bottom-width: ${StyleSheet.hairlineWidth};
 `;
 
 export const AvatarWrapper = styled(Column)`

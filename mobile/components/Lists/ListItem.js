@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { Row } from '../Flex';
-import { ListItemView } from './style';
+import { ListItemView, Divider } from './style';
 
 type ListItemProps = {
   onPressHandler: Function,
@@ -20,11 +20,11 @@ export class ListItem extends Component<ListItemProps> {
     } = this.props;
     return (
       <ListItemView
-        divider={divider}
         onPress={onPressHandler}
         onLongPress={onLongPressHandler ? onLongPressHandler : null}
       >
         <Row style={{ alignItems: 'center' }}>{children}</Row>
+        {divider && <Divider />}
       </ListItemView>
     );
   }

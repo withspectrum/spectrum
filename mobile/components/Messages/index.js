@@ -32,6 +32,7 @@ type Props = {
   hasError: boolean,
   navigation: NavigationProps,
   currentUser: GetUserType,
+  messagesDidLoad?: Function,
   data: {
     thread: {
       ...$Exact<GetThreadMessageConnectionType>,
@@ -43,6 +44,17 @@ type Props = {
 };
 
 class Messages extends Component<Props> {
+  componentDidUpdate(prevProps) {
+    const curr = this.props;
+    if (
+      !prevProps.data.messageConnection &&
+      curr.data.messageConnection &&
+      curr.data.messageConnection.edges.length > 0
+    ) {
+      return this.props.messagesDidLoad && this.props.messagesDidLoad();
+    }
+  }
+
   render() {
     const {
       data,

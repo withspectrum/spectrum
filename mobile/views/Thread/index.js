@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
-import { ScrollView } from 'react-native';
-import InvertedScrollView from './InvertedScrollView';
+import type { ScrollViewProps } from 'react-native';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
@@ -26,6 +25,7 @@ import {
   ThreadTitle,
   ThreadTimestamp,
   Wrapper,
+  ThreadScrollView,
 } from './style';
 import { track, events, transformations } from '../../utils/analytics';
 
@@ -44,6 +44,15 @@ type Props = {
 };
 
 class Thread extends React.Component<Props> {
+  scrolledToBottomOnMount: boolean;
+  scrollView: ScrollViewProps;
+
+  constructor() {
+    super();
+
+    this.scrolledToBottomOnMount = false;
+  }
+
   trackView = () => {
     const { data: { thread } } = this.props;
     if (!thread) return;
@@ -86,6 +95,17 @@ class Thread extends React.Component<Props> {
     this.setTitle();
   }
 
+  messagesDidLoad = () => {
+    if (
+      !this.scrolledToBottomOnMount &&
+      this.props.data.thread &&
+      this.props.data.thread.currentUserLastSeen
+    ) {
+      this.scrolledToBottomOnMount = true;
+      this.scrollView && setTimeout(() => this.scrollView.scrollToEnd());
+    }
+  };
+
   sendMessage = (body: string, user: Object) => {
     const { quotedMessage, data: { thread } } = this.props;
     if (!thread) return;
@@ -113,46 +133,43 @@ class Thread extends React.Component<Props> {
       // undefined below
       const thread = ((data.thread: any): GetThreadType);
 
-      const ScrollComponent = thread.currentUserLastSeen
-        ? InvertedScrollView
-        : ScrollView;
-
-      const ScrollChildrenData = [
-        <ErrorBoundary>
-          <ThreadMessages navigation={navigation} id={thread.id} />
-        </ErrorBoundary>,
-        <ThreadContentContainer>
-          <ThreadTitle>{thread.content.title}</ThreadTitle>
-
-          <ThreadTimestamp>{convertTimestampToDate(createdAt)}</ThreadTimestamp>
-
-          {thread.content.body && (
-            <ThreadContent rawContentState={JSON.parse(thread.content.body)} />
-          )}
-        </ThreadContentContainer>,
-        <UserListItem
-          onPressHandler={() =>
-            navigation.navigate({
-              routeName: 'User',
-              key: thread.author.user.id,
-              params: { id: thread.author.user.id },
-            })
-          }
-          user={thread.author.user}
-        />,
-      ];
-
-      const ScrollChildrenRender = thread.currentUserLastSeen
-        ? ScrollChildrenData
-        : ScrollChildrenData.reverse();
-
       return (
         <Wrapper>
-          <ScrollComponent testID="e2e-thread">
-            {ScrollChildrenRender.map((child, i) => (
-              <React.Fragment key={i}>{child}</React.Fragment>
-            ))}
-          </ScrollComponent>
+          <ThreadScrollView
+            innerRef={c => (this.scrollView = c)}
+            testID="e2e-thread"
+          >
+            <UserListItem
+              onPressHandler={() =>
+                navigation.navigate({
+                  routeName: 'User',
+                  key: thread.author.user.id,
+                  params: { id: thread.author.user.id },
+                })
+              }
+              user={thread.author.user}
+            />
+            <ThreadContentContainer>
+              <ThreadTitle>{thread.content.title}</ThreadTitle>
+
+              <ThreadTimestamp>
+                {convertTimestampToDate(createdAt)}
+              </ThreadTimestamp>
+
+              {thread.content.body && (
+                <ThreadContent
+                  rawContentState={JSON.parse(thread.content.body)}
+                />
+              )}
+            </ThreadContentContainer>,
+            <ErrorBoundary>
+              <ThreadMessages
+                navigation={navigation}
+                id={thread.id}
+                messagesDidLoad={this.messagesDidLoad}
+              />
+            </ErrorBoundary>,
+          </ThreadScrollView>
 
           {currentUser && (
             <ErrorBoundary>
