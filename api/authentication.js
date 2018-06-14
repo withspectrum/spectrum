@@ -70,7 +70,7 @@ const init = () => {
       {
         consumerKey: TWITTER_OAUTH_CLIENT_ID,
         consumerSecret: TWITTER_OAUTH_CLIENT_SECRET,
-        callbackURL: 'https://api.spectrum.chat/auth/twitter/callback',
+        callbackURL: 'https://spectrum.chat/auth/twitter/callback',
         includeEmail: true,
       },
       (token, tokenSecret, profile, done) => {
