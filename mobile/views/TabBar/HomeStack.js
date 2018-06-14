@@ -48,9 +48,17 @@ const ModalStack = createStackNavigator(
     ThreadComposer: {
       screen: withMappedNavigationProps(ThreadComposerModal),
       navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-        headerTitle: navigation.getParam('title', 'New Thread'),
-        // TODO(@mxstbr): Replace with X icon
-        headerLeft: ({ onPress }) => <Button onPress={onPress} title="X" />,
+        headerTitle: navigation.getParam('title', 'Compose'),
+        headerLeft: ({ onPress }) => (
+          <Button onPress={onPress} title="Cancel" />
+        ),
+        headerRight: (
+          <Button
+            title="Publish"
+            disabled={navigation.getParam('publishDisabled', true)}
+            onPress={navigation.getParam('onPublish', () => {})}
+          />
+        ),
       }),
     },
   },

@@ -1,16 +1,13 @@
 // @flow
-import React, { Fragment } from 'react';
-import { TextInput, Button } from 'react-native';
-import Select from '../../components/Select';
+import * as React from 'react';
+import compose from 'recompose/compose';
+import { Button } from 'react-native';
 import Wrapper, { InputWrapper } from './components/Wrapper';
 import LocationPicker from './components/LocationPicker';
 import { TitleTextInput, BodyTextInput } from './components/TextInputs';
 import publishThread, {
   type PublishThreadProps,
-  type PublishThreadResultType,
-  type PublishThreadInput,
 } from '../../../shared/graphql/mutations/thread/publishThread';
-import type { TextInputProps } from 'react-native';
 import type { NavigationProps } from 'react-navigation';
 
 type Props = {|
@@ -30,6 +27,10 @@ type State = {
 };
 
 class ThreadComposer extends React.Component<Props, State> {
+  componentDidMount() {
+    this.props.navigation.setParams({ onPublish: this.publish });
+  }
+
   bodyInput: ?{
     focus: Function,
     clear: Function,
@@ -44,14 +45,24 @@ class ThreadComposer extends React.Component<Props, State> {
     },
   };
 
+  setPublishDisabledState = () => {
+    const { selected, title } = this.state;
+    if (!selected.community || !selected.channel || !title)
+      return this.props.navigation.setParams({ publishDisabled: true });
+    this.props.navigation.setParams({ publishDisabled: false });
+  };
+
   onChangeText = (field: 'title' | 'body') => (text: string) => {
-    this.setState({
-      [field]: text,
-    });
+    this.setState(
+      {
+        [field]: text,
+      },
+      () => this.setPublishDisabledState()
+    );
   };
 
   onSelectedChange = (selected: SelectedState) => {
-    this.setState({ selected });
+    this.setState({ selected }, () => this.setPublishDisabledState());
   };
 
   focusBodyInput = () => {
@@ -84,8 +95,6 @@ class ThreadComposer extends React.Component<Props, State> {
   render() {
     const { selected, title, body } = this.state;
 
-    const canPublish =
-      selected.community !== null && selected.channel !== null && title !== '';
     return (
       <Wrapper>
         <LocationPicker
@@ -110,10 +119,9 @@ class ThreadComposer extends React.Component<Props, State> {
             placeholder="Write more thoughts here..."
           />
         </InputWrapper>
-        <Button onPress={this.publish} title="Publish" disabled={!canPublish} />
       </Wrapper>
     );
   }
 }
 
-export default publishThread(ThreadComposer);
+export default compose(publishThread)(ThreadComposer);
