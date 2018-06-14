@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { SafeAreaView, TextInput } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native';
 import { debounce } from 'throttle-debounce';
 import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
@@ -81,44 +81,46 @@ class SetUsername extends React.Component<Props, State> {
     const { username, validating, result } = this.state;
     return (
       <UserOnboardingWrapper>
-        <Text type="largeTitle" style={{ fontSize: 56, lineHeight: 64 }}>
-          👋
-        </Text>
-        <Spacer vertical={1} />
-        <Text type="title1" bold>
-          Welcome to Spectrum!
-        </Text>
-        <Text type="callout" style={{ textAlign: 'center' }}>
-          Spectrum is a place where communities can share, discuss and grow
-          together. To get started, create a username.
-        </Text>
-        <Spacer vertical={2} />
-        <Text type="headline" bold>
-          Create your username
-        </Text>
-        <Text type="subhead">You can change this later—no pressure!</Text>
-        <Spacer vertical={1} />
-        <UsernameInput onChangeText={this.onChangeText} value={username} />
-        {result === 'available' && (
-          <Text type="caption1" color={props => props.theme.success.default}>
-            That username is available!
+        <KeyboardAvoidingView behavior="position" enabled>
+          <Text type="largeTitle" style={{ fontSize: 56, lineHeight: 64 }}>
+            👋
           </Text>
-        )}
-        {result === 'taken' && (
-          <Text type="caption1" color={props => props.theme.warn.default}>
-            Someone already swooped that username.
+          <Spacer vertical={1} />
+          <Text type="title1" bold>
+            Welcome to Spectrum!
           </Text>
-        )}
-        <Spacer vertical={2} />
-        <Button
-          title="Save and Continue"
-          onPress={this.saveUsername}
-          state={
-            !validating && result === 'available'
-              ? undefined
-              : validating ? 'loading' : 'disabled'
-          }
-        />
+          <Text type="callout" style={{ textAlign: 'center' }}>
+            Spectrum is a place where communities can share, discuss and grow
+            together. To get started, create a username.
+          </Text>
+          <Spacer vertical={2} />
+          <Text type="headline" bold>
+            Create your username
+          </Text>
+          <Text type="subhead">You can change this later—no pressure!</Text>
+          <Spacer vertical={1} />
+          <UsernameInput onChangeText={this.onChangeText} value={username} />
+          {result === 'available' && (
+            <Text type="caption1" color={props => props.theme.success.default}>
+              That username is available!
+            </Text>
+          )}
+          {result === 'taken' && (
+            <Text type="caption1" color={props => props.theme.warn.default}>
+              Someone already swooped that username.
+            </Text>
+          )}
+          <Spacer vertical={2} />
+          <Button
+            title="Save and Continue"
+            onPress={this.saveUsername}
+            state={
+              !validating && result === 'available'
+                ? undefined
+                : validating ? 'loading' : 'disabled'
+            }
+          />
+        </KeyboardAvoidingView>
       </UserOnboardingWrapper>
     );
   }
