@@ -142,7 +142,7 @@ class ThreadDetail extends React.Component<Props, State> {
                 })
               }
               title={thread.channel.name}
-              noDivider
+              divider={false}
             />
           </ListSection>
 
@@ -158,7 +158,7 @@ class ThreadDetail extends React.Component<Props, State> {
                 })
               }
               user={thread.author.user}
-              noDivider
+              divider={false}
             />
           </ListSection>
 
@@ -220,7 +220,7 @@ class ThreadDetail extends React.Component<Props, State> {
                       ? 'Mute conversation'
                       : 'Subscribe to conversation'
                   }
-                  noDivider
+                  divider={false}
                 />
               )}
             />
@@ -235,7 +235,7 @@ class ThreadDetail extends React.Component<Props, State> {
                 title={'Delete conversation'}
                 type="destructive"
                 isLoading={isDeletingThread}
-                noDivider
+                divider={false}
               />
             </ListSection>
           )}

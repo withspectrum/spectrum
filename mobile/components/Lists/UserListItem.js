@@ -14,14 +14,14 @@ import {
 type UserListItemType = {
   user: Object,
   onPressHandler: Function,
-  noDivider?: boolean,
+  divider?: boolean,
 };
 
 export class UserListItem extends Component<UserListItemType> {
   render() {
-    const { user, onPressHandler, noDivider = false } = this.props;
+    const { user, onPressHandler, divider } = this.props;
     return (
-      <ListItem onPressHandler={onPressHandler} noDivider={noDivider}>
+      <ListItem onPressHandler={onPressHandler} divider={divider}>
         <AvatarWrapper>
           <Avatar src={user.profilePhoto} size={40} />
         </AvatarWrapper>

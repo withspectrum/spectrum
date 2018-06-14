@@ -6,7 +6,7 @@ import { ListItemView } from './style';
 type ListItemProps = {
   onPressHandler: Function,
   onLongPressHandler?: Function,
-  noDivider?: boolean,
+  divider?: boolean,
   children?: any,
 };
 
@@ -15,12 +15,12 @@ export class ListItem extends Component<ListItemProps> {
     const {
       onPressHandler,
       onLongPressHandler,
-      noDivider = false,
+      divider = true,
       children,
     } = this.props;
     return (
       <ListItemView
-        noDivider={noDivider}
+        divider={divider}
         onPress={onPressHandler}
         onLongPress={onLongPressHandler ? onLongPressHandler : null}
       >

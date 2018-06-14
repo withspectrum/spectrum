@@ -15,7 +15,7 @@ import type { GetCommunityType } from '../../../shared/graphql/queries/community
 type Props = {
   community: GetCommunityType,
   onPressHandler: Function,
-  noDivider?: boolean,
+  divider?: boolean,
 };
 
 export class CommunityListItem extends Component<Props> {
@@ -26,9 +26,9 @@ export class CommunityListItem extends Component<Props> {
   }
 
   render() {
-    const { community, onPressHandler, noDivider = false } = this.props;
+    const { community, onPressHandler, divider } = this.props;
     return (
-      <ListItem onPressHandler={onPressHandler} noDivider={noDivider}>
+      <ListItem onPressHandler={onPressHandler} divider={divider}>
         <AvatarWrapper>
           <Avatar src={community.profilePhoto} size={40} variant="square" />
         </AvatarWrapper>

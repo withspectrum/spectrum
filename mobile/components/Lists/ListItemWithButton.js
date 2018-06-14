@@ -9,21 +9,21 @@ type Props = {
   type?: 'destructive' | 'default',
   isLoading?: boolean,
   onPressHandler: Function,
-  noDivider?: boolean,
+  divider?: boolean,
 };
 
 export class ListItemWithButton extends Component<Props> {
   render() {
     const {
       type = 'default',
-      noDivider = false,
+      divider,
       isLoading = false,
       title,
       onPressHandler,
     } = this.props;
 
     return (
-      <ListItem onPressHandler={onPressHandler} noDivider={noDivider}>
+      <ListItem onPressHandler={onPressHandler} divider={divider}>
         <TextColumnContainer>
           <Title
             color={theme =>

@@ -12,9 +12,9 @@ export const ListItemView = styled(TouchableOpacity)`
   flex-basis: 100%;
   flex-direction: column;
   border-bottom-color: ${props =>
-    props.noDivider ? 'transparent' : props.theme.bg.hairline};
+    !props.divider ? 'transparent' : props.theme.bg.hairline};
   border-bottom-width: ${props =>
-    props.noDivider ? 0 : StyleSheet.hairlineWidth};
+    !props.divider ? 0 : StyleSheet.hairlineWidth};
   background: ${props => props.theme.bg.default};
   position: relative;
   padding: 12px 16px 12px 0;

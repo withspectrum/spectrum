@@ -1,27 +1,20 @@
 // @flow
-import React, { Component } from 'react';
-import Avatar from '../Avatar';
+import * as React from 'react';
 import { ListItem } from './ListItem';
 import Icon from '../Icon';
-import {
-  TextColumnContainer,
-  Title,
-  Subtitle,
-  AvatarWrapper,
-  ViewForwardContainer,
-} from './style';
+import { TextColumnContainer, Title, ViewForwardContainer } from './style';
 
 type Props = {
   title: string,
   onPressHandler: Function,
-  noDivider?: boolean,
+  divider?: boolean,
 };
 
-export class ListItemWithTitle extends Component<Props> {
+export class ListItemWithTitle extends React.Component<Props> {
   render() {
-    const { title, onPressHandler, noDivider = false } = this.props;
+    const { title, onPressHandler, divider = false } = this.props;
     return (
-      <ListItem onPressHandler={onPressHandler} noDivider={noDivider}>
+      <ListItem onPressHandler={onPressHandler} divider={divider}>
         <TextColumnContainer>
           <Title numberOfLines={1}>{title}</Title>
         </TextColumnContainer>
