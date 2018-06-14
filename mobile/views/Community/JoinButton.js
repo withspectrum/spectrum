@@ -4,14 +4,20 @@ import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
 import { Button } from '../../components/Button';
 import compose from 'recompose/compose';
-import { addCommunityMemberMutation } from '../../../shared/graphql/mutations/communityMember/addCommunityMember';
-import { removeCommunityMemberMutation } from '../../../shared/graphql/mutations/communityMember/removeCommunityMember';
+import addCommunityMember, {
+  type AddCommunityMemberProps,
+} from '../../../shared/graphql/mutations/communityMember/addCommunityMember';
+import removeCommunityMember, {
+  type RemoveCommunityMemberProps,
+} from '../../../shared/graphql/mutations/communityMember/removeCommunityMember';
 import { type GetCommunityType } from '../../../shared/graphql/queries/community/getCommunity';
 import { JoinButtonWrapper } from './style';
+import MutationWrapper from '../../components/MutationWrapper';
 import { addToast } from '../../actions/toasts';
-import { Mutation } from 'react-apollo';
 
 type Props = {
+  ...$Exact<AddCommunityMemberProps>,
+  ...$Exact<RemoveCommunityMemberProps>,
   community: GetCommunityType,
   dispatch: Dispatch<Object>,
 };
@@ -55,21 +61,20 @@ class JoinButton extends React.Component<Props, State> {
     if (joinedDuringSession) {
       return (
         <JoinButtonWrapper>
-          <Mutation
-            mutation={removeCommunityMemberMutation}
+          <MutationWrapper
+            mutation={this.props.removeCommunityMember}
             variables={variables}
-            onCompleted={this.onLeave}
+            onComplete={this.onLeave}
             onError={this.onError}
-          >
-            {(mutate, { data }) => (
+            render={({ isLoading, onPressHandler }) => (
               <Button
-                onPress={mutate}
-                state={data && data.loading ? 'loading' : null}
+                onPress={onPressHandler}
+                state={isLoading ? 'loading' : null}
                 icon={'member-remove'}
                 title={'Leave community'}
               />
             )}
-          </Mutation>
+          />
         </JoinButtonWrapper>
       );
     }
@@ -78,24 +83,25 @@ class JoinButton extends React.Component<Props, State> {
 
     return (
       <JoinButtonWrapper>
-        <Mutation
-          mutation={addCommunityMemberMutation}
+        <MutationWrapper
+          mutation={this.props.addCommunityMember}
           variables={variables}
-          onCompleted={this.onJoin}
+          onComplete={this.onJoin}
           onError={this.onError}
-        >
-          {(mutate, { data }) => (
+          render={({ isLoading, onPressHandler }) => (
             <Button
-              onPress={mutate}
-              state={data && data.loading ? 'loading' : null}
+              onPress={onPressHandler}
+              state={isLoading ? 'loading' : null}
               icon={'member-add'}
               title={'Join community'}
             />
           )}
-        </Mutation>
+        />
       </JoinButtonWrapper>
     );
   }
 }
 
-export default compose(connect())(JoinButton);
+export default compose(connect(), addCommunityMember, removeCommunityMember)(
+  JoinButton
+);

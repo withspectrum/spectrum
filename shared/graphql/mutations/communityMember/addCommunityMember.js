@@ -24,7 +24,7 @@ export type AddCommunityMemberProps = {
   >,
 };
 
-export const addCommunityMemberMutation = gql`
+export const addCommunityMemberQuery = gql`
   mutation addCommunityMember($input: AddCommunityMemberInput!) {
     addCommunityMember(input: $input) {
       ...communityInfo
@@ -48,4 +48,4 @@ const addCommunityMemberOptions = {
   }),
 };
 
-export default graphql(addCommunityMemberMutation, addCommunityMemberOptions);
+export default graphql(addCommunityMemberQuery, addCommunityMemberOptions);
