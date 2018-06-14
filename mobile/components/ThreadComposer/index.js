@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { Button } from 'react-native';
 import Wrapper, { InputWrapper } from './components/Wrapper';
 import LocationPicker from './components/LocationPicker';
 import { TitleTextInput, BodyTextInput } from './components/TextInputs';
