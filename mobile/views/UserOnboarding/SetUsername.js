@@ -1,17 +1,24 @@
 // @flow
 import React from 'react';
+import slugg from 'slugg';
 import { KeyboardAvoidingView } from 'react-native';
 import { debounce } from 'throttle-debounce';
 import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
-import Loading from '../../components/Loading';
-import Text from '../../components/Text';
 import { Button } from '../../components/Button';
 import { getUserByUsernameQuery } from '../../../shared/graphql/queries/user/getUser';
 import editUser, {
   type EditUserProps,
 } from '../../../shared/graphql/mutations/user/editUser';
-import { UserOnboardingWrapper, Spacer, UsernameInput } from './style';
+import {
+  UserOnboardingWrapper,
+  UsernameInput,
+  ViewTitle,
+  ViewSubtitle,
+  SaveButtonWrapper,
+  AvailableLabel,
+  AvailableLabelWrapper,
+} from './style';
 
 type Props = {
   ...$Exact<EditUserProps>,
@@ -21,30 +28,44 @@ type Props = {
 
 type State = {
   username: string,
-  validating: boolean,
   result: 'available' | 'taken' | null,
+  isValid: boolean,
 };
 
 class SetUsername extends React.Component<Props, State> {
   state = {
     username: '',
-    validating: false,
     result: null,
+    isValid: true,
   };
 
   onChangeText = (text: string) => {
+    const username = slugg(text.trim());
+
+    if (!username || username.length === 0) {
+      return this.setState({
+        username,
+        result: null,
+        isValid: true,
+      });
+    }
+
     this.setState({
-      username: text,
+      username,
       result: null,
     });
-    this.validateUsername();
+
+    if (!this.isUsernameValid(username)) {
+      return this.setState({ isValid: false });
+    }
+
+    this.setState({ isValid: true });
+    return this.searchUsername();
   };
 
-  validateUsername = debounce(500, () => {
-    if (this.state.username.length === 0) return;
-    this.setState({
-      validating: true,
-    });
+  isUsernameValid = username => username.length > 0 && username.length <= 20;
+
+  searchUsername = debounce(500, () => {
     this.props.client
       .query({
         query: getUserByUsernameQuery,
@@ -52,15 +73,11 @@ class SetUsername extends React.Component<Props, State> {
       })
       .then(({ data: { user } }) => {
         this.setState({
-          validating: false,
           result: user && user.id ? 'taken' : 'available',
         });
       })
       .catch(err => {
-        console.error(err);
-        this.setState({
-          validating: false,
-        });
+        // do something here if the search fails
       });
   });
 
@@ -73,53 +90,61 @@ class SetUsername extends React.Component<Props, State> {
         this.props.onFinish();
       })
       .catch(err => {
-        console.error(err);
+        // do something here if this fails
       });
   };
 
   render() {
-    const { username, validating, result } = this.state;
+    const { username, result, isValid } = this.state;
+
     return (
       <UserOnboardingWrapper>
         <KeyboardAvoidingView behavior="position" enabled>
-          <Text type="largeTitle" style={{ fontSize: 56, lineHeight: 64 }}>
-            👋
-          </Text>
-          <Spacer vertical={1} />
-          <Text type="title1" bold>
-            Welcome to Spectrum!
-          </Text>
-          <Text type="callout" style={{ textAlign: 'center' }}>
-            Spectrum is a place where communities can share, discuss and grow
-            together. To get started, create a username.
-          </Text>
-          <Spacer vertical={2} />
-          <Text type="headline" bold>
-            Create your username
-          </Text>
-          <Text type="subhead">You can change this later—no pressure!</Text>
-          <Spacer vertical={1} />
-          <UsernameInput onChangeText={this.onChangeText} value={username} />
-          {result === 'available' && (
-            <Text type="caption1" color={props => props.theme.success.default}>
-              That username is available!
-            </Text>
-          )}
-          {result === 'taken' && (
-            <Text type="caption1" color={props => props.theme.warn.default}>
-              Someone already swooped that username.
-            </Text>
-          )}
-          <Spacer vertical={2} />
-          <Button
-            title="Save and Continue"
-            onPress={this.saveUsername}
-            state={
-              !validating && result === 'available'
-                ? undefined
-                : validating ? 'loading' : 'disabled'
+          <ViewTitle>Create your username</ViewTitle>
+
+          <ViewSubtitle>
+            Your username helps people recognize you on Spectrum. It can be
+            changed at any time so there's no pressure to get it perfect right
+            now!
+          </ViewSubtitle>
+
+          <UsernameInput
+            onChangeText={this.onChangeText}
+            value={username}
+            placeholder={'What’s your username?'}
+            borderColor={theme =>
+              result
+                ? result === 'available' && isValid
+                  ? theme.success.alt
+                  : theme.warn.alt
+                : isValid ? theme.bg.border : theme.warn.alt
             }
           />
+
+          <AvailableLabelWrapper>
+            {!isValid && (
+              <AvailableLabel available={false}>
+                Usernames must be less than 20 characters - try another?
+              </AvailableLabel>
+            )}
+            {result === 'taken' && (
+              <AvailableLabel available={false}>
+                Someone already swooped that username - try another?
+              </AvailableLabel>
+            )}
+          </AvailableLabelWrapper>
+
+          <SaveButtonWrapper>
+            <Button
+              title="Save and Continue"
+              onPress={this.saveUsername}
+              state={
+                !isValid || !result || result === 'taken'
+                  ? 'disabled'
+                  : undefined
+              }
+            />
+          </SaveButtonWrapper>
         </KeyboardAvoidingView>
       </UserOnboardingWrapper>
     );

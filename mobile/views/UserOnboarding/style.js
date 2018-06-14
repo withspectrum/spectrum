@@ -1,20 +1,11 @@
 // @flow
-import styled, { css } from 'styled-components/native';
+import styled from 'styled-components/native';
 
 export const UserOnboardingWrapper = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  padding: 32px 16px;
-`;
-
-export const Spacer = styled.View`
-  ${props =>
-    props.vertical &&
-    css`
-      margin-top: ${props.vertical * 8}px;
-      margin-bottom: ${props.vertical * 8}px;
-    `};
+  padding: 72px 16px;
 `;
 
 export const UsernameInput = styled.TextInput.attrs({
@@ -23,8 +14,42 @@ export const UsernameInput = styled.TextInput.attrs({
 })`
   background: ${props => props.theme.bg.default};
   width: 100%;
-  padding: 12px 24px;
-  border-width: 2px;
-  border-color: ${props => props.theme.bg.border};
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-width: 1px;
+  border-color: ${props => props.borderColor(props.theme)};
   border-radius: 8px;
+  font-size: 18px;
+`;
+
+export const ViewTitle = styled.Text`
+  font-size: 40px;
+  line-height: 48;
+  font-weight: 900;
+  color: ${props => props.theme.text.default};
+  margin-bottom: 16px;
+`;
+
+export const ViewSubtitle = styled.Text`
+  font-size: 18px;
+  line-height: 24;
+  font-weight: 500;
+  color: ${props => props.theme.text.alt};
+  margin-bottom: 16px;
+`;
+
+export const SaveButtonWrapper = styled.View`
+  margin-bottom: 16px;
+`;
+
+export const AvailableLabel = styled.Text`
+  font-size: 16px;
+  color: ${props =>
+    props.available ? props.theme.success.alt : props.theme.warn.alt};
+  line-height: 21;
+  font-weight: 500;
+`;
+
+export const AvailableLabelWrapper = styled.View`
+  padding: 8px 16px 16px;
 `;
