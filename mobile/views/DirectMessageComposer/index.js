@@ -24,6 +24,7 @@ type Props = {
   ...$Exact<NavigationProps>,
   ...$Exact<CreateDirectMessageThreadProps>,
   currentUser: GetUserType,
+  presetUserIds?: Array<string>,
 };
 
 type State = {
@@ -51,6 +52,14 @@ class DirectMessageComposer extends React.Component<Props, State> {
 
   componentDidMount() {
     track(events.DIRECT_MESSAGE_THREAD_COMPOSER_VIEWED);
+
+    const { presetUserIds } = this.props;
+
+    if (presetUserIds && presetUserIds.length > 0) {
+      this.setState({
+        selectedUsers: [...presetUserIds],
+      });
+    }
   }
 
   onChangeText = (text: string) => {
