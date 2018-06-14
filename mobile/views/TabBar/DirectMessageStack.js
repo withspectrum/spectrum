@@ -49,8 +49,10 @@ const ModalStack = createStackNavigator(
     DirectMessageComposer: {
       screen: withMappedNavigationProps(DirectMessageComposer),
       navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-        headerTitle: navigation.getParam('title', 'New Direct Message'),
-        headerLeft: ({ onPress }) => <Button onPress={onPress} title="✕" />,
+        headerTitle: navigation.getParam('title', 'New Message'),
+        headerLeft: ({ onPress }) => (
+          <Button onPress={onPress} title="Cancel" />
+        ),
       }),
     },
   },
