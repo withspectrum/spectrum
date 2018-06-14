@@ -11,6 +11,7 @@ import { type ApolloClient } from 'apollo-client';
 import { initStore } from './reducers/store';
 
 import Toasts from './components/Toasts';
+import { CurrentUser } from './components/WithCurrentUser';
 import theme from '../shared/theme';
 import { createClient } from '../shared/graphql';
 import Login from './components/Login';
@@ -92,7 +93,16 @@ class App extends React.Component<{}, State> {
               <Fragment>
                 <StatusBar barStyle={'default'} />
                 <Toasts />
-                {!token ? <Login /> : <TabBar />}
+                {/* If there's either no token or the token is invalid (as shown by no user being returned when using it to fetch) show the login screen */}
+                {!token ? (
+                  <Login />
+                ) : (
+                  <CurrentUser>
+                    {({ currentUser }) =>
+                      currentUser && currentUser.id ? <TabBar /> : <Login />
+                    }
+                  </CurrentUser>
+                )}
               </Fragment>
             </ActionSheetProvider>
           </ThemeProvider>
