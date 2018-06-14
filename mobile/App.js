@@ -4,20 +4,22 @@ import React, { Fragment } from 'react';
 import { StatusBar } from 'react-native';
 import { SecureStore, AppLoading } from 'expo';
 import { Provider } from 'react-redux';
-import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider, Query } from 'react-apollo';
 import { ThemeProvider } from 'styled-components';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { type ApolloClient } from 'apollo-client';
 import { initStore } from './reducers/store';
 
 import Toasts from './components/Toasts';
-import { CurrentUser } from './components/WithCurrentUser';
+import Text from './components/Text';
 import theme from '../shared/theme';
 import { createClient } from '../shared/graphql';
 import Login from './components/Login';
 import TabBar from './views/TabBar';
-import UserOnboarding from './views/UserOnboarding';
+import { SetUsername, ExploreCommunities } from './views/UserOnboarding';
 import { authenticate } from './actions/authentication';
+
+import { getCurrentUserCommunityConnectionQuery } from '../shared/graphql/queries/user/getUserCommunityConnection';
 
 let sentry = Sentry.config(
   'https://3bd8523edd5d43d7998f9b85562d6924@sentry.io/154812'
@@ -98,14 +100,17 @@ class App extends React.Component<{}, State> {
                 {!token ? (
                   <Login />
                 ) : (
-                  <CurrentUser>
-                    {({ currentUser, isLoading }) => {
-                      if (isLoading) return null;
-                      if (!currentUser) return <Login />;
-                      if (!currentUser.username) return <UserOnboarding />;
+                  <Query query={getCurrentUserCommunityConnectionQuery}>
+                    {({ data: { networkStatus, user } }) => {
+                      if (networkStatus === 1 || networkStatus === 2)
+                        return null;
+                      if (!user) return <Login />;
+                      if (!user.username) return <SetUsername />;
+                      if (user.communityConnection.edges.length === 0)
+                        return <ExploreCommunities />;
                       return <TabBar />;
                     }}
-                  </CurrentUser>
+                  </Query>
                 )}
               </Fragment>
             </ActionSheetProvider>
