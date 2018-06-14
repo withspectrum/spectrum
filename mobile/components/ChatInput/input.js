@@ -10,6 +10,7 @@ import type { Node } from 'react';
 export type InputProps = {
   onSubmit: (text: string) => void,
   children?: Node,
+  disableSubmit?: boolean,
 };
 
 type State = {
@@ -26,6 +27,8 @@ class ChatInput extends React.Component<InputProps, State> {
   };
 
   submit = () => {
+    const { disableSubmit = false } = this.props;
+    if (disableSubmit) return;
     this.props.onSubmit(this.state.value);
     this.onChangeText('');
   };

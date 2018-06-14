@@ -1,52 +1,29 @@
 // @flow
 import React from 'react';
+import compose from 'recompose/compose';
+import { withCurrentUser } from '../../components/WithCurrentUser';
 import { throttle, debounce } from 'throttle-debounce';
-import Text from '../../components/Text';
-import TouchableHighlight from '../../components/TouchableHighlight';
 import ChatInput from '../../components/ChatInput';
 import PeopleSearchView from '../Search/PeopleSearchView';
 import createDirectMessageThread, {
   type CreateDirectMessageThreadProps,
 } from '../../../shared/graphql/mutations/directMessageThread/createDirectMessageThread';
-import { getUserById } from '../../../shared/graphql/queries/user/getUser';
+import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 import {
   ComposerWrapper,
   SearchInputArea,
   SelectedUsers,
-  SelectedUserPill,
   UserSearchInput,
 } from './style';
 import { events, track } from '../../utils/analytics';
 import type { NavigationProps } from 'react-navigation';
-import type { ComponentType } from 'react';
 import { FullscreenNullState } from '../../components/NullStates';
-
-const SelectedUser: ComponentType<{
-  id: string,
-  onPressHandler: Function,
-}> = getUserById(({ data, onPressHandler }) => {
-  if (data.user)
-    return (
-      <TouchableHighlight onPress={onPressHandler}>
-        <SelectedUserPill>
-          <Text
-            type="body"
-            style={{ marginTop: 0, fontSize: 14 }}
-            color={props => props.theme.brand.default}
-          >
-            {data.user.name}
-            {'  ✕'}
-          </Text>
-        </SelectedUserPill>
-      </TouchableHighlight>
-    );
-
-  return null;
-});
+import SelectedUser from './SelectedUser';
 
 type Props = {
   ...$Exact<NavigationProps>,
   ...$Exact<CreateDirectMessageThreadProps>,
+  currentUser: GetUserType,
 };
 
 type State = {
@@ -155,15 +132,28 @@ class DirectMessageComposer extends React.Component<Props, State> {
       });
   };
 
+  filterResults = (results: Array<Object>) => {
+    const { currentUser } = this.props;
+    const { selectedUsers } = this.state;
+
+    return results
+      .filter(row => row.id !== currentUser.id)
+      .filter(row => selectedUsers.indexOf(row.id) < 0);
+  };
+
   render() {
     return (
       <ComposerWrapper>
         <SearchInputArea>
-          <SelectedUsers empty={this.state.selectedUsers.length === 0}>
+          <SelectedUsers
+            horizontal
+            empty={this.state.selectedUsers.length === 0}
+          >
             {this.state.selectedUsers.map(userId => (
               <SelectedUser
                 key={userId}
                 id={userId}
+                keyboardShouldPersistTaps={'always'}
                 onPressHandler={this.removeSelectedUser(userId)}
               />
             ))}
@@ -176,6 +166,7 @@ class DirectMessageComposer extends React.Component<Props, State> {
             returnKeyType="search"
             autoFocus
             innerRef={elem => (this.searchInput = elem)}
+            placeholder={'Search for people...'}
           />
         </SearchInputArea>
 
@@ -188,12 +179,19 @@ class DirectMessageComposer extends React.Component<Props, State> {
             onPress={this.selectUser}
             queryString={this.state.searchString}
             keyboardShouldPersistTaps={'always'}
+            filter={results => this.filterResults(results)}
           />
         )}
-        <ChatInput onSubmit={this.onSubmit} />
+
+        <ChatInput
+          onSubmit={this.onSubmit}
+          disableSubmit={this.state.selectedUsers.length === 0}
+        />
       </ComposerWrapper>
     );
   }
 }
 
-export default createDirectMessageThread(DirectMessageComposer);
+export default compose(withCurrentUser, createDirectMessageThread)(
+  DirectMessageComposer
+);

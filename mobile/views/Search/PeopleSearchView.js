@@ -22,6 +22,7 @@ type Props = {
   queryString: ?string,
   style: Object,
   keyboardShouldPersistTaps?: string,
+  filter?: Function,
 };
 
 class UsersSearchView extends Component<Props> {
@@ -40,15 +41,20 @@ class UsersSearchView extends Component<Props> {
       hasError,
       onPress,
       keyboardShouldPersistTaps = 'never',
+      filter,
     } = this.props;
 
     if (data.search) {
       const { search: { searchResultsConnection } } = data;
       const hasResults =
         searchResultsConnection && searchResultsConnection.edges.length > 0;
-      const results = hasResults
+      let results = hasResults
         ? searchResultsConnection.edges.map(e => e && e.node)
         : [];
+
+      if (results && results.length > 0 && filter) {
+        results = filter(results);
+      }
 
       return (
         <SearchView style={this.props.style}>
