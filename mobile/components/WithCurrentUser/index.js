@@ -33,10 +33,10 @@ class CurrentUserComponent extends Component<Props> {
 
     if (!children && !render) return null;
 
-    // $FlowIssue
     return children
       ? children({ currentUser, isLoading })
-      : render({ currentUser, isLoading });
+      : // $FlowIssue
+        render({ currentUser, isLoading });
   }
 }
 

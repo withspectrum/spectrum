@@ -31,7 +31,7 @@ const Spacer = styled.View`
 `;
 
 const UsernameInput = styled.TextInput.attrs({
-  autoCapitalize: false,
+  autoCapitalize: 'none',
   autoCorrect: false,
 })`
   background: ${props => props.theme.bg.default};
@@ -45,6 +45,7 @@ const UsernameInput = styled.TextInput.attrs({
 type Props = {
   ...$Exact<EditUserProps>,
   client: Object,
+  onFinish: Function,
 };
 
 type State = {
@@ -53,7 +54,7 @@ type State = {
   result: 'available' | 'taken' | null,
 };
 
-class UserOnboarding extends React.Component<Props, State> {
+class SetUsernameComponent extends React.Component<Props, State> {
   state = {
     username: '',
     validating: false,
@@ -95,9 +96,14 @@ class UserOnboarding extends React.Component<Props, State> {
   saveUsername = () => {
     const { username } = this.state;
     if (username.length === 0) return;
-    this.props.editUser({ input: { username } }).then(() => {
-      // TODO(@mxstbr): Redirect to home somehow
-    });
+    this.props
+      .editUser({ username })
+      .then(() => {
+        this.props.onFinish();
+      })
+      .catch(err => {
+        console.error(err);
+      });
   };
 
   render() {
@@ -135,6 +141,7 @@ class UserOnboarding extends React.Component<Props, State> {
         <Spacer vertical={2} />
         <Button
           title="Save and Continue"
+          onPress={this.saveUsername}
           state={
             !validating && result === 'available'
               ? undefined
@@ -146,4 +153,31 @@ class UserOnboarding extends React.Component<Props, State> {
   }
 }
 
-export default compose(withApollo, editUser)(UserOnboarding);
+const SetUsername = compose(withApollo, editUser)(SetUsernameComponent);
+
+type UserOnboardingState = {
+  step: 'username-selection' | 'community-joining',
+};
+
+class UserOnboarding extends React.Component<{}, UserOnboardingState> {
+  state = {
+    step: 'username-selection',
+  };
+
+  moveToExplore = () => {
+    this.setState({
+      step: 'community-joining',
+    });
+  };
+
+  render() {
+    const { step } = this.state;
+    if (step === 'username-selection')
+      return <SetUsername onFinish={this.moveToExplore} />;
+    if (step === 'community-joining')
+      return <Text>Join some communities!</Text>;
+    return null;
+  }
+}
+
+export default UserOnboarding;

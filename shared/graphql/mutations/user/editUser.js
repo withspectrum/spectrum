@@ -10,7 +10,9 @@ export type EditUserType = {
 };
 
 export type EditUserProps = {
-  editUser: (input: EditUserInput) => Promise<EditUserType>,
+  editUser: (
+    input: $PropertyType<EditUserInput, 'input'>
+  ) => Promise<EditUserType>,
 };
 
 export const editUserMutation = gql`
