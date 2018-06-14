@@ -1,8 +1,12 @@
 // @flow
 import React from 'react';
-import { TextInput, View } from 'react-native';
+import { View } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import { ChatInputWrapper, ChatInputTextInputWrapper } from './style';
+import {
+  ChatInputWrapper,
+  ChatInputTextInputWrapper,
+  ChatTextInput,
+} from './style';
 import Icon from '../Icon';
 
 import type { Node } from 'react';
@@ -10,6 +14,7 @@ import type { Node } from 'react';
 export type InputProps = {
   onSubmit: (text: string) => void,
   children?: Node,
+  disableSubmit?: boolean,
 };
 
 type State = {
@@ -26,6 +31,8 @@ class ChatInput extends React.Component<InputProps, State> {
   };
 
   submit = () => {
+    const { disableSubmit = false } = this.props;
+    if (disableSubmit) return;
     this.props.onSubmit(this.state.value);
     this.onChangeText('');
   };
@@ -36,10 +43,10 @@ class ChatInput extends React.Component<InputProps, State> {
         <ChatInputWrapper>
           <ChatInputTextInputWrapper>
             {this.props.children}
-            <TextInput
+            <ChatTextInput
               value={this.state.value}
               onChangeText={this.onChangeText}
-              placeholder="Your message here..."
+              placeholder="Send a message..."
               multiline
               autoFocus={false}
               disableFullscreenUI

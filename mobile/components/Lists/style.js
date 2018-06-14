@@ -18,6 +18,10 @@ export const ListItemView = styled.View`
   margin-left: 16px;
 `;
 
+export const ListItemBackgroundWrapper = styled.View`
+  background: ${props => props.theme.bg.default};
+`;
+
 export const AvatarWrapper = styled(Column)`
   margin-right: 16px;
   justify-content: center;

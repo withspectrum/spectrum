@@ -32,9 +32,6 @@ export const SearchBar = styled(TextInput)`
 `;
 
 export const SearchView = styled.View`
-  border-top-color: ${props => props.theme.bg.hairline};
-  border-top-width: ${StyleSheet.hairlineWidth};
   display: flex;
-  background: ${props => props.theme.bg.default};
   flex: 1;
 `;
