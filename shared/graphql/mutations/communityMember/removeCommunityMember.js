@@ -24,7 +24,7 @@ export type RemoveCommunityMemberProps = {
   >,
 };
 
-export const removeCommunityMemberQuery = gql`
+export const removeCommunityMemberMutation = gql`
   mutation removeCommunityMember($input: RemoveCommunityMemberInput!) {
     removeCommunityMember(input: $input) {
       ...communityInfo
@@ -49,6 +49,6 @@ const removeCommunityMemberOptions = {
 };
 
 export default graphql(
-  removeCommunityMemberQuery,
+  removeCommunityMemberMutation,
   removeCommunityMemberOptions
 );
