@@ -106,7 +106,7 @@ jobs:
       - run: *setup-and-build-web
       - run: *build-api
       - run: *start-api
-      - run: ./node_modules/.bin/wait-on http://localhost:3000
+      - run: ./node_modules/.bin/wait-on http://localhost:3001
       - run: *start-web
       - run: ./node_modules/.bin/wait-on http://localhost:3006
       - run:
