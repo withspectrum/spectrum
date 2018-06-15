@@ -40,10 +40,13 @@ export const ViewTitle = styled.Text`
   font-weight: 900;
   color: ${props => props.theme.text.default};
   margin-bottom: 16px;
+  max-width: 100%;
 `;
 
 export const ViewSubtitle = styled.Text`
   font-size: 18px;
+  width: 100%;
+  max-width: 100%;
   line-height: 24;
   font-weight: 500;
   color: ${props => props.theme.text.alt};

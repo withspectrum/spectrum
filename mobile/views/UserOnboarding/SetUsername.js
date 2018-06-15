@@ -34,6 +34,7 @@ type State = {
   result: 'available' | 'taken' | null,
   isValid: boolean,
   isLoading: boolean,
+  isSaving: boolean,
 };
 
 class SetUsername extends React.Component<Props, State> {
@@ -42,6 +43,7 @@ class SetUsername extends React.Component<Props, State> {
     result: null,
     isValid: true,
     isLoading: false,
+    isSaving: false,
   };
 
   onChangeText = (text: string) => {
@@ -98,27 +100,27 @@ class SetUsername extends React.Component<Props, State> {
     if (username.length === 0) return;
 
     this.setState({
-      isLoading: true,
+      isSaving: true,
     });
 
     this.props
       .editUser({ username })
       .then(() => {
         this.setState({
-          isLoading: false,
+          isSaving: false,
         });
 
         this.props.onFinish();
       })
       .catch(err => {
         this.setState({
-          isLoading: false,
+          isSaving: false,
         });
       });
   };
 
   render() {
-    const { username, result, isValid, isLoading } = this.state;
+    const { username, result, isValid, isLoading, isSaving } = this.state;
 
     return (
       <UserOnboardingWrapper>
@@ -170,7 +172,7 @@ class SetUsername extends React.Component<Props, State> {
               onPress={this.saveUsername}
               state={
                 !isValid || !result || result === 'taken'
-                  ? 'disabled'
+                  ? isSaving ? 'loading' : 'disabled'
                   : undefined
               }
             />
