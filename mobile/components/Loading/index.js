@@ -35,12 +35,4 @@ class Loading extends Component<Props> {
   }
 }
 
-class LoadingSpinnerWrapped extends Component<Props> {
-  render() {
-    const { size = 'small', color = this.props.theme.text.alt } = this.props;
-    return <ActivityIndicator size={size} color={color} />;
-  }
-}
-
-export const LoadingSpinner = withTheme(LoadingSpinnerWrapped);
 export default withTheme(Loading);
