@@ -279,7 +279,7 @@ export const Footer = styled.div`
   display: flex;
   justify-content: stretch;
   align-content: stretch;
-  flex: auto;
+  flex: none;
   position: relative;
   padding: 32px;
   background-color: ${({ theme }) => theme.bg.reverse};

@@ -3,27 +3,33 @@ import styled from 'styled-components';
 
 export const Intro = styled.div`
   display: grid;
-  grid-template-rows: auto 40vh;
+  grid-template-rows: auto 1fr;
   grid-template-columns: 1fr;
-  grid-template-areas: 'copy';
-  margin: 160px 5% 80px;
+  grid-template-areas: 'illo' 'copy';
+  grid-gap: 32px;
+  margin: 10vh 5vw;
   align-items: center;
   justify-content: center;
   text-align: center;
 
-  @media (max-width: 1480px) {
-    grid-template-rows: auto 33vh;
-    grid-template-areas: 'copy';
-  }
-
-  @media (max-width: 960px) {
-    grid-template-rows: auto 25vh;
+  @media (min-width: 1440px) {
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr auto;
+    grid-template-areas: 'copy illo';
+    margin: 10vh 10vw;
+    align-items: left;
     text-align: left;
   }
+`;
 
-  @media (max-width: 460px) {
-    grid-template-rows: 1fr auto;
-  }
+export const Devices = styled.img`
+  grid-area: illo;
+  justify-self: center;
+  max-height: 40vh;
+  max-width: 80vw;
+
+  @media (min-width: 1440px) {
+    max-width: 40vw;
 `;
 
 export const TextContent = styled.div`
@@ -53,8 +59,19 @@ export const ActionsContainer = styled.div`
     margin: 0 16px;
   }
 
+  @media (min-width: 1440px) {
+    flex-direction: column;
+    align-items: stretch;
+
+    a {
+      margin: 0;
+      margin-bottom: 16px;
+    }
+  }
+
   @media (max-width: 800px) {
     flex-direction: column;
+    align-items: stretch;
 
     a {
       margin: 0 0 16px;
