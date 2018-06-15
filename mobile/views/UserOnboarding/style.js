@@ -6,6 +6,7 @@ export const UserOnboardingWrapper = styled.View`
   align-items: center;
   justify-content: center;
   padding: 72px 16px;
+  background: ${props => props.theme.bg.default};
 `;
 
 export const UsernameInput = styled.TextInput.attrs({
@@ -36,6 +37,7 @@ export const ViewSubtitle = styled.Text`
   font-weight: 500;
   color: ${props => props.theme.text.alt};
   margin-bottom: 16px;
+  width: 100%;
 `;
 
 export const SaveButtonWrapper = styled.View`

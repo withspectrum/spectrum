@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
-import { SafeAreaView } from 'react-native';
 import compose from 'recompose/compose';
-import Text from '../../components/Text';
 import Loading from '../../components/Loading';
 import ViewNetworkHandler, {
   type ViewNetworkHandlerProps,
@@ -11,12 +9,7 @@ import {
   getCommunitiesByCuratedContentType,
   type GetCommunitiesType,
 } from '../../../shared/graphql/queries/community/getCommunities';
-
-import styled from 'styled-components/native';
-
-const Wrapper = styled.View`
-  align-items: center;
-`;
+import { UserOnboardingWrapper, ViewTitle, ViewSubtitle } from './style';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
@@ -30,21 +23,14 @@ class ExploreCommunities extends React.Component<Props> {
     const { isLoading, data } = this.props;
     if (isLoading) return <Loading />;
     return (
-      <SafeAreaView>
-        <Wrapper>
-          <Text type="title1" bold>
-            Find your people.
-          </Text>
-          <Text
-            type="headline"
-            style={{ textAlign: 'center' }}
-            color={({ theme }) => theme.text.alt}
-          >
-            There are thousands of communities on Spectrum to explore. Check out
-            some of our favorites below or search for topics you love!
-          </Text>
-        </Wrapper>
-      </SafeAreaView>
+      <UserOnboardingWrapper>
+        <ViewTitle>Find your people.</ViewTitle>
+
+        <ViewSubtitle>
+          To get started, let’s find some communities for you to join. Check out
+          some of our favorites, or search for topics like "design"
+        </ViewSubtitle>
+      </UserOnboardingWrapper>
     );
   }
 }

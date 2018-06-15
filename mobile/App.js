@@ -11,7 +11,6 @@ import { type ApolloClient } from 'apollo-client';
 import { initStore } from './reducers/store';
 
 import Toasts from './components/Toasts';
-import Text from './components/Text';
 import theme from '../shared/theme';
 import { createClient } from '../shared/graphql';
 import Login from './components/Login';
