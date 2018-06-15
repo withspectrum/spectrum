@@ -3,11 +3,17 @@ import React, { Component } from 'react';
 import { ListItem } from './ListItem';
 import Loading from '../Loading';
 
-export class LoadingListItem extends Component<{}> {
+type Props = {
+  padding?: number,
+  divider?: boolean,
+};
+
+export class LoadingListItem extends Component<Props> {
   render() {
+    const { divider, padding } = this.props;
     return (
-      <ListItem onPressHandler={() => {}}>
-        <Loading />
+      <ListItem divider={divider} onPressHandler={() => {}}>
+        <Loading padding={padding} />
       </ListItem>
     );
   }
