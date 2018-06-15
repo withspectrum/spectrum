@@ -17,6 +17,21 @@ import {
   ProfileIcon,
 } from './style';
 
+const tabBarVisible = navigation => {
+  const { routes } = navigation.state;
+  const nonTabbarRoutes = ['Thread', 'ThreadDetail', 'DirectMessageThread'];
+
+  let showTabbar = true;
+  routes.forEach(route => {
+    if (nonTabbarRoutes.indexOf(route.routeName) >= 0) {
+      showTabbar = false;
+    }
+  });
+
+  return showTabbar;
+};
+const IS_PROD = process.env.NODE_ENV === 'production';
+
 const routeConfiguration = {
   Home: {
     screen: HomeStack,
@@ -52,17 +67,17 @@ const routeConfiguration = {
 
 const tabBarConfiguration = {
   tabBarOptions: {
-    // tint color is passed to text and icons (if enabled) on the tab bar
-    activeTintColor: theme.bg.default,
-    inactiveTintColor: theme.text.placeholder,
-    // background color is for the tab component
-    activeBackgroundColor: theme.bg.reverse,
-    inactiveBackgroundColor: theme.bg.reverse,
+    activeTintColor: IS_PROD ? theme.brand.alt : theme.text.reverse,
+    inactiveTintColor: IS_PROD ? theme.text.alt : theme.warn.border,
     labelStyle: {
       fontWeight: 'bold',
       marginBottom: 3,
     },
+    style: IS_PROD ? {} : { backgroundColor: theme.warn.alt },
   },
+  navigationOptions: ({ navigation }) => ({
+    tabBarVisible: tabBarVisible(navigation),
+  }),
 };
 
 // NOTE(@mxstbr): I figured this out manually by simply inspecting in the simulator

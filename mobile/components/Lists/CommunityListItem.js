@@ -2,29 +2,53 @@
 import React, { Component } from 'react';
 import Avatar from '../Avatar';
 import { ListItem } from './ListItem';
-import { TextColumnContainer, Title, Subtitle, AvatarWrapper } from './style';
+import Icon from '../Icon';
+import {
+  TextColumnContainer,
+  Title,
+  Subtitle,
+  AvatarWrapper,
+  ViewForwardContainer,
+} from './style';
 import type { GetCommunityType } from '../../../shared/graphql/queries/community/getCommunity';
 
-type CommunityListItemType = {
+type Props = {
   community: GetCommunityType,
-  onPress: Function,
+  onPressHandler: Function,
+  divider?: boolean,
 };
 
-export class CommunityListItem extends Component<CommunityListItemType> {
+export class CommunityListItem extends Component<Props> {
+  shouldComponentUpdate(nextProps: Props) {
+    const currProps = this.props;
+    if (nextProps.community.id !== currProps.community.id) return true;
+    return false;
+  }
+
   render() {
-    const { community, onPress } = this.props;
+    const { community, onPressHandler, divider } = this.props;
     return (
-      <ListItem onPress={onPress}>
+      <ListItem onPressHandler={onPressHandler} divider={divider}>
         <AvatarWrapper>
           <Avatar src={community.profilePhoto} size={40} variant="square" />
         </AvatarWrapper>
 
         <TextColumnContainer>
           <Title numberOfLines={1}>{community.name}</Title>
-          <Subtitle numberOfLines={1}>
-            {community.metaData.members} members
-          </Subtitle>
+          {community.metaData && (
+            <Subtitle numberOfLines={1}>
+              {community.metaData.members} members
+            </Subtitle>
+          )}
         </TextColumnContainer>
+
+        <ViewForwardContainer>
+          <Icon
+            glyph={'view-forward'}
+            size={24}
+            color={theme => theme.text.placeholder}
+          />
+        </ViewForwardContainer>
       </ListItem>
     );
   }

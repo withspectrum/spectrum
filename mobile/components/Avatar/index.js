@@ -16,6 +16,12 @@ type AvatarProps = {
 };
 
 class Avatar extends Component<AvatarProps> {
+  shouldComponentUpdate(nextProps: AvatarProps) {
+    const currProps = this.props;
+    if (nextProps.src !== currProps.src) return true;
+    return false;
+  }
+
   render() {
     const { src, size, onPress, style, variant = 'circle' } = this.props;
     let source = src ? { uri: src } : {};
