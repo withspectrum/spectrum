@@ -7,7 +7,7 @@ type ToastTypes = 'notification' | 'success' | 'error' | 'neutral';
 export type AddToastType = {
   type: ToastTypes,
   message: string,
-  onPressHandler: Function,
+  onPressHandler?: Function,
   icon?: ?GlyphTypes,
 };
 
