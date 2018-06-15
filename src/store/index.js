@@ -36,7 +36,11 @@ export const initStore = (
     );
   }
 
-  if (module.hot) {
+  if (
+    process.env.NODE_ENV === 'development' &&
+    module.hot &&
+    module.hot.accept
+  ) {
     module.hot.accept('../reducers', () => {
       const nextRootReducer = require('../reducers/index');
       store.replaceReducer(nextRootReducer);

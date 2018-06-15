@@ -258,6 +258,7 @@
     "test:e2e": "cypress run",
     "prestart:api:test": "node -e \"require('./shared/testing/setup.js')().then(() => process.exit())\"",
     "start:api:test": "TEST_DB=true FORCE_DEV=true DEBUG=api*,shared* forever build-api/main.js",
+    "start:test": "DISABLE_CACHE=true TEST_DB=true FORCE_DEV=true DEBUG=hyperion*,shared* forever build-hyperion/main.js",
     "cypress:open": "cypress open",
     "cypress:install": "cypress install",
     "lint": "eslint .",

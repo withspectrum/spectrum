@@ -40,42 +40,6 @@ if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
 import cors from 'shared/middlewares/cors';
 app.use(cors);
 
-// Redirect requests to /api and /auth to the production API
-// This allows deploy previews to work, as this route would only be called
-// if there's no path alias in Now for hyperionurl.com/api, which would only
-// happen on deploy previews
-app.use('/api', (req: express$Request, res: express$Response) => {
-  const redirectUrl = `${req.baseUrl}${req.path}`;
-  res.redirect(
-    req.method === 'POST' || req.xhr ? 307 : 301,
-    `https://spectrum.chat${redirectUrl}`
-  );
-});
-
-app.use('/auth', (req: express$Request, res: express$Response) => {
-  const redirectUrl = `${req.baseUrl}${req.path}`;
-  res.redirect(
-    req.method === 'POST' || req.xhr ? 307 : 301,
-    `https://spectrum.chat${redirectUrl}`
-  );
-});
-
-app.use('/websocket', (req: express$Request, res: express$Response) => {
-  const redirectUrl = `${req.baseUrl}${req.path}`;
-  res.redirect(
-    req.method === 'POST' || req.xhr ? 307 : 301,
-    `https://spectrum.chat${redirectUrl}`
-  );
-});
-
-// In development the Webpack HMR server requests /sockjs-node constantly,
-// so let's patch that through to it!
-if (process.env.NODE_ENV === 'development') {
-  app.use('/sockjs-node', (req: express$Request, res: express$Response) => {
-    res.redirect(301, `http://localhost:3000${req.path}`);
-  });
-}
-
 import cookieParser from 'cookie-parser';
 app.use(cookieParser());
 
@@ -105,6 +69,53 @@ app.use(passport.session());
 // This needs to come after passport otherwise we'll always redirect logged-in users
 import threadParamRedirect from 'shared/middlewares/thread-param';
 app.use(threadParamRedirect);
+
+const BASE_URI =
+  process.env.NODE_ENV === 'testing' || process.env.TEST_DB
+    ? 'http://localhost:3001'
+    : 'https://spectrum.chat';
+
+// Redirect requests to /api and /auth to the production API
+// This allows deploy previews to work, as this route would only be called
+// if there's no path alias in Now for hyperionurl.com/api, which would only
+// happen on deploy previews
+app.use('/api', (req: express$Request, res: express$Response) => {
+  const redirectUrl = `${req.baseUrl}${req.path}`;
+  fetch(`${BASE_URI}${redirectUrl}`, {
+    method: req.method,
+    headers: {
+      cookie: req.headers.cookie,
+      'content-type': req.headers['content-type'],
+    },
+    body: JSON.stringify(req.body),
+  })
+    .then(res => res.json())
+    .then(json => res.send(json));
+});
+
+app.use('/auth', (req: express$Request, res: express$Response) => {
+  const redirectUrl = `${req.baseUrl}${req.path}`;
+  res.redirect(
+    req.method === 'POST' || req.xhr ? 307 : 301,
+    `${BASE_URI}${redirectUrl}`
+  );
+});
+
+app.use('/websocket', (req: express$Request, res: express$Response) => {
+  const redirectUrl = `${req.baseUrl}${req.path}`;
+  res.redirect(
+    req.method === 'POST' || req.xhr ? 307 : 301,
+    `${BASE_URI}${redirectUrl}`
+  );
+});
+
+// In development the Webpack HMR server requests /sockjs-node constantly,
+// so let's patch that through to it!
+if (process.env.NODE_ENV === 'development') {
+  app.use('/sockjs-node', (req: express$Request, res: express$Response) => {
+    res.redirect(301, `http://localhost:3000${req.path}`);
+  });
+}
 
 // Static files
 // This route handles the case where our ServiceWorker requests main.asdf123.js, but
