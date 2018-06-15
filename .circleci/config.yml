@@ -108,7 +108,7 @@ jobs:
       - run: *start-api
       - run: *start-web
       # Wait for the API and webserver to start
-      - run: ./node_modules/.bin/wait-on http://localhost:3000 http://localhost:3001
+      - run: ./node_modules/.bin/wait-on http://localhost:3000 http://localhost:3006
       - run:
           name: Run Unit Tests
           command: yarn run test:ci
