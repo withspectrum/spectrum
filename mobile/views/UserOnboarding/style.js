@@ -9,14 +9,25 @@ export const UserOnboardingWrapper = styled.View`
   background: ${props => props.theme.bg.default};
 `;
 
+export const UsernameInputWrapper = styled.View`
+  position: relative;
+`;
+
+export const LoadingSpinnerWrapper = styled.View`
+  position: absolute;
+  top: 26px;
+  right: 16px;
+`;
+
 export const UsernameInput = styled.TextInput.attrs({
   autoCapitalize: 'none',
   autoCorrect: false,
 })`
   background: ${props => props.theme.bg.default};
   width: 100%;
+  max-width: 100%;
   margin-top: 12px;
-  padding: 12px 16px;
+  padding: 12px 48px 12px 16px;
   border-width: 1px;
   border-color: ${props => props.borderColor(props.theme)};
   border-radius: 8px;
@@ -25,7 +36,7 @@ export const UsernameInput = styled.TextInput.attrs({
 
 export const ViewTitle = styled.Text`
   font-size: 40px;
-  line-height: 48;
+  line-height: 40;
   font-weight: 900;
   color: ${props => props.theme.text.default};
   margin-bottom: 16px;
@@ -37,7 +48,6 @@ export const ViewSubtitle = styled.Text`
   font-weight: 500;
   color: ${props => props.theme.text.alt};
   margin-bottom: 16px;
-  width: 100%;
 `;
 
 export const SaveButtonWrapper = styled.View`

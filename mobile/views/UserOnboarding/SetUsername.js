@@ -5,6 +5,7 @@ import { KeyboardAvoidingView } from 'react-native';
 import { debounce } from 'throttle-debounce';
 import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
+import { LoadingSpinner } from '../../components/Loading';
 import { Button } from '../../components/Button';
 import { getUserByUsernameQuery } from '../../../shared/graphql/queries/user/getUser';
 import editUser, {
@@ -18,6 +19,8 @@ import {
   SaveButtonWrapper,
   AvailableLabel,
   AvailableLabelWrapper,
+  UsernameInputWrapper,
+  LoadingSpinnerWrapper,
 } from './style';
 
 type Props = {
@@ -30,6 +33,7 @@ type State = {
   username: string,
   result: 'available' | 'taken' | null,
   isValid: boolean,
+  isLoading: boolean,
 };
 
 class SetUsername extends React.Component<Props, State> {
@@ -37,6 +41,7 @@ class SetUsername extends React.Component<Props, State> {
     username: '',
     result: null,
     isValid: true,
+    isLoading: false,
   };
 
   onChangeText = (text: string) => {
@@ -66,6 +71,10 @@ class SetUsername extends React.Component<Props, State> {
   isUsernameValid = username => username.length > 0 && username.length <= 20;
 
   searchUsername = debounce(500, () => {
+    this.setState({
+      isLoading: true,
+    });
+
     this.props.client
       .query({
         query: getUserByUsernameQuery,
@@ -73,34 +82,48 @@ class SetUsername extends React.Component<Props, State> {
       })
       .then(({ data: { user } }) => {
         this.setState({
+          isLoading: false,
           result: user && user.id ? 'taken' : 'available',
         });
       })
       .catch(err => {
-        // do something here if the search fails
+        this.setState({
+          isLoading: false,
+        });
       });
   });
 
   saveUsername = () => {
     const { username } = this.state;
     if (username.length === 0) return;
+
+    this.setState({
+      isLoading: true,
+    });
+
     this.props
       .editUser({ username })
       .then(() => {
+        this.setState({
+          isLoading: false,
+        });
+
         this.props.onFinish();
       })
       .catch(err => {
-        // do something here if this fails
+        this.setState({
+          isLoading: false,
+        });
       });
   };
 
   render() {
-    const { username, result, isValid } = this.state;
+    const { username, result, isValid, isLoading } = this.state;
 
     return (
       <UserOnboardingWrapper>
         <KeyboardAvoidingView behavior="position" enabled>
-          <ViewTitle>Create your username</ViewTitle>
+          <ViewTitle>Choose a username</ViewTitle>
 
           <ViewSubtitle>
             Your username helps people recognize you on Spectrum. It can be
@@ -108,18 +131,25 @@ class SetUsername extends React.Component<Props, State> {
             now!
           </ViewSubtitle>
 
-          <UsernameInput
-            onChangeText={this.onChangeText}
-            value={username}
-            placeholder={'What’s your username?'}
-            borderColor={theme =>
-              result
-                ? result === 'available' && isValid
-                  ? theme.success.alt
-                  : theme.warn.alt
-                : isValid ? theme.bg.border : theme.warn.alt
-            }
-          />
+          <UsernameInputWrapper>
+            <UsernameInput
+              onChangeText={this.onChangeText}
+              value={username}
+              placeholder={'What’s your username?'}
+              borderColor={theme =>
+                result
+                  ? result === 'available' && isValid
+                    ? theme.success.alt
+                    : theme.warn.alt
+                  : isValid ? theme.bg.border : theme.warn.alt
+              }
+            />
+            {isLoading && (
+              <LoadingSpinnerWrapper>
+                <LoadingSpinner />
+              </LoadingSpinnerWrapper>
+            )}
+          </UsernameInputWrapper>
 
           <AvailableLabelWrapper>
             {!isValid && (
