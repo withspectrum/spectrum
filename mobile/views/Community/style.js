@@ -77,3 +77,7 @@ export const ThreadFeedDivider = styled.View`
   border-bottom-color: ${props => props.theme.bg.border};
   border-bottom-width: 1px;
 `;
+
+export const JoinButtonWrapper = styled.View`
+  margin-top: 16px;
+`;

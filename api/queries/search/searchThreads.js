@@ -109,7 +109,7 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
     );
 
     return loaders.thread
-      .loadMany(searchResultThreads.map(t => t.threadId))
+      .loadMany(searchResultThreads.map(t => t && t.threadId))
       .then(data => data.filter(thread => thread && !thread.deletedAt));
   }
 
@@ -168,7 +168,7 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
       .filter(t => t.communityId === searchFilter.communityId);
 
     return loaders.thread
-      .loadMany(searchResultThreads.map(t => t.threadId))
+      .loadMany(searchResultThreads.map(t => t && t.threadId))
       .then(data => data.filter(thread => thread && !thread.deletedAt));
   }
 
@@ -239,7 +239,7 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
       .filter(t => t.creatorId === searchFilter.creatorId);
 
     return loaders.thread
-      .loadMany(searchResultThreads.map(t => t.threadId))
+      .loadMany(searchResultThreads.map(t => t && t.threadId))
       .then(data => data.filter(thread => thread && !thread.deletedAt));
   }
 
@@ -269,7 +269,7 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
       .filter(t => availableCommunitiesForSearch.indexOf(t.communityId) >= 0);
 
     return loaders.thread
-      .loadMany(searchResultThreads.map(t => t.threadId))
+      .loadMany(searchResultThreads.map(t => t && t.threadId))
       .then(data => data.filter(thread => thread && !thread.deletedAt));
   }
 
@@ -282,11 +282,11 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
 
   // first, lets get the channels where the thread results were posted
   const channelsOfThreads = await getChannels(
-    searchResultThreads.map(t => t.channelId)
+    searchResultThreads.map(t => t && t.channelId)
   );
 
   const communitiesOfThreads = await getCommunities(
-    searchResultThreads.map(t => t.communityId)
+    searchResultThreads.map(t => t && t.communityId)
   );
 
   // see if any channels where thread results were found are private
@@ -305,7 +305,7 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
     (!privateCommunityIds || privateCommunityIds.length === 0)
   ) {
     return loaders.thread
-      .loadMany(searchResultThreads.map(t => t.threadId))
+      .loadMany(searchResultThreads.map(t => t && t.threadId))
       .then(data => data.filter(thread => thread && !thread.deletedAt));
   } else {
     // otherwise here we know that the user found threads where some of them are
@@ -332,6 +332,8 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
     // for each thread in the search results, determine if it was posted in
     // a private channel. if yes, is the current user a member?
     searchResultThreads = searchResultThreads.filter(thread => {
+      if (!thread) return null;
+
       if (privateChannelIds.indexOf(thread.channelId) >= 0) {
         return availablePrivateChannels.indexOf(thread.channelId) >= 0;
       }
@@ -344,7 +346,7 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
     });
 
     return loaders.thread
-      .loadMany(searchResultThreads.map(t => t.threadId))
+      .loadMany(searchResultThreads.map(t => t && t.threadId))
       .then(data => data.filter(thread => thread && !thread.deletedAt));
   }
 };

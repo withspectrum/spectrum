@@ -120,6 +120,7 @@ class InboxThread extends React.Component<Props> {
     const {
       data: { attachments, participants, author },
       data,
+      location,
       active,
       hasActiveCommunity,
       hasActiveChannel,
@@ -144,8 +145,10 @@ class InboxThread extends React.Component<Props> {
         <InboxThreadItem active={active}>
           <InboxLinkWrapper
             to={{
-              pathname: window.location.pathname,
+              pathname: location.pathname,
               search:
+                // TODO(@mxstbr): Fix this to not use window.innerWidth
+                // which breaks SSR rehydration on mobile devices
                 window.innerWidth < 768 || viewContext
                   ? `?thread=${data.id}`
                   : `?t=${data.id}`,
@@ -184,7 +187,11 @@ class InboxThread extends React.Component<Props> {
 
                     return (
                       <AttachmentsContainer active={active} key={url}>
-                        <MiniLinkPreview href={url} target="_blank">
+                        <MiniLinkPreview
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           <Icon glyph="link" size={18} />
                           <EllipsisText>{url}</EllipsisText>
                         </MiniLinkPreview>
@@ -219,6 +226,7 @@ class WatercoolerThreadPure extends React.Component<Props> {
   render() {
     const {
       data: { participants, author, community, messageCount, id },
+      location,
       active,
       viewContext,
     } = this.props;
@@ -229,8 +237,10 @@ class WatercoolerThreadPure extends React.Component<Props> {
         <InboxThreadItem active={active}>
           <InboxLinkWrapper
             to={{
-              pathname: window.location.pathname,
+              pathname: location.pathname,
               search:
+                // TODO(@mxstbr): Fix this to not use window.innerWidth
+                // which breaks SSR rehydration on mobile devices
                 window.innerWidth < 768 || viewContext
                   ? `?thread=${id}`
                   : `?t=${id}`,

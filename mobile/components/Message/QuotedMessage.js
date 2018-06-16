@@ -2,7 +2,7 @@
 import React from 'react';
 import TouchableOpacity from '../TouchableOpacity';
 import Message from './';
-import Author from '../Messages/Author';
+import AuthorName from '../Messages/AuthorName';
 import { QuoteWrapper, QuotedParagraph, QuoteGradient } from './style';
 
 import { isShort } from '../../../shared/clients/draft-js/utils/isShort';
@@ -46,12 +46,12 @@ export class QuotedMessage extends React.Component<
 
   render() {
     const { message, noPadding = false } = this.props;
-    const { isExpanded, isShort } = this.state;
+    const { isExpanded } = this.state;
     // TODO(@mxstbr): Use <ConditionalWrap> to only add TouchableOpacity to long messages
     return (
       <TouchableOpacity onPress={this.toggle}>
         <QuoteWrapper noPadding={noPadding} expanded={isExpanded}>
-          <Author me={false} avatar={false} author={message.author} />
+          <AuthorName author={message.author} />
           <QuotedParagraph>
             <Message bubble={false} message={message} me={false} />
           </QuotedParagraph>

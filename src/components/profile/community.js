@@ -173,7 +173,11 @@ class CommunityWithData extends React.Component<Props> {
               {community.website && (
                 <ExtLink>
                   <Icon glyph="link" size={24} />
-                  <a href={addProtocolToString(community.website)}>
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={addProtocolToString(community.website)}
+                  >
                     {community.website}
                   </a>
                 </ExtLink>

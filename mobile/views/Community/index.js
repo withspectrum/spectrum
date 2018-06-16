@@ -1,6 +1,5 @@
 // @flow
-import React, { Component, Fragment } from 'react';
-import { Text, View, StatusBar } from 'react-native';
+import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { withNavigation } from 'react-navigation';
 import {
@@ -12,6 +11,9 @@ import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import ThreadFeed from '../../components/ThreadFeed';
 import { ThreadListItem } from '../../components/Lists';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
+import Loading from '../../components/Loading';
+import { track, events, transformations } from '../../utils/analytics';
+import JoinButton from './JoinButton';
 
 import {
   Wrapper,
@@ -25,6 +27,8 @@ import {
   Description,
   ThreadFeedDivider,
 } from './style';
+import ErrorBoundary from '../../components/ErrorBoundary';
+import { FullscreenNullState } from '../../components/NullStates';
 
 type Props = {
   isLoading: boolean,
@@ -37,16 +41,16 @@ type Props = {
 
 const RemoteThreadItem = compose(getThreadById, withNavigation)(
   ({ data, navigation }) => {
-    if (data.loading) return <Text>Loading...</Text>;
+    if (data.loading) return <Loading />;
     if (!data.thread) return null;
     return (
       <ThreadListItem
+        refetch={data.refetch}
         activeCommunity={data.thread.community.id}
         thread={data.thread}
-        navigation={navigation}
-        onPress={() =>
+        onPressHandler={() =>
           navigation.navigate({
-            routeName: `Thread`,
+            routeName: 'Thread',
             key: data.thread.id,
             params: { id: data.thread.id },
           })
@@ -59,19 +63,58 @@ const RemoteThreadItem = compose(getThreadById, withNavigation)(
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 
 class Community extends Component<Props> {
+  trackView = () => {
+    const { data: { community } } = this.props;
+    if (!community) return;
+    track(events.COMMUNITY_VIEWED, {
+      community: transformations.analyticsCommunity(community),
+    });
+  };
+
+  setTitle = () => {
+    const { data: { community }, navigation } = this.props;
+    let title;
+    if (community) {
+      title = community.name;
+    } else {
+      title = 'Loading community...';
+    }
+    const oldTitle = navigation.getParam('title', null);
+    if (oldTitle && oldTitle === title) return;
+    navigation.setParams({ title });
+  };
+
+  componentDidMount() {
+    this.trackView();
+    this.setTitle();
+  }
+
+  componentDidUpdate(prev) {
+    const curr = this.props;
+    const first = !prev.data.community && curr.data.community;
+    const changed =
+      prev.data.community &&
+      curr.data.community &&
+      prev.data.community.id !== curr.data.community.id;
+    if (first || changed) {
+      this.trackView();
+    }
+
+    this.setTitle();
+  }
+
   render() {
-    const { data: { community }, isLoading, hasError } = this.props;
+    const { data: { community }, isLoading, hasError, navigation } = this.props;
 
     if (community) {
       return (
         <Wrapper>
-          <StatusBar barStyle="light-content" />
-
           <CommunityThreadFeed
+            navigation={navigation}
             id={community.id}
             activeCommunity={community.id}
             ListHeaderComponent={
-              <Fragment>
+              <ErrorBoundary alert>
                 <CoverPhotoContainer>
                   {community.coverPhoto ? (
                     <CoverPhoto
@@ -90,6 +133,8 @@ class Community extends Component<Props> {
                 <ProfileDetailsContainer>
                   <Name>{community.name}</Name>
                   <Description>{community.description}</Description>
+
+                  <JoinButton community={community} />
                 </ProfileDetailsContainer>
 
                 <ThreadFeedDivider />
@@ -106,7 +151,7 @@ class Community extends Component<Props> {
                     activeCommunity={community.id}
                   />
                 )}
-              </Fragment>
+              </ErrorBoundary>
             }
           />
         </Wrapper>
@@ -116,21 +161,13 @@ class Community extends Component<Props> {
     if (isLoading) {
       return (
         <Wrapper>
-          <View testID="e2e-community">
-            <Text>Loading...</Text>
-          </View>
+          <Loading />
         </Wrapper>
       );
     }
 
     if (hasError) {
-      return (
-        <Wrapper>
-          <View testID="e2e-community">
-            <Text>Error!</Text>
-          </View>
-        </Wrapper>
-      );
+      return <FullscreenNullState />;
     }
 
     return null;

@@ -11,6 +11,7 @@
   "main": "src/main.js",
   "private": true,
   "dependencies": {
+    "electron-context-menu": "^0.9.1",
     "electron-is-dev": "^0.3.0",
     "electron-log": "^2.2.14",
     "electron-updater": "^2.21.4",

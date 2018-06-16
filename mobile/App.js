@@ -1,19 +1,21 @@
 // @flow
 import Sentry from 'sentry-expo';
-import React from 'react';
+import React, { Fragment } from 'react';
+import { StatusBar } from 'react-native';
 import { SecureStore, AppLoading } from 'expo';
-import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { ApolloProvider } from 'react-apollo';
 import { ThemeProvider } from 'styled-components';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { type ApolloClient } from 'apollo-client';
+import { initStore } from './reducers/store';
 
+import Toasts from './components/Toasts';
+import { CurrentUser } from './components/WithCurrentUser';
 import theme from '../shared/theme';
 import { createClient } from '../shared/graphql';
 import Login from './components/Login';
 import TabBar from './views/TabBar';
-import reducers from './reducers';
 import { authenticate } from './actions/authentication';
 
 let sentry = Sentry.config(
@@ -23,7 +25,7 @@ let sentry = Sentry.config(
 // Need to guard this for HMR to work
 if (sentry && sentry.install) sentry.install();
 
-export const store = createStore(reducers);
+export const store = initStore();
 
 type State = {
   authLoaded: ?boolean,
@@ -60,7 +62,9 @@ class App extends React.Component<{}, State> {
   };
 
   listen = () => {
-    const { authentication } = store.getState();
+    const storeState = store.getState();
+    // $FlowFixMe
+    const authentication = storeState && storeState.authentication;
     const { token: oldToken } = this.state;
     if (authentication.token !== oldToken) {
       this.setState({
@@ -86,7 +90,20 @@ class App extends React.Component<{}, State> {
         <ApolloProvider client={client}>
           <ThemeProvider theme={theme}>
             <ActionSheetProvider>
-              {!token ? <Login /> : <TabBar />}
+              <Fragment>
+                <StatusBar barStyle={'default'} />
+                <Toasts />
+                {/* If there's either no token or the token is invalid (as shown by no user being returned when using it to fetch) show the login screen */}
+                {!token ? (
+                  <Login />
+                ) : (
+                  <CurrentUser>
+                    {({ currentUser }) =>
+                      currentUser && currentUser.id ? <TabBar /> : <Login />
+                    }
+                  </CurrentUser>
+                )}
+              </Fragment>
             </ActionSheetProvider>
           </ThemeProvider>
         </ApolloProvider>

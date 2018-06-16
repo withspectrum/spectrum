@@ -17,6 +17,7 @@ import {
   CodeOfConduct,
   Link,
 } from './style';
+import { events, track } from '../../utils/analytics';
 
 const API_URL =
   process.env.NODE_ENV === 'production'
@@ -30,7 +31,12 @@ type Props = {
 };
 
 class Login extends React.Component<Props> {
+  componentDidMount() {
+    track(events.LOGIN_PAGE_VIEWED);
+  }
+
   authenticate = (provider: Provider) => async () => {
+    track(events.LOGIN_PAGE_AUTH_CLICKED, { provider });
     const redirectUrl = AuthSession.getRedirectUrl();
     const result = await AuthSession.startAsync({
       authUrl: `${API_URL}/auth/${provider}?r=${redirectUrl}&authType=token`,

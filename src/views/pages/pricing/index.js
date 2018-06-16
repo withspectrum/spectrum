@@ -6,6 +6,7 @@ import Paid from './components/paid';
 import Intro from './components/intro';
 import Discount from './components/discount';
 import Faq from './components/faq';
+import { Intro as Concierge } from '../concierge';
 import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
 import Head from 'src/components/head';
@@ -14,13 +15,7 @@ type Props = {
   ...$Exact<ContextRouter>,
 };
 
-type State = {
-  ownsCommunities: boolean,
-};
-
-class Pricing extends React.Component<Props, State> {
-  state = { ownsCommunities: false };
-
+class Pricing extends React.Component<Props> {
   componentDidMount() {
     track(events.PRICING_PAGE_VIEWED);
   }
@@ -35,6 +30,7 @@ class Pricing extends React.Component<Props, State> {
 
         <Intro />
         <Paid />
+        <Concierge goopColor={'space.dark'} />
         <Discount />
         <Faq />
         <PageFooter />

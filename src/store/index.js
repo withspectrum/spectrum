@@ -17,8 +17,9 @@ export const initStore = (
   initialState,
   { middleware = [], reducers = {} } = {}
 ) => {
+  let store;
   if (initialState) {
-    return createStore(
+    store = createStore(
       getReducers(reducers),
       initialState,
       composeEnhancers(
@@ -26,7 +27,7 @@ export const initStore = (
       )
     );
   } else {
-    return createStore(
+    store = createStore(
       getReducers(reducers),
       {},
       composeEnhancers(
@@ -34,4 +35,13 @@ export const initStore = (
       )
     );
   }
+
+  if (module.hot) {
+    module.hot.accept('../reducers', () => {
+      const nextRootReducer = require('../reducers/index');
+      store.replaceReducer(nextRootReducer);
+    });
+  }
+
+  return store;
 };

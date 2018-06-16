@@ -5,10 +5,12 @@ import { View, StyleSheet, Dimensions, TextInput } from 'react-native';
 import { TabViewAnimated, SceneMap, TabBar } from 'react-native-tab-view';
 import { TabLabel, SearchView } from './style';
 import { Constants } from 'expo';
-import SearchInput from '../../components/SearchInput';
+import SearchBar from './SearchBar';
 import ThreadsSearchView from './ThreadsSearchView';
 import CommunitiesSearchView from './CommunitiesSearchView';
 import PeopleSearchView from './PeopleSearchView';
+import type { NavigationProps } from 'react-navigation';
+import { FullscreenNullState } from '../../components/NullStates';
 
 const initialLayout = {
   height: 0,
@@ -28,6 +30,7 @@ type State = {
 
 type Props = {
   theme: Object,
+  navigation: NavigationProps,
 };
 
 class Search extends Component<Props, State> {
@@ -44,24 +47,57 @@ class Search extends Component<Props, State> {
   };
 
   renderThreadsRoute = () => {
-    const { index, routes } = this.state;
-    if (routes[index].key !== 'threads') return <SearchView />;
-    if (!this.state.searchString) return <SearchView />;
-    return <ThreadsSearchView queryString={this.state.searchString} />;
+    if (!this.state.searchString)
+      return (
+        <SearchView>
+          <FullscreenNullState title={''} subtitle={''} />
+        </SearchView>
+      );
+
+    return (
+      <ThreadsSearchView
+        navigation={this.props.navigation}
+        queryString={this.state.searchString}
+      />
+    );
   };
 
   renderCommunitiesRoute = () => {
-    const { index, routes } = this.state;
-    if (routes[index].key !== 'communities') return <SearchView />;
-    if (!this.state.searchString) return <SearchView />;
-    return <CommunitiesSearchView queryString={this.state.searchString} />;
+    if (!this.state.searchString)
+      return (
+        <SearchView>
+          <FullscreenNullState title={''} subtitle={''} />
+        </SearchView>
+      );
+
+    return (
+      <CommunitiesSearchView
+        navigation={this.props.navigation}
+        queryString={this.state.searchString}
+      />
+    );
   };
 
   renderPeopleRoute = () => {
-    const { index, routes } = this.state;
-    if (routes[index].key !== 'people') return <SearchView />;
-    if (!this.state.searchString) return <SearchView />;
-    return <PeopleSearchView queryString={this.state.searchString} />;
+    if (!this.state.searchString)
+      return (
+        <SearchView>
+          <FullscreenNullState title={''} subtitle={''} />
+        </SearchView>
+      );
+
+    return (
+      <PeopleSearchView
+        onPress={userId =>
+          this.props.navigation.navigate({
+            routeName: `User`,
+            key: userId,
+            params: { id: userId },
+          })
+        }
+        queryString={this.state.searchString}
+      />
+    );
   };
 
   handleIndexChange = (index: number) => this.setState({ index });
@@ -95,8 +131,8 @@ class Search extends Component<Props, State> {
     const Tabs = () => this.renderTabs(props);
     return (
       <View>
-        <SearchInput
-          autoFocus={true}
+        <SearchBar
+          autoFocus={false}
           blurOnSubmit={true}
           placeholder={`Search for ${this.state.routes[
             this.state.index

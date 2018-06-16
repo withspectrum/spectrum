@@ -27,17 +27,15 @@ import {
   OverflowAvatarLabel,
 } from './style';
 
-type DirectMessageListItemType = {
-  onPress: Function,
+type Props = {
+  onPressHandler: Function,
   participants: Array<Object>,
   title: string,
   subtitle: string,
   timestamp: string,
 };
 
-export class DirectMessageListItem extends Component<
-  DirectMessageListItemType
-> {
+export class DirectMessageListItem extends Component<Props> {
   renderParticipantAvatars = () => {
     const { participants } = this.props;
     if (!participants || participants.length === 0) return null;
@@ -178,10 +176,10 @@ export class DirectMessageListItem extends Component<
   };
 
   render() {
-    const { onPress, title, subtitle, timestamp } = this.props;
+    const { onPressHandler, title, subtitle, timestamp } = this.props;
 
     return (
-      <ListItem onPress={onPress}>
+      <ListItem onPressHandler={onPressHandler}>
         <AvatarWrapper>{this.renderParticipantAvatars()}</AvatarWrapper>
 
         <TextColumnContainer>

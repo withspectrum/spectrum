@@ -1,10 +1,8 @@
 // @flow
+import type { Amplitude } from './';
 
-const amplitude = window.amplitude;
-
-export const unsetUser = () => {
+export const createSetUser = (amplitude: Amplitude) => (userId: string) => {
   if (!amplitude) {
-    console.warn('No amplitude function attached to window');
     return;
   }
 
@@ -14,13 +12,11 @@ export const unsetUser = () => {
       : process.env.AMPLITUDE_API_KEY_DEVELOPMENT;
 
   if (!AMPLITUDE_API_KEY) {
-    // console.warn(`[Amplitude Dev] Unset user`);
     return;
   }
 
   const amplitudePromise = () => {
-    // console.warn('[Amplitude] Unset user');
-    return amplitude.getInstance().setUserId(null);
+    return amplitude.getInstance().setUserId(userId);
   };
 
   return Promise.all([amplitudePromise()]);

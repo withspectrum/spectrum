@@ -136,17 +136,6 @@ jobs:
           name: Deploy and alias Hyperion
           command: npx now-cd --alias "alpha=hyperion.alpha.spectrum.chat" --team spaceprogram
 
-  deploy_desktop:
-    <<: *js_defaults
-    docker:
-      - image: circleci/node:8
-    steps:
-      - attach_workspace:
-          at: ~/spectrum
-      - run:
-          name: Build and release desktop app
-          command: yarn run release:desktop
-
   # Run eslint, flow etc.
   test_static_js:
     <<: *js_defaults
@@ -219,13 +208,6 @@ workflows:
 
       # Deployment
       - deploy_alpha:
-          requires:
-            - test_static_js
-            - test_web
-          filters:
-            branches:
-              only: alpha
-      - deploy_desktop:
           requires:
             - test_static_js
             - test_web

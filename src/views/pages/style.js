@@ -556,57 +556,27 @@ export const LogoTab = styled(Tab)`
   }
 `;
 
-const DropdownLink = styled(Link)`
+export const DropdownLink = styled(Link)`
   padding: 16px 0;
-  margin: 0 16px;
   font-weight: 500;
   display: flex;
+  width: 100%;
   align-items: center;
-  display: grid;
-  grid-template-columns: auto auto 1fr auto;
-  grid-template-rows: 1fr;
-  grid-template-areas: 'icon label . arrow';
   transition: ${Transition.hover.off};
   color: ${props =>
     props.selected ? props.theme.text.placeholder : props.theme.brand.alt};
-
-  > div:last-of-type {
-    grid-area: arrow;
-    opacity: 0;
-    display: ${props => (props.selected ? 'none' : 'inline-block')};
-    transition: ${Transition.hover.off};
-  }
-
-  > div:first-of-type {
-    grid-area: icon;
-    margin-right: 16px;
-  }
-
-  > span {
-    grid-area: label;
-  }
+  border-radius: 8px;
 
   &:hover {
     transition: ${Transition.hover.on};
     color: ${props =>
       props.selected ? props.theme.text.alt : props.theme.brand.default};
-
-    > div:last-of-type {
-      opacity: 1;
-      transition: ${Transition.hover.on};
-    }
   }
 `;
 
 export const LogoLink = styled(DropdownLink)`
-  grid-area: logo;
-  padding: 0;
   color: ${props => props.theme.text.placeholder};
-
-  > div:last-of-type {
-    opacity: 1;
-    display: inline-block;
-  }
+  margin-bottom: 16px;
 
   &:hover {
     color: ${props => props.theme.brand.alt};
@@ -634,35 +604,19 @@ export const ExploreLink = styled(DropdownLink)`
 `;
 
 export const AuthLink = styled(DropdownLink)`
-  grid-area: auth;
   margin: 0;
-  padding: 16px;
+  margin-top: 24px;
+  padding: 16px 0;
   font-weight: 700;
   border-top: none;
   color: ${props => props.theme.text.reverse};
-  background-color: ${props => props.theme.brand.alt};
   background-image: ${props =>
     Gradient(props.theme.brand.alt, props.theme.brand.default)};
-
-  > div > div {
-    box-shadow: 0 0 0 2px ${props => props.theme.bg.default};
-  }
+  justify-content: center;
 
   &:hover {
     color: ${props => props.theme.text.reverse};
     text-shadow: 0 0 32px ${props => hexa(props.theme.text.reverse, 0.5)};
-  }
-
-  > div:first-of-type {
-    grid-area: icon;
-  }
-
-  > span {
-    grid-area: label;
-  }
-
-  > div:last-of-type {
-    grid-area: arrow;
   }
 `;
 
@@ -678,6 +632,7 @@ export const MenuContainer = styled.div`
   bottom: 0;
   height: 100vh;
   width: 300px;
+  padding: 16px;
   color: ${props => props.theme.brand.alt};
   background-color: ${props => props.theme.bg.default};
   background-image: ${props =>
@@ -718,7 +673,7 @@ export const MenuTab = styled.div`
   }
 
   ${MenuContainer} {
-    display: ${props => (props.open ? 'grid' : 'none')};
+    display: ${props => (props.open ? 'flex' : 'none')};
   }
 
   @media (min-width: 768px) {

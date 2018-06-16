@@ -1,7 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import { Text } from 'react-native';
-import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
 import searchUsersQuery, {
   type SearchUsersType,
@@ -12,47 +10,64 @@ import viewNetworkHandler, {
 import Loading from '../../components/Loading';
 import { SearchView } from './style';
 import { UserListItem } from '../../components/Lists';
-import type { Navigation } from '../../utils/types';
 import InfiniteList from '../../components/InfiniteList';
+import { FullscreenNullState } from '../../components/NullStates';
 
 type Props = {
   data: {
     search: SearchUsersType,
   },
   ...$Exact<ViewNetworkHandlerProps>,
-  navigation: Navigation,
+  onPress: (userId: string) => any,
+  queryString: ?string,
+  style: Object,
+  keyboardShouldPersistTaps?: string,
+  filter?: Function,
 };
 
 class UsersSearchView extends Component<Props> {
+  shouldComponentUpdate(nextProps: Props) {
+    const currProps = this.props;
+
+    if (nextProps.data !== currProps.data) return true;
+    if (nextProps.queryString !== currProps.queryString) return true;
+    return false;
+  }
+
   render() {
-    const { isLoading, data, navigation } = this.props;
+    const {
+      isLoading,
+      data,
+      hasError,
+      onPress,
+      keyboardShouldPersistTaps = 'never',
+      filter,
+    } = this.props;
 
     if (data.search) {
       const { search: { searchResultsConnection } } = data;
       const hasResults =
         searchResultsConnection && searchResultsConnection.edges.length > 0;
-      const results = hasResults
+      let results = hasResults
         ? searchResultsConnection.edges.map(e => e && e.node)
         : [];
 
+      if (results && results.length > 0 && filter) {
+        results = filter(results);
+      }
+
       return (
-        <SearchView>
-          {isLoading && <Loading />}
-          {!hasResults && <Text>No results</Text>}
+        <SearchView style={this.props.style}>
+          {!hasResults && <FullscreenNullState title={''} subtitle={''} />}
           {hasResults && (
             <InfiniteList
               data={results}
+              keyboardShouldPersistTaps={keyboardShouldPersistTaps}
               renderItem={({ item }) => (
                 <UserListItem
                   key={item.id}
                   user={item}
-                  onPress={() =>
-                    navigation.navigate({
-                      routeName: `User`,
-                      key: item.id,
-                      params: { id: item.id },
-                    })
-                  }
+                  onPressHandler={() => onPress(item.id)}
                 />
               )}
               loadingIndicator={<Loading />}
@@ -64,16 +79,18 @@ class UsersSearchView extends Component<Props> {
 
     if (isLoading) {
       return (
-        <SearchView>
+        <SearchView style={this.props.style}>
           <Loading />
         </SearchView>
       );
     }
 
-    return <SearchView />;
+    if (hasError) {
+      return <FullscreenNullState style={this.props.style} />;
+    }
+
+    return <SearchView style={this.props.style} />;
   }
 }
 
-export default compose(searchUsersQuery, withNavigation, viewNetworkHandler)(
-  UsersSearchView
-);
+export default compose(searchUsersQuery, viewNetworkHandler)(UsersSearchView);

@@ -5,7 +5,7 @@ import { withNavigation } from 'react-navigation';
 import { View } from 'react-native';
 import TouchableOpacity from '../../TouchableOpacity';
 import Avatar from '../../Avatar';
-import type { Navigation } from '../../../utils/types';
+import type { NavigationProps } from 'react-navigation';
 import type { ThreadInfoType } from '../../../../shared/graphql/fragments/thread/threadInfo';
 import { Subtitle } from '../style';
 import {
@@ -18,7 +18,7 @@ type Props = {
   thread: ThreadInfoType,
   activeChannel?: string,
   activeCommunity?: string,
-  navigation: Navigation,
+  navigation: NavigationProps,
 };
 
 class ThreadCommunityInfo extends Component<Props> {

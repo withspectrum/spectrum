@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import replace from 'string-replace-to-array';
+import { withRouter } from 'react-router';
 import { Button, TextButton } from 'src/components/buttons';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import {
@@ -36,11 +37,13 @@ import {
   SidebarChannelPill,
 } from '../style';
 import { ErrorBoundary } from 'src/components/error';
+import type { ContextRouter } from 'react-router';
 
 type RecommendedThread = {
   node: GetThreadType,
 };
 type Props = {
+  ...$Exact<ContextRouter>,
   thread: GetThreadType,
   currentUser: Object,
   data: {
@@ -57,6 +60,7 @@ class Sidebar extends React.Component<Props> {
       threadViewLoading,
       thread,
       currentUser,
+      location,
       data: { threads },
     } = this.props;
 
@@ -199,7 +203,7 @@ class Sidebar extends React.Component<Props> {
                         <SidebarRelatedThread key={t.id}>
                           <Link
                             to={{
-                              pathname: window.location.pathname,
+                              pathname: location.pathname,
                               search: `?thread=${t.id}`,
                             }}
                           >
@@ -222,4 +226,4 @@ class Sidebar extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getCommunityThreads)(Sidebar);
+export default compose(connect(), withRouter, getCommunityThreads)(Sidebar);

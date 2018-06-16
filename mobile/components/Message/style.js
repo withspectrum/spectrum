@@ -7,9 +7,8 @@ export const Bubble = styled.View`
   /* Android */
   elevation: 10;
   margin-top: 2px;
-  margin-bottom: 2px;
   background-color: ${props =>
-    props.me ? props.theme.brand.default : props.theme.generic.default};
+    props.me ? props.theme.brand.alt : props.theme.generic.default};
 `;
 
 export const Align = styled.View`

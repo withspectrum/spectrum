@@ -1,22 +1,27 @@
 // @flow
 import React, { Component } from 'react';
-import { View } from 'react-native';
-import { withNavigation } from 'react-navigation';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../ViewNetworkHandler';
-import Text from '../Text';
 import Message from '../Message';
 import InfiniteList from '../InfiniteList';
-import { ThreadMargin } from '../../views/Thread/style';
 import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
-import { convertTimestampToDate } from '../../../src/helpers/utils';
+import { convertTimestampToDate } from '../../../shared/time-formatting';
 import { withCurrentUser } from '../../components/WithCurrentUser';
-import RoboText from './RoboText';
-import Author from './Author';
+import { UnseenRoboText, TimestampRoboText } from './RoboText';
+import AuthorAvatar from './AuthorAvatar';
+import AuthorName from './AuthorName';
+import Loading from '../Loading';
+import { FullscreenNullState } from '../NullStates';
+import {
+  Container,
+  MessageGroupContainer,
+  BubbleGroupContainer,
+} from './style';
 
+import type { NavigationProps } from 'react-navigation';
 import type { FlatListProps } from 'react-native';
-import type { Navigation } from 'react-navigation';
-import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection.js';
+import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection';
+import type { GetThreadMessageConnectionType } from '../../../shared/graphql/queries/thread/getThreadMessageConnection.js';
 import type { ThreadParticipantType } from '../../../shared/graphql/fragments/thread/threadParticipant';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 
@@ -25,14 +30,31 @@ type Props = {
   ...$Exact<FlatListProps>,
   isLoading: boolean,
   hasError: boolean,
-  navigation: Navigation,
+  navigation: NavigationProps,
   currentUser: GetUserType,
+  messagesDidLoad?: Function,
   data: {
-    ...$Exact<ThreadMessageConnectionType>,
+    thread: {
+      ...$Exact<GetThreadMessageConnectionType>,
+    },
+    messageConnection: {
+      ...$Exact<ThreadMessageConnectionType>,
+    },
   },
 };
 
 class Messages extends Component<Props> {
+  componentDidUpdate(prevProps) {
+    const curr = this.props;
+    if (
+      !prevProps.data.messageConnection &&
+      curr.data.messageConnection &&
+      curr.data.messageConnection.edges.length > 0
+    ) {
+      return this.props.messagesDidLoad && this.props.messagesDidLoad();
+    }
+  }
+
   render() {
     const {
       data,
@@ -43,7 +65,7 @@ class Messages extends Component<Props> {
       ...flatListProps
     } = this.props;
 
-    if (data.messageConnection && data.messageConnection) {
+    if (data.messageConnection && data.messageConnection.edges.length > 0) {
       const messages = sortAndGroupMessages(
         data.messageConnection.edges
           .slice()
@@ -65,15 +87,30 @@ class Messages extends Component<Props> {
             const me = currentUser
               ? initialMessage.author.user.id === currentUser.id
               : false;
+
+            // const {
+            //   isOwner: isChannelOwner,
+            //   isModerator: isChannelModerator,
+            // } = thread.channel.channelPermissions;
+            // const {
+            //   isOwner: isCommunityOwner,
+            //   isModerator: isCommunityModerator,
+            // } = thread.community.communityPermissions;
+            // const isModerator =
+            //   isChannelOwner ||
+            //   isChannelModerator ||
+            //   isCommunityOwner ||
+            //   isCommunityModerator;
             // const canModerate =
-            //   threadType !== 'directMessageThread' && (me || isModerator);
+            //   initialMessage.threadType !== 'directMessageThread' &&
+            //   (me || isModerator);
 
             if (initialMessage.author.user.id === 'robo') {
               if (initialMessage.message.type === 'timestamp') {
                 return (
-                  <RoboText key={initialMessage.timestamp}>
+                  <TimestampRoboText key={initialMessage.timestamp}>
                     {convertTimestampToDate(initialMessage.timestamp)}
-                  </RoboText>
+                  </TimestampRoboText>
                 );
               }
 
@@ -99,46 +136,52 @@ class Messages extends Component<Props> {
             ) {
               hasInjectedUnseenRobo = true;
               unseenRobo = (
-                <RoboText
-                  style={{ marginTop: 8 }}
-                  color={props => props.theme.warn.default}
-                  key="new-messages"
-                >
-                  New Messages
-                </RoboText>
+                <UnseenRoboText key="new-messages">New Messages</UnseenRoboText>
               );
             }
 
             return (
-              <View key={initialMessage.id || 'robo'}>
+              <Container key={initialMessage.id || 'robo'} me={me}>
                 {unseenRobo}
-                <ThreadMargin>
-                  <Author
+
+                <MessageGroupContainer>
+                  <AuthorAvatar
                     onPress={() =>
                       navigation.navigate({
-                        routeName: `User`,
+                        routeName: 'User',
                         key: author.user.id,
                         params: { id: author.user.id },
                       })
                     }
-                    avatar={!me}
                     author={author}
                     me={me}
                   />
-                  <View>
-                    {group.map(message => {
-                      return (
-                        <Message
-                          key={message.id}
-                          me={me}
-                          message={message}
-                          threadId={this.props.id}
-                        />
-                      );
-                    })}
-                  </View>
-                </ThreadMargin>
-              </View>
+
+                  <BubbleGroupContainer>
+                    {!me && (
+                      <AuthorName
+                        author={author}
+                        onPress={() =>
+                          navigation.navigate({
+                            routeName: 'User',
+                            key: author.user.id,
+                            params: { id: author.user.id },
+                          })
+                        }
+                      />
+                    )}
+
+                    {group.map(message => (
+                      <Message
+                        key={message.id}
+                        me={me}
+                        message={message}
+                        threadId={this.props.id}
+                      />
+                    ))}
+                  </BubbleGroupContainer>
+                </MessageGroupContainer>
+              </Container>
             );
           }}
         />
@@ -146,17 +189,15 @@ class Messages extends Component<Props> {
     }
 
     if (isLoading) {
-      return <Text type="body">Loading...</Text>;
+      return <Loading />;
     }
 
     if (hasError) {
-      return <Text type="body">Error :(</Text>;
+      return <FullscreenNullState />;
     }
 
     return null;
   }
 }
 
-export default compose(viewNetworkHandler, withNavigation, withCurrentUser)(
-  Messages
-);
+export default compose(viewNetworkHandler, withCurrentUser)(Messages);
