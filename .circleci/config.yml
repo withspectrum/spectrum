@@ -170,7 +170,7 @@ jobs:
           name: Install Detox dependencies
           command: |
             brew tap wix/brew
-            brew install applesimutils --HEAD
+            brew install applesimutils
             npm install -g detox-cli
       - run:
           name: Rebuild Detox frameworks
@@ -182,7 +182,9 @@ jobs:
           name: Start Packager in the background
           command: cd ./mobile && exp start
           background: true
-      - run: cd ./mobile && yarn test:e2e
+      - run:
+          name: Run mobile e2e tests
+          command: cd ./mobile && yarn test:e2e
 
 workflows:
   version: 2
@@ -195,10 +197,9 @@ workflows:
       - test_mobile_js:
           requires:
             - checkout_environment
-      # Disabled as Expo is fixing their critical issue with Detox
-      # - test_mobile_native:
-      #     requires:
-      #       - checkout_environment
+      - test_mobile_native:
+          requires:
+            - checkout_environment
       - test_web:
           requires:
             - checkout_environment
