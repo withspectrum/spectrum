@@ -10,6 +10,7 @@
 import { encode } from '../../api/utils/base64';
 
 Cypress.Commands.add('auth', userId => {
+  if (userId === null) return cy.clearCookie('session');
   localStorage.setItem(
     'spectrum',
     JSON.stringify({ currentUser: { id: userId } })
