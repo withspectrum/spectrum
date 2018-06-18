@@ -706,7 +706,7 @@ class ComposerWithData extends Component<Props, State> {
               Cancel
             </TextButton>
             <Button
-              data-cy="composer-publish-button"
+              dataCy="composer-publish-button"
               onClick={this.publishThread}
               loading={isPublishing}
               disabled={
