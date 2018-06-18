@@ -33,7 +33,7 @@ class Dashboard extends Component<Props> {
 
     return (
       <Wrapper>
-        <View testID="welcome" style={{ flex: 1 }}>
+        <View testID="dashboard" style={{ flex: 1 }}>
           <ErrorBoundary alert>
             <EverythingThreadFeed navigation={navigation} />
           </ErrorBoundary>
