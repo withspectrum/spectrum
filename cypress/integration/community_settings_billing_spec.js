@@ -14,7 +14,7 @@ const channels = data.channels.filter(
 );
 
 const verify = () => {
-  cy.visit(`http://localhost:3001/api/email/validate/test-payments/verify`);
+  cy.visit(`http://localhost:3006/api/email/validate/test-payments/verify`);
 };
 
 describe('Community settings billing tab', () => {
@@ -269,7 +269,7 @@ describe('Community settings billing tab', () => {
   // as the last test, reset the administrator email
   describe('should reset the administration email', () => {
     it('should reset email addres', () => {
-      cy.visit(`http://localhost:3001/api/email/validate/test-payments/reset`);
+      cy.visit(`http://localhost:3006/api/email/validate/test-payments/reset`);
     });
   });
 

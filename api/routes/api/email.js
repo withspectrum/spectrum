@@ -20,6 +20,11 @@ import {
 } from '../../models/community';
 import { getChannelsByCommunity } from '../../models/channel';
 
+const BASE_URL =
+  IS_PROD && !IS_TESTING
+    ? 'https://spectrum.chat'
+    : IS_TESTING ? 'http://localhost:3006' : 'http://localhost:3000';
+
 // $FlowIssue
 emailRouter.get('/unsubscribe', (req, res) => {
   const { token } = req.query;
@@ -172,14 +177,7 @@ emailRouter.get('/validate', (req, res) => {
   if (communityId) {
     try {
       return updateCommunityAdministratorEmail(communityId, email, userId).then(
-        community =>
-          IS_PROD
-            ? res.redirect(
-                `https://spectrum.chat/${community.slug}/settings/billing`
-              )
-            : res.redirect(
-                `http://localhost:3000/${community.slug}/settings/billing`
-              )
+        community => `${BASE_URL}/${community.slug}/settings/billing`
       );
     } catch (err) {
       console.error(err);
@@ -194,14 +192,7 @@ emailRouter.get('/validate', (req, res) => {
   // and send a database request to update the user record with this email
   try {
     return updateUserEmail(userId, email).then(
-      user =>
-        IS_PROD
-          ? res.redirect(
-              `https://spectrum.chat/users/${user.username}/settings`
-            )
-          : res.redirect(
-              `http://localhost:3000/users/${user.username}/settings`
-            )
+      user => `${BASE_URL}/users/${user.username}/settings`
     );
   } catch (err) {
     console.error(err);
@@ -221,14 +212,14 @@ if (IS_TESTING) {
       'briandlovin@gmail.com',
       BRIAN_ID
     ).then(() =>
-      res.redirect('http://localhost:3000/payments/settings/billing')
+      res.redirect('http://localhost:3006/payments/settings/billing')
     );
   });
 
   // $FlowIssue
   emailRouter.get('/validate/test-payments/reset', (req, res) => {
     return resetCommunityAdministratorEmail(PAYMENTS_COMMUNITY_ID).then(() =>
-      res.redirect('http://localhost:3000/payments/settings/billing')
+      res.redirect('http://localhost:3006/payments/settings/billing')
     );
   });
 }

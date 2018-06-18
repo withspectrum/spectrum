@@ -81,16 +81,20 @@ const BASE_URI =
 // happen on deploy previews
 app.use('/api', (req: express$Request, res: express$Response) => {
   const redirectUrl = `${req.baseUrl}${req.path}`;
-  fetch(`${BASE_URI}${redirectUrl}`, {
-    method: req.method,
-    headers: {
-      cookie: req.headers.cookie,
-      'content-type': req.headers['content-type'],
-    },
-    body: JSON.stringify(req.body),
-  })
-    .then(res => res.json())
-    .then(json => res.send(json));
+  if (req.headers['content-type'] === 'application/json') {
+    return fetch(`${BASE_URI}${redirectUrl}`, {
+      method: req.method,
+      headers: {
+        cookie: req.headers.cookie,
+        'content-type': req.headers['content-type'],
+      },
+      body: JSON.stringify(req.body),
+    })
+      .then(res => res.json())
+      .then(json => res.send(json));
+  }
+
+  return res.redirect(`${BASE_URI}${redirectUrl}`);
 });
 
 app.use('/auth', (req: express$Request, res: express$Response) => {
