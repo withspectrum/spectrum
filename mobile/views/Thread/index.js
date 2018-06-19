@@ -156,22 +156,22 @@ class Thread extends React.Component<Props> {
                 {convertTimestampToDate(createdAt)}
               </ThreadTimestamp>
 
-              {thread.content.body && (
+              {Boolean(thread.content.body) && (
                 <ThreadContent
                   rawContentState={JSON.parse(thread.content.body)}
                 />
               )}
-            </ThreadContentContainer>,
+            </ThreadContentContainer>
             <ErrorBoundary>
               <ThreadMessages
                 navigation={navigation}
                 id={thread.id}
                 messagesDidLoad={this.messagesDidLoad}
               />
-            </ErrorBoundary>,
+            </ErrorBoundary>
           </ThreadScrollView>
 
-          {currentUser && (
+          {Boolean(currentUser) && (
             <ErrorBoundary>
               <ChatInput
                 onSubmit={text => this.sendMessage(text, currentUser)}
