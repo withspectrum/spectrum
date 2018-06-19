@@ -16,9 +16,6 @@ const HomeStack = createStackNavigator(
       screen: withMappedNavigationProps(Dashboard),
       navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
         headerTitle: 'Home',
-        headerLeft: (
-          <Button onPress={() => store.dispatch(logout())} title="Log out" />
-        ),
         headerRight: (
           <Button
             onPress={() => navigation.navigate('ThreadComposer')}
