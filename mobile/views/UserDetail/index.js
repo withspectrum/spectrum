@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment } from 'react';
+import * as React from 'react';
 import { Share } from 'react-native';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
@@ -7,11 +7,10 @@ import {
   ListItemWithButton,
   ListSectionDivider,
   ListSection,
-  ListItemWithTitle,
   CommunityListItem,
 } from '../../components/Lists';
 import Loading from '../../components/Loading';
-import Text from '../../components/Text';
+import { FullscreenNullState } from '../../components/NullStates';
 import {
   withCurrentUser,
   type WithCurrentUserProps,
@@ -73,48 +72,80 @@ class UserDetail extends React.Component<Props> {
 
     if (user) {
       return (
-        <Fragment>
-          <ListSectionDivider title="Member of" />
-          <ListSection>
-            {user.communityConnection.edges
-              .filter(Boolean)
-              .map(({ node: community }, index) => (
-                <CommunityListItem
-                  key={community.id}
-                  community={community}
-                  divider={index !== user.communityConnection.edges.length - 1}
-                  onPressHandler={() =>
-                    navigation.navigate({
-                      routeName: 'Community',
-                      key: community.id,
-                      params: { id: community.id },
-                    })
-                  }
-                />
-              ))}
-          </ListSection>
+        <React.Fragment>
+          {user.communityConnection.edges &&
+            user.communityConnection.edges.length > 0 && (
+              <React.Fragment>
+                <ListSectionDivider title="Member of" />
+                <ListSection>
+                  {user.communityConnection.edges
+                    .filter(Boolean)
+                    .map(({ node: community }, index) => (
+                      <CommunityListItem
+                        key={community.id}
+                        community={community}
+                        divider={
+                          index !== user.communityConnection.edges.length - 1
+                        }
+                        onPressHandler={() =>
+                          navigation.navigate({
+                            routeName: 'Community',
+                            key: community.id,
+                            params: { id: community.id },
+                          })
+                        }
+                      />
+                    ))}
+                </ListSection>
+              </React.Fragment>
+            )}
 
           <ListSectionDivider />
+
           <ListSection>
-            <ListItemWithButton title="Share" onPressHandler={this.share} />
-            {currentUser &&
-              currentUser.id === user.id && (
-                <ListItemWithButton
-                  type="destructive"
-                  title="Log Out"
-                  onPressHandler={this.logout}
-                />
-              )}
+            <ListItemWithButton
+              title="Share"
+              onPressHandler={this.share}
+              divider={false}
+            />
           </ListSection>
-        </Fragment>
+
+          {currentUser &&
+            currentUser.id === user.id && (
+              <React.Fragment>
+                <ListSectionDivider />
+
+                <ListSection>
+                  <ListItemWithButton
+                    type="destructive"
+                    title="Log Out"
+                    onPressHandler={this.logout}
+                    divider={false}
+                  />
+                </ListSection>
+              </React.Fragment>
+            )}
+
+          <ListSectionDivider />
+          <ListSectionDivider />
+        </React.Fragment>
       );
     }
 
-    if (hasError) return <Text type="title1">Error!</Text>;
+    if (hasError) {
+      return <FullscreenNullState />;
+    }
 
-    if (isLoading) return <Loading />;
+    if (isLoading) {
+      return <Loading />;
+    }
 
-    return null;
+    return (
+      <FullscreenNullState
+        title={'We had trouble loading this user’s details'}
+        subtitle={''}
+      />
+    );
   }
 }
 
