@@ -100,15 +100,13 @@ class App extends React.Component<{}, State> {
                   <Login />
                 ) : (
                   <Query query={getCurrentUserCommunityConnectionQuery}>
-                    {({ data: { networkStatus, user } }) => {
+                    {({ data: { networkStatus, user }, refetch }) => {
                       if (networkStatus === 1 || networkStatus === 2)
                         return null;
                       if (!user) return <Login />;
                       if (!user.username) return <SetUsername />;
                       if (user.communityConnection.edges.length === 0)
-                        return (
-                          <ExploreCommunities curatedContentType="top-communities-by-members" />
-                        );
+                        return <ExploreCommunities refetch={refetch} />;
                       return <TabBar />;
                     }}
                   </Query>
