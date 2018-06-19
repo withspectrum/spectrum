@@ -35,6 +35,9 @@ const DirectMessageThreadsList = (props: Props) => {
       <InfiniteList
         data={edges}
         renderItem={({ item: { node: thread } }) => {
+          const me = thread.participants.find(
+            ({ userId }) => userId === user.id
+          );
           const participants = thread.participants.filter(
             ({ userId }) => userId !== user.id
           );
@@ -59,6 +62,10 @@ const DirectMessageThreadsList = (props: Props) => {
                   Date.now(),
                   new Date(thread.threadLastActive)
                 )}
+                unread={
+                  new Date(me.lastSeen).getTime() <
+                  new Date(thread.threadLastActive).getTime()
+                }
               />
             </ErrorBoundary>
           );

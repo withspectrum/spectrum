@@ -55,6 +55,7 @@ export const Title = styled.Text`
   font-weight: 500;
   color: ${props =>
     props.color ? props.color(props.theme) : props.theme.text.default};
+  ${props => props.weight && `font-weight: ${props.weight};`};
 `;
 
 export const Subtitle = styled.Text`
@@ -63,6 +64,7 @@ export const Subtitle = styled.Text`
   color: ${props =>
     props.color ? props.color(props.theme) : props.theme.text.alt};
   line-height: 21;
+  ${props => props.weight && `font-weight: ${props.weight};`};
 `;
 
 export const Link = styled.Text`
@@ -77,7 +79,8 @@ export const TimestampTextContainer = styled(Row)``;
 export const Timestamp = styled.Text`
   font-size: 16px;
   font-weight: 300;
-  color: ${props => props.theme.text.placeholder};
+  color: ${props =>
+    props.color ? props.color(props.theme) : props.theme.text.placeholder};
 `;
 
 export const FacepileContainer = styled.View`
