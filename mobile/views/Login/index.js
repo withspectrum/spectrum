@@ -7,9 +7,6 @@ import { DEV_BASE_URI } from '../../../shared/graphql/constants.native';
 import type { Dispatch } from 'redux';
 import {
   Container,
-  Emoji,
-  Title,
-  Subtitle,
   FacebookButton,
   GithubButton,
   GoogleButton,
@@ -18,6 +15,7 @@ import {
   Link,
 } from './style';
 import { events, track } from '../../utils/analytics';
+import { ViewTitle, ViewSubtitle } from '../UserOnboarding/style';
 
 const API_URL =
   process.env.NODE_ENV === 'production'
@@ -57,12 +55,11 @@ class Login extends React.Component<Props> {
   render() {
     return (
       <Container testID="login">
-        <Emoji />
-        <Title>Sign in to get started</Title>
-        <Subtitle>
+        <ViewTitle>Sign in to get started</ViewTitle>
+        <ViewSubtitle>
           Spectrum is a place where communities can share, discuss, and grow
-          together. Sign in below to get in on the conversation.
-        </Subtitle>
+          together. Sign in below to join the conversation.
+        </ViewSubtitle>
         <TwitterButton onPress={this.authenticate('twitter')} />
         <GoogleButton onPress={this.authenticate('google')} />
         <FacebookButton onPress={this.authenticate('facebook')} />

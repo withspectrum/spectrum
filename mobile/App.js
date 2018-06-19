@@ -13,7 +13,7 @@ import { initStore } from './reducers/store';
 import Toasts from './components/Toasts';
 import theme from '../shared/theme';
 import { createClient } from '../shared/graphql';
-import Login from './components/Login';
+import Login from './views/Login';
 import TabBar from './views/TabBar';
 import { SetUsername, ExploreCommunities } from './views/UserOnboarding';
 import { authenticate } from './actions/authentication';
