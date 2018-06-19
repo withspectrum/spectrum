@@ -14,9 +14,8 @@ import { ViewTitle, ViewSubtitle } from '../style';
 import ExploreContext from './context';
 import ExploreCommunitiesHeader from './ExploreCommunitiesHeader';
 import ExploreSearchResults from './ExploreSearchResults';
-import addCommunityMembersMutation, {
-  type AddCommunityMembersType,
-} from '../../../../shared/graphql/mutations/communityMember/addCommunityMembers';
+import addCommunityMembersMutation from '../../../../shared/graphql/mutations/communityMember/addCommunityMembers';
+import { events, track } from '../../../utils/analytics';
 
 type State = {
   // context
@@ -60,6 +59,28 @@ class ExploreCommunities extends React.Component<Props, State> {
     };
   }
 
+  componentDidMount() {
+    track(events.USER_ONBOARDING_JOIN_COMMUNITIES_STEP_VIEWED);
+  }
+
+  componentDidUpdate(_, prevState) {
+    const curr = this.state;
+
+    if (
+      prevState.joinedCommunities.length === 0 &&
+      curr.joinedCommunities.length > 0
+    ) {
+      return this.showContinueButton();
+    }
+
+    if (
+      prevState.joinedCommunities.length > 0 &&
+      curr.joinedCommunities.length === 0
+    ) {
+      return this.hideContinueButton();
+    }
+  }
+
   onSearchFocus = () => {
     this.scrollView.scrollTo({ y: 0, animated: true });
     return Animated.timing(this.opacityValue, {
@@ -79,6 +100,7 @@ class ExploreCommunities extends React.Component<Props, State> {
 
   onJoinCommunity = (id: string) => {
     const { joinedCommunities } = this.state;
+    track(events.USER_ONBOARDING_JOINED_COMMUNITY);
     return this.setState({
       joinedCommunities: joinedCommunities.concat(id),
     });
@@ -86,6 +108,7 @@ class ExploreCommunities extends React.Component<Props, State> {
 
   onLeaveCommunity = (id: string) => {
     const { joinedCommunities } = this.state;
+    track(events.USER_ONBOARDING_LEFT_COMMUNITY);
     return this.setState({
       joinedCommunities: joinedCommunities.filter(c => c !== id),
     });
@@ -94,24 +117,6 @@ class ExploreCommunities extends React.Component<Props, State> {
   onSearch = (queryString: string) => {
     return this.setState({ queryString });
   };
-
-  componentDidUpdate(_, prevState) {
-    const curr = this.state;
-
-    if (
-      prevState.joinedCommunities.length === 0 &&
-      curr.joinedCommunities.length > 0
-    ) {
-      return this.showContinueButton();
-    }
-
-    if (
-      prevState.joinedCommunities.length > 0 &&
-      curr.joinedCommunities.length === 0
-    ) {
-      return this.hideContinueButton();
-    }
-  }
 
   animateContinueButtonPosition = (val: 'in' | 'out') => {
     return Animated.spring(this.continueButtonY, {

@@ -5,6 +5,7 @@ import { KeyboardAvoidingView } from 'react-native';
 import { debounce } from 'throttle-debounce';
 import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
+import { events, track } from '../../utils/analytics';
 import { LoadingSpinner } from '../../components/Loading';
 import { Button } from '../../components/Button';
 import { getUserByUsernameQuery } from '../../../shared/graphql/queries/user/getUser';
@@ -45,6 +46,10 @@ class SetUsername extends React.Component<Props, State> {
     isLoading: false,
     isSaving: false,
   };
+
+  componentDidMount() {
+    track(events.USER_ONBOARDING_SET_USERNAME_STEP_VIEWED);
+  }
 
   onChangeText = (text: string) => {
     const username = slugg(text.trim());
@@ -102,6 +107,8 @@ class SetUsername extends React.Component<Props, State> {
     this.setState({
       isSaving: true,
     });
+
+    track(events.USER_ONBOARDING_SET_USERNAME);
 
     this.props.editUser({ username }).catch(err => {
       this.setState({
