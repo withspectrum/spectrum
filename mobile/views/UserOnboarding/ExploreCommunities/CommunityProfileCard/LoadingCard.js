@@ -18,7 +18,7 @@ class LoadingCard extends React.Component<Props> {
     return (
       <CommunityCardWrapper>
         <View>
-          <Svg height={260} width={width * 0.6}>
+          <Svg height={200} width={width * 0.6}>
             <Svg.Rect
               fill={theme.bg.wash}
               x="0"
