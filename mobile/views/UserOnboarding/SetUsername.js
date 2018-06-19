@@ -103,20 +103,11 @@ class SetUsername extends React.Component<Props, State> {
       isSaving: true,
     });
 
-    this.props
-      .editUser({ username })
-      .then(() => {
-        this.setState({
-          isSaving: false,
-        });
-
-        this.props.onFinish();
-      })
-      .catch(err => {
-        this.setState({
-          isSaving: false,
-        });
+    this.props.editUser({ username }).catch(err => {
+      this.setState({
+        isSaving: false,
       });
+    });
   };
 
   render() {
@@ -137,7 +128,7 @@ class SetUsername extends React.Component<Props, State> {
             <UsernameInput
               onChangeText={this.onChangeText}
               value={username}
-              placeholder={'What’s your username?'}
+              placeholder={'Choose a username...'}
               borderColor={theme =>
                 result
                   ? result === 'available' && isValid
