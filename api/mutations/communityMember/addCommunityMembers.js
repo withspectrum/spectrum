@@ -8,6 +8,7 @@ import {
 } from '../../models/usersCommunities';
 import { createMemberInDefaultChannels } from '../../models/usersChannels';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import UserError from '../../utils/UserError';
 
 type Input = {
   input: {
@@ -18,6 +19,10 @@ type Input = {
 export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { user } = ctx;
   const { communityIds } = args.input;
+
+  if (communityIds.length > 20) {
+    return new UserError('Try joining just a few communities at a time');
+  }
 
   const canJoinCommunity = async (
     communityId: string
