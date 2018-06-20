@@ -101,7 +101,7 @@ class App extends React.Component<{}, State> {
                   <Login />
                 ) : (
                   <Query query={getCurrentUserCommunityConnectionQuery}>
-                    {({ data: { networkStatus, user }, refetch }) => {
+                    {({ data: { user }, networkStatus, refetch }) => {
                       if (networkStatus === 1 || networkStatus === 2)
                         return null;
                       if (!user) return <Login />;
