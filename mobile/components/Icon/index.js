@@ -13,11 +13,12 @@ type Props = {
   glyph: GlyphTypes,
   size?: number,
   color?: (theme: Object) => string,
+  style?: Object,
   theme: Object,
 };
 
 // prettier-ignore
-export default withTheme(({ size = 64, color, glyph, theme, onPress }: Props) => {
+export default withTheme(({ size = 64, color, glyph, theme, onPress, style }: Props) => {
     const fill = color ? color(theme) : theme.text.alt;
 
     return (
@@ -27,7 +28,7 @@ export default withTheme(({ size = 64, color, glyph, theme, onPress }: Props) =>
           <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>
         )}
       >
-        <Svg width={size} height={size} viewBox={`0 0 32 32`}>
+        <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={style}>
           <G>
             {getPaths(glyph, fill)}
           </G>
