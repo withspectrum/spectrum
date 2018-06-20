@@ -1,12 +1,14 @@
 // @flow
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
+import { View } from 'react-native';
 import viewNetworkHandler from '../ViewNetworkHandler';
 import Message from '../Message';
 import InfiniteList from '../InfiniteList';
 import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
 import { convertTimestampToDate } from '../../../shared/time-formatting';
 import { withCurrentUser } from '../../components/WithCurrentUser';
+import { deduplicateChildren } from '../../utils/deduplicate-children';
 import { UnseenRoboText, TimestampRoboText } from './RoboText';
 import AuthorAvatar from './AuthorAvatar';
 import AuthorName from './AuthorName';
@@ -55,6 +57,11 @@ class Messages extends Component<Props> {
     }
   }
 
+  fetchMore = () => {
+    if (!this.props.data.fetchMore) return;
+    return this.props.data.fetchMore();
+  };
+
   render() {
     const {
       data,
@@ -62,16 +69,19 @@ class Messages extends Component<Props> {
       hasError,
       navigation,
       currentUser,
+      inverted = false,
       ...flatListProps
     } = this.props;
 
     if (data.messageConnection && data.messageConnection.edges.length > 0) {
-      const messages = sortAndGroupMessages(
-        data.messageConnection.edges
-          .slice()
-          .filter(Boolean)
-          .map(({ node }) => node)
-      );
+      const nodes = data.messageConnection.edges.map(e => e && e.node);
+      const unique = deduplicateChildren(nodes, 'id');
+
+      let messages = sortAndGroupMessages(unique.slice().filter(Boolean));
+
+      if (inverted) {
+        messages = messages.reverse();
+      }
 
       let hasInjectedUnseenRobo = false;
 
@@ -79,6 +89,14 @@ class Messages extends Component<Props> {
         <InfiniteList
           {...flatListProps}
           data={messages}
+          inverted={inverted}
+          fetchMore={this.fetchMore}
+          hasNextPage={this.props.data.hasNextPage}
+          loadingIndicator={
+            <View style={{ marginBottom: 32 }}>
+              <Loading />
+            </View>
+          }
           keyExtractor={item => item[0].id}
           renderItem={({ item: group, index: i }) => {
             if (group.length === 0) return null;

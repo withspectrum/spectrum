@@ -8,12 +8,14 @@ import Community from '../Community';
 import CommunityDetail from '../CommunityDetail';
 import Channel from '../Channel';
 import ChannelDetail from '../ChannelDetail';
+import UserDetail from '../UserDetail';
 import User from '../User';
 import { withMappedNavigationProps } from 'react-navigation-props-mapper';
 import type { NavigationScreenConfigProps } from 'react-navigation';
 import NavigateToThreadDetails from './headerActions/NavigateToThreadDetails';
 import NavigateToCommunityDetails from './headerActions/NavigateToCommunityDetails';
 import NavigateToChannelDetails from './headerActions/NavigateToChannelDetails';
+import NavigateToUserDetails from './headerActions/NavigateToUserDetails';
 
 const BaseStack = {
   ThreadDetail: {
@@ -59,6 +61,13 @@ const BaseStack = {
     screen: withMappedNavigationProps(User),
     navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
       headerTitle: navigation.getParam('title', null),
+      headerRight: <NavigateToUserDetails navigation={navigation} />,
+    }),
+  },
+  UserDetail: {
+    screen: withMappedNavigationProps(UserDetail),
+    navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
+      headerTitle: 'Details',
     }),
   },
 };

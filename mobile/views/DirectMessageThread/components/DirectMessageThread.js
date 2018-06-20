@@ -2,12 +2,8 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import compose from 'recompose/compose';
-import Text from '../../../components/Text';
 import ChatInput from '../../../components/ChatInput';
 import Messages from '../../../components/Messages';
-import Avatar from '../../../components/Avatar';
-import Column from '../../../components/Flex/Column';
-import { Row } from '../../../components/Flex';
 import ViewNetworkHandler, {
   type ViewNetworkHandlerProps,
 } from '../../../components/ViewNetworkHandler';
@@ -41,6 +37,8 @@ type Props = {
 };
 
 class DirectMessageThread extends Component<Props> {
+  messagesComponent: any;
+
   trackView = () => {
     const { data: { directMessageThread } } = this.props;
     if (!directMessageThread) return;
@@ -48,9 +46,17 @@ class DirectMessageThread extends Component<Props> {
   };
 
   setTitle = () => {
-    const { data: { directMessageThread }, navigation } = this.props;
+    const {
+      data: { directMessageThread },
+      navigation,
+      currentUser,
+    } = this.props;
     let title = directMessageThread
-      ? sentencify(directMessageThread.participants.map(({ name }) => name))
+      ? sentencify(
+          directMessageThread.participants
+            .filter(user => user.userId !== currentUser.id)
+            .map(({ name }) => name)
+        )
       : 'Loading thread...';
     const oldTitle = navigation.getParam('title', null);
     if (oldTitle && oldTitle === title) return;
@@ -94,46 +100,16 @@ class DirectMessageThread extends Component<Props> {
       isLoading,
       hasError,
       data: { directMessageThread },
-      currentUser,
       navigation,
     } = this.props;
 
     if (directMessageThread) {
-      const participants = directMessageThread.participants.filter(
-        ({ userId }) => userId !== currentUser.id
-      );
       return (
         <View style={{ flex: 1 }}>
           <DirectMessageThreadMessages
             navigation={navigation}
             id={directMessageThread.id}
-            ListHeaderComponent={() => (
-              <ErrorBoundary fallbackComponent={null}>
-                <Column
-                  style={{
-                    alignItems: 'center',
-                    marginTop: 32,
-                    marginBottom: 32,
-                    marginRight: 8,
-                    marginLeft: 8,
-                  }}
-                >
-                  <Row>
-                    {participants.map(({ profilePhoto, id }) => (
-                      <Avatar
-                        src={profilePhoto}
-                        key={id}
-                        size={60}
-                        style={{ marginRight: 4, marginLeft: 4 }}
-                      />
-                    ))}
-                  </Row>
-                  <Text type="title3" bold>
-                    {sentencify(participants.map(({ name }) => name))}
-                  </Text>
-                </Column>
-              </ErrorBoundary>
-            )}
+            inverted={true}
           />
 
           <ErrorBoundary>

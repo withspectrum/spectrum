@@ -1,6 +1,6 @@
 // @flow
 import React, { type Node, type ElementType } from 'react';
-import { FlatList, Keyboard } from 'react-native';
+import { FlatList } from 'react-native';
 import Text from '../Text';
 import type { FlatListProps } from 'react-native';
 
@@ -76,6 +76,7 @@ class InfiniteList extends React.Component<Props> {
       emptyState,
       fetchMore,
       keyboardShouldPersistTaps,
+      inverted = false,
       ...rest
     } = this.props;
 
@@ -98,6 +99,7 @@ class InfiniteList extends React.Component<Props> {
         keyboardShouldPersistTaps={keyboardShouldPersistTaps}
         keyboardDismissMode={'on-drag'}
         style={{ flex: 1, ...style }}
+        inverted={inverted}
       />
     );
   }

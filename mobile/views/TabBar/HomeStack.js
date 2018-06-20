@@ -5,9 +5,7 @@ import { createStackNavigator } from 'react-navigation';
 import { withMappedNavigationProps } from 'react-navigation-props-mapper';
 import Dashboard from '../Dashboard';
 import BaseStack from './BaseStack';
-import { store } from '../../App';
 import ThreadComposerModal from '../ThreadComposerModal';
-import { logout } from '../../actions/authentication';
 import type { NavigationScreenConfigProps } from 'react-navigation';
 
 const HomeStack = createStackNavigator(
@@ -16,9 +14,6 @@ const HomeStack = createStackNavigator(
       screen: withMappedNavigationProps(Dashboard),
       navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
         headerTitle: 'Home',
-        headerLeft: (
-          <Button onPress={() => store.dispatch(logout())} title="Log out" />
-        ),
         headerRight: (
           <Button
             onPress={() => navigation.navigate('ThreadComposer')}
