@@ -1,7 +1,9 @@
 // @flow
+import * as React from 'react';
 import styled from 'styled-components/native';
 import { Dimensions } from 'react-native';
 import { Row } from '../../../../components/Flex';
+import Text from '../../../../components/Text';
 
 const { width } = Dimensions.get('window');
 
@@ -32,28 +34,50 @@ export const CommunityProfilePhoto = styled.Image`
   border-radius: 8px;
 `;
 
-export const CommunityProfileName = styled.Text`
-  font-size: 18px;
-  font-weight: 800;
-  color: ${props => props.theme.text.default};
-  margin-top: 16px;
-`;
+export const CommunityProfileName = ({ children }: any) => {
+  const customStyles = {
+    marginTop: 16,
+  };
 
-export const CommunityProfileDescription = styled.Text`
-  margin-top: 12px;
-  font-size: 16px;
-  font-weight: 500;
-  color: ${props => props.theme.text.secondary};
-  line-height: 22;
-`;
+  return (
+    <Text type="headline" weight={'heavy'} style={customStyles}>
+      {children}
+    </Text>
+  );
+};
 
-export const CommunityProfileMemberCount = styled.Text`
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  color: ${props => props.theme.text.alt};
-`;
+export const CommunityProfileDescription = ({ children }: any) => {
+  const customStyles = {
+    marginTop: 12,
+  };
+
+  return (
+    <Text
+      type="body"
+      color={theme => theme.text.secondary}
+      style={customStyles}
+    >
+      {children}
+    </Text>
+  );
+};
+
+export const CommunityProfileMemberCount = ({ children }: any) => {
+  const customStyles = {
+    marginTop: 8,
+  };
+
+  return (
+    <Text
+      type="subhead"
+      weight={'semibold'}
+      color={theme => theme.text.alt}
+      style={customStyles}
+    >
+      {children}
+    </Text>
+  );
+};
 
 export const CommunityProfileHeader = styled(Row)`
   justify-content: space-between;
