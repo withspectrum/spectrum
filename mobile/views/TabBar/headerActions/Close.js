@@ -11,7 +11,7 @@ const Info = ({ onPress }: Props) => {
   return (
     <Icon
       style={{ marginRight: 16, marginLeft: 16 }}
-      glyph="info"
+      glyph="post-cancel"
       size={32}
       onPress={onPress}
       color={theme => theme.text.default}

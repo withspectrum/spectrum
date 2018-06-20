@@ -7,11 +7,11 @@ type Props = {
   onPress: Function,
 };
 
-const Info = ({ onPress }: Props) => {
+const Compose = ({ onPress }: Props) => {
   return (
     <Icon
       style={{ marginRight: 16, marginLeft: 16 }}
-      glyph="info"
+      glyph="post"
       size={32}
       onPress={onPress}
       color={theme => theme.text.default}
@@ -19,4 +19,4 @@ const Info = ({ onPress }: Props) => {
   );
 };
 
-export default Info;
+export default Compose;

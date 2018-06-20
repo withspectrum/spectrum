@@ -9,6 +9,7 @@ import DirectMessageThread from '../DirectMessageThread';
 import DirectMessageComposer from '../DirectMessageComposer';
 import DirectMessageThreadDetail from '../DirectMessageThreadDetail';
 import Info from './headerActions/Info';
+import Compose from './headerActions/Compose';
 import type { NavigationScreenConfigProps } from 'react-navigation';
 
 const DMStack = createStackNavigator(
@@ -18,9 +19,8 @@ const DMStack = createStackNavigator(
       navigationOptions: ({ navigation }) => ({
         headerTitle: navigation.getParam('title', 'Messages'),
         headerRight: (
-          <Button
+          <Compose
             onPress={() => navigation.navigate('DirectMessageComposer')}
-            title="New"
           />
         ),
       }),
