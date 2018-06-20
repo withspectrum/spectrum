@@ -8,8 +8,8 @@ import DirectMessages from '../DirectMessages';
 import DirectMessageThread from '../DirectMessageThread';
 import DirectMessageComposer from '../DirectMessageComposer';
 import DirectMessageThreadDetail from '../DirectMessageThreadDetail';
+import Info from './headerActions/Info';
 import type { NavigationScreenConfigProps } from 'react-navigation';
-import NavigateToDirectMessageThreadDetails from './headerActions/NavigateToDirectMessageThreadDetails';
 
 const DMStack = createStackNavigator(
   {
@@ -30,7 +30,15 @@ const DMStack = createStackNavigator(
       navigationOptions: ({ navigation }) => ({
         headerTitle: navigation.getParam('title', null),
         headerRight: (
-          <NavigateToDirectMessageThreadDetails navigation={navigation} />
+          <Info
+            onPress={() =>
+              navigation.navigate({
+                routeName: `DirectMessageThreadDetail`,
+                key: `direct-message-thread-detail-${navigation.state.key}`,
+                params: { id: navigation.state.params.id },
+              })
+            }
+          />
         ),
       }),
     },
