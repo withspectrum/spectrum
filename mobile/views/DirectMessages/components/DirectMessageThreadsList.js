@@ -3,6 +3,7 @@ import React from 'react';
 import compose from 'recompose/compose';
 import InfiniteList from '../../../components/InfiniteList';
 import Text from '../../../components/Text';
+import { deduplicateChildren } from '../../../utils/deduplicate-children';
 import ViewNetworkHandler, {
   type ViewNetworkHandlerProps,
 } from '../../../components/ViewNetworkHandler';
@@ -20,8 +21,8 @@ import { FullscreenNullState } from '../../../components/NullStates';
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
   navigation: NavigationProps,
+  fetchMore: Function,
   data: {
-    fetchMore: Function,
     user?: $Exact<GetCurrentUserDMThreadConnectionType>,
     refetch: Function,
   },
@@ -31,10 +32,13 @@ const DirectMessageThreadsList = (props: Props) => {
   const { isLoading, hasError, data: { user }, navigation } = props;
   if (user) {
     const { pageInfo, edges } = user.directMessageThreadsConnection;
+    const nodes = edges.map(e => e && e.node);
+    const unique = deduplicateChildren(nodes, 'id');
+
     return (
       <InfiniteList
-        data={edges}
-        renderItem={({ item: { node: thread } }) => {
+        data={unique}
+        renderItem={({ item: thread }) => {
           const me = thread.participants.find(
             ({ userId }) => userId === user.id
           );
@@ -71,7 +75,7 @@ const DirectMessageThreadsList = (props: Props) => {
           );
         }}
         hasNextPage={pageInfo.hasNextPage}
-        fetchMore={props.data.fetchMore}
+        fetchMore={props.fetchMore}
         loadingIndicator={<Loading />}
       />
     );
