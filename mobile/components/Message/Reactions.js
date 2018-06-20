@@ -14,8 +14,7 @@ type Props = {
 const Reactions = ({ count, hasReacted, onPress, style }: Props) => {
   if (count === 0) return null;
 
-  const textColor = ({ theme }) =>
-    hasReacted ? theme.warn.default : theme.text.alt;
+  const textColor = theme => (hasReacted ? theme.warn.default : theme.text.alt);
   const iconColor = theme => (hasReacted ? theme.warn.default : theme.text.alt);
   return (
     <Row alignItems="center" style={style}>

@@ -1,4 +1,5 @@
 // @flow
+import 'string.fromcodepoint';
 import Sentry from 'sentry-expo';
 import React, { Fragment } from 'react';
 import { StatusBar } from 'react-native';
