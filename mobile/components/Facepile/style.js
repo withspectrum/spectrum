@@ -1,9 +1,13 @@
 // @flow
 import styled, { css } from 'styled-components/native';
 import Avatar from '../Avatar';
+import { Constants } from 'expo';
 
+// overflow: visible; only works on iOS, so we can't stack avatars on Android
+// Ref https://react-native.canny.io/feature-requests/p/add-overflow-support-to-Android
+// Ref facebook/react-native#17074
 const stackingStyles = css`
-  margin-right: -10px;
+  margin-right: ${Constants.platform.ios ? '-10px' : '4px'};
   border-width: 2px;
   border-color: #ffffff;
 `;
