@@ -2,12 +2,8 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import compose from 'recompose/compose';
-import Text from '../../../components/Text';
 import ChatInput from '../../../components/ChatInput';
 import Messages from '../../../components/Messages';
-import Avatar from '../../../components/Avatar';
-import Column from '../../../components/Flex/Column';
-import { Row } from '../../../components/Flex';
 import ViewNetworkHandler, {
   type ViewNetworkHandlerProps,
 } from '../../../components/ViewNetworkHandler';
@@ -41,6 +37,8 @@ type Props = {
 };
 
 class DirectMessageThread extends Component<Props> {
+  messagesComponent: any;
+
   trackView = () => {
     const { data: { directMessageThread } } = this.props;
     if (!directMessageThread) return;
@@ -111,6 +109,7 @@ class DirectMessageThread extends Component<Props> {
           <DirectMessageThreadMessages
             navigation={navigation}
             id={directMessageThread.id}
+            inverted={true}
           />
 
           <ErrorBoundary>
