@@ -1,6 +1,8 @@
 // @flow
+import * as React from 'react';
 import styled from 'styled-components/native';
 import { ScrollView } from 'react-native';
+import Text from '../../components/Text';
 
 export const UserOnboardingWrapper = styled.View`
   flex: 1;
@@ -41,26 +43,30 @@ export const UsernameInput = styled.TextInput.attrs({
   font-size: 18px;
 `;
 
-export const ViewTitle = styled.Text`
-  font-size: 34px;
-  letter-spacing: -0.3;
-  line-height: 40;
-  font-weight: 800;
-  color: ${props => props.theme.text.default};
-  max-width: 100%;
-  margin-bottom: 8px;
-`;
+export const ViewTitle = ({ children }: any) => {
+  const customStyles = {
+    marginBottom: 8,
+  };
 
-export const ViewSubtitle = styled.Text`
-  font-size: 20px;
-  width: 100%;
-  max-width: 100%;
-  line-height: 28;
-  font-weight: 500;
-  color: ${props => props.theme.text.alt};
-  margin-bottom: 16px;
-  margin-top: 8px;
-`;
+  return (
+    <Text type={'largeTitle'} weight={'heavy'} style={customStyles}>
+      {children}
+    </Text>
+  );
+};
+
+export const ViewSubtitle = ({ children }: any) => {
+  const customStyles = {
+    marginTop: 8,
+    marginBottom: 16,
+  };
+
+  return (
+    <Text type={'title3'} color={theme => theme.text.alt} style={customStyles}>
+      {children}
+    </Text>
+  );
+};
 
 export const SaveButtonWrapper = styled.View`
   margin-bottom: 16px;
@@ -83,17 +89,4 @@ export const CommunityCardListScrollView = styled(ScrollView)`
   margin-left: -16px;
   margin-right: -16px;
   padding: 32px 0;
-`;
-
-export const ExploreSectionHeader = styled.Text`
-  font-size: 24px;
-  font-weight: 700;
-  color: ${props => props.theme.text.default};
-  margin-top: 32px;
-`;
-
-export const ExploreSectionSubheader = styled(ViewSubtitle)`
-  font-size: 16px;
-  line-height: 20;
-  margin-bottom: 0;
 `;

@@ -1,7 +1,8 @@
 // @flow
+import * as React from 'react';
 import styled from 'styled-components/native';
 import { ScrollView } from 'react-native';
-import { ViewSubtitle } from '../style';
+import Text from '../../../components/Text';
 import { BlurView } from 'expo';
 import { isIPhoneX } from '../../../utils/platform';
 
@@ -18,20 +19,6 @@ export const CommunityCardListScrollView = styled(ScrollView)`
   padding: 32px 0;
 `;
 
-export const ExploreSectionHeader = styled.Text`
-  font-size: 28px;
-  font-weight: 800;
-  color: ${props => props.theme.text.default};
-  margin-top: 32px;
-  letter-spacing: -0.3;
-`;
-
-export const ExploreSectionSubheader = styled(ViewSubtitle)`
-  font-size: 18px;
-  line-height: 24;
-  margin-bottom: 0;
-`;
-
 export const ContinueButtonContainer = styled(BlurView)`
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
@@ -46,3 +33,31 @@ export const ContinueButtonContainer = styled(BlurView)`
   shadow-opacity: 0.1;
   shadow-radius: 8;
 `;
+
+export const ExploreSectionHeader = ({ children }: any) => {
+  const customStyles = {
+    marginTop: 32,
+  };
+
+  return (
+    <Text type={'title2'} weight={'heavy'} style={customStyles}>
+      {children}
+    </Text>
+  );
+};
+
+export const ExploreSectionSubheader = ({ children }: any) => {
+  const customStyles = {
+    marginTop: 8,
+  };
+
+  return (
+    <Text
+      type={'headline'}
+      color={theme => theme.text.alt}
+      style={customStyles}
+    >
+      {children}
+    </Text>
+  );
+};

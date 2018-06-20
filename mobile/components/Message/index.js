@@ -169,7 +169,7 @@ class Message extends React.Component<Props, State> {
             )}
           >
             <Text
-              color={me ? '#FFFFFF' : '#000000'}
+              color={theme => (me ? theme.text.reverse : theme.text.default)}
               fontSize={emojiOnly ? 24 : undefined}
               style={{ marginTop: 0, marginBottom: 0 }}
             >
