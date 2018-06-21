@@ -5,6 +5,7 @@ import { withCurrentUser } from '../../components/WithCurrentUser';
 import { throttle, debounce } from 'throttle-debounce';
 import ChatInput from '../../components/ChatInput';
 import PeopleSearchView from '../Search/PeopleSearchView';
+import getCurrentUserDMThreadConnection from '../../../shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
 import createDirectMessageThread, {
   type CreateDirectMessageThreadProps,
 } from '../../../shared/graphql/mutations/directMessageThread/createDirectMessageThread';
@@ -201,6 +202,8 @@ class DirectMessageComposer extends React.Component<Props, State> {
   }
 }
 
-export default compose(withCurrentUser, createDirectMessageThread)(
-  DirectMessageComposer
-);
+export default compose(
+  withCurrentUser,
+  getCurrentUserDMThreadConnection,
+  createDirectMessageThread
+)(DirectMessageComposer);
