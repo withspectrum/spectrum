@@ -1,6 +1,7 @@
+// @flow
 import React from 'react';
 import compose from 'recompose/compose';
-
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import addThreadReactionMutation from 'shared/graphql/mutations/thread/addThreadReaction';
 import removeThreadReactionMutation from 'shared/graphql/mutations/thread/removeThreadReaction';
 
@@ -112,7 +113,13 @@ db.table('threadLikes').getAll(userId, { index:'userId'})
 
 */
 
-const LikeButtonPure = props => {
+type LikeButtonProps = {
+  thread: GetThreadType,
+  addThreadReaction: Function,
+  removeThreadReaction: Function,
+};
+
+const LikeButtonPure = (props: LikeButtonProps) => {
   const { thread } = props;
   const { hasReacted, count } = thread.reactions;
 
@@ -135,9 +142,7 @@ const LikeButtonPure = props => {
         tipText={hasReacted ? 'Unlike thread' : 'Like thread'}
         tipLocation={'bottom-left'}
         onClick={
-          hasReacted
-            ? () => removeThreadReaction(thread)
-            : () => addThreadReaction(thread)
+          hasReacted ? () => removeThreadReaction() : () => addThreadReaction()
         }
       />
       <CurrentCount>{count}</CurrentCount>
@@ -150,13 +155,17 @@ export const LikeButton = compose(
   removeThreadReactionMutation
 )(LikeButtonPure);
 
-export const LikeCount = props => {
+type LikeCountProps = {
+  active: boolean,
+  thread: GetThreadType,
+};
+
+export const LikeCount = (props: LikeCountProps) => {
   const { active, thread } = props;
   const { count } = thread.reactions;
 
   return (
     <LikeCountWrapper active={active}>
-      {console.log('active:', active)}
       <Icon glyph={'thumbsup-fill'} size={24} />
       <CurrentCount>{count}</CurrentCount>
     </LikeCountWrapper>

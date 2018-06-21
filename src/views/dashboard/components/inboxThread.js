@@ -116,7 +116,7 @@ class InboxThread extends React.Component<Props> {
   };
   render() {
     const {
-      data: { attachments, participants, author },
+      data: { attachments },
       data,
       location,
       active,
@@ -125,7 +125,6 @@ class InboxThread extends React.Component<Props> {
       viewContext,
     } = this.props;
     const attachmentsExist = attachments && attachments.length > 0;
-    const participantsExist = participants && participants.length > 0;
     const isPinned = data.id === this.props.pinnedThreadId;
 
     if (data.watercooler) {

@@ -1,3 +1,4 @@
+// @flow
 import styled from 'styled-components';
 
 export const CurrentCount = styled.span`

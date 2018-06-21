@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { LikeButton } from 'src/components/threadLikes';
-import Icon from '../../../components/icons';
 import { Button } from '../../../components/buttons';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -19,9 +18,6 @@ import {
   CommunityHeaderMeta,
   CommunityHeaderSubtitle,
   CommunityHeaderMetaCol,
-  PillLink,
-  PillLabel,
-  Lock,
 } from '../style';
 
 type Props = {
@@ -113,7 +109,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
       <CommunityHeader hide={hide}>
         <CommunityHeaderMeta>
           <CommunityHeaderLink to={`/${community.slug}`}>
-            <Avatar src={community.profilePhoto} community size={32} />
+            <Avatar src={community.profilePhoto} community size={'32'} />
           </CommunityHeaderLink>
           <CommunityHeaderMetaCol>
             <CommunityHeaderName>
@@ -127,7 +123,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
                 {channel.slug !== 'general' && (
                   <span>{` (${channel.name})`}</span>
                 )}
-                <span>{` · ${thread.timestamp}`}</span>
+                <span>{` · ${thread.createdAt}`}</span>
               </CommunityHeaderSubtitle>
             </CommunityHeaderLink>
           </CommunityHeaderMetaCol>
