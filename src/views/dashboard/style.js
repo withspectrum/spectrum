@@ -456,7 +456,7 @@ export const ThreadMeta = styled.div`
   align-self: stretch;
   display: flex;
   margin: 10px 16px 16px;
-  justify-content: space-between;
+  justify-content: flex-start;
 `;
 
 export const FacepileContainer = styled.div`
@@ -512,16 +512,21 @@ export const EmptyParticipantHead = styled.span`
   }
 `;
 
-export const StatusText = styled.span`
+export const StatusText = styled.div`
+  display: flex;
+  flex: none;
   font-size: 14px;
   color: ${props =>
     props.new
       ? props.active ? props.theme.text.reverse : props.theme.warn.alt
       : props.active ? props.theme.text.reverse : props.theme.text.alt};
   font-weight: ${props => (props.new ? 600 : 400)};
-  order: 2;
-  position: relative;
-  top: 4px;
+  align-items: center;
+  margin-right: 8px;
+
+  > span {
+    margin-left: 4px;
+  }
 
   a {
     font-weight: 600;

@@ -1,6 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
+import compose from 'recompose/compose';
+
+import addThreadReactionMutation from 'shared/graphql/mutations/thread/addThreadReaction';
+import removeThreadReactionMutation from 'shared/graphql/mutations/thread/removeThreadReaction';
+
 import { IconButton } from 'src/components/buttons';
 import Icon from 'src/components/icons';
+import { LikeButtonWrapper, LikeCountWrapper, CurrentCount } from './style';
 
 /*
 
@@ -95,24 +101,64 @@ This lets us easily add a view to show all the threads a user has liked by simpl
 db.table('threadLikes').getAll(userId, { index:'userId'})
 
 
+<p>likes: {thread.reactions.count}</p>
+
+          {thread.reactions.hasReacted ? (
+            <p onClick={this.removeThreadReaction}>unlike</p>
+          ) : (
+            <p onClick={this.addThreadReaction}>like</p>
+          )}
+
+
 */
 
-// class LikeButton extends Component {
-//   render() {
-//     return (
-//       <div>
-//         <IconButton glyph="thumbs-up-fill" />
-//         <CurrentCount>{currentCount}</CurrentCount>
-//       </div>
-//     );
-//   }
-// }
+const LikeButtonPure = props => {
+  const { thread } = props;
+  const { hasReacted, count } = thread.reactions;
 
-// const LikeCount = () => {
-//   return (
-//     <div>
-//       <Icon glyph="thumbs-up-fill" size="24" />
-//       <CurrentCount>{currentCount}</CurrentCount>
-//     </div>
-//   );
-// };
+  const addThreadReaction = () => {
+    const { thread, addThreadReaction } = props;
+    const input = { threadId: thread.id };
+    return addThreadReaction({ input });
+  };
+
+  const removeThreadReaction = () => {
+    const { thread, removeThreadReaction } = props;
+    const input = { threadId: thread.id };
+    return removeThreadReaction({ input });
+  };
+
+  return (
+    <LikeButtonWrapper hasReacted={hasReacted}>
+      <IconButton
+        glyph={hasReacted ? 'thumbsup-fill' : 'thumbsup'}
+        tipText={hasReacted ? 'Unlike thread' : 'Like thread'}
+        tipLocation={'bottom-left'}
+        onClick={
+          hasReacted
+            ? () => removeThreadReaction(thread)
+            : () => addThreadReaction(thread)
+        }
+      />
+      <CurrentCount>{count}</CurrentCount>
+    </LikeButtonWrapper>
+  );
+};
+
+export const LikeButton = compose(
+  addThreadReactionMutation,
+  removeThreadReactionMutation
+)(LikeButtonPure);
+
+export const LikeCount = props => {
+  const { active, thread } = props;
+  const { count } = thread.reactions;
+
+  return (
+    <LikeCountWrapper active={active}>
+      {console.log('active:', active)}
+      <Icon glyph={'thumbsup-fill'} size={24} />
+      <CurrentCount>{count}</CurrentCount>
+    </LikeCountWrapper>
+  );
+};

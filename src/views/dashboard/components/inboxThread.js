@@ -3,11 +3,12 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Icon from '../../../components/icons';
+import Icon from 'src/components/icons';
+import { LikeCount } from 'src/components/threadLikes';
 import Facepile from './facepile';
 import truncate from 'shared/truncate';
 import ThreadCommunityInfo, { WaterCoolerPill } from './threadCommunityInfo';
-import { changeActiveThread } from '../../../actions/dashboardFeed';
+import { changeActiveThread } from 'src/actions/dashboardFeed';
 import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo';
 import type { Dispatch } from 'redux';
 import {
@@ -68,11 +69,8 @@ class InboxThread extends React.Component<Props> {
 
     const defaultMessageCountString = (
       <StatusText offset={participants.length} active={active}>
-        {messageCount === 0
-          ? `${messageCount} messages`
-          : messageCount > 1
-            ? `${messageCount} messages`
-            : `${messageCount} message`}
+        <Icon glyph="message-fill" size={24} />
+        <span>{messageCount}</span>
       </StatusText>
     );
 
@@ -199,19 +197,11 @@ class InboxThread extends React.Component<Props> {
                     );
                   })}
             </ErrorBoundary>
-
             <ThreadMeta>
-              {(participantsExist || author) && (
-                <ErrorBoundary fallbackComponent={null}>
-                  <Facepile
-                    active={active}
-                    participants={participants}
-                    author={data.author.user}
-                  />
-                </ErrorBoundary>
-              )}
-
-              {this.generatePillOrMessageCount()}
+              <ErrorBoundary fallbackComponent={null}>
+                {this.generatePillOrMessageCount()}
+                <LikeCount thread={data} active={active} />
+              </ErrorBoundary>
             </ThreadMeta>
           </InboxThreadContent>
         </InboxThreadItem>

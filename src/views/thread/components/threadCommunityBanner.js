@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
+import { LikeButton } from 'src/components/threadLikes';
 import Icon from '../../../components/icons';
 import { Button } from '../../../components/buttons';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
@@ -16,6 +17,7 @@ import {
   CommunityHeaderName,
   CommunityHeaderLink,
   CommunityHeaderMeta,
+  CommunityHeaderSubtitle,
   CommunityHeaderMetaCol,
   PillLink,
   PillLabel,
@@ -97,6 +99,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
   render() {
     const {
       thread: { channel, community, watercooler, id },
+      thread,
       currentUser,
       hide,
     } = this.props;
@@ -110,32 +113,28 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
       <CommunityHeader hide={hide}>
         <CommunityHeaderMeta>
           <CommunityHeaderLink to={`/${community.slug}`}>
-            <Avatar src={community.profilePhoto} community size="32" />
+            <Avatar src={community.profilePhoto} community size={32} />
           </CommunityHeaderLink>
           <CommunityHeaderMetaCol>
+            <CommunityHeaderName>
+              {watercooler
+                ? `${community.name} watercooler`
+                : thread.content.title}
+            </CommunityHeaderName>
             <CommunityHeaderLink to={`/${community.slug}`}>
-              <CommunityHeaderName>
-                {watercooler ? `${community.name} watercooler` : community.name}
-              </CommunityHeaderName>
-            </CommunityHeaderLink>
-
-            {channel.slug !== 'general' && (
-              <PillLink to={`/${community.slug}/${channel.slug}`}>
-                {channel.isPrivate && (
-                  <Lock>
-                    <Icon glyph="private" size={12} />
-                  </Lock>
+              <CommunityHeaderSubtitle>
+                {`${community.name}`}
+                {channel.slug !== 'general' && (
+                  <span>{` (${channel.name})`}</span>
                 )}
-                <PillLabel isPrivate={channel.isPrivate}>
-                  {channel.name}
-                </PillLabel>
-              </PillLink>
-            )}
+                <span>{` · ${thread.timestamp}`}</span>
+              </CommunityHeaderSubtitle>
+            </CommunityHeaderLink>
           </CommunityHeaderMetaCol>
         </CommunityHeaderMeta>
 
         {channel.channelPermissions.isMember ? (
-          <span />
+          <LikeButton thread={thread} />
         ) : currentUser ? (
           <Button
             gradientTheme={'success'}

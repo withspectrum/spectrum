@@ -449,8 +449,16 @@ export const CommunityHeaderName = styled.h3`
   font-weight: 600;
   margin-right: 8px;
   color: ${props => props.theme.text.default};
-  line-height: 1.28;
+  line-height: 16px;
 `;
+
+export const CommunityHeaderSubtitle = styled.span`
+  font-size: 12px;
+  margin-top: 4px;
+  line-height: 12px;
+  color: ${props => props.theme.text.alt};
+`;
+
 export const CommunityHeaderChannelTag = styled.div`
   color: ${props => props.theme.text.reverse};
   background: ${props => props.theme.warn.alt};
@@ -478,11 +486,11 @@ export const CommunityHeaderMeta = styled.div`
 
 export const CommunityHeaderMetaCol = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  align-self: center;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  align-self: flex-start;
   margin-left: 12px;
-  margin-right: 16px;
 `;
 
 export const CommunityHeaderLink = styled(Link)`
