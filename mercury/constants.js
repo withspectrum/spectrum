@@ -20,6 +20,9 @@ export const REACTION_DELETED = 'reaction deleted';
 export const REACTION_DELETED_POST_AUTHOR_BONUS =
   'reaction deleted post author bonus';
 
+export const THREAD_REACTION_CREATED = 'thread reaction created';
+export const THREAD_REACTION_DELETED = 'thread reaction deleted';
+
 // scores
 export const THREAD_CREATED_SCORE = 20;
 export const THREAD_DELETED_SCORE = -20;
@@ -33,3 +36,5 @@ export const REACTION_CREATED_SCORE = 30;
 export const REACTION_CREATED_POST_AUTHOR_SCORE = 2;
 export const REACTION_DELETED_SCORE = -30;
 export const REACTION_DELETED_POST_AUTHOR_SCORE = -2;
+export const THREAD_REACTION_CREATED_SCORE = 2;
+export const THREAD_REACTION_DELETED_SCORE = -2;

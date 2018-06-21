@@ -1,21 +1,24 @@
 // @flow
-const debug = require('debug')('mercury:queue:process-thread-created');
+const debug = require('debug')('mercury:queue:process-thread-reaction-deleted');
 import { updateReputation } from '../models/usersCommunities';
 import { getThread } from '../models/thread';
-import { THREAD_CREATED, THREAD_CREATED_SCORE } from '../constants';
+import {
+  THREAD_REACTION_DELETED,
+  THREAD_REACTION_DELETED_SCORE,
+} from '../constants';
 import type { ReputationEventJobData } from 'shared/bull/types';
 
 export default async (data: ReputationEventJobData) => {
-  // entityId represents the communityId
+  // entityId represents the threadId
   const { userId, entityId } = data;
   const { communityId } = await getThread(entityId);
 
-  debug(`Processing thread created reputation event`);
+  debug(`Processing thread reaction deleted reputation event`);
   debug(`Got communityId: ${communityId}`);
   return updateReputation(
     userId,
     communityId,
-    THREAD_CREATED_SCORE,
-    THREAD_CREATED
+    THREAD_REACTION_DELETED_SCORE,
+    THREAD_REACTION_DELETED
   );
 };

@@ -36,6 +36,7 @@ import {
   __createDirectMessageSnippetLoader,
 } from './directMessageThread';
 import {
+  __createThreadReactionLoader,
   __createReactionLoader,
   __createSingleReactionLoader,
 } from './reaction';
@@ -76,6 +77,7 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   directMessageSnippet: __createDirectMessageSnippetLoader(options),
   message: __createMessageLoader(options),
   messageReaction: __createReactionLoader(options),
+  threadReaction: __createThreadReactionLoader(options),
   reaction: __createSingleReactionLoader(options),
 });
 
