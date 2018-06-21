@@ -5,6 +5,8 @@ import processThreadDeleted from '../functions/processThreadDeleted';
 import processMessageCreated from '../functions/processMessageCreated';
 import processReactionCreated from '../functions/processReactionCreated';
 import processReactionDeleted from '../functions/processReactionDeleted';
+import processThreadReactionCreated from '../functions/processThreadReactionCreated';
+import processThreadReactionDeleted from '../functions/processThreadReactionDeleted';
 import processMessageDeleted from '../functions/processMessageDeleted';
 import processThreadDeletedByModeration from '../functions/processThreadDeletedByModeration';
 import Raven from 'shared/raven';

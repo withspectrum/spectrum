@@ -10,13 +10,13 @@ import type { ReputationEventJobData } from 'shared/bull/types';
 
 export default async (data: ReputationEventJobData) => {
   // entityId represents the threadId
-  const { userId, entityId } = data;
-  const { communityId } = await getThread(entityId);
+  const { entityId } = data;
+  const { creatorId, communityId } = await getThread(entityId);
 
   debug(`Processing thread reaction deleted reputation event`);
   debug(`Got communityId: ${communityId}`);
   return updateReputation(
-    userId,
+    creatorId,
     communityId,
     THREAD_REACTION_DELETED_SCORE,
     THREAD_REACTION_DELETED
