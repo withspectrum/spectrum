@@ -60,7 +60,7 @@ export const addThreadReaction = (input: ThreadReactionInput, userId: string): P
           .get(thisReaction.id)
           .update({
             deletedAt: db.literal(),
-          })
+          }, { returnChanges: 'always' })
           .run()
           .then(result => result.changes[0].new_val || result.changes[0].new_val)
       }
@@ -73,7 +73,7 @@ export const addThreadReaction = (input: ThreadReactionInput, userId: string): P
             userId,
             createdAt: Date.now(),
           },
-          { returnChanges: true }
+          { returnChanges: 'always' }
         )
         .run()
         .then(result => result.changes[0].new_val)
