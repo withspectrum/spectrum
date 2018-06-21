@@ -161,7 +161,11 @@ class ThreadListItemHandlers extends Component<Props> {
     const canModerateCommunity = isCommunityModerator || isCommunityOwner;
 
     let options, cancelButtonIndex, destructiveButtonIndex;
-    options = [SHARE, MESSAGE_AUTHOR];
+    options = [SHARE];
+
+    if (thread.author.user.id !== currentUser.id) {
+      options = options.concat(MESSAGE_AUTHOR);
+    }
 
     options = options.concat(
       thread.receiveNotifications ? MUTE_CONVERSATION : SUBSCRIBE_CONVERSATION
