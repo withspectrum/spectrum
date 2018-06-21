@@ -1,4 +1,5 @@
 // @flow
+import type { DBThreadReaction } from 'shared/types';
 import { transformations } from './index';
 import { getThreadNotificationStatusForUser } from '../models/usersThreads';
 import { getReactionById, getThreadReactionById } from '../models/reaction';
@@ -79,7 +80,9 @@ export const getContext = async (obj: EntityObjType) => {
   }
 
   if (obj.threadReactionId) {
-    const threadReaction = await getThreadReactionById(obj.threadReactionId);
+    const threadReaction: DBThreadReaction = await getThreadReactionById(
+      obj.threadReactionId
+    );
     const thread = await getThreadById(threadReaction.threadId);
 
     // if no thread was found, we are in a dm
@@ -102,7 +105,7 @@ export const getContext = async (obj: EntityObjType) => {
     ]);
 
     return {
-      threadReaction: transformations.analyticsReaction(threadReaction),
+      threadReaction: transformations.analyticsThreadReaction(threadReaction),
       thread: {
         ...transformations.analyticsThread(thread),
         ...transformations.analyticsThreadPermissions(threadPermissions),
