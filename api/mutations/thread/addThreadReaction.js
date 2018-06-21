@@ -1,6 +1,6 @@
 // @flow
 import type { GraphQLContext } from '../../';
-import { addThreadReaction } from '../../models/reaction';
+import { addThreadReaction } from '../../models/threadReaction';
 import { getThreadById } from '../../models/thread';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
