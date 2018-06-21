@@ -10,7 +10,7 @@ import {
   NotificationCard,
   TextContent,
   NotificationListRow,
-  ReactionContext,
+  ThreadReactionContext,
   Content,
 } from '../style';
 import Icon from '../../../components/icons';
@@ -41,10 +41,10 @@ export const NewThreadReactionNotification = ({
         }}
       />
       <CardContent>
-        <ReactionContext>
-          <Icon glyph="like-fill" />
+        <ThreadReactionContext>
+          <Icon glyph="thumbsup-fill" />
           <ActorsRow actors={actors.asObjects} />
-        </ReactionContext>
+        </ThreadReactionContext>
         <Content>
           <TextContent pointer={true}>
             {' '}
@@ -82,10 +82,10 @@ export const MiniNewThreadReactionNotification = ({
         }}
       />
       <CardContent>
-        <ReactionContext>
-          <Icon glyph="like-fill" />
+        <ThreadReactionContext>
+          <Icon glyph="thumbsup-fill" />
           <ActorsRow actors={actors.asObjects} />
-        </ReactionContext>
+        </ThreadReactionContext>
         <Content>
           <TextContent pointer={false}>
             {' '}
