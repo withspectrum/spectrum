@@ -17,7 +17,7 @@ import {
   ProfileIcon,
 } from './style';
 
-const tabBarVisible = navigation => {
+const shouldRenderTabBar = navigation => {
   let showTabbar = true;
 
   const { routes } = navigation.state;
@@ -88,7 +88,7 @@ const tabBarConfiguration = {
     style: IS_PROD ? {} : { backgroundColor: theme.warn.alt },
   },
   navigationOptions: ({ navigation }) => ({
-    tabBarVisible: tabBarVisible(navigation),
+    tabBarVisible: shouldRenderTabBar(navigation),
   }),
 };
 
