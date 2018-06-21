@@ -30,7 +30,6 @@ import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 const threadBodyToPlainText = (body: any): string =>
   toPlainText(toState(JSON.parse(body)));
 
-const OWNER_MODERATOR_SPAM_LIMIT = 5;
 const MEMBER_SPAM_LMIT = 3;
 const SPAM_TIMEFRAME = 60 * 10;
 
@@ -209,6 +208,7 @@ export default requireAuth(
 
     // if user has published other threads in the last hour, check for spam
     if (
+      !isOwnerOrModerator &&
       usersPreviousPublishedThreads &&
       usersPreviousPublishedThreads.length > 0
     ) {
@@ -216,12 +216,7 @@ export default requireAuth(
         'User has posted at least once in the previous 10m - running spam checks'
       );
 
-      if (
-        (isOwnerOrModerator &&
-          usersPreviousPublishedThreads.length >= OWNER_MODERATOR_SPAM_LIMIT) ||
-        (!isOwnerOrModerator &&
-          usersPreviousPublishedThreads.length >= MEMBER_SPAM_LMIT)
-      ) {
+      if (usersPreviousPublishedThreads.length >= MEMBER_SPAM_LMIT) {
         debug('User has posted at least 3 times in the previous 10m');
         _adminProcessUserSpammingThreadsQueue.add({
           user: user,
@@ -382,7 +377,7 @@ export default requireAuth(
     };
 
     const threadIsToxic = await checkToxicity();
-    if (threadIsToxic) {
+    if (!isOwnerOrModerator && threadIsToxic) {
       debug(
         'Thread determined to be toxic, not sending notifications or adding rep'
       );
