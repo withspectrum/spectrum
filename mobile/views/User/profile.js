@@ -56,12 +56,22 @@ class User extends Component<Props, State> {
     navigation.setParams({ title });
   };
 
+  setId = () => {
+    const { data: { user }, navigation } = this.props;
+    if (!user) return;
+    const oldId = navigation.getParam('id', null);
+    if (oldId === user.id) return;
+    navigation.setParams({ id: user.id });
+  };
+
   componentDidMount() {
     this.setTitle();
+    this.setId();
   }
 
   componentDidUpdate() {
     this.setTitle();
+    this.setId();
   }
 
   toggleFeed = (feed: string) => this.setState({ feed });
