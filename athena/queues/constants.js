@@ -8,6 +8,7 @@ export const MESSAGE_NOTIFICATION = 'message notification';
 export const MENTION_NOTIFICATION = 'mention notification';
 export const DIRECT_MESSAGE_NOTIFICATION = 'direct message notification';
 export const REACTION_NOTIFICATION = 'reaction notification';
+export const THREAD_REACTION_NOTIFICATION = 'thread reaction notification';
 export const CHANNEL_NOTIFICATION = 'channel notification';
 export const COMMUNITY_NOTIFICATION = 'community notification';
 export const THREAD_NOTIFICATION = 'thread notification';
