@@ -98,13 +98,24 @@ const Thread = /* GraphQL */ `
     filesToUpload: [Upload]
   }
 
+  input AddThreadReactionInput {
+    threadId: ID!
+    type: ReactionTypes
+  }
+
+  input RemoveThreadReactionInput {
+    threadId: ID!
+  }
+
   extend type Mutation {
     publishThread(thread: ThreadInput!): Thread
     editThread(input: EditThreadInput!): Thread
     setThreadLock(threadId: ID!, value: Boolean!): Thread
     toggleThreadNotifications(threadId: ID!): Thread
     deleteThread(threadId: ID!): Boolean
-        moveThread(threadId: ID!, channelId: ID!): Thread
+    moveThread(threadId: ID!, channelId: ID!): Thread
+    addReaction(input: AddThreadReactionInput!): Thread
+    removeReaction(input: RemoveThreadReactionInput!): Thread
   }
 
   extend type Subscription {

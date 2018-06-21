@@ -2,6 +2,7 @@
 import { db } from './db';
 import {
   sendReactionNotificationQueue,
+  sendThreadReactionNotificationQueue,
   processReputationEventQueue,
 } from 'shared/bull/queues';
 import type { DBReaction, DBThreadReaction } from 'shared/types';
@@ -50,6 +51,122 @@ export const getReactionsByIds = (reactionIds: Array<string>): Promise<Array<DBR
     .table('reactions')
     .getAll(...reactionIds)
     .run();
+};
+
+type ThreadReactionInput = {
+  threadId: string,
+  type: ReactionType,
+};
+
+export const addThreadReaction = (
+  reaction: ThreadReactionInput,
+  userId: string
+): Promise<DBThreadReaction> => {
+  return db
+    .table('threadReactions')
+    .getAll(reaction.threadId, { index: 'threadId' })
+    .filter({ userId })
+    .run()
+    .then(async results => {
+      // if the reaction already exists in the db, it was previously deleted
+      // just remove the deletedAt field
+      if (results && results.length > 0) {
+        const thisReaction = results[0];
+
+        return db
+          .table('threadReactions')
+          .get(thisReaction.id)
+          .update({
+            deletedAt: db.literal(),
+          })
+          .run()
+          .then(() => {
+            trackQueue.add({
+              userId,
+              event: events.THREAD_REACTION_CREATED,
+              context: {
+                threadReactionId: thisReaction.id,
+              },
+            });
+
+            processReputationEventQueue.add({
+              userId,
+              type: 'thread reaction created',
+              entityId: thisReaction.threadId,
+            });
+
+            return;
+          });
+      }
+
+      return db
+        .table('threadReactions')
+        .insert(
+          {
+            ...reaction,
+            userId,
+            createdAt: Date.now(),
+          },
+          { returnChanges: true }
+        )
+        .run()
+        .then(result => result.changes[0].new_val)
+        .then(threadReaction => {
+          trackQueue.add({
+            userId,
+            event: events.THREAD_REACTION_CREATED,
+            context: { threadReactionId: threadReaction.id },
+          });
+
+          sendThreadReactionNotificationQueue.add({ threadReaction, userId });
+
+          processReputationEventQueue.add({
+            userId,
+            type: 'thread reaction created',
+            entityId: reaction.threadId,
+          });
+
+          return reaction;
+        });
+    });
+};
+
+export const removeThreadReaction = (
+  threadId: string,
+  userId: string
+): Promise<DBReaction> => {
+  return db
+    .table('threadReactions')
+    .getAll(threadId, { index: 'threadId' })
+    .filter({ userId })
+    .run()
+    .then(results => {
+      // no reaction exists to be removed
+      if (!results || results.length === 0) return;
+
+      const thisReaction = results[0];
+
+      return db
+        .table('threadReactions')
+        .get(thisReaction.id)
+        .update({
+          deletedAt: new Date(),
+        })
+        .run()
+        .then(() => {
+          trackQueue.add({
+            userId,
+            event: events.THREAD_REACTION_DELETED,
+            context: { threadReactionId: thisReaction.id },
+          });
+
+          processReputationEventQueue.add({
+            userId,
+            type: 'thread reaction deleted',
+            entityId: thisReaction.threadId,
+          });
+        });
+    });
 };
 
 // prettier-ignore
