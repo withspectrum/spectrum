@@ -1,12 +1,17 @@
 // @flow
 import React from 'react';
+import { connect } from 'react-redux';
+import type { Dispatch } from 'redux';
 import compose from 'recompose/compose';
+import type { NavigationProps } from 'react-navigation';
 import { withCurrentUser } from '../../components/WithCurrentUser';
 import { throttle, debounce } from 'throttle-debounce';
+import withSafeView from '../../components/SafeAreaView';
 import ChatInput from '../../components/ChatInput';
 import PeopleSearchView from '../Search/PeopleSearchView';
 import getCurrentUserDMThreadConnection from '../../../shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
 import createDirectMessageThread, {
+  type CreateDirectMessageThreadType,
   type CreateDirectMessageThreadProps,
 } from '../../../shared/graphql/mutations/directMessageThread/createDirectMessageThread';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
@@ -17,15 +22,16 @@ import {
   UserSearchInput,
 } from './style';
 import { events, track } from '../../utils/analytics';
-import type { NavigationProps } from 'react-navigation';
 import { FullscreenNullState } from '../../components/NullStates';
 import SelectedUser from './SelectedUser';
+import { addToast } from '../../actions/toasts';
 
 type Props = {
   ...$Exact<NavigationProps>,
   ...$Exact<CreateDirectMessageThreadProps>,
   currentUser: GetUserType,
   presetUserIds?: Array<string>,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {
@@ -132,10 +138,48 @@ class DirectMessageComposer extends React.Component<Props, State> {
           },
         },
       })
-      .then(result => {
-        this.props.navigation.navigate('DirectMessageThread', {
-          id: result.data.createDirectMessageThread.id,
-        });
+      .then((result: CreateDirectMessageThreadType) => {
+        const { navigation, dispatch } = this.props;
+        const { state: { params } } = navigation;
+
+        // if the user composed this thread from the direct messages tab, take
+        // them to the thread
+        if (
+          params &&
+          params.entryPoint &&
+          params.entryPoint === 'DirectMessages'
+        ) {
+          return navigation.navigate('DirectMessageThread', {
+            id: result.data.createDirectMessageThread.id,
+          });
+        }
+
+        const newDM = result.data.createDirectMessageThread;
+
+        // otherwise if they composed the thread from outside of the messages tab,
+        // just close the composer and show a toast confirming that the message
+        // was sent in the background
+        setTimeout(
+          () =>
+            dispatch(
+              addToast({
+                type: 'success',
+                message: 'Message sent!',
+                icon: 'message-new',
+                onPressHandler: () =>
+                  navigation.navigate({
+                    routeName: 'DirectMessageThread',
+                    key: newDM.id,
+                    params: {
+                      id: newDM.id,
+                    },
+                  }),
+              })
+            ),
+          1000
+        );
+
+        return navigation.goBack();
       })
       .catch(err => {
         console.error(err);
@@ -203,7 +247,9 @@ class DirectMessageComposer extends React.Component<Props, State> {
 }
 
 export default compose(
+  connect(),
   withCurrentUser,
   getCurrentUserDMThreadConnection,
-  createDirectMessageThread
+  createDirectMessageThread,
+  withSafeView
 )(DirectMessageComposer);
