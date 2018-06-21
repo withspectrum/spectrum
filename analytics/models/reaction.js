@@ -9,9 +9,8 @@ export const getReactionById = (reactionId: string): Promise<DBReaction> => {
     .run();
 };
 
-export const getThreadReactionById = (
-  reactionId: string
-): Promise<DBThreadReaction> => {
+// prettier-ignore
+export const getThreadReactionById = (reactionId: string): Promise<DBThreadReaction> => {
   return db
     .table('threadReactions')
     .get(reactionId)
