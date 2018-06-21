@@ -12,17 +12,18 @@ export const LikeWrapper = styled.div`
   > button {
     color: ${props =>
       props.hasReacted ? props.theme.brand.alt : props.theme.text.alt};
-    transition: color 0.1s ease-in-out, transform 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out;
 
     &:hover {
       color: ${props =>
         props.hasReacted ? props.theme.warn.alt : props.theme.brand.alt};
-      transform: ${props => (props.hasReacted ? 'rotateX(180deg)' : 'none')};
-      transition: transform 0.2s ease-in-out, color 0.3s ease-in-out;
+      transition: color 0.3s ease-in-out;
     }
   }
 
   ${CurrentCount} {
+    margin-left: 4px;
+    font-weight: 500;
     color: ${props =>
       props.hasReacted ? props.theme.text.default : props.theme.text.alt};
   }

@@ -16,8 +16,6 @@ import ThreadByline from './threadByline';
 import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
-import addThreadReactionMutation from 'shared/graphql/mutations/thread/addThreadReaction';
-import removeThreadReactionMutation from 'shared/graphql/mutations/thread/removeThreadReaction';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import Editor from '../../../components/rich-text-editor';
 import { toJSON, toPlainText, toState } from 'shared/draft-utils';
@@ -61,8 +59,6 @@ type Props = {
   dispatch: Dispatch<Object>,
   currentUser: ?Object,
   toggleEdit: Function,
-  addThreadReaction: Function,
-  removeThreadReaction: Function,
 };
 
 class ThreadDetailPure extends React.Component<Props, State> {
@@ -425,18 +421,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
       });
   };
 
-  addThreadReaction = () => {
-    const { thread, addThreadReaction } = this.props;
-    const input = { threadId: thread.id };
-    return addThreadReaction({ input });
-  };
-
-  removeThreadReaction = () => {
-    const { thread, removeThreadReaction } = this.props;
-    const input = { threadId: thread.id };
-    return removeThreadReaction({ input });
-  };
-
   render() {
     const { currentUser, thread } = this.props;
 
@@ -490,14 +474,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
             )}
           </Link>
 
-          <p>likes: {thread.reactions.count}</p>
-
-          {thread.reactions.hasReacted ? (
-            <p onClick={this.removeThreadReaction}>unlike</p>
-          ) : (
-            <p onClick={this.addThreadReaction}>like</p>
-          )}
-
           {/* $FlowFixMe */}
           <Editor
             readOnly={!this.state.isEditing}
@@ -543,8 +519,6 @@ const ThreadDetail = compose(
   deleteThreadMutation,
   editThreadMutation,
   pinThreadMutation,
-  addThreadReactionMutation,
-  removeThreadReactionMutation,
   withRouter
 )(ThreadDetailPure);
 
