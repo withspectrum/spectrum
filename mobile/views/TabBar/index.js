@@ -18,15 +18,26 @@ import {
 } from './style';
 
 const tabBarVisible = navigation => {
+  let showTabbar = true;
+
   const { routes } = navigation.state;
   const nonTabbarRoutes = ['Thread', 'ThreadDetail', 'DirectMessageThread'];
+  const thisRoute = routes[0];
 
-  let showTabbar = true;
-  routes.forEach(route => {
-    if (nonTabbarRoutes.indexOf(route.routeName) >= 0) {
+  if (!thisRoute.routes) {
+    if (nonTabbarRoutes.indexOf(routes[0].routeName) >= 0) {
       showTabbar = false;
     }
-  });
+  }
+
+  const subRoutes = thisRoute.routes;
+  if (subRoutes && subRoutes.length > 0) {
+    subRoutes.forEach(route => {
+      if (nonTabbarRoutes.indexOf(route.routeName) >= 0) {
+        showTabbar = false;
+      }
+    });
+  }
 
   return showTabbar;
 };
@@ -66,6 +77,7 @@ const routeConfiguration = {
 };
 
 const tabBarConfiguration = {
+  initialRouteName: 'Home',
   tabBarOptions: {
     activeTintColor: IS_PROD ? theme.brand.alt : theme.text.reverse,
     inactiveTintColor: IS_PROD ? theme.text.alt : theme.warn.border,
