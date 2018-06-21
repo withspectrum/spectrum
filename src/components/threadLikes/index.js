@@ -6,7 +6,7 @@ import removeThreadReactionMutation from 'shared/graphql/mutations/thread/remove
 
 import { IconButton } from 'src/components/buttons';
 import Icon from 'src/components/icons';
-import { LikeWrapper, CurrentCount } from './style';
+import { LikeButtonWrapper, LikeCountWrapper, CurrentCount } from './style';
 
 /*
 
@@ -129,7 +129,7 @@ const LikeButtonPure = props => {
   };
 
   return (
-    <LikeWrapper hasReacted={hasReacted}>
+    <LikeButtonWrapper hasReacted={hasReacted}>
       <IconButton
         glyph={hasReacted ? 'thumbsup-fill' : 'thumbsup'}
         tipText={hasReacted ? 'Unlike thread' : 'Like thread'}
@@ -141,7 +141,7 @@ const LikeButtonPure = props => {
         }
       />
       <CurrentCount>{count}</CurrentCount>
-    </LikeWrapper>
+    </LikeButtonWrapper>
   );
 };
 
@@ -151,12 +151,14 @@ export const LikeButton = compose(
 )(LikeButtonPure);
 
 export const LikeCount = props => {
-  const { count } = props.thread.reactions;
+  const { active, thread } = props;
+  const { count } = thread.reactions;
 
   return (
-    <LikeWrapper>
+    <LikeCountWrapper active={active}>
+      {console.log('active:', active)}
       <Icon glyph={'thumbsup-fill'} size={24} />
       <CurrentCount>{count}</CurrentCount>
-    </LikeWrapper>
+    </LikeCountWrapper>
   );
 };

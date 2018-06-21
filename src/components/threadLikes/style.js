@@ -1,14 +1,16 @@
 import styled from 'styled-components';
 
 export const CurrentCount = styled.span`
-  font-size: 1em;
+  font-size: 14px;
 `;
 
-export const LikeWrapper = styled.div`
+const LikeWrapper = styled.div`
   display: flex;
   flex: none;
   align-items: center;
+`;
 
+export const LikeButtonWrapper = styled(LikeWrapper)`
   > button {
     color: ${props =>
       props.hasReacted ? props.theme.brand.alt : props.theme.text.alt};
@@ -27,4 +29,9 @@ export const LikeWrapper = styled.div`
     color: ${props =>
       props.hasReacted ? props.theme.text.default : props.theme.text.alt};
   }
+`;
+
+export const LikeCountWrapper = styled(LikeWrapper)`
+  color: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.text.alt};
 `;
