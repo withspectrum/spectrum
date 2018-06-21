@@ -36,10 +36,10 @@ import {
   __createDirectMessageSnippetLoader,
 } from './directMessageThread';
 import {
-  __createThreadReactionLoader,
   __createReactionLoader,
   __createSingleReactionLoader,
 } from './reaction';
+import { __createThreadReactionLoader } from './threadReaction';
 import { __createStripeCustomersLoader } from './stripe';
 import { __createMessageLoader } from './message';
 import type { DataLoaderOptions } from './types';
