@@ -16,14 +16,12 @@ import {
   MESSAGE_DELETED,
   REACTION_CREATED,
   REACTION_DELETED,
+  THREAD_REACTION_CREATED,
+  THREAD_REACTION_DELETED,
 } from '../constants';
-import type { Data } from '../functions/types';
+import type { Job, ReputationEventJobData } from 'shared/bull/types';
 
-type Job = {
-  data: Data,
-};
-
-export default async (job: Job) => {
+export default async (job: Job<ReputationEventJobData>) => {
   const { type, userId, entityId } = job.data;
   debug(`\nnew job: ${job.id}`);
   debug(`\nprocessing reputation type: ${type}`);
@@ -52,6 +50,12 @@ export default async (job: Job) => {
       }
       case REACTION_DELETED: {
         return await processReactionDeleted(job.data);
+      }
+      case THREAD_REACTION_CREATED: {
+        return await processThreadReactionCreated(job.data);
+      }
+      case THREAD_REACTION_DELETED: {
+        return await processThreadReactionDeleted(job.data);
       }
       case MESSAGE_DELETED: {
         return await processMessageDeleted(job.data);
