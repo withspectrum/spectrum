@@ -1,7 +1,7 @@
 // @flow
 import type { Node } from 'react';
-import { Platform } from 'react-native';
-import styled from 'styled-components/native';
+import { Platform } from 'react-primitives';
+import styled from 'styled-components/primitives';
 import type { ComponentType } from 'react';
 import getTypeConfigFromType from './getTypeConfigFromType';
 import getWeightFromType from './getWeightFromType';
@@ -45,8 +45,8 @@ const monospaceFont = Platform.OS === 'android' ? 'monospace' : 'Menlo';
 const Text: ComponentType<Props> = styled.Text`
   font-weight: ${props =>
     props.weight ? `${getWeightFromType(props.weight)}` : '400'};
-  font-size: ${props => getTypeConfigFromType(props.type).size}px;
-  line-height: ${props => getTypeConfigFromType(props.type).leading}px;
+  font-size: ${props => getTypeConfigFromType(props.type).size};
+  line-height: ${props => getTypeConfigFromType(props.type).leading};
   color: ${props =>
     props.color ? props.color(props.theme) : props.theme.text.default};
 
