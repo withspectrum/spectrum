@@ -4,7 +4,7 @@ import {
   sendReactionNotificationQueue,
   processReputationEventQueue,
 } from 'shared/bull/queues';
-import type { DBReaction } from 'shared/types';
+import type { DBReaction, DBThreadReaction } from 'shared/types';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 
@@ -23,6 +23,17 @@ export const getReactions = (messageIds: Array<string>): Promise<Array<DBReactio
     .getAll(...distinctMessageIds, { index: 'messageId' })
     .filter(row => row.hasFields('deletedAt').not())
     .group('messageId')
+    .run();
+};
+
+// prettier-ignore
+export const getThreadReactions = (threadIds: Array<string>): Promise<Array<DBThreadReaction>> => {
+  const distinctMessageIds = threadIds.filter((x, i, a) => a.indexOf(x) == i);
+  return db
+    .table('threadReactions')
+    .getAll(...distinctMessageIds, { index: 'threadId' })
+    .filter(row => row.hasFields('deletedAt').not())
+    .group('threadId')
     .run();
 };
 
