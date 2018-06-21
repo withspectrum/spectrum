@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
+import { LikeButton } from 'src/components/threadLikes';
 import Icon from '../../../components/icons';
 import { Button } from '../../../components/buttons';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
@@ -135,7 +136,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
         </CommunityHeaderMeta>
 
         {channel.channelPermissions.isMember ? (
-          <span />
+          <LikeButton />
         ) : currentUser ? (
           <Button
             gradientTheme={'success'}

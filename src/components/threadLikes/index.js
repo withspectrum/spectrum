@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { IconButton } from 'src/components/buttons';
 import Icon from 'src/components/icons';
+import { LikeWrapper, CurrentCount } from './style';
 
 /*
 
@@ -97,22 +98,26 @@ db.table('threadLikes').getAll(userId, { index:'userId'})
 
 */
 
-// class LikeButton extends Component {
-//   render() {
-//     return (
-//       <div>
-//         <IconButton glyph="thumbs-up-fill" />
-//         <CurrentCount>{currentCount}</CurrentCount>
-//       </div>
-//     );
-//   }
-// }
+export const LikeButton = props => {
+  const { hasReacted } = props;
 
-// const LikeCount = () => {
-//   return (
-//     <div>
-//       <Icon glyph="thumbs-up-fill" size="24" />
-//       <CurrentCount>{currentCount}</CurrentCount>
-//     </div>
-//   );
-// };
+  return (
+    <LikeWrapper hasReacted={hasReacted}>
+      <IconButton
+        glyph={'thumbs-up-fill'}
+        tipText={hasReacted ? 'Unlike thread' : 'Like thread'}
+        tipLocation={'bottom-left'}
+      />
+      <CurrentCount>12</CurrentCount>
+    </LikeWrapper>
+  );
+};
+
+export const LikeCount = () => {
+  return (
+    <LikeWrapper>
+      <Icon glyph={'thumbs-up-fill'} size={24} />
+      <CurrentCount>12</CurrentCount>
+    </LikeWrapper>
+  );
+};
