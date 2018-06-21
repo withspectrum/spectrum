@@ -18,6 +18,7 @@ import getDirectMessageThread, {
 import getDirectMessageThreadMessageConnection from '../../../../shared/graphql/queries/directMessageThread/getDirectMessageThreadMessageConnection';
 import type { GetUserType } from '../../../../shared/graphql/queries/user/getUser';
 import sendDirectMessage from '../../../../shared/graphql/mutations/message/sendDirectMessage';
+import setLastSeenMutation from '../../../../shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';
 import type { NavigationProps } from 'react-navigation';
 import { FullscreenNullState } from '../../../components/NullStates';
 
@@ -29,6 +30,7 @@ type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
   id: string,
   sendDirectMessage: Function,
+  setLastSeen: (threadId: string) => Promise<void>,
   currentUser: GetUserType,
   navigation: NavigationProps,
   data: {
@@ -63,6 +65,15 @@ class DirectMessageThread extends Component<Props> {
     navigation.setParams({ title });
   };
 
+  updateLastSeen = () => {
+    const { data: { directMessageThread }, setLastSeen } = this.props;
+    if (directMessageThread) {
+      return setLastSeen(directMessageThread.id).catch(err => {
+        console.error(err);
+      });
+    }
+  };
+
   componentDidMount() {
     this.trackView();
     this.setTitle();
@@ -81,6 +92,10 @@ class DirectMessageThread extends Component<Props> {
     }
 
     this.setTitle();
+  }
+
+  componentWillUnmount() {
+    this.updateLastSeen();
   }
 
   sendMessage = text => {
@@ -129,5 +144,6 @@ class DirectMessageThread extends Component<Props> {
 export default compose(
   ViewNetworkHandler,
   sendDirectMessage,
+  setLastSeenMutation,
   getDirectMessageThread
 )(DirectMessageThread);
