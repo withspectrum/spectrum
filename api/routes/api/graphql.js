@@ -1,4 +1,5 @@
 // @flow
+const debug = require('debug')('api:graphql:logger');
 import { graphqlExpress } from 'graphql-server-express';
 import depthLimit from 'graphql-depth-limit';
 import costAnalysis from 'graphql-cost-analysis';
@@ -12,6 +13,7 @@ export default graphqlExpress(req => {
 
   let currentUser = req.user && !req.user.bannedAt ? req.user : null;
 
+  if (req.body && req.body.operationName) debug(req.body.operationName);
   return {
     schema,
     formatError: createErrorFormatter(req),
