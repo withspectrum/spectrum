@@ -24,6 +24,7 @@ type Props = {
     fetchMore: Function,
     user?: $Exact<GetCurrentUserDMThreadConnectionType>,
     refetch: Function,
+    refetching: boolean,
   },
 };
 
