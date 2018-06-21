@@ -1,5 +1,6 @@
 const Path = require('path');
 
 module.exports = {
-  getProjectRoots: () => [__dirname, Path.join(__dirname, '..')],
+  getProjectRoot: () => Path.join(__dirname, '..'),
+  getWatchFolders: () => [__dirname, Path.join(__dirname, '..')],
 };
