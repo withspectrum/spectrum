@@ -101,12 +101,30 @@ class Notifications extends Component<Props, State> {
       data = { decision: false, timestamp: new Date() };
     } else {
       data = { decision: true, timestamp: new Date() };
-      this.props.subscribeExpoPush(token);
+      this.setState({
+        pushNotifications: data,
+      });
+      this.props
+        .subscribeExpoPush(token)
+        .then(res => {
+          if (res) {
+            return SecureStore.setItemAsync(
+              'pushNotificationsDecision',
+              JSON.stringify(data)
+            );
+          } else {
+            this.setState({
+              pushNotifications: null,
+            });
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          this.setState({
+            pushNotifications: null,
+          });
+        });
     }
-    this.setState({
-      pushNotifications: data,
-    });
-    SecureStore.setItemAsync('pushNotificationsDecision', JSON.stringify(data));
   };
 
   subscribe = () => {
