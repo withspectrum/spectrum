@@ -54,6 +54,7 @@ const Thread = /* GraphQL */ `
     attachments: [Attachment]
     watercooler: Boolean
     currentUserLastSeen: Date @cost(complexity: 1)
+    reactions: ReactionData @cost(complexity: 1)
 
     isCreator: Boolean @deprecated(reason: "Use Thread.isAuthor instead")
     creator: User! @deprecated(reason:"Use Thread.author instead")

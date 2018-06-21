@@ -178,6 +178,15 @@ export type DBReaction = {
   userId: string,
 };
 
+export type DBThreadReaction = {
+  id: string,
+  threadId: string,
+  createdAt: Date,
+  type: ReactionType,
+  deletedAt?: Date,
+  userId: string,
+};
+
 export type DBRecurringPayment = {
   id: string,
   amount: number,
