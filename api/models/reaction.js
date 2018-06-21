@@ -73,30 +73,27 @@ export const addThreadReaction = (
       if (results && results.length > 0) {
         const thisReaction = results[0];
 
+        trackQueue.add({
+          userId,
+          event: events.THREAD_REACTION_CREATED,
+          context: {
+            threadReactionId: thisReaction.id,
+          },
+        });
+
+        processReputationEventQueue.add({
+          userId,
+          type: 'thread reaction created',
+          entityId: thisReaction.threadId,
+        });
+
         return db
           .table('threadReactions')
           .get(thisReaction.id)
           .update({
             deletedAt: db.literal(),
           })
-          .run()
-          .then(() => {
-            trackQueue.add({
-              userId,
-              event: events.THREAD_REACTION_CREATED,
-              context: {
-                threadReactionId: thisReaction.id,
-              },
-            });
-
-            processReputationEventQueue.add({
-              userId,
-              type: 'thread reaction created',
-              entityId: thisReaction.threadId,
-            });
-
-            return;
-          });
+          .run();
       }
 
       return db
@@ -146,26 +143,25 @@ export const removeThreadReaction = (
 
       const thisReaction = results[0];
 
+      trackQueue.add({
+        userId,
+        event: events.THREAD_REACTION_DELETED,
+        context: { threadReactionId: thisReaction.id },
+      });
+
+      processReputationEventQueue.add({
+        userId,
+        type: 'thread reaction deleted',
+        entityId: thisReaction.threadId,
+      });
+
       return db
         .table('threadReactions')
         .get(thisReaction.id)
         .update({
           deletedAt: new Date(),
         })
-        .run()
-        .then(() => {
-          trackQueue.add({
-            userId,
-            event: events.THREAD_REACTION_DELETED,
-            context: { threadReactionId: thisReaction.id },
-          });
-
-          processReputationEventQueue.add({
-            userId,
-            type: 'thread reaction deleted',
-            entityId: thisReaction.threadId,
-          });
-        });
+        .run();
     });
 };
 

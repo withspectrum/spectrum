@@ -114,8 +114,8 @@ const Thread = /* GraphQL */ `
     toggleThreadNotifications(threadId: ID!): Thread
     deleteThread(threadId: ID!): Boolean
     moveThread(threadId: ID!, channelId: ID!): Thread
-    addReaction(input: AddThreadReactionInput!): Thread
-    removeReaction(input: RemoveThreadReactionInput!): Thread
+    addThreadReaction(input: AddThreadReactionInput!): Thread
+    removeThreadReaction(input: RemoveThreadReactionInput!): Thread
   }
 
   extend type Subscription {
