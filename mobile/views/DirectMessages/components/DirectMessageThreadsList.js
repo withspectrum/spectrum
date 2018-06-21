@@ -24,6 +24,7 @@ type Props = {
     fetchMore: Function,
     user?: $Exact<GetCurrentUserDMThreadConnectionType>,
     refetch: Function,
+    refetching: boolean,
   },
 };
 
@@ -72,6 +73,8 @@ const DirectMessageThreadsList = (props: Props) => {
         }}
         hasNextPage={pageInfo.hasNextPage}
         fetchMore={props.data.fetchMore}
+        refetch={props.data.refetch}
+        refetching={props.data.refetching}
         loadingIndicator={<Loading />}
       />
     );
