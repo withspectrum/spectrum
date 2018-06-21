@@ -1,12 +1,10 @@
 // @flow
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
-import { Button } from 'react-native';
 import { withMappedNavigationProps } from 'react-navigation-props-mapper';
 import BaseStack from './BaseStack';
 import DirectMessages from '../DirectMessages';
 import DirectMessageThread from '../DirectMessageThread';
-import DirectMessageComposer from '../DirectMessageComposer';
 import DirectMessageThreadDetail from '../DirectMessageThreadDetail';
 import Info from './headerActions/Info';
 import Compose from './headerActions/Compose';
@@ -55,29 +53,4 @@ const DMStack = createStackNavigator(
   }
 );
 
-const ModalStack = createStackNavigator(
-  {
-    DirectMessages: {
-      screen: withMappedNavigationProps(DMStack),
-      // We don't want to show two headers, so we hide the header of the second stack
-      navigationOptions: {
-        header: null,
-      },
-    },
-    DirectMessageComposer: {
-      screen: withMappedNavigationProps(DirectMessageComposer),
-      navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-        headerTitle: navigation.getParam('title', 'New Message'),
-        headerLeft: ({ onPress }) => (
-          <Button onPress={onPress} title="Cancel" />
-        ),
-      }),
-    },
-  },
-  {
-    mode: 'modal',
-    initialRouteName: 'DirectMessages',
-  }
-);
-
-export default ModalStack;
+export default DMStack;

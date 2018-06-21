@@ -2,8 +2,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from 'react-navigation';
 import theme from '../../../shared/theme';
-
-// Stacks for the individual views
 import HomeStack from './HomeStack';
 import ProfileStack from './ProfileStack';
 import NotificationsStack from './NotificationsStack';
@@ -15,29 +13,19 @@ import {
   MessageIcon,
   NotificationIcon,
   ProfileIcon,
-} from './style';
+} from './Icons';
 
 const shouldRenderTabBar = navigation => {
   let showTabbar = true;
 
   const { routes } = navigation.state;
-  const nonTabbarRoutes = ['Thread', 'ThreadDetail', 'DirectMessageThread'];
-  const thisRoute = routes[0];
+  const nonTabbarRoutes = ['Thread', 'DirectMessageThread'];
 
-  if (!thisRoute.routes) {
-    if (nonTabbarRoutes.indexOf(routes[0].routeName) >= 0) {
+  routes.forEach(route => {
+    if (nonTabbarRoutes.indexOf(route.routeName) >= 0) {
       showTabbar = false;
     }
-  }
-
-  const subRoutes = thisRoute.routes;
-  if (subRoutes && subRoutes.length > 0) {
-    subRoutes.forEach(route => {
-      if (nonTabbarRoutes.indexOf(route.routeName) >= 0) {
-        showTabbar = false;
-      }
-    });
-  }
+  });
 
   return showTabbar;
 };
