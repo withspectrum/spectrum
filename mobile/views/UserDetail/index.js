@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Share } from 'react-native';
+import { Share, ScrollView } from 'react-native';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import {
@@ -72,7 +72,7 @@ class UserDetail extends React.Component<Props> {
 
     if (user) {
       return (
-        <React.Fragment>
+        <ScrollView>
           {user.communityConnection.edges &&
             user.communityConnection.edges.length > 0 && (
               <React.Fragment>
@@ -128,7 +128,7 @@ class UserDetail extends React.Component<Props> {
 
           <ListSectionDivider />
           <ListSectionDivider />
-        </React.Fragment>
+        </ScrollView>
       );
     }
 
