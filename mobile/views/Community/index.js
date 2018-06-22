@@ -13,6 +13,7 @@ import { ThreadListItem } from '../../components/Lists';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
 import Loading from '../../components/Loading';
 import { track, events, transformations } from '../../utils/analytics';
+import JoinButton from './JoinButton';
 
 import {
   Wrapper,
@@ -49,7 +50,7 @@ const RemoteThreadItem = compose(getThreadById, withNavigation)(
         thread={data.thread}
         onPressHandler={() =>
           navigation.navigate({
-            routeName: `Thread`,
+            routeName: 'Thread',
             key: data.thread.id,
             params: { id: data.thread.id },
           })
@@ -132,6 +133,8 @@ class Community extends Component<Props> {
                 <ProfileDetailsContainer>
                   <Name>{community.name}</Name>
                   <Description>{community.description}</Description>
+
+                  <JoinButton community={community} />
                 </ProfileDetailsContainer>
 
                 <ThreadFeedDivider />

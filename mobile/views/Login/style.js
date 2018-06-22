@@ -2,54 +2,19 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { ScrollView } from 'react-native';
-import TouchableOpacity from '../TouchableOpacity';
+import TouchableOpacity from '../../components/TouchableOpacity';
 import { Svg } from 'expo';
 const { Path, G } = Svg;
 import theme from '../../../shared/theme';
-import Anchor from '../Anchor';
+import { ThreadAnchor } from '../../components/Anchor';
 
-export const Container = (props: any) => {
-  const Container = styled.View`
-    padding: 32px 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `;
-
-  return (
-    <ScrollView>
-      <Container>{props.children}</Container>
-    </ScrollView>
-  );
-};
-
-export const Emoji = () => (
-  <Svg width="64" height="64" viewBox="0 0 32 32">
-    <G>
-      <Path
-        fill={theme.text.alt}
-        fillRule="evenodd"
-        d="M26,16c0,5.523 -4.477,10 -10,10c-5.523,0 -10,-4.477 -10,-10c0,-5.523 4.477,-10 10,-10c5.523,0 10,4.477 10,10Zm2,0c0,6.627 -5.373,12 -12,12c-6.627,0 -12,-5.373 -12,-12c0,-6.627 5.373,-12 12,-12c6.627,0 12,5.373 12,12Zm-17.5,0c0.829,0 1.5,-0.672 1.5,-1.5c0,-0.828 -0.671,-1.5 -1.5,-1.5c-0.829,0 -1.5,0.672 -1.5,1.5c0,0.828 0.671,1.5 1.5,1.5Zm12.5,-1.5c0,0.828 -0.671,1.5 -1.5,1.5c-0.829,0 -1.5,-0.672 -1.5,-1.5c0,-0.828 0.671,-1.5 1.5,-1.5c0.829,0 1.5,0.672 1.5,1.5Zm-6.999,8c2.45,0 4.534,-1.715 5,-4c0.232,-1.14 -3,-1.5 -5,-1.5c-2,0 -5.259,0.231 -5,1.5c0.466,2.285 2.549,4 5,4Zm2,-2c0,0 -0.896,0.5 -2,0.5c-1.105,0 -2,-0.5 -2,-0.5c0,0 0.895,-1 2,-1c1.104,0 2,1 2,1Z"
-      />
-    </G>
-  </Svg>
-);
-
-export const Title = styled.Text`
-  color: ${props => props.theme.text.default};
-  font-size: 40px;
-  font-weight: 900;
-  text-align: center;
-`;
-
-export const Subtitle = styled.Text`
-  color: ${props => props.theme.text.alt};
-  font-weight: 500;
-  font-size: 16px;
-  margin-top: 16px;
-  margin-bottom: 16px;
-  text-align: center;
-  padding: 0px 32px;
+export const Container = styled(ScrollView).attrs({
+  alignItems: 'center',
+  justifyContent: 'center',
+})`
+  flex: 1;
+  padding: 72px 16px;
+  background: ${props => props.theme.bg.default};
 `;
 
 type SigninButtonProps = {
@@ -57,19 +22,20 @@ type SigninButtonProps = {
   children: React$Node,
   onPress: Function,
 };
+
 const SigninButtonContainer = styled(TouchableOpacity)`
   background-color: ${props => props.color};
-  width: 220px;
-  height: 51px;
+  flex: 1;
+  height: 48px;
   display: flex;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   border-radius: 8px;
-  padding: 8px;
+  padding: 8px 16px 8px 8px;
   margin-top: 16px;
-  padding-right: 16px;
 `;
+
 const SigninButton = ({ color, children, onPress }: SigninButtonProps) => {
   return (
     <SigninButtonContainer onPress={onPress} color={color}>
@@ -82,16 +48,17 @@ SigninButton.Container = styled.View`
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
+  flex: 1;
 `;
 
 SigninButton.Title = styled.Text`
   flex-grow: 1;
-  font-size: 15px;
-  font-weight: 600;
-  color: #fff;
-  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: ${props => props.theme.text.reverse};
+  margin-left: 16px;
 `;
 
 type IconProps = {|
@@ -166,11 +133,13 @@ export const GithubButton = ({ onPress }: SocialButtonProps) => {
 export const CodeOfConduct = styled.Text`
   padding-top: 32px;
   color: ${props => props.theme.text.alt};
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
+  line-height: 20px;
 `;
 
-export const Link = styled(Anchor)`
-  color: rgb(68, 0, 204);
+export const Link = styled(ThreadAnchor)`
+  color: ${props => props.theme.brand.alt};
   font-weight: 600;
+  font-size: 16px;
 `;

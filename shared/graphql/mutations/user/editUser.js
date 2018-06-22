@@ -3,9 +3,16 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import userInfoFragment from '../../fragments/user/userInfo';
 import type { UserInfoType } from '../../fragments/user/userInfo';
+import type { EditUserInput } from '../../../../api/models/user';
 
 export type EditUserType = {
   ...$Exact<UserInfoType>,
+};
+
+export type EditUserProps = {
+  editUser: (
+    input: $PropertyType<EditUserInput, 'input'>
+  ) => Promise<EditUserType>,
 };
 
 export const editUserMutation = gql`

@@ -34,6 +34,7 @@ export type GlyphTypes =
   | 'google'
   | 'home'
   | 'idea'
+  | 'info'
   | 'inserter'
   | 'like'
   | 'like-fill'

@@ -12,7 +12,7 @@ export const Container = styled.View`
   left: 0;
   right: 0;
   width: 100%;
-  height: 48px;
+  height: 40px;
   z-index: 1;
   overflow: hidden;
 `;
@@ -48,7 +48,7 @@ export const ViewForwardContainer = styled.View`
 export const ToastContainer = styled(Animated.View)`
   display: flex;
   flex: 1;
-  height: 48px;
+  height: 40px;
   width: ${width + 32}px;
   padding: 0 16px;
 `;

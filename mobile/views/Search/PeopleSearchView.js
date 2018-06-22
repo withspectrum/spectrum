@@ -10,7 +10,6 @@ import viewNetworkHandler, {
 import Loading from '../../components/Loading';
 import { SearchView } from './style';
 import { UserListItem } from '../../components/Lists';
-import type { NavigationProps } from 'react-navigation';
 import InfiniteList from '../../components/InfiniteList';
 import { FullscreenNullState } from '../../components/NullStates';
 
@@ -19,8 +18,11 @@ type Props = {
     search: SearchUsersType,
   },
   ...$Exact<ViewNetworkHandlerProps>,
-  navigation: NavigationProps,
+  onPress: (userId: string) => any,
   queryString: ?string,
+  style: Object,
+  keyboardShouldPersistTaps?: string,
+  filter?: Function,
 };
 
 class UsersSearchView extends Component<Props> {
@@ -33,39 +35,39 @@ class UsersSearchView extends Component<Props> {
   }
 
   render() {
-    const { isLoading, data, navigation, hasError } = this.props;
+    const {
+      isLoading,
+      data,
+      hasError,
+      onPress,
+      keyboardShouldPersistTaps = 'never',
+      filter,
+    } = this.props;
 
     if (data.search) {
       const { search: { searchResultsConnection } } = data;
       const hasResults =
         searchResultsConnection && searchResultsConnection.edges.length > 0;
-      const results = hasResults
+      let results = hasResults
         ? searchResultsConnection.edges.map(e => e && e.node)
         : [];
 
+      if (results && results.length > 0 && filter) {
+        results = filter(results);
+      }
+
       return (
-        <SearchView>
-          {!hasResults && (
-            <FullscreenNullState
-              title={'No results found'}
-              subtitle={'Try searching for something else?'}
-              icon={'person'}
-            />
-          )}
+        <SearchView style={this.props.style}>
+          {!hasResults && <FullscreenNullState title={''} subtitle={''} />}
           {hasResults && (
             <InfiniteList
               data={results}
+              keyboardShouldPersistTaps={keyboardShouldPersistTaps}
               renderItem={({ item }) => (
                 <UserListItem
                   key={item.id}
                   user={item}
-                  onPressHandler={() =>
-                    navigation.navigate({
-                      routeName: `User`,
-                      key: item.id,
-                      params: { id: item.id },
-                    })
-                  }
+                  onPressHandler={() => onPress(item.id)}
                 />
               )}
               loadingIndicator={<Loading />}
@@ -77,17 +79,17 @@ class UsersSearchView extends Component<Props> {
 
     if (isLoading) {
       return (
-        <SearchView>
+        <SearchView style={this.props.style}>
           <Loading />
         </SearchView>
       );
     }
 
     if (hasError) {
-      return <FullscreenNullState />;
+      return <FullscreenNullState style={this.props.style} />;
     }
 
-    return <SearchView />;
+    return <SearchView style={this.props.style} />;
   }
 }
 
