@@ -30,7 +30,7 @@ import { FullscreenNullState } from '../../components/NullStates';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
-  mutate: (token: any) => Promise<any>,
+  subscribeExpoPush: (token: any) => Promise<any>,
   authentication: AuthenticationState,
   navigation: NavigationProps,
   currentUser: GetUserType,
@@ -101,12 +101,30 @@ class Notifications extends Component<Props, State> {
       data = { decision: false, timestamp: new Date() };
     } else {
       data = { decision: true, timestamp: new Date() };
-      this.props.mutate(token);
+      this.setState({
+        pushNotifications: data,
+      });
+      this.props
+        .subscribeExpoPush(token)
+        .then(res => {
+          if (res) {
+            return SecureStore.setItemAsync(
+              'pushNotificationsDecision',
+              JSON.stringify(data)
+            );
+          } else {
+            this.setState({
+              pushNotifications: null,
+            });
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          this.setState({
+            pushNotifications: null,
+          });
+        });
     }
-    this.setState({
-      pushNotifications: data,
-    });
-    SecureStore.setItemAsync('pushNotificationsDecision', JSON.stringify(data));
   };
 
   subscribe = () => {

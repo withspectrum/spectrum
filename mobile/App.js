@@ -1,4 +1,5 @@
 // @flow
+import 'string.fromcodepoint';
 import Sentry from 'sentry-expo';
 import React, { Fragment } from 'react';
 import { StatusBar } from 'react-native';
@@ -13,7 +14,7 @@ import { initStore } from './reducers/store';
 import Toasts from './components/Toasts';
 import theme from '../shared/theme';
 import { createClient } from '../shared/graphql';
-import Login from './components/Login';
+import Login from './views/Login';
 import TabBar from './views/TabBar';
 import { SetUsername, ExploreCommunities } from './views/UserOnboarding';
 import { authenticate } from './actions/authentication';
@@ -100,7 +101,7 @@ class App extends React.Component<{}, State> {
                   <Login />
                 ) : (
                   <Query query={getCurrentUserCommunityConnectionQuery}>
-                    {({ data: { networkStatus, user }, refetch }) => {
+                    {({ data: { user }, networkStatus, refetch }) => {
                       if (networkStatus === 1 || networkStatus === 2)
                         return null;
                       if (!user) return <Login />;
