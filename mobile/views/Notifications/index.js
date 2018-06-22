@@ -19,7 +19,6 @@ import getPushNotificationToken from '../../utils/get-push-notification-token';
 import type { State as ReduxState } from '../../reducers';
 import type { AuthenticationState } from '../../reducers/authentication';
 import { parseNotification } from './parseNotification';
-import { deduplicateChildren } from '../../utils/deduplicate-children';
 import { NotificationListItem } from '../../components/Lists';
 import { withCurrentUser } from '../../components/WithCurrentUser';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
@@ -166,9 +165,8 @@ class Notifications extends Component<Props, State> {
     } = this.props;
     const { pushNotifications } = this.state;
     if (notifications && currentUser) {
-      const edges = notifications.edges.map(edge => edge && edge.node);
-      const unique = deduplicateChildren(edges, 'id');
-      const sorted = sortByDate(unique, 'modifiedAt', 'desc');
+      const nodes = notifications.edges.map(edge => edge && edge.node);
+      const sorted = sortByDate(nodes, 'modifiedAt', 'desc');
       const parsed = sorted.map(n => parseNotification(n)).filter(Boolean);
 
       return (
@@ -194,7 +192,8 @@ class Notifications extends Component<Props, State> {
             loadingIndicator={<Loading />}
             hasNextPage={notifications.pageInfo.hasNextPage}
             fetchMore={this.fetchMore}
-            refetching={this.props.isRefetching}
+            isFetchingMore={this.props.isFetchingMore}
+            isRefetching={this.props.isRefetching}
             refetch={this.props.data.refetch}
           />
         </Wrapper>

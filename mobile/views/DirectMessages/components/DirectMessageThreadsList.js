@@ -20,8 +20,8 @@ import { FullscreenNullState } from '../../../components/NullStates';
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
   navigation: NavigationProps,
+  fetchMore: Function,
   data: {
-    fetchMore: Function,
     user?: $Exact<GetCurrentUserDMThreadConnectionType>,
     refetch: Function,
     refetching: boolean,
@@ -32,10 +32,18 @@ const DirectMessageThreadsList = (props: Props) => {
   const { isLoading, hasError, data: { user }, navigation } = props;
   if (user) {
     const { pageInfo, edges } = user.directMessageThreadsConnection;
+    const nodes = edges.map(e => e && e.node);
+
     return (
       <InfiniteList
-        data={edges}
-        renderItem={({ item: { node: thread } }) => {
+        hasNextPage={pageInfo.hasNextPage}
+        fetchMore={props.fetchMore}
+        isFetchingMore={props.isFetchingMore}
+        refetch={props.data.refetch}
+        isRefetching={props.isRefetching}
+        loadingIndicator={<Loading />}
+        data={nodes}
+        renderItem={({ item: thread }) => {
           const me = thread.participants.find(
             ({ userId }) => userId === user.id
           );
@@ -71,11 +79,6 @@ const DirectMessageThreadsList = (props: Props) => {
             </ErrorBoundary>
           );
         }}
-        hasNextPage={pageInfo.hasNextPage}
-        fetchMore={props.data.fetchMore}
-        refetch={props.data.refetch}
-        refetching={props.data.refetching}
-        loadingIndicator={<Loading />}
       />
     );
   }
