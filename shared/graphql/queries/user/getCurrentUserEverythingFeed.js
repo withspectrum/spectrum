@@ -54,10 +54,11 @@ const getCurrentUserEverythingOptions = {
       user,
       networkStatus,
       refetch,
-      threads: user ? user.everything.edges : '',
+      threads: user && user.everything ? user.everything.edges : '',
       feed: 'everything',
-      threadConnection: user ? user.everything : null,
-      hasNextPage: user ? user.everything.pageInfo.hasNextPage : false,
+      threadConnection: user && user.everything ? user.everything : null,
+      hasNextPage:
+        user && user.everything ? user.everything.pageInfo.hasNextPage : false,
       subscribeToUpdatedThreads: () => {
         return subscribeToMore({
           document: subscribeToUpdatedThreads,

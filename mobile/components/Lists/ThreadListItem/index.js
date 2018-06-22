@@ -208,10 +208,10 @@ class ThreadListItemHandlers extends Component<Props> {
 
     if (action === MESSAGE_AUTHOR) {
       return navigation.navigate({
-        routeName: 'User',
+        routeName: 'DirectMessageComposer',
         key: thread.author.user.id,
         params: {
-          id: thread.author.user.id,
+          presetUserIds: [thread.author.user.id],
         },
       });
     }
@@ -269,6 +269,9 @@ class ThreadListItemHandlers extends Component<Props> {
       }
       case 'Thread': {
         return navigation.goBack();
+      }
+      case 'ThreadDetail': {
+        return navigation.pop(2);
       }
       default: {
         return () => {};

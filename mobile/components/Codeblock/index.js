@@ -1,15 +1,28 @@
 // @flow
 import React from 'react';
-import Text from '../Text';
+import {
+  CodeBlockView,
+  InlineCodeView,
+  InlineCodeText,
+  CodeText,
+} from './style';
 
 type Props = {
   children: string,
 };
 
-export default (props: Props) => {
+export const InlineCodeBlock = (props: Props) => {
   return (
-    <Text fontFamily="monospace" type="body">
-      {props.children}
-    </Text>
+    <InlineCodeView>
+      <InlineCodeText fontFamily="monospace">{props.children}</InlineCodeText>
+    </InlineCodeView>
+  );
+};
+
+export const CodeBlock = (props: Props) => {
+  return (
+    <CodeBlockView>
+      <CodeText fontFamily="monospace">{props.children}</CodeText>
+    </CodeBlockView>
   );
 };

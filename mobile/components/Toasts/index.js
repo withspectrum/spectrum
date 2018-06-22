@@ -136,7 +136,9 @@ class Toasts extends React.Component<Props, State> {
             icon={activeToast.icon ? activeToast.icon : null}
             type={activeToast.type}
             message={activeToast.message}
-            onPressHandler={activeToast.onPressHandler}
+            onPressHandler={
+              activeToast.onPressHandler ? activeToast.onPressHandler : null
+            }
           />
         </ToastContainer>
       </Container>

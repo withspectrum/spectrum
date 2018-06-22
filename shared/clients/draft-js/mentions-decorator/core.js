@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { MENTIONS } from '../../../regexps';
-import type { Element, ComponentType, Node } from 'react';
+import type { ComponentType, Node } from 'react';
 import type { ContentBlock } from 'draft-js/lib/ContentBlock';
 
 export type MentionComponentPropsType = {

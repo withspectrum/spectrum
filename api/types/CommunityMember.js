@@ -20,6 +20,10 @@ const CommunityMember = /* GraphQL */ `
     communityId: ID!
   }
 
+  input AddCommunityMembersInput {
+    communityIds: [ID!]
+  }
+
   input RemoveCommunityMemberInput {
     communityId: ID!
   }
@@ -69,6 +73,7 @@ const CommunityMember = /* GraphQL */ `
 
   extend type Mutation {
     addCommunityMember(input: AddCommunityMemberInput!): Community
+    addCommunityMembers(input: AddCommunityMembersInput!): [Community]
     addCommunityMemberWithToken(input: AddCommunityMemberWithTokenInput!): Community
     addPendingCommunityMember(input: AddPendingCommunityMemberInput!): Community
     removePendingCommunityMember(input: RemovePendingCommunityMemberInput!): Community

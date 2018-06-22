@@ -18,6 +18,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-26.0.0.tar.gz",
     "react-native-gesture-handler": "^1.0.1",
     "react-native-keyboard-spacer": "^0.4.1",
+    "react-native-picker-select": "^3.1.1",
     "react-native-tab-view": "^0.0.78",
     "react-native-typography": "^1.2.1",
     "react-navigation": "^2.2.4",
@@ -25,7 +26,10 @@
     "recompose": "^0.26.0",
     "redraft": "^0.10.0",
     "sentry-expo": "^1.7.0",
-    "styled-components": "^3.3.0"
+    "slugg": "^1.2.1",
+    "string.fromcodepoint": "^0.2.1",
+    "styled-components": "^3.3.0",
+    "throttle-debounce": "^2.0.0"
   },
   "devDependencies": {
     "cross-env": "^5.1.1",

@@ -6,7 +6,6 @@ export const FullscreenNullStateWrapper = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  background: ${props => props.theme.bg.default};
 `;
 
 export const FullscreenNullStateContent = styled.View`
