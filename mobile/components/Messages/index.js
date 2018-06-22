@@ -8,7 +8,6 @@ import InfiniteList from '../InfiniteList';
 import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
 import { convertTimestampToDate } from '../../../shared/time-formatting';
 import { withCurrentUser } from '../../components/WithCurrentUser';
-import { deduplicateChildren } from '../../utils/deduplicate-children';
 import { UnseenRoboText, TimestampRoboText } from './RoboText';
 import AuthorAvatar from './AuthorAvatar';
 import AuthorName from './AuthorName';
@@ -69,15 +68,15 @@ class Messages extends Component<Props> {
       hasError,
       navigation,
       currentUser,
+      isFetchingMore,
       inverted = false,
       ...flatListProps
     } = this.props;
 
     if (data.messageConnection && data.messageConnection.edges.length > 0) {
       const nodes = data.messageConnection.edges.map(e => e && e.node);
-      const unique = deduplicateChildren(nodes, 'id');
 
-      let messages = sortAndGroupMessages(unique.slice().filter(Boolean));
+      let messages = sortAndGroupMessages(nodes.slice().filter(Boolean));
 
       if (inverted) {
         messages = messages.reverse();
@@ -91,6 +90,7 @@ class Messages extends Component<Props> {
           data={messages}
           inverted={inverted}
           fetchMore={this.fetchMore}
+          isFetchingMore={isFetchingMore}
           hasNextPage={this.props.data.hasNextPage}
           loadingIndicator={
             <View style={{ marginBottom: 32 }}>
