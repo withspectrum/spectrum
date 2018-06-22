@@ -80,7 +80,6 @@ class ThreadsList extends React.Component<Props, State> {
           hasMore={hasNextPage}
           loader={<LoadingDM />}
           useWindow={false}
-          initialLoad={false}
           scrollElement={scrollElement}
           threshold={30}
           className={'scroller-for-community-dm-threads-list'}
