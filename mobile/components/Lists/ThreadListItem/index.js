@@ -215,7 +215,7 @@ class ThreadListItemHandlers extends Component<Props> {
         routeName: 'DirectMessageComposer',
         key: thread.author.user.id,
         params: {
-          presetUserIds: [thread.author.user.id],
+          presetUserId: thread.author.user.id,
         },
       });
     }

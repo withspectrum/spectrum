@@ -21,9 +21,6 @@ const DMStack = createStackNavigator(
             onPress={() =>
               navigation.navigate({
                 routeName: 'DirectMessageComposer',
-                params: {
-                  entryPoint: 'DirectMessages',
-                },
               })
             }
           />
