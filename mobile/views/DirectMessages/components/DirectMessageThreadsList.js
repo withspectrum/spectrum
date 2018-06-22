@@ -3,7 +3,6 @@ import React from 'react';
 import compose from 'recompose/compose';
 import InfiniteList from '../../../components/InfiniteList';
 import Text from '../../../components/Text';
-import { deduplicateChildren } from '../../../utils/deduplicate-children';
 import ViewNetworkHandler, {
   type ViewNetworkHandlerProps,
 } from '../../../components/ViewNetworkHandler';
@@ -34,11 +33,16 @@ const DirectMessageThreadsList = (props: Props) => {
   if (user) {
     const { pageInfo, edges } = user.directMessageThreadsConnection;
     const nodes = edges.map(e => e && e.node);
-    const unique = deduplicateChildren(nodes, 'id');
 
     return (
       <InfiniteList
-        data={unique}
+        hasNextPage={pageInfo.hasNextPage}
+        fetchMore={props.fetchMore}
+        isFetchingMore={props.isFetchingMore}
+        refetch={props.data.refetch}
+        isRefetching={props.isRefetching}
+        loadingIndicator={<Loading />}
+        data={nodes}
         renderItem={({ item: thread }) => {
           const me = thread.participants.find(
             ({ userId }) => userId === user.id
@@ -75,11 +79,6 @@ const DirectMessageThreadsList = (props: Props) => {
             </ErrorBoundary>
           );
         }}
-        hasNextPage={pageInfo.hasNextPage}
-        fetchMore={props.fetchMore}
-        refetch={props.data.refetch}
-        refetching={props.data.refetching}
-        loadingIndicator={<Loading />}
       />
     );
   }
