@@ -164,10 +164,14 @@ export const LikeCount = (props: LikeCountProps) => {
   const { active, thread } = props;
   const { count } = thread.reactions;
 
-  return (
-    <LikeCountWrapper active={active}>
-      <Icon glyph={'thumbsup-fill'} size={24} />
-      <CurrentCount>{count}</CurrentCount>
-    </LikeCountWrapper>
-  );
+  if (count > 0) {
+    return (
+      <LikeCountWrapper active={active}>
+        <Icon glyph={'thumbsup-fill'} size={24} />
+        <CurrentCount>{count}</CurrentCount>
+      </LikeCountWrapper>
+    );
+  } else {
+    return null;
+  }
 };

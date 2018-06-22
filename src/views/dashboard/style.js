@@ -432,7 +432,7 @@ export const ThreadTitle = styled.h3`
   font-weight: 500;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.default};
-  margin: 12px 16px 4px;
+  margin: 12px 16px 0;
   max-width: 100%;
   line-height: 1.4;
 `;
@@ -455,64 +455,24 @@ export const AttachmentsContainer = styled.div`
 export const ThreadMeta = styled.div`
   align-self: stretch;
   display: flex;
-  margin: 10px 16px 16px;
+  margin: 8px 16px 16px;
   justify-content: flex-start;
 `;
 
-export const FacepileContainer = styled.div`
+export const ThreadActivityWrapper = styled.div`
   display: flex;
-  margin-right: 8px;
-  margin-left: 8px;
-  pointer-events: auto;
-  order: 1;
-`;
-
-export const ParticipantHead = styled.span`
-  position: relative;
-  margin-left: -8px;
-  border-radius: 24px;
-  max-width: 24px;
-  max-height: 24px;
-  pointer-events: auto;
-  box-shadow: 0 0 0 2px
-    ${props => (props.active ? props.theme.brand.alt : props.theme.bg.default)};
-  transform: translateY(0);
-  transition: transform 0.2s ease-in-out;
-  ${Tooltip} &:hover {
-    transform: translateY(-4px);
-    transition: transform 0.2s ease-in-out;
-  }
-`;
-
-export const EmptyParticipantHead = styled.span`
-  background: ${props =>
-    props.active ? props.theme.bg.default : props.theme.bg.wash};
-  display: flex;
+  flex: none;
   align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 600;
-  color: ${props => props.theme.text.alt};
-  box-shadow: 0 0 0 2px
-    ${props => (props.active ? props.theme.brand.alt : props.theme.bg.default)};
-  width: 24px;
-  height: 24px;
-  max-width: 24px;
-  max-height: 24px;
-  pointer-events: auto;
-  position: relative;
-  margin-left: -8px;
-  border-radius: 24px;
-  transform: translateY(0);
-  transition: transform 0.2s ease-in-out;
-
-  &:hover {
-    transform: translateY(-4px);
-    transition: transform 0.2s ease-in-out;
-  }
 `;
 
-export const StatusText = styled.div`
+export const ThreadStatusWrapper = styled(ThreadActivityWrapper)`
+  flex: auto;
+  justify-content: flex-end;
+  color: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.text.alt};
+`;
+
+export const CountWrapper = styled.div`
   display: flex;
   flex: none;
   font-size: 14px;
@@ -537,7 +497,7 @@ export const StatusText = styled.div`
   }
 `;
 
-const StatusPill = styled(StatusText)`
+const StatusPill = styled(CountWrapper)`
   color: ${props =>
     props.active ? props.theme.brand.alt : props.theme.text.reverse};
   background: ${props =>
@@ -558,7 +518,7 @@ export const NewThreadPill = styled(StatusPill)`
     props.active ? props.theme.text.reverse : props.theme.success.alt};
 `;
 
-export const NewMessagePill = styled(StatusText)`
+export const NewMessagePill = styled(CountWrapper)`
   color: ${props =>
     props.active ? props.theme.brand.alt : props.theme.warn.alt};
 `;

@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Icon from 'src/components/icons';
 import { LikeCount } from 'src/components/threadLikes';
-import Facepile from './facepile';
 import truncate from 'shared/truncate';
 import ThreadCommunityInfo, { WaterCoolerPill } from './threadCommunityInfo';
 import { changeActiveThread } from 'src/actions/dashboardFeed';
@@ -16,14 +15,11 @@ import {
   InboxLinkWrapper,
   InboxThreadContent,
   ThreadTitle,
-  AttachmentsContainer,
   ThreadMeta,
-  StatusText,
+  ThreadActivityWrapper,
+  ThreadStatusWrapper,
+  CountWrapper,
   NewThreadPill,
-  NewMessagePill,
-  LockedTextPill,
-  MiniLinkPreview,
-  EllipsisText,
 } from '../style';
 import { ErrorBoundary } from 'src/components/error';
 
@@ -41,79 +37,105 @@ type Props = {
   pinnedThreadId?: ?string,
 };
 
-class InboxThread extends React.Component<Props> {
-  generatePillOrMessageCount = () => {
-    const {
-      data: {
-        participants,
-        isLocked,
-        currentUserLastSeen,
-        lastActive,
-        messageCount,
-        createdAt,
-        channel,
-        community,
-      },
-      data,
-      active,
-    } = this.props;
+const MessageCount = props => {
+  const {
+    thread: {
+      messageCount,
+      createdAt,
+      currentUserLastSeen,
+      lastActive,
+      channel,
+      community,
+    },
+    active,
+  } = props;
 
-    if (!data) return null;
+  const now = new Date().getTime() / 1000;
+  const createdAtTime = new Date(createdAt).getTime() / 1000;
+  const lastActiveTime = lastActive && new Date(lastActive).getTime() / 1000;
+  const createdYesterday = now - createdAtTime > 86400;
+  const newMessagesSinceLastWeek =
+    lastActiveTime && now - lastActiveTime > 86400 * 7;
+  const newMessagesSinceLastViewed =
+    currentUserLastSeen && lastActive && currentUserLastSeen < lastActive;
 
-    const isChannelMember = channel.channelPermissions.isMember;
-    const isCommunityMember = community.communityPermissions.isMember;
-
-    const now = new Date().getTime() / 1000;
-    const createdAtTime = new Date(createdAt).getTime() / 1000;
-    const lastActiveTime = lastActive && new Date(lastActive).getTime() / 1000;
-
-    const defaultMessageCountString = (
-      <StatusText offset={participants.length} active={active}>
-        <Icon glyph="message-fill" size={24} />
-        <span>{messageCount}</span>
-      </StatusText>
+  if (currentUserLastSeen && !createdYesterday) {
+    return (
+      <NewThreadPill active={active}>
+        <Icon glyph="private-fill" size={24} />
+        New thread!
+      </NewThreadPill>
     );
+  }
 
-    if (!isChannelMember || !isCommunityMember) {
-      return defaultMessageCountString;
-    }
+  return (
+    <CountWrapper
+      active={active}
+      newMessages={newMessagesSinceLastViewed && newMessagesSinceLastWeek}
+    >
+      <Icon glyph="message-fill" size={24} />
+      <span>{messageCount}</span>
+    </CountWrapper>
+  );
+};
 
-    if (isLocked) {
-      return (
-        <LockedTextPill offset={participants.length} active={active}>
-          Locked
-        </LockedTextPill>
-      );
-    }
+const ThreadActivity = props => {
+  const { thread, active } = props;
 
-    if (!currentUserLastSeen) {
-      if (now - createdAtTime > 86400) {
-        return defaultMessageCountString;
-      }
+  if (!thread) return null;
 
-      return (
-        <NewThreadPill offset={participants.length} active={active}>
-          New thread!
-        </NewThreadPill>
-      );
-    }
+  return (
+    <ThreadActivityWrapper>
+      <MessageCount thread={thread} active={active} />
+      <LikeCount thread={thread} active={active} />
+    </ThreadActivityWrapper>
+  );
+};
 
-    if (currentUserLastSeen && lastActive && currentUserLastSeen < lastActive) {
-      if (active) return defaultMessageCountString;
+const ThreadStatus = props => {
+  const {
+    thread: { id, isLocked, community, channel },
+    thread,
+    active,
+  } = props;
+  const isPinned = id === community.pinnedThreadId;
+  if (!thread) return null;
 
-      if (lastActiveTime && now - lastActiveTime > 86400 * 7) {
-        return defaultMessageCountString;
-      }
+  return (
+    <ThreadStatusWrapper active={active}>
+      {console.log('thread:', thread)}
+      {isPinned && (
+        <Icon
+          size={24}
+          className={'pinned'}
+          glyph={'pin-fill'}
+          tipText={`Pinned in ${community.name}`}
+          tipLocation={'top-left'}
+        />
+      )}
+      {(community.isPrivate || channel.isPrivate) && (
+        <Icon
+          size={24}
+          className={'private'}
+          glyph={'private-fill'}
+          tipText="Private"
+          tipLocation={'top-left'}
+        />
+      )}
+      {isLocked && (
+        <Icon
+          size={24}
+          className={'locked'}
+          glyph={'private'}
+          tipText="Locked"
+          tipLocation={'top-left'}
+        />
+      )}
+    </ThreadStatusWrapper>
+  );
+};
 
-      return (
-        <NewMessagePill offset={participants.length} active={active} newMessage>
-          New messages!
-        </NewMessagePill>
-      );
-    }
-
-    return defaultMessageCountString;
-  };
+class InboxThread extends React.Component<Props> {
   render() {
     const {
       data: { attachments },
@@ -124,7 +146,6 @@ class InboxThread extends React.Component<Props> {
       hasActiveChannel,
       viewContext,
     } = this.props;
-    const attachmentsExist = attachments && attachments.length > 0;
     const isPinned = data.id === this.props.pinnedThreadId;
 
     if (data.watercooler) {
@@ -171,35 +192,10 @@ class InboxThread extends React.Component<Props> {
             <ThreadTitle active={active}>
               {truncate(data.content.title, 80)}
             </ThreadTitle>
-
-            <ErrorBoundary fallbackComponent={null}>
-              {attachmentsExist &&
-                attachments
-                  .filter(att => att && att.attachmentType === 'linkPreview')
-                  .map(att => {
-                    if (!att) return null;
-                    const attData = JSON.parse(att.data);
-                    const url = attData.trueUrl || attData.url;
-                    if (!url) return null;
-
-                    return (
-                      <AttachmentsContainer active={active} key={url}>
-                        <MiniLinkPreview
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Icon glyph="link" size={18} />
-                          <EllipsisText>{url}</EllipsisText>
-                        </MiniLinkPreview>
-                      </AttachmentsContainer>
-                    );
-                  })}
-            </ErrorBoundary>
             <ThreadMeta>
               <ErrorBoundary fallbackComponent={null}>
-                {this.generatePillOrMessageCount()}
-                <LikeCount thread={data} active={active} />
+                <ThreadActivity thread={data} active={active} />
+                <ThreadStatus thread={data} active={active} />
               </ErrorBoundary>
             </ThreadMeta>
           </InboxThreadContent>
@@ -214,12 +210,12 @@ export default compose(connect(), withRouter)(InboxThread);
 class WatercoolerThreadPure extends React.Component<Props> {
   render() {
     const {
-      data: { participants, author, community, messageCount, id },
+      data: { community, id },
+      data,
       location,
       active,
       viewContext,
     } = this.props;
-    const participantsExist = participants && participants.length > 0;
 
     return (
       <ErrorBoundary fallbackComponent={null}>
@@ -240,29 +236,16 @@ class WatercoolerThreadPure extends React.Component<Props> {
             }
           />
           <InboxThreadContent>
-            <WaterCoolerPill active={active} />
+            <WaterCoolerPill thread={data} active={active} />
             <ThreadTitle active={active}>
               {community.name} Watercooler
             </ThreadTitle>
 
             <ThreadMeta>
-              {(participantsExist || author) && (
-                <ErrorBoundary fallbackComponent={null}>
-                  <Facepile
-                    active={active}
-                    participants={participants}
-                    author={author.user}
-                  />
-                </ErrorBoundary>
-              )}
-
-              {messageCount > 0 && (
-                <StatusText offset={participants.length} active={active}>
-                  {messageCount > 1
-                    ? `${messageCount} messages`
-                    : `${messageCount} message`}
-                </StatusText>
-              )}
+              <ErrorBoundary fallbackComponent={null}>
+                <ThreadActivity thread={data} active={active} />
+                <ThreadStatus thread={data} active={active} />
+              </ErrorBoundary>
             </ThreadMeta>
           </InboxThreadContent>
         </InboxThreadItem>
