@@ -118,8 +118,9 @@ class ThreadFeed extends React.Component<Props, State> {
     const hasThreadsButNoneSelected =
       this.props.data.threads && !this.props.selectedId;
     const justLoadedThreads =
-      (!prevProps.data.threads && this.props.data.threads) ||
-      (prevProps.data.loading && !this.props.data.loading);
+      !mountedWithActiveThread &&
+      ((!prevProps.data.threads && this.props.data.threads) ||
+        (prevProps.data.loading && !this.props.data.loading));
 
     if (
       isDesktop &&
