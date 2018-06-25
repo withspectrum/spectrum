@@ -23,21 +23,24 @@ class DirectMessageComposerContainer extends React.Component<Props> {
 
     return (
       <Query query={getDirectMessageThreadByUserIdQuery} variables={{ userId }}>
-        {({ data, loading, error }) => {
+        {({ data, loading }) => {
           if (loading) {
             return <Loading />;
           }
 
-          if (!data.directMessageThreadByUserId) {
-            return <Composer {...this.props} />;
+          if (
+            data.directMessageThreadByUserId &&
+            data.directMessageThreadByUserId.id
+          ) {
+            return (
+              <DirectMessageThread
+                id={data.directMessageThreadByUserId.id}
+                {...this.props}
+              />
+            );
           }
 
-          return (
-            <DirectMessageThread
-              id={data.directMessageThreadByUserId.id}
-              {...this.props}
-            />
-          );
+          return <Composer {...this.props} />;
         }}
       </Query>
     );
