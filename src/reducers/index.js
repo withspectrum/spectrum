@@ -13,10 +13,8 @@ import threadSlider from './threadSlider';
 import notifications from './notifications';
 import message from './message';
 import connectionStatus from './connectionStatus';
-import type { Reducer } from 'redux';
 
-// Allow dependency injection of extra reducers, we need this for SSR
-const getReducers = (extraReducers: { [key: string]: Reducer<*, *> }) => {
+const getReducers = () => {
   return combineReducers({
     users,
     modals,
@@ -31,7 +29,6 @@ const getReducers = (extraReducers: { [key: string]: Reducer<*, *> }) => {
     notifications,
     connectionStatus,
     message,
-    ...extraReducers,
   });
 };
 

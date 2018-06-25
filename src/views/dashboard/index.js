@@ -52,7 +52,6 @@ const SearchThreadFeed = compose(connect(), searchThreadsQuery)(
 );
 
 type State = {
-  isHovered: boolean,
   activeChannelObject: ?Object,
 };
 
@@ -71,22 +70,7 @@ type Props = {
 
 class Dashboard extends React.Component<Props, State> {
   state = {
-    isHovered: false,
     activeChannelObject: null,
-  };
-
-  setHover = () => {
-    setTimeout(() => {
-      this.setState({
-        isHovered: true,
-      });
-    }, 1000);
-  };
-
-  removeHover = () => {
-    this.setState({
-      isHovered: false,
-    });
   };
 
   setActiveChannelObject = (channel: Object) => {
@@ -116,7 +100,7 @@ class Dashboard extends React.Component<Props, State> {
       everythingFeed: false,
       creatorId: null,
       channelId: activeChannel || null,
-      communityId: activeChannel ? null : activeCommunity || null
+      communityId: activeChannel ? null : activeCommunity || null,
     };
     const { title, description } = generateMetaInfo();
 
@@ -133,7 +117,9 @@ class Dashboard extends React.Component<Props, State> {
       }
 
       // at this point we have succesfully validated a user, and the user has both a username and joined communities - we can show their thread feed!
-      const communities = user.communityConnection.edges.map(c => c && c.node);
+      const communities = user.communityConnection.edges
+        .filter(Boolean)
+        .map(({ node: community }) => community);
       const activeCommunityObject = communities.find(
         c => c && c.id === activeCommunity
       );
