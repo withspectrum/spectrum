@@ -1,6 +1,6 @@
 {
   "name": "Spectrum",
-  "version": "2.4.11",
+  "version": "2.4.12",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "babel-cli": "^6.24.1",
