@@ -208,129 +208,116 @@ class ThreadFeed extends React.Component<Props, State> {
 
   render() {
     const {
-      data: { threads, networkStatus },
+      data: { threads, community },
       selectedId,
       activeCommunity,
       queryString,
+      isLoading,
+      hasError,
     } = this.props;
     const { scrollElement } = this.state;
 
-    // loading state
-    if (networkStatus !== 7 && networkStatus !== 3)
-      return <LoadingThreadFeed />;
+    if (Array.isArray(threads)) {
+      // API returned no threads
+      if (threads.length === 0) {
+        if (queryString) {
+          return <EmptySearchFeed queryString={queryString} />;
+        } else {
+          return <EmptyThreadFeed />;
+        }
+      }
 
-    // error
-    if (networkStatus === 8) return <ErrorThreadFeed />;
+      const threadNodes = threads.slice().map(thread => thread && thread.node);
 
-    // no threads yet
-    if (threads.length === 0 && !queryString) return <EmptyThreadFeed />;
+      let sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
 
-    if (threads.length === 0 && queryString)
-      return <EmptySearchFeed queryString={queryString} />;
+      if (activeCommunity) {
+        sortedThreadNodes = sortedThreadNodes.filter(t => !t.watercooler);
+      }
 
-    const threadNodes = threads
-      .slice()
-      .map(thread => thread && thread.node)
-      .filter(
-        thread =>
-          thread &&
-          (!thread.channel.channelPermissions.isBlocked &&
-            !thread.community.communityPermissions.isBlocked)
-      );
+      // Filter the watercooler and pinned threads from the feed if we're on the community view
+      // since they're automatically shown at the top
+      let filteredThreads = sortedThreadNodes;
+      if (community) {
+        if (community.watercooler && community.watercooler.id) {
+          filteredThreads = filteredThreads.filter(
+            t => t.id !== community.watercooler.id
+          );
+        }
+        if (community.pinnedThread && community.pinnedThread.id) {
+          filteredThreads = filteredThreads.filter(
+            t => t.id !== community.pinnedThread.id
+          );
+        }
+      }
 
-    let sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
+      const uniqueThreads = deduplicateChildren(filteredThreads, 'id');
 
-    if (activeCommunity) {
-      sortedThreadNodes = sortedThreadNodes.filter(t => !t.watercooler);
-    }
-
-    let filteredThreads = sortedThreadNodes;
-    if (
-      this.props.data.community &&
-      this.props.data.community.watercooler &&
-      this.props.data.community.watercooler.id
-    ) {
-      filteredThreads = filteredThreads.filter(
-        t =>
-          this.props.data.community &&
-          t.id !== this.props.data.community.watercooler.id
-      );
-    }
-
-    if (
-      this.props.data.community &&
-      this.props.data.community.pinnedThread &&
-      this.props.data.community.pinnedThread.id
-    ) {
-      filteredThreads = filteredThreads.filter(
-        t =>
-          this.props.data.community &&
-          t.id !== this.props.data.community.pinnedThread.id
-      );
-    }
-
-    const uniqueThreads = deduplicateChildren(filteredThreads, 'id');
-
-    return (
-      <div
-        data-cy="inbox-thread-feed"
-        ref={el => (this.innerScrollElement = el)}
-      >
-        {this.props.data.community &&
-          this.props.data.community.watercooler &&
-          this.props.data.community.watercooler.id && (
-            <ErrorBoundary fallbackComponent={null}>
-              <WatercoolerThread
-                data={this.props.data.community.watercooler}
-                active={selectedId === this.props.data.community.watercooler.id}
-              />
-            </ErrorBoundary>
-          )}
-
-        {this.props.data.community &&
-          this.props.data.community.pinnedThread &&
-          this.props.data.community.pinnedThread.id && (
-            <ErrorBoundary fallbackComponent={null}>
-              <InboxThread
-                data={this.props.data.community.pinnedThread}
-                active={
-                  selectedId === this.props.data.community.pinnedThread.id
-                }
-                hasActiveCommunity={this.props.hasActiveCommunity}
-                hasActiveChannel={this.props.hasActiveChannel}
-                pinnedThreadId={this.props.data.community.pinnedThread.id}
-              />
-            </ErrorBoundary>
-          )}
-        <InfiniteList
-          pageStart={0}
-          loadMore={this.props.data.fetchMore}
-          isLoadingMore={this.props.isFetchingMore}
-          hasMore={this.props.data.hasNextPage}
-          loader={<LoadingInboxThread />}
-          useWindow={false}
-          initialLoad={false}
-          scrollElement={scrollElement}
-          threshold={750}
-          className={'scroller-for-dashboard-threads'}
+      return (
+        <div
+          data-cy="inbox-thread-feed"
+          ref={el => (this.innerScrollElement = el)}
         >
-          <FlipMove duration={350}>
-            {uniqueThreads.map(thread => {
-              return (
-                <ErrorBoundary fallbackComponent={null} key={thread.id}>
-                  <InboxThread
-                    data={thread}
-                    active={selectedId === thread.id}
-                    hasActiveCommunity={this.props.hasActiveCommunity}
-                    hasActiveChannel={this.props.hasActiveChannel}
-                  />
-                </ErrorBoundary>
-              );
-            })}
-          </FlipMove>
-        </InfiniteList>
-      </div>
-    );
+          {community &&
+            community.watercooler &&
+            community.watercooler.id && (
+              <ErrorBoundary fallbackComponent={null}>
+                <WatercoolerThread
+                  data={community.watercooler}
+                  active={selectedId === community.watercooler.id}
+                />
+              </ErrorBoundary>
+            )}
+
+          {community &&
+            community.pinnedThread &&
+            community.pinnedThread.id && (
+              <ErrorBoundary fallbackComponent={null}>
+                <InboxThread
+                  data={community.pinnedThread}
+                  active={selectedId === community.pinnedThread.id}
+                  hasActiveCommunity={this.props.hasActiveCommunity}
+                  hasActiveChannel={this.props.hasActiveChannel}
+                  pinnedThreadId={community.pinnedThread.id}
+                />
+              </ErrorBoundary>
+            )}
+          <InfiniteList
+            pageStart={0}
+            loadMore={this.props.data.fetchMore}
+            isLoadingMore={this.props.isFetchingMore}
+            hasMore={this.props.data.hasNextPage}
+            loader={<LoadingInboxThread />}
+            useWindow={false}
+            initialLoad={false}
+            scrollElement={scrollElement}
+            threshold={750}
+            className={'scroller-for-dashboard-threads'}
+          >
+            <FlipMove duration={350}>
+              {uniqueThreads.map(thread => {
+                return (
+                  <ErrorBoundary fallbackComponent={null} key={thread.id}>
+                    <InboxThread
+                      data={thread}
+                      active={selectedId === thread.id}
+                      hasActiveCommunity={this.props.hasActiveCommunity}
+                      hasActiveChannel={this.props.hasActiveChannel}
+                    />
+                  </ErrorBoundary>
+                );
+              })}
+            </FlipMove>
+          </InfiniteList>
+        </div>
+      );
+    }
+
+    if (isLoading) return <LoadingThreadFeed />;
+
+    if (hasError) return <ErrorThreadFeed />;
+
+    return null;
   }
 }
 const map = state => ({
