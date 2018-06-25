@@ -25,7 +25,9 @@ export const ChatInputTextInputWrapper = styled.View`
   justify-content: center;
 `;
 
-export const ChatTextInput = styled(TextInput)`
+export const ChatTextInput = styled(TextInput).attrs({
+  underlineColorAndroid: 'transparent',
+})`
   display: flex;
   justify-content: center;
   font-size: 16px;

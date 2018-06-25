@@ -5,6 +5,7 @@ import styled from 'styled-components/native';
 import type { ComponentType } from 'react';
 import getTypeConfigFromType from './getTypeConfigFromType';
 import getWeightFromType from './getWeightFromType';
+import type { ThemeType } from '../theme';
 
 export type TextTypes =
   | 'largeTitle'
@@ -30,15 +31,16 @@ export type WeightTypes =
   | 'heavy'
   | 'black';
 
-export type Props = {
+export type Props = {|
   type?: TextTypes,
   weight?: WeightTypes,
   italic?: boolean,
   underline?: boolean,
   fontFamily?: 'monospace',
-  color?: Function,
+  color?: (theme: ThemeType) => string,
   children: Node,
-};
+  style?: Object,
+|};
 
 const monospaceFont = Platform.OS === 'android' ? 'monospace' : 'Menlo';
 

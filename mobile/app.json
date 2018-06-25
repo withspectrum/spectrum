@@ -6,7 +6,10 @@
     "githubUrl": "https://github.com/withspectrum/spectrum",
     "privacy": "unlisted",
     "sdkVersion": "28.0.0",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "../public/img/homescreen-icon-512x512.png",
@@ -16,8 +19,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-			"supportsTablet": true,
-			"bundleIdentifier": "chat.spectrum.mobile"
+      "supportsTablet": true,
+      "bundleIdentifier": "chat.spectrum.mobile"
     },
     "packagerOpts": {
       "projectRoots": "",

@@ -1,7 +1,7 @@
 // @flow
 import React, { Fragment } from 'react';
 import { Svg } from 'expo';
-const { Path } = Svg;
+const { Path, Circle } = Svg;
 import type { GlyphTypes } from './types';
 
 export default (glyph: GlyphTypes, color: string) => {
@@ -397,6 +397,32 @@ export default (glyph: GlyphTypes, color: string) => {
           />
         </Fragment>
       );
+    case 'info':
+      return (
+        <Fragment>
+          <Path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            fill={color}
+            d="M20.3358 3.66423C19.2469 2.57538 17.1 2.00001 12 2C6.90002 1.99999 4.75306 2.57537 3.66421 3.66421C2.57537 4.75305 2 6.90001 2 12C2 17.1 2.57538 19.247 3.66422 20.3358C4.75306 21.4246 6.90001 22 12 22C17.1 22 19.2469 21.4246 20.3358 20.3358C21.4246 19.2469 22 17.1 22 12C22 6.90002 21.4246 4.75307 20.3358 3.66423ZM12 0C22 1.28128e-05 24 2.00002 24 12C24 22 22 24 12 24C2 24 8.42944e-06 22 0 12C-8.42928e-06 2 2.00001 -1.28124e-05 12 0Z"
+            transform="translate(4 4)"
+          />
+          <Circle
+            fill={color}
+            cx="1.5"
+            cy="1.5"
+            r="1.5"
+            transform="translate(14 9)"
+          />
+          <Path
+            fill={color}
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M1 0C0.447723 0 0 0.447708 0 1C0 1.55229 0.447723 2 1 2V7C1 7.55229 1.44772 8 2 8C2.55228 8 3 7.55229 3 7V1C3 0.447708 2.55228 0 2 0H1Z"
+            transform="translate(14 14)"
+          />
+        </Fragment>
+      );
     case 'inserter':
       return (
         <Fragment>
@@ -709,6 +735,9 @@ export default (glyph: GlyphTypes, color: string) => {
         <Fragment>
           <Path
             fill={color}
+            style={{ backgroundColor: 'transparent' }}
+            filleRule="evenodd"
+            clipRule="evenodd"
             d="M26,16.019c0,8 -2,10 -10,10c-8,0 -10,-2 -10,-10c0,-8 2,-10 10,-10c8,0 10,2 10,10Zm-8.586,-2.828c0.391,-0.39 1.024,-0.39 1.414,0c0.391,0.391 0.391,1.024 0,1.414l-1.414,1.414l1.414,1.414c0.39,0.391 0.391,1.024 0,1.415c-0.39,0.39 -1.024,0.39 -1.414,-0.001l-1.414,-1.413l-1.414,1.414c-0.391,0.39 -1.024,0.39 -1.414,0c-0.391,-0.391 -0.391,-1.024 0,-1.414l1.414,-1.415l-1.414,-1.413c-0.39,-0.391 -0.391,-1.024 0,-1.415c0.39,-0.39 1.024,-0.39 1.414,0.001l1.414,1.413l1.414,-1.414Z"
           />
         </Fragment>
