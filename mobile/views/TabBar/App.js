@@ -55,9 +55,7 @@ const AppStack = createStackNavigator(
       screen: withMappedNavigationProps(DirectMessageComposer),
       navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
         headerTitle: navigation.getParam('title', 'New Message'),
-        headerLeft: ({ onPress }) => (
-          <Button onPress={onPress} title="Cancel" />
-        ),
+        headerLeft: ({ onPress }) => <Button onPress={onPress} title="Close" />,
       }),
     },
   },
