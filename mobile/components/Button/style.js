@@ -1,17 +1,18 @@
 // @flow
 import styled, { css } from 'styled-components/native';
+import { Animated } from 'react-native';
 
-export const ButtonView = styled.View`
+export const ButtonView = styled(Animated.View)`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  border-radius: 8px;
-  padding: 12px 16px;
+  border-radius: 6px;
+  padding: 8px;
   background-color: ${props =>
     props.color ? props.color(props) : props.theme.brand.alt};
 
   ${props =>
-    props.state === 'disabled' &&
+    props.disabled &&
     css`
       background-color: ${props.theme.bg.inactive};
     `};
@@ -24,8 +25,8 @@ export const ButtonView = styled.View`
 `;
 
 export const ButtonText = styled.Text`
-  font-weight: 600;
-  font-size: 16px;
+  font-weight: 700;
+  font-size: 15px;
   line-height: 21;
   color: ${props => props.theme.text.reverse};
 
@@ -35,8 +36,17 @@ export const ButtonText = styled.Text`
       font-size: 18px;
       line-height: 18px;
     `};
+
+  ${props =>
+    props.icon &&
+    css`
+      margin-left: 12px;
+    `};
 `;
 
 export const ButtonIcon = styled.View`
-  margin-right: 12px;
+  display: flex;
+  height: 21px;
+  align-items: center;
+  justify-content: center;
 `;

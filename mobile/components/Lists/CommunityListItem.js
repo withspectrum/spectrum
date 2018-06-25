@@ -11,9 +11,10 @@ import {
   ViewForwardContainer,
 } from './style';
 import type { GetCommunityType } from '../../../shared/graphql/queries/community/getCommunity';
+import type { CommunityInfoType } from '../../../shared/graphql/fragments/community/communityInfo';
 
 type Props = {
-  community: GetCommunityType,
+  community: GetCommunityType | CommunityInfoType,
   onPressHandler: Function,
   divider?: boolean,
 };
@@ -35,11 +36,12 @@ export class CommunityListItem extends Component<Props> {
 
         <TextColumnContainer>
           <Title numberOfLines={1}>{community.name}</Title>
-          {community.metaData && (
-            <Subtitle numberOfLines={1}>
-              {community.metaData.members} members
-            </Subtitle>
-          )}
+          {community.metaData &&
+            community.metaData.members && (
+              <Subtitle numberOfLines={1}>
+                {community.metaData.members} members
+              </Subtitle>
+            )}
         </TextColumnContainer>
 
         <ViewForwardContainer>

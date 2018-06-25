@@ -19,8 +19,8 @@ const AuthorName = ({ author, onPress }: Props) => {
       )}
     >
       <NameContainer>
-        <Name>{author.user.name}</Name>
-        <Username>{author.user.username}</Username>
+        <Name style={{ marginRight: 4 }}>{author.user.name}</Name>
+        <Username>@{author.user.username}</Username>
       </NameContainer>
     </ConditionalWrap>
   );
