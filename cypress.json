@@ -2,6 +2,7 @@
   "baseUrl": "http://localhost:3006",
   "viewportWidth": 1300,
   "defaultCommandTimeout": 20000,
+  "chromeWebSecurity": false,
   "blacklistHosts": [
     "*.google-analytics.com",
     "*.amplitude.com"
