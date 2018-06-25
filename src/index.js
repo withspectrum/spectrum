@@ -22,45 +22,32 @@ import { track, events } from './helpers/analytics';
 import { wsLink } from 'shared/graphql';
 import { subscribeToDesktopPush } from './subscribe-to-desktop-push';
 
-const { thread, t } = queryString.parse(history.location.search);
+const storedData: ?Object = getItemFromStorage('spectrum');
+const params = queryString.parse(history.location.search);
 
-const existingUser = getItemFromStorage('spectrum');
-let initialState;
-if (existingUser) {
-  initialState = {
+// Always redirect ?thread=asdfxyz to the thread view
+if (params.thread) history.replace(`/thread/${params.thread}`);
+
+// Redirect ?t=asdfxyz to the thread view only for anonymous users who wouldn't see it
+// in their inbox view (since they don't have an inbox view)
+if ((!storedData || !storedData.currentUser) && params.t)
+  history.replace(`/thread/${params.t}`);
+
+// If the server passes an initial redux state use that, otherwise construct our own
+const store = initStore(
+  window.__SERVER_STATE__ || {
     users: {
-      currentUser: existingUser.currentUser,
+      currentUser: storedData ? storedData.currentUser : null,
     },
     dashboardFeed: {
-      activeThread: t ? t : '',
-      mountedWithActiveThread: t ? t : '',
+      activeThread: params.t || '',
+      mountedWithActiveThread: params.t || '',
       search: {
         isOpen: false,
       },
     },
-  };
-} else {
-  initialState = {};
-}
-
-if (thread) {
-  const hash = window.location.hash.substr(1);
-  if (hash && hash.length > 1) {
-    history.replace(`/thread/${thread}#${hash}`);
-  } else {
-    history.replace(`/thread/${thread}`);
   }
-}
-if (t) {
-  const hash = window.location.hash.substr(1);
-  if (hash && hash.length > 1) {
-    history.replace(`/thread/${t}#${hash}`);
-  } else {
-    history.replace(`/thread/${t}`);
-  }
-}
-
-const store = initStore(window.__SERVER_STATE__ || initialState);
+);
 
 const App = hot(module)(() => {
   return (
