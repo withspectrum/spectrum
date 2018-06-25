@@ -103,17 +103,12 @@ class ThreadFeed extends React.Component<Props, State> {
       return;
     }
 
-    // if the app loaded with a ?t query param, it means the user was linked to a thread from the inbox view and is already logged in. In this case we want to load the thread identified in the url and ignore the fact that a feed is loading in which auto-selects a different thread. If the user is on mobile, we should push them to the thread detail view
-    if (this.props.data.threads && mountedWithActiveThread) {
-      if (!isDesktop) {
-        this.props.history.replace(`/?thread=${mountedWithActiveThread}`);
-      }
+    // If we mount with ?t and are on mobile, we have to redirect to ?thread
+    if (!isDesktop && mountedWithActiveThread) {
+      this.props.history.replace(`/?thread=${mountedWithActiveThread}`);
       this.props.dispatch({ type: 'REMOVE_MOUNTED_THREAD_ID' });
       return;
     }
-
-    // don't select a thread if the composer is open
-    if (prevProps.selectedId === 'new') return;
 
     const hasThreadsButNoneSelected =
       this.props.data.threads && !this.props.selectedId;
@@ -121,6 +116,17 @@ class ThreadFeed extends React.Component<Props, State> {
       !mountedWithActiveThread &&
       ((!prevProps.data.threads && this.props.data.threads) ||
         (prevProps.data.loading && !this.props.data.loading));
+
+    // if the app loaded with a ?t query param, it means the user was linked to a thread from the inbox view and is already logged in. In this case we want to load the thread identified in the url and ignore the fact that a feed is loading in which auto-selects a different thread.
+    if (justLoadedThreads && mountedWithActiveThread) {
+      this.props.dispatch({ type: 'REMOVE_MOUNTED_THREAD_ID' });
+      return;
+    }
+
+    // don't select a thread if the composer is open
+    if (prevProps.selectedId === 'new') {
+      return;
+    }
 
     if (
       isDesktop &&
