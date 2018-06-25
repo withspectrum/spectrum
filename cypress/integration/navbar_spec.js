@@ -117,6 +117,7 @@ describe('Navbar logged in', () => {
 
 describe('Navbar logged out', () => {
   beforeEach(() => {
+    cy.auth(null);
     cy.visit(`/`);
   });
 
