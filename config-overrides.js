@@ -110,9 +110,13 @@ module.exports = function override(config, env) {
       autoUpdate: true,
       cacheMaps: [
         {
-          match(url) {
-            const EXTERNAL_PATHS = ['/api', '/auth'];
-            if (EXTERNAL_PATHS.some(path => url.pathname.indexOf(path) === 0))
+          match: function(url) {
+            var EXTERNAL_PATHS = ['/api', '/auth'];
+            if (
+              EXTERNAL_PATHS.some(function(path) {
+                return url.pathname.indexOf(path) === 0;
+              })
+            )
               return false;
             return url;
           },
