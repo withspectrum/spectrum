@@ -4,7 +4,7 @@ import redis from './redis';
 const debug = require('debug')('hyperion:cache');
 
 if (process.env.DISABLE_CACHE) {
-  console.log(
+  console.warn(
     'Cache disabled, either unset DISABLE_CACHE env variable or run in production mode to enable.'
   );
 }
@@ -14,13 +14,13 @@ const cache = (
   res: express$Response,
   next: express$NextFunction
 ) => {
-  res.setHeader('Content-Type', 'text/html; charset=utf-8');
-
   if (process.env.DISABLE_CACHE) return next();
   if (req.method !== 'GET') {
     debug(`${req.method} request came in, not caching`);
     return next();
   }
+
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
   if (req.user) {
     req.user.id &&
       typeof req.user.id === 'string' &&
