@@ -108,6 +108,20 @@ module.exports = function override(config, env) {
       caches: process.env.NODE_ENV === 'development' ? {} : 'all',
       externals,
       autoUpdate: true,
+      cacheMaps: [
+        {
+          match: function(url) {
+            var EXTERNAL_PATHS = ['/api', '/auth'];
+            if (
+              EXTERNAL_PATHS.some(function(path) {
+                return url.pathname.indexOf(path) === 0;
+              })
+            )
+              return false;
+            return url;
+          },
+        },
+      ],
       rewrites: arg => arg,
       ServiceWorker: {
         entry: './public/push-sw.js',
