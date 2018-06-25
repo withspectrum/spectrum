@@ -108,6 +108,7 @@ module.exports = function override(config, env) {
       caches: process.env.NODE_ENV === 'development' ? {} : 'all',
       externals,
       autoUpdate: true,
+      rewrites: arg => arg,
       ServiceWorker: {
         entry: './public/push-sw.js',
         events: true,
