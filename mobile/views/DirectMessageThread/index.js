@@ -39,8 +39,6 @@ type Props = {
 };
 
 class DirectMessageThread extends Component<Props> {
-  messagesComponent: any;
-
   trackView = () => {
     const { data: { directMessageThread } } = this.props;
     if (!directMessageThread) return;
