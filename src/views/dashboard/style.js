@@ -25,9 +25,8 @@ export const DashboardWrapper = styled.main`
 
 export const InboxWrapper = styled.div`
   display: flex;
-  width: 40%;
-  max-width: 480px;
-  min-width: 360px;
+  flex: 0 0 400px;
+  width: 400px;
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
@@ -35,15 +34,14 @@ export const InboxWrapper = styled.div`
   background: ${props => props.theme.bg.default};
   border-right: 1px solid ${props => props.theme.bg.border};
 
-  @media (min-resolution: 120dpi) {
-    max-width: 400px;
-    min-width: 400px;
+  @media (min-width: 1440px) {
+    flex: 0 0 480px;
+    width: 480px;
   }
 
   @media (max-width: 768px) {
-    max-width: 100%;
-    min-width: 100%;
-    flex: auto;
+    flex: 0 0 100%;
+    width: 100%;
     border-right: none;
   }
 `;
@@ -191,7 +189,7 @@ export const CommunityListItem = styled.div`
   grid-auto-rows: 48px auto;
   grid-template-areas: 'icon title' 'menu menu';
   min-height: 48px;
-  padding: 6px 8px;
+  padding: 8px;
   justify-items: start;
   align-items: center;
   cursor: pointer;
@@ -202,7 +200,9 @@ export const CommunityListItem = styled.div`
 
   box-shadow: ${props =>
     props.active
-      ? `0 1px 0 ${props.theme.bg.border}, 0 -1px 0 ${props.theme.bg.border}`
+      ? `inset 0 -1px 0 ${props.theme.bg.border}, 0 -1px 0 ${
+          props.theme.bg.border
+        }`
       : 'none'};
 
   > ${CommunityListName} {
@@ -284,7 +284,7 @@ export const CommunityListAvatar = styled.img`
 
 export const FeedHeaderContainer = styled.div`
   background: ${props => props.theme.bg.default};
-  padding: 14px 8px;
+  padding: 16px 8px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   position: relative;
   z-index: ${zIndex.chrome - 1};
@@ -470,6 +470,14 @@ export const ThreadStatusWrapper = styled(ThreadActivityWrapper)`
   justify-content: flex-end;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};
+
+  > div {
+    pointer-events: auto;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
 `;
 
 export const CountWrapper = styled.div`

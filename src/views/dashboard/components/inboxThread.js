@@ -39,14 +39,7 @@ type Props = {
 
 const MessageCount = props => {
   const {
-    thread: {
-      messageCount,
-      createdAt,
-      currentUserLastSeen,
-      lastActive,
-      channel,
-      community,
-    },
+    thread: { messageCount, createdAt, currentUserLastSeen, lastActive },
     active,
   } = props;
 
@@ -103,7 +96,6 @@ const ThreadStatus = props => {
 
   return (
     <ThreadStatusWrapper active={active}>
-      {console.log('thread:', thread)}
       {isPinned && (
         <Icon
           size={24}
@@ -138,7 +130,6 @@ const ThreadStatus = props => {
 class InboxThread extends React.Component<Props> {
   render() {
     const {
-      data: { attachments },
       data,
       location,
       active,

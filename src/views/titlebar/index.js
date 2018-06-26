@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
+import { LikeButton } from 'src/components/threadLikes';
 import Link from 'src/components/link';
 import ThreadSearch from '../dashboard/components/threadSearch';
 import Icon from '../../components/icons';
@@ -74,6 +75,7 @@ class Titlebar extends Component {
         ) : (
           <Icon glyph="logo" />
         )}
+
         {noComposer ? null : messageComposer ? (
           <Link to={`/messages/new`}>
             <IconButton glyph="message-new" color="text.reverse" />

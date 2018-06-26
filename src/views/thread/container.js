@@ -283,13 +283,8 @@ class ThreadContainer extends React.Component<Props, State> {
     );
   };
 
-  renderThreadHeader = () => {
-    const {
-      data: { thread },
-      slider,
-      threadViewContext = 'fullscreen',
-      currentUser,
-    } = this.props;
+  renderPost = () => {
+    const { data: { thread }, slider, currentUser } = this.props;
     if (!thread || !thread.id) return null;
 
     if (thread.watercooler) {
@@ -300,14 +295,13 @@ class ThreadContainer extends React.Component<Props, State> {
               src={thread.community.profilePhoto}
               community
               size={44}
-              radius={8}
             />
             <WatercoolerTitle>
               The {thread.community.name} watercooler
             </WatercoolerTitle>
             <WatercoolerDescription>
-              Welcome to the {thread.community.name} watercooler, a new space
-              for general chat with everyone in the community. Jump in to the
+              Welcome to the {thread.community.name} watercooler, a space for
+              general chat with everyone in the community. Jump in to the
               conversation below or introduce yourself!
             </WatercoolerDescription>
           </WatercoolerIntroContainer>
@@ -319,11 +313,6 @@ class ThreadContainer extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <ThreadCommunityBanner
-          hide={threadViewContext === 'fullscreen'}
-          thread={thread}
-        />
-
         <ThreadDetail
           toggleEdit={this.toggleEdit}
           thread={thread}
@@ -418,7 +407,6 @@ class ThreadContainer extends React.Component<Props, State> {
                 description={headDescription}
                 image={thread.community.profilePhoto}
               />
-
               <Titlebar
                 title={thread.content.title}
                 subtitle={`${thread.community.name} / ${thread.channel.name}`}
@@ -427,9 +415,10 @@ class ThreadContainer extends React.Component<Props, State> {
                 noComposer
                 style={{ gridArea: 'header' }}
               />
+              <ThreadCommunityBanner thread={thread} />
               <Content innerRef={this.setMessagesContainer}>
                 <Detail type={slider ? '' : 'only'}>
-                  {this.renderThreadHeader()}
+                  {this.renderPost()}
 
                   {!isEditing && (
                     <Messages

@@ -12,6 +12,10 @@ const LikeWrapper = styled.div`
 `;
 
 export const LikeButtonWrapper = styled(LikeWrapper)`
+  min-width: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   > button {
     color: ${props =>
       props.hasReacted ? props.theme.brand.alt : props.theme.text.alt};

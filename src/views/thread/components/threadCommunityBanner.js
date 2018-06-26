@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { LikeButton } from 'src/components/threadLikes';
+import { convertTimestampToDate } from 'shared/time-formatting';
 import { Button } from '../../../components/buttons';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -105,8 +106,10 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
       ? `/${community.slug}/login?r=${CLIENT_URL}/thread/${id}`
       : `/login?r=${CLIENT_URL}/${community.slug}/thread/${id}`;
 
+    const timestamp = convertTimestampToDate(thread.createdAt);
+
     return (
-      <CommunityHeader hide={hide}>
+      <CommunityHeader hide={watercooler}>
         <CommunityHeaderMeta>
           <CommunityHeaderLink to={`/${community.slug}`}>
             <Avatar src={community.profilePhoto} community size={'32'} />
@@ -117,20 +120,23 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
                 ? `${community.name} watercooler`
                 : thread.content.title}
             </CommunityHeaderName>
-            <CommunityHeaderLink to={`/${community.slug}`}>
-              <CommunityHeaderSubtitle>
-                {`${community.name}`}
-                {channel.slug !== 'general' && (
-                  <span>{` (${channel.name})`}</span>
-                )}
-                <span>{` · ${thread.createdAt}`}</span>
-              </CommunityHeaderSubtitle>
-            </CommunityHeaderLink>
+            <CommunityHeaderSubtitle>
+              <Link to={`/${community.slug}`}>{community.name}</Link>
+              {channel.slug !== 'general' && <span>/</span>}
+              {channel.slug !== 'general' && (
+                <Link to={`/${community.slug}/${channel.slug}`}>
+                  {channel.name}
+                </Link>
+              )}
+              <span>{` · ${timestamp}`}</span>
+            </CommunityHeaderSubtitle>
           </CommunityHeaderMetaCol>
         </CommunityHeaderMeta>
 
         {channel.channelPermissions.isMember ? (
-          <LikeButton thread={thread} />
+          watercooler ? null : (
+            <LikeButton thread={thread} />
+          )
         ) : currentUser ? (
           <Button
             gradientTheme={'success'}

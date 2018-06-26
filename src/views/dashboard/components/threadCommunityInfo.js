@@ -1,15 +1,12 @@
 import React from 'react';
-import Icon from '../../../components/icons';
 import {
   CommunityInfoContainer,
   AvatarLink,
   CommunityAvatar,
   PillLink,
   PillLinkPinned,
-  PinIcon,
   PillLabel,
   MetaCommunityName,
-  Lock,
 } from '../style';
 
 export default ({
