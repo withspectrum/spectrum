@@ -104,10 +104,13 @@ module.exports = function override(config, env) {
   });
   config.plugins.push(
     new OfflinePlugin({
-      appShell: '/index.html',
       caches: process.env.NODE_ENV === 'development' ? {} : 'all',
       externals,
       autoUpdate: true,
+      // NOTE(@mxstbr): Normally this is handled by setting
+      // appShell: './index.html'
+      // but we don't want to serve the app shell for the `/api` and `/auth` routes
+      // which means we have to manually do this and filter any of those routes out
       cacheMaps: [
         {
           match: function(url) {
@@ -118,8 +121,12 @@ module.exports = function override(config, env) {
               })
             )
               return false;
-            return url;
+            // This function will be stringified and injected into the client, where
+            // window.location will be a thing
+            // eslint-disable-next-line no-restricted-globals
+            return new URL('./index.html', window.location);
           },
+          requestTypes: ['navigate'],
         },
       ],
       rewrites: arg => arg,
