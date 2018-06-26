@@ -12,7 +12,7 @@ export const Container = styled.View`
   left: 0;
   right: 0;
   width: 100%;
-  height: 40px;
+  height: 48px;
   z-index: 1;
   overflow: hidden;
 `;
