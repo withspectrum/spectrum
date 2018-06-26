@@ -121,10 +121,10 @@ module.exports = function override(config, env) {
               })
             )
               return false;
-            // This function will be stringified and injected into the client, where
-            // window.location will be a thing
+            // This function will be stringified and injected into the ServiceWorker on the client, where
+            // location will be a thing
             // eslint-disable-next-line no-restricted-globals
-            return new URL('./index.html', window.location);
+            return new URL('./index.html', location);
           },
           requestTypes: ['navigate'],
         },
