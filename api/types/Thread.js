@@ -1,5 +1,14 @@
 // @flow
 const Thread = /* GraphQL */ `
+  enum ThreadReactionTypes {
+		like
+	}
+
+  type ThreadReactions {
+		count: Int!
+		hasReacted: Boolean
+	}
+
   type ThreadMessagesConnection {
     pageInfo: PageInfo!
     edges: [ThreadMessageEdge!]
@@ -54,7 +63,7 @@ const Thread = /* GraphQL */ `
     attachments: [Attachment]
     watercooler: Boolean
     currentUserLastSeen: Date @cost(complexity: 1)
-    reactions: ReactionData @cost(complexity: 1)
+    reactions: ThreadReactions @cost(complexity: 1)
 
     isCreator: Boolean @deprecated(reason: "Use Thread.isAuthor instead")
     creator: User! @deprecated(reason:"Use Thread.author instead")
@@ -100,7 +109,7 @@ const Thread = /* GraphQL */ `
 
   input AddThreadReactionInput {
     threadId: ID!
-    type: ReactionTypes
+    type: ThreadReactionTypes
   }
 
   input RemoveThreadReactionInput {

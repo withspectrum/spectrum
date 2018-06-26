@@ -8,7 +8,7 @@ import type { DBThreadReaction } from 'shared/types';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 
-type ReactionType = 'like';
+type ThreadReactionType = 'like';
 
 // prettier-ignore
 export const getThreadReactions = (threadIds: Array<string>): Promise<Array<DBThreadReaction>> => {
@@ -23,7 +23,7 @@ export const getThreadReactions = (threadIds: Array<string>): Promise<Array<DBTh
 
 type ThreadReactionInput = {
   threadId: string,
-  type: ReactionType,
+  type: ThreadReactionType,
 };
 
 // prettier-ignore

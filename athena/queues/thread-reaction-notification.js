@@ -60,8 +60,6 @@ export default async (job: Job<ThreadReactionNotificationJobData>) => {
     // get the original thread where the reaction was left
     const thread = await getThreadById(updatedNotification.context.id);
 
-    // make sure that the person who left the original message still has notification permissions in this thread. We have to check the threadtype to determine if the reaction was left in a story thread or a direct message thread
-    // TODO: In the future we'll want reactions in direct message threads to trigger push notifications, but for now it introduces too much complexity so we just say false
     const hasPermission = await getUserNotificationPermissionsInThread(
       thread.creatorId,
       thread.id
@@ -97,8 +95,6 @@ export default async (job: Job<ThreadReactionNotificationJobData>) => {
     const thread = await getThreadById(updatedNotification.context.id);
     debug('get thread');
 
-    // make sure that the person who left the original message still has notification permissions in this thread. We have to check the threadtype to determine if the reaction was left in a story thread or a direct message thread
-    // TODO: In the future we'll want reactions in direct message threads to trigger push notifications, but for now it introduces too much complexity so we just say false
     const hasPermission = await getUserNotificationPermissionsInThread(
       thread.creatorId,
       thread.id
