@@ -15,7 +15,7 @@ import Toasts from './components/Toasts';
 import theme from '../shared/theme';
 import { createClient } from '../shared/graphql';
 import Login from './views/Login';
-import TabBar from './views/TabBar';
+import TabBar from './views/TabBar/App';
 import { SetUsername, ExploreCommunities } from './views/UserOnboarding';
 import { authenticate } from './actions/authentication';
 
