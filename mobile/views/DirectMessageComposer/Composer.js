@@ -180,7 +180,7 @@ class DirectMessageComposer extends React.Component<Props, State> {
             returnKeyType="search"
             autoFocus
             autoCorrect={false}
-            autoCapitalize={false}
+            autoCapitalize={'none'}
             innerRef={elem => (this.searchInput = elem)}
             placeholder={'Search for people...'}
           />
