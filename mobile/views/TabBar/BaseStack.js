@@ -12,10 +12,7 @@ import ChannelDetail from '../ChannelDetail';
 import UserDetail from '../UserDetail';
 import User from '../User';
 import Info from './headerActions/Info';
-import type {
-  NavigationScreenConfigProps,
-  NavigationProp,
-} from 'react-navigation';
+import type { NavigationScreenConfigProps } from 'react-navigation';
 
 const BaseStack = {
   ThreadDetail: {

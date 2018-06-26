@@ -18,7 +18,6 @@ import {
 } from 'shared/graphql/queries/thread/getThread';
 import { NullState } from '../../components/upsell';
 import JoinChannel from '../../components/upsell/joinChannel';
-import { toState } from 'shared/draft-utils';
 import LoadingView from './components/loading';
 import ThreadCommunityBanner from './components/threadCommunityBanner';
 import Sidebar from './components/sidebar';
