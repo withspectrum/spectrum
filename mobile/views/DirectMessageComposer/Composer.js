@@ -179,6 +179,8 @@ class DirectMessageComposer extends React.Component<Props, State> {
             value={this.state.wipSearchString}
             returnKeyType="search"
             autoFocus
+            autoCorrect={false}
+            autoCapitalize={false}
             innerRef={elem => (this.searchInput = elem)}
             placeholder={'Search for people...'}
           />
