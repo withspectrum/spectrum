@@ -405,7 +405,7 @@ export const ThreadDescription = {
 export const ShareButtons = styled.div`
   display: flex;
   align-items: center;
-  margin-right: 16px;
+  margin-left: 16px;
 `;
 
 export const ShareButton = styled.span`
@@ -586,6 +586,10 @@ export const ActionBarContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 0 32px;
+  background: ${props => props.theme.bg.wash};
+  border: 1px solid ${props => props.theme.bg.border};
+  border-radius: 6px;
+  padding: 6px 6px 6px 12px;
 `;
 
 export const WatercoolerActionBarContainer = styled(ActionBarContainer)`
@@ -593,13 +597,15 @@ export const WatercoolerActionBarContainer = styled(ActionBarContainer)`
 `;
 
 export const FollowButton = styled(Button)`
-  background: transparent;
+  background: ${props => props.theme.bg.default};
+  border: 1px solid ${props => props.theme.bg.border};
   color: ${props => props.theme.text.alt};
   padding: 4px;
+  margin-right: 12px;
 
   &:hover {
-    background: transparent;
-    color: ${props => props.theme.brand.alt};
+    background: ${props => props.theme.bg.default};
+    color: ${props => props.theme.text.default};
   }
 
   @media (max-width: 768px) {

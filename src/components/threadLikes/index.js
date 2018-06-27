@@ -53,7 +53,7 @@ class LikeButtonPure extends React.Component<LikeButtonProps> {
         <IconButton
           glyph={hasReacted ? 'thumbsup-fill' : 'thumbsup'}
           tipText={hasReacted ? 'Unlike thread' : 'Like thread'}
-          tipLocation={'bottom-left'}
+          tipLocation={'bottom-right'}
           onClick={this.handleClick}
         />
         <CurrentCount>{count}</CurrentCount>
