@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { timeDifferenceShort } from 'shared/time-difference';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import {
@@ -29,10 +29,6 @@ export default ({
   isPinned,
 }: Props) => {
   const { channel, community } = thread;
-  const isGeneral = channel.slug === 'general';
-  if (activeCommunity && isGeneral) return null;
-  if (activeChannel === channel.id) return null;
-
   const now = new Date().getTime();
   const then = thread.lastActive || thread.createdAt;
   const timestamp = timeDifferenceShort(now, new Date(then).getTime());
@@ -40,26 +36,25 @@ export default ({
   return (
     <CommunityInfoContainer active={active}>
       <span style={{ display: 'flex', alignItems: 'center' }}>
-        {!activeCommunity && (
-          <AvatarLink to={`/${community.slug}`}>
-            <CommunityAvatar
-              community={community}
-              src={`${community.profilePhoto}?w=20&dpr=2`}
-            />
-          </AvatarLink>
-        )}
+        {!activeCommunity &&
+          !activeChannel && (
+            <React.Fragment>
+              <AvatarLink to={`/${community.slug}`}>
+                <CommunityAvatar
+                  community={community}
+                  src={`${community.profilePhoto}?w=20&dpr=2`}
+                />
+              </AvatarLink>
 
-        {!activeCommunity && (
-          <MetaCommunityName to={`/${community.slug}`}>
-            {community.name}
-          </MetaCommunityName>
-        )}
+              <MetaCommunityName to={`/${community.slug}`}>
+                {community.name}
+              </MetaCommunityName>
+            </React.Fragment>
+          )}
 
-        {!isGeneral && (
-          <PillLink className="pill" to={`/${community.slug}/${channel.slug}`}>
-            <PillLabel>{channel.name}</PillLabel>
-          </PillLink>
-        )}
+        <PillLink className="pill" to={`/${community.slug}/${channel.slug}`}>
+          <PillLabel>{channel.name}</PillLabel>
+        </PillLink>
       </span>
 
       <LastActiveTimestamp active={active}>{timestamp}</LastActiveTimestamp>
@@ -71,27 +66,43 @@ export const WaterCoolerPill = ({
   thread: { community, lastActive, createdAt },
   active,
   activeCommunity,
+  activeChannel,
 }: Props) => {
   const now = new Date().getTime();
   const then = lastActive || createdAt;
   const timestamp = timeDifferenceShort(now, new Date(then).getTime());
 
+  if (activeCommunity) {
+    return (
+      <CommunityInfoContainer active={active}>
+        <span>
+          <PillLinkPinned>
+            <PillLabel>Open chat</PillLabel>
+          </PillLinkPinned>
+        </span>
+        <LastActiveTimestamp active={active}>{timestamp}</LastActiveTimestamp>
+      </CommunityInfoContainer>
+    );
+  }
+
   return (
     <CommunityInfoContainer active={active}>
       <span style={{ display: 'flex', alignItems: 'center' }}>
-        {!activeCommunity && (
-          <AvatarLink to={`/${community.slug}`}>
-            <CommunityAvatar
-              community={community}
-              src={`${community.profilePhoto}?w=20&dpr=2`}
-            />
-          </AvatarLink>
-        )}
-        {!activeCommunity && (
-          <MetaCommunityName to={`/${community.slug}`}>
-            {community.name}
-          </MetaCommunityName>
-        )}
+        {!activeCommunity &&
+          !activeChannel && (
+            <React.Fragment>
+              <AvatarLink to={`/${community.slug}`}>
+                <CommunityAvatar
+                  community={community}
+                  src={`${community.profilePhoto}?w=20&dpr=2`}
+                />
+              </AvatarLink>
+
+              <MetaCommunityName to={`/${community.slug}`}>
+                {community.name}
+              </MetaCommunityName>
+            </React.Fragment>
+          )}
         <PillLinkPinned>
           <PillLabel>Open chat</PillLabel>
         </PillLinkPinned>
