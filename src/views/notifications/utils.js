@@ -107,6 +107,7 @@ export const parseEvent = event => {
     case 'MESSAGE_CREATED': {
       return <span>replied</span>;
     }
+    case 'THREAD_REACTION_CREATED':
     case 'REACTION_CREATED': {
       return <span>liked</span>;
     }
@@ -144,6 +145,24 @@ export const parseNotificationDate = date => {
 const threadToString = (context, currentUser) => {
   const isAuthor = context.payload.creatorId === currentUser.id;
   const str = isAuthor ? 'in your thread' : 'in';
+  return (
+    <span>
+      {' '}
+      {str}{' '}
+      <Link
+        to={{
+          pathname: window.location.pathname,
+          search: `?thread=${context.payload.id}`,
+        }}
+      >
+        {context.payload.content.title}
+      </Link>
+    </span>
+  );
+};
+
+const threadReactionToString = context => {
+  const str = 'your thread';
   return (
     <span>
       {' '}
@@ -200,6 +219,12 @@ export const parseContext = (context, currentUser) => {
     }
     case 'CHANNEL': {
       const asString = channelToString(context);
+      return {
+        asString,
+      };
+    }
+    case 'THREAD_REACTION': {
+      const asString = threadReactionToString(context);
       return {
         asString,
       };

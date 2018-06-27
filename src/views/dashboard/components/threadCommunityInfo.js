@@ -1,15 +1,12 @@
 import React from 'react';
-import Icon from '../../../components/icons';
 import {
   CommunityInfoContainer,
   AvatarLink,
   CommunityAvatar,
   PillLink,
   PillLinkPinned,
-  PinIcon,
   PillLabel,
   MetaCommunityName,
-  Lock,
 } from '../style';
 
 export default ({
@@ -43,29 +40,32 @@ export default ({
 
       {!isGeneral && (
         <PillLink className="pill" to={`/${community.slug}/${channel.slug}`}>
-          {channel.isPrivate && (
-            <Lock>
-              <Icon glyph="private" size={12} />
-            </Lock>
-          )}
-          <PillLabel isPrivate={channel.isPrivate}>{channel.name}</PillLabel>
+          <PillLabel>{channel.name}</PillLabel>
         </PillLink>
-      )}
-
-      {isPinned && (
-        <PillLinkPinned>
-          <PinIcon>
-            <Icon glyph="pin-fill" size={12} />
-          </PinIcon>
-          <PillLabel>Pinned</PillLabel>
-        </PillLinkPinned>
       )}
     </CommunityInfoContainer>
   );
 };
 
-export const WaterCoolerPill = ({ active }) => (
+export const WaterCoolerPill = ({
+  thread: { community },
+  active,
+  activeCommunity,
+}) => (
   <CommunityInfoContainer active={active}>
+    {!activeCommunity && (
+      <AvatarLink to={`/${community.slug}`}>
+        <CommunityAvatar
+          community={community}
+          src={`${community.profilePhoto}?w=20&dpr=2`}
+        />
+      </AvatarLink>
+    )}
+    {!activeCommunity && (
+      <MetaCommunityName to={`/${community.slug}`}>
+        {community.name}
+      </MetaCommunityName>
+    )}
     <PillLinkPinned>
       <PillLabel>Open chat</PillLabel>
     </PillLinkPinned>

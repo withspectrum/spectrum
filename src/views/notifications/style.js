@@ -207,6 +207,10 @@ export const ThreadContext = styled(ContextRow)`
   margin-bottom: 16px;
 `;
 
+export const ThreadReactionContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.brand.alt};
+`;
+
 export const CreatedContext = styled(ContextRow)`
   color: ${({ theme }) => theme.brand.alt};
   margin: 0 16px;

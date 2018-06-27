@@ -1,12 +1,12 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
+import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Link from 'src/components/link';
 import { getLinkPreviewFromUrl } from '../../../helpers/utils';
-import { convertTimestampToDate } from 'shared/time-formatting';
 import { timeDifference } from 'shared/time-difference';
+import { convertTimestampToDate } from 'shared/time-formatting';
 import isURL from 'validator/lib/isURL';
 import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
@@ -26,8 +26,8 @@ import {
   ThreadWrapper,
   ThreadContent,
   ThreadHeading,
-  Timestamp,
   Edited,
+  ThreadSubtitle,
 } from '../style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
@@ -434,11 +434,12 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isPinningThread,
     } = this.state;
 
+    const createdAt = new Date(thread.createdAt).getTime();
+    const timestamp = convertTimestampToDate(createdAt);
+
     const editedTimestamp = thread.modifiedAt
       ? new Date(thread.modifiedAt).getTime()
       : null;
-
-    const createdAtTimestamp = new Date(thread.createdAt).getTime();
 
     return (
       <ThreadWrapper>
@@ -464,15 +465,25 @@ class ThreadDetailPure extends React.Component<Props, State> {
             <ThreadHeading>{thread.content.title}</ThreadHeading>
           )}
 
-          <Link to={`/thread/${thread.id}`}>
-            <Timestamp>{convertTimestampToDate(createdAtTimestamp)}</Timestamp>
-            {thread.modifiedAt && (
-              <Edited>
-                (Edited{' '}
-                {timeDifference(Date.now(), editedTimestamp).toLowerCase()})
-              </Edited>
+          <ThreadSubtitle>
+            <Link to={`/${thread.community.slug}`}>
+              {thread.community.name}
+            </Link>
+            {thread.channel.slug !== 'general' && <span>/</span>}
+            {thread.channel.slug !== 'general' && (
+              <Link to={`/${thread.community.slug}/${thread.channel.slug}`}>
+                {thread.channel.name}
+              </Link>
             )}
-          </Link>
+            <span>{` · ${timestamp}`}</span>
+          </ThreadSubtitle>
+
+          {thread.modifiedAt && (
+            <Edited>
+              (Edited{' '}
+              {timeDifference(Date.now(), editedTimestamp).toLowerCase()})
+            </Edited>
+          )}
 
           {/* $FlowFixMe */}
           <Editor

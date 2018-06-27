@@ -1,5 +1,14 @@
 // @flow
 const Thread = /* GraphQL */ `
+  enum ThreadReactionTypes {
+		like
+	}
+
+  type ThreadReactions {
+		count: Int!
+		hasReacted: Boolean
+	}
+
   type ThreadMessagesConnection {
     pageInfo: PageInfo!
     edges: [ThreadMessageEdge!]
@@ -54,6 +63,7 @@ const Thread = /* GraphQL */ `
     attachments: [Attachment]
     watercooler: Boolean
     currentUserLastSeen: Date @cost(complexity: 1)
+    reactions: ThreadReactions @cost(complexity: 1)
 
     isCreator: Boolean @deprecated(reason: "Use Thread.isAuthor instead")
     creator: User! @deprecated(reason:"Use Thread.author instead")
@@ -97,13 +107,24 @@ const Thread = /* GraphQL */ `
     filesToUpload: [Upload]
   }
 
+  input AddThreadReactionInput {
+    threadId: ID!
+    type: ThreadReactionTypes
+  }
+
+  input RemoveThreadReactionInput {
+    threadId: ID!
+  }
+
   extend type Mutation {
     publishThread(thread: ThreadInput!): Thread
     editThread(input: EditThreadInput!): Thread
     setThreadLock(threadId: ID!, value: Boolean!): Thread
     toggleThreadNotifications(threadId: ID!): Thread
     deleteThread(threadId: ID!): Boolean
-        moveThread(threadId: ID!, channelId: ID!): Thread
+    moveThread(threadId: ID!, channelId: ID!): Thread
+    addThreadReaction(input: AddThreadReactionInput!): Thread
+    removeThreadReaction(input: RemoveThreadReactionInput!): Thread
   }
 
   extend type Subscription {
