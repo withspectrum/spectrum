@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { timeDifference } from 'shared/time-difference';
+import { timeDifferenceShort } from 'shared/time-difference';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import {
   CommunityInfoContainer,
@@ -35,7 +35,7 @@ export default ({
 
   const now = new Date().getTime();
   const then = thread.lastActive || thread.createdAt;
-  const timestamp = timeDifference(now, new Date(then).getTime());
+  const timestamp = timeDifferenceShort(now, new Date(then).getTime());
 
   return (
     <CommunityInfoContainer active={active}>
