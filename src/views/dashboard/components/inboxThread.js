@@ -4,6 +4,8 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Icon from 'src/components/icons';
+import Link from 'src/components/link';
+import Avatar from 'src/components/avatar';
 import { LikeCount } from 'src/components/threadLikes';
 import truncate from 'shared/truncate';
 import ThreadCommunityInfo, { WaterCoolerPill } from './threadCommunityInfo';
@@ -20,6 +22,7 @@ import {
   ThreadStatusWrapper,
   CountWrapper,
   NewThreadPill,
+  ThreadAuthorWrapper,
 } from '../style';
 import { ErrorBoundary } from 'src/components/error';
 
@@ -35,42 +38,72 @@ type Props = {
   data: ThreadInfoType,
   viewContext?: ?string,
   pinnedThreadId?: ?string,
+  currentUser: ?Object,
 };
 
 const MessageCount = props => {
   const {
-    thread: { messageCount, createdAt, currentUserLastSeen, lastActive },
+    thread: { messageCount, currentUserLastSeen, lastActive },
     active,
   } = props;
 
   const now = new Date().getTime() / 1000;
-  const createdAtTime = new Date(createdAt).getTime() / 1000;
   const lastActiveTime = lastActive && new Date(lastActive).getTime() / 1000;
-  const createdMoreThanOneDayAgo = now - createdAtTime > 86400;
   const newMessagesSinceLastWeek =
     lastActiveTime && now - lastActiveTime > 86400 * 7;
   const newMessagesSinceLastViewed =
     currentUserLastSeen && lastActive && currentUserLastSeen < lastActive;
-
-  if (!currentUserLastSeen && !createdMoreThanOneDayAgo) {
-    return <NewThreadPill active={active}>New thread!</NewThreadPill>;
-  }
 
   return (
     <CountWrapper
       active={active}
       newMessages={newMessagesSinceLastViewed && newMessagesSinceLastWeek}
     >
-      <Icon glyph="message-fill" size={24} />
+      <Icon
+        glyph="message-fill"
+        size={24}
+        tipText={`${messageCount} messages`}
+        tipLocation={'top-right'}
+      />
       <span>{messageCount}</span>
     </CountWrapper>
   );
 };
 
 const ThreadActivity = props => {
-  const { thread, active } = props;
+  const {
+    thread,
+    thread: { createdAt, currentUserLastSeen },
+    active,
+    currentUser,
+  } = props;
 
   if (!thread) return null;
+
+  const now = new Date().getTime() / 1000;
+  const createdAtTime = new Date(createdAt).getTime() / 1000;
+  const createdMoreThanOneDayAgo = now - createdAtTime > 86400;
+  const isAuthor = currentUser && currentUser.id === thread.author.user.id;
+
+  if (!isAuthor && !currentUserLastSeen && !createdMoreThanOneDayAgo) {
+    return <NewThreadPill active={active}>New thread!</NewThreadPill>;
+  }
+
+  if (thread.isLocked) {
+    return (
+      <ThreadActivityWrapper>
+        <ThreadStatusWrapper active={active}>
+          <Icon
+            size={24}
+            className={'locked'}
+            glyph={'private'}
+            tipText="Locked"
+            tipLocation={'top-right'}
+          />
+        </ThreadStatusWrapper>
+      </ThreadActivityWrapper>
+    );
+  }
 
   return (
     <ThreadActivityWrapper>
@@ -81,11 +114,7 @@ const ThreadActivity = props => {
 };
 
 const ThreadStatus = props => {
-  const {
-    thread: { id, isLocked, community, channel },
-    thread,
-    active,
-  } = props;
+  const { thread: { id, community }, thread, active } = props;
   const isPinned = id === community.pinnedThreadId;
   if (!thread) return null;
 
@@ -97,28 +126,28 @@ const ThreadStatus = props => {
           className={'pinned'}
           glyph={'pin-fill'}
           tipText={`Pinned in ${community.name}`}
-          tipLocation={'top-left'}
-        />
-      )}
-      {(community.isPrivate || channel.isPrivate) && (
-        <Icon
-          size={24}
-          className={'private'}
-          glyph={'private-fill'}
-          tipText="Private"
-          tipLocation={'top-left'}
-        />
-      )}
-      {isLocked && (
-        <Icon
-          size={24}
-          className={'locked'}
-          glyph={'private'}
-          tipText="Locked"
-          tipLocation={'top-left'}
+          tipLocation={'top-right'}
         />
       )}
     </ThreadStatusWrapper>
+  );
+};
+
+const ThreadAuthor = props => {
+  const { author: { user } } = props.thread;
+  if (!user.username) {
+    return (
+      <ThreadAuthorWrapper tipText={`By ${user.name}`} tipLocation={'top-left'}>
+        <Avatar src={user.profilePhoto} size={'24'} />
+      </ThreadAuthorWrapper>
+    );
+  }
+  return (
+    <ThreadAuthorWrapper tipText={`By ${user.name}`} tipLocation={'top-left'}>
+      <Link to={`/users/${user.username}`} style={{ display: 'flex' }}>
+        <Avatar src={user.profilePhoto} size={'24'} />
+      </Link>
+    </ThreadAuthorWrapper>
   );
 };
 
@@ -131,6 +160,7 @@ class InboxThread extends React.Component<Props> {
       hasActiveCommunity,
       hasActiveChannel,
       viewContext,
+      currentUser,
     } = this.props;
     const isPinned = data.id === this.props.pinnedThreadId;
 
@@ -180,8 +210,13 @@ class InboxThread extends React.Component<Props> {
             </ThreadTitle>
             <ThreadMeta>
               <ErrorBoundary fallbackComponent={null}>
-                <ThreadActivity thread={data} active={active} />
+                <ThreadActivity
+                  thread={data}
+                  active={active}
+                  currentUser={currentUser}
+                />
                 <ThreadStatus thread={data} active={active} />
+                <ThreadAuthor thread={data} />
               </ErrorBoundary>
             </ThreadMeta>
           </InboxThreadContent>
@@ -191,7 +226,9 @@ class InboxThread extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), withRouter)(InboxThread);
+const map = state => ({ currentUser: state.users.currentUser });
+// $FlowFixMe
+export default compose(connect(map), withRouter)(InboxThread);
 
 class WatercoolerThreadPure extends React.Component<Props> {
   render() {

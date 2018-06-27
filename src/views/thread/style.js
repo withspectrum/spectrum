@@ -180,6 +180,7 @@ export const DropWrap = styled(FlexCol)`
   position: relative;
   color: ${({ theme }) => theme.text.placeholder};
   transition: ${Transition.hover.off};
+  margin: 0 8px;
 
   &:hover {
     color: ${({ theme }) => theme.bg.border};
@@ -405,7 +406,6 @@ export const ThreadDescription = {
 export const ShareButtons = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 16px;
 `;
 
 export const ShareButton = styled.span`
@@ -475,7 +475,10 @@ export const CommunityHeaderSubtitle = styled.span`
 `;
 
 export const ThreadSubtitle = styled(CommunityHeaderSubtitle)`
-  font-size: 14px;
+  font-size: 16px;
+  margin-top: 8px;
+  display: inline-block;
+  line-height: 1.5;
 `;
 
 export const CommunityHeaderChannelTag = styled.div`
@@ -590,6 +593,16 @@ export const ActionBarContainer = styled.div`
   border: 1px solid ${props => props.theme.bg.border};
   border-radius: 6px;
   padding: 6px 6px 6px 12px;
+
+  @media (max-width: 768px) {
+    margin: 0;
+    margin-top: 16px;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    padding-left: 16px;
+    padding-right: 8px;
+  }
 `;
 
 export const WatercoolerActionBarContainer = styled(ActionBarContainer)`
@@ -601,7 +614,6 @@ export const FollowButton = styled(Button)`
   border: 1px solid ${props => props.theme.bg.border};
   color: ${props => props.theme.text.alt};
   padding: 4px;
-  margin-right: 12px;
 
   &:hover {
     background: ${props => props.theme.bg.default};

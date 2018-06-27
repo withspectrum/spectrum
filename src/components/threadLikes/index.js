@@ -84,7 +84,12 @@ export const LikeCount = (props: LikeCountProps) => {
   if (count > 0) {
     return (
       <LikeCountWrapper active={active}>
-        <Icon glyph={'thumbsup-fill'} size={24} />
+        <Icon
+          glyph={'thumbsup-fill'}
+          size={24}
+          tipText={`${count} likes`}
+          tipLocation={'top-right'}
+        />
         <CurrentCount>{count}</CurrentCount>
       </LikeCountWrapper>
     );

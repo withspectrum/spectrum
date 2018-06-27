@@ -457,21 +457,35 @@ export const ThreadMeta = styled.div`
   display: flex;
   margin: 8px 16px 16px;
   justify-content: flex-start;
+  align-items: center;
+`;
+
+export const ThreadAuthorWrapper = styled.div`
+  margin-left: 8px;
+  ${Tooltip};
 `;
 
 export const ThreadActivityWrapper = styled.div`
   display: flex;
   flex: none;
   align-items: center;
+
+  .icon {
+    pointer-events: auto;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
 `;
 
 export const ThreadStatusWrapper = styled(ThreadActivityWrapper)`
   flex: auto;
-  justify-content: flex-end;
+  justify-content: flex-start;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};
 
-  > div {
+  .icon {
     pointer-events: auto;
 
     &:hover {
