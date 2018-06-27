@@ -511,7 +511,7 @@ const StatusPill = styled(CountWrapper)`
   background: ${props =>
     props.active ? props.theme.text.reverse : props.theme.brand.alt};
   border-radius: 20px;
-  padding: 0 12px;
+  padding: 4px 12px;
   font-size: 11px;
   text-transform: uppercase;
   font-weight: 700;

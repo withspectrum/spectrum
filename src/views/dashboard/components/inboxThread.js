@@ -46,13 +46,13 @@ const MessageCount = props => {
   const now = new Date().getTime() / 1000;
   const createdAtTime = new Date(createdAt).getTime() / 1000;
   const lastActiveTime = lastActive && new Date(lastActive).getTime() / 1000;
-  const createdYesterday = now - createdAtTime > 86400;
+  const createdMoreThanOneDayAgo = now - createdAtTime > 86400;
   const newMessagesSinceLastWeek =
     lastActiveTime && now - lastActiveTime > 86400 * 7;
   const newMessagesSinceLastViewed =
     currentUserLastSeen && lastActive && currentUserLastSeen < lastActive;
 
-  if (currentUserLastSeen && !lastActive && !createdYesterday) {
+  if (!currentUserLastSeen && !lastActive && !createdMoreThanOneDayAgo) {
     return <NewThreadPill active={active}>New thread!</NewThreadPill>;
   }
 
