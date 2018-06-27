@@ -68,28 +68,36 @@ export default ({
 };
 
 export const WaterCoolerPill = ({
-  thread: { community },
+  thread: { community, lastActive, createdAt },
   active,
   activeCommunity,
-}: Props) => (
-  <CommunityInfoContainer active={active}>
-    <span style={{ display: 'flex', alignItems: 'center' }}>
-      {!activeCommunity && (
-        <AvatarLink to={`/${community.slug}`}>
-          <CommunityAvatar
-            community={community}
-            src={`${community.profilePhoto}?w=20&dpr=2`}
-          />
-        </AvatarLink>
-      )}
-      {!activeCommunity && (
-        <MetaCommunityName to={`/${community.slug}`}>
-          {community.name}
-        </MetaCommunityName>
-      )}
-      <PillLinkPinned>
-        <PillLabel>Open chat</PillLabel>
-      </PillLinkPinned>
-    </span>
-  </CommunityInfoContainer>
-);
+}: Props) => {
+  const now = new Date().getTime();
+  const then = lastActive || createdAt;
+  const timestamp = timeDifferenceShort(now, new Date(then).getTime());
+
+  return (
+    <CommunityInfoContainer active={active}>
+      <span style={{ display: 'flex', alignItems: 'center' }}>
+        {!activeCommunity && (
+          <AvatarLink to={`/${community.slug}`}>
+            <CommunityAvatar
+              community={community}
+              src={`${community.profilePhoto}?w=20&dpr=2`}
+            />
+          </AvatarLink>
+        )}
+        {!activeCommunity && (
+          <MetaCommunityName to={`/${community.slug}`}>
+            {community.name}
+          </MetaCommunityName>
+        )}
+        <PillLinkPinned>
+          <PillLabel>Open chat</PillLabel>
+        </PillLinkPinned>
+      </span>
+
+      <LastActiveTimestamp active={active}>{timestamp}</LastActiveTimestamp>
+    </CommunityInfoContainer>
+  );
+};
