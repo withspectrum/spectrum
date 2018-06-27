@@ -63,7 +63,6 @@ type State = {
   // while looking at a live thread
   lastSeen: ?number | ?string,
   bannerIsVisible: boolean,
-  scrollOffset: number,
 };
 
 class ThreadContainer extends React.Component<Props, State> {
@@ -165,24 +164,23 @@ class ThreadContainer extends React.Component<Props, State> {
     // enable the `bannerIsVisible` state to slide the thread context banner
     // in from the top of the screen
     const scrollOffset = e.target.scrollTop;
-    this.setState({ scrollOffset }, () => {
-      try {
-        const threadDetail = ReactDOM.findDOMNode(this.threadDetailElem);
-        if (!threadDetail) return;
+    try {
+      const threadDetail = ReactDOM.findDOMNode(this.threadDetailElem);
+      if (!threadDetail) return;
 
-        const {
-          height: threadDetailHeight,
-          // $FlowFixMe
-        } = threadDetail.getBoundingClientRect();
-        if (this.state.scrollOffset > threadDetailHeight) {
-          this.setState({ bannerIsVisible: true });
-        } else {
-          this.setState({ bannerIsVisible: false });
-        }
-      } catch (err) {
-        // no need to do anything here
+      const {
+        height: threadDetailHeight,
+        // $FlowFixMe
+      } = threadDetail.getBoundingClientRect();
+      const bannerShouldBeVisible = scrollOffset > threadDetailHeight;
+      if (bannerShouldBeVisible !== this.state.bannerIsVisible) {
+        this.setState({
+          bannerIsVisible: bannerShouldBeVisible,
+        });
       }
-    });
+    } catch (err) {
+      // no need to do anything here
+    }
   };
 
   componentDidUpdate(prevProps) {
