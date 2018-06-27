@@ -326,7 +326,7 @@ export const Location = styled(FlexRow)`
 export const Timestamp = styled.span`
   font-weight: 400;
   margin: 8px 0;
-  font-size: 14px;
+  font-size: 16px;
   color: ${({ theme }) => theme.text.alt};
   display: inline-block;
 
