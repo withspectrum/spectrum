@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import {
   parseActors,
@@ -20,10 +21,16 @@ import {
   CardContent,
 } from '../../../components/threadFeedCard/style';
 
+type Props = {
+  notification: Object,
+  currentUser: Object,
+  history?: Object,
+};
+
 export const NewThreadReactionNotification = ({
   notification,
   currentUser,
-}) => {
+}: Props) => {
   const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
@@ -60,7 +67,7 @@ export const MiniNewThreadReactionNotification = ({
   notification,
   currentUser,
   history,
-}) => {
+}: Props) => {
   const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);

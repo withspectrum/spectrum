@@ -434,7 +434,8 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isPinningThread,
     } = this.state;
 
-    const timestamp = convertTimestampToDate(thread.createdAt);
+    const createdAt = new Date(thread.createdAt).getTime();
+    const timestamp = convertTimestampToDate(createdAt);
 
     const editedTimestamp = thread.modifiedAt
       ? new Date(thread.modifiedAt).getTime()

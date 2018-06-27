@@ -105,7 +105,8 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
       ? `/${community.slug}/login?r=${CLIENT_URL}/thread/${id}`
       : `/login?r=${CLIENT_URL}/${community.slug}/thread/${id}`;
 
-    const timestamp = convertTimestampToDate(thread.createdAt);
+    const createdAt = new Date(thread.createdAt).getTime();
+    const timestamp = convertTimestampToDate(createdAt);
 
     return (
       <CommunityHeader hide={watercooler}>
