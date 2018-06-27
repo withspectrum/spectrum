@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
-import { LikeButton } from 'src/components/threadLikes';
 import Link from 'src/components/link';
 import ThreadSearch from '../dashboard/components/threadSearch';
 import Icon from '../../components/icons';
