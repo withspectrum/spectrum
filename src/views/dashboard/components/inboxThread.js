@@ -52,13 +52,8 @@ const MessageCount = props => {
   const newMessagesSinceLastViewed =
     currentUserLastSeen && lastActive && currentUserLastSeen < lastActive;
 
-  if (currentUserLastSeen && !createdYesterday) {
-    return (
-      <NewThreadPill active={active}>
-        <Icon glyph="private-fill" size={24} />
-        New thread!
-      </NewThreadPill>
-    );
+  if (currentUserLastSeen && !lastActive && !createdYesterday) {
+    return <NewThreadPill active={active}>New thread!</NewThreadPill>;
   }
 
   return (
