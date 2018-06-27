@@ -73,21 +73,23 @@ export const WaterCoolerPill = ({
   activeCommunity,
 }: Props) => (
   <CommunityInfoContainer active={active}>
-    {!activeCommunity && (
-      <AvatarLink to={`/${community.slug}`}>
-        <CommunityAvatar
-          community={community}
-          src={`${community.profilePhoto}?w=20&dpr=2`}
-        />
-      </AvatarLink>
-    )}
-    {!activeCommunity && (
-      <MetaCommunityName to={`/${community.slug}`}>
-        {community.name}
-      </MetaCommunityName>
-    )}
-    <PillLinkPinned>
-      <PillLabel>Open chat</PillLabel>
-    </PillLinkPinned>
+    <span style={{ display: 'flex', alignItems: 'center' }}>
+      {!activeCommunity && (
+        <AvatarLink to={`/${community.slug}`}>
+          <CommunityAvatar
+            community={community}
+            src={`${community.profilePhoto}?w=20&dpr=2`}
+          />
+        </AvatarLink>
+      )}
+      {!activeCommunity && (
+        <MetaCommunityName to={`/${community.slug}`}>
+          {community.name}
+        </MetaCommunityName>
+      )}
+      <PillLinkPinned>
+        <PillLabel>Open chat</PillLabel>
+      </PillLinkPinned>
+    </span>
   </CommunityInfoContainer>
 );

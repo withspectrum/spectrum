@@ -34,14 +34,15 @@ export const InboxWrapper = styled.div`
   background: ${props => props.theme.bg.default};
   border-right: 1px solid ${props => props.theme.bg.border};
 
-  @media (min-width: 1440px) {
-    flex: 0 0 480px;
-    width: 480px;
+  @media (min-resolution: 120dpi) {
+    max-width: 400px;
+    min-width: 400px;
   }
 
   @media (max-width: 768px) {
-    flex: 0 0 100%;
-    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    flex: auto;
     border-right: none;
   }
 `;
