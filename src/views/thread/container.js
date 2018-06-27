@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import ReactDOM from 'react-dom';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
@@ -61,16 +62,25 @@ type State = {
   // Cache lastSeen so it doesn't jump around
   // while looking at a live thread
   lastSeen: ?number | ?string,
+  bannerIsVisible: boolean,
+  scrollOffset: number,
 };
 
 class ThreadContainer extends React.Component<Props, State> {
   chatInput: any;
+
+  // used to keep track of the height of the thread content element to determine
+  // whether or not to show the contextual thread header banner
+  threadDetailElem: any;
+  threadDetailElem = null;
 
   state = {
     messagesContainer: null,
     scrollElement: null,
     isEditing: false,
     lastSeen: null,
+    bannerIsVisible: false,
+    scrollOffset: 0,
   };
 
   componentWillReceiveProps(next: Props) {
@@ -145,6 +155,34 @@ class ThreadContainer extends React.Component<Props, State> {
       scrollElement: elem,
     });
   }
+
+  handleScroll = e => {
+    e.persist();
+    if (!e || !e.target) return;
+
+    // whenever the user scrolls in the thread we determine if they've scrolled
+    // past the thread content section - once they've scroll passed it, we
+    // enable the `bannerIsVisible` state to slide the thread context banner
+    // in from the top of the screen
+    const scrollOffset = e.target.scrollTop;
+    this.setState({ scrollOffset }, () => {
+      try {
+        const threadDetail = ReactDOM.findDOMNode(this.threadDetailElem);
+        if (!threadDetail) return;
+        // $FlowFixMe
+        const {
+          height: threadDetailHeight,
+        } = threadDetail.getBoundingClientRect();
+        if (this.state.scrollOffset > threadDetailHeight) {
+          this.setState({ bannerIsVisible: true });
+        } else {
+          this.setState({ bannerIsVisible: false });
+        }
+      } catch (err) {
+        // no need to do anything here
+      }
+    });
+  };
 
   componentDidUpdate(prevProps) {
     // if the user is in the inbox and changes threads, it should initially scroll
@@ -290,7 +328,9 @@ class ThreadContainer extends React.Component<Props, State> {
     if (thread.watercooler) {
       return (
         <React.Fragment>
-          <WatercoolerIntroContainer>
+          <WatercoolerIntroContainer
+            innerRef={c => (this.threadDetailElem = c)}
+          >
             <WatercoolerAvatar
               src={thread.community.profilePhoto}
               community
@@ -317,6 +357,7 @@ class ThreadContainer extends React.Component<Props, State> {
           toggleEdit={this.toggleEdit}
           thread={thread}
           slider={slider}
+          ref={c => (this.threadDetailElem = c)}
         />
       </React.Fragment>
     );
@@ -401,7 +442,7 @@ class ThreadContainer extends React.Component<Props, State> {
               />
             )}
 
-            <ThreadContentView slider={slider}>
+            <ThreadContentView slider={slider} onScroll={this.handleScroll}>
               <Head
                 title={headTitle}
                 description={headDescription}
@@ -415,7 +456,13 @@ class ThreadContainer extends React.Component<Props, State> {
                 noComposer
                 style={{ gridArea: 'header' }}
               />
-              <ThreadCommunityBanner thread={thread} />
+
+              <ThreadCommunityBanner
+                forceScrollToTop={this.forceScrollToTop}
+                thread={thread}
+                isVisible={this.state.bannerIsVisible}
+              />
+
               <Content innerRef={this.setMessagesContainer}>
                 <Detail type={slider ? '' : 'only'}>
                   {this.renderPost()}

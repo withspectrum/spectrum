@@ -19,6 +19,7 @@ import {
   CommunityHeaderMeta,
   CommunityHeaderSubtitle,
   CommunityHeaderMetaCol,
+  AnimatedContainer,
 } from '../style';
 
 type Props = {
@@ -28,6 +29,8 @@ type Props = {
   hide: boolean,
   watercooler: boolean,
   thread: GetThreadType,
+  isVisible: boolean,
+  forceScrollToTop: Function,
 };
 type State = {
   isLoading: boolean,
@@ -98,6 +101,8 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
       thread: { channel, community, watercooler, id },
       thread,
       currentUser,
+      isVisible,
+      forceScrollToTop,
     } = this.props;
     const { isLoading } = this.state;
 
@@ -109,48 +114,50 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
     const timestamp = convertTimestampToDate(createdAt);
 
     return (
-      <CommunityHeader hide={watercooler}>
-        <CommunityHeaderMeta>
-          <CommunityHeaderLink to={`/${community.slug}`}>
-            <Avatar src={community.profilePhoto} community size={'32'} />
-          </CommunityHeaderLink>
-          <CommunityHeaderMetaCol>
-            <CommunityHeaderName>
-              {watercooler
-                ? `${community.name} watercooler`
-                : thread.content.title}
-            </CommunityHeaderName>
-            <CommunityHeaderSubtitle>
-              <Link to={`/${community.slug}`}>{community.name}</Link>
-              {channel.slug !== 'general' && <span>/</span>}
-              {channel.slug !== 'general' && (
-                <Link to={`/${community.slug}/${channel.slug}`}>
-                  {channel.name}
-                </Link>
-              )}
-              <span>{` · ${timestamp}`}</span>
-            </CommunityHeaderSubtitle>
-          </CommunityHeaderMetaCol>
-        </CommunityHeaderMeta>
+      <AnimatedContainer isVisible={isVisible}>
+        <CommunityHeader>
+          <CommunityHeaderMeta>
+            <CommunityHeaderLink to={`/${community.slug}`}>
+              <Avatar src={community.profilePhoto} community size={'32'} />
+            </CommunityHeaderLink>
+            <CommunityHeaderMetaCol>
+              <CommunityHeaderName onClick={forceScrollToTop}>
+                {watercooler
+                  ? `${community.name} watercooler`
+                  : thread.content.title}
+              </CommunityHeaderName>
+              <CommunityHeaderSubtitle>
+                <Link to={`/${community.slug}`}>{community.name}</Link>
+                {channel.slug !== 'general' && <span>/</span>}
+                {channel.slug !== 'general' && (
+                  <Link to={`/${community.slug}/${channel.slug}`}>
+                    {channel.name}
+                  </Link>
+                )}
+                <span>{` · ${timestamp}`}</span>
+              </CommunityHeaderSubtitle>
+            </CommunityHeaderMetaCol>
+          </CommunityHeaderMeta>
 
-        {channel.channelPermissions.isMember ? (
-          watercooler ? null : (
-            <LikeButton thread={thread} />
-          )
-        ) : currentUser ? (
-          <Button
-            gradientTheme={'success'}
-            onClick={this.joinChannel}
-            loading={isLoading}
-          >
-            Join channel
-          </Button>
-        ) : (
-          <Link to={loginUrl}>
-            <Button gradientTheme={'success'}>Join Community</Button>
-          </Link>
-        )}
-      </CommunityHeader>
+          {channel.channelPermissions.isMember ? (
+            watercooler ? null : (
+              <LikeButton thread={thread} />
+            )
+          ) : currentUser ? (
+            <Button
+              gradientTheme={'success'}
+              onClick={this.joinChannel}
+              loading={isLoading}
+            >
+              Join channel
+            </Button>
+          ) : (
+            <Link to={loginUrl}>
+              <Button gradientTheme={'success'}>Join Community</Button>
+            </Link>
+          )}
+        </CommunityHeader>
+      </AnimatedContainer>
     );
   }
 }

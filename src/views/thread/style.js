@@ -51,6 +51,7 @@ export const ThreadContentView = styled(FlexCol)`
   grid-template-rows: 48px 1fr 64px;
   grid-template-columns: 100%;
   grid-template-areas: 'header' 'body' 'footer';
+  position: relative;
 `;
 
 export const ThreadSidebarView = styled(FlexCol)`
@@ -770,4 +771,19 @@ export const WatercoolerTitle = styled.h3`
 
 export const WatercoolerAvatar = styled(Avatar)`
   margin-bottom: 16px;
+`;
+
+export const AnimatedContainer = styled.div`
+  transform: translateY(${props => (props.isVisible ? '0' : '-64px')});
+  transition: transform 0.3s ease-in-out;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: ${zIndex.chrome + 10};
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
