@@ -29,8 +29,8 @@ import { ErrorBoundary } from 'src/components/error';
 type Props = {
   active: boolean,
   dispatch: Dispatch<Object>,
-  hasActiveChannel: ?string,
-  hasActiveCommunity: ?string,
+  hasActiveChannel: ?Object,
+  hasActiveCommunity: ?Object,
   history: Object,
   location: Object,
   match: Object,

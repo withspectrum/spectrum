@@ -455,7 +455,7 @@ export const AttachmentsContainer = styled.div`
 export const ThreadMeta = styled.div`
   align-self: stretch;
   display: flex;
-  margin: 8px 16px 16px;
+  margin: 8px 16px;
   justify-content: flex-start;
   align-items: center;
 `;
@@ -560,8 +560,10 @@ export const MetaCommunityName = styled(Link)`
 
 export const CommunityInfoContainer = styled.div`
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  margin: 16px 16px 0;
+  padding: 16px 16px 0;
+  width: 100%;
 
   a {
     font-size: 14px;
@@ -590,6 +592,15 @@ export const CommunityInfoContainer = styled.div`
     background: ${props =>
       props.active ? 'rgba(255,255,255,0.1)' : props.theme.bg.wash};
   }
+`;
+
+export const LastActiveTimestamp = styled.p`
+  font-size: 14px;
+  font-weight: 400;
+  color: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.text.alt};
+  line-height: 1.28;
+  pointer-events: auto;
 `;
 
 export const AvatarLink = styled(Link)`
