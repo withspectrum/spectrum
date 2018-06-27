@@ -775,7 +775,8 @@ export const WatercoolerAvatar = styled(Avatar)`
 
 export const AnimatedContainer = styled.div`
   transform: translateY(${props => (props.isVisible ? '0' : '-64px')});
-  transition: transform 0.3s ease-in-out;
+  opacity: ${props => (props.isVisible ? '1' : '0')};
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
   width: 100%;
   position: absolute;
   top: 0;
