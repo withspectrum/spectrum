@@ -37,7 +37,10 @@ export const SvgWrapper = styled.div`
   min-height: ${props => (props.size ? `${props.size}px` : '32px')};
   position: relative;
   color: inherit;
-  ${props => (props.tipText ? Tooltip(props) : '')};
+
+  @media (min-width: 768px) {
+    ${props => (props.tipText ? Tooltip(props) : '')};
+  }
 
   ${props =>
     props.count &&
