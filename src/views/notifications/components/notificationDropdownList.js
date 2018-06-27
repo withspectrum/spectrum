@@ -6,6 +6,7 @@ import { parseNotification } from '../utils';
 import { sortByDate } from '../../../helpers/utils';
 import { MiniNewMessageNotification } from './newMessageNotification';
 import { MiniNewReactionNotification } from './newReactionNotification';
+import { MiniNewThreadReactionNotification } from './newThreadReactionNotification';
 import { MiniNewChannelNotification } from './newChannelNotification';
 import { MiniNewThreadNotification } from './newThreadNotification';
 import { MiniNewUserInCommunityNotification } from './newUserInCommunityNotification';
@@ -60,6 +61,17 @@ export class NotificationDropdownList extends React.Component<Props> {
               return (
                 <ErrorBoundary fallbackComponent={null} key={notification.id}>
                   <MiniNewReactionNotification
+                    notification={notification}
+                    currentUser={currentUser}
+                    history={history}
+                  />
+                </ErrorBoundary>
+              );
+            }
+            case 'THREAD_REACTION_CREATED': {
+              return (
+                <ErrorBoundary fallbackComponent={null} key={notification.id}>
+                  <MiniNewThreadReactionNotification
                     notification={notification}
                     currentUser={currentUser}
                     history={history}

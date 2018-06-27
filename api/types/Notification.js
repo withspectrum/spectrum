@@ -2,6 +2,7 @@
 const Notification = /* GraphQL */ `
 	enum NotificationEventType {
 		REACTION_CREATED
+		THREAD_REACTION_CREATED
 		MESSAGE_CREATED
 	  THREAD_CREATED
 	  CHANNEL_CREATED
@@ -22,6 +23,7 @@ const Notification = /* GraphQL */ `
 
 	enum EntityType {
 		REACTION
+		THREAD_REACTION
 		MESSAGE
 	  THREAD
 	  CHANNEL

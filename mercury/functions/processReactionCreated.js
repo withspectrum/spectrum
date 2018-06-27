@@ -1,3 +1,4 @@
+// @flow
 const debug = require('debug')('mercury:queue:process-reaction-created');
 import { updateReputation } from '../models/usersCommunities';
 import { getMessage } from '../models/message';
@@ -8,6 +9,7 @@ import {
   REACTION_CREATED_SCORE,
   REACTION_CREATED_POST_AUTHOR_SCORE,
 } from '../constants';
+import type { ReputationEventJobData } from 'shared/bull/types';
 
 /*
   If a reaction was created, it is the message creator who should receive reputation, not the reaction leaver. Therefore the userId passed in from reaction mutation doesn't matter; instead we need to get the userId of the person who left the message.
@@ -15,7 +17,7 @@ import {
   In addition, we should reward the person who created the parent thread for sparking a conversation that resulted in reactions and productive messages
 */
 
-export default async data => {
+export default async (data: ReputationEventJobData) => {
   // entityId represents the messageId
   const { entityId } = data;
 

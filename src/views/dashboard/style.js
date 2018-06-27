@@ -25,9 +25,8 @@ export const DashboardWrapper = styled.main`
 
 export const InboxWrapper = styled.div`
   display: flex;
-  width: 40%;
-  max-width: 480px;
-  min-width: 360px;
+  flex: 0 0 400px;
+  width: 400px;
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
@@ -35,15 +34,14 @@ export const InboxWrapper = styled.div`
   background: ${props => props.theme.bg.default};
   border-right: 1px solid ${props => props.theme.bg.border};
 
-  @media (min-resolution: 120dpi) {
-    max-width: 400px;
-    min-width: 400px;
+  @media (min-width: 1440px) {
+    flex: 0 0 480px;
+    width: 480px;
   }
 
   @media (max-width: 768px) {
-    max-width: 100%;
-    min-width: 100%;
-    flex: auto;
+    flex: 0 0 100%;
+    width: 100%;
     border-right: none;
   }
 `;
@@ -191,7 +189,7 @@ export const CommunityListItem = styled.div`
   grid-auto-rows: 48px auto;
   grid-template-areas: 'icon title' 'menu menu';
   min-height: 48px;
-  padding: 6px 8px;
+  padding: 8px;
   justify-items: start;
   align-items: center;
   cursor: pointer;
@@ -202,7 +200,9 @@ export const CommunityListItem = styled.div`
 
   box-shadow: ${props =>
     props.active
-      ? `0 1px 0 ${props.theme.bg.border}, 0 -1px 0 ${props.theme.bg.border}`
+      ? `inset 0 -1px 0 ${props.theme.bg.border}, 0 -1px 0 ${
+          props.theme.bg.border
+        }`
       : 'none'};
 
   > ${CommunityListName} {
@@ -284,7 +284,7 @@ export const CommunityListAvatar = styled.img`
 
 export const FeedHeaderContainer = styled.div`
   background: ${props => props.theme.bg.default};
-  padding: 14px 8px;
+  padding: 16px 8px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   position: relative;
   z-index: ${zIndex.chrome - 1};
@@ -432,7 +432,7 @@ export const ThreadTitle = styled.h3`
   font-weight: 500;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.default};
-  margin: 12px 16px 4px;
+  margin: 12px 16px 0;
   max-width: 100%;
   line-height: 1.4;
 `;
@@ -455,73 +455,46 @@ export const AttachmentsContainer = styled.div`
 export const ThreadMeta = styled.div`
   align-self: stretch;
   display: flex;
-  margin: 10px 16px 16px;
-  justify-content: space-between;
+  margin: 8px 16px 16px;
+  justify-content: flex-start;
 `;
 
-export const FacepileContainer = styled.div`
+export const ThreadActivityWrapper = styled.div`
   display: flex;
-  margin-right: 8px;
-  margin-left: 8px;
-  pointer-events: auto;
-  order: 1;
-`;
-
-export const ParticipantHead = styled.span`
-  position: relative;
-  margin-left: -8px;
-  border-radius: 24px;
-  max-width: 24px;
-  max-height: 24px;
-  pointer-events: auto;
-  box-shadow: 0 0 0 2px
-    ${props => (props.active ? props.theme.brand.alt : props.theme.bg.default)};
-  transform: translateY(0);
-  transition: transform 0.2s ease-in-out;
-  ${Tooltip} &:hover {
-    transform: translateY(-4px);
-    transition: transform 0.2s ease-in-out;
-  }
-`;
-
-export const EmptyParticipantHead = styled.span`
-  background: ${props =>
-    props.active ? props.theme.bg.default : props.theme.bg.wash};
-  display: flex;
+  flex: none;
   align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 600;
-  color: ${props => props.theme.text.alt};
-  box-shadow: 0 0 0 2px
-    ${props => (props.active ? props.theme.brand.alt : props.theme.bg.default)};
-  width: 24px;
-  height: 24px;
-  max-width: 24px;
-  max-height: 24px;
-  pointer-events: auto;
-  position: relative;
-  margin-left: -8px;
-  border-radius: 24px;
-  transform: translateY(0);
-  transition: transform 0.2s ease-in-out;
+`;
 
-  &:hover {
-    transform: translateY(-4px);
-    transition: transform 0.2s ease-in-out;
+export const ThreadStatusWrapper = styled(ThreadActivityWrapper)`
+  flex: auto;
+  justify-content: flex-end;
+  color: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.text.alt};
+
+  > div {
+    pointer-events: auto;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 `;
 
-export const StatusText = styled.span`
+export const CountWrapper = styled.div`
+  display: flex;
+  flex: none;
   font-size: 14px;
   color: ${props =>
     props.new
       ? props.active ? props.theme.text.reverse : props.theme.warn.alt
       : props.active ? props.theme.text.reverse : props.theme.text.alt};
   font-weight: ${props => (props.new ? 600 : 400)};
-  order: 2;
-  position: relative;
-  top: 4px;
+  align-items: center;
+  margin-right: 8px;
+
+  > span {
+    margin-left: 4px;
+  }
 
   a {
     font-weight: 600;
@@ -532,7 +505,7 @@ export const StatusText = styled.span`
   }
 `;
 
-const StatusPill = styled(StatusText)`
+const StatusPill = styled(CountWrapper)`
   color: ${props =>
     props.active ? props.theme.brand.alt : props.theme.text.reverse};
   background: ${props =>
@@ -553,7 +526,7 @@ export const NewThreadPill = styled(StatusPill)`
     props.active ? props.theme.text.reverse : props.theme.success.alt};
 `;
 
-export const NewMessagePill = styled(StatusText)`
+export const NewMessagePill = styled(CountWrapper)`
   color: ${props =>
     props.active ? props.theme.brand.alt : props.theme.warn.alt};
 `;

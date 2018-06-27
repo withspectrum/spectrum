@@ -9,6 +9,7 @@ import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateCh
 import { parseNotification } from './utils';
 import { NewMessageNotification } from './components/newMessageNotification';
 import { NewReactionNotification } from './components/newReactionNotification';
+import { NewThreadReactionNotification } from './components/newThreadReactionNotification';
 import { NewChannelNotification } from './components/newChannelNotification';
 import { NewThreadNotification } from './components/newThreadNotification';
 import { CommunityInviteNotification } from './components/communityInviteNotification';
@@ -262,6 +263,19 @@ class NotificationsPure extends React.Component<Props, State> {
                         key={notification.id}
                       >
                         <NewReactionNotification
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      </ErrorBoundary>
+                    );
+                  }
+                  case 'THREAD_REACTION_CREATED': {
+                    return (
+                      <ErrorBoundary
+                        fallbackComponent={null}
+                        key={notification.id}
+                      >
+                        <NewThreadReactionNotification
                           notification={notification}
                           currentUser={currentUser}
                         />
