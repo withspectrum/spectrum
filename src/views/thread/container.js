@@ -169,9 +169,10 @@ class ThreadContainer extends React.Component<Props, State> {
       try {
         const threadDetail = ReactDOM.findDOMNode(this.threadDetailElem);
         if (!threadDetail) return;
-        // $FlowFixMe
+
         const {
           height: threadDetailHeight,
+          // $FlowFixMe
         } = threadDetail.getBoundingClientRect();
         if (this.state.scrollOffset > threadDetailHeight) {
           this.setState({ bannerIsVisible: true });
