@@ -3,7 +3,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
-import Icon from '../../../components/icons';
+import { LikeButton } from 'src/components/threadLikes';
+import { convertTimestampToDate } from 'shared/time-formatting';
 import { Button } from '../../../components/buttons';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -16,10 +17,9 @@ import {
   CommunityHeaderName,
   CommunityHeaderLink,
   CommunityHeaderMeta,
+  CommunityHeaderSubtitle,
   CommunityHeaderMetaCol,
-  PillLink,
-  PillLabel,
-  Lock,
+  AnimatedContainer,
 } from '../style';
 
 type Props = {
@@ -29,6 +29,8 @@ type Props = {
   hide: boolean,
   watercooler: boolean,
   thread: GetThreadType,
+  isVisible: boolean,
+  forceScrollToTop: Function,
 };
 type State = {
   isLoading: boolean,
@@ -97,8 +99,10 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
   render() {
     const {
       thread: { channel, community, watercooler, id },
+      thread,
       currentUser,
-      hide,
+      isVisible,
+      forceScrollToTop,
     } = this.props;
     const { isLoading } = this.state;
 
@@ -106,50 +110,54 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
       ? `/${community.slug}/login?r=${CLIENT_URL}/thread/${id}`
       : `/login?r=${CLIENT_URL}/${community.slug}/thread/${id}`;
 
+    const createdAt = new Date(thread.createdAt).getTime();
+    const timestamp = convertTimestampToDate(createdAt);
+
     return (
-      <CommunityHeader hide={hide}>
-        <CommunityHeaderMeta>
-          <CommunityHeaderLink to={`/${community.slug}`}>
-            <Avatar src={community.profilePhoto} community size="32" />
-          </CommunityHeaderLink>
-          <CommunityHeaderMetaCol>
+      <AnimatedContainer isVisible={isVisible}>
+        <CommunityHeader>
+          <CommunityHeaderMeta>
             <CommunityHeaderLink to={`/${community.slug}`}>
-              <CommunityHeaderName>
-                {watercooler ? `${community.name} watercooler` : community.name}
-              </CommunityHeaderName>
+              <Avatar src={community.profilePhoto} community size={'32'} />
             </CommunityHeaderLink>
-
-            {channel.slug !== 'general' && (
-              <PillLink to={`/${community.slug}/${channel.slug}`}>
-                {channel.isPrivate && (
-                  <Lock>
-                    <Icon glyph="private" size={12} />
-                  </Lock>
+            <CommunityHeaderMetaCol>
+              <CommunityHeaderName onClick={forceScrollToTop}>
+                {watercooler
+                  ? `${community.name} watercooler`
+                  : thread.content.title}
+              </CommunityHeaderName>
+              <CommunityHeaderSubtitle>
+                <Link to={`/${community.slug}`}>{community.name}</Link>
+                {channel.slug !== 'general' && <span>/</span>}
+                {channel.slug !== 'general' && (
+                  <Link to={`/${community.slug}/${channel.slug}`}>
+                    {channel.name}
+                  </Link>
                 )}
-                <PillLabel isPrivate={channel.isPrivate}>
-                  {channel.name}
-                </PillLabel>
-              </PillLink>
-            )}
-          </CommunityHeaderMetaCol>
-        </CommunityHeaderMeta>
+                <span>{` · ${timestamp}`}</span>
+              </CommunityHeaderSubtitle>
+            </CommunityHeaderMetaCol>
+          </CommunityHeaderMeta>
 
-        {channel.channelPermissions.isMember ? (
-          <span />
-        ) : currentUser ? (
-          <Button
-            gradientTheme={'success'}
-            onClick={this.joinChannel}
-            loading={isLoading}
-          >
-            Join channel
-          </Button>
-        ) : (
-          <Link to={loginUrl}>
-            <Button gradientTheme={'success'}>Join Community</Button>
-          </Link>
-        )}
-      </CommunityHeader>
+          {channel.channelPermissions.isMember ? (
+            watercooler ? null : (
+              <LikeButton thread={thread} />
+            )
+          ) : currentUser ? (
+            <Button
+              gradientTheme={'success'}
+              onClick={this.joinChannel}
+              loading={isLoading}
+            >
+              Join channel
+            </Button>
+          ) : (
+            <Link to={loginUrl}>
+              <Button gradientTheme={'success'}>Join Community</Button>
+            </Link>
+          )}
+        </CommunityHeader>
+      </AnimatedContainer>
     );
   }
 }

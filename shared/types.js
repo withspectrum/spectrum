@@ -128,6 +128,7 @@ export type DBMessage = {
 
 export type NotificationPayloadType =
   | 'REACTION'
+  | 'THREAD_REACTION'
   | 'MESSAGE'
   | 'THREAD'
   | 'CHANNEL'
@@ -137,6 +138,7 @@ export type NotificationPayloadType =
 
 export type NotificationEventType =
   | 'REACTION_CREATED'
+  | 'THREAD_REACTION_CREATED'
   | 'MESSAGE_CREATED'
   | 'THREAD_CREATED'
   | 'CHANNEL_CREATED'
@@ -175,6 +177,15 @@ export type DBReaction = {
   messageId: string,
   timestamp: Date,
   type: ReactionType,
+  userId: string,
+};
+
+export type DBThreadReaction = {
+  id: string,
+  threadId: string,
+  createdAt: Date,
+  type: ReactionType,
+  deletedAt?: Date,
   userId: string,
 };
 

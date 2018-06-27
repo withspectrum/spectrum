@@ -3,6 +3,7 @@ import type {
   DBThread,
   DBInvoice,
   DBReaction,
+  DBThreadReaction,
   DBChannel,
   DBMessage,
   DBUser,
@@ -239,6 +240,11 @@ export type ReactionNotificationJobData = {
   userId: string,
 };
 
+export type ThreadReactionNotificationJobData = {
+  threadReaction: DBThreadReaction,
+  userId: string,
+};
+
 export type PrivateChannelRequestJobData = {
   userId: string,
   channel: DBChannel,
@@ -418,6 +424,9 @@ export type Queues = {
   sendProInvoicePaidNotificationQueue: BullQueue<InvoiceJobData>,
   sendCommunityInvoicePaidNotificationQueue: BullQueue<InvoiceJobData>,
   sendReactionNotificationQueue: BullQueue<ReactionNotificationJobData>,
+  sendThreadReactionNotificationQueue: BullQueue<
+    ThreadReactionNotificationJobData
+  >,
   sendPrivateChannelRequestQueue: BullQueue<PrivateChannelRequestJobData>,
   sendPrivateChannelRequestApprovedQueue: BullQueue<
     PrivateChannelRequestApprovedJobData

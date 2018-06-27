@@ -7,6 +7,7 @@ import type {
   DBThread,
   DBUser,
   DBReaction,
+  DBThreadReaction,
   DBMessage,
   DBUsersThreads,
 } from 'shared/types';
@@ -61,6 +62,11 @@ type AnalyticsReaction = {
   type: ?string,
 };
 
+type AnalyticsThreadReaction = {
+  id: ?string,
+  type: ?string,
+};
+
 type AnalyticsMessage = {
   id: ?string,
   threadType: ?string,
@@ -68,6 +74,21 @@ type AnalyticsMessage = {
 };
 
 export const analyticsReaction = (reaction: ?DBReaction): AnalyticsReaction => {
+  if (!reaction)
+    return {
+      id: null,
+      type: null,
+    };
+
+  return {
+    id: reaction.id,
+    type: reaction.type,
+  };
+};
+
+export const analyticsThreadReaction = (
+  reaction: ?DBThreadReaction
+): AnalyticsThreadReaction => {
   if (!reaction)
     return {
       id: null,

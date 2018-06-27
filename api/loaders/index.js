@@ -39,6 +39,7 @@ import {
   __createReactionLoader,
   __createSingleReactionLoader,
 } from './reaction';
+import { __createThreadReactionLoader } from './threadReaction';
 import { __createStripeCustomersLoader } from './stripe';
 import { __createMessageLoader } from './message';
 import type { DataLoaderOptions } from './types';
@@ -76,6 +77,7 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   directMessageSnippet: __createDirectMessageSnippetLoader(options),
   message: __createMessageLoader(options),
   messageReaction: __createReactionLoader(options),
+  threadReaction: __createThreadReactionLoader(options),
   reaction: __createSingleReactionLoader(options),
 });
 

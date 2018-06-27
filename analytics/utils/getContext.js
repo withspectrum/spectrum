@@ -1,7 +1,8 @@
 // @flow
+import type { DBThreadReaction } from 'shared/types';
 import { transformations } from './index';
 import { getThreadNotificationStatusForUser } from '../models/usersThreads';
-import { getReactionById } from '../models/reaction';
+import { getReactionById, getThreadReactionById } from '../models/reaction';
 import { getMessageById } from '../models/message';
 import { getThreadById } from '../models/thread';
 import { getChannelById } from '../models/channel';
@@ -20,6 +21,7 @@ import { getNotificationById } from '../models/notification';
 */
 type EntityObjType = {
   reactionId?: string,
+  threadReactionId?: string,
   messageId?: string,
   threadId?: string,
   channelId?: string,
@@ -59,6 +61,51 @@ export const getContext = async (obj: EntityObjType) => {
     return {
       reaction: transformations.analyticsReaction(reaction),
       message: transformations.analyticsMessage(message),
+      thread: {
+        ...transformations.analyticsThread(thread),
+        ...transformations.analyticsThreadPermissions(threadPermissions),
+        isPinned: community.pinnedThreadId
+          ? community.pinnedThreadId === thread.id
+          : false,
+      },
+      channel: {
+        ...transformations.analyticsChannel(channel),
+        ...transformations.analyticsChannelPermissions(channelPermissions),
+      },
+      community: {
+        ...transformations.analyticsCommunity(community),
+        ...transformations.analyticsCommunityPermissions(communityPermissions),
+      },
+    };
+  }
+
+  if (obj.threadReactionId) {
+    const threadReaction: DBThreadReaction = await getThreadReactionById(
+      obj.threadReactionId
+    );
+    const thread = await getThreadById(threadReaction.threadId);
+
+    // if no thread was found, we are in a dm
+    if (!thread) {
+      return {};
+    }
+
+    const [
+      channel,
+      community,
+      channelPermissions,
+      communityPermissions,
+      threadPermissions,
+    ] = await Promise.all([
+      getChannelById(thread.channelId),
+      getCommunityById(thread.communityId),
+      getUserPermissionsInChannel(obj.userId, thread.channelId),
+      getUserPermissionsInCommunity(obj.userId, thread.communityId),
+      getThreadNotificationStatusForUser(thread.id, obj.userId),
+    ]);
+
+    return {
+      threadReaction: transformations.analyticsThreadReaction(threadReaction),
       thread: {
         ...transformations.analyticsThread(thread),
         ...transformations.analyticsThreadPermissions(threadPermissions),
