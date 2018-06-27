@@ -51,24 +51,23 @@ export const WaterCoolerPill = ({
   thread: { community },
   active,
   activeCommunity,
-}) =>
-  console.log('activeCommunity', activeCommunity) || (
-    <CommunityInfoContainer active={active}>
-      {!activeCommunity && (
-        <AvatarLink to={`/${community.slug}`}>
-          <CommunityAvatar
-            community={community}
-            src={`${community.profilePhoto}?w=20&dpr=2`}
-          />
-        </AvatarLink>
-      )}
-      {!activeCommunity && (
-        <MetaCommunityName to={`/${community.slug}`}>
-          {community.name}
-        </MetaCommunityName>
-      )}
-      <PillLinkPinned>
-        <PillLabel>Open chat</PillLabel>
-      </PillLinkPinned>
-    </CommunityInfoContainer>
-  );
+}) => (
+  <CommunityInfoContainer active={active}>
+    {!activeCommunity && (
+      <AvatarLink to={`/${community.slug}`}>
+        <CommunityAvatar
+          community={community}
+          src={`${community.profilePhoto}?w=20&dpr=2`}
+        />
+      </AvatarLink>
+    )}
+    {!activeCommunity && (
+      <MetaCommunityName to={`/${community.slug}`}>
+        {community.name}
+      </MetaCommunityName>
+    )}
+    <PillLinkPinned>
+      <PillLabel>Open chat</PillLabel>
+    </PillLinkPinned>
+  </CommunityInfoContainer>
+);

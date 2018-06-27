@@ -170,6 +170,8 @@ class InboxThread extends React.Component<Props> {
           data={data}
           active={active}
           viewContext={viewContext}
+          hasActiveCommunity={hasActiveCommunity}
+          hasActiveChannel={hasActiveChannel}
         />
       );
     }
@@ -238,6 +240,9 @@ class WatercoolerThreadPure extends React.Component<Props> {
       location,
       active,
       viewContext,
+      currentUser,
+      hasActiveCommunity,
+      hasActiveChannel,
     } = this.props;
 
     return (
@@ -259,14 +264,23 @@ class WatercoolerThreadPure extends React.Component<Props> {
             }
           />
           <InboxThreadContent>
-            <WaterCoolerPill thread={data} active={active} />
+            <WaterCoolerPill
+              activeCommunity={hasActiveCommunity}
+              activeChannel={hasActiveChannel}
+              thread={data}
+              active={active}
+            />
             <ThreadTitle active={active}>
               {community.name} Watercooler
             </ThreadTitle>
 
             <ThreadMeta>
               <ErrorBoundary fallbackComponent={null}>
-                <ThreadActivity thread={data} active={active} />
+                <ThreadActivity
+                  thread={data}
+                  currentUser={currentUser}
+                  active={active}
+                />
                 <ThreadStatus thread={data} active={active} />
               </ErrorBoundary>
             </ThreadMeta>
@@ -277,6 +291,8 @@ class WatercoolerThreadPure extends React.Component<Props> {
   }
 }
 
-export const WatercoolerThread = compose(connect(), withRouter)(
-  WatercoolerThreadPure
-);
+export const WatercoolerThread = compose(
+  // $FlowFixMe
+  connect(map),
+  withRouter
+)(WatercoolerThreadPure);
