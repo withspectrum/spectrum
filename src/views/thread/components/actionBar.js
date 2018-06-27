@@ -272,7 +272,149 @@ class ActionBar extends React.Component<Props, State> {
     } else {
       return (
         <ActionBarContainer>
+          <div style={{ display: 'flex' }}>
+            <LikeButton thread={thread} />
+
+            {!thread.channel.isPrivate && (
+              <ShareButtons>
+                <ShareButton
+                  facebook
+                  tipText={'Share'}
+                  tipLocation={'bottom-right'}
+                  data-cy="thread-facebook-button"
+                >
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${
+                      thread.id
+                    }&t=${thread.content.title}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon
+                      glyph={'facebook'}
+                      size={24}
+                      onClick={() =>
+                        track(events.THREAD_SHARED, { method: 'facebook' })
+                      }
+                    />
+                  </a>
+                </ShareButton>
+
+                <ShareButton
+                  twitter
+                  tipText={'Tweet'}
+                  tipLocation={'bottom-right'}
+                  data-cy="thread-tweet-button"
+                >
+                  <a
+                    href={`https://twitter.com/share?text=${
+                      thread.content.title
+                    } on @withspectrum&url=https://spectrum.chat/thread/${
+                      thread.id
+                    }`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon
+                      glyph={'twitter'}
+                      size={24}
+                      onClick={() =>
+                        track(events.THREAD_SHARED, { method: 'twitter' })
+                      }
+                    />
+                  </a>
+                </ShareButton>
+
+                <Clipboard
+                  style={{ background: 'none' }}
+                  data-clipboard-text={`https://spectrum.chat/thread/${
+                    thread.id
+                  }`}
+                  onSuccess={() =>
+                    this.props.dispatch(
+                      addToastWithTimeout('success', 'Copied to clipboard')
+                    )
+                  }
+                >
+                  <ShareButton
+                    tipText={'Copy link'}
+                    tipLocation={'bottom-right'}
+                    data-cy="thread-copy-link-button"
+                  >
+                    <a>
+                      <Icon
+                        glyph={'link'}
+                        size={24}
+                        onClick={() =>
+                          track(events.THREAD_SHARED, { method: 'link' })
+                        }
+                      />
+                    </a>
+                  </ShareButton>
+                </Clipboard>
+              </ShareButtons>
+            )}
+            {thread.channel.isPrivate && (
+              <ShareButtons>
+                <Clipboard
+                  style={{ background: 'none' }}
+                  data-clipboard-text={`https://spectrum.chat/thread/${
+                    thread.id
+                  }`}
+                  onSuccess={() =>
+                    this.props.dispatch(
+                      addToastWithTimeout('success', 'Copied to clipboard')
+                    )
+                  }
+                >
+                  <ShareButton
+                    tipText={'Copy link'}
+                    tipLocation={'bottom-right'}
+                    data-cy="thread-copy-link-button"
+                  >
+                    <a>
+                      <Icon
+                        glyph={'link'}
+                        size={24}
+                        onClick={() =>
+                          track(events.THREAD_SHARED, { method: 'link' })
+                        }
+                      />
+                    </a>
+                  </ShareButton>
+                </Clipboard>
+              </ShareButtons>
+            )}
+          </div>
+
           <div style={{ display: 'flex', alignItems: 'center' }}>
+            {currentUser ? (
+              <FollowButton
+                currentUser={currentUser}
+                icon={
+                  thread.receiveNotifications
+                    ? 'notification-fill'
+                    : 'notification'
+                }
+                loading={notificationStateLoading}
+                onClick={this.toggleNotification}
+                dataCy="thread-notifications-toggle"
+              >
+                {thread.receiveNotifications ? 'Subscribed' : 'Notify me'}
+              </FollowButton>
+            ) : (
+              <FollowButton
+                currentUser={currentUser}
+                icon={'notification'}
+                dataCy="thread-notifications-login-capture"
+                onClick={() =>
+                  this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}))
+                }
+              >
+                Notify me
+              </FollowButton>
+            )}
+
             {shouldRenderActionsDropdown && (
               <DropWrap
                 onMouseEnter={this.toggleHover}
@@ -295,7 +437,7 @@ class ActionBar extends React.Component<Props, State> {
                   {(isSettingsBtnHovering || flyoutOpen) && (
                     <OutsideClickHandler onOutsideClick={this.toggleFlyout}>
                       <Popper
-                        placement="bottom-start"
+                        placement="bottom-end"
                         modifiers={{
                           preventOverflow: { enabled: true },
                           flip: {
@@ -424,145 +566,6 @@ class ActionBar extends React.Component<Props, State> {
                 </Manager>
               </DropWrap>
             )}
-            {currentUser ? (
-              <FollowButton
-                currentUser={currentUser}
-                icon={
-                  thread.receiveNotifications
-                    ? 'notification-fill'
-                    : 'notification'
-                }
-                loading={notificationStateLoading}
-                onClick={this.toggleNotification}
-                dataCy="thread-notifications-toggle"
-              >
-                {thread.receiveNotifications ? 'Subscribed' : 'Notify me'}
-              </FollowButton>
-            ) : (
-              <FollowButton
-                currentUser={currentUser}
-                icon={'notification'}
-                dataCy="thread-notifications-login-capture"
-                onClick={() =>
-                  this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}))
-                }
-              >
-                Notify me
-              </FollowButton>
-            )}
-          </div>
-          <div style={{ display: 'flex' }}>
-            {!thread.channel.isPrivate && (
-              <ShareButtons>
-                <ShareButton
-                  facebook
-                  tipText={'Share'}
-                  tipLocation={'bottom-left'}
-                  data-cy="thread-facebook-button"
-                >
-                  <a
-                    href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${
-                      thread.id
-                    }&t=${thread.content.title}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Icon
-                      glyph={'facebook'}
-                      size={24}
-                      onClick={() =>
-                        track(events.THREAD_SHARED, { method: 'facebook' })
-                      }
-                    />
-                  </a>
-                </ShareButton>
-
-                <ShareButton
-                  twitter
-                  tipText={'Tweet'}
-                  tipLocation={'bottom-left'}
-                  data-cy="thread-tweet-button"
-                >
-                  <a
-                    href={`https://twitter.com/share?text=${
-                      thread.content.title
-                    } on @withspectrum&url=https://spectrum.chat/thread/${
-                      thread.id
-                    }`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Icon
-                      glyph={'twitter'}
-                      size={24}
-                      onClick={() =>
-                        track(events.THREAD_SHARED, { method: 'twitter' })
-                      }
-                    />
-                  </a>
-                </ShareButton>
-
-                <Clipboard
-                  style={{ background: 'none' }}
-                  data-clipboard-text={`https://spectrum.chat/thread/${
-                    thread.id
-                  }`}
-                  onSuccess={() =>
-                    this.props.dispatch(
-                      addToastWithTimeout('success', 'Copied to clipboard')
-                    )
-                  }
-                >
-                  <ShareButton
-                    tipText={'Copy link'}
-                    tipLocation={'bottom-left'}
-                    data-cy="thread-copy-link-button"
-                  >
-                    <a>
-                      <Icon
-                        glyph={'link'}
-                        size={24}
-                        onClick={() =>
-                          track(events.THREAD_SHARED, { method: 'link' })
-                        }
-                      />
-                    </a>
-                  </ShareButton>
-                </Clipboard>
-              </ShareButtons>
-            )}
-            {thread.channel.isPrivate && (
-              <ShareButtons>
-                <Clipboard
-                  style={{ background: 'none' }}
-                  data-clipboard-text={`https://spectrum.chat/thread/${
-                    thread.id
-                  }`}
-                  onSuccess={() =>
-                    this.props.dispatch(
-                      addToastWithTimeout('success', 'Copied to clipboard')
-                    )
-                  }
-                >
-                  <ShareButton
-                    tipText={'Copy link'}
-                    tipLocation={'top-left'}
-                    data-cy="thread-copy-link-button"
-                  >
-                    <a>
-                      <Icon
-                        glyph={'link'}
-                        size={24}
-                        onClick={() =>
-                          track(events.THREAD_SHARED, { method: 'link' })
-                        }
-                      />
-                    </a>
-                  </ShareButton>
-                </Clipboard>
-              </ShareButtons>
-            )}
-            <LikeButton thread={thread} />
           </div>
         </ActionBarContainer>
       );
