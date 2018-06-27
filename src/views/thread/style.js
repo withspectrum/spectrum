@@ -180,6 +180,7 @@ export const DropWrap = styled(FlexCol)`
   position: relative;
   color: ${({ theme }) => theme.text.placeholder};
   transition: ${Transition.hover.off};
+  margin: 0 8px;
 
   &:hover {
     color: ${({ theme }) => theme.bg.border};
@@ -325,7 +326,7 @@ export const Location = styled(FlexRow)`
 export const Timestamp = styled.span`
   font-weight: 400;
   margin: 8px 0;
-  font-size: 14px;
+  font-size: 16px;
   color: ${({ theme }) => theme.text.alt};
   display: inline-block;
 
@@ -405,7 +406,6 @@ export const ThreadDescription = {
 export const ShareButtons = styled.div`
   display: flex;
   align-items: center;
-  margin-right: 16px;
 `;
 
 export const ShareButton = styled.span`
@@ -475,7 +475,10 @@ export const CommunityHeaderSubtitle = styled.span`
 `;
 
 export const ThreadSubtitle = styled(CommunityHeaderSubtitle)`
-  font-size: 14px;
+  font-size: 16px;
+  margin-top: 8px;
+  display: inline-block;
+  line-height: 1.5;
 `;
 
 export const CommunityHeaderChannelTag = styled.div`
@@ -586,6 +589,20 @@ export const ActionBarContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 0 32px;
+  background: ${props => props.theme.bg.wash};
+  border: 1px solid ${props => props.theme.bg.border};
+  border-radius: 6px;
+  padding: 6px 6px 6px 12px;
+
+  @media (max-width: 768px) {
+    margin: 0;
+    margin-top: 16px;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    padding-left: 16px;
+    padding-right: 8px;
+  }
 `;
 
 export const WatercoolerActionBarContainer = styled(ActionBarContainer)`
@@ -593,13 +610,14 @@ export const WatercoolerActionBarContainer = styled(ActionBarContainer)`
 `;
 
 export const FollowButton = styled(Button)`
-  background: transparent;
+  background: ${props => props.theme.bg.default};
+  border: 1px solid ${props => props.theme.bg.border};
   color: ${props => props.theme.text.alt};
   padding: 4px;
 
   &:hover {
-    background: transparent;
-    color: ${props => props.theme.brand.alt};
+    background: ${props => props.theme.bg.default};
+    color: ${props => props.theme.text.default};
   }
 
   @media (max-width: 768px) {

@@ -257,7 +257,7 @@ class ChatInput extends React.Component<Props, State> {
     // decorators that are passed to the editor are removed from the editor
     // state
     setTimeout(() => {
-      this.editor && this.editor.focus();
+      this.editor && this.editor.focus && this.editor.focus();
     }, 0);
   };
 
@@ -400,7 +400,7 @@ class ChatInput extends React.Component<Props, State> {
     // refocus the input
     setTimeout(() => {
       clear();
-      this.editor && this.editor.focus();
+      this.editor && this.editor.focus && this.editor.focus();
     });
 
     return 'handled';

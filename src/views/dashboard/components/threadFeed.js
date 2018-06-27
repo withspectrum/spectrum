@@ -265,6 +265,8 @@ class ThreadFeed extends React.Component<Props, State> {
                 <WatercoolerThread
                   data={community.watercooler}
                   active={selectedId === community.watercooler.id}
+                  hasActiveCommunity={this.props.hasActiveCommunity}
+                  hasActiveChannel={this.props.hasActiveChannel}
                 />
               </ErrorBoundary>
             )}

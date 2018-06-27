@@ -33,6 +33,7 @@ type Props = {
   networkDisabled: boolean,
   children?: React$Node,
   hasAttachment?: boolean,
+  code?: boolean,
 };
 
 type State = {
@@ -88,6 +89,7 @@ class Input extends React.Component<Props, State> {
       networkDisabled,
       children,
       hasAttachment,
+      code,
       ...rest
     } = this.props;
     const { plugins } = this.state;

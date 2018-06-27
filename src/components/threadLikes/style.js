@@ -29,7 +29,7 @@ export const LikeButtonWrapper = styled(LikeWrapper)`
   }
 
   ${CurrentCount} {
-    margin-left: 4px;
+    margin-right: 8px;
     font-weight: 500;
     color: ${props =>
       props.hasReacted ? props.theme.text.default : props.theme.text.alt};
@@ -37,6 +37,7 @@ export const LikeButtonWrapper = styled(LikeWrapper)`
 `;
 
 export const LikeCountWrapper = styled(LikeWrapper)`
+  margin-right: 8px;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};
 `;

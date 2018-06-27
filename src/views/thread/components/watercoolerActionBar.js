@@ -70,38 +70,6 @@ class WatercoolerActionBar extends React.Component<Props, State> {
 
     return (
       <WatercoolerActionBarContainer>
-        {currentUser ? (
-          <FollowButton
-            currentUser={currentUser}
-            icon={
-              thread.receiveNotifications ? 'notification-fill' : 'notification'
-            }
-            tipText={
-              thread.receiveNotifications
-                ? 'Turn off notifications'
-                : 'Get notified about replies'
-            }
-            tipLocation={'top-right'}
-            loading={notificationStateLoading}
-            onClick={this.toggleNotification}
-            dataCy="thread-notifications-toggle"
-          >
-            {thread.receiveNotifications ? 'Subscribed' : 'Get notifications'}
-          </FollowButton>
-        ) : (
-          <FollowButton
-            currentUser={currentUser}
-            icon={'notification'}
-            tipText={'Get notified about replies'}
-            tipLocation={'top-right'}
-            dataCy="thread-notifications-login-capture"
-            onClick={() =>
-              this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}))
-            }
-          >
-            Notify me
-          </FollowButton>
-        )}
         {!thread.channel.isPrivate && (
           <ShareButtons>
             <ShareButton
@@ -160,6 +128,38 @@ class WatercoolerActionBar extends React.Component<Props, State> {
               </ShareButton>
             </Clipboard>
           </ShareButtons>
+        )}
+        {currentUser ? (
+          <FollowButton
+            currentUser={currentUser}
+            icon={
+              thread.receiveNotifications ? 'notification-fill' : 'notification'
+            }
+            tipText={
+              thread.receiveNotifications
+                ? 'Turn off notifications'
+                : 'Get notified about replies'
+            }
+            tipLocation={'top-right'}
+            loading={notificationStateLoading}
+            onClick={this.toggleNotification}
+            dataCy="thread-notifications-toggle"
+          >
+            {thread.receiveNotifications ? 'Subscribed' : 'Get notifications'}
+          </FollowButton>
+        ) : (
+          <FollowButton
+            currentUser={currentUser}
+            icon={'notification'}
+            tipText={'Get notified about replies'}
+            tipLocation={'top-right'}
+            dataCy="thread-notifications-login-capture"
+            onClick={() =>
+              this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}))
+            }
+          >
+            Notify me
+          </FollowButton>
         )}
       </WatercoolerActionBarContainer>
     );
