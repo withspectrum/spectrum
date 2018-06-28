@@ -73,7 +73,7 @@ class Search extends React.Component<Props, State> {
           sendStringToServer && (
             <SearchThreadFeed
               search
-              viewContext="channel"
+              viewContext="channelProfile"
               channelId={channel.id}
               queryString={sendStringToServer}
               filter={{ channelId: channel.id }}

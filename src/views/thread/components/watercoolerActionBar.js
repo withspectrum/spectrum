@@ -9,6 +9,7 @@ import compose from 'recompose/compose';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import type { Dispatch } from 'redux';
+import { LikeButton } from 'src/components/threadLikes';
 import {
   FollowButton,
   ShareButtons,
@@ -70,65 +71,72 @@ class WatercoolerActionBar extends React.Component<Props, State> {
 
     return (
       <WatercoolerActionBarContainer>
-        {!thread.channel.isPrivate && (
-          <ShareButtons>
-            <ShareButton
-              facebook
-              tipText={'Share'}
-              tipLocation={'top-left'}
-              data-cy="thread-facebook-button"
-            >
-              <a
-                href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${
-                  thread.id
-                }&t=${thread.content.title}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Icon glyph={'facebook'} size={24} />
-              </a>
-            </ShareButton>
+        <div style={{ display: 'flex' }}>
+          <LikeButton thread={thread} tipLocation={'bottom-right'} />
 
-            <ShareButton
-              twitter
-              tipText={'Tweet'}
-              tipLocation={'top-left'}
-              data-cy="thread-tweet-button"
-            >
-              <a
-                href={`https://twitter.com/share?text=${
-                  thread.content.title
-                } on @withspectrum&url=https://spectrum.chat/thread/${
-                  thread.id
-                }`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Icon glyph={'twitter'} size={24} />
-              </a>
-            </ShareButton>
-
-            <Clipboard
-              style={{ background: 'none' }}
-              data-clipboard-text={`https://spectrum.chat/thread/${thread.id}`}
-              onSuccess={() =>
-                this.props.dispatch(
-                  addToastWithTimeout('success', 'Copied to clipboard')
-                )
-              }
-            >
+          {!thread.channel.isPrivate && (
+            <ShareButtons>
               <ShareButton
-                tipText={'Copy link'}
+                facebook
+                tipText={'Share'}
                 tipLocation={'top-left'}
-                data-cy="thread-copy-link-button"
+                data-cy="thread-facebook-button"
               >
-                <a>
-                  <Icon glyph={'link'} size={24} />
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${
+                    thread.id
+                  }&t=${thread.content.title}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon glyph={'facebook'} size={24} />
                 </a>
               </ShareButton>
-            </Clipboard>
-          </ShareButtons>
-        )}
+
+              <ShareButton
+                twitter
+                tipText={'Tweet'}
+                tipLocation={'top-left'}
+                data-cy="thread-tweet-button"
+              >
+                <a
+                  href={`https://twitter.com/share?text=${
+                    thread.content.title
+                  } on @withspectrum&url=https://spectrum.chat/thread/${
+                    thread.id
+                  }`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon glyph={'twitter'} size={24} />
+                </a>
+              </ShareButton>
+
+              <Clipboard
+                style={{ background: 'none' }}
+                data-clipboard-text={`https://spectrum.chat/thread/${
+                  thread.id
+                }`}
+                onSuccess={() =>
+                  this.props.dispatch(
+                    addToastWithTimeout('success', 'Copied to clipboard')
+                  )
+                }
+              >
+                <ShareButton
+                  tipText={'Copy link'}
+                  tipLocation={'top-left'}
+                  data-cy="thread-copy-link-button"
+                >
+                  <a>
+                    <Icon glyph={'link'} size={24} />
+                  </a>
+                </ShareButton>
+              </Clipboard>
+            </ShareButtons>
+          )}
+        </div>
+
         {currentUser ? (
           <FollowButton
             currentUser={currentUser}

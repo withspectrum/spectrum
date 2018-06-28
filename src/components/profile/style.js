@@ -70,7 +70,7 @@ export const Title = styled.h3`
 
 export const FullTitle = styled(Title)`
   font-size: 24px;
-  margin-top: 8px;
+  margin-top: 16px;
 `;
 
 export const FullProfile = styled.div`
