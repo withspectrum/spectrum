@@ -16,6 +16,7 @@ export const LikeButtonWrapper = styled(LikeWrapper)`
   display: flex;
   justify-content: center;
   align-items: center;
+
   > button {
     color: ${props =>
       props.hasReacted ? props.theme.brand.alt : props.theme.text.alt};
@@ -30,14 +31,19 @@ export const LikeButtonWrapper = styled(LikeWrapper)`
 
   ${CurrentCount} {
     margin-right: 8px;
-    font-weight: 500;
-    color: ${props =>
-      props.hasReacted ? props.theme.text.default : props.theme.text.alt};
+    margin-left: 4px;
+    font-weight: 600;
+    color: ${props => props.theme.text.alt};
   }
 `;
 
 export const LikeCountWrapper = styled(LikeWrapper)`
-  margin-right: 8px;
+  margin-right: 12px;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};
+
+  span {
+    margin-left: 4px;
+    font-weight: 600;
+  }
 `;

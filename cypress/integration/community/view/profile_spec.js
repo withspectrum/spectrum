@@ -68,7 +68,10 @@ describe('public community signed out', () => {
         thread => !thread.deletedAt && thread.communityId === publicCommunity.id
       )
       .forEach(thread =>
-        cy.contains(thread.content.title).should('be.visible')
+        cy
+          .contains(thread.content.title)
+          .scrollIntoView()
+          .should('be.visible')
       );
   });
 
@@ -130,7 +133,10 @@ describe('public community signed in without permission', () => {
         thread => !thread.deletedAt && thread.communityId === publicCommunity.id
       )
       .forEach(thread =>
-        cy.contains(thread.content.title).should('be.visible')
+        cy
+          .contains(thread.content.title)
+          .scrollIntoView()
+          .should('be.visible')
       );
   });
 

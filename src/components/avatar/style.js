@@ -1,3 +1,4 @@
+// @flow
 import styled, { css } from 'styled-components';
 import { zIndex } from '../globals';
 import Link from 'src/components/link';
@@ -21,7 +22,7 @@ export const Status = styled.div`
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? '25%' : '100%')};
+  border-radius: ${props => (props.community ? `${props.size / 8}px` : '100%')};
   border: none;
   background-color: ${({ theme }) => theme.bg.default};
 
@@ -86,7 +87,7 @@ export const Img = styled.img`
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? '25%' : '100%')};
+  border-radius: ${props => (props.community ? `${props.size / 8}px` : '100%')};
   object-fit: cover;
 
   ${props =>
@@ -104,7 +105,7 @@ export const ImgPlaceholder = styled.div`
   background-color: ${props => props.theme.bg.border};
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? '25%' : '100%')};
+  border-radius: ${props => (props.community ? `${props.size / 8}px` : '100%')};
   object-fit: cover;
 
   ${props =>

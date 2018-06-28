@@ -372,7 +372,7 @@ class CommunityView extends React.Component<Props, State> {
               {// thread list
               selectedView === 'threads' && (
                 <CommunityThreadFeed
-                  viewContext="community"
+                  viewContext="communityProfile"
                   slug={communitySlug}
                   id={community.id}
                   currentUser={isLoggedIn}
