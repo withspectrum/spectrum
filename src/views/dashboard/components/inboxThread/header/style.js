@@ -91,26 +91,41 @@ export const Timestamp = styled(MetaSubtitleText)``;
 export const NewThreadTimestamp = styled(MetaSubtitleText)`
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.success.default};
-`;
 
-export const NewMessagesTimestamp = styled(MetaSubtitleText)`
-  color: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.warn.alt};
+  &:hover {
+    color: ${props =>
+      props.active ? props.theme.text.reverse : props.theme.success.default};
+  }
 `;
 
 export const MetaSubtitlePinned = styled(MetaSubtitleText)`
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.special.default};
+
+  &:hover {
+    color: ${props =>
+      props.active ? props.theme.text.reverse : props.theme.special.default};
+  }
 `;
 
 export const MetaSubtitleLocked = styled(MetaSubtitleText)`
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.secondary};
+
+  &:hover {
+    color: ${props =>
+      props.active ? props.theme.text.reverse : props.theme.text.secondary};
+  }
 `;
 
 export const MetaSubtitleWatercooler = styled(MetaSubtitleText)`
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.space.default};
+
+  &:hover {
+    color: ${props =>
+      props.active ? props.theme.text.reverse : props.theme.space.default};
+  }
 `;
 
 export const Divider = styled.span`
