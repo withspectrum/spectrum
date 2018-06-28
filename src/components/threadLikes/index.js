@@ -17,6 +17,7 @@ type LikeButtonProps = {
   addThreadReaction: Function,
   removeThreadReaction: Function,
   currentUser: ?Object,
+  tipLocation?: string,
   dispatch: Dispatch<Object>,
 };
 
@@ -45,15 +46,15 @@ class LikeButtonPure extends React.Component<LikeButtonProps> {
   };
 
   render() {
-    const { thread } = this.props;
+    const { thread, tipLocation = 'bottom-left' } = this.props;
     const { hasReacted, count } = thread.reactions;
 
     return (
       <LikeButtonWrapper hasReacted={hasReacted}>
         <IconButton
-          glyph={hasReacted ? 'thumbsup-fill' : 'thumbsup'}
+          glyph={'thumbsup'}
           tipText={hasReacted ? 'Unlike thread' : 'Like thread'}
-          tipLocation={'bottom-left'}
+          tipLocation={tipLocation}
           onClick={this.handleClick}
         />
         <CurrentCount>{count}</CurrentCount>
@@ -80,20 +81,15 @@ type LikeCountProps = {
 export const LikeCount = (props: LikeCountProps) => {
   const { active, thread } = props;
   const { count } = thread.reactions;
-
-  if (count > 0) {
-    return (
-      <LikeCountWrapper active={active}>
-        <Icon
-          glyph={'thumbsup-fill'}
-          size={24}
-          tipText={`${count} likes`}
-          tipLocation={'top-right'}
-        />
-        <CurrentCount>{count}</CurrentCount>
-      </LikeCountWrapper>
-    );
-  } else {
-    return null;
-  }
+  return (
+    <LikeCountWrapper hasReacted={thread.reactions.hasReacted} active={active}>
+      <Icon
+        glyph={'thumbsup'}
+        size={24}
+        tipText={`${count} likes`}
+        tipLocation={'top-right'}
+      />
+      <CurrentCount>{count || '0'}</CurrentCount>
+    </LikeCountWrapper>
+  );
 };

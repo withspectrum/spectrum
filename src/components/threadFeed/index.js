@@ -289,6 +289,9 @@ class ThreadFeedPure extends React.Component<Props, State> {
                   hasActiveCommunity={
                     viewContext === 'community' && this.props.data.community
                   }
+                  hasActiveChannel={
+                    viewContext === 'channel' && this.props.data.channel
+                  }
                 />
               </ErrorBoundary>
             )}

@@ -15,7 +15,7 @@ import LoadingThreadFeed from './loadingThreadFeed';
 import ErrorThreadFeed from './errorThreadFeed';
 import EmptyThreadFeed from './emptyThreadFeed';
 import EmptySearchFeed from './emptySearchFeed';
-import InboxThread, { WatercoolerThread } from './inboxThread';
+import InboxThread from './inboxThread';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import type { ViewNetworkHandlerType } from '../../../components/viewNetworkHandler';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -262,7 +262,7 @@ class ThreadFeed extends React.Component<Props, State> {
             community.watercooler &&
             community.watercooler.id && (
               <ErrorBoundary fallbackComponent={null}>
-                <WatercoolerThread
+                <InboxThread
                   data={community.watercooler}
                   active={selectedId === community.watercooler.id}
                   hasActiveCommunity={this.props.hasActiveCommunity}
@@ -280,7 +280,6 @@ class ThreadFeed extends React.Component<Props, State> {
                   active={selectedId === community.pinnedThread.id}
                   hasActiveCommunity={this.props.hasActiveCommunity}
                   hasActiveChannel={this.props.hasActiveChannel}
-                  pinnedThreadId={community.pinnedThread.id}
                 />
               </ErrorBoundary>
             )}
