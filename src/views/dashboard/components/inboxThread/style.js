@@ -122,6 +122,7 @@ export const CountWrapper = styled.div`
 
 export const AvatarLink = styled(Link)`
   display: flex;
+  flex: 1 0 auto;
   align-self: stretch;
   height: 32px;
   width: 32px;
