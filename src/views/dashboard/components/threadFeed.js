@@ -15,7 +15,7 @@ import LoadingThreadFeed from './loadingThreadFeed';
 import ErrorThreadFeed from './errorThreadFeed';
 import EmptyThreadFeed from './emptyThreadFeed';
 import EmptySearchFeed from './emptySearchFeed';
-import InboxThread, { WatercoolerThread } from './inboxThread';
+import InboxThread from './inboxThread';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import type { ViewNetworkHandlerType } from '../../../components/viewNetworkHandler';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -47,8 +47,8 @@ type Props = {
   dispatch: Dispatch<Object>,
   selectedId: string,
   activeCommunity: ?string,
+  activeChannel: ?string,
   hasActiveCommunity: boolean,
-  hasActiveChannel: boolean,
 };
 
 type State = {
@@ -211,6 +211,7 @@ class ThreadFeed extends React.Component<Props, State> {
       data: { threads, community },
       selectedId,
       activeCommunity,
+      activeChannel,
       queryString,
       isLoading,
       hasError,
@@ -220,6 +221,9 @@ class ThreadFeed extends React.Component<Props, State> {
     if (Array.isArray(threads)) {
       // API returned no threads
       if (threads.length === 0) {
+        if (isLoading) {
+          return <LoadingThreadFeed />;
+        }
         if (queryString) {
           return <EmptySearchFeed queryString={queryString} />;
         } else {
@@ -253,6 +257,10 @@ class ThreadFeed extends React.Component<Props, State> {
 
       const uniqueThreads = deduplicateChildren(filteredThreads, 'id');
 
+      let viewContext;
+      if (activeCommunity) viewContext = 'communityInbox';
+      if (activeChannel) viewContext = 'channelInbox';
+
       return (
         <div
           data-cy="inbox-thread-feed"
@@ -262,11 +270,10 @@ class ThreadFeed extends React.Component<Props, State> {
             community.watercooler &&
             community.watercooler.id && (
               <ErrorBoundary fallbackComponent={null}>
-                <WatercoolerThread
+                <InboxThread
                   data={community.watercooler}
                   active={selectedId === community.watercooler.id}
-                  hasActiveCommunity={this.props.hasActiveCommunity}
-                  hasActiveChannel={this.props.hasActiveChannel}
+                  viewContext={viewContext}
                 />
               </ErrorBoundary>
             )}
@@ -278,9 +285,7 @@ class ThreadFeed extends React.Component<Props, State> {
                 <InboxThread
                   data={community.pinnedThread}
                   active={selectedId === community.pinnedThread.id}
-                  hasActiveCommunity={this.props.hasActiveCommunity}
-                  hasActiveChannel={this.props.hasActiveChannel}
-                  pinnedThreadId={community.pinnedThread.id}
+                  viewContext={viewContext}
                 />
               </ErrorBoundary>
             )}
@@ -303,8 +308,7 @@ class ThreadFeed extends React.Component<Props, State> {
                     <InboxThread
                       data={thread}
                       active={selectedId === thread.id}
-                      hasActiveCommunity={this.props.hasActiveCommunity}
-                      hasActiveChannel={this.props.hasActiveChannel}
+                      viewContext={viewContext}
                     />
                   </ErrorBoundary>
                 );
@@ -325,6 +329,7 @@ class ThreadFeed extends React.Component<Props, State> {
 const map = state => ({
   mountedWithActiveThread: state.dashboardFeed.mountedWithActiveThread,
   activeCommunity: state.dashboardFeed.activeCommunity,
+  activeChannel: state.dashboardFeed.activeChannel,
 });
 export default compose(
   withRouter,

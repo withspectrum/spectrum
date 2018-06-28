@@ -243,7 +243,7 @@ export const Time = styled.div`
 
 export const Text = styled(Bubble)`
   padding: 8px 16px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.4;
   background-color: ${props =>
     props.me ? props.theme.brand.default : props.theme.generic.default};
@@ -332,7 +332,7 @@ export const Image = styled.img`
 
 export const Code = styled(Bubble)`
   padding: 12px 16px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
   background-color: ${props => props.theme.bg.reverse};
   color: ${props => props.theme.text.reverse};

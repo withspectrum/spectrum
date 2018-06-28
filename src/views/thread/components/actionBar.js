@@ -273,7 +273,7 @@ class ActionBar extends React.Component<Props, State> {
       return (
         <ActionBarContainer>
           <div style={{ display: 'flex' }}>
-            <LikeButton thread={thread} />
+            <LikeButton thread={thread} tipLocation={'bottom-right'} />
 
             {!thread.channel.isPrivate && (
               <ShareButtons>
