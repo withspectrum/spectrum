@@ -13,12 +13,16 @@ export type HeaderProps = {
     | 'communityProfile'
     | 'channelInbox'
     | 'channelProfile'
-    | 'userProfile',
+    | 'userProfile'
+    | 'userProfileReplies',
 };
 
 class Header extends React.Component<HeaderProps> {
   render() {
-    if (this.props.viewContext === 'userProfile') {
+    if (
+      this.props.viewContext === 'userProfile' ||
+      this.props.viewContext === 'userProfileReplies'
+    ) {
       return <UserProfileThreadHeader {...this.props} />;
     }
 

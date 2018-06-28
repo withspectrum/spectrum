@@ -1,22 +1,10 @@
 // @flow
 import * as React from 'react';
 import { timeDifferenceShort } from 'shared/time-difference';
-import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { Timestamp, NewThreadTimestamp } from './style';
+import type { HeaderProps } from './index';
 
-type Props = {
-  thread: GetThreadType,
-  active: boolean,
-  currentUser: ?Object,
-  viewContext?:
-    | ?'communityInbox'
-    | 'communityProfile'
-    | 'channelInbox'
-    | 'channelProfile'
-    | 'userProfile',
-};
-
-class ThreadTimestamp extends React.Component<Props> {
+class ThreadTimestamp extends React.Component<HeaderProps> {
   render() {
     const { thread, currentUser, active } = this.props;
 

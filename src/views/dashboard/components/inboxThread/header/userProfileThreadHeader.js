@@ -7,6 +7,7 @@ import {
   MetaTitle,
   MetaSubtitle,
   Divider,
+  MetaSubtitleText,
   MetaSubtitleLocked,
   MetaSubtitleWatercooler,
   MetaSubtitlePinned,
@@ -18,7 +19,8 @@ class Header extends React.Component<HeaderProps> {
   render() {
     const {
       active,
-      thread: { community, channel, id, watercooler, isLocked },
+      viewContext,
+      thread: { community, channel, id, watercooler, isLocked, author },
     } = this.props;
 
     const isPinned = id === community.pinnedThreadId;
@@ -36,6 +38,25 @@ class Header extends React.Component<HeaderProps> {
           </TextRow>
 
           <TextRow>
+            {viewContext === 'userProfileReplies' && (
+              <MetaSubtitleText>
+                {author.user.username ? (
+                  <MetaSubtitle
+                    active={active}
+                    to={`/users/${author.user.username}`}
+                  >
+                    By {author.user.name}
+                  </MetaSubtitle>
+                ) : (
+                  <MetaSubtitleText active={active}>
+                    By {author.user.name}
+                  </MetaSubtitleText>
+                )}
+
+                <Divider>·</Divider>
+              </MetaSubtitleText>
+            )}
+
             <MetaSubtitle
               active={active}
               to={`/${community.slug}/${channel.slug}`}

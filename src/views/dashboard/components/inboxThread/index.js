@@ -34,7 +34,8 @@ type Props = {
     | 'communityProfile'
     | 'channelInbox'
     | 'channelProfile'
-    | 'userProfile',
+    | 'userProfile'
+    | 'userProfileReplies',
   currentUser: ?Object,
 };
 
@@ -74,21 +75,23 @@ class InboxThread extends React.Component<Props> {
           />
 
           <InboxThreadContent>
-            {viewContext !== 'userProfile' && (
-              <AvatarLink>
-                <Avatar
-                  user={thread.author.user}
-                  src={`${thread.author.user.profilePhoto}`}
-                  size={'40'}
-                  link={
-                    thread.author.user.username &&
-                    `/users/${thread.author.user.username}`
-                  }
-                />
-              </AvatarLink>
-            )}
+            {viewContext !== 'userProfile' &&
+              viewContext !== 'userProfileReplies' && (
+                <AvatarLink>
+                  <Avatar
+                    user={thread.author.user}
+                    src={`${thread.author.user.profilePhoto}`}
+                    size={'40'}
+                    link={
+                      thread.author.user.username &&
+                      `/users/${thread.author.user.username}`
+                    }
+                  />
+                </AvatarLink>
+              )}
 
-            {viewContext === 'userProfile' && (
+            {(viewContext === 'userProfile' ||
+              viewContext === 'userProfileReplies') && (
               <CommunityAvatarLink>
                 <Avatar
                   community={thread.community}

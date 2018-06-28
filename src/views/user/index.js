@@ -238,7 +238,11 @@ class UserView extends React.Component<Props, State> {
                   <Feed
                     userId={user.id}
                     username={username}
-                    viewContext="userProfile"
+                    viewContext={
+                      selectedView === 'participant'
+                        ? 'userProfileReplies'
+                        : 'userProfile'
+                    }
                     hasNoThreads={this.hasNoThreads}
                     hasThreads={this.hasThreads}
                     kind={selectedView}
