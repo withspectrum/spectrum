@@ -221,6 +221,9 @@ class ThreadFeed extends React.Component<Props, State> {
     if (Array.isArray(threads)) {
       // API returned no threads
       if (threads.length === 0) {
+        if (isLoading) {
+          return <LoadingThreadFeed />;
+        }
         if (queryString) {
           return <EmptySearchFeed queryString={queryString} />;
         } else {
