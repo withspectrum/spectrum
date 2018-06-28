@@ -1,3 +1,4 @@
+// @flow
 import styled, { css } from 'styled-components';
 import { zIndex } from '../globals';
 import Link from 'src/components/link';
