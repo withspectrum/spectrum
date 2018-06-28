@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import { zIndex, Tooltip } from 'src/components/globals';
 
@@ -14,6 +14,7 @@ export const InboxThreadItem = styled.div`
   background: ${props =>
     props.active ? props.theme.brand.alt : props.theme.bg.default};
   position: relative;
+  padding: 12px 20px 12px 12px;
 
   &:hover {
     background: ${props =>
@@ -45,13 +46,19 @@ export const InboxLinkWrapper = styled(Link)`
 export const InboxThreadContent = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: flex-start;
   align-self: stretch;
   position: relative;
   z-index: ${zIndex.card + 1};
   align-items: flex-start;
   pointer-events: none;
-  padding: 16px;
-  width: 100%;
+`;
+
+export const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  align-items: flex-start;
 `;
 
 export const ThreadTitle = styled.h3`
@@ -59,14 +66,13 @@ export const ThreadTitle = styled.h3`
   font-weight: 500;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.default};
-  margin-bottom: 8px;
   max-width: 100%;
   line-height: 1.4;
 `;
 
 export const ThreadActivityWrapper = styled.div`
   display: flex;
-  margin-top: 16px;
+  margin-top: 12px;
   align-items: center;
 
   .icon {
@@ -105,8 +111,8 @@ export const CountWrapper = styled.div`
   font-weight: 600;
   align-items: center;
 
-  > span {
-    margin-left: 4px;
+  .icon {
+    margin-right: 4px;
   }
 
   a {
@@ -120,14 +126,26 @@ export const CountWrapper = styled.div`
   ${Tooltip};
 `;
 
-export const AvatarLink = styled(Link)`
+export const NewCount = styled.span`
+  margin-left: 6px;
+  color: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.warn.alt};
+`;
+
+const avatarLinkStyles = css`
   display: flex;
   flex: 1 0 auto;
-  align-self: stretch;
-  height: 32px;
-  width: 32px;
-  margin-right: 16px;
+  margin-right: 12px;
+  margin-top: 4px;
   pointer-events: auto;
-  border-radius: 4px;
   overflow: hidden;
+  max-width: 40px;
+`;
+
+export const AvatarLink = styled.div`
+  ${avatarLinkStyles} border-radius: 32px;
+`;
+
+export const CommunityAvatarLink = styled.div`
+  ${avatarLinkStyles} border-radius: 4px;
 `;

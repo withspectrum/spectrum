@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import Icon from 'src/components/icons';
-import { CountWrapper } from './style';
+import { CountWrapper, NewCount } from './style';
 
 type Props = {
   currentUser: ?Object,
@@ -12,7 +12,13 @@ type Props = {
 
 class MessageCount extends React.Component<Props> {
   render() {
-    const { thread: { messageCount }, active } = this.props;
+    const {
+      thread: { messageCount, currentUserLastSeen, lastActive },
+      active,
+    } = this.props;
+
+    const newMessagesSinceLastViewed =
+      currentUserLastSeen && lastActive && currentUserLastSeen < lastActive;
 
     return (
       <CountWrapper
@@ -20,8 +26,10 @@ class MessageCount extends React.Component<Props> {
         tipText={`${messageCount} messages`}
         tipLocation={'top-right'}
       >
-        <Icon glyph="message" size={24} />
+        <Icon glyph="message-simple" size={24} />
         <span>{messageCount}</span>
+        {newMessagesSinceLastViewed &&
+          !active && <NewCount active={active}>(New)</NewCount>}
       </CountWrapper>
     );
   }

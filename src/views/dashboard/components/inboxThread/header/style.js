@@ -1,11 +1,12 @@
 // @flow
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
+import { zIndex } from 'src/components/globals';
 
 export const Container = styled.div`
   display: flex;
   width: 100%;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 `;
 
 export const MetaContainer = styled.div`
@@ -28,12 +29,14 @@ export const TextRow = styled.span`
   align-items: center;
 `;
 
-export const MetaTitle = styled(Link)`
+const metaTitleStyles = css`
   font-size: 14px;
   font-weight: 500;
   color: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.text.default};
+    props.active ? props.theme.text.reverse : props.theme.text.secondary};
   pointer-events: auto;
+  position: relative;
+  z-index: ${zIndex.card};
 
   &:hover {
     cursor: pointer;
@@ -42,13 +45,45 @@ export const MetaTitle = styled(Link)`
   }
 `;
 
-export const MetaSubtitleText = styled.span`
+export const MetaTitle = styled(Link)`
+  ${metaTitleStyles};
+`;
+
+export const MetaTitleText = styled.span`
+  ${metaTitleStyles} &:hover {
+    cursor: auto;
+    color: ${props =>
+      props.active ? props.theme.text.reverse : props.theme.text.alt};
+  }
+`;
+
+const metaSubtitleStyles = css`
   font-size: 14px;
   font-weight: 400;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};
   line-height: 1.28;
   pointer-events: auto;
+  position: relative;
+  z-index: ${zIndex.card};
+
+  &:hover {
+    cursor: pointer;
+    color: ${props =>
+      props.active ? props.theme.text.reverse : props.theme.text.default};
+  }
+`;
+
+export const MetaSubtitle = styled(Link)`
+  ${metaSubtitleStyles};
+`;
+
+export const MetaSubtitleText = styled.span`
+  ${metaSubtitleStyles} &:hover {
+    cursor: auto;
+    color: ${props =>
+      props.active ? props.theme.text.reverse : props.theme.text.alt};
+  }
 `;
 
 export const Timestamp = styled(MetaSubtitleText)``;
@@ -61,21 +96,6 @@ export const NewThreadTimestamp = styled(MetaSubtitleText)`
 export const NewMessagesTimestamp = styled(MetaSubtitleText)`
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.warn.alt};
-`;
-
-export const MetaSubtitle = styled(Link)`
-  font-size: 14px;
-  font-weight: 400;
-  color: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.text.alt};
-  line-height: 1.28;
-  pointer-events: auto;
-
-  &:hover {
-    cursor: pointer;
-    color: ${props =>
-      props.active ? props.theme.text.reverse : props.theme.text.default};
-  }
 `;
 
 export const MetaSubtitlePinned = styled(MetaSubtitleText)`
@@ -94,7 +114,7 @@ export const MetaSubtitleWatercooler = styled(MetaSubtitleText)`
 `;
 
 export const Divider = styled.span`
-  padding-left: 4px;
+  margin: 0 4px;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.placeholder};
 `;

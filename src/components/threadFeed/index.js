@@ -142,7 +142,12 @@ type Props = {
   hasThreads: Function,
   hasNoThreads: Function,
   currentUser: ?Object,
-  viewContext: 'community' | 'channel',
+  viewContext?:
+    | ?'communityInbox'
+    | 'communityProfile'
+    | 'channelInbox'
+    | 'channelProfile'
+    | 'userProfile',
   slug: string,
   pinnedThreadId: ?string,
   isNewAndOwned: ?boolean,
@@ -286,12 +291,6 @@ class ThreadFeedPure extends React.Component<Props, State> {
                   data={this.props.data.community.pinnedThread}
                   viewContext={viewContext}
                   pinnedThreadId={this.props.data.community.pinnedThread.id}
-                  hasActiveCommunity={
-                    viewContext === 'community' && this.props.data.community
-                  }
-                  hasActiveChannel={
-                    viewContext === 'channel' && this.props.data.channel
-                  }
                 />
               </ErrorBoundary>
             )}
@@ -303,9 +302,6 @@ class ThreadFeedPure extends React.Component<Props, State> {
                 <InboxThread
                   data={this.props.data.community.watercooler}
                   viewContext={viewContext}
-                  hasActiveCommunity={
-                    viewContext === 'community' && this.props.data.community
-                  }
                 />
               </ErrorBoundary>
             )}
@@ -325,16 +321,7 @@ class ThreadFeedPure extends React.Component<Props, State> {
             {uniqueThreads.map(thread => {
               return (
                 <ErrorBoundary fallbackComponent={null} key={thread.id}>
-                  <InboxThread
-                    data={thread}
-                    viewContext={viewContext}
-                    hasActiveCommunity={
-                      viewContext === 'community' && this.props.data.community
-                    }
-                    hasActiveChannel={
-                      viewContext === 'channel' && this.props.data.channel
-                    }
-                  />
+                  <InboxThread data={thread} viewContext={viewContext} />
                 </ErrorBoundary>
               );
             })}

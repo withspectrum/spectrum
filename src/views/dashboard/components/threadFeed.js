@@ -47,8 +47,8 @@ type Props = {
   dispatch: Dispatch<Object>,
   selectedId: string,
   activeCommunity: ?string,
+  activeChannel: ?string,
   hasActiveCommunity: boolean,
-  hasActiveChannel: boolean,
 };
 
 type State = {
@@ -211,6 +211,7 @@ class ThreadFeed extends React.Component<Props, State> {
       data: { threads, community },
       selectedId,
       activeCommunity,
+      activeChannel,
       queryString,
       isLoading,
       hasError,
@@ -253,6 +254,10 @@ class ThreadFeed extends React.Component<Props, State> {
 
       const uniqueThreads = deduplicateChildren(filteredThreads, 'id');
 
+      let viewContext;
+      if (activeCommunity) viewContext = 'communityInbox';
+      if (activeChannel) viewContext = 'channelInbox';
+
       return (
         <div
           data-cy="inbox-thread-feed"
@@ -265,8 +270,7 @@ class ThreadFeed extends React.Component<Props, State> {
                 <InboxThread
                   data={community.watercooler}
                   active={selectedId === community.watercooler.id}
-                  hasActiveCommunity={this.props.hasActiveCommunity}
-                  hasActiveChannel={this.props.hasActiveChannel}
+                  viewContext={viewContext}
                 />
               </ErrorBoundary>
             )}
@@ -278,8 +282,7 @@ class ThreadFeed extends React.Component<Props, State> {
                 <InboxThread
                   data={community.pinnedThread}
                   active={selectedId === community.pinnedThread.id}
-                  hasActiveCommunity={this.props.hasActiveCommunity}
-                  hasActiveChannel={this.props.hasActiveChannel}
+                  viewContext={viewContext}
                 />
               </ErrorBoundary>
             )}
@@ -302,8 +305,7 @@ class ThreadFeed extends React.Component<Props, State> {
                     <InboxThread
                       data={thread}
                       active={selectedId === thread.id}
-                      hasActiveCommunity={this.props.hasActiveCommunity}
-                      hasActiveChannel={this.props.hasActiveChannel}
+                      viewContext={viewContext}
                     />
                   </ErrorBoundary>
                 );
@@ -324,6 +326,7 @@ class ThreadFeed extends React.Component<Props, State> {
 const map = state => ({
   mountedWithActiveThread: state.dashboardFeed.mountedWithActiveThread,
   activeCommunity: state.dashboardFeed.activeCommunity,
+  activeChannel: state.dashboardFeed.activeChannel,
 });
 export default compose(
   withRouter,

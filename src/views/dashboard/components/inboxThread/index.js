@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import Avatar from 'src/components/avatar';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import truncate from 'shared/truncate';
@@ -14,42 +13,54 @@ import {
   InboxLinkWrapper,
   InboxThreadContent,
   ThreadTitle,
+  Column,
   AvatarLink,
+  CommunityAvatarLink,
 } from './style';
-import {
-  TextRow,
-  AuthorAvatarContainer,
-  MetaSubtitle,
-  MetaSubtitleText,
-} from './header/style';
+import Avatar from 'src/components/avatar';
 import ThreadActivity from './activity';
 import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   active: boolean,
   dispatch: Dispatch<Object>,
-  hasActiveChannel: ?Object,
-  hasActiveCommunity: ?Object,
   history: Object,
   location: Object,
   match: Object,
   staticContext: ?string,
   data: ThreadInfoType,
-  viewContext?: ?string,
+  viewContext?:
+    | ?'communityInbox'
+    | 'communityProfile'
+    | 'channelInbox'
+    | 'channelProfile'
+    | 'userProfile',
   currentUser: ?Object,
 };
 
 class InboxThread extends React.Component<Props> {
   render() {
     const {
-      data,
+      data: thread,
       location,
       active,
-      hasActiveCommunity,
-      hasActiveChannel,
-      viewContext,
+      viewContext = null,
       currentUser,
     } = this.props;
+
+    let queryPrefix;
+    if (
+      // TODO(@mxstbr): Fix this to not use window.innerWidth
+      // which breaks SSR rehydration on mobile devices
+      window.innerWidth > 768 &&
+      (!viewContext ||
+        viewContext === 'communityInbox' ||
+        viewContext === 'channelInbox')
+    ) {
+      queryPrefix = '?t';
+    } else {
+      queryPrefix = '?thread';
+    }
 
     return (
       <ErrorBoundary fallbackComponent={null}>
@@ -57,91 +68,59 @@ class InboxThread extends React.Component<Props> {
           <InboxLinkWrapper
             to={{
               pathname: location.pathname,
-              search:
-                // TODO(@mxstbr): Fix this to not use window.innerWidth
-                // which breaks SSR rehydration on mobile devices
-                window.innerWidth < 768 || viewContext
-                  ? `?thread=${data.id}`
-                  : `?t=${data.id}`,
+              search: `${queryPrefix}=${thread.id}`,
             }}
-            onClick={e =>
-              window.innerWidth > 768 &&
-              !viewContext &&
-              !e.metaKey &&
-              this.props.dispatch(changeActiveThread(data.id))
-            }
+            onClick={() => this.props.dispatch(changeActiveThread(thread.id))}
           />
 
           <InboxThreadContent>
-            {!hasActiveCommunity &&
-              !hasActiveChannel && (
-                <AvatarLink to={`/${data.community.slug}`}>
-                  <Avatar
-                    community={data.community}
-                    src={`${data.community.profilePhoto}`}
-                    size={'32'}
-                  />
-                </AvatarLink>
-              )}
+            {viewContext !== 'userProfile' && (
+              <AvatarLink>
+                <Avatar
+                  user={thread.author.user}
+                  src={`${thread.author.user.profilePhoto}`}
+                  size={'40'}
+                  link={
+                    thread.author.user.username &&
+                    `/users/${thread.author.user.username}`
+                  }
+                />
+              </AvatarLink>
+            )}
 
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '100%',
-              }}
-            >
+            {viewContext === 'userProfile' && (
+              <CommunityAvatarLink>
+                <Avatar
+                  community={thread.community}
+                  src={`${thread.community.profilePhoto}`}
+                  size={'40'}
+                  link={`/${thread.community.slug}`}
+                />
+              </CommunityAvatarLink>
+            )}
+
+            <Column>
               <ErrorBoundary fallbackComponent={null}>
                 <Header
-                  thread={data}
+                  thread={thread}
                   active={active}
-                  activeCommunity={hasActiveCommunity}
-                  activeChannel={hasActiveChannel}
+                  viewContext={viewContext}
                   currentUser={currentUser}
                 />
               </ErrorBoundary>
 
               <ThreadTitle active={active}>
-                {truncate(data.content.title, 80)}
+                {truncate(thread.content.title, 80)}
               </ThreadTitle>
-
-              <TextRow>
-                {hasActiveChannel && (
-                  <AuthorAvatarContainer>
-                    <Avatar
-                      src={data.author.user.profilePhoto}
-                      size={'16'}
-                      user={data.author.user}
-                      link={
-                        data.author.user.username &&
-                        `/users/${data.author.user.username}`
-                      }
-                    />
-                  </AuthorAvatarContainer>
-                )}
-
-                {data.author.user.username ? (
-                  <MetaSubtitle
-                    active={active}
-                    to={`/users/${data.author.user.username}`}
-                  >
-                    {data.author.user.name}
-                  </MetaSubtitle>
-                ) : (
-                  <MetaSubtitleText active={active}>
-                    {data.author.user.name}
-                  </MetaSubtitleText>
-                )}
-              </TextRow>
 
               <ErrorBoundary fallbackComponent={null}>
                 <ThreadActivity
-                  thread={data}
+                  thread={thread}
                   active={active}
                   currentUser={currentUser}
                 />
               </ErrorBoundary>
-            </div>
+            </Column>
           </InboxThreadContent>
         </InboxThreadItem>
       </ErrorBoundary>
