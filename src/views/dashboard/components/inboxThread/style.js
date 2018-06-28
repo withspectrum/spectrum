@@ -44,28 +44,29 @@ export const InboxLinkWrapper = styled(Link)`
 
 export const InboxThreadContent = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-self: stretch;
   position: relative;
   z-index: ${zIndex.card + 1};
   align-items: flex-start;
   pointer-events: none;
   padding: 16px;
+  width: 100%;
 `;
 
 export const ThreadTitle = styled.h3`
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 500;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.default};
-  margin-top: 12px;
+  margin-bottom: 8px;
   max-width: 100%;
   line-height: 1.4;
 `;
 
 export const ThreadActivityWrapper = styled.div`
   display: flex;
-  margin-top: 12px;
+  margin-top: 16px;
   align-items: center;
 
   .icon {
@@ -96,6 +97,7 @@ export const CountWrapper = styled.div`
   display: flex;
   flex: none;
   font-size: 13px;
+  margin-top: 2px;
   color: ${props =>
     props.new
       ? props.active ? props.theme.text.reverse : props.theme.warn.alt
@@ -118,17 +120,13 @@ export const CountWrapper = styled.div`
   ${Tooltip};
 `;
 
-export const NewThreadPill = styled.div`
-  color: ${props =>
-    props.active ? props.theme.brand.alt : props.theme.text.reverse};
-  background: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.success.default};
-  border-radius: 20px;
-  padding: 4px 12px;
-  font-size: 11px;
-  text-transform: uppercase;
-  font-weight: 700;
+export const AvatarLink = styled(Link)`
   display: flex;
-  align-items: center;
-  letter-spacing: 0.4px;
+  align-self: stretch;
+  height: 32px;
+  width: 32px;
+  margin-right: 16px;
+  pointer-events: auto;
+  border-radius: 4px;
+  overflow: hidden;
 `;

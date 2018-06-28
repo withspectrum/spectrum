@@ -5,12 +5,14 @@ import Link from 'src/components/link';
 export const Container = styled.div`
   display: flex;
   width: 100%;
+  margin-bottom: 4px;
 `;
 
 export const MetaContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 100%;
 `;
 
 export const AuthorAvatarContainer = styled.span`
@@ -19,19 +21,10 @@ export const AuthorAvatarContainer = styled.span`
   align-items: center;
 `;
 
-export const AvatarLink = styled(Link)`
-  display: inline-block;
-  height: 32px;
-  width: 32px;
-  margin-right: 12px;
-  pointer-events: auto;
-  border-radius: 4px;
-  overflow: hidden;
-`;
-
 export const TextRow = styled.span`
-  line-height: 1.3;
   display: flex;
+  flex: 1 0 auto;
+  width: 100%;
   align-items: center;
 `;
 
@@ -49,8 +42,8 @@ export const MetaTitle = styled(Link)`
   }
 `;
 
-export const MetaSubtitleText = styled.p`
-  font-size: 12px;
+export const MetaSubtitleText = styled.span`
+  font-size: 14px;
   font-weight: 400;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};
@@ -58,8 +51,20 @@ export const MetaSubtitleText = styled.p`
   pointer-events: auto;
 `;
 
+export const Timestamp = styled(MetaSubtitleText)``;
+
+export const NewThreadTimestamp = styled(MetaSubtitleText)`
+  color: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.success.default};
+`;
+
+export const NewMessagesTimestamp = styled(MetaSubtitleText)`
+  color: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.warn.alt};
+`;
+
 export const MetaSubtitle = styled(Link)`
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};
@@ -92,4 +97,12 @@ export const Divider = styled.span`
   padding-left: 4px;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.placeholder};
+`;
+
+export const Dot = styled.span`
+  width: 8px;
+  height: 8px;
+  border-radius: 8px;
+  background-color: ${props => props.color(props.theme)};
+  margin-right: 8px;
 `;

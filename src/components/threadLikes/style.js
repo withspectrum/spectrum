@@ -33,17 +33,14 @@ export const LikeButtonWrapper = styled(LikeWrapper)`
     margin-right: 8px;
     margin-left: 4px;
     font-weight: 600;
-    color: ${props =>
-      props.hasReacted ? props.theme.brand.alt : props.theme.text.alt};
+    color: ${props => props.theme.text.alt};
   }
 `;
 
 export const LikeCountWrapper = styled(LikeWrapper)`
   margin-right: 12px;
   color: ${props =>
-    props.active
-      ? props.theme.text.reverse
-      : props.hasReacted ? props.theme.brand.alt : props.theme.text.alt};
+    props.active ? props.theme.text.reverse : props.theme.text.alt};
 
   span {
     margin-left: 4px;

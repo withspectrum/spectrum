@@ -24,8 +24,8 @@ export const DashboardWrapper = styled.main`
 
 export const InboxWrapper = styled.div`
   display: flex;
-  flex: 0 0 400px;
-  width: 400px;
+  flex: 0 0 440px;
+  width: 440px;
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
@@ -34,8 +34,8 @@ export const InboxWrapper = styled.div`
   border-right: 1px solid ${props => props.theme.bg.border};
 
   @media (min-resolution: 120dpi) {
-    max-width: 400px;
-    min-width: 400px;
+    max-width: 440px;
+    min-width: 440px;
   }
 
   @media (max-width: 768px) {

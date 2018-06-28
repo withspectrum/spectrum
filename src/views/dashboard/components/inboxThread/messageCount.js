@@ -12,18 +12,11 @@ type Props = {
 
 class MessageCount extends React.Component<Props> {
   render() {
-    const {
-      thread: { messageCount, currentUserLastSeen, lastActive },
-      active,
-    } = this.props;
-
-    const newMessagesSinceLastViewed =
-      currentUserLastSeen && lastActive && currentUserLastSeen < lastActive;
+    const { thread: { messageCount }, active } = this.props;
 
     return (
       <CountWrapper
         active={active}
-        new={newMessagesSinceLastViewed}
         tipText={`${messageCount} messages`}
         tipLocation={'top-right'}
       >

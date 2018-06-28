@@ -140,9 +140,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
           </CommunityHeaderMeta>
 
           {channel.channelPermissions.isMember ? (
-            watercooler ? null : (
-              <LikeButton thread={thread} />
-            )
+            <LikeButton thread={thread} />
           ) : currentUser ? (
             <Button
               gradientTheme={'success'}
