@@ -24,7 +24,6 @@ class Header extends React.Component<HeaderProps> {
     } = this.props;
 
     const isPinned = id === community.pinnedThreadId;
-    console.log({ viewContext });
     return (
       <Container active={active}>
         <MetaContainer>
