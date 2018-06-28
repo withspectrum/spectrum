@@ -149,9 +149,5 @@ class InboxThread extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-export default compose(
-  // $FlowFixMe
-  connect(map),
-  withRouter
-)(InboxThread);
+const map = (state): * => ({ currentUser: state.users.currentUser });
+export default compose(connect(map), withRouter)(InboxThread);
