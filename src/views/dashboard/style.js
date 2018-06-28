@@ -405,7 +405,7 @@ export const SearchInputDiv = styled.div`
 `;
 
 export const SearchInput = styled.input`
-  font-size: 14px;
+  font-size: 16px;
   width: 100%;
   height: 100%;
   color: ${props =>
