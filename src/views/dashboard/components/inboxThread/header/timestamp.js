@@ -35,7 +35,7 @@ class ThreadTimestamp extends React.Component<Props> {
     if (
       !isAuthor &&
       !thread.currentUserLastSeen &&
-      !createdWithinLastDay &&
+      createdWithinLastDay &&
       !active
     ) {
       return (
