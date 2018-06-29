@@ -63,7 +63,7 @@
     "aws-sdk": "2.200.0",
     "axios": "^0.17.1",
     "bad-words": "^1.6.1",
-    "body-parser": "^1.17.1",
+    "body-parser": "^1.18.3",
     "bull": "3.3.10",
     "casual": "^1.5.19",
     "common-tags": "^1.7.2",
