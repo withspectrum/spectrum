@@ -3724,12 +3724,12 @@ draft-js-focus-plugin@2.0.0-rc2:
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
 
-draft-js-image-plugin@2.0.0-rc8:
-  version "2.0.0-rc8"
-  resolved "https://registry.yarnpkg.com/draft-js-image-plugin/-/draft-js-image-plugin-2.0.0-rc8.tgz#9ccd0d83c84f53dceefcd3c72f944e26ef9e2db5"
+draft-js-image-plugin@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/draft-js-image-plugin/-/draft-js-image-plugin-2.0.5.tgz#17c7218019877d9643a2f379635df11428e68a7f"
   dependencies:
     decorate-component-with-props "^1.0.2"
-    find-with-regex "^1.0.2"
+    find-with-regex "^1.1.3"
     immutable "~3.7.4"
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
@@ -4754,6 +4754,10 @@ find-with-regex@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/find-with-regex/-/find-with-regex-1.0.2.tgz#d3b36286539f14c527e31f194159c6d251651a45"
 
+find-with-regex@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/find-with-regex/-/find-with-regex-1.1.3.tgz#d6c6f2debee898d36b6a77e05709b13dd5dc8a26"
+
 flat-cache@^1.2.1:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/flat-cache/-/flat-cache-1.3.0.tgz#d3030b32b38154f4e3b7e9c709f490f7ef97c481"
@@ -5249,9 +5253,9 @@ graphql-tag@^2.9.2:
     iterall "^1.1.3"
     uuid "^3.1.0"
 
-graphql-tools@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-3.0.2.tgz#fb79821c23b0f5d11d842c4d0c15000d856c6c8c"
+graphql-tools@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-3.0.4.tgz#d08aa75db111d704cba05d92afd67ec5d1dc6b24"
   dependencies:
     apollo-link "1.2.1"
     apollo-utilities "^1.0.1"
