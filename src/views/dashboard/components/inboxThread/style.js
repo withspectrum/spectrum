@@ -103,7 +103,6 @@ export const CountWrapper = styled.div`
   display: flex;
   flex: none;
   font-size: 13px;
-  margin-top: 2px;
   color: ${props =>
     props.new
       ? props.active ? props.theme.text.reverse : props.theme.warn.alt
