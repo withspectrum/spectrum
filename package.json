@@ -109,7 +109,7 @@
     "helmet": "^3.12.0",
     "highlight.js": "^9.10.0",
     "history": "^4.6.1",
-    "hoist-non-react-statics": "^2.3.1",
+    "hoist-non-react-statics": "^2.5.5",
     "hpp": "^0.2.2",
     "idx": "^2.3.0",
     "imgix-core-js": "^1.0.6",
