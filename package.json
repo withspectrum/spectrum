@@ -121,7 +121,7 @@
     "jsonwebtoken": "^8.0.1",
     "keygrip": "^1.0.2",
     "linkify-it": "^2.0.3",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.10",
     "lodash.intersection": "^4.4.0",
     "markdown-draft-js": "^0.6.3",
     "moment": "^2.18.1",
