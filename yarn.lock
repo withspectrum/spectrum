@@ -7521,11 +7521,11 @@ moment-timezone@^0.5.0:
   dependencies:
     moment ">= 2.9.0"
 
-moment@2.x.x, "moment@>= 2.9.0", moment@^2.15.2, moment@^2.18.1, moment@^2.20.1:
+moment@2.x.x, "moment@>= 2.9.0", moment@^2.15.2, moment@^2.20.1:
   version "2.22.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.0.tgz#7921ade01017dd45186e7fee5f424f0b8663a730"
 
-moment@^2.22.1:
+moment@^2.22.1, moment@^2.22.2:
   version "2.22.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
 
