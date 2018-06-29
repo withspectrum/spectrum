@@ -733,19 +733,19 @@ apollo-link@^1.0.0, apollo-link@^1.2.1, apollo-link@^1.2.2:
     apollo-utilities "^1.0.0"
     zen-observable-ts "^0.8.9"
 
-apollo-server-core@^1.3.4:
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-1.3.4.tgz#06715290b32375236d90701acb42f415ab78497f"
+apollo-server-core@^1.3.6:
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-1.3.6.tgz#08636243c2de56fa8c267d68dd602cb1fbd323e3"
   dependencies:
     apollo-cache-control "^0.1.0"
     apollo-tracing "^0.1.0"
     graphql-extensions "^0.0.x"
 
-apollo-server-express@^1.3.0:
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/apollo-server-express/-/apollo-server-express-1.3.4.tgz#0ca0d0aa84f4a5489037d834e3c4b619a1a85237"
+apollo-server-express@^1.3.6:
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/apollo-server-express/-/apollo-server-express-1.3.6.tgz#2120b05021a87def44fafd846e8a0e2a32852db7"
   dependencies:
-    apollo-server-core "^1.3.4"
+    apollo-server-core "^1.3.6"
     apollo-server-module-graphiql "^1.3.4"
 
 apollo-server-module-graphiql@^1.3.4:
@@ -5219,11 +5219,11 @@ graphql-log@0.1.2:
     deep-for-each "^1.0.6"
     is-function "^1.0.1"
 
-graphql-server-express@1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/graphql-server-express/-/graphql-server-express-1.3.0.tgz#f9276a59c2aedff893fe78869a5bc5dea519f6f7"
+graphql-server-express@1.3.6:
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/graphql-server-express/-/graphql-server-express-1.3.6.tgz#6346954c4dea067022dd932d814572803a40d45b"
   dependencies:
-    apollo-server-express "^1.3.0"
+    apollo-server-express "^1.3.6"
 
 graphql-subscriptions@0.5.8:
   version "0.5.8"
@@ -5249,9 +5249,9 @@ graphql-tag@^2.9.2:
     iterall "^1.1.3"
     uuid "^3.1.0"
 
-graphql-tools@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-3.0.4.tgz#d08aa75db111d704cba05d92afd67ec5d1dc6b24"
+graphql-tools@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-3.0.2.tgz#fb79821c23b0f5d11d842c4d0c15000d856c6c8c"
   dependencies:
     apollo-link "1.2.1"
     apollo-utilities "^1.0.1"
