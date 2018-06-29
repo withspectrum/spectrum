@@ -3346,7 +3346,11 @@ deep-equal@~0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-0.1.2.tgz#b246c2b80a570a47c11be1d9bd1070ec878b87ce"
 
-deep-extend@^0.4.0, deep-extend@~0.4.0:
+deep-extend@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.5.1.tgz#b894a9dd90d3023fbf1c55a394fb858eb2066f1f"
+
+deep-extend@~0.4.0:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.4.2.tgz#48b699c27e334bf89f10892be432f6e4c7d34a7f"
 
@@ -7223,6 +7227,10 @@ lodash@4.17.4:
   version "4.17.5"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
 
+lodash@^4.17.10:
+  version "4.17.10"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
+
 log-symbols@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/log-symbols/-/log-symbols-1.0.2.tgz#376ff7b58ea3086a0f09facc74617eca501e1a18"
@@ -7521,11 +7529,11 @@ moment-timezone@^0.5.0:
   dependencies:
     moment ">= 2.9.0"
 
-moment@2.x.x, "moment@>= 2.9.0", moment@^2.15.2, moment@^2.18.1, moment@^2.20.1:
+moment@2.x.x, "moment@>= 2.9.0", moment@^2.15.2, moment@^2.20.1:
   version "2.22.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.0.tgz#7921ade01017dd45186e7fee5f424f0b8663a730"
 
-moment@^2.22.1:
+moment@^2.22.1, moment@^2.22.2:
   version "2.22.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
 
@@ -7891,11 +7899,11 @@ obuf@^1.0.0, obuf@^1.1.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/obuf/-/obuf-1.1.2.tgz#09bea3343d41859ebd446292d11c9d4db619084e"
 
-offline-plugin@^5.0.3:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/offline-plugin/-/offline-plugin-5.0.3.tgz#61488c5c5842d8576aa677384b5bbd3e60949289"
+offline-plugin@^5.0.5:
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/offline-plugin/-/offline-plugin-5.0.5.tgz#e9b16c569d19899af9c923f5bc260705578ffeba"
   dependencies:
-    deep-extend "^0.4.0"
+    deep-extend "^0.5.1"
     ejs "^2.3.4"
     loader-utils "0.2.x"
     minimatch "^3.0.3"
@@ -8990,14 +8998,14 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-apollo@^2.1.6:
-  version "2.1.6"
-  resolved "https://registry.yarnpkg.com/react-apollo/-/react-apollo-2.1.6.tgz#13be92689009eda9023948c78532f4102cbc3d57"
+react-apollo@^2.1.8:
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/react-apollo/-/react-apollo-2.1.8.tgz#ebac0d9bee0f0906df3ce29207f94df337009887"
   dependencies:
     fbjs "^0.8.16"
     hoist-non-react-statics "^2.5.0"
     invariant "^2.2.2"
-    lodash "4.17.10"
+    lodash "^4.17.10"
     prop-types "^15.6.0"
 
 react-app-rewire-hot-loader@^1.0.1:
@@ -9125,12 +9133,14 @@ react-modal@3.x:
     warning "^3.0.0"
 
 react-popper@^1.0.0-beta.5:
-  version "1.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-1.0.0-beta.5.tgz#09cfa5704a527d59c96270247307c349fbccc4a1"
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-1.0.0.tgz#b99452144e8fe4acc77fa3d959a8c79e07a65084"
   dependencies:
     babel-runtime "6.x.x"
     create-react-context "^0.2.1"
     popper.js "^1.14.1"
+    prop-types "^15.6.1"
+    typed-styles "^0.0.5"
     warning "^3.0.0"
 
 react-portal@^3.1.0:
@@ -10908,6 +10918,10 @@ type-is@^1.6.12, type-is@~1.6.15, type-is@~1.6.16:
 type-of@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/type-of/-/type-of-2.0.1.tgz#e72a1741896568e9f628378d816d6912f7f23972"
+
+typed-styles@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/typed-styles/-/typed-styles-0.0.5.tgz#a60df245d482a9b1adf9c06c078d0f06085ed1cf"
 
 typedarray@^0.0.6:
   version "0.0.6"
