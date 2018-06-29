@@ -176,7 +176,7 @@
     "sha1": "^1.1.1",
     "shortid": "^2.2.8",
     "slate": "^0.20.1",
-    "slate-markdown": "0.1.0",
+    "slate-markdown": "0.1.1",
     "slugg": "^1.1.0",
     "stopword": "^0.1.9",
     "string-replace-to-array": "^1.0.3",

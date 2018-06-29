@@ -10086,9 +10086,9 @@ slash@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-1.0.0.tgz#c41f2f6c39fc16d1cd17ad4b5d896114ae470d55"
 
-slate-markdown@0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/slate-markdown/-/slate-markdown-0.1.0.tgz#8e7c203d7937c88527fc4cc4a5e129ac30d8e9ce"
+slate-markdown@0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/slate-markdown/-/slate-markdown-0.1.1.tgz#dc4d8bce0c133661678248108c28ff2637a8ce78"
   dependencies:
     prismjs "^1.6.0"
     react "^0.14.0 || ^15.0.0"
