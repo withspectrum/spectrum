@@ -22,7 +22,7 @@
     "cross-env": "^5.0.5",
     "eslint": "^4.1.1",
     "eslint-config-react-app": "^2.1.0",
-    "eslint-plugin-flowtype": "^2.34.1",
+    "eslint-plugin-flowtype": "^2.49.3",
     "eslint-plugin-import": "^2.6.0",
     "eslint-plugin-jest": "^21.6.1",
     "eslint-plugin-jsx-a11y": "^5.1.1",
