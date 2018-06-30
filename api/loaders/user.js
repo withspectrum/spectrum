@@ -12,7 +12,6 @@ import {
 import { getUsersPermissionsInChannels } from '../models/usersChannels';
 import { getThreadsNotificationStatusForUsers } from '../models/usersThreads';
 import createLoader from './create-loader';
-import type { Loader } from './types';
 
 export const __createUserLoader = createLoader(users => getUsers(users), 'id');
 

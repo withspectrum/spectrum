@@ -1,5 +1,4 @@
 // @flow
-import { getChannelSettings } from '../../models/channelSettings';
 import type { DBChannel } from 'shared/types';
 import type { GraphQLContext } from '../../';
 

@@ -21,13 +21,13 @@ describe('User View', () => {
       });
   });
 
-  it('should list the communities a user is a member of, including their rep in that community', () => {
+  it('should list the public communities a user is a member of, including their rep in that community', () => {
     const usersCommunities = data.usersCommunities.filter(
       ({ userId }) => userId === user.id
     );
     const communityIds = usersCommunities.map(({ communityId }) => communityId);
-    const communities = data.communities.filter(({ id }) =>
-      communityIds.includes(id)
+    const communities = data.communities.filter(
+      ({ id, isPrivate }) => communityIds.includes(id) && isPrivate !== true
     );
     communities.forEach(community => {
       cy.contains(community.name);

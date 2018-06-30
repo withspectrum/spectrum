@@ -4,7 +4,6 @@ import Textarea from 'react-textarea-autosize';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import debounce from 'debounce';
-import { track } from '../../../helpers/events';
 import { closeComposer } from '../../../actions/composer';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -14,6 +13,7 @@ import {
   fromPlainText,
   toJSON,
   toState,
+  isAndroid,
 } from 'shared/draft-utils';
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
@@ -37,10 +37,12 @@ import {
   Dropdowns,
   DisconnectedWarning,
 } from '../style';
+import { events, track } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   isOpen: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isLoading: boolean,
   activeChannel?: string,
   activeCommunity?: string,
@@ -74,17 +76,33 @@ type State = {
 
 const LS_BODY_KEY = 'last-thread-composer-body';
 const LS_TITLE_KEY = 'last-thread-composer-title';
+const LS_COMPOSER_EXPIRE = 'last-thread-composer-expire';
+
+const ONE_DAY = () => new Date().getTime() + 60 * 60 * 24 * 1000;
+
+const REMOVE_STORAGE = () => {
+  localStorage.removeItem(LS_BODY_KEY);
+  localStorage.removeItem(LS_TITLE_KEY);
+  localStorage.removeItem(LS_COMPOSER_EXPIRE);
+};
+
 let storedBody;
 let storedTitle;
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
 if (localStorage) {
   try {
-    storedBody = toState(JSON.parse(localStorage.getItem(LS_BODY_KEY) || ''));
-    storedTitle = localStorage.getItem(LS_TITLE_KEY);
+    const expireTime = localStorage.getItem(LS_COMPOSER_EXPIRE);
+    const currTime = new Date().getTime();
+    /////if current time is greater than valid till of text then please expire title/body back to ''
+    if (currTime > expireTime) {
+      REMOVE_STORAGE();
+    } else {
+      storedBody = toState(JSON.parse(localStorage.getItem(LS_BODY_KEY) || ''));
+      storedTitle = localStorage.getItem(LS_TITLE_KEY);
+    }
   } catch (err) {
-    localStorage.removeItem(LS_BODY_KEY);
-    localStorage.removeItem(LS_TITLE_KEY);
+    REMOVE_STORAGE();
   }
 }
 
@@ -92,12 +110,14 @@ const persistTitle =
   localStorage &&
   debounce((title: string) => {
     localStorage.setItem(LS_TITLE_KEY, title);
+    localStorage.setItem(LS_COMPOSER_EXPIRE, ONE_DAY());
   }, 500);
 
 const persistBody =
   localStorage &&
   debounce(body => {
     localStorage.setItem(LS_BODY_KEY, JSON.stringify(toJSON(body)));
+    localStorage.setItem(LS_COMPOSER_EXPIRE, ONE_DAY());
   }, 500);
 
 class ThreadComposerWithData extends React.Component<Props, State> {
@@ -269,6 +289,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    track(events.THREAD_CREATED_INITED);
     this.setState({ isMounted: true });
     this.props.data
       .refetch()
@@ -292,7 +313,8 @@ class ThreadComposerWithData extends React.Component<Props, State> {
         this.props.dispatch(addToastWithTimeout('error', err.message))
       );
 
-    this.refs.titleTextarea.focus();
+    if (this.titleTextarea && this.titleTextarea.focus)
+      this.titleTextarea.focus();
   }
 
   componentWillUpdate(nextProps) {
@@ -330,7 +352,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
   changeTitle = e => {
     const title = e.target.value;
     if (/\n$/g.test(title)) {
-      this.bodyEditor.focus();
+      this.bodyEditor.focus && this.bodyEditor.focus();
       return;
     }
     persistTitle(title);
@@ -506,7 +528,9 @@ class ThreadComposerWithData extends React.Component<Props, State> {
 
     const content = {
       title,
-      body: JSON.stringify(jsonBody),
+      // NOTE(@mxstbr): On Android we send the text as plain text and parse the raw
+      // markdown on the server
+      body: isAndroid() ? toPlainText(body) : JSON.stringify(jsonBody),
     };
 
     const attachments = [];
@@ -536,7 +560,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     const thread = {
       channelId,
       communityId,
-      type: 'DRAFTJS',
+      type: isAndroid() ? 'TEXT' : 'DRAFTJS',
       content,
       attachments,
       filesToUpload,
@@ -550,9 +574,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
         // get the thread id to redirect the user
         const id = data.publishThread.id;
 
-        track('thread', 'published', null);
-        localStorage.removeItem(LS_TITLE_KEY);
-        localStorage.removeItem(LS_BODY_KEY);
+        REMOVE_STORAGE();
 
         // stop the loading spinner on the publish button
         this.setState({
@@ -688,7 +710,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
                 style={ThreadTitle}
                 value={this.state.title}
                 placeholder={'What do you want to talk about?'}
-                ref="titleTextarea"
+                innerRef={ref => (this.titleTextarea = ref)}
                 autoFocus
               />
 

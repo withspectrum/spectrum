@@ -38,9 +38,7 @@ export const Byline = styled.span`
   line-height: 16px;
   font-weight: 700;
   margin-bottom: 0;
-  -webkit-user-select: none; /* Chrome/Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+ */
+  user-select: none;
   color: ${props =>
     props.op ? props.theme.brand.default : props.theme.text.alt};
   max-width: 100%;
@@ -61,12 +59,6 @@ export const Username = styled(Name)`
 export const Timestamp = styled(HorizontalRule)`
   margin: 16px 0 8px;
   text-align: center;
-  -webkit-user-select: none; /* Chrome/Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+ */
-
-  /* Rules below not implemented in browsers yet */
-  -o-user-select: none;
   user-select: none;
 
   hr {

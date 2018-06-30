@@ -159,7 +159,7 @@ export const SearchInput = styled.input`
   font-size: 16px;
   border-bottom: 1px solid transparent;
   flex: 1;
-  padding: 4px 24px 15px;
+  padding: 4px 0 15px 24px;
   margin-bottom: -13px;
   background: transparent;
 
@@ -180,5 +180,35 @@ export const FetchMore = styled(TextButton)`
 
   &:hover {
     color: ${props => props.theme.brand.alt};
+  }
+`;
+
+export const TokenInputWrapper = styled.div`
+  position: relative;
+  cursor: pointer;
+
+  input {
+    cursor: pointer;
+  }
+
+  &:after {
+    content: 'Copy link';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    text-transform: uppercase;
+    color: ${props => props.theme.text.reverse};
+    background: ${props => props.theme.text.alt};
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+
+  &:hover {
+    &:after {
+      background: ${props => props.theme.success.alt};
+    }
   }
 `;

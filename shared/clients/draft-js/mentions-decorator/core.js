@@ -9,6 +9,30 @@ export type MentionComponentPropsType = {
   children: Node,
 };
 
+type MentionsPosition = {
+  startPos: string,
+  endPos: string,
+};
+
+// Get all the position of the mentions from start to finish. With that array we can call the callback function.
+export const getMentionsPositionsFromMessage = (
+  message: string
+): Array<MentionsPosition> => {
+  const mentionCoordinates = [];
+  const newMessage = message;
+
+  newMessage.replace(MENTIONS, (match, position) => {
+    mentionCoordinates.push({
+      startPos: position,
+      endPos: position + match.length,
+    });
+
+    return match;
+  });
+
+  return mentionCoordinates;
+};
+
 let i = 0;
 const createMentionsDecorator = (
   Component: ComponentType<MentionComponentPropsType>
@@ -17,19 +41,24 @@ const createMentionsDecorator = (
     contentBlock: ContentBlock,
     callback: (...args?: Array<any>) => any
   ) => {
+    // This prevents the search for mentions when we're inside of a code-block
+    if (contentBlock.type === 'code-block') return;
+
     // -> "@brian_lovin, what's up with @mxstbr?"
     const text = contentBlock.getText();
     // -> ["@brian_lovin", " @mxstbr"];
-    const matches = text.match(MENTIONS);
+    let matches = text.match(MENTIONS);
+
     if (!matches || matches.length === 0) return;
 
-    matches.forEach(match => {
-      // Because JS Regexps don't have lookbehinds we have to include the whitespace before the mention in the regex match
-      // The .trim here makes sure we don't highlight that whitespace as a mention
-      // -> " @mxstbr" -> "@mxstbr"
-      const mention = match.trim();
-      const start = text.indexOf(mention);
-      callback(start, start + mention.length);
+    matches = matches.filter(mention => !mention.startsWith('/'));
+
+    if (!matches || matches.length === 0) return;
+
+    const mentionCoordinates = getMentionsPositionsFromMessage(text);
+
+    mentionCoordinates.forEach(({ startPos, endPos }) => {
+      callback(startPos, endPos);
     });
   },
   component: (props: { decoratedText: string, children: Node }) => (

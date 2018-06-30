@@ -1,26 +1,32 @@
 {
   "expo": {
-    "name": "spectrum",
+    "name": "Spectrum",
     "slug": "spectrum",
+    "description": "Simple, powerful online communities.",
+    "githubUrl": "https://github.com/withspectrum/spectrum",
     "privacy": "unlisted",
-    "sdkVersion": "26.0.0",
-    "platforms": ["ios", "android"],
+    "sdkVersion": "28.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "../public/img/homescreen-icon-512x512.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-			"supportsTablet": true,
-			"bundleIdentifier": "com.spectrum.mobile"
+      "supportsTablet": true,
+      "bundleIdentifier": "chat.spectrum.mobile"
     },
     "packagerOpts": {
       "projectRoots": "",
       "config": "rn-cli.config.js"
     },
+    "nodeModulesPath": "./",
     "hooks": {
       "postPublish": [
         {

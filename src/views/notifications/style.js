@@ -14,13 +14,17 @@ import { HorizontalRule } from '../../components/globals';
 import Card from '../../components/card';
 import { IconButton } from '../../components/buttons';
 
-export const HzRule = styled(HorizontalRule)`margin: 0;`;
+export const HzRule = styled(HorizontalRule)`
+  margin: 0;
+`;
 
 export const NotificationCard = styled(Card)`
   padding: 16px;
   padding-bottom: 24px;
   overflow: hidden;
   transition: ${Transition.hover.off};
+  border-radius: 8px;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 
   &:hover {
     transition: none;
@@ -32,6 +36,8 @@ export const SegmentedNotificationCard = styled(Card)`
   padding: 0;
   padding-top: 16px;
   transition: ${Transition.hover.off};
+  border-radius: 8px;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 
   &:hover {
     transition: none;
@@ -151,9 +157,13 @@ export const ActorPhotosContainer = styled(FlexRow)`
   max-width: 100%;
 `;
 
-export const ActorPhotoItem = styled.div`margin-right: 4px;`;
+export const ActorPhotoItem = styled.div`
+  margin-right: 4px;
+`;
 
-export const ActorPhoto = styled.img`width: 100%;`;
+export const ActorPhoto = styled.img`
+  width: 100%;
+`;
 
 export const ContextRow = styled(FlexRow)`
   align-items: center;
@@ -183,10 +193,22 @@ export const JoinContext = styled(ContextRow)`
   color: ${({ theme }) => theme.space.default};
 `;
 
+export const RequestContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.special.alt};
+`;
+
+export const ApprovedContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.success.default};
+`;
+
 export const ThreadContext = styled(ContextRow)`
   color: ${({ theme }) => theme.brand.alt};
   margin: 0 16px;
   margin-bottom: 16px;
+`;
+
+export const ThreadReactionContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.brand.alt};
 `;
 
 export const CreatedContext = styled(ContextRow)`
@@ -245,6 +267,8 @@ export const RequestCard = styled(Card)`
   align-items: center;
   justify-content: space-between;
   padding: 16px 16px 16px 24px;
+  border-radius: 8px;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 
   > p {
     font-weight: 700;
@@ -255,4 +279,26 @@ export const RequestCard = styled(Card)`
 export const CloseRequest = styled(IconButton)`
   margin-left: 8px;
   color: ${props => props.theme.text.placeholder};
+`;
+
+export const ButtonsRow = styled.div`
+  display: flex;
+  align-items: center;
+  align-content: stretch;
+  padding: 0 16px;
+
+  div {
+    display: flex;
+    flex: 1 0 auto;
+    margin-right: 8px;
+  }
+
+  div:last-child {
+    margin-right: 0;
+  }
+
+  button {
+    display: flex;
+    flex: 1 0 auto;
+  }
 `;

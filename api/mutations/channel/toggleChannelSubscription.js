@@ -1,7 +1,7 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { getChannels } from '../../models/channel';
+import { getChannelById } from '../../models/channel';
 import { userIsMemberOfAnyChannelInCommunity } from '../../models/community';
 import { removeMemberInCommunity } from '../../models/usersCommunities';
 import {
@@ -16,43 +16,63 @@ import {
   createMemberInCommunity,
 } from '../../models/usersCommunities';
 import { sendPrivateChannelRequestQueue } from 'shared/bull/queues';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { trackQueue } from 'shared/bull/queues';
+import { events } from 'shared/analytics';
 
-export default async (
-  _: any,
-  { channelId }: { channelId: string },
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+type Input = {
+  channelId: string,
+};
 
-  // user must be authed to join a channel
-  if (!currentUser) {
-    return new UserError('You must be signed in to follow this channel.');
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { channelId } = args;
+  const { user } = ctx;
 
-  // get the channel to evaluate
-  const channels = await getChannels([channelId]);
-
-  const currentUserChannelPermissions = await getUserPermissionsInChannel(
-    channelId,
-    currentUser.id
-  );
-
-  // select the channel
-  const channelToEvaluate = channels[0];
+  const [channelToEvaluate, currentUserChannelPermissions] = await Promise.all([
+    getChannelById(channelId),
+    getUserPermissionsInChannel(channelId, user.id),
+  ]);
 
   // if channel wasn't found or was deleted
   if (!channelToEvaluate || channelToEvaluate.deletedAt) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_CHANNEL_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'no channel',
+      },
+    });
+
     return new UserError("This channel doesn't exist");
   }
 
   // user is blocked, they can't join the channel
   if (currentUserChannelPermissions.isBlocked) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_CHANNEL_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
     return new UserError("You don't have permission to do that.");
   }
 
   // if the person owns the channel, they have accidentally triggered
   // a join or leave action, which isn't allowed
   if (currentUserChannelPermissions.isOwner) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_CHANNEL_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'owner in channel',
+      },
+    });
+
     return new UserError(
       "Owners of a community can't join or leave their own channel."
     );
@@ -61,13 +81,22 @@ export default async (
   // get the current user's permissions in the community
   const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
     channelToEvaluate.communityId,
-    currentUser.id
+    user.id
   );
 
   if (
     currentUserCommunityPermissions &&
     currentUserCommunityPermissions.isBlocked
   ) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_CHANNEL_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'blocked',
+      },
+    });
+
     return new UserError('You have been blocked in this community');
   }
 
@@ -75,7 +104,7 @@ export default async (
   // to leave the channel
   if (currentUserChannelPermissions.isMember) {
     // remove the relationship of the user to the channel
-    const removeRelationship = removeMemberInChannel(channelId, currentUser.id);
+    const removeRelationship = removeMemberInChannel(channelId, user.id);
 
     return (
       Promise.all([channelToEvaluate, removeRelationship])
@@ -87,7 +116,7 @@ export default async (
           // should also be removed from the parent community itself
           const isMemberOfAnotherChannel = userIsMemberOfAnyChannelInCommunity(
             channelToEvaluate.communityId,
-            currentUser.id
+            user.id
           );
 
           return Promise.all([channelToEvaluate, isMemberOfAnotherChannel]);
@@ -102,10 +131,7 @@ export default async (
             // the community
             return Promise.all([
               channelToEvaluate,
-              removeMemberInCommunity(
-                channelToEvaluate.communityId,
-                currentUser.id
-              ),
+              removeMemberInCommunity(channelToEvaluate.communityId, user.id),
             ]);
           }
         })
@@ -123,7 +149,7 @@ export default async (
 
     // 1. user has already requested to join, so remove them from pending
     if (currentUserChannelPermissions.isPending) {
-      return removeMemberInChannel(channelId, currentUser.id);
+      return removeMemberInChannel(channelId, user.id);
     }
 
     // 2. if the channel is private, request to join - since this action
@@ -133,15 +159,15 @@ export default async (
     // owner approves the user
     if (channelToEvaluate.isPrivate) {
       sendPrivateChannelRequestQueue.add({
-        userId: currentUser.id,
+        userId: user.id,
         channel: channelToEvaluate,
       });
-      return createOrUpdatePendingUserInChannel(channelId, currentUser.id);
+      return createOrUpdatePendingUserInChannel(channelId, user.id);
     }
 
     // otherwise the channel is not private so the user can just join.
     // we'll create new usersChannels relationship
-    const join = createMemberInChannel(channelId, currentUser.id);
+    const join = createMemberInChannel(channelId, user.id, false);
 
     // we also need to see if the user is a member of the parent community.
     // if they are, we can just continue
@@ -161,14 +187,8 @@ export default async (
             // join the community and the community's default channels
             return Promise.all([
               joinedChannel,
-              createMemberInCommunity(
-                joinedChannel.communityId,
-                currentUser.id
-              ),
-              createMemberInDefaultChannels(
-                joinedChannel.communityId,
-                currentUser.id
-              ),
+              createMemberInCommunity(joinedChannel.communityId, user.id),
+              createMemberInDefaultChannels(joinedChannel.communityId, user.id),
             ]);
           }
         })
@@ -176,4 +196,4 @@ export default async (
         .then(data => data[0])
     );
   }
-};
+});

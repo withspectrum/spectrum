@@ -41,7 +41,7 @@ export const getThreadMessageConnectionOptions = {
         msgsbefore = params.msgsbefore;
       } catch (err) {
         // Ignore errors in query string parsing, who cares
-        console.log(err);
+        console.error(err);
       }
     }
     let variables = {
@@ -67,6 +67,13 @@ export const getThreadMessageConnectionOptions = {
           variables.last = 50;
         }
       }
+    }
+
+    if (props.isWatercooler) {
+      variables.before = null;
+      variables.after = null;
+      //$FlowFixMe
+      variables.last = 50;
     }
 
     return {

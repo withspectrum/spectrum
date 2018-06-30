@@ -40,7 +40,7 @@ export const fetchPayload = (
       );
     }
     default: {
-      console.log(`Couldn't match the type '${type}' with EntityTypes`);
+      console.error(`Couldn't match the type '${type}' with EntityTypes`);
       return Promise.resolve({});
     }
   }

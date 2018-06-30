@@ -19,7 +19,14 @@ let i = 0;
 const createLinksDecorator = (
   Component: ComponentType<LinksDecoratorComponentProps>
 ) => ({
-  strategy: linkStrategy,
+  strategy: (
+    contentBlock: ContentBlock,
+    callback: (...args?: Array<any>) => any
+  ) => {
+    if (contentBlock.type === 'code-block') return;
+
+    linkStrategy(contentBlock, callback);
+  },
   component: ({ decoratedText, children }: DecoratorComponentProps) => (
     <Component
       href={normalizeUrl(decoratedText)}

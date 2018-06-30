@@ -41,7 +41,7 @@ Spectrum has been under full-time development since March, 2017. See [the roadma
   - [Roadmap](https://github.com/withspectrum/spectrum/projects/19)
 - [Technical](docs/)
   - [Testing](docs/testing/intro.md)
-  - [Background Jobs](docs/backend/background-jobs.md)
+  - [Background Jobs](docs/workers/background-jobs.md)
   - [Deployment](docs/deployments.md)
   - [API](docs/backend/api/)
     - [Fragments](docs/backend/api/fragments.md)
@@ -104,6 +104,7 @@ spectrum/
 ├── api        # API server
 ├── athena     # Worker server (notifications and general processing)
 ├── chronos    # Worker server (cron jobs)
+├── desktop    # desktop apps (build with electron)
 ├── docs
 ├── email-templates
 ├── hermes     # Worker server (email sending)
@@ -190,6 +191,11 @@ yarn run db:seed
 # ⚠️ To empty the database (e.g. if there's faulty data) run yarn run db:drop
 ```
 
+There's a shortcut for dropping, migrating and seeding the database too:
+```sh
+yarn run db:reset
+```
+
 #### Getting the secrets
 
 While the app will run without any secrets set up, you won't be able to sign in locally. To get that set up, copy the provided example secrets file to the real location:
@@ -236,6 +242,14 @@ To develop the frontend and web UI run
 yarn run dev:web
 ```
 
+#### Develop the desktop app
+
+To develop the desktop app you have to have the dev web server running in the background (`yarn run dev:web`) and then, in another terminal tab, run:
+
+```
+yarn run dev:desktop
+```
+
 #### Develop the mobile apps
 
 To start the mobile apps run:
@@ -264,4 +278,3 @@ Refer to [the Expo documentation on how to install the simulators](https://docs.
 ## License
 
 BSD 3-Clause, see the [LICENSE](./LICENSE) file.
-

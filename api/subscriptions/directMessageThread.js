@@ -3,8 +3,6 @@
  * Define the notification subscription resolvers
  */
 const debug = require('debug')('api:subscriptions:direct-message-thread');
-import { withFilter } from 'graphql-subscriptions';
-import { userCanViewDirectMessageThread } from './utils';
 const {
   listenToUpdatedDirectMessageThreads,
 } = require('../models/directMessageThread');
@@ -31,7 +29,7 @@ module.exports = {
         info: GraphQLResolveInfo
       ) => {
         if (!user || !user.id)
-          throw new UserError(
+          return new UserError(
             'Can only listen to direct message thread updates when signed in.'
           );
 

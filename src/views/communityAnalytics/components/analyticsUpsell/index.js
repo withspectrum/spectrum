@@ -18,11 +18,13 @@ import {
 } from './style';
 import Link from 'src/components/link';
 import { Button, TextButton } from 'src/components/buttons';
+import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   community: GetCommunitySettingsType,
   enableCommunityAnalytics: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {
@@ -52,6 +54,12 @@ class AnalyticsUpsell extends React.Component<Props, State> {
   };
 
   initAddPaymentMethod = () => {
+    const { community } = this.props;
+
+    track(events.COMMUNITY_ANALYTICS_ENABLED_INITED, {
+      community: transformations.analyticsCommunity(community),
+    });
+
     if (!this.props.community.billingSettings.administratorEmail) {
       return this.props.dispatch(
         openModal('ADMIN_EMAIL_ADDRESS_VERIFICATION_MODAL', {
@@ -87,6 +95,14 @@ class AnalyticsUpsell extends React.Component<Props, State> {
     );
   };
 
+  learnMoreClicked = () => {
+    const { community } = this.props;
+
+    track(events.COMMUNITY_ANALYTICS_LEARN_MORE_CLICKED, {
+      community: transformations.analyticsCommunity(community),
+    });
+  };
+
   render() {
     const { isLoading } = this.state;
     const action = this.props.community.hasChargeableSource
@@ -113,7 +129,9 @@ class AnalyticsUpsell extends React.Component<Props, State> {
               Unlock Analytics · $100/mo
             </Button>
             <Link to={'/pricing'}>
-              <TextButton large>Learn more</TextButton>
+              <TextButton large onClick={this.learnMoreClicked}>
+                Learn more
+              </TextButton>
             </Link>
           </ActionRow>
           {this.props.community.hasChargeableSource &&

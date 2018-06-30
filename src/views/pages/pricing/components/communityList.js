@@ -18,6 +18,7 @@ import {
   CommunityListCard,
   CardTitle,
 } from '../style';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 type Props = {
   data: {
@@ -44,6 +45,18 @@ class CommunityList extends React.Component<Props, State> {
       return false;
     return true;
   }
+
+  upgrade = community => {
+    track(events.PRICING_PAGE_UPGRADE_COMMUNITY_CLICKED, {
+      community: transformations.analyticsCommunity(community),
+    });
+  };
+
+  applyForDiscount = community => {
+    track(events.PRICING_PAGE_APPLY_FOR_DISCOUNT_CLICKED, {
+      community: transformations.analyticsCommunity(community),
+    });
+  };
 
   calculateOwnedCommunities = (props: Props) => {
     const { data: { user } } = props;
@@ -102,7 +115,10 @@ class CommunityList extends React.Component<Props, State> {
                   <Avatar src={community.profilePhoto} community={community} />
                   <CommunityCardName>{community.name}</CommunityCardName>
                   <CommunityListActions>
-                    <Link to={`/${community.slug}/settings`}>
+                    <Link
+                      onClick={() => this.upgrade(community)}
+                      to={`/${community.slug}/settings`}
+                    >
                       <Button
                         style={{
                           flex: '1 0 auto',
@@ -136,6 +152,7 @@ class CommunityList extends React.Component<Props, State> {
                     href={`mailto:hi@spectrum.chat?subject=Discount request for the ${
                       community.name
                     } community`}
+                    onClick={() => this.applyForDiscount(community)}
                   >
                     <Button
                       style={{

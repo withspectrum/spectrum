@@ -60,6 +60,9 @@ export const getNotificationsQuery = gql`
 `;
 
 export const getNotificationsOptions = {
+  options: () => ({
+    fetchPolicy: 'cache-and-network',
+  }),
   props: ({
     data: {
       fetchMore,
@@ -109,7 +112,8 @@ export const getNotificationsOptions = {
         subscribeToMore({
           document: subscribeToNewNotifications,
           updateQuery: (prev, { subscriptionData }) => {
-            let newNotification = subscriptionData.data.notificationAdded;
+            let newNotification =
+              subscriptionData.data && subscriptionData.data.notificationAdded;
             if (!newNotification) return prev;
 
             const notificationNode = {

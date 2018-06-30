@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { closeGallery } from '../../actions/gallery';
 import type { GetMediaMessagesForThreadType } from 'shared/graphql/queries/message/getMediaMessagesForThread';
+import type { Dispatch } from 'redux';
 import {
   Overlay,
   ActiveImage,
@@ -20,7 +21,7 @@ type State = {
 };
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   data: {
     messages?: GetMediaMessagesForThreadType,
   },

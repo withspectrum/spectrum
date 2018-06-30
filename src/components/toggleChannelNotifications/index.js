@@ -7,13 +7,14 @@ import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import toggleChannelNotificationsMutation, {
   type ToggleChannelNotificationsType,
 } from 'shared/graphql/mutations/channel/toggleChannelNotifications';
+import type { Dispatch } from 'redux';
 
 type Props = {
   channel: {
     ...$Exact<GetChannelType>,
   },
   toggleChannelNotifications: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   render: Function,
 };
 

@@ -22,6 +22,6 @@ export default (
       return loaders.community.loadMany(communityIds);
     })
     .catch(err => {
-      console.log('err', err);
+      console.error('err', err);
     });
 };

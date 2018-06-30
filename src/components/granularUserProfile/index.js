@@ -9,6 +9,7 @@ import Reputation from '../reputation';
 import Badge from '../badges';
 import Icon from '../icons';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
+import type { Dispatch } from 'redux';
 import {
   Row,
   Name,
@@ -35,7 +36,7 @@ type Props = {
   children?: React.Node,
   onlineSize?: 'small' | 'large',
   history: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 // Each prop both provides data AND indicates that the element should be included in the instance of the profile,

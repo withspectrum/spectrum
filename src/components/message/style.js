@@ -1,6 +1,8 @@
 // @flow
 import styled, { css } from 'styled-components';
+import { SvgWrapper } from '../icons';
 import { Gradient, zIndex, Transition, monoStack, hexa } from '../globals';
+import { Byline, Name, Username } from '../messageGroup/style';
 
 const Bubble = styled.div`
   display: inline-block;
@@ -241,7 +243,7 @@ export const Time = styled.div`
 
 export const Text = styled(Bubble)`
   padding: 8px 16px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.4;
   background-color: ${props =>
     props.me ? props.theme.brand.default : props.theme.generic.default};
@@ -253,7 +255,16 @@ export const Text = styled(Bubble)`
     props.me ? props.theme.text.reverse : props.theme.text.default};
   font-weight: ${props => (props.me ? `500` : `400`)};
 
-  & + & {
+  ${props =>
+    props.error &&
+    css`
+      background-color: ${props.theme.warn.default} !important;
+      background-image: ${Gradient(
+        props.theme.warn.alt,
+        props.theme.warn.default
+      )} !important;
+      color: ${props => props.theme.text.reverse} !important;
+    `} & + & {
     margin-top: 2px;
   }
 
@@ -321,7 +332,7 @@ export const Image = styled.img`
 
 export const Code = styled(Bubble)`
   padding: 12px 16px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
   background-color: ${props => props.theme.bg.reverse};
   color: ${props => props.theme.text.reverse};
@@ -344,5 +355,65 @@ export const Paragraph = styled.p`
 
   &:not(:empty) ~ &:not(:empty) {
     margin-top: 1em;
+  }
+`;
+
+export const QuotedParagraph = Paragraph.withComponent('div').extend`
+  padding-left: 12px;
+  border-left: 4px solid ${props => props.theme.bg.border};
+  margin: 4px 0;
+  color: ${props => props.theme.text.alt};
+
+  code {
+    color: ${props => props.theme.text.alt};
+  }
+  /* overrides Bubble component styles to fix #3098 */
+  pre {
+    margin: 0;
+    width: 100%;
+    border: 1px solid ${props => hexa(props.theme.brand.border, 0.5)};
+    color: ${props => props.theme.text.alt};
+  }
+`;
+
+export const QuoteWrapperGradient = styled.div`
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0)
+  );
+  height: 2em;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 0 0 12px 12px;
+`;
+
+export const QuoteWrapper = styled.div`
+  background: ${props => props.theme.bg.default};
+  border-radius: 12px;
+  color: ${props => props.theme.text.default};
+  padding: 8px 12px;
+  /* Position it with little margin to the surrounding bubble */
+  width: calc(100% + 24px);
+  margin-left: -12px;
+  margin-top: -4px;
+  margin-bottom: 8px;
+  max-height: ${props => (props.expanded ? 'none' : '7em')};
+  overflow-y: hidden;
+  cursor: pointer;
+  position: relative;
+
+  ${SvgWrapper} {
+    margin-left: -3px;
+    margin-right: 2px;
+  }
+
+  /* Don't change the color of the name and username on hover since they aren't clickable in quotes */
+  ${Name}:hover,
+  ${Username}:hover,
+  ${Byline}:hover {
+    color: ${props => props.theme.text.alt};
   }
 `;

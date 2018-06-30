@@ -21,6 +21,6 @@ export default (
       return loaders.user.loadMany(userIds);
     })
     .catch(err => {
-      console.log('err', err);
+      console.error('err', err);
     });
 };

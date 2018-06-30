@@ -7,6 +7,7 @@
 **Deploy after merge (delete what needn't be deployed)**
 - api
 - hyperion (frontend)
+- desktop
 - athena
 - vulcan
 - mercury
@@ -21,8 +22,8 @@ YES
 **Release notes for users (delete if codebase-only change)**
 -
 
-<!--
+**Related issues (delete if you don't know of any)**
+Closes #
 
-If your pull request introduces changes to the user interface on Spectrum, please share before and after screenshots of the changes (gifs or videos are encouraged for interaction changes). Please include screenshots of desktop and mobile viewports to ensure that all responsive cases are reviewed.
+<!-- If there are UI changes please share mobile and desktop screenshots or recordings. -->
 
--->

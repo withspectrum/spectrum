@@ -3,19 +3,19 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
-import { track } from '../../helpers/events';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { Button, OutlineButton } from '../buttons';
 import { Actions } from './style';
+import type { Dispatch } from 'redux';
 
 type Props = {
   isPending: boolean,
   community: Object,
   channel: Object,
   toggleChannelSubscription: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {
@@ -55,9 +55,7 @@ class RequestToJoinChannel extends Component<Props, State> {
         const { isPending } = toggleChannelSubscription.channelPermissions;
 
         if (isPending) {
-          track('channel', 'requested to join', null);
         } else {
-          track('channel', 'cancelled request to join', null);
         }
 
         const str = isPending

@@ -2,10 +2,13 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
-import { convertTimestampToDate } from '../../helpers/utils';
+import { convertTimestampToDate } from 'shared/time-formatting';
 import Badge from '../badges';
 import Avatar from '../avatar';
 import Message from '../message';
+import type { Dispatch } from 'redux';
+import { ErrorBoundary } from 'src/components/error';
+import MessageErrorFallback from '../message/messageErrorFallback';
 
 import {
   Byline,
@@ -48,10 +51,14 @@ export const AuthorByline = (props: {
   const { user, roles } = props;
   return (
     <Byline>
-      <Link to={`/users/${user.username}`}>
-        <Name>{user.name}</Name>{' '}
-        <Username>{user.username && `@${user.username}`}</Username>
-      </Link>
+      {user.username ? (
+        <Link to={`/users/${user.username}`}>
+          <Name>{user.name}</Name>{' '}
+          <Username>{user.username && `@${user.username}`}</Username>
+        </Link>
+      ) : (
+        <Name>{user.name}</Name>
+      )}
       {roles && roles.map((role, index) => <Badge type={role} key={index} />)}
       {user.isPro && <Badge type="pro" />}
     </Byline>
@@ -70,7 +77,7 @@ type MessageGroupProps = {
   thread: Object, // TODO: Refine type
   isModerator: boolean,
   toggleReaction: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   selectedId: string,
   changeSelection: Function,
   lastSeen?: number | Date,
@@ -178,8 +185,7 @@ class Messages extends Component<MessageGroupProps, State> {
           const me = currentUser
             ? author.user && author.user.id === currentUser.id
             : false;
-          const canModerate =
-            threadType !== 'directMessageThread' && (me || isModerator);
+          const canModerate = me || isModerator;
 
           if (roboText) {
             if (initialMessage.message.type === 'timestamp') {
@@ -239,20 +245,26 @@ class Messages extends Component<MessageGroupProps, State> {
                   />
                   {group.map(message => {
                     return (
-                      <Message
+                      <ErrorBoundary
+                        fallbackComponent={() => (
+                          <MessageErrorFallback me={me} />
+                        )}
                         key={message.id}
-                        message={message}
-                        reaction={'like'}
-                        me={me}
-                        canModerate={canModerate}
-                        pending={message.id < 0}
-                        currentUser={currentUser}
-                        threadType={threadType}
-                        threadId={threadId}
-                        toggleReaction={toggleReaction}
-                        selectedId={this.state.selectedMessage}
-                        changeSelection={this.toggleSelectedMessage}
-                      />
+                      >
+                        <Message
+                          message={message}
+                          reaction={'like'}
+                          me={me}
+                          canModerate={canModerate}
+                          pending={message.id < 0}
+                          currentUser={currentUser}
+                          threadType={threadType}
+                          threadId={threadId}
+                          toggleReaction={toggleReaction}
+                          selectedId={this.state.selectedMessage}
+                          changeSelection={this.toggleSelectedMessage}
+                        />
+                      </ErrorBoundary>
                     );
                   })}
                 </MessageGroup>

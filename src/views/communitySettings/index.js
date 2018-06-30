@@ -20,6 +20,7 @@ import Header from '../../components/settingsViews/header';
 import Subnav from '../../components/settingsViews/subnav';
 import { View } from './style';
 import type { ContextRouter } from 'react-router';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 type Props = {
   data: {
@@ -31,6 +32,15 @@ type Props = {
 };
 
 class CommunitySettings extends React.Component<Props> {
+  componentDidUpdate(prevProps) {
+    if (!prevProps.data.community && this.props.data.community) {
+      const { community } = this.props.data;
+      track(events.COMMUNITY_SETTINGS_VIEWED, {
+        community: transformations.analyticsCommunity(community),
+      });
+    }
+  }
+
   render() {
     const {
       data: { community },

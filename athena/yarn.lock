@@ -108,6 +108,10 @@ cron-parser@^2.4.1:
     is-nan "^1.2.1"
     moment-timezone "^0.5.0"
 
+cryptr@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/cryptr/-/cryptr-3.0.0.tgz#4cdb1ac8b0b292c6ac1dcdf503bb27a05e4eba10"
+
 css-select@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/css-select/-/css-select-1.2.0.tgz#2b3a110539c5355f1cd8d314623e870b121ec858"

@@ -3,6 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import InfiniteList from 'src/components/infiniteScroll';
+import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import Icon from 'src/components/icons';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { withRouter } from 'react-router';
@@ -15,13 +16,14 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { MessageIconContainer, UserListItemContainer } from '../style';
 import GranularUserProfile from 'src/components/granularUserProfile';
+import type { Dispatch } from 'redux';
 
 type Props = {
   data: {
     community: GetCommunityMembersType,
     fetchMore: Function,
   },
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isLoading: boolean,
   isFetchingMore: boolean,
   history: Object,
@@ -63,6 +65,7 @@ class CommunityMemberGrid extends React.Component<Props, State> {
     if (community) {
       const { edges: members } = community.members;
       const nodes = members.map(member => member && member.node);
+      const uniqueNodes = deduplicateChildren(nodes, 'id');
       const hasNextPage = community.members.pageInfo.hasNextPage;
 
       return (
@@ -82,7 +85,7 @@ class CommunityMemberGrid extends React.Component<Props, State> {
           threshold={750}
           className={'scroller-for-community-members-list'}
         >
-          {nodes.map(node => {
+          {uniqueNodes.map(node => {
             if (!node) return null;
 
             const { user, roles, reputation } = node;

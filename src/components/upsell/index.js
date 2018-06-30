@@ -13,6 +13,7 @@ import ToggleCommunityMembership from '../toggleCommunityMembership';
 import { Button, OutlineButton } from '../buttons';
 import { Login } from '../../views/login';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
+import type { Dispatch } from 'redux';
 import {
   Title,
   MiniTitle,
@@ -294,7 +295,7 @@ export const Upsell404Thread = () => {
 
 type MiniUpgradeProps = {
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 class UpsellMiniUpgradePure extends React.Component<MiniUpgradeProps> {
   render() {
@@ -327,7 +328,7 @@ export const UpsellMiniUpgrade = connect(map)(UpsellMiniUpgradePure);
 type UpgradeProProps = {
   upgradeToPro: Function,
   complete: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   currentUser: Object,
 };
 

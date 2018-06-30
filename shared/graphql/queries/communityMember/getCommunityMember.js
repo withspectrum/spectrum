@@ -1,9 +1,7 @@
 // @flow
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import communityMemberInfoFragment, {
-  type CommunityMemberInfoType,
-} from '../../fragments/communityMember/communityMemberInfo';
+import { type CommunityMemberInfoType } from '../../fragments/communityMember/communityMemberInfo';
 
 export type GetCommunityMemberType = {
   ...$Exact<CommunityMemberInfoType>,
@@ -12,10 +10,10 @@ export type GetCommunityMemberType = {
 export const getCommunityMemberQuery = gql`
   query getCommunityMember($userId: ID!, $communityId: ID!) {
     communityMember(userId: $userId, communityId: $communityId) {
-      ...communityMemberInfoFragment
+      id
+      isPending
     }
   }
-  ${communityMemberInfoFragment}
 `;
 
 const getCommunityMemberOptions = {

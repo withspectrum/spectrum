@@ -83,6 +83,51 @@ describe('chat input', () => {
       cy.get('[contenteditable="true"]').type('');
       cy.contains(newMessage);
     });
+
+    it('should allow chat input to be maintained', () => {
+      const newMessage = 'Persist New Message';
+      cy.get('[data-cy="thread-view"]').should('be.visible');
+      cy.get('[contenteditable="true"]').type(newMessage);
+      cy.get('[contenteditable="true"]').contains(newMessage);
+      cy.get('[data-cy="message-group"]').should('be.visible');
+      cy.wait(1000);
+      // Reload page(incase page closed or crashed ,reload should have same effect)
+      cy.reload();
+      cy.get('[contenteditable="true"]').contains(newMessage);
+    });
+  });
+
+  describe('message attachments', () => {
+    beforeEach(() => {
+      cy.auth(memberInChannelUser.id);
+      cy.visit(`/thread/${publicThread.id}`);
+    });
+
+    it('should allow quoting a message', () => {
+      // Quote a message
+      cy.get('[data-cy="staged-quoted-message"]').should('not.be.visible');
+      cy
+        .get('[data-cy="message"]')
+        .first()
+        .should('be.visible')
+        .click();
+      cy
+        .get('[data-cy="reply-to-message"]')
+        .first()
+        .should('be.visible')
+        .click();
+      cy
+        .get('[data-cy="reply-to-message"]')
+        .first()
+        .should('not.be.visible');
+      cy.get('[data-cy="staged-quoted-message"]').should('be.visible');
+      // Remove quoted message again
+      cy
+        .get('[data-cy="remove-staged-quoted-message"]')
+        .should('be.visible')
+        .click();
+      cy.get('[data-cy="staged-quoted-message"]').should('not.be.visible');
+    });
   });
 
   // NOTE(@mxstbr): This fails in CI, but not locally for some reason

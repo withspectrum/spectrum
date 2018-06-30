@@ -48,6 +48,7 @@ const getCommunityThreadConnectionOptions = {
       community,
       networkStatus,
       subscribeToMore,
+      refetch,
     },
   }) => ({
     data: {
@@ -55,6 +56,7 @@ const getCommunityThreadConnectionOptions = {
       loading,
       networkStatus,
       community,
+      refetch,
       threadConnection: community && community.threadConnection,
       threads:
         community && community.threadConnection
@@ -69,7 +71,8 @@ const getCommunityThreadConnectionOptions = {
         return subscribeToMore({
           document: subscribeToUpdatedThreads,
           updateQuery: (prev, { subscriptionData }) => {
-            const updatedThread = subscriptionData.data.threadUpdated;
+            const updatedThread =
+              subscriptionData.data && subscriptionData.data.threadUpdated;
             if (!updatedThread) return prev;
 
             const thisCommunityId = ownProps.community.id;

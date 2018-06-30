@@ -12,9 +12,10 @@ import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
 import { modalStyles, Description } from '../styles';
 import { Form, Actions } from './style';
+import type { Dispatch } from 'redux';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isOpen: boolean,
   channel: GetChannelType,
   id: string,
@@ -37,6 +38,7 @@ class RestoreChannelModal extends React.Component<Props, State> {
 
   restore = () => {
     const { channel, dispatch } = this.props;
+
     return this.props
       .restoreChannel({ channelId: channel.id })
       .then(() => {

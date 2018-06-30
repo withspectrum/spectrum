@@ -12,7 +12,7 @@ import {
 import { Spinner } from '../globals';
 import Icon from '../icons';
 
-type ButtonProps = {
+type ButtonProps = {|
   loading?: boolean,
   disabled?: boolean,
   large?: boolean,
@@ -21,7 +21,7 @@ type ButtonProps = {
   icon?: string,
   children?: any,
   dataCy?: string,
-};
+|};
 
 type IconProps = {
   glyph: string,

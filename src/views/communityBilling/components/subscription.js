@@ -6,6 +6,7 @@ import type { SubscriptionType } from 'shared/graphql/fragments/community/commun
 import Link from '../../../components/link';
 import { formatNumbersToDollars } from '../utils';
 import { openModal } from 'src/actions/modals';
+import type { Dispatch } from 'redux';
 import {
   LineItem,
   LineItemLeft,
@@ -27,7 +28,7 @@ import {
 type Props = {
   subscription: SubscriptionType,
   community: GetCommunitySettingsType,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 type LineItemType = {
   id: string,

@@ -1,9 +1,10 @@
 // @flow
-console.log('Hyperion starting...');
 const debug = require('debug')('hyperion');
+import 'raf/polyfill';
+debug('Hyperion starting...');
 debug('logging with debug enabled');
-// $FlowFixMe
-require('isomorphic-fetch');
+require('isomorphic-fetch'); // prevent https://github.com/withspectrum/spectrum/issues/3032
+import fs from 'fs';
 import express from 'express';
 import Loadable from 'react-loadable';
 import path from 'path';
@@ -106,9 +107,42 @@ import threadParamRedirect from 'shared/middlewares/thread-param';
 app.use(threadParamRedirect);
 
 // Static files
+// This route handles the case where our ServiceWorker requests main.asdf123.js, but
+// we've deployed a new version of the app so the filename changed to main.dfyt975.js
+let jsFiles;
+try {
+  jsFiles = fs.readdirSync(
+    path.resolve(__dirname, '..', 'build', 'static', 'js')
+  );
+} catch (err) {
+  // In development that folder might not exist, so ignore errors here
+  console.error(err);
+}
 app.use(
-  express.static(path.resolve(__dirname, '..', 'build'), { index: false })
+  express.static(path.resolve(__dirname, '..', 'build'), {
+    index: false,
+    setHeaders: (res, path) => {
+      // Don't cache the serviceworker in the browser
+      if (path.indexOf('sw.js')) {
+        res.setHeader('Cache-Control', 'no-store');
+        return;
+      }
+    },
+  })
 );
+app.get('/static/js/:name', (req: express$Request, res, next) => {
+  if (!req.params.name) return next();
+  const existingFile = jsFiles.find(file => file.startsWith(req.params.name));
+  if (existingFile)
+    return res.sendFile(
+      path.resolve(__dirname, '..', 'build', 'static', 'js', req.params.name)
+    );
+  const match = req.params.name.match(/(\w+?)\.(\w+?\.)?js/i);
+  if (!match) return next();
+  const actualFilename = jsFiles.find(file => file.startsWith(match[1]));
+  if (!actualFilename) return next();
+  res.redirect(`/static/js/${actualFilename}`);
+});
 
 // In dev the static files from the root public folder aren't moved to the build folder by create-react-app
 // so we just tell Express to serve those too
@@ -117,6 +151,17 @@ if (process.env.NODE_ENV === 'development') {
     express.static(path.resolve(__dirname, '..', 'public'), { index: false })
   );
 }
+
+app.get('*', (req: express$Request, res, next) => {
+  // Electron requests should only be client-side rendered
+  if (
+    req.headers['user-agent'] &&
+    req.headers['user-agent'].indexOf('Electron') > -1
+  ) {
+    return res.sendFile(path.resolve(__dirname, '../build/index.html'));
+  }
+  next();
+});
 
 import cache from './cache';
 app.use(cache);
@@ -148,7 +193,7 @@ process.on('uncaughtException', async err => {
 
 Loadable.preloadAll().then(() => {
   app.listen(PORT);
-  console.log(
+  debug(
     `Hyperion, the server-side renderer, running at http://localhost:${PORT}`
   );
 });

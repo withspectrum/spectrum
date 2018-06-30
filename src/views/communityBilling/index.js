@@ -21,11 +21,13 @@ import Subscription from './components/subscription';
 import AdministratorEmailForm from './components/administratorEmailForm';
 import Source from './components/source';
 import Invoice from './components/invoice';
+import type { Dispatch } from 'redux';
+import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
   currentUser: Object,
   community: GetCommunitySettingsType,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   match: Object,
   history: Object,
 };
@@ -56,11 +58,13 @@ class CommunityMembersSettings extends React.Component<Props> {
         return (
           <SectionsContainer data-cy="community-settings-billing-admin-email-form">
             <Column>
-              <AdministratorEmailForm
-                community={community}
-                id={community.id}
-                data
-              />
+              <ErrorBoundary fallbackComponent={SettingsFallback}>
+                <AdministratorEmailForm
+                  community={community}
+                  id={community.id}
+                  data
+                />
+              </ErrorBoundary>
             </Column>
           </SectionsContainer>
         );
@@ -69,101 +73,112 @@ class CommunityMembersSettings extends React.Component<Props> {
       return (
         <SectionsContainer data-cy="community-settings-billing">
           <Column>
-            <SectionCard>
-              <SectionTitle>Your subscription</SectionTitle>
-              {(community.billingSettings.subscriptions.length === 0 ||
-                (community.billingSettings.subscriptions.length > 0 &&
-                  community.billingSettings.subscriptions[0].items.length ===
-                    0)) && (
-                <React.Fragment>
-                  <SectionSubtitle>
-                    You have no active subscriptions. As soon as you add
-                    moderators, private channels, or analytics to this
-                    community, your subscription information will appear here.
-                  </SectionSubtitle>
-                  <SectionSubtitle>
-                    <Link to={'/pricing'}>
-                      Learn more about Spectrum features
-                    </Link>
-                  </SectionSubtitle>
-                </React.Fragment>
-              )}
-              {community.billingSettings.subscriptions.map(
-                subscription =>
-                  subscription &&
-                  subscription.items.length > 0 && (
-                    <Subscription
-                      key={subscription.id}
-                      subscription={subscription}
-                      community={community}
-                    />
-                  )
-              )}
-            </SectionCard>
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <SectionCard>
+                <SectionTitle>Your subscription</SectionTitle>
+                {(community.billingSettings.subscriptions.length === 0 ||
+                  (community.billingSettings.subscriptions.length > 0 &&
+                    community.billingSettings.subscriptions[0].items.length ===
+                      0)) && (
+                  <React.Fragment>
+                    <SectionSubtitle>
+                      You have no active subscriptions. As soon as you add
+                      moderators, private channels, or analytics to this
+                      community, your subscription information will appear here.
+                    </SectionSubtitle>
+                    <SectionSubtitle>
+                      <Link to={'/pricing'}>
+                        Learn more about Spectrum features
+                      </Link>
+                    </SectionSubtitle>
+                  </React.Fragment>
+                )}
+                {community.billingSettings.subscriptions.map(
+                  subscription =>
+                    subscription &&
+                    subscription.items.length > 0 && (
+                      <Subscription
+                        key={subscription.id}
+                        subscription={subscription}
+                        community={community}
+                      />
+                    )
+                )}
+              </SectionCard>
+            </ErrorBoundary>
           </Column>
 
           <Column>
-            <SectionCard>
-              <SectionTitle>Payment methods</SectionTitle>
-              <SectionSubtitle>
-                {community.billingSettings.sources.length === 0
-                  ? 'Saved payment methods will appear here'
-                  : `You can manage your payment information here or change your
-                  default card. To remove your default payment method, you'll need to first cancel any active subscriptions.`}
-              </SectionSubtitle>
-              {community.billingSettings.sources.map(
-                source =>
-                  source && (
-                    <Source
-                      key={source.id}
-                      source={source}
-                      community={community}
-                      canRemoveDefault={
-                        community.billingSettings.subscriptions.length === 0
-                      }
-                    />
-                  )
-              )}
-              <AddCardSection>
-                <SectionTitle>Add new card</SectionTitle>
-                <StripeCardForm
-                  community={community}
-                  render={({ isLoading }) => (
-                    <Button loading={isLoading}>Save</Button>
-                  )}
-                />
-              </AddCardSection>
-            </SectionCard>
-
-            <SectionCard>
-              <SectionTitle>Payment history</SectionTitle>
-              {community.billingSettings.invoices.length === 0 && (
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <SectionCard>
+                <SectionTitle>Payment methods</SectionTitle>
                 <SectionSubtitle>
-                  Receipts will appear here each time a payment occurs.
+                  {community.billingSettings.sources.length === 0
+                    ? 'Saved payment methods will appear here'
+                    : `You can manage your payment information here or change your
+                    default card. To remove your default payment method, you'll need to first cancel any active subscriptions.`}
                 </SectionSubtitle>
-              )}
-              {community.billingSettings.invoices.map(
-                invoice =>
-                  invoice && <Invoice key={invoice.id} invoice={invoice} />
-              )}
-            </SectionCard>
+                {community.billingSettings.sources.map(
+                  source =>
+                    source && (
+                      <Source
+                        key={source.id}
+                        source={source}
+                        community={community}
+                        canRemoveDefault={
+                          community.billingSettings.subscriptions.length === 0
+                        }
+                      />
+                    )
+                )}
+                <AddCardSection>
+                  <SectionTitle>Add new card</SectionTitle>
+                  <StripeCardForm
+                    community={community}
+                    render={({ isLoading }) => (
+                      <Button loading={isLoading}>Save</Button>
+                    )}
+                  />
+                </AddCardSection>
+              </SectionCard>
+            </ErrorBoundary>
 
-            {community.billingSettings.subscriptions.length > 0 &&
-              community.billingSettings.subscriptions[0].items.length > 0 && (
-                <SectionCard>
-                  <SectionTitle>Cancel your subscription</SectionTitle>
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <SectionCard>
+                <SectionTitle>Payment history</SectionTitle>
+                {community.billingSettings.invoices.length === 0 && (
                   <SectionSubtitle>
-                    Canceling your subscription will immediately remove access
-                    to all paid features, including private channels and
-                    moderator seats.
+                    Receipts will appear here each time a payment occurs.
                   </SectionSubtitle>
-                  <SectionCardFooter>
-                    <Button gradientTheme={'warn'} onClick={this.triggerCancel}>
-                      Cancel subscription
-                    </Button>
-                  </SectionCardFooter>
-                </SectionCard>
-              )}
+                )}
+                {community.billingSettings.invoices.map(
+                  invoice =>
+                    invoice && <Invoice key={invoice.id} invoice={invoice} />
+                )}
+              </SectionCard>
+            </ErrorBoundary>
+
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              {community.billingSettings.subscriptions.length > 0 &&
+                community.billingSettings.subscriptions[0].items.length > 0 && (
+                  <SectionCard>
+                    <SectionTitle>Cancel your subscription</SectionTitle>
+                    <SectionSubtitle>
+                      Canceling your subscription will immediately remove access
+                      to all paid features, including private channels and
+                      moderator seats.
+                    </SectionSubtitle>
+                    <SectionCardFooter>
+                      <Button
+                        gradientTheme={'warn'}
+                        onClick={this.triggerCancel}
+                      >
+                        Cancel subscription
+                      </Button>
+                    </SectionCardFooter>
+                  </SectionCard>
+                )}
+            </ErrorBoundary>
           </Column>
         </SectionsContainer>
       );

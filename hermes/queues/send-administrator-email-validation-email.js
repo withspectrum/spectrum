@@ -51,6 +51,7 @@ export default async (job: Job<AdministratorEmailValidationEmailJobData>) => {
           validateToken,
           community,
         },
+        userId,
       });
     } catch (err) {
       debug('❌ Error in job:\n');

@@ -3,32 +3,45 @@ import type { GraphQLContext } from '../../';
 import type { EditUserInput } from '../../models/user';
 import UserError from '../../utils/UserError';
 import { getUser, editUser } from '../../models/user';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-export default (_: any, args: EditUserInput, { user }: GraphQLContext) => {
-  const currentUser = user;
+export default requireAuth(
+  async (_: any, args: EditUserInput, { user }: GraphQLContext) => {
+    if (args.input.username) {
+      if (
+        args.input.username === 'null' ||
+        args.input.username === 'undefined'
+      ) {
+        trackQueue.add({
+          userId: user.id,
+          event: events.USER_EDITED_FAILED,
+          properties: {
+            reason: 'bad username input',
+          },
+        });
 
-  // user must be authed to edit a channel
-  if (!currentUser) {
-    return new UserError(
-      'You must be signed in to make changes to this profile.'
-    );
-  }
+        return new UserError('Nice try! 😉');
+      }
 
-  // if the user is changing their username, check for uniqueness on the server
-  if (args.input.username) {
-    if (args.input.username === 'null' || args.input.username === 'undefined') {
-      throw new UserError('Nice try! 😉');
+      const dbUser = await getUser({ username: args.input.username });
+
+      if (dbUser && dbUser.id !== user.id) {
+        trackQueue.add({
+          userId: user.id,
+          event: events.USER_EDITED_FAILED,
+          properties: {
+            reason: 'username taken',
+          },
+        });
+
+        return new UserError(
+          'Looks like that username got swooped! Try another?'
+        );
+      }
     }
-    return getUser({ username: args.input.username }).then(user => {
-      // no user exists
-      if (!user) return editUser(args, currentUser.id);
-      // if the user is saving themselves, it's safe to edit
-      if (user.id === currentUser.id) return editUser(args, currentUser.id);
-      return new UserError(
-        'Looks like that username got swooped! Try another?'
-      );
-    });
-  } else {
-    return editUser(args, currentUser.id);
+
+    return editUser(args, user.id);
   }
-};
+);

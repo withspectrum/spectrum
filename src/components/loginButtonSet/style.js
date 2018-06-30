@@ -38,19 +38,19 @@ export const SigninButton = styled.div`
   ${props =>
     props.showAfter &&
     `
-			&:after {
-				content: 'Previously signed in with';
-				position: absolute;
-				top: -32px;
-				font-size: 14px;
-				font-weight: 600;
-				left: 50%;
-				transform: translateX(-50%);
-				width: 100%;
-				text-align: center;
-				color: ${props.theme.text.alt};
-			}
-		`} svg {
+    &:after {
+        content: 'Previously signed in with';
+        position: absolute;
+        top: -32px;
+        font-size: 14px;
+        font-weight: 600;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        text-align: center;
+        color: ${props.theme.text.alt};
+      }
+    `} svg {
     fill: currentColor !important;
   }
 `;
@@ -101,8 +101,10 @@ export const GoogleButton = styled(SigninButton)`
 `;
 
 export const GithubButton = styled(SigninButton)`
-  background: ${props => (props.preferred ? props.theme.text.default : 'none')};
-  color: ${props => (props.preferred ? '#fff' : props.theme.text.default)};
+  background: ${props =>
+    props.preferred ? props.theme.social.github.default : 'none'};
+  color: ${props =>
+    props.preferred ? '#fff' : props.theme.social.github.default};
 
   &:after {
     color: ${props => props.theme.text.default};

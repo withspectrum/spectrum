@@ -10,12 +10,14 @@ import isEmail from 'validator/lib/isEmail';
 import { EmailForm } from './style';
 import { Notice } from '../listItems/style';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   render: Function,
   user: GetUserType,
   updateUserEmail: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {
@@ -49,6 +51,8 @@ class UserEmailConfirmation extends React.Component<Props, State> {
         emailError: 'Please enter a working email address',
       });
     }
+
+    track(events.USER_ADDED_EMAIL);
 
     return this.props
       .updateUserEmail(email)

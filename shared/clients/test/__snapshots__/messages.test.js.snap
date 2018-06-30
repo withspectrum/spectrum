@@ -9,6 +9,7 @@ Array [
           "id": "robo",
         },
       },
+      "id": 2016-12-31T23:00:00.000Z,
       "message": Object {
         "content": 2016-12-31T23:00:00.000Z,
         "type": "timestamp",

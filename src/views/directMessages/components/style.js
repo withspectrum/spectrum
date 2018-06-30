@@ -356,7 +356,6 @@ export const SelectedUsersPills = styled.ul`
   font-size: 16px;
   padding: 9px 12px;
   width: 100%;
-  z-index: ${zIndex.chatInput + 1};
   background: #fff;
 `;
 

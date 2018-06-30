@@ -1,19 +1,7 @@
 import React from 'react';
 import Link from 'src/components/link';
-import { timeDifferenceShort } from '../../helpers/utils';
+import { timeDifferenceShort } from 'shared/time-difference';
 import { Timestamp } from './style';
-
-export const getDistinctNotifications = array => {
-  let unique = {};
-  let distinct = [];
-  for (let i in array) {
-    if (typeof unique[array[i].id] === 'undefined') {
-      distinct.push(array[i]);
-    }
-    unique[array[i].id] = 0;
-  }
-  return distinct;
-};
 
 export const parseNotification = notification => {
   return Object.assign({}, notification, {
@@ -119,6 +107,7 @@ export const parseEvent = event => {
     case 'MESSAGE_CREATED': {
       return <span>replied</span>;
     }
+    case 'THREAD_REACTION_CREATED':
     case 'REACTION_CREATED': {
       return <span>liked</span>;
     }
@@ -132,6 +121,12 @@ export const parseEvent = event => {
       return <span>requested to join</span>;
     }
     case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
+      return <span>approved your request to join</span>;
+    }
+    case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
+      return <span>requested to join</span>;
+    }
+    case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
       return <span>approved your request to join</span>;
     }
     default: {
@@ -150,6 +145,24 @@ export const parseNotificationDate = date => {
 const threadToString = (context, currentUser) => {
   const isAuthor = context.payload.creatorId === currentUser.id;
   const str = isAuthor ? 'in your thread' : 'in';
+  return (
+    <span>
+      {' '}
+      {str}{' '}
+      <Link
+        to={{
+          pathname: window.location.pathname,
+          search: `?thread=${context.payload.id}`,
+        }}
+      >
+        {context.payload.content.title}
+      </Link>
+    </span>
+  );
+};
+
+const threadReactionToString = context => {
+  const str = 'your thread';
   return (
     <span>
       {' '}
@@ -206,6 +219,12 @@ export const parseContext = (context, currentUser) => {
     }
     case 'CHANNEL': {
       const asString = channelToString(context);
+      return {
+        asString,
+      };
+    }
+    case 'THREAD_REACTION': {
+      const asString = threadReactionToString(context);
       return {
         asString,
       };

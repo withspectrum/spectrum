@@ -2,9 +2,8 @@
 import { db } from './db';
 import { parseRange } from './utils';
 
-export const getTopMembersInCommunity = (
-  communityId: string
-): Promise<Array<string>> => {
+// prettier-ignore
+export const getTopMembersInCommunity = (communityId: string): Promise<Array<string>> => {
   const { current } = parseRange('weekly');
 
   return db

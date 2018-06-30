@@ -15,6 +15,7 @@ export const sortAndGroupMessages = (messages: Array<Message>) => {
     // on the first message, get the user id and set it to be checked against
     const robo = [
       {
+        id: messages[i].timestamp,
         author: {
           user: {
             id: 'robo',
