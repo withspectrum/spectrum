@@ -42,7 +42,7 @@
     "sw-precache-webpack-plugin": "^0.11.4",
     "uuid": "^3.0.1",
     "wait-on": "^2.1.0",
-    "webpack-bundle-analyzer": "^2.9.1",
+    "webpack-bundle-analyzer": "^2.13.1",
     "write-file-webpack-plugin": "^4.3.2"
   },
   "dependencies": {
