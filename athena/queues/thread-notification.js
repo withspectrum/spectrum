@@ -4,17 +4,6 @@ import Raven from 'shared/raven';
 import axios from 'axios';
 import getMentions from 'shared/get-mentions';
 import { toPlainText, toState } from 'shared/draft-utils';
-import { fetchPayload, createPayload } from '../utils/payloads';
-import { getDistinctActors } from '../utils/actors';
-import {
-  storeNotification,
-  updateNotification,
-  checkForExistingNotification,
-} from '../models/notification';
-import {
-  storeUsersNotifications,
-  markUsersNotificationsAsNew,
-} from '../models/usersNotifications';
 import { getUserById, getUsers } from '../models/user';
 import { getCommunityById } from '../models/community';
 import { getMembersInChannelWithNotifications } from '../models/usersChannels';
@@ -34,63 +23,10 @@ export default async (job: Job<ThreadNotificationJobData>) => {
   const { thread: incomingThread } = job.data;
   debug(`new job for a thread by ${incomingThread.creatorId}`);
 
-  const [
-    actor,
-    context,
-    entity,
-    channelSlackSettings,
-    communitySlackSettings,
-  ] = await Promise.all([
-    fetchPayload('USER', incomingThread.creatorId),
-    fetchPayload('CHANNEL', incomingThread.channelId),
-    createPayload('THREAD', incomingThread),
+  const [channelSlackSettings, communitySlackSettings] = await Promise.all([
     getChannelSettings(incomingThread.channelId),
     getCommunitySettings(incomingThread.communityId),
   ]);
-  const eventType = 'THREAD_CREATED';
-
-  // determine if a notification already exists
-  const existing = await checkForExistingNotification(
-    eventType,
-    incomingThread.channelId
-  );
-
-  // handle the notification record in the db
-  // if it exists, we'll be updating it with new actors and entities
-  const handleNotificationRecord = existing
-    ? updateNotification
-    : storeNotification;
-
-  // handle the usersNotification record in the db
-  // if it exists, we'll mark it as new to trigger a badge in the app
-  const handleUsersNotificationRecord = existing
-    ? markUsersNotificationsAsNew
-    : storeUsersNotifications;
-
-  // actors should always be distinct to make client side rendering easier
-  const distinctActors = existing
-    ? getDistinctActors([...existing.actors, actor])
-    : [actor];
-
-  // append the new thread to the list of entities
-  const entities = existing ? [...existing.entities, entity] : [entity];
-
-  // construct a new notification record to either be updated or stored in the db
-  const nextNotificationRecord = Object.assign(
-    {},
-    {
-      ...existing,
-      event: eventType,
-      actors: distinctActors,
-      context,
-      entities,
-    }
-  );
-
-  // update or store a record in the notifications table, returns a notification
-  const updatedNotification = await handleNotificationRecord(
-    nextNotificationRecord
-  );
 
   // get the members in the channel who should receive notifications
   const recipients = await getMembersInChannelWithNotifications(
@@ -127,12 +63,6 @@ export default async (job: Job<ThreadNotificationJobData>) => {
   const recipientsWithoutMentions = filteredRecipients.filter(r => {
     return r.username && mentions.indexOf(r.username) < 0;
   });
-
-  // for each recipient that *wasn't* mentioned, create a notification in the db
-  const usersNotificationPromises = recipientsWithoutMentions.map(
-    async recipient =>
-      await handleUsersNotificationRecord(updatedNotification.id, recipient.id)
-  );
 
   let slackNotificationPromise;
   if (
@@ -217,7 +147,6 @@ export default async (job: Job<ThreadNotificationJobData>) => {
 
   return Promise.all([
     createThreadNotificationEmail(incomingThread, recipientsWithoutMentions), // handle emails separately
-    ...usersNotificationPromises, // update or store usersNotifications in-app
     slackNotificationPromise,
   ]).catch(err => {
     debug('❌ Error in job:\n');

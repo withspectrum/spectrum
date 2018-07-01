@@ -309,17 +309,7 @@ class NotificationsPure extends React.Component<Props, State> {
                     );
                   }
                   case 'THREAD_CREATED': {
-                    return (
-                      <ErrorBoundary
-                        fallbackComponent={null}
-                        key={notification.id}
-                      >
-                        <NewThreadNotification
-                          notification={notification}
-                          currentUser={currentUser}
-                        />
-                      </ErrorBoundary>
-                    );
+                    return null;
                   }
                   case 'COMMUNITY_INVITE': {
                     return (
