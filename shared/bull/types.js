@@ -23,6 +23,7 @@ export type Job<JobData> = {|
   id: string,
   data: JobData,
   remove: () => Promise<void>,
+  finished: () => Promise<void>,
 |};
 
 type JobOptions = {|
