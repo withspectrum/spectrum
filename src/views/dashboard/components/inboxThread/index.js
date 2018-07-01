@@ -63,6 +63,12 @@ class InboxThread extends React.Component<Props> {
       queryPrefix = '?thread';
     }
 
+    const newMessagesSinceLastViewed =
+      !active &&
+      thread.currentUserLastSeen &&
+      thread.lastActive &&
+      thread.currentUserLastSeen < thread.lastActive;
+
     return (
       <ErrorBoundary fallbackComponent={null}>
         <InboxThreadItem active={active}>
@@ -113,7 +119,7 @@ class InboxThread extends React.Component<Props> {
                 />
               </ErrorBoundary>
 
-              <ThreadTitle active={active}>
+              <ThreadTitle active={active} new={newMessagesSinceLastViewed}>
                 {truncate(thread.content.title, 80)}
               </ThreadTitle>
 
