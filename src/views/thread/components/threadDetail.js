@@ -61,6 +61,47 @@ type Props = {
   toggleEdit: Function,
 };
 
+const getThreadStateFromProps = thread => {
+  track(events.THREAD_VIEWED, {
+    thread: transformations.analyticsThread(thread),
+    channel: transformations.analyticsChannel(thread.channel),
+    community: transformations.analyticsCommunity(thread.community),
+  });
+
+  let rawLinkPreview =
+    thread.attachments && thread.attachments.length > 0
+      ? thread.attachments.filter(
+          attachment =>
+            attachment && attachment.attachmentType === 'linkPreview'
+        )[0]
+      : null;
+
+  let cleanLinkPreview = rawLinkPreview && {
+    attachmentType: rawLinkPreview.attachmentType,
+    data: JSON.parse(rawLinkPreview.data),
+  };
+
+  return {
+    isEditing: false,
+    body: toState(JSON.parse(thread.content.body)),
+    title: thread.content.title,
+    // $FlowFixMe
+    linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
+    linkPreviewTrueUrl:
+      thread.attachments &&
+      thread.attachments.length > 0 &&
+      thread.attachments[0]
+        ? thread.attachments[0].trueUrl
+        : '',
+    linkPreviewLength:
+      thread.attachments && thread.attachments.length > 0 ? 1 : 0,
+    fetchingLinkPreview: false,
+    flyoutOpen: false,
+    receiveNotifications: thread.receiveNotifications,
+    isSavingEdit: false,
+  };
+};
+
 class ThreadDetailPure extends React.Component<Props, State> {
   state = {
     isLockingThread: false,
@@ -82,51 +123,15 @@ class ThreadDetailPure extends React.Component<Props, State> {
   bodyEditor: any;
   titleTextarea: React.Node;
 
-  setThreadState() {
-    const { thread } = this.props;
-
-    track(events.THREAD_VIEWED, {
-      thread: transformations.analyticsThread(thread),
-      channel: transformations.analyticsChannel(thread.channel),
-      community: transformations.analyticsCommunity(thread.community),
-    });
-
-    let rawLinkPreview =
-      thread.attachments && thread.attachments.length > 0
-        ? thread.attachments.filter(
-            attachment =>
-              attachment && attachment.attachmentType === 'linkPreview'
-          )[0]
-        : null;
-
-    let cleanLinkPreview = rawLinkPreview && {
-      attachmentType: rawLinkPreview.attachmentType,
-      data: JSON.parse(rawLinkPreview.data),
-    };
-
-    this.setState({
-      isEditing: false,
-      body: toState(JSON.parse(thread.content.body)),
-      title: thread.content.title,
-      // $FlowFixMe
-      linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
-      linkPreviewTrueUrl:
-        thread.attachments &&
-        thread.attachments.length > 0 &&
-        thread.attachments[0]
-          ? thread.attachments[0].trueUrl
-          : '',
-      linkPreviewLength:
-        thread.attachments && thread.attachments.length > 0 ? 1 : 0,
-      fetchingLinkPreview: false,
-      flyoutOpen: false,
-      receiveNotifications: thread.receiveNotifications,
-      isSavingEdit: false,
-    });
+  static getDerivedStateFromProps(props) {
+    return getThreadStateFromProps(props.thread);
   }
 
-  componentWillMount() {
-    this.setThreadState();
+  setThreadState() {
+    const newState = getThreadStateFromProps(this.props.thread);
+    return this.setState({
+      ...newState,
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -475,7 +480,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
                 {thread.channel.name}
               </Link>
             )}
-            <span>{` · ${timestamp}`}</span>
+            <Link to={`/thread/${thread.id}`}>{` · ${timestamp}`}</Link>
           </ThreadSubtitle>
 
           {thread.modifiedAt && (
