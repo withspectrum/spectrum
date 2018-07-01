@@ -183,7 +183,7 @@
     "string-similarity": "^1.2.0",
     "stripe": "^4.15.0",
     "striptags": "2.x",
-    "styled-components": "3.1.x",
+    "styled-components": "^3.3.3",
     "subscriptions-transport-ws": "0.9.x",
     "then-queue": "^1.3.0",
     "toobusy-js": "^0.5.1",
