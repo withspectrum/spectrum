@@ -49,15 +49,16 @@ class InboxThread extends React.Component<Props> {
       currentUser,
     } = this.props;
 
-    let queryPrefix;
-    if (
-      // TODO(@mxstbr): Fix this to not use window.innerWidth
-      // which breaks SSR rehydration on mobile devices
+    // TODO(@mxstbr): Fix this to not use window.innerWidth
+    // which breaks SSR rehydration on mobile devices
+    const isDesktopInbox =
       window.innerWidth > 768 &&
       (!viewContext ||
         viewContext === 'communityInbox' ||
-        viewContext === 'channelInbox')
-    ) {
+        viewContext === 'channelInbox');
+
+    let queryPrefix;
+    if (isDesktopInbox) {
       queryPrefix = '?t';
     } else {
       queryPrefix = '?thread';
@@ -71,7 +72,10 @@ class InboxThread extends React.Component<Props> {
               pathname: location.pathname,
               search: `${queryPrefix}=${thread.id}`,
             }}
-            onClick={() => this.props.dispatch(changeActiveThread(thread.id))}
+            onClick={() =>
+              isDesktopInbox &&
+              this.props.dispatch(changeActiveThread(thread.id))
+            }
           />
 
           <InboxThreadContent>
