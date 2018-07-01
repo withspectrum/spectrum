@@ -43,7 +43,7 @@ Object {
   "data": Object {
     "href": "/thread/2182d960-5970-46e0-801f-ab0b8e02cfbc",
   },
-  "title": "Max Stoiber mentioned you in in Show us your Dangerfile",
+  "title": "Max Stoiber mentioned you in  Show us your Dangerfile",
 }
 `;
 
@@ -73,7 +73,17 @@ Object {
   "data": Object {
     "href": "/thread/f40e1d78-10e4-484a-b07d-7e7c88afd167",
   },
-  "title": "Max Stoiber mentioned you in in your thread Testing",
+  "title": "Max Stoiber mentioned you in your thread Testing",
+}
+`;
+
+exports[`should format a thread reaction notification 1`] = `
+Object {
+  "body": "{\\"nodes\\":[{\\"kind\\":\\"block\\",\\"type\\":\\"line\\",\\"nodes\\":[{\\"kind\\":\\"text\\",\\"text\\":\\"\\"}]}]}",
+  "data": Object {
+    "href": "/thread/ef021b3b-c520-4133-8749-e96252eff5fc",
+  },
+  "title": "Max Stoiber liked your thread New thread by @mxstbr",
 }
 `;
 
