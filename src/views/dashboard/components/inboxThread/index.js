@@ -81,6 +81,7 @@ class InboxThread extends React.Component<Props> {
                   <Avatar
                     user={thread.author.user}
                     src={`${thread.author.user.profilePhoto}`}
+                    isOnline={thread.author.user.isOnline}
                     size={'40'}
                     link={
                       thread.author.user.username &&

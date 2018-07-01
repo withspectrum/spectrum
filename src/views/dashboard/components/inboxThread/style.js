@@ -137,7 +137,6 @@ const avatarLinkStyles = css`
   margin-right: 12px;
   margin-top: 4px;
   pointer-events: auto;
-  overflow: hidden;
   max-width: 40px;
 `;
 
