@@ -171,7 +171,7 @@
     "rethinkdb-migrate": "^1.1.0",
     "rethinkdbdash": "^2.3.29",
     "sanitize-filename": "^1.6.1",
-    "serialize-javascript": "^1.4.0",
+    "serialize-javascript": "^1.5.0",
     "session-rethinkdb": "^2.0.0",
     "sha1": "^1.1.1",
     "shortid": "^2.2.8",
