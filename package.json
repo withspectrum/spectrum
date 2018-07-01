@@ -27,7 +27,7 @@
     "eslint-plugin-jest": "^21.17.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-react": "^7.1.0",
+    "eslint-plugin-react": "^7.10.0",
     "flow-bin": "0.66",
     "forever": "^0.15.3",
     "is-html": "^1.1.0",
