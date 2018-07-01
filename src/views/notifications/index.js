@@ -138,23 +138,23 @@ class NotificationsPure extends React.Component<Props, State> {
 
   subscribeToWebPush = () => {
     track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_CLICKED);
-    // this.setState({
-    //   webPushPromptLoading: true,
-    // });
+    this.setState({
+      webPushPromptLoading: true,
+    });
     WebPushManager.subscribe()
       .then(subscription => {
         track(events.WEB_PUSH_NOTIFICATIONS_SUBSCRIBED);
-        // this.setState({
-        //   webPushPromptLoading: false,
-        //   showWebPushPrompt: false,
-        // });
+        this.setState({
+          webPushPromptLoading: false,
+          showWebPushPrompt: false,
+        });
         return this.props.subscribeToWebPush(subscription);
       })
       .catch(err => {
         track(events.WEB_PUSH_NOTIFICATIONS_BLOCKED);
-        // this.setState({
-        //   webPushPromptLoading: false,
-        // });
+        this.setState({
+          webPushPromptLoading: false,
+        });
         console.error(err);
         return this.props.dispatch(
           addToastWithTimeout(
@@ -166,9 +166,9 @@ class NotificationsPure extends React.Component<Props, State> {
   };
 
   dismissWebPushRequest = () => {
-    // this.setState({
-    //   showWebPushPrompt: false,
-    // });
+    this.setState({
+      showWebPushPrompt: false,
+    });
     track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_DISMISSED);
   };
 
