@@ -236,10 +236,7 @@ class ThreadContainer extends React.Component<Props, State> {
   };
 
   forceScrollToBottom = () => {
-    const { messagesContainer } = this.state;
-    if (!messagesContainer) return;
-    const node = messagesContainer;
-    node.scrollTop = node.scrollHeight - node.clientHeight;
+    return;
   };
 
   contextualScrollToBottom = () => {
@@ -403,6 +400,15 @@ class ThreadContainer extends React.Component<Props, State> {
         ? `Watercooler chat for the ${thread.community.name} community`
         : description;
 
+      const stickToBottom =
+        isWatercooler ||
+        !currentUser ||
+        thread.isAuthor ||
+        !thread.currentUserLastSeen ||
+        thread.participants
+          .filter(Boolean)
+          .some(user => user.id === currentUser.id);
+
       return (
         <ErrorBoundary>
           <ThreadViewContainer
@@ -443,8 +449,11 @@ class ThreadContainer extends React.Component<Props, State> {
                 isVisible={this.state.bannerIsVisible}
               />
 
-              <Content innerRef={this.setMessagesContainer}>
-                <Detail type={slider ? '' : 'only'}>
+              <Content
+                invert={stickToBottom}
+                innerRef={this.setMessagesContainer}
+              >
+                <Detail invert={stickToBottom} type={slider ? '' : 'only'}>
                   {this.renderPost()}
 
                   {!isEditing && (
