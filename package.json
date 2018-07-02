@@ -161,7 +161,7 @@
     "react-textarea-autosize": "^6.1.0",
     "react-transition-group": "^2.2.0",
     "react-trend": "^1.2.4",
-    "recompose": "0.26.x",
+    "recompose": "^0.27.1",
     "redraft": "0.8.0",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
