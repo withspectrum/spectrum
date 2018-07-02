@@ -164,7 +164,7 @@
     "recompose": "0.26.x",
     "redraft": "0.8.0",
     "redux": "^3.6.0",
-    "redux-thunk": "^2.2.0",
+    "redux-thunk": "^2.3.0",
     "request": "^2.87.0",
     "rethinkdb-changefeed-reconnect": "^0.3.2",
     "rethinkdb-inspector": "^0.3.3",
