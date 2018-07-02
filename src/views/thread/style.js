@@ -75,7 +75,7 @@ export const ThreadSidebarView = styled(FlexCol)`
 
 export const Content = styled(FlexRow)`
   justify-content: center;
-  align-items: flex-start;
+  align-items: ${props => (props.invert ? 'flex-end' : 'flex-start')};
   flex: auto;
   overflow-y: auto;
   grid-area: body;
