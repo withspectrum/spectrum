@@ -62,6 +62,7 @@ type State = {
   // while looking at a live thread
   lastSeen: ?number | ?string,
   bannerIsVisible: boolean,
+  stickToBottom: boolean,
 };
 
 class ThreadContainer extends React.Component<Props, State> {
@@ -79,6 +80,7 @@ class ThreadContainer extends React.Component<Props, State> {
     lastSeen: null,
     bannerIsVisible: false,
     scrollOffset: 0,
+    stickToBottom: false,
   };
 
   componentWillReceiveProps(next: Props) {
@@ -90,10 +92,20 @@ class ThreadContainer extends React.Component<Props, State> {
       curr.data.thread.id !== next.data.thread.id;
     // Update the cached lastSeen value when switching threads
     if (newThread || threadChanged) {
+      const stickToBottom =
+        !!next.data.thread.watercooler ||
+        !next.currentUser ||
+        next.data.thread.isAuthor ||
+        !next.data.thread.currentUserLastSeen ||
+        next.data.thread.participants
+          .filter(Boolean)
+          .some(user => user.id === next.currentUser.id);
+
       this.setState({
         lastSeen: next.data.thread.currentUserLastSeen
           ? next.data.thread.currentUserLastSeen
           : null,
+        stickToBottom,
       });
     }
   }
@@ -165,20 +177,37 @@ class ThreadContainer extends React.Component<Props, State> {
     const scrollOffset = e.target.scrollTop;
     try {
       const threadDetail = ReactDOM.findDOMNode(this.threadDetailElem);
+      const messagesContainer = ReactDOM.findDOMNode(
+        this.state.messagesContainer
+      );
       if (!threadDetail) return;
 
-      const {
-        height: threadDetailHeight,
+      requestAnimationFrame(() => {
+        const {
+          height: threadDetailHeight,
+          // $FlowFixMe
+        } = threadDetail.getBoundingClientRect();
+        const {
+          height: messagesContainerHeight,
+          // $FlowFixMe
+        } = messagesContainer.getBoundingClientRect();
         // $FlowFixMe
-      } = threadDetail.getBoundingClientRect();
-      const bannerShouldBeVisible = scrollOffset > threadDetailHeight;
-      if (bannerShouldBeVisible !== this.state.bannerIsVisible) {
-        this.setState({
-          bannerIsVisible: bannerShouldBeVisible,
-        });
-      }
+        const messagesContainerScrollHeight = messagesContainer.scrollHeight;
+        // To stick to the bottom we invert the scroll container, so we have to adjust our calculation of the scroll position
+        const bannerShouldBeVisible = this.state.stickToBottom
+          ? messagesContainerScrollHeight - messagesContainerHeight >
+            scrollOffset + threadDetailHeight
+          : scrollOffset > threadDetailHeight;
+        if (bannerShouldBeVisible !== this.state.bannerIsVisible) {
+          this.setState({
+            bannerIsVisible: bannerShouldBeVisible,
+          });
+        }
+      });
     } catch (err) {
-      // no need to do anything here
+      if (process.env.NODE_ENV === 'development') {
+        console.error(err);
+      }
     }
   };
 
@@ -203,7 +232,6 @@ class ThreadContainer extends React.Component<Props, State> {
       if (prevProps.threadId) {
         this.updateThreadLastSeen(prevProps.threadId);
       }
-      this.forceScrollToTop();
     }
 
     // we never autofocus on mobile
@@ -236,10 +264,7 @@ class ThreadContainer extends React.Component<Props, State> {
   };
 
   forceScrollToBottom = () => {
-    const { messagesContainer } = this.state;
-    if (!messagesContainer) return;
-    const node = messagesContainer;
-    node.scrollTop = node.scrollHeight - node.clientHeight;
+    return;
   };
 
   contextualScrollToBottom = () => {
@@ -402,6 +427,7 @@ class ThreadContainer extends React.Component<Props, State> {
       const headDescription = isWatercooler
         ? `Watercooler chat for the ${thread.community.name} community`
         : description;
+      const { stickToBottom } = this.state;
 
       return (
         <ErrorBoundary>
@@ -443,8 +469,11 @@ class ThreadContainer extends React.Component<Props, State> {
                 isVisible={this.state.bannerIsVisible}
               />
 
-              <Content innerRef={this.setMessagesContainer}>
-                <Detail type={slider ? '' : 'only'}>
+              <Content
+                invert={stickToBottom}
+                innerRef={this.setMessagesContainer}
+              >
+                <Detail invert={stickToBottom} type={slider ? '' : 'only'}>
                   {this.renderPost()}
 
                   {!isEditing && (

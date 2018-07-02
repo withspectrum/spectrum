@@ -83,6 +83,11 @@ export const Content = styled(FlexRow)`
   max-width: 1024px;
   margin: 0 auto;
   background: ${props => props.theme.bg.default};
+  ${props =>
+    props.invert &&
+    css`
+      transform: scale(1, -1);
+    `};
 `;
 
 export const Input = styled(FlexRow)`
@@ -102,6 +107,11 @@ export const Detail = styled(Column)`
   flex: auto;
   margin: 0;
   max-width: 100%;
+  ${props =>
+    props.invert &&
+    css`
+      transform: scale(1, -1);
+    `};
 `;
 
 export const ChatInputWrapper = styled(FlexCol)`
