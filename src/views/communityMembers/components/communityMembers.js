@@ -187,7 +187,7 @@ class CommunityMembers extends React.Component<Props, State> {
             onClick={this.viewModerators}
             active={filter && filter.isModerator ? true : false}
           >
-            Mods
+            Team
           </Filter>
           <Filter
             onClick={this.viewBlocked}
