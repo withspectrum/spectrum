@@ -9221,7 +9221,7 @@ react-is@^16.3.1:
   version "16.4.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.4.1.tgz#d624c4650d2c65dbd52c72622bbf389435d9776e"
 
-react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
+react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
@@ -9232,11 +9232,12 @@ react-loadable@^5.4.0:
     prop-types "^15.5.0"
 
 react-modal@3.x:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-3.3.2.tgz#b13da9490653a7c76bc0e9600323eb1079c620e7"
+  version "3.4.5"
+  resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-3.4.5.tgz#75a7eefb8f4c8247278d5ce1c41249d7785d9f69"
   dependencies:
     exenv "^1.2.0"
     prop-types "^15.5.10"
+    react-lifecycles-compat "^3.0.0"
     warning "^3.0.0"
 
 react-popper@^1.0.0-beta.5:
