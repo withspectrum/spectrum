@@ -126,11 +126,11 @@ export const NullCol = styled(FlexCol)`
     props.repeat ? 'center top' : 'center center'};
   width: 100%;
   height: auto;
-  min-height: 160px;
+  min-height: ${props => (props.noPadding ? '0' : '160px')};
   flex: 0 0 auto;
   padding: ${props => (props.noPadding ? '0' : '2rem')};
   justify-content: center;
-  align-items: center;
+  align-items: ${props => props.alignItems || 'center'};
   position: relative;
   align-self: center;
 
