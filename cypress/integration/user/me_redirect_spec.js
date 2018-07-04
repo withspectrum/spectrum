@@ -1,13 +1,14 @@
 import data from '../../../shared/testing/data';
 const user = data.users[0];
 
-describe('can view current user settings at /me/settings', () => {
+describe('can view current user settings at /me', () => {
   beforeEach(() => {
     cy.auth(user.id);
-    cy.visit(`/me`);
   });
 
-  it('should render settings', () => {
+  it('should render user profile', () => {
+    cy.visit('/me');
+    cy.location('pathname').should('eq', `/users/${user.username}`);
     cy.get('[data-cy="user-view"]').should('be.visible');
     cy.contains(user.username);
     cy.contains(user.name);
@@ -18,10 +19,11 @@ describe('can view current user settings at /me/settings', () => {
 describe('can view current user settings at /me/settings', () => {
   beforeEach(() => {
     cy.auth(user.id);
-    cy.visit(`/me/settings`);
   });
 
   it('should render settings', () => {
+    cy.visit('/me/settings');
+    cy.location('pathname').should('eq', `/users/${user.username}/settings`);
     cy.get('[data-cy="user-settings"]').should('be.visible');
   });
 });
