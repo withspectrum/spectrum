@@ -46,7 +46,7 @@ export const ProfileDropdown = (props: ProfileProps) => {
     <UserProfileDropdown className={'dropdown'}>
       <UserProfileDropdownList>
         {props.user.username && (
-          <Link rel="nofollow" to={`/me/settings`}>
+          <Link rel="nofollow" to={`/users/${props.user.username}/settings`}>
             <UserProfileDropdownListItem>
               My Settings
             </UserProfileDropdownListItem>
