@@ -62,7 +62,7 @@ export const InputWrapper = styled(EditorWrapper)`
   flex-direction: column;
   align-items: stretch;
   flex: auto;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   line-height: 20px;
   min-height: 40px;

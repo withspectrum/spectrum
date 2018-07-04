@@ -20,11 +20,11 @@ export const MessageGroupContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   position: relative;
-  margin-top: 16px;
+  margin-top: 20px;
 `;
 
 export const Timestamp = styled(HorizontalRule)`
-  margin: 16px 0 0;
+  margin: 20px 0 0;
   text-align: center;
   user-select: none;
 
@@ -38,13 +38,17 @@ export const Byline = styled.span`
   font-size: 14px;
   line-height: 16px;
   font-weight: 500;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   user-select: none;
   color: ${props => props.theme.text.default};
   max-width: 100%;
 `;
 
 export const Name = styled.span`
+  font-weight: 600;
+  font-size: 15px;
+  color: ${({ theme }) => theme.text.default};
+
   &:hover {
     color: ${({ theme }) => theme.brand.default};
     cursor: pointer;

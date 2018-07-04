@@ -128,7 +128,7 @@ const Bubble = styled.div`
   }
 
   pre {
-    font-size: 15px;
+    font-size: 14px;
     margin: 8px 0;
     width: 100%;
     border-radius: 8px;
@@ -195,7 +195,7 @@ export const Time = styled.div`
 `;
 
 export const Text = styled(Bubble)`
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.4;
   color: ${props =>
     props.error ? props.theme.warn.default : props.theme.text.secondary};
@@ -263,7 +263,7 @@ export const Image = styled.img`
 
 export const Code = styled(Bubble)`
   padding: 12px 16px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   background-color: ${props => props.theme.bg.reverse};
   color: ${props => props.theme.text.reverse};
