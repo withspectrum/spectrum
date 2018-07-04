@@ -11,7 +11,7 @@ import {
   NotificationListRow,
   SpecialContext,
 } from '../style';
-import { Author, MessageGroup } from '../../../components/messageGroup/style';
+import { MessageGroupContainer } from '../../../components/messageGroup/style';
 import { AuthorAvatar, AuthorByline } from '../../../components/messageGroup';
 import Message from '../../../components/message';
 import {
@@ -65,9 +65,9 @@ export class MentionMessageNotification extends React.Component<Props, State> {
         <Content>
           <AttachmentsWash>
             {message && (
-              <Author style={{ marginTop: '0' }}>
+              <MessageGroupContainer style={{ marginTop: '0' }}>
                 <AuthorAvatar user={author} />
-                <MessageGroup me={false}>
+                <MessageGroupContainer>
                   <AuthorByline user={author} me={false} />
 
                   <Message
@@ -79,8 +79,8 @@ export class MentionMessageNotification extends React.Component<Props, State> {
                     currentUser={currentUser}
                     context={'notification'}
                   />
-                </MessageGroup>
-              </Author>
+                </MessageGroupContainer>
+              </MessageGroupContainer>
             )}
           </AttachmentsWash>
         </Content>

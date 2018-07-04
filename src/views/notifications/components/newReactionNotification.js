@@ -1,4 +1,5 @@
-import React from 'react';
+// @flow
+import * as React from 'react';
 import {
   parseActors,
   parseEvent,
@@ -17,14 +18,25 @@ import {
 } from '../style';
 import Icon from '../../../components/icons';
 import { truncate } from '../../../helpers/utils';
-import { MessageGroup } from '../../../components/messageGroup/style';
+import { MessageGroupContainer } from '../../../components/messageGroup/style';
 import Message from '../../../components/message';
 import {
   CardLink,
   CardContent,
 } from '../../../components/threadFeedCard/style';
 
-export const NewReactionNotification = ({ notification, currentUser }) => {
+type Props = {
+  notification: Object,
+  currentUser: Object,
+  history: Object,
+  markSingleNotificationSeen?: Function,
+  markSingleNotificationAsSeenInState?: Function,
+};
+
+export const NewReactionNotification = ({
+  notification,
+  currentUser,
+}: Props) => {
   const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
@@ -56,7 +68,7 @@ export const NewReactionNotification = ({ notification, currentUser }) => {
               <hr />
             </HzRule>
 
-            <MessageGroup me={true}>
+            <MessageGroupContainer>
               <Message
                 message={message}
                 link={`#${message.id}`}
@@ -66,7 +78,7 @@ export const NewReactionNotification = ({ notification, currentUser }) => {
                 currentUser={currentUser}
                 context={'notification'}
               />
-            </MessageGroup>
+            </MessageGroupContainer>
           </AttachmentsWash>
         </Content>
       </CardContent>
@@ -78,7 +90,7 @@ export const MiniNewReactionNotification = ({
   notification,
   currentUser,
   history,
-}) => {
+}: Props) => {
   const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);

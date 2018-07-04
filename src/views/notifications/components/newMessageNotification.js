@@ -1,4 +1,5 @@
-import React from 'react';
+// @flow
+import * as React from 'react';
 import {
   parseActors,
   parseEvent,
@@ -11,7 +12,7 @@ import {
   CardContent,
 } from '../../../components/threadFeedCard/style';
 import Icon from '../../../components/icons';
-import { Author, MessageGroup } from '../../../components/messageGroup/style';
+import { MessageGroupContainer } from '../../../components/messageGroup/style';
 import { AuthorAvatar, AuthorByline } from '../../../components/messageGroup';
 import Message from '../../../components/message';
 import { sortAndGroupNotificationMessages } from './sortAndGroupNotificationMessages';
@@ -25,7 +26,18 @@ import {
   Content,
 } from '../style';
 
-export const NewMessageNotification = ({ notification, currentUser }) => {
+type Props = {
+  notification: Object,
+  currentUser: Object,
+  history: Object,
+  markSingleNotificationSeen?: Function,
+  markSingleNotificationAsSeenInState?: Function,
+};
+
+export const NewMessageNotification = ({
+  notification,
+  currentUser,
+}: Props) => {
   const actors = parseActors(notification.actors, currentUser, false);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
@@ -69,10 +81,10 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
               const me = currentUser ? author.id === currentUser.id : false;
 
               return (
-                <Author key={i}>
+                <MessageGroupContainer key={i}>
                   {!me && <AuthorAvatar user={author} />}
 
-                  <MessageGroup me={me}>
+                  <MessageGroupContainer me={me}>
                     <AuthorByline user={author} me={me} />
                     {group.map((message, i) => {
                       return (
@@ -88,8 +100,8 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
                         />
                       );
                     })}
-                  </MessageGroup>
-                </Author>
+                  </MessageGroupContainer>
+                </MessageGroupContainer>
               );
             })}
           </AttachmentsWash>
@@ -103,7 +115,7 @@ export const MiniNewMessageNotification = ({
   notification,
   currentUser,
   history,
-}) => {
+}: Props) => {
   const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
