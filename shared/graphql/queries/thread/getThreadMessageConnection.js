@@ -57,8 +57,9 @@ export const getThreadMessageConnectionOptions = {
       // If the thread was active after the user last saw it, only load the new messages
       if (props.lastSeen) {
         if (
+          props.thread.lastActive &&
           new Date(props.lastSeen).getTime() <
-          new Date(props.lastActive).getTime()
+            new Date(props.thread.lastActive).getTime()
         ) {
           variables.after = btoa(new Date(props.lastSeen).getTime());
           // Otherwise load the last 50 messages
