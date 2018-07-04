@@ -7,7 +7,6 @@ import {
   Emoji,
   Image,
   ActionUI,
-  Indicator,
   ActionWrapper,
   ModActionWrapper,
   Time,
@@ -20,7 +19,6 @@ import { toPlainText, toState } from 'shared/draft-utils';
 import { draftOnlyContainsEmoji } from 'shared/only-contains-emoji';
 import { Byline, Name, Username } from '../messageGroup/style';
 import { isShort } from 'shared/clients/draft-js/utils/isShort';
-import type { Node } from 'react';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
 
 export const Body = (props: {
@@ -98,6 +96,8 @@ export class QuotedMessage extends React.Component<
     nextProps: QuotedMessageProps,
     nextState: QuotedMessageState
   ) {
+    const curr = this.props;
+    if (curr.message.id !== nextProps.message.id) return true;
     return nextState.isExpanded !== this.state.isExpanded;
   }
 
@@ -186,7 +186,6 @@ export const Actions = (props: {
   deleteMessage?: Function,
   replyToMessage?: Function,
   isOptimisticMessage: boolean,
-  children: Node,
   message: Object,
 }) => {
   const {
@@ -204,13 +203,11 @@ export const Actions = (props: {
 
   return (
     <ActionUI me={me}>
-      {props.children}
       <Action me={me} action="reply" replyToMessage={replyToMessage} />
       {canModerate &&
         !isOptimisticMessage && (
           <Action me={me} action={'delete'} deleteMessage={deleteMessage} />
         )}
-      <Indicator me={me} />
     </ActionUI>
   );
 };

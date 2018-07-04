@@ -2,16 +2,10 @@
 import * as React from 'react';
 import { Text } from './style';
 
-type Props = {
-  me: boolean,
-};
-
-class MessageErrorFallback extends React.Component<Props> {
+class MessageErrorFallback extends React.Component<{}> {
   render() {
-    const { me } = this.props;
-
     return (
-      <Text me={me} error>
+      <Text error>
         We encountered an error loading this message - the Spectrum team has
         been alerted.
       </Text>

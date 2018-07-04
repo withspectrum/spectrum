@@ -16,7 +16,6 @@ import Head from 'src/components/head';
 import NextPageButton from 'src/components/nextPageButton';
 import { ChatWrapper, NullMessagesWrapper, NullCopy } from '../style';
 import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
-import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
 import { ErrorBoundary } from 'src/components/error';
 import type { GetThreadMessageConnectionType } from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -26,7 +25,6 @@ type State = {
 };
 
 type Props = {
-  toggleReaction: Function,
   isLoading: boolean,
   location: Object,
   forceScrollToBottom: Function,
@@ -102,7 +100,7 @@ class MessagesWithData extends React.Component<Props, State> {
   }
 
   shouldForceScrollToBottom = () => {
-    const { currentUser, data } = this.props;
+    const { currentUser, data, location } = this.props;
 
     if (!currentUser || !data.thread) return false;
 
@@ -119,6 +117,9 @@ class MessagesWithData extends React.Component<Props, State> {
         participant => participant && participant.id === currentUser.id
       );
 
+    const isLoadingMessageFromUrlHash =
+      location && location.hash && location.hash.length > 0;
+    if (isLoadingMessageFromUrlHash) return false;
     return !!(currentUserLastSeen || isAuthor || isParticipant || watercooler);
   };
 
@@ -144,7 +145,6 @@ class MessagesWithData extends React.Component<Props, State> {
     const {
       data,
       isLoading,
-      toggleReaction,
       forceScrollToBottom,
       id,
       isFetchingMore,
@@ -237,7 +237,6 @@ class MessagesWithData extends React.Component<Props, State> {
               <ChatMessages
                 threadId={data.thread.id}
                 thread={data.thread}
-                toggleReaction={toggleReaction}
                 messages={sortedMessages}
                 threadType={'story'}
                 forceScrollToBottom={forceScrollToBottom}
@@ -284,7 +283,6 @@ const map = state => ({ currentUser: state.users.currentUser });
 const Messages = compose(
   // $FlowIssue
   connect(map),
-  toggleReactionMutation,
   withRouter,
   getThreadMessages,
   viewNetworkHandler
