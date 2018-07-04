@@ -157,7 +157,7 @@
     "react-router": "^4.0.0-beta.7",
     "react-router-dom": "^4.3.1",
     "react-stripe-checkout": "^2.2.5",
-    "react-stripe-elements": "^1.4.1",
+    "react-stripe-elements": "^1.7.0",
     "react-textarea-autosize": "^6.1.0",
     "react-transition-group": "^2.4.0",
     "react-trend": "^1.2.4",
