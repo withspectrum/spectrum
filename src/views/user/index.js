@@ -13,6 +13,8 @@ type Props = {
   currentUser: ?Object,
 };
 
+const map = state => ({ currentUser: state.users.currentUser });
+
 const UserByMatch = compose(
   // $FlowIssue
   connect(map),
@@ -39,7 +41,6 @@ class User extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
   // $FlowIssue
   connect(map)
