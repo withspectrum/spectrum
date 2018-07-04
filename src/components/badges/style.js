@@ -6,7 +6,7 @@ export const Span = styled.span`
   color: ${({ theme }) => theme.text.reverse};
   background-color: ${props => props.theme.text.alt};
   text-transform: uppercase;
-  padding: 2px 6px;
+  padding: 2px 6px 1px;
   margin-left: 4px;
   font-size: 9px;
   font-weight: 800;
@@ -15,6 +15,7 @@ export const Span = styled.span`
   letter-spacing: 0.6px;
   align-self: center;
   line-height: 1.4;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.16);
 `;
 
 export const ProBadge = styled(Span)`
