@@ -112,7 +112,7 @@ class Message extends Component<Props> {
       threadType,
     } = this.props;
 
-    const hash = btoa(new Date(message.timestamp).getTime());
+    const hash = btoa(new Date(message.timestamp).getTime() - 1);
 
     let selected = false;
     if (
