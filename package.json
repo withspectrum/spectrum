@@ -111,7 +111,7 @@
     "history": "^4.6.1",
     "hoist-non-react-statics": "^2.3.1",
     "hpp": "^0.2.2",
-    "idx": "^2.3.0",
+    "idx": "^2.4.0",
     "imgix-core-js": "^1.0.6",
     "ioredis": "3.1.4",
     "is-electron": "^2.1.0",
