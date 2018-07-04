@@ -136,7 +136,7 @@
     "passport-twitter": "^1.0.4",
     "postmark": "^1.4.1",
     "pre-commit": "^1.2.2",
-    "prismjs": "^1.8.1",
+    "prismjs": "^1.15.0",
     "query-string": "^5.0.0",
     "raf": "^3.4.0",
     "raven": "^2.6.3",
