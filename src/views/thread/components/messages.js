@@ -123,7 +123,7 @@ class MessagesWithData extends React.Component<Props, State> {
     // We only scroll to bottom for small (< 50 msgs) threads, because otherwise
     // we paginate and the newest message will be at the top
     const smallThreadScroll =
-      data.thread.messageCount < 50 && (isAuthor || isParticipant);
+      data.thread.messageCount <= 50 && (isAuthor || isParticipant);
     const noNewMessages =
       lastActive &&
       currentUserLastSeen &&
