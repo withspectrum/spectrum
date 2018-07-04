@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { Route, Switch, Redirect } from 'react-router';
-import { connect } from 'react-redux';
 import styled, { ThemeProvider } from 'styled-components';
 import Loadable from 'react-loadable';
 import { ErrorBoundary } from 'src/components/error';
@@ -314,6 +313,6 @@ class Routes extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
+// const map = state => ({ currentUser: state.users.currentUser });
 // $FlowFixMe
-export default connect(map)(Routes);
+export default Routes;
