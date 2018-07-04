@@ -118,7 +118,7 @@
     "isomorphic-fetch": "^2.2.1",
     "jest": "22.4.3",
     "json-stringify-pretty-compact": "^1.0.4",
-    "jsonwebtoken": "^8.0.1",
+    "jsonwebtoken": "^8.3.0",
     "keygrip": "^1.0.2",
     "linkify-it": "^2.0.3",
     "lodash": "^4.17.10",
