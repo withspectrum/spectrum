@@ -49,19 +49,26 @@ class InboxThread extends React.Component<Props> {
       currentUser,
     } = this.props;
 
-    let queryPrefix;
-    if (
-      // TODO(@mxstbr): Fix this to not use window.innerWidth
-      // which breaks SSR rehydration on mobile devices
+    // TODO(@mxstbr): Fix this to not use window.innerWidth
+    // which breaks SSR rehydration on mobile devices
+    const isDesktopInbox =
       window.innerWidth > 768 &&
       (!viewContext ||
         viewContext === 'communityInbox' ||
-        viewContext === 'channelInbox')
-    ) {
+        viewContext === 'channelInbox');
+
+    let queryPrefix;
+    if (isDesktopInbox) {
       queryPrefix = '?t';
     } else {
       queryPrefix = '?thread';
     }
+
+    const newMessagesSinceLastViewed =
+      !active &&
+      thread.currentUserLastSeen &&
+      thread.lastActive &&
+      thread.currentUserLastSeen < thread.lastActive;
 
     return (
       <ErrorBoundary fallbackComponent={null}>
@@ -71,7 +78,10 @@ class InboxThread extends React.Component<Props> {
               pathname: location.pathname,
               search: `${queryPrefix}=${thread.id}`,
             }}
-            onClick={() => this.props.dispatch(changeActiveThread(thread.id))}
+            onClick={() =>
+              isDesktopInbox &&
+              this.props.dispatch(changeActiveThread(thread.id))
+            }
           />
 
           <InboxThreadContent>
@@ -81,6 +91,7 @@ class InboxThread extends React.Component<Props> {
                   <Avatar
                     user={thread.author.user}
                     src={`${thread.author.user.profilePhoto}`}
+                    isOnline={thread.author.user.isOnline}
                     size={'40'}
                     link={
                       thread.author.user.username &&
@@ -112,7 +123,7 @@ class InboxThread extends React.Component<Props> {
                 />
               </ErrorBoundary>
 
-              <ThreadTitle active={active}>
+              <ThreadTitle active={active} new={newMessagesSinceLastViewed}>
                 {truncate(thread.content.title, 80)}
               </ThreadTitle>
 

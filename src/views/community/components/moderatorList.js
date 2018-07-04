@@ -14,6 +14,7 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { MessageIconContainer, ListColumn } from '../style';
 import GranularUserProfile from 'src/components/granularUserProfile';
+import { UpsellTeamMembers } from 'src/components/upsell';
 import type { Dispatch } from 'redux';
 
 type Props = {
@@ -50,12 +51,16 @@ class CommunityModeratorList extends React.Component<Props> {
       const { edges: members } = community.members;
       const nodes = members
         .map(member => member && member.node)
-        .filter(node => node && (node.isOwner || node.isModerator));
+        .filter(node => node && (node.isOwner || node.isModerator))
+        .filter(Boolean);
+
+      const currentUserIsOwner =
+        currentUser &&
+        nodes.find(node => node.user.id === currentUser.id && node.isOwner);
 
       return (
         <ListColumn>
           {nodes.map(node => {
-            if (!node) return null;
             const { user, roles } = node;
 
             return (
@@ -81,6 +86,12 @@ class CommunityModeratorList extends React.Component<Props> {
               </GranularUserProfile>
             );
           })}
+          {currentUserIsOwner && (
+            <UpsellTeamMembers
+              communitySlug={community.slug}
+              small={nodes.length > 1}
+            />
+          )}
         </ListColumn>
       );
     }

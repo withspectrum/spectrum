@@ -243,7 +243,7 @@ export const Time = styled.div`
 
 export const Text = styled(Bubble)`
   padding: 8px 16px;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.4;
   background-color: ${props =>
     props.me ? props.theme.brand.default : props.theme.generic.default};

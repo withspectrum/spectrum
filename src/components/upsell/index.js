@@ -321,6 +321,29 @@ class UpsellMiniUpgradePure extends React.Component<MiniUpgradeProps> {
   }
 }
 
+type TeamMemberProps = {
+  communitySlug: string,
+  small?: boolean,
+};
+
+export const UpsellTeamMembers = (props: TeamMemberProps) => {
+  return (
+    <MiniNullCard
+      copy={
+        props.small ? '' : "Looks like you haven't added any team members yet!"
+      }
+      noPadding
+      alignItems="flex-end"
+    >
+      <Link to={`/${props.communitySlug}/settings/members`}>
+        <OutlineButton icon={props.small ? null : 'member-add'}>
+          Add {props.small ? 'more' : ''} team members
+        </OutlineButton>
+      </Link>
+    </MiniNullCard>
+  );
+};
+
 const map = state => ({ currentUser: state.users.currentUser });
 // $FlowIssue
 export const UpsellMiniUpgrade = connect(map)(UpsellMiniUpgradePure);

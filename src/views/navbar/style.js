@@ -1,3 +1,4 @@
+// @noflow
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import { Transition, FlexRow, hexa, zIndex } from 'src/components/globals';
@@ -235,14 +236,27 @@ export const Logo = styled(Tab)`
 
 export const HomeTab = styled(Tab)`
   grid-area: home;
+  ${isDesktopApp() &&
+    css`
+      -webkit-app-region: no-drag;
+    `};
 `;
 
 export const MessageTab = styled(Tab)`
   grid-area: messages;
+  ${isDesktopApp() &&
+    css`
+      -webkit-app-region: no-drag;
+    `};
 `;
 
 export const ExploreTab = styled(Tab)`
   grid-area: explore;
+
+  ${isDesktopApp() &&
+    css`
+      -webkit-app-region: no-drag;
+    `};
 
   ${props =>
     props.loggedOut &&
@@ -270,6 +284,11 @@ export const PricingTab = styled(MessageTab)`
 export const NotificationTab = styled(DropTab)`
   grid-area: notifications;
 
+  ${isDesktopApp() &&
+    css`
+      -webkit-app-region: no-drag;
+    `};
+
   > a {
     &:hover {
       box-shadow: none;
@@ -280,6 +299,11 @@ export const NotificationTab = styled(DropTab)`
 
 export const ProfileDrop = styled(DropTab)`
   grid-area: profile;
+
+  ${isDesktopApp() &&
+    css`
+      -webkit-app-region: no-drag;
+    `};
 
   > a {
     &:hover {

@@ -1,6 +1,4 @@
-import onlyContainsEmoji from 'shared/only-contains-emoji';
 import sentencify from 'shared/sentencify';
-import { timeDifferenceShort } from 'shared/time-difference';
 import sortByDate from 'shared/sort-by-date';
 import { toState, toPlainText } from 'shared/draft-utils';
 
@@ -16,13 +14,6 @@ const sortThreads = (entities, currentUser) => {
   return threads;
 };
 
-// parse date => modifiedAt to timeAgo
-const parseNotificationDate = date => {
-  const now = new Date().getTime();
-  const timestamp = new Date(date).getTime();
-  return timeDifferenceShort(now, timestamp);
-};
-
 export const parseActors = (actors, currentUser) => {
   const filteredActors = actors
     .filter(actor => actor.id !== currentUser.id)
@@ -31,12 +22,13 @@ export const parseActors = (actors, currentUser) => {
 };
 
 const EVENT_VERB = {
-  MESSAGE_CREATED: 'replied',
+  MESSAGE_CREATED: 'replied in',
   REACTION_CREATED: 'liked',
   CHANNEL_CREATED: 'created in',
   USER_JOINED_COMMUNITY: 'joined',
   MENTION_MESSAGE: 'mentioned you in',
   MENTION_THREAD: 'mentioned you in',
+  THREAD_REACTION_CREATED: 'liked',
 };
 
 const contextToString = (context, currentUser) => {
@@ -45,11 +37,14 @@ const contextToString = (context, currentUser) => {
     case 'THREAD': {
       const payload = context.payload;
       const isCreator = payload.creatorId === currentUser.id;
-      const str = isCreator ? 'in your thread' : 'in';
+      const str = isCreator ? 'your thread' : '';
       return `${str} ${payload.content.title}`;
     }
     case 'DIRECT_MESSAGE_THREAD': {
       return 'in a direct message thread';
+    }
+    case 'THREAD_REACTION': {
+      return 'your thread';
     }
     case 'MESSAGE':
       return 'your reply';
@@ -57,6 +52,8 @@ const contextToString = (context, currentUser) => {
       return context.payload.name;
     case 'CHANNEL':
       return context.payload.name;
+    default:
+      return;
   }
 };
 
@@ -84,7 +81,6 @@ const parseNotification = notification => {
 
 const formatNotification = (incomingNotification, currentUserId) => {
   const notification = parseNotification(incomingNotification);
-
   const actors =
     notification.actors &&
     parseActors(notification.actors, { id: currentUserId });
@@ -92,8 +88,6 @@ const formatNotification = (incomingNotification, currentUserId) => {
   const context =
     notification.context &&
     contextToString(notification.context, { id: currentUserId });
-  const date =
-    notification.modifiedAt && parseNotificationDate(notification.modifiedAt);
 
   let title = `${actors} ${event} ${context}`;
   let href, body;
@@ -171,6 +165,16 @@ const formatNotification = (incomingNotification, currentUserId) => {
           : message.content.body;
       break;
     }
+    case 'THREAD_REACTION_CREATED': {
+      const thread = notification.context.payload;
+
+      href = `/thread/${thread.id}`;
+      body =
+        thread.type === 'draftjs'
+          ? toPlainText(toState(thread.content.body))
+          : thread.content.body;
+      break;
+    }
     case 'CHANNEL_CREATED': {
       const entities = notification.entities;
       const newChannelCount =
@@ -187,6 +191,7 @@ const formatNotification = (incomingNotification, currentUserId) => {
       title = `${actors} ${event} ${context}`;
       break;
     }
+
     case 'MENTION_THREAD': {
       // sort and order the threads
       const threads = sortThreads(notification.entities, { id: currentUserId });
@@ -221,6 +226,8 @@ const formatNotification = (incomingNotification, currentUserId) => {
       title = `${actors} invited you to join their community, ${context}`;
       break;
     }
+    default:
+      return;
   }
 
   const data = href && {
