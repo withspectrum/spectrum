@@ -223,12 +223,14 @@ class Messages extends Component<Props, State> {
           const canModerateMessage = me || isModerator;
 
           if (roboText) {
-            if (initialMessage.message.type === 'timestamp') {
+            if (initialMessage.type === 'timestamp') {
               return (
                 <Timestamp key={initialMessage.timestamp}>
                   <hr />
                   <Time>
-                    {convertTimestampToDate(initialMessage.timestamp)}
+                    {convertTimestampToDate(
+                      new Date(initialMessage.timestamp).getTime()
+                    )}
                   </Time>
                   <hr />
                 </Timestamp>
@@ -264,19 +266,6 @@ class Messages extends Component<Props, State> {
             <Fragment key={initialMessage.id}>
               {unseenRobo}
               <MessageGroupContainer key={initialMessage.id}>
-                {/*
-                  !roboText && (
-                    <AuthorAvatar
-                      user={author.user}
-                      roles={author.roles}
-                      showProfile
-                    />
-                  )
-                */}
-                {/*<AuthorByline
-                    user={author.user}
-                    roles={author.roles}
-                  />*/}
                 {group.map((message, index) => {
                   return (
                     <ErrorBoundary

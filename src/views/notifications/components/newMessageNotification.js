@@ -29,7 +29,7 @@ import {
 type Props = {
   notification: Object,
   currentUser: Object,
-  history: Object,
+  history?: Object,
   markSingleNotificationSeen?: Function,
   markSingleNotificationAsSeenInState?: Function,
 };
