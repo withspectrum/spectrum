@@ -213,12 +213,8 @@ class Navbar extends React.Component<Props, State> {
           <ProfileDrop>
             <Tab
               className={'hideOnMobile'}
-              {...this.getTabProps(
-                history.location.pathname === `/users/${loggedInUser.username}`
-              )}
-              to={
-                loggedInUser.username ? `/users/${loggedInUser.username}` : '/'
-              }
+              {...this.getTabProps(history.location.pathname === `/me`)}
+              to={loggedInUser ? `/me` : '/'}
               onClick={() => this.trackNavigationClick('profile')}
             >
               <Navatar
@@ -233,10 +229,8 @@ class Navbar extends React.Component<Props, State> {
 
           <ProfileTab
             className={'hideOnDesktop'}
-            {...this.getTabProps(
-              history.location.pathname === `/users/${loggedInUser.username}`
-            )}
-            to={loggedInUser.username ? `/users/${loggedInUser.username}` : '/'}
+            {...this.getTabProps(history.location.pathname === `/me`)}
+            to={loggedInUser ? `/me` : '/'}
             onClick={() => this.trackNavigationClick('profile')}
           >
             <Icon glyph="profile" />

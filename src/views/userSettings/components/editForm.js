@@ -330,7 +330,7 @@ class UserWithData extends React.Component<Props, State> {
       usernameError,
     } = this.state;
 
-    const postAuthRedirectPath = `?r=${CLIENT_URL}/users/${username}/settings`;
+    const postAuthRedirectPath = `?r=${CLIENT_URL}/me/settings`;
 
     return (
       <SectionCard>

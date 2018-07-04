@@ -25,6 +25,8 @@ import ThreadSlider from './views/threadSlider';
 import Navbar from './views/navbar';
 import Status from './views/status';
 import Login from './views/login';
+import Me from './views/me';
+import { MeSettings } from './views/me';
 
 import DirectMessages from './views/directMessages';
 import Thread from './views/thread';
@@ -145,6 +147,10 @@ const NotificationsFallback = signedOutFallback(Notifications, () => (
 const ComposerFallback = signedOutFallback(Composer, () => (
   <Redirect to="/login" />
 ));
+const MeFallback = signedOutFallback(Me, () => <Redirect to="/login" />);
+const MeSettingsFallback = signedOutFallback(MeSettings, () => (
+  <Redirect to="/login" />
+));
 
 class Routes extends React.Component<{||}> {
   componentDidMount() {
@@ -242,6 +248,9 @@ class Routes extends React.Component<{||}> {
                   path="/notifications"
                   component={NotificationsFallback}
                 />
+
+                <Route path="/me/settings" component={MeSettingsFallback} />
+                <Route path="/me" component={MeFallback} />
 
                 {/*
                     We check communitySlug last to ensure none of the above routes

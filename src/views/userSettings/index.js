@@ -103,7 +103,7 @@ class UserSettings extends React.Component<Props> {
     if (user && user.id && currentUser.id === user.id) {
       const subnavItems = [
         {
-          to: `/users/${user.username}/settings`,
+          to: `/me/settings`,
           label: 'Overview',
           activeLabel: 'settings',
         },
