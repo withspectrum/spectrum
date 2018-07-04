@@ -67,11 +67,15 @@ export const OuterMessageContainer = styled.div`
   position: relative;
   padding-right: 16px;
   background: ${props =>
-    props.selected ? props.theme.special.wash : props.theme.bg.default};
+    props.selected
+      ? props.theme.special.wash
+      : props.error ? props.theme.warn.wash : props.theme.bg.default};
 
   &:hover {
     background: ${props =>
-      props.selected ? props.theme.special.border : props.theme.bg.wash};
+      props.selected
+        ? props.theme.special.border
+        : props.error ? props.theme.warn.border : props.theme.bg.wash};
 
     ${ActionsContainer} {
       opacity: 1;
@@ -193,7 +197,8 @@ export const Time = styled.div`
 export const Text = styled(Bubble)`
   font-size: 16px;
   line-height: 1.4;
-  color: ${props => props.theme.text.secondary};
+  color: ${props =>
+    props.error ? props.theme.warn.default : props.theme.text.secondary};
   font-weight: 400;
   display: flex;
   flex-direction: column;
