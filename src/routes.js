@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Route, Switch, Redirect } from 'react-router';
+import { connect } from 'react-redux';
 import styled, { ThemeProvider } from 'styled-components';
 import Loadable from 'react-loadable';
 import { ErrorBoundary } from 'src/components/error';
@@ -25,9 +26,6 @@ import ThreadSlider from './views/threadSlider';
 import Navbar from './views/navbar';
 import Status from './views/status';
 import Login from './views/login';
-import Me from './views/me';
-import { MeSettings } from './views/me';
-
 import DirectMessages from './views/directMessages';
 import Thread from './views/thread';
 
@@ -127,32 +125,32 @@ const DashboardFallback = signedOutFallback(Dashboard, Pages);
 const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
 const LoginFallback = signedOutFallback(() => <Redirect to="/" />, Login);
 const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
-  <Redirect to={`/login?r=${CLIENT_URL}/new/community`} />
+  <Login redirectPath={`${CLIENT_URL}/new/community`} />
 ));
 const MessagesFallback = signedOutFallback(DirectMessages, () => (
-  <Redirect to="/login" />
+  <Login redirectPath={`${CLIENT_URL}/messages`} />
 ));
 const UserSettingsFallback = signedOutFallback(UserSettings, () => (
-  <Redirect to="/login" />
+  <Login redirectPath={`${CLIENT_URL}/me/settings`} />
 ));
 const CommunitySettingsFallback = signedOutFallback(CommunitySettings, () => (
-  <Redirect to="/login" />
+  <Login />
 ));
 const ChannelSettingsFallback = signedOutFallback(ChannelSettings, () => (
-  <Redirect to="/login" />
+  <Login />
 ));
 const NotificationsFallback = signedOutFallback(Notifications, () => (
-  <Redirect to="/login" />
+  <Login redirectPath={`${CLIENT_URL}/notifications`} />
 ));
 const ComposerFallback = signedOutFallback(Composer, () => (
-  <Redirect to="/login" />
-));
-const MeFallback = signedOutFallback(Me, () => <Redirect to="/login" />);
-const MeSettingsFallback = signedOutFallback(MeSettings, () => (
-  <Redirect to="/login" />
+  <Login redirectPath={`${CLIENT_URL}/new/thread`} />
 ));
 
-class Routes extends React.Component<{||}> {
+type Props = {
+  currentUser: ?Object,
+};
+
+class Routes extends React.Component<Props> {
   componentDidMount() {
     const AMPLITUDE_API_KEY =
       process.env.NODE_ENV === 'production'
@@ -171,6 +169,7 @@ class Routes extends React.Component<{||}> {
   }
 
   render() {
+    const { currentUser } = this.props;
     const { title, description } = generateMetaInfo();
 
     return (
@@ -249,8 +248,28 @@ class Routes extends React.Component<{||}> {
                   component={NotificationsFallback}
                 />
 
-                <Route path="/me/settings" component={MeSettingsFallback} />
-                <Route path="/me" component={MeFallback} />
+                <Route
+                  path="/me/settings"
+                  render={() =>
+                    currentUser && currentUser.username ? (
+                      <Redirect
+                        to={`/users/${currentUser.username}/settings`}
+                      />
+                    ) : (
+                      <Login redirectPath={`${CLIENT_URL}/me/settings`} />
+                    )
+                  }
+                />
+                <Route
+                  path="/me"
+                  render={() =>
+                    currentUser && currentUser.username ? (
+                      <Redirect to={`/users/${currentUser.username}`} />
+                    ) : (
+                      <Login redirectPath={`${CLIENT_URL}/me`} />
+                    )
+                  }
+                />
 
                 {/*
                     We check communitySlug last to ensure none of the above routes
@@ -295,4 +314,6 @@ class Routes extends React.Component<{||}> {
   }
 }
 
-export default Routes;
+const map = state => ({ currentUser: state.users.currentUser });
+// $FlowFixMe
+export default connect(map)(Routes);
