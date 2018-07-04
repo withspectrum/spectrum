@@ -75,9 +75,10 @@ class EditDropdown extends React.Component<Props, State> {
     moderator: {
       id: 'moderator',
       title: this.props.community.hasChargeableSource
-        ? 'Moderator · $10/mo'
-        : 'Moderator',
-      subtitle: 'Can edit and delete conversations',
+        ? 'Team member · $10/mo'
+        : 'Team member',
+      subtitle:
+        'Highlighted across the community, and can moderate conversations',
       selected: false,
     },
     blocked: {
