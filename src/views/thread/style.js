@@ -588,11 +588,11 @@ export const ActionBarContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 32px;
   background: ${props => props.theme.bg.wash};
   border: 1px solid ${props => props.theme.bg.border};
-  border-radius: 6px;
-  padding: 6px 6px 6px 12px;
+  border-left: 0;
+  border-right: 0;
+  padding: 6px 32px 6px 38px;
 
   @media (max-width: 768px) {
     margin: 0;

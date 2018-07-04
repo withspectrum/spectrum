@@ -1,26 +1,24 @@
 // @flow
 import styled from 'styled-components';
-import { Tooltip, Gradient } from '../globals';
+import { Tooltip } from '../globals';
 
 export const Span = styled.span`
   color: ${({ theme }) => theme.text.reverse};
   background-color: ${props => props.theme.text.alt};
-  background-image: 'none';
   text-transform: uppercase;
-  padding: 2px 4px;
+  padding: 2px 6px 1px;
   margin-left: 4px;
   font-size: 9px;
-  font-weight: 800;
+  font-weight: 900;
   border-radius: 4px;
   ${props => (props.tipText ? Tooltip(props) : '')};
+  letter-spacing: 0.6px;
   align-self: center;
   line-height: 1.4;
 `;
 
 export const ProBadge = styled(Span)`
   background-color: ${props => props.theme.special.default};
-  background-image: ${props =>
-    Gradient(props.theme.special.alt, props.theme.special.default)};
   cursor: pointer;
 
   &:hover {
@@ -30,14 +28,10 @@ export const ProBadge = styled(Span)`
 
 export const TeamBadge = styled(Span)`
   background-color: ${props => props.theme.success.default};
-  background-image: ${props =>
-    Gradient(props.theme.success.alt, props.theme.success.default)};
 `;
 
 export const BlockedBadge = styled(Span)`
   background-color: ${props => props.theme.warn.alt};
-  background-image: ${props =>
-    Gradient(props.theme.warn.alt, props.theme.warn.default)};
   cursor: pointer;
 
   &:hover {
@@ -47,8 +41,6 @@ export const BlockedBadge = styled(Span)`
 
 export const PendingBadge = styled(Span)`
   background-color: ${props => props.theme.special.alt};
-  background-image: ${props =>
-    Gradient(props.theme.special.alt, props.theme.special.default)};
   cursor: pointer;
 
   &:hover {
@@ -57,9 +49,7 @@ export const PendingBadge = styled(Span)`
 `;
 
 export const DefaultPaymentMethodBadge = styled(Span)`
-  background-color: ${props => props.theme.space.default};
-  background-image: ${props =>
-    Gradient(props.theme.space.default, props.theme.space.default)};
+  background-color: ${props => props.theme.space.alt};
   cursor: pointer;
   margin-left: 8px;
 

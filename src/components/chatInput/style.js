@@ -258,6 +258,7 @@ export const PreviewWrapper = styled.div`
     margin: 0;
     margin-top: -6px;
     margin-left: -12px;
+    border-left: 0;
   }
 
   & > img {
