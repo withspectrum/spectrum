@@ -117,7 +117,7 @@
     "is-electron": "^2.1.0",
     "isomorphic-fetch": "^2.2.1",
     "jest": "22.4.3",
-    "json-stringify-pretty-compact": "^1.0.4",
+    "json-stringify-pretty-compact": "^1.2.0",
     "jsonwebtoken": "^8.3.0",
     "keygrip": "^1.0.2",
     "linkify-it": "^2.0.3",
