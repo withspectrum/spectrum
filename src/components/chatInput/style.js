@@ -62,7 +62,7 @@ export const InputWrapper = styled(EditorWrapper)`
   flex-direction: column;
   align-items: stretch;
   flex: auto;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   line-height: 20px;
   min-height: 40px;
@@ -126,7 +126,7 @@ export const InputWrapper = styled(EditorWrapper)`
 
   pre {
     ${monoStack};
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 500;
     background-color: ${props => props.theme.bg.wash};
     border: 1px solid ${props => props.theme.bg.border};
