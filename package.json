@@ -129,7 +129,7 @@
     "now-env": "^3.0.1",
     "offline-plugin": "^5.0.5",
     "optics-agent": "^1.1.2",
-    "passport": "^0.3.2",
+    "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
     "passport-github2": "^0.1.10",
     "passport-google-oauth2": "^0.1.6",
