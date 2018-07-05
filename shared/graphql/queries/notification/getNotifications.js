@@ -60,9 +60,6 @@ export const getNotificationsQuery = gql`
 `;
 
 export const getNotificationsOptions = {
-  options: () => ({
-    fetchPolicy: 'cache-and-network',
-  }),
   props: ({
     data: {
       fetchMore,

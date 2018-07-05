@@ -134,7 +134,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
                     {channel.name}
                   </Link>
                 )}
-                <span>{` · ${timestamp}`}</span>
+                <Link to={`/thread/${id}`}>&nbsp;{`· ${timestamp}`}</Link>
               </CommunityHeaderSubtitle>
             </CommunityHeaderMetaCol>
           </CommunityHeaderMeta>
