@@ -90,7 +90,7 @@
     "draftjs-to-markdown": "^0.4.2",
     "emoji-regex": "^6.1.1",
     "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-standard": "^3.0.1",
+    "eslint-plugin-standard": "^3.1.0",
     "expo-server-sdk": "^2.4.0",
     "express": "^4.15.2",
     "express-session": "^1.15.2",
