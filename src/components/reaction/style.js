@@ -29,7 +29,8 @@ export const ReactionWrapper = styled.span`
   }
 
   .icon {
-    color: ${props => props.theme.warn.alt};
+    color: ${props =>
+      props.hasReacted ? props.theme.warn.alt : props.theme.text.alt};
     margin-right: 4px;
     margin-top: -1px;
   }
