@@ -4,10 +4,11 @@ import { Tooltip, Gradient } from '../globals';
 
 export const Span = styled.span`
   display: inline;
+  align-self: center;
   color: ${({ theme }) => theme.text.reverse};
   background-color: ${props => props.theme.text.alt};
   text-transform: uppercase;
-  padding: 2px 6px;
+  padding: 3px 6px;
   margin-left: 4px;
   font-size: 9px;
   font-weight: 800;
