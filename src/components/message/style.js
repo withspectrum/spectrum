@@ -326,6 +326,7 @@ export const QuoteWrapper = styled.div`
   color: ${props => props.theme.text.alt};
   padding: 4px 12px 4px 16px;
   max-height: ${props => (props.expanded ? 'none' : '7em')};
+  margin-top: 4px;
   margin-bottom: 8px;
   overflow-y: hidden;
   cursor: pointer;
@@ -344,6 +345,14 @@ export const QuoteWrapper = styled.div`
   }
 
   ${Name} {
+    font-size: 14px;
+    font-weight: 600;
+    color: ${props => props.theme.text.secondary};
+  }
+
+  ${Username} {
+    font-size: 13px;
+    font-weight: 500;
     color: ${props => props.theme.text.alt};
   }
 `;
