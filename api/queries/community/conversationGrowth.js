@@ -2,6 +2,7 @@
 import type { DBCommunity } from 'shared/types';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
+import { canAdministerCommunity } from '../../utils/permissions';
 const {
   getThreadCount,
   getCommunityGrowth,
@@ -18,12 +19,7 @@ export default async (
     return new UserError('You must be signed in to continue.');
   }
 
-  const {
-    isOwner,
-    isModerator,
-  } = await loaders.userPermissionsInCommunity.load([currentUser.id, id]);
-
-  if (!isOwner && !isModerator) {
+  if (!await canAdministerCommunity(currentUser.id, id, loaders)) {
     return new UserError(
       'You must be a team member to view community analytics.'
     );
