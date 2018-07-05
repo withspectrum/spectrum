@@ -13,7 +13,6 @@ export const Span = styled.span`
   border-radius: 4px;
   ${props => (props.tipText ? Tooltip(props) : '')};
   letter-spacing: 0.6px;
-  align-self: center;
   line-height: 1.4;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.16);
 `;
