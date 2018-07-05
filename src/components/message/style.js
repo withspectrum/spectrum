@@ -302,6 +302,7 @@ export const QuotedParagraph = Paragraph.withComponent('div').extend`
   /* overrides Bubble component styles to fix #3098 */
   pre {
     margin: 0;
+    margin-top: 8px;
     width: 100%;
     border: 1px solid ${props => hexa(props.theme.brand.border, 0.5)};
     color: ${props => props.theme.text.alt};
