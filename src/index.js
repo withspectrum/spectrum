@@ -54,7 +54,7 @@ const App = () => {
       <HelmetProvider>
         <ApolloProvider client={client}>
           <Router history={history}>
-            <Routes />
+            <Routes currentUser={storedData ? storedData.currentUser : null} />
           </Router>
         </ApolloProvider>
       </HelmetProvider>

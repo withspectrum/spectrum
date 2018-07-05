@@ -216,9 +216,7 @@ class Navbar extends React.Component<Props, State> {
               {...this.getTabProps(
                 history.location.pathname === `/users/${loggedInUser.username}`
               )}
-              to={
-                loggedInUser.username ? `/users/${loggedInUser.username}` : '/'
-              }
+              to={loggedInUser ? `/users/${loggedInUser.username}` : '/'}
               onClick={() => this.trackNavigationClick('profile')}
             >
               <Navatar
@@ -236,7 +234,7 @@ class Navbar extends React.Component<Props, State> {
             {...this.getTabProps(
               history.location.pathname === `/users/${loggedInUser.username}`
             )}
-            to={loggedInUser.username ? `/users/${loggedInUser.username}` : '/'}
+            to={loggedInUser ? `/users/${loggedInUser.username}` : '/'}
             onClick={() => this.trackNavigationClick('profile')}
           >
             <Icon glyph="profile" />
