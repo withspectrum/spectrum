@@ -124,6 +124,7 @@ const Bubble = styled.div`
     border-radius: 4px;
     padding: 2px 4px;
     background: ${props => props.theme.bg.wash};
+    border: 1px solid ${props => props.theme.bg.border};
     color: ${props => props.theme.text.secondary};
   }
 
@@ -134,6 +135,7 @@ const Bubble = styled.div`
     border-radius: 8px;
     padding: 8px 16px;
     background: ${props => props.theme.bg.wash};
+    border: 1px solid ${props => props.theme.bg.border};
     color: ${props => props.theme.text.secondary};
   }
 `;
@@ -266,6 +268,7 @@ export const Code = styled(Bubble)`
   font-size: 14px;
   font-weight: 500;
   background-color: ${props => props.theme.bg.reverse};
+  border: 1px solid ${props => props.theme.bg.border};
   color: ${props => props.theme.text.reverse};
   max-width: 100%;
   overflow-x: scroll;
@@ -279,6 +282,7 @@ export const Line = styled.pre`
   word-break: break-all;
   word-wrap: break-word;
   ${monoStack};
+  border: 1px solid ${props => props.theme.bg.border};
 `;
 
 export const Paragraph = styled.p`
