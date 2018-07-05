@@ -3880,9 +3880,9 @@ draft-js@0.x, draft-js@^0.10.4, "draft-js@npm:draft-js-fork-mxstbr", draft-js@~0
     immutable "~3.7.4"
     object-assign "^4.1.0"
 
-draftjs-to-markdown@^0.4.2:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/draftjs-to-markdown/-/draftjs-to-markdown-0.4.5.tgz#1cb2da90bf7790ff23e24891441882a40fca6d53"
+draftjs-to-markdown@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/draftjs-to-markdown/-/draftjs-to-markdown-0.5.1.tgz#ad4cd3f6d1dfffd01680c6f2588e24e67e9ec988"
 
 duplexer2@~0.1.4:
   version "0.1.4"
