@@ -142,15 +142,14 @@ class SidebarChannels extends React.Component<Props> {
             />
           )}
 
-          {(isOwner || isModerator) &&
-            community.hasFeatures.analytics && (
-              <Link to={`/${community.slug}/settings/analytics`}>
-                <ChannelListItem>
-                  <Icon glyph={'link'} size={24} />
-                  <CommunityListName>Analytics</CommunityListName>
-                </ChannelListItem>
-              </Link>
-            )}
+          {(isOwner || isModerator) && (
+            <Link to={`/${community.slug}/settings/analytics`}>
+              <ChannelListItem>
+                <Icon glyph={'link'} size={24} />
+                <CommunityListName>Analytics</CommunityListName>
+              </ChannelListItem>
+            </Link>
+          )}
 
           {sortedChannels &&
             sortedChannels.length > 1 && (
