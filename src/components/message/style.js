@@ -338,16 +338,18 @@ export const QuoteWrapper = styled.div`
   }
 
   /* Don't change the color of the name and username on hover since they aren't clickable in quotes */
-  ${Name}:hover,
-  ${Username}:hover,
-  ${Byline}:hover {
-    color: ${props => props.theme.text.alt};
+  ${Username}:hover, ${Byline}:hover {
+    color: ${props => props.theme.text.secondary};
   }
 
   ${Name} {
     font-size: 14px;
     font-weight: 600;
     color: ${props => props.theme.text.secondary};
+  }
+
+  ${Name}:hover {
+    color: ${props => props.theme.text.default};
   }
 
   ${Username} {
