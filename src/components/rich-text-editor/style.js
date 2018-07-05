@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { connect } from 'react-redux';
 import { createPortal } from 'react-dom';
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
@@ -9,6 +10,25 @@ import { Manager, Reference, Popper } from 'react-popper';
 import HoverProfile from 'src/components/avatar/hoverProfile';
 import { getUserByUsername } from 'shared/graphql/queries/user/getUser';
 import type { Node } from 'react';
+
+const UsernameWrapper = styled.span`
+  color: ${props =>
+    props.me ? props.theme.special.default : props.theme.space.default};
+  background: ${props =>
+    props.me ? props.theme.special.wash : props.theme.space.wash};
+  padding: 2px 4px;
+  border-radius: 4px;
+  position: relative;
+
+  &:hover {
+    background: ${props =>
+      props.me ? props.theme.special.border : props.theme.space.border};
+  }
+
+  a {
+    text-decoration: none;
+  }
+`;
 
 const MentionHoverProfile = getUserByUsername(
   props =>
@@ -25,18 +45,24 @@ const MentionHoverProfile = getUserByUsername(
 type MentionProps = {
   children: Node,
   username: string,
+  currentUser: ?Object,
 };
 
-export class Mention extends React.Component<
+class MentionWithCurrentUser extends React.Component<
   MentionProps,
   { hovered: boolean }
 > {
   state = { hovered: false };
   hover = (val: boolean) => () => this.setState({ hovered: val });
   render() {
-    const { username, children } = this.props;
+    const { username, children, currentUser } = this.props;
+    const me = currentUser && currentUser.username === username;
     return (
-      <span onMouseEnter={this.hover(true)} onMouseLeave={this.hover(false)}>
+      <UsernameWrapper
+        me={me}
+        onMouseEnter={this.hover(true)}
+        onMouseLeave={this.hover(false)}
+      >
         <Manager>
           <Reference>
             {({ ref }) => (
@@ -60,10 +86,14 @@ export class Mention extends React.Component<
               document.body
             )}
         </Manager>
-      </span>
+      </UsernameWrapper>
     );
   }
 }
+
+const map = state => ({ currentUser: state.users.currentUser });
+// $FlowFixMe
+export const Mention = connect(map)(MentionWithCurrentUser);
 
 export const customStyleMap = {
   CODE: {
