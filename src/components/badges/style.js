@@ -3,17 +3,20 @@ import styled from 'styled-components';
 import { Tooltip, Gradient } from '../globals';
 
 export const Span = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: ${({ theme }) => theme.text.reverse};
   background-color: ${props => props.theme.text.alt};
   text-transform: uppercase;
-  padding: 2px 6px 1px;
+  padding: 2px 6px;
   margin-left: 4px;
   font-size: 9px;
   font-weight: 800;
   border-radius: 4px;
   ${props => (props.tipText ? Tooltip(props) : '')};
   letter-spacing: 0.6px;
-  line-height: 1.4;
+  line-height: 1;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.16);
 `;
 
