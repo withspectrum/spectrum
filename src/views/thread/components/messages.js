@@ -111,8 +111,8 @@ class MessagesWithData extends React.Component<Props, State> {
       isAuthor,
       participants,
       watercooler,
-      lastActive,
     } = data.thread;
+
     const isParticipant =
       participants &&
       participants.length > 0 &&
@@ -120,16 +120,7 @@ class MessagesWithData extends React.Component<Props, State> {
         participant => participant && participant.id === currentUser.id
       );
 
-    // We only scroll to bottom for small (< 50 msgs) threads, because otherwise
-    // we paginate and the newest message will be at the top
-    const smallThreadScroll =
-      data.thread.messageCount <= 50 && (isAuthor || isParticipant);
-    const noNewMessages =
-      lastActive &&
-      currentUserLastSeen &&
-      new Date(currentUserLastSeen).getTime() > new Date(lastActive).getTime();
-
-    return !!(noNewMessages || smallThreadScroll || watercooler);
+    return !!(currentUserLastSeen || isAuthor || isParticipant || watercooler);
   };
 
   componentWillUnmount() {

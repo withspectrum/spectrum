@@ -32,7 +32,7 @@ export const getThreadMessageConnectionQuery = gql`
 `;
 export const getThreadMessageConnectionOptions = {
   // $FlowFixMe
-  options: props => {
+  options: ({ thread, ...props }) => {
     let msgsafter, msgsbefore;
     if (props.location && props.location.search) {
       try {
@@ -44,6 +44,7 @@ export const getThreadMessageConnectionOptions = {
         console.error(err);
       }
     }
+
     let variables = {
       id: props.id,
       after: msgsafter ? msgsafter : null,
@@ -52,24 +53,25 @@ export const getThreadMessageConnectionOptions = {
       first: null,
     };
 
-    // Any thread with less than 50 messages just load all of 'em
-    if (props.thread.messageCount >= 50) {
-      // If the thread was active after the user last saw it, only load the new messages
-      if (props.lastSeen) {
-        if (
-          props.thread.lastActive &&
-          new Date(props.lastSeen).getTime() <
-            new Date(props.thread.lastActive).getTime()
-        ) {
-          variables.after = btoa(new Date(props.lastSeen).getTime());
-          // Otherwise load the last 50 messages
-        } else {
-          // $FlowFixMe
-          variables.last = 50;
-        }
+    // if the thread has less than 50 messages, just load all of them
+    if (thread.messageCount <= 50) {
+      variables.after = null;
+      variables.before = null;
+      // $FlowFixMe
+      variables.last = 50;
+    }
+
+    if (thread.messageCount > 50) {
+      //if the thread has more than 50 messages, we'll likely only want to load the latest 50
+      // **unless** the current user hasn't seen the thread before
+      // $FlowFixMe
+      variables.last = 50;
+      if (!thread.currentUserLastSeen) {
+        variables.last = null;
       }
     }
 
+    // if it's a watercooler thread only ever load the 50 most recent messages
     if (props.isWatercooler) {
       variables.before = null;
       variables.after = null;
