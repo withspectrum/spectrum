@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { btoa } from 'abab';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { withRouter, type Location } from 'react-router';
+import { withRouter, type Location, type History } from 'react-router';
 import Clipboard from 'react-clipboard.js';
 import { openGallery } from '../../actions/gallery';
 import Reaction from '../reaction';
@@ -43,6 +43,7 @@ type Props = {|
   changeSelection: Function,
 
   location: Location,
+  history: History,
   dispatch: Dispatch<Object>,
   currentUser: UserInfoType,
 |};
@@ -96,6 +97,16 @@ class Message extends Component<Props> {
         messageId: message.id,
       })
     );
+  };
+
+  linkToMessage = () => {
+    const {
+      message,
+      history,
+      location: { pathname, search, state },
+    } = this.props;
+    const hash = btoa(new Date(message.timestamp).getTime() - 1);
+    history.push({ pathname, search, hash, state });
   };
 
   render() {
@@ -236,7 +247,11 @@ class Message extends Component<Props> {
                     )
                   }
                 >
-                  <Action tipText={`Link`} tipLocation={'top'}>
+                  <Action
+                    tipText={`Link`}
+                    tipLocation={'top'}
+                    onClick={this.linkToMessage}
+                  >
                     <Icon dataCy="link-to-message" glyph="link" size={20} />
                   </Action>
                 </Clipboard>
