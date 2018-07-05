@@ -3,9 +3,7 @@ import styled from 'styled-components';
 import { Tooltip, Gradient } from '../globals';
 
 export const Span = styled.span`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: inline;
   color: ${({ theme }) => theme.text.reverse};
   background-color: ${props => props.theme.text.alt};
   text-transform: uppercase;
