@@ -54,14 +54,6 @@ class CommunityAnalytics extends React.Component<Props, State> {
     const { community } = this.props;
 
     if (community && community.id) {
-      if (!community.hasFeatures || !community.hasFeatures.analytics) {
-        return (
-          <ErrorBoundary fallbackComponent={SettingsFallback}>
-            <AnalyticsUpsell community={community} />
-          </ErrorBoundary>
-        );
-      }
-
       return (
         <SectionsContainer>
           <Column>

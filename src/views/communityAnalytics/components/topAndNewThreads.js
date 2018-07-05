@@ -10,6 +10,7 @@ import {
   SectionTitle,
 } from '../../../components/settingsViews/style';
 import getCommunityTopAndNewThreads from 'shared/graphql/queries/community/getCommunityTopAndNewThreads';
+import UpsellAnalytics from './analyticsUpsell';
 import type { GetCommunityTopAndNewThreadsType } from 'shared/graphql/queries/community/getCommunityTopAndNewThreads';
 
 type Props = {
@@ -36,7 +37,9 @@ class TopAndNewThreads extends React.Component<Props> {
         <span>
           <SectionCard>
             <SectionTitle>Top conversations this week</SectionTitle>
-            {sortedTopThreads.length > 0 ? (
+            {!community.hasFeatures || !community.hasFeatures.analytics ? (
+              <UpsellAnalytics community={community} />
+            ) : sortedTopThreads.length > 0 ? (
               sortedTopThreads.map(thread => {
                 if (!thread) return null;
                 return <ThreadListItem key={thread.id} thread={thread} />;
@@ -54,7 +57,9 @@ class TopAndNewThreads extends React.Component<Props> {
           </SectionCard>
           <SectionCard>
             <SectionTitle>Unanswered conversations this week</SectionTitle>
-            {newThreads.length > 0 ? (
+            {!community.hasFeatures || !community.hasFeatures.analytics ? (
+              <UpsellAnalytics community={community} />
+            ) : newThreads.length > 0 ? (
               newThreads.map(thread => {
                 if (!thread) return null;
                 return <ThreadListItem key={thread.id} thread={thread} />;
@@ -63,7 +68,7 @@ class TopAndNewThreads extends React.Component<Props> {
               <ViewError
                 small
                 emoji={'✌️'}
-                heading={'All caught up!.'}
+                heading={'All caught up!'}
                 subheading={
                   'It looks like everyone is getting responses in their conversations - nice work!'
                 }
