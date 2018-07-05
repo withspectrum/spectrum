@@ -51,7 +51,11 @@ class ConversationGrowth extends React.Component<Props> {
         <SectionCard>
           <SectionTitle>Top members this week</SectionTitle>
           {!community.hasFeatures || !community.hasFeatures.analytics ? (
-            <UpsellAnalytics community={community} />
+            <UpsellAnalytics community={community}>
+              <UpsellAnalytics.Description>
+                See the weekly top members of your community.
+              </UpsellAnalytics.Description>
+            </UpsellAnalytics>
           ) : sortedTopMembers.length === 0 ? (
             <ViewError
               small

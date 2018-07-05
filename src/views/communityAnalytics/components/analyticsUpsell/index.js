@@ -1,4 +1,10 @@
 // @flow
+
+/* Usage:
+ * <UpsellAnalytics community={community}>
+ *   <UpsellAnalytics.Description>Some text here</UpsellAnalytics.Description>
+ * </UpsellAnalytics>
+ */
 import * as React from 'react';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 import compose from 'recompose/compose';
@@ -7,24 +13,18 @@ import enableCommunityAnalytics from 'shared/graphql/mutations/community/enableC
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
 import { getCardImage } from 'src/views/communityBilling/utils';
-import {
-  Container,
-  Content,
-  Subtitle,
-  Title,
-  Description,
-  ActionRow,
-  CardInfo,
-} from './style';
+import { Container, Content, Description, ActionRow, CardInfo } from './style';
 import Link from 'src/components/link';
 import { Button, TextButton } from 'src/components/buttons';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
+import type { Node } from 'react';
 
 type Props = {
   community: GetCommunitySettingsType,
   enableCommunityAnalytics: Function,
   dispatch: Dispatch<Object>,
+  children: Node,
 };
 
 type State = {
@@ -32,6 +32,8 @@ type State = {
 };
 
 class AnalyticsUpsell extends React.Component<Props, State> {
+  static Description = Description;
+
   state = { isLoading: false };
 
   initEnableCommunityAnalytics = () => {
@@ -104,38 +106,31 @@ class AnalyticsUpsell extends React.Component<Props, State> {
   };
 
   render() {
+    const { community, children } = this.props;
     const { isLoading } = this.state;
-    const action = this.props.community.hasChargeableSource
+    const action = community.hasChargeableSource
       ? this.initEnableCommunityAnalytics
       : this.initAddPaymentMethod;
 
     return (
       <Container>
         <Content>
-          <Subtitle>Supercharge your community</Subtitle>
-          <Title>Community Analytics</Title>
-          <Description>
-            Unlock deeper insights into the content and people who make up your
-            community. With analytics you‘ll have a real-time understanding of
-            the health of your community‘s members and conversations.
-          </Description>
+          {children}
           <ActionRow>
             <Button
               loading={isLoading}
               onClick={action}
-              large
               data-cy="analytics-unlock-upsell-button"
             >
               Unlock Analytics · $100/mo
             </Button>
             <Link to={'/pricing'}>
-              <TextButton large onClick={this.learnMoreClicked}>
+              <TextButton onClick={this.learnMoreClicked}>
                 Learn more
               </TextButton>
             </Link>
           </ActionRow>
-          {this.props.community.hasChargeableSource &&
-            this.getDefaultCardInfo()}
+          {community.hasChargeableSource && this.getDefaultCardInfo()}
         </Content>
       </Container>
     );

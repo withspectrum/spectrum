@@ -38,7 +38,11 @@ class TopAndNewThreads extends React.Component<Props> {
           <SectionCard>
             <SectionTitle>Top conversations this week</SectionTitle>
             {!community.hasFeatures || !community.hasFeatures.analytics ? (
-              <UpsellAnalytics community={community} />
+              <UpsellAnalytics community={community}>
+                <UpsellAnalytics.Description>
+                  See which conversations ignited your community this week.
+                </UpsellAnalytics.Description>
+              </UpsellAnalytics>
             ) : sortedTopThreads.length > 0 ? (
               sortedTopThreads.map(thread => {
                 if (!thread) return null;
@@ -58,7 +62,11 @@ class TopAndNewThreads extends React.Component<Props> {
           <SectionCard>
             <SectionTitle>Unanswered conversations this week</SectionTitle>
             {!community.hasFeatures || !community.hasFeatures.analytics ? (
-              <UpsellAnalytics community={community} />
+              <UpsellAnalytics community={community}>
+                <UpsellAnalytics.Description>
+                  Quickly get a glance at conversations you should reply to.
+                </UpsellAnalytics.Description>
+              </UpsellAnalytics>
             ) : newThreads.length > 0 ? (
               newThreads.map(thread => {
                 if (!thread) return null;
