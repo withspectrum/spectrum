@@ -3,8 +3,12 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
 import type { CommunityInfoType } from '../../fragments/community/communityInfo';
-import threadInfoFragment from 'shared/graphql/fragments/thread/threadInfo';
-import type { ThreadInfoType } from '../../fragments/thread/threadInfo';
+import threadInfoFragment, {
+  type ThreadInfoType,
+} from 'shared/graphql/fragments/thread/threadInfo';
+import communitySettingsFragment, {
+  type CommunitySettingsType,
+} from 'shared/graphql/fragments/community/communitySettings';
 
 type Thread = {
   ...$Exact<ThreadInfoType>,
@@ -12,6 +16,7 @@ type Thread = {
 
 export type GetCommunityTopAndNewThreadsType = {
   ...$Exact<CommunityInfoType>,
+  ...$Exact<CommunitySettingsType>,
   topAndNewThreads: {
     topThreads: Array<?Thread>,
     newThreads: Array<?Thread>,
@@ -22,6 +27,7 @@ export const getCommunityTopAndNewThreadsQuery = gql`
   query getCommunityTopAndNewThreads($id: ID) {
     community(id: $id) {
       ...communityInfo
+      ...communitySettings
       topAndNewThreads {
         topThreads {
           ...threadInfo
@@ -33,6 +39,7 @@ export const getCommunityTopAndNewThreadsQuery = gql`
     }
   }
   ${communityInfoFragment}
+  ${communitySettingsFragment}
   ${threadInfoFragment}
 `;
 

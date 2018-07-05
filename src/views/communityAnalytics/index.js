@@ -10,7 +10,6 @@ import MemberGrowth from './components/memberGrowth';
 import ConversationGrowth from './components/conversationGrowth';
 import TopMembers from './components/topMembers';
 import TopAndNewThreads from './components/topAndNewThreads';
-import AnalyticsUpsell from './components/analyticsUpsell';
 import {
   SectionsContainer,
   Column,
@@ -52,7 +51,6 @@ class CommunityAnalytics extends React.Component<Props, State> {
 
   render() {
     const { community } = this.props;
-
     if (community && community.id) {
       return (
         <SectionsContainer>
