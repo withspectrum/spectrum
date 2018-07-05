@@ -61,47 +61,6 @@ type Props = {
   toggleEdit: Function,
 };
 
-const getThreadStateFromProps = thread => {
-  track(events.THREAD_VIEWED, {
-    thread: transformations.analyticsThread(thread),
-    channel: transformations.analyticsChannel(thread.channel),
-    community: transformations.analyticsCommunity(thread.community),
-  });
-
-  let rawLinkPreview =
-    thread.attachments && thread.attachments.length > 0
-      ? thread.attachments.filter(
-          attachment =>
-            attachment && attachment.attachmentType === 'linkPreview'
-        )[0]
-      : null;
-
-  let cleanLinkPreview = rawLinkPreview && {
-    attachmentType: rawLinkPreview.attachmentType,
-    data: JSON.parse(rawLinkPreview.data),
-  };
-
-  return {
-    isEditing: false,
-    body: toState(JSON.parse(thread.content.body)),
-    title: thread.content.title,
-    // $FlowFixMe
-    linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
-    linkPreviewTrueUrl:
-      thread.attachments &&
-      thread.attachments.length > 0 &&
-      thread.attachments[0]
-        ? thread.attachments[0].trueUrl
-        : '',
-    linkPreviewLength:
-      thread.attachments && thread.attachments.length > 0 ? 1 : 0,
-    fetchingLinkPreview: false,
-    flyoutOpen: false,
-    receiveNotifications: thread.receiveNotifications,
-    isSavingEdit: false,
-  };
-};
-
 class ThreadDetailPure extends React.Component<Props, State> {
   state = {
     isLockingThread: false,
@@ -119,18 +78,53 @@ class ThreadDetailPure extends React.Component<Props, State> {
     linkPreviewLength: 0,
   };
 
-  // $FlowFixMe
   bodyEditor: any;
   titleTextarea: React.Node;
 
-  static getDerivedStateFromProps(props) {
-    return getThreadStateFromProps(props.thread);
+  componentDidMount() {
+    this.setThreadState();
   }
 
   setThreadState() {
-    const newState = getThreadStateFromProps(this.props.thread);
+    const { thread } = this.props;
+
+    track(events.THREAD_VIEWED, {
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
+    });
+
+    let rawLinkPreview =
+      thread.attachments && thread.attachments.length > 0
+        ? thread.attachments.filter(
+            attachment =>
+              attachment && attachment.attachmentType === 'linkPreview'
+          )[0]
+        : null;
+
+    let cleanLinkPreview = rawLinkPreview && {
+      attachmentType: rawLinkPreview.attachmentType,
+      data: JSON.parse(rawLinkPreview.data),
+    };
+
     return this.setState({
-      ...newState,
+      isEditing: false,
+      body: toState(JSON.parse(thread.content.body)),
+      title: thread.content.title,
+      // $FlowFixMe
+      linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
+      linkPreviewTrueUrl:
+        thread.attachments &&
+        thread.attachments.length > 0 &&
+        thread.attachments[0]
+          ? thread.attachments[0].trueUrl
+          : '',
+      linkPreviewLength:
+        thread.attachments && thread.attachments.length > 0 ? 1 : 0,
+      fetchingLinkPreview: false,
+      flyoutOpen: false,
+      receiveNotifications: thread.receiveNotifications,
+      isSavingEdit: false,
     });
   }
 
@@ -438,6 +432,12 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isLockingThread,
       isPinningThread,
     } = this.state;
+
+    // if there is no body it means the user is switching threads or the thread
+    // hasnt loaded yet - we need this body for the editor, otherwise the
+    // thread view will crash. If no body exists we return null to wait for
+    // the body to be set in state after the thread loads.
+    if (!body) return null;
 
     const createdAt = new Date(thread.createdAt).getTime();
     const timestamp = convertTimestampToDate(createdAt);
