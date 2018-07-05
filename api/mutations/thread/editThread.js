@@ -132,7 +132,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const body =
     editedThread.content.body && JSON.parse(editedThread.content.body);
   const imageKeys = Object.keys(body.entityMap).filter(
-    key => body.entityMap[key].type === 'image'
+    key => body.entityMap[key].type.toLowerCase() === 'image'
   );
   urls.forEach((url, index) => {
     if (!body.entityMap[imageKeys[index]]) return;
