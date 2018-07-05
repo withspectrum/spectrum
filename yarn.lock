@@ -4524,13 +4524,14 @@ expect@^22.4.3:
     jest-message-util "^22.4.3"
     jest-regex-util "^22.4.3"
 
-expo-server-sdk@^2.3.3:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/expo-server-sdk/-/expo-server-sdk-2.3.3.tgz#6e52312274ba8e7145fb8c755d85a207c78152e8"
+expo-server-sdk@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/expo-server-sdk/-/expo-server-sdk-2.4.0.tgz#aa5e02415ba3268546ff61dddb5b92cb796f6e3a"
   dependencies:
     babel-runtime "^6.11.6"
-    invariant "^2.2.2"
-    node-fetch "^1.6.1"
+    invariant "^2.2.4"
+    node-fetch "^2.1.2"
+    promise-limit "^2.6.0"
 
 express-session@^1.15.2:
   version "1.15.6"
@@ -7733,12 +7734,16 @@ node-env-file@^0.1.8:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/node-env-file/-/node-env-file-0.1.8.tgz#fccb7b050f735b5a33da9eb937cf6f1ab457fb69"
 
-node-fetch@^1.0.1, node-fetch@^1.6.1:
+node-fetch@^1.0.1:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.7.3.tgz#980f6f72d85211a5347c6b2bc18c5b84c3eb47ef"
   dependencies:
     encoding "^0.1.11"
     is-stream "^1.0.1"
+
+node-fetch@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.1.2.tgz#ab884e8e7e57e38a944753cec706f788d1768bb5"
 
 node-forge@0.7.1:
   version "0.7.1"
@@ -8846,6 +8851,10 @@ progress@1.1.8:
 progress@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.0.tgz#8a1be366bf8fc23db2bd23f10c6fe920b4389d1f"
+
+promise-limit@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/promise-limit/-/promise-limit-2.6.0.tgz#cb6959fcfdd0ee6ec694ec58b2b3b856ca52ffed"
 
 promise@8.0.1:
   version "8.0.1"
