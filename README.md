@@ -196,6 +196,14 @@ There's a shortcut for dropping, migrating and seeding the database too:
 yarn run db:reset
 ```
 
+The `testing` database used in end to end tests is managed separately. It is built, migrated, and seeded when you run:
+
+```sh
+yarn run start:api:test
+```
+
+To drop the `testing` database, go to http://localhost:8080/#tables while `rethinkdb` is running, and click Delete Database on the appropriate database.
+
 #### Getting the secrets
 
 While the app will run without any secrets set up, you won't be able to sign in locally. To get that set up, copy the provided example secrets file to the real location:
