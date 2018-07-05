@@ -7,7 +7,7 @@ import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
 import ChatMessages from 'src/components/messageGroup';
-import { LoadingChat } from 'src/components/loading';
+import { Loading } from 'src/components/loading';
 import { Button } from 'src/components/buttons';
 import Icon from 'src/components/icons';
 import { NullState } from 'src/components/upsell';
@@ -227,7 +227,7 @@ class MessagesWithData extends React.Component<Props, State> {
               loadMore={loadNextPage}
               isLoadingMore={this.props.isFetchingMore}
               hasMore={pageInfo.hasNextPage}
-              loader={<LoadingChat size="small" />}
+              loader={<Loading />}
               useWindow={false}
               initialLoad={false}
               scrollElement={scrollContainer}
@@ -249,8 +249,12 @@ class MessagesWithData extends React.Component<Props, State> {
       );
     }
 
-    if (isLoading) {
-      return <ChatWrapper>{hasMessagesToLoad && <LoadingChat />}</ChatWrapper>;
+    if (isLoading && hasMessagesToLoad) {
+      return (
+        <ChatWrapper>
+          <Loading />
+        </ChatWrapper>
+      );
     }
 
     if (!messagesExist) {

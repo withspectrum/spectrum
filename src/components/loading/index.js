@@ -21,8 +21,6 @@ import {
   ShimmerProfileLite,
   ShimmerListItem,
   ShimmerDM,
-  ShimmerBubble,
-  ShimmerChat,
   ShimmerInboxComposer,
   ShimmerComposer,
   ShimmerBase,
@@ -302,29 +300,6 @@ export const LoadingFeed = () => (
     <LoadingThread />
     <LoadingThread />
   </FlexCol>
-);
-
-export const LoadingBubble = () => (
-  <ShimmerBubble>
-    <ShimmerBase>
-      <ShimmerLine />
-    </ShimmerBase>
-  </ShimmerBubble>
-);
-
-export const LoadingChat = ({ size }: { size?: 'small' }) => (
-  <ShimmerChat>
-    <LoadingBubble />
-    <LoadingBubble />
-    <LoadingBubble />
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-  </ShimmerChat>
 );
 
 export const LoadingThreadDetail = () => (
@@ -988,7 +963,6 @@ export const LoadingThreadView = (): React$Element<any> => (
     <Content>
       <Detail type="only">
         <LoadingThreadDetail />
-        <LoadingChat />
       </Detail>
     </Content>
   </ThreadViewContainer>
