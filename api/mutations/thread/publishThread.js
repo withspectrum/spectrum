@@ -438,13 +438,11 @@ export default requireAuth(
     // Replace the local image srcs with the remote image src
     const body = dbThread.content.body && JSON.parse(dbThread.content.body);
 
-    // $FlowFixMe
+    if (!body) return dbThread;
     const imageKeys = Object.keys(body.entityMap).filter(
-      // $FlowFixMe
-      key => body.entityMap[key].type === 'image'
+      key => body.entityMap[key].type.toLowerCase() === 'image'
     );
     urls.forEach((url, index) => {
-      // $FlowFixMe
       if (!body.entityMap[imageKeys[index]]) return;
       body.entityMap[imageKeys[index]].data.src = url;
     });

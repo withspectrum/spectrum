@@ -275,7 +275,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
     const filesToUpload = Object.keys(jsonBody.entityMap)
       .filter(
         key =>
-          jsonBody.entityMap[key].type === 'image' &&
+          jsonBody.entityMap[key].type.toLowerCase() === 'image' &&
           jsonBody.entityMap[key].data.file &&
           jsonBody.entityMap[key].data.file.constructor === File
       )
