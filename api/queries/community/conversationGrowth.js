@@ -18,36 +18,33 @@ export default async (
     return new UserError('You must be signed in to continue.');
   }
 
-  const { isOwner } = await loaders.userPermissionsInCommunity.load([
-    currentUser.id,
-    id,
-  ]);
+  const {
+    isOwner,
+    isModerator,
+  } = await loaders.userPermissionsInCommunity.load([currentUser.id, id]);
 
-  if (!isOwner) {
+  if (!isOwner && !isModerator) {
     return new UserError(
-      'You must be the owner of this community to view analytics.'
+      'You must be a team member to view community analytics.'
     );
   }
 
+  const [
+    count,
+    weeklyGrowth,
+    monthlyGrowth,
+    quarterlyGrowth,
+  ] = await Promise.all([
+    getThreadCount(id),
+    getCommunityGrowth('threads', 'weekly', 'createdAt', id),
+    getCommunityGrowth('threads', 'monthly', 'createdAt', id),
+    getCommunityGrowth('threads', 'quarterly', 'createdAt', id),
+  ]);
+
   return {
-    count: await getThreadCount(id),
-    weeklyGrowth: await getCommunityGrowth(
-      'threads',
-      'weekly',
-      'createdAt',
-      id
-    ),
-    monthlyGrowth: await getCommunityGrowth(
-      'threads',
-      'monthly',
-      'createdAt',
-      id
-    ),
-    quarterlyGrowth: await getCommunityGrowth(
-      'threads',
-      'quarterly',
-      'createdAt',
-      id
-    ),
+    count,
+    weeklyGrowth,
+    monthlyGrowth,
+    quarterlyGrowth,
   };
 };

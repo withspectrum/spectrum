@@ -15,27 +15,25 @@ export default async (
     return new UserError('You must be signed in to continue.');
   }
 
-  const { isOwner } = await loaders.userPermissionsInCommunity.load([
-    currentUser.id,
-    id,
-  ]);
+  const {
+    isOwner,
+    isModerator,
+  } = await loaders.userPermissionsInCommunity.load([currentUser.id, id]);
 
-  if (!isOwner) {
+  if (!isOwner && !isModerator) {
     return new UserError(
-      'You must be the owner of this community to view analytics.'
+      'You must be a team member to view community analytics.'
     );
   }
 
-  // $FlowFixMe
+  // $FlowIssue
   const userIds = await getTopMembersInCommunity(id);
+  (userIds: ?Array<string>);
 
   if (!userIds || userIds.length === 0) {
     return [];
   }
 
-  return getTopMembersInCommunity(id).then(usersIds => {
-    const permissionsArray = usersIds.map(userId => [userId, id]);
-    // $FlowIssue
-    return loaders.userPermissionsInCommunity.loadMany(permissionsArray);
-  });
+  const permissionsArray = userIds.map(userId => [userId, id]);
+  return loaders.userPermissionsInCommunity.loadMany(permissionsArray);
 };

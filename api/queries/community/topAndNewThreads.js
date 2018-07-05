@@ -8,41 +8,58 @@ import {
   getThreadsByCommunityInTimeframe,
 } from '../../models/thread';
 
-export default ({ id }: DBCommunity, __: any, { user }: GraphQLContext) => {
+export default async (
+  { id }: DBCommunity,
+  __: any,
+  { user, loaders }: GraphQLContext
+) => {
   const currentUser = user;
 
   if (!currentUser) {
     return new UserError('You must be signed in to continue.');
   }
 
-  return getThreadsByCommunityInTimeframe(id, 'weekly').then(async threads => {
-    if (!threads) return { topThreads: [], newThreads: [] };
+  const {
+    isOwner,
+    isModerator,
+  } = await loaders.userPermissionsInCommunity.load([currentUser.id, id]);
 
-    const messageCountPromises = threads.map(async ({ id }) => ({
-      id,
-      messageCount: await getMessageCount(id),
-    }));
+  if (!isOwner && !isModerator) {
+    return new UserError(
+      'You must be a team member to view community analytics.'
+    );
+  }
 
-    // promise all the active threads and message counts
-    const threadsWithMessageCounts = await Promise.all(messageCountPromises);
+  const threads = await getThreadsByCommunityInTimeframe(id, 'weekly');
 
-    const topThreads = threadsWithMessageCounts
-      .filter(t => t.messageCount > 0)
-      .sort((a, b) => {
-        const bc = parseInt(b.messageCount, 10);
-        const ac = parseInt(a.messageCount, 10);
-        return bc <= ac ? -1 : 1;
-      })
-      .slice(0, 10)
-      .map(t => t.id);
+  if (!threads || threads.length === 0)
+    return { topThreads: [], newThreads: [] };
 
-    const newThreads = threadsWithMessageCounts
-      .filter(t => t.messageCount === 0)
-      .map(t => t.id);
+  const threadsWithMessageCounts = await Promise.all(
+    threads.map(({ id }) =>
+      getMessageCount(id).then(messageCount => ({
+        id,
+        messageCount,
+      }))
+    )
+  );
 
-    return {
-      topThreads: await getThreads([...topThreads]),
-      newThreads: await getThreads([...newThreads]),
-    };
-  });
+  const topThreads = threadsWithMessageCounts
+    .filter(t => t.messageCount > 0)
+    .sort((a, b) => {
+      const bc = parseInt(b.messageCount, 10);
+      const ac = parseInt(a.messageCount, 10);
+      return bc <= ac ? -1 : 1;
+    })
+    .slice(0, 10)
+    .map(t => t.id);
+
+  const newThreads = threadsWithMessageCounts
+    .filter(t => t.messageCount === 0)
+    .map(t => t.id);
+
+  return {
+    topThreads: await getThreads([...topThreads]),
+    newThreads: await getThreads([...newThreads]),
+  };
 };
