@@ -13,7 +13,6 @@ const {
   PRIVATE_GENERAL_CHANNEL_ID,
   SPECTRUM_ARCHIVED_CHANNEL_ID,
   SPECTRUM_PRIVATE_CHANNEL_ID,
-  DELETED_COMMUNITY_DELETED_CHANNEL_ID,
   PAYMENTS_GENERAL_CHANNEL_ID,
   PAYMENTS_PRIVATE_CHANNEL_ID,
   MODERATOR_CREATED_CHANNEL_ID,
@@ -360,20 +359,9 @@ module.exports = [
     isPending: false,
     receiveNotifications: true,
   },
+
   {
     id: '29',
-    createdAt: new Date(DATE),
-    userId: BRIAN_ID,
-    channelId: DELETED_COMMUNITY_DELETED_CHANNEL_ID,
-    isOwner: false,
-    isModerator: false,
-    isMember: true,
-    isBlocked: false,
-    isPending: false,
-    receiveNotifications: true,
-  },
-  {
-    id: '30',
     createdAt: new Date(DATE),
     userId: PREVIOUS_MEMBER_USER_ID,
     channelId: SPECTRUM_GENERAL_CHANNEL_ID,
@@ -385,7 +373,7 @@ module.exports = [
     receiveNotifications: false,
   },
   {
-    id: '31',
+    id: '30',
     createdAt: new Date(DATE),
     userId: MAX_ID,
     channelId: PRIVATE_GENERAL_CHANNEL_ID,
