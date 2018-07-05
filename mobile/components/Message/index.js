@@ -168,13 +168,7 @@ class Message extends React.Component<Props, State> {
               </TouchableOpacity>
             )}
           >
-            <Text
-              color={me ? '#FFFFFF' : '#000000'}
-              fontSize={emojiOnly ? 24 : undefined}
-              style={{ marginTop: 0, marginBottom: 0 }}
-            >
-              {body}
-            </Text>
+            {body}
           </ConditionalWrap>
         );
       }

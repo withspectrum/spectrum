@@ -3,6 +3,7 @@ import React from 'react';
 import mentionsDecorator from '../mentions-decorator/index.native';
 import linksDecorator from '../links-decorator/index.native';
 import { BodyText } from '../../../../mobile/components/ThreadContent/style';
+import Text from '../../../../mobile/components/Text';
 import {
   CodeBlock,
   InlineCodeBlock,
@@ -13,14 +14,14 @@ import type { KeyObj, KeysObj } from './types';
 const messageRenderer = {
   inline: {
     BOLD: (children: Array<Node>, { key }: KeyObj) => (
-      <BodyText bold key={`bold-${key}`}>
+      <Text type="body" weight="bold" key={`bold-${key}`}>
         {children}
-      </BodyText>
+      </Text>
     ),
     ITALIC: (children: Array<Node>, { key }: KeyObj) => (
-      <BodyText italic key={`italic-${key}`}>
+      <Text type="body" italic key={`italic-${key}`}>
         {children}
-      </BodyText>
+      </Text>
     ),
     CODE: (children: string, { key }: KeyObj) => (
       <InlineCodeBlock key={`inline-codeblock-${key}`}>
@@ -31,7 +32,9 @@ const messageRenderer = {
   blocks: {
     unstyled: (children: Array<Node>, { keys }: KeysObj) =>
       children.map((child, index) => (
-        <BodyText key={keys[index] || index}>{child}</BodyText>
+        <Text type="body" key={keys[index] || index}>
+          {child}
+        </Text>
       )),
     'code-block': (children: string, { keys }: KeysObj) => (
       <CodeBlock key={keys.join('|')}>{children}</CodeBlock>

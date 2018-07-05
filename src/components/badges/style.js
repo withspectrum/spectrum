@@ -28,6 +28,12 @@ export const ProBadge = styled(Span)`
   }
 `;
 
+export const TeamBadge = styled(Span)`
+  background-color: ${props => props.theme.success.default};
+  background-image: ${props =>
+    Gradient(props.theme.success.alt, props.theme.success.default)};
+`;
+
 export const BlockedBadge = styled(Span)`
   background-color: ${props => props.theme.warn.alt};
   background-image: ${props =>

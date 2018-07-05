@@ -1,3 +1,4 @@
+// @flow
 /* eslint-disable */
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
@@ -13,33 +14,17 @@ const composeEnhancers =
 
 // init the store with the thunkMiddleware which allows us to make async actions play nicely with the store
 // Allow dependency injection of extra reducers and middleware, we need this for SSR
-export const initStore = (
-  initialState,
-  { middleware = [], reducers = {} } = {}
-) => {
-  let store;
-  if (initialState) {
-    store = createStore(
-      getReducers(reducers),
-      initialState,
-      composeEnhancers(
-        applyMiddleware(...middleware, thunkMiddleware, crashReporter)
-      )
-    );
-  } else {
-    store = createStore(
-      getReducers(reducers),
-      {},
-      composeEnhancers(
-        applyMiddleware(...middleware, thunkMiddleware, crashReporter)
-      )
-    );
-  }
+export const initStore = (initialState?: Object) => {
+  let store = createStore(
+    getReducers(),
+    initialState || {},
+    composeEnhancers(applyMiddleware(thunkMiddleware, crashReporter))
+  );
 
-  if (module.hot) {
+  if (module.hot && typeof module.hot.accept === 'function') {
     module.hot.accept('../reducers', () => {
-      const nextRootReducer = require('../reducers/index');
-      store.replaceReducer(nextRootReducer);
+      const nextGetReducers = require('../reducers/index').default;
+      store.replaceReducer(nextGetReducers());
     });
   }
 

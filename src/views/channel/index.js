@@ -434,7 +434,7 @@ class ChannelView extends React.Component<Props, State> {
               {// thread list
               selectedView === 'threads' && (
                 <ThreadFeedWithData
-                  viewContext="channel"
+                  viewContext="channelProfile"
                   id={channel.id}
                   currentUser={isLoggedIn}
                   channelId={channel.id}

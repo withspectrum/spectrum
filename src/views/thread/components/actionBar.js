@@ -3,15 +3,16 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Clipboard from 'react-clipboard.js';
 import { Manager, Reference, Popper } from 'react-popper';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { openModal } from '../../../actions/modals';
-import Icon from '../../../components/icons';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { openModal } from 'src/actions/modals';
+import Icon from 'src/components/icons';
 import compose from 'recompose/compose';
-import { Button, TextButton, IconButton } from '../../../components/buttons';
-import Flyout from '../../../components/flyout';
+import { Button, TextButton, IconButton } from 'src/components/buttons';
+import Flyout from 'src/components/flyout';
+import { LikeButton } from 'src/components/threadLikes';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
-import OutsideClickHandler from '../../../components/outsideClickHandler';
+import OutsideClickHandler from 'src/components/outsideClickHandler';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
@@ -272,46 +273,14 @@ class ActionBar extends React.Component<Props, State> {
       return (
         <ActionBarContainer>
           <div style={{ display: 'flex' }}>
-            {currentUser ? (
-              <FollowButton
-                currentUser={currentUser}
-                icon={
-                  thread.receiveNotifications
-                    ? 'notification-fill'
-                    : 'notification'
-                }
-                tipText={
-                  thread.receiveNotifications
-                    ? 'Turn off notifications'
-                    : 'Get notified about replies'
-                }
-                tipLocation={'top-right'}
-                loading={notificationStateLoading}
-                onClick={this.toggleNotification}
-                dataCy="thread-notifications-toggle"
-              >
-                {thread.receiveNotifications ? 'Subscribed' : 'Notify me'}
-              </FollowButton>
-            ) : (
-              <FollowButton
-                currentUser={currentUser}
-                icon={'notification'}
-                tipText={'Get notified about replies'}
-                tipLocation={'top-right'}
-                dataCy="thread-notifications-login-capture"
-                onClick={() =>
-                  this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}))
-                }
-              >
-                Notify me
-              </FollowButton>
-            )}
+            <LikeButton thread={thread} tipLocation={'bottom-right'} />
+
             {!thread.channel.isPrivate && (
               <ShareButtons>
                 <ShareButton
                   facebook
                   tipText={'Share'}
-                  tipLocation={'top-left'}
+                  tipLocation={'bottom-right'}
                   data-cy="thread-facebook-button"
                 >
                   <a
@@ -334,7 +303,7 @@ class ActionBar extends React.Component<Props, State> {
                 <ShareButton
                   twitter
                   tipText={'Tweet'}
-                  tipLocation={'top-left'}
+                  tipLocation={'bottom-right'}
                   data-cy="thread-tweet-button"
                 >
                   <a
@@ -369,7 +338,7 @@ class ActionBar extends React.Component<Props, State> {
                 >
                   <ShareButton
                     tipText={'Copy link'}
-                    tipLocation={'top-left'}
+                    tipLocation={'bottom-right'}
                     data-cy="thread-copy-link-button"
                   >
                     <a>
@@ -400,7 +369,7 @@ class ActionBar extends React.Component<Props, State> {
                 >
                   <ShareButton
                     tipText={'Copy link'}
-                    tipLocation={'top-left'}
+                    tipLocation={'bottom-right'}
                     data-cy="thread-copy-link-button"
                   >
                     <a>
@@ -418,11 +387,39 @@ class ActionBar extends React.Component<Props, State> {
             )}
           </div>
 
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {currentUser ? (
+              <FollowButton
+                currentUser={currentUser}
+                icon={
+                  thread.receiveNotifications
+                    ? 'notification-fill'
+                    : 'notification'
+                }
+                loading={notificationStateLoading}
+                onClick={this.toggleNotification}
+                dataCy="thread-notifications-toggle"
+              >
+                {thread.receiveNotifications ? 'Subscribed' : 'Notify me'}
+              </FollowButton>
+            ) : (
+              <FollowButton
+                currentUser={currentUser}
+                icon={'notification'}
+                dataCy="thread-notifications-login-capture"
+                onClick={() =>
+                  this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}))
+                }
+              >
+                Notify me
+              </FollowButton>
+            )}
+
             {shouldRenderActionsDropdown && (
               <DropWrap
                 onMouseEnter={this.toggleHover}
                 onMouseLeave={this.toggleHover}
+                style={{ marginRight: '8px' }}
               >
                 <Manager>
                   <Reference>
@@ -430,8 +427,6 @@ class ActionBar extends React.Component<Props, State> {
                       return (
                         <IconButton
                           glyph="settings"
-                          tipText={'Thread settings'}
-                          tipLocation={'left'}
                           onClick={this.toggleFlyout}
                           dataCy="thread-actions-dropdown-trigger"
                           innerRef={ref}

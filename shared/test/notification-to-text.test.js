@@ -9,6 +9,7 @@ import THREAD_CREATED_FIXTURE from './fixtures/THREAD_CREATED.json';
 import USER_JOINED_COMMUNITY_FIXTURE from './fixtures/USER_JOINED_COMMUNITY.json';
 import MENTION_MESSAGE_FIXTURE from './fixtures/MENTION_MESSAGE';
 import MENTION_THREAD_FIXTURE from './fixtures/MENTION_THREAD';
+import THREAD_REACTION_FIXTURE from './fixtures/THREAD_REACTION_CREATED.json';
 
 const USER_ID = 'gVk5mYwccUOEKiN5vtOouqroGKo1';
 
@@ -70,6 +71,13 @@ it('should format a message mention notification', () => {
 
 it('should format a thread mention notification', () => {
   let result = formatNotification(MENTION_THREAD_FIXTURE, USER_ID);
+  expect(result.raw).toBeDefined();
+  delete result.raw; // Don't need raw data
+  expect(result).toMatchSnapshot();
+});
+
+it('should format a thread reaction notification', () => {
+  let result = formatNotification(THREAD_REACTION_FIXTURE, USER_ID);
   expect(result.raw).toBeDefined();
   delete result.raw; // Don't need raw data
   expect(result).toMatchSnapshot();

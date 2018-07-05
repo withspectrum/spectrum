@@ -1,5 +1,6 @@
 // @flow
 import addCommunityMember from './addCommunityMember';
+import addCommunityMembers from './addCommunityMembers';
 import addCommunityMemberWithToken from './addCommunityMemberWithToken';
 import addPendingCommunityMember from './addPendingCommunityMember';
 import removeCommunityMember from './removeCommunityMember';
@@ -14,6 +15,7 @@ import unblockCommunityMember from './unblockCommunityMember';
 module.exports = {
   Mutation: {
     addCommunityMember,
+    addCommunityMembers,
     addCommunityMemberWithToken,
     addPendingCommunityMember,
     removeCommunityMember,

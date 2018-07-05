@@ -4,8 +4,6 @@ import { LinearGradient } from 'expo';
 
 export const Bubble = styled.View`
   border-radius: 16px;
-  /* Android */
-  elevation: 10;
   margin-top: 2px;
   background-color: ${props =>
     props.me ? props.theme.brand.alt : props.theme.generic.default};

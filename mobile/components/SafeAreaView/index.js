@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native';
 export default function withSafeAreaView(WrappedComponent: Node): () => Node {
   function EnhancedComponent(props: any) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#CCC' }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
         {/* $FlowFixMe */}
         <WrappedComponent {...props} />
       </SafeAreaView>

@@ -187,7 +187,7 @@ class CommunityMembers extends React.Component<Props, State> {
             onClick={this.viewModerators}
             active={filter && filter.isModerator ? true : false}
           >
-            Mods
+            Team
           </Filter>
           <Filter
             onClick={this.viewBlocked}
@@ -353,9 +353,9 @@ class CommunityMembers extends React.Component<Props, State> {
                   return (
                     <ViewError
                       emoji={' '}
-                      heading={'No moderators found'}
+                      heading={'No team members found'}
                       subheading={
-                        "We couldn't find any moderators in your community."
+                        "You haven't added any team members to your community yet."
                       }
                     />
                   );

@@ -129,11 +129,21 @@ class ThreadFeed extends Component<Props, State> {
     } = this.props;
 
     if (threadConnection && threadConnection.edges.length > 0) {
+      const hasNextPage =
+        threadConnection &&
+        threadConnection.pageInfo &&
+        threadConnection.pageInfo.hasNextPage;
       return (
         <View data-cy="thread-feed" style={{ flex: 1 }}>
           {isRefetching && <LoadingListItem />}
 
           <InfiniteList
+            loadingIndicator={<Loading />}
+            fetchMore={this.fetchMore}
+            isFetchingMore={this.props.isFetchingMore}
+            hasNextPage={hasNextPage}
+            isRefetching={this.props.isRefetching}
+            refetch={this.props.data.refetch}
             data={threadConnection.edges}
             renderItem={({ item }) => (
               <ErrorBoundary fallbackComponent={null}>
@@ -153,15 +163,6 @@ class ThreadFeed extends Component<Props, State> {
                 />
               </ErrorBoundary>
             )}
-            loadingIndicator={<Loading />}
-            fetchMore={this.fetchMore}
-            hasNextPage={
-              threadConnection &&
-              threadConnection.pageInfo &&
-              threadConnection.pageInfo.hasNextPage
-            }
-            refetching={this.props.isRefetching}
-            refetch={this.props.data.refetch}
             {...flatListProps}
           />
         </View>
