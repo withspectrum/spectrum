@@ -126,7 +126,7 @@ export const InputWrapper = styled(EditorWrapper)`
 
   pre {
     ${monoStack};
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     background-color: ${props => props.theme.bg.wash};
     border: 1px solid ${props => props.theme.bg.border};

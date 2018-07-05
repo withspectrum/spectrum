@@ -54,7 +54,7 @@ export const getThreadMessageConnectionOptions = {
     };
 
     // Any thread with less than 50 messages just load all of 'em
-    if (props.threadMessageCount >= 50) {
+    if (props.thread.messageCount >= 50) {
       // If the thread was active after the user last saw it, only load the new messages
       if (props.lastSeen) {
         if (

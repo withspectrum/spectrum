@@ -1,27 +1,30 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
+import { type History, type Match } from 'react-router';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import Link from 'src/components/link';
-import AppViewWrapper from '../../components/appViewWrapper';
-import Head from '../../components/head';
-import ThreadFeed from '../../components/threadFeed';
+import AppViewWrapper from 'src/components/appViewWrapper';
+import Head from 'src/components/head';
+import ThreadFeed from 'src/components/threadFeed';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
-import { UserProfile } from '../../components/profile';
-import { LoadingScreen } from '../../components/loading';
-import { NullState } from '../../components/upsell';
-import { Button, ButtonRow } from '../../components/buttons';
+import { UserProfile } from 'src/components/profile';
+import { LoadingScreen } from 'src/components/loading';
+import { NullState } from 'src/components/upsell';
+import { Button, ButtonRow } from 'src/components/buttons';
 import CommunityList from './components/communityList';
 import Search from './components/search';
-import { getUserByMatch } from 'shared/graphql/queries/user/getUser';
-import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+import {
+  getUserByMatch,
+  type GetUserType,
+} from 'shared/graphql/queries/user/getUser';
 import getUserThreads from 'shared/graphql/queries/user/getUserThreadConnection';
-import ViewError from '../../components/viewError';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
+import ViewError from 'src/components/viewError';
 import Titlebar from '../titlebar';
-import { CoverPhoto } from '../../components/profile/coverPhoto';
+import { CoverPhoto } from 'src/components/profile/coverPhoto';
 import { LoginButton } from '../community/style';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import type { Dispatch } from 'redux';
 import {
   Grid,
@@ -35,7 +38,7 @@ import {
   SegmentedControl,
   DesktopSegment,
   MobileSegment,
-} from '../../components/segmentedControl';
+} from 'src/components/segmentedControl';
 import { ErrorBoundary } from 'src/components/error';
 
 const ThreadFeedWithData = compose(connect(), getUserThreads)(ThreadFeed);
@@ -44,11 +47,7 @@ const ThreadParticipantFeedWithData = compose(connect(), getUserThreads)(
 );
 
 type Props = {
-  match: {
-    params: {
-      username: string,
-    },
-  },
+  match: Match,
   currentUser: Object,
   data: {
     user: GetUserType,
@@ -57,7 +56,7 @@ type Props = {
   hasError: boolean,
   queryVarIsChanging: boolean,
   dispatch: Dispatch<Object>,
-  history: Object,
+  history: History,
 };
 
 type State = {
@@ -75,7 +74,7 @@ class UserView extends React.Component<Props, State> {
 
   componentDidMount() {}
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     if (!prevProps.data.user) return;
     // track when a new profile is viewed without the component having been remounted
     if (prevProps.data.user.id !== this.props.data.user.id) {

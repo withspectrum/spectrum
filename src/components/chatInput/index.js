@@ -212,6 +212,13 @@ class ChatInput extends React.Component<Props, State> {
     this.props.onRef(undefined);
   }
 
+  componentDidUpdate(prevProps) {
+    const curr = this.props;
+    if (curr.quotedMessage !== prevProps.quotedMessage) {
+      this.triggerFocus();
+    }
+  }
+
   handleKeyDown = (event: any) => {
     const key = event.keyCode || event.charCode;
     // Detect esc key or backspace key (and empty message) to remove

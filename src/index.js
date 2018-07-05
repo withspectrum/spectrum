@@ -11,13 +11,12 @@ import queryString from 'query-string';
 import Loadable from 'react-loadable';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import { HelmetProvider } from 'react-helmet-async';
-import { hot } from 'react-hot-loader';
 import webPushManager from './helpers/web-push-manager';
 import { history } from './helpers/history';
 import { client } from 'shared/graphql';
 import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
-import Routes from './routes';
+import Routes from './hot-routes';
 import { track, events } from './helpers/analytics';
 import { wsLink } from 'shared/graphql';
 import { subscribeToDesktopPush } from './subscribe-to-desktop-push';
@@ -49,19 +48,19 @@ const store = initStore(
   }
 );
 
-const App = hot(module)(() => {
+const App = () => {
   return (
     <Provider store={store}>
       <HelmetProvider>
         <ApolloProvider client={client}>
           <Router history={history}>
-            <Routes />
+            <Routes currentUser={storedData ? storedData.currentUser : null} />
           </Router>
         </ApolloProvider>
       </HelmetProvider>
     </Provider>
   );
-});
+};
 
 const renderMethod = !!window.__SERVER_STATE__
   ? // $FlowIssue

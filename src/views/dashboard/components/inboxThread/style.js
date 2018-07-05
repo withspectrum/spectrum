@@ -63,7 +63,7 @@ export const Column = styled.div`
 
 export const ThreadTitle = styled.h3`
   font-size: 16px;
-  font-weight: 500;
+  font-weight: ${props => (props.new ? '600' : '400')};
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.default};
   max-width: 100%;
@@ -137,7 +137,6 @@ const avatarLinkStyles = css`
   margin-right: 12px;
   margin-top: 4px;
   pointer-events: auto;
-  overflow: hidden;
   max-width: 40px;
 `;
 

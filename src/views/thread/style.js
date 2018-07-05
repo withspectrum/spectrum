@@ -800,7 +800,7 @@ export const AnimatedContainer = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  z-index: ${zIndex.chrome + 10};
+  z-index: ${zIndex.composerToolbar + 1};
 
   @media (max-width: 768px) {
     display: none;

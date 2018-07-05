@@ -78,9 +78,12 @@ class ThreadDetailPure extends React.Component<Props, State> {
     linkPreviewLength: 0,
   };
 
-  // $FlowFixMe
   bodyEditor: any;
   titleTextarea: React.Node;
+
+  componentDidMount() {
+    this.setThreadState();
+  }
 
   setThreadState() {
     const { thread } = this.props;
@@ -104,7 +107,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
       data: JSON.parse(rawLinkPreview.data),
     };
 
-    this.setState({
+    return this.setState({
       isEditing: false,
       body: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
@@ -123,10 +126,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
       receiveNotifications: thread.receiveNotifications,
       isSavingEdit: false,
     });
-  }
-
-  componentWillMount() {
-    this.setThreadState();
   }
 
   componentDidUpdate(prevProps) {
@@ -270,7 +269,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
     const filesToUpload = Object.keys(jsonBody.entityMap)
       .filter(
         key =>
-          jsonBody.entityMap[key].type === 'image' &&
+          jsonBody.entityMap[key].type.toLowerCase() === 'image' &&
           jsonBody.entityMap[key].data.file &&
           jsonBody.entityMap[key].data.file.constructor === File
       )
@@ -434,6 +433,12 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isPinningThread,
     } = this.state;
 
+    // if there is no body it means the user is switching threads or the thread
+    // hasnt loaded yet - we need this body for the editor, otherwise the
+    // thread view will crash. If no body exists we return null to wait for
+    // the body to be set in state after the thread loads.
+    if (!body) return null;
+
     const createdAt = new Date(thread.createdAt).getTime();
     const timestamp = convertTimestampToDate(createdAt);
 
@@ -475,7 +480,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
                 {thread.channel.name}
               </Link>
             )}
-            <span>{` · ${timestamp}`}</span>
+            <Link to={`/thread/${thread.id}`}>{` · ${timestamp}`}</Link>
           </ThreadSubtitle>
 
           {thread.modifiedAt && (

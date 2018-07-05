@@ -62,6 +62,7 @@ type State = {
   // while looking at a live thread
   lastSeen: ?number | ?string,
   bannerIsVisible: boolean,
+  derivedState: Object,
 };
 
 class ThreadContainer extends React.Component<Props, State> {
@@ -72,30 +73,45 @@ class ThreadContainer extends React.Component<Props, State> {
   threadDetailElem: any;
   threadDetailElem = null;
 
-  state = {
-    messagesContainer: null,
-    scrollElement: null,
-    isEditing: false,
-    lastSeen: null,
-    bannerIsVisible: false,
-    scrollOffset: 0,
-  };
+  constructor(props) {
+    super(props);
 
-  componentWillReceiveProps(next: Props) {
-    const curr = this.props;
-    const newThread = !curr.data.thread && next.data.thread;
+    this.state = {
+      messagesContainer: null,
+      scrollElement: null,
+      isEditing: false,
+      lastSeen: null,
+      bannerIsVisible: false,
+      scrollOffset: 0,
+      derivedState: {},
+    };
+  }
+
+  // to compare nextProps to a previous derivedState, we need to store
+  // change in local state
+  // see how to do this here: https://github.com/reactjs/rfcs/blob/master/text/0006-static-lifecycle-methods.md#state-derived-from-propsstate
+  // with implementation below
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const curr = prevState.derivedState;
+    const newThread = curr.data && !curr.data.thread && nextProps.data.thread;
+
     const threadChanged =
+      curr.data &&
       curr.data.thread &&
-      next.data.thread &&
-      curr.data.thread.id !== next.data.thread.id;
+      nextProps.data.thread &&
+      curr.data.thread.id !== nextProps.data.thread.id;
+
     // Update the cached lastSeen value when switching threads
     if (newThread || threadChanged) {
-      this.setState({
-        lastSeen: next.data.thread.currentUserLastSeen
-          ? next.data.thread.currentUserLastSeen
+      return {
+        lastSeen: nextProps.data.thread.currentUserLastSeen
+          ? nextProps.data.thread.currentUserLastSeen
           : null,
-      });
+        derivedState: nextProps,
+      };
     }
+
+    return null;
   }
 
   toggleEdit = () => {
