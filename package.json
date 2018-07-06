@@ -81,7 +81,7 @@
     "draft-js-drag-n-drop-plugin": "^2.0.3",
     "draft-js-embed-plugin": "^1.2.0",
     "draft-js-focus-plugin": "2.0.0-rc2",
-    "draft-js-image-plugin": "^2.0.5",
+    "draft-js-image-plugin": "2.0.0-rc8",
     "draft-js-import-markdown": "^1.2.1",
     "draft-js-linkify-plugin": "^2.0.0-beta1",
     "draft-js-markdown-plugin": "^3.0.0",
