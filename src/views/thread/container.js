@@ -251,10 +251,27 @@ class ThreadContainer extends React.Component<Props, State> {
     messagesContainer.scrollTop = 0;
   };
 
+  forceScrollToMessages = () => {
+    const { messagesContainer } = this.state;
+    const threadDetail = ReactDOM.findDOMNode(this.threadDetailElem);
+    if (!threadDetail || !messagesContainer) return;
+
+    const {
+      height: threadDetailHeight,
+      // $FlowFixMe
+    } = threadDetail.getBoundingClientRect();
+    console.log('force scrolling to MESSAGES');
+    messagesContainer.scrollTop = threadDetailHeight;
+  };
+
   forceScrollToBottom = () => {
     const { messagesContainer } = this.state;
     if (!messagesContainer) return;
     const node = messagesContainer;
+    console.log('force scrolling to BOTTOM');
+    console.log({ nodeScrollTop: node.scrollTop });
+    console.log({ nodeScrollHeight: node.scrollHeight });
+    console.log({ nodeClientHeight: node.clientHeight });
     node.scrollTop = node.scrollHeight - node.clientHeight;
   };
 
@@ -471,6 +488,7 @@ class ThreadContainer extends React.Component<Props, State> {
                       forceScrollToBottom={this.forceScrollToBottom}
                       forceScrollToTop={this.forceScrollToTop}
                       contextualScrollToBottom={this.contextualScrollToBottom}
+                      forceScrollToMessages={this.forceScrollToMessages}
                       thread={thread}
                       isWatercooler={thread.watercooler} // used in the graphql query to always fetch the latest messages
                     />

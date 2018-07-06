@@ -32,7 +32,9 @@ export const getThreadMessageConnectionQuery = gql`
 `;
 export const getThreadMessageConnectionOptions = {
   // $FlowFixMe
-  options: ({ thread, ...props }) => {
+  options: ({ thread, ...props }, rest) => {
+    console.log({ rest });
+    console.log({ props });
     let msgsafter, msgsbefore;
     if (props.location && props.location.search) {
       try {
@@ -53,12 +55,27 @@ export const getThreadMessageConnectionOptions = {
       first: null,
     };
 
+    const hasUnseenMessages =
+      thread.currentUserLastSeen &&
+      thread.lastActive &&
+      new Date(thread.currentUserLastSeen).getTime() <
+        new Date(thread.lastActive).getTime();
+
     // if the thread has less than 50 messages, just load all of them
     if (thread.messageCount <= 50) {
       variables.after = null;
       variables.before = null;
       // $FlowFixMe
       variables.last = 50;
+
+      // if the thread has been seen before, and the thread was active since
+      // the user last saw it, only load unseen messages
+      if (hasUnseenMessages) {
+        // $FlowFixMe
+        variables.first = 50;
+        variables.last = null;
+        variables.after = btoa(new Date(thread.currentUserLastSeen).getTime());
+      }
     }
 
     if (thread.messageCount > 50) {
@@ -66,8 +83,18 @@ export const getThreadMessageConnectionOptions = {
       // **unless** the current user hasn't seen the thread before
       // $FlowFixMe
       variables.last = 50;
+
       if (!thread.currentUserLastSeen) {
         variables.last = null;
+      }
+
+      // if the thread has been seen before, and the thread was active since
+      // the user last saw it, only load unseen messages
+      if (hasUnseenMessages) {
+        // $FlowFixMe
+        variables.first = 50;
+        variables.last = null;
+        variables.after = btoa(new Date(thread.currentUserLastSeen).getTime());
       }
     }
 
