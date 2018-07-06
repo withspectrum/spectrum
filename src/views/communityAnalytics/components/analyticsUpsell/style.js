@@ -11,21 +11,21 @@ export const Container = styled.div`
   padding: 32px;
   background-image: url('/img/share.svg');
   background-repeat: no-repeat;
-  background-position: 100% -100%;
+  background-position: 100% 120%;
   background-size: 500px auto;
 
   @media (max-width: 1020px) {
     padding: 24px;
-    background-position: 100% 150%;
+    background-position: 100% 100%;
     background-size: 400px auto;
   }
 
   @media (max-width: 960px) {
-    background-position: 105% 150%;
+    background-position: 115% 100%;
   }
 
   @media (max-width: 880px) {
-    background-position: 125% 150%;
+    background-position: 135% 100%;
   }
 
   @media (max-width: 820px) {
@@ -67,6 +67,19 @@ export const Description = styled.p`
   color: ${props => props.theme.text.secondary};
   max-width: 600px;
   line-height: 1.4;
+`;
+
+export const List = styled.ul`
+  margin-left: 24px;
+  margin-top: 12px;
+  font-size: 20px;
+  font-weight: 400;
+  color: ${props => props.theme.text.secondary};
+  max-width: 650px;
+
+  li {
+    line-height: 1.6;
+  }
 `;
 
 export const ActionRow = styled.div`

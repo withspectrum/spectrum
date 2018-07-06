@@ -15,6 +15,7 @@ import {
   CardInfo,
   Subtitle,
   Title,
+  List,
 } from './style';
 import Link from 'src/components/link';
 import { Button, TextButton } from 'src/components/buttons';
@@ -119,10 +120,15 @@ class AnalyticsUpsell extends React.Component<Props, State> {
           <Title>Community Analytics</Title>
           <Description>
             Unlock deeper insights into the content and people who make up your
-            community. See your top members each week by contributions to your
-            community, the most active conversations, and threads without
-            replies.
+            community. Analytics helps you find:
           </Description>
+          <List>
+            <li>Top contributing community members each week</li>
+            <li>
+              The most active conversations in your community by engagement
+            </li>
+            <li>Threads where people haven’t received replies yet</li>
+          </List>
 
           <ActionRow>
             <Button
