@@ -10,7 +10,6 @@ import {
   SectionTitle,
 } from '../../../components/settingsViews/style';
 import getCommunityTopAndNewThreads from 'shared/graphql/queries/community/getCommunityTopAndNewThreads';
-import UpsellAnalytics from './analyticsUpsell';
 import type { GetCommunityTopAndNewThreadsType } from 'shared/graphql/queries/community/getCommunityTopAndNewThreads';
 
 type Props = {
@@ -37,13 +36,8 @@ class TopAndNewThreads extends React.Component<Props> {
         <span>
           <SectionCard>
             <SectionTitle>Top conversations this week</SectionTitle>
-            {!community.hasFeatures || !community.hasFeatures.analytics ? (
-              <UpsellAnalytics community={community}>
-                <UpsellAnalytics.Description>
-                  See which conversations ignited your community this week.
-                </UpsellAnalytics.Description>
-              </UpsellAnalytics>
-            ) : sortedTopThreads.length > 0 ? (
+
+            {sortedTopThreads.length > 0 ? (
               sortedTopThreads.map(thread => {
                 if (!thread) return null;
                 return <ThreadListItem key={thread.id} thread={thread} />;
@@ -61,13 +55,7 @@ class TopAndNewThreads extends React.Component<Props> {
           </SectionCard>
           <SectionCard>
             <SectionTitle>Unanswered conversations this week</SectionTitle>
-            {!community.hasFeatures || !community.hasFeatures.analytics ? (
-              <UpsellAnalytics community={community}>
-                <UpsellAnalytics.Description>
-                  Quickly get a glance at conversations you should reply to.
-                </UpsellAnalytics.Description>
-              </UpsellAnalytics>
-            ) : newThreads.length > 0 ? (
+            {newThreads.length > 0 ? (
               newThreads.map(thread => {
                 if (!thread) return null;
                 return <ThreadListItem key={thread.id} thread={thread} />;

@@ -13,7 +13,6 @@ import GranularUserProfile from 'src/components/granularUserProfile';
 import getCommunityTopMembers from 'shared/graphql/queries/community/getCommunityTopMembers';
 import type { GetCommunityTopMembersType } from 'shared/graphql/queries/community/getCommunityTopMembers';
 import { UserListItemContainer, MessageIconContainer } from '../style';
-import UpsellAnalytics from './analyticsUpsell';
 import type { Dispatch } from 'redux';
 
 type Props = {
@@ -34,6 +33,8 @@ class ConversationGrowth extends React.Component<Props> {
 
   render() {
     const { data: { community }, isLoading, currentUser } = this.props;
+    const title = 'Top members this week';
+
     if (community) {
       const sortedTopMembers = community.topMembers.slice().sort((a, b) => {
         const bc = b && parseInt(b.reputation, 10);
@@ -41,16 +42,10 @@ class ConversationGrowth extends React.Component<Props> {
         return bc && ac && bc <= ac ? -1 : 1;
       });
 
-      return (
-        <SectionCard>
-          <SectionTitle>Top members this week</SectionTitle>
-          {!community.hasFeatures || !community.hasFeatures.analytics ? (
-            <UpsellAnalytics community={community}>
-              <UpsellAnalytics.Description>
-                See the weekly top members of your community.
-              </UpsellAnalytics.Description>
-            </UpsellAnalytics>
-          ) : sortedTopMembers.length === 0 ? (
+      if (sortedTopMembers.length === 0) {
+        return (
+          <SectionCard>
+            <SectionTitle>{title}</SectionTitle>
             <ViewError
               small
               emoji={'😭'}
@@ -59,41 +54,46 @@ class ConversationGrowth extends React.Component<Props> {
                 'When people are posting new threads and joining conversations, the most active people will appear here.'
               }
             />
-          ) : (
-            sortedTopMembers.map(member => {
-              if (!member) return null;
-              return (
-                <UserListItemContainer key={member.user.id}>
-                  <GranularUserProfile
-                    userObject={member.user}
-                    id={member.user.id}
-                    name={member.user.name}
-                    username={member.user.username}
-                    description={member.user.description}
-                    isCurrentUser={
-                      currentUser && member.user.id === currentUser.id
-                    }
-                    isOnline={member.user.isOnline}
-                    onlineSize={'small'}
-                    reputation={member.reputation}
-                    profilePhoto={member.user.profilePhoto}
-                    avatarSize={'40'}
-                    badges={member.roles}
-                  >
-                    {currentUser &&
-                      member.user.id !== currentUser.id && (
-                        <MessageIconContainer>
-                          <Icon
-                            glyph={'message'}
-                            onClick={() => this.initMessage(member.user)}
-                          />
-                        </MessageIconContainer>
-                      )}
-                  </GranularUserProfile>
-                </UserListItemContainer>
-              );
-            })
-          )}
+          </SectionCard>
+        );
+      }
+
+      return (
+        <SectionCard>
+          <SectionTitle>{title}</SectionTitle>
+          {sortedTopMembers.map(member => {
+            if (!member) return null;
+            return (
+              <UserListItemContainer key={member.user.id}>
+                <GranularUserProfile
+                  userObject={member.user}
+                  id={member.user.id}
+                  name={member.user.name}
+                  username={member.user.username}
+                  description={member.user.description}
+                  isCurrentUser={
+                    currentUser && member.user.id === currentUser.id
+                  }
+                  isOnline={member.user.isOnline}
+                  onlineSize={'small'}
+                  reputation={member.reputation}
+                  profilePhoto={member.user.profilePhoto}
+                  avatarSize={'40'}
+                  badges={member.roles}
+                >
+                  {currentUser &&
+                    member.user.id !== currentUser.id && (
+                      <MessageIconContainer>
+                        <Icon
+                          glyph={'message'}
+                          onClick={() => this.initMessage(member.user)}
+                        />
+                      </MessageIconContainer>
+                    )}
+                </GranularUserProfile>
+              </UserListItemContainer>
+            );
+          })}
         </SectionCard>
       );
     }

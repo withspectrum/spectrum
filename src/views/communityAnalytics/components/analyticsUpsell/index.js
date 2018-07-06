@@ -13,7 +13,15 @@ import enableCommunityAnalytics from 'shared/graphql/mutations/community/enableC
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
 import { getCardImage } from 'src/views/communityBilling/utils';
-import { Container, Content, Description, ActionRow, CardInfo } from './style';
+import {
+  Container,
+  Content,
+  Description,
+  ActionRow,
+  CardInfo,
+  Subtitle,
+  Title,
+} from './style';
 import Link from 'src/components/link';
 import { Button, TextButton } from 'src/components/buttons';
 import { track, events, transformations } from 'src/helpers/analytics';
@@ -106,7 +114,7 @@ class AnalyticsUpsell extends React.Component<Props, State> {
   };
 
   render() {
-    const { community, children } = this.props;
+    const { community } = this.props;
     const { isLoading } = this.state;
     const action = community.hasChargeableSource
       ? this.initEnableCommunityAnalytics
@@ -115,9 +123,18 @@ class AnalyticsUpsell extends React.Component<Props, State> {
     return (
       <Container>
         <Content>
-          {children}
+          <Subtitle>Supercharge your community</Subtitle>
+          <Title>Community Analytics</Title>
+          <Description>
+            Unlock deeper insights into the content and people who make up your
+            community. See your top members each week by contributions to your
+            community, the most active conversations, and threads without
+            replies.
+          </Description>
+
           <ActionRow>
             <Button
+              large
               loading={isLoading}
               onClick={action}
               data-cy="analytics-unlock-upsell-button"
@@ -125,7 +142,7 @@ class AnalyticsUpsell extends React.Component<Props, State> {
               Unlock Analytics · $100/mo
             </Button>
             <Link to={'/pricing'}>
-              <TextButton onClick={this.learnMoreClicked}>
+              <TextButton large onClick={this.learnMoreClicked}>
                 Learn more
               </TextButton>
             </Link>
