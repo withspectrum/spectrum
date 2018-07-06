@@ -103,7 +103,7 @@ describe('chat input', () => {
       cy.visit(`/thread/${publicThread.id}`);
     });
 
-    it('should allow quoting a message', () => {
+    it.only('should allow quoting a message', () => {
       // Quote a message
       cy.get('[data-cy="staged-quoted-message"]').should('not.be.visible');
       cy
@@ -115,12 +115,10 @@ describe('chat input', () => {
         .get('[data-cy="reply-to-message"]')
         .first()
         .should('be.visible')
-        .click();
-      cy
-        .get('[data-cy="reply-to-message"]')
-        .first()
-        .should('not.be.visible');
+        .click({ force: true });
+
       cy.get('[data-cy="staged-quoted-message"]').should('be.visible');
+
       // Remove quoted message again
       cy
         .get('[data-cy="remove-staged-quoted-message"]')
