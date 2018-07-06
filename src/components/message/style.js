@@ -190,7 +190,7 @@ export const Text = styled(Bubble)`
   font-size: 15px;
   line-height: 1.4;
   color: ${props =>
-    props.error ? props.theme.warn.default : props.theme.text.secondary};
+    props.error ? props.theme.warn.default : props.theme.text.default};
   font-weight: 400;
   display: flex;
   flex-direction: column;
