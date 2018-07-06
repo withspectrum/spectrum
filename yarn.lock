@@ -658,21 +658,21 @@ apollo-client@^2.3.5:
   optionalDependencies:
     "@types/async" "2.0.49"
 
-apollo-engine-binary-darwin@0.2018.4-9-gf79380d21:
-  version "0.2018.4-9-gf79380d21"
-  resolved "https://registry.yarnpkg.com/apollo-engine-binary-darwin/-/apollo-engine-binary-darwin-0.2018.4-9-gf79380d21.tgz#397517eb734220ea9cea47d5ee8b5a4725486cb1"
+apollo-engine-binary-darwin@0.2018.6-20-gc0e4bb519:
+  version "0.2018.6-20-gc0e4bb519"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-darwin/-/apollo-engine-binary-darwin-0.2018.6-20-gc0e4bb519.tgz#1458cf9af9adff1248730b9e7ea3408a778ff20e"
 
-apollo-engine-binary-linux@0.2018.4-9-gf79380d21:
-  version "0.2018.4-9-gf79380d21"
-  resolved "https://registry.yarnpkg.com/apollo-engine-binary-linux/-/apollo-engine-binary-linux-0.2018.4-9-gf79380d21.tgz#543e60a29dd291790645dfe3a60aed4dd48bccda"
+apollo-engine-binary-linux@0.2018.6-20-gc0e4bb519:
+  version "0.2018.6-20-gc0e4bb519"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-linux/-/apollo-engine-binary-linux-0.2018.6-20-gc0e4bb519.tgz#0f61d7e7888a58d8723516d1dc44d4c8a6688df2"
 
-apollo-engine-binary-windows@0.2018.4-9-gf79380d21:
-  version "0.2018.4-9-gf79380d21"
-  resolved "https://registry.yarnpkg.com/apollo-engine-binary-windows/-/apollo-engine-binary-windows-0.2018.4-9-gf79380d21.tgz#93b223f9cde4a3e900be6eaec8681d675a0c02b8"
+apollo-engine-binary-windows@0.2018.6-20-gc0e4bb519:
+  version "0.2018.6-20-gc0e4bb519"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-windows/-/apollo-engine-binary-windows-0.2018.6-20-gc0e4bb519.tgz#288c718a730f2a1f8bb0aae9fff3e6da23c1f00f"
 
 apollo-engine@1.x:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/apollo-engine/-/apollo-engine-1.0.6.tgz#9d0579c673e685bede46a563d9c9b74bb2e44a63"
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/apollo-engine/-/apollo-engine-1.1.2.tgz#ef8465fe5234b3bfe034b7e96d37bc441b72a9cb"
   dependencies:
     "@types/connect" "^3.4.31"
     "@types/express" "^4.0.36"
@@ -681,9 +681,9 @@ apollo-engine@1.x:
     "@types/koa-router" "^7.0.27"
     "@types/restify" "^5.0.7"
   optionalDependencies:
-    apollo-engine-binary-darwin "0.2018.4-9-gf79380d21"
-    apollo-engine-binary-linux "0.2018.4-9-gf79380d21"
-    apollo-engine-binary-windows "0.2018.4-9-gf79380d21"
+    apollo-engine-binary-darwin "0.2018.6-20-gc0e4bb519"
+    apollo-engine-binary-linux "0.2018.6-20-gc0e4bb519"
+    apollo-engine-binary-windows "0.2018.6-20-gc0e4bb519"
 
 apollo-link-dedup@^1.0.0:
   version "1.0.9"
@@ -2807,11 +2807,9 @@ common-tags@1.4.0:
   dependencies:
     babel-runtime "^6.18.0"
 
-common-tags@^1.7.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/common-tags/-/common-tags-1.7.2.tgz#24d9768c63d253a56ecff93845b44b4df1d52771"
-  dependencies:
-    babel-runtime "^6.26.0"
+common-tags@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/common-tags/-/common-tags-1.8.0.tgz#8e3153e542d4a39e9b10554434afaaf98956a937"
 
 commondir@^1.0.1:
   version "1.0.1"
@@ -3781,22 +3779,22 @@ draft-js-embed-plugin@^1.2.0:
   dependencies:
     decorate-component-with-props "^1.0.2"
 
-draft-js-focus-plugin@2.0.0-rc2:
-  version "2.0.0-rc2"
-  resolved "https://registry.yarnpkg.com/draft-js-focus-plugin/-/draft-js-focus-plugin-2.0.0-rc2.tgz#6b65e0c489a0cedc9cfad414b3313d44168375d9"
+draft-js-focus-plugin@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/draft-js-focus-plugin/-/draft-js-focus-plugin-2.1.0.tgz#e45ed9fa0fa50f2e91db82952668419a562cad4e"
   dependencies:
     decorate-component-with-props "^1.0.2"
-    find-with-regex "^1.0.2"
+    find-with-regex "^1.1.3"
     immutable "~3.7.4"
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
 
-draft-js-image-plugin@^2.0.5:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/draft-js-image-plugin/-/draft-js-image-plugin-2.0.5.tgz#17c7218019877d9643a2f379635df11428e68a7f"
+draft-js-image-plugin@2.0.0-rc8:
+  version "2.0.0-rc8"
+  resolved "https://registry.yarnpkg.com/draft-js-image-plugin/-/draft-js-image-plugin-2.0.0-rc8.tgz#9ccd0d83c84f53dceefcd3c72f944e26ef9e2db5"
   dependencies:
     decorate-component-with-props "^1.0.2"
-    find-with-regex "^1.1.3"
+    find-with-regex "^1.0.2"
     immutable "~3.7.4"
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
@@ -3880,9 +3878,9 @@ draft-js@0.x, draft-js@^0.10.4, "draft-js@npm:draft-js-fork-mxstbr", draft-js@~0
     immutable "~3.7.4"
     object-assign "^4.1.0"
 
-draftjs-to-markdown@^0.4.2:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/draftjs-to-markdown/-/draftjs-to-markdown-0.4.5.tgz#1cb2da90bf7790ff23e24891441882a40fca6d53"
+draftjs-to-markdown@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/draftjs-to-markdown/-/draftjs-to-markdown-0.5.1.tgz#ad4cd3f6d1dfffd01680c6f2588e24e67e9ec988"
 
 duplexer2@~0.1.4:
   version "0.1.4"
@@ -4244,9 +4242,9 @@ eslint-plugin-react@^7.10.0:
     jsx-ast-utils "^2.0.1"
     prop-types "^15.6.2"
 
-eslint-plugin-standard@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-standard/-/eslint-plugin-standard-3.0.1.tgz#34d0c915b45edc6f010393c7eef3823b08565cf2"
+eslint-plugin-standard@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-standard/-/eslint-plugin-standard-3.1.0.tgz#2a9e21259ba4c47c02d53b2d0c9135d4b1022d47"
 
 eslint-scope@^3.7.1, eslint-scope@~3.7.1:
   version "3.7.1"
