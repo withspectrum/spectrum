@@ -35,13 +35,8 @@ export class MentionMessageNotification extends React.Component<Props, State> {
     const { notification, currentUser } = this.props;
 
     const actors = parseActors(notification.actors, currentUser, false);
-    const author = actors.asObjects[0];
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context, currentUser);
-    const message =
-      notification.entities.length > 0
-        ? notification.entities[0].payload
-        : null;
 
     return (
       <NotificationCard>
@@ -53,11 +48,14 @@ export class MentionMessageNotification extends React.Component<Props, State> {
         />
         <SpecialContext>
           <Icon glyph="mention" />
+          <ActorsRow actors={actors.asObjects} />
+        </SpecialContext>
+        <Content>
           <TextContent pointer={true}>
             {actors.asObjects[0].name} mentioned you in {context.asString}{' '}
             {date}
           </TextContent>
-        </SpecialContext>
+        </Content>
       </NotificationCard>
     );
   }

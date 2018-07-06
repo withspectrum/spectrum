@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { btoa } from 'abab';
 import {
   parseActors,
   parseEvent,
@@ -12,10 +11,8 @@ import {
   NotificationCard,
   TextContent,
   NotificationListRow,
-  AttachmentsWash,
   ReactionContext,
   Content,
-  HzRule,
 } from '../style';
 import Icon from '../../../components/icons';
 import {
@@ -39,15 +36,13 @@ export const NewReactionNotification = ({
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
-  const message = notification.context.payload;
-  const hash = btoa(new Date(message.timestamp).getTime());
 
   return (
     <NotificationCard key={notification.id}>
       <CardLink
         to={{
           pathname: window.location.pathname,
-          search: `?thread=${notification.context.payload.threadId}#${hash}`,
+          search: `?thread=${notification.context.payload.threadId}`,
         }}
       />
       <CardContent>
@@ -60,13 +55,6 @@ export const NewReactionNotification = ({
             {' '}
             {actors.asString} {event} {context.asString} {date}{' '}
           </TextContent>
-          <AttachmentsWash>
-            <HzRule>
-              <hr />
-              <Icon glyph="message" />
-              <hr />
-            </HzRule>
-          </AttachmentsWash>
         </Content>
       </CardContent>
     </NotificationCard>
@@ -82,15 +70,13 @@ export const MiniNewReactionNotification = ({
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
-  const message = notification.context.payload;
-  const hash = btoa(new Date(message.timestamp).getTime());
 
   return (
     <NotificationListRow isSeen={notification.isSeen}>
       <CardLink
         to={{
           pathname: window.location.pathname,
-          search: `?thread=${notification.context.payload.threadId}#${hash}`,
+          search: `?thread=${notification.context.payload.threadId}`,
         }}
       />
       <CardContent>
