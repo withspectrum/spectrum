@@ -1,10 +1,7 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import Link from 'src/components/link';
 import { convertTimestampToDate } from 'shared/time-formatting';
-import Badge from '../badges';
-import Avatar from '../avatar';
 import Message from '../message';
 import type { Dispatch } from 'redux';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
@@ -15,55 +12,11 @@ import MessageErrorFallback from '../message/messageErrorFallback';
 import {
   MessagesWrapper,
   MessageGroupContainer,
-  Byline,
-  Name,
-  Username,
   Timestamp,
   Time,
   UnseenRobotext,
   UnseenTime,
 } from './style';
-
-export const AuthorAvatar = ({
-  user,
-  showProfile = false,
-}: {
-  user: Object,
-  showProfile?: boolean,
-}) => {
-  return (
-    <Avatar
-      user={user}
-      isOnline={user.isOnline}
-      src={user.profilePhoto}
-      username={user.username}
-      link={user.username ? `/users/${user.username}` : null}
-      size="40"
-      showProfile={showProfile}
-    />
-  );
-};
-
-export const AuthorByline = (props: {
-  user: Object,
-  roles?: Array<string>,
-}) => {
-  const { user, roles } = props;
-  return (
-    <Byline>
-      {user.username ? (
-        <Link to={`/users/${user.username}`}>
-          <Name>{user.name}</Name>{' '}
-          <Username>{user.username && `@${user.username}`}</Username>
-        </Link>
-      ) : (
-        <Name>{user.name}</Name>
-      )}
-      {roles && roles.map((role, index) => <Badge type={role} key={index} />)}
-      {user.isPro && <Badge type="pro" />}
-    </Byline>
-  );
-};
 
 type MessageGroupType = Array<MessageInfoType>;
 

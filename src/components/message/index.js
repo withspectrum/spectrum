@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import { btoa } from 'abab';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
@@ -17,14 +17,16 @@ import type { Dispatch } from 'redux';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import Avatar from 'src/components/avatar';
-import { AuthorByline } from '../messageGroup';
+import AuthorByline from './authorByline';
 import Icon from 'src/components/icons';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
+import { convertTimestampToTime } from 'shared/time-formatting';
 import {
   OuterMessageContainer,
   InnerMessageContainer,
   GutterContainer,
+  GutterTimestamp,
   AuthorAvatarContainer,
   ActionsContainer,
   Actions,
@@ -48,7 +50,7 @@ type Props = {|
   currentUser: UserInfoType,
 |};
 
-class Message extends Component<Props> {
+class Message extends React.Component<Props> {
   shouldComponentUpdate(nextProps, nextState) {
     const newMessage = nextProps.message.id !== this.props.message.id;
     const updatedReactionCount =
@@ -137,7 +139,7 @@ class Message extends Component<Props> {
     return (
       <OuterMessageContainer data-cy="message" selected={selected}>
         <GutterContainer>
-          {showAuthorContext && (
+          {showAuthorContext ? (
             <AuthorAvatarContainer>
               <Avatar
                 src={message.author.user.profilePhoto}
@@ -151,12 +153,17 @@ class Message extends Component<Props> {
                 showProfile
               />
             </AuthorAvatarContainer>
+          ) : (
+            <GutterTimestamp>
+              {convertTimestampToTime(new Date(message.timestamp))}
+            </GutterTimestamp>
           )}
         </GutterContainer>
 
         <InnerMessageContainer>
           {showAuthorContext && (
             <AuthorByline
+              timestamp={message.timestamp}
               user={message.author.user}
               roles={message.author.roles}
             />

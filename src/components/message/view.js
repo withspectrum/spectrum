@@ -6,10 +6,6 @@ import {
   Text,
   Emoji,
   Image,
-  ActionUI,
-  ActionWrapper,
-  ModActionWrapper,
-  Time,
   QuoteWrapper,
   QuoteWrapperGradient,
   QuotedParagraph,
@@ -17,17 +13,19 @@ import {
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { draftOnlyContainsEmoji } from 'shared/only-contains-emoji';
-import { Byline, Name, Username } from '../messageGroup/style';
+import { Byline, Name, Username } from './style';
 import { isShort } from 'shared/clients/draft-js/utils/isShort';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
 
-export const Body = (props: {
+type BodyProps = {
   openGallery: Function,
   me: boolean,
   message: MessageInfoType,
   bubble?: boolean,
   showParent?: boolean,
-}) => {
+};
+
+export const Body = (props: BodyProps) => {
   const { showParent = true, message, openGallery, me, bubble = true } = props;
   const emojiOnly =
     message.messageType === 'draftjs' &&
@@ -132,86 +130,3 @@ export class QuotedMessage extends React.Component<
     );
   }
 }
-
-type ActionProps = {
-  me: boolean,
-  action: string,
-  deleteMessage?: Function,
-  replyToMessage?: Function,
-};
-
-const Action = (props: ActionProps) => {
-  const { me, action, deleteMessage, replyToMessage } = props;
-
-  switch (action) {
-    case 'share':
-    default:
-      return (
-        <ActionWrapper>
-          <Icon glyph="share" tipText={'Share'} tipLocation={'top'} size={24} />
-        </ActionWrapper>
-      );
-    case 'reply':
-      return (
-        <ActionWrapper>
-          <Icon
-            dataCy="reply-to-message"
-            glyph="reply"
-            tipText={`Reply`}
-            tipLocation={'top'}
-            size={24}
-            onClick={replyToMessage}
-          />
-        </ActionWrapper>
-      );
-    case 'delete':
-      return (
-        <ModActionWrapper me={me}>
-          <Icon
-            dataCy="delete-message"
-            glyph="delete"
-            tipText={'Delete'}
-            tipLocation={'top'}
-            size={24}
-            onClick={() => deleteMessage && deleteMessage()}
-          />
-        </ModActionWrapper>
-      );
-  }
-};
-
-export const Actions = (props: {
-  me: boolean,
-  canModerate: boolean,
-  deleteMessage?: Function,
-  replyToMessage?: Function,
-  isOptimisticMessage: boolean,
-  message: Object,
-}) => {
-  const {
-    me,
-    canModerate,
-    deleteMessage,
-    replyToMessage,
-    isOptimisticMessage,
-    message,
-  } = props;
-
-  if (isOptimisticMessage && message.messageType === 'media') {
-    return null;
-  }
-
-  return (
-    <ActionUI me={me}>
-      <Action me={me} action="reply" replyToMessage={replyToMessage} />
-      {canModerate &&
-        !isOptimisticMessage && (
-          <Action me={me} action={'delete'} deleteMessage={deleteMessage} />
-        )}
-    </ActionUI>
-  );
-};
-
-export const Timestamp = (props: { me: boolean, time: string }) => (
-  <Time me={props.me}>{props.time}</Time>
-);

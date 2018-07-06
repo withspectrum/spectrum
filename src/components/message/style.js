@@ -1,8 +1,36 @@
 // @flow
 import styled from 'styled-components';
 import { SvgWrapper } from '../icons';
-import { zIndex, Transition, monoStack, hexa, Tooltip } from '../globals';
-import { Byline, Name, Username } from '../messageGroup/style';
+import { zIndex, Truncate, monoStack, hexa, Tooltip } from '../globals';
+
+export const Byline = styled.span`
+  display: flex;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  user-select: none;
+  color: ${props => props.theme.text.default};
+  max-width: 100%;
+`;
+
+export const Name = styled.span`
+  font-weight: 600;
+  font-size: 15px;
+  color: ${({ theme }) => theme.text.default};
+
+  &:hover {
+    color: ${({ theme }) => theme.brand.default};
+    cursor: pointer;
+  }
+`;
+
+export const Username = styled(Name)`
+  font-weight: 400;
+  margin-left: 2px;
+  margin-right: 4px;
+  color: ${props => props.theme.text.alt};
+`;
 
 export const ActionsContainer = styled.span`
   position: absolute;
@@ -60,6 +88,19 @@ export const LikeAction = styled(Action)`
   }
 `;
 
+export const GutterTimestamp = styled.span`
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  font-size: 14px;
+  font-weight: 400;
+  color: ${props => props.theme.text.placeholder};
+  opacity: 0;
+  ${Truncate};
+`;
+
 export const OuterMessageContainer = styled.div`
   display: flex;
   flex: 1 0 auto;
@@ -81,6 +122,10 @@ export const OuterMessageContainer = styled.div`
       opacity: 1;
       pointer-events: auto;
     }
+
+    ${GutterTimestamp} {
+      opacity: 1;
+    }
   }
 `;
 
@@ -94,6 +139,7 @@ export const InnerMessageContainer = styled.div`
 `;
 
 export const GutterContainer = styled.div`
+  display: flex;
   width: 72px;
   min-width: 72px;
   max-width: 72px;
@@ -138,62 +184,6 @@ const Bubble = styled.div`
     border: 1px solid ${props => props.theme.bg.border};
     color: ${props => props.theme.text.secondary};
   }
-`;
-
-export const ActionWrapper = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  align-self: flex-start;
-  background-color: transparent;
-  height: 24px;
-  padding: 0 4px;
-  margin-left: 4px;
-  cursor: pointer;
-
-  color: ${props => props.theme.text.placeholder};
-
-  span {
-    padding-left: 4px;
-    font-size: 14px;
-  }
-`;
-
-export const ModActionWrapper = styled(ActionWrapper)`
-  padding: 0 8px;
-  border-left: 2px solid ${props => props.theme.bg.wash};
-`;
-
-export const ActionUI = styled.div`
-  display: flex;
-  align-items: stretch;
-  transition: ${Transition.hover.off};
-
-  &:hover {
-    transition: ${Transition.hover.on};
-
-    ${ActionWrapper} {
-      visibility: visible;
-      opacity: 1;
-      transition: ${Transition.hover.on};
-    }
-  }
-
-  ${ActionWrapper} {
-    transition: ${Transition.hover.off};
-    visibility: hidden;
-    opacity: 0;
-  }
-`;
-
-export const Time = styled.div`
-  font-size: 11px;
-  color: ${props => props.theme.text.alt};
-  position: absolute;
-  left: calc(100% + 8px);
-  top: 4px;
 `;
 
 export const Text = styled(Bubble)`

@@ -33,35 +33,6 @@ export const Timestamp = styled(HorizontalRule)`
   }
 `;
 
-export const Byline = styled.span`
-  display: flex;
-  font-size: 14px;
-  line-height: 16px;
-  font-weight: 500;
-  margin-bottom: 4px;
-  user-select: none;
-  color: ${props => props.theme.text.default};
-  max-width: 100%;
-`;
-
-export const Name = styled.span`
-  font-weight: 600;
-  font-size: 15px;
-  color: ${({ theme }) => theme.text.default};
-
-  &:hover {
-    color: ${({ theme }) => theme.brand.default};
-    cursor: pointer;
-  }
-`;
-
-export const Username = styled(Name)`
-  font-weight: 400;
-  margin-left: 2px;
-  margin-right: 4px;
-  color: ${props => props.theme.text.alt};
-`;
-
 export const UnseenRobotext = styled(Timestamp)`
   hr {
     border-color: ${props => props.theme.warn.alt};

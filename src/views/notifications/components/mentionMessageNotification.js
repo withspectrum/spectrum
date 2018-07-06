@@ -5,15 +5,11 @@ import { parseNotificationDate, parseContext, parseActors } from '../utils';
 import Icon from '../../../components/icons';
 import {
   TextContent,
-  AttachmentsWash,
   Content,
   NotificationCard,
   NotificationListRow,
   SpecialContext,
 } from '../style';
-import { MessageGroupContainer } from '../../../components/messageGroup/style';
-import { AuthorAvatar, AuthorByline } from '../../../components/messageGroup';
-import Message from '../../../components/message';
 import {
   CardLink,
   CardContent,
@@ -62,28 +58,6 @@ export class MentionMessageNotification extends React.Component<Props, State> {
             {date}
           </TextContent>
         </SpecialContext>
-        <Content>
-          <AttachmentsWash>
-            {message && (
-              <MessageGroupContainer style={{ marginTop: '0' }}>
-                <AuthorAvatar user={author} />
-                <MessageGroupContainer>
-                  <AuthorByline user={author} me={false} />
-
-                  <Message
-                    message={message}
-                    link={`#${message.id}`}
-                    me={false}
-                    canModerate={false}
-                    pending={message.id < 0}
-                    currentUser={currentUser}
-                    context={'notification'}
-                  />
-                </MessageGroupContainer>
-              </MessageGroupContainer>
-            )}
-          </AttachmentsWash>
-        </Content>
       </NotificationCard>
     );
   }
