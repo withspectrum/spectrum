@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "abab": "^1.0.4",
-    "algoliasearch": "^3.24.7",
+    "algoliasearch": "^3.29.0",
     "amplitude": "^3.5.0",
     "amplitude-js": "^4.2.1",
     "apollo-cache-inmemory": "^1.2.5",
