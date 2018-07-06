@@ -64,7 +64,7 @@
     "axios": "^0.17.1",
     "bad-words": "^1.6.1",
     "body-parser": "^1.18.3",
-    "bull": "3.3.10",
+    "bull": "3.4.2",
     "casual": "^1.5.19",
     "common-tags": "^1.8.0",
     "cookie-parser": "^1.4.3",

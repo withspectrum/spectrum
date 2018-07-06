@@ -2282,17 +2282,17 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
 
-bull@3.3.10:
-  version "3.3.10"
-  resolved "https://registry.yarnpkg.com/bull/-/bull-3.3.10.tgz#32e76281902070b4720bc37b3793f09db635f646"
+bull@3.4.2:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/bull/-/bull-3.4.2.tgz#563e033d09f9cc0865d24e635deab9224e370cab"
   dependencies:
     bluebird "^3.5.0"
-    cron-parser "^2.4.1"
+    cron-parser "^2.5.0"
     debuglog "^1.0.0"
     ioredis "^3.1.4"
     lodash "^4.17.4"
-    semver "^5.4.1"
-    uuid "^3.1.0"
+    semver "^5.5.0"
+    uuid "^3.2.1"
 
 bundle-buddy-webpack-plugin@^0.3.0:
   version "0.3.0"
@@ -3083,9 +3083,9 @@ create-react-context@^0.2.1:
     fbjs "^0.8.0"
     gud "^1.0.0"
 
-cron-parser@^2.4.1:
-  version "2.4.5"
-  resolved "https://registry.yarnpkg.com/cron-parser/-/cron-parser-2.4.5.tgz#33629810a4b491004c363f4b6996133bbc22e16f"
+cron-parser@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/cron-parser/-/cron-parser-2.5.0.tgz#ec1385a3aa8c63624256789ce2ecfa338384676a"
   dependencies:
     is-nan "^1.2.1"
     moment-timezone "^0.5.0"
@@ -11384,6 +11384,10 @@ uuid@^2.0.2:
 uuid@^3.0.0, uuid@^3.0.1, uuid@^3.1.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.2.1.tgz#12c528bb9d58d0b9265d9a2f6f0fe8be17ff1f14"
+
+uuid@^3.2.1:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
 
 v8flags@^2.1.1:
   version "2.1.1"
