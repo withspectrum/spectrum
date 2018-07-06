@@ -99,8 +99,8 @@ export const CardInfo = styled.div`
   align-items: center;
   background: ${props => props.theme.bg.border};
   border-radius: 6px;
-  padding: 8px 10px;
-  font-size: 15px;
+  padding: 8px 12px;
+  font-size: 16px;
   margin-top: 24px;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06),
     0 1px 0 rgba(255, 255, 255, 0.3);

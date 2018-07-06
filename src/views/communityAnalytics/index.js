@@ -80,17 +80,17 @@ class CommunityAnalytics extends React.Component<Props, State> {
             </React.Fragment>
           ) : (
             <React.Fragment>
-              <Column>
+              <Column style={{ paddingBottom: 0 }}>
                 <ErrorBoundary fallbackComponent={SettingsFallback}>
                   <MemberGrowth id={community.id} />
                 </ErrorBoundary>
               </Column>
-              <Column>
+              <Column style={{ paddingBottom: 0 }}>
                 <ErrorBoundary fallbackComponent={SettingsFallback}>
                   <ConversationGrowth id={community.id} />
                 </ErrorBoundary>
               </Column>
-              <Column fullWidth>
+              <Column fullWidth style={{ paddingTop: 0 }}>
                 <ErrorBoundary fallbackComponent={SettingsFallback}>
                   <SectionCard>
                     <AnalyticsUpsell community={community} />
