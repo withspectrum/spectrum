@@ -1,10 +1,4 @@
 // @flow
-
-/* Usage:
- * <UpsellAnalytics community={community}>
- *   <UpsellAnalytics.Description>Some text here</UpsellAnalytics.Description>
- * </UpsellAnalytics>
- */
 import * as React from 'react';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 import compose from 'recompose/compose';
@@ -40,8 +34,6 @@ type State = {
 };
 
 class AnalyticsUpsell extends React.Component<Props, State> {
-  static Description = Description;
-
   state = { isLoading: false };
 
   initEnableCommunityAnalytics = () => {
