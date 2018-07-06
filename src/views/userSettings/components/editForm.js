@@ -38,6 +38,7 @@ import {
 import { Notice } from 'src/components/listItems/style';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import type { Dispatch } from 'redux';
+import type { MutationFunc } from 'react-apollo';
 
 type State = {
   website: ?string,
@@ -61,7 +62,7 @@ type Props = {
   currentUser: Object,
   dispatch: Dispatch<Object>,
   client: Object,
-  editUser: Function,
+  editUser: MutationFunc<*, *>,
 };
 
 class UserWithData extends React.Component<Props, State> {
