@@ -19,7 +19,6 @@ const archivedThread = data.threads.find(
   t =>
     t.communityId === publicCommunity.id && t.channelId === archivedChannel.id
 );
-const lockedThread = data.threads.find(t => t.isLocked);
 
 const nonMemberUser = data.users.find(u => u.id === constants.QUIET_USER_ID);
 const memberInChannelUser = data.users.find(u => u.id === constants.BRIAN_ID);

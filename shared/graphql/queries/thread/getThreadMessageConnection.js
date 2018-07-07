@@ -88,6 +88,8 @@ export const getThreadMessageConnectionOptions = {
     ) {
       variables.after = props.location.hash.substr(1);
       variables.last = null;
+      // $FlowFixMe
+      variables.first = 50;
     }
 
     return {
