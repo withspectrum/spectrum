@@ -103,7 +103,7 @@ describe('chat input', () => {
       cy.visit(`/thread/${publicThread.id}`);
     });
 
-    it.only('should allow quoting a message', () => {
+    it('should allow quoting a message', () => {
       // Quote a message
       cy.get('[data-cy="staged-quoted-message"]').should('not.be.visible');
       cy
