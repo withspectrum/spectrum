@@ -96,6 +96,7 @@ module.exports = function override(config, env) {
   );
   // Get all public files so they're cached by the SW
   let externals = [
+    'sw.js',
     'https://www.google-analytics.com/analytics.js',
     'https://cdn.amplitude.com/libs/amplitude-4.2.1-min.gz.js',
   ];
