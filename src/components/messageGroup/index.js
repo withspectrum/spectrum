@@ -1,5 +1,7 @@
 // @flow
-import React, { Component, Fragment } from 'react';
+import * as React from 'react';
+import compose from 'recompose/compose';
+import { withRouter, type History, type Location } from 'react-router';
 import { connect } from 'react-redux';
 import { convertTimestampToDate } from 'shared/time-formatting';
 import Message from '../message';
@@ -28,21 +30,24 @@ type Props = {
   thread: GetThreadType,
   isModerator: boolean,
   dispatch: Dispatch<Object>,
-  selectedId: string,
-  changeSelection: Function,
   lastSeen?: number | Date,
+  history: History,
+  location: Location,
 };
 
 type State = {
   selectedMessage: ?string,
 };
 
+// $FlowFixMe
+export const MessagesContext = React.createContext();
+
 /*
   Messages expects to receive sorted and grouped messages.
   They will arrive as an array of arrays, where each top-level array is a group
   of message bubbles.
 */
-class Messages extends Component<Props, State> {
+class Messages extends React.Component<Props, State> {
   constructor() {
     super();
 
@@ -56,8 +61,16 @@ class Messages extends Component<Props, State> {
 
     this.state = {
       selectedMessage: initialSelection,
+      selectMessage: this.selectMessage,
     };
   }
+
+  selectMessage = (hash: string) => {
+    const { history, location: { pathname, search, state } } = this.props;
+
+    history.push({ pathname, search, hash, state });
+    return this.setState({ selectedMessage: hash });
+  };
 
   shouldComponentUpdate(next, nextState) {
     const current = this.props;
@@ -138,18 +151,6 @@ class Messages extends Component<Props, State> {
     return false;
   }
 
-  toggleSelectedMessage = messageId => {
-    if (this.state.selectedMessage === messageId) {
-      this.setState({
-        selectedMessage: null,
-      });
-    } else {
-      this.setState({
-        selectedMessage: messageId,
-      });
-    }
-  };
-
   render() {
     const {
       messages,
@@ -216,7 +217,7 @@ class Messages extends Component<Props, State> {
           }
 
           return (
-            <Fragment key={initialMessage.id}>
+            <React.Fragment key={initialMessage.id}>
               {unseenRobo}
               <MessageGroupContainer key={initialMessage.id}>
                 {group.map((message, index) => {
@@ -225,19 +226,21 @@ class Messages extends Component<Props, State> {
                       fallbackComponent={() => <MessageErrorFallback />}
                       key={message.id}
                     >
-                      <Message
-                        me={me}
-                        showAuthorContext={index === 0}
-                        message={message}
-                        canModerateMessage={canModerateMessage}
-                        threadType={threadType}
-                        threadId={threadId}
-                      />
+                      <MessagesContext.Provider value={this.state}>
+                        <Message
+                          me={me}
+                          showAuthorContext={index === 0}
+                          message={message}
+                          canModerateMessage={canModerateMessage}
+                          threadType={threadType}
+                          threadId={threadId}
+                        />
+                      </MessagesContext.Provider>
                     </ErrorBoundary>
                   );
                 })}
               </MessageGroupContainer>
-            </Fragment>
+            </React.Fragment>
           );
         })}
       </MessagesWrapper>
@@ -246,7 +249,11 @@ class Messages extends Component<Props, State> {
 }
 
 // get the current user from the store for evaulation of message bubbles
-const mapStateToProps = state => ({ currentUser: state.users.currentUser });
+const map = state => ({ currentUser: state.users.currentUser });
 
 // $FlowIssue
-export default connect(mapStateToProps)(Messages);
+export default compose(
+  // $FlowFixMe
+  connect(map),
+  withRouter
+)(Messages);
