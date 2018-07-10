@@ -309,11 +309,9 @@ class EditForm extends React.Component<Props, State> {
             />
 
             <PhotoInput
+              type={'community'}
               onChange={this.setCommunityPhoto}
               defaultValue={image}
-              community
-              user={null}
-              allowGif
             />
           </ImageInputWrapper>
 

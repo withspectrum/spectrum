@@ -31,6 +31,7 @@ export const CommunitySuggestionsWrapper = styled.ul`
   list-style-type: none;
   padding: 0;
   margin: 0 0 24px;
+  width: 100%;
 `;
 
 export const CommunitySuggestion = styled.li`
@@ -42,6 +43,7 @@ export const CommunitySuggestion = styled.li`
   border-right: 1px solid ${props => props.theme.bg.border};
   display: flex;
   align-items: center;
+  flex: 1 0 auto;
 
   strong {
     margin-left: 8px;

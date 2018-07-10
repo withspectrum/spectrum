@@ -13,6 +13,7 @@ type Props = {
   mobileSize?: number,
   style?: Object,
   showHoverProfile?: boolean,
+  clickable?: boolean,
 };
 
 export default class AvatarHandler extends Component<Props> {
@@ -22,9 +23,9 @@ export default class AvatarHandler extends Component<Props> {
     return (
       <ConditionalWrap
         condition={showHoverProfile}
-        wrap={() => (
+        wrap={children => (
           <CommunityHoverProfile id={community.id}>
-            <Avatar {...this.props} />
+            {children}
           </CommunityHoverProfile>
         )}
       >
@@ -36,7 +37,13 @@ export default class AvatarHandler extends Component<Props> {
 
 class Avatar extends React.Component<Props> {
   render() {
-    const { community, size = 32, mobileSize, style } = this.props;
+    const {
+      community,
+      size = 32,
+      clickable = true,
+      mobileSize,
+      style,
+    } = this.props;
 
     const src = community.profilePhoto;
 
@@ -57,14 +64,19 @@ class Avatar extends React.Component<Props> {
         style={style}
         type={'community'}
       >
-        <AvatarLink to={`/${community.slug}`}>
+        <ConditionalWrap
+          condition={clickable}
+          wrap={children => (
+            <AvatarLink to={`/${community.slug}`}>{children}</AvatarLink>
+          )}
+        >
           <AvatarImage
             src={source}
             size={size}
             mobileSize={mobileSize}
             type={'community'}
           />
-        </AvatarLink>
+        </ConditionalWrap>
       </Status>
     );
   }

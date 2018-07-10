@@ -68,16 +68,27 @@ type PhotoInputProps = {
 
 export const PhotoInput = (props: PhotoInputProps) => {
   const { size = 48, type, defaultValue, onChange, dataCy } = props;
+
+  let visible,
+    src = defaultValue;
+  if (src.length === 0) {
+    visible = true;
+    src =
+      type === 'user'
+        ? '/img/default_avatar.svg'
+        : '/img/default_community.svg';
+  }
+
   return (
     <PhotoInputLabel type={type} size={size}>
-      <InputOverlay type={type} size={size}>
+      <InputOverlay type={type} size={size} visible={visible}>
         <Icon glyph="photo" />
       </InputOverlay>
 
       <PhotoInputImage
         type={type}
         alt={'Profile photo'}
-        src={defaultValue}
+        src={src}
         size={size}
       />
 
@@ -94,10 +105,12 @@ export const PhotoInput = (props: PhotoInputProps) => {
   );
 };
 
-export const CoverInput = (props: InputProps) => {
+export const CoverInput = (props: PhotoInputProps) => {
   return (
     <CoverInputLabel>
-      <InputOverlay>
+      <InputOverlay
+        visible={!props.defaultValue || props.defaultValue.length === 1}
+      >
         <FauxOutlineButton
           color={'bg.default'}
           hoverColor={'bg.default'}

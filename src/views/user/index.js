@@ -156,6 +156,7 @@ class UserView extends React.Component<Props, State> {
                   data={{ user }}
                   username={username}
                   profileSize="full"
+                  showHoverProfile={false}
                 />
               </ErrorBoundary>
 

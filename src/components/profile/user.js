@@ -57,6 +57,7 @@ type UserWithDataProps = {
   currentUser: CurrentUserProps,
   dispatch: Dispatch<Object>,
   history: Object,
+  showHoverProfile: boolean,
 };
 
 const UserWithData = ({
@@ -65,6 +66,7 @@ const UserWithData = ({
   currentUser,
   dispatch,
   history,
+  showHoverProfile = true,
 }: UserWithDataProps): ?React$Element<any> => {
   const componentSize = profileSize || 'mini';
 
@@ -84,6 +86,7 @@ const UserWithData = ({
           <UserAvatar
             user={user}
             size={128}
+            showHoverProfile={showHoverProfile}
             style={{
               boxShadow: '0 0 0 2px #fff',
               marginRight: '0',
@@ -154,6 +157,7 @@ const UserWithData = ({
               user={user}
               size={64}
               onlineSize={'large'}
+              showHoverProfile={showHoverProfile}
               style={{
                 boxShadow: '0 0 0 2px #fff',
                 flex: '0 0 64px',
@@ -193,6 +197,7 @@ const UserWithData = ({
                 <UserAvatar
                   user={user}
                   size={32}
+                  showHoverProfile={showHoverProfile}
                   style={{ marginRight: '16px' }}
                 />
                 <ProfileHeaderMeta>
@@ -210,6 +215,7 @@ const UserWithData = ({
                 <UserAvatar
                   user={user}
                   size={32}
+                  showHoverProfile={showHoverProfile}
                   style={{ marginRight: '16px' }}
                 />
                 <ProfileHeaderMeta>
