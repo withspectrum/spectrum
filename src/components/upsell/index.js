@@ -8,7 +8,7 @@ import { storeItem } from '../../helpers/localStorage';
 import { PUBLIC_STRIPE_KEY } from '../../api/constants';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
-import Avatar from '../avatar';
+import { UserAvatar } from '../avatar';
 import ToggleCommunityMembership from '../toggleCommunityMembership';
 import { Button, OutlineButton } from '../buttons';
 import { Login } from '../../views/login';
@@ -405,7 +405,7 @@ class UpsellUpgradeToProPure extends React.Component<
     return (
       <NullCard bg="onboarding">
         <Profile>
-          <Avatar src={`${currentUser.profilePhoto}`} user={currentUser} />
+          <UserAvatar user={currentUser} />
           <span>PRO</span>
         </Profile>
         <Title>Upgrade to Pro</Title>

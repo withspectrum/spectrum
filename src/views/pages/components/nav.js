@@ -5,7 +5,7 @@ import { Button, IconButton } from 'src/components/buttons';
 import Link from 'src/components/link';
 import Icon from 'src/components/icons';
 import { Logo } from 'src/components/logo';
-import Avatar from 'src/components/avatar';
+import { UserAvatar } from 'src/components/avatar';
 import Head from 'src/components/head';
 import {
   NavContainer,
@@ -94,10 +94,7 @@ class Nav extends React.Component<Props, State> {
           <AuthTab dark={this.props.dark}>
             {this.props.currentUser ? (
               <Link to={'/'} data-cy="navbar-splash-profile">
-                <Avatar
-                  src={this.props.currentUser.profilePhoto}
-                  user={this.props.currentUser}
-                />
+                <UserAvatar user={this.props.currentUser} />
               </Link>
             ) : (
               <Link

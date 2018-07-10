@@ -1,7 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
-import Avatar from '../../components/avatar';
+import { UserAvatar, CommunityAvatar } from '../../components/avatar';
 import { Button } from '../../components/buttons';
 import Column from '../../components/column';
 import {
@@ -254,7 +254,7 @@ export const BylineMeta = styled(FlexCol)`
   margin-left: 12px;
 `;
 
-export const AuthorAvatar = styled(Avatar)`
+export const AuthorAvatar = styled(UserAvatar)`
   cursor: pointer;
 `;
 
@@ -477,7 +477,7 @@ export const CommunityHeaderSubtitle = styled.span`
 export const ThreadSubtitle = styled(CommunityHeaderSubtitle)`
   font-size: 16px;
   margin-top: 8px;
-  display: inline-block;
+  display: flex;
   line-height: 1.5;
 `;
 
@@ -787,7 +787,7 @@ export const WatercoolerTitle = styled.h3`
   margin-bottom: 8px;
 `;
 
-export const WatercoolerAvatar = styled(Avatar)`
+export const WatercoolerAvatar = styled(CommunityAvatar)`
   margin-bottom: 16px;
 `;
 

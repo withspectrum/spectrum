@@ -221,8 +221,10 @@ class Navbar extends React.Component<Props, State> {
             >
               <Navatar
                 user={loggedInUser}
-                src={`${loggedInUser.profilePhoto}`}
-                size={24}
+                size={28}
+                showHoverProfile={false}
+                showOnlineStatus={false}
+                clickable={false}
                 data-cy="navbar-profile"
               />
             </Tab>

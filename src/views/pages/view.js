@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Link from 'src/components/link';
 import Icon from '../../components/icons';
-import Avatar from '../../components/avatar';
+import { UserAvatar } from '../../components/avatar';
 import {
   Shadow,
   Gradient,
@@ -638,11 +638,10 @@ export const Yours = (props: Props) => {
                 okay, honestly Spectrum is the best thing that happened to me
                 regarding social interaction in 2017
               </Pullquote>
-              <Signature to="/users/Traykov">
-                <Avatar
-                  size={'40'}
-                  src="https://spectrum.imgix.net/users/ZN37gjzZ31PKVPmd6E4ZTlZJa7Z2/5sasho.png.0.17582088793809425?auto=compress&w=64&dpr=2&format=png"
-                />Alexander Traykov<span>@Traykov</span>
+              <Signature to="/users/traykov">
+                <UserAvatar size={40} username={'traykov'} />
+                Alexander Traykov
+                <span>@Traykov</span>
               </Signature>
             </Quote>
             <Quote>
@@ -657,10 +656,9 @@ export const Yours = (props: Props) => {
                 and interact. Except realtime and trolling-free
               </Pullquote>
               <Signature to="/users/rauchg">
-                <Avatar
-                  size={'40'}
-                  src="https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F871555682608136205%2FyMs8Gnot_normal.jpg?w=128&h=128&ixlib=js-1.1.1&s=cc42ed724e75265fbb959ec43c910be2"
-                />Guillermo Rauch <span>@rauchg</span>
+                <UserAvatar size={40} username={'rauchg'} />
+                Guillermo Rauch
+                <span>@rauchg</span>
               </Signature>
             </Quote>
             <Quote>
@@ -674,10 +672,9 @@ export const Yours = (props: Props) => {
                 and been lovely to be a part of the unique communities.
               </Pullquote>
               <Signature to="/users/tayler-m-odea">
-                <Avatar
-                  size={'40'}
-                  src="https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F900025975278157824%2FmydeOAGa_normal.jpg?w=128&h=128&ixlib=js-1.1.1&s=a50556fe67cb087d5083b9d1342711ab"
-                />Tayler O’Dea <span>@tayler-m-odea</span>
+                <UserAvatar size={40} username={'tayler-m-odea'} />
+                Tayler O’Dea
+                <span>@tayler-m-odea</span>
               </Signature>
             </Quote>
           </Quotes>

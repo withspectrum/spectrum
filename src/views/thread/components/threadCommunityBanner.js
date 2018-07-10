@@ -3,13 +3,17 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
+import {
+  CommunityHoverProfile,
+  ChannelHoverProfile,
+} from 'src/components/hoverProfile';
 import { LikeButton } from 'src/components/threadLikes';
 import { convertTimestampToDate } from 'shared/time-formatting';
 import { Button } from '../../../components/buttons';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import Avatar from '../../../components/avatar';
+import { CommunityAvatar } from '../../../components/avatar';
 import { CLIENT_URL } from 'src/api/constants';
 import type { Dispatch } from 'redux';
 import {
@@ -118,7 +122,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
         <CommunityHeader>
           <CommunityHeaderMeta>
             <CommunityHeaderLink to={`/${community.slug}`}>
-              <Avatar src={community.profilePhoto} community size={'32'} />
+              <CommunityAvatar community={community} size={32} />
             </CommunityHeaderLink>
             <CommunityHeaderMetaCol>
               <CommunityHeaderName onClick={forceScrollToTop}>
@@ -127,13 +131,15 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
                   : thread.content.title}
               </CommunityHeaderName>
               <CommunityHeaderSubtitle>
-                <Link to={`/${community.slug}`}>{community.name}</Link>
-                {channel.slug !== 'general' && <span>/</span>}
-                {channel.slug !== 'general' && (
+                <CommunityHoverProfile id={community.id}>
+                  <Link to={`/${community.slug}`}>{community.name}</Link>
+                </CommunityHoverProfile>
+                <span>/</span>
+                <ChannelHoverProfile id={channel.id}>
                   <Link to={`/${community.slug}/${channel.slug}`}>
                     {channel.name}
                   </Link>
-                )}
+                </ChannelHoverProfile>
                 <Link to={`/thread/${id}`}>&nbsp;{`· ${timestamp}`}</Link>
               </CommunityHeaderSubtitle>
             </CommunityHeaderMetaCol>

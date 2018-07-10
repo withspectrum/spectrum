@@ -7,7 +7,7 @@ import { withRouter } from 'react-router';
 import slugg from 'slugg';
 import { withApollo } from 'react-apollo';
 import { Notice } from '../../../../components/listItems/style';
-import Avatar from '../../../../components/avatar';
+import { CommunityAvatar } from '../../../../components/avatar';
 import { throttle } from '../../../../helpers/utils';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { COMMUNITY_SLUG_BLACKLIST } from 'shared/slug-blacklists';
@@ -472,11 +472,9 @@ class CreateCommunityForm extends React.Component<Props, State> {
             />
 
             <PhotoInput
+              type={'community'}
               onChange={this.setCommunityPhoto}
               defaultValue={image}
-              user={null}
-              community
-              allowGif
             />
           </ImageInputWrapper>
 
@@ -539,12 +537,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
                 return (
                   <Link to={`/${suggestion.slug}`} key={suggestion.id}>
                     <CommunitySuggestion>
-                      <Avatar
-                        size={'20'}
-                        radius={4}
-                        community={suggestion}
-                        src={suggestion.profilePhoto}
-                      />
+                      <CommunityAvatar size={20} community={suggestion} />
                       <strong>{suggestion.name}</strong>{' '}
                       {suggestion.metaData.members.toLocaleString()} members
                     </CommunitySuggestion>

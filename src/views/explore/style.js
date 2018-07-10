@@ -20,7 +20,7 @@ import {
 import Card from '../../components/card';
 import { StyledCard } from '../../components/listItems/style';
 import Icon from '../../components/icons';
-import Avatar from '../../components/avatar';
+import { CommunityAvatar } from '../../components/avatar';
 import ScrollRow from '../../components/scrollRow';
 
 import { Button } from '../../components/buttons';
@@ -372,7 +372,7 @@ export const SearchLink = styled(Link)`
   ${Truncate()} padding: 8px 16px 8px 8px;
 `;
 
-export const SearchResultImage = styled(Avatar)``;
+export const SearchResultImage = styled(CommunityAvatar)``;
 
 export const SearchResultMetaWrapper = styled(FlexCol)`
   margin-left: 16px;
