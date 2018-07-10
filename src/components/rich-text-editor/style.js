@@ -1,14 +1,11 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import { createPortal } from 'react-dom';
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import { Transition, zIndex } from '../globals';
 import theme from 'shared/theme';
-import { Manager, Reference, Popper } from 'react-popper';
-import HoverProfile from 'src/components/avatar/hoverProfile';
-import { getUserByUsername } from 'shared/graphql/queries/user/getUser';
+import { UserHoverProfile } from 'src/components/hoverProfile';
 import type { Node } from 'react';
 
 const UsernameWrapper = styled.span`
@@ -19,6 +16,7 @@ const UsernameWrapper = styled.span`
   padding: 2px 4px;
   border-radius: 4px;
   position: relative;
+  display: inline-block;
 
   &:hover {
     background: ${props =>
@@ -30,62 +28,21 @@ const UsernameWrapper = styled.span`
   }
 `;
 
-const MentionHoverProfile = getUserByUsername(
-  props =>
-    !props.data.user ? null : (
-      <HoverProfile
-        innerRef={props.innerRef}
-        source={props.data.user.profilePhoto}
-        user={props.data.user}
-        style={props.style}
-      />
-    )
-);
-
 type MentionProps = {
   children: Node,
   username: string,
   currentUser: ?Object,
 };
 
-class MentionWithCurrentUser extends React.Component<
-  MentionProps,
-  { hovered: boolean }
-> {
-  state = { hovered: false };
-  hover = (val: boolean) => () => this.setState({ hovered: val });
+class MentionWithCurrentUser extends React.Component<MentionProps> {
   render() {
-    const { username, children, currentUser } = this.props;
+    const { username, currentUser, children } = this.props;
     const me = currentUser && currentUser.username === username;
     return (
-      <UsernameWrapper
-        me={me}
-        onMouseEnter={this.hover(true)}
-        onMouseLeave={this.hover(false)}
-      >
-        <Manager>
-          <Reference>
-            {({ ref }) => (
-              <span ref={ref}>
-                <Link to={`/users/${username}`}>{children}</Link>
-              </span>
-            )}
-          </Reference>
-          {this.state.hovered &&
-            document.body &&
-            createPortal(
-              <Popper placement="top">
-                {({ style, ref }) => (
-                  <MentionHoverProfile
-                    username={username}
-                    innerRef={ref}
-                    style={style}
-                  />
-                )}
-              </Popper>,
-              document.body
-            )}
-        </Manager>
+      <UsernameWrapper me={me}>
+        <UserHoverProfile username={username}>
+          <Link to={`/users/${username}`}>{children}</Link>
+        </UserHoverProfile>
       </UsernameWrapper>
     );
   }
