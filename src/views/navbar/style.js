@@ -49,8 +49,8 @@ export const Nav = styled.nav`
   ${props =>
     props.loggedOut &&
     css`
-      grid-template-columns: auto auto auto auto 1fr;
-      grid-template-areas: 'logo explore support pricing .';
+      grid-template-columns: repeat(4, auto) 1fr auto;
+      grid-template-areas: 'logo explore support pricing . signin';
 
       @media (max-width: 768px) {
         grid-template-columns: auto auto auto auto;
@@ -339,21 +339,19 @@ export const LoggedOutSection = styled(FlexRow)`
   }
 `;
 
-export const SigninLink = styled.button`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-self: center;
-  align-items: center;
-  font-weight: 600;
+export const SigninLink = styled(Link)`
+  grid-area: signin;
+  font-weight: 700;
   font-size: 14px;
-  background: transparent;
-  border: none;
-  webkit-display: none;
-  color: #fff;
+  color: ${({ theme }) =>
+    process.env.NODE_ENV === 'production'
+      ? theme.text.placeholder
+      : theme.warn.border};
+  align-self: center;
+  padding: 10px;
 
-  &:hover {
-    cursor: pointer;
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
