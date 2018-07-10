@@ -1,19 +1,21 @@
+// @flow
 import React from 'react';
 import Link from 'src/components/link';
-import Card from '../card';
+import Card from 'src/components/card';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import addProtocolToString from 'shared/normalize-url';
-import { initNewThreadWithUser } from '../../actions/directMessageThreads';
+import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import Icon from '../icons';
 import { CoverPhoto } from './coverPhoto';
-import GithubProfile from '../../components/githubProfile';
+import GithubProfile from 'src/components/githubProfile';
 import type { ProfileSizeProps } from './index';
-import Avatar from '../avatar';
-import Badge from '../badges';
-import { displayLoadingCard } from '../loading';
-import Reputation from '../reputation';
+import { UserAvatar } from 'src/components/avatar';
+import Badge from 'src/components/badges';
+import { displayLoadingCard } from 'src/components/loading';
+import Reputation from 'src/components/reputation';
 import type { Dispatch } from 'redux';
 import {
   FullProfile,
@@ -33,18 +35,6 @@ import {
   ExtLink,
 } from './style';
 
-type UserProps = {
-  id: string,
-  profilePhoto: string,
-  displayName: string,
-  name: ?string,
-  username: string,
-  threadCount: number,
-  website: string,
-  isOnline: string,
-  totalReputation: number,
-};
-
 type CurrentUserProps = {
   id: string,
   profilePhoto: string,
@@ -54,19 +44,28 @@ type CurrentUserProps = {
   website: string,
 };
 
+type ThisUserType = {
+  ...$Exact<GetUserType>,
+  contextPermissions: {
+    reputation: number,
+  },
+};
+
+type UserWithDataProps = {
+  data: { user: ThisUserType },
+  profileSize: ProfileSizeProps,
+  currentUser: CurrentUserProps,
+  dispatch: Dispatch<Object>,
+  history: Object,
+};
+
 const UserWithData = ({
   data: { user },
   profileSize,
   currentUser,
   dispatch,
   history,
-}: {
-  data: { user: UserProps },
-  profileSize: ProfileSizeProps,
-  currentUser: CurrentUserProps,
-  dispatch: Dispatch<Object>,
-  history: Object,
-}): React$Element<any> => {
+}: UserWithDataProps): ?React$Element<any> => {
   const componentSize = profileSize || 'mini';
 
   if (!user) {
@@ -82,12 +81,9 @@ const UserWithData = ({
     case 'full':
       return (
         <FullProfile>
-          <Avatar
+          <UserAvatar
             user={user}
             size={128}
-            onlineSize={'large'}
-            src={`${user.profilePhoto}`}
-            noLink
             style={{
               boxShadow: '0 0 0 2px #fff',
               marginRight: '0',
@@ -154,14 +150,10 @@ const UserWithData = ({
             currentUser={currentUser}
           />
           <CoverLink to={`/users/${user.username}`}>
-            <Avatar
+            <UserAvatar
               user={user}
               size={64}
-              radius={64}
               onlineSize={'large'}
-              isOnline={user.isOnline}
-              src={`${user.profilePhoto}`}
-              noLink
               style={{
                 boxShadow: '0 0 0 2px #fff',
                 flex: '0 0 64px',
@@ -198,13 +190,9 @@ const UserWithData = ({
           <ProfileHeader>
             {user.username ? (
               <ProfileHeaderLink to={`/users/${user.username}`}>
-                <Avatar
+                <UserAvatar
                   user={user}
                   size={32}
-                  radius={32}
-                  isOnline={user.isOnline}
-                  src={`${user.profilePhoto}`}
-                  noLink
                   style={{ marginRight: '16px' }}
                 />
                 <ProfileHeaderMeta>
@@ -219,13 +207,9 @@ const UserWithData = ({
               </ProfileHeaderLink>
             ) : (
               <ProfileHeaderNoLink>
-                <Avatar
+                <UserAvatar
                   user={user}
                   size={32}
-                  radius={32}
-                  isOnline={user.isOnline}
-                  src={`${user.profilePhoto}`}
-                  noLink
                   style={{ marginRight: '16px' }}
                 />
                 <ProfileHeaderMeta>
@@ -277,4 +261,5 @@ const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
   initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,
 });
+// $FlowFixMe
 export default connect(mapStateToProps)(User);
