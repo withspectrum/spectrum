@@ -7,6 +7,7 @@ type ImageProps = {
   decode: boolean,
   src: any,
   innerRef: (?HTMLElement) => void,
+  type: 'user' | 'community',
 };
 
 const cache = {};
@@ -134,14 +135,10 @@ class AvatarImage extends Component<ImageProps> {
     if (this.state.isLoading) this.loadImg();
   }
 
-  componentWillUnmount() {
-    // ensure that we dont leave any lingering listeners
-    /* istanbul ignore else */
-    if (this.i) this.unloadImg();
-  }
+  componentDidUpdate() {
+    const curr = this.props;
 
-  componentWillReceiveProps(nextProps) {
-    let src = this.srcToArray(nextProps.src);
+    let src = this.srcToArray(curr.src);
 
     let srcAdded = src.filter(s => this.sourceList.indexOf(s) === -1);
     let srcRemoved = this.sourceList.filter(s => src.indexOf(s) === -1);
@@ -153,11 +150,18 @@ class AvatarImage extends Component<ImageProps> {
       // if we dont have any sources, jump directly to unloader
       if (!src.length)
         return this.setState({ isLoading: false, isLoaded: false });
-      this.setState(
-        { currentIndex: 0, isLoading: true, isLoaded: false },
-        this.loadImg
-      );
+      return this.setState({
+        currentIndex: 0,
+        isLoading: true,
+        isLoaded: false,
+      });
     }
+  }
+
+  componentWillUnmount() {
+    // ensure that we dont leave any lingering listeners
+    /* istanbul ignore else */
+    if (this.i) this.unloadImg();
   }
 
   render() {
