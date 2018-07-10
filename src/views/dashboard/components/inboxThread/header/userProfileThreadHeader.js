@@ -1,6 +1,11 @@
 // @flow
 import * as React from 'react';
 import {
+  UserHoverProfile,
+  CommunityHoverProfile,
+  ChannelHoverProfile,
+} from 'src/components/hoverProfile';
+import {
   Container,
   MetaContainer,
   TextRow,
@@ -29,9 +34,11 @@ class Header extends React.Component<HeaderProps> {
       <Container active={active}>
         <MetaContainer>
           <TextRow>
-            <MetaTitle active={active} to={`/${community.slug}`}>
-              {community.name}
-            </MetaTitle>
+            <CommunityHoverProfile id={community.id}>
+              <MetaTitle active={active} to={`/${community.slug}`}>
+                {community.name}
+              </MetaTitle>
+            </CommunityHoverProfile>
 
             <Divider>·</Divider>
             <Timestamp {...this.props} />
@@ -41,12 +48,14 @@ class Header extends React.Component<HeaderProps> {
             {viewContext === 'userProfileReplies' && (
               <MetaSubtitleText>
                 {author.user.username ? (
-                  <MetaSubtitle
-                    active={active}
-                    to={`/users/${author.user.username}`}
-                  >
-                    By {author.user.name}
-                  </MetaSubtitle>
+                  <UserHoverProfile username={author.user.username}>
+                    <MetaSubtitle
+                      active={active}
+                      to={`/users/${author.user.username}`}
+                    >
+                      By {author.user.name}
+                    </MetaSubtitle>
+                  </UserHoverProfile>
                 ) : (
                   <MetaSubtitleText active={active}>
                     By {author.user.name}
@@ -57,12 +66,14 @@ class Header extends React.Component<HeaderProps> {
               </MetaSubtitleText>
             )}
 
-            <MetaSubtitle
-              active={active}
-              to={`/${community.slug}/${channel.slug}`}
-            >
-              {channel.name}
-            </MetaSubtitle>
+            <ChannelHoverProfile id={channel.id}>
+              <MetaSubtitle
+                active={active}
+                to={`/${community.slug}/${channel.slug}`}
+              >
+                {channel.name}
+              </MetaSubtitle>
+            </ChannelHoverProfile>
 
             {watercooler && (
               <MetaSubtitleWatercooler active={active}>
