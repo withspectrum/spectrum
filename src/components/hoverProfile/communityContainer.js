@@ -1,10 +1,15 @@
 // @flow
 import * as React from 'react';
+import compose from 'recompose/compose';
+import { withApollo, type Client } from 'react-apollo';
 import { Manager, Reference, Popper } from 'react-popper';
 import { createPortal } from 'react-dom';
 import CommunityProfile from './communityProfile';
 import { Span } from './style';
-import { getCommunityById } from 'shared/graphql/queries/community/getCommunity';
+import {
+  getCommunityById,
+  getCommunityByIdQuery,
+} from 'shared/graphql/queries/community/getCommunity';
 import LoadingHoverProfile from './loadingHoverProfile';
 
 const CommunityHoverProfile = getCommunityById(props => {
@@ -31,6 +36,7 @@ type Props = {
   children: any,
   id: string,
   style?: Object,
+  client: Client,
 };
 
 type State = {
@@ -43,6 +49,13 @@ class CommunityHoverProfileWrapper extends React.Component<Props, State> {
   state = { visible: false };
 
   handleMouseEnter = () => {
+    const { client, id } = this.props;
+
+    client.query({
+      query: getCommunityByIdQuery,
+      variables: { id },
+    });
+
     const ref = setTimeout(() => {
       this.setState({ visible: true });
     }, 500);
@@ -97,4 +110,4 @@ class CommunityHoverProfileWrapper extends React.Component<Props, State> {
   }
 }
 
-export default CommunityHoverProfileWrapper;
+export default compose(withApollo)(CommunityHoverProfileWrapper);

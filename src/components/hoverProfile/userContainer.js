@@ -1,11 +1,16 @@
 // @flow
 import * as React from 'react';
+import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import { withApollo, type Client } from 'react-apollo';
 import { Manager, Reference, Popper } from 'react-popper';
 import { createPortal } from 'react-dom';
 import UserProfile from './userProfile';
 import { Span } from './style';
-import { getUserByUsername } from 'shared/graphql/queries/user/getUser';
+import {
+  getUserByUsername,
+  getUserByUsernameQuery,
+} from 'shared/graphql/queries/user/getUser';
 import LoadingHoverProfile from './loadingHoverProfile';
 
 const MentionHoverProfile = getUserByUsername(props => {
@@ -33,6 +38,7 @@ type Props = {
   username: string,
   currentUser: ?Object,
   style?: Object,
+  client: Client,
 };
 
 type State = {
@@ -45,6 +51,13 @@ class UserHoverProfileWrapper extends React.Component<Props, State> {
   state = { visible: false };
 
   handleMouseEnter = () => {
+    const { username, client } = this.props;
+
+    client.query({
+      query: getUserByUsernameQuery,
+      variables: { username },
+    });
+
     const ref = setTimeout(() => {
       this.setState({ visible: true });
     }, 500);
@@ -106,5 +119,8 @@ class UserHoverProfileWrapper extends React.Component<Props, State> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-// $FlowFixMe
-export default connect(map)(UserHoverProfileWrapper);
+export default compose(
+  // $FlowFixMe
+  connect(map),
+  withApollo
+)(UserHoverProfileWrapper);

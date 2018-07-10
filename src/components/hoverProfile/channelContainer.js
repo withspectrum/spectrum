@@ -1,11 +1,16 @@
 // @flow
 import * as React from 'react';
+import compose from 'recompose/compose';
+import { withApollo, type Client } from 'react-apollo';
 import { Manager, Reference, Popper } from 'react-popper';
 import { createPortal } from 'react-dom';
 import ChannelProfile from './channelProfile';
 import LoadingHoverProfile from './loadingHoverProfile';
 import { Span } from './style';
-import { getChannelById } from 'shared/graphql/queries/channel/getChannel';
+import {
+  getChannelById,
+  getChannelByIdQuery,
+} from 'shared/graphql/queries/channel/getChannel';
 
 const ChannelHoverProfile = getChannelById(props => {
   if (props.data.channel) {
@@ -31,6 +36,7 @@ type Props = {
   children: any,
   id: string,
   style?: Object,
+  client: Client,
 };
 
 type State = {
@@ -43,6 +49,13 @@ class ChannelHoverProfileWrapper extends React.Component<Props, State> {
   state = { visible: false };
 
   handleMouseEnter = () => {
+    const { client, id } = this.props;
+
+    client.query({
+      query: getChannelByIdQuery,
+      variables: { id },
+    });
+
     const ref = setTimeout(() => {
       this.setState({ visible: true });
     }, 500);
@@ -97,4 +110,4 @@ class ChannelHoverProfileWrapper extends React.Component<Props, State> {
   }
 }
 
-export default ChannelHoverProfileWrapper;
+export default compose(withApollo)(ChannelHoverProfileWrapper);
