@@ -9,7 +9,7 @@ export const ReactionWrapper = styled.span`
   justify-content: center;
   border-radius: 4px;
   padding: 2px 8px;
-  margin-top: 8px;
+  margin-top: 4px;
   background: ${props =>
     props.hasReacted ? props.theme.warn.wash : props.theme.bg.wash};
   border: 1px solid
