@@ -43,7 +43,6 @@ import {
   customStyleMap,
 } from './style';
 import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
-import { LoadingThreadContent } from '../loading';
 
 type Props = {
   state: Object,
