@@ -102,7 +102,7 @@ class ChannelWithData extends React.Component<Props, State> {
 
     const renderDescriptionWithLinks = text => {
       return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
-        <a href={url} target="_blank" rel="noopener nofollower" key={url}>
+        <a href={url} target="_blank" rel="noopener noreferrer" key={url}>
           {text}
         </a>
       ));
