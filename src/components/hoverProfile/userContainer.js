@@ -6,17 +6,27 @@ import { createPortal } from 'react-dom';
 import UserProfile from './userProfile';
 import { Span } from './style';
 import { getUserByUsername } from 'shared/graphql/queries/user/getUser';
+import LoadingHoverProfile from './loadingHoverProfile';
 
-const MentionHoverProfile = getUserByUsername(
-  props =>
-    !props.data.user ? null : (
+const MentionHoverProfile = getUserByUsername(props => {
+  if (props.data.user) {
+    return (
       <UserProfile
         innerRef={props.innerRef}
         user={props.data.user}
         style={props.style}
       />
-    )
-);
+    );
+  }
+
+  if (props.data.loading) {
+    return (
+      <LoadingHoverProfile style={props.style} innerRef={props.innerRef} />
+    );
+  }
+
+  return null;
+});
 
 type Props = {
   children: any,

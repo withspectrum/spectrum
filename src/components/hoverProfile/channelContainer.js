@@ -3,19 +3,29 @@ import * as React from 'react';
 import { Manager, Reference, Popper } from 'react-popper';
 import { createPortal } from 'react-dom';
 import ChannelProfile from './channelProfile';
+import LoadingHoverProfile from './loadingHoverProfile';
 import { Span } from './style';
 import { getChannelById } from 'shared/graphql/queries/channel/getChannel';
 
-const ChannelHoverProfile = getChannelById(
-  props =>
-    !props.data.channel ? null : (
+const ChannelHoverProfile = getChannelById(props => {
+  if (props.data.channel) {
+    return (
       <ChannelProfile
         innerRef={props.innerRef}
         channel={props.data.channel}
         style={props.style}
       />
-    )
-);
+    );
+  }
+
+  if (props.data.loading) {
+    return (
+      <LoadingHoverProfile style={props.style} innerRef={props.innerRef} />
+    );
+  }
+
+  return null;
+});
 
 type Props = {
   children: any,

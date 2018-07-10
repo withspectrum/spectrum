@@ -5,17 +5,27 @@ import { createPortal } from 'react-dom';
 import CommunityProfile from './communityProfile';
 import { Span } from './style';
 import { getCommunityById } from 'shared/graphql/queries/community/getCommunity';
+import LoadingHoverProfile from './loadingHoverProfile';
 
-const CommunityHoverProfile = getCommunityById(
-  props =>
-    !props.data.community ? null : (
+const CommunityHoverProfile = getCommunityById(props => {
+  if (props.data.community) {
+    return (
       <CommunityProfile
         innerRef={props.innerRef}
         community={props.data.community}
         style={props.style}
       />
-    )
-);
+    );
+  }
+
+  if (props.data.loading) {
+    return (
+      <LoadingHoverProfile style={props.style} innerRef={props.innerRef} />
+    );
+  }
+
+  return null;
+});
 
 type Props = {
   children: any,

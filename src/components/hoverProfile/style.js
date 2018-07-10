@@ -24,3 +24,12 @@ export const Span = styled.span`
   align-items: center;
   position: relative;
 `;
+
+export const ProfileCard = styled.div`
+  width: 256px;
+  background: ${props => props.theme.bg.default};
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid ${props => props.theme.bg.wash};
+  min-height: 128px;
+`;
