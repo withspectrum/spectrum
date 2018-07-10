@@ -66,7 +66,7 @@ const GetUserByUsername = (props: HandlerProps) => {
 
 export default class AvatarHandler extends Component<HandlerProps> {
   render() {
-    const { showHoverProfile = true } = this.props;
+    const { showHoverProfile = true, clickable } = this.props;
 
     if (this.props.user) {
       const user = this.props.user;
@@ -85,7 +85,12 @@ export default class AvatarHandler extends Component<HandlerProps> {
     }
 
     if (!this.props.user && this.props.username) {
-      return <GetUserByUsername username={this.props.username} />;
+      return (
+        <GetUserByUsername
+          username={this.props.username}
+          clickable={clickable}
+        />
+      );
     }
 
     return null;

@@ -639,7 +639,7 @@ export const Yours = (props: Props) => {
                 regarding social interaction in 2017
               </Pullquote>
               <Signature to="/users/traykov">
-                <UserAvatar size={40} username={'traykov'} />
+                <UserAvatar size={40} username={'traykov'} clickable={false} />
                 Alexander Traykov
                 <span>@Traykov</span>
               </Signature>
@@ -656,7 +656,7 @@ export const Yours = (props: Props) => {
                 and interact. Except realtime and trolling-free
               </Pullquote>
               <Signature to="/users/rauchg">
-                <UserAvatar size={40} username={'rauchg'} />
+                <UserAvatar size={40} username={'rauchg'} clickable={false} />
                 Guillermo Rauch
                 <span>@rauchg</span>
               </Signature>
@@ -672,7 +672,11 @@ export const Yours = (props: Props) => {
                 and been lovely to be a part of the unique communities.
               </Pullquote>
               <Signature to="/users/tayler-m-odea">
-                <UserAvatar size={40} username={'tayler-m-odea'} />
+                <UserAvatar
+                  size={40}
+                  username={'tayler-m-odea'}
+                  clickable={false}
+                />
                 Tayler O’Dea
                 <span>@tayler-m-odea</span>
               </Signature>

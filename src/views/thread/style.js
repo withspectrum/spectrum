@@ -329,14 +329,6 @@ export const Timestamp = styled.span`
   font-size: 16px;
   color: ${({ theme }) => theme.text.alt};
   display: inline-block;
-
-  &:hover {
-    color: ${props => props.theme.text.default};
-  }
-`;
-
-export const Edited = styled(Timestamp)`
-  margin-left: 4px;
 `;
 
 export const ChatWrapper = styled.div`
@@ -465,10 +457,6 @@ export const CommunityHeaderSubtitle = styled.span`
   line-height: 12px;
   color: ${props => props.theme.text.alt};
 
-  > span {
-    margin: 0 4px;
-  }
-
   > a:hover {
     color: ${props => props.theme.brand.default};
   }
@@ -479,6 +467,10 @@ export const ThreadSubtitle = styled(CommunityHeaderSubtitle)`
   margin-top: 8px;
   display: flex;
   line-height: 1.5;
+
+  a:hover {
+    color: ${props => props.theme.text.default};
+  }
 `;
 
 export const CommunityHeaderChannelTag = styled.div`
@@ -513,12 +505,6 @@ export const CommunityHeaderMetaCol = styled.div`
   align-items: flex-start;
   align-self: flex-start;
   margin-left: 12px;
-`;
-
-export const CommunityHeaderLink = styled(Link)`
-  display: flex;
-  align-items: center;
-  flex: auto;
 `;
 
 export const PillLink = styled(Link)`
