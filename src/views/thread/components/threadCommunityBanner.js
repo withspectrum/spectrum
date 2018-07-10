@@ -19,7 +19,6 @@ import type { Dispatch } from 'redux';
 import {
   CommunityHeader,
   CommunityHeaderName,
-  CommunityHeaderLink,
   CommunityHeaderMeta,
   CommunityHeaderSubtitle,
   CommunityHeaderMetaCol,
@@ -121,9 +120,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
       <AnimatedContainer isVisible={isVisible}>
         <CommunityHeader>
           <CommunityHeaderMeta>
-            <CommunityHeaderLink to={`/${community.slug}`}>
-              <CommunityAvatar community={community} size={32} />
-            </CommunityHeaderLink>
+            <CommunityAvatar community={community} size={32} />
             <CommunityHeaderMetaCol>
               <CommunityHeaderName onClick={forceScrollToTop}>
                 {watercooler

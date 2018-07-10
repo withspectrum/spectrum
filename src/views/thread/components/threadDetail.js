@@ -32,7 +32,6 @@ import {
   ThreadWrapper,
   ThreadContent,
   ThreadHeading,
-  Edited,
   ThreadSubtitle,
 } from '../style';
 import { track, events, transformations } from 'src/helpers/analytics';
@@ -491,21 +490,25 @@ class ThreadDetailPure extends React.Component<Props, State> {
                 {thread.community.name}
               </Link>
             </CommunityHoverProfile>
-            <span>/</span>
+            <span>&nbsp;/&nbsp;</span>
             <ChannelHoverProfile id={thread.channel.id}>
               <Link to={`/${thread.community.slug}/${thread.channel.slug}`}>
                 {thread.channel.name}
               </Link>
             </ChannelHoverProfile>
-            <Link to={`/thread/${thread.id}`}>{` · ${timestamp}`}</Link>
           </ThreadSubtitle>
 
-          {thread.modifiedAt && (
-            <Edited>
-              {'· '}(Edited{' '}
-              {timeDifference(Date.now(), editedTimestamp).toLowerCase()})
-            </Edited>
-          )}
+          <ThreadSubtitle>
+            <Link to={`/thread/${thread.id}`}>
+              {timestamp}
+              {thread.modifiedAt && (
+                <React.Fragment>
+                  {' · '}(Edited{' '}
+                  {timeDifference(Date.now(), editedTimestamp).toLowerCase()})
+                </React.Fragment>
+              )}
+            </Link>
+          </ThreadSubtitle>
 
           {/* $FlowFixMe */}
           <Editor
