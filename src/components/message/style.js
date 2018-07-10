@@ -1,7 +1,14 @@
 // @flow
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import Link from 'src/components/link';
 import { SvgWrapper } from '../icons';
-import { zIndex, Truncate, monoStack, hexa, Tooltip } from '../globals';
+import {
+  zIndex,
+  Truncate,
+  monoStack,
+  hexa,
+  Tooltip,
+} from 'src/components/globals';
 
 export const Byline = styled.span`
   display: flex;
@@ -12,6 +19,7 @@ export const Byline = styled.span`
   user-select: none;
   color: ${props => props.theme.text.default};
   max-width: 100%;
+  position: relative;
 `;
 
 export const Name = styled.span`
@@ -36,7 +44,7 @@ export const ActionsContainer = styled.span`
   position: absolute;
   top: -16px;
   right: -16px;
-  height: 32px;
+  height: 28px;
   width: 50%;
   pointer-events: none;
   opacity: 0;
@@ -61,7 +69,7 @@ export const Actions = styled.ul`
 
 export const Action = styled.li`
   border-left: 1px solid ${props => props.theme.bg.border};
-  padding: 6px 12px;
+  padding: 3px 10px;
   display: flex;
   flex: 0 1 auto;
   color: ${props => props.theme.text.secondary};
@@ -88,7 +96,7 @@ export const LikeAction = styled(Action)`
   }
 `;
 
-export const GutterTimestamp = styled.span`
+export const GutterTimestamp = styled(Link)`
   display: flex;
   align-content: center;
   align-items: center;
@@ -112,7 +120,21 @@ export const OuterMessageContainer = styled.div`
       ? props.theme.special.wash
       : props.error ? props.theme.warn.wash : props.theme.bg.default};
 
-  &:hover {
+  ${props =>
+    props.selected &&
+    css`
+      background: ${props.theme.special.wash};
+
+      ${ActionsContainer} {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      ${GutterTimestamp} {
+        opacity: 1;
+        color: ${props.theme.special.default};
+      }
+    `} &:hover {
     background: ${props =>
       props.selected
         ? props.theme.special.border
@@ -125,6 +147,11 @@ export const OuterMessageContainer = styled.div`
 
     ${GutterTimestamp} {
       opacity: 1;
+      ${props =>
+        props.selected &&
+        css`
+          color: ${props.theme.special.default};
+        `};
     }
   }
 `;
@@ -279,7 +306,7 @@ export const Paragraph = styled.p`
   line-height: 1.5;
 
   &:not(:empty) ~ &:not(:empty) {
-    margin-top: 1em;
+    margin-top: 8px;
   }
 `;
 
