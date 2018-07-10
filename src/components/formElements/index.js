@@ -105,7 +105,13 @@ export const PhotoInput = (props: PhotoInputProps) => {
   );
 };
 
-export const CoverInput = (props: PhotoInputProps) => {
+type CoverPhotoInputProps = {
+  defaultValue: string,
+  onChange: Function,
+  dataCy?: string,
+};
+
+export const CoverInput = (props: CoverPhotoInputProps) => {
   return (
     <CoverInputLabel>
       <InputOverlay

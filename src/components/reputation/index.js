@@ -44,7 +44,7 @@ class Reputation extends React.Component<Props> {
         <Icon glyph="rep" size={24} />
 
         <ReputationLabel>
-          {truncateNumber(parseInt(renderedReputation, 1))}
+          {truncateNumber(parseInt(renderedReputation, 10), 1)}
         </ReputationLabel>
       </ReputationWrapper>
     );
