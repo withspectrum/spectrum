@@ -17,6 +17,7 @@ import {
   ShimmerInboxThread,
   ShimmerThread,
   ShimmerThreadDetail,
+  ShimmerThreadContent,
   ShimmerProfile,
   ShimmerProfileLite,
   ShimmerListItem,
@@ -436,6 +437,89 @@ export const LoadingThreadDetail = () => (
       />
     </ShimmerBase>
   </ShimmerThreadDetail>
+);
+
+export const LoadingThreadContent = () => (
+  <ShimmerThreadContent>
+    <ShimmerBase>
+      <ShimmerLine />
+      <Cover
+        style={{
+          top: '20px',
+          left: '0',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0px',
+          right: '0px',
+          height: '20px',
+          width: '20%',
+        }}
+      />
+
+      <Cover
+        style={{
+          top: '48px',
+          left: '0',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '28px',
+          right: '0px',
+          height: '20px',
+          width: '10%',
+        }}
+      />
+
+      <Cover
+        style={{
+          top: '76px',
+          left: '0',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '56px',
+          right: '0px',
+          height: '20px',
+          width: '10%',
+        }}
+      />
+
+      <Cover
+        style={{
+          top: '104px',
+          left: '0',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '84px',
+          right: '0px',
+          height: '20px',
+          width: '30%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '112px',
+          right: '0px',
+          height: '20px',
+          width: '70%',
+        }}
+      />
+    </ShimmerBase>
+  </ShimmerThreadContent>
 );
 
 export const LoadingListItem = () => (

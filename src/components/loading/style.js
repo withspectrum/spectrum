@@ -62,6 +62,17 @@ export const ShimmerThreadDetail = styled(FlexCol)`
   }
 `;
 
+export const ShimmerThreadContent = styled(FlexCol)`
+  padding: 0;
+  margin-top: 32px;
+  display: block;
+  width: 100%;
+
+  section {
+    min-height: 132px;
+  }
+`;
+
 export const ShimmerThread = styled(Card)`
   padding: 16px;
 
