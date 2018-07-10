@@ -30,7 +30,10 @@ class Header extends React.Component<Props> {
               size={48}
             />
           )}
-        {avatar && avatar.user && <UserAvatar user={avatar.user} size={48} />}
+        {avatar &&
+          avatar.user && (
+            <UserAvatar showHoverProfile={false} user={avatar.user} size={48} />
+          )}
         <HeaderText>
           <Link to={subheading.to}>
             <Subheading>{subheading.label}</Subheading>
