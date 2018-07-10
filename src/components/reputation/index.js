@@ -33,7 +33,7 @@ class Reputation extends React.Component<Props> {
 
     if (reputation === undefined || reputation === null) return null;
 
-    const renderedReputation = reputation > 0 ? reputation : 0;
+    const renderedReputation = reputation > 0 ? `${reputation}` : '0';
 
     return (
       <ReputationWrapper
@@ -44,7 +44,7 @@ class Reputation extends React.Component<Props> {
         <Icon glyph="rep" size={24} />
 
         <ReputationLabel>
-          {truncateNumber(renderedReputation, 1)}
+          {truncateNumber(parseInt(renderedReputation, 1))}
         </ReputationLabel>
       </ReputationWrapper>
     );
