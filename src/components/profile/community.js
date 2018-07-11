@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import replace from 'string-replace-to-array';
 import Card from '../card';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
@@ -33,6 +32,7 @@ import {
   CoverDescription,
   ButtonContainer,
 } from './style';
+import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 
 type Props = {
   onJoin: Function,
@@ -68,15 +68,6 @@ class CommunityWithData extends React.Component<Props> {
       currentUser,
       showHoverProfile = true,
     } = this.props;
-    const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
-
-    const renderDescriptionWithLinks = text => {
-      return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
-        <a href={url} target="_blank" rel="noopener noreferrer" key={url}>
-          {text}
-        </a>
-      ));
-    };
 
     if (loading) {
       return <LoadingProfile />;
@@ -105,7 +96,11 @@ class CommunityWithData extends React.Component<Props> {
               <CoverTitle>{community.name}</CoverTitle>
             </CoverLink>
 
-            <CoverDescription>{community.description}</CoverDescription>
+            {community.description && (
+              <CoverDescription>
+                {renderTextWithLinks(community.description)}
+              </CoverDescription>
+            )}
 
             <ButtonContainer>
               {currentUser ? (
@@ -170,7 +165,9 @@ class CommunityWithData extends React.Component<Props> {
               <FullTitle>{community.name}</FullTitle>
             </ProfileHeaderMeta>
             <FullDescription>
-              {renderDescriptionWithLinks(community.description)}
+              {community.description && (
+                <p>{renderTextWithLinks(community.description)}</p>
+              )}
 
               {community.website && (
                 <ExtLink>

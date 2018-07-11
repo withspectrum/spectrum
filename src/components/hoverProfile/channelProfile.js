@@ -3,18 +3,23 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Card } from 'src/components/card';
-import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import AvatarImage from 'src/components/avatar/image';
+import Link from 'src/components/link';
+import { Button, OutlineButton } from 'src/components/buttons';
+import ToggleChannelMembership from 'src/components/toggleChannelMembership';
+import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import type { Dispatch } from 'redux';
 import {
-  CoverLink,
-  CoverPhoto,
-  CoverTitle,
-} from 'src/components/profile/style';
-import { HoverWrapper } from './style';
-import { CoverSubtitle } from '../profile/style';
+  HoverWrapper,
+  ProfileCard,
+  ChannelCommunityRow,
+  ChannelCommunityLabel,
+  Content,
+  Title,
+  Description,
+  Actions,
+} from './style';
 
 type ProfileProps = {
   channel: GetChannelType,
@@ -25,32 +30,70 @@ type ProfileProps = {
 };
 
 class HoverProfile extends Component<ProfileProps> {
-  initMessage = (dispatch, user) => {
-    dispatch(initNewThreadWithUser(user));
-  };
-
   render() {
     const { channel, innerRef, style } = this.props;
 
+    const {
+      isOwner: isChannelOwner,
+      isMember: isChannelMember,
+    } = channel.channelPermissions;
+    const { communityPermissions } = channel.community;
+    const {
+      isOwner: isCommunityOwner,
+      isModerator: isCommunityModerator,
+    } = communityPermissions;
+    const isGlobalOwner = isChannelOwner || isCommunityOwner;
+    const isGlobalModerator = isCommunityModerator;
+
     return (
       <HoverWrapper popperStyle={style} innerRef={innerRef}>
-        <Card
-          style={{
-            boxShadow: '0 4px 8px rgba(18, 22, 23, .25)',
-            borderRadius: '16px',
-          }}
-        >
-          <CoverPhoto url={channel.community.coverPhoto} />
-          <CoverLink to={`/${channel.community.slug}/${channel.slug}`}>
+        <ProfileCard>
+          <ChannelCommunityRow to={`/${channel.community.slug}`}>
             <AvatarImage
+              size={24}
               src={channel.community.profilePhoto}
-              size="64"
-              style={{ boxShadow: '0 0 0 2px white', zIndex: '2' }}
+              type={'community'}
             />
-            <CoverTitle>{channel.name}</CoverTitle>
-            <CoverSubtitle>{channel.community.name}</CoverSubtitle>
-          </CoverLink>
-        </Card>
+            <ChannelCommunityLabel>
+              {channel.community.name}
+            </ChannelCommunityLabel>
+          </ChannelCommunityRow>
+
+          <Content>
+            <Link to={`/${channel.community.slug}/${channel.slug}`}>
+              <Title>{channel.name}</Title>
+            </Link>
+            {channel.description && (
+              <Description>
+                {renderTextWithLinks(channel.description)}
+              </Description>
+            )}
+          </Content>
+
+          <Actions>
+            {!isGlobalModerator &&
+              !isGlobalOwner && (
+                <ToggleChannelMembership
+                  channel={channel}
+                  render={state => (
+                    <Button
+                      isMember={isChannelMember}
+                      icon={isChannelMember ? 'checkmark' : null}
+                      loading={state.isLoading}
+                    >
+                      {isChannelMember ? 'Joined' : `Join ${channel.name}`}
+                    </Button>
+                  )}
+                />
+              )}
+
+            {(isGlobalModerator || isGlobalOwner) && (
+              <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
+                <OutlineButton icon={'settings'}>Settings</OutlineButton>
+              </Link>
+            )}
+          </Actions>
+        </ProfileCard>
       </HoverWrapper>
     );
   }

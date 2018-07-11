@@ -16,6 +16,7 @@ import { UserAvatar } from 'src/components/avatar';
 import Badge from 'src/components/badges';
 import { displayLoadingCard } from 'src/components/loading';
 import Reputation from 'src/components/reputation';
+import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import type { Dispatch } from 'redux';
 import {
   FullProfile,
@@ -99,7 +100,9 @@ const UserWithData = ({
           </Subtitle>
           {(user.description || user.website) && (
             <FullDescription>
-              {user.description && <p>{user.description}</p>}
+              {user.description && (
+                <p>{renderTextWithLinks(user.description)}</p>
+              )}
               <Reputation
                 reputation={
                   user.contextPermissions

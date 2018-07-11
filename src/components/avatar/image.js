@@ -1,18 +1,24 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import { Img, ImgPlaceholder } from './style';
 
-type ImageProps = {
+type Props = {
   loader: any,
   unloader: any,
   decode: boolean,
   src: any,
-  innerRef: (?HTMLElement) => void,
   type: 'user' | 'community',
+};
+
+type State = {
+  currentIndex: number,
+  isLoading: boolean,
+  isLoaded: boolean,
 };
 
 const cache = {};
 
-class AvatarImage extends Component<ImageProps> {
+class AvatarImage extends React.Component<Props, State> {
   static defaultProps = {
     loader: false,
     unloader: false,
@@ -20,7 +26,10 @@ class AvatarImage extends Component<ImageProps> {
     src: [],
   };
 
-  constructor(props) {
+  i: any;
+  sourceList: Array<string>;
+
+  constructor(props: Props) {
     super(props);
 
     this.sourceList = this.srcToArray(this.props.src);
@@ -44,10 +53,11 @@ class AvatarImage extends Component<ImageProps> {
       ? // 'normal' opperation: start at 0 and try to load
         { currentIndex: 0, isLoading: true, isLoaded: false }
       : // if we dont have any sources, jump directly to unloaded
-        { isLoading: false, isLoaded: false };
+        { currentIndex: 0, isLoading: false, isLoaded: false };
   }
 
-  srcToArray = src => (Array.isArray(src) ? src : [src]).filter(x => x);
+  srcToArray = (src: string) =>
+    (Array.isArray(src) ? src : [src]).filter(x => x);
 
   onLoad = () => {
     cache[this.sourceList[this.state.currentIndex]] = true;
@@ -107,6 +117,7 @@ class AvatarImage extends Component<ImageProps> {
 
     if (this.props.decode && this.i.decode) {
       this.i
+        // $FlowIssue
         .decode()
         .then(this.onLoad)
         .catch(this.onError);
@@ -168,14 +179,9 @@ class AvatarImage extends Component<ImageProps> {
     // if we have loaded, show img
     if (this.state.isLoaded) {
       // clear non img props
-      let { src, loader, unloader, decode, innerRef, ...rest } = this.props; //eslint-disable-line
+      let { src, loader, unloader, decode, ...rest } = this.props; //eslint-disable-line
       return (
-        <Img
-          src={this.sourceList[this.state.currentIndex]}
-          innerRef={innerRef}
-          {...rest}
-          alt=""
-        />
+        <Img src={this.sourceList[this.state.currentIndex]} {...rest} alt="" />
       );
     }
 

@@ -2,36 +2,29 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Link from 'src/components/link';
 import { withRouter } from 'react-router';
-import Reputation from 'src/components/reputation';
-import Icon from 'src/components/icons';
-import Badge from 'src/components/badges';
-import { Button } from 'src/components/buttons';
-import addProtocolToString from 'shared/normalize-url';
-import { Card } from 'src/components/card';
-import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import AvatarImage from 'src/components/avatar/image';
+import Link from 'src/components/link';
+import { Button } from 'src/components/buttons';
+import ConditionalWrap from 'src/components/conditionalWrap';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import type { Dispatch } from 'redux';
+import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
+import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import {
-  CoverLink,
+  HoverWrapper,
+  ProfileCard,
+  CoverContainer,
   CoverPhoto,
-  CoverTitle,
-  CoverSubtitle,
-  CoverDescription,
-  ExtLink,
-  MessageButtonContainer,
-} from 'src/components/profile/style';
-import { HoverWrapper } from './style';
+  ProfilePhotoContainer,
+  Content,
+  Title,
+  Description,
+  Actions,
+} from './style';
 
 type ProfileProps = {
-  user: {
-    ...$Exact<GetUserType>,
-    contextPermissions: {
-      reputation: number,
-    },
-  },
+  user: GetUserType,
   dispatch: Dispatch<Object>,
   currentUser: ?Object,
   innerRef: (?HTMLElement) => void,
@@ -39,75 +32,63 @@ type ProfileProps = {
 };
 
 class HoverProfile extends Component<ProfileProps> {
-  initMessage = (dispatch, user) => {
+  initMessage = () => {
+    const { dispatch, user } = this.props;
     dispatch(initNewThreadWithUser(user));
   };
 
   render() {
-    const { user, dispatch, currentUser, innerRef, style } = this.props;
+    const { user, currentUser, innerRef, style } = this.props;
+    const me = currentUser && currentUser.id === user.id;
 
     return (
       <HoverWrapper popperStyle={style} innerRef={innerRef}>
-        <Card
-          style={{
-            boxShadow: '0 4px 8px rgba(18, 22, 23, .25)',
-            borderRadius: '16px',
-          }}
-        >
-          <CoverPhoto url={user.coverPhoto} />
-          <CoverLink to={`/users/${user.username}`}>
-            <AvatarImage
-              src={user.profilePhoto}
-              size="64"
-              style={{ boxShadow: '0 0 0 2px white', zIndex: '2' }}
-            />
-            <CoverTitle>{user.name}</CoverTitle>
-          </CoverLink>
-          <CoverSubtitle center>
-            @{user.username}
-            {user.isPro && <Badge type="pro" />}
-            <Reputation
-              tipText={'Total rep across all communities'}
-              size={'large'}
-              reputation={
-                user.contextPermissions
-                  ? user.contextPermissions.reputation
-                  : user.totalReputation
-              }
-            />
-          </CoverSubtitle>
-
-          {(user.description || user.website) && (
-            <CoverDescription>
-              {user.description && <p>{user.description}</p>}
-              {user.website && (
-                <ExtLink>
-                  <Icon glyph="link" size={24} />
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={addProtocolToString(user.website)}
-                  >
-                    {user.website}
-                  </a>
-                </ExtLink>
-              )}
-            </CoverDescription>
-          )}
-
-          {currentUser &&
-            user &&
-            currentUser.id !== user.id && (
-              <MessageButtonContainer>
-                <Link
-                  to={'/messages/new'}
-                  onClick={() => this.initMessage(dispatch, user)}
-                >
-                  <Button>Message</Button>
-                </Link>
-              </MessageButtonContainer>
+        <ProfileCard>
+          <ConditionalWrap
+            condition={!!user.username}
+            wrap={children => (
+              <Link to={`/users/${user.username}`}>{children}</Link>
             )}
-        </Card>
+          >
+            <CoverContainer>
+              <CoverPhoto src={user.coverPhoto ? user.coverPhoto : null} />
+              <ProfilePhotoContainer>
+                <AvatarImage src={user.profilePhoto} type={'user'} size={40} />
+              </ProfilePhotoContainer>
+            </CoverContainer>
+          </ConditionalWrap>
+
+          <Content>
+            <ConditionalWrap
+              condition={!!user.username}
+              wrap={children => (
+                <Link to={`/users/${user.username}`}>{children}</Link>
+              )}
+            >
+              <Title>{user.name}</Title>
+            </ConditionalWrap>
+
+            {user.description && (
+              <Description>{renderTextWithLinks(user.description)}</Description>
+            )}
+          </Content>
+
+          <Actions>
+            {!me && (
+              <Link to={'/messages/new'}>
+                <Button icon={'message'} onClick={this.initMessage}>
+                  Message
+                </Button>
+              </Link>
+            )}
+
+            {me && (
+              <Link to={'/me'}>
+                <Button>My profile</Button>
+              </Link>
+            )}
+          </Actions>
+        </ProfileCard>
       </HoverWrapper>
     );
   }
