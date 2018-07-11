@@ -74,6 +74,7 @@ export const Img = styled.img`
   border-radius: ${props =>
     props.type === 'community' ? `${props.size / 8}px` : '100%'};
   object-fit: cover;
+  background-color: ${props => props.theme.bg.default};
 
   ${props =>
     props.mobileSize &&
