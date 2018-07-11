@@ -8,7 +8,7 @@ export const Span = styled.span`
   color: ${({ theme }) => theme.text.reverse};
   background-color: ${props => props.theme.text.alt};
   text-transform: uppercase;
-  padding: 3px 6px;
+  padding: 3px 4px;
   margin-left: 4px;
   font-size: 9px;
   font-weight: 800;
