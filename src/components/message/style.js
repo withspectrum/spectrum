@@ -26,6 +26,7 @@ export const Name = styled.span`
   font-weight: 600;
   font-size: 15px;
   color: ${({ theme }) => theme.text.default};
+  margin-right: 2px;
 
   &:hover {
     color: ${({ theme }) => theme.brand.default};
@@ -36,7 +37,7 @@ export const Name = styled.span`
 export const Username = styled(Name)`
   font-weight: 400;
   margin-left: 2px;
-  margin-right: 4px;
+  margin-right: 2px;
   color: ${props => props.theme.text.alt};
 `;
 
