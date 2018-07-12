@@ -225,7 +225,7 @@ class Navbar extends React.Component<Props, State> {
                 showHoverProfile={false}
                 showOnlineStatus={false}
                 clickable={false}
-                data-cy="navbar-profile"
+                dataCy="navbar-profile"
               />
             </Tab>
             <ProfileDropdown user={loggedInUser} />

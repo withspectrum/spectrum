@@ -93,8 +93,11 @@ class Nav extends React.Component<Props, State> {
           </SupportTab>
           <AuthTab dark={this.props.dark}>
             {this.props.currentUser ? (
-              <Link to={'/'} data-cy="navbar-splash-profile">
-                <UserAvatar user={this.props.currentUser} />
+              <Link to={'/'}>
+                <UserAvatar
+                  user={this.props.currentUser}
+                  dataCy="navbar-splash-profile"
+                />
               </Link>
             ) : (
               <Link

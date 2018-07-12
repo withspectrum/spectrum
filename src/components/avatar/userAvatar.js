@@ -39,6 +39,7 @@ type HandlerProps = {|
   showHoverProfile?: boolean,
   showOnlineStatus?: boolean,
   clickable?: boolean,
+  dataCy?: string,
 |};
 
 const GetUserByUsername = (props: HandlerProps) => {
@@ -106,6 +107,7 @@ class Avatar extends Component<AvatarProps> {
   render() {
     const {
       user,
+      dataCy,
       size = 32,
       mobileSize,
       onlineSize = 'large',
@@ -134,6 +136,7 @@ class Avatar extends Component<AvatarProps> {
         onlineSize={onlineSize}
         style={style}
         type={'user'}
+        data-cy={dataCy}
       >
         <LinkHandler user={user} clickable={clickable}>
           <AvatarImage
