@@ -3,6 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { withRouter, type History, type Location } from 'react-router';
 import { connect } from 'react-redux';
+import queryString from 'query-string';
 import { convertTimestampToDate } from 'shared/time-formatting';
 import Message from '../message';
 import type { Dispatch } from 'redux';
@@ -48,15 +49,16 @@ export const MessagesContext = React.createContext();
   of message bubbles.
 */
 class Messages extends React.Component<Props, State> {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
-    const hash = window.location.hash.substr(1);
+    const searchObj = queryString.parse(props.location.search);
+    const selectedMessageId = searchObj.m;
 
     let initialSelection = null;
 
-    if (hash && hash.length > 1) {
-      initialSelection = hash;
+    if (selectedMessageId) {
+      initialSelection = selectedMessageId;
     }
 
     this.state = {
@@ -65,11 +67,19 @@ class Messages extends React.Component<Props, State> {
     };
   }
 
-  selectMessage = (hash: string) => {
+  selectMessage = (selectedMessageId: string) => {
     const { history, location: { pathname, search, state } } = this.props;
-
-    history.push({ pathname, search, hash, state });
-    return this.setState({ selectedMessage: hash });
+    const searchObj = queryString.parse(search);
+    const newSearch = queryString.stringify(
+      { ...searchObj, m: selectedMessageId },
+      { encode: false, strict: false, sort: false }
+    );
+    history.push({
+      pathname,
+      search: newSearch,
+      state,
+    });
+    return this.setState({ selectedMessage: selectedMessageId });
   };
 
   shouldComponentUpdate(next, nextState) {

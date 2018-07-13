@@ -67,11 +67,11 @@ class Message extends React.Component<Props> {
     return false;
   }
 
-  toggleOpenGallery = (e: any, messageId: string) => {
+  toggleOpenGallery = (e: any, selectedMessageId: string) => {
     e.stopPropagation();
 
     const { threadId } = this.props;
-    this.props.dispatch(openGallery(threadId, messageId));
+    this.props.dispatch(openGallery(threadId, selectedMessageId));
   };
 
   deleteMessage = (e: any) => {
@@ -121,13 +121,14 @@ class Message extends React.Component<Props> {
       threadType,
     } = this.props;
 
-    const hash = btoa(new Date(message.timestamp).getTime() - 1);
-    const messageUrl = `/thread/${threadId}#${hash}`;
+    const selectedMessageId = btoa(new Date(message.timestamp).getTime() - 1);
+    const messageUrl = `/thread/${threadId}?m=${selectedMessageId}`;
 
     return (
       <MessagesContext.Consumer>
         {({ selectedMessage, selectMessage }) => {
-          const isSelected = selectedMessage && selectedMessage === hash;
+          const isSelected =
+            selectedMessage && selectedMessage === selectedMessageId;
 
           return (
             <ConditionalWrap
@@ -144,10 +145,10 @@ class Message extends React.Component<Props> {
               <OuterMessageContainer
                 onClick={e => {
                   e.stopPropagation();
-                  selectMessage(hash);
+                  selectMessage(selectedMessageId);
                 }}
                 data-cy="message"
-                selected={selectedMessage === hash}
+                selected={selectedMessage === selectedMessageId}
               >
                 <GutterContainer>
                   {showAuthorContext ? (
@@ -275,7 +276,7 @@ class Message extends React.Component<Props> {
                             background: 'none',
                             borderLeft: '1px solid #DFE7EF',
                           }}
-                          data-clipboard-text={`${CLIENT_URL}/thread/${threadId}#${hash}`}
+                          data-clipboard-text={`${CLIENT_URL}/thread/${threadId}?m=${selectedMessageId}`}
                           onSuccess={() =>
                             this.props.dispatch(
                               addToastWithTimeout(
@@ -290,7 +291,7 @@ class Message extends React.Component<Props> {
                             tipLocation={'top'}
                             onClick={e => {
                               e.stopPropagation();
-                              selectMessage(hash);
+                              selectMessage(selectedMessageId);
                             }}
                           >
                             <Icon

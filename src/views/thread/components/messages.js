@@ -3,6 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import queryString from 'query-string';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
@@ -117,9 +118,10 @@ class MessagesWithData extends React.Component<Props, State> {
         participant => participant && participant.id === currentUser.id
       );
 
-    const isLoadingMessageFromUrlHash =
-      location && location.hash && location.hash.length > 0;
-    if (isLoadingMessageFromUrlHash) return false;
+    const searchObj = queryString.parse(location.search);
+    const isLoadingMessageFromQueryParam = searchObj && searchObj.m;
+    if (isLoadingMessageFromQueryParam) return false;
+
     return !!(currentUserLastSeen || isAuthor || isParticipant || watercooler);
   };
 

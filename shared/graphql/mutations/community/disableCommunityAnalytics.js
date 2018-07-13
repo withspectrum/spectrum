@@ -40,7 +40,6 @@ const disableCommunityAnalyticsOptions = {
           input,
         },
         update: store => {
-          console.log(ownProps);
           const data = store.readQuery({
             query: getCommunitySettingsByMatchQuery,
             variables: {
