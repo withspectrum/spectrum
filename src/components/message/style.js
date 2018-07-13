@@ -138,7 +138,7 @@ export const OuterMessageContainer = styled.div`
     `} &:hover {
     background: ${props =>
       props.selected
-        ? props.theme.special.border
+        ? props.theme.special.wash
         : props.error ? props.theme.warn.border : props.theme.bg.wash};
 
     ${ActionsContainer} {

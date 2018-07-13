@@ -5,9 +5,10 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter, type Location, type History } from 'react-router';
 import Clipboard from 'react-clipboard.js';
-import { openGallery } from '../../actions/gallery';
-import Reaction from '../reaction';
-import { ReactionWrapper } from '../reaction/style';
+import { openGallery } from 'src/actions/gallery';
+import Reaction from 'src/components/reaction';
+import { ReactionWrapper } from 'src/components//reaction/style';
+import OutsideClickHandler from 'src/components/outsideClickHandler';
 import { Body } from './view';
 import { openModal } from 'src/actions/modals';
 import { replyToMessage } from 'src/actions/message';
@@ -23,6 +24,7 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
 import { convertTimestampToTime } from 'shared/time-formatting';
 import { MessagesContext } from 'src/components/messageGroup';
+import ConditionalWrap from 'src/components/conditionalWrap';
 import {
   OuterMessageContainer,
   InnerMessageContainer,
@@ -33,6 +35,7 @@ import {
   Actions,
   Action,
   LikeAction,
+  SelectMessageHandler,
 } from './style';
 
 type Props = {|
@@ -71,8 +74,6 @@ class Message extends React.Component<Props> {
   };
 
   deleteMessage = (e: any) => {
-    e.stopPropagation();
-
     const message = 'Are you sure you want to delete this message?';
 
     track(
@@ -93,8 +94,6 @@ class Message extends React.Component<Props> {
   };
 
   replyToMessage = (e: any) => {
-    e.stopPropagation();
-
     const { threadId, message } = this.props;
     return this.props.dispatch(
       replyToMessage({
@@ -123,156 +122,169 @@ class Message extends React.Component<Props> {
     return (
       <MessagesContext.Consumer>
         {({ selectedMessage, selectMessage }) => {
+          const isSelected = selectedMessage && selectedMessage === hash;
+
           return (
-            <OuterMessageContainer
-              onClick={e => {
-                e.stopPropagation();
-                selectMessage(hash);
-              }}
-              data-cy="message"
-              selected={selectedMessage === hash}
+            <ConditionalWrap
+              condition={isSelected}
+              wrap={children => (
+                <OutsideClickHandler
+                  onOutsideClick={() => selectMessage(null)}
+                  style={{ width: '100%' }}
+                >
+                  {children}
+                </OutsideClickHandler>
+              )}
             >
-              <GutterContainer>
-                {showAuthorContext ? (
-                  <AuthorAvatarContainer>
-                    <UserAvatar user={message.author.user} size={40} />
-                  </AuthorAvatarContainer>
-                ) : (
-                  <GutterTimestamp to={messageUrl}>
-                    {convertTimestampToTime(new Date(message.timestamp))}
-                  </GutterTimestamp>
-                )}
-              </GutterContainer>
+              <OuterMessageContainer
+                data-cy="message"
+                selected={selectedMessage === hash}
+              >
+                <GutterContainer>
+                  {showAuthorContext ? (
+                    <AuthorAvatarContainer>
+                      <UserAvatar user={message.author.user} size={40} />
+                    </AuthorAvatarContainer>
+                  ) : (
+                    <GutterTimestamp onClick={() => selectMessage(hash)}>
+                      {convertTimestampToTime(new Date(message.timestamp))}
+                    </GutterTimestamp>
+                  )}
+                </GutterContainer>
 
-              <InnerMessageContainer>
-                {showAuthorContext && (
-                  <AuthorByline
-                    timestamp={message.timestamp}
-                    user={message.author.user}
-                    roles={message.author.roles}
-                    messageUrl={messageUrl}
-                  />
-                )}
+                <InnerMessageContainer>
+                  <SelectMessageHandler onClick={() => selectMessage(hash)} />
 
-                <Body
-                  me={me}
-                  openGallery={() => this.toggleOpenGallery(message.id)}
-                  message={message}
-                />
+                  {showAuthorContext && (
+                    <AuthorByline
+                      hash={hash}
+                      timestamp={message.timestamp}
+                      user={message.author.user}
+                      roles={message.author.roles}
+                      messageUrl={messageUrl}
+                    />
+                  )}
 
-                {message.reactions.count > 0 && (
-                  <Reaction
-                    message={message}
-                    toggleReaction={toggleReaction}
+                  <Body
                     me={me}
-                    currentUser={currentUser}
-                    dispatch={dispatch}
-                    render={({ me, count, hasReacted, mutation }) => (
-                      <ReactionWrapper
-                        hasCount={count}
-                        hasReacted={hasReacted}
-                        me={me}
-                        onClick={me ? () => {} : mutation}
-                        tipText={me ? 'Likes' : hasReacted ? 'Unlike' : 'Like'}
-                        tipLocation={'top-right'}
-                      >
-                        <Icon
-                          glyph="like-fill"
-                          size={16}
-                          color={'text.reverse'}
-                        />
-                        <span>{count}</span>
-                      </ReactionWrapper>
-                    )}
+                    openGallery={() => this.toggleOpenGallery(message.id)}
+                    message={message}
                   />
-                )}
 
-                <ActionsContainer>
-                  <Actions>
-                    {canModerateMessage && (
-                      <Action
-                        tipText={`Delete`}
-                        tipLocation={'top'}
-                        onClick={this.deleteMessage}
-                      >
-                        <Icon
-                          dataCy="delete-message"
-                          glyph="delete"
-                          size={20}
-                        />
-                      </Action>
-                    )}
-                    <Action
-                      tipText={`Reply`}
-                      tipLocation={'top'}
-                      onClick={this.replyToMessage}
-                    >
-                      <Icon dataCy="reply-to-message" glyph="reply" size={20} />
-                    </Action>
-
-                    {!me && (
-                      <Reaction
-                        message={message}
-                        toggleReaction={toggleReaction}
-                        me={me}
-                        currentUser={currentUser}
-                        dispatch={dispatch}
-                        render={({ me, count, hasReacted, mutation }) => (
-                          <LikeAction
-                            hasReacted={hasReacted}
-                            tipText={hasReacted ? 'Unlike' : 'Like'}
-                            tipLocation={'top'}
-                            onClick={e => {
-                              e.stopPropagation();
-                              mutation();
-                            }}
-                          >
-                            <Icon
-                              dataCy="like-message"
-                              glyph={hasReacted ? 'like-fill' : 'like'}
-                              size={20}
-                            />
-                          </LikeAction>
-                        )}
-                      />
-                    )}
-
-                    {threadType === 'story' && (
-                      <Clipboard
-                        style={{
-                          background: 'none',
-                          borderLeft: '1px solid #DFE7EF',
-                        }}
-                        data-clipboard-text={`${CLIENT_URL}/thread/${threadId}#${hash}`}
-                        onSuccess={() =>
-                          this.props.dispatch(
-                            addToastWithTimeout(
-                              'success',
-                              'Copied to clipboard'
-                            )
-                          )
-                        }
-                      >
-                        <Action
-                          tipText={`Link`}
-                          tipLocation={'top'}
-                          onClick={e => {
-                            e.stopPropagation();
-                            selectMessage(hash);
-                          }}
+                  {message.reactions.count > 0 && (
+                    <Reaction
+                      message={message}
+                      toggleReaction={toggleReaction}
+                      me={me}
+                      currentUser={currentUser}
+                      dispatch={dispatch}
+                      render={({ me, count, hasReacted, mutation }) => (
+                        <ReactionWrapper
+                          hasCount={count}
+                          hasReacted={hasReacted}
+                          me={me}
+                          onClick={me ? () => {} : mutation}
+                          tipText={
+                            me ? 'Likes' : hasReacted ? 'Unlike' : 'Like'
+                          }
+                          tipLocation={'top-right'}
                         >
                           <Icon
-                            dataCy="link-to-message"
-                            glyph="link"
+                            glyph="like-fill"
+                            size={16}
+                            color={'text.reverse'}
+                          />
+                          <span>{count}</span>
+                        </ReactionWrapper>
+                      )}
+                    />
+                  )}
+
+                  <ActionsContainer>
+                    <Actions>
+                      {canModerateMessage && (
+                        <Action
+                          tipText={`Delete`}
+                          tipLocation={'top'}
+                          onClick={this.deleteMessage}
+                        >
+                          <Icon
+                            dataCy="delete-message"
+                            glyph="delete"
                             size={20}
                           />
                         </Action>
-                      </Clipboard>
-                    )}
-                  </Actions>
-                </ActionsContainer>
-              </InnerMessageContainer>
-            </OuterMessageContainer>
+                      )}
+                      <Action
+                        tipText={`Reply`}
+                        tipLocation={'top'}
+                        onClick={this.replyToMessage}
+                      >
+                        <Icon
+                          dataCy="reply-to-message"
+                          glyph="reply"
+                          size={20}
+                        />
+                      </Action>
+
+                      {!me && (
+                        <Reaction
+                          message={message}
+                          toggleReaction={toggleReaction}
+                          me={me}
+                          currentUser={currentUser}
+                          dispatch={dispatch}
+                          render={({ me, count, hasReacted, mutation }) => (
+                            <LikeAction
+                              hasReacted={hasReacted}
+                              tipText={hasReacted ? 'Unlike' : 'Like'}
+                              tipLocation={'top'}
+                              onClick={mutation}
+                            >
+                              <Icon
+                                dataCy="like-message"
+                                glyph={hasReacted ? 'like-fill' : 'like'}
+                                size={20}
+                              />
+                            </LikeAction>
+                          )}
+                        />
+                      )}
+
+                      {threadType === 'story' && (
+                        <Clipboard
+                          style={{
+                            background: 'none',
+                            borderLeft: '1px solid #DFE7EF',
+                          }}
+                          data-clipboard-text={`${CLIENT_URL}/thread/${threadId}#${hash}`}
+                          onSuccess={() =>
+                            this.props.dispatch(
+                              addToastWithTimeout(
+                                'success',
+                                'Copied to clipboard'
+                              )
+                            )
+                          }
+                        >
+                          <Action
+                            tipText={`Link`}
+                            tipLocation={'top'}
+                            onClick={() => selectMessage(hash)}
+                          >
+                            <Icon
+                              dataCy="link-to-message"
+                              glyph="link"
+                              size={20}
+                            />
+                          </Action>
+                        </Clipboard>
+                      )}
+                    </Actions>
+                  </ActionsContainer>
+                </InnerMessageContainer>
+              </OuterMessageContainer>
+            </ConditionalWrap>
           );
         }}
       </MessagesContext.Consumer>

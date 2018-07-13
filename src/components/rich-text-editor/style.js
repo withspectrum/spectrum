@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
-import { Transition, zIndex } from '../globals';
+import { Transition, zIndex } from 'src/components/globals';
 import theme from 'shared/theme';
 import { UserHoverProfile } from 'src/components/hoverProfile';
 import type { Node } from 'react';
@@ -19,8 +19,7 @@ const UsernameWrapper = styled.span`
   display: inline-block;
 
   &:hover {
-    background: ${props =>
-      props.me ? props.theme.special.border : props.theme.space.border};
+    text-decoration: underline;
   }
 
   a {
