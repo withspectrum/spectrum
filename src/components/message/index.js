@@ -67,7 +67,9 @@ class Message extends React.Component<Props> {
     return false;
   }
 
-  toggleOpenGallery = messageId => {
+  toggleOpenGallery = (e: any, messageId: string) => {
+    e.stopPropagation();
+
     const { threadId } = this.props;
     this.props.dispatch(openGallery(threadId, messageId));
   };
@@ -171,7 +173,7 @@ class Message extends React.Component<Props> {
 
                   <Body
                     me={me}
-                    openGallery={() => this.toggleOpenGallery(message.id)}
+                    openGallery={e => this.toggleOpenGallery(e, message.id)}
                     message={message}
                   />
 
@@ -187,7 +189,16 @@ class Message extends React.Component<Props> {
                           hasCount={count}
                           hasReacted={hasReacted}
                           me={me}
-                          onClick={me ? () => {} : mutation}
+                          onClick={
+                            me
+                              ? (e: any) => {
+                                  e.stopPropagation();
+                                }
+                              : (e: any) => {
+                                  e.stopPropagation();
+                                  mutation();
+                                }
+                          }
                           tipText={
                             me ? 'Likes' : hasReacted ? 'Unlike' : 'Like'
                           }

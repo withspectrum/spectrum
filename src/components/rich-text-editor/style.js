@@ -40,7 +40,9 @@ class MentionWithCurrentUser extends React.Component<MentionProps> {
     return (
       <UsernameWrapper me={me}>
         <UserHoverProfile username={username}>
-          <Link to={`/users/${username}`}>{children}</Link>
+          <Link to={`/users/${username}`} onClick={e => e.stopPropagation()}>
+            {children}
+          </Link>
         </UserHoverProfile>
       </UsernameWrapper>
     );

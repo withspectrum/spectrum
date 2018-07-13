@@ -99,7 +99,8 @@ export class QuotedMessage extends React.Component<
     return nextState.isExpanded !== this.state.isExpanded;
   }
 
-  toggle = () => {
+  toggle = (e: any) => {
+    e.stopPropagation();
     if (this.state.isShort) return;
     this.setState(prev => ({ isExpanded: !prev.isExpanded }));
   };

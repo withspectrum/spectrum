@@ -35,11 +35,11 @@ class OutsideAlerter extends React.Component<Props> {
   };
 
   render() {
-    const { style = {} } = this.props;
-    // $FlowFixMe
+    const { style = {}, children } = this.props;
     return (
+      // $FlowFixMe
       <div style={style} ref={this.setWrapperRef}>
-        {this.props.children}
+        {children}
       </div>
     );
   }

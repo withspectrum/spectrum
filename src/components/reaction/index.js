@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { addToastWithTimeout } from '../../actions/toasts';
+import { openModal } from 'src/actions/modals';
 import type { GetMessageType } from 'shared/graphql/queries/message/getMessage';
 import type { Dispatch } from 'redux';
 
@@ -18,9 +18,7 @@ class Reaction extends React.Component<Props> {
     const { toggleReaction, message, dispatch, currentUser } = this.props;
 
     if (!currentUser) {
-      return dispatch(
-        addToastWithTimeout('error', 'Sign in first to leave a reaction!')
-      );
+      return dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}));
     }
 
     return toggleReaction({
