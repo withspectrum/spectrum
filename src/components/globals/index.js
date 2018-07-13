@@ -514,6 +514,13 @@ export const Tooltip = props => css`
     opacity: 1;
     transition: opacity 0.1s ease-in 0.1s;
   }
+
+  @media (max-width: 768px) {
+    &:after,
+    &:before {
+      display: none;
+    }
+  }
 `;
 
 export const Onboarding = props => css`
