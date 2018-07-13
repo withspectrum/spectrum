@@ -42,14 +42,10 @@ export const Body = (props: BodyProps) => {
         <WrapperComponent me={me}>{message.content.body}</WrapperComponent>
       );
     case 'media': {
-      // don't apply imgix url params to optimistic image messages
-      const src = props.id
-        ? message.content.body
-        : `${message.content.body}?max-w=${window.innerWidth * 0.6}`;
       if (typeof message.id === 'number' && message.id < 0) {
         return null;
       }
-      return <Image onClick={openGallery} src={src} />;
+      return <Image onClick={openGallery} src={message.content.body} />;
     }
     case 'draftjs': {
       return (
