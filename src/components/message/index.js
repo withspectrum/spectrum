@@ -35,7 +35,6 @@ import {
   Actions,
   Action,
   LikeAction,
-  SelectMessageHandler,
 } from './style';
 
 type Props = {|
@@ -74,6 +73,8 @@ class Message extends React.Component<Props> {
   };
 
   deleteMessage = (e: any) => {
+    e.stopPropagation();
+
     const message = 'Are you sure you want to delete this message?';
 
     track(
@@ -94,6 +95,8 @@ class Message extends React.Component<Props> {
   };
 
   replyToMessage = (e: any) => {
+    e.stopPropagation();
+
     const { threadId, message } = this.props;
     return this.props.dispatch(
       replyToMessage({
@@ -137,6 +140,10 @@ class Message extends React.Component<Props> {
               )}
             >
               <OuterMessageContainer
+                onClick={e => {
+                  e.stopPropagation();
+                  selectMessage(hash);
+                }}
                 data-cy="message"
                 selected={selectedMessage === hash}
               >
@@ -146,18 +153,15 @@ class Message extends React.Component<Props> {
                       <UserAvatar user={message.author.user} size={40} />
                     </AuthorAvatarContainer>
                   ) : (
-                    <GutterTimestamp onClick={() => selectMessage(hash)}>
+                    <GutterTimestamp to={messageUrl}>
                       {convertTimestampToTime(new Date(message.timestamp))}
                     </GutterTimestamp>
                   )}
                 </GutterContainer>
 
                 <InnerMessageContainer>
-                  <SelectMessageHandler onClick={() => selectMessage(hash)} />
-
                   {showAuthorContext && (
                     <AuthorByline
-                      hash={hash}
                       timestamp={message.timestamp}
                       user={message.author.user}
                       roles={message.author.roles}
@@ -239,7 +243,10 @@ class Message extends React.Component<Props> {
                               hasReacted={hasReacted}
                               tipText={hasReacted ? 'Unlike' : 'Like'}
                               tipLocation={'top'}
-                              onClick={mutation}
+                              onClick={e => {
+                                e.stopPropagation();
+                                mutation();
+                              }}
                             >
                               <Icon
                                 dataCy="like-message"
@@ -270,7 +277,10 @@ class Message extends React.Component<Props> {
                           <Action
                             tipText={`Link`}
                             tipLocation={'top'}
-                            onClick={() => selectMessage(hash)}
+                            onClick={e => {
+                              e.stopPropagation();
+                              selectMessage(hash);
+                            }}
                           >
                             <Icon
                               dataCy="link-to-message"
