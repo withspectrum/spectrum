@@ -43,12 +43,21 @@ type Props = {
 
 type State = {
   visible: boolean,
+  isMounted: boolean,
 };
 
 class UserHoverProfileWrapper extends React.Component<Props, State> {
   ref: ?any;
   ref = null;
-  state = { visible: false };
+  state = { visible: false, isMounted: false };
+
+  componentDidMount() {
+    this.setState({ isMounted: true });
+  }
+
+  componentWillUnmount() {
+    this.setState({ isMounted: false });
+  }
 
   handleMouseEnter = () => {
     const { username, client } = this.props;
@@ -59,7 +68,7 @@ class UserHoverProfileWrapper extends React.Component<Props, State> {
     });
 
     const ref = setTimeout(() => {
-      this.setState({ visible: true });
+      return this.state.isMounted && this.setState({ visible: true });
     }, 500);
     this.ref = ref;
   };
@@ -69,7 +78,7 @@ class UserHoverProfileWrapper extends React.Component<Props, State> {
       clearTimeout(this.ref);
     }
 
-    if (this.state.visible) {
+    if (this.state.isMounted && this.state.visible) {
       this.setState({ visible: false });
     }
   };
