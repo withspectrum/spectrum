@@ -22,7 +22,10 @@ export default (props: Props) => {
         condition={!!user.username}
         wrap={children => (
           <UserHoverProfile username={user.username}>
-            <Link to={`/users/${user.username}`}>
+            <Link
+              to={`/users/${user.username}`}
+              onClick={e => e.stopPropagation()}
+            >
               {children}
               <Username>{user.username && `@${user.username}`}</Username>
             </Link>
@@ -32,8 +35,11 @@ export default (props: Props) => {
         <Name>{user.name}</Name>
       </ConditionalWrap>
 
-      {roles && roles.map((role, index) => <Badge type={role} key={index} />)}
-      {user.isPro && <Badge type="pro" />}
+      {roles &&
+        roles.map((role, index) => (
+          <Badge type={role} key={index} onClick={e => e.stopPropagation()} />
+        ))}
+      {user.isPro && <Badge type="pro" onClick={e => e.stopPropagation()} />}
       <GutterTimestamp to={messageUrl} data-cy="message-timestamp">
         {convertTimestampToTime(new Date(timestamp))}
       </GutterTimestamp>

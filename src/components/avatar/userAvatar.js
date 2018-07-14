@@ -29,7 +29,7 @@ const LinkHandler = (props: LinkHandlerProps) => {
   }
 };
 
-type HandlerProps = {|
+type HandlerProps = {
   user?: GetUserType,
   username?: string,
   size?: number,
@@ -40,7 +40,7 @@ type HandlerProps = {|
   showOnlineStatus?: boolean,
   clickable?: boolean,
   dataCy?: string,
-|};
+};
 
 const GetUserByUsername = (props: HandlerProps) => {
   const { username, showHoverProfile = true } = props;

@@ -14,7 +14,12 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
   if (users.length === 1) {
     return (
       <AvatarContainer>
-        <UserAvatar user={users[0]} onlineSize={'large'} size={44} />
+        <UserAvatar
+          user={users[0]}
+          onlineSize={'large'}
+          size={44}
+          clickable={false}
+        />
       </AvatarContainer>
     );
   }
@@ -25,7 +30,7 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
         {users.map(user => {
           return (
             <TwoAvatarWrap key={user.id}>
-              <UserAvatar user={user} size={34} />
+              <UserAvatar user={user} size={34} clickable={false} />
             </TwoAvatarWrap>
           );
         })}
@@ -43,6 +48,7 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
               onlineSize={'small'}
               key={user.id}
               size={20}
+              clickable={false}
             />
           );
         })}
@@ -60,6 +66,7 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
               onlineSize={'small'}
               key={user.id}
               size={19}
+              clickable={false}
             />
           );
         })}
@@ -80,6 +87,7 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
                 onlineSize={'small'}
                 key={user.id}
                 size={19}
+                clickable={false}
               />
             );
           }
