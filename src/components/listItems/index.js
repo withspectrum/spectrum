@@ -48,6 +48,7 @@ export class CommunityListItem extends React.Component<CommunityProps> {
               community={community}
               size={32}
               showHoverProfile={false}
+              clickable={false}
             />
             <Col style={{ marginLeft: '12px' }}>
               <Heading>{community.name}</Heading>
