@@ -137,7 +137,7 @@
     "postmark": "^1.4.1",
     "pre-commit": "^1.2.2",
     "prismjs": "^1.15.0",
-    "query-string": "^6.1.0",
+    "query-string": "5.1.1",
     "raf": "^3.4.0",
     "raven": "^2.6.3",
     "raven-js": "^3.26.3",
