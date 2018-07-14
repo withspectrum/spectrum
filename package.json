@@ -4,7 +4,7 @@
   "license": "BSD-3-Clause",
   "devDependencies": {
     "babel-cli": "^6.24.1",
-    "babel-eslint": "^8.2.5",
+    "babel-eslint": "^8.2.6",
     "babel-jest": "^22.4.4",
     "babel-plugin-import-inspector": "^2.0.0",
     "babel-plugin-inline-import-graphql-ast": "^2.0.4",
