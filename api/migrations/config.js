@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const debug = require('debug')('migrations');
 
 const DEFAULT_CONFIG = {
   driver: 'rethinkdbdash',
@@ -13,10 +14,9 @@ const RUN_IN_PROD = !!process.env.AWS_RETHINKDB_PASSWORD;
 
 if (RUN_IN_PROD && process.argv[4] === 'down') {
   throw new Error('Do not drop the production database!!!!!');
-  process.exit(1);
 }
 
-if (RUN_IN_PROD) console.log('Running migration in production...');
+if (RUN_IN_PROD) debug('Running migration in production...');
 
 module.exports = !RUN_IN_PROD
   ? DEFAULT_CONFIG

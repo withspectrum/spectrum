@@ -309,6 +309,14 @@ export const Paragraph = styled.p`
   }
 `;
 
+export const BlockQuote = styled.p`
+  line-height: 1.5;
+
+  &:not(:empty) ~ &:not(:empty) {
+    margin-top: 1em;
+  }
+`;
+
 export const QuotedParagraph = Paragraph.withComponent('div').extend`
   color: ${props => props.theme.text.alt};
 

@@ -4,5 +4,6 @@ exports[`messageRenderer should render certain blocks 1`] = `
 Array [
   "unstyled",
   "code-block",
+  "blockquote",
 ]
 `;

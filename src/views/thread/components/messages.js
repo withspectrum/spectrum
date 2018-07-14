@@ -111,6 +111,7 @@ class MessagesWithData extends React.Component<Props, State> {
       participants,
       watercooler,
     } = data.thread;
+
     const isParticipant =
       participants &&
       participants.length > 0 &&
