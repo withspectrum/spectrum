@@ -9,7 +9,7 @@
     "bull": "3.3.10",
     "node-env-file": "^0.1.8",
     "now-env": "^3.1.0",
-    "raven": "^2.1.1",
+    "raven": "^2.6.3",
     "rethinkdbdash": "^2.3.29",
     "sha1": "^1.1.1",
     "source-map-support": "^0.5.6",
