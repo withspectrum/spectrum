@@ -31,7 +31,6 @@ type Props = {
   location: Object,
   forceScrollToBottom: Function,
   forceScrollToTop: Function,
-  forceScrollToMessages: Function,
   contextualScrollToBottom: Function,
   id: string,
   isFetchingMore: boolean,
@@ -57,10 +56,8 @@ class MessagesWithData extends React.Component<Props, State> {
 
     const previousMessagesHaveLoaded =
       prev.data.thread && !!prev.data.thread.messageConnection;
-
     const newMessagesHaveLoaded =
       curr.data.thread && !!curr.data.thread.messageConnection;
-
     const threadChanged =
       previousMessagesHaveLoaded &&
       newMessagesHaveLoaded &&
@@ -69,36 +66,17 @@ class MessagesWithData extends React.Component<Props, State> {
     const previousMessageCount =
       previousMessagesHaveLoaded &&
       prev.data.thread.messageConnection.edges.length;
-
     const newMessageCount =
       newMessagesHaveLoaded && curr.data.thread.messageConnection.edges.length;
-
     const newMessageSent = previousMessageCount < newMessageCount;
-
     const messagesLoadedForFirstTime = !prev.data.thread && curr.data.thread;
 
-    if (messagesLoadedForFirstTime) {
-      if (this.shouldForceScrollToMessages()) {
-        console.log('1 messages');
-        setTimeout(() => this.props.forceScrollToMessages());
-      }
-
-      if (this.shouldForceScrollToBottom()) {
-        console.log('1 bottom');
-        setTimeout(() => curr.forceScrollToBottom());
-      }
+    if (messagesLoadedForFirstTime && this.shouldForceScrollToBottom()) {
+      setTimeout(() => curr.forceScrollToBottom());
     }
 
-    if (threadChanged) {
-      if (this.shouldForceScrollToMessages()) {
-        console.log('2 messages');
-        setTimeout(() => this.props.forceScrollToMessages());
-      }
-
-      if (this.shouldForceScrollToBottom()) {
-        console.log('2 bottom');
-        setTimeout(() => curr.forceScrollToBottom());
-      }
+    if (threadChanged && this.shouldForceScrollToBottom()) {
+      setTimeout(() => curr.forceScrollToBottom());
     }
 
     // force scroll to bottom when a message is sent in the same thread
@@ -118,27 +96,10 @@ class MessagesWithData extends React.Component<Props, State> {
   componentDidMount() {
     this.subscribe();
 
-    if (this.shouldForceScrollToMessages()) {
-      console.log('3 messages');
-      return setTimeout(() => this.props.forceScrollToMessages());
-    }
-
     if (this.shouldForceScrollToBottom()) {
-      console.log('3 bottom');
       return setTimeout(() => this.props.forceScrollToBottom());
     }
   }
-
-  shouldForceScrollToMessages = () => {
-    const { data: { thread } } = this.props;
-    return !!(
-      thread &&
-      thread.currentUserLastSeen &&
-      thread.lastActive &&
-      new Date(thread.currentUserLastSeen).getTime() <
-        new Date(thread.lastActive).getTime()
-    );
-  };
 
   shouldForceScrollToBottom = () => {
     const { currentUser, data } = this.props;
@@ -150,7 +111,6 @@ class MessagesWithData extends React.Component<Props, State> {
       isAuthor,
       participants,
       watercooler,
-      messageCount,
     } = data.thread;
 
     const isParticipant =
@@ -160,10 +120,7 @@ class MessagesWithData extends React.Component<Props, State> {
         participant => participant && participant.id === currentUser.id
       );
 
-    return (
-      messageCount > 0 &&
-      !!(currentUserLastSeen || isAuthor || isParticipant || watercooler)
-    );
+    return !!(currentUserLastSeen || isAuthor || isParticipant || watercooler);
   };
 
   componentWillUnmount() {
