@@ -13,7 +13,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.5.2",
     "backpack-core": "^0.4.1",
-    "body-parser": "^1.17.1",
+    "body-parser": "^1.18.3",
     "bull": "3.3.10",
     "casual": "^1.5.12",
     "compression": "^1.7.1",
