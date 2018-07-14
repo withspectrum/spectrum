@@ -71,7 +71,7 @@ export const PhotoInput = (props: PhotoInputProps) => {
 
   let visible,
     src = defaultValue;
-  if (src.length === 0) {
+  if (src && src.length === 0) {
     visible = true;
     src =
       type === 'user'

@@ -29,7 +29,7 @@ export const Name = styled.span`
   margin-right: 2px;
 
   &:hover {
-    color: ${({ theme }) => theme.brand.default};
+    color: ${({ theme }) => theme.text.default};
     cursor: pointer;
   }
 `;
@@ -119,7 +119,9 @@ export const OuterMessageContainer = styled.div`
   background: ${props =>
     props.selected
       ? props.theme.special.wash
-      : props.error ? props.theme.warn.wash : props.theme.bg.default};
+      : props.error
+        ? props.theme.warn.wash
+        : props.theme.bg.default};
 
   ${props =>
     props.selected &&
@@ -133,13 +135,14 @@ export const OuterMessageContainer = styled.div`
 
       ${GutterTimestamp} {
         opacity: 1;
-        color: ${props.theme.special.default};
       }
     `} &:hover {
     background: ${props =>
       props.selected
         ? props.theme.special.wash
-        : props.error ? props.theme.warn.border : props.theme.bg.wash};
+        : props.error
+          ? props.theme.warn.border
+          : props.theme.bg.wash};
 
     ${ActionsContainer} {
       opacity: 1;
@@ -148,11 +151,6 @@ export const OuterMessageContainer = styled.div`
 
     ${GutterTimestamp} {
       opacity: 1;
-      ${props =>
-        props.selected &&
-        css`
-          color: ${props.theme.special.default};
-        `};
     }
   }
 `;

@@ -34,7 +34,7 @@ export default (props: Props) => {
 
       {roles && roles.map((role, index) => <Badge type={role} key={index} />)}
       {user.isPro && <Badge type="pro" />}
-      <GutterTimestamp to={messageUrl}>
+      <GutterTimestamp to={messageUrl} data-cy="message-timestamp">
         {convertTimestampToTime(new Date(timestamp))}
       </GutterTimestamp>
     </Byline>

@@ -68,10 +68,17 @@ class Messages extends React.Component<Props, State> {
   }
 
   selectMessage = (selectedMessageId: string) => {
-    const { history, location: { pathname, search, state } } = this.props;
+    const {
+      history,
+      location: { pathname, search, state },
+    } = this.props;
     const searchObj = queryString.parse(search);
+    const newSearchObj = { ...searchObj };
+    if (selectedMessageId) {
+      newSearchObj.m = selectedMessageId;
+    }
     const newSearch = queryString.stringify(
-      { ...searchObj, m: selectedMessageId },
+      { ...newSearchObj },
       { encode: false, strict: false, sort: false }
     );
     history.push({

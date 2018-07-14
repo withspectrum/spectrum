@@ -147,7 +147,7 @@ class Message extends React.Component<Props> {
                   e.stopPropagation();
                   selectMessage(selectedMessageId);
                 }}
-                data-cy="message"
+                data-cy={isSelected ? 'message-selected' : 'message'}
                 selected={selectedMessage === selectedMessageId}
               >
                 <GutterContainer>
@@ -206,6 +206,11 @@ class Message extends React.Component<Props> {
                           tipLocation={'top-right'}
                         >
                           <Icon
+                            dataCy={
+                              hasReacted
+                                ? 'inline-unlike-action'
+                                : 'inline-like-action'
+                            }
                             glyph="like-fill"
                             size={16}
                             color={'text.reverse'}
@@ -261,7 +266,9 @@ class Message extends React.Component<Props> {
                               }}
                             >
                               <Icon
-                                dataCy="like-message"
+                                dataCy={
+                                  hasReacted ? 'unlike-action' : 'like-action'
+                                }
                                 glyph={hasReacted ? 'like-fill' : 'like'}
                                 size={20}
                               />
