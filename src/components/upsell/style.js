@@ -4,13 +4,11 @@ import styled from 'styled-components';
 import {
   FlexRow,
   FlexCol,
-  Gradient,
   Transition,
   Shadow,
   hexa,
   zIndex,
 } from 'src/components/globals';
-import Badge from 'src/components/badges';
 import { Button } from 'src/components/buttons';
 
 export const Title = styled.h1`
