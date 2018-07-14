@@ -309,12 +309,11 @@ export const Paragraph = styled.p`
   }
 `;
 
-export const BlockQuote = styled.p`
+export const BlockQuote = styled.blockquote`
   line-height: 1.5;
-
-  &:not(:empty) ~ &:not(:empty) {
-    margin-top: 1em;
-  }
+  border-left: 4px solid ${props => props.theme.bg.border};
+  color: ${props => props.theme.text.alt};
+  padding: 4px 12px 4px 16px;
 `;
 
 export const QuotedParagraph = Paragraph.withComponent('div').extend`

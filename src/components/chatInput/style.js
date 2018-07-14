@@ -135,6 +135,13 @@ export const InputWrapper = styled(EditorWrapper)`
     margin-right: 16px;
   }
 
+  blockquote {
+    line-height: 1.5;
+    border-left: 4px solid ${props => props.theme.bg.border};
+    color: ${props => props.theme.text.alt};
+    padding: 4px 12px 4px 16px;
+  }
+
   ${props =>
     props.hasAttachment &&
     css`

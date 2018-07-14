@@ -62,6 +62,12 @@ export const customStyleMap = {
     fontFamily: 'monospace',
     color: theme.warn.alt,
   },
+  blockquote: {
+    lineHeight: '1.5',
+    borderLeft: `4px solid ${theme.bg.border}`,
+    color: `${theme.text.alt}`,
+    padding: '4px 12px 4px 16px',
+  },
 };
 
 export const Wrapper = styled.div`
