@@ -48,6 +48,7 @@ class HoverProfile extends Component<ProfileProps> {
                   src={community.profilePhoto}
                   type={'community'}
                   size={40}
+                  clickable={false}
                 />
               </ProfilePhotoContainer>
             </CoverContainer>
@@ -109,4 +110,7 @@ class HoverProfile extends Component<ProfileProps> {
 
 const map = state => ({ currentUser: state.users.currentUser });
 //$FlowFixMe
-export default compose(connect(map), withRouter)(HoverProfile);
+export default compose(
+  connect(map),
+  withRouter
+)(HoverProfile);
