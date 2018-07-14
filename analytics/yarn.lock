@@ -286,9 +286,9 @@ node-env-file@^0.1.8:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/node-env-file/-/node-env-file-0.1.8.tgz#fccb7b050f735b5a33da9eb937cf6f1ab457fb69"
 
-now-env@^3.0.1:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/now-env/-/now-env-3.0.4.tgz#f9ed88884bff8d208ad3eaf39cc3437dd1a591ad"
+now-env@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/now-env/-/now-env-3.1.0.tgz#e0198b67279d387229cfd4b25de4c2fc7156943f"
 
 object-keys@^1.0.8:
   version "1.0.11"

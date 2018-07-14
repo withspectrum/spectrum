@@ -8,7 +8,7 @@
     "amplitude": "^3.5.0",
     "bull": "3.3.10",
     "node-env-file": "^0.1.8",
-    "now-env": "^3.0.1",
+    "now-env": "^3.1.0",
     "raven": "^2.1.1",
     "rethinkdbdash": "^2.3.29",
     "sha1": "^1.1.1",
