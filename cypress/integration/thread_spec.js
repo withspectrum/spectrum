@@ -1,4 +1,3 @@
-// @flow
 import { toPlainText, toState } from '../../shared/draft-utils';
 import data from '../../shared/testing/data';
 import {
