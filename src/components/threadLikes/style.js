@@ -1,43 +1,45 @@
 // @flow
 import styled from 'styled-components';
+import { Button } from 'src/components/buttons';
 
-export const CurrentCount = styled.span`
+export const CurrentCount = styled.b`
   font-size: 14px;
 `;
 
-const LikeWrapper = styled.div`
+export const LikeButtonWrapper = styled(Button)`
+  background: ${props => props.theme.bg.default};
+  border: 1px solid ${props => props.theme.bg.border};
+  color: ${props =>
+    props.hasReacted ? props.theme.brand.alt : props.theme.text.alt};
+  padding: 4px 0 4px 8px;
   display: flex;
-  flex: none;
   align-items: center;
-`;
+  overflow: hidden;
 
-export const LikeButtonWrapper = styled(LikeWrapper)`
-  min-width: 48px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  > button {
-    color: ${props =>
-      props.hasReacted ? props.theme.brand.alt : props.theme.text.alt};
-    transition: transform 0.2s ease-in-out;
-
-    &:hover {
-      color: ${props =>
-        props.hasReacted ? props.theme.warn.alt : props.theme.brand.alt};
-      transition: color 0.3s ease-in-out;
-    }
+  div + span {
+    margin: 0;
+    margin-left: 8px;
   }
 
   ${CurrentCount} {
-    margin-right: 8px;
-    margin-left: 4px;
-    font-weight: 600;
-    color: ${props => props.theme.text.alt};
+    background: ${props => props.theme.bg.wash};
+    border-left: 1px solid ${props => props.theme.bg.border};
+    padding: 12px;
+    margin-left: 12px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    color: ${props => props.theme.text.secondary};
+  }
+
+  &:hover {
+    background: ${props => props.theme.bg.default};
+    color: ${props => props.theme.text.default};
   }
 `;
 
-export const LikeCountWrapper = styled(LikeWrapper)`
+export const LikeCountWrapper = styled.div`
+  display: flex;
+  align-items: center;
   margin-right: 12px;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};

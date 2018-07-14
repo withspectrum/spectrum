@@ -406,6 +406,7 @@ export const ThreadDescription = {
 export const ShareButtons = styled.div`
   display: flex;
   align-items: center;
+  margin-left: 12px;
 `;
 
 export const ShareButton = styled.span`
@@ -592,7 +593,7 @@ export const ActionBarContainer = styled.div`
   background: ${props => props.theme.bg.wash};
   border: 1px solid ${props => props.theme.bg.border};
   border-radius: 6px;
-  padding: 6px 6px 6px 12px;
+  padding: 6px;
 
   @media (max-width: 768px) {
     margin: 0;
