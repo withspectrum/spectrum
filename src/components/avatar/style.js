@@ -1,5 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
+import ReactImage from 'react-image';
 import { zIndex } from '../globals';
 import Link from 'src/components/link';
 import { ProfileHeaderAction } from '../profile/style';
@@ -15,11 +16,11 @@ export const Status = styled.div`
   background-color: ${({ theme }) => theme.bg.default};
 
   ${props =>
-    props.mobileSize &&
+    props.mobilesize &&
     css`
       @media (max-width: 768px) {
-        width: ${props => `${props.mobileSize}px`};
-        height: ${props => `${props.mobileSize}px`};
+        width: ${props => `${props.mobilesize}px`};
+        height: ${props => `${props.mobilesize}px`};
       }
     `};
 
@@ -36,11 +37,15 @@ export const Status = styled.div`
     bottom: ${props =>
       props.onlineSize === 'large'
         ? '0'
-        : props.onlineSize === 'small' ? '-1px' : '1px'};
+        : props.onlineSize === 'small'
+          ? '-1px'
+          : '1px'};
     right: ${props =>
       props.onlineSize === 'large'
         ? '0'
-        : props.onlineSize === 'small' ? '-6px' : '-3px'};
+        : props.onlineSize === 'small'
+          ? '-6px'
+          : '-3px'};
     z-index: ${zIndex.avatar};
   }
 `;
@@ -58,8 +63,6 @@ export const AvatarLink = styled(Link)`
     props.type === 'community' ? `${props.size / 8}px` : '100%'};
 `;
 
-export const AvatarNoLink = AvatarLink.withComponent('div');
-
 export const CoverAction = styled(ProfileHeaderAction)`
   position: absolute;
   top: 12px;
@@ -67,7 +70,7 @@ export const CoverAction = styled(ProfileHeaderAction)`
   z-index: ${zIndex.tooltip + 1};
 `;
 
-export const Img = styled.img`
+export const Img = styled(ReactImage)`
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
@@ -77,30 +80,30 @@ export const Img = styled.img`
   background-color: ${props => props.theme.bg.default};
 
   ${props =>
-    props.mobileSize &&
+    props.mobilesize &&
     css`
       @media (max-width: 768px) {
-        width: ${props => `${props.mobileSize}px`};
-        height: ${props => `${props.mobileSize}px`};
+        width: ${props => `${props.mobilesize}px`};
+        height: ${props => `${props.mobilesize}px`};
       }
     `};
 `;
 
-export const ImgPlaceholder = styled.div`
+export const Fallback = styled.img`
   display: inline-block;
-  background-color: ${props => props.theme.bg.border};
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
   border-radius: ${props =>
-    props.type === 'community' ? `${props.size / 8}px` : `${props.size}px`};
+    props.type === 'community' ? `${props.size / 8}px` : '100%'};
   object-fit: cover;
+  background-color: ${props => props.theme.bg.wash};
 
   ${props =>
-    props.mobileSize &&
+    props.mobilesize &&
     css`
       @media (max-width: 768px) {
-        width: ${props => `${props.mobileSize}px`};
-        height: ${props => `${props.mobileSize}px`};
+        width: ${props => `${props.mobilesize}px`};
+        height: ${props => `${props.mobilesize}px`};
       }
     `};
 `;

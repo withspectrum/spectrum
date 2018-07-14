@@ -157,7 +157,7 @@ class CommunityWithData extends React.Component<Props> {
             <CommunityAvatar
               community={community}
               size={128}
-              mobileSize={64}
+              mobilesize={64}
               showHoverProfile={showHoverProfile}
               style={{ marginRight: '16px', boxShadow: '0 0 0 2px #fff' }}
             />

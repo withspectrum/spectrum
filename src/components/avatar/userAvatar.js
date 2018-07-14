@@ -8,32 +8,14 @@ import {
 } from 'shared/graphql/queries/user/getUser';
 import { UserHoverProfile } from 'src/components/hoverProfile';
 import AvatarImage from './image';
-import { Status, AvatarLink, AvatarNoLink } from './style';
+import { Status, AvatarLink } from './style';
 import ConditionalWrap from 'src/components/conditionalWrap';
-
-type LinkHandlerProps = {
-  user: GetUserType,
-  clickable: boolean,
-  children: any,
-};
-
-const LinkHandler = (props: LinkHandlerProps) => {
-  if (props.user.username && props.clickable) {
-    return (
-      <AvatarLink to={`/users/${props.user.username}`}>
-        {props.children}
-      </AvatarLink>
-    );
-  } else {
-    return <AvatarNoLink>{props.children}</AvatarNoLink>;
-  }
-};
 
 type HandlerProps = {
   user?: GetUserType,
   username?: string,
   size?: number,
-  mobileSize?: number,
+  mobilesize?: number,
   onlineSize?: 'small' | 'large',
   style?: Object,
   showHoverProfile?: boolean,
@@ -109,7 +91,7 @@ class Avatar extends Component<AvatarProps> {
       user,
       dataCy,
       size = 32,
-      mobileSize,
+      mobilesize,
       onlineSize = 'large',
       style,
       showOnlineStatus = false,
@@ -131,21 +113,33 @@ class Avatar extends Component<AvatarProps> {
     return (
       <Status
         size={size}
-        mobileSize={mobileSize}
+        mobilesize={mobilesize}
         isOnline={showOnlineStatus && user.isOnline}
         onlineSize={onlineSize}
         style={style}
         type={'user'}
         data-cy={dataCy}
       >
-        <LinkHandler user={user} clickable={clickable}>
+        <ConditionalWrap
+          condition={!!user.username && clickable}
+          wrap={() => (
+            <AvatarLink to={`/users/${user.username}`}>
+              <AvatarImage
+                src={source}
+                size={size}
+                mobilesize={mobilesize}
+                type={'user'}
+              />
+            </AvatarLink>
+          )}
+        >
           <AvatarImage
             src={source}
             size={size}
-            mobileSize={mobileSize}
+            mobilesize={mobilesize}
             type={'user'}
           />
-        </LinkHandler>
+        </ConditionalWrap>
       </Status>
     );
   }

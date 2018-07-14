@@ -10,7 +10,7 @@ import ConditionalWrap from 'src/components/conditionalWrap';
 type Props = {
   community: CommunityInfoType,
   size?: number,
-  mobileSize?: number,
+  mobilesize?: number,
   style?: Object,
   showHoverProfile?: boolean,
   clickable?: boolean,
@@ -41,7 +41,7 @@ class Avatar extends React.Component<Props> {
       community,
       size = 32,
       clickable = true,
-      mobileSize,
+      mobilesize,
       style,
     } = this.props;
 
@@ -60,7 +60,7 @@ class Avatar extends React.Component<Props> {
     return (
       <Status
         size={size}
-        mobileSize={mobileSize}
+        mobilesize={mobilesize}
         style={style}
         type={'community'}
       >
@@ -73,7 +73,7 @@ class Avatar extends React.Component<Props> {
           <AvatarImage
             src={source}
             size={size}
-            mobileSize={mobileSize}
+            mobilesize={mobilesize}
             type={'community'}
           />
         </ConditionalWrap>
