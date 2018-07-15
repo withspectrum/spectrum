@@ -6,7 +6,7 @@
     "aws-sdk": "^2.213.1",
     "body-parser": "^1.18.2",
     "bull": "^3.3.10",
-    "express": "^4.16.2",
+    "express": "^4.16.3",
     "faker": "^4.1.0",
     "http": "^0.0.0",
     "ioredis": "^3.2.2",
@@ -15,7 +15,7 @@
     "raven": "^2.4.0",
     "rethinkdb-changefeed-reconnect": "^0.3.2",
     "rethinkdbdash": "^2.3.31",
-    "shortid": "^2.2.8",
+    "shortid": "^2.2.12",
     "source-map-support": "^0.5.4",
     "stripe": "^5.4.0",
     "toobusy-js": "^0.5.1"

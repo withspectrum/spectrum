@@ -6,9 +6,9 @@ agentkeepalive@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/agentkeepalive/-/agentkeepalive-2.2.0.tgz#c5d1bd4b129008f1163f236f86e5faea2026e2ef"
 
-algoliasearch@^3.24.7:
-  version "3.24.7"
-  resolved "https://registry.yarnpkg.com/algoliasearch/-/algoliasearch-3.24.7.tgz#7ba6c41c9c87b3d36c3181e1d93d482b2ae1a660"
+algoliasearch@^3.29.0:
+  version "3.29.0"
+  resolved "https://registry.yarnpkg.com/algoliasearch/-/algoliasearch-3.29.0.tgz#d04021a5450be55ce314b928bba4a38723399bd8"
   dependencies:
     agentkeepalive "^2.2.0"
     debug "^2.6.8"
@@ -193,9 +193,9 @@ node-fetch@^1.0.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-now-env@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/now-env/-/now-env-3.0.1.tgz#ef67f208b94cb1da07af6a3a958a8dd492fdf63b"
+now-env@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/now-env/-/now-env-3.1.0.tgz#e0198b67279d387229cfd4b25de4c2fc7156943f"
 
 object-assign@^4.1.0:
   version "4.1.1"

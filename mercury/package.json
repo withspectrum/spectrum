@@ -3,9 +3,9 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "bull": "^3.3.10",
+    "bull": "^3.4.2",
     "debug": "^2.6.8",
-    "now-env": "^3.0.4",
+    "now-env": "^3.1.0",
     "raven": "^2.1.1",
     "rethinkdbdash": "^2.3.29",
     "source-map-support": "^0.4.15",
