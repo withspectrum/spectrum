@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Img, Fallback } from './style';
+import { Img, FallbackImg, LoadingImg } from './style';
 import VisibilitySensor from 'react-visibility-sensor';
 
 type Props = {
@@ -24,7 +24,7 @@ export default class Image extends React.Component<Props> {
           {...this.props}
           decode={false}
           loader={
-            <Fallback
+            <LoadingImg
               size={size}
               mobilesize={mobilesize}
               type={type}
@@ -33,7 +33,7 @@ export default class Image extends React.Component<Props> {
             />
           }
           unloader={
-            <Fallback
+            <FallbackImg
               size={size}
               mobilesize={mobilesize}
               type={type}

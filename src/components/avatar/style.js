@@ -89,7 +89,7 @@ export const Img = styled(ReactImage)`
     `};
 `;
 
-export const Fallback = styled.img`
+export const FallbackImg = styled.img`
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
@@ -97,6 +97,24 @@ export const Fallback = styled.img`
     props.type === 'community' ? `${props.size / 8}px` : '100%'};
   object-fit: cover;
   background-color: ${props => props.theme.bg.wash};
+
+  ${props =>
+    props.mobilesize &&
+    css`
+      @media (max-width: 768px) {
+        width: ${props => `${props.mobilesize}px`};
+        height: ${props => `${props.mobilesize}px`};
+      }
+    `};
+`;
+
+export const LoadingImg = styled.div`
+  display: inline-block;
+  width: ${props => (props.size ? `${props.size}px` : '32px')};
+  height: ${props => (props.size ? `${props.size}px` : '32px')};
+  border-radius: ${props =>
+    props.type === 'community' ? `${props.size / 8}px` : '100%'};
+  background: ${props => props.theme.bg.wash};
 
   ${props =>
     props.mobilesize &&
