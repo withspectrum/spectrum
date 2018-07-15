@@ -444,6 +444,10 @@ ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
 
+nanoid@^1.0.7:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-1.1.0.tgz#b18e806e1cdbfdbe030374d5cf08a48cbc80b474"
+
 negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
@@ -592,9 +596,11 @@ setprototypeof@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.1.0.tgz#d0bd85536887b6fe7c0d818cb962d9d91c54e656"
 
-shortid@^2.2.8:
-  version "2.2.8"
-  resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.8.tgz#033b117d6a2e975804f6f0969dbe7d3d0b355131"
+shortid@^2.2.12:
+  version "2.2.12"
+  resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.12.tgz#8e9a95ffbc671fff8f09e985dbc7874102b0cfd2"
+  dependencies:
+    nanoid "^1.0.7"
 
 source-map-support@^0.5.4:
   version "0.5.4"
