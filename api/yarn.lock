@@ -3604,9 +3604,9 @@ imgix-core-js@^1.0.6:
     js-base64 "^2.1.9"
     md5 "^2.2.1"
 
-immutability-helper@^2.2.0:
-  version "2.6.4"
-  resolved "https://registry.yarnpkg.com/immutability-helper/-/immutability-helper-2.6.4.tgz#a931aef97257fcb6d2b5456de652ab6e3bba8408"
+immutability-helper@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/immutability-helper/-/immutability-helper-2.7.1.tgz#5636dbb593e3deb5e572766d42249ea06bae7640"
   dependencies:
     invariant "^2.2.0"
 

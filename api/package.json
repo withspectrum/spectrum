@@ -55,7 +55,7 @@
     "hoist-non-react-statics": "^2.3.1",
     "hpp": "^0.2.2",
     "imgix-core-js": "^1.0.6",
-    "immutability-helper": "^2.2.0",
+    "immutability-helper": "^2.7.1",
     "isomorphic-fetch": "^2.2.1",
     "iterall": "^1.2.2",
     "jest": "^21.2.1",
