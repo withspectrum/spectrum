@@ -36,7 +36,7 @@
     "draft-js-prism-plugin": "0.1.1",
     "draftjs-to-markdown": "^0.4.2",
     "emoji-regex": "^6.1.1",
-    "express": "^4.15.2",
+    "express": "^4.16.3",
     "express-session": "^1.15.2",
     "faker": "^4.1.0",
     "find-with-regex": "^1.0.2",
