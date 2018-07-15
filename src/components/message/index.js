@@ -52,12 +52,6 @@ type Props = {|
 |};
 
 class Message extends React.Component<Props> {
-  wrapperRef: React.Node;
-
-  setWrapperRef = (node: React.Node) => {
-    this.wrapperRef = node;
-  };
-
   shouldComponentUpdate(nextProps, nextState) {
     const newMessage = nextProps.message.id !== this.props.message.id;
     const updatedReactionCount =
@@ -114,18 +108,6 @@ class Message extends React.Component<Props> {
     );
   };
 
-  handleSelectMessage = (
-    e: any,
-    selectMessage: Function,
-    messageId: string
-  ) => {
-    // $FlowFixMe
-    if (this.wrapperRef && this.wrapperRef.contains(e.target)) {
-      e.stopPropagation();
-      return selectMessage(messageId);
-    }
-  };
-
   render() {
     const {
       showAuthorContext,
@@ -161,10 +143,6 @@ class Message extends React.Component<Props> {
               )}
             >
               <OuterMessageContainer
-                innerRef={this.setWrapperRef}
-                onClick={e =>
-                  this.handleSelectMessage(e, selectMessage, selectedMessageId)
-                }
                 data-cy={isSelected ? 'message-selected' : 'message'}
                 selected={selectedMessage === selectedMessageId}
               >
@@ -174,7 +152,10 @@ class Message extends React.Component<Props> {
                       <UserAvatar user={message.author.user} size={40} />
                     </AuthorAvatarContainer>
                   ) : (
-                    <GutterTimestamp to={messageUrl}>
+                    <GutterTimestamp
+                      to={messageUrl}
+                      onClick={() => selectMessage(selectedMessageId)}
+                    >
                       {convertTimestampToTime(new Date(message.timestamp))}
                     </GutterTimestamp>
                   )}
@@ -183,6 +164,7 @@ class Message extends React.Component<Props> {
                 <InnerMessageContainer>
                   {showAuthorContext && (
                     <AuthorByline
+                      selectedMessageId={selectedMessageId}
                       timestamp={message.timestamp}
                       user={message.author.user}
                       roles={message.author.roles}
