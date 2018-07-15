@@ -4,7 +4,7 @@
   },
   "dependencies": {
     "bull": "3.3.10",
-    "debug": "^2.6.8",
+    "debug": "^2.6.9",
     "draft-js": "^0.10.5",
     "jsonwebtoken": "^8.0.1",
     "node-env-file": "^0.1.8",
