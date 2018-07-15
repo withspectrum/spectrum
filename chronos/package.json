@@ -4,7 +4,7 @@
   },
   "dependencies": {
     "bull": "3.3.10",
-    "debug": "^2.6.8",
+    "debug": "^2.6.9",
     "draft-js": "^0.10.3",
     "lodash": "^4.17.4",
     "lodash.intersection": "^4.4.0",
