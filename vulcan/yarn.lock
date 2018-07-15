@@ -193,9 +193,9 @@ node-fetch@^1.0.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-now-env@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/now-env/-/now-env-3.0.1.tgz#ef67f208b94cb1da07af6a3a958a8dd492fdf63b"
+now-env@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/now-env/-/now-env-3.1.0.tgz#e0198b67279d387229cfd4b25de4c2fc7156943f"
 
 object-assign@^4.1.0:
   version "4.1.1"
