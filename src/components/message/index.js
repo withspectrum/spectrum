@@ -52,6 +52,12 @@ type Props = {|
 |};
 
 class Message extends React.Component<Props> {
+  wrapperRef: React.Node;
+
+  setWrapperRef = (node: React.Node) => {
+    this.wrapperRef = node;
+  };
+
   shouldComponentUpdate(nextProps, nextState) {
     const newMessage = nextProps.message.id !== this.props.message.id;
     const updatedReactionCount =
@@ -108,6 +114,15 @@ class Message extends React.Component<Props> {
     );
   };
 
+  // prettier-ignore
+  handleSelectMessage = (e: any, selectMessage: Function,	messageId: string) => {	
+    // $FlowFixMe	
+    if (window && window.innerWidth < 768 && this.wrapperRef && this.wrapperRef.contains(e.target)) {	
+      e.stopPropagation();	
+      return selectMessage(messageId);	
+    }	
+  };
+
   render() {
     const {
       showAuthorContext,
@@ -145,6 +160,10 @@ class Message extends React.Component<Props> {
               <OuterMessageContainer
                 data-cy={isSelected ? 'message-selected' : 'message'}
                 selected={selectedMessage === selectedMessageId}
+                innerRef={this.setWrapperRef}
+                onClick={e =>
+                  this.handleSelectMessage(e, selectMessage, selectedMessageId)
+                }
               >
                 <GutterContainer>
                   {showAuthorContext ? (
@@ -169,6 +188,7 @@ class Message extends React.Component<Props> {
                       user={message.author.user}
                       roles={message.author.roles}
                       messageUrl={messageUrl}
+                      selectedMessage={selectedMessage}
                     />
                   )}
 

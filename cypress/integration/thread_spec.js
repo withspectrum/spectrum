@@ -107,61 +107,6 @@ describe('Thread View', () => {
     });
   });
 
-  describe('Selecting a message', () => {
-    beforeEach(() => {
-      cy.auth(author.id);
-      cy.visit(`/thread/${thread.id}`);
-    });
-
-    it('should allow user to click a message to select it', () => {
-      cy.get('[data-cy="thread-view"]').should('be.visible');
-      // ensure messages have loaded
-      cy.contains('This is the first message!').should('be.visible');
-
-      // click the first message
-      cy.get('[data-cy="message"]')
-        .first()
-        .should('be.visible')
-        .click();
-      // first message should be selected
-      cy.get('[data-cy="message-selected"]').should('be.visible');
-      // only one message should be selected
-      cy.get('[data-cy="message-selected"]').should($p => {
-        expect($p).to.have.length(1);
-      });
-      // the other three messages should be unselected
-      cy.get('[data-cy="message"]').should($p => {
-        expect($p).to.have.length(3);
-      });
-      // the url should contain the message query param
-      cy.url().should(
-        'eq',
-        `http://localhost:3000/thread/${thread.id}?m=MTQ4MzIyNTE5OTk5OQ==`
-      );
-
-      // click the second message
-      cy.get('[data-cy="message"]')
-        .first()
-        .should('be.visible')
-        .click();
-      // second message should be selected
-      cy.get('[data-cy="message-selected"]').should('be.visible');
-      // only one message should be selected
-      cy.get('[data-cy="message-selected"]').should($p => {
-        expect($p).to.have.length(1);
-      });
-      // the other three messages should be unselected
-      cy.get('[data-cy="message"]').should($p => {
-        expect($p).to.have.length(3);
-      });
-      // the url should contain the message query param
-      cy.url().should(
-        'eq',
-        `http://localhost:3000/thread/${thread.id}?m=MTQ4MzIyNTIwMDAwMA==`
-      );
-    });
-  });
-
   describe('Loading a thread with a message query parameter', () => {
     beforeEach(() => {
       cy.auth(author.id);
