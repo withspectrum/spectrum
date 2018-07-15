@@ -930,9 +930,9 @@ apollo-link-http@^1.5.4:
     apollo-link "^1.2.2"
     apollo-link-http-common "^0.2.4"
 
-apollo-link-retry@^2.2.3:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/apollo-link-retry/-/apollo-link-retry-2.2.3.tgz#5bdfabb719edae8faf7340c36ae6b9c13e1ddabb"
+apollo-link-retry@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/apollo-link-retry/-/apollo-link-retry-2.2.4.tgz#63fadf06fcd6975ad0914d8f0146be5f950f6539"
   dependencies:
     "@types/zen-observable" "0.5.3"
     apollo-link "^1.2.2"
