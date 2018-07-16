@@ -80,9 +80,9 @@ ajv@^5.1.0, ajv@^5.1.5, ajv@^5.2.3:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
 
-algoliasearch@^3.24.7:
-  version "3.24.9"
-  resolved "https://registry.yarnpkg.com/algoliasearch/-/algoliasearch-3.24.9.tgz#19063470efe5b6779ec081394b1f7aa400438273"
+algoliasearch@^3.29.0:
+  version "3.29.0"
+  resolved "https://registry.yarnpkg.com/algoliasearch/-/algoliasearch-3.29.0.tgz#d04021a5450be55ce314b928bba4a38723399bd8"
   dependencies:
     agentkeepalive "^2.2.0"
     debug "^2.6.8"
