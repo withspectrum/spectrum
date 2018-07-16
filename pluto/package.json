@@ -4,7 +4,7 @@
   "main": "index.js",
   "dependencies": {
     "aws-sdk": "^2.213.1",
-    "body-parser": "^1.18.2",
+    "body-parser": "^1.18.3",
     "bull": "^3.3.10",
     "express": "^4.16.3",
     "faker": "^4.1.0",
