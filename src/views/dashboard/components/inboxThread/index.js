@@ -17,7 +17,7 @@ import {
   AvatarLink,
   CommunityAvatarLink,
 } from './style';
-import Avatar from 'src/components/avatar';
+import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
 import ThreadActivity from './activity';
 import { ErrorBoundary } from 'src/components/error';
 
@@ -88,28 +88,14 @@ class InboxThread extends React.Component<Props> {
             {viewContext !== 'userProfile' &&
               viewContext !== 'userProfileReplies' && (
                 <AvatarLink>
-                  <Avatar
-                    user={thread.author.user}
-                    src={`${thread.author.user.profilePhoto}`}
-                    isOnline={thread.author.user.isOnline}
-                    size={'40'}
-                    link={
-                      thread.author.user.username &&
-                      `/users/${thread.author.user.username}`
-                    }
-                  />
+                  <UserAvatar user={thread.author.user} size={40} />
                 </AvatarLink>
               )}
 
             {(viewContext === 'userProfile' ||
               viewContext === 'userProfileReplies') && (
               <CommunityAvatarLink>
-                <Avatar
-                  community={thread.community}
-                  src={`${thread.community.profilePhoto}`}
-                  size={'40'}
-                  link={`/${thread.community.slug}`}
-                />
+                <CommunityAvatar community={thread.community} size={40} />
               </CommunityAvatarLink>
             )}
 

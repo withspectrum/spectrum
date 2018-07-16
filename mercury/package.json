@@ -3,15 +3,15 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "bull": "^3.3.10",
-    "debug": "^2.6.8",
-    "now-env": "^3.0.4",
-    "raven": "^2.1.1",
+    "bull": "^3.4.2",
+    "debug": "^2.6.9",
+    "now-env": "^3.1.0",
+    "raven": "^2.6.3",
     "rethinkdbdash": "^2.3.29",
-    "source-map-support": "^0.4.15",
+    "source-map-support": "^0.4.18",
     "toobusy-js": "^0.5.1"
   },
   "devDependencies": {
-    "json-stringify-pretty-compact": "^1.0.4"
+    "json-stringify-pretty-compact": "^1.2.0"
   }
 }

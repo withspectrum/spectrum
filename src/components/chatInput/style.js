@@ -31,7 +31,7 @@ export const ChatInputWrapper = styled.div`
   align-items: flex-end;
   width: 100%;
   margin: 0;
-  padding: 8px 8px 0 4px;
+  padding: 8px 12px 0 12px;
   background-color: ${props => props.theme.bg.default};
   border-top: 1px solid ${({ theme }) => theme.bg.border};
   box-shadow: -1px 0 0 ${props => props.theme.bg.border},
@@ -79,7 +79,7 @@ export const InputWrapper = styled(EditorWrapper)`
   color: ${props =>
     props.networkDisabled
       ? props.theme.special.default
-      : props.theme.text.default};
+      : props.theme.text.secondary};
   background: ${props =>
     props.networkDisabled
       ? hexa(props.theme.special.default, 0.1)
@@ -133,6 +133,13 @@ export const InputWrapper = styled(EditorWrapper)`
     border-radius: 2px;
     padding: 4px;
     margin-right: 16px;
+  }
+
+  blockquote {
+    line-height: 1.5;
+    border-left: 4px solid ${props => props.theme.bg.border};
+    color: ${props => props.theme.text.alt};
+    padding: 4px 12px 4px 16px;
   }
 
   ${props =>
@@ -258,6 +265,7 @@ export const PreviewWrapper = styled.div`
     margin: 0;
     margin-top: -6px;
     margin-left: -12px;
+    border-left: 0;
   }
 
   & > img {

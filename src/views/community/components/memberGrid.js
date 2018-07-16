@@ -102,6 +102,7 @@ class CommunityMemberGrid extends React.Component<Props, State> {
                 onlineSize={'small'}
                 badges={roles}
                 reputation={reputation}
+                showHoverProfile={false}
               >
                 {currentUser &&
                   user.id !== currentUser.id && (

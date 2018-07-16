@@ -152,8 +152,9 @@ class CommunityMembers extends React.Component<Props, State> {
         onlineSize={'small'}
         reputation={reputation}
         profilePhoto={user.profilePhoto}
-        avatarSize={'40'}
+        avatarSize={40}
         badges={roles}
+        showHoverProfile={false}
       >
         {user.id !== this.props.currentUser.id && (
           <EditDropdown

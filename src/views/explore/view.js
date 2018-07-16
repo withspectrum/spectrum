@@ -159,6 +159,7 @@ class CategoryList extends React.Component<CategoryListProps> {
                     currentUser={currentUser}
                     onLeave={this.onLeave}
                     onJoin={this.onJoin}
+                    showHoverProfile={false}
                   />
                 </ErrorBoundary>
               ))}
@@ -189,6 +190,7 @@ class CategoryList extends React.Component<CategoryListProps> {
                         profileSize={'upsell'}
                         data={{ community }}
                         currentUser={currentUser}
+                        showHoverProfile={false}
                       />
                     </ErrorBoundary>
                   ))}

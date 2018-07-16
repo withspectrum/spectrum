@@ -3,13 +3,13 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "algoliasearch": "^3.24.7",
+    "algoliasearch": "^3.29.0",
     "debug": "^2.6.8",
     "draft-js": "^0.10.3",
     "emoji-regex": "^6.1.1",
     "node-env-file": "^0.1.8",
-    "now-env": "^3.0.1",
-    "raven": "^2.1.1",
+    "now-env": "^3.1.0",
+    "raven": "^2.6.3",
     "rethinkdb-changefeed-reconnect": "^0.3.2",
     "rethinkdbdash": "^2.3.29",
     "source-map-support": "^0.4.15",

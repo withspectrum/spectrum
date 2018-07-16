@@ -61,7 +61,7 @@ class ConversationGrowth extends React.Component<Props> {
                   onlineSize={'small'}
                   reputation={member.reputation}
                   profilePhoto={member.user.profilePhoto}
-                  avatarSize={'40'}
+                  avatarSize={40}
                   badges={member.roles}
                 >
                   {currentUser &&

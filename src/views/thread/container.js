@@ -6,19 +6,20 @@ import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
-import Titlebar from '../../views/titlebar';
+import Titlebar from 'src/views/titlebar';
 import ThreadDetail from './components/threadDetail';
 import Messages from './components/messages';
-import Head from '../../components/head';
-import ChatInput from '../../components/chatInput';
-import ViewError from '../../components/viewError';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
+import Head from 'src/components/head';
+import ChatInput from 'src/components/chatInput';
+import ViewError from 'src/components/viewError';
+import Link from 'src/components/link';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import {
   getThreadByMatch,
   getThreadByMatchQuery,
 } from 'shared/graphql/queries/thread/getThread';
-import { NullState } from '../../components/upsell';
-import JoinChannel from '../../components/upsell/joinChannel';
+import { NullState } from 'src/components/upsell';
+import JoinChannel from 'src/components/upsell/joinChannel';
 import LoadingView from './components/loading';
 import ThreadCommunityBanner from './components/threadCommunityBanner';
 import Sidebar from './components/sidebar';
@@ -62,6 +63,7 @@ type State = {
   // while looking at a live thread
   lastSeen: ?number | ?string,
   bannerIsVisible: boolean,
+  derivedState: Object,
 };
 
 class ThreadContainer extends React.Component<Props, State> {
@@ -72,30 +74,45 @@ class ThreadContainer extends React.Component<Props, State> {
   threadDetailElem: any;
   threadDetailElem = null;
 
-  state = {
-    messagesContainer: null,
-    scrollElement: null,
-    isEditing: false,
-    lastSeen: null,
-    bannerIsVisible: false,
-    scrollOffset: 0,
-  };
+  constructor(props) {
+    super(props);
 
-  componentWillReceiveProps(next: Props) {
-    const curr = this.props;
-    const newThread = !curr.data.thread && next.data.thread;
+    this.state = {
+      messagesContainer: null,
+      scrollElement: null,
+      isEditing: false,
+      lastSeen: null,
+      bannerIsVisible: false,
+      scrollOffset: 0,
+      derivedState: {},
+    };
+  }
+
+  // to compare nextProps to a previous derivedState, we need to store
+  // change in local state
+  // see how to do this here: https://github.com/reactjs/rfcs/blob/master/text/0006-static-lifecycle-methods.md#state-derived-from-propsstate
+  // with implementation below
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const curr = prevState.derivedState;
+    const newThread = curr.data && !curr.data.thread && nextProps.data.thread;
+
     const threadChanged =
+      curr.data &&
       curr.data.thread &&
-      next.data.thread &&
-      curr.data.thread.id !== next.data.thread.id;
+      nextProps.data.thread &&
+      curr.data.thread.id !== nextProps.data.thread.id;
+
     // Update the cached lastSeen value when switching threads
     if (newThread || threadChanged) {
-      this.setState({
-        lastSeen: next.data.thread.currentUserLastSeen
-          ? next.data.thread.currentUserLastSeen
+      return {
+        lastSeen: nextProps.data.thread.currentUserLastSeen
+          ? nextProps.data.thread.currentUserLastSeen
           : null,
-      });
+        derivedState: nextProps,
+      };
     }
+
+    return null;
   }
 
   toggleEdit = () => {
@@ -312,13 +329,15 @@ class ThreadContainer extends React.Component<Props, State> {
             innerRef={c => (this.threadDetailElem = c)}
           >
             <WatercoolerAvatar
-              src={thread.community.profilePhoto}
-              community
+              community={thread.community}
+              showHoverProfile={false}
               size={44}
             />
-            <WatercoolerTitle>
-              The {thread.community.name} watercooler
-            </WatercoolerTitle>
+            <Link to={`/${thread.community.slug}`}>
+              <WatercoolerTitle>
+                The {thread.community.name} watercooler
+              </WatercoolerTitle>
+            </Link>
             <WatercoolerDescription>
               Welcome to the {thread.community.name} watercooler, a space for
               general chat with everyone in the community. Jump in to the
