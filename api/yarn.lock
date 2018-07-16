@@ -5864,9 +5864,9 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-app-rewire-styled-components@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/react-app-rewire-styled-components/-/react-app-rewire-styled-components-3.0.0.tgz#0dd37b9ee1bd5245ccc5fb8d6fc93971019d8036"
+react-app-rewire-styled-components@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/react-app-rewire-styled-components/-/react-app-rewire-styled-components-3.0.2.tgz#e1acfaff2738af7ff4c4ad557ebd4599d6cda862"
   dependencies:
     babel-plugin-styled-components "^1.1.4"
     react-app-rewired "^1.2.0"
