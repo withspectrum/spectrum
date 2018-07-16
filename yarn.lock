@@ -10288,9 +10288,9 @@ spdy@^3.4.1:
     select-hose "^2.0.0"
     spdy-transport "^2.0.18"
 
-spectrum-draft-js-inline-toolbar@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/spectrum-draft-js-inline-toolbar/-/spectrum-draft-js-inline-toolbar-0.1.0.tgz#2cd4028032087ef402c5aa47597bc9d6e80fec69"
+spectrum-draft-js-inline-toolbar@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/spectrum-draft-js-inline-toolbar/-/spectrum-draft-js-inline-toolbar-0.1.2.tgz#b94bc7a3383dc335728a27b6765857c6445c3eb8"
   dependencies:
     draft-js "^0.10.5"
     draft-js-plugins-utils "^2.0.3"

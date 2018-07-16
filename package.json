@@ -182,7 +182,7 @@
     "slate": "^0.20.1",
     "slate-markdown": "0.1.1",
     "slugg": "^1.1.0",
-    "spectrum-draft-js-inline-toolbar": "^0.1.0",
+    "spectrum-draft-js-inline-toolbar": "^0.1.2",
     "stopword": "^0.1.9",
     "string-replace-to-array": "^1.0.3",
     "string-similarity": "^1.2.0",

@@ -298,7 +298,10 @@ class Editor extends React.Component<Props, State> {
           <InlineToolbar
             editorState={state}
             selectionRef={{
-              current: this.editor != null ? this.editor.editor.editor : null,
+              current:
+                this.editor != null && this.editor.editor != null
+                  ? this.editor.editor.editor
+                  : null,
             }}
             onChange={onChange}
           />
