@@ -17,7 +17,7 @@
     "rethinkdbdash": "^2.3.31",
     "source-map-support": "^0.4.15",
     "toobusy-js": "^0.5.1",
-    "validator": "^9.2.0",
+    "validator": "^9.4.1",
     "web-push": "^3.2.2"
   }
 }
