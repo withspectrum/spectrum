@@ -16,7 +16,7 @@
     "body-parser": "^1.18.3",
     "bull": "3.3.10",
     "casual": "^1.5.12",
-    "compression": "^1.7.2",
+    "compression": "^1.7.3",
     "cookie-parser": "^1.4.3",
     "cookie-session": "^2.0.0-beta.3",
     "cors": "^2.8.3",
