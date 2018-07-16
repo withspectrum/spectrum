@@ -528,9 +528,9 @@ object.values@^1.0.4:
     function-bind "^1.1.0"
     has "^1.0.1"
 
-postmark@^1.3.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/postmark/-/postmark-1.4.1.tgz#68240baddc4bce37c68b23478bffbf114bd89f04"
+postmark@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/postmark/-/postmark-1.6.1.tgz#23d48f7182509be5be0eb80c16b90a2e2326eb3c"
   dependencies:
     merge "1.2.0"
 
