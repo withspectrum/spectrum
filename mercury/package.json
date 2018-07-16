@@ -12,6 +12,6 @@
     "toobusy-js": "^0.5.1"
   },
   "devDependencies": {
-    "json-stringify-pretty-compact": "^1.0.4"
+    "json-stringify-pretty-compact": "^1.2.0"
   }
 }
