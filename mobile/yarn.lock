@@ -6437,9 +6437,9 @@ react-native-maps@0.21.0:
     babel-plugin-module-resolver "^2.3.0"
     babel-preset-react-native "1.9.0"
 
-react-native-picker-select@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-picker-select/-/react-native-picker-select-3.1.1.tgz#a99ee6726c58a9d05ae425577f2d28e32d8e1262"
+react-native-picker-select@^3.1.3:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/react-native-picker-select/-/react-native-picker-select-3.1.3.tgz#0d360a295b65eb1a892cbe3846bcf1c3b8f9cb1b"
   dependencies:
     lodash.isequal "^4.5.0"
 
