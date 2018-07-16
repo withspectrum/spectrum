@@ -7,6 +7,7 @@ import createFocusPlugin from 'draft-js-focus-plugin';
 import createBlockDndPlugin from 'draft-js-drag-n-drop-plugin';
 import createMarkdownPlugin from 'draft-js-markdown-plugin';
 import createEmbedPlugin from 'draft-js-embed-plugin';
+import InlineToolbar from 'spectrum-draft-js-inline-toolbar';
 import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-java';
@@ -294,6 +295,13 @@ class Editor extends React.Component<Props, State> {
                 margin={'16px 0 24px 0'}
               />
             )}
+          <InlineToolbar
+            editorState={state}
+            selectionRef={{
+              current: this.editor != null ? this.editor.editor.editor : null,
+            }}
+            onChange={onChange}
+          />
         </ComposerBase>
       );
     } else {
