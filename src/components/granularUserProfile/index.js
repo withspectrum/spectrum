@@ -3,13 +3,15 @@ import * as React from 'react';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Avatar from '../avatar';
-import Link from '../link';
-import Reputation from '../reputation';
-import Badge from '../badges';
-import Icon from '../icons';
-import { initNewThreadWithUser } from '../../actions/directMessageThreads';
+import { UserHoverProfile } from 'src/components/hoverProfile';
+import { UserAvatar } from 'src/components/avatar';
+import Link from 'src/components/link';
+import Reputation from 'src/components/reputation';
+import Badge from 'src/components/badges';
+import Icon from 'src/components/icons';
+import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import type { Dispatch } from 'redux';
+import ConditionalWrap from 'src/components/conditionalWrap';
 import {
   Row,
   Name,
@@ -22,7 +24,7 @@ import {
 type Props = {
   userObject: Object,
   id: string,
-  avatarSize?: string,
+  avatarSize?: number,
   profilePhoto?: string,
   name?: string,
   username?: ?string,
@@ -37,6 +39,7 @@ type Props = {
   onlineSize?: 'small' | 'large',
   history: Object,
   dispatch: Dispatch<Object>,
+  showHoverProfile?: boolean,
 };
 
 // Each prop both provides data AND indicates that the element should be included in the instance of the profile,
@@ -49,6 +52,27 @@ const LinkHandler = ({
   username: ?string,
   children: React.Node,
 }) => (username ? <Link to={`/users/${username}`}>{children}</Link> : children);
+
+class GranularUserProfileHandler extends React.Component<Props> {
+  render() {
+    const { showHoverProfile = true, userObject } = this.props;
+    return (
+      <ConditionalWrap
+        condition={showHoverProfile && !!userObject.username}
+        wrap={() => (
+          <UserHoverProfile
+            username={userObject.username}
+            style={{ flex: '1 1 auto' }}
+          >
+            <GranularUserProfile {...this.props} />
+          </UserHoverProfile>
+        )}
+      >
+        <GranularUserProfile {...this.props} />
+      </ConditionalWrap>
+    );
+  }
+}
 
 class GranularUserProfile extends React.Component<Props> {
   initMessage = () => {
@@ -73,29 +97,27 @@ class GranularUserProfile extends React.Component<Props> {
       messageButton,
       multiAction,
       onlineSize,
+      showHoverProfile = true,
     } = this.props;
 
     return (
       <Row avatarSize={avatarSize} multiAction={multiAction}>
         {profilePhoto && (
-          <Avatar
-            src={profilePhoto}
-            size={avatarSize || '32'}
-            isOnline={userObject.isOnline}
+          <UserAvatar
+            user={userObject}
+            size={avatarSize || 32}
             onlineSize={onlineSize || 'small'}
-            link={`/users/${userObject.username}`}
+            showHoverProfile={showHoverProfile}
           />
         )}
         <LinkHandler username={userObject.username}>
-          <span>
-            {name && (
-              <Name>
-                {name}
-                {username && <Username>@{username}</Username>}
-              </Name>
-            )}
-            {badges && badges.map((b, i) => <Badge key={i} type={b} />)}
-          </span>
+          {name && (
+            <Name>
+              {name}
+              {username && <Username>@{username}</Username>}
+              {badges && badges.map((b, i) => <Badge key={i} type={b} />)}
+            </Name>
+          )}
 
           {typeof reputation === 'number' && (
             <Reputation reputation={reputation} />
@@ -117,4 +139,4 @@ class GranularUserProfile extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), withRouter)(GranularUserProfile);
+export default compose(connect(), withRouter)(GranularUserProfileHandler);

@@ -23,6 +23,7 @@ export const Row = styled.div`
   grid-column-gap: 16px;
   grid-row-gap: 8px;
   padding: 12px 16px;
+  width: 100%;
   background: ${props => props.theme.bg.default};
   border-bottom: 1px solid ${props => props.theme.bg.wash};
 
@@ -56,6 +57,7 @@ export const Name = styled.span`
   font-weight: 600;
   line-height: 1;
   vertical-align: middle;
+  display: flex;
 
   &:hover {
     color: ${props => props.theme.brand.alt};

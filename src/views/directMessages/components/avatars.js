@@ -1,5 +1,7 @@
+// @flow
 import React from 'react';
-import Avatar from '../../../components/avatar';
+import { UserAvatar } from 'src/components/avatar';
+import type { ParticipantType } from 'shared/graphql/fragments/directMessageThread/directMessageThreadInfo';
 import {
   AvatarContainer,
   TwoAvatarContainer,
@@ -8,17 +10,15 @@ import {
   Remainder,
 } from './style';
 
-export const renderAvatars = users => {
+export const renderAvatars = (users: Array<ParticipantType>) => {
   if (users.length === 1) {
     return (
       <AvatarContainer>
-        <Avatar
+        <UserAvatar
           user={users[0]}
-          isOnline={users[0].isOnline}
           onlineSize={'large'}
           size={44}
-          radius={44}
-          src={users[0].profilePhoto}
+          clickable={false}
         />
       </AvatarContainer>
     );
@@ -30,13 +30,7 @@ export const renderAvatars = users => {
         {users.map(user => {
           return (
             <TwoAvatarWrap key={user.id}>
-              <Avatar
-                user={user}
-                isOnline={user.isOnline}
-                size={34}
-                radius={34}
-                src={user.profilePhoto}
-              />
+              <UserAvatar user={user} size={34} clickable={false} />
             </TwoAvatarWrap>
           );
         })}
@@ -49,14 +43,12 @@ export const renderAvatars = users => {
       <ThreeAvatarContainer>
         {users.map(user => {
           return (
-            <Avatar
+            <UserAvatar
               user={user}
-              isOnline={user.isOnline}
               onlineSize={'small'}
               key={user.id}
               size={20}
-              radius={20}
-              src={user.profilePhoto}
+              clickable={false}
             />
           );
         })}
@@ -69,14 +61,12 @@ export const renderAvatars = users => {
       <ThreeAvatarContainer>
         {users.map(user => {
           return (
-            <Avatar
+            <UserAvatar
               user={user}
-              isOnline={user.isOnline}
               onlineSize={'small'}
               key={user.id}
               size={19}
-              radius={19}
-              src={user.profilePhoto}
+              clickable={false}
             />
           );
         })}
@@ -92,14 +82,12 @@ export const renderAvatars = users => {
         {users.map((user, i) => {
           while (i < 3) {
             return (
-              <Avatar
+              <UserAvatar
                 user={user}
-                isOnline={user.isOnline}
                 onlineSize={'small'}
                 key={user.id}
                 size={19}
-                radius={19}
-                src={user.profilePhoto}
+                clickable={false}
               />
             );
           }

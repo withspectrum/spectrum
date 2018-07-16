@@ -216,16 +216,16 @@ class Navbar extends React.Component<Props, State> {
               {...this.getTabProps(
                 history.location.pathname === `/users/${loggedInUser.username}`
               )}
-              to={
-                loggedInUser.username ? `/users/${loggedInUser.username}` : '/'
-              }
+              to={loggedInUser ? `/users/${loggedInUser.username}` : '/'}
               onClick={() => this.trackNavigationClick('profile')}
             >
               <Navatar
                 user={loggedInUser}
-                src={`${loggedInUser.profilePhoto}`}
-                size={24}
-                data-cy="navbar-profile"
+                size={28}
+                showHoverProfile={false}
+                showOnlineStatus={false}
+                clickable={false}
+                dataCy="navbar-profile"
               />
             </Tab>
             <ProfileDropdown user={loggedInUser} />
@@ -236,7 +236,7 @@ class Navbar extends React.Component<Props, State> {
             {...this.getTabProps(
               history.location.pathname === `/users/${loggedInUser.username}`
             )}
-            to={loggedInUser.username ? `/users/${loggedInUser.username}` : '/'}
+            to={loggedInUser ? `/users/${loggedInUser.username}` : '/'}
             onClick={() => this.trackNavigationClick('profile')}
           >
             <Icon glyph="profile" />

@@ -7,8 +7,6 @@ import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import addThreadReactionMutation from 'shared/graphql/mutations/thread/addThreadReaction';
 import removeThreadReactionMutation from 'shared/graphql/mutations/thread/removeThreadReaction';
 import { openModal } from 'src/actions/modals';
-
-import { IconButton } from 'src/components/buttons';
 import Icon from 'src/components/icons';
 import { LikeButtonWrapper, LikeCountWrapper, CurrentCount } from './style';
 
@@ -17,7 +15,6 @@ type LikeButtonProps = {
   addThreadReaction: Function,
   removeThreadReaction: Function,
   currentUser: ?Object,
-  tipLocation?: string,
   dispatch: Dispatch<Object>,
 };
 
@@ -46,17 +43,16 @@ class LikeButtonPure extends React.Component<LikeButtonProps> {
   };
 
   render() {
-    const { thread, tipLocation = 'bottom-left' } = this.props;
+    const { thread } = this.props;
     const { hasReacted, count } = thread.reactions;
 
     return (
-      <LikeButtonWrapper hasReacted={hasReacted}>
-        <IconButton
-          glyph={'thumbsup'}
-          tipText={hasReacted ? 'Unlike thread' : 'Like thread'}
-          tipLocation={tipLocation}
-          onClick={this.handleClick}
-        />
+      <LikeButtonWrapper
+        hasReacted={hasReacted}
+        onClick={this.handleClick}
+        icon={'thumbsup'}
+      >
+        {hasReacted ? 'Liked' : 'Like'}
         <CurrentCount>{count}</CurrentCount>
       </LikeButtonWrapper>
     );

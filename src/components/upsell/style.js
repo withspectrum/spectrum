@@ -4,13 +4,12 @@ import styled from 'styled-components';
 import {
   FlexRow,
   FlexCol,
-  Gradient,
   Transition,
   Shadow,
   hexa,
   zIndex,
-} from '../globals';
-import { Button } from '../buttons';
+} from 'src/components/globals';
+import { Button } from 'src/components/buttons';
 
 export const Title = styled.h1`
   color: ${props => props.theme.text.alt};
@@ -163,27 +162,10 @@ export const Profile = styled.div`
   position: relative;
   padding: 16px 0;
 
-  img {
-    border-radius: 48px;
-    width: 48px;
-    height: 48px;
-  }
-
-  span {
-    background-color: ${({ theme }) => theme.special.default};
-    background-image: ${({ theme }) =>
-      Gradient(theme.special.alt, theme.special.default)};
+  .badge {
     position: absolute;
-    left: 75%;
-    top: 48px;
-    color: ${({ theme }) => theme.text.reverse};
-    font-size: 10px;
-    font-weight: 800;
-    padding: 2px 4px;
-    border-radius: 8px;
-    line-height: 1.5;
-    border: 2px solid #fff;
-    z-index: ${zIndex.avatar + 1};
+    top: 54px;
+    left: 40px;
   }
 `;
 
@@ -352,7 +334,9 @@ export const ButtonTwitter = styled(SigninButton)`
   color: ${props =>
     props.whitebg
       ? props.theme.social.twitter.default
-      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+      : props.preferred
+        ? '#fff'
+        : 'rgba(255,255,255,0.8)'};
 
   &:after {
     color: ${props => props.theme.social.twitter.default};
@@ -370,7 +354,9 @@ export const ButtonFacebook = styled(SigninButton)`
   color: ${props =>
     props.whitebg
       ? props.theme.social.facebook.default
-      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+      : props.preferred
+        ? '#fff'
+        : 'rgba(255,255,255,0.8)'};
 
   &:after {
     color: ${props => props.theme.social.facebook.default};
@@ -388,7 +374,9 @@ export const ButtonGoogle = styled(SigninButton)`
   color: ${props =>
     props.whitebg
       ? props.theme.social.google.default
-      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+      : props.preferred
+        ? '#fff'
+        : 'rgba(255,255,255,0.8)'};
 
   &:after {
     color: ${props => props.theme.social.google.default};

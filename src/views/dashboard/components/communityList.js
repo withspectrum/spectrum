@@ -113,6 +113,7 @@ class CommunityList extends React.Component<Props> {
                 <CommunityListAvatar
                   active={c.id === activeCommunity}
                   src={c.profilePhoto}
+                  showHoverProfile={false}
                 />
                 <CommunityListMeta>
                   <CommunityListName>{c.name}</CommunityListName>

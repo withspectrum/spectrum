@@ -1,37 +1,26 @@
 // @flow
 import styled, { css } from 'styled-components';
+import ReactImage from 'react-image';
 import { zIndex } from '../globals';
 import Link from 'src/components/link';
 import { ProfileHeaderAction } from '../profile/style';
-
-export const HoverWrapper = styled.div`
-  position: absolute;
-  z-index: ${zIndex.tooltip};
-  width: 256px;
-  padding-bottom: 12px;
-  padding-top: 12px;
-  ${props => props.popperStyle};
-
-  &:hover {
-    display: inline-block;
-  }
-`;
 
 export const Status = styled.div`
   position: relative;
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? `${props.size / 8}px` : '100%')};
+  border-radius: ${props =>
+    props.type === 'community' ? `${props.size / 8}px` : '100%'};
   border: none;
   background-color: ${({ theme }) => theme.bg.default};
 
   ${props =>
-    props.mobileSize &&
+    props.mobilesize &&
     css`
       @media (max-width: 768px) {
-        width: ${props => `${props.mobileSize}px`};
-        height: ${props => `${props.mobileSize}px`};
+        width: ${props => `${props.mobilesize}px`};
+        height: ${props => `${props.mobilesize}px`};
       }
     `};
 
@@ -42,23 +31,22 @@ export const Status = styled.div`
     width: ${props => (props.onlineSize === 'large' ? '8px' : '6px')};
     height: ${props => (props.onlineSize === 'large' ? '8px' : '6px')};
     background: ${props => props.theme.success.alt};
-    border-radius: 100%;
+    border-radius: ${props =>
+      props.type === 'community' ? `${props.size / 8}px` : '100%'};
     border: 2px solid ${props => props.theme.text.reverse};
     bottom: ${props =>
       props.onlineSize === 'large'
         ? '0'
-        : props.onlineSize === 'small' ? '-1px' : '1px'};
+        : props.onlineSize === 'small'
+          ? '-1px'
+          : '1px'};
     right: ${props =>
       props.onlineSize === 'large'
         ? '0'
-        : props.onlineSize === 'small' ? '-6px' : '-3px'};
+        : props.onlineSize === 'small'
+          ? '-6px'
+          : '-3px'};
     z-index: ${zIndex.avatar};
-  }
-
-  &:hover {
-    ${HoverWrapper} {
-      display: inline-block;
-    }
   }
 `;
 
@@ -71,10 +59,9 @@ export const AvatarLink = styled(Link)`
   justify-content: center;
   align-items: center;
   pointer-events: auto;
-  border-radius: 100%;
+  border-radius: ${props =>
+    props.type === 'community' ? `${props.size / 8}px` : '100%'};
 `;
-
-export const AvatarNoLink = AvatarLink.withComponent('div');
 
 export const CoverAction = styled(ProfileHeaderAction)`
   position: absolute;
@@ -83,37 +70,58 @@ export const CoverAction = styled(ProfileHeaderAction)`
   z-index: ${zIndex.tooltip + 1};
 `;
 
-export const Img = styled.img`
+export const Img = styled(ReactImage)`
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? `${props.size / 8}px` : '100%')};
+  border-radius: ${props =>
+    props.type === 'community' ? `${props.size / 8}px` : '100%'};
   object-fit: cover;
+  background-color: ${props => props.theme.bg.default};
 
   ${props =>
-    props.mobileSize &&
+    props.mobilesize &&
     css`
       @media (max-width: 768px) {
-        width: ${props => `${props.mobileSize}px`};
-        height: ${props => `${props.mobileSize}px`};
+        width: ${props => `${props.mobilesize}px`};
+        height: ${props => `${props.mobilesize}px`};
       }
     `};
 `;
 
-export const ImgPlaceholder = styled.div`
+export const FallbackImg = styled.img`
   display: inline-block;
-  background-color: ${props => props.theme.bg.border};
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? `${props.size / 8}px` : '100%')};
+  border-radius: ${props =>
+    props.type === 'community' ? `${props.size / 8}px` : '100%'};
   object-fit: cover;
+  background-color: ${props => props.theme.bg.wash};
 
   ${props =>
-    props.mobileSize &&
+    props.mobilesize &&
     css`
       @media (max-width: 768px) {
-        width: ${props => `${props.mobileSize}px`};
-        height: ${props => `${props.mobileSize}px`};
+        width: ${props => `${props.mobilesize}px`};
+        height: ${props => `${props.mobilesize}px`};
+      }
+    `};
+`;
+
+export const LoadingImg = styled.div`
+  display: inline-block;
+  width: ${props => (props.size ? `${props.size}px` : '32px')};
+  height: ${props => (props.size ? `${props.size}px` : '32px')};
+  border-radius: ${props =>
+    props.type === 'community' ? `${props.size / 8}px` : '100%'};
+  background: ${props => props.theme.bg.wash};
+
+  ${props =>
+    props.mobilesize &&
+    css`
+      @media (max-width: 768px) {
+        width: ${props => `${props.mobilesize}px`};
+        height: ${props => `${props.mobilesize}px`};
       }
     `};
 `;

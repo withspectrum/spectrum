@@ -254,9 +254,9 @@ class CommunityWithData extends React.Component<Props, State> {
             />
 
             <PhotoInput
+              type={'community'}
               onChange={this.setCommunityPhoto}
               defaultValue={image}
-              allowGif
             />
           </ImageInputWrapper>
 

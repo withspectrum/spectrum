@@ -60,7 +60,7 @@ class Input extends React.Component<Props, State> {
         createMarkdownPlugin({
           features: {
             inline: ['BOLD', 'ITALIC', 'CODE'],
-            block: ['CODE'],
+            block: ['CODE', 'blockquote'],
           },
           renderLanguageSelect: () => null,
         }),

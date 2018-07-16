@@ -79,6 +79,8 @@ export const MetaSubtitle = styled(Link)`
 `;
 
 export const MetaSubtitleText = styled.span`
+  display: flex;
+
   ${metaSubtitleStyles} &:hover {
     cursor: auto;
     color: ${props =>

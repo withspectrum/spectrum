@@ -8,7 +8,6 @@ import { MiniNewMessageNotification } from './newMessageNotification';
 import { MiniNewReactionNotification } from './newReactionNotification';
 import { MiniNewThreadReactionNotification } from './newThreadReactionNotification';
 import { MiniNewChannelNotification } from './newChannelNotification';
-import { MiniNewThreadNotification } from './newThreadNotification';
 import { MiniNewUserInCommunityNotification } from './newUserInCommunityNotification';
 import { MiniCommunityInviteNotification } from './communityInviteNotification';
 import { MiniMentionMessageNotification } from './mentionMessageNotification';
@@ -108,18 +107,8 @@ export class NotificationDropdownList extends React.Component<Props> {
               );
             }
             case 'THREAD_CREATED': {
-              return (
-                <ErrorBoundary fallbackComponent={null} key={notification.id}>
-                  <MiniNewThreadNotification
-                    notification={notification}
-                    currentUser={currentUser}
-                    history={history}
-                    markSingleNotificationAsSeenInState={
-                      markSingleNotificationAsSeenInState
-                    }
-                  />
-                </ErrorBoundary>
-              );
+              // deprecated - we no longer show this notification type in-app
+              return null;
             }
             case 'COMMUNITY_INVITE': {
               return (

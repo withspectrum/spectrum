@@ -1,8 +1,8 @@
-// @noflow
+// @flow
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import { Transition, FlexRow, hexa, zIndex } from 'src/components/globals';
-import Avatar from 'src/components/avatar';
+import { UserAvatar } from 'src/components/avatar';
 import { isDesktopApp } from 'src/helpers/is-desktop-app';
 
 export const Nav = styled.nav`
@@ -321,7 +321,7 @@ export const ProfileTab = styled(Tab)`
   grid-area: profile;
 `;
 
-export const Navatar = styled(Avatar)`
+export const Navatar = styled(UserAvatar)`
   margin-top: 0;
   border-radius: 100%;
   box-shadow: 0 0 0 2px ${props => props.theme.bg.default};

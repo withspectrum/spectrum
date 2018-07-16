@@ -3,15 +3,16 @@ import * as React from 'react';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import Icon from '../../components/icons';
-import { storeItem } from '../../helpers/localStorage';
-import { PUBLIC_STRIPE_KEY } from '../../api/constants';
-import { addToastWithTimeout } from '../../actions/toasts';
-import { openModal } from '../../actions/modals';
-import Avatar from '../avatar';
-import ToggleCommunityMembership from '../toggleCommunityMembership';
-import { Button, OutlineButton } from '../buttons';
-import { Login } from '../../views/login';
+import Icon from 'src/components/icons';
+import { storeItem } from 'src/helpers/localStorage';
+import { PUBLIC_STRIPE_KEY } from 'src/api/constants';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { openModal } from 'src/actions/modals';
+import { UserAvatar } from 'src/components/avatar';
+import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
+import { Button, OutlineButton } from 'src/components/buttons';
+import { Login } from 'src/views/login';
+import Badge from 'src/components/badges';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import type { Dispatch } from 'redux';
 import {
@@ -405,8 +406,10 @@ class UpsellUpgradeToProPure extends React.Component<
     return (
       <NullCard bg="onboarding">
         <Profile>
-          <Avatar src={`${currentUser.profilePhoto}`} user={currentUser} />
-          <span>PRO</span>
+          <UserAvatar size={60} user={currentUser} />
+          <span className={'badge'}>
+            <Badge type={'pro'} />
+          </span>
         </Profile>
         <Title>Upgrade to Pro</Title>
         <Subtitle>
