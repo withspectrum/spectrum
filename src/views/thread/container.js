@@ -6,19 +6,20 @@ import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
-import Titlebar from '../../views/titlebar';
+import Titlebar from 'src/views/titlebar';
 import ThreadDetail from './components/threadDetail';
 import Messages from './components/messages';
-import Head from '../../components/head';
-import ChatInput from '../../components/chatInput';
-import ViewError from '../../components/viewError';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
+import Head from 'src/components/head';
+import ChatInput from 'src/components/chatInput';
+import ViewError from 'src/components/viewError';
+import Link from 'src/components/link';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import {
   getThreadByMatch,
   getThreadByMatchQuery,
 } from 'shared/graphql/queries/thread/getThread';
-import { NullState } from '../../components/upsell';
-import JoinChannel from '../../components/upsell/joinChannel';
+import { NullState } from 'src/components/upsell';
+import JoinChannel from 'src/components/upsell/joinChannel';
 import LoadingView from './components/loading';
 import ThreadCommunityBanner from './components/threadCommunityBanner';
 import Sidebar from './components/sidebar';
@@ -328,13 +329,15 @@ class ThreadContainer extends React.Component<Props, State> {
             innerRef={c => (this.threadDetailElem = c)}
           >
             <WatercoolerAvatar
-              src={thread.community.profilePhoto}
-              community
+              community={thread.community}
+              showHoverProfile={false}
               size={44}
             />
-            <WatercoolerTitle>
-              The {thread.community.name} watercooler
-            </WatercoolerTitle>
+            <Link to={`/${thread.community.slug}`}>
+              <WatercoolerTitle>
+                The {thread.community.name} watercooler
+              </WatercoolerTitle>
+            </Link>
             <WatercoolerDescription>
               Welcome to the {thread.community.name} watercooler, a space for
               general chat with everyone in the community. Jump in to the

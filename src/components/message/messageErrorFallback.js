@@ -1,20 +1,25 @@
 // @flow
 import * as React from 'react';
-import { Text } from './style';
+import {
+  Text,
+  OuterMessageContainer,
+  GutterContainer,
+  InnerMessageContainer,
+} from './style';
 
-type Props = {
-  me: boolean,
-};
-
-class MessageErrorFallback extends React.Component<Props> {
+class MessageErrorFallback extends React.Component<{}> {
   render() {
-    const { me } = this.props;
-
     return (
-      <Text me={me} error>
-        We encountered an error loading this message - the Spectrum team has
-        been alerted.
-      </Text>
+      <OuterMessageContainer error data-cy="message">
+        <GutterContainer />
+
+        <InnerMessageContainer>
+          <Text error>
+            Something went wrong loading this message. The Spectrum team has
+            been alerted and will investigate soon.
+          </Text>
+        </InnerMessageContainer>
+      </OuterMessageContainer>
     );
   }
 }

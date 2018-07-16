@@ -559,18 +559,6 @@ class NewThread extends React.Component<Props, State> {
     }
   };
 
-  componentWillMount() {
-    // can take an optional param of an array of user objects to automatically
-    // populate the new message composer
-    const { initNewThreadWithUser } = this.props;
-
-    // if the prop is present, add the users to the selected users state
-    if (initNewThreadWithUser.length > 0) {
-      this.setState({
-        selectedUsersForNewThread: [...initNewThreadWithUser],
-      });
-    }
-  }
   /*
     Add event listeners when the component mounts - will be listening
     for up, down, backspace, escape, and enter, to trigger different
@@ -579,7 +567,28 @@ class NewThread extends React.Component<Props, State> {
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress, false);
 
+    // can take an optional param of an array of user objects to automatically
+    // populate the new message composer
     const { initNewThreadWithUser, threadSliderIsOpen } = this.props;
+
+    // if the prop is present, add the users to the selected users state
+    if (initNewThreadWithUser.length > 0) {
+      this.setState(
+        {
+          selectedUsersForNewThread: [...initNewThreadWithUser],
+        },
+        () => {
+          // clear the redux store of this inited user, in case the person
+          // sends more messages later in the session
+          this.props.dispatch(clearDirectMessagesComposer());
+
+          if (this.state.selectedUsersForNewThread.length > 0) {
+            // trigger a new search for an existing thread with these users
+            this.getMessagesForExistingDirectMessageThread();
+          }
+        }
+      );
+    }
 
     // if someone is viewing a thread, don't focus here
     if (threadSliderIsOpen) return;
@@ -592,15 +601,6 @@ class NewThread extends React.Component<Props, State> {
     }
 
     this.chatInput.triggerFocus();
-
-    // clear the redux store of this inited user, in case the person
-    // sends more messages later in the session
-    this.props.dispatch(clearDirectMessagesComposer());
-
-    if (this.state.selectedUsersForNewThread.length > 0) {
-      // trigger a new search for an existing thread with these users
-      this.getMessagesForExistingDirectMessageThread();
-    }
   }
 
   componentWillUnmount() {
@@ -771,8 +771,6 @@ class NewThread extends React.Component<Props, State> {
                         user={user}
                         isOnline={user.isOnline}
                         size={32}
-                        radius={32}
-                        src={user.profilePhoto}
                       />
                       <SearchResultTextContainer>
                         <SearchResultDisplayName>

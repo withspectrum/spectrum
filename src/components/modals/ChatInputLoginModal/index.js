@@ -50,7 +50,7 @@ class ChatInputLoginModal extends React.Component<Props> {
           the action to the 'close' icon in the top right corner of all modals
         */}
         <ModalContainer title={'Sign in'} closeModal={this.close}>
-          <Container>
+          <Container data-cy="login-modal">
             <LoginButtonSet
               redirectPath={redirectPath}
               signinType={signinType}

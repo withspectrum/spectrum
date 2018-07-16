@@ -33,7 +33,8 @@ export const LikeButtonWrapper = styled(Button)`
 
   &:hover {
     background: ${props => props.theme.bg.default};
-    color: ${props => props.theme.text.default};
+    color: ${props =>
+      props.hasReacted ? props.theme.brand.alt : props.theme.text.default};
   }
 `;
 

@@ -132,9 +132,9 @@ jobs:
             cd build-api
             npx now-cd --alias "alpha=api.alpha.spectrum.chat" --team spaceprogram
             cd ..
-      # - run:
-          # name: Deploy and alias Hyperion
-          # command: npx now-cd --alias "alpha=hyperion.alpha.spectrum.chat" --team spaceprogram
+      - run:
+          name: Deploy and alias Hyperion
+          command: npx now-cd --alias "alpha=hyperion.alpha.spectrum.chat" --team spaceprogram
 
   # Run eslint, flow etc.
   test_static_js:

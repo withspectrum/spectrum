@@ -79,6 +79,19 @@ export const getThreadMessageConnectionOptions = {
       variables.last = 50;
     }
 
+    // if a user is visiting a url like /thread/:id#:messageId we can extract
+    // the messageId from the query string and start pagination from there. This
+    // allows users to share links to individual messages and the pagination
+    // will work regardless of if it's a super long thread or not
+    if (props.location && props.location.search) {
+      const params = queryString.parse(props.location.search);
+
+      variables.after = params && params.m ? params.m : null;
+      variables.last = null;
+      // $FlowFixMe
+      variables.first = 50;
+    }
+
     return {
       variables,
       fetchPolicy: 'cache-and-network',

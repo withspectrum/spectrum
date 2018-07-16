@@ -7,7 +7,7 @@ import {
 import Link from 'src/components/link';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import compose from 'recompose/compose';
-import Avatar from 'src/components/avatar';
+import { CommunityAvatar } from 'src/components/avatar';
 import { Button } from 'src/components/buttons';
 import {
   CommunityListGrid,
@@ -112,7 +112,10 @@ class CommunityList extends React.Component<Props, State> {
               if (!community) return null;
               return (
                 <CommunityCard key={community.id}>
-                  <Avatar src={community.profilePhoto} community={community} />
+                  <CommunityAvatar
+                    showHoverProfile={false}
+                    community={community}
+                  />
                   <CommunityCardName>{community.name}</CommunityCardName>
                   <CommunityListActions>
                     <Link
@@ -145,7 +148,10 @@ class CommunityList extends React.Component<Props, State> {
             if (!community) return null;
             return (
               <CommunityCard key={community.id}>
-                <Avatar src={community.profilePhoto} community={community} />
+                <CommunityAvatar
+                  showHoverProfile={false}
+                  community={community}
+                />
                 <CommunityCardName>{community.name}</CommunityCardName>
                 <CommunityListActions>
                   <a

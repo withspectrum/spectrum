@@ -25,7 +25,13 @@ const storedData: ?Object = getItemFromStorage('spectrum');
 const params = queryString.parse(history.location.search);
 
 // Always redirect ?thread=asdfxyz to the thread view
-if (params.thread) history.replace(`/thread/${params.thread}`);
+if (params.thread) {
+  if (params.m) {
+    history.replace(`/thread/${params.thread}?m=${params.m}`);
+  } else {
+    history.replace(`/thread/${params.thread}`);
+  }
+}
 
 // Redirect ?t=asdfxyz to the thread view only for anonymous users who wouldn't see it
 // in their inbox view (since they don't have an inbox view)

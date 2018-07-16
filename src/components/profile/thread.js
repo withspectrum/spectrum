@@ -16,10 +16,11 @@ type Props = {
   setName: Function,
   markAsDeleted: Function,
   id: string,
+  children: any,
 };
 
 class ThreadWithData extends React.Component<Props> {
-  componentWillMount() {
+  componentDidMount() {
     const { data: { thread }, data, setName, markAsDeleted, id } = this.props;
 
     if (setName && thread) {
@@ -32,6 +33,7 @@ class ThreadWithData extends React.Component<Props> {
       markAsDeleted(id);
     }
   }
+
   render() {
     const { data: { thread, error } } = this.props;
     if (error || !thread) {

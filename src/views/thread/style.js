@@ -1,7 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
-import Avatar from '../../components/avatar';
+import { UserAvatar, CommunityAvatar } from '../../components/avatar';
 import { Button } from '../../components/buttons';
 import Column from '../../components/column';
 import {
@@ -254,7 +254,7 @@ export const BylineMeta = styled(FlexCol)`
   margin-left: 12px;
 `;
 
-export const AuthorAvatar = styled(Avatar)`
+export const AuthorAvatar = styled(UserAvatar)`
   cursor: pointer;
 `;
 
@@ -329,14 +329,6 @@ export const Timestamp = styled.span`
   font-size: 16px;
   color: ${({ theme }) => theme.text.alt};
   display: inline-block;
-
-  &:hover {
-    color: ${props => props.theme.text.default};
-  }
-`;
-
-export const Edited = styled(Timestamp)`
-  margin-left: 4px;
 `;
 
 export const ChatWrapper = styled.div`
@@ -466,10 +458,6 @@ export const CommunityHeaderSubtitle = styled.span`
   line-height: 12px;
   color: ${props => props.theme.text.alt};
 
-  > span {
-    margin: 0 4px;
-  }
-
   > a:hover {
     color: ${props => props.theme.brand.default};
   }
@@ -478,8 +466,12 @@ export const CommunityHeaderSubtitle = styled.span`
 export const ThreadSubtitle = styled(CommunityHeaderSubtitle)`
   font-size: 16px;
   margin-top: 8px;
-  display: inline-block;
+  display: flex;
   line-height: 1.5;
+
+  a:hover {
+    color: ${props => props.theme.text.default};
+  }
 `;
 
 export const CommunityHeaderChannelTag = styled.div`
@@ -514,12 +506,6 @@ export const CommunityHeaderMetaCol = styled.div`
   align-items: flex-start;
   align-self: flex-start;
   margin-left: 12px;
-`;
-
-export const CommunityHeaderLink = styled(Link)`
-  display: flex;
-  align-items: center;
-  flex: auto;
 `;
 
 export const PillLink = styled(Link)`
@@ -589,11 +575,11 @@ export const ActionBarContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 32px;
   background: ${props => props.theme.bg.wash};
   border: 1px solid ${props => props.theme.bg.border};
-  border-radius: 6px;
-  padding: 6px;
+  border-left: 0;
+  border-right: 0;
+  padding: 6px 32px;
 
   @media (max-width: 768px) {
     margin: 0;
@@ -788,7 +774,7 @@ export const WatercoolerTitle = styled.h3`
   margin-bottom: 8px;
 `;
 
-export const WatercoolerAvatar = styled(Avatar)`
+export const WatercoolerAvatar = styled(CommunityAvatar)`
   margin-bottom: 16px;
 `;
 

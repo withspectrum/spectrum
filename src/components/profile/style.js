@@ -126,6 +126,19 @@ export const FullDescription = styled.div`
   margin-top: 16px;
   color: ${props => props.theme.text.alt};
 
+  p {
+    white-space: pre-wrap;
+  }
+
+  a {
+    color: ${props => props.theme.text.secondary};
+  }
+
+  a:hover {
+    color: ${props => props.theme.text.default};
+    text-decoration: none;
+  }
+
   > ${ReputationWrapper} {
     margin-top: 16px;
 

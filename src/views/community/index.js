@@ -270,7 +270,11 @@ class CommunityView extends React.Component<Props, State> {
             <CoverPhoto src={community.coverPhoto} />
             <Meta>
               <ErrorBoundary fallbackComponent={null}>
-                <CommunityProfile data={{ community }} profileSize="full" />
+                <CommunityProfile
+                  data={{ community }}
+                  profileSize="full"
+                  showCommunityProfile={false}
+                />
               </ErrorBoundary>
 
               {!isLoggedIn ? (

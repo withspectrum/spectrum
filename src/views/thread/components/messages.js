@@ -3,11 +3,12 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import queryString from 'query-string';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
 import ChatMessages from 'src/components/messageGroup';
-import { LoadingChat } from 'src/components/loading';
+import { Loading } from 'src/components/loading';
 import { Button } from 'src/components/buttons';
 import Icon from 'src/components/icons';
 import { NullState } from 'src/components/upsell';
@@ -16,7 +17,6 @@ import Head from 'src/components/head';
 import NextPageButton from 'src/components/nextPageButton';
 import { ChatWrapper, NullMessagesWrapper, NullCopy } from '../style';
 import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
-import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
 import { ErrorBoundary } from 'src/components/error';
 import type { GetThreadMessageConnectionType } from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -26,7 +26,6 @@ type State = {
 };
 
 type Props = {
-  toggleReaction: Function,
   isLoading: boolean,
   location: Object,
   forceScrollToBottom: Function,
@@ -102,7 +101,7 @@ class MessagesWithData extends React.Component<Props, State> {
   }
 
   shouldForceScrollToBottom = () => {
-    const { currentUser, data } = this.props;
+    const { currentUser, data, location } = this.props;
 
     if (!currentUser || !data.thread) return false;
 
@@ -119,6 +118,10 @@ class MessagesWithData extends React.Component<Props, State> {
       participants.some(
         participant => participant && participant.id === currentUser.id
       );
+
+    const searchObj = queryString.parse(location.search);
+    const isLoadingMessageFromQueryParam = searchObj && searchObj.m;
+    if (isLoadingMessageFromQueryParam) return false;
 
     return !!(currentUserLastSeen || isAuthor || isParticipant || watercooler);
   };
@@ -145,7 +148,6 @@ class MessagesWithData extends React.Component<Props, State> {
     const {
       data,
       isLoading,
-      toggleReaction,
       forceScrollToBottom,
       id,
       isFetchingMore,
@@ -228,7 +230,7 @@ class MessagesWithData extends React.Component<Props, State> {
               loadMore={loadNextPage}
               isLoadingMore={this.props.isFetchingMore}
               hasMore={pageInfo.hasNextPage}
-              loader={<LoadingChat size="small" />}
+              loader={<Loading />}
               useWindow={false}
               initialLoad={false}
               scrollElement={scrollContainer}
@@ -238,7 +240,6 @@ class MessagesWithData extends React.Component<Props, State> {
               <ChatMessages
                 threadId={data.thread.id}
                 thread={data.thread}
-                toggleReaction={toggleReaction}
                 messages={sortedMessages}
                 threadType={'story'}
                 forceScrollToBottom={forceScrollToBottom}
@@ -251,8 +252,12 @@ class MessagesWithData extends React.Component<Props, State> {
       );
     }
 
-    if (isLoading) {
-      return <ChatWrapper>{hasMessagesToLoad && <LoadingChat />}</ChatWrapper>;
+    if (isLoading && hasMessagesToLoad) {
+      return (
+        <ChatWrapper>
+          <Loading />
+        </ChatWrapper>
+      );
     }
 
     if (!messagesExist) {
@@ -285,7 +290,6 @@ const map = state => ({ currentUser: state.users.currentUser });
 const Messages = compose(
   // $FlowIssue
   connect(map),
-  toggleReactionMutation,
   withRouter,
   getThreadMessages,
   viewNetworkHandler
