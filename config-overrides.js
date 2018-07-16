@@ -9,13 +9,10 @@ const webpack = require('webpack');
 const { injectBabelPlugin } = require('react-app-rewired');
 const rewireStyledComponents = require('react-app-rewire-styled-components');
 const rewireReactHotLoader = require('react-app-rewire-hot-loader');
-const swPrecachePlugin = require('sw-precache-webpack-plugin');
 const fs = require('fs');
 const path = require('path');
-const match = require('micromatch');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const { ReactLoadablePlugin } = require('react-loadable/webpack');
-const OfflinePlugin = require('offline-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const BundleBuddyWebpackPlugin = require('bundle-buddy-webpack-plugin');
 
@@ -35,8 +32,6 @@ function walkFolder(currentDirPath, callback) {
     }
   });
 }
-
-const isServiceWorkerPlugin = plugin => plugin instanceof swPrecachePlugin;
 
 const removeEslint = config => {
   config.module.rules = config.module.rules.filter(rule => {
@@ -90,10 +85,6 @@ module.exports = function override(config, env) {
   );
   config = injectBabelPlugin('react-loadable/babel', config);
   config = transpileShared(config);
-  // Filter the default serviceworker plugin, add offline plugin instead
-  config.plugins = config.plugins.filter(
-    plugin => !isServiceWorkerPlugin(plugin)
-  );
   // Get all public files so they're cached by the SW
   let externals = [
     'https://www.google-analytics.com/analytics.js',
@@ -105,45 +96,7 @@ module.exports = function override(config, env) {
       return;
     externals.push(file.replace(/public/, ''));
   });
-  config.plugins.push(
-    new OfflinePlugin({
-      caches: process.env.NODE_ENV === 'development' ? {} : 'all',
-      externals,
-      autoUpdate: true,
-      // NOTE(@mxstbr): Normally this is handled by setting
-      // appShell: './index.html'
-      // but we don't want to serve the app shell for the `/api` and `/auth` routes
-      // which means we have to manually do this and filter any of those routes out
-      cacheMaps: [
-        {
-          match: function(url) {
-            var EXTERNAL_PATHS = ['/api', '/auth'];
-            if (
-              EXTERNAL_PATHS.some(function(path) {
-                return url.pathname.indexOf(path) === 0;
-              })
-            )
-              return false;
-            // This function will be stringified and injected into the ServiceWorker on the client, where
-            // location will be a thing
-            // eslint-disable-next-line no-restricted-globals
-            return new URL('./index.html', location);
-          },
-          requestTypes: ['navigate'],
-        },
-      ],
-      rewrites: arg => arg,
-      ServiceWorker: {
-        entry: './public/push-sw.js',
-        events: true,
-        prefetchRequest: {
-          mode: 'cors',
-          credentials: 'include',
-        },
-      },
-      AppCache: false,
-    })
-  );
+
   if (process.env.ANALYZE_BUNDLE === 'true') {
     debug('Bundle analyzer enabled');
     config.plugins.push(
@@ -153,9 +106,11 @@ module.exports = function override(config, env) {
       })
     );
   }
+
   if (process.env.BUNDLE_BUDDY === 'true') {
     config.plugins.push(new BundleBuddyWebpackPlugin());
   }
+
   config.plugins.unshift(
     new webpack.optimize.CommonsChunkPlugin({
       names: ['bootstrap'],
@@ -163,6 +118,7 @@ module.exports = function override(config, env) {
       minChunks: Infinity,
     })
   );
+
   if (process.env.NODE_ENV === 'production') {
     removeEslint(config);
     config.plugins.push(
