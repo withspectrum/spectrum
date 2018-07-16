@@ -33,6 +33,7 @@ export default (args: Args, { loaders, user }: GraphQLContext) => {
       if (searchFilter && !searchFilter.communityId) return [];
       const userIds = content.hits.map(o => o.objectID);
       const input = userIds.map(userId => {
+        /*eslint array-callback-return: "off"*/
         if (!searchFilter || !searchFilter.communityId) return;
         return [userId, searchFilter.communityId];
       });
