@@ -93,7 +93,7 @@
     "react-infinite-scroller-with-scroll-element": "^1.0.4",
     "react-loadable": "5.2.2",
     "react-modal": "^1.6.5",
-    "react-redux": "^5.0.2",
+    "react-redux": "^5.0.7",
     "react-remarkable": "^1.1.1",
     "react-router": "^4.0.0-beta.7",
     "react-router-dom": "^4.0.0-beta.7",
