@@ -114,10 +114,6 @@ foreach@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/foreach/-/foreach-2.0.5.tgz#0bee005018aeb260d0a3af3ae658dd0136ec1b99"
 
-git-rev@0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/git-rev/-/git-rev-0.2.1.tgz#8ccbd2092b345bc2c9149548396df549646ca63f"
-
 iconv-lite@~0.4.13:
   version "0.4.21"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.21.tgz#c47f8733d02171189ebc4a400f3218d348094798"
@@ -369,11 +365,10 @@ object-keys@^1.0.8:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.0.11.tgz#c54601778ad560f1142ce0e01bcca8b56d13426d"
 
-postmark@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/postmark/-/postmark-1.3.1.tgz#ffd0c36c6a7459295e8d1bf1ca97cfe9e4aaf144"
+postmark@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/postmark/-/postmark-1.6.1.tgz#23d48f7182509be5be0eb80c16b90a2e2326eb3c"
   dependencies:
-    git-rev "0.2.1"
     merge "1.2.0"
 
 promise@^7.1.1:
