@@ -130,8 +130,9 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
           if (
             !threadNotificationStatus ||
             !threadNotificationStatus.receiveNotifications
-          )
+          ) {
             return;
+          }
 
           return await updateThreadNotificationStatusForUser(
             threadId,
