@@ -3,7 +3,13 @@ import * as React from 'react';
 import { convertTimestampToTime } from 'shared/time-formatting';
 import Link from 'src/components/link';
 import Badge from '../badges';
-import { Byline, Name, Username, GutterTimestamp } from './style';
+import {
+  Byline,
+  Name,
+  Username,
+  GutterTimestamp,
+  BadgesContainer,
+} from './style';
 import { UserHoverProfile } from 'src/components/hoverProfile';
 import ConditionalWrap from 'src/components/conditionalWrap';
 import { MessagesContext } from 'src/components/messageGroup';
@@ -26,7 +32,10 @@ export default (props: Props) => {
             <ConditionalWrap
               condition={!!user.username}
               wrap={children => (
-                <UserHoverProfile username={user.username}>
+                <UserHoverProfile
+                  username={user.username}
+                  style={{ flexWrap: 'wrap', flex: '0 1 auto' }}
+                >
                   <Link
                     to={`/users/${user.username}`}
                     onClick={e => e.stopPropagation()}
@@ -40,17 +49,19 @@ export default (props: Props) => {
               <Name>{user.name}</Name>
             </ConditionalWrap>
 
-            {roles &&
-              roles.map((role, index) => (
-                <Badge
-                  type={role}
-                  key={index}
-                  onClick={e => e.stopPropagation()}
-                />
-              ))}
-            {user.isPro && (
-              <Badge type="pro" onClick={e => e.stopPropagation()} />
-            )}
+            <BadgesContainer>
+              {roles &&
+                roles.map((role, index) => (
+                  <Badge
+                    type={role}
+                    key={index}
+                    onClick={e => e.stopPropagation()}
+                  />
+                ))}
+              {user.isPro && (
+                <Badge type="pro" onClick={e => e.stopPropagation()} />
+              )}
+            </BadgesContainer>
             <GutterTimestamp
               to={messageUrl}
               data-cy="message-timestamp"
