@@ -114,7 +114,7 @@ export default async (job: Job<ThreadNotificationJobData>) => {
             footer: 'Spectrum',
             footer_icon:
               'https://spectrum.chat/img/apple-icon-57x57-precomposed.png',
-            ts: incomingThread.createdAt,
+            ts: new Date(incomingThread.createdAt).getTime() / 1000,
             color: '#4400CC',
             actions: [
               {

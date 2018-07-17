@@ -160,7 +160,7 @@ const formatNotification = (incomingNotification, currentUserId) => {
 
       href = `/thread/${message.threadId}`;
       body =
-        message.messageType === 'draftjs'
+        message.messageType.toLowerCase() === 'draftjs'
           ? toPlainText(toState(message.content.body))
           : message.content.body;
       break;
@@ -170,7 +170,7 @@ const formatNotification = (incomingNotification, currentUserId) => {
 
       href = `/thread/${thread.id}`;
       body =
-        thread.type === 'draftjs'
+        thread.type.toLowerCase() === 'draftjs'
           ? toPlainText(toState(thread.content.body))
           : thread.content.body;
       break;

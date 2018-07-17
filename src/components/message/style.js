@@ -20,6 +20,17 @@ export const Byline = styled.span`
   color: ${props => props.theme.text.default};
   max-width: 100%;
   position: relative;
+  flex-wrap: wrap;
+
+  a {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 400px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 export const Name = styled.span`
@@ -27,10 +38,15 @@ export const Name = styled.span`
   font-size: 15px;
   color: ${({ theme }) => theme.text.default};
   margin-right: 2px;
+  display: flex;
 
   &:hover {
     color: ${({ theme }) => theme.text.default};
     cursor: pointer;
+  }
+
+  @media (max-width: 400px) {
+    line-height: 1.4;
   }
 `;
 
@@ -39,6 +55,11 @@ export const Username = styled(Name)`
   margin-left: 2px;
   margin-right: 2px;
   color: ${props => props.theme.text.alt};
+  display: flex;
+
+  @media (max-width: 400px) {
+    line-height: 1.4;
+  }
 `;
 
 export const ActionsContainer = styled.span`
@@ -108,6 +129,10 @@ export const GutterTimestamp = styled(Link)`
   color: ${props => props.theme.text.placeholder};
   opacity: 0;
   ${Truncate};
+
+  @media (max-width: 400px) {
+    display: none !important;
+  }
 `;
 
 export const OuterMessageContainer = styled.div`
@@ -382,5 +407,13 @@ export const QuoteWrapper = styled.div`
     font-size: 13px;
     font-weight: 500;
     color: ${props => props.theme.text.alt};
+  }
+`;
+
+export const BadgesContainer = styled.div`
+  display: flex;
+
+  @media (max-width: 400px) {
+    margin-top: 4px;
   }
 `;
