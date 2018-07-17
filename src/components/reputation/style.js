@@ -9,7 +9,7 @@ export const ReputationWrapper = styled.div`
   color: ${props => props.theme.text.alt};
   cursor: pointer;
   position: relative;
-  z-index: ${zIndex.fullScreen};
+  z-index: ${zIndex.fullscreen};
   ${Tooltip};
   width: fit-content;
 `;

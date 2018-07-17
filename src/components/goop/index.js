@@ -1,8 +1,7 @@
+// @flow
 import React from 'react';
 import styled from 'styled-components';
 import { zIndex } from '../globals';
-
-/* eslint no-eval: 0 */
 
 export const InlineSvg = styled.svg`
   position: absolute;
@@ -34,7 +33,7 @@ export const SvgWrapper = styled.div`
   left: -5%;
   right: -5%;
   display: ${props => (props.goop === 0 ? 'none' : 'inline-block')};
-  color: ${props => eval(`props.theme.${props.color}`)};
+  color: ${props => props.color(props.theme)};
   pointer-events: none;
 
   @media (max-width: 768px) {
@@ -44,7 +43,12 @@ export const SvgWrapper = styled.div`
   }
 `;
 
-class Goop extends React.Component {
+type Props = {
+  goop: number,
+  goopHeight: number,
+  color: Function,
+};
+class Goop extends React.Component<Props> {
   returnGoop() {
     switch (this.props.goop) {
       default:
@@ -105,7 +109,7 @@ class Goop extends React.Component {
         className={'goop'}
         goopHeight={this.props.goopHeight}
         goop={this.props.goop}
-        color={this.props.color}
+        color={theme => theme}
       >
         <InlineSvg
           fillRule="evenodd"
@@ -122,9 +126,5 @@ class Goop extends React.Component {
     );
   }
 }
-
-Goop.defaultProps = {
-  color: 'bg.default',
-};
 
 export default Goop;

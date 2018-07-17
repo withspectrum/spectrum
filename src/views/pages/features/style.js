@@ -1,7 +1,6 @@
+// @flow
 import styled, { css } from 'styled-components';
 import { SvgWrapper } from 'src/components/icons';
-
-/* eslint no-eval: 0 */
 
 export const Intro = styled.div`
   display: grid;
@@ -199,9 +198,7 @@ export const EtcFeature = styled.div`
   }
 
   color: ${props =>
-    props.color
-      ? eval(`props.theme.${props.color}`)
-      : props.theme.text.default};
+    props.color ? props.color(props.theme) : props.theme.text.default};
 `;
 
 export const FeatureName = styled.span`

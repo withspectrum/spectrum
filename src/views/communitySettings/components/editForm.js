@@ -8,7 +8,7 @@ import type { EditCommunityType } from 'shared/graphql/mutations/community/editC
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { Button, IconButton } from '../../../components/buttons';
+import { PrimaryButton, Button, IconButton } from 'src/components/buttons';
 import { Notice } from '../../../components/listItems/style';
 import {
   Input,
@@ -347,14 +347,14 @@ class EditForm extends React.Component<Props, State> {
           </Input>
 
           <Actions>
-            <Button
+            <PrimaryButton
               loading={isLoading}
               onClick={this.save}
-              disabled={photoSizeError}
+              disabled={photoSizeError || isLoading}
               type="submit"
             >
               Save
-            </Button>
+            </PrimaryButton>
             <TertiaryActionContainer>
               {community.communityPermissions.isOwner && (
                 <IconButton
@@ -380,4 +380,8 @@ class EditForm extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), editCommunityMutation, withRouter)(EditForm);
+export default compose(
+  connect(),
+  editCommunityMutation,
+  withRouter
+)(EditForm);

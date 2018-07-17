@@ -3,8 +3,6 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { Tooltip } from '../globals';
 
-/* eslint no-eval: 0 */
-
 type Props = {
   glyph: string,
   size?: number | string,
