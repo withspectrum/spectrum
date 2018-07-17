@@ -1,156 +1,120 @@
-import React from 'react';
+// @flow
+import * as React from 'react';
+
 import {
-  Label,
-  StyledSolidButton,
+  StyledButton,
+  StyledPrimaryButton,
+  StyledSecondaryButton,
+  StyledOutlineButton,
   StyledTextButton,
   StyledIconButton,
-  StyledOutlineButton,
-  StyledFauxOutlineButton,
-  SpinnerContainer,
   StyledButtonRow,
+  StyledButtonSegmentRow,
 } from './style';
-import { Spinner } from '../globals';
-import Icon from '../icons';
 
-type ButtonProps = {|
-  loading?: boolean,
+export type Size = 'small' | 'large' | 'default';
+export type Props = {
+  size?: Size,
   disabled?: boolean,
-  large?: boolean,
-  color?: string,
-  gradientTheme?: string,
-  icon?: string,
-  children?: any,
-  dataCy?: string,
-|};
-
-type IconProps = {
-  glyph: string,
-  color?: string,
-  hoverColor?: string,
-  disabled?: boolean,
-  tipText?: string,
-  tipLocation?:
-    | 'top'
-    | 'top-left'
-    | 'top-right'
-    | 'bottom'
-    | 'bottom-right'
-    | 'bottom-left'
-    | 'left'
-    | 'right',
+  children: React.Node,
 };
 
-export const Button = (props: ButtonProps) => (
-  <StyledSolidButton disabled={props.loading} data-cy={props.dataCy} {...props}>
-    {props.icon ? (
-      props.loading ? (
-        <SpinnerContainer>
-          <Spinner color="text.reverse" size={props.large ? '18' : '14'} />
-        </SpinnerContainer>
-      ) : (
-        <Icon glyph={props.icon} />
-      )
-    ) : (
-      ''
-    )}
-    {props.loading &&
-      !props.icon && (
-        <Spinner color="text.reverse" size={props.large ? '18' : '14'} />
-      )}
-    <Label loading={props.loading} hasIcon={props.icon}>
-      {props.children}
-    </Label>
-  </StyledSolidButton>
-);
+export class Button extends React.Component<Props> {
+  render() {
+    const {
+      size = 'default',
+      disabled = false,
+      children,
+      ...rest
+    } = this.props;
+    return (
+      <StyledButton disabled={disabled} size={size} {...rest}>
+        {children}
+      </StyledButton>
+    );
+  }
+}
 
-export const OutlineButton = (props: ButtonProps) => (
-  <StyledOutlineButton
-    disabled={props.loading}
-    data-cy={props.dataCy}
-    {...props}
-  >
-    {props.icon ? (
-      props.loading ? (
-        <SpinnerContainer>
-          <Spinner color="brand.alt" size={props.large ? '18' : '14'} />
-        </SpinnerContainer>
-      ) : (
-        <Icon glyph={props.icon} />
-      )
-    ) : (
-      ''
-    )}
-    {props.loading &&
-      !props.icon && (
-        <Spinner color="brand.alt" size={props.large ? '18' : '14'} />
-      )}
-    <Label loading={props.loading} hasIcon={props.icon}>
-      {props.children}
-    </Label>
-  </StyledOutlineButton>
-);
+export class PrimaryButton extends React.Component<Props> {
+  render() {
+    const {
+      size = 'default',
+      disabled = false,
+      children,
+      ...rest
+    } = this.props;
+    return (
+      <StyledPrimaryButton disabled={disabled} size={size} {...rest}>
+        {children}
+      </StyledPrimaryButton>
+    );
+  }
+}
 
-// looks like a button, but isn't a button so it won't submit forms
-export const FauxOutlineButton = (props: ButtonProps) => (
-  <StyledFauxOutlineButton
-    disabled={props.loading}
-    data-cy={props.dataCy}
-    {...props}
-  >
-    {props.icon ? (
-      props.loading ? (
-        <SpinnerContainer>
-          <Spinner color="brand.alt" size={props.large ? '18' : '14'} />
-        </SpinnerContainer>
-      ) : (
-        <Icon glyph={props.icon} />
-      )
-    ) : (
-      ''
-    )}
-    {props.loading &&
-      !props.icon && (
-        <Spinner color="brand.alt" size={props.large ? '18' : '14'} />
-      )}
-    <Label loading={props.loading} hasIcon={props.icon}>
-      {props.children}
-    </Label>
-  </StyledFauxOutlineButton>
-);
+export class SecondaryButton extends React.Component<Props> {
+  render() {
+    const {
+      size = 'default',
+      disabled = false,
+      children,
+      ...rest
+    } = this.props;
+    return (
+      <StyledSecondaryButton disabled={disabled} size={size} {...rest}>
+        {children}
+      </StyledSecondaryButton>
+    );
+  }
+}
 
-export const TextButton = (props: ButtonProps) => (
-  <StyledTextButton disabled={props.loading} data-cy={props.dataCy} {...props}>
-    {props.icon ? (
-      props.loading ? (
-        <SpinnerContainer>
-          <Spinner color="text.alt" size={props.large ? '18' : '14'} />
-        </SpinnerContainer>
-      ) : (
-        <Icon glyph={props.icon} />
-      )
-    ) : (
-      ''
-    )}
-    {props.loading &&
-      !props.icon && (
-        <Spinner color="text.alt" size={props.large ? '18' : '14'} />
-      )}
-    <Label loading={props.loading} hasIcon={props.icon}>
-      {props.children}
-    </Label>
-  </StyledTextButton>
-);
+export class TextButton extends React.Component<Props> {
+  render() {
+    const {
+      size = 'default',
+      disabled = false,
+      children,
+      ...rest
+    } = this.props;
+    return (
+      <StyledTextButton disabled={disabled} size={size} {...rest}>
+        {children}
+      </StyledTextButton>
+    );
+  }
+}
 
-export const IconButton = (props: IconProps) => (
-  <StyledIconButton disabled={props.loading} data-cy={props.dataCy} {...props}>
-    <Icon
-      glyph={props.glyph}
-      tipText={props.tipText}
-      tipLocation={props.tipLocation}
-    />
-  </StyledIconButton>
-);
+export class OutlineButton extends React.Component<Props> {
+  render() {
+    const {
+      size = 'default',
+      disabled = false,
+      children,
+      ...rest
+    } = this.props;
+    return (
+      <StyledOutlineButton disabled={disabled} size={size} {...rest}>
+        {children}
+      </StyledOutlineButton>
+    );
+  }
+}
 
-export const ButtonRow = props => (
-  <StyledButtonRow>{props.children}</StyledButtonRow>
-);
+export class IconButton extends React.Component<Props> {
+  render() {
+    const {
+      size = 'default',
+      disabled = false,
+      children,
+      ...rest
+    } = this.props;
+    return (
+      <StyledIconButton disabled={disabled} size={size} {...rest}>
+        {children}
+      </StyledIconButton>
+    );
+  }
+}
+
+export const FauxOutlineButton = Button;
+export const ButtonRow = StyledButtonRow;
+export const ButtonSegmentRow = StyledButtonSegmentRow;

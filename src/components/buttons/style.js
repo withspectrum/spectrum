@@ -1,222 +1,290 @@
 // @flow
-/* eslint no-eval: 0 */
-// $FlowFixMe
 import styled, { css } from 'styled-components';
-import { Gradient, Shadow, Transition, hexa } from '../globals';
+import { Shadow, Transition, hexa, tint } from '../globals';
+import type { Size } from './';
 
-const baseButton = css`
+const getPadding = (size: Size) => {
+  switch (size) {
+    case 'small':
+      return '2px 4px';
+    case 'default':
+      return '8px 16px';
+    case 'large':
+      return '12px 24px';
+    default: {
+      return '4px 8px';
+    }
+  }
+};
+
+const getFontSize = (size: Size) => {
+  switch (size) {
+    case 'small':
+      return '12px';
+    case 'default':
+      return '14px';
+    case 'large':
+      return '16px';
+    default: {
+      return '16px';
+    }
+  }
+};
+
+const base = css`
   display: flex;
   flex: none;
   align-self: center;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: 4px;
+  font-size: ${props => getFontSize(props.size)};
+  font-weight: 500;
   white-space: nowrap;
   word-break: keep-all;
   transition: ${Transition.hover.off};
   cursor: pointer;
-  font-size: ${props => (props.large ? '18px' : '14px')};
   line-height: 1;
   position: relative;
   text-align: center;
-  padding: ${props =>
-    props.icon
-      ? props.large ? '8px 12px' : '4px 8px'
-      : props.large ? '16px 32px' : '12px 16px'};
+  padding: ${props => getPadding(props.size)};
+  opacity: ${props => (props.disabled ? '0.64' : '1')};
+  box-shadow: ${props =>
+    props.disabled ? 'none' : `0 1px 2px rgba(0,0,0,0.04)`};
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 
   &:hover {
     transition: ${Transition.hover.on};
     box-shadow: ${props =>
-      props.disabled
-        ? 'none'
-        : `${Shadow.high} ${hexa(props.theme.bg.reverse, 0.15)}`};
-    opacity: ${props => (props.disabled ? '0.5' : '1')};
-  }
-
-  /* if an icon and label are both present, add space around the label*/
-  div + span,
-  span + span {
-    margin: 0 8px;
+      props.disabled ? 'none' : `${Shadow.mid} rgba(0,0,0,0.08)`};
   }
 `;
 
-export const Label = styled.span`
-  display: block;
-  flex: 0 0 auto;
-  line-height: inherit;
-  color: inherit;
-  ${props => (props.loading && !props.hasIcon ? 'opacity: 0;' : 'opacity: 1;')};
-  align-self: center;
-  margin: auto;
-`;
-
-export const StyledSolidButton = styled.button`
-  ${baseButton} background-color: ${props =>
-  props.disabled
-    ? props.theme.bg.inactive
-    : eval(`props.theme.${props.color ? props.color : `brand.alt`}`)};
+export const StyledButton = styled.button`
+  ${base}
+  border: 1px solid ${props => props.theme.bg.border};
+  color: ${props => props.theme.text.secondary};
+  background-color: ${props => props.theme.bg.default};
   background-image: ${props =>
-    props.disabled || props.gradientTheme === 'none'
-      ? 'none'
-      : props.gradientTheme
-        ? Gradient(
-            eval(`props.theme.${props.gradientTheme}.alt`),
-            eval(`props.theme.${props.gradientTheme}.default`)
-          )
-        : Gradient(props.theme.brand.alt, props.theme.brand.default)};
-  color: ${props => props.theme.text.reverse};
-
+    `linear-gradient(to bottom, ${props.theme.bg.default}, ${
+      props.theme.bg.wash
+    })`};
+  
   &:hover {
-    background-color: ${props =>
-      props.disabled
-        ? props.theme.bg.inactive
-        : eval(
-            `props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`
-          )};
+    color: ${props => props.theme.text.default};
   }
 
   &:active {
+    border: 1px solid ${props => props.theme.text.placeholder};
+    background-image: ${props =>
+      `linear-gradient(to top, ${props.theme.bg.default}, ${
+        props.theme.bg.wash
+      })`};
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 1px ${props =>
+      props.theme.bg.default}, 0 0 0 3px ${props => props.theme.bg.border};
+  }
+`;
+
+export const StyledPrimaryButton = styled.button`
+  ${base}
+  border: 1px solid ${props => props.theme.brand.default};
+  color: ${props => props.theme.text.reverse};
+  background-color: ${props => props.theme.brand.alt};
+  background-image: ${props =>
+    `linear-gradient(to bottom, ${props.theme.brand.alt}, ${
+      props.theme.brand.default
+    })`};
+  text-shadow: 0 1px 1px rgba(0,0,0,0.08);
+
+  &:hover {
+    color: ${props => props.theme.text.reverse};
+    background-image: ${props =>
+      `linear-gradient(to bottom, ${tint(props.theme.brand.alt, 16)}, ${tint(
+        props.theme.brand.default,
+        16
+      )})`};
     box-shadow: ${props =>
-      props.disabled
-        ? 'none'
-        : `${Shadow.low} ${hexa(props.theme.bg.reverse, 0.15)}`};
+      props.disabled ? 'none' : `${Shadow.mid} rgba(0,0,0,0.12)`};
+  }
+
+  &:active {
+    border: 1px solid ${props => props.theme.brand.default};
+    background-image: ${props =>
+      `linear-gradient(to top, ${props.theme.brand.alt}, ${
+        props.theme.brand.default
+      })`};
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 1px ${props =>
+      props.theme.bg.default}, 0 0 0 3px ${props =>
+  hexa(props.theme.brand.alt, 0.16)};
   }
 `;
 
-export const StyledTextButton = styled(StyledSolidButton)`
-  background: transparent;
+export const StyledSecondaryButton = styled.button`
+  ${base}
+  border: 1px solid ${props => props.theme.success.default};
+  color: ${props => props.theme.text.reverse};
+  background-color: ${props => props.theme.success.alt};
+  background-image: ${props =>
+    `linear-gradient(to bottom, ${props.theme.success.alt}, ${
+      props.theme.success.default
+    })`};
+  text-shadow: 0 1px 1px rgba(0,0,0,0.08);
+
+  &:hover {
+    color: ${props => props.theme.text.reverse};
+    background-image: ${props =>
+      `linear-gradient(to bottom, ${tint(props.theme.success.alt, 4)}, ${tint(
+        props.theme.success.default,
+        4
+      )})`};
+    box-shadow: ${props =>
+      props.disabled ? 'none' : `${Shadow.mid} rgba(0,0,0,0.12)`};
+  }
+
+  &:active {
+    border: 1px solid ${props => props.theme.success.default};
+    background-image: ${props =>
+      `linear-gradient(to top, ${props.theme.success.alt}, ${
+        props.theme.success.default
+      })`};
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 1px ${props =>
+      props.theme.bg.default}, 0 0 0 3px ${props =>
+  hexa(props.theme.success.alt, 0.32)};
+  }
+`;
+
+export const StyledTextButton = styled.button`
+  ${base} border: none;
+  color: ${props => props.theme.text.secondary};
+  box-shadow: none;
+  background-color: transparent;
   background-image: none;
-  font-weight: 600;
-  color: ${props =>
-    props.disabled
-      ? props.theme.bg.inactive
-      : eval(`props.theme.${props.color ? props.color : 'text.alt'}`)};
-  transition: color 0.1s ease-out, box-shadow 0.2s ease-out 0.1s, border-radius 0.2s ease-out, padding: 0.2s ease-out;
-  ${props =>
-    props.loading
-      ? css`
-          justify-content: center;
-        `
-      : css`
-          justify-content: flex-start;
-        `}
 
   &:hover {
-    background-color: transparent;
+    color: ${props => props.theme.text.default};
     box-shadow: none;
-    color: ${props =>
-      props.disabled
-        ? props.theme.bg.inactive
-        : eval(
-            `props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`
-          )};
-    transition: color 0.1s ease-in, box-shadow 0.2s ease-in 0.1s, padding 0.2s ease-in;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 1px ${props => props.theme.bg.default},
+      0 0 0 3px ${props => hexa(props.theme.text.alt, 0.32)};
   }
 `;
 
-export const StyledOutlineButton = styled(StyledTextButton)`
-  box-shadow: inset 0 0 0 1px
-    ${props =>
-      props.disabled
-        ? props.theme.bg.inactive
-        : eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
-  color: ${props =>
-    props.disabled
-      ? props.theme.bg.inactive
-      : eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
-  transition: ${Transition.hover.on};
+export const StyledOutlineButton = styled.button`
+  ${base}
+  border: 1px solid ${props => props.theme.bg.border};
+  color: ${props => props.theme.text.secondary};
+  background-color: transparent;
+  background-image: none;
 
   &:hover {
-    background-color: transparent;
-    color: ${props =>
-      props.disabled
-        ? props.theme.bg.inactive
-        : eval(
-            `props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`
-          )};
-    box-shadow: inset 0 0 0 1px
-      ${props =>
-        props.disabled
-          ? props.theme.bg.inactive
-          : eval(
-              `props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`
-            )};
-    transition: ${Transition.hover.on};
+    color: ${props => props.theme.text.default};
+    border: 1px solid ${props => props.theme.text.alt};
+    box-shadow: none;
   }
-`;
 
-export const StyledFauxOutlineButton = styled.span`
-  ${baseButton} box-shadow: inset 0 0 0 1px ${props =>
-  props.disabled
-    ? props.theme.bg.inactive
-    : eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
-  color: ${props =>
-    props.disabled
-      ? props.theme.bg.inactive
-      : eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
-  transition: ${Transition.hover.on};
+  &:active {
+    border: 1px solid ${props => props.theme.text.placeholder};
+  }
 
-  &:hover {
-    background-color: transparent;
-    color: ${props =>
-      props.disabled
-        ? props.theme.bg.inactive
-        : eval(
-            `props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`
-          )};
-    box-shadow: inset 0 0 0 1px
-      ${props =>
-        props.disabled
-          ? props.theme.bg.inactive
-          : eval(
-              `props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`
-            )};
-    transition: ${Transition.hover.on};
+  &:focus {
+    box-shadow: 0 0 0 1px ${props =>
+      props.theme.bg.default}, 0 0 0 3px ${props => props.theme.bg.border};
   }
 `;
 
 export const StyledIconButton = styled.button`
-  ${baseButton} padding: 0;
-  width: 32px;
-  height: 32px;
+  ${base} border: none;
+  color: ${props => props.theme.text.secondary};
   background-color: transparent;
-  color: ${props =>
-    props.disabled
-      ? props.theme.bg.inactive
-      : props.color
-        ? eval(`props.theme.${props.color}`)
-        : props.theme.text.alt};
-  opacity: ${props => (props.opacity ? props.opacity : 1)};
+  background-image: none;
+  box-shadow: none;
+  padding: 0;
 
   &:hover {
-    color: ${props =>
-      props.disabled
-        ? props.theme.bg.inactive
-        : props.hoverColor
-          ? eval(`props.theme.${props.hoverColor}`)
-          : props.color
-            ? eval(`props.theme.${props.color}`)
-            : props.theme.brand.alt};
-    transform: ${props => (props.disabled ? 'none' : 'scale(1.05)')};
+    color: ${props => props.theme.text.default};
     box-shadow: none;
-    opacity: 1;
   }
-`;
 
-export const SpinnerContainer = styled.div`
-  width: 32px;
-  height: 32px;
-  position: relative;
+  &:active {
+    transform: scale(0.96);
+    transition: ${Transition.hover.on};
+  }
+
+  &:focus {
+    box-shadow: none;
+  }
 `;
 
 export const StyledButtonRow = styled.div`
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
   align-items: center;
-  > button,
-  > a {
-    margin: 8px;
+  justify-content: center;
+
+  button + button {
+    margin-left: 8px;
+  }
+`;
+
+export const StyledButtonSegmentRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  button {
+    z-index: 1;
+  }
+
+  button:active,
+  button:focus {
+    z-index: 2;
+  }
+
+  button:first-of-type:not(:last-of-type) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  button:last-of-type:not(:first-of-type) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  button:not(:last-of-type):not(:first-of-type) {
+    border-radius: 0;
+    position: relative;
+    margin: 0 -1px;
+  }
+
+  button:not(:last-of-type) {
+    box-shadow: inset -1px 0 0 ${props => hexa(props.theme.bg.default, 0.12)};
+  }
+
+  ${StyledPrimaryButton} {
+    &:focus {
+      box-shadow: 0 0 0 1px ${props => props.theme.bg.default},
+        0 0 0 3px ${props => hexa(props.theme.brand.alt, 0.16)};
+    }
+  }
+
+  ${StyledSecondaryButton} {
+    &:focus {
+      box-shadow: 0 0 0 1px ${props => props.theme.bg.default},
+        0 0 0 3px ${props => hexa(props.theme.success.alt, 0.32)};
+    }
   }
 `;

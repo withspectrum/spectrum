@@ -27,6 +27,7 @@ import Status from './views/status';
 import Login from './views/login';
 import DirectMessages from './views/directMessages';
 import Thread from './views/thread';
+import Buttons from './views/buttons';
 
 /* prettier-ignore */
 const Explore = Loadable({
@@ -202,6 +203,7 @@ class Routes extends React.Component<Props> {
                 <Route exact path="/home" component={HomeFallback} />
 
                 {/* Public Business Pages */}
+                <Route path="/buttons" component={Buttons} />
                 <Route path="/about" component={Pages} />
                 <Route path="/contact" component={Pages} />
                 <Route path="/terms" component={Pages} />
