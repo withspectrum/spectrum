@@ -95,10 +95,7 @@ module.exports = function override(config, env) {
     plugin => !isServiceWorkerPlugin(plugin)
   );
   // Get all public files so they're cached by the SW
-  let externals = [
-    'https://www.google-analytics.com/analytics.js',
-    'https://cdn.amplitude.com/libs/amplitude-4.2.1-min.gz.js',
-  ];
+  let externals = [];
   walkFolder('./public/', file => {
     // HOTFIX: Don't cache images
     if (file.indexOf('img') > -1 && file.indexOf('homescreen-icon') === -1)
