@@ -283,7 +283,7 @@ export const SearchResultsDropdown = styled.ul`
   width: 320px;
   max-height: 420px;
   overflow-y: scroll;
-  z-index: ${zIndex.dropdown};
+  z-index: ${zIndex.dropDown};
 
   @media (max-width: 768px) {
     width: 100%;

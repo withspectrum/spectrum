@@ -11,6 +11,10 @@ import { getChannelsByUserAndCommunity } from '../../models/channel';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import {
+  getThreadNotificationStatusForUser,
+  updateThreadNotificationStatusForUser,
+} from '../../models/usersThreads';
 
 type Input = {
   input: {
@@ -105,6 +109,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       communityId,
       user.id
     );
+
     const leaveChannelsPromises = allChannelsInCommunity.map(channel =>
       removeMemberInChannel(channel, user.id)
     );
@@ -112,7 +117,33 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     return await Promise.all([
       removeMemberInCommunity(communityId, user.id),
       ...leaveChannelsPromises,
-    ]).then(() => community);
+    ])
+      .then(async () => {
+        // if the community has a watercooler and the current user has a subscription
+        // to it, remove the subscription
+        if (community.watercoolerId) {
+          const threadId = community.watercoolerId;
+          const threadNotificationStatus = await getThreadNotificationStatusForUser(
+            threadId,
+            user.id
+          );
+          if (
+            !threadNotificationStatus ||
+            !threadNotificationStatus.receiveNotifications
+          ) {
+            return;
+          }
+
+          return await updateThreadNotificationStatusForUser(
+            threadId,
+            user.id,
+            false
+          );
+        }
+
+        return;
+      })
+      .then(() => community);
   }
 
   trackQueue.add({
