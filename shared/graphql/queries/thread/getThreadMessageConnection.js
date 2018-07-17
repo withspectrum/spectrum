@@ -86,10 +86,12 @@ export const getThreadMessageConnectionOptions = {
     if (props.location && props.location.search) {
       const params = queryString.parse(props.location.search);
 
-      variables.after = params && params.m ? params.m : null;
-      variables.last = null;
-      // $FlowFixMe
-      variables.first = 50;
+      if (params && params.m) {
+        variables.after = params.m;
+        variables.last = null;
+        // $FlowFixMe
+        variables.first = 50;
+      }
     }
 
     return {
