@@ -48,7 +48,7 @@ middlewares.use(session);
 
 import passport from 'passport';
 middlewares.use(passport.initialize());
-middlewares.use(passport.session());
+middlewares.use(passport.session({ cookie: { secure: true } }));
 
 // This needs to come after passport otherwise we'll always redirect logged-in users
 import threadParamRedirect from 'shared/middlewares/thread-param';
