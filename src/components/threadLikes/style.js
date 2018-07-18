@@ -29,6 +29,7 @@ export const LikeButtonWrapper = styled(Button)`
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
     color: ${props => props.theme.text.secondary};
+    font-size: 14px;
   }
 
   &:hover {
