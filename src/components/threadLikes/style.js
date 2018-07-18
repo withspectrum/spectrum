@@ -46,7 +46,7 @@ export const LikeCountWrapper = styled.div`
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};
 
-  b {
+  ${CurrentCount} {
     margin-left: 4px;
     font-weight: 600;
   }
