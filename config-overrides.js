@@ -15,7 +15,6 @@ const path = require('path');
 const match = require('micromatch');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const { ReactLoadablePlugin } = require('react-loadable/webpack');
-const OfflinePlugin = require('offline-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const BundleBuddyWebpackPlugin = require('bundle-buddy-webpack-plugin');
 
@@ -35,8 +34,6 @@ function walkFolder(currentDirPath, callback) {
     }
   });
 }
-
-const isServiceWorkerPlugin = plugin => plugin instanceof swPrecachePlugin;
 
 const removeEslint = config => {
   config.module.rules = config.module.rules.filter(rule => {
@@ -90,57 +87,7 @@ module.exports = function override(config, env) {
   );
   config = injectBabelPlugin('react-loadable/babel', config);
   config = transpileShared(config);
-  // Filter the default serviceworker plugin, add offline plugin instead
-  config.plugins = config.plugins.filter(
-    plugin => !isServiceWorkerPlugin(plugin)
-  );
-  // Get all public files so they're cached by the SW
-  let externals = [];
-  walkFolder('./public/', file => {
-    // HOTFIX: Don't cache images
-    if (file.indexOf('img') > -1 && file.indexOf('homescreen-icon') === -1)
-      return;
-    externals.push(file.replace(/public/, ''));
-  });
-  config.plugins.push(
-    new OfflinePlugin({
-      caches: process.env.NODE_ENV === 'development' ? {} : 'all',
-      externals,
-      autoUpdate: true,
-      // NOTE(@mxstbr): Normally this is handled by setting
-      // appShell: './index.html'
-      // but we don't want to serve the app shell for the `/api` and `/auth` routes
-      // which means we have to manually do this and filter any of those routes out
-      cacheMaps: [
-        {
-          match: function(url) {
-            var EXTERNAL_PATHS = ['/api', '/auth'];
-            if (
-              EXTERNAL_PATHS.some(function(path) {
-                return url.pathname.indexOf(path) === 0;
-              })
-            )
-              return false;
-            // This function will be stringified and injected into the ServiceWorker on the client, where
-            // location will be a thing
-            // eslint-disable-next-line no-restricted-globals
-            return new URL('./index.html', location);
-          },
-          requestTypes: ['navigate'],
-        },
-      ],
-      rewrites: arg => arg,
-      ServiceWorker: {
-        entry: './public/push-sw.js',
-        events: true,
-        prefetchRequest: {
-          mode: 'cors',
-          credentials: 'include',
-        },
-      },
-      AppCache: false,
-    })
-  );
+
   if (process.env.ANALYZE_BUNDLE === 'true') {
     debug('Bundle analyzer enabled');
     config.plugins.push(
