@@ -19,6 +19,7 @@ import Routes from './hot-routes';
 import { track, events } from './helpers/analytics';
 import { wsLink } from 'shared/graphql';
 import { subscribeToDesktopPush } from './subscribe-to-desktop-push';
+import { unregister } from './registerServiceWorker';
 
 const storedData: ?Object = getItemFromStorage('spectrum');
 const params = queryString.parse(history.location.search);
@@ -85,6 +86,8 @@ Loadable.preloadReady()
   .catch(err => {
     console.error(err);
   });
+
+unregister();
 
 wsLink.subscriptionClient.on('disconnected', () =>
   store.dispatch({ type: 'WEBSOCKET_CONNECTION', value: 'disconnected' })
