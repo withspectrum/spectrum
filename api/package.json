@@ -3,7 +3,7 @@
     "algoliasearch": "^3.29.0",
     "apollo-engine": "1.x",
     "apollo-local-query": "^0.3.0",
-    "apollo-upload-client": "^8.0.0",
+    "apollo-upload-client": "^8.1.0",
     "apollo-upload-server": "^5.0.0",
     "aws-sdk": "2.200.0",
     "axios": "^0.16.2",
