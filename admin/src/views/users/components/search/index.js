@@ -187,7 +187,7 @@ class Search extends React.Component<Props, State> {
     this.search(string);
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     document.removeEventListener('keydown', this.handleKeyPress, false);
   }
 
@@ -269,4 +269,9 @@ class Search extends React.Component<Props, State> {
   }
 }
 
-export default compose(withApollo, withRouter, connect(), pure)(Search);
+export default compose(
+  withApollo,
+  withRouter,
+  connect(),
+  pure
+)(Search);

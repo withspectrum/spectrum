@@ -56,7 +56,7 @@ class CardForm extends React.Component<Props, State> {
     document.body && document.body.appendChild(stripeJs);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState({
       isMounted: true,
     });

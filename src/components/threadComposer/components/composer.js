@@ -317,7 +317,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       this.titleTextarea.focus();
   }
 
-  componentWillUpdate(nextProps) {
+  UNSAFE_componentWillUpdate(nextProps) {
     const { isOpen } = nextProps;
     if (isOpen) {
       // $FlowIssue

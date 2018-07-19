@@ -179,7 +179,7 @@ class Search extends Component {
     this.search(string);
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     document.removeEventListener('keydown', this.handleKeyPress, false);
   }
 
@@ -261,4 +261,9 @@ class Search extends Component {
   }
 }
 
-export default compose(withApollo, withRouter, connect(), pure)(Search);
+export default compose(
+  withApollo,
+  withRouter,
+  connect(),
+  pure
+)(Search);

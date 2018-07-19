@@ -34,7 +34,7 @@ class AndroidFallbackInput extends React.Component<Props, FallbackState> {
     };
   }
 
-  componentWillReceiveProps(next: Props) {
+  UNSAFE_componentWillReceiveProps(next: Props) {
     const curr = this.props;
     if (next.editorState !== curr.editorState) {
       this.setState({

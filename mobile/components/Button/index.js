@@ -74,7 +74,7 @@ const ButtonContent = (props: Props) => {
 class UnwrappedButton extends React.Component<Props> {
   buttonScale = new Animated.Value(1);
 
-  componentWillUpdate() {
+  UNSAFE_componentWillUpdate() {
     LayoutAnimation.configureNext(animationConfig);
   }
 
