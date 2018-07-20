@@ -39,7 +39,7 @@
     "exp": "^52.0.0",
     "jest": "^22.4.4",
     "jest-expo": "^28.0.0",
-    "react-test-renderer": "^16.2.0"
+    "react-test-renderer": "^16.4.1"
   },
   "scripts": {
     "dev": "exp start .",
