@@ -2550,7 +2550,7 @@ draft-js-prism@ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb:
     immutable "*"
     prismjs "^1.5.0"
 
-draft-js@0.x, draft-js@^0.10.0, draft-js@~0.10.0:
+draft-js@0.x, draft-js@~0.10.0:
   version "0.10.4"
   resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.10.4.tgz#147741642097c8120d8edc232e9503e8b7fb8d35"
   dependencies:
@@ -2558,7 +2558,7 @@ draft-js@0.x, draft-js@^0.10.0, draft-js@~0.10.0:
     immutable "~3.7.4"
     object-assign "^4.1.0"
 
-draft-js@^0.10.4:
+draft-js@^0.10.4, draft-js@^0.10.5:
   version "0.10.5"
   resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.10.5.tgz#bfa9beb018fe0533dbb08d6675c371a6b08fa742"
   dependencies:
