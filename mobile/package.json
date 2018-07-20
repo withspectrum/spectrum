@@ -33,7 +33,7 @@
     "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
-    "cross-env": "^5.1.1",
+    "cross-env": "^5.2.0",
     "detox": "^6.0.0",
     "detox-expo-helpers": "^0.2.0",
     "exp": "^52.0.0",
