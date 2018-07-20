@@ -10,7 +10,6 @@ import { Router } from 'react-router';
 import queryString from 'query-string';
 import Loadable from 'react-loadable';
 import { HelmetProvider } from 'react-helmet-async';
-import webPushManager from './helpers/web-push-manager';
 import { history } from './helpers/history';
 import { client } from 'shared/graphql';
 import { initStore } from './store';
@@ -19,7 +18,7 @@ import Routes from './hot-routes';
 import { track, events } from './helpers/analytics';
 import { wsLink } from 'shared/graphql';
 import { subscribeToDesktopPush } from './subscribe-to-desktop-push';
-import { unregister } from './registerServiceWorker';
+import registerServiceWorker from './registerServiceWorker';
 
 const storedData: ?Object = getItemFromStorage('spectrum');
 const params = queryString.parse(history.location.search);
@@ -87,7 +86,7 @@ Loadable.preloadReady()
     console.error(err);
   });
 
-unregister();
+registerServiceWorker();
 
 wsLink.subscriptionClient.on('disconnected', () =>
   store.dispatch({ type: 'WEBSOCKET_CONNECTION', value: 'disconnected' })
