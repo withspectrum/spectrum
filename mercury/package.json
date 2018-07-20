@@ -3,7 +3,7 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "bull": "^3.4.2",
+    "bull": "^3.4.3",
     "debug": "^2.6.9",
     "now-env": "^3.1.0",
     "raven": "^2.6.3",
