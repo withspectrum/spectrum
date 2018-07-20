@@ -4,22 +4,22 @@
   "homepage": "https://spectrum.chat",
   "author": {
     "name": "Space Program Inc.",
-    "email": "hey@spectrum.chat"
+    "email": "hi@spectrum.chat"
   },
   "repository": "https://github.com/withspectrum/spectrum",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "main": "src/main.js",
   "private": true,
   "dependencies": {
-    "electron-context-menu": "^0.9.1",
+    "electron-context-menu": "^0.10.0",
     "electron-is-dev": "^0.3.0",
-    "electron-updater": "^2.23.3",
     "electron-log": "^2.2.16",
+    "electron-updater": "^3.0.3",
     "electron-window-state": "^4.1.1"
   },
   "devDependencies": {
-    "electron": "^1.8.4",
-    "electron-builder": "^20.8.1",
+    "electron": "3.0.0-beta.3",
+    "electron-builder": "^20.24.4",
     "nodemon": "^1.18.3",
     "rimraf": "^2.6.2"
   },
