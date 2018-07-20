@@ -5,7 +5,7 @@
   "dependencies": {
     "aws-sdk": "^2.275.1",
     "body-parser": "^1.18.3",
-    "bull": "^3.3.10",
+    "bull": "^3.4.3",
     "express": "^4.16.3",
     "faker": "^4.1.0",
     "http": "^0.0.0",
