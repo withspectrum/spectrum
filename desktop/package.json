@@ -7,7 +7,7 @@
     "email": "hi@spectrum.chat"
   },
   "repository": "https://github.com/withspectrum/spectrum",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "src/main.js",
   "private": true,
   "dependencies": {
