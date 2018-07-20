@@ -11,7 +11,7 @@
     "http": "^0.0.0",
     "ioredis": "^3.2.2",
     "node-env-file": "^0.1.8",
-    "now-env": "^3.0.3",
+    "now-env": "^3.1.0",
     "raven": "^2.4.0",
     "rethinkdb-changefeed-reconnect": "^0.3.2",
     "rethinkdbdash": "^2.3.31",
