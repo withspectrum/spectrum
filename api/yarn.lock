@@ -3442,9 +3442,9 @@ graceful-fs@~3.0.2:
   dependencies:
     natives "^1.1.0"
 
-graphql-cost-analysis@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/graphql-cost-analysis/-/graphql-cost-analysis-0.1.1.tgz#e500cb2e896efe333f6912bb264ccb7948a6c06a"
+graphql-cost-analysis@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/graphql-cost-analysis/-/graphql-cost-analysis-0.1.2.tgz#1ddce5776e7930c423deb538c021f9c7648df5c5"
   dependencies:
     selectn "^1.1.2"
 
