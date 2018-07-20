@@ -13,7 +13,7 @@
     "rethinkdb-changefeed-reconnect": "^0.3.2",
     "rethinkdbdash": "^2.3.29",
     "source-map-support": "^0.4.15",
-    "stopword": "^0.1.9",
+    "stopword": "^0.1.10",
     "toobusy-js": "^0.5.1"
   },
   "devDependencies": {
