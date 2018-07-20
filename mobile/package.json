@@ -6,7 +6,7 @@
     "apollo-cache-inmemory": "^1.1.12",
     "apollo-client": "^2.3.5",
     "apollo-link": "^1.2.2",
-    "apollo-link-error": "^1.0.9",
+    "apollo-link-error": "^1.1.0",
     "apollo-link-http": "^1.5.4",
     "apollo-link-retry": "^2.2.4",
     "expo": "^28.0.0",
