@@ -6,9 +6,9 @@
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
 
-bull@^3.4.3:
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/bull/-/bull-3.4.3.tgz#ed3e03cee7f296f8e5f55bbe29cedf43997f9cd5"
+bull@^3.4.4:
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/bull/-/bull-3.4.4.tgz#763ca8f32cb65cd87f3bb5b83af609e4bccc43f3"
   dependencies:
     bluebird "^3.5.0"
     cron-parser "^2.5.0"
