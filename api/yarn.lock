@@ -5954,9 +5954,9 @@ postcss-value-parser@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/postcss-value-parser/-/postcss-value-parser-3.3.0.tgz#87f38f9f18f774a4ab4c8a232f5c5ce8872a9d15"
 
-postmark@^1.4.1:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/postmark/-/postmark-1.5.0.tgz#6812a35195d14e59922181aba5920f3ceec156b6"
+postmark@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/postmark/-/postmark-1.6.1.tgz#23d48f7182509be5be0eb80c16b90a2e2326eb3c"
   dependencies:
     merge "1.2.0"
 
