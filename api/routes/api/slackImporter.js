@@ -4,6 +4,7 @@ import UserError from '../../utils/UserError';
 import { generateOAuthToken } from '../../models/slackImport';
 import { updateSlackSettingsAfterConnection } from '../../models/communitySettings';
 import { encryptString } from 'shared/encryption';
+import { Request } from '../../index';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 
@@ -24,8 +25,7 @@ const constructInput = (data: any, connectedBy: string) => {
   };
 };
 
-// TODO: Figure out how to type this properly
-slackRouter.get('/', (req: any, res: any) => {
+slackRouter.get('/', (req: Request, res: express$Response) => {
   const code = req.query.code;
   const communityId = req.query.state;
   const connectedBy = req.user.id;
@@ -52,8 +52,7 @@ slackRouter.get('/', (req: any, res: any) => {
     });
 });
 
-// TODO: Figure out how to type this properly
-slackRouter.get('/onboarding', (req: any, res: any) => {
+slackRouter.get('/onboarding', (req: Request, res: express$Response) => {
   const code = req.query.code;
   const communityId = req.query.state;
   const connectedBy = req.user.id;

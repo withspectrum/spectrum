@@ -33,7 +33,7 @@ declare class express$Request extends http$IncomingMessage {
   params: express$RequestParams,
   path: string,
   protocol: 'https' | 'http',
-  query: { [name: string]: string | Array<string> },
+  query: { [name: string]: string },
   route: string,
   secure: boolean,
   signedCookies: { [signedCookie: string]: string },

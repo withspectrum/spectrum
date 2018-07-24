@@ -11,6 +11,7 @@ import passport from 'passport';
 import { URL } from 'url';
 import isSpectrumUrl from '../../utils/is-spectrum-url';
 import { signCookie, getCookies } from 'shared/cookie-utils';
+import { Request } from 'api/index';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 const FALLBACK_URL = IS_PROD
@@ -26,17 +27,15 @@ export const createSigninRoutes = (
   return {
     // The main route takes care of storing the redirect URL in the session
     // and passing the right options
-    main: (req: express$Request, ...rest: any) => {
+    main: (req: $Request, ...rest: any) => {
       let url = FALLBACK_URL;
       if (typeof req.query.r === 'string' && isSpectrumUrl(req.query.r)) {
         url = req.query.r;
       }
 
       // Attach the redirectURL and authType to the session so we have it in the /auth/twitter/callback route
-      // $FlowIssue
       req.session.redirectUrl = url;
       if (req.query.authType === 'token') {
-        // $FlowIssue
         req.session.authType = 'token';
       }
 
@@ -48,8 +47,7 @@ export const createSigninRoutes = (
       passport.authenticate(strategy, {
         failureRedirect: IS_PROD ? '/' : 'http://localhost:3000/',
       }),
-      (req: express$Request, res: express$Response) => {
-        // $FlowIssue
+      (req: Request, res: express$Response) => {
         const redirectUrl = req.session.redirectUrl
           ? new URL(req.session.redirectUrl)
           : new URL(FALLBACK_URL);
@@ -57,7 +55,6 @@ export const createSigninRoutes = (
 
         // Add the session cookies to the query params if token authentication
         if (
-          // $FlowIssue
           req.session.authType === 'token' &&
           req.session.passport &&
           req.session.passport.user
@@ -74,11 +71,9 @@ export const createSigninRoutes = (
           );
         }
 
-        // $FlowIssue
         req.session.authType = undefined;
         // Delete the redirectURL from the session again so we don't redirect
         // to the old URL the next time around
-        // $FlowIssue
         req.session.redirectUrl = undefined;
         return res.redirect(redirectUrl.href);
       },

@@ -1,10 +1,11 @@
 // @flow
 import toobusy from 'toobusy-js';
+import { Request } from 'api/index';
 
 // Middleware which blocks requests when the Node server is too busy
 // now automatically retries the request at another instance of the server if it's too busy
 export default (
-  req: express$Request | http$IncomingMessage,
+  req: Request | http$IncomingMessage,
   res: express$Response | http$ServerResponse,
   next: express$NextFunction | (() => void)
 ) => {

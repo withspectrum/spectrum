@@ -15,6 +15,21 @@ import addSecurityMiddleware from 'shared/middlewares/security';
 import { init as initPassport } from './authentication.js';
 import type { DBUser } from 'shared/types';
 
+/**
+ * patch for Flow Error: property `user` Property not found in express$Request
+ * @see https://github.com/flowtype/flow-typed/issues/114#issuecomment-308006263
+ */
+type User = { id: string };
+type Sesson = {
+  redirectUrl: ?string,
+  authType: ?string,
+  passport: Object,
+};
+export class Request extends express$Request {
+  user: User;
+  session: Sesson;
+}
+
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
 // Initialize authentication
@@ -44,11 +59,10 @@ app.use('/auth', authRoutes);
 import apiRoutes from './routes/api';
 app.use('/api', apiRoutes);
 
-// $FlowIssue
 app.use(
   (
-    err: Error,
-    req: express$Request,
+    err: ?Error,
+    req: Request,
     res: express$Response,
     next: express$NextFunction
   ) => {
@@ -66,7 +80,7 @@ app.use(
   }
 );
 
-app.use('/', (req: express$Request, res: express$Response) => {
+app.use('/', (req: Request, res: express$Response) => {
   res.redirect(
     process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV
       ? 'https://spectrum.chat'

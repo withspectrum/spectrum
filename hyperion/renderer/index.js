@@ -21,6 +21,7 @@ import Raven from 'shared/raven';
 import introspectionQueryResultData from 'shared/graphql/schema.json';
 // $FlowIssue
 import stats from '../../build/react-loadable.json';
+import { Request } from 'api/index';
 
 import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
 import { getFooter, getHeader } from './html-template';
@@ -36,7 +37,7 @@ const FORCE_DEV = process.env.FORCE_DEV;
 
 if (!IS_PROD || FORCE_DEV) debug('Querying API at localhost:3001/api');
 
-const renderer = (req: express$Request, res: express$Response) => {
+const renderer = (req: Request, res: express$Response) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
 
   debug(`server-side render ${req.url}`);
