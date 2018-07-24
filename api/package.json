@@ -83,7 +83,7 @@
     "pre-commit": "^1.2.2",
     "prismjs": "^1.8.1",
     "query-string": "5.1.1",
-    "raven": "^2.0.2",
+    "raven": "^2.6.3",
     "raven-js": "^3.18.1",
     "react": "^15.4.1",
     "react-app-rewire-styled-components": "^3.0.2",
