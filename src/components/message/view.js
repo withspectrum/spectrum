@@ -34,6 +34,7 @@ export const Body = (props: BodyProps) => {
     return (
       <Emoji>{toPlainText(toState(JSON.parse(message.content.body)))}</Emoji>
     );
+
   const WrapperComponent = bubble ? Text : QuotedParagraph;
   switch (message.messageType) {
     case 'text':

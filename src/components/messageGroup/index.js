@@ -10,6 +10,7 @@ import type { Dispatch } from 'redux';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { ErrorBoundary } from 'src/components/error';
+import ChatInput from 'src/components/chatInput';
 import MessageErrorFallback from '../message/messageErrorFallback';
 
 import {
@@ -172,8 +173,10 @@ class Messages extends React.Component<Props, State> {
     const {
       messages,
       currentUser,
+      editingMessage,
       threadType,
       threadId,
+      thread,
       isModerator,
       lastSeen,
     } = this.props;
@@ -244,14 +247,27 @@ class Messages extends React.Component<Props, State> {
                       key={message.id}
                     >
                       <MessagesContext.Provider value={this.state}>
-                        <Message
-                          me={me}
-                          showAuthorContext={index === 0}
-                          message={message}
-                          canModerateMessage={canModerateMessage}
-                          threadType={threadType}
-                          threadId={threadId}
-                        />
+                        {editingMessage !== message.id && (
+                          <Message
+                            me={me}
+                            showAuthorContext={index === 0}
+                            message={message}
+                            canModerateMessage={canModerateMessage}
+                            threadType={threadType}
+                            threadId={threadId}
+                          />
+                        )}
+                        {editingMessage === message.id && (
+                          <ChatInput
+                            threadType="story"
+                            threadData={thread}
+                            thread={thread.id}
+                            currentUser={currentUser}
+                            // forceScrollToBottom={this.forceScrollToBottom}
+                            onRef={chatInput => (this.chatInput = chatInput)}
+                            // refetchThread={this.props.data.refetch}
+                          />
+                        )}
                       </MessagesContext.Provider>
                     </ErrorBoundary>
                   );
@@ -266,7 +282,10 @@ class Messages extends React.Component<Props, State> {
 }
 
 // get the current user from the store for evaulation of message bubbles
-const map = state => ({ currentUser: state.users.currentUser });
+const map = state => ({
+  currentUser: state.users.currentUser,
+  editingMessage: state.message.editingMessage,
+});
 
 // $FlowIssue
 export default compose(

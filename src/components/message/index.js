@@ -11,7 +11,7 @@ import { ReactionWrapper } from 'src/components//reaction/style';
 import OutsideClickHandler from 'src/components/outsideClickHandler';
 import { Body } from './view';
 import { openModal } from 'src/actions/modals';
-import { replyToMessage } from 'src/actions/message';
+import { editMessage, replyToMessage } from 'src/actions/message';
 import { CLIENT_URL } from 'src/api/constants';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
@@ -65,8 +65,14 @@ class Message extends React.Component<Props> {
     const updatedReactionState =
       nextProps.message.reactions.hasReacted !==
       this.props.message.reactions.hasReacted;
+    const editingMode = nextProps.editingMessage !== this.props.editingMessage;
 
-    if (newMessage || updatedReactionCount || updatedReactionState) {
+    if (
+      newMessage ||
+      updatedReactionCount ||
+      updatedReactionState ||
+      editingMode
+    ) {
       return true;
     }
 
@@ -114,13 +120,20 @@ class Message extends React.Component<Props> {
     );
   };
 
+  editMessage = (e: any) => {
+    e.stopPropagation();
+
+    const { message } = this.props;
+    return this.props.dispatch(editMessage(message.id));
+  };
+
   // prettier-ignore
-  handleSelectMessage = (e: any, selectMessage: Function,	messageId: string) => {	
-    // $FlowFixMe	
-    if (window && window.innerWidth < 768 && this.wrapperRef && this.wrapperRef.contains(e.target)) {	
-      e.stopPropagation();	
-      return selectMessage(messageId);	
-    }	
+  handleSelectMessage = (e: any, selectMessage: Function,	messageId: string) => {
+    // $FlowFixMe
+    if (window && window.innerWidth < 768 && this.wrapperRef && this.wrapperRef.contains(e.target)) {
+      e.stopPropagation();
+      return selectMessage(messageId);
+    }
   };
 
   render() {
@@ -128,6 +141,7 @@ class Message extends React.Component<Props> {
       showAuthorContext,
       me,
       currentUser,
+      editingMessage,
       dispatch,
       message,
       canModerateMessage,
@@ -254,6 +268,15 @@ class Message extends React.Component<Props> {
                             glyph="delete"
                             size={20}
                           />
+                        </Action>
+                      )}
+                      {canModerateMessage && (
+                        <Action
+                          tipText={`Edit`}
+                          tipLocation={'top'}
+                          onClick={this.editMessage}
+                        >
+                          <Icon dataCy="edit-message" glyph="edit" size={20} />
                         </Action>
                       )}
                       <Action
