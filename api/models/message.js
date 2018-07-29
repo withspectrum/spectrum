@@ -170,6 +170,58 @@ export const storeMessage = (message: Message, userId: string): Promise<Message>
     });
 };
 
+export const editMessage = (
+  messageId: string,
+  message: Message,
+  userId: string
+): Promise<Message> => {
+  // Insert a message
+  return db
+    .table('messages')
+    .get(messageId)
+    .update(
+      Object.assign({}, message, {
+        timestamp: new Date(),
+        senderId: userId,
+        content: {
+          body:
+            message.messageType === 'media'
+              ? message.content.body
+              : // For text messages linkify URLs and strip HTML tags
+                message.content.body,
+        },
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val)
+    .then(message => {
+      if (message.threadType === 'directMessageThread') {
+        trackQueue.add({
+          userId,
+          event: events.DIRECT_MESSAGE_EDITED,
+          context: { messageId: message.id },
+        });
+      }
+
+      if (message.threadType === 'story') {
+        processReputationEventQueue.add({
+          userId,
+          type: 'message edited',
+          entityId: message.threadId,
+        });
+
+        trackQueue.add({
+          userId,
+          event: events.MESSAGE_EDITED,
+          context: { messageId: message.id },
+        });
+      }
+
+      return message;
+    });
+};
+
 const getNewMessageChangefeed = () =>
   db
     .table('messages')
