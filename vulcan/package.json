@@ -3,7 +3,7 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "algoliasearch": "^3.29.0",
+    "algoliasearch": "^3.30.0",
     "debug": "^2.6.8",
     "draft-js": "^0.10.3",
     "emoji-regex": "^6.1.1",
