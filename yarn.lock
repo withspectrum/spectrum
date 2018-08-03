@@ -5451,6 +5451,10 @@ homedir-polyfill@^1.0.1:
   dependencies:
     parse-passwd "^1.0.0"
 
+host-validation@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/host-validation/-/host-validation-1.1.0.tgz#59e8ee8cd3573f644279ed25475ad9865b7042d4"
+
 hosted-git-info@^2.1.4:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.7.1.tgz#97f236977bd6e125408930ff6de3eec6281ec047"
