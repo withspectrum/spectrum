@@ -7,7 +7,7 @@
     "email": "hi@spectrum.chat"
   },
   "repository": "https://github.com/withspectrum/spectrum",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "src/main.js",
   "private": true,
   "dependencies": {
@@ -31,7 +31,7 @@
     "package:linux": "yarn run package --linux",
     "package:win": "yarn run package --win --x64",
     "package:all": "yarn run package -mwl",
-    "package:test": "yarn run package --mac --linux",
+    "package:test": "yarn run package --linux",
     "release": "yarn run package:all --publish always"
   },
   "build": {
