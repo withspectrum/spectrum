@@ -82,7 +82,7 @@
     "passport-twitter": "^1.0.4",
     "postmark": "^1.6.1",
     "pre-commit": "^1.2.2",
-    "prismjs": "^1.8.1",
+    "prismjs": "^1.15.0",
     "query-string": "5.1.1",
     "raven": "^2.6.3",
     "raven-js": "^3.18.1",
