@@ -33,7 +33,9 @@ app.use(toobusy);
 // Security middleware.
 addSecurityMiddleware(app);
 
-app.use(csrf);
+if (process.env.NODE_ENV === 'production') {
+  app.use(csrf);
+}
 
 // Send all responses as gzip
 app.use(compression());
