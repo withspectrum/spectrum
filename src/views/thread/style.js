@@ -787,7 +787,7 @@ export const AnimatedContainer = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  z-index: ${zIndex.composerToolbar + 1};
+  z-index: ${zIndex.flyout};
 
   @media (max-width: 768px) {
     display: none;
