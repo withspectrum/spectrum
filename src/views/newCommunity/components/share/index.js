@@ -15,9 +15,9 @@ const Share = ({ community, history, onboarding }) => {
     <div>
       <ButtonRow>
         <a
-          href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/${
+          href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/${encodeURIComponent(
             community.slug
-          }&t=Come hang out with me in the ${
+          )}&t=Come hang out with me in the ${
             community.name
           } community on Spectrum!`}
           target="_blank"
@@ -35,9 +35,9 @@ const Share = ({ community, history, onboarding }) => {
         <a
           href={`https://twitter.com/share?text=Come hang out with me in the ${
             community.name
-          } community on @withspectrum!&url=https://spectrum.chat/${
+          } community on @withspectrum!&url=https://spectrum.chat/${encodeURIComponent(
             community.slug
-          }`}
+          )}`}
           target="_blank"
           rel="noopener noreferrer"
         >
