@@ -131,14 +131,10 @@ app.use(
 
       // Cache static files in now CDN for seven days
       // (the filename changes if the file content changes, so we can cache these forever)
-      if (!req.user) {
-        res.setHeader(
-          'Cache-Control',
-          `max-age=${SEVEN_DAYS}, s-maxage=${SEVEN_DAYS}`
-        );
-      } else {
-        res.setHeader('Cache-Control', 's-maxage=0');
-      }
+      res.setHeader(
+        'Cache-Control',
+        `max-age=${SEVEN_DAYS}, s-maxage=${SEVEN_DAYS}`
+      );
     },
   })
 );
