@@ -92,7 +92,7 @@ class ScrollManager extends React.Component<Props> {
     this.debouncedScrollSync = debounceFn(scrollSync, props.scrollSyncDebounce);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { location, onLocationChange } = this.props;
     if (onLocationChange) {
       onLocationChange(location);
@@ -111,7 +111,7 @@ class ScrollManager extends React.Component<Props> {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     switch (nextProps.history.action) {
       case 'PUSH':
       case 'REPLACE':
