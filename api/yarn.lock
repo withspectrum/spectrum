@@ -261,9 +261,9 @@ ajv@^6.0.1:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.1"
 
-algoliasearch@^3.29.0:
-  version "3.29.0"
-  resolved "https://registry.yarnpkg.com/algoliasearch/-/algoliasearch-3.29.0.tgz#d04021a5450be55ce314b928bba4a38723399bd8"
+algoliasearch@^3.30.0:
+  version "3.30.0"
+  resolved "https://registry.yarnpkg.com/algoliasearch/-/algoliasearch-3.30.0.tgz#355585e49b672e5f71d45b9c2b371ecdff129cd1"
   dependencies:
     agentkeepalive "^2.2.0"
     debug "^2.6.8"
