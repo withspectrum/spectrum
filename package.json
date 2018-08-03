@@ -253,6 +253,7 @@
     "postbuild:hyperion": "cp now.json build-hyperion/now.json",
     "build:web": "cross-env NODE_PATH=./ react-app-rewired build",
     "build:desktop": "(cd desktop && yarn run package:all)",
+    "test:desktop": "(cd desktop && yarn run package:test)",
     "release:desktop": "(cd desktop && yarn run release)",
     "jest": "cross-env NODE_PATH=./ jest",
     "test": "npm run jest -- --runInBand --watch",

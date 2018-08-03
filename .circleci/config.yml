@@ -113,7 +113,7 @@ jobs:
           command: yarn run test:ci
       - run:
           name: Build desktop apps
-          command: yarn run build:desktop
+          command: yarn run test:desktop
       - run:
           name: Run E2E Tests
           command: test $CYPRESS_RECORD_KEY && yarn run test:e2e -- --record || yarn run test:e2e
