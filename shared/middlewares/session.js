@@ -18,4 +18,5 @@ export default session({
   // Expire the browser cookie one year from now
   maxAge: ONE_YEAR,
   signed: process.env.TEST_DB ? false : true,
+  sameSite: 'lax',
 });

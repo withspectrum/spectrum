@@ -273,7 +273,7 @@ class CommunityView extends React.Component<Props, State> {
                 <CommunityProfile
                   data={{ community }}
                   profileSize="full"
-                  showCommunityProfile={false}
+                  showHoverProfile={false}
                 />
               </ErrorBoundary>
 

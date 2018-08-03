@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Button } from 'src/components/buttons';
 
 export const CurrentCount = styled.b`
-  font-size: 14px;
+  font-size: 13px;
 `;
 
 export const LikeButtonWrapper = styled(Button)`
@@ -29,6 +29,7 @@ export const LikeButtonWrapper = styled(Button)`
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
     color: ${props => props.theme.text.secondary};
+    font-size: 14px;
   }
 
   &:hover {
@@ -45,7 +46,7 @@ export const LikeCountWrapper = styled.div`
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};
 
-  span {
+  ${CurrentCount} {
     margin-left: 4px;
     font-weight: 600;
   }

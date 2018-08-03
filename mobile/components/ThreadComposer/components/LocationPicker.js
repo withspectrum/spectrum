@@ -65,7 +65,6 @@ const LocationPicker = (props: LocationPickerProps) => {
       />
       <Select
         placeholder={{ label: 'Select a channel', value: null }}
-        placeholder={{ label: 'Select a channel', value: null }}
         items={channels}
         value={selected.channel}
         onValueChange={value =>
@@ -77,6 +76,7 @@ const LocationPicker = (props: LocationPickerProps) => {
   );
 };
 
-export default compose(ViewNetworkHandler, getComposerCommunitiesAndChannels)(
-  LocationPicker
-);
+export default compose(
+  ViewNetworkHandler,
+  getComposerCommunitiesAndChannels
+)(LocationPicker);
