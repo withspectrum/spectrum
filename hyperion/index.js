@@ -124,7 +124,7 @@ app.use(
     setHeaders: (res, path) => {
       // Don't cache the serviceworker in the browser
       if (path.indexOf('sw.js')) {
-        res.setHeader('Cache-Control', 'no-store');
+        res.setHeader('Cache-Control', 'no-store, no-cache');
         return;
       }
     },
@@ -162,9 +162,6 @@ app.get('*', (req: express$Request, res, next) => {
   }
   next();
 });
-
-import cache from './cache';
-app.use(cache);
 
 import renderer from './renderer';
 app.get('*', renderer);

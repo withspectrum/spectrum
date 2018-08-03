@@ -1,6 +1,6 @@
 {
   "name": "Spectrum",
-  "version": "2.4.21",
+  "version": "2.4.22",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -110,6 +110,7 @@
     "highlight.js": "^9.10.0",
     "history": "^4.6.1",
     "hoist-non-react-statics": "^2.3.1",
+    "host-validation": "^1.1.0",
     "hpp": "^0.2.2",
     "idx": "^2.4.0",
     "imgix-core-js": "^1.0.6",
