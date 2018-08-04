@@ -15,18 +15,12 @@ export type ServiceWorkerResult = {
   firstCache?: boolean,
 };
 
-const IS_PROD = process.env.NODE_ENV === 'production';
-
-const swUrl = IS_PROD
-  ? `${process.env.PUBLIC_URL}/service-worker.js`
-  : `${process.env.PUBLIC_URL}/push-sw-v1.js`;
-
 export default function register(): Promise<ServiceWorkerResult> {
   if ('serviceWorker' in navigator) {
     return new Promise(res => {
       window.addEventListener('load', () => {
         navigator.serviceWorker
-          .register(swUrl)
+          .register('push-sw.js')
           .then(registration => {
             if ('PushManager' in window) {
               webPushManager.set(registration.pushManager);

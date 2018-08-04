@@ -9,9 +9,7 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router';
 import queryString from 'query-string';
 import Loadable from 'react-loadable';
-import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import { HelmetProvider } from 'react-helmet-async';
-import webPushManager from './helpers/web-push-manager';
 import { history } from './helpers/history';
 import { client } from 'shared/graphql';
 import { initStore } from './store';
@@ -20,6 +18,7 @@ import Routes from './hot-routes';
 import { track, events } from './helpers/analytics';
 import { wsLink } from 'shared/graphql';
 import { subscribeToDesktopPush } from './subscribe-to-desktop-push';
+import registerServiceWorker from './registerServiceWorker';
 
 const storedData: ?Object = getItemFromStorage('spectrum');
 const params = queryString.parse(history.location.search);
@@ -87,21 +86,7 @@ Loadable.preloadReady()
     console.error(err);
   });
 
-OfflinePluginRuntime.install({
-  // Apply new updates immediately
-  onUpdateReady: () => OfflinePluginRuntime.applyUpdate(),
-  // Set a global variable when an update was installed so that we can reload the page when users
-  // go to a new page, leading to no interruption in the workflow.
-  // Idea from https://zach.codes/handling-client-side-app-updates-with-service-workers/
-  onUpdated: () => (window.appUpdateAvailable = true),
-});
-
-if ('serviceWorker' in navigator && 'PushManager' in window) {
-  // $FlowIssue
-  navigator.serviceWorker.ready.then(registration => {
-    webPushManager.set(registration.pushManager);
-  });
-}
+registerServiceWorker();
 
 wsLink.subscriptionClient.on('disconnected', () =>
   store.dispatch({ type: 'WEBSOCKET_CONNECTION', value: 'disconnected' })
