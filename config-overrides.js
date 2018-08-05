@@ -113,6 +113,7 @@ module.exports = function override(config, env) {
               additional: ['**/*.chunk.js'],
               optional: [':rest:', ':externals:'],
             },
+      safeToUseOptionalCaches: true,
       externals,
       autoUpdate: true,
       // NOTE(@mxstbr): Normally this is handled by setting
