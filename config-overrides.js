@@ -97,14 +97,22 @@ module.exports = function override(config, env) {
   // Get all public files so they're cached by the SW
   let externals = [];
   walkFolder('./public/', file => {
-    // HOTFIX: Don't cache images
-    if (file.indexOf('img') > -1 && file.indexOf('homescreen-icon') === -1)
-      return;
+    if (file.indexOf('index.html') > -1) return;
     externals.push(file.replace(/public/, ''));
   });
   config.plugins.push(
     new OfflinePlugin({
-      caches: process.env.NODE_ENV === 'development' ? {} : 'all',
+      // 1. Download and cache the app shell, the bootstrap JS and the main bundle when SW is installed/updated. If downloading of any of them fails, abort caching anything
+      // 2. Download and cache all JS chunks when SW is installed/updated. If downloading some of them fails, cache those specific ones on-demand, i.e. when they are requested by the main bundle
+      // 3. Everything else cache on-demand
+      caches:
+        process.env.NODE_ENV === 'development'
+          ? {}
+          : {
+              main: ['index.html', '**/*main.*js', '**/*bootstrap.*js'],
+              additional: ['**/*.chunk.js'],
+              optional: [':rest:', ':externals:'],
+            },
       externals,
       autoUpdate: true,
       // NOTE(@mxstbr): Normally this is handled by setting
