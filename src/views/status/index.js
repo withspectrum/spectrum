@@ -5,10 +5,11 @@ import { Bar } from './style';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
+import type { Dispatch } from 'redux';
 
 type Props = {
   websocketConnection: string,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   history: Object,
   currentUser: Object,
 };

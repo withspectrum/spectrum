@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { withRouter } from 'react-router';
 import { Wrapper } from './style';
 
@@ -14,5 +12,4 @@ const AppViewWrapperPure = (props: Object): React$Element<any> => (
   </Wrapper>
 );
 
-const AppViewWrapper = compose(withRouter)(AppViewWrapperPure);
-export default AppViewWrapper;
+export default compose(withRouter)(AppViewWrapperPure);

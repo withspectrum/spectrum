@@ -1,14 +1,16 @@
 // @flow
 import * as React from 'react';
-import ListCardItemDirectMessageThread from './messageThreadListItem';
+import DirectMessageListItem from './messageThreadListItem';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { LoadingDM } from 'src/components/loading';
 import { ThreadsListScrollContainer } from './style';
+import { ErrorBoundary } from 'src/components/error';
+import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 
 type Props = {
-  threads: Array<?Object>,
-  currentUser: ?Object,
+  threads: Array<?GetDirectMessageThreadType>,
+  currentUser: Object,
   active: string,
   fetchMore: Function,
   hasNextPage: boolean,
@@ -79,7 +81,6 @@ class ThreadsList extends React.Component<Props, State> {
           hasMore={hasNextPage}
           loader={<LoadingDM />}
           useWindow={false}
-          initialLoad={false}
           scrollElement={scrollElement}
           threshold={30}
           className={'scroller-for-community-dm-threads-list'}
@@ -87,12 +88,13 @@ class ThreadsList extends React.Component<Props, State> {
           {uniqueThreads.map(thread => {
             if (!thread) return null;
             return (
-              <ListCardItemDirectMessageThread
-                thread={thread}
-                key={thread.id}
-                currentUser={currentUser}
-                active={active === thread.id}
-              />
+              <ErrorBoundary fallbackComponent={null} key={thread.id}>
+                <DirectMessageListItem
+                  thread={thread}
+                  currentUser={currentUser}
+                  active={active === thread.id}
+                />
+              </ErrorBoundary>
             );
           })}
         </InfiniteList>

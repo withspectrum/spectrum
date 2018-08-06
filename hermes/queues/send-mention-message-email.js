@@ -48,6 +48,7 @@ export default async (job: Job<SendNewMessageMentionEmailJobData>) => {
         unsubscribeToken,
         muteThreadToken,
       },
+      userId: recipient.id,
     });
   } catch (err) {
     debug('❌ Error in job:\n');

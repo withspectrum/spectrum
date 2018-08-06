@@ -29,6 +29,7 @@ import hasChargeableSource from './hasChargeableSource';
 import hasFeatures from './hasFeatures';
 import brandedLogin from './brandedLogin';
 import slackSettings from './slackSettings';
+import joinSettings from './joinSettings';
 
 module.exports = {
   Query: {
@@ -62,5 +63,6 @@ module.exports = {
     hasFeatures,
     brandedLogin,
     slackSettings,
+    joinSettings,
   },
 };

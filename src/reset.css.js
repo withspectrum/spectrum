@@ -138,14 +138,14 @@ injectGlobal`
     max-width: 100%;
     display: inline;
     border-radius: 4px;
-    transition: all 0.2s;
+    transition: box-shadow 0.2s;
     display: block;
     margin: 12px 0;
   }
 
   .markdown img:hover {
     cursor: pointer;
-    transition: all 0.2s;
+    transition: box-shadow 0.2s;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 
@@ -206,7 +206,7 @@ injectGlobal`
 
   .markdown a:visited {
     opacity: 0.6;
-    transition: all 0.2s ease-in;
+    transition: opacity 0.2s ease-in;
   }
 
   .markdown code {

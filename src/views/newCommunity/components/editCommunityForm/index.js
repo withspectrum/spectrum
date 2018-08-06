@@ -3,7 +3,6 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { track } from '../../../../helpers/events';
 import editCommunityMutation from 'shared/graphql/mutations/community/editCommunity';
 import deleteCommunityMutation from 'shared/graphql/mutations/community/deleteCommunity';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
@@ -20,6 +19,7 @@ import {
 } from '../../../../components/formElements';
 import { ImageInputWrapper } from '../../../../components/editForm/style';
 import { Actions, FormContainer, Form } from '../../style';
+import type { Dispatch } from 'redux';
 
 type State = {
   name: string,
@@ -39,7 +39,7 @@ type State = {
 
 type Props = {
   community: GetCommunityType,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   communityUpdated: Function,
   editCommunity: Function,
 };
@@ -109,6 +109,8 @@ class CommunityWithData extends React.Component<Props, State> {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (!file) return;
+
     this.setState({
       isLoading: true,
     });
@@ -121,8 +123,6 @@ class CommunityWithData extends React.Component<Props, State> {
     }
 
     reader.onloadend = () => {
-      track('community', 'profile photo uploaded', null);
-
       this.setState({
         file: file,
         // $FlowFixMe
@@ -132,12 +132,16 @@ class CommunityWithData extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   setCommunityCover = e => {
     let reader = new FileReader();
     let file = e.target.files[0];
+
+    if (!file) return;
 
     this.setState({
       isLoading: true,
@@ -151,8 +155,6 @@ class CommunityWithData extends React.Component<Props, State> {
     }
 
     reader.onloadend = () => {
-      track('community', 'cover photo uploaded', null);
-
       this.setState({
         coverFile: file,
         // $FlowFixMe
@@ -162,7 +164,9 @@ class CommunityWithData extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   save = e => {
@@ -204,8 +208,6 @@ class CommunityWithData extends React.Component<Props, State> {
 
         // community was returned
         if (community !== undefined) {
-          track('community', 'edited', null);
-
           this.props.dispatch(
             addToastWithTimeout('success', 'Community saved!')
           );
@@ -252,9 +254,9 @@ class CommunityWithData extends React.Component<Props, State> {
             />
 
             <PhotoInput
+              type={'community'}
               onChange={this.setCommunityPhoto}
               defaultValue={image}
-              allowGif
             />
           </ImageInputWrapper>
 

@@ -1,7 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
-import Avatar from '../../components/avatar';
+import { UserAvatar, CommunityAvatar } from '../../components/avatar';
 import { Button } from '../../components/buttons';
 import Column from '../../components/column';
 import {
@@ -14,6 +14,8 @@ import {
   P,
   zIndex,
   Tooltip,
+  Shadow,
+  hexa,
 } from '../../components/globals';
 
 export const ThreadViewContainer = styled.div`
@@ -51,6 +53,7 @@ export const ThreadContentView = styled(FlexCol)`
   grid-template-rows: 48px 1fr 64px;
   grid-template-columns: 100%;
   grid-template-areas: 'header' 'body' 'footer';
+  position: relative;
 `;
 
 export const ThreadSidebarView = styled(FlexCol)`
@@ -89,8 +92,8 @@ export const Input = styled(FlexRow)`
   justify-content: center;
   z-index: ${zIndex.chatInput};
   grid-area: footer;
-  width: 100%;
-  max-width: 1024px;
+  max-width: 100%;
+  align-self: stretch;
 
   @media (max-width: 768px) {
     z-index: ${zIndex.mobileInput};
@@ -109,6 +112,7 @@ export const ChatInputWrapper = styled(FlexCol)`
   margin: 0;
   flex: auto;
   position: relative;
+  max-width: 100%;
 `;
 
 export const DetailViewWrapper = styled(FlexCol)`
@@ -207,7 +211,7 @@ export const DropWrap = styled(FlexCol)`
   position: relative;
   color: ${({ theme }) => theme.text.placeholder};
   transition: ${Transition.hover.off};
-  align-self: flex-end;
+  margin: 0 8px;
 
   &:hover {
     color: ${({ theme }) => theme.bg.border};
@@ -281,7 +285,7 @@ export const BylineMeta = styled(FlexCol)`
   margin-left: 12px;
 `;
 
-export const AuthorAvatar = styled(Avatar)`
+export const AuthorAvatar = styled(UserAvatar)`
   cursor: pointer;
 `;
 
@@ -353,17 +357,9 @@ export const Location = styled(FlexRow)`
 export const Timestamp = styled.span`
   font-weight: 400;
   margin: 8px 0;
-  font-size: 14px;
+  font-size: 16px;
   color: ${({ theme }) => theme.text.alt};
   display: inline-block;
-
-  &:hover {
-    color: ${props => props.theme.text.default};
-  }
-`;
-
-export const Edited = styled(Timestamp)`
-  margin-left: 4px;
 `;
 
 export const ChatWrapper = styled.div`
@@ -433,6 +429,7 @@ export const ThreadDescription = {
 export const ShareButtons = styled.div`
   display: flex;
   align-items: center;
+  margin-left: 12px;
 `;
 
 export const ShareButton = styled.span`
@@ -464,9 +461,11 @@ export const CommunityHeader = styled.div`
   display: ${props => (props.hide ? 'none' : 'flex')};
   align-items: center;
   justify-content: space-between;
-  padding: 14px 32px;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
-  flex: auto;
+  padding: 16px 32px;
+  box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
+  z-index: ${zIndex.chrome};
+  flex: 0 0 64px;
+  align-self: stretch;
   background: ${props => props.theme.bg.default};
 
   @media (max-width: 728px) {
@@ -479,8 +478,33 @@ export const CommunityHeaderName = styled.h3`
   font-weight: 600;
   margin-right: 8px;
   color: ${props => props.theme.text.default};
-  line-height: 1.28;
+  line-height: 16px;
 `;
+
+export const CommunityHeaderSubtitle = styled.span`
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  margin-top: 4px;
+  line-height: 12px;
+  color: ${props => props.theme.text.alt};
+
+  > a:hover {
+    color: ${props => props.theme.brand.default};
+  }
+`;
+
+export const ThreadSubtitle = styled(CommunityHeaderSubtitle)`
+  font-size: 16px;
+  margin-top: 8px;
+  display: flex;
+  line-height: 1.5;
+
+  a:hover {
+    color: ${props => props.theme.text.default};
+  }
+`;
+
 export const CommunityHeaderChannelTag = styled.div`
   color: ${props => props.theme.text.reverse};
   background: ${props => props.theme.warn.alt};
@@ -508,17 +532,11 @@ export const CommunityHeaderMeta = styled.div`
 
 export const CommunityHeaderMetaCol = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  align-self: center;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  align-self: flex-start;
   margin-left: 12px;
-  margin-right: 16px;
-`;
-
-export const CommunityHeaderLink = styled(Link)`
-  display: flex;
-  align-items: center;
-  flex: auto;
 `;
 
 export const PillLink = styled(Link)`
@@ -587,21 +605,21 @@ export const PinIcon = styled.span`
 export const ActionBarContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  width: calc(100% - 64px);
   align-items: center;
-  margin: 0 32px;
-  border-radius: 4px;
   background: ${props => props.theme.bg.wash};
-  padding: 8px;
   border: 1px solid ${props => props.theme.bg.border};
+  border-left: 0;
+  border-right: 0;
+  padding: 6px 32px;
 
-  @media (max-width: 1024px) {
-    width: calc(100%);
-    border-radius: 0;
+  @media (max-width: 768px) {
     margin: 0;
+    margin-top: 16px;
+    border-radius: 0;
     border-left: 0;
     border-right: 0;
-    margin-top: 16px;
+    padding-left: 16px;
+    padding-right: 8px;
   }
 `;
 
@@ -613,18 +631,16 @@ export const FollowButton = styled(Button)`
   background: ${props => props.theme.bg.default};
   border: 1px solid ${props => props.theme.bg.border};
   color: ${props => props.theme.text.alt};
-  margin-right: 16px;
+  padding: 4px;
 
   &:hover {
     background: ${props => props.theme.bg.default};
-    color: ${props => props.theme.brand.alt};
+    color: ${props => props.theme.text.default};
   }
 
   @media (max-width: 768px) {
     display: ${props => (props.currentUser ? 'none' : 'flex')};
   }
-
-  ${Tooltip};
 `;
 
 export const SidebarSection = styled.div`
@@ -789,6 +805,22 @@ export const WatercoolerTitle = styled.h3`
   margin-bottom: 8px;
 `;
 
-export const WatercoolerAvatar = styled(Avatar)`
+export const WatercoolerAvatar = styled(CommunityAvatar)`
   margin-bottom: 16px;
+`;
+
+export const AnimatedContainer = styled.div`
+  transform: translateY(${props => (props.isVisible ? '0' : '-64px')});
+  opacity: ${props => (props.isVisible ? '1' : '0')};
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: ${zIndex.flyout};
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;

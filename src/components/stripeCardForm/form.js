@@ -7,13 +7,14 @@ import addPaymentSourceMutation from 'shared/graphql/mutations/community/addPaym
 import { addToastWithTimeout } from '../../actions/toasts';
 import { style, Actions } from './style';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
+import type { Dispatch } from 'redux';
 
 type Props = {
   stripe: Object,
   community: GetCommunitySettingsType,
   addPaymentSource: Function,
   children: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   onCardSaved: ?Function,
 };
 

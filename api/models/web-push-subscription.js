@@ -3,10 +3,8 @@ const debug = require('debug')('api:models:webPushSubscription');
 const { db } = require('./db');
 import type { WebPushSubscription } from '../mutations/user';
 
-export const storeSubscription = (
-  subscription: WebPushSubscription,
-  userId: string
-) => {
+// prettier-ignore
+export const storeSubscription = (subscription: WebPushSubscription, userId: string) => {
   debug(
     `store subscription for user#${userId}, endpoint ${subscription.endpoint}`
   );

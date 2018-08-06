@@ -1,31 +1,45 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import {
-  getUserPermissionsInChannel,
-  toggleUserChannelNotifications,
-} from '../../models/usersChannels';
-import { getChannelById } from '../../models/channel';
+import { toggleUserChannelNotifications } from '../../models/usersChannels';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
-export default requireAuth(
-  async (
-    _: any,
-    { channelId }: { channelId: string },
-    { user }: GraphQLContext
-  ) => {
-    const [channel, permissions] = await Promise.all([
-      getChannelById(channelId),
-      getUserPermissionsInChannel(channelId, user.id),
-    ]);
+type Input = {
+  channelId: string,
+};
 
-    if (!permissions || permissions.isBlocked || !permissions.isMember) {
-      return new UserError("You don't have permission to do that.");
-    }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { channelId } = args;
+  const { user, loaders } = ctx;
 
-    const value = !permissions.receiveNotifications;
-    return toggleUserChannelNotifications(user.id, channelId, value).then(
-      () => channel
-    );
+  const [channel, permissions] = await Promise.all([
+    loaders.channel.load(channelId),
+    loaders.userPermissionsInChannel.load([user.id, channelId]),
+  ]);
+
+  if (!permissions || permissions.isBlocked || !permissions.isMember) {
+    let event = !permissions
+      ? events.CHANNEL_NOTIFICATIONS_ENABLED_FAILED
+      : permissions.receiveNotifications
+        ? events.CHANNEL_NOTIFICATIONS_DISABLED_FAILED
+        : events.CHANNEL_NOTIFICATIONS_ENABLED_FAILED;
+
+    trackQueue.add({
+      userId: user.id,
+      event,
+      context: { channelId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+    return new UserError("You don't have permission to do that.");
   }
-);
+
+  const value = !permissions.receiveNotifications;
+
+  return toggleUserChannelNotifications(user.id, channelId, value).then(
+    () => channel
+  );
+});

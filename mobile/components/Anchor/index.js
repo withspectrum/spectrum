@@ -1,16 +1,17 @@
 // @flow
-import React, { type Node } from 'react';
-import { Linking, Text, Share } from 'react-native';
+import * as React from 'react';
+import styled from 'styled-components';
+import { Share, Text } from 'react-native';
 import { WebBrowser } from 'expo';
 
 type LinkProps = {
   href: string,
-  children: Node,
+  children: React.Node,
 };
 
 type ButtonProps = {
   onPress: () => void,
-  children: Node,
+  children: React.Node,
 };
 
 // Either URL or message has to be defined
@@ -28,12 +29,12 @@ export type ShareContent =
 
 type ShareProps = {
   content: ShareContent,
-  children: Node,
+  children: React.Node,
 };
 
 type Props = LinkProps | ButtonProps | ShareProps;
 
-export default class Anchor extends React.Component<Props> {
+class Anchor extends React.Component<Props> {
   handlePress = () => {
     if (typeof this.props.onPress === 'function') return this.props.onPress();
     if (typeof this.props.href === 'string')
@@ -49,3 +50,13 @@ export default class Anchor extends React.Component<Props> {
     );
   }
 }
+
+export const MessageAnchor = styled(Anchor)`
+  color: ${props => props.theme.text.default};
+  font-weight: 700;
+`;
+
+export const ThreadAnchor = styled(Anchor)`
+  color: ${props => props.theme.brand.alt};
+  font-weight: 500;
+`;

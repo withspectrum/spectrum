@@ -5,7 +5,6 @@ import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
-import { track } from 'src/helpers/events';
 import { Button } from 'src/components/buttons';
 import Icon from 'src/components/icons';
 import { SERVER_URL, CLIENT_URL } from 'src/api/constants';
@@ -38,6 +37,7 @@ import {
 } from 'src/helpers/images';
 import { Notice } from 'src/components/listItems/style';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
+import type { Dispatch } from 'redux';
 
 type State = {
   website: ?string,
@@ -59,7 +59,7 @@ type State = {
 
 type Props = {
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   client: Object,
   editUser: Function,
 };
@@ -131,6 +131,8 @@ class UserWithData extends React.Component<Props, State> {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (!file) return;
+
     this.setState({
       isLoading: true,
     });
@@ -167,8 +169,6 @@ class UserWithData extends React.Component<Props, State> {
     }
 
     reader.onloadend = () => {
-      track('user', 'profile photo uploaded', null);
-
       this.setState({
         file: file,
         // $FlowFixMe
@@ -179,7 +179,9 @@ class UserWithData extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   setCoverPhoto = e => {
@@ -222,8 +224,6 @@ class UserWithData extends React.Component<Props, State> {
     }
 
     reader.onloadend = () => {
-      track('user', 'cover photo uploaded', null);
-
       this.setState({
         coverFile: file,
         // $FlowFixMe
@@ -234,13 +234,13 @@ class UserWithData extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   save = e => {
     e.preventDefault();
-
-    track('user', 'edited', null);
 
     const {
       name,
@@ -345,13 +345,11 @@ class UserWithData extends React.Component<Props, State> {
               onChange={this.setCoverPhoto}
               defaultValue={coverPhoto}
               preview={true}
-              allowGif
             />
             <PhotoInput
+              type={'user'}
               onChange={this.setProfilePhoto}
               defaultValue={image}
-              user
-              allowGif
             />
           </ImageInputWrapper>
 

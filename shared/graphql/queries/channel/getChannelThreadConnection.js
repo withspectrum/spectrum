@@ -45,6 +45,7 @@ const getChannelThreadConnectionOptions = {
       channel,
       networkStatus,
       subscribeToMore,
+      refetch,
     },
   }) => ({
     data: {
@@ -52,6 +53,7 @@ const getChannelThreadConnectionOptions = {
       loading,
       networkStatus,
       channel,
+      refetch,
       threadConnection: channel && channel.threadConnection,
       threads:
         channel && channel.threadConnection
@@ -66,7 +68,8 @@ const getChannelThreadConnectionOptions = {
         return subscribeToMore({
           document: subscribeToUpdatedThreads,
           updateQuery: (prev, { subscriptionData }) => {
-            const updatedThread = subscriptionData.data.threadUpdated;
+            const updatedThread =
+              subscriptionData.data && subscriptionData.data.threadUpdated;
             if (!updatedThread) return prev;
 
             const thisChannelId = ownProps.channelId;

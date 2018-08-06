@@ -36,6 +36,7 @@ class TopAndNewThreads extends React.Component<Props> {
         <span>
           <SectionCard>
             <SectionTitle>Top conversations this week</SectionTitle>
+
             {sortedTopThreads.length > 0 ? (
               sortedTopThreads.map(thread => {
                 if (!thread) return null;
@@ -63,7 +64,7 @@ class TopAndNewThreads extends React.Component<Props> {
               <ViewError
                 small
                 emoji={'✌️'}
-                heading={'All caught up!.'}
+                heading={'All caught up!'}
                 subheading={
                   'It looks like everyone is getting responses in their conversations - nice work!'
                 }

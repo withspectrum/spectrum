@@ -1,5 +1,5 @@
+// @flow
 import React from 'react';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { Container, ErrorToast, SuccessToast, NeutralToast } from './style';
 
@@ -47,7 +47,7 @@ const ToastsPure = ({ toasts }): React$Element<any> => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state): Object => ({
   toasts: state.toasts.toasts,
 });
 export default connect(mapStateToProps)(ToastsPure);

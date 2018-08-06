@@ -1,163 +1,177 @@
 // @flow
-import React, { Component, Fragment } from 'react';
+import * as React from 'react';
+import compose from 'recompose/compose';
+import { withRouter, type History, type Location } from 'react-router';
 import { connect } from 'react-redux';
-import Link from 'src/components/link';
-import { convertTimestampToDate } from '../../helpers/utils';
-import Badge from '../badges';
-import Avatar from '../avatar';
+import queryString from 'query-string';
+import { convertTimestampToDate } from 'shared/time-formatting';
 import Message from '../message';
+import type { Dispatch } from 'redux';
+import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
+import { ErrorBoundary } from 'src/components/error';
+import MessageErrorFallback from '../message/messageErrorFallback';
 
 import {
-  Byline,
-  Name,
-  Username,
-  Wrapper,
+  MessagesWrapper,
+  MessageGroupContainer,
   Timestamp,
   Time,
-  Author,
-  MessageGroup,
   UnseenRobotext,
   UnseenTime,
 } from './style';
 
-export const AuthorAvatar = ({
-  user,
-  showProfile = false,
-}: {
-  user: Object,
-  showProfile?: boolean,
-}) => {
-  return (
-    <Avatar
-      user={user}
-      isOnline={user.isOnline}
-      src={user.profilePhoto}
-      username={user.username}
-      link={user.username ? `/users/${user.username}` : null}
-      size="24"
-      showProfile={showProfile}
-    />
-  );
-};
+type MessageGroupType = Array<MessageInfoType>;
 
-export const AuthorByline = (props: {
-  me: boolean,
-  user: Object,
-  roles?: Array<string>,
-}) => {
-  const { user, roles } = props;
-  return (
-    <Byline>
-      <Link to={`/users/${user.username}`}>
-        <Name>{user.name}</Name>{' '}
-        <Username>{user.username && `@${user.username}`}</Username>
-      </Link>
-      {roles && roles.map((role, index) => <Badge type={role} key={index} />)}
-      {user.isPro && <Badge type="pro" />}
-    </Byline>
-  );
-};
-
-type MessageType = Object; // TODO: Refine type
-
-type MessageGroupType = Array<MessageType>;
-
-type MessageGroupProps = {
+type Props = {
   messages: Array<MessageGroupType>,
-  currentUser: Object,
-  threadType: string,
+  currentUser: ?Object,
+  threadType: 'directMessageThread' | 'story',
   threadId: string,
-  thread: Object, // TODO: Refine type
+  thread: GetThreadType,
   isModerator: boolean,
-  toggleReaction: Function,
-  dispatch: Function,
-  selectedId: string,
-  changeSelection: Function,
+  dispatch: Dispatch<Object>,
   lastSeen?: number | Date,
+  history: History,
+  location: Location,
 };
 
 type State = {
   selectedMessage: ?string,
 };
 
+// $FlowFixMe
+export const MessagesContext = React.createContext();
+
 /*
   Messages expects to receive sorted and grouped messages.
   They will arrive as an array of arrays, where each top-level array is a group
   of message bubbles.
-
-  This means we will need a nested map in order to get each group, and then within
-  each group render each bubble.
 */
-class Messages extends Component<MessageGroupProps, State> {
-  constructor() {
-    super();
+class Messages extends React.Component<Props, State> {
+  constructor(props) {
+    super(props);
 
-    const hash = window.location.hash.substr(1);
+    const searchObj = queryString.parse(props.location.search);
+    const selectedMessageId = searchObj.m;
 
     let initialSelection = null;
 
-    if (hash && hash.length > 1) {
-      initialSelection = hash;
+    if (selectedMessageId) {
+      initialSelection = selectedMessageId;
     }
 
     this.state = {
       selectedMessage: initialSelection,
+      selectMessage: this.selectMessage,
     };
   }
+
+  selectMessage = (selectedMessageId: string) => {
+    const {
+      history,
+      location: { pathname, search, state },
+    } = this.props;
+    const searchObj = queryString.parse(search);
+    const newSearchObj = { ...searchObj };
+    if (selectedMessageId) {
+      newSearchObj.m = selectedMessageId;
+    }
+    const newSearch = queryString.stringify(
+      { ...newSearchObj },
+      { encode: false, strict: false, sort: false }
+    );
+    history.push({
+      pathname,
+      search: newSearch,
+      state,
+    });
+    return this.setState({ selectedMessage: selectedMessageId });
+  };
 
   shouldComponentUpdate(next, nextState) {
     const current = this.props;
     const newSelection =
       nextState.selectedMessage !== this.state.selectedMessage;
 
-    if (newSelection) return true;
+    if (newSelection) {
+      return true;
+    }
 
     // If it's a different thread, let's re-render
     const diffThread = next.threadId !== current.threadId;
-    if (diffThread) return true;
+    if (diffThread) {
+      return true;
+    }
 
     // If we don't have any message groups in the next props, return if we have
     // message groups in the current props
-    if (!next.messages) return !current.messages;
+    if (!next.messages) {
+      return !current.messages;
+    }
 
     // If a message group was added
-    if (next.messages.length !== current.messages.length) return true;
+    if (next.messages.length !== current.messages.length) {
+      return true;
+    }
 
     // Check if any message group has different messages than last time
     const hasNewMessages = next.messages.some((nextGroup, groupIndex) => {
       const currGroup = current.messages[groupIndex];
       // New group or more messages in group
-      if (!currGroup || nextGroup.length !== currGroup.length) return true;
+      if (!currGroup || nextGroup.length !== currGroup.length) {
+        return true;
+      }
 
       return nextGroup.some((nextMessage, messageIndex) => {
         const currMessage = current.messages[groupIndex][messageIndex];
         // A new message was added
-        if (!currMessage) return false;
+        if (!currMessage) {
+          return false;
+        }
 
         return currMessage.id !== nextMessage.id;
       });
     });
 
-    return hasNewMessages;
-  }
-
-  toggleSelectedMessage = messageId => {
-    if (this.state.selectedMessage === messageId) {
-      this.setState({
-        selectedMessage: null,
-      });
-    } else {
-      this.setState({
-        selectedMessage: messageId,
-      });
+    if (hasNewMessages) {
+      return true;
     }
-  };
+
+    const hasNewReactions = next.messages.map((nextGroup, groupIndex) => {
+      return nextGroup.some((nextMessage, messageIndex) => {
+        const currMessage = current.messages[groupIndex][messageIndex];
+        if (
+          !currMessage.message ||
+          !nextMessage.message ||
+          currMessage.message.type === 'timestamp' ||
+          nextMessage.message.type === 'timestamp'
+        ) {
+          return false;
+        }
+
+        if (currMessage.reactions.count !== nextMessage.reactions.count)
+          return true;
+        if (
+          currMessage.reactions.hasReacted !== nextMessage.reactions.hasReacted
+        )
+          return true;
+
+        return false;
+      });
+    });
+
+    if (hasNewReactions) {
+      return true;
+    }
+
+    return false;
+  }
 
   render() {
     const {
       messages,
       currentUser,
-      toggleReaction,
       threadType,
       threadId,
       isModerator,
@@ -166,27 +180,28 @@ class Messages extends Component<MessageGroupProps, State> {
 
     let hasInjectedUnseenRobo;
     return (
-      <Wrapper data-cy="message-group">
+      <MessagesWrapper data-cy="message-group">
         {messages.map((group, i) => {
+          // eliminate groups where there are no messages
           if (group.length === 0) return null;
           // Since all messages in the group have the same Author and same initial timestamp, we only need to pull that data from the first message in the group. So let's get that message and then check who sent it.
-          if (group.length === 0) return null;
           const initialMessage = group[0];
           const { author } = initialMessage;
-
           const roboText = author.user.id === 'robo';
           const me = currentUser
             ? author.user && author.user.id === currentUser.id
             : false;
-          const canModerate = me || isModerator;
+          const canModerateMessage = me || isModerator;
 
           if (roboText) {
-            if (initialMessage.message.type === 'timestamp') {
+            if (initialMessage.type === 'timestamp') {
               return (
                 <Timestamp key={initialMessage.timestamp}>
                   <hr />
                   <Time>
-                    {convertTimestampToDate(initialMessage.timestamp)}
+                    {convertTimestampToDate(
+                      new Date(initialMessage.timestamp).getTime()
+                    )}
                   </Time>
                   <hr />
                 </Timestamp>
@@ -219,53 +234,43 @@ class Messages extends Component<MessageGroupProps, State> {
           }
 
           return (
-            <Fragment key={initialMessage.id}>
+            <React.Fragment key={initialMessage.id}>
               {unseenRobo}
-              <Author key={initialMessage.id} me={me}>
-                {!me &&
-                  !roboText && (
-                    <AuthorAvatar
-                      user={author.user}
-                      roles={author.roles}
-                      showProfile
-                    />
-                  )}
-                <MessageGroup me={me}>
-                  <AuthorByline
-                    user={author.user}
-                    roles={author.roles}
-                    me={me}
-                  />
-                  {group.map(message => {
-                    return (
-                      <Message
-                        key={message.id}
-                        message={message}
-                        reaction={'like'}
-                        me={me}
-                        canModerate={canModerate}
-                        pending={message.id < 0}
-                        currentUser={currentUser}
-                        threadType={threadType}
-                        threadId={threadId}
-                        toggleReaction={toggleReaction}
-                        selectedId={this.state.selectedMessage}
-                        changeSelection={this.toggleSelectedMessage}
-                      />
-                    );
-                  })}
-                </MessageGroup>
-              </Author>
-            </Fragment>
+              <MessageGroupContainer key={initialMessage.id}>
+                {group.map((message, index) => {
+                  return (
+                    <ErrorBoundary
+                      fallbackComponent={() => <MessageErrorFallback />}
+                      key={message.id}
+                    >
+                      <MessagesContext.Provider value={this.state}>
+                        <Message
+                          me={me}
+                          showAuthorContext={index === 0}
+                          message={message}
+                          canModerateMessage={canModerateMessage}
+                          threadType={threadType}
+                          threadId={threadId}
+                        />
+                      </MessagesContext.Provider>
+                    </ErrorBoundary>
+                  );
+                })}
+              </MessageGroupContainer>
+            </React.Fragment>
           );
         })}
-      </Wrapper>
+      </MessagesWrapper>
     );
   }
 }
 
 // get the current user from the store for evaulation of message bubbles
-const mapStateToProps = state => ({ currentUser: state.users.currentUser });
+const map = state => ({ currentUser: state.users.currentUser });
 
 // $FlowIssue
-export default connect(mapStateToProps)(Messages);
+export default compose(
+  // $FlowFixMe
+  connect(map),
+  withRouter
+)(Messages);

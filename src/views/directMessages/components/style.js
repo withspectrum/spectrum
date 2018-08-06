@@ -1,5 +1,7 @@
+// @flow
 import styled from 'styled-components';
-import Avatar from '../../../components/avatar';
+import Link from 'src/components/link';
+import { UserAvatar } from 'src/components/avatar';
 import {
   Truncate,
   FlexCol,
@@ -29,10 +31,6 @@ export const Wrapper = styled(FlexCol)`
   box-shadow: ${props =>
     props.isUnread ? `inset -2px 0 0 ${props.theme.brand.default}` : 'none'};
 
-  a {
-    padding: 8px 12px;
-  }
-
   &:after {
     content: '';
     position: absolute;
@@ -42,22 +40,17 @@ export const Wrapper = styled(FlexCol)`
     border-bottom: 1px solid ${props => props.theme.bg.wash};
   }
 
-  &:first-of-type a {
-    padding-top: 8px;
-  }
-
-  &:last-of-type a {
-    padding-bottom: 16px;
-
-    &:after {
-      display: none;
-    }
-  }
-
   &:hover {
     cursor: pointer;
     background: ${props => props.theme.bg.wash};
   }
+`;
+
+export const WrapperLink = styled(Link)`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 16px;
 `;
 
 export const Col = styled(FlexCol)`
@@ -67,6 +60,8 @@ export const Col = styled(FlexCol)`
 export const Row = styled(FlexRow)`
   flex: 0 0 auto;
   align-items: center;
+  max-width: 100%;
+  padding-right: 16px;
 
   a {
     display: flex;
@@ -288,7 +283,7 @@ export const SearchResultsDropdown = styled.ul`
   width: 320px;
   max-height: 420px;
   overflow-y: scroll;
-  z-index: ${zIndex.dropdown};
+  z-index: ${zIndex.dropDown};
 
   @media (max-width: 768px) {
     width: 100%;
@@ -319,14 +314,13 @@ export const SearchResult = styled.li`
   }
 `;
 
-export const SearchResultImage = styled(Avatar)`
-  margin-right: 8px;
-`;
+export const SearchResultImage = styled(UserAvatar)``;
 
 export const SearchResultTextContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+  margin-left: 12px;
 `;
 
 export const SearchResultDisplayName = styled.p`
@@ -356,7 +350,6 @@ export const SelectedUsersPills = styled.ul`
   font-size: 16px;
   padding: 9px 12px;
   width: 100%;
-  z-index: ${zIndex.chatInput + 1};
   background: #fff;
 `;
 
@@ -399,7 +392,7 @@ export const PhotoWrapper = styled.span`
   display: inline-block;
 `;
 
-export const Photo = styled(Avatar)`
+export const Photo = styled(UserAvatar)`
   border: 1px solid #fff;
 `;
 

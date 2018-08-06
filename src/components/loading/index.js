@@ -17,12 +17,11 @@ import {
   ShimmerInboxThread,
   ShimmerThread,
   ShimmerThreadDetail,
+  ShimmerThreadContent,
   ShimmerProfile,
   ShimmerProfileLite,
   ShimmerListItem,
   ShimmerDM,
-  ShimmerBubble,
-  ShimmerChat,
   ShimmerInboxComposer,
   ShimmerComposer,
   ShimmerBase,
@@ -304,29 +303,6 @@ export const LoadingFeed = () => (
   </FlexCol>
 );
 
-export const LoadingBubble = () => (
-  <ShimmerBubble>
-    <ShimmerBase>
-      <ShimmerLine />
-    </ShimmerBase>
-  </ShimmerBubble>
-);
-
-export const LoadingChat = ({ size }: { size?: 'small' }) => (
-  <ShimmerChat>
-    <LoadingBubble />
-    <LoadingBubble />
-    <LoadingBubble />
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-  </ShimmerChat>
-);
-
 export const LoadingThreadDetail = () => (
   <ShimmerThreadDetail>
     <ShimmerBase>
@@ -461,6 +437,89 @@ export const LoadingThreadDetail = () => (
       />
     </ShimmerBase>
   </ShimmerThreadDetail>
+);
+
+export const LoadingThreadContent = () => (
+  <ShimmerThreadContent>
+    <ShimmerBase>
+      <ShimmerLine />
+      <Cover
+        style={{
+          top: '20px',
+          left: '0',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0px',
+          right: '0px',
+          height: '20px',
+          width: '20%',
+        }}
+      />
+
+      <Cover
+        style={{
+          top: '48px',
+          left: '0',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '28px',
+          right: '0px',
+          height: '20px',
+          width: '10%',
+        }}
+      />
+
+      <Cover
+        style={{
+          top: '76px',
+          left: '0',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '56px',
+          right: '0px',
+          height: '20px',
+          width: '10%',
+        }}
+      />
+
+      <Cover
+        style={{
+          top: '104px',
+          left: '0',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '84px',
+          right: '0px',
+          height: '20px',
+          width: '30%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '112px',
+          right: '0px',
+          height: '20px',
+          width: '70%',
+        }}
+      />
+    </ShimmerBase>
+  </ShimmerThreadContent>
 );
 
 export const LoadingListItem = () => (
@@ -988,7 +1047,6 @@ export const LoadingThreadView = (): React$Element<any> => (
     <Content>
       <Detail type="only">
         <LoadingThreadDetail />
-        <LoadingChat />
       </Detail>
     </Content>
   </ThreadViewContainer>

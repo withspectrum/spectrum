@@ -1,23 +1,26 @@
 // @flow
 import type { DBCommunity } from 'shared/types';
 import type { GraphQLContext } from '../../';
+import { canViewCommunity } from '../../utils/permissions';
 
-type MemberOrChannelCount = {
-  reduction?: number,
-};
+export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
+  const { user, loaders } = ctx;
+  const { id } = root;
 
-export default ({ id }: DBCommunity, _: any, { loaders }: GraphQLContext) => {
-  // $FlowIssue
-  return Promise.all([
+  if (!await canViewCommunity(user, id, loaders)) {
+    return {
+      channels: 0,
+      members: 0,
+    };
+  }
+
+  const [channelCount, memberCount] = await Promise.all([
     loaders.communityChannelCount.load(id),
     loaders.communityMemberCount.load(id),
-  ]).then(
-    ([channelCount, memberCount]: [
-      MemberOrChannelCount,
-      MemberOrChannelCount,
-    ]) => ({
-      channels: channelCount ? channelCount.reduction : 0,
-      members: memberCount ? memberCount.reduction : 0,
-    })
-  );
+  ]);
+
+  return {
+    channels: channelCount ? channelCount.reduction : 0,
+    members: memberCount ? memberCount.reduction : 0,
+  };
 };

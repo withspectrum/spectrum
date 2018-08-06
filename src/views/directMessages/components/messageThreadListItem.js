@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
-// $FlowFixMe
-import Link from 'src/components/link';
-import { timeDifference } from '../../../helpers/utils';
+// @flow
+import * as React from 'react';
+import { timeDifference } from 'shared/time-difference';
 import { renderAvatars } from './avatars';
+import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import {
   Wrapper,
+  WrapperLink,
   Row,
   Meta,
   MessageGroupTextContainer,
@@ -13,7 +14,13 @@ import {
   Timestamp,
 } from './style';
 
-class ListCardItemDirectMessageThread extends Component {
+type Props = {
+  active: boolean,
+  currentUser: Object,
+  thread: GetDirectMessageThreadType,
+};
+
+class ListCardItemDirectMessageThread extends React.Component<Props> {
   render() {
     const { thread, currentUser, active } = this.props;
 
@@ -51,7 +58,7 @@ class ListCardItemDirectMessageThread extends Component {
 
     return (
       <Wrapper active={active} isUnread={isUnread}>
-        <Link to={`/messages/${thread.id}`}>
+        <WrapperLink to={`/messages/${thread.id}`}>
           <Row>
             {avatars}
             <MessageGroupTextContainer>
@@ -68,7 +75,7 @@ class ListCardItemDirectMessageThread extends Component {
               </Meta>
             </MessageGroupTextContainer>
           </Row>
-        </Link>
+        </WrapperLink>
       </Wrapper>
     );
   }

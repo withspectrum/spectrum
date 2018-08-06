@@ -1,7 +1,8 @@
 // @flow
-import styled, { css } from 'styled-components';
-import { Button } from 'src/components/buttons';
+import styled from 'styled-components';
+import { Button, TextButton } from 'src/components/buttons';
 import { hexa, zIndex } from 'src/components/globals';
+import Link from 'src/components/link';
 
 export const ContentContainer = styled.div`
   padding: 128px 32px 72px;
@@ -24,6 +25,7 @@ export const ContentContainer = styled.div`
 
 export const Content = styled(ContentContainer)`
   position: relative;
+  margin-bottom: 80px;
 
   > a > button {
     margin-top: 24px;
@@ -87,10 +89,16 @@ export const CTA = styled(Button)`
   align-self: flex-start;
 `;
 
+export const TextCTA = styled(TextButton)`
+  padding: 16px 24px;
+  font-size: 18px;
+`;
+
 export const TwoUp = styled(ContentContainer)`
   display: grid;
   max-width: 100%;
-  padding: 128px 5% 48px;
+  padding: 128px 5% 40px;
+  margin-bottom: 80px;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: min-content;
   grid-template-areas: 'left right';
@@ -109,14 +117,6 @@ export const TwoUp = styled(ContentContainer)`
     ${Heading}, ${Copy} {
       padding: 0px 32px;
     }
-
-    ${props =>
-      props.reverse &&
-      css`
-        & + .goop {
-          display: none;
-        }
-      `};
   }
 `;
 
@@ -250,12 +250,24 @@ export const PlanSection = styled.div`
   background-color: ${props => props.theme.bg.default};
   border-radius: 8px;
   max-width: 480px;
+  z-index: 1;
 
   @media (max-width: 768px) {
     max-width: 100%;
-    padding: 18px 24px;
-    border-radius: 0;
-    box-shadow: none;
+    padding: 24px;
+    padding-bottom: 32px;
+    margin: 0 8px;
+  }
+
+  a {
+    display: inline-block;
+    align-self: center;
+
+    button {
+      margin-top: 24px;
+      padding: 8px 16px;
+      font-size: 16px;
+    }
   }
 `;
 
@@ -366,6 +378,19 @@ export const CommunityListActions = styled.div`
   }
 `;
 
+export const Actions = styled.div`
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 32px;
+  margin-left: 0;
+
+  @media (max-width: 768px) {
+    margin-left: 32px;
+  }
+`;
+
 export const CommunityCardButton = styled.button`
   -webkit-display: none;
   border-radius: 20px;
@@ -374,13 +399,13 @@ export const CommunityCardButton = styled.button`
   font-weight: 600;
   color: ${props => props.theme.text.alt};
   background: ${props => props.theme.bg.wash};
-  transition: all 0.2s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: color 0.2s cubic-bezier(0.77, 0, 0.175, 1);
   width: 100%;
 
   &:hover {
     color: ${props => props.theme.text.default};
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.77, 0, 0.175, 1);
+    transition: color 0.2s cubic-bezier(0.77, 0, 0.175, 1);
   }
 `;
 
@@ -496,8 +521,8 @@ export const FeaturePrice = styled.span`
 export const FeatureWrapper = styled.div`
   display: grid;
   grid-template-columns: auto 1fr auto;
-  grid-template-rows: min-content;
-  grid-template-areas: 'icon title price' '. description description';
+  grid-template-rows: repeat(2, min-content);
+  grid-template-areas: 'icon title price' '. description description' '. render render';
   color: ${props => props.theme[props.color].default};
   padding: 16px 0;
   align-items: center;
@@ -518,6 +543,11 @@ export const FeatureWrapper = styled.div`
   }
 `;
 
+export const FeatureRender = styled.div`
+  grid-area: render;
+  margin-top: 16px;
+`;
+
 export const FeatureTitle = styled.p`
   grid-area: title;
   font-size: 17px;
@@ -535,4 +565,14 @@ export const FeatureDescription = styled.p`
   color: ${props => props.theme.text.alt};
   padding-right: 24px;
   margin-top: 8px;
+`;
+
+export const ConciergeLink = styled(Link)`
+  display: flex;
+  flex: none;
+
+  button {
+    padding: 12px 16px;
+    margin-top: 0 !important;
+  }
 `;

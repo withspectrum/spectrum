@@ -2,6 +2,7 @@
 const Notification = /* GraphQL */ `
 	enum NotificationEventType {
 		REACTION_CREATED
+		THREAD_REACTION_CREATED
 		MESSAGE_CREATED
 	  THREAD_CREATED
 	  CHANNEL_CREATED
@@ -16,10 +17,13 @@ const Notification = /* GraphQL */ `
 		MENTION_MESSAGE
 		PRIVATE_CHANNEL_REQUEST_SENT
 		PRIVATE_CHANNEL_REQUEST_APPROVED
+		PRIVATE_COMMUNITY_REQUEST_SENT
+		PRIVATE_COMMUNITY_REQUEST_APPROVED
 	}
 
 	enum EntityType {
 		REACTION
+		THREAD_REACTION
 		MESSAGE
 	  THREAD
 	  CHANNEL
@@ -64,7 +68,6 @@ const Notification = /* GraphQL */ `
 
 	extend type Mutation {
 		markAllNotificationsSeen: Boolean
-		markAllNotificationsRead: Boolean
 		markDirectMessageNotificationsSeen: Boolean
 		markSingleNotificationSeen(id: ID!): Boolean
 	}

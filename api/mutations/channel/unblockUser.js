@@ -10,37 +10,56 @@ import {
   isAuthedResolver as requireAuth,
   canModerateChannel,
 } from '../../utils/permissions';
+import { trackQueue } from 'shared/bull/queues';
+import { events } from 'shared/analytics';
 
-type UnblockUserInput = {
+type Input = {
   input: {
     channelId: string,
     userId: string,
   },
 };
 
-export default requireAuth(
-  async (
-    _: any,
-    { input }: UnblockUserInput,
-    { user, loaders }: GraphQLContext
-  ) => {
-    if (!await canModerateChannel(user.id, input.channelId, loaders)) {
-      return new UserError('You don’t have permission to manage this channel');
-    }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { channelId, userId } = args.input;
+  const { user, loaders } = ctx;
 
-    const [channel, evaluatedUserChannelPermissions] = await Promise.all([
-      getChannelById(input.channelId),
-      getUserPermissionsInChannel(input.channelId, input.userId),
-    ]);
+  if (!await canModerateChannel(user.id, channelId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_UNBLOCKED_MEMBER_IN_CHANNEL_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
 
-    if (!evaluatedUserChannelPermissions.isBlocked) {
-      return new UserError(
-        'This user is not currently blocked in this channel.'
-      );
-    }
-
-    return unblockMemberInChannel(input.channelId, input.userId).then(
-      () => channel
-    );
+    return new UserError('You don’t have permission to manage this channel');
   }
-);
+
+  const [channel, evaluatedUserChannelPermissions] = await Promise.all([
+    getChannelById(channelId),
+    getUserPermissionsInChannel(channelId, userId),
+  ]);
+
+  if (!evaluatedUserChannelPermissions.isBlocked) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_UNBLOCKED_MEMBER_IN_CHANNEL_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'not blocked',
+      },
+    });
+
+    return new UserError('This user is not currently blocked in this channel.');
+  }
+
+  trackQueue.add({
+    userId: user.id,
+    event: events.USER_UNBLOCKED_MEMBER_IN_CHANNEL,
+    context: { channelId },
+  });
+
+  return unblockMemberInChannel(channelId, userId).then(() => channel);
+});

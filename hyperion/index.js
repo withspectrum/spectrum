@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('hyperion');
+import 'raf/polyfill';
 debug('Hyperion starting...');
 debug('logging with debug enabled');
 require('isomorphic-fetch'); // prevent https://github.com/withspectrum/spectrum/issues/3032
@@ -13,6 +14,7 @@ import toobusy from 'shared/middlewares/toobusy';
 import addSecurityMiddleware from 'shared/middlewares/security';
 
 const PORT = process.env.PORT || 3006;
+const SEVEN_DAYS = 604800;
 
 const app = express();
 
@@ -118,10 +120,31 @@ try {
   console.error(err);
 }
 app.use(
-  express.static(path.resolve(__dirname, '..', 'build'), { index: false })
+  express.static(path.resolve(__dirname, '..', 'build'), {
+    index: false,
+    setHeaders: (res, path) => {
+      // Don't cache the serviceworker in the browser
+      if (path.indexOf('sw.js')) {
+        res.setHeader('Cache-Control', 'no-store, no-cache');
+        return;
+      }
+
+      // Cache static files in now CDN for seven days
+      // (the filename changes if the file content changes, so we can cache these forever)
+      res.setHeader(
+        'Cache-Control',
+        `max-age=${SEVEN_DAYS}, s-maxage=${SEVEN_DAYS}`
+      );
+    },
+  })
 );
 app.get('/static/js/:name', (req: express$Request, res, next) => {
   if (!req.params.name) return next();
+  const existingFile = jsFiles.find(file => file.startsWith(req.params.name));
+  if (existingFile)
+    return res.sendFile(
+      path.resolve(__dirname, '..', 'build', 'static', 'js', req.params.name)
+    );
   const match = req.params.name.match(/(\w+?)\.(\w+?\.)?js/i);
   if (!match) return next();
   const actualFilename = jsFiles.find(file => file.startsWith(match[1]));
@@ -137,8 +160,16 @@ if (process.env.NODE_ENV === 'development') {
   );
 }
 
-import cache from './cache';
-app.use(cache);
+app.get('*', (req: express$Request, res, next) => {
+  // Electron requests should only be client-side rendered
+  if (
+    req.headers['user-agent'] &&
+    req.headers['user-agent'].indexOf('Electron') > -1
+  ) {
+    return res.sendFile(path.resolve(__dirname, '../build/index.html'));
+  }
+  next();
+});
 
 import renderer from './renderer';
 app.get('*', renderer);

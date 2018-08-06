@@ -25,17 +25,17 @@ const Pill = styled.div`
     props.active ? '80px' : '60px'});
   font-weight: 700;
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  transition: all 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out;
   cursor: pointer;
 
   &:hover {
     transform: translateX(-50%) translateY(78px);
-    transition: all 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out;
   }
 
   &:active {
     transform: translateX(-50%) translateY(80px);
-    transition: all 0.1s ease-in-out;
+    transition: transform 0.1s ease-in-out;
   }
 
   @media (max-width: 768px) {
@@ -44,12 +44,12 @@ const Pill = styled.div`
 
     &:hover {
       transform: translateX(-50%) translateY(58px);
-      transition: all 0.2s ease-in-out;
+      transition: transform 0.2s ease-in-out;
     }
 
     &:active {
       transform: translateX(-50%) translateY(60px);
-      transition: all 0.1s ease-in-out;
+      transition: transform 0.1s ease-in-out;
     }
   }
 `;

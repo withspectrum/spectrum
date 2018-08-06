@@ -13,13 +13,14 @@ import GranularUserProfile from 'src/components/granularUserProfile';
 import getCommunityTopMembers from 'shared/graphql/queries/community/getCommunityTopMembers';
 import type { GetCommunityTopMembersType } from 'shared/graphql/queries/community/getCommunityTopMembers';
 import { UserListItemContainer, MessageIconContainer } from '../style';
+import type { Dispatch } from 'redux';
 
 type Props = {
   isLoading: boolean,
   data: {
     community: GetCommunityTopMembersType,
   },
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   history: Object,
   currentUser: ?Object,
 };
@@ -32,17 +33,34 @@ class ConversationGrowth extends React.Component<Props> {
 
   render() {
     const { data: { community }, isLoading, currentUser } = this.props;
+    const title = 'Top members this week';
 
-    if (community && community.topMembers.length > 0) {
+    if (community) {
       const sortedTopMembers = community.topMembers.slice().sort((a, b) => {
         const bc = b && parseInt(b.reputation, 10);
         const ac = a && parseInt(a.reputation, 10);
         return bc && ac && bc <= ac ? -1 : 1;
       });
 
+      if (sortedTopMembers.length === 0) {
+        return (
+          <SectionCard>
+            <SectionTitle>{title}</SectionTitle>
+            <ViewError
+              small
+              emoji={'😭'}
+              heading={'Your community has been quiet this week'}
+              subheading={
+                'When people are posting new threads and joining conversations, the most active people will appear here.'
+              }
+            />
+          </SectionCard>
+        );
+      }
+
       return (
         <SectionCard>
-          <SectionTitle>Top members this week</SectionTitle>
+          <SectionTitle>{title}</SectionTitle>
           {sortedTopMembers.map(member => {
             if (!member) return null;
             return (
@@ -60,7 +78,7 @@ class ConversationGrowth extends React.Component<Props> {
                   onlineSize={'small'}
                   reputation={member.reputation}
                   profilePhoto={member.user.profilePhoto}
-                  avatarSize={'40'}
+                  avatarSize={40}
                   badges={member.roles}
                 >
                   {currentUser &&
@@ -88,19 +106,7 @@ class ConversationGrowth extends React.Component<Props> {
       );
     }
 
-    return (
-      <SectionCard>
-        <SectionTitle>Top members this week</SectionTitle>
-        <ViewError
-          small
-          emoji={'😭'}
-          heading={'Your community has been quiet this week'}
-          subheading={
-            'When people are posting new threads and joining conversations, the most active people will appear here.'
-          }
-        />
-      </SectionCard>
-    );
+    return null;
   }
 }
 

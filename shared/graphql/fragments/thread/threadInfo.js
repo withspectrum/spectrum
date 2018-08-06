@@ -50,6 +50,10 @@ export type ThreadInfoType = {
   },
   attachments: Array<?Attachment>,
   watercooler: boolean,
+  reactions: {
+    count: number,
+    hasReacted: boolean,
+  },
 };
 
 export default gql`
@@ -86,6 +90,10 @@ export default gql`
       data
     }
     watercooler
+    reactions {
+      count
+      hasReacted
+    }
   }
   ${threadParticipantFragment}
   ${userInfoFragment}

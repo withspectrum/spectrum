@@ -81,6 +81,15 @@ export const getNotifications = (notificationIds: Array<string>) => {
     .run();
 };
 
+export const getNotification = (
+  notificationId: string
+): Promise<DBNotification> => {
+  return db
+    .table('notifications')
+    .get(notificationId)
+    .run();
+};
+
 const hasChanged = (field: string) =>
   db
     .row('old_val')(field)

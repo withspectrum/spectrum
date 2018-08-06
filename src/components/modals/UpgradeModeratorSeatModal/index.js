@@ -14,9 +14,10 @@ import StripeCardForm from 'src/components/stripeCardForm';
 import addCommunityModerator from 'shared/graphql/mutations/communityMember/addCommunityModerator';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 import PoweredByStripe from '../components/poweredByStripe';
+import type { Dispatch } from 'redux';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isOpen: boolean,
   currentUser: Object,
   input: Object,

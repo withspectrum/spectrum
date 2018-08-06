@@ -1,48 +1,46 @@
 // @flow
 import React from 'react';
-import { TextInput, View, Button } from 'react-native';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+import compose from 'recompose/compose';
+import { connect } from 'react-redux';
+import { withNavigation } from 'react-navigation';
+import Input, { type InputProps } from './input';
+import { QuotedMessage } from '../Message/QuotedMessage';
+import { getMessageById } from '../../../shared/graphql/queries/message/getMessage';
+import type { Node } from 'react';
 
 type Props = {
-  onSubmit: (text: string) => void,
+  // Don't let people pass in their own children, this container takes care of that
+  ...$Diff<InputProps, { children: Node }>,
+  dispatch: Function,
+  quotedMessage?: string,
 };
 
-type State = {
-  value: string,
+const QuotedMessageById = getMessageById(props => {
+  if (props.data.loading || !props.data.message) return null;
+  return <QuotedMessage noPadding message={props.data.message} />;
+});
+
+// Get the quoted message ID for the current thread
+// by combining the navigation state + the redux state
+const mapStateToProps = (state, ownProps): * => {
+  const { state: navigationState } = ownProps.navigation;
+  const threadId =
+    navigationState.routeName === 'Thread' ? navigationState.params.id : null;
+  return {
+    quotedMessage: threadId ? state.message.quotedMessage[threadId] : null,
+  };
 };
 
-class ChatInput extends React.Component<Props, State> {
-  state = {
-    value: '',
-  };
+const ChatInputContainer = (props: Props) => {
+  const { quotedMessage, dispatch, ...inputProps } = props;
 
-  onChangeText = (value: string) => {
-    this.setState({ value });
-  };
+  return (
+    <Input {...inputProps}>
+      {quotedMessage ? <QuotedMessageById id={quotedMessage} /> : null}
+    </Input>
+  );
+};
 
-  submit = () => {
-    this.props.onSubmit(this.state.value);
-    this.onChangeText('');
-  };
-
-  render() {
-    return (
-      <View>
-        <TextInput
-          value={this.state.value}
-          onChangeText={this.onChangeText}
-          placeholder="Your message here..."
-          multiline
-          autoFocus
-          disableFullscreenUI
-          onSubmitEditing={this.submit}
-        />
-        <Button onPress={this.submit} title="Send" />
-        {/* NOTE(@mxstbr): Magic number, otherwise the chatinput is way above the keyboard */}
-        <KeyboardSpacer topSpacing={-75} />
-      </View>
-    );
-  }
-}
-
-export default ChatInput;
+export default compose(withNavigation, connect(mapStateToProps))(
+  ChatInputContainer
+);

@@ -60,11 +60,20 @@ class AndroidFallbackInput extends React.Component<Props, FallbackState> {
   };
 
   render() {
+    const {
+      editorState,
+      editorRef,
+      stripPastedStyles,
+      customStyleMap,
+      handleReturn,
+      editorKey,
+      ...rest
+    } = this.props;
     return (
       <div className="DraftEditor-root">
         <div className="DraftEditor-editorContainer">
           <Textarea
-            {...this.props}
+            {...rest}
             value={this.state.value}
             onChange={this.onChange}
             className={'DraftEditor-content ' + (this.props.className || '')}

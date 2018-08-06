@@ -19,10 +19,15 @@ import {
   LoadingContainer,
   LoadingBar,
   SectionTitle,
+  PendingBadge,
 } from '../style';
+import GetMembers from 'src/views/communityMembers/components/getMembers';
+import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isLoading: boolean,
   queryVarIsChanging: boolean,
   activeChannel: ?string,
@@ -38,6 +43,7 @@ type Props = {
 };
 class SidebarChannels extends React.Component<Props> {
   changeChannel = id => {
+    track(events.INBOX_CHANNEL_FILTERED);
     this.props.dispatch(changeActiveThread(''));
     this.props.dispatch(changeActiveChannel(id));
   };
@@ -57,10 +63,16 @@ class SidebarChannels extends React.Component<Props> {
       slug,
     } = this.props;
 
-    const { isOwner, isModerator } = permissions;
+    const isOwner = permissions && permissions.isOwner;
+    const isModerator = permissions && permissions.isModerator;
 
     if (community) {
-      const { isOwner, isModerator } = community.communityPermissions;
+      const isOwner =
+        community.communityPermissions &&
+        community.communityPermissions.isOwner;
+      const isModerator =
+        community.communityPermissions &&
+        community.communityPermissions.isModerator;
       const channels = community.channelConnection.edges
         .map(channel => channel && channel.node)
         .filter(channel => {
@@ -102,15 +114,42 @@ class SidebarChannels extends React.Component<Props> {
             </Link>
           )}
 
-          {(isOwner || isModerator) &&
-            community.hasFeatures.analytics && (
-              <Link to={`/${community.slug}/settings/analytics`}>
-                <ChannelListItem>
-                  <Icon glyph={'link'} size={24} />
-                  <CommunityListName>Analytics</CommunityListName>
-                </ChannelListItem>
-              </Link>
-            )}
+          {community.isPrivate && (
+            <GetMembers
+              filter={{ isPending: true }}
+              id={community.id}
+              render={({ isLoading, community, isFetchingMore, fetchMore }) => {
+                const members =
+                  community &&
+                  community.members &&
+                  community.members.edges.map(member => member && member.node);
+
+                if (members && members.length > 0) {
+                  return (
+                    <Link
+                      to={`/${community.slug}/settings/members?filter=pending`}
+                    >
+                      <ChannelListItem>
+                        <PendingBadge>{members.length}</PendingBadge>
+                        <CommunityListName>Pending requests</CommunityListName>
+                      </ChannelListItem>
+                    </Link>
+                  );
+                }
+
+                return null;
+              }}
+            />
+          )}
+
+          {(isOwner || isModerator) && (
+            <Link to={`/${community.slug}/settings/analytics`}>
+              <ChannelListItem>
+                <Icon glyph={'link'} size={24} />
+                <CommunityListName>Analytics</CommunityListName>
+              </ChannelListItem>
+            </Link>
+          )}
 
           {sortedChannels &&
             sortedChannels.length > 1 && (
@@ -120,23 +159,24 @@ class SidebarChannels extends React.Component<Props> {
             sortedChannels.length > 1 &&
             sortedChannels.map(channel => {
               return (
-                <ChannelListItem
-                  key={channel.id}
-                  active={activeChannel === channel.id}
-                  onClick={evt => {
-                    evt.stopPropagation();
-                    this.changeChannel(channel.id);
-                    this.setActiveChannelObject(channel);
-                  }}
-                >
-                  {channel.isPrivate ? (
-                    <Icon glyph="channel-private" size={24} />
-                  ) : (
-                    <Icon glyph="channel" size={24} />
-                  )}
+                <ErrorBoundary fallbackComponent={null} key={channel.id}>
+                  <ChannelListItem
+                    active={activeChannel === channel.id}
+                    onClick={evt => {
+                      evt.stopPropagation();
+                      this.changeChannel(channel.id);
+                      this.setActiveChannelObject(channel);
+                    }}
+                  >
+                    {channel.isPrivate ? (
+                      <Icon glyph="channel-private" size={24} />
+                    ) : (
+                      <Icon glyph="channel" size={24} />
+                    )}
 
-                  <CommunityListName>{channel.name}</CommunityListName>
-                </ChannelListItem>
+                    <CommunityListName>{channel.name}</CommunityListName>
+                  </ChannelListItem>
+                </ErrorBoundary>
               );
             })}
         </ChannelsContainer>

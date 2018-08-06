@@ -4,7 +4,6 @@ import Textarea from 'react-textarea-autosize';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import debounce from 'debounce';
-import { track } from '../../../helpers/events';
 import { closeComposer } from '../../../actions/composer';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -38,10 +37,12 @@ import {
   Dropdowns,
   DisconnectedWarning,
 } from '../style';
+import { events, track } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   isOpen: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isLoading: boolean,
   activeChannel?: string,
   activeCommunity?: string,
@@ -288,6 +289,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    track(events.THREAD_CREATED_INITED);
     this.setState({ isMounted: true });
     this.props.data
       .refetch()
@@ -311,7 +313,8 @@ class ThreadComposerWithData extends React.Component<Props, State> {
         this.props.dispatch(addToastWithTimeout('error', err.message))
       );
 
-    this.refs.titleTextarea.focus();
+    if (this.titleTextarea && this.titleTextarea.focus)
+      this.titleTextarea.focus();
   }
 
   componentWillUpdate(nextProps) {
@@ -349,7 +352,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
   changeTitle = e => {
     const title = e.target.value;
     if (/\n$/g.test(title)) {
-      this.bodyEditor.focus();
+      this.bodyEditor.focus && this.bodyEditor.focus();
       return;
     }
     persistTitle(title);
@@ -546,7 +549,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     const filesToUpload = Object.keys(jsonBody.entityMap)
       .filter(
         key =>
-          jsonBody.entityMap[key].type === 'image' &&
+          jsonBody.entityMap[key].type.toLowerCase() === 'image' &&
           jsonBody.entityMap[key].data.file &&
           jsonBody.entityMap[key].data.file.constructor === File
       )
@@ -571,7 +574,6 @@ class ThreadComposerWithData extends React.Component<Props, State> {
         // get the thread id to redirect the user
         const id = data.publishThread.id;
 
-        track('thread', 'published', null);
         REMOVE_STORAGE();
 
         // stop the loading spinner on the publish button
@@ -708,7 +710,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
                 style={ThreadTitle}
                 value={this.state.title}
                 placeholder={'What do you want to talk about?'}
-                ref="titleTextarea"
+                innerRef={ref => (this.titleTextarea = ref)}
                 autoFocus
               />
 

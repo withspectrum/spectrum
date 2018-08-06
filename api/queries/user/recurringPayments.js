@@ -8,7 +8,7 @@ export default ({ id }: DBUser, __: any, { user, loaders }: GraphQLContext) => {
     return new UserError('You must be signed in to continue.');
   }
   if (id !== user.id) {
-    throw new UserError('You can only see your own recurring payments.');
+    return new UserError('You can only see your own recurring payments.');
   }
 
   return loaders.userRecurringPayments.load(user.id).then(result => {

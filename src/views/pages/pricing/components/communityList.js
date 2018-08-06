@@ -7,7 +7,7 @@ import {
 import Link from 'src/components/link';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import compose from 'recompose/compose';
-import Avatar from 'src/components/avatar';
+import { CommunityAvatar } from 'src/components/avatar';
 import { Button } from 'src/components/buttons';
 import {
   CommunityListGrid,
@@ -18,6 +18,7 @@ import {
   CommunityListCard,
   CardTitle,
 } from '../style';
+import { track, events, transformations } from 'src/helpers/analytics';
 
 type Props = {
   data: {
@@ -44,6 +45,18 @@ class CommunityList extends React.Component<Props, State> {
       return false;
     return true;
   }
+
+  upgrade = community => {
+    track(events.PRICING_PAGE_UPGRADE_COMMUNITY_CLICKED, {
+      community: transformations.analyticsCommunity(community),
+    });
+  };
+
+  applyForDiscount = community => {
+    track(events.PRICING_PAGE_APPLY_FOR_DISCOUNT_CLICKED, {
+      community: transformations.analyticsCommunity(community),
+    });
+  };
 
   calculateOwnedCommunities = (props: Props) => {
     const { data: { user } } = props;
@@ -99,10 +112,16 @@ class CommunityList extends React.Component<Props, State> {
               if (!community) return null;
               return (
                 <CommunityCard key={community.id}>
-                  <Avatar src={community.profilePhoto} community={community} />
+                  <CommunityAvatar
+                    showHoverProfile={false}
+                    community={community}
+                  />
                   <CommunityCardName>{community.name}</CommunityCardName>
                   <CommunityListActions>
-                    <Link to={`/${community.slug}/settings`}>
+                    <Link
+                      onClick={() => this.upgrade(community)}
+                      to={`/${community.slug}/settings`}
+                    >
                       <Button
                         style={{
                           flex: '1 0 auto',
@@ -129,13 +148,17 @@ class CommunityList extends React.Component<Props, State> {
             if (!community) return null;
             return (
               <CommunityCard key={community.id}>
-                <Avatar src={community.profilePhoto} community={community} />
+                <CommunityAvatar
+                  showHoverProfile={false}
+                  community={community}
+                />
                 <CommunityCardName>{community.name}</CommunityCardName>
                 <CommunityListActions>
                   <a
                     href={`mailto:hi@spectrum.chat?subject=Discount request for the ${
                       community.name
                     } community`}
+                    onClick={() => this.applyForDiscount(community)}
                   >
                     <Button
                       style={{

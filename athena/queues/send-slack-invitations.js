@@ -62,7 +62,13 @@ const processJob = async (job: Job<SendSlackInvitationsJobData>) => {
     // filter out deleted members
     .filter(member => !member.deleted)
     // only save members with valid email
-    .filter(member => member.profile.email && isEmail(member.profile.email))
+    .filter(
+      member =>
+        member &&
+        member.profile &&
+        member.profile.email &&
+        isEmail(member.profile.email)
+    )
     // format output data
     .map(member => ({
       firstName: member.profile.first_name,

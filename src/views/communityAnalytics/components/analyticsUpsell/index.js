@@ -10,19 +10,24 @@ import { getCardImage } from 'src/views/communityBilling/utils';
 import {
   Container,
   Content,
-  Subtitle,
-  Title,
   Description,
   ActionRow,
   CardInfo,
+  Subtitle,
+  Title,
+  List,
 } from './style';
 import Link from 'src/components/link';
 import { Button, TextButton } from 'src/components/buttons';
+import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
+import type { Node } from 'react';
 
 type Props = {
   community: GetCommunitySettingsType,
   enableCommunityAnalytics: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
+  children: Node,
 };
 
 type State = {
@@ -52,6 +57,12 @@ class AnalyticsUpsell extends React.Component<Props, State> {
   };
 
   initAddPaymentMethod = () => {
+    const { community } = this.props;
+
+    track(events.COMMUNITY_ANALYTICS_ENABLED_INITED, {
+      community: transformations.analyticsCommunity(community),
+    });
+
     if (!this.props.community.billingSettings.administratorEmail) {
       return this.props.dispatch(
         openModal('ADMIN_EMAIL_ADDRESS_VERIFICATION_MODAL', {
@@ -87,9 +98,18 @@ class AnalyticsUpsell extends React.Component<Props, State> {
     );
   };
 
+  learnMoreClicked = () => {
+    const { community } = this.props;
+
+    track(events.COMMUNITY_ANALYTICS_LEARN_MORE_CLICKED, {
+      community: transformations.analyticsCommunity(community),
+    });
+  };
+
   render() {
+    const { community } = this.props;
     const { isLoading } = this.state;
-    const action = this.props.community.hasChargeableSource
+    const action = community.hasChargeableSource
       ? this.initEnableCommunityAnalytics
       : this.initAddPaymentMethod;
 
@@ -100,24 +120,32 @@ class AnalyticsUpsell extends React.Component<Props, State> {
           <Title>Community Analytics</Title>
           <Description>
             Unlock deeper insights into the content and people who make up your
-            community. With analytics you‘ll have a real-time understanding of
-            the health of your community‘s members and conversations.
+            community. Analytics helps you find:
           </Description>
+          <List>
+            <li>Top contributing community members each week</li>
+            <li>
+              The most active conversations in your community by engagement
+            </li>
+            <li>Threads where people haven’t received replies yet</li>
+          </List>
+
           <ActionRow>
             <Button
+              large
               loading={isLoading}
               onClick={action}
-              large
               data-cy="analytics-unlock-upsell-button"
             >
               Unlock Analytics · $100/mo
             </Button>
             <Link to={'/pricing'}>
-              <TextButton large>Learn more</TextButton>
+              <TextButton large onClick={this.learnMoreClicked}>
+                Learn more
+              </TextButton>
             </Link>
           </ActionRow>
-          {this.props.community.hasChargeableSource &&
-            this.getDefaultCardInfo()}
+          {community.hasChargeableSource && this.getDefaultCardInfo()}
         </Content>
       </Container>
     );
