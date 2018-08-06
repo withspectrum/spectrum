@@ -22,16 +22,16 @@ import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-swift';
 import createPrismPlugin from 'draft-js-prism-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
-import OutsideClickHandler from '../outsideClickHandler';
-import Icon from '../icons';
-import { IconButton } from '../buttons';
+import OutsideClickHandler from 'src/components/outsideClickHandler';
+import Icon from 'src/components/icons';
+import { IconButton } from 'src/components/buttons';
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
-import { renderLanguageSelect } from './LanguageSelect';
 import { isAndroid } from 'shared/draft-utils';
-
+import MediaInput from 'src/components/mediaInput';
+import { LinkPreview, LinkPreviewLoading } from 'src/components/linkPreview';
 import Image from './Image';
 import Embed, { addEmbed, parseEmbedUrl } from './Embed';
-import MediaInput from '../mediaInput';
+import { renderLanguageSelect } from './LanguageSelect';
 import SideToolbar from './toolbar';
 import {
   Wrapper,
@@ -42,7 +42,6 @@ import {
   EmbedUI,
   customStyleMap,
 } from './style';
-import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
 
 type Props = {
   state: Object,

@@ -1,6 +1,5 @@
 // @flow
 // Server-side renderer for our React code
-import fs from 'fs';
 const debug = require('debug')('hyperion:renderer');
 import React from 'react';
 // $FlowIssue
@@ -14,10 +13,8 @@ import {
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory';
 import { StaticRouter } from 'react-router';
-import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { HelmetProvider } from 'react-helmet-async';
-import * as graphql from 'graphql';
 import Loadable from 'react-loadable';
 import { getBundles } from 'react-loadable/webpack';
 import Raven from 'shared/raven';
@@ -26,8 +23,7 @@ import introspectionQueryResultData from 'shared/graphql/schema.json';
 import stats from '../../build/react-loadable.json';
 
 import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
-import { getFooter, getHeader, createScriptTag } from './html-template';
-import createCacheStream from '../create-cache-stream';
+import { getFooter, getHeader } from './html-template';
 
 // Browser shim has to come before any client imports
 import './browser-shim';
@@ -36,6 +32,8 @@ import { initStore } from '../../src/store';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 const FORCE_DEV = process.env.FORCE_DEV;
+const FIVE_MINUTES = 300;
+const ONE_HOUR = 3600;
 
 if (!IS_PROD || FORCE_DEV) debug('Querying API at localhost:3001/api');
 
@@ -100,7 +98,8 @@ const renderer = (req: express$Request, res: express$Response) => {
         <HelmetProvider context={helmetContext}>
           <Provider store={store}>
             <StaticRouter location={req.url} context={routerContext}>
-              <Routes />
+              {/* $FlowIssue */}
+              <Routes currentUser={req.user} />
             </StaticRouter>
           </Provider>
         </HelmetProvider>
@@ -125,13 +124,18 @@ const renderer = (req: express$Request, res: express$Response) => {
       const data = client.extract();
       const { helmet } = helmetContext;
       debug('write header');
-      let response = res;
+      // Use now's CDN to cache the rendered pages in CloudFlare for half an hour
+      // Ref https://zeit.co/docs/features/cdn
       if (!req.user) {
-        response = createCacheStream(req.path);
-        response.pipe(res);
+        res.setHeader(
+          'Cache-Control',
+          `max-age=${FIVE_MINUTES}, s-maxage=${ONE_HOUR}, stale-while-revalidate=${FIVE_MINUTES}, must-revalidate`
+        );
+      } else {
+        res.setHeader('Cache-Control', 's-maxage=0');
       }
 
-      response.write(
+      res.write(
         getHeader({
           metaTags:
             helmet.title.toString() +
@@ -144,7 +148,10 @@ const renderer = (req: express$Request, res: express$Response) => {
         renderToNodeStream(frontend)
       );
 
-      stream.pipe(response, { end: false });
+      stream.pipe(
+        res,
+        { end: false }
+      );
 
       const bundles = getBundles(stats, modules)
         // Create <script defer> tags from bundle objects
@@ -153,7 +160,7 @@ const renderer = (req: express$Request, res: express$Response) => {
         .filter((value, index, self) => self.indexOf(value) === index);
       debug('bundles used:', bundles.join(','));
       stream.on('end', () =>
-        response.end(
+        res.end(
           getFooter({
             state,
             data,

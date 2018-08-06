@@ -17,7 +17,7 @@ import {
   AvatarLink,
   CommunityAvatarLink,
 } from './style';
-import Avatar from 'src/components/avatar';
+import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
 import ThreadActivity from './activity';
 import { ErrorBoundary } from 'src/components/error';
 
@@ -49,19 +49,26 @@ class InboxThread extends React.Component<Props> {
       currentUser,
     } = this.props;
 
-    let queryPrefix;
-    if (
-      // TODO(@mxstbr): Fix this to not use window.innerWidth
-      // which breaks SSR rehydration on mobile devices
+    // TODO(@mxstbr): Fix this to not use window.innerWidth
+    // which breaks SSR rehydration on mobile devices
+    const isDesktopInbox =
       window.innerWidth > 768 &&
       (!viewContext ||
         viewContext === 'communityInbox' ||
-        viewContext === 'channelInbox')
-    ) {
+        viewContext === 'channelInbox');
+
+    let queryPrefix;
+    if (isDesktopInbox) {
       queryPrefix = '?t';
     } else {
       queryPrefix = '?thread';
     }
+
+    const newMessagesSinceLastViewed =
+      !active &&
+      thread.currentUserLastSeen &&
+      thread.lastActive &&
+      thread.currentUserLastSeen < thread.lastActive;
 
     return (
       <ErrorBoundary fallbackComponent={null}>
@@ -71,34 +78,24 @@ class InboxThread extends React.Component<Props> {
               pathname: location.pathname,
               search: `${queryPrefix}=${thread.id}`,
             }}
-            onClick={() => this.props.dispatch(changeActiveThread(thread.id))}
+            onClick={() =>
+              isDesktopInbox &&
+              this.props.dispatch(changeActiveThread(thread.id))
+            }
           />
 
           <InboxThreadContent>
             {viewContext !== 'userProfile' &&
               viewContext !== 'userProfileReplies' && (
                 <AvatarLink>
-                  <Avatar
-                    user={thread.author.user}
-                    src={`${thread.author.user.profilePhoto}`}
-                    size={'40'}
-                    link={
-                      thread.author.user.username &&
-                      `/users/${thread.author.user.username}`
-                    }
-                  />
+                  <UserAvatar user={thread.author.user} size={40} />
                 </AvatarLink>
               )}
 
             {(viewContext === 'userProfile' ||
               viewContext === 'userProfileReplies') && (
               <CommunityAvatarLink>
-                <Avatar
-                  community={thread.community}
-                  src={`${thread.community.profilePhoto}`}
-                  size={'40'}
-                  link={`/${thread.community.slug}`}
-                />
+                <CommunityAvatar community={thread.community} size={40} />
               </CommunityAvatarLink>
             )}
 
@@ -112,7 +109,7 @@ class InboxThread extends React.Component<Props> {
                 />
               </ErrorBoundary>
 
-              <ThreadTitle active={active}>
+              <ThreadTitle active={active} new={newMessagesSinceLastViewed}>
                 {truncate(thread.content.title, 80)}
               </ThreadTitle>
 

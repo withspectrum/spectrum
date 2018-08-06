@@ -380,7 +380,7 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
-    // deletedAt is missing intentionally
+    deletedAt: new Date(DATE),
   },
 
   {

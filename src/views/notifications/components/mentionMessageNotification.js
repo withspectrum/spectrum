@@ -5,15 +5,11 @@ import { parseNotificationDate, parseContext, parseActors } from '../utils';
 import Icon from '../../../components/icons';
 import {
   TextContent,
-  AttachmentsWash,
   Content,
   NotificationCard,
   NotificationListRow,
   SpecialContext,
 } from '../style';
-import { Author, MessageGroup } from '../../../components/messageGroup/style';
-import { AuthorAvatar, AuthorByline } from '../../../components/messageGroup';
-import Message from '../../../components/message';
 import {
   CardLink,
   CardContent,
@@ -39,13 +35,8 @@ export class MentionMessageNotification extends React.Component<Props, State> {
     const { notification, currentUser } = this.props;
 
     const actors = parseActors(notification.actors, currentUser, false);
-    const author = actors.asObjects[0];
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context, currentUser);
-    const message =
-      notification.entities.length > 0
-        ? notification.entities[0].payload
-        : null;
 
     return (
       <NotificationCard>
@@ -57,32 +48,13 @@ export class MentionMessageNotification extends React.Component<Props, State> {
         />
         <SpecialContext>
           <Icon glyph="mention" />
+          <ActorsRow actors={actors.asObjects} />
+        </SpecialContext>
+        <Content>
           <TextContent pointer={true}>
             {actors.asObjects[0].name} mentioned you in {context.asString}{' '}
             {date}
           </TextContent>
-        </SpecialContext>
-        <Content>
-          <AttachmentsWash>
-            {message && (
-              <Author style={{ marginTop: '0' }}>
-                <AuthorAvatar user={author} />
-                <MessageGroup me={false}>
-                  <AuthorByline user={author} me={false} />
-
-                  <Message
-                    message={message}
-                    link={`#${message.id}`}
-                    me={false}
-                    canModerate={false}
-                    pending={message.id < 0}
-                    currentUser={currentUser}
-                    context={'notification'}
-                  />
-                </MessageGroup>
-              </Author>
-            )}
-          </AttachmentsWash>
         </Content>
       </NotificationCard>
     );

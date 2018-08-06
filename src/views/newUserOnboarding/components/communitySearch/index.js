@@ -293,10 +293,7 @@ class Search extends React.Component<Props, State> {
                         focused={focusedSearchResult === community.id}
                         key={community.id}
                       >
-                        <SearchResultImage
-                          community={community}
-                          src={community.profilePhoto}
-                        />
+                        <SearchResultImage community={community} />
 
                         <SearchResultMetaWrapper>
                           <SearchResultName>{community.name}</SearchResultName>

@@ -31,6 +31,7 @@ class JoinFirstCommunityPure extends React.Component<Props> {
           profileSize={'upsell'}
           data={{ community }}
           onJoin={() => joinedCommunity(1, true)}
+          showHoverProfile={false}
         />
       </Row>
     );

@@ -345,13 +345,11 @@ class UserWithData extends React.Component<Props, State> {
               onChange={this.setCoverPhoto}
               defaultValue={coverPhoto}
               preview={true}
-              allowGif
             />
             <PhotoInput
+              type={'user'}
               onChange={this.setProfilePhoto}
               defaultValue={image}
-              user
-              allowGif
             />
           </ImageInputWrapper>
 

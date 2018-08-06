@@ -1,10 +1,13 @@
 // @flow
 import sortByDate from '../sort-by-date';
+import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
 
-// TODO: FIXME
-type Message = Object;
+type Output = {
+  ...$Exact<MessageInfoType>,
+  timestamp: string,
+};
 
-export const sortAndGroupMessages = (messages: Array<Message>) => {
+export const sortAndGroupMessages = (messages: Array<Output>) => {
   if (messages.length === 0) return [];
   messages = sortByDate(messages, 'timestamp', 'asc');
   let masterArray = [];
@@ -22,10 +25,10 @@ export const sortAndGroupMessages = (messages: Array<Message>) => {
           },
         },
         timestamp: messages[i].timestamp,
-        message: {
-          content: messages[i].timestamp,
-          type: 'timestamp',
+        content: {
+          body: messages[i].timestamp,
         },
+        type: 'timestamp',
       },
     ];
 

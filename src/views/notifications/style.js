@@ -224,6 +224,7 @@ export const TextContent = styled.p`
   pointer-events: ${props => (props.pointer ? 'all' : 'none')};
   line-height: 1.4;
   padding-right: 16px;
+  margin-left: 32px;
 
   a {
     font-weight: 600;
