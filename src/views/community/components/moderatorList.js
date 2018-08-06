@@ -38,9 +38,10 @@ class CommunityModeratorList extends React.Component<Props> {
     if (
       this.props.data &&
       this.props.data.community &&
-      this.props.data.community.id === nextProps.data.community.id
+      nextProps.data.community
     ) {
-      return false;
+      if (this.props.data.community.id === nextProps.data.community.id)
+        return false;
     }
     return true;
   }
