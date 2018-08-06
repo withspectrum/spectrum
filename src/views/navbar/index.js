@@ -21,6 +21,7 @@ import {
   Label,
   Navatar,
   SkipLink,
+  SigninLink,
 } from './style';
 import { track, events } from 'src/helpers/analytics';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
@@ -304,6 +305,7 @@ class Navbar extends React.Component<Props, State> {
             <Icon glyph="payment" />
             <Label>Pricing</Label>
           </PricingTab>
+          <SigninLink to="/login">Sign In</SigninLink>
         </Nav>
       );
     }
