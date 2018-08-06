@@ -180,7 +180,9 @@ class MessagesWithData extends React.Component<Props, State> {
         </NullCopy>
         <SocialShareWrapper>
           <A
-            href={`https://twitter.com/share?text=${threadTitle} on @withspectrum&url=https://spectrum.chat/thread/${threadId}`}
+            href={`https://twitter.com/share?text=${encodeURIComponent(
+              threadTitle
+            )} on @withspectrum&url=https://spectrum.chat/thread/${threadId}`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -189,7 +191,9 @@ class MessagesWithData extends React.Component<Props, State> {
             </Button>
           </A>
           <A
-            href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${threadId}&t=${threadTitle}`}
+            href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${threadId}&t=${encodeURIComponent(
+              threadTitle
+            )}`}
             target="_blank"
             rel="noopener noreferrer"
           >
