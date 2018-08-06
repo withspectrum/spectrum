@@ -384,8 +384,8 @@ export const NullMessagesWrapper = styled.div`
   flex-direction: column;
   opacity: 0.8;
 
-  .icon {
-    opacity: ${props => props.iconOpacity || '0.4'};
+  > .icon {
+    opacity: 0.4;
   }
 `;
 

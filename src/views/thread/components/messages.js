@@ -173,11 +173,11 @@ class MessagesWithData extends React.Component<Props, State> {
     const threadId = idx(this.props, _ => _.data.thread.id) || '';
 
     return (
-      <NullMessagesWrapper iconOpacity={1}>
-        <EmptyThreadHeading>No replies yet</EmptyThreadHeading>
-        <EmptyThreadDescription>
-          Share your post on other social media sites
-        </EmptyThreadDescription>
+      <NullMessagesWrapper>
+        <Icon glyph="share" size={64} />
+        <NullCopy>
+          Nobody has replied yet - why don't you share it with your friends?
+        </NullCopy>
         <SocialShareWrapper>
           <A
             href={`https://twitter.com/share?text=${threadTitle} on @withspectrum&url=https://spectrum.chat/thread/${threadId}`}
