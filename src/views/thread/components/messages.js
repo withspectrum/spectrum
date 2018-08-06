@@ -319,7 +319,7 @@ class MessagesWithData extends React.Component<Props, State> {
     }
 
     if (!messagesExist) {
-      if (isLocked) return null;
+      if (isLocked || !this.props.data.thread) return null;
 
       return this.getIsAuthor()
         ? this.getAuthorEmptyMessage()
