@@ -14,6 +14,7 @@ import toobusy from 'shared/middlewares/toobusy';
 import addSecurityMiddleware from 'shared/middlewares/security';
 
 const PORT = process.env.PORT || 3006;
+const SEVEN_DAYS = 604800;
 
 const app = express();
 
@@ -127,6 +128,13 @@ app.use(
         res.setHeader('Cache-Control', 'no-store, no-cache');
         return;
       }
+
+      // Cache static files in now CDN for seven days
+      // (the filename changes if the file content changes, so we can cache these forever)
+      res.setHeader(
+        'Cache-Control',
+        `max-age=${SEVEN_DAYS}, s-maxage=${SEVEN_DAYS}`
+      );
     },
   })
 );
