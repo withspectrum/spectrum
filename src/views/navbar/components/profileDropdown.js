@@ -48,7 +48,7 @@ type ProfileProps = {
   dispatch: Function,
 };
 
-export const ProfileDropdown = connect()((props: ProfileProps) => {
+const ProfileDropdown = (props: ProfileProps) => {
   return (
     <UserProfileDropdown className={'dropdown'}>
       <UserProfileDropdownList>
@@ -83,4 +83,6 @@ export const ProfileDropdown = connect()((props: ProfileProps) => {
       </UserProfileDropdownList>
     </UserProfileDropdown>
   );
-});
+};
+
+export default connect()(ProfileDropdown);
