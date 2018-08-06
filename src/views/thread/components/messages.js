@@ -173,7 +173,7 @@ class MessagesWithData extends React.Component<Props, State> {
     const threadId = idx(this.props, _ => _.data.thread.id) || '';
 
     return (
-      <NullMessagesWrapper>
+      <NullMessagesWrapper iconOpacity={1}>
         <EmptyThreadHeading>No replies yet</EmptyThreadHeading>
         <EmptyThreadDescription>
           Share your post on other social media sites

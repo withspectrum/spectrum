@@ -385,7 +385,7 @@ export const NullMessagesWrapper = styled.div`
   opacity: 0.8;
 
   .icon {
-    opacity: 0.4;
+    opacity: ${props => props.iconOpacity || '0.4'};
   }
 `;
 
