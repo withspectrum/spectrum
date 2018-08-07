@@ -12,7 +12,6 @@ import receiveNotifications from './receiveNotifications';
 import messageConnection from './messageConnection';
 import author from './author';
 import creator from './creator';
-import messageCount from './messageCount';
 import currentUserLastSeen from './currentUserLastSeen';
 import content from './content';
 import reactions from './reactions';
@@ -33,7 +32,6 @@ module.exports = {
     messageConnection,
     author,
     creator, // deprecated
-    messageCount,
     currentUserLastSeen,
     content,
     reactions,

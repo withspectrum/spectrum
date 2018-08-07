@@ -58,6 +58,11 @@ const Channel = /* GraphQL */ `
     userId: ID!
   }
 
+  enum ChannelThreadConnectionSort {
+    NEW
+    TOP
+  }
+
   type Channel {
     id: ID!
     createdAt: Date!
@@ -71,20 +76,29 @@ const Channel = /* GraphQL */ `
     channelPermissions: ChannelPermissions! @cost(complexity: 1)
     communityPermissions: CommunityPermissions!
     community: Community! @cost(complexity: 1)
-    threadConnection(first: Int = 10, after: String): ChannelThreadsConnection! @cost(complexity: 1, multiplier: "first")
-    memberConnection(first: Int = 10, after: String): ChannelMembersConnection! @cost(complexity: 1, multiplier: "first")
+    threadConnection(
+      first: Int = 10
+      after: String
+      sort: ChannelThreadConnectionSort = NEW
+    ): ChannelThreadsConnection! @cost(complexity: 1, multiplier: "first")
+    memberConnection(first: Int = 10, after: String): ChannelMembersConnection!
+      @cost(complexity: 1, multiplier: "first")
     memberCount: Int!
     metaData: ChannelMetaData @cost(complexity: 1)
     pendingUsers: [User] @cost(complexity: 3)
     blockedUsers: [User] @cost(complexity: 3)
     moderators: [User] @cost(complexity: 3)
     owners: [User] @cost(complexity: 3)
-    joinSettings: JoinSettings 
+    joinSettings: JoinSettings
     slackSettings: ChannelSlackSettings
   }
 
   extend type Query {
-    channel(id: ID, channelSlug: LowercaseString, communitySlug: LowercaseString): Channel @cost(complexity: 1)
+    channel(
+      id: ID
+      channelSlug: LowercaseString
+      communitySlug: LowercaseString
+    ): Channel @cost(complexity: 1)
   }
 
   input ArchiveChannelInput {

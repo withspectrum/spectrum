@@ -50,9 +50,10 @@ export const getThreadsByChannelToDelete = (channelId: string) => {
 };
 
 // prettier-ignore
-export const getThreadsByChannel = (channelId: string, options: PaginationOptions): Promise<Array<DBThread>> => {
-  const { first, after } = options
+export const getThreadsByChannel = (channelId: string, options: { ...PaginationOptions, sort: 'NEW' | 'TOP' }): Promise<Array<DBThread>> => {
+  const { first, after, sort } = options
 
+  const order = sort === 'NEW' ? { index: db.desc('channelIdAndLastActive') } : db.desc('frecency_score');
   return db
     .table('threads')
     .between(
@@ -64,21 +65,22 @@ export const getThreadsByChannel = (channelId: string, options: PaginationOption
         rightBound: 'open',
       }
     )
-    .orderBy({ index: db.desc('channelIdAndLastActive') })
+    .orderBy(order)
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .limit(first)
     .run();
 };
 
 // prettier-ignore
-export const getThreadsByChannels = (channelIds: Array<string>, options: PaginationOptions): Promise<Array<DBThread>> => {
-  const { first, after } = options
-  
+export const getThreadsByChannels = (channelIds: Array<string>, options: { ...PaginationOptions, sort: 'NEW' | 'TOP' }): Promise<Array<DBThread>> => {
+  const { first, after, sort } = options
+
+  const order = sort === 'NEW' ? db.desc('lastActive') : db.desc('frecency_score');
   return db
     .table('threads')
     .getAll(...channelIds, { index: 'channelId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+    .orderBy(order)
     .skip(after || 0)
     .limit(first || 999999)
     .run();
@@ -447,10 +449,10 @@ export const setThreadLock = (threadId: string, value: boolean, userId: string, 
       .run()
       .then(async () => {
         const thread = await getThreadById(threadId)
-        
-        const event = value 
-          ? byModerator 
-            ? events.THREAD_LOCKED_BY_MODERATOR 
+
+        const event = value
+          ? byModerator
+            ? events.THREAD_LOCKED_BY_MODERATOR
             : events.THREAD_LOCKED
           : byModerator
             ? events.THREAD_UNLOCKED_BY_MODERATOR
@@ -645,6 +647,58 @@ export const moveThread = (id: string, channelId: string, userId: string) => {
 
       return null;
     });
+};
+
+export const incrementMessageCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      messageCount: db
+        .row('messageCount')
+        .default(0)
+        .add(1),
+    })
+    .run();
+};
+
+export const decrementMessageCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      messageCount: db
+        .row('messageCount')
+        .default(1)
+        .sub(1),
+    })
+    .run();
+};
+
+export const incrementReactionCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      reactionCount: db
+        .row('reactionCount')
+        .default(0)
+        .add(1),
+    })
+    .run();
+};
+
+export const decrementReactionCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      reactionCount: db
+        .row('reactionCount')
+        .default(1)
+        .sub(1),
+    })
+    .run();
 };
 
 const hasChanged = (field: string) =>
