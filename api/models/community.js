@@ -170,7 +170,7 @@ export const getCommunitiesOnlineMemberCounts = (
 ) => {
   return db
     .table('usersCommunities')
-    .getAll('e8792514-dc32-43ff-a26e-81c85754f193', '-Kh6RfPYjmSaIWbkck8i', {
+    .getAll(...communityIds, {
       index: 'communityId',
     })
     .filter({ isBlocked: false, isMember: true })
