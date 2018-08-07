@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Tooltip, Gradient } from '../globals';
 
 export const Span = styled.span`
-  display: inline;
+  display: flex;
   color: ${({ theme }) => theme.text.reverse};
   background-color: ${props => props.theme.text.alt};
   text-transform: uppercase;
@@ -16,6 +16,8 @@ export const Span = styled.span`
   letter-spacing: 0.6px;
   line-height: 1;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.16);
+  align-items: center;
+  align-self: center;
 `;
 
 export const ProBadge = styled(Span)`
