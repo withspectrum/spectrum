@@ -11,8 +11,8 @@ import { getThreadsByChannels } from '../../models/thread';
 import { canViewCommunity } from '../../utils/permissions';
 
 // prettier-ignore
-export default async (root: DBCommunity, args: PaginationOptions, ctx: GraphQLContext) => {
-  const { first = 10, after } = args
+export default async (root: DBCommunity, args: { ...PaginationOptions, sort: 'NEW' | 'TOP' }, ctx: GraphQLContext) => {
+  const { first = 10, after, sort = 'NEW' } = args
   const { user, loaders } = ctx
   const { id } = root
 
@@ -48,6 +48,7 @@ export default async (root: DBCommunity, args: PaginationOptions, ctx: GraphQLCo
   const threads = await getThreadsByChannels(channels, {
     first,
     after: lastThreadIndex,
+    sort,
   });
 
   return {

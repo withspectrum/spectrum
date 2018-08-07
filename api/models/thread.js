@@ -71,14 +71,15 @@ export const getThreadsByChannel = (channelId: string, options: PaginationOption
 };
 
 // prettier-ignore
-export const getThreadsByChannels = (channelIds: Array<string>, options: PaginationOptions): Promise<Array<DBThread>> => {
-  const { first, after } = options
+export const getThreadsByChannels = (channelIds: Array<string>, options: { ...PaginationOptions, sort: 'NEW' | 'TOP' }): Promise<Array<DBThread>> => {
+  const { first, after, sort } = options
 
+  const order = sort === 'NEW' ? db.desc('lastActive') : db.desc('frecency_score');
   return db
     .table('threads')
     .getAll(...channelIds, { index: 'channelId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+    .orderBy(order)
     .skip(after || 0)
     .limit(first || 999999)
     .run();
