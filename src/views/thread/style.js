@@ -193,6 +193,15 @@ export const SocialShareWrapper = styled(FlexRow)`
   ${A}:first-child {
     margin-right: 20px;
   }
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+
+    ${A}:first-child {
+      margin-right: 0;
+      margin-bottom: 8px;
+    }
+  }
 `;
 
 export const ContextRow = styled(FlexRow)`
