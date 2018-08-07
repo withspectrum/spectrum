@@ -12,7 +12,6 @@ import {
 import {
   __createThreadLoader,
   __createThreadParticipantsLoader,
-  __createThreadMessageCountLoader,
 } from './thread';
 import { __createNotificationLoader } from './notification';
 import {
@@ -58,7 +57,6 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   ),
   thread: __createThreadLoader(options),
   threadParticipants: __createThreadParticipantsLoader(options),
-  threadMessageCount: __createThreadMessageCountLoader(options),
   notification: __createNotificationLoader(options),
   channel: __createChannelLoader(options),
   channelMemberCount: __createChannelMemberCountLoader(options),
