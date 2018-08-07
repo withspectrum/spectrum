@@ -51,6 +51,8 @@ export const getDMThreadMessageConnectionOptions = {
         directMessageThread &&
         directMessageThread.messageConnection &&
         directMessageThread.messageConnection.edges,
+      messageConnection:
+        directMessageThread && directMessageThread.messageConnection,
       hasNextPage:
         directMessageThread && directMessageThread.messageConnection
           ? directMessageThread.messageConnection.pageInfo.hasNextPage

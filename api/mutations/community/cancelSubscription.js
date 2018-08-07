@@ -9,29 +9,35 @@ import {
 import { archiveAllPrivateChannels } from '../../models/channel';
 import UserError from '../../utils/UserError';
 import { StripeUtil } from 'shared/stripe/utils';
-import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import {
+  isAuthedResolver as requireAuth,
+  canAdministerCommunity,
+} from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
-export default async (
-  _: any,
-  { input }: { input: { communityId: string } },
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+type Input = {
+  input: {
+    communityId: string,
+  },
+};
 
-  if (!currentUser) {
-    return new UserError('You must be signed in to manage this community');
-  }
-
-  const { communityId } = input;
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { communityId } = args.input;
+  const { user, loaders } = ctx;
 
   const { customer, community } = await StripeUtil.jobPreflight(communityId);
 
-  const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
-    communityId,
-    currentUser.id
-  );
+  if (!await canAdministerCommunity(user.id, communityId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_SUBSCRIPTION_CANCELED_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
 
-  if (!currentUserCommunityPermissions.isOwner) {
     return new UserError(
       'You must own this community to manage payment sources'
     );
@@ -39,6 +45,16 @@ export default async (
 
   if (!community) {
     debug('Error getting community in preflight');
+
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_SUBSCRIPTION_CANCELED_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'community not fetched in preflight',
+      },
+    });
+
     return new UserError(
       'We had trouble processing this request - please try again later'
     );
@@ -46,6 +62,16 @@ export default async (
 
   if (!customer) {
     debug('Error getting customer in preflight');
+
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_SUBSCRIPTION_CANCELED_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'customer not fetched in preflight',
+      },
+    });
+
     return new UserError(
       'We had trouble processing this request - please try again later'
     );
@@ -58,12 +84,15 @@ export default async (
   // have been removed
   return await Promise.all([
     removeModeratorsInCommunity(communityId),
-    disablePaidFeatureFlags(communityId),
-    archiveAllPrivateChannels(communityId),
-  ])
-    .then(() => getCommunityById(communityId))
-    .catch(err => {
-      console.error(err);
-      return new UserError(`Error canceling subscription: ${err.message}`);
+    disablePaidFeatureFlags(communityId, user.id),
+    archiveAllPrivateChannels(communityId, user.id),
+  ]).then(async () => {
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_SUBSCRIPTION_CANCELED,
+      context: { communityId },
     });
-};
+
+    return await getCommunityById(communityId);
+  });
+});

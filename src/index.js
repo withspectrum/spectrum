@@ -16,51 +16,58 @@ import { history } from './helpers/history';
 import { client } from 'shared/graphql';
 import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
-import Routes from './routes';
-import { track } from './helpers/events';
+import Routes from './hot-routes';
+import { track, events } from './helpers/analytics';
 import { wsLink } from 'shared/graphql';
+import { subscribeToDesktopPush } from './subscribe-to-desktop-push';
 
-const { thread, t } = queryString.parse(history.location.search);
+const storedData: ?Object = getItemFromStorage('spectrum');
+const params = queryString.parse(history.location.search);
 
-const existingUser = getItemFromStorage('spectrum');
-let initialState;
-if (existingUser) {
-  initialState = {
+// Always redirect ?thread=asdfxyz to the thread view
+if (params.thread) {
+  if (params.m) {
+    history.replace(`/thread/${params.thread}?m=${params.m}`);
+  } else {
+    history.replace(`/thread/${params.thread}`);
+  }
+}
+
+// Redirect ?t=asdfxyz to the thread view only for anonymous users who wouldn't see it
+// in their inbox view (since they don't have an inbox view)
+if ((!storedData || !storedData.currentUser) && params.t)
+  history.replace(`/thread/${params.t}`);
+
+// If the server passes an initial redux state use that, otherwise construct our own
+const store = initStore(
+  window.__SERVER_STATE__ || {
     users: {
-      currentUser: existingUser.currentUser,
+      currentUser: storedData ? storedData.currentUser : null,
     },
     dashboardFeed: {
-      activeThread: t ? t : '',
-      mountedWithActiveThread: t ? t : '',
+      activeThread: params.t || '',
+      mountedWithActiveThread: params.t || '',
       search: {
         isOpen: false,
       },
     },
-  };
-} else {
-  initialState = {};
-}
-
-if (thread) {
-  const hash = window.location.hash.substr(1);
-  if (hash && hash.length > 1) {
-    history.replace(`/thread/${thread}#${hash}`);
-  } else {
-    history.replace(`/thread/${thread}`);
   }
-}
-if (t && (!existingUser || !existingUser.currentUser)) {
-  const hash = window.location.hash.substr(1);
-  if (hash && hash.length > 1) {
-    history.replace(`/thread/${t}#${hash}`);
-  } else {
-    history.replace(`/thread/${t}`);
-  }
-}
+);
 
-const store = initStore(window.__SERVER_STATE__ || initialState);
+const App = () => {
+  return (
+    <Provider store={store}>
+      <HelmetProvider>
+        <ApolloProvider client={client}>
+          <Router history={history}>
+            <Routes currentUser={storedData ? storedData.currentUser : null} />
+          </Router>
+        </ApolloProvider>
+      </HelmetProvider>
+    </Provider>
+  );
+};
 
-// eslint-disable-next-line
 const renderMethod = !!window.__SERVER_STATE__
   ? // $FlowIssue
     ReactDOM.hydrate
@@ -68,25 +75,17 @@ const renderMethod = !!window.__SERVER_STATE__
 
 function render() {
   return renderMethod(
-    <Provider store={store}>
-      <HelmetProvider>
-        <ApolloProvider client={client}>
-          <Router history={history}>
-            <Routes
-              maintenanceMode={
-                process.env.REACT_APP_MAINTENANCE_MODE === 'enabled'
-              }
-            />
-          </Router>
-        </ApolloProvider>
-      </HelmetProvider>
-    </Provider>,
+    <App />,
     // $FlowIssue
     document.querySelector('#root')
   );
 }
 
-Loadable.preloadReady().then(render);
+Loadable.preloadReady()
+  .then(render)
+  .catch(err => {
+    console.error(err);
+  });
 
 OfflinePluginRuntime.install({
   // Apply new updates immediately
@@ -117,12 +116,16 @@ wsLink.subscriptionClient.on('reconnected', () =>
 // This fires when a user is prompted to add the app to their homescreen
 // We use it to track it happening in Google Analytics so we have those sweet metrics
 window.addEventListener('beforeinstallprompt', e => {
-  track('user', 'prompted to add to homescreen');
+  track(events.PWA_HOME_SCREEN_PROMPTED);
   e.userChoice.then(choiceResult => {
     if (choiceResult.outcome === 'dismissed') {
-      track('user', 'did not add to homescreen');
+      track(events.PWA_HOME_SCREEN_DISMISSED);
     } else {
-      track('user', 'added to homescreen');
+      track(events.PWA_HOME_SCREEN_ADDED);
     }
   });
+});
+
+subscribeToDesktopPush(data => {
+  if (data && data.href) history.push(data.href);
 });

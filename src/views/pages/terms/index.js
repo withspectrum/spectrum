@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { track } from 'src/helpers/events';
 import PageFooter from '../components/footer';
 import { Wrapper } from '../style';
 import {
@@ -14,10 +13,7 @@ import {
 import { PrivacyTermsList } from './style';
 
 class Terms extends React.Component<{}> {
-  componentDidMount() {
-    track('terms', 'viewed', null);
-  }
-
+  
   render() {
     return (
       <Wrapper data-cy="terms-page">

@@ -10,6 +10,7 @@ import {
   IFRAME_TAG,
   YOUTUBE_URLS,
   VIMEO_URLS,
+  CODEPEN_URLS,
 } from '../../helpers/regexps';
 import addProtocolToString from 'shared/normalize-url';
 
@@ -70,6 +71,14 @@ export const parseEmbedUrl = incomingUrl => {
       url,
       width: 600,
       height: 800,
+    };
+  }
+
+  const isCodePenUrl = url.match(CODEPEN_URLS);
+  if (isCodePenUrl) {
+    return {
+      url,
+      height: 300,
     };
   }
 

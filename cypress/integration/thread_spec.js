@@ -10,6 +10,9 @@ const thread = data.threads[0];
 const community = data.communities.find(
   community => community.id === thread.communityId
 );
+const moderator = data.usersCommunities
+  .filter(usersCommunity => usersCommunity.communityId === community.id)
+  .find(usersCommunity => usersCommunity.isOwner);
 const author = data.users.find(user => user.id === thread.creatorId);
 const messages = data.messages.filter(
   message => message.threadId === thread.id
@@ -101,6 +104,284 @@ describe('Thread View', () => {
       // Clear the chat input and make sure the message was sent by matching the text
       cy.get('[contenteditable="true"]').type('');
       cy.contains(newMessage);
+    });
+  });
+
+  describe('Loading a thread with a message query parameter', () => {
+    beforeEach(() => {
+      cy.auth(author.id);
+      cy.visit(`/thread/thread-1?m=MTQ4MzIyNTIwMDAwMQ==`);
+    });
+
+    it('should load only messages after the selected message', () => {
+      cy.get('[data-cy="thread-view"]').should('be.visible');
+      // ensure messages have loaded
+      cy.contains('This is the first message!').should('not.be.visible');
+
+      // the first message should be selected
+      cy.get('[data-cy="message-selected"]').should('be.visible');
+
+      // only one message should be selected
+      cy.get('[data-cy="message-selected"]').should($p => {
+        expect($p).to.have.length(1);
+      });
+
+      // the other message should be unselected
+      cy.get('[data-cy="message"]').should($p => {
+        expect($p).to.have.length(1);
+      });
+
+      // load previous messages should be visible
+      cy.get('[data-cy="load-previous-messages"]')
+        .should('be.visible')
+        .click();
+
+      // all the messages should be loaded
+      cy.get('[data-cy="message"]').should($p => {
+        expect($p).to.have.length(4);
+      });
+    });
+  });
+
+  describe('copy link to message', () => {
+    beforeEach(() => {
+      cy.auth(author.id);
+      cy.visit(`/thread/${thread.id}`);
+    });
+
+    it('should copy link to message from message actions', () => {
+      cy.get('[data-cy="thread-view"]').should('be.visible');
+      // ensure messages have loaded
+      cy.contains('This is the first message!').should('be.visible');
+
+      // click the copy link icon on the first message
+      cy.get('[data-cy="link-to-message"]')
+        .first()
+        .should('be.visible')
+        .click({ force: true });
+      // message should be selected
+      cy.get('[data-cy="message-selected"]').should('be.visible');
+      // only one message should be selected
+      cy.get('[data-cy="message-selected"]').should($p => {
+        expect($p).to.have.length(1);
+      });
+      // the other three messages should be unselected
+      cy.get('[data-cy="message"]').should($p => {
+        expect($p).to.have.length(3);
+      });
+      // the url should contain the message query param
+      cy.url().should(
+        'eq',
+        `http://localhost:3000/thread/${thread.id}?m=MTQ4MzIyNTE5OTk5OQ==`
+      );
+    });
+  });
+
+  describe('message timestamp', () => {
+    beforeEach(() => {
+      cy.auth(author.id);
+      cy.visit(`/thread/${thread.id}`);
+    });
+
+    it('should link the thread with message query param', () => {
+      cy.get('[data-cy="thread-view"]').should('be.visible');
+      // ensure messages have loaded
+      cy.contains('This is the first message!').should('be.visible');
+
+      // click the copy link icon on the first message
+      cy.get('[data-cy="message-timestamp"]')
+        .first()
+        .should('be.visible')
+        .click({ force: true });
+      // message should be selected
+      cy.get('[data-cy="message-selected"]').should('be.visible');
+      // only one message should be selected
+      cy.get('[data-cy="message-selected"]').should($p => {
+        expect($p).to.have.length(1);
+      });
+      // the other three messages should be unselected
+      cy.get('[data-cy="message"]').should($p => {
+        expect($p).to.have.length(3);
+      });
+      // the url should contain the message query param
+      cy.url().should(
+        'eq',
+        `http://localhost:3000/thread/${thread.id}?m=MTQ4MzIyNTE5OTk5OQ==`
+      );
+    });
+  });
+
+  describe('liking a message signed in', () => {
+    beforeEach(() => {
+      cy.auth(author.id);
+      cy.visit(`/thread/${thread.id}`);
+    });
+
+    it('should like a message from the message action bar', () => {
+      cy.get('[data-cy="thread-view"]').should('be.visible');
+      // ensure messages have loaded
+      cy.contains('This is the first message!').should('be.visible');
+
+      // click the first like action in the message action bar
+      cy.get('[data-cy="like-action"]')
+        .first()
+        .should('be.visible')
+        .click({ force: true });
+      // message should be liked
+      cy.get('[data-cy="unlike-action"]').should('be.visible');
+      // only one message should be liked
+      cy.get('[data-cy="like-action"]').should($p => {
+        expect($p).to.have.length(2);
+      });
+      // the other three messages should not be liked
+      cy.get('[data-cy="unlike-action"]').should($p => {
+        expect($p).to.have.length(1);
+      });
+      // the message should not be selected
+      cy.get('[data-cy="message-selected"]').should('not.be.visible');
+      // the url should not have changed
+      cy.url().should('eq', `http://localhost:3000/thread/${thread.id}`);
+
+      // unlike the message from the message action bar
+      cy.get('[data-cy="unlike-action"]')
+        .first()
+        .should('be.visible')
+        .click({ force: true });
+      // message should not be liked
+      cy.get('[data-cy="unlike-action"]').should('not.be.visible');
+      // the rest of the messages should not be liked
+      cy.get('[data-cy="like-action"]').should($p => {
+        expect($p).to.have.length(3);
+      });
+      // the url should not have changed
+      cy.url().should('eq', `http://localhost:3000/thread/${thread.id}`);
+    });
+
+    it('should unlike a message from the inline reaction', () => {
+      cy.get('[data-cy="thread-view"]').should('be.visible');
+      // ensure messages have loaded
+      cy.contains('This is the first message!').should('be.visible');
+
+      // click the first like action in the message action bar
+      cy.get('[data-cy="like-action"]')
+        .first()
+        .should('be.visible')
+        .click({ force: true });
+      // message should be liked
+      cy.get('[data-cy="inline-unlike-action"]').should('be.visible');
+      // should click the inline unlike button
+      cy.get('[data-cy="inline-unlike-action"]').click();
+      // no inline like buttons should be visible
+      cy.get('[data-cy="inline-unlike-action"]').should('not.be.visible');
+      // the url should not have changed
+      cy.url().should('eq', `http://localhost:3000/thread/${thread.id}`);
+    });
+
+    it('should not allow user to like their own message from inline reaction', () => {
+      cy.get('[data-cy="thread-view"]').should('be.visible');
+      // ensure messages have loaded
+      cy.contains('This is the first message!').should('be.visible');
+
+      // the last message should have an inline unlike action
+      cy.get('[data-cy="inline-like-action"]')
+        .should('be.visible')
+        .click();
+
+      // the message should still have the unlike action
+      cy.get('[data-cy="inline-like-action"]').should('be.visible');
+
+      // the message should not have an inline like action
+      cy.get('[data-cy="inline-unlike-action"]').should('not.be.visible');
+    });
+
+    it('should not allow a user to like their own message from action bar', () => {
+      cy.get('[data-cy="thread-view"]').should('be.visible');
+      // ensure messages have loaded
+      cy.contains('This is the first message!').should('be.visible');
+
+      // the last message should not contain a like action in the message
+      // action bar
+      cy.get('[data-cy="message"]')
+        .last()
+        .should('not.contain', '[data-cy="like-action"]');
+    });
+  });
+
+  describe('like a message signed out', () => {
+    beforeEach(() => {
+      cy.visit(`/thread/${thread.id}`);
+    });
+
+    it('should prompt login for non users on inline reaction', () => {
+      cy.get('[data-cy="thread-view"]').should('be.visible');
+      // ensure messages have loaded
+      cy.contains('This is the first message!').should('be.visible');
+
+      // click the first like action in the message action bar
+      cy.get('[data-cy="inline-like-action"]')
+        .scrollIntoView()
+        .should('be.visible')
+        .click({ force: true });
+      // login modal should appear
+      cy.get('[data-cy="login-modal"]').should('be.visible');
+    });
+
+    it('should prompt login for non users on like action bar', () => {
+      cy.get('[data-cy="thread-view"]').should('be.visible');
+      // ensure messages have loaded
+      cy.contains('This is the first message!').should('be.visible');
+
+      // click the first like action in the message action bar
+      cy.get('[data-cy="like-action"]')
+        .first()
+        .should('be.visible')
+        .click({ force: true });
+      // login modal should appear
+      cy.get('[data-cy="login-modal"]').should('be.visible');
+    });
+  });
+
+  describe('delete message as message author', () => {
+    beforeEach(() => {
+      cy.auth(author.id);
+      cy.visit(`/thread/${thread.id}`);
+    });
+
+    it('should allow a user to delete their own message', () => {
+      // the last message should have delete action in the message action bar
+      cy.get('[data-cy="delete-message"]').should('be.visible');
+      // there should only be one deletable message
+      cy.get('[data-cy="delete-message"]').should($p => {
+        expect($p).to.have.length(1);
+      });
+      // clicking delete message should open double check modal
+      cy.get('[data-cy="delete-message"]')
+        .last()
+        .click({ force: true });
+      // modal should open
+      cy.get('[data-cy="delete-button"]').should('be.visible');
+    });
+  });
+
+  describe('delete message as community moderator', () => {
+    beforeEach(() => {
+      cy.auth(moderator.userId);
+      cy.visit(`/thread/${thread.id}`);
+    });
+
+    it('should allow a user to delete all messages', () => {
+      // the last message should have delete action in the message action bar
+      cy.get('[data-cy="delete-message"]').should('be.visible');
+      // there should only be one deletable message
+      cy.get('[data-cy="delete-message"]').should($p => {
+        expect($p).to.have.length(4);
+      });
+      // clicking delete message should open double check modal
+      cy.get('[data-cy="delete-message"]')
+        .last()
+        .click({ force: true });
+      // modal should open
+      cy.get('[data-cy="delete-button"]').should('be.visible');
     });
   });
 });

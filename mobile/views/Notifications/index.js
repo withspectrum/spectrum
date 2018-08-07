@@ -1,10 +1,9 @@
 // @flow
-import React from 'react';
-import { View, Button } from 'react-native';
+import React, { Component } from 'react';
+import { Button } from 'react-native';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { SecureStore } from 'expo';
-import Text from '../../components/Text';
 import InfiniteList from '../../components/InfiniteList';
 import withSafeView from '../../components/SafeAreaView';
 import { Wrapper } from '../Dashboard/style';
@@ -15,14 +14,25 @@ import viewNetworkHandler, {
   type ViewNetworkHandlerProps,
 } from '../../components/ViewNetworkHandler';
 import subscribeExpoPush from '../../../shared/graphql/mutations/user/subscribeExpoPush';
+import sortByDate from '../../../shared/sort-by-date';
 import getPushNotificationToken from '../../utils/get-push-notification-token';
 import type { State as ReduxState } from '../../reducers';
 import type { AuthenticationState } from '../../reducers/authentication';
+import { parseNotification } from './parseNotification';
+import { NotificationListItem } from '../../components/Lists';
+import { withCurrentUser } from '../../components/WithCurrentUser';
+import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
+import type { NavigationProps } from 'react-navigation';
+import Loading from '../../components/Loading';
+import ErrorBoundary from '../../components/ErrorBoundary';
+import { FullscreenNullState } from '../../components/NullStates';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
-  mutate: (token: any) => Promise<any>,
+  subscribeExpoPush: (token: any) => Promise<any>,
   authentication: AuthenticationState,
+  navigation: NavigationProps,
+  currentUser: GetUserType,
   data: {
     subscribeToNewNotifications: Function,
     fetchMore: Function,
@@ -41,11 +51,7 @@ type State = {
   pushNotifications: ?PushNotificationsDecision,
 };
 
-const mapStateToProps = (state: ReduxState): * => ({
-  authentication: state.authentication,
-});
-
-class Notifications extends React.Component<Props, State> {
+class Notifications extends Component<Props, State> {
   constructor() {
     super();
     this.state = {
@@ -94,12 +100,30 @@ class Notifications extends React.Component<Props, State> {
       data = { decision: false, timestamp: new Date() };
     } else {
       data = { decision: true, timestamp: new Date() };
-      this.props.mutate(token);
+      this.setState({
+        pushNotifications: data,
+      });
+      this.props
+        .subscribeExpoPush(token)
+        .then(res => {
+          if (res) {
+            return SecureStore.setItemAsync(
+              'pushNotificationsDecision',
+              JSON.stringify(data)
+            );
+          } else {
+            this.setState({
+              pushNotifications: null,
+            });
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          this.setState({
+            pushNotifications: null,
+          });
+        });
     }
-    this.setState({
-      pushNotifications: data,
-    });
-    SecureStore.setItemAsync('pushNotificationsDecision', JSON.stringify(data));
   };
 
   subscribe = () => {
@@ -124,7 +148,7 @@ class Notifications extends React.Component<Props, State> {
       isLoading,
       hasError,
       isRefetching,
-      data: { fetchMore, notifications },
+      data: { fetchMore },
     } = this.props;
     if (!isFetchingMore && !isLoading && !hasError && !isRefetching) {
       fetchMore();
@@ -132,57 +156,75 @@ class Notifications extends React.Component<Props, State> {
   };
 
   render() {
-    const { isLoading, hasError, data: { notifications } } = this.props;
+    const {
+      isLoading,
+      hasError,
+      currentUser,
+      data: { notifications },
+      navigation,
+    } = this.props;
     const { pushNotifications } = this.state;
-    if (notifications) {
+    if (notifications && currentUser) {
+      const nodes = notifications.edges.map(edge => edge && edge.node);
+      const sorted = sortByDate(nodes, 'modifiedAt', 'desc');
+      const parsed = sorted.map(n => parseNotification(n)).filter(Boolean);
+
       return (
         <Wrapper>
-          <View>
-            {pushNotifications != null &&
-              pushNotifications.decision === undefined && (
-                <Button
-                  title="Enable push notifications"
-                  onPress={this.enablePushNotifications}
+          {pushNotifications != null &&
+            pushNotifications.decision === undefined && (
+              <Button
+                title="Enable push notifications"
+                onPress={this.enablePushNotifications}
+              />
+            )}
+          <InfiniteList
+            data={parsed}
+            renderItem={({ item }) => (
+              <ErrorBoundary fallbackComponent={null}>
+                <NotificationListItem
+                  navigation={navigation}
+                  notification={item}
+                  currentUserId={currentUser.id}
                 />
-              )}
-            <InfiniteList
-              data={notifications.edges}
-              renderItem={({ item: { node } }) => (
-                <Text type="body">{node.id}</Text>
-              )}
-              loadingIndicator={<Text>Loading...</Text>}
-              hasNextPage={notifications.pageInfo.hasNextPage}
-              fetchMore={this.fetchMore}
-              refetching={this.props.isRefetching}
-              refetch={this.props.data.refetch}
-            />
-          </View>
+              </ErrorBoundary>
+            )}
+            loadingIndicator={<Loading />}
+            hasNextPage={notifications.pageInfo.hasNextPage}
+            fetchMore={this.fetchMore}
+            isFetchingMore={this.props.isFetchingMore}
+            isRefetching={this.props.isRefetching}
+            refetch={this.props.data.refetch}
+          />
         </Wrapper>
       );
     }
 
-    if (isLoading)
+    if (isLoading) {
       return (
         <Wrapper>
-          <Text type="body">Loading...</Text>
+          <Loading />
         </Wrapper>
       );
+    }
 
-    if (hasError)
-      return (
-        <Wrapper>
-          <Text type="body">Oh crap, error</Text>
-        </Wrapper>
-      );
+    if (hasError) {
+      return <FullscreenNullState />;
+    }
 
     return null;
   }
 }
 
+const map = (state: ReduxState): * => ({
+  authentication: state.authentication,
+});
+
 export default compose(
+  withCurrentUser,
   withSafeView,
   getNotifications,
   subscribeExpoPush,
   viewNetworkHandler,
-  connect(mapStateToProps)
+  connect(map)
 )(Notifications);

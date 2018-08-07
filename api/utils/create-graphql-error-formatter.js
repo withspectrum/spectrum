@@ -44,9 +44,11 @@ const createGraphQLErrorFormatter = (req?: express$Request) => (
   error: GraphQLError
 ) => {
   logGraphQLError(req, error);
+
   const isUserError = error.originalError
     ? error.originalError[IsUserError]
     : error[IsUserError];
+
   let sentryId = 'ID only generated in production';
   if (!isUserError) {
     if (process.env.NODE_ENV === 'production') {
@@ -56,6 +58,7 @@ const createGraphQLErrorFormatter = (req?: express$Request) => (
       );
     }
   }
+
   return {
     message: isUserError ? error.message : `Internal server error: ${sentryId}`,
     // Hide the stack trace in production mode

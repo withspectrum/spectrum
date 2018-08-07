@@ -1,66 +1,84 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { markInitialSlackInvitationsSent } from '../../models/communitySettings';
 import { getCommunityById } from '../../models/community';
 import { sendSlackInvitationsQueue } from 'shared/bull/queues';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateCommunity,
+} from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
-type SendSlackInvitesInput = {
+type Input = {
   input: {
     id: string,
     customMessage?: ?string,
   },
 };
 
-export default async (
-  _: any,
-  { input }: SendSlackInvitesInput,
-  { user, loaders }: GraphQLContext
-) => {
-  const currentUser = user;
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { id: communityId, customMessage } = args.input;
+  const { user, loaders } = ctx;
 
-  if (!currentUser) {
-    return new UserError(
-      'You must be signed in to invite people to this community.'
-    );
-  }
+  if (!await canModerateCommunity(user.id, communityId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_SLACK_TEAM_INVITES_SENT_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
 
-  // make sure the user is the owner of the community
-  const permissions = await getUserPermissionsInCommunity(
-    input.id,
-    currentUser.id
-  );
-
-  if (!permissions.isOwner && !permissions.isModerator) {
     return new UserError(
       "You don't have permission to invite a Slack team to this community."
     );
   }
 
-  const settings = await loaders.communitySettings.load(input.id);
+  const settings = await loaders.communitySettings.load(communityId);
 
   if (!settings || !settings.slackSettings || !settings.slackSettings.scope) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_SLACK_TEAM_INVITES_SENT_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no slack team connected',
+      },
+    });
+
     return new UserError(
       'No Slack team is connected to this community. Try reconnecting.'
     );
   }
 
   if (settings && settings.slackSettings.invitesSentAt) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_SLACK_TEAM_INVITES_SENT_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'slack team already invited',
+      },
+    });
+
     return new UserError(
       'This Slack team has already been invited to join your community!'
     );
   }
 
   return await markInitialSlackInvitationsSent(
-    input.id,
-    input.customMessage
+    communityId,
+    customMessage,
+    user.id
   ).then(async () => {
-    loaders.communitySettings.clear(input.id);
+    loaders.communitySettings.clear(communityId);
     sendSlackInvitationsQueue.add({
-      communityId: input.id,
-      userId: currentUser.id,
+      communityId,
+      userId: user.id,
     });
-    return await getCommunityById(input.id);
+    return await getCommunityById(communityId);
   });
-};
+});

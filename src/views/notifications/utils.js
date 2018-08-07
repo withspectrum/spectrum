@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from 'src/components/link';
-import { timeDifferenceShort } from '../../helpers/utils';
+import { Query } from 'react-apollo';
+import { timeDifferenceShort } from 'shared/time-difference';
+import { getThreadByIdQuery } from 'shared/graphql/queries/thread/getThread';
 import { Timestamp } from './style';
 
 export const parseNotification = notification => {
@@ -107,6 +109,7 @@ export const parseEvent = event => {
     case 'MESSAGE_CREATED': {
       return <span>replied</span>;
     }
+    case 'THREAD_REACTION_CREATED':
     case 'REACTION_CREATED': {
       return <span>liked</span>;
     }
@@ -120,6 +123,12 @@ export const parseEvent = event => {
       return <span>requested to join</span>;
     }
     case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
+      return <span>approved your request to join</span>;
+    }
+    case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
+      return <span>requested to join</span>;
+    }
+    case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
       return <span>approved your request to join</span>;
     }
     default: {
@@ -154,8 +163,51 @@ const threadToString = (context, currentUser) => {
   );
 };
 
-const messageToString = () => {
-  return <span> your reply</span>;
+const threadReactionToString = context => {
+  const str = 'your thread';
+  return (
+    <span>
+      {' '}
+      {str}{' '}
+      <Link
+        to={{
+          pathname: window.location.pathname,
+          search: `?thread=${context.payload.id}`,
+        }}
+      >
+        {context.payload.content.title}
+      </Link>
+    </span>
+  );
+};
+
+const messageToString = context => {
+  return (
+    <Query
+      query={getThreadByIdQuery}
+      variables={{ id: context.payload.threadId }}
+    >
+      {({ loading, data }) => {
+        if (loading) return <span> your reply</span>;
+        if (!data.thread) return <span> your reply</span>;
+        return (
+          <span>
+            {' '}
+            your reply in
+            <Link
+              to={{
+                pathname: window.location.pathname,
+                search: `?thread=${context.payload.id}`,
+              }}
+            >
+              {' '}
+              {data.thread.content.title}
+            </Link>
+          </span>
+        );
+      }}
+    </Query>
+  );
 };
 
 const communityToString = context => {
@@ -194,6 +246,12 @@ export const parseContext = (context, currentUser) => {
     }
     case 'CHANNEL': {
       const asString = channelToString(context);
+      return {
+        asString,
+      };
+    }
+    case 'THREAD_REACTION': {
+      const asString = threadReactionToString(context);
       return {
         asString,
       };

@@ -6,23 +6,29 @@ import { uploadImage } from '../../utils/file-storage';
 import { getThreads, editThread } from '../../models/thread';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
-export default async (
-  _: any,
-  { input }: { input: EditThreadInput },
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+type Input = {
+  input: EditThreadInput,
+};
 
-  // user must be authed to edit a thread
-  if (!currentUser) {
-    return new UserError(
-      'You must be signed in to make changes to this thread.'
-    );
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { input } = args;
+  const { user } = ctx;
 
   if (input.type === 'SLATE') {
-    throw new UserError(
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_EDITED_FAILED,
+      context: { threadId: input.threadId },
+      properties: {
+        reason: 'slate type',
+      },
+    });
+
+    return new UserError(
       "You're on an old version of Spectrum, please refresh your browser."
     );
   }
@@ -34,21 +40,39 @@ export default async (
 
   // if the thread doesn't exist
   if (!threads || !threadToEvaluate) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_EDITED_FAILED,
+      context: { threadId: input.threadId },
+      properties: {
+        reason: 'thread does not exist',
+      },
+    });
+
     return new UserError("This thread doesn't exist");
   }
 
   const [communityPermissions, channelPermissions] = await Promise.all([
-    getUserPermissionsInCommunity(threadToEvaluate.communityId, currentUser.id),
-    getUserPermissionsInChannel(threadToEvaluate.channelId, currentUser.id),
+    getUserPermissionsInCommunity(threadToEvaluate.communityId, user.id),
+    getUserPermissionsInChannel(threadToEvaluate.channelId, user.id),
   ]);
 
   // only the thread creator can edit the thread
   // also prevent deletion if the user was blocked
   if (
-    threadToEvaluate.creatorId !== currentUser.id ||
+    threadToEvaluate.creatorId !== user.id ||
     channelPermissions.isBlocked ||
     communityPermissions.isBlocked
   ) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_EDITED_FAILED,
+      context: { threadId: input.threadId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
     return new UserError(
       "You don't have permission to make changes to this thread."
     );
@@ -63,6 +87,8 @@ export default async (
         attachmentType: attachment.attachmentType,
         data: JSON.parse(attachment.data),
       });
+
+      return null;
     });
   }
 
@@ -76,7 +102,7 @@ export default async (
   });
 
   // $FlowIssue
-  const editedThread = await editThread(newInput);
+  const editedThread = await editThread(newInput, user.id);
 
   if (!input.filesToUpload) return editedThread;
 
@@ -88,6 +114,15 @@ export default async (
       )
     );
   } catch (err) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_EDITED_FAILED,
+      context: { threadId: input.threadId },
+      properties: {
+        reason: 'images failed to upload',
+      },
+    });
+
     return new UserError(err.message);
   }
 
@@ -97,7 +132,7 @@ export default async (
   const body =
     editedThread.content.body && JSON.parse(editedThread.content.body);
   const imageKeys = Object.keys(body.entityMap).filter(
-    key => body.entityMap[key].type === 'image'
+    key => body.entityMap[key].type.toLowerCase() === 'image'
   );
   urls.forEach((url, index) => {
     if (!body.entityMap[imageKeys[index]]) return;
@@ -105,11 +140,14 @@ export default async (
   });
 
   // Update the thread with the new links
-  return editThread({
-    threadId: editedThread.id,
-    content: {
-      ...editedThread.content,
-      body: JSON.stringify(body),
+  return editThread(
+    {
+      threadId: editedThread.id,
+      content: {
+        ...editedThread.content,
+        body: JSON.stringify(body),
+      },
     },
-  });
-};
+    user.id
+  );
+});

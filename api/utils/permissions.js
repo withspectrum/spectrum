@@ -1,7 +1,7 @@
 // @flow
 import UserError from './UserError';
 import type { GraphQLContext } from '../';
-import type { DBChannel, DBCommunity } from 'shared/types';
+import type { DBChannel, DBCommunity, DBUser } from 'shared/types';
 import {
   COMMUNITY_SLUG_BLACKLIST,
   CHANNEL_SLUG_BLACKLIST,
@@ -47,11 +47,8 @@ const communityExists = async (communityId: string, loaders: any): Promise<?DBCo
   return community;
 };
 
-export const canAdministerChannel = async (
-  userId: string,
-  channelId: string,
-  loaders: any
-) => {
+// prettier-ignore
+export const canAdministerChannel = async (userId: string, channelId: string, loaders: any) => {
   if (!userId || !channelId) return false;
 
   const channel = await channelExists(channelId, loaders);
@@ -71,11 +68,8 @@ export const canAdministerChannel = async (
   return false;
 };
 
-export const canModerateChannel = async (
-  userId: string,
-  channelId: string,
-  loaders: any
-) => {
+// prettier-ignore
+export const canModerateChannel = async (userId: string, channelId: string, loaders: any) => {
   if (!userId || !channelId) return false;
 
   const channel = await channelExists(channelId, loaders);
@@ -95,11 +89,8 @@ export const canModerateChannel = async (
   return false;
 };
 
-export const canAdministerCommunity = async (
-  userId: string,
-  communityId: string,
-  loaders: any
-) => {
+// prettier-ignore
+export const canAdministerCommunity = async (userId: string, communityId: string, loaders: any) => {
   if (!userId || !communityId) return false;
 
   const community = await communityExists(communityId, loaders);
@@ -114,6 +105,7 @@ export const canAdministerCommunity = async (
   return false;
 };
 
+// prettier-igore
 export const canModerateCommunity = async (
   userId: string,
   communityId: string,
@@ -134,3 +126,25 @@ export const canModerateCommunity = async (
     return true;
   return false;
 };
+
+// prettier-ignore
+export const canViewCommunity = async (user: DBUser, communityId: string, loaders: any) => {
+  if (!communityId) return false;
+
+  const community = await communityExists(communityId, loaders);
+  if (!community) return false;
+
+  if (!community.isPrivate) return true
+
+  if (!user) return false
+
+  const communityPermissions = await loaders.userPermissionsInCommunity.load([
+    user.id,
+    communityId,
+  ]);
+
+  if (!communityPermissions) return false;
+  if (!communityPermissions.isMember) return false
+  
+  return true;
+}

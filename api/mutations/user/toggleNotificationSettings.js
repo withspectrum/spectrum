@@ -1,32 +1,25 @@
 // @flow
 import type { GraphQLContext } from '../../';
-import UserError from '../../utils/UserError';
 import {
   getUsersSettings,
   updateUsersNotificationSettings,
 } from '../../models/usersSettings';
 import { getUserById } from '../../models/user';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-type ToggleNotificationsArguments = {
-  deliveryMethod: string,
-  notificationType: string,
+type Input = {
+  input: {
+    deliveryMethod: string,
+    notificationType: string,
+  },
 };
 
-export default async (
-  _: any,
-  { input }: { input: ToggleNotificationsArguments },
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
-
-  if (!currentUser) {
-    return new UserError(
-      'You must be signed in to make changes to this profile.'
-    );
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { user } = ctx;
+  const { deliveryMethod, notificationType } = args.input;
 
   // eslint-disable-next-line
-  const { id, ...settings } = await getUsersSettings(currentUser.id);
+  const { id, ...settings } = await getUsersSettings(user.id);
 
   // destructure the notifications so we don't pass the id into the model downstream
   // trying to update a primary key 'id' will throw a reql error
@@ -34,13 +27,16 @@ export default async (
     ...settings,
   });
 
-  let oldVal =
-    settings.notifications.types[input.notificationType][input.deliveryMethod];
-  newSettings['notifications']['types'][input.notificationType][
-    input.deliveryMethod
+  let oldVal = settings.notifications.types[notificationType][deliveryMethod];
+  newSettings['notifications']['types'][notificationType][
+    deliveryMethod
   ] = !oldVal;
 
-  return updateUsersNotificationSettings(currentUser.id, newSettings).then(() =>
-    getUserById(currentUser.id)
-  );
-};
+  return await updateUsersNotificationSettings(
+    user.id,
+    newSettings,
+    notificationType,
+    deliveryMethod,
+    oldVal
+  ).then(() => getUserById(user.id));
+});

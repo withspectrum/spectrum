@@ -1,19 +1,25 @@
 // @flow
+import 'string.fromcodepoint';
 import Sentry from 'sentry-expo';
-import React from 'react';
+import React, { Fragment } from 'react';
+import { StatusBar } from 'react-native';
 import { SecureStore, AppLoading } from 'expo';
-import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider, Query } from 'react-apollo';
 import { ThemeProvider } from 'styled-components';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { type ApolloClient } from 'apollo-client';
+import { initStore } from './reducers/store';
 
-import theme from './components/theme';
+import Toasts from './components/Toasts';
+import theme from '../shared/theme';
 import { createClient } from '../shared/graphql';
-import Login from './components/Login';
-import TabBar from './views/TabBar';
-import reducers from './reducers';
+import Login from './views/Login';
+import TabBar from './views/TabBar/App';
+import { SetUsername, ExploreCommunities } from './views/UserOnboarding';
 import { authenticate } from './actions/authentication';
+
+import { getCurrentUserCommunityConnectionQuery } from '../shared/graphql/queries/user/getUserCommunityConnection';
 
 let sentry = Sentry.config(
   'https://3bd8523edd5d43d7998f9b85562d6924@sentry.io/154812'
@@ -22,7 +28,7 @@ let sentry = Sentry.config(
 // Need to guard this for HMR to work
 if (sentry && sentry.install) sentry.install();
 
-export const store = createStore(reducers);
+export const store = initStore();
 
 type State = {
   authLoaded: ?boolean,
@@ -45,8 +51,7 @@ class App extends React.Component<{}, State> {
     try {
       token = await SecureStore.getItemAsync('token');
     } catch (err) {
-      // TODO: Sentry
-      console.log(err);
+      Sentry.captureException(err);
       this.setState({
         authLoaded: true,
       });
@@ -60,7 +65,9 @@ class App extends React.Component<{}, State> {
   };
 
   listen = () => {
-    const { authentication } = store.getState();
+    const storeState = store.getState();
+    // $FlowFixMe
+    const authentication = storeState && storeState.authentication;
     const { token: oldToken } = this.state;
     if (authentication.token !== oldToken) {
       this.setState({
@@ -85,7 +92,28 @@ class App extends React.Component<{}, State> {
       <Provider store={store}>
         <ApolloProvider client={client}>
           <ThemeProvider theme={theme}>
-            {!token ? <Login /> : <TabBar />}
+            <ActionSheetProvider>
+              <Fragment>
+                <StatusBar barStyle={'default'} />
+                <Toasts />
+                {/* If there's either no token or the token is invalid (as shown by no user being returned when using it to fetch) show the login screen */}
+                {!token ? (
+                  <Login />
+                ) : (
+                  <Query query={getCurrentUserCommunityConnectionQuery}>
+                    {({ data: { user }, networkStatus, refetch }) => {
+                      if (networkStatus === 1 || networkStatus === 2)
+                        return null;
+                      if (!user) return <Login />;
+                      if (!user.username) return <SetUsername />;
+                      if (user.communityConnection.edges.length === 0)
+                        return <ExploreCommunities refetch={refetch} />;
+                      return <TabBar />;
+                    }}
+                  </Query>
+                )}
+              </Fragment>
+            </ActionSheetProvider>
           </ThemeProvider>
         </ApolloProvider>
       </Provider>

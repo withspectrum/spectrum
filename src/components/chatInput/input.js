@@ -33,6 +33,7 @@ type Props = {
   networkDisabled: boolean,
   children?: React$Node,
   hasAttachment?: boolean,
+  code?: boolean,
 };
 
 type State = {
@@ -59,7 +60,7 @@ class Input extends React.Component<Props, State> {
         createMarkdownPlugin({
           features: {
             inline: ['BOLD', 'ITALIC', 'CODE'],
-            block: ['CODE'],
+            block: ['CODE', 'blockquote'],
           },
           renderLanguageSelect: () => null,
         }),
@@ -88,6 +89,7 @@ class Input extends React.Component<Props, State> {
       networkDisabled,
       children,
       hasAttachment,
+      code,
       ...rest
     } = this.props;
     const { plugins } = this.state;

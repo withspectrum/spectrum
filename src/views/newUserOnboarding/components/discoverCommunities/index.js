@@ -7,6 +7,7 @@ import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCom
 import { displayLoadingState } from '../../../../components/loading';
 import { Row } from './style';
 import { CommunityProfile } from '../../../../components/profile';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   data: {
@@ -18,6 +19,10 @@ type Props = {
 };
 
 class TopCommunitiesPure extends React.Component<Props> {
+  componentDidMount() {
+    track(events.USER_ONBOARDING_JOIN_COMMUNITIES_STEP_VIEWED);
+  }
+
   render() {
     const {
       data: { communities, error },
@@ -40,6 +45,7 @@ class TopCommunitiesPure extends React.Component<Props> {
                 data={{ community }}
                 key={community.id}
                 joinedCommunity={joinedCommunity}
+                showHoverProfile={false}
               />
             );
           })}

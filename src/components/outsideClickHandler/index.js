@@ -3,6 +3,7 @@ import * as React from 'react';
 
 type Props = {
   children: React.Node,
+  style?: Object,
   onOutsideClick: Function,
 };
 
@@ -34,8 +35,13 @@ class OutsideAlerter extends React.Component<Props> {
   };
 
   render() {
-    // $FlowFixMe
-    return <div ref={this.setWrapperRef}>{this.props.children}</div>;
+    const { style = {}, children } = this.props;
+    return (
+      // $FlowFixMe
+      <div style={style} ref={this.setWrapperRef}>
+        {children}
+      </div>
+    );
   }
 }
 

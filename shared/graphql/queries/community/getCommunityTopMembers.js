@@ -1,8 +1,9 @@
 // @flow
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
-import type { CommunityInfoType } from '../../fragments/community/communityInfo';
+import communityInfoFragment, {
+  type CommunityInfoType,
+} from 'shared/graphql/fragments/community/communityInfo';
 import communityMemberInfoFragment, {
   type CommunityMemberInfoType,
 } from '../../fragments/communityMember/communityMemberInfo';

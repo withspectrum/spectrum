@@ -36,6 +36,10 @@ export type CommunitySettingsType = {
     invoices: Array<any>,
     subscriptions: Array<SubscriptionType>,
   },
+  joinSettings: {
+    tokenJoinEnabled: boolean,
+    token: string,
+  },
 };
 
 export default gql`
@@ -84,6 +88,10 @@ export default gql`
           quantity
         }
       }
+    }
+    joinSettings {
+      tokenJoinEnabled
+      token
     }
   }
 `;

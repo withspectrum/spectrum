@@ -10,9 +10,8 @@ export const getStripeCustomer = (customerId: string): Promise<Object> => {
     .run();
 };
 
-export const getStripeCustomersByCustomerIds = (
-  customerIds: Array<string>
-): Promise<Array<Object>> => {
+// prettier-ignore
+export const getStripeCustomersByCustomerIds = (customerIds: Array<string>): Promise<Array<Object>> => {
   return db
     .table('stripeCustomers')
     .getAll(...customerIds)
@@ -56,10 +55,8 @@ export const insertStripeCustomer = async (record: Object): Promise<any> => {
     });
 };
 
-export const replaceStripeCustomer = async (
-  customerId: string,
-  record: Object
-): Promise<any> => {
+// prettier-ignore
+export const replaceStripeCustomer = async (customerId: string, record: Object): Promise<any> => {
   const expanded = Object.assign({}, record, { customerId: record.id });
   return await db
     .table('stripeCustomers')

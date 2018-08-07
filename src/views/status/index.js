@@ -5,11 +5,13 @@ import { Bar } from './style';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
+import type { Dispatch } from 'redux';
 
 type Props = {
   websocketConnection: string,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   history: Object,
+  currentUser: Object,
 };
 
 type State = {|
@@ -104,10 +106,10 @@ class Status extends React.Component<Props, State> {
   }
 
   render() {
-    const { history } = this.props;
+    const { history, currentUser } = this.props;
     const { color, online, wsConnected, label, hidden } = this.state;
 
-    if (isViewingMarketingPage(history)) {
+    if (isViewingMarketingPage(history, currentUser)) {
       return null;
     }
 
@@ -119,6 +121,7 @@ class Status extends React.Component<Props, State> {
 }
 
 const map = state => ({
+  currentUser: state.users.currentUser,
   websocketConnection: state.connectionStatus.websocketConnection,
 });
 

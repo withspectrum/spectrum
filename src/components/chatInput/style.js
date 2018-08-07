@@ -31,7 +31,7 @@ export const ChatInputWrapper = styled.div`
   align-items: flex-end;
   width: 100%;
   margin: 0;
-  padding: 8px 8px 0 4px;
+  padding: 8px 12px 0 12px;
   background-color: ${props => props.theme.bg.default};
   border-top: 1px solid ${({ theme }) => theme.bg.border};
   box-shadow: -1px 0 0 ${props => props.theme.bg.border},
@@ -62,11 +62,11 @@ export const InputWrapper = styled(EditorWrapper)`
   flex-direction: column;
   align-items: stretch;
   flex: auto;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   line-height: 20px;
   min-height: 40px;
-  max-width: 100%;
+  max-width: calc(100% - 32px);
   padding: ${props => (props.hasAttachment ? '16px' : '8px 16px')};
   transition: padding 0.2s ease-in-out;
   border-radius: 24px;
@@ -79,7 +79,7 @@ export const InputWrapper = styled(EditorWrapper)`
   color: ${props =>
     props.networkDisabled
       ? props.theme.special.default
-      : props.theme.text.default};
+      : props.theme.text.secondary};
   background: ${props =>
     props.networkDisabled
       ? hexa(props.theme.special.default, 0.1)
@@ -126,13 +126,20 @@ export const InputWrapper = styled(EditorWrapper)`
 
   pre {
     ${monoStack};
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     background-color: ${props => props.theme.bg.wash};
     border: 1px solid ${props => props.theme.bg.border};
     border-radius: 2px;
     padding: 4px;
     margin-right: 16px;
+  }
+
+  blockquote {
+    line-height: 1.5;
+    border-left: 4px solid ${props => props.theme.bg.border};
+    color: ${props => props.theme.text.alt};
+    padding: 4px 12px 4px 16px;
   }
 
   ${props =>
@@ -149,11 +156,10 @@ export const InputWrapper = styled(EditorWrapper)`
 `;
 
 export const SendButton = styled(IconButton)`
-  position: absolute;
-  right: ${props => (props.hasAttachment ? '12px' : '8px')};
-  bottom: ${props => (props.hasAttachment ? '12px' : '4px')};
   height: 32px;
   width: 32px;
+  bottom: 4px;
+  margin-left: 4px;
   background-color: transparent;
   transition: ${Transition.hover.off};
   align-self: flex-end;
@@ -174,7 +180,7 @@ export const MediaLabel = styled.label`
   outline: 0;
   display: inline-block;
   background: transparent;
-  transition: all 0.3s ease-out;
+  transition: color 0.3s ease-out;
   border-radius: 4px;
   padding: 4px;
   position: relative;
@@ -259,6 +265,7 @@ export const PreviewWrapper = styled.div`
     margin: 0;
     margin-top: -6px;
     margin-left: -12px;
+    border-left: 0;
   }
 
   & > img {

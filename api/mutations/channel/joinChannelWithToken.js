@@ -14,8 +14,10 @@ import {
 } from '../../models/usersCommunities';
 import { getOrCreateChannelSettings } from '../../models/channelSettings';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { trackQueue } from 'shared/bull/queues';
+import { events } from 'shared/analytics';
 
-type JoinChannelWithTokenInput = {
+type Input = {
   input: {
     communitySlug: string,
     channelSlug: string,
@@ -23,83 +25,122 @@ type JoinChannelWithTokenInput = {
   },
 };
 
-export default requireAuth(
-  async (
-    _: any,
-    { input }: JoinChannelWithTokenInput,
-    { user }: GraphQLContext
-  ) => {
-    const { communitySlug, channelSlug, token } = input;
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { user } = ctx;
+  const { communitySlug, channelSlug, token } = args.input;
 
-    const channel = await getChannelBySlug(channelSlug, communitySlug);
+  const channel = await getChannelBySlug(channelSlug, communitySlug);
 
-    if (!channel) return new UserError('No channel found in this community');
+  if (!channel) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_CHANNEL_WITH_TOKEN_FAILED,
+      properties: {
+        reason: 'no channel',
+      },
+    });
 
-    if (!channel.isPrivate) {
-      return channel;
-    }
+    return new UserError('No channel found in this community');
+  }
 
-    const [
-      communityPermissions,
-      channelPermissions,
-      settings,
-    ] = await Promise.all([
-      getUserPermissionsInCommunity(channel.communityId, user.id),
-      getUserPermissionsInChannel(channel.id, user.id),
-      getOrCreateChannelSettings(channel.id),
-    ]);
+  if (!channel.isPrivate) {
+    return channel;
+  }
 
-    if (
-      channelPermissions.isOwner ||
-      channelPermissions.isModerator ||
-      channelPermissions.isMember
-    ) {
-      return channel;
-    }
+  const [
+    communityPermissions,
+    channelPermissions,
+    settings,
+  ] = await Promise.all([
+    getUserPermissionsInCommunity(channel.communityId, user.id),
+    getUserPermissionsInChannel(channel.id, user.id),
+    getOrCreateChannelSettings(channel.id),
+  ]);
 
-    if (channelPermissions.isBlocked || communityPermissions.isBlocked) {
-      return new UserError("You don't have permission to view this channel");
-    }
+  if (
+    channelPermissions.isOwner ||
+    channelPermissions.isModerator ||
+    channelPermissions.isMember
+  ) {
+    return channel;
+  }
 
-    if (!settings.joinSettings || !settings.joinSettings.tokenJoinEnabled) {
-      return new UserError(
-        "You can't join at this time, the token may have changed"
-      );
-    }
-    if (
-      settings.joinSettings.tokenJoinEnabled &&
-      token !== settings.joinSettings.token
-    ) {
-      return new UserError(
-        "You can't join at this time, the token may have changed"
-      );
-    }
+  if (channelPermissions.isBlocked || communityPermissions.isBlocked) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_CHANNEL_WITH_TOKEN_FAILED,
+      context: { channelId: channel.id },
+      properties: {
+        reason: 'no permission',
+      },
+    });
 
-    if (!communityPermissions.isMember) {
-      return await Promise.all([
-        createMemberInCommunity(channel.communityId, user.id),
-        createMemberInDefaultChannels(channel.communityId, user.id),
-      ])
-        .then(async () => {
-          if (channelPermissions.isPending) {
-            return await approvePendingUserInChannel(channel.id, user.id);
-          } else {
-            return await createMemberInChannel(channel.id, user.id);
-          }
-        })
-        .then(joinedChannel => joinedChannel);
-    }
+    return new UserError("You don't have permission to view this channel");
+  }
 
-    if (channelPermissions.isPending) {
-      return await approvePendingUserInChannel(channel.id, user.id);
-    }
-
-    if (!channelPermissions.isMember) {
-      return await createMemberInChannel(channel.id, user.id);
-    }
+  if (!settings.joinSettings || !settings.joinSettings.tokenJoinEnabled) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_CHANNEL_WITH_TOKEN_FAILED,
+      context: { channelId: channel.id },
+      properties: {
+        reason: 'no token or changed token',
+      },
+    });
 
     return new UserError(
-      "Couldn't authenticate this request to join a channel"
+      "You can't join at this time, the token may have changed"
     );
   }
-);
+  if (
+    settings.joinSettings.tokenJoinEnabled &&
+    token !== settings.joinSettings.token
+  ) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_CHANNEL_WITH_TOKEN_FAILED,
+      context: { channelId: channel.id },
+      properties: {
+        reason: 'no token or changed token',
+      },
+    });
+
+    return new UserError(
+      "You can't join at this time, the token may have changed"
+    );
+  }
+
+  if (!communityPermissions.isMember) {
+    return await Promise.all([
+      createMemberInCommunity(channel.communityId, user.id),
+      createMemberInDefaultChannels(channel.communityId, user.id),
+    ])
+      .then(async () => {
+        if (channelPermissions.isPending) {
+          return await approvePendingUserInChannel(channel.id, user.id);
+        } else {
+          return await createMemberInChannel(channel.id, user.id, true);
+        }
+      })
+      .then(joinedChannel => joinedChannel);
+  }
+
+  if (channelPermissions.isPending) {
+    return await approvePendingUserInChannel(channel.id, user.id);
+  }
+
+  if (!channelPermissions.isMember) {
+    return await createMemberInChannel(channel.id, user.id, true);
+  }
+
+  trackQueue.add({
+    userId: user.id,
+    event: events.USER_JOINED_CHANNEL_WITH_TOKEN_FAILED,
+    context: { channelId: channel.id },
+    properties: {
+      reason: 'unknown error',
+    },
+  });
+
+  return new UserError("Couldn't authenticate this request to join a channel");
+});

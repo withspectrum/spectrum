@@ -19,6 +19,7 @@ import ViewError from 'src/components/viewError';
 import ChannelSlackManager from './channelSlackManager';
 import { ChannelListContainer } from './style';
 import Icon from 'src/components/icons';
+import type { Dispatch } from 'redux';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerType>,
@@ -26,7 +27,7 @@ type Props = {
     community: GetCommunityChannelsSlackSettings,
   },
   updateChannelSlackSettings: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   channelFilter?: string,
 };
 

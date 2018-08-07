@@ -1,7 +1,9 @@
+// @flow
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
-import { Transition, FlexRow, hexa, zIndex } from '../../components/globals';
-import Avatar from '../../components/avatar';
+import { Transition, FlexRow, hexa, zIndex } from 'src/components/globals';
+import { UserAvatar } from 'src/components/avatar';
+import { isDesktopApp } from 'src/helpers/is-desktop-app';
 
 export const Nav = styled.nav`
   display: grid;
@@ -9,13 +11,17 @@ export const Nav = styled.nav`
   grid-template-rows: 1fr;
   grid-template-areas: 'logo home messages explore . notifications profile';
   align-items: stretch;
-  padding: 0 32px;
   width: 100%;
-  flex: 0 0 48px;
+  flex: 0 0 ${isDesktopApp() ? '38px' : '48px'};
   padding: 0 16px;
   line-height: 1;
   box-shadow: 0 4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
   z-index: ${zIndex.navBar};
+  ${isDesktopApp() &&
+    css`
+      -webkit-app-region: drag;
+      user-select: none;
+    `}
   background: ${({ theme }) =>
     process.env.NODE_ENV === 'production' ? theme.bg.reverse : theme.warn.alt};
 
@@ -43,25 +49,25 @@ export const Nav = styled.nav`
   ${props =>
     props.loggedOut &&
     css`
-      grid-template-columns: auto auto auto auto 1fr;
-      grid-template-areas: 'logo explore support pricing .';
+      grid-template-columns: repeat(4, auto) 1fr auto;
+      grid-template-areas: 'logo explore support pricing . signin';
 
       @media (max-width: 768px) {
         grid-template-columns: auto auto auto auto;
         grid-template-areas: 'home explore support pricing';
       }
     `} ${props =>
-    props.hideOnMobile &&
-    css`
-      @media (max-width: 768px) {
-        display: none;
-      }
-    `};
+  props.hideOnMobile &&
+  css`
+    @media (max-width: 768px) {
+      display: none;
+    }
+  `};
 `;
 
 export const Label = styled.span`
   font-size: 14px;
-  font-weight: 700;
+  font-weight: ${isDesktopApp() ? '500' : '700'};
   margin-left: 12px;
 
   ${props =>
@@ -87,7 +93,7 @@ export const Tab = styled(Link)`
   grid-template-areas: 'icon label';
   align-items: center;
   justify-items: center;
-  padding: 0 16px;
+  padding: ${isDesktopApp() ? '0 12px' : '0 16px'};
   color: ${({ theme }) =>
     process.env.NODE_ENV === 'production'
       ? theme.text.placeholder
@@ -104,20 +110,26 @@ export const Tab = styled(Link)`
 
   @media (min-width: 768px) {
     &[data-active~='true'] {
-      box-shadow: inset 0 -4px 0 ${({ theme }) => theme.text.reverse};
+      box-shadow: inset 0 ${isDesktopApp() ? '-2px' : '-4px'} 0
+        ${({ theme }) => theme.text.reverse};
       color: ${props => props.theme.text.reverse};
       transition: ${Transition.hover.on};
 
       &:hover,
       &:focus {
-        box-shadow: inset 0 -6px 0 ${({ theme }) => theme.text.reverse};
+        box-shadow: inset 0 ${isDesktopApp() ? '-2px' : '-4px'} 0
+          ${({ theme }) => theme.text.reverse};
         transition: ${Transition.hover.on};
       }
     }
 
     &:hover,
     &:focus {
-      box-shadow: inset 0 -4px 0 ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.placeholder : theme.warn.border)};
+      box-shadow: inset 0 ${isDesktopApp() ? '-2px' : '-4px'} 0
+        ${({ theme }) =>
+          process.env.NODE_ENV === 'production'
+            ? theme.text.placeholder
+            : theme.warn.border};
       color: ${props => props.theme.text.reverse};
       transition: ${Transition.hover.on};
     }
@@ -200,11 +212,14 @@ export const DropTab = styled(FlexRow)`
 
 export const Logo = styled(Tab)`
   grid-area: logo;
-  padding: 0 24px 0 4px;
+  padding: ${isDesktopApp() ? '0 32px 0 4px' : '0 24px 0 4px'};
   color: ${({ theme }) => theme.text.reverse};
   opacity: 1;
 
-  &:hover {
+  ${isDesktopApp() &&
+    css`
+      visibility: hidden;
+    `} &:hover {
     box-shadow: none;
   }
 
@@ -221,14 +236,27 @@ export const Logo = styled(Tab)`
 
 export const HomeTab = styled(Tab)`
   grid-area: home;
+  ${isDesktopApp() &&
+    css`
+      -webkit-app-region: no-drag;
+    `};
 `;
 
 export const MessageTab = styled(Tab)`
   grid-area: messages;
+  ${isDesktopApp() &&
+    css`
+      -webkit-app-region: no-drag;
+    `};
 `;
 
 export const ExploreTab = styled(Tab)`
   grid-area: explore;
+
+  ${isDesktopApp() &&
+    css`
+      -webkit-app-region: no-drag;
+    `};
 
   ${props =>
     props.loggedOut &&
@@ -256,6 +284,11 @@ export const PricingTab = styled(MessageTab)`
 export const NotificationTab = styled(DropTab)`
   grid-area: notifications;
 
+  ${isDesktopApp() &&
+    css`
+      -webkit-app-region: no-drag;
+    `};
+
   > a {
     &:hover {
       box-shadow: none;
@@ -266,6 +299,11 @@ export const NotificationTab = styled(DropTab)`
 
 export const ProfileDrop = styled(DropTab)`
   grid-area: profile;
+
+  ${isDesktopApp() &&
+    css`
+      -webkit-app-region: no-drag;
+    `};
 
   > a {
     &:hover {
@@ -283,7 +321,7 @@ export const ProfileTab = styled(Tab)`
   grid-area: profile;
 `;
 
-export const Navatar = styled(Avatar)`
+export const Navatar = styled(UserAvatar)`
   margin-top: 0;
   border-radius: 100%;
   box-shadow: 0 0 0 2px ${props => props.theme.bg.default};
@@ -301,21 +339,19 @@ export const LoggedOutSection = styled(FlexRow)`
   }
 `;
 
-export const SigninLink = styled.button`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-self: center;
-  align-items: center;
-  font-weight: 600;
+export const SigninLink = styled(Link)`
+  grid-area: signin;
+  font-weight: 700;
   font-size: 14px;
-  background: transparent;
-  border: none;
-  webkit-display: none;
-  color: #fff;
+  color: ${({ theme }) =>
+    process.env.NODE_ENV === 'production'
+      ? theme.text.placeholder
+      : theme.warn.border};
+  align-self: center;
+  padding: 10px;
 
-  &:hover {
-    cursor: pointer;
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 

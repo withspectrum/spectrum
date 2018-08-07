@@ -1,9 +1,57 @@
 // @flow
 import React from 'react';
+import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
-import { Transition, zIndex } from '../globals';
-import { theme } from 'src/components/theme';
+import { Transition, zIndex } from 'src/components/globals';
+import theme from 'shared/theme';
+import { UserHoverProfile } from 'src/components/hoverProfile';
+import type { Node } from 'react';
+
+const UsernameWrapper = styled.span`
+  color: ${props =>
+    props.me ? props.theme.special.default : props.theme.space.default};
+  background: ${props =>
+    props.me ? props.theme.special.wash : props.theme.space.wash};
+  padding: 2px 4px;
+  border-radius: 4px;
+  position: relative;
+  display: inline-block;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  a {
+    text-decoration: none;
+  }
+`;
+
+type MentionProps = {
+  children: Node,
+  username: string,
+  currentUser: ?Object,
+};
+
+class MentionWithCurrentUser extends React.Component<MentionProps> {
+  render() {
+    const { username, currentUser, children } = this.props;
+    const me = currentUser && currentUser.username === username;
+    return (
+      <UsernameWrapper me={me}>
+        <UserHoverProfile username={username}>
+          <Link to={`/users/${username}`} onClick={e => e.stopPropagation()}>
+            {children}
+          </Link>
+        </UserHoverProfile>
+      </UsernameWrapper>
+    );
+  }
+}
+
+const map = state => ({ currentUser: state.users.currentUser });
+// $FlowFixMe
+export const Mention = connect(map)(MentionWithCurrentUser);
 
 export const customStyleMap = {
   CODE: {
@@ -13,6 +61,12 @@ export const customStyleMap = {
     padding: '1px 4px',
     fontFamily: 'monospace',
     color: theme.warn.alt,
+  },
+  blockquote: {
+    lineHeight: '1.5',
+    borderLeft: `4px solid ${theme.bg.border}`,
+    color: `${theme.text.alt}`,
+    padding: '4px 12px 4px 16px',
   },
 };
 
@@ -183,10 +237,6 @@ export const EmbedUI = styled.form`
       }
     `};
 `;
-
-export const Mention = (props: any) => {
-  return <Link to={`/users/${props.username}`}>{props.children}</Link>;
-};
 
 export const EmbedContainer = styled.div`
   position: relative;

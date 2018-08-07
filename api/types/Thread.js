@@ -1,114 +1,135 @@
 // @flow
 const Thread = /* GraphQL */ `
-	type ThreadMessagesConnection {
-		pageInfo: PageInfo!
-		edges: [ThreadMessageEdge!]
+  enum ThreadReactionTypes {
+		like
 	}
 
-	type ThreadMessageEdge {
-		cursor: String!
-		node: Message!
+  type ThreadReactions {
+		count: Int!
+		hasReacted: Boolean
 	}
 
-	# The contents of a thread
-	type ThreadContent {
-		title: String
-		body: String
-		media: String
-	}
+  type ThreadMessagesConnection {
+    pageInfo: PageInfo!
+    edges: [ThreadMessageEdge!]
+  }
 
-	type Edit {
-		timestamp: Date!
-		content: ThreadContent!
-	}
+  type ThreadMessageEdge {
+    cursor: String!
+    node: Message!
+  }
 
-	enum ThreadType {
-		SLATE
-		DRAFTJS
+  # The contents of a thread
+  type ThreadContent {
+    title: String
+    body: String
+    media: String
+  }
+
+  type Edit {
+    timestamp: Date!
+    content: ThreadContent!
+  }
+
+  enum ThreadType {
+    SLATE
+    DRAFTJS
     TEXT
-	}
+  }
 
-	type Attachment {
-		attachmentType: String
-		data: String
-	}
+  type Attachment {
+    attachmentType: String
+    data: String
+  }
 
-	type Thread {
-		id: ID!
-		createdAt: Date!
-		modifiedAt: Date
-		channel: Channel!
+  type Thread {
+    id: ID!
+    createdAt: Date!
+    modifiedAt: Date
+    channel: Channel!
     community: Community! @cost(complexity: 1)
-		isPublished: Boolean!
-		content: ThreadContent!
-		isLocked: Boolean
-		isAuthor: Boolean
+    isPublished: Boolean!
+    content: ThreadContent!
+    isLocked: Boolean
+    isAuthor: Boolean
     receiveNotifications: Boolean @cost(complexity: 1)
-		lastActive: Date
-		type: ThreadType
-		edits: [Edit!]
+    lastActive: Date
+    type: ThreadType
+    edits: [Edit!]
     participants: [User] @cost(complexity: 1)
     messageConnection(first: Int, after: String, last: Int, before: String): ThreadMessagesConnection! @cost(complexity: 1, multiplier: "first")
     messageCount: Int @cost(complexity: 1)
     author: ThreadParticipant! @cost(complexity: 2)
-		attachments: [Attachment]
-		watercooler: Boolean
+    attachments: [Attachment]
+    watercooler: Boolean
     currentUserLastSeen: Date @cost(complexity: 1)
+    reactions: ThreadReactions @cost(complexity: 1)
 
-		isCreator: Boolean @deprecated(reason: "Use Thread.isAuthor instead")
-		creator: User! @deprecated(reason:"Use Thread.author instead")
-	}
+    isCreator: Boolean @deprecated(reason: "Use Thread.isAuthor instead")
+    creator: User! @deprecated(reason:"Use Thread.author instead")
+  }
 
-	input SearchThreadsFilter {
-		communityId: ID
-		creatorId: ID
-		channelId: ID
-		everythingFeed: Boolean
-	}
+  input SearchThreadsFilter {
+    communityId: ID
+    creatorId: ID
+    channelId: ID
+    everythingFeed: Boolean
+  }
 
-	extend type Query {
-		thread(id: ID!): Thread
-		searchThreads(queryString: String!, filter: SearchThreadsFilter): [Thread] @deprecated(reason:"Use the new Search query endpoint")
-	}
+  extend type Query {
+    thread(id: ID!): Thread
+    searchThreads(queryString: String!, filter: SearchThreadsFilter): [Thread] @deprecated(reason:"Use the new Search query endpoint")
+  }
 
-	input AttachmentInput {
-		attachmentType: String
-		data: String
-	}
+  input AttachmentInput {
+    attachmentType: String
+    data: String
+  }
 
-	input ThreadContentInput {
-		title: String
-		body: String
-	}
+  input ThreadContentInput {
+    title: String
+    body: String
+  }
 
-	input EditThreadInput {
-		threadId: ID!
-		content: ThreadContentInput!
-		attachments: [AttachmentInput]
-		filesToUpload: [Upload]
-	}
+  input EditThreadInput {
+    threadId: ID!
+    content: ThreadContentInput!
+    attachments: [AttachmentInput]
+    filesToUpload: [Upload]
+  }
 
-	input ThreadInput {
-		channelId: ID!
-		communityId: ID!
-		type: ThreadType
-		content: ThreadContentInput!
-		attachments: [AttachmentInput]
-		filesToUpload: [Upload]
-	}
+  input ThreadInput {
+    channelId: ID!
+    communityId: ID!
+    type: ThreadType
+    content: ThreadContentInput!
+    attachments: [AttachmentInput]
+    filesToUpload: [Upload]
+  }
 
-	extend type Mutation {
-		publishThread(thread: ThreadInput!): Thread
-		editThread(input: EditThreadInput!): Thread
-		setThreadLock(threadId: ID!, value: Boolean!): Thread
-		toggleThreadNotifications(threadId: ID!): Thread
-		deleteThread(threadId: ID!): Boolean
-        moveThread(threadId: ID!, channelId: ID!): Thread
-	}
+  input AddThreadReactionInput {
+    threadId: ID!
+    type: ThreadReactionTypes
+  }
 
-	extend type Subscription {
+  input RemoveThreadReactionInput {
+    threadId: ID!
+  }
+
+  extend type Mutation {
+    publishThread(thread: ThreadInput!): Thread
+    editThread(input: EditThreadInput!): Thread
+    setThreadLock(threadId: ID!, value: Boolean!): Thread
+    toggleThreadNotifications(threadId: ID!): Thread
+    deleteThread(threadId: ID!): Boolean
+    moveThread(threadId: ID!, channelId: ID!): Thread
+    addThreadReaction(input: AddThreadReactionInput!): Thread
+    removeThreadReaction(input: RemoveThreadReactionInput!): Thread
+  }
+
+  extend type Subscription {
     threadUpdated(channelIds: [String!]): Thread
-	}
+  }
 `;
 
 module.exports = Thread;

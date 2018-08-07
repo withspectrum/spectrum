@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import { KeyBindingUtil } from 'draft-js';
 import debounce from 'debounce';
 import Icon from '../../components/icons';
-import { track } from '../../helpers/events';
 import {
   toJSON,
   toState,
@@ -37,6 +36,7 @@ import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessag
 import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
+import type { Dispatch } from 'redux';
 
 const QuotedMessage = connect()(
   getMessageById(props => {
@@ -52,7 +52,9 @@ const QuotedMessage = connect()(
           'The message you are replying to was deleted or could not be fetched.'
         )
       );
-      props.dispatch(replyToMessage(null));
+      props.dispatch(
+        replyToMessage({ threadId: props.threadId, messageId: null })
+      );
     }
 
     return null;
@@ -71,7 +73,7 @@ type State = {
 type Props = {
   onRef: Function,
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   onChange: Function,
   state: Object,
   createThread: Function,
@@ -87,7 +89,7 @@ type Props = {
   networkOnline: boolean,
   threadData?: Object,
   refetchThread?: Function,
-  quotedMessage: ?string,
+  quotedMessage: ?{ messageId: string, threadId: string },
 };
 
 const LS_KEY = 'last-chat-input-content';
@@ -210,6 +212,13 @@ class ChatInput extends React.Component<Props, State> {
     this.props.onRef(undefined);
   }
 
+  componentDidUpdate(prevProps) {
+    const curr = this.props;
+    if (curr.quotedMessage !== prevProps.quotedMessage) {
+      this.triggerFocus();
+    }
+  }
+
   handleKeyDown = (event: any) => {
     const key = event.keyCode || event.charCode;
     // Detect esc key or backspace key (and empty message) to remove
@@ -225,7 +234,10 @@ class ChatInput extends React.Component<Props, State> {
   };
 
   removeQuotedMessage = () => {
-    if (this.props.quotedMessage) this.props.dispatch(replyToMessage(null));
+    if (this.props.quotedMessage)
+      this.props.dispatch(
+        replyToMessage({ threadId: this.props.thread, messageId: null })
+      );
   };
 
   onChange = (state, ...rest) => {
@@ -252,7 +264,7 @@ class ChatInput extends React.Component<Props, State> {
     // decorators that are passed to the editor are removed from the editor
     // state
     setTimeout(() => {
-      this.editor && this.editor.focus();
+      this.editor && this.editor.focus && this.editor.focus();
     }, 0);
   };
 
@@ -334,6 +346,9 @@ class ChatInput extends React.Component<Props, State> {
           : toPlainText(state),
         messageType: !isAndroid() ? 'draftjs' : 'text',
       });
+      localStorage.removeItem(LS_DM_KEY);
+      localStorage.removeItem(LS_DM_KEY_EXPIRE);
+
       clear();
       return 'handled';
     }
@@ -355,7 +370,6 @@ class ChatInput extends React.Component<Props, State> {
         .then(() => {
           localStorage.removeItem(LS_DM_KEY);
           localStorage.removeItem(LS_DM_KEY_EXPIRE);
-          return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
           dispatch(addToastWithTimeout('error', err.message));
@@ -384,7 +398,6 @@ class ChatInput extends React.Component<Props, State> {
 
           localStorage.removeItem(LS_KEY);
           localStorage.removeItem(LS_KEY_EXPIRE);
-          return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
           dispatch(addToastWithTimeout('error', err.message));
@@ -394,7 +407,7 @@ class ChatInput extends React.Component<Props, State> {
     // refocus the input
     setTimeout(() => {
       clear();
-      this.editor && this.editor.focus();
+      this.editor && this.editor.focus && this.editor.focus();
     });
 
     return 'handled';
@@ -508,11 +521,6 @@ class ChatInput extends React.Component<Props, State> {
             this.setState({
               isSendingMediaMessage: false,
             });
-            return track(
-              `${threadType} message`,
-              'media message created',
-              null
-            );
           })
           .catch(err => {
             this.setState({
@@ -535,11 +543,6 @@ class ChatInput extends React.Component<Props, State> {
             this.setState({
               isSendingMediaMessage: false,
             });
-            return track(
-              `${threadType} message`,
-              'media message created',
-              null
-            );
           })
           .catch(err => {
             this.setState({
@@ -550,7 +553,9 @@ class ChatInput extends React.Component<Props, State> {
       }
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   onFocus = () => {
@@ -605,7 +610,10 @@ class ChatInput extends React.Component<Props, State> {
         mediaPreview: reader.result.toString(),
         isSendingMediaMessage: false,
       });
-    reader.readAsDataURL(blob);
+
+    if (blob) {
+      reader.readAsDataURL(blob);
+    }
   };
 
   render() {
@@ -615,6 +623,7 @@ class ChatInput extends React.Component<Props, State> {
       networkOnline,
       websocketConnection,
       quotedMessage,
+      thread,
     } = this.props;
     const {
       isFocused,
@@ -686,7 +695,7 @@ class ChatInput extends React.Component<Props, State> {
                 )}
                 {quotedMessage && (
                   <PreviewWrapper data-cy="staged-quoted-message">
-                    <QuotedMessage id={quotedMessage} />
+                    <QuotedMessage id={quotedMessage} threadId={thread} />
                     <RemovePreviewButton
                       data-cy="remove-staged-quoted-message"
                       onClick={this.removeQuotedMessage}
@@ -706,21 +715,21 @@ class ChatInput extends React.Component<Props, State> {
           </ChatInputWrapper>
         </ChatInputContainer>
         <MarkdownHint showHint={markdownHint} data-cy="markdownHint">
-          <b>**bold**</b>
-          <i>*italics*</i>
+          <b>*bold*</b>
+          <i>_italic_</i>
           <Preformatted>`code`</Preformatted>
-          <Preformatted>```preformatted```</Preformatted>
+          <Preformatted>```codeblock```</Preformatted>
         </MarkdownHint>
       </React.Fragment>
     );
   }
 }
 
-const map = state => ({
+const map = (state, ownProps) => ({
   currentUser: state.users.currentUser,
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
-  quotedMessage: state.message.quotedMessage,
+  quotedMessage: state.message.quotedMessage[ownProps.thread] || null,
 });
 export default compose(
   sendMessage,

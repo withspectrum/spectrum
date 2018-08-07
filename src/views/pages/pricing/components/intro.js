@@ -15,6 +15,7 @@ import {
   PlanDescription,
   PlanFeatures,
 } from '../style';
+import { track, events } from 'src/helpers/analytics';
 
 const Intro = () => {
   return (
@@ -31,7 +32,10 @@ const Intro = () => {
             got some great features to help you grow, moderate, and measure more
             effectively.
           </Copy>
-          <Link to={`/new/community`}>
+          <Link
+            onClick={() => track(events.PRICING_PAGE_CREATE_COMMUNITY_CLICKED)}
+            to={`/new/community`}
+          >
             <CTA icon={'welcome'}>Create your community</CTA>
           </Link>
         </Left>

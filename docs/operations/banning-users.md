@@ -20,7 +20,44 @@ r.db('spectrum')
   bannedReason: "Reason for ban here"
 })
 ```
-3. Remove that user as a member from all communities and channels:
+3. Disable paid feature flags for communities owned by the user.
+```js
+.table('communities')
+.filter(function (community) {
+  return r.db('spectrum')
+    .table('usersCommunities')
+    .getAll(ID, { index: 'userId' })
+    .filter(function (userCommunity) {
+      return userCommunity('communityId').eq(community('id'))
+        .and(userCommunity('isOwner').eq(true))
+    })
+    .count().gt(0)
+})
+.update({
+  analyticsEnabled: false,
+  prioritySupportEnabled: false,
+})
+```
+
+4. Archive all private channels in communities owned by the user
+
+```js
+.table('channels')
+.filter(function (channel) {
+  return r.db('spectrum')
+    .table('usersCommunities')
+    .getAll(ID, { index: 'userId' })
+    .filter(function (userCommunity) {
+      return userCommunity('communityId').eq(channel('communityId'))
+        .and(userCommunity('isOwner').eq(true))
+    })
+    .count().gt(0)
+    .and(channel('isPrivate').eq(true))
+})
+.update({ archivedAt: new Date() })
+```
+
+5. Remove that user as a member from all communities and channels:
 ```js
 // usersCommunities
 .table('usersCommunities')
@@ -42,7 +79,7 @@ r.db('spectrum')
   receiveNotifications: false,
 })
 ```
-4. Remove all notifications from threads to save worker processing:
+6. Remove all notifications from threads to save worker processing:
 ```js
 // usersThreads
 .table('usersThreads')
@@ -51,7 +88,7 @@ r.db('spectrum')
   receiveNotifications: false,
 })
 ```
-5. Reset the person's notification settings so they will not get any future emails about DMs, daily digests, etc
+7. Reset the person's notification settings so they will not get any future emails about DMs, daily digests, etc
 ```js
 // usersSettings
 .table('usersSettings')
@@ -81,4 +118,4 @@ r.db('spectrum')
   }
 })
 ```
-6. Done! The user now can't be messaged, searched for, or re-logged into. The banned user no longer affects community or channel member counts, and will not ever get pulled into Athena for notifications processing.
+8. Done! The user now can't be messaged, searched for, or re-logged into. The banned user no longer affects community or channel member counts, and will not ever get pulled into Athena for notifications processing.

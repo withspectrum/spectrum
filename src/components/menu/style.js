@@ -1,12 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
-import {
-  Transition,
-  Shadow,
-  zIndex,
-  hexa,
-  Gradient,
-} from '../../components/globals';
+import { Transition, Shadow, zIndex, hexa } from '../../components/globals';
+import { isDesktopApp } from 'src/helpers/is-desktop-app';
 
 export const Wrapper = styled.div`
   display: inline-block;
@@ -58,14 +53,14 @@ export const MenuContainer = styled.div`
   left: 0;
   top: 0;
   bottom: 0;
-  height: ${props => (props.hasTabBar ? 'calc(100% - 48px)' : '100%')};
+  height: ${props =>
+    props.hasTabBar ? (isDesktopApp() ? '100%' : 'calc(100% - 48px)') : '100%'};
   width: 300px;
   color: ${props => props.theme.brand.alt};
-  background-color: ${props => props.theme.bg.default};
-  background-image: ${props =>
-    Gradient(props.theme.bg.default, props.theme.bg.wash)};
+  background-color: ${props => props.theme.bg.wash};
   box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.25)};
-  padding-top: ${props => (props.hasNavBar ? '48px' : '0')};
+  padding-top: ${props =>
+    props.hasNavBar ? '48px' : isDesktopApp() ? '40px' : '0'};
   z-index: ${zIndex.fullscreen + 1};
 `;
 

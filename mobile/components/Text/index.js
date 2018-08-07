@@ -1,11 +1,13 @@
 // @flow
-import React, { type Node } from 'react';
+import type { Node } from 'react';
 import { Platform } from 'react-native';
-import styled, { css } from 'styled-components/native';
-import { human } from 'react-native-typography';
+import styled from 'styled-components/native';
 import type { ComponentType } from 'react';
+import getTypeConfigFromType from './getTypeConfigFromType';
+import getWeightFromType from './getWeightFromType';
+import type { ThemeType } from '../theme';
 
-type TextTypes =
+export type TextTypes =
   | 'largeTitle'
   | 'title1'
   | 'title2'
@@ -18,33 +20,45 @@ type TextTypes =
   | 'caption1'
   | 'caption2';
 
-export type Props = {
+export type WeightTypes =
+  | 'thin'
+  | 'ultraLight'
+  | 'light'
+  | 'regular'
+  | 'medium'
+  | 'semibold'
+  | 'bold'
+  | 'heavy'
+  | 'black';
+
+export type Props = {|
   type?: TextTypes,
-  bold?: boolean,
+  weight?: WeightTypes,
   italic?: boolean,
   underline?: boolean,
   fontFamily?: 'monospace',
-  color?: string | Function,
+  color?: (theme: ThemeType) => string,
   children: Node,
-};
+  style?: Object,
+|};
 
 const monospaceFont = Platform.OS === 'android' ? 'monospace' : 'Menlo';
 
 const Text: ComponentType<Props> = styled.Text`
-  ${(props: Props) => props.type && human[`${props.type}Object`]}
+  font-weight: ${props =>
+    props.weight ? `${getWeightFromType(props.weight)}` : '400'};
+  font-size: ${props => getTypeConfigFromType(props.type).size}px;
+  line-height: ${props => getTypeConfigFromType(props.type).leading}px;
+  color: ${props =>
+    props.color ? props.color(props.theme) : props.theme.text.default};
+
+  ${(props: Props) => props.italic && 'font-style: italic;'} ${(props: Props) =>
+    props.underline &&
+    'text-decoration-line: underline;'}
+
+  font-family: 'System';
   ${(props: Props) =>
-    props.type &&
-    `margin-top: ${human[`${props.type}Object`].lineHeight * 0.35};`}
-  ${(props: Props) => props.bold && 'font-weight: bold;'}
-  ${(props: Props) => props.italic && 'font-style: italic;'}
-  ${(props: Props) => props.underline && 'text-decoration-line: underline;'}
-  ${(props: Props) =>
-    props.color &&
-    css`
-      color: ${props.color};
-    `}
-  ${(props: Props) =>
-    props.fontFamily === 'monospace' && `font-family: ${monospaceFont};`}
+    props.fontFamily === 'monospace' && `font-family: ${monospaceFont};`};
 `;
 
 export default Text;

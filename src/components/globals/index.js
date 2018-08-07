@@ -120,7 +120,7 @@ export const Spinner = styled.span`
           : props.theme.brand.alt};
     border-top-color: transparent;
     border-right-color: ${props =>
-      props.color ? `props.theme.${props.color}` : props.theme.brand.alt};
+      props.color ? eval(`props.theme.${props.color}`) : props.theme.brand.alt};
     border-bottom-color: transparent;
     animation: ${spin} 2s linear infinite;
   }
@@ -512,7 +512,14 @@ export const Tooltip = props => css`
   &:hover:after,
   &:hover:before {
     opacity: 1;
-    transition: all 0.1s ease-in 0.1s;
+    transition: opacity 0.1s ease-in 0.1s;
+  }
+
+  @media (max-width: 768px) {
+    &:after,
+    &:before {
+      display: none;
+    }
   }
 `;
 
@@ -562,7 +569,7 @@ export const Onboarding = props => css`
   &:after,
   &:before {
     opacity: 1;
-    transition: all 0.1s ease-in 0.1s;
+    transition: opacity 0.1s ease-in 0.1s;
   }
 `;
 

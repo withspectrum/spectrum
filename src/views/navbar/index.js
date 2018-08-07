@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import queryString from 'query-string';
 import Icon from '../../components/icons';
-import { ProfileDropdown } from './components/profileDropdown';
+import ProfileDropdown from './components/profileDropdown';
 import MessagesTab from './components/messagesTab';
 import NotificationsTab from './components/notificationsTab';
 import Head from '../../components/head';
@@ -21,8 +21,11 @@ import {
   Label,
   Navatar,
   SkipLink,
+  SigninLink,
 } from './style';
+import { track, events } from 'src/helpers/analytics';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
+import { isDesktopApp } from 'src/helpers/is-desktop-app';
 
 type Props = {
   isLoading: boolean,
@@ -95,12 +98,27 @@ class Navbar extends React.Component<Props, State> {
     };
   }
 
+  trackNavigationClick = (route: string) => {
+    switch (route) {
+      case 'logo':
+        return track(events.NAVIGATION_LOGO_CLICKED);
+      case 'home':
+        return track(events.NAVIGATION_HOME_CLICKED);
+      case 'explore':
+        return track(events.NAVIGATION_EXPLORE_CLICKED);
+      case 'profile':
+        return track(events.NAVIGATION_USER_PROFILE_CLICKED);
+      default:
+        return null;
+    }
+  };
+
   render() {
     const { history, match, currentUser, notificationCounts } = this.props;
 
     const loggedInUser = currentUser;
 
-    if (isViewingMarketingPage(history)) {
+    if (isViewingMarketingPage(history, currentUser)) {
       return null;
     }
 
@@ -123,7 +141,7 @@ class Navbar extends React.Component<Props, State> {
 
     if (loggedInUser) {
       return (
-        <Nav hideOnMobile={hideNavOnMobile}>
+        <Nav hideOnMobile={hideNavOnMobile} data-cy="navbar">
           <Head>
             {notificationCounts.directMessageNotifications > 0 ||
             notificationCounts.notifications > 0 ? (
@@ -148,6 +166,8 @@ class Navbar extends React.Component<Props, State> {
             aria-hidden
             tabIndex="-1"
             isHidden={this.state.isSkipLinkFocused}
+            onClick={() => this.trackNavigationClick('logo')}
+            data-cy="navbar-logo"
           >
             <Icon glyph="logo" size={28} />
           </Logo>
@@ -163,8 +183,10 @@ class Navbar extends React.Component<Props, State> {
           <HomeTab
             {...this.getTabProps(match.url === '/' && match.isExact)}
             to="/"
+            onClick={() => this.trackNavigationClick('home')}
+            data-cy="navbar-home"
           >
-            <Icon glyph="home" />
+            <Icon glyph="home" size={isDesktopApp() ? 28 : 32} />
             <Label>Home</Label>
           </HomeTab>
 
@@ -175,12 +197,15 @@ class Navbar extends React.Component<Props, State> {
           <ExploreTab
             {...this.getTabProps(history.location.pathname === '/explore')}
             to="/explore"
+            onClick={() => this.trackNavigationClick('explore')}
+            data-cy="navbar-explore"
           >
-            <Icon glyph="explore" />
+            <Icon glyph="explore" size={isDesktopApp() ? 28 : 32} />
             <Label>Explore</Label>
           </ExploreTab>
 
           <NotificationsTab
+            onClick={() => this.trackNavigationClick('notifications')}
             location={history.location}
             currentUser={loggedInUser}
             active={history.location.pathname.includes('/notifications')}
@@ -192,14 +217,16 @@ class Navbar extends React.Component<Props, State> {
               {...this.getTabProps(
                 history.location.pathname === `/users/${loggedInUser.username}`
               )}
-              to={
-                loggedInUser.username ? `/users/${loggedInUser.username}` : '/'
-              }
+              to={loggedInUser ? `/users/${loggedInUser.username}` : '/'}
+              onClick={() => this.trackNavigationClick('profile')}
             >
               <Navatar
                 user={loggedInUser}
-                src={`${loggedInUser.profilePhoto}`}
-                size={24}
+                size={28}
+                showHoverProfile={false}
+                showOnlineStatus={false}
+                clickable={false}
+                dataCy="navbar-profile"
               />
             </Tab>
             <ProfileDropdown user={loggedInUser} />
@@ -210,7 +237,8 @@ class Navbar extends React.Component<Props, State> {
             {...this.getTabProps(
               history.location.pathname === `/users/${loggedInUser.username}`
             )}
-            to={loggedInUser.username ? `/users/${loggedInUser.username}` : '/'}
+            to={loggedInUser ? `/users/${loggedInUser.username}` : '/'}
+            onClick={() => this.trackNavigationClick('profile')}
           >
             <Icon glyph="profile" />
             <Label>Profile</Label>
@@ -221,12 +249,17 @@ class Navbar extends React.Component<Props, State> {
 
     if (!loggedInUser) {
       return (
-        <Nav hideOnMobile={hideNavOnMobile} loggedOut={!loggedInUser}>
+        <Nav
+          hideOnMobile={hideNavOnMobile}
+          loggedOut={!loggedInUser}
+          data-cy="navbar"
+        >
           <Logo
             to="/"
             aria-hidden
             tabIndex="-1"
             isHidden={this.state.isSkipLinkFocused}
+            data-cy="navbar-logo"
           >
             <Icon glyph="logo" size={28} />
           </Logo>
@@ -251,6 +284,7 @@ class Navbar extends React.Component<Props, State> {
             {...this.getTabProps(history.location.pathname === '/explore')}
             to="/explore"
             loggedOut={!loggedInUser}
+            data-cy="navbar-explore"
           >
             <Icon glyph="explore" />
             <Label>Explore</Label>
@@ -258,6 +292,7 @@ class Navbar extends React.Component<Props, State> {
           <SupportTab
             {...this.getTabProps(history.location.pathname === '/support')}
             to="/support"
+            data-cy="navbar-support"
           >
             <Icon glyph="like" />
             <Label>Support</Label>
@@ -265,10 +300,12 @@ class Navbar extends React.Component<Props, State> {
           <PricingTab
             {...this.getTabProps(history.location.pathname === '/pricing')}
             to="/pricing"
+            data-cy="navbar-pricing"
           >
             <Icon glyph="payment" />
             <Label>Pricing</Label>
           </PricingTab>
+          <SigninLink to="/login">Sign In</SigninLink>
         </Nav>
       );
     }

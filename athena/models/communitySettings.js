@@ -2,6 +2,7 @@
 const { db } = require('./db');
 import axios from 'axios';
 const querystring = require('querystring');
+import { decryptString } from 'shared/encryption';
 
 const defaultSlackSettings = {
   connectedAt: null,
@@ -51,11 +52,13 @@ export const updateSlackInvitesMemberCount = (id: string, count: number) => {
 };
 
 export const getSlackUserListData = (token: string, scope: string) => {
+  const decryptedToken = decryptString(token);
+
   return axios
     .post(
       'https://slack.com/api/users.list',
       querystring.stringify({
-        token: token,
+        token: decryptedToken,
         scope: scope,
       })
     )

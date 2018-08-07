@@ -1,7 +1,6 @@
+// @flow
 import React, { Component } from 'react';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import FullscreenView from '../../components/fullscreenView';
 import { UpsellCreateCommunity } from '../../components/upsell';
@@ -21,13 +20,28 @@ import {
   StickyRow,
   ContinueButton,
 } from './style';
+import { track, events } from 'src/helpers/analytics';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
+import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 
-class NewUserOnboarding extends Component {
-  state: {
-    activeStep: string,
-    joinedCommunities: number,
-  };
+type StateProps = {|
+  community: CommunityInfoType,
+|};
 
+type Props = StateProps & {|
+  currentUser: UserInfoType,
+  close: Function,
+  noCloseButton: boolean,
+|};
+
+type ActiveStep = 'discoverCommunities' | 'setUsername' | 'joinFirstCommunity';
+
+type State = {|
+  activeStep: ActiveStep,
+  joinedCommunities: number,
+|};
+
+class NewUserOnboarding extends Component<Props, State> {
   constructor(props) {
     super(props);
 
@@ -36,7 +50,10 @@ class NewUserOnboarding extends Component {
     this.state = {
       // if the user has a username already, we know that the onboarding
       // was triggered because the user has not joined any communities yet
-      activeStep: currentUser.username ? 'discoverCommunities' : 'setUsername',
+      activeStep:
+        currentUser && currentUser.username
+          ? 'discoverCommunities'
+          : 'setUsername',
       // we make sure to only let the user continue to their dashboard
       // if they have joined one or more communities - because it's possible
       // to join and then leave a community in this onboarding component,
@@ -57,6 +74,8 @@ class NewUserOnboarding extends Component {
   saveUsername = () => {
     const { community } = this.props;
 
+    track(events.USER_ONBOARDING_SET_USERNAME);
+
     // if the user signed up via a community, channel, or thread view, the first
     // thing they will be asked to do is set a username. After they save their
     // username, they should proceed to the 'joinFirstCommunity' step; otherwise
@@ -70,13 +89,19 @@ class NewUserOnboarding extends Component {
     return this.toStep('joinFirstCommunity');
   };
 
-  toStep = (step: string) => {
+  toStep = (step: ActiveStep) => {
     return this.setState({
       activeStep: step,
     });
   };
 
   joinedCommunity = (number: number, done: boolean) => {
+    if (number > 0) {
+      track(events.USER_ONBOARDING_JOINED_COMMUNITY);
+    } else {
+      track(events.USER_ONBOARDING_LEFT_COMMUNITY);
+    }
+
     const { joinedCommunities } = this.state;
     // number will be either '1' or '-1' - so it will either increment
     // or decrement the joinedCommunities count in state
@@ -176,8 +201,7 @@ class NewUserOnboarding extends Component {
   }
 }
 
-//
-const map = state => ({
+const map = (state): StateProps => ({
   community: state.newUserOnboarding.community,
 });
 export default compose(connect(map))(NewUserOnboarding);

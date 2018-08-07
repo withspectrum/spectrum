@@ -1,0 +1,18 @@
+{
+  "name": "analytics",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "NODE_ENV=production node main.js"
+  },
+  "dependencies": {
+    "amplitude": "^3.5.0",
+    "bull": "3.3.10",
+    "node-env-file": "^0.1.8",
+    "now-env": "^3.1.0",
+    "raven": "^2.6.3",
+    "rethinkdbdash": "^2.3.29",
+    "sha1": "^1.1.1",
+    "source-map-support": "^0.5.6",
+    "toobusy-js": "^0.5.1"
+  }
+}

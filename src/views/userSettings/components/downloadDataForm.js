@@ -1,17 +1,12 @@
 // @flow
 import * as React from 'react';
-import { connect } from 'react-redux';
-import compose from 'recompose/compose';
 import styled from 'styled-components';
-import { addToastWithTimeout } from 'src/actions/toasts';
 import {
   SectionCard,
   SectionTitle,
   SectionSubtitle,
   SectionCardFooter,
 } from 'src/components/settingsViews/style';
-import { Notice } from 'src/components/listItems/style';
-import { Button, TextButton, OutlineButton } from 'src/components/buttons';
 
 const Link = styled.a`
   font-size: 14px;

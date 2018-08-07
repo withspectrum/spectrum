@@ -10,12 +10,14 @@ import { addToastWithTimeout } from '../../../../actions/toasts';
 import { Form, Row, InputLabel, InputSubLabel } from './style';
 import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import { ContinueButton } from '../../style';
+import type { Dispatch } from 'redux';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   client: Object,
   editUser: Function,
   save: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   user: ?Object,
 };
 
@@ -33,11 +35,13 @@ class SetUsername extends React.Component<Props, State> {
 
     // try to intelligently suggest a starting username based on the
     // person's name, or firstname/lastname
-    let username = user.name
-      ? slugg(user.name)
-      : user.firstName && user.lastName
-        ? `${user.firstName}-${user.lastName}`
-        : '';
+    let username = user
+      ? user.name
+        ? slugg(user.name)
+        : user.firstName && user.lastName
+          ? `${user.firstName}-${user.lastName}`
+          : ''
+      : '';
 
     this.state = {
       username: username,
@@ -45,6 +49,10 @@ class SetUsername extends React.Component<Props, State> {
       success: '',
       isLoading: false,
     };
+  }
+
+  componentDidMount() {
+    track(events.USER_ONBOARDING_SET_USERNAME_STEP_VIEWED);
   }
 
   handleUsernameValidation = ({ error, success, username }) => {

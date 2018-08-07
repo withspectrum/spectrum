@@ -1,45 +1,71 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { getThreads } from '../../models/thread';
-import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import { getThreadById } from '../../models/thread';
 import { setPinnedThreadInCommunity } from '../../models/community';
-import { getChannels } from '../../models/channel';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateCommunity,
+} from '../../utils/permissions';
 
-type PinThreadInput = {
+type Input = {
   threadId: string,
   communityId: string,
   value: string,
 };
 
-export default async (
-  _: any,
-  { threadId, communityId, value }: PinThreadInput,
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
-  if (!currentUser) {
-    return new UserError(
-      'You must be signed in to pin a thread in this community.'
-    );
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { threadId, communityId, value } = args;
+  const { user, loaders } = ctx;
 
-  const [permissions, threads] = await Promise.all([
-    getUserPermissionsInCommunity(communityId, currentUser.id),
-    getThreads([threadId]),
-  ]);
+  const eventFailed = value
+    ? events.THREAD_PINNED_FAILED
+    : events.THREAD_UNPINNED_FAILED;
 
-  if (!permissions.isOwner && !permissions.isModerator) {
+  if (!await canModerateCommunity(user.id, communityId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: eventFailed,
+      context: { threadId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+
     return new UserError("You don't have permission to do this.");
   }
 
-  const threadToEvaluate = threads[0];
+  const thread = await getThreadById(threadId);
 
-  // we have to ensure the thread isn't in a private channel
-  const channels = await getChannels([threadToEvaluate.channelId]);
+  if (!thread) {
+    trackQueue.add({
+      userId: user.id,
+      event: eventFailed,
+      context: { threadId },
+      properties: {
+        reason: 'thread not found',
+      },
+    });
 
-  if (channels && channels[0].isPrivate) {
+    return new UserError('This thread has been deleted');
+  }
+
+  const channel = await loaders.channel.load(thread.channelId);
+
+  if (channel.isPrivate) {
+    trackQueue.add({
+      userId: user.id,
+      event: eventFailed,
+      context: { threadId },
+      properties: {
+        reason: 'private channel thread',
+      },
+    });
+
     return new UserError('Only threads in public channels can be pinned.');
   }
-  return setPinnedThreadInCommunity(communityId, value);
-};
+
+  return setPinnedThreadInCommunity(communityId, value, user.id);
+});

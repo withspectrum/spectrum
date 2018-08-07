@@ -4,10 +4,11 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { Row } from '../discoverCommunities/style';
 import { CommunityProfile } from '../../../../components/profile';
+import type { Dispatch } from 'redux';
 
 type Props = {
   toggleCommunityMembership: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   joinedFirstCommunity: Function,
   joinedCommunity: Function,
   community: {
@@ -30,6 +31,7 @@ class JoinFirstCommunityPure extends React.Component<Props> {
           profileSize={'upsell'}
           data={{ community }}
           onJoin={() => joinedCommunity(1, true)}
+          showHoverProfile={false}
         />
       </Row>
     );
