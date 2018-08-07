@@ -188,7 +188,7 @@ export const getCommunitiesOnlineMemberCounts = (
               db
                 .now()
                 .toEpochTime()
-                .sub(84600)
+                .sub(86400)
             )
         )
     )
