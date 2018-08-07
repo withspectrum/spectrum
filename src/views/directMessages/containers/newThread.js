@@ -9,7 +9,8 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import Messages from '../components/messages';
 import Header from '../components/header';
 import ChatInput from '../../../components/chatInput';
-import { MessagesContainer, ViewContent } from '../style';
+import { NullState } from '../../../components/upsell';
+import { MessagesContainer, ViewContent, NoThreads } from '../style';
 import { getDirectMessageThreadQuery } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import { throttle } from '../../../helpers/utils';
@@ -707,7 +708,7 @@ class NewThread extends React.Component<Props, State> {
       loadingExistingThreadMessages,
       existingThreadWithMessages,
     } = this.state;
-    const { currentUser, hideOnMobile } = this.props;
+    const { currentUser, hideOnMobile, threads } = this.props;
 
     const { title, description } = generateMetaInfo({
       type: 'directMessage',
@@ -716,6 +717,8 @@ class NewThread extends React.Component<Props, State> {
         description: null,
       },
     });
+
+    const haveThreads = threads && threads.length > 0;
 
     return (
       <MessagesContainer hideOnMobile={hideOnMobile}>
@@ -821,6 +824,20 @@ class NewThread extends React.Component<Props, State> {
 
           {!existingThreadBasedOnSelectedUsers && (
             <Grow>
+              {haveThreads && (
+                <NoThreads>
+                  <NullState icon="message" heading={`Send direct messages`} />
+                </NoThreads>
+              )}
+              {!haveThreads && (
+                <NoThreads>
+                  <NullState
+                    icon="message"
+                    heading={`Send direct messages`}
+                    copy={`Direct messages are private conversations between you and anyone else, including groups. Search for a person above to start a new conversation.`}
+                  />
+                </NoThreads>
+              )}
               {loadingExistingThreadMessages && (
                 <Spinner size={16} color={'brand.default'} />
               )}
