@@ -24,12 +24,12 @@ const createSubscriptionsServer = (server: any, path: string) => {
         return params;
       },
       onDisconnect: rawSocket => {
-        getUserIdFromReq(rawSocket.upgradeReq)
+        return getUserIdFromReq(rawSocket.upgradeReq)
           .then(id => {
-            setUserOnline(id, false);
+            return setUserOnline(id, false);
           })
           .catch(err => {
-            // Ignore errors
+            console.error(err);
           });
       },
       onConnect: (connectionParams, rawSocket) =>
@@ -42,6 +42,7 @@ const createSubscriptionsServer = (server: any, path: string) => {
             };
           })
           .catch(err => {
+            console.error(err);
             return {
               loaders: createLoaders({ cache: false }),
             };
