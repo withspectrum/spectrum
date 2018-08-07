@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, { Fragment } from 'react';
 import DraftEditor from '../draft-js-plugins-editor';
 import { composeDecorators } from 'draft-js-plugins-editor';
 import createImagePlugin from 'draft-js-image-plugin';
@@ -7,7 +7,7 @@ import createFocusPlugin from 'draft-js-focus-plugin';
 import createBlockDndPlugin from 'draft-js-drag-n-drop-plugin';
 import createMarkdownPlugin from 'draft-js-markdown-plugin';
 import createEmbedPlugin from 'draft-js-embed-plugin';
-import InlineToolbar from 'spectrum-draft-js-inline-toolbar';
+import _InlineToolbar from 'spectrum-draft-js-inline-toolbar';
 import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-java';
@@ -33,6 +33,7 @@ import { LinkPreview, LinkPreviewLoading } from 'src/components/linkPreview';
 import Image from './Image';
 import Embed, { addEmbed, parseEmbedUrl } from './Embed';
 import { renderLanguageSelect } from './LanguageSelect';
+import styled from 'styled-components';
 import SideToolbar from './toolbar';
 import {
   Wrapper,
@@ -43,6 +44,10 @@ import {
   EmbedUI,
   customStyleMap,
 } from './style';
+
+const InlineToolbar = styled(_InlineToolbar)`
+  z-index: 9999;
+`;
 
 type Props = {
   state: Object,
@@ -354,11 +359,23 @@ class Editor extends React.Component<Props, State> {
               />
             )}
           {!readOnly && (
-            <MediaRow>
-              <MediaInput onChange={this.addImage} multiple>
-                Add
-              </MediaInput>
-            </MediaRow>
+            <Fragment>
+              <MediaRow>
+                <MediaInput onChange={this.addImage} multiple>
+                  Add
+                </MediaInput>
+              </MediaRow>
+              <InlineToolbar
+                editorState={state}
+                selectionRef={{
+                  current:
+                    this.editor != null && this.editor.editor != null
+                      ? this.editor.editor.editor
+                      : null,
+                }}
+                onChange={onChange}
+              />
+            </Fragment>
           )}
         </div>
       );
