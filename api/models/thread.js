@@ -73,7 +73,7 @@ export const getThreadsByChannel = (channelId: string, options: PaginationOption
 // prettier-ignore
 export const getThreadsByChannels = (channelIds: Array<string>, options: PaginationOptions): Promise<Array<DBThread>> => {
   const { first, after } = options
-  
+
   return db
     .table('threads')
     .getAll(...channelIds, { index: 'channelId' })
@@ -447,10 +447,10 @@ export const setThreadLock = (threadId: string, value: boolean, userId: string, 
       .run()
       .then(async () => {
         const thread = await getThreadById(threadId)
-        
-        const event = value 
-          ? byModerator 
-            ? events.THREAD_LOCKED_BY_MODERATOR 
+
+        const event = value
+          ? byModerator
+            ? events.THREAD_LOCKED_BY_MODERATOR
             : events.THREAD_LOCKED
           : byModerator
             ? events.THREAD_UNLOCKED_BY_MODERATOR
@@ -645,6 +645,58 @@ export const moveThread = (id: string, channelId: string, userId: string) => {
 
       return null;
     });
+};
+
+export const incrementMessageCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      messageCount: db
+        .row('messageCount')
+        .default(0)
+        .add(1),
+    })
+    .run();
+};
+
+export const decrementMessageCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      messageCount: db
+        .row('messageCount')
+        .default(1)
+        .sub(1),
+    })
+    .run();
+};
+
+export const incrementReactionCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      reactionCount: db
+        .row('reactionCount')
+        .default(0)
+        .add(1),
+    })
+    .run();
+};
+
+export const decrementReactionCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      reactionCount: db
+        .row('reactionCount')
+        .default(1)
+        .sub(1),
+    })
+    .run();
 };
 
 const hasChanged = (field: string) =>
