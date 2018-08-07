@@ -8,8 +8,10 @@ import {
   FlexCol,
   FlexRow,
   H1,
+  H2,
   H3,
   Transition,
+  P,
   zIndex,
   Tooltip,
   Shadow,
@@ -161,6 +163,44 @@ export const ThreadHeading = styled(H1)`
 
   @media (max-width: 768px) {
     margin-top: 8px;
+  }
+`;
+
+export const EmptyThreadHeading = styled(H2)`
+  font-size: 32px;
+  font-weight: 800;
+
+  @media (max-width: 768px) {
+    margin-top: 8px;
+  }
+`;
+
+export const EmptyThreadDescription = styled(P)`
+  margin-top: 8px;
+  font-size: 24px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.text.alt};
+`;
+
+export const A = styled.a`
+  display: flex;
+`;
+
+export const SocialShareWrapper = styled(FlexRow)`
+  justify-content: space-between;
+  margin-top: 20px;
+
+  ${A}:first-child {
+    margin-right: 20px;
+  }
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+
+    ${A}:first-child {
+      margin-right: 0;
+      margin-bottom: 8px;
+    }
   }
 `;
 
@@ -353,7 +393,7 @@ export const NullMessagesWrapper = styled.div`
   flex-direction: column;
   opacity: 0.8;
 
-  .icon {
+  > .icon {
     opacity: 0.4;
   }
 `;

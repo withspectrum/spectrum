@@ -7,6 +7,7 @@ import type { CommunityInfoType } from '../community/communityInfo';
 import channelInfoFragment from '../channel/channelInfo';
 import type { ChannelInfoType } from '../channel/channelInfo';
 import threadParticipantFragment from './threadParticipant';
+import type { ThreadMessageConnectionType } from 'shared/graphql/fragments/thread/threadMessageConnection';
 import type { ThreadParticipantType } from './threadParticipant';
 
 type Participant = {
@@ -36,6 +37,8 @@ export type ThreadInfoType = {
   community: {
     ...$Exact<CommunityInfoType>,
   },
+  // $FlowFixMe: We need to remove `messageConnection` from ThreadMessageConnectionType. This works in the meantime.
+  ...$Exact<ThreadMessageConnectionType>,
   isPublished: boolean,
   isLocked: boolean,
   isAuthor: boolean,
