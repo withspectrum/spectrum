@@ -50,9 +50,10 @@ export const getThreadsByChannelToDelete = (channelId: string) => {
 };
 
 // prettier-ignore
-export const getThreadsByChannel = (channelId: string, options: PaginationOptions): Promise<Array<DBThread>> => {
-  const { first, after } = options
+export const getThreadsByChannel = (channelId: string, options: { ...PaginationOptions, sort: 'NEW' | 'TOP' }): Promise<Array<DBThread>> => {
+  const { first, after, sort } = options
 
+  const order = sort === 'NEW' ? { index: db.desc('channelIdAndLastActive') } : db.desc('frecency_score');
   return db
     .table('threads')
     .between(
@@ -64,7 +65,7 @@ export const getThreadsByChannel = (channelId: string, options: PaginationOption
         rightBound: 'open',
       }
     )
-    .orderBy({ index: db.desc('channelIdAndLastActive') })
+    .orderBy(order)
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .limit(first)
     .run();

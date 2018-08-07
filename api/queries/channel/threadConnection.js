@@ -5,12 +5,13 @@ import { encode, decode } from '../../utils/base64';
 
 export default (
   { id }: { id: string },
-  { first, after }: PaginationOptions
+  { first, after, sort }: { ...$Exact<PaginationOptions>, sort: 'NEW' | 'TOP' }
 ) => {
   // $FlowFixMe
   return getThreadsByChannel(id, {
     first,
     after: after && parseInt(decode(after), 10),
+    sort: sort || 'NEW',
   }).then(threads => ({
     pageInfo: {
       hasNextPage: threads.length >= first,
