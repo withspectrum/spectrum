@@ -273,6 +273,8 @@ export type DBThread = {
   attachments?: Array<DBThreadAttachment>,
   edits?: Array<DBThreadEdits>,
   watercooler?: boolean,
+  messageCount: number,
+  reactionCount: number,
   type: string,
 };
 

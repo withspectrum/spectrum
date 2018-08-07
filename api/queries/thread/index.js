@@ -16,6 +16,8 @@ import currentUserLastSeen from './currentUserLastSeen';
 import content from './content';
 import reactions from './reactions';
 
+import type { DBThread } from 'shared/types';
+
 module.exports = {
   Query: {
     thread,
@@ -35,5 +37,6 @@ module.exports = {
     currentUserLastSeen,
     content,
     reactions,
+    messageCount: ({ messageCount }: DBThread) => messageCount || 0,
   },
 };
