@@ -6588,9 +6588,9 @@ rethinkdb-inspector@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/rethinkdb-inspector/-/rethinkdb-inspector-0.3.3.tgz#f0d88c66d17e0234b5518ca51cd8c272cb787003"
 
-rethinkdb-migrate@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/rethinkdb-migrate/-/rethinkdb-migrate-1.3.0.tgz#0067cb7160ebef4f0d8e7732953e354940fa3e8c"
+rethinkdb-migrate@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/rethinkdb-migrate/-/rethinkdb-migrate-1.4.0.tgz#7a019148d73e6f7a8f4366550557e43e3dafed4c"
   dependencies:
     fs-extra "^5.0.0"
     joi "^13.1.2"
