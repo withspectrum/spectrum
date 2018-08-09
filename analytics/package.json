@@ -12,7 +12,7 @@
     "raven": "^2.6.3",
     "rethinkdbdash": "^2.3.29",
     "sha1": "^1.1.1",
-    "source-map-support": "^0.5.6",
+    "source-map-support": "^0.5.7",
     "toobusy-js": "^0.5.1"
   }
 }
