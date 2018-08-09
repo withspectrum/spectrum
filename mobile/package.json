@@ -4,7 +4,7 @@
   "dependencies": {
     "@expo/react-native-action-sheet": "^1.0.2",
     "apollo-cache-inmemory": "^1.2.6",
-    "apollo-client": "^2.3.7",
+    "apollo-client": "^2.3.8",
     "apollo-link": "^1.2.2",
     "apollo-link-error": "^1.1.0",
     "apollo-link-http": "^1.5.4",
