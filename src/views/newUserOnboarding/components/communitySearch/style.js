@@ -8,7 +8,7 @@ import {
   hexa,
   zIndex,
 } from '../../../../components/globals';
-import Avatar from '../../../../components/avatar';
+import { CommunityAvatar } from '../../../../components/avatar';
 import Icon from '../../../../components/icons';
 
 export const SearchWrapper = styled.div`
@@ -106,7 +106,7 @@ export const SearchResult = styled.li`
   }
 `;
 
-export const SearchResultImage = styled(Avatar)`
+export const SearchResultImage = styled(CommunityAvatar)`
   margin: 4px 16px 0 4px;
   width: 48px;
   height: 48px;

@@ -51,6 +51,7 @@ var COMMUNITY_SLUG_BLACKLIST = [
   'upgrade',
   'user',
   'users',
+  'me',
 ];
 
 var CHANNEL_SLUG_BLACKLIST = ['feed', 'members', 'settings'];

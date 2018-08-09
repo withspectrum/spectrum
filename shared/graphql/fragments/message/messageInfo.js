@@ -5,7 +5,7 @@ import type { ThreadParticipantType } from '../thread/threadParticipant';
 
 export type MessageInfoType = {
   id: string,
-  timestamp: Date,
+  timestamp: string,
   messageType: string,
   parent: {
     id: string,

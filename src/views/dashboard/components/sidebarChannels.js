@@ -97,7 +97,10 @@ class SidebarChannels extends React.Component<Props> {
       const sortedChannels = sortByTitle(channels);
 
       return (
-        <ChannelsContainer className={'channelsContainer'}>
+        <ChannelsContainer
+          className={'channelsContainer'}
+          data-cy="channels-container"
+        >
           <Link to={`/${community.slug}`}>
             <ChannelListItem>
               <Icon glyph={'link'} size={24} />
@@ -142,15 +145,14 @@ class SidebarChannels extends React.Component<Props> {
             />
           )}
 
-          {(isOwner || isModerator) &&
-            community.hasFeatures.analytics && (
-              <Link to={`/${community.slug}/settings/analytics`}>
-                <ChannelListItem>
-                  <Icon glyph={'link'} size={24} />
-                  <CommunityListName>Analytics</CommunityListName>
-                </ChannelListItem>
-              </Link>
-            )}
+          {(isOwner || isModerator) && (
+            <Link to={`/${community.slug}/settings/analytics`}>
+              <ChannelListItem>
+                <Icon glyph={'link'} size={24} />
+                <CommunityListName>Analytics</CommunityListName>
+              </ChannelListItem>
+            </Link>
+          )}
 
           {sortedChannels &&
             sortedChannels.length > 1 && (
@@ -168,6 +170,7 @@ class SidebarChannels extends React.Component<Props> {
                       this.changeChannel(channel.id);
                       this.setActiveChannelObject(channel);
                     }}
+                    data-cy={`channel-list-item-${channel.id}`}
                   >
                     {channel.isPrivate ? (
                       <Icon glyph="channel-private" size={24} />
@@ -186,7 +189,10 @@ class SidebarChannels extends React.Component<Props> {
 
     if (isLoading || queryVarIsChanging) {
       return (
-        <ChannelsContainer className={'channelsContainer'}>
+        <ChannelsContainer
+          className={'channelsContainer'}
+          data-cy="channels-container"
+        >
           <Link to={`/${slug}`}>
             <ChannelListItem>
               <Icon glyph={'link'} size={24} />
@@ -215,6 +221,8 @@ class SidebarChannels extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getCommunityChannels, viewNetworkHandler)(
-  SidebarChannels
-);
+export default compose(
+  connect(),
+  getCommunityChannels,
+  viewNetworkHandler
+)(SidebarChannels);

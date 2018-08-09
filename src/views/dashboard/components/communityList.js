@@ -109,10 +109,12 @@ class CommunityList extends React.Component<Props> {
               <CommunityListItem
                 onClick={() => this.handleOnClick(c.id)}
                 active={c.id === activeCommunity}
+                data-cy={`community-list-item-${c.id}`}
               >
                 <CommunityListAvatar
                   active={c.id === activeCommunity}
                   src={c.profilePhoto}
+                  showHoverProfile={false}
                 />
                 <CommunityListMeta>
                   <CommunityListName>{c.name}</CommunityListName>
@@ -168,4 +170,7 @@ class CommunityList extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), withRouter)(CommunityList);
+export default compose(
+  connect(),
+  withRouter
+)(CommunityList);

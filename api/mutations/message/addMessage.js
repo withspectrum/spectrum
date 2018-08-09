@@ -107,7 +107,11 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     }
     if (
       body.blocks.some(
-        ({ type }) => !type || (type !== 'unstyled' && type !== 'code-block')
+        ({ type }) =>
+          !type ||
+          (type !== 'unstyled' &&
+            type !== 'code-block' &&
+            type !== 'blockquote')
       )
     ) {
       trackQueue.add({

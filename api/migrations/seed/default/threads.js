@@ -7,47 +7,51 @@ const {
   MAX_ID,
   BRYN_ID,
   SPECTRUM_GENERAL_CHANNEL_ID,
+  PAYMENTS_GENERAL_CHANNEL_ID,
   PRIVATE_GENERAL_CHANNEL_ID,
   SPECTRUM_PRIVATE_CHANNEL_ID,
   DELETED_COMMUNITY_DELETED_CHANNEL_ID,
   MODERATOR_CREATED_CHANNEL_ID,
   DELETED_COMMUNITY_ID,
   SPECTRUM_COMMUNITY_ID,
+  PAYMENTS_COMMUNITY_ID,
   PRIVATE_COMMUNITY_ID,
   SPECTRUM_ARCHIVED_CHANNEL_ID,
 } = constants;
 
-module.exports = [
-  {
-    id: 'thread-1',
-    createdAt: new Date(DATE),
-    creatorId: BRIAN_ID,
-    channelId: SPECTRUM_GENERAL_CHANNEL_ID,
-    communityId: SPECTRUM_COMMUNITY_ID,
-    isPublished: true,
-    isLocked: false,
-    type: 'DRAFTJS',
-    content: {
-      title: 'The first thread! 🎉',
-      body: JSON.stringify(
-        toJSON(fromPlainText('This is it, we got a thread here'))
-      ),
-    },
-    attachments: [],
-    edits: [
-      {
-        timestamp: new Date(DATE),
-        content: {
-          title: 'The first thread! 🎉',
-          body: JSON.stringify(
-            toJSON(fromPlainText('This is it, we got a thread here'))
-          ),
-        },
-      },
-    ],
-    modifiedAt: new Date(DATE),
-    lastActive: new Date(DATE),
+const defaultThread = {
+  id: 'thread-1',
+  createdAt: new Date(DATE),
+  creatorId: BRIAN_ID,
+  channelId: SPECTRUM_GENERAL_CHANNEL_ID,
+  communityId: SPECTRUM_COMMUNITY_ID,
+  isPublished: true,
+  isLocked: false,
+  type: 'DRAFTJS',
+  content: {
+    title: 'The first thread! 🎉',
+    body: JSON.stringify(
+      toJSON(fromPlainText('This is it, we got a thread here'))
+    ),
   },
+  attachments: [],
+  edits: [
+    {
+      timestamp: new Date(DATE),
+      content: {
+        title: 'The first thread! 🎉',
+        body: JSON.stringify(
+          toJSON(fromPlainText('This is it, we got a thread here'))
+        ),
+      },
+    },
+  ],
+  modifiedAt: new Date(DATE),
+  lastActive: new Date(DATE),
+};
+
+const threads = [
+  defaultThread,
   {
     id: 'thread-2',
     createdAt: new Date(DATE + 1),
@@ -380,7 +384,7 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
-    // deletedAt is missing intentionally
+    deletedAt: new Date(DATE),
   },
 
   {
@@ -413,4 +417,30 @@ module.exports = [
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
   },
+
+  {
+    id: 'thread-14',
+    createdAt: new Date(DATE),
+    creatorId: BRIAN_ID,
+    channelId: PAYMENTS_GENERAL_CHANNEL_ID,
+    communityId: PAYMENTS_COMMUNITY_ID,
+    isPublished: true,
+    isLocked: false,
+    type: 'DRAFTJS',
+    content: {
+      title: 'First thread in this channel',
+      body: JSON.stringify(toJSON(fromPlainText('This is just a thread'))),
+    },
+    attachments: [],
+    edits: [],
+    modifiedAt: new Date(DATE),
+    lastActive: new Date(DATE),
+  },
 ];
+
+// Adding many default threads to appropriately simulate infinite scrolling
+for (let i = 0; i < 20; i++) {
+  threads.push(Object.assign({}, defaultThread, { id: `extra-thread-${i}` }));
+}
+
+module.exports = threads;

@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from 'src/components/link';
+import { Query } from 'react-apollo';
 import { timeDifferenceShort } from 'shared/time-difference';
+import { getThreadByIdQuery } from 'shared/graphql/queries/thread/getThread';
 import { Timestamp } from './style';
 
 export const parseNotification = notification => {
@@ -179,8 +181,33 @@ const threadReactionToString = context => {
   );
 };
 
-const messageToString = () => {
-  return <span> your reply</span>;
+const messageToString = context => {
+  return (
+    <Query
+      query={getThreadByIdQuery}
+      variables={{ id: context.payload.threadId }}
+    >
+      {({ loading, data }) => {
+        if (loading) return <span> your reply</span>;
+        if (!data.thread) return <span> your reply</span>;
+        return (
+          <span>
+            {' '}
+            your reply in
+            <Link
+              to={{
+                pathname: window.location.pathname,
+                search: `?thread=${context.payload.id}`,
+              }}
+            >
+              {' '}
+              {data.thread.content.title}
+            </Link>
+          </span>
+        );
+      }}
+    </Query>
+  );
 };
 
 const communityToString = context => {

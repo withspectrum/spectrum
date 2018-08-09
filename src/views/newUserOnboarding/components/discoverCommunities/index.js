@@ -45,6 +45,7 @@ class TopCommunitiesPure extends React.Component<Props> {
                 data={{ community }}
                 key={community.id}
                 joinedCommunity={joinedCommunity}
+                showHoverProfile={false}
               />
             );
           })}

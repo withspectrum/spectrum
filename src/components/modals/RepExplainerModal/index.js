@@ -1,8 +1,9 @@
+// @flow
 import * as React from 'react';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import Reputation from '../../reputation';
-import Avatar from '../../avatar';
+import { UserAvatar } from '../../avatar';
 import Icon from '../../icons';
 import ModalContainer from '../modalContainer';
 import { closeModal } from '../../../actions/modals';
@@ -17,7 +18,13 @@ import {
   RepWrapper,
 } from './style';
 
-type Props = {};
+type Props = {
+  dispatch: Function,
+  isOpen: boolean,
+  reputation: number,
+  currentUser: ?Object,
+};
+
 class RepExplainerModal extends React.Component<Props> {
   closeModal = () => {
     this.props.dispatch(closeModal());
@@ -63,11 +70,7 @@ class RepExplainerModal extends React.Component<Props> {
               )
             ) : currentUser ? (
               <Rep>
-                <Avatar
-                  src={currentUser.profilePhoto}
-                  user={currentUser}
-                  size={24}
-                />
+                <UserAvatar user={currentUser} size={24} />
                 <RepWrapper>
                   <Reputation
                     tipText={'Your total reputation'}
@@ -90,4 +93,7 @@ const map = state => ({
   currentUser: state.users.currentUser,
   isOpen: state.modals.isOpen,
 });
-export default compose(connect(map))(RepExplainerModal);
+export default compose(
+  // $FlowFixMe
+  connect(map)
+)(RepExplainerModal);

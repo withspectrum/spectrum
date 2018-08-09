@@ -141,7 +141,7 @@ describe('Community settings billing tab', () => {
       // click the moderator item in dropdown
       cy
         .get('[data-cy="community-settings-members-list"]')
-        .contains('Can edit and delete conversations')
+        .contains('can moderate conversations')
         .click();
 
       // admin email verification modal should appear
@@ -252,7 +252,7 @@ describe('Community settings billing tab', () => {
       // click the moderator item in dropdown
       cy
         .get('[data-cy="community-settings-members-list"]')
-        .contains('Can edit and delete conversations')
+        .contains('can moderate conversations')
         .click();
 
       // admin email verification modal should appear

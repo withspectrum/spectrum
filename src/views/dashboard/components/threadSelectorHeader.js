@@ -48,7 +48,7 @@ class Header extends React.Component<Props> {
             <Link
               to={`/${activeCommunityObject.slug}/${activeChannelObject.slug}`}
             >
-              <HeaderActiveViewTitle>
+              <HeaderActiveViewTitle data-cy="header-channel-title">
                 {activeChannelObject.name}
               </HeaderActiveViewTitle>
             </Link>
@@ -61,7 +61,7 @@ class Header extends React.Component<Props> {
       return (
         <ContextHeaderContainer>
           <Link to={`/${activeCommunityObject.slug}`}>
-            <HeaderActiveViewTitle>
+            <HeaderActiveViewTitle data-cy="header-community-title">
               {activeCommunityObject.name}
             </HeaderActiveViewTitle>
           </Link>

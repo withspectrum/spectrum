@@ -1,0 +1,28 @@
+{
+  "actors": [
+    {
+      "id": "41f5151f-7309-4c95-b2af-d45ea2b0ad82",
+      "payload": "{\"createdAt\":\"2017-07-09T21:47:15.354Z\",\"email\":\"vutpaisawesome@gmail.com\",\"fbProviderId\":null,\"githubProviderId\":null,\"googleProviderId\":null,\"id\":\"41f5151f-7309-4c95-b2af-d45ea2b0ad82\",\"isOnline\":true,\"lastSeen\":\"2017-07-12T04:31:27.939Z\",\"name\":\"Max Stoiber\",\"profilePhoto\":\"https://pbs.twimg.com/profile_images/802074607222132736/G_LVLtD7_normal.jpg\",\"providerId\":\"3195884567\",\"timezone\":-420,\"username\":\"mstoiber05\"}",
+      "type": "USER"
+    }
+  ],
+  "context": {
+    "id": "ef021b3b-c520-4133-8749-e96252eff5fc",
+    "payload": "{\"attachments\":[],\"channelId\":\"0961e72c-087f-4e80-a5d6-3714022094c2\",\"communityId\":\"a719409a-3964-49f6-a570-edfe9db641a9\",\"content\":{\"body\":\"{\\\"nodes\\\":[{\\\"kind\\\":\\\"block\\\",\\\"type\\\":\\\"line\\\",\\\"nodes\\\":[{\\\"kind\\\":\\\"text\\\",\\\"text\\\":\\\"\\\"}]}]}\",\"title\":\"New thread by @mxstbr\"},\"createdAt\":\"2017-07-12T21:43:28.409Z\",\"creatorId\":\"gVk5mYwccUOEKiN5vtOouqroGKo1\",\"edits\":[],\"id\":\"ef021b3b-c520-4133-8749-e96252eff5fc\",\"isLocked\":false,\"isPublished\":true,\"lastActive\":\"2017-07-12T21:43:50.279Z\",\"modifiedAt\":null,\"type\":\"SLATE\"}",
+    "type": "THREAD"
+  },
+  "createdAt": "2017-07-12T21:43:50.399Z",
+  "entities": [
+    {
+      "id":  "343d0e33-8010-4d45-b1d7-bb7d14cd5ed5",
+      "payload":  "{\"createdAt\":1529543590050,\"deletedAt\":\"2018-06-21T01:15:49.678Z\",\"id\":\"343d0e33-8010-4d45-b1d7-bb7d14cd5ed5\",\"threadId\":\"5e333eab-6a46-4a9d-b270-0d3cad8114d0\",\"type\":\"like\",\"userId\":\"01p2A7kDCWUjGj6zQLlMQUOSQL42\"}",
+      "type":  "THREAD_REACTION"
+    }
+  ],
+  "event": "THREAD_REACTION_CREATED",
+  "id": "eb3464c9-e533-43ba-a913-924429bfe7a2",
+  "isRead": false,
+  "isSeen": false,
+  "modifiedAt": "2017-07-12T21:43:50.399Z",
+  "userId": "gVk5mYwccUOEKiN5vtOouqroGKo1"
+}

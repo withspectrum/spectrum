@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Clipboard from 'react-clipboard.js';
 import { Manager, Reference, Popper } from 'react-popper';
+import { CLIENT_URL } from 'src/api/constants';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
 import Icon from 'src/components/icons';
@@ -284,9 +285,9 @@ class ActionBar extends React.Component<Props, State> {
                   data-cy="thread-facebook-button"
                 >
                   <a
-                    href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${
-                      thread.id
-                    }&t=${thread.content.title}`}
+                    href={`https://www.facebook.com/sharer/sharer.php?t=${encodeURIComponent(
+                      thread.content.title
+                    )}&u=https://spectrum.chat/thread/${thread.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -307,11 +308,11 @@ class ActionBar extends React.Component<Props, State> {
                   data-cy="thread-tweet-button"
                 >
                   <a
-                    href={`https://twitter.com/share?text=${
-                      thread.content.title
-                    } on @withspectrum&url=https://spectrum.chat/thread/${
+                    href={`https://twitter.com/share?url=https://spectrum.chat/thread/${
                       thread.id
-                    }`}
+                    }&text=${encodeURIComponent(
+                      thread.content.title
+                    )} on @withspectrum`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -327,9 +328,7 @@ class ActionBar extends React.Component<Props, State> {
 
                 <Clipboard
                   style={{ background: 'none' }}
-                  data-clipboard-text={`https://spectrum.chat/thread/${
-                    thread.id
-                  }`}
+                  data-clipboard-text={`${CLIENT_URL}/thread/${thread.id}`}
                   onSuccess={() =>
                     this.props.dispatch(
                       addToastWithTimeout('success', 'Copied to clipboard')
@@ -573,4 +572,7 @@ class ActionBar extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), toggleThreadNotificationsMutation)(ActionBar);
+export default compose(
+  connect(),
+  toggleThreadNotificationsMutation
+)(ActionBar);
