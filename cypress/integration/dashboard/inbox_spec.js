@@ -8,6 +8,9 @@ const expectedVisibleThreadsForUser = data.threads.filter(
   ({ communityId, isPublished }) =>
     userCommunityIds.includes(communityId) && isPublished
 );
+const userCommunityToTest = data.communities.find(
+  community => community.id === userCommunityIds[0]
+);
 
 const scrollAndLoadThreads = initialThreadCount => {
   cy.get('[data-cy="inbox-thread-feed"]')
@@ -18,13 +21,13 @@ const scrollAndLoadThreads = initialThreadCount => {
     .should('have.length.greaterThan', initialThreadCount);
 };
 
-describe('Inbox view', () => {
+xdescribe('Inbox view', () => {
   beforeEach(() => {
     cy.auth(user.id);
     cy.visit('/');
   });
 
-  xit('should render more threads as user scrolls to the bottom twice', () => {
+  it('should render more threads as user scrolls to the bottom twice', () => {
     cy.get('[data-cy="inbox-thread-item"]')
       .then($threadViewList => {
         const initialThreadCount = $threadViewList.length;
@@ -46,10 +49,6 @@ describe('Inbox view', () => {
       cy.visit('/');
     });
 
-    const userCommunityToTest = data.communities.find(
-      community => community.id === userCommunityIds[0]
-    );
-
     const threadIdsOfUserCommunityToTest = data.threads
       .filter(thread => thread.communityId === userCommunityToTest.id)
       .map(thread => thread.id);
@@ -68,7 +67,7 @@ describe('Inbox view', () => {
         .should('have.attr', 'href', `/${userCommunityToTest.slug}`);
     });
 
-    xit('should filter threads by community', () => {
+    it('should filter threads by community', () => {
       // Ensure more than one community's threads are visible initially
       cy.get('[data-cy="inbox-thread-item"]')
         .get('[data-cy="header-community-name"]')
@@ -122,7 +121,7 @@ describe('Inbox view', () => {
       .filter(thread => thread.channelId === userCommunityChannelToTest.id)
       .map(thread => thread.id);
 
-    xit('should filter threads by channel within a community', () => {
+    it('should filter threads by channel within a community', () => {
       // Filter by the community's threads
       cy.get(`[data-cy="community-list-item-${userCommunityToTest.id}"]`)
         .click()
@@ -166,20 +165,34 @@ describe('Inbox view', () => {
           expect(threadIdsFromOtherChannels.length).to.eq(0);
         });
     });
-
-    xit('should include a link to the filtered community', () => {
-      // TODO
-    });
   });
 });
 
-xdescribe('Inbox view, when logged in as owner of a community', () => {
+describe('Inbox view, when logged in as owner of a community', () => {
+  before(() => {
+    expect(
+      data.usersCommunities.filter(
+        userCommunity =>
+          userCommunity.communityId === userCommunityToTest.id &&
+          userCommunity.userId === user.id
+      )[0].isOwner
+    ).to.be.true;
+  });
+
   beforeEach(() => {
-    // cy.auth(ownerUser.id);
+    cy.auth(user.id);
     cy.visit('/');
   });
 
-  it('should filter threads by community', () => {
-    // TODO
+  it('should have link to community settings when filtered', () => {
+    cy.get(`[data-cy="community-list-item-${userCommunityToTest.id}"]`).click();
+
+    cy.get('[data-cy="header-community-title"]')
+      .invoke('text')
+      .should('eq', userCommunityToTest.name);
+
+    cy.get('[data-cy="channels-container"]').find(
+      `a[href="/${userCommunityToTest.slug}/settings"]`
+    );
   });
 });
