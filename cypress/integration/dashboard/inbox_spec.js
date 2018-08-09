@@ -108,7 +108,7 @@ describe('Inbox view', () => {
     const userCommunityChannelToTest = data.channels.filter(
       channel =>
         channel.communityId === userCommunityToTest.id &&
-        channel.name !== 'General'
+        channel.slug !== 'general'
     )[0];
 
     const threadIdsOfUserCommunityChannelToTest = data.threads

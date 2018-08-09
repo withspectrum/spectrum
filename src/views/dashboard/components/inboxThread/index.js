@@ -110,11 +110,7 @@ class InboxThread extends React.Component<Props> {
                 />
               </ErrorBoundary>
 
-              <ThreadTitle
-                active={active}
-                new={newMessagesSinceLastViewed}
-                data-cy="thread-title"
-              >
+              <ThreadTitle active={active} new={newMessagesSinceLastViewed}>
                 {truncate(thread.content.title, 80)}
               </ThreadTitle>
 
