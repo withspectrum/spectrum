@@ -4,7 +4,6 @@ import Icon from 'src/components/icons';
 import {
   Button,
   PrimaryButton,
-  SecondaryButton,
   DangerButton,
   TextButton,
   OutlineButton,
@@ -21,8 +20,6 @@ export default class Buttons extends React.Component<{}> {
           <Button>Button</Button>
 
           <PrimaryButton>Primary Button</PrimaryButton>
-
-          <SecondaryButton>Secondary Button</SecondaryButton>
 
           <DangerButton>Danger Button</DangerButton>
 
@@ -53,10 +50,6 @@ export default class Buttons extends React.Component<{}> {
             Primary Button Tooltip
           </PrimaryButton>
 
-          <SecondaryButton tipText={'With a tooltip!'} tipLocation={'top-left'}>
-            Secondary Button Tooltip
-          </SecondaryButton>
-
           <DangerButton tipText={'With a tooltip!'} tipLocation={'left'}>
             Danger Button Tooltip
           </DangerButton>
@@ -81,8 +74,6 @@ export default class Buttons extends React.Component<{}> {
 
           <PrimaryButton size="large">Primary Button</PrimaryButton>
 
-          <SecondaryButton size="large">Secondary Button</SecondaryButton>
-
           <DangerButton size="large">Danger Button</DangerButton>
 
           <TextButton size="large">Text Button</TextButton>
@@ -101,8 +92,6 @@ export default class Buttons extends React.Component<{}> {
 
           <PrimaryButton disabled>Primary Button</PrimaryButton>
 
-          <SecondaryButton disabled>Secondary Button</SecondaryButton>
-
           <DangerButton disabled>Danger Button</DangerButton>
 
           <TextButton disabled>Text Button</TextButton>
@@ -120,8 +109,6 @@ export default class Buttons extends React.Component<{}> {
           <Button loading>Loading Button</Button>
 
           <PrimaryButton loading>Loading Primary Button</PrimaryButton>
-
-          <SecondaryButton loading>Loading Secondary Button</SecondaryButton>
 
           <DangerButton loading>Loading Danger Button</DangerButton>
 
@@ -146,11 +133,6 @@ export default class Buttons extends React.Component<{}> {
             <Icon glyph="message-new" size={24} />
             Primary Button
           </PrimaryButton>
-
-          <SecondaryButton>
-            <Icon glyph="message-new" size={24} />
-            Secondary Button
-          </SecondaryButton>
 
           <DangerButton>
             <Icon glyph="message-new" size={24} />
@@ -186,14 +168,6 @@ export default class Buttons extends React.Component<{}> {
           <PrimaryButton>PrimaryButton</PrimaryButton>
           <PrimaryButton>PrimaryButton</PrimaryButton>
           <PrimaryButton>PrimaryButton</PrimaryButton>
-        </ButtonSegmentRow>
-
-        <div style={{ height: '40px' }} />
-
-        <ButtonSegmentRow>
-          <SecondaryButton>SecondaryButton</SecondaryButton>
-          <SecondaryButton>SecondaryButton</SecondaryButton>
-          <SecondaryButton>SecondaryButton</SecondaryButton>
         </ButtonSegmentRow>
       </div>
     );

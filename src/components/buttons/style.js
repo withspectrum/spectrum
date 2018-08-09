@@ -129,38 +129,6 @@ export const StyledPrimaryButton = styled.button`
   }
 `;
 
-export const StyledSecondaryButton = styled.button`
-  ${base}
-  border: 1px solid ${props => props.theme.success.default};
-  color: ${props => props.theme.text.reverse};
-  background-color: ${props => props.theme.success.alt};
-  background-image: ${props =>
-    `linear-gradient(to bottom, ${props.theme.success.alt}, ${
-      props.theme.success.default
-    })`};
-  text-shadow: 0 1px 1px rgba(0,0,0,0.08);
-
-  &:hover {
-    color: ${props => props.theme.text.reverse};
-    box-shadow: ${props =>
-      props.disabled ? 'none' : `${Shadow.mid} rgba(0,0,0,0.12)`};
-  }
-
-  &:active {
-    border: 1px solid ${props => props.theme.success.default};
-    background-image: ${props =>
-      `linear-gradient(to top, ${props.theme.success.alt}, ${
-        props.theme.success.default
-      })`};
-  }
-
-  &:focus {
-    box-shadow: 0 0 0 1px ${props =>
-      props.theme.bg.default}, 0 0 0 3px ${props =>
-  hexa(props.theme.success.alt, 0.32)};
-  }
-`;
-
 export const StyledDangerButton = styled.button`
   ${base};
   border: 1px solid ${props => props.theme.bg.border};
@@ -321,13 +289,6 @@ export const StyledButtonSegmentRow = styled.div`
     &:focus {
       box-shadow: 0 0 0 1px ${props => props.theme.bg.default},
         0 0 0 3px ${props => hexa(props.theme.brand.alt, 0.16)};
-    }
-  }
-
-  ${StyledSecondaryButton} {
-    &:focus {
-      box-shadow: 0 0 0 1px ${props => props.theme.bg.default},
-        0 0 0 3px ${props => hexa(props.theme.success.alt, 0.32)};
     }
   }
 `;

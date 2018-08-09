@@ -3,7 +3,6 @@ import * as React from 'react';
 import {
   StyledButton,
   StyledPrimaryButton,
-  StyledSecondaryButton,
   StyledDangerButton,
   StyledOutlineButton,
   StyledTextButton,
@@ -55,27 +54,6 @@ export class PrimaryButton extends React.Component<Props> {
       <StyledPrimaryButton disabled={disabled || loading} size={size} {...rest}>
         {children}
       </StyledPrimaryButton>
-    );
-  }
-}
-
-export class SecondaryButton extends React.Component<Props> {
-  render() {
-    const {
-      size = 'default',
-      disabled = false,
-      loading = false,
-      children,
-      ...rest
-    } = this.props;
-    return (
-      <StyledSecondaryButton
-        disabled={disabled || loading}
-        size={size}
-        {...rest}
-      >
-        {children}
-      </StyledSecondaryButton>
     );
   }
 }
