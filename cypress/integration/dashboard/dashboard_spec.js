@@ -8,7 +8,7 @@ const dashboardThreads = data.threads.filter(
   ({ deletedAt, channelId }) => !deletedAt && channelIds.includes(channelId)
 );
 
-describe('Inbox View', () => {
+describe('Dashboard View', () => {
   beforeEach(() => {
     cy.auth(user.id);
     cy.visit('/');
