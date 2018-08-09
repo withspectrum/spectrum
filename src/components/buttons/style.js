@@ -52,6 +52,10 @@ const base = css`
   box-shadow: ${props =>
     props.disabled ? 'none' : `0 1px 2px rgba(0,0,0,0.04)`};
 
+  .icon {
+    margin-right: 8px;
+  }
+
   &:disabled {
     cursor: not-allowed;
   }
@@ -207,12 +211,17 @@ export const StyledOutlineButton = styled.button`
 `;
 
 export const StyledIconButton = styled.button`
-  ${base} border: none;
+  ${base};
+  border: none;
   color: ${props => props.theme.text.secondary};
   background-color: transparent;
   background-image: none;
   box-shadow: none;
   padding: 0;
+
+  .icon {
+    margin-right: 0;
+  }
 
   &:hover {
     color: ${props => props.theme.text.default};
@@ -271,7 +280,7 @@ export const StyledButtonSegmentRow = styled.div`
   }
 
   button:not(:last-of-type) {
-    box-shadow: inset -1px 0 0 ${props => hexa(props.theme.bg.default, 0.12)};
+    border-right: 2px solid ${props => hexa(props.theme.bg.default, 0.12)};
   }
 
   ${StyledPrimaryButton} {
