@@ -493,7 +493,7 @@ const returnTooltip = props => {
   }
 };
 
-export const Tooltip = props => css`
+export const Tooltip = css`
   position: relative;
 
   &:after,
@@ -514,9 +514,11 @@ export const Tooltip = props => css`
   }
 
   &:after {
-    content: ${props.tipText && !props.onboarding
-      ? `'${CSS.escape(props.tipText)}'`
-      : "''"};
+    content: ${props =>
+      props.tipText && !props.onboarding
+        ? // $FlowFixMe
+          `'${CSS.escape(props.tipText)}'`
+        : "''"};
     z-index: ${zIndex.tooltip};
     ${fontStack};
     font-size: 14px;
@@ -528,12 +530,12 @@ export const Tooltip = props => css`
     text-overflow: ellipsis;
     padding: 8px 12px;
     border-radius: 8px;
-    box-shadow: ${Shadow.mid} ${hexa(props.theme.bg.reverse, 0.25)};
-    background: ${props.theme.bg.reverse};
-    color: ${props.theme.text.reverse};
+    box-shadow: ${Shadow.mid} ${props => hexa(props.theme.bg.reverse, 0.25)};
+    background: ${props => props.theme.bg.reverse};
+    color: ${props => props.theme.text.reverse};
   }
 
-  ${props.tipText && !props.onboarding ? returnTooltip(props) : ''};
+  ${props => (props.tipText && !props.onboarding ? returnTooltip(props) : '')};
 
   &:hover:after,
   &:hover:before {
@@ -549,7 +551,7 @@ export const Tooltip = props => css`
   }
 `;
 
-export const Onboarding = props => css`
+export const Onboarding = css`
   position: relative;
 
   &:after,
@@ -569,7 +571,7 @@ export const Onboarding = props => css`
   }
 
   &:after {
-    content: ${props.onboarding ? `'${props.onboarding}'` : "''"};
+    content: ${props => (props.onboarding ? `'${props.onboarding}'` : "''")};
     z-index: ${zIndex.tooltip};
     ${fontStack};
     text-align: left;
@@ -582,15 +584,15 @@ export const Onboarding = props => css`
     padding: 16px;
     padding-left: 20px;
     border-radius: 12px;
-    background-color: ${props.theme.bg.default};
-    background: ${props.theme.bg.default} url(/img/goopy-top.svg) center top
-      no-repeat;
+    background-color: ${props => props.theme.bg.default};
+    background: ${props => props.theme.bg.default} url(/img/goopy-top.svg)
+      center top no-repeat;
     background-size: 100%;
-    color: ${props.theme.text.default};
+    color: ${props => props.theme.text.default};
     box-shadow: 0 8px 32px rgba(23, 26, 33, 0.35);
   }
 
-  ${props.onboarding ? returnTooltip(props) : ''};
+  ${props => (props.onboarding ? returnTooltip(props) : '')};
 
   &:after,
   &:before {
