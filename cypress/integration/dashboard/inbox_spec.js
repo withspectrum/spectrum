@@ -12,26 +12,27 @@ const userCommunityToTest = data.communities.find(
   community => community.id === userCommunityIds[0]
 );
 
-const scrollAndLoadThreads = initialThreadCount => {
-  cy.get('[data-cy="inbox-thread-feed"]')
-    .get('#scroller-for-inbox')
-    .scrollTo('bottom');
-  return cy
-    .get('[data-cy="inbox-thread-item"]')
-    .should('have.length.greaterThan', initialThreadCount);
-};
-
-xdescribe('Inbox view', () => {
+describe('Inbox view', () => {
   beforeEach(() => {
     cy.auth(user.id);
     cy.visit('/');
   });
 
+  const scrollAndLoadThreads = initialThreadCount => {
+    cy.get('[data-cy="inbox-thread-feed"]')
+      .get('#scroller-for-inbox')
+      .scrollTo('bottom');
+
+    return cy
+      .get('[data-cy="inbox-thread-item"]')
+      .should('have.length.greaterThan', initialThreadCount);
+  };
+
   it('should render more threads as user scrolls to the bottom twice', () => {
     cy.get('[data-cy="inbox-thread-item"]')
       .then($threadViewList => {
         const initialThreadCount = $threadViewList.length;
-        // Assert that the mock data has enough threads for two scrolldowns
+        // Ensure that the user under test has access to enough threads for two scrolldowns
         expect(initialThreadCount * 3).to.be.lessThan(
           expectedVisibleThreadsForUser.length
         );
@@ -58,13 +59,9 @@ xdescribe('Inbox view', () => {
         `[data-cy="community-list-item-${userCommunityToTest.id}"]`
       ).click();
 
-      cy.get('[data-cy="header-community-title"]')
-        .invoke('text')
-        .should('eq', userCommunityToTest.name);
-
-      cy.get('[data-cy="channels-container"]')
-        .find('a')
-        .should('have.attr', 'href', `/${userCommunityToTest.slug}`);
+      cy.get('[data-cy="channels-container"]').find(
+        `a[href="/${userCommunityToTest.slug}"]`
+      );
     });
 
     it('should filter threads by community', () => {
@@ -84,13 +81,10 @@ xdescribe('Inbox view', () => {
           expect(communitySlugs.has(userCommunityToTest.slug)).to.be.true;
         });
 
-      // Click to filter down to community
-      cy.get(
-        `[data-cy="community-list-item-${userCommunityToTest.id}"]`
-      ).click();
-
-      // Wait until the filter is done loading
-      cy.get('[data-cy="header-community-title"]')
+      // Invoke the community filter
+      cy.get(`[data-cy="community-list-item-${userCommunityToTest.id}"]`)
+        .click()
+        .get('[data-cy="header-community-title"]')
         .invoke('text')
         .should('eq', userCommunityToTest.name);
 
@@ -122,7 +116,7 @@ xdescribe('Inbox view', () => {
       .map(thread => thread.id);
 
     it('should filter threads by channel within a community', () => {
-      // Filter by the community's threads
+      // Invoke the community filter
       cy.get(`[data-cy="community-list-item-${userCommunityToTest.id}"]`)
         .click()
         .get('[data-cy="header-community-title"]')
@@ -141,7 +135,7 @@ xdescribe('Inbox view', () => {
           expect(channelNames.has(userCommunityChannelToTest.name)).to.be.true;
         });
 
-      // Further filter by the channel
+      // Invoke the channel filter
       cy.get(
         `[data-cy="channel-list-item-${userCommunityChannelToTest.id}"]`
       ).click();
@@ -170,6 +164,7 @@ xdescribe('Inbox view', () => {
 
 describe('Inbox view, when logged in as owner of a community', () => {
   before(() => {
+    // Ensure user under test is owner of community under test
     expect(
       data.usersCommunities.filter(
         userCommunity =>
@@ -185,14 +180,9 @@ describe('Inbox view, when logged in as owner of a community', () => {
   });
 
   it('should have link to community settings when filtered', () => {
-    cy.get(`[data-cy="community-list-item-${userCommunityToTest.id}"]`).click();
-
-    cy.get('[data-cy="header-community-title"]')
-      .invoke('text')
-      .should('eq', userCommunityToTest.name);
-
-    cy.get('[data-cy="channels-container"]').find(
-      `a[href="/${userCommunityToTest.slug}/settings"]`
-    );
+    cy.get(`[data-cy="community-list-item-${userCommunityToTest.id}"]`)
+      .click()
+      .get('[data-cy="channels-container"]')
+      .find(`a[href="/${userCommunityToTest.slug}/settings"]`);
   });
 });
