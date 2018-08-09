@@ -40,41 +40,74 @@ describe('Inbox view', () => {
       });
   });
 
-  xdescribe('Filtering operations', () => {
+  describe('Filtering operations', () => {
     beforeEach(() => {
       cy.auth(user.id);
       cy.visit('/');
     });
 
     it('should filter threads by community', () => {
+      const userCommunityToTest = data.communities.find(
+        community => community.id === userCommunityIds[0]
+      );
+
       // Ensure more than one community's threads are visible initially
-      cy.get('[data-cy="inbox-thread-feed"]')
-        .get('[data-cy="meta-community-name"]')
-        .then($communityNameElements => {
-          const communityNames = new Set();
-          for (let i = 0; i < $communityNameElements.length; i++) {
-            communityNames.add($communityNameElements[i].text);
+      cy.get('[data-cy="inbox-thread-item"]')
+        .get('[data-cy="header-community-name"]')
+        .then(communityNameElements => {
+          const communitySlugs = new Set();
+          for (let i = 0; i < communityNameElements.length; i++) {
+            const hrefValue = communityNameElements[i].attributes.getNamedItem(
+              'href'
+            ).value;
+            const slug = hrefValue.split('/')[1];
+            communitySlugs.add(slug);
           }
-          expect(communityNames.size).to.be.greaterThan(1);
+          expect(communitySlugs.size).to.be.greaterThan(1);
+          expect(communitySlugs.has(userCommunityToTest.slug)).to.be.true;
         });
-      // Open the sidebar
-      // Perform the filter
-      // Close the filter bar
-      // Assert that we can only see the filtered community's threads
+
+      // Click to filter down to community
+      cy.get(
+        `[data-cy="community-list-item-${userCommunityToTest.id}"]`
+      ).click();
+
+      // Wait until the filter is done loading
+      cy.get('[data-cy="header-community-title"]')
+        .invoke('text')
+        .should('eq', userCommunityToTest.name);
+
+      // Ensure now only the one community's threads are visible
+      const threadIdsOfUserCommunityToTest = data.threads
+        .filter(thread => thread.communityId === userCommunityToTest.id)
+        .map(thread => thread.id);
+      cy.get('[data-cy="inbox-thread-feed"]')
+        .get('[data-cy="inbox-thread-link"]')
+        .then($anchors => {
+          const visibleThreadIds = [];
+          for (let i = 0; i < $anchors.length; i++) {
+            const anchorUrl = new URL($anchors[i]['href']);
+            const anchorThreadId = anchorUrl.searchParams.get('t');
+            visibleThreadIds.push(anchorThreadId);
+          }
+          const threadIdsFromOtherCommunities = visibleThreadIds.filter(
+            id => !threadIdsOfUserCommunityToTest.includes(id)
+          );
+          expect(threadIdsFromOtherCommunities.length).to.eq(0);
+        });
+    });
+
+    xit('should filter threads by channel within a community', () => {
       // TODO
     });
 
-    it('should filter threads by channel within a community', () => {
-      // TODO
-    });
-
-    it('should include a link to the filtered community', () => {
+    xit('should include a link to the filtered community', () => {
       // TODO
     });
   });
 });
 
-describe('Inbox view, when logged in as owner of a community', () => {
+xdescribe('Inbox view, when logged in as owner of a community', () => {
   beforeEach(() => {
     // cy.auth(ownerUser.id);
     cy.visit('/');

@@ -72,7 +72,7 @@ class InboxThread extends React.Component<Props> {
 
     return (
       <ErrorBoundary fallbackComponent={null}>
-        <InboxThreadItem active={active} data-cy={'inbox-thread-item'}>
+        <InboxThreadItem active={active} data-cy="inbox-thread-item">
           <InboxLinkWrapper
             to={{
               pathname: location.pathname,
@@ -82,6 +82,7 @@ class InboxThread extends React.Component<Props> {
               isDesktopInbox &&
               this.props.dispatch(changeActiveThread(thread.id))
             }
+            data-cy="inbox-thread-link"
           />
 
           <InboxThreadContent>
@@ -109,7 +110,11 @@ class InboxThread extends React.Component<Props> {
                 />
               </ErrorBoundary>
 
-              <ThreadTitle active={active} new={newMessagesSinceLastViewed}>
+              <ThreadTitle
+                active={active}
+                new={newMessagesSinceLastViewed}
+                data-cy="thread-title"
+              >
                 {truncate(thread.content.title, 80)}
               </ThreadTitle>
 

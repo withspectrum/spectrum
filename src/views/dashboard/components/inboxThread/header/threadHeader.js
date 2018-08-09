@@ -77,7 +77,11 @@ class Header extends React.Component<HeaderProps> {
               viewContext !== 'communityProfile' &&
               viewContext !== 'communityInbox' && (
                 <CommunityHoverProfile id={community.id}>
-                  <MetaSubtitle active={active} to={`/${community.slug}`}>
+                  <MetaSubtitle
+                    active={active}
+                    to={`/${community.slug}`}
+                    data-cy="header-community-name"
+                  >
                     {community.name}
                     <Divider>·</Divider>
                   </MetaSubtitle>

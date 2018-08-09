@@ -61,7 +61,7 @@ class Header extends React.Component<Props> {
       return (
         <ContextHeaderContainer>
           <Link to={`/${activeCommunityObject.slug}`}>
-            <HeaderActiveViewTitle>
+            <HeaderActiveViewTitle data-cy="header-community-title">
               {activeCommunityObject.name}
             </HeaderActiveViewTitle>
           </Link>
