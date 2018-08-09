@@ -7,12 +7,14 @@ const {
   MAX_ID,
   BRYN_ID,
   SPECTRUM_GENERAL_CHANNEL_ID,
+  PAYMENTS_GENERAL_CHANNEL_ID,
   PRIVATE_GENERAL_CHANNEL_ID,
   SPECTRUM_PRIVATE_CHANNEL_ID,
   DELETED_COMMUNITY_DELETED_CHANNEL_ID,
   MODERATOR_CREATED_CHANNEL_ID,
   DELETED_COMMUNITY_ID,
   SPECTRUM_COMMUNITY_ID,
+  PAYMENTS_COMMUNITY_ID,
   PRIVATE_COMMUNITY_ID,
   SPECTRUM_ARCHIVED_CHANNEL_ID,
 } = constants;
@@ -414,6 +416,25 @@ const threads = [
     ],
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
+  },
+
+  {
+    id: 'thread-14',
+    createdAt: new Date(DATE),
+    creatorId: BRIAN_ID,
+    channelId: PAYMENTS_GENERAL_CHANNEL_ID,
+    communityId: PAYMENTS_COMMUNITY_ID,
+    isPublished: true,
+    isLocked: false,
+    type: 'DRAFTJS',
+    content: {
+      title: 'First thread in this channel',
+      body: JSON.stringify(toJSON(fromPlainText('This is just a thread'))),
+    },
+    attachments: [],
+    edits: [],
+    modifiedAt: new Date(DATE),
+    lastActive: new Date(DATE),
   },
 ];
 

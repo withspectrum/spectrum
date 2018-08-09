@@ -1,21 +1,53 @@
 import data from '../../../shared/testing/data';
 
-const user = data.users[0];
-const userCommunityIds = data.usersCommunities
-  .filter(({ userId }) => user.id === userId)
-  .map(({ communityId }) => communityId);
-const expectedVisibleThreadsForUser = data.threads.filter(
-  ({ communityId, isPublished }) =>
-    userCommunityIds.includes(communityId) && isPublished
-);
-const userCommunityToTest = data.communities.find(
-  community => community.id === userCommunityIds[0]
-);
+const getUserCommunityIds = targetUserId =>
+  data.usersCommunities
+    .filter(({ userId }) => targetUserId === userId)
+    .map(({ communityId }) => communityId);
 
-describe('Inbox view', () => {
+const getVisibleThreads = userCommunityIds =>
+  data.threads.filter(
+    ({ communityId, isPublished }) =>
+      userCommunityIds.includes(communityId) && isPublished
+  );
+
+const getCommunity = communityId =>
+  data.communities.find(community => community.id === communityId);
+
+describe('Inbox view, when logged in as owner of a community', () => {
+  const user = data.users[0]; // Must be owner of userCommunityToTest
+  const userCommunityIds = getUserCommunityIds(user.id);
+  const userCommunityToTest = getCommunity(userCommunityIds[0]);
+
   beforeEach(() => {
     cy.auth(user.id);
     cy.visit('/');
+  });
+
+  it('should have link to community settings when filtered', () => {
+    cy.get(`[data-cy="community-list-item-${userCommunityToTest.id}"]`)
+      .click()
+      .get('[data-cy="channels-container"]')
+      .find(`a[href="/${userCommunityToTest.slug}/settings"]`);
+  });
+});
+
+describe('Inbox view', () => {
+  const user = data.users[1]; // Must not be owner of userCommunityToTest
+  const userCommunityIds = getUserCommunityIds(user.id);
+  const expectedVisibleThreadsForUser = getVisibleThreads(userCommunityIds);
+  const userCommunityToTest = getCommunity(userCommunityIds[0]);
+
+  beforeEach(() => {
+    cy.auth(user.id);
+    cy.visit('/');
+  });
+
+  it('should NOT have link to community settings when filtered', () => {
+    cy.get(`[data-cy="community-list-item-${userCommunityToTest.id}"]`)
+      .click()
+      .get('[data-cy="channels-container"]')
+      .not(`a[href="/${userCommunityToTest.slug}/settings"]`);
   });
 
   const scrollAndLoadThreads = initialThreadCount => {
@@ -159,30 +191,5 @@ describe('Inbox view', () => {
           expect(threadIdsFromOtherChannels.length).to.eq(0);
         });
     });
-  });
-});
-
-describe('Inbox view, when logged in as owner of a community', () => {
-  before(() => {
-    // Ensure user under test is owner of community under test
-    expect(
-      data.usersCommunities.filter(
-        userCommunity =>
-          userCommunity.communityId === userCommunityToTest.id &&
-          userCommunity.userId === user.id
-      )[0].isOwner
-    ).to.be.true;
-  });
-
-  beforeEach(() => {
-    cy.auth(user.id);
-    cy.visit('/');
-  });
-
-  it('should have link to community settings when filtered', () => {
-    cy.get(`[data-cy="community-list-item-${userCommunityToTest.id}"]`)
-      .click()
-      .get('[data-cy="channels-container"]')
-      .find(`a[href="/${userCommunityToTest.slug}/settings"]`);
   });
 });
