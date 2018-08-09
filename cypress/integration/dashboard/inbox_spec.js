@@ -24,7 +24,7 @@ describe('Inbox view', () => {
     cy.visit('/');
   });
 
-  it('should render more threads as user scrolls to the bottom twice', () => {
+  xit('should render more threads as user scrolls to the bottom twice', () => {
     cy.get('[data-cy="inbox-thread-item"]')
       .then($threadViewList => {
         const initialThreadCount = $threadViewList.length;
@@ -54,8 +54,18 @@ describe('Inbox view', () => {
       .filter(thread => thread.communityId === userCommunityToTest.id)
       .map(thread => thread.id);
 
-    xit('should include a link to the filtered community', () => {
-      // TODO
+    it('should include a link to the filtered community', () => {
+      cy.get(
+        `[data-cy="community-list-item-${userCommunityToTest.id}"]`
+      ).click();
+
+      cy.get('[data-cy="header-community-title"]')
+        .invoke('text')
+        .should('eq', userCommunityToTest.name);
+
+      cy.get('[data-cy="channels-container"]')
+        .find('a')
+        .should('have.attr', 'href', `/${userCommunityToTest.slug}`);
     });
 
     xit('should filter threads by community', () => {
@@ -112,7 +122,7 @@ describe('Inbox view', () => {
       .filter(thread => thread.channelId === userCommunityChannelToTest.id)
       .map(thread => thread.id);
 
-    it('should filter threads by channel within a community', () => {
+    xit('should filter threads by channel within a community', () => {
       // Filter by the community's threads
       cy.get(`[data-cy="community-list-item-${userCommunityToTest.id}"]`)
         .click()

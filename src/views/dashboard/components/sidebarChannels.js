@@ -97,7 +97,10 @@ class SidebarChannels extends React.Component<Props> {
       const sortedChannels = sortByTitle(channels);
 
       return (
-        <ChannelsContainer className={'channelsContainer'}>
+        <ChannelsContainer
+          className={'channelsContainer'}
+          data-cy="channels-container"
+        >
           <Link to={`/${community.slug}`}>
             <ChannelListItem>
               <Icon glyph={'link'} size={24} />
@@ -186,7 +189,10 @@ class SidebarChannels extends React.Component<Props> {
 
     if (isLoading || queryVarIsChanging) {
       return (
-        <ChannelsContainer className={'channelsContainer'}>
+        <ChannelsContainer
+          className={'channelsContainer'}
+          data-cy="channels-container"
+        >
           <Link to={`/${slug}`}>
             <ChannelListItem>
               <Icon glyph={'link'} size={24} />
