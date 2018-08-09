@@ -70,6 +70,57 @@ export default class Buttons extends React.Component<{}> {
 
         <div style={{ height: '40px' }} />
 
+        <ButtonRow>
+          <Button loading>Loading Button</Button>
+
+          <PrimaryButton loading>Loading Primary Button</PrimaryButton>
+
+          <SecondaryButton loading>Loading Secondary Button</SecondaryButton>
+
+          <TextButton loading>Loading Text Button</TextButton>
+
+          <OutlineButton loading>Loading Outline Button</OutlineButton>
+
+          <IconButton loading>
+            <Icon glyph="thumbsup" size={32} />
+          </IconButton>
+        </ButtonRow>
+
+        <div style={{ height: '40px' }} />
+
+        <ButtonRow>
+          <Button>
+            <Icon glyph="message-new" size={24} />
+            Button
+          </Button>
+
+          <PrimaryButton>
+            <Icon glyph="message-new" size={24} />
+            Primary Button
+          </PrimaryButton>
+
+          <SecondaryButton>
+            <Icon glyph="message-new" size={24} />
+            Secondary Button
+          </SecondaryButton>
+
+          <TextButton>
+            <Icon glyph="message-new" size={24} />
+            Text Button
+          </TextButton>
+
+          <OutlineButton>
+            <Icon glyph="message-new" size={24} />
+            Outline Button
+          </OutlineButton>
+
+          <IconButton>
+            <Icon glyph="message-new" size={32} />
+          </IconButton>
+        </ButtonRow>
+
+        <div style={{ height: '40px' }} />
+
         <ButtonSegmentRow>
           <Button>Button</Button>
           <Button>Button</Button>
