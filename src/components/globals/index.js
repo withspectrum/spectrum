@@ -529,7 +529,7 @@ export const Tooltip = css`
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 8px 12px;
-    border-radius: 8px;
+    border-radius: 4px;
     box-shadow: ${Shadow.mid} ${props => hexa(props.theme.bg.reverse, 0.25)};
     background: ${props => props.theme.bg.reverse};
     color: ${props => props.theme.text.reverse};
@@ -537,11 +537,14 @@ export const Tooltip = css`
 
   ${props => (props.tipText && !props.onboarding ? returnTooltip(props) : '')};
 
-  &:hover:after,
-  &:hover:before {
-    opacity: 1;
-    transition: opacity 0.1s ease-in 0.1s;
-  }
+  ${props =>
+    props.tipText &&
+    css`
+      &:hover:after,
+      &:hover:before {
+        opacity: 1;
+      }
+    `};
 
   @media (max-width: 768px) {
     &:after,

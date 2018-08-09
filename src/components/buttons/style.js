@@ -1,6 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { Shadow, hexa, tint } from '../globals';
+import { Shadow, hexa, tint, Tooltip } from '../globals';
 import type { Size } from './';
 
 const getPadding = (size: Size) => {
@@ -51,6 +51,8 @@ const base = css`
   box-shadow: ${props =>
     props.disabled ? 'none' : `0 1px 2px rgba(0,0,0,0.04)`};
   transition: box-shadow 0.2s ease-in-out;
+
+  ${Tooltip};
 
   .icon {
     margin-right: 8px;
@@ -241,7 +243,9 @@ export const StyledIconButton = styled.button`
   ${base};
   border: none;
   color: ${props =>
-    props.color ? props.color(props.theme) : props.theme.text.secondary};
+    props.iconColor
+      ? props.iconColor(props.theme)
+      : props.theme.text.secondary};
   background-color: transparent;
   background-image: none;
   box-shadow: none;
@@ -253,8 +257,8 @@ export const StyledIconButton = styled.button`
 
   &:hover {
     color: ${props =>
-      props.hoverColor
-        ? props.hoverColor(props.theme)
+      props.iconHoverColor
+        ? props.iconHoverColor(props.theme)
         : props.theme.text.default};
     box-shadow: none;
   }

@@ -34,10 +34,46 @@ export default class Buttons extends React.Component<{}> {
             <Icon glyph="thumbsup" size={32} />
           </IconButton>
 
+          <IconButton>
+            <Icon glyph="thumbsup" size={32} />
+          </IconButton>
+
           <IconButton
             color={theme => theme.warn.alt}
             hoverColor={theme => theme.brand.default}
           >
+            <Icon glyph="thumbsup" size={32} />
+          </IconButton>
+        </ButtonRow>
+
+        <div style={{ height: '40px' }} />
+
+        <ButtonRow>
+          <Button tipText={'With a tooltip!'} tipLocation={'top'}>
+            Button Tooltip
+          </Button>
+
+          <PrimaryButton tipText={'With a tooltip!'} tipLocation={'top-right'}>
+            Primary Button Tooltip
+          </PrimaryButton>
+
+          <SecondaryButton tipText={'With a tooltip!'} tipLocation={'top-left'}>
+            Secondary Button Tooltip
+          </SecondaryButton>
+
+          <DangerButton tipText={'With a tooltip!'} tipLocation={'left'}>
+            Danger Button Tooltip
+          </DangerButton>
+
+          <TextButton tipText={'With a tooltip!'} tipLocation={'bottom-left'}>
+            Text Button Tooltip
+          </TextButton>
+
+          <OutlineButton tipText={'With a tooltip!'} tipLocation={'bottom'}>
+            Outline Button Tooltip
+          </OutlineButton>
+
+          <IconButton tipText={'With a tooltip!'} tipLocation={'bottom-right'}>
             <Icon glyph="thumbsup" size={32} />
           </IconButton>
         </ButtonRow>

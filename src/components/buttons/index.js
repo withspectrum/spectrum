@@ -142,8 +142,8 @@ export class IconButton extends React.Component<Props> {
     } = this.props;
     return (
       <StyledIconButton
-        color={color}
-        hoverColor={hoverColor}
+        iconColor={color}
+        iconHoverColor={hoverColor}
         disabled={disabled || loading}
         size={size}
         {...rest}
