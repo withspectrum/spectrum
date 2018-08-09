@@ -29,6 +29,7 @@ import {
   __createCommunityMemberCountLoader,
   __createCommunityChannelCountLoader,
   __createCommunitySettingsLoader,
+  __createCommunityOnlineMemberCountLoader,
 } from './community';
 import {
   __createDirectMessageThreadLoader,
@@ -71,6 +72,7 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   stripeCustomers: __createStripeCustomersLoader(options),
   communityChannelCount: __createCommunityChannelCountLoader(options),
   communityMemberCount: __createCommunityMemberCountLoader(options),
+  communityOnlineMemberCount: __createCommunityOnlineMemberCountLoader(options),
   communitySettings: __createCommunitySettingsLoader(options),
   directMessageThread: __createDirectMessageThreadLoader(options),
   directMessageParticipants: __createDirectMessageParticipantsLoader(options),

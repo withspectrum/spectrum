@@ -35,12 +35,16 @@ export const Absolute = styled.div`
   min-height: 100%;
   z-index: 1;
 
-  > button {
+  button {
     color: ${props => props.theme.text.reverse};
     z-index: 2;
     align-self: flex-start;
     margin-top: ${props => (props.hasNavBar ? '56px' : '8px')};
     margin-left: 8px;
+  }
+
+  button:hover {
+    color: ${props => props.theme.text.reverse};
   }
 `;
 
@@ -53,8 +57,7 @@ export const MenuContainer = styled.div`
   left: 0;
   top: 0;
   bottom: 0;
-  height: ${props =>
-    props.hasTabBar ? (isDesktopApp() ? '100%' : 'calc(100% - 48px)') : '100%'};
+  height: 100%;
   width: 300px;
   color: ${props => props.theme.brand.alt};
   background-color: ${props => props.theme.bg.wash};

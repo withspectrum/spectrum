@@ -1597,6 +1597,13 @@ buffer@^5.0.3:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
 
+buffer@^5.1.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.2.0.tgz#53cf98241100099e9eeae20ee6d51d21b16e541e"
+  dependencies:
+    base64-js "^1.0.2"
+    ieee754 "^1.1.4"
+
 buffers@~0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/buffers/-/buffers-0.1.1.tgz#b24579c3bed4d6d396aeee6d9a8ae7f5482ab7bb"
@@ -2049,6 +2056,12 @@ cors@^2.8.3:
 crc@3.4.4:
   version "3.4.4"
   resolved "https://registry.yarnpkg.com/crc/-/crc-3.4.4.tgz#9da1e980e3bd44fc5c93bf5ab3da3378d85e466b"
+
+crc@^3.5.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/crc/-/crc-3.8.0.tgz#ad60269c2c856f8c299e2c4cc0de4556914056c6"
+  dependencies:
+    buffer "^5.1.0"
 
 create-ecdh@^4.0.0:
   version "4.0.0"
@@ -3850,10 +3863,11 @@ ignore-by-default@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ignore-by-default/-/ignore-by-default-1.0.1.tgz#48ca6d72f6c6a3af00a9ad4ae6876be3889e2b09"
 
-imgix-core-js@^1.0.6:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/imgix-core-js/-/imgix-core-js-1.1.1.tgz#892bc1659738878cacd4b8feb5dc9e9d91e9f837"
+imgix-core-js@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/imgix-core-js/-/imgix-core-js-1.2.0.tgz#72163ebd312b25cdae077340d13cf94dc09327f2"
   dependencies:
+    crc "^3.5.0"
     js-base64 "^2.1.9"
     md5 "^2.2.1"
 
@@ -6588,9 +6602,9 @@ rethinkdb-inspector@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/rethinkdb-inspector/-/rethinkdb-inspector-0.3.3.tgz#f0d88c66d17e0234b5518ca51cd8c272cb787003"
 
-rethinkdb-migrate@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/rethinkdb-migrate/-/rethinkdb-migrate-1.3.0.tgz#0067cb7160ebef4f0d8e7732953e354940fa3e8c"
+rethinkdb-migrate@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/rethinkdb-migrate/-/rethinkdb-migrate-1.4.0.tgz#7a019148d73e6f7a8f4366550557e43e3dafed4c"
   dependencies:
     fs-extra "^5.0.0"
     joi "^13.1.2"

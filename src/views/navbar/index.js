@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import queryString from 'query-string';
 import Icon from '../../components/icons';
-import { ProfileDropdown } from './components/profileDropdown';
+import ProfileDropdown from './components/profileDropdown';
 import MessagesTab from './components/messagesTab';
 import NotificationsTab from './components/notificationsTab';
 import Head from '../../components/head';
@@ -21,6 +21,7 @@ import {
   Label,
   Navatar,
   SkipLink,
+  SigninLink,
 } from './style';
 import { track, events } from 'src/helpers/analytics';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
@@ -304,6 +305,7 @@ class Navbar extends React.Component<Props, State> {
             <Icon glyph="payment" />
             <Label>Pricing</Label>
           </PricingTab>
+          <SigninLink to="/login">Sign In</SigninLink>
         </Nav>
       );
     }

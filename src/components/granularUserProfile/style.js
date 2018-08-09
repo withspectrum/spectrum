@@ -21,7 +21,6 @@ export const Row = styled.div`
       ? `'avatar name message' 'action action action' '. description .'`
       : `'avatar name action' '. description .'`};
   grid-column-gap: 16px;
-  grid-row-gap: 8px;
   padding: 12px 16px;
   width: 100%;
   background: ${props => props.theme.bg.default};
@@ -58,6 +57,7 @@ export const Name = styled.span`
   line-height: 1;
   vertical-align: middle;
   display: flex;
+  align-items: flex-end;
 
   &:hover {
     color: ${props => props.theme.brand.alt};

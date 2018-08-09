@@ -107,7 +107,7 @@ class GranularUserProfile extends React.Component<Props> {
             user={userObject}
             size={avatarSize || 32}
             onlineSize={onlineSize || 'small'}
-            showHoverProfile={showHoverProfile}
+            showHoverProfile={!showHoverProfile}
           />
         )}
         <LinkHandler username={userObject.username}>
@@ -139,4 +139,7 @@ class GranularUserProfile extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), withRouter)(GranularUserProfileHandler);
+export default compose(
+  connect(),
+  withRouter
+)(GranularUserProfileHandler);

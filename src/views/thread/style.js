@@ -1,9 +1,9 @@
 // @flow
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
-import { UserAvatar, CommunityAvatar } from '../../components/avatar';
-import { Button } from '../../components/buttons';
-import Column from '../../components/column';
+import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
+import { Button } from 'src/components/buttons';
+import Column from 'src/components/column';
 import {
   FlexCol,
   FlexRow,
@@ -14,7 +14,7 @@ import {
   Tooltip,
   Shadow,
   hexa,
-} from '../../components/globals';
+} from 'src/components/globals';
 
 export const ThreadViewContainer = styled.div`
   display: flex;
@@ -161,6 +161,28 @@ export const ThreadHeading = styled(H1)`
 
   @media (max-width: 768px) {
     margin-top: 8px;
+  }
+`;
+
+export const A = styled.a`
+  display: flex;
+`;
+
+export const SocialShareWrapper = styled(FlexRow)`
+  justify-content: space-between;
+  margin-top: 20px;
+
+  ${A}:first-child {
+    margin-right: 20px;
+  }
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+
+    ${A}:first-child {
+      margin-right: 0;
+      margin-bottom: 8px;
+    }
   }
 `;
 
@@ -353,7 +375,7 @@ export const NullMessagesWrapper = styled.div`
   flex-direction: column;
   opacity: 0.8;
 
-  .icon {
+  > .icon {
     opacity: 0.4;
   }
 `;
