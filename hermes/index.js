@@ -27,6 +27,8 @@ import processSendAdminActiveCommunityReportEmail from './queues/send-admin-acti
 import processSendRequestJoinPrivateChannelEmail from './queues/send-private-channel-request-sent-email';
 import processSendPrivateChannelRequestApprovedEmail from './queues/send-private-channel-request-approved-email';
 import processSendNewModeratorEmail from './queues/send-new-moderator-email';
+import processSendRequestJoinPrivateCommunityEmail from './queues/send-private-community-request-sent-email';
+import processSendPrivateCommunityRequestApprovedEmail from './queues/send-private-community-request-approved-email';
 
 import {
   SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL,
@@ -53,6 +55,8 @@ import {
   SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
   SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
   SEND_NEW_MODERATOR_WELCOME_EMAIL,
+  SEND_PRIVATE_COMMUNITY_REQUEST_SENT_EMAIL,
+  SEND_PRIVATE_COMMUNITY_REQUEST_APPROVED_EMAIL,
 } from './queues/constants';
 
 const PORT = process.env.PORT || 3002;
@@ -88,6 +92,8 @@ const server = createWorker({
   [SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL]: processSendRequestJoinPrivateChannelEmail,
   [SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL]: processSendPrivateChannelRequestApprovedEmail,
   [SEND_NEW_MODERATOR_WELCOME_EMAIL]: processSendNewModeratorEmail,
+  [SEND_PRIVATE_COMMUNITY_REQUEST_SENT_EMAIL]: processSendRequestJoinPrivateCommunityEmail,
+  [SEND_PRIVATE_COMMUNITY_REQUEST_APPROVED_EMAIL]: processSendPrivateCommunityRequestApprovedEmail,
 });
 
 debug(

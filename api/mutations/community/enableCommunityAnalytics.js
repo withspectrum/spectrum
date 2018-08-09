@@ -2,32 +2,33 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { updateCommunityPaidFeature } from '../../models/community';
-import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateCommunity,
+} from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
-export default async (
-  _: any,
-  { input: { communityId } }: { input: { communityId: string } },
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+type Input = {
+  input: {
+    communityId: string,
+  },
+};
 
-  if (!currentUser) {
-    return new UserError('You must be signed in to manage this community');
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { communityId } = args.input;
+  const { user, loaders } = ctx;
 
-  if (!communityId) {
-    return new UserError('No communityId found');
-  }
+  if (!await canModerateCommunity(user.id, communityId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.COMMUNITY_ANALYTICS_ENABLED_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
 
-  const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
-    communityId,
-    currentUser.id
-  );
-
-  if (
-    !currentUserCommunityPermissions.isOwner &&
-    !currentUserCommunityPermissions.isModerator
-  ) {
     return new UserError(
       'You must own or moderate this community to enable analytics'
     );
@@ -36,8 +37,7 @@ export default async (
   return await updateCommunityPaidFeature(
     communityId,
     'analyticsEnabled',
-    true
-  ).catch(err => {
-    return new UserError('We had trouble saving your card', err.message);
-  });
-};
+    true,
+    user.id
+  );
+});

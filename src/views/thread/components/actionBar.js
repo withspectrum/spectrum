@@ -2,15 +2,21 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Clipboard from 'react-clipboard.js';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { openModal } from '../../../actions/modals';
-import Icon from '../../../components/icons';
+import { Manager, Reference, Popper } from 'react-popper';
+import { CLIENT_URL } from 'src/api/constants';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { openModal } from 'src/actions/modals';
+import Icon from 'src/components/icons';
 import compose from 'recompose/compose';
-import { Button, TextButton, IconButton } from '../../../components/buttons';
-import Flyout from '../../../components/flyout';
-import { track } from '../../../helpers/events';
+import { Button, TextButton, IconButton } from 'src/components/buttons';
+import Flyout from 'src/components/flyout';
+import { LikeButton } from 'src/components/threadLikes';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
+import OutsideClickHandler from 'src/components/outsideClickHandler';
+import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
+
 import {
   FollowButton,
   ShareButtons,
@@ -26,7 +32,7 @@ type Props = {
   thread: GetThreadType,
   currentUser: Object,
   isEditing: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   toggleThreadNotifications: Function,
   toggleEdit: Function,
   saveEdit: Function,
@@ -42,11 +48,19 @@ type Props = {
 type State = {
   notificationStateLoading: boolean,
   flyoutOpen: boolean,
+  isSettingsBtnHovering: boolean,
 };
 class ActionBar extends React.Component<Props, State> {
   state = {
     notificationStateLoading: false,
     flyoutOpen: false,
+    isSettingsBtnHovering: false,
+  };
+
+  toggleHover = () => {
+    this.setState(({ isSettingsBtnHovering }) => ({
+      isSettingsBtnHovering: !isSettingsBtnHovering,
+    }));
   };
 
   toggleFlyout = val => {
@@ -63,6 +77,13 @@ class ActionBar extends React.Component<Props, State> {
 
   triggerChangeChannel = () => {
     const { thread, dispatch } = this.props;
+
+    track(events.THREAD_MOVED_INITED, {
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
+    });
+
     dispatch(openModal('CHANGE_CHANNEL', { thread }));
   };
 
@@ -83,12 +104,10 @@ class ActionBar extends React.Component<Props, State> {
         });
 
         if (toggleThreadNotifications.receiveNotifications) {
-          track('thread', 'notifications turned on', null);
           return dispatch(
             addToastWithTimeout('success', 'Notifications activated!')
           );
         } else {
-          track('thread', 'notifications turned off', null);
           return dispatch(
             addToastWithTimeout('neutral', 'Notifications turned off')
           );
@@ -216,7 +235,11 @@ class ActionBar extends React.Component<Props, State> {
       isLockingThread,
       isPinningThread,
     } = this.props;
-    const { notificationStateLoading, flyoutOpen } = this.state;
+    const {
+      notificationStateLoading,
+      flyoutOpen,
+      isSettingsBtnHovering,
+    } = this.state;
     const isPinned = thread.community.pinnedThreadId === thread.id;
 
     const shouldRenderActionsDropdown = this.shouldRenderActionsDropdown();
@@ -251,78 +274,87 @@ class ActionBar extends React.Component<Props, State> {
       return (
         <ActionBarContainer>
           <div style={{ display: 'flex' }}>
-            {currentUser ? (
-              <FollowButton
-                currentUser={currentUser}
-                icon={
-                  thread.receiveNotifications
-                    ? 'notification-fill'
-                    : 'notification'
-                }
-                tipText={
-                  thread.receiveNotifications
-                    ? 'Turn off notifications'
-                    : 'Get notified about replies'
-                }
-                tipLocation={'top-right'}
-                loading={notificationStateLoading}
-                onClick={this.toggleNotification}
-                dataCy="thread-notifications-toggle"
-              >
-                {thread.receiveNotifications ? 'Subscribed' : 'Notify me'}
-              </FollowButton>
-            ) : (
-              <FollowButton
-                currentUser={currentUser}
-                icon={'notification'}
-                tipText={'Get notified about replies'}
-                tipLocation={'top-right'}
-                dataCy="thread-notifications-login-capture"
-                onClick={() =>
-                  this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}))
-                }
-              >
-                Notify me
-              </FollowButton>
-            )}
+            <LikeButton thread={thread} tipLocation={'bottom-right'} />
+
             {!thread.channel.isPrivate && (
               <ShareButtons>
                 <ShareButton
                   facebook
                   tipText={'Share'}
-                  tipLocation={'top-left'}
+                  tipLocation={'bottom-right'}
                   data-cy="thread-facebook-button"
                 >
                   <a
-                    href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${
-                      thread.id
-                    }&t=${thread.content.title}`}
+                    href={`https://www.facebook.com/sharer/sharer.php?t=${encodeURIComponent(
+                      thread.content.title
+                    )}&u=https://spectrum.chat/thread/${thread.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Icon glyph={'facebook'} size={24} />
+                    <Icon
+                      glyph={'facebook'}
+                      size={24}
+                      onClick={() =>
+                        track(events.THREAD_SHARED, { method: 'facebook' })
+                      }
+                    />
                   </a>
                 </ShareButton>
 
                 <ShareButton
                   twitter
                   tipText={'Tweet'}
-                  tipLocation={'top-left'}
+                  tipLocation={'bottom-right'}
                   data-cy="thread-tweet-button"
                 >
                   <a
-                    href={`https://twitter.com/share?text=${
-                      thread.content.title
-                    } on @withspectrum&url=https://spectrum.chat/thread/${
+                    href={`https://twitter.com/share?url=https://spectrum.chat/thread/${
                       thread.id
-                    }`}
+                    }&text=${encodeURIComponent(
+                      thread.content.title
+                    )} on @withspectrum`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Icon glyph={'twitter'} size={24} />
+                    <Icon
+                      glyph={'twitter'}
+                      size={24}
+                      onClick={() =>
+                        track(events.THREAD_SHARED, { method: 'twitter' })
+                      }
+                    />
                   </a>
                 </ShareButton>
 
+                <Clipboard
+                  style={{ background: 'none' }}
+                  data-clipboard-text={`${CLIENT_URL}/thread/${thread.id}`}
+                  onSuccess={() =>
+                    this.props.dispatch(
+                      addToastWithTimeout('success', 'Copied to clipboard')
+                    )
+                  }
+                >
+                  <ShareButton
+                    tipText={'Copy link'}
+                    tipLocation={'bottom-right'}
+                    data-cy="thread-copy-link-button"
+                  >
+                    <a>
+                      <Icon
+                        glyph={'link'}
+                        size={24}
+                        onClick={() =>
+                          track(events.THREAD_SHARED, { method: 'link' })
+                        }
+                      />
+                    </a>
+                  </ShareButton>
+                </Clipboard>
+              </ShareButtons>
+            )}
+            {thread.channel.isPrivate && (
+              <ShareButtons>
                 <Clipboard
                   style={{ background: 'none' }}
                   data-clipboard-text={`https://spectrum.chat/thread/${
@@ -336,11 +368,17 @@ class ActionBar extends React.Component<Props, State> {
                 >
                   <ShareButton
                     tipText={'Copy link'}
-                    tipLocation={'top-left'}
+                    tipLocation={'bottom-right'}
                     data-cy="thread-copy-link-button"
                   >
                     <a>
-                      <Icon glyph={'link'} size={24} />
+                      <Icon
+                        glyph={'link'}
+                        size={24}
+                        onClick={() =>
+                          track(events.THREAD_SHARED, { method: 'link' })
+                        }
+                      />
                     </a>
                   </ShareButton>
                 </Clipboard>
@@ -348,131 +386,186 @@ class ActionBar extends React.Component<Props, State> {
             )}
           </div>
 
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {currentUser ? (
+              <FollowButton
+                currentUser={currentUser}
+                icon={
+                  thread.receiveNotifications
+                    ? 'notification-fill'
+                    : 'notification'
+                }
+                loading={notificationStateLoading}
+                onClick={this.toggleNotification}
+                dataCy="thread-notifications-toggle"
+              >
+                {thread.receiveNotifications ? 'Subscribed' : 'Notify me'}
+              </FollowButton>
+            ) : (
+              <FollowButton
+                currentUser={currentUser}
+                icon={'notification'}
+                dataCy="thread-notifications-login-capture"
+                onClick={() =>
+                  this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}))
+                }
+              >
+                Notify me
+              </FollowButton>
+            )}
+
             {shouldRenderActionsDropdown && (
-              <DropWrap className={flyoutOpen ? 'open' : ''}>
-                <IconButton
-                  glyph="settings"
-                  tipText={'Thread settings'}
-                  tipLocation={'top-left'}
-                  onClick={this.toggleFlyout}
-                  dataCy="thread-actions-dropdown-trigger"
-                />
-                <Flyout data-cy="thread-actions-dropdown">
-                  <FlyoutRow hideAbove={768}>
-                    <TextButton
-                      icon={
-                        thread.receiveNotifications
-                          ? 'notification-fill'
-                          : 'notification'
-                      }
-                      hoverColor={'brand.alt'}
-                      onClick={this.toggleNotification}
-                      dataCy={'thread-dropdown-notifications'}
-                    >
-                      {thread.receiveNotifications ? 'Subscribed' : 'Notify me'}
-                    </TextButton>
-                  </FlyoutRow>
-
-                  {shouldRenderEditThreadAction && (
-                    <FlyoutRow>
-                      <TextButton
-                        icon="edit"
-                        onClick={this.props.toggleEdit}
-                        hoverColor={'space.default'}
-                        dataCy={'thread-dropdown-edit'}
+              <DropWrap
+                onMouseEnter={this.toggleHover}
+                onMouseLeave={this.toggleHover}
+                style={{ marginRight: '8px' }}
+              >
+                <Manager>
+                  <Reference>
+                    {({ ref }) => {
+                      return (
+                        <IconButton
+                          glyph="settings"
+                          onClick={this.toggleFlyout}
+                          dataCy="thread-actions-dropdown-trigger"
+                          innerRef={ref}
+                        />
+                      );
+                    }}
+                  </Reference>
+                  {(isSettingsBtnHovering || flyoutOpen) && (
+                    <OutsideClickHandler onOutsideClick={this.toggleFlyout}>
+                      <Popper
+                        placement="bottom-end"
+                        modifiers={{
+                          preventOverflow: { enabled: true },
+                          flip: {
+                            boundariesElement: 'scrollParent',
+                            behavior: ['top', 'bottom', 'top'],
+                          },
+                          hide: { enable: false },
+                        }}
                       >
-                        <Label>Edit post</Label>
-                      </TextButton>
-                    </FlyoutRow>
-                  )}
+                        {({ style, ref, placement }) => {
+                          return (
+                            <Flyout
+                              data-cy="thread-actions-dropdown"
+                              innerRef={ref}
+                              style={style}
+                            >
+                              <FlyoutRow hideAbove={768}>
+                                <TextButton
+                                  icon={
+                                    thread.receiveNotifications
+                                      ? 'notification-fill'
+                                      : 'notification'
+                                  }
+                                  hoverColor={'brand.alt'}
+                                  onClick={this.toggleNotification}
+                                  dataCy={'thread-dropdown-notifications'}
+                                >
+                                  {thread.receiveNotifications
+                                    ? 'Subscribed'
+                                    : 'Notify me'}
+                                </TextButton>
+                              </FlyoutRow>
 
-                  {shouldRenderPinThreadAction && (
-                    <FlyoutRow>
-                      <TextButton
-                        icon={isPinned ? 'pin-fill' : 'pin'}
-                        hoverColor={
-                          isPinned ? 'warn.default' : 'special.default'
-                        }
-                        onClick={this.props.togglePinThread}
-                        dataCy={'thread-dropdown-pin'}
-                        loading={isPinningThread}
-                        disabled={isPinningThread}
-                      >
-                        <Label>
-                          {isPinned ? 'Unpin thread' : 'Pin thread'}
-                        </Label>
-                      </TextButton>
-                    </FlyoutRow>
-                  )}
+                              {shouldRenderEditThreadAction && (
+                                <FlyoutRow>
+                                  <TextButton
+                                    icon="edit"
+                                    onClick={this.props.toggleEdit}
+                                    hoverColor={'space.default'}
+                                    dataCy={'thread-dropdown-edit'}
+                                  >
+                                    <Label>Edit post</Label>
+                                  </TextButton>
+                                </FlyoutRow>
+                              )}
 
-                  {shouldRenderMoveThreadAction && (
-                    <FlyoutRow hideBelow={1024}>
-                      <TextButton
-                        icon={'channel'}
-                        hoverColor={'special.default'}
-                        onClick={this.triggerChangeChannel}
-                        dataCy={'thread-dropdown-move'}
-                      >
-                        Move thread
-                      </TextButton>
-                    </FlyoutRow>
-                  )}
+                              {shouldRenderPinThreadAction && (
+                                <FlyoutRow>
+                                  <TextButton
+                                    icon={isPinned ? 'pin-fill' : 'pin'}
+                                    hoverColor={
+                                      isPinned
+                                        ? 'warn.default'
+                                        : 'special.default'
+                                    }
+                                    onClick={this.props.togglePinThread}
+                                    dataCy={'thread-dropdown-pin'}
+                                    loading={isPinningThread}
+                                    disabled={isPinningThread}
+                                  >
+                                    <Label>
+                                      {isPinned ? 'Unpin thread' : 'Pin thread'}
+                                    </Label>
+                                  </TextButton>
+                                </FlyoutRow>
+                              )}
 
-                  {shouldRenderLockThreadAction && (
-                    <FlyoutRow>
-                      <TextButton
-                        icon={thread.isLocked ? 'private' : 'private-unlocked'}
-                        hoverColor={
-                          thread.isLocked ? 'success.default' : 'warn.alt'
-                        }
-                        onClick={this.props.threadLock}
-                        dataCy={'thread-dropdown-lock'}
-                        loading={isLockingThread}
-                        disabled={isLockingThread}
-                      >
-                        <Label>
-                          {thread.isLocked ? 'Unlock chat' : 'Lock chat'}
-                        </Label>
-                      </TextButton>
-                    </FlyoutRow>
-                  )}
+                              {shouldRenderMoveThreadAction && (
+                                <FlyoutRow hideBelow={1024}>
+                                  <TextButton
+                                    icon={'channel'}
+                                    hoverColor={'special.default'}
+                                    onClick={this.triggerChangeChannel}
+                                    dataCy={'thread-dropdown-move'}
+                                  >
+                                    Move thread
+                                  </TextButton>
+                                </FlyoutRow>
+                              )}
 
-                  {shouldRenderDeleteThreadAction && (
-                    <FlyoutRow>
-                      <TextButton
-                        icon="delete"
-                        hoverColor="warn.default"
-                        onClick={this.props.triggerDelete}
-                        dataCy={'thread-dropdown-delete'}
-                      >
-                        <Label>Delete</Label>
-                      </TextButton>
-                    </FlyoutRow>
+                              {shouldRenderLockThreadAction && (
+                                <FlyoutRow>
+                                  <TextButton
+                                    icon={
+                                      thread.isLocked
+                                        ? 'private'
+                                        : 'private-unlocked'
+                                    }
+                                    hoverColor={
+                                      thread.isLocked
+                                        ? 'success.default'
+                                        : 'warn.alt'
+                                    }
+                                    onClick={this.props.threadLock}
+                                    dataCy={'thread-dropdown-lock'}
+                                    loading={isLockingThread}
+                                    disabled={isLockingThread}
+                                  >
+                                    <Label>
+                                      {thread.isLocked
+                                        ? 'Unlock chat'
+                                        : 'Lock chat'}
+                                    </Label>
+                                  </TextButton>
+                                </FlyoutRow>
+                              )}
+
+                              {shouldRenderDeleteThreadAction && (
+                                <FlyoutRow>
+                                  <TextButton
+                                    icon="delete"
+                                    hoverColor="warn.default"
+                                    onClick={this.props.triggerDelete}
+                                    dataCy={'thread-dropdown-delete'}
+                                  >
+                                    <Label>Delete</Label>
+                                  </TextButton>
+                                </FlyoutRow>
+                              )}
+                            </Flyout>
+                          );
+                        }}
+                      </Popper>
+                    </OutsideClickHandler>
                   )}
-                </Flyout>
+                </Manager>
               </DropWrap>
             )}
           </div>
-          {flyoutOpen && (
-            <div
-              style={{
-                position: 'fixed',
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0,
-                background: 'transparent',
-                zIndex: 3002,
-              }}
-              data-cy={'thread-dropdown-close'}
-              onClick={() =>
-                setTimeout(() => {
-                  this.toggleFlyout(false);
-                })
-              }
-            />
-          )}
         </ActionBarContainer>
       );
     }

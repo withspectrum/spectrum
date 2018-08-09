@@ -7,6 +7,9 @@ import {
   checkUserPermissionsInCommunity,
 } from '../../models/usersCommunities';
 import { createMemberInDefaultChannels } from '../../models/usersChannels';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -14,28 +17,33 @@ type Input = {
   },
 };
 
-export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
-  const currentUser = user;
-  const { communityId } = input;
-
-  if (!currentUser) {
-    return new UserError('You must be signed in to join this community.');
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { user } = ctx;
+  const { communityId } = args.input;
 
   const [permissions, community] = await Promise.all([
-    checkUserPermissionsInCommunity(communityId, currentUser.id),
+    checkUserPermissionsInCommunity(communityId, user.id),
     getCommunityById(communityId),
   ]);
 
   if (!community) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no community',
+      },
+    });
+
     return new UserError("We couldn't find that community.");
   }
 
   // if no permissions exist, join them to the community!
   if (!permissions || permissions.length === 0) {
     return await Promise.all([
-      createMemberInCommunity(communityId, currentUser.id),
-      createMemberInDefaultChannels(communityId, currentUser.id),
+      createMemberInCommunity(communityId, user.id),
+      createMemberInDefaultChannels(communityId, user.id),
     ])
       // return the community to fulfill the resolver
       .then(() => community);
@@ -44,18 +52,54 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
   const permission = permissions[0];
 
   if (permission.isBlocked) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'user blocked',
+      },
+    });
+
     return new UserError("You aren't able to join this community.");
   }
 
   if (permission.isOwner) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'already owner',
+      },
+    });
+
     return new UserError("You're already the owner of this community.");
   }
 
   if (permission.isModerator) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'already moderator',
+      },
+    });
+
     return new UserError("You're already a moderator in this community.");
   }
 
   if (permission.isMember) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_JOINED_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'already member',
+      },
+    });
+
     return new UserError('You are already a member of this community.');
   }
 
@@ -63,14 +107,23 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
   // they are trying to re-join the community.
   if (!permission.isMember) {
     return await Promise.all([
-      createMemberInCommunity(communityId, currentUser.id),
-      createMemberInDefaultChannels(communityId, currentUser.id),
+      createMemberInCommunity(communityId, user.id),
+      createMemberInDefaultChannels(communityId, user.id),
     ])
       // return the community to fulfill the resolver
       .then(() => community);
   }
 
+  trackQueue.add({
+    userId: user.id,
+    event: events.USER_JOINED_COMMUNITY_FAILED,
+    context: { communityId },
+    properties: {
+      reason: 'unknown error',
+    },
+  });
+
   return new UserError(
     "We weren't able to process your request to join this community."
   );
-};
+});

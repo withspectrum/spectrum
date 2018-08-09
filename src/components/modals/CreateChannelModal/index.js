@@ -7,7 +7,6 @@ import { withRouter } from 'react-router';
 import slugg from 'slugg';
 import { CHANNEL_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import { withApollo } from 'react-apollo';
-import { track } from '../../../helpers/events';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { throttle } from '../../../helpers/utils';
@@ -16,6 +15,8 @@ import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import createChannelMutation from 'shared/graphql/mutations/channel/createChannel';
 import StripeModalWell from 'src/components/stripeCardForm/modalWell';
+import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
@@ -45,7 +46,7 @@ type State = {
 
 type Props = {
   client: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isOpen: boolean,
   community: GetCommunityType,
   createChannel: Function,
@@ -70,6 +71,13 @@ class CreateChannelModal extends React.Component<Props, State> {
     };
 
     this.checkSlug = throttle(this.checkSlug, 500);
+  }
+
+  componentDidMount() {
+    const { community } = this.props;
+    track(events.CHANNEL_CREATED_INITED, {
+      community: transformations.analyticsCommunity(community),
+    });
   }
 
   close = () => {
@@ -239,7 +247,6 @@ class CreateChannelModal extends React.Component<Props, State> {
     this.props
       .createChannel(input)
       .then(() => {
-        track('channel', 'created', null);
         this.close();
         this.props.dispatch(
           addToastWithTimeout('success', 'Channel successfully created!')

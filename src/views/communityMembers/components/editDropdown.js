@@ -24,16 +24,22 @@ import addCommunityModerator from 'shared/graphql/mutations/communityMember/addC
 import removeCommunityModerator from 'shared/graphql/mutations/communityMember/removeCommunityModerator';
 import blockCommunityMember from 'shared/graphql/mutations/communityMember/blockCommunityMember';
 import unblockCommunityMember from 'shared/graphql/mutations/communityMember/unblockCommunityMember';
+import approvePendingCommunityMember from 'shared/graphql/mutations/communityMember/approvePendingCommunityMember';
+import blockPendingCommunityMember from 'shared/graphql/mutations/communityMember/blockPendingCommunityMember';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 import MutationWrapper from './mutationWrapper';
 import { getCardImage } from '../../communityBilling/utils';
+import type { Dispatch } from 'redux';
 
 type Props = {
   blockCommunityMember: Function,
   unblockCommunityMember: Function,
   addCommunityModerator: Function,
   removeCommunityModerator: Function,
+  approvePendingCommunityMember: Function,
+  blockPendingCommunityMember: Function,
   dispatch: Function,
+  dispatch: Dispatch<Object>,
   community: GetCommunitySettingsType,
   history: Object,
   user: {
@@ -69,9 +75,10 @@ class EditDropdown extends React.Component<Props, State> {
     moderator: {
       id: 'moderator',
       title: this.props.community.hasChargeableSource
-        ? 'Moderator · $10/mo'
-        : 'Moderator',
-      subtitle: 'Can edit and delete conversations',
+        ? 'Team member · $10/mo'
+        : 'Team member',
+      subtitle:
+        'Highlighted across the community, and can moderate conversations',
       selected: false,
     },
     blocked: {
@@ -86,6 +93,19 @@ class EditDropdown extends React.Component<Props, State> {
       title: 'Member',
       subtitle:
         "Can start new conversations and reply to anyone else's conversations",
+      selected: false,
+    },
+    approvePendingMember: {
+      id: 'approvePending',
+      title: 'Approve',
+      subtitle: 'Approve this person to join your community',
+      selected: false,
+    },
+    blockPendingMember: {
+      id: 'blockPending',
+      title: 'Block',
+      subtitle:
+        'Block this person from joining your community and requesting to join in the future',
       selected: false,
     },
   };
@@ -163,6 +183,19 @@ class EditDropdown extends React.Component<Props, State> {
           ...this.permissionConfigurations.blocked,
           mutation: null,
           selected: true,
+        },
+      ];
+    }
+
+    if (permissions.isPending) {
+      return [
+        {
+          ...this.permissionConfigurations.approvePendingMember,
+          mutation: this.props.approvePendingCommunityMember,
+        },
+        {
+          ...this.permissionConfigurations.blockPendingMember,
+          mutation: this.props.blockPendingCommunityMember,
         },
       ];
     }
@@ -307,5 +340,7 @@ export default compose(
   addCommunityModerator,
   removeCommunityModerator,
   blockCommunityMember,
-  unblockCommunityMember
+  unblockCommunityMember,
+  approvePendingCommunityMember,
+  blockPendingCommunityMember
 )(EditDropdown);

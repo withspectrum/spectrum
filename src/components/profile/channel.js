@@ -1,15 +1,14 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import replace from 'string-replace-to-array';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
-import { track } from '../../helpers/events';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import { addToastWithTimeout } from '../../actions/toasts';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import { NullCard } from '../upsell';
+import renderDescriptionWithLinks from 'src/helpers/render-text-with-markdown-links';
 import {
   ChannelListItem,
   ChannelListItemLi,
@@ -18,6 +17,7 @@ import {
 import Icon from '../icons';
 import { Button } from '../buttons';
 import { LoadingListItem } from '../loading';
+import type { Dispatch } from 'redux';
 import { FullTitle, FullDescription, ProfileCard, FullProfile } from './style';
 
 type State = {
@@ -25,7 +25,7 @@ type State = {
 };
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   toggleChannelSubscription: Function,
   profileSize: string,
   currentUser: Object,
@@ -60,21 +60,18 @@ class ChannelWithData extends React.Component<Props, State> {
           toggleChannelSubscription.channelPermissions.isPending;
         let str = '';
         if (isPending) {
-          track('channel', 'requested to join', null);
           str = `Requested to join ${toggleChannelSubscription.name} in ${
             toggleChannelSubscription.community.name
           }`;
         }
 
         if (!isPending && isMember) {
-          track('channel', 'joined', null);
           str = `Joined ${toggleChannelSubscription.name} in ${
             toggleChannelSubscription.community.name
           }!`;
         }
 
         if (!isPending && !isMember) {
-          track('channel', 'unjoined', null);
           str = `Left the channel ${toggleChannelSubscription.name} in ${
             toggleChannelSubscription.community.name
           }.`;
@@ -100,16 +97,6 @@ class ChannelWithData extends React.Component<Props, State> {
     } = this.props;
     const { isLoading } = this.state;
     const componentSize = profileSize || 'mini';
-
-    const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
-
-    const renderDescriptionWithLinks = text => {
-      return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
-        <a href={url} target="_blank" rel="noopener nofollower" key={url}>
-          {text}
-        </a>
-      ));
-    };
 
     if (loading) {
       return <LoadingListItem />;
@@ -148,9 +135,11 @@ class ChannelWithData extends React.Component<Props, State> {
             {channel.name}
             {channel.isArchived && ' (Archived)'}
           </FullTitle>
-          <FullDescription>
-            {renderDescriptionWithLinks(channel.description)}
-          </FullDescription>
+          {channel.description && (
+            <FullDescription>
+              {renderDescriptionWithLinks(channel.description)}
+            </FullDescription>
+          )}
         </FullProfile>
       );
     } else if (componentSize === 'mini') {

@@ -4,6 +4,7 @@ import Section from 'src/components/themedSection';
 import CommunityList from './communityList';
 import { PrimaryCTA } from '../../style';
 import { Content, Heading, Copy } from '../style';
+import { track, events } from 'src/helpers/analytics';
 
 const Discount = () => {
   return (
@@ -21,7 +22,14 @@ const Discount = () => {
         </Copy>
         <CommunityList />
         <a href="mailto:hi@spectrum.chat">
-          <PrimaryCTA icon={'payment'}>Apply for discount</PrimaryCTA>
+          <PrimaryCTA
+            icon={'payment'}
+            onClick={() =>
+              track(events.PRICING_PAGE_APPLY_FOR_DISCOUNT_CLICKED)
+            }
+          >
+            Apply for discount
+          </PrimaryCTA>
         </a>
       </Content>
     </Section>

@@ -2,6 +2,8 @@
 const { db } = require('./db');
 import { NEW_DOCUMENTS } from './utils';
 import { createChangefeed } from 'shared/changefeed-utils';
+import { trackQueue } from 'shared/bull/queues';
+import { events } from 'shared/analytics';
 
 export type DBDirectMessageThread = {
   createdAt: Date,
@@ -10,18 +12,16 @@ export type DBDirectMessageThread = {
   threadLastActive: Date,
 };
 
-const getDirectMessageThread = (
-  directMessageThreadId: string
-): Promise<DBDirectMessageThread> => {
+// prettier-ignore
+const getDirectMessageThread = (directMessageThreadId: string): Promise<DBDirectMessageThread> => {
   return db
     .table('directMessageThreads')
     .get(directMessageThreadId)
     .run();
 };
 
-const getDirectMessageThreads = (
-  ids: Array<string>
-): Promise<Array<DBDirectMessageThread>> => {
+// prettier-ignore
+const getDirectMessageThreads = (ids: Array<string>): Promise<Array<DBDirectMessageThread>> => {
   return db
     .table('directMessageThreads')
     .getAll(...ids)
@@ -47,7 +47,8 @@ const getDirectMessageThreadsByUser = (
     .run();
 };
 
-const createDirectMessageThread = (isGroup: boolean): DBDirectMessageThread => {
+// prettier-ignore
+const createDirectMessageThread = (isGroup: boolean, userId: string): DBDirectMessageThread => {
   return db
     .table('directMessageThreads')
     .insert(
@@ -60,12 +61,20 @@ const createDirectMessageThread = (isGroup: boolean): DBDirectMessageThread => {
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => {
+      trackQueue.add({
+        userId,
+        event: events.DIRECT_MESSAGE_THREAD_CREATED,
+        properties: {
+          isGroup
+        }
+      })
+      return result.changes[0].new_val
+    });
 };
 
-const setDirectMessageThreadLastActive = (
-  id: string
-): DBDirectMessageThread => {
+// prettier-ignore
+const setDirectMessageThreadLastActive = (id: string): DBDirectMessageThread => {
   return db
     .table('directMessageThreads')
     .get(id)

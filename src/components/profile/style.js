@@ -1,3 +1,4 @@
+// @flow
 import styled from 'styled-components';
 import Link from 'src/components/link';
 import {
@@ -69,7 +70,7 @@ export const Title = styled.h3`
 
 export const FullTitle = styled(Title)`
   font-size: 24px;
-  margin-top: 8px;
+  margin-top: 16px;
 `;
 
 export const FullProfile = styled.div`
@@ -124,6 +125,19 @@ export const FullDescription = styled.div`
   padding: 0;
   margin-top: 16px;
   color: ${props => props.theme.text.alt};
+
+  p {
+    white-space: pre-wrap;
+  }
+
+  a {
+    color: ${props => props.theme.text.secondary};
+  }
+
+  a:hover {
+    color: ${props => props.theme.text.default};
+    text-decoration: none;
+  }
 
   > ${ReputationWrapper} {
     margin-top: 16px;
@@ -259,6 +273,11 @@ export const ProfileCard = styled(Card)`
       text-decoration: underline;
     }
   }
+`;
+
+export const ThreadProfileCard = styled(ProfileCard)`
+  border-radius: 8px;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 `;
 
 export const ProUpgrade = styled.div`

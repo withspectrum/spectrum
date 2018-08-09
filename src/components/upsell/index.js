@@ -3,16 +3,18 @@ import * as React from 'react';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import Icon from '../../components/icons';
-import { storeItem } from '../../helpers/localStorage';
-import { PUBLIC_STRIPE_KEY } from '../../api/constants';
-import { addToastWithTimeout } from '../../actions/toasts';
-import { openModal } from '../../actions/modals';
-import Avatar from '../avatar';
-import ToggleCommunityMembership from '../toggleCommunityMembership';
-import { Button, OutlineButton } from '../buttons';
-import { Login } from '../../views/login';
+import Icon from 'src/components/icons';
+import { storeItem } from 'src/helpers/localStorage';
+import { PUBLIC_STRIPE_KEY } from 'src/api/constants';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { openModal } from 'src/actions/modals';
+import { UserAvatar } from 'src/components/avatar';
+import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
+import { Button, OutlineButton } from 'src/components/buttons';
+import { Login } from 'src/views/login';
+import Badge from 'src/components/badges';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
+import type { Dispatch } from 'redux';
 import {
   Title,
   MiniTitle,
@@ -294,7 +296,7 @@ export const Upsell404Thread = () => {
 
 type MiniUpgradeProps = {
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 class UpsellMiniUpgradePure extends React.Component<MiniUpgradeProps> {
   render() {
@@ -320,6 +322,29 @@ class UpsellMiniUpgradePure extends React.Component<MiniUpgradeProps> {
   }
 }
 
+type TeamMemberProps = {
+  communitySlug: string,
+  small?: boolean,
+};
+
+export const UpsellTeamMembers = (props: TeamMemberProps) => {
+  return (
+    <MiniNullCard
+      copy={
+        props.small ? '' : "Looks like you haven't added any team members yet!"
+      }
+      noPadding
+      alignItems="flex-end"
+    >
+      <Link to={`/${props.communitySlug}/settings/members`}>
+        <OutlineButton icon={props.small ? null : 'member-add'}>
+          Add {props.small ? 'more' : ''} team members
+        </OutlineButton>
+      </Link>
+    </MiniNullCard>
+  );
+};
+
 const map = state => ({ currentUser: state.users.currentUser });
 // $FlowIssue
 export const UpsellMiniUpgrade = connect(map)(UpsellMiniUpgradePure);
@@ -327,7 +352,7 @@ export const UpsellMiniUpgrade = connect(map)(UpsellMiniUpgradePure);
 type UpgradeProProps = {
   upgradeToPro: Function,
   complete: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   currentUser: Object,
 };
 
@@ -381,8 +406,10 @@ class UpsellUpgradeToProPure extends React.Component<
     return (
       <NullCard bg="onboarding">
         <Profile>
-          <Avatar src={`${currentUser.profilePhoto}`} user={currentUser} />
-          <span>PRO</span>
+          <UserAvatar size={60} user={currentUser} />
+          <span className={'badge'}>
+            <Badge type={'pro'} />
+          </span>
         </Profile>
         <Title>Upgrade to Pro</Title>
         <Subtitle>

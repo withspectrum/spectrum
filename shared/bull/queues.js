@@ -41,6 +41,8 @@ import {
   SEND_NEW_MENTION_THREAD_EMAIL,
   SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
   SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
+  SEND_PRIVATE_COMMUNITY_REQUEST_SENT_EMAIL,
+  SEND_PRIVATE_COMMUNITY_REQUEST_APPROVED_EMAIL,
   SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
   SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
   SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
@@ -63,8 +65,11 @@ import {
   PRO_INVOICE_PAID_NOTIFICATION,
   COMMUNITY_INVOICE_PAID_NOTIFICATION,
   REACTION_NOTIFICATION,
+  THREAD_REACTION_NOTIFICATION,
   PRIVATE_CHANNEL_REQUEST_SENT,
   PRIVATE_CHANNEL_REQUEST_APPROVED,
+  PRIVATE_COMMUNITY_REQUEST_SENT,
+  PRIVATE_COMMUNITY_REQUEST_APPROVED,
   COMMUNITY_INVITE_NOTIFICATION,
   CHANNEL_NOTIFICATION,
   DIRECT_MESSAGE_NOTIFICATION,
@@ -72,7 +77,13 @@ import {
   SEND_PUSH_NOTIFICATIONS,
   SLACK_IMPORT,
   ADDED_MODERATOR_NOTIFICATION,
+  SEND_SLACK_INVITIATIONS,
 } from 'athena/queues/constants';
+
+import {
+  TRACK_ANALYTICS,
+  IDENTIFY_ANALYTICS,
+} from 'analytics/queues/constants';
 
 import { PROCESS_REPUTATION_EVENT } from 'mercury/constants';
 
@@ -85,8 +96,11 @@ exports.QUEUE_NAMES = {
   sendProInvoicePaidNotificationQueue: PRO_INVOICE_PAID_NOTIFICATION,
   sendCommunityInvoicePaidNotificationQueue: COMMUNITY_INVOICE_PAID_NOTIFICATION,
   sendReactionNotificationQueue: REACTION_NOTIFICATION,
+  sendThreadReactionNotificationQueue: THREAD_REACTION_NOTIFICATION,
   sendPrivateChannelRequestQueue: PRIVATE_CHANNEL_REQUEST_SENT,
   sendPrivateChannelRequestApprovedQueue: PRIVATE_CHANNEL_REQUEST_APPROVED,
+  sendPrivateCommunityRequestQueue: PRIVATE_COMMUNITY_REQUEST_SENT,
+  sendPrivateCommunityRequestApprovedQueue: PRIVATE_COMMUNITY_REQUEST_APPROVED,
   sendPrivateChannelInviteNotificationQueue:
     'private channel invite notification',
   sendCommunityInviteNotificationQueue: COMMUNITY_INVITE_NOTIFICATION,
@@ -97,6 +111,7 @@ exports.QUEUE_NAMES = {
   sendNotificationAsPushQueue: SEND_PUSH_NOTIFICATIONS,
   slackImportQueue: SLACK_IMPORT,
   sendAddedModeratorNotificationQueue: ADDED_MODERATOR_NOTIFICATION,
+  sendSlackInvitationsQueue: SEND_SLACK_INVITIATIONS,
 
   // hermes - emails
   sendNewUserWelcomeEmailQueue: SEND_NEW_USER_WELCOME_EMAIL,
@@ -113,6 +128,8 @@ exports.QUEUE_NAMES = {
   sendNewMentionThreadEmailQueue: SEND_NEW_MENTION_THREAD_EMAIL,
   sendPrivateChannelRequestEmailQueue: SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
   sendPrivateChannelRequestApprovedEmailQueue: SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
+  sendPrivateCommunityRequestEmailQueue: SEND_PRIVATE_COMMUNITY_REQUEST_SENT_EMAIL,
+  sendPrivateCommunityRequestApprovedEmailQueue: SEND_PRIVATE_COMMUNITY_REQUEST_APPROVED_EMAIL,
   sendThreadCreatedNotificationEmailQueue: SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
   sendAddedModeratorEmailQueue: SEND_NEW_MODERATOR_WELCOME_EMAIL,
 
@@ -144,6 +161,11 @@ exports.QUEUE_NAMES = {
   stripePaymentFailedQueue: PROCESS_STRIPE_PAYMENT_FAILED,
   stripeCardExpiringWarningQueue: PROCESS_STRIPE_CARD_EXPIRING_WARNING,
 
+  // analytics
+  trackQueue: TRACK_ANALYTICS,
+  identifyQueue: IDENTIFY_ANALYTICS,
+
+  // admin
   _adminSendCommunityCreatedEmailQueue: SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
   _adminProcessToxicMessageQueue: PROCESS_ADMIN_TOXIC_MESSAGE,
   _adminProcessToxicThreadQueue: PROCESS_ADMIN_TOXIC_THREAD,

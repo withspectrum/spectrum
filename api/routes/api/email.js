@@ -2,7 +2,10 @@
 require('now-env');
 const IS_PROD = process.env.NODE_ENV === 'production';
 const IS_TESTING = process.env.TEST_DB;
-import { PAYMENTS_COMMUNITY_ID } from '../../migrations/seed/default/constants';
+import {
+  PAYMENTS_COMMUNITY_ID,
+  BRIAN_ID,
+} from '../../migrations/seed/default/constants';
 import { Router } from 'express';
 const jwt = require('jsonwebtoken');
 const emailRouter = Router();
@@ -168,7 +171,7 @@ emailRouter.get('/validate', (req, res) => {
   // validate a new administrator email address
   if (communityId) {
     try {
-      return updateCommunityAdministratorEmail(communityId, email).then(
+      return updateCommunityAdministratorEmail(communityId, email, userId).then(
         community =>
           IS_PROD
             ? res.redirect(
@@ -190,16 +193,13 @@ emailRouter.get('/validate', (req, res) => {
 
   // and send a database request to update the user record with this email
   try {
-    return updateUserEmail(userId, email).then(
-      user =>
-        IS_PROD
-          ? res.redirect(
-              `https://spectrum.chat/users/${user.username}/settings`
-            )
-          : res.redirect(
-              `http://localhost:3000/users/${user.username}/settings`
-            )
-    );
+    return updateUserEmail(userId, email).then(user => {
+      const rootRedirect = IS_PROD
+        ? `https://spectrum.chat`
+        : `http://localhost:3000`;
+      if (!user.username) return res.redirect(rootRedirect);
+      return res.redirect(`${rootRedirect}/users/${user.username}/settings`);
+    });
   } catch (err) {
     console.error(err);
     return res
@@ -215,7 +215,8 @@ if (IS_TESTING) {
   emailRouter.get('/validate/test-payments/verify', (req, res) => {
     return updateCommunityAdministratorEmail(
       PAYMENTS_COMMUNITY_ID,
-      'briandlovin@gmail.com'
+      'briandlovin@gmail.com',
+      BRIAN_ID
     ).then(() =>
       res.redirect('http://localhost:3000/payments/settings/billing')
     );

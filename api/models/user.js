@@ -5,6 +5,8 @@ import { createNewUsersSettings } from './usersSettings';
 import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBUser, FileUpload } from 'shared/types';
+import { events } from 'shared/analytics';
+import { trackQueue, identifyQueue } from 'shared/bull/queues';
 
 type GetUserInput = {
   id?: string,
@@ -40,9 +42,8 @@ const getUserByUsername = (username: string): Promise<DBUser> => {
     .then(result => (result ? result[0] : null));
 };
 
-const getUsersByUsername = (
-  usernames: Array<string>
-): Promise<Array<DBUser>> => {
+// prettier-ignore
+const getUsersByUsername = (usernames: Array<string>): Promise<Array<DBUser>> => {
   return db
     .table('users')
     .getAll(...usernames, { index: 'username' })
@@ -70,14 +71,15 @@ const storeUser = (user: Object): Promise<DBUser> => {
     .then(result => {
       const user = result.changes[0].new_val;
 
-      // whenever a new user is created, create a usersSettings record
-      // and send a welcome email
+      identifyQueue.add({ userId: user.id });
+      trackQueue.add({ userId: user.id, event: events.USER_CREATED });
       sendNewUserWelcomeEmailQueue.add({ user });
       return Promise.all([user, createNewUsersSettings(user.id)]);
     })
     .then(([user]) => user);
 };
 
+// pretier-ignore
 const saveUserProvider = (
   userId: string,
   providerMethod: string,
@@ -105,7 +107,20 @@ const saveUserProvider = (
           { returnChanges: true }
         )
         .run()
-        .then(result => result.changes[0].new_val);
+        .then(result => {
+          const user = result.changes[0].new_val;
+          trackQueue.add({
+            userId: user.id,
+            event: events.USER_ADDED_PROVIDER,
+            properties: {
+              providerMethod,
+            },
+          });
+
+          identifyQueue.add({ userId: user.id });
+
+          return user;
+        });
     });
 };
 
@@ -117,10 +132,8 @@ const getUserByIndex = (indexName: string, indexValue: string) => {
     .then(results => results && results.length > 0 && results[0]);
 };
 
-const createOrFindUser = (
-  user: Object,
-  providerMethod: string
-): Promise<DBUser | {}> => {
+// prettier-ignore
+const createOrFindUser = (user: Object, providerMethod: string): Promise<DBUser | {}> => {
   // if a user id gets passed in, we know that a user most likely exists and we just need to retrieve them from the db
   // however, if a user id doesn't exist we need to do a lookup by the email address passed in - if an email address doesn't exist, we know that we're going to be creating a new user
   let promise;
@@ -178,10 +191,9 @@ const createOrFindUser = (
     });
 };
 
-const getEverything = (
-  userId: string,
-  { first, after }: PaginationOptions
-): Promise<Array<any>> => {
+// prettier-ignore
+const getEverything = (userId: string, options: PaginationOptions): Promise<Array<any>> => {
+  const { first, after } = options
   return db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
@@ -211,10 +223,8 @@ type UserThreadCount = {
   id: string,
   count: number,
 };
-
-const getUsersThreadCount = (
-  threadIds: Array<string>
-): Promise<Array<UserThreadCount>> => {
+// prettier-ignore
+const getUsersThreadCount = (threadIds: Array<string>): Promise<Array<UserThreadCount>> => {
   const getThreadCounts = threadIds.map(creatorId =>
     db
       .table('threads')
@@ -243,10 +253,17 @@ export type EditUserInput = {
   },
 };
 
-const editUser = (input: EditUserInput, userId: string): Promise<DBUser> => {
+const editUser = (args: EditUserInput, userId: string): Promise<DBUser> => {
   const {
-    input: { name, description, website, file, coverFile, username, timezone },
-  } = input;
+    name,
+    description,
+    website,
+    file,
+    coverFile,
+    username,
+    timezone,
+  } = args.input;
+
   return db
     .table('users')
     .get(userId)
@@ -262,74 +279,114 @@ const editUser = (input: EditUserInput, userId: string): Promise<DBUser> => {
       });
     })
     .then(user => {
-      // if no file was uploaded, update the community with new string values
-
       if (file || coverFile) {
         if (file && !coverFile) {
-          return uploadImage(file, 'users', user.id).then(profilePhoto => {
-            // update the user with the profilePhoto
-            return (
-              db
-                .table('users')
-                .get(user.id)
-                .update(
-                  {
-                    ...user,
-                    profilePhoto,
-                  },
-                  { returnChanges: 'always' }
-                )
-                .run()
-                // return the resulting user with the profilePhoto set
-                .then(result => {
-                  // if an update happened
-                  if (result.replaced === 1) {
-                    return result.changes[0].new_val;
-                  }
+          return uploadImage(file, 'users', user.id)
+            .then(profilePhoto => {
+              // update the user with the profilePhoto
+              return (
+                db
+                  .table('users')
+                  .get(user.id)
+                  .update(
+                    {
+                      ...user,
+                      profilePhoto,
+                    },
+                    { returnChanges: 'always' }
+                  )
+                  .run()
+                  // return the resulting user with the profilePhoto set
+                  .then(result => {
+                    // if an update happened
+                    if (result.replaced === 1) {
+                      trackQueue.add({
+                        userId,
+                        event: events.USER_EDITED,
+                      });
 
-                  // an update was triggered from the client, but no data was changed
-                  if (result.unchanged === 1) {
-                    return result.changes[0].old_val;
-                  }
-                })
-            );
-          });
+                      identifyQueue.add({ userId: user.id });
+
+                      return result.changes[0].new_val;
+                    }
+
+                    // an update was triggered from the client, but no data was changed
+                    if (result.unchanged === 1) {
+                      trackQueue.add({
+                        userId,
+                        event: events.USER_EDITED_FAILED,
+                        properties: {
+                          reason: 'no changes',
+                        },
+                      });
+
+                      return result.changes[0].old_val;
+                    }
+                  })
+              );
+            })
+            .catch(err => {
+              console.error(err);
+            });
         } else if (!file && coverFile) {
-          return uploadImage(coverFile, 'users', user.id).then(coverPhoto => {
-            // update the user with the profilePhoto
-            return (
-              db
-                .table('users')
-                .get(user.id)
-                .update(
-                  {
-                    ...user,
-                    coverPhoto,
-                  },
-                  { returnChanges: 'always' }
-                )
-                .run()
-                // return the resulting user with the profilePhoto set
-                .then(result => {
-                  // if an update happened
-                  if (result.replaced === 1) {
-                    return result.changes[0].new_val;
-                  }
+          return uploadImage(coverFile, 'users', user.id)
+            .then(coverPhoto => {
+              // update the user with the profilePhoto
+              return (
+                db
+                  .table('users')
+                  .get(user.id)
+                  .update(
+                    {
+                      ...user,
+                      coverPhoto,
+                    },
+                    { returnChanges: 'always' }
+                  )
+                  .run()
+                  // return the resulting user with the profilePhoto set
+                  .then(result => {
+                    // if an update happened
+                    if (result.replaced === 1) {
+                      trackQueue.add({
+                        userId,
+                        event: events.USER_EDITED,
+                      });
 
-                  // an update was triggered from the client, but no data was changed
-                  if (result.unchanged === 1) {
-                    return result.changes[0].old_val;
-                  }
-                })
-            );
-          });
+                      identifyQueue.add({ userId: user.id });
+
+                      return result.changes[0].new_val;
+                    }
+
+                    // an update was triggered from the client, but no data was changed
+                    if (result.unchanged === 1) {
+                      trackQueue.add({
+                        userId,
+                        event: events.USER_EDITED_FAILED,
+                        properties: {
+                          reason: 'no changes',
+                        },
+                      });
+
+                      return result.changes[0].old_val;
+                    }
+                  })
+              );
+            })
+            .catch(err => {
+              console.error(err);
+            });
         } else if (file && coverFile) {
           const uploadFile = file => {
-            return uploadImage(file, 'users', user.id);
+            return uploadImage(file, 'users', user.id).catch(err => {
+              console.error(err);
+            });
           };
 
           const uploadCoverFile = coverFile => {
-            return uploadImage(coverFile, 'users', user.id);
+            return uploadImage(coverFile, 'users', user.id).catch(err => {
+              console.error(err);
+            });
           };
 
           return Promise.all([
@@ -353,11 +410,26 @@ const editUser = (input: EditUserInput, userId: string): Promise<DBUser> => {
                 .then(result => {
                   // if an update happened
                   if (result.replaced === 1) {
+                    trackQueue.add({
+                      userId,
+                      event: events.USER_EDITED,
+                    });
+
+                    identifyQueue.add({ userId: user.id });
+
                     return result.changes[0].new_val;
                   }
 
                   // an update was triggered from the client, but no data was changed
                   if (result.unchanged === 1) {
+                    trackQueue.add({
+                      userId,
+                      event: events.USER_EDITED_FAILED,
+                      properties: {
+                        reason: 'no changes',
+                      },
+                    });
+
                     return result.changes[0].old_val;
                   }
                 })
@@ -378,11 +450,25 @@ const editUser = (input: EditUserInput, userId: string): Promise<DBUser> => {
           .then(result => {
             // if an update happened
             if (result.replaced === 1) {
+              trackQueue.add({
+                userId,
+                event: events.USER_EDITED,
+              });
+
+              identifyQueue.add({ userId: user.id });
+
               return result.changes[0].new_val;
             }
 
             // an update was triggered from the client, but no data was changed
             if (result.unchanged === 1) {
+              trackQueue.add({
+                userId,
+                event: events.USER_EDITED_FAILED,
+                properties: {
+                  reason: 'no changes',
+                },
+              });
               return result.changes[0].old_val;
             }
           });
@@ -394,26 +480,23 @@ const setUserOnline = (id: string, isOnline: boolean): DBUser => {
   let data = {};
 
   data.isOnline = isOnline;
-
-  // If a user is going offline, store their lastSeen
-  if (isOnline === false) {
-    data.lastSeen = new Date();
-  }
+  data.lastSeen = new Date();
   return db
     .table('users')
     .get(id)
     .update(data, { returnChanges: 'always' })
     .run()
     .then(result => {
-      if (result.changes[0].new_val) return result.changes[0].new_val;
+      if (result.changes[0].new_val) {
+        const user = result.changes[0].new_val;
+        return user;
+      }
       return result.changes[0].old_val;
     });
 };
 
-const setUserPendingEmail = (
-  userId: string,
-  pendingEmail: string
-): Promise<Object> => {
+// prettier-ignore
+const setUserPendingEmail = (userId: string, pendingEmail: string): Promise<Object> => {
   return db
     .table('users')
     .get(userId)
@@ -421,8 +504,17 @@ const setUserPendingEmail = (
       pendingEmail,
     })
     .run()
-    .then(() => getUserById(userId));
+    .then(async () => {
+      const user = await getUserById(userId);
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_ADDED_EMAIL,
+      });
+
+      return user
+    });
 };
+
 const updateUserEmail = (userId: string, email: string): Promise<Object> => {
   return db
     .table('users')
@@ -432,7 +524,13 @@ const updateUserEmail = (userId: string, email: string): Promise<Object> => {
       pendingEmail: db.literal(),
     })
     .run()
-    .then(() => getUserById(userId));
+    .then(async () => {
+      const user = await getUserById(userId);
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_VERIFIED_EMAIL,
+      });
+    });
 };
 
 const deleteUser = (userId: string) => {
@@ -459,7 +557,16 @@ const deleteUser = (userId: string) => {
       pendingEmail: null,
       name: 'Deleted',
     })
-    .run();
+    .run()
+    .then(async () => {
+      const user = await getUserById(userId);
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_DELETED,
+      });
+
+      identifyQueue.add({ userId: user.id });
+    });
 };
 
 module.exports = {

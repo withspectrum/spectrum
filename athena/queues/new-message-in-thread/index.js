@@ -19,8 +19,11 @@ import {
 import { getThreadNotificationUsers } from '../../models/usersThreads';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import { getUserById } from '../../models/user';
+import { getMessageById } from '../../models/message';
 import { sendMentionNotificationQueue } from 'shared/bull/queues';
 import type { MessageNotificationJobData, Job } from 'shared/bull/types';
+import type { DBMessage } from 'shared/types';
 
 export default async (job: Job<MessageNotificationJobData>) => {
   const { message: incomingMessage } = job.data;
@@ -97,7 +100,25 @@ export default async (job: Job<MessageNotificationJobData>) => {
       : incomingMessage.content.body;
 
   // get mentions in the message
-  const mentions = getMentions(body);
+  let mentions = getMentions(body);
+  // If the message quoted another message, send a mention notification to the author
+  // of the quoted message
+  if (typeof incomingMessage.parentId === 'string') {
+    // $FlowIssue
+    const parent = await getMessageById(incomingMessage.parentId);
+    // eslint-disable-next-line
+    (parent: DBMessage);
+    if (parent) {
+      const parentAuthor = await getUserById(parent.senderId);
+      if (
+        parentAuthor &&
+        parentAuthor.username &&
+        mentions.indexOf(parentAuthor.username) < 0
+      ) {
+        mentions.push(parentAuthor.username);
+      }
+    }
+  }
   if (mentions && mentions.length > 0) {
     mentions.forEach(username => {
       sendMentionNotificationQueue.add({

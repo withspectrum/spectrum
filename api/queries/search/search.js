@@ -15,7 +15,7 @@ type Input = {
 
 export default (_: any, input: Input, ctx: GraphQLContext) => {
   const { type, first, after, last, before, queryString, filter } = input;
-  if (!queryString) throw new UserError('Please provide a search term.');
+  if (!queryString) return new UserError('Please provide a search term.');
   const args = {
     first,
     after,

@@ -6,6 +6,7 @@ import compose from 'recompose/compose';
 import enableBrandedLoginMutation from 'shared/graphql/mutations/community/enableBrandedLogin';
 import disableBrandedLoginMutation from 'shared/graphql/mutations/community/disableBrandedLogin';
 import { addToastWithTimeout } from '../../../actions/toasts';
+import type { Dispatch } from 'redux';
 
 type Props = {
   id: string,
@@ -14,7 +15,7 @@ type Props = {
   },
   enableBrandedLogin: Function,
   disableBrandedLogin: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 class BrandedLoginToggle extends React.Component<Props> {

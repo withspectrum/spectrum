@@ -4,13 +4,12 @@ import styled from 'styled-components';
 import {
   FlexRow,
   FlexCol,
-  Gradient,
   Transition,
   Shadow,
   hexa,
   zIndex,
-} from '../globals';
-import { Button } from '../buttons';
+} from 'src/components/globals';
+import { Button } from 'src/components/buttons';
 
 export const Title = styled.h1`
   color: ${props => props.theme.text.alt};
@@ -126,11 +125,11 @@ export const NullCol = styled(FlexCol)`
     props.repeat ? 'center top' : 'center center'};
   width: 100%;
   height: auto;
-  min-height: 160px;
+  min-height: ${props => (props.noPadding ? '0' : '160px')};
   flex: 0 0 auto;
   padding: ${props => (props.noPadding ? '0' : '2rem')};
   justify-content: center;
-  align-items: center;
+  align-items: ${props => props.alignItems || 'center'};
   position: relative;
   align-self: center;
 
@@ -163,27 +162,10 @@ export const Profile = styled.div`
   position: relative;
   padding: 16px 0;
 
-  img {
-    border-radius: 48px;
-    width: 48px;
-    height: 48px;
-  }
-
-  span {
-    background-color: ${({ theme }) => theme.special.default};
-    background-image: ${({ theme }) =>
-      Gradient(theme.special.alt, theme.special.default)};
+  .badge {
     position: absolute;
-    left: 75%;
-    top: 48px;
-    color: ${({ theme }) => theme.text.reverse};
-    font-size: 10px;
-    font-weight: 800;
-    padding: 2px 4px;
-    border-radius: 8px;
-    line-height: 1.5;
-    border: 2px solid #fff;
-    z-index: ${zIndex.avatar + 1};
+    top: 54px;
+    left: 40px;
   }
 `;
 
@@ -304,19 +286,19 @@ export const SigninButton = styled.a`
   ${props =>
     props.after &&
     `
-			&:after {
-				content: 'Previously signed in with';
-				position: absolute;
-				top: -32px;
-				font-size: 14px;
-				font-weight: 600;
-				left: 50%;
-				transform: translateX(-50%);
-				width: 100%;
-				text-align: center;
-				color: ${props.theme.text.alt};
-			}
-		`} span {
+      &:after {
+        content: 'Previously signed in with';
+        position: absolute;
+        top: -32px;
+        font-size: 14px;
+        font-weight: 600;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        text-align: center;
+        color: ${props.theme.text.alt};
+      }
+    `} span {
     display: inline-block;
     flex: 0 0 auto;
     margin-top: -1px;

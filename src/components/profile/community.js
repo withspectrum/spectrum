@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import replace from 'string-replace-to-array';
 import Card from '../card';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
@@ -9,10 +8,11 @@ import addProtocolToString from 'shared/normalize-url';
 import { CLIENT_URL } from '../../api/constants';
 import { LoadingProfile } from '../loading';
 import Icon from '../icons';
-import Avatar from '../avatar';
+import { CommunityAvatar } from '../avatar';
 import { Button, OutlineButton } from '../buttons';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import ToggleCommunityMembership from '../toggleCommunityMembership';
+import type { Dispatch } from 'redux';
 import {
   ProfileHeader,
   ProfileHeaderLink,
@@ -32,12 +32,14 @@ import {
   CoverDescription,
   ButtonContainer,
 } from './style';
+import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 
 type Props = {
   onJoin: Function,
+  onLeave: Function,
   joinedCommunity?: Function,
   joinedFirstCommunity?: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   data: {
     community: GetCommunityType,
     loading: boolean,
@@ -45,16 +47,18 @@ type Props = {
   },
   profileSize: ?string,
   currentUser: ?Object,
+  showHoverProfile?: boolean,
 };
 
 class CommunityWithData extends React.Component<Props> {
-  onJoin = () => {
+  onJoin = community => {
     this.props.joinedCommunity && this.props.joinedCommunity(1, false);
-    this.props.onJoin && this.props.onJoin();
+    this.props.onJoin && this.props.onJoin(community);
   };
 
-  onLeave = () => {
+  onLeave = community => {
     this.props.joinedCommunity && this.props.joinedCommunity(-1, false);
+    this.props.onLeave && this.props.onLeave(community);
   };
 
   render() {
@@ -62,16 +66,8 @@ class CommunityWithData extends React.Component<Props> {
       data: { community, loading, error },
       profileSize,
       currentUser,
+      showHoverProfile = true,
     } = this.props;
-    const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
-
-    const renderDescriptionWithLinks = text => {
-      return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
-        <a href={url} target="_blank" rel="noopener nofollower" key={url}>
-          {text}
-        </a>
-      ));
-    };
 
     if (loading) {
       return <LoadingProfile />;
@@ -87,10 +83,10 @@ class CommunityWithData extends React.Component<Props> {
           <Container>
             <CoverPhoto url={community.coverPhoto} />
             <CoverLink to={`/${community.slug}`}>
-              <Avatar
-                src={community.profilePhoto}
+              <CommunityAvatar
                 community={community}
-                size={'64'}
+                showHoverProfile={showHoverProfile}
+                size={64}
                 style={{
                   boxShadow: '0 0 0 2px #fff',
                   flex: '0 0 64px',
@@ -100,7 +96,11 @@ class CommunityWithData extends React.Component<Props> {
               <CoverTitle>{community.name}</CoverTitle>
             </CoverLink>
 
-            <CoverDescription>{community.description}</CoverDescription>
+            {community.description && (
+              <CoverDescription>
+                {renderTextWithLinks(community.description)}
+              </CoverDescription>
+            )}
 
             <ButtonContainer>
               {currentUser ? (
@@ -154,23 +154,29 @@ class CommunityWithData extends React.Component<Props> {
       case 'full':
         return (
           <FullProfile>
-            <Avatar
+            <CommunityAvatar
               community={community}
-              size={'128'}
-              mobileSize={'64'}
-              src={community.profilePhoto}
+              size={128}
+              mobilesize={64}
+              showHoverProfile={showHoverProfile}
               style={{ marginRight: '16px', boxShadow: '0 0 0 2px #fff' }}
             />
             <ProfileHeaderMeta>
               <FullTitle>{community.name}</FullTitle>
             </ProfileHeaderMeta>
             <FullDescription>
-              {renderDescriptionWithLinks(community.description)}
+              {community.description && (
+                <p>{renderTextWithLinks(community.description)}</p>
+              )}
 
               {community.website && (
                 <ExtLink>
                   <Icon glyph="link" size={24} />
-                  <a href={addProtocolToString(community.website)}>
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={addProtocolToString(community.website)}
+                  >
                     {community.website}
                   </a>
                 </ExtLink>
@@ -181,9 +187,9 @@ class CommunityWithData extends React.Component<Props> {
       case 'listItemWithAction':
         return (
           <ProfileHeader>
-            <Avatar
+            <CommunityAvatar
               community={community}
-              src={community.profilePhoto}
+              showHoverProfile={showHoverProfile}
               style={{ marginRight: '16px' }}
             />
             <ProfileHeaderLink to={`/${community.slug}`}>
@@ -238,9 +244,9 @@ class CommunityWithData extends React.Component<Props> {
         return (
           <ProfileCard>
             <ProfileHeader>
-              <Avatar
+              <CommunityAvatar
                 community={community}
-                src={community.profilePhoto}
+                showHoverProfile={showHoverProfile}
                 style={{ marginRight: '16px' }}
               />
               <ProfileHeaderLink to={`/${community.slug}`}>
@@ -295,9 +301,9 @@ class CommunityWithData extends React.Component<Props> {
         return (
           <Card>
             <ProfileHeader>
-              <Avatar
+              <CommunityAvatar
                 community={community}
-                src={`${community.profilePhoto}?w=40&dpr=2`}
+                showHoverProfile={showHoverProfile}
                 style={{ marginRight: '16px' }}
               />
               <ProfileHeaderLink to={`/${community.slug}`}>

@@ -5,13 +5,14 @@ import { openModal } from '../../actions/modals';
 import { truncateNumber } from '../../helpers/utils';
 import Icon from '../icons';
 import { ReputationWrapper, ReputationLabel } from './style';
+import type { Dispatch } from 'redux';
 
 type Props = {
   size?: 'mini' | 'default' | 'large',
   reputation: number,
   tipText?: string,
   tipLocation?: string,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   ignoreClick?: boolean,
 };
 
@@ -32,7 +33,7 @@ class Reputation extends React.Component<Props> {
 
     if (reputation === undefined || reputation === null) return null;
 
-    const renderedReputation = reputation > 0 ? reputation : 0;
+    const renderedReputation = reputation > 0 ? `${reputation}` : '0';
 
     return (
       <ReputationWrapper
@@ -43,7 +44,7 @@ class Reputation extends React.Component<Props> {
         <Icon glyph="rep" size={24} />
 
         <ReputationLabel>
-          {truncateNumber(renderedReputation, 1)}
+          {truncateNumber(parseInt(renderedReputation, 10), 1)}
         </ReputationLabel>
       </ReputationWrapper>
     );

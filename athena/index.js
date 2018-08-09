@@ -6,10 +6,10 @@ import processMessageNotification from './queues/new-message-in-thread';
 import processMentionNotification from './queues/mention-notification';
 import processDirectMessageNotification from './queues/direct-message-notification';
 import processReactionNotification from './queues/reaction-notification';
+import processThreadReactionNotification from './queues/thread-reaction-notification';
 import processChannelNotification from './queues/channel-notification';
 import processCommunityNotification from './queues/community-notification';
 import processThreadNotification from './queues/thread-notification';
-import processSlackImport from './queues/slack-import';
 import processCommunityInvite from './queues/community-invite';
 import processCommunityInvoicePaid from './queues/community-invoice-paid';
 import processProInvoicePaid from './queues/pro-invoice-paid';
@@ -18,18 +18,21 @@ import processAdminMessageModeration from './queues/moderationEvents/message';
 import processAdminThreadModeration from './queues/moderationEvents/thread';
 import processUserRequestedJoinPrivateChannel from './queues/private-channel-request-sent';
 import processUserRequestPrivateChannelApproved from './queues/private-channel-request-approved';
+import processUserRequestedJoinPrivateCommunity from './queues/private-community-request-sent';
+import processUserRequestPrivateCommunityApproved from './queues/private-community-request-approved';
 import processPushNotifications from './queues/send-push-notifications';
 import addedModeratorNotification from './queues/added-moderator-notification';
 import startNotificationsListener from './listeners/notifications';
+import processSendSlackInvitations from './queues/send-slack-invitations';
 import {
   MESSAGE_NOTIFICATION,
   MENTION_NOTIFICATION,
   DIRECT_MESSAGE_NOTIFICATION,
   REACTION_NOTIFICATION,
+  THREAD_REACTION_NOTIFICATION,
   CHANNEL_NOTIFICATION,
   COMMUNITY_NOTIFICATION,
   THREAD_NOTIFICATION,
-  SLACK_IMPORT,
   COMMUNITY_INVITE_NOTIFICATION,
   COMMUNITY_INVOICE_PAID_NOTIFICATION,
   PRO_INVOICE_PAID_NOTIFICATION,
@@ -37,9 +40,12 @@ import {
   PROCESS_ADMIN_TOXIC_THREAD,
   PRIVATE_CHANNEL_REQUEST_SENT,
   PRIVATE_CHANNEL_REQUEST_APPROVED,
+  PRIVATE_COMMUNITY_REQUEST_SENT,
+  PRIVATE_COMMUNITY_REQUEST_APPROVED,
   SEND_PUSH_NOTIFICATIONS,
   TRACK_USER_LAST_SEEN,
   ADDED_MODERATOR_NOTIFICATION,
+  SEND_SLACK_INVITIATIONS,
 } from './queues/constants';
 
 const PORT = process.env.PORT || 3003;
@@ -53,10 +59,11 @@ const server = createWorker({
   [MENTION_NOTIFICATION]: processMentionNotification,
   [DIRECT_MESSAGE_NOTIFICATION]: processDirectMessageNotification,
   [REACTION_NOTIFICATION]: processReactionNotification,
+  [THREAD_REACTION_NOTIFICATION]: processThreadReactionNotification,
   [CHANNEL_NOTIFICATION]: processChannelNotification,
   [COMMUNITY_NOTIFICATION]: processCommunityNotification,
   [THREAD_NOTIFICATION]: processThreadNotification,
-  [SLACK_IMPORT]: processSlackImport,
+  [SEND_SLACK_INVITIATIONS]: processSendSlackInvitations,
   [COMMUNITY_INVITE_NOTIFICATION]: processCommunityInvite,
   [COMMUNITY_INVOICE_PAID_NOTIFICATION]: processCommunityInvoicePaid,
   [PRO_INVOICE_PAID_NOTIFICATION]: processProInvoicePaid,
@@ -65,6 +72,8 @@ const server = createWorker({
   [PROCESS_ADMIN_TOXIC_THREAD]: processAdminThreadModeration,
   [PRIVATE_CHANNEL_REQUEST_SENT]: processUserRequestedJoinPrivateChannel,
   [PRIVATE_CHANNEL_REQUEST_APPROVED]: processUserRequestPrivateChannelApproved,
+  [PRIVATE_COMMUNITY_REQUEST_SENT]: processUserRequestedJoinPrivateCommunity,
+  [PRIVATE_COMMUNITY_REQUEST_APPROVED]: processUserRequestPrivateCommunityApproved,
   [SEND_PUSH_NOTIFICATIONS]: processPushNotifications,
   [ADDED_MODERATOR_NOTIFICATION]: addedModeratorNotification,
 });

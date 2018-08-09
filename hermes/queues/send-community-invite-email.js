@@ -14,8 +14,10 @@ type SendCommunityInviteJobData = {
     firstName: string,
     lastName: string,
     email: string,
+    userId?: string,
   },
   community: Object,
+  communitySettings: Object,
   customMessage: string,
 };
 
@@ -27,9 +29,27 @@ type SendCommunityInviteEmailJob = {
 export default (job: SendCommunityInviteEmailJob) => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending community invite to: ${job.data.to}`);
+
+  const {
+    sender,
+    recipient,
+    community,
+    communitySettings,
+    customMessage,
+  } = job.data;
+
   const subject = `${job.data.sender.name} has invited you to join the ${
     job.data.community.name
   } community on Spectrum`;
+
+  const preheader = `Come join the conversation with ${sender.name}!`;
+  const joinPath = communitySettings
+    ? community.isPrivate &&
+      communitySettings.joinSettings &&
+      communitySettings.joinSettings.token
+      ? `${community.slug}/join/${communitySettings.joinSettings.token}`
+      : `${community.slug}`
+    : `${community.slug}`;
 
   try {
     return sendEmail({
@@ -38,11 +58,14 @@ export default (job: SendCommunityInviteEmailJob) => {
       Tag: SEND_COMMUNITY_INVITE_EMAIL,
       TemplateModel: {
         subject,
-        sender: job.data.sender,
-        recipient: job.data.recipient,
-        community: job.data.community,
-        customMessage: job.data.customMessage,
+        preheader,
+        sender,
+        recipient,
+        community,
+        customMessage,
+        joinPath,
       },
+      userId: recipient.userId,
     });
   } catch (err) {
     debug('❌ Error in job:\n');

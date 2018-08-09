@@ -27,6 +27,7 @@ export const ViewContent = styled(FlexCol)`
 `;
 
 export const MessagesList = styled(FlexCol)`
+  position: relative;
   overflow-y: auto;
   overflow-x: hidden;
   max-width: 400px;
@@ -50,6 +51,14 @@ export const MessagesContainer = styled(FlexCol)`
   flex: auto;
   max-height: 100%;
 
+  @media (min-width: 768px) {
+    ${props =>
+      props.hideOnDesktop &&
+      css`
+        display: none;
+      `};
+  }
+
   @media (max-width: 768px) {
     max-height: calc(100% - 48px);
     ${props =>
@@ -57,6 +66,16 @@ export const MessagesContainer = styled(FlexCol)`
       css`
         display: none;
       `};
+  }
+`;
+
+export const NoThreads = MessagesContainer.extend`
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  transform: translateY(-50%);
+  h2 {
+    max-width: 600px;
   }
 `;
 

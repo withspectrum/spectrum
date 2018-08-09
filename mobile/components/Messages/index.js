@@ -1,123 +1,221 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
+import compose from 'recompose/compose';
 import { View } from 'react-native';
-import ViewNetworkHandler from '../ViewNetworkHandler';
-import Text from '../Text';
+import viewNetworkHandler from '../ViewNetworkHandler';
+import Message from '../Message';
+import InfiniteList from '../InfiniteList';
 import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
+import { convertTimestampToDate } from '../../../shared/time-formatting';
+import { withCurrentUser } from '../../components/WithCurrentUser';
+import { UnseenRoboText, TimestampRoboText } from './RoboText';
+import AuthorAvatar from './AuthorAvatar';
+import AuthorName from './AuthorName';
+import Loading from '../Loading';
+import { FullscreenNullState } from '../NullStates';
+import {
+  Container,
+  MessageGroupContainer,
+  BubbleGroupContainer,
+} from './style';
 
-import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection.js';
+import type { NavigationProps } from 'react-navigation';
+import type { FlatListProps } from 'react-native';
+import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection';
+import type { GetThreadMessageConnectionType } from '../../../shared/graphql/queries/thread/getThreadMessageConnection.js';
+import type { ThreadParticipantType } from '../../../shared/graphql/fragments/thread/threadParticipant';
+import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 
 type Props = {
+  id: string,
+  ...$Exact<FlatListProps>,
   isLoading: boolean,
   hasError: boolean,
+  navigation: NavigationProps,
+  currentUser: GetUserType,
+  messagesDidLoad?: Function,
   data: {
-    ...$Exact<ThreadMessageConnectionType>,
+    thread: {
+      ...$Exact<GetThreadMessageConnectionType>,
+    },
+    messageConnection: {
+      ...$Exact<ThreadMessageConnectionType>,
+    },
   },
 };
 
-class Messages extends React.Component<Props> {
-  render() {
-    const { data, isLoading, hasError } = this.props;
+class Messages extends Component<Props> {
+  componentDidUpdate(prevProps) {
+    const curr = this.props;
+    if (
+      !prevProps.data.messageConnection &&
+      curr.data.messageConnection &&
+      curr.data.messageConnection.edges.length > 0
+    ) {
+      return this.props.messagesDidLoad && this.props.messagesDidLoad();
+    }
+  }
 
-    if (data.messageConnection && data.messageConnection) {
-      const messages = sortAndGroupMessages(
-        data.messageConnection.edges
-          .slice()
-          .filter(Boolean)
-          .map(({ node }) => node)
-      );
+  fetchMore = () => {
+    if (!this.props.data.fetchMore) return;
+    return this.props.data.fetchMore();
+  };
+
+  render() {
+    const {
+      data,
+      isLoading,
+      hasError,
+      navigation,
+      currentUser,
+      isFetchingMore,
+      inverted = false,
+      ...flatListProps
+    } = this.props;
+
+    if (data.messageConnection && data.messageConnection.edges.length > 0) {
+      const nodes = data.messageConnection.edges.map(e => e && e.node);
+
+      let messages = sortAndGroupMessages(nodes.slice().filter(Boolean));
+
+      if (inverted) {
+        messages = messages.reverse();
+      }
+
+      let hasInjectedUnseenRobo = false;
 
       return (
-        <View>
-          {messages.map((group, i) => {
+        <InfiniteList
+          {...flatListProps}
+          data={messages}
+          inverted={inverted}
+          fetchMore={this.fetchMore}
+          isFetchingMore={isFetchingMore}
+          hasNextPage={this.props.data.hasNextPage}
+          loadingIndicator={
+            <View style={{ marginBottom: 32 }}>
+              <Loading />
+            </View>
+          }
+          keyExtractor={item => item[0].id}
+          renderItem={({ item: group, index: i }) => {
             if (group.length === 0) return null;
-            // Since all messages in the group have the same Author and same initial timestamp, we only need to pull that data from the first message in the group. So let's get that message and then check who sent it.
+
             const initialMessage = group[0];
-            const { author } = initialMessage;
+            const me = currentUser
+              ? initialMessage.author.user.id === currentUser.id
+              : false;
 
-            const roboText = author.user.id === 'robo';
-            // const me = currentUser
-            //   ? author.user && author.user.id === currentUser.id
-            //   : false;
+            // const {
+            //   isOwner: isChannelOwner,
+            //   isModerator: isChannelModerator,
+            // } = thread.channel.channelPermissions;
+            // const {
+            //   isOwner: isCommunityOwner,
+            //   isModerator: isCommunityModerator,
+            // } = thread.community.communityPermissions;
+            // const isModerator =
+            //   isChannelOwner ||
+            //   isChannelModerator ||
+            //   isCommunityOwner ||
+            //   isCommunityModerator;
             // const canModerate =
-            //   threadType !== 'directMessageThread' && (me || isModerator);
+            //   initialMessage.threadType !== 'directMessageThread' &&
+            //   (me || isModerator);
 
-            // if (roboText) {
-            //   if (initialMessage.message.type === 'timestamp') {
-            //     return (
-            //       <Timestamp key={initialMessage.timestamp}>
-            //         <hr />
-            //         <Time>
-            //           {convertTimestampToDate(initialMessage.timestamp)}
-            //         </Time>
-            //         <hr />
-            //       </Timestamp>
-            //     );
-            //   } else if (
-            //     initialMessage.message.type === 'unseen-messages-below' &&
-            //     messages[i + 1] &&
-            //     messages[i + 1].length > 0 &&
-            //     messages[i + 1][0].author.id !== currentUser.id
-            //   ) {
-            //     return (
-            //       <UnseenRobotext key={`unseen-${initialMessage.timestamp}`}>
-            //         <hr />
-            //         <UnseenTime>New messages</UnseenTime>
-            //         <hr />
-            //       </UnseenRobotext>
-            //     );
-            //     // Ignore any unknown robo type messages
-            //   } else {
-            //     return null;
-            //   }
-            // }
+            if (initialMessage.author.user.id === 'robo') {
+              if (initialMessage.message.type === 'timestamp') {
+                return (
+                  <TimestampRoboText key={initialMessage.timestamp}>
+                    {convertTimestampToDate(initialMessage.timestamp)}
+                  </TimestampRoboText>
+                );
+              }
 
-            if (roboText) return null;
+              // Ignore unknown robo messages
+              return null;
+            }
+
+            // Flow doesn't seem to understand that we filter the robo authors
+            // (which have incorrect information, obviously) above, so this
+            // has to be a thread participant
+            // $FlowIssue
+            const author: ThreadParticipantType = initialMessage.author;
+
+            let unseenRobo = null;
+            // TODO(@mxstbr): Figure out how to get lastSeen information
+            let lastSeen = new Date('April 15, 2018 12:00:00');
+            if (
+              !!lastSeen &&
+              new Date(group[group.length - 1].timestamp).getTime() >
+                new Date(lastSeen).getTime() &&
+              !me &&
+              !hasInjectedUnseenRobo
+            ) {
+              hasInjectedUnseenRobo = true;
+              unseenRobo = (
+                <UnseenRoboText key="new-messages">New Messages</UnseenRoboText>
+              );
+            }
 
             return (
-              <View key={initialMessage.id || 'robo'}>
-                <View>
-                  {group.map(message => {
-                    return (
-                      <Text key={message.id} type="body">
-                        {message.content.body}
-                      </Text>
-                    );
-                    // return (
-                    //   <Message
-                    //     key={message.id}
-                    //     message={message}
-                    //     reaction={'like'}
-                    //     me={me}
-                    //     canModerate={canModerate}
-                    //     pending={message.id < 0}
-                    //     currentUser={currentUser}
-                    //     threadType={threadType}
-                    //     threadId={threadId}
-                    //     toggleReaction={toggleReaction}
-                    //     selectedId={this.state.selectedMessage}
-                    //     changeSelection={this.toggleSelectedMessage}
-                    //   />
-                    // );
-                  })}
-                </View>
-              </View>
+              <Container key={initialMessage.id || 'robo'} me={me}>
+                {unseenRobo}
+
+                <MessageGroupContainer>
+                  <AuthorAvatar
+                    onPress={() =>
+                      navigation.navigate({
+                        routeName: 'User',
+                        key: author.user.id,
+                        params: { id: author.user.id },
+                      })
+                    }
+                    author={author}
+                    me={me}
+                  />
+
+                  <BubbleGroupContainer>
+                    {!me && (
+                      <AuthorName
+                        author={author}
+                        onPress={() =>
+                          navigation.navigate({
+                            routeName: 'User',
+                            key: author.user.id,
+                            params: { id: author.user.id },
+                          })
+                        }
+                      />
+                    )}
+
+                    {group.map(message => (
+                      <Message
+                        key={message.id}
+                        me={me}
+                        message={message}
+                        threadId={this.props.id}
+                      />
+                    ))}
+                  </BubbleGroupContainer>
+                </MessageGroupContainer>
+              </Container>
             );
-          })}
-        </View>
+          }}
+        />
       );
     }
 
     if (isLoading) {
-      return <Text type="body">Loading...</Text>;
+      return <Loading />;
     }
 
     if (hasError) {
-      return <Text type="body">Error :(</Text>;
+      return <FullscreenNullState />;
     }
 
     return null;
   }
 }
 
-export default ViewNetworkHandler(Messages);
+export default compose(viewNetworkHandler, withCurrentUser)(Messages);

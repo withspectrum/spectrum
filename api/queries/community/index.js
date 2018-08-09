@@ -28,6 +28,8 @@ import billingSettings from './billingSettings';
 import hasChargeableSource from './hasChargeableSource';
 import hasFeatures from './hasFeatures';
 import brandedLogin from './brandedLogin';
+import slackSettings from './slackSettings';
+import joinSettings from './joinSettings';
 
 module.exports = {
   Query: {
@@ -60,5 +62,7 @@ module.exports = {
     hasChargeableSource,
     hasFeatures,
     brandedLogin,
+    slackSettings,
+    joinSettings,
   },
 };

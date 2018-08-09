@@ -37,7 +37,7 @@ export class LinkPreview extends Component {
         size={this.props.size}
         padding={image}
         target="_blank"
-        rel="noopener"
+        rel="noopener noreferrer"
         href={url || trueUrl}
         margin={margin}
       >

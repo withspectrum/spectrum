@@ -1,9 +1,7 @@
 // @flow
-import { track } from '../helpers/events';
+import type { ModalTypes } from 'src/components/modals/modalRoot';
 
-export const openModal = (name: string, props?: Object) => {
-  track(`modal ${name}`, 'opened', null);
-
+export const openModal = (name: ModalTypes, props?: Object) => {
   return {
     type: 'SHOW_MODAL',
     modalType: name,

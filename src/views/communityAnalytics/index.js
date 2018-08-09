@@ -10,17 +10,21 @@ import MemberGrowth from './components/memberGrowth';
 import ConversationGrowth from './components/conversationGrowth';
 import TopMembers from './components/topMembers';
 import TopAndNewThreads from './components/topAndNewThreads';
-import AnalyticsUpsell from './components/analyticsUpsell';
 import {
   SectionsContainer,
+  SectionCard,
   Column,
 } from '../../components/settingsViews/style';
+import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
+import { ErrorBoundary, SettingsFallback } from 'src/components/error';
+import AnalyticsUpsell from './components/analyticsUpsell';
 
 type Props = {
   currentUser: Object,
   community: GetCommunitySettingsType,
   communitySlug: string,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   match: Object,
 };
 
@@ -29,24 +33,72 @@ type State = {
 };
 
 class CommunityAnalytics extends React.Component<Props, State> {
+  componentDidMount() {
+    const { community } = this.props;
+    if (
+      community &&
+      (!community.hasFeatures || !community.hasFeatures.analytics)
+    ) {
+      track(events.COMMUNITY_ANALYTICS_VIEWED_UPSELL, {
+        community: transformations.analyticsCommunity(community),
+      });
+    }
+
+    if (community && community.hasFeatures && community.hasFeatures.analytics) {
+      track(events.COMMUNITY_ANALYTICS_VIEWED, {
+        community: transformations.analyticsCommunity(community),
+      });
+    }
+  }
+
   render() {
     const { community } = this.props;
 
     if (community && community.id) {
-      if (!community.hasFeatures || !community.hasFeatures.analytics) {
-        return <AnalyticsUpsell community={community} />;
-      }
-
       return (
         <SectionsContainer>
-          <Column>
-            <MemberGrowth id={community.id} />
-            <TopMembers id={community.id} />
-          </Column>
-          <Column>
-            <ConversationGrowth id={community.id} />
-            <TopAndNewThreads id={community.id} />
-          </Column>
+          {community.hasFeatures.analytics ? (
+            <React.Fragment>
+              <Column>
+                <ErrorBoundary fallbackComponent={SettingsFallback}>
+                  <MemberGrowth id={community.id} />
+                </ErrorBoundary>
+
+                <ErrorBoundary fallbackComponent={SettingsFallback}>
+                  <TopMembers id={community.id} />
+                </ErrorBoundary>
+              </Column>
+              <Column>
+                <ErrorBoundary fallbackComponent={SettingsFallback}>
+                  <ConversationGrowth id={community.id} />
+                </ErrorBoundary>
+
+                <ErrorBoundary fallbackComponent={SettingsFallback}>
+                  <TopAndNewThreads id={community.id} />
+                </ErrorBoundary>
+              </Column>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <Column style={{ paddingBottom: 0 }}>
+                <ErrorBoundary fallbackComponent={SettingsFallback}>
+                  <MemberGrowth id={community.id} />
+                </ErrorBoundary>
+              </Column>
+              <Column style={{ paddingBottom: 0 }}>
+                <ErrorBoundary fallbackComponent={SettingsFallback}>
+                  <ConversationGrowth id={community.id} />
+                </ErrorBoundary>
+              </Column>
+              <Column fullWidth style={{ paddingTop: 0 }}>
+                <ErrorBoundary fallbackComponent={SettingsFallback}>
+                  <SectionCard>
+                    <AnalyticsUpsell community={community} />
+                  </SectionCard>
+                </ErrorBoundary>
+              </Column>
+            </React.Fragment>
+          )}
         </SectionsContainer>
       );
     }
