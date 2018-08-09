@@ -461,7 +461,9 @@ class ThreadContainer extends React.Component<Props, State> {
                   title: thread.content.title,
                   footer: `spectrum.chat/${thread.community.slug}`,
                 })}
-              />
+              >
+                <meta name="twitter:card" content="summary_large_image" />
+              </Head>
               <Titlebar
                 title={thread.content.title}
                 subtitle={`${thread.community.name} / ${thread.channel.name}`}
