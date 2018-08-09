@@ -4,8 +4,8 @@ import UserError from '../../utils/UserError';
 import { getCommunityById } from '../../models/community';
 import { getUserById } from '../../models/user';
 import {
-  sendAddedModeratorNotificationQueue,
-  sendAddedModeratorEmailQueue,
+  sendAddedAsCommunityModeratorNotificationQueue,
+  sendAddedAsCommunityModeratorEmailQueue,
 } from 'shared/bull/queues';
 import {
   makeMemberModeratorInCommunity,
@@ -137,19 +137,19 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   // all checks pass
   if (currentUserPermission.isOwner || currentUserPermission.isModerator) {
     return await makeMemberModeratorInCommunity(communityId, userToEvaluateId)
-      .then(a => {
-        sendAddedModeratorNotificationQueue.add({
+      .then(communityMember => {
+        sendAddedAsCommunityModeratorNotificationQueue.add({
           communityId: communityId,
           moderatorId: userToEvaluateId,
           userId: currentUser.id,
         });
         if (recipient.email) {
-          sendAddedModeratorEmailQueue.add({
+          sendAddedAsCommunityModeratorEmailQueue.add({
             recipient: { email: recipient.email },
             community,
           });
         }
-        return a;
+        return communityMember;
       })
       .then(result => {
         trackQueue.add({

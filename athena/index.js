@@ -21,7 +21,7 @@ import processUserRequestPrivateChannelApproved from './queues/private-channel-r
 import processUserRequestedJoinPrivateCommunity from './queues/private-community-request-sent';
 import processUserRequestPrivateCommunityApproved from './queues/private-community-request-approved';
 import processPushNotifications from './queues/send-push-notifications';
-import addedModeratorNotification from './queues/added-moderator-notification';
+import addedAsCommunityModeratorNotification from './queues/added-as-community-moderator-notification';
 import startNotificationsListener from './listeners/notifications';
 import processSendSlackInvitations from './queues/send-slack-invitations';
 import {
@@ -44,7 +44,7 @@ import {
   PRIVATE_COMMUNITY_REQUEST_APPROVED,
   SEND_PUSH_NOTIFICATIONS,
   TRACK_USER_LAST_SEEN,
-  ADDED_MODERATOR_NOTIFICATION,
+  ADDED_AS_COMMUNITY_MODERATOR_NOTIFICATION,
   SEND_SLACK_INVITIATIONS,
 } from './queues/constants';
 
@@ -75,7 +75,7 @@ const server = createWorker({
   [PRIVATE_COMMUNITY_REQUEST_SENT]: processUserRequestedJoinPrivateCommunity,
   [PRIVATE_COMMUNITY_REQUEST_APPROVED]: processUserRequestPrivateCommunityApproved,
   [SEND_PUSH_NOTIFICATIONS]: processPushNotifications,
-  [ADDED_MODERATOR_NOTIFICATION]: addedModeratorNotification,
+  [ADDED_AS_COMMUNITY_MODERATOR_NOTIFICATION]: addedAsCommunityModeratorNotification,
 });
 
 startNotificationsListener();

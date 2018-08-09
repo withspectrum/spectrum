@@ -26,7 +26,8 @@ export const PRIVATE_COMMUNITY_REQUEST_SENT = 'private community request sent';
 export const PRIVATE_COMMUNITY_REQUEST_APPROVED =
   'private community request approved';
 export const SEND_PUSH_NOTIFICATIONS = 'push notifications';
-export const ADDED_MODERATOR_NOTIFICATION = 'added moderator notification';
+export const ADDED_AS_COMMUNITY_MODERATOR_NOTIFICATION =
+  'added as community moderator notification';
 export const SEND_SLACK_INVITIATIONS = 'send slack invitations';
 
 // invoices and recurring payments

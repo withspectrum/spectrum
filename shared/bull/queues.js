@@ -52,7 +52,7 @@ import {
   SEND_EMAIL_VALIDATION_EMAIL,
   SEND_NEW_COMMUNITY_WELCOME_EMAIL,
   SEND_NEW_USER_WELCOME_EMAIL,
-  SEND_NEW_MODERATOR_WELCOME_EMAIL,
+  SEND_ADDED_AS_COMMUNITY_MODERATOR_EMAIL,
 } from 'hermes/queues/constants';
 
 import {
@@ -76,7 +76,7 @@ import {
   MESSAGE_NOTIFICATION,
   SEND_PUSH_NOTIFICATIONS,
   SLACK_IMPORT,
-  ADDED_MODERATOR_NOTIFICATION,
+  ADDED_AS_COMMUNITY_MODERATOR_NOTIFICATION,
   SEND_SLACK_INVITIATIONS,
 } from 'athena/queues/constants';
 
@@ -110,7 +110,7 @@ exports.QUEUE_NAMES = {
   sendMentionNotificationQueue: MENTION_NOTIFICATION,
   sendNotificationAsPushQueue: SEND_PUSH_NOTIFICATIONS,
   slackImportQueue: SLACK_IMPORT,
-  sendAddedModeratorNotificationQueue: ADDED_MODERATOR_NOTIFICATION,
+  sendAddedAsCommunityModeratorNotificationQueue: ADDED_AS_COMMUNITY_MODERATOR_NOTIFICATION,
   sendSlackInvitationsQueue: SEND_SLACK_INVITIATIONS,
 
   // hermes - emails
@@ -131,7 +131,7 @@ exports.QUEUE_NAMES = {
   sendPrivateCommunityRequestEmailQueue: SEND_PRIVATE_COMMUNITY_REQUEST_SENT_EMAIL,
   sendPrivateCommunityRequestApprovedEmailQueue: SEND_PRIVATE_COMMUNITY_REQUEST_APPROVED_EMAIL,
   sendThreadCreatedNotificationEmailQueue: SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
-  sendAddedModeratorEmailQueue: SEND_NEW_MODERATOR_WELCOME_EMAIL,
+  sendAddedAsCommunityModeratorEmailQueue: SEND_ADDED_AS_COMMUNITY_MODERATOR_EMAIL,
 
   // mercury - reputation
   processReputationEventQueue: PROCESS_REPUTATION_EVENT,

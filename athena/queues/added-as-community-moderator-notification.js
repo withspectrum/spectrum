@@ -1,18 +1,21 @@
 // @flow
 const debug = require('debug')('athena:queue:added-moderator-notification');
 import Raven from 'shared/raven';
-import { getCommunityById } from '../models/community';
 import { storeNotification } from '../models/notification';
 import { storeUsersNotifications } from '../models/usersNotifications';
 import { getUsers } from '../models/user';
 import { fetchPayload } from '../utils/payloads';
 import isEmail from 'validator/lib/isEmail';
-import { sendAddedModeratorNotificationQueue } from 'shared/bull/queues';
-import type { AddedModeratorNotificationJobData, Job } from 'shared/bull/types';
+import type {
+  AddedAsCommunityModeratorNotificationJobData,
+  Job,
+} from 'shared/bull/types';
 
-export default async (job: Job<AddedModeratorNotificationJobData>) => {
+export default async (
+  job: Job<AddedAsCommunityModeratorNotificationJobData>
+) => {
   const { moderatorId, communityId, userId } = job.data;
-  debug(`added user to community ${communityId}`);
+  debug(`added user as moderator to community ${communityId}`);
 
   const [actor, context, entity] = await Promise.all([
     fetchPayload('USER', userId),
@@ -20,7 +23,7 @@ export default async (job: Job<AddedModeratorNotificationJobData>) => {
     fetchPayload('USER', moderatorId),
   ]);
 
-  const eventType = 'ADDED_MODERATOR';
+  const eventType = 'ADDED_AS_COMMUNITY_MODERATOR';
 
   // construct a new notification record to either be updated or stored in the db
   const nextNotificationRecord = Object.assign(
@@ -45,9 +48,6 @@ export default async (job: Job<AddedModeratorNotificationJobData>) => {
   const usersNotificationPromises = filteredRecipients.map(recipient =>
     storeUsersNotifications(updatedNotification.id, recipient.id)
   );
-
-  // for each owner,send an email
-  const community = await getCommunityById(communityId);
 
   return await Promise.all([
     ...usersNotificationPromises, // update or store usersNotifications in-app

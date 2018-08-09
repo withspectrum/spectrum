@@ -125,8 +125,8 @@ export const parseEvent = event => {
     case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
       return <span>approved your request to join</span>;
     }
-    case 'ADDED_MODERATOR': {
-      return <span>added you as a moderator to</span>;
+    case 'ADDED_AS_COMMUNITY_MODERATOR': {
+      return <span>added you as a moderator in the</span>;
     }
     case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
       return <span>requested to join</span>;

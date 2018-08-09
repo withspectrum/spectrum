@@ -42,8 +42,8 @@ export const SEND_PRIVATE_COMMUNITY_REQUEST_APPROVED_EMAIL =
   'send private community request approved email';
 export const SEND_ADMIN_USER_SPAMMING_THREADS_NOTIFICATION_EMAIL =
   'send admin user spamming threads notification email';
-export const SEND_NEW_MODERATOR_WELCOME_EMAIL =
-  'send new moderator welcome email';
+export const SEND_ADDED_AS_COMMUNITY_MODERATOR_EMAIL =
+  'send added as community moderator email';
 
 export const NEW_MESSAGE_TEMPLATE = IS_PROD ? 2266041 : 3788381;
 export const NEW_MENTION_THREAD_TEMPLATE = IS_PROD ? 3776541 : 3844623;
@@ -82,7 +82,9 @@ export const PRIVATE_CHANNEL_REQUEST_APPROVED_TEMPLATE = IS_PROD
   ? 4550804
   : 4543861;
 
-export const NEW_MODERATOR_WELCOME_TEMPLATE = 1;
+export const ADDED_AS_COMMUNITY_MODERATOR_EMAIL_TEMPLATE = IS_PROD
+  ? 6098042
+  : 6098022;
 export const PRIVATE_COMMUNITY_REQUEST_SENT_TEMPLATE = IS_PROD
   ? 6511303
   : 6504063;
