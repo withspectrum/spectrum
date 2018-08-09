@@ -8,7 +8,6 @@ import idx from 'idx';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
-import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo';
 import ChatMessages from '../../../components/messageGroup';
 import { Loading } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
@@ -21,8 +20,6 @@ import {
   ChatWrapper,
   NullMessagesWrapper,
   NullCopy,
-  EmptyThreadHeading,
-  EmptyThreadDescription,
   SocialShareWrapper,
   A,
 } from '../style';
