@@ -51,9 +51,7 @@ describe('Inbox view', () => {
   });
 
   const scrollAndLoadThreads = initialThreadCount => {
-    cy.get('[data-cy="inbox-thread-feed"]')
-      .get('#scroller-for-inbox')
-      .scrollTo('bottom');
+    cy.get('[data-cy="scroller-for-inbox"]').scrollTo('bottom');
 
     return cy
       .get('[data-cy="inbox-thread-item"]')

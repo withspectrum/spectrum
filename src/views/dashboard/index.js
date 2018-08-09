@@ -35,21 +35,25 @@ import {
 import { track, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
 
-const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
-  DashboardThreadFeed
-);
+const EverythingThreadFeed = compose(
+  connect(),
+  getEverythingThreads
+)(DashboardThreadFeed);
 
-const CommunityThreadFeed = compose(connect(), getCommunityThreads)(
-  DashboardThreadFeed
-);
+const CommunityThreadFeed = compose(
+  connect(),
+  getCommunityThreads
+)(DashboardThreadFeed);
 
-const ChannelThreadFeed = compose(connect(), getChannelThreadConnection)(
-  DashboardThreadFeed
-);
+const ChannelThreadFeed = compose(
+  connect(),
+  getChannelThreadConnection
+)(DashboardThreadFeed);
 
-const SearchThreadFeed = compose(connect(), searchThreadsQuery)(
-  DashboardThreadFeed
-);
+const SearchThreadFeed = compose(
+  connect(),
+  searchThreadsQuery
+)(DashboardThreadFeed);
 
 type State = {
   activeChannelObject: ?Object,
@@ -173,7 +177,7 @@ class Dashboard extends React.Component<Props, State> {
                   Search results for “{searchQueryString}”
                 </SearchStringHeader>
               )}
-            <InboxScroller id="scroller-for-inbox">
+            <InboxScroller id="scroller-for-inbox" data-cy="scroller-for-inbox">
               {searchQueryString &&
                 searchQueryString.length > 0 &&
                 searchFilter && (

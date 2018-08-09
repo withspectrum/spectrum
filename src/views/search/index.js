@@ -9,9 +9,10 @@ import DashboardThreadFeed from '../dashboard/components/threadFeed';
 import { InboxScroller } from '../dashboard/style';
 import SearchInput from './searchInput';
 
-const SearchThreadFeed = compose(connect(), searchThreadsQuery)(
-  DashboardThreadFeed
-);
+const SearchThreadFeed = compose(
+  connect(),
+  searchThreadsQuery
+)(DashboardThreadFeed);
 
 type Props = {};
 type State = {
@@ -41,7 +42,7 @@ class Search extends React.Component<Props, State> {
 
         <SearchInput handleSubmit={this.handleSubmit} />
 
-        <InboxScroller id="scroller-for-inbox">
+        <InboxScroller id="scroller-for-inbox" data-cy="scroller-for-inbox">
           {searchQueryString &&
             searchQueryString.length > 0 &&
             searchFilter && (
