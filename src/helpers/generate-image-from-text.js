@@ -1,7 +1,7 @@
 // @flow
 // Generates a meta image which shows a title and a footer text on a nice Spectrum background.
 import theme from 'shared/theme';
-import { bota } from 'abab';
+import { btoa } from 'abab';
 import { stringify } from 'query-string';
 
 // NOTES(@mxstbr):
