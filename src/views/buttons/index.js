@@ -5,6 +5,7 @@ import {
   Button,
   PrimaryButton,
   SecondaryButton,
+  DangerButton,
   TextButton,
   OutlineButton,
   IconButton,
@@ -22,6 +23,8 @@ export default class Buttons extends React.Component<{}> {
           <PrimaryButton>Primary Button</PrimaryButton>
 
           <SecondaryButton>Secondary Button</SecondaryButton>
+
+          <DangerButton>Danger Button</DangerButton>
 
           <TextButton>Text Button</TextButton>
 
@@ -41,6 +44,8 @@ export default class Buttons extends React.Component<{}> {
 
           <SecondaryButton size="large">Secondary Button</SecondaryButton>
 
+          <DangerButton size="large">Danger Button</DangerButton>
+
           <TextButton size="large">Text Button</TextButton>
 
           <OutlineButton size="large">Outline Button</OutlineButton>
@@ -59,6 +64,8 @@ export default class Buttons extends React.Component<{}> {
 
           <SecondaryButton disabled>Secondary Button</SecondaryButton>
 
+          <DangerButton disabled>Danger Button</DangerButton>
+
           <TextButton disabled>Text Button</TextButton>
 
           <OutlineButton disabled>Outline Button</OutlineButton>
@@ -76,6 +83,8 @@ export default class Buttons extends React.Component<{}> {
           <PrimaryButton loading>Loading Primary Button</PrimaryButton>
 
           <SecondaryButton loading>Loading Secondary Button</SecondaryButton>
+
+          <DangerButton loading>Loading Danger Button</DangerButton>
 
           <TextButton loading>Loading Text Button</TextButton>
 
@@ -103,6 +112,11 @@ export default class Buttons extends React.Component<{}> {
             <Icon glyph="message-new" size={24} />
             Secondary Button
           </SecondaryButton>
+
+          <DangerButton>
+            <Icon glyph="message-new" size={24} />
+            Danger Button
+          </DangerButton>
 
           <TextButton>
             <Icon glyph="message-new" size={24} />

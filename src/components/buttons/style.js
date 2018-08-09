@@ -1,6 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { Shadow, Transition, hexa, tint } from '../globals';
+import { Shadow, hexa, tint } from '../globals';
 import type { Size } from './';
 
 const getPadding = (size: Size) => {
@@ -42,7 +42,6 @@ const base = css`
   font-weight: 500;
   white-space: nowrap;
   word-break: keep-all;
-  transition: ${Transition.hover.off};
   cursor: pointer;
   line-height: 1;
   position: relative;
@@ -51,6 +50,7 @@ const base = css`
   opacity: ${props => (props.disabled ? '0.64' : '1')};
   box-shadow: ${props =>
     props.disabled ? 'none' : `0 1px 2px rgba(0,0,0,0.04)`};
+  transition: box-shadow 0.2s ease-in-out;
 
   .icon {
     margin-right: 8px;
@@ -61,7 +61,7 @@ const base = css`
   }
 
   &:hover {
-    transition: ${Transition.hover.on};
+    transition: box-shadow 0.2s ease-in-out;
     box-shadow: ${props =>
       props.disabled ? 'none' : `${Shadow.mid} rgba(0,0,0,0.08)`};
   }
@@ -108,11 +108,6 @@ export const StyledPrimaryButton = styled.button`
 
   &:hover {
     color: ${props => props.theme.text.reverse};
-    background-image: ${props =>
-      `linear-gradient(to bottom, ${tint(props.theme.brand.alt, 16)}, ${tint(
-        props.theme.brand.default,
-        16
-      )})`};
     box-shadow: ${props =>
       props.disabled ? 'none' : `${Shadow.mid} rgba(0,0,0,0.12)`};
   }
@@ -145,11 +140,6 @@ export const StyledSecondaryButton = styled.button`
 
   &:hover {
     color: ${props => props.theme.text.reverse};
-    background-image: ${props =>
-      `linear-gradient(to bottom, ${tint(props.theme.success.alt, 4)}, ${tint(
-        props.theme.success.default,
-        4
-      )})`};
     box-shadow: ${props =>
       props.disabled ? 'none' : `${Shadow.mid} rgba(0,0,0,0.12)`};
   }
@@ -169,8 +159,45 @@ export const StyledSecondaryButton = styled.button`
   }
 `;
 
+export const StyledDangerButton = styled.button`
+  ${base};
+  border: 1px solid ${props => props.theme.bg.border};
+  color: ${props => props.theme.warn.default};
+  background-color: ${props => props.theme.bg.default};
+  background-image: ${props =>
+    `linear-gradient(to bottom, ${props.theme.bg.default}, ${
+      props.theme.bg.wash
+    })`};
+
+  &:hover {
+    border: 1px solid ${props => props.theme.warn.default};
+    color: ${props => props.theme.text.reverse};
+    background-image: ${props =>
+      `linear-gradient(to bottom, ${tint(props.theme.warn.alt, 4)}, ${tint(
+        props.theme.warn.default,
+        4
+      )})`};
+    box-shadow: ${props =>
+      props.disabled ? 'none' : `${Shadow.mid} rgba(0,0,0,0.12)`};
+  }
+
+  &:active {
+    border: 1px solid ${props => props.theme.warn.default};
+    background-image: ${props =>
+      `linear-gradient(to top, ${props.theme.warn.alt}, ${
+        props.theme.warn.default
+      })`};
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 1px ${props => props.theme.bg.default},
+      0 0 0 3px ${props => hexa(props.theme.warn.alt, 0.32)};
+  }
+`;
+
 export const StyledTextButton = styled.button`
-  ${base} border: none;
+  ${base};
+  border: none;
   color: ${props => props.theme.text.secondary};
   box-shadow: none;
   background-color: transparent;
@@ -230,7 +257,6 @@ export const StyledIconButton = styled.button`
 
   &:active {
     transform: scale(0.96);
-    transition: ${Transition.hover.on};
   }
 
   &:focus {

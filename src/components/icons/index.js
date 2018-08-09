@@ -37,7 +37,7 @@ export const SvgWrapper = styled.div`
   color: inherit;
 
   @media (min-width: 768px) {
-    ${props => (props.tipText ? Tooltip(props) : '')};
+    ${props => (props.tipText ? Tooltip : '')};
   }
 
   ${props =>

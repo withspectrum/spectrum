@@ -1,11 +1,10 @@
 // @flow
 import * as React from 'react';
-import { Spinner } from 'src/components/globals';
-
 import {
   StyledButton,
   StyledPrimaryButton,
   StyledSecondaryButton,
+  StyledDangerButton,
   StyledOutlineButton,
   StyledTextButton,
   StyledIconButton,
@@ -72,6 +71,23 @@ export class SecondaryButton extends React.Component<Props> {
       >
         {children}
       </StyledSecondaryButton>
+    );
+  }
+}
+
+export class DangerButton extends React.Component<Props> {
+  render() {
+    const {
+      size = 'default',
+      disabled = false,
+      loading = false,
+      children,
+      ...rest
+    } = this.props;
+    return (
+      <StyledDangerButton disabled={disabled || loading} size={size} {...rest}>
+        {children}
+      </StyledDangerButton>
     );
   }
 }
