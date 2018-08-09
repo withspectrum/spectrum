@@ -16,7 +16,7 @@
     "rethinkdb-changefeed-reconnect": "^0.3.2",
     "rethinkdbdash": "^2.3.31",
     "shortid": "^2.2.12",
-    "source-map-support": "^0.5.6",
+    "source-map-support": "^0.5.7",
     "stripe": "^5.10.0",
     "toobusy-js": "^0.5.1"
   },
