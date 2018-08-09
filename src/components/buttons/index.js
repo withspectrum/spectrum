@@ -20,6 +20,8 @@ export type Props = {
   // color and hoverColor should only be used to granularly modify icon buttons
   color?: Function,
   hoverColor?: Function,
+  tipText?: string,
+  tipLocation?: string,
   children: React.Node,
 };
 
