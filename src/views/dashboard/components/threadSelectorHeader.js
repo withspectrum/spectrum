@@ -48,7 +48,7 @@ class Header extends React.Component<Props> {
             <Link
               to={`/${activeCommunityObject.slug}/${activeChannelObject.slug}`}
             >
-              <HeaderActiveViewTitle>
+              <HeaderActiveViewTitle data-cy="header-channel-title">
                 {activeChannelObject.name}
               </HeaderActiveViewTitle>
             </Link>

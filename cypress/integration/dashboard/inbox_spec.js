@@ -46,11 +46,19 @@ describe('Inbox view', () => {
       cy.visit('/');
     });
 
-    it('should filter threads by community', () => {
-      const userCommunityToTest = data.communities.find(
-        community => community.id === userCommunityIds[0]
-      );
+    const userCommunityToTest = data.communities.find(
+      community => community.id === userCommunityIds[0]
+    );
 
+    const threadIdsOfUserCommunityToTest = data.threads
+      .filter(thread => thread.communityId === userCommunityToTest.id)
+      .map(thread => thread.id);
+
+    xit('should include a link to the filtered community', () => {
+      // TODO
+    });
+
+    xit('should filter threads by community', () => {
       // Ensure more than one community's threads are visible initially
       cy.get('[data-cy="inbox-thread-item"]')
         .get('[data-cy="header-community-name"]')
@@ -78,9 +86,6 @@ describe('Inbox view', () => {
         .should('eq', userCommunityToTest.name);
 
       // Ensure now only the one community's threads are visible
-      const threadIdsOfUserCommunityToTest = data.threads
-        .filter(thread => thread.communityId === userCommunityToTest.id)
-        .map(thread => thread.id);
       cy.get('[data-cy="inbox-thread-feed"]')
         .get('[data-cy="inbox-thread-link"]')
         .then($anchors => {
@@ -97,8 +102,59 @@ describe('Inbox view', () => {
         });
     });
 
-    xit('should filter threads by channel within a community', () => {
-      // TODO
+    const userCommunityChannelToTest = data.channels.filter(
+      channel =>
+        channel.communityId === userCommunityToTest.id &&
+        channel.name !== 'General'
+    )[0];
+
+    const threadIdsOfUserCommunityChannelToTest = data.threads
+      .filter(thread => thread.channelId === userCommunityChannelToTest.id)
+      .map(thread => thread.id);
+
+    it('should filter threads by channel within a community', () => {
+      // Filter by the community's threads
+      cy.get(`[data-cy="community-list-item-${userCommunityToTest.id}"]`)
+        .click()
+        .get('[data-cy="header-community-title"]')
+        .invoke('text')
+        .should('eq', userCommunityToTest.name);
+
+      // Ensure more than one channel's threads are visible initially
+      cy.get('[data-cy="inbox-thread-feed"]')
+        .get('[data-cy="header-channel-name"]')
+        .then($channelPillElements => {
+          const channelNames = new Set();
+          for (let i = 0; i < $channelPillElements.length; i++) {
+            channelNames.add($channelPillElements[i].textContent);
+          }
+          expect(channelNames.size).to.be.greaterThan(1);
+          expect(channelNames.has(userCommunityChannelToTest.name)).to.be.true;
+        });
+
+      // Further filter by the channel
+      cy.get(
+        `[data-cy="channel-list-item-${userCommunityChannelToTest.id}"]`
+      ).click();
+      cy.get('[data-cy="header-channel-title"]')
+        .invoke('text')
+        .should('eq', userCommunityChannelToTest.name);
+
+      // Ensure now only the one channel's threads are visible
+      cy.get('[data-cy="inbox-thread-feed"]')
+        .get('[data-cy="inbox-thread-link"]')
+        .then($anchors => {
+          const visibleThreadIds = [];
+          for (let i = 0; i < $anchors.length; i++) {
+            const anchorUrl = new URL($anchors[i]['href']);
+            const anchorThreadId = anchorUrl.searchParams.get('t');
+            visibleThreadIds.push(anchorThreadId);
+          }
+          const threadIdsFromOtherChannels = visibleThreadIds.filter(
+            id => !threadIdsOfUserCommunityChannelToTest.includes(id)
+          );
+          expect(threadIdsFromOtherChannels.length).to.eq(0);
+        });
     });
 
     xit('should include a link to the filtered community', () => {

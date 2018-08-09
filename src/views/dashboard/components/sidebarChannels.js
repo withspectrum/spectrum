@@ -167,6 +167,7 @@ class SidebarChannels extends React.Component<Props> {
                       this.changeChannel(channel.id);
                       this.setActiveChannelObject(channel);
                     }}
+                    data-cy={`channel-list-item-${channel.id}`}
                   >
                     {channel.isPrivate ? (
                       <Icon glyph="channel-private" size={24} />
@@ -214,6 +215,8 @@ class SidebarChannels extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getCommunityChannels, viewNetworkHandler)(
-  SidebarChannels
-);
+export default compose(
+  connect(),
+  getCommunityChannels,
+  viewNetworkHandler
+)(SidebarChannels);

@@ -94,6 +94,7 @@ class Header extends React.Component<HeaderProps> {
                   <MetaSubtitle
                     active={active}
                     to={`/${community.slug}/${channel.slug}`}
+                    data-cy="header-channel-name"
                   >
                     {channel.name}
                   </MetaSubtitle>
