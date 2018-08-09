@@ -17,6 +17,9 @@ export type Props = {
   size?: Size,
   disabled?: boolean,
   loading?: boolean,
+  // color and hoverColor should only be used to granularly modify icon buttons
+  color?: Function,
+  hoverColor?: Function,
   children: React.Node,
 };
 
@@ -132,11 +135,19 @@ export class IconButton extends React.Component<Props> {
       size = 'default',
       disabled = false,
       loading = false,
+      color,
+      hoverColor,
       children,
       ...rest
     } = this.props;
     return (
-      <StyledIconButton disabled={disabled || loading} size={size} {...rest}>
+      <StyledIconButton
+        color={color}
+        hoverColor={hoverColor}
+        disabled={disabled || loading}
+        size={size}
+        {...rest}
+      >
         {children}
       </StyledIconButton>
     );

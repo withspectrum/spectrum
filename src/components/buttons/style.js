@@ -240,7 +240,8 @@ export const StyledOutlineButton = styled.button`
 export const StyledIconButton = styled.button`
   ${base};
   border: none;
-  color: ${props => props.theme.text.secondary};
+  color: ${props =>
+    props.color ? props.color(props.theme) : props.theme.text.secondary};
   background-color: transparent;
   background-image: none;
   box-shadow: none;
@@ -251,7 +252,10 @@ export const StyledIconButton = styled.button`
   }
 
   &:hover {
-    color: ${props => props.theme.text.default};
+    color: ${props =>
+      props.hoverColor
+        ? props.hoverColor(props.theme)
+        : props.theme.text.default};
     box-shadow: none;
   }
 

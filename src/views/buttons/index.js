@@ -33,6 +33,13 @@ export default class Buttons extends React.Component<{}> {
           <IconButton>
             <Icon glyph="thumbsup" size={32} />
           </IconButton>
+
+          <IconButton
+            color={theme => theme.warn.alt}
+            hoverColor={theme => theme.brand.default}
+          >
+            <Icon glyph="thumbsup" size={32} />
+          </IconButton>
         </ButtonRow>
 
         <div style={{ height: '40px' }} />
