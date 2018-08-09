@@ -9,7 +9,7 @@ Array [
 
 exports[`models/channel getChannelMetaData excludes deleted threads and non-members 1`] = `
 Array [
-  4,
+  24,
   5,
 ]
 `;
@@ -179,7 +179,7 @@ exports[`models/channel getChannelsThreadCounts excludes deleted channels 1`] = 
 Array [
   Object {
     "group": "1",
-    "reduction": 4,
+    "reduction": 24,
   },
 ]
 `;
@@ -188,7 +188,7 @@ exports[`models/channel getChannelsThreadCounts excludes deleted threads 1`] = `
 Array [
   Object {
     "group": "1",
-    "reduction": 4,
+    "reduction": 24,
   },
   Object {
     "group": "2",
