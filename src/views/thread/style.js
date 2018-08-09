@@ -1,22 +1,20 @@
 // @flow
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
-import { UserAvatar, CommunityAvatar } from '../../components/avatar';
-import { Button } from '../../components/buttons';
-import Column from '../../components/column';
+import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
+import { Button } from 'src/components/buttons';
+import Column from 'src/components/column';
 import {
   FlexCol,
   FlexRow,
   H1,
-  H2,
   H3,
   Transition,
-  P,
   zIndex,
   Tooltip,
   Shadow,
   hexa,
-} from '../../components/globals';
+} from 'src/components/globals';
 
 export const ThreadViewContainer = styled.div`
   display: flex;
@@ -164,22 +162,6 @@ export const ThreadHeading = styled(H1)`
   @media (max-width: 768px) {
     margin-top: 8px;
   }
-`;
-
-export const EmptyThreadHeading = styled(H2)`
-  font-size: 32px;
-  font-weight: 800;
-
-  @media (max-width: 768px) {
-    margin-top: 8px;
-  }
-`;
-
-export const EmptyThreadDescription = styled(P)`
-  margin-top: 8px;
-  font-size: 24px;
-  font-weight: 600;
-  color: ${({ theme }) => theme.text.alt};
 `;
 
 export const A = styled.a`
