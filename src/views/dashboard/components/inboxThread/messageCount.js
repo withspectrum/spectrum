@@ -26,7 +26,7 @@ class MessageCount extends React.Component<Props> {
         tipText={`${messageCount} messages`}
         tipLocation={'top-right'}
       >
-        <Icon glyph="message-simple" size={24} />
+        <Icon glyph="message-simple" />
         <span>{messageCount}</span>
         {newMessagesSinceLastViewed &&
           !active && <NewCount active={active}>(New)</NewCount>}

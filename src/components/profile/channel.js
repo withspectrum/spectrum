@@ -172,7 +172,7 @@ class ChannelWithData extends React.Component<Props, State> {
                   loading={isLoading}
                   onClick={() => this.toggleSubscription(channel.id)}
                 >
-                  <Icon glyph="checkmark" size={24} />
+                  <Icon glyph="checkmark" />
                   Joined
                 </Button>
               )}
@@ -182,7 +182,7 @@ class ChannelWithData extends React.Component<Props, State> {
                   loading={isLoading}
                   onClick={() => this.toggleSubscription(channel.id)}
                 >
-                  <Icon glyph="plus-fill" size={24} />
+                  <Icon glyph="plus-fill" />
                   Join
                 </Button>
               )}
@@ -203,7 +203,7 @@ class ChannelWithData extends React.Component<Props, State> {
                 loading={isLoading}
                 onClick={() => this.toggleSubscription(channel.id)}
               >
-                <Icon glyph="checkmark" size={24} />
+                <Icon glyph="checkmark" />
                 Joined
               </Button>
             )}
@@ -213,7 +213,7 @@ class ChannelWithData extends React.Component<Props, State> {
                 loading={isLoading}
                 onClick={() => this.toggleSubscription(channel.id)}
               >
-                <Icon glyph="plus" size={24} />
+                <Icon glyph="plus" />
                 Join
               </Button>
             )}

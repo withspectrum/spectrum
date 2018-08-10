@@ -89,7 +89,7 @@ class WatercoolerActionBar extends React.Component<Props, State> {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Icon glyph={'facebook'} size={24} />
+                  <Icon glyph={'facebook'} />
                 </a>
               </ShareButton>
 
@@ -108,7 +108,7 @@ class WatercoolerActionBar extends React.Component<Props, State> {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Icon glyph={'twitter'} size={24} />
+                  <Icon glyph={'twitter'} />
                 </a>
               </ShareButton>
 
@@ -129,7 +129,7 @@ class WatercoolerActionBar extends React.Component<Props, State> {
                   data-cy="thread-copy-link-button"
                 >
                   <a>
-                    <Icon glyph={'link'} size={24} />
+                    <Icon glyph={'link'} />
                   </a>
                 </ShareButton>
               </Clipboard>
@@ -150,7 +150,6 @@ class WatercoolerActionBar extends React.Component<Props, State> {
             data-cy="thread-notifications-toggle"
           >
             <Icon
-              size={24}
               glyph={
                 thread.receiveNotifications
                   ? 'notification-fill'
@@ -168,7 +167,7 @@ class WatercoolerActionBar extends React.Component<Props, State> {
               this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}))
             }
           >
-            <Icon size={24} glyph="notification" />
+            <Icon glyph="notification" />
             Notify me
           </Button>
         )}

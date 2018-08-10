@@ -100,7 +100,7 @@ class SidebarChannels extends React.Component<Props> {
         <ChannelsContainer className={'channelsContainer'}>
           <Link to={`/${community.slug}`}>
             <ChannelListItem>
-              <Icon glyph={'link'} size={24} />
+              <Icon glyph={'link'} />
               <CommunityListName>Visit community</CommunityListName>
             </ChannelListItem>
           </Link>
@@ -108,7 +108,7 @@ class SidebarChannels extends React.Component<Props> {
           {(isOwner || isModerator) && (
             <Link to={`/${community.slug}/settings`}>
               <ChannelListItem>
-                <Icon glyph={'settings'} size={24} />
+                <Icon glyph={'settings'} />
                 <CommunityListName>Settings</CommunityListName>
               </ChannelListItem>
             </Link>
@@ -146,7 +146,7 @@ class SidebarChannels extends React.Component<Props> {
             community.hasFeatures.analytics && (
               <Link to={`/${community.slug}/settings/analytics`}>
                 <ChannelListItem>
-                  <Icon glyph={'link'} size={24} />
+                  <Icon glyph={'link'} />
                   <CommunityListName>Analytics</CommunityListName>
                 </ChannelListItem>
               </Link>
@@ -170,9 +170,9 @@ class SidebarChannels extends React.Component<Props> {
                     }}
                   >
                     {channel.isPrivate ? (
-                      <Icon glyph="channel-private" size={24} />
+                      <Icon glyph="channel-private" />
                     ) : (
-                      <Icon glyph="channel" size={24} />
+                      <Icon glyph="channel" />
                     )}
 
                     <CommunityListName>{channel.name}</CommunityListName>
@@ -189,7 +189,7 @@ class SidebarChannels extends React.Component<Props> {
         <ChannelsContainer className={'channelsContainer'}>
           <Link to={`/${slug}`}>
             <ChannelListItem>
-              <Icon glyph={'link'} size={24} />
+              <Icon glyph={'link'} />
               <CommunityListName>Visit community</CommunityListName>
             </ChannelListItem>
           </Link>
@@ -197,7 +197,7 @@ class SidebarChannels extends React.Component<Props> {
           {(isOwner || isModerator) && (
             <Link to={`/${slug}/settings`}>
               <ChannelListItem>
-                <Icon glyph={'settings'} size={24} />
+                <Icon glyph={'settings'} />
                 <CommunityListName>Settings</CommunityListName>
               </ChannelListItem>
             </Link>

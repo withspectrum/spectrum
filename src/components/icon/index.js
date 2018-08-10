@@ -828,7 +828,7 @@ export const Glyph = ({ glyph }: GlyphProps) => {
 class Icon extends React.Component<Props> {
   render() {
     const {
-      size = 32,
+      size = 24,
       tipText,
       tipLocation,
       onboarding,

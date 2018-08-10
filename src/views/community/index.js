@@ -276,7 +276,7 @@ class CommunityView extends React.Component<Props, State> {
               {!isLoggedIn ? (
                 <Link to={loginUrl}>
                   <PrimaryButton fill data-cy={'join-community-button-login'}>
-                    <Icon glyph="plus" size={24} />
+                    <Icon glyph="plus" />
                     Join {community.name}
                   </PrimaryButton>
                 </Link>
@@ -290,7 +290,7 @@ class CommunityView extends React.Component<Props, State> {
                       data-cy={'join-community-button'}
                       fill
                     >
-                      <Icon glyph={isMember ? 'checkmark' : 'plus'} size={24} />
+                      <Icon glyph={isMember ? 'checkmark' : 'plus'} />
                       {isMember ? 'Member' : `Join ${community.name}`}
                     </PrimaryButton>
                   )}
@@ -301,7 +301,7 @@ class CommunityView extends React.Component<Props, State> {
                 (isOwner || isModerator) && (
                   <Link to={`/${community.slug}/settings`}>
                     <Button data-cy="community-settings-button" fill>
-                      <Icon glyph={'settings'} size={24} />
+                      <Icon glyph={'settings'} />
                       Settings
                     </Button>
                   </Link>

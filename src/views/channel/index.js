@@ -155,7 +155,7 @@ class ChannelView extends React.Component<Props, State> {
         return (
           <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
             <Button fill data-cy="channel-settings-button">
-              <Icon glyph="settings" size={24} />
+              <Icon glyph="settings" />
               Settings
             </Button>
           </Link>
@@ -181,7 +181,7 @@ class ChannelView extends React.Component<Props, State> {
 
             <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
               <Button fill data-cy="channel-settings-button">
-                <Icon glyph="settings" size={24} />
+                <Icon glyph="settings" />
                 Settings
               </Button>
             </Link>

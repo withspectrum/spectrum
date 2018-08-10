@@ -125,27 +125,27 @@ export default class Buttons extends React.Component<{}> {
 
         <ButtonRow>
           <Button>
-            <Icon glyph="message-new" size={24} />
+            <Icon glyph="message-new" />
             Button
           </Button>
 
           <PrimaryButton>
-            <Icon glyph="message-new" size={24} />
+            <Icon glyph="message-new" />
             Primary Button
           </PrimaryButton>
 
           <DangerButton>
-            <Icon glyph="message-new" size={24} />
+            <Icon glyph="message-new" />
             Danger Button
           </DangerButton>
 
           <TextButton>
-            <Icon glyph="message-new" size={24} />
+            <Icon glyph="message-new" />
             Text Button
           </TextButton>
 
           <OutlineButton>
-            <Icon glyph="message-new" size={24} />
+            <Icon glyph="message-new" />
             Outline Button
           </OutlineButton>
 

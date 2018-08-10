@@ -86,7 +86,7 @@ class ThreadSlider extends Component {
                       >
                         <CloseLabel>Close</CloseLabel>
                         <CloseButton>
-                          <Icon glyph="view-forward" size={24} />
+                          <Icon glyph="view-forward" />
                         </CloseButton>
                       </Close>
 

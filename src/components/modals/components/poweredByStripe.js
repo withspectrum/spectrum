@@ -8,7 +8,7 @@ export default class PoweredByStripe extends React.Component<{}> {
     return (
       <a href="https://stripe.com" target="_blank" rel="noopener noreferrer">
         <PoweredByStripeFooter>
-          <Icon glyph={'channel-private'} size={24} />
+          <Icon glyph={'channel-private'} />
           Secured and encrypted with
           <img
             alt={'Stripe logo'}

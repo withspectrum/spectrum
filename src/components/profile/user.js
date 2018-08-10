@@ -112,7 +112,7 @@ const UserWithData = ({
               />
               {user.website && (
                 <ExtLink>
-                  <Icon glyph="link" size={24} />
+                  <Icon glyph="link" />
                   <a
                     target="_blank"
                     rel="noopener noreferrer"
@@ -130,7 +130,7 @@ const UserWithData = ({
                   } else {
                     return (
                       <ExtLink>
-                        <Icon glyph="github" size={24} />
+                        <Icon glyph="github" />
                         <a
                           target="_blank"
                           rel="noopener noreferrer"

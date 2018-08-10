@@ -169,7 +169,7 @@ class UserView extends React.Component<Props, State> {
               {currentUser &&
                 user.id !== currentUser.id && (
                   <PrimaryButton onClick={() => this.initMessage(user)} fill>
-                    <Icon glyph="message" size={24} />
+                    <Icon glyph="message" />
                     Message {user.name}
                   </PrimaryButton>
                 )}
@@ -177,7 +177,7 @@ class UserView extends React.Component<Props, State> {
                 user.id === currentUser.id && (
                   <Link to={`/users/${username}/settings`}>
                     <Button fill>
-                      <Icon glyph="settings" size={24} />
+                      <Icon glyph="settings" />
                       My settings
                     </Button>
                   </Link>

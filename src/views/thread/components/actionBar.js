@@ -292,7 +292,6 @@ class ActionBar extends React.Component<Props, State> {
                   >
                     <Icon
                       glyph={'facebook'}
-                      size={24}
                       onClick={() =>
                         track(events.THREAD_SHARED, { method: 'facebook' })
                       }
@@ -317,7 +316,6 @@ class ActionBar extends React.Component<Props, State> {
                   >
                     <Icon
                       glyph={'twitter'}
-                      size={24}
                       onClick={() =>
                         track(events.THREAD_SHARED, { method: 'twitter' })
                       }
@@ -342,7 +340,6 @@ class ActionBar extends React.Component<Props, State> {
                     <a>
                       <Icon
                         glyph={'link'}
-                        size={24}
                         onClick={() =>
                           track(events.THREAD_SHARED, { method: 'link' })
                         }
@@ -373,7 +370,6 @@ class ActionBar extends React.Component<Props, State> {
                     <a>
                       <Icon
                         glyph={'link'}
-                        size={24}
                         onClick={() =>
                           track(events.THREAD_SHARED, { method: 'link' })
                         }
@@ -398,7 +394,6 @@ class ActionBar extends React.Component<Props, State> {
                       ? 'notification-fill'
                       : 'notification'
                   }
-                  size={24}
                 />
                 {thread.receiveNotifications ? 'Subscribed' : 'Notify me'}
               </Button>
@@ -409,8 +404,7 @@ class ActionBar extends React.Component<Props, State> {
                   this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}))
                 }
               >
-                <Icon glyph="notification" size={24} />
-                Notify me
+                /> Notify me
               </Button>
             )}
 

@@ -160,7 +160,7 @@ class CommunityWithData extends React.Component<Props> {
 
               {community.website && (
                 <ExtLink>
-                  <Icon glyph="link" size={24} />
+                  <Icon glyph="link" />
                   <a
                     target="_blank"
                     rel="noopener noreferrer"

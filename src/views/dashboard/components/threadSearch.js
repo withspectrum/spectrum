@@ -93,7 +93,7 @@ class ThreadSearch extends React.Component<Props, State> {
         isOpen={isOpen}
         darkContext={darkContext}
       >
-        <Icon glyph={'search'} size={24} />
+        <Icon glyph={'search'} />
         <SearchInputDiv>
           <SearchInput
             onFocus={this.open}
