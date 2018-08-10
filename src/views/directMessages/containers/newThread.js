@@ -3,20 +3,20 @@ import * as React from 'react';
 import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-import Head from '../../../components/head';
+import Head from 'src/components/head';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import Messages from '../components/messages';
 import Header from '../components/header';
-import ChatInput from '../../../components/chatInput';
+import ChatInput from 'src/components/chatInput';
 import { MessagesContainer, ViewContent } from '../style';
 import { getDirectMessageThreadQuery } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
-import { throttle } from '../../../helpers/utils';
+import { throttle } from 'src/helpers/utils';
 import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
-import { Spinner } from '../../../components/globals';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { clearDirectMessagesComposer } from '../../../actions/directMessageThreads';
+import { Spinner } from 'src/components/globals';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { clearDirectMessagesComposer } from 'src/actions/directMessageThreads';
 import createDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/createDirectMessageThread';
 import type { Dispatch } from 'redux';
 import {
@@ -740,7 +740,7 @@ class NewThread extends React.Component<Props, State> {
 
           {searchIsLoading && (
             <SearchSpinnerContainer>
-              <Spinner size={16} color={'brand.default'} />
+              <Spinner size={16} color={theme => theme.brand.default} />
             </SearchSpinnerContainer>
           )}
 
@@ -822,7 +822,7 @@ class NewThread extends React.Component<Props, State> {
           {!existingThreadBasedOnSelectedUsers && (
             <Grow>
               {loadingExistingThreadMessages && (
-                <Spinner size={16} color={'brand.default'} />
+                <Spinner size={16} color={theme => theme.brand.default} />
               )}
             </Grow>
           )}

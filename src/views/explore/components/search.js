@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
-import { Button } from 'src/components/buttons';
+import { Button } from 'src/components/button';
 import { throttle } from 'src/helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
 import type { SearchCommunitiesType } from 'shared/graphql/queries/search/searchCommunities';
@@ -233,7 +233,7 @@ class Search extends React.Component<Props, State> {
       <SearchWrapper>
         {searchIsLoading && (
           <SearchSpinnerContainer>
-            <Spinner size={16} color={'brand.default'} />
+            <Spinner size={16} color={theme => theme.brand.default} />
           </SearchSpinnerContainer>
         )}
         <SearchInputWrapper>
@@ -306,4 +306,8 @@ class Search extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), withApollo, withRouter)(Search);
+export default compose(
+  connect(),
+  withApollo,
+  withRouter
+)(Search);

@@ -4,13 +4,13 @@ import Link from 'src/components/link';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import { connect } from 'react-redux';
-import Icon from '../../../components/icons';
+import Icon from 'src/components/icon';
 import {
   changeActiveChannel,
   changeActiveThread,
-} from '../../../actions/dashboardFeed';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { sortByTitle } from '../../../helpers/utils';
+} from 'src/actions/dashboardFeed';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import { sortByTitle } from 'src/helpers/utils';
 import compose from 'recompose/compose';
 import {
   CommunityListName,
@@ -215,6 +215,8 @@ class SidebarChannels extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getCommunityChannels, viewNetworkHandler)(
-  SidebarChannels
-);
+export default compose(
+  connect(),
+  getCommunityChannels,
+  viewNetworkHandler
+)(SidebarChannels);

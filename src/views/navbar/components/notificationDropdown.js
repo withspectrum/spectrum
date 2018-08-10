@@ -1,18 +1,15 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import Link from 'src/components/link';
-import Icon from '../../../components/icons';
-import Dropdown from '../../../components/dropdown';
-import { Loading } from '../../../components/loading';
-import { NullState } from '../../../components/upsell';
-import { TextButton } from '../../../components/buttons';
+import Icon from 'src/components/icon';
+import Dropdown from 'src/components/dropdown';
+import { Loading } from 'src/components/loading';
+import { NullState } from 'src/components/upsell';
+import { Button, PrimaryTextButton, TextButton } from 'src/components/button';
+import { NotificationDropdownList } from 'src/views/notifications/components/notificationDropdownList';
 import { DropdownHeader, DropdownFooter } from '../style';
-import { NotificationDropdownList } from '../../notifications/components/notificationDropdownList';
 
 const NullNotifications = () => (
   <NullState
@@ -72,12 +69,14 @@ const NotificationDropdownPure = props => {
         <Link to={`/users/${currentUser.username}/settings`}>
           <Icon glyph="settings" />
         </Link>
-        <TextButton
-          color={count > 0 ? 'brand.alt' : 'text.alt'}
-          onClick={markAllAsSeen}
-        >
-          Mark all as seen
-        </TextButton>
+
+        {count > 0 ? (
+          <PrimaryTextButton onClick={markAllAsSeen}>
+            Mark all as seen
+          </PrimaryTextButton>
+        ) : (
+          <Button>Mark all as seen</Button>
+        )}
       </DropdownHeader>
 
       <NotificationContainer
@@ -91,10 +90,7 @@ const NotificationDropdownPure = props => {
       {rawNotifications &&
         rawNotifications.length > 0 && (
           <DropdownFooter>
-            <TextButton
-              color={'text.alt'}
-              onClick={() => history.push('/notifications')}
-            >
+            <TextButton onClick={() => history.push('/notifications')}>
               View all
             </TextButton>
           </DropdownFooter>

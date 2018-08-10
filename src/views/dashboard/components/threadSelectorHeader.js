@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { changeActiveThread } from '../../../actions/dashboardFeed';
+import { changeActiveThread } from 'src/actions/dashboardFeed';
 import {
   HeaderWrapper,
   NarrowOnly,
@@ -9,9 +9,10 @@ import {
   HeaderActiveViewSubtitle,
   ContextHeaderContainer,
 } from '../style';
-import { IconButton } from '../../../components/buttons';
+import { IconButton } from 'src/components/button';
+import Icon from 'src/components/icon';
 import ThreadSearch from './threadSearch';
-import Menu from '../../../components/menu';
+import Menu from 'src/components/menu';
 import CommunityList from './communityList';
 import Link from 'src/components/link';
 import type { Dispatch } from 'redux';
@@ -100,11 +101,12 @@ class Header extends React.Component<Props> {
           <ThreadSearch filter={filter} />
           <IconButton
             data-e2e-id="inbox-view-post-button"
-            glyph={'post'}
             onClick={() => dispatch(changeActiveThread('new'))}
             tipText={'New conversation'}
             tipLocation={'bottom-left'}
-          />
+          >
+            <Icon glyph="post" />
+          </IconButton>
         </HeaderWrapper>
       </React.Fragment>
     );

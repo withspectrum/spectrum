@@ -1,9 +1,8 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
 import { connect } from 'react-redux';
-import { changeActiveThread } from '../../../actions/dashboardFeed';
-import { Button } from '../../../components/buttons';
+import { changeActiveThread } from 'src/actions/dashboardFeed';
+import { Button } from 'src/components/button';
 import { NullThreadFeed, NullHeading } from '../style';
 
 const EmptySearchFeed = ({ dispatch, queryString }) => (

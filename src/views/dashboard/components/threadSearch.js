@@ -2,13 +2,13 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { SearchInput, SearchForm, SearchInputDiv } from '../style';
-import Icon from '../../../components/icons';
+import Icon from 'src/components/icon';
 import type { Dispatch } from 'redux';
 import {
   closeSearch,
   openSearch,
   setSearchStringVariable,
-} from '../../../actions/dashboardFeed';
+} from 'src/actions/dashboardFeed';
 
 type Props = {
   dispatch: Dispatch<Object>,

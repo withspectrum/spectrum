@@ -2,9 +2,9 @@
 import * as React from 'react';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-import Icon from '../../components/icons';
-import FullscreenView from '../../components/fullscreenView';
-import LoginButtonSet from '../../components/loginButtonSet';
+import Icon from 'src/components/icon';
+import FullscreenView from 'src/components/fullscreenView';
+import LoginButtonSet from 'src/components/loginButtonSet';
 import {
   LargeTitle,
   LargeSubtitle,

@@ -1,7 +1,6 @@
 import React from 'react';
-// $FlowFixMe
 import Link from 'src/components/link';
-import { Button } from '../../../components/buttons';
+import { Button } from 'src/components/button';
 import { NullThreadFeed, NullHeading } from '../style';
 
 export default props => (

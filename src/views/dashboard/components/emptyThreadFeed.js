@@ -1,11 +1,10 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
 import { connect } from 'react-redux';
-import Link from '../../../components/link';
-import { changeActiveThread } from '../../../actions/dashboardFeed';
-import Icon from '../../../components/icons';
-import { Button } from '../../../components/buttons';
+import Link from 'src/components/link';
+import { changeActiveThread } from 'src/actions/dashboardFeed';
+import Icon from 'src/components/icon';
+import { Button } from 'src/components/button';
 import { NullThreadFeed, NullHeading, OutlineButton, Hint } from '../style';
 
 const EmptyThreadFeed = ({ dispatch }) => (

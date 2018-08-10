@@ -1,7 +1,5 @@
 // @flow
-// $FlowFixMe
 import styled from 'styled-components';
-// $FlowFixMe
 import Link from 'src/components/link';
 import {
   FlexCol,
@@ -16,14 +14,13 @@ import {
   hexa,
   Truncate,
   zIndex,
-} from '../../components/globals';
-import Card from '../../components/card';
-import { StyledCard } from '../../components/listItems/style';
-import Icon from '../../components/icons';
-import { CommunityAvatar } from '../../components/avatar';
-import ScrollRow from '../../components/scrollRow';
-
-import { Button } from '../../components/buttons';
+} from 'src/components/globals';
+import Card from 'src/components/card';
+import { StyledCard } from 'src/components/listItems/style';
+import Icon from 'src/components/icon';
+import { CommunityAvatar } from 'src/components/avatar';
+import ScrollRow from 'src/components/scrollRow';
+import { Button } from 'src/components/button';
 
 export const Wrapper = styled.main`
   display: flex;

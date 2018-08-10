@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 import compose from 'recompose/compose';
 import { isDesktopApp } from 'src/helpers/is-desktop-app';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { updateNotificationsCount } from 'src/actions/notifications';
 import { NotificationDropdown } from './notificationDropdown';

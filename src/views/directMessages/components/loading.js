@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import Link from 'src/components/link';
-import Icon from '../../../components/icons';
-import { LoadingDM } from '../../../components/loading';
+import Icon from 'src/components/icon';
+import { LoadingDM } from 'src/components/loading';
 import { View, MessagesList, ComposeHeader } from '../style';
 
 export default () => (

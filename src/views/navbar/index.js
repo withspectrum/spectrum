@@ -3,11 +3,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import queryString from 'query-string';
-import Icon from '../../components/icons';
+import Icon from 'src/components/icon';
 import { ProfileDropdown } from './components/profileDropdown';
 import MessagesTab from './components/messagesTab';
 import NotificationsTab from './components/notificationsTab';
-import Head from '../../components/head';
+import Head from 'src/components/head';
 import {
   Nav,
   Logo,

@@ -8,8 +8,8 @@ import {
   Shadow,
   hexa,
   zIndex,
-} from '../../components/globals';
-import { Button } from '../../components/buttons';
+} from 'src/components/globals';
+import { Button } from 'src/components/button';
 
 export const Title = styled.h1`
   color: ${props => props.theme.text.default};

@@ -3,25 +3,25 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { connect } from 'react-redux';
-import { removeItemFromStorage } from '../../helpers/localStorage';
+import { removeItemFromStorage } from 'src/helpers/localStorage';
 import getEverythingThreads from 'shared/graphql/queries/user/getCurrentUserEverythingFeed';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import type { GetUserCommunityConnectionType } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import searchThreadsQuery from 'shared/graphql/queries/search/searchThreads';
-import Titlebar from '../../views/titlebar';
-import NewUserOnboarding from '../../views/newUserOnboarding';
+import Titlebar from 'src/views/titlebar';
+import NewUserOnboarding from 'src/views/newUserOnboarding';
 import DashboardThreadFeed from './components/threadFeed';
-import Head from '../../components/head';
-import Menu from '../../components/menu';
+import Head from 'src/components/head';
+import Menu from 'src/components/menu';
 import DashboardLoading from './components/dashboardLoading';
 import DashboardError from './components/dashboardError';
 import NewActivityIndicator from './components/newActivityIndicator';
 import DashboardThread from '../dashboardThread';
 import Header from './components/threadSelectorHeader';
 import CommunityList from './components/communityList';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import {
   DashboardWrapper,
   InboxWrapper,
@@ -35,21 +35,25 @@ import {
 import { track, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
 
-const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
-  DashboardThreadFeed
-);
+const EverythingThreadFeed = compose(
+  connect(),
+  getEverythingThreads
+)(DashboardThreadFeed);
 
-const CommunityThreadFeed = compose(connect(), getCommunityThreads)(
-  DashboardThreadFeed
-);
+const CommunityThreadFeed = compose(
+  connect(),
+  getCommunityThreads
+)(DashboardThreadFeed);
 
-const ChannelThreadFeed = compose(connect(), getChannelThreadConnection)(
-  DashboardThreadFeed
-);
+const ChannelThreadFeed = compose(
+  connect(),
+  getChannelThreadConnection
+)(DashboardThreadFeed);
 
-const SearchThreadFeed = compose(connect(), searchThreadsQuery)(
-  DashboardThreadFeed
-);
+const SearchThreadFeed = compose(
+  connect(),
+  searchThreadsQuery
+)(DashboardThreadFeed);
 
 type State = {
   activeChannelObject: ?Object,
