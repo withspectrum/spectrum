@@ -3,7 +3,7 @@ import * as React from 'react';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import ModalContainer from '../modalContainer';
-import { closeModal } from '../../../actions/modals';
+import { closeModal } from 'src/actions/modals';
 import { connect } from 'react-redux';
 import { modalStyles } from '../styles';
 import { Loading } from 'src/components/loading';
@@ -34,7 +34,10 @@ class AdminEmailAddressVerificationModal extends React.Component<Props> {
   };
 
   render() {
-    const { isOpen, data: { community } } = this.props;
+    const {
+      isOpen,
+      data: { community },
+    } = this.props;
 
     if (community) {
       return (

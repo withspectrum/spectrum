@@ -2,11 +2,11 @@
 import * as React from 'react';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
-import Reputation from '../../reputation';
-import { UserAvatar } from '../../avatar';
-import Icon from '../../icons';
+import Reputation from 'src/components/reputation';
+import { UserAvatar } from 'src/components/avatar';
+import Icon from 'src/components/icon';
 import ModalContainer from '../modalContainer';
-import { closeModal } from '../../../actions/modals';
+import { closeModal } from 'src/actions/modals';
 import { connect } from 'react-redux';
 import {
   modalStyles,

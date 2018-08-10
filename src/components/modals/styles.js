@@ -1,9 +1,8 @@
 // @flow
-// $FlowFixMe
 import styled from 'styled-components';
-import { zIndex } from '../globals';
-import { isMobile } from '../../helpers/utils';
-import { IconButton } from '../buttons';
+import { zIndex } from 'src/components/globals';
+import { isMobile } from 'src/helpers/utils';
+import { IconButton } from 'src/components/button';
 
 /*
   This is the global stylesheet for all modal components. Its styles will wrap

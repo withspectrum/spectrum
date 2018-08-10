@@ -1,6 +1,6 @@
 // @flow
 import styled from 'styled-components';
-import { Transition, HorizontalRule } from '../globals';
+import { Transition, HorizontalRule } from 'src/components/globals';
 
 export const MessagesWrapper = styled.div`
   flex: 1 0 auto;

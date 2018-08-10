@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { zIndex } from '../globals';
+import { zIndex } from 'src/components/globals';
 
 export const MediaInput = styled.input`
   width: 0;

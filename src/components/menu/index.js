@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import { IconButton } from '../../components/buttons';
+import Icon from 'src/components/icon';
+import { IconButton } from 'src/components/button';
 import { Wrapper, MenuContainer, MenuOverlay, Absolute } from './style';
 
 type Props = {
@@ -27,16 +28,16 @@ class Menu extends React.Component<Props, State> {
     const { menuIsOpen } = this.state;
     return (
       <Wrapper darkContext={darkContext}>
-        <IconButton glyph={'menu'} onClick={() => this.toggleMenu()} />
+        <IconButton onClick={() => this.toggleMenu()}>
+          <Icon glyph={'menu'} />
+        </IconButton>
         <Absolute open={this.state.menuIsOpen} hasNavBar={hasNavBar}>
           <MenuContainer hasNavBar={hasNavBar} hasTabBar={hasTabBar}>
             {menuIsOpen && this.props.children}
           </MenuContainer>
-          <IconButton
-            glyph={'view-close'}
-            onClick={() => this.toggleMenu()}
-            hasNavBar={hasNavBar}
-          />
+          <IconButton onClick={() => this.toggleMenu()}>
+            <Icon glyph={'menu'} />
+          </IconButton>
           <MenuOverlay onClick={() => this.toggleMenu()} />
         </Absolute>
       </Wrapper>

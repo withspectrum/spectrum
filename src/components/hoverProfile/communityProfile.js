@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import AvatarImage from 'src/components/avatar/image';
 import Link from 'src/components/link';
-import { Button, OutlineButton } from 'src/components/buttons';
+import Icon from 'src/components/icon';
+import { PrimaryButton, OutlineButton } from 'src/components/button';
 import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
@@ -73,23 +74,17 @@ class HoverProfile extends Component<ProfileProps> {
                   render={({ isLoading }) => {
                     if (isMember) {
                       return (
-                        <OutlineButton
-                          loading={isLoading}
-                          icon={'checkmark'}
-                          gradientTheme="success"
-                        >
+                        <PrimaryButton loading={isLoading}>
+                          <Icon glyph="checkmark" />
                           Member
-                        </OutlineButton>
+                        </PrimaryButton>
                       );
                     } else {
                       return (
-                        <Button
-                          loading={isLoading}
-                          icon={'plus-fill'}
-                          gradientTheme="success"
-                        >
+                        <PrimaryButton loading={isLoading}>
+                          <Icon glyph="plus-fill" />
                           Join
-                        </Button>
+                        </PrimaryButton>
                       );
                     }
                   }}

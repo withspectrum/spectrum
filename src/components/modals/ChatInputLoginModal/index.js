@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
-import { closeModal } from '../../../actions/modals';
+import { closeModal } from 'src/actions/modals';
 import ModalContainer from '../modalContainer';
 import { modalStyles } from '../styles';
 import LoginButtonSet from 'src/components/loginButtonSet';

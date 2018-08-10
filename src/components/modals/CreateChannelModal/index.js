@@ -7,9 +7,9 @@ import { withRouter } from 'react-router';
 import slugg from 'slugg';
 import { CHANNEL_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import { withApollo } from 'react-apollo';
-import { closeModal } from '../../../actions/modals';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { throttle } from '../../../helpers/utils';
+import { closeModal } from 'src/actions/modals';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { throttle } from 'src/helpers/utils';
 import { getChannelBySlugAndCommunitySlugQuery } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
@@ -19,7 +19,7 @@ import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
 import ModalContainer from '../modalContainer';
-import { TextButton, Button } from '../../buttons';
+import { TextButton, Button } from 'src/components/button';
 import { modalStyles, UpsellDescription } from '../styles';
 import {
   Input,
@@ -27,7 +27,7 @@ import {
   TextArea,
   Error,
   Checkbox,
-} from '../../formElements';
+} from 'src/components/formElements';
 import { Form, Actions } from './style';
 
 type State = {
@@ -361,9 +361,7 @@ class CreateChannelModal extends React.Component<Props, State> {
             </UpsellDescription>
 
             <Actions>
-              <TextButton onClick={this.close} color={'warn.alt'}>
-                Cancel
-              </TextButton>
+              <TextButton onClick={this.close}>Cancel</TextButton>
               <Button
                 disabled={
                   !name ||

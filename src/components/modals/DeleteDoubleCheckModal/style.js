@@ -1,7 +1,6 @@
 // @flow
-// $FlowFixMe
 import styled from 'styled-components';
-import { FlexRow } from '../../globals';
+import { FlexRow } from 'src/components/globals';
 
 export const Actions = styled(FlexRow)`
   margin-top: 24px;

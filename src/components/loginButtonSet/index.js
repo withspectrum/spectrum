@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
-import { getItemFromStorage, storeItem } from '../../helpers/localStorage';
+import { getItemFromStorage, storeItem } from 'src/helpers/localStorage';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
-import { SERVER_URL, CLIENT_URL } from '../../api/constants';
+import { SERVER_URL, CLIENT_URL } from 'src/api/constants';
 import { Container } from './style';
 import { TwitterSigninButton } from './twitter';
 import { FacebookSigninButton } from './facebook';

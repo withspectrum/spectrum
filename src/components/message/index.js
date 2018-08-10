@@ -19,7 +19,7 @@ import type { MessageInfoType } from 'shared/graphql/fragments/message/messageIn
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import { UserAvatar } from 'src/components/avatar';
 import AuthorByline from './authorByline';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
 import { convertTimestampToTime } from 'shared/time-formatting';

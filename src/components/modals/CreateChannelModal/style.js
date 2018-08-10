@@ -1,7 +1,6 @@
 // @flow
-// $FlowFixMe
 import styled from 'styled-components';
-import { FlexRow } from '../../globals';
+import { FlexRow } from 'src/components/globals';
 
 export const Form = styled.form`
   display: flex;

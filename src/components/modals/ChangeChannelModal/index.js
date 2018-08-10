@@ -3,13 +3,13 @@ import * as React from 'react';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import ModalContainer from '../modalContainer';
-import { closeModal } from '../../../actions/modals';
+import { closeModal } from 'src/actions/modals';
 import { connect } from 'react-redux';
-import { TextButton, Button } from '../../buttons';
+import { TextButton, PrimaryButton } from 'src/components/button';
 import moveThreadMutation from 'shared/graphql/mutations/thread/moveThread';
 import type { MoveThreadType } from 'shared/graphql/mutations/thread/moveThread';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import Icon from '../../icons';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import Icon from 'src/components/icon';
 import { IconContainer } from '../RepExplainerModal/style';
 import { Actions, modalStyles, Section, Title, Subtitle } from './style';
 import ChannelSelector from './channelSelector';
@@ -42,7 +42,10 @@ class ChangeChannelModal extends React.Component<Props, State> {
 
   saveNewChannel = () => {
     const { activeChannel } = this.state;
-    const { thread: { id }, dispatch } = this.props;
+    const {
+      thread: { id },
+      dispatch,
+    } = this.props;
 
     this.setState({
       isLoading: true,
@@ -120,17 +123,14 @@ class ChangeChannelModal extends React.Component<Props, State> {
               />
 
               <Actions>
-                <TextButton onClick={this.closeModal} color={'warn.alt'}>
-                  Cancel
-                </TextButton>
-                <Button
+                <TextButton onClick={this.closeModal}>Cancel</TextButton>
+                <PrimaryButton
                   loading={this.state.isLoading}
-                  color="warn"
                   onClick={this.saveNewChannel}
                   disabled={activeChannel === thread.channel.id}
                 >
                   Save
-                </Button>
+                </PrimaryButton>
               </Actions>
             </Section>
           )}
@@ -142,4 +142,7 @@ class ChangeChannelModal extends React.Component<Props, State> {
 
 const map = state => ({ isOpen: state.modals.isOpen });
 // $FlowIssue
-export default compose(connect(map), moveThreadMutation)(ChangeChannelModal);
+export default compose(
+  connect(map),
+  moveThreadMutation
+)(ChangeChannelModal);

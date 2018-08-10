@@ -1,7 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
-import { SvgWrapper } from '../icons';
+import { SvgWrapper } from 'src/components/icon';
 import {
   zIndex,
   Truncate,

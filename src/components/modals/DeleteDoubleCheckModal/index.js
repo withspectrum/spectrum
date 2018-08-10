@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
-import { closeModal } from '../../../actions/modals';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { closeModal } from 'src/actions/modals';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import deleteCommunityMutation from 'shared/graphql/mutations/community/deleteCommunity';
 import type { DeleteCommunityType } from 'shared/graphql/mutations/community/deleteCommunity';
 import deleteChannelMutation from 'shared/graphql/mutations/channel/deleteChannel';
@@ -17,7 +17,7 @@ import type { DeleteMessageType } from 'shared/graphql/mutations/message/deleteM
 import archiveChannel from 'shared/graphql/mutations/channel/archiveChannel';
 
 import ModalContainer from '../modalContainer';
-import { TextButton, Button } from '../../buttons';
+import { TextButton, DangerButton } from 'src/components/button';
 import { modalStyles } from '../styles';
 import { Actions, Message } from './style';
 import cancelSubscription from 'shared/graphql/mutations/community/cancelSubscription';
@@ -73,7 +73,10 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
   };
 
   triggerDelete = () => {
-    const { modalProps: { id, entity, redirect }, dispatch } = this.props;
+    const {
+      modalProps: { id, entity, redirect },
+      dispatch,
+    } = this.props;
 
     this.setState({
       isLoading: true,
@@ -258,7 +261,10 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
   };
 
   render() {
-    const { isOpen, modalProps: { message, buttonLabel } } = this.props;
+    const {
+      isOpen,
+      modalProps: { message, buttonLabel },
+    } = this.props;
     const styles = modalStyles();
 
     return (
@@ -280,17 +286,14 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
           <Message>{message ? message : 'Are you sure?'}</Message>
 
           <Actions>
-            <TextButton onClick={this.close} color={'warn.alt'}>
-              Cancel
-            </TextButton>
-            <Button
+            <TextButton onClick={this.close}>Cancel</TextButton>
+            <DangerButton
               loading={this.state.isLoading}
-              color="warn"
               onClick={this.triggerDelete}
-              dataCy={'delete-button'}
+              data-cy={'delete-button'}
             >
               {buttonLabel || 'Delete'}
-            </Button>
+            </DangerButton>
           </Actions>
         </ModalContainer>
       </Modal>
