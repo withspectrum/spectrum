@@ -40,11 +40,11 @@ type GetMetaImageInput = {
 
 const generateImageFromText = ({ title, footer }: GetMetaImageInput) => {
   const titleUrl = `${IMGIX_TEXT_ENDPOINT}?${stringify(
-    { ...TITLE_PARAMS, txt: title },
+    { ...TITLE_PARAMS, txt64: btoa(title).replace('=', '') },
     { encode: false }
   )}`;
   const footerUrl = `${IMGIX_TEXT_ENDPOINT}?${stringify(
-    { ...FOOTER_PARAMS, txt: footer },
+    { ...FOOTER_PARAMS, txt64: btoa(footer).replace(/=/g, '') },
     { encode: false }
   )}`;
 
@@ -56,8 +56,8 @@ const generateImageFromText = ({ title, footer }: GetMetaImageInput) => {
     markalign: 'left,bottom', // Show the footer on the left side
     markpad: 12, // We overwrite the X pos, so the padding only applies on the y-axis
     markx: 100,
-    blend64: btoa(titleUrl),
-    mark64: btoa(footerUrl),
+    blend64: btoa(titleUrl).replace(/=/g, ''),
+    mark64: btoa(footerUrl).replace(/=/g, ''),
   };
 
   return `${BACKGROUND_URL}?${stringify(BACKGROUND_PARAMS, { encode: false })}`;
