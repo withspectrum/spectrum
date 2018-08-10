@@ -8,7 +8,7 @@ import compose from 'recompose/compose';
 import addProtocolToString from 'shared/normalize-url';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
-import Icon from '../icons';
+import Icon from 'src/components/icon';
 import { CoverPhoto } from './coverPhoto';
 import GithubProfile from 'src/components/githubProfile';
 import type { ProfileSizeProps } from './index';
@@ -265,7 +265,10 @@ const UserWithData = ({
   }
 };
 
-const User = compose(displayLoadingCard, withRouter)(UserWithData);
+const User = compose(
+  displayLoadingCard,
+  withRouter
+)(UserWithData);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
   initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,

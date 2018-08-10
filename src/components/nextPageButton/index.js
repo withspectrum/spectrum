@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { Spinner } from '../globals';
+import { Spinner } from 'src/components/globals';
 import { HasNextPage, NextPageButton } from './style';
 
 type Props = {
@@ -14,7 +14,7 @@ const NextPageButtonWrapper = (props: Props) => {
     <HasNextPage data-cy="load-previous-messages">
       <NextPageButton loading={isFetchingMore} onClick={() => fetchMore()}>
         {isFetchingMore ? (
-          <Spinner size={16} color={'brand.default'} />
+          <Spinner size={16} color={theme => theme.brand.default} />
         ) : (
           'Load previous messages'
         )}

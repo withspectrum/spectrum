@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { openModal } from '../../actions/modals';
-import { truncateNumber } from '../../helpers/utils';
-import Icon from '../icons';
+import { openModal } from 'src/actions/modals';
+import { truncateNumber } from 'src/helpers/utils';
+import Icon from 'src/components/icon';
 import { ReputationWrapper, ReputationLabel } from './style';
 import type { Dispatch } from 'redux';
 

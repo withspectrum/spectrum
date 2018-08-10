@@ -1,10 +1,8 @@
 import React from 'react';
-// $FlowFixMe
 import styled from 'styled-components';
-// $FlowFixMe
 import Link from 'src/components/link';
 import { ProfileHeaderAction } from './style';
-import { optimize } from '../../helpers/images';
+import { optimize } from 'src/helpers/images';
 
 const PhotoContainer = styled.div`
   grid-area: cover;

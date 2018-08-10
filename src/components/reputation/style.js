@@ -1,6 +1,6 @@
 // @flow
 import styled from 'styled-components';
-import { Tooltip, zIndex } from '../globals';
+import { Tooltip, zIndex } from 'src/components/globals';
 
 export const ReputationWrapper = styled.div`
   display: flex;

@@ -11,7 +11,7 @@ import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from 'src/components/viewNetworkHandler';
 import { Loading } from 'src/components/loading';
-import { Button, OutlineButton } from 'src/components/buttons';
+import { Button, OutlineButton } from 'src/components/button';
 import ViewError from 'src/components/viewError';
 import Link from 'src/components/link';
 
@@ -47,7 +47,10 @@ class ModalWell extends React.Component<Props> {
   }
 
   render() {
-    const { data: { community }, isLoading } = this.props;
+    const {
+      data: { community },
+      isLoading,
+    } = this.props;
 
     if (community) {
       const defaultSource =
@@ -141,4 +144,7 @@ class ModalWell extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunitySettings, viewNetworkHandler)(ModalWell);
+export default compose(
+  getCommunitySettings,
+  viewNetworkHandler
+)(ModalWell);

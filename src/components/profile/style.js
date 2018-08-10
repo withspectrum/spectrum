@@ -9,10 +9,10 @@ import {
   zIndex,
   Shadow,
   hexa,
-} from '../globals';
-import { Button, OutlineButton, IconButton } from '../buttons';
-import { ReputationWrapper } from '../reputation/style';
-import Card from '../card';
+} from 'src/components/globals';
+import { Button, OutlineButton, IconButton } from 'src/components/button';
+import { ReputationWrapper } from 'src/components/reputation/style';
+import Card from 'src/components/card';
 
 export const ProfileHeader = styled(FlexRow)`
   padding: 16px;

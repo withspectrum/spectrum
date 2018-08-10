@@ -23,8 +23,8 @@ import 'prismjs/components/prism-swift';
 import createPrismPlugin from 'draft-js-prism-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import OutsideClickHandler from 'src/components/outsideClickHandler';
-import Icon from 'src/components/icons';
-import { IconButton } from 'src/components/buttons';
+import Icon from 'src/components/icon';
+import { IconButton } from 'src/components/button';
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
 import { isAndroid } from 'shared/draft-utils';
 import MediaInput from 'src/components/mediaInput';
@@ -243,10 +243,9 @@ class Editor extends React.Component<Props, State> {
               <OutsideClickHandler onOutsideClick={this.closeToolbar}>
                 <SideToolbar editorState={state} editorRef={this.editor}>
                   <Expander inserting={inserting}>
-                    <IconButton
-                      glyph={'inserter'}
-                      onClick={this.toggleToolbarDisplayState}
-                    />
+                    <IconButton onClick={this.toggleToolbarDisplayState}>
+                      <Icon glyph="checkmark" />
+                    </IconButton>
                     <Action>
                       <MediaInput
                         onChange={this.addImage}

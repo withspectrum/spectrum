@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { clearActivityIndicator } from '../../actions/newActivityIndicator';
+import { clearActivityIndicator } from 'src/actions/newActivityIndicator';
 import styled from 'styled-components';
-import { Gradient } from '../globals';
+import { Gradient } from 'src/components/globals';
 
 const Pill = styled.div`
   padding: ${props => (props.refetching ? '8px' : '8px 16px')};
@@ -57,7 +57,7 @@ const Pill = styled.div`
 const scrollTo = (element, to, duration) => {
   if (duration < 0) return;
   const difference = to - element.scrollTop;
-  const perTick = difference / duration * 2;
+  const perTick = (difference / duration) * 2;
 
   setTimeout(() => {
     element.scrollTop = element.scrollTop + perTick;

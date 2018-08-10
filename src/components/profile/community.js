@@ -5,13 +5,13 @@ import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import addProtocolToString from 'shared/normalize-url';
-import { CLIENT_URL } from '../../api/constants';
-import { LoadingProfile } from '../loading';
-import Icon from '../icons';
-import { CommunityAvatar } from '../avatar';
-import { Button, OutlineButton } from '../buttons';
+import { CLIENT_URL } from 'src/api/constants';
+import { LoadingProfile } from 'src/components/loading';
+import Icon from 'src/components/icon';
+import { CommunityAvatar } from 'src/components/avatar';
+import { PrimaryButton, Button, OutlineButton } from 'src/components/button';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import ToggleCommunityMembership from '../toggleCommunityMembership';
+import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
 import type { Dispatch } from 'redux';
 import {
   ProfileHeader,
@@ -111,9 +111,6 @@ class CommunityWithData extends React.Component<Props> {
                     community={community}
                     render={({ isLoading }) => (
                       <OutlineButton
-                        gradientTheme="none"
-                        color={'success.alt'}
-                        hoverColor={'success.default'}
                         style={{ fontSize: '16px' }}
                         loading={isLoading}
                       >
@@ -127,12 +124,7 @@ class CommunityWithData extends React.Component<Props> {
                     onLeave={this.onLeave}
                     community={community}
                     render={({ isLoading }) => (
-                      <Button
-                        loading={isLoading}
-                        color={'success.alt'}
-                        gradientTheme={'success'}
-                        style={{ fontSize: '16px' }}
-                      >
+                      <Button loading={isLoading} style={{ fontSize: '16px' }}>
                         Join
                       </Button>
                     )}
@@ -140,12 +132,9 @@ class CommunityWithData extends React.Component<Props> {
                 )
               ) : (
                 <Link to={`/login?r=${CLIENT_URL}/${community.slug}`}>
-                  <Button
-                    gradientTheme={'success'}
-                    style={{ fontSize: '16px' }}
-                  >
+                  <PrimaryButton style={{ fontSize: '16px' }}>
                     Join
-                  </Button>
+                  </PrimaryButton>
                 </Link>
               )}
             </ButtonContainer>
@@ -209,13 +198,8 @@ class CommunityWithData extends React.Component<Props> {
                   onLeave={this.onLeave}
                   community={community}
                   render={({ isLoading }) => (
-                    <Button
-                      loading={isLoading}
-                      icon="checkmark"
-                      gradientTheme="none"
-                      color="text.placeholder"
-                      hoverColor="text.placeholder"
-                    >
+                    <Button loading={isLoading}>
+                      <Icon glyph="checkmark" />
                       Joined
                     </Button>
                   )}
@@ -228,13 +212,10 @@ class CommunityWithData extends React.Component<Props> {
                   onLeave={this.onLeave}
                   community={community}
                   render={({ isLoading }) => (
-                    <Button
-                      loading={isLoading}
-                      icon="plus-fill"
-                      gradientTheme="success"
-                    >
+                    <PrimaryButton loading={isLoading}>
+                      <Icon glyph="plus-fill" />
                       Join
-                    </Button>
+                    </PrimaryButton>
                   )}
                 />
               )}
@@ -264,13 +245,8 @@ class CommunityWithData extends React.Component<Props> {
                     onLeave={this.onLeave}
                     community={community}
                     render={({ isLoading }) => (
-                      <Button
-                        loading={isLoading}
-                        icon="checkmark"
-                        gradientTheme="none"
-                        color="text.placeholder"
-                        hoverColor="text.placeholder"
-                      >
+                      <Button loading={isLoading}>
+                        <Icon glyph="checkmark" />
                         Joined
                       </Button>
                     )}
@@ -283,13 +259,10 @@ class CommunityWithData extends React.Component<Props> {
                     onLeave={this.onLeave}
                     community={community}
                     render={({ isLoading }) => (
-                      <Button
-                        loading={isLoading}
-                        icon="plus-fill"
-                        gradientTheme="success"
-                      >
+                      <PrimaryButton loading={isLoading}>
+                        <Icon glyph="plus-fill" />
                         Join
-                      </Button>
+                      </PrimaryButton>
                     )}
                   />
                 )}

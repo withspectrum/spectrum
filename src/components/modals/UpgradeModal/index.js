@@ -3,12 +3,12 @@ import * as React from 'react';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import ModalContainer from '../modalContainer';
-import { closeModal } from '../../../actions/modals';
+import { closeModal } from 'src/actions/modals';
 import downgradeFromProMutation from 'shared/graphql/mutations/user/downgradeFromPro';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import { connect } from 'react-redux';
-import { Button, OutlineButton } from '../../buttons';
-import { UpsellUpgradeToPro } from '../../upsell';
+import { Button, OutlineButton } from 'src/components/button';
+import { UpsellUpgradeToPro } from 'src/components/upsell';
 import type { Dispatch } from 'redux';
 import {
   modalStyles,

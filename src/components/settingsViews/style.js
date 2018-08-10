@@ -1,6 +1,6 @@
 // @flow
 import styled from 'styled-components';
-import { Tooltip } from '../globals';
+import { Tooltip } from 'src/components/globals';
 
 export const View = styled.main`
   display: flex;
@@ -177,7 +177,9 @@ export const GrowthText = styled.span`
   color: ${props =>
     props.positive
       ? props.theme.success.default
-      : props.negative ? props.theme.warn.alt : props.theme.text.alt};
+      : props.negative
+        ? props.theme.warn.alt
+        : props.theme.text.alt};
   display: inline-block;
   margin-right: 6px;
   font-size: 14px;

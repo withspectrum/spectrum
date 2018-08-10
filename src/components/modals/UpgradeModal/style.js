@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
-import { Gradient, Transition, zIndex } from '../../globals';
-import { isMobile } from '../../../helpers/utils';
+import { Gradient, Transition, zIndex } from 'src/components/globals';
+import { isMobile } from 'src/helpers/utils';
 
 const maxWidth = '440px';
 const mobile = isMobile();

@@ -11,7 +11,7 @@ import {
   YOUTUBE_URLS,
   VIMEO_URLS,
   CODEPEN_URLS,
-} from '../../helpers/regexps';
+} from 'src/helpers/regexps';
 import addProtocolToString from 'shared/normalize-url';
 
 // Taken from https://github.com/vacenz/last-draft-js-plugins/blob/master/draft-js-embed-plugin/src/modifiers/addEmbed.js

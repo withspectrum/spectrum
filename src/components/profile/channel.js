@@ -5,18 +5,18 @@ import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
-import { addToastWithTimeout } from '../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
-import { NullCard } from '../upsell';
+import { NullCard } from 'src/components/upsell';
 import renderDescriptionWithLinks from 'src/helpers/render-text-with-markdown-links';
 import {
   ChannelListItem,
   ChannelListItemLi,
   CommunityListItem,
-} from '../listItems';
-import Icon from '../icons';
-import { Button } from '../buttons';
-import { LoadingListItem } from '../loading';
+} from 'src/components/listItems';
+import Icon from 'src/components/icon';
+import { Button, PrimaryButton } from 'src/components/button';
+import { LoadingListItem } from 'src/components/loading';
 import type { Dispatch } from 'redux';
 import { FullTitle, FullDescription, ProfileCard, FullProfile } from './style';
 
@@ -116,7 +116,7 @@ class ChannelWithData extends React.Component<Props, State> {
             copy="This is uncharted space. Let's get you safely back home, huh?"
           >
             <Link to={'/home'}>
-              <Button>Take me home</Button>
+              <PrimaryButton>Take me home</PrimaryButton>
             </Link>
           </NullCard>
         );
@@ -172,12 +172,9 @@ class ChannelWithData extends React.Component<Props, State> {
               member && (
                 <Button
                   loading={isLoading}
-                  icon="checkmark"
-                  gradientTheme="none"
-                  color="text.placeholder"
-                  hoverColor="text.placeholder"
                   onClick={() => this.toggleSubscription(channel.id)}
                 >
+                  <Icon glyph="checkmark" size={24} />
                   Joined
                 </Button>
               )}
@@ -185,10 +182,9 @@ class ChannelWithData extends React.Component<Props, State> {
               !member && (
                 <Button
                   loading={isLoading}
-                  icon="plus-fill"
-                  gradientTheme="success"
                   onClick={() => this.toggleSubscription(channel.id)}
                 >
+                  <Icon glyph="plus-fill" size={24} />
                   Join
                 </Button>
               )}
@@ -207,25 +203,19 @@ class ChannelWithData extends React.Component<Props, State> {
             member && (
               <Button
                 loading={isLoading}
-                icon="checkmark"
-                gradientTheme="none"
-                color="text.placeholder"
-                hoverColor="text.placeholder"
                 onClick={() => this.toggleSubscription(channel.id)}
               >
+                <Icon glyph="checkmark" size={24} />
                 Joined
               </Button>
             )}
           {currentUser &&
             !member && (
               <Button
-                size={'small'}
                 loading={isLoading}
-                icon="plus-fill"
-                color={'success.alt'}
-                gradientTheme="success"
                 onClick={() => this.toggleSubscription(channel.id)}
               >
+                <Icon glyph="plus" size={24} />
                 Join
               </Button>
             )}

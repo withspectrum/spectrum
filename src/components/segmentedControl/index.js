@@ -1,6 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { FlexRow } from '../globals';
+import { FlexRow } from 'src/components/globals';
 
 export const SegmentedControl = styled(FlexRow)`
   align-self: stretch;

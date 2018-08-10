@@ -1,7 +1,5 @@
 import * as React from 'react';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import debounceFn from 'debounce';
 
 type Props = {
