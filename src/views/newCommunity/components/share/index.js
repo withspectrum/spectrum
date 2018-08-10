@@ -2,10 +2,16 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-import { OutlineButton, Button } from '../../../../components/buttons';
+import {
+  Button,
+  OutlineButton,
+  FacebookButton,
+  TwitterButton,
+} from 'src/components/button';
 import { ButtonRow, InputRow, Input } from './style';
 import { Description } from '../../style';
-import { Loading } from '../../../../components/loading';
+import Icon from 'src/components/icon';
+import { Loading } from 'src/components/loading';
 import Clipboard from 'react-clipboard.js';
 
 const Share = ({ community, history, onboarding }) => {
@@ -23,14 +29,10 @@ const Share = ({ community, history, onboarding }) => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Button
-            icon="facebook"
-            gradientTheme={'none'}
-            hoverColor={'social.facebook.default'}
-            color={'social.facebook.default'}
-          >
+          <FacebookButton>
+            <Icon glyph="facebook" />
             Share on Facebook
-          </Button>
+          </FacebookButton>
         </a>
         <a
           href={`https://twitter.com/share?text=Come hang out with me in the ${
@@ -41,14 +43,10 @@ const Share = ({ community, history, onboarding }) => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Button
-            icon="twitter"
-            gradientTheme={'none'}
-            hoverColor={'social.twitter.default'}
-            color={'social.twitter.default'}
-          >
+          <TwitterButton>
+            <Icon glyph="twitter" />
             Share on Twitter
-          </Button>
+          </TwitterButton>
         </a>
       </ButtonRow>
 

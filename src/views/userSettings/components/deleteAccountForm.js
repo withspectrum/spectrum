@@ -15,7 +15,7 @@ import {
   type GetUserCommunityConnectionType,
 } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import { Button, TextButton, OutlineButton } from 'src/components/buttons';
+import { Button, DangerButton } from 'src/components/button';
 import deleteCurrentUserMutation from 'shared/graphql/mutations/user/deleteCurrentUser';
 import { SERVER_URL } from 'src/api/constants';
 import Link from 'src/components/link';
@@ -85,7 +85,9 @@ class DeleteAccountForm extends React.Component<Props, State> {
 
   render() {
     const { isLoading, ownsCommunities, deleteInited } = this.state;
-    const { data: { user } } = this.props;
+    const {
+      data: { user },
+    } = this.props;
 
     if (user && user.isPro) {
       return (
@@ -126,32 +128,30 @@ class DeleteAccountForm extends React.Component<Props, State> {
                 }}
               >
                 {!isLoading && (
-                  <OutlineButton
-                    dataCy="delete-account-cancel-button"
+                  <Button
+                    data-cy="delete-account-cancel-button"
                     onClick={this.cancelDelete}
                     style={{ marginBottom: '16px', alignSelf: 'stretch' }}
                   >
                     Cancel
-                  </OutlineButton>
+                  </Button>
                 )}
-                <Button
-                  dataCy="delete-account-confirm-button"
+                <DangerButton
+                  data-cy="delete-account-confirm-button"
                   loading={isLoading}
                   disabled={isLoading}
-                  gradientTheme={'warn'}
                   onClick={this.confirmDelete}
                 >
                   Confirm and delete my account
-                </Button>
+                </DangerButton>
               </div>
             ) : (
-              <TextButton
-                dataCy="delete-account-init-button"
-                color={'warn.default'}
+              <Button
+                data-cy="delete-account-init-button"
                 onClick={this.initDelete}
               >
                 Delete my account
-              </TextButton>
+              </Button>
             )}
           </SectionCardFooter>
         </SectionCard>

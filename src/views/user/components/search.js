@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { throttle } from '../../../helpers/utils';
+import { throttle } from 'src/helpers/utils';
 import searchThreadsQuery from 'shared/graphql/queries/search/searchThreads';
-import ThreadFeed from '../../../components/threadFeed';
+import ThreadFeed from 'src/components/threadFeed';
 import { SearchContainer, SearchInput } from '../style';
 
 const SearchThreadFeed = compose(searchThreadsQuery)(ThreadFeed);

@@ -3,11 +3,11 @@ import * as React from 'react';
 import Section from 'src/components/themedSection';
 import PageFooter from '../components/footer';
 import Link from 'src/components/link';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { Easy, Happy, Impact, Ideas } from 'src/components/illustrations';
 import { Wrapper } from '../style';
 import { Heading, Copy } from '../pricing/style';
-import { Button } from 'src/components/buttons';
+import { Button } from 'src/components/button';
 import {
   Intro,
   TextContent,

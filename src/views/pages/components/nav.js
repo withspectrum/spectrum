@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Button, IconButton } from 'src/components/buttons';
+import { Button, IconButton } from 'src/components/button';
 import Link from 'src/components/link';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { Logo } from 'src/components/logo';
 import { UserAvatar } from 'src/components/avatar';
 import Head from 'src/components/head';
@@ -118,10 +118,13 @@ class Nav extends React.Component<Props, State> {
             )}
           </AuthTab>
           <MenuTab dark={this.props.dark} open={this.state.menuIsOpen}>
-            <IconButton
-              glyph={this.state.menuIsOpen ? 'view-close' : 'menu'}
-              onClick={() => this.toggleMenu()}
-            />
+            <IconButton>
+              {this.state.menuIsOpen ? (
+                <Icon glyph="view-close" />
+              ) : (
+                <Icon glyph="menu" />
+              )}
+            </IconButton>
             <MenuContainer open={this.state.menuIsOpen}>
               <LogoLink to="/">
                 <Logo />

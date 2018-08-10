@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { CommunityListItem } from 'src/components/listItems';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { getUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import type { GetUserCommunityConnectionType } from 'shared/graphql/queries/user/getUserCommunityConnection';
 
@@ -72,6 +72,8 @@ class CommunityList extends React.Component<Props> {
   }
 }
 
-export default compose(withRouter, getUserCommunityConnection, connect())(
-  CommunityList
-);
+export default compose(
+  withRouter,
+  getUserCommunityConnection,
+  connect()
+)(CommunityList);

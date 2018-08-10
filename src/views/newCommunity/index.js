@@ -4,24 +4,24 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import queryString from 'query-string';
-import { Button, TextButton } from '../../components/buttons';
-import AppViewWrapper from '../../components/appViewWrapper';
-import Column from '../../components/column';
-import { Loading } from '../../components/loading';
+import { Button, TextButton } from 'src/components/button';
+import AppViewWrapper from 'src/components/appViewWrapper';
+import Column from 'src/components/column';
+import { Loading } from 'src/components/loading';
 import SlackConnection from '../communitySettings/components/slack';
-import { CommunityInvitationForm } from '../../components/emailInvitationForm';
+import { CommunityInvitationForm } from 'src/components/emailInvitationForm';
 import CreateCommunityForm from './components/createCommunityForm';
 import EditCommunityForm from './components/editCommunityForm';
-import Titlebar from '../titlebar';
+import Titlebar from 'src/views/titlebar';
 import Stepper from './components/stepper';
 import Share from './components/share';
-import { Login } from '../../views/login';
+import { Login } from 'src/views/login';
 import { getCommunityByIdQuery } from 'shared/graphql/queries/community/getCommunity';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import getCurrentUserSettings, {
   type GetCurrentUserSettingsType,
 } from 'shared/graphql/queries/user/getCurrentUserSettings';
-import UserEmailConfirmation from '../../components/userEmailConfirmation';
+import UserEmailConfirmation from 'src/components/userEmailConfirmation';
 import {
   Actions,
   Container,
@@ -32,7 +32,7 @@ import {
 } from './style';
 import viewNetworkHandler, {
   type ViewNetworkHandlerType,
-} from '../../components/viewNetworkHandler';
+} from 'src/components/viewNetworkHandler';
 
 type State = {
   activeStep: number,
@@ -168,7 +168,10 @@ class NewCommunity extends React.Component<Props, State> {
   };
 
   render() {
-    const { isLoading, data: { user } } = this.props;
+    const {
+      isLoading,
+      data: { user },
+    } = this.props;
     const { activeStep, community, existingId, hasInvitedPeople } = this.state;
     const title = this.title();
     const description = this.description();
@@ -229,10 +232,7 @@ class NewCommunity extends React.Component<Props, State> {
                   {hasInvitedPeople ? (
                     <Button onClick={() => this.step('next')}>Continue</Button>
                   ) : (
-                    <TextButton
-                      color={'brand.default'}
-                      onClick={() => this.step('next')}
-                    >
+                    <TextButton onClick={() => this.step('next')}>
                       Skip this step
                     </TextButton>
                   )}

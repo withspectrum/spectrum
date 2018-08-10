@@ -3,8 +3,8 @@ import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import Link from 'src/components/link';
 import ThreadSearch from '../dashboard/components/threadSearch';
-import Icon from '../../components/icons';
-import { IconButton } from '../../components/buttons';
+import Icon from 'src/components/icon';
+import { IconButton } from 'src/components/button';
 import { TitleBar, Text, Subtitle, Title } from './style';
 
 const TextHeading = ({ title, subtitle }) => (

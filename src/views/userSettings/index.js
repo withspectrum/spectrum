@@ -13,7 +13,7 @@ import Head from 'src/components/head';
 import ViewError from 'src/components/viewError';
 import { View } from './style';
 import Overview from './components/overview';
-import Titlebar from '../titlebar';
+import Titlebar from 'src/views/titlebar';
 import Header from 'src/components/settingsViews/header';
 import Subnav from 'src/components/settingsViews/subnav';
 import type { ContextRouter } from 'react-router';

@@ -1,6 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { SvgWrapper } from 'src/components/icons';
+import { SvgWrapper } from 'src/components/icon';
 
 export const Intro = styled.div`
   display: grid;

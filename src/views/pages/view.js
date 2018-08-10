@@ -2,18 +2,18 @@
 import React from 'react';
 import styled from 'styled-components';
 import Link from 'src/components/link';
-import Icon from '../../components/icons';
-import { UserAvatar } from '../../components/avatar';
+import Icon from 'src/components/icon';
+import { UserAvatar } from 'src/components/avatar';
 import {
   Shadow,
   Gradient,
   FlexCol,
   Transition,
   HorizontalRule,
-} from '../../components/globals';
+} from 'src/components/globals';
 import Search from '../explore/components/search';
-import Section from '../../components/themedSection';
-import { Conversation, Discover } from '../../components/illustrations';
+import Section from 'src/components/themedSection';
+import { Conversation, Discover } from 'src/components/illustrations';
 import {
   AbstractLogo,
   BootstrapLogo,
@@ -436,7 +436,7 @@ export const Sell = (props: Props) => {
   `;
 
   return (
-    <ThisSection goop={2} background="dark" color={'bg.reverse'}>
+    <ThisSection goop={2} background="dark" color={theme => theme.bg.reverse}>
       <ThisContent>
         <Text>
           <ThisTagline>Spectrum saves you time and money</ThisTagline>

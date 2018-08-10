@@ -8,22 +8,22 @@ import Link from 'src/components/link';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import Head from 'src/components/head';
 import ThreadFeed from 'src/components/threadFeed';
-import { initNewThreadWithUser } from '../../actions/directMessageThreads';
+import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { UserProfile } from 'src/components/profile';
 import { LoadingScreen } from 'src/components/loading';
 import { NullState } from 'src/components/upsell';
-import { Button, ButtonRow } from 'src/components/buttons';
+import { PrimaryButton, Button, ButtonRow } from 'src/components/button';
 import CommunityList from './components/communityList';
 import Search from './components/search';
+import Icon from 'src/components/icon';
 import {
   getUserByMatch,
   type GetUserType,
 } from 'shared/graphql/queries/user/getUser';
 import getUserThreads from 'shared/graphql/queries/user/getUserThreadConnection';
 import ViewError from 'src/components/viewError';
-import Titlebar from '../titlebar';
+import Titlebar from 'src/views/titlebar';
 import { CoverPhoto } from 'src/components/profile/coverPhoto';
-import { LoginButton } from '../community/style';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import type { Dispatch } from 'redux';
 import {
@@ -41,10 +41,14 @@ import {
 } from 'src/components/segmentedControl';
 import { ErrorBoundary } from 'src/components/error';
 
-const ThreadFeedWithData = compose(connect(), getUserThreads)(ThreadFeed);
-const ThreadParticipantFeedWithData = compose(connect(), getUserThreads)(
-  ThreadFeed
-);
+const ThreadFeedWithData = compose(
+  connect(),
+  getUserThreads
+)(ThreadFeed);
+const ThreadParticipantFeedWithData = compose(
+  connect(),
+  getUserThreads
+)(ThreadFeed);
 
 type Props = {
   match: Match,
@@ -104,7 +108,9 @@ class UserView extends React.Component<Props, State> {
       isLoading,
       hasError,
       queryVarIsChanging,
-      match: { params: { username } },
+      match: {
+        params: { username },
+      },
       currentUser,
     } = this.props;
     const { hasThreads, selectedView } = this.state;
@@ -162,14 +168,18 @@ class UserView extends React.Component<Props, State> {
 
               {currentUser &&
                 user.id !== currentUser.id && (
-                  <LoginButton onClick={() => this.initMessage(user)}>
+                  <PrimaryButton onClick={() => this.initMessage(user)} fill>
+                    <Icon glyph="message" size={24} />
                     Message {user.name}
-                  </LoginButton>
+                  </PrimaryButton>
                 )}
               {currentUser &&
                 user.id === currentUser.id && (
                   <Link to={`/users/${username}/settings`}>
-                    <LoginButton isMember>My settings</LoginButton>
+                    <Button fill>
+                      <Icon glyph="settings" size={24} />
+                      My settings
+                    </Button>
                   </Link>
                 )}
 
@@ -305,7 +315,7 @@ class UserView extends React.Component<Props, State> {
           >
             <ButtonRow>
               <Link to={'/'}>
-                <Button large>Take me home</Button>
+                <PrimaryButton>Take me home</PrimaryButton>
               </Link>
             </ButtonRow>
           </ViewError>

@@ -3,7 +3,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { BillingListItem } from 'src/components/listItems';
-import { IconButton } from 'src/components/buttons';
+import { IconButton } from 'src/components/button';
+import Icon from 'src/components/icon';
 import { UpsellUpgradeToPro } from 'src/components/upsell';
 import { openModal } from 'src/actions/modals';
 import { convertTimestampToDate } from 'shared/time-formatting';
@@ -29,7 +30,9 @@ class RecurringPaymentsList extends React.Component<Props> {
   };
 
   render() {
-    const { data: { user } } = this.props;
+    const {
+      data: { user },
+    } = this.props;
     if (!user || user === undefined) return null;
 
     // make sure to only display active subs for now
@@ -57,7 +60,9 @@ class RecurringPaymentsList extends React.Component<Props> {
                   withDescription={false}
                   meta={meta}
                 >
-                  <IconButton glyph="settings" onClick={this.openProModal} />
+                  <IconButton onClick={this.openProModal}>
+                    <Icon glyph="settings" />
+                  </IconButton>
                 </BillingListItem>
               );
             })}
