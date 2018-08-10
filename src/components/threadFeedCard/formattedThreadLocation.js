@@ -1,8 +1,7 @@
 import React from 'react';
-// $FlowFixMe
 import Link from 'src/components/link';
-import Icon from '../../components/icons';
-import Avatar from '../../components/avatar';
+import Icon from 'src/components/icon';
+import Avatar from 'src/components/avatar';
 import {
   ThreadContext,
   ThreadContextAvatar,

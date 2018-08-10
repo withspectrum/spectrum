@@ -8,7 +8,7 @@ import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import InboxThread from 'src/views/dashboard/components/inboxThread';
 import { NullCard } from '../upsell';
 import { LoadingInboxThread } from '../loading';

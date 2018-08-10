@@ -2,9 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-import SetUsername from '../../components/setUsername';
-import { Button, OutlineButton } from '../../components/buttons';
-import TopCommunities from '../../views/dashboard/components/topCommunities';
+import SetUsername from 'src/components/setUsername';
+import Icon from 'src/components/icon';
+import {
+  Button,
+  FacebookButton,
+  TwitterButton,
+  OutlineButton,
+} from 'src/components/button';
+import TopCommunities from 'src/views/dashboard/components/topCommunities';
 import { NullCard } from './index';
 import {
   LargeEmoji,
@@ -84,7 +90,7 @@ class UpsellNewUser extends Component {
     this.props.history.push('/new/community');
   };
 
-  clickShareLink = value => {};
+  clickShareLink = value => () => {};
 
   savedUsername = () => {
     this.setState({
@@ -155,28 +161,20 @@ class UpsellNewUser extends Component {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button
-                icon="facebook"
-                gradientTheme={'none'}
-                color={'social.facebook.default'}
-                onClick={() => this.clickShareLink('facebook')}
-              >
+              <FacebookButton onClick={this.clickShareLink('facebook')}>
+                <Icon glyph="facebook" />
                 Share on Facebook
-              </Button>
+              </FacebookButton>
             </a>
             <a
               href={`https://twitter.com/share?text=Come hang out with me on @withspectrum, a new place on the internet for communities!&url=https://spectrum.chat`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button
-                icon="twitter"
-                gradientTheme={'none'}
-                color={'social.twitter.default'}
-                onClick={() => this.clickShareLink('twitter')}
-              >
+              <TwitterButton onClick={this.clickShareLink('twitter')}>
+                <Icon glyph="twitter" />
                 Share on Twitter
-              </Button>
+              </TwitterButton>
             </a>
           </ButtonRow>
         </Section>
@@ -222,4 +220,7 @@ class UpsellNewUser extends Component {
   }
 }
 
-export default compose(withRouter, connect())(UpsellNewUser);
+export default compose(
+  withRouter,
+  connect()
+)(UpsellNewUser);

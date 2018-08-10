@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import {
   Button,
   PrimaryButton,
@@ -10,7 +10,7 @@ import {
   IconButton,
   ButtonRow,
   ButtonSegmentRow,
-} from 'src/components/buttons';
+} from 'src/components/button';
 
 export default class Buttons extends React.Component<{}> {
   render() {

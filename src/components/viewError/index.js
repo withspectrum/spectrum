@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
 import { FillSpaceError, LargeEmoji, Heading, Subheading } from './style';
-import { Button } from '../buttons';
-import { removeItemFromStorage } from '../../helpers/localStorage';
+import { Button } from 'src/components/button';
+import { removeItemFromStorage } from 'src/helpers/localStorage';
 
 /*
   A generic error component which will fill the space of any container its placed in.

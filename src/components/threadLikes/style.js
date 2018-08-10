@@ -1,6 +1,6 @@
 // @flow
 import styled from 'styled-components';
-import { Button } from 'src/components/buttons';
+import { Button } from 'src/components/button';
 
 export const CurrentCount = styled.b`
   font-size: 14px;

@@ -10,7 +10,7 @@ import {
   Constellations,
   Empty,
 } from '../illustrations';
-import { FlexCol, hexa } from '../globals';
+import { FlexCol, hexa } from 'src/components/globals';
 
 export const Default = styled(FlexCol)`
   display: flex;

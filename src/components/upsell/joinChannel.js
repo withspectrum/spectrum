@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
-import { addToastWithTimeout } from '../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import type { Dispatch } from 'redux';
 import {
   JoinChannelContainer,
@@ -12,7 +12,7 @@ import {
   JoinChannelTitle,
   JoinChannelSubtitle,
 } from './style';
-import { Button } from '../buttons';
+import { Button } from 'src/components/button';
 
 type Props = {
   channel: Object,
@@ -114,6 +114,7 @@ class JoinChannel extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), toggleChannelSubscriptionMutation)(
-  JoinChannel
-);
+export default compose(
+  connect(),
+  toggleChannelSubscriptionMutation
+)(JoinChannel);

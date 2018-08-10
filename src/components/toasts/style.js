@@ -1,7 +1,6 @@
 // @flow
-// $FlowFixMe
 import styled, { keyframes } from 'styled-components';
-import { zIndex, Gradient } from '../globals';
+import { zIndex, Gradient } from 'src/components/globals';
 
 export const Container = styled.div`
   position: fixed;

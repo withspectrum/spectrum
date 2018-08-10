@@ -2,8 +2,8 @@
 /* eslint-disable */
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import crashReporter from '../helpers/sentry-redux-middleware';
-import getReducers from '../reducers';
+import crashReporter from 'src/helpers/sentry-redux-middleware';
+import getReducers from 'src/reducers';
 
 // this enables the chrome devtools for redux only in development
 const composeEnhancers =

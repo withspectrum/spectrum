@@ -7,7 +7,7 @@ import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import addThreadReactionMutation from 'shared/graphql/mutations/thread/addThreadReaction';
 import removeThreadReactionMutation from 'shared/graphql/mutations/thread/removeThreadReaction';
 import { openModal } from 'src/actions/modals';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { LikeButtonWrapper, LikeCountWrapper, CurrentCount } from './style';
 
 type LikeButtonProps = {

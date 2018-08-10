@@ -1,5 +1,11 @@
 import styled, { keyframes } from 'styled-components';
-import { hexa, Transition, FlexRow, FlexCol, zIndex } from '../globals';
+import {
+  hexa,
+  Transition,
+  FlexRow,
+  FlexCol,
+  zIndex,
+} from 'src/components/globals';
 
 export const Container = styled(FlexRow)`
   align-self: stretch;

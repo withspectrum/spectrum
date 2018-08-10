@@ -1,7 +1,6 @@
 import React from 'react';
-// $FlowFixMe
 import styled from 'styled-components';
-import { Transition } from '../globals';
+import { Transition } from 'src/components/globals';
 
 export const Loading = styled.span`
   position: absolute;

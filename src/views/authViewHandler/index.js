@@ -5,9 +5,9 @@ import compose from 'recompose/compose';
 import { getCurrentUser } from 'shared/graphql/queries/user/getUser';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import editUserMutation from 'shared/graphql/mutations/user/editUser';
-import { saveUserDataToLocalStorage } from '../../actions/authentication';
-import { removeItemFromStorage } from '../../helpers/localStorage';
-import NewUserOnboarding from '../../views/newUserOnboarding';
+import { saveUserDataToLocalStorage } from 'src/actions/authentication';
+import { removeItemFromStorage } from 'src/helpers/localStorage';
+import NewUserOnboarding from 'src/views/newUserOnboarding';
 import type { Dispatch } from 'redux';
 
 type Props = {
@@ -37,7 +37,13 @@ class AuthViewHandler extends React.Component<Props, State> {
   };
 
   componentDidUpdate(prev) {
-    const { data: { user }, editUser, dispatch, history, match } = this.props;
+    const {
+      data: { user },
+      editUser,
+      dispatch,
+      history,
+      match,
+    } = this.props;
     // if no user was found, escape
 
     if (!user) {

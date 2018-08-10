@@ -4,10 +4,10 @@ import Textarea from 'react-textarea-autosize';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import debounce from 'debounce';
-import { closeComposer } from '../../../actions/composer';
-import { changeActiveThread } from '../../../actions/dashboardFeed';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import Editor from '../../rich-text-editor';
+import { closeComposer } from 'src/actions/composer';
+import { changeActiveThread } from 'src/actions/dashboardFeed';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import Editor from 'src/components/rich-text-editor';
 import {
   toPlainText,
   fromPlainText,
@@ -18,13 +18,13 @@ import {
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
-import { getLinkPreviewFromUrl } from '../../../helpers/utils';
+import { getLinkPreviewFromUrl } from 'src/helpers/utils';
 import isURL from 'validator/lib/isURL';
-import { URLS, ENDS_IN_WHITESPACE } from '../../../helpers/regexps';
-import { TextButton, Button } from '../../buttons';
-import { FlexRow } from '../../../components/globals';
-import { LoadingComposer } from '../../loading';
-import viewNetworkHandler from '../../viewNetworkHandler';
+import { URLS, ENDS_IN_WHITESPACE } from 'src/helpers/regexps';
+import { TextButton, Button } from 'src/components/button';
+import { FlexRow } from 'src/components/globals';
+import { LoadingComposer } from 'src/components/loading';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import type { PublishThreadType } from 'shared/graphql/mutations/thread/publishThread';
 import {
   Container,

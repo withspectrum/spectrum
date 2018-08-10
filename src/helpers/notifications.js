@@ -1,10 +1,8 @@
 import React from 'react';
-//$FlowFixMe
 import Link from 'src/components/link';
-
-import Icon from '../components/icons';
-import { HorizontalRuleWithIcon } from '../components/globals';
-import { ChatMessage } from '../views/notifications/style';
+import Icon from 'src/components/icon';
+import { HorizontalRuleWithIcon } from 'src/components/globals';
+import { ChatMessage } from 'src/views/notifications/style';
 
 const icons = {
   NEW_THREAD: 'post',

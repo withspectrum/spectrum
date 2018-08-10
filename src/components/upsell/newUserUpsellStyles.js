@@ -1,7 +1,6 @@
 // @flow
-// $FlowFixMe
 import styled from 'styled-components';
-import ScrollRow from '../../components/scrollRow';
+import ScrollRow from 'src/components/scrollRow';
 
 export const Section = styled.section`
   display: flex;

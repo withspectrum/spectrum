@@ -1,7 +1,6 @@
 // @flow
-// $FlowFixMe
 import styled from 'styled-components';
-import { Card } from '../../../components/card';
+import { Card } from 'src/components/card';
 
 export const PendingUserNotificationContainer = styled(Card)`
   width: 100%;

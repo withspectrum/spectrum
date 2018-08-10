@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import { getUserByUsernameQuery } from 'shared/graphql/queries/user/getUser';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
-import { debounce } from '../../helpers/utils';
-import { Spinner } from '../globals';
+import { debounce } from 'src/helpers/utils';
+import { Spinner } from 'src/components/globals';
 import { Input, Loading } from './style';
 
 type Props = {
@@ -147,7 +147,7 @@ class UsernameSearch extends React.Component<Props, State> {
           {label && label}
           {isSearching && (
             <Loading size={size}>
-              <Spinner size={16} color={'brand.default'} />
+              <Spinner size={16} color={theme => theme.brand.default} />
             </Loading>
           )}
         </Input>
@@ -156,4 +156,7 @@ class UsernameSearch extends React.Component<Props, State> {
   }
 }
 
-export default compose(withApollo, connect())(UsernameSearch);
+export default compose(
+  withApollo,
+  connect()
+)(UsernameSearch);

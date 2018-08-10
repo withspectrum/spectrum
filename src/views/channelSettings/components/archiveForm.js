@@ -2,15 +2,15 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { openModal } from '../../../actions/modals';
-import { Button } from '../../../components/buttons';
+import { openModal } from 'src/actions/modals';
+import { Button } from 'src/components/button';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import {
   SectionCard,
   SectionTitle,
   SectionSubtitle,
   SectionCardFooter,
-} from '../../../components/settingsViews/style';
+} from 'src/components/settingsViews/style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 

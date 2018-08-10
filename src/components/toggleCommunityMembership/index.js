@@ -5,7 +5,7 @@ import compose from 'recompose/compose';
 import addCommunityMemberMutation from 'shared/graphql/mutations/communityMember/addCommunityMember';
 import removeCommunityMemberMutation from 'shared/graphql/mutations/communityMember/removeCommunityMember';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import { addToastWithTimeout } from '../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import type { AddCommunityMemberType } from 'shared/graphql/mutations/communityMember/addCommunityMember';
 import type { RemoveCommunityMemberType } from 'shared/graphql/mutations/communityMember/removeCommunityMember';
 import type { Dispatch } from 'redux';

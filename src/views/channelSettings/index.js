@@ -14,7 +14,7 @@ import togglePendingUserInChannelMutation from 'shared/graphql/mutations/channel
 import type { ToggleChannelPendingUserType } from 'shared/graphql/mutations/channel/toggleChannelPendingUser';
 import unblockUserInChannelMutation from 'shared/graphql/mutations/channel/unblockChannelBlockedUser';
 import type { UnblockChannelBlockedUserType } from 'shared/graphql/mutations/channel/unblockChannelBlockedUser';
-import Titlebar from '../titlebar';
+import Titlebar from 'src/views/titlebar';
 import ViewError from 'src/components/viewError';
 import { View } from 'src/components/settingsViews/style';
 import Header from 'src/components/settingsViews/header';
@@ -67,7 +67,10 @@ class ChannelSettings extends React.Component<Props> {
   };
 
   togglePending = (userId, action) => {
-    const { data: { channel }, dispatch } = this.props;
+    const {
+      data: { channel },
+      dispatch,
+    } = this.props;
     const input = {
       channelId: channel.id,
       userId,
@@ -96,7 +99,10 @@ class ChannelSettings extends React.Component<Props> {
   };
 
   unblock = (userId: string) => {
-    const { data: { channel }, dispatch } = this.props;
+    const {
+      data: { channel },
+      dispatch,
+    } = this.props;
 
     const input = {
       channelId: channel.id,

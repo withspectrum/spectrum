@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
 import { LinkPreview } from '../../components/linkPreview';
-import Icon from '../../components/icons';
+import Icon from 'src/components/icon';
 import FacePile from './facePile';
 import FormattedThreadLocation from './formattedThreadLocation';
 import {
@@ -24,7 +24,10 @@ import {
 } from './style';
 
 const ThreadFeedCardPure = (props: Object): React$Element<any> => {
-  const { location: { pathname }, data: { attachments, participants } } = props;
+  const {
+    location: { pathname },
+    data: { attachments, participants },
+  } = props;
   const attachmentsExist = attachments && attachments.length > 0;
   const participantsExist = participants && participants.length > 0;
 

@@ -3,14 +3,14 @@ import * as React from 'react';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { storeItem } from 'src/helpers/localStorage';
 import { PUBLIC_STRIPE_KEY } from 'src/api/constants';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
 import { UserAvatar } from 'src/components/avatar';
 import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
-import { Button, OutlineButton } from 'src/components/buttons';
+import { Button, PrimaryButton, OutlineButton } from 'src/components/button';
 import { Login } from 'src/views/login';
 import Badge from 'src/components/badges';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
@@ -479,7 +479,7 @@ export const UpsellNullNotifications = () => {
   return (
     <NullCard bg="notification" heading="You don't have any notifications yet.">
       <Link to="/">
-        <Button icon="home">Take Me Home</Button>
+        <PrimaryButton>Take Me Home</PrimaryButton>
       </Link>
     </NullCard>
   );

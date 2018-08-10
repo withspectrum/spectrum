@@ -15,7 +15,7 @@ import ViewError from 'src/components/viewError';
 import { StyledButton } from '../../community/style';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { MessageIconContainer, UserListItemContainer } from '../style';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 
 type Props = {
   data: {

@@ -1,7 +1,6 @@
 // @flow
-// $FlowFixMe
 import styled from 'styled-components';
-import { OutlineButton } from '../buttons';
+import { OutlineButton } from 'src/components/button';
 
 export const FetchMoreButton = styled(OutlineButton)`
   width: 100%;

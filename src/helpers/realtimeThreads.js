@@ -1,4 +1,4 @@
-import { addActivityIndicator } from '../actions/newActivityIndicator';
+import { addActivityIndicator } from 'src/actions/newActivityIndicator';
 import type { Dispatch } from 'redux';
 
 // used to update feed caches with new threads in real time

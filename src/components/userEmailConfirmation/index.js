@@ -2,13 +2,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { addToastWithTimeout } from '../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import updateUserEmailMutation from 'shared/graphql/mutations/user/updateUserEmail';
-import { Button } from '../buttons';
-import { Input, Error } from '../formElements';
+import { Button } from 'src/components/button';
+import { Input, Error } from 'src/components/formElements';
 import isEmail from 'validator/lib/isEmail';
 import { EmailForm } from './style';
-import { Notice } from '../listItems/style';
+import { Notice } from 'src/components/listItems/style';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { injectStripe, CardElement } from 'react-stripe-elements';
 import compose from 'recompose/compose';
 import addPaymentSourceMutation from 'shared/graphql/mutations/community/addPaymentSource';
-import { addToastWithTimeout } from '../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import { style, Actions } from './style';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 import type { Dispatch } from 'redux';
@@ -76,4 +76,8 @@ class Form extends React.Component<Props, State> {
   }
 }
 
-export default compose(injectStripe, connect(), addPaymentSourceMutation)(Form);
+export default compose(
+  injectStripe,
+  connect(),
+  addPaymentSourceMutation
+)(Form);

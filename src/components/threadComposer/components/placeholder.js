@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { openComposer } from '../../../actions/composer';
-import Icon from '../../icons';
+import { openComposer } from 'src/actions/composer';
+import Icon from 'src/components/icon';
 import { Container, Composer, Placeholder, PlaceholderLabel } from '../style';
 import Upsell from './upsell';
 import type { Dispatch } from 'redux';

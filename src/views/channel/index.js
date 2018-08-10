@@ -3,47 +3,49 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
-import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
-import ThreadComposer from '../../components/threadComposer';
-import Head from '../../components/head';
-import AppViewWrapper from '../../components/appViewWrapper';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
-import ViewError from '../../components/viewError';
+import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
+import ThreadComposer from 'src/components/threadComposer';
+import Head from 'src/components/head';
+import AppViewWrapper from 'src/components/appViewWrapper';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import ViewError from 'src/components/viewError';
 import Link from 'src/components/link';
-import ThreadFeed from '../../components/threadFeed';
-import { ChannelProfile } from '../../components/profile';
+import ThreadFeed from 'src/components/threadFeed';
+import { ChannelProfile } from 'src/components/profile';
 import PendingUsersNotification from './components/pendingUsersNotification';
 import NotificationsToggle from './components/notificationsToggle';
 import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
-import Login from '../login';
-import { LoadingScreen } from '../../components/loading';
-import { Upsell404Channel } from '../../components/upsell';
-import RequestToJoinChannel from '../../components/upsell/requestToJoinChannel';
-import Titlebar from '../titlebar';
-import Icon from '../../components/icons';
+import Login from 'src/views/login';
+import { PrimaryButton, Button } from 'src/components/button';
+import { LoadingScreen } from 'src/components/loading';
+import { Upsell404Channel } from 'src/components/upsell';
+import RequestToJoinChannel from 'src/components/upsell/requestToJoinChannel';
+import Titlebar from 'src/views/titlebar';
+import Icon from 'src/components/icon';
 import Search from './components/search';
 import ChannelMemberGrid from './components/memberGrid';
-import { CLIENT_URL } from '../../api/constants';
+import { CLIENT_URL } from 'src/api/constants';
 import CommunityLogin from 'src/views/communityLogin';
 import {
   SegmentedControl,
   DesktopSegment,
   Segment,
   MobileSegment,
-} from '../../components/segmentedControl';
+} from 'src/components/segmentedControl';
 import { Grid, Meta, Content, Extras } from './style';
-import { CoverPhoto } from '../../components/profile/coverPhoto';
-import { LoginButton, ColumnHeading, MidSegment } from '../community/style';
-import ToggleChannelMembership from '../../components/toggleChannelMembership';
+import { CoverPhoto } from 'src/components/profile/coverPhoto';
+import { ColumnHeading, MidSegment } from '../community/style';
+import ToggleChannelMembership from 'src/components/toggleChannelMembership';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
 
-const ThreadFeedWithData = compose(connect(), getChannelThreadConnection)(
-  ThreadFeed
-);
+const ThreadFeedWithData = compose(
+  connect(),
+  getChannelThreadConnection
+)(ThreadFeed);
 
 type Props = {
   match: {
@@ -138,9 +140,10 @@ class ChannelView extends React.Component<Props, State> {
       // user isnt logged in, prompt a login-join
       return (
         <Link to={loginUrl}>
-          <LoginButton data-cy="channel-login-join-button">
+          <PrimaryButton data-cy="channel-login-join-button" fill>
+            <Icon glyph="plus" fill />
             Join {channel.name}
-          </LoginButton>
+          </PrimaryButton>
         </Link>
       );
     }
@@ -151,13 +154,10 @@ class ChannelView extends React.Component<Props, State> {
       if (isGlobalOwner) {
         return (
           <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
-            <LoginButton
-              icon={'settings'}
-              isMember
-              data-cy="channel-settings-button"
-            >
+            <Button fill data-cy="channel-settings-button">
+              <Icon glyph="settings" size={24} />
               Settings
-            </LoginButton>
+            </Button>
           </Link>
         );
       }
@@ -168,25 +168,22 @@ class ChannelView extends React.Component<Props, State> {
             <ToggleChannelMembership
               channel={channel}
               render={state => (
-                <LoginButton
-                  isMember={isChannelMember}
-                  icon={isChannelMember ? 'checkmark' : null}
+                <PrimaryButton
+                  fill
                   loading={state.isLoading}
-                  dataCy="channel-join-button"
+                  data-cy="channel-join-button"
                 >
+                  <Icon glyph={isChannelMember ? 'checkmark' : 'plus'} />
                   {isChannelMember ? 'Joined' : `Join ${channel.name}`}
-                </LoginButton>
+                </PrimaryButton>
               )}
             />
 
             <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
-              <LoginButton
-                icon={'settings'}
-                isMember
-                data-cy="channel-settings-button"
-              >
+              <Button fill data-cy="channel-settings-button">
+                <Icon glyph="settings" size={24} />
                 Settings
-              </LoginButton>
+              </Button>
             </Link>
           </React.Fragment>
         );
@@ -197,14 +194,14 @@ class ChannelView extends React.Component<Props, State> {
         <ToggleChannelMembership
           channel={channel}
           render={state => (
-            <LoginButton
-              isMember={isChannelMember}
-              icon={isChannelMember ? 'checkmark' : null}
+            <PrimaryButton
+              fill
               loading={state.isLoading}
-              dataCy="channel-join-button"
+              data-cy="channel-join-button"
             >
+              <Icon glyph={isChannelMember ? 'checkmark' : 'plus'} />
               {isChannelMember ? 'Joined' : `Join ${channel.name}`}
-            </LoginButton>
+            </PrimaryButton>
           )}
         />
       );
