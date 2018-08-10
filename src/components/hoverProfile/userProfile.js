@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import AvatarImage from 'src/components/avatar/image';
 import Link from 'src/components/link';
-import { Button } from 'src/components/buttons';
+import { Button } from 'src/components/button';
 import ConditionalWrap from 'src/components/conditionalWrap';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import type { Dispatch } from 'redux';
@@ -96,4 +96,7 @@ class HoverProfile extends Component<ProfileProps> {
 
 const map = state => ({ currentUser: state.users.currentUser });
 //$FlowFixMe
-export default compose(connect(map), withRouter)(HoverProfile);
+export default compose(
+  connect(map),
+  withRouter
+)(HoverProfile);

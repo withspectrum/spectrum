@@ -1,6 +1,6 @@
 // @flow
 import styled from 'styled-components';
-import { Tooltip, Truncate } from '../globals';
+import { Tooltip, Truncate } from 'src/components/globals';
 
 export const Content = styled.div`
   border-bottom: 1px solid ${props => props.theme.bg.wash};

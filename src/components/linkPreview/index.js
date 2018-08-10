@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Icon from '../icons';
-import { FlexCol } from '../globals';
-import { truncate } from '../../helpers/utils';
+import Icon from 'src/components/icon';
+import { FlexCol } from 'src/components/globals';
+import { truncate } from 'src/helpers/utils';
 import {
   LinkPreviewContainer,
   LinkPreviewImage,
@@ -28,7 +28,11 @@ export class LinkPreview extends Component {
   };
 
   render() {
-    let { data: { image, title, url, trueUrl }, editable, margin } = this.props;
+    let {
+      data: { image, title, url, trueUrl },
+      editable,
+      margin,
+    } = this.props;
     title = title ? truncate(title, 72) : '';
     if (!title) return null;
     if (!url && !trueUrl) return null;

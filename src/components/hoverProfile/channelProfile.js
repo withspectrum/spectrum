@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import AvatarImage from 'src/components/avatar/image';
 import Link from 'src/components/link';
-import { Button, OutlineButton } from 'src/components/buttons';
+import Icon from 'src/components/icon';
+import { PrimaryButton, OutlineButton } from 'src/components/button';
 import ToggleChannelMembership from 'src/components/toggleChannelMembership';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
@@ -78,24 +79,17 @@ class HoverProfile extends Component<ProfileProps> {
                   render={state => {
                     if (isChannelMember) {
                       return (
-                        <OutlineButton
-                          isMember={true}
-                          icon={'checkmark'}
-                          loading={state.isLoading}
-                        >
+                        <OutlineButton loading={state.isLoading}>
+                          <Icon glyph="checkmark" />
                           Joined
                         </OutlineButton>
                       );
                     } else {
                       return (
-                        <Button
-                          isMember={false}
-                          icon={'plus-fill'}
-                          loading={state.isLoading}
-                          gradientTheme={'success'}
-                        >
+                        <PrimaryButton loading={state.isLoading}>
+                          <Icon glyph="plus-fill" />
                           Join channel
-                        </Button>
+                        </PrimaryButton>
                       );
                     }
                   }}
@@ -116,4 +110,7 @@ class HoverProfile extends Component<ProfileProps> {
 
 const map = state => ({ currentUser: state.users.currentUser });
 //$FlowFixMe
-export default compose(connect(map), withRouter)(HoverProfile);
+export default compose(
+  connect(map),
+  withRouter
+)(HoverProfile);

@@ -8,7 +8,7 @@ import { UserAvatar } from 'src/components/avatar';
 import Link from 'src/components/link';
 import Reputation from 'src/components/reputation';
 import Badge from 'src/components/badges';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import type { Dispatch } from 'redux';
 import ConditionalWrap from 'src/components/conditionalWrap';
@@ -139,4 +139,7 @@ class GranularUserProfile extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), withRouter)(GranularUserProfileHandler);
+export default compose(
+  connect(),
+  withRouter
+)(GranularUserProfileHandler);

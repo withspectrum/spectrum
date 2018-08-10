@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FlexRow } from '../globals';
+import { FlexRow } from 'src/components/globals';
 
 const StyledGrid = styled(FlexRow)`
   flex-wrap: wrap;

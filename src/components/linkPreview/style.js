@@ -1,5 +1,11 @@
 import styled, { keyframes } from 'styled-components';
-import { Transition, Shadow, hexa, zIndex, Truncate } from '../globals';
+import {
+  Transition,
+  Shadow,
+  hexa,
+  zIndex,
+  Truncate,
+} from 'src/components/globals';
 
 export const LinkPreviewContainer = styled.a`
   display: flex;

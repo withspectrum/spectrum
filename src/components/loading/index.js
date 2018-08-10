@@ -1,15 +1,12 @@
 // @flow
 import React from 'react';
-//$FlowFixMe
 import branch from 'recompose/branch';
-//$FlowFixMe
 import renderComponent from 'recompose/renderComponent';
-// $FlowFixMe
 import styled from 'styled-components';
-import { Spinner, FlexCol } from '../globals';
-import { Card } from '../card';
-import { Column } from '../column';
-import { ThreadViewContainer, Detail, Content } from '../../views/thread/style';
+import { Spinner, FlexCol } from 'src/components/globals';
+import { Card } from 'src/components/card';
+import { Column } from 'src/components/column';
+import { ThreadViewContainer, Detail, Content } from 'src/views/thread/style';
 import {
   LoadingScreenContainer,
   ShimmerList,
@@ -97,7 +94,7 @@ export const LoadingCard = ({
 
 export const LoadingGallery = (): React$Element<any> => (
   <LoadingOverlay>
-    <Spinner size={'32'} color={'bg.default'} />
+    <Spinner size={'32'} color={theme => theme.bg.default} />
   </LoadingOverlay>
 );
 
@@ -107,7 +104,7 @@ export const LoadingNavbar = (): React$Element<any> => (
       <Logo src="/img/mark-white.png" role="presentation" />
     </LogoLink>
     <LoadingContainer>
-      <Spinner size={'20'} color={'bg.default'} />
+      <Spinner size={'20'} color={theme => theme.bg.default} />
     </LoadingContainer>
   </LoadingNavbarContainer>
 );
