@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { ActorsRow } from './actorsRow';
 import { parseNotificationDate, parseContext, parseActors } from '../utils';
-import Icon from '../../../components/icons';
+import Icon from 'src/components/icon';
 import {
   TextContent,
   Content,
@@ -10,10 +10,7 @@ import {
   NotificationListRow,
   SpecialContext,
 } from '../style';
-import {
-  CardLink,
-  CardContent,
-} from '../../../components/threadFeedCard/style';
+import { CardLink, CardContent } from 'src/components/threadFeedCard/style';
 
 type Props = {
   notification: Object,

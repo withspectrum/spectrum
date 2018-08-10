@@ -4,8 +4,9 @@ import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
+import Icon from 'src/components/icon';
 import { connect } from 'react-redux';
-import { Button, OutlineButton } from 'src/components/buttons';
+import { PrimaryButton } from 'src/components/button';
 import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
 import { throttle } from 'src/helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
@@ -263,7 +264,7 @@ class Search extends React.Component<Props, State> {
       <SearchWrapper>
         {searchIsLoading && (
           <SearchSpinnerContainer>
-            <Spinner size={16} color={'brand.default'} />
+            <Spinner size={16} color={theme => theme.brand.default} />
           </SearchSpinnerContainer>
         )}
         <SearchInputWrapper>
@@ -314,14 +315,10 @@ class Search extends React.Component<Props, State> {
                               onLeave={this.onJoinComplete}
                               community={community}
                               render={({ isLoading }) => (
-                                <OutlineButton
-                                  gradientTheme="none"
-                                  color={'success.alt'}
-                                  hoverColor={'success.default'}
-                                  loading={isLoading}
-                                >
+                                <PrimaryButton loading={isLoading}>
+                                  <Icon glyph="checkmark" />
                                   Joined!
-                                </OutlineButton>
+                                </PrimaryButton>
                               )}
                             />
                           ) : (
@@ -330,14 +327,13 @@ class Search extends React.Component<Props, State> {
                               onLeave={this.onJoinComplete}
                               community={community}
                               render={({ isLoading }) => (
-                                <Button
+                                <PrimaryButton
                                   loading={isLoading}
-                                  gradientTheme={'success'}
                                   style={{ fontSize: '16px' }}
-                                  icon={'plus'}
                                 >
+                                  <Icon glyph="plus" />
                                   Join
-                                </Button>
+                                </PrimaryButton>
                               )}
                             />
                           )}
@@ -352,7 +348,7 @@ class Search extends React.Component<Props, State> {
                       <SearchResultNull>
                         <p>No communities found matching “{searchString}”</p>
                         <Link to={'/new/community'}>
-                          <Button>Create a Community</Button>
+                          <PrimaryButton>Create a Community</PrimaryButton>
                         </Link>
                       </SearchResultNull>
                     </SearchResult>
@@ -365,4 +361,8 @@ class Search extends React.Component<Props, State> {
   }
 }
 
-export default compose(withApollo, withRouter, connect())(Search);
+export default compose(
+  withApollo,
+  withRouter,
+  connect()
+)(Search);

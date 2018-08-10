@@ -1,8 +1,7 @@
 // @flow
-// $FlowFixMe
 import styled from 'styled-components';
-import { Button } from '../../components/buttons';
-import { Shadow, hexa, zIndex } from '../../components/globals';
+import { Button } from 'src/components/button';
+import { Shadow, hexa, zIndex } from 'src/components/globals';
 
 export const OnboardingContainer = styled.div`
   display: flex;

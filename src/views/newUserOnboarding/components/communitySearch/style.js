@@ -1,15 +1,8 @@
 // @flow
-// $FlowFixMe
 import styled from 'styled-components';
-import {
-  FlexCol,
-  FlexRow,
-  Shadow,
-  hexa,
-  zIndex,
-} from '../../../../components/globals';
-import { CommunityAvatar } from '../../../../components/avatar';
-import Icon from '../../../../components/icons';
+import { FlexCol, FlexRow, Shadow, hexa, zIndex } from 'src/components/globals';
+import { CommunityAvatar } from 'src/components/avatar';
+import Icon from 'src/components/icon';
 
 export const SearchWrapper = styled.div`
   position: relative;

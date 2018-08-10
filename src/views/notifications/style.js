@@ -1,5 +1,4 @@
 // @flow
-// $FlowFixMe
 import styled from 'styled-components';
 import {
   FlexRow,
@@ -9,10 +8,10 @@ import {
   hexa,
   Shadow,
   zIndex,
-} from '../../components/globals';
-import { HorizontalRule } from '../../components/globals';
-import Card from '../../components/card';
-import { IconButton } from '../../components/buttons';
+} from 'src/components/globals';
+import { HorizontalRule } from 'src/components/globals';
+import Card from 'src/components/card';
+import { IconButton } from 'src/components/button';
 
 export const HzRule = styled(HorizontalRule)`
   margin: 0;

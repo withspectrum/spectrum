@@ -7,7 +7,7 @@ import { sortByDate } from 'src/helpers/utils';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { parseNotificationDate, parseContext } from '../utils';
 import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { ThreadProfile } from 'src/components/profile';
 import { LoadingCard } from 'src/components/loading';
 import {
@@ -56,9 +56,10 @@ const ThreadCreatedComponent = ({
   return <ThreadProfile profileSize="mini" data={data} {...rest} />;
 };
 
-const ThreadCreated = compose(getThreadById, viewNetworkHandler)(
-  ThreadCreatedComponent
-);
+const ThreadCreated = compose(
+  getThreadById,
+  viewNetworkHandler
+)(ThreadCreatedComponent);
 
 /*
   NOTE: @brianlovin

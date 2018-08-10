@@ -19,29 +19,29 @@ import { PrivateChannelRequestApproved } from './components/privateChannelReques
 import { PrivateChannelRequestSent } from './components/privateChannelRequestSentNotification';
 import { PrivateCommunityRequestApproved } from './components/privateCommunityRequestApprovedNotification';
 import { PrivateCommunityRequestSent } from './components/privateCommunityRequestSentNotification';
-import { Column } from '../../components/column';
-import AppViewWrapper from '../../components/appViewWrapper';
-import Head from '../../components/head';
-import Titlebar from '../../views/titlebar';
+import { Column } from 'src/components/column';
+import AppViewWrapper from 'src/components/appViewWrapper';
+import Head from 'src/components/head';
+import Titlebar from 'src/views/titlebar';
 import {
   displayLoadingNotifications,
   LoadingThread,
   Loading,
-} from '../../components/loading';
-import { FlexCol } from '../../components/globals';
-import { sortByDate } from '../../helpers/utils';
-import WebPushManager from '../../helpers/web-push-manager';
-import { addToastWithTimeout } from '../../actions/toasts';
+} from 'src/components/loading';
+import { FlexCol } from 'src/components/globals';
+import { sortByDate } from 'src/helpers/utils';
+import WebPushManager from 'src/helpers/web-push-manager';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import getNotifications from 'shared/graphql/queries/notification/getNotifications';
 import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
 import { subscribeToWebPush } from 'shared/graphql/subscriptions';
-import { UpsellNullNotifications } from '../../components/upsell';
-import ViewError from '../../components/viewError';
+import { UpsellNullNotifications } from 'src/components/upsell';
+import ViewError from 'src/components/viewError';
 import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
 import viewNetworkHandler, {
   type ViewNetworkHandlerType,
-} from '../../components/viewNetworkHandler';
+} from 'src/components/viewNetworkHandler';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';

@@ -2,9 +2,9 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { getChannelById } from 'shared/graphql/queries/channel/getChannel';
-import { displayLoadingCard } from '../../../components/loading';
+import { displayLoadingCard } from 'src/components/loading';
 import { parseNotificationDate, parseContext } from '../utils';
-import Icon from '../../../components/icons';
+import Icon from 'src/components/icon';
 import {
   SegmentedNotificationCard,
   TextContent,
@@ -13,7 +13,7 @@ import {
   CreatedContext,
   ContentWash,
 } from '../style';
-import { ChannelProfile } from '../../../components/profile';
+import { ChannelProfile } from 'src/components/profile';
 import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 
@@ -25,9 +25,10 @@ const NewChannelComponent = ({
   return <ChannelProfile profileSize="miniWithAction" data={data} />;
 };
 
-const NewChannel = compose(getChannelById, displayLoadingCard)(
-  NewChannelComponent
-);
+const NewChannel = compose(
+  getChannelById,
+  displayLoadingCard
+)(NewChannelComponent);
 
 type Props = {
   notification: Object,
