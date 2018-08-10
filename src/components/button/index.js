@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import composeButton from './composeButton';
 import {
   StyledButton,
   StyledPrimaryButton,
@@ -29,144 +30,19 @@ export type Props = {
   children: React.Node,
 };
 
-export class Button extends React.Component<Props> {
-  render() {
-    const {
-      size = 'default',
-      disabled = false,
-      loading = false,
-      fill = false,
-      children,
-      ...rest
-    } = this.props;
-    return (
-      <StyledButton
-        disabled={disabled || loading}
-        fill={fill}
-        size={size}
-        {...rest}
-      >
-        {children}
-      </StyledButton>
-    );
-  }
-}
+export const Button = composeButton(StyledButton);
+export const PrimaryButton = composeButton(StyledPrimaryButton);
+export const PrimaryTextButton = composeButton(StyledPrimaryTextButton);
+export const TextButton = composeButton(StyledTextButton);
+export const DangerButton = composeButton(StyledDangerButton);
+export const OutlineButton = composeButton(StyledOutlineButton);
+export const FacebookButton = composeButton(StyledFacebookButton);
+export const TwitterButton = composeButton(StyledTwitterButton);
+export const ButtonRow = StyledButtonRow;
+export const ButtonSegmentRow = StyledButtonSegmentRow;
 
-export class PrimaryButton extends React.Component<Props> {
-  render() {
-    const {
-      size = 'default',
-      disabled = false,
-      loading = false,
-      fill = false,
-      children,
-      ...rest
-    } = this.props;
-    return (
-      <StyledPrimaryButton
-        disabled={disabled || loading}
-        fill={fill}
-        size={size}
-        {...rest}
-      >
-        {children}
-      </StyledPrimaryButton>
-    );
-  }
-}
-
-export class PrimaryTextButton extends React.Component<Props> {
-  render() {
-    const {
-      size = 'default',
-      disabled = false,
-      loading = false,
-      fill = false,
-      children,
-      ...rest
-    } = this.props;
-    return (
-      <StyledPrimaryTextButton
-        disabled={disabled || loading}
-        fill={fill}
-        size={size}
-        {...rest}
-      >
-        {children}
-      </StyledPrimaryTextButton>
-    );
-  }
-}
-
-export class DangerButton extends React.Component<Props> {
-  render() {
-    const {
-      size = 'default',
-      disabled = false,
-      loading = false,
-      fill = false,
-      children,
-      ...rest
-    } = this.props;
-    return (
-      <StyledDangerButton
-        disabled={disabled || loading}
-        fill={fill}
-        size={size}
-        {...rest}
-      >
-        {children}
-      </StyledDangerButton>
-    );
-  }
-}
-
-export class TextButton extends React.Component<Props> {
-  render() {
-    const {
-      size = 'default',
-      disabled = false,
-      loading = false,
-      fill = false,
-      children,
-      ...rest
-    } = this.props;
-    return (
-      <StyledTextButton
-        disabled={disabled || loading}
-        fill={fill}
-        size={size}
-        {...rest}
-      >
-        {children}
-      </StyledTextButton>
-    );
-  }
-}
-
-export class OutlineButton extends React.Component<Props> {
-  render() {
-    const {
-      size = 'default',
-      disabled = false,
-      loading = false,
-      fill = false,
-      children,
-      ...rest
-    } = this.props;
-    return (
-      <StyledOutlineButton
-        disabled={disabled || loading}
-        fill={fill}
-        size={size}
-        {...rest}
-      >
-        {children}
-      </StyledOutlineButton>
-    );
-  }
-}
-
+// we handle a couple extra custom color props for icon buttons,
+// so we don't compose the button in the composeButton function
 export class IconButton extends React.Component<Props> {
   render() {
     const {
@@ -193,52 +69,3 @@ export class IconButton extends React.Component<Props> {
     );
   }
 }
-
-export class FacebookButton extends React.Component<Props> {
-  render() {
-    const {
-      size = 'default',
-      disabled = false,
-      loading = false,
-      fill = false,
-      children,
-      ...rest
-    } = this.props;
-    return (
-      <StyledFacebookButton
-        disabled={disabled || loading}
-        fill={fill}
-        size={size}
-        {...rest}
-      >
-        {children}
-      </StyledFacebookButton>
-    );
-  }
-}
-
-export class TwitterButton extends React.Component<Props> {
-  render() {
-    const {
-      size = 'default',
-      disabled = false,
-      loading = false,
-      fill = false,
-      children,
-      ...rest
-    } = this.props;
-    return (
-      <StyledTwitterButton
-        disabled={disabled || loading}
-        fill={fill}
-        size={size}
-        {...rest}
-      >
-        {children}
-      </StyledTwitterButton>
-    );
-  }
-}
-
-export const ButtonRow = StyledButtonRow;
-export const ButtonSegmentRow = StyledButtonSegmentRow;
