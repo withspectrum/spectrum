@@ -13,10 +13,11 @@ const IMGIX_TEXT_ENDPOINT = 'https://assets.imgix.net/~text';
 
 const TITLE_PARAMS = {
   w: WIDTH * 0.8, // 10% padding on each side
-  h: 350, // Magic number, clips text after four lines
+  h: 300, // Magic number, clips text after four lines
   txtsize: 56,
+  txtlead: 4,
   txtfont: 'Helvetica,Bold',
-  txtalign: 'center,middle', // Center the text on both axis
+  txtalign: 'left,middle',
   txtcolor: 'ffffff',
   // NOTE(@mxstbr): txtclip (i.e. ellipsis on overflowing text) only works with single-line text, which titles aren't, so this doesn't do anything rn
   txtclip: 'end,ellipsis',
@@ -30,7 +31,7 @@ const FOOTER_PARAMS = {
   txtfont: 'Helvetica,Bold',
 };
 
-const BACKGROUND_URL = `http://spectrum.imgix.net/default_images/twitter-share-card.png`;
+const BACKGROUND_URL = `https://spectrum.imgix.net/default_images/twitter-share-card.png`;
 
 type GetMetaImageInput = {
   title: string,
@@ -50,6 +51,11 @@ const generateImageFromText = ({ title, footer }: GetMetaImageInput) => {
   const BACKGROUND_PARAMS = {
     w: WIDTH,
     bm: 'normal', // Blend the title normally, don't change opacity or color or anything, just overlay it
+    by: 170, // Magic numbers that get the position right
+    bx: 180,
+    markalign: 'left,bottom', // Show the footer on the left side
+    markpad: 15, // We overwrite the X pos, so the padding only applies on the y-axis
+    markx: 100,
     blend64: btoa(titleUrl),
     mark64: btoa(footerUrl),
   };
