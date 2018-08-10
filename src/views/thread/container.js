@@ -457,12 +457,33 @@ class ThreadContainer extends React.Component<Props, State> {
               <Head
                 title={headTitle}
                 description={headDescription}
+                type="article"
                 image={generateImageFromText({
                   title: headTitle,
                   footer: `spectrum.chat/${thread.community.slug}`,
                 })}
               >
                 <meta name="twitter:card" content="summary_large_image" />
+                <meta
+                  property="article:published_time"
+                  content={new Date(thread.createdAt).toISOString()}
+                />
+                <meta
+                  property="article:modified_time"
+                  content={new Date(
+                    thread.modifiedAt || thread.createdAt
+                  ).toISOString()}
+                />
+                <meta
+                  property="article:author"
+                  content={`https://spectrum.chat/users/@${
+                    thread.author.user.username
+                  }`}
+                />
+                <meta
+                  property="article:section"
+                  content={`${thread.community.name} community`}
+                />
               </Head>
               <Titlebar
                 title={thread.content.title}

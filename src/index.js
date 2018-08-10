@@ -21,6 +21,14 @@ import { track, events } from './helpers/analytics';
 import { wsLink } from 'shared/graphql';
 import { subscribeToDesktopPush } from './subscribe-to-desktop-push';
 
+import generateImageFromText from './helpers/generate-image-from-text';
+console.log(
+  generateImageFromText({
+    title: 'How do I copy&paste?',
+    footer: 'spectrum.chat/figma',
+  })
+);
+
 const storedData: ?Object = getItemFromStorage('spectrum');
 const params = queryString.parse(history.location.search);
 
