@@ -1,6 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { Shadow, hexa, tint, Tooltip } from '../globals';
+import { Shadow, hexa, tint, Tooltip } from 'src/components/globals';
 import type { Size } from './';
 
 const getPadding = (size: Size) => {
@@ -51,6 +51,7 @@ const base = css`
   box-shadow: ${props =>
     props.disabled ? 'none' : `0 1px 2px rgba(0,0,0,0.04)`};
   transition: box-shadow 0.2s ease-in-out;
+  width: ${props => (props.fill ? '100%' : 'auto')};
 
   ${Tooltip};
 
@@ -126,6 +127,25 @@ export const StyledPrimaryButton = styled.button`
     box-shadow: 0 0 0 1px ${props =>
       props.theme.bg.default}, 0 0 0 3px ${props =>
   hexa(props.theme.brand.alt, 0.16)};
+  }
+`;
+
+export const StyledPrimaryTextButton = styled.button`
+  ${base};
+  border: none;
+  color: ${props => props.theme.brand.alt};
+  box-shadow: none;
+  background-color: transparent;
+  background-image: none;
+
+  &:hover {
+    color: ${props => props.theme.brand.default};
+    box-shadow: none;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 1px ${props => props.theme.bg.default},
+      0 0 0 3px ${props => hexa(props.theme.text.alt, 0.32)};
   }
 `;
 
@@ -211,7 +231,7 @@ export const StyledIconButton = styled.button`
   ${base};
   border: none;
   color: ${props =>
-    props.iconColor
+    console.log(props) && props.iconColor
       ? props.iconColor(props.theme)
       : props.theme.text.secondary};
   background-color: transparent;
@@ -290,5 +310,51 @@ export const StyledButtonSegmentRow = styled.div`
       box-shadow: 0 0 0 1px ${props => props.theme.bg.default},
         0 0 0 3px ${props => hexa(props.theme.brand.alt, 0.16)};
     }
+  }
+`;
+
+export const StyledFacebookButton = styled(StyledPrimaryButton)`
+  border: 1px solid ${props => props.theme.social.facebook.default};
+  color: ${props => props.theme.text.reverse};
+  background-color: ${props => props.theme.social.facebook.default};
+  background-image: ${props =>
+    `linear-gradient(to bottom, ${props.theme.social.facebook.alt}, ${
+      props.theme.social.facebook.default
+    })`};
+
+  &:active {
+    border: 1px solid ${props => props.theme.social.facebook.default};
+    background-image: ${props =>
+      `linear-gradient(to top, ${props.theme.social.facebook.alt}, ${
+        props.theme.social.facebook.default
+      })`};
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 1px ${props => props.theme.bg.default},
+      0 0 0 3px ${props => hexa(props.theme.social.facebook.alt, 0.16)};
+  }
+`;
+
+export const StyledTwitterButton = styled(StyledPrimaryButton)`
+  border: 1px solid ${props => props.theme.social.twitter.default};
+  color: ${props => props.theme.text.reverse};
+  background-color: ${props => props.theme.social.twitter.default};
+  background-image: ${props =>
+    `linear-gradient(to bottom, ${props.theme.social.twitter.alt}, ${
+      props.theme.social.twitter.default
+    })`};
+
+  &:active {
+    border: 1px solid ${props => props.theme.social.twitter.default};
+    background-image: ${props =>
+      `linear-gradient(to top, ${props.theme.social.twitter.alt}, ${
+        props.theme.social.twitter.default
+      })`};
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 1px ${props => props.theme.bg.default},
+      0 0 0 3px ${props => hexa(props.theme.social.twitter.alt, 0.16)};
   }
 `;

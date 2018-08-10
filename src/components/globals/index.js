@@ -143,7 +143,7 @@ export const Spinner = styled.span`
     border-radius: 50%;
     border: ${props => '2px'} solid
       ${props =>
-        props.color ? props.color(props.them) : props.theme.brand.alt};
+        props.color ? props.color(props.theme) : props.theme.brand.alt};
     border-top-color: transparent;
     border-right-color: ${props =>
       props.color ? props.color(props.theme) : props.theme.brand.alt};

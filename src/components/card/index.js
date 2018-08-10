@@ -1,10 +1,8 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import styled from 'styled-components';
-import { FlexCol } from '../globals';
+import { FlexCol } from 'src/components/globals';
 
 const StyledCard = styled(FlexCol)`
   background: ${({ theme }) => theme.bg.default};

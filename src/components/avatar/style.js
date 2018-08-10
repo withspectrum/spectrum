@@ -1,7 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
 import ReactImage from 'react-image';
-import { zIndex } from '../globals';
+import { zIndex } from 'src/components/globals';
 import Link from 'src/components/link';
 import { ProfileHeaderAction } from '../profile/style';
 

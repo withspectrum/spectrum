@@ -1,6 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { zIndex } from '../globals';
+import { zIndex } from 'src/components/globals';
 
 export const FullscreenViewContainer = styled.div`
   position: fixed;

@@ -3,13 +3,13 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
-import { addToastWithTimeout } from '../../actions/toasts';
-import Icon from '../icons';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import Icon from 'src/components/icon';
 import isEmail from 'validator/lib/isEmail';
 import sendCommunityEmailInvitations from 'shared/graphql/mutations/community/sendCommunityEmailInvites';
-import { Button } from '../buttons';
-import { Error } from '../formElements';
-import { SectionCardFooter } from '../settingsViews/style';
+import { Button } from 'src/components/button';
+import { Error } from 'src/components/formElements';
+import { SectionCardFooter } from 'src/components/settingsViews/style';
 import {
   EmailInviteForm,
   EmailInviteInput,

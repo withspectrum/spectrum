@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FlexRow } from '../globals';
+import { FlexRow } from 'src/components/globals';
 
 export const Wrapper = styled(FlexRow)`
   order: 2;

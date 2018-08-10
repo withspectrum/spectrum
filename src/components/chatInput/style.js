@@ -1,7 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { IconButton } from '../buttons';
-import { QuoteWrapper } from '../message/style';
+import { IconButton } from 'src/components/button';
+import { QuoteWrapper } from 'src/components/message/style';
 import {
   FlexRow,
   hexa,
@@ -9,7 +9,7 @@ import {
   zIndex,
   monoStack,
 } from 'src/components/globals';
-import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
+import { Wrapper as EditorWrapper } from 'src/components/rich-text-editor/style';
 
 export const ChatInputContainer = styled(FlexRow)`
   flex: none;
@@ -88,7 +88,6 @@ export const InputWrapper = styled(EditorWrapper)`
   @media (max-width: 768px) {
     font-size: 16px;
     padding-left: 16px;
-    ${/* width: calc(100% - 72px); */ ''};
   }
 
   &::placeholder {

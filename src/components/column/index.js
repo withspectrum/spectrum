@@ -1,8 +1,7 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
 import styled, { css } from 'styled-components';
-import { FlexCol } from '../globals';
+import { FlexCol } from 'src/components/globals';
 
 const BaseColumn = styled(FlexCol)`
   margin: 32px 16px;

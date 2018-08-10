@@ -8,11 +8,11 @@ import isURL from 'validator/lib/isURL';
 import debounce from 'debounce';
 import queryString from 'query-string';
 import { KeyBindingUtil } from 'draft-js';
-import { URLS } from '../../helpers/regexps';
-import { closeComposer } from '../../actions/composer';
-import { changeActiveThread } from '../../actions/dashboardFeed';
-import { addToastWithTimeout } from '../../actions/toasts';
-import Editor from '../rich-text-editor';
+import { URLS } from 'src/helpers/regexps';
+import { closeComposer } from 'src/actions/composer';
+import { changeActiveThread } from 'src/actions/dashboardFeed';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import Editor from 'src/components/rich-text-editor';
 import {
   toPlainText,
   fromPlainText,
@@ -23,11 +23,11 @@ import {
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
-import { getLinkPreviewFromUrl } from '../../helpers/utils';
-import { TextButton, Button } from '../buttons';
-import { FlexRow } from '../../components/globals';
+import { getLinkPreviewFromUrl } from 'src/helpers/utils';
+import { TextButton, PrimaryButton } from 'src/components/button';
+import { FlexRow } from 'src/components/globals';
 import { LoadingSelect } from '../loading';
-import Titlebar from '../../views/titlebar';
+import Titlebar from 'src/views/titlebar';
 import type { Dispatch } from 'redux';
 import {
   Container,
@@ -707,10 +707,8 @@ class ComposerWithData extends Component<Props, State> {
           )}
 
           <FlexRow>
-            <TextButton hoverColor="warn.alt" onClick={this.onCancelClick}>
-              Cancel
-            </TextButton>
-            <Button
+            <TextButton onClick={this.onCancelClick}>Cancel</TextButton>
+            <PrimaryButton
               data-cy="composer-publish-button"
               onClick={this.publishThread}
               loading={isPublishing}
@@ -720,10 +718,9 @@ class ComposerWithData extends Component<Props, State> {
                 isPublishing ||
                 networkDisabled
               }
-              color={'brand'}
             >
               Publish
-            </Button>
+            </PrimaryButton>
           </FlexRow>
         </Actions>
       </Container>

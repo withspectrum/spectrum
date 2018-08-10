@@ -2,7 +2,13 @@
 import React from 'react';
 import compose from 'recompose/compose';
 import styled from 'styled-components';
-import { Shadow, FlexCol, hexa, Transition, zIndex } from '../globals';
+import {
+  Shadow,
+  FlexCol,
+  hexa,
+  Transition,
+  zIndex,
+} from 'src/components/globals';
 import Card from '../card';
 
 const StyledDropdown = styled(FlexCol)`

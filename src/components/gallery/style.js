@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Shadow, zIndex } from '../globals';
+import { Shadow, zIndex } from 'src/components/globals';
 
 export const GalleryWrapper = styled.div`
   position: fixed;

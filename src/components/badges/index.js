@@ -2,7 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { openModal } from '../../actions/modals';
+import { openModal } from 'src/actions/modals';
 import type { Dispatch } from 'redux';
 import {
   Span,

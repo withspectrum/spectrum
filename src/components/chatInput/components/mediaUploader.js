@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { MediaLabel, MediaInput, Form } from './style';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { Loading } from 'src/components/loading';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
@@ -62,7 +62,12 @@ class MediaUploader extends React.Component<Props> {
   };
 
   onChange = (e: any) => {
-    const { target: { validity, files: [file] } } = e;
+    const {
+      target: {
+        validity,
+        files: [file],
+      },
+    } = e;
 
     if (!file) return;
 

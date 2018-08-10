@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { FlexRow, Transition, hexa, zIndex } from '../globals';
+import { FlexRow, Transition, hexa, zIndex } from 'src/components/globals';
 import Textarea from 'react-textarea-autosize';
 
 export const StyledLabel = styled.label`

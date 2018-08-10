@@ -1,6 +1,6 @@
 // @flow
 import styled from 'styled-components';
-import { Tooltip, Gradient } from '../globals';
+import { Tooltip, Gradient } from 'src/components/globals';
 
 export const Span = styled.span`
   display: inline;
