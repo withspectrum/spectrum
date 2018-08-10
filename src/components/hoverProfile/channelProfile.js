@@ -109,8 +109,8 @@ class HoverProfile extends Component<ProfileProps> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-//$FlowFixMe
 export default compose(
+  //$FlowFixMe
   connect(map),
   withRouter
 )(HoverProfile);
