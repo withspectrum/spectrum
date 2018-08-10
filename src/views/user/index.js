@@ -314,9 +314,7 @@ class UserView extends React.Component<Props, State> {
             heading={'We couldn’t find anyone with this username.'}
           >
             <ButtonRow>
-              <Link to={'/'}>
-                <PrimaryButton>Take me home</PrimaryButton>
-              </Link>
+              <PrimaryButton to={'/'}>Take me home</PrimaryButton>
             </ButtonRow>
           </ViewError>
         </AppViewWrapper>

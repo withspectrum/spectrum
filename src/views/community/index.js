@@ -187,9 +187,7 @@ class CommunityView extends React.Component<Props, State> {
               heading={`You don’t have permission to view ${community.name}`}
               subheading={'Head back home to get on track.'}
             >
-              <Link to={'/'}>
-                <PrimaryButton>Take me home</PrimaryButton>
-              </Link>
+              <PrimaryButton to={'/'}>Take me home</PrimaryButton>
             </ViewError>
           </AppViewWrapper>
         );

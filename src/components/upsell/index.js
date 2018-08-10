@@ -287,9 +287,7 @@ export const Upsell404Thread = () => {
       heading="Oops, something got lost!"
       copy="We can't find that thread. Maybe it floated off into space..."
     >
-      <Button onClick={() => (window.location.href = '/home')}>
-        Take me home
-      </Button>
+      <Button to={'/home'}>Take me home</Button>
     </NullCard>
   );
 };

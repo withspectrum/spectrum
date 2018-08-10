@@ -115,9 +115,7 @@ class ChannelWithData extends React.Component<Props, State> {
             heading="Whoa there!"
             copy="This is uncharted space. Let's get you safely back home, huh?"
           >
-            <Link to={'/home'}>
-              <PrimaryButton>Take me home</PrimaryButton>
-            </Link>
+            <PrimaryButton to={'/home'}>Take me home</PrimaryButton>
           </NullCard>
         );
       }
