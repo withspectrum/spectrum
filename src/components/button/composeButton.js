@@ -1,19 +1,31 @@
 // @flow
 import React from 'react';
+import styled from 'styled-components';
+import Link from 'src/components/link';
 import hoistStatics from 'hoist-non-react-statics';
+import type { ButtonProps } from './';
+
+const StyledLink = styled(Link)`
+  width: ${props => (props.fill ? '100%' : 'auto')};
+`;
+const StyledA = styled.a`
+  width: ${props => (props.fill ? '100%' : 'auto')};
+`;
 
 const composeButton = (Component: any) => {
-  const ComposedButton = props => {
+  const ComposedButton = (props: ButtonProps) => {
     const {
       wrappedComponentRef,
       size = 'default',
       disabled = false,
       loading = false,
       fill = false,
+      href,
+      to,
       ...rest
     } = props;
 
-    return (
+    const button = (
       <Component
         {...rest}
         disabled={disabled || loading}
@@ -22,6 +34,24 @@ const composeButton = (Component: any) => {
         ref={wrappedComponentRef}
       />
     );
+
+    if (to) {
+      return (
+        <StyledLink to={to} fill={fill}>
+          {button}
+        </StyledLink>
+      );
+    }
+
+    if (href) {
+      return (
+        <StyledA href={href} target={'_blank'} rel={'noopener noreferrer'}>
+          {button}
+        </StyledA>
+      );
+    }
+
+    return button;
   };
 
   ComposedButton.WrappedComponent = Component;
