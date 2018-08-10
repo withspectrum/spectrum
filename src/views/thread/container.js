@@ -458,7 +458,7 @@ class ThreadContainer extends React.Component<Props, State> {
                 title={headTitle}
                 description={headDescription}
                 image={generateImageFromText({
-                  title: thread.content.title,
+                  title: headTitle,
                   footer: `spectrum.chat/${thread.community.slug}`,
                 })}
               >

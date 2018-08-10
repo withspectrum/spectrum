@@ -39,14 +39,23 @@ type GetMetaImageInput = {
 };
 
 const generateImageFromText = ({ title, footer }: GetMetaImageInput) => {
+  const base64title = btoa(title);
+  const base64footer = btoa(footer);
+  if (!base64title || !base64footer) return;
+
   const titleUrl = `${IMGIX_TEXT_ENDPOINT}?${stringify(
-    { ...TITLE_PARAMS, txt64: btoa(title).replace('=', '') },
+    { ...TITLE_PARAMS, txt64: base64title.replace('=', '') },
     { encode: false }
   )}`;
   const footerUrl = `${IMGIX_TEXT_ENDPOINT}?${stringify(
-    { ...FOOTER_PARAMS, txt64: btoa(footer).replace(/=/g, '') },
+    { ...FOOTER_PARAMS, txt64: base64footer.replace(/=/g, '') },
     { encode: false }
   )}`;
+
+  const base64titleurl = btoa(titleUrl);
+  const base64footerurl = btoa(footerUrl);
+
+  if (!base64titleurl || !base64footerurl) return;
 
   const BACKGROUND_PARAMS = {
     w: WIDTH,
