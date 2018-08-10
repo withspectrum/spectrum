@@ -41,10 +41,14 @@ import {
 } from 'src/components/segmentedControl';
 import { ErrorBoundary } from 'src/components/error';
 
-const ThreadFeedWithData = compose(connect(), getUserThreads)(ThreadFeed);
-const ThreadParticipantFeedWithData = compose(connect(), getUserThreads)(
-  ThreadFeed
-);
+const ThreadFeedWithData = compose(
+  connect(),
+  getUserThreads
+)(ThreadFeed);
+const ThreadParticipantFeedWithData = compose(
+  connect(),
+  getUserThreads
+)(ThreadFeed);
 
 type Props = {
   match: Match,
@@ -104,7 +108,9 @@ class UserView extends React.Component<Props, State> {
       isLoading,
       hasError,
       queryVarIsChanging,
-      match: { params: { username } },
+      match: {
+        params: { username },
+      },
       currentUser,
     } = this.props;
     const { hasThreads, selectedView } = this.state;
@@ -140,7 +146,11 @@ class UserView extends React.Component<Props, State> {
             title={title}
             description={description}
             image={user.profilePhoto}
-          />
+            type="profile"
+          >
+            <meta property="profile:last_name" content={user.name} />
+            <meta property="profile:username" content={user.username} />
+          </Head>
           <Titlebar
             title={user.name}
             subtitle={'Posts By'}
