@@ -8,7 +8,7 @@ import Link from 'src/components/link';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import compose from 'recompose/compose';
 import { CommunityAvatar } from 'src/components/avatar';
-import { Button } from 'src/components/buttons';
+import { Button } from 'src/components/button';
 import {
   CommunityListGrid,
   CommunityListRow,
@@ -59,7 +59,9 @@ class CommunityList extends React.Component<Props, State> {
   };
 
   calculateOwnedCommunities = (props: Props) => {
-    const { data: { user } } = props;
+    const {
+      data: { user },
+    } = props;
 
     if (!user)
       return {
@@ -182,6 +184,7 @@ class CommunityList extends React.Component<Props, State> {
   }
 }
 
-export default compose(getCurrentUserCommunityConnection, viewNetworkHandler)(
-  CommunityList
-);
+export default compose(
+  getCurrentUserCommunityConnection,
+  viewNetworkHandler
+)(CommunityList);

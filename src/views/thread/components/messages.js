@@ -9,8 +9,8 @@ import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateCh
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
 import ChatMessages from 'src/components/messageGroup';
 import { Loading } from 'src/components/loading';
-import { Button } from 'src/components/buttons';
-import Icon from 'src/components/icons';
+import { Button } from 'src/components/button';
+import Icon from 'src/components/icon';
 import { NullState } from 'src/components/upsell';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import Head from 'src/components/head';

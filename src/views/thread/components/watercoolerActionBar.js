@@ -2,16 +2,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Clipboard from 'react-clipboard.js';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { openModal } from '../../../actions/modals';
-import Icon from '../../../components/icons';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { openModal } from 'src/actions/modals';
+import Icon from 'src/components/icon';
 import compose from 'recompose/compose';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import type { Dispatch } from 'redux';
+import { Button } from 'src/components/button';
 import { LikeButton } from 'src/components/threadLikes';
 import {
-  FollowButton,
   ShareButtons,
   ShareButton,
   WatercoolerActionBarContainer,
@@ -138,11 +138,7 @@ class WatercoolerActionBar extends React.Component<Props, State> {
         </div>
 
         {currentUser ? (
-          <FollowButton
-            currentUser={currentUser}
-            icon={
-              thread.receiveNotifications ? 'notification-fill' : 'notification'
-            }
+          <Button
             tipText={
               thread.receiveNotifications
                 ? 'Turn off notifications'
@@ -151,29 +147,37 @@ class WatercoolerActionBar extends React.Component<Props, State> {
             tipLocation={'top-right'}
             loading={notificationStateLoading}
             onClick={this.toggleNotification}
-            dataCy="thread-notifications-toggle"
+            data-cy="thread-notifications-toggle"
           >
+            <Icon
+              size={24}
+              glyph={
+                thread.receiveNotifications
+                  ? 'notification-fill'
+                  : 'notification'
+              }
+            />
             {thread.receiveNotifications ? 'Subscribed' : 'Get notifications'}
-          </FollowButton>
+          </Button>
         ) : (
-          <FollowButton
-            currentUser={currentUser}
-            icon={'notification'}
+          <Button
             tipText={'Get notified about replies'}
             tipLocation={'top-right'}
-            dataCy="thread-notifications-login-capture"
+            data-cy="thread-notifications-login-capture"
             onClick={() =>
               this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}))
             }
           >
+            <Icon size={24} glyph="notification" />
             Notify me
-          </FollowButton>
+          </Button>
         )}
       </WatercoolerActionBarContainer>
     );
   }
 }
 
-export default compose(connect(), toggleThreadNotificationsMutation)(
-  WatercoolerActionBar
-);
+export default compose(
+  connect(),
+  toggleThreadNotificationsMutation
+)(WatercoolerActionBar);

@@ -4,7 +4,8 @@ import PageFooter from '../components/footer';
 import Section from 'src/components/themedSection';
 import { Wrapper } from '../style';
 import Link from 'src/components/link';
-import { Button } from 'src/components/buttons';
+import Icon from 'src/components/icon';
+import { TwitterButton, PrimaryButton, Button } from 'src/components/button';
 import {
   FourUp,
   Heading,
@@ -43,11 +44,8 @@ class Support extends React.Component<{}> {
               </div>
 
               <Link to={'/spectrum/hugs-n-bugs'}>
-                <Button
-                  gradientTheme={'warn'}
-                  icon={'bug'}
-                  onClick={() => track(events.SUPPORT_PAGE_REPORT_BUG)}
-                >
+                <Button onClick={() => track(events.SUPPORT_PAGE_REPORT_BUG)}>
+                  <Icon glyph="bug" />
                   Join Hugs-n-Bugs
                 </Button>
               </Link>
@@ -64,10 +62,9 @@ class Support extends React.Component<{}> {
 
               <Link to={'/spectrum/feature-requests'}>
                 <Button
-                  gradientTheme={'space'}
-                  icon={'idea'}
                   onClick={() => track(events.SUPPORT_PAGE_REQUEST_FEATURE)}
                 >
+                  <Icon glyph="idea" />
                   Request a feature
                 </Button>
               </Link>
@@ -87,25 +84,23 @@ class Support extends React.Component<{}> {
                 target={'_blank'}
                 rel={'noopener noreferrer'}
               >
-                <Button
-                  gradientTheme={'social.twitter'}
-                  icon={'twitter'}
+                <TwitterButton
                   onClick={() => track(events.SUPPORT_PAGE_FOLLOW_ON_TWITTER)}
                 >
+                  <Icon glyph="twitter" />
                   Follow us on Twitter
-                </Button>
+                </TwitterButton>
               </a>
 
               <Link to={'/spectrum'}>
-                <Button
-                  gradientTheme={'brand'}
-                  icon={'logo'}
+                <PrimaryButton
                   onClick={() =>
                     track(events.SUPPORT_PAGE_JOIN_SPECTRUM_COMMUNITY)
                   }
                 >
+                  <Icon glyph="logo" />
                   Join our community
-                </Button>
+                </PrimaryButton>
               </Link>
             </PlanSection>
 
@@ -119,11 +114,8 @@ class Support extends React.Component<{}> {
               </div>
 
               <a href={'mailto:hi@spectrum.chat'}>
-                <Button
-                  gradientTheme={'special'}
-                  icon={'email'}
-                  onClick={() => track(events.SUPPORT_PAGE_EMAIL_US)}
-                >
+                <Button onClick={() => track(events.SUPPORT_PAGE_EMAIL_US)}>
+                  <Icon glyph="email" />
                   Email us
                 </Button>
               </a>

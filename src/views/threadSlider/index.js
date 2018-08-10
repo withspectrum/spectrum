@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  openThreadSlider,
-  closeThreadSlider,
-} from '../../actions/threadSlider';
+import { openThreadSlider, closeThreadSlider } from 'src/actions/threadSlider';
 import queryString from 'query-string';
 import Link from 'src/components/link';
 import Transition from 'react-transition-group/Transition';
@@ -15,7 +12,7 @@ import {
   CloseButton,
   CloseLabel,
 } from './style';
-import Icon from '../../components/icons';
+import Icon from 'src/components/icon';
 import ThreadContainer from '../thread';
 import { ErrorBoundary } from 'src/components/error';
 

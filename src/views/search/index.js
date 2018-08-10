@@ -2,16 +2,17 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Titlebar from '../titlebar';
+import Titlebar from 'src/views/titlebar';
 import { View } from './style';
 import searchThreadsQuery from 'shared/graphql/queries/search/searchThreads';
 import DashboardThreadFeed from '../dashboard/components/threadFeed';
 import { InboxScroller } from '../dashboard/style';
 import SearchInput from './searchInput';
 
-const SearchThreadFeed = compose(connect(), searchThreadsQuery)(
-  DashboardThreadFeed
-);
+const SearchThreadFeed = compose(
+  connect(),
+  searchThreadsQuery
+)(DashboardThreadFeed);
 
 type Props = {};
 type State = {

@@ -9,11 +9,11 @@ import {
 } from 'src/components/hoverProfile';
 import { LikeButton } from 'src/components/threadLikes';
 import { convertTimestampToDate } from 'shared/time-formatting';
-import { Button } from '../../../components/buttons';
+import { PrimaryButton } from 'src/components/button';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { CommunityAvatar } from '../../../components/avatar';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { CommunityAvatar } from 'src/components/avatar';
 import { CLIENT_URL } from 'src/api/constants';
 import type { Dispatch } from 'redux';
 import {
@@ -145,16 +145,12 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
           {channel.channelPermissions.isMember ? (
             <LikeButton thread={thread} />
           ) : currentUser ? (
-            <Button
-              gradientTheme={'success'}
-              onClick={this.joinChannel}
-              loading={isLoading}
-            >
+            <PrimaryButton onClick={this.joinChannel} loading={isLoading}>
               Join channel
-            </Button>
+            </PrimaryButton>
           ) : (
             <Link to={loginUrl}>
-              <Button gradientTheme={'success'}>Join Community</Button>
+              <PrimaryButton>Join Community</PrimaryButton>
             </Link>
           )}
         </CommunityHeader>
@@ -164,6 +160,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
 }
 const map = state => ({ currentUser: state.users.currentUser });
 // $FlowIssue
-export default compose(connect(map), toggleChannelSubscriptionMutation)(
-  ThreadCommunityBanner
-);
+export default compose(
+  connect(map),
+  toggleChannelSubscriptionMutation
+)(ThreadCommunityBanner);

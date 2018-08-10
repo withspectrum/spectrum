@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import {
   FeatureWrapper,
   FeatureTitle,

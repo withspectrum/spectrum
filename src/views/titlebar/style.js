@@ -1,7 +1,6 @@
 // @flow
-// $FlowFixMe
 import styled from 'styled-components';
-import { hexa, Shadow, FlexRow, zIndex } from '../../components/globals';
+import { hexa, Shadow, FlexRow, zIndex } from 'src/components/globals';
 import { isDesktopApp } from 'src/helpers/is-desktop-app';
 
 export const TitleBar = styled(FlexRow)`

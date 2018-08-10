@@ -1,9 +1,7 @@
 // @flow
-// $FlowFixMe
 import styled, { css } from 'styled-components';
-// $FlowFixMe
 import Link from 'src/components/link';
-import { zIndex } from '../../components/globals';
+import { zIndex } from 'src/components/globals';
 
 const animation = css`
   opacity: 0;

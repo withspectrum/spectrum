@@ -5,7 +5,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import generateMetaInfo from 'shared/generate-meta-info';
-import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
+import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
 import Titlebar from 'src/views/titlebar';
 import ThreadDetail from './components/threadDetail';
 import Messages from './components/messages';
@@ -226,7 +226,11 @@ class ThreadContainer extends React.Component<Props, State> {
     // we never autofocus on mobile
     if (window && window.innerWidth < 768) return;
 
-    const { currentUser, data: { thread }, threadSliderIsOpen } = this.props;
+    const {
+      currentUser,
+      data: { thread },
+      threadSliderIsOpen,
+    } = this.props;
 
     // if no thread has been returned yet from the query, we don't know whether or not to focus yet
     if (!thread) return;
@@ -270,7 +274,10 @@ class ThreadContainer extends React.Component<Props, State> {
 
   renderChatInputOrUpsell = () => {
     const { isEditing } = this.state;
-    const { data: { thread }, currentUser } = this.props;
+    const {
+      data: { thread },
+      currentUser,
+    } = this.props;
 
     if (!thread) return null;
     if (thread.isLocked) return null;
@@ -319,7 +326,11 @@ class ThreadContainer extends React.Component<Props, State> {
   };
 
   renderPost = () => {
-    const { data: { thread }, slider, currentUser } = this.props;
+    const {
+      data: { thread },
+      slider,
+      currentUser,
+    } = this.props;
     if (!thread || !thread.id) return null;
 
     if (thread.watercooler) {

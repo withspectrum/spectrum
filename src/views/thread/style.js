@@ -1,9 +1,8 @@
 // @flow
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
-import { UserAvatar, CommunityAvatar } from '../../components/avatar';
-import { Button } from '../../components/buttons';
-import Column from '../../components/column';
+import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
+import Column from 'src/components/column';
 import {
   FlexCol,
   FlexRow,
@@ -14,7 +13,7 @@ import {
   Tooltip,
   Shadow,
   hexa,
-} from '../../components/globals';
+} from 'src/components/globals';
 
 export const ThreadViewContainer = styled.div`
   display: flex;
@@ -594,22 +593,6 @@ export const ActionBarContainer = styled.div`
 
 export const WatercoolerActionBarContainer = styled(ActionBarContainer)`
   margin-bottom: 16px;
-`;
-
-export const FollowButton = styled(Button)`
-  background: ${props => props.theme.bg.default};
-  border: 1px solid ${props => props.theme.bg.border};
-  color: ${props => props.theme.text.alt};
-  padding: 4px;
-
-  &:hover {
-    background: ${props => props.theme.bg.default};
-    color: ${props => props.theme.text.default};
-  }
-
-  @media (max-width: 768px) {
-    display: ${props => (props.currentUser ? 'none' : 'flex')};
-  }
 `;
 
 export const SidebarSection = styled.div`

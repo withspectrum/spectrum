@@ -2,7 +2,7 @@
 import * as React from 'react';
 import replace from 'string-replace-to-array';
 import { withRouter } from 'react-router';
-import { Button, TextButton } from 'src/components/buttons';
+import { Button, PrimaryButton, TextButton } from 'src/components/button';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import {
   LoadingProfileThreadDetail,
@@ -14,7 +14,7 @@ import getCommunityThreads from 'shared/graphql/queries/community/getCommunityTh
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { CLIENT_URL } from 'src/api/constants';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import type { Dispatch } from 'redux';
 import {
   SidebarSection,
@@ -110,14 +110,10 @@ class Sidebar extends React.Component<Props> {
               </SidebarSectionBody>
               <SidebarSectionAuth>
                 <Link to={loginUrl}>
-                  <Button gradientTheme={'brand'} color={'brand.default'}>
-                    Sign up
-                  </Button>
+                  <PrimaryButton>Sign up</PrimaryButton>
                 </Link>
                 <Link to={loginUrl}>
-                  <TextButton gradientTheme={'text'} color={'text.alt'}>
-                    Log in
-                  </TextButton>
+                  <Button>Log in</Button>
                 </Link>
               </SidebarSectionAuth>
             </SidebarSection>
@@ -166,23 +162,19 @@ class Sidebar extends React.Component<Props> {
                 <ToggleCommunityMembership
                   community={thread.community}
                   render={({ isLoading }) => (
-                    <Button
-                      gradientTheme={'success'}
-                      color={'success.default'}
+                    <PrimaryButton
                       loading={isLoading}
-                      dataCy="thread-sidebar-join-community-button"
+                      data-cy="thread-sidebar-join-community-button"
                     >
+                      <Icon glyph="plus" />
                       Join community
-                    </Button>
+                    </PrimaryButton>
                   )}
                 />
               ) : (
                 <Link to={loginUrl}>
-                  <Button
-                    gradientTheme={'success'}
-                    color={'success.default'}
-                    dataCy="thread-sidebar-join-login-button"
-                  >
+                  <Button dataCy="thread-sidebar-join-login-button">
+                    <Icon glyph="plus" />
                     Join community
                   </Button>
                 </Link>
@@ -226,4 +218,8 @@ class Sidebar extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), withRouter, getCommunityThreads)(Sidebar);
+export default compose(
+  connect(),
+  withRouter,
+  getCommunityThreads
+)(Sidebar);
