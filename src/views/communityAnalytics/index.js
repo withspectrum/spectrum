@@ -4,17 +4,14 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
-import ViewError from '../../components/viewError';
-import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
+import ViewError from 'src/components/viewError';
+import { Button, OutlineButton, ButtonRow } from 'src/components/button';
 import MemberGrowth from './components/memberGrowth';
 import ConversationGrowth from './components/conversationGrowth';
 import TopMembers from './components/topMembers';
 import TopAndNewThreads from './components/topAndNewThreads';
 import AnalyticsUpsell from './components/analyticsUpsell';
-import {
-  SectionsContainer,
-  Column,
-} from '../../components/settingsViews/style';
+import { SectionsContainer, Column } from 'src/components/settingsViews/style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';

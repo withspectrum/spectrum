@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import compose from 'recompose/compose';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
@@ -32,7 +32,11 @@ class ConversationGrowth extends React.Component<Props> {
   };
 
   render() {
-    const { data: { community }, isLoading, currentUser } = this.props;
+    const {
+      data: { community },
+      isLoading,
+      currentUser,
+    } = this.props;
 
     if (community && community.topMembers.length > 0) {
       const sortedTopMembers = community.topMembers.slice().sort((a, b) => {

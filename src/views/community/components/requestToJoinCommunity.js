@@ -6,7 +6,7 @@ import addPendingCommunityMemberMutation from 'shared/graphql/mutations/communit
 import removePendingCommunityMemberMutation from 'shared/graphql/mutations/communityMember/removePendingCommunityMember';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import { Button, OutlineButton } from 'src/components/buttons';
+import { Button, OutlineButton } from 'src/components/button';
 
 type Props = {
   community: GetCommunityType,

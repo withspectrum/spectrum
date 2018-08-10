@@ -7,8 +7,8 @@ import {
   SectionSubtitle,
   SectionCardFooter,
 } from 'src/components/settingsViews/style';
-import { Button } from 'src/components/buttons';
-import Icon from 'src/components/icons';
+import { Button } from 'src/components/button';
+import Icon from 'src/components/icon';
 
 type Props = {
   community: GetSlackSettingsType,

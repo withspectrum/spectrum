@@ -4,10 +4,10 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 import isEmail from 'validator/lib/isEmail';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { Input, Error } from '../../../components/formElements';
-import { Notice } from '../../../components/listItems/style';
-import { Button } from '../../../components/buttons';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { Input, Error } from 'src/components/formElements';
+import { Notice } from 'src/components/listItems/style';
+import { Button } from 'src/components/button';
 import updateAdministratorEmailMutation from 'shared/graphql/mutations/community/updateAdministratorEmail';
 import type { Dispatch } from 'redux';
 import { EmailForm } from '../style';
@@ -15,7 +15,7 @@ import {
   SectionCard,
   SectionTitle,
   SectionSubtitle,
-} from '../../../components/settingsViews/style';
+} from 'src/components/settingsViews/style';
 
 type Props = {
   id: string,
@@ -142,6 +142,7 @@ class AdministratorEmailForm extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), updateAdministratorEmailMutation)(
-  AdministratorEmailForm
-);
+export default compose(
+  connect(),
+  updateAdministratorEmailMutation
+)(AdministratorEmailForm);

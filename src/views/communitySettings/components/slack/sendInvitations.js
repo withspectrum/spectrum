@@ -9,12 +9,12 @@ import {
   SectionSubtitle,
   SectionCardFooter,
 } from 'src/components/settingsViews/style';
-import { Button } from 'src/components/buttons';
+import { Button } from 'src/components/button';
 import { TextArea, Error } from 'src/components/formElements';
 import sendSlackInvitesMutation from 'shared/graphql/mutations/community/sendSlackInvites';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { timeDifference } from 'shared/time-difference';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import type { Dispatch } from 'redux';
 
 type Props = {
@@ -120,7 +120,7 @@ class SendSlackInvitations extends React.Component<Props, State> {
           <Button
             onClick={this.sendInvitations}
             loading={isLoading}
-            disabled={customMessageError}
+            disabled={!!customMessageError}
           >
             Send invitations
           </Button>
@@ -130,6 +130,7 @@ class SendSlackInvitations extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), sendSlackInvitesMutation)(
-  SendSlackInvitations
-);
+export default compose(
+  connect(),
+  sendSlackInvitesMutation
+)(SendSlackInvitations);

@@ -4,9 +4,9 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import ViewError from '../../components/viewError';
-import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
-import { CommunityInvitationForm } from '../../components/emailInvitationForm';
+import ViewError from 'src/components/viewError';
+import { Button, OutlineButton, ButtonRow } from 'src/components/button';
+import { CommunityInvitationForm } from 'src/components/emailInvitationForm';
 import SlackConnection from '../communitySettings/components/slack';
 import CommunityMembers from './components/communityMembers';
 import JoinTokenSettings from './components/joinTokenSettings';
@@ -16,7 +16,7 @@ import {
   SectionCard,
   SectionTitle,
   Column,
-} from '../../components/settingsViews/style';
+} from 'src/components/settingsViews/style';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {

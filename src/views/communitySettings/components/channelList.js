@@ -3,12 +3,13 @@ import React from 'react';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { openModal } from '../../../actions/modals';
-import { Loading } from '../../../components/loading';
-import { ChannelListItem } from '../../../components/listItems';
-import { IconButton, Button } from '../../../components/buttons';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import ViewError from '../../../components/viewError';
+import Icon from 'src/components/icon';
+import { openModal } from 'src/actions/modals';
+import { Loading } from 'src/components/loading';
+import { ChannelListItem } from 'src/components/listItems';
+import { IconButton, Button } from 'src/components/button';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import ViewError from 'src/components/viewError';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { Dispatch } from 'redux';
@@ -17,7 +18,7 @@ import {
   SectionCard,
   SectionTitle,
   SectionCardFooter,
-} from '../../../components/settingsViews/style';
+} from 'src/components/settingsViews/style';
 
 type Props = {
   data: {
@@ -54,7 +55,9 @@ class ChannelList extends React.Component<Props> {
                     to={`/${communitySlug}/${item.slug}/settings`}
                   >
                     <ChannelListItem contents={item} withDescription={false}>
-                      <IconButton glyph="settings" />
+                      <IconButton>
+                        <Icon glyph="settings" />
+                      </IconButton>
                     </ChannelListItem>
                   </Link>
                 );
@@ -102,6 +105,8 @@ class ChannelList extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getCommunityChannels, viewNetworkHandler)(
-  ChannelList
-);
+export default compose(
+  connect(),
+  getCommunityChannels,
+  viewNetworkHandler
+)(ChannelList);

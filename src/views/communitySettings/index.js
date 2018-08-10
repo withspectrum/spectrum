@@ -15,7 +15,7 @@ import Analytics from '../communityAnalytics';
 import Members from '../communityMembers';
 import Billing from '../communityBilling';
 import Overview from './components/overview';
-import Titlebar from '../titlebar';
+import Titlebar from 'src/views/titlebar';
 import Header from '../../components/settingsViews/header';
 import Subnav from '../../components/settingsViews/subnav';
 import { View } from './style';

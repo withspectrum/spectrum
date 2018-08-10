@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { withApollo } from 'react-apollo';
-import { Loading } from '../../../components/loading';
+import { Loading } from 'src/components/loading';
 import GetMembers from './getMembers';
 import EditDropdown from './editDropdown';
 import Search from './search';
@@ -13,8 +13,8 @@ import {
   SectionCard,
   SectionTitle,
   SectionCardFooter,
-} from '../../../components/settingsViews/style';
-import Icon from '../../../components/icons';
+} from 'src/components/settingsViews/style';
+import Icon from 'src/components/icon';
 import {
   Filters,
   Filter,
@@ -23,11 +23,11 @@ import {
   SearchForm,
   FetchMore,
 } from '../style';
-import { ListContainer } from '../../../components/listItems/style';
-import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
-import ViewError from '../../../components/viewError';
-import GranularUserProfile from '../../../components/granularUserProfile';
-import { Notice } from '../../../components/listItems/style';
+import { ListContainer } from 'src/components/listItems/style';
+import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
+import ViewError from 'src/components/viewError';
+import GranularUserProfile from 'src/components/granularUserProfile';
+import { Notice } from 'src/components/listItems/style';
 import type { Dispatch } from 'redux';
 
 type Props = {

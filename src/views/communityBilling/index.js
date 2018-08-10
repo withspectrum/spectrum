@@ -2,9 +2,14 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Link from '../../components/link';
-import ViewError from '../../components/viewError';
-import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
+import Link from 'src/components/link';
+import ViewError from 'src/components/viewError';
+import {
+  DangerButton,
+  Button,
+  OutlineButton,
+  ButtonRow,
+} from 'src/components/button';
 import {
   SectionsContainer,
   SectionCard,
@@ -12,11 +17,11 @@ import {
   SectionSubtitle,
   SectionCardFooter,
   Column,
-} from '../../components/settingsViews/style';
+} from 'src/components/settingsViews/style';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
-import { openModal } from '../../actions/modals';
+import { openModal } from 'src/actions/modals';
 import { AddCardSection } from './style';
-import StripeCardForm from '../../components/stripeCardForm';
+import StripeCardForm from 'src/components/stripeCardForm';
 import Subscription from './components/subscription';
 import AdministratorEmailForm from './components/administratorEmailForm';
 import Source from './components/source';
@@ -169,12 +174,9 @@ class CommunityMembersSettings extends React.Component<Props> {
                       moderator seats.
                     </SectionSubtitle>
                     <SectionCardFooter>
-                      <Button
-                        gradientTheme={'warn'}
-                        onClick={this.triggerCancel}
-                      >
+                      <DangerButton onClick={this.triggerCancel}>
                         Cancel subscription
-                      </Button>
+                      </DangerButton>
                     </SectionCardFooter>
                   </SectionCard>
                 )}

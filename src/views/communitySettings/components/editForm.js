@@ -6,10 +6,11 @@ import { withRouter } from 'react-router';
 import editCommunityMutation from 'shared/graphql/mutations/community/editCommunity';
 import type { EditCommunityType } from 'shared/graphql/mutations/community/editCommunity';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import { openModal } from '../../../actions/modals';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { PrimaryButton, Button, IconButton } from 'src/components/buttons';
-import { Notice } from '../../../components/listItems/style';
+import { openModal } from 'src/actions/modals';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { PrimaryButton, Button, IconButton } from 'src/components/button';
+import { Notice } from 'src/components/listItems/style';
+import Icon from 'src/components/icon';
 import {
   Input,
   UnderlineInput,
@@ -17,7 +18,7 @@ import {
   PhotoInput,
   Error,
   CoverInput,
-} from '../../../components/formElements';
+} from 'src/components/formElements';
 import {
   Form,
   FormTitle,
@@ -25,11 +26,8 @@ import {
   Actions,
   TertiaryActionContainer,
   ImageInputWrapper,
-} from '../../../components/editForm/style';
-import {
-  SectionCard,
-  SectionTitle,
-} from '../../../components/settingsViews/style';
+} from 'src/components/editForm/style';
+import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
@@ -358,13 +356,13 @@ class EditForm extends React.Component<Props, State> {
             <TertiaryActionContainer>
               {community.communityPermissions.isOwner && (
                 <IconButton
-                  glyph="delete"
                   tipText={`Delete ${name}`}
                   tipLocation="top-right"
-                  color="text.placeholder"
-                  hoverColor={'warn.alt'}
+                  hoverColor={theme => theme.warn.alt}
                   onClick={e => this.triggerDeleteCommunity(e, community.id)}
-                />
+                >
+                  <Icon glyph="delete" />
+                </IconButton>
               )}
             </TertiaryActionContainer>
           </Actions>

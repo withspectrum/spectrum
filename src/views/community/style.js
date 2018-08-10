@@ -1,31 +1,12 @@
 // @flow
 import styled from 'styled-components';
-import { IconButton } from '../../components/buttons';
-import Card from '../../components/card';
-import { Button } from '../../components/buttons';
-import {
-  FlexCol,
-  Transition,
-  zIndex,
-  Gradient,
-  Tooltip,
-} from '../../components/globals';
+import { IconButton, Button } from 'src/components/button';
+import Card from 'src/components/card';
+import { FlexCol, Transition, zIndex, Tooltip } from 'src/components/globals';
 import {
   DesktopSegment,
   SegmentedControl,
-} from '../../components/segmentedControl';
-
-export const LoginButton = styled(Button)`
-  width: 100%;
-  font-size: 14px;
-  font-weight: 700;
-  background-color: ${props =>
-    props.isMember ? props.theme.text.alt : props.theme.success.default};
-  background-image: ${props =>
-    props.isMember
-      ? Gradient(props.theme.text.placeholder, props.theme.text.alt)
-      : Gradient(props.theme.success.alt, props.theme.success.default)};
-`;
+} from 'src/components/segmentedControl';
 
 export const CoverButton = styled(IconButton)`
   position: absolute;

@@ -14,12 +14,12 @@ import {
   DropdownSectionText,
   DropdownSectionTitle,
   DropdownAction,
-} from '../../../components/settingsViews/style';
-import Icon from '../../../components/icons';
-import { Spinner } from '../../../components/globals';
+} from 'src/components/settingsViews/style';
+import Icon from 'src/components/icon';
+import { Spinner } from 'src/components/globals';
 import { openModal } from 'src/actions/modals';
-import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
-import OutsideClickHandler from '../../../components/outsideClickHandler';
+import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
+import OutsideClickHandler from 'src/components/outsideClickHandler';
 import addCommunityModerator from 'shared/graphql/mutations/communityMember/addCommunityModerator';
 import removeCommunityModerator from 'shared/graphql/mutations/communityMember/removeCommunityModerator';
 import blockCommunityMember from 'shared/graphql/mutations/communityMember/blockCommunityMember';

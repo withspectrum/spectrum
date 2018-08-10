@@ -2,7 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { withRouter } from 'react-router';
 import getCommunityMembersQuery, {
@@ -45,7 +45,11 @@ class CommunityModeratorList extends React.Component<Props> {
   };
 
   render() {
-    const { data: { community }, isLoading, currentUser } = this.props;
+    const {
+      data: { community },
+      isLoading,
+      currentUser,
+    } = this.props;
 
     if (community && community.members) {
       const { edges: members } = community.members;

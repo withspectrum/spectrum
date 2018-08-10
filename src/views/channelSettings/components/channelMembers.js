@@ -12,7 +12,7 @@ import GranularUserProfile from 'src/components/granularUserProfile';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import { MessageIconContainer, UserListItemContainer } from '../style';
 import { ListContainer, ListFooter } from 'src/components/listItems/style';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import type { Dispatch } from 'redux';
 
 type Props = {

@@ -18,10 +18,10 @@ import {
 } from 'src/components/settingsViews/style';
 import BrandedLoginToggle from './brandedLoginToggle';
 import Link from 'src/components/link';
-import { Button, OutlineButton } from 'src/components/buttons';
+import { Button, OutlineButton } from 'src/components/button';
 import { TextArea, Error } from 'src/components/formElements';
 import saveBrandedLoginSettings from 'shared/graphql/mutations/community/saveBrandedLoginSettings';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import type { Dispatch } from 'redux';
 
 type Props = {
@@ -92,7 +92,10 @@ class BrandedLogin extends React.Component<Props, State> {
   };
 
   render() {
-    const { data: { community }, isLoading } = this.props;
+    const {
+      data: { community },
+      isLoading,
+    } = this.props;
     const { messageLengthError } = this.state;
 
     if (community) {
@@ -146,7 +149,6 @@ class BrandedLogin extends React.Component<Props, State> {
                   style={{ marginRight: '8px' }}
                 >
                   <OutlineButton
-                    color={'text.alt'}
                     style={{ alignSelf: 'flex-start' }}
                     data-cy="community-settings-branded-login-preview"
                   >

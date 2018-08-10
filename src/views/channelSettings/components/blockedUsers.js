@@ -25,7 +25,7 @@ import {
   DropdownSectionTitle,
   DropdownAction,
 } from 'src/components/settingsViews/style';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 
 type Props = {
   data: {

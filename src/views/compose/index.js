@@ -1,6 +1,6 @@
 import React from 'react';
 import Composer from '../../components/composer';
-import Titlebar from '../titlebar';
+import Titlebar from 'src/views/titlebar';
 import { View } from './style';
 
 const Compose = props => {

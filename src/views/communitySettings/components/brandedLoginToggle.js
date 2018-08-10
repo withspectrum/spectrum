@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import enableBrandedLoginMutation from 'shared/graphql/mutations/community/enableBrandedLogin';
 import disableBrandedLoginMutation from 'shared/graphql/mutations/community/disableBrandedLogin';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import type { Dispatch } from 'redux';
 
 type Props = {

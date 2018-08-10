@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
-import Icon from '../../../components/icons';
-import Reputation from '../../../components/reputation';
+import Icon from 'src/components/icon';
+import Reputation from 'src/components/reputation';
 import SidebarChannels from './sidebarChannels';
 import UpsellExploreCommunities from './upsellExploreCommunities';
 import {
@@ -21,7 +21,7 @@ import {
   changeActiveCommunity,
   changeActiveThread,
   changeActiveChannel,
-} from '../../../actions/dashboardFeed';
+} from 'src/actions/dashboardFeed';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
@@ -169,4 +169,7 @@ class CommunityList extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), withRouter)(CommunityList);
+export default compose(
+  connect(),
+  withRouter
+)(CommunityList);

@@ -1,6 +1,6 @@
 // @flow
 import styled from 'styled-components';
-import { TextButton } from '../../components/buttons';
+import { TextButton } from 'src/components/button';
 
 export const Heading = styled.h1`
   margin-left: 16px;

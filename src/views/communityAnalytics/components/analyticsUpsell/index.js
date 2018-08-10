@@ -17,7 +17,7 @@ import {
   CardInfo,
 } from './style';
 import Link from 'src/components/link';
-import { Button, TextButton } from 'src/components/buttons';
+import { Button, TextButton } from 'src/components/button';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
@@ -142,4 +142,7 @@ class AnalyticsUpsell extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), enableCommunityAnalytics)(AnalyticsUpsell);
+export default compose(
+  connect(),
+  enableCommunityAnalytics
+)(AnalyticsUpsell);

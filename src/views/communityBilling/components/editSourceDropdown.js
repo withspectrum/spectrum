@@ -11,10 +11,10 @@ import {
   DropdownSectionText,
   DropdownSectionTitle,
   DropdownAction,
-} from '../../../components/settingsViews/style';
-import Icon from '../../../components/icons';
-import { Spinner } from '../../../components/globals';
-import OutsideClickHandler from '../../../components/outsideClickHandler';
+} from 'src/components/settingsViews/style';
+import Icon from 'src/components/icon';
+import { Spinner } from 'src/components/globals';
+import OutsideClickHandler from 'src/components/outsideClickHandler';
 import MutationWrapper from './mutationWrapper';
 import removePaymentSource from 'shared/graphql/mutations/community/removePaymentSource';
 import makePaymentSourceDefault from 'shared/graphql/mutations/community/makePaymentSourceDefault';
