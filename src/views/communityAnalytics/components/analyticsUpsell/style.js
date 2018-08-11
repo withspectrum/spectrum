@@ -63,6 +63,7 @@ export const ActionRow = styled.div`
   margin-top: 48px;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 
   button:first-of-type {
     margin-right: 16px;

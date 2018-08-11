@@ -3,7 +3,6 @@ import * as React from 'react';
 import PageFooter from '../components/footer';
 import Section from 'src/components/themedSection';
 import { Wrapper } from '../style';
-import Link from 'src/components/link';
 import Icon from 'src/components/icon';
 import { TwitterButton, PrimaryButton, Button } from 'src/components/button';
 import {

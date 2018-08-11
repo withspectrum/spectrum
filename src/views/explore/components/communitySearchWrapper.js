@@ -1,9 +1,7 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import Link from 'src/components/link';
 import Icon from 'src/components/icon';
-import { Transition, zIndex, Shadow, hexa } from 'src/components/globals';
 import ViewSegment from 'src/components/themedSection';
 import { Button } from 'src/components/button';
 import { CLIENT_URL } from 'src/api/constants';

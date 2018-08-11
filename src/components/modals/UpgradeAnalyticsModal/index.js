@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { modalStyles } from '../styles';
 import { Loading } from 'src/components/loading';
 import { Section, Title, Subtitle } from './style';
-import { Button } from 'src/components/button';
+import { PrimaryButton } from 'src/components/button';
 import StripeCardForm from 'src/components/stripeCardForm';
 import enableCommunityAnalytics from 'shared/graphql/mutations/community/enableCommunityAnalytics';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
@@ -95,7 +95,9 @@ class RepExplainerModal extends React.Component<Props, State> {
                   onCardSaved={this.onCardSaved}
                   community={community}
                   render={formProps => (
-                    <Button loading={formProps.isLoading}>Save</Button>
+                    <PrimaryButton loading={formProps.isLoading}>
+                      Save
+                    </PrimaryButton>
                   )}
                 />
               </React.Fragment>

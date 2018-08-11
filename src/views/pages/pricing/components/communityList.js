@@ -4,7 +4,6 @@ import {
   getCurrentUserCommunityConnection,
   type GetUserCommunityConnectionType,
 } from 'shared/graphql/queries/user/getUserCommunityConnection';
-import Link from 'src/components/link';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import compose from 'recompose/compose';
 import { CommunityAvatar } from 'src/components/avatar';

@@ -6,6 +6,7 @@ import Link from 'src/components/link';
 import ViewError from 'src/components/viewError';
 import {
   DangerButton,
+  PrimaryButton,
   Button,
   OutlineButton,
   ButtonRow,
@@ -141,7 +142,7 @@ class CommunityMembersSettings extends React.Component<Props> {
                   <StripeCardForm
                     community={community}
                     render={({ isLoading }) => (
-                      <Button loading={isLoading}>Save</Button>
+                      <PrimaryButton loading={isLoading}>Save</PrimaryButton>
                     )}
                   />
                 </AddCardSection>

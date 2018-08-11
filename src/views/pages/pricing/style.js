@@ -1,6 +1,5 @@
 // @flow
 import styled from 'styled-components';
-import { Button, TextButton } from 'src/components/button';
 import { hexa, zIndex } from 'src/components/globals';
 import Link from 'src/components/link';
 
@@ -79,19 +78,6 @@ export const Copy = styled.p`
   b {
     font-weight: 700;
   }
-`;
-
-export const CTA = styled(Button)`
-  font-weight: 700;
-  margin-top: 24px;
-  padding: 8px 16px;
-  font-size: 16px;
-  align-self: flex-start;
-`;
-
-export const TextCTA = styled(TextButton)`
-  padding: 16px 24px;
-  font-size: 18px;
 `;
 
 export const TwoUp = styled(ContentContainer)`

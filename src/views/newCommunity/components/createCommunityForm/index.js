@@ -15,7 +15,7 @@ import createCommunityMutation from 'shared/graphql/mutations/community/createCo
 import type { CreateCommunityType } from 'shared/graphql/mutations/community/createCommunity';
 import { getCommunityBySlugQuery } from 'shared/graphql/queries/community/getCommunity';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
-import { PrimaryButton, Button } from 'src/components/button';
+import { PrimaryButton } from 'src/components/button';
 import { CommunityHoverProfile } from 'src/components/hoverProfile';
 import {
   Input,

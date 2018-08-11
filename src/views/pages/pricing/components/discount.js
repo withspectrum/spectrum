@@ -2,8 +2,9 @@
 import * as React from 'react';
 import Section from 'src/components/themedSection';
 import CommunityList from './communityList';
-import { PrimaryCTA } from '../../style';
 import { Content, Heading, Copy } from '../style';
+import { PrimaryButton } from 'src/components/button';
+import Icon from 'src/components/icon';
 import { track, events } from 'src/helpers/analytics';
 
 const Discount = () => {
@@ -21,16 +22,13 @@ const Discount = () => {
           private channel for free.
         </Copy>
         <CommunityList />
-        <a href="mailto:hi@spectrum.chat">
-          <PrimaryCTA
-            icon={'payment'}
-            onClick={() =>
-              track(events.PRICING_PAGE_APPLY_FOR_DISCOUNT_CLICKED)
-            }
-          >
-            Apply for discount
-          </PrimaryCTA>
-        </a>
+        <PrimaryButton
+          href={'mailto:hi@spectrum.chat'}
+          onClick={() => track(events.PRICING_PAGE_APPLY_FOR_DISCOUNT_CLICKED)}
+        >
+          <Icon glyph={'payment'} />
+          Apply for discount
+        </PrimaryButton>
       </Content>
     </Section>
   );

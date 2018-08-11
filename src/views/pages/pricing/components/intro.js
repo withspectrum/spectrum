@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import Section from 'src/components/themedSection';
-import Link from 'src/components/link';
 import Feature from './feature';
 import { PrimaryButton } from 'src/components/button';
 import Icon from 'src/components/icon';
@@ -11,7 +10,6 @@ import {
   Right,
   Heading,
   Copy,
-  CTA,
   PlanSection,
   PlanPrice,
   PlanDescription,

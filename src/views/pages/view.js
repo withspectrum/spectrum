@@ -8,15 +8,8 @@ import {
   LightOutlineButton,
   PrimaryButton,
   Button,
-  LightTextButton,
 } from 'src/components/button';
-import {
-  Shadow,
-  Gradient,
-  FlexCol,
-  Transition,
-  HorizontalRule,
-} from 'src/components/globals';
+import { FlexCol, Transition, HorizontalRule } from 'src/components/globals';
 import Search from '../explore/components/search';
 import Section from 'src/components/themedSection';
 import { Conversation, Discover } from 'src/components/illustrations';
@@ -40,8 +33,6 @@ import {
   BulletTitle,
   BulletCopy,
   Flexer,
-  PrimaryCTA,
-  SecondaryCTA,
   Content,
 } from './style';
 import { track, events } from 'src/helpers/analytics';
@@ -102,17 +93,6 @@ export const Overview = (props: Props) => {
     }
   `;
 
-  const ThisSecondaryCTA = styled(SecondaryCTA)`
-    margin-left: 16px;
-    font-size: 16px;
-    border: 2px solid ${props => props.theme.text.reverse};
-
-    @media (max-width: 768px) {
-      margin-left: 0;
-      margin-top: 16px;
-    }
-  `;
-
   const ThisText = styled(Text)`
     position: relative;
     right: 20vw;
@@ -124,10 +104,6 @@ export const Overview = (props: Props) => {
     @media (max-width: 1200px) {
       right: 0;
     }
-  `;
-
-  const ThisPrimaryCTA = styled(PrimaryCTA)`
-    font-size: 16px;
   `;
 
   const Img = styled.img`
@@ -212,18 +188,6 @@ export const Centralized = (props: Props) => {
   const ThisCopy = styled(Copy)`
     font-weight: 400;
     margin-top: 16px;
-  `;
-
-  const ThisPrimaryCTA = styled(PrimaryCTA)`
-    margin-top: 32px;
-    background-color: ${props => props.theme.brand.alt};
-    background-image: ${props =>
-      Gradient(props.theme.brand.alt, props.theme.brand.default)};
-    color: ${props => props.theme.text.reverse};
-
-    &:hover {
-      color: ${props => props.theme.text.reverse};
-    }
   `;
 
   const Actions = styled.div`
@@ -362,18 +326,6 @@ export const Chat = (props: Props) => {
     margin-top: 16px;
   `;
 
-  const ThisPrimaryCTA = styled(PrimaryCTA)`
-    background-color: ${props => props.theme.brand.alt};
-    background-image: ${props =>
-      Gradient(props.theme.brand.alt, props.theme.brand.default)};
-    color: ${props => props.theme.text.reverse};
-    margin-top: 32px;
-
-    &:hover {
-      color: ${props => props.theme.text.reverse};
-    }
-  `;
-
   const Actions = styled.div`
     margin-top: 24px;
 
@@ -498,9 +450,10 @@ export const Sell = (props: Props) => {
           to="/new/community"
           onClick={() => track(events.HOME_PAGE_CREATE_COMMUNITY_CLICKED)}
         >
-          <PrimaryCTA icon="plus-fill">
+          <PrimaryButton>
+            <Icon glyph={'plus'} />
             Start building your community
-          </PrimaryCTA>
+          </PrimaryButton>
         </Link>
       </Actions>
     </ThisSection>
@@ -518,27 +471,6 @@ export const Yours = (props: Props) => {
   const ThisTagline = styled(Tagline)`
     text-align: center;
     align-self: center;
-  `;
-
-  const ThisSecondaryCTA = styled(SecondaryCTA)`
-    margin-left: 16px;
-    font-size: 16px;
-    border: 2px solid ${props => props.theme.text.reverse};
-
-    @media (max-width: 768px) {
-      margin-left: 0;
-      margin-top: 16px;
-    }
-  `;
-
-  const ThisPrimaryCTA = styled(PrimaryCTA)`
-    font-size: 16px;
-    color: ${props => props.theme.text.default};
-
-    &:hover {
-      color: ${props => props.theme.brand.alt};
-      box-shadow: ${Shadow.high} #000;
-    }
   `;
 
   const Actions = styled(Flexer)`

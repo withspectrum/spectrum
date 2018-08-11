@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import Link from 'src/components/link';
 import Section from 'src/components/themedSection';
 import Feature from '../../pricing/components/feature';
 import {
@@ -9,8 +8,6 @@ import {
   Right,
   Heading,
   Copy,
-  CTA,
-  TextCTA,
   PlanSection,
   PlanPrice,
   PlanDescription,

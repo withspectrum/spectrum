@@ -137,38 +137,6 @@ export const BulletCopy = styled.p`
   font-weight: 500;
 `;
 
-export const PrimaryCTA = styled(Button)`
-  padding: 8px 12px;
-  font-weight: 700;
-  font-size: 16px;
-  border-radius: 12px;
-  background-color: ${props => props.theme.bg.default};
-  background-image: none;
-  color: ${props => props.theme.brand.alt};
-  transition: ${Transition.hover.off};
-  z-index: ${zIndex.card};
-
-  &:hover {
-    background-color: ${props => props.theme.bg.default};
-    color: ${props => props.theme.brand.default};
-    box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.5)};
-    transition: ${Transition.hover.on};
-  }
-`;
-
-export const SecondaryCTA = styled(PrimaryCTA)`
-  color: ${props => props.theme.text.reverse};
-  background-color: transparent;
-  border: 2px solid transparent;
-
-  &:hover {
-    color: ${props => props.theme.text.reverse};
-    background-color: transparent;
-    border-color: ${props => props.theme.bg.default};
-    box-shadow: 0 0 8px 4px ${props => hexa(props.theme.bg.default, 0.5)};
-  }
-`;
-
 export const SignInButton = styled.a`
   display: flex;
   flex-shrink: 1;

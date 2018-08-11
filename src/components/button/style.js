@@ -34,13 +34,11 @@ const getFontSize = (size: Size) => {
 const getFontWeight = (size: Size) => {
   switch (size) {
     case 'small':
-      return '400';
-    case 'default':
       return '500';
-    case 'large':
+    case 'default':
       return '600';
     default: {
-      return '500';
+      return '600';
     }
   }
 };

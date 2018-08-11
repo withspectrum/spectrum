@@ -11,7 +11,7 @@ import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from 'src/components/viewNetworkHandler';
 import { Loading } from 'src/components/loading';
-import { Button, OutlineButton } from 'src/components/button';
+import { PrimaryButton, OutlineButton } from 'src/components/button';
 import ViewError from 'src/components/viewError';
 import Link from 'src/components/link';
 
@@ -118,9 +118,12 @@ class ModalWell extends React.Component<Props> {
           <StripeCardForm
             community={community}
             render={props => (
-              <Button disabled={props.isLoading} loading={props.isLoading}>
+              <PrimaryButton
+                disabled={props.isLoading}
+                loading={props.isLoading}
+              >
                 Save Card
-              </Button>
+              </PrimaryButton>
             )}
           />
         </Well>

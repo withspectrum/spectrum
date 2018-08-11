@@ -2,7 +2,6 @@
 import * as React from 'react';
 import Section from 'src/components/themedSection';
 import CommunityList from './communityList';
-import { PrimaryCTA } from '../../style';
 import {
   TwoUp,
   Left,
@@ -15,7 +14,8 @@ import {
   PlanFeatures,
 } from '../style';
 import Feature from './feature';
-import Link from 'src/components/link';
+import { PrimaryButton } from 'src/components/button';
+import Icon from 'src/components/icon';
 
 class Paid extends React.Component<{}> {
   render() {
@@ -76,14 +76,13 @@ class Paid extends React.Component<{}> {
               when you're done and we'll only bill you for the two days.
             </Copy>
             <CommunityList upgrade />
-            <Link to={`/new/community`}>
-              <PrimaryCTA
-                icon={'welcome'}
-                style={{ marginTop: '24px', padding: '8px 16px' }}
-              >
-                Get started
-              </PrimaryCTA>
-            </Link>
+            <PrimaryButton
+              to={`/new/community`}
+              style={{ marginTop: '24px', padding: '8px 16px' }}
+            >
+              <Icon glyph={'welcome'} />
+              Get started
+            </PrimaryButton>
           </Right>
         </TwoUp>
       </Section>

@@ -4,7 +4,6 @@ import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import Link from 'src/components/link';
 import { PrimaryButton } from 'src/components/button';
 import { throttle } from 'src/helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';

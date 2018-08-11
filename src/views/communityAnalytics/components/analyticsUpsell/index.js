@@ -17,7 +17,7 @@ import {
   CardInfo,
 } from './style';
 import Link from 'src/components/link';
-import { Button, TextButton } from 'src/components/button';
+import { PrimaryButton, TextButton } from 'src/components/button';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
@@ -120,14 +120,14 @@ class AnalyticsUpsell extends React.Component<Props, State> {
             the health of your community‘s members and conversations.
           </Description>
           <ActionRow>
-            <Button
+            <PrimaryButton
               loading={isLoading}
               onClick={action}
-              large
+              size={'large'}
               data-cy="analytics-unlock-upsell-button"
             >
               Unlock Analytics · $100/mo
-            </Button>
+            </PrimaryButton>
             <Link to={'/pricing'}>
               <TextButton large onClick={this.learnMoreClicked}>
                 Learn more
