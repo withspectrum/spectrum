@@ -1,5 +1,14 @@
 {
-  "regions": ["sfo1"],
+  "scale": {
+    "bru1": {
+      "min": 0,
+      "max": 0
+    },
+    "sfo1": {
+      "min": 1,
+      "max": "auto"
+    }
+  },
   "env": {
     "S3_TOKEN": "@s3-token",
     "S3_SECRET": "@s3-secret",
