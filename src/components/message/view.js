@@ -30,10 +30,6 @@ export const Body = (props: BodyProps) => {
   const emojiOnly =
     message.messageType === 'draftjs' &&
     draftOnlyContainsEmoji(JSON.parse(message.content.body));
-  if (emojiOnly)
-    return (
-      <Emoji>{toPlainText(toState(JSON.parse(message.content.body)))}</Emoji>
-    );
   const WrapperComponent = bubble ? Text : QuotedParagraph;
   switch (message.messageType) {
     case 'text':
@@ -55,7 +51,13 @@ export const Body = (props: BodyProps) => {
               // $FlowIssue
               <QuotedMessage message={message.parent} />
             )}
-          {redraft(JSON.parse(message.content.body), messageRenderer)}
+          {emojiOnly ? (
+            <Emoji>
+              {toPlainText(toState(JSON.parse(message.content.body)))}
+            </Emoji>
+          ) : (
+            redraft(JSON.parse(message.content.body), messageRenderer)
+          )}
         </WrapperComponent>
       );
     }
