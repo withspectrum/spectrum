@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
-import Link from 'src/components/link';
 import ThreadSearch from '../dashboard/components/threadSearch';
 import Icon from 'src/components/icon';
 import { IconButton } from 'src/components/button';
@@ -60,10 +59,11 @@ class Titlebar extends Component {
       <TitleBar>
         {provideBack ? (
           <IconButton
-            glyph="view-back"
-            color="text.reverse"
+            color={theme => theme.text.reverse}
             onClick={this.handleBack}
-          />
+          >
+            <Icon glyph="view-back" size={32} />
+          </IconButton>
         ) : hasChildren ? (
           children
         ) : null}
@@ -76,13 +76,13 @@ class Titlebar extends Component {
         )}
 
         {noComposer ? null : messageComposer ? (
-          <Link to={`/messages/new`}>
-            <IconButton glyph="message-new" color="text.reverse" />
-          </Link>
+          <IconButton to={`/messages/new`} color={theme => theme.text.reverse}>
+            <Icon glyph="message-new" size={32} />
+          </IconButton>
         ) : (
-          <Link to={`/new/thread`}>
-            <IconButton glyph="post" color="text.reverse" />
-          </Link>
+          <IconButton to={`/new/thread`} color={theme => theme.text.reverse}>
+            <Icon glyph="post" size={32} />
+          </IconButton>
         )}
       </TitleBar>
     );

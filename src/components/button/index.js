@@ -69,6 +69,8 @@ export class IconButton extends React.Component<ButtonProps> {
       ...rest
     } = this.props;
 
+    console.log({ color });
+
     const button = (
       <StyledIconButton
         iconColor={color}

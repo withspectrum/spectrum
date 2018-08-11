@@ -7,7 +7,7 @@ type Props = {
   onChange: Function,
   accept?: string,
   multiple: boolean,
-  tipLocation: string,
+  tipLocation?: string,
 };
 
 export default ({
