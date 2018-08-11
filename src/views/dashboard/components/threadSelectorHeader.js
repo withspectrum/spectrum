@@ -105,7 +105,7 @@ class Header extends React.Component<Props> {
             tipText={'New conversation'}
             tipLocation={'bottom-left'}
           >
-            <Icon glyph="post" />
+            <Icon glyph="post" size={32} />
           </IconButton>
         </HeaderWrapper>
       </React.Fragment>

@@ -31,6 +31,20 @@ const getFontSize = (size: Size) => {
   }
 };
 
+const getFontWeight = (size: Size) => {
+  switch (size) {
+    case 'small':
+      return '400';
+    case 'default':
+      return '500';
+    case 'large':
+      return '600';
+    default: {
+      return '500';
+    }
+  }
+};
+
 const base = css`
   display: flex;
   flex: none;
@@ -39,7 +53,7 @@ const base = css`
   justify-content: center;
   border-radius: 4px;
   font-size: ${props => getFontSize(props.size)};
-  font-weight: 500;
+  font-weight: ${props => getFontWeight(props.size)};
   white-space: nowrap;
   word-break: keep-all;
   cursor: pointer;
@@ -57,10 +71,6 @@ const base = css`
 
   .icon {
     margin-right: 8px;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
   }
 
   &:hover {
@@ -204,6 +214,25 @@ export const StyledTextButton = styled.button`
   }
 `;
 
+export const StyledLightTextButton = styled.button`
+  ${base};
+  border: none;
+  color: ${props => props.theme.text.reverse};
+  box-shadow: none;
+  background-color: transparent;
+  background-image: none;
+
+  &:hover {
+    color: ${props => props.theme.text.reverse};
+    box-shadow: none;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 1px ${props => props.theme.bg.default},
+      0 0 0 3px ${props => hexa(props.theme.bg.default, 0.16)};
+  }
+`;
+
 export const StyledOutlineButton = styled.button`
   ${base}
   border: 1px solid ${props => props.theme.bg.border};
@@ -224,6 +253,29 @@ export const StyledOutlineButton = styled.button`
   &:focus {
     box-shadow: 0 0 0 1px ${props =>
       props.theme.bg.default}, 0 0 0 3px ${props => props.theme.bg.border};
+  }
+`;
+
+export const StyledLightOutlineButton = styled.button`
+  ${base}
+  border: 1px solid ${props => props.theme.text.reverse};
+  color: ${props => props.theme.text.reverse};
+  background-color: transparent;
+  background-image: none;
+
+  &:hover {
+    color: ${props => props.theme.text.reverse};
+    border: 1px solid ${props => props.theme.text.reverse};
+    box-shadow: none;
+  }
+
+  &:active {
+    border: 1px solid ${props => props.theme.text.reverse};
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 1px ${props => props.theme.bg.default}, 
+    0 0 0 3px ${props => hexa(props.theme.bg.default, 0.16)};
   }
 `;
 

@@ -5,6 +5,12 @@ import Link from 'src/components/link';
 import Icon from 'src/components/icon';
 import { UserAvatar } from 'src/components/avatar';
 import {
+  LightOutlineButton,
+  PrimaryButton,
+  Button,
+  LightTextButton,
+} from 'src/components/button';
+import {
   Shadow,
   Gradient,
   FlexCol,
@@ -161,20 +167,24 @@ export const Overview = (props: Props) => {
             that are built to last.
           </ThisCopy>
           <Actions>
-            <Link
-              to="/login"
+            <Button
+              size={'large'}
+              to={'/login'}
               onClick={() => track(events.HOME_PAGE_JOIN_SPECTRUM_CLICKED)}
+              style={{ marginRight: '16px' }}
             >
-              <ThisPrimaryCTA icon="welcome">Join Spectrum</ThisPrimaryCTA>
-            </Link>
-            <Link
+              <Icon glyph="welcome" size={32} />
+              Sign in
+            </Button>
+
+            <LightOutlineButton
+              size={'large'}
               to="/new/community"
               onClick={() => track(events.HOME_PAGE_CREATE_COMMUNITY_CLICKED)}
             >
-              <ThisSecondaryCTA icon="plus-fill">
-                Create your community
-              </ThisSecondaryCTA>
-            </Link>
+              <Icon glyph="plus" size={32} />
+              Create your community
+            </LightOutlineButton>
           </Actions>
         </ThisText>
         <Img src={'/img/diagram.svg'} alt="" />
@@ -217,6 +227,7 @@ export const Centralized = (props: Props) => {
   `;
 
   const Actions = styled.div`
+    margin-top: 24px;
     @media (max-width: 768px) {
       display: flex;
       justify-content: center;
@@ -250,7 +261,7 @@ export const Centralized = (props: Props) => {
   `;
 
   return (
-    <Section goop={6} color={'space.alt'}>
+    <Section goop={6} color={theme => theme.space.alt}>
       <ThisContent>
         <Discover />
         <Text>
@@ -265,14 +276,14 @@ export const Centralized = (props: Props) => {
             wins!
           </ThisCopy>
           <Actions>
-            <Link to="/explore">
-              <ThisPrimaryCTA
-                icon="explore"
-                onClick={() => track(events.HOME_PAGE_EXPLORE_CLICKED)}
-              >
-                Explore communities
-              </ThisPrimaryCTA>
-            </Link>
+            <PrimaryButton
+              size={'large'}
+              to={'/explore'}
+              onClick={() => track(events.HOME_PAGE_EXPLORE_CLICKED)}
+            >
+              <Icon glyph="explore" size={32} />
+              Explore communities
+            </PrimaryButton>
           </Actions>
         </Text>
       </ThisContent>
@@ -364,6 +375,8 @@ export const Chat = (props: Props) => {
   `;
 
   const Actions = styled.div`
+    margin-top: 24px;
+
     @media (max-width: 768px) {
       display: flex;
       justify-content: center;
@@ -377,7 +390,7 @@ export const Chat = (props: Props) => {
   `;
 
   return (
-    <Section goop={7} color={'bg.reverse'}>
+    <Section goop={7} color={theme => theme.bg.reverse}>
       <ThisContent>
         <Conversation />
         <FlexCol>
@@ -393,16 +406,16 @@ export const Chat = (props: Props) => {
           </ThisCopy>
 
           <Actions>
-            <Link
+            <PrimaryButton
               to="/thread/764331db-16dd-4fc4-a2c5-aabd735a64a9"
               onClick={() =>
                 track(events.HOME_PAGE_EXAMPLE_CONVERSATION_CLICKED)
               }
+              size={'large'}
             >
-              <ThisPrimaryCTA icon="message-fill">
-                Check out a conversation
-              </ThisPrimaryCTA>
-            </Link>
+              <Icon glyph="message" size={32} />
+              Check out a conversation
+            </PrimaryButton>
           </Actions>
         </FlexCol>
       </ThisContent>
@@ -683,20 +696,24 @@ export const Yours = (props: Props) => {
             </Quote>
           </Quotes>
           <Actions>
-            <Link
+            <Button
+              size={'large'}
               to="/login"
               onClick={() => track(events.HOME_PAGE_JOIN_SPECTRUM_CLICKED)}
+              style={{ marginRight: '16px' }}
             >
-              <ThisPrimaryCTA icon="welcome">Join Spectrum</ThisPrimaryCTA>
-            </Link>
-            <Link
+              <Icon glyph={'welcome'} size={32} />
+              Join Spectrum
+            </Button>
+
+            <LightOutlineButton
+              size={'large'}
               to="/explore"
               onClick={() => track(events.HOME_PAGE_CREATE_COMMUNITY_CLICKED)}
             >
-              <ThisSecondaryCTA icon="explore">
-                Explore communities
-              </ThisSecondaryCTA>
-            </Link>
+              <Icon glyph={'explore'} size={32} />
+              Explore communities
+            </LightOutlineButton>
           </Actions>
         </FlexCol>
       </ThisContent>

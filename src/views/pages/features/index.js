@@ -7,7 +7,7 @@ import Icon from 'src/components/icon';
 import { Easy, Happy, Impact, Ideas } from 'src/components/illustrations';
 import { Wrapper } from '../style';
 import { Heading, Copy } from '../pricing/style';
-import { Button } from 'src/components/button';
+import { PrimaryButton } from 'src/components/button';
 import {
   Intro,
   TextContent,
@@ -42,7 +42,7 @@ class Features extends React.Component<Props, State> {
   render() {
     return (
       <Wrapper data-cy="features-page">
-        <Section background={'blank'} goop={1} color={'brand.alt'}>
+        <Section background={'blank'} goop={1} color={theme => theme.brand.alt}>
           <Intro>
             <TextContent>
               <Heading>
@@ -53,21 +53,19 @@ class Features extends React.Component<Props, State> {
                 organically, moderate it effectively, and measure its ROI for
                 your organization.
               </Copy>
-              <Link to={`/new/community`}>
-                <Button
-                  icon="welcome"
-                  onClick={() =>
-                    track(events.FEATURES_PAGE_GET_STARTED_CLICKED)
-                  }
-                >
-                  Get started
-                </Button>
-              </Link>
+              <PrimaryButton
+                to={'/new/community'}
+                size={'large'}
+                onClick={() => track(events.FEATURES_PAGE_GET_STARTED_CLICKED)}
+              >
+                <Icon glyph="welcome" size={32} />
+                Get started
+              </PrimaryButton>
             </TextContent>
             <Waterfall src="https://spectrum.imgix.net/marketing/waterfall.png?h=0.25&dpr=2&auto=compress,format" />
           </Intro>
         </Section>
-        <Section background={'brand'} goop={3} color={'space.alt'}>
+        <Section background={'brand'} goop={3} color={theme => theme.space.alt}>
           <SectionGrid reverse>
             <Topic>
               <Easy />
@@ -114,7 +112,11 @@ class Features extends React.Component<Props, State> {
             </FeatureList>
           </SectionGrid>
         </Section>
-        <Section background={'bright'} goop={2} color={'bg.default'}>
+        <Section
+          background={'bright'}
+          goop={2}
+          color={theme => theme.bg.default}
+        >
           <SectionGrid>
             <Topic>
               <Happy />
@@ -169,7 +171,7 @@ class Features extends React.Component<Props, State> {
             </FeatureList>
           </SectionGrid>
         </Section>
-        <Section goop={6} color={'bg.reverse'}>
+        <Section goop={6} color={theme => theme.bg.reverse}>
           <SectionGrid reverse>
             <Topic>
               <Impact />
@@ -225,7 +227,11 @@ class Features extends React.Component<Props, State> {
             </FeatureList>
           </SectionGrid>
         </Section>
-        <Section background={'reverse'} goop={5} color={'bg.default'}>
+        <Section
+          background={'reverse'}
+          goop={5}
+          color={theme => theme.bg.default}
+        >
           <SectionGrid>
             <Topic>
               <Ideas />
@@ -280,68 +286,72 @@ class Features extends React.Component<Props, State> {
             </FeatureList>
           </SectionGrid>
         </Section>
-        <Section background={'default'} goop={4} color={'bg.reverse'}>
+        <Section
+          background={'default'}
+          goop={4}
+          color={theme => theme.bg.reverse}
+        >
           <EtcGrid>
             <Heading>And there's a whole lot more to love...</Heading>
-            <EtcFeature color="success.alt">
+            <EtcFeature color={theme => theme.success.alt}>
               <Icon glyph="thread" />
               <EtcName>Unlimited chat</EtcName>
             </EtcFeature>
-            <EtcFeature color="space.default">
+            <EtcFeature color={theme => theme.space.default}>
               <Icon glyph="member-add" />
               <EtcName>Unlimited members</EtcName>
             </EtcFeature>
-            <EtcFeature color="brand.alt">
+            <EtcFeature color={theme => theme.brand.alt}>
               <Icon glyph="search" />
               <EtcName>Search-indexed threads</EtcName>
             </EtcFeature>
-            <EtcFeature color="text.alt">
+            <EtcFeature color={theme => theme.text.alt}>
               <Icon glyph="welcome" />
               <EtcName>Brandable signup page</EtcName>
             </EtcFeature>
-            <EtcFeature color="special.default">
+            <EtcFeature color={theme => theme.special.default}>
               <Icon glyph="community" />
               <EtcName>Public community</EtcName>
             </EtcFeature>
-            <EtcFeature color="warn.alt">
+            <EtcFeature color={theme => theme.warn.alt}>
               <Icon glyph="private-outline" />
               <EtcName>Secure, private channels</EtcName>
             </EtcFeature>
-            <EtcFeature color="special.alt">
+            <EtcFeature color={theme => theme.special.alt}>
               <Icon glyph="slack" />
               <EtcName>Slack bot + team import</EtcName>
             </EtcFeature>
-            <EtcFeature color="success.default">
+            <EtcFeature color={theme => theme.success.default}>
               <Icon glyph="email" />
               <EtcName>Email member invitations</EtcName>
             </EtcFeature>
-            <EtcFeature color="brand.alt">
+            <EtcFeature color={theme => theme.brand.alt}>
               <Icon glyph="home" />
               <EtcName>Unified Home feed</EtcName>
             </EtcFeature>
-            <EtcFeature color="success.default">
+            <EtcFeature color={theme => theme.success.default}>
               <Icon glyph="message" />
               <EtcName>Single DM inbox</EtcName>
             </EtcFeature>
-            <EtcFeature color="space.default">
+            <EtcFeature color={theme => theme.space.default}>
               <Icon glyph="notification" />
               <EtcName>Combined notification feed</EtcName>
             </EtcFeature>
-            <EtcFeature color="warn.default">
+            <EtcFeature color={theme => theme.warn.default}>
               <Icon glyph="explore" />
               <EtcName>Curated Explore page</EtcName>
             </EtcFeature>
           </EtcGrid>
           <EtcCTA>
             <EtcName>What are you waiting for?</EtcName>
-            <Link to={`/new/community`}>
-              <Button
-                icon="welcome"
-                onClick={() => track(events.FEATURES_PAGE_GET_STARTED_CLICKED)}
-              >
-                Get started
-              </Button>
-            </Link>
+            <PrimaryButton
+              size={'large'}
+              to={'/new/community'}
+              onClick={() => track(events.FEATURES_PAGE_GET_STARTED_CLICKED)}
+            >
+              <Icon glyph="welcome" size={32} />
+              Get started
+            </PrimaryButton>
           </EtcCTA>
         </Section>
         <PageFooter />

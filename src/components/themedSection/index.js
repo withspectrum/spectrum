@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import Goop from '../goop';
+import Goop from 'src/components/goop';
 import {
   ClusterOne,
   ClusterTwo,
@@ -9,7 +9,7 @@ import {
   ClusterFour,
   Constellations,
   Empty,
-} from '../illustrations';
+} from 'src/components/illustrations';
 import { FlexCol, hexa } from 'src/components/globals';
 
 export const Default = styled(FlexCol)`

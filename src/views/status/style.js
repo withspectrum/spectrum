@@ -8,7 +8,7 @@ export const Bar = styled.div`
   justify-items: center;
   align-items: center;
   background: ${props =>
-    props.color ? props.theme[props.color].default : 'transparent'};
+    props.color ? props.color(props.theme) : 'transparent'};
   color: ${props => (props.color ? props.theme.text.reverse : 'rgba(0,0,0,0)')};
   font-size: 14px;
   font-weight: 600;

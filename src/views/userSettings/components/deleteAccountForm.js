@@ -146,12 +146,12 @@ class DeleteAccountForm extends React.Component<Props, State> {
                 </DangerButton>
               </div>
             ) : (
-              <Button
+              <DangerButton
                 data-cy="delete-account-init-button"
                 onClick={this.initDelete}
               >
                 Delete my account
-              </Button>
+              </DangerButton>
             )}
           </SectionCardFooter>
         </SectionCard>

@@ -141,7 +141,7 @@ class DirectMessages extends React.Component<Props, State> {
         <MessagesList isViewingThread={isViewingThread || isComposing}>
           <Link to="/messages/new" onClick={() => this.setActiveThread('new')}>
             <ComposeHeader>
-              <Icon glyph="message-new" />
+              <Icon glyph="message-new" size={32} />
             </ComposeHeader>
           </Link>
 

@@ -18,15 +18,11 @@ import {
   Actions,
 } from '../../pricing/style';
 import { track, events } from 'src/helpers/analytics';
+import { Button, TextButton } from 'src/components/button';
 
-type Props = {
-  goopColor?: string,
-};
-
-const Intro = (props: Props) => {
-  const { goopColor = 'bg.reverse' } = props;
+const Intro = () => {
   return (
-    <Section goop={4} color={goopColor}>
+    <Section goop={4} color={theme => theme.space.dark}>
       <TwoUp>
         <Left>
           <Heading>Introducing Concierge</Heading>
@@ -43,28 +39,22 @@ const Intro = (props: Props) => {
             problems alone.
           </Copy>
           <Actions>
-            <a
+            <Button
+              size={'large'}
               onClick={() => track(events.CONCIERGE_PAGE_CONTACT_US_CLICKED)}
               href={'mailto:hi@spectrum.chat'}
+              style={{ marginRight: '16px' }}
             >
-              <CTA
-                style={{
-                  padding: '16px 24px',
-                  fontSize: '18px',
-                  marginTop: '0',
-                }}
-                large
-              >
-                Contact our team
-              </CTA>
-            </a>
+              Contact our team
+            </Button>
 
-            <Link
+            <TextButton
+              size={'large'}
               onClick={() => track(events.CONCIERGE_PAGE_LEARN_MORE_CLICKED)}
               to={`/thread/c5a6ea22-eb8f-4247-bed4-c322f6177c94`}
             >
-              <TextCTA>Learn more</TextCTA>
-            </Link>
+              Learn more
+            </TextButton>
           </Actions>
         </Left>
         <Right>

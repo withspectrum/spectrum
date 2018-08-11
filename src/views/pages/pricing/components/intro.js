@@ -3,6 +3,8 @@ import React from 'react';
 import Section from 'src/components/themedSection';
 import Link from 'src/components/link';
 import Feature from './feature';
+import { PrimaryButton } from 'src/components/button';
+import Icon from 'src/components/icon';
 import {
   TwoUp,
   Left,
@@ -19,7 +21,11 @@ import { track, events } from 'src/helpers/analytics';
 
 const Intro = () => {
   return (
-    <Section background={'illustrated'} goop={2} color={'brand.alt'}>
+    <Section
+      background={'illustrated'}
+      goop={2}
+      color={theme => theme.brand.alt}
+    >
       <TwoUp>
         <Left>
           <Heading>Pricing built with your community in mind.</Heading>
@@ -32,12 +38,15 @@ const Intro = () => {
             got some great features to help you grow, moderate, and measure more
             effectively.
           </Copy>
-          <Link
+          <PrimaryButton
+            size={'large'}
             onClick={() => track(events.PRICING_PAGE_CREATE_COMMUNITY_CLICKED)}
             to={`/new/community`}
+            style={{ marginTop: '24px' }}
           >
-            <CTA icon={'welcome'}>Create your community</CTA>
-          </Link>
+            <Icon glyph="welcome" size={32} />
+            Create your community
+          </PrimaryButton>
         </Left>
         <Right>
           <PlanSection>

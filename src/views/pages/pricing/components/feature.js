@@ -13,7 +13,7 @@ type Props = {
   title: string,
   subtitle?: string,
   icon?: string,
-  color?: string,
+  fillColor?: Function,
   priceLabel?: string,
   hideIconsOnMobile?: boolean,
   render?: Function,
@@ -24,17 +24,19 @@ const Feature = (props: Props) => {
     title,
     subtitle,
     icon = 'checkmark',
-    color = 'success',
+    fillColor = theme => theme.success.alt,
     priceLabel,
     render,
   } = props;
 
   return (
-    <FeatureWrapper color={color}>
+    <FeatureWrapper fillColor={fillColor}>
       <Icon glyph={icon} size={32} />
       <FeatureTitle>{title}</FeatureTitle>
       {subtitle && <FeatureDescription>{subtitle}</FeatureDescription>}
-      {priceLabel && <FeaturePrice color={color}>{priceLabel}</FeaturePrice>}
+      {priceLabel && (
+        <FeaturePrice fillColor={fillColor}>{priceLabel}</FeaturePrice>
+      )}
       {render && <FeatureRender>{render()}</FeatureRender>}
     </FeatureWrapper>
   );

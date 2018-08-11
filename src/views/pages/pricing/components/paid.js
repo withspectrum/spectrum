@@ -20,7 +20,7 @@ import Link from 'src/components/link';
 class Paid extends React.Component<{}> {
   render() {
     return (
-      <Section background={'brand'} goop={6} color={'bg.default'}>
+      <Section background={'brand'} goop={6} color={theme => theme.bg.default}>
         <TwoUp reverse>
           <Left>
             <PlanSection>
@@ -36,7 +36,7 @@ class Paid extends React.Component<{}> {
                   subtitle={
                     'Add an additional moderator to your community to help keep conversations healthy and productive.'
                   }
-                  color={'space'}
+                  fillColor={theme => theme.space.default}
                   icon={'member-add'}
                   priceLabel={'$10/mo'}
                 />
@@ -46,7 +46,7 @@ class Paid extends React.Component<{}> {
                   subtitle={
                     'Add a private channel to your community to organize a private beta, support customers securely, or communicate internally with your team.'
                   }
-                  color={'special'}
+                  fillColor={theme => theme.special.default}
                   icon={'private-outline'}
                   priceLabel={'$10/mo'}
                 />

@@ -263,7 +263,7 @@ export const SearchWrapper = styled(Card)`
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   transition: ${Transition.hover.off};
   z-index: ${zIndex.search};
-  border-radius: 8px;
+  border-radius: 4px;
 
   &:hover {
     box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.25)};

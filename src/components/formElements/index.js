@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'src/components/icon';
-import { OutlineButton } from 'src/components/button';
+import { LightOutlineButton } from 'src/components/button';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 
@@ -117,10 +117,10 @@ export const CoverInput = (props: CoverPhotoInputProps) => {
       <InputOverlay
         visible={!props.defaultValue || props.defaultValue.length === 1}
       >
-        <OutlineButton>
+        <LightOutlineButton>
           <Icon glyph={'photo'} />
           Add Cover Photo
-        </OutlineButton>
+        </LightOutlineButton>
       </InputOverlay>
       <CoverImage
         src={

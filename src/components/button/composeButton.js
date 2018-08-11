@@ -5,10 +5,10 @@ import Link from 'src/components/link';
 import hoistStatics from 'hoist-non-react-statics';
 import type { ButtonProps } from './';
 
-const StyledLink = styled(Link)`
+export const StyledLink = styled(Link)`
   width: ${props => (props.fill ? '100%' : 'auto')};
 `;
-const StyledA = styled.a`
+export const StyledA = styled.a`
   width: ${props => (props.fill ? '100%' : 'auto')};
 `;
 
@@ -45,7 +45,12 @@ const composeButton = (Component: any) => {
 
     if (href) {
       return (
-        <StyledA href={href} target={'_blank'} rel={'noopener noreferrer'}>
+        <StyledA
+          fill={fill}
+          href={href}
+          target={'_blank'}
+          rel={'noopener noreferrer'}
+        >
           {button}
         </StyledA>
       );

@@ -262,12 +262,6 @@ export const PlanSection = styled.div`
   a {
     display: inline-block;
     align-self: center;
-
-    button {
-      margin-top: 24px;
-      padding: 8px 16px;
-      font-size: 16px;
-    }
   }
 `;
 
@@ -452,6 +446,7 @@ export const PlanDescription = styled.p`
   font-weight: 400;
   color: ${props => props.theme.text.secondary};
   line-height: 1.3;
+  margin-bottom: 16px;
 `;
 
 export const BusinessPlanSection = styled.div`
@@ -509,12 +504,12 @@ export const FeaturePrice = styled.span`
   margin-left: 8px;
   letter-spacing: -0.2px;
   color: ${props =>
-    props.color
-      ? props.theme[props.color].default
+    props.fillColor
+      ? props.fillColor(props.theme)
       : props.theme.success.default};
   background: ${props =>
-    props.color
-      ? hexa(props.theme[props.color].default, 0.08)
+    props.fillColor
+      ? hexa(props.fillColor(props.theme), 0.08)
       : hexa(props.theme.success.default, 0.08)};
 `;
 
@@ -523,7 +518,7 @@ export const FeatureWrapper = styled.div`
   grid-template-columns: auto 1fr auto;
   grid-template-rows: repeat(2, min-content);
   grid-template-areas: 'icon title price' '. description description' '. render render';
-  color: ${props => props.theme[props.color].default};
+  color: ${props => props.fillColor(props.theme)};
   padding: 16px 0;
   align-items: center;
   grid-column-gap: 16px;

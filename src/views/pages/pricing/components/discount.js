@@ -8,7 +8,7 @@ import { track, events } from 'src/helpers/analytics';
 
 const Discount = () => {
   return (
-    <Section background={'dark'} goop={2} color={'bg.default'}>
+    <Section background={'dark'} goop={2} color={theme => theme.bg.default}>
       <Content>
         <Heading reverse>Do you run a community that gives back?</Heading>
         <Copy reverse>

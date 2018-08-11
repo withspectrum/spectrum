@@ -1,13 +1,15 @@
 // @flow
 import * as React from 'react';
-import composeButton from './composeButton';
+import composeButton, { StyledLink, StyledA } from './composeButton';
 import {
   StyledButton,
   StyledPrimaryButton,
   StyledPrimaryTextButton,
   StyledDangerButton,
   StyledOutlineButton,
+  StyledLightOutlineButton,
   StyledTextButton,
+  StyledLightTextButton,
   StyledIconButton,
   StyledFacebookButton,
   StyledTwitterButton,
@@ -43,6 +45,8 @@ export const PrimaryTextButton = composeButton(StyledPrimaryTextButton);
 export const TextButton = composeButton(StyledTextButton);
 export const DangerButton = composeButton(StyledDangerButton);
 export const OutlineButton = composeButton(StyledOutlineButton);
+export const LightOutlineButton = composeButton(StyledLightOutlineButton);
+export const LightTextButton = composeButton(StyledLightTextButton);
 export const FacebookButton = composeButton(StyledFacebookButton);
 export const TwitterButton = composeButton(StyledTwitterButton);
 export const ButtonRow = StyledButtonRow;
@@ -60,9 +64,12 @@ export class IconButton extends React.Component<ButtonProps> {
       color,
       hoverColor,
       children,
+      to,
+      href,
       ...rest
     } = this.props;
-    return (
+
+    const button = (
       <StyledIconButton
         iconColor={color}
         iconHoverColor={hoverColor}
@@ -74,5 +81,28 @@ export class IconButton extends React.Component<ButtonProps> {
         {children}
       </StyledIconButton>
     );
+
+    if (to) {
+      return (
+        <StyledLink to={to} fill={fill}>
+          {button}
+        </StyledLink>
+      );
+    }
+
+    if (href) {
+      return (
+        <StyledA
+          fill={fill}
+          href={href}
+          target={'_blank'}
+          rel={'noopener noreferrer'}
+        >
+          {button}
+        </StyledA>
+      );
+    }
+
+    return button;
   }
 }

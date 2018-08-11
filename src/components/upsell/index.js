@@ -453,9 +453,13 @@ class UpsellUpgradeToProPure extends React.Component<
           amount={500}
           currency="USD"
         >
-          <Button disabled={isLoading} loading={isLoading} icon="payment">
+          <PrimaryButton
+            disabled={isLoading}
+            loading={isLoading}
+            size={'large'}
+          >
             Make me a Pro!
-          </Button>
+          </PrimaryButton>
         </StripeCheckout>
 
         {!upgradeError && <UpgradeError>{upgradeError}</UpgradeError>}

@@ -24,7 +24,7 @@ class Support extends React.Component<{}> {
   render() {
     return (
       <Wrapper data-cy="support-page">
-        <Section goop={2} color={'bg.reverse'}>
+        <Section goop={2} color={theme => theme.bg.reverse}>
           <FourUp>
             <div style={{ gridArea: 'copy' }}>
               <Heading>What can we help you with?</Heading>
@@ -43,12 +43,14 @@ class Support extends React.Component<{}> {
                 </PlanDescription>
               </div>
 
-              <Link to={'/spectrum/hugs-n-bugs'}>
-                <Button onClick={() => track(events.SUPPORT_PAGE_REPORT_BUG)}>
-                  <Icon glyph="bug" />
-                  Join Hugs-n-Bugs
-                </Button>
-              </Link>
+              <Button
+                fill
+                to={'/spectrum/hugs-n-bugs'}
+                onClick={() => track(events.SUPPORT_PAGE_REPORT_BUG)}
+              >
+                <Icon glyph="bug" />
+                Join Hugs-n-Bugs
+              </Button>
             </PlanSection>
 
             <PlanSection style={{ gridArea: 'two' }}>
@@ -60,14 +62,14 @@ class Support extends React.Component<{}> {
                 </PlanDescription>
               </div>
 
-              <Link to={'/spectrum/feature-requests'}>
-                <Button
-                  onClick={() => track(events.SUPPORT_PAGE_REQUEST_FEATURE)}
-                >
-                  <Icon glyph="idea" />
-                  Request a feature
-                </Button>
-              </Link>
+              <Button
+                fill
+                to={'/spectrum/feature-requests'}
+                onClick={() => track(events.SUPPORT_PAGE_REQUEST_FEATURE)}
+              >
+                <Icon glyph="idea" />
+                Request a feature
+              </Button>
             </PlanSection>
 
             <PlanSection style={{ gridArea: 'three' }}>
@@ -79,29 +81,26 @@ class Support extends React.Component<{}> {
                 </PlanDescription>
               </div>
 
-              <a
+              <TwitterButton
+                fill
                 href={'https://twitter.com/withspectrum'}
-                target={'_blank'}
-                rel={'noopener noreferrer'}
+                onClick={() => track(events.SUPPORT_PAGE_FOLLOW_ON_TWITTER)}
+                style={{ marginBottom: '16px' }}
               >
-                <TwitterButton
-                  onClick={() => track(events.SUPPORT_PAGE_FOLLOW_ON_TWITTER)}
-                >
-                  <Icon glyph="twitter" />
-                  Follow us on Twitter
-                </TwitterButton>
-              </a>
+                <Icon glyph="twitter" />
+                Follow us on Twitter
+              </TwitterButton>
 
-              <Link to={'/spectrum'}>
-                <PrimaryButton
-                  onClick={() =>
-                    track(events.SUPPORT_PAGE_JOIN_SPECTRUM_COMMUNITY)
-                  }
-                >
-                  <Icon glyph="logo" />
-                  Join our community
-                </PrimaryButton>
-              </Link>
+              <PrimaryButton
+                fill
+                to={'/spectrum'}
+                onClick={() =>
+                  track(events.SUPPORT_PAGE_JOIN_SPECTRUM_COMMUNITY)
+                }
+              >
+                <Icon glyph="logo" />
+                Join our community
+              </PrimaryButton>
             </PlanSection>
 
             <PlanSection style={{ gridArea: 'four' }}>
@@ -113,12 +112,14 @@ class Support extends React.Component<{}> {
                 </PlanDescription>
               </div>
 
-              <a href={'mailto:hi@spectrum.chat'}>
-                <Button onClick={() => track(events.SUPPORT_PAGE_EMAIL_US)}>
-                  <Icon glyph="email" />
-                  Email us
-                </Button>
-              </a>
+              <Button
+                fill
+                href={'mailto:hi@spectrum.chat'}
+                onClick={() => track(events.SUPPORT_PAGE_EMAIL_US)}
+              >
+                <Icon glyph="email" />
+                Email us
+              </Button>
             </PlanSection>
           </FourUp>
         </Section>

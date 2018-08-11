@@ -5,7 +5,7 @@ import { Content, Heading, Subhead, Copy } from '../style';
 
 const Faq = () => {
   return (
-    <Section goop={4} color={'bg.reverse'}>
+    <Section goop={4} color={theme => theme.bg.reverse}>
       <Content>
         <Heading>FAQ</Heading>
         <Subhead>How does the Fair Price Promise work?</Subhead>

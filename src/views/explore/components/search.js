@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
-import { Button } from 'src/components/button';
+import { PrimaryButton } from 'src/components/button';
 import { throttle } from 'src/helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
 import type { SearchCommunitiesType } from 'shared/graphql/queries/search/searchCommunities';
@@ -291,9 +291,9 @@ class Search extends React.Component<Props, State> {
                       <SearchResultTextContainer>
                         <SearchResultNull>
                           <p>No communities found matching “{searchString}”</p>
-                          <Link to={'/new/community'}>
-                            <Button>Create a Community</Button>
-                          </Link>
+                          <PrimaryButton to={'/new/community'}>
+                            Create a Community
+                          </PrimaryButton>
                         </SearchResultNull>
                       </SearchResultTextContainer>
                     </SearchResult>

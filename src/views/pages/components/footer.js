@@ -23,24 +23,19 @@ export default () => {
             <Logo />
           </Link>
           <SocialLinks>
-            <a
+            <IconButton
               href="https://github.com/withspectrum"
-              target="_blank"
-              rel="noopener noreferrer"
+              hoverColor={theme => theme.text.reverse}
             >
-              <IconButton hoverColor={theme => theme.text.reverse}>
-                <Icon glyph="github" />
-              </IconButton>
-            </a>
-            <a
+              <Icon glyph="github" size={32} />
+            </IconButton>
+
+            <IconButton
               href="https://twitter.com/withspectrum"
-              target="_blank"
-              rel="noopener noreferrer"
+              hoverColor={theme => theme.text.reverse}
             >
-              <IconButton hoverColor={theme => theme.text.reverse}>
-                <Icon glyph="twitter" />
-              </IconButton>
-            </a>
+              <Icon glyph="twitter" size={32} />
+            </IconButton>
           </SocialLinks>
         </Masthead>
         <Support>

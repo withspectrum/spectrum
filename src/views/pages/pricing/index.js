@@ -24,7 +24,7 @@ class Pricing extends React.Component<Props> {
       <Wrapper data-cy="pricing-page">
         <Intro />
         <Paid />
-        <Concierge goopColor={'space.dark'} />
+        <Concierge />
         <Discount />
         <Faq />
         <PageFooter />

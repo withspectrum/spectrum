@@ -5,7 +5,7 @@ import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
-import { Button } from 'src/components/button';
+import { PrimaryButton } from 'src/components/button';
 import Icon from 'src/components/icon';
 import { SERVER_URL, CLIENT_URL } from 'src/api/constants';
 import GithubProfile from 'src/components/githubProfile';
@@ -436,7 +436,7 @@ class UserWithData extends React.Component<Props, State> {
           />
 
           <Actions>
-            <Button
+            <PrimaryButton
               disabled={
                 !name || nameError || !username || !!usernameError || isLoading
               }
@@ -444,7 +444,7 @@ class UserWithData extends React.Component<Props, State> {
               onClick={this.save}
             >
               Save
-            </Button>
+            </PrimaryButton>
           </Actions>
 
           {createError && (

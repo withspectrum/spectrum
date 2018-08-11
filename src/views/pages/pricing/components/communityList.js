@@ -120,20 +120,13 @@ class CommunityList extends React.Component<Props, State> {
                   />
                   <CommunityCardName>{community.name}</CommunityCardName>
                   <CommunityListActions>
-                    <Link
+                    <Button
+                      fill
                       onClick={() => this.upgrade(community)}
                       to={`/${community.slug}/settings`}
                     >
-                      <Button
-                        style={{
-                          flex: '1 0 auto',
-                          width: 'calc(100%)',
-                          fontSize: '16px',
-                        }}
-                      >
-                        Upgrade
-                      </Button>
-                    </Link>
+                      Upgrade
+                    </Button>
                   </CommunityListActions>
                 </CommunityCard>
               );

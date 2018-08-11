@@ -271,19 +271,6 @@ export const EtcCTA = styled.div`
     font-size: 24px;
     margin-bottom: 16px;
   }
-
-  > a {
-    display: inline-block;
-
-    > button {
-      padding: 8px 16px 8px 8px;
-
-      > span {
-        font-size: 16px;
-        margin-left: 16px;
-      }
-    }
-  }
 `;
 
 export const FeatureCopy = styled.div`

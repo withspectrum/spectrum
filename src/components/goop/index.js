@@ -33,7 +33,8 @@ export const SvgWrapper = styled.div`
   left: -5%;
   right: -5%;
   display: ${props => (props.goop === 0 ? 'none' : 'inline-block')};
-  color: ${props => props.color(props.theme)};
+  color: ${props =>
+    props.color ? props.color(props.theme) : props.theme.bg.default};
   pointer-events: none;
 
   @media (max-width: 768px) {
@@ -109,7 +110,7 @@ class Goop extends React.Component<Props> {
         className={'goop'}
         goopHeight={this.props.goopHeight}
         goop={this.props.goop}
-        color={theme => theme}
+        color={this.props.color}
       >
         <InlineSvg
           fillRule="evenodd"
