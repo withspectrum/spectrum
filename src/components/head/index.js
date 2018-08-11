@@ -1,5 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet-async';
+import { generateImageFromImgix } from '../../helpers/images';
 
 type Props = {
   title?: string,
@@ -9,6 +10,12 @@ type Props = {
 };
 
 export default ({ title, description, image, children }: Props) => {
+  const metaImage =
+    image ||
+    generateImageFromImgix({
+      imageText: title,
+    });
+
   return (
     <Helmet>
       <title>{title}</title>
@@ -17,22 +24,8 @@ export default ({ title, description, image, children }: Props) => {
       <meta name="og:description" content={description} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta
-        name="twitter:image"
-        content={
-          image
-            ? image
-            : 'https://spectrum.chat/img/apple-icon-144x144-precomposed.png'
-        }
-      />
-      <meta
-        name="og:image"
-        content={
-          image
-            ? image
-            : 'https://spectrum.chat/img/apple-icon-144x144-precomposed.png'
-        }
-      />
+      <meta name="twitter:image" content={metaImage} />
+      <meta name="og:image" content={metaImage} />
       {children}
     </Helmet>
   );
