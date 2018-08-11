@@ -7,14 +7,10 @@ export const CurrentCount = styled.b`
 `;
 
 export const LikeButtonWrapper = styled(Button)`
-  background: ${props => props.theme.bg.default};
-  border: 1px solid ${props => props.theme.bg.border};
+  position: relative;
+  padding-right: 48px;
   color: ${props =>
-    props.hasReacted ? props.theme.brand.alt : props.theme.text.alt};
-  padding: 4px 0 4px 8px;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
+    props.hasReacted ? props.theme.brand.default : props.theme.text.secondary};
 
   div + span {
     margin: 0;
@@ -26,15 +22,15 @@ export const LikeButtonWrapper = styled(Button)`
     border-left: 1px solid ${props => props.theme.bg.border};
     padding: 12px;
     margin-left: 12px;
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-    color: ${props => props.theme.text.secondary};
-  }
-
-  &:hover {
-    background: ${props => props.theme.bg.default};
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
     color: ${props =>
-      props.hasReacted ? props.theme.brand.alt : props.theme.text.default};
+      props.hasReacted
+        ? props.theme.brand.default
+        : props.theme.text.secondary};
+    position: absolute;
+    right: 0;
+    height: 100%;
   }
 `;
 

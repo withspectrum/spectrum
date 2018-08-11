@@ -35,7 +35,6 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import getNotifications from 'shared/graphql/queries/notification/getNotifications';
 import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
 import { subscribeToWebPush } from 'shared/graphql/subscriptions';
-import { UpsellNullNotifications } from 'src/components/upsell';
 import ViewError from 'src/components/viewError';
 import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
@@ -46,6 +45,8 @@ import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
 import { isDesktopApp } from 'src/helpers/is-desktop-app';
+import { PrimaryButton } from 'src/components/button';
+import Icon from 'src/components/icon';
 
 type Props = {
   markAllNotificationsSeen?: Function,
@@ -402,10 +403,16 @@ class NotificationsPure extends React.Component<Props, State> {
 
     return (
       <AppViewWrapper>
-        <Column type={'primary'}>
-          <Head title={title} description={description} />
-          <UpsellNullNotifications />
-        </Column>
+        <Head title={title} description={description} />
+        <ViewError
+          heading={`No notifications yet`}
+          subheading={'Head back home to join some conversations!'}
+        >
+          <PrimaryButton to={'/'}>
+            <Icon glyph="home" />
+            Take me home
+          </PrimaryButton>
+        </ViewError>
       </AppViewWrapper>
     );
   }

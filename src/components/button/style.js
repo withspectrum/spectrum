@@ -281,7 +281,7 @@ export const StyledIconButton = styled.button`
   ${base};
   border: none;
   color: ${props =>
-    console.log(props) && props.iconColor
+    props.iconColor
       ? props.iconColor(props.theme)
       : props.theme.text.secondary};
   background-color: transparent;

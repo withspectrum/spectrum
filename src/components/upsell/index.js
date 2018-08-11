@@ -477,16 +477,6 @@ export const UpsellUpgradeToPro = compose(
   connect(mapStateToProps)
 )(UpsellUpgradeToProPure);
 
-export const UpsellNullNotifications = () => {
-  return (
-    <NullCard bg="notification" heading="You don't have any notifications yet.">
-      <Link to="/">
-        <PrimaryButton>Take Me Home</PrimaryButton>
-      </Link>
-    </NullCard>
-  );
-};
-
 export const UpsellReload = () => (
   <NullCard
     bg="error"
