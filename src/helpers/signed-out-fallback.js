@@ -36,8 +36,8 @@ const ConnectedSwitch = compose(
 )(Switch);
 
 const signedOutFallback = (
-  Component: React$Component<*>,
-  FallbackComponent: React$Component<*>
+  Component: React$ComponentType<*>,
+  FallbackComponent: React$ComponentType<*>
 ) => {
   return (props: *) => (
     <ConnectedSwitch
