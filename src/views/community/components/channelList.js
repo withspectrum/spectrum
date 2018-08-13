@@ -17,6 +17,8 @@ import {
   ColumnHeading,
   ChannelListItemRow,
   ToggleNotificationsContainer,
+  ChannelContainer,
+  ChannelName,
 } from '../style';
 import ToggleChannelNotifications from 'src/components/toggleChannelNotifications';
 import type { Dispatch } from 'redux';
@@ -64,6 +66,7 @@ class ChannelList extends React.Component<Props> {
         .map(channel => channel && channel.node)
         .filter(channel => {
           if (!channel) return null;
+          if (channel.isArchived) return null;
           if (channel.isPrivate && !channel.channelPermissions.isMember)
             return null;
 
@@ -80,6 +83,7 @@ class ChannelList extends React.Component<Props> {
       const nonJoinedChannels = channels
         .slice()
         .filter(channel => channel && !channel.channelPermissions.isMember);
+
       const sortedNonJoinedChannels = this.sortChannels(nonJoinedChannels);
 
       return (
@@ -94,19 +98,15 @@ class ChannelList extends React.Component<Props> {
               {sortedChannels.map(channel => {
                 if (!channel) return null;
                 return (
-                  <Link
-                    key={channel.id}
-                    to={`/${communitySlug}/${channel.slug}`}
-                  >
-                    <ChannelListItem
-                      clickable
-                      contents={channel}
-                      withDescription={false}
-                      channelIcon
+                  <ChannelContainer>
+                    <Link
+                      key={channel.id}
+                      to={`/${communitySlug}/${channel.slug}`}
                     >
+                      <ChannelName>{channel.name}</ChannelName>
                       <Icon glyph="view-forward" />
-                    </ChannelListItem>
-                  </Link>
+                    </Link>
+                  </ChannelContainer>
                 );
               })}
             </ListContainer>
@@ -119,21 +119,14 @@ class ChannelList extends React.Component<Props> {
                 {sortedJoinedChannels.map(channel => {
                   if (!channel) return null;
                   return (
-                    <ChannelListItemRow key={channel.id}>
+                    <ChannelContainer key={channel.id}>
                       <Link
+                        key={channel.id}
                         to={`/${communitySlug}/${channel.slug}`}
-                        style={{
-                          display: 'flex',
-                          flex: 'auto',
-                        }}
                       >
-                        <ChannelListItem
-                          clickable
-                          contents={channel}
-                          withDescription={false}
-                          channelIcon
-                        />
+                        <ChannelName>{channel.name}</ChannelName>
                       </Link>
+
                       <ToggleChannelNotifications
                         channel={channel}
                         render={state => (
@@ -160,7 +153,7 @@ class ChannelList extends React.Component<Props> {
                           </ToggleNotificationsContainer>
                         )}
                       />
-                    </ChannelListItemRow>
+                    </ChannelContainer>
                   );
                 })}
               </ListContainer>
@@ -175,11 +168,15 @@ class ChannelList extends React.Component<Props> {
                     {sortedNonJoinedChannels.map(channel => {
                       if (!channel) return null;
                       return (
-                        <ChannelProfile
+                        <Link
                           key={channel.id}
-                          profileSize="listItemWithAction"
-                          data={{ channel }}
-                        />
+                          to={`/${communitySlug}/${channel.slug}`}
+                        >
+                          <ChannelContainer>
+                            <ChannelName>{channel.name}</ChannelName>
+                            <Icon glyph="view-forward" />
+                          </ChannelContainer>
+                        </Link>
                       );
                     })}
                   </ul>

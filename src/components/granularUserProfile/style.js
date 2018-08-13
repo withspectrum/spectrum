@@ -54,7 +54,7 @@ export const Name = styled.span`
   color: ${props => props.theme.text.default};
   font-size: 16px;
   font-weight: 600;
-  line-height: 1;
+  line-height: 1.2;
   vertical-align: middle;
   display: flex;
   align-items: flex-end;

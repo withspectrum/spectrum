@@ -9,6 +9,7 @@ import {
   zIndex,
   Gradient,
   Tooltip,
+  Truncate,
 } from '../../components/globals';
 import {
   DesktopSegment,
@@ -263,4 +264,35 @@ export const MessageIconContainer = styled.div`
 
 export const UserListItemContainer = styled.div`
   border-bottom: 1px solid ${props => props.theme.bg.wash};
+`;
+
+export const ChannelContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1 0 auto;
+  justify-content: space-between;
+
+  border-top: 1px solid ${props => props.theme.bg.wash};
+
+  &:first-of-type {
+    border-top: 0;
+  }
+
+  a {
+    padding: 12px 0 12px 16px;
+
+    ${Truncate};
+    max-width: calc(100% - 48px);
+
+    &:hover {
+      color: ${props => props.theme.brand.alt};
+    }
+  }
+`;
+export const ChannelName = styled.span`
+  font-size: 16px;
+  font-weight: 600;
+  max-width: 100%;
+
+  ${Truncate};
 `;
