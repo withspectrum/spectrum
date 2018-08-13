@@ -63,7 +63,7 @@ const generateImageFromText = ({ title, footer }: GetMetaImageInput) => {
     by: 170, // Magic numbers that get the position right
     bx: 180,
     markalign: 'left,bottom', // Show the footer on the left side
-    markpad: 12, // We overwrite the X pos, so the padding only applies on the y-axis
+    markpad: 24, // We overwrite the X pos, so the padding only applies on the y-axis
     markx: 100,
     blend64: btoa(titleUrl).replace(/=/g, ''),
     mark64: btoa(footerUrl).replace(/=/g, ''),
