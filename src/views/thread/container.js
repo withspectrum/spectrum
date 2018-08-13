@@ -479,7 +479,14 @@ class ThreadContainer extends React.Component<Props, State> {
                 title={headTitle}
                 description={headDescription}
                 image={thread.community.profilePhoto}
-              />
+              >
+                <link
+                  rel="canonical"
+                  href={`https://spectrum.chat/${thread.community.slug}/${
+                    thread.channel.slug
+                  }/${slugg(thread.content.title)}~${thread.id}`}
+                />
+              </Head>
               <Titlebar
                 title={thread.content.title}
                 subtitle={`${thread.community.name} / ${thread.channel.name}`}
