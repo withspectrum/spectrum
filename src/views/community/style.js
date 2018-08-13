@@ -296,7 +296,8 @@ export const ChannelContainer = styled.div`
 `;
 export const ChannelName = styled.span`
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 600;
+  color: ${props => props.theme.text.default};
 
   ${Truncate};
 `;
