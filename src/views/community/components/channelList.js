@@ -104,19 +104,75 @@ class ChannelList extends React.Component<Props> {
             </ListContainer>
           )}
 
-          {isMember && (
+          {isMember &&
+            !isOwner && (
+              <ListContainer data-cy="channel-list">
+                {sortedChannels.map(channel => {
+                  if (!channel) return null;
+                  return (
+                    <ChannelContainer key={channel.id}>
+                      <div
+                        style={{ maxWidth: 'calc(100% - 32px', width: '100%' }}
+                      >
+                        <Link to={`/${communitySlug}/${channel.slug}`}>
+                          <ChannelHoverProfile
+                            id={channel.id}
+                            style={{ flex: '1 1 auto', maxWidth: 'calc(100%)' }}
+                          >
+                            <ChannelName>{channel.name}</ChannelName>
+                          </ChannelHoverProfile>
+                        </Link>
+                      </div>
+
+                      <ToggleChannelNotifications
+                        channel={channel}
+                        render={state => (
+                          <ToggleNotificationsContainer
+                            tipLocation={'top-left'}
+                            tipText={
+                              channel.channelPermissions.receiveNotifications
+                                ? 'Turn notifications off'
+                                : 'Turn notifications on'
+                            }
+                          >
+                            {state.isLoading ? (
+                              <Loading />
+                            ) : (
+                              <Icon
+                                size={24}
+                                glyph={
+                                  channel.channelPermissions
+                                    .receiveNotifications
+                                    ? 'notification-fill'
+                                    : 'notification'
+                                }
+                              />
+                            )}
+                          </ToggleNotificationsContainer>
+                        )}
+                      />
+                    </ChannelContainer>
+                  );
+                })}
+              </ListContainer>
+            )}
+
+          {isOwner && (
             <ListContainer data-cy="channel-list">
               {sortedChannels.map(channel => {
                 if (!channel) return null;
                 return (
                   <ChannelContainer key={channel.id}>
                     <div
-                      style={{ maxWidth: 'calc(100% - 32px', width: '100%' }}
+                      style={{ maxWidth: 'calc(100% - 64px', width: '100%' }}
                     >
                       <Link to={`/${communitySlug}/${channel.slug}`}>
                         <ChannelHoverProfile
                           id={channel.id}
-                          style={{ flex: '1 1 auto', maxWidth: 'calc(100%)' }}
+                          style={{
+                            flex: '1 1 auto',
+                            maxWidth: 'calc(100% - 32px)',
+                          }}
                         >
                           <ChannelName>{channel.name}</ChannelName>
                         </ChannelHoverProfile>
@@ -149,6 +205,15 @@ class ChannelList extends React.Component<Props> {
                         </ToggleNotificationsContainer>
                       )}
                     />
+
+                    <Link to={`/${communitySlug}/${channel.slug}/settings`}>
+                      <Icon
+                        glyph="settings"
+                        size={24}
+                        tipLocation={'top-left'}
+                        tipText={'Settings'}
+                      />
+                    </Link>
                   </ChannelContainer>
                 );
               })}
