@@ -11,14 +11,11 @@ import { Loading } from '../../../components/loading';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import { StyledCard, ListContainer } from '../../../components/listItems/style';
-import {
-  ToggleNotificationsContainer,
-  ChannelContainer,
-  ChannelName,
-} from '../style';
+import { ChannelListItem } from 'src/components/listItems';
 import ToggleChannelNotifications from 'src/components/toggleChannelNotifications';
 import { ChannelHoverProfile } from 'src/components/hoverProfile';
 import type { Dispatch } from 'redux';
+import { ToggleNotificationsContainer } from '../style';
 
 type Props = {
   data: {
@@ -85,20 +82,11 @@ class ChannelList extends React.Component<Props> {
               {sortedChannels.map(channel => {
                 if (!channel) return null;
                 return (
-                  <ChannelContainer key={channel.id}>
+                  <ChannelListItem channel={channel} key={channel.id}>
                     <Link to={`/${communitySlug}/${channel.slug}`}>
-                      <ChannelHoverProfile
-                        id={channel.id}
-                        style={{
-                          flex: '1 1 auto',
-                          maxWidth: 'calc(100% - 32px)',
-                        }}
-                      >
-                        <ChannelName>{channel.name}</ChannelName>
-                      </ChannelHoverProfile>
                       <Icon glyph="view-forward" size={24} />
                     </Link>
-                  </ChannelContainer>
+                  </ChannelListItem>
                 );
               })}
             </ListContainer>
@@ -110,20 +98,7 @@ class ChannelList extends React.Component<Props> {
                 {sortedChannels.map(channel => {
                   if (!channel) return null;
                   return (
-                    <ChannelContainer key={channel.id}>
-                      <div
-                        style={{ maxWidth: 'calc(100% - 32px', width: '100%' }}
-                      >
-                        <Link to={`/${communitySlug}/${channel.slug}`}>
-                          <ChannelHoverProfile
-                            id={channel.id}
-                            style={{ flex: '1 1 auto', maxWidth: 'calc(100%)' }}
-                          >
-                            <ChannelName>{channel.name}</ChannelName>
-                          </ChannelHoverProfile>
-                        </Link>
-                      </div>
-
+                    <ChannelListItem channel={channel} key={channel.id}>
                       <ToggleChannelNotifications
                         channel={channel}
                         render={state => (
@@ -151,7 +126,7 @@ class ChannelList extends React.Component<Props> {
                           </ToggleNotificationsContainer>
                         )}
                       />
-                    </ChannelContainer>
+                    </ChannelListItem>
                   );
                 })}
               </ListContainer>
@@ -162,23 +137,7 @@ class ChannelList extends React.Component<Props> {
               {sortedChannels.map(channel => {
                 if (!channel) return null;
                 return (
-                  <ChannelContainer key={channel.id}>
-                    <div
-                      style={{ maxWidth: 'calc(100% - 64px', width: '100%' }}
-                    >
-                      <Link to={`/${communitySlug}/${channel.slug}`}>
-                        <ChannelHoverProfile
-                          id={channel.id}
-                          style={{
-                            flex: '1 1 auto',
-                            maxWidth: 'calc(100% - 32px)',
-                          }}
-                        >
-                          <ChannelName>{channel.name}</ChannelName>
-                        </ChannelHoverProfile>
-                      </Link>
-                    </div>
-
+                  <ChannelListItem channel={channel} key={channel.id}>
                     <ToggleChannelNotifications
                       channel={channel}
                       render={state => (
@@ -214,7 +173,7 @@ class ChannelList extends React.Component<Props> {
                         tipText={'Settings'}
                       />
                     </Link>
-                  </ChannelContainer>
+                  </ChannelListItem>
                 );
               })}
             </ListContainer>

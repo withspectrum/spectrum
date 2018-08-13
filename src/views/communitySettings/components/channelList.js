@@ -17,6 +17,7 @@ import {
   SectionTitle,
   SectionCardFooter,
 } from '../../../components/settingsViews/style';
+import { ChannelListItem } from 'src/components/listItems';
 
 type Props = {
   data: {
@@ -45,17 +46,14 @@ class ChannelList extends React.Component<Props> {
 
           <ListContainer>
             {channels.length > 0 &&
-              channels.map(item => {
-                if (!item) return null;
+              channels.map(channel => {
+                if (!channel) return null;
                 return (
-                  <Link
-                    key={item.id}
-                    to={`/${communitySlug}/${item.slug}/settings`}
-                  >
-                    <div contents={item} withDescription={false}>
+                  <ChannelListItem key={channel.id} channel={channel}>
+                    <Link to={`/${channel.community.slug}/${channel.slug}`}>
                       <IconButton glyph="settings" />
-                    </div>
-                  </Link>
+                    </Link>
+                  </ChannelListItem>
                 );
               })}
           </ListContainer>

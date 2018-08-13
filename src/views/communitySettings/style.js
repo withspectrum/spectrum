@@ -18,8 +18,8 @@ export const ListHeading = styled(H3)`
 `;
 
 export const ListContainer = styled(FlexCol)`
-  margin: 8px 0 0 0;
-  width: 100%;
+  margin: 8px -16px 0;
+  width: calc(100% + 32px);
 `;
 
 export const MoreLink = styled(Link)`
@@ -213,7 +213,9 @@ export const GrowthText = styled.h5`
   color: ${props =>
     props.positive
       ? props.theme.success.default
-      : props.negative ? props.theme.warn.alt : props.theme.text.alt};
+      : props.negative
+        ? props.theme.warn.alt
+        : props.theme.text.alt};
   display: inline-block;
   margin-right: 6px;
   font-size: 14px;

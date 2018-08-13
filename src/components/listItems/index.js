@@ -10,6 +10,7 @@ import type { CommunityInfoType } from 'shared/graphql/fragments/community/commu
 import type { InvoiceInfoType } from 'shared/graphql/fragments/invoice/invoiceInfo';
 import { convertTimestampToDate } from 'shared/time-formatting';
 import Reputation from 'src/components/reputation';
+import ChannelComponent from './channel';
 import {
   Wrapper,
   WrapperLi,
@@ -211,3 +212,5 @@ class InvoiceListItemPure extends React.Component<InvoiceProps> {
 }
 
 export const InvoiceListItem = compose(connect())(InvoiceListItemPure);
+
+export const ChannelListItem = ChannelComponent;
