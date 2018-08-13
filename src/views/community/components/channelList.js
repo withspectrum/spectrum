@@ -12,7 +12,6 @@ import getCommunityChannels from 'shared/graphql/queries/community/getCommunityC
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import { StyledCard, ListContainer } from '../../../components/listItems/style';
 import {
-  ColumnHeading,
   ToggleNotificationsContainer,
   ChannelContainer,
   ChannelName,

@@ -3,7 +3,6 @@ import * as React from 'react';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import Icon from 'src/components/icons';
 import Badge from 'src/components/badges';
 import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
 import { CommunityHoverProfile } from 'src/components/hoverProfile';
