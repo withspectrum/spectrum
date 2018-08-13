@@ -39,6 +39,7 @@ import {
 } from './style';
 import WatercoolerActionBar from './components/watercoolerActionBar';
 import { ErrorBoundary } from 'src/components/error';
+import generateImageFromText from 'src/helpers/generate-image-from-text';
 
 type Props = {
   data: {
@@ -226,7 +227,11 @@ class ThreadContainer extends React.Component<Props, State> {
     // we never autofocus on mobile
     if (window && window.innerWidth < 768) return;
 
-    const { currentUser, data: { thread }, threadSliderIsOpen } = this.props;
+    const {
+      currentUser,
+      data: { thread },
+      threadSliderIsOpen,
+    } = this.props;
 
     // if no thread has been returned yet from the query, we don't know whether or not to focus yet
     if (!thread) return;
@@ -270,7 +275,10 @@ class ThreadContainer extends React.Component<Props, State> {
 
   renderChatInputOrUpsell = () => {
     const { isEditing } = this.state;
-    const { data: { thread }, currentUser } = this.props;
+    const {
+      data: { thread },
+      currentUser,
+    } = this.props;
 
     if (!thread) return null;
     if (thread.isLocked) return null;
@@ -319,7 +327,11 @@ class ThreadContainer extends React.Component<Props, State> {
   };
 
   renderPost = () => {
-    const { data: { thread }, slider, currentUser } = this.props;
+    const {
+      data: { thread },
+      slider,
+      currentUser,
+    } = this.props;
     if (!thread || !thread.id) return null;
 
     if (thread.watercooler) {
@@ -445,8 +457,13 @@ class ThreadContainer extends React.Component<Props, State> {
               <Head
                 title={headTitle}
                 description={headDescription}
-                image={thread.community.profilePhoto}
-              />
+                image={generateImageFromText({
+                  title: headTitle,
+                  footer: `spectrum.chat/${thread.community.slug}`,
+                })}
+              >
+                <meta name="twitter:card" content="summary_large_image" />
+              </Head>
               <Titlebar
                 title={thread.content.title}
                 subtitle={`${thread.community.name} / ${thread.channel.name}`}
