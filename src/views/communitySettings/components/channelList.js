@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { openModal } from '../../../actions/modals';
 import { Loading } from '../../../components/loading';
-import { ChannelListItem } from '../../../components/listItems';
 import { IconButton, Button } from '../../../components/buttons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import ViewError from '../../../components/viewError';
@@ -53,9 +52,9 @@ class ChannelList extends React.Component<Props> {
                     key={item.id}
                     to={`/${communitySlug}/${item.slug}/settings`}
                   >
-                    <ChannelListItem contents={item} withDescription={false}>
+                    <div contents={item} withDescription={false}>
                       <IconButton glyph="settings" />
-                    </ChannelListItem>
+                    </div>
                   </Link>
                 );
               })}
@@ -102,6 +101,8 @@ class ChannelList extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getCommunityChannels, viewNetworkHandler)(
-  ChannelList
-);
+export default compose(
+  connect(),
+  getCommunityChannels,
+  viewNetworkHandler
+)(ChannelList);

@@ -6,10 +6,7 @@ import compose from 'recompose/compose';
 import Icon from 'src/components/icons';
 import Badge from 'src/components/badges';
 import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
-import {
-  CommunityHoverProfile,
-  ChannelHoverProfile,
-} from 'src/components/hoverProfile';
+import { CommunityHoverProfile } from 'src/components/hoverProfile';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import type { InvoiceInfoType } from 'shared/graphql/fragments/invoice/invoiceInfo';
 import { convertTimestampToDate } from 'shared/time-formatting';
@@ -78,32 +75,6 @@ type CardProps = {
   children?: any,
 };
 
-export const ChannelListItem = (props: CardProps): React$Element<any> => {
-  return (
-    <Wrapper clickable={props.clickable}>
-      <ChannelHoverProfile id={props.contents.id} style={{ flex: '1 0 auto' }}>
-        <Row>
-          <Col>
-            <Heading>
-              {props.contents.isPrivate ? (
-                <Icon glyph={'channel-private'} size={32} />
-              ) : (
-                <Icon glyph={'channel'} size={32} />
-              )}
-              {props.contents.name}
-              {props.contents.isArchived && ' (Archived)'}
-            </Heading>
-            <Meta>{props.meta && props.meta}</Meta>
-          </Col>
-          <ActionContainer className={'action'}>
-            {props.children}
-          </ActionContainer>
-        </Row>
-      </ChannelHoverProfile>
-    </Wrapper>
-  );
-};
-
 export const ThreadListItem = (props: CardProps): React$Element<any> => {
   return (
     <Wrapper clickable={props.clickable}>
@@ -114,29 +85,6 @@ export const ThreadListItem = (props: CardProps): React$Element<any> => {
         </Col>
       </Row>
     </Wrapper>
-  );
-};
-
-export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
-  return (
-    <WrapperLi clickable={props.clickable}>
-      <Row>
-        <Col>
-          <Link to={`/${props.contents.community.slug}/${props.contents.slug}`}>
-            <Heading>
-              {props.contents.isPrivate ? (
-                <Icon glyph={'channel-private'} size={32} />
-              ) : (
-                <Icon glyph={'channel'} size={32} />
-              )}
-              {props.contents.name}
-            </Heading>
-          </Link>
-          <Meta>{props.meta}</Meta>
-        </Col>
-        <ActionContainer className={'action'}>{props.children}</ActionContainer>
-      </Row>
-    </WrapperLi>
   );
 };
 

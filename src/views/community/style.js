@@ -231,15 +231,6 @@ export const ColumnHeading = styled.div`
   border-bottom: 2px solid ${props => props.theme.bg.border};
 `;
 
-export const ChannelListItemRow = styled.div`
-  display: flex;
-
-  a {
-    display: flex;
-    flex: auto;
-  }
-`;
-
 export const ToggleNotificationsContainer = styled.div`
   display: flex;
   color: ${props => props.theme.text.alt};
@@ -271,6 +262,7 @@ export const ChannelContainer = styled.div`
   align-items: center;
   flex: 1 0 auto;
   justify-content: space-between;
+  color: ${props => props.theme.text.secondary};
 
   border-top: 1px solid ${props => props.theme.bg.wash};
 
@@ -278,21 +270,33 @@ export const ChannelContainer = styled.div`
     border-top: 0;
   }
 
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
+
   a {
     padding: 12px 0 12px 16px;
+    display: flex;
+    flex: 1 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 100%;
+    color: ${props => props.theme.text.secondary};
 
-    ${Truncate};
-    max-width: calc(100% - 48px);
+    overflow: visible;
 
     &:hover {
-      color: ${props => props.theme.brand.alt};
+      color: ${props => props.theme.text.default};
     }
+  }
+
+  .icon {
+    color: ${props => props.theme.text.alt};
   }
 `;
 export const ChannelName = styled.span`
   font-size: 16px;
-  font-weight: 600;
-  max-width: 100%;
+  font-weight: 400;
 
   ${Truncate};
 `;

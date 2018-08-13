@@ -3,7 +3,6 @@ import React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import User from './user';
-import Channel from './channel';
 import Community from './community';
 import Thread from './thread';
 
@@ -12,9 +11,6 @@ const ProfilePure = (props: Object): React$Element<any> => {
   switch (type) {
     case 'user': {
       return <User {...props} />;
-    }
-    case 'channel': {
-      return <Channel {...props} />;
     }
     case 'community': {
       return <Community {...props} />;

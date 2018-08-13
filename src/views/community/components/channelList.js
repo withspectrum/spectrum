@@ -3,8 +3,6 @@ import * as React from 'react';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { ChannelListItem } from '../../../components/listItems';
-import { ChannelProfile } from '../../../components/profile';
 import { OutlineButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { openModal } from '../../../actions/modals';
@@ -15,12 +13,12 @@ import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/c
 import { StyledCard, ListContainer } from '../../../components/listItems/style';
 import {
   ColumnHeading,
-  ChannelListItemRow,
   ToggleNotificationsContainer,
   ChannelContainer,
   ChannelName,
 } from '../style';
 import ToggleChannelNotifications from 'src/components/toggleChannelNotifications';
+import { ChannelHoverProfile } from 'src/components/hoverProfile';
 import type { Dispatch } from 'redux';
 
 type Props = {
@@ -73,18 +71,8 @@ class ChannelList extends React.Component<Props> {
           return channel;
         })
         .filter(channel => channel && !channel.channelPermissions.isBlocked);
+
       const sortedChannels = this.sortChannels(channels);
-
-      const joinedChannels = channels
-        .slice()
-        .filter(channel => channel && channel.channelPermissions.isMember);
-      const sortedJoinedChannels = this.sortChannels(joinedChannels);
-
-      const nonJoinedChannels = channels
-        .slice()
-        .filter(channel => channel && !channel.channelPermissions.isMember);
-
-      const sortedNonJoinedChannels = this.sortChannels(nonJoinedChannels);
 
       return (
         <StyledCard largeOnly>
@@ -98,13 +86,18 @@ class ChannelList extends React.Component<Props> {
               {sortedChannels.map(channel => {
                 if (!channel) return null;
                 return (
-                  <ChannelContainer>
-                    <Link
-                      key={channel.id}
-                      to={`/${communitySlug}/${channel.slug}`}
-                    >
-                      <ChannelName>{channel.name}</ChannelName>
-                      <Icon glyph="view-forward" />
+                  <ChannelContainer key={channel.id}>
+                    <Link to={`/${communitySlug}/${channel.slug}`}>
+                      <ChannelHoverProfile
+                        id={channel.id}
+                        style={{
+                          flex: '1 1 auto',
+                          maxWidth: 'calc(100% - 32px)',
+                        }}
+                      >
+                        <ChannelName>{channel.name}</ChannelName>
+                      </ChannelHoverProfile>
+                      <Icon glyph="view-forward" size={24} />
                     </Link>
                   </ChannelContainer>
                 );
@@ -112,77 +105,56 @@ class ChannelList extends React.Component<Props> {
             </ListContainer>
           )}
 
-          {/* user is logged in and is a member of community, channel list is used to join/leave */}
-          {sortedJoinedChannels &&
-            isMember && (
-              <ListContainer data-cy="channel-list">
-                {sortedJoinedChannels.map(channel => {
-                  if (!channel) return null;
-                  return (
-                    <ChannelContainer key={channel.id}>
-                      <Link
-                        key={channel.id}
-                        to={`/${communitySlug}/${channel.slug}`}
-                      >
-                        <ChannelName>{channel.name}</ChannelName>
-                      </Link>
-
-                      <ToggleChannelNotifications
-                        channel={channel}
-                        render={state => (
-                          <ToggleNotificationsContainer
-                            tipLocation={'top-left'}
-                            tipText={
-                              channel.channelPermissions.receiveNotifications
-                                ? 'Turn notifications off'
-                                : 'Turn notifications on'
-                            }
-                          >
-                            {state.isLoading ? (
-                              <Loading />
-                            ) : (
-                              <Icon
-                                glyph={
-                                  channel.channelPermissions
-                                    .receiveNotifications
-                                    ? 'notification-fill'
-                                    : 'notification'
-                                }
-                              />
-                            )}
-                          </ToggleNotificationsContainer>
-                        )}
-                      />
-                    </ChannelContainer>
-                  );
-                })}
-              </ListContainer>
-            )}
-
-          {sortedNonJoinedChannels.length > 0 &&
-            isMember && (
-              <React.Fragment>
-                <ColumnHeading>New channels</ColumnHeading>
-                <ListContainer>
-                  <ul>
-                    {sortedNonJoinedChannels.map(channel => {
-                      if (!channel) return null;
-                      return (
-                        <Link
-                          key={channel.id}
-                          to={`/${communitySlug}/${channel.slug}`}
+          {isMember && (
+            <ListContainer data-cy="channel-list">
+              {sortedChannels.map(channel => {
+                if (!channel) return null;
+                return (
+                  <ChannelContainer key={channel.id}>
+                    <div
+                      style={{ maxWidth: 'calc(100% - 32px', width: '100%' }}
+                    >
+                      <Link to={`/${communitySlug}/${channel.slug}`}>
+                        <ChannelHoverProfile
+                          id={channel.id}
+                          style={{ flex: '1 1 auto', maxWidth: 'calc(100%)' }}
                         >
-                          <ChannelContainer>
-                            <ChannelName>{channel.name}</ChannelName>
-                            <Icon glyph="view-forward" />
-                          </ChannelContainer>
-                        </Link>
-                      );
-                    })}
-                  </ul>
-                </ListContainer>
-              </React.Fragment>
-            )}
+                          <ChannelName>{channel.name}</ChannelName>
+                        </ChannelHoverProfile>
+                      </Link>
+                    </div>
+
+                    <ToggleChannelNotifications
+                      channel={channel}
+                      render={state => (
+                        <ToggleNotificationsContainer
+                          tipLocation={'top-left'}
+                          tipText={
+                            channel.channelPermissions.receiveNotifications
+                              ? 'Turn notifications off'
+                              : 'Turn notifications on'
+                          }
+                        >
+                          {state.isLoading ? (
+                            <Loading />
+                          ) : (
+                            <Icon
+                              size={24}
+                              glyph={
+                                channel.channelPermissions.receiveNotifications
+                                  ? 'notification-fill'
+                                  : 'notification'
+                              }
+                            />
+                          )}
+                        </ToggleNotificationsContainer>
+                      )}
+                    />
+                  </ChannelContainer>
+                );
+              })}
+            </ListContainer>
+          )}
 
           {isOwner && (
             <OutlineButton
