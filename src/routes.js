@@ -304,7 +304,13 @@ class Routes extends React.Component<Props> {
                   component={CommunityLoginView}
                 />
                 <Route
-                  path="/:communitySlug/:channelSlug/:threadId"
+                  // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.
+                  // Imagine our threadId is "id-123-id" (similar in shape to an actual UUID)
+                  // - /id-123-id => id-123-id, easy start that works
+                  // - /some-custom-slug~id-123-id => id-123-id, custom slug also works
+                  // - /~id-123-id => id-123-id => id-123-id, empty custom slug also works
+                  // - /some~custom~slug~id-123-id => id-123-id, custom slug with delimiter char in it (~) also works! :tada:
+                  path="/:communitySlug/:channelSlug/(.*~)?:threadId"
                   component={Thread}
                 />
                 <Route
