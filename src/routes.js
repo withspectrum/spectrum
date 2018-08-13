@@ -27,6 +27,7 @@ import Status from './views/status';
 import Login from './views/login';
 import DirectMessages from './views/directMessages';
 import Thread from './views/thread';
+import RedirectOldThreadRoute from './views/thread/redirect-old-route';
 
 /* prettier-ignore */
 const Explore = Loadable({
@@ -233,7 +234,10 @@ class Routes extends React.Component<Props> {
                   component={MessagesFallback}
                 />
                 <Route path="/messages" component={MessagesFallback} />
-                <Route path="/thread/:threadId" component={Thread} />
+                <Route
+                  path="/thread/:threadId"
+                  component={RedirectOldThreadRoute}
+                />
                 <Route path="/thread" render={() => <Redirect to="/" />} />
                 <Route exact path="/users" render={() => <Redirect to="/" />} />
                 <Route exact path="/users/:username" component={UserView} />
@@ -298,6 +302,10 @@ class Routes extends React.Component<Props> {
                 <Route
                   path="/:communitySlug/login"
                   component={CommunityLoginView}
+                />
+                <Route
+                  path="/:communitySlug/:channelSlug/:threadId"
+                  component={Thread}
                 />
                 <Route
                   path="/:communitySlug/:channelSlug"
