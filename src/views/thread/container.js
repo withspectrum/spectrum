@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
+import slugg from 'slugg';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import Titlebar from 'src/views/titlebar';
@@ -50,7 +51,8 @@ type Props = {
   currentUser: Object,
   dispatch: Dispatch<Object>,
   slider: boolean,
-  threadViewContext: 'slider' | 'fullscreen' | 'inbox',
+  // If this is undefined the thread is being viewed in fullscreen
+  threadViewContext?: 'slider' | 'inbox',
   threadSliderIsOpen: boolean,
   client: Object,
 };
@@ -200,6 +202,26 @@ class ThreadContainer extends React.Component<Props, State> {
   };
 
   componentDidUpdate(prevProps) {
+    // If we're loading the thread for the first time make sure the URL is the right one, and if not
+    // redirect to the right one
+    if (
+      !this.props.threadViewContext &&
+      (!prevProps.data ||
+        !prevProps.data.thread ||
+        !prevProps.data.thread.id) &&
+      this.props.data &&
+      this.props.data.thread &&
+      this.props.data.thread.id
+    ) {
+      const { thread } = this.props.data;
+      const properUrl = `/${thread.community.slug}/${
+        thread.channel.slug
+      }/${slugg(thread.content.title)}~${thread.id}`;
+      // $FlowFixMe
+      if (this.props.location.pathname !== properUrl)
+        return this.props.history.replace(properUrl);
+    }
+
     // if the user is in the inbox and changes threads, it should initially scroll
     // to the top before continuing with logic to force scroll to the bottom
     if (
@@ -226,7 +248,11 @@ class ThreadContainer extends React.Component<Props, State> {
     // we never autofocus on mobile
     if (window && window.innerWidth < 768) return;
 
-    const { currentUser, data: { thread }, threadSliderIsOpen } = this.props;
+    const {
+      currentUser,
+      data: { thread },
+      threadSliderIsOpen,
+    } = this.props;
 
     // if no thread has been returned yet from the query, we don't know whether or not to focus yet
     if (!thread) return;
@@ -270,7 +296,10 @@ class ThreadContainer extends React.Component<Props, State> {
 
   renderChatInputOrUpsell = () => {
     const { isEditing } = this.state;
-    const { data: { thread }, currentUser } = this.props;
+    const {
+      data: { thread },
+      currentUser,
+    } = this.props;
 
     if (!thread) return null;
     if (thread.isLocked) return null;
@@ -319,7 +348,11 @@ class ThreadContainer extends React.Component<Props, State> {
   };
 
   renderPost = () => {
-    const { data: { thread }, slider, currentUser } = this.props;
+    const {
+      data: { thread },
+      slider,
+      currentUser,
+    } = this.props;
     if (!thread || !thread.id) return null;
 
     if (thread.watercooler) {
