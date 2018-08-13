@@ -19,7 +19,8 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     loaders.userPermissionsInChannel.load([user.id, channelId]),
   ]);
 
-  if (!permissions || permissions.isBlocked || !permissions.isMember) {
+  // only reject if the user is blocked in the channel
+  if (permissions && permissions.isBlocked) {
     let event = !permissions
       ? events.CHANNEL_NOTIFICATIONS_ENABLED_FAILED
       : permissions.receiveNotifications
@@ -37,7 +38,8 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     return new UserError("You don't have permission to do that.");
   }
 
-  const value = !permissions.receiveNotifications;
+  // if the user hasn't joined the channel, they are trying to join it now
+  const value = permissions ? !permissions.receiveNotifications : true;
 
   return toggleUserChannelNotifications(user.id, channelId, value).then(
     () => channel
