@@ -13,9 +13,9 @@ const IMGIX_TEXT_ENDPOINT = 'https://assets.imgix.net/~text';
 
 const TITLE_PARAMS = {
   w: WIDTH * 0.8, // 10% padding on each side
-  h: 300, // Magic number, clips text after four lines
+  h: 270, // Magic number, clips text after three lines
   txtsize: 56,
-  txtlead: 4,
+  txtlead: 16,
   txtfont: 'Helvetica,Bold',
   txtalign: 'left,middle',
   txtcolor: 'ffffff',
