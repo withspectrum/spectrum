@@ -455,14 +455,12 @@ class ThreadContainer extends React.Component<Props, State> {
 
             <ThreadContentView slider={slider} onScroll={this.handleScroll}>
               <Head
-                title={
-                  isWatercooler
-                    ? `The Watercooler · ${thread.community.name}`
-                    : thread.content.title
-                }
+                title={headTitle}
                 description={headDescription}
                 image={generateImageFromText({
-                  title: headTitle,
+                  title: isWatercooler
+                    ? `Chat with the ${thread.community.name} community`
+                    : thread.content.title,
                   footer: `spectrum.chat/${thread.community.slug}`,
                 })}
               >
