@@ -16,9 +16,9 @@ type SetType = {
 };
 
 export const set = (input: SetType) => {
-  const { key, value, expiration } = input;
+  const { key, value, expiration = 86400 } = input;
 
-  return Redis.set(key, value, 'EX', expiration || 86400)
+  return Redis.set(key, value, 'EX', expiration)
     .get(key)
     .catch(err => {
       console.error(err);
