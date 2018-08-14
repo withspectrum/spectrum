@@ -34,7 +34,6 @@ class ChannelList extends React.Component<Props> {
       data: { community },
       isLoading,
       dispatch,
-      communitySlug,
     } = this.props;
 
     if (community) {

@@ -9,7 +9,6 @@ import {
   zIndex,
   Gradient,
   Tooltip,
-  Truncate,
 } from '../../components/globals';
 import {
   DesktopSegment,

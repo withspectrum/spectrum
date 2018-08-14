@@ -13,7 +13,6 @@ import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/c
 import { StyledCard, ListContainer } from '../../../components/listItems/style';
 import { ChannelListItem } from 'src/components/listItems';
 import ToggleChannelNotifications from 'src/components/toggleChannelNotifications';
-import { ChannelHoverProfile } from 'src/components/hoverProfile';
 import type { Dispatch } from 'redux';
 import { ToggleNotificationsContainer } from '../style';
 
