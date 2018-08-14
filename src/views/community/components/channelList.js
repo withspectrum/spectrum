@@ -70,7 +70,7 @@ class ChannelList extends React.Component<Props> {
       const sortedChannels = this.sortChannels(channels);
 
       return (
-        <StyledCard largeOnly>
+        <StyledCard largeOnly style={{ padding: '0 16px' }}>
           {/*
             user isn't logged in, channel list is used for navigation
             or
@@ -164,14 +164,16 @@ class ChannelList extends React.Component<Props> {
                       )}
                     />
 
-                    <Link to={`/${communitySlug}/${channel.slug}/settings`}>
-                      <Icon
-                        glyph="settings"
-                        size={24}
-                        tipLocation={'top-left'}
-                        tipText={'Settings'}
-                      />
-                    </Link>
+                    <div>
+                      <Link to={`/${communitySlug}/${channel.slug}/settings`}>
+                        <Icon
+                          glyph="settings"
+                          size={28}
+                          tipLocation={'top-left'}
+                          tipText={'Settings'}
+                        />
+                      </Link>
+                    </div>
                   </ChannelListItem>
                 );
               })}

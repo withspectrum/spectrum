@@ -43,14 +43,18 @@ class ChannelList extends React.Component<Props> {
         <SectionCard data-cy="channel-list">
           <SectionTitle>Channels</SectionTitle>
 
-          <ListContainer>
+          <ListContainer style={{ padding: '0 16px' }}>
             {channels.length > 0 &&
               channels.map(channel => {
                 if (!channel) return null;
                 return (
                   <ChannelListItem key={channel.id} channel={channel}>
                     <Link to={`/${channel.community.slug}/${channel.slug}`}>
-                      <IconButton glyph="settings" />
+                      <IconButton
+                        tipText={'Settings'}
+                        tipLocation={'top-left'}
+                        glyph="settings"
+                      />
                     </Link>
                   </ChannelListItem>
                 );

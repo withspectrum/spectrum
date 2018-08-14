@@ -1,6 +1,11 @@
 // @flow
 import * as React from 'react';
-import { ChannelContainer, ChannelNameLink, ChannelName } from './style';
+import {
+  ChannelContainer,
+  ChannelNameLink,
+  ChannelName,
+  ChannelActions,
+} from './style';
 import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
 import { ChannelHoverProfile } from 'src/components/hoverProfile';
 
@@ -24,7 +29,7 @@ class ChannelListItem extends React.Component<Props> {
           </ChannelHoverProfile>
         </ChannelNameLink>
 
-        {children}
+        {children && <ChannelActions>{children}</ChannelActions>}
       </ChannelContainer>
     );
   }

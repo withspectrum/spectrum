@@ -6,9 +6,10 @@ import Link from 'src/components/link';
 export const ChannelContainer = styled.div`
   display: flex;
   align-items: center;
-  flex: 1 0 auto;
+  flex: 1;
   justify-content: space-between;
   color: ${props => props.theme.text.secondary};
+  min-width: 0;
 
   border-top: 1px solid ${props => props.theme.bg.wash};
 
@@ -28,8 +29,9 @@ export const ChannelContainer = styled.div`
 export const ChannelNameLink = styled(Link)`
   display: flex;
   align-items: center;
-  flex: 1 0 auto;
-  padding: 8px 16px;
+  flex: 1;
+  padding: 8px 0;
+  min-width: 0;
 `;
 
 export const ChannelName = styled.span`
@@ -38,4 +40,16 @@ export const ChannelName = styled.span`
   color: ${props => props.theme.text.default};
 
   ${Truncate};
+`;
+
+export const ChannelActions = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 0 1 auto;
+  min-width: 0;
+
+  a {
+    display: flex;
+    align-items: center;
+  }
 `;
