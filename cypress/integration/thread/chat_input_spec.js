@@ -19,7 +19,6 @@ const archivedThread = data.threads.find(
   t =>
     t.communityId === publicCommunity.id && t.channelId === archivedChannel.id
 );
-const lockedThread = data.threads.find(t => t.isLocked);
 
 const nonMemberUser = data.users.find(u => u.id === constants.QUIET_USER_ID);
 const memberInChannelUser = data.users.find(u => u.id === constants.BRIAN_ID);
@@ -115,12 +114,10 @@ describe('chat input', () => {
         .get('[data-cy="reply-to-message"]')
         .first()
         .should('be.visible')
-        .click();
-      cy
-        .get('[data-cy="reply-to-message"]')
-        .first()
-        .should('not.be.visible');
+        .click({ force: true });
+
       cy.get('[data-cy="staged-quoted-message"]').should('be.visible');
+
       // Remove quoted message again
       cy
         .get('[data-cy="remove-staged-quoted-message"]')

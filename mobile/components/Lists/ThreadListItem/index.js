@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Share } from 'react-native';
 import { connectActionSheet } from '@expo/react-native-action-sheet';
 import compose from 'recompose/compose';
@@ -20,6 +21,7 @@ import deleteThreadMutation, {
 } from '../../../../shared/graphql/mutations/thread/deleteThread';
 import pinThreadMutation from '../../../../shared/graphql/mutations/community/pinCommunityThread';
 import triggerDeleteAlert from '../../DeleteAlert';
+import { addToast } from '../../../actions/toasts';
 
 type Props = {
   thread: GetThreadType,
@@ -33,6 +35,7 @@ type Props = {
   pinThread: Function,
   deleteThread: Function,
   toggleThreadNotifications: Function,
+  dispatch: Function,
   // refetches the parent query that resolved this thread - used when
   // a thread is deleted and we want to refetch the parent query, regardless
   // of where that query was called from
@@ -75,12 +78,48 @@ class ThreadListItemHandlers extends Component<Props> {
   };
 
   toggleLockThread = () => {
-    const { thread, setThreadLock } = this.props;
+    const { thread, setThreadLock, dispatch, navigation } = this.props;
 
     return setThreadLock({
       threadId: thread.id,
       value: !thread.isLocked,
-    });
+    })
+      .then(() => {
+        return dispatch(
+          addToast({
+            type: 'neutral',
+            message: thread.isLocked
+              ? 'Conversation unlocked'
+              : 'Conversation locked',
+            onPressHandler: () =>
+              navigation.navigate({
+                routeName: 'Thread',
+                key: thread.id,
+                params: {
+                  id: thread.id,
+                },
+              }),
+            icon: 'checkmark',
+          })
+        );
+      })
+      .catch(err => {
+        return dispatch(
+          addToast({
+            type: 'error',
+            message: 'Unable to lock conversation',
+            onPressHandler: () =>
+              navigation.navigate({
+                routeName: 'Thread',
+                key: thread.id,
+                params: {
+                  id: thread.id,
+                },
+              }),
+            icon: 'checkmark',
+          })
+        );
+      });
   };
 
   togglePinThread = () => {
@@ -122,7 +161,11 @@ class ThreadListItemHandlers extends Component<Props> {
     const canModerateCommunity = isCommunityModerator || isCommunityOwner;
 
     let options, cancelButtonIndex, destructiveButtonIndex;
-    options = [SHARE, MESSAGE_AUTHOR];
+    options = [SHARE];
+
+    if (thread.author.user.id !== currentUser.id) {
+      options = options.concat(MESSAGE_AUTHOR);
+    }
 
     options = options.concat(
       thread.receiveNotifications ? MUTE_CONVERSATION : SUBSCRIBE_CONVERSATION
@@ -169,10 +212,10 @@ class ThreadListItemHandlers extends Component<Props> {
 
     if (action === MESSAGE_AUTHOR) {
       return navigation.navigate({
-        routeName: 'User',
+        routeName: 'DirectMessageComposer',
         key: thread.author.user.id,
         params: {
-          id: thread.author.user.id,
+          presetUserId: thread.author.user.id,
         },
       });
     }
@@ -230,6 +273,9 @@ class ThreadListItemHandlers extends Component<Props> {
       }
       case 'Thread': {
         return navigation.goBack();
+      }
+      case 'ThreadDetail': {
+        return navigation.pop(2);
       }
       default: {
         return () => {};
@@ -295,6 +341,7 @@ class ThreadListItemHandlers extends Component<Props> {
 }
 
 export const ThreadListItem = compose(
+  connect(),
   setThreadLockMutation,
   deleteThreadMutation,
   pinThreadMutation,

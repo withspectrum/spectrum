@@ -74,6 +74,7 @@ class Titlebar extends Component {
         ) : (
           <Icon glyph="logo" />
         )}
+
         {noComposer ? null : messageComposer ? (
           <Link to={`/messages/new`}>
             <IconButton glyph="message-new" color="text.reverse" />

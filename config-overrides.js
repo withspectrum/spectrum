@@ -8,6 +8,7 @@ const debug = require('debug')('build:config-overrides');
 const webpack = require('webpack');
 const { injectBabelPlugin } = require('react-app-rewired');
 const rewireStyledComponents = require('react-app-rewire-styled-components');
+const rewireReactHotLoader = require('react-app-rewire-hot-loader');
 const swPrecachePlugin = require('sw-precache-webpack-plugin');
 const fs = require('fs');
 const path = require('path');
@@ -74,15 +75,19 @@ const transpileShared = config => {
 module.exports = function override(config, env) {
   if (process.env.NODE_ENV === 'development') {
     config.output.path = path.join(__dirname, './build');
+    config = rewireReactHotLoader(config, env);
+    config.plugins.push(
+      WriteFilePlugin({
+        log: true,
+        useHashIndex: false,
+      })
+    );
   }
   config.plugins.push(
     new ReactLoadablePlugin({
       filename: './build/react-loadable.json',
     })
   );
-  if (process.env.NODE_ENV === 'production') {
-    removeEslint(config);
-  }
   config = injectBabelPlugin('react-loadable/babel', config);
   config = transpileShared(config);
   // Filter the default serviceworker plugin, add offline plugin instead
@@ -92,17 +97,48 @@ module.exports = function override(config, env) {
   // Get all public files so they're cached by the SW
   let externals = [];
   walkFolder('./public/', file => {
-    // HOTFIX: Don't cache images
-    if (file.indexOf('img') > -1 && file.indexOf('homescreen-icon') === -1)
-      return;
+    if (file.indexOf('index.html') > -1) return;
     externals.push(file.replace(/public/, ''));
   });
   config.plugins.push(
     new OfflinePlugin({
-      appShell: '/index.html',
-      caches: process.env.NODE_ENV === 'development' ? {} : 'all',
+      // 1. Download and cache the app shell, the bootstrap JS and the main bundle when SW is installed/updated. If downloading of any of them fails, abort caching anything
+      // 2. Download and cache all JS chunks when SW is installed/updated. If downloading some of them fails, cache those specific ones on-demand, i.e. when they are requested by the main bundle
+      // 3. Everything else cache on-demand
+      caches:
+        process.env.NODE_ENV === 'development'
+          ? {}
+          : {
+              main: ['index.html', '**/*main.*js', '**/*bootstrap.*js'],
+              additional: ['**/*.chunk.js'],
+              optional: [':rest:', ':externals:'],
+            },
+      safeToUseOptionalCaches: true,
       externals,
       autoUpdate: true,
+      // NOTE(@mxstbr): Normally this is handled by setting
+      // appShell: './index.html'
+      // but we don't want to serve the app shell for the `/api` and `/auth` routes
+      // which means we have to manually do this and filter any of those routes out
+      cacheMaps: [
+        {
+          match: function(url) {
+            var EXTERNAL_PATHS = ['/api', '/auth'];
+            if (
+              EXTERNAL_PATHS.some(function(path) {
+                return url.pathname.indexOf(path) === 0;
+              })
+            )
+              return false;
+            // This function will be stringified and injected into the ServiceWorker on the client, where
+            // location will be a thing
+            // eslint-disable-next-line no-restricted-globals
+            return new URL('./index.html', location);
+          },
+          requestTypes: ['navigate'],
+        },
+      ],
+      rewrites: arg => arg,
       ServiceWorker: {
         entry: './public/push-sw.js',
         events: true,
@@ -126,14 +162,6 @@ module.exports = function override(config, env) {
   if (process.env.BUNDLE_BUDDY === 'true') {
     config.plugins.push(new BundleBuddyWebpackPlugin());
   }
-  if (process.env.NODE_ENV === 'development') {
-    config.plugins.push(
-      WriteFilePlugin({
-        log: true,
-        useHashIndex: false,
-      })
-    );
-  }
   config.plugins.unshift(
     new webpack.optimize.CommonsChunkPlugin({
       names: ['bootstrap'],
@@ -142,6 +170,7 @@ module.exports = function override(config, env) {
     })
   );
   if (process.env.NODE_ENV === 'production') {
+    removeEslint(config);
     config.plugins.push(
       new webpack.DefinePlugin({
         'process.env': {

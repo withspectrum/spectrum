@@ -10,7 +10,7 @@ import {
 } from '../../components/globals';
 
 export const Wrapper = styled(FlexCol)`
-  flex: 0 0 auto;
+  flex: 1 0 auto;
   padding: 12px 0;
   justify-content: center;
   max-width: 100%;
@@ -47,7 +47,7 @@ export const Col = styled(FlexCol)`
 `;
 
 export const Row = styled(FlexRow)`
-  flex: 0 0 auto;
+  flex: 1 0 auto;
   align-items: flex-center;
 
   a {

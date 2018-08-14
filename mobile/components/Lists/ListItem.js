@@ -1,26 +1,30 @@
 // @flow
 import React, { Component } from 'react';
 import { Row } from '../Flex';
-import TouchableOpacity from '../TouchableOpacity';
-import { ListItemView } from './style';
+import { ListItemView, Divider } from './style';
 
 type ListItemProps = {
   onPressHandler: Function,
   onLongPressHandler?: Function,
+  divider?: boolean,
   children?: any,
 };
 
 export class ListItem extends Component<ListItemProps> {
   render() {
-    const { onPressHandler, onLongPressHandler, children } = this.props;
+    const {
+      onPressHandler,
+      onLongPressHandler,
+      divider = true,
+      children,
+    } = this.props;
     return (
-      <ListItemView>
-        <TouchableOpacity
-          onPress={onPressHandler}
-          onLongPress={onLongPressHandler ? onLongPressHandler : null}
-        >
-          <Row>{children}</Row>
-        </TouchableOpacity>
+      <ListItemView
+        onPress={onPressHandler}
+        onLongPress={onLongPressHandler ? onLongPressHandler : null}
+      >
+        <Row style={{ alignItems: 'center' }}>{children}</Row>
+        {divider && <Divider />}
       </ListItemView>
     );
   }

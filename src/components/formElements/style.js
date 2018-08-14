@@ -214,12 +214,21 @@ export const StyledSuccess = styled.p`
 
 export const PhotoInputLabel = styled.label`
   position: relative;
-  height: ${props => (props.size ? `${props.size}px` : '48px')};
+  height: ${props => `${props.size}px`};
   z-index: ${zIndex.form + 1};
-  width: ${props => (props.size ? `${props.size}px` : '48px')};
-  border-radius: ${props => (props.user ? '100%' : '8px')};
+  width: ${props => `${props.size}px`};
+  border-radius: ${props =>
+    props.type === 'user' ? `${props.size}px` : '8px'};
   margin-top: 8px;
   background-color: ${({ theme }) => theme.bg.reverse};
+`;
+
+export const PhotoInputImage = styled.img`
+  width: ${props => `${props.size}px`};
+  height: ${props => `${props.size}px`};
+  border-radius: ${props =>
+    props.type === 'user' ? `${props.size}px` : '8px'};
+  box-shadow: 0 0 0 2px ${props => props.theme.bg.default};
 `;
 
 export const CoverInputLabel = styled.label`
@@ -242,7 +251,8 @@ export const ProfileImage = styled.img`
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: ${props => (props.user ? '100%' : '8px')};
+  border-radius: ${props =>
+    props.type === 'user' ? `${props.size}px` : '8px'};
   border: 2px solid ${({ theme }) => theme.text.reverse};
 `;
 
@@ -277,8 +287,9 @@ export const InputOverlay = styled.div`
   color: ${({ theme }) => theme.text.reverse};
   background-color: ${({ theme }) => hexa(theme.bg.reverse, 0.6)};
   padding: 8px;
-  border-radius: ${props => (props.user ? '100%' : '8px')};
-  opacity: 0;
+  border-radius: ${props =>
+    props.type === 'user' ? `${props.size}px` : '8px'};
+  opacity: ${props => (props.visible ? '1' : '0')};
   transition: ${Transition.hover.off};
 
   &:hover {

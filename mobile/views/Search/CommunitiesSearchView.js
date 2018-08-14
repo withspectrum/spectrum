@@ -45,13 +45,7 @@ class CommunitiesSearchView extends Component<Props> {
 
       return (
         <SearchView>
-          {!hasResults && (
-            <FullscreenNullState
-              title={'No results found'}
-              subtitle={'Try searching for something else?'}
-              icon={'community'}
-            />
-          )}
+          {!hasResults && <FullscreenNullState title={''} subtitle={''} />}
           {hasResults && (
             <InfiniteList
               data={results}

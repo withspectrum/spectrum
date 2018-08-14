@@ -38,7 +38,7 @@ export const Thread = styled.div`
   display: flex;
   position: absolute;
   right: 0;
-  top: 48px;
+  top: 0;
   bottom: 0;
   width: 650px;
   background: #fff;

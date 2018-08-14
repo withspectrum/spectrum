@@ -6,6 +6,7 @@ import processMessageNotification from './queues/new-message-in-thread';
 import processMentionNotification from './queues/mention-notification';
 import processDirectMessageNotification from './queues/direct-message-notification';
 import processReactionNotification from './queues/reaction-notification';
+import processThreadReactionNotification from './queues/thread-reaction-notification';
 import processChannelNotification from './queues/channel-notification';
 import processCommunityNotification from './queues/community-notification';
 import processThreadNotification from './queues/thread-notification';
@@ -27,6 +28,7 @@ import {
   MENTION_NOTIFICATION,
   DIRECT_MESSAGE_NOTIFICATION,
   REACTION_NOTIFICATION,
+  THREAD_REACTION_NOTIFICATION,
   CHANNEL_NOTIFICATION,
   COMMUNITY_NOTIFICATION,
   THREAD_NOTIFICATION,
@@ -55,6 +57,7 @@ const server = createWorker({
   [MENTION_NOTIFICATION]: processMentionNotification,
   [DIRECT_MESSAGE_NOTIFICATION]: processDirectMessageNotification,
   [REACTION_NOTIFICATION]: processReactionNotification,
+  [THREAD_REACTION_NOTIFICATION]: processThreadReactionNotification,
   [CHANNEL_NOTIFICATION]: processChannelNotification,
   [COMMUNITY_NOTIFICATION]: processCommunityNotification,
   [THREAD_NOTIFICATION]: processThreadNotification,

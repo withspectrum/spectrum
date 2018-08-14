@@ -42,13 +42,36 @@ const UserThreadFeed = compose(getUserThreadConnection)(ThreadFeed);
 class User extends Component<Props, State> {
   state = { feed: 'participant' };
 
-  componentDidUpdate() {
+  setTitle = () => {
+    const { data: { user }, navigation } = this.props;
+    let title;
+    if (user) {
+      title = `${user.name} (@${user.username})`;
+    } else {
+      title = 'Loading user...';
+    }
+
+    const oldTitle = navigation.getParam('title', null);
+    if (oldTitle && oldTitle === title) return;
+    navigation.setParams({ title });
+  };
+
+  setId = () => {
     const { data: { user }, navigation } = this.props;
     if (!user) return;
-    const title = navigation.getParam('title');
-    if (!title && user) return navigation.setParams({ title: user.name });
-    if (title && title !== user.name)
-      return navigation.setParams({ title: user.name });
+    const oldId = navigation.getParam('id', null);
+    if (oldId === user.id) return;
+    navigation.setParams({ id: user.id });
+  };
+
+  componentDidMount() {
+    this.setTitle();
+    this.setId();
+  }
+
+  componentDidUpdate() {
+    this.setTitle();
+    this.setId();
   }
 
   toggleFeed = (feed: string) => this.setState({ feed });

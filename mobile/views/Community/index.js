@@ -12,6 +12,8 @@ import ThreadFeed from '../../components/ThreadFeed';
 import { ThreadListItem } from '../../components/Lists';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
 import Loading from '../../components/Loading';
+import { track, events, transformations } from '../../utils/analytics';
+import JoinButton from './JoinButton';
 
 import {
   Wrapper,
@@ -48,7 +50,7 @@ const RemoteThreadItem = compose(getThreadById, withNavigation)(
         thread={data.thread}
         onPressHandler={() =>
           navigation.navigate({
-            routeName: `Thread`,
+            routeName: 'Thread',
             key: data.thread.id,
             params: { id: data.thread.id },
           })
@@ -61,6 +63,46 @@ const RemoteThreadItem = compose(getThreadById, withNavigation)(
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 
 class Community extends Component<Props> {
+  trackView = () => {
+    const { data: { community } } = this.props;
+    if (!community) return;
+    track(events.COMMUNITY_VIEWED, {
+      community: transformations.analyticsCommunity(community),
+    });
+  };
+
+  setTitle = () => {
+    const { data: { community }, navigation } = this.props;
+    let title;
+    if (community) {
+      title = community.name;
+    } else {
+      title = 'Loading community...';
+    }
+    const oldTitle = navigation.getParam('title', null);
+    if (oldTitle && oldTitle === title) return;
+    navigation.setParams({ title });
+  };
+
+  componentDidMount() {
+    this.trackView();
+    this.setTitle();
+  }
+
+  componentDidUpdate(prev) {
+    const curr = this.props;
+    const first = !prev.data.community && curr.data.community;
+    const changed =
+      prev.data.community &&
+      curr.data.community &&
+      prev.data.community.id !== curr.data.community.id;
+    if (first || changed) {
+      this.trackView();
+    }
+
+    this.setTitle();
+  }
+
   render() {
     const { data: { community }, isLoading, hasError, navigation } = this.props;
 
@@ -91,6 +133,8 @@ class Community extends Component<Props> {
                 <ProfileDetailsContainer>
                   <Name>{community.name}</Name>
                   <Description>{community.description}</Description>
+
+                  <JoinButton community={community} />
                 </ProfileDetailsContainer>
 
                 <ThreadFeedDivider />

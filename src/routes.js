@@ -25,7 +25,6 @@ import ThreadSlider from './views/threadSlider';
 import Navbar from './views/navbar';
 import Status from './views/status';
 import Login from './views/login';
-
 import DirectMessages from './views/directMessages';
 import Thread from './views/thread';
 
@@ -125,28 +124,32 @@ const DashboardFallback = signedOutFallback(Dashboard, Pages);
 const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
 const LoginFallback = signedOutFallback(() => <Redirect to="/" />, Login);
 const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
-  <Redirect to={`/login?r=${CLIENT_URL}/new/community`} />
+  <Login redirectPath={`${CLIENT_URL}/new/community`} />
 ));
 const MessagesFallback = signedOutFallback(DirectMessages, () => (
-  <Redirect to="/login" />
+  <Login redirectPath={`${CLIENT_URL}/messages`} />
 ));
 const UserSettingsFallback = signedOutFallback(UserSettings, () => (
-  <Redirect to="/login" />
+  <Login redirectPath={`${CLIENT_URL}/me/settings`} />
 ));
 const CommunitySettingsFallback = signedOutFallback(CommunitySettings, () => (
-  <Redirect to="/login" />
+  <Login />
 ));
 const ChannelSettingsFallback = signedOutFallback(ChannelSettings, () => (
-  <Redirect to="/login" />
+  <Login />
 ));
 const NotificationsFallback = signedOutFallback(Notifications, () => (
-  <Redirect to="/login" />
+  <Login redirectPath={`${CLIENT_URL}/notifications`} />
 ));
 const ComposerFallback = signedOutFallback(Composer, () => (
-  <Redirect to="/login" />
+  <Login redirectPath={`${CLIENT_URL}/new/thread`} />
 ));
 
-class Routes extends React.Component<{||}> {
+type Props = {
+  currentUser: ?Object,
+};
+
+class Routes extends React.Component<Props> {
   componentDidMount() {
     const AMPLITUDE_API_KEY =
       process.env.NODE_ENV === 'production'
@@ -165,6 +168,7 @@ class Routes extends React.Component<{||}> {
   }
 
   render() {
+    const { currentUser } = this.props;
     const { title, description } = generateMetaInfo();
 
     return (
@@ -205,6 +209,7 @@ class Routes extends React.Component<{||}> {
                 <Route path="/terms.html" component={Pages} />
                 <Route path="/privacy.html" component={Pages} />
                 <Route path="/code-of-conduct" component={Pages} />
+                <Route path="/pricing/concierge" component={Pages} />
                 <Route path="/pricing" component={Pages} />
                 <Route path="/support" component={Pages} />
                 <Route path="/features" component={Pages} />
@@ -240,6 +245,29 @@ class Routes extends React.Component<{||}> {
                 <Route
                   path="/notifications"
                   component={NotificationsFallback}
+                />
+
+                <Route
+                  path="/me/settings"
+                  render={() =>
+                    currentUser && currentUser.username ? (
+                      <Redirect
+                        to={`/users/${currentUser.username}/settings`}
+                      />
+                    ) : (
+                      <Login redirectPath={`${CLIENT_URL}/me/settings`} />
+                    )
+                  }
+                />
+                <Route
+                  path="/me"
+                  render={() =>
+                    currentUser && currentUser.username ? (
+                      <Redirect to={`/users/${currentUser.username}`} />
+                    ) : (
+                      <Login redirectPath={`${CLIENT_URL}/me`} />
+                    )
+                  }
                 />
 
                 {/*
@@ -285,4 +313,6 @@ class Routes extends React.Component<{||}> {
   }
 }
 
+// const map = state => ({ currentUser: state.users.currentUser });
+// $FlowFixMe
 export default Routes;

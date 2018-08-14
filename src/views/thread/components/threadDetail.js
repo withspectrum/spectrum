@@ -1,35 +1,38 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
+import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Link from 'src/components/link';
-import {
-  getLinkPreviewFromUrl,
-  convertTimestampToDate,
-} from '../../../helpers/utils';
+import { getLinkPreviewFromUrl } from 'src/helpers/utils';
 import { timeDifference } from 'shared/time-difference';
+import { convertTimestampToDate } from 'shared/time-formatting';
 import isURL from 'validator/lib/isURL';
-import { URLS } from '../../../helpers/regexps';
-import { openModal } from '../../../actions/modals';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { URLS } from 'src/helpers/regexps';
+import { openModal } from 'src/actions/modals';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import setThreadLockMutation from 'shared/graphql/mutations/thread/lockThread';
 import ThreadByline from './threadByline';
 import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
-import Editor from '../../../components/rich-text-editor';
+import Editor from 'src/components/rich-text-editor';
 import { toJSON, toPlainText, toState } from 'shared/draft-utils';
 import Textarea from 'react-textarea-autosize';
 import ActionBar from './actionBar';
+import ConditionalWrap from 'src/components/conditionalWrap';
+import {
+  UserHoverProfile,
+  CommunityHoverProfile,
+  ChannelHoverProfile,
+} from 'src/components/hoverProfile';
 import {
   ThreadTitle,
   ThreadWrapper,
   ThreadContent,
   ThreadHeading,
-  Timestamp,
-  Edited,
+  ThreadSubtitle,
 } from '../style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
@@ -80,9 +83,12 @@ class ThreadDetailPure extends React.Component<Props, State> {
     linkPreviewLength: 0,
   };
 
-  // $FlowFixMe
   bodyEditor: any;
   titleTextarea: React.Node;
+
+  componentWillMount() {
+    this.setThreadState();
+  }
 
   setThreadState() {
     const { thread } = this.props;
@@ -106,7 +112,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
       data: JSON.parse(rawLinkPreview.data),
     };
 
-    this.setState({
+    return this.setState({
       isEditing: false,
       body: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
@@ -125,10 +131,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
       receiveNotifications: thread.receiveNotifications,
       isSavingEdit: false,
     });
-  }
-
-  componentWillMount() {
-    this.setThreadState();
   }
 
   componentDidUpdate(prevProps) {
@@ -272,7 +274,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
     const filesToUpload = Object.keys(jsonBody.entityMap)
       .filter(
         key =>
-          jsonBody.entityMap[key].type === 'image' &&
+          jsonBody.entityMap[key].type.toLowerCase() === 'image' &&
           jsonBody.entityMap[key].data.file &&
           jsonBody.entityMap[key].data.file.constructor === File
       )
@@ -436,18 +438,34 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isPinningThread,
     } = this.state;
 
+    // if there is no body it means the user is switching threads or the thread
+    // hasnt loaded yet - we need this body for the editor, otherwise the
+    // thread view will crash. If no body exists we return null to wait for
+    // the body to be set in state after the thread loads.
+    if (!body) return null;
+
+    const createdAt = new Date(thread.createdAt).getTime();
+    const timestamp = convertTimestampToDate(createdAt);
+
     const editedTimestamp = thread.modifiedAt
       ? new Date(thread.modifiedAt).getTime()
       : null;
-
-    const createdAtTimestamp = new Date(thread.createdAt).getTime();
 
     return (
       <ThreadWrapper>
         <ThreadContent isEditing={isEditing}>
           {/* $FlowFixMe */}
           <ErrorBoundary fallbackComponent={null}>
-            <ThreadByline author={thread.author} />
+            <ConditionalWrap
+              condition={!!thread.author.user.username}
+              wrap={() => (
+                <UserHoverProfile username={thread.author.user.username}>
+                  <ThreadByline author={thread.author} />
+                </UserHoverProfile>
+              )}
+            >
+              <ThreadByline author={thread.author} />
+            </ConditionalWrap>
           </ErrorBoundary>
 
           {isEditing ? (
@@ -466,15 +484,31 @@ class ThreadDetailPure extends React.Component<Props, State> {
             <ThreadHeading>{thread.content.title}</ThreadHeading>
           )}
 
-          <Link to={`/thread/${thread.id}`}>
-            <Timestamp>{convertTimestampToDate(createdAtTimestamp)}</Timestamp>
-            {thread.modifiedAt && (
-              <Edited>
-                (Edited{' '}
-                {timeDifference(Date.now(), editedTimestamp).toLowerCase()})
-              </Edited>
-            )}
-          </Link>
+          <ThreadSubtitle>
+            <CommunityHoverProfile id={thread.community.id}>
+              <Link to={`/${thread.community.slug}`}>
+                {thread.community.name}
+              </Link>
+            </CommunityHoverProfile>
+            <span>&nbsp;/&nbsp;</span>
+            <ChannelHoverProfile id={thread.channel.id}>
+              <Link to={`/${thread.community.slug}/${thread.channel.slug}`}>
+                {thread.channel.name}
+              </Link>
+            </ChannelHoverProfile>
+          </ThreadSubtitle>
+
+          <ThreadSubtitle>
+            <Link to={`/thread/${thread.id}`}>
+              {timestamp}
+              {thread.modifiedAt && (
+                <React.Fragment>
+                  {' · '}(Edited{' '}
+                  {timeDifference(Date.now(), editedTimestamp).toLowerCase()})
+                </React.Fragment>
+              )}
+            </Link>
+          </ThreadSubtitle>
 
           {/* $FlowFixMe */}
           <Editor

@@ -4,12 +4,12 @@ import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-import { CommunityListItem } from '../../../components/listItems';
-import Icon from '../../../components/icons';
+import { CommunityListItem } from 'src/components/listItems';
+import Icon from 'src/components/icons';
 import { getUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import type { GetUserCommunityConnectionType } from 'shared/graphql/queries/user/getUserCommunityConnection';
 
-import { ListContainer } from '../../../components/listItems/style';
+import { ListContainer } from 'src/components/listItems/style';
 
 type Props = {
   data: {
@@ -59,7 +59,7 @@ class CommunityList extends React.Component<Props> {
                 reputation={
                   community.contextPermissions
                     ? community.contextPermissions.reputation
-                    : '0'
+                    : 0
                 }
               >
                 <Icon glyph="view-forward" />

@@ -18,6 +18,12 @@ export type RemoveCommunityMemberType = {
   },
 };
 
+export type RemoveCommunityMemberProps = {
+  removeCommunityMember: ({ input: { communityId: string } }) => Promise<
+    RemoveCommunityMemberType
+  >,
+};
+
 export const removeCommunityMemberQuery = gql`
   mutation removeCommunityMember($input: RemoveCommunityMemberInput!) {
     removeCommunityMember(input: $input) {

@@ -88,8 +88,8 @@ export const Placeholder = styled.div`
 
 export const PlaceholderLabel = styled.h3`
   font-size: 20px;
-  font-weight: 800;
-  margin-left: 8px;
+  font-weight: 500;
+  margin-left: 16px;
 `;
 
 export const ContentContainer = styled.div`
@@ -169,7 +169,7 @@ export const ComposerUpsell = styled.div`
 
   p {
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 600;
   }
 `;
 
@@ -245,7 +245,7 @@ export const ThreadTitle = {
   outline: 'none',
   border: '0',
   lineHeight: '1.4',
-  fontWeight: '800',
+  fontWeight: '600',
   boxShadow: 'none',
   width: '100%',
   color: '#171A21',

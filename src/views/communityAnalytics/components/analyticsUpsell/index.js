@@ -10,21 +10,24 @@ import { getCardImage } from 'src/views/communityBilling/utils';
 import {
   Container,
   Content,
-  Subtitle,
-  Title,
   Description,
   ActionRow,
   CardInfo,
+  Subtitle,
+  Title,
+  List,
 } from './style';
 import Link from 'src/components/link';
 import { Button, TextButton } from 'src/components/buttons';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
+import type { Node } from 'react';
 
 type Props = {
   community: GetCommunitySettingsType,
   enableCommunityAnalytics: Function,
   dispatch: Dispatch<Object>,
+  children: Node,
 };
 
 type State = {
@@ -104,8 +107,9 @@ class AnalyticsUpsell extends React.Component<Props, State> {
   };
 
   render() {
+    const { community } = this.props;
     const { isLoading } = this.state;
-    const action = this.props.community.hasChargeableSource
+    const action = community.hasChargeableSource
       ? this.initEnableCommunityAnalytics
       : this.initAddPaymentMethod;
 
@@ -116,14 +120,21 @@ class AnalyticsUpsell extends React.Component<Props, State> {
           <Title>Community Analytics</Title>
           <Description>
             Unlock deeper insights into the content and people who make up your
-            community. With analytics you‘ll have a real-time understanding of
-            the health of your community‘s members and conversations.
+            community. Analytics helps you find:
           </Description>
+          <List>
+            <li>Top contributing community members each week</li>
+            <li>
+              The most active conversations in your community by engagement
+            </li>
+            <li>Threads where people haven’t received replies yet</li>
+          </List>
+
           <ActionRow>
             <Button
+              large
               loading={isLoading}
               onClick={action}
-              large
               data-cy="analytics-unlock-upsell-button"
             >
               Unlock Analytics · $100/mo
@@ -134,8 +145,7 @@ class AnalyticsUpsell extends React.Component<Props, State> {
               </TextButton>
             </Link>
           </ActionRow>
-          {this.props.community.hasChargeableSource &&
-            this.getDefaultCardInfo()}
+          {community.hasChargeableSource && this.getDefaultCardInfo()}
         </Content>
       </Container>
     );

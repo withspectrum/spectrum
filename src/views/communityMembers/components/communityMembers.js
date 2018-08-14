@@ -152,8 +152,9 @@ class CommunityMembers extends React.Component<Props, State> {
         onlineSize={'small'}
         reputation={reputation}
         profilePhoto={user.profilePhoto}
-        avatarSize={'40'}
+        avatarSize={40}
         badges={roles}
+        showHoverProfile={false}
       >
         {user.id !== this.props.currentUser.id && (
           <EditDropdown
@@ -187,7 +188,7 @@ class CommunityMembers extends React.Component<Props, State> {
             onClick={this.viewModerators}
             active={filter && filter.isModerator ? true : false}
           >
-            Mods
+            Team
           </Filter>
           <Filter
             onClick={this.viewBlocked}
@@ -353,9 +354,9 @@ class CommunityMembers extends React.Component<Props, State> {
                   return (
                     <ViewError
                       emoji={' '}
-                      heading={'No moderators found'}
+                      heading={'No team members found'}
                       subheading={
-                        "We couldn't find any moderators in your community."
+                        "You haven't added any team members to your community yet."
                       }
                     />
                   );

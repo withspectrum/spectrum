@@ -1,6 +1,8 @@
+// @flow
 const hpp = require('hpp');
 const helmet = require('helmet');
 
+// $FlowFixMe
 function securityMiddleware(server) {
   // Don't expose any software information to hackers.
   server.disable('x-powered-by');

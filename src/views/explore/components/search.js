@@ -266,7 +266,7 @@ class Search extends React.Component<Props, State> {
                         <SearchLink to={`/${community.slug}`}>
                           <SearchResultImage
                             community={community}
-                            src={community.profilePhoto}
+                            showHoverProfile={false}
                           />
                           <SearchResultTextContainer>
                             <SearchResultMetaWrapper>

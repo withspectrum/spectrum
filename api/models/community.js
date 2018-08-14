@@ -118,7 +118,7 @@ export const getVisibleCommunitiesByUser = async (evaluatingUserId: string, curr
   const overlappingMemberships = intersection(evaluatingUserCommunityIds, currentUserCommunityIds)
   const allVisibleCommunityIds = [...publicCommunityIds, ...overlappingMemberships]
   const distinctCommunityIds = allVisibleCommunityIds.filter((x, i, a) => a.indexOf(x) === i)
-  
+
   return await db
     .table('communities')
     .getAll(...distinctCommunityIds)
@@ -160,6 +160,38 @@ export const getCommunitiesMemberCounts = (communityIds: Array<string>) => {
     .table('usersCommunities')
     .getAll(...communityIds, { index: 'communityId' })
     .filter({ isBlocked: false, isMember: true })
+    .group('communityId')
+    .count()
+    .run();
+};
+
+export const getCommunitiesOnlineMemberCounts = (
+  communityIds: Array<string>
+) => {
+  return db
+    .table('usersCommunities')
+    .getAll(...communityIds, {
+      index: 'communityId',
+    })
+    .filter({ isBlocked: false, isMember: true })
+    .pluck(['communityId', 'userId'])
+    .eqJoin('userId', db.table('users'))
+    .pluck('left', { right: ['lastSeen', 'isOnline'] })
+    .zip()
+    .filter(rec =>
+      rec('isOnline')
+        .eq(true)
+        .or(
+          rec('lastSeen')
+            .toEpochTime()
+            .ge(
+              db
+                .now()
+                .toEpochTime()
+                .sub(86400)
+            )
+        )
+    )
     .group('communityId')
     .count()
     .run();
