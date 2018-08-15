@@ -135,13 +135,16 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   }
 
   // all checks pass
-  if (currentUserPermission.isOwner || currentUserPermission.isModerator) {
+  if (
+    userToEvaluatePermission.isOwner ||
+    userToEvaluatePermission.isModerator
+  ) {
     return await makeMemberModeratorInCommunity(communityId, userToEvaluateId)
       .then(communityMember => {
         sendAddedAsCommunityModeratorNotificationQueue.add({
           communityId: communityId,
           moderatorId: userToEvaluateId,
-          userId: currentUser.id,
+          userId: user.id,
         });
         if (recipient.email) {
           sendAddedAsCommunityModeratorEmailQueue.add({
