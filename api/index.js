@@ -105,6 +105,23 @@ const engine = new ApolloEngine({
     hostname: process.env.NOW_URL || undefined,
     privateHeaders: ['authorization', 'Authorization', 'AUTHORIZATION'],
   },
+  stores: [
+    {
+      name: 'InMemoryStore',
+      inMemory: {
+        cacheSize: 104857600, // 100 MB
+      },
+    },
+  ],
+  queryCache: {
+    // Don't cache logged-in user responses
+    privateFullQueryStore: 'disabled',
+  },
+  sessionAuth: {
+    cookie: 'session',
+    // TODO(@mxstbr): Ping Apollo to note that we need both of those
+    // header: 'Authorization'
+  },
 });
 
 engine.listen({
