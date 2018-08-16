@@ -1,7 +1,5 @@
 // @flow
-const debug = require('debug')(
-  'hermes:queue:send-admin-community-created-email'
-);
+const debug = require('debug')('hermes:queue:send-user-reported-email');
 import sendEmail from '../send-email';
 import { getUser } from '../models/user';
 import Raven from 'shared/raven';
@@ -9,10 +7,12 @@ import type { Job, SendUserReportedEmailJobData } from 'shared/bull/types';
 
 export default async (job: Job<SendUserReportedEmailJobData>) => {
   debug(`\nnew job: ${job.id}`);
-  const { userId, message, reportedBy, reportedAt } = job.data;
+  const { userId, reason, reportedBy, reportedAt } = job.data;
 
-  const reportedUser = await getUser(userId);
-  const reportingUser = await getUser(reportedBy);
+  const [reportedUser, reportingUser] = await Promise.all([
+    getUser(userId),
+    getUser(reportedBy),
+  ]);
 
   try {
     return sendEmail({
@@ -22,7 +22,7 @@ export default async (job: Job<SendUserReportedEmailJobData>) => {
       TemplateModel: {
         reportedUser,
         reportingUser,
-        message,
+        reason,
       },
     });
   } catch (err) {

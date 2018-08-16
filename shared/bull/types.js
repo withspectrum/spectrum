@@ -419,7 +419,7 @@ export type IdentifyAnalyticsData = {
 
 export type SendUserReportedEmailJobData = {
   userId: string,
-  message: string,
+  reason: string,
   reportedBy: string,
   reportedAt: Date,
 };

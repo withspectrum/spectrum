@@ -163,7 +163,7 @@ const User = /* GraphQL */ `
 
   input ReportUserInput {
     userId: String!
-    message: String!
+    reason: String!
   }
 
   extend type Mutation {

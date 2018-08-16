@@ -7,26 +7,32 @@ import type { GraphQLContext } from '../../';
 type ReportUserInput = {
   input: {
     userId: string,
-    message: string,
+    reason: string,
   },
 };
 
 export default isAuthedResolver(
-  async (
-    _: any,
-    { input: { userId, message } }: ReportUserInput,
-    { loaders, user }: GraphQLContext
-  ) => {
-    if (user.id === userId) return new UserError('You cannot report yourself.');
+  async (_: any, args: ReportUserInput, ctx: GraphQLContext) => {
+    const {
+      input: { userId, reason },
+    } = args;
+    const { loaders, user: currentUser } = ctx;
+
+    if (currentUser.id === userId) {
+      return new UserError('You cannot report yourself.');
+    }
+
     const reportedUser = await loaders.user.load(userId);
-    if (!reportedUser)
+
+    if (!reportedUser) {
       return new UserError(`User with ID ${userId} does not exist.`);
+    }
 
     try {
       await sendUserReportedEmail.add({
         userId,
-        message,
-        reportedBy: user.id,
+        reason,
+        reportedBy: currentUser.id,
         reportedAt: new Date(),
       });
     } catch (err) {
