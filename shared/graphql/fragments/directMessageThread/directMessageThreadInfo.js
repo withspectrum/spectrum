@@ -11,6 +11,7 @@ export type ParticipantType = {
 export type DirectMessageThreadInfoType = {
   id: string,
   threadLastActive: Date,
+  archivedAt?: Date,
   snippet: string,
   participants: Array<ParticipantType>,
 };

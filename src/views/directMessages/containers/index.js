@@ -44,15 +44,24 @@ type State = {
   subscription: ?Function,
 };
 
-class DirectMessagesContents extends React.Component<{
-  archivedThreads: boolean,
-  data: {
-    user: GetCurrentUserDMThreadConnectionType,
+class DirectMessagesContents extends React.Component<
+  {
+    ...$Exact<Props>,
+    archivedThreads: boolean,
+    currentUser: Object,
+    showActive: Function,
+    showArchived: Function,
+    setActiveThread: Function,
+    activeThread: string,
   },
-}> {
+  {
+    subscription?: any,
+  }
+> {
   state = {
     subscription: null,
   };
+
   subscribe = () => {
     this.setState({
       subscription: this.props.subscribeToUpdatedDirectMessageThreads(),
@@ -101,6 +110,7 @@ class DirectMessagesContents extends React.Component<{
         ? data.user.directMessageThreadsConnection.edges
             .map(thread => thread && thread.node)
             .filter(thread => {
+              if (!thread) return false;
               if (!thread.archivedAt && !archivedThreads) return true;
               if (thread.archivedAt && archivedThreads) return true;
               return false;
@@ -164,7 +174,6 @@ class DirectMessagesContents extends React.Component<{
             currentUser={currentUser}
             isFetchingMore={isFetchingMore}
             isLoading={isLoading}
-            activeTab={this.props.activeTab}
           />
         </MessagesList>
 

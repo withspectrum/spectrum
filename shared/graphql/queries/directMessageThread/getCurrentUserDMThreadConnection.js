@@ -35,15 +35,14 @@ export const getCurrentUserDMThreadConnectionQuery = gql`
 `;
 
 export const getCurrentUserDMThreadConnectionOptions = {
-  options: ({ archivedThreads }: string) => ({
+  options: (p: { archivedThreads?: boolean }) => ({
     variables: {
       after: '',
-      isArchived: archivedThreads,
+      isArchived: p.archivedThreads,
     },
     fetchPolicy: 'cache-and-network',
   }),
-  // $FlowFixMe
-  props: props => ({
+  props: (props: Object) => ({
     ...props,
     fetchMore: () =>
       props.data.fetchMore({

@@ -329,6 +329,7 @@ export type DBUsersDirectMessageThreads = {
   createdAt: Date,
   lastActive?: Date,
   lastSeen?: Date,
+  archivedAt?: Date,
   receiveNotifications: boolean,
   threadId: string,
   userId: string,

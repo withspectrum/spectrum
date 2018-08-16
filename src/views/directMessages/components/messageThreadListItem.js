@@ -38,6 +38,9 @@ type Props = {
   active: boolean,
   currentUser: Object,
   thread: GetDirectMessageThreadType,
+  dispatch: Function,
+  archiveDirectMessageThread: (threadId: string) => Promise<any>,
+  unarchiveDirectMessageThread: (threadId: string) => Promise<any>,
 };
 
 class ListCardItemDirectMessageThread extends Component<Props> {
