@@ -13,7 +13,7 @@ export type GetCurrentUserDMThreadConnectionType = {
 };
 
 const LoadMoreDirectMessageThreads = gql`
-  query loadMoreDirectMessageThreads($after: String) {
+  query loadMoreDirectMessageThreads($after: String, $isArchived: Boolean) {
     user: currentUser {
       ...userInfo
       ...userDirectMessageThreadConnection
@@ -54,7 +54,10 @@ export const getCurrentUserDMThreadConnectionOptions = {
               props.data.user.directMessageThreadsConnection.edges.length - 1
             ].cursor,
           isArchived:
-            props && props.match && props.match.path === '/messages/archived',
+            (props &&
+              props.match &&
+              props.match.path === '/messages/archived') ||
+            false,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult.user) {
