@@ -417,7 +417,7 @@ export type IdentifyAnalyticsData = {
   userId: string,
 };
 
-export type SendUserReportedEmailJobData = {
+export type AdminProcessUserReportedJobData = {
   userId: string,
   reason: string,
   reportedBy: string,
@@ -493,7 +493,6 @@ export type Queues = {
   sendThreadCreatedNotificationEmailQueue: BullQueue<
     SendNewThreadNotificationEmailJobData
   >,
-  sendUserReportedEmail: BullQueue<SendUserReportedEmailJobData>,
 
   // mercury
   processReputationEventQueue: BullQueue<ReputationEventJobData>,
@@ -563,6 +562,7 @@ export type Queues = {
   _adminProcessToxicMessageQueue: BullQueue<AdminToxicMessageJobData>,
   _adminProcessToxicThreadQueue: BullQueue<AdminToxicThreadJobData>,
   _adminProcessSlackImportQueue: BullQueue<AdminSlackImportJobData>,
+  _adminProcessUserReportedQueue: BullQueue<AdminProcessUserReportedJobData>,
   // TODO: Properly type this
   _adminSendToxicContentEmailQueue: BullQueue<any>,
   _adminProcessUserSpammingThreadsQueue: BullQueue<

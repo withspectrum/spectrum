@@ -1,7 +1,7 @@
 // @flow
 import { isAuthedResolver } from '../../utils/permissions';
 import UserError from '../../utils/UserError';
-import { sendUserReportedEmail } from 'shared/bull/queues';
+import { _adminProcessUserReportedQueue } from 'shared/bull/queues';
 import type { GraphQLContext } from '../../';
 
 type ReportUserInput = {
@@ -29,7 +29,7 @@ export default isAuthedResolver(
     }
 
     try {
-      await sendUserReportedEmail.add({
+      await _adminProcessUserReportedQueue.add({
         userId,
         reason,
         reportedBy: currentUser.id,
