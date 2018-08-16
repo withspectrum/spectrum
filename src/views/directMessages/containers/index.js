@@ -22,11 +22,12 @@ import {
   NewMessageLink,
 } from '../style';
 import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   subscribeToUpdatedDirectMessageThreads: Function,
   markDirectMessageNotificationsSeen: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   match: Object,
   currentUser?: Object,
   hasError: boolean,
@@ -185,6 +186,7 @@ class DirectMessages extends React.Component<Props, State> {
             setActiveThread={this.setActiveThread}
             hideOnMobile={!(isComposing || isViewingThread)}
             id={match.params.threadId && match.params.threadId}
+            threads={threads}
           />
         )}
       </View>

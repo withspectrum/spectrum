@@ -1,16 +1,19 @@
+// @flow
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { addToastWithTimeout } from 'src/actions/toasts';
 import Link from 'src/components/link';
-import { timeDifference } from '../../../helpers/utils';
+import { timeDifference } from 'shared/time-difference';
 import { renderAvatars } from './avatars';
 import archiveDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/archiveDirectMessageThread';
 import unarchiveDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/unarchiveDirectMessageThread';
+import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import {
   ArchiveUnarchiveCTA,
   Wrapper,
+  WrapperLink,
   Row,
   Meta,
   MessageGroupTextContainer,
@@ -20,7 +23,13 @@ import {
   GearButton,
 } from './style';
 
-class ListCardItemDirectMessageThread extends Component {
+type Props = {
+  active: boolean,
+  currentUser: Object,
+  thread: GetDirectMessageThreadType,
+};
+
+class ListCardItemDirectMessageThread extends Component<Props> {
   handleGearClick = e => {
     e.stopPropagation(); // We need this since the whole wrapper is clickable
     e.preventDefault();
@@ -99,7 +108,7 @@ class ListCardItemDirectMessageThread extends Component {
 
     return (
       <Wrapper active={active} isUnread={isUnread}>
-        <Link to={`/messages/${thread.id}`}>
+        <WrapperLink to={`/messages/${thread.id}`}>
           <Row>
             {avatars}
             <MessageGroupTextContainer>
@@ -131,7 +140,7 @@ class ListCardItemDirectMessageThread extends Component {
               </Meta>
             </MessageGroupTextContainer>
           </Row>
-        </Link>
+        </WrapperLink>
       </Wrapper>
     );
   }

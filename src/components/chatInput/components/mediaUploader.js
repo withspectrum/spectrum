@@ -87,7 +87,7 @@ class MediaUploader extends React.Component<Props> {
 
   onPaste = (event: any) => {
     // Ensure that the image is only pasted if user focuses input
-    if (!this.props.inputFocused) {
+    if (!event || !this.props.inputFocused) {
       return;
     }
     const items = (event.clipboardData || event.originalEvent.clipboardData)

@@ -20,6 +20,13 @@ export const COMMUNITY_BRANDED_LOGIN_ENABLED_FAILED = 'Community Branded Login E
 export const COMMUNITY_BRANDED_LOGIN_SETTINGS_SAVED = 'Community Branded Login Settings Saved';
 export const COMMUNITY_BRANDED_LOGIN_SETTINGS_SAVED_FAILED = 'Community Branded Login Settings Saved Failed';
 
+export const COMMUNITY_JOIN_TOKEN_ENABLED = 'Community Join Token Enabled';
+export const COMMUNITY_JOIN_TOKEN_ENABLED_FAILED = 'Community Join Token Enabled Failed';
+export const COMMUNITY_JOIN_TOKEN_DISABLED = 'Community Join Token Disabled';
+export const COMMUNITY_JOIN_TOKEN_DISABLED_FAILED = 'Community Join Token Disabled Failed';
+export const COMMUNITY_JOIN_TOKEN_RESET = 'Community Join Token Reset';
+export const COMMUNITY_JOIN_TOKEN_RESET_FAILED = 'Community Join Token Reset Failed';
+
 export const COMMUNITY_ANALYTICS_ENABLED = 'Community Analytics Enabled';
 export const COMMUNITY_ANALYTICS_ENABLED_FAILED = 'Community Analytics Enabled Failed';
 

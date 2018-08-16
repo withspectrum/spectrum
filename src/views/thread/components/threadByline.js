@@ -26,14 +26,7 @@ class ThreadByline extends React.Component<Props> {
 
     return (
       <Byline>
-        <AuthorAvatar
-          user={user}
-          size={40}
-          radius={40}
-          isOnline={user.isOnline}
-          src={user.profilePhoto}
-          link={user.username ? `/users/${user.username}` : false}
-        />
+        <AuthorAvatar user={user} size={40} showHoverProfile={false} />
         <BylineMeta>
           {user.username ? (
             <AuthorNameLink to={`/users/${user.username}`}>

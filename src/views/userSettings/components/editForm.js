@@ -37,6 +37,7 @@ import {
 } from 'src/helpers/images';
 import { Notice } from 'src/components/listItems/style';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
+import type { Dispatch } from 'redux';
 
 type State = {
   website: ?string,
@@ -58,7 +59,7 @@ type State = {
 
 type Props = {
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   client: Object,
   editUser: Function,
 };
@@ -130,6 +131,8 @@ class UserWithData extends React.Component<Props, State> {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (!file) return;
+
     this.setState({
       isLoading: true,
     });
@@ -176,7 +179,9 @@ class UserWithData extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   setCoverPhoto = e => {
@@ -229,7 +234,9 @@ class UserWithData extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   save = e => {
@@ -338,13 +345,11 @@ class UserWithData extends React.Component<Props, State> {
               onChange={this.setCoverPhoto}
               defaultValue={coverPhoto}
               preview={true}
-              allowGif
             />
             <PhotoInput
+              type={'user'}
               onChange={this.setProfilePhoto}
               defaultValue={image}
-              user
-              allowGif
             />
           </ImageInputWrapper>
 

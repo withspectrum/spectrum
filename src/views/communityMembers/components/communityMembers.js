@@ -2,11 +2,13 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { withApollo } from 'react-apollo';
 import { Loading } from '../../../components/loading';
 import GetMembers from './getMembers';
 import EditDropdown from './editDropdown';
 import Search from './search';
+import queryString from 'query-string';
 import {
   SectionCard,
   SectionTitle,
@@ -26,13 +28,15 @@ import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
 import ViewError from '../../../components/viewError';
 import GranularUserProfile from '../../../components/granularUserProfile';
 import { Notice } from '../../../components/listItems/style';
+import type { Dispatch } from 'redux';
 
 type Props = {
   id: string,
   client: Object,
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   history: Object,
+  location: Object,
   community: Object,
 };
 
@@ -59,9 +63,33 @@ class CommunityMembers extends React.Component<Props, State> {
 
   state = this.initialState;
 
+  componentDidMount() {
+    const { filter } = queryString.parse(this.props.location.search);
+    if (!filter) return;
+
+    if (filter === 'pending') {
+      return this.viewPending();
+    }
+
+    if (filter === 'moderators') {
+      return this.viewModerators();
+    }
+
+    if (filter === 'blocked') {
+      return this.viewBlocked();
+    }
+  }
+
   viewMembers = () => {
     return this.setState({
       filter: { isMember: true, isBlocked: false },
+      searchIsFocused: false,
+    });
+  };
+
+  viewPending = () => {
+    return this.setState({
+      filter: { isPending: true },
       searchIsFocused: false,
     });
   };
@@ -124,8 +152,9 @@ class CommunityMembers extends React.Component<Props, State> {
         onlineSize={'small'}
         reputation={reputation}
         profilePhoto={user.profilePhoto}
-        avatarSize={'40'}
+        avatarSize={40}
         badges={roles}
+        showHoverProfile={false}
       >
         {user.id !== this.props.currentUser.id && (
           <EditDropdown
@@ -159,7 +188,7 @@ class CommunityMembers extends React.Component<Props, State> {
             onClick={this.viewModerators}
             active={filter && filter.isModerator ? true : false}
           >
-            Moderators
+            Team
           </Filter>
           <Filter
             onClick={this.viewBlocked}
@@ -167,6 +196,15 @@ class CommunityMembers extends React.Component<Props, State> {
           >
             Blocked
           </Filter>
+
+          {community.isPrivate && (
+            <Filter
+              onClick={this.viewPending}
+              active={filter && filter.isPending ? true : false}
+            >
+              Pending
+            </Filter>
+          )}
 
           <SearchFilter onClick={this.initSearch}>
             <SearchForm onSubmit={this.search}>
@@ -176,10 +214,6 @@ class CommunityMembers extends React.Component<Props, State> {
                 type={'text'}
                 placeholder={'Search'}
               />
-              {searchString &&
-                searchIsFocused && (
-                  <Icon glyph={'send-fill'} size={28} onClick={this.search} />
-                )}
             </SearchForm>
           </SearchFilter>
         </Filters>
@@ -253,7 +287,8 @@ class CommunityMembers extends React.Component<Props, State> {
                 return (
                   <ListContainer data-cy="community-settings-members-list">
                     {filter &&
-                      filter.isBlocked && (
+                      filter.isBlocked &&
+                      !community.isPrivate && (
                         <Notice>
                           <strong>A note about blocked users:</strong> Your
                           community is publicly viewable (except for private
@@ -319,9 +354,21 @@ class CommunityMembers extends React.Component<Props, State> {
                   return (
                     <ViewError
                       emoji={' '}
-                      heading={'No moderators found'}
+                      heading={'No team members found'}
                       subheading={
-                        "We couldn't find any moderators in your community."
+                        "You haven't added any team members to your community yet."
+                      }
+                    />
+                  );
+                }
+
+                if (filter && filter.isPending) {
+                  return (
+                    <ViewError
+                      emoji={' '}
+                      heading={'No pending members found'}
+                      subheading={
+                        'There are no pending members in your community.'
                       }
                     />
                   );
@@ -342,5 +389,6 @@ const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
   // $FlowIssue
   connect(map),
-  withApollo
+  withApollo,
+  withRouter
 )(CommunityMembers);

@@ -36,6 +36,7 @@ import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessag
 import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
+import type { Dispatch } from 'redux';
 
 const QuotedMessage = connect()(
   getMessageById(props => {
@@ -72,7 +73,7 @@ type State = {
 type Props = {
   onRef: Function,
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   onChange: Function,
   state: Object,
   createThread: Function,
@@ -211,6 +212,13 @@ class ChatInput extends React.Component<Props, State> {
     this.props.onRef(undefined);
   }
 
+  componentDidUpdate(prevProps) {
+    const curr = this.props;
+    if (curr.quotedMessage !== prevProps.quotedMessage) {
+      this.triggerFocus();
+    }
+  }
+
   handleKeyDown = (event: any) => {
     const key = event.keyCode || event.charCode;
     // Detect esc key or backspace key (and empty message) to remove
@@ -256,7 +264,7 @@ class ChatInput extends React.Component<Props, State> {
     // decorators that are passed to the editor are removed from the editor
     // state
     setTimeout(() => {
-      this.editor && this.editor.focus();
+      this.editor && this.editor.focus && this.editor.focus();
     }, 0);
   };
 
@@ -338,6 +346,9 @@ class ChatInput extends React.Component<Props, State> {
           : toPlainText(state),
         messageType: !isAndroid() ? 'draftjs' : 'text',
       });
+      localStorage.removeItem(LS_DM_KEY);
+      localStorage.removeItem(LS_DM_KEY_EXPIRE);
+
       clear();
       return 'handled';
     }
@@ -396,7 +407,7 @@ class ChatInput extends React.Component<Props, State> {
     // refocus the input
     setTimeout(() => {
       clear();
-      this.editor && this.editor.focus();
+      this.editor && this.editor.focus && this.editor.focus();
     });
 
     return 'handled';
@@ -542,7 +553,9 @@ class ChatInput extends React.Component<Props, State> {
       }
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   onFocus = () => {
@@ -597,7 +610,10 @@ class ChatInput extends React.Component<Props, State> {
         mediaPreview: reader.result.toString(),
         isSendingMediaMessage: false,
       });
-    reader.readAsDataURL(blob);
+
+    if (blob) {
+      reader.readAsDataURL(blob);
+    }
   };
 
   render() {
@@ -699,10 +715,10 @@ class ChatInput extends React.Component<Props, State> {
           </ChatInputWrapper>
         </ChatInputContainer>
         <MarkdownHint showHint={markdownHint} data-cy="markdownHint">
-          <b>**bold**</b>
-          <i>*italics*</i>
+          <b>*bold*</b>
+          <i>_italic_</i>
           <Preformatted>`code`</Preformatted>
-          <Preformatted>```preformatted```</Preformatted>
+          <Preformatted>```codeblock```</Preformatted>
         </MarkdownHint>
       </React.Fragment>
     );

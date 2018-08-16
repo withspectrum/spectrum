@@ -3,6 +3,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { SearchInput, SearchForm, SearchInputDiv } from '../style';
 import Icon from '../../../components/icons';
+import type { Dispatch } from 'redux';
 import {
   closeSearch,
   openSearch,
@@ -10,7 +11,7 @@ import {
 } from '../../../actions/dashboardFeed';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   filter: {
     communityId?: ?string,
     channelId?: ?string,
@@ -55,7 +56,7 @@ class ThreadSearch extends React.Component<Props, State> {
 
   open = () => {
     this.props.dispatch(openSearch());
-    this.searchInput.focus();
+    this.searchInput && this.searchInput.focus();
   };
 
   close = () => {
@@ -63,7 +64,7 @@ class ThreadSearch extends React.Component<Props, State> {
       this.props.dispatch(closeSearch());
       this.props.dispatch(setSearchStringVariable(''));
     }
-    this.searchInput.blur();
+    this.searchInput && this.searchInput.blur();
   };
 
   clearClose = () => {

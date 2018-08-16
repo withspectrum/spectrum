@@ -8,10 +8,9 @@ import Constants from '../../mobile/node_modules/expo/src/Constants';
 export const IS_PROD = process.env.NODE_ENV === 'production';
 // TODO(@mxstbr): Make this BASE_URI be based on the computer's IP address
 // so you can query your local API from a device
-export const DEV_BASE_URI =
-  Constants.isDevice && !IS_PROD
-    ? Constants.manifest.debuggerHost.replace(/:\d+/, ':3001')
-    : 'localhost:3001';
+export const DEV_BASE_URI = !IS_PROD
+  ? Constants.manifest.debuggerHost.replace(/:\d+/, ':3001')
+  : 'localhost:3001';
 
 // In production the API is at the same URL, in development it's at a different port
 export const API_URI = IS_PROD

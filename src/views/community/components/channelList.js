@@ -19,19 +19,22 @@ import {
   ToggleNotificationsContainer,
 } from '../style';
 import ToggleChannelNotifications from 'src/components/toggleChannelNotifications';
+import type { Dispatch } from 'redux';
 
 type Props = {
   data: {
     community: GetCommunityChannelConnectionType,
   },
   isLoading: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   currentUser: Object,
   communitySlug: string,
 };
 
 class ChannelList extends React.Component<Props> {
-  sortChannels = (array: Array<any>): Array<any> => {
+  sortChannels = (array: Array<any>): Array<?any> => {
+    if (!array || array.length === 0) return [];
+
     const generalChannel = array.find(channel => channel.slug === 'general');
     const withoutGeneral = array.filter(channel => channel.slug !== 'general');
     const sortedWithoutGeneral = withoutGeneral.sort((a, b) => {

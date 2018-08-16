@@ -67,7 +67,8 @@ export const Waterfall = styled.img`
   height: 100vh;
   max-height: 90vw;
   z-index: 0;
-  transition: all 0.2s ease-in-out;
+  transition: top 0.2s ease-in-out, height 0.2s ease-in-out,
+    left 0.2s ease-in-out;
 
   @media (max-width: 1480px) {
     top: -20vh;

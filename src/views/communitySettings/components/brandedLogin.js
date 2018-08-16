@@ -22,6 +22,7 @@ import { Button, OutlineButton } from 'src/components/buttons';
 import { TextArea, Error } from 'src/components/formElements';
 import saveBrandedLoginSettings from 'shared/graphql/mutations/community/saveBrandedLoginSettings';
 import { addToastWithTimeout } from '../../../actions/toasts';
+import type { Dispatch } from 'redux';
 
 type Props = {
   data: {
@@ -29,7 +30,7 @@ type Props = {
   },
   ...$Exact<ViewNetworkHandlerType>,
   saveBrandedLoginSettings: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {

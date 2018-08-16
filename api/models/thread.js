@@ -153,6 +153,13 @@ export const getViewableThreadsByUser = async (
     .map(userChannel => userChannel('channelId'))
     .run();
 
+  const getCurrentUserCommunityIds = db
+    .table('usersCommunities')
+    .getAll(currentUser, { index: 'userId' })
+    .filter({ isMember: true })
+    .map(userCommunity => userCommunity('communityId'))
+    .run();
+
   // get a list of the channels where the user posted a thread
   const getPublishedChannelIds = db
     .table('threads')
@@ -160,9 +167,22 @@ export const getViewableThreadsByUser = async (
     .map(thread => thread('channelId'))
     .run();
 
-  const [currentUsersChannelIds, publishedChannelIds] = await Promise.all([
+  const getPublishedCommunityIds = db
+    .table('threads')
+    .getAll(evalUser, { index: 'creatorId' })
+    .map(thread => thread('communityId'))
+    .run();
+
+  const [
+    currentUsersChannelIds,
+    publishedChannelIds,
+    currentUsersCommunityIds,
+    publishedCommunityIds,
+  ] = await Promise.all([
     getCurrentUsersChannelIds,
     getPublishedChannelIds,
+    getCurrentUserCommunityIds,
+    getPublishedCommunityIds,
   ]);
 
   // get a list of all the channels that are public
@@ -173,16 +193,32 @@ export const getViewableThreadsByUser = async (
     .map(channel => channel('id'))
     .run();
 
-  const allIds = [...currentUsersChannelIds, ...publicChannelIds];
+  const publicCommunityIds = await db
+    .table('communities')
+    .getAll(...publishedCommunityIds)
+    .filter({ isPrivate: false })
+    .map(community => community('id'))
+    .run();
+
+  const allIds = [
+    ...currentUsersChannelIds,
+    ...currentUsersCommunityIds,
+    ...publicChannelIds,
+    ...publicCommunityIds,
+  ];
   const distinctIds = allIds.filter((x, i, a) => a.indexOf(x) == i);
-  const validIds = intersection(distinctIds, publishedChannelIds);
+  let validChannelIds = intersection(distinctIds, publishedChannelIds);
+  let validCommunityIds = intersection(distinctIds, publishedCommunityIds);
 
   // takes ~70ms for a heavy load
   return await db
     .table('threads')
     .getAll(evalUser, { index: 'creatorId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .filter(thread => db.expr(validIds).contains(thread('channelId')))
+    .filter(thread => db.expr(validChannelIds).contains(thread('channelId')))
+    .filter(thread =>
+      db.expr(validCommunityIds).contains(thread('communityId'))
+    )
     .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .skip(after || 0)
     .limit(first)
@@ -200,6 +236,10 @@ export const getPublicThreadsByUser = (evalUser: string, options: PaginationOpti
     .getAll(evalUser, { index: 'creatorId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .eqJoin('channelId', db.table('channels'))
+    .filter({ right: { isPrivate: false } })
+    .without('right')
+    .zip()
+    .eqJoin('communityId', db.table('communities'))
     .filter({ right: { isPrivate: false } })
     .without('right')
     .zip()
@@ -223,6 +263,13 @@ export const getViewableParticipantThreadsByUser = async (
     .map(userChannel => userChannel('channelId'))
     .run();
 
+  const getCurrentUserCommunityIds = db
+    .table('usersCommunities')
+    .getAll(currentUser, { index: 'userId' })
+    .filter({ isMember: true })
+    .map(userCommunity => userCommunity('communityId'))
+    .run();
+
   // get a list of the channels where the user participated in a thread
   const getParticipantChannelIds = db
     .table('usersThreads')
@@ -233,14 +280,34 @@ export const getViewableParticipantThreadsByUser = async (
     .pluck('channelId', 'threadId')
     .run();
 
-  const [currentUsersChannelIds, participantChannelIds] = await Promise.all([
+  const getParticipantCommunityIds = db
+    .table('usersThreads')
+    .getAll(evalUser, { index: 'userId' })
+    .filter({ isParticipant: true })
+    .eqJoin('threadId', db.table('threads'))
+    .zip()
+    .pluck('communityId', 'threadId')
+    .run();
+
+  const [
+    currentUsersChannelIds,
+    participantChannelIds,
+    currentUsersCommunityIds,
+    participantCommunityIds,
+  ] = await Promise.all([
     getCurrentUsersChannelIds,
     getParticipantChannelIds,
+    getCurrentUserCommunityIds,
+    getParticipantCommunityIds,
   ]);
 
   const participantThreadIds = participantChannelIds.map(c => c.threadId);
   const distinctParticipantChannelIds = participantChannelIds
     .map(c => c.channelId)
+    .filter((x, i, a) => a.indexOf(x) == i);
+
+  const distinctParticipantCommunityIds = participantCommunityIds
+    .map(c => c.communityId)
     .filter((x, i, a) => a.indexOf(x) == i);
 
   // get a list of all the channels that are public
@@ -251,15 +318,37 @@ export const getViewableParticipantThreadsByUser = async (
     .map(channel => channel('id'))
     .run();
 
-  const allIds = [...currentUsersChannelIds, ...publicChannelIds];
+  const publicCommunityIds = await db
+    .table('communities')
+    .getAll(...distinctParticipantCommunityIds)
+    .filter({ isPrivate: false })
+    .map(community => community('id'))
+    .run();
+
+  const allIds = [
+    ...currentUsersChannelIds,
+    ...publicChannelIds,
+    ...currentUsersCommunityIds,
+    ...publicCommunityIds,
+  ];
   const distinctIds = allIds.filter((x, i, a) => a.indexOf(x) == i);
-  const validIds = intersection(distinctIds, distinctParticipantChannelIds);
+  let validChannelIds = intersection(
+    distinctIds,
+    distinctParticipantChannelIds
+  );
+  let validCommunityIds = intersection(
+    distinctIds,
+    distinctParticipantCommunityIds
+  );
 
   return await db
     .table('threads')
     .getAll(...participantThreadIds)
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .filter(thread => db.expr(validIds).contains(thread('channelId')))
+    .filter(thread => db.expr(validChannelIds).contains(thread('channelId')))
+    .filter(thread =>
+      db.expr(validCommunityIds).contains(thread('communityId'))
+    )
     .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .skip(after || 0)
     .limit(first)
@@ -290,6 +379,10 @@ export const getPublicParticipantThreadsByUser = (evalUser: string, options: Pag
     .zip()
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .eqJoin('channelId', db.table('channels'))
+    .filter({ right: { isPrivate: false } })
+    .without('right')
+    .zip()
+    .eqJoin('communityId', db.table('communities'))
     .filter({ right: { isPrivate: false } })
     .without('right')
     .zip()

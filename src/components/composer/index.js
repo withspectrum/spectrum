@@ -28,6 +28,7 @@ import { TextButton, Button } from '../buttons';
 import { FlexRow } from '../../components/globals';
 import { LoadingSelect } from '../loading';
 import Titlebar from '../../views/titlebar';
+import type { Dispatch } from 'redux';
 import {
   Container,
   ThreadDescription,
@@ -69,7 +70,7 @@ type Props = {
     loading: boolean,
   },
   isOpen: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   publishThread: Function,
   history: Object,
   location: Object,
@@ -283,7 +284,7 @@ class ComposerWithData extends Component<Props, State> {
     const title = e.target.value;
     this.persistTitleToLocalStorageWithDebounce(title);
     if (/\n$/g.test(title)) {
-      this.bodyEditor.focus();
+      this.bodyEditor.focus && this.bodyEditor.focus();
       return;
     }
     this.setState({
@@ -473,7 +474,12 @@ class ComposerWithData extends Component<Props, State> {
 
     // Get the images
     const filesToUpload = Object.keys(jsonBody.entityMap)
-      .filter(key => jsonBody.entityMap[key].type === 'image')
+      .filter(
+        key =>
+          jsonBody.entityMap[key].type.toLowerCase() === 'image' &&
+          jsonBody.entityMap[key].data.file &&
+          jsonBody.entityMap[key].data.file.constructor === File
+      )
       .map(key => jsonBody.entityMap[key].data.file);
 
     // this.props.mutate comes from a higher order component defined at the

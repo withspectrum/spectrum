@@ -31,6 +31,7 @@ import {
   SectionTitle,
 } from '../../../components/settingsViews/style';
 import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type State = {
   name: string,
@@ -50,7 +51,7 @@ type State = {
 
 type Props = {
   community: GetCommunityType,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   editCommunity: Function,
 };
 
@@ -119,6 +120,8 @@ class EditForm extends React.Component<Props, State> {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (!file) return;
+
     this.setState({
       isLoading: true,
     });
@@ -149,6 +152,8 @@ class EditForm extends React.Component<Props, State> {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (!file) return;
+
     this.setState({
       isLoading: true,
     });
@@ -170,7 +175,9 @@ class EditForm extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   save = e => {
@@ -302,11 +309,9 @@ class EditForm extends React.Component<Props, State> {
             />
 
             <PhotoInput
+              type={'community'}
               onChange={this.setCommunityPhoto}
               defaultValue={image}
-              community
-              user={null}
-              allowGif
             />
           </ImageInputWrapper>
 

@@ -21,14 +21,16 @@ export default (args: Args, { loaders, user }: GraphQLContext) => {
           ? events.SEARCHED_COMMUNITY_MEMBERS
           : events.SEARCHED_USERS;
 
-      trackQueue.add({
-        userId: user.id,
-        event,
-        properties: {
-          queryString,
-          hitsCount: content.hits ? content.hits.length : 0,
-        },
-      });
+      if (user && user.id) {
+        trackQueue.add({
+          userId: user.id,
+          event,
+          properties: {
+            queryString,
+            hitsCount: content.hits ? content.hits.length : 0,
+          },
+        });
+      }
 
       if (!content.hits || content.hits.length === 0) return [];
 

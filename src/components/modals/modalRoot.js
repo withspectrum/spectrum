@@ -25,6 +25,8 @@ const MODAL_COMPONENTS = {
   ADMIN_EMAIL_ADDRESS_VERIFICATION_MODAL: AdminEmailAddressVerificationModal,
 };
 
+export type ModalTypes = $Keys<typeof MODAL_COMPONENTS>;
+
 /*
   Takes a modalType and modalProps to dynamically return the
   modal component we imported above

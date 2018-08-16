@@ -158,7 +158,7 @@ export const Meta = styled(Column)`
   }
 
   @media (max-width: 768px) {
-    padding: 0 32px;
+    padding: 0 16px;
 
     > div {
       margin-left: 0;

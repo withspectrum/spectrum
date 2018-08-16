@@ -9,6 +9,7 @@ import { Input, Error } from '../../../components/formElements';
 import { Notice } from '../../../components/listItems/style';
 import { Button } from '../../../components/buttons';
 import updateAdministratorEmailMutation from 'shared/graphql/mutations/community/updateAdministratorEmail';
+import type { Dispatch } from 'redux';
 import { EmailForm } from '../style';
 import {
   SectionCard,
@@ -18,7 +19,7 @@ import {
 
 type Props = {
   id: string,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   community: GetCommunitySettingsType,
   updateAdministratorEmail: Function,
 };

@@ -1,6 +1,7 @@
 // @flow
+import type { ModalTypes } from 'src/components/modals/modalRoot';
 
-export const openModal = (name: string, props?: Object) => {
+export const openModal = (name: ModalTypes, props?: Object) => {
   return {
     type: 'SHOW_MODAL',
     modalType: name,

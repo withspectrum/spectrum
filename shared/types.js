@@ -41,6 +41,7 @@ export type DBCommunity = {
   stripeCustomerId: ?string,
   pendingAdministratorEmail?: string,
   ossVerified?: boolean,
+  isPrivate: boolean,
 };
 
 export type DBCommunitySettings = {
@@ -59,6 +60,10 @@ export type DBCommunitySettings = {
     token: ?string,
     invitesMemberCount: ?string,
     invitesCustomMessage: ?string,
+  },
+  joinSettings: {
+    tokenJoinEnabled: boolean,
+    token: ?string,
   },
 };
 
@@ -123,6 +128,7 @@ export type DBMessage = {
 
 export type NotificationPayloadType =
   | 'REACTION'
+  | 'THREAD_REACTION'
   | 'MESSAGE'
   | 'THREAD'
   | 'CHANNEL'
@@ -132,9 +138,9 @@ export type NotificationPayloadType =
 
 export type NotificationEventType =
   | 'REACTION_CREATED'
+  | 'THREAD_REACTION_CREATED'
   | 'MESSAGE_CREATED'
   | 'THREAD_CREATED'
-  | 'THREAD_EDITED'
   | 'CHANNEL_CREATED'
   | 'DIRECT_MESSAGE_THREAD_CREATED'
   | 'USER_JOINED_COMMUNITY'
@@ -142,7 +148,13 @@ export type NotificationEventType =
   | 'USER_APPROVED_TO_JOIN_PRIVATE_CHANNEL'
   | 'THREAD_LOCKED_BY_OWNER'
   | 'THREAD_DELETED_BY_OWNER'
-  | 'COMMUNITY_INVITATION';
+  | 'COMMUNITY_INVITE'
+  | 'MENTION_THREAD'
+  | 'MENTION_MESSAGE'
+  | 'PRIVATE_CHANNEL_REQUEST_SENT'
+  | 'PRIVATE_CHANNEL_REQUEST_APPROVED'
+  | 'PRIVATE_COMMUNITY_REQUEST_SENT'
+  | 'PRIVATE_COMMUNITY_REQUEST_APPROVED';
 
 type NotificationPayload = {
   id: string,
@@ -165,6 +177,15 @@ export type DBReaction = {
   messageId: string,
   timestamp: Date,
   type: ReactionType,
+  userId: string,
+};
+
+export type DBThreadReaction = {
+  id: string,
+  threadId: string,
+  createdAt: Date,
+  type: ReactionType,
+  deletedAt?: Date,
   userId: string,
 };
 
@@ -297,6 +318,7 @@ export type DBUsersCommunities = {
   isMember: boolean,
   isModerator: boolean,
   isOwner: boolean,
+  isPending: boolean,
   receiveNotifications: boolean,
   reputation: number,
   userId: string,

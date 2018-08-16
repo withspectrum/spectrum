@@ -14,13 +14,15 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { MessageIconContainer, ListColumn } from '../style';
 import GranularUserProfile from 'src/components/granularUserProfile';
+import { UpsellTeamMembers } from 'src/components/upsell';
+import type { Dispatch } from 'redux';
 
 type Props = {
   data: {
     community: GetCommunityMembersType,
     fetchMore: Function,
   },
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isLoading: boolean,
   isFetchingMore: boolean,
   history: Object,
@@ -28,12 +30,19 @@ type Props = {
 };
 
 class CommunityModeratorList extends React.Component<Props> {
-  shouldComponentUpdate() {
+  shouldComponentUpdate(nextProps) {
     // NOTE(@brian) This is needed to avoid conflicting the the members tab in
     // the community view. See https://github.com/withspectrum/spectrum/pull/2613#pullrequestreview-105861623
     // for discussion
     // never update once we have the list of team members
-    if (this.props.data && this.props.data.community) return false;
+    if (
+      this.props.data &&
+      this.props.data.community &&
+      nextProps.data.community
+    ) {
+      if (this.props.data.community.id === nextProps.data.community.id)
+        return false;
+    }
     return true;
   }
 
@@ -43,18 +52,26 @@ class CommunityModeratorList extends React.Component<Props> {
   };
 
   render() {
-    const { data: { community }, isLoading, currentUser } = this.props;
+    const {
+      data: { community },
+      isLoading,
+      currentUser,
+    } = this.props;
 
     if (community && community.members) {
       const { edges: members } = community.members;
       const nodes = members
         .map(member => member && member.node)
-        .filter(node => node && (node.isOwner || node.isModerator));
+        .filter(node => node && (node.isOwner || node.isModerator))
+        .filter(Boolean);
+
+      const currentUserIsOwner =
+        currentUser &&
+        nodes.find(node => node.user.id === currentUser.id && node.isOwner);
 
       return (
         <ListColumn>
           {nodes.map(node => {
-            if (!node) return null;
             const { user, roles } = node;
 
             return (
@@ -80,6 +97,12 @@ class CommunityModeratorList extends React.Component<Props> {
               </GranularUserProfile>
             );
           })}
+          {currentUserIsOwner && (
+            <UpsellTeamMembers
+              communitySlug={community.slug}
+              small={nodes.length > 1}
+            />
+          )}
         </ListColumn>
       );
     }

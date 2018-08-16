@@ -1,14 +1,13 @@
 // @flow
 import React from 'react';
 import Titlebar from '../../../views/titlebar';
-import { LoadingThreadDetail, LoadingChat } from '../../../components/loading';
+import { LoadingThreadDetail } from '../../../components/loading';
 import Sidebar from './sidebar';
 import {
   ThreadViewContainer,
   ThreadContentView,
   Content,
   Detail,
-  ChatWrapper,
 } from '../style';
 
 type PropTypes = {
@@ -27,9 +26,6 @@ const LoadingView = ({ threadViewContext = 'fullscreen' }: PropTypes) => (
       <Content>
         <Detail type="only">
           <LoadingThreadDetail />
-          <ChatWrapper>
-            <LoadingChat />
-          </ChatWrapper>
         </Detail>
       </Content>
     </ThreadContentView>

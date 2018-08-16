@@ -12,10 +12,11 @@ import {
   SectionCardFooter,
 } from '../../../components/settingsViews/style';
 import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   channel: GetChannelType,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 class Channel extends React.Component<Props> {

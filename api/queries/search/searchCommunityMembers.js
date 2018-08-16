@@ -16,14 +16,16 @@ export default (args: Args, { loaders, user }: GraphQLContext) => {
   return usersSearchIndex
     .search({ query: queryString, hitsPerPage })
     .then(content => {
-      trackQueue.add({
-        userId: user.id,
-        event: events.SEARCHED_COMMUNITY_MEMBERS,
-        properties: {
-          queryString,
-          hitsCount: content.hits ? content.hits.length : 0,
-        },
-      });
+      if (user && user.id) {
+        trackQueue.add({
+          userId: user.id,
+          event: events.SEARCHED_COMMUNITY_MEMBERS,
+          properties: {
+            queryString,
+            hitsCount: content.hits ? content.hits.length : 0,
+          },
+        });
+      }
 
       if (!content.hits || content.hits.length === 0) return [];
       // if no search filter was passed, there's no way to be searching for
@@ -31,6 +33,7 @@ export default (args: Args, { loaders, user }: GraphQLContext) => {
       if (searchFilter && !searchFilter.communityId) return [];
       const userIds = content.hits.map(o => o.objectID);
       const input = userIds.map(userId => {
+        /*eslint array-callback-return: "off"*/
         if (!searchFilter || !searchFilter.communityId) return;
         return [userId, searchFilter.communityId];
       });

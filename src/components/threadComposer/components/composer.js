@@ -38,10 +38,11 @@ import {
   DisconnectedWarning,
 } from '../style';
 import { events, track } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   isOpen: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isLoading: boolean,
   activeChannel?: string,
   activeCommunity?: string,
@@ -312,7 +313,8 @@ class ThreadComposerWithData extends React.Component<Props, State> {
         this.props.dispatch(addToastWithTimeout('error', err.message))
       );
 
-    this.refs.titleTextarea.focus();
+    if (this.titleTextarea && this.titleTextarea.focus)
+      this.titleTextarea.focus();
   }
 
   componentWillUpdate(nextProps) {
@@ -350,7 +352,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
   changeTitle = e => {
     const title = e.target.value;
     if (/\n$/g.test(title)) {
-      this.bodyEditor.focus();
+      this.bodyEditor.focus && this.bodyEditor.focus();
       return;
     }
     persistTitle(title);
@@ -547,7 +549,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     const filesToUpload = Object.keys(jsonBody.entityMap)
       .filter(
         key =>
-          jsonBody.entityMap[key].type === 'image' &&
+          jsonBody.entityMap[key].type.toLowerCase() === 'image' &&
           jsonBody.entityMap[key].data.file &&
           jsonBody.entityMap[key].data.file.constructor === File
       )
@@ -708,7 +710,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
                 style={ThreadTitle}
                 value={this.state.title}
                 placeholder={'What do you want to talk about?'}
-                ref="titleTextarea"
+                innerRef={ref => (this.titleTextarea = ref)}
                 autoFocus
               />
 

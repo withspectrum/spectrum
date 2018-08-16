@@ -8,6 +8,7 @@ import CommunityLogin from 'src/views/communityLogin';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import { Loading } from 'src/components/loading';
 import { CLIENT_URL } from 'src/api/constants';
+import type { Dispatch } from 'redux';
 
 type Props = {
   match: Object,
@@ -15,7 +16,7 @@ type Props = {
   history: Object,
   joinChannelWithToken: Function,
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {

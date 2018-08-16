@@ -10,13 +10,13 @@ const channelsByCommunitiesQuery = (...communityIds: string[]) =>
   db
     .table('channels')
     .getAll(...communityIds, { index: 'communityId' })
-    .filter(channel => db.not(channel.hasFields('deletedAt')));
+    .filter(channel => channel.hasFields('deletedAt').not());
 
 const channelsByIdsQuery = (...channelIds: string[]) =>
   db
     .table('channels')
     .getAll(...channelIds)
-    .filter(channel => db.not(channel.hasFields('deletedAt')));
+    .filter(channel => channel.hasFields('deletedAt').not());
 
 const threadsByChannelsQuery = (...channelIds: string[]) =>
   channelsByIdsQuery(...channelIds)
@@ -75,7 +75,7 @@ const getChannelsByUserAndCommunity = async (communityId: string, userId: string
 
   const usersChannelsIds = usersChannels.map(c => c.channelId);
   const allPossibleChannels = [...publicChannels, ...usersChannelsIds];
-  const distinct = allPossibleChannels.filter((x, i, a) => a.indexOf(x) == i);
+  const distinct = allPossibleChannels.filter((x, i, a) => a.indexOf(x) === i);
   return distinct;
 };
 

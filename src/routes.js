@@ -3,29 +3,28 @@ import * as React from 'react';
 import { Route, Switch, Redirect } from 'react-router';
 import styled, { ThemeProvider } from 'styled-components';
 import Loadable from 'react-loadable';
-import ErrorBoundary from 'react-error-boundary';
+import { ErrorBoundary } from 'src/components/error';
 import { CLIENT_URL } from './api/constants';
 import generateMetaInfo from 'shared/generate-meta-info';
 import './reset.css.js';
-import { theme } from './components/theme';
+import { theme } from 'shared/theme';
 import { FlexCol } from './components/globals';
 import ScrollManager from './components/scrollManager';
 import Head from './components/head';
 import ModalRoot from './components/modals/modalRoot';
 import Gallery from './components/gallery';
 import Toasts from './components/toasts';
-import Maintenance from './components/maintenance';
 import { Loading, LoadingScreen } from './components/loading';
 import LoadingDashboard from './views/dashboard/components/dashboardLoading';
 import Composer from './components/composer';
 import signedOutFallback from './helpers/signed-out-fallback';
 import AuthViewHandler from './views/authViewHandler';
 import PrivateChannelJoin from './views/privateChannelJoin';
+import PrivateCommunityJoin from './views/privateCommunityJoin';
 import ThreadSlider from './views/threadSlider';
 import Navbar from './views/navbar';
 import Status from './views/status';
 import Login from './views/login';
-
 import DirectMessages from './views/directMessages';
 import Thread from './views/thread';
 
@@ -123,55 +122,58 @@ const Body = styled(FlexCol)`
 
 const DashboardFallback = signedOutFallback(Dashboard, Pages);
 const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
+const LoginFallback = signedOutFallback(() => <Redirect to="/" />, Login);
 const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
-  <Redirect to={`/login?r=${CLIENT_URL}/new/community`} />
+  <Login redirectPath={`${CLIENT_URL}/new/community`} />
 ));
 const MessagesFallback = signedOutFallback(DirectMessages, () => (
-  <Redirect to="/login" />
+  <Login redirectPath={`${CLIENT_URL}/messages`} />
 ));
 const UserSettingsFallback = signedOutFallback(UserSettings, () => (
-  <Redirect to="/login" />
+  <Login redirectPath={`${CLIENT_URL}/me/settings`} />
 ));
 const CommunitySettingsFallback = signedOutFallback(CommunitySettings, () => (
-  <Redirect to="/login" />
+  <Login />
 ));
 const ChannelSettingsFallback = signedOutFallback(ChannelSettings, () => (
-  <Redirect to="/login" />
+  <Login />
 ));
 const NotificationsFallback = signedOutFallback(Notifications, () => (
-  <Redirect to="/login" />
+  <Login redirectPath={`${CLIENT_URL}/notifications`} />
 ));
 const ComposerFallback = signedOutFallback(Composer, () => (
-  <Redirect to="/login" />
+  <Login redirectPath={`${CLIENT_URL}/new/thread`} />
 ));
 
 type Props = {
-  maintenanceMode?: boolean,
+  currentUser: ?Object,
 };
 
 class Routes extends React.Component<Props> {
-  render() {
-    const { title, description } = generateMetaInfo();
-
-    if (this.props.maintenanceMode) {
-      return (
-        <ThemeProvider theme={theme}>
-          <ScrollManager>
-            <Body>
-              <Head
-                title="Ongoing Maintenance - Spectrum"
-                description="Spectrum is currently undergoing scheduled maintenance downtime. Please check https://twitter.com/withspectrum for ongoing updates."
-              />
-              <Maintenance />
-            </Body>
-          </ScrollManager>
-        </ThemeProvider>
-      );
+  componentDidMount() {
+    const AMPLITUDE_API_KEY =
+      process.env.NODE_ENV === 'production'
+        ? process.env.AMPLITUDE_API_KEY
+        : process.env.AMPLITUDE_API_KEY_DEVELOPMENT;
+    if (AMPLITUDE_API_KEY) {
+      try {
+        window.amplitude.getInstance().init(AMPLITUDE_API_KEY);
+        window.amplitude.getInstance().setOptOut(false);
+      } catch (err) {
+        console.warn('Unable to start tracking', err.message);
+      }
+    } else {
+      console.warn('No amplitude api key, tracking in development mode');
     }
+  }
+
+  render() {
+    const { currentUser } = this.props;
+    const { title, description } = generateMetaInfo();
 
     return (
       <ThemeProvider theme={theme}>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <ErrorBoundary fallbackComponent={ErrorFallback}>
           <ScrollManager>
             <Body>
               {/* Default meta tags, get overriden by anything further down the tree */}
@@ -207,6 +209,7 @@ class Routes extends React.Component<Props> {
                 <Route path="/terms.html" component={Pages} />
                 <Route path="/privacy.html" component={Pages} />
                 <Route path="/code-of-conduct" component={Pages} />
+                <Route path="/pricing/concierge" component={Pages} />
                 <Route path="/pricing" component={Pages} />
                 <Route path="/support" component={Pages} />
                 <Route path="/features" component={Pages} />
@@ -222,7 +225,7 @@ class Routes extends React.Component<Props> {
                   render={() => <Redirect to="/new/community" />}
                 />
 
-                <Route path="/login" component={Login} />
+                <Route path="/login" component={LoginFallback} />
                 <Route path="/explore" component={Explore} />
                 <Route path="/messages/new" component={MessagesFallback} />
                 <Route path="/messages/archived" component={MessagesFallback} />
@@ -243,6 +246,29 @@ class Routes extends React.Component<Props> {
                 <Route
                   path="/notifications"
                   component={NotificationsFallback}
+                />
+
+                <Route
+                  path="/me/settings"
+                  render={() =>
+                    currentUser && currentUser.username ? (
+                      <Redirect
+                        to={`/users/${currentUser.username}/settings`}
+                      />
+                    ) : (
+                      <Login redirectPath={`${CLIENT_URL}/me/settings`} />
+                    )
+                  }
+                />
+                <Route
+                  path="/me"
+                  render={() =>
+                    currentUser && currentUser.username ? (
+                      <Redirect to={`/users/${currentUser.username}`} />
+                    ) : (
+                      <Login redirectPath={`${CLIENT_URL}/me`} />
+                    )
+                  }
                 />
 
                 {/*
@@ -267,6 +293,10 @@ class Routes extends React.Component<Props> {
                   component={CommunitySettingsFallback}
                 />
                 <Route
+                  path="/:communitySlug/join/:token"
+                  component={PrivateCommunityJoin}
+                />
+                <Route
                   path="/:communitySlug/login"
                   component={CommunityLoginView}
                 />
@@ -284,4 +314,6 @@ class Routes extends React.Component<Props> {
   }
 }
 
+// const map = state => ({ currentUser: state.users.currentUser });
+// $FlowFixMe
 export default Routes;

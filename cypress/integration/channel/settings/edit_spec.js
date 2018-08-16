@@ -41,10 +41,6 @@ describe('edit a channel', () => {
       .should('be.visible')
       .click();
 
-    cy.get('[data-cy="save-button"]').should('be.disabled');
-
-    cy.get('[data-cy="save-button"]').should('not.be.disabled');
-
     cy.visit(`/${community.slug}/${channel.slug}`);
     cy.get('[data-cy="channel-profile-full"]').should('be.visible');
     cy.get('[data-cy="channel-profile-full"]').contains(NEW_NAME);

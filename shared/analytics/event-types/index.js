@@ -9,13 +9,16 @@ import * as miscEvents from './misc'
 import * as navigationEvents from './navigation'
 import * as notificationsEvents from './notifications'
 import * as pageExploreEvents from './page-explore'
+import * as pageFeatureEvents from './page-features'
 import * as pageHomeEvents from './page-home'
 import * as pageInboxEvents from './page-inbox'
 import * as pageLoginEvents from './page-login'
 import * as pagePricingEvents from './page-pricing'
+import * as pageConciergeEvents from './page-concierge'
 import * as pageSupportEvents from './page-support'
 import * as pwaEvents from './pwa'
 import * as reactionEvents from './reaction'
+import * as threadReactionEvents from './threadReaction'
 import * as searchEvents from './search'
 import * as threadEvents from './thread'
 import * as userEvents from './user'
@@ -33,14 +36,17 @@ export const events = {
   ...navigationEvents,
   ...notificationsEvents,
   ...pageExploreEvents,
+  ...pageFeatureEvents,
   ...pageHomeEvents,
   ...pageInboxEvents,
   ...pageLoginEvents,
   ...pagePricingEvents,
+  ...pageConciergeEvents,
   ...pageSupportEvents,
   ...pagePricingEvents,
   ...pwaEvents,
   ...reactionEvents,
+  ...threadReactionEvents,
   ...searchEvents,
   ...threadEvents,
   ...userEvents,

@@ -10,6 +10,7 @@ import { ListContainer, Notice } from 'src/components/listItems/style';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import { EmailListItem } from '../style';
 import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type State = {
   webPushBlocked: boolean,
@@ -18,7 +19,7 @@ type State = {
 
 type Props = {
   subscribeToWebPush: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   smallOnly?: boolean,
   largeOnly?: boolean,
 };
@@ -124,7 +125,11 @@ class NotificationSettings extends React.Component<Props, State> {
                   You have blocked browser push notifications on this device!
                 </strong>{' '}
                 Unblock them by following{' '}
-                <a href="https://support.sendpulse.com/456261-How-to-Unblock-Web-Push-Notifications">
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://support.sendpulse.com/456261-How-to-Unblock-Web-Push-Notifications"
+                >
                   these steps
                 </a>.
               </Notice>

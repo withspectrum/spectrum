@@ -1,12 +1,16 @@
 // @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import compose from 'recompose/compose';
-import { View, FlatList } from 'react-native';
-import Text from '../Text';
+import { View } from 'react-native';
 import ViewNetworkHandler from '../ViewNetworkHandler';
-import ThreadItem from '../ThreadItem';
+import { ThreadListItem, LoadingListItem } from '../Lists';
 import InfiniteList from '../InfiniteList';
+import Loading from '../Loading';
 import type { ThreadConnectionType } from '../../../shared/graphql/fragments/community/communityThreadConnection';
+import type { FlatListProps } from 'react-native';
+import ErrorBoundary from '../ErrorBoundary';
+import { withCurrentUser } from '../WithCurrentUser';
+import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -16,28 +20,33 @@ import type { ThreadConnectionType } from '../../../shared/graphql/fragments/com
   See 'gql/community/communityThreads.js' for an example of the prop mapping in action
 */
 
-import { CenteredView } from './style';
+import { FullscreenNullState } from '../NullStates';
 
 type State = {
   subscription: ?Function,
 };
 
-type Props = {
+type Props = {|
+  ...$Exact<FlatListProps>,
   isLoading: boolean,
   isFetchingMore: boolean,
   isRefetching: boolean,
   hasError: boolean,
   navigation: Object,
+  activeChannel?: string,
+  activeCommunity?: string,
+  currentUser: GetUserType,
   // This is necessary so we can listen to updates
   channels?: string[],
+  noThreadsFallback?: any,
   data: {
     subscribeToUpdatedThreads: Function,
     fetchMore: () => Promise<any>,
     threadConnection: ThreadConnectionType,
   },
-};
+|};
 
-class ThreadFeed extends React.Component<Props, State> {
+class ThreadFeed extends Component<Props, State> {
   constructor() {
     super();
     this.state = {
@@ -94,6 +103,8 @@ class ThreadFeed extends React.Component<Props, State> {
       !isLoading &&
       !hasError &&
       !isRefetching &&
+      threadConnection &&
+      threadConnection.pageInfo &&
       threadConnection.pageInfo.hasNextPage
     ) {
       fetchMore();
@@ -102,51 +113,82 @@ class ThreadFeed extends React.Component<Props, State> {
 
   render() {
     const {
+      data,
       data: { threadConnection },
       isLoading,
-      isFetchingMore,
       hasError,
       navigation,
+      activeChannel,
+      activeCommunity,
+      isFetchingMore,
+      isRefetching,
+      channels,
+      currentUser,
+      noThreadsFallback: NoThreadsFallback,
+      ...flatListProps
     } = this.props;
 
     if (threadConnection && threadConnection.edges.length > 0) {
+      const hasNextPage =
+        threadConnection &&
+        threadConnection.pageInfo &&
+        threadConnection.pageInfo.hasNextPage;
       return (
         <View data-cy="thread-feed" style={{ flex: 1 }}>
+          {isRefetching && <LoadingListItem />}
+
           <InfiniteList
+            loadingIndicator={<Loading />}
+            fetchMore={this.fetchMore}
+            isFetchingMore={this.props.isFetchingMore}
+            hasNextPage={hasNextPage}
+            isRefetching={this.props.isRefetching}
+            refetch={this.props.data.refetch}
             data={threadConnection.edges}
             renderItem={({ item }) => (
-              <ThreadItem navigation={navigation} thread={item.node} />
+              <ErrorBoundary fallbackComponent={null}>
+                <ThreadListItem
+                  refetch={this.props.data.refetch}
+                  thread={item.node}
+                  activeChannel={activeChannel}
+                  activeCommunity={activeCommunity}
+                  currentUser={currentUser}
+                  onPressHandler={() =>
+                    navigation.navigate({
+                      routeName: 'Thread',
+                      key: item.node.id,
+                      params: { id: item.node.id },
+                    })
+                  }
+                />
+              </ErrorBoundary>
             )}
-            loadingIndicator={<Text>Loading...</Text>}
-            fetchMore={this.fetchMore}
-            hasNextPage={threadConnection.pageInfo.hasNextPage}
+            {...flatListProps}
           />
         </View>
       );
     }
 
     if (isLoading) {
-      return (
-        <CenteredView>
-          <Text type="body">Loading...</Text>
-        </CenteredView>
-      );
+      return <Loading />;
     }
 
     if (hasError) {
-      return (
-        <CenteredView>
-          <Text type="body">Error!</Text>
-        </CenteredView>
-      );
+      return <FullscreenNullState />;
+    }
+
+    if (NoThreadsFallback) {
+      return <NoThreadsFallback />;
     }
 
     return (
-      <CenteredView>
-        <Text type="body">Nothing here yet!</Text>
-      </CenteredView>
+      <FullscreenNullState
+        title={'No threads were found'}
+        subtitle={''}
+        icon={'thread'}
+      />
     );
   }
 }
 
-export default compose(ViewNetworkHandler)(ThreadFeed);
+export default compose(withCurrentUser, ViewNetworkHandler)(ThreadFeed);

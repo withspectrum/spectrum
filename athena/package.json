@@ -8,16 +8,16 @@
     "axios": "^0.16.2",
     "bull": "3.3.10",
     "cryptr": "^3.0.0",
-    "draft-js": "^0.10.3",
+    "draft-js": "^0.10.5",
     "emoji-regex": "^6.5.1",
-    "expo-server-sdk": "^2.3.3",
+    "expo-server-sdk": "^2.4.0",
     "node-env-file": "^0.1.8",
-    "now-env": "^3.0.1",
-    "raven": "^2.1.1",
-    "rethinkdbdash": "^2.3.29",
-    "source-map-support": "^0.4.15",
+    "now-env": "^3.1.0",
+    "raven": "^2.6.3",
+    "rethinkdbdash": "^2.3.31",
+    "source-map-support": "^0.4.18",
     "toobusy-js": "^0.5.1",
-    "validator": "^9.2.0",
-    "web-push": "^3.2.2"
+    "validator": "^9.4.1",
+    "web-push": "^3.3.2"
   }
 }

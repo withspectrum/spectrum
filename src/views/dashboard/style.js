@@ -1,6 +1,5 @@
 // @flow
 import styled, { css, keyframes } from 'styled-components';
-import Link from 'src/components/link';
 import {
   zIndex,
   Truncate,
@@ -25,9 +24,8 @@ export const DashboardWrapper = styled.main`
 
 export const InboxWrapper = styled.div`
   display: flex;
-  width: 40%;
-  max-width: 480px;
-  min-width: 360px;
+  flex: 0 0 440px;
+  width: 440px;
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
@@ -36,8 +34,8 @@ export const InboxWrapper = styled.div`
   border-right: 1px solid ${props => props.theme.bg.border};
 
   @media (min-resolution: 120dpi) {
-    max-width: 400px;
-    min-width: 400px;
+    max-width: 440px;
+    min-width: 440px;
   }
 
   @media (max-width: 768px) {
@@ -191,7 +189,7 @@ export const CommunityListItem = styled.div`
   grid-auto-rows: 48px auto;
   grid-template-areas: 'icon title' 'menu menu';
   min-height: 48px;
-  padding: 6px 8px;
+  padding: 8px;
   justify-items: start;
   align-items: center;
   cursor: pointer;
@@ -202,7 +200,9 @@ export const CommunityListItem = styled.div`
 
   box-shadow: ${props =>
     props.active
-      ? `0 1px 0 ${props.theme.bg.border}, 0 -1px 0 ${props.theme.bg.border}`
+      ? `inset 0 -1px 0 ${props.theme.bg.border}, 0 -1px 0 ${
+          props.theme.bg.border
+        }`
       : 'none'};
 
   > ${CommunityListName} {
@@ -241,6 +241,7 @@ export const CommunityListScroller = styled.div`
   overflow: hidden;
   overflow-y: auto;
   position: relative;
+  padding-top: 1px;
 `;
 
 export const CommunityListWrapper = styled.div`
@@ -283,7 +284,7 @@ export const CommunityListAvatar = styled.img`
 
 export const FeedHeaderContainer = styled.div`
   background: ${props => props.theme.bg.default};
-  padding: 14px 8px;
+  padding: 16px 8px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   position: relative;
   z-index: ${zIndex.chrome - 1};
@@ -361,340 +362,6 @@ export const ComposeIconContainer = styled.div`
   }
 `;
 
-export const InboxThreadItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 100%;
-  min-width: 0;
-  overflow-x: hidden;
-  border-bottom: 1px solid
-    ${props => (props.active ? props.theme.brand.alt : props.theme.bg.border)};
-  background: ${props =>
-    props.active ? props.theme.brand.alt : props.theme.bg.default};
-  position: relative;
-
-  &:hover {
-    background: ${props =>
-      props.active ? props.theme.brand.alt : props.theme.bg.wash};
-  }
-
-  &:last-of-type {
-    border-bottom: 1px solid
-      ${props => (props.active ? props.theme.brand.alt : props.theme.bg.border)};
-  }
-`;
-
-export const InboxLinkWrapper = styled(Link)`
-  position: absolute;
-  display: inline-block;
-  height: 100%;
-  width: 100%;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: ${zIndex.card};
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-export const InboxClickWrapper = styled.span`
-  position: absolute;
-  display: inline-block;
-  height: 100%;
-  width: 100%;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: ${zIndex.card};
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-export const InboxThreadContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-self: stretch;
-  position: relative;
-  z-index: ${zIndex.card + 1};
-  align-items: flex-start;
-  pointer-events: none;
-`;
-
-export const ThreadTitle = styled.h3`
-  font-size: 16px;
-  font-weight: 500;
-  color: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.text.default};
-  margin: 12px 16px 4px;
-  max-width: 100%;
-  line-height: 1.4;
-`;
-
-export const AttachmentsContainer = styled.div`
-  margin: 4px 16px;
-  max-width: calc(100% - 40px);
-
-  a {
-    color: ${props =>
-      props.active ? props.theme.text.reverse : props.theme.text.alt};
-  }
-
-  a:hover {
-    color: ${props =>
-      props.active ? props.theme.text.reverse : props.theme.text.default};
-  }
-`;
-
-export const ThreadMeta = styled.div`
-  align-self: stretch;
-  display: flex;
-  margin: 10px 16px 16px;
-  justify-content: space-between;
-`;
-
-export const FacepileContainer = styled.div`
-  display: flex;
-  margin-right: 8px;
-  margin-left: 8px;
-  pointer-events: auto;
-  order: 1;
-`;
-
-export const ParticipantHead = styled.span`
-  position: relative;
-  margin-left: -8px;
-  border-radius: 24px;
-  max-width: 24px;
-  max-height: 24px;
-  pointer-events: auto;
-  box-shadow: 0 0 0 2px
-    ${props => (props.active ? props.theme.brand.alt : props.theme.bg.default)};
-  transform: translateY(0);
-  transition: transform 0.2s ease-in-out;
-  ${Tooltip} &:hover {
-    transform: translateY(-4px);
-    transition: transform 0.2s ease-in-out;
-  }
-`;
-
-export const EmptyParticipantHead = styled.span`
-  background: ${props =>
-    props.active ? props.theme.bg.default : props.theme.bg.wash};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 600;
-  color: ${props => props.theme.text.alt};
-  box-shadow: 0 0 0 2px
-    ${props => (props.active ? props.theme.brand.alt : props.theme.bg.default)};
-  width: 24px;
-  height: 24px;
-  max-width: 24px;
-  max-height: 24px;
-  pointer-events: auto;
-  position: relative;
-  margin-left: -8px;
-  border-radius: 24px;
-  transform: translateY(0);
-  transition: transform 0.2s ease-in-out;
-
-  &:hover {
-    transform: translateY(-4px);
-    transition: transform 0.2s ease-in-out;
-  }
-`;
-
-export const StatusText = styled.span`
-  font-size: 14px;
-  color: ${props =>
-    props.new
-      ? props.active ? props.theme.text.reverse : props.theme.warn.alt
-      : props.active ? props.theme.text.reverse : props.theme.text.alt};
-  font-weight: ${props => (props.new ? 600 : 400)};
-  order: 2;
-  position: relative;
-  top: 4px;
-
-  a {
-    font-weight: 600;
-  }
-
-  a:hover {
-    color: ${props => props.theme.text.default};
-  }
-`;
-
-const StatusPill = styled(StatusText)`
-  color: ${props =>
-    props.active ? props.theme.brand.alt : props.theme.text.reverse};
-  background: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.brand.alt};
-  border-radius: 20px;
-  padding: 0 12px;
-  font-size: 11px;
-  text-transform: uppercase;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-`;
-
-export const NewThreadPill = styled(StatusPill)`
-  color: ${props =>
-    props.active ? props.theme.brand.alt : props.theme.text.reverse};
-  background: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.success.alt};
-`;
-
-export const NewMessagePill = styled(StatusText)`
-  color: ${props =>
-    props.active ? props.theme.brand.alt : props.theme.warn.alt};
-`;
-
-export const LockedTextPill = styled(StatusPill)`
-  color: ${props =>
-    props.active ? props.theme.brand.alt : props.theme.text.alt};
-  background: ${props =>
-    props.active ? props.theme.brand.wash : props.theme.bg.border};
-`;
-
-export const MetaCommunityName = styled(Link)`
-  padding-right: 8px;
-  pointer-events: auto;
-  white-space: nowrap;
-`;
-
-export const CommunityInfoContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin: 16px 16px 0;
-
-  a {
-    font-size: 14px;
-    color: ${props =>
-      props.active ? props.theme.text.reverse : props.theme.text.alt};
-  }
-
-  a.pill {
-    font-size: 12px;
-    box-shadow: 0 0 0 1px
-      ${props =>
-        props.active ? props.theme.text.reverse : props.theme.bg.border};
-    background: ${props =>
-      props.active ? 'transparent' : props.theme.bg.wash};
-    font-weight: ${props => (props.active ? '500' : '400')};
-    color: ${props =>
-      props.active ? props.theme.text.reverse : props.theme.text.alt};
-  }
-
-  a:hover {
-    color: ${props =>
-      props.active ? props.theme.text.reverse : props.theme.text.default};
-  }
-
-  a.pill:hover {
-    background: ${props =>
-      props.active ? 'rgba(255,255,255,0.1)' : props.theme.bg.wash};
-  }
-`;
-
-export const AvatarLink = styled(Link)`
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-right: 8px;
-  border-radius: 4px;
-  pointer-events: auto;
-  overflow: hidden;
-`;
-
-export const CommunityAvatar = styled.img`
-  width: 100%;
-  height: 100%;
-  pointer-events: auto;
-`;
-
-export const CommunityLink = styled(Link)`
-  font-size: 14px;
-  font-weight: 400;
-  color: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.text.alt};
-  line-height: 1.28;
-  pointer-events: auto;
-
-  &:hover {
-    color: ${props => props.theme.text.default};
-  }
-`;
-
-export const PillLink = styled(Link)`
-  display: inline-block;
-  display: flex;
-  align-items: center;
-  border-radius: 4px;
-  overflow: hidden;
-  padding: 4px 8px;
-  margin-right: 8px;
-  font-size: 12px;
-  max-height: 24px;
-  line-height: 1;
-  pointer-events: auto;
-`;
-
-export const PillLinkPinned = styled.div`
-  background: ${props => props.theme.special.wash};
-  border: 1px solid ${props => props.theme.special.border};
-  color: ${props => props.theme.special.dark};
-  display: flex;
-  height: 20px;
-  border-radius: 4px;
-  overflow: hidden;
-  padding: 0 8px;
-  margin-right: 8px;
-  font-size: 12px;
-  max-height: 24px;
-  line-height: 1.5;
-  .icon {
-    top: -1px;
-  }
-`;
-
-export const PillLabel = styled.span`
-  overflow: hidden;
-  max-width: 128px;
-  text-overflow: ellipsis;
-  display: inline-block;
-  white-space: nowrap;
-`;
-
-export const MiniLinkPreview = styled.a`
-  display: flex;
-  flex: auto;
-  align-items: center;
-  font-size: 14px;
-  color: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.text.alt};
-  font-weight: ${props => (props.active ? '500' : '400')};
-  margin-bottom: 4px;
-  pointer-events: auto;
-  min-width: 0;
-
-  .icon {
-    margin-right: 4px;
-  }
-
-  &:hover {
-    color: ${props =>
-      props.active ? props.theme.text.reverse : props.theme.text.default};
-  }
-`;
-
 export const NullThreadFeed = styled.div`
   display: flex;
   flex: 1;
@@ -738,7 +405,7 @@ export const SearchInputDiv = styled.div`
 `;
 
 export const SearchInput = styled.input`
-  font-size: 14px;
+  font-size: 16px;
   width: 100%;
   height: 100%;
   color: ${props =>
@@ -770,7 +437,7 @@ export const ClearSearch = styled.span`
   font-weight: 500;
   pointer-events: ${props => (props.isOpen ? 'auto' : 'none')};
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.2s;
 
   &:hover {
     background: ${props => props.theme.text.alt};
@@ -905,4 +572,14 @@ export const ContextHeaderContainer = styled.div`
 
 export const EllipsisText = styled.div`
   ${Truncate};
+`;
+
+export const PendingBadge = styled.div`
+  background: ${props => props.theme.warn.alt};
+  color: ${props => props.theme.text.reverse};
+  padding: 0 8px;
+  border-radius: 24px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 2px;
 `;

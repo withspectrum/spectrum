@@ -6,16 +6,17 @@ import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import slugg from 'slugg';
 import { withApollo } from 'react-apollo';
-import { Notice } from '../../../../components/listItems/style';
-import Avatar from '../../../../components/avatar';
-import { throttle } from '../../../../helpers/utils';
-import { addToastWithTimeout } from '../../../../actions/toasts';
+import { Notice } from 'src/components/listItems/style';
+import { CommunityAvatar } from 'src/components/avatar';
+import { throttle } from 'src/helpers/utils';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import { COMMUNITY_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import createCommunityMutation from 'shared/graphql/mutations/community/createCommunity';
 import type { CreateCommunityType } from 'shared/graphql/mutations/community/createCommunity';
 import { getCommunityBySlugQuery } from 'shared/graphql/queries/community/getCommunity';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
-import { Button } from '../../../../components/buttons';
+import { Button } from 'src/components/buttons';
+import { CommunityHoverProfile } from 'src/components/hoverProfile';
 import {
   Input,
   UnderlineInput,
@@ -31,9 +32,14 @@ import {
   CommunitySuggestionsWrapper,
   CommunitySuggestion,
   CommunitySuggestionsText,
+  PrivacySelector,
+  PrivacyOption,
+  PrivacyOptionLabel,
+  PrivacyOptionText,
 } from './style';
 import { FormContainer, Form, Actions } from '../../style';
 import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type State = {
   name: ?string,
@@ -53,13 +59,14 @@ type State = {
   agreeCoC: boolean,
   photoSizeError: boolean,
   communitySuggestions: ?Array<Object>,
+  isPrivate: boolean,
 };
 
 type Props = {
   client: Object,
   createCommunity: Function,
   communityCreated: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   name: string,
 };
 class CreateCommunityForm extends React.Component<Props, State> {
@@ -84,6 +91,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       agreeCoC: false,
       photoSizeError: false,
       communitySuggestions: null,
+      isPrivate: false,
     };
 
     this.checkSlug = throttle(this.checkSlug, 500);
@@ -294,6 +302,8 @@ class CreateCommunityForm extends React.Component<Props, State> {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (!file) return;
+
     if (file.size > 3000000) {
       return this.setState({
         photoSizeError: true,
@@ -309,12 +319,16 @@ class CreateCommunityForm extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   setCommunityCover = e => {
     let reader = new FileReader();
     let file = e.target.files[0];
+
+    if (!file) return;
 
     if (file.size > 3000000) {
       return this.setState({
@@ -331,7 +345,9 @@ class CreateCommunityForm extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   create = e => {
@@ -349,6 +365,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       descriptionError,
       photoSizeError,
       agreeCoC,
+      isPrivate,
     } = this.state;
 
     // if an error is present, ensure the client cant submit the form
@@ -384,6 +401,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       website,
       file,
       coverFile,
+      isPrivate,
     };
 
     // create the community
@@ -405,6 +423,18 @@ class CreateCommunityForm extends React.Component<Props, State> {
       });
   };
 
+  setPrivate = () => {
+    return this.setState({
+      isPrivate: true,
+    });
+  };
+
+  setPublic = () => {
+    return this.setState({
+      isPrivate: false,
+    });
+  };
+
   render() {
     const {
       name,
@@ -422,6 +452,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       agreeCoC,
       photoSizeError,
       communitySuggestions,
+      isPrivate,
     } = this.state;
 
     const suggestionString = slugTaken
@@ -431,7 +462,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       : "This community name and url are available! We also found communities that might be similar to what you're trying to create, just in case you would rather join an existing community instead!";
 
     return (
-      <FormContainer>
+      <FormContainer data-cy="create-community-form">
         <Form>
           <ImageInputWrapper>
             <CoverInput
@@ -442,11 +473,9 @@ class CreateCommunityForm extends React.Component<Props, State> {
             />
 
             <PhotoInput
+              type={'community'}
               onChange={this.setCommunityPhoto}
               defaultValue={image}
-              user={null}
-              community
-              allowGif
             />
           </ImageInputWrapper>
 
@@ -463,6 +492,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
             onChange={this.changeName}
             autoFocus={!window.innerWidth < 768}
             onBlur={this.checkSuggestedCommunities}
+            dataCy="community-name-input"
           >
             What is your community called?
           </Input>
@@ -475,6 +505,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
             defaultValue={slug}
             onChange={this.changeSlug}
             onBlur={this.checkSuggestedCommunities}
+            dataCy="community-slug-input"
           >
             spectrum.chat/
           </UnderlineInput>
@@ -506,16 +537,21 @@ class CreateCommunityForm extends React.Component<Props, State> {
               communitySuggestions.map(suggestion => {
                 return (
                   <Link to={`/${suggestion.slug}`} key={suggestion.id}>
-                    <CommunitySuggestion>
-                      <Avatar
-                        size={'20'}
-                        radius={4}
-                        community={suggestion}
-                        src={suggestion.profilePhoto}
-                      />
-                      <strong>{suggestion.name}</strong>{' '}
-                      {suggestion.metaData.members.toLocaleString()} members
-                    </CommunitySuggestion>
+                    <CommunityHoverProfile
+                      id={suggestion.id}
+                      style={{ flex: '1 0 auto' }}
+                    >
+                      <CommunitySuggestion>
+                        <CommunityAvatar
+                          size={20}
+                          community={suggestion}
+                          clickable={false}
+                          showHoverProfile={false}
+                        />
+                        <strong>{suggestion.name}</strong>{' '}
+                        {suggestion.metaData.members.toLocaleString()} members
+                      </CommunitySuggestion>
+                    </CommunityHoverProfile>
                   </Link>
                 );
               })}
@@ -524,6 +560,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
           <TextArea
             defaultValue={description}
             onChange={this.changeDescription}
+            dataCy="community-description-input"
           >
             Describe it in 140 characters or less
           </TextArea>
@@ -534,11 +571,60 @@ class CreateCommunityForm extends React.Component<Props, State> {
             </Error>
           )}
 
-          <Input defaultValue={website} onChange={this.changeWebsite}>
+          <Input
+            defaultValue={website}
+            onChange={this.changeWebsite}
+            dataCy="community-website-input"
+          >
             Optional: Add your community’s website
           </Input>
 
-          <Checkbox id="isPrivate" checked={agreeCoC} onChange={this.changeCoC}>
+          <PrivacySelector>
+            <PrivacyOption selected={!isPrivate} onClick={this.setPublic}>
+              <PrivacyOptionLabel>
+                <input
+                  type="radio"
+                  value="public"
+                  checked={!isPrivate}
+                  onChange={this.setPublic}
+                  data-cy="community-public-selector-input"
+                />
+                Public
+              </PrivacyOptionLabel>
+              <PrivacyOptionText>
+                Anyone can join and view conversations. Public communities will
+                appear in search results, and can appear as suggested
+                communities to non-members. Conversations will be search
+                indexed.
+              </PrivacyOptionText>
+            </PrivacyOption>
+
+            <PrivacyOption selected={isPrivate} onClick={this.setPrivate}>
+              <PrivacyOptionLabel>
+                <input
+                  type="radio"
+                  checked={isPrivate}
+                  value="private"
+                  onChange={this.setPrivate}
+                  data-cy="community-private-selector-input"
+                />
+                Private
+              </PrivacyOptionLabel>
+              <PrivacyOptionText>
+                All members must be approved before they can view or join
+                conversations. Private communities will not appear in search
+                results or suggested communities. Conversations will not be
+                search indexed.
+              </PrivacyOptionText>
+            </PrivacyOption>
+          </PrivacySelector>
+
+          <Checkbox
+            id="isPrivate"
+            checked={agreeCoC}
+            onChange={this.changeCoC}
+            dataCy="community-coc-input"
+          >
             <span>
               I have read the{' '}
               <a
@@ -579,6 +665,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
               !agreeCoC
             }
             loading={isLoading}
+            dataCy="community-create-button"
           >
             Create Community & Continue
           </Button>

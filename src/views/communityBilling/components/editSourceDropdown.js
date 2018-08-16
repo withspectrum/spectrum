@@ -19,11 +19,12 @@ import MutationWrapper from './mutationWrapper';
 import removePaymentSource from 'shared/graphql/mutations/community/removePaymentSource';
 import makePaymentSourceDefault from 'shared/graphql/mutations/community/makePaymentSourceDefault';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
+import type { Dispatch } from 'redux';
 
 type Props = {
   removePaymentSource: Function,
   makePaymentSourceDefault: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   community: GetCommunitySettingsType,
   source: {
     id: string,

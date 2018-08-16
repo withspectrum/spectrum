@@ -107,7 +107,11 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     }
     if (
       body.blocks.some(
-        ({ type }) => !type || (type !== 'unstyled' && type !== 'code-block')
+        ({ type }) =>
+          !type ||
+          (type !== 'unstyled' &&
+            type !== 'code-block' &&
+            type !== 'blockquote')
       )
     ) {
       trackQueue.add({
@@ -127,7 +131,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   if (message.parentId) {
     const parent = await getMessage(message.parentId);
-    if (parent.threadId !== message.threadId)
+    if (parent.threadId !== message.threadId) {
       trackQueue.add({
         userId: user.id,
         event: eventFailed,
@@ -137,7 +141,8 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         },
       });
 
-    return new UserError('You can only quote messages from the same thread.');
+      return new UserError('You can only quote messages from the same thread.');
+    }
   }
 
   // construct the shape of the object to be stored in the db
@@ -202,7 +207,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   // at this point we are only dealing with thread messages
   const thread = await loaders.thread.load(message.threadId);
 
-  if (thread.isDeleted) {
+  if (!thread || thread.deletedAt) {
     trackQueue.add({
       userId: user.id,
       event: eventFailed,

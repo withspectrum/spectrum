@@ -5,6 +5,7 @@ import compose from 'recompose/compose';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import { addToastWithTimeout } from '../../actions/toasts';
+import type { Dispatch } from 'redux';
 import {
   JoinChannelContainer,
   JoinChannelContent,
@@ -17,7 +18,7 @@ type Props = {
   channel: Object,
   community: Object,
   toggleChannelSubscription: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {
@@ -104,7 +105,6 @@ class JoinChannel extends React.Component<Props, State> {
           loading={isLoading}
           onClick={this.toggleSubscription}
           icon="plus"
-          label
           dataCy="thread-join-channel-upsell-button"
         >
           Join

@@ -16,7 +16,7 @@ type Props = {
   label: string,
   size: string,
   onValidationResult: ({ error: string, success: string }) => void,
-  onError: (err: Error) => void,
+  onError: ?(err: Error) => void,
 };
 
 type State = {
@@ -110,8 +110,7 @@ class UsernameSearch extends React.Component<Props, State> {
       .then(({ data: { user } }: { data: { user: GetUserType } }) => {
         if (user && user.id) {
           this.props.onValidationResult({
-            error:
-              'Someone already swooped this username – not feeling too original today, huh?',
+            error: 'That username has already been taken.',
             success: '',
             username,
           });
@@ -127,8 +126,7 @@ class UsernameSearch extends React.Component<Props, State> {
         });
       })
       .catch(err => {
-        this.props.onError(err);
-        console.error('Error looking up username: ', err);
+        this.props.onError && this.props.onError(err);
         this.setState({
           isSearching: false,
         });
@@ -157,4 +155,7 @@ class UsernameSearch extends React.Component<Props, State> {
   }
 }
 
-export default compose(withApollo, connect())(UsernameSearch);
+export default compose(
+  withApollo,
+  connect()
+)(UsernameSearch);

@@ -1,22 +1,22 @@
 // @flow
-import * as React from 'react';
-import { Button } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import React from 'react';
+import { createStackNavigator } from 'react-navigation';
+import { withMappedNavigationProps } from 'react-navigation-props-mapper';
 import Dashboard from '../Dashboard';
 import BaseStack from './BaseStack';
-import { store } from '../../App';
-import { logout } from '../../actions/authentication';
+import Compose from './headerActions/Compose';
+import type { NavigationScreenConfigProps } from 'react-navigation';
 
-const HomeStack = StackNavigator(
+const HomeStack = createStackNavigator(
   {
     Dashboard: {
-      screen: Dashboard,
-      navigationOptions: {
+      screen: withMappedNavigationProps(Dashboard),
+      navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
         headerTitle: 'Home',
         headerRight: (
-          <Button onPress={() => store.dispatch(logout())} title="Log out" />
+          <Compose onPress={() => navigation.navigate('ThreadComposer')} />
         ),
-      },
+      }),
     },
     ...BaseStack,
   },

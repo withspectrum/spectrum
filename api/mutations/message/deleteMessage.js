@@ -5,8 +5,9 @@ import {
   getMessage,
   deleteMessage,
   userHasMessagesInThread,
+  getMessages,
 } from '../../models/message';
-import { getThread } from '../../models/thread';
+import { setThreadLastActive } from '../../models/thread';
 import { deleteParticipantInThread } from '../../models/usersThreads';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
@@ -20,7 +21,7 @@ type Input = {
 
 export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { id } = args;
-  const { user } = ctx;
+  const { user, loaders } = ctx;
 
   const message = await getMessage(id);
 
@@ -41,6 +42,8 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       ? events.MESSAGE_DELETED_FAILED
       : events.DIRECT_MESSAGE_DELETED_FAILED;
 
+  const thread = await loaders.thread.load(message.threadId);
+
   if (message.senderId !== user.id) {
     // Only the sender can delete a directMessageThread message
     if (message.threadType === 'directMessageThread') {
@@ -55,8 +58,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
       return new UserError('You can only delete your own messages.');
     }
-
-    const thread = await getThread(message.threadId);
 
     const [communityPermissions, channelPermissions] = await Promise.all([
       getUserPermissionsInCommunity(thread.communityId, user.id),
@@ -87,6 +88,21 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     .then(async () => {
       // We don't need to delete participants of direct message threads
       if (message.threadType === 'directMessageThread') return true;
+
+      // If it was the last message in the thread, reset thread.lastActive to
+      // the previous messages timestamp
+      if (
+        new Date(thread.lastActive).getTime() ===
+        new Date(message.timestamp).getTime()
+      ) {
+        const messages = await getMessages(message.threadId, { last: 1 });
+        await setThreadLastActive(
+          message.threadId,
+          messages && messages.length > 0
+            ? messages[0].timestamp
+            : thread.createdAt
+        );
+      }
 
       const hasMoreMessages = await userHasMessagesInThread(
         message.threadId,

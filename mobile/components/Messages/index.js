@@ -1,147 +1,221 @@
 // @flow
-import React, { Fragment } from 'react';
-import styled from 'styled-components/native';
+import React, { Component } from 'react';
+import compose from 'recompose/compose';
 import { View } from 'react-native';
-import { Query } from 'react-apollo';
-import { getCurrentUserQuery } from '../../../shared/graphql/queries/user/getUser';
 import viewNetworkHandler from '../ViewNetworkHandler';
-import Text from '../Text';
 import Message from '../Message';
-import { ThreadMargin } from '../../views/Thread/style';
+import InfiniteList from '../InfiniteList';
 import { sortAndGroupMessages } from '../../../shared/clients/group-messages';
-import { convertTimestampToDate } from '../../../src/helpers/utils';
+import { convertTimestampToDate } from '../../../shared/time-formatting';
+import { withCurrentUser } from '../../components/WithCurrentUser';
+import { UnseenRoboText, TimestampRoboText } from './RoboText';
+import AuthorAvatar from './AuthorAvatar';
+import AuthorName from './AuthorName';
+import Loading from '../Loading';
+import { FullscreenNullState } from '../NullStates';
+import {
+  Container,
+  MessageGroupContainer,
+  BubbleGroupContainer,
+} from './style';
 
-import RoboText from './RoboText';
-import Author from './Author';
-
-import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection.js';
+import type { NavigationProps } from 'react-navigation';
+import type { FlatListProps } from 'react-native';
+import type { ThreadMessageConnectionType } from '../../../shared/graphql/fragments/thread/threadMessageConnection';
+import type { GetThreadMessageConnectionType } from '../../../shared/graphql/queries/thread/getThreadMessageConnection.js';
 import type { ThreadParticipantType } from '../../../shared/graphql/fragments/thread/threadParticipant';
-
-const TimestampWrapper = styled.View`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Hr = styled.View`
-  height: 1px;
-  flex: 1;
-  background-color: ${props => props.theme.bg.border};
-`;
+import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
 
 type Props = {
+  id: string,
+  ...$Exact<FlatListProps>,
   isLoading: boolean,
   hasError: boolean,
+  navigation: NavigationProps,
+  currentUser: GetUserType,
+  messagesDidLoad?: Function,
   data: {
-    ...$Exact<ThreadMessageConnectionType>,
+    thread: {
+      ...$Exact<GetThreadMessageConnectionType>,
+    },
+    messageConnection: {
+      ...$Exact<ThreadMessageConnectionType>,
+    },
   },
 };
 
-class Messages extends React.Component<Props> {
-  render() {
-    const { data, isLoading, hasError } = this.props;
+class Messages extends Component<Props> {
+  componentDidUpdate(prevProps) {
+    const curr = this.props;
+    if (
+      !prevProps.data.messageConnection &&
+      curr.data.messageConnection &&
+      curr.data.messageConnection.edges.length > 0
+    ) {
+      return this.props.messagesDidLoad && this.props.messagesDidLoad();
+    }
+  }
 
-    if (data.messageConnection && data.messageConnection) {
-      const messages = sortAndGroupMessages(
-        data.messageConnection.edges
-          .slice()
-          .filter(Boolean)
-          .map(({ node }) => node)
-      );
+  fetchMore = () => {
+    if (!this.props.data.fetchMore) return;
+    return this.props.data.fetchMore();
+  };
+
+  render() {
+    const {
+      data,
+      isLoading,
+      hasError,
+      navigation,
+      currentUser,
+      isFetchingMore,
+      inverted = false,
+      ...flatListProps
+    } = this.props;
+
+    if (data.messageConnection && data.messageConnection.edges.length > 0) {
+      const nodes = data.messageConnection.edges.map(e => e && e.node);
+
+      let messages = sortAndGroupMessages(nodes.slice().filter(Boolean));
+
+      if (inverted) {
+        messages = messages.reverse();
+      }
 
       let hasInjectedUnseenRobo = false;
 
       return (
-        <Query query={getCurrentUserQuery}>
-          {({ data: { user: currentUser } }) => (
-            <Fragment>
-              {messages.map((group, i) => {
-                if (group.length === 0) return null;
+        <InfiniteList
+          {...flatListProps}
+          data={messages}
+          inverted={inverted}
+          fetchMore={this.fetchMore}
+          isFetchingMore={isFetchingMore}
+          hasNextPage={this.props.data.hasNextPage}
+          loadingIndicator={
+            <View style={{ marginBottom: 32 }}>
+              <Loading />
+            </View>
+          }
+          keyExtractor={item => item[0].id}
+          renderItem={({ item: group, index: i }) => {
+            if (group.length === 0) return null;
 
-                const initialMessage = group[0];
-                const me = currentUser
-                  ? initialMessage.author.user.id === currentUser.id
-                  : false;
-                // const canModerate =
-                //   threadType !== 'directMessageThread' && (me || isModerator);
+            const initialMessage = group[0];
+            const me = currentUser
+              ? initialMessage.author.user.id === currentUser.id
+              : false;
 
-                if (initialMessage.author.user.id === 'robo') {
-                  if (initialMessage.message.type === 'timestamp') {
-                    return (
-                      <RoboText key={initialMessage.timestamp}>
-                        {convertTimestampToDate(initialMessage.timestamp)}
-                      </RoboText>
-                    );
-                  }
+            // const {
+            //   isOwner: isChannelOwner,
+            //   isModerator: isChannelModerator,
+            // } = thread.channel.channelPermissions;
+            // const {
+            //   isOwner: isCommunityOwner,
+            //   isModerator: isCommunityModerator,
+            // } = thread.community.communityPermissions;
+            // const isModerator =
+            //   isChannelOwner ||
+            //   isChannelModerator ||
+            //   isCommunityOwner ||
+            //   isCommunityModerator;
+            // const canModerate =
+            //   initialMessage.threadType !== 'directMessageThread' &&
+            //   (me || isModerator);
 
-                  // Ignore unknown robo messages
-                  return null;
-                }
-
-                // Flow doesn't seem to understand that we filter the robo authors
-                // (which have incorrect information, obviously) above, so this
-                // has to be a thread participant
-                // $FlowIssue
-                const author: ThreadParticipantType = initialMessage.author;
-
-                let unseenRobo = null;
-                // TODO(@mxstbr): Figure out how to get lastSeen information
-                let lastSeen = new Date('April 15, 2018 12:00:00');
-                if (
-                  !!lastSeen &&
-                  new Date(group[group.length - 1].timestamp).getTime() >
-                    new Date(lastSeen).getTime() &&
-                  !me &&
-                  !hasInjectedUnseenRobo
-                ) {
-                  hasInjectedUnseenRobo = true;
-                  unseenRobo = (
-                    <RoboText
-                      style={{ marginTop: 8 }}
-                      color={props => props.theme.warn.default}
-                      key="new-messages"
-                    >
-                      New Messages
-                    </RoboText>
-                  );
-                }
-
+            if (initialMessage.author.user.id === 'robo') {
+              if (initialMessage.message.type === 'timestamp') {
                 return (
-                  <View key={initialMessage.id || 'robo'}>
-                    {unseenRobo}
-                    <ThreadMargin>
-                      <Author author={author} me={me} />
-                      <View>
-                        {group.map(message => {
-                          return (
-                            <Message
-                              key={message.id}
-                              me={me}
-                              message={message}
-                            />
-                          );
-                        })}
-                      </View>
-                    </ThreadMargin>
-                  </View>
+                  <TimestampRoboText key={initialMessage.timestamp}>
+                    {convertTimestampToDate(initialMessage.timestamp)}
+                  </TimestampRoboText>
                 );
-              })}
-            </Fragment>
-          )}
-        </Query>
+              }
+
+              // Ignore unknown robo messages
+              return null;
+            }
+
+            // Flow doesn't seem to understand that we filter the robo authors
+            // (which have incorrect information, obviously) above, so this
+            // has to be a thread participant
+            // $FlowIssue
+            const author: ThreadParticipantType = initialMessage.author;
+
+            let unseenRobo = null;
+            // TODO(@mxstbr): Figure out how to get lastSeen information
+            let lastSeen = new Date('April 15, 2018 12:00:00');
+            if (
+              !!lastSeen &&
+              new Date(group[group.length - 1].timestamp).getTime() >
+                new Date(lastSeen).getTime() &&
+              !me &&
+              !hasInjectedUnseenRobo
+            ) {
+              hasInjectedUnseenRobo = true;
+              unseenRobo = (
+                <UnseenRoboText key="new-messages">New Messages</UnseenRoboText>
+              );
+            }
+
+            return (
+              <Container key={initialMessage.id || 'robo'} me={me}>
+                {unseenRobo}
+
+                <MessageGroupContainer>
+                  <AuthorAvatar
+                    onPress={() =>
+                      navigation.navigate({
+                        routeName: 'User',
+                        key: author.user.id,
+                        params: { id: author.user.id },
+                      })
+                    }
+                    author={author}
+                    me={me}
+                  />
+
+                  <BubbleGroupContainer>
+                    {!me && (
+                      <AuthorName
+                        author={author}
+                        onPress={() =>
+                          navigation.navigate({
+                            routeName: 'User',
+                            key: author.user.id,
+                            params: { id: author.user.id },
+                          })
+                        }
+                      />
+                    )}
+
+                    {group.map(message => (
+                      <Message
+                        key={message.id}
+                        me={me}
+                        message={message}
+                        threadId={this.props.id}
+                      />
+                    ))}
+                  </BubbleGroupContainer>
+                </MessageGroupContainer>
+              </Container>
+            );
+          }}
+        />
       );
     }
 
     if (isLoading) {
-      return <Text type="body">Loading...</Text>;
+      return <Loading />;
     }
 
     if (hasError) {
-      return <Text type="body">Error :(</Text>;
+      return <FullscreenNullState />;
     }
 
     return null;
   }
 }
 
-export default viewNetworkHandler(Messages);
+export default compose(viewNetworkHandler, withCurrentUser)(Messages);

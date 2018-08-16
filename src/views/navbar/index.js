@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import queryString from 'query-string';
 import Icon from '../../components/icons';
-import { ProfileDropdown } from './components/profileDropdown';
+import ProfileDropdown from './components/profileDropdown';
 import MessagesTab from './components/messagesTab';
 import NotificationsTab from './components/notificationsTab';
 import Head from '../../components/head';
@@ -21,9 +21,11 @@ import {
   Label,
   Navatar,
   SkipLink,
+  SigninLink,
 } from './style';
 import { track, events } from 'src/helpers/analytics';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
+import { isDesktopApp } from 'src/helpers/is-desktop-app';
 
 type Props = {
   isLoading: boolean,
@@ -186,7 +188,7 @@ class Navbar extends React.Component<Props, State> {
             onClick={() => this.trackNavigationClick('home')}
             data-cy="navbar-home"
           >
-            <Icon glyph="home" />
+            <Icon glyph="home" size={isDesktopApp() ? 28 : 32} />
             <Label>Home</Label>
           </HomeTab>
 
@@ -200,7 +202,7 @@ class Navbar extends React.Component<Props, State> {
             onClick={() => this.trackNavigationClick('explore')}
             data-cy="navbar-explore"
           >
-            <Icon glyph="explore" />
+            <Icon glyph="explore" size={isDesktopApp() ? 28 : 32} />
             <Label>Explore</Label>
           </ExploreTab>
 
@@ -217,16 +219,16 @@ class Navbar extends React.Component<Props, State> {
               {...this.getTabProps(
                 history.location.pathname === `/users/${loggedInUser.username}`
               )}
-              to={
-                loggedInUser.username ? `/users/${loggedInUser.username}` : '/'
-              }
+              to={loggedInUser ? `/users/${loggedInUser.username}` : '/'}
               onClick={() => this.trackNavigationClick('profile')}
             >
               <Navatar
                 user={loggedInUser}
-                src={`${loggedInUser.profilePhoto}`}
-                size={24}
-                data-cy="navbar-profile"
+                size={28}
+                showHoverProfile={false}
+                showOnlineStatus={false}
+                clickable={false}
+                dataCy="navbar-profile"
               />
             </Tab>
             <ProfileDropdown user={loggedInUser} />
@@ -237,7 +239,7 @@ class Navbar extends React.Component<Props, State> {
             {...this.getTabProps(
               history.location.pathname === `/users/${loggedInUser.username}`
             )}
-            to={loggedInUser.username ? `/users/${loggedInUser.username}` : '/'}
+            to={loggedInUser ? `/users/${loggedInUser.username}` : '/'}
             onClick={() => this.trackNavigationClick('profile')}
           >
             <Icon glyph="profile" />
@@ -305,6 +307,7 @@ class Navbar extends React.Component<Props, State> {
             <Icon glyph="payment" />
             <Label>Pricing</Label>
           </PricingTab>
+          <SigninLink to="/login">Sign In</SigninLink>
         </Nav>
       );
     }

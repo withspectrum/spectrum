@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 import FullscreenView from 'src/components/fullscreenView';
 import LoginButtonSet from 'src/components/loginButtonSet';
 import { Loading } from 'src/components/loading';
-import Avatar from 'src/components/avatar';
+import { CommunityAvatar } from 'src/components/avatar';
 import {
   Title,
   Subtitle,
@@ -63,10 +63,10 @@ export class Login extends React.Component<Props> {
             style={{ justifyContent: 'center' }}
           >
             <LoginImageContainer>
-              <Avatar
+              <CommunityAvatar
                 community={community}
-                size={'88'}
-                src={community.profilePhoto}
+                showHoverProfile={false}
+                size={88}
               />
             </LoginImageContainer>
             <Title>Sign in to the {community.name} community</Title>

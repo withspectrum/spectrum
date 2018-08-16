@@ -31,6 +31,7 @@ import {
   Location,
 } from '../../../components/editForm/style';
 import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type State = {
   name: string,
@@ -44,7 +45,7 @@ type State = {
 
 type Props = {
   editChannel: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   channel: GetChannelType,
 };
 class ChannelWithData extends React.Component<Props, State> {

@@ -2,6 +2,7 @@
 const { db } = require('./db');
 import type { DBCommunitySettings, DBCommunity } from 'shared/types';
 import { getCommunityById } from './community';
+import shortid from 'shortid';
 import axios from 'axios';
 import { decryptString } from 'shared/encryption';
 import { trackQueue } from 'shared/bull/queues';
@@ -23,6 +24,34 @@ const defaultSettings = {
     invitesMemberCount: null,
     invitesCustomMessage: null,
   },
+  joinSettings: {
+    tokenJoinEnabled: false,
+    token: null,
+  },
+};
+
+// prettier-ignore
+export const getOrCreateCommunitySettings = async (communityId: string): Promise<DBCommunitySettings> => {
+  const settings = await db
+    .table('communitySettings')
+    .getAll(communityId, { index: 'communityId' })
+    .run();
+
+  if (!settings || settings.length === 0) {
+    return await db
+      .table('communitySettings')
+      .insert(
+        {
+          ...defaultSettings,
+          communityId,
+        },
+        { returnChanges: true }
+      )
+      .run()
+      .then(results => results.changes[0].new_val);
+  }
+
+  return settings[0];
 };
 
 // prettier-ignore
@@ -90,29 +119,15 @@ export const getCommunitiesSettings = (communityIds: Array<string>): Promise<?DB
 };
 
 // prettier-ignore
-export const createCommunitySettings = (id: string): Promise<DBCommunity> => {
+export const createCommunitySettings = (communityId: string): Promise<DBCommunity> => {
   return db
     .table('communitySettings')
     .insert({
-      communityId: id,
-      brandedLogin: {
-        isEnabled: false,
-        message: null,
-      },
-      slackSettings: {
-        connectedAt: null,
-        connectedBy: null,
-        invitesSentAt: null,
-        teamName: null,
-        teamId: null,
-        invitesMemberCount: null,
-        invitesCustomMessage: null,
-        scope: null,
-        token: null,
-      },
+      communityId,
+      ...defaultSettings
     })
     .run()
-    .then(async () => await getCommunityById(id));
+    .then(async () => await getCommunityById(communityId));
 };
 
 // prettier-ignore
@@ -363,4 +378,78 @@ const handleSlackChannelResponse = async (data: Object, communityId: string) => 
   }
 
   return [];
+};
+
+export const enableCommunityTokenJoin = (
+  communityId: string,
+  userId: string
+) => {
+  return db
+    .table('communitySettings')
+    .getAll(communityId, { index: 'communityId' })
+    .update({
+      joinSettings: {
+        tokenJoinEnabled: true,
+        token: shortid.generate(),
+      },
+    })
+    .run()
+    .then(async () => {
+      trackQueue.add({
+        userId,
+        event: events.COMMUNITY_JOIN_TOKEN_ENABLED,
+        context: { communityId },
+      });
+
+      return await getCommunityById(communityId);
+    });
+};
+
+export const disableCommunityTokenJoin = (
+  communityId: string,
+  userId: string
+) => {
+  return db
+    .table('communitySettings')
+    .getAll(communityId, { index: 'communityId' })
+    .update({
+      joinSettings: {
+        tokenJoinEnabled: false,
+        token: null,
+      },
+    })
+    .run()
+    .then(async () => {
+      trackQueue.add({
+        userId,
+        event: events.COMMUNITY_JOIN_TOKEN_DISABLED,
+        context: { communityId },
+      });
+
+      return await getCommunityById(communityId);
+    });
+};
+
+export const resetCommunityJoinToken = (
+  communityId: string,
+  userId: string
+) => {
+  return db
+    .table('communitySettings')
+    .getAll(communityId, { index: 'communityId' })
+    .update({
+      joinSettings: {
+        token: shortid.generate(),
+      },
+    })
+    .run()
+    .then(async () => {
+      trackQueue.add({
+        userId,
+        event: events.COMMUNITY_JOIN_TOKEN_RESET,
+        context: { communityId },
+      });
+
+      return await getCommunityById(communityId);
+    });
 };

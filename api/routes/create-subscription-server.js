@@ -24,24 +24,23 @@ const createSubscriptionsServer = (server: any, path: string) => {
         return params;
       },
       onDisconnect: rawSocket => {
-        getUserIdFromReq(rawSocket.upgradeReq)
-          .then(id => {
-            setUserOnline(id, false);
-          })
+        return getUserIdFromReq(rawSocket.upgradeReq)
+          .then(id => id && setUserOnline(id, false))
           .catch(err => {
-            // Ignore errors
+            console.error(err);
           });
       },
       onConnect: (connectionParams, rawSocket) =>
         getUserIdFromReq(rawSocket.upgradeReq)
-          .then(id => setUserOnline(id, true))
+          .then(id => (id ? setUserOnline(id, true) : null))
           .then(user => {
             return {
-              user,
+              user: user || null,
               loaders: createLoaders({ cache: false }),
             };
           })
           .catch(err => {
+            console.error(err);
             return {
               loaders: createLoaders({ cache: false }),
             };

@@ -44,6 +44,20 @@ export const getPublicChannelIdsForUsersThreads = (userId: string): Promise<Arra
     .run();
 };
 
+export const getPublicCommunityIdsForUsersThreads = (
+  userId: string
+): Promise<Array<string>> => {
+  return db
+    .table('threads')
+    .getAll(userId, { index: 'creatorId' })
+    .filter(row => row.hasFields('deletedAt').not())
+    .eqJoin('communityId', db.table('communities'))
+    .filter(row => row('right')('isPrivate').eq(false))
+    .zip()
+    .map(row => row('communityId'))
+    .run();
+};
+
 // prettier-ignore
 export const getPrivateChannelIdsForUsersThreads = (userId: string): Promise<Array<string>> => {
   return db
@@ -57,13 +71,43 @@ export const getPrivateChannelIdsForUsersThreads = (userId: string): Promise<Arr
     .run();
 };
 
+export const getPrivateCommunityIdsForUsersThreads = (
+  userId: string
+): Promise<Array<string>> => {
+  return db
+    .table('threads')
+    .getAll(userId, { index: 'creatorId' })
+    .filter(row => row.hasFields('deletedAt').not())
+    .eqJoin('communityId', db.table('communities'))
+    .filter(row => row('right')('isPrivate').eq(true))
+    .zip()
+    .map(row => row('communityId'))
+    .run();
+};
+
 // prettier-ignore
 export const getUsersJoinedChannels = (userId: string): Promise<Array<string>> => {
   return db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
     .filter({ isMember: true })
+    .eqJoin('channelId', db.table('channels'))
+    .filter(row => row('right').hasFields('deletedAt').not())
+    .zip()
     .map(row => row('channelId'))
+    .run();
+};
+
+// prettier-ignore
+export const getUsersJoinedCommunities = (userId: string): Promise<Array<string>> => {
+  return db
+    .table('usersCommunities')
+    .getAll(userId, { index: 'userId' })
+    .filter({ isMember: true })
+    .eqJoin('communityId', db.table('communities'))
+    .filter(row => row('right').hasFields('deletedAt').not())
+    .zip()
+    .map(row => row('communityId'))
     .run();
 };
 
@@ -74,7 +118,21 @@ export const getUsersJoinedPrivateChannelIds = (userId: string): Promise<Array<s
     .getAll(userId, { index: 'userId' })
     .filter({ isMember: true })
     .eqJoin('channelId', db.table('channels'))
-    .filter(row => row('right')('isPrivate').eq(true))
+    .filter(row => row('right')('isPrivate').eq(true).and(row('right').hasFields('deletedAt').not()))
+    .without({ left: ['id'] })
+    .zip()
+    .map(row => row('id'))
+    .run();
+};
+
+// prettier-ignore
+export const getUsersJoinedPrivateCommunityIds = (userId: string): Promise<Array<string>> => {
+  return db
+    .table('usersCommunities')
+    .getAll(userId, { index: 'userId' })
+    .filter({ isMember: true })
+    .eqJoin('communityId', db.table('communities'))
+    .filter(row => row('right')('isPrivate').eq(true).and(row('right').hasFields('deletedAt').not()))
     .without({ left: ['id'] })
     .zip()
     .map(row => row('id'))

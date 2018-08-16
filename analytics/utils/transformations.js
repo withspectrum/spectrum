@@ -7,10 +7,11 @@ import type {
   DBThread,
   DBUser,
   DBReaction,
+  DBThreadReaction,
   DBMessage,
   DBUsersThreads,
 } from 'shared/types';
-import { getTruthyValuesFromObject } from './truthy-values';
+import { getTruthyValuesFromObject } from 'shared/truthy-values';
 
 type AnalyticsChannel = {
   id: ?string,
@@ -24,6 +25,7 @@ type AnalyticsCommunity = {
   id: ?string,
   name: ?string,
   slug: ?string,
+  isPrivate: boolean,
 };
 
 type AnalyticsChannelPermissions = {
@@ -60,6 +62,11 @@ type AnalyticsReaction = {
   type: ?string,
 };
 
+type AnalyticsThreadReaction = {
+  id: ?string,
+  type: ?string,
+};
+
 type AnalyticsMessage = {
   id: ?string,
   threadType: ?string,
@@ -67,6 +74,21 @@ type AnalyticsMessage = {
 };
 
 export const analyticsReaction = (reaction: ?DBReaction): AnalyticsReaction => {
+  if (!reaction)
+    return {
+      id: null,
+      type: null,
+    };
+
+  return {
+    id: reaction.id,
+    type: reaction.type,
+  };
+};
+
+export const analyticsThreadReaction = (
+  reaction: ?DBThreadReaction
+): AnalyticsThreadReaction => {
   if (!reaction)
     return {
       id: null,
@@ -134,12 +156,14 @@ export const analyticsCommunity = (
       id: null,
       name: null,
       slug: null,
+      isPrivate: false,
     };
 
   return {
     id: community.id,
     name: community.name,
     slug: community.slug,
+    isPrivate: community.isPrivate,
   };
 };
 

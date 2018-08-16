@@ -13,7 +13,7 @@ export const getTopMembersInCommunity = (communityId: string): Promise<Array<str
     .group('userId')
     .run()
     .then(results => {
-      if (!results) return null;
+      if (!results) return [];
       const sorted = results
         .map(c => ({
           userId: c.group,

@@ -16,6 +16,7 @@ import type { GetCommunityType } from 'shared/graphql/queries/community/getCommu
 import createChannelMutation from 'shared/graphql/mutations/channel/createChannel';
 import StripeModalWell from 'src/components/stripeCardForm/modalWell';
 import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
@@ -45,7 +46,7 @@ type State = {
 
 type Props = {
   client: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isOpen: boolean,
   community: GetCommunityType,
   createChannel: Function,

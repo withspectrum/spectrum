@@ -3,11 +3,14 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { openModal } from '../../actions/modals';
+import type { Dispatch } from 'redux';
 import {
   Span,
   ProBadge,
   BlockedBadge,
+  PendingBadge,
   DefaultPaymentMethodBadge,
+  TeamBadge,
 } from './style';
 
 type Props = {
@@ -15,7 +18,7 @@ type Props = {
   onClick?: Function,
   tipText: string,
   currentUser: ?Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 class Badge extends React.Component<Props> {
@@ -30,11 +33,12 @@ class Badge extends React.Component<Props> {
   };
 
   render() {
-    switch (this.props.type) {
+    const { type } = this.props;
+    switch (type) {
       case 'default-payment-method':
         return (
           <DefaultPaymentMethodBadge
-            type={this.props.type}
+            type={type}
             tipText={this.props.tipText}
             tipLocation={'top-left'}
             onClick={this.triggerProModal}
@@ -45,33 +49,54 @@ class Badge extends React.Component<Props> {
       case 'pro':
         return (
           <ProBadge
-            type={this.props.type}
+            type={type}
             tipText={this.props.tipText}
             tipLocation={'top-left'}
             onClick={this.triggerProModal}
           >
-            {this.props.type}
+            {type}
           </ProBadge>
         );
       case 'blocked':
         return (
           <BlockedBadge
-            type={this.props.type}
+            type={type}
             tipText={this.props.tipText}
             tipLocation={'top-left'}
           >
-            {this.props.type}
+            {type}
           </BlockedBadge>
+        );
+      case 'pending':
+        return (
+          <PendingBadge
+            type={type}
+            tipText={this.props.tipText}
+            tipLocation={'top-left'}
+          >
+            {type}
+          </PendingBadge>
+        );
+      case 'moderator':
+      case 'admin':
+        return (
+          <TeamBadge
+            type={type}
+            tipText={this.props.tipText}
+            tipLocation="top-left"
+          >
+            Team
+          </TeamBadge>
         );
       default:
         return (
           <Span
-            type={this.props.type}
+            type={type}
             tipText={this.props.tipText}
             tipLocation={'top-left'}
             onClick={this.props.onClick && this.props.onClick}
           >
-            {this.props.type}
+            {type}
           </Span>
         );
     }

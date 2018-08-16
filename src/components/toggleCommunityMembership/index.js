@@ -8,6 +8,7 @@ import type { GetCommunityType } from 'shared/graphql/queries/community/getCommu
 import { addToastWithTimeout } from '../../actions/toasts';
 import type { AddCommunityMemberType } from 'shared/graphql/mutations/communityMember/addCommunityMember';
 import type { RemoveCommunityMemberType } from 'shared/graphql/mutations/communityMember/removeCommunityMember';
+import type { Dispatch } from 'redux';
 
 type Props = {
   community: {
@@ -15,7 +16,7 @@ type Props = {
   },
   removeCommunityMember: Function,
   addCommunityMember: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   render: Function,
   onJoin?: Function,
   onLeave?: Function,

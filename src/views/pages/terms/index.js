@@ -13,8 +13,7 @@ import {
 import { PrivacyTermsList } from './style';
 
 class Terms extends React.Component<{}> {
-  componentDidMount() {}
-
+  
   render() {
     return (
       <Wrapper data-cy="terms-page">

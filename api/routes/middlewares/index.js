@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
 }
 
 middlewares.use((req, res, next) => {
-  if (req.headers && !req.headers.cookie && req.headers.authorization) {
+  if (req.headers && req.headers.authorization) {
     const token = req.headers.authorization.replace(/^\s*Bearer\s*/, '');
     try {
       const decoded = jwt.verify(token, process.env.API_TOKEN_SECRET);

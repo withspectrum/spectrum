@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { closeGallery } from '../../actions/gallery';
 import type { GetMediaMessagesForThreadType } from 'shared/graphql/queries/message/getMediaMessagesForThread';
+import type { Dispatch } from 'redux';
 import {
   Overlay,
   ActiveImage,
@@ -20,7 +21,7 @@ type State = {
 };
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   data: {
     messages?: GetMediaMessagesForThreadType,
   },
@@ -141,24 +142,15 @@ class Browser extends React.Component<Props, State> {
     // when a user uploads an image, sometimes the resulting image doesn't get updated in the Apollo cache
     // if it doesn't update in the cache, then the browser component will receive a bad `activeMessageId`
     // prop. If it's the case that this happens, we just select the *last* image, assuming it's the one that the user just uploaded.
-    let filteredIndex;
-    if (index === null) {
-      filteredIndex = messages.length - 1;
-    } else {
-      filteredIndex = index;
-    }
+    let filteredIndex = index ? index : messages.length - 1;
+
+    const src = `${images[filteredIndex].content.body}?max-w=768`;
 
     return (
       <GalleryWrapper>
         <CloseButton onClick={this.closeGallery}>✕</CloseButton>
         <Overlay onClick={this.closeGallery} onKeyDown={this.handleKeyPress} />
-        <ActiveImage
-          onClick={this.nextImage}
-          // $FlowFixMe
-          src={`${images[filteredIndex].content.body}?max-w=${
-            window.innerWidth
-          }`}
-        />
+        <ActiveImage onClick={this.nextImage} src={src} />
         <Minigallery>
           <MiniContainer>
             {images.map((image, i) => {

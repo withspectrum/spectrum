@@ -16,28 +16,30 @@ import NewActivityIndicator from '../newActivityIndicator';
 import ViewError from '../viewError';
 import { Upsell, UpsellHeader, UpsellFooter } from './style';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
+import type { Dispatch } from 'redux';
+import { ErrorBoundary } from 'src/components/error';
 
 const NullState = ({ viewContext, search }) => {
   let hd;
   let cp;
 
   if (viewContext && viewContext === 'community') {
-    hd = "This community's just getting started...";
-    cp = "Why don't you kick things off?";
+    hd = 'This community’s just getting started...';
+    cp = 'Why don’t you kick things off?';
   }
 
   if (viewContext && viewContext === 'channel') {
-    hd = "There's nothing in this channel yet";
+    hd = 'There’s nothing in this channel yet';
     cp = 'But you could be the first person to post something here!';
   }
 
   if (viewContext && viewContext === 'profile') {
-    hd = "This user hasn't posted yet";
+    hd = 'This user hasn’t posted yet';
     cp = 'But you could message them!';
   }
 
   if (search) {
-    hd = "Sorry, doesn't ring a bell";
+    hd = 'Sorry, doesn’t ring a bell';
     cp = 'You can always try again, though!';
   }
 
@@ -51,32 +53,39 @@ const UpsellState = ({ community }) => (
       <h3>Welcome to your new community!</h3>
     </UpsellHeader>
     <p>
-      You've already taken a huge step, but there's one problem - there's no one
+      You’ve already taken a huge step, but there’s one problem - there’s no one
       here yet!
     </p>
     <p>
-      This is usually the hardest part for new communities, but don't worry!
-      We've got a few suggestions to help you get things started...
+      This is usually the hardest part for new communities, but don’t worry!
+      We’ve got a few suggestions to help you get things started...
     </p>
     <p>
-      First things first, you'll want to <b>start a couple threads</b>.
+      First things first, you’ll want to <b>start a couple threads</b>.
     </p>
     <p>
       Open-ended questions are a great start, for example:
       <ul>
         <li>ask new members to introduce themselves</li>
         <li>
-          ask people about their favorite tools or what they're working on
+          ask people about their favorite tools or what they’re working on
         </li>
-        <li>ask for suggestions on a problem you're facing</li>
+        <li>ask for suggestions on a problem you’re facing</li>
       </ul>
     </p>
     <p>
-      Once you've got a couple threads started, make sure to{' '}
+      Once you’ve got a couple threads started, make sure to{' '}
       <b>help people find your community</b>. Talking about your community on
       social media like Twitter or Facebook is a great start - or you could add
-      our <a href="https://github.com/withspectrum/badge">badge</a> to a project
-      repo or your website.
+      our{' '}
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://github.com/withspectrum/badge"
+      >
+        badge
+      </a>{' '}
+      to a project repo or your website.
     </p>
     <p>
       You can also <b>invite people by email</b> or{' '}
@@ -85,11 +94,17 @@ const UpsellState = ({ community }) => (
     </p>
     <UpsellFooter>
       <p>
-        If you've encountered an issue, want a new feature, or just need some
+        If you’ve encountered an issue, want a new feature, or just need some
         help, you can always find the Spectrum team in the{' '}
         <Link to={'/spectrum'}>Spectrum Support</Link> community or on{' '}
-        <a href="https://twitter.com/withspectrum">Twitter</a> and we'd be more
-        than happy to give you a hand.
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://twitter.com/withspectrum"
+        >
+          Twitter
+        </a>{' '}
+        and we’d be more than happy to give you a hand.
       </p>
     </UpsellFooter>
   </Upsell>
@@ -127,12 +142,17 @@ type Props = {
   hasThreads: Function,
   hasNoThreads: Function,
   currentUser: ?Object,
-  viewContext: 'community' | 'channel',
+  viewContext?:
+    | ?'communityInbox'
+    | 'communityProfile'
+    | 'channelInbox'
+    | 'channelProfile'
+    | 'userProfile',
   slug: string,
   pinnedThreadId: ?string,
   isNewAndOwned: ?boolean,
   newActivityIndicator: ?boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   search?: boolean,
 };
 
@@ -266,26 +286,24 @@ class ThreadFeedPure extends React.Component<Props, State> {
           {this.props.data.community &&
             this.props.data.community.pinnedThread &&
             this.props.data.community.pinnedThread.id && (
-              <InboxThread
-                data={this.props.data.community.pinnedThread}
-                viewContext={viewContext}
-                pinnedThreadId={this.props.data.community.pinnedThread.id}
-                hasActiveCommunity={
-                  viewContext === 'community' && this.props.data.community
-                }
-              />
+              <ErrorBoundary fallbackComponent={null}>
+                <InboxThread
+                  data={this.props.data.community.pinnedThread}
+                  viewContext={viewContext}
+                  pinnedThreadId={this.props.data.community.pinnedThread.id}
+                />
+              </ErrorBoundary>
             )}
 
           {this.props.data.community &&
             this.props.data.community.watercooler &&
             this.props.data.community.watercooler.id && (
-              <InboxThread
-                data={this.props.data.community.watercooler}
-                viewContext={viewContext}
-                hasActiveCommunity={
-                  viewContext === 'community' && this.props.data.community
-                }
-              />
+              <ErrorBoundary fallbackComponent={null}>
+                <InboxThread
+                  data={this.props.data.community.watercooler}
+                  viewContext={viewContext}
+                />
+              </ErrorBoundary>
             )}
 
           <InfiniteList
@@ -302,17 +320,9 @@ class ThreadFeedPure extends React.Component<Props, State> {
           >
             {uniqueThreads.map(thread => {
               return (
-                <InboxThread
-                  key={thread.id}
-                  data={thread}
-                  viewContext={viewContext}
-                  hasActiveCommunity={
-                    viewContext === 'community' && this.props.data.community
-                  }
-                  hasActiveChannel={
-                    viewContext === 'channel' && this.props.data.channel
-                  }
-                />
+                <ErrorBoundary fallbackComponent={null} key={thread.id}>
+                  <InboxThread data={thread} viewContext={viewContext} />
+                </ErrorBoundary>
               );
             })}
           </InfiniteList>

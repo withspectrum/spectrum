@@ -11,6 +11,7 @@ import CommunitySearchWrapper from './components/communitySearchWrapper';
 import { Wrapper } from './style';
 import { Charts } from './view';
 import { track, events } from 'src/helpers/analytics';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   currentUser?: Object,
@@ -35,13 +36,18 @@ class Explore extends React.Component<Props> {
         <Wrapper data-cy="explore-page" id="main">
           <Head title={title} description={description} />
           <Titlebar title={'Explore'} noComposer />
-          <CommunitySearchWrapper
-            currentUser={this.props.currentUser}
-            redirectPath={window.location}
-          >
-            <Search />
-          </CommunitySearchWrapper>
-          <Charts />
+          <ErrorBoundary fallbackComponent={null}>
+            <CommunitySearchWrapper
+              currentUser={this.props.currentUser}
+              redirectPath={window.location}
+            >
+              <Search />
+            </CommunitySearchWrapper>
+          </ErrorBoundary>
+
+          <ErrorBoundary>
+            <Charts />
+          </ErrorBoundary>
         </Wrapper>
       </AppViewWrapper>
     );

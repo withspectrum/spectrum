@@ -19,6 +19,7 @@ import {
 } from '../../../../components/formElements';
 import { ImageInputWrapper } from '../../../../components/editForm/style';
 import { Actions, FormContainer, Form } from '../../style';
+import type { Dispatch } from 'redux';
 
 type State = {
   name: string,
@@ -38,7 +39,7 @@ type State = {
 
 type Props = {
   community: GetCommunityType,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   communityUpdated: Function,
   editCommunity: Function,
 };
@@ -108,6 +109,8 @@ class CommunityWithData extends React.Component<Props, State> {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (!file) return;
+
     this.setState({
       isLoading: true,
     });
@@ -129,12 +132,16 @@ class CommunityWithData extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   setCommunityCover = e => {
     let reader = new FileReader();
     let file = e.target.files[0];
+
+    if (!file) return;
 
     this.setState({
       isLoading: true,
@@ -157,7 +164,9 @@ class CommunityWithData extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   save = e => {
@@ -245,9 +254,9 @@ class CommunityWithData extends React.Component<Props, State> {
             />
 
             <PhotoInput
+              type={'community'}
               onChange={this.setCommunityPhoto}
               defaultValue={image}
-              allowGif
             />
           </ImageInputWrapper>
 
