@@ -16,7 +16,6 @@ import {
   ProfileDrop,
   ProfileTab,
   SupportTab,
-  PricingTab,
   Tab,
   Label,
   Navatar,
@@ -297,14 +296,6 @@ class Navbar extends React.Component<Props, State> {
             <Icon glyph="like" />
             <Label>Support</Label>
           </SupportTab>
-          <PricingTab
-            {...this.getTabProps(history.location.pathname === '/pricing')}
-            to="/pricing"
-            data-cy="navbar-pricing"
-          >
-            <Icon glyph="payment" />
-            <Label>Pricing</Label>
-          </PricingTab>
           <SigninLink to="/login">Sign In</SigninLink>
         </Nav>
       );
