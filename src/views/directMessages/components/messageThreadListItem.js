@@ -159,6 +159,15 @@ class ListCardItemDirectMessageThread extends Component<Props> {
                           )}
                         </DropdownSectionText>
                       </DropdownSection>
+                      {/* TODO(@mxstbr): Implement this */}
+                      <DropdownSection onClick={() => {}}>
+                        <DropdownAction>
+                          <Icon glyph={'door-leave'} size={'32'} />
+                        </DropdownAction>
+                        <DropdownSectionText>
+                          <DropdownSectionTitle>Leave</DropdownSectionTitle>
+                        </DropdownSectionText>
+                      </DropdownSection>
                     </Dropdown>
                   )}
                 />
