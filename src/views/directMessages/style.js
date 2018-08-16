@@ -93,7 +93,7 @@ export const TabsContainer = styled(FlexRow)`
   padding-top: 15px;
 `;
 
-export const TabsLink = styled(Link)`
+export const TabsLink = styled.button`
   color: ${props =>
     props.isActive ? props.theme.text.default : props.theme.text.alt};
   border-bottom: ${props =>
@@ -101,6 +101,8 @@ export const TabsLink = styled(Link)`
       ? `3px solid ${props.theme.text.default}`
       : `3px solid transparent`};
   padding: 0 7px 5px;
+  background: none;
+  font-size: 14px;
 
   &:first-child {
     margin-right: 12px;

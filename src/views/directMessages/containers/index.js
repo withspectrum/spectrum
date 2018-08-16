@@ -40,19 +40,19 @@ type Props = {
 };
 type State = {
   activeThread: string,
+  activeTab: 'archived' | 'active',
   subscription: ?Function,
 };
 
-class DirectMessages extends React.Component<Props, State> {
-  constructor() {
-    super();
-
-    this.state = {
-      activeThread: '',
-      subscription: null,
-    };
-  }
-
+class DirectMessagesContents extends React.Component<{
+  archivedThreads: boolean,
+  data: {
+    user: GetCurrentUserDMThreadConnectionType,
+  },
+}> {
+  state = {
+    subscription: null,
+  };
   subscribe = () => {
     this.setState({
       subscription: this.props.subscribeToUpdatedDirectMessageThreads(),
@@ -77,18 +77,6 @@ class DirectMessages extends React.Component<Props, State> {
     this.unsubscribe();
   }
 
-  setActiveThread = id => {
-    if (id === 'new') {
-      track(events.DIRECT_MESSAGE_THREAD_COMPOSER_VIEWED);
-    } else {
-      track(events.DIRECT_MESSAGE_THREAD_VIEWED);
-    }
-
-    return this.setState({
-      activeThread: id === 'new' ? '' : id,
-    });
-  };
-
   render() {
     const {
       match,
@@ -100,9 +88,6 @@ class DirectMessages extends React.Component<Props, State> {
       isLoading,
     } = this.props;
 
-    // Only logged-in users can view DM threads
-    if (!currentUser) return null;
-    const { activeThread } = this.state;
     const isComposing = match.url === '/messages/new' && match.isExact;
     const isViewingThread = !!match.params.threadId;
     const ThreadDetail = isViewingThread ? ExistingThread : NewThread;
@@ -136,10 +121,110 @@ class DirectMessages extends React.Component<Props, State> {
       data.user.directMessageThreadsConnection.pageInfo &&
       data.user.directMessageThreadsConnection.pageInfo.hasNextPage;
 
-    const isInActiveMessages =
-      this.props.match && this.props.match.path === '/messages';
-    const isInArchivedMessages =
-      this.props.match && this.props.match.path === '/messages/archived';
+    const isInActiveMessages = !this.props.archivedThreads;
+    const isInArchivedMessages = this.props.archivedThreads;
+
+    return (
+      <React.Fragment>
+        <MessagesList isViewingThread={isViewingThread || isComposing}>
+          <ComposeHeader>
+            <TabsContainer>
+              <TabsLink
+                onClick={this.props.showActive}
+                isActive={isInActiveMessages}
+              >
+                Inbox
+              </TabsLink>
+              <TabsLink
+                onClick={this.props.showArchived}
+                isActive={isInArchivedMessages}
+              >
+                Archived
+              </TabsLink>
+            </TabsContainer>
+            <NewMessageLink
+              to="/messages/new"
+              onClick={() => this.props.setActiveThread('new')}
+            >
+              <Icon glyph="message-new" />
+            </NewMessageLink>
+          </ComposeHeader>
+
+          <ThreadsList
+            hasNextPage={hasNextPage}
+            fetchMore={fetchMore}
+            active={this.props.activeThread}
+            threads={threads}
+            currentUser={currentUser}
+            isFetchingMore={isFetchingMore}
+            isLoading={isLoading}
+            activeTab={this.props.activeTab}
+          />
+        </MessagesList>
+
+        {dataExists && (
+          <ThreadDetail
+            match={match}
+            currentUser={currentUser}
+            setActiveThread={this.props.setActiveThread}
+            hideOnMobile={!(isComposing || isViewingThread)}
+            id={match.params.threadId && match.params.threadId}
+            threads={threads}
+          />
+        )}
+      </React.Fragment>
+    );
+  }
+}
+
+const DirectMessagesContentsWithFetch = compose(
+  getCurrentUserDirectMessageThreads,
+  viewNetworkHandler
+)(DirectMessagesContents);
+
+class DirectMessages extends React.Component<Props, State> {
+  constructor() {
+    super();
+
+    this.state = {
+      activeThread: '',
+      activeTab: 'active',
+      subscription: null,
+    };
+  }
+
+  setActiveThread = id => {
+    if (id === 'new') {
+      track(events.DIRECT_MESSAGE_THREAD_COMPOSER_VIEWED);
+    } else {
+      track(events.DIRECT_MESSAGE_THREAD_VIEWED);
+    }
+
+    return this.setState({
+      activeThread: id === 'new' ? '' : id,
+    });
+  };
+
+  showActive = () => {
+    this.setState({
+      activeTab: 'active',
+    });
+  };
+
+  showArchived = () => {
+    this.setState({
+      activeTab: 'archived',
+    });
+  };
+
+  render() {
+    const { match, currentUser } = this.props;
+
+    if (!currentUser) return null;
+
+    const { activeThread, activeTab } = this.state;
+    const isComposing = match.url === '/messages/new' && match.isExact;
+    const isViewingThread = !!match.params.threadId;
 
     return (
       <View>
@@ -150,45 +235,14 @@ class DirectMessages extends React.Component<Props, State> {
           noComposer={isComposing || isViewingThread}
           messageComposer={!isComposing && !isViewingThread}
         />
-        <MessagesList isViewingThread={isViewingThread || isComposing}>
-          <ComposeHeader>
-            <TabsContainer>
-              <TabsLink to="/messages" isActive={isInActiveMessages}>
-                Inbox
-              </TabsLink>
-              <TabsLink to="/messages/archived" isActive={isInArchivedMessages}>
-                Archived
-              </TabsLink>
-            </TabsContainer>
-            <NewMessageLink
-              to="/messages/new"
-              onClick={() => this.setActiveThread('new')}
-            >
-              <Icon glyph="message-new" />
-            </NewMessageLink>
-          </ComposeHeader>
-
-          <ThreadsList
-            hasNextPage={hasNextPage}
-            fetchMore={fetchMore}
-            active={activeThread}
-            threads={threads}
-            currentUser={currentUser}
-            isFetchingMore={isFetchingMore}
-            isLoading={isLoading}
-          />
-        </MessagesList>
-
-        {dataExists && (
-          <ThreadDetail
-            match={match}
-            currentUser={currentUser}
-            setActiveThread={this.setActiveThread}
-            hideOnMobile={!(isComposing || isViewingThread)}
-            id={match.params.threadId && match.params.threadId}
-            threads={threads}
-          />
-        )}
+        <DirectMessagesContentsWithFetch
+          {...this.props}
+          archivedThreads={activeTab === 'archived'}
+          showActive={this.showActive}
+          showArchived={this.showArchived}
+          setActiveThread={this.setActiveThread}
+          activeThread={activeThread}
+        />
       </View>
     );
   }
@@ -198,7 +252,5 @@ const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
   // $FlowIssue
   connect(map),
-  getCurrentUserDirectMessageThreads,
-  markDirectMessageNotificationsSeenMutation,
-  viewNetworkHandler
+  markDirectMessageNotificationsSeenMutation
 )(DirectMessages);

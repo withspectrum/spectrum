@@ -35,10 +35,10 @@ export const getCurrentUserDMThreadConnectionQuery = gql`
 `;
 
 export const getCurrentUserDMThreadConnectionOptions = {
-  options: ({ match: { path } }: string) => ({
+  options: ({ archivedThreads }: string) => ({
     variables: {
       after: '',
-      isArchived: path === '/messages/archived',
+      isArchived: archivedThreads,
     },
     fetchPolicy: 'cache-and-network',
   }),
@@ -53,11 +53,7 @@ export const getCurrentUserDMThreadConnectionOptions = {
             props.data.user.directMessageThreadsConnection.edges[
               props.data.user.directMessageThreadsConnection.edges.length - 1
             ].cursor,
-          isArchived:
-            (props &&
-              props.match &&
-              props.match.path === '/messages/archived') ||
-            false,
+          isArchived: props.archivedThreads,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult.user) {
