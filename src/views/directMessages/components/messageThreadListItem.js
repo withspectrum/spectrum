@@ -5,6 +5,17 @@ import { connect } from 'react-redux';
 // $FlowFixMe
 import { addToastWithTimeout } from 'src/actions/toasts';
 import Link from 'src/components/link';
+import EditDropdown from 'src/views/channelSettings/components/editDropdown';
+import {
+  Dropdown,
+  DropdownAction,
+  DropdownSection,
+  DropdownSectionTitle,
+  DropdownSectionText,
+  DropdownSectionSubtitle,
+  DropdownSectionDivider,
+} from 'src/components/settingsViews/style';
+import Icon from 'src/components/icons';
 import { timeDifference } from 'shared/time-difference';
 import { renderAvatars } from './avatars';
 import archiveDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/archiveDirectMessageThread';
@@ -38,7 +49,10 @@ class ListCardItemDirectMessageThread extends Component<Props> {
   handleArchiveDMThread = e => {
     e.stopPropagation();
     e.preventDefault();
-    const { thread: { id: threadId }, dispatch } = this.props;
+    const {
+      thread: { id: threadId },
+      dispatch,
+    } = this.props;
 
     this.props
       .archiveDirectMessageThread(threadId)
@@ -55,7 +69,10 @@ class ListCardItemDirectMessageThread extends Component<Props> {
   handleUnarchiveDMThread = e => {
     e.stopPropagation();
     e.preventDefault();
-    const { thread: { id: threadId }, dispatch } = this.props;
+    const {
+      thread: { id: threadId },
+      dispatch,
+    } = this.props;
 
     this.props
       .unarchiveDirectMessageThread(threadId)
@@ -119,16 +136,32 @@ class ListCardItemDirectMessageThread extends Component<Props> {
                 <Timestamp className="message-thread-item" isUnread={isUnread}>
                   {threadTimeDifference}
                 </Timestamp>
-                {!isArchived && (
-                  <ArchiveUnarchiveCTA onClick={this.handleArchiveDMThread}>
-                    Archive
-                  </ArchiveUnarchiveCTA>
-                )}
-                {isArchived && (
-                  <ArchiveUnarchiveCTA onClick={this.handleUnarchiveDMThread}>
-                    Unarchive
-                  </ArchiveUnarchiveCTA>
-                )}
+                <EditDropdown
+                  render={() => (
+                    <Dropdown>
+                      <DropdownSection
+                        onClick={
+                          isArchived
+                            ? this.handleUnarchiveDMThread
+                            : this.handleArchiveDMThread
+                        }
+                      >
+                        <DropdownAction>
+                          <Icon glyph={'archive-action'} size={'32'} />
+                        </DropdownAction>
+                        <DropdownSectionText>
+                          {isArchived ? (
+                            <DropdownSectionTitle>
+                              Unarchive
+                            </DropdownSectionTitle>
+                          ) : (
+                            <DropdownSectionTitle>Archive</DropdownSectionTitle>
+                          )}
+                        </DropdownSectionText>
+                      </DropdownSection>
+                    </Dropdown>
+                  )}
+                />
                 {/**
                   Add this when we have the dropdown/popover component and remove line 113-122
                   https://github.com/withspectrum/spectrum/pull/2992#issuecomment-388686504

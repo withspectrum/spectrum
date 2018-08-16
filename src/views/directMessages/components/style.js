@@ -62,10 +62,6 @@ export const ArchiveUnarchiveCTA = styled.button`
   @media (min-width: 768px) {
     display: none;
   }
-
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 export const Wrapper = styled(FlexCol)`
@@ -90,14 +86,6 @@ export const Wrapper = styled(FlexCol)`
   &:hover {
     cursor: pointer;
     background: ${props => props.theme.bg.wash};
-  }
-
-  &:hover ${Timestamp} {
-    display: none;
-  }
-
-  &:hover ${ArchiveUnarchiveCTA} {
-    display: inline-block;
   }
 `;
 
@@ -146,9 +134,9 @@ export const MessageGroupTextContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 0 calc(100% - 64px);
-  overflow: hidden;
   position: relative;
   top: -1px;
+  max-width: calc(100% - 64px);
 `;
 
 export const MessageGroupByline = styled.div`

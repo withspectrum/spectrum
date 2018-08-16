@@ -1,8 +1,5 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
-import compose from 'recompose/compose';
-// $FlowFixMe
 import styled from 'styled-components';
 import { Shadow, FlexCol, hexa, Transition, zIndex } from '../globals';
 import Card from '../card';
@@ -30,11 +27,10 @@ const StyledCard = styled(Card)`
   border-radius: 8px;
 `;
 
-const DropdownPure = (props: Object): React$Element<any> => (
+const Dropdown = (props: Object) => (
   <StyledDropdown className={'dropdown'} {...props}>
     <StyledCard>{props.children}</StyledCard>
   </StyledDropdown>
 );
 
-export const Dropdown = compose()(DropdownPure);
 export default Dropdown;
