@@ -128,6 +128,7 @@ exports.QUEUE_NAMES = {
   sendPrivateCommunityRequestEmailQueue: SEND_PRIVATE_COMMUNITY_REQUEST_SENT_EMAIL,
   sendPrivateCommunityRequestApprovedEmailQueue: SEND_PRIVATE_COMMUNITY_REQUEST_APPROVED_EMAIL,
   sendThreadCreatedNotificationEmailQueue: SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
+  sendUserReportedEmail: 'send user reported email',
 
   // mercury - reputation
   processReputationEventQueue: PROCESS_REPUTATION_EVENT,

@@ -417,6 +417,13 @@ export type IdentifyAnalyticsData = {
   userId: string,
 };
 
+export type SendUserReportedEmailJobData = {
+  userId: string,
+  message: string,
+  reportedBy: string,
+  reportedAt: Date,
+};
+
 export type Queues = {
   // athena
   sendThreadNotificationQueue: BullQueue<ThreadNotificationJobData>,
@@ -486,6 +493,7 @@ export type Queues = {
   sendThreadCreatedNotificationEmailQueue: BullQueue<
     SendNewThreadNotificationEmailJobData
   >,
+  sendUserReportedEmail: BullQueue<SendUserReportedEmailJobData>,
 
   // mercury
   processReputationEventQueue: BullQueue<ReputationEventJobData>,
