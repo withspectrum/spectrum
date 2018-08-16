@@ -170,6 +170,7 @@ class DirectMessagesContents extends React.Component<
             hasNextPage={hasNextPage}
             fetchMore={fetchMore}
             active={this.props.activeThread}
+            setActiveThread={this.props.setActiveThread}
             threads={threads}
             currentUser={currentUser}
             isFetchingMore={isFetchingMore}

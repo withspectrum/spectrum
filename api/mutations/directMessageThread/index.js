@@ -16,6 +16,7 @@ import createDirectMessageThread from './createDirectMessageThread';
 import setLastSeen from './setLastSeen';
 import archiveDirectMessageThread from './archiveDirectMessageThread';
 import unarchiveDirectMessageThread from './unarchiveDirectMessageThread';
+import leaveDirectMessageThread from './leaveDirectMessageThread';
 
 module.exports = {
   Mutation: {
@@ -23,5 +24,6 @@ module.exports = {
     setLastSeen,
     archiveDirectMessageThread,
     unarchiveDirectMessageThread,
+    leaveDirectMessageThread,
   },
 };

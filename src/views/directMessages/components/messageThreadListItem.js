@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 // $FlowFixMe
 import { addToastWithTimeout } from 'src/actions/toasts';
 import Link from 'src/components/link';
@@ -20,6 +21,7 @@ import { timeDifference } from 'shared/time-difference';
 import { renderAvatars } from './avatars';
 import archiveDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/archiveDirectMessageThread';
 import unarchiveDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/unarchiveDirectMessageThread';
+import leaveDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/leaveDirectMessageThread';
 import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import {
   ArchiveUnarchiveCTA,
@@ -39,8 +41,11 @@ type Props = {
   currentUser: Object,
   thread: GetDirectMessageThreadType,
   dispatch: Function,
+  setActiveThread: Function,
   archiveDirectMessageThread: (threadId: string) => Promise<any>,
   unarchiveDirectMessageThread: (threadId: string) => Promise<any>,
+  leaveDirectMessageThread: (threadId: string) => Promise<any>,
+  history: Object,
 };
 
 class ListCardItemDirectMessageThread extends Component<Props> {
@@ -83,6 +88,31 @@ class ListCardItemDirectMessageThread extends Component<Props> {
         dispatch(addToastWithTimeout('success', 'Message unarchived!'));
 
         return;
+      })
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
+  handleLeaveDMThread = e => {
+    e.stopPropagation();
+    e.preventDefault();
+    const {
+      thread: { id: threadId },
+      dispatch,
+    } = this.props;
+
+    this.props
+      .leaveDirectMessageThread(threadId)
+      .then(({ data }) => {
+        dispatch(
+          addToastWithTimeout(
+            'success',
+            'Left direct message thread successfully.'
+          )
+        );
+        this.props.setActiveThread('new');
+        this.props.history.push('/messages/new');
       })
       .catch(err => {
         dispatch(addToastWithTimeout('error', err.message));
@@ -162,8 +192,7 @@ class ListCardItemDirectMessageThread extends Component<Props> {
                           )}
                         </DropdownSectionText>
                       </DropdownSection>
-                      {/* TODO(@mxstbr): Implement this */}
-                      <DropdownSection onClick={() => {}}>
+                      <DropdownSection onClick={this.handleLeaveDMThread}>
                         <DropdownAction>
                           <Icon glyph={'door-leave'} size={'32'} />
                         </DropdownAction>
@@ -194,5 +223,7 @@ class ListCardItemDirectMessageThread extends Component<Props> {
 export default compose(
   connect(),
   archiveDirectMessageThreadMutation,
-  unarchiveDirectMessageThreadMutation
+  unarchiveDirectMessageThreadMutation,
+  withRouter,
+  leaveDirectMessageThreadMutation
 )(ListCardItemDirectMessageThread);

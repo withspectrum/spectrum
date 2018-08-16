@@ -124,6 +124,22 @@ const unarchiveDirectMessageThread = (
     .run();
 };
 
+const leaveDirectMessageThread = (
+  userDirectMessageThreadId: string
+): Promise<Object> => {
+  return db
+    .table('usersDirectMessageThreads')
+    .get(userDirectMessageThreadId)
+    .update(
+      {
+        deletedAt: new Date(),
+        receiveNotifications: false,
+      },
+      { returnChanges: true }
+    )
+    .run();
+};
+
 const getDirectMessageThread = (
   threadId: string,
   userId: string
@@ -175,6 +191,7 @@ module.exports = {
   updateDirectMessageThreadNotificationStatusForUser,
   unarchiveDirectMessageThread,
   archiveDirectMessageThread,
+  leaveDirectMessageThread,
   // get
   getDirectMessageThread,
   getMembersInDirectMessageThread,

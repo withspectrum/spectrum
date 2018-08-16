@@ -37,6 +37,7 @@ const getDirectMessageThreadsByUser = (
   return db
     .table('usersDirectMessageThreads')
     .getAll(userId, { index: 'userId' })
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
     .filter(
       thread =>
         isArchived
@@ -125,6 +126,7 @@ const checkForExistingDMThread = async (participants: Array<string>): Promise<?s
   let idsToCheck = await db
     .table('usersDirectMessageThreads')
     .getAll(...participants, { index: 'userId' })
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
     .group('threadId')
     .map(row => row('userId'))
     .ungroup()
@@ -146,6 +148,7 @@ const checkForExistingDMThread = async (participants: Array<string>): Promise<?s
   return await db
     .table('usersDirectMessageThreads')
     .getAll(...idsToCheck, { index: 'threadId' })
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
     .group('threadId')
     .ungroup()
     .filter(row =>

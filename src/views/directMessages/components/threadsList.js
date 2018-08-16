@@ -18,6 +18,7 @@ type Props = {
   hasNextPage: boolean,
   isFetchingMore: boolean,
   isLoading: boolean,
+  setActiveThread: Function,
 };
 
 type State = {
@@ -111,6 +112,7 @@ class ThreadsList extends React.Component<Props, State> {
                   thread={thread}
                   currentUser={currentUser}
                   active={active === thread.id}
+                  setActiveThread={this.props.setActiveThread}
                 />
               </ErrorBoundary>
             );

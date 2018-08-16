@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 
 export const unarchiveDirectMessageThread = gql`
-  mutation unarchiveDirectMessageThread($input: unarchiveDMThreadInput!) {
+  mutation unarchiveDirectMessageThread($input: UnarchiveDMThreadInput!) {
     unarchiveDirectMessageThread(input: $input) {
       id
     }

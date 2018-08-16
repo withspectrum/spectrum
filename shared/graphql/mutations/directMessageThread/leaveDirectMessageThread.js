@@ -3,16 +3,17 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { getCurrentUserDMThreadConnectionQuery } from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
 
-export const archiveDirectMessageThread = gql`
-  mutation archiveDirectMessageThread($input: ArchiveDMThreadInput!) {
-    archiveDirectMessageThread(input: $input) {
+export const leaveDirectMessageThread = gql`
+  mutation leaveDirectMessageThread($input: LeaveDirectMessageThreadInput!) {
+    leaveDirectMessageThread(input: $input) {
       id
     }
   }
 `;
-const ArchiveDMThreadOptions = {
+
+const leaveDMThreadOptions = {
   props: ({ mutate }) => ({
-    archiveDirectMessageThread: threadId =>
+    leaveDirectMessageThread: threadId =>
       mutate({
         variables: {
           input: {
@@ -23,4 +24,5 @@ const ArchiveDMThreadOptions = {
       }),
   }),
 };
-export default graphql(archiveDirectMessageThread, ArchiveDMThreadOptions);
+
+export default graphql(leaveDirectMessageThread, leaveDMThreadOptions);
