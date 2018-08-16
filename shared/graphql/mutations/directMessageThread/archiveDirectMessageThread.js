@@ -1,6 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
+import { getCurrentUserDMThreadConnectionQuery } from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
 
 export const archiveDirectMessageThread = gql`
   mutation archiveDirectMessageThread($input: archiveDMThreadInput!) {
@@ -18,6 +19,7 @@ const ArchiveDMThreadOptions = {
             threadId,
           },
         },
+        refetchQueries: ['currentUserDirectMessageThreads'],
       }),
   }),
 };

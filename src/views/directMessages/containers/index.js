@@ -86,6 +86,7 @@ class DirectMessagesContents extends React.Component<{
       fetchMore,
       isFetchingMore,
       isLoading,
+      archivedThreads,
     } = this.props;
 
     const isComposing = match.url === '/messages/new' && match.isExact;
@@ -99,6 +100,11 @@ class DirectMessagesContents extends React.Component<{
       data.user.directMessageThreadsConnection.edges.length > 0
         ? data.user.directMessageThreadsConnection.edges
             .map(thread => thread && thread.node)
+            .filter(thread => {
+              if (!thread.archivedAt && !archivedThreads) return true;
+              if (thread.archivedAt && archivedThreads) return true;
+              return false;
+            })
             .sort((a, b) => {
               const x =
                 a &&

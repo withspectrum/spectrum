@@ -18,6 +18,7 @@ const UnarchiveDMThreadOptions = {
             threadId,
           },
         },
+        refetchQueries: ['currentUserDirectMessageThreads'],
       }),
   }),
 };
