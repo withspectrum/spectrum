@@ -7,7 +7,6 @@ export const deleteDirectMessageThread = gql`
   mutation deleteDirectMessageThread($input: DeleteDirectMessageThreadInput!) {
     deleteDirectMessageThread(input: $input) {
       id
-      isdeleted
     }
   }
 `;

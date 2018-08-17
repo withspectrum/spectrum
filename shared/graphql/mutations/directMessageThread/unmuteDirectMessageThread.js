@@ -7,7 +7,7 @@ export const unmuteDirectMessageThread = gql`
   mutation unmuteDirectMessageThread($input: UnmuteDirectMessageThreadInput!) {
     unmuteDirectMessageThread(input: $input) {
       id
-      isunmuted
+      isMuted
     }
   }
 `;

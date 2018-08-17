@@ -7,6 +7,7 @@ export const archiveDirectMessageThread = gql`
   mutation archiveDirectMessageThread($input: ArchiveDMThreadInput!) {
     archiveDirectMessageThread(input: $input) {
       id
+      isArchived
     }
   }
 `;
