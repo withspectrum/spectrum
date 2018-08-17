@@ -1,18 +1,11 @@
 // @flow
 const { db } = require('./db');
-
-/*
-===========================================================
-
-  MODIFYING AND CREATING DATA IN USERSDIRECTMESSAGETHREADS
-
-===========================================================
-*/
+import type { DBUsersDirectMessageThread } from 'shared/types';
 
 // creates a single member in a direct message thread. invoked when a user is added
 // to an existing direct message thread (group thread only)
 // prettier-ignore
-const createMemberInDirectMessageThread = (threadId: string, userId: string, setActive: boolean): Promise<Object> => {
+export const createMemberInDirectMessageThread = (threadId: string, userId: string, setActive: boolean): Promise<DBUsersDirectMessageThread> => {
   return db
     .table('usersDirectMessageThreads')
     .insert(
@@ -33,12 +26,12 @@ const createMemberInDirectMessageThread = (threadId: string, userId: string, set
 // removes a single member from a channel. will be invoked if a user leaves
 // a channel
 // prettier-ignore
-const removeMemberInDirectMessageThread = (threadId: string, userId: string): Promise<Object> => {
+export const removeMemberInDirectMessageThread = (threadId: string, userId: string): Promise<Object> => {
   return db
     .table('usersDirectMessageThreads')
     .getAll(threadId, { index: 'threadId' })
     .filter({ userId })
-    .delete()
+    .update({ deletedAt: new Date() })
     .run();
 };
 
@@ -46,16 +39,16 @@ const removeMemberInDirectMessageThread = (threadId: string, userId: string): Pr
 // dm thread is permanently deleted, at which point we don't want any records in the
 // database to show a user relationship to the deleted thread
 // prettier-ignore
-const removeMembersInDirectMessageThread = (threadId: string): Promise<Object> => {
+export const removeMembersInDirectMessageThread = (threadId: string): Promise<Object> => {
   return db
     .table('usersDirectMessageThreads')
     .getAll(threadId, { index: 'threadId' })
-    .delete()
+    .update({ deletedAt: new Date() })
     .run();
 };
 
 // prettier-ignore
-const setUserLastSeenInDirectMessageThread = (threadId: string, userId: string): Promise<Object> => {
+export const setUserLastSeenInDirectMessageThread = (threadId: string, userId: string): Promise<Object> => {
   return db
     .table('usersDirectMessageThreads')
     .getAll(userId, { index: 'userId' })
@@ -73,7 +66,7 @@ const setUserLastSeenInDirectMessageThread = (threadId: string, userId: string):
 };
 
 // prettier-ignore
-const updateDirectMessageThreadNotificationStatusForUser = (threadId: string, userId: string, val: boolean): Promise<Object> => {
+export const updateDirectMessageThreadNotificationStatusForUser = (threadId: string, userId: string, val: boolean): Promise<Object> => {
   return db
     .table('usersDirectMessageThreads')
     .getAll(userId, { index: 'userId' })
@@ -84,35 +77,26 @@ const updateDirectMessageThreadNotificationStatusForUser = (threadId: string, us
     .run();
 };
 
-/*
-===========================================================
-
-        GETTING DATA FROM USERSDIRECTMESSAGETHREADS
-
-===========================================================
-*/
-
-const archiveDirectMessageThread = (
-  userDirectMessageThreadId: string
-): Promise<Object> => {
+// prettier-ignore
+export const archiveDirectMessageThread = (threadId: string): Promise<DBUsersDirectMessageThread> => {
   return db
     .table('usersDirectMessageThreads')
-    .get(userDirectMessageThreadId)
+    .get(threadId)
     .update(
       {
         archivedAt: new Date(),
       },
       { returnChanges: true }
     )
-    .run();
+    .run()
+    .then(result => result.changes[0].new_val)
 };
 
-const unarchiveDirectMessageThread = (
-  userDirectMessageThreadId: string
-): Promise<Object> => {
+// prettier-ignore
+export const unarchiveDirectMessageThread = (threadId: string): Promise<DBUsersDirectMessageThread> => {
   return db
     .table('usersDirectMessageThreads')
-    .get(userDirectMessageThreadId)
+    .get(threadId)
     .update(
       {
         archivedAt: db.literal(),
@@ -120,15 +104,15 @@ const unarchiveDirectMessageThread = (
       },
       { returnChanges: true }
     )
-    .run();
+    .run()
+    .then(result => result.changes[0].new_val)
 };
 
-const leaveDirectMessageThread = (
-  userDirectMessageThreadId: string
-): Promise<Object> => {
+// prettier-ignore
+export const leaveDirectMessageThread = (threadId: string): Promise<DBUsersDirectMessageThread> => {
   return db
     .table('usersDirectMessageThreads')
-    .get(userDirectMessageThreadId)
+    .get(threadId)
     .update(
       {
         deletedAt: new Date(),
@@ -136,37 +120,71 @@ const leaveDirectMessageThread = (
       },
       { returnChanges: true }
     )
-    .run();
+    .run()
+    .then(result => result.changes[0].new_val)
 };
 
-const getDirectMessageThread = (
-  threadId: string,
-  userId: string
-): Promise<Object> => {
+// prettier-ignore
+export const muteDirectMessageThread = (threadId: string): Promise<DBUsersDirectMessageThread> => {
+  return db
+    .table('usersDirectMessageThreads')
+    .get(threadId)
+    .update(
+      { 
+        receiveNotifications: false,
+        mutedAt: new Date()
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val)
+};
+
+// prettier-ignore
+export const unmuteDirectMessageThread = (threadId: string): Promise<DBUsersDirectMessageThread> => {
+  return db
+    .table('usersDirectMessageThreads')
+    .get(threadId)
+    .update(
+      { 
+        receiveNotifications: true,
+        mutedAt: db.literal()
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val)
+};
+
+// prettier-ignore
+export const getDirectMessageThread = (threadId: string, userId: string): Promise<Array<?DBUsersDirectMessageThread>> => {
   return db
     .table('usersDirectMessageThreads')
     .getAll(threadId, { index: 'threadId' })
     .filter({ userId })
-    .run();
+    .filter(row => row.hasFields('deletedAt').not())
+    .run()
 };
 
 // prettier-ignore
-const getMembersInDirectMessageThread = (threadId: string): Promise<Array<Object>> => {
+export const getMembersInDirectMessageThread = (threadId: string): Promise<Array<Object>> => {
   return db
     .table('usersDirectMessageThreads')
     .getAll(threadId, { index: 'threadId' })
+    .filter(row => row.hasFields('deletedAt').not())
     .eqJoin('userId', db.table('users'))
     .without({ left: ['createdAt'], right: ['id', 'lastSeen'] })
     .zip()
-    .run();
+    .run()
 };
 
 // for loader
 // prettier-ignore
-const getMembersInDirectMessageThreads = (threadIds: Array<string>): Promise<Array<Object>> => {
+export const getMembersInDirectMessageThreads = (threadIds: Array<string>): Promise<Array<Object>> => {
   return db
     .table('usersDirectMessageThreads')
     .getAll(...threadIds, { index: 'threadId' })
+    .filter(row => row.hasFields('deletedAt').not())
     .eqJoin('userId', db.table('users'))
     .without({ left: ['createdAt'], right: ['id', 'lastSeen'] })
     .group(rec => rec('left')('threadId'))
@@ -174,26 +192,14 @@ const getMembersInDirectMessageThreads = (threadIds: Array<string>): Promise<Arr
     .run();
 };
 
-const isMemberOfDirectMessageThread = (threadId: string, userId: string) => {
+export const isMemberOfDirectMessageThread = (
+  threadId: string,
+  userId: string
+) => {
   return db
     .table('usersDirectMessageThreads')
     .getAll(threadId, { index: 'threadId' })('userId')
+    .filter(row => row.hasFields('deletedAt').not())
     .contains(userId)
     .run();
-};
-
-module.exports = {
-  createMemberInDirectMessageThread,
-  removeMemberInDirectMessageThread,
-  removeMembersInDirectMessageThread,
-  setUserLastSeenInDirectMessageThread,
-  updateDirectMessageThreadNotificationStatusForUser,
-  unarchiveDirectMessageThread,
-  archiveDirectMessageThread,
-  leaveDirectMessageThread,
-  // get
-  getDirectMessageThread,
-  getMembersInDirectMessageThread,
-  getMembersInDirectMessageThreads,
-  isMemberOfDirectMessageThread,
 };
