@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "aws-sdk": "^2.279.1",
+    "aws-sdk": "^2.296.0",
     "body-parser": "^1.18.3",
     "bull": "^3.4.7",
     "express": "^4.16.3",
