@@ -5,32 +5,25 @@ import {
   leaveDirectMessageThread,
   getDirectMessageThread,
 } from '../../models/usersDirectMessageThreads';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-type archiveDMThreadInput = {
+type ArchiveDMThreadInput = {
   input: {
     threadId: string,
   },
 };
 
-export default async (
-  _: any,
-  { input }: archiveDMThreadInput,
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+// prettier-ignore
+export default requireAuth( async (_: any, args: ArchiveDMThreadInput, ctx: GraphQLContext) => {
+  const { input: { threadId } } = args
+  const { user: currentUser } = ctx
 
-  if (!currentUser) {
-    return new UserError(
-      'You must be signed in to leave a direct message thread.'
-    );
+  if (!threadId) {
+    return new UserError('We had trouble leaving this direct message thread - please try again.');
   }
 
-  if (!input.threadId) {
-    return new UserError('A threadId is required.');
-  }
-
-  const [directMessageThread] = await getDirectMessageThread(
-    input.threadId,
+  const [ directMessageThread ] = await getDirectMessageThread(
+    threadId,
     currentUser.id
   );
 
@@ -38,11 +31,13 @@ export default async (
     return new UserError('This direct message thread does not exist.');
   }
 
-  try {
-    const { changes } = await leaveDirectMessageThread(directMessageThread.id);
-
-    return changes[0].new_val;
-  } catch (e) {
-    return new UserError('We could not archive your message. Please try again');
+  if (!directMessageThread.isGroup) {
+    return new UserError('Only group messages can be left.')
   }
-};
+
+  try {
+    return await leaveDirectMessageThread(directMessageThread.id);
+  } catch (e) {
+    return new UserError('An error occured while leaving this thread. Please try again');
+  }
+})
