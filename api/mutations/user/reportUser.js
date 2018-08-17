@@ -3,6 +3,8 @@ import { isAuthedResolver } from '../../utils/permissions';
 import UserError from '../../utils/UserError';
 import { _adminProcessUserReportedQueue } from 'shared/bull/queues';
 import type { GraphQLContext } from '../../';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type ReportUserInput = {
   input: {
@@ -29,6 +31,24 @@ export default isAuthedResolver(
     }
 
     try {
+      trackQueue.add({
+        userId,
+        event: events.USER_WAS_REPORTED,
+        properties: {
+          reason,
+          reportedBy: currentUser.id,
+        },
+      });
+
+      trackQueue.add({
+        userId: currentUser.id,
+        event: events.USER_REPORTED_USER,
+        properties: {
+          reason,
+          reportedUser: userId,
+        },
+      });
+
       await _adminProcessUserReportedQueue.add({
         userId,
         reason,
