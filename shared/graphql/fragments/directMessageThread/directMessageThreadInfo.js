@@ -11,7 +11,9 @@ export type ParticipantType = {
 export type DirectMessageThreadInfoType = {
   id: string,
   threadLastActive: Date,
-  archivedAt?: Date,
+  isArchived: boolean,
+  isMuted: boolean,
+  isGroup: boolean,
   snippet: string,
   participants: Array<ParticipantType>,
 };
@@ -19,7 +21,9 @@ export type DirectMessageThreadInfoType = {
 export default gql`
   fragment directMessageThreadInfo on DirectMessageThread {
     id
-    archivedAt
+    isArchived
+    isMuted
+    isGroup
     snippet
     threadLastActive
     participants {

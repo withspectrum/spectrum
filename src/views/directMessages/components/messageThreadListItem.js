@@ -17,7 +17,10 @@ import { timeDifference } from 'shared/time-difference';
 import { renderAvatars } from './avatars';
 import archiveDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/archiveDirectMessageThread';
 import unarchiveDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/unarchiveDirectMessageThread';
+import muteDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/muteDirectMessageThread';
+import unmuteDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/unmuteDirectMessageThread';
 import leaveDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/leaveDirectMessageThread';
+import deleteDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/leaveDirectMessageThread';
 import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import {
   Wrapper,
@@ -39,6 +42,9 @@ type Props = {
   archiveDirectMessageThread: (threadId: string) => Promise<any>,
   unarchiveDirectMessageThread: (threadId: string) => Promise<any>,
   leaveDirectMessageThread: (threadId: string) => Promise<any>,
+  muteDirectMessageThread: (threadId: string) => Promise<any>,
+  unmuteDirectMessageThread: (threadId: string) => Promise<any>,
+  deleteDirectMessageThread: (threadId: string) => Promise<any>,
   history: Object,
 };
 
@@ -79,7 +85,7 @@ class ListCardItemDirectMessageThread extends Component<Props> {
     this.props
       .unarchiveDirectMessageThread(threadId)
       .then(({ data }) => {
-        dispatch(addToastWithTimeout('success', 'Message unarchived!'));
+        dispatch(addToastWithTimeout('neutral', 'Message unarchived'));
 
         return;
       })
@@ -99,14 +105,69 @@ class ListCardItemDirectMessageThread extends Component<Props> {
     this.props
       .leaveDirectMessageThread(threadId)
       .then(({ data }) => {
-        dispatch(
-          addToastWithTimeout(
-            'success',
-            'Left direct message thread successfully.'
-          )
-        );
+        dispatch(addToastWithTimeout('success', 'Left conversation.'));
         this.props.setActiveThread('new');
         this.props.history.push('/messages/new');
+      })
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
+  handleDeleteDMThread = e => {
+    e.stopPropagation();
+    e.preventDefault();
+    const {
+      thread: { id: threadId },
+      dispatch,
+    } = this.props;
+
+    this.props
+      .leaveDirectMessageThread(threadId)
+      .then(({ data }) => {
+        dispatch(addToastWithTimeout('success', 'Conversation deleted'));
+        this.props.setActiveThread('new');
+        this.props.history.push('/messages/new');
+      })
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
+  handleMuteDMThread = e => {
+    e.stopPropagation();
+    e.preventDefault();
+    const {
+      thread: { id: threadId },
+      dispatch,
+    } = this.props;
+
+    this.props
+      .muteDirectMessageThread(threadId)
+      .then(({ data }) => {
+        return dispatch(
+          addToastWithTimeout('neutral', 'Notifications disabled')
+        );
+      })
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
+  handleUnmuteDMThread = e => {
+    e.stopPropagation();
+    e.preventDefault();
+    const {
+      thread: { id: threadId },
+      dispatch,
+    } = this.props;
+
+    this.props
+      .unmuteDirectMessageThread(threadId)
+      .then(({ data }) => {
+        return dispatch(
+          addToastWithTimeout('success', 'Notifications enabled!')
+        );
       })
       .catch(err => {
         dispatch(addToastWithTimeout('error', err.message));
@@ -148,7 +209,7 @@ class ListCardItemDirectMessageThread extends Component<Props> {
     let isUnread = currentParticipantLastActiveTimestamp < timestamp;
     isUnread = active ? false : isUnread;
 
-    const isArchived = Boolean(this.props.thread.archivedAt);
+    const { isArchived, isMuted } = this.props.thread;
 
     return (
       <Wrapper active={active} isUnread={isUnread}>
@@ -174,24 +235,49 @@ class ListCardItemDirectMessageThread extends Component<Props> {
                         }
                       >
                         <DropdownAction>
-                          <Icon glyph={'archive-action'} size={'32'} />
+                          <Icon glyph={'archive-action'} size={24} />
                         </DropdownAction>
                         <DropdownSectionText>
-                          {isArchived ? (
-                            <DropdownSectionTitle>
-                              Unarchive
-                            </DropdownSectionTitle>
-                          ) : (
-                            <DropdownSectionTitle>Archive</DropdownSectionTitle>
-                          )}
+                          <DropdownSectionTitle>
+                            {isArchived ? 'Unarchive' : 'Archive'}
+                          </DropdownSectionTitle>
                         </DropdownSectionText>
                       </DropdownSection>
-                      <DropdownSection onClick={this.handleLeaveDMThread}>
+
+                      {this.props.thread.isGroup && (
+                        <DropdownSection onClick={this.handleLeaveDMThread}>
+                          <DropdownAction>
+                            <Icon glyph={'door-leave'} size={24} />
+                          </DropdownAction>
+                          <DropdownSectionText>
+                            <DropdownSectionTitle>Leave</DropdownSectionTitle>
+                          </DropdownSectionText>
+                        </DropdownSection>
+                      )}
+
+                      <DropdownSection
+                        onClick={
+                          isMuted
+                            ? this.handleUnmuteDMThread
+                            : this.handleMuteDMThread
+                        }
+                      >
                         <DropdownAction>
-                          <Icon glyph={'door-leave'} size={'32'} />
+                          <Icon glyph={'notification'} size={24} />
                         </DropdownAction>
                         <DropdownSectionText>
-                          <DropdownSectionTitle>Leave</DropdownSectionTitle>
+                          <DropdownSectionTitle>
+                            {isMuted ? 'Unmute' : 'Mute'}
+                          </DropdownSectionTitle>
+                        </DropdownSectionText>
+                      </DropdownSection>
+
+                      <DropdownSection onClick={this.handleDeleteDMThread}>
+                        <DropdownAction>
+                          <Icon glyph={'delete'} size={24} />
+                        </DropdownAction>
+                        <DropdownSectionText>
+                          <DropdownSectionTitle>Delete</DropdownSectionTitle>
                         </DropdownSectionText>
                       </DropdownSection>
                     </Dropdown>
@@ -218,6 +304,9 @@ export default compose(
   connect(),
   archiveDirectMessageThreadMutation,
   unarchiveDirectMessageThreadMutation,
+  muteDirectMessageThreadMutation,
+  unmuteDirectMessageThreadMutation,
+  deleteDirectMessageThreadMutation,
   withRouter,
   leaveDirectMessageThreadMutation
 )(ListCardItemDirectMessageThread);
