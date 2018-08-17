@@ -23,7 +23,7 @@ const DirectMessageThread = /* GraphQL */ `
 
   type DirectMessageThread {
     id: ID!
-    archivedAt: Date
+    archivedAt: Date @deprecated(reason: "Check the isArchived boolean instead")
     messageConnection(
       first: Int = 20
       after: String
@@ -31,6 +31,9 @@ const DirectMessageThread = /* GraphQL */ `
     participants: [ParticipantInfo]! @cost(complexity: 1)
     snippet: String! @cost(complexity: 2)
     threadLastActive: Date!
+    isArchived: Boolean
+    isMuted: Boolean
+    isGroup: Boolean
   }
 
   extend type Query {
@@ -68,7 +71,19 @@ const DirectMessageThread = /* GraphQL */ `
     threadId: ID!
   }
 
+  input MuteDMThreadInput {
+    threadId: ID!
+  }
+
+  input UnmuteDMThreadInput {
+    threadId: ID!
+  }
+
   input LeaveDirectMessageThreadInput {
+    threadId: ID!
+  }
+
+  input DeleteDirectMessageThreadInput {
     threadId: ID!
   }
 
@@ -83,8 +98,13 @@ const DirectMessageThread = /* GraphQL */ `
     unarchiveDirectMessageThread(
       input: UnarchiveDMThreadInput!
     ): DirectMessageThread
+    muteDirectMessageThread(input: MuteDMThreadInput!): DirectMessageThread
+    unmuteDirectMessageThread(input: UnmuteDMThreadInput!): DirectMessageThread
     leaveDirectMessageThread(
       input: LeaveDirectMessageThreadInput!
+    ): DirectMessageThread
+    deleteDirectMessageThread(
+      input: DeleteDirectMessageThreadInput!
     ): DirectMessageThread
   }
 
