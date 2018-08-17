@@ -5,30 +5,25 @@ import {
   unarchiveDirectMessageThread,
   getDirectMessageThread,
 } from '../../models/usersDirectMessageThreads';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-type unarchiveDMThreadInput = {
+type UnarchiveDMThreadInput = {
   input: {
     threadId: string,
   },
 };
 
-export default async (
-  _: any,
-  { input }: unarchiveDMThreadInput,
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+// prettier-ignore
+export default requireAuth( async (_: any, args: UnarchiveDMThreadInput, ctx: GraphQLContext) => {
+  const { input: { threadId }} = args
+  const { user: currentUser } = ctx
 
-  if (!currentUser) {
-    return new UserError('You must be signed in to unarchive a message.');
-  }
-
-  if (!input.threadId) {
+  if (!threadId) {
     return new UserError('A threadId is required.');
   }
 
   const [directMessageThread] = await getDirectMessageThread(
-    input.threadId,
+    threadId,
     currentUser.id
   );
 
@@ -37,16 +32,8 @@ export default async (
   }
 
   try {
-    const { changes } = await unarchiveDirectMessageThread(
-      directMessageThread.id
-    );
-
-    console.log(changes);
-
-    return changes[0].new_val;
+    return await unarchiveDirectMessageThread(directMessageThread.id);
   } catch (e) {
-    return new UserError(
-      'We could not unarchive your message. Please try again'
-    );
+    return new UserError('We could not unarchive your message. Please try again');
   }
-};
+})
