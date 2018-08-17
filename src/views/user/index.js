@@ -155,7 +155,11 @@ class UserView extends React.Component<Props, State> {
             title={title}
             description={description}
             image={user.profilePhoto}
-          />
+            type="profile"
+          >
+            <meta property="profile:last_name" content={user.name} />
+            <meta property="profile:username" content={user.username} />
+          </Head>
           <Titlebar
             title={user.name}
             subtitle={'Posts By'}
