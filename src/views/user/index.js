@@ -12,7 +12,7 @@ import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import { UserProfile } from 'src/components/profile';
 import { LoadingScreen } from 'src/components/loading';
 import { NullState } from 'src/components/upsell';
-import { Button, ButtonRow } from 'src/components/buttons';
+import { Button, ButtonRow, TextButton } from 'src/components/buttons';
 import CommunityList from './components/communityList';
 import Search from './components/search';
 import {
@@ -40,11 +40,16 @@ import {
   MobileSegment,
 } from 'src/components/segmentedControl';
 import { ErrorBoundary } from 'src/components/error';
+import { openModal } from 'src/actions/modals';
 
-const ThreadFeedWithData = compose(connect(), getUserThreads)(ThreadFeed);
-const ThreadParticipantFeedWithData = compose(connect(), getUserThreads)(
-  ThreadFeed
-);
+const ThreadFeedWithData = compose(
+  connect(),
+  getUserThreads
+)(ThreadFeed);
+const ThreadParticipantFeedWithData = compose(
+  connect(),
+  getUserThreads
+)(ThreadFeed);
 
 type Props = {
   match: Match,
@@ -98,13 +103,23 @@ class UserView extends React.Component<Props, State> {
     this.props.history.push('/messages/new');
   };
 
+  initReport = () => {
+    const {
+      data: { user },
+      dispatch,
+    } = this.props;
+    return dispatch(openModal('REPORT_USER_MODAL', { user }));
+  };
+
   render() {
     const {
       data: { user },
       isLoading,
       hasError,
       queryVarIsChanging,
-      match: { params: { username } },
+      match: {
+        params: { username },
+      },
       currentUser,
     } = this.props;
     const { hasThreads, selectedView } = this.state;
@@ -162,9 +177,12 @@ class UserView extends React.Component<Props, State> {
 
               {currentUser &&
                 user.id !== currentUser.id && (
-                  <LoginButton onClick={() => this.initMessage(user)}>
-                    Message {user.name}
-                  </LoginButton>
+                  <React.Fragment>
+                    <LoginButton onClick={() => this.initMessage(user)}>
+                      Message {user.name}
+                    </LoginButton>
+                    <TextButton onClick={this.initReport}>Report</TextButton>
+                  </React.Fragment>
                 )}
               {currentUser &&
                 user.id === currentUser.id && (
