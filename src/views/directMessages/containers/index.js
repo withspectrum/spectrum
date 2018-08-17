@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import getCurrentUserDirectMessageThreads from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
 import type { GetCurrentUserDMThreadConnectionType } from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';

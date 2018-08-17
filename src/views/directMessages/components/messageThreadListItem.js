@@ -3,9 +3,7 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-// $FlowFixMe
 import { addToastWithTimeout } from 'src/actions/toasts';
-import Link from 'src/components/link';
 import EditDropdown from 'src/views/channelSettings/components/editDropdown';
 import {
   Dropdown,
@@ -13,8 +11,6 @@ import {
   DropdownSection,
   DropdownSectionTitle,
   DropdownSectionText,
-  DropdownSectionSubtitle,
-  DropdownSectionDivider,
 } from 'src/components/settingsViews/style';
 import Icon from 'src/components/icons';
 import { timeDifference } from 'shared/time-difference';
@@ -24,7 +20,6 @@ import unarchiveDirectMessageThreadMutation from 'shared/graphql/mutations/direc
 import leaveDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/leaveDirectMessageThread';
 import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import {
-  ArchiveUnarchiveCTA,
   Wrapper,
   WrapperLink,
   Row,
@@ -33,7 +28,6 @@ import {
   MessageGroupByline,
   Usernames,
   Timestamp,
-  GearButton,
 } from './style';
 
 type Props = {
