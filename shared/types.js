@@ -324,12 +324,14 @@ export type DBUsersCommunities = {
   userId: string,
 };
 
-export type DBUsersDirectMessageThreads = {
+export type DBUsersDirectMessageThread = {
   id: string,
   createdAt: Date,
   lastActive?: Date,
   lastSeen?: Date,
   archivedAt?: Date,
+  deletedAt?: Date,
+  mutedAt?: Date,
   receiveNotifications: boolean,
   threadId: string,
   userId: string,
