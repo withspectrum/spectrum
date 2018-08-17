@@ -49,12 +49,12 @@ export const Nav = styled.nav`
   ${props =>
     props.loggedOut &&
     css`
-      grid-template-columns: repeat(4, auto) 1fr auto;
-      grid-template-areas: 'logo explore support pricing . signin';
+      grid-template-columns: repeat(3, auto) 1fr auto;
+      grid-template-areas: 'logo explore support . signin';
 
       @media (max-width: 768px) {
-        grid-template-columns: auto auto auto auto;
-        grid-template-areas: 'home explore support pricing';
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-areas: 'home explore support';
       }
     `} ${props =>
   props.hideOnMobile &&
@@ -275,10 +275,6 @@ export const ExploreTab = styled(Tab)`
 
 export const SupportTab = styled(Tab)`
   grid-area: support;
-`;
-
-export const PricingTab = styled(MessageTab)`
-  grid-area: pricing;
 `;
 
 export const NotificationTab = styled(DropTab)`

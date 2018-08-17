@@ -44,7 +44,7 @@ const generateImageFromText = ({ title, footer }: GetMetaImageInput) => {
   if (!base64title || !base64footer) return;
 
   const titleUrl = `${IMGIX_TEXT_ENDPOINT}?${stringify(
-    { ...TITLE_PARAMS, txt64: base64title.replace('=', '') },
+    { ...TITLE_PARAMS, txt64: base64title.replace(/=/g, '') },
     { encode: false }
   )}`;
   const footerUrl = `${IMGIX_TEXT_ENDPOINT}?${stringify(
