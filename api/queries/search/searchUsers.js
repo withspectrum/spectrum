@@ -7,36 +7,38 @@ import { trackQueue } from 'shared/bull/queues';
 import { events } from 'shared/analytics';
 
 export default (args: Args, { loaders, user }: GraphQLContext) => {
-  const { queryString, filter } = args;
-  const searchFilter = filter;
+  // const { queryString, filter } = args;
+  // const searchFilter = filter;
 
-  // if we are searching for community members, find *everyone*
-  const hitsPerPage = searchFilter && searchFilter.communityId ? 100000 : 20;
+  // // if we are searching for community members, find *everyone*
+  // const hitsPerPage = searchFilter && searchFilter.communityId ? 100000 : 20;
 
-  return usersSearchIndex
-    .search({ query: queryString, hitsPerPage })
-    .then(content => {
-      const event =
-        searchFilter && searchFilter.communityId
-          ? events.SEARCHED_COMMUNITY_MEMBERS
-          : events.SEARCHED_USERS;
+  // return usersSearchIndex
+  //   .search({ query: queryString, hitsPerPage })
+  //   .then(content => {
+  //     const event =
+  //       searchFilter && searchFilter.communityId
+  //         ? events.SEARCHED_COMMUNITY_MEMBERS
+  //         : events.SEARCHED_USERS;
 
-      if (user && user.id) {
-        trackQueue.add({
-          userId: user.id,
-          event,
-          properties: {
-            queryString,
-            hitsCount: content.hits ? content.hits.length : 0,
-          },
-        });
-      }
+  //     if (user && user.id) {
+  //       trackQueue.add({
+  //         userId: user.id,
+  //         event,
+  //         properties: {
+  //           queryString,
+  //           hitsCount: content.hits ? content.hits.length : 0,
+  //         },
+  //       });
+  //     }
 
-      if (!content.hits || content.hits.length === 0) return [];
+  //     if (!content.hits || content.hits.length === 0) return [];
 
-      const userIds = content.hits.map(o => o.objectID);
-      return loaders.user.loadMany(userIds);
-    })
+  //     const userIds = content.hits.map(o => o.objectID);
+  //   })
+  return Promise.resolve(
+    loaders.user.loadMany(['95de9ec4-924d-4d3d-b1bf-b56c2a3116a9'])
+  )
     .then(data => data.filter(Boolean))
     .catch(err => {
       console.error('err', err);

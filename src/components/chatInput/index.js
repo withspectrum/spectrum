@@ -37,6 +37,8 @@ import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
 import type { Dispatch } from 'redux';
+import withUserSearch from './hoc/withUserSearch';
+import { consolidateStreamedStyles } from 'styled-components';
 
 const QuotedMessage = connect()(
   getMessageById(props => {
@@ -90,6 +92,8 @@ type Props = {
   threadData?: Object,
   refetchThread?: Function,
   quotedMessage: ?{ messageId: string, threadId: string },
+  search: Function,
+  users: Array<any>,
 };
 
 const LS_KEY = 'last-chat-input-content';
@@ -624,6 +628,7 @@ class ChatInput extends React.Component<Props, State> {
       websocketConnection,
       quotedMessage,
       thread,
+      users,
     } = this.props;
     const {
       isFocused,
@@ -671,6 +676,10 @@ class ChatInput extends React.Component<Props, State> {
             )}
             <Form focus={isFocused}>
               <Input
+                onMentionChange={({ value }) => {
+                  this.props.search(value);
+                }}
+                mentionSuggestions={users.map(userNodeToMention)}
                 focus={isFocused}
                 placeholder={`Your message here...`}
                 editorState={state}
@@ -681,7 +690,7 @@ class ChatInput extends React.Component<Props, State> {
                 code={false}
                 editorRef={editor => (this.editor = editor)}
                 editorKey="chat-input"
-                decorators={[mentionsDecorator, linksDecorator]}
+                decorators={[linksDecorator]}
                 networkDisabled={networkDisabled}
                 hasAttachment={!!mediaPreview || !!quotedMessage}
               >
@@ -742,5 +751,12 @@ export default compose(
   withHandlers({
     onChange: ({ changeState }) => state => changeState(state),
     clear: ({ changeState }) => () => changeState(fromPlainText('')),
-  })
+  }),
+  withUserSearch
 )(ChatInput);
+
+const userNodeToMention = ({ username, profilePhoto }) => ({
+  name: username,
+  avatar: profilePhoto,
+  link: 'https://twitter.com/mrussell247',
+});

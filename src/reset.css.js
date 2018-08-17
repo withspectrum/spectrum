@@ -423,3 +423,7 @@ injectGlobal`${draftGlobalCSS}`;
 import prismGlobalCSS from '!!raw-loader!./components/rich-text-editor/prism-theme.css';
 // $FlowIssue
 injectGlobal`${prismGlobalCSS}`;
+// $FlowIssue
+import draftMentionCss from '!!raw-loader!draft-js-mention-plugin/lib/plugin.css';
+// $FlowIssue
+injectGlobal`${draftMentionCss}`;

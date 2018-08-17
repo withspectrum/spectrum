@@ -3730,6 +3730,17 @@ draft-js-markdown-plugin@^3.0.1:
     immutable "~3.7.4"
     react-click-outside "^3.0.1"
 
+draft-js-mention-plugin@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/draft-js-mention-plugin/-/draft-js-mention-plugin-3.0.4.tgz#e8530b7c16f23ce5b980515458418b5e24376f4a"
+  dependencies:
+    decorate-component-with-props "^1.0.2"
+    find-with-regex "^1.1.3"
+    immutable "~3.7.4"
+    lodash.escaperegexp "^4.1.2"
+    prop-types "^15.5.8"
+    union-class-names "^1.0.0"
+
 draft-js-modifiers@^0.1.5:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/draft-js-modifiers/-/draft-js-modifiers-0.1.5.tgz#5134a6dbf3fa5b76b74dc269e1877b93f29336b0"
@@ -7017,6 +7028,10 @@ lodash.defaults@^4.0.1, lodash.defaults@^4.2.0:
 lodash.difference@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.difference/-/lodash.difference-4.5.0.tgz#9ccb4e505d486b91651345772885a2df27fd017c"
+
+lodash.escaperegexp@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/lodash.escaperegexp/-/lodash.escaperegexp-4.1.2.tgz#64762c48618082518ac3df4ccf5d5886dae20347"
 
 lodash.filter@^4.4.0:
   version "4.6.0"
