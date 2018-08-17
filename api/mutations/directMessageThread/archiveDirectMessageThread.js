@@ -5,30 +5,25 @@ import {
   archiveDirectMessageThread,
   getDirectMessageThread,
 } from '../../models/usersDirectMessageThreads';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-type archiveDMThreadInput = {
+type ArchiveDMThreadInput = {
   input: {
     threadId: string,
   },
 };
 
-export default async (
-  _: any,
-  { input }: archiveDMThreadInput,
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+// prettier-ignore
+export default requireAuth( async ( _: any, args: ArchiveDMThreadInput, ctx: GraphQLContext) => {
+  const { input: { threadId } } = args
+  const { user: currentUser } = ctx
 
-  if (!currentUser) {
-    return new UserError('You must be signed in to archive a message.');
-  }
-
-  if (!input.threadId) {
+  if (!threadId) {
     return new UserError('A threadId is required.');
   }
 
-  const [directMessageThread] = await getDirectMessageThread(
-    input.threadId,
+  const [ directMessageThread ] = await getDirectMessageThread(
+    threadId,
     currentUser.id
   );
 
@@ -37,12 +32,8 @@ export default async (
   }
 
   try {
-    const { changes } = await archiveDirectMessageThread(
-      directMessageThread.id
-    );
-
-    return changes[0].new_val;
+    return await archiveDirectMessageThread(directMessageThread.id);
   } catch (e) {
     return new UserError('We could not archive your message. Please try again');
   }
-};
+})
