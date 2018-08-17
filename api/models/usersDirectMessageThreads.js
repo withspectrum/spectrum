@@ -101,7 +101,6 @@ const archiveDirectMessageThread = (
     .update(
       {
         archivedAt: new Date(),
-        receiveNotifications: false,
       },
       { returnChanges: true }
     )
