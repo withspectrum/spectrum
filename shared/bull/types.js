@@ -417,6 +417,13 @@ export type IdentifyAnalyticsData = {
   userId: string,
 };
 
+export type AdminProcessUserReportedJobData = {
+  userId: string,
+  reason: string,
+  reportedBy: string,
+  reportedAt: Date,
+};
+
 export type Queues = {
   // athena
   sendThreadNotificationQueue: BullQueue<ThreadNotificationJobData>,
@@ -555,6 +562,7 @@ export type Queues = {
   _adminProcessToxicMessageQueue: BullQueue<AdminToxicMessageJobData>,
   _adminProcessToxicThreadQueue: BullQueue<AdminToxicThreadJobData>,
   _adminProcessSlackImportQueue: BullQueue<AdminSlackImportJobData>,
+  _adminProcessUserReportedQueue: BullQueue<AdminProcessUserReportedJobData>,
   // TODO: Properly type this
   _adminSendToxicContentEmailQueue: BullQueue<any>,
   _adminProcessUserSpammingThreadsQueue: BullQueue<
