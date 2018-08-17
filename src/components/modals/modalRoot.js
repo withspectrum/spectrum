@@ -11,6 +11,7 @@ import UpgradeModeratorSeatModal from './UpgradeModeratorSeatModal';
 import RestoreChannelModal from './RestoreChannelModal';
 import ChatInputLoginModal from './ChatInputLoginModal';
 import AdminEmailAddressVerificationModal from './AdminEmailAddressVerificationModal';
+import ReportUserModal from './ReportUserModal';
 
 const MODAL_COMPONENTS = {
   CREATE_CHANNEL_MODAL: CreateChannelModal,
@@ -23,6 +24,7 @@ const MODAL_COMPONENTS = {
   RESTORE_CHANNEL_MODAL: RestoreChannelModal,
   CHAT_INPUT_LOGIN_MODAL: ChatInputLoginModal,
   ADMIN_EMAIL_ADDRESS_VERIFICATION_MODAL: AdminEmailAddressVerificationModal,
+  REPORT_USER_MODAL: ReportUserModal,
 };
 
 export type ModalTypes = $Keys<typeof MODAL_COMPONENTS>;
