@@ -17,6 +17,9 @@ import setLastSeen from './setLastSeen';
 import archiveDirectMessageThread from './archiveDirectMessageThread';
 import unarchiveDirectMessageThread from './unarchiveDirectMessageThread';
 import leaveDirectMessageThread from './leaveDirectMessageThread';
+import muteDirectMessageThread from './muteDirectMessageThread';
+import unmuteDirectMessageThread from './unmuteDirectMessageThread';
+import deleteDirectMessageThread from './deleteDirectMessageThread';
 
 module.exports = {
   Mutation: {
@@ -25,5 +28,8 @@ module.exports = {
     archiveDirectMessageThread,
     unarchiveDirectMessageThread,
     leaveDirectMessageThread,
+    muteDirectMessageThread,
+    unmuteDirectMessageThread,
+    deleteDirectMessageThread,
   },
 };
