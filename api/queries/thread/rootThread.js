@@ -53,8 +53,9 @@ export default async (
       return null;
 
     if (
+      !thread.score ||
       !thread.scoreUpdatedAt ||
-      Date.now() > new Date(thread.scoreUpdatedAt).getTime() + 86400
+      Date.now() > new Date(thread.scoreUpdatedAt).getTime() + 86400000
     ) {
       calculateThreadScoreQueue.add(
         {
