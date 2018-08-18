@@ -44,7 +44,7 @@ export const storeThreadScore = (
   score: number
 ): Promise<any> => {
   return db
-    .table('thread')
+    .table('threads')
     .get(threadId)
     .update({
       score,
