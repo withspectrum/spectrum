@@ -48,6 +48,7 @@ export const storeThreadScore = (
     .get(threadId)
     .update({
       score,
+      scoreUpdatedAt: new Date(),
     })
     .run();
 };
