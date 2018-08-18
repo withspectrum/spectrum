@@ -1,7 +1,8 @@
 const debug = require('debug')('mercury');
 const createWorker = require('../shared/bull/create-worker');
 import processReputationEvent from './queues/processReputationEvent';
-import { PROCESS_REPUTATION_EVENT } from './constants';
+import calculateThreadScore from './queues/calculateThreadScore';
+import { PROCESS_REPUTATION_EVENT, CALCULATE_THREAD_SCORE } from './constants';
 
 const PORT = process.env.PORT || 3005;
 
@@ -10,6 +11,7 @@ debug('Logging with debug enabled!');
 
 const server = createWorker({
   [PROCESS_REPUTATION_EVENT]: processReputationEvent,
+  [CALCULATE_THREAD_SCORE]: calculateThreadScore,
 });
 
 debug(
