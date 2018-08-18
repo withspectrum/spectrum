@@ -130,6 +130,11 @@ const Community = /* GraphQL */ `
     message: String
   }
 
+  enum CommunityThreadConnectionSort {
+    NEW
+    TOP
+  }
+
   type Community {
     id: ID!
     createdAt: Date
@@ -153,6 +158,7 @@ const Community = /* GraphQL */ `
     threadConnection(
       first: Int = 10
       after: String
+      sort: CommunityThreadConnectionSort = NEW
     ): CommunityThreadsConnection @cost(complexity: 2, multiplier: "first")
     metaData: CommunityMetaData @cost(complexity: 10)
     invoices: [Invoice] @cost(complexity: 1)
