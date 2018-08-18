@@ -1,4 +1,5 @@
 // @flow
+import { calculateThreadScoreQueue } from 'shared/bull/queues';
 import type { GraphQLContext } from '../../';
 
 export default async (
@@ -50,6 +51,20 @@ export default async (
       (!communityPermissions || !communityPermissions.isMember)
     )
       return null;
+
+    if (
+      !thread.scoreUpdatedAt ||
+      Date.now() > new Date(thread.scoreUpdatedAt).getTime() + 86400
+    ) {
+      calculateThreadScoreQueue.add(
+        {
+          threadId: thread.id,
+        },
+        {
+          jobId: thread.id,
+        }
+      );
+    }
     return thread;
   }
 };
