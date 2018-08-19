@@ -23,6 +23,7 @@ import createMentionPlugin, {
   defaultSuggestionsFilter,
 } from 'draft-js-mention-plugin';
 import mentionPositionSuggestion from './mentionPositionSuggestion';
+import { MentionEntry } from 'shared/clients/draft-js/mentionEntry';
 
 import { InputWrapper } from './style';
 
@@ -160,6 +161,7 @@ class Input extends React.Component<Props, State> {
           {...rest}
         />
         <MentionSuggestions
+          entryComponent={MentionEntry}
           onSearchChange={({ value }) => {
             this.props.onMentionChange({ value });
           }}
