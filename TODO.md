@@ -1,7 +1,7 @@
 - [x] figure out how to position suggestions where the cursor is
-- [ ] fix mention decorator conflict
+- [x] fix mention decorator conflict
+- [ ] clean up old mention decorator code
 - [ ] how to render thread messages
-      redraft
-
-* [ ] make sure mentions still trigger appropriate serverside actions
-* [ ] disable sending post when hitting enter in input
+- [ ] fix links from mention components
+- [ ] make sure mentions still trigger appropriate serverside actions
+- [ ] disable sending post when hitting enter in input

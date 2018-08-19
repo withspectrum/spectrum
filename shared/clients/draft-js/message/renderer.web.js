@@ -2,6 +2,7 @@
 import React from 'react';
 import mentionsDecorator from '../mentions-decorator/index.web';
 import linksDecorator from '../links-decorator/index.web';
+import { Mention } from 'src/components/rich-text-editor/style.js';
 import { Line, Paragraph, BlockQuote } from 'src/components/message/style';
 import type { Node } from 'react';
 import type { KeyObj, KeysObj } from './types';
@@ -20,6 +21,13 @@ const messageRenderer = {
       <code key={key}>{children}</code>
     ),
   },
+  entities: {
+    mention: (children: string, { mention: { name } }: any) => (
+      <Mention username={name} key={name}>
+        {children}
+      </Mention>
+    ),
+  },
   blocks: {
     unstyled: (children: Array<Node>, { keys }: KeysObj) =>
       children.map((child, index) => (
@@ -35,7 +43,7 @@ const messageRenderer = {
         <BlockQuote key={keys[index] || index}>{child}</BlockQuote>
       )),
   },
-  decorators: [mentionsDecorator, linksDecorator],
+  decorators: [linksDecorator],
 };
 
 export { messageRenderer };
