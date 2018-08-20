@@ -63,12 +63,17 @@ describe('strategy', () => {
       expect(mentions[0]).toEqual('@grdp');
       expect(mentions[1]).toEqual('@rauchg');
     });
-    it('should not include a trailing period', () => {
+    it('should not include trailing special characters', () => {
       const text =
-        "Hey guys it's @abc-123. where is @xyz.. Any news from that guy?";
+        "Hey guys it's @abc.123. where is @xyz? Any news from that guy?  @abc.123... over and out. cc: @some.other.person- @ceo; @hr,.";
+
       const mentions = getMentions(text);
-      expect(mentions[0]).toEqual('@abc-123');
+      expect(mentions[0]).toEqual('@abc.123');
       expect(mentions[1]).toEqual('@xyz');
+      expect(mentions[2]).toEqual('@abc.123');
+      expect(mentions[3]).toEqual('@some.other.person');
+      expect(mentions[4]).toEqual('@ceo');
+      expect(mentions[5]).toEqual('@hr');
     });
   });
 });
