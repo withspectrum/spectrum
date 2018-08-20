@@ -13,7 +13,7 @@ import { canViewCommunity } from '../../utils/permissions';
 export type CommunityThreadConnectionPaginationOptions = {
   after: string,
   first: number,
-  sort: 'NEW' | 'TOP',
+  sort: 'NEW' | 'TRENDING',
 };
 
 // prettier-ignore
@@ -53,7 +53,7 @@ export default async (root: DBCommunity, args: CommunityThreadConnectionPaginati
   const threads = await getThreadsByChannels(channels, {
     first,
     after: lastThreadIndex,
-    sort: sort === 'NEW' ? 'new' : 'top',
+    sort: sort === 'NEW' ? 'new' : 'trending',
   });
 
   return {

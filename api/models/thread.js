@@ -74,7 +74,7 @@ export const getThreadsByChannel = (channelId: string, options: PaginationOption
 type GetThreadsByChannelPaginationOptions = {
   first: number,
   after: number,
-  sort: 'new' | 'top'
+  sort: 'new' | 'trending'
 };
 
 export const getThreadsByChannels = (
@@ -85,7 +85,7 @@ export const getThreadsByChannels = (
 
   let order = [db.desc('lastActive'), db.desc('createdAt')];
   // If we want the top threads, first sort by the score and then lastActive
-  if (sort === 'top') order.unshift(db.desc('score'));
+  if (sort === 'trending') order.unshift(db.desc('score'));
 
   return db
     .table('threads')

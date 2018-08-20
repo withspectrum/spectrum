@@ -132,7 +132,7 @@ const Community = /* GraphQL */ `
 
   enum CommunityThreadConnectionSort {
     NEW
-    TOP
+    TRENDING
   }
 
   type Community {
