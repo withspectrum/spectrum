@@ -44,6 +44,8 @@ export const getParticipantCountByTime = (
             .and(db.row('timestamp').le(db.now().sub(timeRanges[range].end)))
         )
     )
+    .map(rec => rec('senderId'))
+    .distinct()
     .count()
     .default(0)
     .run();
