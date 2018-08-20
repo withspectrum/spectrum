@@ -55,6 +55,12 @@ describe('strategy', () => {
     expect(mentions[1]).toEqual('@brian');
   });
 
+  it('should allow special characters', () => {
+    const text = "Hey I'm @john-doe, I also go by @john_doe or @john.doe";
+    const mentions = getMentions(text);
+    expect(mentions).toEqual(['@john-doe', '@john_doe', '@john.doe']);
+  });
+
   describe('edge cases', () => {
     it('should handle sentences with compound emojis (withspectrum/spectrum#2077)', () => {
       const text =
