@@ -35,6 +35,7 @@ import {
   ThreadSubtitle,
 } from '../style';
 import { track, events, transformations } from 'src/helpers/analytics';
+import getThreadLink from 'src/helpers/get-thread-link';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
 
@@ -499,7 +500,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
           </ThreadSubtitle>
 
           <ThreadSubtitle>
-            <Link to={`/thread/${thread.id}`}>
+            <Link to={getThreadLink(thread)}>
               {timestamp}
               {thread.modifiedAt && (
                 <React.Fragment>

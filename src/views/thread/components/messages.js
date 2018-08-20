@@ -25,6 +25,7 @@ import {
 } from '../style';
 import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import { ErrorBoundary } from 'src/components/error';
+import getThreadLink from 'src/helpers/get-thread-link';
 import type { GetThreadMessageConnectionType } from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 
@@ -179,7 +180,9 @@ class MessagesWithData extends React.Component<Props, State> {
           <A
             href={`https://twitter.com/share?text=${encodeURIComponent(
               threadTitle
-            )} on @withspectrum&url=https://spectrum.chat/thread/${threadId}`}
+            )} on @withspectrum&url=https://spectrum.chat/${getThreadLink(
+              this.props.data.thread
+            )}`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -188,9 +191,9 @@ class MessagesWithData extends React.Component<Props, State> {
             </Button>
           </A>
           <A
-            href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${threadId}&t=${encodeURIComponent(
-              threadTitle
-            )}`}
+            href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/${getThreadLink(
+              this.props.data.thread
+            )}&t=${encodeURIComponent(threadTitle)}`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -269,7 +272,7 @@ class MessagesWithData extends React.Component<Props, State> {
                       href={`${location.pathname}?msgsbefore=${prevCursor}`}
                     />
                   )}
-                  <link rel="canonical" href={`/thread/${data.thread.id}`} />
+                  <link rel="canonical" href={getThreadLink(thread)} />
                 </Head>
               </div>
             )}
@@ -281,7 +284,7 @@ class MessagesWithData extends React.Component<Props, State> {
                     href={`${location.pathname}?msgsafter=${nextCursor}`}
                   />
                 )}
-                <link rel="canonical" href={`/thread/${data.thread.id}`} />
+                <link rel="canonical" href={getThreadLink(thread)} />
               </Head>
             )}
             <InfiniteList
