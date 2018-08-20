@@ -5,6 +5,8 @@ import withState from 'recompose/withState';
 import withHandlers from 'recompose/withHandlers';
 import { connect } from 'react-redux';
 import { KeyBindingUtil } from 'draft-js';
+import createEmojiPlugin from 'draft-js-emoji-plugin';
+import 'draft-js-emoji-plugin/lib/plugin.css';
 import debounce from 'debounce';
 import Icon from '../../components/icons';
 import {
@@ -169,17 +171,26 @@ const persistContent = debounce((content, threadType = '') => {
 }, 500);
 
 class ChatInput extends React.Component<Props, State> {
-  state = {
-    isFocused: false,
-    photoSizeError: '',
-    code: false,
-    isSendingMediaMessage: false,
-    mediaPreview: '',
-    mediaPreviewFile: null,
-    markdownHint: false,
-  };
-
   editor: any;
+
+  constructor(props) {
+    super(props);
+
+    const emojiPlugin = createEmojiPlugin({
+      useNativeArt: true,
+    });
+
+    this.state = {
+      isFocused: false,
+      photoSizeError: '',
+      code: false,
+      isSendingMediaMessage: false,
+      mediaPreview: '',
+      mediaPreviewFile: null,
+      markdownHint: false,
+      emojiPlugin,
+    };
+  }
 
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown, true);
@@ -631,7 +642,9 @@ class ChatInput extends React.Component<Props, State> {
       isSendingMediaMessage,
       mediaPreview,
       markdownHint,
+      emojiPlugin,
     } = this.state;
+    const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
     const networkDisabled =
       !networkOnline ||
       (websocketConnection !== 'connected' &&
@@ -669,6 +682,7 @@ class ChatInput extends React.Component<Props, State> {
                 inputFocused={isFocused}
               />
             )}
+            {currentUser && <EmojiSelect />}
             <Form focus={isFocused}>
               <Input
                 focus={isFocused}
@@ -684,6 +698,7 @@ class ChatInput extends React.Component<Props, State> {
                 decorators={[mentionsDecorator, linksDecorator]}
                 networkDisabled={networkDisabled}
                 hasAttachment={!!mediaPreview || !!quotedMessage}
+                plugins={[emojiPlugin]}
               >
                 {mediaPreview && (
                   <PreviewWrapper>
@@ -704,6 +719,7 @@ class ChatInput extends React.Component<Props, State> {
                     </RemovePreviewButton>
                   </PreviewWrapper>
                 )}
+                <EmojiSuggestions />
               </Input>
               <SendButton
                 data-cy="chat-input-send-button"

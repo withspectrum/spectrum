@@ -34,6 +34,7 @@ type Props = {
   children?: React$Node,
   hasAttachment?: boolean,
   code?: boolean,
+  plugins: Array<mixed>,
 };
 
 type State = {
@@ -68,6 +69,7 @@ class Input extends React.Component<Props, State> {
         createLinkifyPlugin({
           target: '_blank',
         }),
+        ...(props.plugins || []),
       ],
     };
   }
