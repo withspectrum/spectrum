@@ -64,10 +64,10 @@ describe('strategy', () => {
       expect(mentions[1]).toEqual('@rauchg');
     });
     it('should not include a trailing period', () => {
-      const text = "Hey guys it's @abc-123. where is @xyz.";
+      const text =
+        "Hey guys it's @abc-123. where is @xyz.. Any news from that guy?";
       const mentions = getMentions(text);
       expect(mentions[0]).toEqual('@abc-123');
-
       expect(mentions[1]).toEqual('@xyz');
     });
   });
