@@ -37,7 +37,8 @@ export default (args: Args, { loaders, user }: GraphQLContext) => {
   //     const userIds = content.hits.map(o => o.objectID);
   //   })
   // TODO: revert entire file.  Mocking this out to return two known users in the test fixtures right now
-  return Promise.resolve(loaders.user.loadMany(['2', '3']))
+  return loaders.user
+    .loadMany(['2', '3', '4', '5', '6'])
     .then(data => data.filter(Boolean))
     .catch(err => {
       console.error('err', err);
