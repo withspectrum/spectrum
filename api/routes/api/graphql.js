@@ -15,6 +15,9 @@ export default graphqlExpress(req => {
   return {
     schema,
     formatError: createErrorFormatter(req),
+    tracing: true,
+    cacheControl: true,
+    engine: false,
     context: {
       loaders,
       user: currentUser,

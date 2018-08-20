@@ -40,6 +40,8 @@ import {
 } from './style';
 import WatercoolerActionBar from './components/watercoolerActionBar';
 import { ErrorBoundary } from 'src/components/error';
+import generateImageFromText from 'src/helpers/generate-image-from-text';
+import getThreadLink from 'src/helpers/get-thread-link';
 
 type Props = {
   data: {
@@ -479,13 +481,38 @@ class ThreadContainer extends React.Component<Props, State> {
               <Head
                 title={headTitle}
                 description={headDescription}
-                image={thread.community.profilePhoto}
+                type="article"
+                image={generateImageFromText({
+                  title: isWatercooler
+                    ? `Chat with the ${thread.community.name} community`
+                    : thread.content.title,
+                  footer: `spectrum.chat/${thread.community.slug}`,
+                })}
               >
                 <link
                   rel="canonical"
-                  href={`https://spectrum.chat/${thread.community.slug}/${
-                    thread.channel.slug
-                  }/${slugg(thread.content.title)}~${thread.id}`}
+                  href={`https://spectrum.chat/${getThreadLink(thread)}`}
+                />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta
+                  property="article:published_time"
+                  content={new Date(thread.createdAt).toISOString()}
+                />
+                <meta
+                  property="article:modified_time"
+                  content={new Date(
+                    thread.modifiedAt || thread.createdAt
+                  ).toISOString()}
+                />
+                <meta
+                  property="article:author"
+                  content={`https://spectrum.chat/users/@${
+                    thread.author.user.username
+                  }`}
+                />
+                <meta
+                  property="article:section"
+                  content={`${thread.community.name} community`}
                 />
               </Head>
               <Titlebar
