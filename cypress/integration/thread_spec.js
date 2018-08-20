@@ -170,10 +170,7 @@ describe('Thread View', () => {
         expect($p).to.have.length(3);
       });
       // the url should contain the message query param
-      cy.url().should(
-        'eq',
-        `http://localhost:3000/thread/${thread.id}?m=MTQ4MzIyNTE5OTk5OQ==`
-      );
+      cy.url().should('contain', `${thread.id}?m=MTQ4MzIyNTE5OTk5OQ==`);
     });
   });
 
@@ -240,7 +237,7 @@ describe('Thread View', () => {
       // the message should not be selected
       cy.get('[data-cy="message-selected"]').should('not.be.visible');
       // the url should not have changed
-      cy.url().should('eq', `http://localhost:3000/thread/${thread.id}`);
+      cy.url().should('not.contain', `?m`);
 
       // unlike the message from the message action bar
       cy.get('[data-cy="unlike-action"]')
@@ -254,7 +251,7 @@ describe('Thread View', () => {
         expect($p).to.have.length(3);
       });
       // the url should not have changed
-      cy.url().should('eq', `http://localhost:3000/thread/${thread.id}`);
+      cy.url().should('not.contain', `?m`);
     });
 
     it('should unlike a message from the inline reaction', () => {
@@ -274,7 +271,7 @@ describe('Thread View', () => {
       // no inline like buttons should be visible
       cy.get('[data-cy="inline-unlike-action"]').should('not.be.visible');
       // the url should not have changed
-      cy.url().should('eq', `http://localhost:3000/thread/${thread.id}`);
+      cy.url().should('not.contain', `?m`);
     });
 
     it('should not allow user to like their own message from inline reaction', () => {
