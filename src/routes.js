@@ -184,7 +184,7 @@ class Routes extends React.Component<Props> {
                 things like the 'set username' prompt when a user auths and doesn't
                 have a username set.
               */}
-              <AuthViewHandler>{() => {}}</AuthViewHandler>
+              <AuthViewHandler>{() => null}</AuthViewHandler>
               <Status />
               <Route component={Navbar} />
 
