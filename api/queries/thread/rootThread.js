@@ -55,8 +55,9 @@ export default async (
     // If the threads score hasn't been updated in the past
     // 24 hours add a new job to the queue to update it
     if (
-      thread.scoreUpdatedAt &&
-      Date.now() > new Date(thread.scoreUpdatedAt).getTime() + 86400000
+      (!thread.score && !thread.scoreUpdatedAt) ||
+      (thread.scoreUpdatedAt &&
+        Date.now() > new Date(thread.scoreUpdatedAt).getTime() + 86400000)
     ) {
       calculateThreadScoreQueue.add(
         {
