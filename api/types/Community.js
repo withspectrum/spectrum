@@ -131,8 +131,8 @@ const Community = /* GraphQL */ `
   }
 
   enum CommunityThreadConnectionSort {
-    NEW
-    TRENDING
+    new
+    trending
   }
 
   type Community {
@@ -158,7 +158,7 @@ const Community = /* GraphQL */ `
     threadConnection(
       first: Int = 10
       after: String
-      sort: CommunityThreadConnectionSort = NEW
+      sort: CommunityThreadConnectionSort = new
     ): CommunityThreadsConnection @cost(complexity: 2, multiplier: "first")
     metaData: CommunityMetaData @cost(complexity: 10)
     invoices: [Invoice] @cost(complexity: 1)
