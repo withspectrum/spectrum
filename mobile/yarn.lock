@@ -610,9 +610,9 @@
     babel-runtime "^6.23.0"
     exec-async "^2.2.0"
 
-"@expo/react-native-action-sheet@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@expo/react-native-action-sheet/-/react-native-action-sheet-1.0.2.tgz#abdfb21cbefec6147c6ee8b8fb725287cbd2e696"
+"@expo/react-native-action-sheet@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@expo/react-native-action-sheet/-/react-native-action-sheet-1.1.0.tgz#637583fd6367fb8261cda2510260678c3784ed5d"
   dependencies:
     hoist-non-react-statics "^2.2.2"
     prop-types "^15.5.10"
