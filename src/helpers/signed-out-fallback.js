@@ -2,7 +2,6 @@
 // Render a component depending on a users authentication status
 import React from 'react';
 import { connect } from 'react-redux';
-import queryString from 'query-string';
 import AuthViewHandler from 'src/views/authViewHandler';
 
 // This is the component that determines at render time what to do
