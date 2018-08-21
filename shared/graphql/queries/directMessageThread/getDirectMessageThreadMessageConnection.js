@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import { btoa } from 'abab';
+import { btoa } from 'b2a';
 import { subscribeToNewMessages } from '../../subscriptions';
 import directMessageThreadMessageConnectionFragment from '../../fragments/directMessageThread/directMessageThreadMessageConnection';
 import type { DirectMessageThreadMessageConnectionType } from '../../fragments/directMessageThread/directMessageThreadMessageConnection';
