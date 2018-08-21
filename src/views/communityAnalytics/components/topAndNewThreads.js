@@ -21,10 +21,15 @@ type Props = {
 
 class TopAndNewThreads extends React.Component<Props> {
   render() {
-    const { data: { community }, isLoading } = this.props;
+    const {
+      data: { community },
+      isLoading,
+    } = this.props;
 
     if (community) {
-      const { topAndNewThreads: { topThreads, newThreads } } = community;
+      const {
+        topAndNewThreads: { topThreads, newThreads },
+      } = community;
       // resort on the client because while the server *did* technically return the top threads, they get unsorted during the 'getThreads' model query
       const sortedTopThreads = topThreads.slice().sort((a, b) => {
         const bc = b && parseInt(b.messageCount, 10);
@@ -36,6 +41,7 @@ class TopAndNewThreads extends React.Component<Props> {
         <span>
           <SectionCard>
             <SectionTitle>Top conversations this week</SectionTitle>
+
             {sortedTopThreads.length > 0 ? (
               sortedTopThreads.map(thread => {
                 if (!thread) return null;
@@ -63,7 +69,7 @@ class TopAndNewThreads extends React.Component<Props> {
               <ViewError
                 small
                 emoji={'✌️'}
-                heading={'All caught up!.'}
+                heading={'All caught up!'}
                 subheading={
                   'It looks like everyone is getting responses in their conversations - nice work!'
                 }
@@ -86,6 +92,7 @@ class TopAndNewThreads extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunityTopAndNewThreads, viewNetworkHandler)(
-  TopAndNewThreads
-);
+export default compose(
+  getCommunityTopAndNewThreads,
+  viewNetworkHandler
+)(TopAndNewThreads);

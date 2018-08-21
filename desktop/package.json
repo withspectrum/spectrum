@@ -13,8 +13,8 @@
   "dependencies": {
     "electron-context-menu": "^0.10.0",
     "electron-is-dev": "^0.3.0",
-    "electron-log": "^2.2.16",
     "electron-updater": "^3.0.3",
+    "electron-log": "^2.2.17",
     "electron-window-state": "^4.1.1"
   },
   "devDependencies": {

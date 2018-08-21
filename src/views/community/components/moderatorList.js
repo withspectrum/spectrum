@@ -30,12 +30,19 @@ type Props = {
 };
 
 class CommunityModeratorList extends React.Component<Props> {
-  shouldComponentUpdate() {
+  shouldComponentUpdate(nextProps) {
     // NOTE(@brian) This is needed to avoid conflicting the the members tab in
     // the community view. See https://github.com/withspectrum/spectrum/pull/2613#pullrequestreview-105861623
     // for discussion
     // never update once we have the list of team members
-    if (this.props.data && this.props.data.community) return false;
+    if (
+      this.props.data &&
+      this.props.data.community &&
+      nextProps.data.community
+    ) {
+      if (this.props.data.community.id === nextProps.data.community.id)
+        return false;
+    }
     return true;
   }
 
@@ -45,7 +52,11 @@ class CommunityModeratorList extends React.Component<Props> {
   };
 
   render() {
-    const { data: { community }, isLoading, currentUser } = this.props;
+    const {
+      data: { community },
+      isLoading,
+      currentUser,
+    } = this.props;
 
     if (community && community.members) {
       const { edges: members } = community.members;

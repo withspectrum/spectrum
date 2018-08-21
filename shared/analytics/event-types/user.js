@@ -99,3 +99,7 @@ export const USER_UPGRADED_TO_PRO_FAILED = 'User Upgraded to Pro Failed'
 export const USER_DOWNGRADED_FROM_PRO_INITED = 'User Downgraded from Pro Inited'
 export const USER_DOWNGRADED_FROM_PRO = 'User Downgraded from Pro'
 export const USER_DOWNGRADED_FROM_PRO_FAILED = 'User Downgraded from Pro Failed'
+
+export const USER_REPORTED_USER_INITED = 'User Reported User Inited'
+export const USER_REPORTED_USER = 'User Reported User'
+export const USER_WAS_REPORTED = 'User Was Reported'

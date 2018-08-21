@@ -58,7 +58,7 @@ export const Col = styled(FlexCol)`
 `;
 
 export const Row = styled(FlexRow)`
-  flex: 0 0 auto;
+  flex: 1 0 auto;
   align-items: center;
   max-width: 100%;
   padding-right: 16px;
@@ -242,6 +242,7 @@ export const ComposerInputWrapper = styled.div`
 `;
 
 export const Grow = styled.div`
+  position: relative;
   flex: 1 1 auto;
   justify-content: center;
   align-items: stretch;

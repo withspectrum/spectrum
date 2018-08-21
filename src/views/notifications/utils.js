@@ -154,7 +154,7 @@ const threadToString = (context, currentUser) => {
       <Link
         to={{
           pathname: window.location.pathname,
-          search: `?thread=${context.payload.id}`,
+          search: `?thread=${context.id}`,
         }}
       >
         {context.payload.content.title}

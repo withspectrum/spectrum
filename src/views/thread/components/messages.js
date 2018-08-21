@@ -4,18 +4,25 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
+import idx from 'idx';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
-import ChatMessages from 'src/components/messageGroup';
-import { Loading } from 'src/components/loading';
-import { Button } from 'src/components/buttons';
-import Icon from 'src/components/icons';
-import { NullState } from 'src/components/upsell';
-import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import Head from 'src/components/head';
-import NextPageButton from 'src/components/nextPageButton';
-import { ChatWrapper, NullMessagesWrapper, NullCopy } from '../style';
+import ChatMessages from '../../../components/messageGroup';
+import { Loading } from '../../../components/loading';
+import { Button } from '../../../components/buttons';
+import Icon from '../../../components/icons';
+import { NullState } from '../../../components/upsell';
+import viewNetworkHandler from '../../../components/viewNetworkHandler';
+import Head from '../../../components/head';
+import NextPageButton from '../../../components/nextPageButton';
+import {
+  ChatWrapper,
+  NullMessagesWrapper,
+  NullCopy,
+  SocialShareWrapper,
+  A,
+} from '../style';
 import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import { ErrorBoundary } from 'src/components/error';
 import type { GetThreadMessageConnectionType } from 'shared/graphql/queries/thread/getThreadMessageConnection';
@@ -144,6 +151,58 @@ class MessagesWithData extends React.Component<Props, State> {
     }
   };
 
+  getIsAuthor = () => idx(this.props, _ => _.data.thread.isAuthor);
+
+  getNonAuthorEmptyMessage = () => {
+    return (
+      <NullMessagesWrapper>
+        <Icon glyph={'emoji'} size={64} />
+        <NullCopy>
+          No messages have been sent in this conversation yet - why don’t you
+          kick things off below?
+        </NullCopy>
+      </NullMessagesWrapper>
+    );
+  };
+
+  getAuthorEmptyMessage = () => {
+    const threadTitle = idx(this.props, _ => _.data.thread.content.title) || '';
+    const threadId = idx(this.props, _ => _.data.thread.id) || '';
+
+    return (
+      <NullMessagesWrapper>
+        <Icon glyph="share" size={64} />
+        <NullCopy>
+          Nobody has replied yet - why don't you share it with your friends?
+        </NullCopy>
+        <SocialShareWrapper>
+          <A
+            href={`https://twitter.com/share?text=${encodeURIComponent(
+              threadTitle
+            )} on @withspectrum&url=https://spectrum.chat/thread/${threadId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button gradientTheme={'social.twitter'} icon="twitter">
+              Share on Twitter
+            </Button>
+          </A>
+          <A
+            href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${threadId}&t=${encodeURIComponent(
+              threadTitle
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button gradientTheme={'social.facebook'} icon="facebook">
+              Share on Facebook
+            </Button>
+          </A>
+        </SocialShareWrapper>
+      </NullMessagesWrapper>
+    );
+  };
+
   render() {
     const {
       data,
@@ -261,16 +320,11 @@ class MessagesWithData extends React.Component<Props, State> {
     }
 
     if (!messagesExist) {
-      if (isLocked) return null;
-      return (
-        <NullMessagesWrapper>
-          <Icon glyph={'emoji'} size={64} />
-          <NullCopy>
-            No messages have been sent in this conversation yet - why don’t you
-            kick things off below?
-          </NullCopy>
-        </NullMessagesWrapper>
-      );
+      if (isLocked || !this.props.data.thread) return null;
+
+      return this.getIsAuthor()
+        ? this.getAuthorEmptyMessage()
+        : this.getNonAuthorEmptyMessage();
     }
 
     return (

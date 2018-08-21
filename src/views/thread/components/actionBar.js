@@ -285,9 +285,9 @@ class ActionBar extends React.Component<Props, State> {
                   data-cy="thread-facebook-button"
                 >
                   <a
-                    href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${
-                      thread.id
-                    }&t=${thread.content.title}`}
+                    href={`https://www.facebook.com/sharer/sharer.php?t=${encodeURIComponent(
+                      thread.content.title
+                    )}&u=https://spectrum.chat/thread/${thread.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -308,11 +308,11 @@ class ActionBar extends React.Component<Props, State> {
                   data-cy="thread-tweet-button"
                 >
                   <a
-                    href={`https://twitter.com/share?text=${
-                      thread.content.title
-                    } on @withspectrum&url=https://spectrum.chat/thread/${
+                    href={`https://twitter.com/share?url=https://spectrum.chat/thread/${
                       thread.id
-                    }`}
+                    }&text=${encodeURIComponent(
+                      thread.content.title
+                    )} on @withspectrum`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -572,4 +572,7 @@ class ActionBar extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), toggleThreadNotificationsMutation)(ActionBar);
+export default compose(
+  connect(),
+  toggleThreadNotificationsMutation
+)(ActionBar);
