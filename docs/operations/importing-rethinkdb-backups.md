@@ -11,4 +11,4 @@ Sometimes it's useful to have production data running locally in rethinkdb for d
 5. Unzip that backup onto your desktop
 6. Rename the unzipped directory to 'prod-backup'
 6. In your terminal, run: `cd ~/Desktop && rethinkdb import -d prod-backup`
-7. The import will take ~10-15 minutes, at which point you can clear localstorage at localhost:3000 to re-authenticate
+7. The import will take a couple hours, at which point you can clear localstorage at localhost:3000 to re-authenticate

@@ -1,7 +1,7 @@
 // @flow
 // Generates a meta image which shows a title and a footer text on a nice Spectrum background.
 import theme from 'shared/theme';
-import { btoa } from 'abab';
+import { btoa } from 'b2a';
 import { stringify } from 'query-string';
 
 // NOTES(@mxstbr):
@@ -38,13 +38,16 @@ type GetMetaImageInput = {
   footer: string,
 };
 
-const generateImageFromText = ({ title, footer }: GetMetaImageInput) => {
+const generateImageFromText = ({
+  title,
+  footer,
+}: GetMetaImageInput): ?string => {
   const base64title = btoa(title);
   const base64footer = btoa(footer);
-  if (!base64title || !base64footer) return;
+  if (!base64title || !base64footer) return null;
 
   const titleUrl = `${IMGIX_TEXT_ENDPOINT}?${stringify(
-    { ...TITLE_PARAMS, txt64: base64title.replace('=', '') },
+    { ...TITLE_PARAMS, txt64: base64title.replace(/=/g, '') },
     { encode: false }
   )}`;
   const footerUrl = `${IMGIX_TEXT_ENDPOINT}?${stringify(
@@ -55,7 +58,7 @@ const generateImageFromText = ({ title, footer }: GetMetaImageInput) => {
   const base64titleurl = btoa(titleUrl);
   const base64footerurl = btoa(footerUrl);
 
-  if (!base64titleurl || !base64footerurl) return;
+  if (!base64titleurl || !base64footerurl) return null;
 
   const BACKGROUND_PARAMS = {
     w: WIDTH,
