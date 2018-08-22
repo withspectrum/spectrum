@@ -230,15 +230,6 @@ export const ColumnHeading = styled.div`
   border-bottom: 2px solid ${props => props.theme.bg.border};
 `;
 
-export const ChannelListItemRow = styled.div`
-  display: flex;
-
-  a {
-    display: flex;
-    flex: auto;
-  }
-`;
-
 export const ToggleNotificationsContainer = styled.div`
   display: flex;
   color: ${props => props.theme.text.alt};

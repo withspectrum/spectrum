@@ -465,7 +465,7 @@ const createMemberInDefaultChannels = (communityId: string, userId: string): Pro
 };
 
 // prettier-ignore
-const toggleUserChannelNotifications = (userId: string, channelId: string, value: boolean): Promise<DBChannel> => {
+const toggleUserChannelNotifications = async (userId: string, channelId: string, value: boolean): Promise<DBChannel> => {
   const event = value ? events.CHANNEL_NOTIFICATIONS_ENABLED : events.CHANNEL_NOTIFICATIONS_DISABLED
 
   trackQueue.add({
@@ -474,12 +474,25 @@ const toggleUserChannelNotifications = (userId: string, channelId: string, value
     context: { channelId }
   })
 
-  return db
+  const permissions = await db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
     .filter({ userId })
-    .update({ receiveNotifications: value })
     .run();
+  
+  // permissions exist, this user is trying to toggle notifications for a channel where they
+  // are already a member
+  if (permissions && permissions.length > 0) {
+    return db
+      .table('usersChannels')
+      .getAll(channelId, { index: 'channelId' })
+      .filter({ userId })
+      .update({ receiveNotifications: value })
+      .run();
+  }
+
+  // if permissions don't exist, create a usersChannel relationship with notifications on
+  return createMemberInChannel(channelId, userId, false)
 };
 
 const removeUsersChannelMemberships = async (userId: string) => {

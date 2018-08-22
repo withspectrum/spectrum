@@ -1,7 +1,7 @@
 // @flow
 import styled from 'styled-components';
 import Card from '../../components/card';
-import { Transition, zIndex } from '../../components/globals';
+import { Transition, zIndex, Truncate } from '../../components/globals';
 import { SegmentedControl } from '../../components/segmentedControl';
 import { FullProfile, FullDescription } from 'src/components/profile/style';
 import { ListContainer } from 'src/components/listItems/style';
@@ -184,4 +184,50 @@ export const MessageIconContainer = styled.div`
 
 export const UserListItemContainer = styled.div`
   border-bottom: 1px solid ${props => props.theme.bg.wash};
+`;
+
+export const CommunityContext = styled.div`
+  display: flex;
+  margin-top: 32px;
+  margin-left: 32px;
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    margin-top: 16px;
+  }
+`;
+
+export const CommunityName = styled.h5`
+  font-size: 18px;
+  font-weight: 500;
+  margin-left: 16px;
+  color: ${props => props.theme.text.secondary};
+
+  ${Truncate};
+`;
+
+export const ChannelName = styled.h3`
+  font-size: 24px;
+  font-weight: 600;
+  margin-top: 24px;
+  margin-bottom: 8px;
+  margin-left: 32px;
+  color: ${props => props.theme.text.default};
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+  }
+`;
+
+export const ChannelDescription = styled.h4`
+  font-size: 18px;
+  font-weight: 400;
+  margin-left: 32px;
+  margin-bottom: 16px;
+  color: ${props => props.theme.text.alt};
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+  }
 `;
