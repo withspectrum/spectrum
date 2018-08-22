@@ -201,10 +201,7 @@ describe('Thread View', () => {
         expect($p).to.have.length(3);
       });
       // the url should contain the message query param
-      cy.url().should(
-        'eq',
-        `http://localhost:3000/thread/${thread.id}?m=MTQ4MzIyNTE5OTk5OQ==`
-      );
+      cy.url().should('contain', `?m=MTQ4MzIyNTE5OTk5OQ==`);
     });
   });
 
