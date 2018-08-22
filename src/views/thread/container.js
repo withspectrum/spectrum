@@ -1,4 +1,4 @@
-// @flow
+e/ @flow
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import compose from 'recompose/compose';
@@ -457,6 +457,12 @@ class ThreadContainer extends React.Component<Props, State> {
       const headDescription = isWatercooler
         ? `Watercooler chat for the ${thread.community.name} community`
         : description;
+      const metaImage = generateImageFromText({
+        title: isWatercooler
+          ? `Chat with the ${thread.community.name} community`
+          : thread.content.title,
+        footer: `spectrum.chat/${thread.community.slug}`,
+      });
 
       return (
         <ErrorBoundary>
@@ -482,18 +488,15 @@ class ThreadContainer extends React.Component<Props, State> {
                 title={headTitle}
                 description={headDescription}
                 type="article"
-                image={generateImageFromText({
-                  title: isWatercooler
-                    ? `Chat with the ${thread.community.name} community`
-                    : thread.content.title,
-                  footer: `spectrum.chat/${thread.community.slug}`,
-                })}
+                image={metaImage}
               >
                 <link
                   rel="canonical"
                   href={`https://spectrum.chat/${getThreadLink(thread)}`}
                 />
-                <meta name="twitter:card" content="summary_large_image" />
+                {metaImage && (
+                  <meta name="twitter:card" content="summary_large_image" />
+                )}
                 <meta
                   property="article:published_time"
                   content={new Date(thread.createdAt).toISOString()}

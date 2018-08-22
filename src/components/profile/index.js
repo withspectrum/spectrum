@@ -1,9 +1,7 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import User from './user';
-import Channel from './channel';
 import Community from './community';
 import Thread from './thread';
 
@@ -12,9 +10,6 @@ const ProfilePure = (props: Object): React$Element<any> => {
   switch (type) {
     case 'user': {
       return <User {...props} />;
-    }
-    case 'channel': {
-      return <Channel {...props} />;
     }
     case 'community': {
       return <Community {...props} />;
@@ -49,9 +44,6 @@ type ProfileProps = {
 export const Profile = compose()(ProfilePure);
 export const UserProfile = (props: ProfileProps) => (
   <Profile type="user" {...props} />
-);
-export const ChannelProfile = (props: ProfileProps) => (
-  <Profile type="channel" {...props} />
 );
 export const CommunityProfile = (props: ProfileProps) => (
   <Profile type="community" {...props} />

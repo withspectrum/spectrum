@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { btoa } from 'abab';
+import { btoa } from 'b2a';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter, type Location, type History } from 'react-router';
@@ -115,12 +115,12 @@ class Message extends React.Component<Props> {
   };
 
   // prettier-ignore
-  handleSelectMessage = (e: any, selectMessage: Function,	messageId: string) => {	
-    // $FlowFixMe	
-    if (window && window.innerWidth < 768 && this.wrapperRef && this.wrapperRef.contains(e.target)) {	
-      e.stopPropagation();	
-      return selectMessage(messageId);	
-    }	
+  handleSelectMessage = (e: any, selectMessage: Function,	messageId: string) => {
+    // $FlowFixMe
+    if (window && window.innerWidth < 768 && this.wrapperRef && this.wrapperRef.contains(e.target)) {
+      e.stopPropagation();
+      return selectMessage(messageId);
+    }
   };
 
   render() {
