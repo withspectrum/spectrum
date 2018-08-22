@@ -13,12 +13,12 @@ import { canViewCommunity } from '../../utils/permissions';
 export type CommunityThreadConnectionPaginationOptions = {
   after: string,
   first: number,
-  sort: 'new' | 'trending',
+  sort: 'latest' | 'trending',
 };
 
 // prettier-ignore
 export default async (root: DBCommunity, args: CommunityThreadConnectionPaginationOptions, ctx: GraphQLContext) => {
-  const { first = 10, after, sort = 'new' } = args
+  const { first = 10, after, sort = 'latest' } = args
   const { user, loaders } = ctx
   const { id } = root
 

@@ -74,14 +74,14 @@ export const getThreadsByChannel = (channelId: string, options: PaginationOption
 type GetThreadsByChannelPaginationOptions = {
   first: number,
   after: number,
-  sort: 'new' | 'trending'
+  sort: 'latest' | 'trending'
 };
 
 export const getThreadsByChannels = (
   channelIds: Array<string>,
   options: GetThreadsByChannelPaginationOptions
 ): Promise<Array<DBThread>> => {
-  const { first, after, sort } = options;
+  const { first, after, sort = 'latest' } = options;
 
   let order = [db.desc('lastActive'), db.desc('createdAt')];
   // If we want the top threads, first sort by the score and then lastActive
