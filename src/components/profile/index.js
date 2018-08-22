@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import User from './user';
 import Community from './community';
@@ -45,9 +44,6 @@ type ProfileProps = {
 export const Profile = compose()(ProfilePure);
 export const UserProfile = (props: ProfileProps) => (
   <Profile type="user" {...props} />
-);
-export const ChannelProfile = (props: ProfileProps) => (
-  <Profile type="channel" {...props} />
 );
 export const CommunityProfile = (props: ProfileProps) => (
   <Profile type="community" {...props} />

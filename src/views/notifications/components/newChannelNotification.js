@@ -13,7 +13,6 @@ import {
   CreatedContext,
   ContentWash,
 } from '../style';
-import { ChannelProfile } from '../../../components/profile';
 import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 
@@ -22,12 +21,13 @@ const NewChannelComponent = ({
 }: {
   data: { channel: GetChannelType },
 }) => {
-  return <ChannelProfile profileSize="miniWithAction" data={data} />;
+  return <div>channel</div>;
 };
 
-const NewChannel = compose(getChannelById, displayLoadingCard)(
-  NewChannelComponent
-);
+const NewChannel = compose(
+  getChannelById,
+  displayLoadingCard
+)(NewChannelComponent);
 
 type Props = {
   notification: Object,
