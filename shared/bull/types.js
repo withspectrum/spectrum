@@ -424,6 +424,10 @@ export type AdminProcessUserReportedJobData = {
   reportedAt: Date,
 };
 
+export type CalculateThreadScoreJobData = {
+  threadId: string,
+};
+
 export type Queues = {
   // athena
   sendThreadNotificationQueue: BullQueue<ThreadNotificationJobData>,
@@ -496,6 +500,7 @@ export type Queues = {
 
   // mercury
   processReputationEventQueue: BullQueue<ReputationEventJobData>,
+  calculateThreadScoreQueue: BullQueue<CalculateThreadScoreJobData>,
 
   // pluto
   stripeChargeWebhookEventQueue: BullQueue<StripeWebhookEventJobData>,
