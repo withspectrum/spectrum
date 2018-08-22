@@ -84,7 +84,10 @@ import {
   IDENTIFY_ANALYTICS,
 } from 'analytics/queues/constants';
 
-import { PROCESS_REPUTATION_EVENT } from 'mercury/constants';
+import {
+  PROCESS_REPUTATION_EVENT,
+  CALCULATE_THREAD_SCORE,
+} from 'mercury/constants';
 
 // Normalize our (inconsistent) queue names to a set of JS compatible names
 exports.QUEUE_NAMES = {
@@ -132,6 +135,7 @@ exports.QUEUE_NAMES = {
 
   // mercury - reputation
   processReputationEventQueue: PROCESS_REPUTATION_EVENT,
+  calculateThreadScoreQueue: CALCULATE_THREAD_SCORE,
 
   stripeChargeWebhookEventQueue: PROCESS_STRIPE_CHARGE_WEBHOOK_EVENT,
   stripeCustomerWebhookEventQueue: PROCESS_STRIPE_CUSTOMER_WEBHOOK_EVENT,

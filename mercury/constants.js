@@ -2,6 +2,7 @@
 
 // queues
 export const PROCESS_REPUTATION_EVENT = 'process reputation event';
+export const CALCULATE_THREAD_SCORE = 'calculate thread score';
 
 // reputation event types
 export const THREAD_CREATED = 'thread created';
