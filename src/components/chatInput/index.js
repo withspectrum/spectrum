@@ -690,7 +690,7 @@ class ChatInput extends React.Component<Props, State> {
                 code={false}
                 editorRef={editor => (this.editor = editor)}
                 editorKey="chat-input"
-                decorators={[linksDecorator]}
+                decorators={[mentionsDecorator, linksDecorator]}
                 networkDisabled={networkDisabled}
                 hasAttachment={!!mediaPreview || !!quotedMessage}
               >

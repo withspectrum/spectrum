@@ -24,6 +24,7 @@ import createMentionPlugin, {
 } from 'draft-js-mention-plugin';
 import mentionPositionSuggestion from './mentionPositionSuggestion';
 import { MentionEntry } from 'shared/clients/draft-js/mentionEntry';
+import MentionSuggestions from './MentionSuggestions';
 
 import { InputWrapper } from './style';
 
@@ -47,36 +48,6 @@ type State = {
   plugins: Array<mixed>,
   mentionSuggestions: Array<any>,
 };
-// const positionSuggestions = ({ state, props }) => {
-//   console.log('EDITOR STATE');
-//   console.log(state);
-//   console.log(props);
-
-//   let constantOffset = -70;
-//   let transform;
-//   let transition;
-
-//   if (state.isActive && props.suggestions.length > 0) {
-//     transform = `scaleY(1) translateY(${constantOffset -
-//       props.suggestions.length * 30}px)`;
-//     transition = 'all 0.25s cubic-bezier(.3,1.2,.2,1)';
-//   } else if (state.isActive) {
-//     transform = 'scaleY(0)';
-//     transition = 'all 0.25s cubic-bezier(.3,1,.2,1)';
-//   }
-
-//   return {
-//     transform,
-//     transition,
-//   };
-// };
-
-/*
- * NOTE(@mxstbr): DraftJS has huge troubles on Android, it's basically unusable
- * We work around this by replacing the DraftJS editor with a plain text Input
- * on Android, and then converting the plain text to DraftJS content State
- * debounced every couple ms
- */
 class Input extends React.Component<Props, State> {
   editor: any;
   mentionPlugin: any;
@@ -84,6 +55,7 @@ class Input extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.mentionPlugin = createMentionPlugin({
+      mentionSuggestionsComponent: MentionSuggestions,
       positionSuggestions: mentionPositionSuggestion,
       mentionPrefix: '@',
     });
@@ -165,9 +137,7 @@ class Input extends React.Component<Props, State> {
           onSearchChange={({ value }) => {
             this.props.onMentionChange({ value });
           }}
-          suggestions={
-            console.log(mentionSuggestions, 'mentions') || mentionSuggestions
-          }
+          suggestions={mentionSuggestions}
         />
       </InputWrapper>
     );

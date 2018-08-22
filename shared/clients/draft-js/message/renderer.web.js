@@ -21,13 +21,6 @@ const messageRenderer = {
       <code key={key}>{children}</code>
     ),
   },
-  entities: {
-    mention: (children: string, { mention: { name } }: any) => (
-      <Mention username={name} key={name}>
-        {children}
-      </Mention>
-    ),
-  },
   blocks: {
     unstyled: (children: Array<Node>, { keys }: KeysObj) =>
       children.map((child, index) => (
@@ -43,7 +36,7 @@ const messageRenderer = {
         <BlockQuote key={keys[index] || index}>{child}</BlockQuote>
       )),
   },
-  decorators: [linksDecorator],
+  decorators: [mentionsDecorator, linksDecorator],
 };
 
 export { messageRenderer };

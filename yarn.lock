@@ -3730,9 +3730,9 @@ draft-js-markdown-plugin@^3.0.1:
     immutable "~3.7.4"
     react-click-outside "^3.0.1"
 
-draft-js-mention-plugin@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/draft-js-mention-plugin/-/draft-js-mention-plugin-3.0.4.tgz#e8530b7c16f23ce5b980515458418b5e24376f4a"
+draft-js-mention-plugin@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/draft-js-mention-plugin/-/draft-js-mention-plugin-3.1.0.tgz#7786426419d62d1c4467cc90ad47e88877697124"
   dependencies:
     decorate-component-with-props "^1.0.2"
     find-with-regex "^1.1.3"
