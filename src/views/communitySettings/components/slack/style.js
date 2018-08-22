@@ -45,6 +45,7 @@ export const SendsTo = styled.div`
   color: ${props => props.theme.text.alt};
   flex: none;
   margin-right: 12px;
+  margin-left: 4px;
 `;
 export const ChannelListContainer = styled.div`
   margin-top: 16px;

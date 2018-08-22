@@ -9,6 +9,7 @@ import {
   hexa,
   Shadow,
   zIndex,
+  Truncate,
 } from '../../components/globals';
 import { HorizontalRule } from '../../components/globals';
 import Card from '../../components/card';
@@ -302,4 +303,38 @@ export const ButtonsRow = styled.div`
     display: flex;
     flex: 1 0 auto;
   }
+`;
+
+export const ChannelCard = styled.div`
+  padding: 0 16px;
+  border-radius: 8px;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
+  margin: 8px;
+  background: ${props => props.theme.bg.default};
+  display: flex;
+  justify-content: space-between;
+
+  a {
+    display: flex;
+    flex: 1 0 auto;
+  }
+`;
+
+export const ChannelName = styled.p`
+  display: flex;
+  flex: 1 0 auto;
+  padding: 16px 8px 16px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+  ${Truncate};
+`;
+
+export const ToggleNotificationsContainer = styled.div`
+  display: flex;
+  color: ${props => props.theme.text.alt};
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  cursor: pointer;
 `;

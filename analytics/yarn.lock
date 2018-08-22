@@ -353,9 +353,9 @@ sha1@^1.1.1:
     charenc ">= 0.0.1"
     crypt ">= 0.0.1"
 
-source-map-support@^0.5.7:
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.7.tgz#71503b94aefbc89789841100c18c0cc63a7e6137"
+source-map-support@^0.5.9:
+  version "0.5.9"
+  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.9.tgz#41bc953b2534267ea2d605bccfa7bfa3111ced5f"
   dependencies:
     buffer-from "^1.0.0"
     source-map "^0.6.0"

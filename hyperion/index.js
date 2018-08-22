@@ -145,7 +145,8 @@ app.get('/static/js/:name', (req: express$Request, res, next) => {
     return res.sendFile(
       path.resolve(__dirname, '..', 'build', 'static', 'js', req.params.name)
     );
-  const match = req.params.name.match(/(\w+?)\.(\w+?\.)?js/i);
+  // Match the first part of the file name, i.e. from "UserSettings.asdf123.chunk.js" match "UserSettings"
+  const match = req.params.name.match(/(\w+?)\..+js/i);
   if (!match) return next();
   const actualFilename = jsFiles.find(file => file.startsWith(match[1]));
   if (!actualFilename) return next();

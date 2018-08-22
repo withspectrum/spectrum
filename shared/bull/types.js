@@ -433,6 +433,17 @@ export type IdentifyAnalyticsData = {
   userId: string,
 };
 
+export type AdminProcessUserReportedJobData = {
+  userId: string,
+  reason: string,
+  reportedBy: string,
+  reportedAt: Date,
+};
+
+export type CalculateThreadScoreJobData = {
+  threadId: string,
+};
+
 export type Queues = {
   // athena
   sendThreadNotificationQueue: BullQueue<ThreadNotificationJobData>,
@@ -511,6 +522,7 @@ export type Queues = {
 
   // mercury
   processReputationEventQueue: BullQueue<ReputationEventJobData>,
+  calculateThreadScoreQueue: BullQueue<CalculateThreadScoreJobData>,
 
   // pluto
   stripeChargeWebhookEventQueue: BullQueue<StripeWebhookEventJobData>,
@@ -577,6 +589,7 @@ export type Queues = {
   _adminProcessToxicMessageQueue: BullQueue<AdminToxicMessageJobData>,
   _adminProcessToxicThreadQueue: BullQueue<AdminToxicThreadJobData>,
   _adminProcessSlackImportQueue: BullQueue<AdminSlackImportJobData>,
+  _adminProcessUserReportedQueue: BullQueue<AdminProcessUserReportedJobData>,
   // TODO: Properly type this
   _adminSendToxicContentEmailQueue: BullQueue<any>,
   _adminProcessUserSpammingThreadsQueue: BullQueue<

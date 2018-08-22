@@ -13,7 +13,7 @@ import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { events } from 'shared/analytics';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
-import { trackQueue } from 'shared/bull/queues';
+import { trackQueue, calculateThreadScoreQueue } from 'shared/bull/queues';
 
 type Input = {
   id: string,
@@ -114,6 +114,16 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       return await deleteParticipantInThread(
         message.threadId,
         message.senderId
+      );
+    })
+    .then(() => {
+      return calculateThreadScoreQueue.add(
+        {
+          threadId: message.threadId,
+        },
+        {
+          jobId: message.threadId,
+        }
       );
     })
     .then(() => true);

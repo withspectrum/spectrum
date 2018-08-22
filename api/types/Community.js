@@ -41,7 +41,7 @@ const Community = /* GraphQL */ `
     node: Thread!
   }
 
-  type CommunityMetaData {
+  type CommunityMetaData @cacheControl(maxAge: 1800) {
     members: Int
     channels: Int
     onlineMembers: Int
@@ -130,6 +130,11 @@ const Community = /* GraphQL */ `
     message: String
   }
 
+  enum CommunityThreadConnectionSort {
+    latest
+    trending
+  }
+
   type Community {
     id: ID!
     createdAt: Date
@@ -153,6 +158,7 @@ const Community = /* GraphQL */ `
     threadConnection(
       first: Int = 10
       after: String
+      sort: CommunityThreadConnectionSort = latest
     ): CommunityThreadsConnection @cost(complexity: 2, multiplier: "first")
     metaData: CommunityMetaData @cost(complexity: 10)
     invoices: [Invoice] @cost(complexity: 1)

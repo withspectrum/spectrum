@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import queryString from 'query-string';
-import { btoa } from 'abab';
+import { btoa } from 'b2a';
 import { subscribeToNewMessages } from '../../subscriptions';
 import threadInfoFragment from '../../fragments/thread/threadInfo';
 import type { ThreadInfoType } from '../../fragments/thread/threadInfo';

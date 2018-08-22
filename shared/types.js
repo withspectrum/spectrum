@@ -186,6 +186,8 @@ export type DBThreadReaction = {
   createdAt: Date,
   type: ReactionType,
   deletedAt?: Date,
+  score?: number,
+  scoreUpdatedAt?: Date,
   userId: string,
 };
 

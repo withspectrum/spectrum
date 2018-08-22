@@ -11,6 +11,7 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
     return {
       channels: 0,
       members: 0,
+      onlineMembers: 0,
     };
   }
 
