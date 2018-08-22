@@ -3,6 +3,7 @@
 import React from 'react';
 import { Redirect } from 'react-router';
 import slugg from 'slugg';
+import idx from 'idx';
 import { getThreadByMatch } from 'shared/graphql/queries/thread/getThread';
 import Thread from 'src/views/thread';
 import LoadingThread from 'src/views/thread/components/loading';
@@ -14,7 +15,7 @@ export default getThreadByMatch(props => {
       <Redirect
         to={`/${thread.community.slug}/${thread.channel.slug}/${slugg(
           thread.content.title
-        )}~${thread.id}`}
+        )}~${thread.id}${idx(props, _ => _.location.search) || ''}`}
       />
     );
   }
