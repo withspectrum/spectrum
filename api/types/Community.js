@@ -41,7 +41,7 @@ const Community = /* GraphQL */ `
     node: Thread!
   }
 
-  type CommunityMetaData @cacheControl(maxAge: 1800) {
+  type CommunityMetaData {
     members: Int
     channels: Int
     onlineMembers: Int
