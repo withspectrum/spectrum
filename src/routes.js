@@ -17,8 +17,8 @@ import Toasts from './components/toasts';
 import { Loading, LoadingScreen } from './components/loading';
 import LoadingDashboard from './views/dashboard/components/dashboardLoading';
 import Composer from './components/composer';
-import signedOutFallback from './helpers/signed-out-fallback';
 import AuthViewHandler from './views/authViewHandler';
+import signedOutFallback from './helpers/signed-out-fallback';
 import PrivateChannelJoin from './views/privateChannelJoin';
 import PrivateCommunityJoin from './views/privateCommunityJoin';
 import ThreadSlider from './views/threadSlider';
@@ -184,7 +184,7 @@ class Routes extends React.Component<Props> {
                 things like the 'set username' prompt when a user auths and doesn't
                 have a username set.
               */}
-              <Route component={AuthViewHandler} />
+              <AuthViewHandler>{() => null}</AuthViewHandler>
               <Status />
               <Route component={Navbar} />
 

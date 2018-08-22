@@ -433,6 +433,12 @@ class ThreadContainer extends React.Component<Props, State> {
       const headDescription = isWatercooler
         ? `Watercooler chat for the ${thread.community.name} community`
         : description;
+      const metaImage = generateImageFromText({
+        title: isWatercooler
+          ? `Chat with the ${thread.community.name} community`
+          : thread.content.title,
+        footer: `spectrum.chat/${thread.community.slug}`,
+      });
 
       return (
         <ErrorBoundary>
@@ -457,14 +463,32 @@ class ThreadContainer extends React.Component<Props, State> {
               <Head
                 title={headTitle}
                 description={headDescription}
-                image={generateImageFromText({
-                  title: isWatercooler
-                    ? `Chat with the ${thread.community.name} community`
-                    : thread.content.title,
-                  footer: `spectrum.chat/${thread.community.slug}`,
-                })}
+                type="article"
+                image={metaImage}
               >
-                <meta name="twitter:card" content="summary_large_image" />
+                {metaImage && (
+                  <meta name="twitter:card" content="summary_large_image" />
+                )}
+                <meta
+                  property="article:published_time"
+                  content={new Date(thread.createdAt).toISOString()}
+                />
+                <meta
+                  property="article:modified_time"
+                  content={new Date(
+                    thread.modifiedAt || thread.createdAt
+                  ).toISOString()}
+                />
+                <meta
+                  property="article:author"
+                  content={`https://spectrum.chat/users/@${
+                    thread.author.user.username
+                  }`}
+                />
+                <meta
+                  property="article:section"
+                  content={`${thread.community.name} community`}
+                />
               </Head>
               <Titlebar
                 title={thread.content.title}
