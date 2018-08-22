@@ -172,9 +172,7 @@ class CreateChannelModal extends React.Component<Props, State> {
           }
         })
         .catch(err => {
-          return this.props.dispatch(
-            addToastWithTimeout('error', err.toString())
-          );
+          // do nothing
         });
     }
   };

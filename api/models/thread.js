@@ -71,14 +71,27 @@ export const getThreadsByChannel = (channelId: string, options: PaginationOption
 };
 
 // prettier-ignore
-export const getThreadsByChannels = (channelIds: Array<string>, options: PaginationOptions): Promise<Array<DBThread>> => {
-  const { first, after } = options
-  
+type GetThreadsByChannelPaginationOptions = {
+  first: number,
+  after: number,
+  sort: 'latest' | 'trending'
+};
+
+export const getThreadsByChannels = (
+  channelIds: Array<string>,
+  options: GetThreadsByChannelPaginationOptions
+): Promise<Array<DBThread>> => {
+  const { first, after, sort = 'latest' } = options;
+
+  let order = [db.desc('lastActive'), db.desc('createdAt')];
+  // If we want the top threads, first sort by the score and then lastActive
+  if (sort === 'trending') order.unshift(db.desc('score'));
+
   return db
     .table('threads')
     .getAll(...channelIds, { index: 'channelId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+    .orderBy(...order)
     .skip(after || 0)
     .limit(first || 999999)
     .run();
@@ -447,10 +460,10 @@ export const setThreadLock = (threadId: string, value: boolean, userId: string, 
       .run()
       .then(async () => {
         const thread = await getThreadById(threadId)
-        
-        const event = value 
-          ? byModerator 
-            ? events.THREAD_LOCKED_BY_MODERATOR 
+
+        const event = value
+          ? byModerator
+            ? events.THREAD_LOCKED_BY_MODERATOR
             : events.THREAD_LOCKED
           : byModerator
             ? events.THREAD_UNLOCKED_BY_MODERATOR

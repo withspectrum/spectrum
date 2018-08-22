@@ -80,6 +80,11 @@ export const createSigninRoutes = (
         // to the old URL the next time around
         // $FlowIssue
         req.session.redirectUrl = undefined;
+        res.cookie('_now_no_cache', '1', {
+          maxAge: 315569260000, // 10 years
+          sameSite: 'lax',
+          secure: false,
+        });
         return res.redirect(redirectUrl.href);
       },
     ],
