@@ -81,7 +81,7 @@ export const createSigninRoutes = (
         // $FlowIssue
         req.session.redirectUrl = undefined;
         res.cookie('_now_no_cache', '1', {
-          expires: new Date(2147483647000),
+          maxAge: 315569260000, // 10 years
           sameSite: 'lax',
           secure: false,
         });
