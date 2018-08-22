@@ -49,7 +49,9 @@ class ChannelList extends React.Component<Props> {
                 if (!channel) return null;
                 return (
                   <ChannelListItem key={channel.id} channel={channel}>
-                    <Link to={`/${channel.community.slug}/${channel.slug}`}>
+                    <Link
+                      to={`/${channel.community.slug}/${channel.slug}/settings`}
+                    >
                       <IconButton
                         tipText={'Settings'}
                         tipLocation={'top-left'}

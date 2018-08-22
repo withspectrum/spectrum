@@ -354,7 +354,7 @@ class ChannelView extends React.Component<Props, State> {
           />
           <Grid id="main">
             <CoverPhoto src={community.coverPhoto} />
-            <Meta>
+            <Meta data-cy="channel-profile-full">
               <CommunityContext>
                 <CommunityAvatar community={community} />
                 <Link to={`/${community.slug}`}>
@@ -362,7 +362,10 @@ class ChannelView extends React.Component<Props, State> {
                 </Link>
               </CommunityContext>
 
-              <ChannelName>{channel.name}</ChannelName>
+              <ChannelName>
+                {channel.name}
+                {channel.isArchived && ' (Archived)'}
+              </ChannelName>
               {channel.description && (
                 <ChannelDescription>{channel.description}</ChannelDescription>
               )}
