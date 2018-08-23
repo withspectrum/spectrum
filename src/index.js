@@ -20,6 +20,10 @@ import Routes from './hot-routes';
 import { track, events } from './helpers/analytics';
 import { wsLink } from 'shared/graphql';
 import { subscribeToDesktopPush } from './subscribe-to-desktop-push';
+import ViewError from 'src/components/viewError';
+import { Button } from 'src/components/buttons';
+import { ThemeProvider } from 'styled-components';
+import { theme } from 'shared/theme';
 
 const storedData: ?Object = getItemFromStorage('spectrum');
 const params = queryString.parse(history.location.search);
@@ -59,9 +63,30 @@ const App = () => {
     <Provider store={store}>
       <HelmetProvider>
         <ApolloProvider client={client}>
-          <Router history={history}>
-            <Routes currentUser={storedData ? storedData.currentUser : null} />
-          </Router>
+          <ThemeProvider theme={theme}>
+            <ViewError
+              emoji={'🛠'}
+              heading={'Down for maintenance'}
+              subheading={
+                'We’re working on improving the stability of Spectrum. We’ll be back soon!'
+              }
+            >
+              <a
+                href="https://twitter.com/withspectrum"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button icon={'twitter'} large>
+                  Get Updates on Twitter
+                </Button>
+              </a>
+            </ViewError>
+          </ThemeProvider>
+          {/*
+            <Router history={history}>
+              <Routes currentUser={storedData ? storedData.currentUser : null} />
+            </Router>
+          */}
         </ApolloProvider>
       </HelmetProvider>
     </Provider>
