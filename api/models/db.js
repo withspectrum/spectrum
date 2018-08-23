@@ -15,13 +15,26 @@ const DEFAULT_CONFIG = {
 };
 
 const PRODUCTION_CONFIG = {
-  password: process.env.COMPOSE_US_WEST_2_RETHINKDB_PASSWORD,
-  user: 'admin',
-  host: process.env.COMPOSE_US_WEST_2_RETHINKDB_URL,
-  port: process.env.COMPOSE_US_WEST_2_RETHINKDB_PORT,
-  ssl: {
-    ca: fs.readFileSync(path.join(process.cwd(), 'cacert')),
-  },
+  servers: [
+    {
+      password: process.env.COMPOSE_US_WEST_2_RETHINKDB_PASSWORD,
+      user: 'admin',
+      host: process.env.COMPOSE_US_WEST_2_RETHINKDB_URL_2,
+      port: process.env.COMPOSE_US_WEST_2_RETHINKDB_PORT_2,
+      ssl: {
+        ca: fs.readFileSync(path.join(process.cwd(), 'cacert')),
+      },
+    },
+    {
+      password: process.env.COMPOSE_US_WEST_2_RETHINKDB_PASSWORD,
+      user: 'admin',
+      host: process.env.COMPOSE_US_WEST_2_RETHINKDB_URL,
+      port: process.env.COMPOSE_US_WEST_2_RETHINKDB_PORT,
+      ssl: {
+        ca: fs.readFileSync(path.join(process.cwd(), 'cacert')),
+      },
+    },
+  ],
 };
 
 const config = IS_PROD
