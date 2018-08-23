@@ -41,7 +41,7 @@ class ViewError extends React.Component<Props> {
       removeItemFromStorage('spectrum');
     }
 
-    const moji = emoji || '😌';
+    const moji = emoji || '🛠';
     const head = heading || 'We could all use a refresh.';
     const subhead = subheading || 'Refresh this page to try again.';
 

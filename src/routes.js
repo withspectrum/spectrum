@@ -27,6 +27,7 @@ import Status from './views/status';
 import Login from './views/login';
 import DirectMessages from './views/directMessages';
 import Thread from './views/thread';
+import Maintenance from './views/maintenance';
 
 /* prettier-ignore */
 const Explore = Loadable({
@@ -184,25 +185,26 @@ class Routes extends React.Component<Props> {
                 things like the 'set username' prompt when a user auths and doesn't
                 have a username set.
               */}
-              <AuthViewHandler>{() => null}</AuthViewHandler>
-              <Status />
-              <Route component={Navbar} />
+              {/* <AuthViewHandler>{() => null}</AuthViewHandler> */}
+              {/* <Status /> */}
+              <Route component={Maintenance} />
+              {/* <Route component={Navbar} />
 
               <Route component={ModalRoot} />
               <Route component={Toasts} />
               <Route component={Gallery} />
-              <Route component={ThreadSlider} />
+              <Route component={ThreadSlider} /> */}
 
               {/*
                   Switch only renders the first match. Subrouting happens downstream
                   https://reacttraining.com/react-router/web/api/Switch
                 */}
               <Switch>
-                <Route exact path="/" component={DashboardFallback} />
-                <Route exact path="/home" component={HomeFallback} />
+                {/* <Route exact path="/" component={DashboardFallback} />
+                <Route exact path="/home" component={HomeFallback} /> */}
 
                 {/* Public Business Pages */}
-                <Route path="/about" component={Pages} />
+                {/* <Route path="/about" component={Pages} />
                 <Route path="/contact" component={Pages} />
                 <Route path="/terms" component={Pages} />
                 <Route path="/privacy" component={Pages} />
@@ -213,10 +215,10 @@ class Routes extends React.Component<Props> {
                 <Route path="/pricing" component={Pages} />
                 <Route path="/support" component={Pages} />
                 <Route path="/features" component={Pages} />
-                <Route path="/faq" component={Pages} />
+                <Route path="/faq" component={Pages} /> */}
 
                 {/* App Pages */}
-                <Route path="/new/community" component={NewCommunityFallback} />
+                {/* <Route path="/new/community" component={NewCommunityFallback} />
                 <Route path="/new/thread" component={ComposerFallback} />
                 <Route path="/new/search" component={Search} />
 
@@ -268,14 +270,14 @@ class Routes extends React.Component<Props> {
                       <Login redirectPath={`${CLIENT_URL}/me`} />
                     )
                   }
-                />
+                /> */}
 
                 {/*
                     We check communitySlug last to ensure none of the above routes
                     pass. We handle null communitySlug values downstream by either
                     redirecting to home or showing a 404
                   */}
-                <Route
+                {/* <Route
                   path="/:communitySlug/:channelSlug/settings"
                   component={ChannelSettingsFallback}
                 />
@@ -303,7 +305,7 @@ class Routes extends React.Component<Props> {
                   path="/:communitySlug/:channelSlug"
                   component={ChannelView}
                 />
-                <Route path="/:communitySlug" component={CommunityView} />
+                <Route path="/:communitySlug" component={CommunityView} /> */}
               </Switch>
             </Body>
           </ScrollManager>

@@ -8,11 +8,10 @@ import SettingsFallback from './SettingsFallback';
 const BlueScreen = () => {
   return (
     <ViewError
-      heading={'Something went wrong'}
+      heading={'Down for maintenance'}
       subheading={
-        'Sorry about the technical issues. Brian, Bryn and Max have been notified of the problem and should resolve it soon.'
+        "Spectrum is currently down for maintenance. We'll be back soon!"
       }
-      refresh
     />
   );
 };
