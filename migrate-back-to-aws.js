@@ -48,24 +48,6 @@ const dbs = {
 const DATE = new Date(1534982052000);
 
 async function getNewData() {
-  console.log('Getting channelSettings...');
-  const channelSettings = await dbs.compose
-    .table('channelSettings')
-    .filter(dbs.compose.row('createdAt').gt(DATE))
-    .run()
-    .catch(err => {
-      throw new Error(err);
-      process.exit(1);
-    });
-  console.log('Getting communitySettings...');
-  const communitySettings = await dbs.compose
-    .table('communitySettings')
-    .filter(dbs.compose.row('createdAt').gt(DATE))
-    .run()
-    .catch(err => {
-      throw new Error(err);
-      process.exit(1);
-    });
   console.log('Getting directMessageThreads...');
   const directMessageThreads = await dbs.compose
     .table('directMessageThreads')
@@ -78,7 +60,7 @@ async function getNewData() {
   console.log('Getting slackImports...');
   const slackImports = await dbs.compose
     .table('slackImports')
-    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .filter(dbs.compose.row('sent').gt(DATE))
     .run()
     .catch(err => {
       throw new Error(err);
@@ -96,7 +78,7 @@ async function getNewData() {
   console.log('Getting messages...');
   const messages = await dbs.compose
     .table('messages')
-    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .filter(dbs.compose.row('timestamp').gt(DATE))
     .run()
     .catch(err => {
       throw new Error(err);
@@ -132,7 +114,7 @@ async function getNewData() {
   console.log('Getting reactions...');
   const reactions = await dbs.compose
     .table('reactions')
-    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .filter(dbs.compose.row('timestamp  ').gt(DATE))
     .run()
     .catch(err => {
       throw new Error(err);
@@ -141,15 +123,6 @@ async function getNewData() {
   console.log('Getting users...');
   const users = await dbs.compose
     .table('users')
-    .filter(dbs.compose.row('createdAt').gt(DATE))
-    .run()
-    .catch(err => {
-      throw new Error(err);
-      process.exit(1);
-    });
-  console.log('Getting usersSettings...');
-  const usersSettings = await dbs.compose
-    .table('usersSettings')
     .filter(dbs.compose.row('createdAt').gt(DATE))
     .run()
     .catch(err => {
