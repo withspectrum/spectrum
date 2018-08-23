@@ -227,7 +227,7 @@
     "build": "npm run build:web && npm run build:hyperion",
     "prebuild:api": "rimraf build-api",
     "build:api": "cross-env NODE_PATH=./ cross-env DIR=api backpack build",
-    "postbuild:api": "cp api/package.json build-api/package.json && cp now.json build-api/now.json",
+    "postbuild:api": "cp api/package.json build-api/package.json && cp now.json build-api/now.json && cp cacert build-api/cacert",
     "prebuild:athena": "rimraf build-athena",
     "build:athena": "cross-env NODE_PATH=./ cross-env DIR=athena backpack build",
     "postbuild:athena": "cp athena/package.json build-athena/package.json && cp now.json build-athena/now.json",
