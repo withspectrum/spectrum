@@ -6,8 +6,8 @@ export const getMembersInCommunity = (
 ): Promise<Array<string>> => {
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ isMember: true, receiveNotifications: true })
+    .getAll([communityId, true], { index: 'communityIdAndIsMember' })
+    .filter({ receiveNotifications: true })
     .run()
     .then(users => users.map(user => user.userId));
 };
@@ -17,8 +17,7 @@ export const getOwnersInCommunity = (
 ): Promise<Array<string>> => {
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ isOwner: true })
+    .getAll([communityId, true], { index: 'communityIdAndIsOwner' })
     .run()
     .then(users => users.map(user => user.userId));
 };
@@ -28,8 +27,7 @@ export const getModeratorsInCommunity = (
 ): Promise<Array<string>> => {
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ isModerator: true })
+    .getAll([communityId, true], { index: 'communityIdAndIsModerator' })
     .run()
     .then(users => users.map(user => user.userId));
 };
