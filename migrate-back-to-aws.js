@@ -48,78 +48,141 @@ const dbs = {
 const DATE = new Date(1534982052000);
 
 async function getNewData() {
-  const [
-    threads,
-    messages,
-    communities,
-    channels,
-    threadReactions,
-    reactions,
-    usersCommunities,
-    usersChannels,
-    usersThreads,
-  ] = await Promise.all([
-    dbs.compose
-      .table('channelSettings')
-      .filter(r.row('createdAt').gt(DATE))
-      .run(),
-    dbs.compose
-      .table('communitySettings')
-      .filter(r.row('createdAt').gt(DATE))
-      .run(),
-    dbs.compose
-      .table('directMessageThreads')
-      .filter(r.row('createdAt').gt(DATE))
-      .run(),
-    dbs.compose
-      .table('slackImports')
-      .filter(r.row('createdAt').gt(DATE))
-      .run(),
-    dbs.compose
-      .table('threads')
-      .filter(r.row('createdAt').gt(DATE))
-      .run(),
-    dbs.compose
-      .table('messages')
-      .filter(r.row('timestamp').gt(DATE))
-      .run(),
-    dbs.compose
-      .table('communities')
-      .filter(r.row('createdAt').gt(DATE))
-      .run(),
-    dbs.compose
-      .table('channels')
-      .filter(r.row('createdAt').gt(DATE))
-      .run(),
-    dbs.compose
-      .table('threadReactions')
-      .filter(r.row('createdAt').gt(DATE))
-      .run(),
-    dbs.compose
-      .table('reactions')
-      .filter(r.row('createdAt').gt(DATE))
-      .run(),
-    dbs.compose
-      .table('users')
-      .filter(r.row('createdAt').gt(DATE))
-      .run(),
-    dbs.compose
-      .table('usersSettings')
-      .filter(r.row('createdAt').gt(DATE))
-      .run(),
-    dbs.compose
-      .table('usersCommunities')
-      .filter(r.row('createdAt').gt(DATE))
-      .run(),
-    dbs.compose
-      .table('usersChannels')
-      .filter(r.row('createdAt').gt(DATE))
-      .run(),
-    dbs.compose
-      .table('usersThreads')
-      .filter(r.row('createdAt').gt(DATE))
-      .run(),
-  ]);
+  console.log('Getting channelSettings...');
+  const channelSettings = await dbs.compose
+    .table('channelSettings')
+    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .run()
+    .catch(err => {
+      throw new Error(err);
+      process.exit(1);
+    });
+  console.log('Getting communitySettings...');
+  const communitySettings = await dbs.compose
+    .table('communitySettings')
+    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .run()
+    .catch(err => {
+      throw new Error(err);
+      process.exit(1);
+    });
+  console.log('Getting directMessageThreads...');
+  const directMessageThreads = await dbs.compose
+    .table('directMessageThreads')
+    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .run()
+    .catch(err => {
+      throw new Error(err);
+      process.exit(1);
+    });
+  console.log('Getting slackImports...');
+  const slackImports = await dbs.compose
+    .table('slackImports')
+    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .run()
+    .catch(err => {
+      throw new Error(err);
+      process.exit(1);
+    });
+  console.log('Getting threads...');
+  const threads = await dbs.compose
+    .table('threads')
+    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .run()
+    .catch(err => {
+      throw new Error(err);
+      process.exit(1);
+    });
+  console.log('Getting messages...');
+  const messages = await dbs.compose
+    .table('messages')
+    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .run()
+    .catch(err => {
+      throw new Error(err);
+      process.exit(1);
+    });
+  console.log('Getting communities...');
+  const communities = await dbs.compose
+    .table('communities')
+    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .run()
+    .catch(err => {
+      throw new Error(err);
+      process.exit(1);
+    });
+  console.log('Getting channels...');
+  const channels = await dbs.compose
+    .table('channels')
+    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .run()
+    .catch(err => {
+      throw new Error(err);
+      process.exit(1);
+    });
+  console.log('Getting threadReactions...');
+  const threadReactions = await dbs.compose
+    .table('threadReactions')
+    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .run()
+    .catch(err => {
+      throw new Error(err);
+      process.exit(1);
+    });
+  console.log('Getting reactions...');
+  const reactions = await dbs.compose
+    .table('reactions')
+    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .run()
+    .catch(err => {
+      throw new Error(err);
+      process.exit(1);
+    });
+  console.log('Getting users...');
+  const users = await dbs.compose
+    .table('users')
+    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .run()
+    .catch(err => {
+      throw new Error(err);
+      process.exit(1);
+    });
+  console.log('Getting usersSettings...');
+  const usersSettings = await dbs.compose
+    .table('usersSettings')
+    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .run()
+    .catch(err => {
+      throw new Error(err);
+      process.exit(1);
+    });
+  console.log('Getting usersCommuniteis...');
+  const usersCommunities = await dbs.compose
+    .table('usersCommunities')
+    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .run()
+    .catch(err => {
+      throw new Error(err);
+      process.exit(1);
+    });
+  console.log('Getting usersChannels...');
+  const usersChannels = await dbs.compose
+    .table('usersChannels')
+    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .run()
+    .catch(err => {
+      throw new Error(err);
+      process.exit(1);
+    });
+  console.log('Getting usersThreads...');
+  const usersThreads = await dbs.compose
+    .table('usersThreads')
+    .filter(dbs.compose.row('createdAt').gt(DATE))
+    .run()
+    .catch(err => {
+      throw new Error(err);
+      process.exit(1);
+    });
 
   return {
     threads,
@@ -148,7 +211,27 @@ async function insertNewData(data) {
   );
 }
 
-async () => {
-  const data = await getNewData();
-  await insertNewData(data);
-};
+try {
+  (async () => {
+    console.log(
+      'Getting all new data from Compose since',
+      DATE.toLocaleString()
+    );
+    try {
+      const data = await getNewData().catch(err => {
+        throw new Error(err);
+        process.exit(1);
+      });
+      Object.keys(data).forEach(table => {
+        console.log(`${table}: ${data[table].length} new records`);
+      });
+      // await insertNewData(data);
+    } catch (err) {
+      throw new Error(err);
+      process.exit(1);
+    }
+  })();
+} catch (err) {
+  throw new Error(err);
+  process.exit(1);
+}
