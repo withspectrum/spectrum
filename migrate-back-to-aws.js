@@ -59,7 +59,22 @@ async function getNewData() {
     usersChannels,
     usersThreads,
   ] = await Promise.all([
-    // TODO: Figure this filter out and make sure it works
+    dbs.compose
+      .table('channelSettings')
+      .filter(r.row('createdAt').gt(DATE))
+      .run(),
+    dbs.compose
+      .table('communitySettings')
+      .filter(r.row('createdAt').gt(DATE))
+      .run(),
+    dbs.compose
+      .table('directMessageThreads')
+      .filter(r.row('createdAt').gt(DATE))
+      .run(),
+    dbs.compose
+      .table('slackImports')
+      .filter(r.row('createdAt').gt(DATE))
+      .run(),
     dbs.compose
       .table('threads')
       .filter(r.row('createdAt').gt(DATE))
@@ -82,6 +97,14 @@ async function getNewData() {
       .run(),
     dbs.compose
       .table('reactions')
+      .filter(r.row('createdAt').gt(DATE))
+      .run(),
+    dbs.compose
+      .table('users')
+      .filter(r.row('createdAt').gt(DATE))
+      .run(),
+    dbs.compose
+      .table('usersSettings')
       .filter(r.row('createdAt').gt(DATE))
       .run(),
     dbs.compose
