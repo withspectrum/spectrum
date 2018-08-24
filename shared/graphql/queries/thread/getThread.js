@@ -40,19 +40,18 @@ export const getThreadByMatchOptions = {
   options: (props: {
     threadId?: string,
     match?: { params: { threadId: string, '0'?: string, '1'?: string } },
-  }) =>
-    console.log(props) || {
-      variables: {
-        id: props.threadId
-          ? props.threadId
-          : props.match
-            ? // the .params[1] case kicks in with our new custom thread slugs, which use
-              // a custom regexp to match /some-custom-slug-asdf-123-123-123-asdf
-              props.match.params.threadId || props.match.params[1]
-            : null,
-      },
-      fetchPolicy: 'cache-first',
+  }) => ({
+    variables: {
+      id: props.threadId
+        ? props.threadId
+        : props.match
+          ? // the .params[1] case kicks in with our new custom thread slugs, which use
+            // a custom regexp to match /some-custom-slug-asdf-123-123-123-asdf
+            props.match.params.threadId || props.match.params[1]
+          : null,
     },
+    fetchPolicy: 'cache-first',
+  }),
 };
 
 export const getThreadByMatch = graphql(
