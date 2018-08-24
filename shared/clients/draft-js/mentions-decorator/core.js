@@ -39,10 +39,12 @@ const createMentionsDecorator = (
 ) => ({
   strategy: (
     contentBlock: ContentBlock,
-    callback: (...args?: Array<any>) => any
+    callback: (...args?: Array<any>) => any,
+    contentState: any
   ) => {
     // This prevents the search for mentions when we're inside of a code-block
     if (contentBlock.type === 'code-block') return;
+    if (!contentState) return;
 
     // -> "@brian_lovin, what's up with @mxstbr?"
     const text = contentBlock.getText();
@@ -57,7 +59,15 @@ const createMentionsDecorator = (
 
     const mentionCoordinates = getMentionsPositionsFromMessage(text);
 
+    const selectionKeyOffset = contentState
+      .getSelectionAfter()
+      .getStartOffset();
+
     mentionCoordinates.forEach(({ startPos, endPos }) => {
+      // if cursor is currently on a mention, don't match
+      // this is so that the decorator doesn't conflict with the
+      // decorator from draft-js-mention-plugin that renders the suggestions portal
+      if (startPos < selectionKeyOffset && selectionKeyOffset < endPos) return;
       callback(startPos, endPos);
     });
   },

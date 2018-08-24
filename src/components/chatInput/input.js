@@ -137,7 +137,7 @@ class Input extends React.Component<Props, State> {
           onSearchChange={({ value }) => {
             this.props.onMentionChange({ value });
           }}
-          suggestions={mentionSuggestions}
+          suggestions={console.log(mentionSuggestions) || mentionSuggestions}
         />
       </InputWrapper>
     );
