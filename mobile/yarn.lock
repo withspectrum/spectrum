@@ -6360,9 +6360,9 @@ react-navigation-props-mapper@^0.1.3:
   dependencies:
     hoist-non-react-statics "^2.2.1"
 
-react-navigation-stack@0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-0.2.1.tgz#30529f48129a95a456084a58b3acb2a378dc9408"
+react-navigation-stack@0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-0.2.3.tgz#9d1e2524aa1d178302c938948b8ece49d713f12b"
 
 react-navigation-tabs@0.6.0:
   version "0.6.0"
@@ -6374,9 +6374,9 @@ react-navigation-tabs@0.6.0:
     react-native-safe-area-view "^0.7.0"
     react-native-tab-view "^1.0.0"
 
-react-navigation@^2.12.0:
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-2.12.0.tgz#d2e1f3ba5c45e4a4bf4f0ae6b33e5406cce5dbb6"
+react-navigation@^2.12.1:
+  version "2.12.1"
+  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-2.12.1.tgz#17122a4162cd5a65d79814385cd61c2c0cb7ebb5"
   dependencies:
     clamp "^1.0.1"
     create-react-context "^0.2.1"
@@ -6387,7 +6387,7 @@ react-navigation@^2.12.0:
     react-native-safe-area-view "^0.9.0"
     react-navigation-deprecated-tab-navigator "1.3.0"
     react-navigation-drawer "0.5.0"
-    react-navigation-stack "0.2.1"
+    react-navigation-stack "0.2.3"
     react-navigation-tabs "0.6.0"
 
 react-proxy@^1.1.7:
