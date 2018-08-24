@@ -30,7 +30,7 @@ export const convertTimestampToDate = (timestamp: number) => {
   let minutes = date.getMinutes();
   minutes = minutes >= 10 ? minutes : '0' + minutes.toString(); // turns 4 minutes into 04 minutes
   let ampm = hours >= 12 ? 'pm' : 'am'; // todo: support 24hr time
-  return `${month} ${day}, ${year} · ${cleanHours}:${minutes}${ampm}`;
+  return `${month} ${day}, ${year} at ${cleanHours}:${minutes}${ampm}`;
 };
 
 export const convertTimestampToTime = (timestamp: Date) => {
