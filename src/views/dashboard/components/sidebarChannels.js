@@ -101,7 +101,7 @@ class SidebarChannels extends React.Component<Props> {
           <Link to={`/${community.slug}`}>
             <ChannelListItem>
               <Icon glyph={'link'} size={24} />
-              <CommunityListName>Visit community</CommunityListName>
+              <CommunityListName>Visit landing page</CommunityListName>
             </ChannelListItem>
           </Link>
 
@@ -214,6 +214,8 @@ class SidebarChannels extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getCommunityChannels, viewNetworkHandler)(
-  SidebarChannels
-);
+export default compose(
+  connect(),
+  getCommunityChannels,
+  viewNetworkHandler
+)(SidebarChannels);
