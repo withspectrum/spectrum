@@ -127,8 +127,7 @@ export const ChannelListItem = styled.div`
   }
 
   &:hover {
-    color: ${props =>
-      props.active ? props.theme.brand.alt : props.theme.text.default};
+    color: ${props => props.theme.brand.alt};
   }
 
 `;
