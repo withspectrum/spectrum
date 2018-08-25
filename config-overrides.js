@@ -112,7 +112,7 @@ module.exports = function override(config, env) {
       // which means we have to manually do this and filter any of those routes out
       cacheMaps: [
         {
-          match() {
+          match: function() {
             return false;
           },
           requestTypes: ['navigate'],
