@@ -192,7 +192,7 @@ export const Subsection = styled.div`
 export const SectionTitle = styled.h3`
   font-size: 24px;
   font-weight: 600;
-  color: ${theme.text.primary};
+  color: ${theme.text.default};
   line-height: 1.3;
   margin-bottom: 16px;
 `;
