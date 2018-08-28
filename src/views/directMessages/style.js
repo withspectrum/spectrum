@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { FlexCol, FlexRow } from '../../components/globals';
 
@@ -33,8 +34,8 @@ export const MessagesList = styled(FlexCol)`
   max-width: 400px;
   flex: 0 0 25%;
   min-width: 320px;
-  background: ${props => props.theme.bg.default};
-  border-right: 1px solid ${props => props.theme.bg.border};
+  background: ${theme.bg.default};
+  border-right: 1px solid ${theme.bg.border};
   flex: 1 0 auto;
   max-height: 100%;
 
@@ -82,8 +83,8 @@ export const NoThreads = MessagesContainer.extend`
 export const ComposeHeader = styled(FlexRow)`
   justify-content: flex-end;
   padding: 8px;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
-  color: ${props => props.theme.brand.default};
+  border-bottom: 1px solid ${theme.bg.border};
+  color: ${theme.brand.default};
 
   @media (max-width: 768px) {
     display: none;

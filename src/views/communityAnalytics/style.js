@@ -1,18 +1,19 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 
 export const Heading = styled.h1`
   margin-left: 16px;
   font-size: 32px;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   font-weight: 800;
 `;
 
 export const Subheading = styled.h3`
   margin-left: 16px;
   font-size: 16px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-weight: 500;
   line-height: 1;
   margin-bottom: 8px;
@@ -21,8 +22,8 @@ export const Subheading = styled.h3`
 export const StyledHeader = styled.div`
   display: flex;
   padding: 32px;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
-  background: ${props => props.theme.bg.default};
+  border-bottom: 1px solid ${theme.bg.border};
+  background: ${theme.bg.default};
   width: 100%;
   align-items: center;
 `;
@@ -35,7 +36,7 @@ export const HeaderText = styled.div`
 
 export const StyledThreadListItem = styled.div`
   display: flex;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
   padding: 16px 0;
   flex-direction: column;
 
@@ -46,39 +47,39 @@ export const StyledThreadListItem = styled.div`
 `;
 export const ThreadListItemTitle = styled.h4`
   font-size: 16px;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   line-height: 1.28;
   font-weight: 500;
 
   &:hover {
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 `;
 
 export const ThreadListItemSubtitle = styled.h5`
   font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   line-height: 1.28;
   margin-top: 4px;
 
   a:hover {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 `;
 
 export const MessageIconContainer = styled.div`
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
 
   &:hover {
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 `;
 
 export const UserListItemContainer = styled.div`
   padding: 0 16px;
-  border-bottom: 1px solid ${props => props.theme.bg.wash};
+  border-bottom: 1px solid ${theme.bg.wash};
 `;

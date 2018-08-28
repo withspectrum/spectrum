@@ -1,4 +1,5 @@
 import styled, { keyframes } from 'styled-components';
+import theme from 'shared/theme';
 import { hexa, Transition, FlexRow, FlexCol, zIndex } from '../globals';
 
 export const Container = styled(FlexRow)`
@@ -25,7 +26,7 @@ export const Composer = styled.div`
   display: block;
   min-height: 64px;
   transition: ${Transition.hover.off};
-  background-color: ${props => props.theme.bg.default};
+  background-color: ${theme.bg.default};
 
   &:hover {
     transition: none;
@@ -71,14 +72,14 @@ export const Placeholder = styled.div`
   align-items: center;
   cursor: pointer;
   padding: 16px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   transition: ${Transition.hover.off};
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
 
   &:hover {
     transition: ${Transition.hover.on};
-    background-color: ${props => props.theme.bg.wash};
-    color: ${props => props.theme.text.alt};
+    background-color: ${theme.bg.wash};
+    color: ${theme.text.alt};
   }
 
   @media (max-width: 768px) {
@@ -103,7 +104,7 @@ export const ContentContainer = styled.div`
 
 export const Actions = styled(FlexCol)`
   background: #f8fbfe;
-  border-top: 2px solid ${props => props.theme.bg.border};
+  border-top: 2px solid ${theme.bg.border};
   padding: 8px 8px 8px 0;
   border-radius: 0 0 12px 12px;
   width: 100%;
@@ -130,10 +131,10 @@ export const Dropdowns = styled(FlexRow)`
     display: block;
     padding: 8px 12px;
     border: none;
-    border: 2px solid ${props => props.theme.bg.border};
+    border: 2px solid ${theme.bg.border};
     border-radius: 8px;
     box-shadow: none;
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
     font-weight: 600;
     font-size: 14px;
     box-sizing: border-box;
@@ -162,8 +163,8 @@ export const Dropdowns = styled(FlexRow)`
 export const ComposerUpsell = styled.div`
   position: relative;
   padding: 4px 16px;
-  background: ${props => props.theme.brand.alt};
-  border-bottom: 2px solid ${props => props.theme.brand.alt};
+  background: ${theme.brand.alt};
+  border-bottom: 2px solid ${theme.brand.alt};
   color: #fff;
   text-align: center;
 
@@ -176,11 +177,11 @@ export const ComposerUpsell = styled.div`
 export const UpsellPulse = styled.div`
   width: 10px;
   height: 10px;
-  border: 5px solid ${props => props.theme.brand.alt};
+  border: 5px solid ${theme.brand.alt};
   -webkit-border-radius: 30px;
   -moz-border-radius: 30px;
   border-radius: 30px;
-  background-color: ${props => props.theme.brand.alt};
+  background-color: ${theme.brand.alt};
   z-index: ${zIndex.composer};
   position: absolute;
   top: -4px;
@@ -217,7 +218,7 @@ const pulse = keyframes`
 `;
 
 export const UpsellDot = styled.div`
-  border: 10px solid ${props => props.theme.brand.default};
+  border: 10px solid ${theme.brand.default};
   background: transparent;
   -webkit-border-radius: 60px;
   -moz-border-radius: 60px;
@@ -280,7 +281,7 @@ export const DisconnectedWarning = styled.div`
   margin: 8px;
   border-radius: 8px;
   background: ${props => hexa(props.theme.warn.default, 0.1)};
-  color: ${props => props.theme.warn.default};
+  color: ${theme.warn.default};
   font-size: 16px;
   font-weight: 500;
 `;

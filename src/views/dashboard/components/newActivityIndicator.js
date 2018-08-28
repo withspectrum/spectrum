@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
+import theme from 'shared/theme';
 import { connect } from 'react-redux';
 import { clearActivityIndicator } from '../../../actions/newActivityIndicator';
 import styled from 'styled-components';
 
 const NewActivityBar = styled.div`
   padding: ${props => (props.refetching ? '8px' : '8px 16px')};
-  color: ${props => props.theme.brand.alt};
-  background: ${props => props.theme.bg.wash};
+  color: ${theme.brand.alt};
+  background: ${theme.bg.wash};
   font-size: 14px;
   font-weight: 600;
   display: ${props => (props.active ? 'flex' : 'none')};
@@ -15,8 +16,8 @@ const NewActivityBar = styled.div`
   align-self: center;
   padding: 12px 16px;
   height: 40px;
-  border-top: 1px solid ${props => props.theme.bg.border};
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-top: 1px solid ${theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
   z-index: 10;
   position: relative;
   cursor: pointer;
@@ -31,15 +32,15 @@ const NewActivityBar = styled.div`
   }
 
   &:hover {
-    background: ${props => props.theme.brand.alt};
-    color: ${props => props.theme.text.reverse};
+    background: ${theme.brand.alt};
+    color: ${theme.text.reverse};
   }
 `;
 
 const scrollTo = (element, to, duration) => {
   if (duration < 0) return;
   const difference = to - element.scrollTop;
-  const perTick = difference / duration * 2;
+  const perTick = (difference / duration) * 2;
 
   setTimeout(() => {
     element.scrollTop = element.scrollTop + perTick;

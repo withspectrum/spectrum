@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled, { keyframes } from 'styled-components';
 import { zIndex, Gradient } from '../globals';
@@ -57,19 +58,19 @@ const Toast = styled.div`
 `;
 
 export const ErrorToast = styled(Toast)`
-  background-color: ${props => props.theme.warn.default};
+  background-color: ${theme.warn.default};
   background-image: ${props =>
     Gradient(props.theme.warn.alt, props.theme.warn.default)};
 `;
 
 export const SuccessToast = styled(Toast)`
-  background-color: ${props => props.theme.success.default};
+  background-color: ${theme.success.default};
   background-image: ${props =>
     Gradient(props.theme.success.alt, props.theme.success.default)};
 `;
 
 export const NeutralToast = styled(Toast)`
-  background-color: ${props => props.theme.text.alt};
+  background-color: ${theme.text.alt};
   background-image: ${props =>
     Gradient(props.theme.text.placeholder, props.theme.text.alt)};
 `;
