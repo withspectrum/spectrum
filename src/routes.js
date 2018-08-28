@@ -26,7 +26,7 @@ import Navbar from './views/navbar';
 import Status from './views/status';
 import Login from './views/login';
 import DirectMessages from './views/directMessages';
-import Thread from './views/thread';
+import { FullscreenThreadView } from './views/thread';
 
 /* prettier-ignore */
 const Explore = Loadable({
@@ -233,7 +233,10 @@ class Routes extends React.Component<Props> {
                   component={MessagesFallback}
                 />
                 <Route path="/messages" component={MessagesFallback} />
-                <Route path="/thread/:threadId" component={Thread} />
+                <Route
+                  path="/thread/:threadId"
+                  component={FullscreenThreadView}
+                />
                 <Route path="/thread" render={() => <Redirect to="/" />} />
                 <Route exact path="/users" render={() => <Redirect to="/" />} />
                 <Route exact path="/users/:username" component={UserView} />

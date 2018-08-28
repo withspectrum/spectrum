@@ -2,11 +2,35 @@
 import React from 'react';
 import Loadable from 'react-loadable';
 import LoadingThread from './components/loading';
+import ViewError from 'src/components/viewError';
 
 /* prettier-ignore */
-const Thread = Loadable({
-  loader: () => import('./container'/* webpackChunkName: "Thread" */),
-  loading: ({ isLoading }) => isLoading && <LoadingThread threadViewContext="inbox"  />,
+const loader = () => import('./container'/* webpackChunkName: "Thread" */);
+
+const getLoading = (threadViewContext: 'fullscreen' | 'inbox' | 'slider') => ({
+  error,
+  pastDelay,
+}) => {
+  if (error) {
+    return <ViewError />;
+  } else if (pastDelay) {
+    return <LoadingThread threadViewContext={threadViewContext} />;
+  }
+
+  return null;
+};
+
+export const InboxThreadView = Loadable({
+  loader,
+  loading: getLoading('inbox'),
 });
 
-export default Thread;
+export const SliderThreadView = Loadable({
+  loader,
+  loading: getLoading('slider'),
+});
+
+export const FullscreenThreadView = Loadable({
+  loader,
+  loading: getLoading('fullscreen'),
+});
