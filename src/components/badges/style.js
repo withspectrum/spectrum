@@ -23,8 +23,7 @@ export const Span = styled.span`
 
 export const ProBadge = styled(Span)`
   background-color: ${theme.special.default};
-  background-image: ${props =>
-    Gradient(props.theme.special.alt, props.theme.special.default)};
+  background-image: ${Gradient(theme.special.alt, theme.special.default)};
   cursor: pointer;
 
   &:hover {
@@ -34,14 +33,12 @@ export const ProBadge = styled(Span)`
 
 export const TeamBadge = styled(Span)`
   background-color: ${theme.success.default};
-  background-image: ${props =>
-    Gradient(props.theme.success.alt, props.theme.success.default)};
+  background-image: ${Gradient(theme.success.alt, theme.success.default)};
 `;
 
 export const BlockedBadge = styled(Span)`
   background-color: ${theme.warn.alt};
-  background-image: ${props =>
-    Gradient(props.theme.warn.alt, props.theme.warn.default)};
+  background-image: ${Gradient(theme.warn.alt, theme.warn.default)};
   cursor: pointer;
 
   &:hover {
@@ -51,8 +48,7 @@ export const BlockedBadge = styled(Span)`
 
 export const PendingBadge = styled(Span)`
   background-color: ${theme.special.alt};
-  background-image: ${props =>
-    Gradient(props.theme.special.alt, props.theme.special.default)};
+  background-image: ${Gradient(theme.special.alt, theme.special.default)};
   cursor: pointer;
 
   &:hover {
@@ -62,8 +58,7 @@ export const PendingBadge = styled(Span)`
 
 export const DefaultPaymentMethodBadge = styled(Span)`
   background-color: ${theme.space.default};
-  background-image: ${props =>
-    Gradient(props.theme.space.default, props.theme.space.default)};
+  background-image: ${Gradient(theme.space.default, theme.space.default)};
   cursor: pointer;
   margin-left: 8px;
 
