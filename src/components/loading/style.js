@@ -50,7 +50,7 @@ export const ShimmerListLite = styled(Card)`
 `;
 
 export const ShimmerThreadDetail = styled(FlexCol)`
-  padding: 40px 32px;
+  padding: 36px 32px;
   display: inline-block;
 
   @media (max-width: 768px) {
@@ -227,6 +227,13 @@ export const Cover = styled.span`
   position: absolute;
   background: ${({ theme }) => theme.bg.default};
   z-index: ${zIndex.loading + 2};
+`;
+
+export const CircularCover = styled(Cover)`
+  background: radial-gradient(
+    transparent 20px,
+    ${({ theme }) => theme.bg.default} 10px
+  );
 `;
 
 export const LoadingOverlay = styled.div`

@@ -28,6 +28,7 @@ import {
   ShimmerLine,
   ShimmerSelect,
   Cover,
+  CircularCover,
   LoadingOverlay,
   LoadingNavbarContainer,
   LogoLink,
@@ -307,6 +308,14 @@ export const LoadingThreadDetail = () => (
   <ShimmerThreadDetail>
     <ShimmerBase>
       <ShimmerLine />
+      <CircularCover
+        style={{
+          top: 0,
+          left: 0,
+          height: '41px',
+          width: '41px',
+        }}
+      />
       <Cover
         style={{
           top: '0',
