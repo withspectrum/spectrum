@@ -88,7 +88,6 @@ export const Content = styled(FlexRow)`
 export const Input = styled(FlexRow)`
   flex: none;
   justify-content: center;
-  z-index: ${zIndex.chatInput};
   grid-area: footer;
   max-width: 100%;
   align-self: stretch;
@@ -454,7 +453,6 @@ export const CommunityHeader = styled.div`
   justify-content: space-between;
   padding: 16px 32px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
-  z-index: ${zIndex.chrome};
   flex: 0 0 64px;
   align-self: stretch;
   background: ${props => props.theme.bg.default};
@@ -809,7 +807,7 @@ export const AnimatedContainer = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  z-index: ${zIndex.flyout};
+  z-index: ${zIndex.card};
 
   @media (max-width: 768px) {
     display: none;
