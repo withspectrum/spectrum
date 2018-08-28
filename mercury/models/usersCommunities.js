@@ -10,8 +10,7 @@ export const updateReputation = (
 ): Promise<Object> => {
   return db
     .table('usersCommunities')
-    .getAll(userId, { index: 'userId' })
-    .filter({ communityId })
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
     .update({
       reputation: db.row('reputation').add(score),
     })

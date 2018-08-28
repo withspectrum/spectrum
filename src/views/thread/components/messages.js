@@ -117,7 +117,11 @@ class MessagesWithData extends React.Component<Props, State> {
       isAuthor,
       participants,
       watercooler,
+      messageCount,
     } = data.thread;
+
+    // Don't scroll empty threads to bottm
+    if (messageCount === 0) return false;
 
     const isParticipant =
       participants &&
