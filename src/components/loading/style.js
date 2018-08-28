@@ -105,11 +105,12 @@ export const ShimmerProfile = styled(Card)`
 
 export const ShimmerProfileLite = styled(Card)`
   border-radius: 4px;
-  padding: 16px;
+  padding: 0;
+  padding-bottom: 16px;
   box-shadow: none;
 
   section {
-    min-height: 96px;
+    min-height: 238px;
   }
 `;
 

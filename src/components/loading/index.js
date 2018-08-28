@@ -933,74 +933,74 @@ export const LoadingProfileThreadDetail = () => (
       <ShimmerLine />
       <Cover
         style={{
-          top: '0',
+          top: '70px',
           left: '0',
-          height: '48px',
-          width: 'calc(50% - 20px)',
+          height: '24px',
+          width: 'calc(50% - 24px)',
         }}
       />
       <Cover
         style={{
-          top: '0',
+          top: '70px',
           right: '0',
-          height: '48px',
-          width: 'calc(50% - 20px)',
+          height: '24px',
+          width: 'calc(50% - 24px)',
         }}
       />
       <Cover
         style={{
-          top: '40px',
-          left: '0',
+          top: '94px',
+          left: 0,
           height: '16px',
           width: '100%',
         }}
       />
       <Cover
         style={{
-          top: '64px',
-          left: '0',
+          top: '110px',
+          left: 0,
+          height: '20px',
+          width: '25%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '110px',
+          right: 0,
+          height: '20px',
+          width: '25%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '130px',
+          left: 0,
           height: '16px',
           width: '100%',
         }}
       />
       <Cover
         style={{
-          top: '88px',
-          left: '0',
+          top: '146px',
+          left: 0,
           height: '16px',
+          width: '35%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '146px',
+          right: 0,
+          height: '16px',
+          width: '35%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '162px',
+          left: 0,
+          height: '100%',
           width: '100%',
-        }}
-      />
-      <Cover
-        style={{
-          top: '48px',
-          right: '0',
-          height: '16px',
-          width: '32px',
-        }}
-      />
-      <Cover
-        style={{
-          top: '48px',
-          left: '0',
-          height: '16px',
-          width: '32px',
-        }}
-      />
-      <Cover
-        style={{
-          top: '72px',
-          right: '0',
-          height: '16px',
-          width: '64px',
-        }}
-      />
-      <Cover
-        style={{
-          top: '72px',
-          left: '0',
-          height: '16px',
-          width: '64px',
         }}
       />
     </ShimmerBase>
