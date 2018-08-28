@@ -2,13 +2,7 @@
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import { SvgWrapper } from '../icons';
-import {
-  zIndex,
-  Truncate,
-  monoStack,
-  hexa,
-  Tooltip,
-} from 'src/components/globals';
+import { Truncate, monoStack, hexa, Tooltip } from 'src/components/globals';
 
 export const Byline = styled.span`
   display: flex;
@@ -70,7 +64,6 @@ export const ActionsContainer = styled.span`
   width: 50%;
   pointer-events: none;
   opacity: 0;
-  z-index: ${zIndex.chatInput};
 `;
 
 export const Actions = styled.ul`
@@ -207,7 +200,6 @@ export const AuthorAvatarContainer = styled.div`
 const Bubble = styled.div`
   display: inline-block;
   border-radius: 16px;
-  z-index: ${zIndex.card};
   vertical-align: middle;
   white-space: pre-line;
   word-wrap: break-word;
