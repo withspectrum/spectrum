@@ -205,33 +205,33 @@ export const LoadingInboxThread = () => (
   <ShimmerInboxThread>
     <ShimmerBase>
       <ShimmerLine />
+      <CircularCover
+        style={{
+          top: 0,
+          left: 0,
+          height: '40px',
+          width: '40px',
+        }}
+      />
       <Cover
         style={{
           top: '0',
-          left: '0',
-          height: '4px',
-          width: '100%',
+          left: '40px',
+          height: '40px',
+          width: '8px',
         }}
       />
       <Cover
         style={{
-          top: '16px',
-          left: '0',
-          height: '16px',
-          width: '100%',
+          top: '0',
+          left: '50%',
+          height: '40px',
+          width: '50%',
         }}
       />
       <Cover
         style={{
-          top: '4px',
-          left: '120px',
-          height: '12px',
-          width: '100%',
-        }}
-      />
-      <Cover
-        style={{
-          top: '24px',
+          top: '40px',
           left: '0',
           height: '8px',
           width: '100%',
@@ -239,48 +239,24 @@ export const LoadingInboxThread = () => (
       />
       <Cover
         style={{
-          top: '60px',
+          top: '40px',
           left: '0',
-          height: '12px',
+          height: '100%',
+          width: '48px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '72px',
+          left: '48px',
+          height: '8px',
           width: '100%',
         }}
       />
       <Cover
         style={{
           top: '72px',
-          left: '24px',
-          height: '24px',
-          width: '4px',
-        }}
-      />
-      <Cover
-        style={{
-          top: '72px',
-          left: '52px',
-          height: '24px',
-          width: '4px',
-        }}
-      />
-      <Cover
-        style={{
-          top: '72px',
-          left: '80px',
-          height: '24px',
-          width: '4px',
-        }}
-      />
-      <Cover
-        style={{
-          top: '72px',
-          left: '108px',
-          height: '24px',
-          width: '4px',
-        }}
-      />
-      <Cover
-        style={{
-          top: '72px',
-          left: '136px',
+          left: '35%',
           height: '24px',
           width: '100%',
         }}
