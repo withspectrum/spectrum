@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 import { FlexRow, FlexCol } from '../../components/globals';
 import Card from '../../components/card';
@@ -9,7 +10,7 @@ export const Row = styled(FlexRow)`
   padding: 8px 16px;
   align-items: center;
   width: 100%;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
 
   div {
     margin-top: 2px;
@@ -23,8 +24,8 @@ export const Row = styled(FlexRow)`
   }
 
   &:hover {
-    background-color: ${({ theme }) => theme.brand.alt};
-    color: ${({ theme }) => theme.text.reverse};
+    background-color: ${theme.brand.alt};
+    color: ${theme.text.reverse};
   }
 `;
 
@@ -32,7 +33,7 @@ export const Col = styled(FlexCol)`
   width: 100%;
 
   a + a > div {
-    border-top: 2px solid ${({ theme }) => theme.bg.wash};
+    border-top: 2px solid ${theme.bg.wash};
   }
 `;
 
@@ -41,7 +42,7 @@ export const RowLabel = styled.span`
 `;
 
 export const SearchContainer = styled(Card)`
-  border-bottom: 2px solid ${props => props.theme.bg.border};
+  border-bottom: 2px solid ${theme.bg.border};
   position: relative;
   z-index: ${zIndex.search};
   width: 100%;
@@ -51,7 +52,7 @@ export const SearchContainer = styled(Card)`
 
   &:hover {
     transition: none;
-    border-bottom: 2px solid ${props => props.theme.brand.alt};
+    border-bottom: 2px solid ${theme.brand.alt};
   }
 
   @media (max-width: 768px) {
@@ -66,7 +67,7 @@ export const SearchInput = styled.input`
   align-items: center;
   cursor: pointer;
   padding: 20px;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   transition: ${Transition.hover.off};
   font-size: 20px;
   font-weight: 800;
@@ -85,7 +86,7 @@ export const Grid = styled.main`
   min-width: 100%;
   max-width: 100%;
   min-height: 100vh;
-  background-color: ${props => props.theme.bg.default};
+  background-color: ${theme.bg.default};
 
   @media (max-width: 1028px) {
     grid-template-columns: 320px 1fr;
@@ -190,7 +191,7 @@ export const ColumnHeading = styled.div`
   font-weight: 500;
   padding: 8px 16px 12px;
   margin-top: 24px;
-  border-bottom: 2px solid ${props => props.theme.bg.border};
+  border-bottom: 2px solid ${theme.bg.border};
 
   + div {
     padding: 8px 16px;

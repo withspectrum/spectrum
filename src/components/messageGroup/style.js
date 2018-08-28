@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 import { Transition, HorizontalRule } from '../globals';
 
@@ -29,36 +30,36 @@ export const Timestamp = styled(HorizontalRule)`
   user-select: none;
 
   hr {
-    border-color: ${props => props.theme.bg.wash};
+    border-color: ${theme.bg.wash};
   }
 `;
 
 export const UnseenRobotext = styled(Timestamp)`
   hr {
-    border-color: ${props => props.theme.warn.alt};
+    border-color: ${theme.warn.alt};
     opacity: 0.1;
   }
 `;
 
 export const Time = styled.span`
   text-align: center;
-  color: ${({ theme }) => theme.text.placeholder};
+  color: ${theme.text.placeholder};
   font-size: 14px;
   font-weight: 400;
   margin: 0 16px;
   transition: ${Transition.hover.off};
 
   &:hover {
-    color: ${({ theme }) => theme.text.alt};
+    color: ${theme.text.alt};
     transiton: ${Transition.hover.on};
   }
 `;
 
 export const UnseenTime = styled(Time)`
-  color: ${({ theme }) => theme.warn.alt};
+  color: ${theme.warn.alt};
 
   &:hover {
-    color: ${({ theme }) => theme.warn.alt};
+    color: ${theme.warn.alt};
     transiton: ${Transition.hover.on};
   }
 `;
@@ -72,7 +73,7 @@ export const MessageLink = styled.a`
   white-space: nowrap;
   font-size: 12px;
   top: 0;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
   left: calc(100% + 4px);
 `;
 

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import theme from 'shared/theme';
 import { Shadow, zIndex } from '../globals';
 
 export const GalleryWrapper = styled.div`
@@ -18,7 +19,7 @@ export const Overlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: ${({ theme }) => theme.bg.reverse};
+  background: ${theme.bg.reverse};
   opacity: 0.95;
   z-index: ${zIndex.fullscreen + 1};
 `;

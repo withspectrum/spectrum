@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import theme from 'shared/theme';
 import Link from 'src/components/link';
 import {
   Truncate,
@@ -66,7 +67,7 @@ export const Heading = styled(H3)`
   ${Truncate};
 
   > div {
-    color: ${props => props.theme.text.alt};
+    color: ${theme.text.alt};
     margin-right: 4px;
   }
 `;
@@ -74,7 +75,7 @@ export const Heading = styled(H3)`
 export const Meta = styled(H4)`
   font-size: 14px;
   font-weight: 400;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
 
   a {
     display: inline-block;
@@ -86,7 +87,7 @@ export const Meta = styled(H4)`
 export const ActionContainer = styled(FlexCol)`
   justify-content: center;
   align-items: center;
-  color: ${({ theme }) => theme.text.placeholder};
+  color: ${theme.text.placeholder};
   transition: ${Transition.hover.off};
 `;
 
@@ -104,7 +105,7 @@ export const ListHeading = styled(H3)`
   font-size: 18px;
   padding: 16px;
   padding-left: 0;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
 `;
 
 export const ListContainer = styled(FlexCol)`
@@ -118,12 +119,12 @@ export const MoreLink = styled(Link)`
   font-size: 14px;
   font-weight: 700;
   line-height: 1;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
   transition: ${Transition.hover.off};
   padding: 0;
 
   &:hover {
-    color: ${({ theme }) => theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 
   > div {
@@ -133,7 +134,7 @@ export const MoreLink = styled(Link)`
 
 export const ListFooter = styled(FlexRow)`
   padding-top: 8px;
-  border-top: 2px solid ${({ theme }) => theme.bg.wash};
+  border-top: 2px solid ${theme.bg.wash};
   justify-content: flex-start;
   width: 100%;
 `;
@@ -141,25 +142,25 @@ export const ListFooter = styled(FlexRow)`
 export const ListHeader = styled(FlexRow)`
   justify-content: space-between;
   width: 100%;
-  border-bottom: 2px solid ${({ theme }) => theme.bg.border};
+  border-bottom: 2px solid ${theme.bg.border};
   margin-top: ${props => (props.secondary ? '24px' : '0')};
 `;
 
 export const LargeListHeading = styled(H3)`
   font-weight: 800;
   font-size: 20px;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
 `;
 export const Description = styled.div`
   margin-top: 8px;
   font-weight: 400;
   font-size: 14px;
   line-height: 1.4;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
 
   strong {
     font-weight: 600;
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 
   &:last-of-type {
@@ -200,7 +201,7 @@ export const BadgeContainer = styled(FlexCol)`
 `;
 
 export const Lock = styled.span`
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   position: relative;
   top: 2px;
   margin-left: -2px;

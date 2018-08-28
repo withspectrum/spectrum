@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 import { Button } from 'src/components/buttons';
 
@@ -7,8 +8,8 @@ export const CurrentCount = styled.b`
 `;
 
 export const LikeButtonWrapper = styled(Button)`
-  background: ${props => props.theme.bg.default};
-  border: 1px solid ${props => props.theme.bg.border};
+  background: ${theme.bg.default};
+  border: 1px solid ${theme.bg.border};
   color: ${props =>
     props.hasReacted ? props.theme.brand.alt : props.theme.text.alt};
   padding: 4px 0 4px 8px;
@@ -22,18 +23,18 @@ export const LikeButtonWrapper = styled(Button)`
   }
 
   ${CurrentCount} {
-    background: ${props => props.theme.bg.wash};
-    border-left: 1px solid ${props => props.theme.bg.border};
+    background: ${theme.bg.wash};
+    border-left: 1px solid ${theme.bg.border};
     padding: 12px;
     margin-left: 12px;
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
-    color: ${props => props.theme.text.secondary};
+    color: ${theme.text.secondary};
     font-size: 14px;
   }
 
   &:hover {
-    background: ${props => props.theme.bg.default};
+    background: ${theme.bg.default};
     color: ${props =>
       props.hasReacted ? props.theme.brand.alt : props.theme.text.default};
   }
