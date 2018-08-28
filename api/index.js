@@ -14,6 +14,8 @@ import toobusy from 'shared/middlewares/toobusy';
 import addSecurityMiddleware from 'shared/middlewares/security';
 import csrf from 'shared/middlewares/csrf';
 import { init as initPassport } from './authentication.js';
+import apolloServer from './apollo-server';
+import { corsOptions } from 'shared/middlewares/cors';
 import type { DBUser } from 'shared/types';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
@@ -48,6 +50,8 @@ app.use('/auth', authRoutes);
 
 import apiRoutes from './routes/api';
 app.use('/api', apiRoutes);
+
+apolloServer.applyMiddleware({ app, path: '/api', cors: corsOptions });
 
 // $FlowIssue
 app.use(
@@ -88,10 +92,7 @@ export type GraphQLContext = {
 };
 
 const server = createServer(app);
-
-// Create subscriptions server at /websocket
-import createSubscriptionsServer from './routes/create-subscription-server';
-const subscriptionsServer = createSubscriptionsServer(server, '/websocket');
+apolloServer.installSubscriptionHandlers(server);
 
 // Start API wrapped in Apollo Engine
 // const engine = new ApolloEngine({
