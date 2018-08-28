@@ -193,14 +193,13 @@ const messageToString = context => {
         return (
           <span>
             {' '}
-            your reply in
+            your reply in{' '}
             <Link
               to={{
                 pathname: window.location.pathname,
-                search: `?thread=${context.payload.id}`,
+                search: `?thread=${context.payload.threadId}`,
               }}
             >
-              {' '}
               {data.thread.content.title}
             </Link>
           </span>
