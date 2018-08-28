@@ -18,9 +18,7 @@ export default async (job: Job<AdminProcessUserReportedJobData>) => {
     getUser(reportedBy),
   ]);
 
-  const subject = `☠️ User ${reportedUser.username} reported by ${
-    reportingUser.username
-  }`;
+  const subject = `☠️ ${reportedUser.username} was reported`;
   const preheader = `Reason: ${reason}`;
 
   try {
