@@ -6,6 +6,7 @@ import BrandedLogin from './brandedLogin';
 import { SectionsContainer, Column } from 'src/components/settingsViews/style';
 import SlackSettings from './slack';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';
+import TransferOwnership from './transferOwnership';
 
 type Props = {
   communitySlug: string,
@@ -35,6 +36,12 @@ class Overview extends React.Component<Props> {
           <ErrorBoundary fallbackComponent={SettingsFallback}>
             <BrandedLogin id={community.id} />
           </ErrorBoundary>
+
+          {community.communityPermissions.isOwner && (
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <TransferOwnership id={community.id} />
+            </ErrorBoundary>
+          )}
         </Column>
       </SectionsContainer>
     );
