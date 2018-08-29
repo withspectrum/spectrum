@@ -1,4 +1,5 @@
 //@flow
+import theme from 'shared/theme';
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { Tooltip } from '../globals';
@@ -53,7 +54,7 @@ export const SvgWrapper = styled.div`
         top: -2px;
         font-size: 14px;
         font-weight: 600;
-        background: ${({ theme }) => theme.bg.default};
+        background: ${theme.bg.default};
         color: ${({ theme }) =>
           process.env.NODE_ENV === 'production'
             ? theme.text.default

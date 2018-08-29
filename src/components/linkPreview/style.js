@@ -1,4 +1,5 @@
 import styled, { keyframes } from 'styled-components';
+import theme from 'shared/theme';
 import { Transition, Shadow, hexa, zIndex, Truncate } from '../globals';
 
 export const LinkPreviewContainer = styled.a`
@@ -6,8 +7,8 @@ export const LinkPreviewContainer = styled.a`
   flex-direction: ${props => (props.size === 'large' ? 'row' : 'row')};
   align-items: ${props => (props.size === 'large' ? 'flex-start' : 'center')};
   border-radius: 4px;
-  background: ${props => props.theme.bg.default};
-  border: 1px solid ${({ theme }) => theme.bg.border};
+  background: ${theme.bg.default};
+  border: 1px solid ${theme.bg.border};
   ${'' /* box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.1)}; */} overflow: hidden;
   position: relative;
   margin: ${props => (props.margin ? props.margin : '0')};
@@ -19,7 +20,7 @@ export const LinkPreviewContainer = styled.a`
   &:hover {
     transition: ${Transition.reaction.on};
     box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.1)};
-    border: 1px solid ${({ theme }) => theme.bg.border};
+    border: 1px solid ${theme.bg.border};
     text-decoration: none !important;
   }
 `;
@@ -65,7 +66,7 @@ export const MetaTitle = styled(BaseMeta)`
   font-size: 16px;
   font-weight: 800;
   white-space: normal;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   ${Truncate};
 `;
 
@@ -73,11 +74,11 @@ export const MetaDescription = styled(BaseMeta)`
   font-size: 14px;
   font-weight: 500;
   line-height: 1.4;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
 `;
 
 export const MetaUrl = styled(BaseMeta)`
-  color: ${({ theme }) => theme.text.placeholder};
+  color: ${theme.text.placeholder};
   font-weight: 500;
   margin-top: 8px;
   font-size: 12px;
@@ -89,7 +90,7 @@ export const LinkPreviewSkeleton = styled.div`
   align-items: center;
   border-radius: 4px;
   background: #fff;
-  border: 1px solid ${({ theme }) => theme.bg.border};
+  border: 1px solid ${theme.bg.border};
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.1)};
   overflow: hidden;
   position: relative;
@@ -118,9 +119,9 @@ export const AnimatedBackground = styled.div`
   animation-timing-function: ease-in-out;
   background: linear-gradient(
     to right,
-    ${({ theme }) => theme.bg.wash} 10%,
+    ${theme.bg.wash} 10%,
     ${({ theme }) => hexa(theme.generic.default, 0.65)} 20%,
-    ${({ theme }) => theme.bg.wash} 30%
+    ${theme.bg.wash} 30%
   );
   animation-name: ${placeHolderShimmer};
   z-index: ${zIndex.loading + 1};
@@ -128,7 +129,7 @@ export const AnimatedBackground = styled.div`
 
 const Cover = styled.div`
   position: absolute;
-  background: ${props => props.theme.bg.default};
+  background: ${theme.bg.default};
   z-index: ${zIndex.loading + 2};
 `;
 

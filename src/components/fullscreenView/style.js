@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { zIndex } from '../globals';
 
@@ -34,7 +35,7 @@ export const Illustrations = styled.span`
 `;
 
 export const Close = styled.div`
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   position: absolute;
   top: 8px;
   right: 8px;

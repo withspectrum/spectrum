@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import ReactImage from 'react-image';
 import { zIndex } from '../globals';
@@ -13,7 +14,7 @@ export const Status = styled.div`
   border-radius: ${props =>
     props.type === 'community' ? `${props.size / 8}px` : '100%'};
   border: none;
-  background-color: ${({ theme }) => theme.bg.default};
+  background-color: ${theme.bg.default};
 
   ${props =>
     props.mobilesize &&
@@ -30,10 +31,10 @@ export const Status = styled.div`
     display: ${props => (props.isOnline ? 'inline-block' : 'none')};
     width: ${props => (props.onlineSize === 'large' ? '8px' : '6px')};
     height: ${props => (props.onlineSize === 'large' ? '8px' : '6px')};
-    background: ${props => props.theme.success.alt};
+    background: ${theme.success.alt};
     border-radius: ${props =>
       props.type === 'community' ? `${props.size / 8}px` : '100%'};
-    border: 2px solid ${props => props.theme.text.reverse};
+    border: 2px solid ${theme.text.reverse};
     bottom: ${props =>
       props.onlineSize === 'large'
         ? '0'
@@ -77,7 +78,7 @@ export const Img = styled(ReactImage)`
   border-radius: ${props =>
     props.type === 'community' ? `${props.size / 8}px` : '100%'};
   object-fit: cover;
-  background-color: ${props => props.theme.bg.default};
+  background-color: ${theme.bg.default};
 
   ${props =>
     props.mobilesize &&
@@ -96,7 +97,7 @@ export const FallbackImg = styled.img`
   border-radius: ${props =>
     props.type === 'community' ? `${props.size / 8}px` : '100%'};
   object-fit: cover;
-  background-color: ${props => props.theme.bg.wash};
+  background-color: ${theme.bg.wash};
 
   ${props =>
     props.mobilesize &&
@@ -114,7 +115,7 @@ export const LoadingImg = styled.div`
   height: ${props => (props.size ? `${props.size}px` : '32px')};
   border-radius: ${props =>
     props.type === 'community' ? `${props.size / 8}px` : '100%'};
-  background: ${props => props.theme.bg.wash};
+  background: ${theme.bg.wash};
 
   ${props =>
     props.mobilesize &&

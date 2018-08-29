@@ -1,18 +1,19 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 import { TextButton } from '../../components/buttons';
 
 export const Heading = styled.h1`
   margin-left: 16px;
   font-size: 32px;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   font-weight: 800;
 `;
 
 export const Subheading = styled.h3`
   margin-left: 16px;
   font-size: 16px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-weight: 500;
   line-height: 1;
   margin-bottom: 8px;
@@ -21,8 +22,8 @@ export const Subheading = styled.h3`
 export const StyledHeader = styled.div`
   display: flex;
   padding: 32px;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
-  background: ${props => props.theme.bg.default};
+  border-bottom: 1px solid ${theme.bg.border};
+  background: ${theme.bg.default};
   width: 100%;
   align-items: center;
 `;
@@ -35,7 +36,7 @@ export const HeaderText = styled.div`
 
 export const StyledThreadListItem = styled.div`
   display: flex;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
   padding: 16px 0;
   flex-direction: column;
 
@@ -46,33 +47,33 @@ export const StyledThreadListItem = styled.div`
 `;
 export const ThreadListItemTitle = styled.h4`
   font-size: 16px;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   line-height: 1.28;
   font-weight: 500;
 
   &:hover {
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 `;
 
 export const ThreadListItemSubtitle = styled.h5`
   font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   line-height: 1.28;
   margin-top: 4px;
 
   a:hover {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 `;
 
 export const CustomMessageToggle = styled.h4`
   font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   margin-top: 16px;
 
   &:hover {
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
     cursor: pointer;
   }
 
@@ -96,7 +97,7 @@ export const Filters = styled.ul`
   margin: 0 -16px 16px;
   padding: 0 16px;
   flex: 1;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
 `;
 
 export const Filter = styled.li`
@@ -115,7 +116,7 @@ export const Filter = styled.li`
     ${props => (props.active ? props.theme.text.default : 'transparent')};
 
   &:hover {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 `;
 
@@ -125,14 +126,14 @@ export const SearchForm = styled.form`
   justify-content: flex-start;
   position: relative;
   flex: auto;
-  color: ${props => props.theme.brand.alt};
+  color: ${theme.brand.alt};
 
   .icon:first-of-type {
     position: absolute;
     left: -6px;
     top: 0px;
     pointer-events: none;
-    color: ${props => props.theme.text.alt};
+    color: ${theme.text.alt};
   }
 
   .icon:last-of-type {
@@ -164,7 +165,7 @@ export const SearchInput = styled.input`
   background: transparent;
 
   &:focus {
-    border-bottom: 1px solid ${props => props.theme.text.default};
+    border-bottom: 1px solid ${theme.text.default};
   }
 `;
 
@@ -175,11 +176,11 @@ export const FetchMore = styled(TextButton)`
   padding: 8px 16px;
   align-items: center;
   font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   cursor: pointer;
 
   &:hover {
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 `;
 
@@ -199,8 +200,8 @@ export const TokenInputWrapper = styled.div`
     transform: translateY(-50%);
     font-size: 10px;
     text-transform: uppercase;
-    color: ${props => props.theme.text.reverse};
-    background: ${props => props.theme.text.alt};
+    color: ${theme.text.reverse};
+    background: ${theme.text.alt};
     padding: 4px 8px;
     border-radius: 4px;
     font-weight: 700;
@@ -208,7 +209,7 @@ export const TokenInputWrapper = styled.div`
 
   &:hover {
     &:after {
-      background: ${props => props.theme.success.alt};
+      background: ${theme.success.alt};
     }
   }
 `;
