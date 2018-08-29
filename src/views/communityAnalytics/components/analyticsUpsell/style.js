@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -49,7 +50,7 @@ export const Content = styled.div`
 export const Title = styled.h2`
   font-size: 32px;
   font-weight: 700;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   margin-bottom: 16px;
   line-height: 1.3;
 `;
@@ -57,14 +58,14 @@ export const Title = styled.h2`
 export const Subtitle = styled.h3`
   font-size: 18px;
   font-weight: 500;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   margin-bottom: 4px;
 `;
 
 export const Description = styled.p`
   font-size: 20px;
   font-weight: 400;
-  color: ${props => props.theme.text.secondary};
+  color: ${theme.text.secondary};
   max-width: 600px;
   line-height: 1.4;
 `;
@@ -74,7 +75,7 @@ export const List = styled.ul`
   margin-top: 12px;
   font-size: 20px;
   font-weight: 400;
-  color: ${props => props.theme.text.secondary};
+  color: ${theme.text.secondary};
   max-width: 650px;
 
   li {
@@ -110,14 +111,14 @@ export const ActionRow = styled.div`
 export const CardInfo = styled.div`
   display: flex;
   align-items: center;
-  background: ${props => props.theme.bg.border};
+  background: ${theme.bg.border};
   border-radius: 6px;
   padding: 8px 12px;
   font-size: 16px;
   margin-top: 24px;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06),
     0 1px 0 rgba(255, 255, 255, 0.3);
-  color: ${props => props.theme.text.secondary};
+  color: ${theme.text.secondary};
   font-weight: 500;
 
   @media (max-width: 768px) {

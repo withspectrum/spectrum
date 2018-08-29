@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 import { Button, TextButton } from 'src/components/buttons';
 import { hexa, zIndex } from 'src/components/globals';
@@ -68,11 +69,11 @@ export const Copy = styled.p`
   }
 
   a {
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
     text-decoration: underline;
 
     &:hover {
-      color: ${props => props.theme.brand.dark};
+      color: ${theme.brand.dark};
     }
   }
 
@@ -191,7 +192,7 @@ export const Subsection = styled.div`
 export const SectionTitle = styled.h3`
   font-size: 24px;
   font-weight: 600;
-  color: ${props => props.theme.text.primary};
+  color: ${theme.text.default};
   line-height: 1.3;
   margin-bottom: 16px;
 `;
@@ -199,7 +200,7 @@ export const SectionTitle = styled.h3`
 export const SectionSubtitle = styled.h4`
   font-size: 22px;
   font-weight: 600;
-  color: ${props => props.theme.text.secondary};
+  color: ${theme.text.secondary};
   line-height: 1.4;
   margin: 16px 0;
 `;
@@ -207,7 +208,7 @@ export const SectionSubtitle = styled.h4`
 export const SectionDescription = styled.p`
   font-size: 20px;
   font-weight: 400;
-  color: ${props => props.theme.text.secondary};
+  color: ${theme.text.secondary};
   line-height: 1.4;
 
   & + & {
@@ -215,7 +216,7 @@ export const SectionDescription = styled.p`
   }
 
   a {
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
     font-weight: 500;
   }
 `;
@@ -229,7 +230,7 @@ export const Highlight = styled.span`
 
 export const Divider = styled.div`
   height: 1px;
-  background: ${props => props.theme.bg.border};
+  background: ${theme.bg.border};
   width: calc(100% + 64px);
   display: inline-block;
   margin: 64px -32px 0px;
@@ -247,7 +248,7 @@ export const PlanSection = styled.div`
   flex-direction: column;
   padding: 32px;
   box-shadow: 0 8px 32px ${props => hexa(props.theme.brand.alt, 0.25)};
-  background-color: ${props => props.theme.bg.default};
+  background-color: ${theme.bg.default};
   border-radius: 8px;
   max-width: 480px;
   z-index: 1;
@@ -310,7 +311,7 @@ export const CommunityCard = styled.div`
   grid-column-gap: 16px;
   align-items: center;
   grid-template-areas: 'avatar title button';
-  border-bottom: 1px solid ${props => props.theme.bg.wash};
+  border-bottom: 1px solid ${theme.bg.wash};
   padding-bottom: 16px;
 
   &:last-of-type {
@@ -352,7 +353,7 @@ export const CommunityListRow = styled(CommunityListGrid)`
     padding-bottom: 0;
     padding: 16px;
     border-radius: 8px;
-    background-color: ${props => props.theme.bg.default};
+    background-color: ${theme.bg.default};
   }
 `;
 
@@ -360,7 +361,7 @@ export const CommunityCardName = styled.h6`
   grid-area: title;
   font-size: 18px;
   font-weight: 600;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
 `;
 
 export const CommunityListActions = styled.div`
@@ -397,13 +398,13 @@ export const CommunityCardButton = styled.button`
   padding: 8px 16px;
   font-size: 18px;
   font-weight: 600;
-  color: ${props => props.theme.text.alt};
-  background: ${props => props.theme.bg.wash};
+  color: ${theme.text.alt};
+  background: ${theme.bg.wash};
   transition: color 0.2s cubic-bezier(0.77, 0, 0.175, 1);
   width: 100%;
 
   &:hover {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
     cursor: pointer;
     transition: color 0.2s cubic-bezier(0.77, 0, 0.175, 1);
   }
@@ -424,7 +425,7 @@ export const ExtraContent = styled.div`
   margin-top: 32px;
   padding-top: 8px;
   padding-bottom: 16px;
-  border-top: 1px solid ${props => props.theme.bg.border};
+  border-top: 1px solid ${theme.bg.border};
 `;
 
 export const PriceTable = styled.div`
@@ -443,14 +444,14 @@ export const PriceTable = styled.div`
 export const PlanPrice = styled.h3`
   font-size: 24px;
   font-weight: 600;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   margin-bottom: 8px;
 `;
 
 export const PlanDescription = styled.p`
   font-size: 20px;
   font-weight: 400;
-  color: ${props => props.theme.text.secondary};
+  color: ${theme.text.secondary};
   line-height: 1.3;
 `;
 
@@ -459,7 +460,7 @@ export const BusinessPlanSection = styled.div`
   display: flex;
   padding: 24px 32px;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.06);
-  background: ${props => props.theme.bg.default};
+  background: ${theme.bg.default};
   border-radius: 8px;
 
   @media (max-width: 1024px) {
@@ -527,7 +528,7 @@ export const FeatureWrapper = styled.div`
   padding: 16px 0;
   align-items: center;
   grid-column-gap: 16px;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
 
   &:last-of-type {
     border-bottom: 0;
@@ -554,7 +555,7 @@ export const FeatureTitle = styled.p`
   font-weight: 500;
   line-height: 1.2;
   margin-top: -1px;
-  color: ${props => props.theme.text.secondary};
+  color: ${theme.text.secondary};
 `;
 
 export const FeatureDescription = styled.p`
@@ -562,7 +563,7 @@ export const FeatureDescription = styled.p`
   font-size: 16px;
   font-weight: 400;
   line-height: 1.5;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   padding-right: 24px;
   margin-top: 8px;
 `;

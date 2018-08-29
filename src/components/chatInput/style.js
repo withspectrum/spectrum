@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { IconButton } from '../buttons';
 import { QuoteWrapper } from '../message/style';
@@ -32,10 +33,9 @@ export const ChatInputWrapper = styled.div`
   width: 100%;
   margin: 0;
   padding: 8px 12px 0 12px;
-  background-color: ${props => props.theme.bg.default};
-  border-top: 1px solid ${({ theme }) => theme.bg.border};
-  box-shadow: -1px 0 0 ${props => props.theme.bg.border},
-    1px 0 0 ${props => props.theme.bg.border};
+  background-color: ${theme.bg.default};
+  border-top: 1px solid ${theme.bg.border};
+  box-shadow: -1px 0 0 ${theme.bg.border}, 1px 0 0 ${theme.bg.border};
 
   @media (max-width: 768px) {
     bottom: ${props => (props.focus ? '0' : 'auto')};
@@ -128,8 +128,8 @@ export const InputWrapper = styled(EditorWrapper)`
     ${monoStack};
     font-size: 15px;
     font-weight: 500;
-    background-color: ${props => props.theme.bg.wash};
-    border: 1px solid ${props => props.theme.bg.border};
+    background-color: ${theme.bg.wash};
+    border: 1px solid ${theme.bg.border};
     border-radius: 2px;
     padding: 4px;
     margin-right: 16px;
@@ -137,8 +137,8 @@ export const InputWrapper = styled(EditorWrapper)`
 
   blockquote {
     line-height: 1.5;
-    border-left: 4px solid ${props => props.theme.bg.border};
-    color: ${props => props.theme.text.alt};
+    border-left: 4px solid ${theme.bg.border};
+    color: ${theme.text.alt};
     padding: 4px 12px 4px 16px;
   }
 
@@ -163,7 +163,6 @@ export const SendButton = styled(IconButton)`
   background-color: transparent;
   transition: ${Transition.hover.off};
   align-self: flex-end;
-  z-index: ${zIndex.chatInput};
 `;
 
 export const MediaInput = styled.input`
@@ -172,7 +171,6 @@ export const MediaInput = styled.input`
   opacity: 0;
   overflow: hidden;
   position: absolute;
-  z-index: ${zIndex.hidden};
 `;
 
 export const MediaLabel = styled.label`
@@ -185,11 +183,11 @@ export const MediaLabel = styled.label`
   padding: 4px;
   position: relative;
   top: 2px;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
 
   &:hover {
     cursor: pointer;
-    color: ${({ theme }) => theme.brand.default};
+    color: ${theme.brand.default};
   }
 `;
 
@@ -211,21 +209,21 @@ export const PhotoSizeError = styled.div`
   align-content: center;
   padding: 8px 16px;
   width: 100%;
-  background: ${props => props.theme.special.wash};
-  border-top: 1px solid ${props => props.theme.special.border};
+  background: ${theme.special.wash};
+  border-top: 1px solid ${theme.special.border};
 
   &:hover {
     cursor: pointer;
 
     p {
-      color: ${props => props.theme.brand.default};
+      color: ${theme.brand.default};
     }
   }
 
   p {
     font-size: 14px;
     line-height: 1.4;
-    color: ${props => props.theme.special.default};
+    color: ${theme.special.default};
     max-width: calc(100% - 48px);
   }
 
@@ -239,8 +237,8 @@ export const RemovePreviewButton = styled.button`
   top: 0;
   right: 0;
   vertical-align: top;
-  background-color: ${props => props.theme.text.placeholder};
-  color: ${props => props.theme.text.reverse};
+  background-color: ${theme.text.placeholder};
+  color: ${theme.text.reverse};
   border: none;
   border-radius: 100%;
   outline: none;
@@ -251,7 +249,7 @@ export const RemovePreviewButton = styled.button`
   z-index: 1;
 
   &:hover {
-    background-color: ${props => props.theme.warn.alt};
+    background-color: ${theme.warn.alt};
   }
 `;
 
@@ -259,7 +257,7 @@ export const PreviewWrapper = styled.div`
   position: relative;
   padding: 0;
   padding-bottom: 8px;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
 
   ${QuoteWrapper} {
     margin: 0;
@@ -275,8 +273,8 @@ export const PreviewWrapper = styled.div`
 `;
 
 export const Preformatted = styled.code`
-  background-color: ${props => props.theme.bg.wash};
-  border: 1px solid ${props => props.theme.bg.border};
+  background-color: ${theme.bg.wash};
+  border: 1px solid ${theme.bg.border};
   white-space: nowrap;
 `;
 
@@ -286,7 +284,7 @@ export const MarkdownHint = styled.div`
   justify-content: flex-end;
   margin-right: 12px;
   font-size: 11px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   line-height: 1;
   padding: 6px 0;
   opacity: ${({ showHint }) => (showHint ? 1 : 0)};
