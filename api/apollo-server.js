@@ -12,9 +12,11 @@ const server = new ApolloServer({
   schema,
   formatError: createErrorFormatter(),
   // For subscriptions, this gets passed "connection", for everything else "req" and "res"
-  context: ({ req, res, connection }) => {
+  context: ({ req, res, connection, ...rest }, ...other) => {
     if (connection) {
-      return {};
+      return {
+        ...(connection.context || {}),
+      };
     }
 
     const loaders = createLoaders();
