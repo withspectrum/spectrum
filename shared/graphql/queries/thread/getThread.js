@@ -37,18 +37,19 @@ export const getThreadByMatchQuery = gql`
 `;
 
 export const getThreadByMatchOptions = {
-  options: (props: {
+  options: ({
+    threadId,
+    match,
+  }: {
     threadId?: string,
-    match?: { params: { threadId: string, '0'?: string, '1'?: string } },
+    match?: { params: { threadId: string } },
   }) => ({
     variables: {
-      id: props.threadId
-        ? props.threadId
-        : props.match
-          ? // the .params[1] case kicks in with our new custom thread slugs, which use
-            // a custom regexp to match /some-custom-slug-asdf-123-123-123-asdf
-            props.match.params.threadId || props.match.params[1]
-          : null,
+      id: threadId
+        ? threadId
+        : match
+          ? match.params.threadId
+          : console.error('bad arg supplied to getThreadByMatch') || null,
     },
     fetchPolicy: 'cache-first',
   }),
