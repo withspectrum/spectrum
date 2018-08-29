@@ -1,8 +1,9 @@
 import styled from 'styled-components';
+import theme from 'shared/theme';
 import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
 
 export const Container = styled(FlexCol)`
-  background-color: ${props => props.theme.bg.default};
+  background-color: ${theme.bg.default};
   display: grid;
   grid-template-rows: 60px 1fr 64px;
   grid-template-columns: 100%;
@@ -21,8 +22,8 @@ export const Container = styled(FlexCol)`
 `;
 
 export const Actions = styled(FlexCol)`
-  background: ${props => props.theme.bg.wash};
-  border-top: 2px solid ${props => props.theme.bg.border};
+  background: ${theme.bg.wash};
+  border-top: 2px solid ${theme.bg.border};
   padding: 8px;
   border-radius: 0;
   align-self: stretch;
@@ -59,7 +60,7 @@ export const Dropdowns = styled(FlexRow)`
   display: flex;
   align-items: center;
   grid-area: header;
-  background-color: ${props => props.theme.bg.wash};
+  background-color: ${theme.bg.wash};
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   z-index: ${zIndex.composer};
   grid-area: header;
@@ -67,7 +68,7 @@ export const Dropdowns = styled(FlexRow)`
   span {
     font-size: 14px;
     font-weight: 500;
-    color: ${props => props.theme.text.alt};
+    color: ${theme.text.alt};
     margin-left: 16px;
     line-height: 1;
     vertical-align: middle;
@@ -108,14 +109,14 @@ const Selector = styled.select`
 
 export const RequiredSelector = styled(Selector)`
   padding: 8px 12px;
-  border: 2px solid ${props => props.theme.bg.border};
+  border: 2px solid ${theme.bg.border};
   border-radius: 8px;
-  color: ${props => props.theme.text.default};
-  background-color: ${props => props.theme.bg.default};
+  color: ${theme.text.default};
+  background-color: ${theme.bg.default};
 `;
 
 export const OptionalSelector = styled(Selector)`
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   margin-left: 16px;
   background-color: transparent;
 `;
@@ -125,7 +126,7 @@ export const ThreadInputs = styled(FlexCol)`
   overflow-y: scroll;
   padding: 64px;
   padding-left: 80px;
-  background-color: ${props => props.theme.bg.default};
+  background-color: ${theme.bg.default};
 
   @media (max-width: 768px) {
     max-width: 100vw;
@@ -184,5 +185,5 @@ export const DisabledWarning = styled.div`
   font-size: 16px;
   font-weight: 500;
   background: ${props => hexa(props.theme.warn.default, 0.1)};
-  color: ${props => props.theme.warn.default};
+  color: ${theme.warn.default};
 `;

@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 
 export const EmailForm = styled.form`
@@ -15,7 +16,7 @@ export const SourceContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
   padding: 12px 0;
 
   &:last-of-type {
@@ -42,7 +43,7 @@ export const SourceName = styled.p`
   line-height: 1.3;
   font-size: 15px;
   font-weight: 500;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   display: flex;
   align-items: center;
 `;
@@ -50,12 +51,12 @@ export const SourceExpiration = styled.p`
   line-height: 1.3;
   font-size: 14px;
   font-weight: 400;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 `;
 
 export const AddCardSection = styled.section`
-  background: ${props => props.theme.bg.wash};
-  border-top: 1px solid ${props => props.theme.bg.border};
+  background: ${theme.bg.wash};
+  border-top: 1px solid ${theme.bg.border};
   width: calc(100% + 32px);
   padding: 16px;
   margin-top: 16px;
@@ -81,7 +82,7 @@ export const LineItem = styled.div`
 export const LineItemTotal = styled(LineItem)`
   padding: 16px 0 0;
   margin-top: 16px;
-  border-top: 1px solid ${props => props.theme.bg.border};
+  border-top: 1px solid ${theme.bg.border};
 `;
 
 export const LineItemLeft = styled.div`
@@ -100,7 +101,7 @@ export const LineItemTitle = styled.p`
   line-height: 1.6;
   font-size: 14px;
   font-weight: 500;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   display: flex;
   align-items: center;
 `;
@@ -110,7 +111,7 @@ export const LineItemDescription = styled.p`
   margin-top: 2px;
   font-size: 14px;
   font-weight: 400;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 
   cursor: ${props => (props.link ? 'pointer' : 'auto')};
 
@@ -121,7 +122,7 @@ export const LineItemDescription = styled.p`
 
   a {
     display: block;
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
     margin-top: 4px;
   }
 `;
@@ -130,12 +131,12 @@ export const LineItemTitleTotal = styled.p`
   line-height: 1.6;
   font-size: 15px;
   font-weight: 700;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   margin-top: 8px;
 `;
 export const LineItemPrice = styled.p`
   line-height: 1.6;
   font-size: 14px;
   font-weight: 400;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 `;

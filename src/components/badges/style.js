@@ -1,11 +1,12 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 import { Tooltip, Gradient } from '../globals';
 
 export const Span = styled.span`
   display: flex;
-  color: ${({ theme }) => theme.text.reverse};
-  background-color: ${props => props.theme.text.alt};
+  color: ${theme.text.reverse};
+  background-color: ${theme.text.alt};
   text-transform: uppercase;
   padding: 3px 4px;
   margin-left: 4px;
@@ -21,9 +22,8 @@ export const Span = styled.span`
 `;
 
 export const ProBadge = styled(Span)`
-  background-color: ${props => props.theme.special.default};
-  background-image: ${props =>
-    Gradient(props.theme.special.alt, props.theme.special.default)};
+  background-color: ${theme.special.default};
+  background-image: ${Gradient(theme.special.alt, theme.special.default)};
   cursor: pointer;
 
   &:hover {
@@ -32,15 +32,13 @@ export const ProBadge = styled(Span)`
 `;
 
 export const TeamBadge = styled(Span)`
-  background-color: ${props => props.theme.success.default};
-  background-image: ${props =>
-    Gradient(props.theme.success.alt, props.theme.success.default)};
+  background-color: ${theme.success.default};
+  background-image: ${Gradient(theme.success.alt, theme.success.default)};
 `;
 
 export const BlockedBadge = styled(Span)`
-  background-color: ${props => props.theme.warn.alt};
-  background-image: ${props =>
-    Gradient(props.theme.warn.alt, props.theme.warn.default)};
+  background-color: ${theme.warn.alt};
+  background-image: ${Gradient(theme.warn.alt, theme.warn.default)};
   cursor: pointer;
 
   &:hover {
@@ -49,9 +47,8 @@ export const BlockedBadge = styled(Span)`
 `;
 
 export const PendingBadge = styled(Span)`
-  background-color: ${props => props.theme.special.alt};
-  background-image: ${props =>
-    Gradient(props.theme.special.alt, props.theme.special.default)};
+  background-color: ${theme.special.alt};
+  background-image: ${Gradient(theme.special.alt, theme.special.default)};
   cursor: pointer;
 
   &:hover {
@@ -60,9 +57,8 @@ export const PendingBadge = styled(Span)`
 `;
 
 export const DefaultPaymentMethodBadge = styled(Span)`
-  background-color: ${props => props.theme.space.default};
-  background-image: ${props =>
-    Gradient(props.theme.space.default, props.theme.space.default)};
+  background-color: ${theme.space.default};
+  background-image: ${Gradient(theme.space.default, theme.space.default)};
   cursor: pointer;
   margin-left: 8px;
 

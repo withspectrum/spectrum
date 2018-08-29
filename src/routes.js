@@ -117,7 +117,7 @@ const Body = styled(FlexCol)`
   width: 100vw;
   height: 100vh;
   max-height: 100vh;
-  background: ${props => props.theme.bg.wash};
+  background: ${theme.bg.wash};
 `;
 
 const DashboardFallback = signedOutFallback(Dashboard, Pages);

@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
@@ -15,7 +16,7 @@ const StyledDropdown = styled(FlexCol)`
   right: 0px;
   z-index: ${zIndex.dropdown};
   padding-top: 8px;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   transition: ${Transition.dropdown.off};
 `;
 

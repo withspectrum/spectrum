@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled, { css, keyframes } from 'styled-components';
 import {
   zIndex,
@@ -15,7 +16,7 @@ export const DashboardWrapper = styled.main`
   overflow-y: hidden;
   flex: auto;
   width: 100%;
-  box-shadow: 1px 0 0 ${props => props.theme.bg.border};
+  box-shadow: 1px 0 0 ${theme.bg.border};
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -30,8 +31,8 @@ export const InboxWrapper = styled.div`
   position: relative;
   align-self: stretch;
   flex-direction: column;
-  background: ${props => props.theme.bg.default};
-  border-right: 1px solid ${props => props.theme.bg.border};
+  background: ${theme.bg.default};
+  border-right: 1px solid ${theme.bg.border};
 
   @media (min-resolution: 120dpi) {
     max-width: 440px;
@@ -61,7 +62,7 @@ export const Sidebar = styled.div`
   position: relative;
   align-self: stretch;
   flex-direction: column;
-  border-right: 1px solid ${props => props.theme.bg.border};
+  border-right: 1px solid ${theme.bg.border};
 
   @media (max-width: 1280px) {
     display: none;
@@ -72,7 +73,7 @@ export const SectionTitle = styled.span`
   display: inline-block;
   font-size: 12px;
   font-weight: 500;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-variant: small-caps;
   text-transform: lowercase;
   margin: 8px 16px;
@@ -87,7 +88,7 @@ export const ChannelsContainer = styled.div`
   padding: 4px;
 
   ${SectionTitle} {
-    color: ${props => props.theme.text.placeholder};
+    color: ${theme.text.placeholder};
     margin: 8px 8px 4px 8px;
   }
 `;
@@ -127,7 +128,7 @@ export const ChannelListItem = styled.div`
   }
 
   &:hover {
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 
 `;
@@ -166,9 +167,9 @@ export const LoadingBar = styled.div`
   animation-timing-function: ease-in-out;
   background: linear-gradient(
     to right,
-    ${({ theme }) => theme.bg.wash} 10%,
+    ${theme.bg.wash} 10%,
     ${({ theme }) => hexa(theme.generic.default, 0.65)} 20%,
-    ${({ theme }) => theme.bg.wash} 30%
+    ${theme.bg.wash} 30%
   );
   animation-name: ${placeHolderShimmer};
 `;
@@ -223,10 +224,9 @@ export const CommunityListItem = styled.div`
     `};
 
   &:hover {
-    background: ${props => props.theme.bg.default};
-    color: ${props => props.theme.text.default};
-    box-shadow: 0 1px 0 ${props => props.theme.bg.border},
-      0 -1px 0 ${props => props.theme.bg.border};
+    background: ${theme.bg.default};
+    color: ${theme.text.default};
+    box-shadow: 0 1px 0 ${theme.bg.border}, 0 -1px 0 ${theme.bg.border};
 
     img {
       box-shadow: 0;
@@ -245,7 +245,7 @@ export const CommunityListScroller = styled.div`
 
 export const CommunityListWrapper = styled.div`
   flex: auto;
-  background: ${props => props.theme.bg.wash};
+  background: ${theme.bg.wash};
   display: grid;
   grid-template-rows: 1fr auto;
   grid-template-columns: 1fr;
@@ -258,15 +258,15 @@ export const CommunityListWrapper = styled.div`
 export const Fixed = styled.div`
   grid-area: fixed;
   width: 100%;
-  box-shadow: 0 -1px 0 ${props => props.theme.bg.border};
+  box-shadow: 0 -1px 0 ${theme.bg.border};
 
   &:hover {
-    color: ${props => props.theme.brand.alt};
-    background: ${props => props.theme.bg.default};
+    color: ${theme.brand.alt};
+    background: ${theme.bg.default};
 
     div {
-      color: ${props => props.theme.brand.alt};
-      background: ${props => props.theme.bg.default};
+      color: ${theme.brand.alt};
+      background: ${theme.bg.default};
     }
   }
 `;
@@ -282,7 +282,7 @@ export const CommunityListAvatar = styled.img`
 `;
 
 export const FeedHeaderContainer = styled.div`
-  background: ${props => props.theme.bg.default};
+  background: ${theme.bg.default};
   padding: 16px 8px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   position: relative;
@@ -299,7 +299,7 @@ export const ThreadWrapper = styled.div`
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
-  background-color: ${props => props.theme.bg.default};
+  background-color: ${theme.bg.default};
 
   @media (max-width: 768px) {
     display: none;
@@ -336,7 +336,7 @@ export const HeaderWrapper = styled.div`
 
 export const ThreadComposerContainer = styled.div`
   padding: 16px;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
 
   @media (max-width: 768px) {
     margin: 0;
@@ -346,14 +346,14 @@ export const ThreadComposerContainer = styled.div`
 export const ComposeIconContainer = styled.div`
   position: relative;
   top: 2px;
-  color: ${props => props.theme.brand.alt};
+  color: ${theme.brand.alt};
   display: flex;
   align-items: center;
   font-weight: 600;
   cursor: pointer;
 
   &:hover {
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
   }
 
   div {
@@ -369,13 +369,13 @@ export const NullThreadFeed = styled.div`
   justify-content: center;
   padding: 32px;
   flex-direction: column;
-  background: ${props => props.theme.bg.default};
+  background: ${theme.bg.default};
 `;
 
 export const NullHeading = styled.p`
   font-size: 18px;
   font-weight: 500;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   text-align: center;
   margin-bottom: 8px;
 `;
@@ -391,7 +391,7 @@ export const PinIcon = styled.span`
 `;
 
 export const UpsellExploreDivider = styled.div`
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
   display: block;
   width: 100%;
   margin: 16px 0 16px;
@@ -429,17 +429,17 @@ export const ClearSearch = styled.span`
   width: 16px;
   height: 16px;
   opacity: ${props => (props.isVisible ? '1' : '0')};
-  background: ${props => props.theme.text.placeholder};
+  background: ${theme.text.placeholder};
   border-radius: 50%;
   font-size: 16px;
-  color: ${props => props.theme.text.reverse};
+  color: ${theme.text.reverse};
   font-weight: 500;
   pointer-events: ${props => (props.isOpen ? 'auto' : 'none')};
   cursor: pointer;
   transition: background 0.2s;
 
   &:hover {
-    background: ${props => props.theme.text.alt};
+    background: ${theme.text.alt};
   }
 
   span {
@@ -453,8 +453,8 @@ export const SearchForm = styled.form`
   height: 32px;
   min-height: 32px;
   max-height: 32px;
-  color: ${props => props.theme.text.alt};
-  border: 1px solid ${props => props.theme.bg.border};
+  color: ${theme.text.alt};
+  border: 1px solid ${theme.bg.border};
   border-radius: 16px;
   grid-template-columns: 32px 1fr 32px;
   grid-template-rows: 1fr;
@@ -470,13 +470,13 @@ export const SearchForm = styled.form`
     css`
       border-color: transparent;
       background-color: ${props => hexa(props.theme.text.alt, 0.35)};
-      color: ${props => props.theme.text.reverse};
+      color: ${theme.text.reverse};
     `};
 
   > div:last-of-type {
     display: ${props => (props.isOpen ? 'flex' : 'none')};
-    color: ${props => props.theme.text.reverse};
-    background-color: ${props => props.theme.text.alt};
+    color: ${theme.text.reverse};
+    background-color: ${theme.text.alt};
     border-radius: 100%;
     padding: 4px;
     align-items: center;
@@ -491,8 +491,8 @@ export const OutlineButton = styled.button`
   background-color: transparent;
   font-size: 14px;
   font-weight: 700;
-  border: 2px solid ${props => props.theme.text.alt};
-  color: ${props => props.theme.text.alt};
+  border: 2px solid ${theme.text.alt};
+  color: ${theme.text.alt};
   border-radius: 8px;
   padding: 4px 12px 4px 6px;
 
@@ -505,12 +505,12 @@ export const SearchStringHeader = styled.div`
   background: #fff;
   padding: 16px;
   font-weight: 600;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
 `;
 
 export const Hint = styled.span`
   font-size: 16px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   margin-top: 32px;
   margin-bottom: 8px;
 `;
@@ -535,14 +535,14 @@ export const HeaderActiveViewTitle = styled.h2`
   padding: 0 8px;
   font-size: 24px;
   font-weight: 700;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   max-width: 384px;
   line-height: 1.2;
 
   ${Truncate};
 
   &:hover {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 `;
 
@@ -550,7 +550,7 @@ export const HeaderActiveViewSubtitle = styled.h3`
   padding: 0 8px;
   font-size: 14px;
   font-weight: 400;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   max-width: 384px;
   line-height: 1.2;
 
@@ -560,7 +560,7 @@ export const HeaderActiveViewSubtitle = styled.h3`
   ${Truncate};
 
   &:hover {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 `;
 
@@ -574,8 +574,8 @@ export const EllipsisText = styled.div`
 `;
 
 export const PendingBadge = styled.div`
-  background: ${props => props.theme.warn.alt};
-  color: ${props => props.theme.text.reverse};
+  background: ${theme.warn.alt};
+  color: ${theme.text.reverse};
   padding: 0 8px;
   border-radius: 24px;
   font-size: 12px;
