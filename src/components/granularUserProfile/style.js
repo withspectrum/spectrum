@@ -58,7 +58,7 @@ export const Name = styled.span`
   line-height: 1.2;
   vertical-align: middle;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 
   &:hover {
     color: ${theme.brand.alt};
