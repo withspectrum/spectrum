@@ -16,65 +16,48 @@ import csrf from 'shared/middlewares/csrf';
 import { init as initPassport } from './authentication.js';
 import apolloServer from './apollo-server';
 import { corsOptions } from 'shared/middlewares/cors';
+import errorHandler from 'shared/middlewares/error-handler';
+import middlewares from './routes/middlewares';
+import authRoutes from './routes/auth';
+import apiRoutes from './routes/api';
 import type { DBUser } from 'shared/types';
+import type { Loader } from './loaders/types';
+
+export type GraphQLContext = {
+  user: DBUser,
+  loaders: {
+    [key: string]: Loader,
+  },
+};
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
-// Initialize authentication
 initPassport();
 
-// API server
 const app = express();
 
 // Trust the now proxy
 app.set('trust proxy', true);
-
-// Return the request if the server is too busy
 app.use(toobusy);
 
 // Security middleware.
 addSecurityMiddleware(app);
-
 if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
   app.use(csrf);
 }
 
-// Send all responses as gzip
+// All other middlewares
 app.use(compression());
-
-import middlewares from './routes/middlewares';
 app.use(middlewares);
 
-import authRoutes from './routes/auth';
+// Routes
 app.use('/auth', authRoutes);
-
-import apiRoutes from './routes/api';
 app.use('/api', apiRoutes);
 
+// GraphQL middleware
 apolloServer.applyMiddleware({ app, path: '/api', cors: corsOptions });
 
-// $FlowIssue
-app.use(
-  (
-    err: Error,
-    req: express$Request,
-    res: express$Response,
-    next: express$NextFunction
-  ) => {
-    if (err) {
-      console.error(err);
-      res
-        .status(500)
-        .send(
-          'Oops, something went wrong! Our engineers have been alerted and will fix this asap.'
-        );
-      Raven.captureException(err);
-    } else {
-      return next();
-    }
-  }
-);
-
+// Redirect a request to the root path to the main app
 app.use('/', (req: express$Request, res: express$Response) => {
   res.redirect(
     process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV
@@ -83,16 +66,16 @@ app.use('/', (req: express$Request, res: express$Response) => {
   );
 });
 
-import type { Loader } from './loaders/types';
-export type GraphQLContext = {
-  user: DBUser,
-  loaders: {
-    [key: string]: Loader,
-  },
-};
+// $FlowIssue
+app.use(errorHandler);
 
-const server = createServer(app);
-apolloServer.installSubscriptionHandlers(server);
+// We need to create a separate HTTP server to handle GraphQL subscriptions via websockets
+const httpServer = createServer(app);
+apolloServer.installSubscriptionHandlers(httpServer);
+
+// Start listening
+httpServer.listen(PORT);
+debug(`GraphQL API running at http://localhost:${PORT}/api`);
 
 // Start API wrapped in Apollo Engine
 // const engine = new ApolloEngine({
@@ -113,8 +96,6 @@ apolloServer.installSubscriptionHandlers(server);
 //   httpServer: server,
 //   graphqlPaths: ['/api'],
 // });
-server.listen(PORT);
-debug(`GraphQL server running at http://localhost:${PORT}/api`);
 
 process.on('unhandledRejection', async err => {
   console.error('Unhandled rejection', err);
