@@ -123,6 +123,10 @@ const Body = styled(FlexCol)`
 const DashboardFallback = signedOutFallback(Dashboard, Pages);
 const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
 const LoginFallback = signedOutFallback(() => <Redirect to="/" />, Login);
+const CommunityLoginFallback = signedOutFallback(
+  props => <Redirect to={`/${props.match.params.communitySlug}`} />,
+  CommunityLoginView
+);
 const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
   <Login redirectPath={`${CLIENT_URL}/new/community`} />
 ));
@@ -297,7 +301,7 @@ class Routes extends React.Component<Props> {
                 />
                 <Route
                   path="/:communitySlug/login"
-                  component={CommunityLoginView}
+                  component={CommunityLoginFallback}
                 />
                 <Route
                   path="/:communitySlug/:channelSlug"
