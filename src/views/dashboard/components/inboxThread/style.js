@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import { zIndex, Tooltip } from 'src/components/globals';
@@ -105,8 +106,12 @@ export const CountWrapper = styled.div`
   font-size: 13px;
   color: ${props =>
     props.new
-      ? props.active ? props.theme.text.reverse : props.theme.warn.alt
-      : props.active ? props.theme.text.reverse : props.theme.text.alt};
+      ? props.active
+        ? props.theme.text.reverse
+        : props.theme.warn.alt
+      : props.active
+        ? props.theme.text.reverse
+        : props.theme.text.alt};
   font-weight: 600;
   align-items: center;
 
@@ -119,7 +124,7 @@ export const CountWrapper = styled.div`
   }
 
   a:hover {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 
   ${Tooltip};

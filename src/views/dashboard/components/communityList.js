@@ -120,7 +120,7 @@ class CommunityList extends React.Component<Props> {
                   <Reputation
                     ignoreClick
                     size={'mini'}
-                    tipText={`Rep in ${c.name}`}
+                    tipText={`Your rep in ${c.name}`}
                     reputation={c.communityPermissions.reputation}
                   />
                 </CommunityListMeta>
@@ -169,4 +169,7 @@ class CommunityList extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), withRouter)(CommunityList);
+export default compose(
+  connect(),
+  withRouter
+)(CommunityList);

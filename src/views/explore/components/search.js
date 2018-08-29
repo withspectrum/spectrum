@@ -257,6 +257,7 @@ class Search extends React.Component<Props, State> {
             <OutsideClickHandler onOutsideClick={this.hideSearchResults}>
               <SearchResultsDropdown>
                 {searchResults.length > 0 &&
+                  !searchIsLoading &&
                   searchResults.map(community => {
                     return (
                       <SearchResult
@@ -286,6 +287,7 @@ class Search extends React.Component<Props, State> {
                   })}
 
                 {searchResults.length === 0 &&
+                  !searchIsLoading &&
                   isFocused && (
                     <SearchResult>
                       <SearchResultTextContainer>
@@ -298,6 +300,17 @@ class Search extends React.Component<Props, State> {
                       </SearchResultTextContainer>
                     </SearchResult>
                   )}
+
+                {searchIsLoading &&
+                  isFocused && (
+                    <SearchResult>
+                      <SearchResultTextContainer>
+                        <SearchResultNull>
+                          <p>Searching for “{searchString}”</p>
+                        </SearchResultNull>
+                      </SearchResultTextContainer>
+                    </SearchResult>
+                  )}
               </SearchResultsDropdown>
             </OutsideClickHandler>
           )}
@@ -306,4 +319,8 @@ class Search extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), withApollo, withRouter)(Search);
+export default compose(
+  connect(),
+  withApollo,
+  withRouter
+)(Search);

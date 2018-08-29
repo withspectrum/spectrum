@@ -488,71 +488,87 @@ export const blockPendingMemberInCommunity = async (
 type Options = { first: number, after: number };
 
 // prettier-ignore
-export const getMembersInCommunity = (communityId: string, options: Options, filter: Object): Promise<Array<string>> => {
+export const getMembersInCommunity = (communityId: string, options: Options): Promise<Array<string>> => {
   const { first, after } = options
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter(filter ? filter : { isMember: true })
-    .orderBy(db.desc('reputation'))
+    .between([communityId, true, db.minval], [communityId, true, db.maxval], {
+      index: 'communityIdAndIsMemberAndReputation',
+      leftBound: 'open',
+      rightBound: 'open',
+    })
+    .orderBy({ index: db.desc('communityIdAndIsMemberAndReputation') })
     .skip(after || 0)
-    .limit(first || 999999)
-    // return an array of the userIds to be loaded by gql
+    .limit(first || 25)
     .map(userCommunity => userCommunity('userId'))
     .run()
 };
 
 // prettier-ignore
-export const getBlockedUsersInCommunity = (communityId: string): Promise<Array<string>> => {
+export const getBlockedUsersInCommunity = (communityId: string, options: Options): Promise<Array<string>> => {
   return (
     db
       .table('usersCommunities')
-      .getAll(communityId, { index: 'communityId' })
+      .getAll([communityId, false], { index: 'communityIdAndIsMember' })
       .filter({ isBlocked: true })
-      // return an array of the userIds to be loaded by gql
+      .skip(options.after || 0)
+      .limit(options.first || 25)
       .map(userCommunity => userCommunity('userId'))
       .run()
   );
 };
 
 // prettier-ignore
-export const getPendingUsersInCommunity = (communityId: string): Promise<Array<string>> => {
+export const getPendingUsersInCommunity = (communityId: string, options: Options): Promise<Array<string>> => {
   return (
     db
       .table('usersCommunities')
-      .getAll(communityId, { index: 'communityId' })
+      .getAll([communityId, false], { index: 'communityIdAndIsMember' })
       .filter({ isPending: true })
-      // return an array of the userIds to be loaded by gql
+      .skip(options.after || 0)
+      .limit(options.first || 25)
       .map(userCommunity => userCommunity('userId'))
       .run()
   );
 };
 
 // prettier-ignore
-export const getModeratorsInCommunity = (communityId: string): Promise<Array<string>> => {
+export const getModeratorsInCommunity = (communityId: string, options: Options): Promise<Array<string>> => {
   return (
     db
       .table('usersCommunities')
-      .getAll(communityId, { index: 'communityId' })
-      .filter({ isModerator: true })
-      // return an array of the userIds to be loaded by gql
+      .getAll([communityId, true], { index: 'communityIdAndIsModerator' })
+      .skip(options.after || 0)
+      .limit(options.first || 25)
       .map(userCommunity => userCommunity('userId'))
       .run()
   );
 };
 
 export const getOwnersInCommunity = (
-  communityId: string
+  communityId: string,
+  options: Options
 ): Promise<Array<string>> => {
-  return (
-    db
-      .table('usersCommunities')
-      .getAll(communityId, { index: 'communityId' })
-      .filter({ isOwner: true })
-      // return an array of the userIds to be loaded by gql
-      .map(userCommunity => userCommunity('userId'))
-      .run()
-  );
+  return db
+    .table('usersCommunities')
+    .getAll([communityId, true], { index: 'communityIdAndIsOwner' })
+    .skip(options.after || 0)
+    .limit(options.first || 25)
+    .map(userCommunity => userCommunity('userId'))
+    .run();
+};
+
+export const getTeamMembersInCommunity = (
+  communityId: string,
+  options: Options
+): Promise<Array<string>> => {
+  return db
+    .table('usersCommunities')
+    .getAll([communityId, true], { index: 'communityIdAndIsTeamMember' })
+    .skip(options.after || 0)
+    .limit(options.first || 25)
+    .map(userCommunity => userCommunity('userId'))
+    .run();
 };
 
 export const DEFAULT_USER_COMMUNITY_PERMISSIONS = {

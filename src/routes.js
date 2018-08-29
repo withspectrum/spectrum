@@ -118,12 +118,16 @@ const Body = styled(FlexCol)`
   width: 100vw;
   height: 100vh;
   max-height: 100vh;
-  background: ${props => props.theme.bg.wash};
+  background: ${theme.bg.wash};
 `;
 
 const DashboardFallback = signedOutFallback(Dashboard, Pages);
 const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
 const LoginFallback = signedOutFallback(() => <Redirect to="/" />, Login);
+const CommunityLoginFallback = signedOutFallback(
+  props => <Redirect to={`/${props.match.params.communitySlug}`} />,
+  CommunityLoginView
+);
 const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
   <Login redirectPath={`${CLIENT_URL}/new/community`} />
 ));
@@ -301,7 +305,7 @@ class Routes extends React.Component<Props> {
                 />
                 <Route
                   path="/:communitySlug/login"
-                  component={CommunityLoginView}
+                  component={CommunityLoginFallback}
                 />
                 <Route
                   // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.

@@ -98,53 +98,49 @@ const UserWithData = ({
             @{user.username}
             {user.isPro && <Badge type="pro" />}
           </Subtitle>
-          {(user.description || user.website) && (
-            <FullDescription>
-              {user.description && (
-                <p>{renderTextWithLinks(user.description)}</p>
-              )}
-              <Reputation
-                reputation={
-                  user.contextPermissions
-                    ? user.contextPermissions.reputation
-                    : user.totalReputation
+          <FullDescription>
+            {user.description && <p>{renderTextWithLinks(user.description)}</p>}
+            <Reputation
+              reputation={
+                user.contextPermissions
+                  ? user.contextPermissions.reputation
+                  : user.totalReputation
+              }
+            />
+            {user.website && (
+              <ExtLink>
+                <Icon glyph="link" size={24} />
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={addProtocolToString(user.website)}
+                >
+                  {user.website}
+                </a>
+              </ExtLink>
+            )}
+            <GithubProfile
+              id={user.id}
+              render={profile => {
+                if (!profile) {
+                  return null;
+                } else {
+                  return (
+                    <ExtLink>
+                      <Icon glyph="github" size={24} />
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={`https://github.com/${profile.username}`}
+                      >
+                        github.com/{profile.username}
+                      </a>
+                    </ExtLink>
+                  );
                 }
-              />
-              {user.website && (
-                <ExtLink>
-                  <Icon glyph="link" size={24} />
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={addProtocolToString(user.website)}
-                  >
-                    {user.website}
-                  </a>
-                </ExtLink>
-              )}
-              <GithubProfile
-                id={user.id}
-                render={profile => {
-                  if (!profile) {
-                    return null;
-                  } else {
-                    return (
-                      <ExtLink>
-                        <Icon glyph="github" size={24} />
-                        <a
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          href={`https://github.com/${profile.username}`}
-                        >
-                          github.com/{profile.username}
-                        </a>
-                      </ExtLink>
-                    );
-                  }
-                }}
-              />
-            </FullDescription>
-          )}
+              }}
+            />
+          </FullDescription>
         </FullProfile>
       );
     case 'simple':
@@ -265,7 +261,10 @@ const UserWithData = ({
   }
 };
 
-const User = compose(displayLoadingCard, withRouter)(UserWithData);
+const User = compose(
+  displayLoadingCard,
+  withRouter
+)(UserWithData);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
   initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,

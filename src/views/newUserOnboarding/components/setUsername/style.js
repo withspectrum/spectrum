@@ -1,4 +1,5 @@
 // $FlowFixMe
+import theme from 'shared/theme';
 import styled from 'styled-components';
 
 export const Row = styled.div`
@@ -25,7 +26,7 @@ export const InputLabel = styled.h3`
   text-align: center;
   font-size: 20px;
   font-weight: 600;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   margin-bottom: 8px;
 `;
 
@@ -33,7 +34,7 @@ export const InputSubLabel = styled.h4`
   text-align: center;
   font-size: 16px;
   font-weight: 600;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   margin-bottom: 16px;
   line-height: 1.4;
 `;

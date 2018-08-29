@@ -337,7 +337,10 @@ export const UpsellTeamMembers = (props: TeamMemberProps) => {
       alignItems="flex-end"
     >
       <Link to={`/${props.communitySlug}/settings/members`}>
-        <OutlineButton icon={props.small ? null : 'member-add'}>
+        <OutlineButton
+          icon={props.small ? null : 'member-add'}
+          style={{ alignSelf: 'flex-end', marginTop: '16px' }}
+        >
           Add {props.small ? 'more' : ''} team members
         </OutlineButton>
       </Link>

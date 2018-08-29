@@ -1,10 +1,11 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import { zIndex } from 'src/components/globals';
 
 export const Title = styled.h1`
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   width: 100%;
   font-weight: 600;
   font-size: 32px;
@@ -17,7 +18,7 @@ export const Title = styled.h1`
 
 export const Subtitle = styled.h2`
   width: 100%;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-weight: 500;
   font-size: 20px;
   line-height: 1.4;
@@ -31,7 +32,7 @@ export const Subtitle = styled.h2`
   }
 
   a {
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
   }
 
   li {
@@ -53,15 +54,15 @@ export const SignupFooter = styled.div`
   justify-content: center;
   padding: 16px;
   font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-weight: 500;
-  border-top: 2px solid ${props => props.theme.bg.wash};
+  border-top: 2px solid ${theme.bg.wash};
   margin-top: 40px;
   width: 100%;
 `;
 
 export const SigninLink = styled.span`
-  color: ${props => props.theme.brand.default};
+  color: ${theme.brand.default};
   margin-left: 6px;
   cursor: pointer;
 `;
@@ -80,7 +81,7 @@ export const CodeOfConduct = styled.p`
   display: inline-block;
   font-size: 14px;
   font-weight: 500;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   border-radius: 8px;
   margin-top: 64px;
   margin-left: 32px;
@@ -90,7 +91,7 @@ export const CodeOfConduct = styled.p`
   z-index: ${zIndex.card + 1};
 
   a {
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
     font-weight: 600;
   }
 `;

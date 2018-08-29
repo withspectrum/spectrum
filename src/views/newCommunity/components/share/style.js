@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import { zIndex } from '../../../../components/globals';
@@ -41,10 +42,10 @@ export const InputRow = styled.div`
 export const Input = styled.div`
   padding: 4px 12px;
   border-radius: 8px;
-  border: 2px solid ${props => props.theme.bg.border};
+  border: 2px solid ${theme.bg.border};
   background: #fff;
   font-weight: 500;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   padding-right: 72px;
   position: relative;
   display: flex;
@@ -56,7 +57,7 @@ export const Input = styled.div`
     cursor: pointer;
 
     &:after {
-      background: ${props => props.theme.bg.wash};
+      background: ${theme.bg.wash};
     }
   }
 
@@ -64,7 +65,7 @@ export const Input = styled.div`
     content: 'COPY';
     font-size: 11px;
     font-weight: 600;
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
     text-transform: uppercase;
     position: absolute;
     top: 0;
@@ -72,7 +73,7 @@ export const Input = styled.div`
     bottom: 0;
     background: #fff;
     padding: 4px 12px;
-    border-left: 2px solid ${props => props.theme.bg.border};
+    border-left: 2px solid ${theme.bg.border};
     border-radius: 0 8px 8px 0;
     z-index: ${zIndex.form + 1};
     line-height: 2.1;

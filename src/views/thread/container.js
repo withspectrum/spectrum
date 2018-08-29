@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
-import slugg from 'slugg';
+import idx from 'idx';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import Titlebar from 'src/views/titlebar';
@@ -97,26 +97,12 @@ class ThreadContainer extends React.Component<Props, State> {
   // see how to do this here: https://github.com/reactjs/rfcs/blob/master/text/0006-static-lifecycle-methods.md#state-derived-from-propsstate
   // with implementation below
   static getDerivedStateFromProps(nextProps, prevState) {
-    const curr = prevState.derivedState;
-    const newThread = curr.data && !curr.data.thread && nextProps.data.thread;
+    const lastSeen = idx(nextProps, _ => _.data.thread.currentUserLastSeen);
+    if (lastSeen === prevState.lastSeen) return null;
 
-    const threadChanged =
-      curr.data &&
-      curr.data.thread &&
-      nextProps.data.thread &&
-      curr.data.thread.id !== nextProps.data.thread.id;
-
-    // Update the cached lastSeen value when switching threads
-    if (newThread || threadChanged) {
-      return {
-        lastSeen: nextProps.data.thread.currentUserLastSeen
-          ? nextProps.data.thread.currentUserLastSeen
-          : null,
-        derivedState: nextProps,
-      };
-    }
-
-    return null;
+    return {
+      lastSeen,
+    };
   }
 
   toggleEdit = () => {

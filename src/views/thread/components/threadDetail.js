@@ -497,14 +497,12 @@ class ThreadDetailPure extends React.Component<Props, State> {
                 {thread.channel.name}
               </Link>
             </ChannelHoverProfile>
-          </ThreadSubtitle>
-
-          <ThreadSubtitle>
+            <span>&nbsp;·&nbsp;</span>
             <Link to={getThreadLink(thread)}>
               {timestamp}
               {thread.modifiedAt && (
                 <React.Fragment>
-                  {' · '}(Edited{' '}
+                  (Edited{' '}
                   {timeDifference(Date.now(), editedTimestamp).toLowerCase()})
                 </React.Fragment>
               )}

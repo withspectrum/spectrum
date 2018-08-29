@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 
 export const style = {
@@ -34,9 +35,9 @@ export const Well = styled.div`
   padding: 12px;
   font-size: 14px;
   font-weight: 500;
-  color: ${props => props.theme.text.alt};
-  background: ${props => props.theme.bg.wash};
-  border: 1px solid ${props => props.theme.bg.border};
+  color: ${theme.text.alt};
+  background: ${theme.bg.wash};
+  border: 1px solid ${theme.bg.border};
   margin-top: 4px;
   flex-direction: ${props => (props.column ? 'column' : 'row')};
 
