@@ -51,7 +51,6 @@ type Props = {
   },
   toggleCommunityMembership: Function,
   dispatch: Dispatch<Object>,
-  threadViewLoading?: boolean,
 };
 
 const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
@@ -66,7 +65,6 @@ const renderDescriptionWithLinks = text => {
 class Sidebar extends React.Component<Props> {
   render() {
     const {
-      threadViewLoading,
       thread,
       currentUser,
       location,
