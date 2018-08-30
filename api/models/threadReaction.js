@@ -7,6 +7,7 @@ import {
 import type { DBThreadReaction } from 'shared/types';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import { getThreadById } from './thread';
 
 type ThreadReactionType = 'like';
 
@@ -34,6 +35,7 @@ export const addThreadReaction = (input: ThreadReactionInput, userId: string): P
     .filter({ userId })
     .run()
     .then(async results => {
+      const thread = await getThreadById(input.threadId)
       // if the reaction already exists in the db, it was previously deleted
       // just remove the deletedAt field
       if (results && results.length > 0) {
@@ -47,13 +49,15 @@ export const addThreadReaction = (input: ThreadReactionInput, userId: string): P
           },
         });
 
-        sendThreadReactionNotificationQueue.add({ threadReaction: thisReaction, userId });
+        if (thread && (thread.creatorId !== userId)) {
+          sendThreadReactionNotificationQueue.add({ threadReaction: thisReaction, userId });
 
-        processReputationEventQueue.add({
-          userId,
-          type: 'thread reaction created',
-          entityId: thisReaction.threadId,
-        });
+          processReputationEventQueue.add({
+            userId,
+            type: 'thread reaction created',
+            entityId: thisReaction.threadId,
+          });
+        }
 
         return db
           .table('threadReactions')
@@ -84,13 +88,15 @@ export const addThreadReaction = (input: ThreadReactionInput, userId: string): P
             context: { threadReactionId: threadReaction.id },
           });
 
-          sendThreadReactionNotificationQueue.add({ threadReaction, userId });
-
-          processReputationEventQueue.add({
-            userId,
-            type: 'thread reaction created',
-            entityId: threadReaction.threadId,
-          });
+          if (thread && (thread.creatorId !== userId)) {
+            sendThreadReactionNotificationQueue.add({ threadReaction: threadReaction, userId });
+            
+            processReputationEventQueue.add({
+              userId,
+              type: 'thread reaction created',
+              entityId: threadReaction.threadId,
+            });
+          }
 
           return threadReaction;
         });
