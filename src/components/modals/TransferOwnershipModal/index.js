@@ -158,13 +158,13 @@ class TransferOwnershipModal extends React.Component<Props, State> {
                   <p style={{ fontWeight: 800 }}>
                     Final warning: this cannot be undone.
                   </p>
-                  By submitting, an invitation to accept the ownership of the
+                  By submitting, an invitation to accept the ownership of this
                   community will be sent to {newOwner.user.name} (@{
                     newOwner.user.username
                   }).
                   <p>
                     You will remain the owner of this community until they
-                    accept invitation.
+                    accept the invitation.
                   </p>
                 </Notice>
               </div>
