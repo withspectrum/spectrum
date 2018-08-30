@@ -229,11 +229,21 @@ export const LoadingInboxThread = () => (
           width: '50%',
         }}
       />
+
+      <Cover
+        style={{
+          top: '20px',
+          left: '40px',
+          height: '8px',
+          width: '50%',
+        }}
+      />
+
       <Cover
         style={{
           top: '40px',
           left: '0',
-          height: '8px',
+          height: '16px',
           width: '100%',
         }}
       />
