@@ -26,7 +26,7 @@ import Navbar from './views/navbar';
 import Status from './views/status';
 import Login from './views/login';
 import DirectMessages from './views/directMessages';
-import Thread from './views/thread';
+import { FullscreenThreadView } from './views/thread';
 
 /* prettier-ignore */
 const Explore = Loadable({
@@ -123,6 +123,10 @@ const Body = styled(FlexCol)`
 const DashboardFallback = signedOutFallback(Dashboard, Pages);
 const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
 const LoginFallback = signedOutFallback(() => <Redirect to="/" />, Login);
+const CommunityLoginFallback = signedOutFallback(
+  props => <Redirect to={`/${props.match.params.communitySlug}`} />,
+  CommunityLoginView
+);
 const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
   <Login redirectPath={`${CLIENT_URL}/new/community`} />
 ));
@@ -233,7 +237,10 @@ class Routes extends React.Component<Props> {
                   component={MessagesFallback}
                 />
                 <Route path="/messages" component={MessagesFallback} />
-                <Route path="/thread/:threadId" component={Thread} />
+                <Route
+                  path="/thread/:threadId"
+                  component={FullscreenThreadView}
+                />
                 <Route path="/thread" render={() => <Redirect to="/" />} />
                 <Route exact path="/users" render={() => <Redirect to="/" />} />
                 <Route exact path="/users/:username" component={UserView} />
@@ -297,7 +304,7 @@ class Routes extends React.Component<Props> {
                 />
                 <Route
                   path="/:communitySlug/login"
-                  component={CommunityLoginView}
+                  component={CommunityLoginFallback}
                 />
                 <Route
                   path="/:communitySlug/:channelSlug"

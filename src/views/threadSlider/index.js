@@ -16,7 +16,7 @@ import {
   CloseLabel,
 } from './style';
 import Icon from '../../components/icons';
-import ThreadContainer from '../thread';
+import { SliderThreadView } from '../thread';
 import { ErrorBoundary } from 'src/components/error';
 
 const ANIMATION_DURATION = 50;
@@ -93,7 +93,7 @@ class ThreadSlider extends Component {
                         </CloseButton>
                       </Close>
 
-                      <ThreadContainer
+                      <SliderThreadView
                         threadId={threadId}
                         threadViewContext={'slider'}
                         slider
