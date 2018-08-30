@@ -106,7 +106,7 @@ export const Subtitle = styled.div`
 `;
 
 export const Description = styled.div`
-  font-size: 14px;
+  font-size: 16px;
   color: ${theme.text.alt};
   padding: 0 16px 16px;
   line-height: 1.4;
@@ -248,7 +248,7 @@ export const CoverLink = styled(ProfileHeaderLink)`
 
 export const CoverTitle = styled(Title)`
   font-size: 20px;
-  margin-top: 8px;
+  margin-top: 16px;
   text-align: center;
 `;
 
@@ -259,8 +259,8 @@ export const CoverSubtitle = styled(Subtitle)`
 `;
 
 export const CoverDescription = styled(Description)`
-  text-align: center;
   flex: auto;
+  margin-top: 8px;
 `;
 
 // had a hard time targeting the ChannelListItem component, so this is a janky way to get the overrides I needed.
