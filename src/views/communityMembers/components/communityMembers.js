@@ -6,7 +6,6 @@ import { withRouter } from 'react-router';
 import { withApollo } from 'react-apollo';
 import { Loading } from '../../../components/loading';
 import GetMembers from './getMembers';
-import EditDropdown from './editDropdown';
 import Search from './search';
 import queryString from 'query-string';
 import {
@@ -38,6 +37,7 @@ type Props = {
   history: Object,
   location: Object,
   community: Object,
+  action: Function,
 };
 
 type State = {
@@ -138,7 +138,7 @@ class CommunityMembers extends React.Component<Props, State> {
   };
 
   generateUserProfile = communityMember => {
-    const { user, roles, reputation, ...permissions } = communityMember;
+    const { user, roles, reputation } = communityMember;
     return (
       <GranularUserProfile
         userObject={user}
@@ -156,13 +156,8 @@ class CommunityMembers extends React.Component<Props, State> {
         badges={roles}
         showHoverProfile={false}
       >
-        {user.id !== this.props.currentUser.id && (
-          <EditDropdown
-            user={user}
-            permissions={permissions}
-            community={this.props.community}
-          />
-        )}
+        {user.id !== this.props.currentUser.id &&
+          this.props.action(communityMember)}
       </GranularUserProfile>
     );
   };

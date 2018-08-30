@@ -4,29 +4,25 @@ import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
-import slugg from 'slugg';
-import { CHANNEL_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import { withApollo } from 'react-apollo';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { throttle } from '../../../helpers/utils';
-import { getChannelBySlugAndCommunitySlugQuery } from 'shared/graphql/queries/channel/getChannel';
-import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import createChannelMutation from 'shared/graphql/mutations/channel/createChannel';
-import StripeModalWell from 'src/components/stripeCardForm/modalWell';
-import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
 import { modalStyles, Notice } from '../styles';
-import { Input, TextArea, Error } from '../../formElements';
+import { Error, Checkbox } from '../../formElements';
 import { Form, Actions } from './style';
+import CommunityMembers from '../../../views/communityMembers/components/communityMembers';
+import { StyledLabel } from '../../../../src/components/formElements/style';
+import GranularUserProfile from '../../granularUserProfile';
 
 type State = {
   loading: boolean,
-  newOwner: string,
+  newOwner: Object,
 };
 
 type Props = {
@@ -46,8 +42,6 @@ class TransferOwnershipModal extends React.Component<Props, State> {
       newOwner: null,
       transferError: false,
     };
-
-    this.checkSlug = throttle(this.checkSlug, 500);
   }
 
   close = () => {
@@ -86,7 +80,7 @@ class TransferOwnershipModal extends React.Component<Props, State> {
         this.props.dispatch(
           addToastWithTimeout(
             'success',
-            'Community ownership has been transferred!'
+            'The invitation to transfer the ownership has been sent!'
           )
         );
         return;
@@ -105,7 +99,7 @@ class TransferOwnershipModal extends React.Component<Props, State> {
 
     const { transferError, loading, newOwner } = this.state;
 
-    const styles = modalStyles(420);
+    const styles = modalStyles(600);
 
     return (
       <Modal
@@ -124,24 +118,65 @@ class TransferOwnershipModal extends React.Component<Props, State> {
         */}
         <ModalContainer title={'Transfer Ownership'} closeModal={this.close}>
           <Form>
-            <Notice>
-              Transferring the ownership of <strong>{community.name}</strong> is
-              not reversible.
-            </Notice>
+            <StyledLabel>
+              Select a member of the community as the new owner:
+            </StyledLabel>
 
-            <Input
-              id="newOwnerName"
-              defaultValue={newOwner ? newOwner.username : null}
-            >
-              Enter the name of the new owner
-            </Input>
+            <CommunityMembers
+              id={community.id}
+              community={community}
+              action={member => {
+                console.log(this.state);
+                return (
+                  <Checkbox
+                    checked={newOwner && member.id === newOwner.id}
+                    onChange={() => {
+                      this.setState({
+                        newOwner: newOwner ? null : member,
+                      });
+                    }}
+                  />
+                );
+              }}
+            />
+
+            {newOwner && (
+              <div>
+                <span>
+                  Once the transfer is complete, the new owner will be:
+                </span>
+                <GranularUserProfile
+                  userObject={newOwner && newOwner.user}
+                  name={newOwner && newOwner.user.name}
+                  username={newOwner && newOwner.user.username}
+                  isCurrentUser={false}
+                  onlineSize={'small'}
+                  profilePhoto={newOwner && newOwner.user.profilePhoto}
+                  avatarSize={40}
+                  showHoverProfile={false}
+                />
+                <Notice>
+                  <p style={{ fontWeight: 800 }}>
+                    Final warning: this cannot be undone.
+                  </p>
+                  By submitting, an invitation to accept the ownership of the
+                  community will be sent to {newOwner.user.name} (@{
+                    newOwner.user.username
+                  }).
+                  <p>
+                    You will remain the owner of this community until they
+                    accept invitation.
+                  </p>
+                </Notice>
+              </div>
+            )}
 
             <Actions>
               <TextButton onClick={this.close} color={'warn.alt'}>
                 Cancel
               </TextButton>
               <Button
-                disabled={newOwner !== null}
+                disabled={newOwner === null}
                 loading={loading}
                 onClick={this.create}
               >

@@ -100,6 +100,10 @@ class GranularUserProfile extends React.Component<Props> {
       showHoverProfile = true,
     } = this.props;
 
+    if (!userObject) {
+      return null;
+    }
+
     return (
       <Row avatarSize={avatarSize} multiAction={multiAction}>
         {profilePhoto && (

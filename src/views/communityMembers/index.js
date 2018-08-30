@@ -18,6 +18,7 @@ import {
   Column,
 } from '../../components/settingsViews/style';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';
+import EditDropdown from './components/editDropdown';
 
 type Props = {
   currentUser: Object,
@@ -40,6 +41,16 @@ class CommunityMembersSettings extends React.Component<Props> {
                 history={history}
                 id={community.id}
                 community={community}
+                action={member => {
+                  const { user, ...permissions } = member;
+                  return (
+                    <EditDropdown
+                      user={user}
+                      permissions={permissions}
+                      community={community}
+                    />
+                  );
+                }}
               />
             </ErrorBoundary>
           </Column>
