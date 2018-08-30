@@ -126,7 +126,6 @@ class TransferOwnershipModal extends React.Component<Props, State> {
               id={community.id}
               community={community}
               action={member => {
-                console.log(this.state);
                 return (
                   <Checkbox
                     checked={newOwner && member.id === newOwner.id}
