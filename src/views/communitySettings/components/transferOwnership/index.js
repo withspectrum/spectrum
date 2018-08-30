@@ -19,6 +19,7 @@ import {
 import { Button } from 'src/components/buttons';
 import saveBrandedLoginSettings from 'shared/graphql/mutations/community/saveBrandedLoginSettings';
 import type { Dispatch } from 'redux';
+import { openModal } from '../../../../actions/modals';
 
 type Props = {
   data: {
@@ -45,6 +46,7 @@ class TransferOwnership extends React.Component<Props, State> {
     const {
       data: { community },
       isLoading,
+      dispatch,
     } = this.props;
 
     if (community) {
@@ -53,14 +55,24 @@ class TransferOwnership extends React.Component<Props, State> {
           <SectionTitle>Transfer Ownership</SectionTitle>
           <SectionSubtitle>
             Transfer the ownership of this community to another member. This
-            will transfer all of your permissions to the new owner, as well as
-            billing settings.
+            will transfer all of your permissions to the new owner, and they
+            will be prompted to setup new billing settings.
           </SectionSubtitle>
 
           <SectionCardFooter>
-            <a>
-              <Button gradientTheme={'warn'}>Transfer Ownership</Button>
-            </a>
+            <Button
+              gradientTheme={'warn'}
+              onClick={() =>
+                dispatch(
+                  openModal('TRANSFER_OWNERSHIP_MODAL', {
+                    community,
+                    id: community.id,
+                  })
+                )
+              }
+            >
+              Transfer Ownership
+            </Button>
           </SectionCardFooter>
         </SectionCard>
       );
