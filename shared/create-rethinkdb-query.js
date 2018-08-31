@@ -10,6 +10,8 @@
 
 import Redis from 'ioredis';
 
+type Data = ?(Object | string | Array<Object> | Array<string>);
+
 class TagCache {
   redis: Redis;
 
@@ -25,11 +27,7 @@ class TagCache {
     }
   };
 
-  set = async (
-    key: string,
-    data: Object | string,
-    tags: Array<string>
-  ): Promise<void> => {
+  set = async (key: string, data: Data, tags: Array<string>): Promise<void> => {
     try {
       // NOTE(@mxstbr): This is a multi execution because if any of the commands is invalid
       // we don't want to execute anything
@@ -73,21 +71,33 @@ class TagCache {
 
 const queryCache = new TagCache('query-cache');
 
-type CreateQueryInput =
+type CreateQueryInput<I, O> =
   | {|
-      read: Function,
-      tags: () => () => Array<string>,
+      read: (
+        ...args: I
+      ) => {
+        toString: Function,
+        run: () => Promise<?O>,
+      },
+      tags: (...args: I) => (data: ?O) => Array<?string>,
     |}
   | {|
-      write: Function,
-      invalidateTags: () => () => Array<string>,
+      write: (
+        ...args: I
+      ) => {
+        toString: Function,
+        run: () => Promise<?O>,
+      },
+      invalidateTags: (...args: I) => (data: ?O) => Array<?string>,
     |};
 
-export const createQuery = (input: CreateQueryInput) => {
+export const createQuery = <I: Array<any>, O: Data>(
+  input: CreateQueryInput<I, O>
+) => {
   const getQuery = input.read ? input.read : input.write;
   const getTags = input.tags ? input.tags : input.invalidateTags;
 
-  return async (...args) => {
+  return async (...args: I) => {
     // If we have a cached response return that asap...
     const query = getQuery(...args);
     const queryString = query.toString();
@@ -96,7 +106,7 @@ export const createQuery = (input: CreateQueryInput) => {
 
     // ...otherwise run the query and calculate the tags
     const result = await query.run();
-    const tags = getTags(...args)(result);
+    const tags = getTags(...args)(result).filter(Boolean);
     // Then either invalidate the tags or store the result in the cache tagged with the calculated tags
     if (input.invalidateTags) {
       await queryCache.invalidate(tags);
@@ -111,14 +121,16 @@ export const createQuery = (input: CreateQueryInput) => {
  * Usage
  */
 
+import type { DBThread } from 'shared/types';
+
 // Read query
 const getThreadsByCommunityId = createQuery({
   read: (communityId: string) =>
     db.table('threads').getAll(communityId, { index: 'communityId' }),
-  tags: (communityId: string) => (threads: Array<DBThread>) => [
+  tags: (communityId: string) => (threads: ?Array<DBThread>) => [
     communityId,
-    ...threads.map(thread => thread.id),
-    ...threads.map(thread => thread.channelId),
+    ...(threads || []).map(thread => thread.id),
+    ...(threads || []).map(thread => thread.channelId),
   ],
 });
 
@@ -127,6 +139,6 @@ const publishThread = createQuery({
   write: (communityId: string, channelId: string, content: Object) =>
     db.table('threads').insert({ communityId, channelId, content }),
   invalidateTags: (communityId: string, channelId: string) => (
-    thread: DBThread
-  ) => [communityId, channelId, thread.id],
+    thread: ?DBThread
+  ) => [communityId, channelId, thread && thread.id],
 });
