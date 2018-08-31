@@ -8,20 +8,26 @@
  * - `data:db.table('threads').get('asdf-345')` = `{ "id": "asdf-345", "content": { "title": "Hello" }, ... }`
  */
 
-import Redis from 'ioredis';
+import Redis, { type RedisOptions } from 'ioredis';
 
-export type CacheData = ?(Object | string | Array<Object> | Array<string>);
+export type CacheData = ?(Object | string | Array<*>);
 
 class TagCache {
   redis: Redis;
 
-  constructor(keyPrefix: string) {
-    this.redis = new Redis({ keyPrefix });
+  constructor(options: ?RedisOptions) {
+    this.redis = new Redis(options || {});
   }
 
-  get = async (key: string): Promise<?mixed> => {
+  get = async (key: string): Promise<?CacheData> => {
     try {
-      return this.redis.get(`data:${key}`);
+      return this.redis.get(`data:${key}`).then(res => {
+        try {
+          return JSON.parse(res);
+        } catch (err) {
+          return res;
+        }
+      });
     } catch (err) {
       return Promise.reject(err);
     }
@@ -43,7 +49,7 @@ class TagCache {
       });
 
       // Add the data to the key
-      multi.set(`data:${key}`, data);
+      multi.set(`data:${key}`, JSON.stringify(data));
       await multi.exec();
       return;
     } catch (err) {
@@ -51,11 +57,23 @@ class TagCache {
     }
   };
 
+  // How invalidation by tag works:
+  // 1. Get all the keys associated with all the passed-in tags (tags:${tag})
+  // 2. Delete all the keys data (data:${key})
+  // 3. Delete all the tags (tags:${tag})
   invalidate = async (tags: Array<string>): Promise<void> => {
     try {
-      // NOTE(@mxstbr): This is a pipeline because we don't want to stop invalidating all tags
-      // just because one might be invalid
+      // NOTE(@mxstbr): [].concat.apply([],...) flattens the array
+      const keys = [].concat.apply(
+        [],
+        await Promise.all(tags.map(tag => this.redis.smembers(`tags:${tag}`)))
+      );
+
       const pipeline = await this.redis.pipeline();
+
+      keys.forEach(key => {
+        pipeline.del(`data:${key}`);
+      });
 
       tags.forEach(tag => {
         pipeline.del(`tags:${tag}`);

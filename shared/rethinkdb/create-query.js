@@ -14,7 +14,7 @@
 
 import TagCache, { type CacheData } from './tag-cache';
 
-const queryCache = new TagCache('query-cache');
+const queryCache = new TagCache({ keyPrefix: 'query-cache' });
 
 type CreateQueryInput<I, O> =
   | {|
