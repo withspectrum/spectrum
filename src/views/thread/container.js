@@ -21,7 +21,7 @@ import {
 } from 'shared/graphql/queries/thread/getThread';
 import { NullState } from 'src/components/upsell';
 import JoinChannel from 'src/components/upsell/joinChannel';
-import LoadingView from './components/loading';
+import LoadingThread from './components/loading';
 import ThreadCommunityBanner from './components/threadCommunityBanner';
 import Sidebar from './components/sidebar';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -527,7 +527,7 @@ class ThreadContainer extends React.Component<Props, State> {
     }
 
     if (isLoading) {
-      return <LoadingView threadViewContext={threadViewContext} />;
+      return <LoadingThread threadViewContext={threadViewContext} />;
     }
 
     return (

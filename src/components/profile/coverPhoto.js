@@ -1,4 +1,5 @@
 import React from 'react';
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 // $FlowFixMe
@@ -11,7 +12,7 @@ const PhotoContainer = styled.div`
   position: relative;
   width: 100%;
   flex: 0 0 ${props => (props.large ? '320px' : '96px')};
-  background-color: ${({ theme }) => theme.bg.reverse};
+  background-color: ${theme.bg.reverse};
   background-image: ${props =>
     props.coverURL
       ? `url("${optimize(props.coverURL, {

@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import ScrollRow from '../../components/scrollRow';
@@ -34,13 +35,13 @@ export const SectionHeaderNumber = styled.span`
   width: 32px;
   height: 32px;
   font-size: 16px;
-  color: ${props => props.theme.brand.default};
+  color: ${theme.brand.default};
   background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 16px;
-  border: 2px solid ${props => props.theme.brand.default};
+  border: 2px solid ${theme.brand.default};
   font-weight: 700;
   transform: translateX(-50%);
 `;
@@ -60,7 +61,7 @@ export const FriendlyError = styled.p`
   font-size: 14px;
   margin: 16px 0;
   font-weight: 600;
-  color: ${props => props.theme.success.alt};
+  color: ${theme.success.alt};
   padding: 8px 12px;
   border: 2px solid #00d6a9;
   border-radius: 8px;

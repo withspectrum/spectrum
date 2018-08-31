@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import { Card } from '../../../components/card';
@@ -11,7 +12,7 @@ export const PendingUserNotificationContainer = styled(Card)`
   flex: 1;
   font-size: 14px;
   font-weight: 600;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 
   a {
     padding: 16px;
@@ -25,5 +26,5 @@ export const PendingUserCount = styled.span`
   font-size: 14px;
   font-weight: 700;
   margin-right: 12px;
-  background: ${props => props.theme.warn.default};
+  background: ${theme.warn.default};
 `;

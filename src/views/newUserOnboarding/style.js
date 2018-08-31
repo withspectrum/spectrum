@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import { Button } from '../../components/buttons';
@@ -41,11 +42,11 @@ export const IconContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 `;
 
 export const Title = styled.h1`
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   width: 100%;
   line-height: 1.2;
   padding: 0;
@@ -63,7 +64,7 @@ export const Title = styled.h1`
 export const Subtitle = styled.h2`
   width: 100%;
   max-width: 640px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-weight: 500;
   font-size: 20px;
   line-height: 1.4;
@@ -80,7 +81,7 @@ export const Emoji = styled.h3`
 export const ContinueButton = styled(Button)`
   font-size: 18px;
   font-weight: 700;
-  color: ${props => props.theme.text.reverse};
+  color: ${theme.text.reverse};
   padding: 16px 88px;
   max-width: 100%;
   box-shadow: ${props =>
@@ -90,9 +91,9 @@ export const ContinueButton = styled(Button)`
 
 export const CreateUpsellContainer = styled.div`
   margin-top: 32px;
-  background: ${props => props.theme.bg.wash};
+  background: ${theme.bg.wash};
   padding: ${props => (props.extra ? '32px 32px 116px' : '32px')};
-  border-top: 2px solid ${props => props.theme.bg.border};
+  border-top: 2px solid ${theme.bg.border};
   width: calc(100% + 64px);
   margin-bottom: -32px;
   margin-left: -32px;
@@ -112,8 +113,8 @@ export const StickyRow = styled.div`
   pointer-events: ${props => (props.hasJoined ? 'auto' : 'none')};
   left: 0;
   right: 0;
-  background: ${props => props.theme.bg.default};
-  border-top: 2px solid ${props => props.theme.bg.border};
+  background: ${theme.bg.default};
+  border-top: 2px solid ${theme.bg.border};
   z-index: ${zIndex.fullscreen + 1};
   transition: bottom 0.3s ease-in-out, opacity 0.3s ease-in-out;
   -webkit-transform: translate3d(0, 0, 0);

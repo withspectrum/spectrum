@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import { zIndex } from '../../components/globals';
@@ -15,7 +16,7 @@ export const Container = styled.div`
 
 export const Thread = styled.div`
   display: flex;
-  background: ${props => props.theme.bg.wash};
+  background: ${theme.bg.wash};
   flex: auto;
   z-index: ${zIndex.chrome - 2};
   flex-direction: column;
@@ -51,7 +52,7 @@ export const NullThread = styled.div`
 export const Heading = styled.h3`
   font-size: 24px;
   font-weight: 700;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   margin: 48px 24px 16px;
   text-align: center;
 `;
@@ -59,7 +60,7 @@ export const Heading = styled.h3`
 export const Subheading = styled.h4`
   font-size: 18px;
   font-weight: 400;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   margin: 0 48px 32px;
   max-width: 600px;
   text-align: center;

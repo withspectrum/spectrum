@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import * as React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
@@ -31,8 +32,8 @@ const ChartGrid = styled.div`
 const ThisSegment = styled(Segment)`
   @media (max-width: 768px) {
     &:first-of-type {
-      color: ${props => props.theme.text.alt};
-      border-bottom: 2px solid ${props => props.theme.bg.border};
+      color: ${theme.text.alt};
+      border-bottom: 2px solid ${theme.bg.border};
     }
     &:not(:first-of-type) {
       display: none;
