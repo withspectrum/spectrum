@@ -72,8 +72,32 @@ const transpileShared = config => {
   return config;
 };
 
+const useOurEslintRules = config => {
+  config.module.rules = config.module.rules.map((rule, ESLintLoaderKey) => {
+    let ESLintOptionsKey;
+    const isESLintLoader =
+      Array.isArray(rule.use) &&
+      rule.use.some(
+        (v, i) =>
+          v.loader &&
+          v.loader.includes('eslint-loader') &&
+          (ESLintOptionsKey = i) | true
+      );
+    if (isESLintLoader) {
+      const eslintLoader = config.module.rules[ESLintLoaderKey];
+      eslintLoader.use[ESLintOptionsKey].options.useEslintrc = true;
+      return eslintLoader;
+    }
+
+    return rule;
+  });
+
+  return config;
+};
+
 module.exports = function override(config, env) {
   if (process.env.NODE_ENV === 'development') {
+    config = useOurEslintRules(config);
     config.output.path = path.join(__dirname, './build');
     config = rewireReactHotLoader(config, env);
     config.plugins.push(
