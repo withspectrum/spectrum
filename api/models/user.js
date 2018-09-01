@@ -1,5 +1,6 @@
 // @flow
 const { db } = require('./db');
+import { createQuery } from 'shared/rethinkdb/create-query';
 import { uploadImage } from '../utils/file-storage';
 import { createNewUsersSettings } from './usersSettings';
 import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
@@ -8,38 +9,19 @@ import type { DBUser, FileUpload } from 'shared/types';
 import { events } from 'shared/analytics';
 import { trackQueue, identifyQueue } from 'shared/bull/queues';
 
-type GetUserInput = {
-  id?: string,
-  username?: string,
-};
+const getUserById = createQuery({
+  read: (userId: string) => db.table('users').get(userId),
+  tags: (userId: string) => (user: ?DBUser) => [userId],
+});
 
-const getUser = async (input: GetUserInput): Promise<?DBUser> => {
-  if (input.id) return await getUserById(input.id);
-  if (input.username) return await getUserByUsername(input.username);
-  return null;
-};
-
-const getUserById = (userId: string): Promise<DBUser> => {
-  return db
-    .table('users')
-    .get(userId)
-    .run();
-};
-
-const getUserByEmail = (email: string): Promise<DBUser> => {
-  return db
-    .table('users')
-    .getAll(email, { index: 'email' })
-    .run()
-    .then(results => (results.length > 0 ? results[0] : null));
-};
+const getUserByEmail = createQuery({
+  read: (email: string) => db.table('users').getAll(email, { index: 'email' }),
+  process: (users: ?Array<DBUser>) => (users && users[0]) || null,
+  tags: (email: string) => (user: ?DBUser) => (user ? [user.id] : []),
+});
 
 const getUserByUsername = (username: string): Promise<DBUser> => {
-  return db
-    .table('users')
-    .getAll(username, { index: 'username' })
-    .run()
-    .then(result => (result ? result[0] : null));
+  return db.table('users').getAll(username, { index: 'username' });
 };
 
 // prettier-ignore
@@ -138,7 +120,7 @@ const createOrFindUser = (user: Object, providerMethod: string): Promise<DBUser 
   // however, if a user id doesn't exist we need to do a lookup by the email address passed in - if an email address doesn't exist, we know that we're going to be creating a new user
   let promise;
   if (user.id) {
-    promise = getUser({ id: user.id });
+    promise = getUserById(user.id);
   } else {
     if (user[providerMethod]) {
       promise = getUserByIndex(providerMethod, user[providerMethod]).then(
@@ -506,16 +488,18 @@ const setUserPendingEmail = (userId: string, pendingEmail: string): Promise<Obje
     .run()
     .then(async () => {
       const user = await getUserById(userId);
-      trackQueue.add({
-        userId: user.id,
-        event: events.USER_ADDED_EMAIL,
-      });
+      if (user) {
+        trackQueue.add({
+          userId: user.id,
+          event: events.USER_ADDED_EMAIL,
+        });
+      }
 
       return user
     });
 };
 
-const updateUserEmail = (userId: string, email: string): Promise<Object> => {
+const updateUserEmail = (userId: string, email: string): Promise<DBUser> => {
   return db
     .table('users')
     .get(userId)
@@ -526,10 +510,13 @@ const updateUserEmail = (userId: string, email: string): Promise<Object> => {
     .run()
     .then(async () => {
       const user = await getUserById(userId);
-      trackQueue.add({
-        userId: user.id,
-        event: events.USER_VERIFIED_EMAIL,
-      });
+      if (user) {
+        trackQueue.add({
+          userId: user.id,
+          event: events.USER_VERIFIED_EMAIL,
+        });
+      }
+      return user;
     });
 };
 
@@ -560,17 +547,20 @@ const deleteUser = (userId: string) => {
     .run()
     .then(async () => {
       const user = await getUserById(userId);
-      trackQueue.add({
-        userId: user.id,
-        event: events.USER_DELETED,
-      });
+      if (user) {
+        trackQueue.add({
+          userId: user.id,
+          event: events.USER_DELETED,
+        });
 
-      identifyQueue.add({ userId: user.id });
+        identifyQueue.add({ userId: user.id });
+      }
+
+      return user;
     });
 };
 
 module.exports = {
-  getUser,
   getUserById,
   getUserByEmail,
   getUserByUsername,

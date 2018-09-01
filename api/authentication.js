@@ -6,7 +6,7 @@ const { Strategy: FacebookStrategy } = require('passport-facebook');
 const { Strategy: GoogleStrategy } = require('passport-google-oauth2');
 const { Strategy: GitHubStrategy } = require('passport-github2');
 const {
-  getUser,
+  getUserById,
   createOrFindUser,
   saveUserProvider,
   getUserByIndex,
@@ -53,7 +53,7 @@ const init = () => {
   });
 
   passport.deserializeUser((id, done) => {
-    getUser({ id })
+    getUserById(id)
       .then(user => {
         done(null, user);
         return null;

@@ -8,7 +8,9 @@ import fs from 'fs';
 import express from 'express';
 import Loadable from 'react-loadable';
 import path from 'path';
-import { getUser } from 'api/models/user';
+// TODO: This is the only thing that connects hyperion to the db
+// we should get rid of this if at all possible
+import { getUserById } from 'api/models/user';
 import Raven from 'shared/raven';
 import toobusy from 'shared/middlewares/toobusy';
 import addSecurityMiddleware from 'shared/middlewares/security';
@@ -92,7 +94,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  getUser({ id })
+  getUserById(id)
     .then(user => {
       done(null, user);
     })
