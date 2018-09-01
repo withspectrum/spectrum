@@ -10,7 +10,7 @@
 
 import Redis, { type RedisOptions } from 'ioredis';
 
-export type CacheData = ?(Object | string | Array<*>);
+export type CacheData = ?any;
 
 class TagCache {
   redis: Redis;

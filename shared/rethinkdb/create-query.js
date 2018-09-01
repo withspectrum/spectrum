@@ -24,7 +24,8 @@ type CreateQueryInput<I, O> =
         toString: Function,
         run: () => Promise<?O>,
       },
-      tags: (...args: I) => (data: ?O) => Array<?string>,
+      process?: (data: ?O) => *,
+      tags: (...args: I) => (data: *) => Array<?string>,
     |}
   | {|
       write: (
@@ -33,7 +34,8 @@ type CreateQueryInput<I, O> =
         toString: Function,
         run: () => Promise<?O>,
       },
-      invalidateTags: (...args: I) => (data: ?O) => Array<?string>,
+      process?: (data: ?O) => *,
+      invalidateTags: (...args: I) => (data: *) => Array<?string>,
     |};
 
 export const createQuery = <I: Array<any>, O: CacheData>(
@@ -50,7 +52,9 @@ export const createQuery = <I: Array<any>, O: CacheData>(
     if (cached) return cached;
 
     // ...otherwise run the query and calculate the tags
-    const result = await query.run();
+    const result = await query
+      .run()
+      .then(res => (input.process ? input.process(res) : res));
     const tags = getTags(...args)(result).filter(Boolean);
     // Then either invalidate the tags or store the result in the cache tagged with the calculated tags
     if (input.invalidateTags) {
