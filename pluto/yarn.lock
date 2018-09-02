@@ -84,9 +84,9 @@ buffer@4.9.1:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-bull@^3.4.7:
-  version "3.4.7"
-  resolved "https://registry.yarnpkg.com/bull/-/bull-3.4.7.tgz#163df3358502f49ebe293de5529a1eaecce5cce7"
+bull@^3.4.8:
+  version "3.4.8"
+  resolved "https://registry.yarnpkg.com/bull/-/bull-3.4.8.tgz#bd25ae82f47e0a092c0b06b6a13b875fa5b41bc0"
   dependencies:
     bluebird "^3.5.0"
     cron-parser "^2.5.0"
