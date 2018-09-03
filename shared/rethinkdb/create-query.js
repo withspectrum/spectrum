@@ -12,6 +12,7 @@
  * });
  */
 
+const debug = require('debug')('shared:rethinkdb:db-query-cache');
 import TagCache, { type CacheData } from './tag-cache';
 
 const queryCache = new TagCache({ keyPrefix: 'query-cache' });
@@ -37,6 +38,19 @@ type CreateQueryInput<I, O> =
       invalidateTags: (...args: I) => (data: *) => Array<?string>,
     |};
 
+let TOTAL_QUERIES = 0;
+let CACHED_RESULTS = 0;
+
+if (debug.enabled) {
+  debug('Logging of cache hit rate enabled! (every 30s)');
+  setInterval(() => {
+    debug(
+      `Cache hit rate over the last 30s: ${(CACHED_RESULTS / TOTAL_QUERIES) *
+        100}% (${CACHED_RESULTS} of ${TOTAL_QUERIES})`
+    );
+  }, 30000);
+}
+
 export const createQuery = <I: Array<any>, O: CacheData>(
   input: CreateQueryInput<I, O>
 ) => {
@@ -44,11 +58,15 @@ export const createQuery = <I: Array<any>, O: CacheData>(
   const getTags = input.tags ? input.tags : input.invalidateTags;
 
   return async (...args: I) => {
+    TOTAL_QUERIES++;
     // If we have a cached response return that asap...
     const query = await getQuery(...args);
     const queryString = query.toString();
     const cached = await queryCache.get(queryString);
-    if (cached) return cached;
+    if (cached) {
+      CACHED_RESULTS++;
+      return cached;
+    }
 
     // ...otherwise run the query and calculate the tags
     const result = await query
