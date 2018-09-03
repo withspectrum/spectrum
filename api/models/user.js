@@ -4,10 +4,11 @@ import { createQuery } from 'shared/rethinkdb/create-query';
 import { uploadImage } from '../utils/file-storage';
 import { createNewUsersSettings } from './usersSettings';
 import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
-import type { PaginationOptions } from '../utils/paginate-arrays';
-import type { DBUser, FileUpload } from 'shared/types';
 import { events } from 'shared/analytics';
 import { trackQueue, identifyQueue } from 'shared/bull/queues';
+import { getUserChannelIds } from './usersChannels';
+import type { PaginationOptions } from '../utils/paginate-arrays';
+import type { DBUser, FileUpload, DBThread } from 'shared/types';
 
 const getUserById = createQuery({
   read: (userId: string) => db.table('users').get(userId),
@@ -20,102 +21,94 @@ const getUserByEmail = createQuery({
   tags: (email: string) => (user: ?DBUser) => (user ? [user.id] : []),
 });
 
-const getUserByUsername = (username: string): Promise<DBUser> => {
-  return db.table('users').getAll(username, { index: 'username' });
-};
+const getUserByUsername = createQuery({
+  read: (username: string) =>
+    db.table('users').getAll(username, { index: 'username' }),
+  process: (users: ?Array<DBUser>) => (users && users[0]) || null,
+  tags: (username: string) => (user: ?DBUser) => (user ? [user.id] : []),
+});
 
-// prettier-ignore
-const getUsersByUsername = (usernames: Array<string>): Promise<Array<DBUser>> => {
-  return db
-    .table('users')
-    .getAll(...usernames, { index: 'username' })
-    .run();
-};
+const getUsersByUsername = createQuery({
+  read: (usernames: Array<string>) =>
+    db.table('users').getAll(...usernames, { index: 'username' }),
+  tags: () => (users: ?Array<DBUser>) =>
+    users ? users.map(({ id }) => id) : [],
+});
 
-const getUsers = (userIds: Array<string>): Promise<Array<DBUser>> => {
-  return db
-    .table('users')
-    .getAll(...userIds)
-    .run();
-};
+const getUsers = createQuery({
+  read: (userIds: Array<string>) => db.table('users').getAll(...userIds),
+  tags: () => (users: ?Array<DBUser>) =>
+    users ? users.map(({ id }) => id) : [],
+});
 
-const storeUser = (user: Object): Promise<DBUser> => {
-  return db
-    .table('users')
-    .insert(
+const storeUser = createQuery({
+  write: (user: Object) =>
+    db.table('users').insert(
       {
         ...user,
         modifiedAt: null,
       },
       { returnChanges: true }
-    )
-    .run()
-    .then(result => {
-      const user = result.changes[0].new_val;
+    ),
+  process: (result: ?{ changes: { new_val: DBUser } }) => {
+    if (!result || !result.changes || !result.changes.new_val) return null;
+    const user = result.changes[0].new_val;
 
-      identifyQueue.add({ userId: user.id });
-      trackQueue.add({ userId: user.id, event: events.USER_CREATED });
-      sendNewUserWelcomeEmailQueue.add({ user });
-      return Promise.all([user, createNewUsersSettings(user.id)]);
-    })
-    .then(([user]) => user);
-};
+    identifyQueue.add({ userId: user.id });
+    trackQueue.add({ userId: user.id, event: events.USER_CREATED });
+    sendNewUserWelcomeEmailQueue.add({ user });
+    return Promise.all([user, createNewUsersSettings(user.id)]).then(
+      ([user]) => user
+    );
+  },
+  invalidateTags: () => (user: DBUser) => [user.id],
+});
 
-// pretier-ignore
-const saveUserProvider = (
-  userId: string,
-  providerMethod: string,
-  providerId: number,
-  extraFields?: Object
-) => {
-  return db
-    .table('users')
-    .get(userId)
-    .run()
-    .then(result => {
-      let obj = Object.assign({}, result);
-      obj[providerMethod] = providerId;
-      return obj;
-    })
-    .then(user => {
-      return db
-        .table('users')
-        .get(userId)
-        .update(
-          {
-            ...user,
-            ...extraFields,
-          },
-          { returnChanges: true }
-        )
-        .run()
-        .then(result => {
-          const user = result.changes[0].new_val;
-          trackQueue.add({
-            userId: user.id,
-            event: events.USER_ADDED_PROVIDER,
-            properties: {
-              providerMethod,
-            },
-          });
+const saveUserProvider = createQuery({
+  write: (
+    userId: string,
+    providerMethod: string,
+    providerId: number,
+    extraFields?: Object
+  ) =>
+    db
+      .table('users')
+      .get(userId)
+      .update(
+        {
+          [providerMethod]: providerId,
+          ...extraFields,
+        },
+        { returnChanges: true }
+      ),
+  process: (result: ?{ changes: [{ new_val: DBUser }] }) => {
+    if (!result) return null;
+    const user = result.changes[0].new_val;
+    // TODO(@mxstbr): Fix this
+    // trackQueue.add({
+    //   userId: user.id,
+    //   event: events.USER_ADDED_PROVIDER,
+    //   properties: {
+    //     providerMethod,
+    //   },
+    // });
 
-          identifyQueue.add({ userId: user.id });
+    identifyQueue.add({ userId: user.id });
 
-          return user;
-        });
-    });
-};
+    return user;
+  },
+  invalidateTags: () => (user: ?DBUser) => (user ? [user.id] : []),
+});
 
-const getUserByIndex = (indexName: string, indexValue: string) => {
-  return db
-    .table('users')
-    .getAll(indexValue, { index: indexName })
-    .run()
-    .then(results => results && results.length > 0 && results[0]);
-};
+const getUserByIndex = createQuery({
+  read: (indexName: string, indexValue: string) =>
+    db.table('users').getAll(indexValue, { index: indexName }),
+  process: (results: ?Array<DBUser>) => (results ? results[0] : null),
+  tags: () => (user: ?DBUser) => (user ? [user.id] : []),
+});
 
 // prettier-ignore
-const createOrFindUser = (user: Object, providerMethod: string): Promise<DBUser | {}> => {
+const createOrFindUser = (user: Object, providerMethod: string): Promise<?DBUser> => {
   // if a user id gets passed in, we know that a user most likely exists and we just need to retrieve them from the db
   // however, if a user id doesn't exist we need to do a lookup by the email address passed in - if an email address doesn't exist, we know that we're going to be creating a new user
   let promise;
@@ -132,7 +125,7 @@ const createOrFindUser = (user: Object, providerMethod: string): Promise<DBUser 
           if (user.email) {
             return getUserByEmail(user.email);
           } else {
-            return Promise.resolve({});
+            return Promise.resolve(null);
           }
         }
       );
@@ -140,7 +133,7 @@ const createOrFindUser = (user: Object, providerMethod: string): Promise<DBUser 
       if (user.email) {
         promise = getUserByEmail(user.email);
       } else {
-        promise = Promise.resolve({});
+        promise = Promise.resolve(null);
       }
     }
   }
@@ -167,39 +160,37 @@ const createOrFindUser = (user: Object, providerMethod: string): Promise<DBUser 
     .catch(err => {
       if (user.id) {
         console.error(err);
-        return new Error(`No user found for id ${user.id}.`);
+        return null;
       }
       return storeUser(user);
     });
 };
 
-// prettier-ignore
-const getEverything = (userId: string, options: PaginationOptions): Promise<Array<any>> => {
-  const { first, after } = options
-  return db
-    .table('usersChannels')
-    .getAll(userId, { index: 'userId' })
-    .filter(userChannel => userChannel('isMember').eq(true))
-    .map(userChannel => userChannel('channelId'))
-    .run()
-    .then(
-      userChannels =>
-        userChannels &&
-        userChannels.length > 0 &&
-        db
-          .table('threads')
-          .orderBy({ index: db.desc('lastActive') })
-          .filter(thread =>
-            db
-              .expr(userChannels)
-              .contains(thread('channelId'))
-              .and(db.not(thread.hasFields('deletedAt')))
-          )
-          .skip(after || 0)
-          .limit(first)
-          .run()
-    );
-};
+const getEverything = createQuery({
+  read: (userId: string, options: PaginationOptions) =>
+    getUserChannelIds(userId).then(userChannels => {
+      if (!userChannels || userChannels.length === 0) return [];
+
+      return db
+        .table('threads')
+        .orderBy({ index: db.desc('lastActive') })
+        .filter(thread =>
+          db
+            .expr(userChannels)
+            .contains(
+              thread('channelId').and(db.not(thread.hasFields('deletedAt')))
+            )
+        )
+        .skip(options.after || 0)
+        .limit(options.first);
+    }),
+  tags: (userId: string) => (threads: ?Array<DBThread>) => [
+    userId,
+    ...(threads || []).map(({ id }) => id),
+    ...(threads || []).map(({ channelId }) => channelId),
+    ...(threads || []).map(({ communityId }) => communityId),
+  ],
+});
 
 type UserThreadCount = {
   id: string,

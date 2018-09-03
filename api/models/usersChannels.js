@@ -1,8 +1,9 @@
 // @flow
 const { db } = require('./db');
-import type { DBUsersChannels, DBChannel } from 'shared/types';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import { createQuery } from 'shared/rethinkdb/create-query';
+import type { DBUsersChannels, DBChannel } from 'shared/types';
 
 /*
 ===========================================================
@@ -131,7 +132,7 @@ const removeMemberInChannel = (channelId: string, userId: string): Promise<?DBCh
             context: { channelId }
           })
         }
-        
+
         return db.table('channels').get(join.channelId).run();
       } else {
         return null;
@@ -340,7 +341,7 @@ const approvePendingUsersInChannel = (channelId: string): Promise<DBUsersChannel
 // as a member
 // prettier-ignore
 const approveBlockedUserInChannel = (channelId: string, userId: string): Promise<DBUsersChannels> => {
-  
+
   trackQueue.add({
     userId,
     event: events.USER_WAS_UNBLOCKED_IN_CHANNEL,
@@ -479,7 +480,7 @@ const toggleUserChannelNotifications = async (userId: string, channelId: string,
     .getAll(channelId, { index: 'channelId' })
     .filter({ userId })
     .run();
-  
+
   // permissions exist, this user is trying to toggle notifications for a channel where they
   // are already a member
   if (permissions && permissions.length > 0) {
@@ -673,6 +674,20 @@ const getUserUsersChannels = (userId: string) => {
     .run();
 };
 
+const getUserChannelIds = createQuery({
+  read: (userId: string) =>
+    db
+      .table('usersChannels')
+      .getAll(userId, { index: 'userId' })
+      .filter({ isMember: true })
+      .map(rec => rec('channelId')),
+  tags: (userId: string) => (usersChannels: ?Array<DBUsersChannels>) => [
+    userId,
+    ...(usersChannels || []).map(({ channelId }) => channelId),
+    ...(usersChannels || []).map(({ id }) => id),
+  ],
+});
+
 module.exports = {
   // modify and create
   createOwnerInChannel,
@@ -702,6 +717,7 @@ module.exports = {
   getUsersPermissionsInChannels,
   getPendingUsersInChannels,
   getUserUsersChannels,
+  getUserChannelIds,
   // constants
   DEFAULT_USER_CHANNEL_PERMISSIONS,
 };
