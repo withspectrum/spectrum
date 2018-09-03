@@ -16,25 +16,24 @@ import TagCache, { type CacheData } from './tag-cache';
 
 const queryCache = new TagCache({ keyPrefix: 'query-cache' });
 
+type Query<O> = {
+  toString: Function,
+  run: () => Promise<?O>,
+};
+
+type GetQuery<I, O> = (...args: I) => Promise<Query<O>> | Query<O>;
+
+type ProcessFn<O> = (data: ?O) => *;
+
 type CreateQueryInput<I, O> =
   | {|
-      read: (
-        ...args: I
-      ) => {
-        toString: Function,
-        run: () => Promise<?O>,
-      },
-      process?: (data: ?O) => *,
+      read: GetQuery<I, O>,
+      process?: ProcessFn<O> | Promise<ProcessFn<O>>,
       tags: (...args: I) => (data: *) => Array<?string>,
     |}
   | {|
-      write: (
-        ...args: I
-      ) => {
-        toString: Function,
-        run: () => Promise<?O>,
-      },
-      process?: (data: ?O) => *,
+      write: GetQuery<I, O>,
+      process?: ProcessFn<O> | Promise<ProcessFn<O>>,
       invalidateTags: (...args: I) => (data: *) => Array<?string>,
     |};
 
@@ -46,7 +45,7 @@ export const createQuery = <I: Array<any>, O: CacheData>(
 
   return async (...args: I) => {
     // If we have a cached response return that asap...
-    const query = getQuery(...args);
+    const query = await getQuery(...args);
     const queryString = query.toString();
     const cached = await queryCache.get(queryString);
     if (cached) return cached;
@@ -54,7 +53,12 @@ export const createQuery = <I: Array<any>, O: CacheData>(
     // ...otherwise run the query and calculate the tags
     const result = await query
       .run()
-      .then(res => (input.process ? input.process(res) : res));
+      .then(
+        async res =>
+          input.process
+            ? await Promise.resolve(input.process).then(p => p(res))
+            : res
+      );
     const tags = getTags(...args)(result).filter(Boolean);
     // Then either invalidate the tags or store the result in the cache tagged with the calculated tags
     if (input.invalidateTags) {
