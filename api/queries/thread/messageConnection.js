@@ -53,22 +53,22 @@ export default (
   if (cursor) debug(`cursor: ${cursor}`);
 
   let options = {
-    // Default first/last to 50 if their counterparts after/before are provided
+    // Default first/last to 25 if their counterparts after/before are provided
     // so users can query messageConnection(after: "cursor") or (before: "cursor")
     // without any more options
-    first: first ? first : after ? 50 : null,
-    last: last ? last : before ? 50 : null,
+    first: first ? first : after ? 25 : null,
+    last: last ? last : before ? 25 : null,
     // Set after/before to the cursor depending on which one was requested by the user
     after: after ? cursor : null,
     before: before ? cursor : null,
   };
 
   // If we didn't get any arguments at all (i.e messageConnection {})
-  // then just fetch the first 50 messages
+  // then just fetch the first 25 messages
   // $FlowIssue
   if (Object.keys(options).every(key => !options[key])) {
     options = {
-      first: 50,
+      first: 25,
     };
   }
 
