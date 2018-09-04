@@ -5,6 +5,9 @@ import { btoa } from 'b2a';
 import messageInfoFragment from '../../fragments/message/messageInfo';
 import type { MessageInfoType } from '../../fragments/message/messageInfo';
 import { getThreadMessageConnectionQuery } from '../../queries/thread/getThreadMessageConnection';
+import communityInfoFragment from '../../fragments/community/communityInfo';
+import communityMemberInfoFragment from '../../fragments/communityMember/communityMemberInfo';
+import threadInfoFragment from '../../fragments/thread/threadInfo';
 
 export type SendMessageType = {
   data: {
@@ -75,6 +78,31 @@ const sendMessageOptions = {
           },
         },
         update: (store, { data: { addMessage } }) => {
+          const parentMessage =
+            message.parentId &&
+            store.readFragment({
+              fragment: messageInfoFragment,
+              fragmentName: 'messageInfo',
+              id: `Message:${message.parentId}`,
+            });
+          const thread = store.readFragment({
+            fragment: threadInfoFragment,
+            fragmentName: 'threadInfo',
+            id: `Thread:${message.threadId}`,
+          });
+
+          addMessage = {
+            ...addMessage,
+            parent: parentMessage || addMessage.parent,
+            author: thread
+              ? {
+                  ...addMessage.author,
+                  ...thread.community.communityPermissions,
+                  __typename: 'ThreadParticipant',
+                }
+              : addMessage.author,
+          };
+
           const data = store.readQuery({
             query: getThreadMessageConnectionQuery,
             variables: {
