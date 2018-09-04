@@ -27,15 +27,15 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
   ]);
 
   const [channelCount, memberCount, onlineMemberCount] = await Promise.all([
-    cachedChannelCount ||
+    typeof cachedChannelCount === 'number' ||
       loaders.communityChannelCount
         .load(id)
         .then(res => (res && res.reduction) || 0),
-    cachedMemberCount ||
+    typeof cachedMemberCount === 'number' ||
       loaders.communityMemberCount
         .load(id)
         .then(res => (res && res.reduction) || 0),
-    cachedOnlineMemberCount ||
+    typeof cachedOnlineMemberCount === 'number' ||
       loaders.communityOnlineMemberCount
         .load(id)
         .then(res => (res && res.reduction) || 0),
@@ -43,14 +43,17 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
 
   // Cache the fields for an hour
   await Promise.all([
-    cache.set(`community:${id}:channelCount`, channelCount, 'ex', 3600),
-    cache.set(`community:${id}:memberCount`, memberCount, 'ex', 3600),
-    cache.set(
-      `community:${id}:onlineMemberCount`,
-      onlineMemberCount,
-      'ex',
-      3600
-    ),
+    typeof cachedChannelCount === 'number' ||
+      cache.set(`community:${id}:channelCount`, channelCount, 'ex', 3600),
+    typeof cachedMemberCount === 'number' ||
+      cache.set(`community:${id}:memberCount`, memberCount, 'ex', 3600),
+    typeof cachedOnlineMemberCount === 'number' ||
+      cache.set(
+        `community:${id}:onlineMemberCount`,
+        onlineMemberCount,
+        'ex',
+        3600
+      ),
   ]);
 
   return {
