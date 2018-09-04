@@ -88,7 +88,7 @@
     "raven-js": "^3.26.4",
     "react": "^15.4.1",
     "react-app-rewire-styled-components": "^3.0.2",
-    "react-app-rewired": "^1.5.2",
+    "react-app-rewired": "^1.6.2",
     "react-dom": "^15.4.1",
     "react-helmet": "5.x",
     "react-infinite-scroller-with-scroll-element": "^1.0.4",
