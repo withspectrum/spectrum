@@ -90,10 +90,6 @@ Loadable.preloadReady()
 OfflinePluginRuntime.install({
   // Apply new updates immediately
   onUpdateReady: () => OfflinePluginRuntime.applyUpdate(),
-  // Set a global variable when an update was installed so that we can reload the page when users
-  // go to a new page, leading to no interruption in the workflow.
-  // Idea from https://zach.codes/handling-client-side-app-updates-with-service-workers/
-  onUpdated: () => (window.appUpdateAvailable = true),
 });
 
 if ('serviceWorker' in navigator && 'PushManager' in window) {
