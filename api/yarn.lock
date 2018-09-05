@@ -2,12 +2,6 @@
 # yarn lockfile v1
 
 
-"@babel/helper-annotate-as-pure@^7.0.0-beta.37":
-  version "7.0.0-beta.54"
-  resolved "https://registry.yarnpkg.com/@babel/helper-annotate-as-pure/-/helper-annotate-as-pure-7.0.0-beta.54.tgz#1626126a3f9fc4ed280ac942372c7d39653d7121"
-  dependencies:
-    "@babel/types" "7.0.0-beta.54"
-
 "@babel/runtime@^7.0.0-beta.38", "@babel/runtime@^7.0.0-beta.40":
   version "7.0.0-beta.41"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0-beta.41.tgz#776ce13391b8154ccfdea71018a47b63e4d97e74"
@@ -21,14 +15,6 @@
   dependencies:
     core-js "^2.5.7"
     regenerator-runtime "^0.12.0"
-
-"@babel/types@7.0.0-beta.54":
-  version "7.0.0-beta.54"
-  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.0.0-beta.54.tgz#025ad68492fed542c13f14c579a44c848e531063"
-  dependencies:
-    esutils "^2.0.2"
-    lodash "^4.17.5"
-    to-fast-properties "^2.0.0"
 
 "@octokit/rest@^15.2.6":
   version "15.9.4"
@@ -859,13 +845,12 @@ babel-plugin-styled-components@^1.1.4:
     babel-types "^6.26.0"
     stylis "^3.0.0"
 
-babel-plugin-styled-components@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.5.1.tgz#31dbeb696d1354d1585e60d66c7905f5e474afcd"
+babel-plugin-styled-components@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.6.1.tgz#ab8d486813cbef956cfc71e5819a1a2c3282e144"
   dependencies:
-    "@babel/helper-annotate-as-pure" "^7.0.0-beta.37"
-    babel-types "^6.26.0"
-    stylis "^3.0.0"
+    lodash "^4.17.10"
+    semver "^5.5.1"
 
 babel-plugin-syntax-async-functions@^6.8.0:
   version "6.13.0"
@@ -6105,9 +6090,9 @@ range-parser@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
 
-raven-js@^3.26.4:
-  version "3.26.4"
-  resolved "https://registry.yarnpkg.com/raven-js/-/raven-js-3.26.4.tgz#32aae3a63a9314467a453c94c89a364ea43707be"
+raven-js@^3.27.0:
+  version "3.27.0"
+  resolved "https://registry.yarnpkg.com/raven-js/-/raven-js-3.27.0.tgz#9f47c03e17933ce756e189f3669d49c441c1ba6e"
 
 raven@^2.6.3:
   version "2.6.3"
@@ -6160,9 +6145,9 @@ react-app-rewired@^1.2.0:
     cross-spawn "^5.1.0"
     dotenv "^4.0.0"
 
-react-app-rewired@^1.5.2:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/react-app-rewired/-/react-app-rewired-1.5.2.tgz#0f5cdbc92f47f166bb0bcadf8a5d00999b90f68f"
+react-app-rewired@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/react-app-rewired/-/react-app-rewired-1.6.2.tgz#32ce90abc2c4e2b86c71e4e270bd36663b3b1c9a"
   dependencies:
     cross-spawn "^5.1.0"
     dotenv "^4.0.0"
@@ -6727,6 +6712,10 @@ semver-diff@^2.0.0:
 semver@^5.5.0:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.0.tgz#dc4bbc7a6ca9d916dee5d43516f0092b58f7b8ab"
+
+semver@^5.5.1:
+  version "5.5.1"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.1.tgz#7dfdd8814bdb7cabc7be0fb1d734cfb66c940477"
 
 send@0.16.2:
   version "0.16.2"
@@ -7385,10 +7374,6 @@ to-arraybuffer@^1.0.0:
 to-fast-properties@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-1.0.3.tgz#b83571fa4d8c25b82e231b06e3a3055de4ca1a47"
-
-to-fast-properties@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-2.0.0.tgz#dc5e698cbd079265bc73e0377681a4e4e83f616e"
 
 to-object-path@^0.3.0:
   version "0.3.0"
