@@ -9,7 +9,7 @@ const FirstRequest = ({ onSubscribe, onDismiss, loading }) => (
       <span role="img" aria-label="mailbox emoji">
         📬
       </span>{' '}
-      We need your permission to enable push notifications:
+      Enable push notifications
     </p>
     <FlexRow>
       <Button
