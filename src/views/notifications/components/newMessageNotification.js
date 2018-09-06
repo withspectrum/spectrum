@@ -33,7 +33,7 @@ export const NewMessageNotification = ({
   notification,
   currentUser,
 }: Props) => {
-  const actors = parseActors(notification.actors, currentUser, false);
+  const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context, currentUser);
