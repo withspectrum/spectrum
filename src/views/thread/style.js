@@ -304,10 +304,7 @@ export const AuthorUsername = styled.span`
   align-items: center;
   font-weight: 400;
   margin-right: 4px;
-
-  @media (max-width: 768px) {
-    font-size: 12px;
-  }
+  align-self: flex-end;
 `;
 
 export const ReputationRow = styled.div``;
