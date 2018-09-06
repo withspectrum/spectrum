@@ -488,6 +488,7 @@ export const ThreadSubtitle = styled(CommunityHeaderSubtitle)`
   margin-top: 8px;
   display: flex;
   line-height: 1.5;
+  flex-wrap: wrap;
 
   a:hover {
     color: ${theme.text.default};
@@ -621,6 +622,7 @@ export const FollowButton = styled(Button)`
   border: 1px solid ${theme.bg.border};
   color: ${theme.text.alt};
   padding: 4px;
+  margin-left: 24px;
 
   &:hover {
     background: ${theme.bg.default};
