@@ -13,9 +13,12 @@
  */
 
 const debug = require('debug')('shared:rethinkdb:db-query-cache');
-import TagCache, { type CacheData } from './tag-cache';
+import TagCache from 'redis-tag-cache';
 
-const queryCache = new TagCache({ keyPrefix: 'query-cache' });
+const queryCache = new TagCache({
+  defaultTimeout: 86400,
+  ioredis: { keyPrefix: 'query-cache' },
+});
 
 type Query<O> = {
   toString: Function,
@@ -51,7 +54,7 @@ if (debug.enabled) {
   }, 30000);
 }
 
-export const createQuery = <I: Array<any>, O: CacheData>(
+export const createQuery = <I: Array<any>, O: any>(
   input: CreateQueryInput<I, O>
 ) => {
   const getQuery = input.read ? input.read : input.write;
@@ -80,7 +83,7 @@ export const createQuery = <I: Array<any>, O: CacheData>(
     const tags = getTags(...args)(result).filter(Boolean);
     // Then either invalidate the tags or store the result in the cache tagged with the calculated tags
     if (input.invalidateTags) {
-      await queryCache.invalidate(tags);
+      await queryCache.invalidate(...tags);
     } else {
       await queryCache.set(queryString, result, tags);
     }
