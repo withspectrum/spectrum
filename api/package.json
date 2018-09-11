@@ -103,6 +103,7 @@
     "react-transition-group": "^2.4.0",
     "react-trend": "^1.2.4",
     "recompose": "^0.23.1",
+    "redis-tag-cache": "^1.2.1",
     "redraft": "0.8.0",
     "redux": "^3.6.0",
     "redux-thunk": "^2.3.0",
