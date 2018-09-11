@@ -674,19 +674,28 @@ const getUserUsersChannels = (userId: string) => {
     .run();
 };
 
-const getUserChannelIds = createQuery({
-  read: (userId: string) =>
-    db
-      .table('usersChannels')
-      .getAll(userId, { index: 'userId' })
-      .filter({ isMember: true })
-      .map(rec => rec('channelId')),
-  tags: (userId: string) => (usersChannels: ?Array<DBUsersChannels>) => [
-    userId,
-    ...(usersChannels || []).map(({ channelId }) => channelId),
-    ...(usersChannels || []).map(({ id }) => id),
-  ],
-});
+const getUserChannelIds = (userId: string) => {
+  return db
+    .table('usersChannels')
+    .getAll(userId, { index: 'userId' })
+    .filter({ isMember: true })
+    .map(rec => rec('channelId'))
+    .run();
+};
+
+// const getUserChannelIds = createQuery({
+//   read: (userId: string) =>
+//     db
+//       .table('usersChannels')
+//       .getAll(userId, { index: 'userId' })
+//       .filter({ isMember: true })
+//       .map(rec => rec('channelId')),
+//   tags: (userId: string) => (usersChannels: ?Array<DBUsersChannels>) => [
+//     userId,
+//     ...(usersChannels || []).map(({ channelId }) => channelId),
+//     ...(usersChannels || []).map(({ id }) => id),
+//   ],
+// });
 
 module.exports = {
   // modify and create

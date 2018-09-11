@@ -166,31 +166,59 @@ const createOrFindUser = (user: Object, providerMethod: string): Promise<?DBUser
     });
 };
 
-const getEverything = createQuery({
-  read: (userId: string, options: PaginationOptions) =>
-    getUserChannelIds(userId).then(userChannels => {
-      if (!userChannels || userChannels.length === 0) return [];
+// prettier-ignore
+const getEverything = (userId: string, options: PaginationOptions): Promise<Array<any>> => {
+  const { first, after } = options
+  return db
+    .table('usersChannels')
+    .getAll(userId, { index: 'userId' })
+    .filter(userChannel => userChannel('isMember').eq(true))
+    .map(userChannel => userChannel('channelId'))
+    .run()
+    .then(
+      userChannels =>
+        userChannels &&
+        userChannels.length > 0 &&
+        db
+          .table('threads')
+          .orderBy({ index: db.desc('lastActive') })
+          .filter(thread =>
+            db
+              .expr(userChannels)
+              .contains(thread('channelId'))
+              .and(db.not(thread.hasFields('deletedAt')))
+          )
+          .skip(after || 0)
+          .limit(first)
+          .run()
+    );
+};
 
-      return db
-        .table('threads')
-        .orderBy({ index: db.desc('lastActive') })
-        .filter(thread =>
-          db
-            .expr(userChannels)
-            .contains(
-              thread('channelId').and(db.not(thread.hasFields('deletedAt')))
-            )
-        )
-        .skip(options.after || 0)
-        .limit(options.first);
-    }),
-  tags: (userId: string) => (threads: ?Array<DBThread>) => [
-    userId,
-    ...(threads || []).map(({ id }) => id),
-    ...(threads || []).map(({ channelId }) => channelId),
-    ...(threads || []).map(({ communityId }) => communityId),
-  ],
-});
+// const getEverything = createQuery({
+//   read: (userId: string, options: PaginationOptions) =>
+//     getUserChannelIds(userId).then(userChannels => {
+//       if (!userChannels || userChannels.length === 0) return [];
+
+//       return db
+//         .table('threads')
+//         .orderBy({ index: db.desc('lastActive') })
+//         .filter(thread =>
+//           db
+//             .expr(userChannels)
+//             .contains(
+//               thread('channelId').and(db.not(thread.hasFields('deletedAt')))
+//             )
+//         )
+//         .skip(options.after || 0)
+//         .limit(options.first);
+//     }),
+//   tags: (userId: string) => (threads: ?Array<DBThread>) => [
+//     userId,
+//     ...(threads || []).map(({ id }) => id),
+//     ...(threads || []).map(({ channelId }) => channelId),
+//     ...(threads || []).map(({ communityId }) => communityId),
+//   ],
+// });
 
 type UserThreadCount = {
   id: string,
@@ -449,24 +477,31 @@ const editUser = (args: EditUserInput, userId: string): Promise<DBUser> => {
     });
 };
 
-const setUserOnline = (id: string, isOnline: boolean): DBUser => {
-  let data = {};
-
-  data.isOnline = isOnline;
-  data.lastSeen = new Date();
-  return db
-    .table('users')
-    .get(id)
-    .update(data, { returnChanges: 'always' })
-    .run()
-    .then(result => {
-      if (result.changes[0].new_val) {
-        const user = result.changes[0].new_val;
-        return user;
-      }
-      return result.changes[0].old_val;
-    });
-};
+const setUserOnline = createQuery({
+  write: (id: string, isOnline: boolean) => {
+    return db
+      .table('users')
+      .get(id)
+      .update(
+        {
+          isOnline,
+          lastSeen: new Date(),
+        },
+        { returnChanges: 'always' }
+      );
+  },
+  process: (
+    result: ?{ changes: Array<{ new_val: ?DBUser, old_val: ?DBUser }> }
+  ) => {
+    if (!result || !result[0]) return null;
+    if (result.changes[0].new_val) {
+      const user = result.changes[0].new_val;
+      return user;
+    }
+    return result.changes[0].old_val;
+  },
+  invalidateTags: (id: string) => (user: ?DBUser) => [id],
+});
 
 // prettier-ignore
 const setUserPendingEmail = (userId: string, pendingEmail: string): Promise<Object> => {
