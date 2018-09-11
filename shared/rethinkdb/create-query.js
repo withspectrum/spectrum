@@ -76,6 +76,11 @@ export const createQuery = <I: Array<any>, O: any>(
       return cached;
     }
 
+    if (typeof query.run !== 'function')
+      throw new Error(
+        'Do not call .run() on the query passed to createQuery! Pass the query without .run()'
+      );
+
     // ...otherwise run the query and calculate the tags
     const result = await query
       .run()
