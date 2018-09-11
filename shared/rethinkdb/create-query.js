@@ -17,7 +17,12 @@ import TagCache from 'redis-tag-cache';
 
 const queryCache = new TagCache({
   defaultTimeout: 86400,
-  ioredis: { keyPrefix: 'query-cache' },
+  redis: {
+    keyPrefix: 'query-cache',
+    port: process.env.REDIS_CACHE_PORT,
+    host: process.env.REDIS_CACHE_URL,
+    password: process.env.REDIS_CACHE_PASSWORD,
+  },
 });
 
 type Query<O> = {
