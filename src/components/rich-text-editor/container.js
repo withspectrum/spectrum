@@ -1,5 +1,5 @@
 // @flow
-import React, { createRef, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import DraftEditor from '../draft-js-plugins-editor';
 import { composeDecorators } from 'draft-js-plugins-editor';
 import createImagePlugin from 'draft-js-image-plugin';
@@ -74,14 +74,15 @@ type State = {
 
 class Editor extends React.Component<Props, State> {
   editor: any;
-  editorWrapper: React$Ref;
+  editorWrapper: { current: ?Element };
 
   constructor(props: Props) {
     super(props);
 
     const pluginState = this.getPluginState(props);
 
-    this.editorWrapper = createRef();
+    // $FlowFixMe
+    this.editorWrapper = React.createRef();
 
     this.state = {
       ...pluginState,
