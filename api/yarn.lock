@@ -845,9 +845,9 @@ babel-plugin-styled-components@^1.1.4:
     babel-types "^6.26.0"
     stylis "^3.0.0"
 
-babel-plugin-styled-components@^1.6.4:
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.6.4.tgz#24677e5b37a85b04aed855a5f81f1c7bfec77784"
+babel-plugin-styled-components@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.7.0.tgz#2bc9c5ed58fc3ab239299826274389a43d6ad9c9"
   dependencies:
     lodash "^4.17.10"
 
