@@ -7102,9 +7102,9 @@ string-replace-to-array@^1.0.3:
     lodash.flatten "^4.2.0"
     lodash.isstring "^4.0.1"
 
-string-similarity@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/string-similarity/-/string-similarity-1.2.1.tgz#a1e01012e8221587409816c133c28037ea6be2e6"
+string-similarity@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/string-similarity/-/string-similarity-1.2.2.tgz#99b2c20a3c9bbb3903964eae1d89856db3d8db9b"
   dependencies:
     lodash.every "^4.6.0"
     lodash.flattendeep "^4.4.0"
