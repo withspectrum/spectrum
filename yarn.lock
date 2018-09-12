@@ -4885,7 +4885,7 @@ from@~0:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/from/-/from-0.1.7.tgz#83c60afc58b9c56997007ed1a768b3ab303a44fe"
 
-fs-extra@3.0.1:
+fs-extra@3.0.1, fs-extra@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-3.0.1.tgz#3794f378c58b342ea7dbbb23095109c4b3b62291"
   dependencies:
@@ -9122,9 +9122,9 @@ react-loadable@^5.4.0:
   dependencies:
     prop-types "^15.5.0"
 
-react-measure@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/react-measure/-/react-measure-2.0.2.tgz#072a9a5fafc01dfbadc1fa5fb09fc351037f636c"
+react-measure@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/react-measure/-/react-measure-2.1.2.tgz#2fa690cc657d1e7a1271902b7a5937e0055338d5"
   dependencies:
     get-node-dimensions "^1.2.0"
     prop-types "^15.5.10"
@@ -9249,14 +9249,15 @@ react-stripe-elements@^1.4.1:
   dependencies:
     prop-types "^15.5.10"
 
-react-text-selection-popover@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/react-text-selection-popover/-/react-text-selection-popover-0.3.0.tgz#364e83324788c68a34893b6cf9b3f0832350d5c5"
+react-text-selection-popover@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-text-selection-popover/-/react-text-selection-popover-1.1.0.tgz#45563f1d6a118affe60493884e9e2699310e046c"
   dependencies:
     lodash.debounce "^4.0.8"
     react-event-listener "^0.6.1"
-    react-measure "^2.0.2"
+    react-measure "^2.1.2"
     react-window-dimensions "^1.0.2"
+    rollup-plugin-copy "^0.2.3"
 
 react-textarea-autosize@^6.1.0:
   version "6.1.0"
@@ -9825,6 +9826,13 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
+rollup-plugin-copy@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-copy/-/rollup-plugin-copy-0.2.3.tgz#dac1ab81d1f220baeb98e5c4c0108252e1edbb98"
+  dependencies:
+    colors "^1.1.2"
+    fs-extra "^3.0.0"
+
 rsvp@^3.3.3:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-3.6.2.tgz#2e96491599a96cde1b515d5674a8f7a91452926a"
@@ -10294,15 +10302,15 @@ spdy@^3.4.1:
     select-hose "^2.0.0"
     spdy-transport "^2.0.18"
 
-spectrum-draft-js-inline-toolbar@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/spectrum-draft-js-inline-toolbar/-/spectrum-draft-js-inline-toolbar-0.1.4.tgz#3d4cce190c147b1fc48703e4882bd4d809c02dfa"
+spectrum-draft-js-inline-toolbar@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/spectrum-draft-js-inline-toolbar/-/spectrum-draft-js-inline-toolbar-0.2.0.tgz#9105e3544dcc8a0fbed5607801fe4a8ddb26284e"
   dependencies:
     draft-js "^0.10.5"
     draft-js-plugins-utils "^2.0.3"
     prop-types "^15.6.2"
     react-onclickoutside "^6.7.1"
-    react-text-selection-popover "^0.3.0"
+    react-text-selection-popover "^1.1.0"
 
 split-lines@^1.1.0:
   version "1.1.0"

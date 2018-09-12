@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment } from 'react';
+import React, { createRef, Fragment } from 'react';
 import DraftEditor from '../draft-js-plugins-editor';
 import { composeDecorators } from 'draft-js-plugins-editor';
 import createImagePlugin from 'draft-js-image-plugin';
@@ -74,11 +74,14 @@ type State = {
 
 class Editor extends React.Component<Props, State> {
   editor: any;
+  editorWrapper: React$Ref;
 
   constructor(props: Props) {
     super(props);
 
     const pluginState = this.getPluginState(props);
+
+    this.editorWrapper = createRef();
 
     this.state = {
       ...pluginState,
@@ -219,6 +222,7 @@ class Editor extends React.Component<Props, State> {
     if (version === 2) {
       return (
         <ComposerBase
+          innerRef={this.editorWrapper}
           data-cy="rich-text-editor"
           className={`markdown ${className || ''}`}
           focus={focus}
@@ -231,6 +235,9 @@ class Editor extends React.Component<Props, State> {
             handleDroppedFiles={this.handleDroppedFiles}
             editorRef={editor => {
               this.editor = editor;
+              this.editorWrapper = {
+                current: editor != null ? editor.editor.editorContainer : null,
+              };
               if (editorRef) editorRef(editor);
             }}
             readOnly={readOnly}
@@ -302,12 +309,7 @@ class Editor extends React.Component<Props, State> {
             )}
           <InlineToolbar
             editorState={state}
-            selectionRef={{
-              current:
-                this.editor != null && this.editor.editor != null
-                  ? this.editor.editor.editor
-                  : null,
-            }}
+            selectionRef={this.editorWrapper}
             onChange={onChange}
           />
         </ComposerBase>
@@ -327,6 +329,10 @@ class Editor extends React.Component<Props, State> {
               handleDroppedFiles={this.handleDroppedFiles}
               editorRef={editor => {
                 this.editor = editor;
+                this.editorWrapper = {
+                  current:
+                    editor != null ? editor.editor.editorContainer : null,
+                };
                 if (editorRef) editorRef(editor);
               }}
               readOnly={readOnly}
@@ -367,12 +373,7 @@ class Editor extends React.Component<Props, State> {
               </MediaRow>
               <InlineToolbar
                 editorState={state}
-                selectionRef={{
-                  current:
-                    this.editor != null && this.editor.editor != null
-                      ? this.editor.editor.editor
-                      : null,
-                }}
+                selectionRef={this.editorWrapper}
                 onChange={onChange}
               />
             </Fragment>
