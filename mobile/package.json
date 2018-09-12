@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "@expo/react-native-action-sheet": "^1.1.2",
-    "apollo-cache-inmemory": "^1.2.9",
+    "apollo-cache-inmemory": "^1.2.10",
     "apollo-client": "^2.4.1",
     "apollo-link": "^1.2.2",
     "apollo-link-error": "^1.1.0",
