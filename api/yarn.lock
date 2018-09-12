@@ -2,6 +2,12 @@
 # yarn lockfile v1
 
 
+"@babel/helper-annotate-as-pure@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/helper-annotate-as-pure/-/helper-annotate-as-pure-7.0.0.tgz#323d39dd0b50e10c7c06ca7d7638e6864d8c5c32"
+  dependencies:
+    "@babel/types" "^7.0.0"
+
 "@babel/runtime@^7.0.0-beta.38", "@babel/runtime@^7.0.0-beta.40":
   version "7.0.0-beta.41"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0-beta.41.tgz#776ce13391b8154ccfdea71018a47b63e4d97e74"
@@ -15,6 +21,14 @@
   dependencies:
     core-js "^2.5.7"
     regenerator-runtime "^0.12.0"
+
+"@babel/types@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.0.0.tgz#6e191793d3c854d19c6749989e3bc55f0e962118"
+  dependencies:
+    esutils "^2.0.2"
+    lodash "^4.17.10"
+    to-fast-properties "^2.0.0"
 
 "@octokit/rest@^15.2.6":
   version "15.9.4"
@@ -845,10 +859,11 @@ babel-plugin-styled-components@^1.1.4:
     babel-types "^6.26.0"
     stylis "^3.0.0"
 
-babel-plugin-styled-components@^1.6.4:
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.6.4.tgz#24677e5b37a85b04aed855a5f81f1c7bfec77784"
+babel-plugin-styled-components@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.7.1.tgz#c291d2a48ec77bb0828275b87696b6594a2f80f9"
   dependencies:
+    "@babel/helper-annotate-as-pure" "^7.0.0"
     lodash "^4.17.10"
 
 babel-plugin-syntax-async-functions@^6.8.0:
@@ -7369,6 +7384,10 @@ to-arraybuffer@^1.0.0:
 to-fast-properties@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-1.0.3.tgz#b83571fa4d8c25b82e231b06e3a3055de4ca1a47"
+
+to-fast-properties@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-2.0.0.tgz#dc5e698cbd079265bc73e0377681a4e4e83f616e"
 
 to-object-path@^0.3.0:
   version "0.3.0"
