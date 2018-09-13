@@ -2,6 +2,12 @@
 # yarn lockfile v1
 
 
+"@babel/helper-annotate-as-pure@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/helper-annotate-as-pure/-/helper-annotate-as-pure-7.0.0.tgz#323d39dd0b50e10c7c06ca7d7638e6864d8c5c32"
+  dependencies:
+    "@babel/types" "^7.0.0"
+
 "@babel/runtime@^7.0.0-beta.38", "@babel/runtime@^7.0.0-beta.40":
   version "7.0.0-beta.41"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0-beta.41.tgz#776ce13391b8154ccfdea71018a47b63e4d97e74"
@@ -15,6 +21,14 @@
   dependencies:
     core-js "^2.5.7"
     regenerator-runtime "^0.12.0"
+
+"@babel/types@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.0.0.tgz#6e191793d3c854d19c6749989e3bc55f0e962118"
+  dependencies:
+    esutils "^2.0.2"
+    lodash "^4.17.10"
+    to-fast-properties "^2.0.0"
 
 "@octokit/rest@^15.2.6":
   version "15.9.4"
@@ -845,12 +859,12 @@ babel-plugin-styled-components@^1.1.4:
     babel-types "^6.26.0"
     stylis "^3.0.0"
 
-babel-plugin-styled-components@^1.6.1:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.6.1.tgz#ab8d486813cbef956cfc71e5819a1a2c3282e144"
+babel-plugin-styled-components@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.7.1.tgz#c291d2a48ec77bb0828275b87696b6594a2f80f9"
   dependencies:
+    "@babel/helper-annotate-as-pure" "^7.0.0"
     lodash "^4.17.10"
-    semver "^5.5.1"
 
 babel-plugin-syntax-async-functions@^6.8.0:
   version "6.13.0"
@@ -6094,15 +6108,15 @@ raven-js@^3.27.0:
   version "3.27.0"
   resolved "https://registry.yarnpkg.com/raven-js/-/raven-js-3.27.0.tgz#9f47c03e17933ce756e189f3669d49c441c1ba6e"
 
-raven@^2.6.3:
-  version "2.6.3"
-  resolved "https://registry.yarnpkg.com/raven/-/raven-2.6.3.tgz#207475a12809277ef54eaceafe2597ff65262ab4"
+raven@^2.6.4:
+  version "2.6.4"
+  resolved "https://registry.yarnpkg.com/raven/-/raven-2.6.4.tgz#458d4a380c8fbb59e0150c655625aaf60c167ea3"
   dependencies:
     cookie "0.3.1"
     md5 "^2.2.1"
     stack-trace "0.0.10"
     timed-out "4.0.1"
-    uuid "3.0.0"
+    uuid "3.3.2"
 
 raw-body@2.3.2:
   version "2.3.2"
@@ -6713,10 +6727,6 @@ semver@^5.5.0:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.0.tgz#dc4bbc7a6ca9d916dee5d43516f0092b58f7b8ab"
 
-semver@^5.5.1:
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.1.tgz#7dfdd8814bdb7cabc7be0fb1d734cfb66c940477"
-
 send@0.16.2:
   version "0.16.2"
   resolved "https://registry.yarnpkg.com/send/-/send-0.16.2.tgz#6ecca1e0f8c156d141597559848df64730a6bbc1"
@@ -7092,9 +7102,9 @@ string-replace-to-array@^1.0.3:
     lodash.flatten "^4.2.0"
     lodash.isstring "^4.0.1"
 
-string-similarity@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/string-similarity/-/string-similarity-1.2.1.tgz#a1e01012e8221587409816c133c28037ea6be2e6"
+string-similarity@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/string-similarity/-/string-similarity-1.2.2.tgz#99b2c20a3c9bbb3903964eae1d89856db3d8db9b"
   dependencies:
     lodash.every "^4.6.0"
     lodash.flattendeep "^4.4.0"
@@ -7374,6 +7384,10 @@ to-arraybuffer@^1.0.0:
 to-fast-properties@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-1.0.3.tgz#b83571fa4d8c25b82e231b06e3a3055de4ca1a47"
+
+to-fast-properties@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-2.0.0.tgz#dc5e698cbd079265bc73e0377681a4e4e83f616e"
 
 to-object-path@^0.3.0:
   version "0.3.0"
@@ -7684,13 +7698,13 @@ utils-merge@1.0.1, utils-merge@1.x.x:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
 
-uuid@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.0.tgz#6728fc0459c450d796a99c31837569bdf672d728"
-
 uuid@3.1.0, uuid@^3.0.0, uuid@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
+
+uuid@3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
 
 validate-npm-package-license@^3.0.1:
   version "3.0.1"

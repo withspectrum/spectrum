@@ -13,10 +13,11 @@ const UsernameWrapper = styled.span`
     props.me ? props.theme.special.default : props.theme.space.default};
   background: ${props =>
     props.me ? props.theme.special.wash : props.theme.space.wash};
-  padding: 2px 4px;
+  padding: 0px 4px 1px;
   border-radius: 4px;
   position: relative;
   display: inline-block;
+  line-height: 1.4;
 
   &:hover {
     text-decoration: underline;

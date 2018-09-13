@@ -9,7 +9,7 @@ export const Span = styled.span`
   background-color: ${theme.text.alt};
   text-transform: uppercase;
   padding: 3px 4px;
-  margin-left: 4px;
+  margin-right: 4px;
   font-size: 9px;
   font-weight: 800;
   border-radius: 4px;

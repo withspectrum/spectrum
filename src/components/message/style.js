@@ -16,15 +16,11 @@ export const Byline = styled.span`
   max-width: 100%;
   position: relative;
   flex-wrap: wrap;
+  align-items: center;
 
   a {
     display: flex;
     flex-wrap: wrap;
-  }
-
-  @media (max-width: 400px) {
-    flex-direction: column;
-    align-items: flex-start;
   }
 `;
 
@@ -405,6 +401,7 @@ export const QuoteWrapper = styled.div`
 
 export const BadgesContainer = styled.div`
   display: flex;
+  margin-left: 4px;
 
   @media (max-width: 400px) {
     margin-top: 4px;
