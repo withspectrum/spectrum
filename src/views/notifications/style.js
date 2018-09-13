@@ -1,6 +1,5 @@
 // @flow
 import theme from 'shared/theme';
-// $FlowFixMe
 import styled from 'styled-components';
 import {
   FlexRow,
@@ -20,17 +19,27 @@ export const HzRule = styled(HorizontalRule)`
   margin: 0;
 `;
 
-export const NotificationCard = styled(Card)`
+export const NotificationCard = styled.div`
   padding: 16px;
   padding-bottom: 24px;
   overflow: hidden;
   transition: ${Transition.hover.off};
   border-radius: 8px;
+  background: ${props => props.theme.bg.default};
+  margin-top: 8px;
   box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
+  position: relative;
 
   &:hover {
     transition: none;
     box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.default, 0.1)};
+  }
+
+  @media (max-width: 768px) {
+    border-radius: 0;
+    border-bottom: 1px solid ${props => props.theme.bg.border};
+    box-shadow: none;
+    margin-top: 0;
   }
 `;
 
@@ -265,17 +274,26 @@ export const AttachmentsWash = styled(FlexCol)`
   flex: none;
 `;
 
-export const RequestCard = styled(Card)`
+export const RequestCard = styled.div`
+  display: flex;
+  position: relative;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   padding: 16px 16px 16px 24px;
   border-radius: 8px;
   box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
+  background: ${props => props.theme.bg.default};
 
   > p {
     font-weight: 700;
     font-size: 16px;
+  }
+
+  @media (max-width: 768px) {
+    border-radius: 0;
+    border-bottom: 1px solid ${props => props.theme.bg.border};
+    box-shadow: none;
   }
 `;
 

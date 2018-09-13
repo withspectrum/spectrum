@@ -1,6 +1,4 @@
 // @flow
-// This needs to be imported before everything else
-import './helpers/consolidate-streamed-styles';
 import 'css.escape';
 import React from 'react';
 import ReactDOM from 'react-dom';
