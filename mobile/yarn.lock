@@ -6174,9 +6174,9 @@ react-is@^16.4.1:
   version "16.4.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.4.1.tgz#d624c4650d2c65dbd52c72622bbf389435d9776e"
 
-react-is@^16.5.0:
-  version "16.5.0"
-  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.5.0.tgz#2ec7c192709698591efe13722fab3ef56144ba55"
+react-is@^16.5.1:
+  version "16.5.1"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.5.1.tgz#c6e8734fd548a22e1cef4fd0833afbeb433b85ee"
 
 react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
@@ -6434,14 +6434,14 @@ react-test-renderer@^16.3.1:
     prop-types "^15.6.0"
     react-is "^16.4.1"
 
-react-test-renderer@^16.5.0:
-  version "16.5.0"
-  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.5.0.tgz#1aeca0edc4f27f63265dcaed80ba82e11e762f56"
+react-test-renderer@^16.5.1:
+  version "16.5.1"
+  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.5.1.tgz#17f020fb0cf884cadebb5240d9d9c23452f18299"
   dependencies:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    react-is "^16.5.0"
-    schedule "^0.3.0"
+    react-is "^16.5.1"
+    schedule "^0.4.0"
 
 react-timer-mixin@^0.13.2:
   version "0.13.3"
@@ -6874,9 +6874,9 @@ sax@~1.1.1:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.1.6.tgz#5d616be8a5e607d54e114afae55b7eaf2fcc3240"
 
-schedule@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/schedule/-/schedule-0.3.0.tgz#1be2ab2fc2e768536269ce7326efb478d6c045e8"
+schedule@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/schedule/-/schedule-0.4.0.tgz#fa20cfd0bfbf91c47d02272fd7096780d3170bbb"
   dependencies:
     object-assign "^4.1.1"
 
