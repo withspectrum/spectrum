@@ -949,6 +949,13 @@ apollo-link@^1.0.0, apollo-link@^1.0.7, apollo-link@^1.2.2:
     apollo-utilities "^1.0.0"
     zen-observable-ts "^0.8.9"
 
+apollo-link@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.2.3.tgz#9bd8d5fe1d88d31dc91dae9ecc22474d451fb70d"
+  dependencies:
+    apollo-utilities "^1.0.0"
+    zen-observable-ts "^0.8.10"
+
 apollo-utilities@1.0.20, apollo-utilities@^1.0.20:
   version "1.0.20"
   resolved "https://registry.yarnpkg.com/apollo-utilities/-/apollo-utilities-1.0.20.tgz#b14318686cb67838279fb5f009cca0ec97a4d140"
@@ -8236,6 +8243,12 @@ yargs@~3.10.0:
 yesno@^0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/yesno/-/yesno-0.0.1.tgz#ffbc04ff3d6f99dad24f7463134e9b92ae41bef6"
+
+zen-observable-ts@^0.8.10:
+  version "0.8.10"
+  resolved "https://registry.yarnpkg.com/zen-observable-ts/-/zen-observable-ts-0.8.10.tgz#18e2ce1c89fe026e9621fd83cc05168228fce829"
+  dependencies:
+    zen-observable "^0.8.0"
 
 zen-observable-ts@^0.8.9:
   version "0.8.9"
