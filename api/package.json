@@ -56,7 +56,7 @@
     "host-validation": "^1.1.0",
     "hpp": "^0.2.2",
     "imgix-core-js": "^1.2.0",
-    "immutability-helper": "^2.8.0",
+    "immutability-helper": "^2.8.1",
     "isomorphic-fetch": "^2.2.1",
     "iterall": "^1.2.2",
     "jest": "^21.2.1",
