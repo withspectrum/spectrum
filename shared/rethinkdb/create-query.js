@@ -1,14 +1,19 @@
 /* @flow
  *
- * createQuery
  * Create a RethinkDB query and cache it's result in a TagCache
  *
  * Usage:
  *
- * const getThreadById = createQuery({
- *   // NOTE: No .run at the end of the query!!!
- *   read: (threadId: string) => db.table('threads').get(threadId),
+ * const getThreadById = createReadQuery({
+ *   // NOTE: No .run() at the end of the query!!!
+ *   query: (threadId: string) => db.table('threads').get(threadId),
  *   tags: (threadId: string) => (thread: ?DBThread) => thread ? [thread.id, thread.communityId, thread.channelId] : [],
+ * });
+ *
+ * const updateUser = createWriteQuery({
+ *  // NOTE: .run() at the end of the query
+ *  query: (userId: string, data: Object) => db.table('users').get(userId).update(data).run(),
+ *  invalidateTags: (userId: string) => () => [userId]
  * });
  */
 
@@ -25,27 +30,6 @@ const queryCache = new TagCache({
   },
 });
 
-type Query<O> = {
-  toString: Function,
-  run: () => Promise<?O>,
-};
-
-type GetQuery<I, O> = (...args: I) => Promise<Query<O>> | Query<O>;
-
-type ProcessFn<I, O> = (...args: I) => (data: ?O) => *;
-
-type CreateQueryInput<I, O> =
-  | {|
-      read: GetQuery<I, O>,
-      process?: ProcessFn<I, O> | Promise<ProcessFn<I, O>>,
-      tags: (...args: I) => (data: *) => Array<?string>,
-    |}
-  | {|
-      write: GetQuery<I, O>,
-      process?: ProcessFn<I, O> | Promise<ProcessFn<I, O>>,
-      invalidateTags: (...args: I) => (data: *) => Array<?string>,
-    |};
-
 let TOTAL_QUERIES = 0;
 let CACHED_RESULTS = 0;
 
@@ -59,16 +43,27 @@ if (debug.enabled) {
   }, 30000);
 }
 
-export const createQuery = <I: Array<any>, O: any>(
-  input: CreateQueryInput<I, O>
-) => {
-  const getQuery = input.read ? input.read : input.write;
-  const getTags = input.tags ? input.tags : input.invalidateTags;
+type RethinkDBQuery<O> = {
+  toString: Function,
+  run: () => Promise<O>,
+};
 
+type ProcessFn<I, O> = (...args: I) => (data: O) => Promise<*> | *;
+
+type TagsFn<I, O> = (...args: I) => (data: O) => Array<?string>;
+
+type CreateReadQueryInput<I, O> = $Exact<{
+  query: (...args: I) => Promise<RethinkDBQuery<O>> | RethinkDBQuery<O>,
+  process?: ProcessFn<I, O>,
+  tags: TagsFn<I, O>,
+}>;
+
+export const createReadQuery = <I: Array<any>, O: any>(
+  input: CreateReadQueryInput<I, O>
+) => {
   return async (...args: I) => {
     TOTAL_QUERIES++;
-    // If we have a cached response return that asap...
-    const query = await getQuery(...args);
+    const query = await input.query(...args);
     const queryString = query.toString();
     const cached = await queryCache.get(queryString);
     if (cached) {
@@ -76,27 +71,56 @@ export const createQuery = <I: Array<any>, O: any>(
       return cached;
     }
 
-    if (typeof query.run !== 'function')
+    if (typeof query.run !== 'function') {
       throw new Error(
-        'Do not call .run() on the query passed to createQuery! Pass the query without .run()'
-      );
+        `Do not call .run() on the query passed to createReadQuery!
 
-    // ...otherwise run the query and calculate the tags
+Bad: db.table('users').get(userId).run()
+Good: db.table('users').get(userId)
+
+If you need to post-process the query data (.run().then()), use the \`process\` hook.
+`
+      );
+    }
+
     const result = await query
       .run()
-      .then(
-        async res =>
-          input.process
-            ? await Promise.resolve(input.process).then(p => p(...args)(res))
-            : res
+      .then(input.process ? input.process(...args) : res => res);
+
+    const tags = input
+      .tags(...args)(result)
+      .filter(Boolean);
+    await queryCache.set(queryString, result, tags);
+    return result;
+  };
+};
+
+type CreateWriteQueryInput<I, O> = $Exact<{
+  query: (...args: I) => Promise<O> | O,
+  invalidateTags: TagsFn<I, O>,
+}>;
+
+export const createWriteQuery = <I: Array<any>, O: any>(
+  input: CreateWriteQueryInput<I, O>
+) => {
+  return async (...args: I) => {
+    const query = await input.query(...args);
+    if (typeof query.run === 'function') {
+      throw new Error(
+        `Call .run() on the query passed to createWriteQuery!
+
+Bad: db.table('users').get(userId)
+Good: db.table('users').get(userId).run()
+
+If you need to post-process the result, simply use .then()! \`.run().then(result => /* ... */)!\`
+`
       );
-    const tags = getTags(...args)(result).filter(Boolean);
-    // Then either invalidate the tags or store the result in the cache tagged with the calculated tags
-    if (input.invalidateTags) {
-      await queryCache.invalidate(...tags);
-    } else {
-      await queryCache.set(queryString, result, tags);
     }
+    const result = await query();
+    const tags = input
+      .invalidateTags(...args)(result)
+      .filter(Boolean);
+    await queryCache.invalidate(...tags);
     return result;
   };
 };

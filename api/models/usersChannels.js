@@ -2,7 +2,7 @@
 const { db } = require('./db');
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
-import { createQuery } from 'shared/rethinkdb/create-query';
+// import { createQuery } from 'shared/rethinkdb/create-query';
 import type { DBUsersChannels, DBChannel } from 'shared/types';
 
 /*

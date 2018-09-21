@@ -1,6 +1,9 @@
 // @flow
 import { db } from './db';
-import { createQuery } from 'shared/rethinkdb/create-query';
+import {
+  createReadQuery,
+  createWriteQuery,
+} from 'shared/rethinkdb/create-query';
 import { uploadImage } from '../utils/file-storage';
 import { createNewUsersSettings } from './usersSettings';
 import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
@@ -10,99 +13,96 @@ import { getUserChannelIds } from './usersChannels';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBUser, FileUpload, DBThread } from 'shared/types';
 
-export const getUserById = createQuery({
-  read: (userId: string) => db.table('users').get(userId),
+export const getUserById = createReadQuery({
+  query: (userId: string) => db.table('users').get(userId),
   tags: (userId: string) => (user: ?DBUser) => [userId],
 });
 
-export const getUserByEmail = createQuery({
-  read: (email: string) => db.table('users').getAll(email, { index: 'email' }),
+export const getUserByEmail = createReadQuery({
+  query: (email: string) => db.table('users').getAll(email, { index: 'email' }),
   process: () => (users: ?Array<DBUser>) => (users && users[0]) || null,
   tags: (email: string) => (user: ?DBUser) => (user ? [user.id] : []),
 });
 
-export const getUserByUsername = createQuery({
-  read: (username: string) =>
+export const getUserByUsername = createReadQuery({
+  query: (username: string) =>
     db.table('users').getAll(username, { index: 'username' }),
   process: () => (users: ?Array<DBUser>) => (users && users[0]) || null,
   tags: (username: string) => (user: ?DBUser) => (user ? [user.id] : []),
 });
 
-export const getUsersByUsername = createQuery({
-  read: (usernames: Array<string>) =>
+export const getUsersByUsername = createReadQuery({
+  query: (usernames: Array<string>) =>
     db.table('users').getAll(...usernames, { index: 'username' }),
   tags: () => (users: ?Array<DBUser>) =>
     users ? users.map(({ id }) => id) : [],
 });
 
-export const getUsers = createQuery({
-  read: (userIds: Array<string>) => db.table('users').getAll(...userIds),
+export const getUsers = createReadQuery({
+  query: (userIds: Array<string>) => db.table('users').getAll(...userIds),
   tags: () => (users: ?Array<DBUser>) =>
     users ? users.map(({ id }) => id) : [],
 });
 
-export const storeUser = createQuery({
-  write: (user: Object) =>
-    db.table('users').insert(
-      {
-        ...user,
-        modifiedAt: null,
-      },
-      { returnChanges: true }
-    ),
-  process: () => (result: ?{ changes: { new_val: DBUser } }) => {
-    if (!result || !result.changes || !result.changes.new_val) return null;
-    const user = result.changes[0].new_val;
-
-    identifyQueue.add({ userId: user.id });
-    trackQueue.add({ userId: user.id, event: events.USER_CREATED });
-    sendNewUserWelcomeEmailQueue.add({ user });
-    return Promise.all([user, createNewUsersSettings(user.id)]).then(
-      ([user]) => user
-    );
-  },
+export const storeUser = createWriteQuery({
+  query: (user: Object): Promise<DBUser> =>
+    db
+      .table('users')
+      .insert(
+        {
+          ...user,
+          modifiedAt: null,
+        },
+        { returnChanges: true }
+      )
+      .run()
+      .then(() => {
+        identifyQueue.add({ userId: user.id });
+        trackQueue.add({ userId: user.id, event: events.USER_CREATED });
+        sendNewUserWelcomeEmailQueue.add({ user });
+        return Promise.all([user, createNewUsersSettings(user.id)]).then(
+          ([user]) => user
+        );
+      }),
   invalidateTags: () => (user: DBUser) => [user.id],
 });
 
-export const saveUserProvider = createQuery({
-  write: (
+export const saveUserProvider = createWriteQuery({
+  query: (
     userId: string,
     providerMethod: string,
     providerId: number,
     extraFields?: Object
-  ) =>
+  ): Promise<DBUser> =>
     db
       .table('users')
       .get(userId)
-      .update(
-        {
-          [providerMethod]: providerId,
-          ...extraFields,
-        },
-        { returnChanges: true }
-      ),
-  process: (userId: string, providerMethod: string) => (
-    result: ?{ changes: [{ new_val: DBUser }] }
-  ) => {
-    if (!result) return null;
-    const user = result.changes[0].new_val;
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_ADDED_PROVIDER,
-      properties: {
-        providerMethod,
-      },
-    });
+      .update({
+        [providerMethod]: providerId,
+        ...extraFields,
+      })
+      .run()
+      .then(async () => {
+        // TODO(@mxstbr): This will return the old cached value and won't work. Have to use returnChanges.
+        const user = await getUserById(userId);
 
-    identifyQueue.add({ userId: user.id });
+        trackQueue.add({
+          userId: userId,
+          event: events.USER_ADDED_PROVIDER,
+          properties: {
+            providerMethod,
+          },
+        });
 
-    return user;
-  },
+        identifyQueue.add({ userId });
+
+        return user;
+      }),
   invalidateTags: () => (user: ?DBUser) => (user ? [user.id] : []),
 });
 
-export const getUserByIndex = createQuery({
-  read: (indexName: string, indexValue: string) =>
+export const getUserByIndex = createReadQuery({
+  query: (indexName: string, indexValue: string) =>
     db.table('users').getAll(indexValue, { index: indexName }),
   process: () => (results: ?Array<DBUser>) => (results ? results[0] : null),
   tags: () => (user: ?DBUser) => (user ? [user.id] : []),
@@ -167,6 +167,8 @@ export const createOrFindUser = (user: Object, providerMethod: string): Promise<
     });
 };
 
+// NOTE(@mxstbr): This actually runs on the threads table, so we can't createQuery this yet
+// The createQuery'd version is commented out below!
 // prettier-ignore
 export const getEverything = (userId: string, options: PaginationOptions): Promise<Array<any>> => {
   const { first, after } = options
@@ -255,88 +257,147 @@ export type EditUserInput = {
   },
 };
 
-export const editUser = (
-  args: EditUserInput,
-  userId: string
-): Promise<DBUser> => {
-  const {
-    name,
-    description,
-    website,
-    file,
-    coverFile,
-    username,
-    timezone,
-  } = args.input;
+export const editUser = createWriteQuery({
+  query: (args: EditUserInput, userId: string): ?DBUser => {
+    const {
+      name,
+      description,
+      website,
+      file,
+      coverFile,
+      username,
+      timezone,
+    } = args.input;
 
-  return db
-    .table('users')
-    .get(userId)
-    .run()
-    .then(result => {
-      return Object.assign({}, result, {
-        name,
-        description,
-        website,
-        username,
-        timezone,
-        modifiedAt: new Date(),
-      });
-    })
-    .then(user => {
-      if (file || coverFile) {
-        if (file && !coverFile) {
-          return uploadImage(file, 'users', user.id)
-            .then(profilePhoto => {
-              // update the user with the profilePhoto
-              return (
-                db
-                  .table('users')
-                  .get(user.id)
-                  .update(
-                    {
-                      ...user,
-                      profilePhoto,
-                    },
-                    { returnChanges: 'always' }
-                  )
-                  .run()
-                  // return the resulting user with the profilePhoto set
-                  .then(result => {
-                    // if an update happened
-                    if (result.replaced === 1) {
-                      trackQueue.add({
-                        userId,
-                        event: events.USER_EDITED,
-                      });
+    return db
+      .table('users')
+      .get(userId)
+      .run()
+      .then(result => {
+        return Object.assign({}, result, {
+          name,
+          description,
+          website,
+          username,
+          timezone,
+          modifiedAt: new Date(),
+        });
+      })
+      .then(user => {
+        if (file || coverFile) {
+          if (file && !coverFile) {
+            return uploadImage(file, 'users', user.id)
+              .then(profilePhoto => {
+                // update the user with the profilePhoto
+                return (
+                  db
+                    .table('users')
+                    .get(user.id)
+                    .update(
+                      {
+                        ...user,
+                        profilePhoto,
+                      },
+                      { returnChanges: 'always' }
+                    )
+                    .run()
+                    // return the resulting user with the profilePhoto set
+                    .then(result => {
+                      // if an update happened
+                      if (result.replaced === 1) {
+                        trackQueue.add({
+                          userId,
+                          event: events.USER_EDITED,
+                        });
 
-                      identifyQueue.add({ userId: user.id });
+                        identifyQueue.add({ userId: user.id });
 
-                      return result.changes[0].new_val;
-                    }
+                        return result.changes[0].new_val;
+                      }
 
-                    // an update was triggered from the client, but no data was changed
-                    if (result.unchanged === 1) {
-                      trackQueue.add({
-                        userId,
-                        event: events.USER_EDITED_FAILED,
-                        properties: {
-                          reason: 'no changes',
-                        },
-                      });
+                      // an update was triggered from the client, but no data was changed
+                      if (result.unchanged === 1) {
+                        trackQueue.add({
+                          userId,
+                          event: events.USER_EDITED_FAILED,
+                          properties: {
+                            reason: 'no changes',
+                          },
+                        });
 
-                      return result.changes[0].old_val;
-                    }
-                  })
-              );
-            })
-            .catch(err => {
-              console.error(err);
-            });
-        } else if (!file && coverFile) {
-          return uploadImage(coverFile, 'users', user.id)
-            .then(coverPhoto => {
-              // update the user with the profilePhoto
+                        return result.changes[0].old_val;
+                      }
+                    })
+                );
+              })
+              .catch(err => {
+                console.error(err);
+              });
+          } else if (!file && coverFile) {
+            return uploadImage(coverFile, 'users', user.id)
+              .then(coverPhoto => {
+                // update the user with the profilePhoto
+                return (
+                  db
+                    .table('users')
+                    .get(user.id)
+                    .update(
+                      {
+                        ...user,
+                        coverPhoto,
+                      },
+                      { returnChanges: 'always' }
+                    )
+                    .run()
+                    // return the resulting user with the profilePhoto set
+                    .then(result => {
+                      // if an update happened
+                      if (result.replaced === 1) {
+                        trackQueue.add({
+                          userId,
+                          event: events.USER_EDITED,
+                        });
+
+                        identifyQueue.add({ userId: user.id });
+
+                        return result.changes[0].new_val;
+                      }
+
+                      // an update was triggered from the client, but no data was changed
+                      if (result.unchanged === 1) {
+                        trackQueue.add({
+                          userId,
+                          event: events.USER_EDITED_FAILED,
+                          properties: {
+                            reason: 'no changes',
+                          },
+                        });
+
+                        return result.changes[0].old_val;
+                      }
+                    })
+                );
+              })
+              .catch(err => {
+                console.error(err);
+              });
+          } else if (file && coverFile) {
+            const uploadFile = file => {
+              return uploadImage(file, 'users', user.id).catch(err => {
+                console.error(err);
+              });
+            };
+
+            const uploadCoverFile = coverFile => {
+              return uploadImage(coverFile, 'users', user.id).catch(err => {
+                console.error(err);
+              });
+            };
+
+            return Promise.all([
+              uploadFile(file),
+              uploadCoverFile(coverFile),
+            ]).then(([profilePhoto, coverPhoto]) => {
               return (
                 db
                   .table('users')
@@ -345,11 +406,12 @@ export const editUser = (
                     {
                       ...user,
                       coverPhoto,
+                      profilePhoto,
                     },
                     { returnChanges: 'always' }
                   )
                   .run()
-                  // return the resulting user with the profilePhoto set
+                  // return the resulting community with the profilePhoto set
                   .then(result => {
                     // if an update happened
                     if (result.replaced === 1) {
@@ -377,218 +439,158 @@ export const editUser = (
                     }
                   })
               );
-            })
-            .catch(err => {
-              console.error(err);
             });
-        } else if (file && coverFile) {
-          const uploadFile = file => {
-            return uploadImage(file, 'users', user.id).catch(err => {
-              console.error(err);
-            });
-          };
+          }
+        } else {
+          return db
+            .table('users')
+            .get(user.id)
+            .update(
+              {
+                ...user,
+              },
+              { returnChanges: 'always' }
+            )
+            .run()
+            .then(result => {
+              // if an update happened
+              if (result.replaced === 1) {
+                trackQueue.add({
+                  userId,
+                  event: events.USER_EDITED,
+                });
 
-          const uploadCoverFile = coverFile => {
-            return uploadImage(coverFile, 'users', user.id).catch(err => {
-              console.error(err);
-            });
-          };
+                identifyQueue.add({ userId: user.id });
 
-          return Promise.all([
-            uploadFile(file),
-            uploadCoverFile(coverFile),
-          ]).then(([profilePhoto, coverPhoto]) => {
-            return (
-              db
-                .table('users')
-                .get(user.id)
-                .update(
-                  {
-                    ...user,
-                    coverPhoto,
-                    profilePhoto,
+                return result.changes[0].new_val;
+              }
+
+              // an update was triggered from the client, but no data was changed
+              if (result.unchanged === 1) {
+                trackQueue.add({
+                  userId,
+                  event: events.USER_EDITED_FAILED,
+                  properties: {
+                    reason: 'no changes',
                   },
-                  { returnChanges: 'always' }
-                )
-                .run()
-                // return the resulting community with the profilePhoto set
-                .then(result => {
-                  // if an update happened
-                  if (result.replaced === 1) {
-                    trackQueue.add({
-                      userId,
-                      event: events.USER_EDITED,
-                    });
-
-                    identifyQueue.add({ userId: user.id });
-
-                    return result.changes[0].new_val;
-                  }
-
-                  // an update was triggered from the client, but no data was changed
-                  if (result.unchanged === 1) {
-                    trackQueue.add({
-                      userId,
-                      event: events.USER_EDITED_FAILED,
-                      properties: {
-                        reason: 'no changes',
-                      },
-                    });
-
-                    return result.changes[0].old_val;
-                  }
-                })
-            );
-          });
+                });
+                return result.changes[0].old_val;
+              }
+            });
         }
-      } else {
-        return db
-          .table('users')
-          .get(user.id)
-          .update(
-            {
-              ...user,
-            },
-            { returnChanges: 'always' }
-          )
-          .run()
-          .then(result => {
-            // if an update happened
-            if (result.replaced === 1) {
-              trackQueue.add({
-                userId,
-                event: events.USER_EDITED,
-              });
+      });
+  },
+  invalidateTags: (args: EditUserInput, userId: string) => () => [userId],
+});
 
-              identifyQueue.add({ userId: user.id });
-
-              return result.changes[0].new_val;
-            }
-
-            // an update was triggered from the client, but no data was changed
-            if (result.unchanged === 1) {
-              trackQueue.add({
-                userId,
-                event: events.USER_EDITED_FAILED,
-                properties: {
-                  reason: 'no changes',
-                },
-              });
-              return result.changes[0].old_val;
-            }
-          });
-      }
-    });
-};
-
-export const setUserOnline = createQuery({
-  write: (id: string, isOnline: boolean) => {
-    return db
-      .table('users')
-      .get(id)
-      .update(
-        {
+export const setUserOnline = createWriteQuery({
+  query: (id: string, isOnline: boolean): Promise<*> => {
+    return (
+      db
+        .table('users')
+        .get(id)
+        .update({
           isOnline,
           lastSeen: new Date(),
-        },
-        { returnChanges: 'always' }
-      );
-  },
-  process: () => (
-    result: ?{ changes: Array<{ new_val: ?DBUser, old_val: ?DBUser }> }
-  ) => {
-    if (!result || !result[0]) return null;
-    if (result.changes[0].new_val) {
-      const user = result.changes[0].new_val;
-      return user;
-    }
-    return result.changes[0].old_val;
+        })
+        .run()
+        // TODO(@mxstbr): This will return the old cached value and won't work. Have to use returnChanges.
+        .then(() => getUserById(id))
+    );
   },
   invalidateTags: (id: string) => (user: ?DBUser) => [id],
 });
 
-// prettier-ignore
-export const setUserPendingEmail = (userId: string, pendingEmail: string): Promise<Object> => {
-  return db
-    .table('users')
-    .get(userId)
-    .update({
-      pendingEmail,
-    })
-    .run()
-    .then(async () => {
-      const user = await getUserById(userId);
-      if (user) {
-        trackQueue.add({
-          userId: user.id,
-          event: events.USER_ADDED_EMAIL,
-        });
-      }
+export const setUserPendingEmail = createWriteQuery({
+  query: (userId: string, pendingEmail: string): Promise<DBUser> => {
+    return db
+      .table('users')
+      .get(userId)
+      .update({
+        pendingEmail,
+      })
+      .run()
+      .then(async () => {
+        // TODO(@mxstbr): This won't work as it'll return the old cached value. Have to use returnChanges.
+        const user = await getUserById(userId);
+        if (user) {
+          trackQueue.add({
+            userId: user.id,
+            event: events.USER_ADDED_EMAIL,
+          });
+        }
 
-      return user
-    });
-};
+        return user;
+      });
+  },
+  invalidateTags: (userId: string) => () => [userId],
+});
 
-export const updateUserEmail = (
-  userId: string,
-  email: string
-): Promise<DBUser> => {
-  return db
-    .table('users')
-    .get(userId)
-    .update({
-      email,
-      pendingEmail: db.literal(),
-    })
-    .run()
-    .then(async () => {
-      const user = await getUserById(userId);
-      if (user) {
-        trackQueue.add({
-          userId: user.id,
-          event: events.USER_VERIFIED_EMAIL,
-        });
-      }
-      return user;
-    });
-};
+export const updateUserEmail = createWriteQuery({
+  query: (userId: string, email: string): Promise<DBUser> => {
+    return db
+      .table('users')
+      .get(userId)
+      .update({
+        email,
+        pendingEmail: db.literal(),
+      })
+      .run()
+      .then(async () => {
+        // TODO(@mxstbr): This won't work as it'll return the old cached value. Have to use returnChanges.
+        const user = await getUserById(userId);
+        if (user) {
+          trackQueue.add({
+            userId: user.id,
+            event: events.USER_VERIFIED_EMAIL,
+          });
+        }
+        return user;
+      });
+  },
+  invalidateTags: (userId: string) => () => [userId],
+});
 
-export const deleteUser = (userId: string) => {
-  return db
-    .table('users')
-    .get(userId)
-    .update({
-      username: null,
-      email: null,
-      deletedAt: new Date(),
-      providerId: null,
-      fbProviderId: null,
-      googleProviderId: null,
-      githubProviderId: null,
-      githubUsername: null,
-      profilePhoto: null,
-      description: null,
-      website: null,
-      timezone: null,
-      lastSeen: null,
-      modifiedAt: null,
-      firstName: null,
-      lastName: null,
-      pendingEmail: null,
-      name: 'Deleted',
-    })
-    .run()
-    .then(async () => {
-      const user = await getUserById(userId);
-      if (user) {
-        trackQueue.add({
-          userId: user.id,
-          event: events.USER_DELETED,
-        });
+export const deleteUser = createWriteQuery({
+  query: (userId: string): DBUser => {
+    return db
+      .table('users')
+      .get(userId)
+      .update({
+        username: null,
+        email: null,
+        deletedAt: new Date(),
+        providerId: null,
+        fbProviderId: null,
+        googleProviderId: null,
+        githubProviderId: null,
+        githubUsername: null,
+        profilePhoto: null,
+        description: null,
+        website: null,
+        timezone: null,
+        lastSeen: null,
+        modifiedAt: null,
+        firstName: null,
+        lastName: null,
+        pendingEmail: null,
+        name: 'Deleted',
+      })
+      .run()
+      .then(async () => {
+        // TODO(@mxstbr): This won't work as it'll return the old cached value. Have to use returnChanges.
+        const user = await getUserById(userId);
+        if (user) {
+          trackQueue.add({
+            userId: user.id,
+            event: events.USER_DELETED,
+          });
 
-        identifyQueue.add({ userId: user.id });
-      }
+          identifyQueue.add({ userId: user.id });
+        }
 
-      return user;
-    });
-};
+        return user;
+      });
+  },
+  invalidateTags: (userId: string) => () => [userId],
+});
