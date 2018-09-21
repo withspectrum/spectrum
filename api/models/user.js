@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+import { db } from './db';
 import { createQuery } from 'shared/rethinkdb/create-query';
 import { uploadImage } from '../utils/file-storage';
 import { createNewUsersSettings } from './usersSettings';
@@ -10,38 +10,38 @@ import { getUserChannelIds } from './usersChannels';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBUser, FileUpload, DBThread } from 'shared/types';
 
-const getUserById = createQuery({
+export const getUserById = createQuery({
   read: (userId: string) => db.table('users').get(userId),
   tags: (userId: string) => (user: ?DBUser) => [userId],
 });
 
-const getUserByEmail = createQuery({
+export const getUserByEmail = createQuery({
   read: (email: string) => db.table('users').getAll(email, { index: 'email' }),
   process: (users: ?Array<DBUser>) => (users && users[0]) || null,
   tags: (email: string) => (user: ?DBUser) => (user ? [user.id] : []),
 });
 
-const getUserByUsername = createQuery({
+export const getUserByUsername = createQuery({
   read: (username: string) =>
     db.table('users').getAll(username, { index: 'username' }),
   process: (users: ?Array<DBUser>) => (users && users[0]) || null,
   tags: (username: string) => (user: ?DBUser) => (user ? [user.id] : []),
 });
 
-const getUsersByUsername = createQuery({
+export const getUsersByUsername = createQuery({
   read: (usernames: Array<string>) =>
     db.table('users').getAll(...usernames, { index: 'username' }),
   tags: () => (users: ?Array<DBUser>) =>
     users ? users.map(({ id }) => id) : [],
 });
 
-const getUsers = createQuery({
+export const getUsers = createQuery({
   read: (userIds: Array<string>) => db.table('users').getAll(...userIds),
   tags: () => (users: ?Array<DBUser>) =>
     users ? users.map(({ id }) => id) : [],
 });
 
-const storeUser = createQuery({
+export const storeUser = createQuery({
   write: (user: Object) =>
     db.table('users').insert(
       {
@@ -64,7 +64,7 @@ const storeUser = createQuery({
   invalidateTags: () => (user: DBUser) => [user.id],
 });
 
-const saveUserProvider = createQuery({
+export const saveUserProvider = createQuery({
   write: (
     userId: string,
     providerMethod: string,
@@ -100,7 +100,7 @@ const saveUserProvider = createQuery({
   invalidateTags: () => (user: ?DBUser) => (user ? [user.id] : []),
 });
 
-const getUserByIndex = createQuery({
+export const getUserByIndex = createQuery({
   read: (indexName: string, indexValue: string) =>
     db.table('users').getAll(indexValue, { index: indexName }),
   process: (results: ?Array<DBUser>) => (results ? results[0] : null),
@@ -108,7 +108,7 @@ const getUserByIndex = createQuery({
 });
 
 // prettier-ignore
-const createOrFindUser = (user: Object, providerMethod: string): Promise<?DBUser> => {
+export const createOrFindUser = (user: Object, providerMethod: string): Promise<?DBUser> => {
   // if a user id gets passed in, we know that a user most likely exists and we just need to retrieve them from the db
   // however, if a user id doesn't exist we need to do a lookup by the email address passed in - if an email address doesn't exist, we know that we're going to be creating a new user
   let promise;
@@ -167,7 +167,7 @@ const createOrFindUser = (user: Object, providerMethod: string): Promise<?DBUser
 };
 
 // prettier-ignore
-const getEverything = (userId: string, options: PaginationOptions): Promise<Array<any>> => {
+export const getEverything = (userId: string, options: PaginationOptions): Promise<Array<any>> => {
   const { first, after } = options
   return db
     .table('usersChannels')
@@ -225,7 +225,7 @@ type UserThreadCount = {
   count: number,
 };
 // prettier-ignore
-const getUsersThreadCount = (threadIds: Array<string>): Promise<Array<UserThreadCount>> => {
+export const getUsersThreadCount = (threadIds: Array<string>): Promise<Array<UserThreadCount>> => {
   const getThreadCounts = threadIds.map(creatorId =>
     db
       .table('threads')
@@ -254,7 +254,10 @@ export type EditUserInput = {
   },
 };
 
-const editUser = (args: EditUserInput, userId: string): Promise<DBUser> => {
+export const editUser = (
+  args: EditUserInput,
+  userId: string
+): Promise<DBUser> => {
   const {
     name,
     description,
@@ -477,7 +480,7 @@ const editUser = (args: EditUserInput, userId: string): Promise<DBUser> => {
     });
 };
 
-const setUserOnline = createQuery({
+export const setUserOnline = createQuery({
   write: (id: string, isOnline: boolean) => {
     return db
       .table('users')
@@ -504,7 +507,7 @@ const setUserOnline = createQuery({
 });
 
 // prettier-ignore
-const setUserPendingEmail = (userId: string, pendingEmail: string): Promise<Object> => {
+export const setUserPendingEmail = (userId: string, pendingEmail: string): Promise<Object> => {
   return db
     .table('users')
     .get(userId)
@@ -525,7 +528,10 @@ const setUserPendingEmail = (userId: string, pendingEmail: string): Promise<Obje
     });
 };
 
-const updateUserEmail = (userId: string, email: string): Promise<DBUser> => {
+export const updateUserEmail = (
+  userId: string,
+  email: string
+): Promise<DBUser> => {
   return db
     .table('users')
     .get(userId)
@@ -546,7 +552,7 @@ const updateUserEmail = (userId: string, email: string): Promise<DBUser> => {
     });
 };
 
-const deleteUser = (userId: string) => {
+export const deleteUser = (userId: string) => {
   return db
     .table('users')
     .get(userId)
@@ -584,23 +590,4 @@ const deleteUser = (userId: string) => {
 
       return user;
     });
-};
-
-module.exports = {
-  getUserById,
-  getUserByEmail,
-  getUserByUsername,
-  getUsersByUsername,
-  getUsersThreadCount,
-  getUsers,
-  getUserByIndex,
-  saveUserProvider,
-  createOrFindUser,
-  storeUser,
-  editUser,
-  getEverything,
-  setUserOnline,
-  setUserPendingEmail,
-  updateUserEmail,
-  deleteUser,
 };
