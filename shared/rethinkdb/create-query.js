@@ -32,17 +32,17 @@ type Query<O> = {
 
 type GetQuery<I, O> = (...args: I) => Promise<Query<O>> | Query<O>;
 
-type ProcessFn<O> = (data: ?O) => *;
+type ProcessFn<I, O> = (...args: I) => (data: ?O) => *;
 
 type CreateQueryInput<I, O> =
   | {|
       read: GetQuery<I, O>,
-      process?: ProcessFn<O> | Promise<ProcessFn<O>>,
+      process?: ProcessFn<I, O> | Promise<ProcessFn<I, O>>,
       tags: (...args: I) => (data: *) => Array<?string>,
     |}
   | {|
       write: GetQuery<I, O>,
-      process?: ProcessFn<O> | Promise<ProcessFn<O>>,
+      process?: ProcessFn<I, O> | Promise<ProcessFn<I, O>>,
       invalidateTags: (...args: I) => (data: *) => Array<?string>,
     |};
 
@@ -87,7 +87,7 @@ export const createQuery = <I: Array<any>, O: any>(
       .then(
         async res =>
           input.process
-            ? await Promise.resolve(input.process).then(p => p(res))
+            ? await Promise.resolve(input.process).then(p => p(...args)(res))
             : res
       );
     const tags = getTags(...args)(result).filter(Boolean);

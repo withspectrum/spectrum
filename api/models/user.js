@@ -17,14 +17,14 @@ export const getUserById = createQuery({
 
 export const getUserByEmail = createQuery({
   read: (email: string) => db.table('users').getAll(email, { index: 'email' }),
-  process: (users: ?Array<DBUser>) => (users && users[0]) || null,
+  process: () => (users: ?Array<DBUser>) => (users && users[0]) || null,
   tags: (email: string) => (user: ?DBUser) => (user ? [user.id] : []),
 });
 
 export const getUserByUsername = createQuery({
   read: (username: string) =>
     db.table('users').getAll(username, { index: 'username' }),
-  process: (users: ?Array<DBUser>) => (users && users[0]) || null,
+  process: () => (users: ?Array<DBUser>) => (users && users[0]) || null,
   tags: (username: string) => (user: ?DBUser) => (user ? [user.id] : []),
 });
 
@@ -50,7 +50,7 @@ export const storeUser = createQuery({
       },
       { returnChanges: true }
     ),
-  process: (result: ?{ changes: { new_val: DBUser } }) => {
+  process: () => (result: ?{ changes: { new_val: DBUser } }) => {
     if (!result || !result.changes || !result.changes.new_val) return null;
     const user = result.changes[0].new_val;
 
@@ -81,17 +81,18 @@ export const saveUserProvider = createQuery({
         },
         { returnChanges: true }
       ),
-  process: (result: ?{ changes: [{ new_val: DBUser }] }) => {
+  process: (userId: string, providerMethod: string) => (
+    result: ?{ changes: [{ new_val: DBUser }] }
+  ) => {
     if (!result) return null;
     const user = result.changes[0].new_val;
-    // TODO(@mxstbr): Fix this
-    // trackQueue.add({
-    //   userId: user.id,
-    //   event: events.USER_ADDED_PROVIDER,
-    //   properties: {
-    //     providerMethod,
-    //   },
-    // });
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_ADDED_PROVIDER,
+      properties: {
+        providerMethod,
+      },
+    });
 
     identifyQueue.add({ userId: user.id });
 
@@ -103,7 +104,7 @@ export const saveUserProvider = createQuery({
 export const getUserByIndex = createQuery({
   read: (indexName: string, indexValue: string) =>
     db.table('users').getAll(indexValue, { index: indexName }),
-  process: (results: ?Array<DBUser>) => (results ? results[0] : null),
+  process: () => (results: ?Array<DBUser>) => (results ? results[0] : null),
   tags: () => (user: ?DBUser) => (user ? [user.id] : []),
 });
 
@@ -493,7 +494,7 @@ export const setUserOnline = createQuery({
         { returnChanges: 'always' }
       );
   },
-  process: (
+  process: () => (
     result: ?{ changes: Array<{ new_val: ?DBUser, old_val: ?DBUser }> }
   ) => {
     if (!result || !result[0]) return null;
