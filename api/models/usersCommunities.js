@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import { sendCommunityNotificationQueue } from 'shared/bull/queues';
 import type { DBUsersCommunities, DBCommunity } from 'shared/types';
 import { events } from 'shared/analytics';

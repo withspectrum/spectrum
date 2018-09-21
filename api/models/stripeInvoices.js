@@ -1,5 +1,5 @@
 // @flow
-import { db } from './db';
+import { db } from 'shared/db';
 
 // prettier-ignore
 export const getInvoices = (invoices: Array<string>): Promise<Array<?Object>> => {

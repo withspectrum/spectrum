@@ -4,7 +4,7 @@ const stripeRouter = Router();
 import { stripe } from 'shared/stripe';
 import { getCommunityById } from '../../models/community';
 import { processInvoicePaid } from '../webhooks';
-import { db } from '../../models/db';
+import { db } from 'shared/db';
 
 /*
  *

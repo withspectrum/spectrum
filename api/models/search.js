@@ -1,5 +1,5 @@
 //@flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 
 // prettier-ignore
 export const getPublicChannelIdsInCommunity = (communityId: string): Promise<Array<string>> => {

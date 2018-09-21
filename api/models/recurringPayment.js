@@ -1,4 +1,4 @@
-import { db } from './db';
+import { db } from 'shared/db';
 
 const parseStripeDataToDb = (stripeData): Object => ({
   customerId: stripeData.customer,

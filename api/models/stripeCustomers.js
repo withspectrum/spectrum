@@ -1,5 +1,5 @@
 // @flow
-import { db } from './db';
+import { db } from 'shared/db';
 import type { RawCustomer } from 'shared/stripe/types/customer';
 const debug = require('debug')('api:models:stripe-customers');
 
