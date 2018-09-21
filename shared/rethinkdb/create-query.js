@@ -114,8 +114,8 @@ export const createWriteQuery = <I: Array<any>, O: any>(
   input: CreateWriteQueryInput<I, O>
 ) => {
   return async (...args: I) => {
-    const query = await input.query(...args);
-    if (typeof query.run === 'function') {
+    const result = await input.query(...args);
+    if (typeof result.run === 'function') {
       throw new Error(
         `Call .run() on the query passed to createWriteQuery!
 
@@ -126,7 +126,6 @@ If you need to post-process the result, simply use .then()! \`.run().then(result
 `
       );
     }
-    const result = await query();
     const tags = input
       .invalidateTags(...args)(result)
       .filter(Boolean);
