@@ -8,7 +8,7 @@
     "apollo-link": "^1.2.3",
     "apollo-link-error": "^1.1.1",
     "apollo-link-http": "^1.5.4",
-    "apollo-link-retry": "^2.2.4",
+    "apollo-link-retry": "^2.2.5",
     "expo": "^28.0.0",
     "graphql": "^0.11.0",
     "graphql-tag": "^2.9.2",
