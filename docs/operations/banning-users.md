@@ -17,7 +17,8 @@ r.db('spectrum')
 .update({
   bannedAt: new Date(),
   bannedBy: YOUR_USER_ID,
-  bannedReason: "Reason for ban here"
+  bannedReason: "Reason for ban here",
+  username: null
 })
 ```
 3. Disable paid feature flags for communities owned by the user.
