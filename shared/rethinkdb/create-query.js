@@ -55,15 +55,13 @@ export const createReadQuery = <I: Array<any>, O: any>(
   return async (...args: I) => {
     TOTAL_QUERIES++;
     const query = await input.query(...args);
+    if (typeof query.run !== 'function') throw new Error(READ_RUN_ERROR);
+
     const queryString = query.toString();
     const cached = await queryCache.get(queryString);
     if (cached) {
       CACHED_RESULTS++;
       return cached;
-    }
-
-    if (typeof query.run !== 'function') {
-      throw new Error(READ_RUN_ERROR);
     }
 
     const result = await query
@@ -88,9 +86,8 @@ export const createWriteQuery = <I: Array<any>, O: any>(
 ) => {
   return async (...args: I) => {
     const result = await input.query(...args);
-    if (typeof result.run === 'function') {
-      throw new Error(WRITE_RUN_ERROR);
-    }
+    if (typeof result.run === 'function') throw new Error(WRITE_RUN_ERROR);
+
     const tags = input
       .invalidateTags(...args)(result)
       .filter(Boolean);
