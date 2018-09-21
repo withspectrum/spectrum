@@ -9259,6 +9259,17 @@ react-text-selection-popover@^1.1.0:
     react-window-dimensions "^1.0.2"
     rollup-plugin-copy "^0.2.3"
 
+react-text-selection-popover@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-text-selection-popover/-/react-text-selection-popover-1.2.0.tgz#7fe870d372f7e5994cb32931738bf4de77c2e9df"
+  dependencies:
+    invariant "^2.2.4"
+    lodash.debounce "^4.0.8"
+    react-event-listener "^0.6.1"
+    react-measure "^2.1.2"
+    react-window-dimensions "^1.0.2"
+    rollup-plugin-copy "^0.2.3"
+
 react-textarea-autosize@^6.1.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/react-textarea-autosize/-/react-textarea-autosize-6.1.0.tgz#df91387f8a8f22020b77e3833c09829d706a09a5"
@@ -10302,15 +10313,15 @@ spdy@^3.4.1:
     select-hose "^2.0.0"
     spdy-transport "^2.0.18"
 
-spectrum-draft-js-inline-toolbar@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/spectrum-draft-js-inline-toolbar/-/spectrum-draft-js-inline-toolbar-0.2.1.tgz#0d2737e6666cfa2fb07ab5c40064e2ad01c7f2d5"
+spectrum-draft-js-inline-toolbar@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/spectrum-draft-js-inline-toolbar/-/spectrum-draft-js-inline-toolbar-0.2.2.tgz#f46550a55af947ec2e2545c1efdfc09a043c8a1c"
   dependencies:
     draft-js "^0.10.5"
     draft-js-plugins-utils "^2.0.3"
     prop-types "^15.6.2"
     react-onclickoutside "^6.7.1"
-    react-text-selection-popover "^1.1.0"
+    react-text-selection-popover "^1.2.0"
 
 split-lines@^1.1.0:
   version "1.1.0"
