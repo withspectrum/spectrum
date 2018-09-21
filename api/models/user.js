@@ -1,9 +1,6 @@
 // @flow
 import { db } from './db';
-import {
-  createReadQuery,
-  createWriteQuery,
-} from 'shared/rethinkdb/create-query';
+import { createReadQuery, createWriteQuery } from 'shared/db/create-query';
 import { uploadImage } from '../utils/file-storage';
 import { createNewUsersSettings } from './usersSettings';
 import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
