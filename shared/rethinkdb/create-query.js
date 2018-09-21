@@ -18,27 +18,8 @@
  */
 
 const debug = require('debug')('shared:rethinkdb:db-query-cache');
-import TagCache from 'redis-tag-cache';
-
-const IS_PROD = process.env.NODE_ENV === 'production';
-
-const DEFAULT_REDIS_OPTIONS = {
-  keyPrefix: 'query-cache',
-};
-
-const PRODUCTION_REDIS_OPTIONS = {
-  port: process.env.REDIS_CACHE_PORT,
-  host: process.env.REDIS_CACHE_URL,
-  password: process.env.REDIS_CACHE_PASSWORD,
-};
-
-const queryCache = new TagCache({
-  defaultTimeout: 86400,
-  redis: {
-    ...DEFAULT_REDIS_OPTIONS,
-    ...(IS_PROD ? PRODUCTION_REDIS_OPTIONS : {}),
-  },
-});
+import queryCache from './query-cache';
+import { READ_RUN_ERROR, WRITE_RUN_ERROR } from './constants';
 
 let TOTAL_QUERIES = 0;
 let CACHED_RESULTS = 0;
@@ -47,8 +28,8 @@ if (debug.enabled) {
   debug('Logging of cache hit rate enabled! (every 30s)');
   setInterval(() => {
     debug(
-      `Cache hit rate over the last 30s: ${(CACHED_RESULTS / TOTAL_QUERIES) *
-        100}% (${CACHED_RESULTS} of ${TOTAL_QUERIES})`
+      `Cache hit rate: ${(CACHED_RESULTS / TOTAL_QUERIES) *
+        100}% (${CACHED_RESULTS} cached of ${TOTAL_QUERIES} total)`
     );
   }, 30000);
 }
@@ -82,15 +63,7 @@ export const createReadQuery = <I: Array<any>, O: any>(
     }
 
     if (typeof query.run !== 'function') {
-      throw new Error(
-        `Do not call .run() on the query passed to createReadQuery!
-
-Bad: db.table('users').get(userId).run()
-Good: db.table('users').get(userId)
-
-If you need to post-process the query data (.run().then()), use the \`process\` hook.
-`
-      );
+      throw new Error(READ_RUN_ERROR);
     }
 
     const result = await query
@@ -116,15 +89,7 @@ export const createWriteQuery = <I: Array<any>, O: any>(
   return async (...args: I) => {
     const result = await input.query(...args);
     if (typeof result.run === 'function') {
-      throw new Error(
-        `Call .run() on the query passed to createWriteQuery!
-
-Bad: db.table('users').get(userId)
-Good: db.table('users').get(userId).run()
-
-If you need to post-process the result, simply use .then()! \`.run().then(result => /* ... */)!\`
-`
-      );
+      throw new Error(WRITE_RUN_ERROR);
     }
     const tags = input
       .invalidateTags(...args)(result)
