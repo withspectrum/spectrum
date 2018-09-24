@@ -39,22 +39,24 @@ type RethinkDBQuery<O> = {
   run: () => Promise<O>,
 };
 
-type ProcessFn<I, O> = (...args: I) => (data: O) => Promise<*> | *;
-
-type TagsFn<I, O> = (...args: I) => (data: O) => Array<?string>;
+type ProcessFn<I, O> = (data: O) => Promise<*> | *;
+type TagsFn<I, O> = (data: O) => Array<?string>;
 
 type CreateReadQueryInput<I, O> = $Exact<{
-  query: (...args: I) => Promise<RethinkDBQuery<O>> | RethinkDBQuery<O>,
+  query: Promise<RethinkDBQuery<O>> | RethinkDBQuery<O>,
   process?: ProcessFn<I, O>,
   tags: TagsFn<I, O>,
 }>;
 
-export const createReadQuery = <I: Array<any>, O: any>(
-  input: CreateReadQueryInput<I, O>
+type CreateQueryCallback<I, O> = (...args: I) => O;
+
+export const createReadQuery = <I: Array<*>, O: *>(
+  callback: (...args: I) => CreateReadQueryInput<I, O>
 ) => {
   return async (...args: I) => {
+    const input = callback(...args);
     TOTAL_QUERIES++;
-    const query = await input.query(...args);
+    const query = await input.query;
     if (typeof query.run !== 'function') throw new Error(READ_RUN_ERROR);
 
     const queryString = query.toString();
@@ -66,31 +68,28 @@ export const createReadQuery = <I: Array<any>, O: any>(
 
     const result = await query
       .run()
-      .then(input.process ? input.process(...args) : res => res);
+      .then(input.process ? input.process : res => res);
 
-    const tags = input
-      .tags(...args)(result)
-      .filter(Boolean);
+    const tags = input.tags(result).filter(Boolean);
     await queryCache.set(queryString, result, tags);
     return result;
   };
 };
 
 type CreateWriteQueryInput<I, O> = $Exact<{
-  query: (...args: I) => Promise<O> | O,
+  query: Promise<O> | O,
   invalidateTags: TagsFn<I, O>,
 }>;
 
-export const createWriteQuery = <I: Array<any>, O: any>(
-  input: CreateWriteQueryInput<I, O>
+export const createWriteQuery = <I: Array<*>, O: *>(
+  callback: (...args: I) => CreateWriteQueryInput<I, O>
 ) => {
   return async (...args: I) => {
-    const result = await input.query(...args);
+    const input = callback(...args);
+    const result = await input.query;
     if (typeof result.run === 'function') throw new Error(WRITE_RUN_ERROR);
 
-    const tags = input
-      .invalidateTags(...args)(result)
-      .filter(Boolean);
+    const tags = input.invalidateTags(result).filter(Boolean);
     await queryCache.invalidate(...tags);
     return result;
   };
