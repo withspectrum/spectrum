@@ -1,5 +1,5 @@
 // @flow
-import { db } from 'api/models/db';
+import { db } from 'shared/db';
 
 export const archiveAllCommunityPrivateChannels = (communityId: string) => {
   return db

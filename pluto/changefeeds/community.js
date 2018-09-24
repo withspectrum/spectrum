@@ -7,7 +7,7 @@ import {
   listenToDeletedDocumentsIn,
 } from 'shared/changefeed-utils';
 import type { DBCommunity } from 'shared/types';
-import { db } from 'api/models/db';
+import { db } from 'shared/db';
 import {
   stripeCommunityAdministratorEmailChangedQueue,
   stripeCommunityCreatedQueue,

@@ -1,5 +1,5 @@
 // @flow
-import { db } from 'api/models/db';
+import { db } from 'shared/db';
 import type { DBCommunity } from 'shared/types';
 
 export const getCommunityById = (

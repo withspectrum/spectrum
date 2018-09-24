@@ -1,5 +1,5 @@
 // @flow
-import { db } from 'api/models/db';
+import { db } from 'shared/db';
 
 export const removeAllCommunityModerators = (communityId: string) => {
   return db

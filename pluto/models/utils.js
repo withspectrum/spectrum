@@ -1,5 +1,5 @@
 // @flow
-import { db } from 'api/models/db';
+import { db } from 'shared/db';
 const debug = require('debug')('pluto:models:utils');
 
 export const recordExists = async (
