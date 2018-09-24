@@ -18,7 +18,6 @@ import { db } from 'shared/db';
 //   const customers = await stripe.customers.list({ limit: 100 });
 //   const deleteCustomers = customers.data.map(
 //     async customer =>
-//       console.log('deleting customer') ||
 //       (await stripe.customers.del(customer.id))
 //   );
 //   const stripeTables = ['stripeCustomers', 'stripeInvoices'];
