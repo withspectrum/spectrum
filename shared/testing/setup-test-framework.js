@@ -4,6 +4,6 @@ const mockDb = require('./db');
 jest.setTimeout(30000);
 
 // Mock the database
-jest.mock('shared/db/db.js', () => ({
+jest.mock('shared/db/db', () => ({
   db: mockDb,
 }));
