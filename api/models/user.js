@@ -162,8 +162,6 @@ export const createOrFindUser = (user: Object, providerMethod: string): Promise<
     });
 };
 
-// NOTE(@mxstbr): This actually runs on the threads table, so we can't createQuery this yet
-// The createQuery'd version is commented out below!
 // prettier-ignore
 export const getEverything = (userId: string, options: PaginationOptions): Promise<Array<any>> => {
   const { first, after } = options
@@ -192,36 +190,11 @@ export const getEverything = (userId: string, options: PaginationOptions): Promi
     );
 };
 
-// const getEverything = createQuery({
-//   read: (userId: string, options: PaginationOptions) =>
-//     getUserChannelIds(userId).then(userChannels => {
-//       if (!userChannels || userChannels.length === 0) return [];
-
-//       return db
-//         .table('threads')
-//         .orderBy({ index: db.desc('lastActive') })
-//         .filter(thread =>
-//           db
-//             .expr(userChannels)
-//             .contains(
-//               thread('channelId').and(db.not(thread.hasFields('deletedAt')))
-//             )
-//         )
-//         .skip(options.after || 0)
-//         .limit(options.first);
-//     }),
-//   tags: (userId: string) => (threads: ?Array<DBThread>) => [
-//     userId,
-//     ...(threads || []).map(({ id }) => id),
-//     ...(threads || []).map(({ channelId }) => channelId),
-//     ...(threads || []).map(({ communityId }) => communityId),
-//   ],
-// });
-
 type UserThreadCount = {
   id: string,
   count: number,
 };
+
 // prettier-ignore
 export const getUsersThreadCount = (threadIds: Array<string>): Promise<Array<UserThreadCount>> => {
   const getThreadCounts = threadIds.map(creatorId =>
