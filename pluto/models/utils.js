@@ -19,7 +19,7 @@ export const recordExists = async (
         (result && result.length > 0)
     )
     .catch(err => {
-      console.log('ERROR: ', err);
+      console.error('ERROR: ', err);
       return new Error(err);
     });
 };
@@ -35,7 +35,7 @@ export const insertRecord = async (
     .run()
     .then(result => debug('\nInserted') || result.changes[0].new_val)
     .catch(err => {
-      console.log('ERROR: ', err);
+      console.error('ERROR: ', err);
       return new Error(err);
     });
 };
@@ -59,7 +59,7 @@ export const replaceRecord = async (
         result.changes[0].old_val
     )
     .catch(err => {
-      console.log('ERROR: ', err);
+      console.error('ERROR: ', err);
       return new Error(err);
     });
 };
