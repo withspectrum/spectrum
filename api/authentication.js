@@ -49,19 +49,31 @@ const GITHUB_OAUTH_CLIENT_ID = IS_PROD
 const init = () => {
   // Setup use serialization
   passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, JSON.stringify(user));
   });
 
-  passport.deserializeUser((id, done) => {
-    getUser({ id })
-      .then(user => {
-        done(null, user);
-        return null;
-      })
-      .catch(err => {
-        done(err);
-        return null;
-      });
+  // NOTE(@mxstbr): `data` used to be just the userID, but is now the full user data
+  // to avoid having to go to the db on every single request. We have to handle both
+  // cases here, as more and more users use Spectrum again we go to the db less and less
+  passport.deserializeUser((data, done) => {
+    // Fast path: try to JSON.parse the data
+    // if it works, we got the user data, yay!
+    try {
+      const user = JSON.parse(data);
+      done(null, user);
+      return null;
+      // Slow path: data is the legacy stuff (just the userID), so we have to go to the db to get the full data
+    } catch (err) {
+      return getUser({ id: data })
+        .then(user => {
+          done(null, user);
+          return null;
+        })
+        .catch(err => {
+          done(err);
+          return null;
+        });
+    }
   });
 
   // Set up Twitter login
