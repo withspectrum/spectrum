@@ -8,7 +8,13 @@ import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 export default requireAuth(
-  async (_: any, args: EditUserInput, { user }: GraphQLContext) => {
+  async (
+    _: any,
+    args: EditUserInput,
+    { user, updateCookieUserData }: GraphQLContext
+  ) => {
+    const dbUser = await getUser({ username: args.input.username });
+
     if (args.input.username) {
       if (
         args.input.username === 'null' ||
@@ -25,8 +31,6 @@ export default requireAuth(
         return new UserError('Nice try! 😉');
       }
 
-      const dbUser = await getUser({ username: args.input.username });
-
       if (dbUser && dbUser.id !== user.id) {
         trackQueue.add({
           userId: user.id,
@@ -42,6 +46,10 @@ export default requireAuth(
       }
     }
 
+    await updateCookieUserData({
+      ...dbUser,
+      ...{ ...args.input, file: undefined },
+    });
     return editUser(args, user.id);
   }
 );
