@@ -321,7 +321,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       await addCommunityMember(
         {},
         { input: { communityId: thread.communityId } },
-        { user: user, loaders: loaders }
+        ctx
       );
   }
 
