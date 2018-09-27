@@ -49,7 +49,10 @@ class Pages extends React.Component<Props> {
 
     return (
       <Page id="main">
-        <Nav dark={dark} location={this.props.match.path.substr(1)} />
+        <Nav
+          dark={dark ? 'true' : undefined}
+          location={this.props.match.path.substr(1)}
+        />
         {this.renderPage()}
       </Page>
     );
