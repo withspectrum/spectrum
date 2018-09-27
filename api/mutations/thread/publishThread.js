@@ -12,7 +12,6 @@ import {
 } from '../../models/thread';
 import { createParticipantInThread } from '../../models/usersThreads';
 import type { FileUpload, DBThread } from 'shared/types';
-import { PRIVATE_CHANNEL, FREE_PRIVATE_CHANNEL } from 'pluto/queues/constants';
 import { toPlainText, toState } from 'shared/draft-utils';
 import {
   processReputationEventQueue,
