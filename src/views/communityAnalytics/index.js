@@ -33,7 +33,7 @@ type State = {
 class CommunityAnalytics extends React.Component<Props, State> {
   componentDidMount() {
     const { community } = this.props;
-    if (community && community.hasFeatures && community.hasFeatures.analytics) {
+    if (community) {
       track(events.COMMUNITY_ANALYTICS_VIEWED, {
         community: transformations.analyticsCommunity(community),
       });
