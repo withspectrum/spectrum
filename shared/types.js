@@ -36,10 +36,7 @@ export type DBCommunity = {
   watercoolerId?: string,
   creatorId: string,
   administratorEmail: ?string,
-  hasAnalytics: boolean,
-  hasPrioritySupport: boolean,
   pendingAdministratorEmail?: string,
-  ossVerified?: boolean,
   isPrivate: boolean,
 };
 
@@ -260,6 +257,7 @@ export type DBUser = {
   description?: ?string,
   website?: ?string,
   modifiedAt: ?string,
+  betaSupporter?: boolean,
 };
 
 export type DBUsersChannels = {
