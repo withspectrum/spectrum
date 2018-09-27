@@ -71,9 +71,7 @@ class EditDropdown extends React.Component<Props, State> {
     },
     moderator: {
       id: 'moderator',
-      title: this.props.community.hasChargeableSource
-        ? 'Team member · $10/mo'
-        : 'Team member',
+      title: 'Team member',
       subtitle:
         'Highlighted across the community, and can moderate conversations',
       selected: false,
@@ -113,7 +111,7 @@ class EditDropdown extends React.Component<Props, State> {
   };
 
   getRolesConfiguration = () => {
-    const { permissions, community } = this.props;
+    const { permissions } = this.props;
 
     if (permissions.isOwner) {
       return [
@@ -146,9 +144,7 @@ class EditDropdown extends React.Component<Props, State> {
       return [
         {
           ...this.permissionConfigurations.moderator,
-          mutation: community.hasChargeableSource
-            ? this.props.addCommunityModerator
-            : null,
+          mutation: this.props.addCommunityModerator,
         },
         {
           ...this.permissionConfigurations.member,
@@ -166,9 +162,7 @@ class EditDropdown extends React.Component<Props, State> {
       return [
         {
           ...this.permissionConfigurations.moderator,
-          mutation: community.hasChargeableSource
-            ? this.props.addCommunityModerator
-            : null,
+          mutation: this.props.addCommunityModerator,
         },
         {
           ...this.permissionConfigurations.member,

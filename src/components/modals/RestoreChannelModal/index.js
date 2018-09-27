@@ -23,19 +23,17 @@ type Props = {
 
 type State = {
   isLoading: boolean,
-  hasChargeableSource: boolean,
 };
 
 class RestoreChannelModal extends React.Component<Props, State> {
-  state = { isLoading: false, hasChargeableSource: false };
-
-  onSourceAvailable = () => this.setState({ hasChargeableSource: true });
+  state = { isLoading: false };
 
   close = () => {
     this.props.dispatch(closeModal());
   };
 
-  restore = () => {
+  restore = (e: any) => {
+    e.preventDefault();
     const { channel, dispatch } = this.props;
 
     return this.props
@@ -56,8 +54,8 @@ class RestoreChannelModal extends React.Component<Props, State> {
   };
 
   render() {
-    const { isOpen, channel } = this.props;
-    const { isLoading, hasChargeableSource } = this.state;
+    const { isOpen } = this.props;
+    const { isLoading } = this.state;
 
     const styles = modalStyles(420);
 
@@ -79,19 +77,15 @@ class RestoreChannelModal extends React.Component<Props, State> {
         <ModalContainer title={'Restore Channel'} closeModal={this.close}>
           <Form>
             <Description>
-              Restoring a private channel will automatically resume your
-              subscription at $10 per month.
+              Are you sure you want to restore this channel? Members will be
+              able to start new conversations and join this channel.
             </Description>
 
             <Actions>
               <TextButton onClick={this.close} color={'warn.alt'}>
                 Cancel
               </TextButton>
-              <Button
-                disabled={channel.isPrivate && !hasChargeableSource}
-                loading={isLoading}
-                onClick={this.restore}
-              >
+              <Button loading={isLoading} onClick={this.restore}>
                 Restore Channel
               </Button>
             </Actions>
