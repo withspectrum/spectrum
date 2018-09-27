@@ -567,13 +567,3 @@ export const FeatureDescription = styled.p`
   padding-right: 24px;
   margin-top: 8px;
 `;
-
-export const ConciergeLink = styled(Link)`
-  display: flex;
-  flex: none;
-
-  button {
-    padding: 12px 16px;
-    margin-top: 0 !important;
-  }
-`;
