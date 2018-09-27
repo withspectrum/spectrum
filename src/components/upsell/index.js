@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import Icon from 'src/components/icons';
 import { storeItem } from 'src/helpers/localStorage';
-import { PUBLIC_STRIPE_KEY } from 'src/api/constants';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
 import { UserAvatar } from 'src/components/avatar';
@@ -449,19 +448,6 @@ class UpsellUpgradeToProPure extends React.Component<
           </ul>
         </Subtitle>
         <Cost>Spectrum Pro costs $5/month and you can cancel at any time.</Cost>
-        <StripeCheckout
-          token={this.upgradeToPro}
-          stripeKey={PUBLIC_STRIPE_KEY}
-          name="🔐   Pay Securely"
-          description="Secured and Encrypted by Stripe"
-          panelLabel="Subscribe for "
-          amount={500}
-          currency="USD"
-        >
-          <Button disabled={isLoading} loading={isLoading} icon="payment">
-            Make me a Pro!
-          </Button>
-        </StripeCheckout>
 
         {!upgradeError && <UpgradeError>{upgradeError}</UpgradeError>}
       </NullCard>

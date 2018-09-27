@@ -7,13 +7,7 @@ import {
   getCommunitiesOnlineMemberCounts,
 } from '../models/community';
 import { getCommunitiesSettings } from '../models/communitySettings';
-import { getCommunitiesRecurringPayments } from '../models/recurringPayment';
 import createLoader from './create-loader';
-
-export const __createCommunityRecurringPaymentsLoader = createLoader(
-  communities => getCommunitiesRecurringPayments(communities),
-  'group'
-);
 
 export const __createCommunityLoader = createLoader(communities =>
   getCommunities(communities)

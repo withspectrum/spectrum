@@ -15,18 +15,12 @@ import pinnedThread from './pinnedThread';
 import threadConnection from './threadConnection';
 import metaData from './metaData';
 import slackImport from './slackImport';
-import invoices from './invoices';
-import recurringPayments from './recurringPayments';
 import memberGrowth from './memberGrowth';
 import conversationGrowth from './conversationGrowth';
 import topMembers from './topMembers';
 import topAndNewThreads from './topAndNewThreads';
-import isPro from './isPro';
 import contextPermissions from './contextPermissions';
 import watercooler from './watercooler';
-import billingSettings from './billingSettings';
-import hasChargeableSource from './hasChargeableSource';
-import hasFeatures from './hasFeatures';
 import brandedLogin from './brandedLogin';
 import slackSettings from './slackSettings';
 import joinSettings from './joinSettings';
@@ -49,18 +43,12 @@ module.exports = {
     threadConnection,
     metaData,
     slackImport,
-    invoices,
-    recurringPayments,
     memberGrowth,
     conversationGrowth,
     topMembers,
     topAndNewThreads,
-    isPro,
     contextPermissions,
     watercooler,
-    billingSettings,
-    hasChargeableSource,
-    hasFeatures,
     brandedLogin,
     slackSettings,
     joinSettings,

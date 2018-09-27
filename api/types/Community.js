@@ -58,73 +58,6 @@ const Community = /* GraphQL */ `
     newThreads: [Thread]
   }
 
-  type StripeCard {
-    brand: String
-    exp_month: Int
-    exp_year: Int
-    last4: String
-  }
-
-  type StripeSource {
-    id: ID
-    card: StripeCard
-    isDefault: Boolean
-  }
-
-  type StripeItem {
-    id: ID
-    amount: Int
-    quantity: Int
-    planId: String
-    planName: String
-  }
-
-  type StripeSubscriptionItem {
-    created: Int
-    planId: String
-    planName: String
-    amount: Int
-    quantity: Int
-    id: String
-  }
-
-  type StripeDiscount {
-    amount_off: Int
-    percent_off: Int
-    id: String
-  }
-
-  type StripeSubscription {
-    id: ID
-    created: Int
-    discount: StripeDiscount
-    billing_cycle_anchor: Int
-    current_period_end: Int
-    canceled_at: Int
-    items: [StripeSubscriptionItem]
-    status: String
-  }
-
-  type StripeInvoice {
-    id: ID
-    date: Int
-    items: [StripeItem]
-    total: Int
-  }
-
-  type CommunityBillingSettings {
-    pendingAdministratorEmail: LowercaseString
-    administratorEmail: LowercaseString
-    sources: [StripeSource]
-    invoices: [StripeInvoice]
-    subscriptions: [StripeSubscription]
-  }
-
-  type Features {
-    analytics: Boolean
-    prioritySupport: Boolean
-  }
-
   type BrandedLogin {
     isEnabled: Boolean
     message: String
@@ -161,9 +94,6 @@ const Community = /* GraphQL */ `
       sort: CommunityThreadConnectionSort = latest
     ): CommunityThreadsConnection @cost(complexity: 2, multiplier: "first")
     metaData: CommunityMetaData @cost(complexity: 10)
-    invoices: [Invoice] @cost(complexity: 1)
-    recurringPayments: [RecurringPayment]
-    isPro: Boolean @cost(complexity: 1)
     memberGrowth: GrowthData @cost(complexity: 10)
     conversationGrowth: GrowthData @cost(complexity: 3)
     topMembers: [CommunityMember] @cost(complexity: 10)
@@ -172,11 +102,6 @@ const Community = /* GraphQL */ `
     brandedLogin: BrandedLogin
     joinSettings: JoinSettings
     slackSettings: CommunitySlackSettings @cost(complexity: 2)
-
-    hasFeatures: Features
-    hasChargeableSource: Boolean
-    billingSettings: CommunityBillingSettings
-
     slackImport: SlackImport
       @cost(complexity: 2)
       @deprecated(reason: "Use slack settings field instead")
@@ -259,33 +184,6 @@ const Community = /* GraphQL */ `
     email: LowercaseString!
   }
 
-  input AddPaymentSourceInput {
-    sourceId: String!
-    communityId: ID!
-  }
-
-  input RemovePaymentSourceInput {
-    sourceId: String!
-    communityId: ID!
-  }
-
-  input MakePaymentSourceDefaultInput {
-    sourceId: String!
-    communityId: ID!
-  }
-
-  input CancelSubscriptionInput {
-    communityId: ID!
-  }
-
-  input EnableCommunityAnalyticsInput {
-    communityId: ID!
-  }
-
-  input DisableCommunityAnalyticsInput {
-    communityId: ID!
-  }
-
   input EnableBrandedLoginInput {
     id: String!
   }
@@ -345,12 +243,6 @@ const Community = /* GraphQL */ `
         reason: "Use feature level downgrade mutations like disableCommunityAnalytics"
       )
     updateAdministratorEmail(input: UpdateAdministratorEmailInput!): Community
-    addPaymentSource(input: AddPaymentSourceInput!): Community
-    removePaymentSource(input: RemovePaymentSourceInput!): Community
-    makePaymentSourceDefault(input: MakePaymentSourceDefaultInput!): Community
-    cancelSubscription(input: CancelSubscriptionInput!): Community
-    enableCommunityAnalytics(input: EnableCommunityAnalyticsInput!): Community
-    disableCommunityAnalytics(input: DisableCommunityAnalyticsInput!): Community
     enableBrandedLogin(input: EnableBrandedLoginInput!): Community
     disableBrandedLogin(input: DisableBrandedLoginInput!): Community
     saveBrandedLoginSettings(input: SaveBrandedLoginSettingsInput!): Community

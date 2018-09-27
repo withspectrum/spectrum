@@ -100,7 +100,6 @@ const User = /* GraphQL */ `
     # non-schema fields
     threadCount: Int @cost(complexity: 1)
     isAdmin: Boolean
-    isPro: Boolean! @cost(complexity: 1)
     communityConnection: UserCommunitiesConnection!
     channelConnection: UserChannelsConnection!
     directMessageThreadsConnection(
@@ -115,8 +114,6 @@ const User = /* GraphQL */ `
     ): UserThreadsConnection! @cost(complexity: 1, multiplier: "first")
     everything(first: Int = 20, after: String): EverythingThreadsConnection!
       @cost(complexity: 1, multiplier: "first")
-    recurringPayments: [RecurringPayment]
-    invoices: [Invoice]
     settings: UserSettings @cost(complexity: 1)
     githubProfile: GithubProfile
 
