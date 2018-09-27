@@ -38,7 +38,6 @@ export type DBCommunity = {
   administratorEmail: ?string,
   hasAnalytics: boolean,
   hasPrioritySupport: boolean,
-  stripeCustomerId: ?string,
   pendingAdministratorEmail?: string,
   ossVerified?: boolean,
   isPrivate: boolean,
@@ -92,23 +91,6 @@ export type DBDirectMessageThread = {
   id: string,
   name?: string,
   threadLastActive: Date,
-};
-
-export type DBInvoice = {
-  amount: number,
-  chargeId: string,
-  communityId?: string,
-  customerId: string,
-  id: string,
-  paidAt: Date,
-  planId: 'beta-pro' | 'community-standard',
-  planName: string,
-  quantity: number,
-  sourceBrand: string,
-  sourceLast4: string,
-  status: string,
-  subscriptionId: string,
-  userId: string,
 };
 
 export type DBMessage = {
@@ -189,25 +171,6 @@ export type DBThreadReaction = {
   score?: number,
   scoreUpdatedAt?: Date,
   userId: string,
-};
-
-export type DBRecurringPayment = {
-  id: string,
-  amount: number,
-  canceledAt?: Date,
-  createdAt: Date,
-  currentPeriodEnd: Date,
-  currentPeriodStart: Date,
-  customerId: string,
-  planId: 'beta-pro' | 'community-standard',
-  planName: string,
-  quantity: number,
-  sourceBrand: string,
-  sourceLast4: string,
-  status: 'active' | 'canceled',
-  subscriptionId: string,
-  userId: string,
-  communityId?: string,
 };
 
 export type DBReputationEvent = {
@@ -414,17 +377,6 @@ export type DBExpoPushSubscription = {
   id: string,
   token: string,
   userId: string,
-};
-
-export type DBStripeCustomer = {
-  created: number,
-  currency: ?string,
-  customerId: string,
-  email: string,
-  metadata: {
-    communityId?: string,
-    communityName?: string,
-  },
 };
 
 export type FileUpload = {

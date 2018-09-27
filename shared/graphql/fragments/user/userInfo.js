@@ -12,7 +12,6 @@ export type UserInfoType = {
   username: string,
   isOnline: boolean,
   timezone: number,
-  isPro: boolean,
   totalReputation: number,
 };
 
@@ -28,7 +27,6 @@ export default gql`
     username
     isOnline
     timezone
-    isPro
     totalReputation
   }
 `;
