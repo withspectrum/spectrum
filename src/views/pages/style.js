@@ -671,14 +671,6 @@ export const MenuTab = styled.div`
   }
 `;
 
-export const PricingTab = styled(Tab)`
-  grid-area: pricing;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
 export const FeaturesTab = styled(Tab)`
   grid-area: features;
 

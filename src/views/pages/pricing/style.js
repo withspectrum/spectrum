@@ -3,7 +3,6 @@ import theme from 'shared/theme';
 import styled from 'styled-components';
 import { Button, TextButton } from 'src/components/buttons';
 import { hexa, zIndex } from 'src/components/globals';
-import Link from 'src/components/link';
 
 export const ContentContainer = styled.div`
   padding: 128px 32px 72px;

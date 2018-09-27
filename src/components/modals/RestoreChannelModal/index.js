@@ -7,7 +7,6 @@ import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import restoreChannel from 'shared/graphql/mutations/channel/restoreChannel';
-import StripeCardWell from 'src/components/stripeCardForm/modalWell';
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
 import { modalStyles, Description } from '../styles';
@@ -83,14 +82,6 @@ class RestoreChannelModal extends React.Component<Props, State> {
               Restoring a private channel will automatically resume your
               subscription at $10 per month.
             </Description>
-
-            {channel.isPrivate && (
-              <StripeCardWell
-                id={this.props.id}
-                onSourceAvailable={this.onSourceAvailable}
-                closeModal={this.close}
-              />
-            )}
 
             <Actions>
               <TextButton onClick={this.close} color={'warn.alt'}>

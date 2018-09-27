@@ -10,14 +10,12 @@ import {
   DropdownSectionDivider,
   DropdownSection,
   DropdownSectionSubtitle,
-  DropdownSectionCardInfo,
   DropdownSectionText,
   DropdownSectionTitle,
   DropdownAction,
 } from '../../../components/settingsViews/style';
 import Icon from '../../../components/icons';
 import { Spinner } from '../../../components/globals';
-import { openModal } from 'src/actions/modals';
 import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
 import OutsideClickHandler from '../../../components/outsideClickHandler';
 import addCommunityModerator from 'shared/graphql/mutations/communityMember/addCommunityModerator';
@@ -28,7 +26,6 @@ import approvePendingCommunityMember from 'shared/graphql/mutations/communityMem
 import blockPendingCommunityMember from 'shared/graphql/mutations/communityMember/blockPendingCommunityMember';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 import MutationWrapper from './mutationWrapper';
-import { getCardImage } from '../../communityBilling/utils';
 import type { Dispatch } from 'redux';
 
 type Props = {
@@ -152,7 +149,6 @@ class EditDropdown extends React.Component<Props, State> {
           mutation: community.hasChargeableSource
             ? this.props.addCommunityModerator
             : null,
-          onClick: this.initUpgrade,
         },
         {
           ...this.permissionConfigurations.member,
@@ -173,7 +169,6 @@ class EditDropdown extends React.Component<Props, State> {
           mutation: community.hasChargeableSource
             ? this.props.addCommunityModerator
             : null,
-          onClick: this.initUpgrade,
         },
         {
           ...this.permissionConfigurations.member,
@@ -203,45 +198,6 @@ class EditDropdown extends React.Component<Props, State> {
 
   toggleOpen = () => this.setState({ isOpen: true });
   close = () => this.setState({ isOpen: false });
-  initUpgrade = () => {
-    if (!this.props.community.billingSettings.administratorEmail) {
-      return this.props.dispatch(
-        openModal('ADMIN_EMAIL_ADDRESS_VERIFICATION_MODAL', {
-          id: this.props.community.id,
-        })
-      );
-    }
-
-    return this.props.dispatch(
-      openModal('UPGRADE_MODERATOR_SEAT_MODAL', {
-        input: this.input,
-        community: this.props.community,
-      })
-    );
-  };
-
-  getDefaultCardInfo = () => {
-    const { community } = this.props;
-    const sources = community.billingSettings.sources;
-    if (!sources || sources.length === 0) return null;
-    const defaultSource = sources.find(source => source.isDefault);
-    if (!defaultSource) return null;
-    return (
-      <DropdownSectionCardInfo>
-        <img
-          alt={`${defaultSource.card.brand} ending in ${
-            defaultSource.card.last4
-          }`}
-          src={getCardImage(defaultSource.card.brand)}
-          width={24}
-        />
-        <span>
-          Pay with {defaultSource.card.brand} ending in{' '}
-          {defaultSource.card.last4}
-        </span>
-      </DropdownSectionCardInfo>
-    );
-  };
 
   render() {
     const { isOpen } = this.state;
@@ -297,9 +253,6 @@ class EditDropdown extends React.Component<Props, State> {
                             <DropdownSectionSubtitle>
                               {role.subtitle}
                             </DropdownSectionSubtitle>
-
-                            {role.id === 'moderator' &&
-                              this.getDefaultCardInfo()}
                           </DropdownSectionText>
                         </DropdownSection>
                       )}
@@ -320,8 +273,6 @@ class EditDropdown extends React.Component<Props, State> {
                         <DropdownSectionSubtitle>
                           {role.subtitle}
                         </DropdownSectionSubtitle>
-
-                        {role.id === 'moderator' && this.getDefaultCardInfo()}
                       </DropdownSectionText>
                     </DropdownSection>
                   );

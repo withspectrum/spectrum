@@ -12,7 +12,6 @@ import {
   Tabs,
   LogoTab,
   MenuTab,
-  PricingTab,
   SupportTab,
   FeaturesTab,
   AuthTab,

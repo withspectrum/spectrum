@@ -14,7 +14,6 @@ import { getChannelBySlugAndCommunitySlugQuery } from 'shared/graphql/queries/ch
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import createChannelMutation from 'shared/graphql/mutations/channel/createChannel';
-import StripeModalWell from 'src/components/stripeCardForm/modalWell';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
@@ -344,14 +343,6 @@ class CreateChannelModal extends React.Component<Props, State> {
             >
               Private channel · $10/mo
             </Checkbox>
-
-            {isPrivate && (
-              <StripeModalWell
-                id={community.id}
-                onSourceAvailable={this.onSourceAvailable}
-                closeModal={this.close}
-              />
-            )}
 
             <UpsellDescription>
               Private channels protect all conversations and messages, and all
