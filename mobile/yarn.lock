@@ -6373,9 +6373,9 @@ react-navigation-props-mapper@^0.1.3:
   dependencies:
     hoist-non-react-statics "^2.2.1"
 
-react-navigation-stack@0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-0.6.0.tgz#57dd25d0902137b950795549c43f3608e9edc250"
+react-navigation-stack@0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-0.7.0.tgz#0b2f139ee1cba953037ef51353df992ec6c74fa2"
 
 react-navigation-tabs@0.8.2:
   version "0.8.2"
@@ -6386,9 +6386,9 @@ react-navigation-tabs@0.8.2:
     react-lifecycles-compat "^3.0.4"
     react-native-tab-view "^1.0.0"
 
-react-navigation@^2.16.0:
-  version "2.16.0"
-  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-2.16.0.tgz#9b9320801700baac50e49e87a63641a4df179230"
+react-navigation@^2.17.0:
+  version "2.17.0"
+  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-2.17.0.tgz#ebc5a92d7633f529ca340a38146637ff01f969a4"
   dependencies:
     clamp "^1.0.1"
     create-react-context "0.2.2"
@@ -6400,7 +6400,7 @@ react-navigation@^2.16.0:
     react-native-screens "^1.0.0-alpha.11"
     react-navigation-deprecated-tab-navigator "1.3.0"
     react-navigation-drawer "0.5.0"
-    react-navigation-stack "0.6.0"
+    react-navigation-stack "0.7.0"
     react-navigation-tabs "0.8.2"
 
 react-proxy@^1.1.7:
