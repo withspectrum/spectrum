@@ -135,11 +135,7 @@ class UserWithData extends React.Component<Props, State> {
 
     if (!file) return;
 
-    if (
-      file &&
-      file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES &&
-      this.props.currentUser.isPro
-    ) {
+    if (file && file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES) {
       return this.setState({
         photoSizeError: `Try uploading a file less than ${PRO_USER_MAX_IMAGE_SIZE_STRING}.`,
         isLoading: false,
@@ -171,11 +167,7 @@ class UserWithData extends React.Component<Props, State> {
       isLoading: true,
     });
 
-    if (
-      file &&
-      file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES &&
-      this.props.currentUser.isPro
-    ) {
+    if (file && file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES) {
       return this.setState({
         photoSizeError: `Try uploading a file less than ${PRO_USER_MAX_IMAGE_SIZE_STRING}.`,
         isLoading: false,

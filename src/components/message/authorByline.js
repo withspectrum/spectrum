@@ -58,9 +58,6 @@ export default (props: Props) => {
                     onClick={e => e.stopPropagation()}
                   />
                 ))}
-              {user.isPro && (
-                <Badge type="pro" onClick={e => e.stopPropagation()} />
-              )}
             </BadgesContainer>
             <GutterTimestamp
               to={messageUrl}

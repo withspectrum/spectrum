@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import AvatarImage from 'src/components/avatar/image';
 import Link from 'src/components/link';
+import Badge from 'src/components/badges';
 import { Button } from 'src/components/buttons';
 import ConditionalWrap from 'src/components/conditionalWrap';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
@@ -68,6 +69,12 @@ class HoverProfile extends Component<ProfileProps> {
               <Title>{user.name}</Title>
             </ConditionalWrap>
 
+            {user.betaSupporter && (
+              <span style={{ display: 'inline-block', marginBottom: '4px' }}>
+                <Badge type="beta-supporter" />
+              </span>
+            )}
+
             {user.description && (
               <Description>{renderTextWithLinks(user.description)}</Description>
             )}
@@ -96,4 +103,7 @@ class HoverProfile extends Component<ProfileProps> {
 
 const map = state => ({ currentUser: state.users.currentUser });
 //$FlowFixMe
-export default compose(connect(map), withRouter)(HoverProfile);
+export default compose(
+  connect(map),
+  withRouter
+)(HoverProfile);

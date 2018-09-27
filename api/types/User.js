@@ -96,6 +96,7 @@ const User = /* GraphQL */ `
     timezone: Int
     totalReputation: Int
     pendingEmail: LowercaseString
+    betaSupporter: Boolean
 
     # non-schema fields
     threadCount: Int @cost(complexity: 1)

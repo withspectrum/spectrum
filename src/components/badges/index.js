@@ -17,14 +17,14 @@ class Badge extends React.Component<Props> {
   render() {
     const { type } = this.props;
     switch (type) {
-      case 'pro':
+      case 'beta-supporter':
         return (
           <ProBadge
             type={type}
-            tipText={this.props.tipText}
-            tipLocation={'top-left'}
+            tipText={'Beta Supporter'}
+            tipLocation={'top-right'}
           >
-            {type}
+            Supporter
           </ProBadge>
         );
       case 'blocked':
