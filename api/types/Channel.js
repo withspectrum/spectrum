@@ -58,7 +58,7 @@ const Channel = /* GraphQL */ `
     userId: ID!
   }
 
-  type Channel {
+  type Channel @cacheControl(maxAge: 1800) {
     id: ID!
     createdAt: Date!
     modifiedAt: Date

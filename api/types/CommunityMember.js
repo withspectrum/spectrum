@@ -1,6 +1,6 @@
 // @flow
 const CommunityMember = /* GraphQL */ `
-  type CommunityMember {
+  type CommunityMember @cacheControl(maxAge: 1800) {
     id: ID!
     user: User!
     roles: [String]

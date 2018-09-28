@@ -79,7 +79,7 @@ const User = /* GraphQL */ `
     username: String
   }
 
-  type User {
+  type User @cacheControl(maxAge: 1800) {
     id: ID!
     name: String
     firstName: String

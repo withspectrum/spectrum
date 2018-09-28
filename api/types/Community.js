@@ -135,7 +135,7 @@ const Community = /* GraphQL */ `
     subscriptions: [StripeSubscription]
   }
 
-  type Community {
+  type Community @cacheControl(maxAge: 1800) {
     id: ID!
     createdAt: Date
     name: String!
