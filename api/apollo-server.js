@@ -7,6 +7,7 @@ import createErrorFormatter from './utils/create-graphql-error-formatter';
 import schema from './schema';
 import { getUser, setUserOnline } from './models/user';
 import { getUserIdFromReq } from './utils/session-store';
+import UserError from './utils/UserError';
 import type { DBUser } from 'shared/types';
 
 const server = new ApolloServer({
@@ -82,20 +83,19 @@ const server = new ApolloServer({
   engine: false,
   tracing: true,
   cacheControl: true,
-  // validationRules: [
-  //   depthLimit(10),
-  //   costAnalysis({
-  //     variables: req.body.variables,
-  //     maximumCost: 750,
-  //     defaultCost: 1,
-  //     createError: (max, actual) => {
-  //       const err = new UserError(
-  //         `GraphQL query exceeds maximum complexity, please remove some nesting or fields and try again. (max: ${max}, actual: ${actual})`
-  //       );
-  //       return err;
-  //     },
-  //   }),
-  // ],
+  validationRules: [
+    depthLimit(10),
+    costAnalysis({
+      maximumCost: 750,
+      defaultCost: 1,
+      createError: (max, actual) => {
+        const err = new UserError(
+          `GraphQL query exceeds maximum complexity, please remove some nesting or fields and try again. (max: ${max}, actual: ${actual})`
+        );
+        return err;
+      },
+    }),
+  ],
 });
 
 export default server;
