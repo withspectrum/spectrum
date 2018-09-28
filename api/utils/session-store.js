@@ -17,6 +17,17 @@ export const getUserIdFromReq = (req: any): Promise<?string> =>
         return res(null);
       }
 
-      return res(req.session.passport.user);
+      // NOTE(@mxstbr): `req.session.passport.user` used to be just the userID, but is now the full user data
+      // JSON.stringified to avoid having to go to the db on every single request. We have to handle both
+      // cases here to get the ID.
+      let id;
+      try {
+        const user = JSON.parse(req.session.passport.user);
+        id = user.id;
+      } catch (err) {
+        id = req.session.passport.user;
+      }
+
+      return res(id);
     });
   });

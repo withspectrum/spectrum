@@ -522,9 +522,9 @@ validator@^9.4.1:
   version "9.4.1"
   resolved "https://registry.yarnpkg.com/validator/-/validator-9.4.1.tgz#abf466d398b561cd243050112c6ff1de6cc12663"
 
-web-push@^3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/web-push/-/web-push-3.3.2.tgz#7a8f8b77c8cb1875b02a53e45d7bc277a3d05368"
+web-push@^3.3.3:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/web-push/-/web-push-3.3.3.tgz#8dc7c578dd1243ceb5a8377389424e87ea9b15cc"
   dependencies:
     asn1.js "^5.0.0"
     http_ece "1.0.5"
