@@ -1,4 +1,5 @@
 import styled, { keyframes } from 'styled-components';
+import theme from 'shared/theme';
 import { Gradient, Transition, zIndex } from '../../globals';
 import { isMobile } from '../../../helpers/utils';
 
@@ -69,10 +70,10 @@ export const SectionActions = styled(Section)`
 `;
 
 export const SectionAlert = styled(Section)`
-  background-color: ${({ theme }) => theme.success.alt};
+  background-color: ${theme.success.alt};
   background-image: ${({ theme }) =>
     Gradient(theme.success.alt, theme.success.default)};
-  color: ${({ theme }) => theme.text.reverse};
+  color: ${theme.text.reverse};
   line-height: 1.3;
   font-weight: 600;
   font-size: 0.875rem;
@@ -107,7 +108,7 @@ export const Heading = styled.h2`
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.2px;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   margin: 0.5rem 0;
 `;
 
@@ -115,7 +116,7 @@ export const Subheading = styled.h4`
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.3;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
 `;
 
 export const Flex = styled.div`
@@ -143,7 +144,7 @@ export const Spinner = styled.div`
   height: ${props => (props.size ? props.size + 'px' : '1rem')};
   width: ${props => (props.size ? props.size + 'px' : '1rem')};
   border-radius: 50%;
-  border: 2px solid ${({ theme }) => theme.text.reverse};
+  border: 2px solid ${theme.text.reverse};
   border-top-color: ${props => props.color};
   animation: ${rotate} 1s infinite linear;
   position: absolute;
@@ -170,13 +171,13 @@ export const Profile = styled.div`
   }
 
   span {
-    background-color: ${({ theme }) => theme.success.alt};
+    background-color: ${theme.success.alt};
     background-image: ${({ theme }) =>
       Gradient(theme.success.alt, theme.success.default)};
     position: absolute;
     left: 52%;
     top: 32px;
-    color: ${({ theme }) => theme.text.reverse};
+    color: ${theme.text.reverse};
     font-size: 10px;
     font-weight: 800;
     padding: 2px 4px;

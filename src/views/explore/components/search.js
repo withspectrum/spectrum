@@ -276,7 +276,8 @@ class Search extends React.Component<Props, State> {
                               </SearchResultName>
                               {community.metaData && (
                                 <SearchResultMetadata>
-                                  {community.metaData.members} members
+                                  {community.metaData.members.toLocaleString()}{' '}
+                                  members
                                 </SearchResultMetadata>
                               )}
                             </SearchResultMetaWrapper>

@@ -13,9 +13,9 @@ array-flatten@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-1.1.1.tgz#9a5f699051b1e7073328f2a008968b64ea2955d2"
 
-aws-sdk@^2.296.0:
-  version "2.296.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.296.0.tgz#109016088b7edc063a5e5bc36537632e02e91447"
+aws-sdk@^2.318.0:
+  version "2.318.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.318.0.tgz#b9e8e795d4ae9d5ba428cdaa75dde49acce708d4"
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
@@ -84,9 +84,9 @@ buffer@4.9.1:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-bull@^3.4.7:
-  version "3.4.7"
-  resolved "https://registry.yarnpkg.com/bull/-/bull-3.4.7.tgz#163df3358502f49ebe293de5529a1eaecce5cce7"
+bull@^3.4.8:
+  version "3.4.8"
+  resolved "https://registry.yarnpkg.com/bull/-/bull-3.4.8.tgz#bd25ae82f47e0a092c0b06b6a13b875fa5b41bc0"
   dependencies:
     bluebird "^3.5.0"
     cron-parser "^2.5.0"
@@ -544,15 +544,15 @@ range-parser@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
 
-raven@^2.6.3:
-  version "2.6.3"
-  resolved "https://registry.yarnpkg.com/raven/-/raven-2.6.3.tgz#207475a12809277ef54eaceafe2597ff65262ab4"
+raven@^2.6.4:
+  version "2.6.4"
+  resolved "https://registry.yarnpkg.com/raven/-/raven-2.6.4.tgz#458d4a380c8fbb59e0150c655625aaf60c167ea3"
   dependencies:
     cookie "0.3.1"
     md5 "^2.2.1"
     stack-trace "0.0.10"
     timed-out "4.0.1"
-    uuid "3.0.0"
+    uuid "3.3.2"
 
 raw-body@2.3.2:
   version "2.3.2"
@@ -725,15 +725,11 @@ utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
 
-uuid@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.0.tgz#6728fc0459c450d796a99c31837569bdf672d728"
-
 uuid@3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
 
-uuid@^3.2.1:
+uuid@3.3.2, uuid@^3.2.1:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
 

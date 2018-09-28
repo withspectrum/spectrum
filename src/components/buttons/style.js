@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 /* eslint no-eval: 0 */
 // $FlowFixMe
 import styled, { css } from 'styled-components';
@@ -22,8 +23,12 @@ const baseButton = css`
   text-align: center;
   padding: ${props =>
     props.icon
-      ? props.large ? '8px 12px' : '4px 8px'
-      : props.large ? '16px 32px' : '12px 16px'};
+      ? props.large
+        ? '8px 12px'
+        : '4px 8px'
+      : props.large
+        ? '16px 32px'
+        : '12px 16px'};
 
   &:hover {
     transition: ${Transition.hover.on};
@@ -65,7 +70,7 @@ export const StyledSolidButton = styled.button`
             eval(`props.theme.${props.gradientTheme}.default`)
           )
         : Gradient(props.theme.brand.alt, props.theme.brand.default)};
-  color: ${props => props.theme.text.reverse};
+  color: ${theme.text.reverse};
 
   &:hover {
     background-color: ${props =>

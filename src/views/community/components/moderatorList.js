@@ -72,7 +72,7 @@ class CommunityModeratorList extends React.Component<Props> {
       return (
         <ListColumn>
           {nodes.map(node => {
-            const { user, roles } = node;
+            const { user } = node;
 
             return (
               <GranularUserProfile
@@ -83,7 +83,6 @@ class CommunityModeratorList extends React.Component<Props> {
                 isCurrentUser={currentUser && user.id === currentUser.id}
                 isOnline={user.isOnline}
                 onlineSize={'small'}
-                badges={roles}
               >
                 {currentUser &&
                   node.user.id !== currentUser.id && (

@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 
 export const Section = styled.section`
@@ -12,13 +13,13 @@ export const Section = styled.section`
 export const Title = styled.h3`
   font-size: 24px;
   font-weight: 700;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   margin: 0;
 `;
 
 export const Subtitle = styled.h3`
   font-size: 16px;
   font-weight: 400;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   margin-bottom: 16px;
 `;

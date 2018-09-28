@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 import { zIndex } from 'src/components/globals';
 import Link from 'src/components/link';
@@ -28,7 +29,7 @@ export const Span = styled.span`
 
 export const ProfileCard = styled.div`
   width: 256px;
-  background: ${props => props.theme.bg.default};
+  background: ${theme.bg.default};
   border-radius: 4px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.16);
   min-height: 128px;
@@ -42,20 +43,20 @@ export const Content = styled.div`
 export const Title = styled.h2`
   font-size: 20px;
   font-weight: 700;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
 `;
 
 export const Description = styled.p`
   font-size: 14px;
   font-weight: 400;
-  color: ${props => props.theme.text.secondary};
+  color: ${theme.text.secondary};
   margin-top: 4px;
   line-height: 1.4;
   white-space: pre-wrap;
 
   a {
     font-weight: 500;
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 
   a:hover {
@@ -104,7 +105,7 @@ export const ProfilePhotoContainer = styled.div`
   margin-bottom: -16px;
 
   img {
-    box-shadow: 0 0 0 2px ${props => props.theme.bg.default};
+    box-shadow: 0 0 0 2px ${theme.bg.default};
   }
 `;
 
@@ -116,7 +117,7 @@ CHANNEL SPECIFIC
 export const ChannelCommunityLabel = styled.h5`
   font-size: 14px;
   font-weight: 500;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 `;
 
 export const ChannelCommunityRow = styled(Link)`
@@ -131,7 +132,7 @@ export const ChannelCommunityRow = styled(Link)`
 
   &:hover {
     ${ChannelCommunityLabel} {
-      color: ${props => props.theme.text.secondary};
+      color: ${theme.text.secondary};
     }
   }
 `;

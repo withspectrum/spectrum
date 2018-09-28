@@ -7,6 +7,7 @@ import createErrorFormatter from './utils/create-graphql-error-formatter';
 import schema from './schema';
 import { getUser, setUserOnline } from './models/user';
 import { getUserIdFromReq } from './utils/session-store';
+import type { DBUser } from 'shared/types';
 
 const server = new ApolloServer({
   schema,
@@ -24,6 +25,10 @@ const server = new ApolloServer({
 
     return {
       loaders,
+      updateCookieUserData: (data: DBUser) =>
+        new Promise((res, rej) =>
+          req.login(data, err => (err ? rej(err) : res()))
+        ),
       user: currentUser,
     };
   },

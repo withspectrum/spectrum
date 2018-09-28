@@ -77,7 +77,7 @@ export default async (job: Job<ReactionNotificationJobData>) => {
 
     debug('mark notification as new for sender');
 
-    // if the user is allowed to recieve notifications, update their notification
+    // if the user is allowed to receive notifications, update their notification
     return Promise.all([
       markUsersNotificationsAsNew(updatedNotification.id, message.senderId),
     ]).catch(err => {

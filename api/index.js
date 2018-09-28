@@ -25,6 +25,7 @@ import type { Loader } from './loaders/types';
 
 export type GraphQLContext = {
   user: DBUser,
+  updateCookieUserData: (data: DBUser) => Promise<void>,
   loaders: {
     [key: string]: Loader,
   },
@@ -73,29 +74,36 @@ app.use(errorHandler);
 const httpServer = createServer(app);
 apolloServer.installSubscriptionHandlers(httpServer);
 
-// Start listening
-httpServer.listen(PORT);
-debug(`GraphQL API running at http://localhost:${PORT}/api`);
-
 // Start API wrapped in Apollo Engine
-// const engine = new ApolloEngine({
-//   logging: {
-//     level: 'WARN',
-//   },
-//   apiKey: process.env.APOLLO_ENGINE_API_KEY,
-//   // Only send perf data to the remote server in production
-//   reporting: {
-//     disabled: process.env.NODE_ENV !== 'production',
-//     hostname: process.env.NOW_URL || undefined,
-//     privateHeaders: ['authorization', 'Authorization', 'AUTHORIZATION'],
-//   },
-// });
+const engine = new ApolloEngine({
+  logging: {
+    level: 'WARN',
+  },
+  apiKey: process.env.APOLLO_ENGINE_API_KEY,
+  // Only send perf data to the remote server in production
+  reporting: {
+    disabled: process.env.NODE_ENV !== 'production',
+    hostname: process.env.NOW_URL || undefined,
+    privateHeaders: ['authorization', 'Authorization', 'AUTHORIZATION'],
+  },
+  queryCache: {
+    // Don't cache logged-in user responses
+    privateFullQueryStore: 'disabled',
+  },
+  sessionAuth: {
+    cookie: 'session',
+    // TODO(@mxstbr): Ping Apollo to note that we need both of those
+    // header: 'Authorization'
+  },
+});
 
-// engine.listen({
-//   port: PORT,
-//   httpServer: server,
-//   graphqlPaths: ['/api'],
-// });
+engine.listen({
+  port: PORT,
+  httpServer: httpServer,
+  graphqlPaths: ['/api'],
+});
+
+debug(`GraphQL API running at http://localhost:${PORT}/api`);
 
 process.on('unhandledRejection', async err => {
   console.error('Unhandled rejection', err);
