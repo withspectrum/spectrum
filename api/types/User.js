@@ -98,6 +98,11 @@ const User = /* GraphQL */ `
     pendingEmail: LowercaseString
     betaSupporter: Boolean
 
+    isPro: Boolean @deprecated(reason: "Use the betaSupporter field instead")
+    recurringPayments: [RecurringPayment]
+      @deprecated(reason: "Payments are no longer used")
+    invoices: [Invoice] @deprecated(reason: "Payments are no longer used")
+
     # non-schema fields
     threadCount: Int @cost(complexity: 1)
     isAdmin: Boolean

@@ -25,6 +25,21 @@ import brandedLogin from './brandedLogin';
 import slackSettings from './slackSettings';
 import joinSettings from './joinSettings';
 
+// no-op resolvers to transition while removing payments
+import type { DBCommunity } from 'shared/types';
+const isPro = () => false;
+const recurringPayments = () => [];
+const invoices = () => [];
+const billingSettings = (community: DBCommunity) => ({
+  pendingAdministratorEmail: null,
+  administratorEmail: community.administratorEmail,
+  sources: [],
+  invoices: [],
+  subscriptions: [],
+});
+const hasChargeableSource = () => false;
+const hasFeatures = () => ({ analytics: true, prioritySupport: true });
+
 module.exports = {
   Query: {
     community,
@@ -52,5 +67,12 @@ module.exports = {
     brandedLogin,
     slackSettings,
     joinSettings,
+
+    invoices,
+    recurringPayments,
+    isPro,
+    billingSettings,
+    hasChargeableSource,
+    hasFeatures,
   },
 };

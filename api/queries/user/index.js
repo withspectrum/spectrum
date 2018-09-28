@@ -18,6 +18,12 @@ import isAdmin from './isAdmin';
 import contextPermissions from './contextPermissions';
 import githubProfile from './githubProfile';
 
+// no-op resolvers to transition while removing payments
+import type { DBUser } from 'shared/types';
+const isPro = (dbUser: DBUser) => dbUser.betaSupporter;
+const recurringPayments = () => [];
+const invoices = () => [];
+
 module.exports = {
   Query: {
     user,
@@ -39,5 +45,8 @@ module.exports = {
     isAdmin,
     githubProfile,
     contextPermissions,
+    isPro,
+    recurringPayments,
+    invoices,
   },
 };

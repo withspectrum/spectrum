@@ -68,6 +68,73 @@ const Community = /* GraphQL */ `
     trending
   }
 
+  type Features {
+    analytics: Boolean
+    prioritySupport: Boolean
+  }
+
+  type StripeCard {
+    brand: String
+    exp_month: Int
+    exp_year: Int
+    last4: String
+  }
+
+  type StripeSource {
+    id: ID
+    card: StripeCard
+    isDefault: Boolean
+  }
+
+  type StripeItem {
+    id: ID
+    amount: Int
+    quantity: Int
+    planId: String
+    planName: String
+  }
+
+  type StripeSubscriptionItem {
+    created: Int
+    planId: String
+    planName: String
+    amount: Int
+    quantity: Int
+    id: String
+  }
+
+  type StripeDiscount {
+    amount_off: Int
+    percent_off: Int
+    id: String
+  }
+
+  type StripeSubscription {
+    id: ID
+    created: Int
+    discount: StripeDiscount
+    billing_cycle_anchor: Int
+    current_period_end: Int
+    canceledAt: Int
+    items: [StripeSubscriptionItem]
+    status: String
+  }
+
+  type StripeInvoice {
+    id: ID
+    date: Int
+    items: [StripeItem]
+    total: Int
+  }
+
+  type CommunityBillingSettings {
+    pendingAdministratorEmail: LowercaseString
+    administratorEmail: LowercaseString
+    sources: [StripeSource]
+    invoices: [StripeInvoice]
+    subscriptions: [StripeSubscription]
+  }
+
   type Community {
     id: ID!
     createdAt: Date
@@ -113,6 +180,16 @@ const Community = /* GraphQL */ `
       @deprecated(reason: "Use the new Community.members type")
     contextPermissions: ContextPermissions
       @deprecated(reason: "Use the new CommunityMember type to get permissions")
+
+    hasFeatures: Features @deprecated(reason: "Payments are no longer used")
+    hasChargeableSource: Boolean
+      @deprecated(reason: "Payments are no longer used")
+    billingSettings: CommunityBillingSettings
+      @deprecated(reason: "Payments are no longer used")
+    invoices: [Invoice] @deprecated(reason: "Payments are no longer used")
+    recurringPayments: [RecurringPayment]
+      @deprecated(reason: "Payments are no longer used")
+    isPro: Boolean @deprecated(reason: "Payments are no longer used")
   }
 
   extend type Query {

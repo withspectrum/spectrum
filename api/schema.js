@@ -28,6 +28,7 @@ const DirectMessageThread = require('./types/DirectMessageThread');
 const Notification = require('./types/Notification');
 const Meta = require('./types/Meta');
 const Search = require('./types/Search');
+const Invoice = require('./types/Invoice');
 const CommunityMember = require('./types/CommunityMember');
 const ThreadParticipant = require('./types/ThreadParticipant');
 
@@ -144,6 +145,7 @@ const schema = makeExecutableSchema({
     DirectMessageThread,
     Notification,
     Meta,
+    Invoice,
     Search,
   ],
   resolvers,
