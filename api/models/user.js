@@ -19,7 +19,14 @@ const getUser = async (input: GetUserInput): Promise<?DBUser> => {
 
     // hotfix a malformed payload that is a stringified full user object
     if (userId[0] === '{') {
-      userId = JSON.parse(userId).id;
+      const userObj = JSON.parse(userId);
+      userId = userObj.id;
+      if (userId === undefined) {
+        console.log({
+          error: 'Undefined userId in getUser',
+          data: input,
+        });
+      }
     }
 
     return await getUserById(userId);
@@ -491,7 +498,14 @@ const setUserOnline = (id: string, isOnline: boolean): DBUser => {
 
   let userId = id;
   if (id[0] === '{') {
-    userId = JSON.parse(id).id;
+    const userObj = JSON.parse(id);
+    userId = userObj.id;
+    if (userId === undefined) {
+      console.log({
+        error: 'Undefined userId in setUserOnline',
+        data: id,
+      });
+    }
   }
 
   data.isOnline = isOnline;

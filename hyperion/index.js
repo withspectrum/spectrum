@@ -96,7 +96,14 @@ passport.deserializeUser((id, done) => {
   // hotfix a case where the cookie contained a full user object as a string
   // and was passing it as the userid to the db request
   if (id[0] === '{') {
-    userId = JSON.parse(id).id;
+    const userObj = JSON.parse(id);
+    userId = userObj.id;
+    if (userId === undefined) {
+      console.log({
+        error: 'Undefined userId in passport deserialization',
+        data: id,
+      });
+    }
   }
   getUser({ id: userId })
     .then(user => {
