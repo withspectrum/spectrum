@@ -92,7 +92,13 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  getUser({ id })
+  let userId = id;
+  // hotfix a case where the cookie contained a full user object as a string
+  // and was passing it as the userid to the db request
+  if (id[0] === '{') {
+    userId = JSON.parse(id).id;
+  }
+  getUser({ id: userId })
     .then(user => {
       done(null, user);
     })
