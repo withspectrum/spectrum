@@ -33,6 +33,9 @@ class ThreadByline extends React.Component<Props> {
               <AuthorName>{user.name}</AuthorName>
               <AuthorUsername>@{user.username}</AuthorUsername>
               {roles.map((role, index) => <Badge type={role} key={index} />)}
+              {user.betaSupporter && (
+                <Badge type="beta-supporter" label="Supporter" />
+              )}
             </AuthorNameLink>
           ) : (
             <AuthorNameNoLink>

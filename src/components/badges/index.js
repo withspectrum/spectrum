@@ -7,6 +7,7 @@ import { Span, ProBadge, BlockedBadge, PendingBadge, TeamBadge } from './style';
 
 type Props = {
   type: string,
+  label?: string,
   onClick?: Function,
   tipText: string,
   currentUser: ?Object,
@@ -15,16 +16,12 @@ type Props = {
 
 class Badge extends React.Component<Props> {
   render() {
-    const { type } = this.props;
+    const { type, label } = this.props;
     switch (type) {
       case 'beta-supporter':
         return (
-          <ProBadge
-            type={type}
-            tipText={'Beta Supporter'}
-            tipLocation={'top-right'}
-          >
-            Supporter
+          <ProBadge type={type} tipText={'Beta Supporter'} tipLocation={'top'}>
+            {label || 'Supporter'}
           </ProBadge>
         );
       case 'blocked':
@@ -34,7 +31,7 @@ class Badge extends React.Component<Props> {
             tipText={this.props.tipText}
             tipLocation={'top-left'}
           >
-            {type}
+            {label || type}
           </BlockedBadge>
         );
       case 'pending':
@@ -44,7 +41,7 @@ class Badge extends React.Component<Props> {
             tipText={this.props.tipText}
             tipLocation={'top-left'}
           >
-            {type}
+            {label || type}
           </PendingBadge>
         );
       case 'moderator':
@@ -68,7 +65,7 @@ class Badge extends React.Component<Props> {
             tipLocation={'top-left'}
             onClick={this.props.onClick && this.props.onClick}
           >
-            {type}
+            {label || type}
           </Span>
         );
     }
