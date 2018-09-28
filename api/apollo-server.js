@@ -78,6 +78,7 @@ const server = new ApolloServer({
       },
     ],
   },
+  maxFileSize: 25 * 1024 * 1024, // 25MB
   // validationRules: [
   //   depthLimit(10),
   //   costAnalysis({
