@@ -49,7 +49,7 @@ const GITHUB_OAUTH_CLIENT_ID = IS_PROD
 const init = () => {
   // Setup use serialization
   passport.serializeUser((user, done) => {
-    done(null, JSON.stringify(user));
+    done(null, typeof user === 'string' ? user : JSON.stringify(user));
   });
 
   // NOTE(@mxstbr): `data` used to be just the userID, but is now the full user data
