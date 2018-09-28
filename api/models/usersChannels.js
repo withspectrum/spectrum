@@ -637,7 +637,7 @@ const getUserPermissionsInChannel = (channelId: string, userId: string): Promise
     });
 };
 
-type UserIdAndChannelId = [string, string];
+type UserIdAndChannelId = [?string, string];
 
 // prettier-ignore
 const getUsersPermissionsInChannels = (input: Array<UserIdAndChannelId>): Promise<Array<DBUsersChannels>> => {
