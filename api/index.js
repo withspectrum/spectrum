@@ -82,6 +82,7 @@ app.use('/', (req: express$Request, res: express$Response) => {
 import type { Loader } from './loaders/types';
 export type GraphQLContext = {
   user: DBUser,
+  updateCookieUserData: (data: DBUser) => Promise<void>,
   loaders: {
     [key: string]: Loader,
   },

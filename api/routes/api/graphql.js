@@ -6,6 +6,7 @@ import UserError from '../../utils/UserError';
 import createLoaders from '../../loaders/';
 import createErrorFormatter from '../../utils/create-graphql-error-formatter';
 import schema from '../../schema';
+import type { DBUser } from 'shared/types';
 
 export default graphqlExpress(req => {
   const loaders = createLoaders();
@@ -20,6 +21,10 @@ export default graphqlExpress(req => {
     engine: false,
     context: {
       loaders,
+      updateCookieUserData: (data: DBUser) =>
+        new Promise((res, rej) =>
+          req.login(data, err => (err ? rej(err) : res()))
+        ),
       user: currentUser,
     },
     validationRules: [
