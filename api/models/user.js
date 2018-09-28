@@ -14,7 +14,24 @@ type GetUserInput = {
 };
 
 const getUser = async (input: GetUserInput): Promise<?DBUser> => {
-  if (input.id) return await getUserById(input.id);
+  if (input.id) {
+    let userId = input.id;
+
+    // hotfix a malformed payload that is a stringified full user object
+    if (userId[0] === '{') {
+      const userObj = JSON.parse(userId);
+      userId = userObj.id;
+      if (userId === undefined) {
+        console.log({
+          error: 'Undefined userId in getUser',
+          data: input,
+        });
+      }
+    }
+
+    return await getUserById(userId);
+  }
+
   if (input.username) return await getUserByUsername(input.username);
   return null;
 };
@@ -479,11 +496,23 @@ const editUser = (args: EditUserInput, userId: string): Promise<DBUser> => {
 const setUserOnline = (id: string, isOnline: boolean): DBUser => {
   let data = {};
 
+  let userId = id;
+  if (id[0] === '{') {
+    const userObj = JSON.parse(id);
+    userId = userObj.id;
+    if (userId === undefined) {
+      console.log({
+        error: 'Undefined userId in setUserOnline',
+        data: id,
+      });
+    }
+  }
+
   data.isOnline = isOnline;
   data.lastSeen = new Date();
   return db
     .table('users')
-    .get(id)
+    .get(userId)
     .update(data, { returnChanges: 'always' })
     .run()
     .then(result => {
