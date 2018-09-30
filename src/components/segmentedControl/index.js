@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { FlexRow } from '../globals';
 
@@ -6,12 +7,12 @@ export const SegmentedControl = styled(FlexRow)`
   align-self: stretch;
   margin: 0 32px;
   margin-top: 16px;
-  border-bottom: 2px solid ${props => props.theme.bg.border};
+  border-bottom: 2px solid ${theme.bg.border};
   align-items: stretch;
   min-height: 48px;
 
   @media (max-width: 768px) {
-    background-color: ${props => props.theme.bg.default};
+    background-color: ${theme.bg.default};
     align-self: stretch;
     margin: 0;
     margin-bottom: 2px;
@@ -41,11 +42,11 @@ export const Segment = styled(FlexRow)`
   ${props =>
     props.selected &&
     css`
-      border-bottom: 2px solid ${props => props.theme.bg.reverse};
+      border-bottom: 2px solid ${theme.bg.reverse};
     `};
 
   &:hover {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 
   @media (max-width: 768px) {

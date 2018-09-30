@@ -82,7 +82,9 @@ class Badge extends React.Component<Props> {
         return (
           <TeamBadge
             type={type}
-            tipText={this.props.tipText}
+            tipText={`${
+              type === 'moderator' ? 'Moderator' : 'Owner'
+            } of this community`}
             tipLocation="top-left"
           >
             Team

@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import React from 'react';
 import styled from 'styled-components';
 import { zIndex } from '../globals';
@@ -61,7 +62,7 @@ export const ConversationWrapper = styled.div`
 
   max-width: 480px;
   overflow-y: hidden;
-  box-shadow: 0 0 32px 24px ${props => props.theme.bg.default};
+  box-shadow: 0 0 32px 24px ${theme.bg.default};
   display: inline-block;
   align-items: center;
   justify-content: center;

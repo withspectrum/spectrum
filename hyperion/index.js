@@ -87,12 +87,28 @@ import session from 'shared/middlewares/session';
 app.use(session);
 
 import passport from 'passport';
+// Setup use serialization
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, typeof user === 'string' ? user : JSON.stringify(user));
 });
 
-passport.deserializeUser((id, done) => {
-  getUser({ id })
+// NOTE(@mxstbr): `data` used to be just the userID, but is now the full user data
+// to avoid having to go to the db on every single request. We have to handle both
+// cases here, as more and more users use Spectrum again we go to the db less and less
+passport.deserializeUser((data, done) => {
+  // Fast path: try to JSON.parse the data if it works, we got the user data, yay!
+  try {
+    const user = JSON.parse(data);
+    // Make sure more than the user ID is in the data by checking any other required
+    // field for existance
+    if (user.id && user.createdAt) {
+      return done(null, user);
+    }
+    // Ignore JSON parsing errors
+  } catch (err) {}
+
+  // Slow path: data is just the userID (legacy), so we have to go to the db to get the full data
+  getUser({ id: data })
     .then(user => {
       done(null, user);
     })
@@ -145,7 +161,8 @@ app.get('/static/js/:name', (req: express$Request, res, next) => {
     return res.sendFile(
       path.resolve(__dirname, '..', 'build', 'static', 'js', req.params.name)
     );
-  const match = req.params.name.match(/(\w+?)\.(\w+?\.)?js/i);
+  // Match the first part of the file name, i.e. from "UserSettings.asdf123.chunk.js" match "UserSettings"
+  const match = req.params.name.match(/(\w+?)\..+js/i);
   if (!match) return next();
   const actualFilename = jsFiles.find(file => file.startsWith(match[1]));
   if (!actualFilename) return next();

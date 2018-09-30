@@ -82,6 +82,7 @@ app.use('/', (req: express$Request, res: express$Response) => {
 import type { Loader } from './loaders/types';
 export type GraphQLContext = {
   user: DBUser,
+  updateCookieUserData: (data: DBUser) => Promise<void>,
   loaders: {
     [key: string]: Loader,
   },
@@ -94,25 +95,33 @@ import createSubscriptionsServer from './routes/create-subscription-server';
 const subscriptionsServer = createSubscriptionsServer(server, '/websocket');
 
 // Start API wrapped in Apollo Engine
-// const engine = new ApolloEngine({
-//   logging: {
-//     level: 'WARN',
-//   },
-//   apiKey: process.env.APOLLO_ENGINE_API_KEY,
-//   // Only send perf data to the remote server in production
-//   reporting: {
-//     disabled: process.env.NODE_ENV !== 'production',
-//     hostname: process.env.NOW_URL || undefined,
-//     privateHeaders: ['authorization', 'Authorization', 'AUTHORIZATION'],
-//   },
-// });
+const engine = new ApolloEngine({
+  logging: {
+    level: 'WARN',
+  },
+  apiKey: process.env.APOLLO_ENGINE_API_KEY,
+  // Only send perf data to the remote server in production
+  reporting: {
+    disabled: process.env.NODE_ENV !== 'production',
+    hostname: process.env.NOW_URL || undefined,
+    privateHeaders: ['authorization', 'Authorization', 'AUTHORIZATION'],
+  },
+  queryCache: {
+    // Don't cache logged-in user responses
+    privateFullQueryStore: 'disabled',
+  },
+  sessionAuth: {
+    cookie: 'session',
+    // TODO(@mxstbr): Ping Apollo to note that we need both of those
+    // header: 'Authorization'
+  },
+});
 
-// engine.listen({
-//   port: PORT,
-//   httpServer: server,
-//   graphqlPaths: ['/api'],
-// });
-server.listen(PORT);
+engine.listen({
+  port: PORT,
+  httpServer: server,
+  graphqlPaths: ['/api'],
+});
 debug(`GraphQL server running at http://localhost:${PORT}/api`);
 
 process.on('unhandledRejection', async err => {

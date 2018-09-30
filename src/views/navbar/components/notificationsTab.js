@@ -247,7 +247,7 @@ class NotificationsTab extends React.Component<Props, State> {
     // and we want to mark notifications as read as they view threads
     // if we do not pass in notifications from the state when this method is
     // invoked, it is because the incoming props have changed from the server
-    // i.e. a new notification was recieved, so we should therefore run
+    // i.e. a new notification was received, so we should therefore run
     // the rest of this method on the incoming notifications data
     const nodes = stateNotifications
       ? stateNotifications

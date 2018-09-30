@@ -13,7 +13,7 @@ import { trackUserThreadLastSeenQueue } from 'shared/bull/queues';
 import type { FileUpload } from 'shared/types';
 import { events } from 'shared/analytics';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
-import { trackQueue } from 'shared/bull/queues';
+import { trackQueue, calculateThreadScoreQueue } from 'shared/bull/queues';
 
 type Input = {
   message: {
@@ -321,7 +321,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       await addCommunityMember(
         {},
         { input: { communityId: thread.communityId } },
-        { user: user, loaders: loaders }
+        ctx
       );
   }
 
@@ -344,6 +344,14 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         timestamp: Date.now(),
       });
 
+      calculateThreadScoreQueue.add(
+        {
+          threadId: message.threadId,
+        },
+        {
+          jobId: message.threadId,
+        }
+      );
       return {
         ...dbMessage,
         contextPermissions,

@@ -8,6 +8,8 @@ export default cors({
           'https://spectrum.chat',
           /\.spectrum\.chat$/,
           process.env.NOW_URL,
+          'https://zeit.co',
+          /(\.|https:\/\/)zeit\.sh$/,
         ].filter(Boolean)
       : [/localhost/],
   credentials: true,

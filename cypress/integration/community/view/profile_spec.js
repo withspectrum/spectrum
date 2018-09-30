@@ -58,8 +58,7 @@ describe('public community signed out', () => {
   });
 
   it('should render threads', () => {
-    cy
-      .get('[data-cy="community-view-content"]')
+    cy.get('[data-cy="community-view-content"]')
       .scrollIntoView()
       .should('be.visible');
 
@@ -81,8 +80,7 @@ describe('public community signed out', () => {
       .filter(channel => !channel.isPrivate)
       .filter(channel => !channel.deletedAt)
       .forEach(channel => {
-        cy
-          .contains(channel.name)
+        cy.contains(channel.name)
           .scrollIntoView()
           .should('be.visible');
       });
@@ -90,16 +88,14 @@ describe('public community signed out', () => {
 
   it('should render team', () => {
     publicTeamMembers.forEach(user => {
-      cy
-        .contains(user.name)
+      cy.contains(user.name)
         .scrollIntoView()
         .should('be.visible');
     });
   });
 
   it('should prompt user to login when joining', () => {
-    cy
-      .get('[data-cy="join-community-button-login"]')
+    cy.get('[data-cy="join-community-button-login"]')
       .scrollIntoView()
       .should('be.visible')
       .click();
@@ -123,8 +119,7 @@ describe('public community signed in without permission', () => {
   });
 
   it('should render threads', () => {
-    cy
-      .get('[data-cy="community-view-content"]')
+    cy.get('[data-cy="community-view-content"]')
       .scrollIntoView()
       .should('be.visible');
 
@@ -146,8 +141,7 @@ describe('public community signed in without permission', () => {
       .filter(channel => !channel.isPrivate)
       .filter(channel => !channel.deletedAt)
       .forEach(channel => {
-        cy
-          .contains(channel.name)
+        cy.contains(channel.name)
           .scrollIntoView()
           .should('be.visible');
       });
@@ -155,35 +149,28 @@ describe('public community signed in without permission', () => {
 
   it('should render team', () => {
     publicTeamMembers.forEach(user => {
-      cy
-        .contains(user.name)
+      cy.contains(user.name)
         .scrollIntoView()
         .should('be.visible');
     });
   });
 
   it('should join the community', () => {
-    cy
-      .get('[data-cy="join-community-button"]')
+    cy.get('[data-cy="join-community-button"]')
       .scrollIntoView()
       .should('be.visible');
 
-    cy
-      .get('[data-cy="join-community-button"]')
+    cy.get('[data-cy="join-community-button"]')
       .contains(`Join ${publicCommunity.name}`)
       .click();
 
-    cy.get('[data-cy="join-community-button"]').should('not.be.disabled');
-
-    cy
-      .get('[data-cy="join-community-button"]')
+    cy.get('[data-cy="join-community-button"]')
       .contains(`Member`)
       .click();
 
-    cy
-      .get('[data-cy="join-community-button"]')
+    cy.get('[data-cy="join-community-button"]')
       .contains(`Join ${publicCommunity.name}`)
-      .should('not.be.disabled');
+      .should('be.visible');
   });
 });
 
@@ -224,20 +211,17 @@ describe('private community signed in without permission', () => {
   });
 
   it('should request to join the private community', () => {
-    cy
-      .get('[data-cy="request-to-join-private-community-button"]')
+    cy.get('[data-cy="request-to-join-private-community-button"]')
       .should('be.visible')
       .contains(`Request to join ${privateCommunity.name}`)
       .click();
 
-    cy
-      .get('[data-cy="cancel-request-to-join-private-community-button"]')
+    cy.get('[data-cy="cancel-request-to-join-private-community-button"]')
       .should('be.visible')
       .contains('Cancel request')
       .click();
 
-    cy
-      .get('[data-cy="request-to-join-private-community-button"]')
+    cy.get('[data-cy="request-to-join-private-community-button"]')
       .should('be.visible')
       .contains(`Request to join ${privateCommunity.name}`);
   });
@@ -258,8 +242,7 @@ describe('private community signed in with permissions', () => {
   });
 
   it('should render threads', () => {
-    cy
-      .get('[data-cy="community-view-content"]')
+    cy.get('[data-cy="community-view-content"]')
       .scrollIntoView()
       .should('be.visible');
 
@@ -279,8 +262,7 @@ describe('private community signed in with permissions', () => {
       .filter(channel => !channel.isPrivate)
       .filter(channel => !channel.deletedAt)
       .forEach(channel => {
-        cy
-          .contains(channel.name)
+        cy.contains(channel.name)
           .scrollIntoView()
           .should('be.visible');
       });
@@ -288,8 +270,7 @@ describe('private community signed in with permissions', () => {
 
   it('should render team', () => {
     privateTeamMembers.forEach(user => {
-      cy
-        .contains(user.name)
+      cy.contains(user.name)
         .scrollIntoView()
         .should('be.visible');
     });

@@ -1,6 +1,6 @@
 {
   "name": "Spectrum",
-  "version": "2.1.6",
+  "version": "2.4.30",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -46,7 +46,6 @@
     "write-file-webpack-plugin": "^4.3.2"
   },
   "dependencies": {
-    "abab": "^1.0.4",
     "algoliasearch": "^3.29.0",
     "amplitude": "^3.5.0",
     "amplitude-js": "^4.2.1",
@@ -62,6 +61,7 @@
     "apollo-utilities": "^1.0.16",
     "aws-sdk": "2.200.0",
     "axios": "^0.17.1",
+    "b2a": "^1.0.10",
     "bad-words": "^1.6.1",
     "body-parser": "^1.18.3",
     "bull": "3.4.2",
@@ -84,7 +84,7 @@
     "draft-js-image-plugin": "2.0.0-rc8",
     "draft-js-import-markdown": "^1.2.1",
     "draft-js-linkify-plugin": "^2.0.0-beta1",
-    "draft-js-markdown-plugin": "^3.0.0",
+    "draft-js-markdown-plugin": "^3.0.4",
     "draft-js-plugins-editor": "^2.1.1",
     "draft-js-prism-plugin": "0.1.3",
     "draftjs-to-markdown": "^0.5.1",

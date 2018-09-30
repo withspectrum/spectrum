@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import { hexa, Shadow, FlexRow, zIndex } from '../../components/globals';
@@ -13,8 +14,8 @@ export const TitleBar = styled(FlexRow)`
   grid-template-areas: 'left center right';
   grid-column-gap: 16px;
   padding: ${isDesktopApp() ? '32px 8px 0' : '0 8px'};
-  background-color: ${({ theme }) => theme.bg.reverse};
-  color: ${({ theme }) => theme.text.reverse};
+  background-color: ${theme.bg.reverse};
+  color: ${theme.text.reverse};
   min-height: ${isDesktopApp() ? '80px' : '48px'};
   height: ${isDesktopApp() ? '80px' : '48px'};
   max-height: ${isDesktopApp() ? '80px' : '48px'};

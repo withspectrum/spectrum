@@ -14,6 +14,7 @@ import unsubscribeWebPush from './unsubscribeWebPush';
 import updateUserEmail from './updateUserEmail';
 import deleteCurrentUser from './deleteCurrentUser';
 import subscribeExpoPush from './subscribeExpoPush';
+import reportUser from './reportUser';
 
 module.exports = {
   Mutation: {
@@ -24,5 +25,6 @@ module.exports = {
     updateUserEmail,
     deleteCurrentUser,
     subscribeExpoPush,
+    reportUser,
   },
 };

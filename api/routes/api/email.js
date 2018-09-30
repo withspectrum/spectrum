@@ -74,7 +74,7 @@ emailRouter.get('/unsubscribe', (req, res) => {
           res
             .status(200)
             .send(
-              'You will no longer recieve new thread emails from this channel.'
+              'You will no longer receive new thread emails from this channel.'
             )
         );
       case 'muteCommunity':
@@ -87,7 +87,7 @@ emailRouter.get('/unsubscribe', (req, res) => {
             res
               .status(200)
               .send(
-                'You will no longer recieve new thread emails from this community.'
+                'You will no longer receive new thread emails from this community.'
               )
           );
       case 'muteThread':
@@ -99,7 +99,7 @@ emailRouter.get('/unsubscribe', (req, res) => {
           res
             .status(200)
             .send(
-              'You will no longer recieve emails about new messages in this thread.'
+              'You will no longer receive emails about new messages in this thread.'
             )
         );
       case 'muteDirectMessageThread':
@@ -111,7 +111,7 @@ emailRouter.get('/unsubscribe', (req, res) => {
           res
             .status(200)
             .send(
-              'You will no longer recieve emails about new messages in this direct message conversation.'
+              'You will no longer receive emails about new messages in this direct message conversation.'
             )
         );
       default: {

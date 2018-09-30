@@ -480,11 +480,7 @@ const setUserOnline = (id: string, isOnline: boolean): DBUser => {
   let data = {};
 
   data.isOnline = isOnline;
-
-  // If a user is going offline, store their lastSeen
-  if (isOnline === false) {
-    data.lastSeen = new Date();
-  }
+  data.lastSeen = new Date();
   return db
     .table('users')
     .get(id)

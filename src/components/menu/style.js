@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { Transition, Shadow, zIndex, hexa } from '../../components/globals';
 import { isDesktopApp } from 'src/helpers/is-desktop-app';
@@ -10,11 +11,11 @@ export const Wrapper = styled.div`
     props.darkContext &&
     css`
       > button {
-        color: ${props => props.theme.text.reverse};
+        color: ${theme.text.reverse};
         transition: ${Transition.hover.off};
 
         &:hover {
-          color: ${props => props.theme.text.reverse};
+          color: ${theme.text.reverse};
           transform: scale(1.1);
           transition: ${Transition.hover.on};
         }
@@ -35,12 +36,16 @@ export const Absolute = styled.div`
   min-height: 100%;
   z-index: 1;
 
-  > button {
-    color: ${props => props.theme.text.reverse};
+  button {
+    color: ${theme.text.reverse};
     z-index: 2;
     align-self: flex-start;
     margin-top: ${props => (props.hasNavBar ? '56px' : '8px')};
     margin-left: 8px;
+  }
+
+  button:hover {
+    color: ${theme.text.reverse};
   }
 `;
 
@@ -53,11 +58,10 @@ export const MenuContainer = styled.div`
   left: 0;
   top: 0;
   bottom: 0;
-  height: ${props =>
-    props.hasTabBar ? (isDesktopApp() ? '100%' : 'calc(100% - 48px)') : '100%'};
+  height: 100%;
   width: 300px;
-  color: ${props => props.theme.brand.alt};
-  background-color: ${props => props.theme.bg.wash};
+  color: ${theme.brand.alt};
+  background-color: ${theme.bg.wash};
   box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.25)};
   padding-top: ${props =>
     props.hasNavBar ? '48px' : isDesktopApp() ? '40px' : '0'};

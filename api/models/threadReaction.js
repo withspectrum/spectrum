@@ -8,6 +8,7 @@ import type { DBThreadReaction } from 'shared/types';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 import { incrementReactionCount, decrementReactionCount } from './thread';
+import { getThreadById } from './thread';
 
 type ThreadReactionType = 'like';
 
@@ -35,10 +36,15 @@ export const addThreadReaction = (input: ThreadReactionInput, userId: string): P
     .filter({ userId })
     .run()
     .then(async results => {
+      const thread = await getThreadById(input.threadId)
       // if the reaction already exists in the db, it was previously deleted
       // just remove the deletedAt field
       if (results && results.length > 0) {
         const thisReaction = results[0];
+
+        const sendReactionNotification = thread && (thread.creatorId !== userId)
+          ? sendThreadReactionNotificationQueue.add({ threadReaction: thisReaction, userId })
+          : null
 
         await Promise.all([
           trackQueue.add({
@@ -48,13 +54,12 @@ export const addThreadReaction = (input: ThreadReactionInput, userId: string): P
               threadReactionId: thisReaction.id,
             },
           }),
-          sendThreadReactionNotificationQueue.add({ threadReaction: thisReaction, userId }),
+          sendReactionNotification,
           processReputationEventQueue.add({
             userId,
             type: 'thread reaction created',
             entityId: thisReaction.threadId,
           }),
-
           incrementReactionCount(thisReaction.threadId)
         ])
 
@@ -81,19 +86,22 @@ export const addThreadReaction = (input: ThreadReactionInput, userId: string): P
         .run()
         .then(result => result.changes[0].new_val)
         .then(async threadReaction => {
+          const sendReactionNotification = thread && (thread.creatorId !== userId)
+            ? sendThreadReactionNotificationQueue.add({ threadReaction, userId })
+            : null
+
           await Promise.all([
             trackQueue.add({
               userId,
               event: events.THREAD_REACTION_CREATED,
               context: { threadReactionId: threadReaction.id },
             }),
-            sendThreadReactionNotificationQueue.add({ threadReaction, userId }),
             processReputationEventQueue.add({
               userId,
               type: 'thread reaction created',
               entityId: threadReaction.threadId,
             }),
-
+            sendReactionNotification,
             incrementReactionCount(threadReaction.threadId)
           ])
 

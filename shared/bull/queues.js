@@ -48,6 +48,7 @@ import {
   SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
   SEND_ADMIN_USER_SPAMMING_THREADS_NOTIFICATION_EMAIL,
   SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
+  SEND_ADMIN_USER_REPORTED_EMAIL,
   SEND_ADMINISTRATOR_EMAIL_VALIDATION_EMAIL,
   SEND_EMAIL_VALIDATION_EMAIL,
   SEND_NEW_COMMUNITY_WELCOME_EMAIL,
@@ -83,7 +84,10 @@ import {
   IDENTIFY_ANALYTICS,
 } from 'analytics/queues/constants';
 
-import { PROCESS_REPUTATION_EVENT } from 'mercury/constants';
+import {
+  PROCESS_REPUTATION_EVENT,
+  CALCULATE_THREAD_SCORE,
+} from 'mercury/constants';
 
 // Normalize our (inconsistent) queue names to a set of JS compatible names
 exports.QUEUE_NAMES = {
@@ -131,6 +135,7 @@ exports.QUEUE_NAMES = {
 
   // mercury - reputation
   processReputationEventQueue: PROCESS_REPUTATION_EVENT,
+  calculateThreadScoreQueue: CALCULATE_THREAD_SCORE,
 
   stripeChargeWebhookEventQueue: PROCESS_STRIPE_CHARGE_WEBHOOK_EVENT,
   stripeCustomerWebhookEventQueue: PROCESS_STRIPE_CUSTOMER_WEBHOOK_EVENT,
@@ -168,6 +173,7 @@ exports.QUEUE_NAMES = {
   _adminProcessSlackImportQueue: SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
   _adminSendToxicContentEmailQueue: SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
   _adminProcessUserSpammingThreadsQueue: SEND_ADMIN_USER_SPAMMING_THREADS_NOTIFICATION_EMAIL,
+  _adminProcessUserReportedQueue: SEND_ADMIN_USER_REPORTED_EMAIL,
 };
 
 // We add one error listener per queue, so we have to set the max listeners

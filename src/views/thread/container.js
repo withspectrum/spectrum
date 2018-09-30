@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
+import idx from 'idx';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import Titlebar from 'src/views/titlebar';
@@ -20,7 +21,7 @@ import {
 } from 'shared/graphql/queries/thread/getThread';
 import { NullState } from 'src/components/upsell';
 import JoinChannel from 'src/components/upsell/joinChannel';
-import LoadingView from './components/loading';
+import LoadingThread from './components/loading';
 import ThreadCommunityBanner from './components/threadCommunityBanner';
 import Sidebar from './components/sidebar';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -39,6 +40,7 @@ import {
 } from './style';
 import WatercoolerActionBar from './components/watercoolerActionBar';
 import { ErrorBoundary } from 'src/components/error';
+import generateImageFromText from 'src/helpers/generate-image-from-text';
 
 type Props = {
   data: {
@@ -93,26 +95,12 @@ class ThreadContainer extends React.Component<Props, State> {
   // see how to do this here: https://github.com/reactjs/rfcs/blob/master/text/0006-static-lifecycle-methods.md#state-derived-from-propsstate
   // with implementation below
   static getDerivedStateFromProps(nextProps, prevState) {
-    const curr = prevState.derivedState;
-    const newThread = curr.data && !curr.data.thread && nextProps.data.thread;
+    const lastSeen = idx(nextProps, _ => _.data.thread.currentUserLastSeen);
+    if (lastSeen === prevState.lastSeen) return null;
 
-    const threadChanged =
-      curr.data &&
-      curr.data.thread &&
-      nextProps.data.thread &&
-      curr.data.thread.id !== nextProps.data.thread.id;
-
-    // Update the cached lastSeen value when switching threads
-    if (newThread || threadChanged) {
-      return {
-        lastSeen: nextProps.data.thread.currentUserLastSeen
-          ? nextProps.data.thread.currentUserLastSeen
-          : null,
-        derivedState: nextProps,
-      };
-    }
-
-    return null;
+    return {
+      lastSeen,
+    };
   }
 
   toggleEdit = () => {
@@ -226,7 +214,11 @@ class ThreadContainer extends React.Component<Props, State> {
     // we never autofocus on mobile
     if (window && window.innerWidth < 768) return;
 
-    const { currentUser, data: { thread }, threadSliderIsOpen } = this.props;
+    const {
+      currentUser,
+      data: { thread },
+      threadSliderIsOpen,
+    } = this.props;
 
     // if no thread has been returned yet from the query, we don't know whether or not to focus yet
     if (!thread) return;
@@ -270,7 +262,10 @@ class ThreadContainer extends React.Component<Props, State> {
 
   renderChatInputOrUpsell = () => {
     const { isEditing } = this.state;
-    const { data: { thread }, currentUser } = this.props;
+    const {
+      data: { thread },
+      currentUser,
+    } = this.props;
 
     if (!thread) return null;
     if (thread.isLocked) return null;
@@ -319,7 +314,11 @@ class ThreadContainer extends React.Component<Props, State> {
   };
 
   renderPost = () => {
-    const { data: { thread }, slider, currentUser } = this.props;
+    const {
+      data: { thread },
+      slider,
+      currentUser,
+    } = this.props;
     if (!thread || !thread.id) return null;
 
     if (thread.watercooler) {
@@ -421,6 +420,12 @@ class ThreadContainer extends React.Component<Props, State> {
       const headDescription = isWatercooler
         ? `Watercooler chat for the ${thread.community.name} community`
         : description;
+      const metaImage = generateImageFromText({
+        title: isWatercooler
+          ? `Chat with the ${thread.community.name} community`
+          : thread.content.title,
+        footer: `spectrum.chat/${thread.community.slug}`,
+      });
 
       return (
         <ErrorBoundary>
@@ -445,8 +450,33 @@ class ThreadContainer extends React.Component<Props, State> {
               <Head
                 title={headTitle}
                 description={headDescription}
-                image={thread.community.profilePhoto}
-              />
+                type="article"
+                image={metaImage}
+              >
+                {metaImage && (
+                  <meta name="twitter:card" content="summary_large_image" />
+                )}
+                <meta
+                  property="article:published_time"
+                  content={new Date(thread.createdAt).toISOString()}
+                />
+                <meta
+                  property="article:modified_time"
+                  content={new Date(
+                    thread.modifiedAt || thread.createdAt
+                  ).toISOString()}
+                />
+                <meta
+                  property="article:author"
+                  content={`https://spectrum.chat/users/@${
+                    thread.author.user.username
+                  }`}
+                />
+                <meta
+                  property="article:section"
+                  content={`${thread.community.name} community`}
+                />
+              </Head>
               <Titlebar
                 title={thread.content.title}
                 subtitle={`${thread.community.name} / ${thread.channel.name}`}
@@ -497,7 +527,7 @@ class ThreadContainer extends React.Component<Props, State> {
     }
 
     if (isLoading) {
-      return <LoadingView threadViewContext={threadViewContext} />;
+      return <LoadingThread threadViewContext={threadViewContext} />;
     }
 
     return (
