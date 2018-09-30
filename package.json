@@ -177,7 +177,7 @@
     "serialize-javascript": "^1.5.0",
     "session-rethinkdb": "^2.0.0",
     "sha1": "^1.1.1",
-    "shortid": "^2.2.8",
+    "shortid": "^2.2.13",
     "slate": "^0.20.1",
     "slate-markdown": "0.1.1",
     "slugg": "^1.1.0",
