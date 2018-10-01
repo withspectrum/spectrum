@@ -47,6 +47,8 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE),
     lastActive: new Date(DATE),
+    messageCount: 4,
+    reactionCount: 0,
   },
   {
     id: 'thread-2',
@@ -77,6 +79,8 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE + 1),
     lastActive: new Date(DATE + 1),
+    messageCount: 4,
+    reactionCount: 0,
   },
   {
     id: 'thread-3',
@@ -107,6 +111,8 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
+    messageCount: 0,
+    reactionCount: 0,
   },
 
   {
@@ -138,6 +144,8 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE),
     lastActive: new Date(DATE),
+    messageCount: 0,
+    reactionCount: 0,
   },
   {
     id: 'thread-5',
@@ -168,6 +176,8 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE + 1),
     lastActive: new Date(DATE + 1),
+    messageCount: 0,
+    reactionCount: 0,
   },
   {
     id: 'thread-6',
@@ -198,6 +208,8 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
+    messageCount: 0,
+    reactionCount: 0,
   },
   {
     id: 'thread-7',
@@ -229,6 +241,8 @@ module.exports = [
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
     deletedAt: new Date(DATE + 3),
+    messageCount: 0,
+    reactionCount: 0,
   },
   {
     id: 'thread-8',
@@ -259,6 +273,8 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
+    messageCount: 0,
+    reactionCount: 0,
   },
   {
     id: 'thread-9',
@@ -320,6 +336,8 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
+    messageCount: 0,
+    reactionCount: 0,
   },
   {
     id: 'thread-11',
@@ -349,6 +367,8 @@ module.exports = [
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
     deletedAt: new Date(DATE + 3),
+    messageCount: 0,
+    reactionCount: 0,
   },
 
   {
@@ -381,6 +401,8 @@ module.exports = [
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
     deletedAt: new Date(DATE),
+    messageCount: 0,
+    reactionCount: 0,
   },
 
   {
@@ -412,5 +434,7 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
+    messageCount: 0,
+    reactionCount: 0,
   },
 ];
