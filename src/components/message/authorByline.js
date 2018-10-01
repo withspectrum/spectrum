@@ -59,7 +59,11 @@ export default (props: Props) => {
                   />
                 ))}
               {user.betaSupporter && (
-                <Badge type="beta-supporter" label={'★'} />
+                <Badge
+                  type="beta-supporter"
+                  label={'β'}
+                  style={{ textTransform: 'none' }}
+                />
               )}
             </BadgesContainer>
             <GutterTimestamp

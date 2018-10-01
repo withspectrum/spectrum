@@ -16,11 +16,16 @@ type Props = {
 
 class Badge extends React.Component<Props> {
   render() {
-    const { type, label } = this.props;
+    const { type, label, ...rest } = this.props;
     switch (type) {
       case 'beta-supporter':
         return (
-          <ProBadge type={type} tipText={'Beta Supporter'} tipLocation={'top'}>
+          <ProBadge
+            type={type}
+            tipText={'Beta Supporter'}
+            tipLocation={'top'}
+            {...rest}
+          >
             {label || 'Supporter'}
           </ProBadge>
         );
@@ -30,6 +35,7 @@ class Badge extends React.Component<Props> {
             type={type}
             tipText={this.props.tipText}
             tipLocation={'top-left'}
+            {...rest}
           >
             {label || type}
           </BlockedBadge>
@@ -40,6 +46,7 @@ class Badge extends React.Component<Props> {
             type={type}
             tipText={this.props.tipText}
             tipLocation={'top-left'}
+            {...rest}
           >
             {label || type}
           </PendingBadge>
@@ -53,6 +60,7 @@ class Badge extends React.Component<Props> {
               type === 'moderator' ? 'Moderator' : 'Owner'
             } of this community`}
             tipLocation="top-left"
+            {...rest}
           >
             Team
           </TeamBadge>
@@ -64,6 +72,7 @@ class Badge extends React.Component<Props> {
             tipText={this.props.tipText}
             tipLocation={'top-left'}
             onClick={this.props.onClick && this.props.onClick}
+            {...rest}
           >
             {label || type}
           </Span>
