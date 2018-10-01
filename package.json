@@ -58,7 +58,7 @@
     "apollo-link-ws": "^1.0.8",
     "apollo-upload-client": "^8.1.0",
     "apollo-upload-server": "^5.0.0",
-    "apollo-utilities": "^1.0.16",
+    "apollo-utilities": "^1.0.21",
     "aws-sdk": "2.200.0",
     "axios": "^0.17.1",
     "b2a": "^1.0.10",
