@@ -395,6 +395,48 @@ const archiveAllPrivateChannels = async (communityId: string, userId: string) =>
   return await Promise.all([...trackingPromises, archivePromise]);
 };
 
+const incrementMemberCount = (channelId: string): Promise<DBChannel> => {
+  return db
+    .table('channels')
+    .get(channelId)
+    .update({
+      memberCount: db
+        .row('memberCount')
+        .default(0)
+        .add(1),
+    })
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};
+
+const decrementMemberCount = (channelId: string): Promise<DBChannel> => {
+  return db
+    .table('channels')
+    .get(channelId)
+    .update({
+      memberCount: db
+        .row('memberCount')
+        .default(1)
+        .sub(1),
+    })
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};
+
+const setMemberCount = (
+  channelId: string,
+  value: number
+): Promise<DBChannel> => {
+  return db
+    .table('channels')
+    .get(channelId)
+    .update({
+      memberCount: value,
+    })
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};
+
 module.exports = {
   getChannelBySlug,
   getChannelById,
@@ -414,6 +456,9 @@ module.exports = {
   archiveChannel,
   restoreChannel,
   archiveAllPrivateChannels,
+  incrementMemberCount,
+  decrementMemberCount,
+  setMemberCount,
   __forQueryTests: {
     channelsByCommunitiesQuery,
     channelsByIdsQuery,
