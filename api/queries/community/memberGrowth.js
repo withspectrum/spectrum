@@ -8,7 +8,7 @@ const {
 } = require('../../models/community');
 
 export default async (
-  { id }: DBCommunity,
+  { id, memberCount }: DBCommunity,
   _: any,
   { user, loaders }: GraphQLContext
 ) => {
@@ -30,7 +30,7 @@ export default async (
   }
 
   return {
-    count: await getMemberCount(id),
+    count: memberCount || 1,
     weeklyGrowth: await getCommunityGrowth(
       'usersCommunities',
       'weekly',

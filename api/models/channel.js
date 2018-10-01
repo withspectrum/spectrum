@@ -138,19 +138,6 @@ const getChannels = (channelIds: Array<string>): Promise<Array<DBChannel>> => {
   return channelsByIdsQuery(...channelIds).run();
 };
 
-// prettier-ignore
-const getChannelMetaData = async (channelId: string): Promise<Array<number>> => {
-  const getThreadCount = threadsByChannelsQuery(channelId)
-    .count()
-    .run();
-
-  const getMemberCount = membersByChannelsQuery(channelId)
-    .count()
-    .run();
-
-  return Promise.all([getThreadCount, getMemberCount]);
-};
-
 type GroupedCount = {
   group: string,
   reduction: number,
@@ -323,14 +310,6 @@ const deleteChannel = (channelId: string, userId: string): Promise<Boolean> => {
     });
 };
 
-const getChannelMemberCount = (channelId: string): number => {
-  return db
-    .table('channels')
-    .get(channelId)('members')
-    .count()
-    .run();
-};
-
 // prettier-ignore
 const archiveChannel = (channelId: string, userId: string): Promise<DBChannel> => {
   return db
@@ -440,7 +419,6 @@ const setMemberCount = (
 module.exports = {
   getChannelBySlug,
   getChannelById,
-  getChannelMetaData,
   getChannelsByUser,
   getChannelsByCommunity,
   getPublicChannelsByCommunity,
@@ -449,7 +427,6 @@ module.exports = {
   createGeneralChannel,
   editChannel,
   deleteChannel,
-  getChannelMemberCount,
   getChannelsMemberCounts,
   getChannelsThreadCounts,
   getChannels,

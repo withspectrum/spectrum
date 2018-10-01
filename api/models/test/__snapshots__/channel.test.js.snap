@@ -1,19 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`models/channel getChannelMetaData excludes deleted channels 1`] = `
-Array [
-  0,
-  0,
-]
-`;
-
-exports[`models/channel getChannelMetaData excludes deleted threads and non-members 1`] = `
-Array [
-  4,
-  5,
-]
-`;
-
 exports[`models/channel getChannels excludes deleted channels 1`] = `
 Array [
   Object {
