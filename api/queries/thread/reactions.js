@@ -8,6 +8,14 @@ export default async (
   _: any,
   { user, loaders }: GraphQLContext
 ) => ({
-  count: reactionCount,
+  count:
+    typeof reactionCount === 'number'
+      ? reactionCount
+      : await loaders.threadReaction
+          .load(id)
+          .then(
+            res =>
+              res && Array.isArray(res.reduction) ? res.reduction.length : 0
+          ),
   hasReacted: user ? await hasReactedToThread(user.id, id) : false,
 });
