@@ -64,7 +64,7 @@
     "b2a": "^1.0.10",
     "bad-words": "^1.6.1",
     "body-parser": "^1.18.3",
-    "bull": "3.4.2",
+    "bull": "3.4.8",
     "casual": "^1.5.19",
     "common-tags": "^1.8.0",
     "cookie-parser": "^1.4.3",
