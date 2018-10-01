@@ -16,7 +16,6 @@ import {
 import { __createNotificationLoader } from './notification';
 import {
   __createChannelLoader,
-  __createChannelMemberCountLoader,
   __createChannelThreadCountLoader,
   __createChannelPendingMembersLoader,
   __createChannelSettingsLoader,
@@ -25,7 +24,6 @@ import {
   __createCommunityLoader,
   __createCommunityBySlugLoader,
   __createCommunityRecurringPaymentsLoader,
-  __createCommunityMemberCountLoader,
   __createCommunityChannelCountLoader,
   __createCommunitySettingsLoader,
   __createCommunityOnlineMemberCountLoader,
@@ -60,7 +58,6 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   threadParticipants: __createThreadParticipantsLoader(options),
   notification: __createNotificationLoader(options),
   channel: __createChannelLoader(options),
-  channelMemberCount: __createChannelMemberCountLoader(options),
   channelThreadCount: __createChannelThreadCountLoader(options),
   channelPendingUsers: __createChannelPendingMembersLoader(options),
   channelSettings: __createChannelSettingsLoader(options),
@@ -69,7 +66,6 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   communityRecurringPayments: __createCommunityRecurringPaymentsLoader(options),
   stripeCustomers: __createStripeCustomersLoader(options),
   communityChannelCount: __createCommunityChannelCountLoader(options),
-  communityMemberCount: __createCommunityMemberCountLoader(options),
   communityOnlineMemberCount: __createCommunityOnlineMemberCountLoader(options),
   communitySettings: __createCommunitySettingsLoader(options),
   directMessageThread: __createDirectMessageThreadLoader(options),
