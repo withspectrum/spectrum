@@ -6,7 +6,7 @@ import cache from 'shared/cache/redis';
 
 export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
   const { user, loaders } = ctx;
-  const { id } = root;
+  const { id, memberCount } = root;
 
   if (!(await canViewCommunity(user, id, loaders))) {
     return {
@@ -26,13 +26,9 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
     cache.get(`community:${id}:onlineMemberCount`),
   ]);
 
-  const [channelCount, memberCount, onlineMemberCount] = await Promise.all([
+  const [channelCount, onlineMemberCount] = await Promise.all([
     typeof cachedChannelCount === 'number' ||
       loaders.communityChannelCount
-        .load(id)
-        .then(res => (res && res.reduction) || 0),
-    typeof cachedMemberCount === 'number' ||
-      loaders.communityMemberCount
         .load(id)
         .then(res => (res && res.reduction) || 0),
     typeof cachedOnlineMemberCount === 'number' ||
@@ -45,8 +41,6 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
   await Promise.all([
     typeof cachedChannelCount === 'number' ||
       cache.set(`community:${id}:channelCount`, channelCount, 'ex', 3600),
-    typeof cachedMemberCount === 'number' ||
-      cache.set(`community:${id}:memberCount`, memberCount, 'ex', 3600),
     typeof cachedOnlineMemberCount === 'number' ||
       cache.set(
         `community:${id}:onlineMemberCount`,
