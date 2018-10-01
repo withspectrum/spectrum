@@ -7,17 +7,15 @@ exports.up = async (r, conn) => {
     .run(conn)
     .then(cursor => cursor.toArray());
 
-  const addSupporterFieldToUsersPromises = () =>
-    betaSupporterIds.map(async userId => {
-      return await r
-        .db('spectrum')
-        .table('users')
-        .get(userId)
-        .update({
-          betaSupporter: true,
-        })
-        .run(conn);
-    });
+  const addSupporterFieldToUsersPromises = async () =>
+    await r
+      .db('spectrum')
+      .table('users')
+      .getAll(...betaSupporterIds)
+      .update({
+        betaSupporter: true,
+      })
+      .run(conn);
 
   const cleanCommunitiesModel = () =>
     r
