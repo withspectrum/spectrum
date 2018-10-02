@@ -154,12 +154,12 @@ const Community = /* GraphQL */ `
       first: Int = 10
       after: String
       filter: MembersFilter
-    ): CommunityMembers @cost(complexity: 5, multiplier: "first")
+    ): CommunityMembers @cost(complexity: 5, multipliers: ["first"])
     threadConnection(
       first: Int = 10
       after: String
       sort: CommunityThreadConnectionSort = latest
-    ): CommunityThreadsConnection @cost(complexity: 2, multiplier: "first")
+    ): CommunityThreadsConnection @cost(complexity: 2, multipliers: ["first"])
     metaData: CommunityMetaData @cost(complexity: 10)
     memberGrowth: GrowthData @cost(complexity: 10)
     conversationGrowth: GrowthData @cost(complexity: 3)
@@ -201,7 +201,7 @@ const Community = /* GraphQL */ `
     ): [Community]
     communityMember(userId: String, communityId: String): CommunityMember
     topCommunities(amount: Int = 20): [Community!]
-      @cost(complexity: 4, multiplier: "amount")
+      @cost(complexity: 4, multipliers: ["amount"])
     recentCommunities: [Community!]
 
     searchCommunities(string: String, amount: Int = 20): [Community]
