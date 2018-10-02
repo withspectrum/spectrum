@@ -122,7 +122,7 @@
     "jsonwebtoken": "^8.3.0",
     "keygrip": "^1.0.2",
     "linkify-it": "^2.0.3",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.11",
     "lodash.intersection": "^4.4.0",
     "markdown-draft-js": "^0.6.3",
     "moment": "^2.22.2",
