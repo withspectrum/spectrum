@@ -4834,6 +4834,10 @@ lodash.escape@^3.0.0:
   dependencies:
     lodash._root "^3.0.0"
 
+lodash.flowright@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.flowright/-/lodash.flowright-3.5.0.tgz#2b5fff399716d7e7dc5724fe9349f67065184d67"
+
 lodash.isarguments@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/lodash.isarguments/-/lodash.isarguments-3.1.0.tgz#2f573d85c6a24289ff00663b491c1d338ff3458a"
@@ -4922,10 +4926,6 @@ lodash@4.x.x, lodash@^4.0.0, lodash@^4.13.1, lodash@^4.14.0, lodash@^4.14.1, lod
 lodash@^3.5.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
-
-lodash@^4.17.10:
-  version "4.17.10"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
 lodash@~2.4.1:
   version "2.4.2"
@@ -6160,13 +6160,13 @@ rc@^1.1.7:
     strip-json-comments "~2.0.1"
 
 react-apollo@2.x:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/react-apollo/-/react-apollo-2.2.2.tgz#2bb896bfe123688f6780cf2c12b5ac4ebf8ced55"
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/react-apollo/-/react-apollo-2.2.3.tgz#a1072bfd182d2daadddab15ff943e8ef742c653c"
   dependencies:
     fbjs "^1.0.0"
     hoist-non-react-statics "^3.0.0"
     invariant "^2.2.2"
-    lodash "^4.17.10"
+    lodash.flowright "^3.5.0"
     prop-types "^15.6.0"
 
 react-clone-referenced-element@^1.0.1:

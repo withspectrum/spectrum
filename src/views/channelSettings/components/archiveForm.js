@@ -92,21 +92,12 @@ class Channel extends React.Component<Props> {
     } else {
       return (
         <SectionCard>
-          <SectionTitle>
-            Restore channel {channel.isPrivate ? '· $10/mo' : ''}
-          </SectionTitle>
-          {channel.isPrivate ? (
-            <SectionSubtitle>
-              Restoring a private channel will automatically resume your
-              subscription at $10 per month. The channel will be restored and
-              channel members will be able to start new conversations.
-            </SectionSubtitle>
-          ) : (
-            <SectionSubtitle>
-              The channel will be restored and channel members will be able to
-              start new conversations.
-            </SectionSubtitle>
-          )}
+          <SectionTitle>Restore channel</SectionTitle>
+
+          <SectionSubtitle>
+            The channel will be restored and channel members will be able to
+            start new conversations.
+          </SectionSubtitle>
 
           <SectionCardFooter>
             <Button onClick={this.initRestoreChannel}>Restore Channel</Button>

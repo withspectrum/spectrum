@@ -10,8 +10,6 @@ const { userId: ownerInChannelId } = data.usersChannels.find(
   ({ channelId, isOwner }) => channelId === channel.id && isOwner
 );
 
-// NOTE @brian: I will finish this after payments-api-v2 merges
-
 describe('create a channel', () => {
   beforeEach(() => {
     cy.auth(ownerInChannelId);
@@ -20,8 +18,7 @@ describe('create a channel', () => {
   });
 
   it('should go through create a channel flow', () => {
-    cy
-      .get('[data-cy="create-channel-button"]')
+    cy.get('[data-cy="create-channel-button"]')
       .scrollIntoView()
       .should('be.visible')
       .click();

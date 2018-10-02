@@ -58,6 +58,21 @@ const Community = /* GraphQL */ `
     newThreads: [Thread]
   }
 
+  type BrandedLogin {
+    isEnabled: Boolean
+    message: String
+  }
+
+  enum CommunityThreadConnectionSort {
+    latest
+    trending
+  }
+
+  type Features {
+    analytics: Boolean
+    prioritySupport: Boolean
+  }
+
   type StripeCard {
     brand: String
     exp_month: Int
@@ -100,7 +115,7 @@ const Community = /* GraphQL */ `
     discount: StripeDiscount
     billing_cycle_anchor: Int
     current_period_end: Int
-    canceled_at: Int
+    canceledAt: Int
     items: [StripeSubscriptionItem]
     status: String
   }
@@ -118,21 +133,6 @@ const Community = /* GraphQL */ `
     sources: [StripeSource]
     invoices: [StripeInvoice]
     subscriptions: [StripeSubscription]
-  }
-
-  type Features {
-    analytics: Boolean
-    prioritySupport: Boolean
-  }
-
-  type BrandedLogin {
-    isEnabled: Boolean
-    message: String
-  }
-
-  enum CommunityThreadConnectionSort {
-    latest
-    trending
   }
 
   type Community {
@@ -161,9 +161,6 @@ const Community = /* GraphQL */ `
       sort: CommunityThreadConnectionSort = latest
     ): CommunityThreadsConnection @cost(complexity: 2, multiplier: "first")
     metaData: CommunityMetaData @cost(complexity: 10)
-    invoices: [Invoice] @cost(complexity: 1)
-    recurringPayments: [RecurringPayment]
-    isPro: Boolean @cost(complexity: 1)
     memberGrowth: GrowthData @cost(complexity: 10)
     conversationGrowth: GrowthData @cost(complexity: 3)
     topMembers: [CommunityMember] @cost(complexity: 10)
@@ -172,11 +169,6 @@ const Community = /* GraphQL */ `
     brandedLogin: BrandedLogin
     joinSettings: JoinSettings
     slackSettings: CommunitySlackSettings @cost(complexity: 2)
-
-    hasFeatures: Features
-    hasChargeableSource: Boolean
-    billingSettings: CommunityBillingSettings
-
     slackImport: SlackImport
       @cost(complexity: 2)
       @deprecated(reason: "Use slack settings field instead")
@@ -188,6 +180,16 @@ const Community = /* GraphQL */ `
       @deprecated(reason: "Use the new Community.members type")
     contextPermissions: ContextPermissions
       @deprecated(reason: "Use the new CommunityMember type to get permissions")
+
+    hasFeatures: Features @deprecated(reason: "Payments are no longer used")
+    hasChargeableSource: Boolean
+      @deprecated(reason: "Payments are no longer used")
+    billingSettings: CommunityBillingSettings
+      @deprecated(reason: "Payments are no longer used")
+    invoices: [Invoice] @deprecated(reason: "Payments are no longer used")
+    recurringPayments: [RecurringPayment]
+      @deprecated(reason: "Payments are no longer used")
+    isPro: Boolean @deprecated(reason: "Payments are no longer used")
   }
 
   extend type Query {
@@ -259,33 +261,6 @@ const Community = /* GraphQL */ `
     email: LowercaseString!
   }
 
-  input AddPaymentSourceInput {
-    sourceId: String!
-    communityId: ID!
-  }
-
-  input RemovePaymentSourceInput {
-    sourceId: String!
-    communityId: ID!
-  }
-
-  input MakePaymentSourceDefaultInput {
-    sourceId: String!
-    communityId: ID!
-  }
-
-  input CancelSubscriptionInput {
-    communityId: ID!
-  }
-
-  input EnableCommunityAnalyticsInput {
-    communityId: ID!
-  }
-
-  input DisableCommunityAnalyticsInput {
-    communityId: ID!
-  }
-
   input EnableBrandedLoginInput {
     id: String!
   }
@@ -345,12 +320,6 @@ const Community = /* GraphQL */ `
         reason: "Use feature level downgrade mutations like disableCommunityAnalytics"
       )
     updateAdministratorEmail(input: UpdateAdministratorEmailInput!): Community
-    addPaymentSource(input: AddPaymentSourceInput!): Community
-    removePaymentSource(input: RemovePaymentSourceInput!): Community
-    makePaymentSourceDefault(input: MakePaymentSourceDefaultInput!): Community
-    cancelSubscription(input: CancelSubscriptionInput!): Community
-    enableCommunityAnalytics(input: EnableCommunityAnalyticsInput!): Community
-    disableCommunityAnalytics(input: DisableCommunityAnalyticsInput!): Community
     enableBrandedLogin(input: EnableBrandedLoginInput!): Community
     disableBrandedLogin(input: DisableBrandedLoginInput!): Community
     saveBrandedLoginSettings(input: SaveBrandedLoginSettingsInput!): Community

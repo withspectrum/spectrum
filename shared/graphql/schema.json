@@ -188,16 +188,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "RecurringPayment",
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "Invoice",
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
         "name": "UserSettings",
         "possibleTypes": null
       },

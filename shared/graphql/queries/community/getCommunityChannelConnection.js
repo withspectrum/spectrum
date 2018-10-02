@@ -8,9 +8,6 @@ import type { CommunityChannelConnectionType } from '../../fragments/community/c
 
 export type GetCommunityChannelConnectionType = {
   ...$Exact<CommunityInfoType>,
-  hasFeatures: {
-    analytics: boolean,
-  },
   ...$Exact<CommunityChannelConnectionType>,
 };
 
@@ -18,9 +15,6 @@ export const getCommunityChannelConnectionQuery = gql`
   query getCommunityChannels($id: ID) {
     community(id: $id) {
       ...communityInfo
-      hasFeatures {
-        analytics
-      }
       ...communityChannelConnection
     }
   }

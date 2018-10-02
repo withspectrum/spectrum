@@ -17,7 +17,6 @@ build-chronos
 build-mercury
 build-vulcan
 build-hyperion
-build-pluto
 build-electron
 build-analytics
 package-lock.json

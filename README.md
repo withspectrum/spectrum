@@ -111,7 +111,6 @@ spectrum/
 ├── hyperion   # Server rendering server
 ├── mercury    # Worker server (reputation)
 ├── mobile     # Mobile apps
-├── pluto      # Worker server (payments; syncing with Stripe)
 ├── public     # Public files used on the frontend
 ├── shared     # Shared JavaScript code
 ├── src        # Frontend SPA
