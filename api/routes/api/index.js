@@ -12,9 +12,6 @@ const apiRouter = Router();
 import slackImporter from './slackImporter';
 apiRouter.use('/slack', slackImporter);
 
-import stripe from './stripe';
-apiRouter.use('/stripe', stripe);
-
 import email from './email';
 apiRouter.use('/email', email);
 

@@ -14,11 +14,6 @@ export const __createThreadParticipantsLoader = createLoader(
   'group'
 );
 
-export const __createThreadMessageCountLoader = createLoader(
-  threadIds => getMessageCountInThreads(threadIds),
-  'group'
-);
-
 export default () => {
   throw new Error(
     '⚠️ Do not import loaders directly, get them from the GraphQL context instead! ⚠️'

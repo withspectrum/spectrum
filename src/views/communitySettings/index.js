@@ -13,7 +13,6 @@ import Head from '../../components/head';
 import ViewError from '../../components/viewError';
 import Analytics from '../communityAnalytics';
 import Members from '../communityMembers';
-import Billing from '../communityBilling';
 import Overview from './components/overview';
 import Titlebar from '../titlebar';
 import Header from '../../components/settingsViews/header';
@@ -102,14 +101,6 @@ class CommunitySettings extends React.Component<Props> {
         },
       ];
 
-      if (community.communityPermissions.isOwner) {
-        subnavItems.push({
-          to: `/${community.slug}/settings/billing`,
-          label: 'Billing',
-          activeLabel: 'billing',
-        });
-      }
-
       const subheading = {
         to: `/${community.slug}`,
         label: `Return to ${community.name}`,
@@ -154,15 +145,6 @@ class CommunitySettings extends React.Component<Props> {
               </Route>
               <Route path={`${match.url}/members`}>
                 {() => <Members community={community} history={history} />}
-              </Route>
-              <Route path={`${match.url}/billing`}>
-                {() => (
-                  <Billing
-                    community={community}
-                    id={community.id}
-                    history={history}
-                  />
-                )}
               </Route>
               <Route path={`${match.url}`}>
                 {() => (

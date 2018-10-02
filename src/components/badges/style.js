@@ -55,14 +55,3 @@ export const PendingBadge = styled(Span)`
     cursor: pointer;
   }
 `;
-
-export const DefaultPaymentMethodBadge = styled(Span)`
-  background-color: ${theme.space.default};
-  background-image: ${Gradient(theme.space.default, theme.space.default)};
-  cursor: pointer;
-  margin-left: 8px;
-
-  &:hover {
-    cursor: pointer;
-  }
-`;

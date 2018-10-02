@@ -28,13 +28,6 @@ const general = /* GraphQL */ `
     reputation: Int
   }
 
-  type RecurringPayment {
-    plan: String
-    amount: String
-    createdAt: String
-    status: String
-  }
-
   type ContextPermissions
     @deprecated(
       reason: "Use the CommunityMember or ThreadParticipant type to get permissions"
@@ -75,6 +68,13 @@ const general = /* GraphQL */ `
   type JoinSettings {
     tokenJoinEnabled: Boolean
     token: String
+  }
+
+  type RecurringPayment {
+    plan: String
+    amount: String
+    createdAt: String
+    status: String
   }
 `;
 

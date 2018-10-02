@@ -85,18 +85,9 @@ class DeleteAccountForm extends React.Component<Props, State> {
 
   render() {
     const { isLoading, ownsCommunities, deleteInited } = this.state;
-    const { data: { user } } = this.props;
-
-    if (user && user.isPro) {
-      return (
-        <SectionCard>
-          <SectionTitle>Delete my account</SectionTitle>
-          <SectionSubtitle>
-            Please downgrade from the Pro plan before deleting your account.
-          </SectionSubtitle>
-        </SectionCard>
-      );
-    }
+    const {
+      data: { user },
+    } = this.props;
 
     if (user) {
       return (

@@ -95,8 +95,8 @@ const UserWithData = ({
           />
           <FullTitle>{user.name}</FullTitle>
           <Subtitle>
-            @{user.username}
-            {user.isPro && <Badge type="pro" />}
+            <span style={{ marginRight: '4px' }}>@{user.username}</span>
+            {user.betaSupporter && <Badge type="beta-supporter" />}
           </Subtitle>
           <FullDescription>
             {user.description && <p>{renderTextWithLinks(user.description)}</p>}
@@ -167,7 +167,6 @@ const UserWithData = ({
           </CoverLink>
           <CoverSubtitle center>
             {user.username && `@${user.username}`}
-            {user.isPro && <Badge type="pro" />}
             <Reputation
               tipText={'Total rep across all communities'}
               size={'large'}
@@ -201,12 +200,7 @@ const UserWithData = ({
                 />
                 <ProfileHeaderMeta>
                   <Title>{user.name}</Title>
-                  {user.username && (
-                    <Subtitle>
-                      @{user.username}
-                      {user.isPro && <Badge type="pro" />}
-                    </Subtitle>
-                  )}
+                  {user.username && <Subtitle>@{user.username}</Subtitle>}
                 </ProfileHeaderMeta>
               </ProfileHeaderLink>
             ) : (
@@ -222,7 +216,6 @@ const UserWithData = ({
                   {user.username && (
                     <Subtitle>
                       @{user.username}
-                      {user.isPro && <Badge type="pro" />}
                       <Reputation
                         tipText={'Total rep across all communities'}
                         size={'large'}

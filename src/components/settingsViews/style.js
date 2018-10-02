@@ -260,15 +260,6 @@ export const DropdownSectionSubtitle = styled.p`
   line-height: 1.2;
 `;
 
-export const DropdownSectionCardInfo = styled(DropdownSectionSubtitle)`
-  margin-top: 6px;
-  display: flex;
-  align-items: flex-start;
-  img {
-    margin-right: 6px;
-  }
-`;
-
 export const DropdownAction = styled.div`
   display: flex;
   flex: 0 0 48px;
