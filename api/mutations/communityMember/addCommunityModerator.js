@@ -24,7 +24,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { user, loaders } = ctx;
   const { communityId, userId: userToEvaluateId } = args.input;
 
-  if (!await canModerateCommunity(user.id, communityId, loaders)) {
+  if (!(await canModerateCommunity(user.id, communityId, loaders))) {
     trackQueue.add({
       userId: user.id,
       event: events.USER_ADDED_MODERATOR_IN_COMMUNITY_FAILED,
@@ -55,22 +55,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     });
 
     return new UserError("We couldn't find that community.");
-  }
-
-  const { stripeCustomerId } = community;
-  if (!stripeCustomerId) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_ADDED_MODERATOR_IN_COMMUNITY_FAILED,
-      context: { communityId },
-      properties: {
-        reason: 'no payment method',
-      },
-    });
-
-    return new UserError(
-      'You must have a valid payment method for this community to add new moderators'
-    );
   }
 
   if (!userToEvaluatePermissions || userToEvaluatePermissions.length === 0) {

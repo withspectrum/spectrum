@@ -21,26 +21,8 @@ r.db('spectrum')
   username: null
 })
 ```
-3. Disable paid feature flags for communities owned by the user.
-```js
-.table('communities')
-.filter(function (community) {
-  return r.db('spectrum')
-    .table('usersCommunities')
-    .getAll(ID, { index: 'userId' })
-    .filter(function (userCommunity) {
-      return userCommunity('communityId').eq(community('id'))
-        .and(userCommunity('isOwner').eq(true))
-    })
-    .count().gt(0)
-})
-.update({
-  analyticsEnabled: false,
-  prioritySupportEnabled: false,
-})
-```
 
-4. Archive all private channels in communities owned by the user
+3. Archive all private channels in communities owned by the user
 
 ```js
 .table('channels')
@@ -58,7 +40,7 @@ r.db('spectrum')
 .update({ archivedAt: new Date() })
 ```
 
-5. Remove that user as a member from all communities and channels:
+4. Remove that user as a member from all communities and channels:
 ```js
 // usersCommunities
 .table('usersCommunities')
@@ -80,7 +62,7 @@ r.db('spectrum')
   receiveNotifications: false,
 })
 ```
-6. Remove all notifications from threads to save worker processing:
+5. Remove all notifications from threads to save worker processing:
 ```js
 // usersThreads
 .table('usersThreads')
@@ -89,7 +71,7 @@ r.db('spectrum')
   receiveNotifications: false,
 })
 ```
-7. Reset the person's notification settings so they will not get any future emails about DMs, daily digests, etc
+6. Reset the person's notification settings so they will not get any future emails about DMs, daily digests, etc
 ```js
 // usersSettings
 .table('usersSettings')
@@ -119,4 +101,4 @@ r.db('spectrum')
   }
 })
 ```
-8. Done! The user now can't be messaged, searched for, or re-logged into. The banned user no longer affects community or channel member counts, and will not ever get pulled into Athena for notifications processing.
+7. Done! The user now can't be messaged, searched for, or re-logged into. The banned user no longer affects community or channel member counts, and will not ever get pulled into Athena for notifications processing.

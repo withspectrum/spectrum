@@ -642,15 +642,7 @@ class ChatInput extends React.Component<Props, State> {
         <ChatInputContainer focus={isFocused} onClick={this.triggerFocus}>
           {photoSizeError && (
             <PhotoSizeError>
-              <p
-                onClick={() =>
-                  this.props.dispatch(
-                    openModal('UPGRADE_MODAL', { user: currentUser })
-                  )
-                }
-              >
-                {photoSizeError}
-              </p>
+              <p>{photoSizeError}</p>
               <Icon
                 onClick={() => this.clearError()}
                 glyph="view-close"
