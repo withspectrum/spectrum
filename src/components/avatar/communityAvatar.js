@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import { optimize } from 'src/helpers/images';
 import { CommunityHoverProfile } from 'src/components/hoverProfile';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
@@ -15,25 +15,6 @@ type Props = {
   showHoverProfile?: boolean,
   clickable?: boolean,
 };
-
-export default class AvatarHandler extends Component<Props> {
-  render() {
-    const { showHoverProfile = true, community } = this.props;
-
-    return (
-      <ConditionalWrap
-        condition={showHoverProfile}
-        wrap={children => (
-          <CommunityHoverProfile id={community.id}>
-            {children}
-          </CommunityHoverProfile>
-        )}
-      >
-        <Avatar {...this.props} />
-      </ConditionalWrap>
-    );
-  }
-}
 
 class Avatar extends React.Component<Props> {
   render() {
@@ -81,3 +62,24 @@ class Avatar extends React.Component<Props> {
     );
   }
 }
+
+class AvatarHandler extends React.Component<Props> {
+  render() {
+    const { showHoverProfile = true, community } = this.props;
+
+    return (
+      <ConditionalWrap
+        condition={showHoverProfile}
+        wrap={children => (
+          <CommunityHoverProfile id={community.id}>
+            {children}
+          </CommunityHoverProfile>
+        )}
+      >
+        <Avatar {...this.props} />
+      </ConditionalWrap>
+    );
+  }
+}
+
+export default AvatarHandler;

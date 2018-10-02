@@ -11,9 +11,7 @@ import {
   getThreadsByUserAsSpamCheck,
 } from '../../models/thread';
 import { createParticipantInThread } from '../../models/usersThreads';
-import { StripeUtil } from 'shared/stripe/utils';
 import type { FileUpload, DBThread } from 'shared/types';
-import { PRIVATE_CHANNEL, FREE_PRIVATE_CHANNEL } from 'pluto/queues/constants';
 import { toPlainText, toState } from 'shared/draft-utils';
 import {
   processReputationEventQueue,
@@ -159,45 +157,6 @@ export default requireAuth(
       return new UserError(
         "You don't have permission to create threads in this channel."
       );
-    }
-
-    if (channel.isPrivate) {
-      const { customer } = await StripeUtil.jobPreflight(community.id);
-
-      if (!customer) {
-        trackQueue.add({
-          userId: user.id,
-          event: events.THREAD_CREATED_FAILED,
-          context: { channelId: thread.channelId },
-          properties: {
-            reason: 'no customer for private channel',
-          },
-        });
-
-        return new UserError(
-          'We could not verify the billing status for this channel, please try again'
-        );
-      }
-
-      const [hasPaidPrivateChannel, hasFreePrivateChannel] = await Promise.all([
-        StripeUtil.hasSubscriptionItemOfType(customer, PRIVATE_CHANNEL),
-        StripeUtil.hasSubscriptionItemOfType(customer, FREE_PRIVATE_CHANNEL),
-      ]);
-
-      if (!hasPaidPrivateChannel && !hasFreePrivateChannel) {
-        trackQueue.add({
-          userId: user.id,
-          event: events.THREAD_CREATED_FAILED,
-          context: { channelId: thread.channelId },
-          properties: {
-            reason: 'private channel without subscription',
-          },
-        });
-
-        return new UserError(
-          'This private channel does not have an active subscription'
-        );
-      }
     }
 
     const isOwnerOrModerator =
