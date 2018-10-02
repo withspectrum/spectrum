@@ -35,21 +35,25 @@ import {
 import { track, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
 
-const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
-  DashboardThreadFeed
-);
+const EverythingThreadFeed = compose(
+  connect(),
+  getEverythingThreads
+)(DashboardThreadFeed);
 
-const CommunityThreadFeed = compose(connect(), getCommunityThreads)(
-  DashboardThreadFeed
-);
+const CommunityThreadFeed = compose(
+  connect(),
+  getCommunityThreads
+)(DashboardThreadFeed);
 
-const ChannelThreadFeed = compose(connect(), getChannelThreadConnection)(
-  DashboardThreadFeed
-);
+const ChannelThreadFeed = compose(
+  connect(),
+  getChannelThreadConnection
+)(DashboardThreadFeed);
 
-const SearchThreadFeed = compose(connect(), searchThreadsQuery)(
-  DashboardThreadFeed
-);
+const SearchThreadFeed = compose(
+  connect(),
+  searchThreadsQuery
+)(DashboardThreadFeed);
 
 type State = {
   activeChannelObject: ?Object,
@@ -105,8 +109,8 @@ class Dashboard extends React.Component<Props, State> {
     const { title, description } = generateMetaInfo();
 
     if (user) {
-      // if the user has set a username but hasn't joined any communities yet, we have nothing to show them on the dashboard. So instead just render the onboarding step to upsell popular communities to join
-      if (user.username && user.communityConnection.edges.length === 0) {
+      // if the user hasn't joined any communities yet, we have nothing to show them on the dashboard. So instead just render the onboarding step to upsell popular communities to join
+      if (user.communityConnection.edges.length === 0) {
         return (
           <NewUserOnboarding
             noCloseButton
