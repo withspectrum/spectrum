@@ -5,9 +5,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
 import Dropdown from '../../../components/dropdown';
-import { openModal } from 'src/actions/modals';
 import { SERVER_URL } from '../../../api/constants';
-import Badge from 'src/components/badges';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 
 const UserProfileDropdown = styled(Dropdown)`
@@ -59,15 +57,6 @@ const ProfileDropdown = (props: ProfileProps) => {
               My Settings
             </UserProfileDropdownListItem>
           </Link>
-        )}
-        {!props.user.isPro && (
-          <UserProfileDropdownListItem
-            onClick={() =>
-              props.dispatch(openModal('UPGRADE_MODAL', { user: props.user }))
-            }
-          >
-            Upgrade to <Badge type="pro" />
-          </UserProfileDropdownListItem>
         )}
         <Link to={`/about`}>
           <UserProfileDropdownListItem>

@@ -7,8 +7,6 @@ const coreSplashPageNavbarLinksVisible = () => {
 
   cy.get('[data-cy="navbar-splash-features"]').should('be.visible');
 
-  cy.get('[data-cy="navbar-splash-pricing"]').should('be.visible');
-
   cy.get('[data-cy="navbar-splash-support"]').should('be.visible');
 };
 
@@ -51,9 +49,6 @@ const checkSignedOutNavbarRenders = () => {
 };
 
 const checkSignedOutSplashNavbarRenders = () => {
-  cy.visit('/pricing');
-  checkSignedOutSplashNavbarLinksRender();
-
   cy.visit('/terms');
   checkSignedOutSplashNavbarLinksRender();
 

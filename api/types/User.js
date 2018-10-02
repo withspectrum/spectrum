@@ -96,11 +96,16 @@ const User = /* GraphQL */ `
     timezone: Int
     totalReputation: Int
     pendingEmail: LowercaseString
+    betaSupporter: Boolean
+
+    isPro: Boolean @deprecated(reason: "Use the betaSupporter field instead")
+    recurringPayments: [RecurringPayment]
+      @deprecated(reason: "Payments are no longer used")
+    invoices: [Invoice] @deprecated(reason: "Payments are no longer used")
 
     # non-schema fields
     threadCount: Int @cost(complexity: 1)
     isAdmin: Boolean
-    isPro: Boolean! @cost(complexity: 1)
     communityConnection: UserCommunitiesConnection!
     channelConnection: UserChannelsConnection!
     directMessageThreadsConnection(
@@ -115,8 +120,6 @@ const User = /* GraphQL */ `
     ): UserThreadsConnection! @cost(complexity: 1, multiplier: "first")
     everything(first: Int = 20, after: String): EverythingThreadsConnection!
       @cost(complexity: 1, multiplier: "first")
-    recurringPayments: [RecurringPayment]
-    invoices: [Invoice]
     settings: UserSettings @cost(complexity: 1)
     githubProfile: GithubProfile
 

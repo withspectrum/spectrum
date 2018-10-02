@@ -2,7 +2,6 @@
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
-import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
 import { Button } from 'src/components/buttons';
 import Column from 'src/components/column';
 import {
@@ -273,10 +272,6 @@ export const Byline = styled.div`
 
 export const BylineMeta = styled(FlexCol)`
   margin-left: 12px;
-`;
-
-export const AuthorAvatar = styled(UserAvatar)`
-  cursor: pointer;
 `;
 
 export const AuthorNameLink = styled(Link)`
@@ -791,10 +786,6 @@ export const WatercoolerTitle = styled.h3`
   font-weight: 500;
   color: ${theme.text.default};
   margin-bottom: 8px;
-`;
-
-export const WatercoolerAvatar = styled(CommunityAvatar)`
-  margin-bottom: 16px;
 `;
 
 export const AnimatedContainer = styled.div`

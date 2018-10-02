@@ -1,11 +1,11 @@
 // @flow
 import * as React from 'react';
-import Badge from '../../../components/badges';
-import Reputation from '../../../components/reputation';
+import Badge from 'src/components/badges';
+import Reputation from 'src/components/reputation';
 import type { ThreadParticipantType } from 'shared/graphql/fragments/thread/threadParticipant';
+import { UserAvatar } from 'src/components/avatar';
 import {
   Byline,
-  AuthorAvatar,
   BylineMeta,
   AuthorName,
   AuthorNameLink,
@@ -26,13 +26,16 @@ class ThreadByline extends React.Component<Props> {
 
     return (
       <Byline>
-        <AuthorAvatar user={user} size={40} showHoverProfile={false} />
+        <UserAvatar user={user} size={40} showHoverProfile={false} />
         <BylineMeta>
           {user.username ? (
             <AuthorNameLink to={`/users/${user.username}`}>
               <AuthorName>{user.name}</AuthorName>
               <AuthorUsername>@{user.username}</AuthorUsername>
               {roles.map((role, index) => <Badge type={role} key={index} />)}
+              {user.betaSupporter && (
+                <Badge type="beta-supporter" label="Supporter" />
+              )}
             </AuthorNameLink>
           ) : (
             <AuthorNameNoLink>

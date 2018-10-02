@@ -21,5 +21,4 @@
   - [Athena](workers/athena/intro.md)
   - [Chronos](workers/chronos/intro.md)
   - [Mercury](workers/mercury/intro.md)
-  - [Pluto](workers/pluto/intro.md)
   - [Vulcan](workers/vulcan/intro.md)
