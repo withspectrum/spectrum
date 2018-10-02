@@ -378,12 +378,15 @@ const incrementMemberCount = (channelId: string): Promise<DBChannel> => {
   return db
     .table('channels')
     .get(channelId)
-    .update({
-      memberCount: db
-        .row('memberCount')
-        .default(0)
-        .add(1),
-    })
+    .update(
+      {
+        memberCount: db
+          .row('memberCount')
+          .default(0)
+          .add(1),
+      },
+      { returnChanges: true }
+    )
     .run()
     .then(result => result.changes[0].new_val || result.changes[0].old_val);
 };
@@ -392,12 +395,15 @@ const decrementMemberCount = (channelId: string): Promise<DBChannel> => {
   return db
     .table('channels')
     .get(channelId)
-    .update({
-      memberCount: db
-        .row('memberCount')
-        .default(1)
-        .sub(1),
-    })
+    .update(
+      {
+        memberCount: db
+          .row('memberCount')
+          .default(1)
+          .sub(1),
+      },
+      { returnChanges: true }
+    )
     .run()
     .then(result => result.changes[0].new_val || result.changes[0].old_val);
 };
@@ -409,9 +415,12 @@ const setMemberCount = (
   return db
     .table('channels')
     .get(channelId)
-    .update({
-      memberCount: value,
-    })
+    .update(
+      {
+        memberCount: value,
+      },
+      { returnChanges: true }
+    )
     .run()
     .then(result => result.changes[0].new_val || result.changes[0].old_val);
 };
