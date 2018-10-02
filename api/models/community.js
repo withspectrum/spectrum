@@ -267,7 +267,6 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
         modifiedAt: null,
         creatorId: user.id,
         administratorEmail: user.email,
-        stripeCustomerId: null,
         isPrivate
       },
       { returnChanges: true }
@@ -761,93 +760,4 @@ export const resetCommunityAdministratorEmail = (communityId: string) => {
       pendingAdministratorEmail: db.literal(),
     })
     .run();
-};
-
-// prettier-ignore
-export const setStripeCustomerId = (communityId: string, stripeCustomerId: string): Promise<DBCommunity> => {
-  return db
-    .table('communities')
-    .get(communityId)
-    .update(
-      {
-        stripeCustomerId,
-      },
-      {
-        returnChanges: 'always',
-      }
-    )
-    .run()
-    .then(result => result.changes[0].new_val || result.changes[0].old_val);
-};
-
-// prettier-ignore
-export const disablePaidFeatureFlags = (communityId: string, userId: string): Promise<DBCommunity> => {
-  return db
-    .table('communities')
-    .get(communityId)
-    .update({
-      analyticsEnabled: false,
-      prioritySupportEnabled: false,
-    })
-    .run()
-    .then(async () => {
-      trackQueue.add({
-        userId,
-        event: events.COMMUNITY_ANALYTICS_DISABLED,
-        context: { communityId }
-      })
-
-      trackQueue.add({
-        userId,
-        event: events.COMMUNITY_PRIORITY_SUPPORT_DISABLED,
-        context: { communityId }
-      })
-
-      return await getCommunityById(communityId)
-    })
-};
-
-export const updateCommunityPaidFeature = (
-  communityId: string,
-  feature: string,
-  value: boolean,
-  userId: string
-): Promise<DBCommunity> => {
-  const obj = { [feature]: value };
-  return db
-    .table('communities')
-    .get(communityId)
-    .update(obj, { returnChanges: 'always' })
-    .run()
-    .then(result => {
-      if (result && result.changes.length > 0) {
-        switch (feature) {
-          case 'analyticsEnabled': {
-            trackQueue.add({
-              userId,
-              event: value
-                ? events.COMMUNITY_ANALYTICS_ENABLED
-                : events.COMMUNITY_ANALYTICS_DISABLED,
-              context: { communityId },
-            });
-            break;
-          }
-          case 'prioritySupportEnabled': {
-            trackQueue.add({
-              userId,
-              event: value
-                ? events.COMMUNITY_PRIORITY_SUPPORT_ENABLED
-                : events.COMMUNITY_PRIORITY_SUPPORT_DISABLED,
-              context: { communityId },
-            });
-          }
-          default: {
-            break;
-          }
-        }
-
-        return result.changes[0].new_val || result.changes[0].old_val;
-      }
-      return { id: communityId };
-    });
 };

@@ -1,20 +1,12 @@
 // @flow
 import * as React from 'react';
 import Link from 'src/components/link';
-import { connect } from 'react-redux';
-import compose from 'recompose/compose';
 import Icon from 'src/components/icons';
 import { storeItem } from 'src/helpers/localStorage';
-import { PUBLIC_STRIPE_KEY } from 'src/api/constants';
-import { addToastWithTimeout } from 'src/actions/toasts';
-import { openModal } from 'src/actions/modals';
-import { UserAvatar } from 'src/components/avatar';
 import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
 import { Button, OutlineButton } from 'src/components/buttons';
 import { Login } from 'src/views/login';
-import Badge from 'src/components/badges';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import type { Dispatch } from 'redux';
 import {
   Title,
   MiniTitle,
@@ -22,17 +14,12 @@ import {
   MiniSubtitle,
   Actions,
   NullCol,
-  UpgradeError,
-  Profile,
-  Cost,
   LargeEmoji,
   UpsellIconContainer,
   SignupButton,
   SignupFooter,
   SigninLink,
 } from './style';
-import StripeCheckout from 'react-stripe-checkout';
-import upgradeToProMutation from 'shared/graphql/mutations/user/upgradeToPro';
 
 type NullCardProps = {
   noShadow?: boolean,
@@ -294,34 +281,6 @@ export const Upsell404Thread = () => {
   );
 };
 
-type MiniUpgradeProps = {
-  currentUser: Object,
-  dispatch: Dispatch<Object>,
-};
-class UpsellMiniUpgradePure extends React.Component<MiniUpgradeProps> {
-  render() {
-    const { currentUser, dispatch } = this.props;
-
-    return (
-      <MiniNullCard
-        bg="null"
-        heading="Upgrade to Pro"
-        copy="Upgrade to Pro for badges, gif avatars, and more!"
-        emoji="😍"
-      >
-        <Button
-          icon="payment"
-          onClick={() =>
-            dispatch(openModal('UPGRADE_MODAL', { user: currentUser }))
-          }
-        >
-          Upgrade
-        </Button>
-      </MiniNullCard>
-    );
-  }
-}
-
 type TeamMemberProps = {
   communitySlug: string,
   small?: boolean,
@@ -347,136 +306,6 @@ export const UpsellTeamMembers = (props: TeamMemberProps) => {
     </MiniNullCard>
   );
 };
-
-const map = state => ({ currentUser: state.users.currentUser });
-// $FlowIssue
-export const UpsellMiniUpgrade = connect(map)(UpsellMiniUpgradePure);
-
-type UpgradeProProps = {
-  upgradeToPro: Function,
-  complete: Function,
-  dispatch: Dispatch<Object>,
-  currentUser: Object,
-};
-
-type UpgradeProState = {
-  upgradeError: string,
-  isLoading: boolean,
-};
-class UpsellUpgradeToProPure extends React.Component<
-  UpgradeProProps,
-  UpgradeProState
-> {
-  state = {
-    upgradeError: '',
-    isLoading: false,
-  };
-
-  upgradeToPro = token => {
-    this.setState({
-      isLoading: true,
-    });
-
-    const input = {
-      plan: 'beta-pro',
-      token: JSON.stringify(token),
-    };
-
-    this.props
-      .upgradeToPro(input)
-      .then(() => {
-        this.props.dispatch(addToastWithTimeout('success', 'Upgraded to Pro!'));
-        this.setState({
-          isLoading: false,
-          upgradeError: '',
-        });
-        // if the upgrade is triggered from a modal, close the modal
-        return this.props.complete && this.props.complete();
-      })
-      .catch(err => {
-        this.setState({
-          isLoading: false,
-          upgradeError: err.message,
-        });
-        this.props.dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
-  render() {
-    const { upgradeError, isLoading } = this.state;
-    const { currentUser } = this.props;
-
-    return (
-      <NullCard bg="onboarding">
-        <Profile>
-          <UserAvatar size={60} user={currentUser} />
-          <span className={'badge'}>
-            <Badge type={'pro'} />
-          </span>
-        </Profile>
-        <Title>Upgrade to Pro</Title>
-        <Subtitle>
-          We’re hard at work building features for Spectrum Pro. Your early
-          support helps us get there faster – thank you! In the meantime, here’s
-          what’s unlocked on Pro:
-        </Subtitle>
-        <Subtitle>
-          <ul>
-            <li>
-              <span role="img" aria-label="sparkle emoji">
-                ✨
-              </span>{' '}
-              A spiffy new Pro badge will adorn your name everywhere on Spectrum
-            </li>
-            <li>
-              <span role="img" aria-label="smile with heart eyes emoji">
-                😍
-              </span>{' '}
-              Set a gif as your profile photo or cover photo
-            </li>
-            <li>
-              <span role="img" aria-label="tools emoji">
-                🛠
-              </span>{' '}
-              Upload images up to 25mb, making sharing work easier
-            </li>
-            <li>
-              <span role="img" aria-label="heart emoji">
-                ❤️
-              </span>{' '}
-              More to come!
-            </li>
-          </ul>
-        </Subtitle>
-        <Cost>Spectrum Pro costs $5/month and you can cancel at any time.</Cost>
-        <StripeCheckout
-          token={this.upgradeToPro}
-          stripeKey={PUBLIC_STRIPE_KEY}
-          name="🔐   Pay Securely"
-          description="Secured and Encrypted by Stripe"
-          panelLabel="Subscribe for "
-          amount={500}
-          currency="USD"
-        >
-          <Button disabled={isLoading} loading={isLoading} icon="payment">
-            Make me a Pro!
-          </Button>
-        </StripeCheckout>
-
-        {!upgradeError && <UpgradeError>{upgradeError}</UpgradeError>}
-      </NullCard>
-    );
-  }
-}
-
-const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
-});
-export const UpsellUpgradeToPro = compose(
-  upgradeToProMutation,
-  // $FlowIssue
-  connect(mapStateToProps)
-)(UpsellUpgradeToProPure);
 
 export const UpsellNullNotifications = () => {
   return (

@@ -4,7 +4,6 @@ import {
   getUsersThreadCount,
   getUsersByUsername,
 } from '../models/user';
-import { getUsersRecurringPayments } from '../models/recurringPayment';
 import {
   getUsersPermissionsInCommunities,
   getUsersTotalReputation,
@@ -23,11 +22,6 @@ export const __createUserByUsernameLoader = createLoader(
 export const __createUserThreadCountLoader = createLoader(
   users => getUsersThreadCount(users),
   'id'
-);
-
-export const __createUserRecurringPaymentsLoader = createLoader(
-  users => getUsersRecurringPayments(users),
-  'group'
 );
 
 export const __createUserPermissionsInCommunityLoader = createLoader(

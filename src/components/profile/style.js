@@ -281,28 +281,6 @@ export const ThreadProfileCard = styled(ProfileCard)`
   box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 `;
 
-export const ProUpgrade = styled.div`
-  margin: 16px;
-  margin-top: 0;
-  display: flex;
-  align-items: stretch;
-  align-content: stretch;
-  justify-content: center;
-
-  button {
-    width: 100%;
-    text-align: center;
-  }
-`;
-
-// export const ReputationContainer = styled.div`
-//   border-top: 2px solid ${theme.bg.border};
-//   padding: 12px 0;
-//   margin: 0 16px;
-//   display: flex;
-//   color: ${theme.text.alt};
-// `;
-
 export const CoverPhoto = styled.div`
   position: relative;
   width: 100%;
