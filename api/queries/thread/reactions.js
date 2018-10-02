@@ -1,5 +1,6 @@
 // @flow
 import { hasReactedToThread } from 'api/models/threadReaction';
+import Raven from 'shared/raven';
 import type { DBThread } from 'shared/types';
 import type { GraphQLContext } from '../../';
 
