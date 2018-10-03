@@ -10,7 +10,37 @@ import { getUserIdFromReq } from './utils/session-store';
 import UserError from './utils/UserError';
 import type { DBUser } from 'shared/types';
 
-const server = new ApolloServer({
+// NOTE(@mxstbr): Evil hack to make graphql-cost-analysis work with Apollo Server v2
+// @see pa-bru/graphql-cost-analysis#12
+// @author @arianon
+class ProtectedApolloServer extends ApolloServer {
+  async createGraphQLServerOptions(
+    req: express$Request,
+    res: express$Response
+  ): Promise<*> {
+    const options = await super.createGraphQLServerOptions(req, res);
+
+    return {
+      ...options,
+      validationRules: [
+        ...options.validationRules,
+        costAnalysis({
+          maximumCost: 750,
+          defaultCost: 1,
+          variables: req.body.variables,
+          createError: (max, actual) => {
+            const err = new UserError(
+              `GraphQL query exceeds maximum complexity, please remove some nesting or fields and try again. (max: ${max}, actual: ${actual})`
+            );
+            return err;
+          },
+        }),
+      ],
+    };
+  }
+}
+
+const server = new ProtectedApolloServer({
   schema,
   formatError: createErrorFormatter(),
   // For subscriptions, this gets passed "connection", for everything else "req" and "res"
@@ -83,19 +113,7 @@ const server = new ApolloServer({
   engine: false,
   tracing: true,
   cacheControl: true,
-  validationRules: [
-    depthLimit(10),
-    costAnalysis({
-      maximumCost: 750,
-      defaultCost: 1,
-      createError: (max, actual) => {
-        const err = new UserError(
-          `GraphQL query exceeds maximum complexity, please remove some nesting or fields and try again. (max: ${max}, actual: ${actual})`
-        );
-        return err;
-      },
-    }),
-  ],
+  validationRules: [depthLimit(10)],
 });
 
 export default server;
