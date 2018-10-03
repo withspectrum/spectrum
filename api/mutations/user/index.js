@@ -15,6 +15,7 @@ import updateUserEmail from './updateUserEmail';
 import deleteCurrentUser from './deleteCurrentUser';
 import subscribeExpoPush from './subscribeExpoPush';
 import reportUser from './reportUser';
+import banUser from './banUser';
 
 module.exports = {
   Mutation: {
@@ -26,5 +27,6 @@ module.exports = {
     deleteCurrentUser,
     subscribeExpoPush,
     reportUser,
+    banUser,
   },
 };
