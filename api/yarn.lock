@@ -452,7 +452,7 @@ apollo-engine-reporting@0.0.2:
     graphql-extensions "0.1.2"
     lodash "^4.17.10"
 
-apollo-engine@1.x:
+apollo-engine@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/apollo-engine/-/apollo-engine-1.1.2.tgz#ef8465fe5234b3bfe034b7e96d37bc441b72a9cb"
   dependencies:
