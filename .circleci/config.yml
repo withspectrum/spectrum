@@ -100,11 +100,11 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/spectrum
+      - run: yarn run db:migrate
+      - run: yarn run db:seed
       - run:
           name: Run Unit Tests
           command: yarn run test:ci
-      - run: yarn run db:migrate
-      - run: yarn run db:seed
       - run: *setup-and-build-web
       - run: *build-api
       - run: *start-api
