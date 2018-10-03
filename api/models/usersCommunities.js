@@ -316,7 +316,7 @@ export const removeModeratorsInCommunity = async (communityId: string): Promise<
   ])
 };
 
-// invoked when a user is deleting their account
+// invoked when a user is deleting their account or being banned
 export const removeUsersCommunityMemberships = async (userId: string) => {
   const memberships = await db
     .table('usersCommunities')
