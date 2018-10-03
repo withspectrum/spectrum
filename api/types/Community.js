@@ -199,7 +199,6 @@ const Community = /* GraphQL */ `
       ids: [ID]
       curatedContentType: String
     ): [Community]
-    communityMember(userId: String, communityId: String): CommunityMember
     topCommunities(amount: Int = 20): [Community!]
       @cost(complexity: 4, multipliers: ["amount"])
     recentCommunities: [Community!]
