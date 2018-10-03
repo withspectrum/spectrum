@@ -4,6 +4,7 @@ import {
   getCommunitiesBySlug,
   getCommunitiesChannelCounts,
   getCommunitiesOnlineMemberCounts,
+  getCommunitiesMemberCounts,
 } from '../models/community';
 import { getCommunitiesSettings } from '../models/communitySettings';
 import createLoader from './create-loader';
@@ -15,6 +16,11 @@ export const __createCommunityLoader = createLoader(communities =>
 export const __createCommunityBySlugLoader = createLoader(
   communities => getCommunitiesBySlug(communities),
   'slug'
+);
+
+export const __createCommunityMemberCountLoader = createLoader(
+  communityIds => getCommunitiesMemberCounts(communityIds),
+  'group'
 );
 
 export const __createCommunityChannelCountLoader = createLoader(

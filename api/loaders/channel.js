@@ -1,5 +1,9 @@
 // @flow
-import { getChannels, getChannelsThreadCounts } from '../models/channel';
+import {
+  getChannels,
+  getChannelsThreadCounts,
+  getChannelsMemberCounts,
+} from '../models/channel';
 import { getChannelsSettings } from '../models/channelSettings';
 import createLoader from './create-loader';
 import { getPendingUsersInChannels } from '../models/usersChannels';
@@ -15,6 +19,11 @@ export const __createChannelThreadCountLoader = createLoader(
 
 export const __createChannelPendingMembersLoader = createLoader(
   channels => getPendingUsersInChannels(channels),
+  'group'
+);
+
+export const __createChannelMemberCountLoader = createLoader(
+  channels => getChannelsMemberCounts(channels),
   'group'
 );
 

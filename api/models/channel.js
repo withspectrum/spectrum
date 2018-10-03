@@ -425,6 +425,15 @@ const setMemberCount = (
     .then(result => result.changes[0].new_val || result.changes[0].old_val);
 };
 
+const getMemberCount = (channelId: string): Promise<number> => {
+  return db
+    .table('usersChannels')
+    .getAll(channelId, { index: 'channelId' })
+    .filter({ isMember: true })
+    .count()
+    .run();
+};
+
 module.exports = {
   getChannelBySlug,
   getChannelById,
@@ -445,6 +454,7 @@ module.exports = {
   incrementMemberCount,
   decrementMemberCount,
   setMemberCount,
+  getMemberCount,
   __forQueryTests: {
     channelsByCommunitiesQuery,
     channelsByIdsQuery,

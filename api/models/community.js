@@ -197,34 +197,6 @@ export const getCommunitiesOnlineMemberCounts = (
     .run();
 };
 
-// prettier-ignore
-export const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
-  const getChannelCount = db
-    .table('channels')
-    .getAll(communityId, { index: 'communityId' })
-    .filter(channel => db.not(channel.hasFields('deletedAt')))
-    .count()
-    .run();
-
-  const getMemberCount = db
-    .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ isBlocked: false, isMember: true })
-    .count()
-    .run();
-
-  return Promise.all([getChannelCount, getMemberCount]);
-};
-
-export const getMemberCount = (communityId: string): Promise<number> => {
-  return db
-    .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ isBlocked: false, isMember: true })
-    .count()
-    .run();
-};
-
 export type CreateCommunityInput = {
   input: {
     name: string,
@@ -815,4 +787,13 @@ export const setMemberCount = (
     )
     .run()
     .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};
+
+export const getMemberCount = (communityId: string): Promise<number> => {
+  return db
+    .table('usersCommunities')
+    .getAll(communityId, { index: 'communityId' })
+    .filter({ isMember: true })
+    .count()
+    .run();
 };
