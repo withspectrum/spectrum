@@ -100,6 +100,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/spectrum
+      - run:
+          name: Run Unit Tests
+          command: yarn run test:ci
       - run: yarn run db:migrate
       - run: yarn run db:seed
       - run: *setup-and-build-web
@@ -108,9 +111,6 @@ jobs:
       - run: *start-web
       # Wait for the API and webserver to start
       - run: ./node_modules/.bin/wait-on http://localhost:3000 http://localhost:3001
-      - run:
-          name: Run Unit Tests
-          command: yarn run test:ci
       - run:
           name: Build desktop apps
           command: yarn run build:desktop
