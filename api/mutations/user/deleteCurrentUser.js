@@ -5,6 +5,7 @@ import { deleteUser } from '../../models/user';
 import { removeUsersCommunityMemberships } from '../../models/usersCommunities';
 import { removeUsersChannelMemberships } from '../../models/usersChannels';
 import { disableAllThreadNotificationsForUser } from '../../models/usersThreads';
+import { disableAllUsersEmailSettings } from '../../models/usersSettings';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
@@ -14,6 +15,7 @@ export default requireAuth(async (_: any, __: any, ctx: GraphQLContext) => {
 
   return Promise.all([
     deleteUser(user.id),
+    disableAllUsersEmailSettings(user.id),
     removeUsersCommunityMemberships(user.id),
     removeUsersChannelMemberships(user.id),
     disableAllThreadNotificationsForUser(user.id),
