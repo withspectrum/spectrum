@@ -23,6 +23,19 @@ export const getThreadReactions = (threadIds: Array<string>): Promise<Array<DBTh
     .run();
 };
 
+export const hasReactedToThread = (
+  userId: string,
+  threadId: string
+): Promise<boolean> => {
+  return db
+    .table('threadReactions')
+    .getAll([userId, threadId], { index: 'userIdAndThreadId' })
+    .filter(row => row.hasFields('deletedAt').not())
+    .count()
+    .eq(1)
+    .run();
+};
+
 type ThreadReactionInput = {
   threadId: string,
   type: ThreadReactionType,

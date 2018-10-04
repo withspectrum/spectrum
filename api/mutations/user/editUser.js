@@ -13,8 +13,8 @@ export default requireAuth(
     args: EditUserInput,
     { user, updateCookieUserData }: GraphQLContext
   ) => {
-    const dbUser = await getUser({ username: args.input.username });
-
+    const currentUser = user;
+    // If the user is trying to change their username check whether there's a person with that username already
     if (args.input.username) {
       if (
         args.input.username === 'null' ||
@@ -31,6 +31,7 @@ export default requireAuth(
         return new UserError('Nice try! 😉');
       }
 
+      const dbUser = await getUser({ username: args.input.username });
       if (dbUser && dbUser.id !== user.id) {
         trackQueue.add({
           userId: user.id,
@@ -47,8 +48,9 @@ export default requireAuth(
     }
 
     await updateCookieUserData({
-      ...dbUser,
-      ...{ ...args.input, file: undefined },
+      ...(await getUser({ id: currentUser.id })),
+      ...args.input,
+      file: undefined,
     });
     return editUser(args, user.id);
   }

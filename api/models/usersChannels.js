@@ -372,7 +372,6 @@ const approvePendingUsersInChannel = async (channelId: string): Promise<DBUsersC
 // as a member
 // prettier-ignore
 const approveBlockedUserInChannel = async (channelId: string, userId: string): Promise<DBUsersChannels> => {
-  
   trackQueue.add({
     userId,
     event: events.USER_WAS_UNBLOCKED_IN_CHANNEL,
@@ -468,7 +467,7 @@ const toggleUserChannelNotifications = async (userId: string, channelId: string,
     .getAll(channelId, { index: 'channelId' })
     .filter({ userId })
     .run();
-  
+
   // permissions exist, this user is trying to toggle notifications for a channel where they
   // are already a member
   if (permissions && permissions.length > 0) {
@@ -634,7 +633,7 @@ const getUserPermissionsInChannel = (channelId: string, userId: string): Promise
     });
 };
 
-type UserIdAndChannelId = [string, string];
+type UserIdAndChannelId = [?string, string];
 
 // prettier-ignore
 const getUsersPermissionsInChannels = (input: Array<UserIdAndChannelId>): Promise<Array<DBUsersChannels>> => {

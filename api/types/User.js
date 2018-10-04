@@ -112,14 +112,14 @@ const User = /* GraphQL */ `
       first: Int = 15
       after: String
     ): UserDirectMessageThreadsConnection!
-      @cost(complexity: 1, multiplier: "first")
+      @cost(complexity: 1, multipliers: ["first"])
     threadConnection(
       first: Int = 20
       after: String
       kind: ThreadConnectionType
-    ): UserThreadsConnection! @cost(complexity: 1, multiplier: "first")
+    ): UserThreadsConnection! @cost(complexity: 1, multipliers: ["first"])
     everything(first: Int = 20, after: String): EverythingThreadsConnection!
-      @cost(complexity: 1, multiplier: "first")
+      @cost(complexity: 1, multipliers: ["first"])
     settings: UserSettings @cost(complexity: 1)
     githubProfile: GithubProfile
 
