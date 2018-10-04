@@ -1,4 +1,5 @@
 // @flow
+import Raven from 'shared/raven';
 import type { DBCommunity } from 'shared/types';
 import type { GraphQLContext } from '../../';
 import { canViewCommunity } from '../../utils/permissions';
@@ -6,7 +7,7 @@ import cache from 'shared/cache/redis';
 
 export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
   const { user, loaders } = ctx;
-  const { id } = root;
+  const { id, memberCount: rootMemberCount } = root;
 
   if (!(await canViewCommunity(user, id, loaders))) {
     return {
@@ -16,23 +17,14 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
     };
   }
 
-  const [
-    cachedChannelCount,
-    cachedMemberCount,
-    cachedOnlineMemberCount,
-  ] = await Promise.all([
+  const [cachedChannelCount, cachedOnlineMemberCount] = await Promise.all([
     cache.get(`community:${id}:channelCount`),
-    cache.get(`community:${id}:memberCount`),
     cache.get(`community:${id}:onlineMemberCount`),
   ]);
 
-  const [channelCount, memberCount, onlineMemberCount] = await Promise.all([
+  const [channelCount, onlineMemberCount] = await Promise.all([
     typeof cachedChannelCount === 'number' ||
       loaders.communityChannelCount
-        .load(id)
-        .then(res => (res && res.reduction) || 0),
-    typeof cachedMemberCount === 'number' ||
-      loaders.communityMemberCount
         .load(id)
         .then(res => (res && res.reduction) || 0),
     typeof cachedOnlineMemberCount === 'number' ||
@@ -45,8 +37,6 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
   await Promise.all([
     typeof cachedChannelCount === 'number' ||
       cache.set(`community:${id}:channelCount`, channelCount, 'ex', 3600),
-    typeof cachedMemberCount === 'number' ||
-      cache.set(`community:${id}:memberCount`, memberCount, 'ex', 3600),
     typeof cachedOnlineMemberCount === 'number' ||
       cache.set(
         `community:${id}:onlineMemberCount`,
@@ -56,9 +46,25 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
       ),
   ]);
 
+  if (typeof rootMemberCount === 'number') {
+    return {
+      channels: channelCount,
+      members: rootMemberCount,
+      onlineMembers: onlineMemberCount,
+    };
+  }
+
+  // Fallback if there's no denormalized memberCount, also report to Sentry
+  Raven.captureException(
+    new Error(
+      `Community with ID "${id}" does not have denormalized memberCount.`
+    )
+  );
   return {
-    channels: channelCount,
-    members: memberCount,
+    members: await loaders.communityMemberCount
+      .load(id)
+      .then(res => (res && res.reduction) || 0),
     onlineMembers: onlineMemberCount,
+    channels: channelCount,
   };
 };
