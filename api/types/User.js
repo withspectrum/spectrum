@@ -169,6 +169,11 @@ const User = /* GraphQL */ `
     reason: String!
   }
 
+  input BanUserInput {
+    userId: String!
+    reason: String!
+  }
+
   extend type Mutation {
     editUser(input: EditUserInput!): User
     upgradeToPro(input: UpgradeToProInput!): User
@@ -180,6 +185,7 @@ const User = /* GraphQL */ `
     deleteCurrentUser: Boolean
     updateUserEmail(email: LowercaseString!): User
     reportUser(input: ReportUserInput!): Boolean
+    banUser(input: BanUserInput!): Boolean
   }
 `;
 

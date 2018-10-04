@@ -96,3 +96,6 @@ export const USER_WAS_ADDED_AS_OWNER_IN_COMMUNITY = 'User Was Added as Owner in 
 export const USER_REPORTED_USER_INITED = 'User Reported User Inited'
 export const USER_REPORTED_USER = 'User Reported User'
 export const USER_WAS_REPORTED = 'User Was Reported'
+
+export const USER_WAS_BANNED = 'User Was Banned'
+export const USER_BANNED_USER = 'User Banned User'
