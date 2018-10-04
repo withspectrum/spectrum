@@ -7,26 +7,30 @@ import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBUser, FileUpload } from 'shared/types';
 import { events } from 'shared/analytics';
 import { trackQueue, identifyQueue } from 'shared/bull/queues';
+import { removeUsersCommunityMemberships } from './usersCommunities';
+import { removeUsersChannelMemberships } from './usersChannels';
+import { disableAllThreadNotificationsForUser } from './usersThreads';
+import { disableAllUsersEmailSettings } from './usersSettings';
 
 type GetUserInput = {
   id?: string,
   username?: string,
 };
 
-const getUser = async (input: GetUserInput): Promise<?DBUser> => {
+export const getUser = async (input: GetUserInput): Promise<?DBUser> => {
   if (input.id) return await getUserById(input.id);
   if (input.username) return await getUserByUsername(input.username);
   return null;
 };
 
-const getUserById = (userId: string): Promise<DBUser> => {
+export const getUserById = (userId: string): Promise<DBUser> => {
   return db
     .table('users')
     .get(userId)
     .run();
 };
 
-const getUserByEmail = (email: string): Promise<DBUser> => {
+export const getUserByEmail = (email: string): Promise<DBUser> => {
   return db
     .table('users')
     .getAll(email, { index: 'email' })
@@ -34,7 +38,7 @@ const getUserByEmail = (email: string): Promise<DBUser> => {
     .then(results => (results.length > 0 ? results[0] : null));
 };
 
-const getUserByUsername = (username: string): Promise<DBUser> => {
+export const getUserByUsername = (username: string): Promise<DBUser> => {
   return db
     .table('users')
     .getAll(username, { index: 'username' })
@@ -43,21 +47,21 @@ const getUserByUsername = (username: string): Promise<DBUser> => {
 };
 
 // prettier-ignore
-const getUsersByUsername = (usernames: Array<string>): Promise<Array<DBUser>> => {
+export const getUsersByUsername = (usernames: Array<string>): Promise<Array<DBUser>> => {
   return db
     .table('users')
     .getAll(...usernames, { index: 'username' })
     .run();
 };
 
-const getUsers = (userIds: Array<string>): Promise<Array<DBUser>> => {
+export const getUsers = (userIds: Array<string>): Promise<Array<DBUser>> => {
   return db
     .table('users')
     .getAll(...userIds)
     .run();
 };
 
-const storeUser = (user: Object): Promise<DBUser> => {
+export const storeUser = (user: Object): Promise<DBUser> => {
   return db
     .table('users')
     .insert(
@@ -80,7 +84,7 @@ const storeUser = (user: Object): Promise<DBUser> => {
 };
 
 // pretier-ignore
-const saveUserProvider = (
+export const saveUserProvider = (
   userId: string,
   providerMethod: string,
   providerId: number,
@@ -124,7 +128,7 @@ const saveUserProvider = (
     });
 };
 
-const getUserByIndex = (indexName: string, indexValue: string) => {
+export const getUserByIndex = (indexName: string, indexValue: string) => {
   return db
     .table('users')
     .getAll(indexValue, { index: indexName })
@@ -133,7 +137,7 @@ const getUserByIndex = (indexName: string, indexValue: string) => {
 };
 
 // prettier-ignore
-const createOrFindUser = (user: Object, providerMethod: string): Promise<DBUser | {}> => {
+export const createOrFindUser = (user: Object, providerMethod: string): Promise<DBUser | {}> => {
   // if a user id gets passed in, we know that a user most likely exists and we just need to retrieve them from the db
   // however, if a user id doesn't exist we need to do a lookup by the email address passed in - if an email address doesn't exist, we know that we're going to be creating a new user
   let promise;
@@ -192,7 +196,7 @@ const createOrFindUser = (user: Object, providerMethod: string): Promise<DBUser 
 };
 
 // prettier-ignore
-const getEverything = (userId: string, options: PaginationOptions): Promise<Array<any>> => {
+export const getEverything = (userId: string, options: PaginationOptions): Promise<Array<any>> => {
   const { first, after } = options
   return db
     .table('usersChannels')
@@ -224,7 +228,7 @@ type UserThreadCount = {
   count: number,
 };
 // prettier-ignore
-const getUsersThreadCount = (threadIds: Array<string>): Promise<Array<UserThreadCount>> => {
+export const getUsersThreadCount = (threadIds: Array<string>): Promise<Array<UserThreadCount>> => {
   const getThreadCounts = threadIds.map(creatorId =>
     db
       .table('threads')
@@ -253,7 +257,10 @@ export type EditUserInput = {
   },
 };
 
-const editUser = (args: EditUserInput, userId: string): Promise<DBUser> => {
+export const editUser = (
+  args: EditUserInput,
+  userId: string
+): Promise<DBUser> => {
   const {
     name,
     description,
@@ -476,7 +483,7 @@ const editUser = (args: EditUserInput, userId: string): Promise<DBUser> => {
     });
 };
 
-const setUserOnline = (id: string, isOnline: boolean): DBUser => {
+export const setUserOnline = (id: string, isOnline: boolean): DBUser => {
   let data = {};
 
   data.isOnline = isOnline;
@@ -496,7 +503,7 @@ const setUserOnline = (id: string, isOnline: boolean): DBUser => {
 };
 
 // prettier-ignore
-const setUserPendingEmail = (userId: string, pendingEmail: string): Promise<Object> => {
+export const setUserPendingEmail = (userId: string, pendingEmail: string): Promise<Object> => {
   return db
     .table('users')
     .get(userId)
@@ -515,7 +522,10 @@ const setUserPendingEmail = (userId: string, pendingEmail: string): Promise<Obje
     });
 };
 
-const updateUserEmail = (userId: string, email: string): Promise<Object> => {
+export const updateUserEmail = (
+  userId: string,
+  email: string
+): Promise<Object> => {
   return db
     .table('users')
     .get(userId)
@@ -533,7 +543,7 @@ const updateUserEmail = (userId: string, email: string): Promise<Object> => {
     });
 };
 
-const deleteUser = (userId: string) => {
+export const deleteUser = (userId: string) => {
   return db
     .table('users')
     .get(userId)
@@ -559,32 +569,79 @@ const deleteUser = (userId: string) => {
     })
     .run()
     .then(async () => {
-      const user = await getUserById(userId);
       trackQueue.add({
-        userId: user.id,
+        userId,
         event: events.USER_DELETED,
       });
 
-      identifyQueue.add({ userId: user.id });
+      identifyQueue.add({ userId });
     });
 };
 
-module.exports = {
-  getUser,
-  getUserById,
-  getUserByEmail,
-  getUserByUsername,
-  getUsersByUsername,
-  getUsersThreadCount,
-  getUsers,
-  getUserByIndex,
-  saveUserProvider,
-  createOrFindUser,
-  storeUser,
-  editUser,
-  getEverything,
-  setUserOnline,
-  setUserPendingEmail,
-  updateUserEmail,
-  deleteUser,
+/*
+  Occassionally bad actors will show up on Spectrum and become toxic, spam communities, harass others, or violate our code of conduct. We have a safe way to ban these users in a way that respects the integrity of data across the rest of the database.
+
+  Do NOT ever `.delete()` a user record from the database!!
+*/
+type BanUserType = {
+  userId: string,
+  reason: string,
+  currentUserId: string,
+};
+export const banUser = (args: BanUserType) => {
+  const { userId, reason, currentUserId } = args;
+
+  return db
+    .table('users')
+    .get(userId)
+    .update({
+      bannedAt: new Date(),
+      bannedBy: currentUserId,
+      bannedReason: reason,
+      username: null,
+      coverPhoto: null, // in case the photo is inappropriate
+      profilePhoto: null, // in case the photo is inappropriate
+    })
+    .run()
+    .then(async () => {
+      /*  
+        after the user object has been cleared, the user
+        can no longer be searched for, messaged, or viewed
+        so we can simply cleanup db data to ensure they are
+        no longer listed as members of communities or channels
+        and their DMs cant be seen by other users
+      */
+
+      // updates the indentification information in amplitude analytics
+      identifyQueue.add({ userId });
+
+      const dmThreadIds = await db
+        .table('usersDirectMessageThreads')
+        .getAll(userId, { index: 'userId' })
+        .run();
+
+      let removeOtherParticipantsDmThreadIds, removeDMThreads;
+      if (dmThreadIds && dmThreadIds.length > 0) {
+        removeOtherParticipantsDmThreadIds = db
+          .table('usersDirectMessageThreads')
+          .getAll(...dmThreadIds, { index: 'threadId' })
+          .update({ deletedAt: new Date() })
+          .run();
+
+        removeDMThreads = await db
+          .table('directMessageThreads')
+          .getAll(...dmThreadIds)
+          .update({ deletedAt: new Date() })
+          .run();
+      }
+
+      return await Promise.all([
+        removeUsersCommunityMemberships(userId),
+        removeUsersChannelMemberships(userId),
+        disableAllThreadNotificationsForUser(userId),
+        disableAllUsersEmailSettings(userId),
+        removeOtherParticipantsDmThreadIds,
+        removeDMThreads,
+      ]);
+    });
 };

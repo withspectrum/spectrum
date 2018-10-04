@@ -88,3 +88,34 @@ export const unsubscribeUserFromEmailNotification = (userId: string, type: objec
     .update({ ...obj })
     .run();
 };
+
+export const disableAllUsersEmailSettings = (userId: string) => {
+  return db
+    .table('usersSettings')
+    .getAll(userId, { index: 'userId' })
+    .update({
+      notifications: {
+        types: {
+          dailyDigest: {
+            email: false,
+          },
+          newDirectMessage: {
+            email: false,
+          },
+          newMention: {
+            email: false,
+          },
+          newMessageInThreads: {
+            email: false,
+          },
+          newThreadCreated: {
+            email: false,
+          },
+          weeklyDigest: {
+            email: false,
+          },
+        },
+      },
+    })
+    .run();
+};

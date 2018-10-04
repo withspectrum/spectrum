@@ -41,6 +41,7 @@ import {
 } from 'src/components/segmentedControl';
 import { ErrorBoundary } from 'src/components/error';
 import { openModal } from 'src/actions/modals';
+import { isAdmin } from 'src/helpers/is-admin';
 
 const ThreadFeedWithData = compose(
   connect(),
@@ -109,6 +110,14 @@ class UserView extends React.Component<Props, State> {
       dispatch,
     } = this.props;
     return dispatch(openModal('REPORT_USER_MODAL', { user }));
+  };
+
+  initBan = () => {
+    const {
+      data: { user },
+      dispatch,
+    } = this.props;
+    return dispatch(openModal('BAN_USER_MODAL', { user }));
   };
 
   render() {
@@ -188,6 +197,13 @@ class UserView extends React.Component<Props, State> {
                     <TextButton onClick={this.initReport}>Report</TextButton>
                   </React.Fragment>
                 )}
+
+              {currentUser &&
+                user.id !== currentUser.id &&
+                isAdmin(currentUser.id) && (
+                  <TextButton onClick={this.initBan}>Ban</TextButton>
+                )}
+
               {currentUser &&
                 user.id === currentUser.id && (
                   <Link to={`/users/${username}/settings`}>

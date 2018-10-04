@@ -17,7 +17,8 @@ const getDirectMessageThread = (directMessageThreadId: string): Promise<DBDirect
   return db
     .table('directMessageThreads')
     .get(directMessageThreadId)
-    .run();
+    .run()
+    .then(res => res && !res.deletedAt ? res : null);
 };
 
 // prettier-ignore
@@ -25,6 +26,7 @@ const getDirectMessageThreads = (ids: Array<string>): Promise<Array<DBDirectMess
   return db
     .table('directMessageThreads')
     .getAll(...ids)
+    .filter(row => row.hasFields('deletedAt').not())
     .run();
 };
 
@@ -36,6 +38,7 @@ const getDirectMessageThreadsByUser = (
   return db
     .table('usersDirectMessageThreads')
     .getAll(userId, { index: 'userId' })
+    .filter(row => row.hasFields('deletedAt').not())
     .eqJoin('threadId', db.table('directMessageThreads'))
     .without({
       left: ['id', 'createdAt', 'threadId', 'userId', 'lastActive', 'lastSeen'],

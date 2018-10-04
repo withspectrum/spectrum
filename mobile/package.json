@@ -11,7 +11,7 @@
     "apollo-link-retry": "^2.2.5",
     "expo": "^28.0.0",
     "graphql": "^0.11.0",
-    "graphql-tag": "^2.9.2",
+    "graphql-tag": "^2.10.0",
     "metro-bundler": "^0.22.1",
     "react": "16.3.1",
     "react-apollo": "2.x",

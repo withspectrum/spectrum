@@ -28,13 +28,6 @@ const general = /* GraphQL */ `
     reputation: Int
   }
 
-  input File {
-    name: String!
-    type: String!
-    size: Int!
-    path: String!
-  }
-
   type ContextPermissions
     @deprecated(
       reason: "Use the CommunityMember or ThreadParticipant type to get permissions"

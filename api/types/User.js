@@ -112,14 +112,14 @@ const User = /* GraphQL */ `
       first: Int = 15
       after: String
     ): UserDirectMessageThreadsConnection!
-      @cost(complexity: 1, multiplier: "first")
+      @cost(complexity: 1, multipliers: ["first"])
     threadConnection(
       first: Int = 20
       after: String
       kind: ThreadConnectionType
-    ): UserThreadsConnection! @cost(complexity: 1, multiplier: "first")
+    ): UserThreadsConnection! @cost(complexity: 1, multipliers: ["first"])
     everything(first: Int = 20, after: String): EverythingThreadsConnection!
-      @cost(complexity: 1, multiplier: "first")
+      @cost(complexity: 1, multipliers: ["first"])
     settings: UserSettings @cost(complexity: 1)
     githubProfile: GithubProfile
 
@@ -169,6 +169,11 @@ const User = /* GraphQL */ `
     reason: String!
   }
 
+  input BanUserInput {
+    userId: String!
+    reason: String!
+  }
+
   extend type Mutation {
     editUser(input: EditUserInput!): User
     upgradeToPro(input: UpgradeToProInput!): User
@@ -180,6 +185,7 @@ const User = /* GraphQL */ `
     deleteCurrentUser: Boolean
     updateUserEmail(email: LowercaseString!): User
     reportUser(input: ReportUserInput!): Boolean
+    banUser(input: BanUserInput!): Boolean
   }
 `;
 

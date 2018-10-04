@@ -21,6 +21,7 @@ module.exports = [
     coverPhoto:
       'https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Header.png.0.3303118636071434',
     slug: 'spectrum',
+    memberCount: 4,
   },
   {
     id: PAYMENTS_COMMUNITY_ID,
@@ -34,6 +35,7 @@ module.exports = [
     coverPhoto:
       'https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Header.png.0.3303118636071434',
     slug: 'payments',
+    memberCount: 5,
   },
   {
     id: DELETED_COMMUNITY_ID,
@@ -48,6 +50,7 @@ module.exports = [
     coverPhoto:
       'https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Header.png.0.3303118636071434',
     slug: 'deleted',
+    memberCount: 0,
   },
   {
     id: PRIVATE_COMMUNITY_ID,
@@ -61,5 +64,6 @@ module.exports = [
     coverPhoto:
       'https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Header.png.0.3303118636071434',
     slug: 'private',
+    memberCount: 1,
   },
 ];
