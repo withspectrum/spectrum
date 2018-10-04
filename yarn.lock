@@ -763,6 +763,13 @@ apollo-link@1.2.2, apollo-link@^1.0.0, apollo-link@^1.2.2:
     apollo-utilities "^1.0.0"
     zen-observable-ts "^0.8.9"
 
+apollo-link@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.2.3.tgz#9bd8d5fe1d88d31dc91dae9ecc22474d451fb70d"
+  dependencies:
+    apollo-utilities "^1.0.0"
+    zen-observable-ts "^0.8.10"
+
 apollo-server-caching@0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/apollo-server-caching/-/apollo-server-caching-0.1.2.tgz#f5b85701945110a5fca1956450e8553576635936"
@@ -11971,6 +11978,12 @@ yauzl@2.8.0:
   dependencies:
     buffer-crc32 "~0.2.3"
     fd-slicer "~1.0.1"
+
+zen-observable-ts@^0.8.10:
+  version "0.8.10"
+  resolved "https://registry.yarnpkg.com/zen-observable-ts/-/zen-observable-ts-0.8.10.tgz#18e2ce1c89fe026e9621fd83cc05168228fce829"
+  dependencies:
+    zen-observable "^0.8.0"
 
 zen-observable-ts@^0.8.9:
   version "0.8.9"
