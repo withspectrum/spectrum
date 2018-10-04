@@ -46,21 +46,39 @@ const GITHUB_OAUTH_CLIENT_ID = IS_PROD
   ? '208a2e8684d88883eded'
   : 'ed3e924f4a599313c83b';
 
+const isSerializedJSON = (str: string) =>
+  str[0] === '{' && str[str.length - 1] === '}';
+
 const init = () => {
   // Setup use serialization
   passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, typeof user === 'string' ? user : JSON.stringify(user));
   });
 
-  passport.deserializeUser((id, done) => {
-    getUserById(id)
+  // NOTE(@mxstbr): `data` used to be just the userID, but is now the full user data
+  // to avoid having to go to the db on every single request. We have to handle both
+  // cases here, as more and more users use Spectrum again we go to the db less and less
+  passport.deserializeUser((data, done) => {
+    // Fast path: we got the full user data in the cookie
+    if (isSerializedJSON(data)) {
+      let user;
+      // Ignore errors if our isSerializedJSON heuristic is wrong and `data` isn't serialized JSON
+      try {
+        user = JSON.parse(data);
+      } catch (err) {}
+
+      if (user && user.id && user.createdAt) {
+        return done(null, user);
+      }
+    }
+
+    // Slow path: data is just the userID (legacy), so we have to go to the db to get the full data
+    return getUserById(data)
       .then(user => {
         done(null, user);
-        return null;
       })
       .catch(err => {
         done(err);
-        return null;
       });
   });
 

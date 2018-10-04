@@ -5,6 +5,10 @@ import { createNewUsersSettings } from './usersSettings';
 import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
 import { events } from 'shared/analytics';
 import { trackQueue, identifyQueue } from 'shared/bull/queues';
+import { removeUsersCommunityMemberships } from './usersCommunities';
+import { removeUsersChannelMemberships } from './usersChannels';
+import { disableAllThreadNotificationsForUser } from './usersThreads';
+import { disableAllUsersEmailSettings } from './usersSettings';
 import { getUserChannelIds } from './usersChannels';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBUser, FileUpload, DBThread } from 'shared/types';
@@ -560,3 +564,73 @@ export const deleteUser = createWriteQuery((userId: string) => ({
     }),
   invalidateTags: () => [userId],
 }));
+
+/*
+  Occassionally bad actors will show up on Spectrum and become toxic, spam communities, harass others, or violate our code of conduct. We have a safe way to ban these users in a way that respects the integrity of data across the rest of the database.
+  Do NOT ever `.delete()` a user record from the database!!
+*/
+type BanUserType = {
+  userId: string,
+  reason: string,
+  currentUserId: string,
+};
+export const banUser = createWriteQuery((args: BanUserType) => {
+  const { userId, reason, currentUserId } = args;
+
+  return {
+    invalidateTags: data => [userId],
+    query: db
+      .table('users')
+      .get(userId)
+      .update({
+        bannedAt: new Date(),
+        bannedBy: currentUserId,
+        bannedReason: reason,
+        username: null,
+        coverPhoto: null, // in case the photo is inappropriate
+        profilePhoto: null, // in case the photo is inappropriate
+      })
+      .run()
+      .then(async () => {
+        /*  
+          after the user object has been cleared, the user
+          can no longer be searched for, messaged, or viewed
+          so we can simply cleanup db data to ensure they are
+          no longer listed as members of communities or channels
+          and their DMs cant be seen by other users
+        */
+
+        // updates the indentification information in amplitude analytics
+        identifyQueue.add({ userId });
+
+        const dmThreadIds = await db
+          .table('usersDirectMessageThreads')
+          .getAll(userId, { index: 'userId' })
+          .run();
+
+        let removeOtherParticipantsDmThreadIds, removeDMThreads;
+        if (dmThreadIds && dmThreadIds.length > 0) {
+          removeOtherParticipantsDmThreadIds = db
+            .table('usersDirectMessageThreads')
+            .getAll(...dmThreadIds, { index: 'threadId' })
+            .update({ deletedAt: new Date() })
+            .run();
+
+          removeDMThreads = await db
+            .table('directMessageThreads')
+            .getAll(...dmThreadIds)
+            .update({ deletedAt: new Date() })
+            .run();
+        }
+
+        return await Promise.all([
+          removeUsersCommunityMemberships(userId),
+          removeUsersChannelMemberships(userId),
+          disableAllThreadNotificationsForUser(userId),
+          disableAllUsersEmailSettings(userId),
+          removeOtherParticipantsDmThreadIds,
+          removeDMThreads,
+        ]);
+      }),
+  };
+});

@@ -36,8 +36,8 @@ import {
   WatercoolerDescription,
   WatercoolerIntroContainer,
   WatercoolerTitle,
-  WatercoolerAvatar,
 } from './style';
+import { CommunityAvatar } from 'src/components/avatar';
 import WatercoolerActionBar from './components/watercoolerActionBar';
 import { ErrorBoundary } from 'src/components/error';
 import generateImageFromText from 'src/helpers/generate-image-from-text';
@@ -327,11 +327,13 @@ class ThreadContainer extends React.Component<Props, State> {
           <WatercoolerIntroContainer
             innerRef={c => (this.threadDetailElem = c)}
           >
-            <WatercoolerAvatar
+            <CommunityAvatar
               community={thread.community}
               showHoverProfile={false}
               size={44}
+              style={{ marginBottom: '16px' }}
             />
+
             <Link to={`/${thread.community.slug}`}>
               <WatercoolerTitle>
                 The {thread.community.name} watercooler

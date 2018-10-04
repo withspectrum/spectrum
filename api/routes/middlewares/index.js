@@ -36,19 +36,36 @@ middlewares.use(cookieParser());
 import bodyParser from 'body-parser';
 middlewares.use(bodyParser.json());
 
-import { apolloUploadExpress } from 'apollo-upload-server';
-middlewares.use(
-  apolloUploadExpress({
-    maxFileSize: 25 * 1024 * 1024, // 25MB
-  })
-);
-
 import session from 'shared/middlewares/session';
 middlewares.use(session);
 
 import passport from 'passport';
 middlewares.use(passport.initialize());
 middlewares.use(passport.session());
+
+const isSerializedJSON = str => str[0] === '{';
+
+// NOTE(@mxstbr): If a logged-in user with a legacy cookie (just the user ID) sends a request
+// we add all the user data to the cookie (by calling req.login) to move them to the new cookie
+// format.
+// @see #3944
+// @see https://stackoverflow.com/a/24498660
+middlewares.use((req, res, next) => {
+  if (
+    req.session &&
+    req.session.passport &&
+    typeof req.session.passport.user === 'string' &&
+    !isSerializedJSON(req.session.passport.user[0]) &&
+    req.user
+  ) {
+    req.login(req.user, () => {
+      next();
+    });
+    return;
+  }
+
+  next();
+});
 
 // This needs to come after passport otherwise we'll always redirect logged-in users
 import threadParamRedirect from 'shared/middlewares/thread-param';

@@ -1,19 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`models/channel getChannelMetaData excludes deleted channels 1`] = `
-Array [
-  0,
-  0,
-]
-`;
-
-exports[`models/channel getChannelMetaData excludes deleted threads and non-members 1`] = `
-Array [
-  4,
-  5,
-]
-`;
-
 exports[`models/channel getChannels excludes deleted channels 1`] = `
 Array [
   Object {
@@ -23,6 +9,7 @@ Array [
     "id": "1",
     "isDefault": true,
     "isPrivate": false,
+    "memberCount": 5,
     "name": "General",
     "slug": "general",
   },
@@ -39,6 +26,7 @@ Array [
     "id": "5",
     "isDefault": true,
     "isPrivate": false,
+    "memberCount": 3,
     "name": "Archived",
     "slug": "archived",
   },
@@ -49,6 +37,7 @@ Array [
     "id": "1",
     "isDefault": true,
     "isPrivate": false,
+    "memberCount": 5,
     "name": "General",
     "slug": "general",
   },
@@ -59,6 +48,7 @@ Array [
     "id": "2",
     "isDefault": false,
     "isPrivate": true,
+    "memberCount": 5,
     "name": "Private",
     "slug": "private",
   },
@@ -69,6 +59,7 @@ Array [
     "id": "8",
     "isDefault": false,
     "isPrivate": false,
+    "memberCount": 1,
     "name": "Moderator created",
     "slug": "moderator-created",
   },
@@ -89,6 +80,7 @@ Array [
     "isOwner": false,
     "isPending": false,
     "isPrivate": true,
+    "memberCount": 5,
     "name": "Private",
     "receiveNotifications": true,
     "slug": "private",
@@ -105,6 +97,7 @@ Array [
     "isOwner": false,
     "isPending": false,
     "isPrivate": true,
+    "memberCount": 5,
     "name": "Private",
     "receiveNotifications": true,
     "slug": "private",
@@ -121,6 +114,7 @@ Array [
     "isOwner": false,
     "isPending": false,
     "isPrivate": false,
+    "memberCount": 5,
     "name": "General",
     "receiveNotifications": true,
     "slug": "general",
@@ -137,6 +131,7 @@ Array [
     "isOwner": false,
     "isPending": false,
     "isPrivate": false,
+    "memberCount": 5,
     "name": "General",
     "receiveNotifications": true,
     "slug": "general",

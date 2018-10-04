@@ -2,13 +2,19 @@
 import type { GraphQLContext } from '../../';
 import type { EditUserInput } from '../../models/user';
 import UserError from '../../utils/UserError';
-import { getUserByUsername, editUser } from '../../models/user';
+import { getUserByUsername, getUserById, editUser } from '../../models/user';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 export default requireAuth(
-  async (_: any, args: EditUserInput, { user }: GraphQLContext) => {
+  async (
+    _: any,
+    args: EditUserInput,
+    { user, updateCookieUserData }: GraphQLContext
+  ) => {
+    const currentUser = user;
+    // If the user is trying to change their username check whether there's a person with that username already
     if (args.input.username) {
       if (
         args.input.username === 'null' ||
@@ -26,7 +32,6 @@ export default requireAuth(
       }
 
       const dbUser = await getUserByUsername(args.input.username);
-
       if (dbUser && dbUser.id !== user.id) {
         trackQueue.add({
           userId: user.id,
@@ -42,6 +47,11 @@ export default requireAuth(
       }
     }
 
+    await updateCookieUserData({
+      ...(await getUserById(currentUser.id)),
+      ...args.input,
+      file: undefined,
+    });
     return editUser(args, user.id);
   }
 );

@@ -19,7 +19,11 @@ export const getActiveThreadsInTimeframe = (timeframe: string) => {
 
   return db
     .table('threads')
-    .filter(db.row('lastActive').during(db.now().sub(range), db.now()))
+    .between(db.now().sub(range), db.now(), {
+      index: 'lastActive',
+      leftBound: 'open',
+      rightBound: 'open',
+    })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .run();
 };
@@ -27,7 +31,11 @@ export const getActiveThreadsInTimeframe = (timeframe: string) => {
 export const getCoreMetricsActiveThreads = (range: number) => {
   return db
     .table('threads')
-    .filter(db.row('lastActive').during(db.now().sub(range), db.now()))
+    .between(db.now().sub(range), db.now(), {
+      index: 'lastActive',
+      leftBound: 'open',
+      rightBound: 'open',
+    })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .group('communityId')
     .ungroup()

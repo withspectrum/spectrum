@@ -8,7 +8,11 @@ import {
 } from 'shared/bull/queues';
 import { NEW_DOCUMENTS } from './utils';
 import { createChangefeed } from 'shared/changefeed-utils';
-import { setThreadLastActive } from './thread';
+import {
+  setThreadLastActive,
+  incrementMessageCount,
+  decrementMessageCount,
+} from './thread';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 
@@ -135,35 +139,36 @@ export const storeMessage = (message: Message, userId: string): Promise<Message>
     )
     .run()
     .then(result => result.changes[0].new_val)
-    .then(message => {
+    .then(async message => {
       if (message.threadType === 'directMessageThread') {
-        trackQueue.add({
-          userId,
-          event: events.DIRECT_MESSAGE_SENT,
-          context: { messageId: message.id },
-        });
-
-        sendDirectMessageNotificationQueue.add({ message, userId });
+        await Promise.all([
+          trackQueue.add({
+            userId,
+            event: events.DIRECT_MESSAGE_SENT,
+            context: { messageId: message.id },
+          }),
+          sendDirectMessageNotificationQueue.add({ message, userId }),
+        ])
       }
 
       if (message.threadType === 'story') {
-        sendMessageNotificationQueue.add({ message });
-
-        _adminProcessToxicMessageQueue.add({ message });
-
+        await Promise.all([
+        sendMessageNotificationQueue.add({ message }),
         processReputationEventQueue.add({
           userId,
           type: 'message created',
           entityId: message.threadId,
-        });
-
+        }),
         trackQueue.add({
           userId,
           event: events.MESSAGE_SENT,
           context: { messageId: message.id },
-        });
+        }),
+        _adminProcessToxicMessageQueue.add({ message }),
 
-        setThreadLastActive(message.threadId, message.timestamp);
+          setThreadLastActive(message.threadId, message.timestamp),
+          incrementMessageCount(message.threadId)
+        ])
       }
 
       return message;
@@ -216,23 +221,27 @@ export const deleteMessage = (userId: string, messageId: string) => {
     )
     .run()
     .then(result => result.changes[0].new_val || result.changes[0].old_val)
-    .then(message => {
+    .then(async message => {
       const event =
         message.threadType === 'story'
           ? events.MESSAGE_DELETED
           : events.DIRECT_MESSAGE_DELETED;
 
-      trackQueue.add({
-        userId,
-        event,
-        context: { messageId },
-      });
-
-      processReputationEventQueue.add({
-        userId,
-        type: 'message deleted',
-        entityId: messageId,
-      });
+      await Promise.all([
+        trackQueue.add({
+          userId,
+          event,
+          context: { messageId },
+        }),
+        processReputationEventQueue.add({
+          userId,
+          type: 'message deleted',
+          entityId: messageId,
+        }),
+        message.threadType === 'story'
+          ? decrementMessageCount(message.threadId)
+          : Promise.resolve(),
+      ]);
 
       return message;
     });
@@ -267,7 +276,9 @@ export const deleteMessagesInThread = async (threadId: string, userId: string) =
     })
     .run();
 
-  return await Promise.all([...trackingPromises, deletePromise]);
+  return await Promise.all([...trackingPromises, deletePromise]).then(() => {
+    return Promise.all(Array.from({ length: messages.length }).map(() => decrementMessageCount(threadId)))
+  });
 };
 
 export const userHasMessagesInThread = (threadId: string, userId: string) => {
