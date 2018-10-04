@@ -2006,9 +2006,9 @@ backpack-core@^0.4.1:
     webpack "^3.0.0"
     webpack-node-externals "^1.6.0"
 
-bad-words@^1.6.1:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/bad-words/-/bad-words-1.6.1.tgz#06483021951a9d80fb5fcaa2f0d9a1e75a745b50"
+bad-words@^1.6.4:
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/bad-words/-/bad-words-1.6.4.tgz#a75f4f495686ee2071a36ea6f304077171bc7ed0"
   dependencies:
     badwords-list "^1.0.0"
 
