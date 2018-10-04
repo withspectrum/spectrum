@@ -735,12 +735,18 @@ apollo-link-http-common@^0.2.4:
   dependencies:
     apollo-link "^1.2.2"
 
-apollo-link-http@^1.5.4:
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/apollo-link-http/-/apollo-link-http-1.5.4.tgz#b80b7b4b342c655b6a5614624b076a36be368f43"
+apollo-link-http-common@^0.2.5:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/apollo-link-http-common/-/apollo-link-http-common-0.2.5.tgz#d094beb7971523203359bf830bfbfa7b4e7c30ed"
   dependencies:
-    apollo-link "^1.2.2"
-    apollo-link-http-common "^0.2.4"
+    apollo-link "^1.2.3"
+
+apollo-link-http@^1.5.5:
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/apollo-link-http/-/apollo-link-http-1.5.5.tgz#7dbe851821771ad67fa29e3900c57f38cbd80da8"
+  dependencies:
+    apollo-link "^1.2.3"
+    apollo-link-http-common "^0.2.5"
 
 apollo-link-retry@^2.2.5:
   version "2.2.5"
@@ -749,11 +755,11 @@ apollo-link-retry@^2.2.5:
     "@types/zen-observable" "0.8.0"
     apollo-link "^1.2.3"
 
-apollo-link-ws@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/apollo-link-ws/-/apollo-link-ws-1.0.8.tgz#ac1de8f29e92418728479a9a523af9f75b9ccc8b"
+apollo-link-ws@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/apollo-link-ws/-/apollo-link-ws-1.0.9.tgz#e2198abd6d3900e83fd842fdee335a28b347ea2d"
   dependencies:
-    apollo-link "^1.2.2"
+    apollo-link "^1.2.3"
 
 apollo-link@1.2.2, apollo-link@^1.0.0, apollo-link@^1.2.2:
   version "1.2.2"
@@ -9166,9 +9172,9 @@ react-click-outside@^3.0.1:
   dependencies:
     hoist-non-react-statics "^2.1.1"
 
-react-clipboard.js@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-clipboard.js/-/react-clipboard.js-2.0.0.tgz#8ab3c49093e73ea146eb3bbc054889b7a60bf2b4"
+react-clipboard.js@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/react-clipboard.js/-/react-clipboard.js-2.0.1.tgz#aa05590f047a2671e890e51c8af113404fbf6967"
   dependencies:
     clipboard "^2.0.0"
     prop-types "^15.5.0"
@@ -11469,9 +11475,9 @@ wbuf@^1.1.0, wbuf@^1.7.2:
   dependencies:
     minimalistic-assert "^1.0.0"
 
-web-push@^3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/web-push/-/web-push-3.3.2.tgz#7a8f8b77c8cb1875b02a53e45d7bc277a3d05368"
+web-push@^3.3.3:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/web-push/-/web-push-3.3.3.tgz#8dc7c578dd1243ceb5a8377389424e87ea9b15cc"
   dependencies:
     asn1.js "^5.0.0"
     http_ece "1.0.5"

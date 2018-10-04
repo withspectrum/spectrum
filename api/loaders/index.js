@@ -15,17 +15,17 @@ import {
 import { __createNotificationLoader } from './notification';
 import {
   __createChannelLoader,
-  __createChannelMemberCountLoader,
   __createChannelThreadCountLoader,
+  __createChannelMemberCountLoader,
   __createChannelPendingMembersLoader,
   __createChannelSettingsLoader,
 } from './channel';
 import {
   __createCommunityLoader,
   __createCommunityBySlugLoader,
-  __createCommunityMemberCountLoader,
   __createCommunityChannelCountLoader,
   __createCommunitySettingsLoader,
+  __createCommunityMemberCountLoader,
   __createCommunityOnlineMemberCountLoader,
 } from './community';
 import {
