@@ -144,7 +144,7 @@
     "react-apollo": "^2.1.9",
     "react-app-rewire-styled-components": "^3.0.0",
     "react-app-rewired": "^1.5.2",
-    "react-clipboard.js": "^2.0.0",
+    "react-clipboard.js": "^2.0.1",
     "react-dom": "^16.4.0",
     "react-flip-move": "^3.0.2",
     "react-helmet-async": "^0.1.0",
