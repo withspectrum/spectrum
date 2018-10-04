@@ -416,7 +416,7 @@ export const MarkAllSeen = styled.span`
 
 // We make it a real link element because anchor links don’t work properly with React Router.
 // Ref: https://github.com/ReactTraining/react-router/issues/394.
-export const SkipLink = Tab.withComponent('a').extend`
+export const SkipLink = styled(Tab.withComponent('a'))`
   grid-area: logo;
   overflow: hidden;
   height: 1px;

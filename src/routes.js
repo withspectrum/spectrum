@@ -6,7 +6,7 @@ import Loadable from 'react-loadable';
 import { ErrorBoundary } from 'src/components/error';
 import { CLIENT_URL } from './api/constants';
 import generateMetaInfo from 'shared/generate-meta-info';
-import './reset.css.js';
+import { GlobalStyles } from './reset.css.js';
 import { theme } from 'shared/theme';
 import { FlexCol } from './components/globals';
 import ScrollManager from './components/scrollManager';
@@ -189,6 +189,7 @@ class Routes extends React.Component<Props> {
                 have a username set.
               */}
               <AuthViewHandler>{() => null}</AuthViewHandler>
+              <GlobalStyles />
               <Status />
               <Route component={Navbar} />
 

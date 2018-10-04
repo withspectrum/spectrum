@@ -1,7 +1,16 @@
 // @flow
-import { injectGlobal } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
+// NOTE(@mxstbr): This is necessary to make sure the placeholder is aligned
+// and stuff like that. We have to import the raw CSS file and inject it with
+// styled-components to make sure it works when we SSR.
+/* eslint-disable import/first */
+/* eslint-disable import/no-webpack-loader-syntax */
+// $FlowIssue
+import draftGlobalCSS from '!!raw-loader!draft-js/dist/Draft.css';
+// $FlowIssue
+import prismGlobalCSS from '!!raw-loader!./components/rich-text-editor/prism-theme.css';
 
-injectGlobal`
+export const GlobalStyles = createGlobalStyle`
   * {
     border: 0;
     box-sizing: inherit;
@@ -386,18 +395,7 @@ injectGlobal`
   .hljs-link {
     text-decoration: underline;
   }
-`;
 
-// NOTE(@mxstbr): This is necessary to make sure the placeholder is aligned
-// and stuff like that. We have to import the raw CSS file and inject it with
-// styled-components to make sure it works when we SSR.
-/* eslint-disable import/first */
-/* eslint-disable import/no-webpack-loader-syntax */
-// $FlowIssue
-import draftGlobalCSS from '!!raw-loader!draft-js/dist/Draft.css';
-// $FlowIssue
-injectGlobal`${draftGlobalCSS}`;
-// $FlowIssue
-import prismGlobalCSS from '!!raw-loader!./components/rich-text-editor/prism-theme.css';
-// $FlowIssue
-injectGlobal`${prismGlobalCSS}`;
+  ${draftGlobalCSS}
+  ${prismGlobalCSS}
+`;

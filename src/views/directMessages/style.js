@@ -70,7 +70,7 @@ export const MessagesContainer = styled(FlexCol)`
   }
 `;
 
-export const NoThreads = MessagesContainer.extend`
+export const NoThreads = styled(MessagesContainer)`
   position: absolute;
   top: 50%;
   width: 100%;
