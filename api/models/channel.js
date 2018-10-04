@@ -138,19 +138,6 @@ const getChannels = (channelIds: Array<string>): Promise<Array<DBChannel>> => {
   return channelsByIdsQuery(...channelIds).run();
 };
 
-// prettier-ignore
-const getChannelMetaData = async (channelId: string): Promise<Array<number>> => {
-  const getThreadCount = threadsByChannelsQuery(channelId)
-    .count()
-    .run();
-
-  const getMemberCount = membersByChannelsQuery(channelId)
-    .count()
-    .run();
-
-  return Promise.all([getThreadCount, getMemberCount]);
-};
-
 type GroupedCount = {
   group: string,
   reduction: number,
@@ -323,14 +310,6 @@ const deleteChannel = (channelId: string, userId: string): Promise<Boolean> => {
     });
 };
 
-const getChannelMemberCount = (channelId: string): number => {
-  return db
-    .table('channels')
-    .get(channelId)('members')
-    .count()
-    .run();
-};
-
 // prettier-ignore
 const archiveChannel = (channelId: string, userId: string): Promise<DBChannel> => {
   return db
@@ -395,10 +374,69 @@ const archiveAllPrivateChannels = async (communityId: string, userId: string) =>
   return await Promise.all([...trackingPromises, archivePromise]);
 };
 
+const incrementMemberCount = (channelId: string): Promise<DBChannel> => {
+  return db
+    .table('channels')
+    .get(channelId)
+    .update(
+      {
+        memberCount: db
+          .row('memberCount')
+          .default(0)
+          .add(1),
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};
+
+const decrementMemberCount = (channelId: string): Promise<DBChannel> => {
+  return db
+    .table('channels')
+    .get(channelId)
+    .update(
+      {
+        memberCount: db
+          .row('memberCount')
+          .default(1)
+          .sub(1),
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};
+
+const setMemberCount = (
+  channelId: string,
+  value: number
+): Promise<DBChannel> => {
+  return db
+    .table('channels')
+    .get(channelId)
+    .update(
+      {
+        memberCount: value,
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};
+
+const getMemberCount = (channelId: string): Promise<number> => {
+  return db
+    .table('usersChannels')
+    .getAll(channelId, { index: 'channelId' })
+    .filter({ isMember: true })
+    .count()
+    .run();
+};
+
 module.exports = {
   getChannelBySlug,
   getChannelById,
-  getChannelMetaData,
   getChannelsByUser,
   getChannelsByCommunity,
   getPublicChannelsByCommunity,
@@ -407,13 +445,16 @@ module.exports = {
   createGeneralChannel,
   editChannel,
   deleteChannel,
-  getChannelMemberCount,
   getChannelsMemberCounts,
   getChannelsThreadCounts,
   getChannels,
   archiveChannel,
   restoreChannel,
   archiveAllPrivateChannels,
+  incrementMemberCount,
+  decrementMemberCount,
+  setMemberCount,
+  getMemberCount,
   __forQueryTests: {
     channelsByCommunitiesQuery,
     channelsByIdsQuery,

@@ -4,11 +4,12 @@
  * both their type definitions and their resolvers
  */
 const GraphQLDate = require('graphql-date');
-import { GraphQLUpload } from 'apollo-upload-server';
+// NOTE(@mxstbr): We can remove this once we stop using makeExecutableSchema
+import { GraphQLUpload } from 'apollo-server-express';
 import LowercaseString from './custom-scalars/LowercaseString';
 
 const typeDefs = /* GraphQL */ `
-	scalar Date
+  scalar Date
   scalar Upload
   scalar LowercaseString
 `;

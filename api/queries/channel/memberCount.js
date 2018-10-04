@@ -1,5 +1,4 @@
 // @flow
+import type { DBChannel } from 'shared/types';
 
-import { getChannelMemberCount } from '../../models/channel';
-
-export default ({ id }: { id: string }) => getChannelMemberCount(id);
+export default ({ memberCount }: DBChannel) => memberCount || 1;

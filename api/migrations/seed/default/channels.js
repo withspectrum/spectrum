@@ -27,6 +27,7 @@ module.exports = [
     slug: 'general',
     isPrivate: false,
     isDefault: true,
+    memberCount: 5,
   },
 
   {
@@ -38,6 +39,7 @@ module.exports = [
     slug: 'private',
     isPrivate: true,
     isDefault: false,
+    memberCount: 5,
   },
 
   {
@@ -49,6 +51,7 @@ module.exports = [
     slug: 'general',
     isPrivate: false,
     isDefault: true,
+    memberCount: 5,
   },
 
   {
@@ -60,6 +63,7 @@ module.exports = [
     slug: 'private',
     isPrivate: true,
     isDefault: false,
+    memberCount: 5,
   },
 
   {
@@ -72,6 +76,7 @@ module.exports = [
     isPrivate: false,
     isDefault: true,
     archivedAt: new Date(DATE),
+    memberCount: 3,
   },
 
   {
@@ -84,6 +89,7 @@ module.exports = [
     isPrivate: false,
     isDefault: false,
     deletedAt: new Date(DATE),
+    memberCount: 0,
   },
 
   {
@@ -96,6 +102,7 @@ module.exports = [
     isPrivate: false,
     isDefault: false,
     deletedAt: new Date(DATE),
+    memberCount: 1,
   },
 
   {
@@ -107,6 +114,7 @@ module.exports = [
     slug: 'moderator-created',
     isPrivate: false,
     isDefault: false,
+    memberCount: 1,
   },
 
   {
@@ -118,5 +126,6 @@ module.exports = [
     slug: 'private-general',
     isPrivate: false,
     isDefault: false,
+    memberCount: 1,
   },
 ];
