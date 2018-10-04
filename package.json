@@ -53,7 +53,7 @@
     "apollo-client": "^2.3.5",
     "apollo-engine": "1.x",
     "apollo-link": "^1.2.3",
-    "apollo-link-http": "^1.5.4",
+    "apollo-link-http": "^1.5.5",
     "apollo-link-retry": "^2.2.5",
     "apollo-link-ws": "^1.0.8",
     "apollo-server-express": "^2.0.4",
