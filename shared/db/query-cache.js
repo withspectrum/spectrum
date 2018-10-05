@@ -1,7 +1,7 @@
 // @flow
 import TagCache from 'redis-tag-cache';
 
-const IS_PROD = process.env.NODE_ENV === 'production';
+const IS_PROD = process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV;
 
 const DEFAULT_REDIS_OPTIONS = {
   keyPrefix: 'query-cache',
