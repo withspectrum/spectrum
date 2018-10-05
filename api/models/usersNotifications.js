@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('shared/db');
+const { db, createReadQuery, createWriteQuery } = require('shared/db');
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 /*
@@ -10,51 +10,51 @@ import { trackQueue } from 'shared/bull/queues';
 ===========================================================
 */
 
-// marks one notification as read
-// prettier-ignore
-export const markSingleNotificationSeen = (notificationId: string, userId: string): Promise<Object> => {
-  trackQueue.add({
-    userId,
-    event: events.NOTIFICATION_MARKED_AS_SEEN,
-    context: { notificationId },
-  });
-
-  return db
-    .table('usersNotifications')
-    .getAll(notificationId, { index: 'notificationId' })
-    .filter({
-      userId,
-    })
-    .update(
-      {
+export const markSingleNotificationSeen = createWriteQuery(
+  (notificationId: string, userId: string) => ({
+    query: db
+      .table('usersNotifications')
+      .getAll([userId, notificationId], { index: 'userIdAndNotificationId' })
+      .update({
         isSeen: true,
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(() => true)
-    .catch(err => false);
-};
+      })
+      .run()
+      .then(() => {
+        trackQueue.add({
+          userId,
+          event: events.NOTIFICATION_MARKED_AS_SEEN,
+          context: { notificationId },
+        });
+        return true;
+      })
+      .catch(err => false),
+    invalidateTags: () => [notificationId, userId],
+  })
+);
 
-// prettier-ignore
-export const markNotificationsSeen = (userId: string, notifications: Array<string>) => {
-  trackQueue.add({
-    userId,
-    event: events.NOTIFICATIONS_MARKED_AS_SEEN,
-  });
+export const markNotificationsSeen = createWriteQuery(
+  (userId: string, notifications: Array<string>) => ({
+    query: db
+      .table('usersNotifications')
+      .getAll(...notifications.map(nId => [userId, nId]), {
+        index: 'userIdAndNotificationId',
+      })
+      .update({
+        isSeen: true,
+      })
+      .run()
+      .then(() => {
+        trackQueue.add({
+          userId,
+          event: events.NOTIFICATIONS_MARKED_AS_SEEN,
+        });
+      }),
+    invalidateTags: () => [userId, ...notifications],
+  })
+);
 
-  return db
-    .table('usersNotifications')
-    .getAll(...notifications, { index: 'notificationId' })
-    .update({
-      isSeen: true,
-    })
-    .run();
-};
-
-// marks all notifications for a user as seen
-export const markAllNotificationsSeen = (userId: string): Promise<Object> => {
-  return db
+export const markAllNotificationsSeen = createWriteQuery((userId: string) => ({
+  query: db
     .table('usersNotifications')
     .getAll(userId, { index: 'userId' })
     .filter({ isSeen: false })
@@ -72,8 +72,9 @@ export const markAllNotificationsSeen = (userId: string): Promise<Object> => {
       )
     )
     .then(() => true)
-    .catch(err => false);
-};
+    .catch(err => false),
+  invalidateTags: () => [userId],
+}));
 
 export const markDirectMessageNotificationsSeen = (
   userId: string
