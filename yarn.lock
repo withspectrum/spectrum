@@ -3895,9 +3895,9 @@ draft-js-linkify-plugin@^2.0.0-beta1:
     tlds "^1.189.0"
     union-class-names "^1.0.0"
 
-draft-js-markdown-plugin@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/draft-js-markdown-plugin/-/draft-js-markdown-plugin-3.0.4.tgz#9b5b439bf9fae4ea9f27fa5e3e9da37f23691679"
+draft-js-markdown-plugin@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/draft-js-markdown-plugin/-/draft-js-markdown-plugin-3.0.5.tgz#a769b2fee3cca4ae87c7dd86c954ecb9e8a75ffc"
   dependencies:
     decorate-component-with-props "^1.1.0"
     draft-js "^0.10.4"
