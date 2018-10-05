@@ -61,7 +61,7 @@
     "apollo-upload-server": "^5.0.0",
     "apollo-utilities": "^1.0.21",
     "aws-sdk": "2.200.0",
-    "axios": "^0.17.1",
+    "axios": "^0.18.0",
     "b2a": "^1.0.10",
     "bad-words": "^1.6.4",
     "body-parser": "^1.18.3",
