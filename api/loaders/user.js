@@ -3,7 +3,7 @@ import {
   getUsers,
   getUsersThreadCount,
   getUsersByUsername,
-} from '../models/user';
+} from 'shared/db/queries/user';
 import {
   getUsersPermissionsInCommunities,
   getUsersTotalReputation,

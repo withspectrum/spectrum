@@ -10,7 +10,7 @@ import Loadable from 'react-loadable';
 import path from 'path';
 // TODO: This is the only thing that connects hyperion to the db
 // we should get rid of this if at all possible
-import { getUserById } from 'api/models/user';
+import { getUserById } from 'shared/db/queries/user';
 import Raven from 'shared/raven';
 import toobusy from 'shared/middlewares/toobusy';
 import addSecurityMiddleware from 'shared/middlewares/security';

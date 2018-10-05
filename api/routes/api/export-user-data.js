@@ -1,7 +1,7 @@
 // @flow
 import { Router } from 'express';
 const userDataRouter = Router();
-import { getUserById } from '../../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import { trackQueue } from 'shared/bull/queues';
 import { events } from 'shared/analytics';
 

@@ -1,8 +1,12 @@
 // @flow
 import type { GraphQLContext } from '../../';
-import type { EditUserInput } from '../../models/user';
+import type { EditUserInput } from 'shared/db/queries/user';
 import UserError from '../../utils/UserError';
-import { getUserByUsername, getUserById, editUser } from '../../models/user';
+import {
+  getUserByUsername,
+  getUserById,
+  editUser,
+} from 'shared/db/queries/user';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';

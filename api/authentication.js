@@ -10,7 +10,7 @@ const {
   createOrFindUser,
   saveUserProvider,
   getUserByIndex,
-} = require('./models/user');
+} = require('shared/db/queries/user');
 
 const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 

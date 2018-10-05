@@ -5,7 +5,7 @@ import costAnalysis from 'graphql-cost-analysis';
 import createLoaders from './loaders';
 import createErrorFormatter from './utils/create-graphql-error-formatter';
 import schema from './schema';
-import { setUserOnline } from './models/user';
+import { setUserOnline } from 'shared/db/queries/user';
 import { getUserIdFromReq } from './utils/session-store';
 import UserError from './utils/UserError';
 import type { DBUser } from 'shared/types';

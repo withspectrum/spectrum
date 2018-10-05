@@ -1,6 +1,6 @@
 // @flow
 const { db } = require('shared/db');
-import { getUserById } from '../models/user';
+import { getUserById } from 'shared/db/queries/user';
 
 /*
 ===========================================================

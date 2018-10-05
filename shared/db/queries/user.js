@@ -1,16 +1,16 @@
 // @flow
 import { createReadQuery, createWriteQuery, db } from 'shared/db';
-import { uploadImage } from '../utils/file-storage';
-import { createNewUsersSettings } from './usersSettings';
+import { uploadImage } from 'api/utils/file-storage';
+import { createNewUsersSettings } from 'api/models/usersSettings';
 import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
 import { events } from 'shared/analytics';
 import { trackQueue, identifyQueue } from 'shared/bull/queues';
-import { removeUsersCommunityMemberships } from './usersCommunities';
-import { removeUsersChannelMemberships } from './usersChannels';
-import { disableAllThreadNotificationsForUser } from './usersThreads';
-import { disableAllUsersEmailSettings } from './usersSettings';
-import { getUserChannelIds } from './usersChannels';
-import type { PaginationOptions } from '../utils/paginate-arrays';
+import { removeUsersCommunityMemberships } from 'api/models/usersCommunities';
+import { removeUsersChannelMemberships } from 'api/models/usersChannels';
+import { disableAllThreadNotificationsForUser } from 'api/models/usersThreads';
+import { disableAllUsersEmailSettings } from 'api/models/usersSettings';
+import { getUserChannelIds } from 'api/models/usersChannels';
+import type { PaginationOptions } from 'api/utils/paginate-arrays';
 import type { DBUser, FileUpload, DBThread } from 'shared/types';
 
 export const getUserById = createReadQuery((userId: string) => ({
