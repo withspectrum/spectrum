@@ -2,6 +2,7 @@
 const { db, createReadQuery, createWriteQuery } = require('shared/db');
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import { trackNotification } from './utils/trackNotifications';
 import type { DBNotification } from 'shared/types';
 /*
 ===========================================================
@@ -97,6 +98,61 @@ export const markDirectMessageNotificationsSeen = createWriteQuery(
       .then(() => true)
       .catch(err => false),
     invalidateTags: () => [userId],
+  })
+);
+
+export const storeUsersNotifications = createWriteQuery(
+  (notificationId: string, userId: string) => ({
+    query: db
+      .table('usersNotifications')
+      .insert({
+        createdAt: new Date(),
+        entityAddedAt: new Date(),
+        notificationId,
+        userId,
+        isSeen: false,
+        isRead: false,
+      })
+      .run()
+      .then(res => {
+        trackNotification(notificationId, userId);
+        return res;
+      }),
+    invalidateTags: () => [userId, notificationId],
+  })
+);
+
+export const markUsersNotificationsAsNew = createWriteQuery(
+  (notificationId: string, userId: string) => ({
+    query: db
+      .table('usersNotifications')
+      .getAll([userId, notificationId], { index: 'userIdAndNotificationId' })
+      .run()
+      .then(result => {
+        /*
+				If a user becomes a new participant on the notification before the time buffer runs out, we need to ensure that we include them in setting a notification.
+
+				So in this section we check to see if an existing usersNotifications row exists, otherwise we create a new one. All users passed into this function should return an updated or new usersNotifications record.
+			*/
+        if (result && result.length > 0) {
+          trackNotification(notificationId, userId);
+
+          return db
+            .table('usersNotifications')
+            .getAll([userId, notificationId], {
+              index: 'userIdAndNotificationId',
+            })
+            .update({
+              isRead: false,
+              isSeen: false,
+              entityAddedAt: new Date(),
+            })
+            .run();
+        } else {
+          return storeUsersNotifications(notificationId, userId);
+        }
+      }),
+    invalidateTags: () => [notificationId, userId],
   })
 );
 

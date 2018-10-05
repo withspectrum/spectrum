@@ -6,7 +6,7 @@ import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import { storeNotification } from '../models/notification';
 import { getUserByEmail } from '../models/user';
 import createQueue from '../../shared/bull/create-queue';
-import { storeUsersNotifications } from '../models/usersNotifications';
+import { storeUsersNotifications } from 'shared/db/queries/usersNotifications';
 import { getCommunitySettings } from '../models/communitySettings';
 import { SEND_COMMUNITY_INVITE_EMAIL } from './constants';
 const sendCommunityInviteEmailQueue = createQueue(SEND_COMMUNITY_INVITE_EMAIL);

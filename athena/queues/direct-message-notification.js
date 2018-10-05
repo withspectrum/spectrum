@@ -13,7 +13,7 @@ import {
 import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
-} from '../models/usersNotifications';
+} from 'shared/db/queries/usersNotifications';
 import { getDirectMessageThreadMembers } from '../models/usersDirectMessageThreads';
 import sentencify from '../utils/sentencify';
 import { toPlainText, toState } from 'shared/draft-utils';

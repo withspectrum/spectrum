@@ -15,7 +15,7 @@ import {
 import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
-} from '../../models/usersNotifications';
+} from 'shared/db/queries/usersNotifications';
 import { getThreadNotificationUsers } from '../../models/usersThreads';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
