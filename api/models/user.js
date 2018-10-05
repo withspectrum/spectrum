@@ -485,7 +485,9 @@ export const setUserOnline = createWriteQuery(
           const user = changes.new_val || changes.old_val;
           if (!user)
             throw new Error(
-              `Failed to set user online status to ${isOnline} for user ${id}`
+              `Failed to set user online status to ${String(
+                isOnline
+              )} for user ${id}`
             );
           return user;
         }
