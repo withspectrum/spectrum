@@ -10,7 +10,7 @@ import {
   getOwnersInCommunity,
   getModeratorsInCommunity,
 } from '../models/usersCommunities';
-import { getUsers } from '../models/user';
+import { getUsers } from 'shared/db/queries/user';
 import { fetchPayload } from '../utils/payloads';
 import isEmail from 'validator/lib/isEmail';
 import { sendPrivateCommunityRequestEmailQueue } from 'shared/bull/queues';

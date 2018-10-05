@@ -1,7 +1,7 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-admin-user-reported-email');
 import sendEmail from '../send-email';
-import { getUser } from '../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import Raven from 'shared/raven';
 import {
   SEND_ADMIN_USER_REPORTED_EMAIL,
@@ -14,8 +14,8 @@ export default async (job: Job<AdminProcessUserReportedJobData>) => {
   const { userId, reason, reportedBy, reportedAt } = job.data;
 
   const [reportedUser, reportingUser] = await Promise.all([
-    getUser(userId),
-    getUser(reportedBy),
+    getUserById(userId),
+    getUserById(reportedBy),
   ]);
 
   const subject = `☠️ ${reportedUser.username} was reported`;

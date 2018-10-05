@@ -19,7 +19,7 @@ import {
 import { getThreadNotificationUsers } from '../../models/usersThreads';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
-import { getUserById } from '../../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import { getMessageById } from '../../models/message';
 import { sendMentionNotificationQueue } from 'shared/bull/queues';
 import type { MessageNotificationJobData, Job } from 'shared/bull/types';

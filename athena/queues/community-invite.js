@@ -4,7 +4,7 @@ import Raven from '../../shared/raven';
 import { fetchPayload } from '../utils/payloads';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import { storeNotification } from '../models/notification';
-import { getUserByEmail } from '../models/user';
+import { getUserByEmail } from 'shared/db/queries/user';
 import createQueue from '../../shared/bull/create-queue';
 import { storeUsersNotifications } from 'shared/db/queries/usersNotifications';
 import { getCommunitySettings } from '../models/communitySettings';

@@ -14,7 +14,7 @@ import { getUsersThread } from '../models/usersThreads';
 import { storeUsersNotifications } from 'shared/db/queries/usersNotifications';
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { getThreadById } from '../models/thread';
-import { getUserByUsername, getUserById } from '../models/user';
+import { getUserByUsername, getUserById } from 'shared/db/queries/user';
 import {
   sendNewMentionThreadEmailQueue,
   sendNewMentionMessageEmailQueue,

@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('athena:queue:moderation-events:thread');
-import { getUserById } from '../../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import { getCommunityById } from '../../models/community';
 import { getChannelById } from '../../models/channel';
 import { toState, toPlainText } from 'shared/draft-utils';
@@ -12,7 +12,9 @@ import type { Job, AdminToxicThreadJobData } from 'shared/bull/types';
 export default async (job: Job<AdminToxicThreadJobData>) => {
   debug('new job for admin thread moderation');
 
-  const { data: { thread } } = job;
+  const {
+    data: { thread },
+  } = job;
 
   const body =
     thread.type === 'DRAFTJS'
