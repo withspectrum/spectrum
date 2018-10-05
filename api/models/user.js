@@ -74,27 +74,37 @@ export const saveUserProvider = createWriteQuery(
     query: db
       .table('users')
       .get(userId)
-      .update({
-        [providerMethod]: providerId,
-        ...extraFields,
-      })
+      .update(
+        {
+          [providerMethod]: providerId,
+          ...extraFields,
+        },
+        { returnChanges: true }
+      )
       .run()
-      .then(async () => {
-        // TODO(@mxstbr): This will return the old cached value and won't work. Have to use returnChanges.
-        const user = await getUserById(userId);
+      .then(
+        async ({
+          changes,
+        }: {
+          changes: { new_val?: DBUser, old_val?: DBUser },
+        }) => {
+          const user = changes.new_val || changes.old_val;
+          if (!user)
+            throw new Error(`Failed to update user with ID ${userId}.`);
 
-        trackQueue.add({
-          userId: userId,
-          event: events.USER_ADDED_PROVIDER,
-          properties: {
-            providerMethod,
-          },
-        });
+          trackQueue.add({
+            userId: userId,
+            event: events.USER_ADDED_PROVIDER,
+            properties: {
+              providerMethod,
+            },
+          });
 
-        identifyQueue.add({ userId });
+          identifyQueue.add({ userId });
 
-        return user;
-      }),
+          return user;
+        }
+      ),
     invalidateTags: (user: ?DBUser) => (user ? [user.id] : []),
   })
 );
@@ -462,13 +472,24 @@ export const setUserOnline = createWriteQuery(
     query: db
       .table('users')
       .get(id)
-      .update({
-        isOnline,
-        lastSeen: new Date(),
-      })
+      .update(
+        {
+          isOnline,
+          lastSeen: new Date(),
+        },
+        { returnChanges: true }
+      )
       .run()
-      // TODO(@mxstbr): This will return the old cached value and won't work. Have to use returnChanges.
-      .then(() => getUserById(id)),
+      .then(
+        ({ changes }: { changes: { old_val?: DBUser, new_val?: DBUser } }) => {
+          const user = changes.new_val || changes.old_val;
+          if (!user)
+            throw new Error(
+              `Failed to set user online status to ${isOnline} for user ${id}`
+            );
+          return user;
+        }
+      ),
     invalidateTags: (user: ?DBUser) => [id],
   })
 );
@@ -478,22 +499,33 @@ export const setUserPendingEmail = createWriteQuery(
     query: db
       .table('users')
       .get(userId)
-      .update({
-        pendingEmail,
-      })
+      .update(
+        {
+          pendingEmail,
+        },
+        { returnChanges: true }
+      )
       .run()
-      .then(async () => {
-        // TODO(@mxstbr): This won't work as it'll return the old cached value. Have to use returnChanges.
-        const user = await getUserById(userId);
-        if (user) {
+      .then(
+        async ({
+          changes,
+        }: {
+          changes: { new_val?: DBUser, old_val?: DBUser },
+        }) => {
+          const user = changes.new_val || changes.old_val;
+          if (!user)
+            throw new Error(
+              `Failed to set user pending email to ${pendingEmail} for user ${userId}.`
+            );
+
           trackQueue.add({
             userId: user.id,
             event: events.USER_ADDED_EMAIL,
           });
-        }
 
-        return user;
-      }),
+          return user;
+        }
+      ),
     invalidateTags: () => [userId],
   })
 );
@@ -503,22 +535,34 @@ export const updateUserEmail = createWriteQuery(
     query: db
       .table('users')
       .get(userId)
-      .update({
-        email,
-        pendingEmail: db.literal(),
-      })
+      .update(
+        {
+          email,
+          pendingEmail: db.literal(),
+        },
+        { returnChanges: true }
+      )
       .run()
-      .then(async () => {
-        // TODO(@mxstbr): This won't work as it'll return the old cached value. Have to use returnChanges.
-        const user = await getUserById(userId);
-        if (user) {
+      .then(
+        async ({
+          changes,
+        }: {
+          changes: { new_val?: DBUser, old_val?: DBUser },
+        }) => {
+          const user = changes.new_val || changes.old_val;
+          if (!user)
+            throw new Error(
+              `Failed to update user email to ${email} for user ${userId}.`
+            );
+
           trackQueue.add({
             userId: user.id,
             event: events.USER_VERIFIED_EMAIL,
           });
+
+          return user;
         }
-        return user;
-      }),
+      ),
     invalidateTags: () => [userId],
   })
 );
@@ -527,41 +571,48 @@ export const deleteUser = createWriteQuery((userId: string) => ({
   query: db
     .table('users')
     .get(userId)
-    .update({
-      username: null,
-      email: null,
-      deletedAt: new Date(),
-      providerId: null,
-      fbProviderId: null,
-      googleProviderId: null,
-      githubProviderId: null,
-      githubUsername: null,
-      profilePhoto: null,
-      description: null,
-      website: null,
-      timezone: null,
-      lastSeen: null,
-      modifiedAt: null,
-      firstName: null,
-      lastName: null,
-      pendingEmail: null,
-      name: 'Deleted',
-    })
+    .update(
+      {
+        username: null,
+        email: null,
+        deletedAt: new Date(),
+        providerId: null,
+        fbProviderId: null,
+        googleProviderId: null,
+        githubProviderId: null,
+        githubUsername: null,
+        profilePhoto: null,
+        description: null,
+        website: null,
+        timezone: null,
+        lastSeen: null,
+        modifiedAt: null,
+        firstName: null,
+        lastName: null,
+        pendingEmail: null,
+        name: 'Deleted',
+      },
+      { returnChanges: true }
+    )
     .run()
-    .then(async () => {
-      // TODO(@mxstbr): This won't work as it'll return the old cached value. Have to use returnChanges.
-      const user = await getUserById(userId);
-      if (user) {
+    .then(
+      async ({
+        changes,
+      }: {
+        changes: { new_val?: DBUser, old_val?: DBUser },
+      }) => {
+        const user = changes.new_val || changes.old_val;
+
         trackQueue.add({
-          userId: user.id,
+          userId: userId,
           event: events.USER_DELETED,
         });
 
-        identifyQueue.add({ userId: user.id });
-      }
+        identifyQueue.add({ userId });
 
-      return user;
-    }),
+        return user;
+      }
+    ),
   invalidateTags: () => [userId],
 }));
 
