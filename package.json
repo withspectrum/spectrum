@@ -46,7 +46,7 @@
     "write-file-webpack-plugin": "^4.3.2"
   },
   "dependencies": {
-    "algoliasearch": "^3.29.0",
+    "algoliasearch": "^3.30.0",
     "amplitude": "^3.5.0",
     "amplitude-js": "^4.4.0",
     "apollo-cache-inmemory": "^1.2.5",
