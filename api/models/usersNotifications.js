@@ -2,6 +2,7 @@
 const { db, createReadQuery, createWriteQuery } = require('shared/db');
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import type { DBNotification } from 'shared/types';
 /*
 ===========================================================
 
@@ -56,8 +57,7 @@ export const markNotificationsSeen = createWriteQuery(
 export const markAllNotificationsSeen = createWriteQuery((userId: string) => ({
   query: db
     .table('usersNotifications')
-    .getAll(userId, { index: 'userId' })
-    .filter({ isSeen: false })
+    .getAll([userId, false], { index: 'userIdAndIsSeen' })
     .eqJoin('notificationId', db.table('notifications'))
     .without({ left: ['createdAt', 'id'] })
     .zip()
@@ -76,29 +76,29 @@ export const markAllNotificationsSeen = createWriteQuery((userId: string) => ({
   invalidateTags: () => [userId],
 }));
 
-export const markDirectMessageNotificationsSeen = (
-  userId: string
-): Promise<Object> => {
-  return db
-    .table('usersNotifications')
-    .getAll(userId, { index: 'userId' })
-    .filter({ isSeen: false })
-    .eqJoin('notificationId', db.table('notifications'))
-    .without({ left: ['createdAt', 'id'] })
-    .zip()
-    .filter(row => row('context')('type').eq('DIRECT_MESSAGE_THREAD'))
-    .run()
-    .then(notifications =>
-      markNotificationsSeen(
-        userId,
-        notifications
-          .filter(notification => !!notification)
-          .map(notification => notification.id)
+export const markDirectMessageNotificationsSeen = createWriteQuery(
+  (userId: string) => ({
+    query: db
+      .table('usersNotifications')
+      .getAll([userId, false], { index: 'userIdAndIsSeen' })
+      .eqJoin('notificationId', db.table('notifications'))
+      .without({ left: ['createdAt', 'id'] })
+      .zip()
+      .filter(row => row('context')('type').eq('DIRECT_MESSAGE_THREAD'))
+      .run()
+      .then(notifications =>
+        markNotificationsSeen(
+          userId,
+          notifications
+            .filter(notification => !!notification)
+            .map(notification => notification.id)
+        )
       )
-    )
-    .then(() => true)
-    .catch(err => false);
-};
+      .then(() => true)
+      .catch(err => false),
+    invalidateTags: () => [userId],
+  })
+);
 
 /*
 ===========================================================
@@ -108,14 +108,15 @@ export const markDirectMessageNotificationsSeen = (
 ===========================================================
 */
 
-export const getUsersNotifications = (
-  userId: string
-): Promise<Array<string>> => {
-  return db
+export const getUsersNotifications = createReadQuery((userId: string) => ({
+  query: db
     .table('usersNotifications')
     .getAll(userId, { index: 'userId' })
     .eqJoin('notificationId', db.table('notifications'))
     .without({ left: ['createdAt', 'id'] })
-    .zip()
-    .run();
-};
+    .zip(),
+  tags: (notifications: Array<DBNotification>) => [
+    userId,
+    ...notifications.map(n => n.id),
+  ],
+}));
