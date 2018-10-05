@@ -17,8 +17,8 @@ const getDirectMessageThread = (directMessageThreadId: string): Promise<DBDirect
   return db
     .table('directMessageThreads')
     .get(directMessageThreadId)
-    .filter(row => row.hasFields('deletedAt').not())
-    .run();
+    .run()
+    .then(res => res && !res.deletedAt ? res : null);
 };
 
 // prettier-ignore

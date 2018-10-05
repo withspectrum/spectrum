@@ -424,6 +424,8 @@ export const publishThread = (
         isPublished: true,
         isLocked: false,
         edits: [],
+        reactionCount: 0,
+        messageCount: 0,
       }),
       { returnChanges: true }
     )
