@@ -167,7 +167,7 @@
     "request": "^2.87.0",
     "rethinkdb-changefeed-reconnect": "^0.3.2",
     "rethinkdb-inspector": "^0.3.3",
-    "rethinkdb-migrate": "^1.1.0",
+    "rethinkdb-migrate": "^1.4.0",
     "rethinkdbdash": "^2.3.29",
     "sanitize-filename": "^1.6.1",
     "serialize-javascript": "^1.5.0",
