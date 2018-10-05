@@ -563,9 +563,9 @@ amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
-amplitude-js@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/amplitude-js/-/amplitude-js-4.2.1.tgz#539f5aaf312c1a56fec3946370e8dfa7ed185de1"
+amplitude-js@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/amplitude-js/-/amplitude-js-4.4.0.tgz#818a9911b1c5db24ce2915fc86f5e1d099cf44e3"
   dependencies:
     "@segment/top-domain" "^3.0.0"
     blueimp-md5 "^2.10.0"
