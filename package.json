@@ -112,7 +112,7 @@
     "host-validation": "^1.1.0",
     "hpp": "^0.2.2",
     "idx": "^2.4.0",
-    "imgix-core-js": "^1.0.6",
+    "imgix-core-js": "^1.2.0",
     "ioredis": "3.2.2",
     "is-electron": "^2.1.0",
     "isomorphic-fetch": "^2.2.1",
