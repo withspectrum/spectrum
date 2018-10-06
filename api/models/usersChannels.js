@@ -103,7 +103,7 @@ const createMemberInChannel = (channelId: string, userId: string, token: boolean
     })
     .then(async () => {
       await incrementMemberCount(channelId)
-      return db.table('channels').get(channelId)
+      return db.table('channels').get(channelId).run()
     });
 };
 
