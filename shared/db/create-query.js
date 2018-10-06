@@ -43,7 +43,7 @@ type ProcessFn<I, O> = (data: O) => Promise<*> | *;
 type TagsFn<I, O> = (data: O) => Array<?string>;
 
 type CreateReadQueryInput<I, O> = $Exact<{
-  query: Promise<RethinkDBQuery<O>> | RethinkDBQuery<O>,
+  query: RethinkDBQuery<O>,
   process?: ProcessFn<I, O>,
   tags: TagsFn<I, O>,
 }>;
@@ -56,17 +56,16 @@ export const createReadQuery = <I: Array<*>, O: *>(
   return async (...args: I) => {
     const input = callback(...args);
     TOTAL_QUERIES++;
-    const query = await input.query;
-    if (typeof query.run !== 'function') throw new Error(READ_RUN_ERROR);
+    if (typeof input.query.run !== 'function') throw new Error(READ_RUN_ERROR);
 
-    const queryString = query.toString();
+    const queryString = input.query.toString();
     const cached = await queryCache.get(queryString);
     if (cached) {
       CACHED_RESULTS++;
       return cached;
     }
 
-    const result = await query
+    const result = await input.query
       .run()
       .then(input.process ? input.process : res => res);
 
@@ -77,7 +76,7 @@ export const createReadQuery = <I: Array<*>, O: *>(
 };
 
 type CreateWriteQueryInput<I, O> = $Exact<{
-  query: Promise<O> | O,
+  query: Promise<O>,
   invalidateTags: TagsFn<I, O>,
 }>;
 
