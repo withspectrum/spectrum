@@ -55,6 +55,7 @@
     "apollo-link": "^1.2.3",
     "apollo-link-http": "^1.5.5",
     "apollo-link-retry": "^2.2.5",
+    "apollo-link-schema": "^1.1.1",
     "apollo-link-ws": "^1.0.9",
     "apollo-server-express": "^2.0.4",
     "apollo-upload-client": "^8.1.0",
