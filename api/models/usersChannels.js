@@ -171,9 +171,9 @@ const unblockMemberInChannel = (channelId: string, userId: string): Promise<?DBC
     .run()
     .then(result => {
       if (result && result.changes && result.changes.length > 0) {
-        return db.table('channels').get(channelId);
+        return db.table('channels').get(channelId).run();
       } else {
-        return;
+        return null;
       }
     });
 };
@@ -245,7 +245,7 @@ const createOrUpdatePendingUserInChannel = (channelId: string, userId: string): 
       }
     })
     .then(() => {
-      return db.table('channels').get(channelId);
+      return db.table('channels').get(channelId).run();
     });
 };
 
@@ -265,7 +265,10 @@ const removePendingUsersInChannel = (channelId: string): Promise<DBChannel> => {
     .run()
     .then(result => {
       const join = result.changes[0].new_val;
-      return db.table('channels').get(join.channelId);
+      return db
+        .table('channels')
+        .get(join.channelId)
+        .run();
     });
 };
 
@@ -326,7 +329,7 @@ const approvePendingUserInChannel = async (channelId: string, userId: string): P
     )
     .run()
     .then(() => {
-      return db.table('channels').get(channelId);
+      return db.table('channels').get(channelId).run();
     });
 };
 
