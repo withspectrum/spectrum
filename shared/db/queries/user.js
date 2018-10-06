@@ -86,9 +86,9 @@ export const saveUserProvider = createWriteQuery(
         async ({
           changes,
         }: {
-          changes: { new_val?: DBUser, old_val?: DBUser },
+          changes: [{ new_val?: DBUser, old_val?: DBUser }],
         }) => {
-          const user = changes.new_val || changes.old_val;
+          const user = changes[0].new_val || changes[0].old_val;
           if (!user)
             throw new Error(`Failed to update user with ID ${userId}.`);
 
@@ -481,8 +481,12 @@ export const setUserOnline = createWriteQuery(
       )
       .run()
       .then(
-        ({ changes }: { changes: { old_val?: DBUser, new_val?: DBUser } }) => {
-          const user = changes.new_val || changes.old_val;
+        ({
+          changes,
+        }: {
+          changes: [{ old_val?: DBUser, new_val?: DBUser }],
+        }) => {
+          const user = changes[0].new_val || changes[0].old_val;
           if (!user)
             throw new Error(
               `Failed to set user online status to ${String(
@@ -512,9 +516,9 @@ export const setUserPendingEmail = createWriteQuery(
         async ({
           changes,
         }: {
-          changes: { new_val?: DBUser, old_val?: DBUser },
+          changes: [{ new_val?: DBUser, old_val?: DBUser }],
         }) => {
-          const user = changes.new_val || changes.old_val;
+          const user = changes[0].new_val || changes[0].old_val;
           if (!user)
             throw new Error(
               `Failed to set user pending email to ${pendingEmail} for user ${userId}.`
@@ -549,9 +553,9 @@ export const updateUserEmail = createWriteQuery(
         async ({
           changes,
         }: {
-          changes: { new_val?: DBUser, old_val?: DBUser },
+          changes: [{ new_val?: DBUser, old_val?: DBUser }],
         }) => {
-          const user = changes.new_val || changes.old_val;
+          const user = changes[0].new_val || changes[0].old_val;
           if (!user)
             throw new Error(
               `Failed to update user email to ${email} for user ${userId}.`
@@ -601,9 +605,9 @@ export const deleteUser = createWriteQuery((userId: string) => ({
       async ({
         changes,
       }: {
-        changes: { new_val?: DBUser, old_val?: DBUser },
+        changes: [{ new_val?: DBUser, old_val?: DBUser }],
       }) => {
-        const user = changes.new_val || changes.old_val;
+        const user = changes[0].new_val || changes[0].old_val;
 
         trackQueue.add({
           userId: userId,
