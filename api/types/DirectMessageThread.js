@@ -28,7 +28,7 @@ const DirectMessageThread = /* GraphQL */ `
       after: String
     ): DirectMessagesConnection! @cost(complexity: 1, multipliers: ["first"])
     participants: [ParticipantInfo]! @cost(complexity: 1)
-    snippet: String! @cost(complexity: 2)
+    snippet: String @cost(complexity: 2)
     threadLastActive: Date!
   }
 
