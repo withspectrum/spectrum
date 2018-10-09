@@ -3866,9 +3866,9 @@ draft-js-embed-plugin@^1.2.0:
   dependencies:
     decorate-component-with-props "^1.0.2"
 
-draft-js-focus-plugin@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/draft-js-focus-plugin/-/draft-js-focus-plugin-2.1.0.tgz#e45ed9fa0fa50f2e91db82952668419a562cad4e"
+draft-js-focus-plugin@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/draft-js-focus-plugin/-/draft-js-focus-plugin-2.2.0.tgz#beece3caa3c812a208e7fd638becbb85cf081071"
   dependencies:
     decorate-component-with-props "^1.0.2"
     find-with-regex "^1.1.3"
