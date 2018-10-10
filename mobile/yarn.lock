@@ -871,9 +871,9 @@ anymatch@^1.3.0:
     micromatch "^2.1.5"
     normalize-path "^2.0.0"
 
-apollo-cache-inmemory@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/apollo-cache-inmemory/-/apollo-cache-inmemory-1.3.0.tgz#3bbadeea01a84c7d67f49872c87912a06f1678df"
+apollo-cache-inmemory@^1.3.5:
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/apollo-cache-inmemory/-/apollo-cache-inmemory-1.3.5.tgz#7628ee598271cfffa611e15a7ce67652a84b07b0"
   dependencies:
     apollo-cache "^1.1.17"
     apollo-utilities "^1.0.21"
