@@ -50,7 +50,7 @@
     "amplitude": "^3.5.0",
     "amplitude-js": "^4.4.0",
     "apollo-cache-inmemory": "^1.2.5",
-    "apollo-client": "^2.3.5",
+    "apollo-client": "^2.4.2",
     "apollo-engine": "1.x",
     "apollo-link": "^1.2.3",
     "apollo-link-http": "^1.5.5",
