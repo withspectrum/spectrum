@@ -33,7 +33,7 @@
     "is-html": "^1.1.0",
     "lint-staged": "^3.3.0",
     "micromatch": "^3.0.4",
-    "prettier": "^1.0.0",
+    "prettier": "^1.14.3",
     "raw-loader": "^0.5.1",
     "react-app-rewire-hot-loader": "^1.0.3",
     "react-hot-loader": "^4.3.11",
