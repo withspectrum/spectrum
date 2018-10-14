@@ -177,7 +177,7 @@ class MessagesWithData extends React.Component<Props, State> {
       <NullMessagesWrapper>
         <Icon glyph="share" size={64} />
         <NullCopy>
-          Nobody has replied yet—why don't you share it with your friends?
+          Nobody has replied yet—why don’t you share it with your friends?
         </NullCopy>
         <SocialShareWrapper>
           <A
