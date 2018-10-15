@@ -9369,8 +9369,8 @@ react-loadable@^5.5.0:
     prop-types "^15.5.0"
 
 react-modal@3.x:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-3.5.1.tgz#33d38527def90ea324848f7d63e53acc4468a451"
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-3.6.1.tgz#54d27a1ec2b493bbc451c7efaa3557b6af82332d"
   dependencies:
     exenv "^1.2.0"
     prop-types "^15.5.10"
