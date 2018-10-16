@@ -158,7 +158,7 @@
     "react-router": "^4.0.0-beta.7",
     "react-router-dom": "^4.3.1",
     "react-textarea-autosize": "^6.1.0",
-    "react-transition-group": "^2.4.0",
+    "react-transition-group": "^2.5.0",
     "react-trend": "^1.2.4",
     "react-visibility-sensor": "^3.11.0",
     "recompose": "^0.27.1",
