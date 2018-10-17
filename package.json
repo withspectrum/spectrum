@@ -43,7 +43,7 @@
     "uuid": "^3.0.1",
     "wait-on": "^2.1.0",
     "webpack-bundle-analyzer": "^2.13.1",
-    "write-file-webpack-plugin": "^4.3.2"
+    "write-file-webpack-plugin": "^4.4.1"
   },
   "dependencies": {
     "algoliasearch": "^3.30.0",
