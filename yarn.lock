@@ -3178,7 +3178,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-create-react-class@^15.5.1, create-react-class@^15.6.0:
+create-react-class@^15.6.0:
   version "15.6.3"
   resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.6.3.tgz#2d73237fb3f970ae6ebe011a9e66f46dbca80036"
   dependencies:
@@ -9529,12 +9529,11 @@ react-trend@^1.2.4:
   dependencies:
     prop-types "^15.5.8"
 
-react-visibility-sensor@^3.11.0:
-  version "3.11.0"
-  resolved "https://registry.yarnpkg.com/react-visibility-sensor/-/react-visibility-sensor-3.11.0.tgz#2da089ccb18b33ec3539914b300b120684aff2e0"
+react-visibility-sensor@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/react-visibility-sensor/-/react-visibility-sensor-5.0.1.tgz#1780fdd2f64cc782868b3eb5b862190392493313"
   dependencies:
-    create-react-class "^15.5.1"
-    prop-types "^15.5.4"
+    prop-types "^15.6.2"
 
 react@*, react@^16.4.0:
   version "16.4.1"
