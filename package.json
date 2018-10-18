@@ -142,7 +142,7 @@
     "raven": "^2.6.4",
     "raven-js": "^3.27.0",
     "react": "^16.4.0",
-    "react-apollo": "^2.1.9",
+    "react-apollo": "^2.2.4",
     "react-app-rewire-styled-components": "^3.0.0",
     "react-app-rewired": "^1.6.2",
     "react-clipboard.js": "^2.0.1",
