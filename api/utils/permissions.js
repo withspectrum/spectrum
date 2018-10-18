@@ -6,6 +6,7 @@ import {
   COMMUNITY_SLUG_BLACKLIST,
   CHANNEL_SLUG_BLACKLIST,
 } from 'shared/slug-blacklists';
+import { getThreadById } from '../models/thread';
 
 export const isAdmin = (id: string): boolean => {
   const admins = [
@@ -148,3 +149,30 @@ export const canViewCommunity = async (user: DBUser, communityId: string, loader
   
   return true;
 }
+
+export const canViewThread = async (
+  userId: string,
+  threadId: string,
+  loaders: any
+) => {
+  const thread = await getThreadById(threadId);
+
+  if (!thread || thread.deletedAt) return false;
+
+  const [
+    channel,
+    community,
+    channelPermissions,
+    communityPermissions,
+  ] = await Promise.all([
+    loaders.channel.load(thread.channelId),
+    loaders.community.load(thread.communityId),
+    loaders.userPermissionsInChannel.load([userId, thread.channelId]),
+    loaders.userPermissionsInCommunity.load([userId, thread.communityId]),
+  ]);
+
+  if (!channel.isPrivate && !community.isPrivate) return true;
+  if (channel.isPrivate) return channelPermissions.isMember;
+  if (community.isPrivate) return communityPermissions.isMember;
+  return false;
+};
