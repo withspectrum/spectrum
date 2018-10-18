@@ -148,3 +148,24 @@ export const canViewCommunity = async (user: DBUser, communityId: string, loader
   
   return true;
 }
+
+export const canViewDMThread = async (
+  userId: string,
+  threadId: string,
+  loaders: any
+) => {
+  if (!userId) return false;
+
+  const thread = await loaders.directMessageParticipants.load(threadId);
+
+  if (!thread || !thread.reduction || thread.reduction.length === 0)
+    return false;
+
+  const participants = thread.reduction;
+
+  const ids = participants.map(({ userId }) => userId);
+
+  if (ids.indexOf(userId) === -1) return false;
+
+  return true;
+};
