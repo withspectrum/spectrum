@@ -46,6 +46,7 @@
     "write-file-webpack-plugin": "^4.4.1"
   },
   "dependencies": {
+    "@braintree/sanitize-url": "^2.1.0",
     "algoliasearch": "^3.30.0",
     "amplitude": "^3.5.0",
     "amplitude-js": "^4.4.0",
