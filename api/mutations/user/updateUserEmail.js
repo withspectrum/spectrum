@@ -4,16 +4,15 @@ import UserError from '../../utils/UserError';
 import { getUserByEmail, setUserPendingEmail } from '../../models/user';
 import isEmail from 'validator/lib/isEmail';
 import { sendEmailValidationEmailQueue } from 'shared/bull/queues';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
-export default async (
-  _: any,
-  { email }: { email: string },
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
-  if (!currentUser) {
-    return new UserError('You must be signed in to update your email address');
-  }
+type Input = {
+  email: string,
+};
+
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { email } = args;
+  const { user } = ctx;
 
   if (!isEmail(email)) {
     return new UserError('Please enter a working email address');
@@ -27,7 +26,7 @@ export default async (
     );
   }
 
-  return setUserPendingEmail(user.id, email)
+  return await setUserPendingEmail(user.id, email)
     .then(user => {
       sendEmailValidationEmailQueue.add({ email, userId: user.id });
       return user;
@@ -38,4 +37,4 @@ export default async (
           "We weren't able to send a confirmation email. Please try again."
         )
     );
-};
+});

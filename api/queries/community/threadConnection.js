@@ -8,17 +8,34 @@ import {
   getPublicChannelsByCommunity,
 } from '../../models/channel';
 import { getThreadsByChannels } from '../../models/thread';
+import { canViewCommunity } from '../../utils/permissions';
 
-export default async (
-  { id }: DBCommunity,
-  { first = 10, after }: PaginationOptions,
-  { user }: GraphQLContext
-) => {
+export type CommunityThreadConnectionPaginationOptions = {
+  after: string,
+  first: number,
+  sort: 'latest' | 'trending',
+};
+
+// prettier-ignore
+export default async (root: DBCommunity, args: CommunityThreadConnectionPaginationOptions, ctx: GraphQLContext) => {
+  const { first = 10, after, sort = 'latest' } = args
+  const { user, loaders } = ctx
+  const { id } = root
+
+  if (!await canViewCommunity(user, id, loaders)) {
+    return {
+      pageInfo: {
+        hasNextPage: false,
+      },
+      edges: []
+    }
+  }
+
   const cursor = decode(after);
   // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
   const lastDigits = cursor.match(/-(\d+)$/);
   const lastThreadIndex =
-    lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
+    lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10) || 0;
   const currentUser = user;
 
   // if the user is signed in, only return stories for the channels
@@ -33,10 +50,10 @@ export default async (
     channels = await getPublicChannelsByCommunity(id);
   }
 
-  // $FlowFixMe
   const threads = await getThreadsByChannels(channels, {
     first,
     after: lastThreadIndex,
+    sort,
   });
 
   return {

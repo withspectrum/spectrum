@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import React from 'react';
 import styled from 'styled-components';
 import Goop from '../goop';
@@ -17,73 +18,77 @@ export const Default = styled(FlexCol)`
   position: relative;
   flex: none;
   justify-content: center;
-  background-color: ${({ theme }) => theme.bg.default};
-  color: ${({ theme }) => theme.text.default};
+  background-color: ${theme.bg.default};
+  color: ${theme.text.default};
 `;
 
 export const Primary = styled(Default)`
-  background-color: ${({ theme }) => theme.space.dark};
+  background-color: ${theme.space.dark};
   background-image: ${({ theme }) =>
     `radial-gradient(farthest-corner at 50% 100%,
       ${hexa(theme.brand.alt, 0.75)}, ${theme.space.dark}
     )`};
-  color: ${({ theme }) => theme.text.reverse};
+  color: ${theme.text.reverse};
 `;
 
 export const Brand = styled(Default)`
-  background-color: ${({ theme }) => theme.brand.default};
+  background-color: ${theme.brand.default};
   background-image: linear-gradient(
     to bottom,
     ${({ theme }) => `${theme.brand.alt}, ${theme.brand.default}`}
   );
-  color: ${({ theme }) => theme.text.reverse};
+  color: ${theme.text.reverse};
 `;
 
 export const Dark = styled(Default)`
-  background-color: ${({ theme }) => theme.space.dark};
+  background-color: ${theme.space.dark};
   background-image: linear-gradient(
     to bottom,
     ${({ theme }) => `${theme.space.dark}, ${theme.brand.default}`}
   );
-  color: ${({ theme }) => theme.text.reverse};
+  color: ${theme.text.reverse};
 `;
 
 export const Space = styled(Default)`
-  background-color: ${({ theme }) => theme.space.dark};
+  background-color: ${theme.space.dark};
   background-image: linear-gradient(
     to bottom,
     ${({ theme }) => `${theme.space.alt}, ${theme.space.dark}`}
   );
-  color: ${({ theme }) => theme.text.reverse};
+  color: ${theme.text.reverse};
 `;
 
 export const Light = styled(Default)`
-  background-color: ${({ theme }) => theme.space.alt};
-  color: ${({ theme }) => theme.text.reverse};
+  background-color: ${theme.space.alt};
+  color: ${theme.text.reverse};
 `;
 
 export const Bright = styled(Default)`
-  background-color: ${({ theme }) => theme.brand.default};
+  background-color: ${theme.brand.default};
   background-image: linear-gradient(
     to bottom,
     ${({ theme }) => `${theme.space.alt}, ${theme.brand.default}`}
   );
-  color: ${({ theme }) => theme.text.reverse};
+  color: ${theme.text.reverse};
 `;
 
 export const Grayscale = styled(Default)`
-  background-color: ${({ theme }) => theme.bg.reverse};
+  background-color: ${theme.bg.reverse};
   background-image: linear-gradient(
     to bottom,
     ${({ theme }) => `${theme.text.alt}, ${theme.bg.reverse}`}
   );
-  color: ${({ theme }) => theme.text.reverse};
+  color: ${theme.text.reverse};
 `;
 
 export const Reverse = styled(Default)`
-  background-color: ${({ theme }) => theme.bg.reverse};
+  background-color: ${theme.bg.reverse};
   background-image: none;
-  color: ${({ theme }) => theme.text.reverse};
+  color: ${theme.text.reverse};
+`;
+
+export const Blank = styled(Default)`
+  background-image: none;
 `;
 
 export const Illustrated = styled(Default)`
@@ -107,6 +112,13 @@ const Section = (props: ThemeProps) => {
           <ClusterTwo src="/img/cluster-2.svg" role="presentation" />
           <ClusterThree src="/img/cluster-5.svg" role="presentation" />
           <ClusterFour src="/img/cluster-4.svg" role="presentation" />
+          {props.children}
+          <Goop {...props} />
+        </Default>
+      );
+    case 'blank':
+      return (
+        <Default>
           {props.children}
           <Goop {...props} />
         </Default>

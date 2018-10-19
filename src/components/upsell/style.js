@@ -1,19 +1,19 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import {
   FlexRow,
   FlexCol,
-  Gradient,
   Transition,
   Shadow,
   hexa,
   zIndex,
-} from '../globals';
-import { Button } from '../buttons';
+} from 'src/components/globals';
+import { Button } from 'src/components/buttons';
 
 export const Title = styled.h1`
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   width: 100%;
   font-weight: 800;
   font-size: 24px;
@@ -48,7 +48,7 @@ export const Actions = styled.div`
 
 export const Subtitle = styled.h2`
   width: 100%;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-weight: 500;
   font-size: 16px;
   line-height: 1.4;
@@ -61,7 +61,7 @@ export const Subtitle = styled.h2`
   }
 
   a {
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
   }
 
   li {
@@ -74,7 +74,7 @@ export const CommunityUpsellSubtitle = styled(Subtitle)`
   text-align: left;
   padding: 0;
   font-size: 14px;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
 
   li {
     margin-top: 16px;
@@ -83,7 +83,7 @@ export const CommunityUpsellSubtitle = styled(Subtitle)`
 
 export const MiniSubtitle = styled(Subtitle)`
   font-weight: 600;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-size: 0.875rem;
   line-height: 1.4;
 `;
@@ -126,16 +126,16 @@ export const NullCol = styled(FlexCol)`
     props.repeat ? 'center top' : 'center center'};
   width: 100%;
   height: auto;
-  min-height: 160px;
+  min-height: ${props => (props.noPadding ? '0' : '160px')};
   flex: 0 0 auto;
   padding: ${props => (props.noPadding ? '0' : '2rem')};
   justify-content: center;
-  align-items: center;
+  align-items: ${props => props.alignItems || 'center'};
   position: relative;
   align-self: center;
 
   > div {
-    color: ${props => props.theme.text.alt};
+    color: ${theme.text.alt};
     margin-bottom: 8px;
   }
 `;
@@ -152,38 +152,14 @@ export const NullRow = styled(FlexRow)`
   padding: 1rem 15%;
 `;
 
-export const UpgradeError = styled.p`
-  color: ${props => props.theme.warn.default};
-  font-size: 14px;
-  text-align: center;
-  margin: 16px 0 0;
-`;
-
 export const Profile = styled.div`
   position: relative;
   padding: 16px 0;
 
-  img {
-    border-radius: 48px;
-    width: 48px;
-    height: 48px;
-  }
-
-  span {
-    background-color: ${({ theme }) => theme.special.default};
-    background-image: ${({ theme }) =>
-      Gradient(theme.special.alt, theme.special.default)};
+  .badge {
     position: absolute;
-    left: 75%;
-    top: 48px;
-    color: ${({ theme }) => theme.text.reverse};
-    font-size: 10px;
-    font-weight: 800;
-    padding: 2px 4px;
-    border-radius: 8px;
-    line-height: 1.5;
-    border: 2px solid #fff;
-    z-index: ${zIndex.avatar + 1};
+    top: 54px;
+    left: 40px;
   }
 `;
 
@@ -201,13 +177,13 @@ export const UpsellIconContainer = styled.div`
   justify-content: center;
   margin-bottom: 16px;
   margin-top: 32px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 `;
 
 export const SignupButton = styled(Button)`
   font-size: 18px;
   font-weight: 700;
-  color: ${props => props.theme.text.reverse};
+  color: ${theme.text.reverse};
   padding: 16px 88px;
   max-width: 100%;
   box-shadow: ${props =>
@@ -220,15 +196,15 @@ export const SignupFooter = styled.div`
   justify-content: center;
   padding: 16px;
   font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-weight: 500;
-  border-top: 2px solid ${props => props.theme.bg.wash};
+  border-top: 2px solid ${theme.bg.wash};
   margin-top: 40px;
   width: 100%;
 `;
 
 export const SigninLink = styled.span`
-  color: ${props => props.theme.brand.default};
+  color: ${theme.brand.default};
   margin-left: 6px;
   cursor: pointer;
 `;
@@ -247,7 +223,7 @@ export const CodeOfConduct = styled.p`
   display: inline-block;
   font-size: 14px;
   font-weight: 500;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   border-radius: 8px;
   margin-top: 64px;
   margin-left: 32px;
@@ -257,7 +233,7 @@ export const CodeOfConduct = styled.p`
   z-index: ${zIndex.card + 1};
 
   a {
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
     font-weight: 600;
   }
 `;
@@ -291,7 +267,7 @@ export const SigninButton = styled.a`
   flex-direction: flex-row;
   align-self: flex-start;
   align-items: center;
-  color: ${({ theme }) => theme.text.reverse};
+  color: ${theme.text.reverse};
   border-radius: 8px;
   padding: 8px;
   padding-right: 16px;
@@ -304,19 +280,19 @@ export const SigninButton = styled.a`
   ${props =>
     props.after &&
     `
-			&:after {
-				content: 'Previously signed in with';
-				position: absolute;
-				top: -32px;
-				font-size: 14px;
-				font-weight: 600;
-				left: 50%;
-				transform: translateX(-50%);
-				width: 100%;
-				text-align: center;
-				color: ${props.theme.text.alt};
-			}
-		`} span {
+      &:after {
+        content: 'Previously signed in with';
+        position: absolute;
+        top: -32px;
+        font-size: 14px;
+        font-weight: 600;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        text-align: center;
+        color: ${props.theme.text.alt};
+      }
+    `} span {
     display: inline-block;
     flex: 0 0 auto;
     margin-top: -1px;
@@ -352,10 +328,12 @@ export const ButtonTwitter = styled(SigninButton)`
   color: ${props =>
     props.whitebg
       ? props.theme.social.twitter.default
-      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+      : props.preferred
+        ? '#fff'
+        : 'rgba(255,255,255,0.8)'};
 
   &:after {
-    color: ${props => props.theme.social.twitter.default};
+    color: ${theme.social.twitter.default};
   }
 
   &:hover {
@@ -370,10 +348,12 @@ export const ButtonFacebook = styled(SigninButton)`
   color: ${props =>
     props.whitebg
       ? props.theme.social.facebook.default
-      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+      : props.preferred
+        ? '#fff'
+        : 'rgba(255,255,255,0.8)'};
 
   &:after {
-    color: ${props => props.theme.social.facebook.default};
+    color: ${theme.social.facebook.default};
   }
 
   &:hover {
@@ -388,10 +368,12 @@ export const ButtonGoogle = styled(SigninButton)`
   color: ${props =>
     props.whitebg
       ? props.theme.social.google.default
-      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+      : props.preferred
+        ? '#fff'
+        : 'rgba(255,255,255,0.8)'};
 
   &:after {
-    color: ${props => props.theme.social.google.default};
+    color: ${theme.social.google.default};
   }
 
   &:hover {
@@ -408,14 +390,14 @@ export const ShareInputContainer = styled.div`
 
 export const JoinChannelContainer = styled.div`
   display: flex;
-  border: 1px solid ${props => props.theme.bg.border};
+  border: 1px solid ${theme.bg.border};
   border-radius: 4px;
   padding: 16px 24px;
   align-items: center;
   flex: 1 0 auto;
   width: calc(100% - 24px);
   margin-bottom: 12px;
-  background: ${props => props.theme.bg.wash};
+  background: ${theme.bg.wash};
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -439,11 +421,11 @@ export const JoinChannelContent = styled.div`
 export const JoinChannelTitle = styled.h3`
   font-size: 18px;
   font-weight: 600;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
 `;
 
 export const JoinChannelSubtitle = styled.h4`
   font-size: 16px;
   font-weight: 400;
-  color: ${props => props.theme.text.secondary};
+  color: ${theme.text.secondary};
 `;

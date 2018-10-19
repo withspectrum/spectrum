@@ -1,93 +1,37 @@
-import React, { Component } from 'react';
-import Icon from '../icons';
-import { track } from '../../helpers/events';
-import { addToastWithTimeout } from '../../actions/toasts';
-import { ReactionWrapper } from '../message/style';
+// @flow
+import * as React from 'react';
+import { openModal } from 'src/actions/modals';
+import type { GetMessageType } from 'shared/graphql/queries/message/getMessage';
+import type { Dispatch } from 'redux';
 
-class Reaction extends Component {
-  state: {
-    count: number,
-    hasReacted: boolean,
-  };
+type Props = {
+  toggleReaction: Function,
+  dispatch: Dispatch<Object>,
+  currentUser?: Object,
+  me: boolean,
+  message: GetMessageType,
+  render: Function,
+};
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      count: props.message.reactions.count,
-      hasReacted: props.message.reactions.hasReacted,
-    };
-  }
-
-  doNothing = () => {};
-
+class Reaction extends React.Component<Props> {
   triggerMutation = () => {
     const { toggleReaction, message, dispatch, currentUser } = this.props;
 
     if (!currentUser) {
-      return dispatch(
-        addToastWithTimeout('error', 'Sign in first to leave a reaction!')
-      );
+      return dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}));
     }
 
-    const hasReacted = this.state.hasReacted;
-    const count = this.state.count;
-
-    track('reaction', hasReacted ? 'removed' : 'created', null);
-
-    this.setState({
-      hasReacted: !hasReacted,
-      count: hasReacted ? count - 1 : count + 1,
-    });
-
-    toggleReaction({
+    return toggleReaction({
       messageId: message.id,
       type: 'like',
-    })
-      // after the mutation occurs, it will either return an error or the new
-      // thread that was published
-      .then(({ data }) => {
-        // can do something with the returned reaction here
-      })
-      .catch(error => {
-        // TODO add some kind of dispatch here to show an error to the user
-        dispatch(
-          addToastWithTimeout(
-            'error',
-            "Couldn't quite save that reaction, try again?"
-          )
-        );
-
-        this.setState({
-          hasReacted,
-          count,
-        });
-      });
+    });
   };
 
   render() {
-    const { me, currentUser } = this.props;
-    const { hasReacted, count } = this.state;
+    const { me, message: { reactions: { hasReacted, count } } } = this.props;
+    const mutation = me ? () => {} : this.triggerMutation;
 
-    return (
-      <ReactionWrapper
-        hasCount={count}
-        hasReacted={hasReacted}
-        me={me}
-        hide={(me || !currentUser) && count === 0}
-        onClick={me ? this.doNothing : this.triggerMutation}
-        dummy={false}
-      >
-        <Icon
-          glyph="like-fill"
-          size={16}
-          color={'text.reverse'}
-          tipText={me ? 'Likes' : hasReacted ? 'Unlike' : 'Like'}
-          tipLocation={me ? 'top-left' : 'top-right'}
-        />
-        <span>{count}</span>
-      </ReactionWrapper>
-    );
+    return this.props.render({ me, hasReacted, count, mutation });
   }
 }
 

@@ -25,7 +25,7 @@ export const InlineSvg = styled.svg`
 `;
 
 export const SvgWrapper = styled.div`
-  position: relative;
+  position: absolute;
   flex: none;
   z-index: ${zIndex.base};
   height: 80px;

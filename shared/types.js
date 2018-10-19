@@ -11,6 +11,7 @@ export type DBChannel = {
   communityId: string,
   createdAt: Date,
   deletedAt?: Date,
+  deletedBy?: string,
   description: string,
   id: string,
   isDefault: boolean,
@@ -18,6 +19,7 @@ export type DBChannel = {
   name: string,
   slug: string,
   archivedAt?: Date,
+  memberCount: number,
 };
 
 export type DBCommunity = {
@@ -30,15 +32,14 @@ export type DBCommunity = {
   slug: string,
   website?: ?string,
   deletedAt?: Date,
+  deletedBy?: string,
   pinnedThreadId?: string,
   watercoolerId?: string,
   creatorId: string,
   administratorEmail: ?string,
-  hasAnalytics: boolean,
-  hasPrioritySupport: boolean,
-  stripeCustomerId: ?string,
   pendingAdministratorEmail?: string,
-  ossVerified?: boolean,
+  isPrivate: boolean,
+  memberCount: number,
 };
 
 export type DBCommunitySettings = {
@@ -47,14 +48,34 @@ export type DBCommunitySettings = {
   brandedLogin: ?{
     customMessage: ?string,
   },
+  slackSettings: ?{
+    connectedAt: ?string,
+    connectedBy: ?string,
+    invitesSentAt: ?string,
+    teamName: ?string,
+    teamId: ?string,
+    scope: ?string,
+    token: ?string,
+    invitesMemberCount: ?string,
+    invitesCustomMessage: ?string,
+  },
+  joinSettings: {
+    tokenJoinEnabled: boolean,
+    token: ?string,
+  },
 };
 
 export type DBChannelSettings = {
   id: string,
   channelId: string,
-  joinSettings: {
+  joinSettings?: {
     tokenJoinEnabled: boolean,
     token: string,
+  },
+  slackSettings?: {
+    botLinks: {
+      threadCreated: ?string,
+    },
   },
 };
 
@@ -71,23 +92,6 @@ export type DBDirectMessageThread = {
   threadLastActive: Date,
 };
 
-export type DBInvoice = {
-  amount: number,
-  chargeId: string,
-  communityId?: string,
-  customerId: string,
-  id: string,
-  paidAt: Date,
-  planId: 'beta-pro' | 'community-standard',
-  planName: string,
-  quantity: number,
-  sourceBrand: string,
-  sourceLast4: string,
-  status: string,
-  subscriptionId: string,
-  userId: string,
-};
-
 export type DBMessage = {
   content: {
     body: string,
@@ -96,13 +100,16 @@ export type DBMessage = {
   messageType: 'text' | 'media' | 'draftjs',
   senderId: string,
   deletedAt?: Date,
+  deletedBy?: string,
   threadId: string,
   threadType: 'story' | 'directMessageThread',
   timestamp: Date,
+  parentId?: string,
 };
 
 export type NotificationPayloadType =
   | 'REACTION'
+  | 'THREAD_REACTION'
   | 'MESSAGE'
   | 'THREAD'
   | 'CHANNEL'
@@ -112,9 +119,9 @@ export type NotificationPayloadType =
 
 export type NotificationEventType =
   | 'REACTION_CREATED'
+  | 'THREAD_REACTION_CREATED'
   | 'MESSAGE_CREATED'
   | 'THREAD_CREATED'
-  | 'THREAD_EDITED'
   | 'CHANNEL_CREATED'
   | 'DIRECT_MESSAGE_THREAD_CREATED'
   | 'USER_JOINED_COMMUNITY'
@@ -122,7 +129,13 @@ export type NotificationEventType =
   | 'USER_APPROVED_TO_JOIN_PRIVATE_CHANNEL'
   | 'THREAD_LOCKED_BY_OWNER'
   | 'THREAD_DELETED_BY_OWNER'
-  | 'COMMUNITY_INVITATION';
+  | 'COMMUNITY_INVITE'
+  | 'MENTION_THREAD'
+  | 'MENTION_MESSAGE'
+  | 'PRIVATE_CHANNEL_REQUEST_SENT'
+  | 'PRIVATE_CHANNEL_REQUEST_APPROVED'
+  | 'PRIVATE_COMMUNITY_REQUEST_SENT'
+  | 'PRIVATE_COMMUNITY_REQUEST_APPROVED';
 
 type NotificationPayload = {
   id: string,
@@ -148,23 +161,15 @@ export type DBReaction = {
   userId: string,
 };
 
-export type DBRecurringPayment = {
+export type DBThreadReaction = {
   id: string,
-  amount: number,
-  canceledAt?: Date,
+  threadId: string,
   createdAt: Date,
-  currentPeriodEnd: Date,
-  currentPeriodStart: Date,
-  customerId: string,
-  planId: 'beta-pro' | 'community-standard',
-  planName: string,
-  quantity: number,
-  sourceBrand: string,
-  sourceLast4: string,
-  status: 'active' | 'canceled',
-  subscriptionId: string,
+  type: ReactionType,
+  deletedAt?: Date,
+  score?: number,
+  scoreUpdatedAt?: Date,
   userId: string,
-  communityId?: string,
 };
 
 export type DBReputationEvent = {
@@ -227,16 +232,20 @@ export type DBThread = {
   lockedAt?: Date,
   lastActive: Date,
   modifiedAt?: Date,
+  deletedAt?: string,
+  deletedBy: ?string,
   attachments?: Array<DBThreadAttachment>,
   edits?: Array<DBThreadEdits>,
   watercooler?: boolean,
+  messageCount: number,
+  reactionCount: number,
   type: string,
 };
 
 export type DBUser = {
   id: string,
   email?: string,
-  createdAt: Date,
+  createdAt: string,
   name: string,
   coverPhoto: string,
   profilePhoto: string,
@@ -248,10 +257,11 @@ export type DBUser = {
   username: ?string,
   timezone?: ?number,
   isOnline?: boolean,
-  lastSeen?: ?Date,
+  lastSeen?: ?string,
   description?: ?string,
   website?: ?string,
-  modifiedAt: ?Date,
+  modifiedAt: ?string,
+  betaSupporter?: boolean,
 };
 
 export type DBUsersChannels = {
@@ -275,6 +285,7 @@ export type DBUsersCommunities = {
   isMember: boolean,
   isModerator: boolean,
   isOwner: boolean,
+  isPending: boolean,
   receiveNotifications: boolean,
   reputation: number,
   userId: string,
@@ -370,20 +381,11 @@ export type DBExpoPushSubscription = {
   userId: string,
 };
 
-export type DBStripeCustomer = {
-  created: number,
-  currency: ?string,
-  customerId: string,
-  email: string,
-  metadata: {
-    communityId?: string,
-    communityName?: string,
-  },
-};
-
 export type FileUpload = {
   filename: string,
   mimetype: string,
   encoding: string,
   stream: any,
 };
+
+export type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';

@@ -8,6 +8,7 @@ import Link from '../../../components/link';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { CommunityListAvatar, UpsellRow } from '../style';
+import { track, events } from 'src/helpers/analytics';
 
 const getRandom = (arr, n) => {
   let result = new Array(n),
@@ -110,7 +111,11 @@ class UpsellExploreCommunities extends React.Component<Props, State> {
           {communitiesToJoin.map(c => {
             if (!c) return null;
             return (
-              <Link to={`/${c.slug}`} key={c.id}>
+              <Link
+                to={`/${c.slug}`}
+                key={c.id}
+                onClick={() => track(events.INBOX_UPSELL_COMMUNITY_CLICKED)}
+              >
                 <CommunityListAvatar
                   active={c.id === activeCommunity}
                   src={c.profilePhoto}

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import theme from 'shared/theme';
 import { zIndex } from '../../globals';
 import { isMobile } from '../../../helpers/utils';
 
@@ -52,29 +53,31 @@ export const Section = styled.section`
 export const Title = styled.h3`
   font-size: 24px;
   font-weight: 700;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   margin: 16px 0 8px;
 `;
 
 export const Subtitle = styled.h3`
   font-size: 16px;
   font-weight: 400;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   text-align: center;
 `;
 
 export const Rep = styled.div`
   display: flex;
-  background: ${props => props.theme.bg.wash};
-  border: 1px solid ${props => props.theme.bg.border};
+  background: ${theme.bg.wash};
+  border: 1px solid ${theme.bg.border};
   padding: 8px;
   border-radius: 4px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   margin-top: 32px;
 `;
 
 export const IconContainer = styled.div`
-  color: ${props => props.theme.brand.alt};
+  color: ${theme.brand.alt};
 `;
 
-export const RepWrapper = styled.span`margin-left: 8px;`;
+export const RepWrapper = styled.span`
+  margin-left: 8px;
+`;

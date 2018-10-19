@@ -17,6 +17,7 @@ import { EmailListItem, CheckboxContent } from '../style';
 import type { GetCurrentUserSettingsType } from 'shared/graphql/queries/user/getCurrentUserSettings';
 import UserEmailConfirmation from 'src/components/userEmailConfirmation';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
+import type { Dispatch } from 'redux';
 
 const parseNotificationTypes = notifications => {
   const types = Object.keys(notifications.types).filter(
@@ -80,7 +81,7 @@ const parseNotificationTypes = notifications => {
 
 type Props = {
   updateUserEmail: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   toggleNotificationSettings: Function,
   smallOnly: boolean,
   largeOnly: boolean,

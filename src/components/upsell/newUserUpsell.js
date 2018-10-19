@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import compose from 'recompose/compose';
-import { track } from '../../helpers/events';
 import SetUsername from '../../components/setUsername';
 import { Button, OutlineButton } from '../../components/buttons';
 import TopCommunities from '../../views/dashboard/components/topCommunities';
@@ -42,16 +38,13 @@ class UpsellNewUser extends Component {
     };
   }
 
-  componentDidMount() {
-    track('onboarding', 'viewed', null);
-  }
+  componentDidMount() {}
 
   graduate = () => {
     const { joinedCommunities, savedUsername } = this.state;
     const { communities } = this.props;
 
     if ((joinedCommunities > 0 || communities) && savedUsername) {
-      track('onboarding', 'graduated', null);
       this.props.graduate();
     } else {
       let error;
@@ -91,9 +84,7 @@ class UpsellNewUser extends Component {
     this.props.history.push('/new/community');
   };
 
-  clickShareLink = value => {
-    track('onboarding', 'share link clicked', value);
-  };
+  clickShareLink = value => {};
 
   savedUsername = () => {
     this.setState({

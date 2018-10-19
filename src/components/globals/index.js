@@ -1,4 +1,5 @@
 /* eslint no-eval: 0 */
+import theme from 'shared/theme';
 import styled, { css, keyframes } from 'styled-components';
 
 export const Gradient = (g1, g2) =>
@@ -120,7 +121,7 @@ export const Spinner = styled.span`
           : props.theme.brand.alt};
     border-top-color: transparent;
     border-right-color: ${props =>
-      props.color ? `props.theme.${props.color}` : props.theme.brand.alt};
+      props.color ? eval(`props.theme.${props.color}`) : props.theme.brand.alt};
     border-bottom-color: transparent;
     animation: ${spin} 2s linear infinite;
   }
@@ -134,7 +135,7 @@ export const Label = styled.label`
   font-weight: 500;
   font-size: 0.875rem;
   letter-spacing: -0.4px;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
 
   &:not(:first-of-type) {
     margin-top: 1.5rem;
@@ -152,7 +153,7 @@ export const PrefixLabel = styled.label`
   padding-left: 0.875rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: ${({ theme }) => theme.text.placeholder};
+  color: ${theme.text.placeholder};
 
   > input {
     margin-left: 2px;
@@ -161,11 +162,11 @@ export const PrefixLabel = styled.label`
 
 export const Input = styled.input`
   flex: 1 0 auto;
-  background: ${({ theme }) => theme.bg.default};
+  background: ${theme.bg.default};
   font-weight: 500;
   width: 100%;
   font-size: 0.875rem;
-  border: 0.125rem solid ${({ theme }) => theme.bg.inactive};
+  border: 0.125rem solid ${theme.bg.inactive};
   border-radius: 0.25rem;
   padding: 0.5rem 0.75rem;
   margin-top: 0.125rem;
@@ -178,67 +179,67 @@ export const Input = styled.input`
       width: initial;
       margin-right: 0.5rem;
     `} &::placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
   &::-webkit-input-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
   &:-moz-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
   &:-ms-input-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
 
   &:focus {
-    border-color: ${({ theme }) => theme.brand.default};
+    border-color: ${theme.brand.default};
   }
 `;
 
 export const TextArea = styled.textarea`
   flex: 1 0 auto;
   width: 100%;
-  background: ${({ theme }) => theme.bg.default};
+  background: ${theme.bg.default};
   font-weight: 500;
   font-size: 0.875rem;
-  border: 0.125rem solid ${({ theme }) => theme.bg.inactive};
+  border: 0.125rem solid ${theme.bg.inactive};
   border-radius: 0.25rem;
   padding: 0.75rem;
   margin-top: 0.125rem;
   box-shadow: none;
 
   &::placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
   &::-webkit-input-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
   &:-moz-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
   &:-ms-input-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
 
   &:focus {
-    border-color: ${({ theme }) => theme.brand.default};
+    border-color: ${theme.brand.default};
   }
 `;
 
 export const UnderlineInput = styled.input`
   font-size: inherit;
   font-weight: inherit;
-  color: ${({ theme }) => theme.text.default};
-  border-bottom: 0.125rem solid ${({ theme }) => theme.bg.inactive};
+  color: ${theme.text.default};
+  border-bottom: 0.125rem solid ${theme.bg.inactive};
 
   &:focus {
-    border-color: ${({ theme }) => theme.brand.default};
+    border-color: ${theme.brand.default};
   }
 `;
 
 export const H1 = styled.h1`
   ${fontStack};
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   font-weight: 900;
   font-size: 1.5rem;
   line-height: 1.25;
@@ -247,7 +248,7 @@ export const H1 = styled.h1`
 `;
 
 export const H2 = styled.h2`
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   ${fontStack};
   font-weight: 700;
   font-size: 1.25rem;
@@ -257,7 +258,7 @@ export const H2 = styled.h2`
 `;
 
 export const H3 = styled.h3`
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   ${fontStack};
   font-weight: 500;
   font-size: 1rem;
@@ -267,7 +268,7 @@ export const H3 = styled.h3`
 `;
 
 export const H4 = styled.h4`
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   ${fontStack};
   font-weight: 500;
   font-size: 0.875rem;
@@ -277,7 +278,7 @@ export const H4 = styled.h4`
 `;
 
 export const H5 = styled.h5`
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   ${fontStack};
   font-weight: 500;
   font-size: 0.75rem;
@@ -287,7 +288,7 @@ export const H5 = styled.h5`
 `;
 
 export const H6 = styled.h6`
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   ${fontStack};
   font-weight: 600;
   text-transform: uppercase;
@@ -298,7 +299,7 @@ export const H6 = styled.h6`
 `;
 
 export const P = styled.p`
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   ${fontStack};
   font-weight: 400;
   font-size: 0.875rem;
@@ -308,7 +309,7 @@ export const P = styled.p`
 `;
 
 export const Span = styled.span`
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   ${fontStack};
   font-weight: 400;
   font-size: 0.875rem;
@@ -343,8 +344,8 @@ const returnTooltip = props => {
             bottom: 100%;
             right: 0;
             transform: translateX(-100%);
-      	    border-bottom-width: 0;
-      	    border-top-color: ${
+            border-bottom-width: 0;
+            border-top-color: ${
               props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
             };
           }
@@ -359,8 +360,8 @@ const returnTooltip = props => {
             bottom: 100%;
             left: 0;
             transform: translateX(100%);
-      	    border-bottom-width: 0;
-      	    border-top-color: ${
+            border-bottom-width: 0;
+            border-top-color: ${
               props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
             };
           }
@@ -409,8 +410,8 @@ const returnTooltip = props => {
             top: 100%;
             right: 0;
             transform: translateX(-100%);
-      	    border-top-width: 0;
-      	    border-bottom-color: ${
+            border-top-width: 0;
+            border-bottom-color: ${
               props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
             };
           }
@@ -425,8 +426,8 @@ const returnTooltip = props => {
             top: 100%;
             left: 0;
             transform: translateX(100%);
-      	    border-top-width: 0;
-      	    border-bottom-color: ${
+            border-top-width: 0;
+            border-bottom-color: ${
               props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
             };
           }
@@ -512,7 +513,14 @@ export const Tooltip = props => css`
   &:hover:after,
   &:hover:before {
     opacity: 1;
-    transition: all 0.1s ease-in 0.1s;
+    transition: opacity 0.1s ease-in 0.1s;
+  }
+
+  @media (max-width: 768px) {
+    &:after,
+    &:before {
+      display: none;
+    }
   }
 `;
 
@@ -562,7 +570,7 @@ export const Onboarding = props => css`
   &:after,
   &:before {
     opacity: 1;
-    transition: all 0.1s ease-in 0.1s;
+    transition: opacity 0.1s ease-in 0.1s;
   }
 `;
 
@@ -571,12 +579,12 @@ export const HorizontalRule = styled(FlexRow)`
   justify-content: center;
   align-items: center;
   align-self: stretch;
-  color: ${props => props.theme.bg.border};
+  color: ${theme.bg.border};
 
   hr {
     display: inline-block;
     flex: 1 0 auto;
-    border-top: 1px solid ${props => props.theme.bg.border};
+    border-top: 1px solid ${theme.bg.border};
   }
 
   div {

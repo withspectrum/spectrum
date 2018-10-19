@@ -1,3 +1,4 @@
+// @flow
 const hpp = require('hpp');
 const helmet = require('helmet');
 const uuid = require('uuid');

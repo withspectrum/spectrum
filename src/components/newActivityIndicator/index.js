@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import theme from 'shared/theme';
 import { connect } from 'react-redux';
 import { clearActivityIndicator } from '../../actions/newActivityIndicator';
 import styled from 'styled-components';
@@ -7,7 +8,7 @@ import { Gradient } from '../globals';
 const Pill = styled.div`
   padding: ${props => (props.refetching ? '8px' : '8px 16px')};
   border-radius: 20px;
-  color: ${props => props.theme.text.reverse};
+  color: ${theme.text.reverse};
   background: ${props =>
     Gradient(props.theme.brand.alt, props.theme.brand.default)};};
   font-size: 14px;
@@ -25,17 +26,17 @@ const Pill = styled.div`
     props.active ? '80px' : '60px'});
   font-weight: 700;
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  transition: all 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out;
   cursor: pointer;
 
   &:hover {
     transform: translateX(-50%) translateY(78px);
-    transition: all 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out;
   }
 
   &:active {
     transform: translateX(-50%) translateY(80px);
-    transition: all 0.1s ease-in-out;
+    transition: transform 0.1s ease-in-out;
   }
 
   @media (max-width: 768px) {
@@ -44,12 +45,12 @@ const Pill = styled.div`
 
     &:hover {
       transform: translateX(-50%) translateY(58px);
-      transition: all 0.2s ease-in-out;
+      transition: transform 0.2s ease-in-out;
     }
 
     &:active {
       transform: translateX(-50%) translateY(60px);
-      transition: all 0.1s ease-in-out;
+      transition: transform 0.1s ease-in-out;
     }
   }
 `;
@@ -57,7 +58,7 @@ const Pill = styled.div`
 const scrollTo = (element, to, duration) => {
   if (duration < 0) return;
   const difference = to - element.scrollTop;
-  const perTick = difference / duration * 2;
+  const perTick = (difference / duration) * 2;
 
   setTimeout(() => {
     element.scrollTop = element.scrollTop + perTick;

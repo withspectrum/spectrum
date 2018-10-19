@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import theme from 'shared/theme';
 
 export const EmailInviteForm = styled.div`
   display: flex;
@@ -31,7 +32,7 @@ export const EmailInviteInput = styled.input`
   }
 
   &:focus {
-    border: 2px solid ${props => props.theme.brand.default};
+    border: 2px solid ${theme.brand.default};
   }
 
   @media screen and (max-width: 768px) {
@@ -44,37 +45,37 @@ export const AddRow = styled.div`
   width: 100%;
   justify-content: center;
   padding: 8px;
-  background: ${props => props.theme.bg.wash};
+  background: ${theme.bg.wash};
   margin-top: 8px;
   margin-bottom: 16px;
   font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-weight: 500;
   border-radius: 4px;
 
   &:hover {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
     cursor: pointer;
   }
 `;
 
 export const RemoveRow = styled.div`
   margin-left: 4px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 
   &:hover {
     cursor: pointer;
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 `;
 
 export const CustomMessageToggle = styled.h4`
   font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   margin-top: 16px;
 
   &:hover {
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
     cursor: pointer;
   }
 

@@ -13,6 +13,7 @@ import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import { MessageIconContainer, UserListItemContainer } from '../style';
 import { ListContainer, ListFooter } from 'src/components/listItems/style';
 import Icon from 'src/components/icons';
+import type { Dispatch } from 'redux';
 
 type Props = {
   data: {
@@ -21,7 +22,7 @@ type Props = {
   },
   isLoading: boolean,
   isFetchingMore: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   initMessage: Function,
   currentUser: ?Object,
 };
@@ -67,8 +68,9 @@ class ChannelMembers extends Component<Props> {
                       isOnline={user.isOnline}
                       onlineSize={'small'}
                       profilePhoto={user.profilePhoto}
-                      avatarSize={'32'}
+                      avatarSize={32}
                       description={user.description}
+                      showHoverProfile={false}
                     >
                       {currentUser &&
                         user.id !== currentUser.id && (

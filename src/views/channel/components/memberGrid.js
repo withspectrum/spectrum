@@ -24,7 +24,7 @@ type Props = {
   },
   isLoading: boolean,
   isFetchingMore: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   history: Object,
   currentUser: ?Object,
 };
@@ -68,7 +68,7 @@ class ChannelMemberGrid extends React.Component<Props> {
                     isOnline={user.isOnline}
                     onlineSize={'small'}
                     profilePhoto={user.profilePhoto}
-                    avatarSize={'32'}
+                    avatarSize={32}
                   >
                     {currentUser &&
                       user.id !== currentUser.id && (

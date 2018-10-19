@@ -20,7 +20,7 @@ import createPrismPlugin from 'draft-js-prism-plugin';
 import { customStyleMap } from 'src/components/rich-text-editor/style';
 import type { DraftEditorState } from 'draft-js/lib/EditorState';
 
-import { InputWrapper, MediaPreview } from './style';
+import { InputWrapper } from './style';
 
 type Props = {
   editorState: DraftEditorState,
@@ -31,8 +31,9 @@ type Props = {
   readOnly?: boolean,
   editorRef?: any => void,
   networkDisabled: boolean,
-  mediaPreview?: string,
-  onRemoveMedia: Object => void,
+  children?: React$Node,
+  hasAttachment?: boolean,
+  code?: boolean,
 };
 
 type State = {
@@ -59,7 +60,7 @@ class Input extends React.Component<Props, State> {
         createMarkdownPlugin({
           features: {
             inline: ['BOLD', 'ITALIC', 'CODE'],
-            block: ['CODE'],
+            block: ['CODE', 'blockquote'],
           },
           renderLanguageSelect: () => null,
         }),
@@ -86,20 +87,20 @@ class Input extends React.Component<Props, State> {
       readOnly,
       editorRef,
       networkDisabled,
-      mediaPreview,
-      onRemoveMedia,
+      children,
+      hasAttachment,
+      code,
       ...rest
     } = this.props;
     const { plugins } = this.state;
 
     return (
-      <InputWrapper focus={focus} networkDisabled={networkDisabled}>
-        {mediaPreview && (
-          <MediaPreview>
-            <img src={mediaPreview} alt="" />
-            <button onClick={onRemoveMedia} />
-          </MediaPreview>
-        )}
+      <InputWrapper
+        hasAttachment={hasAttachment}
+        focus={focus}
+        networkDisabled={networkDisabled}
+      >
+        {children}
         <DraftEditor
           editorState={editorState}
           onChange={onChange}

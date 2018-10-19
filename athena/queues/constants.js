@@ -8,6 +8,7 @@ export const MESSAGE_NOTIFICATION = 'message notification';
 export const MENTION_NOTIFICATION = 'mention notification';
 export const DIRECT_MESSAGE_NOTIFICATION = 'direct message notification';
 export const REACTION_NOTIFICATION = 'reaction notification';
+export const THREAD_REACTION_NOTIFICATION = 'thread reaction notification';
 export const CHANNEL_NOTIFICATION = 'channel notification';
 export const COMMUNITY_NOTIFICATION = 'community notification';
 export const THREAD_NOTIFICATION = 'thread notification';
@@ -21,14 +22,10 @@ export const PROCESS_ADMIN_TOXIC_THREAD = 'process admin toxic thread';
 export const PRIVATE_CHANNEL_REQUEST_SENT = 'private channel request sent';
 export const PRIVATE_CHANNEL_REQUEST_APPROVED =
   'private channel request approved';
+export const PRIVATE_COMMUNITY_REQUEST_SENT = 'private community request sent';
+export const PRIVATE_COMMUNITY_REQUEST_APPROVED =
+  'private community request approved';
 export const SEND_PUSH_NOTIFICATIONS = 'push notifications';
-
-// invoices and recurring payments
-export const PRO_INVOICE_PAID_NOTIFICATION = 'pro invoice paid notification';
-export const COMMUNITY_INVOICE_PAID_NOTIFICATION =
-  'community invoice paid notification';
-export const SEND_PRO_INVOICE_RECEIPT_EMAIL = 'send pro invoice receipt email';
-export const SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL =
-  'send community invoice receipt email';
+export const SEND_SLACK_INVITIATIONS = 'send slack invitations';
 
 export const TRACK_USER_LAST_SEEN = 'track user thread last seen';

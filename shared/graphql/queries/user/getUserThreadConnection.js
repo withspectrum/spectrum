@@ -46,21 +46,34 @@ export const getUserThreadConnectionQuery = gql`
 const getUserThreadConnectionOptions = {
   props: ({
     ownProps,
-    data: { fetchMore, error, loading, networkStatus, user, subscribeToMore },
+    data: {
+      fetchMore,
+      error,
+      loading,
+      networkStatus,
+      user,
+      subscribeToMore,
+      refetch,
+    },
   }) => ({
     data: {
       error,
       loading,
       user,
       networkStatus,
+      refetch,
       threadConnection: user && user.threadConnection,
-      threads: user ? user.threadConnection.edges : '',
-      hasNextPage: user ? user.threadConnection.pageInfo.hasNextPage : false,
+      threads: user && user.threadConnection ? user.threadConnection.edges : '',
+      hasNextPage:
+        user && user.threadConnection
+          ? user.threadConnection.pageInfo.hasNextPage
+          : false,
       subscribeToUpdatedThreads: () => {
         return subscribeToMore({
           document: subscribeToUpdatedThreads,
           updateQuery: (prev, { subscriptionData }) => {
-            const updatedThread = subscriptionData.data.threadUpdated;
+            const updatedThread =
+              subscriptionData.data && subscriptionData.data.threadUpdated;
             if (!updatedThread) return prev;
 
             const thisUserId = ownProps.userId;

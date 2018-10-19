@@ -18,13 +18,20 @@ export const getThreadsForDigest = async (timeframe: Timeframe) => {
 
   // for each thread that was active in the last week, return a new array containing a record for each thread with the thread data and the message count
   const messageCountPromises = threadIds.map(
-    async ({ communityId, channelId, id, content, ...thread }) => ({
+    async ({
+      communityId,
+      channelId,
+      id,
+      content,
+      messageCount,
+      ...thread
+    }) => ({
       communityId,
       channelId,
       id,
       title: content.title,
       newMessageCount: await getNewMessageCount(id, timeframe),
-      totalMessageCount: await getTotalMessageCount(id),
+      totalMessageCount: messageCount || (await getTotalMessageCount(id)),
     })
   );
 
@@ -47,18 +54,19 @@ export const attachDataToThreads = async (threads: Threads) => {
   // create an empty object for the final output
   let obj = {};
 
-  const getCommunity = id => getCommunityById(id);
-  const getChannel = id => getChannelById(id);
-
   // for each thread, get the community data that we'll need when rendering an email
   const topThreadsWithDataPromises = threads.map(async thread => {
-    const community = await getCommunity(thread.communityId);
-    const channel = await getChannel(thread.channelId);
+    const [community, channel] = await Promise.all([
+      getCommunityById(thread.communityId),
+      getChannelById(thread.channelId),
+    ]);
 
     // if the thread was created in the timeframe being evaluated, it's dumb to say: 10 messages (10 new!) - so here we're composing a string that will be passed to the email that determines what we should show for the message count. If all 10 messages are new, it will simply say '10 new!'
     const messageCountString =
       thread.newMessageCount === thread.totalMessageCount
-        ? `<span class="newMessageCount">${thread.newMessageCount} new messages</span>`
+        ? `<span class="newMessageCount">${
+            thread.newMessageCount
+          } new messages</span>`
         : `
           <span class="totalMessageCount">
             ${thread.totalMessageCount} messages
@@ -67,7 +75,7 @@ export const attachDataToThreads = async (threads: Threads) => {
       `;
 
     // this is the final data we'll send to the email for each thread
-    const threadWithData = {
+    return {
       community: {
         name: community.name,
         slug: community.slug,
@@ -84,7 +92,6 @@ export const attachDataToThreads = async (threads: Threads) => {
       newMessageCount: thread.newMessageCount,
       totalMessageCount: thread.totalMessageCount,
     };
-    return threadWithData;
   });
 
   const threadsWithCommunityData = await Promise.all(

@@ -1,6 +1,8 @@
 // @flow
-import styled from 'styled-components';
+import theme from 'shared/theme';
+import styled, { css } from 'styled-components';
 import { IconButton } from '../buttons';
+import { QuoteWrapper } from '../message/style';
 import {
   FlexRow,
   hexa,
@@ -11,6 +13,7 @@ import {
 import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
 
 export const ChatInputContainer = styled(FlexRow)`
+  flex: none;
   display: flex;
   flex-direction: column;
   z-index: inherit;
@@ -26,14 +29,13 @@ export const ChatInputContainer = styled(FlexRow)`
 export const ChatInputWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   width: 100%;
   margin: 0;
-  padding: 16px 16px 0px;
-  background-color: ${props => props.theme.bg.default};
-  border-top: 1px solid ${({ theme }) => theme.bg.border};
-  box-shadow: -1px 0 0 ${props => props.theme.bg.border},
-    1px 0 0 ${props => props.theme.bg.border};
+  padding: 8px 12px 0 12px;
+  background-color: ${theme.bg.default};
+  border-top: 1px solid ${theme.bg.border};
+  box-shadow: -1px 0 0 ${theme.bg.border}, 1px 0 0 ${theme.bg.border};
 
   @media (max-width: 768px) {
     bottom: ${props => (props.focus ? '0' : 'auto')};
@@ -56,13 +58,17 @@ export const Form = styled.form`
 `;
 
 export const InputWrapper = styled(EditorWrapper)`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   flex: auto;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   line-height: 20px;
   min-height: 40px;
-  max-width: 100%;
-  padding: 8px 40px 8px 16px;
+  max-width: calc(100% - 32px);
+  padding: ${props => (props.hasAttachment ? '16px' : '8px 16px')};
+  transition: padding 0.2s ease-in-out;
   border-radius: 24px;
   border: 1px solid
     ${props =>
@@ -73,7 +79,7 @@ export const InputWrapper = styled(EditorWrapper)`
   color: ${props =>
     props.networkDisabled
       ? props.theme.special.default
-      : props.theme.text.default};
+      : props.theme.text.secondary};
   background: ${props =>
     props.networkDisabled
       ? hexa(props.theme.special.default, 0.1)
@@ -120,24 +126,43 @@ export const InputWrapper = styled(EditorWrapper)`
 
   pre {
     ${monoStack};
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
-    background-color: #f5f8fc;
-    border: 1px solid ${props => props.theme.bg.border};
+    background-color: ${theme.bg.wash};
+    border: 1px solid ${theme.bg.border};
     border-radius: 2px;
     padding: 4px;
     margin-right: 16px;
   }
+
+  blockquote {
+    line-height: 1.5;
+    border-left: 4px solid ${theme.bg.border};
+    color: ${theme.text.alt};
+    padding: 4px 12px 4px 16px;
+  }
+
+  ${props =>
+    props.hasAttachment &&
+    css`
+      > div:not(:first-of-type) {
+        margin-top: 16px;
+      }
+
+      > div:last-of-type {
+        margin-right: 32px;
+      }
+    `};
 `;
 
 export const SendButton = styled(IconButton)`
-  position: absolute;
-  right: 12px;
   height: 32px;
   width: 32px;
+  bottom: 4px;
+  margin-left: 4px;
   background-color: transparent;
   transition: ${Transition.hover.off};
-  top: calc(50% - 16px);
+  align-self: flex-end;
 `;
 
 export const MediaInput = styled.input`
@@ -146,7 +171,6 @@ export const MediaInput = styled.input`
   opacity: 0;
   overflow: hidden;
   position: absolute;
-  z-index: ${zIndex.hidden};
 `;
 
 export const MediaLabel = styled.label`
@@ -154,16 +178,16 @@ export const MediaLabel = styled.label`
   outline: 0;
   display: inline-block;
   background: transparent;
-  transition: all 0.3s ease-out;
+  transition: color 0.3s ease-out;
   border-radius: 4px;
   padding: 4px;
   position: relative;
   top: 2px;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
 
   &:hover {
     cursor: pointer;
-    color: ${({ theme }) => theme.brand.default};
+    color: ${theme.brand.default};
   }
 `;
 
@@ -185,21 +209,21 @@ export const PhotoSizeError = styled.div`
   align-content: center;
   padding: 8px 16px;
   width: 100%;
-  background: #fff1cc;
-  border-top: 1px solid #ffd566;
+  background: ${theme.special.wash};
+  border-top: 1px solid ${theme.special.border};
 
   &:hover {
     cursor: pointer;
 
     p {
-      color: ${props => props.theme.brand.default};
+      color: ${theme.brand.default};
     }
   }
 
   p {
     font-size: 14px;
     line-height: 1.4;
-    color: #715818;
+    color: ${theme.special.default};
     max-width: calc(100% - 48px);
   }
 
@@ -208,61 +232,59 @@ export const PhotoSizeError = styled.div`
   }
 `;
 
-export const MediaPreview = styled.div`
-  padding-top: 8px;
-  padding-bottom: 10px;
+export const RemovePreviewButton = styled.button`
+  position: absolute;
+  top: 0;
+  right: 0;
+  vertical-align: top;
+  background-color: ${theme.text.placeholder};
+  color: ${theme.text.reverse};
+  border: none;
+  border-radius: 100%;
+  outline: none;
+  padding: 4px;
+  max-height: 24px;
+  max-width: 24px;
+  cursor: pointer;
+  z-index: 1;
 
-  & > img {
-    border-radius: 16px;
-    max-width: 37%;
-  }
-
-  button {
-    position: relative;
-    top: -5px;
-    left: -25px;
-    vertical-align: top;
-    background: #16171a;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
-    transition: box-shadow 0.3s ease-in-out;
-    border: none;
-    border-radius: 40px;
-    outline: none;
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-  }
-
-  button:after {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    content: '\\d7';
-    font-size: 21px;
-    color: #fff;
-    line-height: 28px;
-    text-align: center;
-  }
-
-  button:hover {
-    box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.15);
+  &:hover {
+    background-color: ${theme.warn.alt};
   }
 `;
 
-export const Preformated = styled.code`
-  background-color: #f7f7f9;
-  border: 1px solid #e1e1e8;
+export const PreviewWrapper = styled.div`
+  position: relative;
+  padding: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid ${theme.bg.border};
+
+  ${QuoteWrapper} {
+    margin: 0;
+    margin-top: -6px;
+    margin-left: -12px;
+    border-left: 0;
+  }
+
+  & > img {
+    border-radius: 8px;
+    max-width: 37%;
+  }
+`;
+
+export const Preformatted = styled.code`
+  background-color: ${theme.bg.wash};
+  border: 1px solid ${theme.bg.border};
   white-space: nowrap;
 `;
 
 export const MarkdownHint = styled.div`
   display: flex;
+  flex: 0 0 auto;
   justify-content: flex-end;
   margin-right: 12px;
   font-size: 11px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   line-height: 1;
   padding: 6px 0;
   opacity: ${({ showHint }) => (showHint ? 1 : 0)};

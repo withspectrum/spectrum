@@ -18,34 +18,6 @@ const createSubscriptionsServer = (server: any, path: string) => {
       execute,
       subscribe,
       schema,
-      onOperation: (_: any, params: Object) => {
-        const errorFormatter = createErrorFormatter();
-        params.formatError = errorFormatter;
-        return params;
-      },
-      onDisconnect: rawSocket => {
-        getUserIdFromReq(rawSocket.upgradeReq)
-          .then(id => {
-            setUserOnline(id, false);
-          })
-          .catch(err => {
-            // Ignore errors
-          });
-      },
-      onConnect: (connectionParams, rawSocket) =>
-        getUserIdFromReq(rawSocket.upgradeReq)
-          .then(id => setUserOnline(id, true))
-          .then(user => {
-            return {
-              user,
-              loaders: createLoaders({ cache: false }),
-            };
-          })
-          .catch(err => {
-            return {
-              loaders: createLoaders({ cache: false }),
-            };
-          }),
     },
     {
       server,

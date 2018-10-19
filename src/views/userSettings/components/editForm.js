@@ -5,7 +5,6 @@ import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
-import { track } from 'src/helpers/events';
 import { Button } from 'src/components/buttons';
 import Icon from 'src/components/icons';
 import { SERVER_URL, CLIENT_URL } from 'src/api/constants';
@@ -33,11 +32,10 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
   PRO_USER_MAX_IMAGE_SIZE_BYTES,
-  FREE_USER_MAX_IMAGE_SIZE_BYTES,
-  FREE_USER_MAX_IMAGE_SIZE_STRING,
 } from 'src/helpers/images';
 import { Notice } from 'src/components/listItems/style';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
+import type { Dispatch } from 'redux';
 
 type State = {
   website: ?string,
@@ -53,13 +51,12 @@ type State = {
   createError: boolean,
   isLoading: boolean,
   photoSizeError: string,
-  proGifError: boolean,
   usernameError: string,
 };
 
 type Props = {
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   client: Object,
   editUser: Function,
 };
@@ -84,7 +81,6 @@ class UserWithData extends React.Component<Props, State> {
       createError: false,
       isLoading: false,
       photoSizeError: '',
-      proGifError: false,
       usernameError: '',
     };
   }
@@ -131,55 +127,34 @@ class UserWithData extends React.Component<Props, State> {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (!file) return;
+
     this.setState({
       isLoading: true,
     });
 
     if (!file) return;
 
-    if (
-      file &&
-      file.size > FREE_USER_MAX_IMAGE_SIZE_BYTES &&
-      !this.props.currentUser.isPro
-    ) {
-      return this.setState({
-        photoSizeError: `Upgrade to Pro to upload files up to ${PRO_USER_MAX_IMAGE_SIZE_STRING}. Otherwise, try uploading a photo less than ${FREE_USER_MAX_IMAGE_SIZE_STRING}.`,
-        isLoading: false,
-      });
-    }
-
-    if (
-      file &&
-      file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES &&
-      this.props.currentUser.isPro
-    ) {
+    if (file && file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES) {
       return this.setState({
         photoSizeError: `Try uploading a file less than ${PRO_USER_MAX_IMAGE_SIZE_STRING}.`,
         isLoading: false,
       });
     }
 
-    if (file && file.type === 'image/gif' && !this.props.currentUser.isPro) {
-      return this.setState({
-        isLoading: false,
-        proGifError: true,
-      });
-    }
-
     reader.onloadend = () => {
-      track('user', 'profile photo uploaded', null);
-
       this.setState({
         file: file,
         // $FlowFixMe
         image: reader.result,
         photoSizeError: '',
-        proGifError: false,
         isLoading: false,
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   setCoverPhoto = e => {
@@ -192,55 +167,30 @@ class UserWithData extends React.Component<Props, State> {
       isLoading: true,
     });
 
-    if (
-      file &&
-      file.size > FREE_USER_MAX_IMAGE_SIZE_BYTES &&
-      !this.props.currentUser.isPro
-    ) {
-      return this.setState({
-        photoSizeError: `Upgrade to Pro to upload files up to ${PRO_USER_MAX_IMAGE_SIZE_STRING}. Otherwise, try uploading a photo less than ${FREE_USER_MAX_IMAGE_SIZE_STRING}.`,
-        isLoading: false,
-      });
-    }
-
-    if (
-      file &&
-      file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES &&
-      this.props.currentUser.isPro
-    ) {
+    if (file && file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES) {
       return this.setState({
         photoSizeError: `Try uploading a file less than ${PRO_USER_MAX_IMAGE_SIZE_STRING}.`,
         isLoading: false,
       });
     }
 
-    if (file && file.type === 'image/gif' && !this.props.currentUser.isPro) {
-      return this.setState({
-        isLoading: false,
-        proGifError: true,
-      });
-    }
-
     reader.onloadend = () => {
-      track('user', 'cover photo uploaded', null);
-
       this.setState({
         coverFile: file,
         // $FlowFixMe
         coverPhoto: reader.result,
         photoSizeError: '',
-        proGifError: false,
         isLoading: false,
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   save = e => {
     e.preventDefault();
-
-    track('user', 'edited', null);
 
     const {
       name,
@@ -326,7 +276,6 @@ class UserWithData extends React.Component<Props, State> {
       nameError,
       isLoading,
       photoSizeError,
-      proGifError,
       usernameError,
     } = this.state;
 
@@ -345,27 +294,16 @@ class UserWithData extends React.Component<Props, State> {
               onChange={this.setCoverPhoto}
               defaultValue={coverPhoto}
               preview={true}
-              allowGif
             />
             <PhotoInput
+              type={'user'}
               onChange={this.setProfilePhoto}
               defaultValue={image}
-              user
-              allowGif
             />
           </ImageInputWrapper>
 
           {photoSizeError && (
             <Notice style={{ marginTop: '32px' }}>{photoSizeError}</Notice>
-          )}
-
-          {proGifError && (
-            <Notice style={{ marginTop: '32px' }}>
-              Upgrade to Pro to use a gif as your profile or cover photo{' '}
-              <span role="img" aria-label="finger pointing right emoji">
-                👉
-              </span>
-            </Notice>
           )}
 
           <div style={{ height: '8px' }} />

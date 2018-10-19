@@ -29,8 +29,7 @@ export const getTopCommunities = (amount: number): Array<Object> => {
         communityIds.map(community => {
           return db
             .table('usersCommunities')
-            .getAll(community, { index: 'communityId' })
-            .filter({ isMember: true })
+            .getAll([community, true], { index: 'communityIdAndIsMember' })
             .count()
             .run()
             .then(count => {

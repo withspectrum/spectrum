@@ -1,35 +1,30 @@
+// @flow
 import * as React from 'react';
 import Link from 'src/components/link';
-import { connect } from 'react-redux';
-import compose from 'recompose/compose';
-import Icon from '../icons';
-import Badge from '../badges';
-import Avatar from '../avatar';
-import { convertTimestampToDate } from '../../helpers/utils';
-import Reputation from '../reputation';
+import Badge from 'src/components/badges';
+import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
+import { CommunityHoverProfile } from 'src/components/hoverProfile';
+import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
+import Reputation from 'src/components/reputation';
+import ChannelComponent from './channel';
 import {
   Wrapper,
-  WrapperLi,
   Col,
   Row,
   Heading,
   Meta,
   Description,
   ActionContainer,
-  BadgeContainer,
 } from './style';
 
 type CommunityProps = {
-  community: {
-    profilePhoto: string,
-    name: string,
-    slug: string,
-    description: string,
-  },
+  community: CommunityInfoType,
   showDescription?: boolean,
   showMeta?: boolean,
   meta?: any,
   children?: any,
+  reputation?: number,
+  showHoverProfile?: boolean,
 };
 
 export class CommunityListItem extends React.Component<CommunityProps> {
@@ -38,52 +33,40 @@ export class CommunityListItem extends React.Component<CommunityProps> {
 
     return (
       <Wrapper>
-        <Row>
-          <Avatar
-            community={community}
-            radius={4}
-            src={`${community.profilePhoto}`}
-            size={'32'}
-            noLink
-          />
-          <Col style={{ marginLeft: '12px' }}>
-            <Heading>{community.name}</Heading>
-
-            {/* greater than -1 because we want to pass the 0 to the component so it returns null */}
-            {reputation > -1 && (
-              <Meta>
-                <Reputation size={'default'} reputation={reputation} />
-              </Meta>
-            )}
-          </Col>
-          <ActionContainer className={'action'}>{children}</ActionContainer>
-        </Row>
-        {showDescription && <Description>{community.description}</Description>}
+        <CommunityHoverProfile id={community.id} style={{ flex: '1 0 auto' }}>
+          <Row>
+            <CommunityAvatar
+              community={community}
+              size={32}
+              showHoverProfile={false}
+              clickable={false}
+            />
+            <Col style={{ marginLeft: '12px' }}>
+              <Heading>{community.name}</Heading>
+              {/* greater than -1 because we want to pass the 0 to the component so it returns null */}
+              {typeof reputation === 'number' &&
+                reputation > -1 && (
+                  <Meta>
+                    <Reputation size={'default'} reputation={reputation} />
+                  </Meta>
+                )}
+            </Col>
+            <ActionContainer className={'action'}>{children}</ActionContainer>
+          </Row>
+          {showDescription && (
+            <Description>{community.description}</Description>
+          )}
+        </CommunityHoverProfile>
       </Wrapper>
     );
   }
 }
 
-export const ChannelListItem = (props: CardProps): React$Element<any> => {
-  return (
-    <Wrapper clickable={props.clickable}>
-      <Row>
-        <Col>
-          <Heading>
-            {props.contents.isPrivate ? (
-              <Icon glyph={'channel-private'} size={32} />
-            ) : (
-              <Icon glyph={'channel'} size={32} />
-            )}
-            {props.contents.name}
-            {props.contents.isArchived && ' (Archived)'}
-          </Heading>
-          <Meta>{props.meta && props.meta}</Meta>
-        </Col>
-        <ActionContainer className={'action'}>{props.children}</ActionContainer>
-      </Row>
-    </Wrapper>
-  );
+type CardProps = {
+  clickable?: boolean,
+  contents: any,
+  meta?: string,
+  children?: any,
 };
 
 export const ThreadListItem = (props: CardProps): React$Element<any> => {
@@ -99,29 +82,6 @@ export const ThreadListItem = (props: CardProps): React$Element<any> => {
   );
 };
 
-export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
-  return (
-    <WrapperLi clickable={props.clickable}>
-      <Row>
-        <Col>
-          <Link to={`/${props.contents.community.slug}/${props.contents.slug}`}>
-            <Heading>
-              {props.contents.isPrivate ? (
-                <Icon glyph={'channel-private'} size={32} />
-              ) : (
-                <Icon glyph={'channel'} size={32} />
-              )}
-              {props.contents.name}
-            </Heading>
-          </Link>
-          <Meta>{props.meta}</Meta>
-        </Col>
-        <ActionContainer className={'action'}>{props.children}</ActionContainer>
-      </Row>
-    </WrapperLi>
-  );
-};
-
 export const UserListItem = ({
   user,
   children,
@@ -130,11 +90,13 @@ export const UserListItem = ({
   const reputation = user.contextPermissions
     ? user.contextPermissions.reputation &&
       typeof user.contextPermissions.reputation === 'number'
+      ? user.contextPermissions.reputation
+      : 0
     : user.reputation && typeof user.reputation === 'number'
       ? user.reputation
       : user.totalReputation && typeof user.totalReputation === 'number'
         ? user.totalReputation
-        : '0';
+        : 0;
 
   const role =
     user.contextPermissions && user.contextPermissions.isOwner
@@ -146,13 +108,7 @@ export const UserListItem = ({
   return (
     <Wrapper border>
       <Row>
-        <Avatar
-          radius={20}
-          user={user}
-          src={`${user.profilePhoto}`}
-          size={'40'}
-          link={user.username ? `/users/${user.username}` : null}
-        />
+        <UserAvatar user={user} size={40} />
         <Col
           style={{
             marginLeft: '16px',
@@ -183,58 +139,4 @@ export const UserListItem = ({
   );
 };
 
-export const BillingListItem = props => {
-  return (
-    <div>
-      <Wrapper>
-        <Row>
-          {props.badge && (
-            <BadgeContainer>
-              <Badge type={props.badge || 'pro'} />
-            </BadgeContainer>
-          )}
-          <Col>
-            <Heading>{props.contents.name}</Heading>
-            <Meta>{props.meta}</Meta>
-          </Col>
-          <ActionContainer className={'action'}>
-            {props.children}
-          </ActionContainer>
-        </Row>
-        {!!props.contents.description && props.withDescription ? (
-          <Description>{props.contents.description}</Description>
-        ) : (
-          ''
-        )}
-      </Wrapper>
-    </div>
-  );
-};
-
-class InvoiceListItemPure extends React.Component {
-  render() {
-    const { invoice } = this.props;
-
-    return (
-      <WrapperLi>
-        <Row>
-          <Col>
-            <Heading>
-              ${(invoice.amount / 100)
-                .toFixed(2)
-                .replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}
-            </Heading>
-            <Meta>
-              {invoice.paidAt
-                ? `Paid on ${convertTimestampToDate(invoice.paidAt * 1000)}`
-                : 'Unpaid'}{' '}
-              · {invoice.sourceBrand} {invoice.sourceLast4}
-            </Meta>
-          </Col>
-        </Row>
-      </WrapperLi>
-    );
-  }
-}
-
-export const InvoiceListItem = compose(connect())(InvoiceListItemPure);
+export const ChannelListItem = ChannelComponent;

@@ -4,16 +4,19 @@ import { withApollo } from 'react-apollo';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 import compose from 'recompose/compose';
-import Icon from '../../../components/icons';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { updateNotificationsCount } from '../../../actions/notifications';
+import { isDesktopApp } from 'src/helpers/is-desktop-app';
+import Icon from 'src/components/icons';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import { updateNotificationsCount } from 'src/actions/notifications';
 import { NotificationDropdown } from './notificationDropdown';
 import getNotifications from 'shared/graphql/queries/notification/getNotifications';
 import type { GetNotificationsType } from 'shared/graphql/queries/notification/getNotifications';
 import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
 import { markSingleNotificationSeenMutation } from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import { Tab, NotificationTab, Label } from '../style';
-import { getDistinctNotifications } from '../../notifications/utils';
+import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
+import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   active: boolean,
@@ -31,7 +34,7 @@ type Props = {
   },
   refetch: Function,
   client: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   count: number,
 };
 
@@ -244,7 +247,7 @@ class NotificationsTab extends React.Component<Props, State> {
     // and we want to mark notifications as read as they view threads
     // if we do not pass in notifications from the state when this method is
     // invoked, it is because the incoming props have changed from the server
-    // i.e. a new notification was recieved, so we should therefore run
+    // i.e. a new notification was received, so we should therefore run
     // the rest of this method on the incoming notifications data
     const nodes = stateNotifications
       ? stateNotifications
@@ -254,7 +257,7 @@ class NotificationsTab extends React.Component<Props, State> {
     if (!nodes || nodes.length === 0) return this.setCount();
 
     // get distinct notifications by id
-    const distinct = getDistinctNotifications(nodes);
+    const distinct = deduplicateChildren(nodes, 'id');
 
     /*
       1. If the user is viewing a ?thread= url, don't display a notification
@@ -332,7 +335,7 @@ class NotificationsTab extends React.Component<Props, State> {
       return curr.dispatch(updateNotificationsCount('notifications', 0));
     }
 
-    const distinct = getDistinctNotifications(notifications);
+    const distinct = deduplicateChildren(notifications, 'id');
     // set to 0 if no notifications exist yet
     if (!distinct || distinct.length === 0) {
       return curr.dispatch(updateNotificationsCount('notifications', 0));
@@ -380,18 +383,31 @@ class NotificationsTab extends React.Component<Props, State> {
     const { active, currentUser, isLoading, count } = this.props;
     const { notifications, shouldRenderDropdown } = this.state;
 
+    // Keep the dock icon notification count indicator of the desktop app in sync
+    if (isDesktopApp()) {
+      window.interop.setBadgeCount(count);
+    }
+
     return (
-      <NotificationTab padOnHover onMouseOver={this.setHover}>
+      <NotificationTab
+        padOnHover
+        onMouseOver={this.setHover}
+        data-cy="navbar-notifications"
+      >
         <Tab
           data-active={active}
           aria-current={active ? 'page' : undefined}
           to="/notifications"
           rel="nofollow"
-          onClick={this.markAllAsSeen}
+          onClick={() => {
+            this.markAllAsSeen();
+            track(events.NAVIGATION_NOTIFICATIONS_CLICKED);
+          }}
         >
           <Icon
             glyph={count > 0 ? 'notification-fill' : 'notification'}
-            withCount={count > 10 ? '10+' : count > 0 ? count : false}
+            count={count > 10 ? '10+' : count > 0 ? count.toString() : null}
+            size={isDesktopApp() ? 28 : 32}
           />
           <Label hideOnDesktop>Notifications</Label>
         </Tab>

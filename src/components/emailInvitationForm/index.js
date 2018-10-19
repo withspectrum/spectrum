@@ -7,7 +7,6 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import Icon from '../icons';
 import isEmail from 'validator/lib/isEmail';
 import sendCommunityEmailInvitations from 'shared/graphql/mutations/community/sendCommunityEmailInvites';
-// import sendChannelEmailInvitations from 'shared/graphql/mutations/community/sendCommunityEmailInvites';
 import { Button } from '../buttons';
 import { Error } from '../formElements';
 import { SectionCardFooter } from '../settingsViews/style';
@@ -22,7 +21,7 @@ import {
 
 type Props = {
   id: string,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   currentUser: Object,
   sendEmailInvites: Function,
 };

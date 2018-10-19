@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import React from 'react';
 import styled, { css, keyframes } from 'styled-components';
 
@@ -38,9 +39,9 @@ export const ActiveOverlay = styled.span`
   bottom: 0;
   background: rgba(56, 24, 229, 0.1);
   border-radius: 8px;
-  border: 1px solid ${props => props.theme.brand.default};
+  border: 1px solid ${theme.brand.default};
   opacity: ${props => (props.active ? 1 : 0)};
-  transition: all 0.1s ease-in-out;
+  transition: opacity 0.1s ease-in-out;
 `;
 
 const Img = styled.img`

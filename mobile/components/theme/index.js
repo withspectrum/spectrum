@@ -1,9 +1,11 @@
-export default {
+// @flow
+export const theme = {
   bg: {
     default: '#FFFFFF',
     reverse: '#16171A',
     wash: '#F5F8FC',
     border: '#DFE7EF',
+    hairline: '#A3AFBF',
     inactive: '#DFE7EF',
   },
   brand: {
@@ -31,8 +33,8 @@ export default {
       alt: '#ea4335',
     },
     github: {
-      default: '#1475DA',
-      alt: '#1475DA',
+      default: '#16171A',
+      alt: '#828C99',
     },
     ph: {
       default: '#D85537',
@@ -65,6 +67,7 @@ export default {
     alt: '#828C99',
     reverse: '#FFFFFF',
     placeholder: '#A3AFBF',
+    secondary: '#494C57',
   },
   warn: {
     default: '#C21F3A',
@@ -74,3 +77,7 @@ export default {
     border: '#FFCCE5',
   },
 };
+
+export type ThemeType = typeof theme;
+
+export default theme;

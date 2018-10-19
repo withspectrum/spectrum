@@ -1,6 +1,5 @@
 // @flow
 // Server-side renderer for our React code
-import fs from 'fs';
 const debug = require('debug')('hyperion:renderer');
 import React from 'react';
 // $FlowIssue
@@ -8,16 +7,17 @@ import { renderToNodeStream } from 'react-dom/server';
 import { ServerStyleSheet } from 'styled-components';
 import { ApolloProvider, getDataFromTree } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
+import { SchemaLink } from 'apollo-link-schema';
+import schema from 'api/schema';
+import createLoaders from 'api/loaders';
 import { createHttpLink } from 'apollo-link-http';
 import {
   InMemoryCache,
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory';
 import { StaticRouter } from 'react-router';
-import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { HelmetProvider } from 'react-helmet-async';
-import * as graphql from 'graphql';
 import Loadable from 'react-loadable';
 import { getBundles } from 'react-loadable/webpack';
 import Raven from 'shared/raven';
@@ -26,35 +26,30 @@ import introspectionQueryResultData from 'shared/graphql/schema.json';
 import stats from '../../build/react-loadable.json';
 
 import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
-import { getFooter, getHeader, createScriptTag } from './html-template';
-import createCacheStream from '../create-cache-stream';
+import { getFooter, getHeader } from './html-template';
 
 // Browser shim has to come before any client imports
 import './browser-shim';
 const Routes = require('../../src/routes').default;
 import { initStore } from '../../src/store';
 
-const IN_MAINTENANCE_MODE =
-  process.env.REACT_APP_MAINTENANCE_MODE === 'enabled';
 const IS_PROD = process.env.NODE_ENV === 'production';
 const FORCE_DEV = process.env.FORCE_DEV;
+const FIVE_MINUTES = 300;
+const ONE_HOUR = 3600;
 
-if (!IS_PROD || FORCE_DEV) console.log('Querying API at localhost:3001/api');
+if (!IS_PROD || FORCE_DEV) debug('Querying API at localhost:3001/api');
 
 const renderer = (req: express$Request, res: express$Response) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
 
   debug(`server-side render ${req.url}`);
   debug(`querying API at https://${req.hostname}/api`);
-  // HTTP Link for queries and mutations including file uploads
-  const httpLink = createHttpLink({
-    uri:
-      IS_PROD && !FORCE_DEV
-        ? `https://${req.hostname}/api`
-        : 'http://localhost:3001/api',
-    credentials: 'include',
-    headers: {
-      cookie: req.headers.cookie,
+  const schemaLink = new SchemaLink({
+    schema,
+    context: {
+      user: req.user || null,
+      loaders: createLoaders(),
     },
   });
 
@@ -72,13 +67,22 @@ const renderer = (req: express$Request, res: express$Response) => {
   // Create an Apollo Client with a local network interface
   const client = new ApolloClient({
     ssrMode: true,
-    link: httpLink,
+    link: schemaLink,
     cache,
   });
   // Define the initial redux state
+  const { t } = req.query;
+
   const initialReduxState = {
     users: {
       currentUser: req.user ? req.user : null,
+    },
+    dashboardFeed: {
+      activeThread: t ? t : '',
+      mountedWithActiveThread: t ? t : '',
+      search: {
+        isOpen: false,
+      },
     },
   };
   // Create the Redux store
@@ -97,7 +101,8 @@ const renderer = (req: express$Request, res: express$Response) => {
         <HelmetProvider context={helmetContext}>
           <Provider store={store}>
             <StaticRouter location={req.url} context={routerContext}>
-              <Routes maintenanceMode={IN_MAINTENANCE_MODE} />
+              {/* $FlowIssue */}
+              <Routes currentUser={req.user} />
             </StaticRouter>
           </Provider>
         </HelmetProvider>
@@ -115,25 +120,25 @@ const renderer = (req: express$Request, res: express$Response) => {
         res.redirect(301, routerContext.url);
         return;
       }
-      // maintainance mode
-      if (IN_MAINTENANCE_MODE) {
-        debug('maintainance mode enabled, sending 503');
-        res.status(503);
-        res.set('Retry-After', '3600');
-      } else {
-        res.status(200);
-      }
+
+      res.status(200);
+
       const state = store.getState();
       const data = client.extract();
       const { helmet } = helmetContext;
       debug('write header');
-      let response = res;
+      // Use now's CDN to cache the rendered pages in CloudFlare for half an hour
+      // Ref https://zeit.co/docs/features/cdn
       if (!req.user) {
-        response = createCacheStream(req.path);
-        response.pipe(res);
+        res.setHeader(
+          'Cache-Control',
+          `max-age=${FIVE_MINUTES}, s-maxage=${ONE_HOUR}, stale-while-revalidate=${FIVE_MINUTES}, must-revalidate`
+        );
+      } else {
+        res.setHeader('Cache-Control', 's-maxage=0');
       }
 
-      response.write(
+      res.write(
         getHeader({
           metaTags:
             helmet.title.toString() +
@@ -147,7 +152,10 @@ const renderer = (req: express$Request, res: express$Response) => {
         renderToNodeStream(frontend)
       );
 
-      stream.pipe(response, { end: false });
+      stream.pipe(
+        res,
+        { end: false }
+      );
 
       const bundles = getBundles(stats, modules)
         // Create <script defer> tags from bundle objects
@@ -156,7 +164,7 @@ const renderer = (req: express$Request, res: express$Response) => {
         .filter((value, index, self) => self.indexOf(value) === index);
       debug('bundles used:', bundles.join(','));
       stream.on('end', () =>
-        response.end(
+        res.end(
           getFooter({
             state,
             data,

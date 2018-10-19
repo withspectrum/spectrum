@@ -5,8 +5,19 @@ import type { ThreadParticipantType } from '../thread/threadParticipant';
 
 export type MessageInfoType = {
   id: string,
-  timestamp: Date,
+  timestamp: string,
   messageType: string,
+  parent: {
+    id: string,
+    timestamp: Date,
+    messageType: string,
+    author: {
+      ...$Exact<ThreadParticipantType>,
+    },
+    content: {
+      body: string,
+    },
+  },
   author: {
     ...$Exact<ThreadParticipantType>,
   },
@@ -24,6 +35,17 @@ export default gql`
     id
     timestamp
     messageType
+    parent {
+      id
+      timestamp
+      messageType
+      author {
+        ...threadParticipant
+      }
+      content {
+        body
+      }
+    }
     author {
       ...threadParticipant
     }

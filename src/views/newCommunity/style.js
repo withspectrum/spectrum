@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import Card from '../../components/card';
@@ -20,7 +21,7 @@ export const Container = styled(Card)`
 export const Actions = styled.div`
   display: flex;
   justify-content: space-between;
-  border-top: 2px solid ${props => props.theme.bg.border};
+  border-top: 2px solid ${theme.bg.border};
   padding: 24px;
   background: #fff;
   border-radius: 0 0 12px 12px;
@@ -28,7 +29,7 @@ export const Actions = styled.div`
 
 export const Title = styled.h1`
   font-weight: 900;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   font-size: 24px;
   letter-spacing: -0.1px;
   padding: 24px 24px 8px;
@@ -38,21 +39,23 @@ export const Title = styled.h1`
 export const Description = styled.h3`
   font-size: 16px;
   font-weight: 500;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   line-height: 1.4;
   padding: 8px 24px 16px;
   text-align: ${props => (props.centered ? 'center' : 'left')};
 `;
 
 export const Divider = styled.div`
-  border-bottom: 2px solid ${props => props.theme.bg.border};
+  border-bottom: 2px solid ${theme.bg.border};
   width: 100%;
   display: block;
   padding-top: 24px;
   margin-bottom: 24px;
 `;
 
-export const ContentContainer = styled.div`padding: 0 24px 24px;`;
+export const ContentContainer = styled.div`
+  padding: 0 24px 24px;
+`;
 
 export const FormContainer = styled.div``;
 

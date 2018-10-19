@@ -20,6 +20,8 @@ import deleteCurrentUserMutation from 'shared/graphql/mutations/user/deleteCurre
 import { SERVER_URL } from 'src/api/constants';
 import Link from 'src/components/link';
 import { Loading } from 'src/components/loading';
+import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type State = {
   isLoading: boolean,
@@ -30,7 +32,7 @@ type State = {
 type Props = {
   isLoading: boolean,
   deleteCurrentUser: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   data: {
     user: GetUserCommunityConnectionType,
   },
@@ -56,7 +58,10 @@ class DeleteAccountForm extends React.Component<Props, State> {
     }
   }
 
-  initDelete = () => this.setState({ deleteInited: true });
+  initDelete = () => {
+    track(events.USER_DELETED_INITED);
+    this.setState({ deleteInited: true });
+  };
 
   cancelDelete = () => this.setState({ deleteInited: false });
 
@@ -64,6 +69,8 @@ class DeleteAccountForm extends React.Component<Props, State> {
     this.setState({
       isLoading: true,
     });
+
+    track(events.USER_DELETED);
 
     this.props
       .deleteCurrentUser()
@@ -78,18 +85,9 @@ class DeleteAccountForm extends React.Component<Props, State> {
 
   render() {
     const { isLoading, ownsCommunities, deleteInited } = this.state;
-    const { data: { user } } = this.props;
-
-    if (user && user.isPro) {
-      return (
-        <SectionCard>
-          <SectionTitle>Delete my account</SectionTitle>
-          <SectionSubtitle>
-            Please downgrade from the Pro plan before deleting your account.
-          </SectionSubtitle>
-        </SectionCard>
-      );
-    }
+    const {
+      data: { user },
+    } = this.props;
 
     if (user) {
       return (

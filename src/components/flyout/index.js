@@ -1,11 +1,12 @@
 // @flow
+import theme from 'shared/theme';
 import React from 'react';
 import styled from 'styled-components';
-import { FlexCol, FlexRow, Transition, zIndex } from '../globals';
+import { FlexCol, FlexRow, zIndex } from '../globals';
 
 const StyledFlyout = styled(FlexRow)`
-  background-color: ${props => props.theme.bg.default};
-  border: 1px solid ${props => props.theme.bg.border};
+  background-color: ${theme.bg.default};
+  border: 1px solid ${theme.bg.border};
   border-radius: 4px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   position: absolute;
@@ -13,8 +14,8 @@ const StyledFlyout = styled(FlexRow)`
   right: -25%;
   top: 36px;
   z-index: ${zIndex.flyout};
-  color: ${({ theme }) => theme.text.default};
-  transition: ${Transition.dropdown.off};
+  color: ${theme.text.default};
+  ${props => props.style};
 `;
 
 const StyledRow = styled(FlexCol)`

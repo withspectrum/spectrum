@@ -19,7 +19,8 @@ aliases:
   - &yarn
     |
       yarn
-      cd ./mobile && yarn && yarn setup
+      cd ./mobile && yarn && yarn setup && cd ..
+      cd ./desktop && yarn && cd ..
 
   - &install-rethinkdb
     name: Install RethinkDB 2.3.5
@@ -36,12 +37,15 @@ aliases:
     background: true
 
   - &setup-and-build-web
-    name: Setup and build
+    name: Setup and build web
     command:
       |
         cp now-secrets.example.json now-secrets.json
         yarn run build:web
-        yarn run build:api
+
+  - &build-api
+    name: Build API
+    command: yarn run build:api
 
   - &start-api
     name: Start the API in the background
@@ -96,22 +100,41 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/spectrum
-      - run: node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"
+      - run: yarn run db:migrate
+      - run: yarn run db:seed
+      - run:
+          name: Run Unit Tests
+          command: yarn run test:ci
       - run: *setup-and-build-web
+      - run: *build-api
       - run: *start-api
       - run: *start-web
       # Wait for the API and webserver to start
       - run: ./node_modules/.bin/wait-on http://localhost:3000 http://localhost:3001
       - run:
-          name: Run Unit Tests
-          command: yarn run test:ci
-      - run:
-          name: Danger
-          when: always
-          command: test $DANGER_GITHUB_API_TOKEN && yarn run danger ci || echo "forks are not allowed to run danger"
-      - run:
           name: Run E2E Tests
           command: test $CYPRESS_RECORD_KEY && yarn run test:e2e -- --record || yarn run test:e2e
+      - run:
+          name: Build desktop apps
+          command: yarn run build:desktop
+
+  deploy_alpha:
+    <<: *js_defaults
+    docker:
+      - image: circleci/node:8-browsers
+    steps:
+      - attach_workspace:
+          at: ~/spectrum
+      - run: *build-api
+      - run:
+          name: Deploy and alias API
+          command: |
+            cd build-api
+            npx now-cd --alias "alpha=api.alpha.spectrum.chat" --team space-program
+            cd ..
+      - run:
+          name: Deploy and alias Hyperion
+          command: npx now-cd --alias "alpha=hyperion.alpha.spectrum.chat" --team space-program
 
   # Run eslint, flow etc.
   test_static_js:
@@ -167,10 +190,11 @@ workflows:
   test:
     jobs:
       - checkout_environment
+
+      # Testing
       - test_mobile_js:
           requires:
             - checkout_environment
-
       # Disabled as Expo is fixing their critical issue with Detox
       # - test_mobile_native:
       #     requires:
@@ -181,3 +205,12 @@ workflows:
       - test_static_js:
           requires:
             - checkout_environment
+
+      # Deployment
+      - deploy_alpha:
+          requires:
+            - test_static_js
+            - test_web
+          filters:
+            branches:
+              only: alpha

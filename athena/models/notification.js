@@ -32,7 +32,7 @@ export const checkForExistingNotification = (
       return notifications[0];
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       return null;
     });
 };
@@ -78,6 +78,15 @@ export const getNotifications = (notificationIds: Array<string>) => {
     .eqJoin('id', db.table('usersNotifications'), { index: 'notificationId' })
     .without({ right: ['id'] })
     .zip()
+    .run();
+};
+
+export const getNotification = (
+  notificationId: string
+): Promise<DBNotification> => {
+  return db
+    .table('notifications')
+    .get(notificationId)
     .run();
 };
 

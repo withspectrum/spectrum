@@ -1,17 +1,20 @@
 // @flow
 import gql from 'graphql-tag';
-import type { NotificationEventType } from 'shared/types';
+import type {
+  NotificationEventType,
+  NotificationPayloadType,
+} from 'shared/types';
 
 type Node = {
   id: string,
-  type: string,
+  type: NotificationPayloadType,
   payload: string,
 };
 
 export type NotificationInfoType = {
   id: string,
-  createdAt: Date,
-  modifiedAt: ?Date,
+  createdAt: string,
+  modifiedAt: ?string,
   actors: Array<Node>,
   context: Node,
   entities: Array<Node>,

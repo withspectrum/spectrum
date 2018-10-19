@@ -7,7 +7,6 @@ npm-debug.log
 build
 .DS_Store
 src/config/FirebaseConfig.js
-npm-debug.log
 rethinkdb_data
 debug
 now-secrets.json
@@ -19,7 +18,6 @@ build-chronos
 build-mercury
 build-vulcan
 build-hyperion
-build-pluto
 package-lock.json
 .vscode
 dump.rdb

@@ -2,9 +2,8 @@
 import { db } from './db';
 import { parseRange } from './utils';
 
-export const getTopMembersInCommunity = (
-  communityId: string
-): Promise<Array<string>> => {
+// prettier-ignore
+export const getTopMembersInCommunity = (communityId: string): Promise<Array<string>> => {
   const { current } = parseRange('weekly');
 
   return db
@@ -14,7 +13,7 @@ export const getTopMembersInCommunity = (
     .group('userId')
     .run()
     .then(results => {
-      if (!results) return null;
+      if (!results) return [];
       const sorted = results
         .map(c => ({
           userId: c.group,

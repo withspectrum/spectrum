@@ -8,6 +8,12 @@ import {
   blockUserInCommunity,
   checkUserPermissionsInCommunity,
 } from '../../models/usersCommunities';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateCommunity,
+} from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -16,74 +22,120 @@ type Input = {
   },
 };
 
-export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
-  const currentUser = user;
-  const { communityId, userId: userToEvaluateId } = input;
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { user, loaders } = ctx;
+  const { communityId, userId: userToEvaluateId } = args.input;
 
-  if (!currentUser) {
-    return new UserError(
-      'You must be signed in to manage moderators in this community.'
-    );
-  }
+  if (!await canModerateCommunity(user.id, communityId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_BLOCKED_MEMBER_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
 
-  const [
-    currentUserPermissions,
-    userToEvaluatePermissions,
-    community,
-  ] = await Promise.all([
-    checkUserPermissionsInCommunity(communityId, currentUser.id),
-    checkUserPermissionsInCommunity(communityId, userToEvaluateId),
-    getCommunityById(communityId),
-  ]);
-
-  if (!community) {
-    return new UserError("We couldn't find that community.");
-  }
-
-  // if no permissions exist, the user performing this mutation isn't even
-  // a member of this community
-  if (!currentUserPermissions || currentUserPermissions.length === 0) {
-    return new UserError('You must own this community to manage members.');
-  }
-
-  if (!userToEvaluatePermissions || userToEvaluatePermissions === 0) {
-    return new UserError('This person is not a member of your community.');
-  }
-
-  const currentUserPermission = currentUserPermissions[0];
-  const userToEvaluatePermission = userToEvaluatePermissions[0];
-
-  if (!userToEvaluatePermission.isMember) {
-    return new UserError('This person is not a member of your community.');
-  }
-
-  if (userToEvaluatePermission.isBlocked) {
-    return new UserError('This person is already blocked in your community.');
-  }
-
-  if (!currentUserPermission.isOwner && !currentUserPermission.isModerator) {
     return new UserError(
       'You must own or moderate this community to manage members.'
     );
   }
 
-  // all checks pass
-  if (currentUserPermission.isOwner || currentUserPermission.isModerator) {
-    const channels = await getChannelsByCommunity(community.id);
-    const channelIds = channels.map(c => c.id);
-    const blockInChannelPromises = channelIds.map(
-      async channelId => await blockUserInChannel(channelId, userToEvaluateId)
-    );
+  const [userToEvaluatePermissions, community] = await Promise.all([
+    checkUserPermissionsInCommunity(communityId, userToEvaluateId),
+    getCommunityById(communityId),
+  ]);
 
-    return await Promise.all([
-      blockUserInCommunity(communityId, userToEvaluateId),
-      ...blockInChannelPromises,
-    ])
-      .then(([newPermissions]) => newPermissions)
-      .catch(err => new UserError(err));
+  if (!community) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_BLOCKED_MEMBER_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'no community',
+      },
+    });
+
+    return new UserError("We couldn't find that community.");
   }
 
-  return new UserError(
-    "We weren't able to process your request to block a member in this community."
-  );
-};
+  if (!userToEvaluatePermissions || userToEvaluatePermissions === 0) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_BLOCKED_MEMBER_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'not member',
+      },
+    });
+
+    return new UserError('This person is not a member of your community.');
+  }
+
+  const userToEvaluatePermission = userToEvaluatePermissions[0];
+
+  if (!userToEvaluatePermission.isMember) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_BLOCKED_MEMBER_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'not member',
+      },
+    });
+
+    return new UserError('This person is not a member of your community.');
+  }
+
+  if (userToEvaluatePermission.isBlocked) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_BLOCKED_MEMBER_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'blocked',
+      },
+    });
+
+    return new UserError('This person is already blocked in your community.');
+  }
+
+  const channels = await getChannelsByCommunity(community.id);
+  const channelIds = channels.map(c => c.id);
+  const blockInChannelPromises = channelIds.map(async channelId => {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_BLOCKED_MEMBER_IN_CHANNEL,
+      context: { channelId },
+    });
+
+    return await blockUserInChannel(channelId, userToEvaluateId);
+  });
+
+  return await Promise.all([
+    blockUserInCommunity(communityId, userToEvaluateId),
+    ...blockInChannelPromises,
+  ])
+    .then(([newPermissions]) => {
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_BLOCKED_MEMBER_IN_COMMUNITY,
+        context: { communityId },
+      });
+
+      return newPermissions;
+    })
+    .catch(err => {
+      trackQueue.add({
+        userId: user.id,
+        event: events.USER_BLOCKED_MEMBER_IN_COMMUNITY_FAILED,
+        context: { communityId },
+        properties: {
+          reason: 'unknown error',
+          error: err.message,
+        },
+      });
+
+      return new UserError(err);
+    });
+});

@@ -1,7 +1,5 @@
 // @flow
 const debug = require('debug')('api:subscriptions:notification');
-import { withFilter } from 'graphql-subscriptions';
-import { userIsMemberOfChannel } from './utils';
 import { listenToUpdatedThreads } from '../models/thread';
 import {
   getUserUsersChannels,
@@ -26,7 +24,7 @@ module.exports = {
         info: GraphQLResolveInfo
       ) => {
         if (!channelIds && (!user || !user.id))
-          throw new UserError(
+          return new UserError(
             'Please provide a list of channels to listen to when not signed in.'
           );
 
@@ -38,7 +36,7 @@ module.exports = {
         } else {
           // If specific channels were passed make sure the user has permission to listen in those channels
           const permissions = await getUsersPermissionsInChannels(
-            ids.map(id => [user.id, id])
+            ids.map(id => [user ? user.id : null, id])
           );
           ids = permissions
             .filter(

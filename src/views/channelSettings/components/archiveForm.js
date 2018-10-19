@@ -11,14 +11,18 @@ import {
   SectionSubtitle,
   SectionCardFooter,
 } from '../../../components/settingsViews/style';
+import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   channel: GetChannelType,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 class Channel extends React.Component<Props> {
   initArchiveChannel = () => {
+    const { channel } = this.props;
+
     const message = (
       <div>
         <p>
@@ -28,9 +32,14 @@ class Channel extends React.Component<Props> {
       </div>
     );
 
+    track(events.CHANNEL_ARCHIVED_INITED, {
+      channel: transformations.analyticsChannel(channel),
+      community: transformations.analyticsCommunity(channel.community),
+    });
+
     return this.props.dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {
-        id: this.props.channel.id,
+        id: channel.id,
         entity: 'channel-archive',
         message,
         buttonLabel: 'Archive',
@@ -39,6 +48,13 @@ class Channel extends React.Component<Props> {
   };
 
   initRestoreChannel = () => {
+    const { channel } = this.props;
+
+    track(events.CHANNEL_RESTORED_INITED, {
+      channel: transformations.analyticsChannel(channel),
+      community: transformations.analyticsCommunity(channel.community),
+    });
+
     return this.props.dispatch(
       openModal('RESTORE_CHANNEL_MODAL', {
         channel: this.props.channel,
@@ -76,21 +92,12 @@ class Channel extends React.Component<Props> {
     } else {
       return (
         <SectionCard>
-          <SectionTitle>
-            Restore channel {channel.isPrivate ? '· $10/mo' : ''}
-          </SectionTitle>
-          {channel.isPrivate ? (
-            <SectionSubtitle>
-              Restoring a private channel will automatically resume your
-              subscription at $10 per month. The channel will be restored and
-              channel members will be able to start new conversations.
-            </SectionSubtitle>
-          ) : (
-            <SectionSubtitle>
-              The channel will be restored and channel members will be able to
-              start new conversations.
-            </SectionSubtitle>
-          )}
+          <SectionTitle>Restore channel</SectionTitle>
+
+          <SectionSubtitle>
+            The channel will be restored and channel members will be able to
+            start new conversations.
+          </SectionSubtitle>
 
           <SectionCardFooter>
             <Button onClick={this.initRestoreChannel}>Restore Channel</Button>

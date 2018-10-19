@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 import { zIndex } from 'src/components/globals';
 
@@ -16,14 +17,15 @@ export const MediaLabel = styled.label`
   outline: 0;
   display: inline-block;
   background: transparent;
-  transition: all 0.3s ease-out;
-  color: ${({ theme }) => theme.text.placeholder};
+  transition: color 0.3s ease-out;
+  color: ${theme.text.placeholder};
   height: 32px;
   width: 32px;
+  margin: 4px;
 
   &:hover {
     cursor: pointer;
-    color: ${({ theme }) => theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 `;
 

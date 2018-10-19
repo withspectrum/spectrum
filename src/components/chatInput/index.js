@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import { KeyBindingUtil } from 'draft-js';
 import debounce from 'debounce';
 import Icon from '../../components/icons';
-import { track } from '../../helpers/events';
 import {
   toJSON,
   toState,
@@ -19,6 +18,7 @@ import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.
 import linksDecorator from 'shared/clients/draft-js/links-decorator/index.web.js';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
+import { replyToMessage } from '../../actions/message';
 import {
   Form,
   ChatInputContainer,
@@ -26,12 +26,40 @@ import {
   SendButton,
   PhotoSizeError,
   MarkdownHint,
-  Preformated,
+  Preformatted,
+  PreviewWrapper,
+  RemovePreviewButton,
 } from './style';
 import Input from './input';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
 import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
+import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
+import { QuotedMessage as QuotedMessageComponent } from '../message/view';
+import type { Dispatch } from 'redux';
+
+const QuotedMessage = connect()(
+  getMessageById(props => {
+    if (props.data && props.data.message) {
+      return <QuotedMessageComponent message={props.data.message} />;
+    }
+
+    // if the query is done loading and no message was returned, clear the input
+    if (props.data && props.data.networkStatus === 7 && !props.data.message) {
+      props.dispatch(
+        addToastWithTimeout(
+          'error',
+          'The message you are replying to was deleted or could not be fetched.'
+        )
+      );
+      props.dispatch(
+        replyToMessage({ threadId: props.threadId, messageId: null })
+      );
+    }
+
+    return null;
+  })
+);
 
 type State = {
   isFocused: boolean,
@@ -45,7 +73,7 @@ type State = {
 type Props = {
   onRef: Function,
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   onChange: Function,
   state: Object,
   createThread: Function,
@@ -61,24 +89,83 @@ type Props = {
   networkOnline: boolean,
   threadData?: Object,
   refetchThread?: Function,
+  quotedMessage: ?{ messageId: string, threadId: string },
 };
 
 const LS_KEY = 'last-chat-input-content';
-let storedContent;
+const LS_KEY_EXPIRE = 'last-chat-input-content-expire';
+const LS_DM_KEY = 'last-chat-input-content-dm';
+const LS_DM_KEY_EXPIRE = 'last-chat-input-content-dm-expire';
+
+const ONE_DAY = (): string => {
+  const time = new Date().getTime() + 60 * 60 * 24 * 1000;
+  return time.toString();
+};
+
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
-if (localStorage) {
-  try {
-    storedContent = toState(JSON.parse(localStorage.getItem(LS_KEY) || ''));
-  } catch (err) {
-    localStorage.removeItem(LS_KEY);
-  }
-}
+const returnText = (type = '') => {
+  let storedContent;
+  let storedContentDM;
+  const currTime = new Date().getTime().toString();
+  if (localStorage) {
+    try {
+      const expireTime = localStorage.getItem(LS_KEY_EXPIRE);
 
-const forcePersist = content =>
-  localStorage && localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
-const persistContent = debounce(content => {
-  localStorage && localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
+      // if current time is greater than valid till of text then please expire text back to ''
+      if (expireTime && currTime > expireTime) {
+        localStorage.removeItem(LS_KEY);
+        localStorage.removeItem(LS_KEY_EXPIRE);
+      } else {
+        storedContent = toState(JSON.parse(localStorage.getItem(LS_KEY) || ''));
+      }
+    } catch (err) {
+      localStorage.removeItem(LS_KEY);
+      localStorage.removeItem(LS_KEY_EXPIRE);
+    }
+
+    try {
+      const expireTimeDM = localStorage.getItem(LS_DM_KEY_EXPIRE);
+
+      // if current time is greater than valid till of text then please expire text back to ''
+      if (expireTimeDM && currTime > expireTimeDM) {
+        localStorage.removeItem(LS_DM_KEY);
+        localStorage.removeItem(LS_DM_KEY_EXPIRE);
+      } else {
+        storedContentDM = toState(
+          JSON.parse(localStorage.getItem(LS_DM_KEY) || '')
+        );
+      }
+    } catch (err) {
+      localStorage.removeItem(LS_DM_KEY);
+      localStorage.removeItem(LS_DM_KEY_EXPIRE);
+    }
+  }
+
+  if (type === 'directMessageThread') {
+    return storedContentDM;
+  } else {
+    return storedContent;
+  }
+};
+
+const setText = (content, threadType = '') => {
+  if (threadType === 'directMessageThread') {
+    localStorage &&
+      localStorage.setItem(LS_DM_KEY, JSON.stringify(toJSON(content)));
+    localStorage && localStorage.setItem(LS_DM_KEY_EXPIRE, ONE_DAY());
+  } else {
+    localStorage &&
+      localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
+    localStorage && localStorage.setItem(LS_KEY_EXPIRE, ONE_DAY());
+  }
+};
+
+const forcePersist = (content, threadType = '') => {
+  setText(content, threadType);
+};
+const persistContent = debounce((content, threadType = '') => {
+  setText(content, threadType);
 }, 500);
 
 class ChatInput extends React.Component<Props, State> {
@@ -102,12 +189,13 @@ class ChatInput extends React.Component<Props, State> {
   shouldComponentUpdate(next, nextState) {
     const curr = this.props;
     const currState = this.state;
-
     // User changed
     if (curr.currentUser !== next.currentUser) return true;
 
     if (curr.networkOnline !== next.networkOnline) return true;
     if (curr.websocketConnection !== next.websocketConnection) return true;
+
+    if (curr.quotedMessage !== next.quotedMessage) return true;
 
     // State changed
     if (curr.state !== next.state) return true;
@@ -124,24 +212,38 @@ class ChatInput extends React.Component<Props, State> {
     this.props.onRef(undefined);
   }
 
+  componentDidUpdate(prevProps) {
+    const curr = this.props;
+    if (curr.quotedMessage !== prevProps.quotedMessage) {
+      this.triggerFocus();
+    }
+  }
+
   handleKeyDown = (event: any) => {
     const key = event.keyCode || event.charCode;
     // Detect esc key or backspace key (and empty message) to remove
-    // the previewed image
+    // the previewed image and quoted message
     if (
       key === 27 ||
       ((key === 8 || key === 46) &&
         !this.props.state.getCurrentContent().hasText())
     ) {
-      this.removeMediaPreview();
+      this.removePreviewWrapper();
+      this.removeQuotedMessage();
     }
   };
 
-  onChange = (state, ...rest) => {
-    const { onChange } = this.props;
+  removeQuotedMessage = () => {
+    if (this.props.quotedMessage)
+      this.props.dispatch(
+        replyToMessage({ threadId: this.props.thread, messageId: null })
+      );
+  };
 
+  onChange = (state, ...rest) => {
+    const { onChange, threadType } = this.props;
     this.toggleMarkdownHint(state);
-    persistContent(state);
+    persistContent(state, threadType);
     onChange(state, ...rest);
   };
 
@@ -162,7 +264,7 @@ class ChatInput extends React.Component<Props, State> {
     // decorators that are passed to the editor are removed from the editor
     // state
     setTimeout(() => {
-      this.editor && this.editor.focus();
+      this.editor && this.editor.focus && this.editor.focus();
     }, 0);
   };
 
@@ -184,6 +286,7 @@ class ChatInput extends React.Component<Props, State> {
       currentUser,
       threadData,
       refetchThread,
+      quotedMessage,
     } = this.props;
 
     const isSendingMessageAsNonMember =
@@ -229,9 +332,9 @@ class ChatInput extends React.Component<Props, State> {
 
     // If the input is empty don't do anything
     if (!state.getCurrentContent().hasText()) return 'handled';
-
     // do one last persist before sending
-    forcePersist(state);
+    forcePersist(state, threadType);
+    this.removeQuotedMessage();
 
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
@@ -243,6 +346,9 @@ class ChatInput extends React.Component<Props, State> {
           : toPlainText(state),
         messageType: !isAndroid() ? 'draftjs' : 'text',
       });
+      localStorage.removeItem(LS_DM_KEY);
+      localStorage.removeItem(LS_DM_KEY_EXPIRE);
+
       clear();
       return 'handled';
     }
@@ -254,6 +360,7 @@ class ChatInput extends React.Component<Props, State> {
         threadId: thread,
         messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
+        parentId: quotedMessage,
         content: {
           body: !isAndroid()
             ? JSON.stringify(toJSON(state))
@@ -261,8 +368,8 @@ class ChatInput extends React.Component<Props, State> {
         },
       })
         .then(() => {
-          localStorage.removeItem(LS_KEY);
-          return track(`${threadType} message`, 'text message created', null);
+          localStorage.removeItem(LS_DM_KEY);
+          localStorage.removeItem(LS_DM_KEY_EXPIRE);
         })
         .catch(err => {
           dispatch(addToastWithTimeout('error', err.message));
@@ -272,6 +379,7 @@ class ChatInput extends React.Component<Props, State> {
         threadId: thread,
         messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
+        parentId: quotedMessage,
         content: {
           body: !isAndroid()
             ? JSON.stringify(toJSON(state))
@@ -289,7 +397,7 @@ class ChatInput extends React.Component<Props, State> {
           }
 
           localStorage.removeItem(LS_KEY);
-          return track(`${threadType} message`, 'text message created', null);
+          localStorage.removeItem(LS_KEY_EXPIRE);
         })
         .catch(err => {
           dispatch(addToastWithTimeout('error', err.message));
@@ -299,7 +407,7 @@ class ChatInput extends React.Component<Props, State> {
     // refocus the input
     setTimeout(() => {
       clear();
-      this.editor && this.editor.focus();
+      this.editor && this.editor.focus && this.editor.focus();
     });
 
     return 'handled';
@@ -331,7 +439,7 @@ class ChatInput extends React.Component<Props, State> {
     return this.submit(e);
   };
 
-  removeMediaPreview = () => {
+  removePreviewWrapper = () => {
     this.setState({
       mediaPreview: '',
       mediaPreviewFile: null,
@@ -343,7 +451,7 @@ class ChatInput extends React.Component<Props, State> {
       return;
     }
 
-    this.removeMediaPreview();
+    this.removePreviewWrapper();
 
     // eslint-disable-next-line
     let reader = new FileReader();
@@ -358,6 +466,7 @@ class ChatInput extends React.Component<Props, State> {
       sendMessage,
       websocketConnection,
       networkOnline,
+      quotedMessage,
     } = this.props;
 
     if (!networkOnline) {
@@ -402,6 +511,7 @@ class ChatInput extends React.Component<Props, State> {
           threadId: thread,
           messageType: 'media',
           threadType,
+          parentId: quotedMessage,
           content: {
             body: reader.result,
           },
@@ -411,11 +521,6 @@ class ChatInput extends React.Component<Props, State> {
             this.setState({
               isSendingMediaMessage: false,
             });
-            return track(
-              `${threadType} message`,
-              'media message created',
-              null
-            );
           })
           .catch(err => {
             this.setState({
@@ -428,6 +533,7 @@ class ChatInput extends React.Component<Props, State> {
           threadId: thread,
           messageType: 'media',
           threadType,
+          parentId: quotedMessage,
           content: {
             body: reader.result,
           },
@@ -437,11 +543,6 @@ class ChatInput extends React.Component<Props, State> {
             this.setState({
               isSendingMediaMessage: false,
             });
-            return track(
-              `${threadType} message`,
-              'media message created',
-              null
-            );
           })
           .catch(err => {
             this.setState({
@@ -452,7 +553,9 @@ class ChatInput extends React.Component<Props, State> {
       }
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   onFocus = () => {
@@ -507,7 +610,10 @@ class ChatInput extends React.Component<Props, State> {
         mediaPreview: reader.result.toString(),
         isSendingMediaMessage: false,
       });
-    reader.readAsDataURL(blob);
+
+    if (blob) {
+      reader.readAsDataURL(blob);
+    }
   };
 
   render() {
@@ -516,6 +622,8 @@ class ChatInput extends React.Component<Props, State> {
       currentUser,
       networkOnline,
       websocketConnection,
+      quotedMessage,
+      thread,
     } = this.props;
     const {
       isFocused,
@@ -524,7 +632,6 @@ class ChatInput extends React.Component<Props, State> {
       mediaPreview,
       markdownHint,
     } = this.state;
-
     const networkDisabled =
       !networkOnline ||
       (websocketConnection !== 'connected' &&
@@ -535,15 +642,7 @@ class ChatInput extends React.Component<Props, State> {
         <ChatInputContainer focus={isFocused} onClick={this.triggerFocus}>
           {photoSizeError && (
             <PhotoSizeError>
-              <p
-                onClick={() =>
-                  this.props.dispatch(
-                    openModal('UPGRADE_MODAL', { user: currentUser })
-                  )
-                }
-              >
-                {photoSizeError}
-              </p>
+              <p>{photoSizeError}</p>
               <Icon
                 onClick={() => this.clearError()}
                 glyph="view-close"
@@ -564,8 +663,6 @@ class ChatInput extends React.Component<Props, State> {
             )}
             <Form focus={isFocused}>
               <Input
-                mediaPreview={mediaPreview}
-                onRemoveMedia={this.removeMediaPreview}
                 focus={isFocused}
                 placeholder={`Your message here...`}
                 editorState={state}
@@ -578,37 +675,62 @@ class ChatInput extends React.Component<Props, State> {
                 editorKey="chat-input"
                 decorators={[mentionsDecorator, linksDecorator]}
                 networkDisabled={networkDisabled}
-              />
+                hasAttachment={!!mediaPreview || !!quotedMessage}
+              >
+                {mediaPreview && (
+                  <PreviewWrapper>
+                    <img src={mediaPreview} alt="" />
+                    <RemovePreviewButton onClick={this.removePreviewWrapper}>
+                      <Icon glyph="view-close-small" size={'16'} />
+                    </RemovePreviewButton>
+                  </PreviewWrapper>
+                )}
+                {quotedMessage && (
+                  <PreviewWrapper data-cy="staged-quoted-message">
+                    <QuotedMessage id={quotedMessage} threadId={thread} />
+                    <RemovePreviewButton
+                      data-cy="remove-staged-quoted-message"
+                      onClick={this.removeQuotedMessage}
+                    >
+                      <Icon glyph="view-close-small" size={'16'} />
+                    </RemovePreviewButton>
+                  </PreviewWrapper>
+                )}
+              </Input>
               <SendButton
                 data-cy="chat-input-send-button"
                 glyph="send-fill"
                 onClick={this.submit}
+                hasAttachment={mediaPreview || quotedMessage ? true : false}
               />
             </Form>
           </ChatInputWrapper>
         </ChatInputContainer>
         <MarkdownHint showHint={markdownHint} data-cy="markdownHint">
-          <b>**bold**</b>
-          <i>*italics*</i>
-          <Preformated>`code`</Preformated>
-          <Preformated>```preformatted```</Preformated>
+          <b>*bold*</b>
+          <i>_italic_</i>
+          <Preformatted>`code`</Preformatted>
+          <Preformatted>```codeblock```</Preformatted>
         </MarkdownHint>
       </React.Fragment>
     );
   }
 }
 
-const map = state => ({
+const map = (state, ownProps) => ({
   currentUser: state.users.currentUser,
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
+  quotedMessage: state.message.quotedMessage[ownProps.thread] || null,
 });
 export default compose(
   sendMessage,
   sendDirectMessage,
   // $FlowIssue
   connect(map),
-  withState('state', 'changeState', () => storedContent || fromPlainText('')),
+  withState('state', 'changeState', props => {
+    return returnText(props.threadType) || fromPlainText('');
+  }),
   withHandlers({
     onChange: ({ changeState }) => state => changeState(state),
     clear: ({ changeState }) => () => changeState(fromPlainText('')),

@@ -2,19 +2,23 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
+import { withRouter } from 'react-router';
 import { getCurrentUser } from 'shared/graphql/queries/user/getUser';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
 import { removeItemFromStorage } from '../../helpers/localStorage';
 import NewUserOnboarding from '../../views/newUserOnboarding';
+import { Loading } from 'src/components/loading';
+import type { Dispatch } from 'redux';
 
 type Props = {
   currentUser?: Object,
-  dispatch: Function,
-  match: Object,
+  dispatch: Dispatch<Object>,
   history: Object,
+  location: Object,
   editUser: Function,
+  children: (authed: boolean) => React$Element<*>,
   data: {
     user: GetUserType,
   },
@@ -35,8 +39,15 @@ class AuthViewHandler extends React.Component<Props, State> {
     });
   };
 
-  componentDidUpdate(prev) {
-    const { data: { user }, editUser, dispatch, history, match } = this.props;
+  componentWillUpdate(next) {
+    const {
+      data: { user },
+      editUser,
+      dispatch,
+      history,
+      location,
+    } = next;
+    const prev = this.props;
     // if no user was found, escape
 
     if (!user) {
@@ -61,14 +72,14 @@ class AuthViewHandler extends React.Component<Props, State> {
       // if the user lands on /home, it means they just logged in. If this code
       // runs, we know a user was returned successfully and set to localStorage,
       // so we can redirect to the root url
-      if (match.url === '/home') {
+      if (location.pathname === '/home') {
         history.push('/');
       }
     }
   }
 
   render() {
-    const { currentUser } = this.props;
+    const { currentUser, children, data } = this.props;
     const { showNewUserOnboarding } = this.state;
 
     if (showNewUserOnboarding)
@@ -80,14 +91,18 @@ class AuthViewHandler extends React.Component<Props, State> {
         />
       );
 
-    return null;
+    if (currentUser || (data.user && data.user.id)) return children(true);
+
+    if (data.loading) return <Loading />;
+
+    return children(false);
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
+const map = (state: *): * => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowIssue
   connect(map),
   getCurrentUser,
-  editUserMutation
+  editUserMutation,
+  withRouter
 )(AuthViewHandler);

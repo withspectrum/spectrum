@@ -1,19 +1,23 @@
+// @flow
 import React from 'react';
 import Link from 'src/components/link';
-import Card from '../card';
+import Card from 'src/components/card';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import addProtocolToString from 'shared/normalize-url';
-import { initNewThreadWithUser } from '../../actions/directMessageThreads';
+import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import Icon from '../icons';
 import { CoverPhoto } from './coverPhoto';
-import GithubProfile from '../../components/githubProfile';
+import GithubProfile from 'src/components/githubProfile';
 import type { ProfileSizeProps } from './index';
-import Avatar from '../avatar';
-import Badge from '../badges';
-import { displayLoadingCard } from '../loading';
-import Reputation from '../reputation';
+import { UserAvatar } from 'src/components/avatar';
+import Badge from 'src/components/badges';
+import { displayLoadingCard } from 'src/components/loading';
+import Reputation from 'src/components/reputation';
+import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
+import type { Dispatch } from 'redux';
 import {
   FullProfile,
   ProfileHeader,
@@ -32,18 +36,6 @@ import {
   ExtLink,
 } from './style';
 
-type UserProps = {
-  id: string,
-  profilePhoto: string,
-  displayName: string,
-  name: ?string,
-  username: string,
-  threadCount: number,
-  website: string,
-  isOnline: string,
-  totalReputation: number,
-};
-
 type CurrentUserProps = {
   id: string,
   profilePhoto: string,
@@ -53,19 +45,30 @@ type CurrentUserProps = {
   website: string,
 };
 
+type ThisUserType = {
+  ...$Exact<GetUserType>,
+  contextPermissions: {
+    reputation: number,
+  },
+};
+
+type UserWithDataProps = {
+  data: { user: ThisUserType },
+  profileSize: ProfileSizeProps,
+  currentUser: CurrentUserProps,
+  dispatch: Dispatch<Object>,
+  history: Object,
+  showHoverProfile: boolean,
+};
+
 const UserWithData = ({
   data: { user },
   profileSize,
   currentUser,
   dispatch,
   history,
-}: {
-  data: { user: UserProps },
-  profileSize: ProfileSizeProps,
-  currentUser: CurrentUserProps,
-  dispatch: Function,
-  history: Object,
-}): React$Element<any> => {
+  showHoverProfile = true,
+}: UserWithDataProps): ?React$Element<any> => {
   const componentSize = profileSize || 'mini';
 
   if (!user) {
@@ -81,12 +84,10 @@ const UserWithData = ({
     case 'full':
       return (
         <FullProfile>
-          <Avatar
+          <UserAvatar
             user={user}
             size={128}
-            onlineSize={'large'}
-            src={`${user.profilePhoto}`}
-            noLink
+            showHoverProfile={showHoverProfile}
             style={{
               boxShadow: '0 0 0 2px #fff',
               marginRight: '0',
@@ -94,54 +95,52 @@ const UserWithData = ({
           />
           <FullTitle>{user.name}</FullTitle>
           <Subtitle>
-            @{user.username}
-            {user.isPro && <Badge type="pro" />}
+            <span style={{ marginRight: '4px' }}>@{user.username}</span>
+            {user.betaSupporter && <Badge type="beta-supporter" />}
           </Subtitle>
-          {(user.description || user.website) && (
-            <FullDescription>
-              {user.description && <p>{user.description}</p>}
-              <Reputation
-                reputation={
-                  user.contextPermissions
-                    ? user.contextPermissions.reputation
-                    : user.totalReputation
+          <FullDescription>
+            {user.description && <p>{renderTextWithLinks(user.description)}</p>}
+            <Reputation
+              reputation={
+                user.contextPermissions
+                  ? user.contextPermissions.reputation
+                  : user.totalReputation
+              }
+            />
+            {user.website && (
+              <ExtLink>
+                <Icon glyph="link" size={24} />
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={addProtocolToString(user.website)}
+                >
+                  {user.website}
+                </a>
+              </ExtLink>
+            )}
+            <GithubProfile
+              id={user.id}
+              render={profile => {
+                if (!profile) {
+                  return null;
+                } else {
+                  return (
+                    <ExtLink>
+                      <Icon glyph="github" size={24} />
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={`https://github.com/${profile.username}`}
+                      >
+                        github.com/{profile.username}
+                      </a>
+                    </ExtLink>
+                  );
                 }
-              />
-              {user.website && (
-                <ExtLink>
-                  <Icon glyph="link" size={24} />
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={addProtocolToString(user.website)}
-                  >
-                    {user.website}
-                  </a>
-                </ExtLink>
-              )}
-              <GithubProfile
-                id={user.id}
-                render={profile => {
-                  if (!profile) {
-                    return null;
-                  } else {
-                    return (
-                      <ExtLink>
-                        <Icon glyph="github" size={24} />
-                        <a
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          href={`https://github.com/${profile.username}`}
-                        >
-                          github.com/{profile.username}
-                        </a>
-                      </ExtLink>
-                    );
-                  }
-                }}
-              />
-            </FullDescription>
-          )}
+              }}
+            />
+          </FullDescription>
         </FullProfile>
       );
     case 'simple':
@@ -153,14 +152,11 @@ const UserWithData = ({
             currentUser={currentUser}
           />
           <CoverLink to={`/users/${user.username}`}>
-            <Avatar
+            <UserAvatar
               user={user}
               size={64}
-              radius={64}
               onlineSize={'large'}
-              isOnline={user.isOnline}
-              src={`${user.profilePhoto}`}
-              noLink
+              showHoverProfile={showHoverProfile}
               style={{
                 boxShadow: '0 0 0 2px #fff',
                 flex: '0 0 64px',
@@ -171,7 +167,6 @@ const UserWithData = ({
           </CoverLink>
           <CoverSubtitle center>
             {user.username && `@${user.username}`}
-            {user.isPro && <Badge type="pro" />}
             <Reputation
               tipText={'Total rep across all communities'}
               size={'large'}
@@ -197,34 +192,23 @@ const UserWithData = ({
           <ProfileHeader>
             {user.username ? (
               <ProfileHeaderLink to={`/users/${user.username}`}>
-                <Avatar
+                <UserAvatar
                   user={user}
                   size={32}
-                  radius={32}
-                  isOnline={user.isOnline}
-                  src={`${user.profilePhoto}`}
-                  noLink
+                  showHoverProfile={showHoverProfile}
                   style={{ marginRight: '16px' }}
                 />
                 <ProfileHeaderMeta>
                   <Title>{user.name}</Title>
-                  {user.username && (
-                    <Subtitle>
-                      @{user.username}
-                      {user.isPro && <Badge type="pro" />}
-                    </Subtitle>
-                  )}
+                  {user.username && <Subtitle>@{user.username}</Subtitle>}
                 </ProfileHeaderMeta>
               </ProfileHeaderLink>
             ) : (
               <ProfileHeaderNoLink>
-                <Avatar
+                <UserAvatar
                   user={user}
                   size={32}
-                  radius={32}
-                  isOnline={user.isOnline}
-                  src={`${user.profilePhoto}`}
-                  noLink
+                  showHoverProfile={showHoverProfile}
                   style={{ marginRight: '16px' }}
                 />
                 <ProfileHeaderMeta>
@@ -232,7 +216,6 @@ const UserWithData = ({
                   {user.username && (
                     <Subtitle>
                       @{user.username}
-                      {user.isPro && <Badge type="pro" />}
                       <Reputation
                         tipText={'Total rep across all communities'}
                         size={'large'}
@@ -271,9 +254,13 @@ const UserWithData = ({
   }
 };
 
-const User = compose(displayLoadingCard, withRouter)(UserWithData);
+const User = compose(
+  displayLoadingCard,
+  withRouter
+)(UserWithData);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
   initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,
 });
+// $FlowFixMe
 export default connect(mapStateToProps)(User);

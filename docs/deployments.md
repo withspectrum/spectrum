@@ -16,7 +16,7 @@ npm install -g now
 
 ### Naming scheme
 
-All our workers are aliased to `<workername>.workers.spectrum.chat`, with the one exception being the API (the API server) which runs at `api.spectrum.chat`. 
+All our workers are aliased to `<workername>.workers.spectrum.chat`, with the one exception being the API (the API server) which runs at `api.spectrum.chat`.
 
 #### Path aliases
 
@@ -30,7 +30,7 @@ now alias spectrum.chat -r rules.json
 
 The same command with a different URL and slightly adapted rules can also be used to create an alpha/beta/staging/... version of the site.
 
-### Frontend and Hyperion 
+### Frontend and Hyperion
 
 Since the frontend is the part that changes the most often the repo is set up such that typing `now` in the root directory will deploy the frontend with hyperion. (the server-side rendering worker)
 

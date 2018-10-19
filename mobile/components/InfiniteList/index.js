@@ -20,19 +20,21 @@ type Props = {
   fetchMore: Function,
   loadingIndicator: Node,
   keyExtractor?: (item: any, index: number) => ID, // This defaults to using item.id or item.node.id. If your data doesn't have either of those you need to pass a custom keyExtractor function
-  refetching?: boolean,
+  isRefetching?: boolean,
   refetch?: Function,
   style?: Object,
   separator?: ElementType,
   emptyState?: ElementType,
   threshold?: number,
+  isFetchingMore?: boolean,
   ...$Exact<FlatListProps>,
 };
 
 class InfiniteList extends React.Component<Props> {
   static defaultProps = {
     refreshing: false,
-    threshold: 0.75,
+    threshold: 0.5,
+    isFetchingMore: false,
     keyExtractor: (item: Item, index: number) => {
       const key = item.id || (item.node && item.node.id);
 
@@ -53,7 +55,8 @@ class InfiniteList extends React.Component<Props> {
     // distanceFromEnd for reasons I don't fully understand. This makes sure we don't overfetch.
     if (
       this.props.hasNextPage &&
-      this.props.refetching !== true &&
+      this.props.isRefetching !== true &&
+      !this.props.isFetchingMore &&
       distanceFromEnd > 0
     ) {
       this.props.fetchMore();
@@ -62,7 +65,8 @@ class InfiniteList extends React.Component<Props> {
 
   render() {
     const {
-      refetching,
+      isRefetching,
+      refreshing,
       refetch,
       renderItem,
       data,
@@ -73,13 +77,16 @@ class InfiniteList extends React.Component<Props> {
       separator,
       style = {},
       emptyState,
+      fetchMore,
+      keyboardShouldPersistTaps,
+      inverted = false,
       ...rest
     } = this.props;
 
     return (
       <FlatList
         {...rest}
-        refreshing={refetching}
+        refreshing={isRefetching || refreshing}
         keyExtractor={keyExtractor}
         onRefresh={refetch}
         data={data}
@@ -92,7 +99,10 @@ class InfiniteList extends React.Component<Props> {
         ItemSeparatorComponent={separator}
         ListEmptyComponent={emptyState || <Text type="body">Nothing here</Text>}
         removeClippedSubviews={true}
+        keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+        keyboardDismissMode={'on-drag'}
         style={{ flex: 1, ...style }}
+        inverted={inverted}
       />
     );
   }

@@ -3,14 +3,17 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
-import { closeModal } from '../../../actions/modals';
+import Link from 'src/components/link';
+import { closeModal } from 'src/actions/modals';
 import ModalContainer from '../modalContainer';
 import { modalStyles } from '../styles';
 import LoginButtonSet from 'src/components/loginButtonSet';
-import { Container } from './style';
+import { Container, CodeOfConduct, PrivacyTerms } from './style';
+import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isOpen: boolean,
   modalProps: any,
 };
@@ -19,6 +22,11 @@ class ChatInputLoginModal extends React.Component<Props> {
   close = () => {
     this.props.dispatch(closeModal());
   };
+
+  componentDidMount() {
+    const redirectPath = `${window.location.href}`;
+    track(events.LOGIN_MODAL_VIEWED, { redirectPath });
+  }
 
   render() {
     const { isOpen } = this.props;
@@ -43,11 +51,30 @@ class ChatInputLoginModal extends React.Component<Props> {
           the action to the 'close' icon in the top right corner of all modals
         */}
         <ModalContainer title={'Sign in'} closeModal={this.close}>
-          <Container>
+          <Container data-cy="login-modal">
             <LoginButtonSet
               redirectPath={redirectPath}
               signinType={signinType}
             />
+
+            <CodeOfConduct>
+              By using Spectrum, you agree to our{' '}
+              <a
+                href="https://github.com/withspectrum/code-of-conduct"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  track(events.CODE_OF_CONDUCT_CLICKED, { location: 'login' })
+                }
+              >
+                Code of Conduct
+              </a>
+            </CodeOfConduct>
+
+            <PrivacyTerms>
+              <Link to={'/privacy'}>Privacy Policy</Link> ·{' '}
+              <Link to={'/terms'}>Terms of Service</Link>.
+            </PrivacyTerms>
           </Container>
         </ModalContainer>
       </Modal>

@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 import { zIndex } from '../globals';
 
@@ -24,7 +25,7 @@ export const SigninButton = styled.div`
   align-self: flex-start;
   align-items: center;
   justify-content: flex-start;
-  color: ${({ theme }) => theme.text.reverse};
+  color: ${theme.text.reverse};
   border-radius: 8px;
   padding: 8px;
   padding-right: 16px;
@@ -38,19 +39,19 @@ export const SigninButton = styled.div`
   ${props =>
     props.showAfter &&
     `
-			&:after {
-				content: 'Previously signed in with';
-				position: absolute;
-				top: -32px;
-				font-size: 14px;
-				font-weight: 600;
-				left: 50%;
-				transform: translateX(-50%);
-				width: 100%;
-				text-align: center;
-				color: ${props.theme.text.alt};
-			}
-		`} svg {
+    &:after {
+        content: 'Previously signed in with';
+        position: absolute;
+        top: -32px;
+        font-size: 14px;
+        font-weight: 600;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        text-align: center;
+        color: ${props.theme.text.alt};
+      }
+    `} svg {
     fill: currentColor !important;
   }
 `;
@@ -74,7 +75,7 @@ export const TwitterButton = styled(SigninButton)`
     props.preferred ? '#fff' : props.theme.social.twitter.default};
 
   &:after {
-    color: ${props => props.theme.social.twitter.default};
+    color: ${theme.social.twitter.default};
   }
 `;
 
@@ -85,7 +86,7 @@ export const FacebookButton = styled(SigninButton)`
     props.preferred ? '#fff' : props.theme.social.facebook.default};
 
   &:after {
-    color: ${props => props.theme.social.facebook.default};
+    color: ${theme.social.facebook.default};
   }
 `;
 
@@ -96,15 +97,17 @@ export const GoogleButton = styled(SigninButton)`
     props.preferred ? '#fff' : props.theme.social.google.default};
 
   &:after {
-    color: ${props => props.theme.social.google.default};
+    color: ${theme.social.google.default};
   }
 `;
 
 export const GithubButton = styled(SigninButton)`
-  background: ${props => (props.preferred ? props.theme.text.default : 'none')};
-  color: ${props => (props.preferred ? '#fff' : props.theme.text.default)};
+  background: ${props =>
+    props.preferred ? props.theme.social.github.default : 'none'};
+  color: ${props =>
+    props.preferred ? '#fff' : props.theme.social.github.default};
 
   &:after {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 `;

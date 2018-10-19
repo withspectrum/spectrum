@@ -3,7 +3,15 @@ import type { DBCommunity } from 'shared/types';
 import type { GraphQLContext } from '../../';
 import type { PaginationOptions } from '../../utils/paginate-arrays';
 import { encode, decode } from '../../utils/base64';
-const { getMembersInCommunity } = require('../../models/usersCommunities');
+import { canViewCommunity } from '../../utils/permissions';
+import {
+  getMembersInCommunity,
+  getOwnersInCommunity,
+  getModeratorsInCommunity,
+  getTeamMembersInCommunity,
+  getPendingUsersInCommunity,
+  getBlockedUsersInCommunity,
+} from '../../models/usersCommunities';
 
 type MembersFilterType = {
   isMember?: boolean,
@@ -13,31 +21,47 @@ type MembersFilterType = {
   isBlocked?: boolean,
 };
 
-export default (
-  { id }: DBCommunity,
-  {
-    first = 10,
-    after,
-    filter,
-  }: { ...$Exact<PaginationOptions>, filter: MembersFilterType },
-  { loaders }: GraphQLContext
-) => {
+type Args = {
+  ...$Exact<PaginationOptions>,
+  filter?: MembersFilterType,
+};
+
+export default async (root: DBCommunity, args: Args, ctx: GraphQLContext) => {
+  const { id } = root;
+  const { user, loaders } = ctx;
+
+  if (!(await canViewCommunity(user, id, loaders))) {
+    return {
+      pageInfo: {
+        hasNextPage: false,
+      },
+      edges: [],
+    };
+  }
+
+  const { first = 10, after, filter = {} } = args;
   const cursor = decode(after);
   // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
   const lastDigits = cursor.match(/-(\d+)$/);
   const lastUserIndex =
-    lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
+    (lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10)) || 0;
 
-  // Note @brian: this is a shitty hack, but if we want to show both
-  // moderators and admins in a single list, I need to tweak the inbound
-  // filter here
-  let dbfilter = filter;
-  if (filter && (filter.isOwner && filter.isModerator)) {
-    dbfilter = row => row('isModerator').or(row('isOwner'));
+  let query;
+  if (filter.isBlocked) {
+    query = getBlockedUsersInCommunity;
+  } else if (filter.isPending) {
+    query = getPendingUsersInCommunity;
+  } else if (filter.isModerator && filter.isOwner) {
+    query = getTeamMembersInCommunity;
+  } else if (filter.isModerator) {
+    query = getModeratorsInCommunity;
+  } else if (filter.isOwner) {
+    query = getOwnersInCommunity;
+  } else {
+    query = getMembersInCommunity;
   }
 
-  // $FlowFixMe
-  return getMembersInCommunity(id, { first, after: lastUserIndex }, dbfilter)
+  return query(id, { first, after: lastUserIndex })
     .then(users => {
       const permissionsArray = users.map(userId => [userId, id]);
       // $FlowIssue

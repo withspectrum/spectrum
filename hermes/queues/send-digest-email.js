@@ -41,7 +41,6 @@ type SendWeeklyDigestJobData = {
   name?: string,
   username: string,
   userId: string,
-  userId: string,
   threads: Array<ThreadType>,
   reputationString: string,
   communities: ?Array<TopCommunityType>,
@@ -120,6 +119,7 @@ export default async (job: SendWeeklyDigestJob) => {
           },
         },
       },
+      userId,
     });
   } catch (err) {
     debug('❌ Error in job:\n');

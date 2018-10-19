@@ -1,7 +1,9 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import { hexa, Shadow, FlexRow, zIndex } from '../../components/globals';
+import { isDesktopApp } from 'src/helpers/is-desktop-app';
 
 export const TitleBar = styled(FlexRow)`
   grid-area: title;
@@ -11,14 +13,14 @@ export const TitleBar = styled(FlexRow)`
   grid-template-rows: 1fr;
   grid-template-areas: 'left center right';
   grid-column-gap: 16px;
-  padding: 0 8px;
-  background-color: ${({ theme }) => theme.bg.reverse};
-  color: ${({ theme }) => theme.text.reverse};
-  min-height: 48px;
-  height: 48px;
-  max-height: 48px;
+  padding: ${isDesktopApp() ? '32px 8px 0' : '0 8px'};
+  background-color: ${theme.bg.reverse};
+  color: ${theme.text.reverse};
+  min-height: ${isDesktopApp() ? '80px' : '48px'};
+  height: ${isDesktopApp() ? '80px' : '48px'};
+  max-height: ${isDesktopApp() ? '80px' : '48px'};
   order: 0;
-  flex: 0 0 48px;
+  flex: 0 0 ${isDesktopApp() ? '80px' : '48px'};
   z-index: ${zIndex.chrome};
   box-shadow: ${Shadow.mid} ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
   justify-items: center;

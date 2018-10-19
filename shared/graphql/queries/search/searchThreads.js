@@ -45,6 +45,7 @@ const searchThreadsOptions = {
       networkStatus,
       fetchMore: () => {},
       threads: search ? search.searchResultsConnection.edges : [],
+      threadConnection: search && search.searchResultsConnection,
     },
   }),
   options: ({ queryString, filter }) => ({

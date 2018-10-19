@@ -1,3 +1,5 @@
+// @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 import Link from 'src/components/link';
 import {
@@ -30,7 +32,7 @@ export const ProfileHeaderLink = styled(Link)`
 
   &:hover h3 {
     transition: ${Transition.hover.on};
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 `;
 
@@ -44,7 +46,7 @@ export const ProfileHeaderNoLink = styled.div`
 
   &:hover h3 {
     transition: ${Transition.hover.on};
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 `;
 
@@ -61,7 +63,7 @@ export const ProfileHeaderAction = styled(IconButton)`
 
 export const Title = styled.h3`
   font-size: 16px;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   font-weight: 700;
   line-height: 1.2;
   transition: ${Transition.hover.off};
@@ -69,13 +71,13 @@ export const Title = styled.h3`
 
 export const FullTitle = styled(Title)`
   font-size: 24px;
-  margin-top: 8px;
+  margin-top: 16px;
 `;
 
 export const FullProfile = styled.div`
   margin-left: 32px;
   margin-top: -64px;
-  background-color: ${props => props.theme.bg.default};
+  background-color: ${theme.bg.default};
 
   @media (max-width: 768px) {
     margin-top: -48px;
@@ -86,7 +88,7 @@ export const Subtitle = styled.div`
   display: flex;
   align-items: center;
   font-size: 16px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   line-height: 1.2;
   margin-top: 4px;
 
@@ -104,15 +106,15 @@ export const Subtitle = styled.div`
 `;
 
 export const Description = styled.div`
-  font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  font-size: 16px;
+  color: ${theme.text.alt};
   padding: 0 16px 16px;
   line-height: 1.4;
   white-space: pre-wrap;
 
   a {
     font-weight: 500;
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
 
     &:hover {
       text-decoration: underline;
@@ -123,7 +125,20 @@ export const Description = styled.div`
 export const FullDescription = styled.div`
   padding: 0;
   margin-top: 16px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
+
+  p {
+    white-space: pre-wrap;
+  }
+
+  a {
+    color: ${theme.text.secondary};
+  }
+
+  a:hover {
+    color: ${theme.text.default};
+    text-decoration: none;
+  }
 
   > ${ReputationWrapper} {
     margin-top: 16px;
@@ -138,7 +153,7 @@ export const FullDescription = styled.div`
 
 export const ExtLink = styled(FlexRow)`
   align-items: center;
-  color: ${({ theme }) => theme.brand.alt};
+  color: ${theme.brand.alt};
   font-weight: 600;
   transition: ${Transition.hover.off};
   ${Truncate};
@@ -151,7 +166,7 @@ export const ExtLink = styled(FlexRow)`
   }
 
   > div {
-    color: ${({ theme }) => theme.text.alt};
+    color: ${theme.text.alt};
     margin-right: 4px;
     margin-top: 1px;
   }
@@ -180,7 +195,7 @@ export const ActionOutline = styled(OutlineButton)`
 
 export const Meta = styled.div`
   background: #f8fbfe;
-  border-top: 2px solid ${props => props.theme.bg.border};
+  border-top: 2px solid ${theme.bg.border};
   padding: 8px 16px;
   width: 100%;
   border-radius: 0 0 12px 12px;
@@ -192,9 +207,9 @@ export const MetaListItem = styled.li`
   list-style-type: none;
   font-size: 14px;
   font-weight: 600;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   padding: 8px 0;
-  border-top: 2px solid ${props => props.theme.bg.border};
+  border-top: 2px solid ${theme.bg.border};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -233,7 +248,7 @@ export const CoverLink = styled(ProfileHeaderLink)`
 
 export const CoverTitle = styled(Title)`
   font-size: 20px;
-  margin-top: 8px;
+  margin-top: 16px;
   text-align: center;
 `;
 
@@ -244,8 +259,8 @@ export const CoverSubtitle = styled(Subtitle)`
 `;
 
 export const CoverDescription = styled(Description)`
-  text-align: center;
   flex: auto;
+  margin-top: 8px;
 `;
 
 // had a hard time targeting the ChannelListItem component, so this is a janky way to get the overrides I needed.
@@ -255,39 +270,22 @@ export const ProfileCard = styled(Card)`
     padding: 16px;
 
     h4 > a:hover {
-      color: ${({ theme }) => theme.brand.alt};
+      color: ${theme.brand.alt};
       text-decoration: underline;
     }
   }
 `;
 
-export const ProUpgrade = styled.div`
-  margin: 16px;
-  margin-top: 0;
-  display: flex;
-  align-items: stretch;
-  align-content: stretch;
-  justify-content: center;
-
-  button {
-    width: 100%;
-    text-align: center;
-  }
+export const ThreadProfileCard = styled(ProfileCard)`
+  border-radius: 8px;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 `;
-
-// export const ReputationContainer = styled.div`
-//   border-top: 2px solid ${props => props.theme.bg.border};
-//   padding: 12px 0;
-//   margin: 0 16px;
-//   display: flex;
-//   color: ${props => props.theme.text.alt};
-// `;
 
 export const CoverPhoto = styled.div`
   position: relative;
   width: 100%;
   height: ${props => (props.large ? '320px' : '96px')};
-  background-color: ${({ theme }) => theme.brand.default};
+  background-color: ${theme.brand.default};
   background-image: url('${props => props.url}');
   background-size: cover;
   background-repeat: no-repeat;
@@ -296,7 +294,7 @@ export const CoverPhoto = styled.div`
 `;
 
 export const Container = styled.div`
-  background: ${props => props.theme.bg.default};
+  background: ${theme.bg.default};
   box-shadow: ${Shadow.mid} ${props => hexa(props.theme.bg.reverse, 0.15)};
   flex: 0 0 22%;
   display: flex;

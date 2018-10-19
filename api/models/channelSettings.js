@@ -1,32 +1,49 @@
 // @flow
 const { db } = require('./db');
-import type { DBChannelSettings } from 'shared/types';
+import type { DBChannelSettings, DBChannel } from 'shared/types';
 import { getChannelById } from './channel';
 import shortid from 'shortid';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
 const defaultSettings = {
   joinSettings: {
     tokenJoinEnabled: false,
     message: null,
   },
+  slackSettings: {
+    botLinks: {
+      threadCreated: null,
+    },
+  },
 };
 
-export const getChannelSettings = (id: string) => {
-  return db
+// prettier-ignore
+export const getOrCreateChannelSettings = async (channelId: string): Promise<DBChannelSettings> => {
+  const settings = await db
     .table('channelSettings')
-    .getAll(id, { index: 'channelId' })
-    .run()
-    .then(data => {
-      if (!data || data.length === 0) {
-        return defaultSettings;
-      }
-      return data[0];
-    });
+    .getAll(channelId, { index: 'channelId' })
+    .run();
+
+  if (!settings || settings.length === 0) {
+    return await db
+      .table('channelSettings')
+      .insert(
+        {
+          ...defaultSettings,
+          channelId,
+        },
+        { returnChanges: true }
+      )
+      .run()
+      .then(results => results.changes[0].new_val);
+  }
+
+  return settings[0];
 };
 
-export const getChannelsSettings = (
-  channelIds: Array<string>
-): Promise<?DBChannelSettings> => {
+// prettier-ignore
+export const getChannelsSettings = (channelIds: Array<string>): Promise<?DBChannelSettings> => {
   return db
     .table('channelSettings')
     .getAll(...channelIds, { index: 'channelId' })
@@ -50,24 +67,10 @@ export const getChannelsSettings = (
     });
 };
 
-export const createChannelSettings = (id: string) => {
+export const enableChannelTokenJoin = (channelId: string, userId: string) => {
   return db
     .table('channelSettings')
-    .insert({
-      channelId: id,
-      joinSettings: {
-        token: null,
-        tokenJoinEnabled: false,
-      },
-    })
-    .run()
-    .then(async () => await getChannelById(id));
-};
-
-export const enableChannelTokenJoin = (id: string) => {
-  return db
-    .table('channelSettings')
-    .getAll(id, { index: 'channelId' })
+    .getAll(channelId, { index: 'channelId' })
     .update({
       joinSettings: {
         tokenJoinEnabled: true,
@@ -75,13 +78,21 @@ export const enableChannelTokenJoin = (id: string) => {
       },
     })
     .run()
-    .then(async () => await getChannelById(id));
+    .then(async () => {
+      trackQueue.add({
+        userId,
+        event: events.CHANNEL_JOIN_TOKEN_ENABLED,
+        context: { channelId },
+      });
+
+      return await getChannelById(channelId);
+    });
 };
 
-export const disableChannelTokenJoin = (id: string) => {
+export const disableChannelTokenJoin = (channelId: string, userId: string) => {
   return db
     .table('channelSettings')
-    .getAll(id, { index: 'channelId' })
+    .getAll(channelId, { index: 'channelId' })
     .update({
       joinSettings: {
         tokenJoinEnabled: false,
@@ -89,18 +100,85 @@ export const disableChannelTokenJoin = (id: string) => {
       },
     })
     .run()
-    .then(async () => await getChannelById(id));
+    .then(async () => {
+      trackQueue.add({
+        userId,
+        event: events.CHANNEL_JOIN_TOKEN_DISABLED,
+        context: { channelId },
+      });
+
+      return await getChannelById(channelId);
+    });
 };
 
-export const resetChannelJoinToken = (id: string) => {
+export const resetChannelJoinToken = (channelId: string, userId: string) => {
   return db
     .table('channelSettings')
-    .getAll(id, { index: 'channelId' })
+    .getAll(channelId, { index: 'channelId' })
     .update({
       joinSettings: {
         token: shortid.generate(),
       },
     })
     .run()
-    .then(async () => await getChannelById(id));
+    .then(async () => {
+      trackQueue.add({
+        userId,
+        event: events.CHANNEL_JOIN_TOKEN_RESET,
+        context: { channelId },
+      });
+
+      return await getChannelById(channelId);
+    });
+};
+
+type UpdateInput = {
+  channelId: string,
+  slackChannelId: ?string,
+  eventType: 'threadCreated',
+};
+
+// prettier-ignore
+export const updateChannelSlackBotLinks = async ({ channelId, slackChannelId, eventType }: UpdateInput, userId: string): Promise<DBChannel> => {
+  const settings: DBChannelSettings = await getOrCreateChannelSettings(
+    channelId
+  );
+
+  let newSettings;
+  if (!settings.slackSettings) {
+    settings.slackSettings = {
+      botLinks: {
+        [eventType]:
+          slackChannelId && slackChannelId.length > 0 ? slackChannelId : null,
+      },
+    };
+    newSettings = Object.assign({}, settings);
+  } else {
+    newSettings = Object.assign({}, settings, {
+      slackSettings: {
+        botLinks: {
+          [eventType]:
+            slackChannelId && slackChannelId.length > 0 ? slackChannelId : null,
+        },
+      },
+    });
+  }
+
+  return db
+    .table('channelSettings')
+    .getAll(channelId, { index: 'channelId' })
+    .update({
+      ...newSettings,
+    })
+    .run()
+    .then(async () => {
+
+      trackQueue.add({
+        userId,
+        event: events.CHANNEL_SLACK_BOT_LINK_UPDATED,
+        context: { channelId },
+      });
+
+      return await getChannelById(channelId)
+    });
 };

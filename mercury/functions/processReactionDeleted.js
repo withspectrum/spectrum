@@ -1,3 +1,4 @@
+// @flow
 const debug = require('debug')('mercury:queue:process-reaction-deleted');
 import { updateReputation } from '../models/usersCommunities';
 import { getMessage } from '../models/message';
@@ -8,8 +9,9 @@ import {
   REACTION_DELETED_SCORE,
   REACTION_DELETED_POST_AUTHOR_SCORE,
 } from '../constants';
+import type { ReputationEventJobData } from 'shared/bull/types';
 
-export default async data => {
+export default async (data: ReputationEventJobData) => {
   // entityId represents the messageId
   const { entityId } = data;
 

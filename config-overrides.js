@@ -8,6 +8,7 @@ const debug = require('debug')('build:config-overrides');
 const webpack = require('webpack');
 const { injectBabelPlugin } = require('react-app-rewired');
 const rewireStyledComponents = require('react-app-rewire-styled-components');
+const rewireReactHotLoader = require('react-app-rewire-hot-loader');
 const swPrecachePlugin = require('sw-precache-webpack-plugin');
 const fs = require('fs');
 const path = require('path');
@@ -16,6 +17,7 @@ const WriteFilePlugin = require('write-file-webpack-plugin');
 const { ReactLoadablePlugin } = require('react-loadable/webpack');
 const OfflinePlugin = require('offline-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const BundleBuddyWebpackPlugin = require('bundle-buddy-webpack-plugin');
 
 // Recursively walk a folder and get all file paths
 function walkFolder(currentDirPath, callback) {
@@ -73,24 +75,21 @@ const transpileShared = config => {
 module.exports = function override(config, env) {
   if (process.env.NODE_ENV === 'development') {
     config.output.path = path.join(__dirname, './build');
+    config = rewireReactHotLoader(config, env);
+    config.plugins.push(
+      WriteFilePlugin({
+        log: true,
+        useHashIndex: false,
+      })
+    );
   }
   config.plugins.push(
     new ReactLoadablePlugin({
       filename: './build/react-loadable.json',
     })
   );
-  if (process.env.NODE_ENV === 'production') {
-    removeEslint(config);
-  }
   config = injectBabelPlugin('react-loadable/babel', config);
   config = transpileShared(config);
-  config.plugins.push(
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['bootstrap'],
-      filename: './static/js/[name].js',
-      minChunks: Infinity,
-    })
-  );
   // Filter the default serviceworker plugin, add offline plugin instead
   config.plugins = config.plugins.filter(
     plugin => !isServiceWorkerPlugin(plugin)
@@ -98,44 +97,37 @@ module.exports = function override(config, env) {
   // Get all public files so they're cached by the SW
   let externals = [];
   walkFolder('./public/', file => {
-    // HOTFIX: Don't cache images
-    if (file.indexOf('img') > -1 && file.indexOf('homescreen-icon') === -1)
-      return;
+    if (file.indexOf('index.html') > -1) return;
     externals.push(file.replace(/public/, ''));
   });
   config.plugins.push(
     new OfflinePlugin({
-      // Don't cache anything in dev
-      caches: process.env.NODE_ENV === 'development' ? {} : 'all',
-      updateStrategy: 'all', // Update all files on update, seems safer than trying to only update changed files since we didn't write the webpack config
-      externals, // These files should be cached, but they're not emitted by webpack, so we gotta tell OfflinePlugin about 'em.
-      excludes: ['**/*.map'], // Don't cache any source maps, they're huge and unnecessary for clients
-      autoUpdate: true, // Automatically check for updates every hour
-      rewrites: arg => arg,
+      // We don't want to cache anything
+      caches: {},
+      externals,
+      autoUpdate: true,
+      // NOTE(@mxstbr): Normally this is handled by setting
+      // appShell: './index.html'
+      // but we don't want to serve the app shell for the `/api` and `/auth` routes
+      // which means we have to manually do this and filter any of those routes out
       cacheMaps: [
         {
-          match: url => {
-            // Don't return the cached index.html for API requests or /auth pages
-            if (url.pathname.indexOf('/api') === 0) return;
-            if (url.pathname.indexOf('/auth') === 0) return;
-            try {
-              return new URL('/index.html', url);
-              // TODO: Fix this properly instead of ignoring errors
-            } catch (err) {
-              return;
-            }
+          match: function() {
+            return false;
           },
-          requestType: ['navigate'],
+          requestTypes: ['navigate'],
         },
       ],
+      rewrites: arg => arg,
       ServiceWorker: {
-        entry: './public/push-sw.js', // Add the push notification ServiceWorker
-        events: true, // Emit events from the ServiceWorker
+        entry: './public/push-sw.js',
+        events: true,
         prefetchRequest: {
-          credentials: 'include', // Include credentials when fetching files, just to make sure we don't get into any issues
+          mode: 'cors',
+          credentials: 'include',
         },
       },
-      AppCache: false, // Don't cache using AppCache, too buggy that thing
+      AppCache: false,
     })
   );
   if (process.env.ANALYZE_BUNDLE === 'true') {
@@ -147,11 +139,24 @@ module.exports = function override(config, env) {
       })
     );
   }
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.BUNDLE_BUDDY === 'true') {
+    config.plugins.push(new BundleBuddyWebpackPlugin());
+  }
+  config.plugins.unshift(
+    new webpack.optimize.CommonsChunkPlugin({
+      names: ['bootstrap'],
+      filename: 'static/js/[name].js',
+      minChunks: Infinity,
+    })
+  );
+  if (process.env.NODE_ENV === 'production') {
+    removeEslint(config);
     config.plugins.push(
-      WriteFilePlugin({
-        // Don't match hot-update files
-        test: /^((?!(hot-update)).)*$/g,
+      new webpack.DefinePlugin({
+        'process.env': {
+          SENTRY_DSN_CLIENT: `"${process.env.SENTRY_DSN_CLIENT}"`,
+          AMPLITUDE_API_KEY: `"${process.env.AMPLITUDE_API_KEY}"`,
+        },
       })
     );
   }
