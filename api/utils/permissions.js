@@ -177,7 +177,7 @@ export const canViewThread = async (
   return false;
 };
 
-const canViewDMThread = async (
+export const canViewDMThread = async (
   userId: string,
   threadId: string,
   loaders: any
