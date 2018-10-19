@@ -663,6 +663,7 @@ export const banUser = createWriteQuery((args: BanUserType) => {
         const dmThreadIds = await db
           .table('usersDirectMessageThreads')
           .getAll(userId, { index: 'userId' })
+          .map(row => row('threadId'))
           .run();
 
         let removeOtherParticipantsDmThreadIds, removeDMThreads;
