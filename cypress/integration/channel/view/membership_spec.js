@@ -28,8 +28,7 @@ const { userId: memberInPrivateChannelId } = data.usersChannels.find(
 const QUIET_USER_ID = constants.QUIET_USER_ID;
 
 const leave = () => {
-  cy
-    .get('[data-cy="channel-join-button"]')
+  cy.get('[data-cy="channel-join-button"]')
     .should('be.visible')
     .contains('Joined');
 
@@ -39,8 +38,7 @@ const leave = () => {
 };
 
 const join = () => {
-  cy
-    .get('[data-cy="channel-join-button"]')
+  cy.get('[data-cy="channel-join-button"]')
     .should('be.visible')
     .contains('Join ');
 
@@ -90,8 +88,7 @@ describe('channel profile as owner', () => {
   });
 
   it('should render settings button', () => {
-    cy
-      .get('[data-cy="channel-settings-button"]')
+    cy.get('[data-cy="channel-settings-button"]')
       .should('be.visible')
       .contains('Settings');
   });
@@ -115,18 +112,8 @@ describe('private channel profile', () => {
       cy.visit(`/${community.slug}/${privateChannel.slug}`);
     });
 
-    it('should render request to join view', () => {
-      cy.get('[data-cy="channel-view-is-restricted"]').should('be.visible');
-
-      cy
-        .get('[data-cy="request-to-join-private-channel-button"]')
-        .contains(`Request to join ${privateChannel.name}`)
-        .click();
-
-      cy
-        .get('[data-cy="cancel-request-to-join-private-channel-button"]')
-        .contains('Cancel request')
-        .click();
+    it('should render channel not found view', () => {
+      cy.get('[data-cy="channel-not-found"]').should('be.visible');
     });
   });
 });
