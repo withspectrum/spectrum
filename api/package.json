@@ -48,7 +48,7 @@
     "graphql-log": "0.1.2",
     "graphql-tools": "3.0.0",
     "helmet": "^3.14.0",
-    "highlight.js": "^9.13.0",
+    "highlight.js": "^9.13.1",
     "history": "^4.6.1",
     "hoist-non-react-statics": "^2.5.5",
     "host-validation": "^1.2.0",
