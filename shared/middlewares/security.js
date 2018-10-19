@@ -66,6 +66,7 @@ function securityMiddleware(
         'www.google-analytics.com',
         'cdn.ravenjs.com',
         'cdn.polyfill.io',
+        'cdn.amplitude.com',
 
         // Note: We will execution of any inline scripts that have the following
         // nonce identifier attached to them.
@@ -100,7 +101,7 @@ function securityMiddleware(
     },
 
     // Set to true if you only want browsers to report errors, not block them.
-    reportOnly: true,
+    reportOnly: process.env.NODE_ENV === 'development' || process.env.FORCE_DEV,
   };
 
   if (enableCSP) {
