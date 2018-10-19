@@ -82,6 +82,7 @@ class UserView extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps: Props) {
     if (!prevProps.data.user) return;
+    if (!this.props.data.user) return;
     // track when a new profile is viewed without the component having been remounted
     if (prevProps.data.user.id !== this.props.data.user.id) {
     }

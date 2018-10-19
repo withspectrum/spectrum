@@ -46,7 +46,7 @@ export default async (job: Job<PrivateChannelRequestApprovedJobData>) => {
 
   // only get owners with emails
   const filteredRecipients = recipients.filter(
-    user => user && isEmail(user.email)
+    user => user && user.email && isEmail(user.email)
   );
 
   // for each owner, create a notification for the app

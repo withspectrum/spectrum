@@ -1,36 +1,43 @@
 const { db } = require('shared/db');
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import type { DBUserSettings } from 'shared/types';
 
-export const createNewUsersSettings = (userId: string): Promise<Object> => {
+export const createNewUsersSettings = (
+  userId: string
+): Promise<DBUserSettings> => {
   return db
     .table('usersSettings')
-    .insert({
-      userId,
-      notifications: {
-        types: {
-          newMessageInThreads: {
-            email: true,
-          },
-          newMention: {
-            email: true,
-          },
-          newDirectMessage: {
-            email: true,
-          },
-          newThreadCreated: {
-            email: true,
-          },
-          dailyDigest: {
-            email: true,
-          },
-          weeklyDigest: {
-            email: true,
+    .insert(
+      {
+        userId,
+        notifications: {
+          types: {
+            newMessageInThreads: {
+              email: true,
+            },
+            newMention: {
+              email: true,
+            },
+            newDirectMessage: {
+              email: true,
+            },
+            newThreadCreated: {
+              email: true,
+            },
+            dailyDigest: {
+              email: true,
+            },
+            weeklyDigest: {
+              email: true,
+            },
           },
         },
       },
-    })
-    .run();
+      { returnChanges: 'always' }
+    )
+    .run()
+    .then(res => res.changes[0].new_val);
 };
 
 export const getUsersSettings = (userId: string): Promise<Object> => {
@@ -42,6 +49,8 @@ export const getUsersSettings = (userId: string): Promise<Object> => {
       if (results && results.length > 0) {
         // if the user already has a relationship with the thread we don't need to do anything, return
         return results[0];
+      } else {
+        return null;
       }
     });
 };

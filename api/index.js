@@ -42,7 +42,7 @@ app.set('trust proxy', true);
 app.use(toobusy);
 
 // Security middleware.
-addSecurityMiddleware(app);
+addSecurityMiddleware(app, { enableNonce: false, enableCSP: false });
 if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
   app.use(csrf);
 }
