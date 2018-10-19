@@ -101,7 +101,10 @@ function securityMiddleware(
     },
 
     // Set to true if you only want browsers to report errors, not block them.
-    reportOnly: process.env.NODE_ENV === 'development' || process.env.FORCE_DEV,
+    reportOnly:
+      process.env.NODE_ENV === 'development' || process.env.FORCE_DEV || false,
+    // Necessary because of Zeit CDN usage
+    browserSniff: false,
   };
 
   if (enableCSP) {
