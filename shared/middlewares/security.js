@@ -78,7 +78,7 @@ function securityMiddleware(
 
       // Defines the origins from which images can be loaded.
       // @note: Leave open to all images, too much image coming from different servers.
-      imgSrc: ['https:', 'http:'],
+      imgSrc: ['https:', 'http:', "'self'", 'data:'],
 
       // Defines valid sources of stylesheets.
       styleSrc: ["'self'", "'unsafe-inline'"],
