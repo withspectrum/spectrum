@@ -46,6 +46,7 @@
     "write-file-webpack-plugin": "^4.4.1"
   },
   "dependencies": {
+    "@braintree/sanitize-url": "^2.1.0",
     "algoliasearch": "^3.30.0",
     "amplitude": "^3.5.0",
     "amplitude-js": "^4.4.0",
@@ -61,7 +62,7 @@
     "apollo-upload-client": "^8.1.0",
     "apollo-upload-server": "^5.0.0",
     "apollo-utilities": "^1.0.21",
-    "aws-sdk": "2.318.0",
+    "aws-sdk": "2.336.0",
     "axios": "^0.17.1",
     "b2a": "^1.0.10",
     "bad-words": "^1.6.4",
