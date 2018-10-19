@@ -46,7 +46,6 @@
     "write-file-webpack-plugin": "^4.4.1"
   },
   "dependencies": {
-    "@braintree/sanitize-url": "^2.1.0",
     "algoliasearch": "^3.30.0",
     "amplitude": "^3.5.0",
     "amplitude-js": "^4.4.0",
@@ -108,7 +107,7 @@
     "graphql-tag": "^2.10.0",
     "graphql-tools": "^3.0.5",
     "helmet": "^3.14.0",
-    "highlight.js": "^9.10.0",
+    "highlight.js": "^9.13.1",
     "history": "^4.6.1",
     "hoist-non-react-statics": "^2.3.1",
     "host-validation": "^1.1.0",
