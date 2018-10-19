@@ -9,7 +9,12 @@ export default async (channel: DBChannel, _: any, ctx: GraphQLContext) => {
 
   const community = await loaders.community.load(communityId);
   if (community.isPrivate) {
-    if (!(await canViewCommunity(currentUser, community.id, loaders)))
+    if (await canViewCommunity(currentUser, community.id, loaders)) {
       return community;
+    } else {
+      return null;
+    }
   }
+
+  return community;
 };
