@@ -76,7 +76,7 @@ exports[`should not fetch pending users if no permissions 1`] = `
 Object {
   "data": Object {
     "channel": null,
-  }
+  },
 }
 `;
 
