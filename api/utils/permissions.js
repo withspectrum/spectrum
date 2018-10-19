@@ -176,3 +176,24 @@ export const canViewThread = async (
   if (community.isPrivate) return communityPermissions.isMember;
   return false;
 };
+
+const canViewDMThread = async (
+  userId: string,
+  threadId: string,
+  loaders: any
+) => {
+  if (!userId) return false;
+
+  const thread = await loaders.directMessageParticipants.load(threadId);
+
+  if (!thread || !thread.reduction || thread.reduction.length === 0)
+    return false;
+
+  const participants = thread.reduction;
+
+  const ids = participants.map(({ userId }) => userId);
+
+  if (ids.indexOf(userId) === -1) return false;
+
+  return true;
+};
