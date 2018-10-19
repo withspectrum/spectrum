@@ -75,27 +75,15 @@ Object {
 exports[`should not fetch pending users if no permissions 1`] = `
 Object {
   "data": Object {
-    "channel": Object {
-      "blockedUsers": null,
-      "id": "2",
-    },
+    "channel": null,
   },
-  "errors": Array [
-    [GraphQLError: You don’t have permission to manage this channel],
-  ],
 }
 `;
 
 exports[`should not fetch pending users if not authed 1`] = `
 Object {
   "data": Object {
-    "channel": Object {
-      "blockedUsers": null,
-      "id": "2",
-    },
+    "channel": null,
   },
-  "errors": Array [
-    [GraphQLError: You must be signed in to do this],
-  ],
 }
 `;

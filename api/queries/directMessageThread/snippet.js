@@ -1,7 +1,7 @@
 // @flow
 
 import type { GraphQLContext } from '../../';
-import { canViewDMThread } from './utils';
+import { canViewDMThread } from '../../utils/permissions';
 import { toPlainText, toState } from 'shared/draft-utils';
 
 export default async (
@@ -11,7 +11,7 @@ export default async (
 ) => {
   if (!user || !user.id) return null;
 
-  const canViewThread = await canViewDMThread(id, user.id, { loaders });
+  const canViewThread = await canViewDMThread(user.id, id, loaders);
   if (!canViewThread) return null;
 
   return loaders.directMessageSnippet.load(id).then(results => {
