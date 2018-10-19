@@ -22,6 +22,7 @@ const Channel = /* GraphQL */ `
 
   type ChannelMetaData {
     threads: Int
+      @deprecated(reason: "metaData.threads is deprecated and always returns 0")
     members: Int
   }
 

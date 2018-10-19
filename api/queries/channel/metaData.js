@@ -3,16 +3,16 @@ import type { GraphQLContext } from '../../';
 import type { DBChannel } from 'shared/types';
 import Raven from 'shared/raven';
 
+// NOTE(@mxstbr): metaData.threads is deprecated and not shown anywhere in the UI
+// so we always return 0
 export default async (
   { id, memberCount }: DBChannel,
   _: any,
   { loaders }: GraphQLContext
 ) => {
-  const [threads] = await Promise.all([loaders.channelThreadCount.load(id)]);
-
   if (typeof memberCount === 'number') {
     return {
-      threads: threads ? threads.reduction : 0,
+      threads: 0,
       members: memberCount || 1,
     };
   }
@@ -28,6 +28,6 @@ export default async (
       .then(
         res => (res && Array.isArray(res.reduction) ? res.reduction.length : 0)
       ),
-    threads: threads ? threads.reduction : 0,
+    threads: 0,
   };
 };
