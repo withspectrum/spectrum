@@ -3,7 +3,10 @@ const hpp = require('hpp');
 const helmet = require('helmet');
 const uuid = require('uuid');
 
-function securityMiddleware(server, { enableNonce, enableCSP }) {
+function securityMiddleware(
+  server: express$Application,
+  { enableNonce, enableCSP }: { enableNonce: boolean, enableCSP: boolean }
+) {
   // Don't expose any software information to hackers.
   server.disable('x-powered-by');
 
@@ -34,10 +37,16 @@ function securityMiddleware(server, { enableNonce, enableCSP }) {
     // Attach a unique "nonce" to every response. This allows use to declare
     // inline scripts as being safe for execution against our content security policy.
     // @see https://helmetjs.github.io/docs/csp/
-    server.use((request, response, next) => {
-      response.locals.nonce = uuid.v4();
-      next();
-    });
+    server.use(
+      (
+        request: express$Request,
+        response: express$Response,
+        next: express$NextFunction
+      ) => {
+        response.locals.nonce = uuid.v4();
+        next();
+      }
+    );
   }
 
   // Content Security Policy (CSP)
