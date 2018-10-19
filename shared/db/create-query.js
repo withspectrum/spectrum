@@ -50,10 +50,8 @@ type CreateReadQueryInput<I, O> = $Exact<{
 
 type CreateQueryCallback<I, O> = (...args: I) => O;
 
-export const createReadQuery = <I: Array<*>, O: *>(
-  callback: (...args: I) => CreateReadQueryInput<I, O>
-) => {
-  return async (...args: I) => {
+export const createReadQuery = (callback: any) => {
+  return async (...args: any) => {
     const input = callback(...args);
     TOTAL_QUERIES++;
     if (typeof input.query.run !== 'function') throw new Error(READ_RUN_ERROR);
@@ -80,9 +78,7 @@ type CreateWriteQueryInput<I, O> = $Exact<{
   invalidateTags: TagsFn<I, O>,
 }>;
 
-export const createWriteQuery = <I: Array<*>, O: *>(
-  callback: (...args: I) => CreateWriteQueryInput<I, O>
-) => {
+export const createWriteQuery = <I: Array<*>, O: *>(callback: any) => {
   return callback;
   /*
   return async (...args: I) => {
