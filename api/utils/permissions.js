@@ -148,3 +148,39 @@ export const canViewCommunity = async (user: DBUser, communityId: string, loader
   
   return true;
 }
+
+// prettier-ignore
+export const canViewChannel = async (user: DBUser, channelId: string, loaders: any) => {
+  if (!channelId) return false;
+
+  const channel = await channelExists(channelId, loaders);
+  if (!channel) return false;
+
+  const community = await communityExists(channel.communityId, loaders);
+  if (!community) return false
+
+  if (!channel.isPrivate && !community.isPrivate) return true
+
+  if (!user) return false
+
+  const [
+    communityPermissions,
+    channelPermissions
+  ] = await Promise.all([
+    loaders.userPermissionsInCommunity.load([
+      user.id,
+      community.id,
+    ]),
+    loaders.userPermissionsInChannel.load([
+      user.id,
+      channel.id,
+    ])
+  ])
+
+  if (channel.isPrivate && !channelPermissions) return false
+  if (community.isPrivate && !communityPermissions) return false
+  if (channel.isPrivate && !channelPermissions.isMember) return false
+  if (community.isPrivate && !communityPermissions.isMember) return false
+  
+  return true
+}
