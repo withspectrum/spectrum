@@ -6,6 +6,7 @@
     }
   },
   "env": {
+    "DEBUG": "shared:rethinkdb:db-query-cache",
     "S3_TOKEN": "@s3-token",
     "S3_SECRET": "@s3-secret",
     "COMPOSE_RETHINKDB_PASSWORD": "@compose-rethinkdb-password",

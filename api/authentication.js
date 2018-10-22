@@ -6,11 +6,11 @@ const { Strategy: FacebookStrategy } = require('passport-facebook');
 const { Strategy: GoogleStrategy } = require('passport-google-oauth2');
 const { Strategy: GitHubStrategy } = require('passport-github2');
 const {
-  getUser,
+  getUserById,
   createOrFindUser,
   saveUserProvider,
   getUserByIndex,
-} = require('./models/user');
+} = require('shared/db/queries/user');
 
 const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
@@ -73,7 +73,7 @@ const init = () => {
     }
 
     // Slow path: data is just the userID (legacy), so we have to go to the db to get the full data
-    return getUser({ id: data })
+    return getUserById(data)
       .then(user => {
         done(null, user);
       })

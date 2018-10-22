@@ -6,7 +6,7 @@ import { BRIAN_ID } from '../../migrations/seed/default/constants';
 import { Router } from 'express';
 const jwt = require('jsonwebtoken');
 const emailRouter = Router();
-import { updateUserEmail } from '../../models/user';
+import { updateUserEmail } from 'shared/db/queries/user';
 import { unsubscribeUserFromEmailNotification } from '../../models/usersSettings';
 import { updateThreadNotificationStatusForUser } from '../../models/usersThreads';
 import { updateDirectMessageThreadNotificationStatusForUser } from '../../models/usersDirectMessageThreads';

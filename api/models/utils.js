@@ -1,5 +1,5 @@
 // @flow
-import { db } from './db';
+import { db } from 'shared/db';
 
 export const NEW_DOCUMENTS = db
   .row('old_val')

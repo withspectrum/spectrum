@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import intersection from 'lodash.intersection';
 import { parseRange } from './utils';
 import { uploadImage } from '../utils/file-storage';

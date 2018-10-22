@@ -4,7 +4,7 @@ import UserError from '../../utils/UserError';
 import type { GraphQLContext } from '../../';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
-import { banUser } from '../../models/user';
+import { banUser } from 'shared/db/queries/user';
 
 type BanUserInput = {
   input: {
