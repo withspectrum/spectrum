@@ -15,15 +15,62 @@ import type { DBUser, FileUpload, DBThread } from 'shared/types';
 
 export const getUserById = createReadQuery((userId: string) => {
   // fallback for a bad id coming in that is a stringified user object
-  let id = userId;
   if (userId[0] === '{') {
     let user = JSON.parse(userId);
-    id = user.id;
+
+    if (user.id) {
+      return {
+        query: db.table('users').get(user.id),
+        tags: (user: ?DBUser) => (user ? [user.id] : []),
+      };
+    } else if (user.email) {
+      return {
+        query: db.table('users').getAll(user.email, { index: 'email' }),
+        process: (users: ?Array<DBUser>) => (users && users[0]) || null,
+        tags: (user: ?DBUser) => (user ? [user.id] : []),
+      };
+    } else if (user.username) {
+      return {
+        query: db.table('users').getAll(user.username, { index: 'username' }),
+        process: (users: ?Array<DBUser>) => (users && users[0]) || null,
+        tags: (user: ?DBUser) => (user ? [user.id] : []),
+      };
+    } else if (user.githubProviderId) {
+      return {
+        query: db
+          .table('users')
+          .getAll(user.githubProviderId, { index: 'githubProviderId' }),
+        process: (users: ?Array<DBUser>) => (users && users[0]) || null,
+        tags: (user: ?DBUser) => (user ? [user.id] : []),
+      };
+    } else if (user.googleProviderId) {
+      return {
+        query: db
+          .table('users')
+          .getAll(user.googleProviderId, { index: 'googleProviderId' }),
+        process: (users: ?Array<DBUser>) => (users && users[0]) || null,
+        tags: (user: ?DBUser) => (user ? [user.id] : []),
+      };
+    } else if (user.providerId) {
+      return {
+        query: db
+          .table('users')
+          .getAll(user.providerId, { index: 'providerId' }),
+        process: (users: ?Array<DBUser>) => (users && users[0]) || null,
+        tags: (user: ?DBUser) => (user ? [user.id] : []),
+      };
+    } else {
+      console.error(
+        `Couldn’t get meaningful user data from passport: ${userId}`
+      );
+      return null;
+    }
   }
 
+  // userId was not a stringified object
   return {
-    query: db.table('users').get(id),
-    tags: (user: ?DBUser) => [id],
+    query: db.table('users').get(userId),
+    tags: (user: ?DBUser) => [userId],
   };
 });
 
