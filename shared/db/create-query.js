@@ -79,15 +79,13 @@ type CreateWriteQueryInput<I, O> = $Exact<{
 }>;
 
 export const createWriteQuery = <I: Array<*>, O: *>(callback: any) => {
-  return callback;
-  /*
   return async (...args: I) => {
     const input = callback(...args);
     const result = await input.query;
     if (typeof result.run === 'function') throw new Error(WRITE_RUN_ERROR);
 
-    const tags = input.invalidateTags(result).filter(Boolean);
-    await queryCache.invalidate(...tags);
+    // const tags = input.invalidateTags(result).filter(Boolean);
+    // await queryCache.invalidate(...tags);
     return result;
-  };*/
+  };
 };
