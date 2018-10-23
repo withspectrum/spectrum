@@ -23,7 +23,7 @@ export const getUserById = createReadQuery((userId: string) => {
 
   return {
     query: db.table('users').get(id),
-    tags: (user: ?DBUser) => [userId],
+    tags: (user: ?DBUser) => [id],
   };
 });
 
