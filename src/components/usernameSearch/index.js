@@ -136,7 +136,6 @@ class UsernameSearch extends React.Component<Props, State> {
 
   render() {
     const { username, isSearching } = this.state;
-    console.log({ props: this.props });
     const { label, size, dataCy } = this.props;
     return (
       <React.Fragment>
