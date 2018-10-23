@@ -71,9 +71,7 @@ describe('sidebar components on thread view', () => {
 
     it('should render', () => {
       // loaded login upsell in sidebar
-      cy.get('[data-cy="thread-sidebar-login"]')
-        .scrollIntoView()
-        .should('not.be.visible');
+      cy.get('[data-cy="thread-sidebar-login"]').should('not.be.visible');
 
       // loaded community info
       cy.get('[data-cy="thread-sidebar-community-info"]')
@@ -100,9 +98,7 @@ describe('sidebar components on thread view', () => {
 
     it('should render', () => {
       // loaded login upsell in sidebar
-      cy.get('[data-cy="thread-sidebar-login"]')
-        .scrollIntoView()
-        .should('not.be.visible');
+      cy.get('[data-cy="thread-sidebar-login"]').should('not.be.visible');
 
       // loaded community info
       cy.get('[data-cy="thread-sidebar-community-info"]')
