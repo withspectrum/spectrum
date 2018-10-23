@@ -195,7 +195,7 @@ const createChannel = ({ input }: CreateChannelInput, userId: string): Promise<D
         slug,
         isPrivate,
         isDefault: isDefault ? true : false,
-        memberCount: 1,
+        memberCount: 0,
       },
       { returnChanges: true }
     )
