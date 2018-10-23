@@ -1,4 +1,3 @@
-// @flow
 import data from '../../../shared/testing/data';
 import { toPlainText, toState } from '../../../shared/draft-utils';
 import constants from '../../../api/migrations/seed/default/constants';
