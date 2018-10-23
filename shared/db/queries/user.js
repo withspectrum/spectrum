@@ -13,10 +13,19 @@ import { getUserChannelIds } from 'api/models/usersChannels';
 import type { PaginationOptions } from 'api/utils/paginate-arrays';
 import type { DBUser, FileUpload, DBThread } from 'shared/types';
 
-export const getUserById = createReadQuery((userId: string) => ({
-  query: db.table('users').get(userId),
-  tags: (user: ?DBUser) => [userId],
-}));
+export const getUserById = createReadQuery((userId: string) => {
+  // fallback for a bad id coming in that is a stringified user object
+  let id = userId;
+  if (userId[0] === '{') {
+    let user = JSON.parse(userId);
+    id = user.id;
+  }
+
+  return {
+    query: db.table('users').get(id),
+    tags: (user: ?DBUser) => [id],
+  };
+});
 
 export const getUserByEmail = createReadQuery((email: string) => ({
   query: db.table('users').getAll(email, { index: 'email' }),
@@ -79,7 +88,7 @@ export const saveUserProvider = createWriteQuery(
           [providerMethod]: providerId,
           ...extraFields,
         },
-        { returnChanges: true }
+        { returnChanges: 'always' }
       )
       .run()
       .then(
@@ -293,7 +302,7 @@ export const editUser = createWriteQuery(
                             event: events.USER_EDITED,
                           });
 
-                          identifyQueue.add({ userId: user.id });
+                          identifyQueue.add({ userId });
 
                           return result.changes[0].new_val;
                         }
@@ -341,7 +350,7 @@ export const editUser = createWriteQuery(
                             event: events.USER_EDITED,
                           });
 
-                          identifyQueue.add({ userId: user.id });
+                          identifyQueue.add({ userId });
 
                           return result.changes[0].new_val;
                         }
@@ -403,7 +412,7 @@ export const editUser = createWriteQuery(
                           event: events.USER_EDITED,
                         });
 
-                        identifyQueue.add({ userId: user.id });
+                        identifyQueue.add({ userId });
 
                         return result.changes[0].new_val;
                       }
@@ -443,7 +452,7 @@ export const editUser = createWriteQuery(
                     event: events.USER_EDITED,
                   });
 
-                  identifyQueue.add({ userId: user.id });
+                  identifyQueue.add({ userId });
 
                   return result.changes[0].new_val;
                 }
@@ -477,7 +486,7 @@ export const setUserOnline = createWriteQuery(
           isOnline,
           lastSeen: new Date(),
         },
-        { returnChanges: true }
+        { returnChanges: 'always' }
       )
       .run()
       .then(
@@ -509,7 +518,7 @@ export const setUserPendingEmail = createWriteQuery(
         {
           pendingEmail,
         },
-        { returnChanges: true }
+        { returnChanges: 'always' }
       )
       .run()
       .then(
@@ -546,7 +555,7 @@ export const updateUserEmail = createWriteQuery(
           email,
           pendingEmail: db.literal(),
         },
-        { returnChanges: true }
+        { returnChanges: 'always' }
       )
       .run()
       .then(
@@ -598,7 +607,7 @@ export const deleteUser = createWriteQuery((userId: string) => ({
         pendingEmail: null,
         name: 'Deleted',
       },
-      { returnChanges: true }
+      { returnChanges: 'always' }
     )
     .run()
     .then(
