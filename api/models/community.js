@@ -240,7 +240,7 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
         creatorId: user.id,
         administratorEmail: user.email,
         isPrivate,
-        memberCount: 1,
+        memberCount: 0,
       },
       { returnChanges: true }
     )
