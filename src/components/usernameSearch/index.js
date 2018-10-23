@@ -17,6 +17,7 @@ type Props = {
   size: string,
   onValidationResult: ({ error: string, success: string }) => void,
   onError: ?(err: Error) => void,
+  dataCy?: string,
 };
 
 type State = {
@@ -135,13 +136,15 @@ class UsernameSearch extends React.Component<Props, State> {
 
   render() {
     const { username, isSearching } = this.state;
-    const { label, size } = this.props;
+    console.log({ props: this.props });
+    const { label, size, dataCy } = this.props;
     return (
       <React.Fragment>
         <Input
           {...this.props}
           defaultValue={username}
           onChange={this.handleChange}
+          dataCy={dataCy}
         >
           {label && label}
           {isSearching && (
