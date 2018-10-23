@@ -18,6 +18,7 @@ export default async (_: any, args: GetChannelArgs, ctx: GraphQLContext) => {
       args.channelSlug,
       args.communitySlug
     );
+    if (!channel) return new UserError('We couldn’t find this channel');
     if (!(await canViewChannel(currentUser, channel.id, loaders))) return null;
     return channel;
   }
