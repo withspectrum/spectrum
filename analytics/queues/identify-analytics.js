@@ -7,6 +7,9 @@ import { identify, transformations } from '../utils';
 
 const processJob = async (job: Job<IdentifyAnalyticsData>) => {
   const { userId } = job.data;
+
+  if (!userId) return;
+
   const user = await getUserById(userId);
 
   if (!user) return;

@@ -79,7 +79,7 @@ export const saveUserProvider = createWriteQuery(
           [providerMethod]: providerId,
           ...extraFields,
         },
-        { returnChanges: true }
+        { returnChanges: 'always' }
       )
       .run()
       .then(
@@ -293,7 +293,7 @@ export const editUser = createWriteQuery(
                             event: events.USER_EDITED,
                           });
 
-                          identifyQueue.add({ userId: user.id });
+                          identifyQueue.add({ userId });
 
                           return result.changes[0].new_val;
                         }
@@ -341,7 +341,7 @@ export const editUser = createWriteQuery(
                             event: events.USER_EDITED,
                           });
 
-                          identifyQueue.add({ userId: user.id });
+                          identifyQueue.add({ userId });
 
                           return result.changes[0].new_val;
                         }
@@ -403,7 +403,7 @@ export const editUser = createWriteQuery(
                           event: events.USER_EDITED,
                         });
 
-                        identifyQueue.add({ userId: user.id });
+                        identifyQueue.add({ userId });
 
                         return result.changes[0].new_val;
                       }
@@ -443,7 +443,7 @@ export const editUser = createWriteQuery(
                     event: events.USER_EDITED,
                   });
 
-                  identifyQueue.add({ userId: user.id });
+                  identifyQueue.add({ userId });
 
                   return result.changes[0].new_val;
                 }
@@ -477,7 +477,7 @@ export const setUserOnline = createWriteQuery(
           isOnline,
           lastSeen: new Date(),
         },
-        { returnChanges: true }
+        { returnChanges: 'always' }
       )
       .run()
       .then(
@@ -509,7 +509,7 @@ export const setUserPendingEmail = createWriteQuery(
         {
           pendingEmail,
         },
-        { returnChanges: true }
+        { returnChanges: 'always' }
       )
       .run()
       .then(
@@ -546,7 +546,7 @@ export const updateUserEmail = createWriteQuery(
           email,
           pendingEmail: db.literal(),
         },
-        { returnChanges: true }
+        { returnChanges: 'always' }
       )
       .run()
       .then(
@@ -598,7 +598,7 @@ export const deleteUser = createWriteQuery((userId: string) => ({
         pendingEmail: null,
         name: 'Deleted',
       },
-      { returnChanges: true }
+      { returnChanges: 'always' }
     )
     .run()
     .then(
