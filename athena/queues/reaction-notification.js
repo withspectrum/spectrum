@@ -13,7 +13,7 @@ import {
 import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
-} from '../models/usersNotifications';
+} from 'shared/db/queries/usersNotifications';
 import type { Job, ReactionNotificationJobData } from 'shared/bull/types';
 
 export default async (job: Job<ReactionNotificationJobData>) => {

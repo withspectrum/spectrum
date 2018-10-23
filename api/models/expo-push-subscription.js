@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('api:models:expo-push-subscription');
-const { db } = require('./db');
+const { db } = require('shared/db');
 import type { DBExpoPushSubscription } from 'shared/types';
 
 export const storeExpoSubscription = (token: string, userId: string) => {

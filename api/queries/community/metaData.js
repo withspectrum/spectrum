@@ -1,4 +1,4 @@
-// @flow
+// TODO: Flow type again
 import Raven from 'shared/raven';
 import type { DBCommunity } from 'shared/types';
 import type { GraphQLContext } from '../../';

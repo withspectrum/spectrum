@@ -1,6 +1,5 @@
 // @flow
-const { db } = require('./db');
-import type { DBUsersChannels, DBChannel } from 'shared/types';
+const { db } = require('shared/db');
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 import {
@@ -8,6 +7,7 @@ import {
   decrementMemberCount,
   setMemberCount,
 } from './channel';
+import type { DBUsersChannels, DBChannel } from 'shared/types';
 
 /*
 ===========================================================
@@ -103,7 +103,7 @@ const createMemberInChannel = (channelId: string, userId: string, token: boolean
     })
     .then(async () => {
       await incrementMemberCount(channelId)
-      return db.table('channels').get(channelId)
+      return db.table('channels').get(channelId).run()
     });
 };
 
@@ -142,7 +142,6 @@ const removeMemberInChannel = (channelId: string, userId: string): Promise<?DBCh
         }
 
         await decrementMemberCount(channelId)
-        
         return db.table('channels').get(join.channelId).run();
       } else {
         return null;
@@ -172,9 +171,9 @@ const unblockMemberInChannel = (channelId: string, userId: string): Promise<?DBC
     .run()
     .then(result => {
       if (result && result.changes && result.changes.length > 0) {
-        return db.table('channels').get(channelId);
+        return db.table('channels').get(channelId).run();
       } else {
-        return;
+        return null;
       }
     });
 };
@@ -246,7 +245,7 @@ const createOrUpdatePendingUserInChannel = (channelId: string, userId: string): 
       }
     })
     .then(() => {
-      return db.table('channels').get(channelId);
+      return db.table('channels').get(channelId).run();
     });
 };
 
@@ -266,7 +265,10 @@ const removePendingUsersInChannel = (channelId: string): Promise<DBChannel> => {
     .run()
     .then(result => {
       const join = result.changes[0].new_val;
-      return db.table('channels').get(join.channelId);
+      return db
+        .table('channels')
+        .get(join.channelId)
+        .run();
     });
 };
 
@@ -327,7 +329,7 @@ const approvePendingUserInChannel = async (channelId: string, userId: string): P
     )
     .run()
     .then(() => {
-      return db.table('channels').get(channelId);
+      return db.table('channels').get(channelId).run();
     });
 };
 
@@ -351,7 +353,7 @@ const approvePendingUsersInChannel = async (channelId: string): Promise<DBUsersC
     .run()
 
   setMemberCount(channelId, currentCount + pendingCount)
-  
+
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -669,6 +671,29 @@ const getUserUsersChannels = (userId: string) => {
     .run();
 };
 
+const getUserChannelIds = (userId: string) => {
+  return db
+    .table('usersChannels')
+    .getAll(userId, { index: 'userId' })
+    .filter({ isMember: true })
+    .map(rec => rec('channelId'))
+    .run();
+};
+
+// const getUserChannelIds = createQuery({
+//   read: (userId: string) =>
+//     db
+//       .table('usersChannels')
+//       .getAll(userId, { index: 'userId' })
+//       .filter({ isMember: true })
+//       .map(rec => rec('channelId')),
+//   tags: (userId: string) => (usersChannels: ?Array<DBUsersChannels>) => [
+//     userId,
+//     ...(usersChannels || []).map(({ channelId }) => channelId),
+//     ...(usersChannels || []).map(({ id }) => id),
+//   ],
+// });
+
 module.exports = {
   // modify and create
   createOwnerInChannel,
@@ -696,6 +721,7 @@ module.exports = {
   getUsersPermissionsInChannels,
   getPendingUsersInChannels,
   getUserUsersChannels,
+  getUserChannelIds,
   // constants
   DEFAULT_USER_CHANNEL_PERMISSIONS,
 };

@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import intersection from 'lodash.intersection';
 import { parseRange } from './utils';
 import { uploadImage } from '../utils/file-storage';
@@ -240,7 +240,7 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
         creatorId: user.id,
         administratorEmail: user.email,
         isPrivate,
-        memberCount: 1,
+        memberCount: 0,
       },
       { returnChanges: true }
     )
