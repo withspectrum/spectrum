@@ -71,8 +71,9 @@ export const StyledInput = styled.input`
 `;
 
 export const Input = props => {
+  const { dataCy, ...rest } = props;
   return (
-    <StyledLabel {...props}>
+    <StyledLabel {...rest}>
       {props.children}
       <StyledInput
         id={props.id}
@@ -83,6 +84,7 @@ export const Input = props => {
         autoFocus={props.autoFocus}
         disabled={props.disabled}
         size={props.size}
+        data-cy={dataCy}
       />
     </StyledLabel>
   );

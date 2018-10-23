@@ -52,17 +52,17 @@ export default requireAuth(
       }
     }
 
-    return editUser(args, user.id).then(async res => {
-      await updateCookieUserData({
-        ...res,
-      }).catch(err => {
-        Raven.captureException(
-          new Error(`Error updating cookie user data: ${err.message}`)
-        );
-        return res;
-      });
+    const editedUser = await editUser(args, user.id);
 
-      return res;
+    await updateCookieUserData({
+      ...editedUser,
+    }).catch(err => {
+      Raven.captureException(
+        new Error(`Error updating cookie user data: ${err.message}`)
+      );
+      return editedUser;
     });
+
+    return editedUser;
   }
 );
