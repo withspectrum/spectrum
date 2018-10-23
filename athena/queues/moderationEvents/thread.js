@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('athena:queue:moderation-events:thread');
-import { getUserById } from '../../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import { getCommunityById } from '../../models/community';
 import { getChannelById } from '../../models/channel';
 import { toState, toPlainText } from 'shared/draft-utils';

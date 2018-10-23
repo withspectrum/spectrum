@@ -26,8 +26,6 @@ it('should not fetch pending users if not authed', async () => {
         id
         blockedUsers {
           id
-          profilePhoto
-          coverPhoto
           name
           firstName
           description
@@ -53,8 +51,6 @@ it('should not fetch pending users if no permissions', async () => {
         id
         blockedUsers {
           id
-          profilePhoto
-          coverPhoto
           name
           firstName
           description
@@ -82,8 +78,6 @@ it('should fetch pending users if moderates channel', async () => {
         id
         blockedUsers {
           id
-          profilePhoto
-          coverPhoto
           name
           firstName
           description
@@ -111,8 +105,6 @@ it('should fetch pending users if moderates community', async () => {
         id
         blockedUsers {
           id
-          profilePhoto
-          coverPhoto
           name
           firstName
           description
@@ -140,8 +132,6 @@ it('should fetch pending users if owns community', async () => {
         id
         blockedUsers {
           id
-          profilePhoto
-          coverPhoto
           name
           firstName
           description

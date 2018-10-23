@@ -1,7 +1,7 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { deleteUser } from '../../models/user';
+import { deleteUser } from 'shared/db/queries/user';
 import { removeUsersCommunityMemberships } from '../../models/usersCommunities';
 import { removeUsersChannelMemberships } from '../../models/usersChannels';
 import { disableAllThreadNotificationsForUser } from '../../models/usersThreads';

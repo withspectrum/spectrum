@@ -2,7 +2,7 @@
 const debug = require('debug')('analytics:queues:identify');
 import Raven from 'shared/raven';
 import type { Job, IdentifyAnalyticsData } from 'shared/bull/types';
-import { getUserById } from '../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import { identify, transformations } from '../utils';
 
 const processJob = async (job: Job<IdentifyAnalyticsData>) => {

@@ -162,8 +162,8 @@ class MessagesWithData extends React.Component<Props, State> {
       <NullMessagesWrapper>
         <Icon glyph={'emoji'} size={64} />
         <NullCopy>
-          No messages have been sent in this conversation yet—why don’t you
-          kick things off below?
+          No messages have been sent in this conversation yet—why don’t you kick
+          things off below?
         </NullCopy>
       </NullMessagesWrapper>
     );

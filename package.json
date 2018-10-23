@@ -1,6 +1,6 @@
 {
   "name": "Spectrum",
-  "version": "2.4.47",
+  "version": "2.4.48",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -162,6 +162,7 @@
     "react-trend": "^1.2.4",
     "react-visibility-sensor": "^5.0.1",
     "recompose": "^0.27.1",
+    "redis-tag-cache": "^1.2.1",
     "redraft": "0.10.2",
     "redux": "^3.6.0",
     "redux-thunk": "^2.3.0",
@@ -206,7 +207,7 @@
     "start:analytics": "cross-env NODE_ENV=production node build-analytics/main.js",
     "start:api": "cross-env NODE_ENV=production node build-api/main.js",
     "dev:web": "cross-env NODE_PATH=./ react-app-rewired start",
-    "dev:api": "cross-env FILE_STORAGE=local cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,api*,shared:middlewares*,-api:resolvers cross-env DIR=api backpack",
+    "dev:api": "cross-env FILE_STORAGE=local cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,api*,shared:middlewares*,shared:rethinkdb:db-query-cache,-api:resolvers cross-env DIR=api backpack",
     "dev:athena": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,athena*,shared:middlewares*,-athena:resolvers cross-env DIR=athena backpack",
     "dev:hermes": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,hermes*,shared:middlewares*,-hermes:resolvers cross-env DIR=hermes backpack",
     "dev:chronos": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,chronos*,shared:middlewares*,-chronos:resolvers cross-env DIR=chronos backpack",
