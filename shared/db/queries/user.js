@@ -106,15 +106,16 @@ export const storeUser = createWriteQuery((user: Object) => ({
         ...user,
         modifiedAt: null,
       },
-      { returnChanges: true }
+      { returnChanges: 'always' }
     )
     .run()
-    .then(() => {
-      identifyQueue.add({ userId: user.id });
-      trackQueue.add({ userId: user.id, event: events.USER_CREATED });
-      sendNewUserWelcomeEmailQueue.add({ user });
-      return Promise.all([user, createNewUsersSettings(user.id)]).then(
-        ([user]) => user
+    .then(res => {
+      const dbUser = res.changes[0].new_val || res.changes[0].old_val;
+      identifyQueue.add({ userId: dbUser.id });
+      trackQueue.add({ userId: dbUser.id, event: events.USER_CREATED });
+      sendNewUserWelcomeEmailQueue.add({ user: dbUser });
+      return Promise.all([dbUser, createNewUsersSettings(dbUser.id)]).then(
+        ([dbUser]) => dbUser
       );
     }),
   invalidateTags: (user: DBUser) => [user.id],
