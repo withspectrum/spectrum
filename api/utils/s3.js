@@ -5,6 +5,7 @@ import shortid from 'shortid';
 import _ from 'lodash';
 import Raven from 'shared/raven';
 import sanitize from 'sanitize-filename';
+import UserError from './UserError';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 
@@ -48,12 +49,11 @@ export const uploadImage = async (
   const { filename, stream, mimetype } = result;
   const sanitized = sanitize(filename);
   const validMediaTypes = ['image/gif', 'image/jpeg', 'image/png', 'video/mp4'];
-
   return new Promise(res => {
     // mimetype not in the validMediaType collection
     if (_.indexOf(validMediaTypes, _.toLower(mimetype)) < 0) {
-      const unsupportedMediaTypeError = new Error(
-        `Unsupported media type ${mimetype}`
+      const unsupportedMediaTypeError = new UserError(
+        `We aren’t able to support uploads with the type ${mimetype}. Try uploading another image.`
       );
       Raven.captureException(unsupportedMediaTypeError);
       throw unsupportedMediaTypeError;
@@ -70,7 +70,8 @@ export const uploadImage = async (
       },
       (err, data) => {
         if (err) throw new Error(err);
-        if (!data || !data.Key) throw new Error('Image upload failed.');
+        if (!data || !data.Key)
+          throw new UserError('Image upload failed. Please try again.');
         const url = generateImageUrl(data.Key);
         res(encodeURI(url));
       }
