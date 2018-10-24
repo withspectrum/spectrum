@@ -9,6 +9,15 @@ export const track = (
   eventType: string,
   eventProperties: Object = {}
 ) => {
+  if (!userId) {
+    console.error('Undefined received as userId in tracking queue: ', {
+      userId,
+      eventType,
+      eventProperties,
+    });
+    return;
+  }
+
   const amplitudePromise = () => {
     debug(`[Amplitude] Tracking ${eventType}`);
 
