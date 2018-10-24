@@ -21,8 +21,6 @@ export const Page = styled.main`
   grid-template-rows: 1fr;
   grid-template-columns: 1fr;
   grid-template-areas: 'content';
-  overflow: auto;
-  overflow-x: hidden;
   background-color: ${theme.bg.default};
 `;
 
