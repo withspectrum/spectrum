@@ -450,7 +450,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     );
     const newActiveChannel =
       activeCommunityChannels.find(channel => {
-        if (channel) return null;
+        if (!channel) return null;
         // If there is an active channel and we're switching back to the currently open community
         // select that channel
         if (

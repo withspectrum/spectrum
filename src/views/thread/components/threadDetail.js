@@ -192,8 +192,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
       message = `You are about to delete another person's thread. As the owner of the ${
         thread.channel.name
       } channel, you have permission to do this. The thread author will be notified that this thread was deleted.`;
-    } else if (thread.isAuthor) {
-      message = 'Are you sure you want to delete this thread?';
     } else {
       message = 'Are you sure you want to delete this thread?';
     }

@@ -247,7 +247,8 @@ class MessagesWithData extends React.Component<Props, State> {
 
     if (messagesExist) {
       const { edges, pageInfo } = data.thread.messageConnection;
-      const unsortedMessages = edges.map(message => message && message.node);
+      const unsortedMessages =
+        edges && edges.map(message => message && message.node);
 
       const uniqueMessages = deduplicateChildren(unsortedMessages, 'id');
       const sortedMessages = sortAndGroupMessages(uniqueMessages);
@@ -323,7 +324,7 @@ class MessagesWithData extends React.Component<Props, State> {
       );
     }
 
-    if (!messagesExist) {
+    if (!isLoading && !messagesExist) {
       if (isLocked || !this.props.data.thread) return null;
 
       return this.getIsAuthor()

@@ -312,23 +312,6 @@ class UserView extends React.Component<Props, State> {
       return <LoadingScreen />;
     }
 
-    if (hasError) {
-      return (
-        <AppViewWrapper>
-          <Titlebar
-            title={'User not found'}
-            provideBack={true}
-            backRoute={'/'}
-            noComposer
-          />
-          <ViewError
-            heading={'We ran into an error loading this user.'}
-            refresh
-          />
-        </AppViewWrapper>
-      );
-    }
-
     if (!user) {
       return (
         <AppViewWrapper>
@@ -351,6 +334,21 @@ class UserView extends React.Component<Props, State> {
         </AppViewWrapper>
       );
     }
+
+    return (
+      <AppViewWrapper>
+        <Titlebar
+          title={'User not found'}
+          provideBack={true}
+          backRoute={'/'}
+          noComposer
+        />
+        <ViewError
+          heading={'We ran into an error loading this user.'}
+          refresh
+        />
+      </AppViewWrapper>
+    );
   }
 }
 
