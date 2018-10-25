@@ -1,7 +1,7 @@
 // @flow
 const debug = require('debug')('athena:should-get-email');
 import { getUsersSettings } from '../models/usersSettings';
-import { getUserById } from '../models/user';
+import { getUserById } from 'shared/db/queries/user';
 
 const getEmailStatus = (
   userId: string,

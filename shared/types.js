@@ -19,6 +19,7 @@ export type DBChannel = {
   name: string,
   slug: string,
   archivedAt?: Date,
+  memberCount: number,
 };
 
 export type DBCommunity = {
@@ -38,6 +39,7 @@ export type DBCommunity = {
   administratorEmail: ?string,
   pendingAdministratorEmail?: string,
   isPrivate: boolean,
+  memberCount: number,
 };
 
 export type DBCommunitySettings = {

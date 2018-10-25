@@ -17,13 +17,13 @@ export const __createChannelThreadCountLoader = createLoader(
   'group'
 );
 
-export const __createChannelMemberCountLoader = createLoader(
-  channels => getChannelsMemberCounts(channels),
+export const __createChannelPendingMembersLoader = createLoader(
+  channels => getPendingUsersInChannels(channels),
   'group'
 );
 
-export const __createChannelPendingMembersLoader = createLoader(
-  channels => getPendingUsersInChannels(channels),
+export const __createChannelMemberCountLoader = createLoader(
+  channels => getChannelsMemberCounts(channels),
   'group'
 );
 

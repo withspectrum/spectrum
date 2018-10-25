@@ -1,6 +1,6 @@
 // @flow
 import type { GraphQLContext } from '../../';
-import { canViewDMThread } from './utils';
+import { canViewDMThread } from '../../utils/permissions';
 
 export default async (
   { id }: { id: string },
@@ -9,7 +9,7 @@ export default async (
 ) => {
   if (!user || !user.id) return null;
 
-  const canViewThread = await canViewDMThread(id, user.id, { loaders });
+  const canViewThread = await canViewDMThread(user.id, id, loaders);
 
   if (!canViewThread) return null;
 

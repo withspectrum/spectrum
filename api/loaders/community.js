@@ -2,9 +2,9 @@
 import {
   getCommunities,
   getCommunitiesBySlug,
-  getCommunitiesMemberCounts,
   getCommunitiesChannelCounts,
   getCommunitiesOnlineMemberCounts,
+  getCommunitiesMemberCounts,
 } from '../models/community';
 import { getCommunitiesSettings } from '../models/communitySettings';
 import createLoader from './create-loader';

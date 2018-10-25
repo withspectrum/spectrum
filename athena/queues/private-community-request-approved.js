@@ -5,8 +5,8 @@ const debug = require('debug')(
 import Raven from 'shared/raven';
 import { getCommunityById } from '../models/community';
 import { storeNotification } from '../models/notification';
-import { storeUsersNotifications } from '../models/usersNotifications';
-import { getUsers } from '../models/user';
+import { storeUsersNotifications } from 'shared/db/queries/usersNotifications';
+import { getUsers } from 'shared/db/queries/user';
 import { fetchPayload } from '../utils/payloads';
 import isEmail from 'validator/lib/isEmail';
 import { sendPrivateCommunityRequestApprovedEmailQueue } from 'shared/bull/queues';

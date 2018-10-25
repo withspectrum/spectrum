@@ -8,7 +8,9 @@ import fs from 'fs';
 import express from 'express';
 import Loadable from 'react-loadable';
 import path from 'path';
-import { getUser } from 'api/models/user';
+// TODO: This is the only thing that connects hyperion to the db
+// we should get rid of this if at all possible
+import { getUserById } from 'shared/db/queries/user';
 import Raven from 'shared/raven';
 import toobusy from 'shared/middlewares/toobusy';
 import addSecurityMiddleware from 'shared/middlewares/security';
@@ -24,7 +26,7 @@ app.set('trust proxy', true);
 app.use(toobusy);
 
 // Security middleware.
-addSecurityMiddleware(app);
+addSecurityMiddleware(app, { enableNonce: true, enableCSP: true });
 
 if (process.env.NODE_ENV === 'development') {
   const logging = require('shared/middlewares/logging');
@@ -108,7 +110,7 @@ passport.deserializeUser((data, done) => {
   } catch (err) {}
 
   // Slow path: data is just the userID (legacy), so we have to go to the db to get the full data
-  getUser({ id: data })
+  getUserById(data)
     .then(user => {
       done(null, user);
     })

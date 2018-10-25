@@ -1,8 +1,13 @@
 // @flow
+import Raven from 'shared/raven';
 import type { GraphQLContext } from '../../';
-import type { EditUserInput } from '../../models/user';
+import type { EditUserInput } from 'shared/db/queries/user';
 import UserError from '../../utils/UserError';
-import { getUser, editUser } from '../../models/user';
+import {
+  getUserByUsername,
+  getUserById,
+  editUser,
+} from 'shared/db/queries/user';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
@@ -31,7 +36,7 @@ export default requireAuth(
         return new UserError('Nice try! 😉');
       }
 
-      const dbUser = await getUser({ username: args.input.username });
+      const dbUser = await getUserByUsername(args.input.username);
       if (dbUser && dbUser.id !== user.id) {
         trackQueue.add({
           userId: user.id,
@@ -47,11 +52,17 @@ export default requireAuth(
       }
     }
 
+    const editedUser = await editUser(args, user.id);
+
     await updateCookieUserData({
-      ...(await getUser({ id: currentUser.id })),
-      ...args.input,
-      file: undefined,
+      ...editedUser,
+    }).catch(err => {
+      Raven.captureException(
+        new Error(`Error updating cookie user data: ${err.message}`)
+      );
+      return editedUser;
     });
-    return editUser(args, user.id);
+
+    return editedUser;
   }
 );

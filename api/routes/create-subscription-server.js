@@ -4,7 +4,7 @@ import { execute, subscribe } from 'graphql';
 
 import schema from '../schema';
 import createLoaders from '../loaders';
-import { getUser, setUserOnline } from '../models/user';
+import { setUserOnline } from 'shared/db/queries/user';
 import { getUserIdFromReq } from '../utils/session-store';
 import createErrorFormatter from '../utils/create-graphql-error-formatter';
 

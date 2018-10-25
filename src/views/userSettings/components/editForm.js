@@ -282,7 +282,7 @@ class UserWithData extends React.Component<Props, State> {
     const postAuthRedirectPath = `?r=${CLIENT_URL}/users/${username}/settings`;
 
     return (
-      <SectionCard>
+      <SectionCard data-cy="user-edit-form">
         <Location>
           <Icon glyph="view-back" size={16} />
           <Link to={`/users/${username}`}>Return to Profile</Link>
@@ -313,6 +313,7 @@ class UserWithData extends React.Component<Props, State> {
             defaultValue={name}
             onChange={this.changeName}
             placeholder={"What's your name?"}
+            dataCy="user-name-input"
           >
             Name
           </Input>
@@ -326,6 +327,7 @@ class UserWithData extends React.Component<Props, State> {
             username={username}
             onValidationResult={this.handleUsernameValidation}
             onError={this.handleOnError}
+            dataCy="user-username-input"
           />
 
           {usernameError && (
@@ -336,13 +338,18 @@ class UserWithData extends React.Component<Props, State> {
             defaultValue={description}
             onChange={this.changeDescription}
             placeholder={'Introduce yourself to the class...'}
+            dataCy="user-description-input"
           >
             Bio
           </TextArea>
 
           {descriptionError && <Error>Bios can be up to 140 characters.</Error>}
 
-          <Input defaultValue={website} onChange={this.changeWebsite}>
+          <Input
+            defaultValue={website}
+            onChange={this.changeWebsite}
+            dataCy="user-website-input"
+          >
             Optional: Add your website
           </Input>
 
@@ -382,6 +389,7 @@ class UserWithData extends React.Component<Props, State> {
               }
               loading={isLoading}
               onClick={this.save}
+              dataCy="save-button"
             >
               Save
             </Button>

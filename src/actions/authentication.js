@@ -33,15 +33,7 @@ export const saveUserDataToLocalStorage = (user: Object) => async dispatch => {
   }
   // construct a clean object that doesn't include any metadata from apollo
   // like __typename
-  obj['currentUser'] = {
-    id: user.id,
-    name: user.name,
-    username: user.username,
-    profilePhoto: user.profilePhoto,
-    coverPhoto: user.coverPhoto,
-    website: user.website,
-    totalReputation: user.totalReputation,
-  };
+  obj['currentUser'] = user;
 
   // logs user id to analytics
   const response = await fetch(

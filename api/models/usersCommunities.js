@@ -1,9 +1,14 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import { sendCommunityNotificationQueue } from 'shared/bull/queues';
 import type { DBUsersCommunities, DBCommunity } from 'shared/types';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import {
+  incrementMemberCount,
+  decrementMemberCount,
+  setMemberCount,
+} from './community';
 
 /*
 ===========================================================
@@ -35,12 +40,16 @@ export const createOwnerInCommunity = (communityId: string, userId: string): Pro
       { returnChanges: true }
     )
     .run()
-    .then(result => {
-      trackQueue.add({
-        userId,
-        event: events.USER_WAS_ADDED_AS_OWNER_IN_COMMUNITY,
-        context: { communityId }
-      })
+    .then(async result => {
+      await Promise.all([
+        trackQueue.add({
+          userId,
+          event: events.USER_WAS_ADDED_AS_OWNER_IN_COMMUNITY,
+          context: { communityId }
+        }),
+        incrementMemberCount(communityId)
+      ])
+
       return result.changes[0].new_val
     });
 };
@@ -101,8 +110,11 @@ export const createMemberInCommunity = (communityId: string, userId: string): Pr
           .run();
       }
     })
-    .then(result => {
-      sendCommunityNotificationQueue.add({ communityId, userId });
+    .then(async result => {
+      await Promise.all([
+        sendCommunityNotificationQueue.add({ communityId, userId }),
+        incrementMemberCount(communityId)
+      ])
       return result.changes[0].new_val;
     });
 };
@@ -126,12 +138,16 @@ export const removeMemberInCommunity = (communityId: string, userId: string): Pr
       receiveNotifications: false,
     })
     .run()
-    .then(() =>
-      db
+    .then(async () => {
+      const community = await db
         .table('communities')
         .get(communityId)
         .run()
-    );
+
+      await decrementMemberCount(communityId)
+
+      return community
+    })
 };
 
 // removes all the user relationships to a community. will be invoked when a
@@ -166,6 +182,7 @@ export const removeMembersInCommunity = async (communityId: string): Promise<?Ob
 
   return Promise.all([
     ...trackingPromises,
+    setMemberCount(communityId, 0),
     leavePromise
   ])
 };
@@ -189,12 +206,15 @@ export const blockUserInCommunity = (communityId: string, userId: string): Promi
       { returnChanges: true }
     )
     .run()
-    .then(result => {
-      trackQueue.add({
-        userId,
-        event: events.USER_WAS_BLOCKED_IN_COMMUNITY,
-        context : { communityId }
-      })
+    .then(async result => {
+      await Promise.all([
+        trackQueue.add({
+          userId,
+          event: events.USER_WAS_BLOCKED_IN_COMMUNITY,
+          context : { communityId }
+        }),
+        decrementMemberCount(communityId)
+      ])
       return result.changes[0].new_val
     });
 };
@@ -219,13 +239,16 @@ export const unblockUserInCommunity = (communityId: string, userId: string): Pro
       { returnChanges: true }
     )
     .run()
-    .then(result => {
+    .then(async result => {
 
-      trackQueue.add({
-        userId,
-        event: events.USER_WAS_UNBLOCKED_IN_COMMUNITY,
-        context: { communityId }
-      })
+      await Promise.all([
+        trackQueue.add({
+          userId,
+          event: events.USER_WAS_UNBLOCKED_IN_COMMUNITY,
+          context: { communityId }
+        }),
+        incrementMemberCount(communityId)
+      ])
 
       return result.changes[0].new_val
     });
@@ -333,6 +356,10 @@ export const removeUsersCommunityMemberships = async (userId: string) => {
     });
   });
 
+  const memberCountPromises = memberships.map(member => {
+    return decrementMemberCount(member.communityId);
+  });
+
   const removeMembershipsPromise = db
     .table('usersCommunities')
     .getAll(userId, { index: 'userId' })
@@ -345,7 +372,11 @@ export const removeUsersCommunityMemberships = async (userId: string) => {
     })
     .run();
 
-  return Promise.all([...trackingPromises, removeMembershipsPromise]);
+  return Promise.all([
+    ...trackingPromises,
+    memberCountPromises,
+    removeMembershipsPromise,
+  ]);
 };
 
 // prettier-ignore

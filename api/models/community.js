@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import intersection from 'lodash.intersection';
 import { parseRange } from './utils';
 import { uploadImage } from '../utils/file-storage';
@@ -197,34 +197,6 @@ export const getCommunitiesOnlineMemberCounts = (
     .run();
 };
 
-// prettier-ignore
-export const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
-  const getChannelCount = db
-    .table('channels')
-    .getAll(communityId, { index: 'communityId' })
-    .filter(channel => db.not(channel.hasFields('deletedAt')))
-    .count()
-    .run();
-
-  const getMemberCount = db
-    .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ isBlocked: false, isMember: true })
-    .count()
-    .run();
-
-  return Promise.all([getChannelCount, getMemberCount]);
-};
-
-export const getMemberCount = (communityId: string): Promise<number> => {
-  return db
-    .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ isBlocked: false, isMember: true })
-    .count()
-    .run();
-};
-
 export type CreateCommunityInput = {
   input: {
     name: string,
@@ -267,7 +239,8 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
         modifiedAt: null,
         creatorId: user.id,
         administratorEmail: user.email,
-        isPrivate
+        isPrivate,
+        memberCount: 0,
       },
       { returnChanges: true }
     )
@@ -759,5 +732,69 @@ export const resetCommunityAdministratorEmail = (communityId: string) => {
       administratorEmail: null,
       pendingAdministratorEmail: db.literal(),
     })
+    .run();
+};
+
+export const incrementMemberCount = (
+  communityId: string
+): Promise<DBCommunity> => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update(
+      {
+        memberCount: db
+          .row('memberCount')
+          .default(0)
+          .add(1),
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};
+
+export const decrementMemberCount = (
+  communityId: string
+): Promise<DBCommunity> => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update(
+      {
+        memberCount: db
+          .row('memberCount')
+          .default(1)
+          .sub(1),
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};
+
+export const setMemberCount = (
+  communityId: string,
+  value: number
+): Promise<DBCommunity> => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update(
+      {
+        memberCount: value,
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};
+
+export const getMemberCount = (communityId: string): Promise<number> => {
+  return db
+    .table('usersCommunities')
+    .getAll(communityId, { index: 'communityId' })
+    .filter({ isMember: true })
+    .count()
     .run();
 };

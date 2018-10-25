@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import intersection from 'lodash.intersection';
 import { processReputationEventQueue } from 'shared/bull/queues';
 const { NEW_DOCUMENTS, parseRange } = require('./utils');
@@ -424,6 +424,8 @@ export const publishThread = (
         isPublished: true,
         isLocked: false,
         edits: [],
+        reactionCount: 0,
+        messageCount: 0,
       }),
       { returnChanges: true }
     )

@@ -1,5 +1,5 @@
 //@flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import { NEW_DOCUMENTS } from './utils';
 import { createChangefeed } from 'shared/changefeed-utils';
 import { trackQueue } from 'shared/bull/queues';
@@ -16,10 +16,9 @@ export type DBDirectMessageThread = {
 const getDirectMessageThread = (directMessageThreadId: string): Promise<DBDirectMessageThread> => {
   return db
     .table('directMessageThreads')
-    .getAll(directMessageThreadId)
-    .filter(row => row.hasFields('deletedAt').not())
+    .get(directMessageThreadId)
     .run()
-    .then(res => res ? res[0] : null)
+    .then(res => res && !res.deletedAt ? res : null);
 };
 
 // prettier-ignore

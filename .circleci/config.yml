@@ -118,23 +118,23 @@ jobs:
           name: Build desktop apps
           command: yarn run build:desktop
 
-  deploy_alpha:
-    <<: *js_defaults
-    docker:
-      - image: circleci/node:8-browsers
-    steps:
-      - attach_workspace:
-          at: ~/spectrum
-      - run: *build-api
-      - run:
-          name: Deploy and alias API
-          command: |
-            cd build-api
-            npx now-cd --alias "alpha=api.alpha.spectrum.chat" --team space-program
-            cd ..
-      - run:
-          name: Deploy and alias Hyperion
-          command: npx now-cd --alias "alpha=hyperion.alpha.spectrum.chat" --team space-program
+  # deploy_alpha:
+    # <<: *js_defaults
+    # docker:
+      # - image: circleci/node:8-browsers
+    # steps:
+      # - attach_workspace:
+          # at: ~/spectrum
+      # - run: *build-api
+      # - run:
+          # name: Deploy and alias API
+          # command: |
+            # cd build-api
+            # npx now-cd --alias "alpha=api.alpha.spectrum.chat" --team space-program
+            # cd ..
+      # - run:
+          # name: Deploy and alias Hyperion
+          # command: npx now-cd --alias "alpha=hyperion.alpha.spectrum.chat" --team space-program
 
   # Run eslint, flow etc.
   test_static_js:
