@@ -36,6 +36,12 @@
     source-map "^0.5.0"
     trim-right "^1.0.1"
 
+"@babel/helper-annotate-as-pure@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/helper-annotate-as-pure/-/helper-annotate-as-pure-7.0.0.tgz#323d39dd0b50e10c7c06ca7d7638e6864d8c5c32"
+  dependencies:
+    "@babel/types" "^7.0.0"
+
 "@babel/helper-annotate-as-pure@^7.0.0-beta.37":
   version "7.0.0-beta.53"
   resolved "https://registry.yarnpkg.com/@babel/helper-annotate-as-pure/-/helper-annotate-as-pure-7.0.0-beta.53.tgz#59960628375cbeef96a07edfe1ca38b756f01aa8"
@@ -136,6 +142,14 @@
   dependencies:
     esutils "^2.0.2"
     lodash "^4.17.5"
+    to-fast-properties "^2.0.0"
+
+"@babel/types@^7.0.0":
+  version "7.1.3"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.1.3.tgz#3a767004567060c2f40fca49a304712c525ee37d"
+  dependencies:
+    esutils "^2.0.2"
+    lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
 "@cypress/listr-verbose-renderer@0.4.1":
@@ -1479,6 +1493,13 @@ babel-plugin-jest-hoist@^20.0.3:
 babel-plugin-jest-hoist@^22.4.4:
   version "22.4.4"
   resolved "https://registry.yarnpkg.com/babel-plugin-jest-hoist/-/babel-plugin-jest-hoist-22.4.4.tgz#b9851906eab34c7bf6f8c895a2b08bea1a844c0b"
+
+"babel-plugin-styled-components@>= 1":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.8.0.tgz#9dd054c8e86825203449a852a5746f29f2dab857"
+  dependencies:
+    "@babel/helper-annotate-as-pure" "^7.0.0"
+    lodash "^4.17.10"
 
 babel-plugin-styled-components@^1.1.4, babel-plugin-styled-components@^1.1.7:
   version "1.5.1"
@@ -3284,6 +3305,14 @@ css-selector-tokenizer@^0.7.0:
 css-to-react-native@^2.0.3:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/css-to-react-native/-/css-to-react-native-2.2.1.tgz#7f3f4c95de65501b8720c87bf0caf1f39073b88e"
+  dependencies:
+    css-color-keywords "^1.0.0"
+    fbjs "^0.8.5"
+    postcss-value-parser "^3.3.0"
+
+css-to-react-native@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/css-to-react-native/-/css-to-react-native-2.2.2.tgz#c077d0f7bf3e6c915a539e7325821c9dd01f9965"
   dependencies:
     css-color-keywords "^1.0.0"
     fbjs "^0.8.5"
@@ -10631,12 +10660,13 @@ styled-components@^2.0.0:
     stylis "^3.4.0"
     supports-color "^3.2.3"
 
-styled-components@^4.0.0-beta.9:
-  version "4.0.0-beta.9"
-  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-4.0.0-beta.9.tgz#34d3fd57e9511a9da98f2007223e1aee1491429d"
+styled-components@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-4.0.2.tgz#7d4409ada019cdd34c25ba68c4577ea95dbcf0c5"
   dependencies:
     "@emotion/is-prop-valid" "^0.6.8"
-    css-to-react-native "^2.0.3"
+    babel-plugin-styled-components ">= 1"
+    css-to-react-native "^2.2.2"
     memoize-one "^4.0.0"
     prop-types "^15.5.4"
     react-is "^16.3.1"

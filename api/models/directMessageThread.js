@@ -16,9 +16,10 @@ export type DBDirectMessageThread = {
 const getDirectMessageThread = (directMessageThreadId: string): Promise<DBDirectMessageThread> => {
   return db
     .table('directMessageThreads')
-    .get(directMessageThreadId)
+    .getAll(directMessageThreadId)
     .filter(row => row.hasFields('deletedAt').not())
-    .run();
+    .run()
+    .then(res => res ? res[0] : null)
 };
 
 // prettier-ignore
