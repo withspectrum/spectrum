@@ -6561,9 +6561,9 @@ react-navigation-tabs@0.8.4:
     react-lifecycles-compat "^3.0.4"
     react-native-tab-view "^1.0.0"
 
-react-navigation@^2.18.0:
-  version "2.18.0"
-  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-2.18.0.tgz#c14e632da308cb60c3f60bbfba4b0c037ea502c3"
+react-navigation@^2.18.1:
+  version "2.18.1"
+  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-2.18.1.tgz#0aadd405ba1f04135701e75aadd29814678c3ba4"
   dependencies:
     clamp "^1.0.1"
     create-react-context "0.2.2"
