@@ -32,15 +32,9 @@ export const getCommunitiesWithMinimumMembers = (
   communityIds: Array<string>
 ) => {
   return db
-    .table('usersCommunities')
-    .getAll(...communityIds, { index: 'communityId' })
-    .group('communityId')
-    .ungroup()
-    .filter(row =>
-      row('reduction')
-        .count()
-        .gt(min)
-    )
-    .map(row => row('group'))
+    .table('communities')
+    .filter(row => row('memberCount').ge(min))
+    .filter(community => community.hasFields('deletedAt').not())
+    .map(row => row('id'))
     .run();
 };
