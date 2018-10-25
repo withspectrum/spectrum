@@ -3,7 +3,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Clipboard from 'react-clipboard.js';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { openModal } from '../../../actions/modals';
 import Icon from '../../../components/icons';
 import compose from 'recompose/compose';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
