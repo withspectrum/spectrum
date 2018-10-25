@@ -56,9 +56,10 @@ const ThreadCreatedComponent = ({
   return <ThreadProfile profileSize="mini" data={data} {...rest} />;
 };
 
-const ThreadCreated = compose(getThreadById, viewNetworkHandler)(
-  ThreadCreatedComponent
-);
+const ThreadCreated = compose(
+  getThreadById,
+  viewNetworkHandler
+)(ThreadCreatedComponent);
 
 /*
   NOTE: @brianlovin
@@ -95,7 +96,7 @@ export class NewThreadNotification extends React.Component<Props, State> {
     );
 
     const newThreadCount =
-      threads.length > 1 ? 'New threads were' : 'A new thread was';
+      threads && threads.length > 1 ? 'New threads were' : 'A new thread was';
 
     if (threads && threads.length > 0) {
       return (
@@ -172,7 +173,7 @@ class MiniNewThreadNotificationWithMutation extends React.Component<
     );
 
     const newThreadCount =
-      threads.length > 1 ? 'New threads were' : 'A new thread was';
+      threads && threads.length > 1 ? 'New threads were' : 'A new thread was';
 
     if (threads && threads.length > 0) {
       return (

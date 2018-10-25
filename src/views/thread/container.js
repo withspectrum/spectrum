@@ -160,8 +160,11 @@ class ThreadContainer extends React.Component<Props, State> {
   }
 
   handleScroll = e => {
-    e.persist();
     if (!e || !e.target) return;
+
+    if (e && e.persist) {
+      e.persist();
+    }
 
     // whenever the user scrolls in the thread we determine if they've scrolled
     // past the thread content section - once they've scroll passed it, we
