@@ -14,7 +14,6 @@ import {
   CardLink,
   Title,
   MessageCount,
-  Attachments,
   Pinned,
   PinnedBanner,
   PinnedIconWrapper,
@@ -25,9 +24,8 @@ import {
 const ThreadFeedCardPure = (props: Object): React$Element<any> => {
   const {
     location: { pathname },
-    data: { attachments, participants },
+    data: { participants },
   } = props;
-  const attachmentsExist = attachments && attachments.length > 0;
   const participantsExist = participants && participants.length > 0;
 
   return (
