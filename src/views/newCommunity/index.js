@@ -172,7 +172,7 @@ class NewCommunity extends React.Component<Props, State> {
       isLoading,
       data: { user },
     } = this.props;
-    const { activeStep, community, existingId, hasInvitedPeople } = this.state;
+    const { activeStep, community, hasInvitedPeople } = this.state;
     const title = this.title();
     const description = this.description();
     if (user && user.email) {

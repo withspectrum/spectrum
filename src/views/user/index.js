@@ -59,7 +59,6 @@ type Props = {
     user: GetUserType,
   },
   isLoading: boolean,
-  hasError: boolean,
   queryVarIsChanging: boolean,
   dispatch: Dispatch<Object>,
   history: History,
@@ -125,7 +124,6 @@ class UserView extends React.Component<Props, State> {
     const {
       data: { user },
       isLoading,
-      hasError,
       queryVarIsChanging,
       match: {
         params: { username },
