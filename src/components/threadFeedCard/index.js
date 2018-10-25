@@ -5,7 +5,6 @@ import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
-import { LinkPreview } from '../../components/linkPreview';
 import Icon from '../../components/icons';
 import FacePile from './facePile';
 import FormattedThreadLocation from './formattedThreadLocation';
@@ -24,7 +23,10 @@ import {
 } from './style';
 
 const ThreadFeedCardPure = (props: Object): React$Element<any> => {
-  const { location: { pathname }, data: { attachments, participants } } = props;
+  const {
+    location: { pathname },
+    data: { attachments, participants },
+  } = props;
   const attachmentsExist = attachments && attachments.length > 0;
   const participantsExist = participants && participants.length > 0;
 
@@ -54,24 +56,6 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
             </Pinned>
           )}
         </Link>
-        {attachmentsExist &&
-          attachments.map((attachment, i) => {
-            if (attachment.attachmentType === 'linkPreview') {
-              return (
-                <Attachments key={i}>
-                  <LinkPreview
-                    trueUrl={attachment.data.trueUrl}
-                    data={JSON.parse(attachment.data)}
-                    size={'small'}
-                    editable={false}
-                    margin={'8px 0 12px'}
-                  />
-                </Attachments>
-              );
-            } else {
-              return null;
-            }
-          })}
         <ContentInfo>
           {participantsExist && <FacePile {...props} />}
           {props.data.messageCount > 0 ? (
