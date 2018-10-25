@@ -387,7 +387,7 @@ class ActionBar extends React.Component<Props, State> {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            {currentUser ? (
+            {currentUser && (
               <FollowButton
                 currentUser={currentUser}
                 icon={
@@ -400,17 +400,6 @@ class ActionBar extends React.Component<Props, State> {
                 dataCy="thread-notifications-toggle"
               >
                 {thread.receiveNotifications ? 'Subscribed' : 'Notify me'}
-              </FollowButton>
-            ) : (
-              <FollowButton
-                currentUser={currentUser}
-                icon={'notification'}
-                dataCy="thread-notifications-login-capture"
-                onClick={() =>
-                  this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}))
-                }
-              >
-                Notify me
               </FollowButton>
             )}
 
