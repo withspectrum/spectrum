@@ -28,7 +28,6 @@ import { IconButton } from 'src/components/buttons';
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
 import { isAndroid } from 'shared/draft-utils';
 import MediaInput from 'src/components/mediaInput';
-import { LinkPreview, LinkPreviewLoading } from 'src/components/linkPreview';
 import Image from './Image';
 import Embed, { addEmbed, parseEmbedUrl } from './Embed';
 import { renderLanguageSelect } from './LanguageSelect';
@@ -46,8 +45,6 @@ import {
 type Props = {
   state: Object,
   onChange: Function,
-  showLinkPreview?: boolean,
-  linkPreview?: Object,
   focus?: boolean,
   readOnly?: boolean,
   editorRef?: any => void,
@@ -200,8 +197,6 @@ class Editor extends React.Component<Props, State> {
       className,
       style,
       editorRef,
-      showLinkPreview,
-      linkPreview,
       focus,
       version,
       placeholder,
@@ -277,23 +272,6 @@ class Editor extends React.Component<Props, State> {
                 </SideToolbar>
               </OutsideClickHandler>
             )}
-          {showLinkPreview &&
-            linkPreview &&
-            linkPreview.loading && (
-              <LinkPreviewLoading margin={'16px 0 24px 0'} />
-            )}
-          {showLinkPreview &&
-            linkPreview &&
-            linkPreview.data && (
-              <LinkPreview
-                data={linkPreview.data}
-                size={'large'}
-                remove={linkPreview.remove}
-                editable={!this.props.readOnly}
-                trueUrl={linkPreview.trueUrl}
-                margin={'16px 0 24px 0'}
-              />
-            )}
         </ComposerBase>
       );
     } else {
@@ -325,23 +303,6 @@ class Editor extends React.Component<Props, State> {
               {...rest}
             />
           </Wrapper>
-          {showLinkPreview &&
-            linkPreview &&
-            linkPreview.loading && (
-              <LinkPreviewLoading margin={'16px 0 24px 0'} />
-            )}
-          {showLinkPreview &&
-            linkPreview &&
-            linkPreview.data && (
-              <LinkPreview
-                data={linkPreview.data}
-                size={'large'}
-                remove={linkPreview.remove}
-                editable={!this.props.readOnly}
-                trueUrl={linkPreview.trueUrl}
-                margin={'16px 0 24px 0'}
-              />
-            )}
           {!readOnly && (
             <MediaRow>
               <MediaInput onChange={this.addImage} multiple>

@@ -53,7 +53,7 @@ class UserSettings extends React.Component<Props> {
     }
 
     // the user is logged in but somehow a user wasnt fetched from the server prompt a refresh to reauth the user
-    if ((currentUser && !user) || (currentUser && !user && !user.id)) {
+    if ((currentUser && !user) || (currentUser && user && !user.id)) {
       return (
         <React.Fragment>
           <Titlebar
@@ -77,7 +77,7 @@ class UserSettings extends React.Component<Props> {
     }
 
     // if the user isn't logged in, or for some reason the user settings that were returned don't match the user id in the store, we show a warning error state
-    if (!currentUser || user.id !== currentUser.id) {
+    if (!currentUser || (user && user.id !== currentUser.id)) {
       return (
         <React.Fragment>
           >
