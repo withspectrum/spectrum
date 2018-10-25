@@ -490,7 +490,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
           <Input
             defaultValue={name}
             onChange={this.changeName}
-            autoFocus={!window.innerWidth < 768}
+            autoFocus={!(window.innerWidth < 768)}
             onBlur={this.checkSuggestedCommunities}
             dataCy="community-name-input"
           >

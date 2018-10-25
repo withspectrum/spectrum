@@ -1,7 +1,7 @@
 import { sortByDate } from '../../../helpers/utils';
 
 export const sortAndGroupNotificationMessages = messagesToSort => {
-  if (!messagesToSort.length > 0) return [];
+  if (!(messagesToSort.length > 0)) return [];
   let messages = messagesToSort;
   messages = sortByDate(messages, 'timestamp', 'asc');
   let masterArray = [];
