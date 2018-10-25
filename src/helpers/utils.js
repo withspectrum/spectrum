@@ -60,15 +60,6 @@ export const throttle = (func: Function, threshhold: number, scope: any) => {
   };
 };
 
-export const getLinkPreviewFromUrl = (url: string) =>
-  fetch(`https://links.spectrum.chat/?url=${url}`)
-    .then(response => {
-      return response.json();
-    })
-    .catch(err => {
-      console.error('Error getting link preview: ', err);
-    });
-
 // Truncate a string nicely to a certain length
 export const truncate = (str: string, length: number) => {
   if (str.length <= length) {
@@ -120,7 +111,7 @@ export const renderMarkdownLinks = (text: string) => {
   const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
 
   return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
-    <a href={url} target="_blank" rel="noopener nofollower">
+    <a href={url} target="_blank" rel="noopener noreferrer">
       {text}
     </a>
   ));

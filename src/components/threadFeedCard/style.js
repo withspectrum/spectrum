@@ -62,14 +62,6 @@ export const MessageCount = styled(FlexRow)`
   }
 `;
 
-export const Attachments = styled(FlexRow)`
-  align-self: stretch;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0;
-  margin-top: 8px;
-`;
-
 export const AuthorName = styled.span`
   font-weight: 500;
   font-size: 13px;
