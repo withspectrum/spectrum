@@ -11,6 +11,7 @@ import { removeItemFromStorage } from '../../helpers/localStorage';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import { Loading } from 'src/components/loading';
 import type { Dispatch } from 'redux';
+import _ from 'lodash';
 
 type Props = {
   currentUser?: Object,
@@ -55,7 +56,7 @@ class AuthViewHandler extends React.Component<Props, State> {
       return removeItemFromStorage('spectrum');
     }
 
-    if (prev.data.user !== user && user !== null) {
+    if (!_.isEqual(prev.data.user, user) && user !== null) {
       // user has no timezone set
       if (!user.timezone) {
         editUser({ timezone: new Date().getTimezoneOffset() * -1 });
