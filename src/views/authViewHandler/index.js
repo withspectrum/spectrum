@@ -55,7 +55,10 @@ class AuthViewHandler extends React.Component<Props, State> {
       return removeItemFromStorage('spectrum');
     }
 
-    if (prev.data.user !== user && user !== null) {
+    if (
+      JSON.stringify(prev.data.user) !== JSON.stringify(user) &&
+      user !== null
+    ) {
       // user has no timezone set
       if (!user.timezone) {
         editUser({ timezone: new Date().getTimezoneOffset() * -1 });
