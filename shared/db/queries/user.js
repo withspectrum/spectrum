@@ -696,16 +696,20 @@ export const banUser = createWriteQuery((args: BanUserType) => {
     query: db
       .table('users')
       .get(userId)
-      .update({
-        bannedAt: new Date(),
-        bannedBy: currentUserId,
-        bannedReason: reason,
-        username: null,
-        coverPhoto: null, // in case the photo is inappropriate
-        profilePhoto: null, // in case the photo is inappropriate
-      })
+      .update(
+        {
+          bannedAt: new Date(),
+          bannedBy: currentUserId,
+          bannedReason: reason,
+          username: null,
+          coverPhoto: null, // in case the photo is inappropriate
+          profilePhoto: null, // in case the photo is inappropriate
+        },
+        { returnChanges: 'always' }
+      )
       .run()
-      .then(async () => {
+      .then(async res => {
+        const user = res.changes[0].new_val;
         /*  
           after the user object has been cleared, the user
           can no longer be searched for, messaged, or viewed
@@ -739,6 +743,7 @@ export const banUser = createWriteQuery((args: BanUserType) => {
         }
 
         return await Promise.all([
+          user,
           removeUsersCommunityMemberships(userId),
           removeUsersChannelMemberships(userId),
           disableAllThreadNotificationsForUser(userId),

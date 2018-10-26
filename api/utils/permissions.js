@@ -27,7 +27,7 @@ export const channelSlugIsBlacklisted = (slug: string): boolean => {
 
 // prettier-ignore
 export const isAuthedResolver = (resolver: Function) => (obj: any, args: any, context: GraphQLContext, info: any) => {
-  if (!context.user || !context.user.id) {
+  if (!context.user || !context.user.id || context.user.bannedAt) {
     return new UserError('You must be signed in to do this')
   }
 

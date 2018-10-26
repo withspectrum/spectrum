@@ -1,4 +1,5 @@
 // @flow
+import Raven from 'shared/raven';
 import { isAuthedResolver, isAdmin } from '../../utils/permissions';
 import UserError from '../../utils/UserError';
 import type { GraphQLContext } from '../../';
@@ -18,7 +19,7 @@ export default isAuthedResolver(
     const {
       input: { userId, reason },
     } = args;
-    const { loaders, user: currentUser } = ctx;
+    const { loaders, user: currentUser, updateCookieUserData } = ctx;
 
     if (!isAdmin(currentUser.id)) {
       return new UserError('You don’t have permission to do that.');
@@ -43,7 +44,7 @@ export default isAuthedResolver(
       reason,
       currentUserId: currentUser.id,
     })
-      .then(() => {
+      .then(async ([user]) => {
         trackQueue.add({
           userId,
           event: events.USER_WAS_BANNED,
@@ -60,6 +61,15 @@ export default isAuthedResolver(
             reason,
             reportedUser: userId,
           },
+        });
+
+        await updateCookieUserData({
+          ...user,
+        }).catch(err => {
+          Raven.captureException(
+            new Error(`Error updating cookie user data: ${err.message}`)
+          );
+          return true;
         });
 
         return true;
