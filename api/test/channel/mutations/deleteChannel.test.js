@@ -56,7 +56,6 @@ const DEFAULT_THREADS = [
       title: 'The first thread! 🎉',
       body: '',
     },
-    attachments: [],
     edits: [],
     modifiedAt: new Date(DATE),
     lastActive: new Date(DATE),
@@ -73,7 +72,6 @@ const DEFAULT_THREADS = [
       title: 'Another thread',
       body: '',
     },
-    attachments: [],
     edits: [],
     modifiedAt: new Date(DATE + 1),
     lastActive: new Date(DATE + 1),
@@ -90,7 +88,6 @@ const DEFAULT_THREADS = [
       title: 'Yet another thread',
       body: '',
     },
-    attachments: [],
     edits: [],
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
@@ -140,8 +137,8 @@ const variables = {
 it('should delete a channel if user is owner', async () => {
   const query = /* GraphQL */ `
     mutation deleteChannel($channelId: ID!) {
-      deleteChannel (channelId: $channelId)
-    },
+      deleteChannel(channelId: $channelId)
+    }
   `;
 
   const context = {
@@ -157,8 +154,8 @@ it('should delete a channel if user is owner', async () => {
 it('should not delete a channel if user is not owner', async () => {
   const query = /* GraphQL */ `
     mutation deleteChannel($channelId: ID!) {
-      deleteChannel (channelId: $channelId)
-    },
+      deleteChannel(channelId: $channelId)
+    }
   `;
 
   const context = {
@@ -174,8 +171,8 @@ it('should not delete a channel if user is not owner', async () => {
 it('should not delete a channel if user is not signed in', async () => {
   const query = /* GraphQL */ `
     mutation deleteChannel($channelId: ID!) {
-      deleteChannel (channelId: $channelId)
-    },
+      deleteChannel(channelId: $channelId)
+    }
   `;
 
   expect.assertions(1);
@@ -187,8 +184,8 @@ it('should not delete a channel if user is not signed in', async () => {
 it('should not delete the general channel', async () => {
   const query = /* GraphQL */ `
     mutation deleteChannel($channelId: ID!) {
-      deleteChannel (channelId: $channelId)
-    },
+      deleteChannel(channelId: $channelId)
+    }
   `;
 
   const context = {
@@ -215,8 +212,8 @@ it('should delete all threads in the deleted channel', async () => {
 
   const query = /* GraphQL */ `
     mutation deleteChannel($channelId: ID!) {
-      deleteChannel (channelId: $channelId)
-    },
+      deleteChannel(channelId: $channelId)
+    }
   `;
 
   const context = {

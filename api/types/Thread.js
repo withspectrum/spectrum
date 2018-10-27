@@ -65,11 +65,12 @@ const Thread = /* GraphQL */ `
     ): ThreadMessagesConnection! @cost(complexity: 1, multipliers: ["first"])
     messageCount: Int @cost(complexity: 1)
     author: ThreadParticipant! @cost(complexity: 2)
-    attachments: [Attachment]
     watercooler: Boolean
     currentUserLastSeen: Date @cost(complexity: 1)
     reactions: ThreadReactions @cost(complexity: 1)
 
+    attachments: [Attachment]
+      @deprecated(reason: "Attachments no longer used for link previews")
     isCreator: Boolean @deprecated(reason: "Use Thread.isAuthor instead")
     creator: User! @deprecated(reason: "Use Thread.author instead")
   }
