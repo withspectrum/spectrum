@@ -33,7 +33,6 @@ module.exports = [
         toJSON(fromPlainText('This is it, we got a thread here'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE),
@@ -65,7 +64,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 1),
@@ -97,7 +95,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 2),
@@ -130,7 +127,6 @@ module.exports = [
         toJSON(fromPlainText('This is it, we got a thread here'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE),
@@ -162,7 +158,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 1),
@@ -194,7 +189,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 2),
@@ -226,7 +220,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 2),
@@ -259,7 +252,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 2),
@@ -291,7 +283,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 2),
@@ -322,7 +313,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 2),
@@ -352,7 +342,6 @@ module.exports = [
       title: 'Deleted thread',
       body: JSON.stringify(toJSON(fromPlainText('This is a deleted thread'))),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 2),
@@ -386,7 +375,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 2),
@@ -420,7 +408,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 2),

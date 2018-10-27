@@ -534,18 +534,12 @@ export const deleteThread = (threadId: string, userId: string): Promise<Boolean>
 
 type File = FileUpload;
 
-type Attachment = {
-  attachmentType: string,
-  data: string,
-};
-
 export type EditThreadInput = {
   threadId: string,
   content: {
     title: string,
     body: ?string,
   },
-  attachments?: ?Array<Attachment>,
   filesToUpload?: ?Array<File>,
 };
 
@@ -558,11 +552,9 @@ export const editThread = (input: EditThreadInput, userId: string, shouldUpdate:
     .update(
       {
         content: input.content,
-        attachments: input.attachments,
         modifiedAt: shouldUpdate ? new Date() : null,
         edits: db.row('edits').append({
           content: db.row('content'),
-          attachments: db.row('attachments'),
           timestamp: new Date(),
         }),
       },
