@@ -78,27 +78,12 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     );
   }
 
-  let attachments = [];
-  // if the thread came in with attachments
-  if (input.attachments) {
-    // iterate through them and construct a new attachment object
-    input.attachments.map(attachment => {
-      attachments.push({
-        attachmentType: attachment.attachmentType,
-        data: JSON.parse(attachment.data),
-      });
-
-      return null;
-    });
-  }
-
   const newInput = Object.assign({}, input, {
     ...input,
     content: {
       ...input.content,
       title: input.content.title.trim(),
     },
-    attachments,
   });
 
   // $FlowIssue

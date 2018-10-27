@@ -59,6 +59,12 @@ const sendEmail = (options: Options) => {
     return;
   }
 
+  // qq.com email addresses are isp blocked, which raises our error rate
+  // on postmark. prevent sending these emails at all
+  if (To.substr(To.length - 7) === '@qq.com') {
+    return;
+  }
+
   // $FlowFixMe
   return new Promise((res, rej) => {
     client.sendEmailWithTemplate(
