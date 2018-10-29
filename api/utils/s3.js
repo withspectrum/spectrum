@@ -41,6 +41,7 @@ export const uploadImage = async (
   const result = await file;
   const { filename, stream, mimetype } = result;
   const sanitized = sanitize(filename);
+  const encoded = encodeURIComponent(sanitized);
   const validMediaTypes = ['image/gif', 'image/jpeg', 'image/png', 'video/mp4'];
   return new Promise(res => {
     // mimetype not in the validMediaType collection
@@ -53,7 +54,7 @@ export const uploadImage = async (
     }
 
     const path = `spectrum-chat/${entity}/${id}`;
-    const fileKey = `${shortid.generate()}-${sanitized}`;
+    const fileKey = `${shortid.generate()}-${encoded}`;
     return s3.upload(
       {
         Bucket: path,
