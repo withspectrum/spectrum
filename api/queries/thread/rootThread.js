@@ -8,7 +8,7 @@ export default async (
   { id }: { id: string },
   { loaders, user }: GraphQLContext
 ) => {
-  if (!(await canViewThread(user ? user.id : undefined, id, loaders))) {
+  if (!(await canViewThread(user ? user.id : 'undefined', id, loaders))) {
     return null;
   }
 
