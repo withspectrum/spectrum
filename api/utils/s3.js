@@ -59,7 +59,6 @@ export const uploadImage = async (
         Bucket: path,
         Key: fileKey,
         Body: stream,
-        ACL: 'public-read',
       },
       (err, data) => {
         if (err) throw new Error(err);
