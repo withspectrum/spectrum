@@ -25,7 +25,7 @@ const useProxy = (url: string): boolean => url.indexOf('spectrum.imgix.net') < 0
 // prettier-ignore
 const stripLegacyPrefix = (url: string): string => url.replace(LEGACY_PREFIX, '')
 
-const signPrimary = (url: string, opts?: any = {}): string => {
+const signPrimary = (url: string, opts: Object = {}): string => {
   const client = new ImgixClient({
     domains: ['spectrum.imgix.net'],
     secureURLToken: process.env.IMGIX_SECURITY_KEY,
@@ -46,9 +46,10 @@ export const signImageUrl = (url: string, opts?: any) => {
 
   if (isLocalUpload(url)) return url;
 
-  const optsWithExpiration = Object.assign(opts ? opts : {}, {
+  const optsWithExpiration = {
+    ...opts,
     expires: new Date().getTime() + EXPIRATION_TIME,
-  });
+  };
 
   let processedUrl = hasLegacyPrefix(url) ? stripLegacyPrefix(url) : url;
 
