@@ -2,7 +2,7 @@
 import type { DBThread } from 'shared/types';
 import { signImageUrl } from 'shared/imgix';
 
-export default (thread: DBThread) => {
+export default (thread: DBThread, imageSignatureExpiration: number) => {
   const { content } = thread;
 
   if (!content.body) {
@@ -35,7 +35,9 @@ export default (thread: DBThread) => {
     const { src } = body.entityMap[imageKeys[index]].data;
 
     // transform the body inline with signed image urls
-    body.entityMap[imageKeys[index]].data.src = signImageUrl(src);
+    body.entityMap[imageKeys[index]].data.src = signImageUrl(src, {
+      expires: imageSignatureExpiration,
+    });
   });
 
   return JSON.stringify(body);

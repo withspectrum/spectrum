@@ -41,18 +41,17 @@ const signProxy = (url: string, opts?: any = {}): string => {
   return client.buildURL(url, opts);
 };
 
-export const signImageUrl = (url: string, opts?: any) => {
+type Opts = {
+  expires: number,
+};
+
+export const signImageUrl = (url: string, opts?: Opts) => {
   if (!url) return null;
 
   if (isLocalUpload(url)) return url;
 
-  const optsWithExpiration = {
-    ...opts,
-    expires: new Date().getTime() + EXPIRATION_TIME,
-  };
-
   let processedUrl = hasLegacyPrefix(url) ? stripLegacyPrefix(url) : url;
 
-  if (useProxy(url)) return signProxy(processedUrl, optsWithExpiration);
-  return signPrimary(processedUrl, optsWithExpiration);
+  if (useProxy(url)) return signProxy(processedUrl, opts);
+  return signPrimary(processedUrl, opts);
 };
