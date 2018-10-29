@@ -50,6 +50,15 @@ const renderer = (req: express$Request, res: express$Response) => {
     context: {
       user: req.user || null,
       loaders: createLoaders(),
+      getImageSignatureExpiration: () => {
+        // see api/apollo-server.js
+        const date = new Date();
+        date.setHours(24);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        return date.getTime();
+      },
     },
   });
 
