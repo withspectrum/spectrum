@@ -157,7 +157,7 @@ export const canViewCommunity = async (user: DBUser, communityId: string, loader
 }
 
 export const canViewThread = async (
-  userId: string,
+  userId: ?string,
   threadId: string,
   loaders: any
 ) => {
