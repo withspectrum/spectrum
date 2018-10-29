@@ -24,6 +24,8 @@ import watercooler from './watercooler';
 import brandedLogin from './brandedLogin';
 import slackSettings from './slackSettings';
 import joinSettings from './joinSettings';
+import coverPhoto from './coverPhoto';
+import profilePhoto from './profilePhoto';
 
 // no-op resolvers to transition while removing payments
 import type { DBCommunity } from 'shared/types';
@@ -67,6 +69,8 @@ module.exports = {
     brandedLogin,
     slackSettings,
     joinSettings,
+    coverPhoto,
+    profilePhoto,
 
     invoices,
     recurringPayments,

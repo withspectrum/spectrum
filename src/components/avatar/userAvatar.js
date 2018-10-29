@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { optimize } from 'src/helpers/images';
 import {
   getUserByUsernameQuery,
   type GetUserType,
@@ -67,15 +66,8 @@ class Avatar extends React.Component<AvatarProps> {
 
     const src = user.profilePhoto;
 
-    const optimizedAvatar =
-      src &&
-      optimize(src, {
-        w: size.toString(),
-        dpr: '2',
-        format: 'png',
-      });
     const userFallback = '/img/default_avatar.svg';
-    const source = [optimizedAvatar, userFallback];
+    const source = [src, userFallback];
 
     return (
       <Status

@@ -26,6 +26,7 @@ import type { Loader } from './loaders/types';
 export type GraphQLContext = {
   user: DBUser,
   updateCookieUserData: (data: DBUser) => Promise<void>,
+  getImageSignatureExpiration: () => number,
   loaders: {
     [key: string]: Loader,
   },

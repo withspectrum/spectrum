@@ -54,7 +54,6 @@ describe('public community signed out', () => {
     cy.contains(publicCommunity.description);
     cy.contains(publicCommunity.name);
     cy.contains(publicCommunity.website);
-    cy.get(`[src*="${publicCommunity.profilePhoto}"]`).should('be.visible');
   });
 
   it('should render threads', () => {
@@ -115,7 +114,6 @@ describe('public community signed in without permission', () => {
     cy.contains(publicCommunity.description);
     cy.contains(publicCommunity.name);
     cy.contains(publicCommunity.website);
-    cy.get(`[src*="${publicCommunity.profilePhoto}"]`).should('be.visible');
   });
 
   it('should render threads', () => {
@@ -185,7 +183,6 @@ describe('public community signed in with permission', () => {
     cy.contains(publicCommunity.description);
     cy.contains(publicCommunity.name);
     cy.contains(publicCommunity.website);
-    cy.get(`[src*="${publicCommunity.profilePhoto}"]`).should('be.visible');
   });
 });
 
@@ -238,7 +235,6 @@ describe('private community signed in with permissions', () => {
     cy.contains(privateCommunity.description);
     cy.contains(privateCommunity.name);
     cy.contains(privateCommunity.website);
-    cy.get(`[src*="${privateCommunity.profilePhoto}"]`).should('be.visible');
   });
 
   it('should render threads', () => {
