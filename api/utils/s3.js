@@ -28,17 +28,10 @@ AWS.config.update({
 });
 const s3 = new AWS.S3();
 
-const generateImageUrl = path => {
-  // remove the bucket name from the path
-  const newPath = path.replace('spectrum-chat/', '');
-
-  // this is the default source for our imgix account, which starts
-  // at the bucket root, thus we remove the bucket from the path
-  const imgixBase = 'https://spectrum.imgix.net';
-
-  // return a new url to update the user object
-  return imgixBase + '/' + newPath;
-};
+// remove the bucket name from the url
+// the bucket name is not required since it is automatically bound
+// to our imgix source
+const generateImageUrl = path => path.replace('spectrum-chat/', '');
 
 export const uploadImage = async (
   file: FileUpload,
