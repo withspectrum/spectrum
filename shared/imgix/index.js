@@ -50,8 +50,9 @@ export const signImageUrl = (url: string, opts: Opts) => {
 
   if (isLocalUpload(url)) return url;
 
-  let processedUrl = hasLegacyPrefix(url) ? stripLegacyPrefix(url) : url;
+  const processedUrl = hasLegacyPrefix(url) ? stripLegacyPrefix(url) : url;
+  const decoded = decodeURIComponent(processedUrl);
 
-  if (useProxy(url)) return signProxy(processedUrl, opts);
-  return signPrimary(processedUrl, opts);
+  if (useProxy(url)) return signProxy(decoded, opts);
+  return signPrimary(decoded, opts);
 };
