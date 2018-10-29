@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { optimize } from 'src/helpers/images';
 import { CommunityHoverProfile } from 'src/components/hoverProfile';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import AvatarImage from './image';
@@ -28,15 +27,8 @@ class Avatar extends React.Component<Props> {
 
     const src = community.profilePhoto;
 
-    const optimizedAvatar =
-      src &&
-      optimize(src, {
-        w: size.toString(),
-        dpr: '2',
-        format: 'png',
-      });
     const communityFallback = '/img/default_community.svg';
-    const source = [optimizedAvatar, communityFallback];
+    const source = [src, communityFallback];
 
     return (
       <Status

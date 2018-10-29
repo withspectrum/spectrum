@@ -1,6 +1,6 @@
 {
   "name": "Spectrum",
-  "version": "2.4.52",
+  "version": "2.4.53",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -208,6 +208,7 @@
     "start:api": "cross-env NODE_ENV=production node build-api/main.js",
     "dev:web": "cross-env NODE_PATH=./ react-app-rewired start",
     "dev:api": "cross-env FILE_STORAGE=local cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,api*,shared:middlewares*,shared:rethinkdb:db-query-cache,-api:resolvers cross-env DIR=api backpack",
+    "dev:api:s3": "cross-env FILE_STORAGE=s3 cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,api*,shared:middlewares*,shared:rethinkdb:db-query-cache,-api:resolvers cross-env DIR=api backpack",
     "dev:athena": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,athena*,shared:middlewares*,-athena:resolvers cross-env DIR=athena backpack",
     "dev:hermes": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,hermes*,shared:middlewares*,-hermes:resolvers cross-env DIR=hermes backpack",
     "dev:chronos": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,chronos*,shared:middlewares*,-chronos:resolvers cross-env DIR=chronos backpack",
