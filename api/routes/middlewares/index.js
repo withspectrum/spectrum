@@ -31,6 +31,14 @@ import passport from 'passport';
 middlewares.use(passport.initialize());
 middlewares.use(passport.session());
 
+// Refresh authenticated users expiry time
+middlewares.use((req, res, next) => {
+  if (req.session && req.user) {
+    req.session.lastRequest = Date.now();
+  }
+  next();
+});
+
 const isSerializedJSON = str => str[0] === '{';
 
 // NOTE(@mxstbr): If a logged-in user with a legacy cookie (just the user ID) sends a request
