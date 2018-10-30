@@ -98,12 +98,28 @@ const server = new ProtectedApolloServer({
           return {
             user: user || null,
             loaders: createLoaders({ cache: false }),
+            getImageSignatureExpiration: () => {
+              const date = new Date();
+              date.setHours(24);
+              date.setMinutes(0);
+              date.setSeconds(0);
+              date.setMilliseconds(0);
+              return date.getTime();
+            },
           };
         })
         .catch(err => {
           console.error(err);
           return {
             loaders: createLoaders({ cache: false }),
+            getImageSignatureExpiration: () => {
+              const date = new Date();
+              date.setHours(24);
+              date.setMinutes(0);
+              date.setSeconds(0);
+              date.setMilliseconds(0);
+              return date.getTime();
+            },
           };
         }),
   },
