@@ -13,7 +13,6 @@ const isLocalUpload = (url: string): boolean => url.startsWith('/uploads/', 0) &
 const hasLegacyPrefix = (url: string): boolean => url.startsWith(LEGACY_PREFIX, 0)
 // prettier-ignore
 const useProxy = (url: string): boolean => url.indexOf('spectrum.imgix.net') < 0 && url.startsWith('http', 0)
-const isEncoded = (url: string): boolean => url.indexOf('%') >= 0;
 
 /*
   When an image is uploaded to s3, we generate a url to be stored in our db
@@ -56,15 +55,5 @@ export const signImageUrl = (url: string, opts: Opts) => {
 
   // we never have to worry about escaping or unescaping proxied urls e.g. twitter images
   if (useProxy(url)) return signProxy(processedUrl, opts);
-
-  let decoded = processedUrl;
-  if (isEncoded(processedUrl)) {
-    const pathParts = decoded.split('/');
-    const filename = pathParts.pop();
-    const bucketPath = pathParts.join('/');
-    decoded = bucketPath + '/' + encodeURIComponent(filename);
-    decoded = decodeUriComponent(decoded);
-  }
-
-  return signPrimary(decoded, opts);
+  return signPrimary(processedUrl, opts);
 };
