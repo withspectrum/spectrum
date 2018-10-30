@@ -66,7 +66,7 @@ export const uploadImage = async (
         if (!data || !data.Key)
           throw new UserError('Image upload failed. Please try again.');
         const url = generateImageUrl(data.Key);
-        res(encodeURI(url));
+        res(url);
       }
     );
   });
