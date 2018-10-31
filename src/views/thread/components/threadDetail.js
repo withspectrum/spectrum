@@ -388,6 +388,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
               {timestamp}
               {thread.modifiedAt && (
                 <React.Fragment>
+                  {' '}
                   (Edited{' '}
                   {timeDifference(Date.now(), editedTimestamp).toLowerCase()})
                 </React.Fragment>
