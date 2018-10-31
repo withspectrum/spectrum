@@ -15,11 +15,11 @@ import {
 } from './thread';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import type { DBMessage } from 'shared/types';
 
 export type MessageTypes = 'text' | 'media';
-export type Message = Object;
 
-export const getMessage = (messageId: string): Promise<Message> => {
+export const getMessage = (messageId: string): Promise<DBMessage> => {
   return db
     .table('messages')
     .get(messageId)
@@ -30,7 +30,7 @@ export const getMessage = (messageId: string): Promise<Message> => {
     });
 };
 
-export const getManyMessages = (messageIds: string[]): Promise<Message[]> => {
+export const getManyMessages = (messageIds: string[]): Promise<DBMessage[]> => {
   return db
     .table('messages')
     .getAll(...messageIds)
@@ -82,14 +82,14 @@ export const getMessages = (
     last,
     before,
   }: { ...BackwardsPaginationOptions, ...ForwardsPaginationOptions }
-): Promise<Array<Message>> => {
+): Promise<Array<DBMessage>> => {
   // $FlowIssue
   if (last || before) return getBackwardsMessages(threadId, { last, before });
   // $FlowIssue
   return getForwardMessages(threadId, { first, after });
 };
 
-export const getLastMessage = (threadId: string): Promise<Message> => {
+export const getLastMessage = (threadId: string): Promise<DBMessage> => {
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
@@ -109,7 +109,7 @@ export const getLastMessages = (threadIds: Array<string>): Promise<Object> => {
 };
 
 // prettier-ignore
-export const getMediaMessagesForThread = (threadId: string): Promise<Array<Message>> => {
+export const getMediaMessagesForThread = (threadId: string): Promise<Array<DBMessage>> => {
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
@@ -119,7 +119,7 @@ export const getMediaMessagesForThread = (threadId: string): Promise<Array<Messa
 };
 
 // prettier-ignore
-export const storeMessage = (message: Message, userId: string): Promise<Message> => {
+export const storeMessage = (message: Object, userId: string): Promise<DBMessage> => {
   // Insert a message
   return db
     .table('messages')
@@ -288,4 +288,57 @@ export const userHasMessagesInThread = (threadId: string, userId: string) => {
     .filter(db.row.hasFields('deletedAt').not())('senderId')
     .contains(userId)
     .run();
+};
+
+type EditInput = {
+  id: string,
+  content: {
+    body: string,
+  },
+};
+
+// prettier-ignore
+export const editMessage = (message: EditInput, userId: string): Promise<DBMessage> => {
+  // Insert a message
+  return db
+    .table('messages')
+    .get(message.id)
+    .update(
+      {
+        content: message.content,
+        modifiedAt: new Date(),
+        edits: db.branch(
+          db.row.hasFields('edits'), 
+          db.row('edits').append({
+            content: db.row('content'),
+            timestamp: db.row('modifiedAt'),
+          }),
+          [{ 
+            content: db.row('content'), 
+            timstamp: db.row('timestamp')
+          }]
+        ),
+      },
+      { returnChanges: 'always' }
+    )
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val)
+    .then(message => {
+      if (message.threadType === 'directMessageThread') {
+        trackQueue.add({
+          userId,
+          event: events.DIRECT_MESSAGE_EDITED,
+          context: { messageId: message.id },
+        });
+      }
+      if (message.threadType === 'story') {
+        trackQueue.add({
+          userId,
+          event: events.MESSAGE_EDITED,
+          context: { messageId: message.id },
+        });
+      }
+
+      return message;
+    });
 };

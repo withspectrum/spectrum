@@ -219,7 +219,7 @@ export const getViewableThreadsByUser = async (
     ...publicChannelIds,
     ...publicCommunityIds,
   ];
-  const distinctIds = allIds.filter((x, i, a) => a.indexOf(x) == i);
+  const distinctIds = allIds.filter((x, i, a) => a.indexOf(x) === i);
   let validChannelIds = intersection(distinctIds, publishedChannelIds);
   let validCommunityIds = intersection(distinctIds, publishedCommunityIds);
 
@@ -317,11 +317,11 @@ export const getViewableParticipantThreadsByUser = async (
   const participantThreadIds = participantChannelIds.map(c => c.threadId);
   const distinctParticipantChannelIds = participantChannelIds
     .map(c => c.channelId)
-    .filter((x, i, a) => a.indexOf(x) == i);
+    .filter((x, i, a) => a.indexOf(x) === i);
 
   const distinctParticipantCommunityIds = participantCommunityIds
     .map(c => c.communityId)
-    .filter((x, i, a) => a.indexOf(x) == i);
+    .filter((x, i, a) => a.indexOf(x) === i);
 
   // get a list of all the channels that are public
   const publicChannelIds = await db
@@ -344,7 +344,7 @@ export const getViewableParticipantThreadsByUser = async (
     ...currentUsersCommunityIds,
     ...publicCommunityIds,
   ];
-  const distinctIds = allIds.filter((x, i, a) => a.indexOf(x) == i);
+  const distinctIds = allIds.filter((x, i, a) => a.indexOf(x) === i);
   let validChannelIds = intersection(
     distinctIds,
     distinctParticipantChannelIds

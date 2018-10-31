@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import { SvgWrapper } from '../icons';
 import { Truncate, monoStack, hexa, Tooltip } from 'src/components/globals';
+import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
 
 export const Byline = styled.span`
   display: flex;
@@ -406,4 +407,77 @@ export const BadgesContainer = styled.div`
   @media (max-width: 400px) {
     margin-top: 4px;
   }
+`;
+
+export const EditorInput = styled(EditorWrapper)`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex: auto;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 20px;
+  min-height: 40px;
+  padding: 8px 16px;
+  transition: padding 0.2s ease-in-out;
+  border-radius: 4px;
+  border: 1px solid ${props => props.theme.bg.border};
+  transition: border 0.3s ease-out;
+  color: ${props => props.theme.text.secondary};
+  background: ${props => props.theme.bg.default};
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+    padding-left: 16px;
+  }
+
+  &::placeholder {
+    color: ${props => props.theme.text.placeholder};
+  }
+  &::-webkit-input-placeholder {
+    color: ${props => props.theme.text.placeholder};
+  }
+  &:-moz-placeholder {
+    color: ${props => props.theme.text.placeholder};
+  }
+  &:-ms-input-placeholder {
+    color: ${props => props.theme.text.placeholder};
+  }
+
+  &:hover {
+    border-color: ${props => props.theme.text.alt};
+    transition: border-color 0.2s ease-in;
+  }
+
+  pre {
+    ${monoStack};
+    font-size: 15px;
+    font-weight: 500;
+    background-color: ${theme.bg.wash};
+    border: 1px solid ${theme.bg.border};
+    border-radius: 2px;
+    padding: 4px;
+    margin-right: 16px;
+  }
+
+  blockquote {
+    line-height: 1.5;
+    border-left: 4px solid ${theme.bg.border};
+    color: ${theme.text.alt};
+    padding: 4px 12px 4px 16px;
+  }
+`;
+
+export const EditActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 8px;
+`;
+
+export const EditedIndicator = styled.span`
+  display: block;
+  font-size: 11px;
+  color: ${props => props.theme.text.alt};
+  ${Tooltip};
 `;
