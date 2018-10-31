@@ -230,6 +230,7 @@ class Message extends React.Component<Props, State> {
                   {message.modifiedAt &&
                     !isEditing && (
                       <EditedIndicator
+                        data-cy="edited-message-indicator"
                         tipLocation={'top-right'}
                         tipText={`Edited ${convertTimestampToDate(
                           new Date(message.modifiedAt)

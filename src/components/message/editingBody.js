@@ -158,7 +158,7 @@ class Editing extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <EditorInput>
+        <EditorInput data-cy="edit-message-input">
           <DraftEditor
             editorState={body}
             onChange={this.onChange}
@@ -173,12 +173,17 @@ class Editing extends React.Component<Props, State> {
             stripPastedStyles={true}
             customStyleMap={customStyleMap}
             handleReturn={this.handleReturn}
+            onEscape={cancelEdit}
             {...rest}
           />
         </EditorInput>
         <EditActions>
-          <TextButton onClick={cancelEdit}>Cancel</TextButton>
-          <Button onClick={this.save}>Save</Button>
+          <TextButton dataCy="edit-message-cancel" onClick={cancelEdit}>
+            Cancel
+          </TextButton>
+          <Button dataCy="edit-message-save" onClick={this.save}>
+            Save
+          </Button>
         </EditActions>
       </React.Fragment>
     );
