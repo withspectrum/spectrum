@@ -92,6 +92,13 @@ export type DBDirectMessageThread = {
   threadLastActive: Date,
 };
 
+type DBMessageEdits = {
+  content: {
+    body: string,
+  },
+  timestamp: string,
+};
+
 export type DBMessage = {
   content: {
     body: string,
@@ -105,6 +112,8 @@ export type DBMessage = {
   threadType: 'story' | 'directMessageThread',
   timestamp: Date,
   parentId?: string,
+  edits?: Array<DBMessageEdits>,
+  modifiedAt?: string,
 };
 
 export type NotificationPayloadType =
