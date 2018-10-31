@@ -173,6 +173,7 @@ class Editing extends React.Component<Props, State> {
             stripPastedStyles={true}
             customStyleMap={customStyleMap}
             handleReturn={this.handleReturn}
+            onEscape={cancelEdit}
             {...rest}
           />
         </EditorInput>
