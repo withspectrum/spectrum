@@ -30,12 +30,12 @@ export default (thread: DBThread, imageSignatureExpiration: number) => {
   );
 
   imageKeys.forEach((key, index) => {
-    if (!body.entityMap[key[index]]) return;
+    if (!body.entityMap[key]) return;
 
-    const { src } = body.entityMap[imageKeys[index]].data;
+    const { src } = body.entityMap[key].data;
 
     // transform the body inline with signed image urls
-    body.entityMap[imageKeys[index]].data.src = signImageUrl(src, {
+    body.entityMap[key].data.src = signImageUrl(src, {
       expires: imageSignatureExpiration,
     });
   });
