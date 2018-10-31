@@ -5,6 +5,7 @@ import {
   checkForExistingDMThread,
   getDirectMessageThread,
   createDirectMessageThread,
+  setDirectMessageThreadLastActive,
 } from '../../models/directMessageThread';
 import { uploadImage } from '../../utils/file-storage';
 import { storeMessage } from '../../models/message';
@@ -132,6 +133,7 @@ export default requireAuth(
     if (existingThread) {
       return await Promise.all([
         setUserLastSeenInDirectMessageThread(threadId, user.id),
+        setDirectMessageThreadLastActive(threadId),
         handleStoreMessage(message),
       ]).then(() => threadToReturn);
     }
