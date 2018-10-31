@@ -4,16 +4,15 @@ import ImgixClient from 'imgix-core-js';
 import decodeUriComponent from 'decode-uri-component';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
-const LEGACY_PREFIX = 'https://spectrum.imgix.net/';
+export const LEGACY_PREFIX = 'https://spectrum.imgix.net/';
 const EXPIRATION_TIME = 60 * 60 * 10;
 
 // prettier-ignore
 const isLocalUpload = (url: string): boolean => url.startsWith('/uploads/', 0) && !IS_PROD
 // prettier-ignore
-const hasLegacyPrefix = (url: string): boolean => url.startsWith(LEGACY_PREFIX, 0)
+export const hasLegacyPrefix = (url: string): boolean => url.startsWith(LEGACY_PREFIX, 0)
 // prettier-ignore
 const useProxy = (url: string): boolean => url.indexOf('spectrum.imgix.net') < 0 && url.startsWith('http', 0)
-const isEncoded = (url: string): boolean => url.indexOf('%') >= 0;
 
 /*
   When an image is uploaded to s3, we generate a url to be stored in our db
@@ -25,7 +24,7 @@ const isEncoded = (url: string): boolean => url.indexOf('%') >= 0;
   url in this utility
 */
 // prettier-ignore
-const stripLegacyPrefix = (url: string): string => url.replace(LEGACY_PREFIX, '')
+export const stripLegacyPrefix = (url: string): string => url.replace(LEGACY_PREFIX, '')
 
 const signPrimary = (url: string, opts: Object = {}): string => {
   const client = new ImgixClient({
@@ -56,15 +55,5 @@ export const signImageUrl = (url: string, opts: Opts) => {
 
   // we never have to worry about escaping or unescaping proxied urls e.g. twitter images
   if (useProxy(url)) return signProxy(processedUrl, opts);
-
-  let decoded = processedUrl;
-  if (isEncoded(processedUrl)) {
-    const pathParts = decoded.split('/');
-    const filename = pathParts.pop();
-    const bucketPath = pathParts.join('/');
-    decoded = bucketPath + '/' + encodeURIComponent(filename);
-    decoded = decodeUriComponent(decoded);
-  }
-
-  return signPrimary(decoded, opts);
+  return signPrimary(processedUrl, opts);
 };
