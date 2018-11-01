@@ -11,14 +11,9 @@
 .*/node_modules/react-navigation
 .*/node_modules/reqwest
 .*/node_modules/sentry-expo
-
 .*/node_modules/react-apollo
 .*/node_modules/dataloader
-
-
-[include]
-
-[libs]
+<PROJECT_ROOT>/node_modules/*
 
 [options]
 suppress_comment=.*\\$FlowFixMe

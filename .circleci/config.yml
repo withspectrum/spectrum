@@ -112,6 +112,9 @@ jobs:
       # Wait for the API and webserver to start
       - run: ./node_modules/.bin/wait-on http://localhost:3000 http://localhost:3001
       - run:
+          name: Install Cypress
+          command: yarn run cypress:install
+      - run:
           name: Run E2E Tests
           command: test $CYPRESS_RECORD_KEY && yarn run test:e2e -- --record || yarn run test:e2e
       - run:
