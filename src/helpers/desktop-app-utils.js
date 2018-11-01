@@ -18,3 +18,6 @@ export const hasDismissedDesktopAppUpsell = () => {
 export const dismissDesktopAppUpsell = () => {
   return storeItem(DESKTOP_UPSELL_LS_KEY, true);
 };
+
+export const DESKTOP_APP_MAC_URL =
+  'https://github.com/withspectrum/spectrum/releases/download/v1.0.5/Spectrum-1.0.5.dmg';

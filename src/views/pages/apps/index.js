@@ -9,6 +9,7 @@ import { Intro, ActionsContainer, TextContent } from './style';
 import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
 import Head from 'src/components/head';
+import { DESKTOP_APP_MAC_URL } from 'src/helpers/desktop-app-utils';
 
 type Props = {
   ...$Exact<ContextRouter>,
@@ -40,9 +41,7 @@ class Features extends React.Component<Props, State> {
               </Copy>
 
               <ActionsContainer>
-                <a
-                  href={`https://github.com/withspectrum/spectrum/releases/download/v1.0.5/Spectrum-1.0.5.dmg`}
-                >
+                <a href={DESKTOP_APP_MAC_URL}>
                   <Button
                     large
                     icon="apple"

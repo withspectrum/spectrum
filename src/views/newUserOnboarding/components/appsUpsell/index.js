@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Button, TextButton } from 'src/components/buttons';
 import { track, events } from 'src/helpers/analytics';
 import { ActionsContainer } from './style';
+import { DESKTOP_APP_MAC_URL } from 'src/helpers/desktop-app-utils';
 
 type Props = {
   nextStep: (step: string) => void,
@@ -42,9 +43,7 @@ class AppsUpsell extends React.Component<Props, State> {
 
     return (
       <ActionsContainer>
-        <a
-          href={`https://github.com/withspectrum/spectrum/releases/download/v1.0.5/Spectrum-1.0.5.dmg`}
-        >
+        <a href={DESKTOP_APP_MAC_URL}>
           <Button large icon="apple" onClick={this.onDownload}>
             Download for Mac
           </Button>
