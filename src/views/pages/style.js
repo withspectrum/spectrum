@@ -284,7 +284,7 @@ export const Footer = styled.div`
   display: flex;
   justify-content: stretch;
   align-content: stretch;
-  flex: auto;
+  flex: none;
   position: relative;
   padding: 32px;
   background-color: ${theme.bg.reverse};
@@ -631,16 +631,12 @@ export const AuthLink = styled(DropdownLink)`
 
 export const MenuContainer = styled.div`
   position: fixed;
-  <<<<<<<headdisplay: grid;
+  display: grid;
   grid-template-columns: auto;
   grid-template-rows: auto 16px repeat(5, auto) 1fr auto;
-  grid-template-areas: 'logo' '.' 'features' 'apps' 'pricing' 'support' 'explore' '.' 'auth';
+  grid-template-areas: 'logo' '.' 'features' 'apps' 'support' 'explore' '.' 'auth';
   align-content: start;
-  =======display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  >>>>>>>f346c33a7d6f6003c6a18824c058fe84a56737c2left: 0;
+  left: 0;
   top: 0;
   bottom: 0;
   height: 100vh;

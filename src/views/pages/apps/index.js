@@ -6,7 +6,7 @@ import Link from 'src/components/link';
 import { Wrapper } from '../style';
 import { Heading, Copy } from '../pricing/style';
 import { Button } from 'src/components/buttons';
-import { Intro, ActionsContainer, TextContent } from './style';
+import { Intro, ActionsContainer, TextContent, Devices } from './style';
 import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
 import Head from 'src/components/head';
@@ -31,8 +31,9 @@ class Features extends React.Component<Props, State> {
           title={'Spectrum · Apps'}
           description={'Download Spectrum for Mac and Windows'}
         />
-        <Section>
+        <Section goop={6} color="text.default">
           <Intro>
+            <Devices src="https://spectrum.imgix.net/marketing/electron.png?h=0.25&dpr=2&auto=compress,format" />
             <TextContent>
               <Heading>Spectrum for Mac & Windows</Heading>
 
@@ -65,9 +66,6 @@ class Features extends React.Component<Props, State> {
             </TextContent>
           </Intro>
         </Section>
-
-        <Section background={'default'} goop={4} color={'bg.reverse'} />
-
         <PageFooter />
       </Wrapper>
     );
