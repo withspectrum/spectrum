@@ -2398,9 +2398,9 @@ babel-polyfill@^6.26.0:
     core-js "^2.5.0"
     regenerator-runtime "^0.10.5"
 
-babel-preset-backpack@^0.4.3:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/babel-preset-backpack/-/babel-preset-backpack-0.4.3.tgz#781869c0242e3ea12bd2fe1eab4f45a934aa23e9"
+babel-preset-backpack@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/babel-preset-backpack/-/babel-preset-backpack-0.7.0.tgz#7794b922cb43306e952afe784a921650fdee3c76"
   dependencies:
     babel-plugin-transform-class-properties "^6.19.0"
     babel-plugin-transform-es2015-modules-commonjs "^6.18.0"
@@ -2597,19 +2597,20 @@ backo2@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/backo2/-/backo2-1.0.2.tgz#31ab1ac8b129363463e35b3ebb69f4dfcfba7947"
 
-backpack-core@^0.4.1:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/backpack-core/-/backpack-core-0.4.3.tgz#587234309db49706d362aa0f2801c7234e3a5611"
+backpack-core@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/backpack-core/-/backpack-core-0.7.0.tgz#ccc7bde25dfd13153bfa6d9e687dd64cb187a7ef"
   dependencies:
     babel-core "^6.25.0"
     babel-loader "^7.1.0"
-    babel-preset-backpack "^0.4.3"
+    babel-preset-backpack "^0.7.0"
     cross-spawn "^5.0.1"
     friendly-errors-webpack-plugin "^1.6.1"
+    json-loader "^0.5.7"
     nodemon "^1.11.0"
     ramda "^0.23.0"
     source-map-support "^0.4.15"
-    webpack "^3.0.0"
+    webpack "^3.11.0"
     webpack-node-externals "^1.6.0"
 
 bad-words@^1.6.4:
@@ -7659,7 +7660,7 @@ jsesc@~0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
 
-json-loader@^0.5.4:
+json-loader@^0.5.4, json-loader@^0.5.7:
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/json-loader/-/json-loader-0.5.7.tgz#dca14a70235ff82f0ac9a3abeb60d337a365185d"
 
@@ -12650,7 +12651,7 @@ webpack@3.8.1:
     webpack-sources "^1.0.1"
     yargs "^8.0.2"
 
-webpack@^3.0.0:
+webpack@^3.11.0:
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.12.0.tgz#3f9e34360370602fcf639e97939db486f4ec0d74"
   dependencies:
