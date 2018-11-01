@@ -2,11 +2,10 @@
 import * as React from 'react';
 import Section from 'src/components/themedSection';
 import PageFooter from '../components/footer';
-import Link from 'src/components/link';
 import { Wrapper } from '../style';
 import { Heading, Copy } from '../pricing/style';
 import { Button } from 'src/components/buttons';
-import { Intro, ActionsContainer, TextContent, Devices } from './style';
+import { Intro, ActionsContainer, TextContent } from './style';
 import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
 import Head from 'src/components/head';
@@ -33,16 +32,17 @@ class Features extends React.Component<Props, State> {
         />
         <Section goop={6} color="text.default">
           <Intro>
-            <Devices src="https://spectrum.imgix.net/marketing/electron.png?h=0.25&dpr=2&auto=compress,format" />
             <TextContent>
-              <Heading>Spectrum for Mac & Windows</Heading>
+              <Heading>Spectrum for Mac</Heading>
 
               <Copy style={{ marginTop: '8px', marginBottom: '40px' }}>
                 Keep up with your communities without distractions.
               </Copy>
 
               <ActionsContainer>
-                <Link to={`/new/community`}>
+                <a
+                  href={`https://github.com/withspectrum/spectrum/releases/download/v1.0.5/Spectrum-1.0.5.dmg`}
+                >
                   <Button
                     large
                     icon="apple"
@@ -50,18 +50,7 @@ class Features extends React.Component<Props, State> {
                   >
                     Download for Mac
                   </Button>
-                </Link>
-                <Link to={`/new/community`}>
-                  <Button
-                    large
-                    icon="windows"
-                    onClick={() =>
-                      track(events.APPS_PAGE_DOWNLOAD_WINDOWS_CLICKED)
-                    }
-                  >
-                    Download for Windows
-                  </Button>
-                </Link>
+                </a>
               </ActionsContainer>
             </TextContent>
           </Intro>
