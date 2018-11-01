@@ -3,6 +3,7 @@
   "version": "2.4.30",
   "license": "BSD-3-Clause",
   "devDependencies": {
+    "@babel/preset-flow": "^7.0.0",
     "babel-cli": "^6.24.1",
     "babel-eslint": "^8.2.6",
     "babel-jest": "^22.4.4",
@@ -46,6 +47,7 @@
     "write-file-webpack-plugin": "^4.4.1"
   },
   "dependencies": {
+    "@cypress/browserify-preprocessor": "^1.1.2",
     "algoliasearch": "^3.30.0",
     "amplitude": "^3.5.0",
     "amplitude-js": "^4.4.0",
@@ -74,7 +76,7 @@
     "cors": "^2.8.3",
     "cryptr": "^3.0.0",
     "css.escape": "^1.5.1",
-    "cypress": "^2.1.0",
+    "cypress": "^3.1.0",
     "dataloader": "^1.3.0",
     "debounce": "^1.2.0",
     "debug": "^2.6.8",
@@ -256,6 +258,7 @@
     "prestart:api:test": "node -e \"require('./shared/testing/setup.js')().then(() => process.exit())\"",
     "start:api:test": "TEST_DB=true FORCE_DEV=true DEBUG=api*,shared* forever build-api/main.js",
     "cypress:open": "cypress open",
+    "cypress:install": "cypress install",
     "lint": "eslint .",
     "flow": "flow",
     "db:migrate": "npm run rethinkdb:migrate -- up",
