@@ -658,7 +658,7 @@ ejs@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.6.1.tgz#498ec0d495655abc6f23cd61868d926464071aa0"
 
-electron-builder@^20.8.1:
+electron-builder@^20.29.0:
   version "20.29.0"
   resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-20.29.0.tgz#f147eb9f24caed9139e7ad530b6ef6f13a82b069"
   dependencies:
@@ -740,7 +740,7 @@ electron-publish@20.29.0:
     lazy-val "^1.0.3"
     mime "^2.3.1"
 
-electron-updater@^3.1.1:
+electron-updater@^3.1.6:
   version "3.1.6"
   resolved "https://registry.yarnpkg.com/electron-updater/-/electron-updater-3.1.6.tgz#142ab3341a0a483ed377005b8dce961999d2b4d5"
   dependencies:
@@ -754,17 +754,17 @@ electron-updater@^3.1.1:
     semver "^5.6.0"
     source-map-support "^0.5.9"
 
-electron-window-state@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/electron-window-state/-/electron-window-state-4.1.1.tgz#6b34fdc31b38514dfec8b7c8f7b5d4addb67632d"
+electron-window-state@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/electron-window-state/-/electron-window-state-5.0.2.tgz#dfc4f7dd0ca2d7116d1e246acf1683b0bdfd45c2"
   dependencies:
     deep-equal "^1.0.1"
-    jsonfile "^2.2.3"
+    jsonfile "^4.0.0"
     mkdirp "^0.5.1"
 
-electron@3.0.0-beta.6:
-  version "3.0.0-beta.6"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-3.0.0-beta.6.tgz#5b983c830d0f16c71cf1403951e8c25bab58b9ce"
+electron@^3.0.7:
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-3.0.7.tgz#e70c735467b4903c66e0c21278263c8ca571f9eb"
   dependencies:
     "@types/node" "^8.0.24"
     electron-download "^4.1.0"
@@ -1426,12 +1426,6 @@ json5@^1.0.1:
   resolved "http://registry.npmjs.org/json5/-/json5-1.0.1.tgz#779fb0018604fa854eacbf6252180d83543e3dbe"
   dependencies:
     minimist "^1.2.0"
-
-jsonfile@^2.2.3:
-  version "2.4.0"
-  resolved "http://registry.npmjs.org/jsonfile/-/jsonfile-2.4.0.tgz#3736a2b428b87bbda0cc83b53fa3d633a35c2ae8"
-  optionalDependencies:
-    graceful-fs "^4.1.6"
 
 jsonfile@^4.0.0:
   version "4.0.0"
