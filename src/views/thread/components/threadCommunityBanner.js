@@ -166,8 +166,8 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
   }
 }
 const map = state => ({ currentUser: state.users.currentUser });
-// $FlowIssue
 export default compose(
+  // $FlowIssue
   connect(map),
   toggleChannelSubscriptionMutation
 )(ThreadCommunityBanner);
