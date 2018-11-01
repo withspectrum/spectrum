@@ -6,6 +6,7 @@ import { ActionsContainer } from './style';
 
 type Props = {
   nextStep: (step: string) => void,
+  onDownload: () => void,
 };
 
 type State = {
