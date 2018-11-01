@@ -3,7 +3,7 @@ import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import { hexa, Shadow, FlexRow, zIndex } from '../../components/globals';
-import { isDesktopApp } from 'src/helpers/is-desktop-app';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 export const TitleBar = styled(FlexRow)`
   grid-area: title;
