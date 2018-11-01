@@ -11,14 +11,12 @@
 .*/node_modules/react-navigation
 .*/node_modules/reqwest
 .*/node_modules/sentry-expo
-
 .*/node_modules/react-apollo
 .*/node_modules/dataloader
-
-
-[include]
-
-[libs]
+.*/node_modules/@cypress*
+.*/node_modules/@babel*
+.*/node_modules/@cypress
+.*/node_modules/@babel
 
 [options]
 suppress_comment=.*\\$FlowFixMe
