@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import intersection from 'lodash.intersection';
 import { processReputationEventQueue } from 'shared/bull/queues';
 const { NEW_DOCUMENTS, parseRange } = require('./utils');
@@ -71,14 +71,27 @@ export const getThreadsByChannel = (channelId: string, options: PaginationOption
 };
 
 // prettier-ignore
-export const getThreadsByChannels = (channelIds: Array<string>, options: PaginationOptions): Promise<Array<DBThread>> => {
-  const { first, after } = options
-  
+type GetThreadsByChannelPaginationOptions = {
+  first: number,
+  after: number,
+  sort: 'latest' | 'trending'
+};
+
+export const getThreadsByChannels = (
+  channelIds: Array<string>,
+  options: GetThreadsByChannelPaginationOptions
+): Promise<Array<DBThread>> => {
+  const { first, after, sort = 'latest' } = options;
+
+  let order = [db.desc('lastActive'), db.desc('createdAt')];
+  // If we want the top threads, first sort by the score and then lastActive
+  if (sort === 'trending') order.unshift(db.desc('score'));
+
   return db
     .table('threads')
     .getAll(...channelIds, { index: 'channelId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+    .orderBy(...order)
     .skip(after || 0)
     .limit(first || 999999)
     .run();
@@ -206,7 +219,7 @@ export const getViewableThreadsByUser = async (
     ...publicChannelIds,
     ...publicCommunityIds,
   ];
-  const distinctIds = allIds.filter((x, i, a) => a.indexOf(x) == i);
+  const distinctIds = allIds.filter((x, i, a) => a.indexOf(x) === i);
   let validChannelIds = intersection(distinctIds, publishedChannelIds);
   let validCommunityIds = intersection(distinctIds, publishedCommunityIds);
 
@@ -304,11 +317,11 @@ export const getViewableParticipantThreadsByUser = async (
   const participantThreadIds = participantChannelIds.map(c => c.threadId);
   const distinctParticipantChannelIds = participantChannelIds
     .map(c => c.channelId)
-    .filter((x, i, a) => a.indexOf(x) == i);
+    .filter((x, i, a) => a.indexOf(x) === i);
 
   const distinctParticipantCommunityIds = participantCommunityIds
     .map(c => c.communityId)
-    .filter((x, i, a) => a.indexOf(x) == i);
+    .filter((x, i, a) => a.indexOf(x) === i);
 
   // get a list of all the channels that are public
   const publicChannelIds = await db
@@ -331,7 +344,7 @@ export const getViewableParticipantThreadsByUser = async (
     ...currentUsersCommunityIds,
     ...publicCommunityIds,
   ];
-  const distinctIds = allIds.filter((x, i, a) => a.indexOf(x) == i);
+  const distinctIds = allIds.filter((x, i, a) => a.indexOf(x) === i);
   let validChannelIds = intersection(
     distinctIds,
     distinctParticipantChannelIds
@@ -411,6 +424,8 @@ export const publishThread = (
         isPublished: true,
         isLocked: false,
         edits: [],
+        reactionCount: 0,
+        messageCount: 0,
       }),
       { returnChanges: true }
     )
@@ -447,10 +462,10 @@ export const setThreadLock = (threadId: string, value: boolean, userId: string, 
       .run()
       .then(async () => {
         const thread = await getThreadById(threadId)
-        
-        const event = value 
-          ? byModerator 
-            ? events.THREAD_LOCKED_BY_MODERATOR 
+
+        const event = value
+          ? byModerator
+            ? events.THREAD_LOCKED_BY_MODERATOR
             : events.THREAD_LOCKED
           : byModerator
             ? events.THREAD_UNLOCKED_BY_MODERATOR
@@ -519,18 +534,12 @@ export const deleteThread = (threadId: string, userId: string): Promise<Boolean>
 
 type File = FileUpload;
 
-type Attachment = {
-  attachmentType: string,
-  data: string,
-};
-
 export type EditThreadInput = {
   threadId: string,
   content: {
     title: string,
     body: ?string,
   },
-  attachments?: ?Array<Attachment>,
   filesToUpload?: ?Array<File>,
 };
 
@@ -543,11 +552,9 @@ export const editThread = (input: EditThreadInput, userId: string, shouldUpdate:
     .update(
       {
         content: input.content,
-        attachments: input.attachments,
         modifiedAt: shouldUpdate ? new Date() : null,
         edits: db.row('edits').append({
           content: db.row('content'),
-          attachments: db.row('attachments'),
           timestamp: new Date(),
         }),
       },
@@ -645,6 +652,58 @@ export const moveThread = (id: string, channelId: string, userId: string) => {
 
       return null;
     });
+};
+
+export const incrementMessageCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      messageCount: db
+        .row('messageCount')
+        .default(0)
+        .add(1),
+    })
+    .run();
+};
+
+export const decrementMessageCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      messageCount: db
+        .row('messageCount')
+        .default(1)
+        .sub(1),
+    })
+    .run();
+};
+
+export const incrementReactionCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      reactionCount: db
+        .row('reactionCount')
+        .default(0)
+        .add(1),
+    })
+    .run();
+};
+
+export const decrementReactionCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      reactionCount: db
+        .row('reactionCount')
+        .default(1)
+        .sub(1),
+    })
+    .run();
 };
 
 const hasChanged = (field: string) =>

@@ -17,8 +17,8 @@ import Toasts from './components/toasts';
 import { Loading, LoadingScreen } from './components/loading';
 import LoadingDashboard from './views/dashboard/components/dashboardLoading';
 import Composer from './components/composer';
-import signedOutFallback from './helpers/signed-out-fallback';
 import AuthViewHandler from './views/authViewHandler';
+import signedOutFallback from './helpers/signed-out-fallback';
 import PrivateChannelJoin from './views/privateChannelJoin';
 import PrivateCommunityJoin from './views/privateCommunityJoin';
 import ThreadSlider from './views/threadSlider';
@@ -26,7 +26,7 @@ import Navbar from './views/navbar';
 import Status from './views/status';
 import Login from './views/login';
 import DirectMessages from './views/directMessages';
-import Thread from './views/thread';
+import { FullscreenThreadView } from './views/thread';
 
 /* prettier-ignore */
 const Explore = Loadable({
@@ -117,12 +117,16 @@ const Body = styled(FlexCol)`
   width: 100vw;
   height: 100vh;
   max-height: 100vh;
-  background: ${props => props.theme.bg.wash};
+  background: ${theme.bg.wash};
 `;
 
 const DashboardFallback = signedOutFallback(Dashboard, Pages);
 const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
 const LoginFallback = signedOutFallback(() => <Redirect to="/" />, Login);
+const CommunityLoginFallback = signedOutFallback(
+  props => <Redirect to={`/${props.match.params.communitySlug}`} />,
+  CommunityLoginView
+);
 const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
   <Login redirectPath={`${CLIENT_URL}/new/community`} />
 ));
@@ -184,7 +188,7 @@ class Routes extends React.Component<Props> {
                 things like the 'set username' prompt when a user auths and doesn't
                 have a username set.
               */}
-              <Route component={AuthViewHandler} />
+              <AuthViewHandler>{() => null}</AuthViewHandler>
               <Status />
               <Route component={Navbar} />
 
@@ -209,8 +213,6 @@ class Routes extends React.Component<Props> {
                 <Route path="/terms.html" component={Pages} />
                 <Route path="/privacy.html" component={Pages} />
                 <Route path="/code-of-conduct" component={Pages} />
-                <Route path="/pricing/concierge" component={Pages} />
-                <Route path="/pricing" component={Pages} />
                 <Route path="/support" component={Pages} />
                 <Route path="/features" component={Pages} />
                 <Route path="/faq" component={Pages} />
@@ -233,7 +235,10 @@ class Routes extends React.Component<Props> {
                   component={MessagesFallback}
                 />
                 <Route path="/messages" component={MessagesFallback} />
-                <Route path="/thread/:threadId" component={Thread} />
+                <Route
+                  path="/thread/:threadId"
+                  component={FullscreenThreadView}
+                />
                 <Route path="/thread" render={() => <Redirect to="/" />} />
                 <Route exact path="/users" render={() => <Redirect to="/" />} />
                 <Route exact path="/users/:username" component={UserView} />
@@ -297,7 +302,7 @@ class Routes extends React.Component<Props> {
                 />
                 <Route
                   path="/:communitySlug/login"
-                  component={CommunityLoginView}
+                  component={CommunityLoginFallback}
                 />
                 <Route
                   path="/:communitySlug/:channelSlug"

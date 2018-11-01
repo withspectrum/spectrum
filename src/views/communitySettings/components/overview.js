@@ -22,10 +22,6 @@ class Overview extends React.Component<Props> {
           <ErrorBoundary fallbackComponent={SettingsFallback}>
             <EditForm community={community} />
           </ErrorBoundary>
-
-          <ErrorBoundary fallbackComponent={SettingsFallback}>
-            <ChannelList id={community.id} communitySlug={communitySlug} />
-          </ErrorBoundary>
         </Column>
         <Column>
           <ErrorBoundary fallbackComponent={SettingsFallback}>
@@ -34,6 +30,10 @@ class Overview extends React.Component<Props> {
 
           <ErrorBoundary fallbackComponent={SettingsFallback}>
             <BrandedLogin id={community.id} />
+          </ErrorBoundary>
+
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            <ChannelList id={community.id} communitySlug={communitySlug} />
           </ErrorBoundary>
         </Column>
       </SectionsContainer>

@@ -1,4 +1,5 @@
 import React from 'react';
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import { Transition } from '../globals';
@@ -16,7 +17,7 @@ export const StyledLabel = styled.label`
   font-weight: 500;
   font-size: 14px;
   letter-spacing: -0.4px;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   transition: ${Transition.hover.off};
   position: relative;
   margin-top: ${props => (props.size === 'small' ? '12px' : 0)};
@@ -51,27 +52,28 @@ export const StyledInput = styled.input`
   transition: ${Transition.hover.off};
 
   &::placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
   &::-webkit-input-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
   &:-moz-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
   &:-ms-input-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
 
   &:focus {
-    border-color: ${({ theme }) => theme.brand.default};
+    border-color: ${theme.brand.default};
     transition: ${Transition.hover.on};
   }
 `;
 
 export const Input = props => {
+  const { dataCy, ...rest } = props;
   return (
-    <StyledLabel {...props}>
+    <StyledLabel {...rest}>
       {props.children}
       <StyledInput
         id={props.id}
@@ -82,6 +84,7 @@ export const Input = props => {
         autoFocus={props.autoFocus}
         disabled={props.disabled}
         size={props.size}
+        data-cy={dataCy}
       />
     </StyledLabel>
   );

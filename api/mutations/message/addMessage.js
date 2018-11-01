@@ -12,8 +12,11 @@ import addCommunityMember from '../communityMember/addCommunityMember';
 import { trackUserThreadLastSeenQueue } from 'shared/bull/queues';
 import type { FileUpload } from 'shared/types';
 import { events } from 'shared/analytics';
-import { isAuthedResolver as requireAuth } from '../../utils/permissions';
-import { trackQueue } from 'shared/bull/queues';
+import {
+  isAuthedResolver as requireAuth,
+  canViewDMThread,
+} from '../../utils/permissions';
+import { trackQueue, calculateThreadScoreQueue } from 'shared/bull/queues';
 
 type Input = {
   message: {
@@ -36,6 +39,22 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     message.threadType === 'story'
       ? events.MESSAGE_SENT_FAILED
       : events.DIRECT_MESSAGE_SENT_FAILED;
+
+  if (message.threadType === 'directMessageThread') {
+    if (!(await canViewDMThread(user.id, message.threadId, loaders))) {
+      trackQueue.add({
+        userId: user.id,
+        event: eventFailed,
+        properties: {
+          reason: 'no permission',
+        },
+      });
+
+      return new UserError(
+        'You don’t have permission to send a message in this conversation'
+      );
+    }
+  }
 
   if (message.messageType === 'media' && !message.file) {
     trackQueue.add({
@@ -321,7 +340,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       await addCommunityMember(
         {},
         { input: { communityId: thread.communityId } },
-        { user: user, loaders: loaders }
+        ctx
       );
   }
 
@@ -344,6 +363,14 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         timestamp: Date.now(),
       });
 
+      calculateThreadScoreQueue.add(
+        {
+          threadId: message.threadId,
+        },
+        {
+          jobId: message.threadId,
+        }
+      );
       return {
         ...dbMessage,
         contextPermissions,

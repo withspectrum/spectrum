@@ -4,11 +4,9 @@ import compose from 'recompose/compose';
 import Textarea from 'react-textarea-autosize';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import isURL from 'validator/lib/isURL';
 import debounce from 'debounce';
 import queryString from 'query-string';
 import { KeyBindingUtil } from 'draft-js';
-import { URLS } from '../../helpers/regexps';
 import { closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -23,7 +21,6 @@ import {
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
-import { getLinkPreviewFromUrl } from '../../helpers/utils';
 import { TextButton, Button } from '../buttons';
 import { FlexRow } from '../../components/globals';
 import { LoadingSelect } from '../loading';
@@ -46,8 +43,6 @@ import {
 } from './utils';
 import { events, track } from 'src/helpers/analytics';
 
-const ENDS_IN_WHITESPACE = /(\s|\n)$/;
-
 type State = {
   title: string,
   body: Object,
@@ -56,10 +51,6 @@ type State = {
   activeCommunity: ?string,
   activeChannel: ?string,
   isPublishing: boolean,
-  linkPreview: ?Object,
-  linkPreviewTrueUrl: ?string,
-  linkPreviewLength: number,
-  fetchingLinkPreview: boolean,
   postWasPublished: boolean,
 };
 
@@ -109,10 +100,6 @@ class ComposerWithData extends Component<Props, State> {
       activeCommunity: '',
       activeChannel: '',
       isPublishing: false,
-      linkPreview: null,
-      linkPreviewTrueUrl: '',
-      linkPreviewLength: 0,
-      fetchingLinkPreview: false,
       postWasPublished: false,
     };
 
@@ -293,7 +280,6 @@ class ComposerWithData extends Component<Props, State> {
   };
 
   changeBody = body => {
-    this.listenForUrl(body);
     this.persistBodyToLocalStorageWithDebounce(body);
     this.setState({
       body,
@@ -443,14 +429,7 @@ class ComposerWithData extends Component<Props, State> {
 
     // define new constants in order to construct the proper shape of the
     // input for the publishThread mutation
-    const {
-      activeChannel,
-      activeCommunity,
-      title,
-      body,
-      linkPreview,
-      linkPreviewTrueUrl,
-    } = this.state;
+    const { activeChannel, activeCommunity, title, body } = this.state;
     const channelId = activeChannel;
     const communityId = activeCommunity;
     const jsonBody = toJSON(body);
@@ -459,18 +438,6 @@ class ComposerWithData extends Component<Props, State> {
       title: title.trim(),
       body: isAndroid() ? toPlainText(body) : JSON.stringify(jsonBody),
     };
-
-    const attachments = [];
-    if (linkPreview) {
-      const attachmentData = JSON.stringify({
-        ...linkPreview,
-        trueUrl: linkPreviewTrueUrl,
-      });
-      attachments.push({
-        attachmentType: 'linkPreview',
-        data: attachmentData,
-      });
-    }
 
     // Get the images
     const filesToUpload = Object.keys(jsonBody.entityMap)
@@ -491,7 +458,6 @@ class ComposerWithData extends Component<Props, State> {
       // which is parsed as markdown to draftjs on the server
       type: isAndroid() ? 'TEXT' : 'DRAFTJS',
       content,
-      attachments,
       filesToUpload,
     };
 
@@ -539,68 +505,6 @@ class ComposerWithData extends Component<Props, State> {
       });
   };
 
-  listenForUrl = state => {
-    const { linkPreview, linkPreviewLength } = this.state;
-    if (linkPreview !== null) return;
-
-    const lastChangeType = state.getLastChangeType();
-    if (
-      lastChangeType !== 'backspace-character' &&
-      lastChangeType !== 'insert-characters'
-    ) {
-      return;
-    }
-
-    const text = toPlainText(state);
-
-    if (!ENDS_IN_WHITESPACE.test(text)) return;
-
-    const toCheck = text.match(URLS);
-
-    if (toCheck) {
-      const len = toCheck.length;
-      if (linkPreviewLength === len) return; // no new links, don't recheck
-
-      let urlToCheck = toCheck[len - 1].trim();
-
-      if (!/^https?:\/\//i.test(urlToCheck)) {
-        urlToCheck = 'https://' + urlToCheck;
-      }
-
-      if (!isURL(urlToCheck)) return;
-
-      this.setState({ fetchingLinkPreview: true });
-
-      getLinkPreviewFromUrl(urlToCheck)
-        .then(data =>
-          this.setState(prevState => ({
-            linkPreview: { ...data, trueUrl: urlToCheck },
-            linkPreviewTrueUrl: urlToCheck,
-            linkPreviewLength: prevState.linkPreviewLength + 1,
-            fetchingLinkPreview: false,
-          }))
-        )
-        .catch(() => {
-          this.setState({
-            fetchingLinkPreview: false,
-          });
-          this.props.dispatch(
-            addToastWithTimeout(
-              'error',
-              `Oops, we couldn't fetch a preview for ${urlToCheck}. You can publish your story anyways though! 👍`
-            )
-          );
-        });
-    }
-  };
-
-  removeLinkPreview = () => {
-    this.setState({
-      linkPreview: null,
-      linkPreviewTrueUrl: null,
-    });
-  };
-
   render() {
     const {
       title,
@@ -609,9 +513,6 @@ class ComposerWithData extends Component<Props, State> {
       activeCommunity,
       activeChannel,
       isPublishing,
-      linkPreview,
-      linkPreviewTrueUrl,
-      fetchingLinkPreview,
     } = this.state;
 
     const {
@@ -689,13 +590,6 @@ class ComposerWithData extends Component<Props, State> {
             editorKey="thread-composer"
             placeholder={'Write more thoughts here...'}
             className={'threadComposer'}
-            showLinkPreview={true}
-            linkPreview={{
-              loading: fetchingLinkPreview,
-              remove: this.removeLinkPreview,
-              trueUrl: linkPreviewTrueUrl,
-              data: linkPreview,
-            }}
           />
         </ThreadInputs>
 

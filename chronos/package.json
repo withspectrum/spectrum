@@ -3,15 +3,20 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
+    "aws-sdk": "^2.340.0",
     "bull": "3.3.10",
     "debug": "^2.6.9",
     "draft-js": "^0.10.5",
-    "lodash": "^4.17.10",
+    "faker": "^4.1.0",
+    "lodash": "^4.17.11",
     "lodash.intersection": "^4.4.0",
     "now-env": "^3.1.0",
     "postmark": "^1.3.1",
-    "raven": "^2.6.3",
+    "raven": "^2.6.4",
+    "redis-tag-cache": "^1.2.1",
     "rethinkdbdash": "^2.3.29",
+    "sanitize-filename": "^1.6.1",
+    "shortid": "^2.2.13",
     "source-map-support": "^0.4.18",
     "toobusy-js": "^0.5.1"
   },

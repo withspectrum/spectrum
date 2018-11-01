@@ -13,7 +13,7 @@ import {
 import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
-} from '../models/usersNotifications';
+} from 'shared/db/queries/usersNotifications';
 import type { Job, ThreadReactionNotificationJobData } from 'shared/bull/types';
 
 export default async (job: Job<ThreadReactionNotificationJobData>) => {
@@ -71,7 +71,7 @@ export default async (job: Job<ThreadReactionNotificationJobData>) => {
 
     debug('mark notification as new for sender');
 
-    // if the user is allowed to recieve notifications, update their notification
+    // if the user is allowed to receive notifications, update their notification
     return Promise.all([
       markUsersNotificationsAsNew(updatedNotification.id, thread.creatorId),
     ]).catch(err => {

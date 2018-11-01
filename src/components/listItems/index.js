@@ -1,29 +1,20 @@
 // @flow
 import * as React from 'react';
 import Link from 'src/components/link';
-import { connect } from 'react-redux';
-import compose from 'recompose/compose';
-import Icon from 'src/components/icons';
 import Badge from 'src/components/badges';
 import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
-import {
-  CommunityHoverProfile,
-  ChannelHoverProfile,
-} from 'src/components/hoverProfile';
+import { CommunityHoverProfile } from 'src/components/hoverProfile';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
-import type { InvoiceInfoType } from 'shared/graphql/fragments/invoice/invoiceInfo';
-import { convertTimestampToDate } from 'shared/time-formatting';
 import Reputation from 'src/components/reputation';
+import ChannelComponent from './channel';
 import {
   Wrapper,
-  WrapperLi,
   Col,
   Row,
   Heading,
   Meta,
   Description,
   ActionContainer,
-  BadgeContainer,
 } from './style';
 
 type CommunityProps = {
@@ -78,32 +69,6 @@ type CardProps = {
   children?: any,
 };
 
-export const ChannelListItem = (props: CardProps): React$Element<any> => {
-  return (
-    <Wrapper clickable={props.clickable}>
-      <ChannelHoverProfile id={props.contents.id} style={{ flex: '1 0 auto' }}>
-        <Row>
-          <Col>
-            <Heading>
-              {props.contents.isPrivate ? (
-                <Icon glyph={'channel-private'} size={32} />
-              ) : (
-                <Icon glyph={'channel'} size={32} />
-              )}
-              {props.contents.name}
-              {props.contents.isArchived && ' (Archived)'}
-            </Heading>
-            <Meta>{props.meta && props.meta}</Meta>
-          </Col>
-          <ActionContainer className={'action'}>
-            {props.children}
-          </ActionContainer>
-        </Row>
-      </ChannelHoverProfile>
-    </Wrapper>
-  );
-};
-
 export const ThreadListItem = (props: CardProps): React$Element<any> => {
   return (
     <Wrapper clickable={props.clickable}>
@@ -114,29 +79,6 @@ export const ThreadListItem = (props: CardProps): React$Element<any> => {
         </Col>
       </Row>
     </Wrapper>
-  );
-};
-
-export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
-  return (
-    <WrapperLi clickable={props.clickable}>
-      <Row>
-        <Col>
-          <Link to={`/${props.contents.community.slug}/${props.contents.slug}`}>
-            <Heading>
-              {props.contents.isPrivate ? (
-                <Icon glyph={'channel-private'} size={32} />
-              ) : (
-                <Icon glyph={'channel'} size={32} />
-              )}
-              {props.contents.name}
-            </Heading>
-          </Link>
-          <Meta>{props.meta}</Meta>
-        </Col>
-        <ActionContainer className={'action'}>{props.children}</ActionContainer>
-      </Row>
-    </WrapperLi>
   );
 };
 
@@ -197,70 +139,4 @@ export const UserListItem = ({
   );
 };
 
-type BillingProps = {
-  meta: string,
-  contents: any,
-  children?: any,
-  badge?: string,
-  withDescription: boolean,
-};
-
-export const BillingListItem = (props: BillingProps) => {
-  return (
-    <div>
-      <Wrapper>
-        <Row>
-          {props.badge && (
-            <BadgeContainer>
-              <Badge type={props.badge || 'pro'} />
-            </BadgeContainer>
-          )}
-          <Col>
-            <Heading>{props.contents.name}</Heading>
-            <Meta>{props.meta}</Meta>
-          </Col>
-          <ActionContainer className={'action'}>
-            {props.children}
-          </ActionContainer>
-        </Row>
-        {!!props.contents.description && props.withDescription ? (
-          <Description>{props.contents.description}</Description>
-        ) : (
-          ''
-        )}
-      </Wrapper>
-    </div>
-  );
-};
-
-type InvoiceProps = {
-  invoice: InvoiceInfoType,
-};
-
-class InvoiceListItemPure extends React.Component<InvoiceProps> {
-  render() {
-    const { invoice } = this.props;
-
-    return (
-      <WrapperLi>
-        <Row>
-          <Col>
-            <Heading>
-              ${(invoice.amount / 100)
-                .toFixed(2)
-                .replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}
-            </Heading>
-            <Meta>
-              {invoice.paidAt
-                ? `Paid on ${convertTimestampToDate(invoice.paidAt * 1000)}`
-                : 'Unpaid'}{' '}
-              · {invoice.sourceBrand} {invoice.sourceLast4}
-            </Meta>
-          </Col>
-        </Row>
-      </WrapperLi>
-    );
-  }
-}
-
-export const InvoiceListItem = compose(connect())(InvoiceListItemPure);
+export const ChannelListItem = ChannelComponent;

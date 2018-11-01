@@ -391,7 +391,7 @@ class NotificationsPure extends React.Component<Props, State> {
       );
     }
 
-    if (!data || data.error) {
+    if (!data || (data && data.error)) {
       return (
         <AppViewWrapper>
           <Head title={title} description={description} />

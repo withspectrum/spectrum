@@ -1,13 +1,13 @@
 // @flow
 const Thread = /* GraphQL */ `
   enum ThreadReactionTypes {
-		like
-	}
+    like
+  }
 
   type ThreadReactions {
-		count: Int!
-		hasReacted: Boolean
-	}
+    count: Int!
+    hasReacted: Boolean
+  }
 
   type ThreadMessagesConnection {
     pageInfo: PageInfo!
@@ -57,16 +57,22 @@ const Thread = /* GraphQL */ `
     type: ThreadType
     edits: [Edit!]
     participants: [User] @cost(complexity: 1)
-    messageConnection(first: Int, after: String, last: Int, before: String): ThreadMessagesConnection! @cost(complexity: 1, multiplier: "first")
+    messageConnection(
+      first: Int
+      after: String
+      last: Int
+      before: String
+    ): ThreadMessagesConnection! @cost(complexity: 1, multipliers: ["first"])
     messageCount: Int @cost(complexity: 1)
     author: ThreadParticipant! @cost(complexity: 2)
-    attachments: [Attachment]
     watercooler: Boolean
     currentUserLastSeen: Date @cost(complexity: 1)
     reactions: ThreadReactions @cost(complexity: 1)
 
+    attachments: [Attachment]
+      @deprecated(reason: "Attachments no longer used for link previews")
     isCreator: Boolean @deprecated(reason: "Use Thread.isAuthor instead")
-    creator: User! @deprecated(reason:"Use Thread.author instead")
+    creator: User! @deprecated(reason: "Use Thread.author instead")
   }
 
   input SearchThreadsFilter {
@@ -78,7 +84,8 @@ const Thread = /* GraphQL */ `
 
   extend type Query {
     thread(id: ID!): Thread
-    searchThreads(queryString: String!, filter: SearchThreadsFilter): [Thread] @deprecated(reason:"Use the new Search query endpoint")
+    searchThreads(queryString: String!, filter: SearchThreadsFilter): [Thread]
+      @deprecated(reason: "Use the new Search query endpoint")
   }
 
   input AttachmentInput {

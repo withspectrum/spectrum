@@ -111,7 +111,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       createMemberInDefaultChannels(communityId, user.id),
     ])
       // return the community to fulfill the resolver
-      .then(() => community);
+      .then(() => getCommunityById(communityId));
   }
 
   trackQueue.add({

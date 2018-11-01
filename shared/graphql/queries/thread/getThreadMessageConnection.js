@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import queryString from 'query-string';
-import { btoa } from 'abab';
+import { btoa } from 'b2a';
 import { subscribeToNewMessages } from '../../subscriptions';
 import threadInfoFragment from '../../fragments/thread/threadInfo';
 import type { ThreadInfoType } from '../../fragments/thread/threadInfo';
@@ -53,30 +53,30 @@ export const getThreadMessageConnectionOptions = {
       first: null,
     };
 
-    // if the thread has less than 50 messages, just load all of them
-    if (thread.messageCount <= 50) {
+    // if the thread has less than 25 messages, just load all of them
+    if (thread.messageCount <= 25) {
       variables.after = null;
       variables.before = null;
       // $FlowFixMe
-      variables.last = 50;
+      variables.last = 25;
     }
 
-    if (thread.messageCount > 50) {
-      //if the thread has more than 50 messages, we'll likely only want to load the latest 50
+    if (thread.messageCount > 25) {
+      //if the thread has more than 25 messages, we'll likely only want to load the latest 25
       // **unless** the current user hasn't seen the thread before
       // $FlowFixMe
-      variables.last = 50;
+      variables.last = 25;
       if (!thread.currentUserLastSeen) {
         variables.last = null;
       }
     }
 
-    // if it's a watercooler thread only ever load the 50 most recent messages
+    // if it's a watercooler thread only ever load the 25 most recent messages
     if (props.isWatercooler) {
       variables.before = null;
       variables.after = null;
       //$FlowFixMe
-      variables.last = 50;
+      variables.last = 25;
     }
 
     // if a user is visiting a url like /thread/:id#:messageId we can extract
@@ -90,7 +90,7 @@ export const getThreadMessageConnectionOptions = {
         variables.after = params.m;
         variables.last = null;
         // $FlowFixMe
-        variables.first = 50;
+        variables.first = 25;
       }
     }
 

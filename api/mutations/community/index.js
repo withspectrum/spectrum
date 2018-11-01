@@ -7,12 +7,6 @@ import sendSlackInvites from './sendSlackInvites';
 import sendEmailInvites from './sendEmailInvites';
 import pinThread from './pinThread';
 import updateAdministratorEmail from './updateAdministratorEmail';
-import addPaymentSource from './addPaymentSource';
-import removePaymentSource from './removePaymentSource';
-import makePaymentSourceDefault from './makePaymentSourceDefault';
-import cancelSubscription from './cancelSubscription';
-import enableCommunityAnalytics from './enableCommunityAnalytics';
-import disableCommunityAnalytics from './disableCommunityAnalytics';
 import enableBrandedLogin from './enableBrandedLogin';
 import disableBrandedLogin from './disableBrandedLogin';
 import saveBrandedLoginSettings from './saveBrandedLoginSettings';
@@ -31,12 +25,6 @@ module.exports = {
     sendEmailInvites,
     pinThread,
     updateAdministratorEmail,
-    addPaymentSource,
-    removePaymentSource,
-    makePaymentSourceDefault,
-    cancelSubscription,
-    enableCommunityAnalytics,
-    disableCommunityAnalytics,
     enableBrandedLogin,
     disableBrandedLogin,
     saveBrandedLoginSettings,

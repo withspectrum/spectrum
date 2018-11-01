@@ -5,6 +5,7 @@ import shortid from 'shortid';
 import _ from 'lodash';
 import Raven from 'shared/raven';
 import sanitize from 'sanitize-filename';
+import UserError from './UserError';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 
@@ -27,17 +28,10 @@ AWS.config.update({
 });
 const s3 = new AWS.S3();
 
-const generateImageUrl = path => {
-  // remove the bucket name from the path
-  const newPath = path.replace('spectrum-chat/', '');
-
-  // this is the default source for our imgix account, which starts
-  // at the bucket root, thus we remove the bucket from the path
-  const imgixBase = 'https://spectrum.imgix.net';
-
-  // return a new url to update the user object
-  return imgixBase + '/' + newPath;
-};
+// remove the bucket name from the url
+// the bucket name is not required since it is automatically bound
+// to our imgix source
+const generateImageUrl = path => path.replace('spectrum-chat/', '');
 
 export const uploadImage = async (
   file: FileUpload,
@@ -47,32 +41,32 @@ export const uploadImage = async (
   const result = await file;
   const { filename, stream, mimetype } = result;
   const sanitized = sanitize(filename);
+  const encoded = encodeURIComponent(sanitized);
   const validMediaTypes = ['image/gif', 'image/jpeg', 'image/png', 'video/mp4'];
-
   return new Promise(res => {
     // mimetype not in the validMediaType collection
     if (_.indexOf(validMediaTypes, _.toLower(mimetype)) < 0) {
-      const unsupportedMediaTypeError = new Error(
-        `Unsupported media type ${mimetype}`
+      const unsupportedMediaTypeError = new UserError(
+        `We aren’t able to support uploads with the type ${mimetype}. Try uploading another image.`
       );
       Raven.captureException(unsupportedMediaTypeError);
       throw unsupportedMediaTypeError;
     }
 
     const path = `spectrum-chat/${entity}/${id}`;
-    const fileKey = `${shortid.generate()}-${sanitized}`;
+    const fileKey = `${shortid.generate()}-${encoded}`;
     return s3.upload(
       {
         Bucket: path,
         Key: fileKey,
         Body: stream,
-        ACL: 'public-read',
       },
       (err, data) => {
         if (err) throw new Error(err);
-        if (!data || !data.Key) throw new Error('Image upload failed.');
+        if (!data || !data.Key)
+          throw new UserError('Image upload failed. Please try again.');
         const url = generateImageUrl(data.Key);
-        res(encodeURI(url));
+        res(url);
       }
     );
   });

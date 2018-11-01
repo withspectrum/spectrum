@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
+import idx from 'idx';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import Titlebar from 'src/views/titlebar';
@@ -20,7 +21,7 @@ import {
 } from 'shared/graphql/queries/thread/getThread';
 import { NullState } from 'src/components/upsell';
 import JoinChannel from 'src/components/upsell/joinChannel';
-import LoadingView from './components/loading';
+import LoadingThread from './components/loading';
 import ThreadCommunityBanner from './components/threadCommunityBanner';
 import Sidebar from './components/sidebar';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -35,8 +36,8 @@ import {
   WatercoolerDescription,
   WatercoolerIntroContainer,
   WatercoolerTitle,
-  WatercoolerAvatar,
 } from './style';
+import { CommunityAvatar } from 'src/components/avatar';
 import WatercoolerActionBar from './components/watercoolerActionBar';
 import { ErrorBoundary } from 'src/components/error';
 import generateImageFromText from 'src/helpers/generate-image-from-text';
@@ -94,26 +95,12 @@ class ThreadContainer extends React.Component<Props, State> {
   // see how to do this here: https://github.com/reactjs/rfcs/blob/master/text/0006-static-lifecycle-methods.md#state-derived-from-propsstate
   // with implementation below
   static getDerivedStateFromProps(nextProps, prevState) {
-    const curr = prevState.derivedState;
-    const newThread = curr.data && !curr.data.thread && nextProps.data.thread;
+    const lastSeen = idx(nextProps, _ => _.data.thread.currentUserLastSeen);
+    if (lastSeen === prevState.lastSeen) return null;
 
-    const threadChanged =
-      curr.data &&
-      curr.data.thread &&
-      nextProps.data.thread &&
-      curr.data.thread.id !== nextProps.data.thread.id;
-
-    // Update the cached lastSeen value when switching threads
-    if (newThread || threadChanged) {
-      return {
-        lastSeen: nextProps.data.thread.currentUserLastSeen
-          ? nextProps.data.thread.currentUserLastSeen
-          : null,
-        derivedState: nextProps,
-      };
-    }
-
-    return null;
+    return {
+      lastSeen,
+    };
   }
 
   toggleEdit = () => {
@@ -173,8 +160,11 @@ class ThreadContainer extends React.Component<Props, State> {
   }
 
   handleScroll = e => {
-    e.persist();
     if (!e || !e.target) return;
+
+    if (e && e.persist) {
+      e.persist();
+    }
 
     // whenever the user scrolls in the thread we determine if they've scrolled
     // past the thread content section - once they've scroll passed it, we
@@ -340,11 +330,13 @@ class ThreadContainer extends React.Component<Props, State> {
           <WatercoolerIntroContainer
             innerRef={c => (this.threadDetailElem = c)}
           >
-            <WatercoolerAvatar
+            <CommunityAvatar
               community={thread.community}
               showHoverProfile={false}
               size={44}
+              style={{ marginBottom: '16px' }}
             />
+
             <Link to={`/${thread.community.slug}`}>
               <WatercoolerTitle>
                 The {thread.community.name} watercooler
@@ -433,6 +425,12 @@ class ThreadContainer extends React.Component<Props, State> {
       const headDescription = isWatercooler
         ? `Watercooler chat for the ${thread.community.name} community`
         : description;
+      const metaImage = generateImageFromText({
+        title: isWatercooler
+          ? `Chat with the ${thread.community.name} community`
+          : thread.content.title,
+        footer: `spectrum.chat/${thread.community.slug}`,
+      });
 
       return (
         <ErrorBoundary>
@@ -458,14 +456,11 @@ class ThreadContainer extends React.Component<Props, State> {
                 title={headTitle}
                 description={headDescription}
                 type="article"
-                image={generateImageFromText({
-                  title: isWatercooler
-                    ? `Chat with the ${thread.community.name} community`
-                    : thread.content.title,
-                  footer: `spectrum.chat/${thread.community.slug}`,
-                })}
+                image={metaImage}
               >
-                <meta name="twitter:card" content="summary_large_image" />
+                {metaImage && (
+                  <meta name="twitter:card" content="summary_large_image" />
+                )}
                 <meta
                   property="article:published_time"
                   content={new Date(thread.createdAt).toISOString()}
@@ -537,7 +532,7 @@ class ThreadContainer extends React.Component<Props, State> {
     }
 
     if (isLoading) {
-      return <LoadingView threadViewContext={threadViewContext} />;
+      return <LoadingThread threadViewContext={threadViewContext} />;
     }
 
     return (

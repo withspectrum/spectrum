@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import theme from 'shared/theme';
 import Card from '../../components/card';
 import Link from 'src/components/link';
 import { FlexCol, H1, H2, H3, Span, Tooltip } from '../../components/globals';
@@ -7,25 +8,25 @@ export const ListHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid ${props => props.theme.bg.border};
+  border-bottom: 2px solid ${theme.bg.border};
   padding-bottom: 16px;
 `;
 
 export const ListHeading = styled(H3)`
   font-weight: 800;
   font-size: 20px;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
 `;
 
 export const ListContainer = styled(FlexCol)`
-  margin: 8px 0 0 0;
-  width: 100%;
+  margin: 8px -16px 0;
+  width: calc(100% + 32px);
 `;
 
 export const MoreLink = styled(Link)`
   font-size: 14px;
   font-weight: 700;
-  color: ${({ theme }) => theme.brand.alt};
+  color: ${theme.brand.alt};
 `;
 
 export const StyledCard = styled(Card)`
@@ -70,7 +71,7 @@ export const EmailInviteInput = styled.input`
   }
 
   &:focus {
-    border: 2px solid ${props => props.theme.brand.default};
+    border: 2px solid ${theme.brand.default};
   }
 
   @media screen and (max-width: 768px) {
@@ -83,27 +84,27 @@ export const AddRow = styled.div`
   width: 100%;
   justify-content: center;
   padding: 8px;
-  background: ${props => props.theme.bg.wash};
+  background: ${theme.bg.wash};
   margin-top: 8px;
   margin-bottom: 16px;
   font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-weight: 500;
   border-radius: 4px;
 
   &:hover {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
     cursor: pointer;
   }
 `;
 
 export const RemoveRow = styled.div`
   margin-left: 4px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 
   &:hover {
     cursor: pointer;
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 `;
 
@@ -154,7 +155,7 @@ export const CostNumber = styled(H2)`
   vertical-align: baseline;
   position: relative;
   left: -16px;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
 
   &:before {
     content: '$';
@@ -165,12 +166,12 @@ export const CostNumber = styled(H2)`
     font-weight: 400;
     font-size: 20px;
     letter-spacing: normal;
-    color: ${({ theme }) => theme.text.alt};
+    color: ${theme.text.alt};
   }
 
   &:after {
     content: ${props => (props.per ? `'/ ${props.per}'` : "''")};
-    color: ${({ theme }) => theme.text.alt};
+    color: ${theme.text.alt};
     position: absolute;
     font-size: 14px;
     white-space: nowrap;
@@ -182,7 +183,7 @@ export const CostNumber = styled(H2)`
 `;
 
 export const CostPer = styled(Span)`
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
   position: relative;
   left: -12px;
   font-weight: 500;
@@ -190,7 +191,7 @@ export const CostPer = styled(Span)`
 `;
 
 export const CostSubtext = styled(FlexCol)`
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
   flex: none;
   margin-bottom: 24px;
   justify-content: flex-start;
@@ -213,14 +214,16 @@ export const GrowthText = styled.h5`
   color: ${props =>
     props.positive
       ? props.theme.success.default
-      : props.negative ? props.theme.warn.alt : props.theme.text.alt};
+      : props.negative
+        ? props.theme.warn.alt
+        : props.theme.text.alt};
   display: inline-block;
   margin-right: 6px;
   font-size: 14px;
 `;
 
 export const MessageIcon = styled.div`
-  color: ${props => props.theme.brand.alt};
+  color: ${theme.brand.alt};
   cursor: pointer;
   ${Tooltip} top: 2px;
 `;

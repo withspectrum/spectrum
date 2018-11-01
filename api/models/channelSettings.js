@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import type { DBChannelSettings, DBChannel } from 'shared/types';
 import { getChannelById } from './channel';
 import shortid from 'shortid';

@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 
 export const PrivacyTermsList = styled.ul`
@@ -9,7 +10,7 @@ export const PrivacyTermsList = styled.ul`
   li {
     font-size: 20px;
     font-weight: 400;
-    color: ${props => props.theme.text.secondary};
+    color: ${theme.text.secondary};
     line-height: 1.4;
     margin-top: 12px;
   }

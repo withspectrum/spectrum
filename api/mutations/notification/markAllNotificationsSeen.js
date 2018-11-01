@@ -1,6 +1,6 @@
 // @flow
 import type { GraphQLContext } from '../../';
-import { markAllNotificationsSeen } from '../../models/usersNotifications';
+import { markAllNotificationsSeen } from 'shared/db/queries/usersNotifications';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 export default requireAuth(

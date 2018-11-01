@@ -4,11 +4,8 @@ import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { getLinkPreviewFromUrl } from 'src/helpers/utils';
 import { timeDifference } from 'shared/time-difference';
 import { convertTimestampToDate } from 'shared/time-formatting';
-import isURL from 'validator/lib/isURL';
-import { URLS } from 'src/helpers/regexps';
 import { openModal } from 'src/actions/modals';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import setThreadLockMutation from 'shared/graphql/mutations/thread/lockThread';
@@ -18,7 +15,7 @@ import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import Editor from 'src/components/rich-text-editor';
-import { toJSON, toPlainText, toState } from 'shared/draft-utils';
+import { toJSON, toState } from 'shared/draft-utils';
 import Textarea from 'react-textarea-autosize';
 import ActionBar from './actionBar';
 import ConditionalWrap from 'src/components/conditionalWrap';
@@ -38,16 +35,10 @@ import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
 
-const ENDS_IN_WHITESPACE = /(\s|\n)$/;
-
 type State = {
   isEditing?: boolean,
   body?: any,
   title?: string,
-  linkPreview?: ?Object,
-  linkPreviewTrueUrl?: string,
-  linkPreviewLength?: number,
-  fetchingLinkPreview?: boolean,
   receiveNotifications?: boolean,
   isSavingEdit?: boolean,
   flyoutOpen?: ?boolean,
@@ -73,14 +64,10 @@ class ThreadDetailPure extends React.Component<Props, State> {
     isEditing: false,
     body: null,
     title: '',
-    linkPreview: null,
-    linkPreviewTrueUrl: '',
-    fetchingLinkPreview: false,
     receiveNotifications: false,
     isSavingEdit: false,
     flyoutOpen: false,
     error: '',
-    linkPreviewLength: 0,
   };
 
   bodyEditor: any;
@@ -99,34 +86,10 @@ class ThreadDetailPure extends React.Component<Props, State> {
       community: transformations.analyticsCommunity(thread.community),
     });
 
-    let rawLinkPreview =
-      thread.attachments && thread.attachments.length > 0
-        ? thread.attachments.filter(
-            attachment =>
-              attachment && attachment.attachmentType === 'linkPreview'
-          )[0]
-        : null;
-
-    let cleanLinkPreview = rawLinkPreview && {
-      attachmentType: rawLinkPreview.attachmentType,
-      data: JSON.parse(rawLinkPreview.data),
-    };
-
     return this.setState({
       isEditing: false,
       body: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
-      // $FlowFixMe
-      linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
-      linkPreviewTrueUrl:
-        thread.attachments &&
-        thread.attachments.length > 0 &&
-        thread.attachments[0]
-          ? thread.attachments[0].trueUrl
-          : '',
-      linkPreviewLength:
-        thread.attachments && thread.attachments.length > 0 ? 1 : 0,
-      fetchingLinkPreview: false,
       flyoutOpen: false,
       receiveNotifications: thread.receiveNotifications,
       isSavingEdit: false,
@@ -192,8 +155,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
       message = `You are about to delete another person's thread. As the owner of the ${
         thread.channel.name
       } channel, you have permission to do this. The thread author will be notified that this thread was deleted.`;
-    } else if (thread.isAuthor) {
-      message = 'Are you sure you want to delete this thread?';
     } else {
       message = 'Are you sure you want to delete this thread?';
     }
@@ -237,7 +198,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
   saveEdit = () => {
     const { dispatch, editThread, thread } = this.props;
-    const { linkPreview, linkPreviewTrueUrl, title, body } = this.state;
+    const { title, body } = this.state;
     const threadId = thread.id;
 
     if (!title || title.trim().length === 0) {
@@ -258,18 +219,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
       body: JSON.stringify(jsonBody),
     };
 
-    const attachments = [];
-    if (linkPreview) {
-      const attachmentData = JSON.stringify({
-        ...linkPreview,
-        trueUrl: linkPreviewTrueUrl,
-      });
-      attachments.push({
-        attachmentType: 'linkPreview',
-        data: attachmentData,
-      });
-    }
-
     // Get the images
     const filesToUpload = Object.keys(jsonBody.entityMap)
       .filter(
@@ -283,7 +232,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
     const input = {
       threadId,
       content,
-      attachments,
       filesToUpload,
     };
 
@@ -325,67 +273,8 @@ class ThreadDetailPure extends React.Component<Props, State> {
   };
 
   changeBody = state => {
-    this.listenForUrl(state);
     this.setState({
       body: state,
-    });
-  };
-
-  listenForUrl = state => {
-    const { linkPreview, linkPreviewLength } = this.state;
-    if (linkPreview !== null) return;
-
-    const lastChangeType = state.getLastChangeType();
-    if (
-      lastChangeType !== 'backspace-character' &&
-      lastChangeType !== 'insert-characters'
-    ) {
-      return;
-    }
-
-    const text = toPlainText(state);
-
-    if (!ENDS_IN_WHITESPACE.test(text)) return;
-
-    const toCheck = text.match(URLS);
-
-    if (toCheck) {
-      const len = toCheck.length;
-      if (linkPreviewLength === len) return; // no new links, don't recheck
-
-      let urlToCheck = toCheck[len - 1].trim();
-
-      if (!/^https?:\/\//i.test(urlToCheck)) {
-        urlToCheck = 'https://' + urlToCheck;
-      }
-
-      if (!isURL(urlToCheck)) return;
-      this.setState({ fetchingLinkPreview: true });
-
-      getLinkPreviewFromUrl(urlToCheck)
-        .then(data => {
-          return this.setState(prevState => ({
-            linkPreview: { ...data, trueUrl: urlToCheck },
-            linkPreviewTrueUrl: urlToCheck,
-            linkPreviewLength: prevState.linkPreviewLength + 1,
-            fetchingLinkPreview: false,
-            error: null,
-          }));
-        })
-        .catch(() => {
-          this.setState({
-            error:
-              "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
-            fetchingLinkPreview: false,
-          });
-        });
-    }
-  };
-
-  removeLinkPreview = () => {
-    this.setState({
-      linkPreview: null,
-      linkPreviewTrueUrl: '',
     });
   };
 
@@ -430,9 +319,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
     const {
       isEditing,
-      linkPreview,
       body,
-      fetchingLinkPreview,
       isSavingEdit,
       isLockingThread,
       isPinningThread,
@@ -496,14 +383,13 @@ class ThreadDetailPure extends React.Component<Props, State> {
                 {thread.channel.name}
               </Link>
             </ChannelHoverProfile>
-          </ThreadSubtitle>
-
-          <ThreadSubtitle>
+            <span>&nbsp;·&nbsp;</span>
             <Link to={`/thread/${thread.id}`}>
               {timestamp}
               {thread.modifiedAt && (
                 <React.Fragment>
-                  {' · '}(Edited{' '}
+                  {' '}
+                  (Edited{' '}
                   {timeDifference(Date.now(), editedTimestamp).toLowerCase()})
                 </React.Fragment>
               )}
@@ -517,15 +403,8 @@ class ThreadDetailPure extends React.Component<Props, State> {
             onChange={this.changeBody}
             editorKey="thread-detail"
             placeholder="Write more thoughts here..."
-            showLinkPreview={true}
             editorRef={editor => (this.bodyEditor = editor)}
             version={2}
-            linkPreview={{
-              loading: fetchingLinkPreview,
-              remove: this.removeLinkPreview,
-              trueUrl: linkPreview && linkPreview.url,
-              data: linkPreview,
-            }}
           />
         </ThreadContent>
 

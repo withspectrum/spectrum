@@ -4,7 +4,7 @@ import Raven from 'shared/raven';
 import axios from 'axios';
 import getMentions from 'shared/get-mentions';
 import { toPlainText, toState } from 'shared/draft-utils';
-import { getUserById, getUsers } from '../models/user';
+import { getUserById, getUsers } from 'shared/db/queries/user';
 import { getCommunityById } from '../models/community';
 import { getMembersInChannelWithNotifications } from '../models/usersChannels';
 import createThreadNotificationEmail from './create-thread-notification-email';

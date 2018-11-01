@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import theme from 'shared/theme';
 import Link from 'src/components/link';
 import { FlexCol, FlexRow, Transition, Gradient, zIndex } from '../globals';
 
@@ -7,11 +8,11 @@ export const StyledThreadFeedCard = styled.div`
   transition: ${Transition.hover.off};
 
   &:hover {
-    background-color: ${props => props.theme.bg.wash};
+    background-color: ${theme.bg.wash};
   }
   
   &:first-of-type {
-    border-top: 2px: ${props => props.theme.bg.default};
+    border-top: 2px: ${theme.bg.default};
   }
 `;
 
@@ -41,7 +42,7 @@ export const Title = styled.h2`
   font-size: 20px;
   line-height: 1.2;
   flex: 0 0 auto;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   pointer-events: all;
 `;
 
@@ -54,25 +55,17 @@ export const MessageCount = styled(FlexRow)`
   font-weight: 700;
   line-height: 1;
   vertical-align: middle;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
 
   div {
     margin-right: 4px;
   }
 `;
 
-export const Attachments = styled(FlexRow)`
-  align-self: stretch;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0;
-  margin-top: 8px;
-`;
-
 export const AuthorName = styled.span`
   font-weight: 500;
   font-size: 13px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   line-height: 1;
 `;
 
@@ -96,7 +89,7 @@ export const Meta = styled.span`
   font-weight: 700;
   line-height: 1;
   vertical-align: middle;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
   display: flex;
   align-items: center;
   margin-bottom: 4px;
@@ -107,7 +100,7 @@ export const Meta = styled.span`
 `;
 
 export const MetaNew = styled(Meta)`
-  color: ${({ theme }) => theme.success.default};
+  color: ${theme.success.default};
   align-self: flex-end;
 `;
 
@@ -116,7 +109,7 @@ export const Location = styled.span`
   flex: 0 0 auto;
   font-size: 13px;
   font-weight: 500;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
   line-height: 1;
   margin-bottom: 2px;
 
@@ -125,14 +118,14 @@ export const Location = styled.span`
   }
 
   > a:hover {
-    color: ${({ theme }) => theme.brand.alt};
+    color: ${theme.brand.alt};
     text-decoration: underline;
   }
 `;
 
 export const Lock = styled.span`
   position: relative;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   top: 1px;
 `;
 
@@ -149,7 +142,7 @@ export const PinnedBanner = styled.span`
   position: absolute;
   width: 72px;
   height: 72px;
-  background-color: ${props => props.theme.special.default};
+  background-color: ${theme.special.default};
   background-image: ${props =>
     Gradient(props.theme.special.alt, props.theme.special.default)};
   transform: rotate(45deg);
@@ -161,7 +154,7 @@ export const PinnedIconWrapper = styled.span`
   position: relative;
   right: -36px;
   top: 4px;
-  color: ${props => props.theme.text.reverse};
+  color: ${theme.text.reverse};
 `;
 
 export const ParticipantHeads = styled(FlexRow)`
@@ -178,8 +171,8 @@ export const ParticipantCount = styled.span`
   border-radius: 100%;
   height: 32px;
   width: 32px;
-  color: ${props => props.theme.text.reverse};
-  background-color: ${props => props.theme.text.alt};
+  color: ${theme.text.reverse};
+  background-color: ${theme.text.alt};
   font-size: 11px;
   font-weight: 700;
   line-height: 32px;
@@ -191,7 +184,7 @@ export const ParticipantCount = styled.span`
 export const Author = styled.div`
   padding: 2px;
   border-radius: 100%;
-  border: 2px solid ${({ theme }) => theme.brand.alt};
+  border: 2px solid ${theme.brand.alt};
   pointer-events: all;
   display: flex;
   flex: none;

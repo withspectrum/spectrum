@@ -168,8 +168,11 @@ class NewCommunity extends React.Component<Props, State> {
   };
 
   render() {
-    const { isLoading, data: { user } } = this.props;
-    const { activeStep, community, existingId, hasInvitedPeople } = this.state;
+    const {
+      isLoading,
+      data: { user },
+    } = this.props;
+    const { activeStep, community, hasInvitedPeople } = this.state;
     const title = this.title();
     const description = this.description();
     if (user && user.email) {
@@ -211,10 +214,7 @@ class NewCommunity extends React.Component<Props, State> {
                 community.id && (
                   <ContentContainer data-cy="community-creation-invitation-step">
                     <Divider />
-                    <SlackConnection
-                      isOnboarding={true}
-                      id={community.id || existingId}
-                    />
+                    <SlackConnection isOnboarding={true} id={community.id} />
                     <Divider />
                     <CommunityInvitationForm id={community.id} />
                   </ContentContainer>

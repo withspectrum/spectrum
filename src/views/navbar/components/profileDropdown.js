@@ -1,12 +1,11 @@
 // @flow
+import theme from 'shared/theme';
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
 import Dropdown from '../../../components/dropdown';
-import { openModal } from 'src/actions/modals';
 import { SERVER_URL } from '../../../api/constants';
-import Badge from 'src/components/badges';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 
 const UserProfileDropdown = styled(Dropdown)`
@@ -31,15 +30,15 @@ const UserProfileDropdownListItem = styled.li`
   flex: 1;
   font-size: 14px;
   font-weight: 600;
-  color: ${props => props.theme.text.alt};
-  border-bottom: 2px solid ${props => props.theme.bg.border};
-  background: ${props => props.theme.bg.default};
+  color: ${theme.text.alt};
+  border-bottom: 2px solid ${theme.bg.border};
+  background: ${theme.bg.default};
   justify-content: center;
 
   &:hover {
     cursor: pointer;
-    color: ${props => props.theme.text.default};
-    background: ${props => props.theme.bg.wash};
+    color: ${theme.text.default};
+    background: ${theme.bg.wash};
   }
 `;
 
@@ -58,15 +57,6 @@ const ProfileDropdown = (props: ProfileProps) => {
               My Settings
             </UserProfileDropdownListItem>
           </Link>
-        )}
-        {!props.user.isPro && (
-          <UserProfileDropdownListItem
-            onClick={() =>
-              props.dispatch(openModal('UPGRADE_MODAL', { user: props.user }))
-            }
-          >
-            Upgrade to <Badge type="pro" />
-          </UserProfileDropdownListItem>
         )}
         <Link to={`/about`}>
           <UserProfileDropdownListItem>

@@ -9,12 +9,6 @@ import processSendCommunityInviteEmail from './queues/send-community-invite-emai
 import processSendUserWelcomeEmail from './queues/send-user-welcome-email';
 import processSendNewCommunityWelcomeEmail from './queues/send-new-community-welcome-email';
 
-import processSendCommunityInvoiceReceiptEmail from './queues/send-community-invoice-receipt-email';
-import processSendCommunityPaymentSucceededEmail from './queues/send-community-payment-succeeded-email';
-import processSendCommunityPaymentFailedEmail from './queues/send-community-payment-failed-email';
-import processSendCommunityCardExpiringWarningEmail from './queues/send-community-card-expiring-warning-email';
-
-import processSendProInvoiceReceiptEmail from './queues/send-pro-invoice-receipt-email';
 import processSendNewThreadEmail from './queues/send-new-thread-email';
 import processSendDigestEmail from './queues/send-digest-email';
 import processSendEmailValidationEmail from './queues/send-email-validation-email';
@@ -31,11 +25,6 @@ import processSendRequestJoinPrivateCommunityEmail from './queues/send-private-c
 import processSendPrivateCommunityRequestApprovedEmail from './queues/send-private-community-request-approved-email';
 
 import {
-  SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL,
-  SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL,
-  SEND_COMMUNITY_PAYMENT_FAILED_EMAIL,
-  SEND_COMMUNITY_PAYMENT_SUCCEEDED_EMAIL,
-  SEND_PRO_INVOICE_RECEIPT_EMAIL,
   SEND_COMMUNITY_INVITE_EMAIL,
   SEND_NEW_MESSAGE_EMAIL,
   SEND_NEW_MENTION_THREAD_EMAIL,
@@ -74,12 +63,6 @@ const server = createWorker({
   [SEND_NEW_USER_WELCOME_EMAIL]: processSendUserWelcomeEmail,
   [SEND_NEW_COMMUNITY_WELCOME_EMAIL]: processSendNewCommunityWelcomeEmail,
 
-  [SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL]: processSendCommunityInvoiceReceiptEmail,
-  [SEND_COMMUNITY_PAYMENT_SUCCEEDED_EMAIL]: processSendCommunityPaymentSucceededEmail,
-  [SEND_COMMUNITY_PAYMENT_FAILED_EMAIL]: processSendCommunityPaymentFailedEmail,
-  [SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL]: processSendCommunityCardExpiringWarningEmail,
-
-  [SEND_PRO_INVOICE_RECEIPT_EMAIL]: processSendProInvoiceReceiptEmail,
   [SEND_THREAD_CREATED_NOTIFICATION_EMAIL]: processSendNewThreadEmail,
   [SEND_DIGEST_EMAIL]: processSendDigestEmail,
   [SEND_EMAIL_VALIDATION_EMAIL]: processSendEmailValidationEmail,

@@ -8,7 +8,7 @@ import {
   resetCommunitySlackSettings,
   updateSlackInvitesMemberCount,
 } from '../models/communitySettings';
-import { getUserById } from '../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import { getCommunityById } from '../models/community';
 import {
   sendCommunityInviteNotificationQueue,

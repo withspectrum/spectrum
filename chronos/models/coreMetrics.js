@@ -77,7 +77,6 @@ export const getCount = (table: string, filter: mixed) => {
   if (filter) {
     return db
       .table(table)
-      .filter(filter)
       .filter(row => db.not(row.hasFields('deletedAt')))
       .count()
       .run();

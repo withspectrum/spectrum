@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 
 export const TokenInputWrapper = styled.div`
@@ -17,8 +18,8 @@ export const TokenInputWrapper = styled.div`
     transform: translateY(-50%);
     font-size: 10px;
     text-transform: uppercase;
-    color: ${props => props.theme.text.reverse};
-    background: ${props => props.theme.text.alt};
+    color: ${theme.text.reverse};
+    background: ${theme.text.alt};
     padding: 4px 8px;
     border-radius: 4px;
     font-weight: 700;
@@ -26,25 +27,25 @@ export const TokenInputWrapper = styled.div`
 
   &:hover {
     &:after {
-      background: ${props => props.theme.success.alt};
+      background: ${theme.success.alt};
     }
   }
 `;
 
 export const MessageIconContainer = styled.div`
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
 
   &:hover {
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 `;
 
 export const UserListItemContainer = styled.div`
-  border-bottom: 1px solid ${props => props.theme.bg.wash};
+  border-bottom: 1px solid ${theme.bg.wash};
 
   &:last-of-type {
     border-bottom: none;

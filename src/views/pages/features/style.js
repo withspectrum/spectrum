@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import theme from 'shared/theme';
 import { SvgWrapper } from 'src/components/icons';
 
 /* eslint no-eval: 0 */
@@ -28,7 +29,7 @@ export const TextContent = styled.div`
   grid-area: copy;
   justify-self: center;
   z-index: 1;
-  text-shadow: 0 0 4px ${props => props.theme.bg.default};
+  text-shadow: 0 0 4px ${theme.bg.default};
   max-width: 560px;
 
   > a {
@@ -220,7 +221,7 @@ export const FeatureName = styled.span`
         font-size: 12px;
         background-color: ${props =>
           props.bright ? props.theme.success.alt : props.theme.space.dark};
-        color: ${props => props.theme.text.reverse};
+        color: ${theme.text.reverse};
         padding: 4px 8px;
         border-radius: 16px;
         position: relative;
@@ -234,7 +235,7 @@ export const FeatureName = styled.span`
 
 export const EtcName = styled(FeatureName)`
   font-size: 20px;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   line-height: 1.2;
 `;
 

@@ -10,7 +10,6 @@
 import passport from 'passport';
 import { URL } from 'url';
 import isSpectrumUrl from '../../utils/is-spectrum-url';
-import { signCookie, getCookies } from 'shared/cookie-utils';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 const FALLBACK_URL = IS_PROD
@@ -35,10 +34,6 @@ export const createSigninRoutes = (
       // Attach the redirectURL and authType to the session so we have it in the /auth/twitter/callback route
       // $FlowIssue
       req.session.redirectUrl = url;
-      if (req.query.authType === 'token') {
-        // $FlowIssue
-        req.session.authType = 'token';
-      }
 
       return passport.authenticate(strategy, strategyOptions)(req, ...rest);
     },
@@ -55,31 +50,15 @@ export const createSigninRoutes = (
           : new URL(FALLBACK_URL);
         redirectUrl.searchParams.append('authed', 'true');
 
-        // Add the session cookies to the query params if token authentication
-        if (
-          // $FlowIssue
-          req.session.authType === 'token' &&
-          req.session.passport &&
-          req.session.passport.user
-        ) {
-          const cookies = getCookies({ userId: req.session.passport.user });
-
-          redirectUrl.searchParams.append(
-            'accessToken',
-            signCookie(
-              `session=${cookies.session}; session.sig=${
-                cookies['session.sig']
-              }`
-            )
-          );
-        }
-
-        // $FlowIssue
-        req.session.authType = undefined;
         // Delete the redirectURL from the session again so we don't redirect
         // to the old URL the next time around
         // $FlowIssue
         req.session.redirectUrl = undefined;
+        res.cookie('_now_no_cache', '1', {
+          maxAge: 315569260000, // 10 years
+          sameSite: 'lax',
+          secure: false,
+        });
         return res.redirect(redirectUrl.href);
       },
     ],

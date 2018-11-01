@@ -4,7 +4,7 @@ import {
   getUsersSettings,
   updateUsersNotificationSettings,
 } from '../../models/usersSettings';
-import { getUserById } from '../../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 type Input = {

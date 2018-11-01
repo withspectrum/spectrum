@@ -8,7 +8,6 @@ import type { UserCommunityConnectionType } from '../../fragments/user/userCommu
 
 export type GetUserCommunityConnectionType = {
   ...$Exact<UserInfoType>,
-  isPro: boolean,
   totalReputation: number,
   ...$Exact<UserCommunityConnectionType>,
 };

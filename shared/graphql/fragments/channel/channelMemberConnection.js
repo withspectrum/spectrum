@@ -35,7 +35,6 @@ export default gql`
         cursor
         node {
           ...userInfo
-          isPro
           contextPermissions {
             communityId
             reputation

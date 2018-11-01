@@ -1,6 +1,10 @@
 // @flow
-import { db } from './db';
+import { db } from 'shared/db';
 
 export const destroySession = (id: string) => {
-  return db.table('sessions').get(id).delete().run();
+  return db
+    .table('sessions')
+    .get(id)
+    .delete()
+    .run();
 };

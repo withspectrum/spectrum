@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import * as React from 'react';
 import styled from 'styled-components';
 import {
@@ -12,11 +13,11 @@ const Link = styled.a`
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  color: ${props => props.theme.brand.default};
+  color: ${theme.brand.default};
   padding: 12px 16px;
 
   &:hover {
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 `;
 
