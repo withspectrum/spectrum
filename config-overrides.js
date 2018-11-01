@@ -8,6 +8,7 @@ const debug = require('debug')('build:config-overrides');
 const webpack = require('webpack');
 const { injectBabelPlugin } = require('react-app-rewired');
 const rewireStyledComponents = require('react-app-rewire-styled-components');
+const rewireReactHotLoader = require('react-app-rewire-hot-loader');
 const swPrecachePlugin = require('sw-precache-webpack-plugin');
 const fs = require('fs');
 const path = require('path');
@@ -74,24 +75,21 @@ const transpileShared = config => {
 module.exports = function override(config, env) {
   if (process.env.NODE_ENV === 'development') {
     config.output.path = path.join(__dirname, './build');
+    config = rewireReactHotLoader(config, env);
+    config.plugins.push(
+      WriteFilePlugin({
+        log: true,
+        useHashIndex: false,
+      })
+    );
   }
   config.plugins.push(
     new ReactLoadablePlugin({
       filename: './build/react-loadable.json',
     })
   );
-  if (process.env.NODE_ENV === 'production') {
-    removeEslint(config);
-  }
   config = injectBabelPlugin('react-loadable/babel', config);
   config = transpileShared(config);
-  config.plugins.push(
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['bootstrap'],
-      filename: 'static/js/[name].js',
-      minChunks: Infinity,
-    })
-  );
   // Filter the default serviceworker plugin, add offline plugin instead
   config.plugins = config.plugins.filter(
     plugin => !isServiceWorkerPlugin(plugin)
@@ -99,17 +97,28 @@ module.exports = function override(config, env) {
   // Get all public files so they're cached by the SW
   let externals = [];
   walkFolder('./public/', file => {
-    // HOTFIX: Don't cache images
-    if (file.indexOf('img') > -1 && file.indexOf('homescreen-icon') === -1)
-      return;
+    if (file.indexOf('index.html') > -1) return;
     externals.push(file.replace(/public/, ''));
   });
   config.plugins.push(
     new OfflinePlugin({
-      appShell: '/index.html',
-      caches: process.env.NODE_ENV === 'development' ? {} : 'all',
+      // We don't want to cache anything
+      caches: {},
       externals,
       autoUpdate: true,
+      // NOTE(@mxstbr): Normally this is handled by setting
+      // appShell: './index.html'
+      // but we don't want to serve the app shell for the `/api` and `/auth` routes
+      // which means we have to manually do this and filter any of those routes out
+      cacheMaps: [
+        {
+          match: function() {
+            return false;
+          },
+          requestTypes: ['navigate'],
+        },
+      ],
+      rewrites: arg => arg,
       ServiceWorker: {
         entry: './public/push-sw.js',
         events: true,
@@ -133,23 +142,15 @@ module.exports = function override(config, env) {
   if (process.env.BUNDLE_BUDDY === 'true') {
     config.plugins.push(new BundleBuddyWebpackPlugin());
   }
-  if (process.env.NODE_ENV === 'development') {
-    config.plugins.push(
-      WriteFilePlugin({
-        // Don't match hot-update files
-        test: /^((?!(hot-update)).)*$/g,
-      })
-    );
-  }
-  config.plugins.push(
+  config.plugins.unshift(
     new webpack.optimize.CommonsChunkPlugin({
-      minChunks: 3,
-      name: 'main',
-      async: 'commons',
-      children: true,
+      names: ['bootstrap'],
+      filename: 'static/js/[name].js',
+      minChunks: Infinity,
     })
   );
   if (process.env.NODE_ENV === 'production') {
+    removeEslint(config);
     config.plugins.push(
       new webpack.DefinePlugin({
         'process.env': {

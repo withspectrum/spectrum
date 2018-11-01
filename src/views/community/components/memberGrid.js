@@ -59,7 +59,11 @@ class CommunityMemberGrid extends React.Component<Props, State> {
   }
 
   render() {
-    const { data: { community }, isLoading, currentUser } = this.props;
+    const {
+      data: { community },
+      isLoading,
+      currentUser,
+    } = this.props;
     const { scrollElement } = this.state;
 
     if (community) {
@@ -102,6 +106,7 @@ class CommunityMemberGrid extends React.Component<Props, State> {
                 onlineSize={'small'}
                 badges={roles}
                 reputation={reputation}
+                showHoverProfile={false}
               >
                 {currentUser &&
                   user.id !== currentUser.id && (

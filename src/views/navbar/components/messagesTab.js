@@ -9,7 +9,7 @@ import { updateNotificationsCount } from 'src/actions/notifications';
 import getUnreadDMQuery from 'shared/graphql/queries/notification/getDirectMessageNotifications';
 import type { GetDirectMessageNotificationsType } from 'shared/graphql/queries/notification/getDirectMessageNotifications';
 import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
-import { Tab, Label } from '../style';
+import { MessageTab, Label } from '../style';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
@@ -144,7 +144,9 @@ class MessagesTab extends React.Component<Props, State> {
   };
 
   setCount(props) {
-    const { data: { directMessageNotifications } } = props;
+    const {
+      data: { directMessageNotifications },
+    } = props;
     const { dispatch } = this.props;
     const nodes = this.convertEdgesToNodes(directMessageNotifications);
 
@@ -209,7 +211,7 @@ class MessagesTab extends React.Component<Props, State> {
     }
 
     return (
-      <Tab
+      <MessageTab
         data-active={active}
         aria-current={active ? 'page' : undefined}
         to="/messages"
@@ -226,7 +228,7 @@ class MessagesTab extends React.Component<Props, State> {
           size={isDesktopApp() ? 28 : 32}
         />
         <Label>Messages</Label>
-      </Tab>
+      </MessageTab>
     );
   }
 }

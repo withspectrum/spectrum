@@ -1,24 +1,17 @@
 import React from 'react';
-// $FlowFixMe
+import theme from 'shared/theme';
 import styled from 'styled-components';
-// $FlowFixMe
 import Link from 'src/components/link';
 import { ProfileHeaderAction } from './style';
-import { optimize } from '../../helpers/images';
 
 const PhotoContainer = styled.div`
   grid-area: cover;
   position: relative;
   width: 100%;
   flex: 0 0 ${props => (props.large ? '320px' : '96px')};
-  background-color: ${({ theme }) => theme.bg.reverse};
+  background-color: ${theme.bg.reverse};
   background-image: ${props =>
-    props.coverURL
-      ? `url("${optimize(props.coverURL, {
-          w: props.large ? 1024 : 320,
-          dpr: 2,
-        })}")`
-      : 'none'};
+    props.coverURL ? `url(${props.coverURL})` : 'none'};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

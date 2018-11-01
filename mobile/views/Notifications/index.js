@@ -4,7 +4,6 @@ import { Button } from 'react-native';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { SecureStore } from 'expo';
-import Text from '../../components/Text';
 import InfiniteList from '../../components/InfiniteList';
 import withSafeView from '../../components/SafeAreaView';
 import { Wrapper } from '../Dashboard/style';
@@ -20,17 +19,19 @@ import getPushNotificationToken from '../../utils/get-push-notification-token';
 import type { State as ReduxState } from '../../reducers';
 import type { AuthenticationState } from '../../reducers/authentication';
 import { parseNotification } from './parseNotification';
-import type { Navigation } from '../../utils/types';
-import { deduplicateChildren } from '../../utils/deduplicate-children';
 import { NotificationListItem } from '../../components/Lists';
 import { withCurrentUser } from '../../components/WithCurrentUser';
 import type { GetUserType } from '../../../shared/graphql/queries/user/getUser';
+import type { NavigationProps } from 'react-navigation';
+import Loading from '../../components/Loading';
+import ErrorBoundary from '../../components/ErrorBoundary';
+import { FullscreenNullState } from '../../components/NullStates';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
-  mutate: (token: any) => Promise<any>,
+  subscribeExpoPush: (token: any) => Promise<any>,
   authentication: AuthenticationState,
-  navigation: Navigation,
+  navigation: NavigationProps,
   currentUser: GetUserType,
   data: {
     subscribeToNewNotifications: Function,
@@ -99,12 +100,30 @@ class Notifications extends Component<Props, State> {
       data = { decision: false, timestamp: new Date() };
     } else {
       data = { decision: true, timestamp: new Date() };
-      this.props.mutate(token);
+      this.setState({
+        pushNotifications: data,
+      });
+      this.props
+        .subscribeExpoPush(token)
+        .then(res => {
+          if (res) {
+            return SecureStore.setItemAsync(
+              'pushNotificationsDecision',
+              JSON.stringify(data)
+            );
+          } else {
+            this.setState({
+              pushNotifications: null,
+            });
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          this.setState({
+            pushNotifications: null,
+          });
+        });
     }
-    this.setState({
-      pushNotifications: data,
-    });
-    SecureStore.setItemAsync('pushNotificationsDecision', JSON.stringify(data));
   };
 
   subscribe = () => {
@@ -146,9 +165,8 @@ class Notifications extends Component<Props, State> {
     } = this.props;
     const { pushNotifications } = this.state;
     if (notifications && currentUser) {
-      const edges = notifications.edges.map(edge => edge && edge.node);
-      const unique = deduplicateChildren(edges, 'id');
-      const sorted = sortByDate(unique, 'modifiedAt', 'desc');
+      const nodes = notifications.edges.map(edge => edge && edge.node);
+      const sorted = sortByDate(nodes, 'modifiedAt', 'desc');
       const parsed = sorted.map(n => parseNotification(n)).filter(Boolean);
 
       return (
@@ -163,35 +181,36 @@ class Notifications extends Component<Props, State> {
           <InfiniteList
             data={parsed}
             renderItem={({ item }) => (
-              <NotificationListItem
-                navigation={navigation}
-                notification={item}
-                currentUserId={currentUser.id}
-              />
+              <ErrorBoundary fallbackComponent={null}>
+                <NotificationListItem
+                  navigation={navigation}
+                  notification={item}
+                  currentUserId={currentUser.id}
+                />
+              </ErrorBoundary>
             )}
-            loadingIndicator={<Text>Loading...</Text>}
+            loadingIndicator={<Loading />}
             hasNextPage={notifications.pageInfo.hasNextPage}
             fetchMore={this.fetchMore}
-            refetching={this.props.isRefetching}
+            isFetchingMore={this.props.isFetchingMore}
+            isRefetching={this.props.isRefetching}
             refetch={this.props.data.refetch}
           />
         </Wrapper>
       );
     }
 
-    if (isLoading)
+    if (isLoading) {
       return (
         <Wrapper>
-          <Text type="body">Loading...</Text>
+          <Loading />
         </Wrapper>
       );
+    }
 
-    if (hasError)
-      return (
-        <Wrapper>
-          <Text type="body">Oh crap, error</Text>
-        </Wrapper>
-      );
+    if (hasError) {
+      return <FullscreenNullState />;
+    }
 
     return null;
   }

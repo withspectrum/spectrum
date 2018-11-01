@@ -5,8 +5,9 @@ import type { ThreadParticipantType } from '../thread/threadParticipant';
 
 export type MessageInfoType = {
   id: string,
-  timestamp: Date,
+  timestamp: string,
   messageType: string,
+  modifiedAt: string,
   parent: {
     id: string,
     timestamp: Date,
@@ -34,6 +35,7 @@ export default gql`
   fragment messageInfo on Message {
     id
     timestamp
+    modifiedAt
     messageType
     parent {
       id

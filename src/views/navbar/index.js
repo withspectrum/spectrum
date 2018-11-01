@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import queryString from 'query-string';
 import Icon from '../../components/icons';
-import { ProfileDropdown } from './components/profileDropdown';
+import ProfileDropdown from './components/profileDropdown';
 import MessagesTab from './components/messagesTab';
 import NotificationsTab from './components/notificationsTab';
 import Head from '../../components/head';
@@ -16,11 +16,11 @@ import {
   ProfileDrop,
   ProfileTab,
   SupportTab,
-  PricingTab,
   Tab,
   Label,
   Navatar,
   SkipLink,
+  SigninLink,
 } from './style';
 import { track, events } from 'src/helpers/analytics';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
@@ -51,6 +51,7 @@ class Navbar extends React.Component<Props, State> {
 
   shouldComponentUpdate(nextProps, nextState) {
     const currProps = this.props;
+    const isMobile = window && window.innerWidth <= 768;
 
     // If the update was caused by the focus on the skip link
     if (nextState.isSkipLinkFocused !== this.state.isSkipLinkFocused)
@@ -60,8 +61,9 @@ class Navbar extends React.Component<Props, State> {
     if (currProps.location.pathname !== nextProps.location.pathname)
       return true;
 
-    // if route query params change
-    if (currProps.location.search !== nextProps.location.search) return true;
+    // if route query params change we need to re-render on mobile
+    if (isMobile && currProps.location.search !== nextProps.location.search)
+      return true;
 
     // Had no user, now have user or user changed
     if (nextProps.currentUser !== currProps.currentUser) return true;
@@ -74,15 +76,17 @@ class Navbar extends React.Component<Props, State> {
       nextProps.notificationCounts.notifications;
     if (newDMNotifications || newNotifications) return true;
 
-    // if the user is mobile and is viewing a thread or DM thread, re-render
-    // the navbar when they exit the thread
-    const { thread: thisThreadParam } = queryString.parse(
-      currProps.history.location.search
-    );
-    const { thread: nextThreadParam } = queryString.parse(
-      nextProps.history.location.search
-    );
-    if (thisThreadParam !== nextThreadParam) return true;
+    if (isMobile) {
+      // if the user is mobile and is viewing a thread or DM thread, re-render
+      // the navbar when they exit the thread
+      const { thread: thisThreadParam } = queryString.parse(
+        currProps.history.location.search
+      );
+      const { thread: nextThreadParam } = queryString.parse(
+        nextProps.history.location.search
+      );
+      if (thisThreadParam !== nextThreadParam) return true;
+    }
 
     return false;
   }
@@ -164,7 +168,7 @@ class Navbar extends React.Component<Props, State> {
             to="/"
             aria-hidden
             tabIndex="-1"
-            isHidden={this.state.isSkipLinkFocused}
+            ishidden={this.state.isSkipLinkFocused || undefined}
             onClick={() => this.trackNavigationClick('logo')}
             data-cy="navbar-logo"
           >
@@ -216,16 +220,16 @@ class Navbar extends React.Component<Props, State> {
               {...this.getTabProps(
                 history.location.pathname === `/users/${loggedInUser.username}`
               )}
-              to={
-                loggedInUser.username ? `/users/${loggedInUser.username}` : '/'
-              }
+              to={loggedInUser ? `/users/${loggedInUser.username}` : '/'}
               onClick={() => this.trackNavigationClick('profile')}
             >
               <Navatar
                 user={loggedInUser}
-                src={`${loggedInUser.profilePhoto}`}
-                size={24}
-                data-cy="navbar-profile"
+                size={28}
+                showHoverProfile={false}
+                showOnlineStatus={false}
+                clickable={false}
+                dataCy="navbar-profile"
               />
             </Tab>
             <ProfileDropdown user={loggedInUser} />
@@ -236,7 +240,7 @@ class Navbar extends React.Component<Props, State> {
             {...this.getTabProps(
               history.location.pathname === `/users/${loggedInUser.username}`
             )}
-            to={loggedInUser.username ? `/users/${loggedInUser.username}` : '/'}
+            to={loggedInUser ? `/users/${loggedInUser.username}` : '/'}
             onClick={() => this.trackNavigationClick('profile')}
           >
             <Icon glyph="profile" />
@@ -257,7 +261,7 @@ class Navbar extends React.Component<Props, State> {
             to="/"
             aria-hidden
             tabIndex="-1"
-            isHidden={this.state.isSkipLinkFocused}
+            ishidden={this.state.isSkipLinkFocused || undefined}
             data-cy="navbar-logo"
           >
             <Icon glyph="logo" size={28} />
@@ -296,14 +300,7 @@ class Navbar extends React.Component<Props, State> {
             <Icon glyph="like" />
             <Label>Support</Label>
           </SupportTab>
-          <PricingTab
-            {...this.getTabProps(history.location.pathname === '/pricing')}
-            to="/pricing"
-            data-cy="navbar-pricing"
-          >
-            <Icon glyph="payment" />
-            <Label>Pricing</Label>
-          </PricingTab>
+          <SigninLink to="/login">Sign In</SigninLink>
         </Nav>
       );
     }

@@ -2,7 +2,7 @@
 import session from 'cookie-session';
 import { cookieKeygrip } from '../cookie-utils';
 
-const ONE_YEAR = 31556952000;
+const ONE_WEEK = 604800000;
 
 if (!process.env.SESSION_COOKIE_SECRET && !process.env.TEST_DB) {
   throw new Error(
@@ -15,7 +15,9 @@ export default session({
   keys: cookieKeygrip,
   name: 'session',
   secure: process.env.NODE_ENV === 'production',
-  // Expire the browser cookie one year from now
-  maxAge: ONE_YEAR,
+  // This is refresh everytime a user does a request
+  // @see api/routes/middleware/index.js
+  maxAge: ONE_WEEK,
   signed: process.env.TEST_DB ? false : true,
+  sameSite: 'lax',
 });

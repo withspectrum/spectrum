@@ -63,10 +63,16 @@ class SidebarChannels extends React.Component<Props> {
       slug,
     } = this.props;
 
-    const { isOwner, isModerator } = permissions;
+    const isOwner = permissions && permissions.isOwner;
+    const isModerator = permissions && permissions.isModerator;
 
     if (community) {
-      const { isOwner, isModerator } = community.communityPermissions;
+      const isOwner =
+        community.communityPermissions &&
+        community.communityPermissions.isOwner;
+      const isModerator =
+        community.communityPermissions &&
+        community.communityPermissions.isModerator;
       const channels = community.channelConnection.edges
         .map(channel => channel && channel.node)
         .filter(channel => {
@@ -95,7 +101,7 @@ class SidebarChannels extends React.Component<Props> {
           <Link to={`/${community.slug}`}>
             <ChannelListItem>
               <Icon glyph={'link'} size={24} />
-              <CommunityListName>Visit community</CommunityListName>
+              <CommunityListName>View community home</CommunityListName>
             </ChannelListItem>
           </Link>
 
@@ -136,15 +142,14 @@ class SidebarChannels extends React.Component<Props> {
             />
           )}
 
-          {(isOwner || isModerator) &&
-            community.hasFeatures.analytics && (
-              <Link to={`/${community.slug}/settings/analytics`}>
-                <ChannelListItem>
-                  <Icon glyph={'link'} size={24} />
-                  <CommunityListName>Analytics</CommunityListName>
-                </ChannelListItem>
-              </Link>
-            )}
+          {(isOwner || isModerator) && (
+            <Link to={`/${community.slug}/settings/analytics`}>
+              <ChannelListItem>
+                <Icon glyph={'link'} size={24} />
+                <CommunityListName>Analytics</CommunityListName>
+              </ChannelListItem>
+            </Link>
+          )}
 
           {sortedChannels &&
             sortedChannels.length > 1 && (
@@ -209,6 +214,8 @@ class SidebarChannels extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getCommunityChannels, viewNetworkHandler)(
-  SidebarChannels
-);
+export default compose(
+  connect(),
+  getCommunityChannels,
+  viewNetworkHandler
+)(SidebarChannels);

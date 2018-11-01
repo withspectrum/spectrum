@@ -1,7 +1,7 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { getUserByEmail, setUserPendingEmail } from '../../models/user';
+import { getUserByEmail, setUserPendingEmail } from 'shared/db/queries/user';
 import isEmail from 'validator/lib/isEmail';
 import { sendEmailValidationEmailQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';

@@ -3,7 +3,7 @@ const debug = require('debug')('athena:queue:direct-message-notification');
 import Raven from '../../shared/raven';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
-import { getUserById } from '../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import getEmailStatus from '../utils/get-email-status';
 import {
   storeNotification,
@@ -13,7 +13,7 @@ import {
 import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
-} from '../models/usersNotifications';
+} from 'shared/db/queries/usersNotifications';
 import { getDirectMessageThreadMembers } from '../models/usersDirectMessageThreads';
 import sentencify from '../utils/sentencify';
 import { toPlainText, toState } from 'shared/draft-utils';

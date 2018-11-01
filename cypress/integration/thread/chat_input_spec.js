@@ -19,7 +19,6 @@ const archivedThread = data.threads.find(
   t =>
     t.communityId === publicCommunity.id && t.channelId === archivedChannel.id
 );
-const lockedThread = data.threads.find(t => t.isLocked);
 
 const nonMemberUser = data.users.find(u => u.id === constants.QUIET_USER_ID);
 const memberInChannelUser = data.users.find(u => u.id === constants.BRIAN_ID);
@@ -55,9 +54,9 @@ describe('chat input', () => {
     it('should render', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
       cy.get('[data-cy="chat-input-send-button"]').should('not.be.visible');
-      cy
-        .get('[data-cy="thread-join-channel-upsell-button"]')
-        .should('be.visible');
+      cy.get('[data-cy="thread-join-channel-upsell-button"]').should(
+        'be.visible'
+      );
     });
   });
 
@@ -106,24 +105,19 @@ describe('chat input', () => {
     it('should allow quoting a message', () => {
       // Quote a message
       cy.get('[data-cy="staged-quoted-message"]').should('not.be.visible');
-      cy
-        .get('[data-cy="message"]')
+      cy.get('[data-cy="message"]')
         .first()
         .should('be.visible')
         .click();
-      cy
-        .get('[data-cy="reply-to-message"]')
+      cy.get('[data-cy="reply-to-message"]')
         .first()
         .should('be.visible')
-        .click();
-      cy
-        .get('[data-cy="reply-to-message"]')
-        .first()
-        .should('not.be.visible');
+        .click({ force: true });
+
       cy.get('[data-cy="staged-quoted-message"]').should('be.visible');
+
       // Remove quoted message again
-      cy
-        .get('[data-cy="remove-staged-quoted-message"]')
+      cy.get('[data-cy="remove-staged-quoted-message"]')
         .should('be.visible')
         .click();
       cy.get('[data-cy="staged-quoted-message"]').should('not.be.visible');

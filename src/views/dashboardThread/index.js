@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Composer from '../../components/composer';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import ThreadContainer from '../thread';
+import { InboxThreadView } from '../thread';
 import { Container, Thread } from './style';
 
 class DashboardThread extends Component {
@@ -28,7 +28,7 @@ class DashboardThread extends Component {
     return (
       <Container>
         <Thread>
-          <ThreadContainer
+          <InboxThreadView
             threadSliderIsOpen={threadSliderIsOpen}
             threadViewContext={'inbox'}
             threadId={threadId}

@@ -56,7 +56,7 @@ class ThreadSearch extends React.Component<Props, State> {
 
   open = () => {
     this.props.dispatch(openSearch());
-    this.searchInput.focus();
+    this.searchInput && this.searchInput.focus();
   };
 
   close = () => {
@@ -64,7 +64,7 @@ class ThreadSearch extends React.Component<Props, State> {
       this.props.dispatch(closeSearch());
       this.props.dispatch(setSearchStringVariable(''));
     }
-    this.searchInput.blur();
+    this.searchInput && this.searchInput.blur();
   };
 
   clearClose = () => {

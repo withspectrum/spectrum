@@ -6,12 +6,11 @@ import processMessageNotification from './queues/new-message-in-thread';
 import processMentionNotification from './queues/mention-notification';
 import processDirectMessageNotification from './queues/direct-message-notification';
 import processReactionNotification from './queues/reaction-notification';
+import processThreadReactionNotification from './queues/thread-reaction-notification';
 import processChannelNotification from './queues/channel-notification';
 import processCommunityNotification from './queues/community-notification';
 import processThreadNotification from './queues/thread-notification';
 import processCommunityInvite from './queues/community-invite';
-import processCommunityInvoicePaid from './queues/community-invoice-paid';
-import processProInvoicePaid from './queues/pro-invoice-paid';
 import trackUserThreadLastSeen from './queues/track-user-thread-last-seen';
 import processAdminMessageModeration from './queues/moderationEvents/message';
 import processAdminThreadModeration from './queues/moderationEvents/thread';
@@ -27,12 +26,11 @@ import {
   MENTION_NOTIFICATION,
   DIRECT_MESSAGE_NOTIFICATION,
   REACTION_NOTIFICATION,
+  THREAD_REACTION_NOTIFICATION,
   CHANNEL_NOTIFICATION,
   COMMUNITY_NOTIFICATION,
   THREAD_NOTIFICATION,
   COMMUNITY_INVITE_NOTIFICATION,
-  COMMUNITY_INVOICE_PAID_NOTIFICATION,
-  PRO_INVOICE_PAID_NOTIFICATION,
   PROCESS_ADMIN_TOXIC_MESSAGE,
   PROCESS_ADMIN_TOXIC_THREAD,
   PRIVATE_CHANNEL_REQUEST_SENT,
@@ -55,13 +53,12 @@ const server = createWorker({
   [MENTION_NOTIFICATION]: processMentionNotification,
   [DIRECT_MESSAGE_NOTIFICATION]: processDirectMessageNotification,
   [REACTION_NOTIFICATION]: processReactionNotification,
+  [THREAD_REACTION_NOTIFICATION]: processThreadReactionNotification,
   [CHANNEL_NOTIFICATION]: processChannelNotification,
   [COMMUNITY_NOTIFICATION]: processCommunityNotification,
   [THREAD_NOTIFICATION]: processThreadNotification,
   [SEND_SLACK_INVITIATIONS]: processSendSlackInvitations,
   [COMMUNITY_INVITE_NOTIFICATION]: processCommunityInvite,
-  [COMMUNITY_INVOICE_PAID_NOTIFICATION]: processCommunityInvoicePaid,
-  [PRO_INVOICE_PAID_NOTIFICATION]: processProInvoicePaid,
   [TRACK_USER_LAST_SEEN]: trackUserThreadLastSeen,
   [PROCESS_ADMIN_TOXIC_MESSAGE]: processAdminMessageModeration,
   [PROCESS_ADMIN_TOXIC_THREAD]: processAdminThreadModeration,

@@ -22,16 +22,15 @@ import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-swift';
 import createPrismPlugin from 'draft-js-prism-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
-import OutsideClickHandler from '../outsideClickHandler';
-import Icon from '../icons';
-import { IconButton } from '../buttons';
+import OutsideClickHandler from 'src/components/outsideClickHandler';
+import Icon from 'src/components/icons';
+import { IconButton } from 'src/components/buttons';
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
-import { renderLanguageSelect } from './LanguageSelect';
 import { isAndroid } from 'shared/draft-utils';
-
+import MediaInput from 'src/components/mediaInput';
 import Image from './Image';
 import Embed, { addEmbed, parseEmbedUrl } from './Embed';
-import MediaInput from '../mediaInput';
+import { renderLanguageSelect } from './LanguageSelect';
 import SideToolbar from './toolbar';
 import {
   Wrapper,
@@ -42,13 +41,10 @@ import {
   EmbedUI,
   customStyleMap,
 } from './style';
-import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
 
 type Props = {
   state: Object,
   onChange: Function,
-  showLinkPreview?: boolean,
-  linkPreview?: Object,
   focus?: boolean,
   readOnly?: boolean,
   editorRef?: any => void,
@@ -201,8 +197,6 @@ class Editor extends React.Component<Props, State> {
       className,
       style,
       editorRef,
-      showLinkPreview,
-      linkPreview,
       focus,
       version,
       placeholder,
@@ -278,23 +272,6 @@ class Editor extends React.Component<Props, State> {
                 </SideToolbar>
               </OutsideClickHandler>
             )}
-          {showLinkPreview &&
-            linkPreview &&
-            linkPreview.loading && (
-              <LinkPreviewLoading margin={'16px 0 24px 0'} />
-            )}
-          {showLinkPreview &&
-            linkPreview &&
-            linkPreview.data && (
-              <LinkPreview
-                data={linkPreview.data}
-                size={'large'}
-                remove={linkPreview.remove}
-                editable={!this.props.readOnly}
-                trueUrl={linkPreview.trueUrl}
-                margin={'16px 0 24px 0'}
-              />
-            )}
         </ComposerBase>
       );
     } else {
@@ -326,23 +303,6 @@ class Editor extends React.Component<Props, State> {
               {...rest}
             />
           </Wrapper>
-          {showLinkPreview &&
-            linkPreview &&
-            linkPreview.loading && (
-              <LinkPreviewLoading margin={'16px 0 24px 0'} />
-            )}
-          {showLinkPreview &&
-            linkPreview &&
-            linkPreview.data && (
-              <LinkPreview
-                data={linkPreview.data}
-                size={'large'}
-                remove={linkPreview.remove}
-                editable={!this.props.readOnly}
-                trueUrl={linkPreview.trueUrl}
-                margin={'16px 0 24px 0'}
-              />
-            )}
           {!readOnly && (
             <MediaRow>
               <MediaInput onChange={this.addImage} multiple>

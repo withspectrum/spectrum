@@ -27,7 +27,13 @@ if (!mainBundle) {
 export const createScriptTag = ({ src }: { src: string }) =>
   `<script defer="defer" src="${src}"></script>`;
 
-export const getHeader = ({ metaTags }: { metaTags: string }) => {
+export const getHeader = ({
+  metaTags,
+  nonce,
+}: {
+  metaTags: string,
+  nonce: string,
+}) => {
   return html`
       <!DOCTYPE html>
       <html lang="en">
@@ -37,8 +43,7 @@ export const getHeader = ({ metaTags }: { metaTags: string }) => {
           <link rel="mask-icon" href="/img/pinned-tab.svg" color="#171A21">
           <meta name="theme-color" content="#171A21">
           <link rel="manifest" href="/manifest.json">
-          <meta name="og:type" content="website">
-          <meta name="og:site_name" content="Spectrum.chat">
+          <meta property="og:site_name" content="Spectrum">
           <meta name="twitter:card" content="summary">
           <meta name="twitter:site" content="@withspectrum">
           <meta name="twitter:image:alt" content="Where communities are built">
@@ -47,10 +52,10 @@ export const getHeader = ({ metaTags }: { metaTags: string }) => {
           <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/apple-icon-114x114-precomposed.png" />
           <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-icon-144x144-precomposed.png" />
           ${metaTags}
-          <script>
+          <script type="text/javascript" nonce="${nonce}">
               !function(e,a,t,n,g,c,o){e.GoogleAnalyticsObject=g,e.ga=e.ga||function(){(e.ga.q=e.ga.q||[]).push(arguments)},e.ga.l=1*new Date,c=a.createElement(t),o=a.getElementsByTagName(t)[0],c.defer=1,c.src="https://www.google-analytics.com/analytics.js",o.parentNode.insertBefore(c,o)}(window,document,"script",0,"ga"),ga("create","UA-92673909-1","auto"),ga("send","pageview"),ga('set', 'anonymizeIp', true)
           </script>
-          <script type="text/javascript">
+          <script nonce="${nonce}" type="text/javascript">
             (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
             ;r.type="text/javascript";r.async=true
             ;r.src="https://cdn.amplitude.com/libs/amplitude-4.2.1-min.gz.js"
@@ -83,16 +88,20 @@ export const getFooter = ({
   state,
   data,
   bundles,
+  nonce,
 }: {
   state: Object,
   data: Object,
   bundles: Array<string>,
+  nonce: string,
 }) => {
   return html`</div>
       <script defer="defer" src="https://cdn.ravenjs.com/3.14.0/raven.min.js" crossorigin="anonymous"></script>
       <script defer="defer" src="/install-raven.js"></script>
-      <script>window.__SERVER_STATE__=${serialize(state)}</script>
-      <script>window.__DATA__=${serialize(data)}</script>
+      <script nonce="${nonce}">window.__SERVER_STATE__=${serialize(
+    state
+  )}</script>
+      <script nonce="${nonce}">window.__DATA__=${serialize(data)}</script>
       <script defer="defer" type="text/javascript" src="https://cdn.polyfill.io/v2/polyfill.min.js?features=default,Array.prototype.find,Symbol.iterator"></script>
       <script type="text/javascript" src="/static/js/bootstrap.js"></script>
       ${bundles.map(src => createScriptTag({ src }))}

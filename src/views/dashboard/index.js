@@ -35,24 +35,27 @@ import {
 import { track, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
 
-const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
-  DashboardThreadFeed
-);
+const EverythingThreadFeed = compose(
+  connect(),
+  getEverythingThreads
+)(DashboardThreadFeed);
 
-const CommunityThreadFeed = compose(connect(), getCommunityThreads)(
-  DashboardThreadFeed
-);
+const CommunityThreadFeed = compose(
+  connect(),
+  getCommunityThreads
+)(DashboardThreadFeed);
 
-const ChannelThreadFeed = compose(connect(), getChannelThreadConnection)(
-  DashboardThreadFeed
-);
+const ChannelThreadFeed = compose(
+  connect(),
+  getChannelThreadConnection
+)(DashboardThreadFeed);
 
-const SearchThreadFeed = compose(connect(), searchThreadsQuery)(
-  DashboardThreadFeed
-);
+const SearchThreadFeed = compose(
+  connect(),
+  searchThreadsQuery
+)(DashboardThreadFeed);
 
 type State = {
-  isHovered: boolean,
   activeChannelObject: ?Object,
 };
 
@@ -71,22 +74,7 @@ type Props = {
 
 class Dashboard extends React.Component<Props, State> {
   state = {
-    isHovered: false,
     activeChannelObject: null,
-  };
-
-  setHover = () => {
-    setTimeout(() => {
-      this.setState({
-        isHovered: true,
-      });
-    }, 1000);
-  };
-
-  removeHover = () => {
-    this.setState({
-      isHovered: false,
-    });
   };
 
   setActiveChannelObject = (channel: Object) => {
@@ -116,13 +104,13 @@ class Dashboard extends React.Component<Props, State> {
       everythingFeed: false,
       creatorId: null,
       channelId: activeChannel || null,
-      communityId: activeChannel ? null : activeCommunity || null
+      communityId: activeChannel ? null : activeCommunity || null,
     };
     const { title, description } = generateMetaInfo();
 
     if (user) {
-      // if the user has set a username but hasn't joined any communities yet, we have nothing to show them on the dashboard. So instead just render the onboarding step to upsell popular communities to join
-      if (user.username && user.communityConnection.edges.length === 0) {
+      // if the user hasn't joined any communities yet, we have nothing to show them on the dashboard. So instead just render the onboarding step to upsell popular communities to join
+      if (user.communityConnection.edges.length === 0) {
         return (
           <NewUserOnboarding
             noCloseButton
@@ -133,7 +121,9 @@ class Dashboard extends React.Component<Props, State> {
       }
 
       // at this point we have succesfully validated a user, and the user has both a username and joined communities - we can show their thread feed!
-      const communities = user.communityConnection.edges.map(c => c && c.node);
+      const communities = user.communityConnection.edges
+        .filter(Boolean)
+        .map(({ node: community }) => community);
       const activeCommunityObject = communities.find(
         c => c && c.id === activeCommunity
       );

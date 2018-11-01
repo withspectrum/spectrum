@@ -2,25 +2,42 @@
 import React, { Component } from 'react';
 import Avatar from '../Avatar';
 import { ListItem } from './ListItem';
-import { TextColumnContainer, Title, Subtitle, AvatarWrapper } from './style';
+import Icon from '../Icon';
+import {
+  TextColumnContainer,
+  Title,
+  Subtitle,
+  AvatarWrapper,
+  ViewForwardContainer,
+} from './style';
 
 type UserListItemType = {
   user: Object,
-  onPress: Function,
+  onPressHandler: Function,
+  divider?: boolean,
 };
 
 export class UserListItem extends Component<UserListItemType> {
   render() {
-    const { user, onPress } = this.props;
+    const { user, onPressHandler, divider } = this.props;
     return (
-      <ListItem onPress={onPress}>
+      <ListItem onPressHandler={onPressHandler} divider={divider}>
         <AvatarWrapper>
           <Avatar src={user.profilePhoto} size={40} />
         </AvatarWrapper>
+
         <TextColumnContainer>
           <Title numberOfLines={1}>{user.name}</Title>
           <Subtitle numberOfLines={1}>@{user.username}</Subtitle>
         </TextColumnContainer>
+
+        <ViewForwardContainer>
+          <Icon
+            glyph={'view-forward'}
+            size={24}
+            color={theme => theme.text.placeholder}
+          />
+        </ViewForwardContainer>
       </ListItem>
     );
   }

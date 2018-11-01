@@ -1,5 +1,14 @@
 // @flow
 const Thread = /* GraphQL */ `
+  enum ThreadReactionTypes {
+    like
+  }
+
+  type ThreadReactions {
+    count: Int!
+    hasReacted: Boolean
+  }
+
   type ThreadMessagesConnection {
     pageInfo: PageInfo!
     edges: [ThreadMessageEdge!]
@@ -48,15 +57,22 @@ const Thread = /* GraphQL */ `
     type: ThreadType
     edits: [Edit!]
     participants: [User] @cost(complexity: 1)
-    messageConnection(first: Int, after: String, last: Int, before: String): ThreadMessagesConnection! @cost(complexity: 1, multiplier: "first")
+    messageConnection(
+      first: Int
+      after: String
+      last: Int
+      before: String
+    ): ThreadMessagesConnection! @cost(complexity: 1, multipliers: ["first"])
     messageCount: Int @cost(complexity: 1)
     author: ThreadParticipant! @cost(complexity: 2)
-    attachments: [Attachment]
     watercooler: Boolean
     currentUserLastSeen: Date @cost(complexity: 1)
+    reactions: ThreadReactions @cost(complexity: 1)
 
+    attachments: [Attachment]
+      @deprecated(reason: "Attachments no longer used for link previews")
     isCreator: Boolean @deprecated(reason: "Use Thread.isAuthor instead")
-    creator: User! @deprecated(reason:"Use Thread.author instead")
+    creator: User! @deprecated(reason: "Use Thread.author instead")
   }
 
   input SearchThreadsFilter {
@@ -68,7 +84,8 @@ const Thread = /* GraphQL */ `
 
   extend type Query {
     thread(id: ID!): Thread
-    searchThreads(queryString: String!, filter: SearchThreadsFilter): [Thread] @deprecated(reason:"Use the new Search query endpoint")
+    searchThreads(queryString: String!, filter: SearchThreadsFilter): [Thread]
+      @deprecated(reason: "Use the new Search query endpoint")
   }
 
   input AttachmentInput {
@@ -97,13 +114,24 @@ const Thread = /* GraphQL */ `
     filesToUpload: [Upload]
   }
 
+  input AddThreadReactionInput {
+    threadId: ID!
+    type: ThreadReactionTypes
+  }
+
+  input RemoveThreadReactionInput {
+    threadId: ID!
+  }
+
   extend type Mutation {
     publishThread(thread: ThreadInput!): Thread
     editThread(input: EditThreadInput!): Thread
     setThreadLock(threadId: ID!, value: Boolean!): Thread
     toggleThreadNotifications(threadId: ID!): Thread
     deleteThread(threadId: ID!): Boolean
-        moveThread(threadId: ID!, channelId: ID!): Thread
+    moveThread(threadId: ID!, channelId: ID!): Thread
+    addThreadReaction(input: AddThreadReactionInput!): Thread
+    removeThreadReaction(input: RemoveThreadReactionInput!): Thread
   }
 
   extend type Subscription {

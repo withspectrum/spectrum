@@ -1,9 +1,10 @@
 // @flow
+import theme from 'shared/theme';
 import React from 'react';
 import styled from 'styled-components';
 import Link from 'src/components/link';
 import Icon from '../../components/icons';
-import Avatar from '../../components/avatar';
+import { UserAvatar } from '../../components/avatar';
 import {
   Shadow,
   Gradient,
@@ -99,7 +100,7 @@ export const Overview = (props: Props) => {
   const ThisSecondaryCTA = styled(SecondaryCTA)`
     margin-left: 16px;
     font-size: 16px;
-    border: 2px solid ${props => props.theme.text.reverse};
+    border: 2px solid ${theme.text.reverse};
 
     @media (max-width: 768px) {
       margin-left: 0;
@@ -206,13 +207,13 @@ export const Centralized = (props: Props) => {
 
   const ThisPrimaryCTA = styled(PrimaryCTA)`
     margin-top: 32px;
-    background-color: ${props => props.theme.brand.alt};
+    background-color: ${theme.brand.alt};
     background-image: ${props =>
       Gradient(props.theme.brand.alt, props.theme.brand.default)};
-    color: ${props => props.theme.text.reverse};
+    color: ${theme.text.reverse};
 
     &:hover {
-      color: ${props => props.theme.text.reverse};
+      color: ${theme.text.reverse};
     }
   `;
 
@@ -352,14 +353,14 @@ export const Chat = (props: Props) => {
   `;
 
   const ThisPrimaryCTA = styled(PrimaryCTA)`
-    background-color: ${props => props.theme.brand.alt};
+    background-color: ${theme.brand.alt};
     background-image: ${props =>
       Gradient(props.theme.brand.alt, props.theme.brand.default)};
-    color: ${props => props.theme.text.reverse};
+    color: ${theme.text.reverse};
     margin-top: 32px;
 
     &:hover {
-      color: ${props => props.theme.text.reverse};
+      color: ${theme.text.reverse};
     }
   `;
 
@@ -510,7 +511,7 @@ export const Yours = (props: Props) => {
   const ThisSecondaryCTA = styled(SecondaryCTA)`
     margin-left: 16px;
     font-size: 16px;
-    border: 2px solid ${props => props.theme.text.reverse};
+    border: 2px solid ${theme.text.reverse};
 
     @media (max-width: 768px) {
       margin-left: 0;
@@ -520,10 +521,10 @@ export const Yours = (props: Props) => {
 
   const ThisPrimaryCTA = styled(PrimaryCTA)`
     font-size: 16px;
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
 
     &:hover {
-      color: ${props => props.theme.brand.alt};
+      color: ${theme.brand.alt};
       box-shadow: ${Shadow.high} #000;
     }
   `;
@@ -565,7 +566,7 @@ export const Yours = (props: Props) => {
     min-width: 320px;
     flex: none;
     box-shadow: 0 8px 16px #000;
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
     position: relative;
     padding: 24px;
     transition: ${Transition.hover.off};
@@ -573,11 +574,11 @@ export const Yours = (props: Props) => {
     margin-left: 32px;
 
     &:hover {
-      box-shadow: 0 0px 32px ${props => props.theme.brand.alt};
+      box-shadow: 0 0px 32px ${theme.brand.alt};
       transition: ${Transition.hover.on};
 
       > div {
-        color: ${props => props.theme.brand.alt};
+        color: ${theme.brand.alt};
         transition: ${Transition.hover.on};
       }
     }
@@ -606,14 +607,14 @@ export const Yours = (props: Props) => {
     }
 
     span {
-      color: ${props => props.theme.text.alt};
+      color: ${theme.text.alt};
       font-weight: 400;
       margin-left: 4px;
     }
   `;
 
   const Rule = styled(HorizontalRule)`
-    color: ${props => props.theme.brand.border};
+    color: ${theme.brand.border};
     transition: ${Transition.hover.off};
 
     hr {
@@ -638,11 +639,10 @@ export const Yours = (props: Props) => {
                 okay, honestly Spectrum is the best thing that happened to me
                 regarding social interaction in 2017
               </Pullquote>
-              <Signature to="/users/Traykov">
-                <Avatar
-                  size={'40'}
-                  src="https://spectrum.imgix.net/users/ZN37gjzZ31PKVPmd6E4ZTlZJa7Z2/5sasho.png.0.17582088793809425?auto=compress&w=64&dpr=2&format=png"
-                />Alexander Traykov<span>@Traykov</span>
+              <Signature to="/users/traykov">
+                <UserAvatar size={40} username={'traykov'} clickable={false} />
+                Alexander Traykov
+                <span>@Traykov</span>
               </Signature>
             </Quote>
             <Quote>
@@ -657,10 +657,9 @@ export const Yours = (props: Props) => {
                 and interact. Except realtime and trolling-free
               </Pullquote>
               <Signature to="/users/rauchg">
-                <Avatar
-                  size={'40'}
-                  src="https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F871555682608136205%2FyMs8Gnot_normal.jpg?w=128&h=128&ixlib=js-1.1.1&s=cc42ed724e75265fbb959ec43c910be2"
-                />Guillermo Rauch <span>@rauchg</span>
+                <UserAvatar size={40} username={'rauchg'} clickable={false} />
+                Guillermo Rauch
+                <span>@rauchg</span>
               </Signature>
             </Quote>
             <Quote>
@@ -674,10 +673,13 @@ export const Yours = (props: Props) => {
                 and been lovely to be a part of the unique communities.
               </Pullquote>
               <Signature to="/users/tayler-m-odea">
-                <Avatar
-                  size={'40'}
-                  src="https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F900025975278157824%2FmydeOAGa_normal.jpg?w=128&h=128&ixlib=js-1.1.1&s=a50556fe67cb087d5083b9d1342711ab"
-                />Tayler O’Dea <span>@tayler-m-odea</span>
+                <UserAvatar
+                  size={40}
+                  username={'tayler-m-odea'}
+                  clickable={false}
+                />
+                Tayler O’Dea
+                <span>@tayler-m-odea</span>
               </Signature>
             </Quote>
           </Quotes>

@@ -1,7 +1,9 @@
+// @flow
 import * as React from 'react';
-import Avatar from '../avatar';
-import Icon from '../icons';
-import { FauxOutlineButton } from '../buttons';
+import Icon from 'src/components/icons';
+import { FauxOutlineButton } from 'src/components/buttons';
+import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 
 import {
   StyledLabel,
@@ -17,6 +19,7 @@ import {
   CoverInputLabel,
   InputOverlay,
   CoverImage,
+  PhotoInputImage,
 } from './style';
 
 type InputProps = {
@@ -31,6 +34,9 @@ type InputProps = {
   disabled?: boolean,
   id?: string,
   dataCy?: string,
+  user?: GetUserType,
+  community?: GetCommunityType,
+  size?: number,
 };
 
 export const Input = (props: InputProps) => {
@@ -52,38 +58,65 @@ export const Input = (props: InputProps) => {
   );
 };
 
-export const PhotoInput = (props: InputProps) => {
+type PhotoInputProps = {
+  size?: number,
+  type: 'user' | 'community',
+  defaultValue: string,
+  onChange: Function,
+  dataCy?: string,
+};
+
+export const PhotoInput = (props: PhotoInputProps) => {
+  const { size = 48, type, defaultValue, onChange, dataCy } = props;
+
+  let visible,
+    src = defaultValue;
+  if (src && src.length === 0) {
+    visible = true;
+    src =
+      type === 'user'
+        ? '/img/default_avatar.svg'
+        : '/img/default_community.svg';
+  }
+
   return (
-    <PhotoInputLabel user={props.user} size={props.size || 48}>
-      <InputOverlay user={props.user}>
+    <PhotoInputLabel type={type} size={size}>
+      <InputOverlay type={type} size={size} visible={visible}>
         <Icon glyph="photo" />
       </InputOverlay>
-      <Avatar
-        style={{ boxShadow: '0 0 0 2px white' }}
-        size={props.size || 48}
-        src={`${props.defaultValue}`}
-        user={props.user}
-        community={props.community}
+
+      <PhotoInputImage
+        type={type}
+        alt={'Profile photo'}
+        src={src}
+        size={size}
       />
+
       <StyledHiddenInput
         type="file"
         id="file"
         name="file"
-        accept={
-          props.allowGif ? '.png, .jpg, .jpeg, .gif, .mp4' : '.png, .jpg, .jpeg'
-        }
+        accept={'.png, .jpg, .jpeg'}
         multiple={false}
-        onChange={props.onChange}
-        data-cy={props.dataCy}
+        onChange={onChange}
+        data-cy={dataCy}
       />
     </PhotoInputLabel>
   );
 };
 
-export const CoverInput = (props: InputProps) => {
+type CoverPhotoInputProps = {
+  defaultValue: string,
+  onChange: Function,
+  dataCy?: string,
+};
+
+export const CoverInput = (props: CoverPhotoInputProps) => {
   return (
     <CoverInputLabel>
-      <InputOverlay>
+      <InputOverlay
+        visible={!props.defaultValue || props.defaultValue.length === 1}
+      >
         <FauxOutlineButton
           color={'bg.default'}
           hoverColor={'bg.default'}
@@ -93,7 +126,11 @@ export const CoverInput = (props: InputProps) => {
         </FauxOutlineButton>
       </InputOverlay>
       <CoverImage
-        src={`${props.defaultValue}${props.preview ? '' : '?w=320&dpr=2'}`}
+        src={
+          props.defaultValue
+            ? `${props.defaultValue}${props.preview ? '' : '?w=320&dpr=2'}`
+            : ''
+        }
         role="presentation"
       />
       <StyledHiddenInput
@@ -117,7 +154,11 @@ export const Checkbox = (props: InputProps) => {
       <StyledCheckboxWrapper
         disabled={props.disabled || false}
         align={props.align || 'center'}
-        data-cy={`${props.dataCy}-${props.checked ? 'checked' : 'unchecked'}`}
+        data-cy={
+          props.dataCy
+            ? `${props.dataCy}-${props.checked ? 'checked' : 'unchecked'}`
+            : null
+        }
       >
         {props.checked ? <Icon glyph="checkmark" /> : <Icon glyph="checkbox" />}
         <StyledHiddenInput
@@ -150,7 +191,7 @@ export const TextArea = (props: InputProps) => {
   );
 };
 
-export class UnderlineInput extends React.Component {
+export class UnderlineInput extends React.Component<InputProps> {
   render() {
     return (
       <StyledPrefixLabel disabled={this.props.disabled}>

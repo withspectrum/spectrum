@@ -6,13 +6,19 @@
   },
   "dependencies": {
     "amplitude": "^3.5.0",
+    "aws-sdk": "^2.340.0",
     "bull": "3.3.10",
+    "faker": "^4.1.0",
+    "lodash.intersection": "^4.4.0",
     "node-env-file": "^0.1.8",
-    "now-env": "^3.0.1",
-    "raven": "^2.1.1",
+    "now-env": "^3.1.0",
+    "raven": "^2.6.4",
+    "redis-tag-cache": "^1.2.1",
     "rethinkdbdash": "^2.3.29",
+    "sanitize-filename": "^1.6.1",
     "sha1": "^1.1.1",
-    "source-map-support": "^0.5.6",
+    "shortid": "^2.2.13",
+    "source-map-support": "^0.5.9",
     "toobusy-js": "^0.5.1"
   }
 }

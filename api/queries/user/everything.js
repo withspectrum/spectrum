@@ -2,7 +2,7 @@
 import type { GraphQLContext } from '../../';
 import type { PaginationOptions } from '../../utils/paginate-arrays';
 import { encode, decode } from '../../utils/base64';
-import { getEverything } from '../../models/user';
+import { getEverything } from 'shared/db/queries/user';
 
 export default (
   _: any,

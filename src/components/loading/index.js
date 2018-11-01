@@ -17,18 +17,18 @@ import {
   ShimmerInboxThread,
   ShimmerThread,
   ShimmerThreadDetail,
+  ShimmerThreadContent,
   ShimmerProfile,
   ShimmerProfileLite,
   ShimmerListItem,
   ShimmerDM,
-  ShimmerBubble,
-  ShimmerChat,
   ShimmerInboxComposer,
   ShimmerComposer,
   ShimmerBase,
   ShimmerLine,
   ShimmerSelect,
   Cover,
+  CircularCover,
   LoadingOverlay,
   LoadingNavbarContainer,
   LogoLink,
@@ -205,17 +205,43 @@ export const LoadingInboxThread = () => (
   <ShimmerInboxThread>
     <ShimmerBase>
       <ShimmerLine />
-      <Cover
+      <CircularCover
         style={{
-          top: '0',
-          left: '0',
-          height: '4px',
-          width: '100%',
+          top: 0,
+          left: 0,
+          height: '40px',
+          width: '40px',
         }}
       />
       <Cover
         style={{
-          top: '16px',
+          top: '0',
+          left: '40px',
+          height: '40px',
+          width: '8px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0',
+          left: '50%',
+          height: '40px',
+          width: '50%',
+        }}
+      />
+
+      <Cover
+        style={{
+          top: '20px',
+          left: '40px',
+          height: '8px',
+          width: '50%',
+        }}
+      />
+
+      <Cover
+        style={{
+          top: '40px',
           left: '0',
           height: '16px',
           width: '100%',
@@ -223,64 +249,24 @@ export const LoadingInboxThread = () => (
       />
       <Cover
         style={{
-          top: '4px',
-          left: '120px',
-          height: '12px',
-          width: '100%',
+          top: '40px',
+          left: '0',
+          height: '100%',
+          width: '48px',
         }}
       />
       <Cover
         style={{
-          top: '24px',
-          left: '0',
+          top: '72px',
+          left: '48px',
           height: '8px',
           width: '100%',
         }}
       />
       <Cover
         style={{
-          top: '60px',
-          left: '0',
-          height: '12px',
-          width: '100%',
-        }}
-      />
-      <Cover
-        style={{
           top: '72px',
-          left: '24px',
-          height: '24px',
-          width: '4px',
-        }}
-      />
-      <Cover
-        style={{
-          top: '72px',
-          left: '52px',
-          height: '24px',
-          width: '4px',
-        }}
-      />
-      <Cover
-        style={{
-          top: '72px',
-          left: '80px',
-          height: '24px',
-          width: '4px',
-        }}
-      />
-      <Cover
-        style={{
-          top: '72px',
-          left: '108px',
-          height: '24px',
-          width: '4px',
-        }}
-      />
-      <Cover
-        style={{
-          top: '72px',
-          left: '136px',
+          left: '35%',
           height: '24px',
           width: '100%',
         }}
@@ -304,33 +290,18 @@ export const LoadingFeed = () => (
   </FlexCol>
 );
 
-export const LoadingBubble = () => (
-  <ShimmerBubble>
-    <ShimmerBase>
-      <ShimmerLine />
-    </ShimmerBase>
-  </ShimmerBubble>
-);
-
-export const LoadingChat = ({ size }: { size?: 'small' }) => (
-  <ShimmerChat>
-    <LoadingBubble />
-    <LoadingBubble />
-    <LoadingBubble />
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-    {size !== 'small' && <LoadingBubble />}
-  </ShimmerChat>
-);
-
 export const LoadingThreadDetail = () => (
   <ShimmerThreadDetail>
     <ShimmerBase>
       <ShimmerLine />
+      <CircularCover
+        style={{
+          top: 0,
+          left: 0,
+          height: '41px',
+          width: '41px',
+        }}
+      />
       <Cover
         style={{
           top: '0',
@@ -461,6 +432,89 @@ export const LoadingThreadDetail = () => (
       />
     </ShimmerBase>
   </ShimmerThreadDetail>
+);
+
+export const LoadingThreadContent = () => (
+  <ShimmerThreadContent>
+    <ShimmerBase>
+      <ShimmerLine />
+      <Cover
+        style={{
+          top: '20px',
+          left: '0',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0px',
+          right: '0px',
+          height: '20px',
+          width: '20%',
+        }}
+      />
+
+      <Cover
+        style={{
+          top: '48px',
+          left: '0',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '28px',
+          right: '0px',
+          height: '20px',
+          width: '10%',
+        }}
+      />
+
+      <Cover
+        style={{
+          top: '76px',
+          left: '0',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '56px',
+          right: '0px',
+          height: '20px',
+          width: '10%',
+        }}
+      />
+
+      <Cover
+        style={{
+          top: '104px',
+          left: '0',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '84px',
+          right: '0px',
+          height: '20px',
+          width: '30%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '112px',
+          right: '0px',
+          height: '20px',
+          width: '70%',
+        }}
+      />
+    </ShimmerBase>
+  </ShimmerThreadContent>
 );
 
 export const LoadingListItem = () => (
@@ -889,74 +943,74 @@ export const LoadingProfileThreadDetail = () => (
       <ShimmerLine />
       <Cover
         style={{
-          top: '0',
+          top: '70px',
           left: '0',
-          height: '48px',
-          width: 'calc(50% - 20px)',
+          height: '24px',
+          width: 'calc(50% - 24px)',
         }}
       />
       <Cover
         style={{
-          top: '0',
+          top: '70px',
           right: '0',
-          height: '48px',
-          width: 'calc(50% - 20px)',
+          height: '24px',
+          width: 'calc(50% - 24px)',
         }}
       />
       <Cover
         style={{
-          top: '40px',
-          left: '0',
+          top: '94px',
+          left: 0,
           height: '16px',
           width: '100%',
         }}
       />
       <Cover
         style={{
-          top: '64px',
-          left: '0',
+          top: '110px',
+          left: 0,
+          height: '20px',
+          width: '25%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '110px',
+          right: 0,
+          height: '20px',
+          width: '25%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '130px',
+          left: 0,
           height: '16px',
           width: '100%',
         }}
       />
       <Cover
         style={{
-          top: '88px',
-          left: '0',
+          top: '146px',
+          left: 0,
           height: '16px',
+          width: '35%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '146px',
+          right: 0,
+          height: '16px',
+          width: '35%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '162px',
+          left: 0,
+          height: '100%',
           width: '100%',
-        }}
-      />
-      <Cover
-        style={{
-          top: '48px',
-          right: '0',
-          height: '16px',
-          width: '32px',
-        }}
-      />
-      <Cover
-        style={{
-          top: '48px',
-          left: '0',
-          height: '16px',
-          width: '32px',
-        }}
-      />
-      <Cover
-        style={{
-          top: '72px',
-          right: '0',
-          height: '16px',
-          width: '64px',
-        }}
-      />
-      <Cover
-        style={{
-          top: '72px',
-          left: '0',
-          height: '16px',
-          width: '64px',
         }}
       />
     </ShimmerBase>
@@ -988,7 +1042,6 @@ export const LoadingThreadView = (): React$Element<any> => (
     <Content>
       <Detail type="only">
         <LoadingThreadDetail />
-        <LoadingChat />
       </Detail>
     </Content>
   </ThreadViewContainer>

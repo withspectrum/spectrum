@@ -3,12 +3,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Clipboard from 'react-clipboard.js';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { openModal } from '../../../actions/modals';
 import Icon from '../../../components/icons';
 import compose from 'recompose/compose';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import type { Dispatch } from 'redux';
+import { LikeButton } from 'src/components/threadLikes';
 import {
   FollowButton,
   ShareButtons,
@@ -71,40 +71,8 @@ class WatercoolerActionBar extends React.Component<Props, State> {
     return (
       <WatercoolerActionBarContainer>
         <div style={{ display: 'flex' }}>
-          {currentUser ? (
-            <FollowButton
-              currentUser={currentUser}
-              icon={
-                thread.receiveNotifications
-                  ? 'notification-fill'
-                  : 'notification'
-              }
-              tipText={
-                thread.receiveNotifications
-                  ? 'Turn off notifications'
-                  : 'Get notified about replies'
-              }
-              tipLocation={'top-right'}
-              loading={notificationStateLoading}
-              onClick={this.toggleNotification}
-              dataCy="thread-notifications-toggle"
-            >
-              {thread.receiveNotifications ? 'Subscribed' : 'Get notifications'}
-            </FollowButton>
-          ) : (
-            <FollowButton
-              currentUser={currentUser}
-              icon={'notification'}
-              tipText={'Get notified about replies'}
-              tipLocation={'top-right'}
-              dataCy="thread-notifications-login-capture"
-              onClick={() =>
-                this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}))
-              }
-            >
-              Notify me
-            </FollowButton>
-          )}
+          <LikeButton thread={thread} tipLocation={'bottom-right'} />
+
           {!thread.channel.isPrivate && (
             <ShareButtons>
               <ShareButton
@@ -114,9 +82,9 @@ class WatercoolerActionBar extends React.Component<Props, State> {
                 data-cy="thread-facebook-button"
               >
                 <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${
-                    thread.id
-                  }&t=${thread.content.title}`}
+                  href={`https://www.facebook.com/sharer/sharer.php?t=${encodeURIComponent(
+                    thread.content.title
+                  )}&u=https://spectrum.chat/thread/${thread.id}&`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -131,9 +99,9 @@ class WatercoolerActionBar extends React.Component<Props, State> {
                 data-cy="thread-tweet-button"
               >
                 <a
-                  href={`https://twitter.com/share?text=${
+                  href={`https://twitter.com/share?text=${encodeURIComponent(
                     thread.content.title
-                  } on @withspectrum&url=https://spectrum.chat/thread/${
+                  )} on @withspectrum&url=https://spectrum.chat/thread/${
                     thread.id
                   }`}
                   target="_blank"
@@ -167,11 +135,32 @@ class WatercoolerActionBar extends React.Component<Props, State> {
             </ShareButtons>
           )}
         </div>
+
+        {currentUser && (
+          <FollowButton
+            currentUser={currentUser}
+            icon={
+              thread.receiveNotifications ? 'notification-fill' : 'notification'
+            }
+            tipText={
+              thread.receiveNotifications
+                ? 'Turn off notifications'
+                : 'Get notified about replies'
+            }
+            tipLocation={'top-right'}
+            loading={notificationStateLoading}
+            onClick={this.toggleNotification}
+            dataCy="thread-notifications-toggle"
+          >
+            {thread.receiveNotifications ? 'Subscribed' : 'Get notifications'}
+          </FollowButton>
+        )}
       </WatercoolerActionBarContainer>
     );
   }
 }
 
-export default compose(connect(), toggleThreadNotificationsMutation)(
-  WatercoolerActionBar
-);
+export default compose(
+  connect(),
+  toggleThreadNotificationsMutation
+)(WatercoolerActionBar);

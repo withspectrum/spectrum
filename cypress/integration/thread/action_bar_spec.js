@@ -50,8 +50,7 @@ const pinThread = () => {
 const triggerThreadDelete = () => {
   cy.get('[data-cy="thread-dropdown-delete"]').click();
   cy.get('[data-cy="delete-button"]').should('be.visible');
-  cy
-    .get('div.ReactModal__Overlay')
+  cy.get('div.ReactModal__Overlay')
     .should('be.visible')
     .click('topLeft');
 };
@@ -59,15 +58,13 @@ const triggerThreadDelete = () => {
 const triggerMovingThread = () => {
   cy.get('[data-cy="thread-dropdown-move"]').click();
   cy.get('[data-cy="move-thread-modal"]').should('be.visible');
-  cy
-    .get('div.ReactModal__Overlay')
+  cy.get('div.ReactModal__Overlay')
     .should('be.visible')
     .click('topLeft');
 };
 
 const openSettingsDropdown = () => {
-  cy
-    .get('[data-cy="thread-actions-dropdown-trigger"]')
+  cy.get('[data-cy="thread-actions-dropdown-trigger"]')
     .should('be.visible')
     .click();
 };
@@ -80,15 +77,12 @@ describe('action bar renders', () => {
 
     it('should render', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy
-        .get('[data-cy="thread-notifications-login-capture"]')
-        .should('be.visible');
       cy.get('[data-cy="thread-facebook-button"]').should('be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('be.visible');
       cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
-      cy
-        .get('[data-cy="thread-actions-dropdown-trigger"]')
-        .should('not.be.visible');
+      cy.get('[data-cy="thread-actions-dropdown-trigger"]').should(
+        'not.be.visible'
+      );
     });
   });
 
@@ -104,9 +98,9 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-facebook-button"]').should('be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('be.visible');
       cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
-      cy
-        .get('[data-cy="thread-actions-dropdown-trigger"]')
-        .should('not.be.visible');
+      cy.get('[data-cy="thread-actions-dropdown-trigger"]').should(
+        'not.be.visible'
+      );
     });
   });
 
@@ -122,9 +116,9 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-facebook-button"]').should('be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('be.visible');
       cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
-      cy
-        .get('[data-cy="thread-actions-dropdown-trigger"]')
-        .should('not.be.visible');
+      cy.get('[data-cy="thread-actions-dropdown-trigger"]').should(
+        'not.be.visible'
+      );
     });
   });
 
@@ -139,10 +133,10 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
       cy.get('[data-cy="thread-facebook-button"]').should('not.be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('not.be.visible');
-      cy.get('[data-cy="thread-copy-link-button"]').should('not.be.visible');
-      cy
-        .get('[data-cy="thread-actions-dropdown-trigger"]')
-        .should('not.be.visible');
+      cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
+      cy.get('[data-cy="thread-actions-dropdown-trigger"]').should(
+        'not.be.visible'
+      );
     });
   });
 
@@ -192,8 +186,7 @@ describe('action bar renders', () => {
       cy.get('[data-cy="save-thread-edit-button"]').should('be.visible');
       const title = 'Some new thread';
       cy.get('[data-cy="rich-text-editor"]').should('be.visible');
-      cy
-        .get('[data-cy="thread-editor-title-input"]')
+      cy.get('[data-cy="thread-editor-title-input"]')
         .clear()
         .type(title);
       cy.get('[data-cy="save-thread-edit-button"]').click();
@@ -205,8 +198,7 @@ describe('action bar renders', () => {
       cy.get('[data-cy="save-thread-edit-button"]').should('be.visible');
       const originalTitle = 'The first thread! 🎉';
       cy.get('[data-cy="rich-text-editor"]').should('be.visible');
-      cy
-        .get('[data-cy="thread-editor-title-input"]')
+      cy.get('[data-cy="thread-editor-title-input"]')
         .clear()
         .type(originalTitle);
       cy.get('[data-cy="save-thread-edit-button"]').click();

@@ -3,20 +3,27 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import queryString from 'query-string';
+import idx from 'idx';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
-import ChatMessages from 'src/components/messageGroup';
-import { LoadingChat } from 'src/components/loading';
-import { Button } from 'src/components/buttons';
-import Icon from 'src/components/icons';
-import { NullState } from 'src/components/upsell';
-import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import Head from 'src/components/head';
-import NextPageButton from 'src/components/nextPageButton';
-import { ChatWrapper, NullMessagesWrapper, NullCopy } from '../style';
+import ChatMessages from '../../../components/messageGroup';
+import { Loading } from '../../../components/loading';
+import { Button } from '../../../components/buttons';
+import Icon from '../../../components/icons';
+import { NullState } from '../../../components/upsell';
+import viewNetworkHandler from '../../../components/viewNetworkHandler';
+import Head from '../../../components/head';
+import NextPageButton from '../../../components/nextPageButton';
+import {
+  ChatWrapper,
+  NullMessagesWrapper,
+  NullCopy,
+  SocialShareWrapper,
+  A,
+} from '../style';
 import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
-import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
 import { ErrorBoundary } from 'src/components/error';
 import type { GetThreadMessageConnectionType } from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -26,7 +33,6 @@ type State = {
 };
 
 type Props = {
-  toggleReaction: Function,
   isLoading: boolean,
   location: Object,
   forceScrollToBottom: Function,
@@ -102,7 +108,7 @@ class MessagesWithData extends React.Component<Props, State> {
   }
 
   shouldForceScrollToBottom = () => {
-    const { currentUser, data } = this.props;
+    const { currentUser, data, location } = this.props;
 
     if (!currentUser || !data.thread) return false;
 
@@ -111,13 +117,22 @@ class MessagesWithData extends React.Component<Props, State> {
       isAuthor,
       participants,
       watercooler,
+      messageCount,
     } = data.thread;
+
+    // Don't scroll empty threads to bottm
+    if (messageCount === 0) return false;
+
     const isParticipant =
       participants &&
       participants.length > 0 &&
       participants.some(
         participant => participant && participant.id === currentUser.id
       );
+
+    const searchObj = queryString.parse(location.search);
+    const isLoadingMessageFromQueryParam = searchObj && searchObj.m;
+    if (isLoadingMessageFromQueryParam) return false;
 
     return !!(currentUserLastSeen || isAuthor || isParticipant || watercooler);
   };
@@ -140,11 +155,62 @@ class MessagesWithData extends React.Component<Props, State> {
     }
   };
 
+  getIsAuthor = () => idx(this.props, _ => _.data.thread.isAuthor);
+
+  getNonAuthorEmptyMessage = () => {
+    return (
+      <NullMessagesWrapper>
+        <Icon glyph={'emoji'} size={64} />
+        <NullCopy>
+          No messages have been sent in this conversation yet—why don’t you kick
+          things off below?
+        </NullCopy>
+      </NullMessagesWrapper>
+    );
+  };
+
+  getAuthorEmptyMessage = () => {
+    const threadTitle = idx(this.props, _ => _.data.thread.content.title) || '';
+    const threadId = idx(this.props, _ => _.data.thread.id) || '';
+
+    return (
+      <NullMessagesWrapper>
+        <Icon glyph="share" size={64} />
+        <NullCopy>
+          Nobody has replied yet—why don’t you share it with your friends?
+        </NullCopy>
+        <SocialShareWrapper>
+          <A
+            href={`https://twitter.com/share?text=${encodeURIComponent(
+              threadTitle
+            )} on @withspectrum&url=https://spectrum.chat/thread/${threadId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button gradientTheme={'social.twitter'} icon="twitter">
+              Share on Twitter
+            </Button>
+          </A>
+          <A
+            href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${threadId}&t=${encodeURIComponent(
+              threadTitle
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button gradientTheme={'social.facebook'} icon="facebook">
+              Share on Facebook
+            </Button>
+          </A>
+        </SocialShareWrapper>
+      </NullMessagesWrapper>
+    );
+  };
+
   render() {
     const {
       data,
       isLoading,
-      toggleReaction,
       forceScrollToBottom,
       id,
       isFetchingMore,
@@ -181,7 +247,8 @@ class MessagesWithData extends React.Component<Props, State> {
 
     if (messagesExist) {
       const { edges, pageInfo } = data.thread.messageConnection;
-      const unsortedMessages = edges.map(message => message && message.node);
+      const unsortedMessages =
+        edges && edges.map(message => message && message.node);
 
       const uniqueMessages = deduplicateChildren(unsortedMessages, 'id');
       const sortedMessages = sortAndGroupMessages(uniqueMessages);
@@ -227,7 +294,7 @@ class MessagesWithData extends React.Component<Props, State> {
               loadMore={loadNextPage}
               isLoadingMore={this.props.isFetchingMore}
               hasMore={pageInfo.hasNextPage}
-              loader={<LoadingChat size="small" />}
+              loader={<Loading />}
               useWindow={false}
               initialLoad={false}
               scrollElement={scrollContainer}
@@ -237,7 +304,6 @@ class MessagesWithData extends React.Component<Props, State> {
               <ChatMessages
                 threadId={data.thread.id}
                 thread={data.thread}
-                toggleReaction={toggleReaction}
                 messages={sortedMessages}
                 threadType={'story'}
                 forceScrollToBottom={forceScrollToBottom}
@@ -250,21 +316,20 @@ class MessagesWithData extends React.Component<Props, State> {
       );
     }
 
-    if (isLoading) {
-      return <ChatWrapper>{hasMessagesToLoad && <LoadingChat />}</ChatWrapper>;
+    if (isLoading && hasMessagesToLoad) {
+      return (
+        <ChatWrapper>
+          <Loading />
+        </ChatWrapper>
+      );
     }
 
-    if (!messagesExist) {
-      if (isLocked) return null;
-      return (
-        <NullMessagesWrapper>
-          <Icon glyph={'emoji'} size={64} />
-          <NullCopy>
-            No messages have been sent in this conversation yet - why don’t you
-            kick things off below?
-          </NullCopy>
-        </NullMessagesWrapper>
-      );
+    if (!isLoading && !messagesExist) {
+      if (isLocked || !this.props.data.thread) return null;
+
+      return this.getIsAuthor()
+        ? this.getAuthorEmptyMessage()
+        : this.getNonAuthorEmptyMessage();
     }
 
     return (
@@ -284,7 +349,6 @@ const map = state => ({ currentUser: state.users.currentUser });
 const Messages = compose(
   // $FlowIssue
   connect(map),
-  toggleReactionMutation,
   withRouter,
   getThreadMessages,
   viewNetworkHandler

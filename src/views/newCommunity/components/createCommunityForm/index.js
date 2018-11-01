@@ -6,16 +6,17 @@ import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import slugg from 'slugg';
 import { withApollo } from 'react-apollo';
-import { Notice } from '../../../../components/listItems/style';
-import Avatar from '../../../../components/avatar';
-import { throttle } from '../../../../helpers/utils';
-import { addToastWithTimeout } from '../../../../actions/toasts';
+import { Notice } from 'src/components/listItems/style';
+import { CommunityAvatar } from 'src/components/avatar';
+import { throttle } from 'src/helpers/utils';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import { COMMUNITY_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import createCommunityMutation from 'shared/graphql/mutations/community/createCommunity';
 import type { CreateCommunityType } from 'shared/graphql/mutations/community/createCommunity';
 import { getCommunityBySlugQuery } from 'shared/graphql/queries/community/getCommunity';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
-import { Button } from '../../../../components/buttons';
+import { Button } from 'src/components/buttons';
+import { CommunityHoverProfile } from 'src/components/hoverProfile';
 import {
   Input,
   UnderlineInput,
@@ -301,6 +302,8 @@ class CreateCommunityForm extends React.Component<Props, State> {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (!file) return;
+
     if (file.size > 3000000) {
       return this.setState({
         photoSizeError: true,
@@ -316,12 +319,16 @@ class CreateCommunityForm extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   setCommunityCover = e => {
     let reader = new FileReader();
     let file = e.target.files[0];
+
+    if (!file) return;
 
     if (file.size > 3000000) {
       return this.setState({
@@ -338,7 +345,9 @@ class CreateCommunityForm extends React.Component<Props, State> {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   create = e => {
@@ -464,11 +473,9 @@ class CreateCommunityForm extends React.Component<Props, State> {
             />
 
             <PhotoInput
+              type={'community'}
               onChange={this.setCommunityPhoto}
               defaultValue={image}
-              user={null}
-              community
-              allowGif
             />
           </ImageInputWrapper>
 
@@ -483,7 +490,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
           <Input
             defaultValue={name}
             onChange={this.changeName}
-            autoFocus={!window.innerWidth < 768}
+            autoFocus={!(window.innerWidth < 768)}
             onBlur={this.checkSuggestedCommunities}
             dataCy="community-name-input"
           >
@@ -530,16 +537,21 @@ class CreateCommunityForm extends React.Component<Props, State> {
               communitySuggestions.map(suggestion => {
                 return (
                   <Link to={`/${suggestion.slug}`} key={suggestion.id}>
-                    <CommunitySuggestion>
-                      <Avatar
-                        size={'20'}
-                        radius={4}
-                        community={suggestion}
-                        src={suggestion.profilePhoto}
-                      />
-                      <strong>{suggestion.name}</strong>{' '}
-                      {suggestion.metaData.members.toLocaleString()} members
-                    </CommunitySuggestion>
+                    <CommunityHoverProfile
+                      id={suggestion.id}
+                      style={{ flex: '1 0 auto' }}
+                    >
+                      <CommunitySuggestion>
+                        <CommunityAvatar
+                          size={20}
+                          community={suggestion}
+                          clickable={false}
+                          showHoverProfile={false}
+                        />
+                        <strong>{suggestion.name}</strong>{' '}
+                        {suggestion.metaData.members.toLocaleString()} members
+                      </CommunitySuggestion>
+                    </CommunityHoverProfile>
                   </Link>
                 );
               })}

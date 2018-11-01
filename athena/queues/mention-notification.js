@@ -11,10 +11,10 @@ import { getMessageById } from '../models/message';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import { getCommunityById } from '../models/community';
 import { getUsersThread } from '../models/usersThreads';
-import { storeUsersNotifications } from '../models/usersNotifications';
+import { storeUsersNotifications } from 'shared/db/queries/usersNotifications';
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { getThreadById } from '../models/thread';
-import { getUserByUsername, getUserById } from '../models/user';
+import { getUserByUsername, getUserById } from 'shared/db/queries/user';
 import {
   sendNewMentionThreadEmailQueue,
   sendNewMentionMessageEmailQueue,
@@ -50,21 +50,29 @@ export default async ({ data }: Job<MentionNotificationJobData>) => {
   // dont send any notification about the mention
   if (!thread || thread.deletedAt) return;
 
-  const { isPrivate } = await getChannelById(thread.channelId);
+  const { isPrivate: channelIsPrivate } = await getChannelById(
+    thread.channelId
+  );
+  const { isPrivate: communityIsPrivate } = await getCommunityById(
+    thread.communityId
+  );
   const {
     isBlocked: isBlockedInCommunity,
+    isMember: isMemberInCommunity,
   } = await getUserPermissionsInCommunity(thread.communityId, recipient.id);
   const {
     isMember: isMemberInChannel,
     isBlocked: isBlockedInChannel,
   } = await getUserPermissionsInChannel(recipient.id, thread.channelId);
-  // don't notify people where they are blocked, or where the channel is private and they aren't a member
+
   if (
     isBlockedInCommunity ||
     isBlockedInChannel ||
-    (isPrivate && !isMemberInChannel)
-  )
+    (channelIsPrivate && !isMemberInChannel) ||
+    (communityIsPrivate && !isMemberInCommunity)
+  ) {
     return;
+  }
 
   // see if a usersThreads record exists. If it does, and notifications are muted, we
   // should not send an email. If the record doesn't exist, it means the person being

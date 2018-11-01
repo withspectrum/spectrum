@@ -10,7 +10,6 @@ import MemberGrowth from './components/memberGrowth';
 import ConversationGrowth from './components/conversationGrowth';
 import TopMembers from './components/topMembers';
 import TopAndNewThreads from './components/topAndNewThreads';
-import AnalyticsUpsell from './components/analyticsUpsell';
 import {
   SectionsContainer,
   Column,
@@ -34,16 +33,7 @@ type State = {
 class CommunityAnalytics extends React.Component<Props, State> {
   componentDidMount() {
     const { community } = this.props;
-    if (
-      community &&
-      (!community.hasFeatures || !community.hasFeatures.analytics)
-    ) {
-      track(events.COMMUNITY_ANALYTICS_VIEWED_UPSELL, {
-        community: transformations.analyticsCommunity(community),
-      });
-    }
-
-    if (community && community.hasFeatures && community.hasFeatures.analytics) {
+    if (community) {
       track(events.COMMUNITY_ANALYTICS_VIEWED, {
         community: transformations.analyticsCommunity(community),
       });
@@ -54,14 +44,6 @@ class CommunityAnalytics extends React.Component<Props, State> {
     const { community } = this.props;
 
     if (community && community.id) {
-      if (!community.hasFeatures || !community.hasFeatures.analytics) {
-        return (
-          <ErrorBoundary fallbackComponent={SettingsFallback}>
-            <AnalyticsUpsell community={community} />
-          </ErrorBoundary>
-        );
-      }
-
       return (
         <SectionsContainer>
           <Column>

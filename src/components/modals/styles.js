@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import { zIndex } from '../globals';
@@ -64,7 +65,7 @@ export const ModalBody = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  background-color: ${({ theme }) => theme.bg.default};
+  background-color: ${theme.bg.default};
   overflow: visible;
 `;
 
@@ -88,21 +89,21 @@ export const CloseButton = styled(IconButton)`
   right: 8px;
   top: 8px;
   z-index: ${zIndex.modal + 1};
-  color: ${({ theme }) => theme.text.placeholder};
+  color: ${theme.text.placeholder};
 
   &:hover {
-    color: ${({ theme }) => theme.warn.alt};
+    color: ${theme.warn.alt};
   }
 `;
 
 export const Description = styled.p`
   font-size: 14px;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   padding: 8px 0 16px;
   line-height: 1.4;
 
   a {
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
   }
 `;
 
@@ -110,12 +111,12 @@ export const UpsellDescription = styled(Description)`
   padding: 8px 12px;
   margin: 8px 0;
   border-radius: 4px;
-  border: 1px solid ${props => props.theme.success.border};
-  background: ${props => props.theme.success.wash};
-  color: ${props => props.theme.success.dark};
+  border: 1px solid ${theme.success.border};
+  background: ${theme.success.wash};
+  color: ${theme.success.dark};
 
   a {
-    color: ${props => props.theme.success.default};
+    color: ${theme.success.default};
     font-weight: 700;
     display: block;
     margin-top: 4px;
@@ -126,24 +127,7 @@ export const Notice = styled(Description)`
   padding: 8px 16px;
   margin: 8px 0;
   border-radius: 4px;
-  background: ${props => props.theme.special.wash};
-  border: 2px solid ${props => props.theme.special.border};
-  color: ${props => props.theme.special.dark};
-`;
-
-export const PoweredByStripeFooter = styled.div`
-  width: 100%;
-  background: ${props => props.theme.bg.wash};
-  border-top: 1px solid ${props => props.theme.bg.border};
-  padding: 8px 12px;
-  font-size: 14px;
-  font-weight: 500;
-  color: ${props => props.theme.text.secondary};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  img {
-    margin-left: 4px;
-  }
+  background: ${theme.special.wash};
+  border: 2px solid ${theme.special.border};
+  color: ${theme.special.dark};
 `;

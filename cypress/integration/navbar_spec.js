@@ -9,8 +9,6 @@ const coreSplashPageNavbarLinksVisible = () => {
 
   cy.get('[data-cy="navbar-splash-apps"]').should('be.visible');
 
-  cy.get('[data-cy="navbar-splash-pricing"]').should('be.visible');
-
   cy.get('[data-cy="navbar-splash-support"]').should('be.visible');
 };
 
@@ -50,14 +48,9 @@ const checkSignedOutNavbarRenders = () => {
   cy.get('[data-cy="navbar-explore"]').should('be.visible');
 
   cy.get('[data-cy="navbar-support"]').should('be.visible');
-
-  cy.get('[data-cy="navbar-pricing"]').should('be.visible');
 };
 
 const checkSignedOutSplashNavbarRenders = () => {
-  cy.visit('/pricing');
-  checkSignedOutSplashNavbarLinksRender();
-
   cy.visit('/terms');
   checkSignedOutSplashNavbarLinksRender();
 
@@ -67,9 +60,6 @@ const checkSignedOutSplashNavbarRenders = () => {
 
 const checkSignedInSplashNavbarRenders = () => {
   cy.visit('/about');
-  checkSignedInSplashNavbarLinksRender();
-
-  cy.visit('/pricing');
   checkSignedInSplashNavbarLinksRender();
 
   cy.visit('/features');

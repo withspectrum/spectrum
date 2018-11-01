@@ -212,6 +212,13 @@ class ChatInput extends React.Component<Props, State> {
     this.props.onRef(undefined);
   }
 
+  componentDidUpdate(prevProps) {
+    const curr = this.props;
+    if (curr.quotedMessage !== prevProps.quotedMessage) {
+      this.triggerFocus();
+    }
+  }
+
   handleKeyDown = (event: any) => {
     const key = event.keyCode || event.charCode;
     // Detect esc key or backspace key (and empty message) to remove
@@ -257,7 +264,7 @@ class ChatInput extends React.Component<Props, State> {
     // decorators that are passed to the editor are removed from the editor
     // state
     setTimeout(() => {
-      this.editor && this.editor.focus();
+      this.editor && this.editor.focus && this.editor.focus();
     }, 0);
   };
 
@@ -400,7 +407,7 @@ class ChatInput extends React.Component<Props, State> {
     // refocus the input
     setTimeout(() => {
       clear();
-      this.editor && this.editor.focus();
+      this.editor && this.editor.focus && this.editor.focus();
     });
 
     return 'handled';
@@ -546,7 +553,9 @@ class ChatInput extends React.Component<Props, State> {
       }
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   onFocus = () => {
@@ -601,7 +610,10 @@ class ChatInput extends React.Component<Props, State> {
         mediaPreview: reader.result.toString(),
         isSendingMediaMessage: false,
       });
-    reader.readAsDataURL(blob);
+
+    if (blob) {
+      reader.readAsDataURL(blob);
+    }
   };
 
   render() {
@@ -630,15 +642,7 @@ class ChatInput extends React.Component<Props, State> {
         <ChatInputContainer focus={isFocused} onClick={this.triggerFocus}>
           {photoSizeError && (
             <PhotoSizeError>
-              <p
-                onClick={() =>
-                  this.props.dispatch(
-                    openModal('UPGRADE_MODAL', { user: currentUser })
-                  )
-                }
-              >
-                {photoSizeError}
-              </p>
+              <p>{photoSizeError}</p>
               <Icon
                 onClick={() => this.clearError()}
                 glyph="view-close"

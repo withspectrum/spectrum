@@ -4,7 +4,8 @@ import compose from 'recompose/compose';
 import FullscreenView from 'src/components/fullscreenView';
 import LoginButtonSet from 'src/components/loginButtonSet';
 import { Loading } from 'src/components/loading';
-import Avatar from 'src/components/avatar';
+import { CommunityAvatar } from 'src/components/avatar';
+import { CLIENT_URL } from 'src/api/constants';
 import {
   Title,
   Subtitle,
@@ -51,7 +52,12 @@ export class Login extends React.Component<Props> {
   }
 
   render() {
-    const { data: { community }, isLoading, redirectPath } = this.props;
+    const {
+      data: { community },
+      isLoading,
+      redirectPath,
+      match,
+    } = this.props;
 
     if (community && community.id) {
       const { brandedLogin } = community;
@@ -63,10 +69,10 @@ export class Login extends React.Component<Props> {
             style={{ justifyContent: 'center' }}
           >
             <LoginImageContainer>
-              <Avatar
+              <CommunityAvatar
                 community={community}
-                size={'88'}
-                src={community.profilePhoto}
+                showHoverProfile={false}
+                size={88}
               />
             </LoginImageContainer>
             <Title>Sign in to the {community.name} community</Title>
@@ -77,7 +83,9 @@ export class Login extends React.Component<Props> {
             </Subtitle>
 
             <LoginButtonSet
-              redirectPath={redirectPath || null}
+              redirectPath={
+                redirectPath || `${CLIENT_URL}/${match.params.communitySlug}`
+              }
               signinType={'signin'}
             />
 
@@ -123,4 +131,7 @@ export class Login extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunityByMatch, viewNetworkHandler)(Login);
+export default compose(
+  getCommunityByMatch,
+  viewNetworkHandler
+)(Login);

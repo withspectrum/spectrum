@@ -2,18 +2,12 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { openModal } from '../../actions/modals';
 import type { Dispatch } from 'redux';
-import {
-  Span,
-  ProBadge,
-  BlockedBadge,
-  PendingBadge,
-  DefaultPaymentMethodBadge,
-} from './style';
+import { Span, ProBadge, BlockedBadge, PendingBadge, TeamBadge } from './style';
 
 type Props = {
   type: string,
+  label?: string,
   onClick?: Function,
   tipText: string,
   currentUser: ?Object,
@@ -21,69 +15,66 @@ type Props = {
 };
 
 class Badge extends React.Component<Props> {
-  triggerProModal = () => {
-    // if user isn't signed in, don't trigger the modal
-    // if the user is currently pro, don't trigger the modal (otherwise they'll see a downsell)
-    if (!this.props.currentUser || this.props.currentUser.isPro) return;
-    // otherwise trigger the upgrade modal
-    this.props.dispatch(
-      openModal('UPGRADE_MODAL', { user: this.props.currentUser })
-    );
-  };
-
   render() {
-    switch (this.props.type) {
-      case 'default-payment-method':
-        return (
-          <DefaultPaymentMethodBadge
-            type={this.props.type}
-            tipText={this.props.tipText}
-            tipLocation={'top-left'}
-            onClick={this.triggerProModal}
-          >
-            Default
-          </DefaultPaymentMethodBadge>
-        );
-      case 'pro':
+    const { type, label, ...rest } = this.props;
+    switch (type) {
+      case 'beta-supporter':
         return (
           <ProBadge
-            type={this.props.type}
-            tipText={this.props.tipText}
-            tipLocation={'top-left'}
-            onClick={this.triggerProModal}
+            type={type}
+            tipText={'Beta Supporter'}
+            tipLocation={'top'}
+            {...rest}
           >
-            {this.props.type}
+            {label || 'Supporter'}
           </ProBadge>
         );
       case 'blocked':
         return (
           <BlockedBadge
-            type={this.props.type}
+            type={type}
             tipText={this.props.tipText}
             tipLocation={'top-left'}
+            {...rest}
           >
-            {this.props.type}
+            {label || type}
           </BlockedBadge>
         );
       case 'pending':
         return (
           <PendingBadge
-            type={this.props.type}
+            type={type}
             tipText={this.props.tipText}
             tipLocation={'top-left'}
+            {...rest}
           >
-            {this.props.type}
+            {label || type}
           </PendingBadge>
+        );
+      case 'moderator':
+      case 'admin':
+        return (
+          <TeamBadge
+            type={type}
+            tipText={`${
+              type === 'moderator' ? 'Moderator' : 'Owner'
+            } of this community`}
+            tipLocation="top-left"
+            {...rest}
+          >
+            Team
+          </TeamBadge>
         );
       default:
         return (
           <Span
-            type={this.props.type}
+            type={type}
             tipText={this.props.tipText}
             tipLocation={'top-left'}
             onClick={this.props.onClick && this.props.onClick}
+            {...rest}
           >
-            {this.props.type}
+            {label || type}
           </Span>
         );
     }

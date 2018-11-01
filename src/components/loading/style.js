@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled, { keyframes } from 'styled-components';
 import { Card } from '../card';
@@ -50,7 +51,7 @@ export const ShimmerListLite = styled(Card)`
 `;
 
 export const ShimmerThreadDetail = styled(FlexCol)`
-  padding: 40px 32px;
+  padding: 36px 32px;
   display: inline-block;
 
   @media (max-width: 768px) {
@@ -59,6 +60,17 @@ export const ShimmerThreadDetail = styled(FlexCol)`
 
   section {
     min-height: 308px;
+  }
+`;
+
+export const ShimmerThreadContent = styled(FlexCol)`
+  padding: 0;
+  margin-top: 32px;
+  display: block;
+  width: 100%;
+
+  section {
+    min-height: 132px;
   }
 `;
 
@@ -71,9 +83,9 @@ export const ShimmerThread = styled(Card)`
 `;
 
 export const ShimmerInboxThread = styled.div`
-  background: ${props => props.theme.bg.default};
+  background: ${theme.bg.default};
   padding: 16px;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
 
   section {
     min-height: 96px;
@@ -94,11 +106,12 @@ export const ShimmerProfile = styled(Card)`
 
 export const ShimmerProfileLite = styled(Card)`
   border-radius: 4px;
-  padding: 16px;
+  padding: 0;
+  padding-bottom: 16px;
   box-shadow: none;
 
   section {
-    min-height: 96px;
+    min-height: 238px;
   }
 `;
 
@@ -115,7 +128,7 @@ export const ShimmerDM = styled(ShimmerProfile)`
   margin: 0;
   box-shadow: none;
   border-radius: 0;
-  border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
+  border-bottom: 2px solid ${theme.bg.wash};
 
   section {
     min-height: 40px;
@@ -123,79 +136,6 @@ export const ShimmerDM = styled(ShimmerProfile)`
 
   + div {
     margin: 0;
-  }
-`;
-
-export const ShimmerBubble = styled(FlexCol)`
-  margin-top: 4px;
-  margin-left: 32px;
-  align-self: flex-start;
-  width: 60%;
-
-  section {
-    min-height: 48px;
-    border-radius: 12px;
-  }
-`;
-
-export const ShimmerChat = styled(FlexCol)`
-  margin-top: 32px;
-
-  > div:nth-of-type(2n + 2) {
-    width: 40%;
-
-    section {
-      min-height: 32px;
-    }
-  }
-
-  > div:nth-of-type(3n + 1) {
-    width: 25%;
-
-    section {
-      min-height: 32px;
-    }
-  }
-
-  > div:nth-of-type(4n) {
-    align-self: flex-end;
-    margin-top: 16px;
-    margin-left: 0;
-    margin-right: 32px;
-
-    > section {
-      background: ${({ theme }) => theme.brand.alt};
-
-      > span {
-        background: linear-gradient(
-          to right,
-          ${({ theme }) => theme.brand.alt} 10%,
-          ${({ theme }) => hexa(theme.brand.default, 0.35)} 20%,
-          ${({ theme }) => theme.brand.alt} 30%
-        );
-      }
-    }
-  }
-
-  > div:nth-of-type(5n) {
-    align-self: flex-end;
-    margin-top: 4px;
-    margin-bottom: 16px;
-    margin-left: 0;
-    margin-right: 32px;
-
-    > section {
-      background: ${({ theme }) => theme.brand.alt};
-
-      > span {
-        background: linear-gradient(
-          to right,
-          ${({ theme }) => theme.brand.alt} 10%,
-          ${({ theme }) => hexa(theme.brand.default, 0.25)} 20%,
-          ${({ theme }) => theme.brand.alt} 30%
-        );
-      }
-    }
   }
 `;
 
@@ -213,10 +153,10 @@ export const ShimmerComposer = styled(Card)`
 
 export const ShimmerInboxComposer = styled.div`
   padding: 16px;
-  background: ${props => props.theme.bg.default};
+  background: ${theme.bg.default};
   margin: 8px 0;
-  border-top: 1px solid ${props => props.theme.bg.border};
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-top: 1px solid ${theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
 
   section {
     min-height: 32px;
@@ -232,8 +172,8 @@ export const ShimmerSelect = styled.div`
   width: 196px;
   margin-left: 8px;
   border-radius: 8px;
-  background: ${props => props.theme.bg.default};
-  border: 2px solid ${props => props.theme.bg.border};
+  background: ${theme.bg.default};
+  border: 2px solid ${theme.bg.border};
 
   @media (max-width: 768px) {
     width: calc(50% - 12px);
@@ -263,7 +203,7 @@ export const ShimmerBase = styled.section`
   height: 100%;
   position: relative;
   z-index: ${zIndex.loading};
-  background: ${({ theme }) => theme.bg.wash};
+  background: ${theme.bg.wash};
   overflow: hidden;
 `;
 
@@ -278,17 +218,24 @@ export const ShimmerLine = styled.span`
   animation-timing-function: ease-in-out;
   background: linear-gradient(
     to right,
-    ${({ theme }) => theme.bg.wash} 10%,
+    ${theme.bg.wash} 10%,
     ${({ theme }) => hexa(theme.generic.default, 0.65)} 20%,
-    ${({ theme }) => theme.bg.wash} 30%
+    ${theme.bg.wash} 30%
   );
   ${/* background-size: 100%; */ ''} animation-name: ${placeHolderShimmer};
 `;
 
 export const Cover = styled.span`
   position: absolute;
-  background: ${({ theme }) => theme.bg.default};
+  background: ${theme.bg.default};
   z-index: ${zIndex.loading + 2};
+`;
+
+export const CircularCover = styled(Cover)`
+  background: radial-gradient(
+    transparent 20px,
+    ${({ theme }) => theme.bg.default} 10px
+  );
 `;
 
 export const LoadingOverlay = styled.div`
@@ -297,7 +244,7 @@ export const LoadingOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: ${({ theme }) => theme.bg.reverse};
+  background: ${theme.bg.reverse};
   opacity: 0.95;
   width: 100%;
   height: 100%;
@@ -306,7 +253,7 @@ export const LoadingOverlay = styled.div`
 
 export const LoadingNavbarContainer = styled.nav`
   width: 100%;
-  background: ${({ theme }) => theme.text.default};
+  background: ${theme.text.default};
   display: flex;
   align-items: center;
   color: #fff;
@@ -357,7 +304,7 @@ export const GridProfile = styled.div`
   max-width: 100%;
   height: 100%;
   min-height: 100vh;
-  background-color: ${props => props.theme.bg.default};
+  background-color: ${theme.bg.default};
 
   @media (max-width: 1028px) {
     grid-template-columns: 240px 1fr;
@@ -390,5 +337,5 @@ export const GridContent = styled(Column)`
 export const LoadingCoverPhoto = styled.div`
   grid-area: cover;
   width: 100%;
-  background-color: ${({ theme }) => theme.bg.wash};
+  background-color: ${theme.bg.wash};
 `;

@@ -3,7 +3,7 @@ const debug = require('debug')('athena:queue:create-thread-email');
 import Raven from '../../shared/raven';
 import truncate from 'shared/truncate';
 import getEmailStatus from '../utils/get-email-status';
-import { getUserById } from '../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import { getCommunityById } from '../models/community';
 import { getChannelById } from '../models/channel';
 import { toPlainText, toState } from 'shared/draft-utils';

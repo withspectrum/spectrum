@@ -38,7 +38,11 @@ export const getAu = (range: string) => {
   const RANGE = parseRange(range);
   return db
     .table('users')
-    .filter(db.row('lastSeen').during(db.now().sub(RANGE), db.now()))
+    .filter(row =>
+      row
+        .hasFields('lastSeen')
+        .and(row('lastSeen').during(db.now().sub(RANGE), db.now()))
+    )
     .count()
     .default(0)
     .run();
@@ -73,7 +77,6 @@ export const getCount = (table: string, filter: mixed) => {
   if (filter) {
     return db
       .table(table)
-      .filter(filter)
       .filter(row => db.not(row.hasFields('deletedAt')))
       .count()
       .run();

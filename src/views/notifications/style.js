@@ -1,5 +1,5 @@
 // @flow
-// $FlowFixMe
+import theme from 'shared/theme';
 import styled from 'styled-components';
 import {
   FlexRow,
@@ -9,6 +9,7 @@ import {
   hexa,
   Shadow,
   zIndex,
+  Truncate,
 } from '../../components/globals';
 import { HorizontalRule } from '../../components/globals';
 import Card from '../../components/card';
@@ -18,15 +19,27 @@ export const HzRule = styled(HorizontalRule)`
   margin: 0;
 `;
 
-export const NotificationCard = styled(Card)`
+export const NotificationCard = styled.div`
   padding: 16px;
   padding-bottom: 24px;
   overflow: hidden;
   transition: ${Transition.hover.off};
+  border-radius: 8px;
+  background: ${props => props.theme.bg.default};
+  margin-top: 8px;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
+  position: relative;
 
   &:hover {
     transition: none;
     box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.default, 0.1)};
+  }
+
+  @media (max-width: 768px) {
+    border-radius: 0;
+    border-bottom: 1px solid ${props => props.theme.bg.border};
+    box-shadow: none;
+    margin-top: 0;
   }
 `;
 
@@ -34,6 +47,8 @@ export const SegmentedNotificationCard = styled(Card)`
   padding: 0;
   padding-top: 16px;
   transition: ${Transition.hover.off};
+  border-radius: 8px;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 
   &:hover {
     transition: none;
@@ -44,7 +59,7 @@ export const SegmentedNotificationCard = styled(Card)`
 export const ContentHeading = styled.h2`
   font-size: 20px;
   font-weight: 700;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   margin: 8px 0;
 `;
 
@@ -61,7 +76,7 @@ export const ContentWash = styled(Content)`
   margin: 0;
   background-color: ${props => hexa(props.theme.bg.wash, 0.75)};
   border-radius: ${props => (props.mini ? '0' : '0 0 8px 8px')};
-  border-top: 1px solid ${props => props.theme.bg.border};
+  border-top: 1px solid ${theme.bg.border};
   padding: 8px;
   padding-top: 0;
 `;
@@ -103,7 +118,7 @@ export const ChatMessage = styled.p`
   padding: 12px 16px;
   border-radius: 16px;
   font-size: 14px;
-  background-color: ${({ theme }) => theme.generic.alt};
+  background-color: ${theme.generic.alt};
   background-image: ${({ theme }) =>
     Gradient(theme.generic.alt, theme.generic.default)};
   float: left;
@@ -114,10 +129,10 @@ export const ChatMessage = styled.p`
 export const NotificationListRow = styled(FlexCol)`
   padding: 16px;
   padding-top: 12px;
-  border-bottom: 1px solid ${({ theme }) => theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
   justify-content: center;
   align-items: flex-start;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   position: relative;
   z-index: ${zIndex.card};
   flex: none;
@@ -174,37 +189,41 @@ export const ContextRow = styled(FlexRow)`
 `;
 
 export const SuccessContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.success.alt};
+  color: ${theme.success.alt};
 `;
 
 export const SpecialContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.special.default};
+  color: ${theme.special.default};
 `;
 
 export const ReactionContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.warn.alt};
+  color: ${theme.warn.alt};
 `;
 
 export const JoinContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.space.default};
+  color: ${theme.space.default};
 `;
 
 export const RequestContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.special.alt};
+  color: ${theme.special.alt};
 `;
 
 export const ApprovedContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.success.default};
+  color: ${theme.success.default};
 `;
 
 export const ThreadContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.brand.alt};
+  color: ${theme.brand.alt};
   margin: 0 16px;
   margin-bottom: 16px;
 `;
 
+export const ThreadReactionContext = styled(ContextRow)`
+  color: ${theme.brand.alt};
+`;
+
 export const CreatedContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.brand.alt};
+  color: ${theme.brand.alt};
   margin: 0 16px;
   margin-bottom: 16px;
 `;
@@ -212,17 +231,18 @@ export const CreatedContext = styled(ContextRow)`
 export const TextContent = styled.p`
   font-size: 14px;
   font-weight: 400;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   pointer-events: ${props => (props.pointer ? 'all' : 'none')};
   line-height: 1.4;
   padding-right: 16px;
+  margin-left: 32px;
 
   a {
     font-weight: 600;
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
 
     &:hover {
-      color: ${props => props.theme.brand.alt};
+      color: ${theme.brand.alt};
       text-decoration: underline;
     }
   }
@@ -245,7 +265,7 @@ export const BubbleGroupContainer = styled(FlexCol)`
 export const Timestamp = styled.span`
   font-size: 14px;
   font-weight: 500;
-  color: ${props => props.theme.text.placeholder};
+  color: ${theme.text.placeholder};
 `;
 
 export const AttachmentsWash = styled(FlexCol)`
@@ -254,21 +274,32 @@ export const AttachmentsWash = styled(FlexCol)`
   flex: none;
 `;
 
-export const RequestCard = styled(Card)`
+export const RequestCard = styled.div`
+  display: flex;
+  position: relative;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   padding: 16px 16px 16px 24px;
+  border-radius: 8px;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
+  background: ${props => props.theme.bg.default};
 
   > p {
     font-weight: 700;
     font-size: 16px;
   }
+
+  @media (max-width: 768px) {
+    border-radius: 0;
+    border-bottom: 1px solid ${props => props.theme.bg.border};
+    box-shadow: none;
+  }
 `;
 
 export const CloseRequest = styled(IconButton)`
   margin-left: 8px;
-  color: ${props => props.theme.text.placeholder};
+  color: ${theme.text.placeholder};
 `;
 
 export const ButtonsRow = styled.div`
@@ -291,4 +322,38 @@ export const ButtonsRow = styled.div`
     display: flex;
     flex: 1 0 auto;
   }
+`;
+
+export const ChannelCard = styled.div`
+  padding: 0 16px;
+  border-radius: 8px;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
+  margin: 8px;
+  background: ${theme.bg.default};
+  display: flex;
+  justify-content: space-between;
+
+  a {
+    display: flex;
+    flex: 1 0 auto;
+  }
+`;
+
+export const ChannelName = styled.p`
+  display: flex;
+  flex: 1 0 auto;
+  padding: 16px 8px 16px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: ${theme.text.default};
+  ${Truncate};
+`;
+
+export const ToggleNotificationsContainer = styled.div`
+  display: flex;
+  color: ${theme.text.alt};
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  cursor: pointer;
 `;

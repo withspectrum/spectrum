@@ -59,20 +59,9 @@ const sendEmail = (options: Options) => {
     return;
   }
 
-  if (!isEmail(To)) {
-    if (userId) {
-      trackQueue.add({
-        userId: userId,
-        event: events.EMAIL_BOUNCED,
-        // we can safely log the To field because it's not a valid email, thus not PII
-        properties: {
-          tag: Tag,
-          to: To,
-          error: 'To field was not a valid email address',
-        },
-      });
-    }
-
+  // qq.com email addresses are isp blocked, which raises our error rate
+  // on postmark. prevent sending these emails at all
+  if (To.substr(To.length - 7) === '@qq.com') {
     return;
   }
 

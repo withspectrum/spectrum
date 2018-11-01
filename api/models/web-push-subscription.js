@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('api:models:webPushSubscription');
-const { db } = require('./db');
+const { db } = require('shared/db');
 import type { WebPushSubscription } from '../mutations/user';
 
 // prettier-ignore

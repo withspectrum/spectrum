@@ -2,15 +2,17 @@
 import * as React from 'react';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-import Icon from '../../components/icons';
-import FullscreenView from '../../components/fullscreenView';
-import LoginButtonSet from '../../components/loginButtonSet';
+import Link from 'src/components/link';
+import Icon from 'src/components/icons';
+import FullscreenView from 'src/components/fullscreenView';
+import LoginButtonSet from 'src/components/loginButtonSet';
 import {
   LargeTitle,
   LargeSubtitle,
   UpsellIconContainer,
   FullscreenContent,
   CodeOfConduct,
+  PrivacyTerms,
 } from './style';
 import queryString from 'query-string';
 import { track, events } from 'src/helpers/analytics';
@@ -76,6 +78,11 @@ export class Login extends React.Component<Props> {
               Code of Conduct
             </a>
           </CodeOfConduct>
+
+          <PrivacyTerms>
+            <Link to={'/privacy'}>Privacy Policy</Link> ·{' '}
+            <Link to={'/terms'}>Terms of Service</Link>.
+          </PrivacyTerms>
         </FullscreenContent>
       </FullscreenView>
     );

@@ -18,9 +18,6 @@ import {
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
-import { getLinkPreviewFromUrl } from '../../../helpers/utils';
-import isURL from 'validator/lib/isURL';
-import { URLS, ENDS_IN_WHITESPACE } from '../../../helpers/regexps';
 import { TextButton, Button } from '../../buttons';
 import { FlexRow } from '../../../components/globals';
 import { LoadingComposer } from '../../loading';
@@ -67,10 +64,6 @@ type State = {
   activeCommunity: ?string,
   activeChannel: ?string,
   isPublishing: boolean,
-  linkPreview: ?Object,
-  linkPreviewTrueUrl: ?string,
-  linkPreviewLength: number,
-  fetchingLinkPreview: boolean,
   postWasPublished: boolean,
 };
 
@@ -133,10 +126,6 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       activeCommunity: '',
       activeChannel: '',
       isPublishing: false,
-      linkPreview: null,
-      linkPreviewTrueUrl: '',
-      linkPreviewLength: 0,
-      fetchingLinkPreview: false,
       postWasPublished: false,
     };
   }
@@ -281,10 +270,6 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       activeCommunity,
       activeChannel,
       isPublishing: false,
-      linkPreview: null,
-      linkPreviewTrueUrl: '',
-      linkPreviewLength: 0,
-      fetchingLinkPreview: false,
     });
   };
 
@@ -313,7 +298,8 @@ class ThreadComposerWithData extends React.Component<Props, State> {
         this.props.dispatch(addToastWithTimeout('error', err.message))
       );
 
-    this.refs.titleTextarea.focus();
+    if (this.titleTextarea && this.titleTextarea.focus)
+      this.titleTextarea.focus();
   }
 
   componentWillUpdate(nextProps) {
@@ -361,7 +347,6 @@ class ThreadComposerWithData extends React.Component<Props, State> {
   };
 
   changeBody = body => {
-    this.listenForUrl(body);
     persistBody(body);
     this.setState({
       body,
@@ -449,7 +434,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     );
     const newActiveChannel =
       activeCommunityChannels.find(channel => {
-        if (channel) return null;
+        if (!channel) return null;
         // If there is an active channel and we're switching back to the currently open community
         // select that channel
         if (
@@ -513,14 +498,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
 
     // define new constants in order to construct the proper shape of the
     // input for the publishThread mutation
-    const {
-      activeChannel,
-      activeCommunity,
-      title,
-      body,
-      linkPreview,
-      linkPreviewTrueUrl,
-    } = this.state;
+    const { activeChannel, activeCommunity, title, body } = this.state;
     const channelId = activeChannel;
     const communityId = activeCommunity;
     const jsonBody = toJSON(body);
@@ -532,23 +510,11 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       body: isAndroid() ? toPlainText(body) : JSON.stringify(jsonBody),
     };
 
-    const attachments = [];
-    if (linkPreview) {
-      const attachmentData = JSON.stringify({
-        ...linkPreview,
-        trueUrl: linkPreviewTrueUrl,
-      });
-      attachments.push({
-        attachmentType: 'linkPreview',
-        data: attachmentData,
-      });
-    }
-
     // Get the images
     const filesToUpload = Object.keys(jsonBody.entityMap)
       .filter(
         key =>
-          jsonBody.entityMap[key].type === 'image' &&
+          jsonBody.entityMap[key].type.toLowerCase() === 'image' &&
           jsonBody.entityMap[key].data.file &&
           jsonBody.entityMap[key].data.file.constructor === File
       )
@@ -561,7 +527,6 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       communityId,
       type: isAndroid() ? 'TEXT' : 'DRAFTJS',
       content,
-      attachments,
       filesToUpload,
     };
 
@@ -603,64 +568,6 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       });
   };
 
-  listenForUrl = state => {
-    const { linkPreview, linkPreviewLength } = this.state;
-    if (linkPreview !== null) return;
-
-    const lastChangeType = state.getLastChangeType();
-    if (
-      lastChangeType !== 'backspace-character' &&
-      lastChangeType !== 'insert-characters'
-    ) {
-      return;
-    }
-
-    const text = toPlainText(state);
-
-    if (!ENDS_IN_WHITESPACE.test(text)) return;
-
-    const toCheck = text.match(URLS);
-
-    if (toCheck) {
-      const len = toCheck.length;
-      if (linkPreviewLength === len) return; // no new links, don't recheck
-
-      let urlToCheck = toCheck[len - 1].trim();
-
-      if (!/^https?:\/\//i.test(urlToCheck)) {
-        urlToCheck = 'https://' + urlToCheck;
-      }
-
-      if (!isURL(urlToCheck)) return;
-      this.setState({ fetchingLinkPreview: true });
-
-      getLinkPreviewFromUrl(urlToCheck)
-        .then(data =>
-          this.setState(prevState => ({
-            linkPreview: { ...data, trueUrl: urlToCheck },
-            linkPreviewTrueUrl: urlToCheck,
-            linkPreviewLength: prevState.linkPreviewLength + 1,
-            fetchingLinkPreview: false,
-            error: null,
-          }))
-        )
-        .catch(() => {
-          this.setState({
-            error:
-              "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
-            fetchingLinkPreview: false,
-          });
-        });
-    }
-  };
-
-  removeLinkPreview = () => {
-    this.setState({
-      linkPreview: null,
-      linkPreviewTrueUrl: null,
-    });
-  };
-
   render() {
     const {
       title,
@@ -669,9 +576,6 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       activeCommunity,
       activeChannel,
       isPublishing,
-      linkPreview,
-      linkPreviewTrueUrl,
-      fetchingLinkPreview,
     } = this.state;
 
     const {
@@ -709,7 +613,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
                 style={ThreadTitle}
                 value={this.state.title}
                 placeholder={'What do you want to talk about?'}
-                ref="titleTextarea"
+                innerRef={ref => (this.titleTextarea = ref)}
                 autoFocus
               />
 
@@ -721,13 +625,6 @@ class ThreadComposerWithData extends React.Component<Props, State> {
                 editorKey="thread-composer"
                 placeholder="Put your text, photos, code, or embeds here..."
                 className={'threadComposer'}
-                showLinkPreview={true}
-                linkPreview={{
-                  loading: fetchingLinkPreview,
-                  remove: this.removeLinkPreview,
-                  trueUrl: linkPreviewTrueUrl,
-                  data: linkPreview,
-                }}
               />
 
               <Actions>

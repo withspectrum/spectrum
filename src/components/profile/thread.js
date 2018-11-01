@@ -5,7 +5,7 @@ import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import { ThreadListItem } from '../listItems';
-import { ProfileCard } from './style';
+import { ThreadProfileCard } from './style';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 
 type Props = {
@@ -16,11 +16,18 @@ type Props = {
   setName: Function,
   markAsDeleted: Function,
   id: string,
+  children: any,
 };
 
 class ThreadWithData extends React.Component<Props> {
-  componentWillMount() {
-    const { data: { thread }, data, setName, markAsDeleted, id } = this.props;
+  componentDidMount() {
+    const {
+      data: { thread },
+      data,
+      setName,
+      markAsDeleted,
+      id,
+    } = this.props;
 
     if (setName && thread) {
       setName(thread.community.name);
@@ -32,14 +39,17 @@ class ThreadWithData extends React.Component<Props> {
       markAsDeleted(id);
     }
   }
+
   render() {
-    const { data: { thread, error } } = this.props;
+    const {
+      data: { thread, error },
+    } = this.props;
     if (error || !thread) {
       return null;
     }
 
     return (
-      <ProfileCard>
+      <ThreadProfileCard>
         <Link
           to={{
             search: `?thread=${thread.id}`,
@@ -53,9 +63,12 @@ class ThreadWithData extends React.Component<Props> {
             }`}
           />
         </Link>
-      </ProfileCard>
+      </ThreadProfileCard>
     );
   }
 }
 
-export default compose(connect(), withRouter)(ThreadWithData);
+export default compose(
+  connect(),
+  withRouter
+)(ThreadWithData);

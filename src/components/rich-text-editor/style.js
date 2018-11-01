@@ -1,69 +1,58 @@
 // @flow
+import theme from 'shared/theme';
 import React from 'react';
-import { createPortal } from 'react-dom';
+import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
-import { Transition, zIndex } from '../globals';
-import theme from 'shared/theme';
-import { Manager, Reference, Popper } from 'react-popper';
-import HoverProfile from 'src/components/avatar/hoverProfile';
-import { getUserByUsername } from 'shared/graphql/queries/user/getUser';
+import { Transition, zIndex } from 'src/components/globals';
+import { UserHoverProfile } from 'src/components/hoverProfile';
 import type { Node } from 'react';
 
-const MentionHoverProfile = getUserByUsername(
-  props =>
-    !props.data.user ? null : (
-      <HoverProfile
-        innerRef={props.innerRef}
-        source={props.data.user.profilePhoto}
-        user={props.data.user}
-        style={props.style}
-      />
-    )
-);
+const UsernameWrapper = styled.span`
+  color: ${props =>
+    props.me ? props.theme.special.default : props.theme.space.default};
+  background: ${props =>
+    props.me ? props.theme.special.wash : props.theme.space.wash};
+  padding: 0px 4px 1px;
+  border-radius: 4px;
+  position: relative;
+  display: inline-block;
+  line-height: 1.4;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  a {
+    text-decoration: none;
+  }
+`;
 
 type MentionProps = {
   children: Node,
   username: string,
+  currentUser: ?Object,
 };
 
-export class Mention extends React.Component<
-  MentionProps,
-  { hovered: boolean }
-> {
-  state = { hovered: false };
-  hover = (val: boolean) => () => this.setState({ hovered: val });
+class MentionWithCurrentUser extends React.Component<MentionProps> {
   render() {
-    const { username, children } = this.props;
+    const { username, currentUser, children } = this.props;
+    const me = currentUser && currentUser.username === username;
     return (
-      <span onMouseEnter={this.hover(true)} onMouseLeave={this.hover(false)}>
-        <Manager>
-          <Reference>
-            {({ ref }) => (
-              <span ref={ref}>
-                <Link to={`/users/${username}`}>{children}</Link>
-              </span>
-            )}
-          </Reference>
-          {this.state.hovered &&
-            document.body &&
-            createPortal(
-              <Popper placement="top">
-                {({ style, ref }) => (
-                  <MentionHoverProfile
-                    username={username}
-                    innerRef={ref}
-                    style={style}
-                  />
-                )}
-              </Popper>,
-              document.body
-            )}
-        </Manager>
-      </span>
+      <UsernameWrapper me={me}>
+        <UserHoverProfile username={username}>
+          <Link to={`/users/${username}`} onClick={e => e.stopPropagation()}>
+            {children}
+          </Link>
+        </UserHoverProfile>
+      </UsernameWrapper>
     );
   }
 }
+
+const map = state => ({ currentUser: state.users.currentUser });
+// $FlowFixMe
+export const Mention = connect(map)(MentionWithCurrentUser);
 
 export const customStyleMap = {
   CODE: {
@@ -73,6 +62,12 @@ export const customStyleMap = {
     padding: '1px 4px',
     fontFamily: 'monospace',
     color: theme.warn.alt,
+  },
+  blockquote: {
+    lineHeight: '1.5',
+    borderLeft: `4px solid ${theme.bg.border}`,
+    color: `${theme.text.alt}`,
+    padding: '4px 12px 4px 16px',
   },
 };
 
@@ -88,8 +83,8 @@ export const Wrapper = styled.div`
 
 export const MediaRow = styled.div`
   display: flex;
-  background: ${props => props.theme.bg.wash};
-  border-top: 2px solid ${props => props.theme.bg.border};
+  background: ${theme.bg.wash};
+  border-top: 2px solid ${theme.bg.border};
   padding: 8px 16px;
   margin-left: -24px;
   margin-bottom: -24px;
@@ -115,7 +110,7 @@ export const ComposerBase = styled.div`
     bottom: -11px;
     padding: 0;
     margin: 0;
-    color: ${props => props.theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
 `;
 
@@ -137,7 +132,7 @@ export const Action = styled.div`
 
   label > div,
   label > button > div {
-    color: ${props => props.theme.text.reverse};
+    color: ${theme.text.reverse};
   }
 `;
 
@@ -150,25 +145,25 @@ export const Expander = styled.div`
   border-radius: 12px;
 
   > button > div {
-    color: ${props => props.theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
 
   > button:hover > div {
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 
   ${props =>
     props.inserting &&
     css`
-      background-color: ${props => props.theme.brand.alt};
+      background-color: ${theme.brand.alt};
       transition: ${Transition.hover.on};
 
       > button > div {
-        color: ${props => props.theme.brand.wash};
+        color: ${theme.brand.wash};
       }
 
       > button:hover > div {
-        color: ${props => props.theme.brand.wash};
+        color: ${theme.brand.wash};
       }
 
       ${Action} {
@@ -180,7 +175,7 @@ export const Expander = styled.div`
 export const EmbedUI = styled.form`
   display: flex;
   flex-direction: row;
-  background-color: ${props => props.theme.brand.alt};
+  background-color: ${theme.brand.alt};
   border-radius: 12px;
 
   label {
@@ -227,7 +222,7 @@ export const EmbedUI = styled.form`
       button {
         display: inline-block;
         background-color: transparent;
-        color: ${props => props.theme.text.reverse};
+        color: ${theme.text.reverse};
         margin-right: 16px;
         font-size: 14px;
         line-height: 1;
@@ -236,7 +231,7 @@ export const EmbedUI = styled.form`
         transition: ${Transition.hover.off};
 
         &:hover {
-          background-color: ${props => props.theme.brand.dark};
+          background-color: ${theme.brand.dark};
           border-radius: 8px;
           transition: ${Transition.hover.on};
         }

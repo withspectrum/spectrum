@@ -1,3 +1,4 @@
+// @flow
 const debug = require('debug')('mercury:queue:process-thread-deleted');
 import { updateReputation } from '../models/usersCommunities';
 import { getThread } from '../models/thread';
@@ -15,6 +16,7 @@ import {
   REACTION_DELETED_POST_AUTHOR_SCORE,
   REACTION_DELETED_POST_AUTHOR_BONUS,
 } from '../constants';
+import type { ReputationEventJobData } from 'shared/bull/types';
 
 /*
   If a thread is deleted, not only do we need to remove the reputation from the post author, but we also need to remove all of the reputation that was gained by users within the thread:
@@ -24,7 +26,7 @@ import {
 
 */
 
-export default async data => {
+export default async (data: ReputationEventJobData) => {
   // entityId represents the threadId
   const { userId, entityId } = data;
 

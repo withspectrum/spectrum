@@ -3,6 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
+import { CommunityAvatar } from 'src/components/avatar';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import ThreadComposer from '../../components/threadComposer';
 import Head from '../../components/head';
@@ -11,7 +12,6 @@ import viewNetworkHandler from '../../components/viewNetworkHandler';
 import ViewError from '../../components/viewError';
 import Link from 'src/components/link';
 import ThreadFeed from '../../components/threadFeed';
-import { ChannelProfile } from '../../components/profile';
 import PendingUsersNotification from './components/pendingUsersNotification';
 import NotificationsToggle from './components/notificationsToggle';
 import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
@@ -33,7 +33,16 @@ import {
   Segment,
   MobileSegment,
 } from '../../components/segmentedControl';
-import { Grid, Meta, Content, Extras } from './style';
+import {
+  Grid,
+  Meta,
+  Content,
+  Extras,
+  CommunityContext,
+  CommunityName,
+  ChannelName,
+  ChannelDescription,
+} from './style';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import { LoginButton, ColumnHeading, MidSegment } from '../community/style';
 import ToggleChannelMembership from '../../components/toggleChannelMembership';
@@ -41,9 +50,10 @@ import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
 
-const ThreadFeedWithData = compose(connect(), getChannelThreadConnection)(
-  ThreadFeed
-);
+const ThreadFeedWithData = compose(
+  connect(),
+  getChannelThreadConnection
+)(ThreadFeed);
 
 type Props = {
   match: {
@@ -344,10 +354,21 @@ class ChannelView extends React.Component<Props, State> {
           />
           <Grid id="main">
             <CoverPhoto src={community.coverPhoto} />
-            <Meta>
-              <ErrorBoundary fallbackComponent={null}>
-                <ChannelProfile data={{ channel }} profileSize="full" />
-              </ErrorBoundary>
+            <Meta data-cy="channel-profile-full">
+              <CommunityContext>
+                <CommunityAvatar community={community} />
+                <Link to={`/${community.slug}`}>
+                  <CommunityName>{community.name}</CommunityName>
+                </Link>
+              </CommunityContext>
+
+              <ChannelName>
+                {channel.name}
+                {channel.isArchived && ' (Archived)'}
+              </ChannelName>
+              {channel.description && (
+                <ChannelDescription>{channel.description}</ChannelDescription>
+              )}
 
               {actionButton}
 
@@ -396,9 +417,11 @@ class ChannelView extends React.Component<Props, State> {
                   onClick={() => this.handleSegmentClick('members')}
                   selected={selectedView === 'members'}
                 >
-                  Members ({channel.metaData &&
+                  Members (
+                  {channel.metaData &&
                     channel.metaData.members &&
-                    channel.metaData.members.toLocaleString()})
+                    channel.metaData.members.toLocaleString()}
+                  )
                 </MidSegment>
                 <MobileSegment
                   segmentLabel="members"
@@ -434,7 +457,7 @@ class ChannelView extends React.Component<Props, State> {
               {// thread list
               selectedView === 'threads' && (
                 <ThreadFeedWithData
-                  viewContext="channel"
+                  viewContext="channelProfile"
                   id={channel.id}
                   currentUser={isLoggedIn}
                   channelId={channel.id}
