@@ -5750,7 +5750,7 @@ flow-bin@0.66:
   version "0.66.0"
   resolved "http://registry.npmjs.org/flow-bin/-/flow-bin-0.66.0.tgz#a96dde7015dc3343fd552a7b4963c02be705ca26"
 
-flow-typed@^2.1.5:
+flow-typed@^2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/flow-typed/-/flow-typed-2.5.1.tgz#0ff565cc94d2af8c557744ba364b6f14726a6b9f"
   dependencies:
@@ -10199,7 +10199,7 @@ react-modal@3.x:
     react-lifecycles-compat "^3.0.0"
     warning "^3.0.0"
 
-react-popper@^1.0.0-beta.5:
+react-popper@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-1.0.2.tgz#0e72f338b7f15ab9f9ec884e36ae0dad78a3e301"
   dependencies:

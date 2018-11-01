@@ -13,10 +13,7 @@
 .*/node_modules/sentry-expo
 .*/node_modules/react-apollo
 .*/node_modules/dataloader
-.*/node_modules/@cypress*
-.*/node_modules/@babel*
-.*/node_modules/@cypress
-.*/node_modules/@babel
+<PROJECT_ROOT>/node_modules/*
 
 [options]
 suppress_comment=.*\\$FlowFixMe
