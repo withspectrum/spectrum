@@ -13,7 +13,7 @@ import {
 import LoadingHoverProfile from './loadingHoverProfile';
 
 const CommunityHoverProfile = getCommunityById(props => {
-  if (props.data.community) {
+  if (props.data && props.data.community) {
     return (
       <CommunityProfile
         innerRef={props.innerRef}
@@ -23,7 +23,7 @@ const CommunityHoverProfile = getCommunityById(props => {
     );
   }
 
-  if (props.data.loading) {
+  if (props.data && props.data.loading) {
     return (
       <LoadingHoverProfile style={props.style} innerRef={props.innerRef} />
     );
