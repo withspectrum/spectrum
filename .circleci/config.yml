@@ -121,8 +121,8 @@ jobs:
           name: Run E2E Tests
           command: test $CYPRESS_RECORD_KEY && yarn run test:e2e -- --record || yarn run test:e2e
       - run:
-          name: Build desktop apps
-          command: yarn run build:desktop
+          name: Test desktop apps
+          command: yarn run test:desktop
 
   # deploy_alpha:
     # <<: *js_defaults
