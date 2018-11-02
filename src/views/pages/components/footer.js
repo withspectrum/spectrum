@@ -41,7 +41,7 @@ export default () => {
         </Masthead>
         <Apps>
           <span>Apps</span>
-          <Link to={`/apps`}>Mac & Windows</Link>
+          <Link to={`/apps`}>Mac</Link>
         </Apps>
         <Support>
           <span>Support</span>
