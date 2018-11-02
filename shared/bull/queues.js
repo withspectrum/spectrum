@@ -53,6 +53,8 @@ import {
   IDENTIFY_ANALYTICS,
 } from 'analytics/queues/constants';
 
+import { SEARCH_INDEXING_EVENT } from 'vulcan/queues/constants';
+
 import {
   PROCESS_REPUTATION_EVENT,
   CALCULATE_THREAD_SCORE,
@@ -104,6 +106,9 @@ exports.QUEUE_NAMES = {
   // analytics
   trackQueue: TRACK_ANALYTICS,
   identifyQueue: IDENTIFY_ANALYTICS,
+
+  // vulcan
+  searchQueue: SEARCH_INDEXING_EVENT,
 
   // admin
   _adminSendCommunityCreatedEmailQueue: SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
