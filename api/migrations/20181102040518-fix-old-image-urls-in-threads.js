@@ -10,57 +10,55 @@ exports.up = async function(r, conn) {
     .run(conn)
     .then(cursor => cursor.toArray());
 
-  const threadPromises = threads
-    .filter(o => o.id === 'ff1aa2c0-5c0d-4942-a5a5-4370ffe2656d')
-    .map(async obj => {
-      const newBody = JSON.parse(obj.body);
+  const threadPromises = threads.map(async obj => {
+    const newBody = JSON.parse(obj.body);
 
-      if (newBody) {
-        const imageKeys = Object.keys(newBody.entityMap).filter(
-          key => newBody.entityMap[key].type.toLowerCase() === 'image'
-        );
+    if (newBody) {
+      const imageKeys = Object.keys(newBody.entityMap).filter(
+        key => newBody.entityMap[key].type.toLowerCase() === 'image'
+      );
 
-        const LEGACY_PREFIX = 'https://spectrum.imgix.net/';
-        const hasLegacyPrefix = url => url.startsWith(LEGACY_PREFIX, 0);
-        const stripLegacyPrefix = url => url.replace(LEGACY_PREFIX, '');
+      const LEGACY_PREFIX = 'https://spectrum.imgix.net/';
+      const hasLegacyPrefix = url => url.startsWith(LEGACY_PREFIX, 0);
+      const stripLegacyPrefix = url => url.replace(LEGACY_PREFIX, '');
 
-        const processImageUrl = str => {
-          if (str.indexOf('https://spectrum.imgix.net') < 0) {
-            return str;
-          }
-          if (str.indexOf('%20') < 0) {
-            return str;
-          }
+      const processImageUrl = str => {
+        if (str.indexOf('https://spectrum.imgix.net') < 0) {
+          return str;
+        }
+        if (str.indexOf('%20') < 0) {
+          return str;
+        }
 
-          const split = str.split('?');
-          const imagePath = split[0];
+        const split = str.split('?');
+        const imagePath = split[0];
 
-          const decoded = decodeURIComponent(imagePath);
+        const decoded = decodeURIComponent(imagePath);
 
-          const processed = hasLegacyPrefix(decoded)
-            ? stripLegacyPrefix(decoded)
-            : decoded;
+        const processed = hasLegacyPrefix(decoded)
+          ? stripLegacyPrefix(decoded)
+          : decoded;
 
-          return processed;
-        };
+        return processed;
+      };
 
-        imageKeys.forEach((key, index) => {
-          if (!newBody.entityMap[key]) {
-            return;
-          }
+      imageKeys.forEach((key, index) => {
+        if (!newBody.entityMap[key]) {
+          return;
+        }
 
-          const { src } = newBody.entityMap[key].data;
-          newBody.entityMap[key].data.src = processImageUrl(src);
-        });
-      }
+        const { src } = newBody.entityMap[key].data;
+        newBody.entityMap[key].data.src = processImageUrl(src);
+      });
+    }
 
-      return await r
-        .db('spectrum')
-        .table('threads')
-        .get(obj.id)
-        .update({ content: { body: JSON.stringify(newBody) } })
-        .run(conn);
-    });
+    return await r
+      .db('spectrum')
+      .table('threads')
+      .get(obj.id)
+      .update({ content: { body: JSON.stringify(newBody) } })
+      .run(conn);
+  });
 
   return await Promise.all(threadPromises);
 };
