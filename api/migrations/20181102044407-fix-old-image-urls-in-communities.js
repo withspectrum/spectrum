@@ -30,7 +30,7 @@ exports.up = async function(r, conn) {
     const stripLegacyPrefix = url => url.replace(LEGACY_PREFIX, '');
 
     const processImageUrl = str => {
-      if (str.indexOf('https://spectrum.imgix.net') < 0) {
+      if (str.indexOf(LEGACY_PREFIX) < 0) {
         return str;
       }
 
