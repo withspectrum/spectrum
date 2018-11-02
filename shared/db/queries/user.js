@@ -2,9 +2,13 @@
 import { createReadQuery, createWriteQuery, db } from 'shared/db';
 import { uploadImage } from 'api/utils/file-storage';
 import { createNewUsersSettings } from 'api/models/usersSettings';
-import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
+import {
+  sendNewUserWelcomeEmailQueue,
+  trackQueue,
+  identifyQueue,
+  searchQueue,
+} from 'shared/bull/queues';
 import { events } from 'shared/analytics';
-import { trackQueue, identifyQueue } from 'shared/bull/queues';
 import { removeUsersCommunityMemberships } from 'api/models/usersCommunities';
 import { removeUsersChannelMemberships } from 'api/models/usersChannels';
 import { disableAllThreadNotificationsForUser } from 'api/models/usersThreads';
@@ -114,6 +118,15 @@ export const storeUser = createWriteQuery((user: Object) => ({
       identifyQueue.add({ userId: dbUser.id });
       trackQueue.add({ userId: dbUser.id, event: events.USER_CREATED });
       sendNewUserWelcomeEmailQueue.add({ user: dbUser });
+
+      if (dbUser.username) {
+        searchQueue.add({
+          id: dbUser.id,
+          type: 'user',
+          event: 'created',
+        });
+      }
+
       return Promise.all([dbUser, createNewUsersSettings(dbUser.id)]).then(
         ([dbUser]) => dbUser
       );
@@ -324,6 +337,14 @@ export const editUser = createWriteQuery(
           });
         })
         .then(user => {
+          if (user.username) {
+            searchQueue.add({
+              id: user.id,
+              type: 'user',
+              event: 'edited',
+            });
+          }
+
           if (file || coverFile) {
             if (file && !coverFile) {
               return uploadImage(file, 'users', user.id)
@@ -666,6 +687,12 @@ export const deleteUser = createWriteQuery((userId: string) => ({
       }) => {
         const user = changes[0].new_val || changes[0].old_val;
 
+        searchQueue.add({
+          id: userId,
+          type: 'user',
+          event: 'deleted',
+        });
+
         trackQueue.add({
           userId: userId,
           event: events.USER_DELETED,
@@ -716,6 +743,12 @@ export const banUser = createWriteQuery((args: BanUserType) => {
 
         // updates the indentification information in amplitude analytics
         identifyQueue.add({ userId });
+
+        searchQueue.add({
+          id: userId,
+          type: 'user',
+          event: 'deleted',
+        });
 
         const dmThreadIds = await db
           .table('usersDirectMessageThreads')
