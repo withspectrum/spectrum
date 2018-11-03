@@ -133,7 +133,8 @@ const UserWithData = ({
                         rel="noopener noreferrer"
                         href={`https://github.com/${profile.username}`}
                       >
-                        github.com/{profile.username}
+                        github.com/
+                        {profile.username}
                       </a>
                     </ExtLink>
                   );

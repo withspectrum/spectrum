@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": "9.x.x"
+  },
   "dependencies": {
     "algoliasearch": "^3.30.0",
     "apollo-engine": "^1.1.2",
@@ -12,7 +15,7 @@
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.7.0",
-    "backpack-core": "^0.4.1",
+    "backpack-core": "^0.8.1",
     "body-parser": "^1.18.3",
     "bull": "3.3.10",
     "casual": "^1.5.12",
@@ -112,7 +115,7 @@
     "serialize-javascript": "^1.5.0",
     "session-rethinkdb": "^2.0.0",
     "shortid": "^2.2.13",
-    "slate": "^0.43.0",
+    "slate": "^0.43.3",
     "slate-markdown": "0.1.0",
     "slugg": "^1.1.0",
     "string-replace-to-array": "^1.0.3",
