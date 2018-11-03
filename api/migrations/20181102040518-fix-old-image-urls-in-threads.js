@@ -2,7 +2,7 @@ exports.up = async function(r, conn) {
   const threads = await r
     .db('spectrum')
     .table('threads')
-    .filter(row => row('createdAt').lt(r.epochTime(1540929600)))
+    .filter(row => row('modifiedAt').lt(r.epochTime(1540929600)))
     .filter(row => row('content')('body').match('spectrum.imgix.net'))
     .filter(row => row('content')('body').match('%20'))
     .filter(row => row.hasFields('deletedAt').not())
