@@ -1940,9 +1940,9 @@ babel-polyfill@^6.26.0:
     core-js "^2.5.0"
     regenerator-runtime "^0.10.5"
 
-babel-preset-backpack@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/babel-preset-backpack/-/babel-preset-backpack-0.8.1.tgz#888f971167fbb689fd4f3cbffdb9a79098235925"
+babel-preset-backpack@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/babel-preset-backpack/-/babel-preset-backpack-0.8.2.tgz#c27197249a78e28c9ce7513e15508bd54f593bcf"
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
@@ -2057,13 +2057,13 @@ backo2@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/backo2/-/backo2-1.0.2.tgz#31ab1ac8b129363463e35b3ebb69f4dfcfba7947"
 
-backpack-core@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/backpack-core/-/backpack-core-0.8.1.tgz#ead72b5557c90d023e45610f3ff5f5331e1f90ba"
+backpack-core@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/backpack-core/-/backpack-core-0.8.2.tgz#d8ef661ecbee43a87bce1888603a54eee8490873"
   dependencies:
     "@babel/core" "^7.1.2"
     babel-loader "^8.0.2"
-    babel-preset-backpack "^0.8.1"
+    babel-preset-backpack "^0.8.2"
     cross-spawn "^5.0.1"
     friendly-errors-webpack-plugin "^1.7.0"
     json-loader "^0.5.7"
