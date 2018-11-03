@@ -118,19 +118,22 @@ class Nav extends React.Component<Props, State> {
                 to="/features"
                 selected={this.props.location === 'features'}
               >
-                <Icon glyph="checkmark" />Features
+                <Icon glyph="checkmark" />
+                Features
               </DropdownLink>
               <DropdownLink
                 to="/support"
                 selected={this.props.location === 'support'}
               >
-                <Icon glyph="like" />Support
+                <Icon glyph="like" />
+                Support
               </DropdownLink>
               <DropdownLink
                 to="/explore"
                 selected={this.props.location === 'explore'}
               >
-                <Icon glyph="explore" />Explore
+                <Icon glyph="explore" />
+                Explore
               </DropdownLink>
               {this.props.currentUser ? (
                 <AuthLink to={'/'}>

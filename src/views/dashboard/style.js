@@ -1,13 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled, { css, keyframes } from 'styled-components';
-import {
-  zIndex,
-  Truncate,
-  Tooltip,
-  Shadow,
-  hexa,
-} from '../../components/globals';
+import { zIndex, Truncate, Shadow, hexa } from 'src/components/globals';
 
 export const DashboardWrapper = styled.main`
   display: flex;
@@ -271,14 +265,10 @@ export const Fixed = styled.div`
   }
 `;
 
-export const CommunityListAvatar = styled.img`
-  width: 32px;
-  min-width: 32px;
-  height: 32px;
-  display: inline-block;
-  border-radius: 4px;
-  box-shadow: ${props => (props.active ? '0' : '0 1px 2px rgba(0, 0, 0, 0.1)')};
-  ${Tooltip};
+export const CommunityAvatarContainer = styled.span`
+  img {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 export const FeedHeaderContainer = styled.div`
