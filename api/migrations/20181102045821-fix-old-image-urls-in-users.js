@@ -63,6 +63,7 @@ exports.up = async function(r, conn) {
       .update({
         coverPhoto: newCoverPhoto,
         profilePhoto: newProfilePhoto,
+        imageReplaced: new Date(),
       })
       .run(conn);
   });

@@ -54,7 +54,12 @@ exports.up = async function(r, conn) {
       .db('spectrum')
       .table('threads')
       .get(obj.id)
-      .update({ content: { body: JSON.stringify(newBody) } })
+      .update({
+        content: {
+          body: JSON.stringify(newBody),
+        },
+        imageReplaced: new Date(),
+      })
       .run(conn);
   });
 
