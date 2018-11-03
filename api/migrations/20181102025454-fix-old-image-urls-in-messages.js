@@ -16,7 +16,12 @@ exports.up = async function(r, conn) {
       .db('spectrum')
       .table('messages')
       .get(obj.id)
-      .update({ content: { body: decodeURIComponent(obj.url) } })
+      .update({
+        content: {
+          body: decodeURIComponent(obj.url),
+        },
+        imageReplaced: new Date(),
+      })
       .run(conn);
   });
 

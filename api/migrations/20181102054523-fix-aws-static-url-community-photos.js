@@ -41,6 +41,7 @@ exports.up = async function(r, conn) {
       .update({
         coverPhoto: newCoverPhoto,
         profilePhoto: newProfilePhoto,
+        awsStaticReplaced: new Date(),
       })
       .run(conn);
   });
