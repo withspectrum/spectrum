@@ -146,7 +146,7 @@ class Browser extends React.Component<Props, State> {
     // prop. If it's the case that this happens, we just select the *last* image, assuming it's the one that the user just uploaded.
     let filteredIndex = typeof index === 'number' ? index : messages.length - 1;
 
-    const src = `${images[filteredIndex].content.body}?max-w=768`;
+    const src = `${images[filteredIndex].content.body}`;
 
     return (
       <GalleryWrapper>
@@ -158,7 +158,7 @@ class Browser extends React.Component<Props, State> {
             {images.map((image, i) => {
               return (
                 <MiniImg
-                  src={`${image.content.body}?max-w=64`}
+                  src={`${image.content.body}`}
                   key={i}
                   onClick={() => this.setCount(i)}
                   active={i === filteredIndex}
