@@ -3,23 +3,18 @@ const debug = require('debug')('vulcan:queue:created');
 import initIndex from 'shared/algolia';
 import Raven from 'shared/raven';
 import type { Job, SearchIndexJobData } from 'shared/bull/types';
-import community from '../types/community';
-import user from '../types/user';
-import thread from '../types/thread';
-import message from '../types/message';
+import { getQueueFromType } from 'vulcan/utils/get-queue-from-type';
 
-const types = {
-  community,
-  user,
-  thread,
-  message,
-};
-
-export default async (job: Job<SearchIndexJobData>) => {
+export const created = async (job: Job<SearchIndexJobData>) => {
   const { id, type, event } = job.data;
   debug(`Search index event '${event}' for ${type} ${id}`);
 
-  const queue = types[type];
+  const queue = getQueueFromType(type);
+
+  if (!queue) {
+    throw new Error(`No valid queue type found for '${type}'`);
+  }
+
   const record = await queue.get(id);
   const index = initIndex(queue.index);
 

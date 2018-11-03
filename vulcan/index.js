@@ -1,12 +1,12 @@
 // @flow
 const debug = require('debug')('vulcan');
 const createWorker = require('shared/bull/create-worker');
-import searchEvent from './queues';
-import { SEARCH_INDEXING_EVENT } from './queues/constants';
+import searchEvent from 'vulcan/queues';
+import { SEARCH_INDEXING_EVENT } from 'vulcan/queues/constants';
 
 const PORT = process.env.PORT || 3005;
 
-debug('\n✉️ Vulcan, the search indexing, is starting...');
+debug('\n✉️ Vulcan, the search indexing worker, is starting...');
 debug('Logging with debug enabled!');
 
 const server = createWorker({

@@ -1,12 +1,12 @@
 // @flow
-import created from '../../events/created';
-import edited from '../../events/edited';
-import deleted from '../../events/deleted';
-import moved from './moved';
+import { created } from 'vulcan/queues/events/created';
+import { edited } from 'vulcan/queues/events/edited';
+import { deleted } from 'vulcan/queues/events/deleted';
+import { moved } from 'vulcan/queues/types/thread/moved';
 import { getThreadById } from 'shared/db/queries/thread';
-import { dbThreadToSearchThread } from '../../../utils';
+import { dbThreadToSearchThread } from 'vulcan/utils';
 
-export default {
+export const threadType = {
   created,
   edited,
   deleted,

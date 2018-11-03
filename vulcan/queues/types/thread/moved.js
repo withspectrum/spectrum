@@ -7,7 +7,7 @@ import type { Job, SearchIndexJobData } from 'shared/bull/types';
 import { getThreadById } from 'shared/db/queries/thread';
 import type { DBThread } from 'shared/types';
 
-export default async (job: Job<SearchIndexJobData>) => {
+export const moved = async (job: Job<SearchIndexJobData>) => {
   const { id, type, event } = job.data;
   debug(`Search index event '${event}' for ${type} ${id}`);
 

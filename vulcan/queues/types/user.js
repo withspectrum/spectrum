@@ -1,13 +1,13 @@
 // @flow
-import created from '../events/created';
-import edited from '../events/edited';
-import deleted from '../events/deleted';
+import { created } from 'vulcan/queues/events/created';
+import { edited } from 'vulcan/queues/events/edited';
+import { deleted } from 'vulcan/queues/events/deleted';
 import { getUserById } from 'shared/db/queries/user';
-import { dbUserToSearchUser } from '../../utils';
+import { dbUserToSearchUser } from 'vulcan/utils';
 import type { Job, SearchIndexJobData } from 'shared/bull/types';
 import type { DBUser } from 'shared/types';
 
-export default {
+export const userType = {
   created,
   edited,
   deleted,

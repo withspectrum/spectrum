@@ -1,12 +1,12 @@
 // @flow
-import created from '../events/created';
-import edited from '../events/edited';
-import deleted from '../events/deleted';
+import { created } from 'vulcan/queues/events/created';
+import { edited } from 'vulcan/queues/events/edited';
+import { deleted } from 'vulcan/queues/events/deleted';
 import { getMessageById } from 'shared/db/queries/message';
-import { dbMessageToSearchThread } from '../../utils';
+import { dbMessageToSearchThread } from 'vulcan/utils';
 import type { Job, SearchIndexJobData } from 'shared/bull/types';
 
-export default {
+export const messageType = {
   created,
   edited,
   deleted,
