@@ -141,6 +141,7 @@ const formatNotification = (incomingNotification, currentUserId) => {
           const sender = notification.actors.find(
             actor => payload.senderId === actor.id
           );
+
           if (payload.messageType === 'draftjs') {
             let body = payload.content.body;
             if (typeof body === 'string')
@@ -150,7 +151,9 @@ const formatNotification = (incomingNotification, currentUserId) => {
             }): ${toPlainText(toState(body))}`;
           }
 
-          return `${sender.payload.name}: ${payload.content.body}`;
+          return `${sender.payload.name}: ${
+            payload.messageType === 'media' ? '📷 Photo' : payload.content.body
+          }`;
         })
         .join('\n');
       break;
