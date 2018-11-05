@@ -163,9 +163,12 @@ class Message extends React.Component<Props, State> {
 
     const canEditMessage = me && message.messageType !== 'media';
     const selectedMessageId = btoa(new Date(message.timestamp).getTime() - 1);
-    const messageUrl = thread
-      ? `/${getThreadLink(thread)}?m=${selectedMessageId}`
-      : `/thread/${threadId}?m=${selectedMessageId}`;
+    const messageUrl =
+      threadType === 'story' && thread
+        ? `/${getThreadLink(thread)}?m=${selectedMessageId}`
+        : threadType === 'directMessageThread'
+          ? `/messages/${threadId}?m=${selectedMessageId}`
+          : `/thread/${threadId}?m=${selectedMessageId}`;
 
     return (
       <MessagesContext.Consumer>
