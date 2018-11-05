@@ -16,6 +16,7 @@ export const deleted = async (job: Job<SearchIndexJobData>) => {
   }
 
   const index = initIndex(queue.index);
+
   return index
     .deleteObject(id)
     .then(() =>

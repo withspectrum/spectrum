@@ -16,6 +16,7 @@ export const created = async (job: Job<SearchIndexJobData>) => {
   }
 
   const record = await queue.get(id);
+
   const index = initIndex(queue.index);
 
   if (!record) {
@@ -31,7 +32,7 @@ export const created = async (job: Job<SearchIndexJobData>) => {
     return;
   }
 
-  const searchable = queue.transform(record);
+  const searchable = await queue.transform(record);
 
   if (!searchable) {
     debug(`Searchable transformation failed for ${type} ${event} ${id}`);

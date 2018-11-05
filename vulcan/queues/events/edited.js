@@ -31,7 +31,7 @@ export const edited = async (job: Job<SearchIndexJobData>) => {
     return;
   }
 
-  const searchable = queue.transform(record);
+  const searchable = await queue.transform(record);
 
   return index
     .partialUpdateObject({
