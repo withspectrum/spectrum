@@ -114,7 +114,7 @@
     "sanitize-filename": "^1.6.1",
     "serialize-javascript": "^1.5.0",
     "session-rethinkdb": "^2.0.0",
-    "shortid": "^2.2.13",
+    "shortid": "^2.2.14",
     "slate": "^0.43.6",
     "slate-markdown": "0.1.0",
     "slugg": "^1.1.0",
