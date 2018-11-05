@@ -277,7 +277,10 @@ class MessagesWithData extends React.Component<Props, State> {
                       href={`${location.pathname}?msgsbefore=${prevCursor}`}
                     />
                   )}
-                  <link rel="canonical" href={getThreadLink(thread)} />
+                  <link
+                    rel="canonical"
+                    href={'https://spectrum.chat/' + getThreadLink(thread)}
+                  />
                 </Head>
               </div>
             )}
@@ -289,7 +292,10 @@ class MessagesWithData extends React.Component<Props, State> {
                     href={`${location.pathname}?msgsafter=${nextCursor}`}
                   />
                 )}
-                <link rel="canonical" href={getThreadLink(thread)} />
+                <link
+                  rel="canonical"
+                  href={'https://spectrum.chat/' + getThreadLink(thread)}
+                />
               </Head>
             )}
             <InfiniteList

@@ -385,7 +385,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
               </Link>
             </ChannelHoverProfile>
             <span>&nbsp;·&nbsp;</span>
-            <Link to={getThreadLink(thread)}>
+            <Link to={'/' + getThreadLink(thread)}>
               {timestamp}
               {thread.modifiedAt && (
                 <React.Fragment>
