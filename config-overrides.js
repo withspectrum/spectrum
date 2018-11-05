@@ -102,18 +102,8 @@ module.exports = function override(config, env) {
   });
   config.plugins.push(
     new OfflinePlugin({
-      // 1. Download and cache the app shell, the bootstrap JS and the main bundle when SW is installed/updated. If downloading of any of them fails, abort caching anything
-      // 2. Download and cache all JS chunks when SW is installed/updated. If downloading some of them fails, cache those specific ones on-demand, i.e. when they are requested by the main bundle
-      // 3. Everything else cache on-demand
-      caches:
-        process.env.NODE_ENV === 'development'
-          ? {}
-          : {
-              main: ['index.html', '**/*main.*js', '**/*bootstrap.*js'],
-              additional: ['**/*.chunk.js'],
-              optional: [':rest:', ':externals:'],
-            },
-      safeToUseOptionalCaches: true,
+      // We don't want to cache anything
+      caches: {},
       externals,
       autoUpdate: true,
       // NOTE(@mxstbr): Normally this is handled by setting
@@ -122,18 +112,8 @@ module.exports = function override(config, env) {
       // which means we have to manually do this and filter any of those routes out
       cacheMaps: [
         {
-          match: function(url) {
-            var EXTERNAL_PATHS = ['/api', '/auth'];
-            if (
-              EXTERNAL_PATHS.some(function(path) {
-                return url.pathname.indexOf(path) === 0;
-              })
-            )
-              return false;
-            // This function will be stringified and injected into the ServiceWorker on the client, where
-            // location will be a thing
-            // eslint-disable-next-line no-restricted-globals
-            return new URL('./index.html', location);
+          match: function() {
+            return false;
           },
           requestTypes: ['navigate'],
         },

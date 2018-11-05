@@ -36,7 +36,7 @@ module.exports = {
         } else {
           // If specific channels were passed make sure the user has permission to listen in those channels
           const permissions = await getUsersPermissionsInChannels(
-            ids.map(id => [user.id, id])
+            ids.map(id => [user ? user.id : null, id])
           );
           ids = permissions
             .filter(

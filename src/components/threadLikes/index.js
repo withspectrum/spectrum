@@ -7,6 +7,7 @@ import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import addThreadReactionMutation from 'shared/graphql/mutations/thread/addThreadReaction';
 import removeThreadReactionMutation from 'shared/graphql/mutations/thread/removeThreadReaction';
 import { openModal } from 'src/actions/modals';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import Icon from 'src/components/icons';
 import { LikeButtonWrapper, LikeCountWrapper, CurrentCount } from './style';
 
@@ -31,15 +32,19 @@ class LikeButtonPure extends React.Component<LikeButtonProps> {
   };
 
   addThreadReaction = () => {
-    const { thread, addThreadReaction } = this.props;
+    const { thread, addThreadReaction, dispatch } = this.props;
     const input = { threadId: thread.id };
-    return addThreadReaction({ input });
+    return addThreadReaction({ input }).catch(err =>
+      dispatch(addToastWithTimeout('error', err.message))
+    );
   };
 
   removeThreadReaction = () => {
-    const { thread, removeThreadReaction } = this.props;
+    const { thread, removeThreadReaction, dispatch } = this.props;
     const input = { threadId: thread.id };
-    return removeThreadReaction({ input });
+    return removeThreadReaction({ input }).catch(err =>
+      dispatch(addToastWithTimeout('error', err.message))
+    );
   };
 
   render() {

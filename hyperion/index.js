@@ -8,7 +8,9 @@ import fs from 'fs';
 import express from 'express';
 import Loadable from 'react-loadable';
 import path from 'path';
-import { getUser } from 'api/models/user';
+// TODO: This is the only thing that connects hyperion to the db
+// we should get rid of this if at all possible
+import { getUserById } from 'shared/db/queries/user';
 import Raven from 'shared/raven';
 import toobusy from 'shared/middlewares/toobusy';
 import addSecurityMiddleware from 'shared/middlewares/security';
@@ -24,7 +26,7 @@ app.set('trust proxy', true);
 app.use(toobusy);
 
 // Security middleware.
-addSecurityMiddleware(app);
+addSecurityMiddleware(app, { enableNonce: true, enableCSP: true });
 
 if (process.env.NODE_ENV === 'development') {
   const logging = require('shared/middlewares/logging');
@@ -87,12 +89,28 @@ import session from 'shared/middlewares/session';
 app.use(session);
 
 import passport from 'passport';
+// Setup use serialization
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, typeof user === 'string' ? user : JSON.stringify(user));
 });
 
-passport.deserializeUser((id, done) => {
-  getUser({ id })
+// NOTE(@mxstbr): `data` used to be just the userID, but is now the full user data
+// to avoid having to go to the db on every single request. We have to handle both
+// cases here, as more and more users use Spectrum again we go to the db less and less
+passport.deserializeUser((data, done) => {
+  // Fast path: try to JSON.parse the data if it works, we got the user data, yay!
+  try {
+    const user = JSON.parse(data);
+    // Make sure more than the user ID is in the data by checking any other required
+    // field for existance
+    if (user.id && user.createdAt) {
+      return done(null, user);
+    }
+    // Ignore JSON parsing errors
+  } catch (err) {}
+
+  // Slow path: data is just the userID (legacy), so we have to go to the db to get the full data
+  getUserById(data)
     .then(user => {
       done(null, user);
     })

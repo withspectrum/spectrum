@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('athena:queue:moderation-events:thread');
-import { getUserById } from '../../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import { getCommunityById } from '../../models/community';
 import { getChannelById } from '../../models/channel';
 import { toState, toPlainText } from 'shared/draft-utils';
@@ -12,7 +12,9 @@ import type { Job, AdminToxicThreadJobData } from 'shared/bull/types';
 export default async (job: Job<AdminToxicThreadJobData>) => {
   debug('new job for admin thread moderation');
 
-  const { data: { thread } } = job;
+  const {
+    data: { thread },
+  } = job;
 
   const body =
     thread.type === 'DRAFTJS'
@@ -28,7 +30,13 @@ export default async (job: Job<AdminToxicThreadJobData>) => {
     getSpectrumScore(text, thread.id, thread.creatorId),
     getPerspectiveScore(text),
   ]).catch(err =>
-    console.error('Error getting thread moderation scores from providers', err)
+    console.error('Error getting thread moderation scores from providers', {
+      error: err.message,
+      data: {
+        text,
+        threadId: thread.id,
+      },
+    })
   );
 
   const spectrumScore = scores && scores[0];

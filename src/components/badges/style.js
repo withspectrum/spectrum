@@ -9,7 +9,7 @@ export const Span = styled.span`
   background-color: ${theme.text.alt};
   text-transform: uppercase;
   padding: 3px 4px;
-  margin-left: 4px;
+  margin-right: 4px;
   font-size: 9px;
   font-weight: 800;
   border-radius: 4px;
@@ -50,17 +50,6 @@ export const PendingBadge = styled(Span)`
   background-color: ${theme.special.alt};
   background-image: ${Gradient(theme.special.alt, theme.special.default)};
   cursor: pointer;
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-export const DefaultPaymentMethodBadge = styled(Span)`
-  background-color: ${theme.space.default};
-  background-image: ${Gradient(theme.space.default, theme.space.default)};
-  cursor: pointer;
-  margin-left: 8px;
 
   &:hover {
     cursor: pointer;

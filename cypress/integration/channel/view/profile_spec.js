@@ -55,8 +55,8 @@ describe('public channel in private community signed out', () => {
     );
   });
 
-  it('should render error view', () => {
-    cy.get('[data-cy="channel-view-blocked"]').should('be.visible');
+  it('should render channel not found view', () => {
+    cy.get('[data-cy="channel-not-found"]').should('be.visible');
   });
 });
 
@@ -81,8 +81,8 @@ describe('public channel in private community without permission', () => {
     );
   });
 
-  it('should render error view', () => {
-    cy.get('[data-cy="channel-view-blocked"]').should('be.visible');
+  it('should render channel not found view', () => {
+    cy.get('[data-cy="channel-not-found"]').should('be.visible');
   });
 });
 
@@ -141,8 +141,8 @@ describe('blocked in private channel', () => {
     cy.visit(`/${community.slug}/${privateChannel.slug}`);
   });
 
-  it('should render error view', () => {
-    cy.get('[data-cy="channel-view-blocked"]').should('be.visible');
+  it('should render channel not found view', () => {
+    cy.get('[data-cy="channel-not-found"]').should('be.visible');
   });
 });
 
@@ -151,7 +151,7 @@ describe('is not logged in', () => {
     cy.visit(`/${community.slug}/${privateChannel.slug}`);
   });
 
-  it('should render login view', () => {
-    cy.contains(`Sign in`);
+  it('should render channel not found view', () => {
+    cy.get('[data-cy="channel-not-found"]').should('be.visible');
   });
 });

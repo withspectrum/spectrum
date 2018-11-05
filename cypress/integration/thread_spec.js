@@ -380,6 +380,61 @@ describe('Thread View', () => {
   });
 });
 
+describe('edit message signed out', () => {
+  beforeEach(() => {
+    cy.visit(`/thread/${thread.id}`);
+  });
+
+  it('should not render edit message buttons', () => {
+    cy.get('[data-cy="edit-message"]').should('not.be.visible');
+  });
+});
+
+describe.only('edit message signed in', () => {
+  beforeEach(() => {
+    cy.auth(moderator.userId);
+    cy.visit(`/thread/${thread.id}`);
+  });
+
+  it('should render edit buttons on current users messages', () => {
+    cy.get('[data-cy="edit-message"]').should('be.visible');
+    cy.get('[data-cy="edit-message"]').should($p => {
+      expect($p).to.have.length(2);
+    });
+    cy.contains('The next one is an emoji-only one :scream:').should(
+      'be.visible'
+    );
+    cy.get('[data-cy="edit-message"]')
+      .last()
+      .click({ force: true });
+
+    cy.get('[data-cy="edit-message-input"]').should('be.visible');
+    cy.get('[data-cy="edit-message-cancel"]').should('be.visible');
+    cy.get('[data-cy="edit-message-save"]').should('be.visible');
+
+    cy.get('[data-cy="edit-message-cancel"]').click();
+
+    cy.get('[data-cy="edit-message-input"]').should('not.be.visible');
+    cy.get('[data-cy="edit-message-cancel"]').should('not.be.visible');
+    cy.get('[data-cy="edit-message-save"]').should('not.be.visible');
+
+    cy.get('[data-cy="edit-message"]')
+      .last()
+      .click({ force: true });
+
+    cy.get('[data-cy="edit-message-input"]');
+    cy.get('[contenteditable="true"]').type(' with edits');
+
+    cy.get('[data-cy="edit-message-save"]').click();
+
+    cy.get('[data-cy="edit-message-input"]').should('not.be.visible');
+    cy.get('[data-cy="edited-message-indicator"]').should('be.visible');
+    cy.contains('The next one is an emoji-only one :scream: with edits').should(
+      'be.visible'
+    );
+  });
+});
+
 describe('/new/thread', () => {
   beforeEach(() => {
     cy.auth(author.id);

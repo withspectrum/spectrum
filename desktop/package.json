@@ -4,23 +4,23 @@
   "homepage": "https://spectrum.chat",
   "author": {
     "name": "Space Program Inc.",
-    "email": "hey@spectrum.chat"
+    "email": "hi@spectrum.chat"
   },
   "repository": "https://github.com/withspectrum/spectrum",
-  "version": "1.0.1",
+  "version": "1.0.5",
   "main": "src/main.js",
   "private": true,
   "dependencies": {
-    "electron-context-menu": "^0.9.1",
-    "electron-is-dev": "^0.3.0",
-    "electron-updater": "^2.23.3",
+    "electron-context-menu": "^0.10.1",
+    "electron-is-dev": "^1.0.1",
     "electron-log": "^2.2.17",
-    "electron-window-state": "^4.1.1"
+    "electron-updater": "^3.1.6",
+    "electron-window-state": "^5.0.2"
   },
   "devDependencies": {
-    "electron": "^1.8.4",
-    "electron-builder": "^20.8.1",
-    "nodemon": "^1.18.3",
+    "electron": "^3.0.7",
+    "electron-builder": "^20.31.2",
+    "nodemon": "^1.18.5",
     "rimraf": "^2.6.2"
   },
   "scripts": {
@@ -31,6 +31,7 @@
     "package:linux": "yarn run package --linux",
     "package:win": "yarn run package --win --x64",
     "package:all": "yarn run package -mwl",
+    "package:test": "yarn run package --linux",
     "release": "yarn run package:all --publish always"
   },
   "build": {

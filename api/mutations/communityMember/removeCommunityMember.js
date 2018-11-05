@@ -143,7 +143,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
         return;
       })
-      .then(() => community);
+      .then(() => getCommunityById(communityId));
   }
 
   trackQueue.add({

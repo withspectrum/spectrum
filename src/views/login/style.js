@@ -127,13 +127,6 @@ export const NullRow = styled(FlexRow)`
   padding: 1rem 15%;
 `;
 
-export const UpgradeError = styled.p`
-  color: ${theme.warn.default};
-  font-size: 14px;
-  text-align: center;
-  margin: 16px 0 0;
-`;
-
 export const Profile = styled.div`
   position: relative;
   padding: 16px 0;
@@ -227,4 +220,8 @@ export const CodeOfConduct = styled.p`
     color: ${theme.brand.default};
     font-weight: 600;
   }
+`;
+
+export const PrivacyTerms = styled(CodeOfConduct)`
+  margin-top: 16px;
 `;

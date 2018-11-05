@@ -6,6 +6,7 @@ import Link from 'src/components/link';
 
 export const HoverWrapper = styled.div`
   position: absolute;
+  padding: 8px 0;
   z-index: ${zIndex.tooltip};
   width: 256px;
   ${props => props.popperStyle};

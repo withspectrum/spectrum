@@ -21,8 +21,6 @@ export const Page = styled.main`
   grid-template-rows: 1fr;
   grid-template-columns: 1fr;
   grid-template-areas: 'content';
-  overflow: auto;
-  overflow-x: hidden;
   background-color: ${theme.bg.default};
 `;
 
@@ -487,7 +485,7 @@ export const Tabs = styled.div`
   grid-template-columns: auto 1fr repeat(3, auto);
   grid-column-gap: 32px;
   grid-template-rows: auto;
-  grid-template-areas: 'logo . features pricing support auth';
+  grid-template-areas: 'logo . features support auth';
   align-items: center;
   justify-items: center;
   color: ${props =>
@@ -667,14 +665,6 @@ export const MenuTab = styled.div`
   }
 
   @media (min-width: 768px) {
-    display: none;
-  }
-`;
-
-export const PricingTab = styled(Tab)`
-  grid-area: pricing;
-
-  @media (max-width: 768px) {
     display: none;
   }
 `;

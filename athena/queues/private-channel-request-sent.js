@@ -5,7 +5,7 @@ const debug = require('debug')(
 import Raven from 'shared/raven';
 import { getCommunityById } from '../models/community';
 import { storeNotification } from '../models/notification';
-import { storeUsersNotifications } from '../models/usersNotifications';
+import { storeUsersNotifications } from 'shared/db/queries/usersNotifications';
 import {
   getOwnersInChannel,
   getModeratorsInChannel,
@@ -14,7 +14,7 @@ import {
   getOwnersInCommunity,
   getModeratorsInCommunity,
 } from '../models/usersCommunities';
-import { getUsers } from '../models/user';
+import { getUsers } from 'shared/db/queries/user';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import isEmail from 'validator/lib/isEmail';
 import { sendPrivateChannelRequestEmailQueue } from 'shared/bull/queues';

@@ -10,6 +10,7 @@ import Reaction from 'src/components/reaction';
 import { ReactionWrapper } from 'src/components//reaction/style';
 import OutsideClickHandler from 'src/components/outsideClickHandler';
 import { Body } from './view';
+import EditingBody from './editingBody';
 import { openModal } from 'src/actions/modals';
 import { replyToMessage } from 'src/actions/message';
 import { CLIENT_URL } from 'src/api/constants';
@@ -22,7 +23,10 @@ import AuthorByline from './authorByline';
 import Icon from 'src/components/icons';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
-import { convertTimestampToTime } from 'shared/time-formatting';
+import {
+  convertTimestampToTime,
+  convertTimestampToDate,
+} from 'shared/time-formatting';
 import { MessagesContext } from 'src/components/messageGroup';
 import ConditionalWrap from 'src/components/conditionalWrap';
 import {
@@ -35,6 +39,7 @@ import {
   Actions,
   Action,
   LikeAction,
+  EditedIndicator,
 } from './style';
 
 type Props = {|
@@ -51,14 +56,21 @@ type Props = {|
   currentUser: UserInfoType,
 |};
 
-class Message extends React.Component<Props> {
+type State = {
+  isEditing: boolean,
+};
+
+class Message extends React.Component<Props, State> {
   wrapperRef: React.Node;
+
+  state = { isEditing: false };
 
   setWrapperRef = (node: React.Node) => {
     this.wrapperRef = node;
   };
 
   shouldComponentUpdate(nextProps, nextState) {
+    const isEditing = this.state.isEditing !== nextState.isEditing;
     const newMessage = nextProps.message.id !== this.props.message.id;
     const updatedReactionCount =
       nextProps.message.reactions.count !== this.props.message.reactions.count;
@@ -66,7 +78,12 @@ class Message extends React.Component<Props> {
       nextProps.message.reactions.hasReacted !==
       this.props.message.reactions.hasReacted;
 
-    if (newMessage || updatedReactionCount || updatedReactionState) {
+    if (
+      newMessage ||
+      updatedReactionCount ||
+      updatedReactionState ||
+      isEditing
+    ) {
       return true;
     }
 
@@ -123,6 +140,9 @@ class Message extends React.Component<Props> {
     }
   };
 
+  initEditMessage = () => this.setState({ isEditing: true });
+  cancelEdit = () => this.setState({ isEditing: false });
+
   render() {
     const {
       showAuthorContext,
@@ -135,7 +155,9 @@ class Message extends React.Component<Props> {
       threadId,
       threadType,
     } = this.props;
+    const { isEditing } = this.state;
 
+    const canEditMessage = me && message.messageType !== 'media';
     const selectedMessageId = btoa(new Date(message.timestamp).getTime() - 1);
     const messageUrl = `/thread/${threadId}?m=${selectedMessageId}`;
 
@@ -192,11 +214,31 @@ class Message extends React.Component<Props> {
                     />
                   )}
 
-                  <Body
-                    me={me}
-                    openGallery={e => this.toggleOpenGallery(e, message.id)}
-                    message={message}
-                  />
+                  {!isEditing ? (
+                    <Body
+                      me={me}
+                      openGallery={e => this.toggleOpenGallery(e, message.id)}
+                      message={message}
+                    />
+                  ) : (
+                    <EditingBody
+                      message={message}
+                      cancelEdit={this.cancelEdit}
+                    />
+                  )}
+
+                  {message.modifiedAt &&
+                    !isEditing && (
+                      <EditedIndicator
+                        data-cy="edited-message-indicator"
+                        tipLocation={'top-right'}
+                        tipText={`Edited ${convertTimestampToDate(
+                          new Date(message.modifiedAt)
+                        )}`}
+                      >
+                        Edited
+                      </EditedIndicator>
+                    )}
 
                   {message.reactions.count > 0 && (
                     <Reaction
@@ -241,96 +283,111 @@ class Message extends React.Component<Props> {
                     />
                   )}
 
-                  <ActionsContainer>
-                    <Actions>
-                      {canModerateMessage && (
-                        <Action
-                          tipText={`Delete`}
-                          tipLocation={'top'}
-                          onClick={this.deleteMessage}
-                        >
-                          <Icon
-                            dataCy="delete-message"
-                            glyph="delete"
-                            size={20}
-                          />
-                        </Action>
-                      )}
-                      <Action
-                        tipText={`Reply`}
-                        tipLocation={'top'}
-                        onClick={this.replyToMessage}
-                      >
-                        <Icon
-                          dataCy="reply-to-message"
-                          glyph="reply"
-                          size={20}
-                        />
-                      </Action>
-
-                      {!me && (
-                        <Reaction
-                          message={message}
-                          toggleReaction={toggleReaction}
-                          me={me}
-                          currentUser={currentUser}
-                          dispatch={dispatch}
-                          render={({ me, count, hasReacted, mutation }) => (
-                            <LikeAction
-                              hasReacted={hasReacted}
-                              tipText={hasReacted ? 'Unlike' : 'Like'}
-                              tipLocation={'top'}
-                              onClick={e => {
-                                e.stopPropagation();
-                                mutation();
-                              }}
-                            >
-                              <Icon
-                                dataCy={
-                                  hasReacted ? 'unlike-action' : 'like-action'
-                                }
-                                glyph={hasReacted ? 'like-fill' : 'like'}
-                                size={20}
-                              />
-                            </LikeAction>
-                          )}
-                        />
-                      )}
-
-                      {threadType === 'story' && (
-                        <Clipboard
-                          style={{
-                            background: 'none',
-                            borderLeft: '1px solid #DFE7EF',
-                          }}
-                          data-clipboard-text={`${CLIENT_URL}/thread/${threadId}?m=${selectedMessageId}`}
-                          onSuccess={() =>
-                            this.props.dispatch(
-                              addToastWithTimeout(
-                                'success',
-                                'Copied to clipboard'
-                              )
-                            )
-                          }
-                        >
+                  {!isEditing && (
+                    <ActionsContainer>
+                      <Actions>
+                        {canEditMessage && (
                           <Action
-                            tipText={`Link`}
+                            tipText={`Edit`}
                             tipLocation={'top'}
-                            onClick={e => {
-                              e.stopPropagation();
-                              selectMessage(selectedMessageId);
-                            }}
+                            onClick={this.initEditMessage}
                           >
                             <Icon
-                              dataCy="link-to-message"
-                              glyph="link"
+                              dataCy="edit-message"
+                              glyph="edit"
                               size={20}
                             />
                           </Action>
-                        </Clipboard>
-                      )}
-                    </Actions>
-                  </ActionsContainer>
+                        )}
+                        {canModerateMessage && (
+                          <Action
+                            tipText={`Delete`}
+                            tipLocation={'top'}
+                            onClick={this.deleteMessage}
+                          >
+                            <Icon
+                              dataCy="delete-message"
+                              glyph="delete"
+                              size={20}
+                            />
+                          </Action>
+                        )}
+                        <Action
+                          tipText={`Reply`}
+                          tipLocation={'top'}
+                          onClick={this.replyToMessage}
+                        >
+                          <Icon
+                            dataCy="reply-to-message"
+                            glyph="reply"
+                            size={20}
+                          />
+                        </Action>
+
+                        {!me && (
+                          <Reaction
+                            message={message}
+                            toggleReaction={toggleReaction}
+                            me={me}
+                            currentUser={currentUser}
+                            dispatch={dispatch}
+                            render={({ me, count, hasReacted, mutation }) => (
+                              <LikeAction
+                                hasReacted={hasReacted}
+                                tipText={hasReacted ? 'Unlike' : 'Like'}
+                                tipLocation={'top'}
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  mutation();
+                                }}
+                              >
+                                <Icon
+                                  dataCy={
+                                    hasReacted ? 'unlike-action' : 'like-action'
+                                  }
+                                  glyph={hasReacted ? 'like-fill' : 'like'}
+                                  size={20}
+                                />
+                              </LikeAction>
+                            )}
+                          />
+                        )}
+
+                        {threadType === 'story' && (
+                          <Clipboard
+                            style={{
+                              background: 'none',
+                              borderLeft: '1px solid #DFE7EF',
+                            }}
+                            data-clipboard-text={`${CLIENT_URL}/thread/${threadId}?m=${selectedMessageId}`}
+                            onSuccess={() =>
+                              this.props.dispatch(
+                                addToastWithTimeout(
+                                  'success',
+                                  'Copied to clipboard'
+                                )
+                              )
+                            }
+                          >
+                            <Action
+                              tipText={`Link`}
+                              tipLocation={'top'}
+                              onClick={e => {
+                                e.stopPropagation();
+                                selectMessage(selectedMessageId);
+                              }}
+                            >
+                              <Icon
+                                dataCy="link-to-message"
+                                glyph="link"
+                                size={20}
+                              />
+                            </Action>
+                          </Clipboard>
+                        )}
+                      </Actions>
+                    </ActionsContainer>
+                  )}
                 </InnerMessageContainer>
               </OuterMessageContainer>
             </ConditionalWrap>

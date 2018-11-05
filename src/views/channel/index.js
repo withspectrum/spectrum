@@ -417,9 +417,11 @@ class ChannelView extends React.Component<Props, State> {
                   onClick={() => this.handleSegmentClick('members')}
                   selected={selectedView === 'members'}
                 >
-                  Members ({channel.metaData &&
+                  Members (
+                  {channel.metaData &&
                     channel.metaData.members &&
-                    channel.metaData.members.toLocaleString()})
+                    channel.metaData.members.toLocaleString()}
+                  )
                 </MidSegment>
                 <MobileSegment
                   segmentLabel="members"

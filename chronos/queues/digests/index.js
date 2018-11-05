@@ -37,6 +37,7 @@ export default async (job: DigestJob) => {
     debug('\n ❌ No threads found for this digest');
     return;
   }
+
   debug('\n ⚙️ Fetched threads for digest');
 
   const threadsWithData = await attachDataToThreads(threads);
@@ -44,6 +45,7 @@ export default async (job: DigestJob) => {
     debug('\n ❌ No threads with data eligible for this digest');
     return;
   }
+
   debug('\n ⚙️ Processed threads with data');
 
   // 2
@@ -60,6 +62,8 @@ export default async (job: DigestJob) => {
 
   // 4
   const usersPromises = users.map(user => {
+    if (!user.email || !user.username) return null;
+
     try {
       return addQueue(
         PROCESS_INDIVIDUAL_DIGEST,
@@ -72,12 +76,13 @@ export default async (job: DigestJob) => {
     } catch (err) {
       debug(err);
       Raven.captureException(err);
+      return null;
     }
   });
 
   debug('\n ⚙️ Created individual jobs for each users digest');
   try {
-    return Promise.all(usersPromises);
+    return Promise.all(usersPromises.filter(Boolean));
   } catch (err) {
     debug('❌ Error in job:\n');
     debug(err);

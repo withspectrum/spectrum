@@ -104,7 +104,7 @@ class UserHoverProfileWrapper extends React.Component<Props, State> {
             document.body &&
             createPortal(
               <Popper
-                placement="top-start"
+                placement="bottom-end"
                 modifiers={{
                   preventOverflow: { enabled: false },
                   hide: { enabled: false },

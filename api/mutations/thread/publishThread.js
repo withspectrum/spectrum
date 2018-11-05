@@ -11,9 +11,7 @@ import {
   getThreadsByUserAsSpamCheck,
 } from '../../models/thread';
 import { createParticipantInThread } from '../../models/usersThreads';
-import { StripeUtil } from 'shared/stripe/utils';
 import type { FileUpload, DBThread } from 'shared/types';
-import { PRIVATE_CHANNEL, FREE_PRIVATE_CHANNEL } from 'pluto/queues/constants';
 import { toPlainText, toState } from 'shared/draft-utils';
 import {
   processReputationEventQueue,
@@ -33,11 +31,6 @@ const threadBodyToPlainText = (body: any): string =>
 const MEMBER_SPAM_LMIT = 3;
 const SPAM_TIMEFRAME = 60 * 10;
 
-type Attachment = {
-  attachmentType: string,
-  data: string,
-};
-
 type File = FileUpload;
 
 export type PublishThreadInput = {
@@ -49,7 +42,6 @@ export type PublishThreadInput = {
       title: string,
       body?: string,
     },
-    attachments?: ?Array<Attachment>,
     filesToUpload?: ?Array<File>,
   },
 };
@@ -161,45 +153,6 @@ export default requireAuth(
       );
     }
 
-    if (channel.isPrivate) {
-      const { customer } = await StripeUtil.jobPreflight(community.id);
-
-      if (!customer) {
-        trackQueue.add({
-          userId: user.id,
-          event: events.THREAD_CREATED_FAILED,
-          context: { channelId: thread.channelId },
-          properties: {
-            reason: 'no customer for private channel',
-          },
-        });
-
-        return new UserError(
-          'We could not verify the billing status for this channel, please try again'
-        );
-      }
-
-      const [hasPaidPrivateChannel, hasFreePrivateChannel] = await Promise.all([
-        StripeUtil.hasSubscriptionItemOfType(customer, PRIVATE_CHANNEL),
-        StripeUtil.hasSubscriptionItemOfType(customer, FREE_PRIVATE_CHANNEL),
-      ]);
-
-      if (!hasPaidPrivateChannel && !hasFreePrivateChannel) {
-        trackQueue.add({
-          userId: user.id,
-          event: events.THREAD_CREATED_FAILED,
-          context: { channelId: thread.channelId },
-          properties: {
-            reason: 'private channel without subscription',
-          },
-        });
-
-        return new UserError(
-          'This private channel does not have an active subscription'
-        );
-      }
-    }
-
     const isOwnerOrModerator =
       currentUserChannelPermissions.isOwner ||
       currentUserChannelPermissions.isModerator ||
@@ -297,17 +250,6 @@ export default requireAuth(
       }
     }
 
-    /*
-    If the thread has attachments, we have to iterate through each attachment and JSON.parse() the data payload. This is because we want a generic data shape in the graphQL layer like this:
-
-    {
-      attachmentType: enum String
-      data: String
-    }
-
-    But when we get the data onto the client we JSON.parse the `data` field so that we can have any generic shape for attachments in the future.
-  */
-
     let threadObject = Object.assign(
       {},
       {
@@ -318,21 +260,6 @@ export default requireAuth(
         },
       }
     );
-    // if the thread has attachments
-    if (thread.attachments) {
-      // iterate through them and construct a new attachment object
-      const attachments = thread.attachments.map(attachment => {
-        return {
-          attachmentType: attachment.attachmentType,
-          data: JSON.parse(attachment.data),
-        };
-      });
-
-      // create a new thread object, overriding the attachments field with our new array
-      threadObject = Object.assign({}, threadObject, {
-        attachments,
-      });
-    }
 
     // $FlowFixMe
     const dbThread: DBThread = await publishThread(threadObject, user.id);

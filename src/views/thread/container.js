@@ -5,6 +5,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import idx from 'idx';
+import slugg from 'slugg';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import Titlebar from 'src/views/titlebar';
@@ -21,7 +22,7 @@ import {
 } from 'shared/graphql/queries/thread/getThread';
 import { NullState } from 'src/components/upsell';
 import JoinChannel from 'src/components/upsell/joinChannel';
-import LoadingView from './components/loading';
+import LoadingThread from './components/loading';
 import ThreadCommunityBanner from './components/threadCommunityBanner';
 import Sidebar from './components/sidebar';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -36,8 +37,8 @@ import {
   WatercoolerDescription,
   WatercoolerIntroContainer,
   WatercoolerTitle,
-  WatercoolerAvatar,
 } from './style';
+import { CommunityAvatar } from 'src/components/avatar';
 import WatercoolerActionBar from './components/watercoolerActionBar';
 import { ErrorBoundary } from 'src/components/error';
 import generateImageFromText from 'src/helpers/generate-image-from-text';
@@ -162,8 +163,11 @@ class ThreadContainer extends React.Component<Props, State> {
   }
 
   handleScroll = e => {
-    e.persist();
     if (!e || !e.target) return;
+
+    if (e && e.persist) {
+      e.persist();
+    }
 
     // whenever the user scrolls in the thread we determine if they've scrolled
     // past the thread content section - once they've scroll passed it, we
@@ -350,11 +354,13 @@ class ThreadContainer extends React.Component<Props, State> {
           <WatercoolerIntroContainer
             innerRef={c => (this.threadDetailElem = c)}
           >
-            <WatercoolerAvatar
+            <CommunityAvatar
               community={thread.community}
               showHoverProfile={false}
               size={44}
+              style={{ marginBottom: '16px' }}
             />
+
             <Link to={`/${thread.community.slug}`}>
               <WatercoolerTitle>
                 The {thread.community.name} watercooler
@@ -554,7 +560,7 @@ class ThreadContainer extends React.Component<Props, State> {
     }
 
     if (isLoading) {
-      return <LoadingView threadViewContext={threadViewContext} />;
+      return <LoadingThread threadViewContext={threadViewContext} />;
     }
 
     return (

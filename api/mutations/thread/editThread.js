@@ -9,6 +9,11 @@ import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import {
+  LEGACY_PREFIX,
+  hasLegacyPrefix,
+  stripLegacyPrefix,
+} from 'shared/imgix';
 
 type Input = {
   input: EditThreadInput,
@@ -78,27 +83,59 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     );
   }
 
-  let attachments = [];
-  // if the thread came in with attachments
-  if (input.attachments) {
-    // iterate through them and construct a new attachment object
-    input.attachments.map(attachment => {
-      attachments.push({
-        attachmentType: attachment.attachmentType,
-        data: JSON.parse(attachment.data),
-      });
+  /*
+    When threads are sent to the client, all image urls are signed and proxied
+    via imgix. If a user edits the thread, we have to restore all image upload
+    urls back to their previous state so that we don't accidentally store
+    an encoded, signed, and expired image url back into the db
+  */
+  const initialBody = input.content.body && JSON.parse(input.content.body);
 
-      return null;
+  if (initialBody) {
+    const imageKeys = Object.keys(initialBody.entityMap).filter(
+      key => initialBody.entityMap[key].type.toLowerCase() === 'image'
+    );
+
+    const stripQueryParams = (str: string): string => {
+      if (
+        str.indexOf('https://spectrum.imgix.net') < 0 &&
+        str.indexOf('https://spectrum-proxy.imgix.net') < 0
+      ) {
+        return str;
+      }
+
+      const split = str.split('?');
+      // if no query params existed, we can just return the original image
+      if (split.length < 2) return str;
+
+      // otherwise the image path is everything before the first ? in the url
+      const imagePath = split[0];
+      // images are encoded during the signing process (shared/imgix/index.js)
+      // so they must be decoded here for accurate storage in the db
+      const decoded = decodeURIComponent(imagePath);
+      // we remove https://spectrum.imgix.net from the path as well so that the
+      // path represents the generic location of the file in s3 and decouples
+      // usage with imgix
+      const processed = hasLegacyPrefix(decoded)
+        ? stripLegacyPrefix(decoded)
+        : decoded;
+      return processed;
+    };
+
+    imageKeys.forEach((key, index) => {
+      if (!initialBody.entityMap[key[index]]) return;
+
+      const { src } = initialBody.entityMap[imageKeys[index]].data;
+      initialBody.entityMap[imageKeys[index]].data.src = stripQueryParams(src);
     });
   }
 
   const newInput = Object.assign({}, input, {
     ...input,
     content: {
-      ...input.content,
+      body: JSON.stringify(initialBody),
       title: input.content.title.trim(),
     },
-    attachments,
   });
 
   // $FlowIssue
@@ -131,9 +168,13 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   // Replace the local image srcs with the remote image src
   const body =
     editedThread.content.body && JSON.parse(editedThread.content.body);
+
   const imageKeys = Object.keys(body.entityMap).filter(
-    key => body.entityMap[key].type.toLowerCase() === 'image'
+    key =>
+      body.entityMap[key].type.toLowerCase() === 'image' &&
+      body.entityMap[key].data.src.startsWith('blob:')
   );
+
   urls.forEach((url, index) => {
     if (!body.entityMap[imageKeys[index]]) return;
     body.entityMap[imageKeys[index]].data.src = url;

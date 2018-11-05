@@ -133,20 +133,6 @@ describe('models/channel', () => {
     });
   });
 
-  describe('getChannelMetaData', () => {
-    it('excludes deleted channels', async () => {
-      expect(
-        await channel.getChannelMetaData(DELETED_COMMUNITY_DELETED_CHANNEL_ID)
-      ).toMatchSnapshot();
-    });
-
-    it('excludes deleted threads and non-members', async () => {
-      expect(
-        await channel.getChannelMetaData(SPECTRUM_GENERAL_CHANNEL_ID)
-      ).toMatchSnapshot();
-    });
-  });
-
   describe('getChannelsThreadCounts', () => {
     it('excludes deleted channels', async () => {
       expect(

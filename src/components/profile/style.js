@@ -106,7 +106,7 @@ export const Subtitle = styled.div`
 `;
 
 export const Description = styled.div`
-  font-size: 14px;
+  font-size: 16px;
   color: ${theme.text.alt};
   padding: 0 16px 16px;
   line-height: 1.4;
@@ -248,7 +248,7 @@ export const CoverLink = styled(ProfileHeaderLink)`
 
 export const CoverTitle = styled(Title)`
   font-size: 20px;
-  margin-top: 8px;
+  margin-top: 16px;
   text-align: center;
 `;
 
@@ -259,8 +259,8 @@ export const CoverSubtitle = styled(Subtitle)`
 `;
 
 export const CoverDescription = styled(Description)`
-  text-align: center;
   flex: auto;
+  margin-top: 8px;
 `;
 
 // had a hard time targeting the ChannelListItem component, so this is a janky way to get the overrides I needed.
@@ -280,28 +280,6 @@ export const ThreadProfileCard = styled(ProfileCard)`
   border-radius: 8px;
   box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 `;
-
-export const ProUpgrade = styled.div`
-  margin: 16px;
-  margin-top: 0;
-  display: flex;
-  align-items: stretch;
-  align-content: stretch;
-  justify-content: center;
-
-  button {
-    width: 100%;
-    text-align: center;
-  }
-`;
-
-// export const ReputationContainer = styled.div`
-//   border-top: 2px solid ${theme.bg.border};
-//   padding: 12px 0;
-//   margin: 0 16px;
-//   display: flex;
-//   color: ${theme.text.alt};
-// `;
 
 export const CoverPhoto = styled.div`
   position: relative;

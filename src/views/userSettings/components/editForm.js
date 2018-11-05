@@ -32,8 +32,6 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
   PRO_USER_MAX_IMAGE_SIZE_BYTES,
-  FREE_USER_MAX_IMAGE_SIZE_BYTES,
-  FREE_USER_MAX_IMAGE_SIZE_STRING,
 } from 'src/helpers/images';
 import { Notice } from 'src/components/listItems/style';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
@@ -53,7 +51,6 @@ type State = {
   createError: boolean,
   isLoading: boolean,
   photoSizeError: string,
-  proGifError: boolean,
   usernameError: string,
 };
 
@@ -84,7 +81,6 @@ class UserWithData extends React.Component<Props, State> {
       createError: false,
       isLoading: false,
       photoSizeError: '',
-      proGifError: false,
       usernameError: '',
     };
   }
@@ -137,34 +133,10 @@ class UserWithData extends React.Component<Props, State> {
       isLoading: true,
     });
 
-    if (!file) return;
-
-    if (
-      file &&
-      file.size > FREE_USER_MAX_IMAGE_SIZE_BYTES &&
-      !this.props.currentUser.isPro
-    ) {
-      return this.setState({
-        photoSizeError: `Upgrade to Pro to upload files up to ${PRO_USER_MAX_IMAGE_SIZE_STRING}. Otherwise, try uploading a photo less than ${FREE_USER_MAX_IMAGE_SIZE_STRING}.`,
-        isLoading: false,
-      });
-    }
-
-    if (
-      file &&
-      file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES &&
-      this.props.currentUser.isPro
-    ) {
+    if (file && file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES) {
       return this.setState({
         photoSizeError: `Try uploading a file less than ${PRO_USER_MAX_IMAGE_SIZE_STRING}.`,
         isLoading: false,
-      });
-    }
-
-    if (file && file.type === 'image/gif' && !this.props.currentUser.isPro) {
-      return this.setState({
-        isLoading: false,
-        proGifError: true,
       });
     }
 
@@ -174,7 +146,6 @@ class UserWithData extends React.Component<Props, State> {
         // $FlowFixMe
         image: reader.result,
         photoSizeError: '',
-        proGifError: false,
         isLoading: false,
       });
     };
@@ -194,32 +165,10 @@ class UserWithData extends React.Component<Props, State> {
       isLoading: true,
     });
 
-    if (
-      file &&
-      file.size > FREE_USER_MAX_IMAGE_SIZE_BYTES &&
-      !this.props.currentUser.isPro
-    ) {
-      return this.setState({
-        photoSizeError: `Upgrade to Pro to upload files up to ${PRO_USER_MAX_IMAGE_SIZE_STRING}. Otherwise, try uploading a photo less than ${FREE_USER_MAX_IMAGE_SIZE_STRING}.`,
-        isLoading: false,
-      });
-    }
-
-    if (
-      file &&
-      file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES &&
-      this.props.currentUser.isPro
-    ) {
+    if (file && file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES) {
       return this.setState({
         photoSizeError: `Try uploading a file less than ${PRO_USER_MAX_IMAGE_SIZE_STRING}.`,
         isLoading: false,
-      });
-    }
-
-    if (file && file.type === 'image/gif' && !this.props.currentUser.isPro) {
-      return this.setState({
-        isLoading: false,
-        proGifError: true,
       });
     }
 
@@ -229,7 +178,6 @@ class UserWithData extends React.Component<Props, State> {
         // $FlowFixMe
         coverPhoto: reader.result,
         photoSizeError: '',
-        proGifError: false,
         isLoading: false,
       });
     };
@@ -326,14 +274,13 @@ class UserWithData extends React.Component<Props, State> {
       nameError,
       isLoading,
       photoSizeError,
-      proGifError,
       usernameError,
     } = this.state;
 
     const postAuthRedirectPath = `?r=${CLIENT_URL}/users/${username}/settings`;
 
     return (
-      <SectionCard>
+      <SectionCard data-cy="user-edit-form">
         <Location>
           <Icon glyph="view-back" size={16} />
           <Link to={`/users/${username}`}>Return to Profile</Link>
@@ -357,15 +304,6 @@ class UserWithData extends React.Component<Props, State> {
             <Notice style={{ marginTop: '32px' }}>{photoSizeError}</Notice>
           )}
 
-          {proGifError && (
-            <Notice style={{ marginTop: '32px' }}>
-              Upgrade to Pro to use a gif as your profile or cover photo{' '}
-              <span role="img" aria-label="finger pointing right emoji">
-                👉
-              </span>
-            </Notice>
-          )}
-
           <div style={{ height: '8px' }} />
 
           <Input
@@ -373,6 +311,7 @@ class UserWithData extends React.Component<Props, State> {
             defaultValue={name}
             onChange={this.changeName}
             placeholder={"What's your name?"}
+            dataCy="user-name-input"
           >
             Name
           </Input>
@@ -386,6 +325,7 @@ class UserWithData extends React.Component<Props, State> {
             username={username}
             onValidationResult={this.handleUsernameValidation}
             onError={this.handleOnError}
+            dataCy="user-username-input"
           />
 
           {usernameError && (
@@ -396,13 +336,18 @@ class UserWithData extends React.Component<Props, State> {
             defaultValue={description}
             onChange={this.changeDescription}
             placeholder={'Introduce yourself to the class...'}
+            dataCy="user-description-input"
           >
             Bio
           </TextArea>
 
           {descriptionError && <Error>Bios can be up to 140 characters.</Error>}
 
-          <Input defaultValue={website} onChange={this.changeWebsite}>
+          <Input
+            defaultValue={website}
+            onChange={this.changeWebsite}
+            dataCy="user-website-input"
+          >
             Optional: Add your website
           </Input>
 
@@ -442,6 +387,7 @@ class UserWithData extends React.Component<Props, State> {
               }
               loading={isLoading}
               onClick={this.save}
+              dataCy="save-button"
             >
               Save
             </Button>

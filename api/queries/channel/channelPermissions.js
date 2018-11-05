@@ -2,31 +2,29 @@
 import type { GraphQLContext } from '../../';
 import type { DBChannel } from 'shared/types';
 
-export default (root: DBChannel, _: any, { user, loaders }: GraphQLContext) => {
+export default async (
+  root: DBChannel,
+  _: any,
+  { user, loaders }: GraphQLContext
+) => {
   const channelId = root.id;
+  const defaultPermissions = {
+    isOwner: false,
+    isMember: false,
+    isModerator: false,
+    isBlocked: false,
+    isPending: false,
+    receiveNotifications: false,
+  };
+
   if (!channelId || !user) {
-    return {
-      isOwner: false,
-      isMember: false,
-      isModerator: false,
-      isBlocked: false,
-      isPending: false,
-      receiveNotifications: false,
-    };
+    return defaultPermissions;
   }
-  return loaders.userPermissionsInChannel
-    .load([user.id, channelId])
-    .then(res => {
-      if (!res) {
-        return {
-          isOwner: false,
-          isMember: false,
-          isModerator: false,
-          isBlocked: false,
-          isPending: false,
-          receiveNotifications: false,
-        };
-      }
-      return res;
-    });
+
+  const permissions = await loaders.userPermissionsInChannel.load([
+    user.id,
+    channelId,
+  ]);
+
+  return permissions || defaultPermissions;
 };

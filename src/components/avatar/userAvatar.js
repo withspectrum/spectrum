@@ -1,7 +1,6 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import { Query } from 'react-apollo';
-import { optimize } from 'src/helpers/images';
 import {
   getUserByUsernameQuery,
   type GetUserType,
@@ -22,6 +21,11 @@ type HandlerProps = {
   showOnlineStatus?: boolean,
   clickable?: boolean,
   dataCy?: string,
+};
+
+type AvatarProps = {
+  ...$Exact<HandlerProps>,
+  user: GetUserType,
 };
 
 const GetUserByUsername = (props: HandlerProps) => {
@@ -47,45 +51,7 @@ const GetUserByUsername = (props: HandlerProps) => {
   );
 };
 
-export default class AvatarHandler extends Component<HandlerProps> {
-  render() {
-    const { showHoverProfile = true, clickable } = this.props;
-
-    if (this.props.user) {
-      const user = this.props.user;
-      return (
-        <ConditionalWrap
-          condition={showHoverProfile}
-          wrap={() => (
-            <UserHoverProfile username={user.username}>
-              <Avatar {...this.props} />
-            </UserHoverProfile>
-          )}
-        >
-          <Avatar {...this.props} />
-        </ConditionalWrap>
-      );
-    }
-
-    if (!this.props.user && this.props.username) {
-      return (
-        <GetUserByUsername
-          username={this.props.username}
-          clickable={clickable}
-        />
-      );
-    }
-
-    return null;
-  }
-}
-
-type AvatarProps = {
-  ...$Exact<HandlerProps>,
-  user: GetUserType,
-};
-
-class Avatar extends Component<AvatarProps> {
+class Avatar extends React.Component<AvatarProps> {
   render() {
     const {
       user,
@@ -100,15 +66,8 @@ class Avatar extends Component<AvatarProps> {
 
     const src = user.profilePhoto;
 
-    const optimizedAvatar =
-      src &&
-      optimize(src, {
-        w: size.toString(),
-        dpr: '2',
-        format: 'png',
-      });
     const userFallback = '/img/default_avatar.svg';
-    const source = [optimizedAvatar, userFallback];
+    const source = [src, userFallback];
 
     return (
       <Status
@@ -144,3 +103,38 @@ class Avatar extends Component<AvatarProps> {
     );
   }
 }
+
+class AvatarHandler extends React.Component<HandlerProps> {
+  render() {
+    const { showHoverProfile = true, clickable } = this.props;
+
+    if (this.props.user) {
+      const user = this.props.user;
+      return (
+        <ConditionalWrap
+          condition={showHoverProfile}
+          wrap={() => (
+            <UserHoverProfile username={user.username}>
+              <Avatar {...this.props} />
+            </UserHoverProfile>
+          )}
+        >
+          <Avatar {...this.props} />
+        </ConditionalWrap>
+      );
+    }
+
+    if (!this.props.user && this.props.username) {
+      return (
+        <GetUserByUsername
+          username={this.props.username}
+          clickable={clickable}
+        />
+      );
+    }
+
+    return null;
+  }
+}
+
+export default AvatarHandler;

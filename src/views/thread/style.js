@@ -2,7 +2,6 @@
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
-import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
 import { Button } from 'src/components/buttons';
 import Column from 'src/components/column';
 import {
@@ -275,10 +274,6 @@ export const BylineMeta = styled(FlexCol)`
   margin-left: 12px;
 `;
 
-export const AuthorAvatar = styled(UserAvatar)`
-  cursor: pointer;
-`;
-
 export const AuthorNameLink = styled(Link)`
   display: flex;
 `;
@@ -304,10 +299,7 @@ export const AuthorUsername = styled.span`
   align-items: center;
   font-weight: 400;
   margin-right: 4px;
-
-  @media (max-width: 768px) {
-    font-size: 12px;
-  }
+  align-self: flex-end;
 `;
 
 export const ReputationRow = styled.div``;
@@ -488,6 +480,7 @@ export const ThreadSubtitle = styled(CommunityHeaderSubtitle)`
   margin-top: 8px;
   display: flex;
   line-height: 1.5;
+  flex-wrap: wrap;
 
   a:hover {
     color: ${theme.text.default};
@@ -621,6 +614,7 @@ export const FollowButton = styled(Button)`
   border: 1px solid ${theme.bg.border};
   color: ${theme.text.alt};
   padding: 4px;
+  margin-left: 24px;
 
   &:hover {
     background: ${theme.bg.default};
@@ -792,10 +786,6 @@ export const WatercoolerTitle = styled.h3`
   font-weight: 500;
   color: ${theme.text.default};
   margin-bottom: 8px;
-`;
-
-export const WatercoolerAvatar = styled(CommunityAvatar)`
-  margin-bottom: 16px;
 `;
 
 export const AnimatedContainer = styled.div`

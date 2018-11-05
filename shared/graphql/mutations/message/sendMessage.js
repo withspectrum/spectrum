@@ -42,6 +42,7 @@ const sendMessageOptions = {
             id: fakeId,
             timestamp: JSON.parse(JSON.stringify(new Date())),
             messageType: message.messageType,
+            modifiedAt: '',
             author: {
               user: {
                 ...(ownProps.currentUser || author),

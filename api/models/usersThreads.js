@@ -1,6 +1,6 @@
 // @flow
 import type { DBUsersThreads } from 'shared/types';
-const { db } = require('./db');
+const { db } = require('shared/db');
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 

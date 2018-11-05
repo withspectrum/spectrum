@@ -163,8 +163,8 @@ class MessagesWithData extends React.Component<Props, State> {
       <NullMessagesWrapper>
         <Icon glyph={'emoji'} size={64} />
         <NullCopy>
-          No messages have been sent in this conversation yet - why don’t you
-          kick things off below?
+          No messages have been sent in this conversation yet—why don’t you kick
+          things off below?
         </NullCopy>
       </NullMessagesWrapper>
     );
@@ -178,7 +178,7 @@ class MessagesWithData extends React.Component<Props, State> {
       <NullMessagesWrapper>
         <Icon glyph="share" size={64} />
         <NullCopy>
-          Nobody has replied yet - why don't you share it with your friends?
+          Nobody has replied yet—why don’t you share it with your friends?
         </NullCopy>
         <SocialShareWrapper>
           <A
@@ -250,7 +250,8 @@ class MessagesWithData extends React.Component<Props, State> {
 
     if (messagesExist) {
       const { edges, pageInfo } = data.thread.messageConnection;
-      const unsortedMessages = edges.map(message => message && message.node);
+      const unsortedMessages =
+        edges && edges.map(message => message && message.node);
 
       const uniqueMessages = deduplicateChildren(unsortedMessages, 'id');
       const sortedMessages = sortAndGroupMessages(uniqueMessages);
@@ -326,7 +327,7 @@ class MessagesWithData extends React.Component<Props, State> {
       );
     }
 
-    if (!messagesExist) {
+    if (!isLoading && !messagesExist) {
       if (isLocked || !this.props.data.thread) return null;
 
       return this.getIsAuthor()

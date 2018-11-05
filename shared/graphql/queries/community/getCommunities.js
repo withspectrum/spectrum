@@ -42,11 +42,9 @@ export const getCommunitiesBySlugsQuery = gql`
   query getCommunitiesBySlugs($slugs: [LowercaseString]) {
     communities(slugs: $slugs) {
       ...communityInfo
-      ...communityMetaData
     }
   }
   ${communityInfoFragment}
-  ${communityMetaDataFragment}
 `;
 
 const getCommunitiesBySlugOptions = {
@@ -67,11 +65,9 @@ const getCommunitiesByCuratedContentTypeQuery = gql`
   query getCommunitiesCollection($curatedContentType: String) {
     communities(curatedContentType: $curatedContentType) {
       ...communityInfo
-      ...communityMetaData
     }
   }
   ${communityInfoFragment}
-  ${communityMetaDataFragment}
 `;
 
 const getCommunitiesByCuratedContentTypeOptions = {

@@ -32,7 +32,11 @@ class ConversationGrowth extends React.Component<Props> {
   };
 
   render() {
-    const { data: { community }, isLoading, currentUser } = this.props;
+    const {
+      data: { community },
+      isLoading,
+      currentUser,
+    } = this.props;
     const title = 'Top members this week';
 
     if (community) {

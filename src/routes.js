@@ -26,8 +26,8 @@ import Navbar from './views/navbar';
 import Status from './views/status';
 import Login from './views/login';
 import DirectMessages from './views/directMessages';
-import Thread from './views/thread';
 import RedirectOldThreadRoute from './views/thread/redirect-old-route';
+import { FullscreenThreadView } from './views/thread';
 
 /* prettier-ignore */
 const Explore = Loadable({
@@ -214,8 +214,6 @@ class Routes extends React.Component<Props> {
                 <Route path="/terms.html" component={Pages} />
                 <Route path="/privacy.html" component={Pages} />
                 <Route path="/code-of-conduct" component={Pages} />
-                <Route path="/pricing/concierge" component={Pages} />
-                <Route path="/pricing" component={Pages} />
                 <Route path="/support" component={Pages} />
                 <Route path="/features" component={Pages} />
                 <Route path="/faq" component={Pages} />
@@ -315,7 +313,7 @@ class Routes extends React.Component<Props> {
                   // - /~id-123-id => id-123-id => id-123-id, empty custom slug also works
                   // - /some~custom~slug~id-123-id => id-123-id, custom slug with delimiter char in it (~) also works! :tada:
                   path="/:communitySlug/:channelSlug/(.*~)?:threadId"
-                  component={Thread}
+                  component={FullscreenThreadView}
                 />
                 <Route
                   path="/:communitySlug/:channelSlug"
