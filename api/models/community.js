@@ -7,8 +7,9 @@ import getRandomDefaultPhoto from '../utils/get-random-default-photo';
 import {
   sendNewCommunityWelcomeEmailQueue,
   _adminSendCommunityCreatedEmailQueue,
+  searchQueue,
+  trackQueue,
 } from 'shared/bull/queues';
-import { trackQueue } from 'shared/bull/queues';
 import { events } from 'shared/analytics';
 import type { DBCommunity, DBUser } from 'shared/types';
 import type { Timeframe } from './utils';
@@ -253,6 +254,12 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
         context: { communityId: community.id },
       });
 
+      searchQueue.add({
+        id: community.id,
+        type: 'community',
+        event: 'created'
+      })
+
       // send a welcome email to the community creator
       sendNewCommunityWelcomeEmailQueue.add({ user, community });
       // email brian with info about the community and owner
@@ -426,6 +433,12 @@ export const editCommunity = ({ input }: EditCommunityInput, userId: string): Pr
       });
     })
     .then(community => {
+      searchQueue.add({
+        id: community.id,
+        type: 'community',
+        event: 'edited'
+      })
+
       // if no file was uploaded, update the community with new string values
       if (!file && !coverFile) {
         return db
@@ -592,6 +605,12 @@ export const deleteCommunity = (communityId: string, userId: string): Promise<DB
         event: events.COMMUNITY_DELETED,
         context: { communityId },
       });
+
+      searchQueue.add({
+        id: communityId,
+        type: 'community',
+        event: 'deleted'
+      })
     });
 };
 
