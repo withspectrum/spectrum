@@ -20,6 +20,7 @@ const CommunitySearchWrapper = props => {
     margin-top: 40px;
     margin-bottom: 0;
     padding: 16px;
+    padding-bottom: 48px;
 
     @media (max-width: 640px) {
       margin-top: 80px;
