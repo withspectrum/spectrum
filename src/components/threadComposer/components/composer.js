@@ -1,9 +1,9 @@
+// @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
 import Textarea from 'react-textarea-autosize';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import debounce from 'debounce';
 import { closeComposer } from '../../../actions/composer';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -22,7 +22,6 @@ import { TextButton, Button } from '../../buttons';
 import { FlexRow } from '../../../components/globals';
 import { LoadingComposer } from '../../loading';
 import viewNetworkHandler from '../../viewNetworkHandler';
-import type { PublishThreadType } from 'shared/graphql/mutations/thread/publishThread';
 import {
   Container,
   Composer,
@@ -71,51 +70,16 @@ const LS_BODY_KEY = 'last-thread-composer-body';
 const LS_TITLE_KEY = 'last-thread-composer-title';
 const LS_COMPOSER_EXPIRE = 'last-thread-composer-expire';
 
-const ONE_DAY = () => new Date().getTime() + 60 * 60 * 24 * 1000;
-
-const REMOVE_STORAGE = () => {
-  localStorage.removeItem(LS_BODY_KEY);
-  localStorage.removeItem(LS_TITLE_KEY);
-  localStorage.removeItem(LS_COMPOSER_EXPIRE);
-};
-
-let storedBody;
-let storedTitle;
-// We persist the body and title to localStorage
-// so in case the app crashes users don't loose content
-if (localStorage) {
-  try {
-    const expireTime = localStorage.getItem(LS_COMPOSER_EXPIRE);
-    const currTime = new Date().getTime();
-    /////if current time is greater than valid till of text then please expire title/body back to ''
-    if (currTime > expireTime) {
-      REMOVE_STORAGE();
-    } else {
-      storedBody = toState(JSON.parse(localStorage.getItem(LS_BODY_KEY) || ''));
-      storedTitle = localStorage.getItem(LS_TITLE_KEY);
-    }
-  } catch (err) {
-    REMOVE_STORAGE();
-  }
-}
-
-const persistTitle =
-  localStorage &&
-  debounce((title: string) => {
-    localStorage.setItem(LS_TITLE_KEY, title);
-    localStorage.setItem(LS_COMPOSER_EXPIRE, ONE_DAY());
-  }, 500);
-
-const persistBody =
-  localStorage &&
-  debounce(body => {
-    localStorage.setItem(LS_BODY_KEY, JSON.stringify(toJSON(body)));
-    localStorage.setItem(LS_COMPOSER_EXPIRE, ONE_DAY());
-  }, 500);
+const ONE_DAY = (new Date().getTime() + 60 * 60 * 24 * 1000).toString();
 
 class ThreadComposerWithData extends React.Component<Props, State> {
+  bodyEditor: any;
+  titleTextarea: any;
+
   constructor(props) {
     super(props);
+
+    const { storedBody, storedTitle } = this.getStoredContent();
 
     this.state = {
       isMounted: true,
@@ -129,6 +93,57 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       postWasPublished: false,
     };
   }
+
+  removeStorage = () => {
+    localStorage.removeItem(LS_BODY_KEY);
+    localStorage.removeItem(LS_TITLE_KEY);
+    localStorage.removeItem(LS_COMPOSER_EXPIRE);
+  };
+
+  getStoredContent = () => {
+    // We persist the body and title to localStorage
+    // so in case the app crashes users don't loose content
+    let storedBody, storedTitle;
+
+    if (this.hasLocalStorage()) {
+      try {
+        const expireTime = localStorage.getItem(LS_COMPOSER_EXPIRE);
+        const currTime = new Date().getTime();
+        /////if current time is greater than valid till of text then please expire title/body back to ''
+        if (currTime > parseInt(expireTime, 10)) {
+          this.removeStorage();
+          return { storedBody, storedTitle };
+        } else {
+          storedBody = toState(
+            JSON.parse(localStorage.getItem(LS_BODY_KEY) || '')
+          );
+          storedTitle = localStorage.getItem(LS_TITLE_KEY);
+          return { storedBody, storedTitle };
+        }
+      } catch (err) {
+        this.removeStorage();
+        return { storedBody, storedTitle };
+      }
+    }
+
+    return { storedBody, storedTitle };
+  };
+
+  hasLocalStorage = () => !!localStorage;
+
+  persistTitle = title => {
+    if (this.hasLocalStorage()) {
+      localStorage.setItem(LS_TITLE_KEY, title);
+      localStorage.setItem(LS_COMPOSER_EXPIRE, ONE_DAY);
+    }
+  };
+
+  persistBody = body => {
+    if (this.hasLocalStorage()) {
+      localStorage.setItem(LS_BODY_KEY, JSON.stringify(toJSON(body)));
+      localStorage.setItem(LS_COMPOSER_EXPIRE, ONE_DAY);
+    }
+  };
 
   handleIncomingProps = props => {
     const { isMounted } = this.state;
@@ -206,7 +221,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
         : availableCommunities);
 
     activeCommunity =
-      activeCommunity && activeCommunity.length > 0
+      activeCommunity && activeCommunity.length > 0 && !!activeCommunity[0]
         ? activeCommunity[0].id
         : null;
 
@@ -221,11 +236,8 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     }
   };
 
-  setActiveStuff = (
-    availableCommunities,
-    availableChannels,
-    activeCommunity
-  ) => {
+  // prettier-ignore
+  setActiveStuff = (availableCommunities, availableChannels, activeCommunity) => {
     const props = this.props;
     const { isMounted } = this.state;
     if (!isMounted) return;
@@ -240,6 +252,8 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       activeChannel = activeCommunityChannels.filter(
         channel =>
           channel &&
+          props.activeChannel &&
+          // $FlowFixMe
           channel.slug.toLowerCase() === props.activeChannel.toLowerCase()
       );
     } else {
@@ -260,7 +274,9 @@ class ThreadComposerWithData extends React.Component<Props, State> {
 
     // ensure that if no items were found for some reason, we don't crash the app
     // and instead just set null values on the composer
-    activeChannel = activeChannel.length > 0 ? activeChannel[0].id : null;
+    activeChannel = (activeChannel.length > 0 && !!activeChannel[0]) ? activeChannel[0].id : null;
+
+    const { storedTitle, storedBody } = this.getStoredContent()
 
     this.setState({
       title: storedTitle || '',
@@ -321,7 +337,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
 
     // if a post was published, in this session, clear redux so that the next
     // composer open will start fresh
-    if (postWasPublished) return this.closeComposer('clear');
+    if (postWasPublished) return this.closeComposer();
 
     // otherwise, clear the composer normally and save the state
     return this.closeComposer();
@@ -337,20 +353,17 @@ class ThreadComposerWithData extends React.Component<Props, State> {
   changeTitle = e => {
     const title = e.target.value;
     if (/\n$/g.test(title)) {
-      this.bodyEditor.focus && this.bodyEditor.focus();
+      this.bodyEditor && this.bodyEditor.focus && this.bodyEditor.focus();
       return;
     }
-    persistTitle(title);
-    this.setState({
-      title,
-    });
+
+    this.persistTitle(title);
+    this.setState({ title });
   };
 
   changeBody = body => {
-    persistBody(body);
-    this.setState({
-      body,
-    });
+    this.persistBody(body);
+    this.setState({ body });
   };
 
   componentDidUpdate(prevProps) {
@@ -416,12 +429,11 @@ class ThreadComposerWithData extends React.Component<Props, State> {
   closeComposer = (clear?: string) => {
     // we will clear the composer if it unmounts as a result of a post
     // being published, that way the next composer open will start fresh
-    if (clear) return this.props.dispatch(closeComposer('', ''));
+    if (clear) return this.props.dispatch(closeComposer());
 
     // otherwise, we will save the editor state to rehydrate the title and
     // body if the user reopens the composer in the same session
-    const { title, body } = this.state;
-    this.props.dispatch(closeComposer(title, body));
+    this.props.dispatch(closeComposer());
   };
 
   setActiveCommunity = e => {
@@ -439,6 +451,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
         // select that channel
         if (
           this.props.activeChannel &&
+          newActiveCommunityData &&
           this.props.activeCommunity === newActiveCommunityData.slug
         ) {
           return channel.slug === this.props.activeChannel;
@@ -534,11 +547,11 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       .publishThread(thread)
       // after the mutation occurs, it will either return an error or the new
       // thread that was published
-      .then(({ data }: PublishThreadType) => {
+      .then(({ data }) => {
         // get the thread id to redirect the user
         const id = data.publishThread.id;
 
-        REMOVE_STORAGE();
+        this.removeStorage();
 
         // stop the loading spinner on the publish button
         this.setState({
@@ -556,7 +569,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
           addToastWithTimeout('success', 'Thread published!')
         );
 
-        this.props.dispatch(closeComposer('', ''));
+        this.props.dispatch(closeComposer());
 
         return;
       })
