@@ -2,33 +2,33 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Link from '../../components/link';
-import { Button } from '../../components/buttons';
+import Link from 'src/components/link';
+import { Button } from 'src/components/buttons';
 import generateMetaInfo from 'shared/generate-meta-info';
-import ThreadComposer from '../../components/threadComposer';
-import Head from '../../components/head';
-import Icon from '../../components/icons';
-import AppViewWrapper from '../../components/appViewWrapper';
-import ThreadFeed from '../../components/threadFeed';
+import ThreadComposer from 'src/components/threadComposer';
+import Head from 'src/components/head';
+import Icon from 'src/components/icons';
+import AppViewWrapper from 'src/components/appViewWrapper';
+import ThreadFeed from 'src/components/threadFeed';
 import Search from './components/search';
 import CommunityMemberGrid from './components/memberGrid';
-import ToggleCommunityMembership from '../../components/toggleCommunityMembership';
-import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
-import { CoverPhoto } from '../../components/profile/coverPhoto';
+import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
+import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
+import { CoverPhoto } from 'src/components/profile/coverPhoto';
 import Titlebar from '../titlebar';
-import { CommunityProfile } from '../../components/profile';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
-import type { ViewNetworkHandlerType } from '../../components/viewNetworkHandler';
-import ViewError from '../../components/viewError';
-import { LoadingScreen } from '../../components/loading';
-import { CLIENT_URL } from '../../api/constants';
-import { Upsell404Community } from '../../components/upsell';
+import { CommunityProfile } from 'src/components/profile';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import type { ViewNetworkHandlerType } from 'src/components/viewNetworkHandler';
+import ViewError from 'src/components/viewError';
+import { LoadingScreen } from 'src/components/loading';
+import { CLIENT_URL } from 'src/api/constants';
+import { Upsell404Community } from 'src/components/upsell';
 import {
   SegmentedControl,
   Segment,
   DesktopSegment,
   MobileSegment,
-} from '../../components/segmentedControl';
+} from 'src/components/segmentedControl';
 import {
   LoginButton,
   Grid,
