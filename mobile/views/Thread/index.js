@@ -54,7 +54,9 @@ class Thread extends React.Component<Props> {
   }
 
   trackView = () => {
-    const { data: { thread } } = this.props;
+    const {
+      data: { thread },
+    } = this.props;
     if (!thread) return;
     track(events.THREAD_VIEWED, {
       thread: transformations.analyticsThread(thread),
@@ -64,7 +66,10 @@ class Thread extends React.Component<Props> {
   };
 
   setTitle = () => {
-    const { data: { thread }, navigation } = this.props;
+    const {
+      data: { thread },
+      navigation,
+    } = this.props;
     let title;
     if (thread) {
       title = thread.content.title;
@@ -107,7 +112,10 @@ class Thread extends React.Component<Props> {
   };
 
   sendMessage = (body: string, user: Object) => {
-    const { quotedMessage, data: { thread } } = this.props;
+    const {
+      quotedMessage,
+      data: { thread },
+    } = this.props;
     if (!thread) return;
     this.props.sendMessage(
       {

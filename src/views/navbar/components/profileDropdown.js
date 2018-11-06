@@ -4,9 +4,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
-import Dropdown from '../../../components/dropdown';
-import { SERVER_URL } from '../../../api/constants';
+import Dropdown from 'src/components/dropdown';
+import { SERVER_URL } from 'src/api/constants';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
+import { isMac } from 'src/helpers/is-os';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 const UserProfileDropdown = styled(Dropdown)`
   width: 200px;
@@ -58,6 +60,16 @@ const ProfileDropdown = (props: ProfileProps) => {
             </UserProfileDropdownListItem>
           </Link>
         )}
+
+        {isMac() &&
+          !isDesktopApp() && (
+            <Link to={`/apps`}>
+              <UserProfileDropdownListItem>
+                Desktop App
+              </UserProfileDropdownListItem>
+            </Link>
+          )}
+
         <Link to={`/about`}>
           <UserProfileDropdownListItem>
             About Spectrum

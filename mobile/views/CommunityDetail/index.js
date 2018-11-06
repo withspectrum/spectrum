@@ -47,7 +47,11 @@ class CommunityDetail extends React.Component<Props> {
   };
 
   render() {
-    const { data: { community }, isLoading, hasError } = this.props;
+    const {
+      data: { community },
+      isLoading,
+      hasError,
+    } = this.props;
 
     if (community && community.id) {
       const variables = { input: { communityId: community.id } };

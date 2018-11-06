@@ -218,4 +218,7 @@ class Messages extends Component<Props> {
   }
 }
 
-export default compose(viewNetworkHandler, withCurrentUser)(Messages);
+export default compose(
+  viewNetworkHandler,
+  withCurrentUser
+)(Messages);

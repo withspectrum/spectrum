@@ -131,7 +131,8 @@ class NotificationSettings extends React.Component<Props, State> {
                   href="https://support.sendpulse.com/456261-How-to-Unblock-Web-Push-Notifications"
                 >
                   these steps
-                </a>.
+                </a>
+                .
               </Notice>
             )}
           </EmailListItem>
@@ -141,4 +142,7 @@ class NotificationSettings extends React.Component<Props, State> {
   }
 }
 
-export default compose(subscribeToWebPush, connect())(NotificationSettings);
+export default compose(
+  subscribeToWebPush,
+  connect()
+)(NotificationSettings);

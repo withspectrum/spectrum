@@ -27,8 +27,8 @@ class Toasts extends React.Component<Props, State> {
   opacityValue = new Animated.Value(0);
   containerTimeoutTiming = 3000;
   animationDuration = 200;
-  removeToastTimeoutTiming = this.containerTimeoutTiming +
-    this.animationDuration;
+  removeToastTimeoutTiming =
+    this.containerTimeoutTiming + this.animationDuration;
   hideContainerTimeout = undefined;
 
   state = {
@@ -147,4 +147,7 @@ class Toasts extends React.Component<Props, State> {
 }
 
 const map = (state: ReduxState): * => ({ toasts: state.toasts });
-export default compose(connect(map), withTheme)(Toasts);
+export default compose(
+  connect(map),
+  withTheme
+)(Toasts);

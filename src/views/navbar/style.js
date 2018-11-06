@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import { Transition, FlexRow, hexa, zIndex } from 'src/components/globals';
 import { UserAvatar } from 'src/components/avatar';
-import { isDesktopApp } from 'src/helpers/is-desktop-app';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 export const Nav = styled.nav`
   display: grid;

@@ -41,6 +41,7 @@ const ChatInputContainer = (props: Props) => {
   );
 };
 
-export default compose(withNavigation, connect(mapStateToProps))(
-  ChatInputContainer
-);
+export default compose(
+  withNavigation,
+  connect(mapStateToProps)
+)(ChatInputContainer);

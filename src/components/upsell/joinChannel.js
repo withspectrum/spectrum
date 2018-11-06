@@ -114,6 +114,7 @@ class JoinChannel extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), toggleChannelSubscriptionMutation)(
-  JoinChannel
-);
+export default compose(
+  connect(),
+  toggleChannelSubscriptionMutation
+)(JoinChannel);

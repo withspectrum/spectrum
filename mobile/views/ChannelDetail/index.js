@@ -48,7 +48,11 @@ class ChannelDetail extends React.Component<Props> {
   };
 
   render() {
-    const { data: { channel }, isLoading, hasError } = this.props;
+    const {
+      data: { channel },
+      isLoading,
+      hasError,
+    } = this.props;
 
     if (channel && channel.id) {
       const variables = { channelId: channel.id };

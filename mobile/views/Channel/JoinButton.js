@@ -95,4 +95,7 @@ class JoinButton extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), toggleChannelSubscription)(JoinButton);
+export default compose(
+  connect(),
+  toggleChannelSubscription
+)(JoinButton);

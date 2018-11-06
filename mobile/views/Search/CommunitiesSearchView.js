@@ -36,7 +36,9 @@ class CommunitiesSearchView extends Component<Props> {
     const { isLoading, data, navigation, hasError } = this.props;
 
     if (data.search) {
-      const { search: { searchResultsConnection } } = data;
+      const {
+        search: { searchResultsConnection },
+      } = data;
       const hasResults =
         searchResultsConnection && searchResultsConnection.edges.length > 0;
       const results = hasResults
@@ -85,6 +87,7 @@ class CommunitiesSearchView extends Component<Props> {
   }
 }
 
-export default compose(searchCommunitiesQuery, viewNetworkHandler)(
-  CommunitiesSearchView
-);
+export default compose(
+  searchCommunitiesQuery,
+  viewNetworkHandler
+)(CommunitiesSearchView);
