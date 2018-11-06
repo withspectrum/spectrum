@@ -29,14 +29,16 @@ class DesktopAppUpsell extends React.Component<{}, State> {
     super();
 
     this.state = {
-      isVisible: isMac() && !isDesktopApp() && !hasDismissedDesktopAppUpsell(),
+      isVisible: false,
     };
   }
 
   componentDidMount() {
-    const { isVisible } = this.state;
+    const desktopUpsellVisible =
+      !!isMac() && !isDesktopApp() && !hasDismissedDesktopAppUpsell();
 
-    if (isVisible) {
+    if (desktopUpsellVisible) {
+      this.setState({ isVisible: true });
       track(events.INBOX_DOWNLOAD_MAC_VIEWED);
     }
   }
