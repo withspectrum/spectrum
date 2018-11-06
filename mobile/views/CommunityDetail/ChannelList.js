@@ -20,7 +20,11 @@ type Props = {
 
 class ChannelList extends React.Component<Props> {
   render() {
-    const { data: { community }, isLoading, navigation } = this.props;
+    const {
+      data: { community },
+      isLoading,
+      navigation,
+    } = this.props;
 
     if (community && community.channelConnection) {
       const nodes = community.channelConnection.edges

@@ -63,6 +63,7 @@ class CommunityUpsellCards extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunitiesByCuratedContentType, ViewNetworkHandler)(
-  CommunityUpsellCards
-);
+export default compose(
+  getCommunitiesByCuratedContentType,
+  ViewNetworkHandler
+)(CommunityUpsellCards);

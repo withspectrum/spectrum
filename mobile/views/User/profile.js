@@ -43,7 +43,10 @@ class User extends Component<Props, State> {
   state = { feed: 'participant' };
 
   setTitle = () => {
-    const { data: { user }, navigation } = this.props;
+    const {
+      data: { user },
+      navigation,
+    } = this.props;
     let title;
     if (user) {
       title = `${user.name} (@${user.username})`;
@@ -57,7 +60,10 @@ class User extends Component<Props, State> {
   };
 
   setId = () => {
-    const { data: { user }, navigation } = this.props;
+    const {
+      data: { user },
+      navigation,
+    } = this.props;
     if (!user) return;
     const oldId = navigation.getParam('id', null);
     if (oldId === user.id) return;

@@ -59,7 +59,11 @@ class CommunityMemberGrid extends React.Component<Props, State> {
   }
 
   render() {
-    const { data: { community }, isLoading, currentUser } = this.props;
+    const {
+      data: { community },
+      isLoading,
+      currentUser,
+    } = this.props;
     const { scrollElement } = this.state;
 
     if (community) {

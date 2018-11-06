@@ -8,6 +8,7 @@ import SetUsername from './components/setUsername';
 import JoinFirstCommunity from './components/joinFirstCommunity';
 import TopCommunities from './components/discoverCommunities';
 import Search from './components/communitySearch';
+import AppsUpsell from './components/appsUpsell';
 import {
   OnboardingContainer,
   OnboardingContent,
@@ -23,6 +24,7 @@ import {
 import { track, events } from 'src/helpers/analytics';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 type StateProps = {|
   community: CommunityInfoType,
@@ -34,11 +36,19 @@ type Props = StateProps & {|
   noCloseButton: boolean,
 |};
 
-type ActiveStep = 'discoverCommunities' | 'setUsername' | 'joinFirstCommunity';
+type ActiveStep =
+  | 'discoverCommunities'
+  | 'setUsername'
+  | 'joinFirstCommunity'
+  | 'appsUpsell';
 
 type State = {|
   activeStep: ActiveStep,
   joinedCommunities: number,
+  appUpsellCopy: {
+    title: string,
+    subtitle: string,
+  },
 |};
 
 class NewUserOnboarding extends Component<Props, State> {
@@ -60,6 +70,10 @@ class NewUserOnboarding extends Component<Props, State> {
       // we keep track of the total joined count with a number, rathern than
       // a boolean
       joinedCommunities: 0,
+      appUpsellCopy: {
+        title: 'Download the app',
+        subtitle: 'A better way to keep up with your communities.',
+      },
     };
   }
   //
@@ -75,6 +89,8 @@ class NewUserOnboarding extends Component<Props, State> {
     const { community } = this.props;
 
     track(events.USER_ONBOARDING_SET_USERNAME);
+
+    if (!isDesktopApp()) return this.toStep('appsUpsell');
 
     // if the user signed up via a community, channel, or thread view, the first
     // thing they will be asked to do is set a username. After they save their
@@ -118,9 +134,35 @@ class NewUserOnboarding extends Component<Props, State> {
     }
   };
 
+  appUpsellComplete = () => {
+    const { community } = this.props;
+
+    // if the user signed up via a community, channel, or thread view, the first
+    // thing they will be asked to do is set a username. After they save their
+    // username, they should proceed to the 'joinFirstCommunity' step; otherwise
+    // we can just close the onboarding
+    if (!community) return this.props.close();
+    // if the user signed in via a comunity, channel, or thread view, but they
+    // are already members of that community, we can escape the onboarding
+    if (community.communityPermissions.isMember) return this.props.close();
+
+    // if the user signed up via a community, channel, or thread view and
+    // has not yet joined that community, move them to that step in the onboarding
+    return this.toStep('joinFirstCommunity');
+  };
+
+  onAppDownload = () => {
+    return this.setState({
+      appUpsellCopy: {
+        title: 'Your download is starting!',
+        subtitle: 'Continue in the app, or keep going here.',
+      },
+    });
+  };
+
   render() {
     const { community, currentUser } = this.props;
-    const { activeStep, joinedCommunities } = this.state;
+    const { activeStep, joinedCommunities, appUpsellCopy } = this.state;
 
     const steps = {
       setUsername: {
@@ -140,6 +182,11 @@ class NewUserOnboarding extends Component<Props, State> {
         title: 'Find your people.',
         subtitle:
           'There are hundreds of communities on Spectrum to explore. Check out some of our favorites below or search for topics.',
+        emoji: null,
+      },
+      appsUpsell: {
+        title: appUpsellCopy.title,
+        subtitle: appUpsellCopy.subtitle,
         emoji: null,
       },
     };
@@ -193,6 +240,13 @@ class NewUserOnboarding extends Component<Props, State> {
                   </ContinueButton>
                 </StickyRow>
               </Container>
+            )}
+
+            {activeStep === 'appsUpsell' && (
+              <AppsUpsell
+                onDownload={this.onAppDownload}
+                nextStep={this.appUpsellComplete}
+              />
             )}
           </OnboardingContent>
         </OnboardingContainer>

@@ -24,7 +24,7 @@ import {
 } from './style';
 import { track, events } from 'src/helpers/analytics';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
-import { isDesktopApp } from 'src/helpers/is-desktop-app';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 type Props = {
   isLoading: boolean,

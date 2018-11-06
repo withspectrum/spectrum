@@ -39,32 +39,35 @@ type Props = {
   },
 };
 
-const RemoteThreadItem = compose(getThreadById, withNavigation)(
-  ({ data, navigation }) => {
-    if (data.loading) return <Loading />;
-    if (!data.thread) return null;
-    return (
-      <ThreadListItem
-        refetch={data.refetch}
-        activeCommunity={data.thread.community.id}
-        thread={data.thread}
-        onPressHandler={() =>
-          navigation.navigate({
-            routeName: 'Thread',
-            key: data.thread.id,
-            params: { id: data.thread.id },
-          })
-        }
-      />
-    );
-  }
-);
+const RemoteThreadItem = compose(
+  getThreadById,
+  withNavigation
+)(({ data, navigation }) => {
+  if (data.loading) return <Loading />;
+  if (!data.thread) return null;
+  return (
+    <ThreadListItem
+      refetch={data.refetch}
+      activeCommunity={data.thread.community.id}
+      thread={data.thread}
+      onPressHandler={() =>
+        navigation.navigate({
+          routeName: 'Thread',
+          key: data.thread.id,
+          params: { id: data.thread.id },
+        })
+      }
+    />
+  );
+});
 
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 
 class Community extends Component<Props> {
   trackView = () => {
-    const { data: { community } } = this.props;
+    const {
+      data: { community },
+    } = this.props;
     if (!community) return;
     track(events.COMMUNITY_VIEWED, {
       community: transformations.analyticsCommunity(community),
@@ -72,7 +75,10 @@ class Community extends Component<Props> {
   };
 
   setTitle = () => {
-    const { data: { community }, navigation } = this.props;
+    const {
+      data: { community },
+      navigation,
+    } = this.props;
     let title;
     if (community) {
       title = community.name;
@@ -104,7 +110,12 @@ class Community extends Component<Props> {
   }
 
   render() {
-    const { data: { community }, isLoading, hasError, navigation } = this.props;
+    const {
+      data: { community },
+      isLoading,
+      hasError,
+      navigation,
+    } = this.props;
 
     if (community) {
       return (
@@ -174,4 +185,7 @@ class Community extends Component<Props> {
   }
 }
 
-export default compose(getCommunityById, ViewNetworkHandler)(Community);
+export default compose(
+  getCommunityById,
+  ViewNetworkHandler
+)(Community);

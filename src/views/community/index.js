@@ -50,7 +50,10 @@ import CommunityLogin from 'src/views/communityLogin';
 import Login from 'src/views/login';
 import { ErrorBoundary } from 'src/components/error';
 
-const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
+const CommunityThreadFeed = compose(
+  connect(),
+  getCommunityThreads
+)(ThreadFeed);
 
 type Props = {
   ...$Exact<ViewNetworkHandlerType>,
@@ -118,7 +121,9 @@ class CommunityView extends React.Component<Props, State> {
   }
 
   setComposerUpsell = () => {
-    const { data: { community } } = this.props;
+    const {
+      data: { community },
+    } = this.props;
     const communityExists = community && community.communityPermissions;
     if (!communityExists) return;
 
@@ -339,9 +344,11 @@ class CommunityView extends React.Component<Props, State> {
                   onClick={() => this.handleSegmentClick('members')}
                   selected={selectedView === 'members'}
                 >
-                  Members ({community.metaData &&
+                  Members (
+                  {community.metaData &&
                     community.metaData.members &&
-                    community.metaData.members.toLocaleString()})
+                    community.metaData.members.toLocaleString()}
+                  )
                 </DesktopSegment>
                 <MobileSegment
                   segmentLabel="members"

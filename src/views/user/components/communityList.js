@@ -72,6 +72,8 @@ class CommunityList extends React.Component<Props> {
   }
 }
 
-export default compose(withRouter, getUserCommunityConnection, connect())(
-  CommunityList
-);
+export default compose(
+  withRouter,
+  getUserCommunityConnection,
+  connect()
+)(CommunityList);

@@ -102,6 +102,8 @@ class JoinButton extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), addCommunityMember, removeCommunityMember)(
-  JoinButton
-);
+export default compose(
+  connect(),
+  addCommunityMember,
+  removeCommunityMember
+)(JoinButton);

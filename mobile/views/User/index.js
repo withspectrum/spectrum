@@ -18,8 +18,14 @@ type State = {
   feed: 'participant' | 'creator',
 };
 
-const User = compose(getUserById, ViewNetworkHandler)(Profile);
-const CurrentUser = compose(getCurrentUser, ViewNetworkHandler)(Profile);
+const User = compose(
+  getUserById,
+  ViewNetworkHandler
+)(Profile);
+const CurrentUser = compose(
+  getCurrentUser,
+  ViewNetworkHandler
+)(Profile);
 
 class Container extends Component<Props, State> {
   render() {

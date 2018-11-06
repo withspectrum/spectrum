@@ -42,7 +42,9 @@ const ChannelThreadFeed = compose(getChannelThreadConnection)(ThreadFeed);
 
 class Channel extends Component<Props> {
   trackView = () => {
-    const { data: { channel } } = this.props;
+    const {
+      data: { channel },
+    } = this.props;
     if (!channel) return;
     track(events.CHANNEL_VIEWED, {
       channel: transformations.analyticsChannel(channel),
@@ -51,7 +53,10 @@ class Channel extends Component<Props> {
   };
 
   setTitle = () => {
-    const { data: { channel }, navigation } = this.props;
+    const {
+      data: { channel },
+      navigation,
+    } = this.props;
     let title;
     if (channel) {
       title = channel.name;
@@ -145,4 +150,7 @@ class Channel extends Component<Props> {
   }
 }
 
-export default compose(getChannelById, ViewNetworkHandler)(Channel);
+export default compose(
+  getChannelById,
+  ViewNetworkHandler
+)(Channel);
