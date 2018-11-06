@@ -48,6 +48,7 @@ type Props = {
   data: { thread: GetThreadMessageConnectionType },
   thread: GetThreadType,
   currentUser: ?Object,
+  hasError: boolean,
 };
 
 class MessagesWithData extends React.Component<Props, State> {
@@ -221,6 +222,7 @@ class MessagesWithData extends React.Component<Props, State> {
       lastSeen,
       thread,
       currentUser,
+      hasError,
     } = this.props;
 
     const hasMessagesToLoad = thread.messageCount > 0;
@@ -324,7 +326,7 @@ class MessagesWithData extends React.Component<Props, State> {
       );
     }
 
-    if (!isLoading && !messagesExist) {
+    if ((isLoading && !hasMessagesToLoad) || (!isLoading && !messagesExist)) {
       if (isLocked || !this.props.data.thread) return null;
 
       return this.getIsAuthor()
@@ -332,16 +334,23 @@ class MessagesWithData extends React.Component<Props, State> {
         : this.getNonAuthorEmptyMessage();
     }
 
-    return (
-      <NullState
-        heading="Sorry, we lost connection to the server..."
-        copy="Mind reloading the page?"
-      >
-        <Button icon="view-reload" onClick={() => window.location.reload(true)}>
-          Reload
-        </Button>
-      </NullState>
-    );
+    if (hasError) {
+      return (
+        <NullState
+          heading="Sorry, we lost connection to the server..."
+          copy="Mind reloading the page?"
+        >
+          <Button
+            icon="view-reload"
+            onClick={() => window.location.reload(true)}
+          >
+            Reload
+          </Button>
+        </NullState>
+      );
+    }
+
+    return null;
   }
 }
 
