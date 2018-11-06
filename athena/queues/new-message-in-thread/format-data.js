@@ -25,6 +25,20 @@ export default async (
   user: UserType,
   message: MessageType
 ): Promise<NewMessageNotificationEmailThread> => {
+  let body;
+  switch (message.messageType) {
+    case 'draftjs': {
+      body = toPlainText(toState(JSON.parse(message.content.body)));
+      break;
+    }
+    case 'media': {
+      body = '📷 Photo';
+      break;
+    }
+    default: {
+      body = message.content.body;
+    }
+  }
   return {
     ...thread,
     community: await getCommunityById(thread.communityId),
@@ -39,10 +53,7 @@ export default async (
           username: user.username,
         },
         content: {
-          body:
-            message.messageType === 'draftjs'
-              ? toPlainText(toState(JSON.parse(message.content.body)))
-              : message.content.body,
+          body,
         },
       },
     ],
