@@ -3,6 +3,7 @@ import formatNotification from '../notification-to-text';
 import CHANNEL_CREATED_FIXTURE from './fixtures/CHANNEL_CREATED.json';
 import COMMUNITY_INVITE_FIXTURE from './fixtures/COMMUNITY_INVITE.json';
 import MESSAGE_CREATED_FIXTURE from './fixtures/MESSAGE_CREATED.json';
+import MEDIA_MESSAGE_CREATED_FIXTURE from './fixtures/MEDIA_MESSAGE_CREATED.json';
 import DIRECT_MESSAGE_CREATED_FIXTURE from './fixtures/DIRECT_MESSAGE_CREATED.json';
 import REACTION_CREATED_FIXTURE from './fixtures/REACTION_CREATED.json';
 import THREAD_CREATED_FIXTURE from './fixtures/THREAD_CREATED.json';
@@ -64,6 +65,13 @@ it('should format a user joined community notification', () => {
 
 it('should format a message mention notification', () => {
   let result = formatNotification(MENTION_MESSAGE_FIXTURE, USER_ID);
+  expect(result.raw).toBeDefined();
+  delete result.raw; // Don't need raw data
+  expect(result).toMatchSnapshot();
+});
+
+it('should format a media message mention notification', () => {
+  let result = formatNotification(MEDIA_MESSAGE_CREATED_FIXTURE, USER_ID);
   expect(result.raw).toBeDefined();
   delete result.raw; // Don't need raw data
   expect(result).toMatchSnapshot();

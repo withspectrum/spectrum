@@ -1,7 +1,11 @@
 // @flow
 const { db } = require('shared/db');
 import intersection from 'lodash.intersection';
-import { processReputationEventQueue } from 'shared/bull/queues';
+import {
+  processReputationEventQueue,
+  trackQueue,
+  searchQueue,
+} from 'shared/bull/queues';
 const { NEW_DOCUMENTS, parseRange } = require('./utils');
 import { createChangefeed } from 'shared/changefeed-utils';
 import { deleteMessagesInThread } from '../models/message';
@@ -10,7 +14,6 @@ import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBThread, FileUpload } from 'shared/types';
 import type { Timeframe } from './utils';
 import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 
 export const getThread = (threadId: string): Promise<DBThread> => {
   return db
@@ -433,6 +436,12 @@ export const publishThread = (
     .then(result => {
       const thread = result.changes[0].new_val;
 
+      searchQueue.add({
+        id: thread.id,
+        type: 'thread',
+        event: 'created',
+      });
+
       trackQueue.add({
         userId,
         event: events.THREAD_CREATED,
@@ -516,6 +525,12 @@ export const deleteThread = (threadId: string, userId: string): Promise<Boolean>
     .then(([result]) => {
       const thread = result.changes[0].new_val;
 
+      searchQueue.add({
+        id: thread.id,
+        type: 'thread',
+        event: 'deleted'
+      })
+
       trackQueue.add({
         userId,
         event: events.THREAD_DELETED,
@@ -565,6 +580,12 @@ export const editThread = (input: EditThreadInput, userId: string, shouldUpdate:
       // if an update happened
       if (result.replaced === 1) {
         const thread = result.changes[0].new_val;
+
+        searchQueue.add({
+          id: thread.id,
+          type: 'thread',
+          event: 'edited'
+        })
 
         trackQueue.add({
           userId,
@@ -631,6 +652,12 @@ export const moveThread = (id: string, channelId: string, userId: string) => {
     .then(result => {
       if (result.replaced === 1) {
         const thread = result.changes[0].new_val;
+
+        searchQueue.add({
+          id: thread.id,
+          type: 'thread',
+          event: 'moved',
+        });
 
         trackQueue.add({
           userId,
