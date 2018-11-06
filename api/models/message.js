@@ -5,6 +5,8 @@ import {
   sendDirectMessageNotificationQueue,
   processReputationEventQueue,
   _adminProcessToxicMessageQueue,
+  trackQueue,
+  searchQueue,
 } from 'shared/bull/queues';
 import { NEW_DOCUMENTS } from './utils';
 import { createChangefeed } from 'shared/changefeed-utils';
@@ -14,7 +16,6 @@ import {
   decrementMessageCount,
 } from './thread';
 import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import type { DBMessage } from 'shared/types';
 
 export type MessageTypes = 'text' | 'media';
@@ -154,6 +155,11 @@ export const storeMessage = (message: Object, userId: string): Promise<DBMessage
       if (message.threadType === 'story') {
         await Promise.all([
         sendMessageNotificationQueue.add({ message }),
+        searchQueue.add({
+          id: message.id,
+          type: 'message',
+          event: 'created'
+        }),
         processReputationEventQueue.add({
           userId,
           type: 'message created',
@@ -241,6 +247,13 @@ export const deleteMessage = (userId: string, messageId: string) => {
         message.threadType === 'story'
           ? decrementMessageCount(message.threadId)
           : Promise.resolve(),
+        message.threadType === 'story'
+          ? searchQueue.add({
+              id: message.id,
+              type: 'message',
+              event: 'deleted',
+            })
+          : Promise.resolve(),
       ]);
 
       return message;
@@ -267,6 +280,15 @@ export const deleteMessagesInThread = async (threadId: string, userId: string) =
     });
   });
 
+  const searchPromises = messages.map(message => {
+    if (message.threadType !== 'story') return null
+    return searchQueue.add({
+      id: message.id,
+      type: 'message',
+      event: 'deleted'
+    })
+  })
+
   const deletePromise = db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
@@ -276,7 +298,11 @@ export const deleteMessagesInThread = async (threadId: string, userId: string) =
     })
     .run();
 
-  return await Promise.all([...trackingPromises, deletePromise]).then(() => {
+  return await Promise.all([
+    ...trackingPromises, 
+    deletePromise,
+    ...searchPromises
+  ]).then(() => {
     return Promise.all(Array.from({ length: messages.length }).map(() => decrementMessageCount(threadId)))
   });
 };
@@ -337,6 +363,12 @@ export const editMessage = (message: EditInput, userId: string): Promise<DBMessa
           event: events.MESSAGE_EDITED,
           context: { messageId: message.id },
         });
+
+        searchQueue.add({
+          id: message.id,
+          type: 'message',
+          event: 'edited'
+        })
       }
 
       return message;

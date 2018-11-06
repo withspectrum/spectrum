@@ -1940,9 +1940,9 @@ babel-polyfill@^6.26.0:
     core-js "^2.5.0"
     regenerator-runtime "^0.10.5"
 
-babel-preset-backpack@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/babel-preset-backpack/-/babel-preset-backpack-0.8.1.tgz#888f971167fbb689fd4f3cbffdb9a79098235925"
+babel-preset-backpack@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/babel-preset-backpack/-/babel-preset-backpack-0.8.2.tgz#c27197249a78e28c9ce7513e15508bd54f593bcf"
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
@@ -2057,13 +2057,13 @@ backo2@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/backo2/-/backo2-1.0.2.tgz#31ab1ac8b129363463e35b3ebb69f4dfcfba7947"
 
-backpack-core@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/backpack-core/-/backpack-core-0.8.1.tgz#ead72b5557c90d023e45610f3ff5f5331e1f90ba"
+backpack-core@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/backpack-core/-/backpack-core-0.8.2.tgz#d8ef661ecbee43a87bce1888603a54eee8490873"
   dependencies:
     "@babel/core" "^7.1.2"
     babel-loader "^8.0.2"
-    babel-preset-backpack "^0.8.1"
+    babel-preset-backpack "^0.8.2"
     cross-spawn "^5.0.1"
     friendly-errors-webpack-plugin "^1.7.0"
     json-loader "^0.5.7"
@@ -2857,9 +2857,16 @@ core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
 
-cors@^2.8.3, cors@^2.8.4:
+cors@^2.8.4:
   version "2.8.4"
   resolved "https://registry.yarnpkg.com/cors/-/cors-2.8.4.tgz#2bd381f2eb201020105cd50ea59da63090694686"
+  dependencies:
+    object-assign "^4"
+    vary "^1"
+
+cors@^2.8.5:
+  version "2.8.5"
+  resolved "https://registry.yarnpkg.com/cors/-/cors-2.8.5.tgz#eac11da51592dd86b9f06f6e7ac293b3df875d29"
   dependencies:
     object-assign "^4"
     vary "^1"
@@ -6219,9 +6226,9 @@ nan@^2.9.2:
   version "2.11.1"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.1.tgz#90e22bccb8ca57ea4cd37cc83d3819b52eea6766"
 
-nanoid@^1.0.7:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-1.1.0.tgz#b18e806e1cdbfdbe030374d5cf08a48cbc80b474"
+nanoid@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-2.0.0.tgz#e1ab4a4b024a38d15531ba34a712a201540de639"
 
 nanomatch@^1.2.5:
   version "1.2.7"
@@ -7943,11 +7950,11 @@ shellwords@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
 
-shortid@^2.2.13:
-  version "2.2.13"
-  resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.13.tgz#b2441e71c664ace458a341d343959f677910ef5b"
+shortid@^2.2.14:
+  version "2.2.14"
+  resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.14.tgz#80db6aafcbc3e3a46850b3c88d39e051b84c8d18"
   dependencies:
-    nanoid "^1.0.7"
+    nanoid "^2.0.0"
 
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
@@ -7965,9 +7972,9 @@ slate-markdown@0.1.0:
     react "^0.14.0 || ^15.0.0"
     styled-components "^2.0.0"
 
-slate@^0.43.3:
-  version "0.43.3"
-  resolved "https://registry.yarnpkg.com/slate/-/slate-0.43.3.tgz#7a71d95a8b3f5e7ed33120020e66d1eadc0ee699"
+slate@^0.43.6:
+  version "0.43.6"
+  resolved "https://registry.yarnpkg.com/slate/-/slate-0.43.6.tgz#f42934dc041bd52ea23bf7190b51cb8f84867fe6"
   dependencies:
     debug "^3.1.0"
     direction "^0.1.5"

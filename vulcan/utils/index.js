@@ -9,7 +9,7 @@ import type {
   SearchUser,
   SearchCommunity,
 } from 'shared/types';
-import { getThreadById } from './thread';
+import { getThreadById } from 'shared/db/queries/thread';
 import { byteCount } from './text-parsing';
 import { toPlainText, toState } from 'shared/draft-utils';
 import {
@@ -106,14 +106,13 @@ const filterMessageString = (message: DBMessage): ?string => {
   return messageString;
 };
 
-export const dbMessageToSearchThread = async (
-  message: DBMessage
-): Promise<?SearchThread> => {
+// prettier-ignore
+export const dbMessageToSearchThread = async (message: DBMessage): Promise<?SearchThread> => {
   const messageString = filterMessageString(message);
-  if (!messageString) return;
+  if (!messageString) return null;
 
   const thread = await getThreadById(message.threadId);
-  if (!thread || thread.deletedAt) return;
+  if (!thread || thread.deletedAt) return null;
 
   return {
     channelId: thread.channelId,
@@ -135,7 +134,6 @@ export const dbMessageToSearchThread = async (
 
 export const dbUserToSearchUser = (user: DBUser): SearchUser => {
   let description = user.description;
-  // filter out stop words
   description = description && withoutStopWords(description);
 
   return {
@@ -148,11 +146,9 @@ export const dbUserToSearchUser = (user: DBUser): SearchUser => {
   };
 };
 
-export const dbCommunityToSearchCommunity = (
-  community: DBCommunity
-): SearchCommunity => {
+// prettier-ignore
+export const dbCommunityToSearchCommunity = (community: DBCommunity): SearchCommunity => {
   let description = community.description;
-  // filter out stop words
   description = description && withoutStopWords(description);
 
   return {
