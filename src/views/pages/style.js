@@ -571,19 +571,19 @@ export const LogoTab = styled(Tab)`
 
 export const DropdownLink = styled(Link)`
   padding: 16px 0;
-  font-weight: 500;
+  font-weight: ${props => (props.selected ? '600' : '500')};
   display: flex;
   width: 100%;
   align-items: center;
   transition: ${Transition.hover.off};
   color: ${props =>
-    props.selected ? props.theme.text.placeholder : props.theme.brand.alt};
+    props.selected ? props.theme.brand.alt : props.theme.text.alt};
   border-radius: 8px;
 
   &:hover {
     transition: ${Transition.hover.on};
     color: ${props =>
-      props.selected ? props.theme.text.alt : props.theme.brand.default};
+      props.selected ? props.theme.brand.default : props.theme.text.secondary};
   }
 `;
 
@@ -649,6 +649,7 @@ export const MenuContainer = styled.div`
   box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.25)};
   padding-top: 32px;
   z-index: 2;
+  flex-direction: column;
 `;
 
 export const MenuOverlay = styled.div`
