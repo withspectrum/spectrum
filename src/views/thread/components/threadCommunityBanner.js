@@ -137,7 +137,10 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
                     {channel.name}
                   </Link>
                 </ChannelHoverProfile>
-                <Link to={`/thread/${id}`}>&nbsp;{`· ${timestamp}`}</Link>
+                <Link to={`/thread/${id}`}>
+                  &nbsp;
+                  {`· ${timestamp}`}
+                </Link>
               </CommunityHeaderSubtitle>
             </CommunityHeaderMetaCol>
           </CommunityHeaderMeta>
@@ -163,7 +166,8 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
   }
 }
 const map = state => ({ currentUser: state.users.currentUser });
-// $FlowIssue
-export default compose(connect(map), toggleChannelSubscriptionMutation)(
-  ThreadCommunityBanner
-);
+export default compose(
+  // $FlowIssue
+  connect(map),
+  toggleChannelSubscriptionMutation
+)(ThreadCommunityBanner);

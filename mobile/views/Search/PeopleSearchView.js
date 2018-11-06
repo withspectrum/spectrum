@@ -45,7 +45,9 @@ class UsersSearchView extends Component<Props> {
     } = this.props;
 
     if (data.search) {
-      const { search: { searchResultsConnection } } = data;
+      const {
+        search: { searchResultsConnection },
+      } = data;
       const hasResults =
         searchResultsConnection && searchResultsConnection.edges.length > 0;
       let results = hasResults
@@ -93,4 +95,7 @@ class UsersSearchView extends Component<Props> {
   }
 }
 
-export default compose(searchUsersQuery, viewNetworkHandler)(UsersSearchView);
+export default compose(
+  searchUsersQuery,
+  viewNetworkHandler
+)(UsersSearchView);

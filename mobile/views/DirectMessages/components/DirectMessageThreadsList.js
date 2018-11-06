@@ -29,7 +29,12 @@ type Props = {
 };
 
 const DirectMessageThreadsList = (props: Props) => {
-  const { isLoading, hasError, data: { user }, navigation } = props;
+  const {
+    isLoading,
+    hasError,
+    data: { user },
+    navigation,
+  } = props;
   if (user) {
     const { pageInfo, edges } = user.directMessageThreadsConnection;
     const nodes = edges.map(e => e && e.node);
@@ -87,6 +92,7 @@ const DirectMessageThreadsList = (props: Props) => {
   return <Text>No DM Threads yet</Text>;
 };
 
-export default compose(getCurrentUserDMThreadConnection, ViewNetworkHandler)(
-  DirectMessageThreadsList
-);
+export default compose(
+  getCurrentUserDMThreadConnection,
+  ViewNetworkHandler
+)(DirectMessageThreadsList);

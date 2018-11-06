@@ -33,7 +33,7 @@ const GetUserByUsername = (props: HandlerProps) => {
   return (
     <Query variables={{ username }} query={getUserByUsernameQuery}>
       {({ data }) => {
-        if (!data.user) return null;
+        if (!data || !data.user) return null;
         return (
           <ConditionalWrap
             condition={showHoverProfile}

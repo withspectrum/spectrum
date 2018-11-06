@@ -64,7 +64,11 @@ class ThreadDetail extends React.Component<Props, State> {
   };
 
   initDeleteThread = () => {
-    const { data: { thread }, currentUser, deleteThread } = this.props;
+    const {
+      data: { thread },
+      currentUser,
+      deleteThread,
+    } = this.props;
     if (!thread) return;
 
     const isAuthor = currentUser.id === thread.author.user.id;

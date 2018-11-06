@@ -178,4 +178,8 @@ class Message extends React.Component<Props, State> {
   }
 }
 
-export default compose(connectActionSheet, toggleReaction, connect())(Message);
+export default compose(
+  connectActionSheet,
+  toggleReaction,
+  connect()
+)(Message);

@@ -45,7 +45,7 @@ import viewNetworkHandler, {
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
-import { isDesktopApp } from 'src/helpers/is-desktop-app';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 type Props = {
   markAllNotificationsSeen?: Function,

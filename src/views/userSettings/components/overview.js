@@ -8,7 +8,7 @@ import DeleteAccountForm from './deleteAccountForm';
 import DownloadDataForm from './downloadDataForm';
 import { SectionsContainer, Column } from 'src/components/settingsViews/style';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';
-import { isDesktopApp } from 'src/helpers/is-desktop-app';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 type Props = {
   user: GetCurrentUserSettingsType,

@@ -14,10 +14,14 @@ import {
   MenuTab,
   SupportTab,
   FeaturesTab,
+  AppsTab,
   AuthTab,
   LogoLink,
   AuthLink,
-  DropdownLink,
+  SupportLink,
+  FeaturesLink,
+  AppsLink,
+  ExploreLink,
   MenuContainer,
   MenuOverlay,
 } from '../style';
@@ -71,6 +75,14 @@ class Nav extends React.Component<Props, State> {
           >
             Features
           </FeaturesTab>
+          <AppsTab
+            dark={this.props.dark}
+            selected={this.props.location === 'apps'}
+            to="/apps"
+            data-cy="navbar-splash-apps"
+          >
+            Apps
+          </AppsTab>
           <SupportTab
             dark={this.props.dark}
             selected={this.props.location === 'support'}
@@ -114,27 +126,33 @@ class Nav extends React.Component<Props, State> {
               <LogoLink to="/">
                 <Logo />
               </LogoLink>
-              <DropdownLink
+              <FeaturesLink
                 to="/features"
                 selected={this.props.location === 'features'}
               >
                 <Icon glyph="checkmark" />
                 Features
-              </DropdownLink>
-              <DropdownLink
+                <Icon glyph="enter" />
+              </FeaturesLink>
+              <AppsLink to="/apps" selected={this.props.location === 'apps'}>
+                <Icon glyph="plus" />
+                Apps
+                <Icon glyph="enter" />
+              </AppsLink>
+              <SupportLink
                 to="/support"
                 selected={this.props.location === 'support'}
               >
                 <Icon glyph="like" />
                 Support
-              </DropdownLink>
-              <DropdownLink
+              </SupportLink>
+              <ExploreLink
                 to="/explore"
                 selected={this.props.location === 'explore'}
               >
                 <Icon glyph="explore" />
                 Explore
-              </DropdownLink>
+              </ExploreLink>
               {this.props.currentUser ? (
                 <AuthLink to={'/'}>
                   <span>Return home</span>

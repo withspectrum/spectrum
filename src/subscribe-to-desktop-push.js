@@ -1,5 +1,5 @@
 // @flow
-import { isDesktopApp } from './helpers/is-desktop-app';
+import { isDesktopApp } from './helpers/desktop-app-utils';
 import { getItemFromStorage } from './helpers/localStorage';
 import { client } from 'shared/graphql';
 import {

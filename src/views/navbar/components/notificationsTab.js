@@ -4,7 +4,7 @@ import { withApollo } from 'react-apollo';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 import compose from 'recompose/compose';
-import { isDesktopApp } from 'src/helpers/is-desktop-app';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import Icon from 'src/components/icons';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { updateNotificationsCount } from 'src/actions/notifications';
