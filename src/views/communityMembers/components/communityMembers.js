@@ -43,8 +43,9 @@ type Props = {
 type State = {
   filter: ?{
     isMember?: boolean,
-    isModerator?: boolean,
+    isOwner?: boolean,
     isBlocked?: boolean,
+    isOwner?: boolean,
   },
   searchIsFocused: boolean,
   // what the user types in
@@ -71,8 +72,8 @@ class CommunityMembers extends React.Component<Props, State> {
       return this.viewPending();
     }
 
-    if (filter === 'moderators') {
-      return this.viewModerators();
+    if (filter === 'team') {
+      return this.viewTeam();
     }
 
     if (filter === 'blocked') {
@@ -94,9 +95,9 @@ class CommunityMembers extends React.Component<Props, State> {
     });
   };
 
-  viewModerators = () => {
+  viewTeam = () => {
     return this.setState({
-      filter: { isModerator: true },
+      filter: { isModerator: true, isOwner: true },
       searchIsFocused: false,
     });
   };
@@ -185,8 +186,10 @@ class CommunityMembers extends React.Component<Props, State> {
             Members
           </Filter>
           <Filter
-            onClick={this.viewModerators}
-            active={filter && filter.isModerator ? true : false}
+            onClick={this.viewTeam}
+            active={
+              filter && filter.isModerator && filter.isOwner ? true : false
+            }
           >
             Team
           </Filter>
@@ -350,7 +353,7 @@ class CommunityMembers extends React.Component<Props, State> {
                   );
                 }
 
-                if (filter && filter.isModerator) {
+                if (filter && filter.isModerator && filter.isOwner) {
                   return (
                     <ViewError
                       emoji={' '}
