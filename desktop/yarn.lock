@@ -742,9 +742,9 @@ electron-window-state@^5.0.2:
     jsonfile "^4.0.0"
     mkdirp "^0.5.1"
 
-electron@^3.0.7:
-  version "3.0.7"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-3.0.7.tgz#e70c735467b4903c66e0c21278263c8ca571f9eb"
+electron@^3.0.8:
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-3.0.8.tgz#7905806ebaead4c693531e11cda6568c32efa7bb"
   dependencies:
     "@types/node" "^8.0.24"
     electron-download "^4.1.0"
