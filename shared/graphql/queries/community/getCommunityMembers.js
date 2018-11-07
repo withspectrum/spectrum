@@ -54,6 +54,7 @@ export const getcommunityMembersQuery = gql`
 const getcommunityMembersOptions = {
   props: ({
     data: { fetchMore, error, loading, community, networkStatus },
+    ownProps: { filter },
   }) => ({
     data: {
       error,
@@ -72,6 +73,7 @@ const getcommunityMembersOptions = {
             after:
               community.members.edges[community.members.edges.length - 1]
                 .cursor,
+            filter: filter || null,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult.community) {

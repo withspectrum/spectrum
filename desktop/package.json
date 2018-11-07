@@ -18,9 +18,9 @@
     "electron-window-state": "^5.0.2"
   },
   "devDependencies": {
-    "electron": "^3.0.7",
+    "electron": "^3.0.8",
     "electron-builder": "^20.31.2",
-    "nodemon": "^1.18.5",
+    "nodemon": "^1.18.6",
     "rimraf": "^2.6.2"
   },
   "scripts": {
