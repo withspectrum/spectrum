@@ -43,7 +43,7 @@ type Props = {
 type State = {
   filter: ?{
     isMember?: boolean,
-    isOwner?: boolean,
+    isModerator?: boolean,
     isBlocked?: boolean,
     isOwner?: boolean,
   },
