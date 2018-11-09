@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "electron": "^3.0.8",
-    "electron-builder": "^20.31.2",
+    "electron-builder": "^20.33.2",
     "nodemon": "^1.18.6",
     "rimraf": "^2.6.2"
   },
