@@ -57,20 +57,17 @@ export default requireAuth(
       // if user is changing their email, make sure it's not taken by someone else
       if (pendingEmail !== currentUser.email) {
         if (!isEmail(input.email)) {
-          return new UserError('Please enter a working email address');
+          return new UserError('Please enter a valid email address.');
         }
 
         const dbUsers = await getUsersByEmail(pendingEmail);
         if (dbUsers && dbUsers.length > 0) {
-          return new UserError(
-            'That email address is already taken by another person on Spectrum.'
-          );
+          return new UserError('Please enter a valid email address.');
         }
 
         // the user will have to confirm their email for it to be saved in
         // order to prevent spoofing your email as someone elses
         await setUserPendingEmail(currentUser.id, pendingEmail).then(() => {
-          // need this duplicate check for some reason for Flow to work properly
           sendEmailValidationEmailQueue.add({
             email: pendingEmail,
             userId: currentUser.id,
