@@ -312,7 +312,6 @@ export type EditUserInput = {
     coverFile?: FileUpload,
     username?: string,
     timezone?: number,
-    email?: string,
   },
 };
 
