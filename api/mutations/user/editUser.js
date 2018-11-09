@@ -7,26 +7,25 @@ import {
   getUserByUsername,
   getUserById,
   editUser,
+  getUsersByEmail,
+  setUserPendingEmail,
 } from 'shared/db/queries/user';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import isEmail from 'validator/lib/isEmail';
+import { sendEmailValidationEmailQueue } from 'shared/bull/queues';
 
 export default requireAuth(
-  async (
-    _: any,
-    args: EditUserInput,
-    { user, updateCookieUserData }: GraphQLContext
-  ) => {
-    const currentUser = user;
+  async (_: any, args: EditUserInput, ctx: GraphQLContext) => {
+    const { user: currentUser, updateCookieUserData } = ctx;
+    const { input } = args;
+
     // If the user is trying to change their username check whether there's a person with that username already
-    if (args.input.username) {
-      if (
-        args.input.username === 'null' ||
-        args.input.username === 'undefined'
-      ) {
+    if (input.username) {
+      if (input.username === 'null' || input.username === 'undefined') {
         trackQueue.add({
-          userId: user.id,
+          userId: currentUser.id,
           event: events.USER_EDITED_FAILED,
           properties: {
             reason: 'bad username input',
@@ -36,10 +35,10 @@ export default requireAuth(
         return new UserError('Nice try! 😉');
       }
 
-      const dbUser = await getUserByUsername(args.input.username);
-      if (dbUser && dbUser.id !== user.id) {
+      const dbUser = await getUserByUsername(input.username);
+      if (dbUser && dbUser.id !== currentUser.id) {
         trackQueue.add({
-          userId: user.id,
+          userId: currentUser.id,
           event: events.USER_EDITED_FAILED,
           properties: {
             reason: 'username taken',
@@ -52,7 +51,35 @@ export default requireAuth(
       }
     }
 
-    const editedUser = await editUser(args, user.id);
+    if (input.email) {
+      // if user is changing their email, make sure it's not taken by someone else
+      if (input.email !== currentUser.email) {
+        if (!isEmail(input.email)) {
+          return new UserError('Please enter a working email address');
+        }
+
+        const dbUsers = await getUsersByEmail(input.email);
+        if (dbUsers && dbUsers.length > 0) {
+          return new UserError(
+            'That email address is already taken by another person on Spectrum.'
+          );
+        }
+
+        // the user will have to confirm their email for it to be saved in
+        // order to prevent spoofing your email as someone elses
+        await setUserPendingEmail(currentUser.id, input.email).then(() => {
+          // need this duplicate check for some reason for Flow to work properly
+          if (input.email) {
+            sendEmailValidationEmailQueue.add({
+              email: input.email,
+              userId: currentUser.id,
+            });
+          }
+        });
+      }
+    }
+
+    const editedUser = await editUser(args, currentUser.id);
 
     await updateCookieUserData({
       ...editedUser,
