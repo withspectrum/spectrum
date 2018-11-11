@@ -711,9 +711,9 @@ electron-publish@20.33.2:
     lazy-val "^1.0.3"
     mime "^2.3.1"
 
-electron-updater@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/electron-updater/-/electron-updater-3.2.2.tgz#e1115c29fffd0e4bc344252e5600a4d3c0403c9f"
+electron-updater@^3.2.3:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/electron-updater/-/electron-updater-3.2.3.tgz#bdd23aeee4786f206facbb09fd78c8a967e21756"
   dependencies:
     bluebird-lst "^1.0.6"
     builder-util-runtime "~7.1.0"
