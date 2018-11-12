@@ -7972,9 +7972,9 @@ slate-markdown@0.1.0:
     react "^0.14.0 || ^15.0.0"
     styled-components "^2.0.0"
 
-slate@^0.43.7:
-  version "0.43.7"
-  resolved "https://registry.yarnpkg.com/slate/-/slate-0.43.7.tgz#8e33860dd0ea698c106fe781b2fb926e56e271df"
+slate@^0.44.4:
+  version "0.44.4"
+  resolved "https://registry.yarnpkg.com/slate/-/slate-0.44.4.tgz#b8b82c2d906805aaed42e86ad331963246386aa4"
   dependencies:
     debug "^3.1.0"
     direction "^0.1.5"
