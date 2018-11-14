@@ -4,7 +4,7 @@
   },
   "dependencies": {
     "algoliasearch": "^3.30.0",
-    "aws-sdk": "^2.348.0",
+    "aws-sdk": "^2.354.0",
     "bull": "^3.4.8",
     "debug": "^2.6.8",
     "draft-js": "^0.10.3",

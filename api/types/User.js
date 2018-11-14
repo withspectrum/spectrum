@@ -142,6 +142,7 @@ const User = /* GraphQL */ `
     website: String
     username: LowercaseString
     timezone: Int
+    email: String
   }
 
   input UpgradeToProInput {

@@ -84,6 +84,12 @@ export const getUserByEmail = createReadQuery((email: string) => ({
   tags: (user: ?DBUser) => (user ? [user.id] : []),
 }));
 
+export const getUsersByEmail = createReadQuery((email: string) => ({
+  query: db.table('users').getAll(email, { index: 'email' }),
+  process: (users: Array<?DBUser>) => users,
+  tags: (users: Array<?DBUser>) => (users ? users.map(u => u && u.id) : []),
+}));
+
 export const getUserByUsername = createReadQuery((username: string) => ({
   query: db.table('users').getAll(username, { index: 'username' }),
   process: (users: ?Array<DBUser>) => (users && users[0]) || null,

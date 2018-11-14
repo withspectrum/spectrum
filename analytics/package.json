@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "amplitude": "^3.5.0",
-    "aws-sdk": "^2.340.0",
+    "aws-sdk": "^2.354.0",
     "bull": "3.3.10",
     "faker": "^4.1.0",
     "lodash.intersection": "^4.4.0",
