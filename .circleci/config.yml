@@ -213,10 +213,10 @@ workflows:
             - checkout_environment
 
       # Deployment
-      - deploy_alpha:
-          requires:
-            - test_static_js
-            - test_web
-          filters:
-            branches:
-              only: alpha
+      # - deploy_alpha:
+          # requires:
+            # - test_static_js
+            # - test_web
+          # filters:
+            # branches:
+              # only: alpha
