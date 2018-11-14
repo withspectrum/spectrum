@@ -190,8 +190,19 @@ emailRouter.get('/validate', (req, res) => {
       const rootRedirect = IS_PROD
         ? `https://spectrum.chat`
         : `http://localhost:3000`;
-      if (!user.username) return res.redirect(rootRedirect);
-      return res.redirect(`${rootRedirect}/users/${user.username}/settings`);
+
+      req.login(user, err => {
+        if (err) {
+          return res
+            .status(400)
+            .send(
+              'We ran into an issue validating this email address. You can re-enter your email address in your community settings to resend a confirmation email, or get in touch with us at hi@spectrum.chat.'
+            );
+        }
+
+        if (!user.username) return res.redirect(rootRedirect);
+        return res.redirect(`${rootRedirect}/users/${user.username}/settings`);
+      });
     });
   } catch (err) {
     console.error(err);
