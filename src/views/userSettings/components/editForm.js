@@ -14,6 +14,7 @@ import {
   Input,
   TextArea,
   Error,
+  Success,
   PhotoInput,
   CoverInput,
 } from 'src/components/formElements';
@@ -36,6 +37,8 @@ import {
 import { Notice } from 'src/components/listItems/style';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import type { Dispatch } from 'redux';
+import type { GetCurrentUserSettingsType } from 'shared/graphql/queries/user/getCurrentUserSettings';
+import isEmail from 'validator/lib/isEmail';
 
 type State = {
   website: ?string,
@@ -52,6 +55,9 @@ type State = {
   isLoading: boolean,
   photoSizeError: string,
   usernameError: string,
+  email: string,
+  emailError: string,
+  didChangeEmail: boolean,
 };
 
 type Props = {
@@ -59,13 +65,14 @@ type Props = {
   dispatch: Dispatch<Object>,
   client: Object,
   editUser: Function,
+  user: GetCurrentUserSettingsType,
 };
 
 class UserWithData extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
-    const user = this.props.currentUser;
+    const user = this.props.user;
 
     this.state = {
       website: user.website ? user.website : '',
@@ -82,6 +89,9 @@ class UserWithData extends React.Component<Props, State> {
       isLoading: false,
       photoSizeError: '',
       usernameError: '',
+      email: user.email ? user.email : '',
+      emailError: '',
+      didChangeEmail: false,
     };
   }
 
@@ -98,6 +108,24 @@ class UserWithData extends React.Component<Props, State> {
     this.setState({
       name,
       nameError: false,
+    });
+  };
+
+  changeEmail = e => {
+    const email = e.target.value;
+
+    if (!email || email.length === 0) {
+      return this.setState({
+        email,
+        emailError: 'Your email can’t be blank',
+        didChangeEmail: false,
+      });
+    }
+
+    this.setState({
+      email,
+      emailError: '',
+      didChangeEmail: false,
     });
   };
 
@@ -199,7 +227,11 @@ class UserWithData extends React.Component<Props, State> {
       photoSizeError,
       username,
       usernameError,
+      email,
+      emailError,
     } = this.state;
+
+    const { user } = this.props;
 
     const input = {
       name,
@@ -208,9 +240,22 @@ class UserWithData extends React.Component<Props, State> {
       file,
       coverFile,
       username,
+      email,
     };
 
-    if (photoSizeError || usernameError) {
+    if (!isEmail(email)) {
+      return this.setState({
+        emailError: 'Please add a valid email address.',
+      });
+    }
+
+    if (email !== user.email) {
+      this.setState({
+        didChangeEmail: true,
+      });
+    }
+
+    if (photoSizeError || usernameError || emailError) {
       return;
     }
 
@@ -275,6 +320,9 @@ class UserWithData extends React.Component<Props, State> {
       isLoading,
       photoSizeError,
       usernameError,
+      email,
+      emailError,
+      didChangeEmail,
     } = this.state;
 
     const postAuthRedirectPath = `?r=${CLIENT_URL}/users/${username}/settings`;
@@ -351,6 +399,21 @@ class UserWithData extends React.Component<Props, State> {
             Optional: Add your website
           </Input>
 
+          <Input
+            type="text"
+            defaultValue={email}
+            onChange={this.changeEmail}
+            placeholder={'Email address'}
+            dataCy="user-email-input"
+          >
+            Email
+          </Input>
+
+          {didChangeEmail && (
+            <Success>A confirmation email has been sent to {email}.</Success>
+          )}
+          {emailError && <Error>{emailError}</Error>}
+
           <GithubProfile
             id={currentUser.id}
             render={profile => {
@@ -383,7 +446,12 @@ class UserWithData extends React.Component<Props, State> {
           <Actions>
             <Button
               disabled={
-                !name || nameError || !username || usernameError || isLoading
+                !name ||
+                nameError ||
+                !username ||
+                usernameError ||
+                isLoading ||
+                emailError
               }
               loading={isLoading}
               onClick={this.save}

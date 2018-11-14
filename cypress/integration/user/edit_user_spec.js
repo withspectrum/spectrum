@@ -34,6 +34,8 @@ describe('edit a user', () => {
       .clear()
       .type(NEW_DESCRIPTION);
 
+    cy.get('[data-cy="user-email-input"]').should('be.visible');
+
     cy.get('[data-cy="user-website-input"]')
       .should('be.visible')
       .click()
