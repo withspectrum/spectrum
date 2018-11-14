@@ -5,7 +5,6 @@ import { getUserById } from 'shared/db/queries/user';
 export default async (_: any, __: any, { user }: GraphQLContext) => {
   if (!user || !user.id) return null;
   const dbUser = await getUserById(user.id);
-  if (!dbUser) return null;
-  if (dbUser.bannedAt) return null;
+  if (!dbUser || dbUser.bannedAt) return null;
   return dbUser;
 };
