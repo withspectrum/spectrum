@@ -131,8 +131,6 @@ const init = () => {
             profile._json.entities.url.urls.length > 0
               ? profile._json.entities.url.urls[0].expanded_url
               : '',
-          createdAt: new Date(),
-          lastSeen: new Date(),
         };
 
         return createOrFindUser(user, 'providerId')
@@ -198,8 +196,6 @@ const init = () => {
               ? profile.photos[0].value
               : null,
           coverPhoto: profile._json.cover ? profile._json.cover.source : '',
-          createdAt: new Date(),
-          lastSeen: new Date(),
         };
 
         return createOrFindUser(user, 'fbProviderId')
@@ -264,8 +260,6 @@ const init = () => {
             profile._json.urls && profile._json.urls.length > 0
               ? profile._json.urls[0].value
               : '',
-          createdAt: new Date(),
-          lastSeen: new Date(),
         };
 
         return createOrFindUser(user, 'googleProviderId')
@@ -377,8 +371,6 @@ const init = () => {
             null,
           profilePhoto:
             (profile._json.avatar_url && profile._json.avatar_url) || null,
-          createdAt: new Date(),
-          lastSeen: new Date(),
         };
 
         return createOrFindUser(user, 'githubProviderId')
