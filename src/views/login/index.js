@@ -12,7 +12,6 @@ import {
   UpsellIconContainer,
   FullscreenContent,
   CodeOfConduct,
-  PrivacyTerms,
 } from './style';
 import queryString from 'query-string';
 import { track, events } from 'src/helpers/analytics';
