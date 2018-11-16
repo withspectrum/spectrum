@@ -59,9 +59,13 @@ base64-js@^1.0.2:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.1.tgz#d9551f9de98f1fcda1e683d17ee91a0602ee2eb9"
 
-bluebird@^3.3.4, bluebird@^3.5.0:
+bluebird@^3.3.4:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.2.tgz#1be0908e054a751754549c270489c1505d4ab15a"
+
+bluebird@^3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.3.tgz#7d01c6f9616c9a51ab0f8c549a79dfe6ec33efa7"
 
 buffer@4.9.1:
   version "4.9.1"
@@ -71,16 +75,16 @@ buffer@4.9.1:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-bull@^3.4.8:
-  version "3.4.8"
-  resolved "https://registry.yarnpkg.com/bull/-/bull-3.4.8.tgz#bd25ae82f47e0a092c0b06b6a13b875fa5b41bc0"
+bull@^3.5.2:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/bull/-/bull-3.5.2.tgz#9c85f205b17686efab2ee28aaa4388887360de32"
   dependencies:
-    bluebird "^3.5.0"
+    bluebird "^3.5.3"
     cron-parser "^2.5.0"
     debuglog "^1.0.0"
     ioredis "^3.1.4"
-    lodash "^4.17.4"
-    semver "^5.5.0"
+    lodash "^4.17.11"
+    semver "^5.6.0"
     uuid "^3.2.1"
 
 charenc@~0.0.1:
@@ -388,7 +392,7 @@ lodash.values@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/lodash.values/-/lodash.values-4.3.0.tgz#a3a6c2b0ebecc5c2cba1c17e6e620fe81b53d347"
 
-lodash@^4.17.11, lodash@^4.17.4:
+lodash@^4.17.11:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
@@ -561,7 +565,7 @@ semver@^5.1.0:
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.4.1.tgz#e059c09d8571f0540823733433505d3a2f00b18e"
 
-semver@^5.5.0:
+semver@^5.6.0:
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.6.0.tgz#7e74256fbaa49c75aa7c7a205cc22799cac80004"
 
