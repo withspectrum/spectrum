@@ -115,6 +115,9 @@ export const storeUser = createWriteQuery((user: Object) => ({
       {
         ...user,
         modifiedAt: null,
+        createdAt: new Date(),
+        termsLastAcceptedAt: new Date(),
+        lastSeen: new Date(),
       },
       { returnChanges: 'always' }
     )
