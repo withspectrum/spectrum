@@ -109,7 +109,7 @@ export const canAdministerCommunity = async (userId: string, communityId: string
   ]);
 
   if (!communityPermissions) return false
-  if (communityPermisisons.isBlocked) return false
+  if (communityPermissions.isBlocked) return false
   return communityPermissions.isOwner
 };
 
