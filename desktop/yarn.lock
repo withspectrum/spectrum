@@ -298,20 +298,10 @@ buffer-from@^1.0.0:
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.1.tgz#32713bc028f75c02fdb710d7c7bcec1f2c6070ef"
   integrity sha512-MQcXEUbCKtEo7bhqEs6560Hyd4XaovZlO/k9V3hjVUF/zwW7KBVdSK4gIt/bzwS9MbR5qob+F5jusZsb0YQK2A==
 
-builder-util-runtime@8.0.2, builder-util-runtime@^8.0.1:
+builder-util-runtime@8.0.2, builder-util-runtime@^8.0.1, builder-util-runtime@~8.0.2:
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/builder-util-runtime/-/builder-util-runtime-8.0.2.tgz#9d638a266ca3aa25ced1cff4df74c8fd97dd78cf"
   integrity sha512-46AjyMQ1/yBvGnXWmqNGlg8te7jCPCs7TJ0zDC2+4vV/t5iZp2dR1H9UfVpcBxlvBq3dlAOmwb9fz1d9xZN1+Q==
-  dependencies:
-    bluebird-lst "^1.0.6"
-    debug "^4.1.0"
-    fs-extra-p "^7.0.0"
-    sax "^1.2.4"
-
-builder-util-runtime@~7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/builder-util-runtime/-/builder-util-runtime-7.1.0.tgz#f0bf1f247d0eb79ea8a20d0c9178ffa0daf98a80"
-  integrity sha512-TAsx651+q6bXYry21SzQblYQBUlfu4ixbDa6k2Nvts+kHO9ajyr0gDuHJsamxBaAyUUi5EldPABqsFERDEK3Hg==
   dependencies:
     bluebird-lst "^1.0.6"
     debug "^4.1.0"
@@ -726,7 +716,7 @@ ejs@^2.6.1:
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.6.1.tgz#498ec0d495655abc6f23cd61868d926464071aa0"
   integrity sha512-0xy4A/twfrRCnkhfk8ErDi5DqdAsAqeGxht4xkCUrsvhhbQNs7E+4jV0CN7+NKIY0aHE72+XvqtBIXzD31ZbXQ==
 
-electron-builder@^20.34.0:
+electron-builder@^20.36.2:
   version "20.36.2"
   resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-20.36.2.tgz#9fefef8c5f08ced5c2085d8331c2ad3c545daef8"
   integrity sha512-xPJNt3ZBn5IYlp3pCP0Rvi00JYAKdTeOSLWFrkST1xqWfRZxXrI4uisVD9HQjzRN8hBHhTgTfXtb9uhWPha9eA==
@@ -777,11 +767,6 @@ electron-download@^4.1.0:
     semver "^5.4.1"
     sumchecker "^2.0.2"
 
-electron-is-dev@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-0.3.0.tgz#14e6fda5c68e9e4ecbeff9ccf037cbd7c05c5afe"
-  integrity sha1-FOb9pcaOnk7L7/nM8DfL18BcWv4=
-
 electron-is-dev@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-1.0.1.tgz#6e0a184736fe7aea77d18210b0b0f6a02402c4bc"
@@ -817,14 +802,13 @@ electron-publish@20.36.0:
     lazy-val "^1.0.3"
     mime "^2.3.1"
 
-electron-updater@^3.2.3:
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/electron-updater/-/electron-updater-3.2.3.tgz#bdd23aeee4786f206facbb09fd78c8a967e21756"
-  integrity sha512-QkLS+hYyTTHzZ2gGtTyQQ3kY5zQaEf/VwJW+UP37CPi58/VNUOx0xNA9iChwwYa6mzeEyo1xhrS1XjePwkeTbA==
+electron-updater@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/electron-updater/-/electron-updater-4.0.4.tgz#d6a8a7a36cfe2882c8c0ae9ac4056ccf1a96eee9"
+  integrity sha512-y3wddJQyC5h1UTJhNAWoX4McJ5Z1r1ZDqyifpYWniVS286YCXe1xSLkbe9C6ZzxzPurt1jg2ZubPuBNt/811Dw==
   dependencies:
     bluebird-lst "^1.0.6"
-    builder-util-runtime "~7.1.0"
-    electron-is-dev "^0.3.0"
+    builder-util-runtime "~8.0.2"
     fs-extra-p "^7.0.0"
     js-yaml "^3.12.0"
     lazy-val "^1.0.3"
