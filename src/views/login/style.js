@@ -221,7 +221,3 @@ export const CodeOfConduct = styled.p`
     font-weight: 600;
   }
 `;
-
-export const PrivacyTerms = styled(CodeOfConduct)`
-  margin-top: 16px;
-`;

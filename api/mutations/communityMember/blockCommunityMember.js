@@ -26,7 +26,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { user, loaders } = ctx;
   const { communityId, userId: userToEvaluateId } = args.input;
 
-  if (!await canModerateCommunity(user.id, communityId, loaders)) {
+  if (!(await canModerateCommunity(user.id, communityId, loaders))) {
     trackQueue.add({
       userId: user.id,
       event: events.USER_BLOCKED_MEMBER_IN_COMMUNITY_FAILED,
@@ -59,7 +59,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     return new UserError("We couldn't find that community.");
   }
 
-  if (!userToEvaluatePermissions || userToEvaluatePermissions === 0) {
+  if (!userToEvaluatePermissions || userToEvaluatePermissions.length === 0) {
     trackQueue.add({
       userId: user.id,
       event: events.USER_BLOCKED_MEMBER_IN_COMMUNITY_FAILED,
@@ -98,6 +98,19 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     });
 
     return new UserError('This person is already blocked in your community.');
+  }
+
+  if (userToEvaluatePermission.isOwner) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.USER_BLOCKED_MEMBER_IN_COMMUNITY_FAILED,
+      context: { communityId },
+      properties: {
+        reason: 'user is owner',
+      },
+    });
+
+    return new UserError('The owner of the community cannot be blocked.');
   }
 
   const channels = await getChannelsByCommunity(community.id);

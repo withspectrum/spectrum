@@ -8,6 +8,7 @@
     "amplitude": "^3.5.0",
     "aws-sdk": "^2.354.0",
     "bull": "3.3.10",
+    "debug": "^4.1.0",
     "faker": "^4.1.0",
     "lodash.intersection": "^4.4.0",
     "node-env-file": "^0.1.8",
@@ -17,7 +18,6 @@
     "rethinkdbdash": "^2.3.29",
     "sanitize-filename": "^1.6.1",
     "sha1": "^1.1.1",
-    "shortid": "^2.2.14",
     "source-map-support": "^0.5.9",
     "toobusy-js": "^0.5.1"
   }

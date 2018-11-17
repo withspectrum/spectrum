@@ -5,8 +5,8 @@
   "dependencies": {
     "algoliasearch": "^3.30.0",
     "aws-sdk": "^2.354.0",
-    "bull": "^3.4.8",
-    "debug": "^2.6.8",
+    "bull": "^3.5.2",
+    "debug": "^4.1.0",
     "draft-js": "^0.10.3",
     "emoji-regex": "^6.1.1",
     "faker": "^4.1.0",
@@ -19,7 +19,6 @@
     "rethinkdb-changefeed-reconnect": "^0.3.2",
     "rethinkdbdash": "^2.3.29",
     "sanitize-filename": "^1.6.1",
-    "shortid": "^2.2.14",
     "source-map-support": "^0.4.15",
     "stopword": "^0.1.13",
     "toobusy-js": "^0.5.1"
