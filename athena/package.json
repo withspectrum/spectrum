@@ -21,7 +21,6 @@
     "redis-tag-cache": "^1.2.1",
     "rethinkdbdash": "^2.3.31",
     "sanitize-filename": "^1.6.1",
-    "shortid": "^2.2.14",
     "source-map-support": "^0.4.18",
     "toobusy-js": "^0.5.1",
     "validator": "^9.4.1",

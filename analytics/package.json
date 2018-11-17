@@ -18,7 +18,6 @@
     "rethinkdbdash": "^2.3.29",
     "sanitize-filename": "^1.6.1",
     "sha1": "^1.1.1",
-    "shortid": "^2.2.14",
     "source-map-support": "^0.5.9",
     "toobusy-js": "^0.5.1"
   }
