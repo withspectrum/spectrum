@@ -26,7 +26,7 @@
     "cryptr": "^3.0.0",
     "dataloader": "^1.4.0",
     "debounce": "^1.2.0",
-    "debug": "^2.6.8",
+    "debug": "^4.1.0",
     "decode-uri-component": "^0.2.0",
     "draft-js": "^0.10.5",
     "draft-js-code-editor-plugin": "0.2.1",

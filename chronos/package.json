@@ -5,7 +5,7 @@
   "dependencies": {
     "aws-sdk": "^2.354.0",
     "bull": "3.3.10",
-    "debug": "^2.6.9",
+    "debug": "^4.1.0",
     "draft-js": "^0.10.5",
     "faker": "^4.1.0",
     "lodash": "^4.17.11",
