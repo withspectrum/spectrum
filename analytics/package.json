@@ -8,6 +8,7 @@
     "amplitude": "^3.5.0",
     "aws-sdk": "^2.354.0",
     "bull": "3.3.10",
+    "debug": "^4.1.0",
     "faker": "^4.1.0",
     "lodash.intersection": "^4.4.0",
     "node-env-file": "^0.1.8",
