@@ -4,7 +4,7 @@ const helmet = require('helmet');
 const uuid = require('uuid');
 const hsts = require('hsts');
 const express_enforces_ssl = require('express-enforces-ssl');
-const IS_PROD = process.env.NODE_ENV === 'production';
+const IS_PROD = process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV;
 
 function securityMiddleware(
   server: express$Application,
