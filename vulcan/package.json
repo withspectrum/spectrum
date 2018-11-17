@@ -19,7 +19,6 @@
     "rethinkdb-changefeed-reconnect": "^0.3.2",
     "rethinkdbdash": "^2.3.29",
     "sanitize-filename": "^1.6.1",
-    "shortid": "^2.2.14",
     "source-map-support": "^0.4.15",
     "stopword": "^0.1.13",
     "toobusy-js": "^0.5.1"
