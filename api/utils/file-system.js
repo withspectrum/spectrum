@@ -1,5 +1,5 @@
 // @flow
-import shortid from 'shortid';
+import uuidv4 from 'uuid/v4';
 import fs from 'fs';
 
 import type { FileUpload, EntityTypes } from 'shared/types';
@@ -25,12 +25,12 @@ export const uploadImage = async (
 ): Promise<string> => {
   const result = await file;
 
-  if (!await dirExists(STORAGE_DIR)) {
+  if (!(await dirExists(STORAGE_DIR))) {
     await createUploadsDir(STORAGE_DIR);
   }
 
   return new Promise(res => {
-    const filePath = `${shortid.generate()}-${entity}-${id}`;
+    const filePath = `${uuidv4()}-${entity}-${id}`;
     const { stream } = result;
     stream.pipe(fs.createWriteStream(`${STORAGE_DIR}/${filePath}`));
     stream.on('end', () => {
