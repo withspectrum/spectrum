@@ -68,6 +68,8 @@ class Navbar extends React.Component<Props, State> {
 
     // Had no user, now have user or user changed
     if (nextProps.currentUser !== currProps.currentUser) return true;
+    if (nextProps.isLoadingCurrentUser !== currProps.isLoadingCurrentUser)
+      return true;
 
     const newDMNotifications =
       currProps.notificationCounts.directMessageNotifications !==
@@ -118,9 +120,14 @@ class Navbar extends React.Component<Props, State> {
   };
 
   render() {
-    const { history, match, currentUser, notificationCounts } = this.props;
-
-    const loggedInUser = currentUser;
+    const {
+      history,
+      match,
+      currentUser,
+      isLoadingCurrentUser,
+      notificationCounts,
+    } = this.props;
+    console.log({ currentUser, isLoadingCurrentUser });
 
     if (isViewingMarketingPage(history, currentUser)) {
       return null;
@@ -143,7 +150,7 @@ class Navbar extends React.Component<Props, State> {
       isViewingDm ||
       isComposingThread;
 
-    if (loggedInUser) {
+    if (currentUser) {
       return (
         <Nav hideOnMobile={hideNavOnMobile} data-cy="navbar">
           <Head>
@@ -211,7 +218,7 @@ class Navbar extends React.Component<Props, State> {
           <NotificationsTab
             onClick={() => this.trackNavigationClick('notifications')}
             location={history.location}
-            currentUser={loggedInUser}
+            currentUser={currentUser}
             active={history.location.pathname.includes('/notifications')}
           />
 
@@ -219,13 +226,13 @@ class Navbar extends React.Component<Props, State> {
             <Tab
               className={'hideOnMobile'}
               {...this.getTabProps(
-                history.location.pathname === `/users/${loggedInUser.username}`
+                history.location.pathname === `/users/${currentUser.username}`
               )}
-              to={loggedInUser ? `/users/${loggedInUser.username}` : '/'}
+              to={currentUser ? `/users/${currentUser.username}` : '/'}
               onClick={() => this.trackNavigationClick('profile')}
             >
               <Navatar
-                user={loggedInUser}
+                user={currentUser}
                 size={28}
                 showHoverProfile={false}
                 showOnlineStatus={false}
@@ -233,15 +240,15 @@ class Navbar extends React.Component<Props, State> {
                 dataCy="navbar-profile"
               />
             </Tab>
-            <ProfileDropdown user={loggedInUser} />
+            <ProfileDropdown user={currentUser} />
           </ProfileDrop>
 
           <ProfileTab
             className={'hideOnDesktop'}
             {...this.getTabProps(
-              history.location.pathname === `/users/${loggedInUser.username}`
+              history.location.pathname === `/users/${currentUser.username}`
             )}
-            to={loggedInUser ? `/users/${loggedInUser.username}` : '/'}
+            to={currentUser ? `/users/${currentUser.username}` : '/'}
             onClick={() => this.trackNavigationClick('profile')}
           >
             <Icon glyph="profile" />
@@ -250,12 +257,12 @@ class Navbar extends React.Component<Props, State> {
         </Nav>
       );
     }
-
-    if (!loggedInUser) {
+    console.log('signed out navbar', !currentUser && !isLoadingCurrentUser);
+    if (!currentUser && !isLoadingCurrentUser) {
       return (
         <Nav
           hideOnMobile={hideNavOnMobile}
-          loggedOut={!loggedInUser}
+          loggedOut={!currentUser}
           data-cy="navbar"
         >
           <Logo
@@ -287,7 +294,7 @@ class Navbar extends React.Component<Props, State> {
           <ExploreTab
             {...this.getTabProps(history.location.pathname === '/explore')}
             to="/explore"
-            loggedOut={!loggedInUser}
+            loggedOut={!currentUser}
             data-cy="navbar-explore"
           >
             <Icon glyph="explore" />
@@ -305,7 +312,7 @@ class Navbar extends React.Component<Props, State> {
         </Nav>
       );
     }
-
+    console.log('returning null navbar');
     return null;
   }
 }
