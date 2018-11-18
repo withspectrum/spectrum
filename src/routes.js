@@ -16,7 +16,6 @@ import ModalRoot from 'src/components/modals/modalRoot';
 import Gallery from 'src/components/gallery';
 import Toasts from 'src/components/toasts';
 import { Loading, LoadingScreen } from 'src/components/loading';
-import LoadingDashboard from 'src/views/dashboard/components/dashboardLoading';
 import Composer from 'src/components/composer';
 import AuthViewHandler from 'src/views/authViewHandler';
 import signedOutFallback from 'src/helpers/signed-out-fallback';
