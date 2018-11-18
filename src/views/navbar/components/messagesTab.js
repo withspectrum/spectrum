@@ -37,6 +37,11 @@ class MessagesTab extends React.Component<Props, State> {
     subscription: null,
   };
 
+  componentDidMount() {
+    this.subscribe();
+    return this.setCount(this.props);
+  }
+
   shouldComponentUpdate(nextProps) {
     const prevProps = this.props;
 
@@ -59,7 +64,6 @@ class MessagesTab extends React.Component<Props, State> {
         nextProps.data.directMessageNotifications.edges.length
     )
       return true;
-
     // if the user clicks on the messages tab
     if (prevProps.active !== nextProps.active) return true;
 
@@ -149,7 +153,6 @@ class MessagesTab extends React.Component<Props, State> {
     } = props;
     const { dispatch } = this.props;
     const nodes = this.convertEdgesToNodes(directMessageNotifications);
-
     // set to 0 if no notifications exist yet
     if (!nodes || nodes.length === 0) {
       return dispatch(

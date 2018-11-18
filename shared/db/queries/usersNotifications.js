@@ -50,6 +50,7 @@ export const markNotificationsSeen = createWriteQuery(
           userId,
           event: events.NOTIFICATIONS_MARKED_AS_SEEN,
         });
+        return true;
       }),
     invalidateTags: () => [userId, ...notifications],
   })
