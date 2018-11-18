@@ -86,9 +86,6 @@ const renderer = (req: express$Request, res: express$Response) => {
   const { t } = req.query;
 
   const initialReduxState = {
-    users: {
-      currentUser: req.user ? req.user : null,
-    },
     dashboardFeed: {
       activeThread: t ? t : '',
       mountedWithActiveThread: t ? t : '',
@@ -114,7 +111,7 @@ const renderer = (req: express$Request, res: express$Response) => {
           <Provider store={store}>
             <StaticRouter location={req.url} context={routerContext}>
               {/* $FlowIssue */}
-              <Routes currentUser={req.user} />
+              <Routes />
             </StaticRouter>
           </Provider>
         </HelmetProvider>
