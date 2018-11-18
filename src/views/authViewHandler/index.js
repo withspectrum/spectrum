@@ -8,7 +8,6 @@ import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import NewUserOnboarding from 'src/views/newUserOnboarding';
 import { Loading } from 'src/components/loading';
-import { setTrackingContexts } from 'src/actions/authentication';
 
 type Props = {
   history: History,
