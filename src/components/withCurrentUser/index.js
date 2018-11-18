@@ -52,14 +52,23 @@ export const withCurrentUser = (
     const { wrappedComponentRef, ...remainingProps } = props;
     return (
       <CurrentUser>
-        {({ currentUser }) => {
-          if (!currentUser)
-            return <Component {...remainingProps} ref={wrappedComponentRef} />;
+        {({ currentUser, isLoading }) => {
+          if (!currentUser) {
+            return (
+              <Component
+                {...remainingProps}
+                currentUser={null}
+                isLoadingCurrentUser={isLoading}
+                ref={wrappedComponentRef}
+              />
+            );
+          }
 
           return (
             <Component
               {...remainingProps}
               currentUser={currentUser}
+              isLoadingCurrentUser={isLoading}
               ref={wrappedComponentRef}
             />
           );
