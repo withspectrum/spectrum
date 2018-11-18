@@ -442,8 +442,8 @@ const map = state => ({
   flyoutOpen: state.flyoutOpen,
 });
 
-// $FlowIssue
 export default compose(
   withCurrentUser,
+  // $FlowIssue
   connect(map)
 )(ThreadDetail);

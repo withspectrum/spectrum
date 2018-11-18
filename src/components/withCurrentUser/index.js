@@ -35,7 +35,8 @@ class CurrentUserComponent extends Component<Props> {
 
     return children
       ? children({ currentUser, isLoading })
-      : render({ currentUser, isLoading });
+      : // $FlowIssue
+        render({ currentUser, isLoading });
   }
 }
 

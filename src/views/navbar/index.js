@@ -9,6 +9,7 @@ import MessagesTab from './components/messagesTab';
 import NotificationsTab from './components/notificationsTab';
 import Head from 'src/components/head';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import {
   Nav,
   Logo,
@@ -37,7 +38,8 @@ type Props = {
     notifications: number,
     directMessageNotifications: number,
   },
-  currentUser?: Object,
+  currentUser?: GetUserType,
+  isLoadingCurrentUser: boolean,
   activeInboxThread: ?string,
 };
 

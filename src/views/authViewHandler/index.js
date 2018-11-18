@@ -16,6 +16,7 @@ type Props = {
   children: (authed: boolean) => React$Element<*>,
   data: {
     user: GetUserType,
+    loading: boolean,
   },
 };
 

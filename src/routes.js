@@ -29,6 +29,7 @@ import DirectMessages from 'src/views/directMessages';
 import { FullscreenThreadView } from 'src/views/thread';
 import ThirdPartyContext from 'src/components/thirdPartyContextSetting';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 
 /* prettier-ignore */
 const Explore = Loadable({
@@ -152,7 +153,8 @@ const ComposerFallback = signedOutFallback(Composer, () => (
 ));
 
 type Props = {
-  currentUser: ?Object,
+  currentUser: ?GetUserType,
+  isLoadingCurrentUser: boolean,
 };
 
 class Routes extends React.Component<Props> {
