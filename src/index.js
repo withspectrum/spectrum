@@ -9,31 +9,25 @@ import queryString from 'query-string';
 import Loadable from 'react-loadable';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import { HelmetProvider } from 'react-helmet-async';
-import webPushManager from './helpers/web-push-manager';
-import { history } from './helpers/history';
+import webPushManager from 'src/helpers/web-push-manager';
+import { history } from 'src/helpers/history';
 import { client } from 'shared/graphql';
-import { initStore } from './store';
-import Routes from './hot-routes';
-import { track, events } from './helpers/analytics';
+import { initStore } from 'src/store';
+import { track, events } from 'src/helpers/analytics';
 import { wsLink } from 'shared/graphql';
-import { subscribeToDesktopPush } from './subscribe-to-desktop-push';
-
+import { subscribeToDesktopPush } from 'src/subscribe-to-desktop-push';
+import RedirectHandler from 'src/components/redirectHandler';
 const params = queryString.parse(history.location.search);
 
 // Always redirect ?thread=asdfxyz to the thread view
 if (params.thread) {
+  console.log({ params });
   if (params.m) {
     history.replace(`/thread/${params.thread}?m=${params.m}`);
   } else {
     history.replace(`/thread/${params.thread}`);
   }
 }
-
-// Redirect ?t=asdfxyz to the thread view only for anonymous users who wouldn't see it
-// in their inbox view (since they don't have an inbox view)
-// if ((!storedData || !storedData.currentUser) && params.t)
-// history.replace(`/thread/${params.t}`);
-
 // If the server passes an initial redux state use that, otherwise construct our own
 const store = initStore(
   window.__SERVER_STATE__ || {
@@ -53,7 +47,7 @@ const App = () => {
       <HelmetProvider>
         <ApolloProvider client={client}>
           <Router history={history}>
-            <Routes />
+            <RedirectHandler />
           </Router>
         </ApolloProvider>
       </HelmetProvider>
