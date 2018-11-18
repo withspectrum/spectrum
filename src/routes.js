@@ -319,6 +319,4 @@ class Routes extends React.Component<Props> {
   }
 }
 
-// const map = state => ({ currentUser: state.users.currentUser });
-// $FlowFixMe
 export default Routes;

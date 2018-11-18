@@ -3,8 +3,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
-import { closeModal } from '../../../actions/modals';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { closeModal } from 'src/actions/modals';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import reportUserMutation from 'shared/graphql/mutations/user/reportUser';
 import { track, events } from 'src/helpers/analytics';
@@ -14,6 +14,7 @@ import { TextButton, Button } from '../../buttons';
 import { modalStyles } from '../styles';
 import { TextArea, Error } from '../../formElements';
 import { Form, Actions } from './style';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type State = {
   reason: ?string,
@@ -151,12 +152,12 @@ class ReportUserModal extends React.Component<Props, State> {
 }
 
 const map = state => ({
-  currentUser: state.users.currentUser,
   isOpen: state.modals.isOpen,
 });
 
 export default compose(
   // $FlowIssue
   connect(map),
+  withCurrentUser,
   reportUserMutation
 )(ReportUserModal);

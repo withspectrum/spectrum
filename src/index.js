@@ -13,13 +13,11 @@ import webPushManager from './helpers/web-push-manager';
 import { history } from './helpers/history';
 import { client } from 'shared/graphql';
 import { initStore } from './store';
-import { getItemFromStorage } from './helpers/localStorage';
 import Routes from './hot-routes';
 import { track, events } from './helpers/analytics';
 import { wsLink } from 'shared/graphql';
 import { subscribeToDesktopPush } from './subscribe-to-desktop-push';
 
-const storedData: ?Object = getItemFromStorage('spectrum');
 const params = queryString.parse(history.location.search);
 
 // Always redirect ?thread=asdfxyz to the thread view
@@ -33,15 +31,12 @@ if (params.thread) {
 
 // Redirect ?t=asdfxyz to the thread view only for anonymous users who wouldn't see it
 // in their inbox view (since they don't have an inbox view)
-if ((!storedData || !storedData.currentUser) && params.t)
-  history.replace(`/thread/${params.t}`);
+// if ((!storedData || !storedData.currentUser) && params.t)
+// history.replace(`/thread/${params.t}`);
 
 // If the server passes an initial redux state use that, otherwise construct our own
 const store = initStore(
   window.__SERVER_STATE__ || {
-    users: {
-      currentUser: storedData ? storedData.currentUser : null,
-    },
     dashboardFeed: {
       activeThread: params.t || '',
       mountedWithActiveThread: params.t || '',
@@ -58,7 +53,7 @@ const App = () => {
       <HelmetProvider>
         <ApolloProvider client={client}>
           <Router history={history}>
-            <Routes currentUser={storedData ? storedData.currentUser : null} />
+            <Routes />
           </Router>
         </ApolloProvider>
       </HelmetProvider>

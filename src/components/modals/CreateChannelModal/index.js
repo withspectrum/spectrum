@@ -16,6 +16,7 @@ import type { GetCommunityType } from 'shared/graphql/queries/community/getCommu
 import createChannelMutation from 'shared/graphql/mutations/channel/createChannel';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
@@ -370,13 +371,13 @@ class CreateChannelModal extends React.Component<Props, State> {
 }
 
 const map = state => ({
-  currentUser: state.users.currentUser,
   isOpen: state.modals.isOpen,
 });
 export default compose(
   // $FlowIssue
   connect(map),
   withApollo,
+  withCurrentUser,
   createChannelMutation,
   withRouter
 )(CreateChannelModal);

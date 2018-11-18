@@ -9,6 +9,7 @@ import CommunityLogin from 'src/views/communityLogin';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import { Loading } from 'src/components/loading';
 import { CLIENT_URL } from 'src/api/constants';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   match: Object,
@@ -79,7 +80,9 @@ class PrivateCommunityJoin extends React.Component<Props, State> {
     const { currentUser, match } = this.props;
     const { isLoading } = this.state;
 
-    const { params: { communitySlug, token } } = match;
+    const {
+      params: { communitySlug, token },
+    } = match;
 
     const redirectPath = `${CLIENT_URL}/${communitySlug}/join/${token}`;
 
@@ -99,8 +102,8 @@ class PrivateCommunityJoin extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-// $FlowIssue
-export default compose(connect(map), addCommunityMemberWithTokenMutation)(
-  PrivateCommunityJoin
-);
+export default compose(
+  withCurrentUser,
+  addCommunityMemberWithTokenMutation,
+  connect()
+)(PrivateCommunityJoin);

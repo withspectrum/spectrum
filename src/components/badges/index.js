@@ -4,6 +4,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
 import { Span, ProBadge, BlockedBadge, PendingBadge, TeamBadge } from './style';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   type: string,
@@ -81,11 +82,7 @@ class Badge extends React.Component<Props> {
   }
 }
 
-const map = state => ({
-  currentUser: state.users.currentUser,
-});
-
 export default compose(
-  // $FlowIssue
-  connect(map)
+  withCurrentUser,
+  connect()
 )(Badge);

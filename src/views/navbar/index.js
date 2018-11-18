@@ -3,11 +3,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import queryString from 'query-string';
-import Icon from '../../components/icons';
+import Icon from 'src/components/icons';
 import ProfileDropdown from './components/profileDropdown';
 import MessagesTab from './components/messagesTab';
 import NotificationsTab from './components/notificationsTab';
-import Head from '../../components/head';
+import Head from 'src/components/head';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   Nav,
   Logo,
@@ -310,10 +311,10 @@ class Navbar extends React.Component<Props, State> {
 }
 
 const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
   notificationCounts: state.notifications,
 });
 export default compose(
   // $FlowIssue
-  connect(mapStateToProps)
+  connect(mapStateToProps),
+  withCurrentUser
 )(Navbar);

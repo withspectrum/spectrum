@@ -1,11 +1,7 @@
 import { setUser, unsetUser } from 'src/helpers/analytics';
-import { removeItemFromStorage, storeItem } from 'src/helpers/localStorage';
 import Raven from 'raven-js';
 
-export const logout = dispatch => {
-  // clear localStorage
-  removeItemFromStorage('spectrum');
-
+export const logout = () => {
   // no longer track analytics
   unsetUser();
 
@@ -19,39 +15,18 @@ export const logout = dispatch => {
         process.env.NODE_ENV === 'production'
           ? '/auth/logout'
           : 'http://localhost:3001/auth/logout';
-      dispatch({
-        type: 'CLEAR_USER',
-      });
     });
 };
 
-export const saveUserDataToLocalStorage = (user: Object) => async dispatch => {
-  const obj = {};
+export const setTrackingContexts = async (user: ?GetUserType) => {
+  if (!user || !user.id) return logout();
 
-  if (!user) {
-    logout();
-  }
-  // construct a clean object that doesn't include any metadata from apollo
-  // like __typename
-  obj['currentUser'] = user;
-
-  // logs user id to analytics
+  // get an anonymized userId for Sentry and Amplitude
   const response = await fetch(
     `https://micro-anonymizomatic-woewfxwpkp.now.sh?text=${user.id}`
   );
-  const { text } = await response.json();
-  setUser(text);
-
-  // logs the user id to sentry errors
-  Raven.setUserContext({ id: user.id });
-
-  // save this object to localstorage. This will be used in the future to hydrate
-  // the store when users visit the homepage
-  storeItem('spectrum', obj);
-
-  // dispatch to the store and save the user
-  dispatch({
-    type: 'SET_USER',
-    user,
-  });
+  const { text: id } = await response.json();
+  return Promise.all([setAmplitudeUserContext(id), setRavenUserContext(id)]);
 };
+export const setAmplitudeUserContext = (id: string) => setUser(id);
+export const setRavenUserContext = (id: string) => Raven.setUserContext({ id });

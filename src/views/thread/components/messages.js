@@ -8,14 +8,15 @@ import idx from 'idx';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
-import ChatMessages from '../../../components/messageGroup';
-import { Loading } from '../../../components/loading';
-import { Button } from '../../../components/buttons';
-import Icon from '../../../components/icons';
-import { NullState } from '../../../components/upsell';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import Head from '../../../components/head';
-import NextPageButton from '../../../components/nextPageButton';
+import ChatMessages from 'src/components/messageGroup';
+import { Loading } from 'src/components/loading';
+import { Button } from 'src/components/buttons';
+import Icon from 'src/components/icons';
+import { NullState } from 'src/components/upsell';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import Head from 'src/components/head';
+import NextPageButton from 'src/components/nextPageButton';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   ChatWrapper,
   NullMessagesWrapper,
@@ -354,13 +355,10 @@ class MessagesWithData extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-const Messages = compose(
-  // $FlowIssue
-  connect(map),
+export default compose(
   withRouter,
+  withCurrentUser,
   getThreadMessages,
-  viewNetworkHandler
+  viewNetworkHandler,
+  connect()
 )(MessagesWithData);
-
-export default Messages;

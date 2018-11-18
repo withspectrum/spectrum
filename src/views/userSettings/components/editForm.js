@@ -10,6 +10,7 @@ import Icon from 'src/components/icons';
 import { SERVER_URL, CLIENT_URL } from 'src/api/constants';
 import GithubProfile from 'src/components/githubProfile';
 import { GithubSigninButton } from 'src/components/loginButtonSet/github';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   Input,
   TextArea,
@@ -470,15 +471,11 @@ class UserWithData extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({
-  currentUser: state.users.currentUser,
-});
-
 const UserSettings = compose(
   editUserMutation,
   withRouter,
   withApollo,
-  // $FlowIssue
-  connect(map)
+  withCurrentUser,
+  connect()
 )(UserWithData);
 export default UserSettings;

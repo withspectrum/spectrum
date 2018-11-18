@@ -14,6 +14,7 @@ import getCommunityTopMembers from 'shared/graphql/queries/community/getCommunit
 import type { GetCommunityTopMembersType } from 'shared/graphql/queries/community/getCommunityTopMembers';
 import { UserListItemContainer, MessageIconContainer } from '../style';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   isLoading: boolean,
@@ -85,15 +86,14 @@ class ConversationGrowth extends React.Component<Props> {
                   avatarSize={40}
                   badges={member.roles}
                 >
-                  {currentUser &&
-                    member.user.id !== currentUser.id && (
-                      <MessageIconContainer>
-                        <Icon
-                          glyph={'message'}
-                          onClick={() => this.initMessage(member.user)}
-                        />
-                      </MessageIconContainer>
-                    )}
+                  {currentUser && member.user.id !== currentUser.id && (
+                    <MessageIconContainer>
+                      <Icon
+                        glyph={'message'}
+                        onClick={() => this.initMessage(member.user)}
+                      />
+                    </MessageIconContainer>
+                  )}
                 </GranularUserProfile>
               </UserListItemContainer>
             );
@@ -114,11 +114,10 @@ class ConversationGrowth extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowIssue
-  connect(map),
   withRouter,
+  withCurrentUser,
   getCommunityTopMembers,
-  viewNetworkHandler
+  viewNetworkHandler,
+  connect()
 )(ConversationGrowth);

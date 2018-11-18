@@ -19,6 +19,7 @@ import { toJSON, toState } from 'shared/draft-utils';
 import Textarea from 'react-textarea-autosize';
 import ActionBar from './actionBar';
 import ConditionalWrap from 'src/components/conditionalWrap';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   UserHoverProfile,
   CommunityHoverProfile,
@@ -438,9 +439,11 @@ const ThreadDetail = compose(
 )(ThreadDetailPure);
 
 const map = state => ({
-  currentUser: state.users.currentUser,
   flyoutOpen: state.flyoutOpen,
 });
 
 // $FlowIssue
-export default connect(map)(ThreadDetail);
+export default compose(
+  withCurrentUser,
+  connect(map)
+)(ThreadDetail);
