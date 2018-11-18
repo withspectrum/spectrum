@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import compose from 'recompose/compose';
-import { getCurrentUser } from 'shared/graphql/queries/user/getUser';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import AuthViewHandler from 'src/views/authViewHandler';
 
 const Switch = props => {
@@ -20,7 +20,7 @@ const Switch = props => {
 };
 
 // Connect that component to the Redux state
-const ConnectedSwitch = compose(getCurrentUser)(Switch);
+const ConnectedSwitch = compose(withCurrentUser)(Switch);
 
 const signedOutFallback = (
   Component: React$ComponentType<*>,

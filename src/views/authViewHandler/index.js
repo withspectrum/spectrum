@@ -30,8 +30,6 @@ class AuthViewHandler extends React.Component<Props> {
     } = this.props;
 
     if (!prev.data.user && user) {
-      setTrackingContexts(user);
-
       if (!user.timezone) {
         const timezone = new Date().getTimezoneOffset() * -1;
         editUser({ timezone });

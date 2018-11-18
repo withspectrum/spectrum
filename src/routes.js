@@ -27,6 +27,7 @@ import Status from './views/status';
 import Login from './views/login';
 import DirectMessages from './views/directMessages';
 import { FullscreenThreadView } from './views/thread';
+import ThirdPartyContext from './components/thirdPartyContextSetting';
 
 /* prettier-ignore */
 const Explore = Loadable({
@@ -189,6 +190,7 @@ class Routes extends React.Component<Props> {
                 have a username set.
               */}
               <AuthViewHandler>{() => null}</AuthViewHandler>
+              <ThirdPartyContext />
               <Status />
               <Route component={Navbar} />
 
