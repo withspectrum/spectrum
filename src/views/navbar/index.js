@@ -127,7 +127,6 @@ class Navbar extends React.Component<Props, State> {
       isLoadingCurrentUser,
       notificationCounts,
     } = this.props;
-    console.log({ currentUser, isLoadingCurrentUser });
 
     if (isViewingMarketingPage(history, currentUser)) {
       return null;
@@ -257,7 +256,6 @@ class Navbar extends React.Component<Props, State> {
         </Nav>
       );
     }
-    console.log('signed out navbar', !currentUser && !isLoadingCurrentUser);
     if (!currentUser && !isLoadingCurrentUser) {
       return (
         <Nav
@@ -312,7 +310,7 @@ class Navbar extends React.Component<Props, State> {
         </Nav>
       );
     }
-    console.log('returning null navbar');
+
     return null;
   }
 }

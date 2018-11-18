@@ -21,7 +21,6 @@ const params = queryString.parse(history.location.search);
 
 // Always redirect ?thread=asdfxyz to the thread view
 if (params.thread) {
-  console.log({ params });
   if (params.m) {
     history.replace(`/thread/${params.thread}?m=${params.m}`);
   } else {
