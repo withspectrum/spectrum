@@ -5,24 +5,24 @@ import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo'
 import { getTruthyValuesFromObject } from '../../truthy-values';
 
 type AnalyticsChannel = {
-  id: string,
-  name: string,
-  slug: string,
+  id: ?string,
+  name: ?string,
+  slug: ?string,
   roles: Array<?string>,
   isPrivate: boolean,
   isArchived: boolean,
 };
 
 type AnalyticsCommunity = {
-  id: string,
-  name: string,
-  slug: string,
+  id: ?string,
+  name: ?string,
+  slug: ?string,
   roles: Array<?string>,
   reputation: number,
 };
 
 type AnalyticsThread = {
-  id: string,
+  id: ?string,
   receiveNotifications: boolean,
   isLocked: boolean,
   isWatercooler: boolean,

@@ -48,7 +48,7 @@ type AnalyticsThreadPermissions = {
 };
 
 type AnalyticsUser = {
-  createdAt: string,
+  createdAt: ?string,
   twitterAuthed: boolean,
   fbAuthed: boolean,
   githubAuthed: boolean,
