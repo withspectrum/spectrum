@@ -34,6 +34,7 @@ untyped-type-import=error
 untyped-import=warn
 unclear-type=warn
 unsafe-getters-setters=error
+deprecated-call-syntax=off
 
 [version]
 0.86.0
