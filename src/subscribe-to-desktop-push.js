@@ -28,10 +28,7 @@ export const subscribeToDesktopPush = (
       const push = new Notification(title, {
         body,
         icon: '/public/img/homescreen-icon-512x512.png',
-        // NOTE(@mxstbr): MacOS push notifications only show a single line of text, so if we
-        // renotify with more messages it'll always show the first message which is confusing
-        // This works around that by never replacing notifications, only adding new ones
-        // tag: notification.id,
+        tag: notification.id,
         renotify: true,
       });
       push.onclick = () => onClick(notificationData);
