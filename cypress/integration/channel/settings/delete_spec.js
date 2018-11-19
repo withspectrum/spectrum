@@ -21,8 +21,9 @@ const { userId: ownerInPrivateChannelId } = data.usersChannels.find(
 
 describe('deleting general channel', () => {
   beforeEach(() => {
-    cy.auth(ownerInChannelId);
-    cy.visit(`/${community.slug}/${channel.slug}/settings`);
+    cy.auth(ownerInChannelId).then(() =>
+      cy.visit(`/${community.slug}/${channel.slug}/settings`)
+    );
   });
 
   it('should not allow general channel to be deleted', () => {
@@ -34,8 +35,9 @@ describe('deleting general channel', () => {
 
 describe('deleting a channel', () => {
   beforeEach(() => {
-    cy.auth(ownerInPrivateChannelId);
-    cy.visit(`/${privateCommunity.slug}/${privateChannel.slug}/settings`);
+    cy.auth(ownerInPrivateChannelId).then(() =>
+      cy.visit(`/${privateCommunity.slug}/${privateChannel.slug}/settings`)
+    );
   });
 
   it('should delete a channel', () => {
