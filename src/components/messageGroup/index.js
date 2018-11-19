@@ -176,6 +176,7 @@ class Messages extends React.Component<Props, State> {
       threadId,
       isModerator,
       lastSeen,
+      thread,
     } = this.props;
 
     let hasInjectedUnseenRobo;
@@ -251,6 +252,7 @@ class Messages extends React.Component<Props, State> {
                           canModerateMessage={canModerateMessage}
                           threadType={threadType}
                           threadId={threadId}
+                          thread={thread}
                         />
                       </MessagesContext.Provider>
                     </ErrorBoundary>

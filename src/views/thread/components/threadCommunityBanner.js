@@ -15,6 +15,7 @@ import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { CommunityAvatar } from '../../../components/avatar';
 import { CLIENT_URL } from 'src/api/constants';
+import getThreadLink from 'src/helpers/get-thread-link';
 import type { Dispatch } from 'redux';
 import {
   CommunityHeader,
@@ -110,8 +111,8 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
     const { isLoading } = this.state;
 
     const loginUrl = community.brandedLogin.isEnabled
-      ? `/${community.slug}/login?r=${CLIENT_URL}/thread/${id}`
-      : `/login?r=${CLIENT_URL}/${community.slug}/thread/${id}`;
+      ? `/${community.slug}/login?r=${CLIENT_URL}/${getThreadLink(thread)}`
+      : `/login?r=${CLIENT_URL}/${getThreadLink(thread)}`;
 
     const createdAt = new Date(thread.createdAt).getTime();
     const timestamp = convertTimestampToDate(createdAt);
@@ -137,7 +138,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
                     {channel.name}
                   </Link>
                 </ChannelHoverProfile>
-                <Link to={`/thread/${id}`}>
+                <Link to={'/' + getThreadLink(thread)}>
                   &nbsp;
                   {`· ${timestamp}`}
                 </Link>
@@ -165,9 +166,10 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
     );
   }
 }
-const map = state => ({ currentUser: state.users.currentUser });
+
+const map = (state: *): * => ({ currentUser: state.users.currentUser });
+// $FlowIssue
 export default compose(
-  // $FlowIssue
   connect(map),
   toggleChannelSubscriptionMutation
 )(ThreadCommunityBanner);

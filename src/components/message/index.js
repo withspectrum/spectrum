@@ -41,6 +41,8 @@ import {
   LikeAction,
   EditedIndicator,
 } from './style';
+import getThreadLink from 'src/helpers/get-thread-link';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 
 type Props = {|
   me: boolean,
@@ -49,6 +51,7 @@ type Props = {|
   canModerateMessage: boolean,
   threadType: 'directMessageThread' | 'story',
   threadId: string,
+  thread: GetThreadType,
   toggleReaction: Function,
   location: Location,
   history: History,
@@ -154,12 +157,18 @@ class Message extends React.Component<Props, State> {
       toggleReaction,
       threadId,
       threadType,
+      thread,
     } = this.props;
     const { isEditing } = this.state;
 
     const canEditMessage = me && message.messageType !== 'media';
     const selectedMessageId = btoa(new Date(message.timestamp).getTime() - 1);
-    const messageUrl = `/thread/${threadId}?m=${selectedMessageId}`;
+    const messageUrl =
+      threadType === 'story' && thread
+        ? `/${getThreadLink(thread)}?m=${selectedMessageId}`
+        : threadType === 'directMessageThread'
+          ? `/messages/${threadId}?m=${selectedMessageId}`
+          : `/thread/${threadId}?m=${selectedMessageId}`;
 
     return (
       <MessagesContext.Consumer>
@@ -359,7 +368,13 @@ class Message extends React.Component<Props, State> {
                               background: 'none',
                               borderLeft: '1px solid #DFE7EF',
                             }}
-                            data-clipboard-text={`${CLIENT_URL}/thread/${threadId}?m=${selectedMessageId}`}
+                            data-clipboard-text={
+                              thread
+                                ? `${CLIENT_URL}/${getThreadLink(
+                                    thread
+                                  )}?m=${selectedMessageId}`
+                                : `${CLIENT_URL}/thread/${threadId}?m=${selectedMessageId}`
+                            }
                             onSuccess={() =>
                               this.props.dispatch(
                                 addToastWithTimeout(

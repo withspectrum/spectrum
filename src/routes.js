@@ -26,6 +26,7 @@ import Navbar from './views/navbar';
 import Status from './views/status';
 import Login from './views/login';
 import DirectMessages from './views/directMessages';
+import RedirectOldThreadRoute from './views/thread/redirect-old-route';
 import { FullscreenThreadView } from './views/thread';
 
 /* prettier-ignore */
@@ -238,7 +239,7 @@ class Routes extends React.Component<Props> {
                 <Route path="/messages" component={MessagesFallback} />
                 <Route
                   path="/thread/:threadId"
-                  component={FullscreenThreadView}
+                  component={RedirectOldThreadRoute}
                 />
                 <Route path="/thread" render={() => <Redirect to="/" />} />
                 <Route exact path="/users" render={() => <Redirect to="/" />} />
@@ -304,6 +305,16 @@ class Routes extends React.Component<Props> {
                 <Route
                   path="/:communitySlug/login"
                   component={CommunityLoginFallback}
+                />
+                <Route
+                  // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.
+                  // Imagine our threadId is "id-123-id" (similar in shape to an actual UUID)
+                  // - /id-123-id => id-123-id, easy start that works
+                  // - /some-custom-slug~id-123-id => id-123-id, custom slug also works
+                  // - /~id-123-id => id-123-id => id-123-id, empty custom slug also works
+                  // - /some~custom~slug~id-123-id => id-123-id, custom slug with delimiter char in it (~) also works! :tada:
+                  path="/:communitySlug/:channelSlug/(.*~)?:threadId"
+                  component={FullscreenThreadView}
                 />
                 <Route
                   path="/:communitySlug/:channelSlug"
