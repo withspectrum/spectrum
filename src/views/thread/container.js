@@ -5,6 +5,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import idx from 'idx';
+import slugg from 'slugg';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import Titlebar from 'src/views/titlebar';
@@ -42,6 +43,7 @@ import { CommunityAvatar } from 'src/components/avatar';
 import WatercoolerActionBar from './components/watercoolerActionBar';
 import { ErrorBoundary } from 'src/components/error';
 import generateImageFromText from 'src/helpers/generate-image-from-text';
+import getThreadLink from 'src/helpers/get-thread-link';
 
 type Props = {
   data: {
@@ -53,7 +55,8 @@ type Props = {
   currentUser: Object,
   dispatch: Dispatch<Object>,
   slider: boolean,
-  threadViewContext: 'slider' | 'fullscreen' | 'inbox',
+  // If this is undefined the thread is being viewed in fullscreen
+  threadViewContext?: 'slider' | 'inbox',
   threadSliderIsOpen: boolean,
   client: Object,
 };
@@ -192,6 +195,27 @@ class ThreadContainer extends React.Component<Props, State> {
   };
 
   componentDidUpdate(prevProps) {
+    // If we're loading the thread for the first time make sure the URL is the right one, and if not
+    // redirect to the right one
+    if (
+      !this.props.threadViewContext &&
+      (!prevProps.data ||
+        !prevProps.data.thread ||
+        !prevProps.data.thread.id) &&
+      this.props.data &&
+      this.props.data.thread &&
+      this.props.data.thread.id
+    ) {
+      const { thread } = this.props.data;
+      const properUrl = `/${thread.community.slug}/${
+        thread.channel.slug
+      }/${slugg(thread.content.title)}~${thread.id}`;
+      // $FlowFixMe
+      if (this.props.location.pathname !== properUrl)
+        // $FlowFixMe
+        return this.props.history.replace(properUrl);
+    }
+
     // if the user is in the inbox and changes threads, it should initially scroll
     // to the top before continuing with logic to force scroll to the bottom
     if (
@@ -459,6 +483,10 @@ class ThreadContainer extends React.Component<Props, State> {
                 type="article"
                 image={metaImage}
               >
+                <link
+                  rel="canonical"
+                  href={`https://spectrum.chat/${getThreadLink(thread)}`}
+                />
                 {metaImage && (
                   <meta name="twitter:card" content="summary_large_image" />
                 )}

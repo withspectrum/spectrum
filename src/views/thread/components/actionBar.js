@@ -15,6 +15,7 @@ import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import OutsideClickHandler from 'src/components/outsideClickHandler';
 import { track, events, transformations } from 'src/helpers/analytics';
+import getThreadLink from 'src/helpers/get-thread-link';
 import type { Dispatch } from 'redux';
 
 import {
@@ -287,7 +288,7 @@ class ActionBar extends React.Component<Props, State> {
                   <a
                     href={`https://www.facebook.com/sharer/sharer.php?t=${encodeURIComponent(
                       thread.content.title
-                    )}&u=https://spectrum.chat/thread/${thread.id}`}
+                    )}&u=https://spectrum.chat/${getThreadLink(thread)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -308,9 +309,9 @@ class ActionBar extends React.Component<Props, State> {
                   data-cy="thread-tweet-button"
                 >
                   <a
-                    href={`https://twitter.com/share?url=https://spectrum.chat/thread/${
-                      thread.id
-                    }&text=${encodeURIComponent(
+                    href={`https://twitter.com/share?url=https://spectrum.chat/${getThreadLink(
+                      thread
+                    )}&text=${encodeURIComponent(
                       thread.content.title
                     )} on @withspectrum`}
                     target="_blank"
@@ -328,7 +329,7 @@ class ActionBar extends React.Component<Props, State> {
 
                 <Clipboard
                   style={{ background: 'none' }}
-                  data-clipboard-text={`${CLIENT_URL}/thread/${thread.id}`}
+                  data-clipboard-text={`${CLIENT_URL}/${getThreadLink(thread)}`}
                   onSuccess={() =>
                     this.props.dispatch(
                       addToastWithTimeout('success', 'Copied to clipboard')
@@ -357,9 +358,9 @@ class ActionBar extends React.Component<Props, State> {
               <ShareButtons>
                 <Clipboard
                   style={{ background: 'none' }}
-                  data-clipboard-text={`https://spectrum.chat/thread/${
-                    thread.id
-                  }`}
+                  data-clipboard-text={`https://spectrum.chat/${getThreadLink(
+                    thread
+                  )}`}
                   onSuccess={() =>
                     this.props.dispatch(
                       addToastWithTimeout('success', 'Copied to clipboard')

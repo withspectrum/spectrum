@@ -30,6 +30,8 @@ import { FullscreenThreadView } from 'src/views/thread';
 import ThirdPartyContext from 'src/components/thirdPartyContextSetting';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+import LoadingDashboard from './views/dashboard/components/dashboardLoading';
+import RedirectOldThreadRoute from './views/thread/redirect-old-route';
 
 /* prettier-ignore */
 const Explore = Loadable({
@@ -226,7 +228,7 @@ class Routes extends React.Component<Props> {
                 <Route path="/messages" component={MessagesFallback} />
                 <Route
                   path="/thread/:threadId"
-                  component={FullscreenThreadView}
+                  component={RedirectOldThreadRoute}
                 />
                 <Route path="/thread" render={() => <Redirect to="/" />} />
                 <Route exact path="/users" render={() => <Redirect to="/" />} />
@@ -292,6 +294,16 @@ class Routes extends React.Component<Props> {
                 <Route
                   path="/:communitySlug/login"
                   component={CommunityLoginFallback}
+                />
+                <Route
+                  // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.
+                  // Imagine our threadId is "id-123-id" (similar in shape to an actual UUID)
+                  // - /id-123-id => id-123-id, easy start that works
+                  // - /some-custom-slug~id-123-id => id-123-id, custom slug also works
+                  // - /~id-123-id => id-123-id => id-123-id, empty custom slug also works
+                  // - /some~custom~slug~id-123-id => id-123-id, custom slug with delimiter char in it (~) also works! :tada:
+                  path="/:communitySlug/:channelSlug/(.*~)?:threadId"
+                  component={FullscreenThreadView}
                 />
                 <Route
                   path="/:communitySlug/:channelSlug"
