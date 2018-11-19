@@ -25,7 +25,7 @@ type FallbackState = {
 };
 
 class AndroidFallbackInput extends React.Component<Props, FallbackState> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     this.syncChanges = debounce(this.syncChanges, 100);

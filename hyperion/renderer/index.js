@@ -48,6 +48,7 @@ const renderer = (req: express$Request, res: express$Response) => {
   const schemaLink = new SchemaLink({
     schema,
     context: {
+      // $FlowFixMe
       user: req.user || null,
       loaders: createLoaders(),
       getImageSignatureExpiration: () => {
@@ -87,6 +88,7 @@ const renderer = (req: express$Request, res: express$Response) => {
 
   const initialReduxState = {
     users: {
+      // $FlowFixMe
       currentUser: req.user ? req.user : null,
     },
     dashboardFeed: {
@@ -141,6 +143,7 @@ const renderer = (req: express$Request, res: express$Response) => {
       debug('write header');
       // Use now's CDN to cache the rendered pages in CloudFlare for half an hour
       // Ref https://zeit.co/docs/features/cdn
+      // $FlowFixMe
       if (!req.user) {
         res.setHeader(
           'Cache-Control',

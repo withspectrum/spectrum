@@ -50,4 +50,5 @@ class MutationWrapper extends React.Component<Props, State> {
   }
 }
 
+// $FlowIssue
 export default connect()(MutationWrapper);

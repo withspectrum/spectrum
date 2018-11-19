@@ -1,5 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
+import type { ThreadInfoType } from '../thread/threadInfo';
 
 export type CommunityInfoType = {
   id: string,
@@ -11,6 +12,7 @@ export type CommunityInfoType = {
   profilePhoto: string,
   coverPhoto: string,
   pinnedThreadId: ?string,
+  watercoolerId: ?string,
   isPrivate: boolean,
   communityPermissions: {
     isMember: boolean,
@@ -37,6 +39,7 @@ export default gql`
     profilePhoto
     coverPhoto
     pinnedThreadId
+    watercoolerId
     isPrivate
     communityPermissions {
       isMember

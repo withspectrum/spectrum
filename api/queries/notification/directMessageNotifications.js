@@ -19,6 +19,7 @@ export default (
     pageInfo: {
       hasNextPage: result.length >= first,
     },
+    // $FlowFixMe
     edges: result.map(notification => ({
       cursor: encode(String(notification.entityAddedAt.getTime())),
       node: notification,

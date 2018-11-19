@@ -60,6 +60,7 @@ export default async (root: DBCommunity, args: CommunityThreadConnectionPaginati
     pageInfo: {
       hasNextPage: threads && threads.length >= first,
     },
+    // $FlowFixMe
     edges: threads.map((thread, index) => ({
       cursor: encode(`${thread.id}-${lastThreadIndex + index + 1}`),
       node: thread,

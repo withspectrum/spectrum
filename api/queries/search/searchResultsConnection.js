@@ -7,6 +7,7 @@ export default (results: Array<any>) => {
       hasNextPage: false,
       hasPreviousPage: false,
     },
+    // $FlowFixMe
     edges: results.map(
       result =>
         result && {

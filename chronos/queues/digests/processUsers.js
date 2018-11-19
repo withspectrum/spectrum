@@ -25,7 +25,7 @@ export const getIntersectingChannels = (
 export const getEligibleThreadsForUser = (
   threadsWithData: ThreadsWithData,
   channelIds: Array<string>
-) => {
+): ?Array<mixed> => {
   let eligibleThreads = [];
   channelIds.map(c => eligibleThreads.push(...threadsWithData[c]));
 
@@ -33,25 +33,29 @@ export const getEligibleThreadsForUser = (
     return null;
   }
 
-  return eligibleThreads
-    .map(t => ({
-      ...t,
-      score:
-        t.newMessageCount * NEW_MESSAGE_COUNT_WEIGHT +
-        t.totalMessageCount * TOTAL_MESSAGE_COUNT_WEIGHT,
-    }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, MAX_THREAD_COUNT_PER_DIGEST);
+  return (
+    eligibleThreads
+      .map(t => ({
+        ...t,
+        score:
+          t.newMessageCount * NEW_MESSAGE_COUNT_WEIGHT +
+          t.totalMessageCount * TOTAL_MESSAGE_COUNT_WEIGHT,
+      }))
+      // $FlowFixMe
+      .sort((a, b) => b.score - a.score)
+      .slice(0, MAX_THREAD_COUNT_PER_DIGEST)
+  );
 };
 
 export const getUpsellCommunities = async (
   user: User,
   topCommunities: Array<Community>
-) => {
+): Promise<?Array<mixed>> => {
   // see what communities the user is in. if they are a member of less than 3 communities, we will upsell communities to join in the digest
   const usersCommunityIds = await getUsersCommunityIds(user.userId);
 
   // if the user has joined less than the threshold number of communities, take the top communities on Spectrum, remove any that the user has already joined, and slice the first 3 to send into the email template
+  // $FlowFixMe
   return usersCommunityIds.length <= COMMUNITY_UPSELL_THRESHOLD
     ? topCommunities
         .filter(community => usersCommunityIds.indexOf(community.id) <= -1)

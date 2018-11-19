@@ -556,6 +556,7 @@ export type EditThreadInput = {
     body: ?string,
   },
   filesToUpload?: ?Array<File>,
+  type?: string,
 };
 
 // shouldUpdate arguemnt is used to prevent a thread from being marked as edited when the images are uploaded at publish time

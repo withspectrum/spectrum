@@ -15,6 +15,7 @@ import message from './message';
 import connectionStatus from './connectionStatus';
 
 const getReducers = () => {
+  // $FlowIssue
   return combineReducers({
     users,
     modals,

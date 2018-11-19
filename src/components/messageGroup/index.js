@@ -38,10 +38,14 @@ type Props = {
 
 type State = {
   selectedMessage: ?string,
+  selectMessage: Function,
 };
 
 // $FlowFixMe
-export const MessagesContext = React.createContext();
+export const MessagesContext = React.createContext({
+  selectedMessage: null,
+  selectMessage: (messageId: ?string) => {},
+});
 
 /*
   Messages expects to receive sorted and grouped messages.
@@ -142,7 +146,9 @@ class Messages extends React.Component<Props, State> {
       return nextGroup.some((nextMessage, messageIndex) => {
         const currMessage = current.messages[groupIndex][messageIndex];
         if (
+          // $FlowFixMe
           !currMessage.message ||
+          // $FlowFixMe
           !nextMessage.message ||
           currMessage.message.type === 'timestamp' ||
           nextMessage.message.type === 'timestamp'
@@ -195,6 +201,7 @@ class Messages extends React.Component<Props, State> {
           const canModerateMessage = me || isModerator;
 
           if (roboText) {
+            // $FlowFixMe
             if (initialMessage.type === 'timestamp') {
               return (
                 <Timestamp key={initialMessage.timestamp}>

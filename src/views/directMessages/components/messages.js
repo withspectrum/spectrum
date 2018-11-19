@@ -22,6 +22,7 @@ type Props = {
     messages: Array<Object>,
     hasNextPage: boolean,
     fetchMore: Function,
+    networkStatus: number,
   },
   subscribeToNewMessages: Function,
   isLoading: boolean,

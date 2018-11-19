@@ -24,6 +24,8 @@ const parseNotificationTypes = notifications => {
     type => type !== '__typename'
   );
   return types.map(type => {
+    if (!type) return {};
+    // $FlowFixMe
     if (!notifications.types[type]) return {};
     switch (type) {
       case 'newMessageInThreads':
@@ -110,7 +112,12 @@ class EmailSettings extends React.Component<Props> {
   };
 
   render() {
-    const { user: { settings: { notifications } }, user } = this.props;
+    const {
+      user: {
+        settings: { notifications },
+      },
+      user,
+    } = this.props;
 
     const settings = parseNotificationTypes(notifications).filter(
       notification => notification.hasOwnProperty('emailValue')

@@ -1,10 +1,16 @@
 // @flow
 import { SecureStore } from 'expo';
 
-export type AuthenticateAction = {
+type AUTHENTICATE = {
   type: 'AUTHENTICATE',
   token: ?string,
 };
+
+type LOGOUT = {
+  type: 'LOGOUT',
+};
+
+export type AuthenticateAction = AUTHENTICATE | LOGOUT;
 
 export const authenticate = (token: ?string) => {
   return {

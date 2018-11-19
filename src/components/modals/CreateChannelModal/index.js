@@ -16,6 +16,7 @@ import type { GetCommunityType } from 'shared/graphql/queries/community/getCommu
 import createChannelMutation from 'shared/graphql/mutations/channel/createChannel';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
+import type { QueryProps } from 'react-apollo';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
@@ -149,23 +150,29 @@ class CreateChannelModal extends React.Component<Props, State> {
             communitySlug,
           },
         })
-        .then(({ data }: { data: { channel: GetChannelType } }) => {
-          if (CHANNEL_SLUG_BLACKLIST.indexOf(this.state.slug) > -1) {
-            return this.setState({
-              slugTaken: true,
-            });
-          }
+        .then(
+          ({
+            data,
+          }: {
+            data: { ...$Exact<QueryProps>, channel: GetChannelType },
+          }) => {
+            if (CHANNEL_SLUG_BLACKLIST.indexOf(this.state.slug) > -1) {
+              return this.setState({
+                slugTaken: true,
+              });
+            }
 
-          if (!data.loading && data && data.channel && data.channel.id) {
-            return this.setState({
-              slugTaken: true,
-            });
-          } else {
-            return this.setState({
-              slugTaken: false,
-            });
+            if (!data.loading && data && data.channel && data.channel.id) {
+              return this.setState({
+                slugTaken: true,
+              });
+            } else {
+              return this.setState({
+                slugTaken: false,
+              });
+            }
           }
-        })
+        )
         .catch(err => {
           // do nothing
         });

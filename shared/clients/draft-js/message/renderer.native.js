@@ -31,6 +31,7 @@ const messageRenderer = {
   },
   blocks: {
     unstyled: (children: Array<Node>, { keys }: KeysObj) =>
+      // $FlowFixMe
       children.map((child, index) => (
         <Text type="body" key={keys[index] || index}>
           {child}

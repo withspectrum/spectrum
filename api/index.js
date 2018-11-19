@@ -72,6 +72,7 @@ app.use('/', (req: express$Request, res: express$Response) => {
 app.use(errorHandler);
 
 // We need to create a separate HTTP server to handle GraphQL subscriptions via websockets
+// $FlowIssue
 const httpServer = createServer(app);
 apolloServer.installSubscriptionHandlers(httpServer);
 

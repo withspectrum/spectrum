@@ -7,7 +7,7 @@ import { canViewCommunity } from '../../utils/permissions';
 export default async ({ id }: DBCommunity, _: any, ctx: GraphQLContext) => {
   const { user, loaders } = ctx;
 
-  if (!await canViewCommunity(user, id, loaders)) {
+  if (!(await canViewCommunity(user, id, loaders))) {
     return {
       pageInfo: {
         hasNextPage: false,
@@ -21,6 +21,7 @@ export default async ({ id }: DBCommunity, _: any, ctx: GraphQLContext) => {
       hasNextPage: false,
     },
     edges: getChannelsByCommunity(id).then(channels =>
+      // $FlowFixMe
       channels.map(channel => ({
         node: channel,
       }))

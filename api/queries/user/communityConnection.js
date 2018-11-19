@@ -27,6 +27,7 @@ export default async (user: DBUser, _: any, ctx: GraphQLContext) => {
     pageInfo: {
       hasNextPage: false,
     },
+    // $FlowFixMe
     edges: communities.map(async community => {
       const permissions = await loaders.userPermissionsInCommunity.load([
         user.id,

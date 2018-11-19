@@ -50,7 +50,9 @@ export const getThreadsForDigest = async (timeframe: Timeframe) => {
   return filteredTopThreads;
 };
 
-export const attachDataToThreads = async (threads: Threads) => {
+export const attachDataToThreads = async (
+  threads: Threads
+): Promise<Object> => {
   // create an empty object for the final output
   let obj = {};
 

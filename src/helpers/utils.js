@@ -84,7 +84,11 @@ export const truncateNumber = (number: number, places: number = 1) => {
   }
 };
 
-export const sortByDate = (array: Array<any>, key: string, order: string) => {
+export const sortByDate = (
+  array: Array<any>,
+  key: string,
+  order: string
+): Array<any> => {
   return array.sort((a, b) => {
     const x = new Date(a[key]).getTime();
     const y = new Date(b[key]).getTime();
@@ -94,7 +98,7 @@ export const sortByDate = (array: Array<any>, key: string, order: string) => {
   });
 };
 
-export const sortByTitle = (array: Array<any>) => {
+export const sortByTitle = (array: Array<any>): Array<any> => {
   return array.sort((a, b) => {
     const x = a['name'];
     const y = b['name'];

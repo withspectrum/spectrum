@@ -46,6 +46,7 @@ type State = {
     isModerator?: boolean,
     isBlocked?: boolean,
     isOwner?: boolean,
+    isPending?: boolean,
   },
   searchIsFocused: boolean,
   // what the user types in

@@ -58,6 +58,7 @@ type Props = {
   threadViewContext?: 'slider' | 'inbox',
   threadSliderIsOpen: boolean,
   client: Object,
+  threadId: string,
 };
 
 type State = {

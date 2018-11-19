@@ -10,7 +10,7 @@ import type { Node } from 'react';
 
 type Props = {
   // Don't let people pass in their own children, this container takes care of that
-  ...$Diff<InputProps, { children: Node }>,
+  ...$Exact<InputProps>,
   dispatch: Function,
   quotedMessage?: string,
 };

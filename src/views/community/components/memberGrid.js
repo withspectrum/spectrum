@@ -17,11 +17,12 @@ import ViewError from 'src/components/viewError';
 import { MessageIconContainer, UserListItemContainer } from '../style';
 import GranularUserProfile from 'src/components/granularUserProfile';
 import type { Dispatch } from 'redux';
+import type { QueryProps } from 'react-apollo';
 
 type Props = {
   data: {
+    ...$Exact<QueryProps>,
     community: GetCommunityMembersType,
-    fetchMore: Function,
   },
   dispatch: Dispatch<Object>,
   isLoading: boolean,

@@ -211,7 +211,7 @@ class ThreadFeedPure extends React.Component<Props, State> {
     const curr = this.props;
 
     if (
-      !prevProps.data.thread &&
+      !prevProps.data.threads &&
       curr.data.threads &&
       curr.data.threads.length === 0
     ) {

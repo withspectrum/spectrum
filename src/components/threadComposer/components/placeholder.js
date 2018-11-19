@@ -38,4 +38,6 @@ class ComposerPlaceholder extends React.Component<Props> {
     );
   }
 }
+
+// $FlowIssue
 export default connect()(ComposerPlaceholder);

@@ -6,6 +6,7 @@ import { trackQueue } from 'shared/bull/queues';
 import { events } from 'shared/analytics';
 
 userDataRouter.get('/', async (req: express$Request, res: express$Response) => {
+  // $FlowFixMe
   if (!req.user) return res.send('No logged-in user');
 
   // $FlowIssue

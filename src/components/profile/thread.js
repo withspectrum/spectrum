@@ -7,11 +7,12 @@ import { connect } from 'react-redux';
 import { ThreadListItem } from '../listItems';
 import { ThreadProfileCard } from './style';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
+import type { QueryProps } from 'react-apollo';
 
 type Props = {
   data: {
+    ...$Exact<QueryProps>,
     thread: GetThreadType,
-    error: ?string,
   },
   setName: Function,
   markAsDeleted: Function,

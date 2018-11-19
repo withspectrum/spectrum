@@ -22,6 +22,7 @@ const messageRenderer = {
   },
   blocks: {
     unstyled: (children: Array<Node>, { keys }: KeysObj) =>
+      // $FlowFixMe
       children.map((child, index) => (
         <Paragraph key={keys[index] || index}>{child}</Paragraph>
       )),
@@ -31,6 +32,7 @@ const messageRenderer = {
       </Line>
     ),
     blockquote: (children: Array<Node>, { keys }: KeysObj) =>
+      // $FlowFixMe
       children.map((child, index) => (
         <BlockQuote key={keys[index] || index}>{child}</BlockQuote>
       )),

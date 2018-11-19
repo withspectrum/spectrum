@@ -11,6 +11,7 @@ import { removeItemFromStorage } from '../../helpers/localStorage';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import { Loading } from 'src/components/loading';
 import type { Dispatch } from 'redux';
+import type { QueryProps } from 'react-apollo';
 
 type Props = {
   currentUser?: Object,
@@ -20,6 +21,7 @@ type Props = {
   editUser: Function,
   children: (authed: boolean) => React$Element<*>,
   data: {
+    ...$Exact<QueryProps>,
     user: GetUserType,
   },
 };

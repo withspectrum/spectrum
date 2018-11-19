@@ -28,4 +28,5 @@ const EmptyThreadFeed = ({ dispatch }) => (
   </NullThreadFeed>
 );
 
+// $FlowIssue
 export default connect()(EmptyThreadFeed);

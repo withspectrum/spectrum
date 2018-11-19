@@ -50,4 +50,5 @@ const ToastsPure = ({ toasts }): React$Element<any> => {
 const mapStateToProps = (state): Object => ({
   toasts: state.toasts.toasts,
 });
+// $FlowIssue
 export default connect(mapStateToProps)(ToastsPure);

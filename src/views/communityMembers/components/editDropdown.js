@@ -47,6 +47,7 @@ type Props = {
     isBlocked: boolean,
     isModerator: boolean,
     isOwner: boolean,
+    isPending: boolean,
   },
 };
 
@@ -252,7 +253,7 @@ class EditDropdown extends React.Component<Props, State> {
                       )}
                     />
                   ) : (
-                    <DropdownSection key={i} onClick={role.onClick}>
+                    <DropdownSection key={i}>
                       <DropdownAction>
                         <Icon
                           glyph={role.selected ? 'checkmark' : 'checkbox'}

@@ -15,12 +15,14 @@ export const initStore = (
   { middleware = [], reducers = {} } = {}
 ) => {
   if (initialState) {
+    // $FlowFixMe
     return createStore(
       getReducers(reducers),
       initialState,
       composeEnhancers(applyMiddleware(...middleware, thunkMiddleware))
     );
   } else {
+    // $FlowFixMe
     return createStore(
       getReducers(reducers),
       {},

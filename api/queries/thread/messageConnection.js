@@ -112,6 +112,7 @@ export default (
         // $FlowIssue
         hasPreviousPage: loadedMoreLast || !!options.after,
       },
+      // $FlowFixMe
       edges: messages.map(message => ({
         cursor: encode(message.timestamp.getTime().toString()),
         node: message,

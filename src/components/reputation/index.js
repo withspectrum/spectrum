@@ -51,4 +51,5 @@ class Reputation extends React.Component<Props> {
   }
 }
 
+// $FlowIssue
 export default connect()(Reputation);

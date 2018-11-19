@@ -40,6 +40,7 @@ const asyncify = (listener: Listener) => {
     try {
       return {
         next: () =>
+          // $FlowFixMe
           new Promise(resolve => {
             watcher.callback = resolve;
             watchers.push(watcher);
@@ -48,7 +49,7 @@ const asyncify = (listener: Listener) => {
           cleanup();
           return Promise.resolve({ done: true });
         },
-        throw: err => {
+        throw: (err: any) => {
           cleanup();
           onError(err);
           return Promise.reject(err);

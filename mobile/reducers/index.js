@@ -12,6 +12,7 @@ export type State = {
 
 // Allow dependency injection of extra reducers, we need this for SSR
 const getReducers = (extraReducers: { [key: string]: Reducer<*, *> }) => {
+  // $FlowFixMe
   return combineReducers({
     authentication,
     message,

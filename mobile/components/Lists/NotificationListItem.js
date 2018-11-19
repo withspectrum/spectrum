@@ -27,6 +27,7 @@ type Props = {
 
 export class NotificationListItem extends Component<Props> {
   getActors = () => {
+    // $FlowFixMe
     return this.props.notification.actors.filter(
       actor => actor.id !== this.props.currentUserId
     );
@@ -254,6 +255,7 @@ export class NotificationListItem extends Component<Props> {
   };
 
   facepileDataFromActors = () => {
+    // $FlowFixMe
     return this.props.notification.actors
       .filter(actor => actor.id !== this.props.currentUserId)
       .map(actor => actor.payload);

@@ -24,6 +24,7 @@ export default async (
     pageInfo: {
       hasNextPage: threads && threads.length >= first,
     },
+    // $FlowFixMe
     edges: threads.map((thread, index) => ({
       cursor: encode(`${thread.id}-${lastThreadIndex + index + 1}`),
       node: thread,

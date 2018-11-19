@@ -23,7 +23,8 @@ export default (
       hasNextPage: result && result.length >= first,
     },
     edges: result
-      ? result.map((thread, index) => ({
+      ? // $FlowFixMe
+        result.map((thread, index) => ({
           cursor: encode(`${thread.id}-${lastThreadIndex + index + 1}`),
           node: thread,
         }))

@@ -37,6 +37,7 @@ type InputProps = {
   user?: GetUserType,
   community?: GetCommunityType,
   size?: number,
+  align?: string,
 };
 
 export const Input = (props: InputProps) => {
@@ -109,6 +110,8 @@ type CoverPhotoInputProps = {
   defaultValue: string,
   onChange: Function,
   dataCy?: string,
+  preview?: boolean,
+  allowGif?: boolean,
 };
 
 export const CoverInput = (props: CoverPhotoInputProps) => {

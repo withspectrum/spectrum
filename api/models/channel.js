@@ -128,7 +128,7 @@ type GetChannelByIdArgs = {|
 |};
 
 type GetChannelBySlugArgs = {|
-  slug: string,
+  channelSlug: string,
   communitySlug: string,
 |};
 

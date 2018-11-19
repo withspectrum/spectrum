@@ -388,7 +388,7 @@ class CommunityView extends React.Component<Props, State> {
                   id={community.id}
                   currentUser={isLoggedIn}
                   setThreadsStatus={
-                    !this.showComposerUpsell && this.setComposerUpsell
+                    !this.state.showComposerUpsell && this.setComposerUpsell
                   }
                   isNewAndOwned={isNewAndOwned}
                   community={community}

@@ -14,6 +14,8 @@ export type UserInfoType = {
   timezone: number,
   totalReputation: number,
   betaSupporter?: boolean,
+  email?: string,
+  pendingEmail?: ?string,
 };
 
 export default gql`

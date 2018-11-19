@@ -111,4 +111,5 @@ class Header extends React.Component<Props> {
   }
 }
 
+// $FlowIssue
 export default connect()(Header);

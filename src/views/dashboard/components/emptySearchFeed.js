@@ -15,4 +15,5 @@ const EmptySearchFeed = ({ dispatch, queryString }) => (
   </NullThreadFeed>
 );
 
+// $FlowIssue
 export default connect()(EmptySearchFeed);

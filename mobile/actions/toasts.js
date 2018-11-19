@@ -23,6 +23,13 @@ export type AddToastActionType = {
   },
 };
 
+export type RemoveToastActionType = {
+  type: 'REMOVE_TOAST',
+  payload: {
+    ...$Exact<ToastType>,
+  },
+};
+
 let nextToastId = 0;
 export const addToast = (payload: AddToastType) => (
   dispatch: Dispatch<Object>

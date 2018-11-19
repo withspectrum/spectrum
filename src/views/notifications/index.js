@@ -46,6 +46,7 @@ import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
+import type { QueryProps } from 'react-apollo';
 
 type Props = {
   markAllNotificationsSeen?: Function,
@@ -55,9 +56,7 @@ type Props = {
   isFetchingMore: boolean,
   ...$Exact<ViewNetworkHandlerType>,
   data: {
-    networkStatus: number,
-    fetchMore: Function,
-    hasNextPage: boolean,
+    ...$Exact<QueryProps>,
     notifications: {
       edges: Array<Object>,
     },

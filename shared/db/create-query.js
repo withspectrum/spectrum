@@ -39,7 +39,7 @@ type RethinkDBQuery<O> = {
   run: () => Promise<O>,
 };
 
-type ProcessFn<I, O> = (data: O) => Promise<*> | *;
+type ProcessFn<I, O> = (data: O) => Promise<mixed> | mixed;
 type TagsFn<I, O> = (data: O) => Array<?string>;
 
 type CreateReadQueryInput<I, O> = $Exact<{
@@ -78,8 +78,8 @@ type CreateWriteQueryInput<I, O> = $Exact<{
   invalidateTags: TagsFn<I, O>,
 }>;
 
-export const createWriteQuery = <I: Array<*>, O: *>(callback: any) => {
-  return async (...args: I) => {
+export const createWriteQuery = <I: any, O: mixed>(callback: any) => {
+  return async (...args: any) => {
     const input = callback(...args);
     const result = await input.query;
     if (typeof result.run === 'function') throw new Error(WRITE_RUN_ERROR);

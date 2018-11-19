@@ -21,6 +21,7 @@ const Switch = props => {
 };
 
 // Connect that component to the Redux state
+// $FlowIssue
 const ConnectedSwitch = connect(
   (state: *): * => ({
     currentUser: state.users.currentUser,

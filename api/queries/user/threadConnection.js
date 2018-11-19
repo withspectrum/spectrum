@@ -58,6 +58,7 @@ export default (
       // $FlowFixMe => super weird
       hasNextPage: result && result.length >= first,
     },
+    // $FlowFixMe
     edges: result.map((thread, index) => ({
       cursor: encode(`${thread.id}-${lastThreadIndex + index + 1}`),
       node: thread,

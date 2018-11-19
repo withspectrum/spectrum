@@ -236,8 +236,7 @@ class ChannelWithData extends React.Component<Props, State> {
                 Anyone on Spectrum can join this channel, post threads and
                 messages, and will be able to see other members. If you want to
                 create private channels,{' '}
-                <a href="mailto:hi@spectrum.chat">get in touch</a>
-                .
+                <a href="mailto:hi@spectrum.chat">get in touch</a>.
               </Description>
             )}
 
@@ -289,7 +288,10 @@ class ChannelWithData extends React.Component<Props, State> {
   }
 }
 
-const Channel = compose(deleteChannelMutation, editChannelMutation, withRouter)(
-  ChannelWithData
-);
-export default connect()(Channel);
+export default compose(
+  deleteChannelMutation,
+  editChannelMutation,
+  withRouter,
+  // $FlowIssue
+  connect()
+)(ChannelWithData);

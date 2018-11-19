@@ -15,12 +15,14 @@ const composeEnhancers =
 // init the store with the thunkMiddleware which allows us to make async actions play nicely with the store
 // Allow dependency injection of extra reducers and middleware, we need this for SSR
 export const initStore = (initialState?: Object) => {
+  // $FlowIssue
   let store = createStore(
     getReducers(),
     initialState || {},
     composeEnhancers(applyMiddleware(thunkMiddleware, crashReporter))
   );
 
+  // $FlowIssue
   if (module.hot && typeof module.hot.accept === 'function') {
     module.hot.accept('../reducers', () => {
       const nextGetReducers = require('../reducers/index').default;

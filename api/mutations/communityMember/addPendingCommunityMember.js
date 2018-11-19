@@ -107,7 +107,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   if (
     permission &&
-    (permission.isOwner || permission.isModerator || permissions.isMember)
+    (permission.isOwner || permission.isModerator || permission.isMember)
   ) {
     trackQueue.add({
       userId: user.id,

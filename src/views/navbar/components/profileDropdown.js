@@ -2,7 +2,6 @@
 import theme from 'shared/theme';
 import React from 'react';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
 import Link from 'src/components/link';
 import Dropdown from 'src/components/dropdown';
 import { SERVER_URL } from 'src/api/constants';
@@ -46,7 +45,6 @@ const UserProfileDropdownListItem = styled.li`
 
 type ProfileProps = {
   user: UserInfoType,
-  dispatch: Function,
 };
 
 type State = {
@@ -102,4 +100,4 @@ class ProfileDropdown extends React.Component<ProfileProps, State> {
   }
 }
 
-export default connect()(ProfileDropdown);
+export default ProfileDropdown;

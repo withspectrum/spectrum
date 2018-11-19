@@ -166,6 +166,7 @@ const Community = /* GraphQL */ `
     topMembers: [CommunityMember] @cost(complexity: 10)
     topAndNewThreads: TopAndNewThreads @cost(complexity: 4)
     watercooler: Thread
+    watercoolerId: String
     brandedLogin: BrandedLogin
     joinSettings: JoinSettings
     slackSettings: CommunitySlackSettings @cost(complexity: 2)

@@ -73,5 +73,8 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
   );
 };
 
-const ThreadFeedCard = compose(withRouter)(ThreadFeedCardPure);
-export default connect()(ThreadFeedCard);
+export default compose(
+  withRouter,
+  // $FlowIssue
+  connect()
+)(ThreadFeedCardPure);

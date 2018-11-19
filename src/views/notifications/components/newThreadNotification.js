@@ -46,12 +46,14 @@ const sortThreads = (entities, currentUser) => {
   return threads;
 };
 
-const ThreadCreatedComponent = ({
-  data,
-  ...rest
-}: {
-  data: { thread: GetThreadType },
-}) => {
+type ThreadCreatedType = {
+  data: {
+    thread: GetThreadType,
+  },
+  isLoading: boolean,
+};
+
+const ThreadCreatedComponent = ({ data, ...rest }: ThreadCreatedType) => {
   if (rest.isLoading) return <LoadingCard />;
   return <ThreadProfile profileSize="mini" data={data} {...rest} />;
 };
