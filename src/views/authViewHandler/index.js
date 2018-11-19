@@ -32,7 +32,9 @@ class AuthViewHandler extends React.Component<Props> {
     if (!prev.data.user && user) {
       if (!user.timezone) {
         const timezone = new Date().getTimezoneOffset() * -1;
-        editUser({ timezone });
+        try {
+          editUser({ timezone });
+        } catch (err) {}
       }
 
       if (location.pathname === '/home') history.push('/');

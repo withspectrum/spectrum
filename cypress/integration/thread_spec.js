@@ -396,7 +396,7 @@ describe('edit message signed out', () => {
   });
 });
 
-describe.only('edit message signed in', () => {
+describe('edit message signed in', () => {
   beforeEach(() => {
     cy.auth(moderator.userId);
     cy.visit(`/thread/${thread.id}`);

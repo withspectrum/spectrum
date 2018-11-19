@@ -20,7 +20,7 @@ const { userId: ownerInPrivateChannelId } = data.usersChannels.find(
 );
 
 describe('deleting general channel', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(ownerInChannelId);
     cy.visit(`/${community.slug}/${channel.slug}/settings`);
   });
@@ -33,7 +33,7 @@ describe('deleting general channel', () => {
 });
 
 describe('deleting a channel', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(ownerInPrivateChannelId);
     cy.visit(`/${privateCommunity.slug}/${privateChannel.slug}/settings`);
   });
@@ -41,8 +41,7 @@ describe('deleting a channel', () => {
   it('should delete a channel', () => {
     cy.get('[data-cy="channel-overview"]').should('be.visible');
 
-    cy
-      .get('[data-cy="delete-channel-button"]')
+    cy.get('[data-cy="delete-channel-button"]')
       .should('be.visible')
       .click();
 
