@@ -39,10 +39,6 @@
       color: #7b16ff;
       font-weight: bold;
       text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
     }
 
     a img {
@@ -245,11 +241,6 @@
       word-break: keep-all;
       white-space: nowrap;
       font-size: 16px;
-
-      &:hover {
-        text-decoration: none;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-      }
     }
 
     .button.feed {
@@ -420,7 +411,7 @@
                       <table class="attributes post" width="100%" cellpadding="0" cellspacing="0">
                         <tr>
                           <td>
-                            <a href="https://spectrum.chat/{{thread.path}}"><h2 class="title">{{thread.content.title}}</h2></a>
+                            <a data-pm-no-track href="https://spectrum.chat/{{thread.path}}"><h2 class="title">{{thread.content.title}}</h2></a>
                           </td>
                         </tr>
 
@@ -429,7 +420,7 @@
                               <table>
                                 <tr>
                                   <td valign="top">
-                                    <a href="https://spectrum.chat/{{thread.path}}">
+                                    <a data-pm-no-track href="https://spectrum.chat/{{thread.path}}">
                                       <img class="avatar" src="{{user.profilePhoto}}" />
                                     </a>
                                   </td>
@@ -437,12 +428,12 @@
                                     <table>
                                       <tr>
                                         <td>
-                                          <a href="https://spectrum.chat/{{thread.path}}"><span class="name">{{user.name}}</span></a>
+                                          <a data-pm-no-track href="https://spectrum.chat/{{thread.path}}"><span class="name">{{user.name}}</span></a>
                                         </td>
                                       </tr>
                                       <tr>
                                         <td>
-                                          <a href="https://spectrum.chat/{{thread.path}}"><p class="reply">{{{message.content.body}}}</p></a>
+                                          <a data-pm-no-track href="https://spectrum.chat/{{thread.path}}"><p class="reply">{{{message.content.body}}}</p></a>
                                         </td>
                                       </tr>
                                     </table>
@@ -454,7 +445,7 @@
 
                           <tr>
                             <td>
-                              <a class="feed button" href="https://spectrum.chat/{{thread.path}}">Go to conversation</a>
+                              <a data-pm-no-track class="feed button" href="https://spectrum.chat/{{thread.path}}">Go to conversation</a>
                             </td>
                           </tr>
                       </table>
