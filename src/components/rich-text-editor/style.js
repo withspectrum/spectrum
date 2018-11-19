@@ -10,9 +10,11 @@ import type { Node } from 'react';
 
 const UsernameWrapper = styled.span`
   color: ${props =>
-    props.me ? props.theme.special.default : props.theme.space.default};
+    props.me
+      ? props.theme.special.default
+      : props.theme.space.default}!important;
   background: ${props =>
-    props.me ? props.theme.special.wash : props.theme.space.wash};
+    props.me ? props.theme.special.wash : props.theme.space.wash}!important;
   padding: 0px 4px 1px;
   border-radius: 4px;
   position: relative;
@@ -24,7 +26,8 @@ const UsernameWrapper = styled.span`
   }
 
   a {
-    text-decoration: none;
+    color: inherit !important;
+    text-decoration: none !important;
   }
 `;
 

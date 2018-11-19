@@ -13,6 +13,7 @@ export const CodeOfConduct = styled.p`
   font-weight: 500;
   color: ${theme.text.alt};
   margin-top: 16px;
+  margin-bottom: 16px;
   position: relative;
   z-index: ${zIndex.card + 1};
 
@@ -20,9 +21,4 @@ export const CodeOfConduct = styled.p`
     color: ${theme.brand.default};
     font-weight: 600;
   }
-`;
-
-export const PrivacyTerms = styled(CodeOfConduct)`
-  margin-top: 8px;
-  margin-bottom: 16px;
 `;
