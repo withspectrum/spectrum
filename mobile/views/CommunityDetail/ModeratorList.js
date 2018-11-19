@@ -29,7 +29,11 @@ class ModeratorList extends React.Component<Props> {
   }
 
   render() {
-    const { data: { community }, isLoading, navigation } = this.props;
+    const {
+      data: { community },
+      isLoading,
+      navigation,
+    } = this.props;
 
     if (community && community.members) {
       const { edges: members } = community.members;

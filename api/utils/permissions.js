@@ -88,12 +88,12 @@ export const canModerateChannel = async (userId: string, channelId: string, load
   ]);
 
   if (!communityPermissions) return false;
-  if (communityPermissions.isOwner || communityPermissions.isModerator)
-    return true;
-  if (!channelPermissions) return false;
-  if (channelPermissions.isOwner || channelPermissions.isModerator) return true;
+  if (communityPermissions.isBlocked) return false
+  if (communityPermissions.isOwner || communityPermissions.isModerator) return true
 
-  return false;
+  if (!channelPermissions) return false;
+  if (channelPermissions.isBlocked) return false
+  return channelPermissions.isOwner || channelPermissions.isModerator
 };
 
 // prettier-ignore
@@ -108,8 +108,9 @@ export const canAdministerCommunity = async (userId: string, communityId: string
     communityId,
   ]);
 
-  if (communityPermissions && communityPermissions.isOwner) return true;
-  return false;
+  if (!communityPermissions) return false
+  if (communityPermissions.isBlocked) return false
+  return communityPermissions.isOwner
 };
 
 // prettier-igore
@@ -129,9 +130,8 @@ export const canModerateCommunity = async (
   ]);
 
   if (!communityPermissions) return false;
-  if (communityPermissions.isOwner || communityPermissions.isModerator)
-    return true;
-  return false;
+  if (communityPermissions.isBlocked) return false;
+  return communityPermissions.isOwner || communityPermissions.isModerator;
 };
 
 // prettier-ignore
@@ -151,6 +151,7 @@ export const canViewCommunity = async (user: DBUser, communityId: string, loader
   ]);
 
   if (!communityPermissions) return false;
+  if (communityPermissions.isBlocked) return false
   if (!communityPermissions.isMember) return false
   
   return true;
@@ -178,8 +179,10 @@ export const canViewThread = async (
   ]);
 
   if (!channel.isPrivate && !community.isPrivate) return true;
-  if (channel.isPrivate) return channelPermissions.isMember;
-  if (community.isPrivate) return communityPermissions.isMember;
+  if (channel.isPrivate)
+    return channelPermissions.isMember && !channelPermissions.isBlocked;
+  if (community.isPrivate)
+    return communityPermissions.isMember && !communityPermissions.isBlocked;
   return false;
 };
 
@@ -236,6 +239,8 @@ export const canViewChannel = async (user: DBUser, channelId: string, loaders: a
   if (community.isPrivate && !communityPermissions) return false
   if (channel.isPrivate && !channelPermissions.isMember) return false
   if (community.isPrivate && !communityPermissions.isMember) return false
+  if (channelPermissions && channelPermissions.isBlocked) return false
+  if (communityPermissions && communityPermissions.isBlocked) return false
   
   return true
 }

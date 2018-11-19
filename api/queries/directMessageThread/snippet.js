@@ -17,6 +17,7 @@ export default async (
   return loaders.directMessageSnippet.load(id).then(results => {
     if (!results) return 'No messages yet...';
     const message = results.reduction;
+    if (message.messageType === 'media') return '📷 Photo';
     return message.messageType === 'draftjs'
       ? toPlainText(toState(JSON.parse(message.content.body)))
       : message.content.body;

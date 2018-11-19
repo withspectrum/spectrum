@@ -386,6 +386,12 @@ export type CalculateThreadScoreJobData = {
   threadId: string,
 };
 
+export type SearchIndexJobData = {
+  id: string,
+  type: 'message' | 'thread' | 'user' | 'community',
+  event: 'created' | 'edited' | 'deleted' | 'moved',
+};
+
 export type Queues = {
   // athena
   sendThreadNotificationQueue: BullQueue<ThreadNotificationJobData>,
@@ -454,6 +460,9 @@ export type Queues = {
   // analytics
   trackQueue: BullQueue<TrackAnalyticsData>,
   identifyQueue: BullQueue<IdentifyAnalyticsData>,
+
+  // vulcan
+  searchQueue: BullQueue<SearchIndexJobData>,
 
   // admin
   _adminSendCommunityCreatedEmailQueue: BullQueue<

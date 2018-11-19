@@ -1,7 +1,7 @@
 // @flow
 require('now-env');
 import AWS from 'aws-sdk';
-import shortid from 'shortid';
+import uuidv4 from 'uuid/v4';
 import _ from 'lodash';
 import Raven from 'shared/raven';
 import sanitize from 'sanitize-filename';
@@ -54,7 +54,7 @@ export const uploadImage = async (
     }
 
     const path = `spectrum-chat/${entity}/${id}`;
-    const fileKey = `${shortid.generate()}-${encoded}`;
+    const fileKey = `${uuidv4()}-${encoded}`;
     return s3.upload(
       {
         Bucket: path,

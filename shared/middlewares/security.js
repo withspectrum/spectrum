@@ -2,6 +2,9 @@
 const hpp = require('hpp');
 const helmet = require('helmet');
 const uuid = require('uuid');
+const hsts = require('hsts');
+const express_enforces_ssl = require('express-enforces-ssl');
+const IS_PROD = process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV;
 
 function securityMiddleware(
   server: express$Application,
@@ -12,6 +15,22 @@ function securityMiddleware(
 
   // Prevent HTTP Parameter pollution.
   server.use(hpp());
+
+  if (IS_PROD) {
+    server.use(
+      hsts({
+        // 5 mins in seconds
+        // we will scale this up incrementally to ensure we dont break the
+        // app for end users
+        // see deployment recommendations here https://hstspreload.org/?domain=spectrum.chat
+        maxAge: 300,
+        includeSubDomains: true,
+        preload: true,
+      })
+    );
+
+    server.use(express_enforces_ssl());
+  }
 
   // The xssFilter middleware sets the X-XSS-Protection header to prevent
   // reflected XSS attacks.

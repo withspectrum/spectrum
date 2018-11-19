@@ -191,4 +191,7 @@ class ThreadFeed extends Component<Props, State> {
   }
 }
 
-export default compose(withCurrentUser, ViewNetworkHandler)(ThreadFeed);
+export default compose(
+  withCurrentUser,
+  ViewNetworkHandler
+)(ThreadFeed);

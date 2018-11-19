@@ -43,4 +43,7 @@ class Dashboard extends Component<Props> {
   }
 }
 
-export default compose(withSafeView, getCurrentUser)(Dashboard);
+export default compose(
+  withSafeView,
+  getCurrentUser
+)(Dashboard);

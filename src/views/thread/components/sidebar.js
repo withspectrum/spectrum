@@ -39,6 +39,7 @@ import {
 } from '../style';
 import { ErrorBoundary } from 'src/components/error';
 import type { ContextRouter } from 'react-router';
+import DesktopAppUpsell from './desktopAppUpsell';
 
 type RecommendedThread = {
   node: GetThreadType,
@@ -192,6 +193,8 @@ class Sidebar extends React.Component<Props> {
             </SidebarSection>
           )}
         </ErrorBoundary>
+
+        <DesktopAppUpsell />
 
         <ErrorBoundary fallbackComponent={null}>
           {Array.isArray(threadsToRender) ? (

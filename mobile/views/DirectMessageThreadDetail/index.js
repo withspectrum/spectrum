@@ -107,6 +107,7 @@ class DirectMessageThreadDetail extends React.Component<Props> {
   }
 }
 
-export default compose(getDirectMessageThread, ViewNetworkHandler)(
-  DirectMessageThreadDetail
-);
+export default compose(
+  getDirectMessageThread,
+  ViewNetworkHandler
+)(DirectMessageThreadDetail);

@@ -12,7 +12,6 @@ import {
   UpsellIconContainer,
   FullscreenContent,
   CodeOfConduct,
-  PrivacyTerms,
 } from './style';
 import queryString from 'query-string';
 import { track, events } from 'src/helpers/analytics';
@@ -77,12 +76,9 @@ export class Login extends React.Component<Props> {
             >
               Code of Conduct
             </a>
-          </CodeOfConduct>
-
-          <PrivacyTerms>
-            <Link to={'/privacy'}>Privacy Policy</Link> ·{' '}
+            , <Link to={'/privacy'}>Privacy Policy</Link> and{' '}
             <Link to={'/terms'}>Terms of Service</Link>.
-          </PrivacyTerms>
+          </CodeOfConduct>
         </FullscreenContent>
       </FullscreenView>
     );

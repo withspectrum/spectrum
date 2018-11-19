@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import Icon from 'src/components/icons';
-import { isDesktopApp } from 'src/helpers/is-desktop-app';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { updateNotificationsCount } from 'src/actions/notifications';
 import getUnreadDMQuery from 'shared/graphql/queries/notification/getDirectMessageNotifications';
@@ -37,6 +37,11 @@ class MessagesTab extends React.Component<Props, State> {
     subscription: null,
   };
 
+  componentDidMount() {
+    this.subscribe();
+    return this.setCount(this.props);
+  }
+
   shouldComponentUpdate(nextProps) {
     const prevProps = this.props;
 
@@ -59,7 +64,6 @@ class MessagesTab extends React.Component<Props, State> {
         nextProps.data.directMessageNotifications.edges.length
     )
       return true;
-
     // if the user clicks on the messages tab
     if (prevProps.active !== nextProps.active) return true;
 
@@ -144,10 +148,11 @@ class MessagesTab extends React.Component<Props, State> {
   };
 
   setCount(props) {
-    const { data: { directMessageNotifications } } = props;
+    const {
+      data: { directMessageNotifications },
+    } = props;
     const { dispatch } = this.props;
     const nodes = this.convertEdgesToNodes(directMessageNotifications);
-
     // set to 0 if no notifications exist yet
     if (!nodes || nodes.length === 0) {
       return dispatch(

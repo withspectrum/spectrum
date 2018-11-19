@@ -28,7 +28,12 @@ class Reaction extends React.Component<Props> {
   };
 
   render() {
-    const { me, message: { reactions: { hasReacted, count } } } = this.props;
+    const {
+      me,
+      message: {
+        reactions: { hasReacted, count },
+      },
+    } = this.props;
     const mutation = me ? () => {} : this.triggerMutation;
 
     return this.props.render({ me, hasReacted, count, mutation });

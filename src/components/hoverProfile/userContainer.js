@@ -14,7 +14,7 @@ import {
 import LoadingHoverProfile from './loadingHoverProfile';
 
 const MentionHoverProfile = getUserByUsername(props => {
-  if (props.data.user) {
+  if (props.data && props.data.user) {
     return (
       <UserProfile
         innerRef={props.innerRef}
@@ -24,7 +24,7 @@ const MentionHoverProfile = getUserByUsername(props => {
     );
   }
 
-  if (props.data.loading) {
+  if (props.data && props.data.loading) {
     return (
       <LoadingHoverProfile style={props.style} innerRef={props.innerRef} />
     );

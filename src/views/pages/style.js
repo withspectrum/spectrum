@@ -284,7 +284,7 @@ export const Footer = styled.div`
   display: flex;
   justify-content: stretch;
   align-content: stretch;
-  flex: auto;
+  flex: none;
   position: relative;
   padding: 32px;
   background-color: ${theme.bg.reverse};
@@ -294,19 +294,19 @@ export const Footer = styled.div`
 export const FooterGrid = styled.div`
   flex: auto;
   display: grid;
-  grid-template-columns: auto 1fr repeat(2, minmax(160px, auto));
+  grid-template-columns: auto 1fr repeat(3, minmax(160px, auto));
   grid-template-rows: 1fr;
   grid-column-gap: 32px;
-  grid-template-areas: 'masthead . support safety';
+  grid-template-areas: 'masthead . apps support safety';
   align-items: flex-start;
   justify-items: flex-start;
 
-  @media (max-width: 640px) {
+  @media (max-width: 800px) {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr 1fr;
+    grid-template-rows: auto;
     grid-column-gap: 0;
     grid-row-gap: 32px;
-    grid-template-areas: 'masthead' 'support' 'safety';
+    grid-template-areas: 'masthead' 'apps' 'support' 'safety';
   }
 `;
 
@@ -363,6 +363,10 @@ export const LinkSection = styled(FooterSection)`
 
 export const Support = styled(LinkSection)`
   grid-area: support;
+`;
+
+export const Apps = styled(LinkSection)`
+  grid-area: apps;
 `;
 
 export const Safety = styled(LinkSection)`
@@ -485,7 +489,7 @@ export const Tabs = styled.div`
   grid-template-columns: auto 1fr repeat(3, auto);
   grid-column-gap: 32px;
   grid-template-rows: auto;
-  grid-template-areas: 'logo . features support auth';
+  grid-template-areas: 'logo . features apps support auth';
   align-items: center;
   justify-items: center;
   color: ${props =>
@@ -567,19 +571,19 @@ export const LogoTab = styled(Tab)`
 
 export const DropdownLink = styled(Link)`
   padding: 16px 0;
-  font-weight: 500;
+  font-weight: ${props => (props.selected ? '600' : '500')};
   display: flex;
   width: 100%;
   align-items: center;
   transition: ${Transition.hover.off};
   color: ${props =>
-    props.selected ? props.theme.text.placeholder : props.theme.brand.alt};
+    props.selected ? props.theme.brand.alt : props.theme.text.alt};
   border-radius: 8px;
 
   &:hover {
     transition: ${Transition.hover.on};
     color: ${props =>
-      props.selected ? props.theme.text.alt : props.theme.brand.default};
+      props.selected ? props.theme.brand.default : props.theme.text.secondary};
   }
 `;
 
@@ -590,6 +594,22 @@ export const LogoLink = styled(DropdownLink)`
   &:hover {
     color: ${theme.brand.alt};
   }
+`;
+
+export const FeaturesLink = styled(DropdownLink)`
+  grid-area: features;
+`;
+
+export const AppsLink = styled(DropdownLink)`
+  grid-area: apps;
+`;
+
+export const SupportLink = styled(DropdownLink)`
+  grid-area: support;
+`;
+
+export const ExploreLink = styled(DropdownLink)`
+  grid-area: explore;
 `;
 
 export const AuthLink = styled(DropdownLink)`
@@ -611,10 +631,11 @@ export const AuthLink = styled(DropdownLink)`
 
 export const MenuContainer = styled.div`
   position: fixed;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto 16px repeat(5, auto) 1fr auto;
+  grid-template-areas: 'logo' '.' 'features' 'apps' 'support' 'explore' '.' 'auth';
+  align-content: start;
   left: 0;
   top: 0;
   bottom: 0;
@@ -628,6 +649,7 @@ export const MenuContainer = styled.div`
   box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.25)};
   padding-top: 32px;
   z-index: 2;
+  flex-direction: column;
 `;
 
 export const MenuOverlay = styled.div`
@@ -671,6 +693,14 @@ export const MenuTab = styled.div`
 
 export const FeaturesTab = styled(Tab)`
   grid-area: features;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const AppsTab = styled(Tab)`
+  grid-area: apps;
 
   @media (max-width: 768px) {
     display: none;

@@ -16,7 +16,8 @@ import { FlexCol, hexa } from '../globals';
 export const Default = styled(FlexCol)`
   display: flex;
   position: relative;
-  flex: none;
+  flex: auto;
+  align-items: center;
   justify-content: center;
   background-color: ${theme.bg.default};
   color: ${theme.text.default};
@@ -29,6 +30,8 @@ export const Primary = styled(Default)`
       ${hexa(theme.brand.alt, 0.75)}, ${theme.space.dark}
     )`};
   color: ${theme.text.reverse};
+  display: flex;
+  flex: 1 0 auto;
 `;
 
 export const Brand = styled(Default)`
@@ -38,6 +41,8 @@ export const Brand = styled(Default)`
     ${({ theme }) => `${theme.brand.alt}, ${theme.brand.default}`}
   );
   color: ${theme.text.reverse};
+  display: flex;
+  flex: 1 0 auto;
 `;
 
 export const Dark = styled(Default)`
@@ -47,6 +52,8 @@ export const Dark = styled(Default)`
     ${({ theme }) => `${theme.space.dark}, ${theme.brand.default}`}
   );
   color: ${theme.text.reverse};
+  display: flex;
+  flex: 1 0 auto;
 `;
 
 export const Space = styled(Default)`
@@ -56,11 +63,15 @@ export const Space = styled(Default)`
     ${({ theme }) => `${theme.space.alt}, ${theme.space.dark}`}
   );
   color: ${theme.text.reverse};
+  display: flex;
+  flex: 1 0 auto;
 `;
 
 export const Light = styled(Default)`
   background-color: ${theme.space.alt};
   color: ${theme.text.reverse};
+  display: flex;
+  flex: 1 0 auto;
 `;
 
 export const Bright = styled(Default)`
@@ -70,6 +81,8 @@ export const Bright = styled(Default)`
     ${({ theme }) => `${theme.space.alt}, ${theme.brand.default}`}
   );
   color: ${theme.text.reverse};
+  display: flex;
+  flex: 1 0 auto;
 `;
 
 export const Grayscale = styled(Default)`
@@ -79,19 +92,28 @@ export const Grayscale = styled(Default)`
     ${({ theme }) => `${theme.text.alt}, ${theme.bg.reverse}`}
   );
   color: ${theme.text.reverse};
+  display: flex;
+  flex: 1 0 auto;
 `;
 
 export const Reverse = styled(Default)`
   background-color: ${theme.bg.reverse};
   background-image: none;
   color: ${theme.text.reverse};
+  display: flex;
+  flex: 1 0 auto;
 `;
 
 export const Blank = styled(Default)`
   background-image: none;
+  display: flex;
+  flex: 1 0 auto;
 `;
 
 export const Illustrated = styled(Default)`
+  display: flex;
+  flex: 1 0 auto;
+
   > img {
     opacity: 0.15;
 

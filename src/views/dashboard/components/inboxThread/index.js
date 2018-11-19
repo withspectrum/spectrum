@@ -129,4 +129,7 @@ class InboxThread extends React.Component<Props> {
 }
 
 const map = (state): * => ({ currentUser: state.users.currentUser });
-export default compose(connect(map), withRouter)(InboxThread);
+export default compose(
+  connect(map),
+  withRouter
+)(InboxThread);

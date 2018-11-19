@@ -16,6 +16,7 @@ import ErrorThreadFeed from './errorThreadFeed';
 import EmptyThreadFeed from './emptyThreadFeed';
 import EmptySearchFeed from './emptySearchFeed';
 import InboxThread from './inboxThread';
+import DesktopAppUpsell from './desktopAppUpsell';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import type { ViewNetworkHandlerType } from '../../../components/viewNetworkHandler';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -266,6 +267,8 @@ class ThreadFeed extends React.Component<Props, State> {
           data-cy="inbox-thread-feed"
           ref={el => (this.innerScrollElement = el)}
         >
+          <DesktopAppUpsell />
+
           {community &&
             community.watercooler &&
             community.watercooler.id && (

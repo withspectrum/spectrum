@@ -139,7 +139,8 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
                   </Link>
                 </ChannelHoverProfile>
                 <Link to={'/' + getThreadLink(thread)}>
-                  &nbsp;{`· ${timestamp}`}
+                  &nbsp;
+                  {`· ${timestamp}`}
                 </Link>
               </CommunityHeaderSubtitle>
             </CommunityHeaderMetaCol>
@@ -165,6 +166,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
     );
   }
 }
+
 const map = (state: *): * => ({ currentUser: state.users.currentUser });
 // $FlowIssue
 export default compose(

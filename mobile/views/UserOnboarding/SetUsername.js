@@ -141,7 +141,9 @@ class SetUsername extends React.Component<Props, State> {
                   ? result === 'available' && isValid
                     ? theme.success.alt
                     : theme.warn.alt
-                  : isValid ? theme.bg.border : theme.warn.alt
+                  : isValid
+                    ? theme.bg.border
+                    : theme.warn.alt
               }
             />
             {isLoading && (
@@ -170,7 +172,9 @@ class SetUsername extends React.Component<Props, State> {
               onPress={this.saveUsername}
               state={
                 !isValid || !result || result === 'taken'
-                  ? isSaving ? 'loading' : 'disabled'
+                  ? isSaving
+                    ? 'loading'
+                    : 'disabled'
                   : undefined
               }
             />
@@ -181,4 +185,7 @@ class SetUsername extends React.Component<Props, State> {
   }
 }
 
-export default compose(withApollo, editUser)(SetUsername);
+export default compose(
+  withApollo,
+  editUser
+)(SetUsername);

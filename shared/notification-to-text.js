@@ -141,6 +141,7 @@ const formatNotification = (incomingNotification, currentUserId) => {
           const sender = notification.actors.find(
             actor => payload.senderId === actor.id
           );
+
           if (payload.messageType === 'draftjs') {
             let body = payload.content.body;
             if (typeof body === 'string')
@@ -150,28 +151,28 @@ const formatNotification = (incomingNotification, currentUserId) => {
             }): ${toPlainText(toState(body))}`;
           }
 
-          return `${sender.payload.name}: ${payload.content.body}`;
+          return `${sender.payload.name}: ${
+            payload.messageType === 'media' ? '📷 Photo' : payload.content.body
+          }`;
         })
         .join('\n');
       break;
     }
     case 'REACTION_CREATED': {
       const message = notification.context.payload;
-
       href = `/thread/${message.threadId}`;
       body =
         message.messageType.toLowerCase() === 'draftjs'
-          ? toPlainText(toState(message.content.body))
+          ? `${toPlainText(toState(JSON.parse(message.content.body)))}`
           : message.content.body;
       break;
     }
     case 'THREAD_REACTION_CREATED': {
       const thread = notification.context.payload;
-
       href = `/thread/${thread.id}`;
       body =
         thread.type.toLowerCase() === 'draftjs'
-          ? toPlainText(toState(thread.content.body))
+          ? `${toPlainText(toState(JSON.parse(thread.content.body)))}`
           : thread.content.body;
       break;
     }
