@@ -103,7 +103,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
 
   render() {
     const {
-      thread: { channel, community, watercooler, id },
+      thread: { channel, community, watercooler },
       thread,
       currentUser,
       isVisible,

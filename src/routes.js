@@ -30,7 +30,6 @@ import { FullscreenThreadView } from 'src/views/thread';
 import ThirdPartyContext from 'src/components/thirdPartyContextSetting';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
-import LoadingDashboard from './views/dashboard/components/dashboardLoading';
 import RedirectOldThreadRoute from './views/thread/redirect-old-route';
 
 /* prettier-ignore */
