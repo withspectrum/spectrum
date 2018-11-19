@@ -96,14 +96,17 @@ class ChannelView extends React.Component<Props, State> {
     if (
       (!prevProps.data.channel && this.props.data.channel) ||
       (prevProps.data.channel &&
+        this.props.data.channel &&
         prevProps.data.channel.id !== this.props.data.channel.id)
     ) {
       const { channel } = this.props.data;
 
-      track(events.CHANNEL_VIEWED, {
-        channel: transformations.analyticsChannel(channel),
-        community: transformations.analyticsCommunity(channel.community),
-      });
+      if (channel) {
+        track(events.CHANNEL_VIEWED, {
+          channel: transformations.analyticsChannel(channel),
+          community: transformations.analyticsCommunity(channel.community),
+        });
+      }
 
       // if the user is new and signed up through a community page, push
       // the community data into the store to hydrate the new user experience
@@ -373,21 +376,27 @@ class ChannelView extends React.Component<Props, State> {
 
               {actionButton}
 
-              {isLoggedIn && userHasPermissions && !channel.isArchived && (
-                <ErrorBoundary fallbackComponent={null}>
-                  <NotificationsToggle
-                    value={channel.channelPermissions.receiveNotifications}
-                    channel={channel}
-                  />
-                </ErrorBoundary>
-              )}
+              {isLoggedIn &&
+                userHasPermissions &&
+                !channel.isArchived && (
+                  <ErrorBoundary fallbackComponent={null}>
+                    <NotificationsToggle
+                      value={channel.channelPermissions.receiveNotifications}
+                      channel={channel}
+                    />
+                  </ErrorBoundary>
+                )}
 
               {/* user is signed in and has permissions to view pending users */}
-              {isLoggedIn && (isOwner || isGlobalOwner) && (
-                <ErrorBoundary fallbackComponent={null}>
-                  <PendingUsersNotification channel={channel} id={channel.id} />
-                </ErrorBoundary>
-              )}
+              {isLoggedIn &&
+                (isOwner || isGlobalOwner) && (
+                  <ErrorBoundary fallbackComponent={null}>
+                    <PendingUsersNotification
+                      channel={channel}
+                      id={channel.id}
+                    />
+                  </ErrorBoundary>
+                )}
             </Meta>
             <Content>
               <SegmentedControl style={{ margin: '16px 0 0 0' }}>
