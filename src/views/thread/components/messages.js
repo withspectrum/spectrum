@@ -173,7 +173,6 @@ class MessagesWithData extends React.Component<Props, State> {
 
   getAuthorEmptyMessage = () => {
     const threadTitle = idx(this.props, _ => _.data.thread.content.title) || '';
-    const threadId = idx(this.props, _ => _.data.thread.id) || '';
 
     return (
       <NullMessagesWrapper>
