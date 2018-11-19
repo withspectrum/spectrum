@@ -37,8 +37,8 @@ export const analyticsChannel = (
       name: null,
       slug: null,
       roles: [],
-      isPrivate: null,
-      isArchived: null,
+      isPrivate: false,
+      isArchived: false,
     };
   }
 
