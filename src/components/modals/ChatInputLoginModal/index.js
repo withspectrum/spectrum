@@ -8,7 +8,7 @@ import { closeModal } from 'src/actions/modals';
 import ModalContainer from '../modalContainer';
 import { modalStyles } from '../styles';
 import LoginButtonSet from 'src/components/loginButtonSet';
-import { Container, CodeOfConduct, PrivacyTerms } from './style';
+import { Container, CodeOfConduct } from './style';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
@@ -69,12 +69,11 @@ class ChatInputLoginModal extends React.Component<Props> {
               >
                 Code of Conduct
               </a>
-            </CodeOfConduct>
-
-            <PrivacyTerms>
-              <Link to={'/privacy'}>Privacy Policy</Link> ·{' '}
+              {', '}
+              <Link to={'/privacy'}>Privacy Policy</Link>
+              {', and '}
               <Link to={'/terms'}>Terms of Service</Link>.
-            </PrivacyTerms>
+            </CodeOfConduct>
           </Container>
         </ModalContainer>
       </Modal>
