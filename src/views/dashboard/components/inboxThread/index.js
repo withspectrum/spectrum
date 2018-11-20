@@ -20,6 +20,7 @@ import {
 import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
 import ThreadActivity from './activity';
 import { ErrorBoundary } from 'src/components/error';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   active: boolean,
@@ -128,8 +129,8 @@ class InboxThread extends React.Component<Props> {
   }
 }
 
-const map = (state): * => ({ currentUser: state.users.currentUser });
 export default compose(
-  connect(map),
-  withRouter
+  withRouter,
+  withCurrentUser,
+  connect()
 )(InboxThread);

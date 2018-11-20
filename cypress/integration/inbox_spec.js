@@ -10,8 +10,7 @@ const dashboardThreads = data.threads.filter(
 
 describe('Inbox View', () => {
   beforeEach(() => {
-    cy.auth(user.id);
-    cy.visit('/');
+    cy.auth(user.id).then(() => cy.visit('/'));
   });
 
   it('should render the inbox view', () => {

@@ -478,6 +478,8 @@ export const approvePendingMemberInCommunity = async (
         context: { communityId },
       });
 
+      incrementMemberCount(communityId);
+
       return result.changes[0].new_val;
     });
 };

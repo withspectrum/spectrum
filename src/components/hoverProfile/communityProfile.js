@@ -10,6 +10,7 @@ import ToggleCommunityMembership from 'src/components/toggleCommunityMembership'
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   HoverWrapper,
   ProfileCard,
@@ -108,9 +109,8 @@ class HoverProfile extends Component<ProfileProps> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  //$FlowFixMe
-  connect(map),
-  withRouter
+  withCurrentUser,
+  withRouter,
+  connect()
 )(HoverProfile);

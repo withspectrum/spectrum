@@ -117,7 +117,7 @@ class UpsellExploreCommunities extends React.Component<Props, State> {
                 onClick={() => track(events.INBOX_UPSELL_COMMUNITY_CLICKED)}
               >
                 <CommunityAvatarContainer>
-                  <CommunityAvatar community={c} />
+                  <CommunityAvatar community={c} clickable={false} />
                 </CommunityAvatarContainer>
               </Link>
             );

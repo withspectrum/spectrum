@@ -9,14 +9,15 @@ import {
 } from 'src/components/hoverProfile';
 import { LikeButton } from 'src/components/threadLikes';
 import { convertTimestampToDate } from 'shared/time-formatting';
-import { Button } from '../../../components/buttons';
+import { Button } from 'src/components/buttons';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { CommunityAvatar } from '../../../components/avatar';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { CommunityAvatar } from 'src/components/avatar';
 import { CLIENT_URL } from 'src/api/constants';
 import getThreadLink from 'src/helpers/get-thread-link';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   CommunityHeader,
   CommunityHeaderName,
@@ -166,10 +167,8 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
     );
   }
 }
-
-const map = (state: *): * => ({ currentUser: state.users.currentUser });
-// $FlowIssue
 export default compose(
-  connect(map),
-  toggleChannelSubscriptionMutation
+  withCurrentUser,
+  toggleChannelSubscriptionMutation,
+  connect()
 )(ThreadCommunityBanner);

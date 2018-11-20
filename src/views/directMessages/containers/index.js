@@ -6,16 +6,17 @@ import { connect } from 'react-redux';
 import getCurrentUserDirectMessageThreads from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
 import type { GetCurrentUserDMThreadConnectionType } from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
 import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
-import Icon from '../../../components/icons';
+import Icon from 'src/components/icons';
 import ThreadsList from '../components/threadsList';
 import NewThread from './newThread';
 import ExistingThread from './existingThread';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import ViewError from '../../../components/viewError';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import ViewError from 'src/components/viewError';
 import Titlebar from '../../titlebar';
 import { View, MessagesList, ComposeHeader } from '../style';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   subscribeToUpdatedDirectMessageThreads: Function,
@@ -171,11 +172,10 @@ class DirectMessages extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowIssue
-  connect(map),
+  withCurrentUser,
   getCurrentUserDirectMessageThreads,
   markDirectMessageNotificationsSeenMutation,
-  viewNetworkHandler
+  viewNetworkHandler,
+  connect()
 )(DirectMessages);

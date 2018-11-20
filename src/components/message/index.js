@@ -18,6 +18,7 @@ import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import { UserAvatar } from 'src/components/avatar';
 import AuthorByline from './authorByline';
 import Icon from 'src/components/icons';
@@ -413,10 +414,9 @@ class Message extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowFixMe
-  connect(map),
+  withCurrentUser,
   withRouter,
-  toggleReactionMutation
+  toggleReactionMutation,
+  connect()
 )(Message);

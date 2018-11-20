@@ -151,6 +151,7 @@ module.exports = function override(config, env) {
   );
   if (process.env.NODE_ENV === 'production') {
     removeEslint(config);
+    config.plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
     config.plugins.push(
       new webpack.DefinePlugin({
         'process.env': {

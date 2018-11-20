@@ -105,8 +105,9 @@ describe('public community signed out', () => {
 
 describe('public community signed in without permission', () => {
   beforeEach(() => {
-    cy.auth(nonMemberInPublicCommunityId);
-    cy.visit(`/${publicCommunity.slug}`);
+    cy.auth(nonMemberInPublicCommunityId).then(() =>
+      cy.visit(`/${publicCommunity.slug}`)
+    );
   });
 
   it('should render profile', () => {
@@ -174,8 +175,9 @@ describe('public community signed in without permission', () => {
 
 describe('public community signed in with permission', () => {
   beforeEach(() => {
-    cy.auth(memberInPublicCommunityId);
-    cy.visit(`/${publicCommunity.slug}`);
+    cy.auth(memberInPublicCommunityId).then(() =>
+      cy.visit(`/${publicCommunity.slug}`)
+    );
   });
 
   it('should render profile', () => {
@@ -198,8 +200,9 @@ describe('private community signed out', () => {
 
 describe('private community signed in without permission', () => {
   beforeEach(() => {
-    cy.auth(nonMemberInPrivateCommunityId);
-    cy.visit(`/${privateCommunity.slug}`);
+    cy.auth(nonMemberInPrivateCommunityId).then(() =>
+      cy.visit(`/${privateCommunity.slug}`)
+    );
   });
 
   it('should render the blocked page', () => {
@@ -226,8 +229,9 @@ describe('private community signed in without permission', () => {
 
 describe('private community signed in with permissions', () => {
   beforeEach(() => {
-    cy.auth(memberInPrivateCommunityId);
-    cy.visit(`/${privateCommunity.slug}`);
+    cy.auth(memberInPrivateCommunityId).then(() =>
+      cy.visit(`/${privateCommunity.slug}`)
+    );
   });
 
   it('should render profile', () => {

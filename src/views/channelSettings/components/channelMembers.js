@@ -14,6 +14,7 @@ import { MessageIconContainer, UserListItemContainer } from '../style';
 import { ListContainer, ListFooter } from 'src/components/listItems/style';
 import Icon from 'src/components/icons';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   data: {
@@ -119,11 +120,9 @@ class ChannelMembers extends Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-
 export default compose(
-  // $FlowIssue
-  connect(map),
   getChannelMembersQuery,
-  viewNetworkHandler
+  withCurrentUser,
+  viewNetworkHandler,
+  connect()
 )(ChannelMembers);

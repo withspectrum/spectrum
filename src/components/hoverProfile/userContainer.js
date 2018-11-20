@@ -11,6 +11,7 @@ import {
   getUserByUsername,
   getUserByUsernameQuery,
 } from 'shared/graphql/queries/user/getUser';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import LoadingHoverProfile from './loadingHoverProfile';
 
 const MentionHoverProfile = getUserByUsername(props => {
@@ -127,9 +128,8 @@ class UserHoverProfileWrapper extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowFixMe
-  connect(map),
-  withApollo
+  withCurrentUser,
+  withApollo,
+  connect()
 )(UserHoverProfileWrapper);

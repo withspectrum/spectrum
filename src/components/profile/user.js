@@ -18,6 +18,7 @@ import { displayLoadingCard } from 'src/components/loading';
 import Reputation from 'src/components/reputation';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   FullProfile,
   ProfileHeader,
@@ -257,10 +258,10 @@ const UserWithData = ({
 
 const User = compose(
   displayLoadingCard,
-  withRouter
+  withRouter,
+  withCurrentUser
 )(UserWithData);
 const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
   initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,
 });
 // $FlowFixMe

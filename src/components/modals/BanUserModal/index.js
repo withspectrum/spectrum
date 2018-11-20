@@ -13,6 +13,7 @@ import { TextButton, Button } from '../../buttons';
 import { modalStyles } from '../styles';
 import { TextArea, Error } from '../../formElements';
 import { Form, Actions, Subtitle } from './style';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type State = {
   reason: ?string,
@@ -137,12 +138,12 @@ class BanUserModal extends React.Component<Props, State> {
 }
 
 const map = state => ({
-  currentUser: state.users.currentUser,
   isOpen: state.modals.isOpen,
 });
 
 export default compose(
   // $FlowIssue
   connect(map),
+  withCurrentUser,
   banUserMutation
 )(BanUserModal);

@@ -4,9 +4,10 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { CommunityProfile } from '../../components/profile';
+import { CommunityProfile } from 'src/components/profile';
 import { collections } from './collections';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   ListWithTitle,
   ListTitle,
@@ -18,8 +19,8 @@ import {
 } from './style';
 import { getCommunitiesBySlug } from 'shared/graphql/queries/community/getCommunities';
 import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCommunities';
-import { Loading } from '../../components/loading';
-import { SegmentedControl, Segment } from '../../components/segmentedControl';
+import { Loading } from 'src/components/loading';
+import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { track, transformations, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
 
@@ -223,10 +224,9 @@ class CategoryList extends React.Component<CategoryListProps> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export const Category = compose(
-  // $FlowIssue
-  connect(map),
+  withCurrentUser,
   getCommunitiesBySlug,
-  viewNetworkHandler
+  viewNetworkHandler,
+  connect()
 )(CategoryList);
