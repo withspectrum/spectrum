@@ -234,7 +234,7 @@ class Navbar extends React.Component<Props, State> {
             >
               <Navatar
                 user={currentUser}
-                size={28}
+                size={32}
                 showHoverProfile={false}
                 showOnlineStatus={false}
                 clickable={false}

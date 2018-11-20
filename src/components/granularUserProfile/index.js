@@ -106,7 +106,6 @@ class GranularUserProfile extends React.Component<Props> {
           <UserAvatar
             user={userObject}
             size={avatarSize || 32}
-            onlineSize={onlineSize || 'small'}
             showHoverProfile={!showHoverProfile}
           />
         )}

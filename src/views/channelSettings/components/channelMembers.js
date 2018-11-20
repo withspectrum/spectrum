@@ -67,9 +67,8 @@ class ChannelMembers extends Component<Props> {
                       username={user.username}
                       isCurrentUser={currentUser && user.id === currentUser.id}
                       isOnline={user.isOnline}
-                      onlineSize={'small'}
                       profilePhoto={user.profilePhoto}
-                      avatarSize={32}
+                      avatarSize={40}
                       description={user.description}
                       showHoverProfile={false}
                     >

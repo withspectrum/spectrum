@@ -6,7 +6,7 @@ import { zIndex } from '../globals';
 import Link from 'src/components/link';
 import { ProfileHeaderAction } from '../profile/style';
 
-export const Status = styled.div`
+export const Container = styled.div`
   position: relative;
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
@@ -24,31 +24,6 @@ export const Status = styled.div`
         height: ${props => `${props.mobilesize}px`};
       }
     `};
-
-  &:after {
-    content: '';
-    position: absolute;
-    display: ${props => (props.isOnline ? 'inline-block' : 'none')};
-    width: ${props => (props.onlineSize === 'large' ? '8px' : '6px')};
-    height: ${props => (props.onlineSize === 'large' ? '8px' : '6px')};
-    background: ${theme.success.alt};
-    border-radius: ${props =>
-      props.type === 'community' ? `${props.size / 8}px` : '100%'};
-    border: 2px solid ${theme.text.reverse};
-    bottom: ${props =>
-      props.onlineSize === 'large'
-        ? '0'
-        : props.onlineSize === 'small'
-          ? '-1px'
-          : '1px'};
-    right: ${props =>
-      props.onlineSize === 'large'
-        ? '0'
-        : props.onlineSize === 'small'
-          ? '-6px'
-          : '-3px'};
-    z-index: ${zIndex.avatar};
-  }
 `;
 
 export const AvatarLink = styled(Link)`
@@ -125,4 +100,20 @@ export const LoadingImg = styled.div`
         height: ${props => `${props.mobilesize}px`};
       }
     `};
+`;
+
+export const OnlineIndicator = styled.span`
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 2px solid
+    ${props =>
+      props.onlineBorderColor
+        ? props.onlineBorderColor(props.theme)
+        : props.theme.text.reverse};
+  background: ${theme.success.alt};
+  border-radius: 5px;
+  bottom: 0;
+  right: 0;
+  z-index: ${zIndex.avatar};
 `;
