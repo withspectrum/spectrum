@@ -199,7 +199,8 @@
     "draft-js": "npm:draft-js-fork-mxstbr",
     "jest-environment-node": "22.4.3",
     "jest": "22.4.3",
-    "fbjs": "0.8.16"
+    "fbjs": "0.8.16",
+    "punycode": "1.4.1"
   },
   "scripts": {
     "start": "cross-env NODE_ENV=production node build-hyperion/main.js",

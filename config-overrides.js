@@ -160,5 +160,6 @@ module.exports = function override(config, env) {
       })
     );
   }
+  config.node = false;
   return rewireStyledComponents(config, env, { ssr: true });
 };
