@@ -145,7 +145,6 @@
     "query-string": "5.1.1",
     "raf": "^3.4.0",
     "raven": "^2.6.4",
-    "raven-js": "^3.27.0",
     "react": "16.4.2",
     "react-apollo": "^2.2.4",
     "react-app-rewire-styled-components": "^3.0.0",

@@ -1,6 +1,5 @@
 import { setUser, unsetUser } from 'src/helpers/analytics';
 import { removeItemFromStorage, storeItem } from 'src/helpers/localStorage';
-import Raven from 'raven-js';
 
 export const logout = dispatch => {
   // clear localStorage
@@ -42,8 +41,23 @@ export const saveUserDataToLocalStorage = (user: Object) => async dispatch => {
   const { text } = await response.json();
   setUser(text);
 
-  // logs the user id to sentry errors
-  Raven.setUserContext({ id: user.id });
+  // logs the user id to Sentry
+  // if Raven hasn't loaded yet, try every 5s until it's loaded
+  if (window.Raven) {
+    console.log('Raven setUserContext!');
+    window.Raven.setUserContext({ id: user.id });
+  } else {
+    console.log('No Raven :( Try again in 5s');
+    const interval = setInterval(() => {
+      console.log('Raven?');
+      if (window.Raven) {
+        console.log('Yes! setUserContext');
+        window.Raven.setUserContext({ id: user.id });
+        clearInterval(interval);
+      }
+      console.log('No :( Try again in 5s');
+    }, 5000);
+  }
 
   // save this object to localstorage. This will be used in the future to hydrate
   // the store when users visit the homepage
