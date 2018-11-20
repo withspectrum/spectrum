@@ -20,7 +20,7 @@ type HandlerProps = {
   showOnlineStatus?: boolean,
   clickable?: boolean,
   dataCy?: string,
-  onlineBorderColor?: Function,
+  onlineBorderColor?: ?Function,
 };
 
 type AvatarProps = {
