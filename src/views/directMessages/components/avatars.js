@@ -16,7 +16,6 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
       <AvatarContainer>
         <UserAvatar
           user={users[0]}
-          onlineSize={'large'}
           size={44}
           clickable={false}
           showHoverProfile={false}
@@ -51,7 +50,6 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
           return (
             <UserAvatar
               user={user}
-              onlineSize={'small'}
               key={user.id}
               size={20}
               clickable={false}
@@ -70,7 +68,6 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
           return (
             <UserAvatar
               user={user}
-              onlineSize={'small'}
               key={user.id}
               size={19}
               clickable={false}
@@ -92,7 +89,6 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
             return (
               <UserAvatar
                 user={user}
-                onlineSize={'small'}
                 key={user.id}
                 size={19}
                 clickable={false}

@@ -67,7 +67,6 @@ class ChannelMemberGrid extends React.Component<Props> {
                     username={user.username}
                     isCurrentUser={currentUser && user.id === currentUser.id}
                     isOnline={user.isOnline}
-                    onlineSize={'small'}
                     profilePhoto={user.profilePhoto}
                     avatarSize={32}
                   >

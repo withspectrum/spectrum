@@ -151,7 +151,6 @@ class CommunityMembers extends React.Component<Props, State> {
         description={user.description}
         isCurrentUser={user.id === this.props.currentUser.id}
         isOnline={user.isOnline}
-        onlineSize={'small'}
         reputation={reputation}
         profilePhoto={user.profilePhoto}
         avatarSize={40}

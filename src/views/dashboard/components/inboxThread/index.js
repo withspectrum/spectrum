@@ -89,7 +89,11 @@ class InboxThread extends React.Component<Props> {
             {viewContext !== 'userProfile' &&
               viewContext !== 'userProfileReplies' && (
                 <AvatarLink>
-                  <UserAvatar user={thread.author.user} size={40} />
+                  <UserAvatar
+                    onlineBorderColor={active ? theme => theme.brand.alt : null}
+                    user={thread.author.user}
+                    size={40}
+                  />
                 </AvatarLink>
               )}
 

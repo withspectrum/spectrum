@@ -83,7 +83,6 @@ class CommunityModeratorList extends React.Component<Props> {
                 profilePhoto={user.profilePhoto}
                 isCurrentUser={currentUser && user.id === currentUser.id}
                 isOnline={user.isOnline}
-                onlineSize={'small'}
               >
                 {currentUser &&
                   node.user.id !== currentUser.id && (
