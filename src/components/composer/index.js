@@ -289,14 +289,20 @@ class ComposerWithData extends Component<Props, State> {
   componentWillUpdate(next) {
     const currChannelLength =
       this.props.data.user &&
+      this.props.data.user.channelConnection &&
       this.props.data.user.channelConnection.edges.length;
     const nextChannelLength =
-      next.data.user && next.data.user.channelConnection.edges.length;
+      next.data.user &&
+      next.data.user.channelConnection &&
+      next.data.user.channelConnection.edges.length;
     const currCommunityLength =
       this.props.data.user &&
+      this.props.data.user.communityConnection &&
       this.props.data.user.communityConnection.edges.length;
     const nextCommunityLength =
-      next.data.user && next.data.user.communityConnection.edges.length;
+      next.data.user &&
+      next.data.user.communityConnection &&
+      next.data.user.communityConnection.edges.length;
 
     if (
       (this.props.data.loading && !next.data.loading) ||
