@@ -23,6 +23,7 @@ import ViewError from 'src/components/viewError';
 import { LoadingScreen } from 'src/components/loading';
 import { CLIENT_URL } from 'src/api/constants';
 import { Upsell404Community } from 'src/components/upsell';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   SegmentedControl,
   Segment,
@@ -307,18 +308,17 @@ class CommunityView extends React.Component<Props, State> {
                 />
               ) : null}
 
-              {currentUser &&
-                (isOwner || isModerator) && (
-                  <Link to={`/${community.slug}/settings`}>
-                    <LoginButton
-                      icon={'settings'}
-                      isMember
-                      data-cy="community-settings-button"
-                    >
-                      Settings
-                    </LoginButton>
-                  </Link>
-                )}
+              {currentUser && (isOwner || isModerator) && (
+                <Link to={`/${community.slug}/settings`}>
+                  <LoginButton
+                    icon={'settings'}
+                    isMember
+                    data-cy="community-settings-button"
+                  >
+                    Settings
+                  </LoginButton>
+                </Link>
+              )}
             </Meta>
             <Content data-cy="community-view-content">
               <SegmentedControl style={{ margin: '16px 0 0 0' }}>
@@ -369,16 +369,14 @@ class CommunityView extends React.Component<Props, State> {
               {// if the user is logged in, is viewing the threads,
               // and is a member of the community, they should see a
               // new thread composer
-              isLoggedIn &&
-                selectedView === 'threads' &&
-                userHasPermissions && (
-                  <ErrorBoundary fallbackComponent={null}>
-                    <ThreadComposer
-                      activeCommunity={communitySlug}
-                      showComposerUpsell={showComposerUpsell}
-                    />
-                  </ErrorBoundary>
-                )}
+              isLoggedIn && selectedView === 'threads' && userHasPermissions && (
+                <ErrorBoundary fallbackComponent={null}>
+                  <ThreadComposer
+                    activeCommunity={communitySlug}
+                    showComposerUpsell={showComposerUpsell}
+                  />
+                </ErrorBoundary>
+              )}
 
               {// thread list
               selectedView === 'threads' && (
@@ -476,13 +474,9 @@ class CommunityView extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({
-  currentUser: state.users.currentUser,
-});
-
 export default compose(
-  // $FlowIssue
-  connect(map),
+  withCurrentUser,
   getCommunityByMatch,
-  viewNetworkHandler
+  viewNetworkHandler,
+  connect()
 )(CommunityView);

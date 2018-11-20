@@ -3,18 +3,19 @@ import * as React from 'react';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { OutlineButton } from '../../../components/buttons';
-import Icon from '../../../components/icons';
-import { openModal } from '../../../actions/modals';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { Loading } from '../../../components/loading';
+import { OutlineButton } from 'src/components/buttons';
+import Icon from 'src/components/icons';
+import { openModal } from 'src/actions/modals';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import { Loading } from 'src/components/loading';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
-import { StyledCard, ListContainer } from '../../../components/listItems/style';
+import { StyledCard, ListContainer } from 'src/components/listItems/style';
 import { ChannelListItem } from 'src/components/listItems';
 import ToggleChannelNotifications from 'src/components/toggleChannelNotifications';
 import type { Dispatch } from 'redux';
 import { ToggleNotificationsContainer } from '../style';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   data: {
@@ -91,45 +92,43 @@ class ChannelList extends React.Component<Props> {
             </ListContainer>
           )}
 
-          {isMember &&
-            !isOwner && (
-              <ListContainer data-cy="channel-list">
-                {sortedChannels.map(channel => {
-                  if (!channel) return null;
-                  return (
-                    <ChannelListItem channel={channel} key={channel.id}>
-                      <ToggleChannelNotifications
-                        channel={channel}
-                        render={state => (
-                          <ToggleNotificationsContainer
-                            tipLocation={'top-left'}
-                            tipText={
-                              channel.channelPermissions.receiveNotifications
-                                ? 'Turn notifications off'
-                                : 'Turn notifications on'
-                            }
-                          >
-                            {state.isLoading ? (
-                              <Loading />
-                            ) : (
-                              <Icon
-                                size={24}
-                                glyph={
-                                  channel.channelPermissions
-                                    .receiveNotifications
-                                    ? 'notification-fill'
-                                    : 'notification'
-                                }
-                              />
-                            )}
-                          </ToggleNotificationsContainer>
-                        )}
-                      />
-                    </ChannelListItem>
-                  );
-                })}
-              </ListContainer>
-            )}
+          {isMember && !isOwner && (
+            <ListContainer data-cy="channel-list">
+              {sortedChannels.map(channel => {
+                if (!channel) return null;
+                return (
+                  <ChannelListItem channel={channel} key={channel.id}>
+                    <ToggleChannelNotifications
+                      channel={channel}
+                      render={state => (
+                        <ToggleNotificationsContainer
+                          tipLocation={'top-left'}
+                          tipText={
+                            channel.channelPermissions.receiveNotifications
+                              ? 'Turn notifications off'
+                              : 'Turn notifications on'
+                          }
+                        >
+                          {state.isLoading ? (
+                            <Loading />
+                          ) : (
+                            <Icon
+                              size={24}
+                              glyph={
+                                channel.channelPermissions.receiveNotifications
+                                  ? 'notification-fill'
+                                  : 'notification'
+                              }
+                            />
+                          )}
+                        </ToggleNotificationsContainer>
+                      )}
+                    />
+                  </ChannelListItem>
+                );
+              })}
+            </ListContainer>
+          )}
 
           {isOwner && (
             <ListContainer data-cy="channel-list">
@@ -210,10 +209,9 @@ class ChannelList extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowIssue
-  connect(map),
   getCommunityChannels,
-  viewNetworkHandler
+  viewNetworkHandler,
+  withCurrentUser,
+  connect()
 )(ChannelList);

@@ -15,29 +15,27 @@ const NEW_DESCRIPTION = 'New description';
 
 describe('edit a channel', () => {
   beforeEach(() => {
-    cy.auth(ownerInChannelId);
-    cy.visit(`/${community.slug}/${channel.slug}/settings`);
+    cy.auth(ownerInChannelId).then(() =>
+      cy.visit(`/${community.slug}/${channel.slug}/settings`)
+    );
   });
 
   it('should edit a channel', () => {
     cy.get('[data-cy="channel-overview"]').should('be.visible');
 
-    cy
-      .get('[data-cy="channel-name-input"]')
+    cy.get('[data-cy="channel-name-input"]')
       .should('be.visible')
       .click()
       .clear()
       .type(NEW_NAME);
 
-    cy
-      .get('[data-cy="channel-description-input"]')
+    cy.get('[data-cy="channel-description-input"]')
       .should('be.visible')
       .click()
       .clear()
       .type(NEW_DESCRIPTION);
 
-    cy
-      .get('[data-cy="save-button"]')
+    cy.get('[data-cy="save-button"]')
       .should('be.visible')
       .click();
 

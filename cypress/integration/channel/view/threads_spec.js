@@ -27,8 +27,9 @@ describe('channel threads logged out', () => {
 
 describe('channel threads logged in', () => {
   beforeEach(() => {
-    cy.auth(memberInChannelId);
-    cy.visit(`/${community.slug}/${channel.slug}`);
+    cy.auth(memberInChannelId).then(() =>
+      cy.visit(`/${community.slug}/${channel.slug}`)
+    );
   });
 
   it('should render list of threads', () => {

@@ -3,8 +3,7 @@ const user = data.users[0];
 
 describe.skip('can view delete controls in settings', () => {
   beforeEach(() => {
-    cy.auth(user.id);
-    cy.visit(`/users/${user.username}/settings`);
+    cy.auth(user.id).then(() => cy.visit(`/users/${user.username}/settings`));
   });
 
   it('should render delete account section', () => {
@@ -19,28 +18,24 @@ describe.skip('can view delete controls in settings', () => {
     cy.get('[data-cy="owns-communities-notice"]').should('be.visible');
 
     // init delete
-    cy
-      .get('[data-cy="delete-account-init-button"]')
+    cy.get('[data-cy="delete-account-init-button"]')
       .should('be.visible')
       .click();
 
     // should see option to confirm or cancel
     cy.get('[data-cy="delete-account-confirm-button"]').should('be.visible');
     // click cancel
-    cy
-      .get('[data-cy="delete-account-cancel-button"]')
+    cy.get('[data-cy="delete-account-cancel-button"]')
       .should('be.visible')
       .click();
 
     // after canceling it should reset
-    cy
-      .get('[data-cy="delete-account-init-button"]')
+    cy.get('[data-cy="delete-account-init-button"]')
       .should('be.visible')
       .click();
 
     // actually delete the account
-    cy
-      .get('[data-cy="delete-account-confirm-button"]')
+    cy.get('[data-cy="delete-account-confirm-button"]')
       .should('be.visible')
       .click();
 

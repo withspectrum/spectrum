@@ -8,13 +8,14 @@ import Link from 'src/components/link';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import Head from 'src/components/head';
 import ThreadFeed from 'src/components/threadFeed';
-import { initNewThreadWithUser } from '../../actions/directMessageThreads';
+import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { UserProfile } from 'src/components/profile';
 import { LoadingScreen } from 'src/components/loading';
 import { NullState } from 'src/components/upsell';
 import { Button, ButtonRow, TextButton } from 'src/components/buttons';
 import CommunityList from './components/communityList';
 import Search from './components/search';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   getUserByMatch,
   type GetUserType,
@@ -187,15 +188,14 @@ class UserView extends React.Component<Props, State> {
                 />
               </ErrorBoundary>
 
-              {currentUser &&
-                user.id !== currentUser.id && (
-                  <React.Fragment>
-                    <LoginButton onClick={() => this.initMessage(user)}>
-                      Message {user.name}
-                    </LoginButton>
-                    <TextButton onClick={this.initReport}>Report</TextButton>
-                  </React.Fragment>
-                )}
+              {currentUser && user.id !== currentUser.id && (
+                <React.Fragment>
+                  <LoginButton onClick={() => this.initMessage(user)}>
+                    Message {user.name}
+                  </LoginButton>
+                  <TextButton onClick={this.initReport}>Report</TextButton>
+                </React.Fragment>
+              )}
 
               {currentUser &&
                 user.id !== currentUser.id &&
@@ -203,12 +203,11 @@ class UserView extends React.Component<Props, State> {
                   <TextButton onClick={this.initBan}>Ban</TextButton>
                 )}
 
-              {currentUser &&
-                user.id === currentUser.id && (
-                  <Link to={`/users/${username}/settings`}>
-                    <LoginButton isMember>My settings</LoginButton>
-                  </Link>
-                )}
+              {currentUser && user.id === currentUser.id && (
+                <Link to={`/users/${username}/settings`}>
+                  <LoginButton isMember>My settings</LoginButton>
+                </Link>
+              )}
 
               <ErrorBoundary fallbackComponent={null}>
                 <MetaMemberships>
@@ -350,10 +349,9 @@ class UserView extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowIssue
-  connect(map),
   getUserByMatch,
-  viewNetworkHandler
+  withCurrentUser,
+  viewNetworkHandler,
+  connect()
 )(UserView);

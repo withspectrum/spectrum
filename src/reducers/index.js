@@ -1,6 +1,5 @@
 // @flow
 import { combineReducers } from 'redux';
-import users from './users';
 import composer from './composer';
 import modals from './modals';
 import toasts from './toasts';
@@ -16,7 +15,6 @@ import connectionStatus from './connectionStatus';
 
 const getReducers = () => {
   return combineReducers({
-    users,
     modals,
     toasts,
     directMessageThreads,

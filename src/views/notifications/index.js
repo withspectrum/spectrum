@@ -23,6 +23,7 @@ import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import Titlebar from '../../views/titlebar';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   displayLoadingNotifications,
   LoadingThread,
@@ -196,14 +197,13 @@ class NotificationsPure extends React.Component<Props, State> {
           <Titlebar title={'Notifications'} provideBack={false} noComposer />
           <AppViewWrapper>
             <Column type={'primary'}>
-              {!isDesktopApp() &&
-                this.state.showWebPushPrompt && (
-                  <BrowserNotificationRequest
-                    onSubscribe={this.subscribeToWebPush}
-                    onDismiss={this.dismissWebPushRequest}
-                    loading={this.state.webPushPromptLoading}
-                  />
-                )}
+              {!isDesktopApp() && this.state.showWebPushPrompt && (
+                <BrowserNotificationRequest
+                  onSubscribe={this.subscribeToWebPush}
+                  onDismiss={this.dismissWebPushRequest}
+                  loading={this.state.webPushPromptLoading}
+                />
+              )}
               <InfiniteList
                 pageStart={0}
                 loadMore={data.fetchMore}
@@ -411,16 +411,12 @@ class NotificationsPure extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
-});
-
 export default compose(
   subscribeToWebPush,
   getNotifications,
   displayLoadingNotifications,
   markNotificationsSeenMutation,
-  // $FlowIssue
-  connect(mapStateToProps),
-  viewNetworkHandler
+  viewNetworkHandler,
+  withCurrentUser,
+  connect()
 )(NotificationsPure);

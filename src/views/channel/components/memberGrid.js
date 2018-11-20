@@ -16,6 +16,7 @@ import { StyledButton } from '../../community/style';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { MessageIconContainer, UserListItemContainer } from '../style';
 import Icon from 'src/components/icons';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   data: {
@@ -70,15 +71,14 @@ class ChannelMemberGrid extends React.Component<Props> {
                     profilePhoto={user.profilePhoto}
                     avatarSize={32}
                   >
-                    {currentUser &&
-                      user.id !== currentUser.id && (
-                        <MessageIconContainer>
-                          <Icon
-                            glyph={'message'}
-                            onClick={() => this.initMessage(user)}
-                          />
-                        </MessageIconContainer>
-                      )}
+                    {currentUser && user.id !== currentUser.id && (
+                      <MessageIconContainer>
+                        <Icon
+                          glyph={'message'}
+                          onClick={() => this.initMessage(user)}
+                        />
+                      </MessageIconContainer>
+                    )}
                   </GranularUserProfile>
                 </UserListItemContainer>
               );
@@ -112,12 +112,10 @@ class ChannelMemberGrid extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-
 export default compose(
-  // $FlowIssue
-  connect(map),
   withRouter,
+  withCurrentUser,
   getChannelMembersQuery,
-  viewNetworkHandler
+  viewNetworkHandler,
+  connect()
 )(ChannelMemberGrid);

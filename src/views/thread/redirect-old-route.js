@@ -9,7 +9,7 @@ import { FullscreenThreadView } from 'src/views/thread';
 import LoadingThread from 'src/views/thread/components/loading';
 
 export default getThreadByMatch(props => {
-  if (props.data && props.data.thread) {
+  if (props.data && props.data.thread && props.data.thread.id) {
     const { thread } = props.data;
     return (
       <Redirect

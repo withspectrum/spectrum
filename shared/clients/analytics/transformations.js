@@ -5,24 +5,24 @@ import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo'
 import { getTruthyValuesFromObject } from '../../truthy-values';
 
 type AnalyticsChannel = {
-  id: string,
-  name: string,
-  slug: string,
+  id: ?string,
+  name: ?string,
+  slug: ?string,
   roles: Array<?string>,
   isPrivate: boolean,
   isArchived: boolean,
 };
 
 type AnalyticsCommunity = {
-  id: string,
-  name: string,
-  slug: string,
+  id: ?string,
+  name: ?string,
+  slug: ?string,
   roles: Array<?string>,
   reputation: number,
 };
 
 type AnalyticsThread = {
-  id: string,
+  id: ?string,
   receiveNotifications: boolean,
   isLocked: boolean,
   isWatercooler: boolean,
@@ -31,6 +31,17 @@ type AnalyticsThread = {
 export const analyticsChannel = (
   channel: ChannelInfoType
 ): AnalyticsChannel => {
+  if (!channel) {
+    return {
+      id: null,
+      name: null,
+      slug: null,
+      roles: [],
+      isPrivate: false,
+      isArchived: false,
+    };
+  }
+
   return {
     id: channel.id,
     name: channel.name,
@@ -44,6 +55,17 @@ export const analyticsChannel = (
 export const analyticsCommunity = (
   community: CommunityInfoType
 ): AnalyticsCommunity => {
+  if (!community) {
+    return {
+      id: null,
+      name: null,
+      slug: null,
+      roles: [],
+      reputation: 0,
+      isPrivate: false,
+    };
+  }
+
   return {
     id: community.id,
     name: community.name,
@@ -55,6 +77,14 @@ export const analyticsCommunity = (
 };
 
 export const analyticsThread = (thread: ThreadInfoType): AnalyticsThread => {
+  if (!thread) {
+    return {
+      id: null,
+      receiveNotifications: false,
+      isLocked: false,
+      isWatercooler: false,
+    };
+  }
   return {
     id: thread.id,
     receiveNotifications: thread.receiveNotifications,

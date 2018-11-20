@@ -16,6 +16,7 @@ import ChatInput from 'src/components/chatInput';
 import ViewError from 'src/components/viewError';
 import Link from 'src/components/link';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   getThreadByMatch,
   getThreadByMatchQuery,
@@ -542,13 +543,12 @@ class ThreadContainer extends React.Component<Props, State> {
                     />
                   )}
 
-                  {!isEditing &&
-                    isLocked && (
-                      <NullState
-                        icon="private"
-                        copy="This conversation has been locked."
-                      />
-                    )}
+                  {!isEditing && isLocked && (
+                    <NullState
+                      icon="private"
+                      copy="This conversation has been locked."
+                    />
+                  )}
                 </Detail>
               </Content>
 
@@ -589,11 +589,10 @@ class ThreadContainer extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowIssue
-  connect(map),
+  withCurrentUser,
   getThreadByMatch,
   viewNetworkHandler,
-  withApollo
+  withApollo,
+  connect()
 )(ThreadContainer);

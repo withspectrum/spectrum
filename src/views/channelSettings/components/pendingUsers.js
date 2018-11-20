@@ -26,6 +26,7 @@ import {
   DropdownAction,
 } from 'src/components/settingsViews/style';
 import Icon from 'src/components/icons';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   data: {
@@ -53,14 +54,13 @@ class PendingUsers extends React.Component<Props> {
       return (
         <SectionCard>
           <SectionTitle>Pending Members</SectionTitle>
-          {pendingUsers &&
-            pendingUsers.length > 0 && (
-              <SectionSubtitle>
-                Approving requests will allow a person to view all threads and
-                messages in this channel, as well as allow them to post their
-                own threads.
-              </SectionSubtitle>
-            )}
+          {pendingUsers && pendingUsers.length > 0 && (
+            <SectionSubtitle>
+              Approving requests will allow a person to view all threads and
+              messages in this channel, as well as allow them to post their own
+              threads.
+            </SectionSubtitle>
+          )}
 
           <ListContainer>
             {pendingUsers &&
@@ -144,12 +144,11 @@ class PendingUsers extends React.Component<Props> {
                 );
               })}
 
-            {pendingUsers &&
-              pendingUsers.length <= 0 && (
-                <SectionSubtitle>
-                  There are no pending requests to join this channel.
-                </SectionSubtitle>
-              )}
+            {pendingUsers && pendingUsers.length <= 0 && (
+              <SectionSubtitle>
+                There are no pending requests to join this channel.
+              </SectionSubtitle>
+            )}
           </ListContainer>
         </SectionCard>
       );
@@ -171,11 +170,9 @@ class PendingUsers extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-
 export default compose(
-  // $FlowIssue
-  connect(map),
   getPendingUsersQuery,
-  viewNetworkHandler
+  withCurrentUser,
+  viewNetworkHandler,
+  connect()
 )(PendingUsers);

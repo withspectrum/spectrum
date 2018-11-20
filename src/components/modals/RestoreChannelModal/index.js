@@ -3,8 +3,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
-import { closeModal } from '../../../actions/modals';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { closeModal } from 'src/actions/modals';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import restoreChannel from 'shared/graphql/mutations/channel/restoreChannel';
 import ModalContainer from '../modalContainer';
@@ -12,6 +12,7 @@ import { TextButton, Button } from '../../buttons';
 import { modalStyles, Description } from '../styles';
 import { Form, Actions } from './style';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   dispatch: Dispatch<Object>,
@@ -97,11 +98,11 @@ class RestoreChannelModal extends React.Component<Props, State> {
 }
 
 const map = state => ({
-  currentUser: state.users.currentUser,
   isOpen: state.modals.isOpen,
 });
 export default compose(
   // $FlowIssue
   connect(map),
+  withCurrentUser,
   restoreChannel
 )(RestoreChannelModal);

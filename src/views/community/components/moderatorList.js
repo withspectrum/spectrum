@@ -16,6 +16,7 @@ import { MessageIconContainer, ListColumn } from '../style';
 import GranularUserProfile from 'src/components/granularUserProfile';
 import { UpsellTeamMembers } from 'src/components/upsell';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   data: {
@@ -84,15 +85,14 @@ class CommunityModeratorList extends React.Component<Props> {
                 isOnline={user.isOnline}
                 onlineSize={'small'}
               >
-                {currentUser &&
-                  node.user.id !== currentUser.id && (
-                    <MessageIconContainer>
-                      <Icon
-                        glyph={'message'}
-                        onClick={() => this.initMessage(node.user)}
-                      />
-                    </MessageIconContainer>
-                  )}
+                {currentUser && node.user.id !== currentUser.id && (
+                  <MessageIconContainer>
+                    <Icon
+                      glyph={'message'}
+                      onClick={() => this.initMessage(node.user)}
+                    />
+                  </MessageIconContainer>
+                )}
               </GranularUserProfile>
             );
           })}
@@ -127,12 +127,10 @@ class CommunityModeratorList extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-
 export default compose(
-  // $FlowIssue
-  connect(map),
   withRouter,
+  withCurrentUser,
   getCommunityMembersQuery,
-  viewNetworkHandler
+  viewNetworkHandler,
+  connect()
 )(CommunityModeratorList);
