@@ -72,35 +72,36 @@ class HoverProfile extends Component<ProfileProps> {
           </Content>
 
           <Actions>
-            {!isGlobalModerator && !isGlobalOwner && (
-              <ToggleChannelMembership
-                channel={channel}
-                render={state => {
-                  if (isChannelMember) {
-                    return (
-                      <OutlineButton
-                        isMember={true}
-                        icon={'checkmark'}
-                        loading={state.isLoading}
-                      >
-                        Joined
-                      </OutlineButton>
-                    );
-                  } else {
-                    return (
-                      <Button
-                        isMember={false}
-                        icon={'plus-fill'}
-                        loading={state.isLoading}
-                        gradientTheme={'success'}
-                      >
-                        Join channel
-                      </Button>
-                    );
-                  }
-                }}
-              />
-            )}
+            {!isGlobalModerator &&
+              !isGlobalOwner && (
+                <ToggleChannelMembership
+                  channel={channel}
+                  render={state => {
+                    if (isChannelMember) {
+                      return (
+                        <OutlineButton
+                          isMember={true}
+                          icon={'checkmark'}
+                          loading={state.isLoading}
+                        >
+                          Joined
+                        </OutlineButton>
+                      );
+                    } else {
+                      return (
+                        <Button
+                          isMember={false}
+                          icon={'plus-fill'}
+                          loading={state.isLoading}
+                          gradientTheme={'success'}
+                        >
+                          Join channel
+                        </Button>
+                      );
+                    }
+                  }}
+                />
+              )}
 
             {(isGlobalModerator || isGlobalOwner) && (
               <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>

@@ -71,14 +71,15 @@ class ChannelMemberGrid extends React.Component<Props> {
                     profilePhoto={user.profilePhoto}
                     avatarSize={32}
                   >
-                    {currentUser && user.id !== currentUser.id && (
-                      <MessageIconContainer>
-                        <Icon
-                          glyph={'message'}
-                          onClick={() => this.initMessage(user)}
-                        />
-                      </MessageIconContainer>
-                    )}
+                    {currentUser &&
+                      user.id !== currentUser.id && (
+                        <MessageIconContainer>
+                          <Icon
+                            glyph={'message'}
+                            onClick={() => this.initMessage(user)}
+                          />
+                        </MessageIconContainer>
+                      )}
                   </GranularUserProfile>
                 </UserListItemContainer>
               );

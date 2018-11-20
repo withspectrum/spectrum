@@ -188,14 +188,15 @@ class UserView extends React.Component<Props, State> {
                 />
               </ErrorBoundary>
 
-              {currentUser && user.id !== currentUser.id && (
-                <React.Fragment>
-                  <LoginButton onClick={() => this.initMessage(user)}>
-                    Message {user.name}
-                  </LoginButton>
-                  <TextButton onClick={this.initReport}>Report</TextButton>
-                </React.Fragment>
-              )}
+              {currentUser &&
+                user.id !== currentUser.id && (
+                  <React.Fragment>
+                    <LoginButton onClick={() => this.initMessage(user)}>
+                      Message {user.name}
+                    </LoginButton>
+                    <TextButton onClick={this.initReport}>Report</TextButton>
+                  </React.Fragment>
+                )}
 
               {currentUser &&
                 user.id !== currentUser.id &&
@@ -203,11 +204,12 @@ class UserView extends React.Component<Props, State> {
                   <TextButton onClick={this.initBan}>Ban</TextButton>
                 )}
 
-              {currentUser && user.id === currentUser.id && (
-                <Link to={`/users/${username}/settings`}>
-                  <LoginButton isMember>My settings</LoginButton>
-                </Link>
-              )}
+              {currentUser &&
+                user.id === currentUser.id && (
+                  <Link to={`/users/${username}/settings`}>
+                    <LoginButton isMember>My settings</LoginButton>
+                  </Link>
+                )}
 
               <ErrorBoundary fallbackComponent={null}>
                 <MetaMemberships>

@@ -86,14 +86,15 @@ class ConversationGrowth extends React.Component<Props> {
                   avatarSize={40}
                   badges={member.roles}
                 >
-                  {currentUser && member.user.id !== currentUser.id && (
-                    <MessageIconContainer>
-                      <Icon
-                        glyph={'message'}
-                        onClick={() => this.initMessage(member.user)}
-                      />
-                    </MessageIconContainer>
-                  )}
+                  {currentUser &&
+                    member.user.id !== currentUser.id && (
+                      <MessageIconContainer>
+                        <Icon
+                          glyph={'message'}
+                          onClick={() => this.initMessage(member.user)}
+                        />
+                      </MessageIconContainer>
+                    )}
                 </GranularUserProfile>
               </UserListItemContainer>
             );

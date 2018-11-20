@@ -204,40 +204,42 @@ class CommunityWithData extends React.Component<Props> {
                 )}
               </ProfileHeaderMeta>
             </ProfileHeaderLink>
-            {currentUser && member && (
-              <ToggleCommunityMembership
-                onJoin={this.onJoin}
-                onLeave={this.onLeave}
-                community={community}
-                render={({ isLoading }) => (
-                  <Button
-                    loading={isLoading}
-                    icon="checkmark"
-                    gradientTheme="none"
-                    color="text.placeholder"
-                    hoverColor="text.placeholder"
-                  >
-                    Joined
-                  </Button>
-                )}
-              />
-            )}
-            {currentUser && !member && (
-              <ToggleCommunityMembership
-                onJoin={this.onJoin}
-                onLeave={this.onLeave}
-                community={community}
-                render={({ isLoading }) => (
-                  <Button
-                    loading={isLoading}
-                    icon="plus-fill"
-                    gradientTheme="success"
-                  >
-                    Join
-                  </Button>
-                )}
-              />
-            )}
+            {currentUser &&
+              member && (
+                <ToggleCommunityMembership
+                  onJoin={this.onJoin}
+                  onLeave={this.onLeave}
+                  community={community}
+                  render={({ isLoading }) => (
+                    <Button
+                      loading={isLoading}
+                      icon="checkmark"
+                      gradientTheme="none"
+                      color="text.placeholder"
+                      hoverColor="text.placeholder"
+                    >
+                      Joined
+                    </Button>
+                  )}
+                />
+              )}
+            {currentUser &&
+              !member && (
+                <ToggleCommunityMembership
+                  onJoin={this.onJoin}
+                  onLeave={this.onLeave}
+                  community={community}
+                  render={({ isLoading }) => (
+                    <Button
+                      loading={isLoading}
+                      icon="plus-fill"
+                      gradientTheme="success"
+                    >
+                      Join
+                    </Button>
+                  )}
+                />
+              )}
           </ProfileHeader>
         );
       case 'miniWithAction':
@@ -257,40 +259,42 @@ class CommunityWithData extends React.Component<Props> {
                   )}
                 </ProfileHeaderMeta>
               </ProfileHeaderLink>
-              {currentUser && member && (
-                <ToggleCommunityMembership
-                  onJoin={this.onJoin}
-                  onLeave={this.onLeave}
-                  community={community}
-                  render={({ isLoading }) => (
-                    <Button
-                      loading={isLoading}
-                      icon="checkmark"
-                      gradientTheme="none"
-                      color="text.placeholder"
-                      hoverColor="text.placeholder"
-                    >
-                      Joined
-                    </Button>
-                  )}
-                />
-              )}
-              {currentUser && !member && (
-                <ToggleCommunityMembership
-                  onJoin={this.onJoin}
-                  onLeave={this.onLeave}
-                  community={community}
-                  render={({ isLoading }) => (
-                    <Button
-                      loading={isLoading}
-                      icon="plus-fill"
-                      gradientTheme="success"
-                    >
-                      Join
-                    </Button>
-                  )}
-                />
-              )}
+              {currentUser &&
+                member && (
+                  <ToggleCommunityMembership
+                    onJoin={this.onJoin}
+                    onLeave={this.onLeave}
+                    community={community}
+                    render={({ isLoading }) => (
+                      <Button
+                        loading={isLoading}
+                        icon="checkmark"
+                        gradientTheme="none"
+                        color="text.placeholder"
+                        hoverColor="text.placeholder"
+                      >
+                        Joined
+                      </Button>
+                    )}
+                  />
+                )}
+              {currentUser &&
+                !member && (
+                  <ToggleCommunityMembership
+                    onJoin={this.onJoin}
+                    onLeave={this.onLeave}
+                    community={community}
+                    render={({ isLoading }) => (
+                      <Button
+                        loading={isLoading}
+                        icon="plus-fill"
+                        gradientTheme="success"
+                      >
+                        Join
+                      </Button>
+                    )}
+                  />
+                )}
             </ProfileHeader>
           </ProfileCard>
         );
@@ -310,49 +314,51 @@ class CommunityWithData extends React.Component<Props> {
                 </ProfileHeaderMeta>
               </ProfileHeaderLink>
 
-              {currentUser && !community.communityPermissions.isOwner && (
-                <ToggleCommunityMembership
-                  onJoin={this.onJoin}
-                  onLeave={this.onLeave}
-                  community={community}
-                  render={({ isLoading }) => (
+              {currentUser &&
+                !community.communityPermissions.isOwner && (
+                  <ToggleCommunityMembership
+                    onJoin={this.onJoin}
+                    onLeave={this.onLeave}
+                    community={community}
+                    render={({ isLoading }) => (
+                      <ProfileHeaderAction
+                        glyph={
+                          community.communityPermissions.isMember
+                            ? 'minus'
+                            : 'plus-fill'
+                        }
+                        color={
+                          community.communityPermissions.isMember
+                            ? 'text.placeholder'
+                            : 'brand.alt'
+                        }
+                        hoverColor={
+                          community.communityPermissions.isMember
+                            ? 'warn.default'
+                            : 'brand.alt'
+                        }
+                        tipText={
+                          community.communityPermissions.isMember
+                            ? 'Leave community'
+                            : 'Join community'
+                        }
+                        loading={isLoading}
+                        tipLocation="top-left"
+                      />
+                    )}
+                  />
+                )}
+
+              {currentUser &&
+                community.communityPermissions.isOwner && (
+                  <Link to={`/${community.slug}/settings`}>
                     <ProfileHeaderAction
-                      glyph={
-                        community.communityPermissions.isMember
-                          ? 'minus'
-                          : 'plus-fill'
-                      }
-                      color={
-                        community.communityPermissions.isMember
-                          ? 'text.placeholder'
-                          : 'brand.alt'
-                      }
-                      hoverColor={
-                        community.communityPermissions.isMember
-                          ? 'warn.default'
-                          : 'brand.alt'
-                      }
-                      tipText={
-                        community.communityPermissions.isMember
-                          ? 'Leave community'
-                          : 'Join community'
-                      }
-                      loading={isLoading}
+                      glyph="settings"
+                      tipText="Edit community"
                       tipLocation="top-left"
                     />
-                  )}
-                />
-              )}
-
-              {currentUser && community.communityPermissions.isOwner && (
-                <Link to={`/${community.slug}/settings`}>
-                  <ProfileHeaderAction
-                    glyph="settings"
-                    tipText="Edit community"
-                    tipLocation="top-left"
-                  />
-                </Link>
-              )}
+                  </Link>
+                )}
             </ProfileHeader>
           </Card>
         );

@@ -67,34 +67,35 @@ class HoverProfile extends Component<ProfileProps> {
           </Content>
 
           <Actions>
-            {!isModerator && !isOwner && (
-              <ToggleCommunityMembership
-                community={community}
-                render={({ isLoading }) => {
-                  if (isMember) {
-                    return (
-                      <OutlineButton
-                        loading={isLoading}
-                        icon={'checkmark'}
-                        gradientTheme="success"
-                      >
-                        Member
-                      </OutlineButton>
-                    );
-                  } else {
-                    return (
-                      <Button
-                        loading={isLoading}
-                        icon={'plus-fill'}
-                        gradientTheme="success"
-                      >
-                        Join
-                      </Button>
-                    );
-                  }
-                }}
-              />
-            )}
+            {!isModerator &&
+              !isOwner && (
+                <ToggleCommunityMembership
+                  community={community}
+                  render={({ isLoading }) => {
+                    if (isMember) {
+                      return (
+                        <OutlineButton
+                          loading={isLoading}
+                          icon={'checkmark'}
+                          gradientTheme="success"
+                        >
+                          Member
+                        </OutlineButton>
+                      );
+                    } else {
+                      return (
+                        <Button
+                          loading={isLoading}
+                          icon={'plus-fill'}
+                          gradientTheme="success"
+                        >
+                          Join
+                        </Button>
+                      );
+                    }
+                  }}
+                />
+              )}
 
             {(isModerator || isOwner) && (
               <Link to={`/${community.slug}/settings`}>

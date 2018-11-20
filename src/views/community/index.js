@@ -308,17 +308,18 @@ class CommunityView extends React.Component<Props, State> {
                 />
               ) : null}
 
-              {currentUser && (isOwner || isModerator) && (
-                <Link to={`/${community.slug}/settings`}>
-                  <LoginButton
-                    icon={'settings'}
-                    isMember
-                    data-cy="community-settings-button"
-                  >
-                    Settings
-                  </LoginButton>
-                </Link>
-              )}
+              {currentUser &&
+                (isOwner || isModerator) && (
+                  <Link to={`/${community.slug}/settings`}>
+                    <LoginButton
+                      icon={'settings'}
+                      isMember
+                      data-cy="community-settings-button"
+                    >
+                      Settings
+                    </LoginButton>
+                  </Link>
+                )}
             </Meta>
             <Content data-cy="community-view-content">
               <SegmentedControl style={{ margin: '16px 0 0 0' }}>
@@ -369,14 +370,16 @@ class CommunityView extends React.Component<Props, State> {
               {// if the user is logged in, is viewing the threads,
               // and is a member of the community, they should see a
               // new thread composer
-              isLoggedIn && selectedView === 'threads' && userHasPermissions && (
-                <ErrorBoundary fallbackComponent={null}>
-                  <ThreadComposer
-                    activeCommunity={communitySlug}
-                    showComposerUpsell={showComposerUpsell}
-                  />
-                </ErrorBoundary>
-              )}
+              isLoggedIn &&
+                selectedView === 'threads' &&
+                userHasPermissions && (
+                  <ErrorBoundary fallbackComponent={null}>
+                    <ThreadComposer
+                      activeCommunity={communitySlug}
+                      showComposerUpsell={showComposerUpsell}
+                    />
+                  </ErrorBoundary>
+                )}
 
               {// thread list
               selectedView === 'threads' && (

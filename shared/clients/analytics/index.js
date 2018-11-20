@@ -4,7 +4,6 @@ import { createTrack } from './track';
 import { createSetUser } from './setUser';
 import { createUnsetUser } from './unsetUser';
 import * as transformations from './transformations';
-require('./raven');
 
 export type AmplitudeClient = 'web' | 'desktop' | 'mobile';
 

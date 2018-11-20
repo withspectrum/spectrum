@@ -168,8 +168,8 @@ class Message extends React.Component<Props, State> {
       threadType === 'story' && thread
         ? `/${getThreadLink(thread)}?m=${selectedMessageId}`
         : threadType === 'directMessageThread'
-        ? `/messages/${threadId}?m=${selectedMessageId}`
-        : `/thread/${threadId}?m=${selectedMessageId}`;
+          ? `/messages/${threadId}?m=${selectedMessageId}`
+          : `/thread/${threadId}?m=${selectedMessageId}`;
 
     return (
       <MessagesContext.Consumer>
@@ -237,17 +237,18 @@ class Message extends React.Component<Props, State> {
                     />
                   )}
 
-                  {message.modifiedAt && !isEditing && (
-                    <EditedIndicator
-                      data-cy="edited-message-indicator"
-                      tipLocation={'top-right'}
-                      tipText={`Edited ${convertTimestampToDate(
-                        new Date(message.modifiedAt)
-                      )}`}
-                    >
-                      Edited
-                    </EditedIndicator>
-                  )}
+                  {message.modifiedAt &&
+                    !isEditing && (
+                      <EditedIndicator
+                        data-cy="edited-message-indicator"
+                        tipLocation={'top-right'}
+                        tipText={`Edited ${convertTimestampToDate(
+                          new Date(message.modifiedAt)
+                        )}`}
+                      >
+                        Edited
+                      </EditedIndicator>
+                    )}
 
                   {message.reactions.count > 0 && (
                     <Reaction

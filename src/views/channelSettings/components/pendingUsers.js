@@ -54,13 +54,14 @@ class PendingUsers extends React.Component<Props> {
       return (
         <SectionCard>
           <SectionTitle>Pending Members</SectionTitle>
-          {pendingUsers && pendingUsers.length > 0 && (
-            <SectionSubtitle>
-              Approving requests will allow a person to view all threads and
-              messages in this channel, as well as allow them to post their own
-              threads.
-            </SectionSubtitle>
-          )}
+          {pendingUsers &&
+            pendingUsers.length > 0 && (
+              <SectionSubtitle>
+                Approving requests will allow a person to view all threads and
+                messages in this channel, as well as allow them to post their
+                own threads.
+              </SectionSubtitle>
+            )}
 
           <ListContainer>
             {pendingUsers &&
@@ -144,11 +145,12 @@ class PendingUsers extends React.Component<Props> {
                 );
               })}
 
-            {pendingUsers && pendingUsers.length <= 0 && (
-              <SectionSubtitle>
-                There are no pending requests to join this channel.
-              </SectionSubtitle>
-            )}
+            {pendingUsers &&
+              pendingUsers.length <= 0 && (
+                <SectionSubtitle>
+                  There are no pending requests to join this channel.
+                </SectionSubtitle>
+              )}
           </ListContainer>
         </SectionCard>
       );

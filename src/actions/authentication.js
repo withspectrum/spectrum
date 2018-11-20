@@ -1,5 +1,4 @@
 import { setUser, unsetUser } from 'src/helpers/analytics';
-import Raven from 'raven-js';
 
 export const logout = () => {
   // no longer track analytics
@@ -28,5 +27,26 @@ export const setTrackingContexts = async (user: ?GetUserType) => {
   const { text: id } = await response.json();
   return Promise.all([setAmplitudeUserContext(id), setRavenUserContext(id)]);
 };
+
 export const setAmplitudeUserContext = (id: string) => setUser(id);
-export const setRavenUserContext = (id: string) => Raven.setUserContext({ id });
+
+export const setRavenUserContext = (id: string) => {
+  // logs the user id to Sentry
+  // if Raven hasn't loaded yet, try every 5s until it's loaded
+  if (window.Raven) {
+    console.log('Raven setUserContext!');
+    return window.Raven.setUserContext({ id });
+  } else {
+    console.log('No Raven :( Try again in 5s');
+    const interval = setInterval(() => {
+      console.log('Raven?');
+      if (window.Raven) {
+        console.log('Yes! setUserContext');
+        window.Raven.setUserContext({ id });
+        clearInterval(interval);
+        return;
+      }
+      console.log('No :( Try again in 5s');
+    }, 5000);
+  }
+};

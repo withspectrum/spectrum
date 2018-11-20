@@ -197,13 +197,14 @@ class NotificationsPure extends React.Component<Props, State> {
           <Titlebar title={'Notifications'} provideBack={false} noComposer />
           <AppViewWrapper>
             <Column type={'primary'}>
-              {!isDesktopApp() && this.state.showWebPushPrompt && (
-                <BrowserNotificationRequest
-                  onSubscribe={this.subscribeToWebPush}
-                  onDismiss={this.dismissWebPushRequest}
-                  loading={this.state.webPushPromptLoading}
-                />
-              )}
+              {!isDesktopApp() &&
+                this.state.showWebPushPrompt && (
+                  <BrowserNotificationRequest
+                    onSubscribe={this.subscribeToWebPush}
+                    onDismiss={this.dismissWebPushRequest}
+                    loading={this.state.webPushPromptLoading}
+                  />
+                )}
               <InfiniteList
                 pageStart={0}
                 loadMore={data.fetchMore}

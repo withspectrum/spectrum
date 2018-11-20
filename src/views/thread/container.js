@@ -543,12 +543,13 @@ class ThreadContainer extends React.Component<Props, State> {
                     />
                   )}
 
-                  {!isEditing && isLocked && (
-                    <NullState
-                      icon="private"
-                      copy="This conversation has been locked."
-                    />
-                  )}
+                  {!isEditing &&
+                    isLocked && (
+                      <NullState
+                        icon="private"
+                        copy="This conversation has been locked."
+                      />
+                    )}
                 </Detail>
               </Content>
 

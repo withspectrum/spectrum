@@ -294,11 +294,12 @@ class EmailInvitationForm extends React.Component<Props, State> {
           />
         )}
 
-        {hasCustomMessage && customMessageError && (
-          <Error>
-            Your custom invitation message can be up to 500 characters.
-          </Error>
-        )}
+        {hasCustomMessage &&
+          customMessageError && (
+            <Error>
+              Your custom invitation message can be up to 500 characters.
+            </Error>
+          )}
 
         <SectionCardFooter>
           <Button

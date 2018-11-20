@@ -85,14 +85,15 @@ class CommunityModeratorList extends React.Component<Props> {
                 isOnline={user.isOnline}
                 onlineSize={'small'}
               >
-                {currentUser && node.user.id !== currentUser.id && (
-                  <MessageIconContainer>
-                    <Icon
-                      glyph={'message'}
-                      onClick={() => this.initMessage(node.user)}
-                    />
-                  </MessageIconContainer>
-                )}
+                {currentUser &&
+                  node.user.id !== currentUser.id && (
+                    <MessageIconContainer>
+                      <Icon
+                        glyph={'message'}
+                        onClick={() => this.initMessage(node.user)}
+                      />
+                    </MessageIconContainer>
+                  )}
               </GranularUserProfile>
             );
           })}
