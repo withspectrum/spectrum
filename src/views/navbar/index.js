@@ -27,7 +27,6 @@ import {
 import { track, events } from 'src/helpers/analytics';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
-import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 
 type Props = {
@@ -100,14 +99,6 @@ class Navbar extends React.Component<Props, State> {
     }
 
     return false;
-  }
-
-  componentDidUpdate(prev: Props) {
-    const curr = this.props;
-    const didReconnect = useConnectionRestored({ curr, prev });
-    if (didReconnect && curr.data.refetch) {
-      curr.data.refetch();
-    }
   }
 
   handleSkipLinkFocus = () => this.setState({ isSkipLinkFocused: true });

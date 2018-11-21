@@ -8,7 +8,9 @@ import Messages from '../components/messages';
 import Header from '../components/header';
 import ChatInput from 'src/components/chatInput';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import getDirectMessageThread from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
+import getDirectMessageThread, {
+  type GetDirectMessageThreadType,
+} from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import { MessagesContainer, ViewContent } from '../style';
 import { Loading } from 'src/components/loading';
 import ViewError from 'src/components/viewError';
@@ -19,6 +21,7 @@ import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 type Props = {
   data: {
     refetch: Function,
+    directMessageThread: GetDirectMessageThreadType,
   },
   isLoading: boolean,
   setActiveThread: Function,

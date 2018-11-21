@@ -12,6 +12,8 @@ import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations
 import { MessageTab, Label } from '../style';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
+import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
+import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 
 type Props = {
   active: boolean,
@@ -21,11 +23,14 @@ type Props = {
   markDirectMessageNotificationsSeen: Function,
   data: {
     directMessageNotifications: GetDirectMessageNotificationsType,
+    refetch: Function,
   },
   subscribeToDMs: Function,
   refetch: Function,
   count: number,
   dispatch: Dispatch<Object>,
+  networkOnline: boolean,
+  websocketConnection: WebsocketConnectionType,
 };
 
 type State = {
@@ -43,39 +48,47 @@ class MessagesTab extends React.Component<Props, State> {
   }
 
   shouldComponentUpdate(nextProps) {
-    const prevProps = this.props;
+    const curr = this.props;
+
+    if (curr.networkOnline !== nextProps.networkOnline) return true;
+    if (curr.websocketConnection !== nextProps.websocketConnection) return true;
 
     // if a refetch completes
-    if (prevProps.isRefetching !== nextProps.isRefetching) return true;
+    if (curr.isRefetching !== nextProps.isRefetching) return true;
 
     // once the initial query finishes loading
     if (
-      !prevProps.data.directMessageNotifications &&
+      !curr.data.directMessageNotifications &&
       nextProps.data.directMessageNotifications
     )
       return true;
 
     // if a subscription updates the number of records returned
     if (
-      prevProps.data &&
-      prevProps.data.directMessageNotifications &&
+      curr.data &&
+      curr.data.directMessageNotifications &&
       nextProps.data.directMessageNotifications &&
-      prevProps.data.directMessageNotifications.edges.length !==
+      curr.data.directMessageNotifications.edges.length !==
         nextProps.data.directMessageNotifications.edges.length
     )
       return true;
     // if the user clicks on the messages tab
-    if (prevProps.active !== nextProps.active) return true;
+    if (curr.active !== nextProps.active) return true;
 
     // any time the count changes
-    if (prevProps.count !== nextProps.count) return true;
+    if (curr.count !== nextProps.count) return true;
 
     return false;
   }
 
-  componentDidUpdate(prevProps) {
-    const { data: prevData } = prevProps;
+  componentDidUpdate(prev: Props) {
+    const { data: prevData } = prev;
     const curr = this.props;
+
+    const didReconnect = useConnectionRestored({ curr, prev });
+    if (didReconnect && curr.data.refetch) {
+      curr.data.refetch();
+    }
 
     // never update the badge if the user is viewing the messages tab
     // set the count to 0 if the tab is active so that if a user loads
@@ -83,7 +96,7 @@ class MessagesTab extends React.Component<Props, State> {
 
     // if the user is viewing /messages, mark any incoming notifications
     // as seen, so that when they navigate away the message count won't shoot up
-    if (!prevProps.active && this.props.active) {
+    if (!prev.active && this.props.active) {
       return this.markAllAsSeen();
     }
 
@@ -238,6 +251,8 @@ class MessagesTab extends React.Component<Props, State> {
 
 const map = state => ({
   count: state.notifications.directMessageNotifications,
+  networkOnline: state.connectionStatus.networkOnline,
+  websocketConnection: state.connectionStatus.websocketConnection,
 });
 export default compose(
   // $FlowIssue

@@ -49,7 +49,10 @@ type Props = {
   scrollContainer: any,
   subscribeToNewMessages: Function,
   lastSeen: ?number | ?Date,
-  data: { thread: GetThreadMessageConnectionType },
+  data: {
+    thread: GetThreadMessageConnectionType,
+    refetch: Function,
+  },
   thread: GetThreadType,
   currentUser: ?Object,
   hasError: boolean,
@@ -62,7 +65,7 @@ class MessagesWithData extends React.Component<Props, State> {
     subscription: null,
   };
 
-  componentDidUpdate(prev = {}) {
+  componentDidUpdate(prev: Props) {
     const curr = this.props;
 
     const didReconnect = useConnectionRestored({ curr, prev });
