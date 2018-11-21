@@ -180,7 +180,7 @@ class CommunityView extends React.Component<Props, State> {
               title={community.name}
               provideBack={true}
               backRoute={'/'}
-              noComposer={!community.communityPermissions.isMember}
+              noComposer
             />
 
             <Head
@@ -271,6 +271,7 @@ class CommunityView extends React.Component<Props, State> {
             provideBack={true}
             backRoute={'/'}
             noComposer={!community.communityPermissions.isMember}
+            activeCommunitySlug={community.slug}
           />
           <Grid id="main">
             <CoverPhoto src={community.coverPhoto} />
