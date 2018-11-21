@@ -1,24 +1,39 @@
-// @flow
-import type { GraphQLContext } from '../../';
-import type { DBChannel } from 'shared/types';
+// TODO: Flow type again
 import Raven from 'shared/raven';
+import type { DBChannel } from 'shared/types';
+import type { GraphQLContext } from '../../';
 import { canViewChannel } from '../../utils/permissions';
+import cache from 'shared/cache/redis';
 
-// NOTE(@mxstbr): metaData.threads is deprecated and not shown anywhere in the UI
-// so we always return 0
-export default async (channel: DBChannel, _: any, ctx: GraphQLContext) => {
-  const { id, isPrivate, memberCount } = channel;
-  const { loaders, user: currentUser } = ctx;
+export default async (root: DBChannel, _: any, ctx: GraphQLContext) => {
+  const { user, loaders } = ctx;
+  const { id, memberCount: rootMemberCount } = root;
 
-  if (isPrivate) {
-    if (!(await canViewChannel(currentUser, id, loaders)))
-      return { threads: 0, members: 0 };
+  if (!(await canViewChannel(user, id, loaders))) {
+    return {
+      members: 0,
+      onlineMembers: 0,
+    };
   }
 
-  if (typeof memberCount === 'number') {
+  const cachedOnlineMemberCount = await cache.get(
+    `channel:${id}:onlineMemberCount`
+  );
+
+  const onlineMemberCount =
+    (await typeof cachedOnlineMemberCount) === 'number' ||
+    loaders.channelOnlineMemberCount
+      .load(id)
+      .then(res => (res && res.reduction) || 0);
+
+  // Cache the fields for an hour
+  (await typeof cachedOnlineMemberCount) === 'number' ||
+    cache.set(`channel:${id}:onlineMemberCount`, onlineMemberCount, 'ex', 3600);
+
+  if (typeof rootMemberCount === 'number') {
     return {
-      threads: 0,
-      members: memberCount || 1,
+      members: rootMemberCount,
+      onlineMembers: onlineMemberCount,
     };
   }
 
@@ -26,13 +41,10 @@ export default async (channel: DBChannel, _: any, ctx: GraphQLContext) => {
   Raven.captureException(
     new Error(`Channel with ID "${id}" does not have denormalized memberCount.`)
   );
-
   return {
-    count: await loaders.channelMemberCount
+    members: await loaders.channelMemberCount
       .load(id)
-      .then(
-        res => (res && Array.isArray(res.reduction) ? res.reduction.length : 0)
-      ),
-    threads: 0,
+      .then(res => (res && res.reduction) || 0),
+    onlineMembers: onlineMemberCount,
   };
 };

@@ -54,6 +54,7 @@ export const Img = styled(ReactImage)`
     props.type === 'community' ? `${props.size / 8}px` : '100%'};
   object-fit: cover;
   background-color: ${theme.bg.default};
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
 
   ${props =>
     props.mobilesize &&

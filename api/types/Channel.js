@@ -24,6 +24,7 @@ const Channel = /* GraphQL */ `
     threads: Int
       @deprecated(reason: "metaData.threads is deprecated and always returns 0")
     members: Int
+    onlineMembers: Int
   }
 
   input CreateChannelInput {

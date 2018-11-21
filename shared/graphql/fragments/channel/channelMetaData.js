@@ -5,6 +5,7 @@ export type ChannelMetaDataType = {
   metaData: {
     threads: number,
     members: number,
+    onlineMembers: number,
   },
 };
 
@@ -13,6 +14,7 @@ export default gql`
     metaData {
       threads
       members
+      onlineMembers
     }
   }
 `;

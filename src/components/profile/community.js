@@ -32,6 +32,7 @@ import {
   CoverTitle,
   CoverDescription,
   ButtonContainer,
+  OnlineIndicator,
 } from './style';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 
@@ -170,6 +171,23 @@ class CommunityWithData extends React.Component<Props> {
               {community.description && (
                 <p>{renderTextWithLinks(community.description)}</p>
               )}
+
+              {community.metaData &&
+                community.metaData.members && (
+                  <ExtLink>
+                    <Icon glyph="person" size={24} />
+                    {community.metaData.members.toLocaleString()}
+                    {community.metaData.members > 1 ? ' members' : ' member'}
+                  </ExtLink>
+                )}
+
+              {community.metaData &&
+                community.metaData.onlineMembers && (
+                  <ExtLink>
+                    <OnlineIndicator />
+                    {community.metaData.onlineMembers.toLocaleString()} online
+                  </ExtLink>
+                )}
 
               {community.website && (
                 <ExtLink>
