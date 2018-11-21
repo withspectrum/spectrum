@@ -345,7 +345,7 @@ export const OnlineIndicator = styled.span`
   width: 10px;
   height: 10px;
   border-radius: 5px;
-  background: ${theme.success.alt};
+  background: ${props => (props.offline ? theme.warn.alt : theme.success.alt)};
   margin-right: 12px;
   display: inline-block;
   margin-left: 6px;

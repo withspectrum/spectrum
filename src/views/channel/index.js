@@ -387,11 +387,12 @@ class ChannelView extends React.Component<Props, State> {
                   )}
 
                 {channel.metaData &&
-                  channel.metaData.onlineMembers &&
-                  channel.metaData.onlineMembers > 0 && (
+                  typeof channel.metaData.onlineMembers === 'number' && (
                     <ExtLink>
-                      <OnlineIndicator />
-                      {channel.metaData.onlineMembers.toLocaleString()} online
+                      <OnlineIndicator
+                        offline={channel.metaData.onlineMembers === 0}
+                      />
+                      {channel.metaData.onlineMembers} online
                     </ExtLink>
                   )}
               </MetadataContainer>

@@ -182,13 +182,14 @@ class CommunityWithData extends React.Component<Props> {
                 )}
 
               {community.metaData &&
-              community.metaData.onlineMembers &&
-              community.metaData.onlineMembers > 0 ? (
-                <ExtLink>
-                  <OnlineIndicator />
-                  {community.metaData.onlineMembers} online
-                </ExtLink>
-              ) : null}
+                typeof community.metaData.onlineMembers === 'number' && (
+                  <ExtLink>
+                    <OnlineIndicator
+                      offline={community.metaData.onlineMembers === 0}
+                    />
+                    {community.metaData.onlineMembers} online
+                  </ExtLink>
+                )}
 
               {community.website && (
                 <ExtLink>
