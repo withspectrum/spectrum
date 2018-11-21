@@ -166,7 +166,7 @@ export const ExtLink = styled(FlexRow)`
   }
 
   > a:hover {
-    color: ${theme.text.primary};
+    color: ${theme.text.default};
   }
 
   > div {
