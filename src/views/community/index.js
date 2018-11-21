@@ -73,7 +73,7 @@ type Props = {
 
 type State = {
   showComposerUpsell: boolean,
-  selectedView: 'threads' | 'search' | 'members',
+  selectedView: 'trending-threads' | 'threads' | 'search' | 'members',
   isLeavingCommunity: boolean,
 };
 
@@ -84,7 +84,7 @@ class CommunityView extends React.Component<Props, State> {
     this.state = {
       isLeavingCommunity: false,
       showComposerUpsell: false,
-      selectedView: 'threads',
+      selectedView: 'trending-threads',
     };
   }
 
@@ -333,11 +333,19 @@ class CommunityView extends React.Component<Props, State> {
                 </DesktopSegment>
 
                 <Segment
+                  segmentLabel="trending-threads"
+                  onClick={() => this.handleSegmentClick('trending-threads')}
+                  selected={selectedView === 'trending-threads'}
+                >
+                  Trending
+                </Segment>
+
+                <Segment
                   segmentLabel="threads"
                   onClick={() => this.handleSegmentClick('threads')}
                   selected={selectedView === 'threads'}
                 >
-                  Threads
+                  Latest
                 </Segment>
 
                 <DesktopSegment
@@ -381,8 +389,8 @@ class CommunityView extends React.Component<Props, State> {
                   </ErrorBoundary>
                 )}
 
-              {// thread list
-              selectedView === 'threads' && (
+              {(selectedView === 'threads' ||
+                selectedView === 'trending-threads') && (
                 <CommunityThreadFeed
                   viewContext="communityProfile"
                   slug={communitySlug}
@@ -394,6 +402,9 @@ class CommunityView extends React.Component<Props, State> {
                   isNewAndOwned={isNewAndOwned}
                   community={community}
                   pinnedThreadId={community.pinnedThreadId}
+                  sort={
+                    selectedView === 'trending-threads' ? 'trending' : 'latest'
+                  }
                 />
               )}
 
