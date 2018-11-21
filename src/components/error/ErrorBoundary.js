@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import Raven from 'raven-js';
 import BlueScreen from '.';
 
 type State = {
@@ -17,7 +16,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch = (error: any, errorInfo: any) => {
     this.setState({ error });
-    Raven.captureException(error, { extra: errorInfo });
+    window.Raven && window.Raven.captureException(error, { extra: errorInfo });
   };
 
   render() {

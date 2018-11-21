@@ -18,6 +18,7 @@ import { Upsell, UpsellHeader, UpsellFooter } from './style';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 const NullState = ({ viewContext, search }) => {
   let hd;
@@ -368,12 +369,12 @@ class ThreadFeedPure extends React.Component<Props, State> {
 }
 
 const map = state => ({
-  currentUser: state.users.currentUser,
   newActivityIndicator: state.newActivityIndicator.hasNew,
 });
 const ThreadFeed = compose(
   // $FlowIssue
-  connect(map)
+  connect(map),
+  withCurrentUser
 )(ThreadFeedPure);
 
 export default ThreadFeed;

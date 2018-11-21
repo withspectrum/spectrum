@@ -3,11 +3,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import queryString from 'query-string';
-import Icon from '../../components/icons';
+import Icon from 'src/components/icons';
 import ProfileDropdown from './components/profileDropdown';
 import MessagesTab from './components/messagesTab';
 import NotificationsTab from './components/notificationsTab';
-import Head from '../../components/head';
+import Head from 'src/components/head';
+import { withCurrentUser } from 'src/components/withCurrentUser';
+import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import {
   Nav,
   Logo,
@@ -36,7 +38,8 @@ type Props = {
     notifications: number,
     directMessageNotifications: number,
   },
-  currentUser?: Object,
+  currentUser?: GetUserType,
+  isLoadingCurrentUser: boolean,
   activeInboxThread: ?string,
 };
 
@@ -67,6 +70,8 @@ class Navbar extends React.Component<Props, State> {
 
     // Had no user, now have user or user changed
     if (nextProps.currentUser !== currProps.currentUser) return true;
+    if (nextProps.isLoadingCurrentUser !== currProps.isLoadingCurrentUser)
+      return true;
 
     const newDMNotifications =
       currProps.notificationCounts.directMessageNotifications !==
@@ -117,9 +122,13 @@ class Navbar extends React.Component<Props, State> {
   };
 
   render() {
-    const { history, match, currentUser, notificationCounts } = this.props;
-
-    const loggedInUser = currentUser;
+    const {
+      history,
+      match,
+      currentUser,
+      isLoadingCurrentUser,
+      notificationCounts,
+    } = this.props;
 
     if (isViewingMarketingPage(history, currentUser)) {
       return null;
@@ -142,7 +151,7 @@ class Navbar extends React.Component<Props, State> {
       isViewingDm ||
       isComposingThread;
 
-    if (loggedInUser) {
+    if (currentUser) {
       return (
         <Nav hideOnMobile={hideNavOnMobile} data-cy="navbar">
           <Head>
@@ -210,7 +219,7 @@ class Navbar extends React.Component<Props, State> {
           <NotificationsTab
             onClick={() => this.trackNavigationClick('notifications')}
             location={history.location}
-            currentUser={loggedInUser}
+            currentUser={currentUser}
             active={history.location.pathname.includes('/notifications')}
           />
 
@@ -218,29 +227,29 @@ class Navbar extends React.Component<Props, State> {
             <Tab
               className={'hideOnMobile'}
               {...this.getTabProps(
-                history.location.pathname === `/users/${loggedInUser.username}`
+                history.location.pathname === `/users/${currentUser.username}`
               )}
-              to={loggedInUser ? `/users/${loggedInUser.username}` : '/'}
+              to={currentUser ? `/users/${currentUser.username}` : '/'}
               onClick={() => this.trackNavigationClick('profile')}
             >
               <Navatar
-                user={loggedInUser}
-                size={28}
+                user={currentUser}
+                size={32}
                 showHoverProfile={false}
                 showOnlineStatus={false}
                 clickable={false}
                 dataCy="navbar-profile"
               />
             </Tab>
-            <ProfileDropdown user={loggedInUser} />
+            <ProfileDropdown user={currentUser} />
           </ProfileDrop>
 
           <ProfileTab
             className={'hideOnDesktop'}
             {...this.getTabProps(
-              history.location.pathname === `/users/${loggedInUser.username}`
+              history.location.pathname === `/users/${currentUser.username}`
             )}
-            to={loggedInUser ? `/users/${loggedInUser.username}` : '/'}
+            to={currentUser ? `/users/${currentUser.username}` : '/'}
             onClick={() => this.trackNavigationClick('profile')}
           >
             <Icon glyph="profile" />
@@ -249,12 +258,11 @@ class Navbar extends React.Component<Props, State> {
         </Nav>
       );
     }
-
-    if (!loggedInUser) {
+    if (!currentUser && !isLoadingCurrentUser) {
       return (
         <Nav
           hideOnMobile={hideNavOnMobile}
-          loggedOut={!loggedInUser}
+          loggedOut={!currentUser}
           data-cy="navbar"
         >
           <Logo
@@ -286,7 +294,7 @@ class Navbar extends React.Component<Props, State> {
           <ExploreTab
             {...this.getTabProps(history.location.pathname === '/explore')}
             to="/explore"
-            loggedOut={!loggedInUser}
+            loggedOut={!currentUser}
             data-cy="navbar-explore"
           >
             <Icon glyph="explore" />
@@ -310,10 +318,10 @@ class Navbar extends React.Component<Props, State> {
 }
 
 const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
   notificationCounts: state.notifications,
 });
 export default compose(
   // $FlowIssue
-  connect(mapStateToProps)
+  connect(mapStateToProps),
+  withCurrentUser
 )(Navbar);

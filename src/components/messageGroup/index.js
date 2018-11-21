@@ -11,6 +11,7 @@ import type { MessageInfoType } from 'shared/graphql/fragments/message/messageIn
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { ErrorBoundary } from 'src/components/error';
 import MessageErrorFallback from '../message/messageErrorFallback';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 import {
   MessagesWrapper,
@@ -267,12 +268,8 @@ class Messages extends React.Component<Props, State> {
   }
 }
 
-// get the current user from the store for evaulation of message bubbles
-const map = state => ({ currentUser: state.users.currentUser });
-
-// $FlowIssue
 export default compose(
-  // $FlowFixMe
-  connect(map),
-  withRouter
+  withCurrentUser,
+  withRouter,
+  connect()
 )(Messages);

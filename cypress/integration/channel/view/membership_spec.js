@@ -59,8 +59,9 @@ describe('logged out channel membership', () => {
 
 describe('channel profile as member', () => {
   beforeEach(() => {
-    cy.auth(memberInChannelId);
-    cy.visit(`/${community.slug}/${publicChannel.slug}`);
+    cy.auth(memberInChannelId).then(() =>
+      cy.visit(`/${community.slug}/${publicChannel.slug}`)
+    );
   });
 
   it('should render leave channel button', () => {
@@ -71,8 +72,9 @@ describe('channel profile as member', () => {
 
 describe('channel profile as non-member', () => {
   beforeEach(() => {
-    cy.auth(QUIET_USER_ID);
-    cy.visit(`/${community.slug}/${publicChannel.slug}`);
+    cy.auth(QUIET_USER_ID).then(() =>
+      cy.visit(`/${community.slug}/${publicChannel.slug}`)
+    );
   });
 
   it('should render join channel button', () => {
@@ -83,8 +85,9 @@ describe('channel profile as non-member', () => {
 
 describe('channel profile as owner', () => {
   beforeEach(() => {
-    cy.auth(ownerInChannelId);
-    cy.visit(`/${community.slug}/${publicChannel.slug}`);
+    cy.auth(ownerInChannelId).then(() =>
+      cy.visit(`/${community.slug}/${publicChannel.slug}`)
+    );
   });
 
   it('should render settings button', () => {
@@ -97,8 +100,9 @@ describe('channel profile as owner', () => {
 describe('private channel profile', () => {
   describe('private channel as member', () => {
     beforeEach(() => {
-      cy.auth(memberInPrivateChannelId);
-      cy.visit(`/${community.slug}/${privateChannel.slug}`);
+      cy.auth(memberInPrivateChannelId).then(() =>
+        cy.visit(`/${community.slug}/${privateChannel.slug}`)
+      );
     });
 
     it('should render profile', () => {
@@ -108,8 +112,9 @@ describe('private channel profile', () => {
 
   describe('private channel as non-member', () => {
     beforeEach(() => {
-      cy.auth(QUIET_USER_ID);
-      cy.visit(`/${community.slug}/${privateChannel.slug}`);
+      cy.auth(QUIET_USER_ID).then(() =>
+        cy.visit(`/${community.slug}/${privateChannel.slug}`)
+      );
     });
 
     it('should render channel not found view', () => {

@@ -10,6 +10,7 @@ import { openModal } from 'src/actions/modals';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import Icon from 'src/components/icons';
 import { LikeButtonWrapper, LikeCountWrapper, CurrentCount } from './style';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type LikeButtonProps = {
   thread: GetThreadType,
@@ -64,14 +65,11 @@ class LikeButtonPure extends React.Component<LikeButtonProps> {
   }
 }
 
-const map = state => ({
-  currentUser: state.users.currentUser,
-});
 export const LikeButton = compose(
-  // $FlowFixMe
-  connect(map),
   addThreadReactionMutation,
-  removeThreadReactionMutation
+  removeThreadReactionMutation,
+  withCurrentUser,
+  connect()
 )(LikeButtonPure);
 
 type LikeCountProps = {

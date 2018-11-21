@@ -3,8 +3,9 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { Row } from '../discoverCommunities/style';
-import { CommunityProfile } from '../../../../components/profile';
+import { CommunityProfile } from 'src/components/profile';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   toggleCommunityMembership: Function,
@@ -38,12 +39,7 @@ class JoinFirstCommunityPure extends React.Component<Props> {
   }
 }
 
-const map = state => ({
-  currentUser: state.users.currentUser,
-});
-
-const JoinFirstCommunity = compose(
-  // $FlowIssue
-  connect(map)
+export default compose(
+  withCurrentUser,
+  connect()
 )(JoinFirstCommunityPure);
-export default JoinFirstCommunity;

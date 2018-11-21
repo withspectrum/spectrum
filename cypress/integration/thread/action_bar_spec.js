@@ -88,8 +88,9 @@ describe('action bar renders', () => {
 
   describe('authed non member', () => {
     beforeEach(() => {
-      cy.auth(nonMemberUser.id);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(nonMemberUser.id).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should render', () => {
@@ -106,8 +107,9 @@ describe('action bar renders', () => {
 
   describe('authed member', () => {
     beforeEach(() => {
-      cy.auth(memberInChannelUser.id);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(memberInChannelUser.id).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should render', () => {
@@ -124,8 +126,9 @@ describe('action bar renders', () => {
 
   describe('authed private channel member', () => {
     beforeEach(() => {
-      cy.auth(memberInChannelUser.id);
-      cy.visit(`/thread/${privateThread.id}`);
+      cy.auth(memberInChannelUser.id).then(() =>
+        cy.visit(`/thread/${privateThread.id}`)
+      );
     });
 
     it('should render', () => {
@@ -142,8 +145,9 @@ describe('action bar renders', () => {
 
   describe('thread author', () => {
     beforeEach(() => {
-      cy.auth(publicThreadAuthor.id);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(publicThreadAuthor.id).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should render', () => {
@@ -209,8 +213,9 @@ describe('action bar renders', () => {
 
   describe('channel moderator', () => {
     beforeEach(() => {
-      cy.auth(constants.CHANNEL_MODERATOR_USER_ID);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(constants.CHANNEL_MODERATOR_USER_ID).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should render', () => {
@@ -249,8 +254,9 @@ describe('action bar renders', () => {
 
   describe('channel owner', () => {
     beforeEach(() => {
-      cy.auth(constants.CHANNEL_MODERATOR_USER_ID);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(constants.CHANNEL_MODERATOR_USER_ID).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should render', () => {
@@ -289,8 +295,9 @@ describe('action bar renders', () => {
 
   describe('community moderator', () => {
     beforeEach(() => {
-      cy.auth(constants.COMMUNITY_MODERATOR_USER_ID);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(constants.COMMUNITY_MODERATOR_USER_ID).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should render', () => {
@@ -343,8 +350,9 @@ describe('action bar renders', () => {
 
   describe('community owner', () => {
     beforeEach(() => {
-      cy.auth(constants.MAX_ID);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(constants.MAX_ID).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should render', () => {

@@ -17,6 +17,7 @@ import ViewError from 'src/components/viewError';
 import { MessageIconContainer, UserListItemContainer } from '../style';
 import GranularUserProfile from 'src/components/granularUserProfile';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   data: {
@@ -103,7 +104,6 @@ class CommunityMemberGrid extends React.Component<Props, State> {
                 description={user.description}
                 isCurrentUser={currentUser && user.id === currentUser.id}
                 isOnline={user.isOnline}
-                onlineSize={'small'}
                 badges={roles}
                 reputation={reputation}
                 showHoverProfile={false}
@@ -139,12 +139,10 @@ class CommunityMemberGrid extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-
 export default compose(
-  // $FlowIssue
-  connect(map),
   withRouter,
+  withCurrentUser,
   getCommunityMembersQuery,
-  viewNetworkHandler
+  viewNetworkHandler,
+  connect()
 )(CommunityMemberGrid);

@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { Button, IconButton } from 'src/components/buttons';
 import Link from 'src/components/link';
@@ -7,6 +8,7 @@ import Icon from 'src/components/icons';
 import { Logo } from 'src/components/logo';
 import { UserAvatar } from 'src/components/avatar';
 import Head from 'src/components/head';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   NavContainer,
   Tabs,
@@ -171,7 +173,7 @@ class Nav extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-
-// $FlowIssue
-export default connect(map)(Nav);
+export default compose(
+  withCurrentUser,
+  connect()
+)(Nav);

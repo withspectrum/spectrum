@@ -9,6 +9,7 @@ import getCurrentUserSettings, {
 import { Loading } from 'src/components/loading';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
 import ViewError from 'src/components/viewError';
 import { View } from './style';
@@ -178,10 +179,9 @@ class UserSettings extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowIssue
-  connect(map),
   getCurrentUserSettings,
-  viewNetworkHandler
+  viewNetworkHandler,
+  withCurrentUser,
+  connect()
 )(UserSettings);

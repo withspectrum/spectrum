@@ -88,7 +88,6 @@
     "prismjs": "^1.15.0",
     "query-string": "5.1.1",
     "raven": "^2.6.4",
-    "raven-js": "^3.27.0",
     "react": "^15.4.1",
     "react-app-rewire-styled-components": "^3.0.2",
     "react-app-rewired": "^1.6.2",

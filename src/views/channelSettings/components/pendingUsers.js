@@ -26,6 +26,7 @@ import {
   DropdownAction,
 } from 'src/components/settingsViews/style';
 import Icon from 'src/components/icons';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   data: {
@@ -75,9 +76,8 @@ class PendingUsers extends React.Component<Props> {
                       username={user.username}
                       isCurrentUser={currentUser && user.id === currentUser.id}
                       isOnline={user.isOnline}
-                      onlineSize={'small'}
                       profilePhoto={user.profilePhoto}
-                      avatarSize={32}
+                      avatarSize={40}
                       description={user.description}
                       showHoverProfile={false}
                     >
@@ -171,11 +171,9 @@ class PendingUsers extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-
 export default compose(
-  // $FlowIssue
-  connect(map),
   getPendingUsersQuery,
-  viewNetworkHandler
+  withCurrentUser,
+  viewNetworkHandler,
+  connect()
 )(PendingUsers);

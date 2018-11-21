@@ -2,12 +2,13 @@
 import * as React from 'react';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
-import Reputation from '../../reputation';
-import { UserAvatar } from '../../avatar';
-import Icon from '../../icons';
+import Reputation from 'src/components/reputation';
+import { UserAvatar } from 'src/components/avatar';
+import Icon from 'src/components/icons';
 import ModalContainer from '../modalContainer';
-import { closeModal } from '../../../actions/modals';
+import { closeModal } from 'src/actions/modals';
 import { connect } from 'react-redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   modalStyles,
   Section,
@@ -90,10 +91,10 @@ class RepExplainerModal extends React.Component<Props> {
 }
 
 const map = state => ({
-  currentUser: state.users.currentUser,
   isOpen: state.modals.isOpen,
 });
 export default compose(
   // $FlowFixMe
-  connect(map)
+  connect(map),
+  withCurrentUser
 )(RepExplainerModal);
