@@ -80,8 +80,7 @@ const checkSignedInSplashNavbarRenders = () => {
 
 describe('Navbar logged in', () => {
   beforeEach(() => {
-    cy.auth(user.id);
-    cy.visit(`/`);
+    cy.auth(user.id).then(() => cy.visit(`/`));
   });
 
   it('should render product navbar', () => {

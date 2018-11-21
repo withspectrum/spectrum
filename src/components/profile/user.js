@@ -18,6 +18,7 @@ import { displayLoadingCard } from 'src/components/loading';
 import Reputation from 'src/components/reputation';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   FullProfile,
   ProfileHeader,
@@ -34,6 +35,8 @@ import {
   FullDescription,
   Title,
   ExtLink,
+  OnlineContainer,
+  OnlineIndicator,
 } from './style';
 
 type CurrentUserProps = {
@@ -88,6 +91,7 @@ const UserWithData = ({
             user={user}
             size={128}
             showHoverProfile={showHoverProfile}
+            showOnlineStatus={false}
             style={{
               boxShadow: '0 0 0 2px #fff',
               marginRight: '0',
@@ -98,8 +102,16 @@ const UserWithData = ({
             <span style={{ marginRight: '4px' }}>@{user.username}</span>
             {user.betaSupporter && <Badge type="beta-supporter" />}
           </Subtitle>
+
           <FullDescription>
             {user.description && <p>{renderTextWithLinks(user.description)}</p>}
+
+            {user.isOnline && (
+              <OnlineContainer>
+                <OnlineIndicator /> Online now
+              </OnlineContainer>
+            )}
+
             <Reputation
               reputation={
                 user.contextPermissions
@@ -156,7 +168,6 @@ const UserWithData = ({
             <UserAvatar
               user={user}
               size={64}
-              onlineSize={'large'}
               showHoverProfile={showHoverProfile}
               style={{
                 boxShadow: '0 0 0 2px #fff',
@@ -257,10 +268,10 @@ const UserWithData = ({
 
 const User = compose(
   displayLoadingCard,
-  withRouter
+  withRouter,
+  withCurrentUser
 )(UserWithData);
 const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
   initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,
 });
 // $FlowFixMe

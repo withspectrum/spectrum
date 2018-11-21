@@ -4,16 +4,14 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
-import ViewError from '../../components/viewError';
-import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
+import ViewError from 'src/components/viewError';
+import { Button, OutlineButton, ButtonRow } from 'src/components/buttons';
 import MemberGrowth from './components/memberGrowth';
 import ConversationGrowth from './components/conversationGrowth';
 import TopMembers from './components/topMembers';
 import TopAndNewThreads from './components/topAndNewThreads';
-import {
-  SectionsContainer,
-  Column,
-} from '../../components/settingsViews/style';
+import { withCurrentUser } from 'src/components/withCurrentUser';
+import { SectionsContainer, Column } from 'src/components/settingsViews/style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';
@@ -89,8 +87,7 @@ class CommunityAnalytics extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowIssue
-  connect(map)
+  withCurrentUser,
+  connect()
 )(CommunityAnalytics);

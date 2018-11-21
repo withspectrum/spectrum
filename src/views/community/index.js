@@ -23,6 +23,7 @@ import ViewError from 'src/components/viewError';
 import { LoadingScreen } from 'src/components/loading';
 import { CLIENT_URL } from 'src/api/constants';
 import { Upsell404Community } from 'src/components/upsell';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   SegmentedControl,
   Segment,
@@ -476,13 +477,9 @@ class CommunityView extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({
-  currentUser: state.users.currentUser,
-});
-
 export default compose(
-  // $FlowIssue
-  connect(map),
+  withCurrentUser,
   getCommunityByMatch,
-  viewNetworkHandler
+  viewNetworkHandler,
+  connect()
 )(CommunityView);

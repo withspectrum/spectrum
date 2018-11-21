@@ -1,5 +1,6 @@
 // @flow
 import theme from 'shared/theme';
+import compose from 'recompose/compose';
 import React from 'react';
 import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
@@ -7,6 +8,7 @@ import Link from 'src/components/link';
 import { Transition, zIndex } from 'src/components/globals';
 import { UserHoverProfile } from 'src/components/hoverProfile';
 import type { Node } from 'react';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 const UsernameWrapper = styled.span`
   color: ${props =>
@@ -53,9 +55,10 @@ class MentionWithCurrentUser extends React.Component<MentionProps> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-// $FlowFixMe
-export const Mention = connect(map)(MentionWithCurrentUser);
+export const Mention = compose(
+  withCurrentUser,
+  connect()
+)(MentionWithCurrentUser);
 
 export const customStyleMap = {
   CODE: {

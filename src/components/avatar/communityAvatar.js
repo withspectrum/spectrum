@@ -3,7 +3,7 @@ import * as React from 'react';
 import { CommunityHoverProfile } from 'src/components/hoverProfile';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import AvatarImage from './image';
-import { Status, AvatarLink } from './style';
+import { Container, AvatarLink } from './style';
 import ConditionalWrap from 'src/components/conditionalWrap';
 
 type Props = {
@@ -31,7 +31,7 @@ class Avatar extends React.Component<Props> {
     const source = [src, communityFallback];
 
     return (
-      <Status
+      <Container
         size={size}
         mobilesize={mobilesize}
         style={style}
@@ -50,7 +50,7 @@ class Avatar extends React.Component<Props> {
             type={'community'}
           />
         </ConditionalWrap>
-      </Status>
+      </Container>
     );
   }
 }

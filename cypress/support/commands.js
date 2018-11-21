@@ -14,10 +14,6 @@ const getUser = userId => data.users.find(user => user.id === userId);
 Cypress.Commands.add('auth', userId => {
   const user = getUser(userId);
 
-  localStorage.setItem(
-    'spectrum',
-    JSON.stringify({ currentUser: { id: user.id, username: user.username } })
-  );
   return cy.setCookie(
     'session',
     encode(JSON.stringify({ passport: { user: userId } })),

@@ -336,3 +336,18 @@ export const MessageButtonContainer = styled.div`
     text-align: center;
   }
 `;
+
+export const OnlineContainer = styled.div`
+  margin-top: 16px;
+  margin-bottom: -4px;
+`;
+
+export const OnlineIndicator = styled.span`
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+  background: ${theme.success.alt};
+  margin-right: 6px;
+  display: inline-block;
+  margin-left: 4px;
+`;

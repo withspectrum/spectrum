@@ -47,8 +47,9 @@ describe('chat input', () => {
 
   describe('authed non member', () => {
     beforeEach(() => {
-      cy.auth(nonMemberUser.id);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(nonMemberUser.id).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should render', () => {
@@ -62,8 +63,9 @@ describe('chat input', () => {
 
   describe('authed member', () => {
     beforeEach(() => {
-      cy.auth(memberInChannelUser.id);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(memberInChannelUser.id).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should render', () => {
@@ -98,8 +100,9 @@ describe('chat input', () => {
 
   describe('message attachments', () => {
     beforeEach(() => {
-      cy.auth(memberInChannelUser.id);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(memberInChannelUser.id).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should allow quoting a message', () => {
@@ -141,8 +144,9 @@ describe('chat input', () => {
 
   describe('thread in archived channel', () => {
     beforeEach(() => {
-      cy.auth(memberInChannelUser.id);
-      cy.visit(`/thread/${archivedThread.id}`);
+      cy.auth(memberInChannelUser.id).then(() =>
+        cy.visit(`/thread/${archivedThread.id}`)
+      );
     });
 
     it('should render', () => {

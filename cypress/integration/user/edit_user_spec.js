@@ -9,8 +9,7 @@ const NEW_USERNAME = 'brian-edited';
 
 describe('edit a user', () => {
   beforeEach(() => {
-    cy.auth(user.id);
-    cy.visit(`/me/settings`);
+    cy.auth(user.id).then(() => cy.visit(`/me/settings`));
   });
 
   it('should edit a user', () => {

@@ -3,18 +3,19 @@ import * as React from 'react';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { OutlineButton } from '../../../components/buttons';
-import Icon from '../../../components/icons';
-import { openModal } from '../../../actions/modals';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { Loading } from '../../../components/loading';
+import { OutlineButton } from 'src/components/buttons';
+import Icon from 'src/components/icons';
+import { openModal } from 'src/actions/modals';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import { Loading } from 'src/components/loading';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
-import { StyledCard, ListContainer } from '../../../components/listItems/style';
+import { StyledCard, ListContainer } from 'src/components/listItems/style';
 import { ChannelListItem } from 'src/components/listItems';
 import ToggleChannelNotifications from 'src/components/toggleChannelNotifications';
 import type { Dispatch } from 'redux';
 import { ToggleNotificationsContainer } from '../style';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   data: {
@@ -210,10 +211,9 @@ class ChannelList extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowIssue
-  connect(map),
   getCommunityChannels,
-  viewNetworkHandler
+  viewNetworkHandler,
+  withCurrentUser,
+  connect()
 )(ChannelList);

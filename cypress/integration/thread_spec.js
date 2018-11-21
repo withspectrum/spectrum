@@ -62,8 +62,7 @@ describe('Thread View', () => {
 
   describe('Public (authenticated)', () => {
     beforeEach(() => {
-      cy.auth(author.id);
-      cy.visit(`/thread/${thread.id}`);
+      cy.auth(author.id).then(() => cy.visit(`/thread/${thread.id}`));
     });
 
     it('should allow logged-in users to send public messages', () => {
@@ -81,8 +80,9 @@ describe('Thread View', () => {
 
   describe('Private', () => {
     beforeEach(() => {
-      cy.auth(QUIET_USER_ID);
-      cy.visit(`/thread/${privateThread.id}`);
+      cy.auth(QUIET_USER_ID).then(() =>
+        cy.visit(`/thread/${privateThread.id}`)
+      );
     });
 
     it("should not allow logged-in users to send private messages if they don't have permission", () => {
@@ -92,8 +92,9 @@ describe('Thread View', () => {
 
   describe('Private (with permissions)', () => {
     beforeEach(() => {
-      cy.auth(privateAuthor.id);
-      cy.visit(`/thread/${privateThread.id}`);
+      cy.auth(privateAuthor.id).then(() =>
+        cy.visit(`/thread/${privateThread.id}`)
+      );
     });
 
     it('should allow logged-in users to send private messages if they have permission', () => {
@@ -109,8 +110,9 @@ describe('Thread View', () => {
 
   describe('Loading a thread with a message query parameter', () => {
     beforeEach(() => {
-      cy.auth(author.id);
-      cy.visit(`/thread/thread-1?m=MTQ4MzIyNTIwMDAwMQ==`);
+      cy.auth(author.id).then(() =>
+        cy.visit(`/thread/thread-1?m=MTQ4MzIyNTIwMDAwMQ==`)
+      );
     });
 
     it('should load only messages after the selected message', () => {
@@ -145,8 +147,7 @@ describe('Thread View', () => {
 
   describe('copy link to message', () => {
     beforeEach(() => {
-      cy.auth(author.id);
-      cy.visit(`/thread/${thread.id}`);
+      cy.auth(author.id).then(() => cy.visit(`/thread/${thread.id}`));
     });
 
     it('should copy link to message from message actions', () => {
@@ -176,8 +177,7 @@ describe('Thread View', () => {
 
   describe('message timestamp', () => {
     beforeEach(() => {
-      cy.auth(author.id);
-      cy.visit(`/thread/${thread.id}`);
+      cy.auth(author.id).then(() => cy.visit(`/thread/${thread.id}`));
     });
 
     it('should link the thread with message query param', () => {
@@ -207,8 +207,7 @@ describe('Thread View', () => {
 
   describe('liking a message signed in', () => {
     beforeEach(() => {
-      cy.auth(author.id);
-      cy.visit(`/thread/${thread.id}`);
+      cy.auth(author.id).then(() => cy.visit(`/thread/${thread.id}`));
     });
 
     it('should like a message from the message action bar', () => {
@@ -337,8 +336,7 @@ describe('Thread View', () => {
 
   describe('delete message as message author', () => {
     beforeEach(() => {
-      cy.auth(author.id);
-      cy.visit(`/thread/${thread.id}`);
+      cy.auth(author.id).then(() => cy.visit(`/thread/${thread.id}`));
     });
 
     it('should allow a user to delete their own message', () => {
@@ -359,8 +357,7 @@ describe('Thread View', () => {
 
   describe('delete message as community moderator', () => {
     beforeEach(() => {
-      cy.auth(moderator.userId);
-      cy.visit(`/thread/${thread.id}`);
+      cy.auth(moderator.userId).then(() => cy.visit(`/thread/${thread.id}`));
     });
 
     it('should allow a user to delete all messages', () => {
@@ -390,10 +387,9 @@ describe('edit message signed out', () => {
   });
 });
 
-describe.only('edit message signed in', () => {
+describe('edit message signed in', () => {
   beforeEach(() => {
-    cy.auth(moderator.userId);
-    cy.visit(`/thread/${thread.id}`);
+    cy.auth(moderator.userId).then(() => cy.visit(`/thread/${thread.id}`));
   });
 
   it('should render edit buttons on current users messages', () => {
@@ -437,8 +433,7 @@ describe.only('edit message signed in', () => {
 
 describe('/new/thread', () => {
   beforeEach(() => {
-    cy.auth(author.id);
-    cy.visit('/new/thread');
+    cy.auth(author.id).then(() => cy.visit('/new/thread'));
   });
 
   it('should allow composing new threads', () => {

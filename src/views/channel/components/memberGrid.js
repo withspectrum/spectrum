@@ -16,6 +16,7 @@ import { StyledButton } from '../../community/style';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { MessageIconContainer, UserListItemContainer } from '../style';
 import Icon from 'src/components/icons';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   data: {
@@ -66,7 +67,6 @@ class ChannelMemberGrid extends React.Component<Props> {
                     username={user.username}
                     isCurrentUser={currentUser && user.id === currentUser.id}
                     isOnline={user.isOnline}
-                    onlineSize={'small'}
                     profilePhoto={user.profilePhoto}
                     avatarSize={32}
                   >
@@ -112,12 +112,10 @@ class ChannelMemberGrid extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-
 export default compose(
-  // $FlowIssue
-  connect(map),
   withRouter,
+  withCurrentUser,
   getChannelMembersQuery,
-  viewNetworkHandler
+  viewNetworkHandler,
+  connect()
 )(ChannelMemberGrid);

@@ -10,8 +10,7 @@ const channels = data.channels
 
 describe('Community settings overview tab', () => {
   beforeEach(() => {
-    cy.auth(ownerId);
-    cy.visit(`/${community.slug}/settings`);
+    cy.auth(ownerId).then(() => cy.visit(`/${community.slug}/settings`));
   });
 
   it('should render the settings overview and allow editing the community metadata', () => {

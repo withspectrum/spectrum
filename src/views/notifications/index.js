@@ -23,6 +23,7 @@ import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import Titlebar from '../../views/titlebar';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   displayLoadingNotifications,
   LoadingThread,
@@ -411,16 +412,12 @@ class NotificationsPure extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
-});
-
 export default compose(
   subscribeToWebPush,
   getNotifications,
   displayLoadingNotifications,
   markNotificationsSeenMutation,
-  // $FlowIssue
-  connect(mapStateToProps),
-  viewNetworkHandler
+  viewNetworkHandler,
+  withCurrentUser,
+  connect()
 )(NotificationsPure);

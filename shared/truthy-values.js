@@ -1,4 +1,9 @@
 // @flow
 export const getTruthyValuesFromObject = (object: Object): Array<?string> => {
-  return Object.keys(object).filter(key => object[key] === true);
+  if (!object) return [];
+  try {
+    return Object.keys(object).filter(key => object[key] === true);
+  } catch (err) {
+    return [];
+  }
 };

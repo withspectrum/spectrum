@@ -4,35 +4,36 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { CommunityAvatar } from 'src/components/avatar';
-import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
-import ThreadComposer from '../../components/threadComposer';
-import Head from '../../components/head';
-import AppViewWrapper from '../../components/appViewWrapper';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
-import ViewError from '../../components/viewError';
+import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
+import ThreadComposer from 'src/components/threadComposer';
+import Head from 'src/components/head';
+import AppViewWrapper from 'src/components/appViewWrapper';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import ViewError from 'src/components/viewError';
 import Link from 'src/components/link';
-import ThreadFeed from '../../components/threadFeed';
+import ThreadFeed from 'src/components/threadFeed';
 import PendingUsersNotification from './components/pendingUsersNotification';
 import NotificationsToggle from './components/notificationsToggle';
 import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import Login from '../login';
-import { LoadingScreen } from '../../components/loading';
-import { Upsell404Channel } from '../../components/upsell';
-import RequestToJoinChannel from '../../components/upsell/requestToJoinChannel';
+import { LoadingScreen } from 'src/components/loading';
+import { Upsell404Channel } from 'src/components/upsell';
+import RequestToJoinChannel from 'src/components/upsell/requestToJoinChannel';
 import Titlebar from '../titlebar';
-import Icon from '../../components/icons';
+import Icon from 'src/components/icons';
 import Search from './components/search';
 import ChannelMemberGrid from './components/memberGrid';
-import { CLIENT_URL } from '../../api/constants';
+import { CLIENT_URL } from 'src/api/constants';
 import CommunityLogin from 'src/views/communityLogin';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   SegmentedControl,
   DesktopSegment,
   Segment,
   MobileSegment,
-} from '../../components/segmentedControl';
+} from 'src/components/segmentedControl';
 import {
   Grid,
   Meta,
@@ -43,9 +44,9 @@ import {
   ChannelName,
   ChannelDescription,
 } from './style';
-import { CoverPhoto } from '../../components/profile/coverPhoto';
+import { CoverPhoto } from 'src/components/profile/coverPhoto';
 import { LoginButton, ColumnHeading, MidSegment } from '../community/style';
-import ToggleChannelMembership from '../../components/toggleChannelMembership';
+import ToggleChannelMembership from 'src/components/toggleChannelMembership';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
@@ -95,14 +96,17 @@ class ChannelView extends React.Component<Props, State> {
     if (
       (!prevProps.data.channel && this.props.data.channel) ||
       (prevProps.data.channel &&
+        this.props.data.channel &&
         prevProps.data.channel.id !== this.props.data.channel.id)
     ) {
       const { channel } = this.props.data;
 
-      track(events.CHANNEL_VIEWED, {
-        channel: transformations.analyticsChannel(channel),
-        community: transformations.analyticsCommunity(channel.community),
-      });
+      if (channel) {
+        track(events.CHANNEL_VIEWED, {
+          channel: transformations.analyticsChannel(channel),
+          community: transformations.analyticsCommunity(channel.community),
+        });
+      }
 
       // if the user is new and signed up through a community page, push
       // the community data into the store to hydrate the new user experience
@@ -530,13 +534,9 @@ class ChannelView extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({
-  currentUser: state.users.currentUser,
-});
-
 export default compose(
-  // $FlowIssue
-  connect(map),
+  withCurrentUser,
   getChannelByMatch,
-  viewNetworkHandler
+  viewNetworkHandler,
+  connect()
 )(ChannelView);
