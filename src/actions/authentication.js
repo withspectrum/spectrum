@@ -34,19 +34,14 @@ export const setRavenUserContext = (id: string) => {
   // logs the user id to Sentry
   // if Raven hasn't loaded yet, try every 5s until it's loaded
   if (window.Raven) {
-    console.log('Raven setUserContext!');
     return window.Raven.setUserContext({ id });
   } else {
-    console.log('No Raven :( Try again in 5s');
     const interval = setInterval(() => {
-      console.log('Raven?');
       if (window.Raven) {
-        console.log('Yes! setUserContext');
         window.Raven.setUserContext({ id });
         clearInterval(interval);
         return;
       }
-      console.log('No :( Try again in 5s');
     }, 5000);
   }
 };
