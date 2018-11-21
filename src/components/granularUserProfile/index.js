@@ -36,7 +36,6 @@ type Props = {
   messageButton?: boolean,
   multiAction?: boolean,
   children?: React.Node,
-  onlineSize?: 'small' | 'large',
   history: Object,
   dispatch: Dispatch<Object>,
   showHoverProfile?: boolean,
@@ -91,12 +90,11 @@ class GranularUserProfile extends React.Component<Props> {
       username,
       description,
       reputation,
-      avatarSize,
+      avatarSize = 32,
       badges,
       children,
       messageButton,
       multiAction,
-      onlineSize,
       showHoverProfile = true,
     } = this.props;
 
@@ -105,7 +103,7 @@ class GranularUserProfile extends React.Component<Props> {
         {profilePhoto && (
           <UserAvatar
             user={userObject}
-            size={avatarSize || 32}
+            size={avatarSize}
             showHoverProfile={!showHoverProfile}
           />
         )}
