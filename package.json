@@ -4,8 +4,8 @@
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@babel/preset-flow": "^7.0.0",
+    "@craco/craco": "^3.1.0",
     "babel-cli": "^6.24.1",
-    "babel-eslint": "^8.2.6",
     "babel-jest": "^22.4.4",
     "babel-plugin-import-inspector": "^2.0.0",
     "babel-plugin-inline-import-graphql-ast": "^2.0.4",
@@ -38,7 +38,7 @@
     "raw-loader": "^0.5.1",
     "react-app-rewire-hot-loader": "^1.0.3",
     "react-hot-loader": "^4.3.11",
-    "react-scripts": "^1.1.5",
+    "react-scripts": "^2.1.1",
     "rimraf": "^2.6.1",
     "sw-precache-webpack-plugin": "^0.11.4",
     "uuid": "^3.0.1",
@@ -209,7 +209,7 @@
     "start:vulcan": "cross-env NODE_ENV=production node build-vulcan/main.js",
     "start:analytics": "cross-env NODE_ENV=production node build-analytics/main.js",
     "start:api": "cross-env NODE_ENV=production node build-api/main.js",
-    "dev:web": "cross-env NODE_PATH=./ react-app-rewired start",
+    "dev:web": "cross-env NODE_PATH=./ cross-env SKIP_PREFLIGHT_CHECK=true craco start",
     "dev:api": "cross-env FILE_STORAGE=local cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,api*,shared:middlewares*,shared:rethinkdb:db-query-cache,-api:resolvers cross-env DIR=api backpack",
     "dev:api:s3": "cross-env FILE_STORAGE=s3 cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,api*,shared:middlewares*,shared:rethinkdb:db-query-cache,-api:resolvers cross-env DIR=api backpack",
     "dev:athena": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,athena*,shared:middlewares*,-athena:resolvers cross-env DIR=athena backpack",
@@ -248,7 +248,7 @@
     "prebuild:hyperion": "rimraf build-hyperion",
     "build:hyperion": "cross-env NODE_PATH=./ cross-env DIR=hyperion backpack build",
     "postbuild:hyperion": "cp now.json build-hyperion/now.json",
-    "build:web": "cross-env NODE_PATH=./ react-app-rewired build",
+    "build:web": "cross-env NODE_PATH=./ cross-env SKIP_PREFLIGHT_CHECK=true craco build",
     "build:desktop": "(cd desktop && yarn run package:all)",
     "test:desktop": "(cd desktop && yarn run package:test)",
     "release:desktop": "(cd desktop && yarn run release)",
@@ -278,5 +278,11 @@
       "git add"
     ]
   },
-  "pre-commit": "lint:staged"
+  "pre-commit": "lint:staged",
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
