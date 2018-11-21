@@ -35,6 +35,7 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
                 size={34}
                 clickable={false}
                 showHoverProfile={false}
+                showOnlineStatus={false}
               />
             </TwoAvatarWrap>
           );
@@ -54,6 +55,7 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
               size={20}
               clickable={false}
               showHoverProfile={false}
+              showOnlineStatus={false}
             />
           );
         })}
@@ -72,6 +74,7 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
               size={19}
               clickable={false}
               showHoverProfile={false}
+              showOnlineStatus={false}
             />
           );
         })}
@@ -93,6 +96,7 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
                 size={19}
                 clickable={false}
                 showHoverProfile={false}
+                showOnlineStatus={false}
               />
             );
           }
