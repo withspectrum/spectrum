@@ -182,12 +182,13 @@ class CommunityWithData extends React.Component<Props> {
                 )}
 
               {community.metaData &&
-                community.metaData.onlineMembers && (
-                  <ExtLink>
-                    <OnlineIndicator />
-                    {community.metaData.onlineMembers.toLocaleString()} online
-                  </ExtLink>
-                )}
+              community.metaData.onlineMembers &&
+              community.metaData.onlineMembers > 0 ? (
+                <ExtLink>
+                  <OnlineIndicator />
+                  {community.metaData.onlineMembers} online
+                </ExtLink>
+              ) : null}
 
               {community.website && (
                 <ExtLink>
