@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
+import PromiseQueue from './helpers/p-queue';
 import { Route, Switch, Redirect } from 'react-router';
 import styled, { ThemeProvider } from 'styled-components';
 import Loadable from 'react-loadable';
@@ -152,6 +153,44 @@ const NotificationsFallback = signedOutFallback(Notifications, () => (
 const ComposerFallback = signedOutFallback(Composer, () => (
   <Login redirectPath={`${CLIENT_URL}/new/thread`} />
 ));
+
+// Preload the important routes when browser is idle and users has been using the app
+// for > 5s (i.e. all the data should hopefully have been loaded)
+const preload = [
+  FullscreenThreadView,
+  CommunityView,
+  CommunityLoginView,
+  UserView,
+  ChannelView,
+  Dashboard,
+  Notifications,
+];
+requestAnimationFrame(() => {
+  // Fallback to setTimeout for older browsers with no requestIdleCallback support
+  const idle = window.requestIdleCallback || window.setTimeout;
+  const queue = new PromiseQueue({
+    concurrency: 2,
+  });
+  idle(() => {
+    // Wait 5 seconds to make sure the data has loaded
+    setTimeout(() => {
+      preload.forEach(bundle => {
+        queue
+          .add(() => {
+            return new Promise(res => {
+              idle(() => {
+                bundle
+                  .preload()
+                  .then(res)
+                  .catch(err => console.error(err));
+              });
+            });
+          })
+          .catch(err => console.error(err));
+      });
+    }, 5000);
+  });
+});
 
 type Props = {
   currentUser: ?GetUserType,
