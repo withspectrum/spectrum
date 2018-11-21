@@ -1,10 +1,13 @@
+// @flow
+export type WebsocketConnectionType =
+  | 'connected'
+  | 'connecting'
+  | 'reconnected'
+  | 'reconnecting';
+
 type InitialState = {
   networkOnline: boolean,
-  websocketConnection:
-    | 'connected'
-    | 'connecting'
-    | 'reconnected'
-    | 'reconnecting',
+  websocketConnection: WebsocketConnectionType,
 };
 
 const initialState: InitialState = {

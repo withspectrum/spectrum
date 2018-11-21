@@ -47,6 +47,8 @@ import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
+import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
+import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 
 type Props = {
   markAllNotificationsSeen?: Function,
@@ -62,8 +64,12 @@ type Props = {
     notifications: {
       edges: Array<Object>,
     },
+    refetch: Function,
   },
+  networkOnline: boolean,
+  websocketConnection: WebsocketConnectionType,
 };
+
 type State = {
   showWebPushPrompt: boolean,
   webPushPromptLoading: boolean,
@@ -129,12 +135,22 @@ class NotificationsPure extends React.Component<Props, State> {
       });
   }
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps: Props) {
     const curr = this.props;
+    if (curr.networkOnline !== nextProps.networkOnline) return true;
+    if (curr.websocketConnection !== nextProps.websocketConnection) return true;
     // fetching more
     if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
       return false;
     return true;
+  }
+
+  componentDidUpdate(prev: Props) {
+    const curr = this.props;
+    const didReconnect = useConnectionRestored({ curr, prev });
+    if (didReconnect && curr.data.refetch) {
+      curr.data.refetch();
+    }
   }
 
   subscribeToWebPush = () => {
@@ -412,6 +428,11 @@ class NotificationsPure extends React.Component<Props, State> {
   }
 }
 
+const map = state => ({
+  networkOnline: state.connectionStatus.networkOnline,
+  websocketConnection: state.connectionStatus.websocketConnection,
+});
+
 export default compose(
   subscribeToWebPush,
   getNotifications,
@@ -419,5 +440,6 @@ export default compose(
   markNotificationsSeenMutation,
   viewNetworkHandler,
   withCurrentUser,
-  connect()
+  // $FlowIssue
+  connect(map)
 )(NotificationsPure);

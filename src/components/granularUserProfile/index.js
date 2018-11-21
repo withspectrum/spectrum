@@ -36,7 +36,6 @@ type Props = {
   messageButton?: boolean,
   multiAction?: boolean,
   children?: React.Node,
-  onlineSize?: 'small' | 'large',
   history: Object,
   dispatch: Dispatch<Object>,
   showHoverProfile?: boolean,
@@ -96,7 +95,6 @@ class GranularUserProfile extends React.Component<Props> {
       children,
       messageButton,
       multiAction,
-      onlineSize,
       showHoverProfile = true,
     } = this.props;
 

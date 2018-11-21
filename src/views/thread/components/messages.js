@@ -29,6 +29,8 @@ import { ErrorBoundary } from 'src/components/error';
 import getThreadLink from 'src/helpers/get-thread-link';
 import type { GetThreadMessageConnectionType } from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
+import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
+import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 
 type State = {
   subscription: ?Function,
@@ -51,6 +53,8 @@ type Props = {
   thread: GetThreadType,
   currentUser: ?Object,
   hasError: boolean,
+  networkOnline: boolean,
+  websocketConnection: WebsocketConnectionType,
 };
 
 class MessagesWithData extends React.Component<Props, State> {
@@ -60,6 +64,11 @@ class MessagesWithData extends React.Component<Props, State> {
 
   componentDidUpdate(prev = {}) {
     const curr = this.props;
+
+    const didReconnect = useConnectionRestored({ curr, prev });
+    if (didReconnect && curr.data.refetch) {
+      curr.data.refetch();
+    }
 
     if (!curr.data.thread) return;
 
@@ -363,10 +372,16 @@ class MessagesWithData extends React.Component<Props, State> {
   }
 }
 
+const map = state => ({
+  networkOnline: state.connectionStatus.networkOnline,
+  websocketConnection: state.connectionStatus.websocketConnection,
+});
+
 export default compose(
   withRouter,
   withCurrentUser,
   getThreadMessages,
   viewNetworkHandler,
-  connect()
+  // $FlowIssue
+  connect(map)
 )(MessagesWithData);

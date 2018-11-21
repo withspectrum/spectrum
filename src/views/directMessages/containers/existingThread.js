@@ -13,9 +13,13 @@ import { MessagesContainer, ViewContent } from '../style';
 import { Loading } from 'src/components/loading';
 import ViewError from 'src/components/viewError';
 import { ErrorBoundary } from 'src/components/error';
+import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
+import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 
 type Props = {
-  data: Object,
+  data: {
+    refetch: Function,
+  },
   isLoading: boolean,
   setActiveThread: Function,
   setLastSeen: Function,
@@ -23,7 +27,10 @@ type Props = {
   id: ?string,
   currentUser: Object,
   threadSliderIsOpen: boolean,
+  networkOnline: boolean,
+  websocketConnection: WebsocketConnectionType,
 };
+
 class ExistingThread extends React.Component<Props> {
   scrollBody: ?HTMLDivElement;
   chatInput: ?ChatInput;
@@ -40,29 +47,32 @@ class ExistingThread extends React.Component<Props> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prev) {
+    const curr = this.props;
+
+    const didReconnect = useConnectionRestored({ curr, prev });
+    if (didReconnect && curr.data.refetch) {
+      curr.data.refetch();
+    }
+
     // if the thread slider is open, dont be focusing shit up in heyuhr
-    if (this.props.threadSliderIsOpen) return;
+    if (curr.threadSliderIsOpen) return;
     // if the thread slider is closed and we're viewing DMs, refocus the chat input
-    if (
-      prevProps.threadSliderIsOpen &&
-      !this.props.threadSliderIsOpen &&
-      this.chatInput
-    ) {
+    if (prev.threadSliderIsOpen && !curr.threadSliderIsOpen && this.chatInput) {
       this.chatInput.triggerFocus();
     }
     // as soon as the direct message thread is loaded, refocus the chat input
     if (
-      this.props.data.directMessageThread &&
-      !prevProps.data.directMessageThread &&
+      curr.data.directMessageThread &&
+      !prev.data.directMessageThread &&
       this.chatInput
     ) {
       this.chatInput.triggerFocus();
     }
-    if (prevProps.match.params.threadId !== this.props.match.params.threadId) {
-      const threadId = this.props.match.params.threadId;
-      this.props.setActiveThread(threadId);
-      this.props.setLastSeen(threadId);
+    if (prev.match.params.threadId !== curr.match.params.threadId) {
+      const threadId = curr.match.params.threadId;
+      curr.setActiveThread(threadId);
+      curr.setLastSeen(threadId);
       this.forceScrollToBottom();
       // autofocus on desktop
       if (window && window.innerWidth > 768 && this.chatInput) {
@@ -141,7 +151,11 @@ class ExistingThread extends React.Component<Props> {
   }
 }
 
-const map = state => ({ threadSliderIsOpen: state.threadSlider.isOpen });
+const map = state => ({
+  networkOnline: state.connectionStatus.networkOnline,
+  websocketConnection: state.connectionStatus.websocketConnection,
+  threadSliderIsOpen: state.threadSlider.isOpen,
+});
 export default compose(
   // $FlowIssue
   connect(map),

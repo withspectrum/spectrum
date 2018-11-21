@@ -8,21 +8,23 @@ import { connect } from 'react-redux';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import FlipMove from 'react-flip-move';
-import { sortByDate } from '../../../helpers/utils';
-import { LoadingInboxThread } from '../../../components/loading';
-import { changeActiveThread } from '../../../actions/dashboardFeed';
+import { sortByDate } from 'src/helpers/utils';
+import { LoadingInboxThread } from 'src/components/loading';
+import { changeActiveThread } from 'src/actions/dashboardFeed';
 import LoadingThreadFeed from './loadingThreadFeed';
 import ErrorThreadFeed from './errorThreadFeed';
 import EmptyThreadFeed from './emptyThreadFeed';
 import EmptySearchFeed from './emptySearchFeed';
 import InboxThread from './inboxThread';
 import DesktopAppUpsell from './desktopAppUpsell';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import type { ViewNetworkHandlerType } from '../../../components/viewNetworkHandler';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import type { ViewNetworkHandlerType } from 'src/components/viewNetworkHandler';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import type { GetCommunityThreadConnectionType } from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
+import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
+import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 
 type Node = {
   node: {
@@ -43,6 +45,7 @@ type Props = {
     networkStatus: number,
     hasNextPage: boolean,
     feed: string,
+    refetch: Function,
   },
   history: Function,
   dispatch: Dispatch<Object>,
@@ -50,6 +53,8 @@ type Props = {
   activeCommunity: ?string,
   activeChannel: ?string,
   hasActiveCommunity: boolean,
+  networkOnline: boolean,
+  websocketConnection: WebsocketConnectionType,
 };
 
 type State = {
@@ -81,6 +86,8 @@ class ThreadFeed extends React.Component<Props, State> {
 
   shouldComponentUpdate(nextProps) {
     const curr = this.props;
+    if (curr.networkOnline !== nextProps.networkOnline) return true;
+    if (curr.websocketConnection !== nextProps.websocketConnection) return true;
     // fetching more
     if (curr.data.networkStatus === 7 && nextProps.isFetchingMore) return false;
     return true;
@@ -94,10 +101,16 @@ class ThreadFeed extends React.Component<Props, State> {
     }
   };
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prev) {
     const isDesktop = window.innerWidth > 768;
     const { scrollElement } = this.state;
-    const { mountedWithActiveThread, queryString } = this.props;
+    const curr = this.props;
+    const { mountedWithActiveThread, queryString } = curr;
+
+    const didReconnect = useConnectionRestored({ curr, prev });
+    if (didReconnect && curr.data.refetch) {
+      curr.data.refetch();
+    }
 
     // user is searching, don't select anything
     if (queryString) {
@@ -106,78 +119,77 @@ class ThreadFeed extends React.Component<Props, State> {
 
     // If we mount with ?t and are on mobile, we have to redirect to ?thread
     if (!isDesktop && mountedWithActiveThread) {
-      this.props.history.replace(`/?thread=${mountedWithActiveThread}`);
-      this.props.dispatch({ type: 'REMOVE_MOUNTED_THREAD_ID' });
+      curr.history.replace(`/?thread=${mountedWithActiveThread}`);
+      curr.dispatch({ type: 'REMOVE_MOUNTED_THREAD_ID' });
       return;
     }
 
-    const hasThreadsButNoneSelected =
-      this.props.data.threads && !this.props.selectedId;
+    const hasThreadsButNoneSelected = curr.data.threads && !curr.selectedId;
     const justLoadedThreads =
       !mountedWithActiveThread &&
-      ((!prevProps.data.threads && this.props.data.threads) ||
-        (prevProps.data.loading && !this.props.data.loading));
+      ((!prev.data.threads && curr.data.threads) ||
+        (prev.data.loading && !curr.data.loading));
 
     // if the app loaded with a ?t query param, it means the user was linked to a thread from the inbox view and is already logged in. In this case we want to load the thread identified in the url and ignore the fact that a feed is loading in which auto-selects a different thread.
     if (justLoadedThreads && mountedWithActiveThread) {
-      this.props.dispatch({ type: 'REMOVE_MOUNTED_THREAD_ID' });
+      curr.dispatch({ type: 'REMOVE_MOUNTED_THREAD_ID' });
       return;
     }
 
     // don't select a thread if the composer is open
-    if (prevProps.selectedId === 'new') {
+    if (prev.selectedId === 'new') {
       return;
     }
 
     if (
       isDesktop &&
       (hasThreadsButNoneSelected || justLoadedThreads) &&
-      this.props.data.threads.length > 0 &&
-      !prevProps.isFetchingMore
+      curr.data.threads.length > 0 &&
+      !prev.isFetchingMore
     ) {
       if (
-        (this.props.data.community &&
-          this.props.data.community.watercooler &&
-          this.props.data.community.watercooler.id) ||
-        (this.props.data.community &&
-          this.props.data.community.pinnedThread &&
-          this.props.data.community.pinnedThread.id)
+        (curr.data.community &&
+          curr.data.community.watercooler &&
+          curr.data.community.watercooler.id) ||
+        (curr.data.community &&
+          curr.data.community.pinnedThread &&
+          curr.data.community.pinnedThread.id)
       ) {
-        const selectId = this.props.data.community.watercooler
-          ? this.props.data.community.watercooler.id
-          : this.props.data.community.pinnedThread.id;
+        const selectId = curr.data.community.watercooler
+          ? curr.data.community.watercooler.id
+          : curr.data.community.pinnedThread.id;
 
-        this.props.history.replace(`/?t=${selectId}`);
-        this.props.dispatch(changeActiveThread(selectId));
+        curr.history.replace(`/?t=${selectId}`);
+        curr.dispatch(changeActiveThread(selectId));
         return;
       }
 
-      const threadNodes = this.props.data.threads
+      const threadNodes = curr.data.threads
         .slice()
         .map(thread => thread && thread.node);
       const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
       const hasFirstThread = sortedThreadNodes.length > 0;
       const firstThreadId = hasFirstThread ? sortedThreadNodes[0].id : '';
       if (hasFirstThread) {
-        this.props.history.replace(`/?t=${firstThreadId}`);
-        this.props.dispatch(changeActiveThread(firstThreadId));
+        curr.history.replace(`/?t=${firstThreadId}`);
+        curr.dispatch(changeActiveThread(firstThreadId));
       }
     }
 
     // if the user changes the feed from all to a specific community, we need to reset the active thread in the inbox and reset our subscription for updates
     if (
-      (!prevProps.data.feed && this.props.data.feed) ||
-      (prevProps.data.feed && prevProps.data.feed !== this.props.data.feed)
+      (!prev.data.feed && curr.data.feed) ||
+      (prev.data.feed && prev.data.feed !== curr.data.feed)
     ) {
-      const threadNodes = this.props.data.threads
+      const threadNodes = curr.data.threads
         .slice()
         .map(thread => thread && thread.node);
       const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
       const hasFirstThread = sortedThreadNodes.length > 0;
       const firstThreadId = hasFirstThread ? sortedThreadNodes[0].id : '';
       if (hasFirstThread) {
-        this.props.history.replace(`/?t=${firstThreadId}`);
-        this.props.dispatch(changeActiveThread(firstThreadId));
+        curr.history.replace(`/?t=${firstThreadId}`);
+        curr.dispatch(changeActiveThread(firstThreadId));
       }
 
       if (scrollElement) {
@@ -333,6 +345,8 @@ const map = state => ({
   mountedWithActiveThread: state.dashboardFeed.mountedWithActiveThread,
   activeCommunity: state.dashboardFeed.activeCommunity,
   activeChannel: state.dashboardFeed.activeChannel,
+  networkOnline: state.connectionStatus.networkOnline,
+  websocketConnection: state.connectionStatus.websocketConnection,
 });
 export default compose(
   withRouter,
