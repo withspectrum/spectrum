@@ -981,12 +981,12 @@ apollo-link-dedup@^1.0.0:
   dependencies:
     apollo-link "^1.2.3"
 
-apollo-link-error@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/apollo-link-error/-/apollo-link-error-1.1.1.tgz#69d7124d4dc11ce60f505c940f05d4f1aa0945fb"
-  integrity sha512-/yPcaQWcBdB94vpJ4FsiCJt1dAGGRm+6Tsj3wKwP+72taBH+UsGRQQZk7U/1cpZwl1yqhHZn+ZNhVOebpPcIlA==
+apollo-link-error@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/apollo-link-error/-/apollo-link-error-1.1.2.tgz#d068fdf99892e6fc65cfe0390db8528d182f9481"
+  integrity sha512-zlEZiqQ42E49+BeX3mIKPkMTSlOPrYNEwzSi1MubUiP/Bi6QRP7tzdJXNBnUpkW6MjZJQpfSNZNxK/xwvPiJIw==
   dependencies:
-    apollo-link "^1.2.3"
+    apollo-link "^1.2.4"
 
 apollo-link-http-common@^0.2.5:
   version "0.2.5"
