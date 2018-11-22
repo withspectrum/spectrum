@@ -5,6 +5,7 @@ import type { UserInfoType } from '../user/userInfo';
 import communityInfoFragment from '../community/communityInfo';
 import type { CommunityInfoType } from '../community/communityInfo';
 import channelInfoFragment from '../channel/channelInfo';
+import threadParticipantFragment from './threadParticipant';
 import type { ChannelInfoType } from '../channel/channelInfo';
 import type { ThreadMessageConnectionType } from 'shared/graphql/fragments/thread/threadMessageConnection';
 import type { ThreadParticipantType } from './threadParticipant';
@@ -86,6 +87,7 @@ export default gql`
       hasReacted
     }
   }
+  ${threadParticipantFragment}
   ${userInfoFragment}
   ${channelInfoFragment}
   ${communityInfoFragment}
