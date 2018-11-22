@@ -21,13 +21,13 @@ export const getReputationString = ({
 
   let reputationString;
   if (!hasGainedReputation) {
-    reputationString = `You were a little quiet ${during} and haven't gained any reputation – join some of the conversations below, your communities would love to hear from you!`;
+    reputationString = `You were a little quiet ${during} and haven't gained any reputation – join some of the conversations below, your communities would love to hear from you.`;
   } else {
-    reputationString = `You gained ${reputationGained} reputation ${during}. Awesome! 😍`;
+    reputationString = `You gained ${reputationGained} reputation ${during}.`;
   }
 
   if (isFirstReputation) {
-    reputationString += ` Reputation is an indicator of how active and constructive you are across all your communities. The more great conversations you start or join, the more reputation you will have!`;
+    reputationString += ` Reputation is an indicator of how active and constructive you are across all your communities. The more great conversations you start or join, the more reputation you will have.`;
   } else {
     reputationString += ` You have a total of ${totalReputation} reputation across all of your communities${
       hasGainedReputation ? ' - well done!' : '.'
