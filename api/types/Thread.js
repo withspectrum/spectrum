@@ -56,7 +56,6 @@ const Thread = /* GraphQL */ `
     lastActive: Date
     type: ThreadType
     edits: [Edit!]
-    participants: [User] @cost(complexity: 1)
     messageConnection(
       first: Int
       after: String
@@ -73,6 +72,9 @@ const Thread = /* GraphQL */ `
       @deprecated(reason: "Attachments no longer used for link previews")
     isCreator: Boolean @deprecated(reason: "Use Thread.isAuthor instead")
     creator: User! @deprecated(reason: "Use Thread.author instead")
+    participants: [User]
+      @cost(complexity: 1)
+      @deprecated(reason: "No longer used")
   }
 
   input SearchThreadsFilter {

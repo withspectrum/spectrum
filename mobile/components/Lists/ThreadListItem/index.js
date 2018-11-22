@@ -305,12 +305,6 @@ class ThreadListItemHandlers extends Component<Props> {
     } = this.props;
 
     if (!thread.id) return null;
-    const facepileUsers = [
-      thread.author.user,
-      ...thread.participants.filter(
-        participant => participant && participant.id !== thread.author.user.id
-      ),
-    ];
 
     return (
       <ListItem
@@ -330,7 +324,6 @@ class ThreadListItemHandlers extends Component<Props> {
 
           <ErrorBoundary fallbackComponent={null}>
             <ThreadFacepileRowContainer>
-              <Facepile users={facepileUsers} />
               <PillOrMessageCount thread={thread} />
             </ThreadFacepileRowContainer>
           </ErrorBoundary>
