@@ -988,20 +988,20 @@ apollo-link-error@^1.1.2:
   dependencies:
     apollo-link "^1.2.4"
 
-apollo-link-http-common@^0.2.5:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/apollo-link-http-common/-/apollo-link-http-common-0.2.5.tgz#d094beb7971523203359bf830bfbfa7b4e7c30ed"
-  integrity sha512-6FV1wr5AqAyJ64Em1dq5hhGgiyxZE383VJQmhIoDVc3MyNcFL92TkhxREOs4rnH2a9X2iJMko7nodHSGLC6d8w==
+apollo-link-http-common@^0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/apollo-link-http-common/-/apollo-link-http-common-0.2.6.tgz#47b9012500599fe343e2e87378026384b4fc8c1f"
+  integrity sha512-LUOMWvrZuBP1hyWLBXyaW0KyFeKo79j+k3N+Q4HSkXKbLibnllXQ+JxxoSKGhm0bhREygiLtJAG9JnGlhxGO/Q==
   dependencies:
-    apollo-link "^1.2.3"
+    apollo-link "^1.2.4"
 
-apollo-link-http@^1.5.5:
-  version "1.5.5"
-  resolved "https://registry.yarnpkg.com/apollo-link-http/-/apollo-link-http-1.5.5.tgz#7dbe851821771ad67fa29e3900c57f38cbd80da8"
-  integrity sha512-C5N6N/mRwmepvtzO27dgMEU3MMtRKSqcljBkYNZmWwH11BxkUQ5imBLPM3V4QJXNE7NFuAQAB5PeUd4ligivTQ==
+apollo-link-http@^1.5.6:
+  version "1.5.6"
+  resolved "https://registry.yarnpkg.com/apollo-link-http/-/apollo-link-http-1.5.6.tgz#7d6952998870c2fc9e6e7fcff70b5a2bc3b1c448"
+  integrity sha512-F+KbIvKxpyUUGhx69w9fCNBPFOAT8XeHZGOwSilz12XN7JVSSXHqje86U/jKPgAmfCe1RZDrdgzkNp0zUJFNWw==
   dependencies:
-    apollo-link "^1.2.3"
-    apollo-link-http-common "^0.2.5"
+    apollo-link "^1.2.4"
+    apollo-link-http-common "^0.2.6"
 
 apollo-link-retry@^2.2.6:
   version "2.2.6"
