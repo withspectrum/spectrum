@@ -141,8 +141,8 @@ const server = new ProtectedApolloServer({
   },
   maxFileSize: 25 * 1024 * 1024, // 25MB
   engine: false,
-  tracing: true,
-  cacheControl: true,
+  tracing: false,
+  cacheControl: false,
   validationRules: [depthLimit(10)],
 });
 
