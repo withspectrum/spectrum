@@ -323,7 +323,13 @@ class CommunityView extends React.Component<Props, State> {
                 )}
             </Meta>
             <Content data-cy="community-view-content">
-              <SegmentedControl style={{ margin: '16px 0 0 0' }}>
+              <SegmentedControl
+                style={{
+                  margin: '16px 0 0 0',
+                  overflowX: 'scroll',
+                  overflowY: 'hidden',
+                }}
+              >
                 <DesktopSegment
                   segmentLabel="search"
                   onClick={() => this.handleSegmentClick('search')}
@@ -332,6 +338,14 @@ class CommunityView extends React.Component<Props, State> {
                   <Icon glyph={'search'} />
                   Search
                 </DesktopSegment>
+
+                <MobileSegment
+                  segmentLabel="search"
+                  onClick={() => this.handleSegmentClick('search')}
+                  selected={selectedView === 'search'}
+                >
+                  <Icon glyph={'search'} />
+                </MobileSegment>
 
                 <Segment
                   segmentLabel="trending-threads"
@@ -362,13 +376,6 @@ class CommunityView extends React.Component<Props, State> {
                   selected={selectedView === 'members'}
                 >
                   Members
-                </MobileSegment>
-                <MobileSegment
-                  segmentLabel="search"
-                  onClick={() => this.handleSegmentClick('search')}
-                  selected={selectedView === 'search'}
-                >
-                  <Icon glyph={'search'} />
                 </MobileSegment>
               </SegmentedControl>
 

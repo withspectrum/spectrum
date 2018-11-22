@@ -404,8 +404,12 @@ describe('edit message signed in', () => {
       .last()
       .click({ force: true });
 
-    cy.get('[data-cy="edit-message-input"]').should('be.visible');
-    cy.get('[data-cy="edit-message-cancel"]').should('be.visible');
+    cy.get('[data-cy="edit-message-input"]')
+      .scrollIntoView()
+      .should('be.visible');
+    cy.get('[data-cy="edit-message-cancel"]')
+      .scrollIntoView()
+      .should('be.visible');
     cy.get('[data-cy="edit-message-save"]').should('be.visible');
 
     cy.get('[data-cy="edit-message-cancel"]').click();

@@ -59,7 +59,10 @@ class MessagesTab extends React.Component<Props, State> {
     if (
       prevProps.data &&
       prevProps.data.directMessageNotifications &&
+      prevProps.data.directMessageNotifications.edges &&
+      nextProps.data &&
       nextProps.data.directMessageNotifications &&
+      nextProps.data.directMessageNotifications.edges &&
       prevProps.data.directMessageNotifications.edges.length !==
         nextProps.data.directMessageNotifications.edges.length
     )
