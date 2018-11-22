@@ -5,8 +5,8 @@ import { getThreadById } from '../../models/thread';
 import { getCommunityById } from '../../models/community';
 import { getChannelById } from '../../models/channel';
 import { toState, toPlainText } from 'shared/draft-utils';
-import getSpectrumScore from './spectrum';
-import getPerspectiveScore from './perspective';
+import getSpectrumScore from 'shared/moderation/spectrum';
+import getPerspectiveScore from 'shared/moderation/perspective';
 import { _adminSendToxicContentEmailQueue } from 'shared/bull/queues';
 import type { Job, AdminToxicMessageJobData } from 'shared/bull/types';
 

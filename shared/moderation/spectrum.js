@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('athena:queue:moderation-events:spectrum');
+const debug = require('debug')('shared:moderation:spectrum');
 require('now-env');
 import axios from 'axios';
 const SPECTRUM_MODERATION_API_KEY = process.env.SPECTRUM_MODERATION_API_KEY;

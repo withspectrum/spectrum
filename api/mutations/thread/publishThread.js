@@ -19,8 +19,8 @@ import {
   _adminProcessToxicThreadQueue,
   _adminProcessUserSpammingThreadsQueue,
 } from 'shared/bull/queues';
-import getSpectrumScore from 'athena/queues/moderationEvents/spectrum';
-import getPerspectiveScore from 'athena/queues/moderationEvents/perspective';
+import getSpectrumScore from 'shared/moderation/spectrum';
+import getPerspectiveScore from 'shared/moderation/perspective';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';

@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('athena:queue:moderation-events:perspective');
+const debug = require('debug')('shared:moderation:perspective');
 require('now-env');
 import axios from 'axios';
 const PERSPECTIVE_API_KEY = process.env.PERSPECTIVE_API_KEY;

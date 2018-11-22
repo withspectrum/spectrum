@@ -2258,7 +2258,7 @@ backo2@^1.0.2:
 
 backpack-core@^0.8.2:
   version "0.8.2"
-  resolved "https://registry.yarnpkg.com/backpack-core/-/backpack-core-0.8.2.tgz#d8ef661ecbee43a87bce1888603a54eee8490873"
+  resolved "https://registry.npmjs.org/backpack-core/-/backpack-core-0.8.2.tgz#d8ef661ecbee43a87bce1888603a54eee8490873"
   integrity sha512-EKAiTtL0Ij97bQc+rvzAmSr9moYlbiZD1OBjujCIg/Hr1nasXtViJrw1EedOUjXNFudIa0acfnCAXde/8FcNKQ==
   dependencies:
     "@babel/core" "^7.1.2"
