@@ -169,6 +169,8 @@ const renderer = (req: express$Request, res: express$Response) => {
       const bundles = getBundles(stats, modules)
         // Create <script defer> tags from bundle objects
         .map(bundle => `/${bundle.file.replace(/\.map$/, '')}`)
+        // We don't need hot-update files
+        .filter(bundle => bundle.indexOf('.hot-update.') === -1)
         // Make sure only unique bundles are included
         .filter((value, index, self) => self.indexOf(value) === index);
       debug('bundles used:', bundles.join(','));
