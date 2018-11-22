@@ -199,48 +199,29 @@ export const getUserByIndex = createReadQuery(
 // prettier-ignore
 export const createOrFindUser = (user: Object, providerMethod: string): Promise<?DBUser> => {
   // if a user id gets passed in, we know that a user most likely exists and we just need to retrieve them from the db
-  // however, if a user id doesn't exist we need to do a lookup by the email address passed in - if an email address doesn't exist, we know that we're going to be creating a new user
+  // if not, we need to create a new user
   let promise;
   if (user.id) {
     promise = getUserById(user.id);
-  } else {
-    if (user[providerMethod]) {
-      promise = getUserByIndex(providerMethod, user[providerMethod]).then(
-        storedUser => {
+  } else if (user[providerMethod]) {
+    promise = getUserByIndex(providerMethod, user[providerMethod])
+      .then(storedUser => {
           if (storedUser) {
             return storedUser;
           }
 
-          if (user.email) {
-            return getUserByEmail(user.email);
-          } else {
-            return Promise.resolve(null);
-          }
+          return Promise.resolve(null);
         }
       );
-    } else {
-      if (user.email) {
-        promise = getUserByEmail(user.email);
-      } else {
-        promise = Promise.resolve(null);
-      }
-    }
+  } else {
+    promise = Promise.resolve(null);
   }
 
   return promise
     .then(storedUser => {
-      // if a user is found with an id or email, return the user in the db
+      // if a user is found with the providerId, return the user in the db
       if (storedUser && storedUser.id) {
-        // if a user is signing in with a second auth method from what their user was created with, store the new auth method
-        if (!storedUser[providerMethod]) {
-          return saveUserProvider(
-            storedUser.id,
-            providerMethod,
-            user[providerMethod]
-          ).then(() => Promise.resolve(storedUser));
-        } else {
-          return Promise.resolve(storedUser);
-        }
+        return Promise.resolve(storedUser);
       }
 
       // if no user exists, create a new one with the oauth profile data
