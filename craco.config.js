@@ -6,9 +6,6 @@ const WriteFilePlugin = require('write-file-webpack-plugin');
 const { ReactLoadablePlugin } = require('react-loadable/webpack');
 const OfflinePlugin = require('offline-plugin');
 
-const babelConfig = fs.readFileSync('.babelrc');
-console.log(babelConfig);
-
 // Recursively walk a folder and get all file paths
 function walkFolder(currentDirPath, callback) {
   fs.readdirSync(currentDirPath).forEach(name => {
