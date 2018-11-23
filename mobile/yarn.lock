@@ -995,10 +995,10 @@ apollo-link-http-common@^0.2.6:
   dependencies:
     apollo-link "^1.2.4"
 
-apollo-link-http@^1.5.6:
-  version "1.5.6"
-  resolved "https://registry.yarnpkg.com/apollo-link-http/-/apollo-link-http-1.5.6.tgz#7d6952998870c2fc9e6e7fcff70b5a2bc3b1c448"
-  integrity sha512-F+KbIvKxpyUUGhx69w9fCNBPFOAT8XeHZGOwSilz12XN7JVSSXHqje86U/jKPgAmfCe1RZDrdgzkNp0zUJFNWw==
+apollo-link-http@^1.5.7:
+  version "1.5.7"
+  resolved "https://registry.yarnpkg.com/apollo-link-http/-/apollo-link-http-1.5.7.tgz#098615c427a910ec8c5817476bbabe68c586b339"
+  integrity sha512-EZ9nynHjwYCpGYP5IsRrZGTWidUVpshk7MuSG4joqGtJMwpFCgMQz+y3BHdUhowHtfAd9z60XmeOTG9FJolb8A==
   dependencies:
     apollo-link "^1.2.4"
     apollo-link-http-common "^0.2.6"
