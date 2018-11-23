@@ -61,9 +61,7 @@ export const getCommunitiesByUser = (userId: string): Promise<Array<DBCommunity>
     db
       .table('usersCommunities')
       // get all the user's communities
-      .getAll(userId, { index: 'userId' })
-      // only return communities the user is a member of
-      .filter({ isMember: true })
+      .getAll([userId, true], { index: 'userIdAndIsMember' })
       // get the community objects for each community
       .eqJoin('communityId', db.table('communities'))
       // get rid of unnecessary info from the usersCommunities object on the left
@@ -81,9 +79,7 @@ export const getVisibleCommunitiesByUser = async (evaluatingUserId: string, curr
   const evaluatingUserMemberships = await db
     .table('usersCommunities')
     // get all the user's communities
-    .getAll(evaluatingUserId, { index: 'userId' })
-    // only return communities the user is a member of
-    .filter({ isMember: true })
+    .getAll([evaluatingUserId, true], { index: 'userIdAndIsMember' })
     // get the community objects for each community
     .eqJoin('communityId', db.table('communities'))
     // get rid of unnecessary info from the usersCommunities object on the left
@@ -97,9 +93,7 @@ export const getVisibleCommunitiesByUser = async (evaluatingUserId: string, curr
   const currentUserMemberships = await db
     .table('usersCommunities')
     // get all the user's communities
-    .getAll(currentUserId, { index: 'userId' })
-    // only return communities the user is a member of
-    .filter({ isMember: true })
+    .getAll([currentUserId, true], { index: 'userIdAndIsMember' })
     // get the community objects for each community
     .eqJoin('communityId', db.table('communities'))
     // get rid of unnecessary info from the usersCommunities object on the left
@@ -130,9 +124,7 @@ export const getPublicCommunitiesByUser = async (userId: string) => {
   return await db
     .table('usersCommunities')
     // get all the user's communities
-    .getAll(userId, { index: 'userId' })
-    // only return communities the user is a member of
-    .filter({ isMember: true })
+    .getAll([userId, true], { index: 'userIdAndIsMember' })
     // get the community objects for each community
     .eqJoin('communityId', db.table('communities'))
     // only return public community ids
@@ -159,8 +151,9 @@ export const getCommunitiesChannelCounts = (communityIds: Array<string>) => {
 export const getCommunitiesMemberCounts = (communityIds: Array<string>) => {
   return db
     .table('usersCommunities')
-    .getAll(...communityIds, { index: 'communityId' })
-    .filter({ isBlocked: false, isMember: true })
+    .getAll(...communityIds.map(id => [id, true]), {
+      index: 'communityIdAndIsMember',
+    })
     .group('communityId')
     .count()
     .run();
@@ -171,10 +164,9 @@ export const getCommunitiesOnlineMemberCounts = (
 ) => {
   return db
     .table('usersCommunities')
-    .getAll(...communityIds, {
-      index: 'communityId',
+    .getAll(...communityIds.map(id => [id, true]), {
+      index: 'communityIdAndIsMember',
     })
-    .filter({ isBlocked: false, isMember: true })
     .pluck(['communityId', 'userId'])
     .eqJoin('userId', db.table('users'))
     .pluck('left', { right: ['lastSeen', 'isOnline'] })
@@ -812,8 +804,7 @@ export const setMemberCount = (
 export const getMemberCount = (communityId: string): Promise<number> => {
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ isMember: true })
+    .getAll([communityId, true], { index: 'communityIdAndIsMember' })
     .count()
     .run();
 };

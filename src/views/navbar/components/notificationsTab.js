@@ -160,10 +160,10 @@ class NotificationsTab extends React.Component<Props, State> {
     // if the component updates with changed or new notifications
     // if any are unseen, set the counts
     if (
-      curr.data.notifications &&
-      curr.data.notifications.edges &&
       prevData.notifications &&
       prevData.notifications.edges &&
+      curr.data.notifications &&
+      curr.data.notifications.edges &&
       curr.data.notifications.edges.length > 0 &&
       curr.data.notifications.edges.length !==
         prevData.notifications.edges.length

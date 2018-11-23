@@ -43,7 +43,9 @@ import {
   CommunityName,
   ChannelName,
   ChannelDescription,
+  MetadataContainer,
 } from './style';
+import { ExtLink, OnlineIndicator } from 'src/components/profile/style';
 import { CoverPhoto } from 'src/components/profile/coverPhoto';
 import { LoginButton, ColumnHeading, MidSegment } from '../community/style';
 import ToggleChannelMembership from 'src/components/toggleChannelMembership';
@@ -355,6 +357,8 @@ class ChannelView extends React.Component<Props, State> {
             provideBack={true}
             backRoute={`/${communitySlug}`}
             noComposer={!isMember}
+            activeCommunitySlug={communitySlug}
+            activeChannelSlug={channel.slug}
           />
           <Grid id="main">
             <CoverPhoto src={community.coverPhoto} />
@@ -373,6 +377,27 @@ class ChannelView extends React.Component<Props, State> {
               {channel.description && (
                 <ChannelDescription>{channel.description}</ChannelDescription>
               )}
+
+              <MetadataContainer>
+                {channel.metaData &&
+                  channel.metaData.members && (
+                    <ExtLink>
+                      <Icon glyph="person" size={24} />
+                      {channel.metaData.members.toLocaleString()}
+                      {channel.metaData.members > 1 ? ' members' : ' member'}
+                    </ExtLink>
+                  )}
+
+                {channel.metaData &&
+                  typeof channel.metaData.onlineMembers === 'number' && (
+                    <ExtLink>
+                      <OnlineIndicator
+                        offline={channel.metaData.onlineMembers === 0}
+                      />
+                      {channel.metaData.onlineMembers} online
+                    </ExtLink>
+                  )}
+              </MetadataContainer>
 
               {actionButton}
 

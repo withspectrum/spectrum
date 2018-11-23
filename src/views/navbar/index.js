@@ -23,6 +23,7 @@ import {
   Navatar,
   SkipLink,
   SigninLink,
+  Reputation,
 } from './style';
 import { track, events } from 'src/helpers/analytics';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
@@ -237,7 +238,13 @@ class Navbar extends React.Component<Props, State> {
               to={currentUser ? `/users/${currentUser.username}` : '/'}
               onClick={() => this.trackNavigationClick('profile')}
             >
+              {currentUser && (
+                <Reputation>
+                  <Icon glyph="rep" /> {currentUser.totalReputation}
+                </Reputation>
+              )}
               <Navatar
+                style={{ gridArea: 'label' }}
                 user={currentUser}
                 size={32}
                 showHoverProfile={false}

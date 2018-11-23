@@ -67,16 +67,6 @@ export const Meta = styled(Column)`
     }
   }
 
-  > div:nth-of-type(2) {
-    display: flex;
-    flex: none;
-    margin: 16px 0 0 32px;
-
-    @media (max-width: 768px) {
-      margin-left: 0;
-    }
-  }
-
   > button,
   > a > button {
     margin-top: 16px;
@@ -230,5 +220,13 @@ export const ChannelDescription = styled.h4`
 
   @media (max-width: 768px) {
     margin-left: 0;
+  }
+`;
+
+export const MetadataContainer = styled.div`
+  margin-left: 32px;
+
+  @media (max-width: 768px;) {
+    margin-left: 8px;
   }
 `;

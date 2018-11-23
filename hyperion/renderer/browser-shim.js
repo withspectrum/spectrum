@@ -20,3 +20,4 @@ global.navigator = {
 global.CSS = {
   escape: require('css.escape'),
 };
+global.IS_SERVER = true;

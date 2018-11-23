@@ -73,7 +73,7 @@ type Props = {
 
 type State = {
   showComposerUpsell: boolean,
-  selectedView: 'threads' | 'search' | 'members',
+  selectedView: 'trending-threads' | 'threads' | 'search' | 'members',
   isLeavingCommunity: boolean,
 };
 
@@ -84,7 +84,7 @@ class CommunityView extends React.Component<Props, State> {
     this.state = {
       isLeavingCommunity: false,
       showComposerUpsell: false,
-      selectedView: 'threads',
+      selectedView: 'trending-threads',
     };
   }
 
@@ -180,7 +180,7 @@ class CommunityView extends React.Component<Props, State> {
               title={community.name}
               provideBack={true}
               backRoute={'/'}
-              noComposer={!community.communityPermissions.isMember}
+              noComposer
             />
 
             <Head
@@ -271,6 +271,7 @@ class CommunityView extends React.Component<Props, State> {
             provideBack={true}
             backRoute={'/'}
             noComposer={!community.communityPermissions.isMember}
+            activeCommunitySlug={community.slug}
           />
           <Grid id="main">
             <CoverPhoto src={community.coverPhoto} />
@@ -322,7 +323,13 @@ class CommunityView extends React.Component<Props, State> {
                 )}
             </Meta>
             <Content data-cy="community-view-content">
-              <SegmentedControl style={{ margin: '16px 0 0 0' }}>
+              <SegmentedControl
+                style={{
+                  margin: '16px 0 0 0',
+                  overflowX: 'scroll',
+                  overflowY: 'hidden',
+                }}
+              >
                 <DesktopSegment
                   segmentLabel="search"
                   onClick={() => this.handleSegmentClick('search')}
@@ -332,12 +339,28 @@ class CommunityView extends React.Component<Props, State> {
                   Search
                 </DesktopSegment>
 
+                <MobileSegment
+                  segmentLabel="search"
+                  onClick={() => this.handleSegmentClick('search')}
+                  selected={selectedView === 'search'}
+                >
+                  <Icon glyph={'search'} />
+                </MobileSegment>
+
+                <Segment
+                  segmentLabel="trending-threads"
+                  onClick={() => this.handleSegmentClick('trending-threads')}
+                  selected={selectedView === 'trending-threads'}
+                >
+                  Trending
+                </Segment>
+
                 <Segment
                   segmentLabel="threads"
                   onClick={() => this.handleSegmentClick('threads')}
                   selected={selectedView === 'threads'}
                 >
-                  Threads
+                  Latest
                 </Segment>
 
                 <DesktopSegment
@@ -345,11 +368,7 @@ class CommunityView extends React.Component<Props, State> {
                   onClick={() => this.handleSegmentClick('members')}
                   selected={selectedView === 'members'}
                 >
-                  Members (
-                  {community.metaData &&
-                    community.metaData.members &&
-                    community.metaData.members.toLocaleString()}
-                  )
+                  Members
                 </DesktopSegment>
                 <MobileSegment
                   segmentLabel="members"
@@ -357,13 +376,6 @@ class CommunityView extends React.Component<Props, State> {
                   selected={selectedView === 'members'}
                 >
                   Members
-                </MobileSegment>
-                <MobileSegment
-                  segmentLabel="search"
-                  onClick={() => this.handleSegmentClick('search')}
-                  selected={selectedView === 'search'}
-                >
-                  <Icon glyph={'search'} />
                 </MobileSegment>
               </SegmentedControl>
 
@@ -381,8 +393,8 @@ class CommunityView extends React.Component<Props, State> {
                   </ErrorBoundary>
                 )}
 
-              {// thread list
-              selectedView === 'threads' && (
+              {(selectedView === 'threads' ||
+                selectedView === 'trending-threads') && (
                 <CommunityThreadFeed
                   viewContext="communityProfile"
                   slug={communitySlug}
@@ -394,6 +406,9 @@ class CommunityView extends React.Component<Props, State> {
                   isNewAndOwned={isNewAndOwned}
                   community={community}
                   pinnedThreadId={community.pinnedThreadId}
+                  sort={
+                    selectedView === 'trending-threads' ? 'trending' : 'latest'
+                  }
                 />
               )}
 

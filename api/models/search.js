@@ -102,8 +102,7 @@ export const getUsersJoinedChannels = (userId: string): Promise<Array<string>> =
 export const getUsersJoinedCommunities = (userId: string): Promise<Array<string>> => {
   return db
     .table('usersCommunities')
-    .getAll(userId, { index: 'userId' })
-    .filter({ isMember: true })
+    .getAll([userId, true], { index: 'userIdAndIsMember' })
     .eqJoin('communityId', db.table('communities'))
     .filter(row => row('right').hasFields('deletedAt').not())
     .zip()
@@ -129,8 +128,7 @@ export const getUsersJoinedPrivateChannelIds = (userId: string): Promise<Array<s
 export const getUsersJoinedPrivateCommunityIds = (userId: string): Promise<Array<string>> => {
   return db
     .table('usersCommunities')
-    .getAll(userId, { index: 'userId' })
-    .filter({ isMember: true })
+    .getAll([userId, true], { index: 'userIdAndIsMember' })
     .eqJoin('communityId', db.table('communities'))
     .filter(row => row('right')('isPrivate').eq(true).and(row('right').hasFields('deletedAt').not()))
     .without({ left: ['id'] })

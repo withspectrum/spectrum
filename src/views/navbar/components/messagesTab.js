@@ -65,10 +65,13 @@ class MessagesTab extends React.Component<Props, State> {
 
     // if a subscription updates the number of records returned
     if (
-      curr.data &&
-      curr.data.directMessageNotifications &&
+      prevProps.data &&
+      prevProps.data.directMessageNotifications &&
+      prevProps.data.directMessageNotifications.edges &&
+      nextProps.data &&
       nextProps.data.directMessageNotifications &&
-      curr.data.directMessageNotifications.edges.length !==
+      nextProps.data.directMessageNotifications.edges &&
+      prevProps.data.directMessageNotifications.edges.length !==
         nextProps.data.directMessageNotifications.edges.length
     )
       return true;

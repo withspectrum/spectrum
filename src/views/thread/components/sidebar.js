@@ -200,7 +200,9 @@ class Sidebar extends React.Component<Props> {
           {Array.isArray(threadsToRender) ? (
             threadsToRender.length > 0 && (
               <SidebarSection data-cy="thread-sidebar-more-threads">
-                <SidebarSectionTitle>More conversations</SidebarSectionTitle>
+                <SidebarSectionTitle>
+                  More active conversations
+                </SidebarSectionTitle>
                 <SidebarRelatedThreadList>
                   {threadsToRender.map(t => {
                     return (

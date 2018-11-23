@@ -90,7 +90,7 @@ class GranularUserProfile extends React.Component<Props> {
       username,
       description,
       reputation,
-      avatarSize,
+      avatarSize = 32,
       badges,
       children,
       messageButton,
@@ -103,7 +103,7 @@ class GranularUserProfile extends React.Component<Props> {
         {profilePhoto && (
           <UserAvatar
             user={userObject}
-            size={avatarSize || 32}
+            size={avatarSize}
             showHoverProfile={!showHoverProfile}
           />
         )}

@@ -19,8 +19,7 @@ const saveUserCommunityPermissions = (
 ): Promise<Object> => {
   return db
     .table('usersCommunities')
-    .getAll(userId, { index: 'userId' })
-    .filter({ communityId })
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
     .update(
       {
         ...permissions,
