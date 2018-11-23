@@ -120,7 +120,6 @@ class ExistingThread extends React.Component<Props> {
 
               <Messages
                 id={id}
-                threadType={thread.threadType}
                 currentUser={currentUser}
                 forceScrollToBottom={this.forceScrollToBottom}
                 contextualScrollToBottom={this.contextualScrollToBottom}

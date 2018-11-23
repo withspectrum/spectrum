@@ -34,7 +34,7 @@ type Props = {
   dispatch: Dispatch<Object>,
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
-  pageVisibile: PageVisibilityType,
+  pageVisibility: PageVisibilityType,
 };
 
 type State = {
