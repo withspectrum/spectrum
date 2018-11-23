@@ -123,7 +123,7 @@ class ThreadFeed extends React.Component<Props, State> {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prev) {
     const isDesktop = window.innerWidth > 768;
     const { scrollElement } = this.state;
     const curr = this.props;
