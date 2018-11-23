@@ -68,7 +68,7 @@
     "jsonwebtoken": "^8.4.0",
     "keygrip": "^1.0.3",
     "linkify-it": "^2.0.3",
-    "localstorage-memory": "^1.0.2",
+    "localstorage-memory": "^1.0.3",
     "lodash": "^4.17.11",
     "lodash.intersection": "^4.4.0",
     "longjohn": "^0.2.12",

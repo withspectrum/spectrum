@@ -35,7 +35,6 @@ import {
   FullDescription,
   Title,
   ExtLink,
-  OnlineContainer,
   OnlineIndicator,
 } from './style';
 
@@ -107,9 +106,9 @@ const UserWithData = ({
             {user.description && <p>{renderTextWithLinks(user.description)}</p>}
 
             {user.isOnline && (
-              <OnlineContainer>
+              <ExtLink>
                 <OnlineIndicator /> Online now
-              </OnlineContainer>
+              </ExtLink>
             )}
 
             <Reputation

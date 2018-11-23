@@ -17,6 +17,7 @@ import {
   __createChannelLoader,
   __createChannelThreadCountLoader,
   __createChannelMemberCountLoader,
+  __createChannelOnlineMemberCountLoader,
   __createChannelPendingMembersLoader,
   __createChannelSettingsLoader,
 } from './channel';
@@ -57,6 +58,7 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   notification: __createNotificationLoader(options),
   channel: __createChannelLoader(options),
   channelMemberCount: __createChannelMemberCountLoader(options),
+  channelOnlineMemberCount: __createChannelOnlineMemberCountLoader(options),
   channelThreadCount: __createChannelThreadCountLoader(options),
   channelPendingUsers: __createChannelPendingMembersLoader(options),
   channelSettings: __createChannelSettingsLoader(options),

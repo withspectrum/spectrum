@@ -211,6 +211,13 @@ export const DropTab = styled(FlexRow)`
   }
 `;
 
+export const Reputation = styled.div`
+  display: flex;
+  grid-area: icon;
+  align-items: center;
+  padding-right: 16px;
+`;
+
 export const Logo = styled(Tab)`
   grid-area: logo;
   padding: ${isDesktopApp() ? '0 32px 0 4px' : '0 24px 0 4px'};

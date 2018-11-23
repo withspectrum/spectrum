@@ -435,6 +435,36 @@ const getMemberCount = (channelId: string): Promise<number> => {
     .run();
 };
 
+const getChannelsOnlineMemberCounts = (channelIds: Array<string>) => {
+  return db
+    .table('usersChannels')
+    .getAll(...channelIds, {
+      index: 'channelId',
+    })
+    .filter({ isBlocked: false, isMember: true })
+    .pluck(['channelId', 'userId'])
+    .eqJoin('userId', db.table('users'))
+    .pluck('left', { right: ['lastSeen', 'isOnline'] })
+    .zip()
+    .filter(rec =>
+      rec('isOnline')
+        .eq(true)
+        .or(
+          rec('lastSeen')
+            .toEpochTime()
+            .ge(
+              db
+                .now()
+                .toEpochTime()
+                .sub(86400)
+            )
+        )
+    )
+    .group('channelId')
+    .count()
+    .run();
+};
+
 module.exports = {
   getChannelBySlug,
   getChannelById,
@@ -456,6 +486,7 @@ module.exports = {
   decrementMemberCount,
   setMemberCount,
   getMemberCount,
+  getChannelsOnlineMemberCounts,
   __forQueryTests: {
     channelsByCommunitiesQuery,
     channelsByIdsQuery,

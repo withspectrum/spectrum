@@ -6,28 +6,43 @@ import {
 } from '../../models/reputationEvent';
 import type { User, Timeframe } from './types';
 
+export const getReputationString = ({
+  totalReputation,
+  reputationGained,
+  timeframe,
+}: {
+  timeframe: Timeframe,
+  totalReputation: number,
+  reputationGained: number,
+}) => {
+  const hasGainedReputation = reputationGained > 0;
+  const isFirstReputation = totalReputation === reputationGained;
+  const during = timeframe === 'weekly' ? 'last week' : 'yesterday';
+
+  let reputationString;
+  if (!hasGainedReputation) {
+    reputationString = `You were a little quiet ${during} and haven't gained any reputation – join some of the conversations below, your communities would love to hear from you.`;
+  } else {
+    reputationString = `You gained ${reputationGained} reputation ${during}.`;
+  }
+
+  if (isFirstReputation) {
+    reputationString += ` Reputation is an indicator of how active and constructive you are across all your communities. The more great conversations you start or join, the more reputation you will have.`;
+  } else {
+    reputationString += ` You have a total of ${totalReputation} reputation across all of your communities${
+      hasGainedReputation ? ' - well done!' : '.'
+    }`;
+  }
+
+  return reputationString;
+};
+
 export default async (user: User, timeframe: Timeframe) => {
   const reputationGained = await getReputationChangeInTimeframe(
     user.userId,
     timeframe
   );
   const totalReputation = await getTotalReputation(user.userId);
-  const hasGainedReputation = reputationGained > 0;
-  const isFirstReputation = totalReputation === reputationGained;
-  const reputationString = hasGainedReputation
-    ? // user gained some reputation during the last timeframe range
-      isFirstReputation
-      ? // if the total reputation and reputation gained are the same amount, this means the user has gained their first bit of rep!
-        timeframe === 'weekly'
-        ? // if this is a weekly digest
-          `Since last week you've gained ${reputationGained} rep! Your rep will keep growing as you start and join more conversations.`
-        : `Since yesterday you've gained ${reputationGained} rep!`
-      : // if the total reputation is greater than the reputation gained, it means this is an incremental amount of rep for the user
-        timeframe === 'weekly'
-        ? `Since last week you've gained ${reputationGained} rep. You're now sitting strong at ${totalReputation.toLocaleString()} - keep it up!`
-        : `Since yesterday you've gained ${reputationGained} rep. You now have ${totalReputation.toLocaleString()} total rep across all of your communities - well done!`
-    : // has not gained any reputation
-      `You've been a little quiet this week – this week try joining some conversations, your community wants to hear from you!`;
 
-  return reputationString;
+  return getReputationString({ totalReputation, reputationGained, timeframe });
 };

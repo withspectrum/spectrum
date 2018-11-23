@@ -92,13 +92,17 @@ class ComposerWithData extends Component<Props, State> {
 
     let { storedBody, storedTitle } = this.getTitleAndBody();
 
+    const { activeCommunitySlug, activeChannelSlug } = queryString.parse(
+      props.location.search
+    );
+
     this.state = {
       title: storedTitle || '',
       body: storedBody || fromPlainText(''),
       availableCommunities: [],
       availableChannels: [],
-      activeCommunity: '',
-      activeChannel: '',
+      activeCommunity: activeCommunitySlug || '',
+      activeChannel: activeChannelSlug || '',
       isPublishing: false,
       postWasPublished: false,
     };
@@ -149,7 +153,7 @@ class ComposerWithData extends Component<Props, State> {
   handleIncomingProps = props => {
     const { user } = props.data;
     // if the user doesn't exist, bust outta here
-    if (!user || !user.id) return;
+    if (!user || !user.id || !user.communityConnection) return;
 
     const hasCommunities =
       user.communityConnection.edges &&
