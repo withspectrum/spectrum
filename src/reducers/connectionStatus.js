@@ -24,7 +24,10 @@ const initialState: InitialState = {
   pageVisibility: 'visible',
 };
 
-export default function status(state: InitialState, action: ActionType) {
+export default function status(
+  state: InitialState = initialState,
+  action: ActionType
+) {
   switch (action.type) {
     case 'NETWORK_CONNECTION':
       return Object.assign({}, state, {
