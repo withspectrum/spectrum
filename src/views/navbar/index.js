@@ -28,7 +28,10 @@ import {
 import { track, events } from 'src/helpers/analytics';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
-import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
+import type {
+  WebsocketConnectionType,
+  PageVisibilityType,
+} from 'src/reducers/connectionStatus';
 
 type Props = {
   isLoading: boolean,
@@ -45,6 +48,7 @@ type Props = {
   activeInboxThread: ?string,
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
+  pageVisibility: PageVisibilityType,
 };
 
 type State = {
@@ -62,6 +66,7 @@ class Navbar extends React.Component<Props, State> {
 
     if (curr.networkOnline !== nextProps.networkOnline) return true;
     if (curr.websocketConnection !== nextProps.websocketConnection) return true;
+    if (curr.pageVisibility !== nextProps.pageVisibility) return true;
 
     // If the update was caused by the focus on the skip link
     if (nextState.isSkipLinkFocused !== this.state.isSkipLinkFocused)
@@ -333,6 +338,7 @@ const map = state => ({
   notificationCounts: state.notifications,
   networkOnline: state.connectionStatus.networkOnline,
   websocketConnection: state.connectionStatus.websocketConnection,
+  pageVisibility: state.connectionStatus.pageVisibility,
 });
 export default compose(
   // $FlowIssue

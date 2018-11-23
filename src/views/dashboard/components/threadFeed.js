@@ -24,7 +24,10 @@ import type { GetCommunityThreadConnectionType } from 'shared/graphql/queries/co
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
-import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
+import type {
+  WebsocketConnectionType,
+  PageVisibilityType,
+} from 'src/reducers/connectionStatus';
 
 type Node = {
   node: {
@@ -55,6 +58,7 @@ type Props = {
   hasActiveCommunity: boolean,
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
+  pageVisibility: PageVisibilityType,
 };
 
 type State = {
@@ -88,6 +92,7 @@ class ThreadFeed extends React.Component<Props, State> {
     const curr = this.props;
     if (curr.networkOnline !== nextProps.networkOnline) return true;
     if (curr.websocketConnection !== nextProps.websocketConnection) return true;
+    if (curr.pageVisibility !== nextProps.pageVisibility) return true;
     // fetching more
     if (curr.data.networkStatus === 7 && nextProps.isFetchingMore) return false;
     return true;
@@ -369,6 +374,7 @@ const map = state => ({
   activeChannel: state.dashboardFeed.activeChannel,
   networkOnline: state.connectionStatus.networkOnline,
   websocketConnection: state.connectionStatus.websocketConnection,
+  pageVisibility: state.connectionStatus.pageVisibility,
 });
 export default compose(
   withRouter,

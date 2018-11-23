@@ -30,7 +30,10 @@ import getThreadLink from 'src/helpers/get-thread-link';
 import type { GetThreadMessageConnectionType } from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
-import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
+import type {
+  WebsocketConnectionType,
+  PageVisibilityType,
+} from 'src/reducers/connectionStatus';
 
 type State = {
   subscription: ?Function,
@@ -58,6 +61,7 @@ type Props = {
   hasError: boolean,
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
+  pageVisibility: PageVisibilityType,
 };
 
 class MessagesWithData extends React.Component<Props, State> {
@@ -370,6 +374,7 @@ class MessagesWithData extends React.Component<Props, State> {
 const map = state => ({
   networkOnline: state.connectionStatus.networkOnline,
   websocketConnection: state.connectionStatus.websocketConnection,
+  pageVisibility: state.connectionStatus.pageVisibility,
 });
 
 export default compose(
