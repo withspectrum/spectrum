@@ -115,5 +115,5 @@ export const OnlineIndicator = styled.span`
   border-radius: 5px;
   bottom: 0;
   right: 0;
-  z-index: ${zIndex.avatar};
+  z-index: 1;
 `;
