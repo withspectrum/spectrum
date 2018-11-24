@@ -473,6 +473,7 @@ class ThreadContainer extends React.Component<Props, State> {
                 currentUser={currentUser}
                 slug={thread.community.slug}
                 id={thread.community.id}
+                sort="trending"
               />
             )}
 

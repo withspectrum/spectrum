@@ -118,7 +118,6 @@ class MessagesWithData extends React.Component<Props, State> {
     const {
       currentUserLastSeen,
       isAuthor,
-      participants,
       watercooler,
       messageCount,
     } = data.thread;
@@ -126,18 +125,11 @@ class MessagesWithData extends React.Component<Props, State> {
     // Don't scroll empty threads to bottm
     if (messageCount === 0) return false;
 
-    const isParticipant =
-      participants &&
-      participants.length > 0 &&
-      participants.some(
-        participant => participant && participant.id === currentUser.id
-      );
-
     const searchObj = queryString.parse(location.search);
     const isLoadingMessageFromQueryParam = searchObj && searchObj.m;
     if (isLoadingMessageFromQueryParam) return false;
 
-    return !!(currentUserLastSeen || isAuthor || isParticipant || watercooler);
+    return !!(currentUserLastSeen || isAuthor || watercooler);
   };
 
   componentWillUnmount() {

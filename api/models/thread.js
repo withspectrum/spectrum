@@ -171,8 +171,7 @@ export const getViewableThreadsByUser = async (
 
   const getCurrentUserCommunityIds = db
     .table('usersCommunities')
-    .getAll(currentUser, { index: 'userId' })
-    .filter({ isMember: true })
+    .getAll([currentUser, true], { index: 'userIdAndIsMember' })
     .map(userCommunity => userCommunity('communityId'))
     .run();
 
@@ -281,8 +280,7 @@ export const getViewableParticipantThreadsByUser = async (
 
   const getCurrentUserCommunityIds = db
     .table('usersCommunities')
-    .getAll(currentUser, { index: 'userId' })
-    .filter({ isMember: true })
+    .getAll([currentUser, true], { index: 'userIdAndIsMember' })
     .map(userCommunity => userCommunity('communityId'))
     .run();
 

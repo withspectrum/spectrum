@@ -5,14 +5,10 @@ import type { UserInfoType } from '../user/userInfo';
 import communityInfoFragment from '../community/communityInfo';
 import type { CommunityInfoType } from '../community/communityInfo';
 import channelInfoFragment from '../channel/channelInfo';
-import type { ChannelInfoType } from '../channel/channelInfo';
 import threadParticipantFragment from './threadParticipant';
+import type { ChannelInfoType } from '../channel/channelInfo';
 import type { ThreadMessageConnectionType } from 'shared/graphql/fragments/thread/threadMessageConnection';
 import type { ThreadParticipantType } from './threadParticipant';
-
-type Participant = {
-  ...$Exact<UserInfoType>,
-};
 
 type Attachment = {
   attachmentType: string,
@@ -43,7 +39,6 @@ export type ThreadInfoType = {
   isLocked: boolean,
   isAuthor: boolean,
   type: string,
-  participants: Array<?Participant>,
   content: {
     title: string,
     body: string,
@@ -78,9 +73,6 @@ export default gql`
     isLocked
     isAuthor
     type
-    participants {
-      ...userInfo
-    }
     content {
       title
       body
