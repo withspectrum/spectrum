@@ -238,7 +238,10 @@ class Navbar extends React.Component<Props, State> {
                 typeof currentUser.totalReputation === 'number' && (
                   <Reputation>
                     <Icon glyph="rep" />{' '}
-                    {truncateNumber(parseInt(currentUser.totalReputation), 1)}
+                    {truncateNumber(
+                      parseInt(currentUser.totalReputation, 10),
+                      1
+                    )}
                   </Reputation>
                 )}
               <Navatar
