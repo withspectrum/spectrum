@@ -693,7 +693,7 @@ export const getUsersTotalReputation = (userIds: Array<string>): Promise<Array<n
     .getAll(...userIds.map(userId => ([userId, true])), { index: 'userIdAndIsMember' })
     .group('userId')
     .map(rec => rec('reputation'))
-    .count()
+    .reduce((l, r) => l.add(r))
     .default(0)
     .run()
     .then(res =>
