@@ -106,28 +106,6 @@ class ThreadFeed extends React.Component<Props, State> {
     }
   };
 
-  // Select the first thread on SSR if none is selected
-  componentWillMount() {
-    const { mountedWithActiveThread } = this.props;
-
-    if (
-      mountedWithActiveThread ||
-      this.props.selectedId ||
-      !this.props.data.threads
-    )
-      return;
-
-    const threadNodes = this.props.data.threads
-      .slice()
-      .map(thread => thread && thread.node);
-    const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
-    const hasFirstThread = sortedThreadNodes.length > 0;
-    const firstThreadId = hasFirstThread ? sortedThreadNodes[0].id : '';
-    if (hasFirstThread) {
-      this.props.history.replace(`/?t=${firstThreadId}`);
-    }
-  }
-
   componentDidUpdate(prev) {
     const isDesktop = window.innerWidth > 768;
     const { scrollElement } = this.state;

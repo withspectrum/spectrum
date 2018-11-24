@@ -383,7 +383,8 @@ class CommunityView extends React.Component<Props, State> {
               // and is a member of the community, they should see a
               // new thread composer
               isLoggedIn &&
-                selectedView === 'threads' &&
+                (selectedView === 'threads' ||
+                  selectedView === 'trending-threads') &&
                 userHasPermissions && (
                   <ErrorBoundary fallbackComponent={null}>
                     <ThreadComposer
