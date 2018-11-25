@@ -147,14 +147,12 @@ app.use(
         return;
       }
 
-      if (path.indexOf('.html') === -1) {
-        // Cache static files in now CDN for seven days
-        // (the filename changes if the file content changes, so we can cache these forever)
-        res.setHeader(
-          'Cache-Control',
-          `max-age=${SEVEN_DAYS}, s-maxage=${SEVEN_DAYS}`
-        );
-      }
+      // Cache static files in now CDN for seven days
+      // (the filename changes if the file content changes, so we can cache these forever)
+      res.setHeader(
+        'Cache-Control',
+        `max-age=${SEVEN_DAYS}, s-maxage=${SEVEN_DAYS}`
+      );
     },
   })
 );
@@ -162,12 +160,10 @@ app.get('/static/js/:name', (req: express$Request, res, next) => {
   if (!req.params.name) return next();
   const existingFile = jsFiles.find(file => file.startsWith(req.params.name));
   if (existingFile) {
-    if (existingFile.indexOf('.html') === -1) {
-      res.setHeader(
-        'Cache-Control',
-        `max-age=${SEVEN_DAYS}, s-maxage=${SEVEN_DAYS}`
-      );
-    }
+    res.setHeader(
+      'Cache-Control',
+      `max-age=${SEVEN_DAYS}, s-maxage=${SEVEN_DAYS}`
+    );
     return res.sendFile(
       path.resolve(__dirname, '..', 'build', 'static', 'js', req.params.name)
     );
