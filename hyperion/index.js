@@ -142,7 +142,7 @@ app.use(
     index: false,
     setHeaders: (res, path) => {
       // Don't cache the serviceworker in the browser
-      if (path.indexOf('sw.js') > -1) {
+      if (path.indexOf('sw.js')) {
         res.setHeader('Cache-Control', 'no-store, no-cache');
         return;
       }
@@ -160,10 +160,10 @@ app.get('/static/js/:name', (req: express$Request, res, next) => {
   if (!req.params.name) return next();
   const existingFile = jsFiles.find(file => file.startsWith(req.params.name));
   if (existingFile) {
-    res.setHeader(
-      'Cache-Control',
-      `max-age=${SEVEN_DAYS}, s-maxage=${SEVEN_DAYS}`
-    );
+    // res.setHeader(
+    //   'Cache-Control',
+    //   `max-age=${SEVEN_DAYS}, s-maxage=${SEVEN_DAYS}`
+    // );
     return res.sendFile(
       path.resolve(__dirname, '..', 'build', 'static', 'js', req.params.name)
     );
