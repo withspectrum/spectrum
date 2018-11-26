@@ -64,10 +64,10 @@ const generateImageFromText = ({
     w: WIDTH,
     bm: 'normal', // Blend the title normally, don't change opacity or color or anything, just overlay it
     by: 170, // Magic numbers that get the position right
-    bx: 180,
+    bx: 170,
     markalign: 'left,bottom', // Show the footer on the left side
     markpad: 24, // We overwrite the X pos, so the padding only applies on the y-axis
-    markx: 100,
+    markx: 140,
     blend64: btoa(titleUrl).replace(/=/g, ''),
     mark64: btoa(footerUrl).replace(/=/g, ''),
   };
