@@ -1,8 +1,9 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import type { DBMessage } from 'shared/types';
-import body from './content/body';
+import { signMessage } from 'shared/imgix';
 
-export default (message: DBMessage, _: any, ctx: GraphQLContext) => ({
-  body: body(message, ctx.getImageSignatureExpiration()),
-});
+export default (message: DBMessage, _: any, ctx: GraphQLContext) => {
+  const signedMessage = signMessage(message);
+  return message.content;
+};

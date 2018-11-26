@@ -2,7 +2,7 @@
 import type { DBUser } from 'shared/types';
 import { signImageUrl } from 'shared/imgix';
 
-export const signUser = (user: DBUser, expires: number): DBUser => {
+export const signUser = (user: DBUser, expires?: number): DBUser => {
   const { profilePhoto, coverPhoto, ...rest } = user;
 
   return {

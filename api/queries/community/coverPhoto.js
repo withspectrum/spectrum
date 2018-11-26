@@ -4,7 +4,6 @@ import type { DBCommunity } from 'shared/types';
 import { signCommunity } from 'shared/imgix';
 
 export default (community: DBCommunity, _: any, ctx: GraphQLContext) => {
-  const expires = ctx.getImageSignatureExpiration();
-  const { coverPhoto } = signCommunity(community, expires);
+  const { coverPhoto } = signCommunity(community);
   return coverPhoto;
 };

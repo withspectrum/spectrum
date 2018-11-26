@@ -2,10 +2,10 @@
 require('now-env');
 import ImgixClient from 'imgix-core-js';
 import decodeUriComponent from 'decode-uri-component';
+import { getDefaultExpires } from './getDefaultExpires';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 export const LEGACY_PREFIX = 'https://spectrum.imgix.net/';
-const EXPIRATION_TIME = 60 * 60 * 10;
 
 // prettier-ignore
 const isLocalUpload = (url: string): boolean => url.startsWith('/uploads/', 0) && !IS_PROD
@@ -26,7 +26,15 @@ const useProxy = (url: string): boolean => url.indexOf('spectrum.imgix.net') < 0
 // prettier-ignore
 export const stripLegacyPrefix = (url: string): string => url.replace(LEGACY_PREFIX, '')
 
-const signPrimary = (url: string, opts: Object = {}): string => {
+type Opts = {
+  expires: ?number,
+};
+
+const defaultOpts = {
+  expires: getDefaultExpires(),
+};
+
+const signPrimary = (url: string, opts: Opts = defaultOpts): string => {
   const client = new ImgixClient({
     domains: ['spectrum.imgix.net'],
     secureURLToken: process.env.IMGIX_SECURITY_KEY,
@@ -34,7 +42,7 @@ const signPrimary = (url: string, opts: Object = {}): string => {
   return client.buildURL(url, opts);
 };
 
-const signProxy = (url: string, opts?: any = {}): string => {
+const signProxy = (url: string, opts?: Opts = defaultOpts): string => {
   const client = new ImgixClient({
     domains: ['spectrum-proxy.imgix.net'],
     secureURLToken: process.env.IMGIX_PROXY_SECURITY_KEY,
@@ -42,18 +50,23 @@ const signProxy = (url: string, opts?: any = {}): string => {
   return client.buildURL(url, opts);
 };
 
-type Opts = {
-  expires: number,
-};
-
-export const signImageUrl = (url: string, opts: Opts): string => {
+export const signImageUrl = (url: string, opts: Opts = defaultOpts): string => {
   if (!url) return '';
+  if (!opts.expires) {
+    opts['expires'] = defaultOpts.expires;
+  }
 
   if (isLocalUpload(url)) return url;
 
   const processedUrl = hasLegacyPrefix(url) ? stripLegacyPrefix(url) : url;
 
-  // we never have to worry about escaping or unescaping proxied urls e.g. twitter images
-  if (useProxy(url)) return signProxy(processedUrl, opts);
-  return signPrimary(processedUrl, opts);
+  try {
+    // we never have to worry about escaping or unescaping proxied urls e.g. twitter images
+    if (useProxy(url)) return signProxy(processedUrl, opts);
+    return signPrimary(processedUrl, opts);
+  } catch (err) {
+    // if something fails, dont crash the entire frontend, just fail the images
+    console.error(err);
+    return '';
+  }
 };

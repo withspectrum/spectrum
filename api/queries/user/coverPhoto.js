@@ -4,7 +4,6 @@ import type { DBUser } from 'shared/types';
 import { signUser } from 'shared/imgix';
 
 export default (user: DBUser, _: any, ctx: GraphQLContext) => {
-  const expires = ctx.getImageSignatureExpiration();
-  const { coverPhoto } = signUser(user, expires);
+  const { coverPhoto } = signUser(user);
   return coverPhoto;
 };
