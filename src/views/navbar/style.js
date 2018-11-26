@@ -269,7 +269,7 @@ export const ExploreTab = styled(Tab)`
     `};
 
   ${props =>
-    props.loggedOut &&
+    props.loggedout &&
     css`
       grid-area: explore;
     `} ${Label} {

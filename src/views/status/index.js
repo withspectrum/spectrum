@@ -37,6 +37,8 @@ class Status extends React.Component<Props, State> {
   componentDidMount() {
     window.addEventListener('offline', this.handleOnlineChange);
     window.addEventListener('online', this.handleOnlineChange);
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
+
     // Only show the bar after a five second timeout
     setTimeout(() => {
       this.setState({
@@ -49,6 +51,16 @@ class Status extends React.Component<Props, State> {
     window.removeEventListener('offline', this.handleOnlineChange);
     window.removeEventListener('online', this.handleOnlineChange);
   }
+
+  handleVisibilityChange = () => {
+    if (document && document.visibilityState === 'hidden') {
+      return this.props.dispatch({ type: 'PAGE_VISIBILITY', value: 'hidden' });
+    } else if (document && document.visibilityState === 'visible') {
+      return this.props.dispatch({ type: 'PAGE_VISIBILITY', value: 'visible' });
+    } else {
+      return;
+    }
+  };
 
   handleOnlineChange = () => {
     const online = window.navigator.onLine;

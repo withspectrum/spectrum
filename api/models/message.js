@@ -90,23 +90,25 @@ export const getMessages = (
   return getForwardMessages(threadId, { first, after });
 };
 
-export const getLastMessage = (threadId: string): Promise<DBMessage> => {
+export const getLastMessage = (threadId: string): Promise<?DBMessage> => {
   return db
     .table('messages')
-    .getAll(threadId, { index: 'threadId' })
+    .between([threadId, db.minval], [threadId, db.maxval], {
+      index: 'threadIdAndTimestamp',
+      leftBound: 'open',
+      rightBound: 'closed',
+    })
+    .orderBy({ index: db.desc('threadIdAndTimestamp') })
     .filter(db.row.hasFields('deletedAt').not())
-    .max('timestamp')
-    .run();
+    .limit(1)
+    .run()
+    .then(res => (Array.isArray(res) && res.length > 0 ? res[0] : null));
 };
 
-export const getLastMessages = (threadIds: Array<string>): Promise<Object> => {
-  return db
-    .table('messages')
-    .getAll(...threadIds, { index: 'threadId' })
-    .filter(db.row.hasFields('deletedAt').not())
-    .group('threadId')
-    .max(row => row('timestamp'))
-    .run();
+export const getLastMessageOfThreads = (
+  threadIds: Array<string>
+): Promise<Array<?DBMessage>> => {
+  return Promise.all(threadIds.map(id => getLastMessage(id)));
 };
 
 // prettier-ignore

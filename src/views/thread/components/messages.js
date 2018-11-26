@@ -29,6 +29,11 @@ import { ErrorBoundary } from 'src/components/error';
 import getThreadLink from 'src/helpers/get-thread-link';
 import type { GetThreadMessageConnectionType } from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
+import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
+import type {
+  WebsocketConnectionType,
+  PageVisibilityType,
+} from 'src/reducers/connectionStatus';
 
 type State = {
   subscription: ?Function,
@@ -47,10 +52,16 @@ type Props = {
   scrollContainer: any,
   subscribeToNewMessages: Function,
   lastSeen: ?number | ?Date,
-  data: { thread: GetThreadMessageConnectionType },
+  data: {
+    thread: GetThreadMessageConnectionType,
+    refetch: Function,
+  },
   thread: GetThreadType,
   currentUser: ?Object,
   hasError: boolean,
+  networkOnline: boolean,
+  websocketConnection: WebsocketConnectionType,
+  pageVisibility: PageVisibilityType,
 };
 
 class MessagesWithData extends React.Component<Props, State> {
@@ -58,8 +69,13 @@ class MessagesWithData extends React.Component<Props, State> {
     subscription: null,
   };
 
-  componentDidUpdate(prev = {}) {
+  componentDidUpdate(prev: Props) {
     const curr = this.props;
+
+    const didReconnect = useConnectionRestored({ curr, prev });
+    if (didReconnect && curr.data.refetch) {
+      curr.data.refetch();
+    }
 
     if (!curr.data.thread) return;
 
@@ -355,10 +371,17 @@ class MessagesWithData extends React.Component<Props, State> {
   }
 }
 
+const map = state => ({
+  networkOnline: state.connectionStatus.networkOnline,
+  websocketConnection: state.connectionStatus.websocketConnection,
+  pageVisibility: state.connectionStatus.pageVisibility,
+});
+
 export default compose(
   withRouter,
   withCurrentUser,
   getThreadMessages,
   viewNetworkHandler,
-  connect()
+  // $FlowIssue
+  connect(map)
 )(MessagesWithData);

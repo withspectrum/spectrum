@@ -42,7 +42,6 @@ import {
 import { CommunityAvatar } from 'src/components/avatar';
 import WatercoolerActionBar from './components/watercoolerActionBar';
 import { ErrorBoundary } from 'src/components/error';
-import generateImageFromText from 'src/helpers/generate-image-from-text';
 import getThreadLink from 'src/helpers/get-thread-link';
 
 type Props = {
@@ -450,12 +449,7 @@ class ThreadContainer extends React.Component<Props, State> {
       const headDescription = isWatercooler
         ? `Watercooler chat for the ${thread.community.name} community`
         : description;
-      const metaImage = generateImageFromText({
-        title: isWatercooler
-          ? `Chat with the ${thread.community.name} community`
-          : thread.content.title,
-        footer: `spectrum.chat/${thread.community.slug}`,
-      });
+      const metaImage = thread.metaImage;
 
       return (
         <ErrorBoundary>
