@@ -17,7 +17,7 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
         <UserAvatar
           user={users[0]}
           size={44}
-          clickable={false}
+          isClickable={false}
           showHoverProfile={false}
         />
       </AvatarContainer>
@@ -33,7 +33,7 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
               <UserAvatar
                 user={user}
                 size={34}
-                clickable={false}
+                isClickable={false}
                 showHoverProfile={false}
                 showOnlineStatus={false}
               />
@@ -53,7 +53,7 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
               user={user}
               key={user.id}
               size={20}
-              clickable={false}
+              isClickable={false}
               showHoverProfile={false}
               showOnlineStatus={false}
             />
@@ -72,7 +72,7 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
               user={user}
               key={user.id}
               size={19}
-              clickable={false}
+              isClickable={false}
               showHoverProfile={false}
               showOnlineStatus={false}
             />
@@ -94,7 +94,7 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
                 user={user}
                 key={user.id}
                 size={19}
-                clickable={false}
+                isClickable={false}
                 showHoverProfile={false}
                 showOnlineStatus={false}
               />

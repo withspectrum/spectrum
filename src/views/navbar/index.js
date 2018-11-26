@@ -250,7 +250,7 @@ class Navbar extends React.Component<Props, State> {
                 size={32}
                 showHoverProfile={false}
                 showOnlineStatus={false}
-                clickable={false}
+                isClickable={false}
                 dataCy="navbar-profile"
               />
             </Tab>
@@ -307,7 +307,7 @@ class Navbar extends React.Component<Props, State> {
           <ExploreTab
             {...this.getTabProps(history.location.pathname === '/explore')}
             to="/explore"
-            loggedOut={!currentUser}
+            loggedout={!currentUser ? 'true' : undefined}
             data-cy="navbar-explore"
           >
             <Icon glyph="explore" />
