@@ -33,6 +33,7 @@ import {
 import {
   LoginButton,
   LoginOutlineButton,
+  SettingsButton,
   Grid,
   Meta,
   Content,
@@ -298,16 +299,16 @@ class CommunityView extends React.Component<Props, State> {
                           Leave community
                         </LoginOutlineButton>
                       );
+                    } else {
+                      return (
+                        <LoginButton
+                          loading={state.isLoading}
+                          dataCy={'join-community-button'}
+                        >
+                          Join {community.name}
+                        </LoginButton>
+                      );
                     }
-
-                    return (
-                      <LoginButton
-                        loading={state.isLoading}
-                        dataCy={'join-community-button'}
-                      >
-                        Join {community.name}
-                      </LoginButton>
-                    );
                   }}
                 />
               ) : null}
@@ -315,13 +316,13 @@ class CommunityView extends React.Component<Props, State> {
               {currentUser &&
                 (isOwner || isModerator) && (
                   <Link to={`/${community.slug}/settings`}>
-                    <LoginButton
+                    <SettingsButton
                       icon={'settings'}
                       isMember
                       data-cy="community-settings-button"
                     >
                       Settings
-                    </LoginButton>
+                    </SettingsButton>
                   </Link>
                 )}
             </Meta>

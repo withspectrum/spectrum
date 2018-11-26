@@ -36,6 +36,14 @@ export const LoginOutlineButton = styled(OutlineButton)`
   }
 `;
 
+export const SettingsButton = styled(LoginOutlineButton)`
+  justify-content: center;
+  &:hover {
+    color: ${props => props.theme.text.secondary};
+    box-shadow: 0 0 1px ${props => props.theme.text.secondary};
+  }
+`;
+
 export const CoverButton = styled(IconButton)`
   position: absolute;
   right: 16px;
