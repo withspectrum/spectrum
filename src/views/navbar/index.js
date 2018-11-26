@@ -250,7 +250,7 @@ class Navbar extends React.Component<Props, State> {
                 size={32}
                 showHoverProfile={false}
                 showOnlineStatus={false}
-                clickable={false}
+                isClickable={false}
                 dataCy="navbar-profile"
               />
             </Tab>
