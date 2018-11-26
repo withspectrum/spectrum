@@ -15,6 +15,7 @@ import { fetchPayload } from '../utils/payloads';
 import isEmail from 'validator/lib/isEmail';
 import { sendPrivateCommunityRequestEmailQueue } from 'shared/bull/queues';
 import type { Job, PrivateCommunityRequestJobData } from 'shared/bull/types';
+import { signCommunity, signUser } from 'shared/imgix';
 
 export default async (job: Job<PrivateCommunityRequestJobData>) => {
   const { userId, communityId } = job.data;
@@ -74,8 +75,8 @@ export default async (job: Job<PrivateCommunityRequestJobData>) => {
     sendPrivateCommunityRequestEmailQueue.add({
       user: userPayload,
       // $FlowFixMe
-      recipient,
-      community,
+      recipient: signUser(recipient),
+      community: signCommunity(community),
     })
   );
 
