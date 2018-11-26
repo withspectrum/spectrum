@@ -323,8 +323,6 @@ class CommunityView extends React.Component<Props, State> {
               <SegmentedControl
                 style={{
                   margin: '16px 0 0 0',
-                  overflowX: 'scroll',
-                  overflowY: 'hidden',
                 }}
               >
                 <DesktopSegment
