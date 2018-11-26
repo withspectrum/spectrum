@@ -29,6 +29,10 @@ import {
 import { track, events } from 'src/helpers/analytics';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
+import type {
+  WebsocketConnectionType,
+  PageVisibilityType,
+} from 'src/reducers/connectionStatus';
 
 type Props = {
   isLoading: boolean,
@@ -43,6 +47,9 @@ type Props = {
   currentUser?: GetUserType,
   isLoadingCurrentUser: boolean,
   activeInboxThread: ?string,
+  networkOnline: boolean,
+  websocketConnection: WebsocketConnectionType,
+  pageVisibility: PageVisibilityType,
 };
 
 type State = {
@@ -54,32 +61,35 @@ class Navbar extends React.Component<Props, State> {
     isSkipLinkFocused: false,
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const currProps = this.props;
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
+    const curr = this.props;
     const isMobile = window && window.innerWidth <= 768;
+
+    if (curr.networkOnline !== nextProps.networkOnline) return true;
+    if (curr.websocketConnection !== nextProps.websocketConnection) return true;
+    if (curr.pageVisibility !== nextProps.pageVisibility) return true;
 
     // If the update was caused by the focus on the skip link
     if (nextState.isSkipLinkFocused !== this.state.isSkipLinkFocused)
       return true;
 
     // if route changes
-    if (currProps.location.pathname !== nextProps.location.pathname)
-      return true;
+    if (curr.location.pathname !== nextProps.location.pathname) return true;
 
     // if route query params change we need to re-render on mobile
-    if (isMobile && currProps.location.search !== nextProps.location.search)
+    if (isMobile && curr.location.search !== nextProps.location.search)
       return true;
 
     // Had no user, now have user or user changed
-    if (nextProps.currentUser !== currProps.currentUser) return true;
-    if (nextProps.isLoadingCurrentUser !== currProps.isLoadingCurrentUser)
+    if (nextProps.currentUser !== curr.currentUser) return true;
+    if (nextProps.isLoadingCurrentUser !== curr.isLoadingCurrentUser)
       return true;
 
     const newDMNotifications =
-      currProps.notificationCounts.directMessageNotifications !==
+      curr.notificationCounts.directMessageNotifications !==
       nextProps.notificationCounts.directMessageNotifications;
     const newNotifications =
-      currProps.notificationCounts.notifications !==
+      curr.notificationCounts.notifications !==
       nextProps.notificationCounts.notifications;
     if (newDMNotifications || newNotifications) return true;
 
@@ -87,7 +97,7 @@ class Navbar extends React.Component<Props, State> {
       // if the user is mobile and is viewing a thread or DM thread, re-render
       // the navbar when they exit the thread
       const { thread: thisThreadParam } = queryString.parse(
-        currProps.history.location.search
+        curr.history.location.search
       );
       const { thread: nextThreadParam } = queryString.parse(
         nextProps.history.location.search
@@ -330,11 +340,14 @@ class Navbar extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => ({
+const map = state => ({
   notificationCounts: state.notifications,
+  networkOnline: state.connectionStatus.networkOnline,
+  websocketConnection: state.connectionStatus.websocketConnection,
+  pageVisibility: state.connectionStatus.pageVisibility,
 });
 export default compose(
   // $FlowIssue
-  connect(mapStateToProps),
+  connect(map),
   withCurrentUser
 )(Navbar);

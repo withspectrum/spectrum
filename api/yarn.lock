@@ -1603,6 +1603,11 @@ axios@^0.16.2:
     follow-redirects "^1.2.3"
     is-buffer "^1.1.5"
 
+b2a@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/b2a/-/b2a-1.0.10.tgz#979271967ae2dd6d0bafea827ab5d02bb0362c01"
+  integrity sha512-qRdfj/Abk64Wp1QKE5t4dG+ioF87/er959LgzyBg0DGBNNQMcOzljC5lpFeYeFFUcUdtUhwofDRRo/0YM8Il1Q==
+
 babel-code-frame@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-code-frame/-/babel-code-frame-6.26.0.tgz#63fd43f7dc1e3bb7ce35947db8fe369a3f58c74b"
