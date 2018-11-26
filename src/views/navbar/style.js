@@ -48,7 +48,7 @@ export const Nav = styled.nav`
   }
 
   ${props =>
-    props.loggedin &&
+    props.loggedOut &&
     css`
       grid-template-columns: repeat(3, auto) 1fr auto;
       grid-template-areas: 'logo explore support . signin';
@@ -269,7 +269,7 @@ export const ExploreTab = styled(Tab)`
     `};
 
   ${props =>
-    props.loggedin &&
+    props.loggedout &&
     css`
       grid-area: explore;
     `} ${Label} {
