@@ -6,7 +6,9 @@ export const getUsersChannelsEligibleForWeeklyDigest = (
 ): Promise<Array<string>> => {
   return db
     .table('usersChannels')
-    .getAll([userId, 'member'], { index: 'userIdAndRole' })
+    .getAll([userId, 'member'], [userId, 'moderator'], [userId, 'owner'], {
+      index: 'userIdAndRole',
+    })
     .map(row => row('channelId'))
     .run();
 };

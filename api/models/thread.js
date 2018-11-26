@@ -164,7 +164,14 @@ export const getViewableThreadsByUser = async (
   // get a list of the channelIds the current user is allowed to see threads
   const getCurrentUsersChannelIds = db
     .table('usersChannels')
-    .getAll([currentUser, 'member'], { index: 'userId' })
+    .getAll(
+      [evalUser, 'member'],
+      [evalUser, 'moderator'],
+      [evalUser, 'owner'],
+      {
+        index: 'userIdAndRole',
+      }
+    )
     .map(userChannel => userChannel('channelId'))
     .run();
 
@@ -272,7 +279,14 @@ export const getViewableParticipantThreadsByUser = async (
   // get a list of the channelIds the current user is allowed to see threads for
   const getCurrentUsersChannelIds = db
     .table('usersChannels')
-    .getAll([currentUser, 'member'], { index: 'userIdAndRole' })
+    .getAll(
+      [evalUser, 'member'],
+      [evalUser, 'moderator'],
+      [evalUser, 'owner'],
+      {
+        index: 'userIdAndRole',
+      }
+    )
     .map(userChannel => userChannel('channelId'))
     .run();
 

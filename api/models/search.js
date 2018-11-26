@@ -89,7 +89,7 @@ export const getPrivateCommunityIdsForUsersThreads = (
 export const getUsersJoinedChannels = (userId: string): Promise<Array<string>> => {
   return db
     .table('usersChannels')
-    .getAll([userId, "member"], { index: 'userIdAndRole' })
+    .getAll([userId, "member"], [userId, "moderator"], [userId, "owner"], { index: 'userIdAndRole' })
     .eqJoin('channelId', db.table('channels'))
     .filter(row => row('right').hasFields('deletedAt').not())
     .zip()
@@ -113,7 +113,7 @@ export const getUsersJoinedCommunities = (userId: string): Promise<Array<string>
 export const getUsersJoinedPrivateChannelIds = (userId: string): Promise<Array<string>> => {
   return db
     .table('usersChannels')
-    .getAll([userId, "member"], { index: 'userIdAndRole' })
+    .getAll([userId, "member"], [userId, "moderator"], [userId, "owner"], { index: 'userIdAndRole' })
     .eqJoin('channelId', db.table('channels'))
     .filter(row => row('right')('isPrivate').eq(true).and(row('right').hasFields('deletedAt').not()))
     .without({ left: ['id'] })

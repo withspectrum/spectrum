@@ -6,7 +6,12 @@ export const getMembersInChannelWithNotifications = (
 ): Promise<Array<string>> => {
   return db
     .table('usersChannels')
-    .getAll([channelId, 'member'], { index: 'channelIdAndRole' })
+    .getAll(
+      [channelId, 'member'],
+      [channelId, 'moderator'],
+      [channelId, 'owner'],
+      { index: 'channelIdAndRole' }
+    )
     .filter({ receiveNotifications: true })
     .group('userId')
     .run()

@@ -332,7 +332,14 @@ const approvePendingUserInChannel = async (channelId: string, userId: string): P
 // prettier-ignore
 const approvePendingUsersInChannel = async (channelId: string): Promise<DBUsersChannels> => {
   const currentCount = await db.table('usersChannels')
-    .getAll([channelId, "member"], { index: 'channelIdAndRole' })
+    .getAll(
+      [channelId, 'member'],
+      [channelId, 'moderator'],
+      [channelId, 'owner'],
+      {
+        index: 'channelIdAndRole',
+      }
+    )
     .count()
     .default(1)
     .run()
@@ -525,7 +532,7 @@ const getMembersInChannel = (channelId: string, options: Options): Promise<Array
   return (
     db
       .table('usersChannels')
-      .getAll([channelId, "member"], { index: 'channelIdAndRole' })
+      .getAll([channelId, "member"], [channelId, "moderator"], [channelId, "owner"], { index: 'channelIdAndRole' })
       .skip(after || 0)
       .limit(first || 25)
       // return an array of the userIds to be loaded by gql
@@ -654,14 +661,18 @@ const getUsersPermissionsInChannels = (input: Array<UserIdAndChannelId>): Promis
 const getUserUsersChannels = (userId: string) => {
   return db
     .table('usersChannels')
-    .getAll([userId, 'member'], { index: 'userIdAndRole' })
+    .getAll([userId, 'member'], [userId, 'owner'], [userId, 'moderator'], {
+      index: 'userIdAndRole',
+    })
     .run();
 };
 
 const getUserChannelIds = (userId: string) => {
   return db
     .table('usersChannels')
-    .getAll([userId, 'member'], { index: 'userIdAndRole' })
+    .getAll([userId, 'member'], [userId, 'owner'], [userId, 'moderator'], {
+      index: 'userIdAndRole',
+    })
     .map(rec => rec('channelId'))
     .run();
 };
