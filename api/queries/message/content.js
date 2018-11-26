@@ -5,5 +5,5 @@ import { signMessage } from 'shared/imgix';
 
 export default (message: DBMessage, _: any, ctx: GraphQLContext) => {
   const signedMessage = signMessage(message);
-  return message.content;
+  return signedMessage.content;
 };

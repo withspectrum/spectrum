@@ -126,11 +126,7 @@ export const CoverInput = (props: CoverPhotoInputProps) => {
         </FauxOutlineButton>
       </InputOverlay>
       <CoverImage
-        src={
-          props.defaultValue
-            ? `${props.defaultValue}${props.preview ? '' : '?w=320&dpr=2'}`
-            : ''
-        }
+        src={props.defaultValue ? `${props.defaultValue}` : ''}
         role="presentation"
       />
       <StyledHiddenInput

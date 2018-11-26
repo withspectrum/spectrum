@@ -32,7 +32,7 @@ export default async (
       break;
     }
     case 'media': {
-      body = '📷 Photo';
+      body = message.content.body;
       break;
     }
     default: {

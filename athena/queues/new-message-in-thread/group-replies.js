@@ -24,7 +24,7 @@ export default async replies => {
       message.messageType === 'media'
         ? `<p class='reply-img-container'><img class='reply-img' src='${signImageUrl(
             reply.content.body
-          )}?w=600&dpr=2' /></p>`
+          )}' /></p>`
         : `<p class='reply'>${reply.content.body}</p>`;
 
     const newGroup = {
