@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import { saveReputationEvent } from './reputationEvent';
 
 export const updateReputation = (

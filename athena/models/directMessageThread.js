@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import type { DBDirectMessageThread } from 'shared/types';
 
 export const getDirectMessageThreadById = (

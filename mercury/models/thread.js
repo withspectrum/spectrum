@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import type { DBThread } from 'shared/types';
 
 export const getThread = (id: string): Promise<DBThread> => {
