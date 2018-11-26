@@ -1,5 +1,5 @@
 // @flow
-const faker = require('faker');
+const random = require('faker/lib/random');
 
 // Helper function to get a random profile and cover photo
 const PALETTE = [
@@ -15,7 +15,7 @@ const PALETTE = [
   'violet',
 ];
 export default () => {
-  const color = faker.random.arrayElement(PALETTE);
+  const color = random.arrayElement(PALETTE);
   return {
     profilePhoto: `/default_images/profile-${color}.png`,
     coverPhoto: `/default_images/cover-${color}.svg`,
