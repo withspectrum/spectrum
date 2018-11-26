@@ -26,7 +26,7 @@ exports.up = function(r, conn) {
     r
       .table('usersChannels')
       .indexCreate('userIdAndRole', [
-        r.row('channelId'),
+        r.row('userId'),
         branch(
           r,
           'Pending',
