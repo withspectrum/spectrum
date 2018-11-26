@@ -41,33 +41,42 @@ type Props = {
 
 type State = {
   visible: boolean,
-  isMounted: boolean,
 };
 
 class CommunityHoverProfileWrapper extends React.Component<Props, State> {
   ref: ?any;
   ref = null;
-  state = { visible: false, isMounted: false };
+  state = { visible: false };
+  _isMounted = false;
 
   componentDidMount() {
-    this.setState({ isMounted: true });
+    this._isMounted = true;
   }
 
   componentWillUnmount() {
-    this.setState({ isMounted: false });
+    this._isMounted = false;
   }
 
   handleMouseEnter = () => {
     const { client, id } = this.props;
 
-    client.query({
-      query: getCommunityByIdQuery,
-      variables: { id },
-    });
+    if (!this._isMounted) return;
+
+    client
+      .query({
+        query: getCommunityByIdQuery,
+        variables: { id },
+      })
+      .then(() => {
+        if (!this._isMounted) return;
+      });
 
     const ref = setTimeout(() => {
-      return this.state.isMounted && this.setState({ visible: true });
+      if (this._isMounted) {
+        return this.setState({ visible: true });
+      }
     }, 500);
+
     this.ref = ref;
   };
 
@@ -76,7 +85,7 @@ class CommunityHoverProfileWrapper extends React.Component<Props, State> {
       clearTimeout(this.ref);
     }
 
-    if (this.state.isMounted && this.state.visible) {
+    if (this._isMounted && this.state.visible) {
       this.setState({ visible: false });
     }
   };
