@@ -71,6 +71,16 @@ class DirectMessages extends React.Component<Props, State> {
     }
   };
 
+  shouldComponentUpdate(nextProps: Props) {
+    const curr = this.props;
+
+    // fetching more
+    if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
+      return false;
+
+    return true;
+  }
+
   componentDidUpdate(prev: Props) {
     const curr = this.props;
 
