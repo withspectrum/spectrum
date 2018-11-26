@@ -1,9 +1,10 @@
 // @flow
 import type { DBMessage } from 'shared/types';
-import { signImageUrl } from 'shared/imgix';
+import { signMessage } from 'shared/imgix';
 
-export default (message: DBMessage, imageSignatureExpiration: number) => {
-  const { content, messageType } = message;
-  if (messageType !== 'media') return content.body;
-  return signImageUrl(content.body, { expires: imageSignatureExpiration });
+export default (message: DBMessage, expires: number) => {
+  const {
+    content: { body },
+  } = signMessage(message, expires);
+  return body;
 };

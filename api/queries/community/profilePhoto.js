@@ -1,12 +1,10 @@
 // @flow
 import type { GraphQLContext } from '../../';
-import type { DBUser } from 'shared/types';
-import { signImageUrl } from 'shared/imgix';
+import type { DBCommunity } from 'shared/types';
+import { signCommunity } from 'shared/imgix';
 
-export default ({ profilePhoto }: DBUser, _: any, ctx: GraphQLContext) => {
-  return signImageUrl(profilePhoto, {
-    w: 256,
-    h: 256,
-    expires: ctx.getImageSignatureExpiration(),
-  });
+export default (community: DBCommunity, _: any, ctx: GraphQLContext) => {
+  const expires = ctx.getImageSignatureExpiration();
+  const { profilePhoto } = signCommunity(community, expires);
+  return profilePhoto;
 };
