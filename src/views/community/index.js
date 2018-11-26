@@ -294,7 +294,9 @@ class CommunityView extends React.Component<Props, State> {
                   render={state => {
                     if (isMember) {
                       return (
-                        <LoginOutlineButton>Leave community</LoginOutlineButton>
+                        <LoginOutlineButton dataCy={'leave-community-button'}>
+                          Leave community
+                        </LoginOutlineButton>
                       );
                     }
 
