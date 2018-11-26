@@ -2,7 +2,10 @@
 import type { DBCommunity } from 'shared/types';
 import { signImageUrl } from 'shared/imgix';
 
-export const signCommunity = (community: DBCommunity, expires: number) => {
+export const signCommunity = (
+  community: DBCommunity,
+  expires: number
+): DBCommunity => {
   const { profilePhoto, coverPhoto, ...rest } = community;
 
   return {

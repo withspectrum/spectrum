@@ -46,8 +46,8 @@ type Opts = {
   expires: number,
 };
 
-export const signImageUrl = (url: string, opts: Opts) => {
-  if (!url) return null;
+export const signImageUrl = (url: string, opts: Opts): string => {
+  if (!url) return '';
 
   if (isLocalUpload(url)) return url;
 

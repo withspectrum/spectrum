@@ -2,7 +2,7 @@
 import type { DBThread } from 'shared/types';
 import { signImageUrl } from 'shared/imgix';
 
-const signBody = (body: string, expires: number) => {
+const signBody = (body?: string, expires: number) => {
   if (!body) {
     return JSON.stringify({
       blocks: [
@@ -32,13 +32,13 @@ const signBody = (body: string, expires: number) => {
     const { src } = returnBody.entityMap[key].data;
 
     // transform the body inline with signed image urls
-    body.entityMap[key].data.src = signImageUrl(src, { expires });
+    returnBody.entityMap[key].data.src = signImageUrl(src, { expires });
   });
 
   return JSON.stringify(body);
 };
 
-export const signThread = (thread: DBThread, expires: number) => {
+export const signThread = (thread: DBThread, expires: number): DBThread => {
   const { content, ...rest } = thread;
 
   return {
