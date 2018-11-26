@@ -32,6 +32,7 @@ import {
 } from 'src/components/segmentedControl';
 import {
   LoginButton,
+  LoginOutlineButton,
   Grid,
   Meta,
   Content,
@@ -99,25 +100,22 @@ class CommunityView extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
+    const { community: prevCommunity } = prevProps.data;
+    const { community: currCommunity } = this.props.data;
     if (
-      (!prevProps.data.community &&
-        this.props.data.community &&
-        this.props.data.community.id) ||
-      (prevProps.data.community &&
-        prevProps.data.community.id !== this.props.data.community.id)
+      (!prevCommunity && currCommunity && currCommunity.id) ||
+      (prevCommunity && prevCommunity.id !== currCommunity.id)
     ) {
       track(events.COMMUNITY_VIEWED, {
-        community: transformations.analyticsCommunity(
-          this.props.data.community
-        ),
+        community: transformations.analyticsCommunity(currCommunity),
       });
 
       // if the user is new and signed up through a community page, push
       // the community data into the store to hydrate the new user experience
       // with their first community they should join
-      if (this.props.currentUser) return;
-
-      this.props.dispatch(addCommunityToOnboarding(this.props.data.community));
+      if (!this.props.currentUser || !this.props.currentUser.username) {
+        return this.props.dispatch(addCommunityToOnboarding(currCommunity));
+      }
     }
   }
 
@@ -293,19 +291,24 @@ class CommunityView extends React.Component<Props, State> {
               ) : !isOwner ? (
                 <ToggleCommunityMembership
                   community={community}
-                  render={state => (
-                    <LoginButton
-                      isMember={isMember}
-                      gradientTheme={isMember ? null : 'success'}
-                      color={isMember ? 'text.alt' : null}
-                      icon={isMember ? 'checkmark' : null}
-                      loading={state.isLoading}
-                      dataCy={'join-community-button'}
-                      style={{ marginTop: '16px' }}
-                    >
-                      {isMember ? 'Member' : `Join ${community.name}`}
-                    </LoginButton>
-                  )}
+                  render={state => {
+                    if (isMember) {
+                      return (
+                        <LoginOutlineButton dataCy={'leave-community-button'}>
+                          Leave community
+                        </LoginOutlineButton>
+                      );
+                    }
+
+                    return (
+                      <LoginButton
+                        loading={state.isLoading}
+                        dataCy={'join-community-button'}
+                      >
+                        Join {community.name}
+                      </LoginButton>
+                    );
+                  }}
                 />
               ) : null}
 
@@ -326,8 +329,6 @@ class CommunityView extends React.Component<Props, State> {
               <SegmentedControl
                 style={{
                   margin: '16px 0 0 0',
-                  overflowX: 'scroll',
-                  overflowY: 'hidden',
                 }}
               >
                 <DesktopSegment
@@ -383,7 +384,8 @@ class CommunityView extends React.Component<Props, State> {
               // and is a member of the community, they should see a
               // new thread composer
               isLoggedIn &&
-                selectedView === 'threads' &&
+                (selectedView === 'threads' ||
+                  selectedView === 'trending-threads') &&
                 userHasPermissions && (
                   <ErrorBoundary fallbackComponent={null}>
                     <ThreadComposer

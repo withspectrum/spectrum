@@ -67,6 +67,7 @@ const Thread = /* GraphQL */ `
     watercooler: Boolean
     currentUserLastSeen: Date @cost(complexity: 1)
     reactions: ThreadReactions @cost(complexity: 1)
+    metaImage: String
 
     attachments: [Attachment]
       @deprecated(reason: "Attachments no longer used for link previews")

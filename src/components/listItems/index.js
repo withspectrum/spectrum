@@ -39,7 +39,7 @@ export class CommunityListItem extends React.Component<CommunityProps> {
               community={community}
               size={32}
               showHoverProfile={false}
-              clickable={false}
+              isClickable={false}
             />
             <Col style={{ marginLeft: '12px' }}>
               <Heading>{community.name}</Heading>
@@ -63,7 +63,7 @@ export class CommunityListItem extends React.Component<CommunityProps> {
 }
 
 type CardProps = {
-  clickable?: boolean,
+  isClickable?: boolean,
   contents: any,
   meta?: string,
   children?: any,
@@ -71,7 +71,7 @@ type CardProps = {
 
 export const ThreadListItem = (props: CardProps): React$Element<any> => {
   return (
-    <Wrapper clickable={props.clickable}>
+    <Wrapper isClickable={props.isClickable}>
       <Row>
         <Col>
           <Heading>{props.contents.content.title}</Heading>

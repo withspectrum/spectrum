@@ -10,6 +10,7 @@ import NotificationsTab from './components/notificationsTab';
 import Head from 'src/components/head';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+import { truncateNumber } from 'src/helpers/utils';
 import {
   Nav,
   Logo,
@@ -243,18 +244,23 @@ class Navbar extends React.Component<Props, State> {
               to={currentUser ? `/users/${currentUser.username}` : '/'}
               onClick={() => this.trackNavigationClick('profile')}
             >
-              {currentUser && (
-                <Reputation>
-                  <Icon glyph="rep" /> {currentUser.totalReputation}
-                </Reputation>
-              )}
+              {currentUser &&
+                typeof currentUser.totalReputation === 'number' && (
+                  <Reputation>
+                    <Icon glyph="rep" />{' '}
+                    {truncateNumber(
+                      parseInt(currentUser.totalReputation, 10),
+                      1
+                    )}
+                  </Reputation>
+                )}
               <Navatar
                 style={{ gridArea: 'label' }}
                 user={currentUser}
                 size={32}
                 showHoverProfile={false}
                 showOnlineStatus={false}
-                clickable={false}
+                isClickable={false}
                 dataCy="navbar-profile"
               />
             </Tab>
@@ -311,7 +317,7 @@ class Navbar extends React.Component<Props, State> {
           <ExploreTab
             {...this.getTabProps(history.location.pathname === '/explore')}
             to="/explore"
-            loggedOut={!currentUser}
+            loggedout={!currentUser ? 'true' : undefined}
             data-cy="navbar-explore"
           >
             <Icon glyph="explore" />

@@ -49,7 +49,7 @@ class HoverProfile extends Component<ProfileProps> {
                   src={community.profilePhoto}
                   type={'community'}
                   size={40}
-                  clickable={false}
+                  isClickable={false}
                 />
               </ProfilePhotoContainer>
             </CoverContainer>

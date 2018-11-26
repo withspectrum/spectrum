@@ -216,6 +216,8 @@ export const Reputation = styled.div`
   grid-area: icon;
   align-items: center;
   padding-right: 16px;
+  font-size: 14px;
+  font-weight: 700;
 `;
 
 export const Logo = styled(Tab)`
@@ -267,7 +269,7 @@ export const ExploreTab = styled(Tab)`
     `};
 
   ${props =>
-    props.loggedOut &&
+    props.loggedout &&
     css`
       grid-area: explore;
     `} ${Label} {

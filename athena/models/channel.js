@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import type { DBChannel } from 'shared/types';
 
 export const getChannelById = (id: string): Promise<DBChannel> => {
