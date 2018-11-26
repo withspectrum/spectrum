@@ -542,7 +542,7 @@ const getMembersInChannel = (channelId: string, options: Options): Promise<Array
       .getAll(channelId, { index: 'channelId' })
       .filter({ isMember: true })
       .skip(after || 0)
-      .limit(first || 999999)
+      .limit(first || 25)
       // return an array of the userIds to be loaded by gql
       .map(userChannel => userChannel('userId'))
       .run()

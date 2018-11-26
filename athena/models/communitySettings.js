@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import axios from 'axios';
 const querystring = require('querystring');
 import { decryptString } from 'shared/encryption';
