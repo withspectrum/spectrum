@@ -32,6 +32,7 @@ import {
 } from 'src/components/segmentedControl';
 import {
   LoginButton,
+  LoginOutlineButton,
   Grid,
   Meta,
   Content,
@@ -290,19 +291,22 @@ class CommunityView extends React.Component<Props, State> {
               ) : !isOwner ? (
                 <ToggleCommunityMembership
                   community={community}
-                  render={state => (
-                    <LoginButton
-                      isMember={isMember}
-                      gradientTheme={isMember ? null : 'success'}
-                      color={isMember ? 'text.alt' : null}
-                      icon={isMember ? 'checkmark' : null}
-                      loading={state.isLoading}
-                      dataCy={'join-community-button'}
-                      style={{ marginTop: '16px' }}
-                    >
-                      {isMember ? 'Member' : `Join ${community.name}`}
-                    </LoginButton>
-                  )}
+                  render={state => {
+                    if (isMember) {
+                      return (
+                        <LoginOutlineButton>Leave community</LoginOutlineButton>
+                      );
+                    }
+
+                    return (
+                      <LoginButton
+                        loading={state.isLoading}
+                        dataCy={'join-community-button'}
+                      >
+                        Join {community.name}
+                      </LoginButton>
+                    );
+                  }}
                 />
               ) : null}
 

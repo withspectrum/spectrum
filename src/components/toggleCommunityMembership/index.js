@@ -44,6 +44,19 @@ class ToggleCommunityMembership extends React.Component<Props, State> {
       );
     }
 
+    // warn all other members before leaving
+    if (community.communityPermissions.isMember) {
+      return this.props.dispatch(
+        openModal('DELETE_DOUBLE_CHECK_MODAL', {
+          id: community.id,
+          entity: 'team-member-leaving-community',
+          buttonLabel: 'Leave Community',
+          message:
+            'Are you sure you want to leave this community? You will no longer see conversations in your feed or get updates about new activity.',
+        })
+      );
+    }
+
     const action = community.communityPermissions.isMember
       ? this.removeMember
       : this.addMember;
