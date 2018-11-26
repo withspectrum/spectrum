@@ -73,6 +73,7 @@ export default async (job: Job<PrivateCommunityRequestJobData>) => {
   const community = await getCommunityById(communityId);
   const usersEmailPromises = filteredRecipients.map(recipient =>
     sendPrivateCommunityRequestEmailQueue.add({
+      // $FlowFixMe
       user: signUser(userPayload),
       // $FlowFixMe
       recipient: signUser(recipient),
