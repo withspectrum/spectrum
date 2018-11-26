@@ -275,7 +275,7 @@ class Navbar extends React.Component<Props, State> {
       return (
         <Nav
           hideOnMobile={hideNavOnMobile}
-          loggedIn={currentUser}
+          loggedin={currentUser}
           data-cy="navbar"
         >
           <Logo
@@ -307,7 +307,7 @@ class Navbar extends React.Component<Props, State> {
           <ExploreTab
             {...this.getTabProps(history.location.pathname === '/explore')}
             to="/explore"
-            loggedIn={currentUser}
+            loggedin={currentUser}
             data-cy="navbar-explore"
           >
             <Icon glyph="explore" />
