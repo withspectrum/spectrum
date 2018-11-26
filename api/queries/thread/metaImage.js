@@ -6,13 +6,13 @@ import { signImageUrl } from 'shared/imgix';
 
 export default async (thread: DBThread, _: any, ctx: GraphQLContext) => {
   const { loaders, getImageSignatureExpiration } = ctx;
-  const { isWatercooler, communityId, content } = thread;
+  const { watercooler, communityId, content } = thread;
 
   const community = await loaders.community.load(communityId);
   if (!community) return null;
 
   const imageUrl = generateImageFromText({
-    title: isWatercooler
+    title: watercooler
       ? `Chat with the ${community.name} community`
       : content.title,
     footer: `spectrum.chat/${community.slug}`,
