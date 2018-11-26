@@ -164,7 +164,7 @@ describe('public community signed in without permission', () => {
       .click();
 
     cy.get('[data-cy="join-community-button"]')
-      .contains(`Member`)
+      .contains(`Leave community`)
       .click();
 
     cy.get('[data-cy="join-community-button"]')
