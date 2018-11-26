@@ -16,7 +16,7 @@ import toobusy from 'shared/middlewares/toobusy';
 import addSecurityMiddleware from 'shared/middlewares/security';
 
 const PORT = process.env.PORT || 3006;
-const SEVEN_DAYS = 604800;
+const ONE_HOUR = 3600;
 
 const app = express();
 
@@ -152,7 +152,7 @@ app.use(
         // (the filename changes if the file content changes, so we can cache these forever)
         res.setHeader(
           'Cache-Control',
-          `max-age=${SEVEN_DAYS}, s-maxage=${SEVEN_DAYS}`
+          `max-age=${ONE_HOUR}, s-maxage=${ONE_HOUR}`
         );
       }
     },
@@ -165,7 +165,7 @@ app.get('/static/js/:name', (req: express$Request, res, next) => {
     if (existingFile.indexOf('.html') === -1) {
       res.setHeader(
         'Cache-Control',
-        `max-age=${SEVEN_DAYS}, s-maxage=${SEVEN_DAYS}`
+        `max-age=${ONE_HOUR}, s-maxage=${ONE_HOUR}`
       );
     }
     return res.sendFile(
