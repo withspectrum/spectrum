@@ -9,6 +9,7 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import type { AddCommunityMemberType } from 'shared/graphql/mutations/communityMember/addCommunityMember';
 import type { RemoveCommunityMemberType } from 'shared/graphql/mutations/communityMember/removeCommunityMember';
 import type { Dispatch } from 'redux';
+import { openModal } from 'src/actions/modals';
 
 type Props = {
   community: {
@@ -29,6 +30,19 @@ class ToggleCommunityMembership extends React.Component<Props, State> {
 
   init = () => {
     const { community } = this.props;
+
+    // warn team members before leaving a community they moderator
+    if (community.communityPermissions.isModerator) {
+      return this.props.dispatch(
+        openModal('DELETE_DOUBLE_CHECK_MODAL', {
+          id: community.id,
+          entity: 'team-member-leaving-community',
+          message:
+            'You are a team member of this community. If you leave you will no longer be able to moderate this community.',
+          buttonLabel: 'Leave Community',
+        })
+      );
+    }
 
     const action = community.communityPermissions.isMember
       ? this.removeMember
