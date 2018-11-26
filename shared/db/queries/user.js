@@ -241,8 +241,7 @@ export const getEverything = (userId: string, options: PaginationOptions): Promi
   const { first, after } = options
   return db
     .table('usersChannels')
-    .getAll(userId, { index: 'userId' })
-    .filter(userChannel => userChannel('isMember').eq(true))
+    .getAll([userId, "member"], { index: 'userIdAndRole' })
     .map(userChannel => userChannel('channelId'))
     .run()
     .then(

@@ -63,15 +63,13 @@ const createMemberInChannel = (channelId: string, userId: string, token: boolean
 
   return db
     .table('usersChannels')
-    .getAll(userId, { index: 'userId' })
-    .filter({ channelId })
+    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
     .run()
     .then(result => {
       if (result && result.length > 0) {
         return db
           .table('usersChannels')
-          .getAll(userId, { index: 'userId' })
-          .filter({ channelId, isBlocked: false })
+          .getAll([userId, channelId], { index: 'userIdAndChannelId' })
           .update(
             {
               createdAt: new Date(),
@@ -112,8 +110,7 @@ const createMemberInChannel = (channelId: string, userId: string, token: boolean
 const removeMemberInChannel = (channelId: string, userId: string): Promise<?DBChannel> => {
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ userId })
+    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
     .update(
       {
         isModerator: false,
@@ -160,8 +157,7 @@ const unblockMemberInChannel = (channelId: string, userId: string): Promise<?DBC
 
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ userId })
+    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
     .update(
       {
         isBlocked: false,
@@ -208,15 +204,13 @@ const createOrUpdatePendingUserInChannel = (channelId: string, userId: string): 
 
   return db
     .table('usersChannels')
-    .getAll(userId, { index: 'userId' })
-    .filter({ channelId })
+    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
     .run()
     .then(data => {
       if (data && data.length > 0) {
         return db
           .table('usersChannels')
-          .getAll(channelId, { index: 'channelId' })
-          .filter({ userId })
+          .getAll([userId, channelId], { index: 'userIdAndChannelId' })
           .update(
             {
               isPending: true,
@@ -256,8 +250,7 @@ const createOrUpdatePendingUserInChannel = (channelId: string, userId: string): 
 const removePendingUsersInChannel = (channelId: string): Promise<DBChannel> => {
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ isPending: true })
+    .getAll([channelId, 'pending'], { index: 'channelIdAndRole' })
     .update({
       isPending: false,
       receiveNotifications: false,
@@ -288,11 +281,12 @@ const blockUserInChannel = async (channelId: string, userId: string): Promise<DB
 
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ userId })
+    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
     .update(
       {
         isMember: false,
+        isModerator: false,
+        isOwner: false,
         isPending: false,
         isBlocked: true,
         receiveNotifications: false,
@@ -317,8 +311,7 @@ const approvePendingUserInChannel = async (channelId: string, userId: string): P
 
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ userId })
+    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
     .update(
       {
         isMember: true,
@@ -339,15 +332,13 @@ const approvePendingUserInChannel = async (channelId: string, userId: string): P
 // prettier-ignore
 const approvePendingUsersInChannel = async (channelId: string): Promise<DBUsersChannels> => {
   const currentCount = await db.table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ isMember: true })
+    .getAll([channelId, "member"], { index: 'channelIdAndRole' })
     .count()
     .default(1)
     .run()
 
   const pendingCount = await db.table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ isPending: true })
+    .getAll([channelId, "pending"], { index: 'channelIdAndRole' })
     .count()
     .default(0)
     .run()
@@ -356,8 +347,7 @@ const approvePendingUsersInChannel = async (channelId: string): Promise<DBUsersC
 
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ isPending: true })
+    .getAll([channelId, "pending"], { index: 'channelIdAndRole' })
     .update(
       {
         isMember: true,
@@ -384,8 +374,7 @@ const approveBlockedUserInChannel = async (channelId: string, userId: string): P
 
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ userId, isBlocked: true })
+    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
     .update(
       {
         isMember: true,
@@ -404,8 +393,7 @@ const removeModeratorInChannel = (
 ): Promise<DBUsersChannels> => {
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ userId })
+    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
     .update({
       isModerator: false,
     })
@@ -466,8 +454,7 @@ const toggleUserChannelNotifications = async (userId: string, channelId: string,
 
   const permissions = await db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ userId })
+    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
     .run();
 
   // permissions exist, this user is trying to toggle notifications for a channel where they
@@ -475,8 +462,7 @@ const toggleUserChannelNotifications = async (userId: string, channelId: string,
   if (permissions && permissions.length > 0) {
     return db
       .table('usersChannels')
-      .getAll(channelId, { index: 'channelId' })
-      .filter({ userId })
+      .getAll([userId, channelId], { index: 'userIdAndChannelId' })
       .update({ receiveNotifications: value })
       .run();
   }
@@ -539,8 +525,7 @@ const getMembersInChannel = (channelId: string, options: Options): Promise<Array
   return (
     db
       .table('usersChannels')
-      .getAll(channelId, { index: 'channelId' })
-      .filter({ isMember: true })
+      .getAll([channelId, "member"], { index: 'channelIdAndRole' })
       .skip(after || 0)
       .limit(first || 25)
       // return an array of the userIds to be loaded by gql
@@ -554,8 +539,7 @@ const getPendingUsersInChannel = (channelId: string): Promise<Array<string>> => 
   return (
     db
       .table('usersChannels')
-      .getAll(channelId, { index: 'channelId' })
-      .filter({ isPending: true })
+      .getAll([channelId, "pending"], { index: 'channelIdAndRole' })
       // return an array of the userIds to be loaded by gql
       .map(userChannel => userChannel('userId'))
       .run()
@@ -565,9 +549,10 @@ const getPendingUsersInChannel = (channelId: string): Promise<Array<string>> => 
 const getPendingUsersInChannels = (channelIds: Array<string>) => {
   return db
     .table('usersChannels')
-    .getAll(...channelIds, { index: 'channelId' })
+    .getAll(...channelIds.map(id => [id, 'pending']), {
+      index: 'channelIdAndRole',
+    })
     .group('channelId')
-    .filter({ isPending: true })
     .run();
 };
 
@@ -576,8 +561,9 @@ const getBlockedUsersInChannel = (channelId: string): Promise<Array<string>> => 
   return (
     db
       .table('usersChannels')
-      .getAll(channelId, { index: 'channelId' })
-      .filter({ isBlocked: true })
+      .getAll([channelId, 'blocked'], {
+        index: 'channelIdAndRole',
+      })
       // return an array of the userIds to be loaded by gql
       .map(userChannel => userChannel('userId'))
       .run()
@@ -588,8 +574,9 @@ const getModeratorsInChannel = (channelId: string): Promise<Array<string>> => {
   return (
     db
       .table('usersChannels')
-      .getAll(channelId, { index: 'channelId' })
-      .filter({ isModerator: true })
+      .getAll([channelId, 'moderator'], {
+        index: 'channelIdAndRole',
+      })
       // return an array of the userIds to be loaded by gql
       .map(userChannel => userChannel('userId'))
       .run()
@@ -600,8 +587,9 @@ const getOwnersInChannel = (channelId: string): Promise<Array<string>> => {
   return (
     db
       .table('usersChannels')
-      .getAll(channelId, { index: 'channelId' })
-      .filter({ isOwner: true })
+      .getAll([channelId, 'owner'], {
+        index: 'channelIdAndRole',
+      })
       // return an array of the userIds to be loaded by gql
       .map(userChannel => userChannel('userId'))
       .run()
@@ -666,16 +654,14 @@ const getUsersPermissionsInChannels = (input: Array<UserIdAndChannelId>): Promis
 const getUserUsersChannels = (userId: string) => {
   return db
     .table('usersChannels')
-    .getAll(userId, { index: 'userId' })
-    .filter({ isMember: true })
+    .getAll([userId, 'member'], { index: 'userIdAndRole' })
     .run();
 };
 
 const getUserChannelIds = (userId: string) => {
   return db
     .table('usersChannels')
-    .getAll(userId, { index: 'userId' })
-    .filter({ isMember: true })
+    .getAll([userId, 'member'], { index: 'userIdAndRole' })
     .map(rec => rec('channelId'))
     .run();
 };
