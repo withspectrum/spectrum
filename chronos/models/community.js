@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import type { DBCommunity } from 'shared/types';
 
 export const getCommunityById = (id: string): Promise<Object> => {

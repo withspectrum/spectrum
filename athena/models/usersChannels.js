@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 
 export const getMembersInChannelWithNotifications = (
   channelId: string
@@ -19,8 +19,7 @@ export const getUserPermissionsInChannel = (
 ): Promise<Object> => {
   return db
     .table('usersChannels')
-    .getAll(userId, { index: 'userId' })
-    .filter({ channelId })
+    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
     .group('userId')
     .run()
     .then(groups => {

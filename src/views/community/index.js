@@ -99,25 +99,22 @@ class CommunityView extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
+    const { community: prevCommunity } = prevProps.data;
+    const { community: currCommunity } = this.props.data;
     if (
-      (!prevProps.data.community &&
-        this.props.data.community &&
-        this.props.data.community.id) ||
-      (prevProps.data.community &&
-        prevProps.data.community.id !== this.props.data.community.id)
+      (!prevCommunity && currCommunity && currCommunity.id) ||
+      (prevCommunity && prevCommunity.id !== currCommunity.id)
     ) {
       track(events.COMMUNITY_VIEWED, {
-        community: transformations.analyticsCommunity(
-          this.props.data.community
-        ),
+        community: transformations.analyticsCommunity(currCommunity),
       });
 
       // if the user is new and signed up through a community page, push
       // the community data into the store to hydrate the new user experience
       // with their first community they should join
-      if (this.props.currentUser) return;
-
-      this.props.dispatch(addCommunityToOnboarding(this.props.data.community));
+      if (!this.props.currentUser || !this.props.currentUser.username) {
+        return this.props.dispatch(addCommunityToOnboarding(currCommunity));
+      }
     }
   }
 
