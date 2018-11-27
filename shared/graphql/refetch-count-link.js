@@ -1,13 +1,21 @@
 // @flow
 import { ApolloLink } from 'apollo-link';
 import type { Operation } from 'apollo-client';
-import type { Observable } from 'zen-observable';
+
+// TODO
+type Observable = any;
+
+type Options = {
+  onRefetching: () => void,
+  onRefetchFinished: () => void,
+};
 
 class RefetchCountLink extends ApolloLink {
-  constructor() {
+  constructor(options: Options) {
     super();
     this.queries = {};
     this.loading = 0;
+    this.options = options;
   }
 
   request<I: Operation>(operation: I, forward: (op: I) => Observable) {
@@ -15,6 +23,7 @@ class RefetchCountLink extends ApolloLink {
       def => def.kind === 'OperationDefinition'
     ).operation;
     if (operationType === 'subscription') return forward(operation);
+    console.log(operation.getContext());
 
     const observable = forward(operation);
     const key = operation.toKey();
@@ -22,25 +31,23 @@ class RefetchCountLink extends ApolloLink {
       this.queries[key] = true;
       return observable;
     }
+    console.log(key);
     const self = this;
     self.loading++;
-    console.log(
-      `Refetching a query. Refetching ${self.loading} queries right now`
-    );
+    if (self.loading === 1) {
+      this.options.onRefetching();
+    }
+
+    const handleFinish = () => {
+      self.loading--;
+      if (self.loading === 0) {
+        self.options.onRefetchFinished();
+      }
+    };
 
     observable.subscribe({
-      error() {
-        self.loading--;
-        console.log(
-          `Refetching query errored. Refetching ${
-            self.loading
-          } queries right now`
-        );
-      },
-      complete() {
-        self.loading--;
-        console.log(`Refetched query, refetching ${self.loading} queries`);
-      },
+      error: handleFinish,
+      complete: handleFinish,
     });
 
     return observable;

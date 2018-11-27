@@ -1,5 +1,6 @@
 // @flow
 import { combineReducers } from 'redux';
+import { loadingBarReducer } from 'react-redux-loading-bar';
 import composer from './composer';
 import modals from './modals';
 import toasts from './toasts';
@@ -27,6 +28,7 @@ const getReducers = () => {
     notifications,
     connectionStatus,
     message,
+    loadingBar: loadingBarReducer,
   });
 };
 

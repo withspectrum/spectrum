@@ -3,18 +3,10 @@ import { setUser, unsetUser } from 'src/helpers/analytics';
 export const logout = () => {
   // no longer track analytics
   unsetUser();
-
-  import('shared/graphql')
-    .then(module => module.clearApolloStore)
-    .then(clearApolloStore => {
-      // clear Apollo's query cache
-      clearApolloStore();
-      // redirect to home page
-      window.location.href =
-        process.env.NODE_ENV === 'production'
-          ? '/auth/logout'
-          : 'http://localhost:3001/auth/logout';
-    });
+  window.location.href =
+    process.env.NODE_ENV === 'production'
+      ? '/auth/logout'
+      : 'http://localhost:3001/auth/logout';
 };
 
 export const setTrackingContexts = async (user: ?GetUserType) => {

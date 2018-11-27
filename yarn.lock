@@ -10212,6 +10212,14 @@ react-portal@^3.1.0:
   dependencies:
     prop-types "^15.5.8"
 
+react-redux-loading-bar@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.npmjs.org/react-redux-loading-bar/-/react-redux-loading-bar-4.1.0.tgz#3ca460569d979450d9d1dc992328efa449c10a7a"
+  integrity sha512-9L51ZvPqnlPs97j44FZLio6maQ/2BMP8xXFPArDWxByyLyGYs2fXpSZw+Lby9qr8Px3SsH9dylfC8HfQrmc/Mw==
+  dependencies:
+    prop-types "^15.6.2"
+    react-lifecycles-compat "^3.0.2"
+
 react-redux@^5.0.2:
   version "5.0.7"
   resolved "http://registry.npmjs.org/react-redux/-/react-redux-5.0.7.tgz#0dc1076d9afb4670f993ffaef44b8f8c1155a4c8"

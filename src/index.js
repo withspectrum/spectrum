@@ -9,9 +9,10 @@ import queryString from 'query-string';
 import Loadable from 'react-loadable';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import { HelmetProvider } from 'react-helmet-async';
+import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import webPushManager from 'src/helpers/web-push-manager';
 import { history } from 'src/helpers/history';
-import { client } from 'shared/graphql';
+import { createClient } from 'shared/graphql';
 import { initStore } from 'src/store';
 import { track, events } from 'src/helpers/analytics';
 import { wsLink } from 'shared/graphql';
@@ -39,6 +40,11 @@ const store = initStore(
     },
   }
 );
+
+const client = createClient({
+  onRefetching: () => store.dispatch(showLoading()),
+  onRefetchFinished: () => store.dispatch(hideLoading()),
+});
 
 const App = () => {
   return (
@@ -108,6 +114,6 @@ window.addEventListener('beforeinstallprompt', e => {
   });
 });
 
-subscribeToDesktopPush(data => {
+subscribeToDesktopPush(client, data => {
   if (data && data.href) history.push(data.href);
 });

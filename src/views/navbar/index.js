@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import queryString from 'query-string';
+import LoadingBar from 'react-redux-loading-bar';
 import Icon from 'src/components/icons';
 import ProfileDropdown from './components/profileDropdown';
 import MessagesTab from './components/messagesTab';
@@ -50,6 +51,7 @@ type Props = {
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
   pageVisibility: PageVisibilityType,
+  loadingBar: Object,
 };
 
 type State = {
@@ -68,6 +70,7 @@ class Navbar extends React.Component<Props, State> {
     if (curr.networkOnline !== nextProps.networkOnline) return true;
     if (curr.websocketConnection !== nextProps.websocketConnection) return true;
     if (curr.pageVisibility !== nextProps.pageVisibility) return true;
+    if (curr.loadingBar.default !== nextProps.loadingBar.default) return true;
 
     // If the update was caused by the focus on the skip link
     if (nextState.isSkipLinkFocused !== this.state.isSkipLinkFocused)
@@ -165,120 +168,126 @@ class Navbar extends React.Component<Props, State> {
 
     if (currentUser) {
       return (
-        <Nav hideOnMobile={hideNavOnMobile} data-cy="navbar">
-          <Head>
-            {notificationCounts.directMessageNotifications > 0 ||
-            notificationCounts.notifications > 0 ? (
-              <link
-                rel="shortcut icon"
-                id="dynamic-favicon"
-                // $FlowIssue
-                href={`${process.env.PUBLIC_URL}/img/favicon_unread.ico`}
-              />
-            ) : (
-              <link
-                rel="shortcut icon"
-                id="dynamic-favicon"
-                // $FlowIssue
-                href={`${process.env.PUBLIC_URL}/img/favicon.ico`}
-              />
-            )}
-          </Head>
-
-          <Logo
-            to="/"
-            aria-hidden
-            tabIndex="-1"
-            ishidden={this.state.isSkipLinkFocused || undefined}
-            onClick={() => this.trackNavigationClick('logo')}
-            data-cy="navbar-logo"
-          >
-            <Icon glyph="logo" size={28} />
-          </Logo>
-
-          <SkipLink
-            href="#main"
-            onFocus={this.handleSkipLinkFocus}
-            onBlur={this.handleSkipLinkBlur}
-          >
-            Skip to content
-          </SkipLink>
-
-          <HomeTab
-            {...this.getTabProps(match.url === '/' && match.isExact)}
-            to="/"
-            onClick={() => this.trackNavigationClick('home')}
-            data-cy="navbar-home"
-          >
-            <Icon glyph="home" size={isDesktopApp() ? 28 : 32} />
-            <Label>Home</Label>
-          </HomeTab>
-
-          <MessagesTab
-            active={history.location.pathname.includes('/messages')}
+        <React.Fragment>
+          <LoadingBar
+            showFastActions
+            style={{ backgroundColor: 'white', zIndex: 5000 }}
           />
+          <Nav hideOnMobile={hideNavOnMobile} data-cy="navbar">
+            <Head>
+              {notificationCounts.directMessageNotifications > 0 ||
+              notificationCounts.notifications > 0 ? (
+                <link
+                  rel="shortcut icon"
+                  id="dynamic-favicon"
+                  // $FlowIssue
+                  href={`${process.env.PUBLIC_URL}/img/favicon_unread.ico`}
+                />
+              ) : (
+                <link
+                  rel="shortcut icon"
+                  id="dynamic-favicon"
+                  // $FlowIssue
+                  href={`${process.env.PUBLIC_URL}/img/favicon.ico`}
+                />
+              )}
+            </Head>
 
-          <ExploreTab
-            {...this.getTabProps(history.location.pathname === '/explore')}
-            to="/explore"
-            onClick={() => this.trackNavigationClick('explore')}
-            data-cy="navbar-explore"
-          >
-            <Icon glyph="explore" size={isDesktopApp() ? 28 : 32} />
-            <Label>Explore</Label>
-          </ExploreTab>
+            <Logo
+              to="/"
+              aria-hidden
+              tabIndex="-1"
+              ishidden={this.state.isSkipLinkFocused || undefined}
+              onClick={() => this.trackNavigationClick('logo')}
+              data-cy="navbar-logo"
+            >
+              <Icon glyph="logo" size={28} />
+            </Logo>
 
-          <NotificationsTab
-            onClick={() => this.trackNavigationClick('notifications')}
-            location={history.location}
-            currentUser={currentUser}
-            active={history.location.pathname.includes('/notifications')}
-          />
+            <SkipLink
+              href="#main"
+              onFocus={this.handleSkipLinkFocus}
+              onBlur={this.handleSkipLinkBlur}
+            >
+              Skip to content
+            </SkipLink>
 
-          <ProfileDrop>
-            <Tab
-              className={'hideOnMobile'}
+            <HomeTab
+              {...this.getTabProps(match.url === '/' && match.isExact)}
+              to="/"
+              onClick={() => this.trackNavigationClick('home')}
+              data-cy="navbar-home"
+            >
+              <Icon glyph="home" size={isDesktopApp() ? 28 : 32} />
+              <Label>Home</Label>
+            </HomeTab>
+
+            <MessagesTab
+              active={history.location.pathname.includes('/messages')}
+            />
+
+            <ExploreTab
+              {...this.getTabProps(history.location.pathname === '/explore')}
+              to="/explore"
+              onClick={() => this.trackNavigationClick('explore')}
+              data-cy="navbar-explore"
+            >
+              <Icon glyph="explore" size={isDesktopApp() ? 28 : 32} />
+              <Label>Explore</Label>
+            </ExploreTab>
+
+            <NotificationsTab
+              onClick={() => this.trackNavigationClick('notifications')}
+              location={history.location}
+              currentUser={currentUser}
+              active={history.location.pathname.includes('/notifications')}
+            />
+
+            <ProfileDrop>
+              <Tab
+                className={'hideOnMobile'}
+                {...this.getTabProps(
+                  history.location.pathname === `/users/${currentUser.username}`
+                )}
+                to={currentUser ? `/users/${currentUser.username}` : '/'}
+                onClick={() => this.trackNavigationClick('profile')}
+              >
+                {currentUser &&
+                  typeof currentUser.totalReputation === 'number' && (
+                    <Reputation>
+                      <Icon glyph="rep" />{' '}
+                      {truncateNumber(
+                        parseInt(currentUser.totalReputation, 10),
+                        1
+                      )}
+                    </Reputation>
+                  )}
+                <Navatar
+                  style={{ gridArea: 'label' }}
+                  user={currentUser}
+                  size={32}
+                  showHoverProfile={false}
+                  showOnlineStatus={false}
+                  isClickable={false}
+                  dataCy="navbar-profile"
+                />
+              </Tab>
+              <ProfileDropdown user={currentUser} />
+            </ProfileDrop>
+
+            <ProfileTab
+              className={'hideOnDesktop'}
               {...this.getTabProps(
                 history.location.pathname === `/users/${currentUser.username}`
               )}
               to={currentUser ? `/users/${currentUser.username}` : '/'}
               onClick={() => this.trackNavigationClick('profile')}
             >
-              {currentUser &&
-                typeof currentUser.totalReputation === 'number' && (
-                  <Reputation>
-                    <Icon glyph="rep" />{' '}
-                    {truncateNumber(
-                      parseInt(currentUser.totalReputation, 10),
-                      1
-                    )}
-                  </Reputation>
-                )}
-              <Navatar
-                style={{ gridArea: 'label' }}
-                user={currentUser}
-                size={32}
-                showHoverProfile={false}
-                showOnlineStatus={false}
-                isClickable={false}
-                dataCy="navbar-profile"
-              />
-            </Tab>
-            <ProfileDropdown user={currentUser} />
-          </ProfileDrop>
-
-          <ProfileTab
-            className={'hideOnDesktop'}
-            {...this.getTabProps(
-              history.location.pathname === `/users/${currentUser.username}`
-            )}
-            to={currentUser ? `/users/${currentUser.username}` : '/'}
-            onClick={() => this.trackNavigationClick('profile')}
-          >
-            <Icon glyph="profile" />
-            <Label>Profile</Label>
-          </ProfileTab>
-        </Nav>
+              <Icon glyph="profile" />
+              <Label>Profile</Label>
+            </ProfileTab>
+          </Nav>
+        </React.Fragment>
       );
     }
     if (!currentUser && !isLoadingCurrentUser) {
@@ -345,6 +354,7 @@ const map = state => ({
   networkOnline: state.connectionStatus.networkOnline,
   websocketConnection: state.connectionStatus.websocketConnection,
   pageVisibility: state.connectionStatus.pageVisibility,
+  loadingBar: state.loadingBar,
 });
 export default compose(
   // $FlowIssue

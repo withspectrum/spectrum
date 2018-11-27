@@ -1,7 +1,6 @@
 // @flow
 import { isDesktopApp } from './helpers/desktop-app-utils';
 import { getItemFromStorage } from './helpers/localStorage';
-import { client } from 'shared/graphql';
 import {
   subscribeToNewNotifications,
   subscribeToDirectMessageNotifications,
@@ -11,6 +10,7 @@ import formatNotification from 'shared/notification-to-text';
 // On Electron listen to new notifications outside the component tree
 // and show desktop push notifications
 export const subscribeToDesktopPush = (
+  client: any,
   onClick: ({ href?: string }) => void
 ) => {
   if (isDesktopApp()) {

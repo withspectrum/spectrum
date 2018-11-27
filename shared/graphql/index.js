@@ -21,6 +21,8 @@ if (typeof global.self === 'undefined') {
 
 type CreateClientOptions = {
   token?: ?string,
+  onRefetching: Function,
+  onRefetchFinished: Function,
 };
 
 // Websocket link for subscriptions
@@ -91,22 +93,13 @@ export const createClient = (options?: CreateClientOptions = {}) => {
   );
 
   return new ApolloClient({
-    link: new RefetchCountLink().concat(link),
+    link: new RefetchCountLink({
+      onRefetching: options.onRefetching,
+      onRefetchFinished: options.onRefetchFinished,
+    }).concat(link),
     // eslint-disable-next-line
     cache: window.__DATA__ ? cache.restore(window.__DATA__) : cache,
     ssrForceFetchDelay: 100,
     queryDeduplication: true,
   });
-};
-
-const client = createClient();
-
-export { client };
-
-export const clearApolloStore = () => {
-  try {
-    client.resetStore();
-  } catch (e) {
-    console.error('error clearing store');
-  }
 };
