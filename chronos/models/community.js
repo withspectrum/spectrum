@@ -21,7 +21,7 @@ export const getCommunities = (
 export const getTopCommunities = (amount: number): Array<Object> => {
   return db
     .table('communities')
-    .orderBy('memberCount')
+    .orderBy({ index: db.desc('memberCount') })
     .filter(community => community.hasFields('deletedAt').not())
     .limit(amount)
     .run();
@@ -33,7 +33,7 @@ export const getCommunitiesWithMinimumMembers = (
 ) => {
   return db
     .table('communities')
-    .filter(row => row('memberCount').ge(min))
+    .between(min, db.maxval, { index: 'memberCount' })
     .filter(community => community.hasFields('deletedAt').not())
     .map(row => row('id'))
     .run();
