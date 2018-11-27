@@ -6,12 +6,13 @@ import {
   InMemoryCache,
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory';
-import { split } from 'apollo-link';
+import { ApolloLink, split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import introspectionQueryResultData from './schema.json';
 import getSharedApolloClientOptions from './apollo-client-options';
 import { IS_PROD, API_URI, WS_URI } from './constants';
+import RefetchCountLink from './refetch-count-link';
 
 // Fixes a bug with ReactNative, see https://github.com/facebook/react-native/issues/9599
 if (typeof global.self === 'undefined') {
@@ -90,7 +91,7 @@ export const createClient = (options?: CreateClientOptions = {}) => {
   );
 
   return new ApolloClient({
-    link,
+    link: new RefetchCountLink().concat(link),
     // eslint-disable-next-line
     cache: window.__DATA__ ? cache.restore(window.__DATA__) : cache,
     ssrForceFetchDelay: 100,
