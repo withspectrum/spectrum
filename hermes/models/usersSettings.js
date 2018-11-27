@@ -1,5 +1,5 @@
 // @flow
-import { db } from './db';
+import { db } from 'shared/db';
 
 export const deactivateUserEmailNotifications = async (email: string) => {
   const userId = await db

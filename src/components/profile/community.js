@@ -89,7 +89,7 @@ class CommunityWithData extends React.Component<Props> {
                 community={community}
                 showHoverProfile={showHoverProfile}
                 size={64}
-                clickable={false}
+                isClickable={false}
                 style={{
                   boxShadow: '0 0 0 2px #fff',
                   flex: '0 0 64px',

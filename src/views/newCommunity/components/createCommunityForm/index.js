@@ -545,7 +545,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
                         <CommunityAvatar
                           size={20}
                           community={suggestion}
-                          clickable={false}
+                          isClickable={false}
                           showHoverProfile={false}
                         />
                         <strong>{suggestion.name}</strong>{' '}

@@ -3,7 +3,7 @@ import theme from 'shared/theme';
 import styled from 'styled-components';
 import { IconButton } from '../../components/buttons';
 import Card from '../../components/card';
-import { Button } from '../../components/buttons';
+import { Button, OutlineButton } from '../../components/buttons';
 import {
   FlexCol,
   Transition,
@@ -18,14 +18,30 @@ import {
 
 export const LoginButton = styled(Button)`
   width: 100%;
-  font-size: 14px;
-  font-weight: 700;
-  background-color: ${props =>
-    props.isMember ? props.theme.text.alt : props.theme.success.default};
+  margin-top: 16px;
+  background-color: ${props => props.theme.success.default};
   background-image: ${props =>
-    props.isMember
-      ? Gradient(props.theme.text.placeholder, props.theme.text.alt)
-      : Gradient(props.theme.success.alt, props.theme.success.default)};
+    Gradient(props.theme.success.alt, props.theme.success.default)};
+`;
+
+export const LoginOutlineButton = styled(OutlineButton)`
+  width: 100%;
+  margin-top: 16px;
+  color: ${props => props.theme.text.alt};
+  box-shadow: 0 0 1px ${props => props.theme.text.alt};
+
+  &:hover {
+    color: ${props => props.theme.warn.default};
+    box-shadow: 0 0 1px ${props => props.theme.warn.default};
+  }
+`;
+
+export const SettingsButton = styled(LoginOutlineButton)`
+  justify-content: center;
+  &:hover {
+    color: ${props => props.theme.text.secondary};
+    box-shadow: 0 0 1px ${props => props.theme.text.secondary};
+  }
 `;
 
 export const CoverButton = styled(IconButton)`

@@ -1,4 +1,5 @@
 import { getMessageById } from '../../models/message';
+import { signImageUrl } from 'shared/imgix';
 
 export default async replies => {
   let newReplies = [];
@@ -21,9 +22,9 @@ export default async replies => {
     const reply = replies.filter(r => r.id === message.id)[0];
     const body =
       message.messageType === 'media'
-        ? `<p class='reply-img-container'><img class='reply-img' src='${
+        ? `<p class='reply-img-container'><img class='reply-img' src='${signImageUrl(
             reply.content.body
-          }?w=600&dpr=2' /></p>`
+          )}' /></p>`
         : `<p class='reply'>${reply.content.body}</p>`;
 
     const newGroup = {

@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 
 // prettier-ignore
 export const getUsersForDigest = (timeframe: string): Promise<Array<Object>> => {

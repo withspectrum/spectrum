@@ -1,13 +1,14 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 
 export const getUsersChannelsEligibleForWeeklyDigest = (
   userId: string
 ): Promise<Array<string>> => {
   return db
     .table('usersChannels')
-    .getAll(userId, { index: 'userId' })
-    .filter({ isMember: true })
+    .getAll([userId, 'member'], [userId, 'moderator'], [userId, 'owner'], {
+      index: 'userIdAndRole',
+    })
     .map(row => row('channelId'))
     .run();
 };

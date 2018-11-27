@@ -1,6 +1,6 @@
 // @flow
 import type { DBUsersCommunities } from 'shared/types';
-import { db } from './db';
+import { db } from 'shared/db';
 
 const defaultResult = {
   isMember: false,

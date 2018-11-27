@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import { getCoreMetricsActiveThreads } from './thread';
 import { getCommunitiesWithMinimumMembers, getCommunities } from './community';
 

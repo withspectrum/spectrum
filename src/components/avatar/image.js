@@ -8,11 +8,13 @@ type Props = {
   type: 'user' | 'community',
   size: number,
   mobilesize?: number,
+  isClickable?: boolean,
 };
 
 export default class Image extends React.Component<Props> {
   render() {
     const { type, size, mobilesize } = this.props;
+    const { isClickable, ...rest } = this.props;
     const fallbackSrc =
       type === 'user'
         ? '/img/default_avatar.svg'
@@ -21,7 +23,7 @@ export default class Image extends React.Component<Props> {
     return (
       <VisibilitySensor>
         <Img
-          {...this.props}
+          {...rest}
           decode={false}
           loader={
             <LoadingImg

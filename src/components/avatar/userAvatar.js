@@ -18,7 +18,7 @@ type HandlerProps = {
   style?: Object,
   showHoverProfile?: boolean,
   showOnlineStatus?: boolean,
-  clickable?: boolean,
+  isClickable?: boolean,
   dataCy?: string,
   onlineBorderColor?: ?Function,
 };
@@ -60,7 +60,7 @@ class Avatar extends React.Component<AvatarProps> {
       mobilesize,
       style,
       showOnlineStatus = true,
-      clickable = true,
+      isClickable = true,
       onlineBorderColor = null,
     } = this.props;
 
@@ -82,7 +82,7 @@ class Avatar extends React.Component<AvatarProps> {
             <OnlineIndicator onlineBorderColor={onlineBorderColor} />
           )}
         <ConditionalWrap
-          condition={!!user.username && clickable}
+          condition={!!user.username && isClickable}
           wrap={() => (
             <AvatarLink to={`/users/${user.username}`}>
               <AvatarImage
@@ -108,7 +108,7 @@ class Avatar extends React.Component<AvatarProps> {
 
 class AvatarHandler extends React.Component<HandlerProps> {
   render() {
-    const { showHoverProfile = true, clickable } = this.props;
+    const { showHoverProfile = true, isClickable } = this.props;
 
     if (this.props.user) {
       const user = this.props.user;
@@ -130,7 +130,7 @@ class AvatarHandler extends React.Component<HandlerProps> {
       return (
         <GetUserByUsername
           username={this.props.username}
-          clickable={clickable}
+          isClickable={isClickable}
         />
       );
     }

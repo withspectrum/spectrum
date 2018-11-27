@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import type { NotificationEventType, DBNotification } from 'shared/types';
 import { TIME_BUFFER } from '../queues/constants';
 import { NEW_DOCUMENTS } from 'api/models/utils';

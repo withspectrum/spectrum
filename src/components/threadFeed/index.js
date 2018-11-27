@@ -19,6 +19,11 @@ import type { GetCommunityType } from 'shared/graphql/queries/community/getCommu
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
+import type {
+  WebsocketConnectionType,
+  PageVisibilityType,
+} from 'src/reducers/connectionStatus';
 
 const NullState = ({ viewContext, search }) => {
   let hd;
@@ -137,6 +142,7 @@ type Props = {
     community?: any,
     channel?: any,
     threads?: Array<any>,
+    refetch: Function,
   },
   community: GetCommunityType,
   setThreadsStatus: Function,
@@ -155,6 +161,9 @@ type Props = {
   newActivityIndicator: ?boolean,
   dispatch: Dispatch<Object>,
   search?: boolean,
+  networkOnline: boolean,
+  websocketConnection: WebsocketConnectionType,
+  pageVisibility: PageVisibilityType,
 };
 
 type State = {
@@ -184,8 +193,11 @@ class ThreadFeedPure extends React.Component<Props, State> {
     }
   };
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps: Props) {
     const curr = this.props;
+    if (curr.networkOnline !== nextProps.networkOnline) return true;
+    if (curr.websocketConnection !== nextProps.websocketConnection) return true;
+    if (curr.pageVisibility !== nextProps.pageVisibility) return true;
     // fetching more
     if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
       return false;
@@ -208,11 +220,16 @@ class ThreadFeedPure extends React.Component<Props, State> {
     this.subscribe();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prev: Props) {
     const curr = this.props;
 
+    const didReconnect = useConnectionRestored({ curr, prev });
+    if (didReconnect && curr.data.refetch) {
+      curr.data.refetch();
+    }
+
     if (
-      !prevProps.data.thread &&
+      !prev.data.thread &&
       curr.data.threads &&
       curr.data.threads.length === 0
     ) {
@@ -370,6 +387,9 @@ class ThreadFeedPure extends React.Component<Props, State> {
 
 const map = state => ({
   newActivityIndicator: state.newActivityIndicator.hasNew,
+  networkOnline: state.connectionStatus.networkOnline,
+  websocketConnection: state.connectionStatus.websocketConnection,
+  pageVisibility: state.connectionStatus.pageVisibility,
 });
 const ThreadFeed = compose(
   // $FlowIssue
