@@ -32,18 +32,12 @@ export const getParticipantCountByTime = (
 ): Promise<number> => {
   return db
     .table('messages')
-    .getAll(threadId, { index: 'threadId' })
-    .filter(
-      db.row
-        .hasFields('deletedAt')
-        .not()
-        .and(
-          db
-            .row('timestamp')
-            .ge(db.now().sub(timeRanges[range].start))
-            .and(db.row('timestamp').le(db.now().sub(timeRanges[range].end)))
-        )
+    .between(
+      [threadId, db.now().sub(timeRanges[range].start)],
+      [threadId, db.now().sub(timeRanges[range].end)],
+      { index: 'threadIdAndTimestamp' }
     )
+    .filter(db.row.hasFields('deletedAt').not())
     .map(rec => rec('senderId'))
     .distinct()
     .count()
