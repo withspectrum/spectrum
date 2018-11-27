@@ -383,6 +383,7 @@ const approveBlockedUserInChannel = async (channelId: string, userId: string): P
   return db
     .table('usersChannels')
     .getAll([userId, channelId], { index: 'userIdAndChannelId' })
+    .filter({ isBlocked: true })
     .update(
       {
         isMember: true,
