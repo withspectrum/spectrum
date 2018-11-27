@@ -18,6 +18,7 @@ import { handleSlackChannelResponse } from '../utils/slack';
 import { decryptString } from 'shared/encryption';
 import { trackQueue } from 'shared/bull/queues';
 import { events } from 'shared/analytics';
+import { signThread, signUser } from 'shared/imgix';
 
 export default async (job: Job<ThreadNotificationJobData>) => {
   const { thread: incomingThread } = job.data;
@@ -64,6 +65,10 @@ export default async (job: Job<ThreadNotificationJobData>) => {
     return r.username && mentions.indexOf(r.username) < 0;
   });
 
+  const signedRecipientsWithoutMentions = recipientsWithoutMentions.map(r => {
+    return signUser(r);
+  });
+
   let slackNotificationPromise;
   if (
     // process.env.NODE_ENV === 'production' &&
@@ -85,6 +90,8 @@ export default async (job: Job<ThreadNotificationJobData>) => {
       getChannelById(incomingThread.channelId),
     ]);
 
+    const signedAuthor = signUser(author);
+
     const decryptedToken = decryptString(
       communitySlackSettings.slackSettings.token
     );
@@ -104,7 +111,7 @@ export default async (job: Job<ThreadNotificationJobData>) => {
             }:`,
             author_name: `${author.name} (@${author.username})`,
             author_link: `https://spectrum.chat/users/${author.username}`,
-            author_icon: author.profilePhoto,
+            author_icon: signedAuthor.profilePhoto,
             pretext: `New conversation published in ${community.name} #${
               channel.name
             }:`,
@@ -145,8 +152,13 @@ export default async (job: Job<ThreadNotificationJobData>) => {
     });
   }
 
+  const signedThread = signThread(incomingThread);
+
   return Promise.all([
-    createThreadNotificationEmail(incomingThread, recipientsWithoutMentions), // handle emails separately
+    createThreadNotificationEmail(
+      signedThread,
+      signedRecipientsWithoutMentions
+    ), // handle emails separately
     slackNotificationPromise,
   ]).catch(err => {
     debug('❌ Error in job:\n');

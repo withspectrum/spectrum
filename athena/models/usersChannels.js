@@ -6,8 +6,13 @@ export const getMembersInChannelWithNotifications = (
 ): Promise<Array<string>> => {
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ isMember: true, receiveNotifications: true })
+    .getAll(
+      [channelId, 'member'],
+      [channelId, 'moderator'],
+      [channelId, 'owner'],
+      { index: 'channelIdAndRole' }
+    )
+    .filter({ receiveNotifications: true })
     .group('userId')
     .run()
     .then(users => users.map(u => u.group));
@@ -42,8 +47,7 @@ export const getOwnersInChannel = (
 ): Promise<Array<string>> => {
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ isOwner: true })
+    .getAll([channelId, 'owner'], { index: 'channelIdAndRole' })
     .map(user => user('userId'))
     .run();
 };
@@ -53,8 +57,7 @@ export const getModeratorsInChannel = (
 ): Promise<Array<string>> => {
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ isModerator: true })
+    .getAll([channelId, 'moderator'], { index: 'channelIdAndRole' })
     .map(user => user('userId'))
     .run();
 };

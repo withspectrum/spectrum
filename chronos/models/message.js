@@ -31,15 +31,10 @@ export const getNewMessageCount = (
 
   return db
     .table('messages')
-    .getAll(threadId, { index: 'threadId' })
+    .between([threadId, db.now().sub(range)], [threadId, db.now()], {
+      index: 'threadIdAndTimestamp',
+    })
     .filter(db.row.hasFields('deletedAt').not())
-    .filter(
-      db.row('timestamp').during(
-        // only count messages sent in the past week
-        db.now().sub(range),
-        db.now()
-      )
-    )
     .count()
     .run();
 };

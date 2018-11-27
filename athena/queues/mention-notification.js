@@ -20,6 +20,7 @@ import {
   sendNewMentionMessageEmailQueue,
 } from 'shared/bull/queues';
 import type { Job, MentionNotificationJobData } from 'shared/bull/types';
+import { signUser, signThread, signMessage, signCommunity } from 'shared/imgix';
 
 export default async ({ data }: Job<MentionNotificationJobData>) => {
   debug('mention job created');
@@ -135,13 +136,15 @@ export default async ({ data }: Job<MentionNotificationJobData>) => {
     getChannelById(thread.channelId),
   ]);
 
+  const signedThread = signThread(thread);
+
   // compose preview text for the email
   const rawThreadBody =
-    thread.type === 'DRAFTJS'
-      ? thread.content.body
-        ? toPlainText(toState(JSON.parse(thread.content.body)))
+    signedThread.type === 'DRAFTJS'
+      ? signedThread.content.body
+        ? toPlainText(toState(JSON.parse(signedThread.content.body)))
         : ''
-      : thread.content.body || '';
+      : signedThread.content.body || '';
 
   const threadBody =
     rawThreadBody && rawThreadBody.length > 10
@@ -149,8 +152,10 @@ export default async ({ data }: Job<MentionNotificationJobData>) => {
       : rawThreadBody.trim();
   const primaryActionLabel = 'View conversation';
 
-  const rawMessageBody = message
-    ? toPlainText(toState(JSON.parse(message.content.body)))
+  const signedMessage = message ? signMessage(message) : null;
+
+  const rawMessageBody = signedMessage
+    ? toPlainText(toState(JSON.parse(signedMessage.content.body)))
     : '';
 
   // if the message was super long, truncate it
@@ -162,15 +167,18 @@ export default async ({ data }: Job<MentionNotificationJobData>) => {
       ? sendNewMentionThreadEmailQueue
       : sendNewMentionMessageEmailQueue;
 
+  const signedSender = signUser(sender);
+  const signedCommunity = signCommunity(community);
+
   return Promise.all([
     queue.add({
       recipient,
-      sender,
+      sender: signedSender,
       primaryActionLabel,
       thread: {
         ...thread,
-        creator: sender,
-        community,
+        creator: signedSender,
+        community: signedCommunity,
         channel,
         content: {
           title: thread.content.title,
@@ -179,7 +187,7 @@ export default async ({ data }: Job<MentionNotificationJobData>) => {
       },
       message: {
         ...message,
-        sender,
+        sender: signedSender,
         content: {
           body: messageBody,
         },
