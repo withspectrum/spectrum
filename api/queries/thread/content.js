@@ -1,11 +1,12 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import type { DBThread } from 'shared/types';
-import body from './content/body';
+import { signThread } from 'shared/imgix';
 
 export default (thread: DBThread, _: any, ctx: GraphQLContext) => {
+  const signedThread = signThread(thread);
   return {
-    title: thread.content.title,
-    body: body(thread, ctx.getImageSignatureExpiration()),
+    ...signedThread.content,
+    body: signedThread.content.body,
   };
 };

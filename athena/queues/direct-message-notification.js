@@ -19,6 +19,7 @@ import sentencify from '../utils/sentencify';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { sendNewDirectMessageEmailQueue } from 'shared/bull/queues';
 import type { Job, DirectMessageNotificationJobData } from 'shared/bull/types';
+import { signUser, signMessage } from 'shared/imgix';
 
 export default async (job: Job<DirectMessageNotificationJobData>) => {
   const { message: incomingMessage, userId: currentUserId } = job.data;
@@ -91,6 +92,9 @@ export default async (job: Job<DirectMessageNotificationJobData>) => {
     ? markUsersNotificationsAsNew
     : storeUsersNotifications;
 
+  const signedMessage = signMessage(message);
+  const signedUser = signUser(user);
+
   const addToQueue = recipient => {
     return sendNewDirectMessageEmailQueue.add({
       recipient,
@@ -106,14 +110,14 @@ export default async (job: Job<DirectMessageNotificationJobData>) => {
         path: `messages/${thread.id}`,
         id: thread.id,
       },
-      user,
+      user: signedUser,
       message: {
-        ...message,
+        ...signedMessage,
         content: {
           body:
-            message.messageType === 'draftjs'
-              ? toPlainText(toState(JSON.parse(message.content.body)))
-              : message.content.body,
+            signedMessage.messageType === 'draftjs'
+              ? toPlainText(toState(JSON.parse(signedMessage.content.body)))
+              : signedMessage.content.body,
         },
       },
     });

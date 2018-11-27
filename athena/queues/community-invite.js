@@ -14,6 +14,7 @@ import type {
   CommunityInviteNotificationJobData,
   Job,
 } from 'shared/bull/types';
+import { signCommunity, signUser } from 'shared/imgix';
 
 const addToSendCommunityInviteEmailQueue = (
   recipient,
@@ -31,8 +32,8 @@ const addToSendCommunityInviteEmailQueue = (
     {
       to: recipient.email,
       recipient,
-      sender,
-      community,
+      sender: signUser(sender),
+      community: signCommunity(community),
       communitySettings,
       customMessage,
     },

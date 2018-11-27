@@ -181,12 +181,11 @@ export type SendNewDirectMessageEmailJobData = {
   recipient: {
     email: string,
     name: string,
-    username: string,
+    username: ?string,
     userId: string,
   },
   user: {
-    displayName: string,
-    username: string,
+    username: ?string,
     id: string,
     name: string,
   },

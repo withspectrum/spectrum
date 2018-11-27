@@ -18,20 +18,6 @@ export const request = (query: mixed, { context, variables }: Options = {}) => {
     undefined,
     {
       loaders: createLoaders(),
-      getImageSignatureExpiration: () => {
-        /*
-          Expire images sent to the client at midnight each day (UTC).
-          Expiration needs to be consistent across all images in order
-          to preserve client-side caching abilities and to prevent checksum
-          mismatches during SSR
-        */
-        const date = new Date();
-        date.setHours(24);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        date.setMilliseconds(0);
-        return date.getTime();
-      },
       ...context,
     },
     variables

@@ -5,7 +5,7 @@ import generateImageFromText from '../../utils/generate-thread-meta-image-from-t
 import { signImageUrl } from 'shared/imgix';
 
 export default async (thread: DBThread, _: any, ctx: GraphQLContext) => {
-  const { loaders, getImageSignatureExpiration } = ctx;
+  const { loaders } = ctx;
   const { watercooler, communityId, content } = thread;
 
   const community = await loaders.community.load(communityId);
@@ -20,7 +20,5 @@ export default async (thread: DBThread, _: any, ctx: GraphQLContext) => {
 
   if (!imageUrl) return null;
 
-  return signImageUrl(imageUrl, {
-    expires: getImageSignatureExpiration(),
-  });
+  return signImageUrl(imageUrl);
 };

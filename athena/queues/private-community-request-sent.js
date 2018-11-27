@@ -15,6 +15,7 @@ import { fetchPayload } from '../utils/payloads';
 import isEmail from 'validator/lib/isEmail';
 import { sendPrivateCommunityRequestEmailQueue } from 'shared/bull/queues';
 import type { Job, PrivateCommunityRequestJobData } from 'shared/bull/types';
+import { signCommunity, signUser } from 'shared/imgix';
 
 export default async (job: Job<PrivateCommunityRequestJobData>) => {
   const { userId, communityId } = job.data;
@@ -72,10 +73,11 @@ export default async (job: Job<PrivateCommunityRequestJobData>) => {
   const community = await getCommunityById(communityId);
   const usersEmailPromises = filteredRecipients.map(recipient =>
     sendPrivateCommunityRequestEmailQueue.add({
-      user: userPayload,
       // $FlowFixMe
-      recipient,
-      community,
+      user: signUser(userPayload),
+      // $FlowFixMe
+      recipient: signUser(recipient),
+      community: signCommunity(community),
     })
   );
 
