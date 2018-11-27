@@ -52,6 +52,7 @@ import {
   ColumnHeading,
   MidSegment,
   SettingsButton,
+  LoginOutlineButton,
 } from '../community/style';
 import ToggleChannelMembership from 'src/components/toggleChannelMembership';
 import { track, events, transformations } from 'src/helpers/analytics';
@@ -188,26 +189,37 @@ class ChannelView extends React.Component<Props, State> {
           <React.Fragment>
             <ToggleChannelMembership
               channel={channel}
-              render={state => (
-                <LoginButton
-                  isMember={isChannelMember}
-                  icon={isChannelMember ? 'checkmark' : null}
-                  loading={state.isLoading}
-                  dataCy="channel-join-button"
-                >
-                  {isChannelMember ? 'Joined' : `Join ${channel.name}`}
-                </LoginButton>
-              )}
+              render={state => {
+                if (isChannelMember) {
+                  return (
+                    <LoginOutlineButton
+                      loading={state.isLoading}
+                      dataCy={'channel-leave-button'}
+                    >
+                      Leave channel
+                    </LoginOutlineButton>
+                  );
+                } else {
+                  return (
+                    <LoginButton
+                      loading={state.isLoading}
+                      dataCy="channel-join-button"
+                    >
+                      Join {channel.name}
+                    </LoginButton>
+                  );
+                }
+              }}
             />
 
             <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
-              <LoginButton
+              <SettingsButton
                 icon={'settings'}
                 isMember
                 data-cy="channel-settings-button"
               >
                 Settings
-              </LoginButton>
+              </SettingsButton>
             </Link>
           </React.Fragment>
         );
@@ -217,16 +229,27 @@ class ChannelView extends React.Component<Props, State> {
       return (
         <ToggleChannelMembership
           channel={channel}
-          render={state => (
-            <LoginButton
-              isMember={isChannelMember}
-              icon={isChannelMember ? 'checkmark' : null}
-              loading={state.isLoading}
-              dataCy="channel-join-button"
-            >
-              {isChannelMember ? 'Joined' : `Join ${channel.name}`}
-            </LoginButton>
-          )}
+          render={state => {
+            if (isChannelMember) {
+              return (
+                <LoginOutlineButton
+                  loading={state.isLoading}
+                  dataCy={'channel-leave-button'}
+                >
+                  Leave channel
+                </LoginOutlineButton>
+              );
+            } else {
+              return (
+                <LoginButton
+                  loading={state.isLoading}
+                  dataCy="channel-join-button"
+                >
+                  Join {channel.name}
+                </LoginButton>
+              );
+            }
+          }}
         />
       );
     }
@@ -402,9 +425,11 @@ class ChannelView extends React.Component<Props, State> {
                       {channel.metaData.onlineMembers} online
                     </ExtLink>
                   )}
-              </MetadataContainer>
 
-              {actionButton}
+                <div style={{ height: '8px' }} />
+
+                {actionButton}
+              </MetadataContainer>
 
               {isLoggedIn &&
                 userHasPermissions &&

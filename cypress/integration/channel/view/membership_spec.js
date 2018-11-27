@@ -28,11 +28,11 @@ const { userId: memberInPrivateChannelId } = data.usersChannels.find(
 const QUIET_USER_ID = constants.QUIET_USER_ID;
 
 const leave = () => {
-  cy.get('[data-cy="channel-join-button"]')
+  cy.get('[data-cy="channel-leave-button"]')
     .should('be.visible')
-    .contains('Joined');
+    .contains('Leave channel');
 
-  cy.get('[data-cy="channel-join-button"]').click();
+  cy.get('[data-cy="channel-leave-button"]').click();
 
   cy.get('[data-cy="channel-join-button"]').contains(`Join `);
 };
@@ -44,7 +44,7 @@ const join = () => {
 
   cy.get('[data-cy="channel-join-button"]').click();
 
-  cy.get('[data-cy="channel-join-button"]').contains(`Joined`);
+  cy.get('[data-cy="channel-leave-button"]').contains(`Leave channel`);
 };
 
 describe('logged out channel membership', () => {
