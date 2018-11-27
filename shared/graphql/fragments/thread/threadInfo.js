@@ -45,6 +45,7 @@ export type ThreadInfoType = {
   },
   attachments: Array<?Attachment>,
   watercooler: boolean,
+  metaImage: string,
   reactions: {
     count: number,
     hasReacted: boolean,
@@ -82,6 +83,7 @@ export default gql`
       data
     }
     watercooler
+    metaImage
     reactions {
       count
       hasReacted

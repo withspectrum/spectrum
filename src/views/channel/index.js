@@ -47,7 +47,12 @@ import {
 } from './style';
 import { ExtLink, OnlineIndicator } from 'src/components/profile/style';
 import { CoverPhoto } from 'src/components/profile/coverPhoto';
-import { LoginButton, ColumnHeading, MidSegment } from '../community/style';
+import {
+  LoginButton,
+  ColumnHeading,
+  MidSegment,
+  SettingsButton,
+} from '../community/style';
 import ToggleChannelMembership from 'src/components/toggleChannelMembership';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
@@ -167,13 +172,13 @@ class ChannelView extends React.Component<Props, State> {
       if (isGlobalOwner) {
         return (
           <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
-            <LoginButton
+            <SettingsButton
               icon={'settings'}
               isMember
               data-cy="channel-settings-button"
             >
               Settings
-            </LoginButton>
+            </SettingsButton>
           </Link>
         );
       }

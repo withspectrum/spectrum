@@ -52,6 +52,8 @@ type State = {|
 |};
 
 class NewUserOnboarding extends Component<Props, State> {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
 
@@ -76,14 +78,14 @@ class NewUserOnboarding extends Component<Props, State> {
       },
     };
   }
-  //
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   // don't reload the component as the user saves info
-  //   if (!this.props.currentUser.username && nextProps.currentUser.username)
-  //     return false;
-  //
-  //   return true;
-  // }
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
   saveUsername = () => {
     const { community } = this.props;
@@ -96,16 +98,14 @@ class NewUserOnboarding extends Component<Props, State> {
     // thing they will be asked to do is set a username. After they save their
     // username, they should proceed to the 'joinFirstCommunity' step; otherwise
     // we can just close the onboarding
-    if (!community) return this.props.close();
-    // if the user signed in via a comunity, channel, or thread view, but they
-    // are already members of that community, we can escape the onboarding
-    if (community.communityPermissions.isMember) return this.props.close();
-    // if the user signed up via a community, channel, or thread view and
-    // has not yet joined that community, move them to that step in the onboarding
+    if (community) {
+      return this.props.close();
+    }
     return this.toStep('joinFirstCommunity');
   };
 
   toStep = (step: ActiveStep) => {
+    if (!this._isMounted) return;
     return this.setState({
       activeStep: step,
     });

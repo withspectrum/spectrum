@@ -99,22 +99,28 @@ const getChannelsByUser = (userId: string): Promise<Array<DBChannel>> => {
   );
 };
 
-// prettier-ignore
-const getChannelBySlug = (channelSlug: string, communitySlug: string): Promise<DBChannel> => {
+const getChannelBySlug = async (
+  channelSlug: string,
+  communitySlug: string
+): Promise<?DBChannel> => {
+  const [communityId] = await db
+    .table('communities')
+    .getAll(communitySlug, { index: 'slug' })('id')
+    .run();
+
+  if (!communityId) return null;
+
   return db
     .table('channels')
+    .getAll(communityId, { index: 'communityId' })
     .filter(channel =>
       channel('slug')
         .eq(channelSlug)
         .and(db.not(channel.hasFields('deletedAt')))
     )
-    .eqJoin('communityId', db.table('communities'))
-    .filter({ right: { slug: communitySlug } })
     .run()
-    .then(result => {
-      if (result && result[0]) {
-        return result[0].left;
-      }
+    .then(res => {
+      if (Array.isArray(res) && res.length > 0) return res[0];
       return null;
     });
 };

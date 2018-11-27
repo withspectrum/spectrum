@@ -28,7 +28,7 @@ export const Wrapper = styled(FlexCol)`
 
   &:hover > div > div h3,
   &:hover .action {
-    color: ${props => (props.clickable ? props.theme.brand.alt : '')};
+    color: ${props => (props.isClickable ? props.theme.brand.alt : '')};
   }
 `;
 

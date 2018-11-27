@@ -1,6 +1,6 @@
 // @flow
 import type { DBReaction, DBThreadReaction } from 'shared/types';
-import { db } from './db';
+import { db } from 'shared/db';
 
 export const getReactionById = (reactionId: string): Promise<DBReaction> => {
   return db

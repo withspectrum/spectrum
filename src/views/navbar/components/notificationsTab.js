@@ -17,6 +17,11 @@ import { Tab, NotificationTab, Label } from '../style';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
+import type {
+  WebsocketConnectionType,
+  PageVisibilityType,
+} from 'src/reducers/connectionStatus';
+import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 
 type Props = {
   active: boolean,
@@ -36,6 +41,9 @@ type Props = {
   client: Function,
   dispatch: Dispatch<Object>,
   count: number,
+  networkOnline: boolean,
+  websocketConnection: WebsocketConnectionType,
+  pageVisibility: PageVisibilityType,
 };
 
 type State = {
@@ -51,15 +59,19 @@ class NotificationsTab extends React.Component<Props, State> {
     shouldRenderDropdown: false,
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const prevProps = this.props;
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
+    const curr = this.props;
     const prevState = this.state;
 
-    const prevLocation = prevProps.location;
+    if (curr.networkOnline !== nextProps.networkOnline) return true;
+    if (curr.websocketConnection !== nextProps.websocketConnection) return true;
+    if (curr.pageVisibility !== nextProps.pageVisibility) return true;
+
+    const prevLocation = curr.location;
     const nextLocation = nextProps.location;
     const { thread: prevThreadParam } = queryString.parse(prevLocation.search);
     const { thread: nextThreadParam } = queryString.parse(nextLocation.search);
-    const prevActiveInboxThread = prevProps.activeInboxThread;
+    const prevActiveInboxThread = curr.activeInboxThread;
     const nextActiveInboxThread = nextProps.activeInboxThread;
     const prevParts = prevLocation.pathname.split('/');
     const nextParts = nextLocation.pathname.split('/');
@@ -74,29 +86,28 @@ class NotificationsTab extends React.Component<Props, State> {
     if (prevParts[2] !== nextParts[2]) return true;
 
     // if a refetch completes
-    if (prevProps.isRefetching !== nextProps.isRefetching) return true;
+    if (curr.isRefetching !== nextProps.isRefetching) return true;
 
     // once the initial query finishes loading
-    if (!prevProps.data.notifications && nextProps.data.notifications)
-      return true;
+    if (!curr.data.notifications && nextProps.data.notifications) return true;
 
     // after refetch
-    if (prevProps.isRefetching !== nextProps.isRefetching) return true;
+    if (curr.isRefetching !== nextProps.isRefetching) return true;
 
     // if a subscription updates the number of records returned
     if (
-      prevProps.data &&
-      prevProps.data.notifications &&
-      prevProps.data.notifications.edges &&
+      curr.data &&
+      curr.data.notifications &&
+      curr.data.notifications.edges &&
       nextProps.data.notifications &&
       nextProps.data.notifications.edges &&
-      prevProps.data.notifications.edges.length !==
+      curr.data.notifications.edges.length !==
         nextProps.data.notifications.edges.length
     )
       return true;
 
     // if the user clicks on the notifications tab
-    if (prevProps.active !== nextProps.active) return true;
+    if (curr.active !== nextProps.active) return true;
 
     // when the notifications get set for the first time
     if (!prevState.notifications && nextState.notifications) return true;
@@ -106,7 +117,7 @@ class NotificationsTab extends React.Component<Props, State> {
       return true;
 
     // any time the count changes
-    if (prevProps.count !== nextProps.count) return true;
+    if (curr.count !== nextProps.count) return true;
 
     // any time the count changes
     if (
@@ -119,13 +130,18 @@ class NotificationsTab extends React.Component<Props, State> {
     return false;
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prev: Props) {
     const {
       data: prevData,
       location: prevLocation,
       activeInboxThread: prevActiveInboxThread,
-    } = prevProps;
+    } = prev;
     const curr = this.props;
+
+    const didReconnect = useConnectionRestored({ curr, prev });
+    if (didReconnect && curr.data.refetch) {
+      curr.data.refetch();
+    }
 
     const { notifications } = this.state;
 
@@ -178,7 +194,7 @@ class NotificationsTab extends React.Component<Props, State> {
       return this.processAndMarkSeenNotifications();
 
     // when the component finishes a refetch
-    if (prevProps.isRefetching && !curr.isRefetching) {
+    if (prev.isRefetching && !curr.isRefetching) {
       return this.processAndMarkSeenNotifications();
     }
   }
@@ -434,6 +450,9 @@ class NotificationsTab extends React.Component<Props, State> {
 const map = state => ({
   activeInboxThread: state.dashboardFeed.activeThread,
   count: state.notifications.notifications,
+  networkOnline: state.connectionStatus.networkOnline,
+  websocketConnection: state.connectionStatus.websocketConnection,
+  pageVisibility: state.connectionStatus.pageVisibility,
 });
 export default compose(
   // $FlowIssue

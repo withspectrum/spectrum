@@ -12,7 +12,7 @@ type Props = {
   mobilesize?: number,
   style?: Object,
   showHoverProfile?: boolean,
-  clickable?: boolean,
+  isClickable?: boolean,
 };
 
 class Avatar extends React.Component<Props> {
@@ -20,7 +20,7 @@ class Avatar extends React.Component<Props> {
     const {
       community,
       size = 32,
-      clickable = true,
+      isClickable = true,
       mobilesize,
       style,
     } = this.props;
@@ -38,7 +38,7 @@ class Avatar extends React.Component<Props> {
         type={'community'}
       >
         <ConditionalWrap
-          condition={clickable}
+          condition={isClickable}
           wrap={children => (
             <AvatarLink to={`/${community.slug}`}>{children}</AvatarLink>
           )}

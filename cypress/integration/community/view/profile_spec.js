@@ -163,12 +163,18 @@ describe('public community signed in without permission', () => {
       .contains(`Join ${publicCommunity.name}`)
       .click();
 
-    cy.get('[data-cy="join-community-button"]')
-      .contains(`Member`)
+    cy.get('[data-cy="leave-community-button"]')
+      .contains(`Leave community`)
+      .click();
+
+    // triggered the leave modal
+    cy.get('[data-cy="delete-button"]')
+      .contains(`Leave Community`)
+      .should('be.visible')
       .click();
 
     cy.get('[data-cy="join-community-button"]')
-      .contains(`Join ${publicCommunity.name}`)
+      .scrollIntoView()
       .should('be.visible');
   });
 });

@@ -1,6 +1,6 @@
 // @flow
 import type { DBThread } from 'shared/types';
-import { db } from './db';
+import { db } from 'shared/db';
 
 export const getThreadById = (threadId: string): Promise<DBThread> => {
   return db

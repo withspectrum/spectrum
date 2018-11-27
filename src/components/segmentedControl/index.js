@@ -12,6 +12,8 @@ export const SegmentedControl = styled(FlexRow)`
   min-height: 48px;
 
   @media (max-width: 768px) {
+    overflow-y: hidden;
+    overflow-x: scroll;
     background-color: ${theme.bg.default};
     align-self: stretch;
     margin: 0;

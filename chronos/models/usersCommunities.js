@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 const debug = require('debug')('hermes:queue:send-weekly-digest-email');
 
 export const getUsersCommunityIds = (
