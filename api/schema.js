@@ -32,7 +32,7 @@ const Invoice = require('./types/Invoice');
 const CommunityMember = require('./types/CommunityMember');
 const ThreadParticipant = require('./types/ThreadParticipant');
 
-const ThreadQueries = require('./queries/thread');
+const threadQueries = require('./queries/thread');
 const channelQueries = require('./queries/channel');
 const communityQueries = require('./queries/community');
 const messageQueries = require('./queries/message');
@@ -90,7 +90,7 @@ const resolvers = merge(
   {},
   //queries
   scalars.resolvers,
-  ThreadQueries,
+  threadQueries,
   channelQueries,
   communityQueries,
   messageQueries,
