@@ -70,6 +70,7 @@ const createMemberInChannel = (channelId: string, userId: string, token: boolean
         return db
           .table('usersChannels')
           .getAll([userId, channelId], { index: 'userIdAndChannelId' })
+          .filter({ isBlocked: false })
           .update(
             {
               createdAt: new Date(),

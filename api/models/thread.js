@@ -165,9 +165,9 @@ export const getViewableThreadsByUser = async (
   const getCurrentUsersChannelIds = db
     .table('usersChannels')
     .getAll(
-      [evalUser, 'member'],
-      [evalUser, 'moderator'],
-      [evalUser, 'owner'],
+      [currentUser, 'member'],
+      [currentUser, 'moderator'],
+      [currentUser, 'owner'],
       {
         index: 'userIdAndRole',
       }
@@ -280,9 +280,9 @@ export const getViewableParticipantThreadsByUser = async (
   const getCurrentUsersChannelIds = db
     .table('usersChannels')
     .getAll(
-      [evalUser, 'member'],
-      [evalUser, 'moderator'],
-      [evalUser, 'owner'],
+      [currentUser, 'member'],
+      [currentUser, 'moderator'],
+      [currentUser, 'owner'],
       {
         index: 'userIdAndRole',
       }
