@@ -1,10 +1,9 @@
 // @flow
-const debug = require('debug')('chronos:queue:digest-process-reputation');
 import {
   getReputationChangeInTimeframe,
   getTotalReputation,
 } from '../../models/reputationEvent';
-import type { User, Timeframe } from './types';
+import type { Timeframe } from 'chronos/types';
 
 export const getReputationString = ({
   totalReputation,
@@ -37,12 +36,15 @@ export const getReputationString = ({
   return reputationString;
 };
 
-export default async (user: User, timeframe: Timeframe) => {
-  const reputationGained = await getReputationChangeInTimeframe(
-    user.userId,
-    timeframe
-  );
-  const totalReputation = await getTotalReputation(user.userId);
+export default async (userId: string, timeframe: Timeframe) => {
+  const [reputationGained, totalReputation] = await Promise.all([
+    getReputationChangeInTimeframe(userId, timeframe),
+    getTotalReputation(userId),
+  ]);
 
-  return getReputationString({ totalReputation, reputationGained, timeframe });
+  return getReputationString({
+    totalReputation: totalReputation.toLocaleString().toString(),
+    reputationGained: reputationGained.toLocaleString().toString(),
+    timeframe,
+  });
 };
