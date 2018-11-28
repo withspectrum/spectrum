@@ -10,10 +10,8 @@ export const getTotalMessageCount = (threadId: string): Promise<number> => {
     .run();
 };
 
-export const getNewMessageCount = (
-  threadId: string,
-  timeframe: string
-): Promise<number> => {
+// prettier-ignore
+export const getNewMessageCount = (threadId: string, timeframe: string): Promise<number> => {
   let range;
   switch (timeframe) {
     case 'daily': {
