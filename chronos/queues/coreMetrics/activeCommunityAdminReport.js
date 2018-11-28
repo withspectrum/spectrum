@@ -5,19 +5,18 @@ import { intersection, difference } from 'lodash';
 import { getLastTwoCoreMetrics } from '../../models/coreMetrics';
 import { addQueue } from '../../jobs/utils';
 import { SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL } from '../constants';
+import { _adminSendActiveCommunityReport } from 'shared/bull/queues';
 
 export default async () => {
   debug('\nprocessing active community admin report');
-  const lastTwoCoreMetrics = await getLastTwoCoreMetrics();
-  const thisCoreMetrics = lastTwoCoreMetrics[0];
-  const prevCoreMetrics = lastTwoCoreMetrics[1];
-  // don't do this for the first job
+  const [thisCoreMetrics, prevCoreMetrics] = await getLastTwoCoreMetrics();
+
   if (!prevCoreMetrics || !prevCoreMetrics.dacSlugs) return;
 
-  // we want to figure out what daily, weekly, and monthly active communities
-  // were added or were lost during the last 24 hours. To do this, we will compare
-  // two arrays for each time range
   const {
+    dac: thisDacCount,
+    wac: thisWacCount,
+    mac: thisMacCount,
     dacSlugs: thisDacSlugs,
     wacSlugs: thisWacSlugs,
     macSlugs: thisMacSlugs,
@@ -29,46 +28,15 @@ export default async () => {
     macSlugs: prevMacSlugs,
   } = prevCoreMetrics;
 
-  // values that both arrays contain
-  const overlappingDac = intersection(thisDacSlugs, prevDacSlugs);
-  const overlappingWac = intersection(thisWacSlugs, prevWacSlugs);
-  const overlappingMac = intersection(thisMacSlugs, prevMacSlugs);
-
-  // values that exist in the 1st record but not in the 2nd
-  const newDac = difference(thisDacSlugs, prevDacSlugs);
-  const newWac = difference(thisWacSlugs, prevWacSlugs);
-  const newMac = difference(thisMacSlugs, prevMacSlugs);
-
-  // values that exist in the 2nd record but not in the 1st record
-  const lostDac = difference(prevDacSlugs, thisDacSlugs);
-  const lostWac = difference(prevWacSlugs, thisWacSlugs);
-  const lostMac = difference(prevMacSlugs, thisMacSlugs);
-
-  try {
-    addQueue(
-      SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
-      {
-        allDac: thisDacSlugs,
-        allWac: thisWacSlugs,
-        allMac: thisMacSlugs,
-        overlappingDac,
-        overlappingWac,
-        overlappingMac,
-        newDac,
-        newWac,
-        newMac,
-        lostDac,
-        lostWac,
-        lostMac,
-      },
-      {
-        removeOnComplete: true,
-        removeOnFail: true,
-      }
-    );
-  } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
-    Raven.captureException(err);
-  }
+  _adminSendActiveCommunityReport.add({
+    dacCount: thisDacCount,
+    wacCount: thisWacCount,
+    macCount: thisMacCount,
+    newDac: difference(thisDacSlugs, prevDacSlugs),
+    newWac: difference(thisWacSlugs, prevWacSlugs),
+    newMac: difference(thisMacSlugs, prevMacSlugs),
+    lostDac: difference(prevDacSlugs, thisDacSlugs),
+    lostWac: difference(prevWacSlugs, thisWacSlugs),
+    lostMac: difference(prevMacSlugs, thisMacSlugs),
+  });
 };

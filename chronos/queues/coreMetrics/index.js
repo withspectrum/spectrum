@@ -9,68 +9,43 @@ import {
   getCount,
 } from '../../models/coreMetrics';
 
-/*
-  1. Daily active users
-  2. Weekly active users
-  3. Monthly active users
-  4. Daily active communities
-  5. Weekly active communities
-  6. Monthly active communities
-  7. Communities per user
-  8. Messages per user
-  9. Threads per user
-  10. Total users
-  11. Total communities
-  12. Total threads
-  13. Total DM threads
-  14. Total thread messages
-  15. Total DM messages
-*/
-
 export default async () => {
   debug('\nprocessing daily core metrics');
 
   // 1;
-  const dau = await getAu('daily');
+  const [
+    dau,
+    wau,
+    mau,
+    { count: dac, communities: dacData },
+    { count: wac, communities: wacData },
+    { count: mac, communities: macData },
+    cpu,
+    mpu,
+    tpu,
+    users,
+    communities,
+    threads,
+    dmThreads,
+  ] = await Promise.all([
+    getAu('daily'),
+    getAu('weekly'),
+    getAu('month'),
+    getAc('daily'),
+    getAc('weekly'),
+    getAc('monthly'),
+    getPu('usersCommunities'),
+    getPu('messages'),
+    getPu('threads'),
+    getCount('users'),
+    getCount('communities'),
+    getCount('threads'),
+    getCount('directMessageThreads'),
+  ]);
 
-  // 2
-  const wau = await getAu('weekly');
-
-  // 3
-  const mau = await getAu('monthly');
-
-  // 4
-  const { count: dac, communities: dacData } = await getAc('daily');
   const dacSlugs = dacData.map(c => c.slug);
-
-  // 5
-  const { count: wac, communities: wacData } = await getAc('weekly');
   const wacSlugs = wacData.map(c => c.slug);
-
-  // 6
-  const { count: mac, communities: macData } = await getAc('monthly');
   const macSlugs = macData.map(c => c.slug);
-
-  // 7
-  const cpu = await getPu('usersCommunities');
-
-  // 8
-  const mpu = await getPu('messages');
-
-  // 9
-  const tpu = await getPu('threads');
-
-  // 10
-  const users = await getCount('users');
-
-  // 11
-  const communities = await getCount('communities');
-
-  // 12
-  const threads = await getCount('threads');
-
-  // 13
-  const dmThreads = await getCount('directMessageThreads');
 
   const coreMetrics = {
     dau,

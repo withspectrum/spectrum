@@ -60,6 +60,8 @@ import {
   CALCULATE_THREAD_SCORE,
 } from 'mercury/constants';
 
+import { SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL } from 'chronos/queues/constants';
+
 // Normalize our (inconsistent) queue names to a set of JS compatible names
 exports.QUEUE_NAMES = {
   // athena - notifications
@@ -118,6 +120,7 @@ exports.QUEUE_NAMES = {
   _adminSendToxicContentEmailQueue: SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
   _adminProcessUserSpammingThreadsQueue: SEND_ADMIN_USER_SPAMMING_THREADS_NOTIFICATION_EMAIL,
   _adminProcessUserReportedQueue: SEND_ADMIN_USER_REPORTED_EMAIL,
+  _adminSendActiveCommunityReport: SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
 };
 
 // We add one error listener per queue, so we have to set the max listeners

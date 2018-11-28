@@ -391,6 +391,18 @@ export type SearchIndexJobData = {
   event: 'created' | 'edited' | 'deleted' | 'moved',
 };
 
+export type AdminActiveCommunityReportJobData = {
+  dacCount: number,
+  wacCount: number,
+  macCount: number,
+  newDac: Array<string>,
+  newWac: Array<string>,
+  newMac: Array<string>,
+  lostDac: Array<string>,
+  lostWac: Array<string>,
+  lostMac: Array<string>,
+};
+
 export type Queues = {
   // athena
   sendThreadNotificationQueue: BullQueue<ThreadNotificationJobData>,
@@ -476,4 +488,5 @@ export type Queues = {
   _adminProcessUserSpammingThreadsQueue: BullQueue<
     AdminUserSpammingThreadsJobData
   >,
+  _adminSendActiveCommunityReport: BullQueue<AdminActiveCommunityReportJobData>,
 };

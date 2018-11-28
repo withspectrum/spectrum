@@ -2,8 +2,28 @@
 const { db } = require('shared/db');
 import { getCoreMetricsActiveThreads } from './thread';
 import { getCommunitiesWithMinimumMembers, getCommunities } from './community';
+import type { DBCommunity } from 'shared/types';
 
-export const saveCoreMetrics = (data: Object): Promise<Object> => {
+type CoreMetricsType = {
+  dau: number,
+  wau: number,
+  mau: number,
+  dac: number,
+  dacSlugs: Array<string>,
+  wac: number,
+  wacSlugs: Array<string>,
+  mac: number,
+  macSlugs: Array<string>,
+  cpu: number,
+  mpu: number,
+  tpu: number,
+  users: number,
+  communities: number,
+  threads: number,
+  dmThreads: number,
+};
+
+export const saveCoreMetrics = (data: CoreMetricsType): Promise<Object> => {
   return db
     .table('coreMetrics')
     .insert({
@@ -13,7 +33,7 @@ export const saveCoreMetrics = (data: Object): Promise<Object> => {
     .run();
 };
 
-export const parseRange = (timeframe: string) => {
+export const parseRange = (timeframe: string): number => {
   switch (timeframe) {
     case 'daily': {
       return 60 * 60 * 24;
@@ -34,7 +54,7 @@ export const parseRange = (timeframe: string) => {
 };
 
 // dau, wau, mau
-export const getAu = (range: string) => {
+export const getAu = (range: string): Promise<number> => {
   const RANGE = parseRange(range);
   return db
     .table('users')
@@ -49,7 +69,11 @@ export const getAu = (range: string) => {
 };
 
 // dac, wac, mac
-export const getAc = async (range: string) => {
+type ACData = {
+  count: number,
+  communities: Array<DBCommunity>,
+};
+export const getAc = async (range: string): Promise<ACData> => {
   // constants
   const RANGE = parseRange(range);
   const MIN_THREAD_COUNT = 1;
@@ -73,7 +97,7 @@ export const getAc = async (range: string) => {
   };
 };
 
-export const getCount = (table: string, filter: mixed) => {
+export const getCount = (table: string, filter: mixed): Promise<number> => {
   if (filter) {
     return db
       .table(table)
@@ -90,7 +114,7 @@ export const getCount = (table: string, filter: mixed) => {
 };
 
 // cpu, tpu, mpu
-export const getPu = async (table: string) => {
+export const getPu = async (table: string): Promise<number> => {
   const userCount = await getCount('users');
   const tableCount = await db
     .table(table)
@@ -101,7 +125,7 @@ export const getPu = async (table: string) => {
   return parseFloat((tableCount / userCount).toFixed(3));
 };
 
-export const getLastTwoCoreMetrics = () => {
+export const getLastTwoCoreMetrics = (): Promise<Array<CoreMetricsType>> => {
   return (
     db
       .table('coreMetrics')
