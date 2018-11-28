@@ -8,7 +8,7 @@ export const getUserIdsForDigest = (timeframe: Timeframe, after: number, limit: 
 
   return db
     .table('usersSettings')
-    .getAll(true, { index: `${range}EmailAndTimezone` })
+    .getAll(true, { index: `${range}Email` })
     .skip(after)
     .limit(limit)
     .map(row => row('userId'))
