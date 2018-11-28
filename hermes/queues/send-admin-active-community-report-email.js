@@ -28,6 +28,7 @@ export default (job: Job<AdminActiveCommunityReportJobData>) => {
       To: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
       Tag: SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
       TemplateModel: {
+        subject: 'Active Community Report',
         data: {
           dacCount,
           wacCount,
