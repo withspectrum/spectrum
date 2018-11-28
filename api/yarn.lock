@@ -6096,6 +6096,13 @@ linkify-it@^2.0.3:
   dependencies:
     uc.micro "^1.0.1"
 
+linkify-it@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/linkify-it/-/linkify-it-2.1.0.tgz#c4caf38a6cd7ac2212ef3c7d2bde30a91561f9db"
+  integrity sha512-4REs8/062kV2DSHxNfq5183zrqXMl7WP0WzABH9IeJI+NLm429FgE1PDecltYfnOoFDFlZGh2T8PfZn0r+GTRg==
+  dependencies:
+    uc.micro "^1.0.1"
+
 listenercount@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/listenercount/-/listenercount-1.0.1.tgz#84c8a72ab59c4725321480c975e6508342e70937"
