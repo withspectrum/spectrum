@@ -704,12 +704,24 @@
     component-type "^1.2.1"
     join-component "^1.1.0"
 
-"@sentry/cli@^1.36.1", "@sentry/cli@^1.36.4":
+"@sentry/cli@^1.36.1":
   version "1.36.4"
   resolved "https://registry.yarnpkg.com/@sentry/cli/-/cli-1.36.4.tgz#0704b28d4bafdec3ba71ebc23b6bf90e43d908a5"
   integrity sha512-flED76AXf72x7ebjx/KxqnAo7iFXWpEcC2SrPsatYGLgVcX6HDzBSDqy3GAisM1Ki2CEmpmvADHDTO71s598DQ==
   dependencies:
     https-proxy-agent "^2.2.1"
+    node-fetch "^2.1.2"
+    progress "2.0.0"
+    proxy-from-env "^1.0.0"
+
+"@sentry/cli@^1.37.0":
+  version "1.37.0"
+  resolved "https://registry.yarnpkg.com/@sentry/cli/-/cli-1.37.0.tgz#cd3f7fb1260da92650e8f719f2e60e9033f0df83"
+  integrity sha512-xNVclYfg/YkwAFA9Nv6dsvDYeZmH8vSA8I4sTZ8aRg8meAHxMyTCNv9ZwkfGlSYn2hQND9VlTiolx0od0LZ0Eg==
+  dependencies:
+    fs-copy-file-sync "^1.1.1"
+    https-proxy-agent "^2.2.1"
+    mkdirp "^0.5.1"
     node-fetch "^2.1.2"
     progress "2.0.0"
     proxy-from-env "^1.0.0"
@@ -3995,6 +4007,11 @@ from2@^2.1.1:
   dependencies:
     inherits "^2.0.1"
     readable-stream "^2.0.0"
+
+fs-copy-file-sync@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/fs-copy-file-sync/-/fs-copy-file-sync-1.1.1.tgz#11bf32c096c10d126e5f6b36d06eece776062918"
+  integrity sha512-2QY5eeqVv4m2PfyMiEuy9adxNP+ajf+8AR05cEi+OAzPcOj90hvFImeZhTmKLBgSd9EvG33jsD7ZRxsx9dThkQ==
 
 fs-extra@^1.0.0:
   version "1.0.0"
