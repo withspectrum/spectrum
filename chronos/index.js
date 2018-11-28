@@ -1,34 +1,29 @@
 // @flow
 const debug = require('debug')('chronos');
 import createWorker from 'shared/bull/create-worker';
-import processDataForDigest from './queues/digests';
-import processSingleDigestEmail from './queues/digests/processDigestEmail';
-import processDailyCoreMetrics from './queues/coreMetrics';
-import processActiveCommunityAdminReport from './queues/coreMetrics/activeCommunityAdminReport';
+import processDailyDigest from 'chronos/queues/digests/dailyDigest';
+import processWeeklyDigest from 'chronos/queues/digests/weeklyDigest';
+import processSingleDigestEmail from 'chronos/queues/digests/processIndividualDigest';
+import processDailyCoreMetrics from 'chronos/queues/coreMetrics';
+import processActiveCommunityAdminReport from 'chronos/queues/coreMetrics/activeCommunityAdminReport';
 import {
   PROCESS_WEEKLY_DIGEST_EMAIL,
   PROCESS_DAILY_DIGEST_EMAIL,
   PROCESS_INDIVIDUAL_DIGEST,
   PROCESS_DAILY_CORE_METRICS,
   PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
-} from './queues/constants';
-import {
-  weeklyDigest,
-  dailyDigest,
-  dailyCoreMetrics,
-  activeCommunityReport,
-} from './jobs';
+} from 'chronos/queues/constants';
+import { startJobs } from 'chronos/jobs';
 
 const PORT = parseInt(process.env.PORT, 10) || 3004;
 
-console.log('\n✉️ Chronos, the cron job worker, is starting...');
-debug('Logging with debug enabled!');
-console.log('');
+debug('\n⏱ Chronos, the cron job worker, is starting...');
+debug('Logging with debug enabled!\n');
 
 const server = createWorker(
   {
-    [PROCESS_WEEKLY_DIGEST_EMAIL]: processDataForDigest,
-    [PROCESS_DAILY_DIGEST_EMAIL]: processDataForDigest,
+    [PROCESS_WEEKLY_DIGEST_EMAIL]: processWeeklyDigest,
+    [PROCESS_DAILY_DIGEST_EMAIL]: processDailyDigest,
     [PROCESS_INDIVIDUAL_DIGEST]: processSingleDigestEmail,
     [PROCESS_DAILY_CORE_METRICS]: processDailyCoreMetrics,
     [PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT]: processActiveCommunityAdminReport,
@@ -43,24 +38,14 @@ const server = createWorker(
 );
 
 // start the jobs
-weeklyDigest();
-dailyDigest();
-dailyCoreMetrics();
-activeCommunityReport();
+startJobs();
 
 // $FlowIssue
-console.log(
-  `🗄 Crons open for business ${
-    process.env.NODE_ENV === 'production' ? 'in production' : 'locally'
-  }`
-);
+debug('🗄 Crons open for business');
 
 // NOTE(@mxstbr): 511 is the default value, have to add that so flow
 // doesn't complain. Ref: https://nodejs.org/api/net.html#net_server_listen_port_host_backlog_callback
 server.listen(PORT, 'localhost', 511, () => {
-  console.log(
-    `💉 Healthcheck server running at ${server.address().address}:${
-      server.address().port
-    }`
-  );
+  // prettier-ignore
+  debug(`💉 Healthcheck server running at ${server.address().address}:${server.address().port}`);
 });
