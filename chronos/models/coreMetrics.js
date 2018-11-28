@@ -91,6 +91,6 @@ export const getLastTwoCoreMetrics = (): Promise<Array<DBCoreMetric>> => {
       .orderBy(db.desc('date'))
       .run()
       // send back the most recent 2 records
-      .then(results => results.slice(8, 10))
+      .then(results => results.slice(0, 2))
   );
 };
