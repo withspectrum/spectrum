@@ -36,6 +36,7 @@ const processJob = async (timeframe: Timeframe) => {
     }
 
     if (arr.length < limit) {
+      done = true;
       return await createJobs(arr);
     }
 
