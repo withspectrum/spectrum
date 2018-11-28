@@ -6,6 +6,7 @@ import { MIN_TOTAL_MESSAGE_COUNT, MIN_NEW_MESSAGE_COUNT } from '../constants';
 import { getCommunityById } from '../../models/community';
 import { getChannelById } from '../../models/channel';
 import type { Timeframe, Thread, Threads, ThreadsWithData } from './types';
+import { signCommunity } from 'shared/imgix';
 
 export const getThreadsForDigest = async (timeframe: Timeframe) => {
   // returns array of thread ids
@@ -61,6 +62,8 @@ export const attachDataToThreads = async (threads: Threads) => {
       getChannelById(thread.channelId),
     ]);
 
+    const signedCommunity = signCommunity(community);
+
     // if the thread was created in the timeframe being evaluated, it's dumb to say: 10 messages (10 new!) - so here we're composing a string that will be passed to the email that determines what we should show for the message count. If all 10 messages are new, it will simply say '10 new!'
     const messageCountString =
       thread.newMessageCount === thread.totalMessageCount
@@ -76,11 +79,7 @@ export const attachDataToThreads = async (threads: Threads) => {
 
     // this is the final data we'll send to the email for each thread
     return {
-      community: {
-        name: community.name,
-        slug: community.slug,
-        profilePhoto: community.profilePhoto,
-      },
+      community: signedCommunity,
       channel: {
         name: channel.name,
         slug: channel.slug,
