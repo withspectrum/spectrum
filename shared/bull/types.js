@@ -15,6 +15,7 @@ import type {
   Recipient,
   NewMessageNotificationEmailThread,
 } from 'athena/queues/new-message-in-thread/buffer-email';
+import type { CleanDigestThread, Timeframe } from 'chronos/types';
 
 export type Job<JobData> = {|
   id: string,
@@ -23,11 +24,16 @@ export type Job<JobData> = {|
   finished: () => Promise<void>,
 |};
 
-type JobOptions = {|
+export type JobOptions = {|
   jobId?: number | string,
   delay?: number,
   removeOnComplete?: boolean,
   removeOnFail?: boolean,
+  attempts?: number,
+  repeat?: {
+    cron: string,
+    tz: 'America/Los_Angeles',
+  },
 |};
 
 interface BullQueue<JobData> {
@@ -391,7 +397,7 @@ export type SearchIndexJobData = {
   event: 'created' | 'edited' | 'deleted' | 'moved',
 };
 
-export type AdminActiveCommunityReportJobData = {
+export type AdminActiveCommunityReportEmailJobData = {
   dacCount: number,
   wacCount: number,
   macCount: number,
@@ -401,6 +407,23 @@ export type AdminActiveCommunityReportJobData = {
   lostDac: Array<string>,
   lostWac: Array<string>,
   lostMac: Array<string>,
+};
+
+export type ProcessIndividualDigestJobData = {
+  userId: string,
+  topCommunityIds: Array<string>,
+  timeframe: Timeframe,
+};
+
+export type SendDigestEmailJobData = {
+  email: ?string,
+  userId: string,
+  username: ?string,
+  user: DBUser,
+  threads: Array<CleanDigestThread>,
+  reputationString: string,
+  communities: ?Array<DBCommunity>,
+  timeframe: Timeframe,
 };
 
 export type Queues = {
@@ -463,6 +486,7 @@ export type Queues = {
   sendThreadCreatedNotificationEmailQueue: BullQueue<
     SendNewThreadNotificationEmailJobData
   >,
+  sendDigestEmailQueue: BullQueue<SendDigestEmailJobData>,
 
   // mercury
   processReputationEventQueue: BullQueue<ReputationEventJobData>,
@@ -488,5 +512,14 @@ export type Queues = {
   _adminProcessUserSpammingThreadsQueue: BullQueue<
     AdminUserSpammingThreadsJobData
   >,
-  _adminSendActiveCommunityReport: BullQueue<AdminActiveCommunityReportJobData>,
+  _adminSendActiveCommunityReportEmailQueue: BullQueue<
+    AdminActiveCommunityReportEmailJobData
+  >,
+
+  // chronos
+  weeklyDigestQueue: BullQueue<void>,
+  dailyDigestQueue: BullQueue<void>,
+  processIndividualDigestQueue: BullQueue<ProcessIndividualDigestJobData>,
+  dailyCoreMetricsQueue: BullQueue<void>,
+  activeCommunityReportQueue: BullQueue<void>,
 };
