@@ -1,12 +1,20 @@
 module.exports = {
-  extends: 'react-app',
+  extends: 'eslint:recommended',
+  parser: 'babel-eslint',
   env: {
-    node: false,
+    es6: true,
+    node: true,
   },
+  parserOptions: {
+    ecmaVersion: 6,
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
+  plugins: ['eslint-plugin-flowtype'],
   rules: {
-    'no-unused-vars': 0,
     'no-undef': 0,
-    radix: 0,
-    'import/first': 0,
+    'no-console': ['error', { allow: ['warn', 'error'] }],
   },
 };
