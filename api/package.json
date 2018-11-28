@@ -12,7 +12,7 @@
     "axios": "^0.16.2",
     "b2a": "^1.0.10",
     "babel-plugin-replace-dynamic-import-runtime": "^1.0.2",
-    "babel-plugin-styled-components": "^1.9.0",
+    "babel-plugin-styled-components": "^1.9.1",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.7.0",

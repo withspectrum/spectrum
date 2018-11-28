@@ -314,13 +314,6 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.0.0"
 
-"@babel/plugin-syntax-jsx@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-jsx/-/plugin-syntax-jsx-7.0.0.tgz#034d5e2b4e14ccaea2e4c137af7e4afb39375ffd"
-  integrity sha512-PdmL2AoPsCLWxhIr3kG2+F9v4WH06Q3z+NoGVpQgnUNGcagXHq5sB3OXxkSahKq9TLdNMN/AJzFYSOo8UKDMHg==
-  dependencies:
-    "@babel/helper-plugin-utils" "^7.0.0"
-
 "@babel/plugin-syntax-object-rest-spread@^7.0.0":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-object-rest-spread/-/plugin-syntax-object-rest-spread-7.0.0.tgz#37d8fbcaf216bd658ea1aebbeb8b75e88ebc549b"
@@ -1849,13 +1842,13 @@ babel-plugin-styled-components@^1.1.4:
     "@babel/helper-annotate-as-pure" "^7.0.0"
     lodash "^4.17.10"
 
-babel-plugin-styled-components@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.9.0.tgz#7b814bbe55900d9e0f6ec2c66741a1992c1c4a3d"
-  integrity sha512-DRurNjnndoIAiW0+vYgQyGmnCtKyCEGP9Y19Z9NrSwMEMGBWl2S7Q7F70RyGDae+KKeighhOPI1WttIb3r0xaA==
+babel-plugin-styled-components@^1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.9.1.tgz#53dde7a9cdff22a16db197129b1e68160c926e8b"
+  integrity sha512-mn7vI7ueBzr7ntLbDAhvILxjOnFPO/JzZsnU1wakgSh4YNrgLZ+oMnycRnC8xpZut3Kuwcz8dZJDsWJBl1OXVA==
   dependencies:
     "@babel/helper-annotate-as-pure" "^7.0.0"
-    "@babel/plugin-syntax-jsx" "^7.0.0"
+    babel-plugin-syntax-jsx "^6.18.0"
     lodash "^4.17.10"
 
 babel-plugin-syntax-async-functions@^6.8.0:
@@ -1878,7 +1871,7 @@ babel-plugin-syntax-flow@^6.18.0:
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-flow/-/babel-plugin-syntax-flow-6.18.0.tgz#4c3ab20a2af26aa20cd25995c398c4eb70310c8d"
   integrity sha1-TDqyCiryaqIM0lmVw5jE63AxDI0=
 
-babel-plugin-syntax-jsx@^6.8.0:
+babel-plugin-syntax-jsx@^6.18.0, babel-plugin-syntax-jsx@^6.8.0:
   version "6.18.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-jsx/-/babel-plugin-syntax-jsx-6.18.0.tgz#0af32a9a6e13ca7a3fd5069e62d7b0f58d0d8946"
   integrity sha1-CvMqmm4Tyno/1QaeYtew9Y0NiUY=
