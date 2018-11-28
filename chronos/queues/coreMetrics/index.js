@@ -8,7 +8,7 @@ import {
   getTableRecordCount,
 } from 'chronos/models/coreMetrics';
 
-export default async () => {
+const processJob = async () => {
   debug('Processing daily core metrics');
 
   const [
@@ -68,9 +68,12 @@ export default async () => {
     dmThreads,
   };
 
+  return saveCoreMetrics(coreMetrics);
+};
+
+export default async () => {
   try {
-    debug('Saving core metrics to db');
-    return saveCoreMetrics(coreMetrics);
+    await processJob();
   } catch (err) {
     debug('❌ Error in job:\n');
     debug(err);

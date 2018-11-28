@@ -1,9 +1,11 @@
 // @flow
+const debug = require('debug')('chronos:queues:active-community-admin-report');
+import Raven from 'shared/raven';
 import { difference } from 'lodash';
 import { getLastTwoCoreMetrics } from 'chronos/models/coreMetrics';
 import { _adminSendActiveCommunityReportEmailQueue } from 'shared/bull/queues';
 
-export default async () => {
+const processJob = async () => {
   const [thisCoreMetrics, prevCoreMetrics] = await getLastTwoCoreMetrics();
 
   if (!prevCoreMetrics || !prevCoreMetrics.dacSlugs) return;
@@ -34,4 +36,14 @@ export default async () => {
     lostWac: difference(thisWacSlugs, prevWacSlugs),
     lostMac: difference(thisMacSlugs, prevMacSlugs),
   });
+};
+
+export default async () => {
+  try {
+    await processJob();
+  } catch (err) {
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
+  }
 };

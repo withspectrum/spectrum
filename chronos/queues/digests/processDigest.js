@@ -1,11 +1,12 @@
 // @flow
 const debug = require('debug')('chronos:queue:process-digest');
+import Raven from 'shared/raven';
 import { getUserIdsForDigest } from 'chronos/models/usersSettings';
 import type { Timeframe } from 'chronos/types';
 import { processIndividualDigestQueue } from 'shared/bull/queues';
 import { getTopCommunitiesByMemberCount } from 'shared/db/queries/community';
 
-export default async (timeframe: Timeframe) => {
+const processJob = async (timeframe: Timeframe) => {
   debug(`Processing ${timeframe} digest`);
 
   const topCommunities = await getTopCommunitiesByMemberCount(20);
@@ -47,4 +48,14 @@ export default async (timeframe: Timeframe) => {
 
   const initialUserIds = await getUserIdsForDigest(timeframe, after, limit);
   return processUserIds(initialUserIds);
+};
+
+export default async (timeframe: Timeframe) => {
+  try {
+    await processJob(timeframe);
+  } catch (err) {
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
+  }
 };

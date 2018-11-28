@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('chronos:queue:process-individual-digest');
+import Raven from 'shared/raven';
 import getReputationString from './getReputationString';
 import { getUpsellCommunities } from './getUpsellCommunities';
 import { getThreadsInChannelsInTimeframe } from 'chronos/models/thread';
@@ -16,7 +17,7 @@ import {
   cleanThreadData,
 } from './processThreads';
 
-export default async (job: Job<ProcessIndividualDigestJobData>) => {
+const processJob = async (job: Job<ProcessIndividualDigestJobData>) => {
   const { userId, topCommunityIds, timeframe } = job.data;
 
   debug(`Processing individual digest for ${userId}`);
@@ -70,4 +71,14 @@ export default async (job: Job<ProcessIndividualDigestJobData>) => {
     timeframe,
     threads,
   });
+};
+
+export default async (job: Job<ProcessIndividualDigestJobData>) => {
+  try {
+    await processJob(job);
+  } catch (err) {
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
+  }
 };
