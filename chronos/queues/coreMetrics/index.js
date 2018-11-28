@@ -1,18 +1,16 @@
 // @flow
-const debug = require('debug')('chronos:queue:process-core-metrics');
+const debug = require('debug')('chronos:queue:save-core-metrics');
 import Raven from 'shared/raven';
 import {
   saveCoreMetrics,
-  getAu,
-  getAc,
-  getPu,
-  getCount,
-} from '../../models/coreMetrics';
+  getActiveUsersInTimeframe,
+  getActiveCommunitiesInTimeframe,
+  getTableRecordCount,
+} from 'chronos/models/coreMetrics';
 
 export default async () => {
-  debug('\nprocessing daily core metrics');
+  debug('Processing daily core metrics');
 
-  // 1;
   const [
     dau,
     wau,
@@ -20,28 +18,32 @@ export default async () => {
     { count: dac, communities: dacData },
     { count: wac, communities: wacData },
     { count: mac, communities: macData },
-    cpu,
-    mpu,
-    tpu,
+    usersCommunitiesCount,
+    messagesCount,
+    threadsCount,
     users,
     communities,
     threads,
     dmThreads,
   ] = await Promise.all([
-    getAu('daily'),
-    getAu('weekly'),
-    getAu('month'),
-    getAc('daily'),
-    getAc('weekly'),
-    getAc('monthly'),
-    getPu('usersCommunities'),
-    getPu('messages'),
-    getPu('threads'),
-    getCount('users'),
-    getCount('communities'),
-    getCount('threads'),
-    getCount('directMessageThreads'),
+    getActiveUsersInTimeframe('daily'),
+    getActiveUsersInTimeframe('weekly'),
+    getActiveUsersInTimeframe('monthly'),
+    getActiveCommunitiesInTimeframe('daily'),
+    getActiveCommunitiesInTimeframe('weekly'),
+    getActiveCommunitiesInTimeframe('monthly'),
+    getTableRecordCount('usersCommunities'),
+    getTableRecordCount('messages'),
+    getTableRecordCount('threads'),
+    getTableRecordCount('users'),
+    getTableRecordCount('communities'),
+    getTableRecordCount('threads'),
+    getTableRecordCount('directMessageThreads'),
   ]);
+
+  const cpu = parseFloat((usersCommunitiesCount / users).toFixed(3));
+  const mpu = parseFloat((messagesCount / users).toFixed(3));
+  const tpu = parseFloat((threadsCount / users).toFixed(3));
 
   const dacSlugs = dacData.map(c => c.slug);
   const wacSlugs = wacData.map(c => c.slug);
@@ -67,6 +69,7 @@ export default async () => {
   };
 
   try {
+    debug('Saving core metrics to db');
     return saveCoreMetrics(coreMetrics);
   } catch (err) {
     debug('❌ Error in job:\n');
