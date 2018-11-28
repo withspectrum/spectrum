@@ -6,16 +6,14 @@ import {
   ADMIN_ACTIVE_COMMUNITY_REPORT_TEMPLATE,
   SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
 } from './constants';
+import type { AdminActiveCommunityReportJobData, Job } from 'shared/bull/types';
 
-export default job => {
+export default (job: Job<AdminActiveCommunityReportJobData>) => {
   debug(`\nnew job: ${job.id}`);
   const {
-    allDac,
-    allWac,
-    allMac,
-    overlappingDac,
-    overlappingWac,
-    overlappingMac,
+    dacCount,
+    wacCount,
+    macCount,
     newDac,
     newWac,
     newMac,
@@ -31,20 +29,14 @@ export default job => {
       Tag: SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
       TemplateModel: {
         data: {
-          allDac,
-          allDacCount: allDac.length,
-          overlappingDac: overlappingDac.join(', '),
+          dacCount,
+          wacCount,
+          macCount,
           newDac: newDac.join(', '),
-          lostDac: lostDac.join(', '),
-          allWac: allWac.join(', '),
-          allWacCount: allWac.length,
-          overlappingWac: overlappingWac.join(', '),
           newWac: newWac.join(', '),
-          lostWac: lostWac.join(', '),
-          allMac: allMac.join(', '),
-          allMacCount: allMac.length,
-          overlappingMac: overlappingMac.join(', '),
           newMac: newMac.join(', '),
+          lostDac: lostDac.join(', '),
+          lostWac: lostWac.join(', '),
           lostMac: lostMac.join(', '),
         },
       },
