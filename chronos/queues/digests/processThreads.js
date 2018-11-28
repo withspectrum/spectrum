@@ -1,110 +1,124 @@
 // @flow
-const debug = require('debug')('chronos:queue:digest-process-threads');
 import { getTotalMessageCount, getNewMessageCount } from '../../models/message';
-import { getActiveThreadsInTimeframe } from '../../models/thread';
-import { MIN_TOTAL_MESSAGE_COUNT, MIN_NEW_MESSAGE_COUNT } from '../constants';
-import { getCommunityById } from '../../models/community';
-import { getChannelById } from '../../models/channel';
-import type { Timeframe, Thread, Threads, ThreadsWithData } from './types';
+import {
+  NEW_MESSAGE_COUNT_WEIGHT,
+  TOTAL_MESSAGE_COUNT_WEIGHT,
+} from '../constants';
+import { getCommunityById } from 'shared/db/queries/community';
+import { getChannelById } from 'shared/db/queries/channel';
+import type {
+  Timeframe,
+  ThreadWithDigestData,
+  CleanDigestThread,
+} from 'chronos/types';
 import { signCommunity } from 'shared/imgix';
 
-export const getThreadsForDigest = async (timeframe: Timeframe) => {
-  // returns array of thread ids
-  const threadIds = await getActiveThreadsInTimeframe(timeframe);
+import type { DBThread, DBCommunity, DBChannel } from 'shared/types';
 
-  // if no threadIds, escape
-  if (!threadIds || threadIds.length === 0) {
-    return null;
-  }
-
-  // for each thread that was active in the last week, return a new array containing a record for each thread with the thread data and the message count
-  const messageCountPromises = threadIds.map(
-    async ({
-      communityId,
-      channelId,
-      id,
-      content,
-      messageCount,
-      ...thread
-    }) => ({
-      communityId,
-      channelId,
-      id,
-      title: content.title,
-      newMessageCount: await getNewMessageCount(id, timeframe),
-      totalMessageCount: messageCount || (await getTotalMessageCount(id)),
-    })
-  );
-
-  const messageCounts = await Promise.all(messageCountPromises);
-
-  // remove any threads where the total message count is less than 10
-  const filteredTopThreads = messageCounts
-    .filter(thread => thread.totalMessageCount >= MIN_TOTAL_MESSAGE_COUNT)
-    .filter(thread => thread.newMessageCount >= MIN_NEW_MESSAGE_COUNT);
-
-  if (!filteredTopThreads || filteredTopThreads.length === 0) {
-    return null;
-  }
-
-  // returns an array of threads that are active in the last week and have the minimum required message count to be considered valuable
-  return filteredTopThreads;
+type DBThreadWithMetadata = {
+  ...$Exact<DBThread>,
+  community: DBCommunity,
+  channel: DBChannel,
+  messageCountString: string,
+  newMessageCount: number,
+  totalMessageCount: number,
 };
 
-export const attachDataToThreads = async (threads: Threads) => {
-  // create an empty object for the final output
-  let obj = {};
+type DBThreadWithMessageString = {
+  ...$Exact<DBThreadWithMetadata>,
+  messageCountString: string,
+};
 
-  // for each thread, get the community data that we'll need when rendering an email
-  const topThreadsWithDataPromises = threads.map(async thread => {
-    const [community, channel] = await Promise.all([
-      getCommunityById(thread.communityId),
-      getChannelById(thread.channelId),
-    ]);
+export const attachMetadataToThreads = async (
+  threads: Array<DBThread>,
+  timeframe: Timeframe
+): Promise<Array<DBThreadWithMetadata>> => {
+  const promises = threads.map(
+    async (thread): Promise<DBThreadWithMessageString> => {
+      const [community, channel, newMessageCount] = await Promise.all([
+        getCommunityById(thread.communityId),
+        getChannelById(thread.channelId),
+        getNewMessageCount(thread.id, timeframe),
+      ]);
 
-    const signedCommunity = signCommunity(community);
+      const signedCommunity = signCommunity(community);
+      const totalMessageCount =
+        thread.messageCount || (await getTotalMessageCount(thread.id));
 
-    // if the thread was created in the timeframe being evaluated, it's dumb to say: 10 messages (10 new!) - so here we're composing a string that will be passed to the email that determines what we should show for the message count. If all 10 messages are new, it will simply say '10 new!'
+      // $FlowFixMe
+      return {
+        ...thread,
+        community: signedCommunity,
+        channel,
+        newMessageCount,
+        totalMessageCount,
+      };
+    }
+  );
+
+  return await Promise.all([...promises]);
+};
+
+export const attachMessageCountStringToThreads = async (
+  threads: Array<DBThreadWithMetadata>
+): Promise<Array<DBThreadWithMessageString>> => {
+  const promises = threads.map(thread => {
     const messageCountString =
       thread.newMessageCount === thread.totalMessageCount
-        ? `<span class="newMessageCount">${
-            thread.newMessageCount
-          } new messages</span>`
-        : `
-          <span class="totalMessageCount">
-            ${thread.totalMessageCount} messages
-          </span>
-          <span class="newMessageCount">(${thread.newMessageCount} new)</span>
-      `;
+        ? // prettier-ignore
+          `<span class="newMessageCount">${thread.newMessageCount} new messages</span>`
+        : // prettier-ignore
+          `<span class="totalMessageCount">${thread.totalMessageCount} messages </span><span class="newMessageCount">(${thread.newMessageCount} new)</span>`;
 
-    // this is the final data we'll send to the email for each thread
     return {
-      community: signedCommunity,
-      channel: {
-        name: channel.name,
-        slug: channel.slug,
-      },
-      channelId: thread.channelId,
-      title: thread.title,
-      threadId: thread.id,
+      ...thread,
       messageCountString,
-      newMessageCount: thread.newMessageCount,
-      totalMessageCount: thread.totalMessageCount,
     };
   });
 
-  const threadsWithCommunityData = await Promise.all(
-    topThreadsWithDataPromises
-  );
+  return Promise.all([...promises]);
+};
 
-  // for each of the active threads this week, determine if that that thread has been categorized yet into the new object. If so, push that thread into the array, otherwise create a new key/value pair in the object for the channel + thread
-  threadsWithCommunityData.map(
-    thread =>
-      obj[thread.channelId]
-        ? (obj[thread.channelId] = [...obj[thread.channelId], { ...thread }])
-        : (obj[thread.channelId] = [{ ...thread }])
-  );
+export const attachScoreToThreads = async (
+  threads: Array<DBThreadWithMessageString>
+): Promise<Array<ThreadWithDigestData>> => {
+  const promises = threads
+    .map(thread => {
+      const score =
+        thread.newMessageCount * NEW_MESSAGE_COUNT_WEIGHT +
+        thread.totalMessageCount * TOTAL_MESSAGE_COUNT_WEIGHT;
 
-  // return the final object containing keys for channelIds, and arrays of threads for values
-  return obj;
+      return {
+        ...thread,
+        score,
+      };
+    })
+    .sort((a, b) => b.score - a.score);
+
+  return Promise.all([...promises]);
+};
+
+export const cleanThreadData = async (
+  threads: Array<ThreadWithDigestData>
+): Promise<Array<CleanDigestThread>> => {
+  const promises = threads.map(thread => {
+    return {
+      id: thread.id,
+      content: {
+        title: thread.content.title,
+      },
+      community: {
+        slug: thread.community.slug,
+        name: thread.community.name,
+        profilePhoto: thread.community.profilePhoto,
+      },
+      channel: {
+        slug: thread.channel.slug,
+        name: thread.channel.name,
+      },
+      messageCountString: thread.messageCountString,
+    };
+  });
+
+  return Promise.all([...promises]);
 };
