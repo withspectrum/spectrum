@@ -4,8 +4,8 @@ import {
   NEW_MESSAGE_COUNT_WEIGHT,
   TOTAL_MESSAGE_COUNT_WEIGHT,
 } from '../constants';
-import { getCommunityById } from 'shared/db/queries/community';
-import { getChannelById } from 'shared/db/queries/channel';
+import { getCommunitiesById } from 'shared/db/queries/community';
+import { getChannelsById } from 'shared/db/queries/channel';
 import type {
   Timeframe,
   ThreadWithDigestData,
@@ -34,22 +34,30 @@ export const attachMetadataToThreads = async (
   threads: Array<DBThread>,
   timeframe: Timeframe
 ): Promise<Array<DBThreadWithMetadata>> => {
+  const [communities, channels] = await Promise.all([
+    getCommunitiesById(threads.map(({ communityId }) => communityId)),
+    getChannelsById(threads.map(({ channelId }) => channelId)),
+  ]);
+
+  const signedCommunities = communities.map(community =>
+    signCommunity(community)
+  );
+
   const promises = threads.map(
     async (thread): Promise<DBThreadWithMessageString> => {
-      const [community, channel, newMessageCount] = await Promise.all([
-        getCommunityById(thread.communityId),
-        getChannelById(thread.channelId),
-        getNewMessageCount(thread.id, timeframe),
-      ]);
-
-      const signedCommunity = signCommunity(community);
-      const totalMessageCount =
-        thread.messageCount || (await getTotalMessageCount(thread.id));
+      const community = signedCommunities.find(
+        community => community.id === thread.communityId
+      );
+      const channel = channels.find(channel => channel.id === thread.channelId);
+      const newMessageCount = await getNewMessageCount(thread.id, timeframe);
+      const totalMessageCount = thread.messageCount
+        ? thread.messageCount
+        : await getTotalMessageCount(thread.id);
 
       // $FlowFixMe
       return {
         ...thread,
-        community: signedCommunity,
+        community,
         channel,
         newMessageCount,
         totalMessageCount,
