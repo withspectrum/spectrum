@@ -20,7 +20,7 @@ export const weeklyDigest = () => {
 
 export const dailyDigest = () => {
   // end of day, every day
-  return dailyDigestQueue.add(undefined, defaultJobOptions('0 18 * * *'));
+  return dailyDigestQueue.add(undefined, defaultJobOptions('0 19 * * *'));
 };
 
 export const dailyCoreMetrics = () => {
