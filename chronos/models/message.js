@@ -1,5 +1,7 @@
 // @flow
 const { db } = require('shared/db');
+import { getRangeFromTimeframe } from './utils';
+import type { Timeframe } from 'chronos/types';
 
 export const getTotalMessageCount = (threadId: string): Promise<number> => {
   return db
@@ -11,21 +13,8 @@ export const getTotalMessageCount = (threadId: string): Promise<number> => {
 };
 
 // prettier-ignore
-export const getNewMessageCount = (threadId: string, timeframe: string): Promise<number> => {
-  let range;
-  switch (timeframe) {
-    case 'daily': {
-      range = 60 * 60 * 24;
-      break;
-    }
-    case 'weekly': {
-      range = 60 * 60 * 24 * 7;
-      break;
-    }
-    default: {
-      range = 60 * 60 * 24 * 7;
-    } // default to weekly
-  }
+export const getNewMessageCount = (threadId: string, timeframe: Timeframe): Promise<number> => {
+  const range = getRangeFromTimeframe(timeframe)
 
   return db
     .table('messages')
