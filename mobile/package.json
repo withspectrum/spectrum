@@ -63,5 +63,8 @@
         "name": "iPhone 8"
       }
     }
+  },
+  "resolutions": {
+    "event-stream": "3.3.4"
   }
 }
