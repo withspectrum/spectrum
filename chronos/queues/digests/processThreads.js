@@ -12,6 +12,7 @@ import type {
   CleanDigestThread,
 } from 'chronos/types';
 import { signCommunity } from 'shared/imgix';
+import truncate from 'shared/truncate';
 
 import type { DBThread, DBCommunity, DBChannel } from 'shared/types';
 
@@ -59,16 +60,31 @@ export const attachMetadataToThreads = async (
   return await Promise.all([...promises]);
 };
 
+export const getMessageCountString = (
+  newMessageCount: number,
+  totalMessageCount: number
+): string => {
+  if (totalMessageCount === 0) {
+    return `<span class="newMessageCount">New thread</span>`;
+  } else if (newMessageCount === totalMessageCount) {
+    if (newMessageCount === 1) {
+      return `<span class="newMessageCount">1 new message</span>`;
+    } else {
+      return `<span class="newMessageCount">${newMessageCount} new messages</span>`;
+    }
+  } else {
+    return `<span class="totalMessageCount">${totalMessageCount} messages </span><span class="newMessageCount">(${newMessageCount} new)</span>`;
+  }
+};
+
 export const attachMessageCountStringToThreads = async (
   threads: Array<DBThreadWithMetadata>
 ): Promise<Array<DBThreadWithMessageString>> => {
   const promises = threads.map(thread => {
-    const messageCountString =
-      thread.newMessageCount === thread.totalMessageCount
-        ? // prettier-ignore
-          `<span class="newMessageCount">${thread.newMessageCount} new messages</span>`
-        : // prettier-ignore
-          `<span class="totalMessageCount">${thread.totalMessageCount} messages </span><span class="newMessageCount">(${thread.newMessageCount} new)</span>`;
+    let messageCountString = getMessageCountString(
+      thread.newMessageCount,
+      thread.totalMessageCount
+    );
 
     return {
       ...thread,
@@ -105,7 +121,7 @@ export const cleanThreadData = async (
     return {
       id: thread.id,
       content: {
-        title: thread.content.title,
+        title: truncate(thread.content.title, 80),
       },
       community: {
         slug: thread.community.slug,
