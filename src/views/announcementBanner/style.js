@@ -4,8 +4,7 @@ import theme from 'shared/theme';
 import Link from 'src/components/link';
 
 export const Bar = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 32px;
+  display: flex;
   background: ${theme.brand.wash};
   align-items: center;
   border-bottom: 1px solid ${theme.brand.border};
@@ -13,6 +12,9 @@ export const Bar = styled.div`
   font-size: 14px;
   font-weight: 400;
   padding: 0 8px 0 0;
+  justify-content: center;
+  flex: 0 0 48px;
+  max-height: 48px;
 `;
 
 export const Content = styled(Link)`
@@ -21,6 +23,7 @@ export const Content = styled(Link)`
   align-items: center;
   line-height: 1.2;
   padding: 12px 0;
+  flex: 1 0 auto;
 
   @media (max-width: 768px) {
     justify-content: flex-start;
@@ -46,5 +49,6 @@ export const Dismiss = styled.div`
   justify-content: center;
   font-size: 18px;
   padding-bottom: 4px;
+  padding: 0 12px 4px 12px;
   cursor: pointer;
 `;
