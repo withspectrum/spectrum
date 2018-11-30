@@ -17,9 +17,9 @@ describe('renders members list on channel view', () => {
     cy.get('[data-cy="channel-members-list"]').should('be.visible');
 
     members.map(member => {
-      cy
-        .get('[data-cy="channel-view"]')
+      cy.get('[data-cy="channel-view"]')
         .contains(`${member.name}`)
+        .scrollIntoView()
         .should('be.visible');
     });
   });
