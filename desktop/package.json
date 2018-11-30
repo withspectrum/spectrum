@@ -92,5 +92,8 @@
       "target": "nsis",
       "icon": "resources/icons/win/icon.ico"
     }
+  },
+  "resolutions": {
+    "event-stream": "3.3.4"
   }
 }

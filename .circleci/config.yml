@@ -19,6 +19,7 @@ aliases:
   - &yarn
     |
       yarn
+      cd ./mobile && yarn && yarn setup && cd ..
       cd ./desktop && yarn && cd ..
 
   - &install-rethinkdb
@@ -197,9 +198,9 @@ workflows:
       - checkout_environment
 
       # Testing
-      #- test_mobile_js:
-         # requires:
-            #- checkout_environment
+      - test_mobile_js:
+          requires:
+            - checkout_environment
       # Disabled as Expo is fixing their critical issue with Detox
       # - test_mobile_native:
       #     requires:
