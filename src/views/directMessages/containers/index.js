@@ -18,10 +18,7 @@ import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
-import type {
-  WebsocketConnectionType,
-  PageVisibilityType,
-} from 'src/reducers/connectionStatus';
+import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 
 type Props = {
   subscribeToUpdatedDirectMessageThreads: Function,
@@ -39,7 +36,6 @@ type Props = {
   },
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
-  pageVisibility: PageVisibilityType,
 };
 
 type State = {
@@ -204,7 +200,6 @@ class DirectMessages extends React.Component<Props, State> {
 const map = state => ({
   networkOnline: state.connectionStatus.networkOnline,
   websocketConnection: state.connectionStatus.websocketConnection,
-  pageVisibility: state.connectionStatus.pageVisibility,
 });
 
 export default compose(
