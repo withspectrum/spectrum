@@ -27,6 +27,8 @@ export const Content = styled(Link)`
 
   @media (max-width: 768px) {
     justify-content: flex-start;
+    padding-left: 12px;
+    flex: 1 1 auto;
 
     .icon {
       margin-right: 8px;
