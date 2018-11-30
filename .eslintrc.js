@@ -15,7 +15,11 @@ module.exports = {
   plugins: ['eslint-plugin-flowtype'],
   rules: {
     'no-undef': 0,
-    'no-console': ['error', { allow: ['warn', 'error'] }],
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
     'no-unused-vars': 0,
+    'no-empty': 1,
+    'no-useless-escape': 1,
+    'no-fallthrough': 1,
+    'no-extra-boolean-cast': 1,
   },
 };
