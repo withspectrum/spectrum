@@ -2,7 +2,6 @@
 import styled from 'styled-components';
 import theme from 'shared/theme';
 import Link from 'src/components/link';
-import Icon from 'src/components/icons';
 
 export const Bar = styled.div`
   display: grid;
