@@ -61,6 +61,7 @@ users.forEach(user => {
 debug('Generating channels...');
 let channels = defaultChannels;
 communities.forEach(community => {
+  if (community.deletedAt) return;
   randomAmount({ max: 10 }, () => {
     channels.push(generateChannel(community.id));
   });
@@ -78,6 +79,11 @@ generatedUsersChannels.map(elem => {
 debug('Generating threads...');
 let threads = defaultThreads;
 channels.forEach(channel => {
+  const community = communities.find(
+    community => community.id === channel.communityId
+  );
+  if (community.deletedAt) return;
+
   randomAmount({ max: 10 }, () => {
     const creator = faker.random.arrayElement(users);
     const thread = generateThread(channel.communityId, channel.id, creator.id);

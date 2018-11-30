@@ -1,5 +1,5 @@
 // @flow
-import { createReadQuery, createWriteQuery, db } from 'shared/db';
+import { createReadQuery, db } from 'shared/db';
 import type { DBThread } from 'shared/types';
 
 export const getThreadById = createReadQuery((id: string) => ({

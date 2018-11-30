@@ -1,11 +1,8 @@
 // @flow
 const { db } = require('shared/db');
-const debug = require('debug')('hermes:queue:send-weekly-digest-email');
 
-export const getUsersCommunityIds = (
-  userId: string
-): Promise<Array<string>> => {
-  debug(userId);
+// prettier-ignore
+export const getUsersCommunityIds = (userId: string): Promise<Array<string>> => {
   return db
     .table('usersCommunities')
     .getAll([userId, true], { index: 'userIdAndIsMember' })('communityId')

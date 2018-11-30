@@ -1,5 +1,5 @@
 // @flow
-import { getReputationString } from '../processReputation';
+import { getReputationString } from '../getReputationString';
 
 describe('first-time users', () => {
   it('should get an explanation what reputation is', () => {

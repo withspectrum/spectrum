@@ -13,9 +13,8 @@ import { removeUsersCommunityMemberships } from 'api/models/usersCommunities';
 import { removeUsersChannelMemberships } from 'api/models/usersChannels';
 import { disableAllThreadNotificationsForUser } from 'api/models/usersThreads';
 import { disableAllUsersEmailSettings } from 'api/models/usersSettings';
-import { getUserChannelIds } from 'api/models/usersChannels';
 import type { PaginationOptions } from 'api/utils/paginate-arrays';
-import type { DBUser, FileUpload, DBThread } from 'shared/types';
+import type { DBUser, FileUpload } from 'shared/types';
 
 export const getUserById = createReadQuery((userId: string) => {
   // fallback for a bad id coming in that is a stringified user object
@@ -74,7 +73,7 @@ export const getUserById = createReadQuery((userId: string) => {
   // userId was not a stringified object
   return {
     query: db.table('users').get(userId),
-    tags: (user: ?DBUser) => [userId],
+    tags: () => [userId],
   };
 });
 
@@ -563,7 +562,7 @@ export const setUserOnline = createWriteQuery(
           return user;
         }
       ),
-    invalidateTags: (user: ?DBUser) => [id],
+    invalidateTags: () => [id],
   })
 );
 
@@ -708,7 +707,7 @@ export const banUser = createWriteQuery((args: BanUserType) => {
   const { userId, reason, currentUserId } = args;
 
   return {
-    invalidateTags: data => [userId],
+    invalidateTags: () => [userId],
     query: db
       .table('users')
       .get(userId)

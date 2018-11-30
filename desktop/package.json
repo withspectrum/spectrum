@@ -14,13 +14,13 @@
     "electron-context-menu": "^0.10.1",
     "electron-is-dev": "^1.0.1",
     "electron-log": "^2.2.17",
-    "electron-updater": "^4.0.4",
+    "electron-updater": "^4.0.5",
     "electron-window-state": "^5.0.3"
   },
   "devDependencies": {
     "electron": "^3.0.10",
     "electron-builder": "^20.36.2",
-    "nodemon": "^1.18.6",
+    "nodemon": "^1.18.7",
     "rimraf": "^2.6.2"
   },
   "scripts": {
@@ -92,5 +92,8 @@
       "target": "nsis",
       "icon": "resources/icons/win/icon.ico"
     }
+  },
+  "resolutions": {
+    "event-stream": "3.3.4"
   }
 }

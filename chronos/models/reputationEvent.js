@@ -1,10 +1,8 @@
 // @flow
 const { db } = require('shared/db');
 
-export const getReputationChangeInTimeframe = (
-  userId: string,
-  timeframe: string
-): Promise<number> => {
+// prettier-ignore
+export const getReputationChangeInTimeframe = (userId: string, timeframe: string): Promise<number> => {
   let range;
   switch (timeframe) {
     case 'daily': {

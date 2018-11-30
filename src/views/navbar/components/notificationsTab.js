@@ -17,10 +17,7 @@ import { Tab, NotificationTab, Label } from '../style';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
-import type {
-  WebsocketConnectionType,
-  PageVisibilityType,
-} from 'src/reducers/connectionStatus';
+import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 
 type Props = {
@@ -43,7 +40,6 @@ type Props = {
   count: number,
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
-  pageVisibility: PageVisibilityType,
 };
 
 type State = {
@@ -65,7 +61,6 @@ class NotificationsTab extends React.Component<Props, State> {
 
     if (curr.networkOnline !== nextProps.networkOnline) return true;
     if (curr.websocketConnection !== nextProps.websocketConnection) return true;
-    if (curr.pageVisibility !== nextProps.pageVisibility) return true;
 
     const prevLocation = curr.location;
     const nextLocation = nextProps.location;
@@ -452,8 +447,8 @@ const map = state => ({
   count: state.notifications.notifications,
   networkOnline: state.connectionStatus.networkOnline,
   websocketConnection: state.connectionStatus.websocketConnection,
-  pageVisibility: state.connectionStatus.pageVisibility,
 });
+
 export default compose(
   // $FlowIssue
   connect(map),
