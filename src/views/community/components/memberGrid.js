@@ -110,7 +110,7 @@ class CommunityMemberGrid extends React.Component<Props, State> {
               >
                 {currentUser &&
                   user.id !== currentUser.id && (
-                    <MessageIconContainer>
+                    <MessageIconContainer data-cy="message-user-button">
                       <Icon
                         glyph={'message'}
                         onClick={() => this.initMessage(user)}

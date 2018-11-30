@@ -733,6 +733,7 @@ class NewThread extends React.Component<Props, State> {
                     selected={focusedSelectedUser === user.id}
                     onClick={() => this.setFocusedSelectedUser(user.id)}
                     key={user.id}
+                    data-cy="selected-user-pill"
                   >
                     {user.name}
                   </Pill>
