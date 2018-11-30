@@ -28,7 +28,11 @@ class Banner extends React.Component<{}, State> {
     if (!visible) return null;
     return (
       <Bar>
-        <Content to={'/'}>
+        <Content
+          to={
+            '/spectrum/general/spectrum-is-joining-github~1d3eb8ee-4c99-46c0-8daf-ca35a96be6ce'
+          }
+        >
           <Icon glyph="announcement" size="24" />
           <p>
             <Bold>Spectrum is now part of GitHub!</Bold>

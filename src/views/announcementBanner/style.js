@@ -6,14 +6,13 @@ import Link from 'src/components/link';
 export const Bar = styled.div`
   display: grid;
   grid-template-columns: 1fr 32px;
-  grid-template-rows: 48px;
   background: ${theme.brand.wash};
   align-items: center;
   border-bottom: 1px solid ${theme.brand.border};
   color: ${theme.brand.default};
   font-size: 14px;
   font-weight: 400;
-  padding: 0 8px;
+  padding: 0 8px 0 0;
 `;
 
 export const Content = styled(Link)`
@@ -21,6 +20,7 @@ export const Content = styled(Link)`
   justify-content: center;
   align-items: center;
   line-height: 1.2;
+  padding: 12px 0;
 
   @media (max-width: 768px) {
     justify-content: flex-start;
