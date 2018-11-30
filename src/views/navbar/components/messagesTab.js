@@ -12,10 +12,7 @@ import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations
 import { MessageTab, Label } from '../style';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
-import type {
-  WebsocketConnectionType,
-  PageVisibilityType,
-} from 'src/reducers/connectionStatus';
+import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 
 type Props = {
@@ -34,7 +31,6 @@ type Props = {
   dispatch: Dispatch<Object>,
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
-  pageVisibility: PageVisibilityType,
 };
 
 type State = {
@@ -56,7 +52,6 @@ class MessagesTab extends React.Component<Props, State> {
 
     if (curr.networkOnline !== nextProps.networkOnline) return true;
     if (curr.websocketConnection !== nextProps.websocketConnection) return true;
-    if (curr.pageVisibility !== nextProps.pageVisibility) return true;
 
     // if a refetch completes
     if (curr.isRefetching !== nextProps.isRefetching) return true;
@@ -261,7 +256,6 @@ const map = state => ({
   count: state.notifications.directMessageNotifications,
   networkOnline: state.connectionStatus.networkOnline,
   websocketConnection: state.connectionStatus.websocketConnection,
-  pageVisibility: state.connectionStatus.pageVisibility,
 });
 export default compose(
   // $FlowIssue

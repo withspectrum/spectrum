@@ -398,3 +398,22 @@ export type FileUpload = {
 };
 
 export type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';
+
+export type DBCoreMetric = {
+  dau: number,
+  wau: number,
+  mau: number,
+  dac: number,
+  dacSlugs: Array<string>,
+  wac: number,
+  wacSlugs: Array<string>,
+  mac: number,
+  macSlugs: Array<string>,
+  cpu: number,
+  mpu: number,
+  tpu: number,
+  users: number,
+  communities: number,
+  threads: number,
+  dmThreads: number,
+};

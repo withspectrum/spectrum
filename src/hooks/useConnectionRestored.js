@@ -1,13 +1,9 @@
 // @flow
-import type {
-  PageVisibilityType,
-  WebsocketConnectionType,
-} from 'src/reducers/connectionStatus';
+import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 
 type ConnectionProps = {
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
-  pageVisibility: PageVisibilityType,
 };
 
 type Props = {
@@ -31,13 +27,6 @@ const validateProps = (props: Props) => {
     return false;
   }
 
-  if (
-    !props.prev.hasOwnProperty('pageVisibility') ||
-    !props.curr.hasOwnProperty('pageVisibility')
-  ) {
-    return false;
-  }
-
   return true;
 };
 
@@ -57,17 +46,9 @@ const networkOnlineDidReconnect = (props: Props) => {
   return false;
 };
 
-const pageBecameVisible = (props: Props) => {
-  const { curr, prev } = props;
-  if (prev.pageVisibility === 'hidden' && curr.pageVisibility === 'visible')
-    return true;
-  return false;
-};
-
 export const useConnectionRestored = (props: Props) => {
   if (!validateProps(props)) return false;
   if (websocketDidReconnect(props)) return true;
   if (networkOnlineDidReconnect(props)) return true;
-  if (pageBecameVisible(props)) return true;
   return false;
 };
