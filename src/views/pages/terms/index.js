@@ -210,7 +210,7 @@ class Terms extends React.Component<{}> {
           </Section>
 
           <Section>
-            <SectionTitle>Space Program Materials</SectionTitle>
+            <SectionTitle>GitHub Materials</SectionTitle>
 
             <SectionDescription>
               We put a lot of effort into creating the Service including, the
@@ -246,7 +246,7 @@ class Terms extends React.Component<{}> {
             </SectionDescription>
 
             <SectionDescription>
-              Space Program, Inc. makes no claim or representation regarding,
+              GitHub, Inc. makes no claim or representation regarding,
               and accepts no responsibility for third party websites accessible
               by hyperlink from the Service or websites linking to the Service.
               When you leave the Service, you should be aware that these Terms
@@ -280,7 +280,7 @@ class Terms extends React.Component<{}> {
             </SectionDescription>
 
             <SectionDescription>
-              IN NO EVENT WILL SPACE PROGRAM, INC. BE LIABLE TO YOU OR ANY THIRD
+              IN NO EVENT WILL GITHUB, INC. BE LIABLE TO YOU OR ANY THIRD
               PARTY FOR ANY SPECIAL, INDIRECT, INCIDENTAL, EXEMPLARY OR
               CONSEQUENTIAL DAMAGES OF ANY KIND ARISING OUT OF OR IN CONNECTION
               WITH THE SERVICE OR ANY OTHER SERVICE AND/OR CONTENT INCLUDED ON
@@ -289,7 +289,7 @@ class Terms extends React.Component<{}> {
               OR OTHERWISE, EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF
               SUCH DAMAGES OR ARE AWARE OF THE POSSIBILITY OF SUCH DAMAGES. OUR
               TOTAL LIABILITY FOR ALL CAUSES OF ACTION AND UNDER ALL THEORIES OF
-              LIABILITY WILL BE LIMITED TO THE AMOUNT YOU PAID TO SPACE PROGRAM,
+              LIABILITY WILL BE LIMITED TO THE AMOUNT YOU PAID TO GITHUB,
               INC. THIS SECTION WILL BE GIVEN FULL EFFECT EVEN IF ANY REMEDY
               SPECIFIED IN THIS AGREEMENT IS DEEMED TO HAVE FAILED OF ITS
               ESSENTIAL PURPOSE.
@@ -355,6 +355,15 @@ class Terms extends React.Component<{}> {
               If you breach any of these Terms, we have the right to suspend or
               disable your access to or use of the Service.
             </SectionDescription>
+          </Section>
+
+          <Section>
+            <SectionTitle>Assignment</SectionTitle>
+
+            <SectionDescription>
+              We may assign or delegate these Terms of Service and/or the Privacy Policy, in whole or in part, to any person or entity at any time with or without your consent, including the license grant in the "Your Content & Conduct" section. You may not assign or delegate any rights or obligations under the Terms of Service or Privacy Policy without our prior written consent, and any unauthorized assignment and delegation by you is void.
+            </SectionDescription>
+
           </Section>
 
           <Section>
