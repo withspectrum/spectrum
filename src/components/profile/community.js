@@ -187,7 +187,7 @@ class CommunityWithData extends React.Component<Props> {
                     <OnlineIndicator
                       offline={community.metaData.onlineMembers === 0}
                     />
-                    {community.metaData.onlineMembers} online
+                    {community.metaData.onlineMembers.toLocaleString()} online
                   </ExtLink>
                 )}
 
