@@ -1,40 +1,33 @@
 // @flow
 const { db } = require('shared/db');
-import type { DBCommunity } from 'shared/types';
+import type { Timeframe } from 'chronos/types';
+import { getRangeFromTimeframe } from 'chronos/models/utils';
 
-export const getCommunityById = (id: string): Promise<Object> => {
-  return db
-    .table('communities')
-    .get(id)
-    .run();
-};
-
-export const getCommunities = (
-  ids: Array<string>
-): Promise<Array<DBCommunity>> => {
-  return db
-    .table('communities')
-    .getAll(...ids)
-    .run();
-};
-
-export const getTopCommunities = (amount: number): Array<Object> => {
-  return db
-    .table('communities')
-    .orderBy({ index: db.desc('memberCount') })
-    .filter(community => community.hasFields('deletedAt').not())
-    .limit(amount)
-    .run();
-};
-
-export const getCommunitiesWithMinimumMembers = (
-  min: number = 2,
-  communityIds: Array<string>
-) => {
+// prettier-ignore
+export const getCommunitiesWithMinimumMembers = (min: number = 2): Promise<Array<string>> => {
   return db
     .table('communities')
     .between(min, db.maxval, { index: 'memberCount' })
     .filter(community => community.hasFields('deletedAt').not())
     .map(row => row('id'))
+    .run();
+};
+
+export const getCommunitiesWithActiveThreadsInTimeframe = async (
+  timeframe: Timeframe
+): Promise<Array<string>> => {
+  const range = getRangeFromTimeframe(timeframe);
+
+  return db
+    .table('threads')
+    .between(db.now().sub(range), db.now(), {
+      index: 'lastActive',
+      leftBound: 'open',
+      rightBound: 'open',
+    })
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .group('communityId')
+    .ungroup()
+    .map(row => row('group'))
     .run();
 };
