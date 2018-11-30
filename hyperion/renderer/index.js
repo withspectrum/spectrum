@@ -132,7 +132,7 @@ const renderer = (req: express$Request, res: express$Response) => {
       if (!req.user) {
         res.setHeader(
           'Cache-Control',
-          `max-age=${FIVE_MINUTES}, s-maxage=${ONE_HOUR}, stale-while-revalidate=${FIVE_MINUTES}, must-revalidate`
+          `s-maxage=${ONE_HOUR}, stale-while-revalidate=${FIVE_MINUTES}, must-revalidate`
         );
       } else {
         res.setHeader('Cache-Control', 's-maxage=0');
