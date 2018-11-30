@@ -150,10 +150,7 @@ app.use(
       if (path.endsWith('.js')) {
         // Cache static files in now CDN for seven days
         // (the filename changes if the file content changes, so we can cache these forever)
-        res.setHeader(
-          'Cache-Control',
-          `max-age=${ONE_HOUR}, s-maxage=${ONE_HOUR}`
-        );
+        res.setHeader('Cache-Control', `s-maxage=${ONE_HOUR}`);
       }
     },
   })
@@ -163,10 +160,7 @@ app.get('/static/js/:name', (req: express$Request, res, next) => {
   const existingFile = jsFiles.find(file => file.startsWith(req.params.name));
   if (existingFile) {
     if (existingFile.endsWith('.js')) {
-      res.setHeader(
-        'Cache-Control',
-        `max-age=${ONE_HOUR}, s-maxage=${ONE_HOUR}`
-      );
+      res.setHeader('Cache-Control', `s-maxage=${ONE_HOUR}`);
     }
     return res.sendFile(
       path.resolve(__dirname, '..', 'build', 'static', 'js', req.params.name)
