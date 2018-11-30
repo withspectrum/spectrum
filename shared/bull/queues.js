@@ -24,6 +24,8 @@ import {
   SEND_EMAIL_VALIDATION_EMAIL,
   SEND_NEW_COMMUNITY_WELCOME_EMAIL,
   SEND_NEW_USER_WELCOME_EMAIL,
+  SEND_DIGEST_EMAIL,
+  SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
 } from 'hermes/queues/constants';
 
 import {
@@ -59,6 +61,14 @@ import {
   PROCESS_REPUTATION_EVENT,
   CALCULATE_THREAD_SCORE,
 } from 'mercury/constants';
+
+import {
+  PROCESS_INDIVIDUAL_DIGEST,
+  PROCESS_WEEKLY_DIGEST_EMAIL,
+  PROCESS_DAILY_DIGEST_EMAIL,
+  PROCESS_DAILY_CORE_METRICS,
+  PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
+} from 'chronos/queues/constants';
 
 // Normalize our (inconsistent) queue names to a set of JS compatible names
 exports.QUEUE_NAMES = {
@@ -98,6 +108,7 @@ exports.QUEUE_NAMES = {
   sendPrivateCommunityRequestEmailQueue: SEND_PRIVATE_COMMUNITY_REQUEST_SENT_EMAIL,
   sendPrivateCommunityRequestApprovedEmailQueue: SEND_PRIVATE_COMMUNITY_REQUEST_APPROVED_EMAIL,
   sendThreadCreatedNotificationEmailQueue: SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
+  sendDigestEmailQueue: SEND_DIGEST_EMAIL,
 
   // mercury - reputation
   processReputationEventQueue: PROCESS_REPUTATION_EVENT,
@@ -118,6 +129,14 @@ exports.QUEUE_NAMES = {
   _adminSendToxicContentEmailQueue: SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
   _adminProcessUserSpammingThreadsQueue: SEND_ADMIN_USER_SPAMMING_THREADS_NOTIFICATION_EMAIL,
   _adminProcessUserReportedQueue: SEND_ADMIN_USER_REPORTED_EMAIL,
+  _adminSendActiveCommunityReportEmailQueue: SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
+
+  // chronos
+  weeklyDigestQueue: PROCESS_WEEKLY_DIGEST_EMAIL,
+  dailyDigestQueue: PROCESS_DAILY_DIGEST_EMAIL,
+  processIndividualDigestQueue: PROCESS_INDIVIDUAL_DIGEST,
+  dailyCoreMetricsQueue: PROCESS_DAILY_CORE_METRICS,
+  activeCommunityReportQueue: PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
 };
 
 // We add one error listener per queue, so we have to set the max listeners

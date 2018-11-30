@@ -1,43 +1,32 @@
 // @flow
 const { db } = require('shared/db');
+import type { DBThread } from 'shared/types';
+import { getRangeFromTimeframe } from 'chronos/models/utils';
+import type { Timeframe } from 'chronos/types';
 
-export const getActiveThreadsInTimeframe = (timeframe: string) => {
-  let range;
-  switch (timeframe) {
-    case 'daily': {
-      range = 60 * 60 * 24;
-      break;
-    }
-    case 'weekly': {
-      range = 60 * 60 * 24 * 7;
-      break;
-    }
-    default: {
-      range = 60 * 60 * 24 * 7;
-    } // default to weekly
-  }
+export const getThreadsInChannelsInTimeframe = async (
+  timeframe: Timeframe,
+  channelIds: Array<string>
+): Promise<Array<DBThread>> => {
+  const range = getRangeFromTimeframe(timeframe);
+  let threads = [];
 
-  return db
-    .table('threads')
-    .between(db.now().sub(range), db.now(), {
-      index: 'lastActive',
-      leftBound: 'open',
-      rightBound: 'open',
-    })
-    .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .run();
-};
+  const channelPromises = channelIds.map(async channelId => {
+    const threadsInChannelAndTimeframe = await db
+      .table('threads')
+      .between([channelId, db.now().sub(range)], [channelId, db.now()], {
+        index: 'channelIdAndLastActive',
+        leftBound: 'open',
+        rightBound: 'open',
+      })
+      .orderBy({ index: db.desc('channelIdAndLastActive') })
+      .filter(thread => db.not(thread.hasFields('deletedAt')))
+      .run();
 
-export const getCoreMetricsActiveThreads = (range: number) => {
-  return db
-    .table('threads')
-    .between(db.now().sub(range), db.now(), {
-      index: 'lastActive',
-      leftBound: 'open',
-      rightBound: 'open',
-    })
-    .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .group('communityId')
-    .ungroup()
-    .run();
+    threads = [...threads, ...threadsInChannelAndTimeframe];
+  });
+
+  return await Promise.all([...channelPromises]).then(() => {
+    return threads;
+  });
 };

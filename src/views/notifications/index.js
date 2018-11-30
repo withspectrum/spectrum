@@ -48,10 +48,7 @@ import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
-import type {
-  WebsocketConnectionType,
-  PageVisibilityType,
-} from 'src/reducers/connectionStatus';
+import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 
 type Props = {
   markAllNotificationsSeen?: Function,
@@ -71,7 +68,6 @@ type Props = {
   },
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
-  pageVisibility: PageVisibilityType,
 };
 
 type State = {
@@ -143,7 +139,6 @@ class NotificationsPure extends React.Component<Props, State> {
     const curr = this.props;
     if (curr.networkOnline !== nextProps.networkOnline) return true;
     if (curr.websocketConnection !== nextProps.websocketConnection) return true;
-    if (curr.pageVisibility !== nextProps.pageVisibility) return true;
     // fetching more
     if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
       return false;
@@ -436,7 +431,6 @@ class NotificationsPure extends React.Component<Props, State> {
 const map = state => ({
   networkOnline: state.connectionStatus.networkOnline,
   websocketConnection: state.connectionStatus.websocketConnection,
-  pageVisibility: state.connectionStatus.pageVisibility,
 });
 
 export default compose(

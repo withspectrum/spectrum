@@ -1,14 +1,16 @@
 // @flow
 const { db } = require('shared/db');
+import type { Timeframe } from 'chronos/types';
 
 // prettier-ignore
-export const getUsersForDigest = (timeframe: string): Promise<Array<Object>> => {
+export const getUserIdsForDigest = (timeframe: Timeframe, after: number, limit: number): Promise<Array<string>> => {
   let range = timeframe === 'daily' ? 'dailyDigest' : 'weeklyDigest';
+
   return db
     .table('usersSettings')
     .getAll(true, { index: `${range}Email` })
-    .eqJoin('userId', db.table('users'))
-    .zip()
-    .pluck(['userId', 'email', 'firstName', 'name', 'username'])
+    .skip(after)
+    .limit(limit)
+    .map(row => row('userId'))
     .run()
 };
