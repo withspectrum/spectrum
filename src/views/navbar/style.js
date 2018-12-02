@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
-import Link from 'src/components/link';
+import Link from 'react-router-dom';
 import { Transition, FlexRow, hexa, zIndex } from 'src/components/globals';
 import { UserAvatar } from 'src/components/avatar';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
