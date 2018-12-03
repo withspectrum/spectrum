@@ -77,29 +77,6 @@ class UserSettings extends React.Component<Props> {
       );
     }
 
-    // if the user isn't logged in, or for some reason the user settings that were returned don't match the user id in the store, we show a warning error state
-    if (!currentUser || (user && user.id !== currentUser.id)) {
-      return (
-        <React.Fragment>
-          >
-          <Titlebar
-            title={'No User Found'}
-            provideBack={true}
-            backRoute={'/'}
-            noComposer
-          />
-          <AppViewWrapper>
-            <ViewError
-              heading={'These aren’t the settings you’re looking for.'}
-              subheading={
-                'You can only view your own user settings. Head on back.'
-              }
-            />
-          </AppViewWrapper>
-        </React.Fragment>
-      );
-    }
-
     // user is viewing their own settings, validated on the server
     if (user && user.id && currentUser.id === user.id) {
       const subnavItems = [

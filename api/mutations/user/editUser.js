@@ -55,7 +55,7 @@ export default requireAuth(
       const pendingEmail = input.email;
 
       // if user is changing their email, make sure it's not taken by someone else
-      if (pendingEmail !== currentUser.email) {
+      if (pendingEmail !== currentUser.email || !currentUser.email) {
         if (!isEmail(input.email)) {
           return new UserError('Please enter a valid email address.');
         }
