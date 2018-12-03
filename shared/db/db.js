@@ -4,8 +4,6 @@
  */
 const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
-console.log(process.env.SENTRY_NAME);
-
 const DEFAULT_CONFIG = {
   // Connect to the test database when, well, testing
   db: !process.env.TEST_DB ? 'spectrum' : 'testing',
