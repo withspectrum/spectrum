@@ -7,7 +7,7 @@ const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 const DEFAULT_CONFIG = {
   // Connect to the test database when, well, testing
   db: !process.env.TEST_DB ? 'spectrum' : 'testing',
-  max: 40, // Maximum number of connections, default is 1000
+  max: 60, // Maximum number of connections, default is 1000
   buffer: 1, // Minimum number of connections open at any given moment, default is 50
   timeoutGb: 60 * 1000, // How long should an unused connection stick around, default is an hour, this is a minute
 };
@@ -38,24 +38,34 @@ if (process.env.TEST_DB) {
   });
 }
 
-if (process.env.NODE_ENV === 'development' && process.env.TRACK_DB_PERF) {
-  const fs = require('fs');
-  const inspect = require('rethinkdb-inspector');
-  const queries = [];
-  inspect(r, {
-    onQueryComplete: (query, { size, time }) => {
-      if (query.indexOf('.changes') > -1) return;
-      queries.push({ query, time, size });
-      fs.writeFileSync(
-        'queries-by-time.js',
-        JSON.stringify(queries.sort((a, b) => b.time - a.time), null, 2)
+const fs = require('fs');
+const inspect = require('rethinkdb-inspector');
+const queries = [];
+let slowestQuery = { query: '', time: 0 };
+let biggestQuery = { query: '', size: 0 };
+inspect(r, {
+  onQueryComplete: (query, { size, time }) => {
+    if (query.indexOf('.changes') > -1) return;
+    queries.push({ query, time, size });
+    const newSlowestQuery = queries.sort((a, b) => b.time - a.time)[0];
+    const newBiggestQuery = queries.sort((a, b) => b.size - a.size)[0];
+    if (newSlowestQuery.time > slowestQuery.time) {
+      slowestQuery = newSlowestQuery;
+      console.log(
+        `\n---New Slowest Query (${newSlowestQuery.time}ms)---\n`,
+        newSlowestQuery.query,
+        '\n------\n\n'
       );
-      fs.writeFileSync(
-        'queries-by-response-size.js',
-        JSON.stringify(queries.sort((a, b) => b.size - a.size), null, 2)
+    }
+    if (newBiggestQuery.size > biggestQuery.size) {
+      biggestQuery = newBiggestQuery;
+      console.log(
+        `\n---New biggest query (${newBiggestQuery.size} bytes response)---\n`,
+        newBiggestQuery.query,
+        '\n------\n\n'
       );
-    },
-  });
-}
+    }
+  },
+});
 
 module.exports = { db: r };
