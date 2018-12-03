@@ -7,7 +7,7 @@ const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 const DEFAULT_CONFIG = {
   // Connect to the test database when, well, testing
   db: !process.env.TEST_DB ? 'spectrum' : 'testing',
-  max: 40, // Maximum number of connections, default is 1000
+  max: 60, // Maximum number of connections, default is 1000
   buffer: 1, // Minimum number of connections open at any given moment, default is 50
   timeoutGb: 60 * 1000, // How long should an unused connection stick around, default is an hour, this is a minute
 };
