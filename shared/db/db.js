@@ -9,7 +9,7 @@ const DEFAULT_CONFIG = {
   db: !process.env.TEST_DB ? 'spectrum' : 'testing',
   max:
     process.env.SENTRY_NAME === 'api' || process.env.SENTRY_NAME === 'hyperion'
-      ? 20
+      ? 60
       : 1, // Maximum number of connections, default is 1000
   buffer: 1, // Minimum number of connections open at any given moment, default is 50
   timeoutGb: 60 * 1000, // How long should an unused connection stick around, default is an hour, this is a minute
