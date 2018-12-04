@@ -8530,10 +8530,10 @@ slate-markdown@0.1.0:
     react "^0.14.0 || ^15.0.0"
     styled-components "^2.0.0"
 
-slate@^0.44.6:
-  version "0.44.6"
-  resolved "https://registry.yarnpkg.com/slate/-/slate-0.44.6.tgz#47ab3127641bc1faa3e5a5b01bfab8861843c82e"
-  integrity sha512-Q5DASlX7tUXrAaQFb5AliZjAeuXkI1oVq3HM8A/mb4qClwpSpuKq/uOcA3855bFzAOXSjUM/kESK3M3oiIHnNA==
+slate@^0.44.7:
+  version "0.44.7"
+  resolved "https://registry.yarnpkg.com/slate/-/slate-0.44.7.tgz#3cf8a3f2bd78c03e02a6cf8bb726ae9f43582e13"
+  integrity sha512-h2aW2r20qtn4oUk8rh7qbW3NluLMlsDCctFNwWdrDmGnwTfszfVApcapnOFmv+qmKnZsPZLqidl3mHnXVL/lcQ==
   dependencies:
     debug "^3.1.0"
     direction "^0.1.5"
