@@ -21,12 +21,10 @@ export default job => {
   } = job.data;
 
   const toPercent = (num: number) => Math.round(num * 100);
-  const perspectivePercent = perspectiveScore
-    ? toPercent(perspectiveScore)
-    : null;
-  let avgPercent = perspectivePercent;
 
-  const subject = `Toxic alert (${avgPercent.toString()}%): ${text}`;
+  const perspectivePercent = perspectiveScore.toPercent(perspectiveScore);
+
+  const subject = `Toxic alert (${perspectivePercent.toString()}%): ${text}`;
 
   try {
     return sendEmail({
