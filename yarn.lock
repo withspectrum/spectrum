@@ -3642,11 +3642,6 @@ commondir@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
 
-compare-versions@3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/compare-versions/-/compare-versions-3.4.0.tgz#e0747df5c9cb7f054d6d3dc3e1dbc444f9e92b26"
-  integrity sha512-tK69D7oNXXqUW3ZNo/z7NXTEz22TCF0pTE+YF9cxvaAM9XnkLo1fV621xCLrRR6aevJlKxExkss0vWqUCUpqdg==
-
 component-cookie@^1.1.2:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/component-cookie/-/component-cookie-1.1.4.tgz#1b88b3dda4953d890163dd52fa53df374247cf8d"
@@ -4131,10 +4126,10 @@ cycle@1.0.x:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/cycle/-/cycle-1.0.3.tgz#21e80b2be8580f98b468f379430662b046c34ad2"
 
-cypress@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/cypress/-/cypress-3.1.2.tgz#d1adbb48afecad54a84adf25f30536b400aa0f18"
-  integrity sha512-anII950IRqmpQcxlo9te3vTcrl4keuGJaWlBQ5hbAb77D2YrcDv7Iux1FvX1vy/ZzzTdMaiiOts5sa8h63iP0g==
+cypress@^3.1.3:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-3.1.3.tgz#f6253e2428c9f76e0541440b959b6282d1757467"
+  integrity sha512-ZusTQffKBVrLDvcxEinymTH0iCUL7hM1m6q9X+557wDtpd6S4et330QQE1IW10Pnyp+vYIHpkWxDm43B9G14nA==
   dependencies:
     "@cypress/listr-verbose-renderer" "0.4.1"
     "@cypress/xvfb" "1.2.3"
@@ -4154,7 +4149,6 @@ cypress@^3.1.2:
     check-more-types "2.24.0"
     commander "2.11.0"
     common-tags "1.4.0"
-    compare-versions "3.4.0"
     debug "3.1.0"
     execa "0.10.0"
     executable "4.1.1"

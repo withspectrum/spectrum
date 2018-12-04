@@ -83,7 +83,13 @@ class Overview extends React.Component<Props> {
           )}
 
           <ErrorBoundary fallbackComponent={SettingsFallback}>
-            {!channel.isPrivate && <ChannelMembers id={channel.id} />}
+            {!channel.isPrivate && (
+              <ChannelMembers
+                channel={channel}
+                initMessage={initMessage}
+                id={channel.id}
+              />
+            )}
           </ErrorBoundary>
         </Column>
       </SectionsContainer>

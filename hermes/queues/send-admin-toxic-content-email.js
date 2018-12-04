@@ -17,22 +17,14 @@ export default job => {
     thread,
     community,
     channel,
-    toxicityConfidence: { spectrumScore, perspectiveScore },
+    toxicityConfidence: { perspectiveScore },
   } = job.data;
 
   const toPercent = (num: number) => Math.round(num * 100);
-  const spectrumPercent = spectrumScore ? toPercent(spectrumScore) : null;
-  const perspectivePercent = perspectiveScore
-    ? toPercent(perspectiveScore)
-    : null;
-  let avgPercent;
-  if (spectrumPercent && perspectivePercent) {
-    avgPercent = (spectrumPercent + perspectivePercent) / 2;
-  } else {
-    avgPercent = spectrumPercent || perspectivePercent || 0;
-  }
 
-  const subject = `Toxic alert (${avgPercent.toString()}%): ${text}`;
+  const perspectivePercent = perspectiveScore.toPercent(perspectiveScore);
+
+  const subject = `Toxic alert (${perspectivePercent.toString()}%): ${text}`;
 
   try {
     return sendEmail({
@@ -50,7 +42,6 @@ export default job => {
           community,
           channel,
           toxicityConfidence: {
-            spectrumPercent,
             perspectivePercent,
           },
         },

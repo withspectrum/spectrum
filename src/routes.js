@@ -24,6 +24,7 @@ import PrivateCommunityJoin from 'src/views/privateCommunityJoin';
 import ThreadSlider from 'src/views/threadSlider';
 import Navbar from 'src/views/navbar';
 import Status from 'src/views/status';
+import AnnouncementBanner from 'src/views/announcementBanner';
 import Login from 'src/views/login';
 import DirectMessages from 'src/views/directMessages';
 import { FullscreenThreadView } from 'src/views/thread';
@@ -178,6 +179,7 @@ class Routes extends React.Component<Props> {
               */}
               <AuthViewHandler>{() => null}</AuthViewHandler>
               <ThirdPartyContext />
+              <AnnouncementBanner />
               <Status />
               <Route component={Navbar} />
 

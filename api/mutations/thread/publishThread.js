@@ -19,7 +19,6 @@ import {
   _adminProcessToxicThreadQueue,
   _adminProcessUserSpammingThreadsQueue,
 } from 'shared/bull/queues';
-import getSpectrumScore from 'athena/queues/moderationEvents/spectrum';
 import getPerspectiveScore from 'athena/queues/moderationEvents/perspective';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
@@ -275,27 +274,23 @@ export default requireAuth(
       const title = thread.content.title;
       const text = `${title} ${body}`;
 
-      const scores = await Promise.all([
-        getSpectrumScore(text, dbThread.id, dbThread.creatorId).catch(err => 0),
-        getPerspectiveScore(text).catch(err => 0),
-      ]).catch(err =>
+      const scores = await getPerspectiveScore(text).catch(err =>
         console.error(
           'Error getting thread moderation scores from providers',
           err.message
         )
       );
 
-      const spectrumScore = scores && scores[0];
       const perspectiveScore = scores && scores[1];
 
       // if neither models returned results
-      if (!spectrumScore && !perspectiveScore) {
+      if (!perspectiveScore) {
         debug('Toxicity checks from providers say not toxic');
         return false;
       }
 
       // if both services agree that the thread is >= 98% toxic
-      if ((spectrumScore + perspectiveScore) / 2 >= 0.9) {
+      if (perspectiveScore >= 0.9) {
         debug('Thread is toxic according to both providers');
         return true;
       }
