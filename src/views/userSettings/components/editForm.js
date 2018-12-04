@@ -10,7 +10,6 @@ import Icon from 'src/components/icons';
 import { SERVER_URL, CLIENT_URL } from 'src/api/constants';
 import GithubProfile from 'src/components/githubProfile';
 import { GithubSigninButton } from 'src/components/loginButtonSet/github';
-import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   Input,
   TextArea,
@@ -62,7 +61,6 @@ type State = {
 };
 
 type Props = {
-  currentUser: Object,
   dispatch: Dispatch<Object>,
   client: Object,
   editUser: Function,
@@ -293,9 +291,9 @@ class UserWithData extends React.Component<Props, State> {
   };
 
   handleUsernameValidation = ({ error, username }) => {
-    const { currentUser } = this.props;
+    const { user } = this.props;
     // we want to reset error if was typed same username which was set before
-    const usernameError = currentUser.username === username ? '' : error;
+    const usernameError = user.username === username ? '' : error;
     this.setState({
       usernameError,
       username,
@@ -307,7 +305,7 @@ class UserWithData extends React.Component<Props, State> {
   };
 
   render() {
-    const { currentUser } = this.props;
+    const { user } = this.props;
     const {
       name,
       username,
@@ -416,7 +414,7 @@ class UserWithData extends React.Component<Props, State> {
           {emailError && <Error>{emailError}</Error>}
 
           <GithubProfile
-            id={currentUser.id}
+            id={user.id}
             render={profile => {
               if (!profile) {
                 return (
@@ -484,7 +482,6 @@ const UserSettings = compose(
   editUserMutation,
   withRouter,
   withApollo,
-  withCurrentUser,
   connect()
 )(UserWithData);
 export default UserSettings;
