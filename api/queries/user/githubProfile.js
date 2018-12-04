@@ -5,6 +5,12 @@ import cache from 'shared/cache/redis';
 import fetch from 'isomorphic-fetch';
 import { githubProfile } from 'shared/graphql-cache-keys';
 
+const apiUrl = 'https://api.github.com';
+const apiRoute = '/user/';
+const { GITHUB_OAUTH_CLIENT_ID, GITHUB_OAUTH_CLIENT_SECRET } = process.env;
+const queryString = `?client_id=${GITHUB_OAUTH_CLIENT_ID}&client_secret=${GITHUB_OAUTH_CLIENT_SECRET}`;
+const fetchUrl = apiUrl + apiRoute + githubProviderId + queryString;
+
 export default async ({ githubProviderId, id }: DBUser) => {
   if (!githubProviderId) return null;
 
@@ -19,12 +25,6 @@ export default async ({ githubProviderId, id }: DBUser) => {
       };
     } catch (err) {}
   } else {
-    const apiUrl = 'https://api.github.com';
-    const apiRoute = '/user/';
-    const { GITHUB_OAUTH_CLIENT_ID, GITHUB_OAUTH_CLIENT_SECRET } = process.env;
-    const queryString = `?client_id=${GITHUB_OAUTH_CLIENT_ID}&client_secret=${GITHUB_OAUTH_CLIENT_SECRET}`;
-    const fetchUrl = apiUrl + apiRoute + githubProviderId + queryString;
-
     const networkGithubProfile = await fetch(fetchUrl)
       .then(res => res.json())
       .catch(err => {
