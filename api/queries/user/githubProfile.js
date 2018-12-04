@@ -11,11 +11,13 @@ export default async ({ githubProviderId, id }: DBUser) => {
   const cachedGithubProfile = await cache.get(githubProfile(id));
 
   if (cachedGithubProfile) {
-    const parsed = JSON.parse(cachedGithubProfile);
-    return {
-      id: parsed.id,
-      username: parsed.username,
-    };
+    try {
+      const parsed = JSON.parse(cachedGithubProfile);
+      return {
+        id: parsed.id,
+        username: parsed.username,
+      };
+    } catch (err) {}
   } else {
     const apiUrl = 'https://api.github.com';
     const apiRoute = '/user/';
