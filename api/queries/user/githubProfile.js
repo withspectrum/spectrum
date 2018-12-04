@@ -8,8 +8,16 @@ import { githubProfile } from 'shared/graphql-cache-keys';
 const apiUrl = 'https://api.github.com';
 const apiRoute = '/user/';
 const { GITHUB_OAUTH_CLIENT_ID, GITHUB_OAUTH_CLIENT_SECRET } = process.env;
+
+if (!GITHUB_OAUTH_CLIENT_ID || !GITHUB_OAUTH_CLIENT_SECRET) {
+  console.error(
+    'No github oauth client id or client secret found in environment.'
+  );
+}
+// $FlowIssue
 const queryString = `?client_id=${GITHUB_OAUTH_CLIENT_ID}&client_secret=${GITHUB_OAUTH_CLIENT_SECRET}`;
-const fetchUrl = apiUrl + apiRoute + githubProviderId + queryString;
+const fetchUrl = (githubProviderId: string) =>
+  apiUrl + apiRoute + githubProviderId + queryString;
 
 export default async ({ githubProviderId, id }: DBUser) => {
   if (!githubProviderId) return null;
@@ -25,7 +33,7 @@ export default async ({ githubProviderId, id }: DBUser) => {
       };
     } catch (err) {}
   } else {
-    const networkGithubProfile = await fetch(fetchUrl)
+    const networkGithubProfile = await fetch(fetchUrl(githubProviderId))
       .then(res => res.json())
       .catch(err => {
         console.error('Error getting github info from github api', err);
@@ -42,6 +50,7 @@ export default async ({ githubProviderId, id }: DBUser) => {
     await cache.set(
       githubProfile(id),
       JSON.stringify(cacheRecord),
+      'NX',
       'EX',
       86400
     );

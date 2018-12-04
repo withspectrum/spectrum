@@ -319,6 +319,7 @@ const init = () => {
             await cache.set(
               githubProfile(req.user.id),
               JSON.stringify(cacheRecord),
+              'NX',
               'EX',
               86400
             );

@@ -40,9 +40,15 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
   // Cache the fields for an hour
   await Promise.all([
     typeof cachedChannelCount === 'number' ||
-      cache.set(communityChannelCount(id), channelCount, 'EX', 3600),
+      cache.set(communityChannelCount(id), channelCount, 'NX', 'EX', 3600),
     typeof cachedOnlineMemberCount === 'number' ||
-      cache.set(communityOnlineMemberCount(id), onlineMemberCount, 'EX', 3600),
+      cache.set(
+        communityOnlineMemberCount(id),
+        onlineMemberCount,
+        'NX',
+        'EX',
+        3600
+      ),
   ]);
 
   if (typeof rootMemberCount === 'number') {
