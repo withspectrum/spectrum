@@ -27,13 +27,7 @@ export default async (root: DBChannel, _: any, ctx: GraphQLContext) => {
 
   // Cache the fields for an hour
   (await typeof cachedOnlineMemberCount) === 'number' ||
-    cache.set(
-      channelOnlineMemberCount(id),
-      onlineMemberCount,
-      'NX',
-      'EX',
-      3600
-    );
+    cache.set(channelOnlineMemberCount(id), onlineMemberCount, 'EX', 3600);
 
   if (typeof rootMemberCount === 'number') {
     return {
