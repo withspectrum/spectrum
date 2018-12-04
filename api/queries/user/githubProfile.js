@@ -3,11 +3,12 @@ require('now-env');
 import type { DBUser } from 'shared/types';
 import cache from 'shared/cache/redis';
 import fetch from 'isomorphic-fetch';
+import { githubProfile } from 'shared/graphql-cache-keys';
 
 export default async ({ githubProviderId, id }: DBUser) => {
   if (!githubProviderId) return null;
 
-  const cachedGithubProfile = await cache.get(`githubProfile:${id}`);
+  const cachedGithubProfile = await cache.get(githubProfile(id));
 
   if (cachedGithubProfile) {
     const parsed = JSON.parse(cachedGithubProfile);
@@ -36,9 +37,9 @@ export default async ({ githubProviderId, id }: DBUser) => {
       };
 
       await cache.set(
-        `githubProfile:${id}`,
+        githubProfile(id),
         JSON.stringify(cacheRecord),
-        'ex',
+        'EX',
         86400
       );
 

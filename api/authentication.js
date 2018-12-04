@@ -6,6 +6,7 @@ const { Strategy: FacebookStrategy } = require('passport-facebook');
 const { Strategy: GoogleStrategy } = require('passport-google-oauth2');
 const { Strategy: GitHubStrategy } = require('passport-github2');
 import cache from 'shared/cache/redis';
+import { githubProfile } from 'shared/graphql-cache-keys';
 const {
   getUserById,
   createOrFindUser,
@@ -316,9 +317,9 @@ const init = () => {
               the web app which will update the cache with any changed usernames
             */
             await cache.set(
-              `githubProfile:${req.user.id}`,
+              githubProfile(req.user.id),
               JSON.stringify(cacheRecord),
-              'ex',
+              'EX',
               86400
             );
 
