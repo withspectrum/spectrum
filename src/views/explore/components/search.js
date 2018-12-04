@@ -58,7 +58,7 @@ class Search extends React.Component<Props, State> {
     };
 
     // only kick off search query if 500ms have passed without a consecutive invocation
-    this.search = debounce(this.search, 500);
+    this.search = debounce(this.search, 500, false);
   }
 
   search = (searchString: string) => {
