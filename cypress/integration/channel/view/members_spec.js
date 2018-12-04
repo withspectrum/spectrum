@@ -6,6 +6,7 @@ const community = data.communities.find(
 const usersChannels = data.usersChannels
   .filter(({ channelId, isMember }) => channelId === channel.id && isMember)
   .map(o => o.userId);
+
 const members = data.users.filter(user => usersChannels.indexOf(user.id) >= 0);
 
 describe('renders members list on channel view', () => {
@@ -14,7 +15,9 @@ describe('renders members list on channel view', () => {
   });
 
   it('should render members component', () => {
-    cy.get('[data-cy="channel-members-list"]').should('be.visible');
+    cy.get('[data-cy="channel-members-list"]')
+      .scrollIntoView()
+      .should('be.visible');
 
     members.map(member => {
       cy.get('[data-cy="channel-view"]')
