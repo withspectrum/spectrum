@@ -5,7 +5,6 @@ import { getThreadById } from '../../models/thread';
 import { getCommunityById } from '../../models/community';
 import { getChannelById } from '../../models/channel';
 import { toState, toPlainText } from 'shared/draft-utils';
-import getSpectrumScore from './spectrum';
 import getPerspectiveScore from './perspective';
 import { _adminSendToxicContentEmailQueue } from 'shared/bull/queues';
 import type { Job, AdminToxicMessageJobData } from 'shared/bull/types';
@@ -21,11 +20,8 @@ export default async (job: Job<AdminToxicMessageJobData>) => {
       ? toPlainText(toState(JSON.parse(message.content.body)))
       : message.content.body;
 
-  const scores = await Promise.all([
-    getSpectrumScore(text, message.id, message.senderId),
-    getPerspectiveScore(text),
-  ]).catch(err =>
-    console.error('Error getting message moderation scores from providers', {
+  const perspectiveScore = await getPerspectiveScore(text).catch(err =>
+    console.error('Error getting message moderation score from providers', {
       error: err.message,
       data: {
         text,
@@ -34,11 +30,7 @@ export default async (job: Job<AdminToxicMessageJobData>) => {
     })
   );
 
-  const spectrumScore = scores && scores[0];
-  const perspectiveScore = scores && scores[1];
-
-  // if neither models returned results
-  if (!spectrumScore && !perspectiveScore) return;
+  if (!perspectiveScore) return;
 
   const [user, thread] = await Promise.all([
     getUserById(message.senderId),
@@ -58,7 +50,6 @@ export default async (job: Job<AdminToxicMessageJobData>) => {
     community,
     channel,
     toxicityConfidence: {
-      spectrumScore,
       perspectiveScore,
     },
   });

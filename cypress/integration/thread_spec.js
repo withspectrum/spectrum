@@ -397,9 +397,10 @@ describe('edit message signed in', () => {
     cy.get('[data-cy="edit-message"]').should($p => {
       expect($p).to.have.length(2);
     });
-    cy.contains('The next one is an emoji-only one :scream:').should(
-      'be.visible'
-    );
+    cy.contains('The next one is an emoji-only one :scream:')
+      .scrollIntoView()
+      .should('be.visible');
+
     cy.get('[data-cy="edit-message"]')
       .last()
       .click({ force: true });
@@ -407,14 +408,19 @@ describe('edit message signed in', () => {
     cy.get('[data-cy="edit-message-input"]')
       .scrollIntoView()
       .should('be.visible');
+
     cy.get('[data-cy="edit-message-cancel"]')
       .scrollIntoView()
       .should('be.visible');
-    cy.get('[data-cy="edit-message-save"]').should('be.visible');
+
+    cy.get('[data-cy="edit-message-save"]')
+      .scrollIntoView()
+      .should('be.visible');
 
     cy.get('[data-cy="edit-message-cancel"]').click();
 
     cy.get('[data-cy="edit-message-input"]').should('not.be.visible');
+
     cy.get('[data-cy="edit-message-cancel"]').should('not.be.visible');
     cy.get('[data-cy="edit-message-save"]').should('not.be.visible');
 
@@ -428,10 +434,11 @@ describe('edit message signed in', () => {
     cy.get('[data-cy="edit-message-save"]').click();
 
     cy.get('[data-cy="edit-message-input"]').should('not.be.visible');
+
     cy.get('[data-cy="edited-message-indicator"]').should('be.visible');
-    cy.contains('The next one is an emoji-only one :scream: with edits').should(
-      'be.visible'
-    );
+    cy.contains('The next one is an emoji-only one :scream: with edits')
+      .scrollIntoView()
+      .should('be.visible');
   });
 });
 

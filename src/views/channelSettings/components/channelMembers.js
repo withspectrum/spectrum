@@ -74,7 +74,7 @@ class ChannelMembers extends Component<Props> {
                     >
                       {currentUser &&
                         user.id !== currentUser.id && (
-                          <MessageIconContainer>
+                          <MessageIconContainer data-cy="message-user-button">
                             <Icon
                               glyph={'message'}
                               onClick={() => initMessage(user)}
