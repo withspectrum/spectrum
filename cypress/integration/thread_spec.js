@@ -397,9 +397,9 @@ describe('edit message signed in', () => {
     cy.get('[data-cy="edit-message"]').should($p => {
       expect($p).to.have.length(2);
     });
-    cy.contains('The next one is an emoji-only one :scream:').should(
-      'be.visible'
-    );
+    cy.contains('The next one is an emoji-only one :scream:')
+      .scrollIntoView()
+      .should('be.visible');
     cy.get('[data-cy="edit-message"]')
       .last()
       .click({ force: true });
