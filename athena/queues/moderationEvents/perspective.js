@@ -29,7 +29,7 @@ export default async (text: string) => {
   });
 
   // if something failed?
-  if (!request || !request.data) return;
+  if (!request || !request.data) return null;
 
   // get the scores from the request
   const { attributeScores } = request.data;
