@@ -5,8 +5,6 @@ const { Strategy: TwitterStrategy } = require('passport-twitter');
 const { Strategy: FacebookStrategy } = require('passport-facebook');
 const { Strategy: GoogleStrategy } = require('passport-google-oauth2');
 const { Strategy: GitHubStrategy } = require('passport-github2');
-import cache from 'shared/cache/redis';
-import { githubProfile } from 'shared/graphql-cache-keys';
 const {
   getUserById,
   createOrFindUser,
@@ -295,10 +293,6 @@ const init = () => {
         const fallbackUsername = splitProfileUrl[splitProfileUrl.length - 1];
         const githubUsername =
           profile.username || profile._json.login || fallbackUsername;
-        const cacheRecord = {
-          id: profile.id,
-          username: githubUsername,
-        };
 
         if (req.user) {
           // if a user exists in the request body, it means the user is already
@@ -316,15 +310,10 @@ const init = () => {
               on the client for a user to re-connect a github profile from
               the web app which will update the cache with any changed usernames
             */
-            await cache.set(
-              githubProfile(req.user.id),
-              JSON.stringify(cacheRecord),
-              'NX',
-              'EX',
-              86400
-            );
-
-            if (!req.user.githubUsername) {
+            if (
+              !req.user.githubUsername ||
+              req.user.githubUsername !== githubUsername
+            ) {
               return saveUserProvider(
                 req.user.id,
                 'githubProviderId',
