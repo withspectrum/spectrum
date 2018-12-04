@@ -32,22 +32,20 @@ export default async ({ githubProviderId, id }: DBUser) => {
         return null;
       });
 
-    if (networkGithubProfile) {
-      const cacheRecord = {
-        id: networkGithubProfile.id,
-        username: networkGithubProfile.login,
-      };
+    if (!networkGithubProfile) return null;
 
-      await cache.set(
-        githubProfile(id),
-        JSON.stringify(cacheRecord),
-        'EX',
-        86400
-      );
+    const cacheRecord = {
+      id: networkGithubProfile.id,
+      username: networkGithubProfile.login,
+    };
 
-      return cacheRecord;
-    }
+    await cache.set(
+      githubProfile(id),
+      JSON.stringify(cacheRecord),
+      'EX',
+      86400
+    );
 
-    return null;
+    return cacheRecord;
   }
 };
