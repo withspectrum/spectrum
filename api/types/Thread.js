@@ -42,6 +42,11 @@ const Thread = /* GraphQL */ `
     data: String
   }
 
+  type ThreadTag {
+    id: ID!
+    title: String!
+  }
+
   type Thread {
     id: ID!
     createdAt: Date!
@@ -68,6 +73,7 @@ const Thread = /* GraphQL */ `
     currentUserLastSeen: Date @cost(complexity: 1)
     reactions: ThreadReactions @cost(complexity: 1)
     metaImage: String
+    tags: [ThreadTag!]!
 
     attachments: [Attachment]
       @deprecated(reason: "Attachments no longer used for link previews")
@@ -126,6 +132,16 @@ const Thread = /* GraphQL */ `
     threadId: ID!
   }
 
+  input AddTagsToThreadInput {
+    threadId: ID!
+    tags: [ID!]!
+  }
+
+  input RemoveTagsFromThreadInput {
+    threadId: ID!
+    tags: [ID!]!
+  }
+
   extend type Mutation {
     publishThread(thread: ThreadInput!): Thread
     editThread(input: EditThreadInput!): Thread
@@ -135,6 +151,8 @@ const Thread = /* GraphQL */ `
     moveThread(threadId: ID!, channelId: ID!): Thread
     addThreadReaction(input: AddThreadReactionInput!): Thread
     removeThreadReaction(input: RemoveThreadReactionInput!): Thread
+    addTagsToThread(input: AddTagsToThreadInput!): Thread
+    removeTagsFromThread(input: RemoveTagsFromThreadInput!): Thread
   }
 
   extend type Subscription {

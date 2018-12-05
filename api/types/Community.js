@@ -169,6 +169,7 @@ const Community = /* GraphQL */ `
     brandedLogin: BrandedLogin
     joinSettings: JoinSettings
     slackSettings: CommunitySlackSettings @cost(complexity: 2)
+    threadTags: [ThreadTag!]!
     slackImport: SlackImport
       @cost(complexity: 2)
       @deprecated(reason: "Use slack settings field instead")
@@ -325,6 +326,24 @@ const Community = /* GraphQL */ `
     enableCommunityTokenJoin(input: EnableCommunityTokenJoinInput!): Community
     disableCommunityTokenJoin(input: DisableCommunityTokenJoinInput!): Community
     resetCommunityJoinToken(input: ResetCommunityJoinTokenInput!): Community
+    addThreadTagsToCommunity(input: AddThreadTagsToCommunity!): Community
+    removeThreadTagsFromCommunity(
+      input: RemoveThreadTagsFromCommunity!
+    ): Community
+  }
+
+  input ThreadTagsInput {
+    title: String!
+  }
+
+  input AddThreadTagsToCommunity {
+    communityId: String!
+    tags: [ThreadTagsInput!]!
+  }
+
+  input RemoveThreadTagsFromCommunity {
+    communityId: String!
+    tags: [ID!]!
   }
 `;
 
