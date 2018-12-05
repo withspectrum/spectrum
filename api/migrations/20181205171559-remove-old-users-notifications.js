@@ -1,6 +1,6 @@
 exports.up = async (r, conn) => {
   let after = 0;
-  let limit = 10;
+  let limit = 1000;
   let done = false;
 
   const getRecords = async (after, limit) => {
