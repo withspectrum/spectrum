@@ -30,7 +30,7 @@ const config = IS_PROD
       ...DEFAULT_CONFIG,
     };
 
-var r = require('rethinkdbdash')(config);
+var r = require('rethinkhaberdashery')(config);
 
 // Exit the process on unhealthy db in test env
 if (process.env.TEST_DB) {
