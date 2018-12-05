@@ -417,3 +417,9 @@ export type DBCoreMetric = {
   threads: number,
   dmThreads: number,
 };
+
+export type DBThreadTag = {
+  communityId: string,
+  id: string,
+  title: string,
+};
