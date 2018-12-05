@@ -248,7 +248,6 @@
     "postbuild:analytics": "cp analytics/package.json build-analytics/package.json && cp now.json build-analytics/now.json && cp cacert build-analytics/cacert",
     "prebuild:hyperion": "rimraf build-hyperion",
     "build:hyperion": "cross-env NODE_PATH=./ cross-env DIR=hyperion backpack build",
-    "postbuild:hyperion": "cp now.json build-hyperion/now.json && cp cacert build-hyperion/cacert",
     "build:web": "cross-env NODE_PATH=./ react-app-rewired build",
     "build:desktop": "(cd desktop && yarn run package:all)",
     "test:desktop": "(cd desktop && yarn run package:test)",
