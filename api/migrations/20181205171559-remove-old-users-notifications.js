@@ -1,6 +1,6 @@
 exports.up = async (r, conn) => {
   let after = 0;
-  let limit = 1000;
+  let limit = 10000;
   let done = false;
 
   const getRecords = async (after, limit) => {
@@ -50,9 +50,17 @@ exports.up = async (r, conn) => {
       return await deleteRecords(arr);
     }
 
+    const timeout = () => {
+      return new Promise(resolve => setTimeout(resolve, 2000));
+    };
+
     return deleteRecords(arr).then(async () => {
       after = after + limit;
       const nextRecords = await getRecords(after, limit);
+
+      console.log('start timeout');
+      await timeout();
+      console.log('end timeout');
       return processUsersNotificiations(nextRecords);
     });
   };
