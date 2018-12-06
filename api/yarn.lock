@@ -3659,7 +3659,7 @@ draft-js-prism@^1.0.6:
     extend "^3.0.0"
     immutable "*"
 
-"draft-js-prism@github:ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb":
+draft-js-prism@ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb:
   version "1.0.3"
   resolved "https://codeload.github.com/ngs/draft-js-prism/tar.gz/6edb31c3805dd1de3fb897cc27fced6bac1bafbb"
   dependencies:
