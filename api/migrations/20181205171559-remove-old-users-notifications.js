@@ -4,8 +4,6 @@ exports.up = async (r, conn) => {
   let done = false;
 
   const getRecords = async (after, limit) => {
-    console.log('getting new batch', after, limit);
-
     return await r
       .table('usersNotifications')
       .skip(after)
@@ -25,9 +23,9 @@ exports.up = async (r, conn) => {
         const now = new Date().getTime(); //ms
         return now - added > THIRTY_DAYS;
       })
-      .map(rec => rec.id);
+      .map(rec => rec.id)
+      .filter(Boolean);
 
-    console.log('deleting batch');
     return await r
       .table('usersNotifications')
       .getAll(...filtered)
@@ -36,38 +34,25 @@ exports.up = async (r, conn) => {
   };
 
   const processUsersNotificiations = async arr => {
-    console.log('processing batch');
-
     if (done) {
-      console.log('done');
       return await deleteRecords(arr);
     }
 
     if (arr.length < limit) {
       done = true;
-
-      console.log('almost done');
       return await deleteRecords(arr);
     }
-
-    const timeout = () => {
-      return new Promise(resolve => setTimeout(resolve, 2000));
-    };
 
     return deleteRecords(arr).then(async () => {
       after = after + limit;
       const nextRecords = await getRecords(after, limit);
 
-      console.log('start timeout');
-      await timeout();
-      console.log('end timeout');
       return processUsersNotificiations(nextRecords);
     });
   };
 
   const initialRecordIds = await getRecords(after, limit);
 
-  console.log('initing');
   return processUsersNotificiations(initialRecordIds);
 };
 
