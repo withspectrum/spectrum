@@ -40,6 +40,7 @@ import {
 } from './reaction';
 import { __createThreadReactionLoader } from './threadReaction';
 import { __createMessageLoader } from './message';
+import { __createThreadTagsLoader } from './threadTags';
 import type { DataLoaderOptions } from './types';
 
 // Create all the necessary loaders to be attached to the GraphQL context for each request
@@ -75,6 +76,7 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   messageReaction: __createReactionLoader(options),
   threadReaction: __createThreadReactionLoader(options),
   reaction: __createSingleReactionLoader(options),
+  threadTags: __createThreadTagsLoader(options),
 });
 
 export default createLoaders;

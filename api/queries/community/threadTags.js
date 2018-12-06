@@ -8,6 +8,5 @@ export default (
   _: void,
   { loaders }: GraphQLContext
 ) => {
-  // TODO(@mxstbr): Use a loader
   return getThreadTagsByCommunity(community.id);
 };
