@@ -94,9 +94,9 @@ export const getThreadsByChannels = (
     .table('threads')
     .getAll(...channelIds, { index: 'channelId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(...order)
     .skip(after || 0)
     .limit(first || 999999)
+    .orderBy(...order)
     .run();
 };
 
@@ -299,8 +299,7 @@ export const getViewableParticipantThreadsByUser = async (
   // get a list of the channels where the user participated in a thread
   const getParticipantChannelIds = db
     .table('usersThreads')
-    .getAll(evalUser, { index: 'userId' })
-    .filter({ isParticipant: true })
+    .getAll([evalUser, true], { index: 'userIdAndIsParticipant' })
     .eqJoin('threadId', db.table('threads'))
     .zip()
     .pluck('channelId', 'threadId')
@@ -308,8 +307,7 @@ export const getViewableParticipantThreadsByUser = async (
 
   const getParticipantCommunityIds = db
     .table('usersThreads')
-    .getAll(evalUser, { index: 'userId' })
-    .filter({ isParticipant: true })
+    .getAll([evalUser, true], { index: 'userIdAndIsParticipant' })
     .eqJoin('threadId', db.table('threads'))
     .zip()
     .pluck('communityId', 'threadId')
@@ -389,8 +387,7 @@ export const getPublicParticipantThreadsByUser = (evalUser: string, options: Pag
   const { first, after } = options
   return db
     .table('usersThreads')
-    .getAll(evalUser, { index: 'userId' })
-    .filter({ isParticipant: true })
+    .getAll([evalUser, true], { index: 'userIdAndIsParticipant' })
     .eqJoin('threadId', db.table('threads'))
     .without({
       left: [
