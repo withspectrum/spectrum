@@ -26,9 +26,10 @@ const threadsByChannelsQuery = (...channelIds: string[]) =>
 
 const membersByChannelsQuery = (...channelIds: string[]) =>
   channelsByIdsQuery(...channelIds)
-    .eqJoin('id', db.table('usersChannels'), { index: 'channelId' })
-    .map(row => row('right'))
-    .filter({ isBlocked: false, isPending: false, isMember: true });
+    .eqJoin(row => [row('id'), 'member'], db.table('usersChannels'), {
+      index: 'channelIdAndRole',
+    })
+    .map(row => row('right'));
 
 // reusable query parts -- end
 
@@ -80,23 +81,14 @@ const getChannelsByUserAndCommunity = async (communityId: string, userId: string
 };
 
 const getChannelsByUser = (userId: string): Promise<Array<DBChannel>> => {
-  return (
-    db
-      .table('usersChannels')
-      // get all the user's channels
-      .getAll(userId, { index: 'userId' })
-      // only return channels where the user is a member
-      .filter({ isMember: true })
-      // get the channel objects for each channel
-      .eqJoin('channelId', db.table('channels'))
-      // get rid of unnecessary info from the usersChannels object on the left
-      .without({ left: ['id', 'channelId', 'userId', 'createdAt'] })
-      // zip the tables
-      .zip()
-      // ensure we don't return any deleted channels
-      .filter(channel => db.not(channel.hasFields('deletedAt')))
-      .run()
-  );
+  return db
+    .table('usersChannels')
+    .getAll([userId, 'member'], { index: 'userIdAndRole' })
+    .eqJoin('channelId', db.table('channels'))
+    .without({ left: ['id', 'channelId', 'userId', 'createdAt'] })
+    .zip()
+    .filter(channel => db.not(channel.hasFields('deletedAt')))
+    .run();
 };
 
 const getChannelBySlug = async (
@@ -432,22 +424,12 @@ const setMemberCount = (
     .then(result => result.changes[0].new_val || result.changes[0].old_val);
 };
 
-const getMemberCount = (channelId: string): Promise<number> => {
-  return db
-    .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ isMember: true })
-    .count()
-    .run();
-};
-
 const getChannelsOnlineMemberCounts = (channelIds: Array<string>) => {
   return db
     .table('usersChannels')
-    .getAll(...channelIds, {
-      index: 'channelId',
+    .getAll(...channelIds.map(id => [id, 'member']), {
+      index: 'channelIdAndRole',
     })
-    .filter({ isBlocked: false, isMember: true })
     .pluck(['channelId', 'userId'])
     .eqJoin('userId', db.table('users'))
     .pluck('left', { right: ['lastSeen', 'isOnline'] })
@@ -491,7 +473,6 @@ module.exports = {
   incrementMemberCount,
   decrementMemberCount,
   setMemberCount,
-  getMemberCount,
   getChannelsOnlineMemberCounts,
   __forQueryTests: {
     channelsByCommunitiesQuery,
