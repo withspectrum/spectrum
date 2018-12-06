@@ -29,3 +29,12 @@ export const getThreadTags = createReadQuery((tagIds: [string]) => ({
   query: db.table('threadTags').getAll(...tagIds),
   tags: (tags: ?Array<DBThreadTag>) => (tags || []).map(({ id }) => id),
 }));
+
+export const deleteThreadTags = createWriteQuery((tagIds: [string]) => ({
+  query: db
+    .table('threadTags')
+    .getAll(...tagIds)
+    .delete()
+    .run(),
+  invalidateTags: () => tagIds,
+}));

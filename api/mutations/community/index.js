@@ -15,6 +15,7 @@ import enableCommunityTokenJoin from './enableCommunityTokenJoin';
 import disableCommunityTokenJoin from './disableCommunityTokenJoin';
 import resetCommunityJoinToken from './resetCommunityJoinToken';
 import addThreadTagsToCommunity from './addThreadTagsToCommunity';
+import removeThreadTagsFromCommunity from './removeThreadTagsFromCommunity';
 import addTagsToThread from './addTagsToThread';
 import removeTagsFromThread from './removeTagsFromThread';
 
@@ -38,5 +39,6 @@ module.exports = {
     addThreadTagsToCommunity,
     addTagsToThread,
     removeTagsFromThread,
+    removeThreadTagsFromCommunity,
   },
 };
