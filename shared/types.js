@@ -249,6 +249,7 @@ export type DBThread = {
   messageCount: number,
   reactionCount: number,
   type: string,
+  tags: ?Array<string>,
 };
 
 export type DBUser = {

@@ -26,6 +26,7 @@ import slackSettings from './slackSettings';
 import joinSettings from './joinSettings';
 import coverPhoto from './coverPhoto';
 import profilePhoto from './profilePhoto';
+import threadTags from './threadTags';
 
 // no-op resolvers to transition while removing payments
 import type { DBCommunity } from 'shared/types';
@@ -71,6 +72,7 @@ module.exports = {
     joinSettings,
     coverPhoto,
     profilePhoto,
+    threadTags,
 
     invoices,
     recurringPayments,
