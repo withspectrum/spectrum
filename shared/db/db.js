@@ -18,13 +18,25 @@ const DEFAULT_CONFIG = {
   timeoutGb: 60 * 1000, // How long should an unused connection stick around, default is an hour, this is a minute
 };
 
+let ca;
+
+try {
+  ca = fs.readFileSync(path.join(process.cwd(), 'cacert'));
+} catch (err) {
+  if (IS_PROD) throw err;
+}
+
 const PRODUCTION_CONFIG = {
   password: process.env.COMPOSE_RETHINKDB_PASSWORD,
   host: process.env.COMPOSE_RETHINKDB_URL,
   port: process.env.COMPOSE_RETHINKDB_PORT,
-  ssl: {
-    ca: fs.readFileSync(path.join(process.cwd(), 'cacert')),
-  },
+  ...(ca
+    ? {
+        ssl: {
+          ca,
+        },
+      }
+    : {}),
 };
 
 const config = IS_PROD
