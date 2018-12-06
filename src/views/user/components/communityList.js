@@ -1,6 +1,7 @@
 //@flow
 import * as React from 'react';
 import Link from 'src/components/link';
+import { TextButton } from 'src/components/buttons';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
@@ -8,11 +9,12 @@ import { CommunityListItem } from 'src/components/listItems';
 import Icon from 'src/components/icons';
 import { getUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import type { GetUserCommunityConnectionType } from 'shared/graphql/queries/user/getUserCommunityConnection';
-
+import type { QueryType } from 'react-apollo';
 import { ListContainer } from 'src/components/listItems/style';
 
 type Props = {
   data: {
+    ...$Exact<QueryType>,
     user: GetUserCommunityConnectionType,
   },
   currentUser: Object,
@@ -22,19 +24,20 @@ type Props = {
 class CommunityList extends React.Component<Props> {
   render() {
     const { data } = this.props;
+    const { hasNextPage, user, fetchMore, networkStatus } = data;
+
+    const isFetchingMore = networkStatus === 3;
 
     if (
-      !data.user ||
-      !data.user.communityConnection ||
-      !data.user.communityConnection.edges ||
-      data.user.communityConnection.edges.length === 0
+      !user ||
+      !user.communityConnection ||
+      !user.communityConnection.edges ||
+      user.communityConnection.edges.length === 0
     ) {
       return null;
     }
 
-    const communities = data.user.communityConnection.edges.map(
-      c => c && c.node
-    );
+    const communities = user.communityConnection.edges.map(c => c && c.node);
 
     let sortedCommunities = communities;
 
@@ -67,6 +70,16 @@ class CommunityList extends React.Component<Props> {
             </Link>
           );
         })}
+
+        {hasNextPage && (
+          <TextButton
+            onClick={() => fetchMore()}
+            disabled={isFetchingMore}
+            loading={isFetchingMore}
+          >
+            Show more
+          </TextButton>
+        )}
       </ListContainer>
     );
   }

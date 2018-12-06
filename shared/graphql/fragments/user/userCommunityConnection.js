@@ -4,6 +4,7 @@ import communityInfoFragment from '../community/communityInfo';
 import type { CommunityInfoType } from '../community/communityInfo';
 
 type Edge = {
+  cursor: string,
   node: {
     ...$Exact<CommunityInfoType>,
     contextPermissions: {
@@ -27,12 +28,13 @@ export type UserCommunityConnectionType = {
 
 export default gql`
   fragment userCommunityConnection on User {
-    communityConnection {
+    communityConnection(first: 5, after: $after) {
       pageInfo {
         hasNextPage
         hasPreviousPage
       }
       edges {
+        cursor
         node {
           ...communityInfo
           contextPermissions {

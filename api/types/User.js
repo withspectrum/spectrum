@@ -7,6 +7,7 @@ const User = /* GraphQL */ `
 
   type UserCommunityEdge {
     node: Community!
+    cursor: String!
   }
 
   type UserChannelsConnection {
@@ -106,7 +107,10 @@ const User = /* GraphQL */ `
     # non-schema fields
     threadCount: Int @cost(complexity: 1)
     isAdmin: Boolean
-    communityConnection: UserCommunitiesConnection!
+    communityConnection(
+      first: Int = 5
+      after: String
+    ): UserCommunitiesConnection!
     channelConnection: UserChannelsConnection!
     directMessageThreadsConnection(
       first: Int = 15
@@ -114,11 +118,11 @@ const User = /* GraphQL */ `
     ): UserDirectMessageThreadsConnection!
       @cost(complexity: 1, multipliers: ["first"])
     threadConnection(
-      first: Int = 20
+      first: Int = 10
       after: String
       kind: ThreadConnectionType
     ): UserThreadsConnection! @cost(complexity: 1, multipliers: ["first"])
-    everything(first: Int = 20, after: String): EverythingThreadsConnection!
+    everything(first: Int = 10, after: String): EverythingThreadsConnection!
       @cost(complexity: 1, multipliers: ["first"])
     settings: UserSettings @cost(complexity: 1)
     githubProfile: GithubProfile

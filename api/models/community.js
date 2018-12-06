@@ -56,84 +56,92 @@ export const getCommunityBySlug = (slug: string): Promise<?DBCommunity> => {
 };
 
 // prettier-ignore
-export const getCommunitiesByUser = (userId: string): Promise<Array<DBCommunity>> => {
+export const getCommunitiesByUser = (userId: string, after: number, first: number): Promise<Array<DBCommunity>> => {
   return (
     db
-      .table('usersCommunities')
-      // get all the user's communities
-      .getAll([userId, true], { index: 'userIdAndIsMember' })
-      // get the community objects for each community
-      .eqJoin('communityId', db.table('communities'))
-      // get rid of unnecessary info from the usersCommunities object on the left
-      .without({ left: ['id', 'communityId', 'userId', 'createdAt'] })
-      // zip the tables
-      .zip()
-      // ensure we don't return any deleted communities
-      .filter(community => db.not(community.hasFields('deletedAt')))
-      .run()
+    .table('usersCommunities')
+    .getAll([userId, true], { index: 'userIdAndIsMember' })
+    .orderBy(db.desc('reputation'))
+    .skip(after)
+    .limit(first)
+    .eqJoin('communityId', db.table('communities'))
+    .without({ left: ['id', 'communityId', 'userId', 'createdAt'] })
+    .zip()
+    .filter(community => db.not(community.hasFields('deletedAt')))
+    .run()
   );
 };
 
-// prettier-ignore
-export const getVisibleCommunitiesByUser = async (evaluatingUserId: string, currentUserId: string) => {
+export const getVisibleCommunitiesByUser = async (
+  evaluatingUserId: string,
+  currentUserId: string,
+  after: number,
+  first: number
+) => {
   const evaluatingUserMemberships = await db
     .table('usersCommunities')
-    // get all the user's communities
     .getAll([evaluatingUserId, true], { index: 'userIdAndIsMember' })
-    // get the community objects for each community
+    .orderBy(db.desc('reputation'))
+    .skip(after)
+    .limit(first)
     .eqJoin('communityId', db.table('communities'))
-    // get rid of unnecessary info from the usersCommunities object on the left
     .without({ left: ['id', 'communityId', 'userId', 'createdAt'] })
-    // zip the tables
     .zip()
-    // ensure we don't return any deleted communities
     .filter(community => db.not(community.hasFields('deletedAt')))
-    .run()
+    .run();
 
   const currentUserMemberships = await db
     .table('usersCommunities')
-    // get all the user's communities
     .getAll([currentUserId, true], { index: 'userIdAndIsMember' })
-    // get the community objects for each community
     .eqJoin('communityId', db.table('communities'))
-    // get rid of unnecessary info from the usersCommunities object on the left
     .without({ left: ['id', 'communityId', 'userId', 'createdAt'] })
-    // zip the tables
     .zip()
-    // ensure we don't return any deleted communities
     .filter(community => db.not(community.hasFields('deletedAt')))
-    .run()
+    .run();
 
-  const evaluatingUserCommunityIds = evaluatingUserMemberships.map(community => community.id)
-  const currentUserCommunityIds = currentUserMemberships.map(community => community.id)
+  const evaluatingUserCommunityIds = evaluatingUserMemberships.map(
+    community => community.id
+  );
+  const currentUserCommunityIds = currentUserMemberships.map(
+    community => community.id
+  );
   const publicCommunityIds = evaluatingUserMemberships
     .filter(community => !community.isPrivate)
-    .map(community => community.id)
+    .map(community => community.id);
 
-  const overlappingMemberships = intersection(evaluatingUserCommunityIds, currentUserCommunityIds)
-  const allVisibleCommunityIds = [...publicCommunityIds, ...overlappingMemberships]
-  const distinctCommunityIds = allVisibleCommunityIds.filter((x, i, a) => a.indexOf(x) === i)
+  const overlappingMemberships = intersection(
+    evaluatingUserCommunityIds,
+    currentUserCommunityIds
+  );
+  const allVisibleCommunityIds = [
+    ...publicCommunityIds,
+    ...overlappingMemberships,
+  ];
+  const distinctCommunityIds = allVisibleCommunityIds.filter(
+    (x, i, a) => a.indexOf(x) === i
+  );
 
   return await db
     .table('communities')
     .getAll(...distinctCommunityIds)
-    .run()
-}
+    .run();
+};
 
-export const getPublicCommunitiesByUser = async (userId: string) => {
+export const getPublicCommunitiesByUser = async (
+  userId: string,
+  after: number,
+  first: number
+) => {
   return await db
     .table('usersCommunities')
-    // get all the user's communities
     .getAll([userId, true], { index: 'userIdAndIsMember' })
-    // get the community objects for each community
+    .orderBy(db.desc('reputation'))
+    .skip(after)
+    .limit(first)
     .eqJoin('communityId', db.table('communities'))
-    // only return public community ids
     .filter(row => row('right')('isPrivate').eq(false))
-    // get rid of unnecessary info from the usersCommunities object on the left
     .without({ left: ['id', 'communityId', 'userId', 'createdAt'] })
-    // zip the tables
     .zip()
-    // ensure we don't return any deleted communities
     .filter(community => db.not(community.hasFields('deletedAt')))
     .run();
 };
@@ -799,12 +807,4 @@ export const setMemberCount = (
     )
     .run()
     .then(result => result.changes[0].new_val || result.changes[0].old_val);
-};
-
-export const getMemberCount = (communityId: string): Promise<number> => {
-  return db
-    .table('usersCommunities')
-    .getAll([communityId, true], { index: 'communityIdAndIsMember' })
-    .count()
-    .run();
 };
