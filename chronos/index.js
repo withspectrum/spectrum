@@ -7,12 +7,14 @@ import processWeeklyDigest from 'chronos/queues/digests/weeklyDigest';
 import processSingleDigestEmail from 'chronos/queues/digests/processIndividualDigest';
 import processDailyCoreMetrics from 'chronos/queues/coreMetrics';
 import processActiveCommunityAdminReport from 'chronos/queues/coreMetrics/activeCommunityAdminReport';
+import processRemoveSeenUsersNotifications from 'chronos/queues/remove-seen-usersNotifications';
 import {
   PROCESS_WEEKLY_DIGEST_EMAIL,
   PROCESS_DAILY_DIGEST_EMAIL,
   PROCESS_INDIVIDUAL_DIGEST,
   PROCESS_DAILY_CORE_METRICS,
   PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
+  PROCESS_REMOVE_SEEN_USERS_NOTIFICATIONS,
 } from 'chronos/queues/constants';
 import { startJobs } from 'chronos/jobs';
 
@@ -28,6 +30,7 @@ const server = createWorker(
     [PROCESS_INDIVIDUAL_DIGEST]: processSingleDigestEmail,
     [PROCESS_DAILY_CORE_METRICS]: processDailyCoreMetrics,
     [PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT]: processActiveCommunityAdminReport,
+    [PROCESS_REMOVE_SEEN_USERS_NOTIFICATIONS]: processRemoveSeenUsersNotifications,
   },
   {
     settings: {
