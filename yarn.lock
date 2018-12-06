@@ -4594,10 +4594,10 @@ crypto-random-string@^1.0.0:
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-1.0.0.tgz#a230f64f568310e1498009940790ec99545bca7e"
   integrity sha1-ojD2T1aDEOFJgAmUB5DsmVRbyn4=
 
-cryptr@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/cryptr/-/cryptr-3.0.0.tgz#4cdb1ac8b0b292c6ac1dcdf503bb27a05e4eba10"
-  integrity sha512-ojvQNR6fiYVPVeRJbihzuHdJ4lU4zWa/A2heJuW54R8U51DnRBrMD7KA7gET9yPrTXkcKjntflx/wW5nohKRPQ==
+cryptr@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/cryptr/-/cryptr-5.0.0.tgz#68c289aaff53c450ac4e6a607dfdaf05d754bd89"
+  integrity sha512-Mk7tYjFbhpK/XIDhNS08/B6nqRJuuD9Y0R2rctaTskVas2gq5a+SkNYq1Jr5lCztBNfuiLkFdGHaLu8PGtY5ZQ==
 
 css-color-keywords@^1.0.0:
   version "1.0.0"
