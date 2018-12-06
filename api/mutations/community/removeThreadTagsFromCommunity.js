@@ -10,7 +10,7 @@ import type { GraphQLContext } from '../../';
 
 type RemoveThreadTagsFromCommunityInput = {
   input: {
-    tags: Array<string>,
+    tagIds: Array<string>,
     communityId: string,
   },
 };
@@ -26,12 +26,12 @@ export default isAuthedResolver(
         "You cannot delete thread tags if you're not a team member."
       );
 
-    const tags = await loaders.threadTags.loadMany(input.tags);
+    const tags = await loaders.threadTags.loadMany(input.tagIds);
 
     if (tags.some(tag => !tag || tag.communityId !== input.communityId))
       return new UserError('Passed invalid tag IDs.');
 
-    await deleteThreadTags(input.tags);
+    await deleteThreadTags(input.tagIds);
 
     return getCommunityById(input.communityId);
   }

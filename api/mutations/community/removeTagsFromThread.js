@@ -9,7 +9,7 @@ import {
 type RemoveTagsFromThreadArgs = {
   input: {
     threadId: string,
-    tags: [string],
+    tagIds: [string],
   },
 };
 
@@ -21,11 +21,11 @@ export default isAuthedResolver(
     if (!(await canAdministerCommunity(thread.communityId, user.id, loaders)))
       return new UserError('Only team members can remove tags to a thread.');
 
-    const tags = await loaders.threadTags.loadMany(input.tags);
+    const tags = await loaders.threadTags.loadMany(input.tagIds);
 
     if (tags.some(tag => !tag || tag.communityId !== thread.communityId))
       return new UserError('Passed invalid tag IDs.');
 
-    return removeTagsFromThread(input.threadId, input.tags);
+    return removeTagsFromThread(input.threadId, input.tagIds);
   }
 );

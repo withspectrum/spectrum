@@ -343,7 +343,7 @@ const Community = /* GraphQL */ `
 
   input RemoveThreadTagsFromCommunity {
     communityId: String!
-    tags: [ID!]!
+    tagIds: [ID!]!
   }
 `;
 

@@ -134,12 +134,12 @@ const Thread = /* GraphQL */ `
 
   input AddTagsToThreadInput {
     threadId: ID!
-    tags: [ID!]!
+    tagIds: [ID!]!
   }
 
   input RemoveTagsFromThreadInput {
     threadId: ID!
-    tags: [ID!]!
+    tagIds: [ID!]!
   }
 
   extend type Mutation {
