@@ -21,7 +21,10 @@ export default isAuthedResolver(
     if (!(await canAdministerCommunity(thread.communityId, user.id, loaders)))
       return new UserError('Only team members can add tags to a thread.');
 
-    // TODO(@mxstbr): Verify that tag IDs are valid and of the same community
+    const tags = await loaders.threadTags.loadMany(input.tags);
+
+    if (tags.some(tag => !tag || tag.communityId !== thread.communityId))
+      return new UserError('Passed invalid tag IDs.');
 
     return addTagsToThread(input.threadId, input.tags);
   }
