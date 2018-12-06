@@ -68,6 +68,7 @@ import {
   PROCESS_DAILY_DIGEST_EMAIL,
   PROCESS_DAILY_CORE_METRICS,
   PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
+  PROCESS_REMOVE_SEEN_USERS_NOTIFICATIONS,
 } from 'chronos/queues/constants';
 
 // Normalize our (inconsistent) queue names to a set of JS compatible names
@@ -137,6 +138,7 @@ exports.QUEUE_NAMES = {
   processIndividualDigestQueue: PROCESS_INDIVIDUAL_DIGEST,
   dailyCoreMetricsQueue: PROCESS_DAILY_CORE_METRICS,
   activeCommunityReportQueue: PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
+  removeSeenUsersNotificationsQueue: PROCESS_REMOVE_SEEN_USERS_NOTIFICATIONS,
 };
 
 // We add one error listener per queue, so we have to set the max listeners

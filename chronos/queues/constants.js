@@ -23,3 +23,5 @@ export const PROCESS_DAILY_DIGEST_EMAIL = 'process daily digest email';
 export const PROCESS_DAILY_CORE_METRICS = 'process daily core metrics';
 export const PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT =
   'process active community admin report';
+export const PROCESS_REMOVE_SEEN_USERS_NOTIFICATIONS =
+  'process remove seen usersNotifications';
