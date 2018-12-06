@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "algoliasearch": "^3.30.0",
+    "algoliasearch": "^3.31.0",
     "apollo-engine": "^1.1.2",
     "apollo-local-query": "^0.3.0",
-    "apollo-server-express": "^2.2.5",
+    "apollo-server-express": "^2.2.6",
     "apollo-upload-client": "^8.1.0",
     "aws-sdk": "2.200.0",
     "axios": "^0.16.2",
@@ -114,7 +114,7 @@
     "sanitize-filename": "^1.6.1",
     "serialize-javascript": "^1.5.0",
     "session-rethinkdb": "^2.0.0",
-    "slate": "^0.44.7",
+    "slate": "^0.44.8",
     "slate-markdown": "0.1.0",
     "slugg": "^1.1.0",
     "string-replace-to-array": "^1.0.3",

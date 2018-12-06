@@ -1110,7 +1110,11 @@ ajv@^6.0.1, ajv@^6.1.0, ajv@^6.5.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
+<<<<<<< HEAD
 algoliasearch@^3.30.0:
+=======
+algoliasearch@^3.31.0:
+>>>>>>> 845465c9d7051eab7f437ae0ad6640b726ef24d3
   version "3.31.0"
   resolved "https://registry.yarnpkg.com/algoliasearch/-/algoliasearch-3.31.0.tgz#c4083375ff02538ef50d9ec73e6a72e5e19ed96f"
   integrity sha512-RJ3m8bQEitEQvWVfJa8WCTM4B9WSt0D4PPEYoqOga7Q0GAfBOqXTWeFYyDO46o085SWBSBWBInVuKyr5BIFP3A==
@@ -1323,7 +1327,11 @@ apollo-server-errors@2.2.0:
   resolved "https://registry.yarnpkg.com/apollo-server-errors/-/apollo-server-errors-2.2.0.tgz#5b452a1d6ff76440eb0f127511dc58031a8f3cb5"
   integrity sha512-gV9EZG2tovFtT1cLuCTavnJu2DaKxnXPRNGSTo+SDI6IAk6cdzyW0Gje5N2+3LybI0Wq5KAbW6VLei31S4MWmg==
 
+<<<<<<< HEAD
 apollo-server-express@^2.2.5:
+=======
+apollo-server-express@^2.2.6:
+>>>>>>> 845465c9d7051eab7f437ae0ad6640b726ef24d3
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/apollo-server-express/-/apollo-server-express-2.2.6.tgz#2c0c5bdab6eccf63ab138ad4b6d6836aeb723540"
   integrity sha512-+zajJDcJLhWdkW8f0D5KQfDsaxgx7fQ3ULGDT1eZgL0UY5pazWBOnXqeRoVKRl+r1WcrwN1SMfBVnAKWv6CyVw==
@@ -8621,7 +8629,11 @@ slate-markdown@0.1.0:
     react "^0.14.0 || ^15.0.0"
     styled-components "^2.0.0"
 
+<<<<<<< HEAD
 slate@^0.44.7:
+=======
+slate@^0.44.8:
+>>>>>>> 845465c9d7051eab7f437ae0ad6640b726ef24d3
   version "0.44.8"
   resolved "https://registry.yarnpkg.com/slate/-/slate-0.44.8.tgz#cd39a4e238acf21d072be9b0b5a5220bc4bd5f4c"
   integrity sha512-O7RMFsNiTxRxiVL6ndZplICQ9jK7wG8cJ9jZ0vYv5/RBir2RjH0tgRVSVvlgVEQv51h5vpmSQcrQ+GhEiWKX4g==
