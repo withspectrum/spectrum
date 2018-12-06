@@ -1,7 +1,9 @@
 // @flow
 import { addThreadTag } from '../../models/threadTags';
-import { isAuthedResolver } from '../../utils/permissions';
-import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import {
+  isAuthedResolver,
+  canAdministerCommunity,
+} from '../../utils/permissions';
 import { getCommunityById } from '../../models/community';
 import UserError from '../../utils/UserError';
 import type { GraphQLContext } from '../../';
@@ -17,14 +19,9 @@ export default isAuthedResolver(
   async (
     _: void,
     { input }: AddThreadTagsToCommunityInput,
-    { user }: GraphQLContext
+    { user, loaders }: GraphQLContext
   ) => {
-    const { isOwner, isModerator } = await getUserPermissionsInCommunity(
-      input.communityId,
-      user.id
-    );
-
-    if (!isOwner && !isModerator)
+    if (!(await canAdministerCommunity(input.communityId, user.id, loaders)))
       return new UserError(
         "You cannot add thread tags to a community if you're not a team member"
       );
