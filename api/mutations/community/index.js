@@ -16,6 +16,7 @@ import disableCommunityTokenJoin from './disableCommunityTokenJoin';
 import resetCommunityJoinToken from './resetCommunityJoinToken';
 import addThreadTagsToCommunity from './addThreadTagsToCommunity';
 import addTagsToThread from './addTagsToThread';
+import removeTagsFromThread from './removeTagsFromThread';
 
 module.exports = {
   Mutation: {
@@ -36,5 +37,6 @@ module.exports = {
     resetCommunityJoinToken,
     addThreadTagsToCommunity,
     addTagsToThread,
+    removeTagsFromThread,
   },
 };

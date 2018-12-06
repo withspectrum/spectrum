@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('shared/db');
+const { db, createWriteQuery } = require('shared/db');
 import intersection from 'lodash.intersection';
 import {
   processReputationEventQueue,
@@ -691,28 +691,55 @@ export const moveThread = (id: string, channelId: string, userId: string) => {
     });
 };
 
-export const addTagsToThread = (threadId: string, tags: [string]): DBThread => {
-  return db
-    .table('threads')
-    .get(threadId)
-    .update(
-      {
-        tags: db
-          .row('tags')
-          .default([])
-          .setUnion(tags),
-      },
-      {
-        returnChanges: 'always',
-      }
-    )
-    .run()
-    .then(res => {
-      if (!res || !Array.isArray(res.changes) || !res.changes.length > 0)
-        return null;
-      return res.changes[0].new_val || res.changes[0].old_val;
-    });
-};
+export const addTagsToThread = createWriteQuery(
+  (threadId: string, tags: [string]) => ({
+    query: db
+      .table('threads')
+      .get(threadId)
+      .update(
+        {
+          tags: db
+            .row('tags')
+            .default([])
+            .setUnion(tags),
+        },
+        {
+          returnChanges: 'always',
+        }
+      )
+      .run()
+      .then(res => {
+        if (!res || !Array.isArray(res.changes) || !res.changes.length > 0)
+          return null;
+        return res.changes[0].new_val || res.changes[0].old_val;
+      }),
+    invalidateTags: (thread: ?DBThread) => [threadId],
+  })
+);
+
+export const removeTagsFromThread = createWriteQuery(
+  (threadId: string, tags: [string]) => ({
+    query: db
+      .table('threads')
+      .get(threadId)
+      .update(
+        {
+          tags: db
+            .row('tags')
+            .default([])
+            .setDifference(tags),
+        },
+        { returnChanges: 'always' }
+      )
+      .run()
+      .then(res => {
+        if (!res || !Array.isArray(res.changes) || !res.changes.length > 0)
+          return null;
+        return res.changes[0].new_val || res.changes[0].old_val;
+      }),
+    invalidateTags: (thread: ?DBThread) => [threadId],
+  })
+);
 
 export const incrementMessageCount = (threadId: string) => {
   return db
