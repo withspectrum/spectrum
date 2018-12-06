@@ -45,6 +45,14 @@ if (!IS_PROD || FORCE_DEV) debug('Querying API at localhost:3001/api');
 const renderer = (req: express$Request, res: express$Response) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
 
+  if (IN_MAINTENANCE_MODE) {
+    res.status(500);
+    res.send(
+      `<!DOCTYPE html><html><head><title>Spectrum</title> <style>body{margin: 0;}html{-webkit-font-smoothing: antialiased; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';}h1, p{line-height: 1.5;}.container{background: rgb(56,24,229);background: linear-gradient(90deg, rgba(56,24,229,1) 0%, rgba(56,24,229,0.8029586834733894) 52%, rgba(56,24,229,1) 100%); width: 100%; display: flex; height: 100vh; justify-content: center;}.item{color: white; font-weight: bold; align-self: center; text-align: center;}a{color: white;}span{font-size: 40px; padding: 0; margin: 0;}</style></head><body> <div class="container"> <div class="item"> <span>🛠</span> <h1>We are currently undergoing maintenance.</h1> <p>We'll be back shortly. Follow <a href="https://twitter.com/withspectrum">@withspectrum on Twitter</a> to stay up to date. </p></div></div></body></html>`
+    );
+    return;
+  }
+
   debug(`server-side render ${req.url}`);
   debug(`querying API at https://${req.hostname}/api`);
   const schemaLink = new SchemaLink({
@@ -188,7 +196,7 @@ const renderer = (req: express$Request, res: express$Response) => {
           : 'Only output in production.';
       res.status(500);
       res.send(
-        `<!DOCTYPE html><html><head><title>Spectrum Chat Error</title> <style>body{margin: 0;}html{-webkit-font-smoothing: antialiased; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';}h1, p{line-height: 1.5;}.container{background: rgb(56,24,229);background: linear-gradient(90deg, rgba(56,24,229,1) 0%, rgba(56,24,229,0.8029586834733894) 52%, rgba(56,24,229,1) 100%); width: 100%; display: flex; height: 100vh; justify-content: center;}.item{color: white; font-weight: bold; align-self: center; text-align: center;}a{color: white;}span{font-size: 40px; padding: 0; margin: 0;}</style></head><body> <div class="container"> <div class="item"> <span>😢</span> <h1>Oops, something went wrong. Sorry!</h1> <p>Please refresh or <a href="/">go home</a>. </p></div></div></body></html>`
+        `<!DOCTYPE html><html><head><title>Spectrum</title> <style>body{margin: 0;}html{-webkit-font-smoothing: antialiased; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';}h1, p{line-height: 1.5;}.container{background: rgb(56,24,229);background: linear-gradient(90deg, rgba(56,24,229,1) 0%, rgba(56,24,229,0.8029586834733894) 52%, rgba(56,24,229,1) 100%); width: 100%; display: flex; height: 100vh; justify-content: center;}.item{color: white; font-weight: bold; align-self: center; text-align: center;}a{color: white;}span{font-size: 40px; padding: 0; margin: 0;}</style></head><body> <div class="container"> <div class="item"> <span>😢</span> <h1>Oops, something went wrong. Sorry!</h1> <p>Please refresh or <a href="/">go home</a>. </p></div></div></body></html>`
       );
     });
 };
