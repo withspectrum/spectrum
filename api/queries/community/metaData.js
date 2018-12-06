@@ -22,49 +22,58 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
     cache.get(`community:${id}:onlineMemberCount`),
   ]);
 
-  const [channelCount, onlineMemberCount] = await Promise.all([
-    typeof cachedChannelCount === 'number' ||
-      loaders.communityChannelCount
-        .load(id)
-        .then(res => (res && res.reduction) || 0),
-    typeof cachedOnlineMemberCount === 'number' ||
-      loaders.communityOnlineMemberCount
-        .load(id)
-        .then(res => (res && res.reduction) || 0),
-  ]);
-
-  // Cache the fields for an hour
-  await Promise.all([
-    typeof cachedChannelCount === 'number' ||
-      cache.set(`community:${id}:channelCount`, channelCount, 'ex', 3600),
-    typeof cachedOnlineMemberCount === 'number' ||
-      cache.set(
-        `community:${id}:onlineMemberCount`,
-        onlineMemberCount,
-        'ex',
-        3600
-      ),
-  ]);
-
-  if (typeof rootMemberCount === 'number') {
-    return {
-      channels: channelCount,
-      members: rootMemberCount,
-      onlineMembers: onlineMemberCount,
-    };
-  }
-
-  // Fallback if there's no denormalized memberCount, also report to Sentry
-  Raven.captureException(
-    new Error(
-      `Community with ID "${id}" does not have denormalized memberCount.`
-    )
-  );
-  return {
-    members: await loaders.communityMemberCount
+  const getDbCommunityChannelCount = async () => {
+    const count = await loaders.communityChannelCount
       .load(id)
-      .then(res => (res && res.reduction) || 0),
-    onlineMembers: onlineMemberCount,
-    channels: channelCount,
+      .then(res => (res && res.reduction) || 0);
+
+    await cache.set(`community:${id}:channelCount`, count, 'ex', 3600);
+
+    return count;
+  };
+
+  const getDbCommunityOnlineMemberCount = async () => {
+    const count = await loaders.communityOnlineMemberCount
+      .load(id)
+      .then(res => (res && res.reduction) || 0);
+
+    await cache.set(`community:${id}:onlineMemberCount`, count, 'ex', 3600);
+
+    return count;
+  };
+
+  const getDbRootMemberCount = async () => {
+    const count = await loaders.communityMemberCount
+      .load(id)
+      .then(res => (res && res.reduction) || 0);
+
+    await Raven.captureException(
+      new Error(
+        `Community with ID "${id}" does not have denormalized memberCount.`
+      )
+    );
+
+    return count;
+  };
+
+  const returnedChannelCount =
+    typeof cachedChannelCount === 'string'
+      ? parseInt(cachedChannelCount, 10)
+      : await getDbCommunityChannelCount();
+
+  const returnedOnlineMemberCount =
+    typeof cachedOnlineMemberCount === 'string'
+      ? parseInt(cachedOnlineMemberCount, 10)
+      : await getDbCommunityOnlineMemberCount();
+
+  const returnedMemberCount =
+    typeof rootMemberCount === 'number'
+      ? rootMemberCount
+      : await getDbRootMemberCount();
+
+  return {
+    channels: returnedChannelCount,
+    members: returnedMemberCount,
+    onlineMembers: returnedOnlineMemberCount,
   };
 };
