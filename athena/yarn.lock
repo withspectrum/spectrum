@@ -699,6 +699,13 @@ rethinkdbdash@^2.3.31:
   dependencies:
     bluebird ">= 3.0.1"
 
+rethinkhaberdashery@^2.3.32:
+  version "2.3.32"
+  resolved "https://registry.yarnpkg.com/rethinkhaberdashery/-/rethinkhaberdashery-2.3.32.tgz#ddcc4ba1342e653a9d3bb6982b526087e93d537e"
+  integrity sha512-scDswDEu7R47WqomjScq46LkCdhaFhpaGQDP3P44GDF32iCFgYbsL4fnJdaieE115qLeinRhEjna08XWCtV0iQ==
+  dependencies:
+    bluebird ">= 3.0.1"
+
 safe-buffer@^5.0.1:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
