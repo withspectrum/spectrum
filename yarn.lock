@@ -1052,9 +1052,9 @@
   integrity sha512-RObYTpPMo0IY+ZksPtKHsXlYFRxsYIvUqd68e89Y7otDrXsjBy1VgMd53kxVV0JMsNlkCASjllFOlLlhxEv0iw==
 
 "@types/jquery@*":
-  version "3.3.22"
-  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.3.22.tgz#cde55dc8f83207dffd16205b05f97ce824581735"
-  integrity sha512-a4JDcIhJhHYnoWCkG3xT2CZxXZeA92JeREESorg0DMQ3ZsjuKF48h7XK4l5Gl2GRa/ItGRpKMT0pyK88yRgqXQ==
+  version "3.3.23"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.3.23.tgz#e681aa2428e819edace9b30c91d987ef302c4e96"
+  integrity sha512-pHsP+vJn89UOhKFGCgdX3aPzv3QEoBmj1Rl76TAV5N5OS5G0Jf1S7mxzP7/5ZDmCiYAY6KpAT/b8XP09iem4cw==
   dependencies:
     "@types/sizzle" "*"
 
@@ -3719,14 +3719,14 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000914"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000914.tgz#5df1edfb2407dd857bf33e7f346514316c7b9fa3"
-  integrity sha512-UbjlrZOQowyqrPwFKFPZ4M7LngssN5FyWpvzuFKYiQoZD8J+bPYU4s0rSiKPTzFzDYNEP9w5E5+MQj3+TqW+gA==
+  version "1.0.30000916"
+  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000916.tgz#44556ba3f7360a4e103950fc58cc98b74d253da1"
+  integrity sha512-XuMzGxlFYXDEm+e/6ti7ThqQki/hRXHw4aaFMQXtFHYoj2XNn92zZ5aH75AADfQ1tnXoZTOvS2+NbaaWWPypIw==
 
 caniuse-lite@^1.0.30000748, caniuse-lite@^1.0.30000792, caniuse-lite@^1.0.30000844, caniuse-lite@^1.0.30000912:
-  version "1.0.30000914"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000914.tgz#f802b4667c24d0255f54a95818dcf8e1aa41f624"
-  integrity sha512-qqj0CL1xANgg6iDOybiPTIxtsmAnfIky9mBC35qgWrnK4WwmhqfpmkDYMYgwXJ8LRZ3/2jXlCntulO8mBaAgSg==
+  version "1.0.30000915"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000915.tgz#62fc895e9517fbf871c81fb5fad109564c453be6"
+  integrity sha512-6MmDHxeFfue8DYmcIKVosSK5ySNZxeZhsVEsGnOZREtqAe9EBYW5wKkjZou73KXMFlIcYsm1MdXSgRfraN79dw==
 
 capture-exit@^1.2.0:
   version "1.2.0"
