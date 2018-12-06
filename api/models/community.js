@@ -81,9 +81,6 @@ export const getVisibleCommunitiesByUser = async (
   const evaluatingUserMemberships = await db
     .table('usersCommunities')
     .getAll([evaluatingUserId, true], { index: 'userIdAndIsMember' })
-    .orderBy(db.desc('reputation'))
-    .skip(after)
-    .limit(first)
     .eqJoin('communityId', db.table('communities'))
     .without({ left: ['id', 'communityId', 'userId', 'createdAt'] })
     .zip()
@@ -135,14 +132,14 @@ export const getPublicCommunitiesByUser = async (
   return await db
     .table('usersCommunities')
     .getAll([userId, true], { index: 'userIdAndIsMember' })
-    .orderBy(db.desc('reputation'))
-    .skip(after)
-    .limit(first)
     .eqJoin('communityId', db.table('communities'))
     .filter(row => row('right')('isPrivate').eq(false))
     .without({ left: ['id', 'communityId', 'userId', 'createdAt'] })
     .zip()
     .filter(community => db.not(community.hasFields('deletedAt')))
+    .orderBy(db.desc('reputation'))
+    .skip(after)
+    .limit(first)
     .run();
 };
 
