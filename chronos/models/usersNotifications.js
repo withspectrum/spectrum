@@ -11,12 +11,11 @@ export const getSeenUsersNotifications = (after: number, limit: number): Promise
     .run()
 };
 
-export const deleteUsersNotifications = (
-  arr: Array<string>
-): Promise<boolean> => {
+// prettier-ignore
+export const deleteUsersNotifications = (arr: Array<string>): Promise<boolean> => {
   return db
     .table('usersNotifications')
-    .getAll(...filtered)
+    .getAll(...arr)
     .delete()
     .run()
     .then(() => true);
