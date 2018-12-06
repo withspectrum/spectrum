@@ -2,6 +2,9 @@
 /**
  * Database setup is done here
  */
+import fs from 'fs';
+import path from 'path';
+
 const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
 const DEFAULT_CONFIG = {
@@ -15,10 +18,28 @@ const DEFAULT_CONFIG = {
   timeoutGb: 60 * 1000, // How long should an unused connection stick around, default is an hour, this is a minute
 };
 
+let ca;
+
+try {
+  ca = fs.readFileSync(path.join(process.cwd(), 'cacert'));
+} catch (err) {}
+
+if (!ca && IS_PROD)
+  throw new Error(
+    'Please provide the SSL certificate to connect to the production database in a file called `cacert` in the root directory.'
+  );
+
 const PRODUCTION_CONFIG = {
-  password: process.env.AWS_RETHINKDB_PASSWORD,
-  host: process.env.AWS_RETHINKDB_URL,
-  port: process.env.AWS_RETHINKDB_PORT,
+  password: process.env.COMPOSE_RETHINKDB_PASSWORD,
+  host: process.env.COMPOSE_RETHINKDB_URL,
+  port: process.env.COMPOSE_RETHINKDB_PORT,
+  ...(ca
+    ? {
+        ssl: {
+          ca,
+        },
+      }
+    : {}),
 };
 
 const config = IS_PROD
