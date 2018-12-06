@@ -73,6 +73,9 @@ const transpileShared = config => {
 };
 
 module.exports = function override(config, env) {
+  if (process.env.REACT_APP_MAINTENANCE_MODE === 'enabled') {
+    console.error('\n\n⚠️ ----MAINTENANCE MODE ENABLED----⚠️\n\n');
+  }
   if (process.env.NODE_ENV === 'development') {
     config.output.path = path.join(__dirname, './build');
     config = rewireReactHotLoader(config, env);
