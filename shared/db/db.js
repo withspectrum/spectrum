@@ -22,9 +22,12 @@ let ca;
 
 try {
   ca = fs.readFileSync(path.join(process.cwd(), 'cacert'));
-} catch (err) {
-  if (IS_PROD) throw err;
-}
+} catch (err) {}
+
+if (!ca && IS_PROD)
+  throw new Error(
+    'Please provide the SSL certificate to connect to the production database in a file called `cacert` in the root directory.'
+  );
 
 const PRODUCTION_CONFIG = {
   password: process.env.COMPOSE_RETHINKDB_PASSWORD,
