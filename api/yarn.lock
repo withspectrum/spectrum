@@ -8352,10 +8352,10 @@ rethinkdbdash@^2.3.31:
   dependencies:
     bluebird ">= 3.0.1"
 
-rethinkhaberdashery@^2.3.31:
-  version "2.3.31"
-  resolved "https://registry.yarnpkg.com/rethinkhaberdashery/-/rethinkhaberdashery-2.3.31.tgz#760e847bb78eef366750fdf6c38b02465deb1b9b"
-  integrity sha512-VIIOgcUcvXdDaBqiXVSPD7Rz23tiHs0veMBaJ5VUYcSvqEWg8kc/671Y2ng4sIPsaSmDl6rmU6wiAO1MzsweoQ==
+rethinkhaberdashery@^2.3.32:
+  version "2.3.32"
+  resolved "https://registry.yarnpkg.com/rethinkhaberdashery/-/rethinkhaberdashery-2.3.32.tgz#ddcc4ba1342e653a9d3bb6982b526087e93d537e"
+  integrity sha512-scDswDEu7R47WqomjScq46LkCdhaFhpaGQDP3P44GDF32iCFgYbsL4fnJdaieE115qLeinRhEjna08XWCtV0iQ==
   dependencies:
     bluebird ">= 3.0.1"
 
