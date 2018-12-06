@@ -18,6 +18,7 @@
     "redis-tag-cache": "^1.2.1",
     "rethinkdb-changefeed-reconnect": "^0.3.2",
     "rethinkdbdash": "^2.3.29",
+    "rethinkhaberdashery": "^2.3.32",
     "sanitize-filename": "^1.6.1",
     "source-map-support": "^0.4.15",
     "stopword": "^0.1.13",
