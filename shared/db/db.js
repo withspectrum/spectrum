@@ -7,12 +7,11 @@ import path from 'path';
 
 const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
-const DEFAULT_CONFIG = {
-  // Connect to the test database when, well, testing
-  db: !process.env.TEST_DB ? 'spectrum' : 'testing',
+const RETHINKDBDASH_CONFIG = {
   max: 1000, // Maximum number of connections, default is 1000
   buffer: 50, // Minimum number of connections open at any given moment, default is 50
   timeoutGb: 60 * 60 * 1000, // How long should an unused connection stick around, default is an hour, this is a minute
+  pool: false,
 };
 
 let ca;
@@ -26,7 +25,12 @@ if (!ca && IS_PROD)
     'Please provide the SSL certificate to connect to the production database in a file called `cacert` in the root directory.'
   );
 
-const PRODUCTION_CONFIG = {
+const DEFAULT_CONNECTION_CONFIG = {
+  // Connect to the test database when, well, testing
+  db: !process.env.TEST_DB ? 'spectrum' : 'testing',
+};
+
+const PRODUCTION_CONNECTION_CONFIG = {
   password: process.env.COMPOSE_RETHINKDB_PASSWORD,
   host: process.env.COMPOSE_RETHINKDB_URL,
   port: process.env.COMPOSE_RETHINKDB_PORT,
@@ -39,25 +43,37 @@ const PRODUCTION_CONFIG = {
     : {}),
 };
 
-const config = IS_PROD
+const CONNECTION_CONFIG = IS_PROD
   ? {
-      ...DEFAULT_CONFIG,
-      ...PRODUCTION_CONFIG,
+      ...DEFAULT_CONNECTION_CONFIG,
+      ...PRODUCTION_CONNECTION_CONFIG,
     }
   : {
-      ...DEFAULT_CONFIG,
+      ...DEFAULT_CONNECTION_CONFIG,
     };
 
-var r = require('rethinkhaberdashery')(config);
+var r = require('rethinkhaberdashery')(RETHINKDBDASH_CONFIG);
 
-// Exit the process on unhealthy db in test env
-if (process.env.TEST_DB) {
-  r.getPoolMaster().on('healthy', healthy => {
-    if (!healthy) {
-      process.exit(1);
-    }
+let conn;
+r.connect(CONNECTION_CONFIG).then(connection => {
+  connection.on('error', err => {
+    console.error(err);
   });
-}
+  conn = connection;
+});
+// Monkey-patch query.run() to automatically pass in the single connection we use
+const run = r._Term.prototype.run;
+r._Term.prototype.run = function monkeyPatchedRun(...args) {
+  if (!conn) {
+    return new Promise(res => {
+      setTimeout(() => {
+        res(monkeyPatchedRun.call(this, ...args));
+      }, 250);
+    });
+  }
+
+  return run.call(this, conn, ...args);
+};
 
 if (process.env.NODE_ENV === 'development' && process.env.TRACK_DB_PERF) {
   const fs = require('fs');
