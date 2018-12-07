@@ -15,6 +15,7 @@
     "emoji-regex": "^6.5.1",
     "expo-server-sdk": "^2.4.0",
     "faker": "^4.1.0",
+    "generic-pool": "^3.4.2",
     "imgix-core-js": "^1.2.0",
     "lodash.intersection": "^4.4.0",
     "node-env-file": "^0.1.8",

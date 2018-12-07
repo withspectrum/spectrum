@@ -10,6 +10,7 @@
     "draft-js": "^0.10.3",
     "emoji-regex": "^6.1.1",
     "faker": "^4.1.0",
+    "generic-pool": "^3.4.2",
     "lodash": "^4.17.11",
     "lodash.intersection": "^4.4.0",
     "node-env-file": "^0.1.8",

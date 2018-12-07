@@ -9,6 +9,7 @@
     "decode-uri-component": "^0.2.0",
     "draft-js": "^0.10.5",
     "faker": "^4.1.0",
+    "generic-pool": "^3.4.2",
     "imgix-core-js": "^1.2.0",
     "lodash": "^4.17.11",
     "lodash.intersection": "^4.4.0",

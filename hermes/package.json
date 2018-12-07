@@ -8,6 +8,7 @@
     "debug": "^4.1.0",
     "draft-js": "^0.10.5",
     "faker": "^4.1.0",
+    "generic-pool": "^3.4.2",
     "jsonwebtoken": "^8.4.0",
     "lodash.intersection": "^4.4.0",
     "node-env-file": "^0.1.8",
