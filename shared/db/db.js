@@ -48,6 +48,8 @@ const CONNECTION_CONFIG = IS_PROD
       ...DEFAULT_CONNECTION_CONFIG,
     };
 
+const changefeedConn = r.connect(CONNECTION_CONFIG);
+
 const pool = createPool(
   {
     create: () =>
@@ -61,14 +63,36 @@ const pool = createPool(
   },
   {
     min: 1,
-    max: 10,
+    max: 5,
   }
 );
+
+// Taken from neumino/rethinkdbdash
+const CHANGES_PROTODEF = 152;
+// Queries are structured as trees and stored as arrays
+// this iterates over the whole tree and checks whether any part contains .changes(),
+// which has the proto defition of 152
+const isChangefeedQuery = query => {
+  if (!query) return false;
+  if (!Array.isArray(query)) return query === 152;
+  return (
+    query[0] === 152 ||
+    query[1] === 152 ||
+    isChangefeedQuery(query[0]) ||
+    isChangefeedQuery(query[1])
+  );
+};
 
 // Monkey-patch query.run() to automatically pass in the single connection we use
 const run = r._Term.prototype.run;
 r._Term.prototype.run = function monkeyPatchedRun(...args) {
   const self = this;
+  // Don't run changefeed queries on connections from the pool as those might be cancelled eventually
+  if (isChangefeedQuery(self._query)) {
+    return Promise.resolve(changefeedConn).then(conn => {
+      return run.call(self, conn, ...args);
+    });
+  }
   return pool.acquire().then(conn => {
     return run.call(self, conn, ...args).then(result => {
       pool.release(conn);
