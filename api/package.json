@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": "9.x.x"
+    "node": "10.7.0"
   },
   "dependencies": {
     "algoliasearch": "^3.31.0",
