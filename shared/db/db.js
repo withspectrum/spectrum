@@ -8,7 +8,7 @@ import { createPool } from 'generic-pool';
 
 const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
-const r = require('rethinkhaberdashery')({ pool: false });
+const r = require('rethinkhaberdashery')({ pool: false, optionalRun: false });
 
 let ca;
 
@@ -61,7 +61,7 @@ const pool = createPool(
   },
   {
     min: 1,
-    max: 5,
+    max: 10,
   }
 );
 
