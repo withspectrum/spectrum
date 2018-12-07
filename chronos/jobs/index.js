@@ -41,7 +41,7 @@ export const removeSeenUsersNotifications = () => {
   // 2am daily
   return removeSeenUsersNotificationsQueue.add(
     undefined,
-    defaultJobOptions('* * * * *')
+    defaultJobOptions('0 2 * * *')
   );
 };
 
