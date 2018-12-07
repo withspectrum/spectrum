@@ -4,7 +4,6 @@
  */
 import fs from 'fs';
 import path from 'path';
-import { createPool } from 'generic-pool';
 
 const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
@@ -48,57 +47,24 @@ const CONNECTION_CONFIG = IS_PROD
       ...DEFAULT_CONNECTION_CONFIG,
     };
 
-const changefeedConn = r.connect(CONNECTION_CONFIG);
+const connections = [
+  r.connect(CONNECTION_CONFIG),
+  r.connect(CONNECTION_CONFIG),
+  r.connect(CONNECTION_CONFIG),
+  r.connect(CONNECTION_CONFIG),
+  r.connect(CONNECTION_CONFIG),
+];
 
-const pool = createPool(
-  {
-    create: () =>
-      r.connect(CONNECTION_CONFIG).then(conn => {
-        conn.on('error', err => {
-          throw err;
-        });
-        return conn;
-      }),
-    destroy: conn => conn.close(),
-  },
-  {
-    min: 1,
-    max: 5,
-  }
-);
-
-// Taken from neumino/rethinkdbdash
-const CHANGES_PROTODEF = 152;
-// Queries are structured as trees and stored as arrays
-// this iterates over the whole tree and checks whether any part contains .changes(),
-// which has the proto defition of 152
-const isChangefeedQuery = query => {
-  if (!query) return false;
-  if (!Array.isArray(query)) return query === 152;
-  return (
-    query[0] === 152 ||
-    query[1] === 152 ||
-    isChangefeedQuery(query[0]) ||
-    isChangefeedQuery(query[1])
-  );
-};
-
-// Monkey-patch query.run() to automatically pass in the single connection we use
+// Monkey-patch query.run() to rotate over our database connections
+let counter = 0;
 const run = r._Term.prototype.run;
 r._Term.prototype.run = function monkeyPatchedRun(...args) {
   const self = this;
-  // Don't run changefeed queries on connections from the pool as those might be cancelled eventually
-  if (isChangefeedQuery(self._query)) {
-    return Promise.resolve(changefeedConn).then(conn => {
+  return Promise.resolve(connections[counter++ % connections.length]).then(
+    conn => {
       return run.call(self, conn, ...args);
-    });
-  }
-  return pool.acquire().then(conn => {
-    return run.call(self, conn, ...args).then(result => {
-      pool.release(conn);
-      return result;
-    });
-  });
+    }
+  );
 };
 
 if (process.env.NODE_ENV === 'development' && process.env.TRACK_DB_PERF) {
