@@ -7,12 +7,7 @@ import path from 'path';
 
 const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
-const RETHINKDBDASH_CONFIG = {
-  max: 1000, // Maximum number of connections, default is 1000
-  buffer: 50, // Minimum number of connections open at any given moment, default is 50
-  timeoutGb: 60 * 60 * 1000, // How long should an unused connection stick around, default is an hour, this is a minute
-  pool: false,
-};
+const r = require('rethinkhaberdashery')({ pool: false });
 
 let ca;
 
@@ -52,8 +47,6 @@ const CONNECTION_CONFIG = IS_PROD
       ...DEFAULT_CONNECTION_CONFIG,
     };
 
-var r = require('rethinkhaberdashery')(RETHINKDBDASH_CONFIG);
-
 let conn;
 r.connect(CONNECTION_CONFIG).then(connection => {
   connection.on('error', err => {
@@ -61,6 +54,7 @@ r.connect(CONNECTION_CONFIG).then(connection => {
   });
   conn = connection;
 });
+
 // Monkey-patch query.run() to automatically pass in the single connection we use
 const run = r._Term.prototype.run;
 r._Term.prototype.run = function monkeyPatchedRun(...args) {
