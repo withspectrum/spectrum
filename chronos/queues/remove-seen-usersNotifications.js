@@ -60,11 +60,14 @@ const processJob = async () => {
 };
 
 export default async () => {
-  try {
-    await processJob();
-  } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
-    Raven.captureException(err);
-  }
+  // NOTE(@mxstbr): This would iterate over the entire usersNotifications table every minute (!),
+  // so I've disabled it for now. We should run this at most once a week.
+  return;
+  // try {
+  //   await processJob();
+  // } catch (err) {
+  //   debug('❌ Error in job:\n');
+  //   debug(err);
+  //   Raven.captureException(err);
+  // }
 };
