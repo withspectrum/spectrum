@@ -4,6 +4,7 @@
  */
 import fs from 'fs';
 import path from 'path';
+import { createPool } from 'generic-pool';
 
 const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
@@ -47,26 +48,33 @@ const CONNECTION_CONFIG = IS_PROD
       ...DEFAULT_CONNECTION_CONFIG,
     };
 
-let conn;
-r.connect(CONNECTION_CONFIG).then(connection => {
-  connection.on('error', err => {
-    console.error(err);
-  });
-  conn = connection;
-});
+const pool = createPool(
+  {
+    create: () =>
+      r.connect(CONNECTION_CONFIG).then(conn => {
+        conn.on('error', err => {
+          throw err;
+        });
+        return conn;
+      }),
+    destroy: conn => conn.close(),
+  },
+  {
+    min: 1,
+    max: 5,
+  }
+);
 
 // Monkey-patch query.run() to automatically pass in the single connection we use
 const run = r._Term.prototype.run;
 r._Term.prototype.run = function monkeyPatchedRun(...args) {
-  if (!conn) {
-    return new Promise(res => {
-      setTimeout(() => {
-        res(monkeyPatchedRun.call(this, ...args));
-      }, 250);
+  const self = this;
+  return pool.acquire().then(conn => {
+    return run.call(self, conn, ...args).then(result => {
+      pool.release(conn);
+      return result;
     });
-  }
-
-  return run.call(this, conn, ...args);
+  });
 };
 
 if (process.env.NODE_ENV === 'development' && process.env.TRACK_DB_PERF) {

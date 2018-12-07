@@ -104,6 +104,7 @@
     "faker": "^4.1.0",
     "find-with-regex": "^1.0.2",
     "flow-typed": "^2.5.1",
+    "generic-pool": "^3.4.2",
     "graphql": "0.13.x",
     "graphql-cost-analysis": "^1.0.2",
     "graphql-date": "^1.0.3",
