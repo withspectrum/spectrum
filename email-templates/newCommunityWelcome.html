@@ -1,15 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Your community is live on Spectrum!</title>
-    <!--
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Your community is live on Spectrum!</title>
+  <!--
     The style block is collapsed on page load to save you some scrolling.
     Postmark automatically inlines all CSS properties for maximum email client
     compatibility. You can just update styles here, and Postmark does the rest.
     -->
-    <style type="text/css" rel="stylesheet" media="all">
+  <style type="text/css" rel="stylesheet" media="all">
     /* Base ------------------------------ */
 
     *:not(br):not(tr):not(html) {
@@ -39,10 +40,6 @@
       color: #7b16ff;
       font-weight: bold;
       text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
     }
 
     a img {
@@ -52,6 +49,7 @@
     td {
       word-break: break-word;
     }
+
     /* Layout ------------------------------ */
 
     .email-wrapper {
@@ -196,9 +194,11 @@
     .collapse {
       border-collapse: collapse;
     }
+
     /*Media Queries ------------------------------ */
 
     @media only screen and (max-width: 600px) {
+
       .email-body_inner,
       .email-footer {
         width: 100% !important;
@@ -213,8 +213,8 @@
 
     .button {
       background-color: #7B16FF;
-      display: inline-block;
-      color: #FFF;
+      display: block;
+      color: #FFF !important;
       padding: 12px 16px;
       text-decoration: none;
       border-radius: 12px;
@@ -225,11 +225,6 @@
       font-size: 17px;
       font-weight: 400;
       letter-spacing: 0.5px;
-
-      &:hover {
-        text-decoration: none;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-      }
     }
 
     .button.button-twitter {
@@ -294,7 +289,8 @@
       border-radius: 12px;
     }
 
-    p.emoji, span.emoji {
+    p.emoji,
+    span.emoji {
       font-size: 32px;
       vertical-align: middle;
       line-height: 1.6;
@@ -362,113 +358,130 @@
       font-size: 12px;
       font-weight: 500;
     }
-    </style>
-  </head>
-  <body>
-    <div style="display: none; max-height: 0px; overflow: hidden;">
-      Your {{community.name}} is live on Spectrum!
-    </div>
+  </style>
+</head>
 
-    <!-- Insert &zwnj;&nbsp; hack after hidden preview text -->
-    <div style="display: none; max-height: 0px; overflow: hidden;">
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-    </div>
+<body>
+  <div style="display: none; max-height: 0px; overflow: hidden;">
+    Your {{community.name}} is live on Spectrum!
+  </div>
 
-    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
-      <tr>
-        <td align="center">
-          <table class="email-content" width="100%" cellpadding="0" cellspacing="0">
-            <!-- Email Body -->
-            <tr>
-              <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
-                <table class="email-body_inner" align="center" cellpadding="0" cellspacing="0">
-                  <!-- Body content -->
-                  <tr>
-                    <td class="header-cell"></td>
-                  </tr>
-                  <tr>
-                    <td class="content-cell">
-                      <p class="emoji large">✨</p>
-                      <h1 class="title"><a href="https://spectrum.chat/{{community.slug}}"><b>{{community.name}}</a> is live on Spectrum!</b></h1>
-                      <p>But it's pretty quiet in there right now - share {{community.name}} to get the conversation started!</p>
+  <!-- Insert &zwnj;&nbsp; hack after hidden preview text -->
+  <div style="display: none; max-height: 0px; overflow: hidden;">
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+  </div>
 
-                      <table class="button-group">
-                        <tr>
-                          <td>
-                            <a class="button button-twitter" href="https://twitter.com/share?text=Come hang out with me in the {{community.name}} community on @withspectrum!&amp;url=https://spectrum.chat/{{community.slug}}">Share on Twitter</a>
-                          </td>
+  <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center">
+        <table class="email-content" width="100%" cellpadding="0" cellspacing="0">
+          <!-- Email Body -->
+          <tr>
+            <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
+              <table class="email-body_inner" align="center" cellpadding="0" cellspacing="0">
+                <!-- Body content -->
+                <tr>
+                  <td class="header-cell"></td>
+                </tr>
+                <tr>
+                  <td class="content-cell">
+                    <p class="emoji large">✨</p>
+                    <h1 class="title"><a href="https://spectrum.chat/{{community.slug}}"><b>{{community.name}}</a> is
+                      live on Spectrum!</b></h1>
+                    <p>But it's pretty quiet in there right now - share {{community.name}} to get the conversation
+                      started!</p>
 
-                          <td>
-                            <a class="button button-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/{{community.slug}}&amp;t=Come hang out with me in the {{community.name}} community on Spectrum!">Share on Facebook</a>
-                          </td>
-                        </tr>
-                      </table>
+                    <table class="button-group">
+                      <tr>
+                        <td>
+                          <a class="button button-twitter" href="https://twitter.com/share?text=Come hang out with me in the {{community.name}} community on @withspectrum!&amp;url=https://spectrum.chat/{{community.slug}}">Share
+                            on Twitter</a>
+                        </td>
 
-                      <div class="section-divider"></div>
-                      <h2 class="section-title">Connect with our team and other community owners</h2>
-                      <p>We've created a channel on Spectrum just for community builders like you. Come join our Meta channel to talk about building communities, ask us questions, request features, or get faster replies on those pesky bug reports!</p>
+                        <td>
+                          <a class="button button-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/{{community.slug}}&amp;t=Come hang out with me in the {{community.name}} community on Spectrum!">Share
+                            on Facebook</a>
+                        </td>
+                      </tr>
+                    </table>
 
-                      <table class="button-group">
-                        <tr>
-                          <td>
-                            <a class="button" href="https://spectrum.chat/spectrum/meta">Join our community builders community</a>
-                          </td>
-                        </tr>
-                      </table>
+                    <div class="section-divider"></div>
+                    <h2 class="section-title">Connect with our team and other community owners</h2>
+                    <p>We've created a channel on Spectrum just for community builders like you. Come join our Meta
+                      channel to talk about building communities, ask us questions, request features, or get faster
+                      replies on those pesky bug reports!</p>
 
-                      <div class="section-divider"></div>
-                      <h2 class="section-title">Threads: The building blocks of communities</h2>
-                      <p>Threads are the building blocks of communities on Spectrum - they're rich posts that can contain text, photos, videos, embedded content, and more. Your community is new, so there aren't any threads yet.</p>
+                    <table class="button-group">
+                      <tr>
+                        <td>
+                          <a class="button" href="https://spectrum.chat/spectrum/meta">Join our community builders
+                            community</a>
+                        </td>
+                      </tr>
+                    </table>
 
-                      <table class="button-group">
-                        <tr>
-                          <td>
-                            <a class="button" href="https://spectrum.chat/{{community.slug}}">Post your first thread</a>
-                          </td>
-                        </tr>
-                      </table>
+                    <div class="section-divider"></div>
+                    <h2 class="section-title">Threads: The building blocks of communities</h2>
+                    <p>Threads are the building blocks of communities on Spectrum - they're rich posts that can contain
+                      text, photos, videos, embedded content, and more. Your community is new, so there aren't any
+                      threads yet.</p>
 
-                      <div class="section-divider"></div>
-                      <h2 class="section-title">Moving an existing community?</h2>
-                      <p>We've also made it easy to <b>migrate an existing Slack team</b> and invite people to {{community.name}} directly by email.</p>
+                    <table class="button-group">
+                      <tr>
+                        <td>
+                          <a class="button" href="https://spectrum.chat/{{community.slug}}">Post your first thread</a>
+                        </td>
+                      </tr>
+                    </table>
 
-                      <table class="button-group">
-                        <tr>
-                          <td>
-                            <a class="button" href="https://spectrum.chat/{{community.slug}}/settings">Invite people to your community</a>
-                          </td>
-                        </tr>
-                      </table>
+                    <div class="section-divider"></div>
+                    <h2 class="section-title">Moving an existing community?</h2>
+                    <p>We've also made it easy to <b>migrate an existing Slack team</b> and invite people to
+                      {{community.name}} directly by email.</p>
 
-                      <div class="section-divider"></div>
-                      <h2 class="section-title">More to come...</h2>
-                      <p>We're working on new features for community builders just like you - if you have ideas, feel free to <a href="https://spectrum.chat/spectrum/feature-requests">request new features</a>. And if you happen to come across any bugs, <a href="https://spectrum.chat/spectrum/hugs-n-bugs">we're listening to you.</a></p>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-          <table class="email-footer" align="center" cellpadding="0" cellspacing="0">
-            <tr>
-              <td class="content-cell">
-                <p class="sub"><strong>Spectrum</strong> is made by <strong>Space Program, Inc.</strong><br/>542 Brannan St. 409, San Francisco, CA 94107</p>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
+                    <table class="button-group">
+                      <tr>
+                        <td>
+                          <a class="button" href="https://spectrum.chat/{{community.slug}}/settings">Invite people to
+                            your community</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <div class="section-divider"></div>
+                    <h2 class="section-title">More to come...</h2>
+                    <p>We're working on new features for community builders just like you - if you have ideas, feel
+                      free to <a href="https://spectrum.chat/spectrum/feature-requests">request new features</a>. And
+                      if you happen to come across any bugs, <a href="https://spectrum.chat/spectrum/hugs-n-bugs">we're
+                        listening to you.</a></p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <table class="email-footer" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="content-cell">
+              <p class="sub"><strong>Spectrum</strong> is made by <strong>Space Program, Inc.</strong><br />88 Colin P
+                Kelly Jr St, San Francisco, CA 94107, United States</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+
 </html>
