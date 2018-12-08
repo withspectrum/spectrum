@@ -33,10 +33,9 @@ export default async (job: Job<SendNewMessageMentionEmailJobData>) => {
 
   try {
     return sendEmail({
-      TemplateId: NEW_MENTION_MESSAGE_TEMPLATE,
-      To: recipient.email,
-      Tag: SEND_NEW_MENTION_MESSAGE_EMAIL,
-      TemplateModel: {
+      templateId: NEW_MENTION_MESSAGE_TEMPLATE,
+      to: recipient.email,
+      dynamic_template_data: {
         subject,
         preheader,
         sender,

@@ -3,6 +3,7 @@ const debug = require('debug')('hermes:queue:send-new-message-email');
 import Raven from 'shared/raven';
 import sendEmail from '../send-email';
 import { generateUnsubscribeToken } from '../utils/generate-jwt';
+import smarten from 'hermes/utils/smarten-string';
 import {
   NEW_MESSAGE_TEMPLATE,
   TYPE_NEW_MESSAGE_IN_THREAD,
@@ -36,9 +37,10 @@ export default async (job: Job<SendNewMessageEmailJobData>) => {
           : `${restNames.length} others`
       }`
     : '';
+
   const threadsText =
     threadsAmount === 1
-      ? `'${threads[0].content.title}'`
+      ? `‘${smarten(threads[0].content.title)}’`
       : `${threadsAmount} conversations`;
   // Brian and 3 others replied in 4 conversations
   // Brian replied in 'Thread title'
@@ -78,10 +80,9 @@ export default async (job: Job<SendNewMessageEmailJobData>) => {
   if (!unsubscribeToken || !recipient.email || !recipient.username) return;
   try {
     return sendEmail({
-      TemplateId: NEW_MESSAGE_TEMPLATE,
-      To: recipient.email,
-      Tag: SEND_NEW_MESSAGE_EMAIL,
-      TemplateModel: {
+      templateId: NEW_MESSAGE_TEMPLATE,
+      to: recipient.email,
+      dynamic_template_data: {
         subject,
         preheader,
         recipient,
