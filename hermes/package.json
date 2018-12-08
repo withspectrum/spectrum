@@ -3,10 +3,12 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
+    "@sendgrid/mail": "^6.3.1",
     "aws-sdk": "^2.354.0",
     "bull": "3.3.10",
     "debug": "^4.1.0",
     "draft-js": "^0.10.5",
+    "escape-html": "^1.0.3",
     "faker": "^4.1.0",
     "jsonwebtoken": "^8.4.0",
     "lodash.intersection": "^4.4.0",
