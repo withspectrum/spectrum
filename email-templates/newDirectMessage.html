@@ -34,7 +34,6 @@
 
     a {
       color: #7b16ff;
-      font-weight: bold;
       text-decoration: none;
     }
 
@@ -46,8 +45,6 @@
       word-break: break-word;
     }
 
-    /* Layout ------------------------------ */
-
     .email-wrapper {
       width: 100%;
       margin: 0;
@@ -55,7 +52,7 @@
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
-      background-color: #FFF;
+      background-color: #F5F8FC;
     }
 
     .email-content {
@@ -65,69 +62,59 @@
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
+      background-color: #FFFFFF;
+      border-bottom: 1px solid #DAE4F2;
     }
 
     /* Body ------------------------------ */
 
     .email-body {
       width: 100%;
-      max-width: 560px;
       margin: 0;
-      padding: 0;
+      padding: 32px 0;
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
-      background-color: #FFFFFF;
     }
 
     .email-body_inner {
-      width: 100%;
-      max-width: 560px;
+      width: 570px;
       margin: 0 auto;
-      padding: 0;
-      -premailer-width: 560px;
+      padding: 16px;
+      -premailer-width: 570px;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
       background-color: #FFFFFF;
     }
 
     .email-footer {
-      width: 100%;
-      max-width: 560px;
+      width: 570px;
       margin: 0 auto;
-      padding: 8px;
-      -premailer-width: 560px;
+      padding: 16px 16px 32px;
+      -premailer-width: 570px;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
       text-align: center;
-      background-color: #F2F5F9;
-      margin-top: 32px;
-      font-weight: 400;
     }
 
     .email-footer p {
-      color: #747E8D;
-      margin-bottom: 0;
+      color: #828C99;
       font-size: 14px;
     }
 
     .email-footer a {
-      color: #16171A;
-      font-weight: 500;
+      color: #1D2129;
     }
 
     .email-footer ul {
       list-style-type: none;
-      margin: 16px 0;
-      padding: 0;
-      font-size: 14px;
-      color: #747E8D;
+      margin: 24px 0;
+      padding-left: 0;
     }
 
     .email-footer li {
-      margin-top: 8px;
-      display: block;
-      width: 100%;
+      margin: 8px 0;
+      font-size: 14px;
     }
 
     .body-action {
@@ -164,7 +151,7 @@
     }
 
     .header-cell {
-      padding: 24px;
+      padding: 24px 24px 0 24px;
     }
 
     .content-cell {
@@ -404,12 +391,6 @@
               <table class="email-body_inner" align="center" width="560" cellpadding="0" cellspacing="0">
                 <!-- Body content -->
                 <tr>
-                  <td class="header-cell">
-                    <p>Hey there!</p>
-                    <p>You have a new direct messages on Spectrum.</p>
-                  </td>
-                </tr>
-                <tr>
                   <td class="content-cell">
                     <table class="attributes post" width="100%" cellpadding="0" cellspacing="0">
                       <tr>
@@ -496,8 +477,19 @@
                 {{/username}}
               </ul>
 
+              <ul>
+                <li>
+                  <a href="https://twitter.com/withspectrum">Follow @withspectrum on Twitter</a>
+                </li>
+
+                <li>
+                  <a href="https://spectrum.chat/spectrum/hugs-n-bugs">Report bugs</a> · <a href="https://spectrum.chat/spectrum/feature-requests">Request
+                    a feature</a>
+                </li>
+              </ul>
+
               <p class="sub">Spectrum is made by GitHub, Inc.<br />88 Colin P Kelly Jr St, San Francisco, CA
-                94107, United States</p>
+                94107<br /> United States</p>
             </td>
           </tr>
         </table>

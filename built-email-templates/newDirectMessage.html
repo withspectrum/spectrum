@@ -15,27 +15,21 @@
 </head>
 
 <body style="-webkit-text-size-adjust:none; background-color:#FFF; color:#171a21; height:100%; line-height:1.4; margin:0; width:100%" bgcolor="#FFFFFF" height="100%" width="100%">
-  <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" style="-premailer-cellpadding:0; -premailer-cellspacing:0; -premailer-width:100%; background-color:#FFF; margin:0; padding:0; width:100%" bgcolor="#FFFFFF">
+  <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" style="-premailer-cellpadding:0; -premailer-cellspacing:0; -premailer-width:100%; background-color:#F5F8FC; margin:0; padding:0; width:100%" bgcolor="#F5F8FC">
     <tr>
       <td align="center" style="word-break:break-word">
-        <table class="email-content" width="100%" cellpadding="0" cellspacing="0" style="-premailer-cellpadding:0; -premailer-cellspacing:0; -premailer-width:100%; margin:0; padding:0; width:100%">
+        <table class="email-content" width="100%" cellpadding="0" cellspacing="0" style="-premailer-cellpadding:0; -premailer-cellspacing:0; -premailer-width:100%; background-color:#FFF; border-bottom:1px solid #DAE4F2; margin:0; padding:0; width:100%" bgcolor="#FFFFFF">
           <!-- Email Body -->
           <tr>
-            <td class="email-body" width="100%" cellpadding="0" cellspacing="0" style="word-break:break-word; -premailer-cellpadding:0; -premailer-cellspacing:0; -premailer-width:100%; background-color:#FFF; margin:0; max-width:560px; padding:0; width:100%" bgcolor="#FFFFFF">
-              <table class="email-body_inner" align="center" width="100%" cellpadding="0" cellspacing="0" style="-premailer-cellpadding:0; -premailer-cellspacing:0; -premailer-width:560px; background-color:#FFF; margin:0 auto; max-width:560px; padding:0; width:100%" bgcolor="#FFFFFF">
+            <td class="email-body" width="100%" cellpadding="0" cellspacing="0" style="word-break:break-word; -premailer-cellpadding:0; -premailer-cellspacing:0; -premailer-width:100%; margin:0; padding:32px 0; width:100%">
+              <table class="email-body_inner" align="center" width="570" cellpadding="0" cellspacing="0" style="-premailer-cellpadding:0; -premailer-cellspacing:0; -premailer-width:570px; background-color:#FFF; margin:0 auto; padding:16px; width:570px" bgcolor="#FFFFFF">
                 <!-- Body content -->
-                <tr>
-                  <td class="header-cell" style="word-break:break-word; padding:24px">
-                    <p style="line-height:1.5em; text-align:left; color:#171A21; font-size:16px; margin:0; margin-bottom:16px; padding:0" align="left">Hey there!</p>
-                    <p style="line-height:1.5em; text-align:left; color:#171A21; font-size:16px; margin:0; margin-bottom:16px; padding:0" align="left">You have a new direct messages on Spectrum.</p>
-                  </td>
-                </tr>
                 <tr>
                   <td class="content-cell" style="word-break:break-word; padding:8px 24px">
                     <table class="attributes post" width="100%" cellpadding="0" cellspacing="0" style="border-bottom:2px solid #DFE7EF; padding:24px 0 24px">
                       <tr>
                         <td style="word-break:break-word">
-                          <a href="https://spectrum.chat/{{ thread.path }}" style="color:#7b16ff; font-weight:bold; text-decoration:none">
+                          <a href="https://spectrum.chat/{{ thread.path }}" style="color:#7b16ff; text-decoration:none">
                             <h2 class="title" style="color:#171A21; font-size:16px; font-weight:bold; margin:0; padding:0; text-align:left" align="left">{{thread.content.title}}</h2>
                           </a>
                         </td>
@@ -46,7 +40,7 @@
                           <table>
                             <tr>
                               <td valign="top" style="word-break:break-word">
-                                <a href="https://spectrum.chat/{{ thread.path }}" style="color:#7b16ff; font-weight:bold; text-decoration:none">
+                                <a href="https://spectrum.chat/{{ thread.path }}" style="color:#7b16ff; text-decoration:none">
                                   <img class="avatar" src="{{ user.profilePhoto }}" style="border:none; border-radius:20px; height:40px; margin-right:8px; vertical-align:middle; width:40px" height="40" valign="middle" width="40">
                                 </a>
                               </td>
@@ -54,12 +48,12 @@
                                 <table>
                                   <tr>
                                     <td style="word-break:break-word">
-                                      <a href="https://spectrum.chat/{{ thread.path }}" style="color:#7b16ff; font-weight:bold; text-decoration:none"><span class="name" style="color:#747E8D; font-size:14px; font-style:normal; font-weight:400; line-height:1; vertical-align:bottom" valign="bottom">{{user.name}}</span></a>
+                                      <a href="https://spectrum.chat/{{ thread.path }}" style="color:#7b16ff; text-decoration:none"><span class="name" style="color:#747E8D; font-size:14px; font-style:normal; font-weight:400; line-height:1; vertical-align:bottom" valign="bottom">{{user.name}}</span></a>
                                     </td>
                                   </tr>
                                   <tr>
                                     <td style="word-break:break-word">
-                                      <a href="https://spectrum.chat/{{ thread.path }}" style="color:#7b16ff; font-weight:bold; text-decoration:none">
+                                      <a href="https://spectrum.chat/{{ thread.path }}" style="color:#7b16ff; text-decoration:none">
                                         <p class="reply" style="line-height:1.5em; text-align:left; color:#171A21; font-size:16px; margin:0; margin-bottom:2px; padding:8px 12px; background:#E6ECF7; border-radius:12px; display:block; font-weight:400" align="left">{{message.content.body}}</p>
                                       </a>
                                     </td>
@@ -73,7 +67,7 @@
 
                       <tr>
                         <td style="word-break:break-word">
-                          <a data-pm-no-track class="feed button" href="https://spectrum.chat/{{ thread.path }}" style="color:#FFF; font-weight:bold; text-decoration:none; -webkit-text-size-adjust:none; background-color:#7B16FF; border-radius:12px; box-shadow:0 4px 8px rgba(0, 0, 0, 0.15); display:block; font-size:16px; padding:12px 16px; text-align:center; white-space:nowrap; word-break:keep-all; margin-top:16px" bgcolor="#7B16FF" align="center">Go to
+                          <a data-pm-no-track class="feed button" href="https://spectrum.chat/{{ thread.path }}" style="color:#FFF; text-decoration:none; -webkit-text-size-adjust:none; background-color:#7B16FF; border-radius:12px; box-shadow:0 4px 8px rgba(0, 0, 0, 0.15); display:block; font-size:16px; padding:12px 16px; text-align:center; white-space:nowrap; word-break:keep-all; margin-top:16px" bgcolor="#7B16FF" align="center">Go to
                             conversation</a>
                         </td>
                       </tr>
@@ -90,35 +84,46 @@
             </td>
           </tr>
         </table>
-        <table class="email-footer" align="center" width="100%" cellpadding="0" cellspacing="0" style="-premailer-cellpadding:0; -premailer-cellspacing:0; -premailer-width:560px; background-color:#F2F5F9; font-weight:400; margin:0 auto; margin-top:32px; max-width:560px; padding:8px; text-align:center; width:100%" bgcolor="#F2F5F9">
+        <table class="email-footer" align="center" width="570" cellpadding="0" cellspacing="0" style="-premailer-cellpadding:0; -premailer-cellspacing:0; -premailer-width:570px; margin:0 auto; padding:16px 16px 32px; text-align:center; width:570px">
           <tr>
             <td class="content-cell" style="word-break:break-word; padding:8px 24px">
-              <p class="sub" style="line-height:1.5em; text-align:left; color:#747E8D; font-size:14px; margin:0; margin-bottom:0; padding:0" align="left">
-                You are receiving this email because you joined <a href="https://spectrum.chat" style="color:#16171A; font-weight:500; text-decoration:none">Spectrum</a>. If you no
+              <p class="sub" style="line-height:1.5em; text-align:left; color:#747E8D; font-size:14px; margin:0; margin-bottom:16px; padding:0" align="left">
+                You are receiving this email because you joined <a href="https://spectrum.chat" style="color:#1D2129; text-decoration:none">Spectrum</a>. If you no
                 longer want to receive emails like this, you can:
               </p>
 
-              <ul style="line-height:1.4; text-align:left; color:#747E8D; font-size:14px; list-style-type:none; margin:16px 0; padding:0" align="left">
+              <ul style="line-height:1.4; text-align:left; list-style-type:none; margin:24px 0; padding-left:0" align="left">
                 {{#muteThreadToken}}
-                <li style="display:block; margin-top:8px; width:100%" width="100%">
-                  <a href="https://spectrum.chat/api/email/unsubscribe?token={{ . }}" style="color:#16171A; font-weight:500; text-decoration:none">Unsubscribe from this conversation</a>
+                <li style="font-size:14px; margin:8px 0">
+                  <a href="https://spectrum.chat/api/email/unsubscribe?token={{ . }}" style="color:#1D2129; text-decoration:none">Unsubscribe from this conversation</a>
                 </li>
                 {{/muteThreadToken}}
 
-                <li style="display:block; margin-top:8px; width:100%" width="100%">
-                  <a href="https://spectrum.chat/api/email/unsubscribe?token={{ unsubscribeToken }}" style="color:#16171A; font-weight:500; text-decoration:none">Unsubscribe from all
+                <li style="font-size:14px; margin:8px 0">
+                  <a href="https://spectrum.chat/api/email/unsubscribe?token={{ unsubscribeToken }}" style="color:#1D2129; text-decoration:none">Unsubscribe from all
                     new direct message notification emails</a>
                 </li>
 
                 {{#username}}
-                <li style="display:block; margin-top:8px; width:100%" width="100%">
-                  <a href="https://spectrum.chat/users/{{ . }}/settings" style="color:#16171A; font-weight:500; text-decoration:none">Manage your email preferences on Spectrum</a>
+                <li style="font-size:14px; margin:8px 0">
+                  <a href="https://spectrum.chat/users/{{ . }}/settings" style="color:#1D2129; text-decoration:none">Manage your email preferences on Spectrum</a>
                 </li>
                 {{/username}}
               </ul>
 
-              <p class="sub" style="line-height:1.5em; text-align:left; color:#747E8D; font-size:14px; margin:0; margin-bottom:0; padding:0" align="left">Spectrum is made by GitHub, Inc.<br>88 Colin P Kelly Jr St, San Francisco, CA
-                94107, United States</p>
+              <ul style="line-height:1.4; text-align:left; list-style-type:none; margin:24px 0; padding-left:0" align="left">
+                <li style="font-size:14px; margin:8px 0">
+                  <a href="https://twitter.com/withspectrum" style="color:#1D2129; text-decoration:none">Follow @withspectrum on Twitter</a>
+                </li>
+
+                <li style="font-size:14px; margin:8px 0">
+                  <a href="https://spectrum.chat/spectrum/hugs-n-bugs" style="color:#1D2129; text-decoration:none">Report bugs</a> · <a href="https://spectrum.chat/spectrum/feature-requests" style="color:#1D2129; text-decoration:none">Request
+                    a feature</a>
+                </li>
+              </ul>
+
+              <p class="sub" style="line-height:1.5em; text-align:left; color:#747E8D; font-size:14px; margin:0; margin-bottom:16px; padding:0" align="left">Spectrum is made by GitHub, Inc.<br>88 Colin P Kelly Jr St, San Francisco, CA
+                94107<br> United States</p>
             </td>
           </tr>
         </table>

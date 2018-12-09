@@ -34,7 +34,6 @@
 
     a {
       color: #7b16ff;
-      font-weight: bold;
       text-decoration: none;
     }
 
@@ -55,7 +54,7 @@
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
-      background-color: #FFF;
+      background-color: #F5F8FC;
     }
 
     .email-content {
@@ -65,48 +64,59 @@
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
+      background-color: #FFFFFF;
+      border-bottom: 1px solid #DAE4F2;
     }
 
     /* Body ------------------------------ */
 
     .email-body {
       width: 100%;
-      max-width: 560px;
       margin: 0;
-      padding: 0;
+      padding: 32px 0;
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
-      background-color: #FFFFFF;
     }
 
     .email-body_inner {
-      width: 100%;
-      max-width: 560px;
+      width: 570px;
       margin: 0 auto;
-      padding: 0;
-      -premailer-width: 560px;
+      padding: 16px;
+      -premailer-width: 570px;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
       background-color: #FFFFFF;
     }
 
     .email-footer {
-      width: 100%;
-      max-width: 560px;
+      width: 570px;
       margin: 0 auto;
-      padding: 0;
-      -premailer-width: 560px;
+      padding: 16px 16px 32px;
+      -premailer-width: 570px;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
       text-align: center;
-      background-color: #F2F5F9;
-      margin-top: 32px;
     }
 
     .email-footer p {
-      color: #AEAEAE;
-      margin-bottom: 0;
+      color: #828C99;
+      font-size: 14px;
+    }
+
+    .email-footer a {
+      color: #1D2129;
+    }
+
+    .email-footer ul {
+      list-style-type: none;
+      margin: 24px 0;
+      padding-left: 0;
+    }
+
+    .email-footer li {
+      margin: 8px 0;
+      font-size: 14px;
     }
 
     .body-action {
@@ -218,9 +228,8 @@
       -webkit-text-size-adjust: none;
       word-break: keep-all;
       white-space: nowrap;
-      font-size: 17px;
-      font-weight: 400;
-      letter-spacing: 0.5px;
+      font-size: 16px;
+      font-weight: 500;
       text-align: center;
     }
 
@@ -263,12 +272,10 @@
     }
 
     p {
-      margin: 0;
-      margin-bottom: 16px;
-      padding: 0;
+      margin-top: 12px;
       color: #171A21;
       font-size: 16px;
-      line-height: 1.5em;
+      line-height: 1.4;
       text-align: left;
     }
 
@@ -331,14 +338,14 @@
 
     h1.title {
       font-size: 24px;
-      font-weight: 800;
+      font-weight: 600;
       color: #171A21;
       margin-bottom: 24px;
     }
 
     h2.section-title {
       font-size: 18px;
-      font-weight: 800;
+      font-weight: 500;
       color: #171A21;
       margin-bottom: 8px;
     }
@@ -388,9 +395,6 @@
             <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
               <table class="email-body_inner" align="center" cellpadding="0" cellspacing="0">
                 <!-- Body content -->
-                <tr>
-                  <td class="header-cell"></td>
-                </tr>
                 <tr>
                   <td class="content-cell">
                     <p class="emoji large">✨</p>
@@ -462,6 +466,7 @@
                       free to <a href="https://spectrum.chat/spectrum/feature-requests">request new features</a>. And
                       if you happen to come across any bugs, <a href="https://spectrum.chat/spectrum/hugs-n-bugs">we're
                         listening to you.</a></p>
+                    <p>&nbsp;</p>
                   </td>
                 </tr>
               </table>
@@ -470,9 +475,23 @@
         </table>
         <table class="email-footer" align="center" cellpadding="0" cellspacing="0">
           <tr>
-            <td class="content-cell">
-              <p class="sub"><strong>Spectrum</strong> is made by <strong>Space Program, Inc.</strong><br />88 Colin P
-                Kelly Jr St, San Francisco, CA 94107, United States</p>
+            <td>
+              <p>
+                You are receiving this email because you joined <a href="https://spectrum.chat">Spectrum</a>.
+              </p>
+              <ul>
+                <li>
+                  <a href="https://twitter.com/withspectrum">Follow @withspectrum on Twitter</a>
+                </li>
+
+                <li>
+                  <a href="https://spectrum.chat/spectrum/hugs-n-bugs">Report bugs</a> · <a href="https://spectrum.chat/spectrum/feature-requests">Request
+                    a feature</a>
+                </li>
+              </ul>
+              <p>Spectrum is made by GitHub, Inc.<br />88 Colin P Kelly Jr St, San Francisco, CA 94107<br />United
+                States
+              </p>
             </td>
           </tr>
         </table>
