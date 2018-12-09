@@ -87,7 +87,7 @@ const processPath = path => {
         .replace(/(\r\n\t|\n|\r\t)/gm, '');
       const config = JSON.parse(configString);
 
-      if (!config.test) {
+      if (!UPDATE_PROD_TEMPLATES && !config.test) {
         console.log('🔅 No test config for this template, skipping');
         return;
       }
@@ -95,7 +95,7 @@ const processPath = path => {
       const { test: testConfig, production: prodConfig } = config;
 
       return Promise.all([
-        processFile(file, testConfig),
+        testConfig && processFile(file, testConfig),
         UPDATE_PROD_TEMPLATES && processFile(file, prodConfig),
       ]);
     }
