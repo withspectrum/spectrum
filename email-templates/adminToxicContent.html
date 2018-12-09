@@ -1,10 +1,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- 
+  START_CONFIG
+  { 
+    "production": {
+      "version": "c9d15baa-4799-45b9-8fbf-0b1a20d7fc75",
+      "template": "d-f6e52c81dd8d49e29f23c5c6112d676b"
+    }
+  }
+  END_CONFIG
+-->
+
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>{{subject}}</title>
 </head>
+
 <body>
   <div style="display: none; max-height: 0px; overflow: hidden;">
     {{preheader}}
@@ -32,7 +46,7 @@
   <p><strong>Info:</strong></p>
   <ul>
     {{#data.toxicityConfidence.perspectivePercent}}
-      <li><strong>Perspective:</strong> {{.}}% confident</li>
+    <li><strong>Perspective:</strong> {{.}}% confident</li>
     {{/data.toxicityConfidence.perspectivePercent}}
   </ul>
 
@@ -43,4 +57,5 @@
     <li>Channel: <a href="https://spectrum.chat/{{data.community.slug}}/{{data.channel.slug}}">{{data.channel.name}}</a></li>
   </ul>
 </body>
+
 </html>

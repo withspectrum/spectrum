@@ -1,10 +1,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- 
+  START_CONFIG
+  { 
+    "production": {
+      "version": "abb1a526-56c2-4162-b7f0-dd86eb76fb11",
+      "template": "d-8220ddfc3d3a436a9ea974348c9c2edd"
+    }
+  }
+  END_CONFIG
+-->
+
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>New community: {{community.name}}</title>
 </head>
+
 <body>
   <div style="display: none; max-height: 0px; overflow: hidden;">
     New community {{community.name}} created by {{user.name}}
@@ -41,4 +55,5 @@
     <li>Email: <a href="mailto:{{user.email}}">{{user.email}}</a></li>
   </ul>
 </body>
+
 </html>
