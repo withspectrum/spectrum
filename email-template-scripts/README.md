@@ -13,3 +13,11 @@ You will need a `SENDGRID_API_KEY` from the SendGrid app for this to work.
 
 The `:test` script inlines all the CSS for each email template then syncs it with the `[Test]` template on SendGrid. When done testing your changes, you can sync both test and production templates by running:
 `SENDGRID_API_KEY=<key> yarn run process:emails:prod`
+
+# Sending test emails
+
+Rather than spinning up the local web app, clicking around and trying to replicate each email's conditions, you can instead run the `send-test-emails` script:
+
+`SENDGRID_API_KEY=<key> yarn run process:emails:send`
+
+**Be sure to edit the email address in `package.json` first**
