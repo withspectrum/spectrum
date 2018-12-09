@@ -8,6 +8,6 @@ In an effort to maintain consistency across our emails, please following the fol
 
 - Make sure you have python3 installed: `brew install python3`
 - Install `premailer` with python3: `sudo python3 -m pip install premailer`
-- Run the script in `python-scripts` dir: `python3 python-scripts/inline-html-emails.py`
+- Run the script in `python-scripts` dir: `cd python-scripts && python3 inline-html-emails.py`
 
 This will iterate through each email template, inline the css, and save the final version in `./built-email-templates` - from this directory, you can grab the html to add to SendGrid.
