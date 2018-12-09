@@ -8,6 +8,11 @@ const RELATIVE_PATH_TO_TEMPLATES = '../built-email-templates';
 const processArgs = process.argv.slice(2);
 const UPDATE_PROD_TEMPLATES = processArgs.some(arg => arg === 'prod');
 
+if (!SENDGRID_API_KEY) {
+  console.log('❌ Be sure to provide a SendGrid API key');
+  return;
+}
+
 const readdirAsync = path => {
   return new Promise((resolve, reject) => {
     fs.readdir(path, (error, result) => {
