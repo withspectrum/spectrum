@@ -275,7 +275,8 @@
     "lint:staged": "lint-staged",
     "webpack-defaults": "webpack-defaults",
     "process:emails:test": "(cd email-template-scripts && python3 inline-html-emails.py && node sendgrid-sync.js)",
-    "process:emails:prod": "(cd email-template-scripts && python3 inline-html-emails.py && node sendgrid-sync.js prod)"
+    "process:emails:prod": "(cd email-template-scripts && python3 inline-html-emails.py && node sendgrid-sync.js prod)",
+    "process:emails:send": "(cd email-template-scripts && node send-test-emails.js brian@spectrum.chat)"
   },
   "lint-staged": {
     "*.js": [
