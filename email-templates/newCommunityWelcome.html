@@ -31,9 +31,10 @@
     }
 
     body {
+      height: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
       width: 100% !important;
-      height: 100%;
-      margin: 0;
       line-height: 1.4;
       background-color: #FFF;
       color: #171a21;
@@ -172,7 +173,7 @@
     }
 
     .content-cell {
-      padding: 8px 24px;
+      padding: 8px 0;
     }
 
     .footer-cell {
@@ -229,23 +230,19 @@
 
     /* Buttons ------------------------------ */
 
-    .button-group {
-      margin: 32px 0;
-    }
-
     .button {
       background-color: #7B16FF;
       display: block;
       color: #FFF !important;
-      padding: 12px 16px;
+      padding: 12px 0px;
       text-decoration: none;
-      border-radius: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
       -webkit-text-size-adjust: none;
       word-break: keep-all;
       white-space: nowrap;
-      font-size: 16px;
-      font-weight: 500;
       text-align: center;
     }
 
@@ -254,8 +251,8 @@
     }
 
     .button.button-facebook {
+      margin-top: 8px;
       background-color: #3B5998;
-      margin-left: 8px;
     }
 
     /* Type ------------------------------ */
@@ -419,13 +416,14 @@
                     <p>But it's pretty quiet in there right now - share {{community.name}} to get the conversation
                       started!</p>
 
-                    <table class="button-group">
+                    <table class="button-group" width="100%">
                       <tr>
                         <td>
                           <a class="button button-twitter" href="https://twitter.com/share?text=Come hang out with me in the {{community.name}} community on @withspectrum!&amp;url=https://spectrum.chat/{{community.slug}}">Share
                             on Twitter</a>
                         </td>
-
+                      </tr>
+                      <tr>
                         <td>
                           <a class="button button-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/{{community.slug}}&amp;t=Come hang out with me in the {{community.name}} community on Spectrum!">Share
                             on Facebook</a>
@@ -439,7 +437,7 @@
                       channel to talk about building communities, ask us questions, request features, or get faster
                       replies on those pesky bug reports!</p>
 
-                    <table class="button-group">
+                    <table class="button-group" width="100%">
                       <tr>
                         <td>
                           <a class="button" href="https://spectrum.chat/spectrum/meta">Join our community builders
@@ -454,7 +452,7 @@
                       text, photos, videos, embedded content, and more. Your community is new, so there aren't any
                       threads yet.</p>
 
-                    <table class="button-group">
+                    <table class="button-group" width="100%">
                       <tr>
                         <td>
                           <a class="button" href="https://spectrum.chat/{{community.slug}}">Post your first thread</a>
@@ -467,7 +465,7 @@
                     <p>We've also made it easy to <b>migrate an existing Slack team</b> and invite people to
                       {{community.name}} directly by email.</p>
 
-                    <table class="button-group">
+                    <table class="button-group" width="100%">
                       <tr>
                         <td>
                           <a class="button" href="https://spectrum.chat/{{community.slug}}/settings">Invite people to
