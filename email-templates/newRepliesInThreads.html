@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>{{subject}}</title>
-  <!--
-    The style block is collapsed on page load to save you some scrolling.
-    Postmark automatically inlines all CSS properties for maximum email client
-    compatibility. You can just update styles here, and Postmark does the rest.
-    -->
+
   <style type="text/css" rel="stylesheet" media="all">
     *:not(br):not(tr):not(html) {
       font-family: -apple-system, BlinkMacSystemFont, Helvetica, "Segoe", Arial, Helvetica, sans-serif;
@@ -499,7 +495,7 @@
                     <table width="100%" cellpadding="0" cellspacing="0" class="thread-title">
                       <tr width="100%" cellpadding="0" cellspacing="0">
                         <td valign="middle">
-                          <a data-pm-no-track href="https://spectrum.chat/thread/{{id}}" class="block">
+                          <a href="https://spectrum.chat/thread/{{id}}" class="block">
                             <h3>{{content.title}}</h3>
                           </a>
                         </td>
@@ -530,8 +526,8 @@
                           <table cellpadding="0" cellspacing="0" class="reply-body">
                             <tr width="100%" cellpadding="0" cellspacing="0">
                               <td valign="middle">
-                                <a data-pm-no-track href="https://spectrum.chat/thread/{{../id}}" class="block">
-                                  {{{content.body}}}
+                                <a href="https://spectrum.chat/thread/{{../id}}" class="block">
+                                  {{content.body}}
                                 </a>
                               </td>
                             </tr>
@@ -545,7 +541,7 @@
                     <table width="100%" cellpadding="0" cellspacing="0" class="thread-actions multi">
                       <tr width="100%" cellpadding="0" cellspacing="0">
                         <td valign="middle" class="action-top">
-                          <a data-pm-no-track href="https://spectrum.chat/thread/{{id}}" class="button">
+                          <a href="https://spectrum.chat/thread/{{id}}" class="button">
                             View conversation
                           </a>
                         </td>

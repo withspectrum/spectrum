@@ -4,12 +4,8 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <title>{{subject}}</title>
-  <!--
-    The style block is collapsed on page load to save you some scrolling.
-    Postmark automatically inlines all CSS properties for maximum email client
-    compatibility. You can just update styles here, and Postmark does the rest.
-    -->
+  <title>{{ subject }}</title>
+
   <style type="text/css" rel="stylesheet" media="all">
     *:not(br):not(tr):not(html) {
       font-family: -apple-system, BlinkMacSystemFont, Helvetica, "Segoe", Arial, Helvetica, sans-serif;
@@ -431,7 +427,7 @@
                           </p>
                           <p>
                             <a href="https://spectrum.chat/{{community.slug}}" class="block a-p">
-                              {{{messageCountString}}}
+                              {{messageCountString}}
                             </a>
                           </p>
                         </td>

@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>New direct message on Spectrum!</title>
-  <!--
-    The style block is collapsed on page load to save you some scrolling.
-    Postmark automatically inlines all CSS properties for maximum email client
-    compatibility. You can just update styles here, and Postmark does the rest.
-    -->
+
   <style type="text/css" rel="stylesheet" media="all">
     /* Base ------------------------------ */
 
@@ -417,7 +413,7 @@
                     <table class="attributes post" width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td>
-                          <a data-pm-no-track href="https://spectrum.chat/{{thread.path}}">
+                          <a href="https://spectrum.chat/{{thread.path}}">
                             <h2 class="title">{{thread.content.title}}</h2>
                           </a>
                         </td>
@@ -428,7 +424,7 @@
                           <table>
                             <tr>
                               <td valign="top">
-                                <a data-pm-no-track href="https://spectrum.chat/{{thread.path}}">
+                                <a href="https://spectrum.chat/{{thread.path}}">
                                   <img class="avatar" src="{{user.profilePhoto}}" />
                                 </a>
                               </td>
@@ -436,13 +432,13 @@
                                 <table>
                                   <tr>
                                     <td>
-                                      <a data-pm-no-track href="https://spectrum.chat/{{thread.path}}"><span class="name">{{user.name}}</span></a>
+                                      <a href="https://spectrum.chat/{{thread.path}}"><span class="name">{{user.name}}</span></a>
                                     </td>
                                   </tr>
                                   <tr>
                                     <td>
-                                      <a data-pm-no-track href="https://spectrum.chat/{{thread.path}}">
-                                        <p class="reply">{{{message.content.body}}}</p>
+                                      <a href="https://spectrum.chat/{{thread.path}}">
+                                        <p class="reply">{{message.content.body}}</p>
                                       </a>
                                     </td>
                                   </tr>

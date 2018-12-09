@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>New direct message on Spectrum!</title>
-  <!--
-    The style block is collapsed on page load to save you some scrolling.
-    Postmark automatically inlines all CSS properties for maximum email client
-    compatibility. You can just update styles here, and Postmark does the rest.
-    -->
+
   <style type="text/css" rel="stylesheet" media="all">*:not(br):not(tr):not(html) {font-family:-apple-system, BlinkMacSystemFont, Helvetica, "Segoe", Arial, Helvetica, sans-serif;box-sizing:border-box}
 @media only screen and (max-width: 600px) {
     .email-body_inner, .email-footer {
@@ -39,7 +35,7 @@
                     <table class="attributes post" width="100%" cellpadding="0" cellspacing="0" style="border-bottom:2px solid #DFE7EF; padding:24px 0 24px">
                       <tr>
                         <td style="word-break:break-word">
-                          <a data-pm-no-track href="https://spectrum.chat/{{ thread.path }}" style="color:#7b16ff; font-weight:bold; text-decoration:none">
+                          <a href="https://spectrum.chat/{{ thread.path }}" style="color:#7b16ff; font-weight:bold; text-decoration:none">
                             <h2 class="title" style="color:#171A21; font-size:16px; font-weight:bold; margin:0; padding:0; text-align:left" align="left">{{thread.content.title}}</h2>
                           </a>
                         </td>
@@ -50,7 +46,7 @@
                           <table>
                             <tr>
                               <td valign="top" style="word-break:break-word">
-                                <a data-pm-no-track href="https://spectrum.chat/{{ thread.path }}" style="color:#7b16ff; font-weight:bold; text-decoration:none">
+                                <a href="https://spectrum.chat/{{ thread.path }}" style="color:#7b16ff; font-weight:bold; text-decoration:none">
                                   <img class="avatar" src="{{ user.profilePhoto }}" style="border:none; border-radius:20px; height:40px; margin-right:8px; vertical-align:middle; width:40px" height="40" valign="middle" width="40">
                                 </a>
                               </td>
@@ -58,13 +54,13 @@
                                 <table>
                                   <tr>
                                     <td style="word-break:break-word">
-                                      <a data-pm-no-track href="https://spectrum.chat/{{ thread.path }}" style="color:#7b16ff; font-weight:bold; text-decoration:none"><span class="name" style="color:#747E8D; font-size:14px; font-style:normal; font-weight:400; line-height:1; vertical-align:bottom" valign="bottom">{{user.name}}</span></a>
+                                      <a href="https://spectrum.chat/{{ thread.path }}" style="color:#7b16ff; font-weight:bold; text-decoration:none"><span class="name" style="color:#747E8D; font-size:14px; font-style:normal; font-weight:400; line-height:1; vertical-align:bottom" valign="bottom">{{user.name}}</span></a>
                                     </td>
                                   </tr>
                                   <tr>
                                     <td style="word-break:break-word">
-                                      <a data-pm-no-track href="https://spectrum.chat/{{ thread.path }}" style="color:#7b16ff; font-weight:bold; text-decoration:none">
-                                        <p class="reply" style="line-height:1.5em; text-align:left; color:#171A21; font-size:16px; margin:0; margin-bottom:2px; padding:8px 12px; background:#E6ECF7; border-radius:12px; display:block; font-weight:400" align="left">{{{message.content.body}}}</p>
+                                      <a href="https://spectrum.chat/{{ thread.path }}" style="color:#7b16ff; font-weight:bold; text-decoration:none">
+                                        <p class="reply" style="line-height:1.5em; text-align:left; color:#171A21; font-size:16px; margin:0; margin-bottom:2px; padding:8px 12px; background:#E6ECF7; border-radius:12px; display:block; font-weight:400" align="left">{{message.content.body}}</p>
                                       </a>
                                     </td>
                                   </tr>

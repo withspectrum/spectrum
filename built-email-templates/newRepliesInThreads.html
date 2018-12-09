@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>{{subject}}</title>
-  <!--
-    The style block is collapsed on page load to save you some scrolling.
-    Postmark automatically inlines all CSS properties for maximum email client
-    compatibility. You can just update styles here, and Postmark does the rest.
-    -->
+
   <style type="text/css" rel="stylesheet" media="all">*:not(br):not(tr):not(html) {font-family:-apple-system, BlinkMacSystemFont, Helvetica, "Segoe", Arial, Helvetica, sans-serif;box-sizing:border-box}
 @media only screen and (max-width: 600px) {
     .email-body_inner, .email-footer {
@@ -96,7 +92,7 @@
                     <table width="100%" cellpadding="0" cellspacing="0" class="thread-title" style="border-bottom:1px solid #DAE4F2; padding:8px 16px 16px">
                       <tr width="100%" cellpadding="0" cellspacing="0">
                         <td valign="middle" style="word-break:break-word">
-                          <a data-pm-no-track href="https://spectrum.chat/thread/{{ id }}" class="block" style="color:#7B16FF; text-decoration:none; display:block">
+                          <a href="https://spectrum.chat/thread/{{ id }}" class="block" style="color:#7B16FF; text-decoration:none; display:block">
                             <h3 style="color:#16171A; font-size:16px; font-weight:500; margin-top:0; text-align:left; line-height:1.4; margin-bottom:0" align="left">{{content.title}}</h3>
                           </a>
                         </td>
@@ -127,8 +123,8 @@
                           <table cellpadding="0" cellspacing="0" class="reply-body" style="color:#16171A; display:inline-block; margin-bottom:2px; max-width:100%">
                             <tr width="100%" cellpadding="0" cellspacing="0">
                               <td valign="middle" style="word-break:break-word">
-                                <a data-pm-no-track href="https://spectrum.chat/thread/{{ ../id }}" class="block" style="color:#7B16FF; text-decoration:none; display:block">
-                                  {{{content.body}}}
+                                <a href="https://spectrum.chat/thread/{{ ../id }}" class="block" style="color:#7B16FF; text-decoration:none; display:block">
+                                  {{content.body}}
                                 </a>
                               </td>
                             </tr>
@@ -142,7 +138,7 @@
                     <table width="100%" cellpadding="0" cellspacing="0" class="thread-actions multi" style="padding:16px; padding-bottom:0">
                       <tr width="100%" cellpadding="0" cellspacing="0">
                         <td valign="middle" class="action-top" style="word-break:break-word">
-                          <a data-pm-no-track href="https://spectrum.chat/thread/{{ id }}" class="button" style="color:#FFF; text-decoration:none; -webkit-text-size-adjust:none; background-color:#7B16FF; border-radius:8px; box-shadow:0 4px 8px rgba(0, 0, 0, 0.15); display:block; font-size:16px; font-weight:600; padding:12px 16px; text-align:center; white-space:nowrap; word-break:keep-all" bgcolor="#7B16FF" align="center">
+                          <a href="https://spectrum.chat/thread/{{ id }}" class="button" style="color:#FFF; text-decoration:none; -webkit-text-size-adjust:none; background-color:#7B16FF; border-radius:8px; box-shadow:0 4px 8px rgba(0, 0, 0, 0.15); display:block; font-size:16px; font-weight:600; padding:12px 16px; text-align:center; white-space:nowrap; word-break:keep-all" bgcolor="#7B16FF" align="center">
                             View conversation
                           </a>
                         </td>
