@@ -432,8 +432,8 @@ export const ShareButton = styled.span`
       props.facebook
         ? props.theme.social.facebook.default
         : props.twitter
-          ? props.theme.social.twitter.default
-          : props.theme.text.default};
+        ? props.theme.social.twitter.default
+        : props.theme.text.default};
   }
 
   ${Tooltip};
@@ -607,6 +607,13 @@ export const ActionBarContainer = styled.div`
 
 export const WatercoolerActionBarContainer = styled(ActionBarContainer)`
   margin-bottom: 16px;
+`;
+
+export const FixedBottomActionBarContainer = styled(ActionBarContainer)`
+  z-index: 1;
+  bottom: 0;
+  position: sticky;
+  width: 100%;
 `;
 
 export const FollowButton = styled(Button)`
