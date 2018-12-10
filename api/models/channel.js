@@ -26,10 +26,9 @@ const threadsByChannelsQuery = (...channelIds: string[]) =>
 
 const membersByChannelsQuery = (...channelIds: string[]) =>
   channelsByIdsQuery(...channelIds)
-    .eqJoin(row => [row('id'), 'member'], db.table('usersChannels'), {
-      index: 'channelIdAndRole',
-    })
-    .map(row => row('right'));
+    .eqJoin('id', db.table('usersChannels'), { index: 'channelId' })
+    .map(row => row('right'))
+    .filter({ isBlocked: false, isPending: false, isMember: true });
 
 // reusable query parts -- end
 
