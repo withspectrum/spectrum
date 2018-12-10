@@ -35,7 +35,7 @@ export const getUserCommunityConnectionQuery = gql`
 `;
 
 export const getCurrentUserCommunityConnectionQuery = gql`
-  query getCurrentUserCommunityConnection {
+  query getCurrentUserCommunityConnection($after: String) {
     user: currentUser {
       ...userInfo
       ...userCommunityConnection
