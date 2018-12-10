@@ -21,9 +21,15 @@ for raw_template in raw_template_paths:
   # premailer escapes curly braces, which we don't want since we use handlebars
   # so after we transform our html, we then replace escaped braces with the actual
   # curly brace character
-  mapping = (('%7B%7B', '{{ '), ('%7D%7D', ' }}'))
+  triplemapping = (('%7B%7B%7B', '{{{ '), ('%7D%7D%7D', ' }}}'))
+  doublemapping = (('%7B%7B', '{{ '), ('%7D%7D', ' }}'))
+  
   transformed = transform(html)
-  for k, v in mapping:
+  
+  for k, v in triplemapping:
+    transformed = transformed.replace(k, v)
+
+  for k, v in doublemapping:
     transformed = transformed.replace(k, v)
 
   # open a writeable file in the output directory
