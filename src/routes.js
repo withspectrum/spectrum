@@ -30,6 +30,7 @@ import DirectMessages from 'src/views/directMessages';
 import { FullscreenThreadView } from 'src/views/thread';
 import ThirdPartyContext from 'src/components/thirdPartyContextSetting';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import Maintenance from 'src/components/maintenance';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import RedirectOldThreadRoute from './views/thread/redirect-old-route';
 
@@ -157,12 +158,29 @@ const ComposerFallback = signedOutFallback(Composer, () => (
 type Props = {
   currentUser: ?GetUserType,
   isLoadingCurrentUser: boolean,
+  maintenanceMode?: boolean,
 };
 
 class Routes extends React.Component<Props> {
   render() {
     const { currentUser, isLoadingCurrentUser } = this.props;
     const { title, description } = generateMetaInfo();
+
+    if (this.props.maintenanceMode) {
+      return (
+        <ThemeProvider theme={theme}>
+          <ScrollManager>
+            <Body>
+              <Head
+                title="Ongoing Maintenance - Spectrum"
+                description="Spectrum is currently undergoing scheduled maintenance downtime. Please check https://twitter.com/withspectrum for ongoing updates."
+              />
+              <Maintenance />
+            </Body>
+          </ScrollManager>
+        </ThemeProvider>
+      );
+    }
 
     return (
       <ThemeProvider theme={theme}>

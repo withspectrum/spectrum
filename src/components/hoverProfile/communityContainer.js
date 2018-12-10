@@ -44,87 +44,89 @@ type State = {
 };
 
 class CommunityHoverProfileWrapper extends React.Component<Props, State> {
-  ref: ?any;
-  ref = null;
-  state = { visible: false };
-  _isMounted = false;
+  // ref: ?any;
+  // ref = null;
+  // state = { visible: false };
+  // _isMounted = false;
 
-  componentDidMount() {
-    this._isMounted = true;
-  }
+  // componentDidMount() {
+  //   this._isMounted = true;
+  // }
 
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
+  // componentWillUnmount() {
+  //   this._isMounted = false;
+  // }
 
-  handleMouseEnter = () => {
-    const { client, id } = this.props;
+  // handleMouseEnter = () => {
+  //   const { client, id } = this.props;
 
-    if (!this._isMounted) return;
+  //   if (!this._isMounted) return;
 
-    client
-      .query({
-        query: getCommunityByIdQuery,
-        variables: { id },
-      })
-      .then(() => {
-        if (!this._isMounted) return;
-      });
+  //   client
+  //     .query({
+  //       query: getCommunityByIdQuery,
+  //       variables: { id },
+  //     })
+  //     .then(() => {
+  //       if (!this._isMounted) return;
+  //     });
 
-    const ref = setTimeout(() => {
-      if (this._isMounted) {
-        return this.setState({ visible: true });
-      }
-    }, 500);
+  //   const ref = setTimeout(() => {
+  //     if (this._isMounted) {
+  //       return this.setState({ visible: true });
+  //     }
+  //   }, 500);
 
-    this.ref = ref;
-  };
+  //   this.ref = ref;
+  // };
 
-  handleMouseLeave = () => {
-    if (this.ref) {
-      clearTimeout(this.ref);
-    }
+  // handleMouseLeave = () => {
+  //   if (this.ref) {
+  //     clearTimeout(this.ref);
+  //   }
 
-    if (this._isMounted && this.state.visible) {
-      this.setState({ visible: false });
-    }
-  };
+  //   if (this._isMounted && this.state.visible) {
+  //     this.setState({ visible: false });
+  //   }
+  // };
 
   render() {
-    const { children, id, style = {} } = this.props;
-    return (
-      <Span
-        onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseLeave}
-        style={style}
-      >
-        <Manager>
-          <Reference>
-            {({ ref }) => (
-              <Span innerRef={ref} style={style}>
-                {children}
-              </Span>
-            )}
-          </Reference>
-          {this.state.visible &&
-            document.body &&
-            createPortal(
-              <Popper
-                placement="top-start"
-                modifiers={{
-                  preventOverflow: { enabled: false },
-                  hide: { enabled: false },
-                }}
-              >
-                {({ style, ref }) => (
-                  <CommunityHoverProfile id={id} innerRef={ref} style={style} />
-                )}
-              </Popper>,
-              document.body
-            )}
-        </Manager>
-      </Span>
-    );
+    return this.props.children;
+    // const { children, id, style = {} } = this.props;
+
+    // return (
+    //   <Span
+    //     onMouseEnter={this.handleMouseEnter}
+    //     onMouseLeave={this.handleMouseLeave}
+    //     style={style}
+    //   >
+    //     <Manager>
+    //       <Reference>
+    //         {({ ref }) => (
+    //           <Span innerRef={ref} style={style}>
+    //             {children}
+    //           </Span>
+    //         )}
+    //       </Reference>
+    //       {this.state.visible &&
+    //         document.body &&
+    //         createPortal(
+    //           <Popper
+    //             placement="top-start"
+    //             modifiers={{
+    //               preventOverflow: { enabled: false },
+    //               hide: { enabled: false },
+    //             }}
+    //           >
+    //             {({ style, ref }) => (
+    //               <CommunityHoverProfile id={id} innerRef={ref} style={style} />
+    //             )}
+    //           </Popper>,
+    //           document.body
+    //         )}
+    //     </Manager>
+    //   </Span>
+    // );
   }
 }
 

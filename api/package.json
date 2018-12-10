@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": "10.7.0"
+  },
   "dependencies": {
     "algoliasearch": "^3.31.0",
     "apollo-engine": "^1.1.2",
@@ -110,7 +113,7 @@
     "rethinkdb-changefeed-reconnect": "^0.3.2",
     "rethinkdb-inspector": "^0.3.3",
     "rethinkdb-migrate": "^1.4.0",
-    "rethinkdbdash": "^2.3.29",
+    "rethinkhaberdashery": "^2.3.32",
     "sanitize-filename": "^1.6.1",
     "serialize-javascript": "^1.5.0",
     "session-rethinkdb": "^2.0.0",
