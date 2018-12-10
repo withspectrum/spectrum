@@ -86,7 +86,7 @@ const sendEmail = (options: Options) => {
       {
         ...defaultOptions,
         templateId,
-        to: 'brian@spectrum.chat',
+        to,
         dynamic_template_data,
       },
       async err => {
