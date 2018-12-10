@@ -19,7 +19,7 @@
           "slug": "general",
           "name": "General"
         },
-        "messageCountString": "<span class=\"totalMessageCount\">100 messages </span><span class=\"newMessageCount\">(3 new)</span>"
+        "messageCountString": "<span class=\"totalMessageCount\">100 messages </span><span class=\"newMessageCount\" style=\"color: #E2197A;\">(3 new)</span>"
       }
     ],
     "communities": [

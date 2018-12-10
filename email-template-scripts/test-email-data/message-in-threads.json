@@ -88,7 +88,7 @@
               "username": "username"
             },
             "content": {
-              "body": "<p class='reply'>this is the message</p>"
+              "body": "<p class='reply' style='font-weight: 400; font-size: 16px;background: #E6ECF7;margin-bottom: 2px;padding: 8px 12px;border-radius: 12px;display: block;max-width: 100%;margin-top: 0!important;color: #16171A;'>this is the message</p>"
             }
           }
         ],
