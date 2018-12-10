@@ -73,7 +73,7 @@ const sendEmail = (options: Options) => {
   }
 
   // qq.com email addresses are isp blocked, which raises our error rate
-  // on postmark. prevent sending these emails at all
+  // on sendgrid. prevent sending these emails at all
   if (to.substr(to.length - 7) === '@qq.com') {
     return;
   }

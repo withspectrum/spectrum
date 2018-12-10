@@ -14,7 +14,6 @@
     "lodash.intersection": "^4.4.0",
     "node-env-file": "^0.1.8",
     "now-env": "^3.1.0",
-    "postmark": "^1.6.1",
     "raven": "^2.6.4",
     "redis-tag-cache": "^1.2.1",
     "rethinkdbdash": "^2.3.31",
