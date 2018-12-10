@@ -4,6 +4,7 @@ import type { DBChannel } from 'shared/types';
 import type { GraphQLContext } from '../../';
 import { canViewChannel } from '../../utils/permissions';
 import cache from 'shared/cache/redis';
+import { channelOnlineMemberCount } from 'shared/graphql-cache-keys';
 
 export default async (root: DBChannel, _: any, ctx: GraphQLContext) => {
   const { user, loaders } = ctx;
@@ -16,9 +17,7 @@ export default async (root: DBChannel, _: any, ctx: GraphQLContext) => {
     };
   }
 
-  const cachedOnlineMemberCount = await cache.get(
-    `channel:${id}:onlineMemberCount`
-  );
+  const cachedOnlineMemberCount = await cache.get(channelOnlineMemberCount(id));
 
   const onlineMemberCount =
     (await typeof cachedOnlineMemberCount) === 'number' ||
@@ -28,7 +27,7 @@ export default async (root: DBChannel, _: any, ctx: GraphQLContext) => {
 
   // Cache the fields for an hour
   (await typeof cachedOnlineMemberCount) === 'number' ||
-    cache.set(`channel:${id}:onlineMemberCount`, onlineMemberCount, 'ex', 3600);
+    cache.set(channelOnlineMemberCount(id), onlineMemberCount, 'EX', 3600);
 
   if (typeof rootMemberCount === 'number') {
     return {

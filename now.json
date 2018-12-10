@@ -29,6 +29,7 @@
     "FACEBOOK_OAUTH_CLIENT_SECRET": "@facebook-oauth-client-secret",
     "GOOGLE_OAUTH_CLIENT_SECRET": "@google-oauth-client-secret",
     "GITHUB_OAUTH_CLIENT_SECRET": "@github-oauth-client-secret",
+    "GITHUB_OAUTH_CLIENT_ID": "@github-oauth-client-id",
     "TWITTER_OAUTH_CLIENT_SECRET_DEVELOPMENT": "@twitter-oauth-client-secret-development",
     "FACEBOOK_OAUTH_CLIENT_ID_DEVELOPMENT": "@facebook-oauth-client-id-development",
     "FACEBOOK_OAUTH_CLIENT_SECRET_DEVELOPMENT": "@facebook-oauth-client-secret-development",

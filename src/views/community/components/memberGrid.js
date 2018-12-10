@@ -108,15 +108,14 @@ class CommunityMemberGrid extends React.Component<Props, State> {
                 reputation={reputation}
                 showHoverProfile={false}
               >
-                {currentUser &&
-                  user.id !== currentUser.id && (
-                    <MessageIconContainer data-cy="message-user-button">
-                      <Icon
-                        glyph={'message'}
-                        onClick={() => this.initMessage(user)}
-                      />
-                    </MessageIconContainer>
-                  )}
+                {currentUser && user.id !== currentUser.id && (
+                  <MessageIconContainer data-cy="message-user-button">
+                    <Icon
+                      glyph={'message'}
+                      onClick={() => this.initMessage(user)}
+                    />
+                  </MessageIconContainer>
+                )}
               </GranularUserProfile>
             );
           })}

@@ -807,13 +807,12 @@ class NewThread extends React.Component<Props, State> {
           moved={selectedUsersForNewThread.length > 0}
           innerRef={scrollBody => (this.scrollBody = scrollBody)}
         >
-          {existingThreadWithMessages &&
-            existingThreadWithMessages.id && (
-              <Header
-                thread={existingThreadWithMessages}
-                currentUser={currentUser}
-              />
-            )}
+          {existingThreadWithMessages && existingThreadWithMessages.id && (
+            <Header
+              thread={existingThreadWithMessages}
+              currentUser={currentUser}
+            />
+          )}
 
           {existingThreadBasedOnSelectedUsers && (
             <Messages
