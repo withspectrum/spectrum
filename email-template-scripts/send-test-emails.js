@@ -6,12 +6,12 @@ const TO = processArgs.find(arg => arg.indexOf('@') > 0);
 const sg = require('@sendgrid/mail');
 
 if (!TO) {
-  console.log('❌ Be sure to provide a valid email');
+  console.error('❌ Be sure to provide a valid email');
   return;
 }
 
 if (!SENDGRID_API_KEY) {
-  console.log('❌ Be sure to provide a SendGrid API key');
+  console.error('❌ Be sure to provide a SendGrid API key');
   return;
 }
 
@@ -109,7 +109,7 @@ const init = () => {
 
   return templates.map(template => {
     const json = require(`./test-email-data/${template.filename}`);
-    console.log(`✅ Sending test email for ${template.filename}`);
+    console.error(`✅ Sending test email for ${template.filename}`);
     return sendEmail(template.id, json);
   });
 };

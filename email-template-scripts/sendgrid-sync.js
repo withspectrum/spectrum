@@ -9,7 +9,7 @@ const processArgs = process.argv.slice(2);
 const UPDATE_PROD_TEMPLATES = processArgs.some(arg => arg === 'prod');
 
 if (!SENDGRID_API_KEY) {
-  console.log('❌ Be sure to provide a SendGrid API key');
+  console.error('❌ Be sure to provide a SendGrid API key');
   return;
 }
 
@@ -57,15 +57,15 @@ const processFile = (file, config) => {
     body: JSON.stringify(data),
   };
 
-  console.log('♻️ Uploading template to SendGrid');
+  console.error('♻️ Uploading template to SendGrid');
 
   return fetch(url, options)
     .then(res => res.json())
     .then(res => {
-      console.log('✅ Saved template on SendGrid');
+      console.error('✅ Saved template on SendGrid');
     })
     .catch(err => {
-      console.log({ err });
+      console.error({ err });
     });
 };
 
@@ -88,7 +88,7 @@ const processPath = path => {
       const config = JSON.parse(configString);
 
       if (!UPDATE_PROD_TEMPLATES && !config.test) {
-        console.log('🔅 No test config for this template, skipping');
+        console.error('🔅 No test config for this template, skipping');
         return;
       }
 
