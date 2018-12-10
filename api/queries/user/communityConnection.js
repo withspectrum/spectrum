@@ -24,7 +24,8 @@ export default async (
   const lastCommunityIndex =
     (lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10)) || 0;
 
-  let communities;
+  let communities,
+    forceNoPagination = false;
   if (!currentUser || !currentUser.id) {
     communities = await getPublicCommunitiesByUser(
       evaluatingUserId,
@@ -38,6 +39,7 @@ export default async (
       first
     );
   } else {
+    forceNoPagination = true;
     communities = await getVisibleCommunitiesByUser(
       evaluatingUserId,
       currentUser.id,
@@ -48,7 +50,8 @@ export default async (
 
   return {
     pageInfo: {
-      hasNextPage: communities && communities.length >= first,
+      hasNextPage:
+        !forceNoPagination && communities && communities.length > first,
     },
     edges: communities.map(async (community, index) => {
       const permissions = await loaders.userPermissionsInCommunity.load([
