@@ -13,7 +13,6 @@
     "decode-uri-component": "^0.2.0",
     "draft-js": "^0.10.5",
     "emoji-regex": "^6.5.1",
-    "expo-server-sdk": "^2.4.0",
     "faker": "^4.1.0",
     "imgix-core-js": "^1.2.0",
     "lodash.intersection": "^4.4.0",

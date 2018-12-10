@@ -13,7 +13,6 @@
 - mercury
 - hermes
 - chronos
-- mobile
 - analytics
 
 **Run database migrations (delete if no migration was added)**

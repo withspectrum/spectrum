@@ -31,7 +31,6 @@ test-extend.js
 stats.json
 iris/.env
 api/.env
-.expo
 test-results.json
 public/uploads
 cypress/screenshots/

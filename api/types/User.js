@@ -182,7 +182,6 @@ const User = /* GraphQL */ `
     toggleNotificationSettings(input: ToggleNotificationSettingsInput): User
     subscribeWebPush(subscription: WebPushSubscription!): Boolean
     unsubscribeWebPush(endpoint: String!): Boolean
-    subscribeExpoPush(token: String!): Boolean
     deleteCurrentUser: Boolean
     updateUserEmail(email: LowercaseString!): User
     reportUser(input: ReportUserInput!): Boolean
