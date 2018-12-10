@@ -109,6 +109,7 @@ const init = () => {
 
   return templates.map(template => {
     const json = require(`./test-email-data/${template.filename}`);
+    console.log(`✅ Sending test email for ${template.filename}`);
     return sendEmail(template.id, json);
   });
 };
