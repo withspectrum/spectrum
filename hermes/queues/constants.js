@@ -33,6 +33,7 @@ export const SEND_PRIVATE_COMMUNITY_REQUEST_APPROVED_EMAIL =
 export const SEND_ADMIN_USER_SPAMMING_THREADS_NOTIFICATION_EMAIL =
   'send admin user spamming threads notification email';
 export const SEND_ADMIN_USER_REPORTED_EMAIL = 'send admin user reported email';
+export const SENDGRID_WEBHOOK_EVENT = 'process sendgrid webhook event';
 
 export const NEW_MESSAGE_TEMPLATE = IS_PROD
   ? 'd-1379042b64ba4c6093fecaec7161480a'

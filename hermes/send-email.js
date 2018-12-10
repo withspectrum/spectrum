@@ -1,9 +1,9 @@
 // @flow
 import isEmail from 'validator/lib/isEmail';
 import sg from '@sendgrid/mail';
+import fs from 'fs';
 const debug = require('debug')('hermes:send-email');
 const stringify = require('json-stringify-pretty-compact');
-import { deactivateUserEmailNotifications } from './models/usersSettings';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 const { SENDGRID_API_KEY } = process.env;
@@ -87,22 +87,8 @@ const sendEmail = (options: Options) => {
         to,
         dynamic_template_data,
       },
-      async err => {
+      async (res, err) => {
         if (err) {
-          if (err.status === 553 || err.status === 554) {
-            if (userId) {
-              trackQueue.add({
-                userId: userId,
-                event: events.EMAIL_BOUNCED,
-                properties: { error: err.message },
-              });
-            }
-
-            return await deactivateUserEmailNotifications(to)
-              .then(() => rej(err))
-              .catch(e => rej(e));
-          }
-
           console.error('Error sending email:');
           console.error(err);
           return rej(err);
