@@ -54,7 +54,8 @@ const processJob = async (job: Job<ProcessIndividualDigestJobData>) => {
   const threads = await attachMetadataToThreads(threadsInTimeframe, timeframe)
     .then(threads => attachMessageCountStringToThreads(threads))
     .then(threads => attachScoreToThreads(threads))
-    .then(threads => cleanThreadData(threads));
+    .then(threads => cleanThreadData(threads))
+    .then(threads => threads.slice(0, 20));
 
   const user = await getUserById(userId);
 
