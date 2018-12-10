@@ -11,8 +11,6 @@ const { SENDGRID_API_KEY } = process.env;
 type Options = {
   templateId: string,
   to: string,
-  from: 'hi@spectrum.chat',
-  subject: string,
   dynamic_template_data: Object,
   userId?: string,
 };
