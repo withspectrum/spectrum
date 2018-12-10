@@ -1,3 +1,4 @@
+// @flow
 require('now-env');
 const fs = require('fs');
 const util = require('util');

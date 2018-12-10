@@ -1,3 +1,4 @@
+// @flow
 require('now-env');
 const fetch = require('isomorphic-fetch');
 const { SENDGRID_API_KEY } = process.env;
