@@ -19,11 +19,13 @@ type Props = {
 
 class GithubProfile extends React.Component<Props> {
   render() {
-    const { data: { user }, render } = this.props;
+    const {
+      data: { user },
+      render,
+    } = this.props;
 
     if (user) {
-      if (!user.githubProfile || !user.githubProfile.username)
-        return render(null);
+      if (!user.githubProfile || !user.githubProfile.id) return render(null);
       return render(user.githubProfile);
     }
 
@@ -31,4 +33,7 @@ class GithubProfile extends React.Component<Props> {
   }
 }
 
-export default compose(getUserGithubProfile, viewNetworkHandler)(GithubProfile);
+export default compose(
+  getUserGithubProfile,
+  viewNetworkHandler
+)(GithubProfile);

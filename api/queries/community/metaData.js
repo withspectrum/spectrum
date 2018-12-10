@@ -4,6 +4,10 @@ import type { DBCommunity } from 'shared/types';
 import type { GraphQLContext } from '../../';
 import { canViewCommunity } from '../../utils/permissions';
 import cache from 'shared/cache/redis';
+import {
+  communityOnlineMemberCount,
+  communityChannelCount,
+} from 'shared/graphql-cache-keys';
 
 export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
   const { user, loaders } = ctx;
@@ -18,8 +22,8 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
   }
 
   const [cachedChannelCount, cachedOnlineMemberCount] = await Promise.all([
-    cache.get(`community:${id}:channelCount`),
-    cache.get(`community:${id}:onlineMemberCount`),
+    cache.get(communityChannelCount(id)),
+    cache.get(communityOnlineMemberCount(id)),
   ]);
 
   const getDbCommunityChannelCount = async () => {
@@ -27,7 +31,7 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
       .load(id)
       .then(res => (res && res.reduction) || 0);
 
-    await cache.set(`community:${id}:channelCount`, count, 'ex', 3600);
+    await cache.set(communityChannelCount(id), count, 'ex', 3600);
 
     return count;
   };
@@ -37,7 +41,7 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
       .load(id)
       .then(res => (res && res.reduction) || 0);
 
-    await cache.set(`community:${id}:onlineMemberCount`, count, 'ex', 3600);
+    await cache.set(communityOnlineMemberCount(id), count, 'ex', 3600);
 
     return count;
   };

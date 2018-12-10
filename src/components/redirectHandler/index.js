@@ -9,6 +9,7 @@ import Routes from 'src/hot-routes';
 type Props = {
   currentUser: ?Object,
   isLoadingCurrentUser: boolean,
+  maintenanceMode: boolean,
 };
 
 class RedirectHandler extends React.Component<Props> {
@@ -28,7 +29,7 @@ class RedirectHandler extends React.Component<Props> {
   }
 
   render() {
-    return <Routes />;
+    return <Routes maintenanceMode={this.props.maintenanceMode} />;
   }
 }
 

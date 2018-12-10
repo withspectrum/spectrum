@@ -435,7 +435,16 @@ class UserWithData extends React.Component<Props, State> {
                     disabled
                     defaultValue={`github.com/${profile.username}`}
                   >
-                    Your GitHub Profile
+                    <div>
+                      Your GitHub Profile ·{' '}
+                      <span>
+                        <a
+                          href={`${SERVER_URL}/auth/github${postAuthRedirectPath}`}
+                        >
+                          Refresh username
+                        </a>
+                      </span>
+                    </div>
                   </Input>
                 );
               }

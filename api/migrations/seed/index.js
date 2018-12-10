@@ -155,7 +155,7 @@ messages.map(message => {
 
 debug('Connecting to db...');
 // $FlowFixMe
-const db = require('rethinkdbdash')({
+const db = require('rethinkhaberdashery')({
   db: 'spectrum',
 });
 

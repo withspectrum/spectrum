@@ -432,27 +432,15 @@ export type Queues = {
   sendCommunityNotificationQueue: BullQueue<CommunityNotificationJobData>,
   trackUserThreadLastSeenQueue: BullQueue<UserThreadLastSeenJobData>,
   sendReactionNotificationQueue: BullQueue<ReactionNotificationJobData>,
-  sendThreadReactionNotificationQueue: BullQueue<
-    ThreadReactionNotificationJobData
-  >,
+  sendThreadReactionNotificationQueue: BullQueue<ThreadReactionNotificationJobData>,
   sendPrivateChannelRequestQueue: BullQueue<PrivateChannelRequestJobData>,
-  sendPrivateChannelRequestApprovedQueue: BullQueue<
-    PrivateChannelRequestApprovedJobData
-  >,
+  sendPrivateChannelRequestApprovedQueue: BullQueue<PrivateChannelRequestApprovedJobData>,
   sendPrivateCommunityRequestQueue: BullQueue<PrivateCommunityRequestJobData>,
-  sendPrivateCommunityRequestApprovedQueue: BullQueue<
-    PrivateCommunityRequestApprovedJobData
-  >,
-  sendPrivateChannelInviteNotificationQueue: BullQueue<
-    PrivateChannelInviteNotificationJobData
-  >,
-  sendCommunityInviteNotificationQueue: BullQueue<
-    CommunityInviteNotificationJobData
-  >,
+  sendPrivateCommunityRequestApprovedQueue: BullQueue<PrivateCommunityRequestApprovedJobData>,
+  sendPrivateChannelInviteNotificationQueue: BullQueue<PrivateChannelInviteNotificationJobData>,
+  sendCommunityInviteNotificationQueue: BullQueue<CommunityInviteNotificationJobData>,
   sendChannelNotificationQueue: BullQueue<ChannelNotificationJobData>,
-  sendDirectMessageNotificationQueue: BullQueue<
-    DirectMessageNotificationJobData
-  >,
+  sendDirectMessageNotificationQueue: BullQueue<DirectMessageNotificationJobData>,
   sendMessageNotificationQueue: BullQueue<MessageNotificationJobData>,
   sendMentionNotificationQueue: BullQueue<MentionNotificationJobData>,
   sendNotificationAsPushQueue: BullQueue<PushNotificationsJobData>,
@@ -463,29 +451,17 @@ export type Queues = {
   sendNewUserWelcomeEmailQueue: BullQueue<NewUserWelcomeEmailJobData>,
   sendNewCommunityWelcomeEmailQueue: BullQueue<NewCommunityWelcomeEmailJobData>,
   sendEmailValidationEmailQueue: BullQueue<EmailValidationEmailJobData>,
-  sendAdministratorEmailValidationEmailQueue: BullQueue<
-    AdministratorEmailValidationEmailJobData
-  >,
+  sendAdministratorEmailValidationEmailQueue: BullQueue<AdministratorEmailValidationEmailJobData>,
   sendNewMessageEmailQueue: BullQueue<SendNewMessageEmailJobData>,
   bufferNewMessageEmailQueue: BullQueue<BufferNewMessageEmailJobData>,
   sendNewDirectMessageEmailQueue: BullQueue<SendNewDirectMessageEmailJobData>,
   sendNewMentionMessageEmailQueue: BullQueue<SendNewMessageMentionEmailJobData>,
   sendNewMentionThreadEmailQueue: BullQueue<SendNewThreadMentionEmailJobData>,
-  sendPrivateChannelRequestEmailQueue: BullQueue<
-    SendPrivateChannelRequestEmailJobData
-  >,
-  sendPrivateChannelRequestApprovedEmailQueue: BullQueue<
-    SendPrivateChannelRequestApprovedEmailJobData
-  >,
-  sendPrivateCommunityRequestEmailQueue: BullQueue<
-    SendPrivateCommunityRequestEmailJobData
-  >,
-  sendPrivateCommunityRequestApprovedEmailQueue: BullQueue<
-    SendPrivateCommunityRequestApprovedEmailJobData
-  >,
-  sendThreadCreatedNotificationEmailQueue: BullQueue<
-    SendNewThreadNotificationEmailJobData
-  >,
+  sendPrivateChannelRequestEmailQueue: BullQueue<SendPrivateChannelRequestEmailJobData>,
+  sendPrivateChannelRequestApprovedEmailQueue: BullQueue<SendPrivateChannelRequestApprovedEmailJobData>,
+  sendPrivateCommunityRequestEmailQueue: BullQueue<SendPrivateCommunityRequestEmailJobData>,
+  sendPrivateCommunityRequestApprovedEmailQueue: BullQueue<SendPrivateCommunityRequestApprovedEmailJobData>,
+  sendThreadCreatedNotificationEmailQueue: BullQueue<SendNewThreadNotificationEmailJobData>,
   sendDigestEmailQueue: BullQueue<SendDigestEmailJobData>,
 
   // mercury
@@ -500,21 +476,15 @@ export type Queues = {
   searchQueue: BullQueue<SearchIndexJobData>,
 
   // admin
-  _adminSendCommunityCreatedEmailQueue: BullQueue<
-    AdminCommunityCreatedEmailJobData
-  >,
+  _adminSendCommunityCreatedEmailQueue: BullQueue<AdminCommunityCreatedEmailJobData>,
   _adminProcessToxicMessageQueue: BullQueue<AdminToxicMessageJobData>,
   _adminProcessToxicThreadQueue: BullQueue<AdminToxicThreadJobData>,
   _adminProcessSlackImportQueue: BullQueue<AdminSlackImportJobData>,
   _adminProcessUserReportedQueue: BullQueue<AdminProcessUserReportedJobData>,
   // TODO: Properly type this
   _adminSendToxicContentEmailQueue: BullQueue<any>,
-  _adminProcessUserSpammingThreadsQueue: BullQueue<
-    AdminUserSpammingThreadsJobData
-  >,
-  _adminSendActiveCommunityReportEmailQueue: BullQueue<
-    AdminActiveCommunityReportEmailJobData
-  >,
+  _adminProcessUserSpammingThreadsQueue: BullQueue<AdminUserSpammingThreadsJobData>,
+  _adminSendActiveCommunityReportEmailQueue: BullQueue<AdminActiveCommunityReportEmailJobData>,
 
   // chronos
   weeklyDigestQueue: BullQueue<void>,
@@ -522,4 +492,5 @@ export type Queues = {
   processIndividualDigestQueue: BullQueue<ProcessIndividualDigestJobData>,
   dailyCoreMetricsQueue: BullQueue<void>,
   activeCommunityReportQueue: BullQueue<void>,
+  removeSeenUsersNotificationsQueue: BullQueue<void>,
 };
