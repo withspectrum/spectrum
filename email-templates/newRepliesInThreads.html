@@ -20,7 +20,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <title>{{subject}}</title>
+  <title>{{{subject}}}</title>
 
   <style type="text/css" rel="stylesheet" media="all">
     *:not(br):not(tr):not(html) {
@@ -438,6 +438,7 @@
       max-width: 100%;
       margin-top: 0 !important;
       color: #16171A;
+      font-size: 16px;
     }
 
     .reply-body p.reply-img-container {
@@ -545,7 +546,7 @@
                             <tr width="100%" cellpadding="0" cellspacing="0">
                               <td valign="middle">
                                 <a href="https://spectrum.chat/thread/{{../id}}" class="block">
-                                  {{content.body}}
+                                  {{{content.body}}}
                                 </a>
                               </td>
                             </tr>
