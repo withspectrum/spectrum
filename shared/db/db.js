@@ -53,12 +53,12 @@ var r = require('rethinkhaberdashery')(config);
 
 const poolMaster = r.getPoolMaster();
 
-poolMaster.on('queueing', length => {
-  statsd.gauge('db.query_queue_length', length);
+poolMaster.on('queueing', size => {
+  statsd.gauge('db.query_queue.size', size);
 });
 
 poolMaster.on('size', connections => {
-  statsd.gauge('db.connection_count', connections);
+  statsd.gauge('db.connection_pool.size', connections);
 });
 
 // Exit the process on unhealthy db in test env
