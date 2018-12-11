@@ -51,11 +51,15 @@ const processJob = async (job: Job<ProcessIndividualDigestJobData>) => {
 
   debug('Got threads in timeframe');
 
+  let hasOverflowThreads = false;
   const threads = await attachMetadataToThreads(threadsInTimeframe, timeframe)
     .then(threads => attachMessageCountStringToThreads(threads))
     .then(threads => attachScoreToThreads(threads))
     .then(threads => cleanThreadData(threads))
-    .then(threads => threads.slice(0, 20));
+    .then(threads => {
+      hasOverflowThreads = true;
+      return threads.slice(0, 20);
+    });
 
   const user = await getUserById(userId);
 
@@ -71,6 +75,7 @@ const processJob = async (job: Job<ProcessIndividualDigestJobData>) => {
     reputationString,
     timeframe,
     threads,
+    hasOverflowThreads,
   });
 };
 

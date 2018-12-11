@@ -17,6 +17,7 @@ export default async (job: Job<SendDigestEmailJobData>) => {
     reputationString,
     communities,
     timeframe,
+    hasOverflowThreads,
   } = job.data;
 
   if (!email || !userId || !username) {
@@ -68,6 +69,7 @@ export default async (job: Job<SendDigestEmailJobData>) => {
         preheader,
         unsubscribeToken,
         data: {
+          hasOverflowThreads,
           username,
           threads,
           communities,
