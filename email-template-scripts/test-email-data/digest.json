@@ -4,6 +4,7 @@
   "unsubscribeToken": "foo",
   "data": {
     "username": "username",
+    "hasOverflowThreads": true,
     "threads": [
       {
         "id": "1",
