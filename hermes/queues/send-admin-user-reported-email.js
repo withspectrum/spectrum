@@ -23,10 +23,9 @@ export default async (job: Job<AdminProcessUserReportedJobData>) => {
 
   try {
     return sendEmail({
-      TemplateId: ADMIN_USER_REPORTED_TEMPLATE,
-      To: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
-      Tag: SEND_ADMIN_USER_REPORTED_EMAIL,
-      TemplateModel: {
+      templateId: ADMIN_USER_REPORTED_TEMPLATE,
+      to: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
+      dynamic_template_data: {
         subject,
         preheader,
         reportedUser,

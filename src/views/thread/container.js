@@ -189,7 +189,11 @@ class ThreadContainer extends React.Component<Props, State> {
         });
       }
     } catch (err) {
-      // no need to do anything here
+      // if theres an error finding the dom node, we should make sure
+      // the banner is not visible to avoid it accidentally covering content
+      this.setState({
+        bannerIsVisible: false,
+      });
     }
   };
 
@@ -538,13 +542,12 @@ class ThreadContainer extends React.Component<Props, State> {
                     />
                   )}
 
-                  {!isEditing &&
-                    isLocked && (
-                      <NullState
-                        icon="private"
-                        copy="This conversation has been locked."
-                      />
-                    )}
+                  {!isEditing && isLocked && (
+                    <NullState
+                      icon="private"
+                      copy="This conversation has been locked."
+                    />
+                  )}
                 </Detail>
               </Content>
 

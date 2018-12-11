@@ -800,11 +800,3 @@ export const setMemberCount = (
     .run()
     .then(result => result.changes[0].new_val || result.changes[0].old_val);
 };
-
-export const getMemberCount = (communityId: string): Promise<number> => {
-  return db
-    .table('usersCommunities')
-    .getAll([communityId, true], { index: 'communityIdAndIsMember' })
-    .count()
-    .run();
-};

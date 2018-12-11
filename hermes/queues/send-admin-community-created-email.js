@@ -13,10 +13,10 @@ export default job => {
 
   try {
     return sendEmail({
-      TemplateId: ADMIN_COMMUNITY_CREATED_TEMPLATE,
-      To: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
-      Tag: SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
-      TemplateModel: {
+      templateId: ADMIN_COMMUNITY_CREATED_TEMPLATE,
+      to: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
+      dynamic_template_data: {
+        subject: `New community: ${community.name}`,
         user: {
           ...user,
           createdAt: new Date(user.createdAt),

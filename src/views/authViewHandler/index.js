@@ -7,7 +7,6 @@ import { getCurrentUser } from 'shared/graphql/queries/user/getUser';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import NewUserOnboarding from 'src/views/newUserOnboarding';
-import { Loading } from 'src/components/loading';
 
 type Props = {
   history: History,
@@ -49,7 +48,7 @@ class AuthViewHandler extends React.Component<Props> {
 
     if (user && !user.username) return <NewUserOnboarding />;
     if (user && user.id) return children(true);
-    if (loading) return <Loading />;
+    if (loading) return null;
     return children(false);
   }
 }

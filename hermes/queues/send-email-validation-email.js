@@ -33,10 +33,10 @@ export default async (job: SendEmailValidationJob) => {
   } else {
     try {
       return sendEmail({
-        TemplateId: EMAIL_VALIDATION_TEMPLATE,
-        To: email,
-        Tag: SEND_EMAIL_VALIDATION_EMAIL,
-        TemplateModel: {
+        templateId: EMAIL_VALIDATION_TEMPLATE,
+        to: email,
+        dynamic_template_data: {
+          subject: 'Confirm your email address on Spectrum',
           validateToken,
         },
       });

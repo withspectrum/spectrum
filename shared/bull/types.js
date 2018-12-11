@@ -424,6 +424,22 @@ export type SendDigestEmailJobData = {
   reputationString: string,
   communities: ?Array<DBCommunity>,
   timeframe: Timeframe,
+  hasOverflowThreads: boolean,
+};
+
+export type SendGridWebhookEventJobData = {
+  event: {
+    email: string,
+    timestamp: number,
+    event: string,
+    category: string,
+    sg_event_id: string,
+    sg_message_id: string,
+    response: string,
+    status: string,
+    reason: string,
+    attempt: string,
+  },
 };
 
 export type Queues = {
@@ -463,6 +479,7 @@ export type Queues = {
   sendPrivateCommunityRequestApprovedEmailQueue: BullQueue<SendPrivateCommunityRequestApprovedEmailJobData>,
   sendThreadCreatedNotificationEmailQueue: BullQueue<SendNewThreadNotificationEmailJobData>,
   sendDigestEmailQueue: BullQueue<SendDigestEmailJobData>,
+  sendgridEventQueue: BullQueue<SendGridWebhookEventJobData>,
 
   // mercury
   processReputationEventQueue: BullQueue<ReputationEventJobData>,

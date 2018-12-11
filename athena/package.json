@@ -5,7 +5,7 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "aws-sdk": "^2.354.0",
+    "aws-sdk": "^2.373.0",
     "axios": "^0.16.2",
     "bull": "3.3.10",
     "cryptr": "^3.0.0",
@@ -13,6 +13,7 @@
     "decode-uri-component": "^0.2.0",
     "draft-js": "^0.10.5",
     "emoji-regex": "^6.5.1",
+    "escape-html": "^1.0.3",
     "faker": "^4.1.0",
     "imgix-core-js": "^1.2.0",
     "lodash.intersection": "^4.4.0",

@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- 
+  START_CONFIG
+  { 
+    "production": {
+      "version": "d4694aa7-4056-4da0-90fd-10460f236ba8",
+      "template": "d-65de04a810d84af7b76a57f7b4b6ebbe"
+    }
+  }
+  END_CONFIG
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>{{{subject}}}</title>
+  </head>
+
+<body style='font-family:-apple-system, BlinkMacSystemFont, Helvetica, "Segoe", Arial, Helvetica, sans-serif'>
+  <div style="display: none; max-height: 0px; overflow: hidden;">
+    {{preheader}}
+  </div>
+
+  <!-- Insert &zwnj;&nbsp; hack after hidden preview text -->
+  <div style="display: none; max-height: 0px; overflow: hidden;">
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+  </div>
+
+
+  <p style="margin-top:4px"><strong>User:</strong></p>
+  <p style="margin-top:4px"><a href="https://spectrum.chat/users/{{ data.user.username }}">{{data.user.name}}</a></p>
+
+  <br>
+  <br>
+
+  <p style="margin-top:4px"><strong>Attempting to publish:</strong></p>
+  <p style="margin-top:4px">{{data.publishing.content.title}}</p>
+  <p style="margin-top:4px">{{data.publishing.content.body}}</p>
+
+  <br>
+  <br>
+
+  <p style="margin-top:4px"><strong>Previous threads published:</strong></p>
+  {{#each data.threads}}
+  <p style="margin-top:4px"><a href="https://spectrum.chat/thread/{{ id }}">{{content.title}}</a></p>
+  {{/each}}
+
+  <br>
+  <br>
+
+  <p style="margin-top:4px"><strong>Publishing in </strong></p>
+  <a href="https://spectrum.chat/{{ data.community.slug }}">{{data.community.name}}</a> / <a href="https://spectrum.chat/{{ data.community.slug }}/{{ data.channel.slug }}">{{data.channel.name}}</a>
+</body>
+
+</html>

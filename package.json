@@ -49,6 +49,7 @@
   },
   "dependencies": {
     "@cypress/browserify-preprocessor": "^1.1.2",
+    "@sendgrid/mail": "^6.3.1",
     "algoliasearch": "^3.30.0",
     "amplitude": "^3.5.0",
     "amplitude-js": "^4.4.0",
@@ -95,6 +96,7 @@
     "draft-js-prism-plugin": "0.1.3",
     "draftjs-to-markdown": "^0.5.1",
     "emoji-regex": "^6.1.1",
+    "escape-html": "^1.0.3",
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-standard": "^3.1.0",
     "express": "^4.16.4",
@@ -139,7 +141,6 @@
     "passport-github2": "^0.1.10",
     "passport-google-oauth2": "^0.1.6",
     "passport-twitter": "^1.0.4",
-    "postmark": "^1.4.1",
     "pre-commit": "^1.2.2",
     "prismjs": "^1.15.0",
     "query-string": "5.1.1",
@@ -188,6 +189,7 @@
     "striptags": "2.x",
     "styled-components": "^3.4.10",
     "subscriptions-transport-ws": "0.9.x",
+    "textversionjs": "^1.1.3",
     "then-queue": "^1.3.0",
     "toobusy-js": "^0.5.1",
     "validator": "^9.0.0",
@@ -266,7 +268,10 @@
     "rethinkdb:migrate": "rethinkdb-migrate -f ./api/migrations/config.js",
     "eject": "react-scripts eject",
     "lint:staged": "lint-staged",
-    "webpack-defaults": "webpack-defaults"
+    "webpack-defaults": "webpack-defaults",
+    "process:emails:test": "(cd email-template-scripts && python3 inline-html-emails.py && node sendgrid-sync.js)",
+    "process:emails:prod": "(cd email-template-scripts && python3 inline-html-emails.py && node sendgrid-sync.js prod)",
+    "process:emails:send": "(cd email-template-scripts && node send-test-emails.js brian@spectrum.chat)"
   },
   "lint-staged": {
     "*.js": [

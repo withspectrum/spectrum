@@ -1,15 +1,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- 
+  START_CONFIG
+  { 
+    "test": {
+      "version": "50f883da-53b9-438e-ba6a-7bf7fb5cbd24",
+      "template": "d-3e289af9efe748308be2dde1d3786c0d"
+    },
+    "production": {
+      "version": "676b57a5-0765-4306-b0e3-63cc77503e9f",
+      "template": "d-d959535dd2304830ad14e1850297f46d"
+    }
+  }
+  END_CONFIG
+-->
+
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>New direct message on Spectrum!</title>
-    <!--
-    The style block is collapsed on page load to save you some scrolling.
-    Postmark automatically inlines all CSS properties for maximum email client
-    compatibility. You can just update styles here, and Postmark does the rest.
-    -->
-    <style type="text/css" rel="stylesheet" media="all">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>{{{ subject }}}</title>
+
+  <style type="text/css" rel="stylesheet" media="all">
     /* Base ------------------------------ */
 
     *:not(br):not(tr):not(html) {
@@ -18,13 +31,15 @@
     }
 
     body {
+      height: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
       width: 100% !important;
-      height: 100%;
-      margin: 0;
       line-height: 1.4;
       background-color: #FFF;
       color: #171a21;
       -webkit-text-size-adjust: none;
+      font-family: -apple-system, BlinkMacSystemFont, Helvetica, "Segoe", Arial, Helvetica, sans-serif !important;
     }
 
     p,
@@ -37,7 +52,6 @@
 
     a {
       color: #7b16ff;
-      font-weight: bold;
       text-decoration: none;
     }
 
@@ -48,7 +62,6 @@
     td {
       word-break: break-word;
     }
-    /* Layout ------------------------------ */
 
     .email-wrapper {
       width: 100%;
@@ -57,7 +70,7 @@
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
-      background-color: #FFF;
+      background-color: #F5F8FC;
     }
 
     .email-content {
@@ -67,69 +80,59 @@
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
+      background-color: #FFFFFF;
+      border-bottom: 1px solid #DAE4F2;
     }
 
     /* Body ------------------------------ */
 
     .email-body {
       width: 100%;
-      max-width: 560px;
       margin: 0;
-      padding: 0;
+      padding: 32px 0;
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
-      background-color: #FFFFFF;
     }
 
     .email-body_inner {
-      width: 100%;
-      max-width: 560px;
+      width: 570px;
       margin: 0 auto;
-      padding: 0;
-      -premailer-width: 560px;
+      padding: 16px;
+      -premailer-width: 570px;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
       background-color: #FFFFFF;
     }
 
     .email-footer {
-      width: 100%;
-      max-width: 560px;
+      width: 570px;
       margin: 0 auto;
-      padding: 8px;
-      -premailer-width: 560px;
+      padding: 16px 16px 32px;
+      -premailer-width: 570px;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
       text-align: center;
-      background-color: #F2F5F9;
-      margin-top: 32px;
-      font-weight: 400;
     }
 
     .email-footer p {
-      color: #747E8D;
-      margin-bottom: 0;
+      color: #828C99;
       font-size: 14px;
     }
 
     .email-footer a {
-      color: #16171A;
-      font-weight: 500;
+      color: #1D2129;
     }
 
     .email-footer ul {
       list-style-type: none;
-      margin: 16px 0;
-      padding: 0;
-      font-size: 14px;
-      color: #747E8D;
+      margin: 24px 0;
+      padding-left: 0;
     }
 
     .email-footer li {
-      margin-top: 8px;
-      display: block;
-      width: 100%;
+      margin: 8px 0;
+      font-size: 14px;
     }
 
     .body-action {
@@ -166,7 +169,7 @@
     }
 
     .header-cell {
-      padding: 24px;
+      padding: 24px 24px 0 24px;
     }
 
     .content-cell {
@@ -214,9 +217,11 @@
     .collapse {
       border-collapse: collapse;
     }
+
     /*Media Queries ------------------------------ */
 
     @media only screen and (max-width: 600px) {
+
       .email-body_inner,
       .email-footer {
         width: 100% !important;
@@ -231,16 +236,18 @@
 
     .button {
       background-color: #7B16FF;
-      display: inline-block;
-      color: #FFF;
-      padding: 12px 16px;
+      display: block;
+      color: #FFF !important;
+      padding: 12px 0px;
       text-decoration: none;
-      border-radius: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
       -webkit-text-size-adjust: none;
       word-break: keep-all;
       white-space: nowrap;
-      font-size: 16px;
+      text-align: center;
     }
 
     .button.feed {
@@ -308,9 +315,11 @@
       padding: 8px 12px;
       border-radius: 12px;
       display: block;
+      font-size: 16px;
     }
 
-    p.emoji, span.emoji {
+    p.emoji,
+    span.emoji {
       font-size: 32px;
       vertical-align: middle;
       line-height: 1.6;
@@ -388,110 +397,125 @@
       font-weight: 800;
       color: #171A21;
     }
-    </style>
-  </head>
-  <body>
-    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
-      <tr>
-        <td align="center">
-          <table class="email-content" width="100%" cellpadding="0" cellspacing="0">
-            <!-- Email Body -->
-            <tr>
-              <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
-                <table class="email-body_inner" align="center" width="560" cellpadding="0" cellspacing="0">
-                  <!-- Body content -->
-                  <tr>
-                    <td class="header-cell">
-                      <p>Hey there!</p>
-                      <p>You have a new direct messages on Spectrum.</p>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="content-cell">
-                      <table class="attributes post" width="100%" cellpadding="0" cellspacing="0">
-                        <tr>
-                          <td>
-                            <a data-pm-no-track href="https://spectrum.chat/{{thread.path}}"><h2 class="title">{{thread.content.title}}</h2></a>
-                          </td>
-                        </tr>
+  </style>
+</head>
 
-                          <tr class="reply-container">
-                            <td class="attributes_item">
-                              <table>
-                                <tr>
-                                  <td valign="top">
-                                    <a data-pm-no-track href="https://spectrum.chat/{{thread.path}}">
-                                      <img class="avatar" src="{{user.profilePhoto}}" />
-                                    </a>
-                                  </td>
-                                  <td>
-                                    <table>
-                                      <tr>
-                                        <td>
-                                          <a data-pm-no-track href="https://spectrum.chat/{{thread.path}}"><span class="name">{{user.name}}</span></a>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          <a data-pm-no-track href="https://spectrum.chat/{{thread.path}}"><p class="reply">{{{message.content.body}}}</p></a>
-                                        </td>
-                                      </tr>
-                                    </table>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
+<body>
+  <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center">
+        <table class="email-content" width="100%" cellpadding="0" cellspacing="0">
+          <!-- Email Body -->
+          <tr>
+            <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
+              <table class="email-body_inner" align="center" width="560" cellpadding="0" cellspacing="0">
+                <!-- Body content -->
+                <tr>
+                  <td class="content-cell">
+                    <table class="attributes post" width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td>
+                          <a href="https://spectrum.chat/{{thread.path}}">
+                            <h2 class="title">{{thread.content.title}}</h2>
+                          </a>
+                        </td>
+                      </tr>
 
-                          <tr>
-                            <td>
-                              <a data-pm-no-track class="feed button" href="https://spectrum.chat/{{thread.path}}">Go to conversation</a>
-                            </td>
-                          </tr>
-                      </table>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="footer-cell">
-                      <p class="emoji">✌️</p>
-                      <p>- The Spectrum team</p>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-          <table class="email-footer" align="center" width="560" cellpadding="0" cellspacing="0">
-            <tr>
-              <td class="content-cell">
-                <p class="sub">
-                  You are receiving this email because you joined <a href="https://spectrum.chat">Spectrum</a>. If you no longer want to receive emails like this, you can:
-                </p>
+                      <tr class="reply-container">
+                        <td class="attributes_item">
+                          <table>
+                            <tr>
+                              <td valign="top">
+                                <a href="https://spectrum.chat/{{thread.path}}">
+                                  <img class="avatar" src="{{user.profilePhoto}}" />
+                                </a>
+                              </td>
+                              <td>
+                                <table>
+                                  <tr>
+                                    <td>
+                                      <a href="https://spectrum.chat/{{thread.path}}"><span class="name">{{user.name}}</span></a>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <a href="https://spectrum.chat/{{thread.path}}">
+                                        <p class="reply">{{message.content.body}}</p>
+                                      </a>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
 
-                <ul>
-                  {{#muteThreadToken}}
-                    <li>
-                      <a href="https://spectrum.chat/api/email/unsubscribe?token={{.}}">Unsubscribe from this conversation</a>
-                    </li>
-                  {{/muteThreadToken}}
+                      <tr>
+                        <td>
+                          <a data-pm-no-track class="feed button" href="https://spectrum.chat/{{thread.path}}">Go to
+                            conversation</a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="footer-cell">
+                    <p class="emoji">✌️</p>
+                    <p>- The Spectrum team</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <table class="email-footer" align="center" width="560" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="content-cell">
+              <p class="sub">
+                You are receiving this email because you joined <a href="https://spectrum.chat">Spectrum</a>. If you no
+                longer want to receive emails like this, you can:
+              </p>
 
-                  <li>
-                    <a href="https://spectrum.chat/api/email/unsubscribe?token={{unsubscribeToken}}">Unsubscribe from all new direct message notification emails</a>
-                  </li>
+              <ul>
+                {{#muteThreadToken}}
+                <li>
+                  <a href="https://spectrum.chat/api/email/unsubscribe?token={{.}}">Unsubscribe from this conversation</a>
+                </li>
+                {{/muteThreadToken}}
 
-                  {{#username}}
-                    <li>
-                      <a href="https://spectrum.chat/users/{{.}}/settings">Manage your email preferences on Spectrum</a>
-                    </li>
-                  {{/username}}
-                </ul>
+                <li>
+                  <a href="https://spectrum.chat/api/email/unsubscribe?token={{unsubscribeToken}}">Unsubscribe from all
+                    new direct message notification emails</a>
+                </li>
 
-                <p class="sub">Spectrum is made by Space Program, Inc.<br/>542 Brannan St. 409, San Francisco, CA 94107</p>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
+                {{#username}}
+                <li>
+                  <a href="https://spectrum.chat/users/{{.}}/settings">Manage your email preferences on Spectrum</a>
+                </li>
+                {{/username}}
+              </ul>
+
+              <ul>
+                <li>
+                  <a href="https://twitter.com/withspectrum">Follow @withspectrum on Twitter</a>
+                </li>
+
+                <li>
+                  <a href="https://spectrum.chat/spectrum/hugs-n-bugs">Report bugs</a> · <a href="https://spectrum.chat/spectrum/feature-requests">Request
+                    a feature</a>
+                </li>
+              </ul>
+
+              <p class="sub">Spectrum is made by GitHub, Inc.<br />88 Colin P Kelly Jr St, San Francisco, CA
+                94107<br /> United States</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+
 </html>

@@ -9,6 +9,7 @@
 .*/node_modules/react-apollo
 .*/node_modules/dataloader
 <PROJECT_ROOT>/node_modules/*
+<PROJECT_ROOT>/email-template-scripts/*
 
 [options]
 suppress_comment=.*\\$FlowFixMe
