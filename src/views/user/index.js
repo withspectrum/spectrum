@@ -24,7 +24,7 @@ import getUserThreads from 'shared/graphql/queries/user/getUserThreadConnection'
 import ViewError from 'src/components/viewError';
 import Titlebar from '../titlebar';
 import { CoverPhoto } from 'src/components/profile/coverPhoto';
-import { LoginButton } from '../community/style';
+import { SettingsButton } from '../community/style';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import type { Dispatch } from 'redux';
 import {
@@ -188,15 +188,14 @@ class UserView extends React.Component<Props, State> {
                 />
               </ErrorBoundary>
 
-              {currentUser &&
-                user.id !== currentUser.id && (
-                  <React.Fragment>
-                    <LoginButton onClick={() => this.initMessage(user)}>
-                      Message {user.name}
-                    </LoginButton>
-                    <TextButton onClick={this.initReport}>Report</TextButton>
-                  </React.Fragment>
-                )}
+              {currentUser && user.id !== currentUser.id && (
+                <React.Fragment>
+                  <LoginButton onClick={() => this.initMessage(user)}>
+                    Message {user.name}
+                  </LoginButton>
+                  <TextButton onClick={this.initReport}>Report</TextButton>
+                </React.Fragment>
+              )}
 
               {currentUser &&
                 user.id !== currentUser.id &&
@@ -204,12 +203,11 @@ class UserView extends React.Component<Props, State> {
                   <TextButton onClick={this.initBan}>Ban</TextButton>
                 )}
 
-              {currentUser &&
-                user.id === currentUser.id && (
-                  <Link to={`/users/${username}/settings`}>
-                    <LoginButton isMember>My settings</LoginButton>
-                  </Link>
-                )}
+              {currentUser && user.id === currentUser.id && (
+                <Link to={`/users/${username}/settings`}>
+                  <SettingsButton icon={'settings'}>Settings</SettingsButton>
+                </Link>
+              )}
 
               <ErrorBoundary fallbackComponent={null}>
                 <MetaMemberships>
