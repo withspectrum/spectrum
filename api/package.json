@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": "10.7.0"
+    "node": "^10.0.0"
   },
   "dependencies": {
     "algoliasearch": "^3.31.0",
@@ -58,6 +58,7 @@
     "history": "^4.6.1",
     "hoist-non-react-statics": "^2.5.5",
     "host-validation": "^1.2.0",
+    "hot-shots": "^5.9.2",
     "hpp": "^0.2.2",
     "hsts": "^2.1.0",
     "imgix-core-js": "^1.2.0",

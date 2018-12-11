@@ -3659,7 +3659,7 @@ draft-js-prism@^1.0.6:
     extend "^3.0.0"
     immutable "*"
 
-"draft-js-prism@github:ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb":
+draft-js-prism@ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb:
   version "1.0.3"
   resolved "https://codeload.github.com/ngs/draft-js-prism/tar.gz/6edb31c3805dd1de3fb897cc27fced6bac1bafbb"
   dependencies:
@@ -4929,6 +4929,11 @@ hosted-git-info@^2.1.4:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.7.1.tgz#97f236977bd6e125408930ff6de3eec6281ec047"
   integrity sha512-7T/BxH19zbcCTa8XkMlbK5lTo1WtgkFi3GvdWEyNuc4Vex7/9Dqbnpsf4JMydcfj9HCg4zUWFTL3Za6lapg5/w==
+
+hot-shots@^5.9.2:
+  version "5.9.2"
+  resolved "https://registry.yarnpkg.com/hot-shots/-/hot-shots-5.9.2.tgz#1cff097706f40ba2c1350d4806deebbd16a5e8c8"
+  integrity sha512-ruHZvHaxZRVUCoCleiwwCcjdr9A2/Y97C7oc9LpyMg9ae39blHvsJJQQ0QtMtxKX+i4lig/7/BqZBjUUZPUp3A==
 
 hpkp@2.0.0:
   version "2.0.0"
