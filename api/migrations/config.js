@@ -16,12 +16,12 @@ try {
   ca = fs.readFileSync(path.join(process.cwd(), 'cacert'));
 } catch (err) {}
 
-if (!ca && IS_PROD)
+const RUN_IN_PROD = !!process.env.AWS_RETHINKDB_PASSWORD;
+
+if (!ca && RUN_IN_PROD)
   throw new Error(
     'Please provide the SSL certificate to connect to the production database in a file called `cacert` in the root directory.'
   );
-
-const RUN_IN_PROD = !!process.env.AWS_RETHINKDB_PASSWORD;
 
 if (RUN_IN_PROD && process.argv[4] === 'down') {
   throw new Error('Do not drop the production database!!!!!');
