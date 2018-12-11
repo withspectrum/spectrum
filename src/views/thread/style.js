@@ -14,6 +14,7 @@ import {
   Tooltip,
   Shadow,
   hexa,
+  Truncate,
 } from 'src/components/globals';
 
 export const ThreadViewContainer = styled.div`
@@ -459,7 +460,9 @@ export const CommunityHeaderName = styled.h3`
   font-weight: 600;
   margin-right: 8px;
   color: ${theme.text.default};
-  line-height: 16px;
+  line-height: 1.2;
+  max-width: 100%;
+  ${Truncate};
 `;
 
 export const CommunityHeaderSubtitle = styled.span`
@@ -469,6 +472,11 @@ export const CommunityHeaderSubtitle = styled.span`
   margin-top: 4px;
   line-height: 12px;
   color: ${theme.text.alt};
+
+  > a {
+    display: flex;
+    flex: 0 0 auto;
+  }
 
   > a:hover {
     color: ${theme.brand.default};
@@ -510,6 +518,7 @@ export const CommunityHeaderChannelTag = styled.div`
 export const CommunityHeaderMeta = styled.div`
   display: flex;
   align-items: center;
+  max-width: 80%;
 `;
 
 export const CommunityHeaderMetaCol = styled.div`
@@ -519,6 +528,8 @@ export const CommunityHeaderMetaCol = styled.div`
   align-items: flex-start;
   align-self: flex-start;
   margin-left: 12px;
+  max-width: 100%;
+  padding-right: 64px;
 `;
 
 export const PillLink = styled(Link)`
