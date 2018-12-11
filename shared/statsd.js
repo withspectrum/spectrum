@@ -4,7 +4,9 @@ import StatsD from 'hot-shots';
 
 export const statsd = new StatsD({
   mock: process.env.NODE_ENV !== 'production',
-  prefix: `${process.env.SENTRY_NAME || 'server'}.`,
+  globalTags: {
+    server: process.env.SENTRY_NAME || 'unknown_server',
+  },
 });
 
 statsd.socket.on('error', function(error) {

@@ -4032,6 +4032,14 @@ express-enforces-ssl@^1.1.0:
   resolved "https://registry.yarnpkg.com/express-enforces-ssl/-/express-enforces-ssl-1.1.0.tgz#cf29c6a61c5bdd802e2c7ed265a4a98e7487d1ac"
   integrity sha1-zynGphxb3YAuLH7SZaSpjnSH0aw=
 
+express-hot-shots@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/express-hot-shots/-/express-hot-shots-1.0.2.tgz#570c2d5f7c18b6e2c6d3fb48a0736e92af5ddc1d"
+  integrity sha512-EW/HoBhpTSaO0QCwcIHSQ2M39ugKr/l2jtH4+qRSCbFAc31qLsOlFt5TGXIGUmMyyb1ffv0kiFHDbaWCd21kzA==
+  dependencies:
+    hot-shots "^5.9.2"
+    obj-extend "~0.1.0"
+
 express-session@^1.15.2:
   version "1.15.6"
   resolved "https://registry.yarnpkg.com/express-session/-/express-session-1.15.6.tgz#47b4160c88f42ab70fe8a508e31cbff76757ab0a"
@@ -4046,14 +4054,6 @@ express-session@^1.15.2:
     parseurl "~1.3.2"
     uid-safe "~2.1.5"
     utils-merge "1.0.1"
-
-express-statsd@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/express-statsd/-/express-statsd-0.3.0.tgz#cb60b8e4f633adc7eaaefb5819698b469c00b1bd"
-  integrity sha1-y2C45PYzrcfqrvtYGWmLRpwAsb0=
-  dependencies:
-    lynx "~0.0.11"
-    obj-extend "~0.1.0"
 
 express@^4.16.4:
   version "4.16.4"
@@ -6427,14 +6427,6 @@ lru-cache@^5.0.0:
   dependencies:
     yallist "^3.0.2"
 
-lynx@~0.0.11:
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/lynx/-/lynx-0.0.11.tgz#2cfa14e443fd2d92a59b779f41567ce1cc6965a3"
-  integrity sha1-LPoU5EP9LZKlm3efQVZ84cxpZaM=
-  dependencies:
-    mersenne "~0.0.3"
-    statsd-parser "~0.0.4"
-
 macos-release@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/macos-release/-/macos-release-2.0.0.tgz#7dddf4caf79001a851eb4fba7fb6034f251276ab"
@@ -6556,11 +6548,6 @@ mersenne-twister@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/mersenne-twister/-/mersenne-twister-1.1.0.tgz#f916618ee43d7179efcf641bec4531eb9670978a"
   integrity sha1-+RZhjuQ9cXnvz2Qb7EUx65Zwl4o=
-
-mersenne@~0.0.3:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/mersenne/-/mersenne-0.0.4.tgz#401fdec7ec21cdb9e03cd3d3021398da21b27085"
-  integrity sha1-QB/ex+whzbngPNPTAhOY2iGycIU=
 
 methods@~1.1.2:
   version "1.1.2"
@@ -8856,11 +8843,6 @@ static-extend@^0.1.1:
   dependencies:
     define-property "^0.2.5"
     object-copy "^0.1.0"
-
-statsd-parser@~0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/statsd-parser/-/statsd-parser-0.0.4.tgz#cbd243953cc42effd548b5d22388ed689ec639bd"
-  integrity sha1-y9JDlTzELv/VSLXSI4jtaJ7GOb0=
 
 "statuses@>= 1.4.0 < 2":
   version "1.5.0"

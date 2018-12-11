@@ -1,5 +1,5 @@
 // @flow
-import statsdMiddleware from 'express-statsd';
+import statsdMiddleware from 'express-hot-shots';
 import { statsd } from '../statsd';
 
 const middleware = statsdMiddleware({
