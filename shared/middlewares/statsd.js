@@ -12,7 +12,7 @@ client.socket.on('error', function(error) {
 });
 
 const middleware = statsdMiddleware({
-  client: new StatsD(),
+  client,
 });
 
 export default (
