@@ -407,14 +407,13 @@ class ChannelView extends React.Component<Props, State> {
               )}
 
               <MetadataContainer>
-                {channel.metaData &&
-                  channel.metaData.members && (
-                    <ExtLink>
-                      <Icon glyph="person" size={24} />
-                      {channel.metaData.members.toLocaleString()}
-                      {channel.metaData.members > 1 ? ' members' : ' member'}
-                    </ExtLink>
-                  )}
+                {channel.metaData && channel.metaData.members && (
+                  <ExtLink>
+                    <Icon glyph="person" size={24} />
+                    {channel.metaData.members.toLocaleString()}
+                    {channel.metaData.members > 1 ? ' members' : ' member'}
+                  </ExtLink>
+                )}
 
                 {channel.metaData &&
                   typeof channel.metaData.onlineMembers === 'number' && (
@@ -431,27 +430,21 @@ class ChannelView extends React.Component<Props, State> {
                 {actionButton}
               </MetadataContainer>
 
-              {isLoggedIn &&
-                userHasPermissions &&
-                !channel.isArchived && (
-                  <ErrorBoundary fallbackComponent={null}>
-                    <NotificationsToggle
-                      value={channel.channelPermissions.receiveNotifications}
-                      channel={channel}
-                    />
-                  </ErrorBoundary>
-                )}
+              {isLoggedIn && userHasPermissions && !channel.isArchived && (
+                <ErrorBoundary fallbackComponent={null}>
+                  <NotificationsToggle
+                    value={channel.channelPermissions.receiveNotifications}
+                    channel={channel}
+                  />
+                </ErrorBoundary>
+              )}
 
               {/* user is signed in and has permissions to view pending users */}
-              {isLoggedIn &&
-                (isOwner || isGlobalOwner) && (
-                  <ErrorBoundary fallbackComponent={null}>
-                    <PendingUsersNotification
-                      channel={channel}
-                      id={channel.id}
-                    />
-                  </ErrorBoundary>
-                )}
+              {isLoggedIn && (isOwner || isGlobalOwner) && (
+                <ErrorBoundary fallbackComponent={null}>
+                  <PendingUsersNotification channel={channel} id={channel.id} />
+                </ErrorBoundary>
+              )}
             </Meta>
             <Content>
               <SegmentedControl style={{ margin: '16px 0 0 0' }}>

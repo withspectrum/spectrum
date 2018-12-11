@@ -455,6 +455,21 @@
                 </tr>
                 {{/each}}
 
+                {{#data.hasOverflowThreads}}
+                <tr>
+                  <td>
+                    <p>&nbsp;</p>
+                    <p class="reputation-string">Today’s digest highlights the top 20 conversations in your
+                      communities - but there are more active conversations waiting for you!</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a class="button" href="https://spectrum.chat">See more conversations</a>
+                  </td>
+                </tr>
+                {{/data.hasOverflowThreads}}
+
                 {{#data.communities}}
                 <tr>
                   <td>

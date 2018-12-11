@@ -424,6 +424,7 @@ export type SendDigestEmailJobData = {
   reputationString: string,
   communities: ?Array<DBCommunity>,
   timeframe: Timeframe,
+  hasOverflowThreads: boolean,
 };
 
 export type SendGridWebhookEventJobData = {
