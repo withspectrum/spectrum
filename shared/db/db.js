@@ -4,6 +4,7 @@
  */
 import fs from 'fs';
 import path from 'path';
+import { statsd } from '../statsd';
 
 const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
@@ -49,6 +50,16 @@ const config = IS_PROD
     };
 
 var r = require('rethinkhaberdashery')(config);
+
+const poolMaster = r.getPoolMaster();
+
+poolMaster.on('queueing', length => {
+  statsd.gauge('db.query_queue_length', length);
+});
+
+poolMaster.on('size', connections => {
+  statsd.gauge('db.connection_count', connections);
+});
 
 // Exit the process on unhealthy db in test env
 if (process.env.TEST_DB) {

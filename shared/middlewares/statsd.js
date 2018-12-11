@@ -1,27 +1,10 @@
 // @flow
-const debug = require('debug')('shared:middlewares:statsd');
 import statsdMiddleware from 'express-statsd';
-import StatsD from 'hot-shots';
-
-export const client = new StatsD({
-  mock: process.env.NODE_ENV !== 'production',
-  prefix: `${process.env.SENTRY_NAME || 'server'}.`,
-});
-
-client.socket.on('error', function(error) {
-  console.error('Error in socket: ', error);
-});
+import { statsd } from '../statsd';
 
 const middleware = statsdMiddleware({
-  client,
+  client: statsd,
 });
-
-const log = () => {
-  client.mockBuffer.forEach(item => {
-    debug(item);
-  });
-  client.mockBuffer = [];
-};
 
 export default (
   req: express$Request,
@@ -35,7 +18,5 @@ export default (
   req.statsdKey = `http.${req.method.toLowerCase()}${pathname
     .toLowerCase()
     .replace('/', '.')}`;
-  // Log the StatsD metrics in development
-  if (debug.enabled) res.once('finish', log);
   return middleware(req, res, next);
 };
