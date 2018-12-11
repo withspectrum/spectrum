@@ -23,7 +23,7 @@ class Privacy extends React.Component<{}> {
 
         <ContentContainer>
           <Heading>Privacy Policy</Heading>
-          <Copy>Effective date: May 24, 2018</Copy>
+          <Copy>Effective date: December 12, 2018</Copy>
 
           <Section>
             <SectionDescription>
