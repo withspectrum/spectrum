@@ -31,7 +31,6 @@ test-extend.js
 stats.json
 iris/.env
 api/.env
-.expo
 test-results.json
 public/uploads
 cypress/screenshots/
@@ -39,7 +38,6 @@ cypress/videos/
 
 # This is hyperion-now-specific, do not copy to .gitignore
 desktop
-mobile
 docs
 cypress
 admin
