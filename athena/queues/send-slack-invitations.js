@@ -112,8 +112,8 @@ export default async (job: Job<SendSlackInvitationsJobData>) => {
   try {
     await processJob(job);
   } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     Raven.captureException(err);
   }
 };

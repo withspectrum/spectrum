@@ -2,23 +2,41 @@
 /**
  * Database setup is done here
  */
+import fs from 'fs';
+import path from 'path';
+
 const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
 const DEFAULT_CONFIG = {
   // Connect to the test database when, well, testing
   db: !process.env.TEST_DB ? 'spectrum' : 'testing',
-  max:
-    process.env.SENTRY_NAME === 'api' || process.env.SENTRY_NAME === 'hyperion'
-      ? 60
-      : 1, // Maximum number of connections, default is 1000
-  buffer: 1, // Minimum number of connections open at any given moment, default is 50
-  timeoutGb: 60 * 1000, // How long should an unused connection stick around, default is an hour, this is a minute
+  max: 1000, // Maximum number of connections, default is 1000
+  buffer: 50, // Minimum number of connections open at any given moment, default is 50
+  timeoutGb: 60 * 60 * 1000, // How long should an unused connection stick around, default is an hour, this is a minute
 };
 
+let ca;
+
+try {
+  ca = fs.readFileSync(path.join(process.cwd(), 'cacert'));
+} catch (err) {}
+
+if (!ca && IS_PROD)
+  throw new Error(
+    'Please provide the SSL certificate to connect to the production database in a file called `cacert` in the root directory.'
+  );
+
 const PRODUCTION_CONFIG = {
-  password: process.env.AWS_RETHINKDB_PASSWORD,
-  host: process.env.AWS_RETHINKDB_URL,
-  port: process.env.AWS_RETHINKDB_PORT,
+  password: process.env.COMPOSE_RETHINKDB_PASSWORD,
+  host: process.env.COMPOSE_RETHINKDB_URL,
+  port: process.env.COMPOSE_RETHINKDB_PORT,
+  ...(ca
+    ? {
+        ssl: {
+          ca,
+        },
+      }
+    : {}),
 };
 
 const config = IS_PROD
@@ -30,7 +48,7 @@ const config = IS_PROD
       ...DEFAULT_CONFIG,
     };
 
-var r = require('rethinkdbdash')(config);
+var r = require('rethinkhaberdashery')(config);
 
 // Exit the process on unhealthy db in test env
 if (process.env.TEST_DB) {

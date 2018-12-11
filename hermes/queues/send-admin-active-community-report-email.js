@@ -7,6 +7,7 @@ import {
   SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
 } from './constants';
 import type { AdminActiveCommunityReportJobData, Job } from 'shared/bull/types';
+import formatDate from '../utils/format-date';
 
 export default (job: Job<AdminActiveCommunityReportJobData>) => {
   debug(`\nnew job: ${job.id}`);
@@ -21,14 +22,14 @@ export default (job: Job<AdminActiveCommunityReportJobData>) => {
     lostWac,
     lostMac,
   } = job.data;
+  const { day, month, year } = formatDate();
 
   try {
     return sendEmail({
-      TemplateId: ADMIN_ACTIVE_COMMUNITY_REPORT_TEMPLATE,
-      To: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
-      Tag: SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
-      TemplateModel: {
-        subject: 'Active Community Report',
+      templateId: ADMIN_ACTIVE_COMMUNITY_REPORT_TEMPLATE,
+      to: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
+      dynamic_template_data: {
+        subject: `Active Community Report: ${month} ${day}, ${year}`,
         data: {
           dacCount,
           wacCount,

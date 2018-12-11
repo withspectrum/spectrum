@@ -75,7 +75,7 @@ export default async (job: Job<ThreadReactionNotificationJobData>) => {
     return Promise.all([
       markUsersNotificationsAsNew(updatedNotification.id, thread.creatorId),
     ]).catch(err => {
-      debug(err);
+      console.error(err);
       Raven.captureException(err);
     });
   } else {
@@ -108,8 +108,8 @@ export default async (job: Job<ThreadReactionNotificationJobData>) => {
     return Promise.all([
       storeUsersNotifications(updatedNotification.id, thread.creatorId),
     ]).catch(err => {
-      debug('❌ Error in job:\n');
-      debug(err);
+      console.error('❌ Error in job:\n');
+      console.error(err);
       Raven.captureException(err);
     });
   }

@@ -5,7 +5,7 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "aws-sdk": "^2.354.0",
+    "aws-sdk": "^2.373.0",
     "axios": "^0.16.2",
     "bull": "3.3.10",
     "cryptr": "^3.0.0",
@@ -13,6 +13,7 @@
     "decode-uri-component": "^0.2.0",
     "draft-js": "^0.10.5",
     "emoji-regex": "^6.5.1",
+    "escape-html": "^1.0.3",
     "expo-server-sdk": "^2.4.0",
     "faker": "^4.1.0",
     "imgix-core-js": "^1.2.0",
@@ -22,6 +23,7 @@
     "raven": "^2.6.4",
     "redis-tag-cache": "^1.2.1",
     "rethinkdbdash": "^2.3.31",
+    "rethinkhaberdashery": "^2.3.32",
     "sanitize-filename": "^1.6.1",
     "source-map-support": "^0.4.18",
     "toobusy-js": "^0.5.1",

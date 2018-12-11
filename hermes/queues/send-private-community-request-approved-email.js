@@ -27,10 +27,9 @@ export default (job: Job<SendPrivateCommunityRequestApprovedEmailJobData>) => {
 
   try {
     return sendEmail({
-      TemplateId: PRIVATE_COMMUNITY_REQUEST_APPROVED_TEMPLATE,
-      To: recipient.email,
-      Tag: SEND_PRIVATE_COMMUNITY_REQUEST_APPROVED_EMAIL,
-      TemplateModel: {
+      templateId: PRIVATE_COMMUNITY_REQUEST_APPROVED_TEMPLATE,
+      to: recipient.email,
+      dynamic_template_data: {
         subject,
         preheader,
         data: {

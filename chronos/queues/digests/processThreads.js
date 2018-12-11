@@ -76,12 +76,12 @@ export const getMessageCountString = (
     return `<span class="newMessageCount">New thread</span>`;
   } else if (newMessageCount === totalMessageCount) {
     if (newMessageCount === 1) {
-      return `<span class="newMessageCount">1 new message</span>`;
+      return `<span class="newMessageCount" style="color: #E2197A;">1 new message</span>`;
     } else {
-      return `<span class="newMessageCount">${newMessageCount} new messages</span>`;
+      return `<span class="newMessageCount" style="color: #E2197A;">${newMessageCount} new messages</span>`;
     }
   } else {
-    return `<span class="totalMessageCount">${totalMessageCount} messages </span><span class="newMessageCount">(${newMessageCount} new)</span>`;
+    return `<span class="totalMessageCount">${totalMessageCount} messages </span><span class="newMessageCount" style="color: #E2197A;">(${newMessageCount} new)</span>`;
   }
 };
 

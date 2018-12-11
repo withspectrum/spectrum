@@ -45,77 +45,78 @@ type State = {
 };
 
 class ChannelHoverProfileWrapper extends React.Component<Props, State> {
-  ref: ?any;
-  ref = null;
-  state = { visible: false, isMounted: false };
+  // ref: ?any;
+  // ref = null;
+  // state = { visible: false, isMounted: false };
 
-  componentDidMount() {
-    this.setState({ isMounted: true });
-  }
+  // componentDidMount() {
+  //   this.setState({ isMounted: true });
+  // }
 
-  componentWillUnmount() {
-    this.setState({ isMounted: false });
-  }
+  // componentWillUnmount() {
+  //   this.setState({ isMounted: false });
+  // }
 
-  handleMouseEnter = () => {
-    const { client, id } = this.props;
+  // handleMouseEnter = () => {
+  //   const { client, id } = this.props;
 
-    client.query({
-      query: getChannelByIdQuery,
-      variables: { id },
-    });
+  //   client.query({
+  //     query: getChannelByIdQuery,
+  //     variables: { id },
+  //   });
 
-    const ref = setTimeout(() => {
-      return this.state.isMounted && this.setState({ visible: true });
-    }, 500);
-    this.ref = ref;
-  };
+  //   const ref = setTimeout(() => {
+  //     return this.state.isMounted && this.setState({ visible: true });
+  //   }, 500);
+  //   this.ref = ref;
+  // };
 
-  handleMouseLeave = () => {
-    if (this.ref) {
-      clearTimeout(this.ref);
-    }
+  // handleMouseLeave = () => {
+  //   if (this.ref) {
+  //     clearTimeout(this.ref);
+  //   }
 
-    if (this.state.isMounted && this.state.visible) {
-      this.setState({ visible: false });
-    }
-  };
+  //   if (this.state.isMounted && this.state.visible) {
+  //     this.setState({ visible: false });
+  //   }
+  // };
 
   render() {
-    const { children, id, style = {} } = this.props;
-    return (
-      <Span
-        onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseLeave}
-        style={style}
-      >
-        <Manager>
-          <Reference>
-            {({ ref }) => (
-              <Span innerRef={ref} style={style}>
-                {children}
-              </Span>
-            )}
-          </Reference>
-          {this.state.visible &&
-            document.body &&
-            createPortal(
-              <Popper
-                placement="top-start"
-                modifiers={{
-                  preventOverflow: { enabled: false },
-                  hide: { enabled: false },
-                }}
-              >
-                {({ style, ref }) => (
-                  <ChannelHoverProfile id={id} innerRef={ref} style={style} />
-                )}
-              </Popper>,
-              document.body
-            )}
-        </Manager>
-      </Span>
-    );
+    return this.props.children;
+    // const { children, id, style = {} } = this.props;
+    // return (
+    //   <Span
+    //     onMouseEnter={this.handleMouseEnter}
+    //     onMouseLeave={this.handleMouseLeave}
+    //     style={style}
+    //   >
+    //     <Manager>
+    //       <Reference>
+    //         {({ ref }) => (
+    //           <Span innerRef={ref} style={style}>
+    //             {children}
+    //           </Span>
+    //         )}
+    //       </Reference>
+    //       {this.state.visible &&
+    //         document.body &&
+    //         createPortal(
+    //           <Popper
+    //             placement="top-start"
+    //             modifiers={{
+    //               preventOverflow: { enabled: false },
+    //               hide: { enabled: false },
+    //             }}
+    //           >
+    //             {({ style, ref }) => (
+    //               <ChannelHoverProfile id={id} innerRef={ref} style={style} />
+    //             )}
+    //           </Popper>,
+    //           document.body
+    //         )}
+    //     </Manager>
+    //   </Span>
+    // );
   }
 }
 

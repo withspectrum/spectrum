@@ -53,10 +53,9 @@ export default (job: SendCommunityInviteEmailJob) => {
 
   try {
     return sendEmail({
-      TemplateId: COMMUNITY_INVITE_TEMPLATE,
-      To: job.data.to,
-      Tag: SEND_COMMUNITY_INVITE_EMAIL,
-      TemplateModel: {
+      templateId: COMMUNITY_INVITE_TEMPLATE,
+      to: job.data.to,
+      dynamic_template_data: {
         subject,
         preheader,
         sender,

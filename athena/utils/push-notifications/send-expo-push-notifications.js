@@ -75,6 +75,7 @@ export const sendExpoPushNotifications = (
       })
       .catch(err => {
         // This means Expo is down or something
+        console.error(err);
         Raven.captureException(err);
       })
   );

@@ -26,6 +26,7 @@ import {
   SEND_NEW_USER_WELCOME_EMAIL,
   SEND_DIGEST_EMAIL,
   SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
+  SENDGRID_WEBHOOK_EVENT,
 } from 'hermes/queues/constants';
 
 import {
@@ -68,6 +69,7 @@ import {
   PROCESS_DAILY_DIGEST_EMAIL,
   PROCESS_DAILY_CORE_METRICS,
   PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
+  PROCESS_REMOVE_SEEN_USERS_NOTIFICATIONS,
 } from 'chronos/queues/constants';
 
 // Normalize our (inconsistent) queue names to a set of JS compatible names
@@ -109,6 +111,7 @@ exports.QUEUE_NAMES = {
   sendPrivateCommunityRequestApprovedEmailQueue: SEND_PRIVATE_COMMUNITY_REQUEST_APPROVED_EMAIL,
   sendThreadCreatedNotificationEmailQueue: SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
   sendDigestEmailQueue: SEND_DIGEST_EMAIL,
+  sendgridEventQueue: SENDGRID_WEBHOOK_EVENT,
 
   // mercury - reputation
   processReputationEventQueue: PROCESS_REPUTATION_EVENT,
@@ -137,6 +140,7 @@ exports.QUEUE_NAMES = {
   processIndividualDigestQueue: PROCESS_INDIVIDUAL_DIGEST,
   dailyCoreMetricsQueue: PROCESS_DAILY_CORE_METRICS,
   activeCommunityReportQueue: PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
+  removeSeenUsersNotificationsQueue: PROCESS_REMOVE_SEEN_USERS_NOTIFICATIONS,
 };
 
 // We add one error listener per queue, so we have to set the max listeners

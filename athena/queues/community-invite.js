@@ -97,7 +97,7 @@ export default async (job: Job<CommunityInviteNotificationJobData>) => {
       sender,
       customMessage
     ).catch(err => {
-      debug(err);
+      console.error(err);
       Raven.captureException(err);
     });
   } else {
@@ -149,8 +149,8 @@ export default async (job: Job<CommunityInviteNotificationJobData>) => {
       sendInvite,
       usersNotification,
     ]).catch(err => {
-      debug('❌ Error in job:\n');
-      debug(err);
+      console.error('❌ Error in job:\n');
+      console.error(err);
       Raven.captureException(err);
     });
   }
