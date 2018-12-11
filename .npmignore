@@ -1,0 +1,46 @@
+# This is used by now when deploying hyperion, replacing .gitignore
+# NOTE(@mxstbr): The important change is that `cacert` is NOT ignored!
+node_modules
+.sass-cache
+npm-debug.log
+build
+.DS_Store
+src/config/FirebaseConfig.js
+npm-debug.log
+yarn-error.log
+rethinkdb_data
+debug
+now-secrets.json
+build-iris
+build-api
+build-athena
+build-hermes
+build-chronos
+build-mercury
+build-vulcan
+build-hyperion
+build-electron
+build-analytics
+package-lock.json
+.vscode
+dump.rdb
+*.swp
+queries-by-response-size.js
+queries-by-time.js
+test-extend.js
+stats.json
+iris/.env
+api/.env
+test-results.json
+public/uploads
+cypress/screenshots/
+cypress/videos/
+
+# This is hyperion-now-specific, do not copy to .gitignore
+desktop
+docs
+cypress
+admin
+.circleci
+.github
+

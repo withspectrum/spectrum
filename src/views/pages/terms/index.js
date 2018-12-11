@@ -22,7 +22,7 @@ class Terms extends React.Component<{}> {
         <ContentContainer>
           <Heading>Terms of Service</Heading>
 
-          <Copy>Last updated March 15th, 2017</Copy>
+          <Copy>Last updated December 12, 2018</Copy>
 
           <Section>
             <SectionDescription>
@@ -37,7 +37,7 @@ class Terms extends React.Component<{}> {
             <SectionDescription>
               If you access or use the Service, it means you agree to be bound
               by all of the terms below. So, before you use the Service, please
-              read all of the terms. If you don't agree to all of the terms
+              read all of the terms. If you don’t agree to all of the terms
               below, please do not use the Service. Also, if a term does not
               make sense to you, please let us know by e-mailing
               support@spectrum.chat.
@@ -87,7 +87,7 @@ class Terms extends React.Component<{}> {
               websites or services that we do not own or control. Your use of
               the Service may also include the use of applications that are
               developed or owned by a third party. Your use of such third party
-              applications, websites, and services is governed by that party's
+              applications, websites, and services is governed by that party’s
               own terms of service or privacy policies. We encourage you to read
               the terms and conditions and privacy policy of any third party
               application, website or service that you visit or use.
@@ -210,7 +210,7 @@ class Terms extends React.Component<{}> {
           </Section>
 
           <Section>
-            <SectionTitle>Space Program Materials</SectionTitle>
+            <SectionTitle>GitHub Materials</SectionTitle>
 
             <SectionDescription>
               We put a lot of effort into creating the Service including, the
@@ -246,16 +246,16 @@ class Terms extends React.Component<{}> {
             </SectionDescription>
 
             <SectionDescription>
-              Space Program, Inc. makes no claim or representation regarding,
-              and accepts no responsibility for third party websites accessible
-              by hyperlink from the Service or websites linking to the Service.
+              GitHub, Inc. makes no claim or representation regarding, and
+              accepts no responsibility for third party websites accessible by
+              hyperlink from the Service or websites linking to the Service.
               When you leave the Service, you should be aware that these Terms
               and our policies no longer govern.
             </SectionDescription>
 
             <SectionDescription>
               If there is any content on the Service from you and others, we
-              don't review, verify or authenticate it, and it may include
+              don’t review, verify or authenticate it, and it may include
               inaccuracies or false information. We make no representations,
               warranties, or guarantees relating to the quality, suitability,
               truth, accuracy or completeness of any content contained in the
@@ -280,17 +280,17 @@ class Terms extends React.Component<{}> {
             </SectionDescription>
 
             <SectionDescription>
-              IN NO EVENT WILL SPACE PROGRAM, INC. BE LIABLE TO YOU OR ANY THIRD
-              PARTY FOR ANY SPECIAL, INDIRECT, INCIDENTAL, EXEMPLARY OR
-              CONSEQUENTIAL DAMAGES OF ANY KIND ARISING OUT OF OR IN CONNECTION
-              WITH THE SERVICE OR ANY OTHER SERVICE AND/OR CONTENT INCLUDED ON
-              OR OTHERWISE MADE AVAILABLE TO YOU THROUGH THE SERVICE, REGARDLESS
-              OF THE FORM OF ACTION, WHETHER IN CONTRACT, TORT, STRICT LIABILITY
-              OR OTHERWISE, EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF
-              SUCH DAMAGES OR ARE AWARE OF THE POSSIBILITY OF SUCH DAMAGES. OUR
-              TOTAL LIABILITY FOR ALL CAUSES OF ACTION AND UNDER ALL THEORIES OF
-              LIABILITY WILL BE LIMITED TO THE AMOUNT YOU PAID TO SPACE PROGRAM,
-              INC. THIS SECTION WILL BE GIVEN FULL EFFECT EVEN IF ANY REMEDY
+              IN NO EVENT WILL GITHUB, INC. BE LIABLE TO YOU OR ANY THIRD PARTY
+              FOR ANY SPECIAL, INDIRECT, INCIDENTAL, EXEMPLARY OR CONSEQUENTIAL
+              DAMAGES OF ANY KIND ARISING OUT OF OR IN CONNECTION WITH THE
+              SERVICE OR ANY OTHER SERVICE AND/OR CONTENT INCLUDED ON OR
+              OTHERWISE MADE AVAILABLE TO YOU THROUGH THE SERVICE, REGARDLESS OF
+              THE FORM OF ACTION, WHETHER IN CONTRACT, TORT, STRICT LIABILITY OR
+              OTHERWISE, EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH
+              DAMAGES OR ARE AWARE OF THE POSSIBILITY OF SUCH DAMAGES. OUR TOTAL
+              LIABILITY FOR ALL CAUSES OF ACTION AND UNDER ALL THEORIES OF
+              LIABILITY WILL BE LIMITED TO THE AMOUNT YOU PAID TO GITHUB, INC.
+              THIS SECTION WILL BE GIVEN FULL EFFECT EVEN IF ANY REMEDY
               SPECIFIED IN THIS AGREEMENT IS DEEMED TO HAVE FAILED OF ITS
               ESSENTIAL PURPOSE.
             </SectionDescription>
@@ -298,7 +298,7 @@ class Terms extends React.Component<{}> {
             <SectionDescription>
               You agree to defend, indemnify and hold us harmless from and
               against any and all costs, damages, liabilities, and expenses
-              (including attorneys' fees, costs, penalties, interest and
+              (including attorneys’ fees, costs, penalties, interest and
               disbursements) we incur in relation to, arising from, or for the
               purpose of avoiding, any claim or demand from a third party
               relating to your use of the Service or the use of the Service by
@@ -354,6 +354,20 @@ class Terms extends React.Component<{}> {
             <SectionDescription>
               If you breach any of these Terms, we have the right to suspend or
               disable your access to or use of the Service.
+            </SectionDescription>
+          </Section>
+
+          <Section>
+            <SectionTitle>Assignment</SectionTitle>
+
+            <SectionDescription>
+              We may assign or delegate these Terms of Service and/or the
+              Privacy Policy, in whole or in part, to any person or entity at
+              any time with or without your consent, including the license grant
+              in the "Your Content & Conduct" section. You may not assign or
+              delegate any rights or obligations under the Terms of Service or
+              Privacy Policy without our prior written consent, and any
+              unauthorized assignment and delegation by you is void.
             </SectionDescription>
           </Section>
 

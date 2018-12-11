@@ -16,11 +16,12 @@ export default job => {
 
   try {
     return sendEmail({
-      TemplateId: NEW_USER_WELCOME_TEMPLATE,
-      To: user.email,
+      templateId: NEW_USER_WELCOME_TEMPLATE,
+      to: user.email,
       Tag: SEND_NEW_USER_WELCOME_EMAIL,
-      TemplateModel: {
+      dynamic_template_data: {
         user,
+        subject: 'Welcome to Spectrum!',
       },
     });
   } catch (err) {

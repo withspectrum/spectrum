@@ -16,12 +16,12 @@ export default job => {
 
   try {
     return sendEmail({
-      TemplateId: NEW_COMMUNITY_WELCOME_TEMPLATE,
-      To: user.email,
-      Tag: SEND_NEW_COMMUNITY_WELCOME_EMAIL,
-      TemplateModel: {
+      templateId: NEW_COMMUNITY_WELCOME_TEMPLATE,
+      to: user.email,
+      dynamic_template_data: {
         user,
         community,
+        subject: 'Your new community is live on Spectrum!',
       },
     });
   } catch (err) {

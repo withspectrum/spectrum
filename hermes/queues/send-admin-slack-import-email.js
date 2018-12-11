@@ -16,10 +16,9 @@ export default job => {
   } community`;
   try {
     return sendEmail({
-      TemplateId: ADMIN_SLACK_IMPORT_PROCESSED_TEMPLATE,
-      To: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
-      Tag: SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
-      TemplateModel: {
+      templateId: ADMIN_SLACK_IMPORT_PROCESSED_TEMPLATE,
+      to: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
+      dynamic_template_data: {
         subject,
         preheader,
         data: {

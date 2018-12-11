@@ -64,10 +64,8 @@ export default async (job: Job<UserThreadLastSeenJobData>) => {
       debug(`lastSeen successfully stored`);
     })
     .catch(err => {
-      debug(
-        '❌ Error in job for\nuserId: ${userId}\nthreadId: ${threadId}\ntimestamp: ${timestamp}'
-      );
-      debug(err);
+      console.error('❌ Error in job');
+      console.error(err);
       Raven.captureException(err);
     });
 };

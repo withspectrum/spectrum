@@ -16,7 +16,7 @@ Cypress.Commands.add('auth', userId => {
 
   return cy.setCookie(
     'session',
-    encode(JSON.stringify({ passport: { user: userId } })),
+    encode(JSON.stringify({ passport: { user: user.id } })),
     {
       httpOnly: true,
       secure: false,

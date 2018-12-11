@@ -6,6 +6,7 @@ import {
   dailyDigestQueue,
   dailyCoreMetricsQueue,
   activeCommunityReportQueue,
+  removeSeenUsersNotificationsQueue,
 } from 'shared/bull/queues';
 
 /*
@@ -36,9 +37,18 @@ export const activeCommunityReport = () => {
   );
 };
 
+export const removeSeenUsersNotifications = () => {
+  // 2am daily
+  return removeSeenUsersNotificationsQueue.add(
+    undefined,
+    defaultJobOptions('0 2 * * *')
+  );
+};
+
 export const startJobs = () => {
   weeklyDigest();
   dailyDigest();
   dailyCoreMetrics();
   activeCommunityReport();
+  removeSeenUsersNotifications();
 };

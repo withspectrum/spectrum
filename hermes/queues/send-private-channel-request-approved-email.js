@@ -27,10 +27,9 @@ export default (job: Job<SendPrivateChannelRequestApprovedEmailJobData>) => {
 
   try {
     return sendEmail({
-      TemplateId: PRIVATE_CHANNEL_REQUEST_APPROVED_TEMPLATE,
-      To: recipient.email,
-      Tag: SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
-      TemplateModel: {
+      templateId: PRIVATE_CHANNEL_REQUEST_APPROVED_TEMPLATE,
+      to: recipient.email,
+      dynamic_template_data: {
         subject,
         preheader,
         data: {
