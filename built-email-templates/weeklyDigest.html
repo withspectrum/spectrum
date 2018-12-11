@@ -106,6 +106,21 @@
                 </tr>
                 {{/each}}
 
+                {{#data.hasOverflowThreads}}
+                <tr>
+                  <td style="word-break:break-word">
+                    <p style="line-height:1.4; margin:0; padding:0; text-align:left; color:#171A21; font-size:16px; margin-top:12px" align="left"> </p>
+                    <p class="reputation-string" style="line-height:1.4; margin:0; padding:0; text-align:left; color:#16171A; font-size:16px; margin-top:12px; margin-bottom:24px" align="left">Today’s digest highlights the top 20 conversations in your
+                      communities - but there are more active conversations waiting for you!</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="word-break:break-word">
+                    <a class="button" href="https://spectrum.chat" style="color:#FFF; text-decoration:none; -webkit-text-size-adjust:none; background-color:#7B16FF; border-radius:8px; box-shadow:0 4px 8px rgba(0, 0, 0, 0.15); display:block; font-size:16px; font-weight:600; padding:12px 0; text-align:center; white-space:nowrap; word-break:keep-all" bgcolor="#7B16FF" align="center">See more conversations</a>
+                  </td>
+                </tr>
+                {{/data.hasOverflowThreads}}
+
                 {{#data.communities}}
                 <tr>
                   <td style="word-break:break-word">
