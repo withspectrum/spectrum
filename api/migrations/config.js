@@ -2,6 +2,8 @@ const path = require('path');
 const fs = require('fs');
 const debug = require('debug')('migrations');
 
+const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
+
 const DEFAULT_CONFIG = {
   driver: 'rethinkdbdash',
   db: process.env.NODE_ENV === 'test' ? 'testing' : 'spectrum',
