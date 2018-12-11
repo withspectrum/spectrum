@@ -31,6 +31,7 @@ export default (
   // Set a sensible default req.statsdKey, which is what will be shown in the DataDog UI. Example key:
   // hyperion.http.get.spectrum.general
   const pathname = req.path.replace(/\?.*/, '');
+  // $FlowFixMe
   req.statsdKey = `http.${req.method.toLowerCase()}${pathname
     .toLowerCase()
     .replace('/', '.')}`;
