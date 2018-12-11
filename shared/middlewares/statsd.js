@@ -15,8 +15,7 @@ export default (
   // hyperion.http.get.spectrum.general
   const pathname = req.path.replace(/\?.*/, '');
   // $FlowFixMe
-  req.statsdKey = `http.${req.method.toLowerCase()}${pathname
-    .toLowerCase()
-    .replace('/', '.')}`;
+  req.statsdKey = `http.${req.method.toLowerCase() ||
+    'unknown_method'}${pathname.toLowerCase().replace('/', '.')}`;
   return middleware(req, res, next);
 };
