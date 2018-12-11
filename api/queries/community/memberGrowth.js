@@ -2,10 +2,7 @@
 import type { DBCommunity } from 'shared/types';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-const {
-  getMemberCount,
-  getCommunityGrowth,
-} = require('../../models/community');
+const { getCommunityGrowth } = require('../../models/community');
 import { canModerateCommunity } from '../../utils/permissions';
 
 export default async (

@@ -546,22 +546,10 @@ export const setUserOnline = createWriteQuery(
         { returnChanges: 'always' }
       )
       .run()
-      .then(
-        ({
-          changes,
-        }: {
-          changes: [{ old_val?: DBUser, new_val?: DBUser }],
-        }) => {
-          const user = changes[0].new_val || changes[0].old_val;
-          if (!user)
-            throw new Error(
-              `Failed to set user online status to ${String(
-                isOnline
-              )} for user ${id}`
-            );
-          return user;
-        }
-      ),
+      .then(res => {
+        const user = res.changes[0].new_val || res.changes[0].old_val;
+        return user;
+      }),
     invalidateTags: () => [id],
   })
 );
