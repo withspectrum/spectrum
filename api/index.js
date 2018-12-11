@@ -13,6 +13,7 @@ import { ApolloEngine } from 'apollo-engine';
 import toobusy from 'shared/middlewares/toobusy';
 import addSecurityMiddleware from 'shared/middlewares/security';
 import csrf from 'shared/middlewares/csrf';
+import statsd from 'shared/middlewares/statsd';
 import { init as initPassport } from './authentication.js';
 import apolloServer from './apollo-server';
 import { corsOptions } from 'shared/middlewares/cors';
@@ -36,6 +37,9 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 initPassport();
 
 const app = express();
+
+// Instantiate the statsd middleware as soon as possible to get accurate time tracking
+app.use(statsd);
 
 // Trust the now proxy
 app.set('trust proxy', true);

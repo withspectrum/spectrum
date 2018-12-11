@@ -4047,6 +4047,14 @@ express-session@^1.15.2:
     uid-safe "~2.1.5"
     utils-merge "1.0.1"
 
+express-statsd@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/express-statsd/-/express-statsd-0.3.0.tgz#cb60b8e4f633adc7eaaefb5819698b469c00b1bd"
+  integrity sha1-y2C45PYzrcfqrvtYGWmLRpwAsb0=
+  dependencies:
+    lynx "~0.0.11"
+    obj-extend "~0.1.0"
+
 express@^4.16.4:
   version "4.16.4"
   resolved "https://registry.yarnpkg.com/express/-/express-4.16.4.tgz#fddef61926109e24c515ea97fd2f1bdbf62df12e"
@@ -6419,6 +6427,14 @@ lru-cache@^5.0.0:
   dependencies:
     yallist "^3.0.2"
 
+lynx@~0.0.11:
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/lynx/-/lynx-0.0.11.tgz#2cfa14e443fd2d92a59b779f41567ce1cc6965a3"
+  integrity sha1-LPoU5EP9LZKlm3efQVZ84cxpZaM=
+  dependencies:
+    mersenne "~0.0.3"
+    statsd-parser "~0.0.4"
+
 macos-release@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/macos-release/-/macos-release-2.0.0.tgz#7dddf4caf79001a851eb4fba7fb6034f251276ab"
@@ -6540,6 +6556,11 @@ mersenne-twister@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/mersenne-twister/-/mersenne-twister-1.1.0.tgz#f916618ee43d7179efcf641bec4531eb9670978a"
   integrity sha1-+RZhjuQ9cXnvz2Qb7EUx65Zwl4o=
+
+mersenne@~0.0.3:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/mersenne/-/mersenne-0.0.4.tgz#401fdec7ec21cdb9e03cd3d3021398da21b27085"
+  integrity sha1-QB/ex+whzbngPNPTAhOY2iGycIU=
 
 methods@~1.1.2:
   version "1.1.2"
@@ -6988,6 +7009,11 @@ oauth@0.9.x:
   version "0.9.15"
   resolved "https://registry.yarnpkg.com/oauth/-/oauth-0.9.15.tgz#bd1fefaf686c96b75475aed5196412ff60cfb9c1"
   integrity sha1-vR/vr2hslrdUda7VGWQS/2DPucE=
+
+obj-extend@~0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/obj-extend/-/obj-extend-0.1.0.tgz#bb448a4775fb95eb34a781f908bbac2df23dbb5b"
+  integrity sha1-u0SKR3X7les0p4H5CLusLfI9u1s=
 
 object-assign@^4, object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
@@ -8830,6 +8856,11 @@ static-extend@^0.1.1:
   dependencies:
     define-property "^0.2.5"
     object-copy "^0.1.0"
+
+statsd-parser@~0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/statsd-parser/-/statsd-parser-0.0.4.tgz#cbd243953cc42effd548b5d22388ed689ec639bd"
+  integrity sha1-y9JDlTzELv/VSLXSI4jtaJ7GOb0=
 
 "statuses@>= 1.4.0 < 2":
   version "1.5.0"

@@ -51,6 +51,9 @@ const server = new ProtectedApolloServer({
       };
     }
 
+    // Override the default req.statsdKey with GraphQL info
+    req.statsdKey = `http.post.api.${req.body.operationName ||
+      'unnamed_query'}`;
     const loaders = createLoaders();
     let currentUser = req.user && !req.user.bannedAt ? req.user : null;
 
