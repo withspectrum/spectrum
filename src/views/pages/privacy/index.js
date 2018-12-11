@@ -204,7 +204,7 @@ class Privacy extends React.Component<{}> {
             <SectionTitle>Retention of Data</SectionTitle>
 
             <SectionDescription>
-              We will retain your Personal Data only for as long as is necessary
+              We will retain your Personal Data only for as long as is necessary
               for the purposes set out in this Privacy Policy. We will retain
               and use your Personal Data to the extent necessary to comply with
               our legal obligations (for example, if we are required to retain
@@ -213,7 +213,7 @@ class Privacy extends React.Component<{}> {
             </SectionDescription>
 
             <SectionDescription>
-              We will also retain Usage Data for internal analysis purposes.
+              We will also retain Usage Data for internal analysis purposes.
               Usage Data is generally retained for a shorter period of time,
               except when this data is used to strengthen the security or to
               improve the functionality of our Service, or we are legally
@@ -257,7 +257,7 @@ class Privacy extends React.Component<{}> {
             </SectionDescription>
 
             <SectionDescription>
-              We will take all steps reasonably necessary to ensure that your
+              We will take all steps reasonably necessary to ensure that your
               data is treated securely and in accordance with this Privacy
               Policy and no transfer of your Personal Data will take place to an
               organization or a country unless there are adequate controls in
@@ -270,7 +270,7 @@ class Privacy extends React.Component<{}> {
             <SectionTitle>Disclosure of Data</SectionTitle>
 
             <SectionDescription>
-              If we are involved in a merger, acquisition or asset sale, your
+              If we are involved in a merger, acquisition or asset sale, your
               Personal Data may be transferred. We will provide notice before
               your Personal Data is transferred and becomes subject to a
               different Privacy Policy.
@@ -284,7 +284,7 @@ class Privacy extends React.Component<{}> {
             </SectionDescription>
 
             <SectionDescription>
-              We may disclose your Personal Data in the good faith belief that
+              We may disclose your Personal Data in the good faith belief that
               such action is necessary to:
             </SectionDescription>
 
