@@ -254,3 +254,13 @@ To develop the desktop app you have to have the dev web server running in the ba
 ```
 yarn run dev:desktop
 ```
+
+> Note: If something didn't work or you ran into troubles please submit PRs to improve this doc and keep it up to date!	
+
+<br />	
+<div align="center">	
+  <img height="200px" src="public/img/connect.svg" />	
+</div>	
+
+## License	
+BSD 3-Clause, see the [LICENSE](./LICENSE) file.
