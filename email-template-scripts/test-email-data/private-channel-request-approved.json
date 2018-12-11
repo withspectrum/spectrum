@@ -1,0 +1,54 @@
+{
+  "subject": "Your request to join the Test channel in the Test community was approved!",
+  "preheader": "You can now join the conversations happening in the Test channel!",
+  "data": {
+    "recipient": {
+      "coverPhoto": "",
+      "createdAt": "2018-10-10T09:02:49.421Z",
+      "description": "",
+      "email": "email",
+      "fbProviderId": null,
+      "firstName": null,
+      "githubProviderId": null,
+      "googleProviderId": null,
+      "id": "1",
+      "isOnline": false,
+      "lastName": null,
+      "lastSeen": "2018-10-28T22:11:11.461Z",
+      "modifiedAt": "2018-10-10T09:09:53.940Z",
+      "name": "Full Name",
+      "profilePhoto": "",
+      "providerId": null,
+      "timezone": 180,
+      "username": "username",
+      "website": ""
+    },
+    "channel": {
+      "communityId": "1",
+      "createdAt": "2018-10-12T19:16:03.198Z",
+      "description": "Channel Description",
+      "id": "1",
+      "isDefault": false,
+      "isPrivate": true,
+      "memberCount": 1,
+      "name": "Test Channel",
+      "slug": "test-channel"
+    },
+    "community": {
+      "administratorEmail": "email",
+      "coverPhoto": "",
+      "createdAt": "2018-10-04T13:10:23.828Z",
+      "creatorId": "1",
+      "description": "Community description",
+      "id": "1",
+      "isPrivate": false,
+      "memberCount": 1,
+      "modifiedAt": "2018-10-08T11:23:19.135Z",
+      "name": "Community Name",
+      "pinnedThreadId": "1",
+      "profilePhoto": "",
+      "slug": "community-slug",
+      "website": ""
+    }
+  }
+}

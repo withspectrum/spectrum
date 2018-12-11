@@ -4,6 +4,7 @@ import Raven from 'shared/raven';
 import sendEmail from '../send-email';
 import truncate from 'shared/truncate';
 import { generateUnsubscribeToken } from '../utils/generate-jwt';
+import smarten from 'hermes/utils/smarten-string';
 import {
   NEW_THREAD_CREATED_TEMPLATE,
   TYPE_NEW_THREAD_CREATED,
@@ -61,7 +62,7 @@ export default async (job: SendNewThreadEmailJob) => {
 
   if (!unsubscribeToken || !recipient.email) return;
 
-  const subject = `${truncate(thread.content.title, 80)} by ${
+  const subject = `‘${truncate(smarten(thread.content.title), 80)}’ by ${
     thread.creator.name
   } · ${thread.community.name} (${thread.channel.name})`;
   const preheader = thread.content.body
@@ -70,10 +71,9 @@ export default async (job: SendNewThreadEmailJob) => {
 
   try {
     return sendEmail({
-      TemplateId: NEW_THREAD_CREATED_TEMPLATE,
-      To: recipient.email,
-      Tag: SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
-      TemplateModel: {
+      templateId: NEW_THREAD_CREATED_TEMPLATE,
+      to: recipient.email,
+      dynamic_template_data: {
         subject,
         preheader,
         data: {

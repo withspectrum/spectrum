@@ -61,10 +61,9 @@ export default async (job: Job<SendDigestEmailJobData>) => {
 
   try {
     return sendEmail({
-      TemplateId: DIGEST_TEMPLATE,
-      To: email,
-      Tag: tag,
-      TemplateModel: {
+      templateId: DIGEST_TEMPLATE,
+      to: email,
+      dynamic_template_data: {
         subject,
         preheader,
         unsubscribeToken,

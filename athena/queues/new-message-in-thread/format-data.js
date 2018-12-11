@@ -8,6 +8,7 @@ import { toPlainText, toState } from 'shared/draft-utils';
 import bufferNotificationEmail from './buffer-email';
 import type { DBUser, DBMessage, DBThread, DBNotification } from 'shared/types';
 import type { NewMessageNotificationEmailThread } from './buffer-email';
+import { signUser, signCommunity, signThread } from 'shared/imgix';
 
 type UserType = DBUser;
 type MessageType = DBMessage;
@@ -39,16 +40,22 @@ export default async (
       body = message.content.body;
     }
   }
+
+  const signedUser = signUser(user);
+  const community = await getCommunityById(thread.communityId);
+  const signedCommunity = signCommunity(community);
+  const signedThread = signThread(thread);
+
   return {
-    ...thread,
-    community: await getCommunityById(thread.communityId),
+    ...signedThread,
+    community: signedCommunity,
     channel: await getChannelById(thread.channelId),
     replies: [
       {
         id: message.id,
         sender: {
           id: user.id,
-          profilePhoto: user.profilePhoto,
+          profilePhoto: signedUser.profilePhoto,
           name: user.name,
           username: user.username,
         },

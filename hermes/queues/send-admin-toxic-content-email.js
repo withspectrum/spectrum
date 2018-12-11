@@ -28,10 +28,9 @@ export default job => {
 
   try {
     return sendEmail({
-      TemplateId: ADMIN_TOXIC_MESSAGE_TEMPLATE,
-      To: 'brian@spectrum.chat, bryn@spectrum.chat, max@spectrum.chat',
-      Tag: SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
-      TemplateModel: {
+      templateId: ADMIN_TOXIC_MESSAGE_TEMPLATE,
+      to: 'brian@spectrum.chat, bryn@spectrum.chat, max@spectrum.chat',
+      dynamic_template_data: {
         subject,
         preheader: text,
         data: {

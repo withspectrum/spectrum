@@ -42,10 +42,9 @@ export default async (job: Job<AdministratorEmailValidationEmailJobData>) => {
   } else {
     try {
       return sendEmail({
-        TemplateId: ADMINISTRATOR_EMAIL_VALIDATION_TEMPLATE,
-        To: email,
-        Tag: SEND_ADMINISTRATOR_EMAIL_VALIDATION_EMAIL,
-        TemplateModel: {
+        templateId: ADMINISTRATOR_EMAIL_VALIDATION_TEMPLATE,
+        to: email,
+        dynamic_template_data: {
           subject,
           preheader,
           validateToken,
