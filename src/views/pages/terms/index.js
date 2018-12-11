@@ -22,7 +22,7 @@ class Terms extends React.Component<{}> {
         <ContentContainer>
           <Heading>Terms of Service</Heading>
 
-          <Copy>Last updated March 15th, 2017</Copy>
+          <Copy>Last updated December 12, 2018</Copy>
 
           <Section>
             <SectionDescription>
