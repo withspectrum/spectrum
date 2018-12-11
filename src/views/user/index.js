@@ -24,7 +24,7 @@ import getUserThreads from 'shared/graphql/queries/user/getUserThreadConnection'
 import ViewError from 'src/components/viewError';
 import Titlebar from '../titlebar';
 import { CoverPhoto } from 'src/components/profile/coverPhoto';
-import { SettingsButton } from '../community/style';
+import { LoginButton, SettingsButton } from '../community/style';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import type { Dispatch } from 'redux';
 import {
