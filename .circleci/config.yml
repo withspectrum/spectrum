@@ -63,11 +63,6 @@ js_defaults: &js_defaults
   docker:
     - image: circleci/node:8
 
-macos_defaults: &macos_defaults
-  <<: *defaults
-  macos:
-    xcode: "9.2.0"
-
 version: 2
 jobs:
 
