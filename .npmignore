@@ -38,7 +38,6 @@ cypress/videos/
 
 # This is hyperion-now-specific, do not copy to .gitignore
 desktop
-mobile
 docs
 cypress
 admin
