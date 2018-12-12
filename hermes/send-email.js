@@ -80,24 +80,12 @@ const sendEmail = (options: Options) => {
 
   // $FlowFixMe
   return new Promise((res, rej) => {
-    sg.send(
-      {
-        ...defaultOptions,
-        templateId,
-        to,
-        dynamic_template_data,
-      },
-      async (res, err) => {
-        if (err) {
-          console.error('Error sending email:');
-          console.error(err);
-          return rej(err);
-        }
-
-        res();
-        debug(`email to ${to} sent successfully`);
-      }
-    );
+    sg.send({
+      ...defaultOptions,
+      templateId,
+      to,
+      dynamic_template_data,
+    });
   });
 };
 
