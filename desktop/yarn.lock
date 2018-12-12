@@ -298,10 +298,20 @@ buffer-from@^1.0.0:
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.1.tgz#32713bc028f75c02fdb710d7c7bcec1f2c6070ef"
   integrity sha512-MQcXEUbCKtEo7bhqEs6560Hyd4XaovZlO/k9V3hjVUF/zwW7KBVdSK4gIt/bzwS9MbR5qob+F5jusZsb0YQK2A==
 
-builder-util-runtime@8.0.2, builder-util-runtime@^8.0.1, builder-util-runtime@~8.0.2:
+builder-util-runtime@8.0.2, builder-util-runtime@^8.0.1:
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/builder-util-runtime/-/builder-util-runtime-8.0.2.tgz#9d638a266ca3aa25ced1cff4df74c8fd97dd78cf"
   integrity sha512-46AjyMQ1/yBvGnXWmqNGlg8te7jCPCs7TJ0zDC2+4vV/t5iZp2dR1H9UfVpcBxlvBq3dlAOmwb9fz1d9xZN1+Q==
+  dependencies:
+    bluebird-lst "^1.0.6"
+    debug "^4.1.0"
+    fs-extra-p "^7.0.0"
+    sax "^1.2.4"
+
+builder-util-runtime@~8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/builder-util-runtime/-/builder-util-runtime-8.1.0.tgz#dd7fca995d48ceee7580b4851ca057566c94601e"
+  integrity sha512-s1mlJ28mv+56Iebh6c9aXjVe11O3Z0cDTwAGeB0PCcUzHA37fDxGgS8ZGoYNMZP+rBHj21d/od1wuYofTVLaQg==
   dependencies:
     bluebird-lst "^1.0.6"
     debug "^4.1.0"
@@ -797,18 +807,18 @@ electron-publish@20.36.0:
     lazy-val "^1.0.3"
     mime "^2.3.1"
 
-electron-updater@^4.0.5:
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/electron-updater/-/electron-updater-4.0.5.tgz#0d35f13b539d0dde5a1ee18f676ea87c37bf5f4a"
-  integrity sha512-2w93987YlPNMbhYQe6+EsSpkhtgYtLyYuAMttqQckwFdBJJat4Jo8ja/gmBk2Aa760g2Jt7aIBPQvlJDiXGPgg==
+electron-updater@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/electron-updater/-/electron-updater-4.0.6.tgz#9c4f495ae0e80bf4425e3e1b801c5ed2ab933c2d"
+  integrity sha512-JPGLME6fxJcHG8hX7HWFl6Aew6iVm0DkcrENreKa5SUJCHG+uUaAhxDGDt+YGcNkyx1uJ6eBGMvFxDTLUv67pg==
   dependencies:
     bluebird-lst "^1.0.6"
-    builder-util-runtime "~8.0.2"
+    builder-util-runtime "~8.1.0"
     fs-extra-p "^7.0.0"
     js-yaml "^3.12.0"
     lazy-val "^1.0.3"
     lodash.isequal "^4.5.0"
-    pako "^1.0.6"
+    pako "^1.0.7"
     semver "^5.6.0"
     source-map-support "^0.5.9"
 
@@ -2121,10 +2131,10 @@ package-json@^4.0.0:
     registry-url "^3.0.3"
     semver "^5.1.0"
 
-pako@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.6.tgz#0101211baa70c4bca4a0f63f2206e97b7dfaf258"
-  integrity sha512-lQe48YPsMJAig+yngZ87Lus+NF+3mtu7DVOBu6b/gHO1YpKwIj5AWjZ/TOS7i46HD/UixzWb1zeWDZfGZ3iYcg==
+pako@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.7.tgz#2473439021b57f1516c82f58be7275ad8ef1bb27"
+  integrity sha512-3HNK5tW4x8o5mO8RuHZp3Ydw9icZXx0RANAOMzlMzx7LVXhMJ4mo3MOBpzyd7r/+RUu8BmndP47LXT+vzjtWcQ==
 
 parse-color@^1.0.0:
   version "1.0.0"
