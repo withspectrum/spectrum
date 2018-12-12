@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Query } from 'react-apollo';
 import { timeDifferenceShort } from 'shared/time-difference';
 import { getThreadByIdQuery } from 'shared/graphql/queries/thread/getThread';

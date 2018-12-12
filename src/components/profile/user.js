@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import Card from 'src/components/card';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';

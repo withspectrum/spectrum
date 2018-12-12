@@ -1,7 +1,7 @@
 import React from 'react';
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { ProfileHeaderAction } from './style';
 
 const PhotoContainer = styled.div`

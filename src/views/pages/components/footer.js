@@ -9,7 +9,7 @@ import {
   Safety,
   SocialLinks,
 } from '../style';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { IconButton } from 'src/components/buttons';
 import { Logo } from 'src/components/logo';
 import { track, events } from 'src/helpers/analytics';

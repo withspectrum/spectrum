@@ -13,7 +13,7 @@ import { IconButton } from '../../../components/buttons';
 import ThreadSearch from './threadSearch';
 import Menu from '../../../components/menu';
 import CommunityList from './communityList';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 
 type Props = {

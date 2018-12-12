@@ -5,7 +5,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { UserHoverProfile } from 'src/components/hoverProfile';
 import { UserAvatar } from 'src/components/avatar';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import Reputation from 'src/components/reputation';
 import Badge from 'src/components/badges';
 import Icon from 'src/components/icons';

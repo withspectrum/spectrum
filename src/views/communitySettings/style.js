@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import theme from 'shared/theme';
 import Card from '../../components/card';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { FlexCol, H1, H2, H3, Span, Tooltip } from '../../components/globals';
 
 export const ListHeader = styled.div`
@@ -215,8 +215,8 @@ export const GrowthText = styled.h5`
     props.positive
       ? props.theme.success.default
       : props.negative
-        ? props.theme.warn.alt
-        : props.theme.text.alt};
+      ? props.theme.warn.alt
+      : props.theme.text.alt};
   display: inline-block;
   margin-right: 6px;
   font-size: 14px;

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import theme from 'shared/theme';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { FlexCol, FlexRow, Transition, Gradient, zIndex } from '../globals';
 
 export const StyledThreadFeedCard = styled.div`
