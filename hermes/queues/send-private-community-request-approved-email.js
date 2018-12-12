@@ -39,8 +39,8 @@ export default (job: Job<SendPrivateCommunityRequestApprovedEmailJobData>) => {
       },
     });
   } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     Raven.captureException(err);
   }
 };
