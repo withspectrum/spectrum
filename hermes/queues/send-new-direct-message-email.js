@@ -32,7 +32,7 @@ export default async (job: Job<SendNewDirectMessageEmailJobData>) => {
   try {
     return sendEmail({
       templateId: NEW_DIRECT_MESSAGE_TEMPLATE,
-      to: recipient.email,
+      to: [{ email: recipient.email }],
       dynamic_template_data: {
         subject,
         user,

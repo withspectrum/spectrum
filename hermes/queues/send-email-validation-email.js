@@ -34,7 +34,7 @@ export default async (job: SendEmailValidationJob) => {
     try {
       return sendEmail({
         templateId: EMAIL_VALIDATION_TEMPLATE,
-        to: email,
+        to: [{ email }],
         dynamic_template_data: {
           subject: 'Confirm your email address on Spectrum',
           validateToken,

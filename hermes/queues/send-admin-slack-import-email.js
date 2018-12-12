@@ -17,7 +17,11 @@ export default job => {
   try {
     return sendEmail({
       templateId: ADMIN_SLACK_IMPORT_PROCESSED_TEMPLATE,
-      to: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
+      to: [
+        { email: 'brian@spectrum.chat ' },
+        { email: 'max@spectrum.chat ' },
+        { email: 'bryn@spectrum.chat ' },
+      ],
       dynamic_template_data: {
         subject,
         preheader,

@@ -27,7 +27,11 @@ export default (job: Job<AdminActiveCommunityReportJobData>) => {
   try {
     return sendEmail({
       templateId: ADMIN_ACTIVE_COMMUNITY_REPORT_TEMPLATE,
-      to: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
+      to: [
+        { email: 'brian@spectrum.chat ' },
+        { email: 'max@spectrum.chat ' },
+        { email: 'bryn@spectrum.chat ' },
+      ],
       dynamic_template_data: {
         subject: `Active Community Report: ${month} ${day}, ${year}`,
         data: {

@@ -28,7 +28,7 @@ export default async (job: Job<SendNewMessageMentionEmailJobData>) => {
   try {
     return sendEmail({
       templateId: NEW_MENTION_THREAD_TEMPLATE,
-      to: recipient.email,
+      to: [{ email: recipient.email }],
       dynamic_template_data: {
         subject,
         preheader,

@@ -43,7 +43,7 @@ export default async (job: Job<AdministratorEmailValidationEmailJobData>) => {
     try {
       return sendEmail({
         templateId: ADMINISTRATOR_EMAIL_VALIDATION_TEMPLATE,
-        to: email,
+        to: [{ email }],
         dynamic_template_data: {
           subject,
           preheader,

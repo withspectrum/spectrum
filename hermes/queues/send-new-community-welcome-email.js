@@ -17,7 +17,7 @@ export default job => {
   try {
     return sendEmail({
       templateId: NEW_COMMUNITY_WELCOME_TEMPLATE,
-      to: user.email,
+      to: [{ email: user.email }],
       dynamic_template_data: {
         user,
         community,

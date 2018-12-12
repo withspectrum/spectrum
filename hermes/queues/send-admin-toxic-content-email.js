@@ -29,7 +29,11 @@ export default job => {
   try {
     return sendEmail({
       templateId: ADMIN_TOXIC_MESSAGE_TEMPLATE,
-      to: 'brian@spectrum.chat, bryn@spectrum.chat, max@spectrum.chat',
+      to: [
+        { email: 'brian@spectrum.chat ' },
+        { email: 'max@spectrum.chat ' },
+        { email: 'bryn@spectrum.chat ' },
+      ],
       dynamic_template_data: {
         subject,
         preheader: text,

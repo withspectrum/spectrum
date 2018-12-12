@@ -36,6 +36,7 @@ export default (job: SendCommunityInviteEmailJob) => {
     community,
     communitySettings,
     customMessage,
+    to,
   } = job.data;
 
   const subject = `${job.data.sender.name} has invited you to join the ${
@@ -54,7 +55,7 @@ export default (job: SendCommunityInviteEmailJob) => {
   try {
     return sendEmail({
       templateId: COMMUNITY_INVITE_TEMPLATE,
-      to: job.data.to,
+      to: [{ email: to }],
       dynamic_template_data: {
         subject,
         preheader,

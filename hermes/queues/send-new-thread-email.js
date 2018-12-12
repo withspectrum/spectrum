@@ -75,7 +75,7 @@ export default async (job: SendNewThreadEmailJob) => {
   try {
     return sendEmail({
       templateId: NEW_THREAD_CREATED_TEMPLATE,
-      to: recipient.email,
+      to: [{ email: recipient.email }],
       dynamic_template_data: {
         subject,
         preheader,

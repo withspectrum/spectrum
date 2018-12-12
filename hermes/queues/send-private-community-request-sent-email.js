@@ -29,7 +29,7 @@ export default (job: Job<SendPrivateCommunityRequestEmailJobData>) => {
   try {
     return sendEmail({
       templateId: PRIVATE_COMMUNITY_REQUEST_SENT_TEMPLATE,
-      to: recipient.email,
+      to: [{ email: recipient.email }],
       dynamic_template_data: {
         subject,
         preheader,

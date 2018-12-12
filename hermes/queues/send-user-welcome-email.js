@@ -17,7 +17,7 @@ export default job => {
   try {
     return sendEmail({
       templateId: NEW_USER_WELCOME_TEMPLATE,
-      to: user.email,
+      to: [{ email: user.email }],
       Tag: SEND_NEW_USER_WELCOME_EMAIL,
       dynamic_template_data: {
         user,

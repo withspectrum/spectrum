@@ -14,7 +14,11 @@ export default job => {
   try {
     return sendEmail({
       templateId: ADMIN_COMMUNITY_CREATED_TEMPLATE,
-      to: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
+      to: [
+        { email: 'brian@spectrum.chat ' },
+        { email: 'max@spectrum.chat ' },
+        { email: 'bryn@spectrum.chat ' },
+      ],
       dynamic_template_data: {
         subject: `New community: ${community.name}`,
         user: {

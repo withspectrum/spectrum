@@ -36,7 +36,11 @@ export default (job: Job<AdminUserSpammingThreadsJobData>) => {
   try {
     return sendEmail({
       templateId: ADMIN_USER_SPAMMING_THREADS_NOTIFICATION_TEMPLATE,
-      to: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
+      to: [
+        { email: 'brian@spectrum.chat ' },
+        { email: 'max@spectrum.chat ' },
+        { email: 'bryn@spectrum.chat ' },
+      ],
       dynamic_template_data: {
         subject,
         preheader,

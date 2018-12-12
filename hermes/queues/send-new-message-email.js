@@ -81,7 +81,7 @@ export default async (job: Job<SendNewMessageEmailJobData>) => {
   try {
     return sendEmail({
       templateId: NEW_MESSAGE_TEMPLATE,
-      to: recipient.email,
+      to: [{ email: recipient.email }],
       dynamic_template_data: {
         subject,
         preheader,

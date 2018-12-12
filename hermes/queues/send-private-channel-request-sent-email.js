@@ -27,7 +27,7 @@ export default (job: Job<SendPrivateChannelRequestEmailJobData>) => {
   try {
     return sendEmail({
       templateId: PRIVATE_CHANNEL_REQUEST_SENT_TEMPLATE,
-      to: recipient.email,
+      to: [{ email: recipient.email }],
       dynamic_template_data: {
         subject,
         preheader,
