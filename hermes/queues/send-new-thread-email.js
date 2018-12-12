@@ -60,7 +60,10 @@ export default async (job: SendNewThreadEmailJob) => {
     TYPE_NEW_THREAD_CREATED
   );
 
-  if (!unsubscribeToken || !recipient.email) return;
+  if (!unsubscribeToken || !recipient.email) {
+    console.error('Aborting no unsub token or recipient email');
+    return null;
+  }
 
   const subject = `‘${truncate(smarten(thread.content.title), 80)}’ by ${
     thread.creator.name
