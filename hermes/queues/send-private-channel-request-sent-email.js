@@ -15,7 +15,7 @@ import type {
 
 export default (
   job: Job<SendPrivateChannelRequestEmailJobData>
-): Promise<any> => {
+): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const { user, recipient, channel, community } = job.data;
   debug(`\nsending notification to private channel owner: ${recipient.email}`);

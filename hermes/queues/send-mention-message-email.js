@@ -13,7 +13,7 @@ import type { SendNewMessageMentionEmailJobData, Job } from 'shared/bull/types';
 
 export default async (
   job: Job<SendNewMessageMentionEmailJobData>
-): Promise<any> => {
+): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
 
   const { recipient, sender, thread, message } = job.data;

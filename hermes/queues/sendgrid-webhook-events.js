@@ -7,7 +7,7 @@ import type { Job, SendGridWebhookEventJobData } from 'shared/bull/types';
 
 const processEvent = async (
   job: Job<SendGridWebhookEventJobData>
-): Promise<any> => {
+): Promise<void> => {
   const { event } = job.data;
 
   const user = await getUserByEmail(event.email);
@@ -20,7 +20,7 @@ const processEvent = async (
   return await deactivateUserEmailNotifications(user.id);
 };
 
-export default (job: Job<SendGridWebhookEventJobData>): Promise<any> => {
+export default (job: Job<SendGridWebhookEventJobData>): Promise<void> => {
   try {
     debug('Processing SendGrid webhook event');
     return processEvent(job);

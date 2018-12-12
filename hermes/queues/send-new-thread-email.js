@@ -49,7 +49,7 @@ type SendNewThreadEmailJob = {
   id: string,
 };
 
-export default async (job: SendNewThreadEmailJob): Promise<any> => {
+export default async (job: SendNewThreadEmailJob): Promise<void> => {
   const { recipient, thread, primaryActionLabel } = job.data;
 
   debug(`\nnew job: ${job.id}`);

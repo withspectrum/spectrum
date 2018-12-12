@@ -26,7 +26,7 @@ type SendCommunityInviteEmailJob = {
   id: string,
 };
 
-export default (job: SendCommunityInviteEmailJob): Promise<any> => {
+export default (job: SendCommunityInviteEmailJob): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending community invite to: ${job.data.to}`);
 

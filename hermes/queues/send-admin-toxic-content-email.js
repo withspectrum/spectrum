@@ -8,7 +8,7 @@ import {
 } from './constants';
 import type { Job, AdminToxicContentEmailJobData } from 'shared/bull/types';
 
-export default (job: Job<AdminToxicContentEmailJobData>): Promise<any> => {
+export default (job: Job<AdminToxicContentEmailJobData>): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const {
     type,

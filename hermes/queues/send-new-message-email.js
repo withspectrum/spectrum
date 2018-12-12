@@ -12,7 +12,7 @@ import {
 } from './constants';
 import type { Job, SendNewMessageEmailJobData } from 'shared/bull/types';
 
-export default async (job: Job<SendNewMessageEmailJobData>): Promise<any> => {
+export default async (job: Job<SendNewMessageEmailJobData>): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const { recipient, threads } = job.data;
 

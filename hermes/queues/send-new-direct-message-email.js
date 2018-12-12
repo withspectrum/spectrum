@@ -13,7 +13,7 @@ import type { Job, SendNewDirectMessageEmailJobData } from 'shared/bull/types';
 
 export default async (
   job: Job<SendNewDirectMessageEmailJobData>
-): Promise<any> => {
+): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const { recipient, user, thread, message } = job.data;
   const subject = `New direct message from ${user.name} on Spectrum`;

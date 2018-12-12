@@ -14,7 +14,7 @@ import type { Job, AdminUserSpammingThreadsJobData } from 'shared/bull/types';
 const threadBodyToPlainText = (body: any): string =>
   toPlainText(toState(JSON.parse(body)));
 
-export default (job: Job<AdminUserSpammingThreadsJobData>): Promise<any> => {
+export default (job: Job<AdminUserSpammingThreadsJobData>): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const { user, threads, publishing, community, channel } = job.data;
 

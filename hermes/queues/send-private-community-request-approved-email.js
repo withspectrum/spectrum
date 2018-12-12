@@ -15,7 +15,7 @@ import type {
 
 export default (
   job: Job<SendPrivateCommunityRequestApprovedEmailJobData>
-): Promise<any> => {
+): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const { recipient, community } = job.data;
   debug(`\nsending notification to user: ${recipient.email}`);

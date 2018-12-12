@@ -8,7 +8,7 @@ import {
   SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
 } from './constants';
 
-export default (job: Job<AdminCommunityCreatedEmailJobData>): Promise<any> => {
+export default (job: Job<AdminCommunityCreatedEmailJobData>): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const { user, community } = job.data;
 

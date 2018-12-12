@@ -16,7 +16,7 @@ import type {
 
 export default async (
   job: Job<AdministratorEmailValidationEmailJobData>
-): Promise<any> => {
+): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending email validation email to: ${job.data.email}`);
 

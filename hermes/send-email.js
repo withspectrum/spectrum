@@ -32,7 +32,7 @@ const defaultOptions = {
   },
 };
 
-const sendEmail = (options: Options): Promise<any> => {
+const sendEmail = (options: Options): Promise<void> => {
   let { templateId, to, dynamic_template_data, userId } = options;
 
   if (SENDGRID_API_KEY !== 'undefined') {
@@ -89,14 +89,13 @@ const sendEmail = (options: Options): Promise<any> => {
     return toType.email.substr(to.length - 7) !== '@qq.com';
   });
 
-  // $FlowFixMe
-  return new Promise((res, rej) => {
-    sg.send({
-      ...defaultOptions,
-      templateId,
-      to,
-      dynamic_template_data,
-    });
+  if (!to || to.length === 0) return Promise.resolve();
+
+  return sg.send({
+    ...defaultOptions,
+    templateId,
+    to,
+    dynamic_template_data,
   });
 };
 

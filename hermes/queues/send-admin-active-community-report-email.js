@@ -16,7 +16,7 @@ import formatDate from '../utils/format-date';
 
 export default (
   job: Job<AdminActiveCommunityReportEmailJobData>
-): Promise<any> => {
+): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const {
     dacCount,

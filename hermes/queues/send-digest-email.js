@@ -8,7 +8,7 @@ import { TYPE_DAILY_DIGEST, TYPE_WEEKLY_DIGEST } from './constants';
 import formatDate from '../utils/format-date';
 import type { Job, SendDigestEmailJobData } from 'shared/bull/types';
 
-export default async (job: Job<SendDigestEmailJobData>): Promise<any> => {
+export default async (job: Job<SendDigestEmailJobData>): Promise<void> => {
   const {
     email,
     username,

@@ -8,7 +8,7 @@ import {
   SEND_NEW_USER_WELCOME_EMAIL,
 } from './constants';
 
-export default (job: Job<NewUserWelcomeEmailJobData>): Promise<any> => {
+export default (job: Job<NewUserWelcomeEmailJobData>): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const { user } = job.data;
 

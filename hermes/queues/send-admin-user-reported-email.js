@@ -11,7 +11,7 @@ import type { Job, AdminProcessUserReportedJobData } from 'shared/bull/types';
 
 export default async (
   job: Job<AdminProcessUserReportedJobData>
-): Promise<any> => {
+): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const { userId, reason, reportedBy, reportedAt } = job.data;
 

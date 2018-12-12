@@ -16,7 +16,7 @@ type SendEmailValidationJob = {
   id: string,
 };
 
-export default async (job: SendEmailValidationJob): Promise<any> => {
+export default async (job: SendEmailValidationJob): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending email validation email to: ${job.data.email}`);
 

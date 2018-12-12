@@ -8,7 +8,7 @@ import {
 } from './constants';
 import type { Job, NewCommunityWelcomeEmailJobData } from 'shared/bull/types';
 
-export default (job: Job<NewCommunityWelcomeEmailJobData>): Promise<any> => {
+export default (job: Job<NewCommunityWelcomeEmailJobData>): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const { user, community } = job.data;
 
