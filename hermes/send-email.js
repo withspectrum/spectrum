@@ -80,7 +80,7 @@ const sendEmail = (options: Options) => {
 
   // $FlowFixMe
   return new Promise((res, rej) => {
-    sg.send({
+    return sg.send({
       ...defaultOptions,
       templateId,
       to,
