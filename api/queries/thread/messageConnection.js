@@ -47,7 +47,8 @@ export default (
     cursor = decode(cursor);
     if (cursor) cursor = parseInt(cursor, 10);
   } catch (err) {
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     return new UserError('Invalid cursor passed to thread.messageConnection.');
   }
   if (cursor) debug(`cursor: ${cursor}`);
