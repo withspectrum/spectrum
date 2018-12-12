@@ -4,6 +4,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.373.0",
+    "bluebird": "^3.5.3",
     "bull": "^3.5.2",
     "debug": "^4.1.0",
     "decode-uri-component": "^0.2.0",

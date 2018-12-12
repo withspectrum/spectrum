@@ -14,7 +14,7 @@ import type { Job, AdminUserSpammingThreadsJobData } from 'shared/bull/types';
 const threadBodyToPlainText = (body: any): string =>
   toPlainText(toState(JSON.parse(body)));
 
-export default (job: Job<AdminUserSpammingThreadsJobData>) => {
+export default (job: Job<AdminUserSpammingThreadsJobData>): Promise<any> => {
   debug(`\nnew job: ${job.id}`);
   const { user, threads, publishing, community, channel } = job.data;
 
@@ -56,6 +56,6 @@ export default (job: Job<AdminUserSpammingThreadsJobData>) => {
   } catch (err) {
     console.error('❌ Error in job:\n');
     console.error(err);
-    Raven.captureException(err);
+    return Raven.captureException(err);
   }
 };

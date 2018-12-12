@@ -11,7 +11,9 @@ import {
 } from './constants';
 import type { SendNewMessageMentionEmailJobData, Job } from 'shared/bull/types';
 
-export default async (job: Job<SendNewMessageMentionEmailJobData>) => {
+export default async (
+  job: Job<SendNewMessageMentionEmailJobData>
+): Promise<any> => {
   debug(`\nnew job: ${job.id}`);
 
   const { recipient, sender, thread } = job.data;
@@ -23,7 +25,7 @@ export default async (job: Job<SendNewMessageMentionEmailJobData>) => {
     generateUnsubscribeToken(recipient.id, TYPE_MUTE_THREAD, thread.id),
   ]);
 
-  if (!recipient.email || !unsubscribeToken) return;
+  if (!recipient.email || !unsubscribeToken) return Promise.resolve();
 
   try {
     return sendEmail({
@@ -45,6 +47,6 @@ export default async (job: Job<SendNewMessageMentionEmailJobData>) => {
   } catch (err) {
     console.error('❌ Error in job:\n');
     console.error(err);
-    Raven.captureException(err);
+    return Raven.captureException(err);
   }
 };

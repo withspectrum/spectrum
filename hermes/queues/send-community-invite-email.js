@@ -26,7 +26,7 @@ type SendCommunityInviteEmailJob = {
   id: string,
 };
 
-export default (job: SendCommunityInviteEmailJob) => {
+export default (job: SendCommunityInviteEmailJob): Promise<any> => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending community invite to: ${job.data.to}`);
 
@@ -70,6 +70,6 @@ export default (job: SendCommunityInviteEmailJob) => {
   } catch (err) {
     console.error('❌ Error in job:\n');
     console.error(err);
-    Raven.captureException(err);
+    return Raven.captureException(err);
   }
 };

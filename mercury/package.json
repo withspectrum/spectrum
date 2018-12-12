@@ -3,6 +3,7 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
+    "bluebird": "^3.5.3",
     "bull": "^3.5.2",
     "debug": "^4.1.0",
     "now-env": "^3.1.0",

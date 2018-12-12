@@ -7,6 +7,7 @@
   "dependencies": {
     "aws-sdk": "^2.373.0",
     "axios": "^0.16.2",
+    "bluebird": "^3.5.3",
     "bull": "3.3.10",
     "cryptr": "^3.0.0",
     "debug": "^4.1.0",

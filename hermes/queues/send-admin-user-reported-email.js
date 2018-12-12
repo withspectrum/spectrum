@@ -9,7 +9,9 @@ import {
 } from './constants';
 import type { Job, AdminProcessUserReportedJobData } from 'shared/bull/types';
 
-export default async (job: Job<AdminProcessUserReportedJobData>) => {
+export default async (
+  job: Job<AdminProcessUserReportedJobData>
+): Promise<any> => {
   debug(`\nnew job: ${job.id}`);
   const { userId, reason, reportedBy, reportedAt } = job.data;
 
@@ -40,6 +42,6 @@ export default async (job: Job<AdminProcessUserReportedJobData>) => {
   } catch (err) {
     console.error('❌ Error in job:\n');
     console.error(err);
-    Raven.captureException(err);
+    return Raven.captureException(err);
   }
 };

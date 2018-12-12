@@ -1,13 +1,16 @@
+// @flow
 const debug = require('debug')(
-  'hermes:queue:send-admin-slack-import-processed-email'
+  'hermes:queue:admin-slack-import-processed-email'
 );
+import Raven from 'shared/raven';
 import sendEmail from '../send-email';
 import {
   ADMIN_SLACK_IMPORT_PROCESSED_TEMPLATE,
   SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
 } from './constants';
+import type { Job, AdminSlackImportJobData } from 'shared/bull/types';
 
-export default job => {
+export default (job: Job<AdminSlackImportJobData>): Promise<any> => {
   debug(`\nnew job: ${job.id}`);
   const { user, community, invitedCount, teamName } = job.data;
   const subject = `New Slack import: ${invitedCount} invites from the ${teamName} Slack team`;
@@ -36,6 +39,6 @@ export default job => {
   } catch (err) {
     console.error('❌ Error in job:\n');
     console.error(err);
-    Raven.captureException(err);
+    return Raven.captureException(err);
   }
 };

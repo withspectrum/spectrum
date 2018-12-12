@@ -326,7 +326,7 @@ export type AdminToxicMessageJobData = { message: DBMessage };
 export type AdminToxicThreadJobData = { thread: DBThread };
 
 export type AdminSlackImportJobData = {
-  thisUser: DBUser,
+  user: DBUser,
   community: DBCommunity,
   invitedCount: number,
   teamName: string,
@@ -442,6 +442,18 @@ export type SendGridWebhookEventJobData = {
   },
 };
 
+export type AdminToxicContentEmailJobData = {
+  type: string,
+  text: string,
+  user: DBUser,
+  thread: DBThread,
+  community: DBCommunity,
+  channel: DBChannel,
+  toxicityConfidence: {
+    perspectiveScore: number,
+  },
+};
+
 export type Queues = {
   // athena
   sendThreadNotificationQueue: BullQueue<ThreadNotificationJobData>,
@@ -499,7 +511,7 @@ export type Queues = {
   _adminProcessSlackImportQueue: BullQueue<AdminSlackImportJobData>,
   _adminProcessUserReportedQueue: BullQueue<AdminProcessUserReportedJobData>,
   // TODO: Properly type this
-  _adminSendToxicContentEmailQueue: BullQueue<any>,
+  _adminSendToxicContentEmailQueue: BullQueue<AdminToxicContentEmailJobData>,
   _adminProcessUserSpammingThreadsQueue: BullQueue<AdminUserSpammingThreadsJobData>,
   _adminSendActiveCommunityReportEmailQueue: BullQueue<AdminActiveCommunityReportEmailJobData>,
 

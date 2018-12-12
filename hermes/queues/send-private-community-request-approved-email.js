@@ -13,7 +13,9 @@ import type {
   SendPrivateCommunityRequestApprovedEmailJobData,
 } from 'shared/bull/types';
 
-export default (job: Job<SendPrivateCommunityRequestApprovedEmailJobData>) => {
+export default (
+  job: Job<SendPrivateCommunityRequestApprovedEmailJobData>
+): Promise<any> => {
   debug(`\nnew job: ${job.id}`);
   const { recipient, community } = job.data;
   debug(`\nsending notification to user: ${recipient.email}`);
@@ -41,6 +43,6 @@ export default (job: Job<SendPrivateCommunityRequestApprovedEmailJobData>) => {
   } catch (err) {
     console.error('❌ Error in job:\n');
     console.error(err);
-    Raven.captureException(err);
+    return Raven.captureException(err);
   }
 };

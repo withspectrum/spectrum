@@ -6,9 +6,9 @@ import {
   ADMIN_TOXIC_MESSAGE_TEMPLATE,
   SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
 } from './constants';
+import type { Job, AdminToxicContentEmailJobData } from 'shared/bull/types';
 
-// $FlowFixMe
-export default job => {
+export default (job: Job<AdminToxicContentEmailJobData>): Promise<any> => {
   debug(`\nnew job: ${job.id}`);
   const {
     type,
@@ -20,10 +20,8 @@ export default job => {
     toxicityConfidence: { perspectiveScore },
   } = job.data;
 
-  const toPercent = (num: number) => Math.round(num * 100);
-
-  const perspectivePercent = perspectiveScore.toPercent(perspectiveScore);
-
+  const toPercent = (num: number): number => Math.round(num * 100);
+  const perspectivePercent = toPercent(perspectiveScore);
   const subject = `Toxic alert (${perspectivePercent.toString()}%): ${text}`;
 
   try {
@@ -53,6 +51,6 @@ export default job => {
   } catch (err) {
     console.error('❌ Error in job:\n');
     console.error(err);
-    Raven.captureException(err);
+    return Raven.captureException(err);
   }
 };

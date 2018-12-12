@@ -8,7 +8,7 @@ import { TYPE_DAILY_DIGEST, TYPE_WEEKLY_DIGEST } from './constants';
 import formatDate from '../utils/format-date';
 import type { Job, SendDigestEmailJobData } from 'shared/bull/types';
 
-export default async (job: Job<SendDigestEmailJobData>) => {
+export default async (job: Job<SendDigestEmailJobData>): Promise<any> => {
   const {
     email,
     username,
@@ -21,7 +21,7 @@ export default async (job: Job<SendDigestEmailJobData>) => {
   } = job.data;
 
   if (!email || !userId || !username) {
-    return;
+    return Promise.resolve();
   }
 
   const unsubscribeType =
@@ -32,7 +32,7 @@ export default async (job: Job<SendDigestEmailJobData>) => {
     unsubscribeType
   );
 
-  if (!unsubscribeToken) return;
+  if (!unsubscribeToken) return Promise.resolve();
 
   const tag =
     timeframe === 'daily'
@@ -84,6 +84,6 @@ export default async (job: Job<SendDigestEmailJobData>) => {
   } catch (err) {
     console.error('❌ Error in job:\n');
     console.error(err);
-    Raven.captureException(err);
+    return Raven.captureException(err);
   }
 };

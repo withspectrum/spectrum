@@ -5,6 +5,7 @@
   "dependencies": {
     "@sendgrid/mail": "^6.3.1",
     "aws-sdk": "^2.373.0",
+    "bluebird": "^3.5.3",
     "bull": "3.3.10",
     "debug": "^4.1.0",
     "draft-js": "^0.10.5",

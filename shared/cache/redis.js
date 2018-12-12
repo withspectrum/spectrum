@@ -1,5 +1,6 @@
 // @flow
 import Redis from 'ioredis';
+Redis.Promise = require('bluebird');
 
 const config =
   process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV
