@@ -15,7 +15,7 @@
     "now-env": "^3.1.0",
     "raven": "^2.6.4",
     "redis-tag-cache": "^1.2.1",
-    "rethinkdbdash": "^2.3.29",
+    "rethinkdbdash": "^2.3.31",
     "rethinkhaberdashery": "^2.3.32",
     "sanitize-filename": "^1.6.1",
     "sha1": "^1.1.1",

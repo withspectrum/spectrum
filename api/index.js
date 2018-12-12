@@ -9,7 +9,6 @@ debug('logging with debug enabled!');
 import { createServer } from 'http';
 import express from 'express';
 import Raven from 'shared/raven';
-import { ApolloEngine } from 'apollo-engine';
 import toobusy from 'shared/middlewares/toobusy';
 import addSecurityMiddleware from 'shared/middlewares/security';
 import csrf from 'shared/middlewares/csrf';

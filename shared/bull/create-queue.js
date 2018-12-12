@@ -28,15 +28,16 @@ function createQueue(name: string, queueOptions?: Object = {}) {
   // but that's a bug upstream in bull. Reference: OptimalBits/bull#503
   queue.on('stalled', job => {
     console.error(`Job#${job.id} stalled, processing again.`);
-    Raven.captureException(new Error(err));
+    console.error({ job });
   });
   queue.on('error', err => {
-    console.error(`Job errored: `, err);
+    console.error('Job errored');
+    console.error({ err });
     Raven.captureException(new Error(err));
   });
   queue.on('failed', (job, err) => {
     console.error(`Job#${job.id} failed, with following reason`);
-    console.error(err);
+    console.error({ job, err });
     Raven.captureException(err);
   });
   return queue;
