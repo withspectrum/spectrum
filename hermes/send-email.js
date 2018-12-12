@@ -27,7 +27,7 @@ const defaultOptions = {
   },
 };
 
-const sendEmail = (options: Options) => {
+const sendEmail = (options: Options): Promise<void> => {
   const { templateId, to, dynamic_template_data, userId } = options;
 
   if (SENDGRID_API_KEY !== 'undefined') {
@@ -50,7 +50,7 @@ const sendEmail = (options: Options) => {
       })
     );
 
-    return;
+    return Promise.resolve();
   }
 
   if (userId) {
@@ -69,23 +69,20 @@ const sendEmail = (options: Options) => {
       });
     }
 
-    return;
+    return Promise.resolve();
   }
 
   // qq.com email addresses are isp blocked, which raises our error rate
   // on sendgrid. prevent sending these emails at all
   if (to.substr(to.length - 7) === '@qq.com') {
-    return;
+    return Promise.resolve();
   }
 
-  // $FlowFixMe
-  return new Promise((res, rej) => {
-    return sg.send({
-      ...defaultOptions,
-      templateId,
-      to,
-      dynamic_template_data,
-    });
+  return sg.send({
+    ...defaultOptions,
+    templateId,
+    to,
+    dynamic_template_data,
   });
 };
 
