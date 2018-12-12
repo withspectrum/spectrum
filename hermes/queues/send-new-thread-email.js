@@ -96,8 +96,8 @@ export default async (job: SendNewThreadEmailJob) => {
       userId: recipient.id,
     });
   } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     Raven.captureException(err);
   }
 };
