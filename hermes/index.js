@@ -96,11 +96,7 @@ const server = createWorker(
 
     [SENDGRID_WEBHOOK_EVENT]: processSendGridWebhookEvent,
   },
-  {
-    settings: {
-      maxStalledCount: 3, // Max amount of times a stalled job will be re-processed.
-    },
-  },
+  {},
   requestHandler
 );
 
