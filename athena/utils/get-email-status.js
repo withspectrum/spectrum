@@ -28,7 +28,8 @@ const getEmailStatus = (
       return true;
     })
     .catch(err => {
-      debug(err);
+      console.error('❌ Error in job:\n');
+      console.error(err);
       return false;
     });
 };
