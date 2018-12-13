@@ -5,6 +5,7 @@ import ChannelList from './channelList';
 import BrandedLogin from './brandedLogin';
 import { SectionsContainer, Column } from 'src/components/settingsViews/style';
 import SlackSettings from './slack';
+import ThreadTags from './threadTags';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
@@ -21,6 +22,10 @@ class Overview extends React.Component<Props> {
         <Column>
           <ErrorBoundary fallbackComponent={SettingsFallback}>
             <EditForm community={community} />
+          </ErrorBoundary>
+
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            <ThreadTags id={community.id} />
           </ErrorBoundary>
         </Column>
         <Column>
