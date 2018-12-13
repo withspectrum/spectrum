@@ -13,6 +13,7 @@ import Icon from '../../icons';
 import { IconContainer } from '../RepExplainerModal/style';
 import { Section, Title, Subtitle, Actions, modalStyles } from './style';
 import { Checkbox } from 'src/components/formElements';
+import { getThreadByIdQuery } from 'shared/graphql/queries/thread/getThread';
 import {
   getCommunityThreadTagsQuery,
   type GetCommunityThreadTagsType,
@@ -82,7 +83,7 @@ class EditThreadTagsModal extends React.Component<Props, State> {
   };
 
   render() {
-    const { thread, isOpen } = this.props;
+    const { thread: propsThread, isOpen } = this.props;
 
     return (
       <Modal
@@ -106,50 +107,60 @@ class EditThreadTagsModal extends React.Component<Props, State> {
               Finely categorize this thread with the community's set of tags.
             </Subtitle>
 
+            {/* Need to load the thread from the Apollo cache anew so we update when tags are changed */}
             <Query
-              query={getCommunityThreadTagsQuery}
-              variables={{ id: thread.community.id }}
+              query={getThreadByIdQuery}
+              variables={{ id: propsThread.id }}
             >
-              {({ data, loading, error }) => {
-                if (data && data.community)
-                  return (
-                    <div>
-                      {data.community.threadTags.map(tag => {
-                        const checked = thread.tags.some(
-                          ({ id }) => id === tag.id
-                        );
+              {({ data: { thread } }) =>
+                thread && (
+                  <Query
+                    query={getCommunityThreadTagsQuery}
+                    variables={{ id: thread.community.id }}
+                  >
+                    {({ data, loading, error }) => {
+                      if (data && data.community)
                         return (
-                          <Checkbox
-                            disabled={this.state.loading[tag.id]}
-                            checked={checked}
-                            onChange={() =>
-                              this.editTag(
-                                tag.id,
-                                checked
-                                  ? 'removeTagsFromThread'
-                                  : 'addTagsToThread'
-                              )
-                            }
-                            key={tag.id}
-                            id={tag.id}
-                          >
-                            {tag.title}
-                          </Checkbox>
+                          <div>
+                            {data.community.threadTags.map(tag => {
+                              const checked = thread.tags.some(
+                                ({ id }) => id === tag.id
+                              );
+                              return (
+                                <Checkbox
+                                  disabled={this.state.loading[tag.id]}
+                                  checked={checked}
+                                  onChange={() =>
+                                    this.editTag(
+                                      tag.id,
+                                      checked
+                                        ? 'removeTagsFromThread'
+                                        : 'addTagsToThread'
+                                    )
+                                  }
+                                  key={tag.id}
+                                  id={tag.id}
+                                >
+                                  {tag.title}
+                                </Checkbox>
+                              );
+                            })}
+                            <Subtitle>
+                              Add new tags in your{' '}
+                              <Link to={`/${data.community.slug}/settings`}>
+                                community's settings
+                              </Link>
+                              !
+                            </Subtitle>
+                          </div>
                         );
-                      })}
-                      <Subtitle>
-                        Add new tags in your{' '}
-                        <Link to={`/${data.community.slug}/settings`}>
-                          community's settings
-                        </Link>
-                        !
-                      </Subtitle>
-                    </div>
-                  );
-                if (loading) return <p>Loading</p>;
-                if (error) return <p>Error! :(</p>;
-                return null;
-              }}
+                      if (loading) return <p>Loading</p>;
+                      if (error) return <p>Error! :(</p>;
+                      return null;
+                    }}
+                  </Query>
+                )
+              }
             </Query>
           </Section>
         </ModalContainer>
