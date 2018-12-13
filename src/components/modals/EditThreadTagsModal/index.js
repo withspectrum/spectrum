@@ -17,6 +17,12 @@ import {
   getCommunityThreadTagsQuery,
   type GetCommunityThreadTagsType,
 } from 'shared/graphql/queries/community/getCommunityThreadTags';
+import addTagsToThread, {
+  type AddTagsToThreadProps,
+} from 'shared/graphql/mutations/thread/addTagsToThread';
+import removeTagsFromThread, {
+  type RemoveTagsFromThreadProps,
+} from 'shared/graphql/mutations/thread/removeTagsFromThread';
 import type { Dispatch } from 'redux';
 
 type Props = {
@@ -24,14 +30,55 @@ type Props = {
   dispatch: Dispatch<Object>,
   isOpen: boolean,
   community: GetCommunityThreadTagsType,
+  ...$Exact<AddTagsToThreadProps>,
+  ...$Exact<RemoveTagsFromThreadProps>,
 };
-class EditThreadTagsModal extends React.Component<Props> {
+
+type State = {
+  loading: {
+    [tagId: string]: boolean,
+  },
+};
+
+class EditThreadTagsModal extends React.Component<Props, State> {
+  state = {
+    loading: {},
+  };
+
   closeModal = () => {
     this.props.dispatch(closeModal());
   };
 
-  saveTags = () => {
-    this.closeModal();
+  editTag = (
+    id: string,
+    method: 'addTagsToThread' | 'removeTagsFromThread'
+  ) => {
+    this.setState(prev => ({
+      loading: {
+        ...prev.loading,
+        [id]: true,
+      },
+    }));
+    this.props[method]({
+      threadId: this.props.thread.id,
+      tagIds: [id],
+    })
+      .then(() => {
+        this.setState(prev => ({
+          loading: {
+            ...prev.loading,
+            [id]: false,
+          },
+        }));
+      })
+      .catch(() => {
+        this.setState(prev => ({
+          loading: {
+            ...prev.loading,
+            [id]: false,
+          },
+        }));
+      });
   };
 
   render() {
@@ -67,11 +114,29 @@ class EditThreadTagsModal extends React.Component<Props> {
                 if (data && data.community)
                   return (
                     <div>
-                      {data.community.threadTags.map(tag => (
-                        <Checkbox key={tag.id} id={tag.id}>
-                          {tag.title}
-                        </Checkbox>
-                      ))}
+                      {data.community.threadTags.map(tag => {
+                        const checked = thread.tags.some(
+                          ({ id }) => id === tag.id
+                        );
+                        return (
+                          <Checkbox
+                            disabled={this.state.loading[tag.id]}
+                            checked={checked}
+                            onChange={() =>
+                              this.editTag(
+                                tag.id,
+                                checked
+                                  ? 'removeTagsFromThread'
+                                  : 'addTagsToThread'
+                              )
+                            }
+                            key={tag.id}
+                            id={tag.id}
+                          >
+                            {tag.title}
+                          </Checkbox>
+                        );
+                      })}
                       <Subtitle>
                         Add new tags in your{' '}
                         <Link to={`/${data.community.slug}/settings`}>
@@ -86,17 +151,7 @@ class EditThreadTagsModal extends React.Component<Props> {
                 return null;
               }}
             </Query>
-
-            <Actions>
-              <TextButton onClick={this.closeModal} color={'warn.alt'}>
-                Cancel
-              </TextButton>
-              <Button color="warn" onClick={this.saveTags}>
-                Save
-              </Button>
-            </Actions>
           </Section>
-          )}
         </ModalContainer>
       </Modal>
     );
@@ -106,5 +161,7 @@ class EditThreadTagsModal extends React.Component<Props> {
 const map = state => ({ isOpen: state.modals.isOpen });
 export default compose(
   // $FlowIssue
-  connect(map)
+  connect(map),
+  addTagsToThread,
+  removeTagsFromThread
 )(EditThreadTagsModal);

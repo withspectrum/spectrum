@@ -33,6 +33,7 @@ export type ThreadInfoType = {
   community: {
     ...$Exact<CommunityInfoType>,
   },
+  tags: Array<{ title: string, id: string }>,
   // $FlowFixMe: We need to remove `messageConnection` from ThreadMessageConnectionType. This works in the meantime.
   ...$Exact<ThreadMessageConnectionType>,
   isPublished: boolean,
@@ -69,6 +70,10 @@ export default gql`
     }
     community {
       ...communityInfo
+    }
+    tags {
+      id
+      title
     }
     isPublished
     isLocked
