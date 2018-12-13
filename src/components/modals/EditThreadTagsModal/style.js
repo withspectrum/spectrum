@@ -1,3 +1,4 @@
+// @flow
 import styled from 'styled-components';
 import theme from 'shared/theme';
 import { zIndex } from '../../globals';
