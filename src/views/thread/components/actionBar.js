@@ -88,6 +88,18 @@ class ActionBar extends React.Component<Props, State> {
     dispatch(openModal('CHANGE_CHANNEL', { thread }));
   };
 
+  triggerEditThreadTags = () => {
+    const { thread, dispatch } = this.props;
+
+    // track(events.THREAD_MOVED_INITED, {
+    //   thread: transformations.analyticsThread(thread),
+    //   channel: transformations.analyticsChannel(thread.channel),
+    //   community: transformations.analyticsCommunity(thread.community),
+    // });
+
+    dispatch(openModal('EDIT_THREAD_TAGS_MODAL', { thread }));
+  };
+
   toggleNotification = () => {
     const { thread, dispatch, toggleThreadNotifications } = this.props;
     const threadId = thread.id;
@@ -196,6 +208,22 @@ class ActionBar extends React.Component<Props, State> {
     );
   };
 
+  shouldRenderTagThreadAction = () => {
+    const {
+      isChannelModerator,
+      isChannelOwner,
+      isCommunityOwner,
+      isCommunityModerator,
+    } = this.getThreadActionPermissions();
+
+    return (
+      isChannelModerator ||
+      isCommunityModerator ||
+      isChannelOwner ||
+      isCommunityOwner
+    );
+  };
+
   shouldRenderPinThreadAction = () => {
     const { thread } = this.props;
     const {
@@ -249,6 +277,7 @@ class ActionBar extends React.Component<Props, State> {
     const shouldRenderMoveThreadAction = this.shouldRenderMoveThreadAction();
     const shouldRenderEditThreadAction = this.shouldRenderEditThreadAction();
     const shouldRenderDeleteThreadAction = this.shouldRenderDeleteThreadAction();
+    const shouldRenderTagThreadAction = this.shouldRenderTagThreadAction();
 
     if (isEditing) {
       return (
@@ -503,6 +532,19 @@ class ActionBar extends React.Component<Props, State> {
                                     dataCy={'thread-dropdown-move'}
                                   >
                                     Move thread
+                                  </TextButton>
+                                </FlyoutRow>
+                              )}
+
+                              {shouldRenderTagThreadAction && (
+                                <FlyoutRow>
+                                  <TextButton
+                                    icon={'attachment'}
+                                    hoverColor={'special.default'}
+                                    onClick={this.triggerEditThreadTags}
+                                    dataCy={'thread-tag'}
+                                  >
+                                    Edit thread tags
                                   </TextButton>
                                 </FlyoutRow>
                               )}

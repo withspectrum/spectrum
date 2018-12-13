@@ -9,6 +9,7 @@ import RestoreChannelModal from './RestoreChannelModal';
 import ChatInputLoginModal from './ChatInputLoginModal';
 import ReportUserModal from './ReportUserModal';
 import BanUserModal from './BanUserModal';
+import EditThreadTagsModal from './EditThreadTagsModal';
 
 const MODAL_COMPONENTS = {
   CREATE_CHANNEL_MODAL: CreateChannelModal,
@@ -19,6 +20,7 @@ const MODAL_COMPONENTS = {
   CHAT_INPUT_LOGIN_MODAL: ChatInputLoginModal,
   REPORT_USER_MODAL: ReportUserModal,
   BAN_USER_MODAL: BanUserModal,
+  EDIT_THREAD_TAGS_MODAL: EditThreadTagsModal,
 };
 
 export type ModalTypes = $Keys<typeof MODAL_COMPONENTS>;
