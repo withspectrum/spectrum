@@ -326,9 +326,9 @@ const Community = /* GraphQL */ `
     enableCommunityTokenJoin(input: EnableCommunityTokenJoinInput!): Community
     disableCommunityTokenJoin(input: DisableCommunityTokenJoinInput!): Community
     resetCommunityJoinToken(input: ResetCommunityJoinTokenInput!): Community
-    addThreadTagsToCommunity(input: AddThreadTagsToCommunity!): Community
+    addThreadTagsToCommunity(input: AddThreadTagsToCommunityInput!): Community
     removeThreadTagsFromCommunity(
-      input: RemoveThreadTagsFromCommunity!
+      input: RemoveThreadTagsFromCommunityInput!
     ): Community
   }
 
@@ -336,12 +336,12 @@ const Community = /* GraphQL */ `
     title: String!
   }
 
-  input AddThreadTagsToCommunity {
+  input AddThreadTagsToCommunityInput {
     communityId: String!
     tags: [ThreadTagsInput!]!
   }
 
-  input RemoveThreadTagsFromCommunity {
+  input RemoveThreadTagsFromCommunityInput {
     communityId: String!
     tagIds: [ID!]!
   }
