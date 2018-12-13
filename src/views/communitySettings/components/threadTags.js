@@ -16,9 +16,11 @@ import ViewError from '../../../components/viewError';
 import { getCommunityThreadTags } from 'shared/graphql/queries/community/getCommunityThreadTags';
 import type { GetCommunityThreadTagsType } from 'shared/graphql/queries/community/getCommunityThreadTags';
 import addThreadTagsToCommunity, {
-  type AddThreadTagsToCommunityType,
   type AddThreadTagsToCommunityInput,
 } from 'shared/graphql/mutations/community/addThreadTagsToCommunity';
+import removeThreadTagsFromCommunity, {
+  type RemoveThreadTagsFromCommunityInput,
+} from 'shared/graphql/mutations/community/removeThreadTagsFromCommunity';
 import type { Dispatch } from 'redux';
 import { ListContainer } from '../style';
 import {
@@ -34,6 +36,9 @@ type Props = {
   addThreadTagsToCommunity: (
     input: AddThreadTagsToCommunityInput
   ) => Promise<void>,
+  removeThreadTagsFromCommunity: (
+    input: RemoveThreadTagsFromCommunityInput
+  ) => Promise<void>,
   isLoading: boolean,
   dispatch: Dispatch<Object>,
   id: string,
@@ -42,12 +47,14 @@ type Props = {
 type State = {
   input: string,
   loading: boolean,
+  removing: string,
 };
 
 class ChannelList extends React.Component<Props, State> {
   state = {
     input: '',
     loading: false,
+    removing: '',
   };
 
   createThreadTag = e => {
@@ -84,6 +91,28 @@ class ChannelList extends React.Component<Props, State> {
     });
   };
 
+  removeThreadTag = (id: string) => {
+    if (!id) return;
+    this.setState({
+      removing: id,
+    });
+    this.props
+      .removeThreadTagsFromCommunity({
+        communityId: this.props.id,
+        tagIds: [id],
+      })
+      .then(() => {
+        this.setState({
+          removing: '',
+        });
+      })
+      .catch(() => {
+        this.setState({
+          removing: '',
+        });
+      });
+  };
+
   render() {
     const {
       data: { community },
@@ -97,13 +126,24 @@ class ChannelList extends React.Component<Props, State> {
           <SectionTitle>Thread Tags</SectionTitle>
 
           <ListContainer style={{ padding: '0 16px' }}>
-            {community.threadTags.map(tag => (
-              <li key={tag.id}>{tag.title}</li>
-            ))}
+            {community.threadTags
+              // Fake optimistic update for removing tags
+              .filter(({ id }) => id !== this.state.removing)
+              .map(tag => (
+                <li key={tag.id}>
+                  {tag.title}{' '}
+                  <button onClick={() => this.removeThreadTag(tag.id)}>
+                    X
+                  </button>
+                </li>
+              ))}
           </ListContainer>
 
-          <SectionCardFooter style={{ alignItems: 'flex-start' }}>
-            <form onSubmit={this.createThreadTag}>
+          <SectionCardFooter>
+            <form
+              onSubmit={this.createThreadTag}
+              style={{ width: '100%', display: 'flex', flexDirection: 'row' }}
+            >
               <Input
                 onChange={this.changeInput}
                 value={this.state.input}
@@ -150,5 +190,6 @@ export default compose(
   connect(),
   getCommunityThreadTags,
   addThreadTagsToCommunity,
+  removeThreadTagsFromCommunity,
   viewNetworkHandler
 )(ChannelList);

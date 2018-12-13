@@ -17,7 +17,10 @@ export const addThreadTag = createWriteQuery(
 
 export const getThreadTagsByCommunity = createReadQuery(
   (communityId: string) => ({
-    query: db.table('threadTags').getAll(communityId, { index: 'communityId' }),
+    query: db
+      .table('threadTags')
+      .getAll(communityId, { index: 'communityId' })
+      .orderBy(db.desc('createdAt')),
     tags: (tags: ?Array<DBThreadTag>) => [
       communityId,
       ...(tags || []).map(({ id }) => id),
