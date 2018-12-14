@@ -5,7 +5,7 @@
   "dependencies": {
     "algoliasearch": "^3.31.0",
     "apollo-local-query": "^0.3.1",
-    "apollo-server-express": "^2.2.6",
+    "apollo-server-express": "^2.3.1",
     "apollo-upload-client": "^9.1.0",
     "aws-sdk": "2.200.0",
     "axios": "^0.16.2",
