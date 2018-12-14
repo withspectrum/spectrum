@@ -63,7 +63,7 @@ export const createChangefeed = (
     },
     {
       changefeedName: name,
-      attemptDelay: 60000,
+      attemptDelay: 10000,
       maxAttempts: Infinity,
       logger: {
         // Ignore log and info logs in production
