@@ -7,7 +7,7 @@ import compose from 'recompose/compose';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { connect } from 'react-redux';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
 import InboxThread from 'src/views/dashboard/components/inboxThread';
 import { NullCard } from '../upsell';

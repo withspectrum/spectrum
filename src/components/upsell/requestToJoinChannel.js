@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -119,6 +119,7 @@ class RequestToJoinChannel extends Component<Props, State> {
   }
 }
 
-export default compose(connect(), toggleChannelSubscriptionMutation)(
-  RequestToJoinChannel
-);
+export default compose(
+  connect(),
+  toggleChannelSubscriptionMutation
+)(RequestToJoinChannel);

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
 import FullscreenView from 'src/components/fullscreenView';
 import LoginButtonSet from 'src/components/loginButtonSet';

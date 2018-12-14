@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 import React from 'react';
 import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Transition, zIndex } from 'src/components/globals';
 import { UserHoverProfile } from 'src/components/hoverProfile';
 import type { Node } from 'react';

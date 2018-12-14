@@ -3,7 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { Button, IconButton } from 'src/components/buttons';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
 import { Logo } from 'src/components/logo';
 import { UserAvatar } from 'src/components/avatar';

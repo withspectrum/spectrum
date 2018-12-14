@@ -4,7 +4,7 @@ import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Button } from 'src/components/buttons';
 import { throttle } from 'src/helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
@@ -252,69 +252,65 @@ class Search extends React.Component<Props, State> {
         </SearchInputWrapper>
 
         {// user has typed in a search string
-        isFocused &&
-          searchString && (
-            <OutsideClickHandler onOutsideClick={this.hideSearchResults}>
-              <SearchResultsDropdown>
-                {searchResults.length > 0 &&
-                  !searchIsLoading &&
-                  searchResults.map(community => {
-                    return (
-                      <SearchResult
-                        focused={focusedSearchResult === community.id}
-                        key={community.id}
-                      >
-                        <SearchLink to={`/${community.slug}`}>
-                          <SearchResultImage
-                            community={community}
-                            showHoverProfile={false}
-                          />
-                          <SearchResultTextContainer>
-                            <SearchResultMetaWrapper>
-                              <SearchResultName>
-                                {community.name}
-                              </SearchResultName>
-                              {community.metaData && (
-                                <SearchResultMetadata>
-                                  {community.metaData.members.toLocaleString()}{' '}
-                                  members
-                                </SearchResultMetadata>
-                              )}
-                            </SearchResultMetaWrapper>
-                          </SearchResultTextContainer>
-                        </SearchLink>
-                      </SearchResult>
-                    );
-                  })}
-
-                {searchResults.length === 0 &&
-                  !searchIsLoading &&
-                  isFocused && (
-                    <SearchResult>
-                      <SearchResultTextContainer>
-                        <SearchResultNull>
-                          <p>No communities found matching “{searchString}”</p>
-                          <Link to={'/new/community'}>
-                            <Button>Create a Community</Button>
-                          </Link>
-                        </SearchResultNull>
-                      </SearchResultTextContainer>
+        isFocused && searchString && (
+          <OutsideClickHandler onOutsideClick={this.hideSearchResults}>
+            <SearchResultsDropdown>
+              {searchResults.length > 0 &&
+                !searchIsLoading &&
+                searchResults.map(community => {
+                  return (
+                    <SearchResult
+                      focused={focusedSearchResult === community.id}
+                      key={community.id}
+                    >
+                      <SearchLink to={`/${community.slug}`}>
+                        <SearchResultImage
+                          community={community}
+                          showHoverProfile={false}
+                        />
+                        <SearchResultTextContainer>
+                          <SearchResultMetaWrapper>
+                            <SearchResultName>
+                              {community.name}
+                            </SearchResultName>
+                            {community.metaData && (
+                              <SearchResultMetadata>
+                                {community.metaData.members.toLocaleString()}{' '}
+                                members
+                              </SearchResultMetadata>
+                            )}
+                          </SearchResultMetaWrapper>
+                        </SearchResultTextContainer>
+                      </SearchLink>
                     </SearchResult>
-                  )}
+                  );
+                })}
 
-                {searchIsLoading &&
-                  isFocused && (
-                    <SearchResult>
-                      <SearchResultTextContainer>
-                        <SearchResultNull>
-                          <p>Searching for “{searchString}”</p>
-                        </SearchResultNull>
-                      </SearchResultTextContainer>
-                    </SearchResult>
-                  )}
-              </SearchResultsDropdown>
-            </OutsideClickHandler>
-          )}
+              {searchResults.length === 0 && !searchIsLoading && isFocused && (
+                <SearchResult>
+                  <SearchResultTextContainer>
+                    <SearchResultNull>
+                      <p>No communities found matching “{searchString}”</p>
+                      <Link to={'/new/community'}>
+                        <Button>Create a Community</Button>
+                      </Link>
+                    </SearchResultNull>
+                  </SearchResultTextContainer>
+                </SearchResult>
+              )}
+
+              {searchIsLoading && isFocused && (
+                <SearchResult>
+                  <SearchResultTextContainer>
+                    <SearchResultNull>
+                      <p>Searching for “{searchString}”</p>
+                    </SearchResultNull>
+                  </SearchResultTextContainer>
+                </SearchResult>
+              )}
+            </SearchResultsDropdown>
+          </OutsideClickHandler>
+        )}
       </SearchWrapper>
     );
   }

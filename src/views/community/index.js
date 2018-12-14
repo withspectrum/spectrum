@@ -2,7 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Button } from 'src/components/buttons';
 import generateMetaInfo from 'shared/generate-meta-info';
 import ThreadComposer from 'src/components/threadComposer';
@@ -316,18 +316,17 @@ class CommunityView extends React.Component<Props, State> {
                 />
               ) : null}
 
-              {currentUser &&
-                (isOwner || isModerator) && (
-                  <Link to={`/${community.slug}/settings`}>
-                    <SettingsButton
-                      icon={'settings'}
-                      isMember
-                      data-cy="community-settings-button"
-                    >
-                      Settings
-                    </SettingsButton>
-                  </Link>
-                )}
+              {currentUser && (isOwner || isModerator) && (
+                <Link to={`/${community.slug}/settings`}>
+                  <SettingsButton
+                    icon={'settings'}
+                    isMember
+                    data-cy="community-settings-button"
+                  >
+                    Settings
+                  </SettingsButton>
+                </Link>
+              )}
             </Meta>
             <Content data-cy="community-view-content">
               <SegmentedControl
