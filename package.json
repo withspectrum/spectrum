@@ -120,7 +120,7 @@
     "hsts": "^2.1.0",
     "idx": "^2.4.0",
     "imgix-core-js": "^1.0.6",
-    "ioredis": "^4.3.0",
+    "ioredis": "3.2.2",
     "is-electron": "^2.1.0",
     "isomorphic-fetch": "^2.2.1",
     "jest": "22.4.3",
