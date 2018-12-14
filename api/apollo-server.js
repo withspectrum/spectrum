@@ -40,6 +40,7 @@ class ProtectedApolloServer extends ApolloServer {
   }
 }
 
+const loaders = createLoaders();
 const server = new ProtectedApolloServer({
   schema,
   formatError: createErrorFormatter(),
@@ -51,7 +52,6 @@ const server = new ProtectedApolloServer({
       };
     }
 
-    const loaders = createLoaders();
     let currentUser = req.user && !req.user.bannedAt ? req.user : null;
 
     return {
