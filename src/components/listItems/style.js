@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import theme from 'shared/theme';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import {
   Truncate,
   FlexCol,

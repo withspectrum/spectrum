@@ -100,7 +100,7 @@ const processJob = async (job: Job<SendSlackInvitationsJobData>) => {
     ...invitePromises,
     updateSlackInvitesMemberCount(communityId, membersCount),
     _adminProcessSlackImportQueue.add({
-      thisUser: owner,
+      user: owner,
       community,
       invitedCount: membersCount,
       teamName,

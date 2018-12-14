@@ -8,9 +8,14 @@ import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 const { SENDGRID_API_KEY } = process.env;
 
+type ToType = {
+  email: string,
+  name?: string,
+};
+
 type Options = {
   templateId: string,
-  to: string,
+  to: Array<ToType>,
   dynamic_template_data: Object,
   userId?: string,
 };
@@ -27,18 +32,24 @@ const defaultOptions = {
   },
 };
 
-const sendEmail = (options: Options) => {
-  const { templateId, to, dynamic_template_data, userId } = options;
+const sendEmail = (options: Options): Promise<void> => {
+  let { templateId, to, dynamic_template_data, userId } = options;
 
   if (SENDGRID_API_KEY !== 'undefined') {
     debug(
-      `--Send LIVE email with templateId ${templateId}--\nto: ${to}\ndynamic_template_data: ${stringify(
+      `--Send LIVE email with templateId ${templateId}--\nto: ${to
+        .map(t => t.email)
+        .join(', ')}\ndynamic_template_data: ${stringify(
         dynamic_template_data
       )}`
     );
     sg.setApiKey(SENDGRID_API_KEY);
   } else {
-    debug(`--Send TEST email with templateId ${templateId}--\n--to: ${to}--`);
+    debug(
+      `--Send TEST email with templateId ${templateId}--\n--to: ${to
+        .map(t => t.email)
+        .join(', ')}--`
+    );
 
     // eslint-disable-next-line
     debug(
@@ -50,7 +61,7 @@ const sendEmail = (options: Options) => {
       })
     );
 
-    return;
+    return Promise.resolve();
   }
 
   if (userId) {
@@ -69,35 +80,22 @@ const sendEmail = (options: Options) => {
       });
     }
 
-    return;
+    return Promise.resolve();
   }
 
   // qq.com email addresses are isp blocked, which raises our error rate
   // on sendgrid. prevent sending these emails at all
-  if (to.substr(to.length - 7) === '@qq.com') {
-    return;
-  }
+  to = to.filter(toType => {
+    return toType.email.substr(to.length - 7) !== '@qq.com';
+  });
 
-  // $FlowFixMe
-  return new Promise((res, rej) => {
-    sg.send(
-      {
-        ...defaultOptions,
-        templateId,
-        to,
-        dynamic_template_data,
-      },
-      async (res, err) => {
-        if (err) {
-          console.error('Error sending email:');
-          console.error(err);
-          return rej(err);
-        }
+  if (!to || to.length === 0) return Promise.resolve();
 
-        res();
-        debug(`email to ${to} sent successfully`);
-      }
-    );
+  return sg.send({
+    ...defaultOptions,
+    templateId,
+    to,
+    dynamic_template_data,
   });
 };
 

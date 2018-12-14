@@ -13,7 +13,9 @@ import type {
   SendPrivateCommunityRequestEmailJobData,
 } from 'shared/bull/types';
 
-export default (job: Job<SendPrivateCommunityRequestEmailJobData>) => {
+export default (
+  job: Job<SendPrivateCommunityRequestEmailJobData>
+): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const { user, recipient, community } = job.data;
   debug(
@@ -29,7 +31,7 @@ export default (job: Job<SendPrivateCommunityRequestEmailJobData>) => {
   try {
     return sendEmail({
       templateId: PRIVATE_COMMUNITY_REQUEST_SENT_TEMPLATE,
-      to: recipient.email,
+      to: [{ email: recipient.email }],
       dynamic_template_data: {
         subject,
         preheader,
@@ -41,8 +43,8 @@ export default (job: Job<SendPrivateCommunityRequestEmailJobData>) => {
       },
     });
   } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
-    Raven.captureException(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
+    return Raven.captureException(err);
   }
 };

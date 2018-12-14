@@ -49,7 +49,7 @@ type SendNewThreadEmailJob = {
   id: string,
 };
 
-export default async (job: SendNewThreadEmailJob) => {
+export default async (job: SendNewThreadEmailJob): Promise<void> => {
   const { recipient, thread, primaryActionLabel } = job.data;
 
   debug(`\nnew job: ${job.id}`);
@@ -60,7 +60,10 @@ export default async (job: SendNewThreadEmailJob) => {
     TYPE_NEW_THREAD_CREATED
   );
 
-  if (!unsubscribeToken || !recipient.email) return;
+  if (!unsubscribeToken || !recipient.email) {
+    console.error('Aborting no unsub token or recipient email');
+    return Promise.resolve();
+  }
 
   const subject = `‘${truncate(smarten(thread.content.title), 80)}’ by ${
     thread.creator.name
@@ -72,7 +75,7 @@ export default async (job: SendNewThreadEmailJob) => {
   try {
     return sendEmail({
       templateId: NEW_THREAD_CREATED_TEMPLATE,
-      to: recipient.email,
+      to: [{ email: recipient.email }],
       dynamic_template_data: {
         subject,
         preheader,
@@ -96,8 +99,8 @@ export default async (job: SendNewThreadEmailJob) => {
       userId: recipient.id,
     });
   } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
-    Raven.captureException(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
+    return Raven.captureException(err);
   }
 };

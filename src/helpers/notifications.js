@@ -1,6 +1,6 @@
 import React from 'react';
 //$FlowFixMe
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 
 import Icon from '../components/icons';
 import { HorizontalRuleWithIcon } from '../components/globals';
@@ -51,7 +51,8 @@ export const constructMessage = notification => {
             }}
           >
             thread
-          </Link>:
+          </Link>
+          :
         </span>
       );
     default:

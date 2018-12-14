@@ -3,7 +3,7 @@ import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 // $FlowFixMe
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import {
   FlexCol,
   FlexRow,
