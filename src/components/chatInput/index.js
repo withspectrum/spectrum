@@ -111,6 +111,40 @@ const ChatInput = React.forwardRef((props: Props, ref) => {
     changeText(text);
   };
 
+  const sendMessage = ({ file, body }) => {
+    // user is creating a new directMessageThread, break the chain
+    // and initiate a new group creation with the message being sent
+    // in views/directMessages/containers/newThread.js
+    if (props.thread === 'newDirectMessageThread') {
+      if (file) {
+        return props.createThread({
+          messageType: 'media',
+          file,
+        });
+      } else {
+        return props.createThread({
+          messageBody: body,
+          messageType: 'text',
+        });
+      }
+    }
+
+    const method =
+      props.threadType === 'story'
+        ? props.sendMessage
+        : props.sendDirectMessage;
+    return method({
+      threadId: props.thread,
+      messageType: file ? 'media' : 'text',
+      threadType: props.threadType,
+      parentId: props.quotedMessage,
+      content: {
+        body,
+      },
+      file,
+    });
+  };
+
   const submit = e => {
     if (e) e.preventDefault();
 
@@ -143,36 +177,28 @@ const ChatInput = React.forwardRef((props: Props, ref) => {
     // If a user sends a message, force a scroll to bottom. This doesn't exist if this is a new DM thread
     if (props.forceScrollToBottom) props.forceScrollToBottom();
 
-    if (text.length === 0) return;
-
-    // user is creating a new directMessageThread, break the chain
-    // and initiate a new group creation with the message being sent
-    // in views/directMessages/containers/newThread.js
-    if (props.thread === 'newDirectMessageThread') {
-      props.createThread({
-        messageBody: text,
-        messageType: 'text',
-      });
-      return;
+    if (mediaPreviewFile) {
+      setIsSendingMediaMessage(true);
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        if (props.forceScrollToBottom) props.forceScrollToBottom();
+        sendMessage({ file: mediaPreviewFile, body: reader.result })
+          .then(() => setIsSendingMediaMessage(false))
+          .catch(err => {
+            setIsSendingMediaMessage(false);
+            props.dispatch(addToastWithTimeout('error', err.message));
+          });
+      };
+      reader.readAsDataURL(mediaPreviewFile);
     }
+
+    if (text.length === 0) return;
 
     // Clear the chat input now that we're sending a message for sure
     onChange({ target: { value: '' } });
+    removeQuotedMessage();
 
-    // Add a new line on shift+enter, don't submit
-    const method =
-      props.threadType === 'story'
-        ? props.sendMessage
-        : props.sendDirectMessage;
-    method({
-      threadId: props.thread,
-      messageType: 'text',
-      threadType: props.threadType,
-      parentId: props.quotedMessage,
-      content: {
-        body: text,
-      },
-    })
+    sendMessage({ body: text })
       .then(() => {
         // If we're viewing a thread and the user sends a message as a non-member, we need to refetch the thread data
         if (
@@ -193,11 +219,12 @@ const ChatInput = React.forwardRef((props: Props, ref) => {
     false
   );
   const [mediaPreview, setMediaPreview] = React.useState(null);
+  const [mediaPreviewFile, setMediaPreviewFile] = React.useState(null);
 
   const previewMedia = blob => {
     if (isSendingMediaMessage) return;
     setIsSendingMediaMessage(true);
-    setMediaPreview(blob);
+    setMediaPreviewFile(blob);
 
     const reader = new FileReader();
     reader.onload = () => {
