@@ -58,26 +58,15 @@ export const Form = styled.form`
   position: relative;
 `;
 
-export const Input = styled(Textarea).attrs({
-  spellCheck: true,
-  autoCapitalize: 'sentences',
-  autoComplete: 'on',
-  autoCorrect: 'on',
-  async: true,
-  rows: 1,
-  maxRows: 5,
-})`
+export const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
   flex: auto;
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 20px;
-  min-height: 40px;
-  max-width: calc(100% - 32px);
   padding: ${props => (props.hasAttachment ? '16px' : '8px 16px')};
   transition: padding 0.2s ease-in-out;
+  min-height: 40px;
+  max-width: calc(100% - 32px);
   border-radius: 24px;
   border: 1px solid
     ${props =>
@@ -94,10 +83,35 @@ export const Input = styled(Textarea).attrs({
       ? hexa(props.theme.special.default, 0.1)
       : props.theme.bg.default};
 
+  &:hover,
+  &:focus {
+    border-color: ${props =>
+      props.networkDisabled
+        ? props.theme.special.default
+        : props.theme.text.alt};
+    transition: border-color 0.2s ease-in;
+  }
+
+  @media (max-width: 768px) {
+    padding-left: 16px;
+  }
+`;
+
+export const Input = styled(Textarea).attrs({
+  spellCheck: true,
+  autoCapitalize: 'sentences',
+  autoComplete: 'on',
+  autoCorrect: 'on',
+  async: true,
+  rows: 1,
+  maxRows: 5,
+})`
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 20px;
+
   @media (max-width: 768px) {
     font-size: 16px;
-    padding-left: 16px;
-    ${/* width: calc(100% - 72px); */ ''};
   }
 
   &::placeholder {
@@ -125,15 +139,6 @@ export const Input = styled(Textarea).attrs({
         : props.theme.text.placeholder};
   }
 
-  &:hover,
-  &:focus {
-    border-color: ${props =>
-      props.networkDisabled
-        ? props.theme.special.default
-        : props.theme.text.alt};
-    transition: border-color 0.2s ease-in;
-  }
-
   pre {
     ${monoStack};
     font-size: 15px;
@@ -155,13 +160,10 @@ export const Input = styled(Textarea).attrs({
   ${props =>
     props.hasAttachment &&
     css`
-      > div:not(:first-of-type) {
-        margin-top: 16px;
-      }
-
-      > div:last-of-type {
+      margin-top: 16px;
+      ${'' /* > div:last-of-type {
         margin-right: 32px;
-      }
+      } */};
     `};
 `;
 
@@ -292,7 +294,7 @@ export const MarkdownHint = styled.div`
   display: flex;
   flex: 0 0 auto;
   justify-content: flex-start;
-  margin-left: 16px;
+  margin-left: 56px;
   font-size: 11px;
   color: ${theme.text.alt};
   line-height: 1;

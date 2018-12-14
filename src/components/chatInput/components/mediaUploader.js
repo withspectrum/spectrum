@@ -13,7 +13,6 @@ type Props = {
   onError: Function,
   currentUser: ?Object,
   isSendingMediaMessage: boolean,
-  inputFocused: boolean,
 };
 
 class MediaUploader extends React.Component<Props> {

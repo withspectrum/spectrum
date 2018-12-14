@@ -15,6 +15,7 @@ import {
   ChatInputContainer,
   ChatInputWrapper,
   Input,
+  InputWrapper,
   SendButton,
   PhotoSizeError,
   MarkdownHint,
@@ -78,9 +79,11 @@ type Props = {
 const ChatInput = React.forwardRef((props: Props, ref) => {
   const [text, changeText] = React.useState('');
   const [showMarkdownHint, setShowMarkdownHint] = React.useState(false);
+  const [photoSizeError, setPhotoSizeError] = React.useState('');
 
   const removeAttachments = () => {
-    // Remove media preview and quoted message
+    removeQuotedMessage();
+    setMediaPreview(null);
   };
 
   const handleKeyPress = e => {
@@ -165,7 +168,7 @@ const ChatInput = React.forwardRef((props: Props, ref) => {
       threadId: props.thread,
       messageType: 'text',
       threadType: props.threadType,
-      // parentId: quotedMessage,
+      parentId: props.quotedMessage,
       content: {
         body: text,
       },
@@ -186,18 +189,94 @@ const ChatInput = React.forwardRef((props: Props, ref) => {
       });
   };
 
+  const [isSendingMediaMessage, setIsSendingMediaMessage] = React.useState(
+    false
+  );
+  const [mediaPreview, setMediaPreview] = React.useState(null);
+
+  const previewMedia = blob => {
+    if (isSendingMediaMessage) return;
+    setIsSendingMediaMessage(true);
+    setMediaPreview(blob);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setMediaPreview(reader.result.toString());
+      setIsSendingMediaMessage(false);
+    };
+
+    if (blob) {
+      reader.readAsDataURL(blob);
+    }
+  };
+
+  const removeQuotedMessage = () => {
+    if (props.quotedMessage)
+      props.dispatch(
+        replyToMessage({ threadId: props.thread, messageId: null })
+      );
+  };
+
   return (
     <React.Fragment>
       <ChatInputContainer>
-        <ChatInputWrapper>
-          <Form onSubmit={submit}>
-            <Input
-              placeholder="Your message here..."
-              value={text}
-              onChange={onChange}
-              onKeyDown={handleKeyPress}
-              ref={ref}
+        {photoSizeError && (
+          <PhotoSizeError>
+            <p>{photoSizeError}</p>
+            <Icon
+              onClick={() => setPhotoSizeError('')}
+              glyph="view-close"
+              size={16}
+              color={'warn.default'}
             />
+          </PhotoSizeError>
+        )}
+        <ChatInputWrapper>
+          {props.currentUser && (
+            <MediaUploader
+              isSendingMediaMessage={isSendingMediaMessage}
+              currentUser={props.currentUser}
+              onValidated={previewMedia}
+              onError={err => setPhotoSizeError(err)}
+            />
+          )}
+          <Form onSubmit={submit}>
+            <InputWrapper
+              hasAttachment={!!props.quotedMessage || !!mediaPreview}
+              networkDisabled={!props.networkOnline}
+            >
+              {mediaPreview && (
+                <PreviewWrapper>
+                  <img src={mediaPreview} alt="" />
+                  <RemovePreviewButton onClick={() => setMediaPreview(null)}>
+                    <Icon glyph="view-close-small" size={'16'} />
+                  </RemovePreviewButton>
+                </PreviewWrapper>
+              )}
+              {props.quotedMessage && (
+                <PreviewWrapper data-cy="staged-quoted-message">
+                  <QuotedMessage
+                    id={props.quotedMessage}
+                    threadId={props.thread}
+                  />
+                  <RemovePreviewButton
+                    data-cy="remove-staged-quoted-message"
+                    onClick={removeQuotedMessage}
+                  >
+                    <Icon glyph="view-close-small" size={'16'} />
+                  </RemovePreviewButton>
+                </PreviewWrapper>
+              )}
+              <Input
+                hasAttachment={!!props.quotedMessage || !!mediaPreview}
+                networkDisabled={!props.networkOnline}
+                placeholder="Your message here..."
+                value={text}
+                onChange={onChange}
+                onKeyDown={handleKeyPress}
+                ref={ref}
+              />
+            </InputWrapper>
             <SendButton
               data-cy="chat-input-send-button"
               glyph="send-fill"
