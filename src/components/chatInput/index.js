@@ -79,12 +79,24 @@ const ChatInput = React.forwardRef((props: Props, ref) => {
   const [text, changeText] = React.useState('');
   const [showMarkdownHint, setShowMarkdownHint] = React.useState(false);
 
+  const removeAttachments = () => {
+    // Remove media preview and quoted message
+  };
+
   const handleKeyPress = e => {
-    // Shift+Enter
-    if (e.key !== 'Enter') return;
-    if (!e.shiftKey) {
-      e.preventDefault();
-      submit();
+    switch (e.key) {
+      // Submit on Enter unless Shift is pressed
+      case 'Enter': {
+        if (e.shiftKey) return;
+        e.preventDefault();
+        submit();
+        return;
+      }
+      // If backspace is pressed on the empty
+      case 'Backspace': {
+        if (text.length === 0) removeAttachments();
+        return;
+      }
     }
   };
 
@@ -98,7 +110,52 @@ const ChatInput = React.forwardRef((props: Props, ref) => {
 
   const submit = e => {
     if (e) e.preventDefault();
+
+    if (!props.networkOnline) {
+      return props.dispatch(
+        addToastWithTimeout(
+          'error',
+          'Not connected to the internet - check your internet connection or try again'
+        )
+      );
+    }
+
+    if (
+      props.websocketConnection !== 'connected' &&
+      props.websocketConnection !== 'reconnected'
+    ) {
+      return props.dispatch(
+        addToastWithTimeout(
+          'error',
+          'Error connecting to the server - hang tight while we try to reconnect'
+        )
+      );
+    }
+
+    if (!props.currentUser) {
+      // user is trying to send a message without being signed in
+      return props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}));
+    }
+
+    // If a user sends a message, force a scroll to bottom. This doesn't exist if this is a new DM thread
+    if (props.forceScrollToBottom) props.forceScrollToBottom();
+
     if (text.length === 0) return;
+
+    // user is creating a new directMessageThread, break the chain
+    // and initiate a new group creation with the message being sent
+    // in views/directMessages/containers/newThread.js
+    if (props.thread === 'newDirectMessageThread') {
+      props.createThread({
+        messageBody: text,
+        messageType: 'text',
+      });
+      return;
+    }
+
+    // Clear the chat input now that we're sending a message for sure
+    onChange({ target: { value: '' } });
+
     // Add a new line on shift+enter, don't submit
     const method =
       props.threadType === 'story'
@@ -112,9 +169,21 @@ const ChatInput = React.forwardRef((props: Props, ref) => {
       content: {
         body: text,
       },
-    }).then(() => {
-      onChange({ target: { value: '' } });
-    });
+    })
+      .then(() => {
+        // If we're viewing a thread and the user sends a message as a non-member, we need to refetch the thread data
+        if (
+          props.threadType === 'story' &&
+          props.threadData &&
+          !props.threadData.channel.channelPermissions.isMember &&
+          props.refetchThread
+        ) {
+          return props.refetchThread();
+        }
+      })
+      .catch(err => {
+        props.dispatch(addToastWithTimeout('error', err.message));
+      });
   };
 
   return (
