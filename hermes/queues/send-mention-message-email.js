@@ -11,7 +11,9 @@ import {
 } from './constants';
 import type { SendNewMessageMentionEmailJobData, Job } from 'shared/bull/types';
 
-export default async (job: Job<SendNewMessageMentionEmailJobData>) => {
+export default async (
+  job: Job<SendNewMessageMentionEmailJobData>
+): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
 
   const { recipient, sender, thread, message } = job.data;
@@ -29,12 +31,12 @@ export default async (job: Job<SendNewMessageMentionEmailJobData>) => {
     thread.id
   );
 
-  if (!recipient.email || !unsubscribeToken) return;
+  if (!recipient.email || !unsubscribeToken) return Promise.resolve();
 
   try {
     return sendEmail({
       templateId: NEW_MENTION_MESSAGE_TEMPLATE,
-      to: recipient.email,
+      to: [{ email: recipient.email }],
       dynamic_template_data: {
         subject,
         preheader,
@@ -50,8 +52,8 @@ export default async (job: Job<SendNewMessageMentionEmailJobData>) => {
       userId: recipient.id,
     });
   } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
-    Raven.captureException(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
+    return Raven.captureException(err);
   }
 };

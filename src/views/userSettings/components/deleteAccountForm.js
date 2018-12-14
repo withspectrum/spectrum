@@ -18,7 +18,7 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { Button, TextButton, OutlineButton } from 'src/components/buttons';
 import deleteCurrentUserMutation from 'shared/graphql/mutations/user/deleteCurrentUser';
 import { SERVER_URL } from 'src/api/constants';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Loading } from 'src/components/loading';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';

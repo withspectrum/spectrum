@@ -1,15 +1,22 @@
+// @flow
 const debug = require('debug')(
   'hermes:queue:send-admin-active-community-report-email'
 );
 import sendEmail from '../send-email';
+import Raven from 'shared/raven';
 import {
   ADMIN_ACTIVE_COMMUNITY_REPORT_TEMPLATE,
   SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
 } from './constants';
-import type { AdminActiveCommunityReportJobData, Job } from 'shared/bull/types';
+import type {
+  AdminActiveCommunityReportEmailJobData,
+  Job,
+} from 'shared/bull/types';
 import formatDate from '../utils/format-date';
 
-export default (job: Job<AdminActiveCommunityReportJobData>) => {
+export default (
+  job: Job<AdminActiveCommunityReportEmailJobData>
+): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const {
     dacCount,
@@ -27,7 +34,11 @@ export default (job: Job<AdminActiveCommunityReportJobData>) => {
   try {
     return sendEmail({
       templateId: ADMIN_ACTIVE_COMMUNITY_REPORT_TEMPLATE,
-      to: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
+      to: [
+        { email: 'brian@spectrum.chat ' },
+        { email: 'max@spectrum.chat ' },
+        { email: 'bryn@spectrum.chat ' },
+      ],
       dynamic_template_data: {
         subject: `Active Community Report: ${month} ${day}, ${year}`,
         data: {
@@ -44,8 +55,8 @@ export default (job: Job<AdminActiveCommunityReportJobData>) => {
       },
     });
   } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
-    Raven.captureException(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
+    return Raven.captureException(err);
   }
 };

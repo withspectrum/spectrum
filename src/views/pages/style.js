@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
-import Link from '../../components/link';
+import { Link } from 'react-router-dom';
 import { Button } from '../../components/buttons';
 import {
   H2,
@@ -239,8 +239,8 @@ export const ButtonTwitter = styled(Button)`
     props.whitebg
       ? props.theme.social.twitter.default
       : props.preferred
-        ? '#fff'
-        : 'rgba(255,255,255,0.8)'};
+      ? '#fff'
+      : 'rgba(255,255,255,0.8)'};
 
   &:hover {
     color: ${props =>
@@ -255,8 +255,8 @@ export const ButtonFacebook = styled(Button)`
     props.whitebg
       ? props.theme.social.facebook.default
       : props.preferred
-        ? '#fff'
-        : 'rgba(255,255,255,0.8)'};
+      ? '#fff'
+      : 'rgba(255,255,255,0.8)'};
 
   &:hover {
     color: ${props =>
@@ -271,8 +271,8 @@ export const ButtonGoogle = styled(Button)`
     props.whitebg
       ? props.theme.social.google.default
       : props.preferred
-        ? '#fff'
-        : 'rgba(255,255,255,0.8)'};
+      ? '#fff'
+      : 'rgba(255,255,255,0.8)'};
 
   &:hover {
     color: ${props =>
@@ -530,8 +530,8 @@ export const Tab = styled(Link)`
         ? props.theme.text.reverse
         : props.theme.text.default
       : props.dark
-        ? props.theme.text.reverse
-        : props.theme.text.alt};
+      ? props.theme.text.reverse
+      : props.theme.text.alt};
 
   &:hover {
     color: ${props =>
@@ -540,8 +540,8 @@ export const Tab = styled(Link)`
           ? props.theme.text.reverse
           : props.theme.text.default
         : props.dark
-          ? props.theme.text.reverse
-          : props.theme.text.alt};
+        ? props.theme.text.reverse
+        : props.theme.text.alt};
     text-shadow: ${props =>
       props.dark ? `0 0 32px ${hexa(props.theme.text.reverse, 0.75)}` : 'none'};
   }

@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
 import { storeItem } from 'src/helpers/localStorage';
 import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';

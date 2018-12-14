@@ -14,7 +14,8 @@ export const identify = (userId: string, userProperties: Object) => {
   };
 
   return Promise.all([amplitudePromise()]).catch(err => {
-    console.error('Error Identifying event: ', err.message);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     Raven.captureException(err);
   });
 };
