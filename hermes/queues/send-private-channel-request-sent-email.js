@@ -13,7 +13,9 @@ import type {
   SendPrivateChannelRequestEmailJobData,
 } from 'shared/bull/types';
 
-export default (job: Job<SendPrivateChannelRequestEmailJobData>) => {
+export default (
+  job: Job<SendPrivateChannelRequestEmailJobData>
+): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const { user, recipient, channel, community } = job.data;
   debug(`\nsending notification to private channel owner: ${recipient.email}`);
@@ -27,7 +29,7 @@ export default (job: Job<SendPrivateChannelRequestEmailJobData>) => {
   try {
     return sendEmail({
       templateId: PRIVATE_CHANNEL_REQUEST_SENT_TEMPLATE,
-      to: recipient.email,
+      to: [{ email: recipient.email }],
       dynamic_template_data: {
         subject,
         preheader,
@@ -42,6 +44,6 @@ export default (job: Job<SendPrivateChannelRequestEmailJobData>) => {
   } catch (err) {
     console.error('❌ Error in job:\n');
     console.error(err);
-    Raven.captureException(err);
+    return Raven.captureException(err);
   }
 };

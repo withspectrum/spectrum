@@ -26,7 +26,7 @@ type SendCommunityInviteEmailJob = {
   id: string,
 };
 
-export default (job: SendCommunityInviteEmailJob) => {
+export default (job: SendCommunityInviteEmailJob): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending community invite to: ${job.data.to}`);
 
@@ -36,6 +36,7 @@ export default (job: SendCommunityInviteEmailJob) => {
     community,
     communitySettings,
     customMessage,
+    to,
   } = job.data;
 
   const subject = `${job.data.sender.name} has invited you to join the ${
@@ -54,7 +55,7 @@ export default (job: SendCommunityInviteEmailJob) => {
   try {
     return sendEmail({
       templateId: COMMUNITY_INVITE_TEMPLATE,
-      to: job.data.to,
+      to: [{ email: to }],
       dynamic_template_data: {
         subject,
         preheader,
@@ -69,6 +70,6 @@ export default (job: SendCommunityInviteEmailJob) => {
   } catch (err) {
     console.error('❌ Error in job:\n');
     console.error(err);
-    Raven.captureException(err);
+    return Raven.captureException(err);
   }
 };

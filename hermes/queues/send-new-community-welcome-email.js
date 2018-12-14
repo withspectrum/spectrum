@@ -1,11 +1,14 @@
+// @flow
 const debug = require('debug')('hermes:queue:send-new-community-welcome-email');
 import sendEmail from '../send-email';
+import Raven from 'shared/raven';
 import {
   NEW_COMMUNITY_WELCOME_TEMPLATE,
   SEND_NEW_COMMUNITY_WELCOME_EMAIL,
 } from './constants';
+import type { Job, NewCommunityWelcomeEmailJobData } from 'shared/bull/types';
 
-export default job => {
+export default (job: Job<NewCommunityWelcomeEmailJobData>): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const { user, community } = job.data;
 
@@ -17,7 +20,7 @@ export default job => {
   try {
     return sendEmail({
       templateId: NEW_COMMUNITY_WELCOME_TEMPLATE,
-      to: user.email,
+      to: [{ email: user.email }],
       dynamic_template_data: {
         user,
         community,
@@ -27,6 +30,6 @@ export default job => {
   } catch (err) {
     console.error('❌ Error in job:\n');
     console.error(err);
-    Raven.captureException(err);
+    return Raven.captureException(err);
   }
 };

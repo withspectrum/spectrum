@@ -16,34 +16,31 @@ type SendEmailValidationJob = {
   id: string,
 };
 
-export default async (job: SendEmailValidationJob) => {
+export default async (job: SendEmailValidationJob): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending email validation email to: ${job.data.email}`);
 
   const { email, userId } = job.data;
   if (!email || !userId) {
     debug('\nno email or userId found for this request, returning');
-    return;
+    return Promise.resolve();
   }
 
   const validateToken = await generateEmailValidationToken(userId, email);
 
-  if (!validateToken) {
-    return;
-  } else {
-    try {
-      return sendEmail({
-        templateId: EMAIL_VALIDATION_TEMPLATE,
-        to: email,
-        dynamic_template_data: {
-          subject: 'Confirm your email address on Spectrum',
-          validateToken,
-        },
-      });
-    } catch (err) {
-      console.error('❌ Error in job:\n');
-      console.error(err);
-      Raven.captureException(err);
-    }
+  if (!validateToken) return Promise.resolve();
+  try {
+    return sendEmail({
+      templateId: EMAIL_VALIDATION_TEMPLATE,
+      to: [{ email }],
+      dynamic_template_data: {
+        subject: 'Confirm your email address on Spectrum',
+        validateToken,
+      },
+    });
+  } catch (err) {
+    console.error('❌ Error in job:\n');
+    console.error(err);
+    return Raven.captureException(err);
   }
 };

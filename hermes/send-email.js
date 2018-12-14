@@ -8,9 +8,14 @@ import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 const { SENDGRID_API_KEY } = process.env;
 
+type ToType = {
+  email: string,
+  name?: string,
+};
+
 type Options = {
   templateId: string,
-  to: string,
+  to: Array<ToType>,
   dynamic_template_data: Object,
   userId?: string,
 };
@@ -28,17 +33,23 @@ const defaultOptions = {
 };
 
 const sendEmail = (options: Options): Promise<void> => {
-  const { templateId, to, dynamic_template_data, userId } = options;
+  let { templateId, to, dynamic_template_data, userId } = options;
 
   if (SENDGRID_API_KEY !== 'undefined') {
     debug(
-      `--Send LIVE email with templateId ${templateId}--\nto: ${to}\ndynamic_template_data: ${stringify(
+      `--Send LIVE email with templateId ${templateId}--\nto: ${to
+        .map(t => t.email)
+        .join(', ')}\ndynamic_template_data: ${stringify(
         dynamic_template_data
       )}`
     );
     sg.setApiKey(SENDGRID_API_KEY);
   } else {
-    debug(`--Send TEST email with templateId ${templateId}--\n--to: ${to}--`);
+    debug(
+      `--Send TEST email with templateId ${templateId}--\n--to: ${to
+        .map(t => t.email)
+        .join(', ')}--`
+    );
 
     // eslint-disable-next-line
     debug(
@@ -74,9 +85,11 @@ const sendEmail = (options: Options): Promise<void> => {
 
   // qq.com email addresses are isp blocked, which raises our error rate
   // on sendgrid. prevent sending these emails at all
-  if (to.substr(to.length - 7) === '@qq.com') {
-    return Promise.resolve();
-  }
+  to = to.filter(toType => {
+    return toType.email.substr(to.length - 7) !== '@qq.com';
+  });
+
+  if (!to || to.length === 0) return Promise.resolve();
 
   return sg.send({
     ...defaultOptions,
