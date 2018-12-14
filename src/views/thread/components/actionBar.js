@@ -539,7 +539,7 @@ class ActionBar extends React.Component<Props, State> {
                               {shouldRenderTagThreadAction && (
                                 <FlyoutRow>
                                   <TextButton
-                                    icon={'attachment'}
+                                    icon={'tag'}
                                     hoverColor={'special.default'}
                                     onClick={this.triggerEditThreadTags}
                                     dataCy={'thread-tag'}
