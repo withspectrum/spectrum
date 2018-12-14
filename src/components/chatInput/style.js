@@ -1,6 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
+import Textarea from 'react-textarea-autosize';
 import { IconButton } from '../buttons';
 import { QuoteWrapper } from '../message/style';
 import {
@@ -57,7 +58,15 @@ export const Form = styled.form`
   position: relative;
 `;
 
-export const InputWrapper = styled(EditorWrapper)`
+export const Input = styled(Textarea).attrs({
+  spellCheck: true,
+  autoCapitalize: 'sentences',
+  autoComplete: 'on',
+  autoCorrect: 'on',
+  async: true,
+  rows: 1,
+  maxRows: 5,
+})`
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -116,7 +125,8 @@ export const InputWrapper = styled(EditorWrapper)`
         : props.theme.text.placeholder};
   }
 
-  &:hover {
+  &:hover,
+  &:focus {
     border-color: ${props =>
       props.networkDisabled
         ? props.theme.special.default
@@ -281,8 +291,8 @@ export const Preformatted = styled.code`
 export const MarkdownHint = styled.div`
   display: flex;
   flex: 0 0 auto;
-  justify-content: flex-end;
-  margin-right: 12px;
+  justify-content: flex-start;
+  margin-left: 16px;
   font-size: 11px;
   color: ${theme.text.alt};
   line-height: 1;

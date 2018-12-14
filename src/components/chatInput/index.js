@@ -4,18 +4,8 @@ import compose from 'recompose/compose';
 import withState from 'recompose/withState';
 import withHandlers from 'recompose/withHandlers';
 import { connect } from 'react-redux';
-import { KeyBindingUtil } from 'draft-js';
 import debounce from 'debounce';
 import Icon from 'src/components/icons';
-import {
-  toJSON,
-  toState,
-  fromPlainText,
-  toPlainText,
-  isAndroid,
-} from 'shared/draft-utils';
-import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
-import linksDecorator from 'shared/clients/draft-js/links-decorator/index.web.js';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
 import { replyToMessage } from 'src/actions/message';
@@ -24,6 +14,7 @@ import {
   Form,
   ChatInputContainer,
   ChatInputWrapper,
+  Input,
   SendButton,
   PhotoSizeError,
   MarkdownHint,
@@ -31,7 +22,6 @@ import {
   PreviewWrapper,
   RemovePreviewButton,
 } from './style';
-import Input from './input';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
 import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
 import { getMessageById } from 'shared/graphql/queries/message/getMessage';
@@ -62,21 +52,15 @@ const QuotedMessage = connect()(
   })
 );
 
-type State = {
-  isFocused: boolean,
-  photoSizeError: string,
-  isSendingMediaMessage: boolean,
-  mediaPreview: string,
-  mediaPreviewFile: ?Blob,
-  markdownHint: boolean,
-};
+const LS_KEY = 'last-chat-input-content';
+const LS_KEY_EXPIRE = 'last-chat-input-content-expire';
+const LS_DM_KEY = 'last-chat-input-content-dm';
+const LS_DM_KEY_EXPIRE = 'last-chat-input-content-dm-expire';
 
 type Props = {
   onRef: Function,
   currentUser: Object,
   dispatch: Dispatch<Object>,
-  onChange: Function,
-  state: Object,
   createThread: Function,
   sendMessage: Function,
   sendDirectMessage: Function,
@@ -84,8 +68,6 @@ type Props = {
   threadType: string,
   thread: string,
   clear: Function,
-  onBlur: Function,
-  onFocus: Function,
   websocketConnection: string,
   networkOnline: boolean,
   threadData?: Object,
@@ -93,593 +75,89 @@ type Props = {
   quotedMessage: ?{ messageId: string, threadId: string },
 };
 
-const LS_KEY = 'last-chat-input-content';
-const LS_KEY_EXPIRE = 'last-chat-input-content-expire';
-const LS_DM_KEY = 'last-chat-input-content-dm';
-const LS_DM_KEY_EXPIRE = 'last-chat-input-content-dm-expire';
+const ChatInput = React.forwardRef((props: Props, ref) => {
+  const [text, changeText] = React.useState('');
+  const [showMarkdownHint, setShowMarkdownHint] = React.useState(false);
 
-const ONE_DAY = (): string => {
-  const time = new Date().getTime() + 60 * 60 * 24 * 1000;
-  return time.toString();
-};
-
-// We persist the body and title to localStorage
-// so in case the app crashes users don't loose content
-const returnText = (type = '') => {
-  return;
-  let storedContent;
-  let storedContentDM;
-  const currTime = new Date().getTime().toString();
-  if (localStorage) {
-    try {
-      const expireTime = localStorage.getItem(LS_KEY_EXPIRE);
-
-      // if current time is greater than valid till of text then please expire text back to ''
-      if (expireTime && currTime > expireTime) {
-        localStorage.removeItem(LS_KEY);
-        localStorage.removeItem(LS_KEY_EXPIRE);
-      } else {
-        storedContent = toState(JSON.parse(localStorage.getItem(LS_KEY) || ''));
-      }
-    } catch (err) {
-      localStorage.removeItem(LS_KEY);
-      localStorage.removeItem(LS_KEY_EXPIRE);
-    }
-
-    try {
-      const expireTimeDM = localStorage.getItem(LS_DM_KEY_EXPIRE);
-
-      // if current time is greater than valid till of text then please expire text back to ''
-      if (expireTimeDM && currTime > expireTimeDM) {
-        localStorage.removeItem(LS_DM_KEY);
-        localStorage.removeItem(LS_DM_KEY_EXPIRE);
-      } else {
-        storedContentDM = toState(
-          JSON.parse(localStorage.getItem(LS_DM_KEY) || '')
-        );
-      }
-    } catch (err) {
-      localStorage.removeItem(LS_DM_KEY);
-      localStorage.removeItem(LS_DM_KEY_EXPIRE);
-    }
-  }
-
-  if (type === 'directMessageThread') {
-    return storedContentDM;
-  } else {
-    return storedContent;
-  }
-};
-
-const setText = (content, threadType = '') => {
-  return;
-  if (threadType === 'directMessageThread') {
-    localStorage &&
-      localStorage.setItem(LS_DM_KEY, JSON.stringify(toJSON(content)));
-    localStorage && localStorage.setItem(LS_DM_KEY_EXPIRE, ONE_DAY());
-  } else {
-    localStorage &&
-      localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
-    localStorage && localStorage.setItem(LS_KEY_EXPIRE, ONE_DAY());
-  }
-};
-
-const forcePersist = (content, threadType = '') => {
-  setText(content, threadType);
-};
-const persistContent = debounce((content, threadType = '') => {
-  setText(content, threadType);
-}, 500);
-
-class ChatInput extends React.Component<Props, State> {
-  state = {
-    isFocused: false,
-    photoSizeError: '',
-    code: false,
-    isSendingMediaMessage: false,
-    mediaPreview: '',
-    mediaPreviewFile: null,
-    markdownHint: false,
-  };
-
-  editor: any;
-
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown, true);
-    this.props.onRef(this);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyDown);
-    this.props.onRef(undefined);
-  }
-
-  componentDidUpdate(prevProps) {
-    const curr = this.props;
-    if (curr.quotedMessage !== prevProps.quotedMessage) {
-      this.triggerFocus();
-    }
-  }
-
-  handleKeyDown = (event: any) => {
-    const key = event.keyCode || event.charCode;
-    // Detect esc key or backspace key (and empty message) to remove
-    // the previewed image and quoted message
-    if (
-      key === 27 ||
-      ((key === 8 || key === 46) && this.props.state.length === 0)
-    ) {
-      this.removePreviewWrapper();
-      this.removeQuotedMessage();
+  const handleKeyPress = e => {
+    // Shift+Enter
+    if (e.key !== 'Enter') return;
+    if (!e.shiftKey) {
+      e.preventDefault();
+      submit();
     }
   };
 
-  removeQuotedMessage = () => {
-    if (this.props.quotedMessage)
-      this.props.dispatch(
-        replyToMessage({ threadId: this.props.thread, messageId: null })
-      );
+  const onChange = e => {
+    const text = e.target.value;
+    const newShowMarkdownHint = text.length > 0;
+    if (newShowMarkdownHint !== showMarkdownHint)
+      setShowMarkdownHint(newShowMarkdownHint);
+    changeText(text);
   };
 
-  onChange = evt => {
-    const state = evt.target.value;
-    const { onChange, threadType } = this.props;
-    this.toggleMarkdownHint(state);
-    persistContent(state, threadType);
-    onChange(state);
-  };
-
-  toggleMarkdownHint = state => {
-    this.setState({
-      markdownHint: state.length === 0 ? true : false,
-    });
-  };
-
-  triggerFocus = () => {
-    // NOTE(@mxstbr): This needs to be delayed for a tick, otherwise the
-    // decorators that are passed to the editor are removed from the editor
-    // state
-    setTimeout(() => {
-      this.editor && this.editor.focus && this.editor.focus();
-    }, 0);
-  };
-
-  submit = e => {
+  const submit = e => {
     if (e) e.preventDefault();
-
-    const {
-      state,
-      thread,
-      threadType,
-      createThread,
-      dispatch,
-      sendMessage,
-      sendDirectMessage,
-      clear,
-      forceScrollToBottom,
-      networkOnline,
-      websocketConnection,
-      currentUser,
-      threadData,
-      refetchThread,
-      quotedMessage,
-    } = this.props;
-
-    const isSendingMessageAsNonMember =
-      threadType === 'story' &&
-      threadData &&
-      !threadData.channel.channelPermissions.isMember;
-
-    if (!networkOnline) {
-      return dispatch(
-        addToastWithTimeout(
-          'error',
-          'Not connected to the internet - check your internet connection or try again'
-        )
-      );
-    }
-
-    if (
-      websocketConnection !== 'connected' &&
-      websocketConnection !== 'reconnected'
-    ) {
-      return dispatch(
-        addToastWithTimeout(
-          'error',
-          'Error connecting to the server - hang tight while we try to reconnect'
-        )
-      );
-    }
-
-    if (!currentUser) {
-      // user is trying to send a message without being signed in
-      return dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}));
-    }
-
-    // This doesn't exist if this is a new conversation
-    if (forceScrollToBottom) {
-      // if a user sends a message, force a scroll to bottom
-      forceScrollToBottom();
-    }
-
-    if (this.state.mediaPreview.length) {
-      this.sendMediaMessage(this.state.mediaPreviewFile);
-    }
-
-    // If the input is empty don't do anything
-    if (state.length === 0) return 'handled';
-    // do one last persist before sending
-    forcePersist(state, threadType);
-    this.removeQuotedMessage();
-
-    // user is creating a new directMessageThread, break the chain
-    // and initiate a new group creation with the message being sent
-    // in views/directMessages/containers/newThread.js
-    if (thread === 'newDirectMessageThread') {
-      createThread({
-        messageBody: !isAndroid()
-          ? JSON.stringify(toJSON(state))
-          : toPlainText(state),
-        messageType: !isAndroid() ? 'draftjs' : 'text',
-      });
-      localStorage.removeItem(LS_DM_KEY);
-      localStorage.removeItem(LS_DM_KEY_EXPIRE);
-
-      clear();
-      return 'handled';
-    }
-
-    // user is sending a message to an existing thread id - either a thread
-    // or direct message thread
-    if (threadType === 'directMessageThread') {
-      sendDirectMessage({
-        threadId: thread,
-        messageType: 'text',
-        threadType,
-        parentId: quotedMessage,
-        content: {
-          body: state,
-        },
-      })
-        .then(() => {
-          localStorage.removeItem(LS_DM_KEY);
-          localStorage.removeItem(LS_DM_KEY_EXPIRE);
-        })
-        .catch(err => {
-          dispatch(addToastWithTimeout('error', err.message));
-        });
-    } else {
-      sendMessage({
-        threadId: thread,
-        messageType: 'text',
-        threadType,
-        parentId: quotedMessage,
-        content: {
-          body: state,
-        },
-      })
-        .then(() => {
-          // if the user sends a message as a non member of the community or
-          // channel, we need to refetch the thread to update any join buttons
-          // and update all clientside caching of community + channel permissions
-          if (isSendingMessageAsNonMember) {
-            if (refetchThread) {
-              refetchThread();
-            }
-          }
-
-          localStorage.removeItem(LS_KEY);
-          localStorage.removeItem(LS_KEY_EXPIRE);
-        })
-        .catch(err => {
-          dispatch(addToastWithTimeout('error', err.message));
-        });
-    }
-
-    // refocus the input
-    setTimeout(() => {
-      clear();
-      this.editor && this.editor.focus && this.editor.focus();
-    });
-
-    return 'handled';
-  };
-
-  handleReturn = e => {
-    // Always submit on CMD+Enter
-    if (KeyBindingUtil.hasCommandModifier(e)) {
-      return this.submit(e);
-    }
-
-    // SHIFT+Enter should always add a new line
-    if (e.shiftKey) return 'not-handled';
-
-    return;
-
-    const currentContent = this.props.state.getCurrentContent();
-    const selection = this.props.state.getSelection();
-    const key = selection.getStartKey();
-    const blockMap = currentContent.getBlockMap();
-    const block = blockMap.get(key);
-
-    // If we're in a code block or starting one don't submit on enter
-    if (
-      block.get('type') === 'code-block' ||
-      block.get('text').indexOf('```') === 0
-    ) {
-      return 'not-handled';
-    }
-
-    return this.submit(e);
-  };
-
-  removePreviewWrapper = () => {
-    this.setState({
-      mediaPreview: '',
-      mediaPreviewFile: null,
+    if (text.length === 0) return;
+    // Add a new line on shift+enter, don't submit
+    const method =
+      props.threadType === 'story'
+        ? props.sendMessage
+        : props.sendDirectMessage;
+    method({
+      threadId: props.thread,
+      messageType: 'text',
+      threadType: props.threadType,
+      // parentId: quotedMessage,
+      content: {
+        body: text,
+      },
+    }).then(() => {
+      onChange({ target: { value: '' } });
     });
   };
 
-  sendMediaMessage = (file: ?Blob) => {
-    if (file == null) {
-      return;
-    }
-
-    this.removePreviewWrapper();
-
-    // eslint-disable-next-line
-    let reader = new FileReader();
-
-    const {
-      thread,
-      threadType,
-      createThread,
-      dispatch,
-      forceScrollToBottom,
-      sendDirectMessage,
-      sendMessage,
-      websocketConnection,
-      networkOnline,
-      quotedMessage,
-    } = this.props;
-
-    if (!networkOnline) {
-      return dispatch(
-        addToastWithTimeout(
-          'error',
-          'Not connected to the internet - check your internet connection or try again'
-        )
-      );
-    }
-
-    if (
-      websocketConnection !== 'connected' &&
-      websocketConnection !== 'reconnected'
-    ) {
-      return dispatch(
-        addToastWithTimeout(
-          'error',
-          'Error connecting to the server - hang tight while we try to reconnect'
-        )
-      );
-    }
-
-    this.setState({
-      isSendingMediaMessage: true,
-    });
-
-    reader.onloadend = () => {
-      if (forceScrollToBottom) {
-        forceScrollToBottom();
-      }
-
-      if (thread === 'newDirectMessageThread') {
-        return createThread({
-          messageType: 'media',
-          file,
-        });
-      }
-
-      if (threadType === 'directMessageThread') {
-        sendDirectMessage({
-          threadId: thread,
-          messageType: 'media',
-          threadType,
-          parentId: quotedMessage,
-          content: {
-            body: reader.result,
-          },
-          file,
-        })
-          .then(() => {
-            this.setState({
-              isSendingMediaMessage: false,
-            });
-          })
-          .catch(err => {
-            this.setState({
-              isSendingMediaMessage: false,
-            });
-            dispatch(addToastWithTimeout('error', err.message));
-          });
-      } else {
-        sendMessage({
-          threadId: thread,
-          messageType: 'media',
-          threadType,
-          parentId: quotedMessage,
-          content: {
-            body: reader.result,
-          },
-          file,
-        })
-          .then(() => {
-            this.setState({
-              isSendingMediaMessage: false,
-            });
-          })
-          .catch(err => {
-            this.setState({
-              isSendingMediaMessage: false,
-            });
-            dispatch(addToastWithTimeout('error', err.message));
-          });
-      }
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  };
-
-  onFocus = () => {
-    /*
-      The new direct message thread component needs to know if the chat input is focused. That component passes down an onFocus prop, which should be called if it exists
-    */
-    const { onFocus } = this.props;
-    if (onFocus) {
-      onFocus();
-    }
-
-    this.setState({
-      isFocused: true,
-    });
-  };
-
-  onBlur = () => {
-    /*
-      The new direct message thread component needs to know if the chat input is focused. That component passes down an onBlur prop, which should be called if it exists
-    */
-    const { onBlur } = this.props;
-    if (onBlur) {
-      onBlur();
-    }
-
-    this.setState({
-      isFocused: false,
-    });
-  };
-
-  clearError = () => {
-    this.setState({ photoSizeError: '' });
-  };
-
-  setMediaMessageError = (error: string) => {
-    return this.setState({
-      photoSizeError: error,
-    });
-  };
-
-  previewMedia = blob => {
-    if (this.state.isSendingMediaMessage) {
-      return;
-    }
-    this.setState({
-      isSendingMediaMessage: true,
-      mediaPreviewFile: blob,
-    });
-    const reader = new FileReader();
-    reader.onload = () =>
-      this.setState({
-        mediaPreview: reader.result.toString(),
-        isSendingMediaMessage: false,
-      });
-
-    if (blob) {
-      reader.readAsDataURL(blob);
-    }
-  };
-
-  render() {
-    const {
-      state,
-      currentUser,
-      networkOnline,
-      websocketConnection,
-      quotedMessage,
-      thread,
-    } = this.props;
-    const {
-      isFocused,
-      photoSizeError,
-      isSendingMediaMessage,
-      mediaPreview,
-      markdownHint,
-    } = this.state;
-    const networkDisabled =
-      !networkOnline ||
-      (websocketConnection !== 'connected' &&
-        websocketConnection !== 'reconnected');
-
-    return (
-      <React.Fragment>
-        <ChatInputContainer focus={isFocused} onClick={this.triggerFocus}>
-          {photoSizeError && (
-            <PhotoSizeError>
-              <p>{photoSizeError}</p>
-              <Icon
-                onClick={() => this.clearError()}
-                glyph="view-close"
-                size={16}
-                color={'warn.default'}
-              />
-            </PhotoSizeError>
-          )}
-          <ChatInputWrapper>
-            {currentUser && (
-              <MediaUploader
-                isSendingMediaMessage={isSendingMediaMessage}
-                currentUser={currentUser}
-                onValidated={this.previewMedia}
-                onError={this.setMediaMessageError}
-                inputFocused={isFocused}
-              />
-            )}
-            <Form focus={isFocused}>
-              <input
-                placeholder="Your message here..."
-                value={state}
-                onChange={this.onChange}
-                onFocus={this.onFocus}
-                onBlur={this.onBlur}
-                ref={editor => (this.editor = editor)}
-              />
-              <SendButton
-                data-cy="chat-input-send-button"
-                glyph="send-fill"
-                onClick={this.submit}
-                hasAttachment={mediaPreview || quotedMessage ? true : false}
-              />
-            </Form>
-          </ChatInputWrapper>
-        </ChatInputContainer>
-        <MarkdownHint showHint={markdownHint} data-cy="markdownHint">
-          <b>*bold*</b>
-          <i>_italic_</i>
-          <Preformatted>`code`</Preformatted>
-          <Preformatted>```codeblock```</Preformatted>
-        </MarkdownHint>
-      </React.Fragment>
-    );
-  }
-}
+  return (
+    <React.Fragment>
+      <ChatInputContainer>
+        <ChatInputWrapper>
+          <Form onSubmit={submit}>
+            <Input
+              placeholder="Your message here..."
+              value={text}
+              onChange={onChange}
+              onKeyDown={handleKeyPress}
+              ref={ref}
+            />
+            <SendButton
+              data-cy="chat-input-send-button"
+              glyph="send-fill"
+              onClick={submit}
+              // hasAttachment={mediaPreview || quotedMessage ? true : false}
+            />
+          </Form>
+        </ChatInputWrapper>
+      </ChatInputContainer>
+      <MarkdownHint showHint={showMarkdownHint} data-cy="markdownHint">
+        <b>**bold**</b>
+        <i>*italic*</i>
+        <Preformatted>`code`</Preformatted>
+        <Preformatted>```codeblock```</Preformatted>
+      </MarkdownHint>
+    </React.Fragment>
+  );
+});
 
 const map = (state, ownProps) => ({
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
   quotedMessage: state.message.quotedMessage[ownProps.thread] || null,
 });
+
 export default compose(
   withCurrentUser,
   sendMessage,
   sendDirectMessage,
   // $FlowIssue
-  connect(map),
-  withState('state', 'changeState', props => {
-    return returnText(props.threadType) || '';
-  }),
-  withHandlers({
-    onChange: ({ changeState }) => state => changeState(state),
-    clear: ({ changeState }) => () => changeState(''),
-  })
+  connect(map)
 )(ChatInput);
