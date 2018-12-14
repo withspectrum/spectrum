@@ -23,6 +23,7 @@ import {
   ShareButtons,
   ShareButton,
   ActionBarContainer,
+  FixedBottomActionBarContainer,
   FlyoutRow,
   DropWrap,
   EditDone,
@@ -281,7 +282,7 @@ class ActionBar extends React.Component<Props, State> {
 
     if (isEditing) {
       return (
-        <ActionBarContainer>
+        <FixedBottomActionBarContainer>
           <div style={{ display: 'flex' }} />
           <div style={{ display: 'flex' }}>
             <EditDone data-cy="cancel-thread-edit-button">
@@ -298,7 +299,7 @@ class ActionBar extends React.Component<Props, State> {
               </Button>
             </EditDone>
           </div>
-        </ActionBarContainer>
+        </FixedBottomActionBarContainer>
       );
     } else {
       return (

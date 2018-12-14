@@ -1,18 +1,7 @@
 // @flow
 import { db } from 'shared/db';
 
-export const deactivateUserEmailNotifications = async (email: string) => {
-  const userId = await db
-    .table('users')
-    .getAll(email, { index: 'email' })
-    .run()
-    .then(data => {
-      if (!data || data.length === 0) return null;
-      return data[0].id;
-    });
-
-  if (!userId) return null;
-
+export const deactivateUserEmailNotifications = async (userId: string) => {
   return await db
     .table('usersSettings')
     .getAll(userId, { index: 'userId' })

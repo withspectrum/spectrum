@@ -1,0 +1,85 @@
+{
+  "subject": "🐟 User spamming threads alert: Someone has published one thread in previous 10 minutes",
+  "preheader": "Someone is attempting to publish a new thread in the made up community",
+  "data": {
+    "user": {
+      "createdAt": "2018-04-30T23:27:15.910Z",
+      "description": null,
+      "email": "email",
+      "fbProviderId": null,
+      "githubProviderId": null,
+      "githubUsername": null,
+      "googleProviderId": null,
+      "id": "1",
+      "isOnline": true,
+      "lastSeen": "2018-12-06T01:36:04.565Z",
+      "modifiedAt": "2018-05-11T21:08:49.440Z",
+      "name": "User Name",
+      "profilePhoto": "",
+      "providerId": null,
+      "termsLastAcceptedAt": "2018-04-30T23:27:15.910Z",
+      "timezone": -180,
+      "username": "username",
+      "website": ""
+    },
+    "threads": [
+      {
+        "channelId": "1",
+        "communityId": "1",
+        "content": {
+          "body": "Body",
+          "title": "Title"
+        },
+        "createdAt": "2018-12-09T18:09:17.723Z",
+        "creatorId": "1",
+        "deletedAt": "2018-12-09T18:12:06.441Z",
+        "deletedBy": "1",
+        "id": "1",
+        "isLocked": false,
+        "isPublished": true,
+        "lastActive": "2018-12-09T18:09:17.723Z",
+        "messageCount": 0,
+        "modifiedAt": "2018-12-09T18:10:38.496Z",
+        "reactionCount": 0,
+        "score": 20,
+        "scoreUpdatedAt": "2018-12-09T18:09:21.301Z",
+        "type": "DRAFTJS"
+      }
+    ],
+    "publishing": {
+      "channelId": "1",
+      "communityId": "1",
+      "type": "DRAFTJS",
+      "content": {
+        "title": "Title",
+        "body": "Body"
+      }
+    },
+    "community": {
+      "administratorEmail": "email",
+      "coverPhoto": "",
+      "createdAt": "2018-04-26T06:10:12.502Z",
+      "creatorId": "1",
+      "description": "Description",
+      "id": "1",
+      "isPrivate": false,
+      "memberCount": 1,
+      "modifiedAt": "2018-05-11T21:10:59.072Z",
+      "name": "Community Name",
+      "profilePhoto": "",
+      "slug": "community-slug",
+      "website": "website"
+    },
+    "channel": {
+      "communityId": "1",
+      "createdAt": "2018-04-26T06:10:12.965Z",
+      "description": "Description",
+      "id": "1",
+      "isDefault": true,
+      "isPrivate": false,
+      "memberCount": 1,
+      "name": "General",
+      "slug": "general"
+    }
+  }
+}

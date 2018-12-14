@@ -14,10 +14,10 @@ asynckit@^0.4.0:
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha1-x57Zf380y48robyXkLzDZkdLS3k=
 
-aws-sdk@^2.354.0:
-  version "2.358.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.358.0.tgz#d2b0449711640f764029c35381d1a6ebdeababe9"
-  integrity sha512-nS47i+YecWDAy3JE55GrC2dLbWsc5lqIub8y+VgHPoVI11f/wmWpF1kY+8FD20IGbZQHWiqiMdMZjFS86L1w6g==
+aws-sdk@^2.373.0:
+  version "2.373.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.373.0.tgz#fcc5606634b3b11d80810ad252d1b52b3733d780"
+  integrity sha512-NZYXwXGtFt9jxaKXc+PJsLPnpbD03t0MAZRxh93g36kbFMuRXtY8CDqHYNQ0ZcrgQpXbCQiz1fxT5/wu5Cu70g==
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
@@ -104,9 +104,9 @@ core-util-is@~1.0.0:
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
 
 cron-parser@^2.4.1:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/cron-parser/-/cron-parser-2.7.1.tgz#d08c00b1e220db564fd1cecb5019c8dd450f84d1"
-  integrity sha512-gupE4KsGEVtp5X4YbUlQx6NiFt3e+VOhREPI4ZXS9FT5JcOjfw2ey1EUv3J6XWrxHR1aKYrk4uJDmdRjG39bgA==
+  version "2.7.3"
+  resolved "https://registry.yarnpkg.com/cron-parser/-/cron-parser-2.7.3.tgz#12603f89f5375af353a9357be2543d3172eac651"
+  integrity sha512-t9Kc7HWBWPndBzvbdQ1YG9rpPRB37Tb/tTviziUOh1qs3TARGh3b1p+tnkOHNe1K5iI3oheBPgLqwotMM7+lpg==
   dependencies:
     is-nan "^1.2.1"
     moment-timezone "^0.5.23"
@@ -208,7 +208,7 @@ inherits@~2.0.3:
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
   integrity sha1-Yzwsg+PaQqUC9SRmAiSA9CCCYd4=
 
-ioredis@^3.1.4:
+ioredis@3.2.2, ioredis@^3.1.4:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/ioredis/-/ioredis-3.2.2.tgz#b7d5ff3afd77bb9718bb2821329b894b9a44c00b"
   integrity sha512-g+ShTQYLsCcOUkNOK6CCEZbj3aRDVPw3WOwXk+LxlUKvuS9ujEqP2MppBHyRVYrNNFW/vcPaTBUZ2ctGNSiOCA==
@@ -506,10 +506,17 @@ redis-tag-cache@^1.2.1:
   dependencies:
     ioredis "^4.0.0"
 
-rethinkdbdash@^2.3.29:
+rethinkdbdash@^2.3.31:
   version "2.3.31"
   resolved "https://registry.yarnpkg.com/rethinkdbdash/-/rethinkdbdash-2.3.31.tgz#fe2f73d1fa6e6f5d96d8e881292013cf6dca914d"
   integrity sha512-6nXrKFjdg2Ug0YpdmPWSvyD/2EisHnFNt4FWZ74dcXGK48ievSv+cNFTmVv+KjLi6I9CCf6w4CKZ6yCYTfMfdQ==
+  dependencies:
+    bluebird ">= 3.0.1"
+
+rethinkhaberdashery@^2.3.32:
+  version "2.3.32"
+  resolved "https://registry.yarnpkg.com/rethinkhaberdashery/-/rethinkhaberdashery-2.3.32.tgz#ddcc4ba1342e653a9d3bb6982b526087e93d537e"
+  integrity sha512-scDswDEu7R47WqomjScq46LkCdhaFhpaGQDP3P44GDF32iCFgYbsL4fnJdaieE115qLeinRhEjna08XWCtV0iQ==
   dependencies:
     bluebird ">= 3.0.1"
 

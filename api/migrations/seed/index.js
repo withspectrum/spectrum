@@ -155,7 +155,7 @@ messages.map(message => {
 
 debug('Connecting to db...');
 // $FlowFixMe
-const db = require('rethinkdbdash')({
+const db = require('rethinkhaberdashery')({
   db: 'spectrum',
 });
 
@@ -235,5 +235,6 @@ Promise.all([
     debug(
       'Encountered error while inserting data (see below), please run yarn run db:drop and yarn run db:migrate to restore tables to original condition, then run this script again.'
     );
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
   });

@@ -1,0 +1,49 @@
+{
+  "subject": "Spectrum Daily Digest: Something, Another Thing, and 9 more active conversations in your communities",
+  "preheader": "Your Spectrum daily digest · December 9, 2018",
+  "unsubscribeToken": "foo",
+  "data": {
+    "username": "username",
+    "hasOverflowThreads": true,
+    "threads": [
+      {
+        "id": "1",
+        "content": {
+          "title": "Thread title"
+        },
+        "community": {
+          "slug": "community-slug",
+          "name": "Community Name",
+          "profilePhoto": ""
+        },
+        "channel": {
+          "slug": "general",
+          "name": "General"
+        },
+        "messageCountString": "<span class=\"totalMessageCount\">100 messages </span><span class=\"newMessageCount\" style=\"color: #E2197A;\">(3 new)</span>"
+      }
+    ],
+    "communities": [
+      {
+        "administratorEmail": "email",
+        "coverPhoto": "",
+        "createdAt": "2017-07-25T05:06:23.563Z",
+        "creatorId": "1",
+        "description": "Description",
+        "id": "1",
+        "isPrivate": false,
+        "memberCount": 1,
+        "modifiedAt": "2017-12-23T05:01:46.216Z",
+        "name": "Community Name",
+        "profilePhoto": "",
+        "slug": "community-slug",
+        "website": "website"
+      }
+    ],
+    "reputationString": "You were a little quiet yesterday and haven't gained any reputation – join some of the conversations below, your communities would love to hear from you. Reputation is an indicator of how active and constructive you are across all your communities. The more great conversations you start or join, the more reputation you will have.",
+    "timeframe": {
+      "subject": "daily",
+      "time": "day"
+    }
+  }
+}

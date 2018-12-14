@@ -46,7 +46,11 @@ const App = () => {
       <HelmetProvider>
         <ApolloProvider client={client}>
           <Router history={history}>
-            <RedirectHandler />
+            <RedirectHandler
+              maintenanceMode={
+                process.env.REACT_APP_MAINTENANCE_MODE === 'enabled'
+              }
+            />
           </Router>
         </ApolloProvider>
       </HelmetProvider>
@@ -54,7 +58,7 @@ const App = () => {
   );
 };
 
-const renderMethod = !!window.__SERVER_STATE__
+const renderMethod = window.__SERVER_STATE__
   ? // $FlowIssue
     ReactDOM.hydrate
   : ReactDOM.render;

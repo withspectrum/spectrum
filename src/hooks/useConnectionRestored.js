@@ -48,7 +48,7 @@ const networkOnlineDidReconnect = (props: Props) => {
 
 export const useConnectionRestored = (props: Props) => {
   if (!validateProps(props)) return false;
-  if (websocketDidReconnect(props)) return true;
-  if (networkOnlineDidReconnect(props)) return true;
+  if (websocketDidReconnect(props)) return false;
+  if (networkOnlineDidReconnect(props)) return false;
   return false;
 };

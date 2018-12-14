@@ -9,6 +9,6 @@ module.exports = {
   ),
   globalSetup: path.resolve(__dirname, './shared/testing/setup'),
   globalTeardown: path.resolve(__dirname, './shared/testing/teardown'),
-  testPathIgnorePatterns: ['/node_modules/', '/mutations/', '/mobile/'],
+  testPathIgnorePatterns: ['/node_modules/', '/mutations/'],
   testURL: 'http://localhost/',
 };

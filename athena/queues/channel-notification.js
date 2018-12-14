@@ -88,8 +88,8 @@ export default async (job: Job<ChannelNotificationJobData>) => {
 
   // for each person who should receie an updated notification, mark their notification as unseen and unread
   return Promise.all([notificationPromises]).catch(err => {
-    debug('❌ Error in job:\n');
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     Raven.captureException(err);
   });
 };

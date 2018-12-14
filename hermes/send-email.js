@@ -1,117 +1,101 @@
 // @flow
 import isEmail from 'validator/lib/isEmail';
-import postmark from 'postmark';
+import sg from '@sendgrid/mail';
+import fs from 'fs';
 const debug = require('debug')('hermes:send-email');
 const stringify = require('json-stringify-pretty-compact');
-import { deactivateUserEmailNotifications } from './models/usersSettings';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+const { SENDGRID_API_KEY } = process.env;
 
-let client;
-if (process.env.POSTMARK_SERVER_KEY) {
-  client = new postmark.Client(process.env.POSTMARK_SERVER_KEY);
-} else {
-  debug(
-    '\nℹ️ POSTMARK_SERVER_KEY not provided, debug mode enabled. Will log emails instead of actually sending them.'
-  );
-  // If no postmark API key is provided don't crash the server but log instead
-  client = {
-    sendEmailWithTemplate: ({ To, TemplateModel, Tag }, cb) => {
-      debug('debug mode enabled, mocking email sending');
-      cb();
-    },
-  };
-}
+type ToType = {
+  email: string,
+  name?: string,
+};
 
 type Options = {
-  TemplateId: number,
-  To: string,
-  TemplateModel: Object,
-  Tag: string,
+  templateId: string,
+  to: Array<ToType>,
+  dynamic_template_data: Object,
   userId?: string,
 };
 
-const sendEmail = (options: Options) => {
-  const { TemplateId, To, TemplateModel, Tag, userId } = options;
-  debug(
-    `--Send email with template ${TemplateId}--\nTo: ${To}\nRe: ${
-      TemplateModel.subject
-    }\nTemplateModel: ${stringify(TemplateModel)}`
-  );
+const defaultOptions = {
+  from: {
+    email: 'hi@spectrum.chat',
+    name: 'Spectrum',
+  },
+  tracking_settings: {
+    click_tracking: {
+      enable: false,
+    },
+  },
+};
+
+const sendEmail = (options: Options): Promise<void> => {
+  let { templateId, to, dynamic_template_data, userId } = options;
+
+  if (SENDGRID_API_KEY !== 'undefined') {
+    debug(
+      `--Send LIVE email with templateId ${templateId}--\nto: ${to
+        .map(t => t.email)
+        .join(', ')}\ndynamic_template_data: ${stringify(
+        dynamic_template_data
+      )}`
+    );
+    sg.setApiKey(SENDGRID_API_KEY);
+  } else {
+    debug(
+      `--Send TEST email with templateId ${templateId}--\n--to: ${to
+        .map(t => t.email)
+        .join(', ')}--`
+    );
+
+    // eslint-disable-next-line
+    debug(
+      stringify({
+        templateId,
+        to,
+        dynamic_template_data,
+        userId,
+      })
+    );
+
+    return Promise.resolve();
+  }
 
   if (userId) {
     trackQueue.add({
       userId: userId,
       event: events.EMAIL_RECEIVED,
-      properties: { tag: Tag },
     });
   }
 
-  if (!To) {
+  if (!to) {
     if (userId) {
       trackQueue.add({
         userId: userId,
         event: events.EMAIL_BOUNCED,
-        properties: { tag: Tag, error: 'To field was not provided' },
+        properties: { error: 'To field was not provided' },
       });
     }
 
-    return;
+    return Promise.resolve();
   }
 
   // qq.com email addresses are isp blocked, which raises our error rate
-  // on postmark. prevent sending these emails at all
-  if (To.substr(To.length - 7) === '@qq.com') {
-    return;
-  }
+  // on sendgrid. prevent sending these emails at all
+  to = to.filter(toType => {
+    return toType.email.substr(to.length - 7) !== '@qq.com';
+  });
 
-  // $FlowFixMe
-  return new Promise((res, rej) => {
-    client.sendEmailWithTemplate(
-      {
-        From: 'hi@spectrum.chat',
-        TemplateId: TemplateId,
-        To: To,
-        TemplateModel: TemplateModel,
-        Tag: Tag,
-      },
-      async err => {
-        if (err) {
-          // 406 means the user became inactive, either by having an email
-          // hard bounce or they marked as spam
-          if (err.code === 406) {
-            if (userId) {
-              trackQueue.add({
-                userId: userId,
-                event: events.EMAIL_BOUNCED,
-                properties: { tag: Tag, error: err.message },
-              });
-            }
+  if (!to || to.length === 0) return Promise.resolve();
 
-            return await deactivateUserEmailNotifications(To)
-              .then(() => rej(err))
-              .catch(e => rej(e));
-          }
-
-          if (err.code === 422) {
-            if (userId) {
-              trackQueue.add({
-                userId: userId,
-                event: events.EMAIL_BOUNCED,
-                // we can safely log the To field as error 422 means the To field is malformed anyways and is not a valid email address
-                properties: { tag: Tag, error: err.message, to: To },
-              });
-            }
-          }
-
-          console.error('Error sending email:');
-          console.error(err);
-          return rej(err);
-        }
-        res();
-        debug(`email to ${To} sent successfully`);
-      }
-    );
+  return sg.send({
+    ...defaultOptions,
+    templateId,
+    to,
+    dynamic_template_data,
   });
 };
 
