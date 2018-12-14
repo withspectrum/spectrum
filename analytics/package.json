@@ -7,7 +7,6 @@
   "dependencies": {
     "amplitude": "^3.5.0",
     "aws-sdk": "^2.373.0",
-    "bluebird": "^3.5.3",
     "bull": "3.3.10",
     "debug": "^4.1.0",
     "faker": "^4.1.0",
