@@ -106,6 +106,7 @@ const ONE_DAY = (): string => {
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
 const returnText = (type = '') => {
+  return;
   let storedContent;
   let storedContentDM;
   const currTime = new Date().getTime().toString();
@@ -151,6 +152,7 @@ const returnText = (type = '') => {
 };
 
 const setText = (content, threadType = '') => {
+  return;
   if (threadType === 'directMessageThread') {
     localStorage &&
       localStorage.setItem(LS_DM_KEY, JSON.stringify(toJSON(content)));
@@ -187,27 +189,6 @@ class ChatInput extends React.Component<Props, State> {
     this.props.onRef(this);
   }
 
-  shouldComponentUpdate(next, nextState) {
-    const curr = this.props;
-    const currState = this.state;
-    // User changed
-    if (curr.currentUser !== next.currentUser) return true;
-
-    if (curr.networkOnline !== next.networkOnline) return true;
-    if (curr.websocketConnection !== next.websocketConnection) return true;
-
-    if (curr.quotedMessage !== next.quotedMessage) return true;
-
-    // State changed
-    if (curr.state !== next.state) return true;
-    if (currState.isSendingMediaMessage !== nextState.isSendingMediaMessage)
-      return true;
-    if (currState.mediaPreview !== nextState.mediaPreview) return true;
-    if (currState.photoSizeError !== nextState.photoSizeError) return true;
-
-    return false;
-  }
-
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyDown);
     this.props.onRef(undefined);
@@ -226,8 +207,7 @@ class ChatInput extends React.Component<Props, State> {
     // the previewed image and quoted message
     if (
       key === 27 ||
-      ((key === 8 || key === 46) &&
-        !this.props.state.getCurrentContent().hasText())
+      ((key === 8 || key === 46) && this.props.state.length === 0)
     ) {
       this.removePreviewWrapper();
       this.removeQuotedMessage();
@@ -241,22 +221,17 @@ class ChatInput extends React.Component<Props, State> {
       );
   };
 
-  onChange = (state, ...rest) => {
+  onChange = evt => {
+    const state = evt.target.value;
     const { onChange, threadType } = this.props;
     this.toggleMarkdownHint(state);
     persistContent(state, threadType);
-    onChange(state, ...rest);
+    onChange(state);
   };
 
   toggleMarkdownHint = state => {
-    // eslint-disable-next-line
-    let hasText = false;
-    // NOTE(@mxstbr): This throws an error on focus, so we just ignore that
-    try {
-      hasText = state.getCurrentContent().hasText();
-    } catch (err) {}
     this.setState({
-      markdownHint: state.getCurrentContent().hasText() ? true : false,
+      markdownHint: state.length === 0 ? true : false,
     });
   };
 
@@ -332,7 +307,7 @@ class ChatInput extends React.Component<Props, State> {
     }
 
     // If the input is empty don't do anything
-    if (!state.getCurrentContent().hasText()) return 'handled';
+    if (state.length === 0) return 'handled';
     // do one last persist before sending
     forcePersist(state, threadType);
     this.removeQuotedMessage();
@@ -359,13 +334,11 @@ class ChatInput extends React.Component<Props, State> {
     if (threadType === 'directMessageThread') {
       sendDirectMessage({
         threadId: thread,
-        messageType: !isAndroid() ? 'draftjs' : 'text',
+        messageType: 'text',
         threadType,
         parentId: quotedMessage,
         content: {
-          body: !isAndroid()
-            ? JSON.stringify(toJSON(state))
-            : toPlainText(state),
+          body: state,
         },
       })
         .then(() => {
@@ -378,13 +351,11 @@ class ChatInput extends React.Component<Props, State> {
     } else {
       sendMessage({
         threadId: thread,
-        messageType: !isAndroid() ? 'draftjs' : 'text',
+        messageType: 'text',
         threadType,
         parentId: quotedMessage,
         content: {
-          body: !isAndroid()
-            ? JSON.stringify(toJSON(state))
-            : toPlainText(state),
+          body: state,
         },
       })
         .then(() => {
@@ -422,6 +393,8 @@ class ChatInput extends React.Component<Props, State> {
 
     // SHIFT+Enter should always add a new line
     if (e.shiftKey) return 'not-handled';
+
+    return;
 
     const currentContent = this.props.state.getCurrentContent();
     const selection = this.props.state.getSelection();
@@ -663,41 +636,14 @@ class ChatInput extends React.Component<Props, State> {
               />
             )}
             <Form focus={isFocused}>
-              <Input
-                focus={isFocused}
-                placeholder={`Your message here...`}
-                editorState={state}
-                handleReturn={this.handleReturn}
+              <input
+                placeholder="Your message here..."
+                value={state}
                 onChange={this.onChange}
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
-                code={false}
-                editorRef={editor => (this.editor = editor)}
-                editorKey="chat-input"
-                decorators={[mentionsDecorator, linksDecorator]}
-                networkDisabled={networkDisabled}
-                hasAttachment={!!mediaPreview || !!quotedMessage}
-              >
-                {mediaPreview && (
-                  <PreviewWrapper>
-                    <img src={mediaPreview} alt="" />
-                    <RemovePreviewButton onClick={this.removePreviewWrapper}>
-                      <Icon glyph="view-close-small" size={'16'} />
-                    </RemovePreviewButton>
-                  </PreviewWrapper>
-                )}
-                {quotedMessage && (
-                  <PreviewWrapper data-cy="staged-quoted-message">
-                    <QuotedMessage id={quotedMessage} threadId={thread} />
-                    <RemovePreviewButton
-                      data-cy="remove-staged-quoted-message"
-                      onClick={this.removeQuotedMessage}
-                    >
-                      <Icon glyph="view-close-small" size={'16'} />
-                    </RemovePreviewButton>
-                  </PreviewWrapper>
-                )}
-              </Input>
+                ref={editor => (this.editor = editor)}
+              />
               <SendButton
                 data-cy="chat-input-send-button"
                 glyph="send-fill"
@@ -730,10 +676,10 @@ export default compose(
   // $FlowIssue
   connect(map),
   withState('state', 'changeState', props => {
-    return returnText(props.threadType) || fromPlainText('');
+    return returnText(props.threadType) || '';
   }),
   withHandlers({
     onChange: ({ changeState }) => state => changeState(state),
-    clear: ({ changeState }) => () => changeState(fromPlainText('')),
+    clear: ({ changeState }) => () => changeState(''),
   })
 )(ChatInput);
