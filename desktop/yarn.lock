@@ -823,10 +823,10 @@ electron-window-state@^5.0.3:
     jsonfile "^4.0.0"
     mkdirp "^0.5.1"
 
-electron@^3.0.11:
-  version "3.0.11"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-3.0.11.tgz#81e350db741fc0f2997ecb2fef5ed085ca42a723"
-  integrity sha512-galllxAMT3HLbHNR6i5WXrUXzsxzz0D1X6vu3uFMhofU9Wdbxv2w7BAD/BcYTT4c1bu4nZEgXO6AvHXjq0Sksw==
+electron@^3.0.12:
+  version "3.0.12"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-3.0.12.tgz#7486ff1c60e9c22d8aadaee620695c42c9ddb2ac"
+  integrity sha512-stvGbqYzWv5qHHtjZZgA7gET3NPGLuxs68IHTrJqsqujQfXGkhMOh8tstpXl86kBdRpzZn7GaDlTWcgeFSmsPw==
   dependencies:
     "@types/node" "^8.0.24"
     electron-download "^4.1.0"
