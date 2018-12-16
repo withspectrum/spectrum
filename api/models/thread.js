@@ -325,7 +325,7 @@ export const getViewableParticipantThreadsByUser = async (
     getParticipantCommunityIds,
   ]);
 
-  const participantThreadIds = participantChannelIds.map(c => c.threadId);
+  const participantThreadIds = participantChannelIds.map(c => c && c.threadId);
   const distinctParticipantChannelIds = participantChannelIds
     .map(c => c.channelId)
     .filter((x, i, a) => a.indexOf(x) === i);
