@@ -59,7 +59,7 @@ export const sortAndGroupMessages = (messages: Array<Output>) => {
       */
       const c = new Date(current.timestamp).getTime();
       const p = new Date(previous.timestamp).getTime();
-      return c > p + 21600000;
+      return c > p + 3600000; // one hour;
     };
 
     // if we are evaulating a bubble from the same user
