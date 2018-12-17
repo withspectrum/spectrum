@@ -58,6 +58,8 @@ export default class InfiniteScroll extends React.Component<Props> {
         mainElement: showPTRBefore,
         triggerElement: showPTRBefore,
         onRefresh: refetch ? refetch : () => window.location.reload(),
+        shouldPullToRefresh: () =>
+          !document.getElementById('scroller-for-inbox').scrollTop,
       });
     }
   }
