@@ -5,6 +5,7 @@ import { getChannelById } from 'shared/graphql/queries/channel/getChannel';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext } from '../utils';
 import Icon from '../../../components/icons';
+import { Link } from 'react-router-dom';
 import {
   SegmentedNotificationCard,
   TextContent,
@@ -12,22 +13,62 @@ import {
   AttachmentsWash,
   CreatedContext,
   ContentWash,
+  ChannelCard,
+  ChannelName,
+  ToggleNotificationsContainer,
 } from '../style';
-import { ChannelProfile } from '../../../components/profile';
 import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
+import ToggleChannelNotifications from 'src/components/toggleChannelNotifications';
+import { Loading } from 'src/components/loading';
 
 const NewChannelComponent = ({
   data,
 }: {
   data: { channel: GetChannelType },
 }) => {
-  return <ChannelProfile profileSize="miniWithAction" data={data} />;
+  if (!data.channel) return null;
+  const { channel } = data;
+  return (
+    <ChannelCard>
+      <Link to={`/${channel.community.slug}/${channel.slug}`}>
+        <ChannelName>{channel.name}</ChannelName>
+      </Link>
+
+      <ToggleChannelNotifications
+        channel={channel}
+        render={state => (
+          <ToggleNotificationsContainer
+            tipLocation={'top-left'}
+            tipText={
+              channel.channelPermissions.receiveNotifications
+                ? 'Turn notifications off'
+                : 'Turn notifications on'
+            }
+          >
+            {state.isLoading ? (
+              <Loading />
+            ) : (
+              <Icon
+                size={24}
+                glyph={
+                  channel.channelPermissions.receiveNotifications
+                    ? 'notification-fill'
+                    : 'notification'
+                }
+              />
+            )}
+          </ToggleNotificationsContainer>
+        )}
+      />
+    </ChannelCard>
+  );
 };
 
-const NewChannel = compose(getChannelById, displayLoadingCard)(
-  NewChannelComponent
-);
+const NewChannel = compose(
+  getChannelById,
+  displayLoadingCard
+)(NewChannelComponent);
 
 type Props = {
   notification: Object,

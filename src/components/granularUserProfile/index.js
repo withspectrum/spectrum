@@ -5,7 +5,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { UserHoverProfile } from 'src/components/hoverProfile';
 import { UserAvatar } from 'src/components/avatar';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import Reputation from 'src/components/reputation';
 import Badge from 'src/components/badges';
 import Icon from 'src/components/icons';
@@ -36,7 +36,6 @@ type Props = {
   messageButton?: boolean,
   multiAction?: boolean,
   children?: React.Node,
-  onlineSize?: 'small' | 'large',
   history: Object,
   dispatch: Dispatch<Object>,
   showHoverProfile?: boolean,
@@ -91,12 +90,11 @@ class GranularUserProfile extends React.Component<Props> {
       username,
       description,
       reputation,
-      avatarSize,
+      avatarSize = 32,
       badges,
       children,
       messageButton,
       multiAction,
-      onlineSize,
       showHoverProfile = true,
     } = this.props;
 
@@ -105,8 +103,7 @@ class GranularUserProfile extends React.Component<Props> {
         {profilePhoto && (
           <UserAvatar
             user={userObject}
-            size={avatarSize || 32}
-            onlineSize={onlineSize || 'small'}
+            size={avatarSize}
             showHoverProfile={!showHoverProfile}
           />
         )}

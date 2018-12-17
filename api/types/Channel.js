@@ -22,7 +22,9 @@ const Channel = /* GraphQL */ `
 
   type ChannelMetaData {
     threads: Int
+      @deprecated(reason: "metaData.threads is deprecated and always returns 0")
     members: Int
+    onlineMembers: Int
   }
 
   input CreateChannelInput {
@@ -71,20 +73,26 @@ const Channel = /* GraphQL */ `
     channelPermissions: ChannelPermissions! @cost(complexity: 1)
     communityPermissions: CommunityPermissions!
     community: Community! @cost(complexity: 1)
-    threadConnection(first: Int = 10, after: String): ChannelThreadsConnection! @cost(complexity: 1, multiplier: "first")
-    memberConnection(first: Int = 10, after: String): ChannelMembersConnection! @cost(complexity: 1, multiplier: "first")
+    threadConnection(first: Int = 10, after: String): ChannelThreadsConnection!
+      @cost(complexity: 1, multipliers: ["first"])
+    memberConnection(first: Int = 10, after: String): ChannelMembersConnection!
+      @cost(complexity: 1, multipliers: ["first"])
     memberCount: Int!
     metaData: ChannelMetaData @cost(complexity: 1)
     pendingUsers: [User] @cost(complexity: 3)
     blockedUsers: [User] @cost(complexity: 3)
     moderators: [User] @cost(complexity: 3)
     owners: [User] @cost(complexity: 3)
-    joinSettings: JoinSettings 
+    joinSettings: JoinSettings
     slackSettings: ChannelSlackSettings
   }
 
   extend type Query {
-    channel(id: ID, channelSlug: LowercaseString, communitySlug: LowercaseString): Channel @cost(complexity: 1)
+    channel(
+      id: ID
+      channelSlug: LowercaseString
+      communitySlug: LowercaseString
+    ): Channel @cost(complexity: 1)
   }
 
   input ArchiveChannelInput {

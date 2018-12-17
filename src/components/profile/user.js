@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import Card from 'src/components/card';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -18,6 +18,7 @@ import { displayLoadingCard } from 'src/components/loading';
 import Reputation from 'src/components/reputation';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   FullProfile,
   ProfileHeader,
@@ -34,6 +35,7 @@ import {
   FullDescription,
   Title,
   ExtLink,
+  OnlineIndicator,
 } from './style';
 
 type CurrentUserProps = {
@@ -88,6 +90,7 @@ const UserWithData = ({
             user={user}
             size={128}
             showHoverProfile={showHoverProfile}
+            showOnlineStatus={false}
             style={{
               boxShadow: '0 0 0 2px #fff',
               marginRight: '0',
@@ -95,56 +98,61 @@ const UserWithData = ({
           />
           <FullTitle>{user.name}</FullTitle>
           <Subtitle>
-            @{user.username}
-            {user.isPro && <Badge type="pro" />}
+            <span style={{ marginRight: '4px' }}>@{user.username}</span>
+            {user.betaSupporter && <Badge type="beta-supporter" />}
           </Subtitle>
-          {(user.description || user.website) && (
-            <FullDescription>
-              {user.description && (
-                <p>{renderTextWithLinks(user.description)}</p>
-              )}
-              <Reputation
-                reputation={
-                  user.contextPermissions
-                    ? user.contextPermissions.reputation
-                    : user.totalReputation
+
+          <FullDescription>
+            {user.description && <p>{renderTextWithLinks(user.description)}</p>}
+
+            {user.isOnline && (
+              <ExtLink>
+                <OnlineIndicator /> Online now
+              </ExtLink>
+            )}
+
+            <Reputation
+              reputation={
+                user.contextPermissions
+                  ? user.contextPermissions.reputation
+                  : user.totalReputation
+              }
+            />
+            {user.website && (
+              <ExtLink>
+                <Icon glyph="link" size={24} />
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={addProtocolToString(user.website)}
+                >
+                  {user.website}
+                </a>
+              </ExtLink>
+            )}
+            <GithubProfile
+              id={user.id}
+              render={profile => {
+                if (!profile) {
+                  return null;
+                } else {
+                  return (
+                    <ExtLink>
+                      <Icon glyph="github" size={24} />
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={`https://github.com/${profile.username}`}
+                      >
+                        github.com/
+                        {profile.username}
+                      </a>
+                    </ExtLink>
+                  );
                 }
-              />
-              {user.website && (
-                <ExtLink>
-                  <Icon glyph="link" size={24} />
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={addProtocolToString(user.website)}
-                  >
-                    {user.website}
-                  </a>
-                </ExtLink>
-              )}
-              <GithubProfile
-                id={user.id}
-                render={profile => {
-                  if (!profile) {
-                    return null;
-                  } else {
-                    return (
-                      <ExtLink>
-                        <Icon glyph="github" size={24} />
-                        <a
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          href={`https://github.com/${profile.username}`}
-                        >
-                          github.com/{profile.username}
-                        </a>
-                      </ExtLink>
-                    );
-                  }
-                }}
-              />
-            </FullDescription>
-          )}
+              }}
+            />
+          </FullDescription>
         </FullProfile>
       );
     case 'simple':
@@ -159,7 +167,6 @@ const UserWithData = ({
             <UserAvatar
               user={user}
               size={64}
-              onlineSize={'large'}
               showHoverProfile={showHoverProfile}
               style={{
                 boxShadow: '0 0 0 2px #fff',
@@ -171,7 +178,6 @@ const UserWithData = ({
           </CoverLink>
           <CoverSubtitle center>
             {user.username && `@${user.username}`}
-            {user.isPro && <Badge type="pro" />}
             <Reputation
               tipText={'Total rep across all communities'}
               size={'large'}
@@ -205,12 +211,7 @@ const UserWithData = ({
                 />
                 <ProfileHeaderMeta>
                   <Title>{user.name}</Title>
-                  {user.username && (
-                    <Subtitle>
-                      @{user.username}
-                      {user.isPro && <Badge type="pro" />}
-                    </Subtitle>
-                  )}
+                  {user.username && <Subtitle>@{user.username}</Subtitle>}
                 </ProfileHeaderMeta>
               </ProfileHeaderLink>
             ) : (
@@ -226,7 +227,6 @@ const UserWithData = ({
                   {user.username && (
                     <Subtitle>
                       @{user.username}
-                      {user.isPro && <Badge type="pro" />}
                       <Reputation
                         tipText={'Total rep across all communities'}
                         size={'large'}
@@ -265,9 +265,12 @@ const UserWithData = ({
   }
 };
 
-const User = compose(displayLoadingCard, withRouter)(UserWithData);
+const User = compose(
+  displayLoadingCard,
+  withRouter,
+  withCurrentUser
+)(UserWithData);
 const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
   initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,
 });
 // $FlowFixMe

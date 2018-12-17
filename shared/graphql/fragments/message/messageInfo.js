@@ -7,6 +7,7 @@ export type MessageInfoType = {
   id: string,
   timestamp: string,
   messageType: string,
+  modifiedAt: string,
   parent: {
     id: string,
     timestamp: Date,
@@ -34,6 +35,7 @@ export default gql`
   fragment messageInfo on Message {
     id
     timestamp
+    modifiedAt
     messageType
     parent {
       id

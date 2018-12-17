@@ -1,9 +1,10 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 import { Tooltip, Truncate } from '../globals';
 
 export const Content = styled.div`
-  border-bottom: 1px solid ${props => props.theme.bg.wash};
+  border-bottom: 1px solid ${theme.bg.wash};
   padding: 12px 0;
   display: flex;
   align-items: center;
@@ -23,8 +24,8 @@ export const Row = styled.div`
   grid-column-gap: 16px;
   padding: 12px 16px;
   width: 100%;
-  background: ${props => props.theme.bg.default};
-  border-bottom: 1px solid ${props => props.theme.bg.wash};
+  background: ${theme.bg.default};
+  border-bottom: 1px solid ${theme.bg.wash};
 
   &:last-of-type {
     > ${Content} {
@@ -51,41 +52,41 @@ export const Row = styled.div`
 `;
 
 export const Name = styled.span`
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   font-size: 16px;
   font-weight: 600;
-  line-height: 1;
+  line-height: 1.2;
   vertical-align: middle;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 
   &:hover {
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 `;
 
 export const Username = styled.span`
   font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-weight: 400;
   margin: 0px 4px;
   line-height: 1;
 
   &:hover {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 `;
 
 export const Description = styled.p`
   grid-area: description;
   font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 `;
 
 export const MessageIcon = styled.div`
   grid-area: message;
   height: 32px;
-  color: ${props => props.theme.brand.alt};
+  color: ${theme.brand.alt};
   cursor: pointer;
   ${Tooltip};
 `;

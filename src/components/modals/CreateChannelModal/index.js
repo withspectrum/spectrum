@@ -14,9 +14,9 @@ import { getChannelBySlugAndCommunitySlugQuery } from 'shared/graphql/queries/ch
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import createChannelMutation from 'shared/graphql/mutations/channel/createChannel';
-import StripeModalWell from 'src/components/stripeCardForm/modalWell';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
@@ -41,7 +41,6 @@ type State = {
   nameError: boolean,
   createError: boolean,
   loading: boolean,
-  hasChargeableSource: boolean,
 };
 
 type Props = {
@@ -67,7 +66,6 @@ class CreateChannelModal extends React.Component<Props, State> {
       nameError: false,
       createError: false,
       loading: false,
-      hasChargeableSource: false,
     };
 
     this.checkSlug = throttle(this.checkSlug, 500);
@@ -83,8 +81,6 @@ class CreateChannelModal extends React.Component<Props, State> {
   close = () => {
     this.props.dispatch(closeModal());
   };
-
-  onSourceAvailable = () => this.setState({ hasChargeableSource: true });
 
   changeName = e => {
     const name = e.target.value;
@@ -172,9 +168,7 @@ class CreateChannelModal extends React.Component<Props, State> {
           }
         })
         .catch(err => {
-          return this.props.dispatch(
-            addToastWithTimeout('error', err.toString())
-          );
+          // do nothing
         });
     }
   };
@@ -276,7 +270,6 @@ class CreateChannelModal extends React.Component<Props, State> {
       descriptionError,
       createError,
       loading,
-      hasChargeableSource,
     } = this.state;
 
     const styles = modalStyles(420);
@@ -344,16 +337,8 @@ class CreateChannelModal extends React.Component<Props, State> {
               onChange={this.changePrivate}
               dataCy="create-channel-modal-toggle-private-checkbox"
             >
-              Private channel · $10/mo
+              Private channel
             </Checkbox>
-
-            {isPrivate && (
-              <StripeModalWell
-                id={community.id}
-                onSourceAvailable={this.onSourceAvailable}
-                closeModal={this.close}
-              />
-            )}
 
             <UpsellDescription>
               Private channels protect all conversations and messages, and all
@@ -365,13 +350,7 @@ class CreateChannelModal extends React.Component<Props, State> {
                 Cancel
               </TextButton>
               <Button
-                disabled={
-                  !name ||
-                  !slug ||
-                  slugTaken ||
-                  !description ||
-                  (isPrivate && !hasChargeableSource)
-                }
+                disabled={!name || !slug || slugTaken || !description}
                 loading={loading}
                 onClick={this.create}
               >
@@ -392,13 +371,13 @@ class CreateChannelModal extends React.Component<Props, State> {
 }
 
 const map = state => ({
-  currentUser: state.users.currentUser,
   isOpen: state.modals.isOpen,
 });
 export default compose(
   // $FlowIssue
   connect(map),
   withApollo,
+  withCurrentUser,
   createChannelMutation,
   withRouter
 )(CreateChannelModal);

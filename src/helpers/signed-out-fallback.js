@@ -1,26 +1,32 @@
-// Render a component depending on a users authentication status
+// @flow
 import React from 'react';
-import { connect } from 'react-redux';
-import queryString from 'query-string';
+import compose from 'recompose/compose';
+import { withCurrentUser } from 'src/components/withCurrentUser';
+import AuthViewHandler from 'src/views/authViewHandler';
 
-// This is the component that determines at render time what to do
 const Switch = props => {
-  const { Component, FallbackComponent, currentUser, ...rest } = props;
-  const { authed } = queryString.parse(props.location.search);
-  if ((!currentUser && !authed) || !Component) {
-    return <FallbackComponent {...rest} />;
-  } else {
-    return <Component {...rest} />;
-  }
+  const { Component, FallbackComponent, ...rest } = props;
+  return (
+    <AuthViewHandler>
+      {authed => {
+        if (!authed) {
+          return <FallbackComponent {...rest} />;
+        } else {
+          return <Component {...rest} />;
+        }
+      }}
+    </AuthViewHandler>
+  );
 };
 
 // Connect that component to the Redux state
-const ConnectedSwitch = connect(state => ({
-  currentUser: state.users.currentUser,
-}))(Switch);
+const ConnectedSwitch = compose(withCurrentUser)(Switch);
 
-const signedOutFallback = (Component, FallbackComponent) => {
-  return props => (
+const signedOutFallback = (
+  Component: React$ComponentType<*>,
+  FallbackComponent: React$ComponentType<*>
+) => {
+  return (props: *) => (
     <ConnectedSwitch
       {...props}
       FallbackComponent={FallbackComponent}

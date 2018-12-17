@@ -55,16 +55,17 @@ describe('public channel in private community signed out', () => {
     );
   });
 
-  it('should render error view', () => {
-    cy.get('[data-cy="channel-view-blocked"]').should('be.visible');
+  it('should render channel not found view', () => {
+    cy.get('[data-cy="channel-not-found"]').should('be.visible');
   });
 });
 
 describe('public channel in private community with permission', () => {
   beforeEach(() => {
-    cy.auth(memberInPrivateCommunityId);
-    cy.visit(
-      `/${privateCommunity.slug}/${publicChannelInPrivateCommunity.slug}`
+    cy.auth(memberInPrivateCommunityId).then(() =>
+      cy.visit(
+        `/${privateCommunity.slug}/${publicChannelInPrivateCommunity.slug}`
+      )
     );
   });
 
@@ -75,14 +76,15 @@ describe('public channel in private community with permission', () => {
 
 describe('public channel in private community without permission', () => {
   beforeEach(() => {
-    cy.auth(bryn.id);
-    cy.visit(
-      `/${privateCommunity.slug}/${publicChannelInPrivateCommunity.slug}`
+    cy.auth(bryn.id).then(() =>
+      cy.visit(
+        `/${privateCommunity.slug}/${publicChannelInPrivateCommunity.slug}`
+      )
     );
   });
 
-  it('should render error view', () => {
-    cy.get('[data-cy="channel-view-blocked"]').should('be.visible');
+  it('should render channel not found view', () => {
+    cy.get('[data-cy="channel-not-found"]').should('be.visible');
   });
 });
 
@@ -114,8 +116,9 @@ describe('deleted channel', () => {
 
 describe('blocked in public channel', () => {
   beforeEach(() => {
-    cy.auth(blockedInChannelId);
-    cy.visit(`/${community.slug}/${publicChannel.slug}`);
+    cy.auth(blockedInChannelId).then(() =>
+      cy.visit(`/${community.slug}/${publicChannel.slug}`)
+    );
   });
 
   it('should render error view', () => {
@@ -126,8 +129,9 @@ describe('blocked in public channel', () => {
 
 describe('member in private channel', () => {
   beforeEach(() => {
-    cy.auth(memberInPrivateChannelId);
-    cy.visit(`/${community.slug}/${privateChannel.slug}`);
+    cy.auth(memberInPrivateChannelId).then(() =>
+      cy.visit(`/${community.slug}/${privateChannel.slug}`)
+    );
   });
 
   it('should render profile', () => {
@@ -137,12 +141,13 @@ describe('member in private channel', () => {
 
 describe('blocked in private channel', () => {
   beforeEach(() => {
-    cy.auth(blockedInChannelId);
-    cy.visit(`/${community.slug}/${privateChannel.slug}`);
+    cy.auth(blockedInChannelId).then(() =>
+      cy.visit(`/${community.slug}/${privateChannel.slug}`)
+    );
   });
 
-  it('should render error view', () => {
-    cy.get('[data-cy="channel-view-blocked"]').should('be.visible');
+  it('should render channel not found view', () => {
+    cy.get('[data-cy="channel-not-found"]').should('be.visible');
   });
 });
 
@@ -151,7 +156,7 @@ describe('is not logged in', () => {
     cy.visit(`/${community.slug}/${privateChannel.slug}`);
   });
 
-  it('should render login view', () => {
-    cy.contains(`Sign in`);
+  it('should render channel not found view', () => {
+    cy.get('[data-cy="channel-not-found"]').should('be.visible');
   });
 });

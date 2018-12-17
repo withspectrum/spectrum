@@ -1,29 +1,35 @@
 // @flow
+import theme from 'shared/theme';
+import compose from 'recompose/compose';
 import React from 'react';
 import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Transition, zIndex } from 'src/components/globals';
-import theme from 'shared/theme';
 import { UserHoverProfile } from 'src/components/hoverProfile';
 import type { Node } from 'react';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 const UsernameWrapper = styled.span`
   color: ${props =>
-    props.me ? props.theme.special.default : props.theme.space.default};
+    props.me
+      ? props.theme.special.default
+      : props.theme.space.default}!important;
   background: ${props =>
-    props.me ? props.theme.special.wash : props.theme.space.wash};
-  padding: 2px 4px;
+    props.me ? props.theme.special.wash : props.theme.space.wash}!important;
+  padding: 0px 4px 1px;
   border-radius: 4px;
   position: relative;
   display: inline-block;
+  line-height: 1.4;
 
   &:hover {
     text-decoration: underline;
   }
 
   a {
-    text-decoration: none;
+    color: inherit !important;
+    text-decoration: none !important;
   }
 `;
 
@@ -49,9 +55,10 @@ class MentionWithCurrentUser extends React.Component<MentionProps> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-// $FlowFixMe
-export const Mention = connect(map)(MentionWithCurrentUser);
+export const Mention = compose(
+  withCurrentUser,
+  connect()
+)(MentionWithCurrentUser);
 
 export const customStyleMap = {
   CODE: {
@@ -82,8 +89,8 @@ export const Wrapper = styled.div`
 
 export const MediaRow = styled.div`
   display: flex;
-  background: ${props => props.theme.bg.wash};
-  border-top: 2px solid ${props => props.theme.bg.border};
+  background: ${theme.bg.wash};
+  border-top: 2px solid ${theme.bg.border};
   padding: 8px 16px;
   margin-left: -24px;
   margin-bottom: -24px;
@@ -109,7 +116,7 @@ export const ComposerBase = styled.div`
     bottom: -11px;
     padding: 0;
     margin: 0;
-    color: ${props => props.theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
 `;
 
@@ -131,7 +138,7 @@ export const Action = styled.div`
 
   label > div,
   label > button > div {
-    color: ${props => props.theme.text.reverse};
+    color: ${theme.text.reverse};
   }
 `;
 
@@ -144,25 +151,25 @@ export const Expander = styled.div`
   border-radius: 12px;
 
   > button > div {
-    color: ${props => props.theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
 
   > button:hover > div {
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 
   ${props =>
     props.inserting &&
     css`
-      background-color: ${props => props.theme.brand.alt};
+      background-color: ${theme.brand.alt};
       transition: ${Transition.hover.on};
 
       > button > div {
-        color: ${props => props.theme.brand.wash};
+        color: ${theme.brand.wash};
       }
 
       > button:hover > div {
-        color: ${props => props.theme.brand.wash};
+        color: ${theme.brand.wash};
       }
 
       ${Action} {
@@ -174,7 +181,7 @@ export const Expander = styled.div`
 export const EmbedUI = styled.form`
   display: flex;
   flex-direction: row;
-  background-color: ${props => props.theme.brand.alt};
+  background-color: ${theme.brand.alt};
   border-radius: 12px;
 
   label {
@@ -221,7 +228,7 @@ export const EmbedUI = styled.form`
       button {
         display: inline-block;
         background-color: transparent;
-        color: ${props => props.theme.text.reverse};
+        color: ${theme.text.reverse};
         margin-right: 16px;
         font-size: 14px;
         line-height: 1;
@@ -230,7 +237,7 @@ export const EmbedUI = styled.form`
         transition: ${Transition.hover.off};
 
         &:hover {
-          background-color: ${props => props.theme.brand.dark};
+          background-color: ${theme.brand.dark};
           border-radius: 8px;
           transition: ${Transition.hover.on};
         }

@@ -1,8 +1,8 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import type { DBCommunitySettings, DBCommunity } from 'shared/types';
 import { getCommunityById } from './community';
-import shortid from 'shortid';
+import uuidv4 from 'uuid/v4';
 import axios from 'axios';
 import { decryptString } from 'shared/encryption';
 import { trackQueue } from 'shared/bull/queues';
@@ -390,7 +390,7 @@ export const enableCommunityTokenJoin = (
     .update({
       joinSettings: {
         tokenJoinEnabled: true,
-        token: shortid.generate(),
+        token: uuidv4(),
       },
     })
     .run()
@@ -439,7 +439,7 @@ export const resetCommunityJoinToken = (
     .getAll(communityId, { index: 'communityId' })
     .update({
       joinSettings: {
-        token: shortid.generate(),
+        token: uuidv4(),
       },
     })
     .run()

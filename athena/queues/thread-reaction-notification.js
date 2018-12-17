@@ -13,7 +13,7 @@ import {
 import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
-} from '../models/usersNotifications';
+} from 'shared/db/queries/usersNotifications';
 import type { Job, ThreadReactionNotificationJobData } from 'shared/bull/types';
 
 export default async (job: Job<ThreadReactionNotificationJobData>) => {
@@ -71,11 +71,11 @@ export default async (job: Job<ThreadReactionNotificationJobData>) => {
 
     debug('mark notification as new for sender');
 
-    // if the user is allowed to recieve notifications, update their notification
+    // if the user is allowed to receive notifications, update their notification
     return Promise.all([
       markUsersNotificationsAsNew(updatedNotification.id, thread.creatorId),
     ]).catch(err => {
-      debug(err);
+      console.error(err);
       Raven.captureException(err);
     });
   } else {
@@ -108,8 +108,8 @@ export default async (job: Job<ThreadReactionNotificationJobData>) => {
     return Promise.all([
       storeUsersNotifications(updatedNotification.id, thread.creatorId),
     ]).catch(err => {
-      debug('❌ Error in job:\n');
-      debug(err);
+      console.error('❌ Error in job:\n');
+      console.error(err);
       Raven.captureException(err);
     });
   }

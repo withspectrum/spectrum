@@ -4,9 +4,9 @@ import Raven from '../../shared/raven';
 import { fetchPayload } from '../utils/payloads';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import { storeNotification } from '../models/notification';
-import { getUserByEmail } from '../models/user';
+import { getUserByEmail } from 'shared/db/queries/user';
 import createQueue from '../../shared/bull/create-queue';
-import { storeUsersNotifications } from '../models/usersNotifications';
+import { storeUsersNotifications } from 'shared/db/queries/usersNotifications';
 import { getCommunitySettings } from '../models/communitySettings';
 import { SEND_COMMUNITY_INVITE_EMAIL } from './constants';
 const sendCommunityInviteEmailQueue = createQueue(SEND_COMMUNITY_INVITE_EMAIL);
@@ -14,6 +14,7 @@ import type {
   CommunityInviteNotificationJobData,
   Job,
 } from 'shared/bull/types';
+import { signCommunity, signUser } from 'shared/imgix';
 
 const addToSendCommunityInviteEmailQueue = (
   recipient,
@@ -31,8 +32,8 @@ const addToSendCommunityInviteEmailQueue = (
     {
       to: recipient.email,
       recipient,
-      sender,
-      community,
+      sender: signUser(sender),
+      community: signCommunity(community),
       communitySettings,
       customMessage,
     },
@@ -96,7 +97,7 @@ export default async (job: Job<CommunityInviteNotificationJobData>) => {
       sender,
       customMessage
     ).catch(err => {
-      debug(err);
+      console.error(err);
       Raven.captureException(err);
     });
   } else {
@@ -148,8 +149,8 @@ export default async (job: Job<CommunityInviteNotificationJobData>) => {
       sendInvite,
       usersNotification,
     ]).catch(err => {
-      debug('❌ Error in job:\n');
-      debug(err);
+      console.error('❌ Error in job:\n');
+      console.error(err);
       Raven.captureException(err);
     });
   }

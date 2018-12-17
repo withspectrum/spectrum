@@ -1,10 +1,10 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import type { DBChannelSettings, DBChannel } from 'shared/types';
 import { getChannelById } from './channel';
-import shortid from 'shortid';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import uuidv4 from 'uuid/v4';
 
 const defaultSettings = {
   joinSettings: {
@@ -74,7 +74,7 @@ export const enableChannelTokenJoin = (channelId: string, userId: string) => {
     .update({
       joinSettings: {
         tokenJoinEnabled: true,
-        token: shortid.generate(),
+        token: uuidv4(),
       },
     })
     .run()
@@ -117,7 +117,7 @@ export const resetChannelJoinToken = (channelId: string, userId: string) => {
     .getAll(channelId, { index: 'channelId' })
     .update({
       joinSettings: {
-        token: shortid.generate(),
+        token: uuidv4(),
       },
     })
     .run()

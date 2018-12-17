@@ -5,8 +5,8 @@ const debug = require('debug')(
 import Raven from 'shared/raven';
 import { getCommunityById } from '../models/community';
 import { storeNotification } from '../models/notification';
-import { storeUsersNotifications } from '../models/usersNotifications';
-import { getUsers } from '../models/user';
+import { storeUsersNotifications } from 'shared/db/queries/usersNotifications';
+import { getUsers } from 'shared/db/queries/user';
 import { fetchPayload } from '../utils/payloads';
 import isEmail from 'validator/lib/isEmail';
 import { sendPrivateCommunityRequestApprovedEmailQueue } from 'shared/bull/queues';
@@ -61,8 +61,8 @@ export default async (job: Job<PrivateCommunityRequestApprovedJobData>) => {
     ...usersEmailPromises, // handle emails separately
     ...usersNotificationPromises, // update or store usersNotifications in-app
   ]).catch(err => {
-    debug('❌ Error in job:\n');
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     Raven.captureException(err);
   });
 };

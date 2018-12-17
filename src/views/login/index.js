@@ -2,9 +2,10 @@
 import * as React from 'react';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-import Icon from '../../components/icons';
-import FullscreenView from '../../components/fullscreenView';
-import LoginButtonSet from '../../components/loginButtonSet';
+import { Link } from 'react-router-dom';
+import Icon from 'src/components/icons';
+import FullscreenView from 'src/components/fullscreenView';
+import LoginButtonSet from 'src/components/loginButtonSet';
 import {
   LargeTitle,
   LargeSubtitle,
@@ -75,6 +76,8 @@ export class Login extends React.Component<Props> {
             >
               Code of Conduct
             </a>
+            , <Link to={'/privacy'}>Privacy Policy</Link> and{' '}
+            <Link to={'/terms'}>Terms of Service</Link>.
           </CodeOfConduct>
         </FullscreenContent>
       </FullscreenView>

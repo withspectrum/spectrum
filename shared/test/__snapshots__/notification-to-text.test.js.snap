@@ -27,6 +27,16 @@ Max Stoiber: Testin",
 }
 `;
 
+exports[`should format a media message mention notification 1`] = `
+Object {
+  "body": "Max Stoiber: 📷 Photo",
+  "data": Object {
+    "href": "/thread/ef021b3b-c520-4133-8749-e96252eff5fc",
+  },
+  "title": "New thread by @mxstbr (1 new reply)",
+}
+`;
+
 exports[`should format a message creation notification 1`] = `
 Object {
   "body": "Max Stoiber: Testing",

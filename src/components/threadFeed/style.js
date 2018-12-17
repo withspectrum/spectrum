@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import { OutlineButton } from '../buttons';
@@ -13,13 +14,13 @@ export const FetchMoreButton = styled(OutlineButton)`
     background: #fff;
     font-size: 16px;
     font-weight: 600;
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
     border: none;
     box-shadow: none;
-    border-top: 2px solid ${props => props.theme.bg.border};
+    border-top: 2px solid ${theme.bg.border};
 
     &:hover {
-      background: ${props => props.theme.bg.wash};
+      background: ${theme.bg.wash};
       border-radius: 0;
       box-shadow: none;
     }
@@ -27,7 +28,7 @@ export const FetchMoreButton = styled(OutlineButton)`
 `;
 
 export const Divider = styled.div`
-  border-bottom: 2px solid ${props => props.theme.bg.border};
+  border-bottom: 2px solid ${theme.bg.border};
   width: 100%;
   display: block;
   padding-top: 24px;
@@ -43,7 +44,7 @@ export const Upsell = styled.div`
   padding: 64px 32px;
 
   a {
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
     font-weight: 500;
 
     &:hover {
@@ -52,7 +53,7 @@ export const Upsell = styled.div`
   }
 
   p {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
     margin-top: 16px;
     font-size: 16px;
     line-height: 1.5;
@@ -80,7 +81,7 @@ export const Upsell = styled.div`
 export const UpsellHeader = styled.div`
   display: flex;
   align-items: center;
-  color: ${props => props.theme.brand.alt};
+  color: ${theme.brand.alt};
 
   div {
     margin-right: 8px;

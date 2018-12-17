@@ -1,14 +1,10 @@
 // @flow
+import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { SvgWrapper } from '../icons';
-import {
-  zIndex,
-  Truncate,
-  monoStack,
-  hexa,
-  Tooltip,
-} from 'src/components/globals';
+import { Truncate, monoStack, hexa, Tooltip } from 'src/components/globals';
+import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
 
 export const Byline = styled.span`
   display: flex;
@@ -17,31 +13,27 @@ export const Byline = styled.span`
   font-weight: 500;
   margin-bottom: 4px;
   user-select: none;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   max-width: 100%;
   position: relative;
   flex-wrap: wrap;
+  align-items: center;
 
   a {
     display: flex;
     flex-wrap: wrap;
-  }
-
-  @media (max-width: 400px) {
-    flex-direction: column;
-    align-items: flex-start;
   }
 `;
 
 export const Name = styled.span`
   font-weight: 600;
   font-size: 15px;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   margin-right: 2px;
   display: flex;
 
   &:hover {
-    color: ${({ theme }) => theme.text.default};
+    color: ${theme.text.default};
     cursor: pointer;
   }
 
@@ -54,7 +46,7 @@ export const Username = styled(Name)`
   font-weight: 400;
   margin-left: 2px;
   margin-right: 2px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   display: flex;
 
   @media (max-width: 400px) {
@@ -70,7 +62,6 @@ export const ActionsContainer = styled.span`
   width: 50%;
   pointer-events: none;
   opacity: 0;
-  z-index: ${zIndex.chatInput};
 `;
 
 export const Actions = styled.ul`
@@ -78,8 +69,8 @@ export const Actions = styled.ul`
   top: 0;
   right: 16px;
   border-radius: 4px;
-  border: 1px solid ${props => props.theme.bg.border};
-  background: ${props => props.theme.bg.default};
+  border: 1px solid ${theme.bg.border};
+  background: ${theme.bg.default};
   list-style-type: none;
   display: flex;
   margin-left: 30px;
@@ -90,15 +81,15 @@ export const Actions = styled.ul`
 `;
 
 export const Action = styled.li`
-  border-left: 1px solid ${props => props.theme.bg.border};
+  border-left: 1px solid ${theme.bg.border};
   padding: 3px 10px;
   display: flex;
   flex: 0 1 auto;
-  color: ${props => props.theme.text.secondary};
+  color: ${theme.text.secondary};
 
   &:hover {
     cursor: pointer;
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 
   &:first-child {
@@ -126,7 +117,7 @@ export const GutterTimestamp = styled(Link)`
   width: 72px;
   font-size: 14px;
   font-weight: 400;
-  color: ${props => props.theme.text.placeholder};
+  color: ${theme.text.placeholder};
   opacity: 0;
   ${Truncate};
 
@@ -145,8 +136,8 @@ export const OuterMessageContainer = styled.div`
     props.selected
       ? props.theme.special.wash
       : props.error
-        ? props.theme.warn.wash
-        : props.theme.bg.default};
+      ? props.theme.warn.wash
+      : props.theme.bg.default};
 
   ${props =>
     props.selected &&
@@ -167,8 +158,8 @@ export const OuterMessageContainer = styled.div`
         props.selected
           ? props.theme.special.wash
           : props.error
-            ? props.theme.warn.border
-            : props.theme.bg.wash};
+          ? props.theme.warn.border
+          : props.theme.bg.wash};
 
       ${ActionsContainer} {
         opacity: 1;
@@ -207,7 +198,6 @@ export const AuthorAvatarContainer = styled.div`
 const Bubble = styled.div`
   display: inline-block;
   border-radius: 16px;
-  z-index: ${zIndex.card};
   vertical-align: middle;
   white-space: pre-line;
   word-wrap: break-word;
@@ -216,15 +206,15 @@ const Bubble = styled.div`
   clear: both;
 
   &::selection {
-    background-color: ${props => props.theme.brand.alt};
+    background-color: ${theme.brand.alt};
   }
 
   code {
     border-radius: 4px;
     padding: 2px 4px;
-    background: ${props => props.theme.bg.wash};
-    border: 1px solid ${props => props.theme.bg.border};
-    color: ${props => props.theme.text.secondary};
+    background: ${theme.bg.wash};
+    border: 1px solid ${theme.bg.border};
+    color: ${theme.text.secondary};
   }
 
   pre {
@@ -233,9 +223,9 @@ const Bubble = styled.div`
     width: 100%;
     border-radius: 8px;
     padding: 8px 16px;
-    background: ${props => props.theme.bg.wash};
-    border: 1px solid ${props => props.theme.bg.border};
-    color: ${props => props.theme.text.secondary};
+    background: ${theme.bg.wash};
+    border: 1px solid ${theme.bg.border};
+    color: ${theme.text.secondary};
   }
 `;
 
@@ -310,9 +300,9 @@ export const Code = styled(Bubble)`
   padding: 12px 16px;
   font-size: 14px;
   font-weight: 500;
-  background-color: ${props => props.theme.bg.reverse};
-  border: 1px solid ${props => props.theme.bg.border};
-  color: ${props => props.theme.text.reverse};
+  background-color: ${theme.bg.reverse};
+  border: 1px solid ${theme.bg.border};
+  color: ${theme.text.reverse};
   max-width: 100%;
   overflow-x: scroll;
   list-style: none;
@@ -325,7 +315,7 @@ export const Line = styled.pre`
   word-break: break-all;
   word-wrap: break-word;
   ${monoStack};
-  border: 1px solid ${props => props.theme.bg.border};
+  border: 1px solid ${theme.bg.border};
 `;
 
 export const Paragraph = styled.p`
@@ -338,16 +328,16 @@ export const Paragraph = styled.p`
 
 export const BlockQuote = styled.blockquote`
   line-height: 1.5;
-  border-left: 4px solid ${props => props.theme.bg.border};
-  color: ${props => props.theme.text.alt};
+  border-left: 4px solid ${theme.bg.border};
+  color: ${theme.text.alt};
   padding: 4px 12px 4px 16px;
 `;
 
 export const QuotedParagraph = Paragraph.withComponent('div').extend`
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 
   code {
-    color: ${props => props.theme.text.alt};
+    color: ${theme.text.alt};
   }
   /* overrides Bubble component styles to fix #3098 */
   pre {
@@ -355,7 +345,7 @@ export const QuotedParagraph = Paragraph.withComponent('div').extend`
     margin-top: 8px;
     width: 100%;
     border: 1px solid ${props => hexa(props.theme.brand.border, 0.5)};
-    color: ${props => props.theme.text.alt};
+    color: ${theme.text.alt};
   }
 `;
 
@@ -373,8 +363,8 @@ export const QuoteWrapperGradient = styled.div`
 `;
 
 export const QuoteWrapper = styled.div`
-  border-left: 4px solid ${props => props.theme.bg.border};
-  color: ${props => props.theme.text.alt};
+  border-left: 4px solid ${theme.bg.border};
+  color: ${theme.text.alt};
   padding: 4px 12px 4px 16px;
   max-height: ${props => (props.expanded ? 'none' : '7em')};
   margin-top: 4px;
@@ -390,30 +380,104 @@ export const QuoteWrapper = styled.div`
 
   /* Don't change the color of the name and username on hover since they aren't clickable in quotes */
   ${Username}:hover, ${Byline}:hover {
-    color: ${props => props.theme.text.secondary};
+    color: ${theme.text.secondary};
   }
 
   ${Name} {
     font-size: 14px;
     font-weight: 600;
-    color: ${props => props.theme.text.secondary};
+    color: ${theme.text.secondary};
   }
 
   ${Name}:hover {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 
   ${Username} {
     font-size: 13px;
     font-weight: 500;
-    color: ${props => props.theme.text.alt};
+    color: ${theme.text.alt};
   }
 `;
 
 export const BadgesContainer = styled.div`
   display: flex;
+  margin-left: 4px;
 
   @media (max-width: 400px) {
     margin-top: 4px;
   }
+`;
+
+export const EditorInput = styled(EditorWrapper)`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex: auto;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 20px;
+  min-height: 40px;
+  padding: 8px 16px;
+  transition: padding 0.2s ease-in-out;
+  border-radius: 4px;
+  border: 1px solid ${props => props.theme.bg.border};
+  transition: border 0.3s ease-out;
+  color: ${props => props.theme.text.secondary};
+  background: ${props => props.theme.bg.default};
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+    padding-left: 16px;
+  }
+
+  &::placeholder {
+    color: ${props => props.theme.text.placeholder};
+  }
+  &::-webkit-input-placeholder {
+    color: ${props => props.theme.text.placeholder};
+  }
+  &:-moz-placeholder {
+    color: ${props => props.theme.text.placeholder};
+  }
+  &:-ms-input-placeholder {
+    color: ${props => props.theme.text.placeholder};
+  }
+
+  &:hover {
+    border-color: ${props => props.theme.text.alt};
+    transition: border-color 0.2s ease-in;
+  }
+
+  pre {
+    ${monoStack};
+    font-size: 15px;
+    font-weight: 500;
+    background-color: ${theme.bg.wash};
+    border: 1px solid ${theme.bg.border};
+    border-radius: 2px;
+    padding: 4px;
+    margin-right: 16px;
+  }
+
+  blockquote {
+    line-height: 1.5;
+    border-left: 4px solid ${theme.bg.border};
+    color: ${theme.text.alt};
+    padding: 4px 12px 4px 16px;
+  }
+`;
+
+export const EditActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 8px;
+`;
+
+export const EditedIndicator = styled.span`
+  display: block;
+  font-size: 11px;
+  color: ${props => props.theme.text.alt};
+  ${Tooltip};
 `;

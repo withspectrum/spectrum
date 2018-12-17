@@ -3,7 +3,7 @@ const debug = require('debug')('athena:queue:direct-message-notification');
 import Raven from '../../shared/raven';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
-import { getUserById } from '../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import getEmailStatus from '../utils/get-email-status';
 import {
   storeNotification,
@@ -13,12 +13,13 @@ import {
 import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
-} from '../models/usersNotifications';
+} from 'shared/db/queries/usersNotifications';
 import { getDirectMessageThreadMembers } from '../models/usersDirectMessageThreads';
 import sentencify from '../utils/sentencify';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { sendNewDirectMessageEmailQueue } from 'shared/bull/queues';
 import type { Job, DirectMessageNotificationJobData } from 'shared/bull/types';
+import { signUser, signMessage } from 'shared/imgix';
 
 export default async (job: Job<DirectMessageNotificationJobData>) => {
   const { message: incomingMessage, userId: currentUserId } = job.data;
@@ -91,6 +92,9 @@ export default async (job: Job<DirectMessageNotificationJobData>) => {
     ? markUsersNotificationsAsNew
     : storeUsersNotifications;
 
+  const signedMessage = signMessage(message);
+  const signedUser = signUser(user);
+
   const addToQueue = recipient => {
     return sendNewDirectMessageEmailQueue.add({
       recipient,
@@ -106,14 +110,14 @@ export default async (job: Job<DirectMessageNotificationJobData>) => {
         path: `messages/${thread.id}`,
         id: thread.id,
       },
-      user,
+      user: signedUser,
       message: {
-        ...message,
+        ...signedMessage,
         content: {
           body:
-            message.messageType === 'draftjs'
-              ? toPlainText(toState(JSON.parse(message.content.body)))
-              : message.content.body,
+            signedMessage.messageType === 'draftjs'
+              ? toPlainText(toState(JSON.parse(signedMessage.content.body)))
+              : signedMessage.content.body,
         },
       },
     });
@@ -162,8 +166,8 @@ export default async (job: Job<DirectMessageNotificationJobData>) => {
   });
 
   return Promise.all(formatAndBufferPromises).catch(err => {
-    debug('❌ Error in job:\n');
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     Raven.captureException(err);
   });
 };

@@ -6,8 +6,6 @@ import { Loading } from 'src/components/loading';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
   PRO_USER_MAX_IMAGE_SIZE_BYTES,
-  FREE_USER_MAX_IMAGE_SIZE_BYTES,
-  FREE_USER_MAX_IMAGE_SIZE_STRING,
 } from 'src/helpers/images';
 
 type Props = {
@@ -29,19 +27,7 @@ class MediaUploader extends React.Component<Props> {
     if (!validity.valid)
       return "We couldn't validate this upload, please try uploading another file";
 
-    if (
-      file &&
-      file.size > FREE_USER_MAX_IMAGE_SIZE_BYTES &&
-      !currentUser.isPro
-    ) {
-      return `Upgrade to Pro to upload files up to ${PRO_USER_MAX_IMAGE_SIZE_STRING}. Otherwise, try uploading a photo less than ${FREE_USER_MAX_IMAGE_SIZE_STRING}.`;
-    }
-
-    if (
-      file &&
-      file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES &&
-      currentUser.isPro
-    ) {
+    if (file && file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES) {
       return `Try uploading a file less than ${PRO_USER_MAX_IMAGE_SIZE_STRING}.`;
     }
 
@@ -62,7 +48,12 @@ class MediaUploader extends React.Component<Props> {
   };
 
   onChange = (e: any) => {
-    const { target: { validity, files: [file] } } = e;
+    const {
+      target: {
+        validity,
+        files: [file],
+      },
+    } = e;
 
     if (!file) return;
 

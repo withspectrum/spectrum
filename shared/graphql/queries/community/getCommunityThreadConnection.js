@@ -15,7 +15,11 @@ export type GetCommunityThreadConnectionType = {
 };
 
 const LoadMoreThreads = gql`
-  query loadMoreCommunityThreads($after: String, $id: ID) {
+  query loadMoreCommunityThreads(
+    $after: String
+    $id: ID
+    $sort: CommunityThreadConnectionSort
+  ) {
     community(id: $id) {
       ...communityInfo
       ...communityThreadConnection
@@ -27,7 +31,11 @@ const LoadMoreThreads = gql`
 `;
 
 export const getCommunityThreadConnectionQuery = gql`
-  query getCommunityThreadConnection($id: ID, $after: String) {
+  query getCommunityThreadConnection(
+    $id: ID
+    $after: String
+    $sort: CommunityThreadConnectionSort
+  ) {
     community(id: $id) {
       ...communityInfo
       ...communityThreadConnection
@@ -137,10 +145,19 @@ const getCommunityThreadConnectionOptions = {
         }),
     },
   }),
-  options: ({ id, after }: { id: string, after?: ?string }) => ({
+  options: ({
+    id,
+    after,
+    sort,
+  }: {
+    id: string,
+    after?: ?string,
+    sort?: ?string,
+  }) => ({
     variables: {
       id,
       after: after || null,
+      sort,
     },
     fetchPolicy: 'cache-and-network',
   }),

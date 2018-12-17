@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import {
@@ -15,7 +16,7 @@ export const SearchWrapper = styled.div`
   position: relative;
   margin: 32px 16px;
   padding: 12px 16px;
-  border: 2px solid ${props => props.theme.bg.border};
+  border: 2px solid ${theme.bg.border};
   border-radius: 12px;
   width: 100%;
   max-width: 640px;
@@ -27,7 +28,7 @@ export const SearchWrapper = styled.div`
 
 export const SearchInputWrapper = styled(FlexRow)`
   flex: auto;
-  color: ${props => props.theme.text.placeholder};
+  color: ${theme.text.placeholder};
 `;
 
 export const SearchIcon = styled(Icon)``;
@@ -67,7 +68,7 @@ export const SearchResultsDropdown = styled.ul`
   max-height: 400px;
   overflow-y: scroll;
   z-index: ${zIndex.search};
-  background: ${props => props.theme.bg.default};
+  background: ${theme.bg.default};
 
   @media (max-width: 768px) {
     border-radius: 0 0 8px 8px;
@@ -79,21 +80,21 @@ export const SearchResult = styled.li`
   flex: auto;
   background: ${props =>
     props.focused ? props.theme.bg.wash : props.theme.bg.default};
-  border-bottom: 2px solid ${props => props.theme.bg.border};
+  border-bottom: 2px solid ${theme.bg.border};
   align-items: center;
   padding: 8px 16px 8px 8px;
 
   &:hover {
-    background: ${props => props.theme.bg.wash};
+    background: ${theme.bg.wash};
     cursor: pointer;
   }
 
   h2 {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 
   p {
-    color: ${props => props.theme.text.alt};
+    color: ${theme.text.alt};
     line-height: 1.4;
   }
 
@@ -139,14 +140,14 @@ export const SearchResultNull = styled.div`
   align-items: center;
   flex: auto;
   padding: 24px;
-  background-color: ${props => props.theme.bg.default};
+  background-color: ${theme.bg.default};
   border: 0;
 
   &:hover {
     border: 0;
 
     p {
-      color: ${props => props.theme.text.alt};
+      color: ${theme.text.alt};
     }
   }
 
@@ -158,7 +159,7 @@ export const SearchResultNull = styled.div`
     text-align: center;
     font-size: 14px;
     font-weight: 400;
-    color: ${props => props.theme.text.alt};
+    color: ${theme.text.alt};
     text-align: center;
     font-size: 18px;
     font-weight: 600;
@@ -167,5 +168,5 @@ export const SearchResultNull = styled.div`
 
 export const SearchResultDescription = styled.p`
   font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 `;

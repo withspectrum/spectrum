@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import { connect } from 'react-redux';
@@ -101,7 +101,7 @@ class SidebarChannels extends React.Component<Props> {
           <Link to={`/${community.slug}`}>
             <ChannelListItem>
               <Icon glyph={'link'} size={24} />
-              <CommunityListName>Visit community</CommunityListName>
+              <CommunityListName>View community home</CommunityListName>
             </ChannelListItem>
           </Link>
 
@@ -151,10 +151,9 @@ class SidebarChannels extends React.Component<Props> {
             </Link>
           )}
 
-          {sortedChannels &&
-            sortedChannels.length > 1 && (
-              <SectionTitle>Filter by Channel</SectionTitle>
-            )}
+          {sortedChannels && sortedChannels.length > 1 && (
+            <SectionTitle>Filter by Channel</SectionTitle>
+          )}
           {sortedChannels &&
             sortedChannels.length > 1 &&
             sortedChannels.map(channel => {
@@ -214,6 +213,8 @@ class SidebarChannels extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getCommunityChannels, viewNetworkHandler)(
-  SidebarChannels
-);
+export default compose(
+  connect(),
+  getCommunityChannels,
+  viewNetworkHandler
+)(SidebarChannels);

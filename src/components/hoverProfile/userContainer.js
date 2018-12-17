@@ -11,10 +11,11 @@ import {
   getUserByUsername,
   getUserByUsernameQuery,
 } from 'shared/graphql/queries/user/getUser';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import LoadingHoverProfile from './loadingHoverProfile';
 
 const MentionHoverProfile = getUserByUsername(props => {
-  if (props.data.user) {
+  if (props.data && props.data.user) {
     return (
       <UserProfile
         innerRef={props.innerRef}
@@ -24,7 +25,7 @@ const MentionHoverProfile = getUserByUsername(props => {
     );
   }
 
-  if (props.data.loading) {
+  if (props.data && props.data.loading) {
     return (
       <LoadingHoverProfile style={props.style} innerRef={props.innerRef} />
     );
@@ -43,93 +44,101 @@ type Props = {
 
 type State = {
   visible: boolean,
-  isMounted: boolean,
 };
 
 class UserHoverProfileWrapper extends React.Component<Props, State> {
-  ref: ?any;
-  ref = null;
-  state = { visible: false, isMounted: false };
+  // ref: ?any;
+  // ref = null;
+  // state = { visible: false };
+  // _isMounted = false;
 
-  componentDidMount() {
-    this.setState({ isMounted: true });
-  }
+  // componentDidMount() {
+  //   this._isMounted = true;
+  // }
 
-  componentWillUnmount() {
-    this.setState({ isMounted: false });
-  }
+  // componentWillUnmount() {
+  //   this._isMounted = false;
+  // }
 
-  handleMouseEnter = () => {
-    const { username, client } = this.props;
+  // handleMouseEnter = () => {
+  //   const { username, client } = this.props;
 
-    client.query({
-      query: getUserByUsernameQuery,
-      variables: { username },
-    });
+  //   if (!this._isMounted) return;
 
-    const ref = setTimeout(() => {
-      return this.state.isMounted && this.setState({ visible: true });
-    }, 500);
-    this.ref = ref;
-  };
+  //   client
+  //     .query({
+  //       query: getUserByUsernameQuery,
+  //       variables: { username },
+  //     })
+  //     .then(() => {
+  //       if (!this._isMounted) return;
+  //     });
 
-  handleMouseLeave = () => {
-    if (this.ref) {
-      clearTimeout(this.ref);
-    }
+  //   const ref = setTimeout(() => {
+  //     if (this._isMounted) {
+  //       return this.setState({ visible: true });
+  //     }
+  //   }, 500);
+  //   this.ref = ref;
+  // };
 
-    if (this.state.isMounted && this.state.visible) {
-      this.setState({ visible: false });
-    }
-  };
+  // handleMouseLeave = () => {
+  //   if (this.ref) {
+  //     clearTimeout(this.ref);
+  //   }
+
+  //   if (this._isMounted && this.state.visible) {
+  //     this.setState({ visible: false });
+  //   }
+  // };
 
   render() {
-    const { children, currentUser, username, style = {} } = this.props;
-    const me = currentUser && currentUser.username === username;
-    return (
-      <Span
-        onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseLeave}
-        style={style}
-      >
-        <Manager>
-          <Reference>
-            {({ ref }) => (
-              <Span innerRef={ref} style={style}>
-                {children}
-              </Span>
-            )}
-          </Reference>
-          {this.state.visible &&
-            document.body &&
-            createPortal(
-              <Popper
-                placement="top-start"
-                modifiers={{
-                  preventOverflow: { enabled: false },
-                  hide: { enabled: false },
-                }}
-              >
-                {({ style, ref }) => (
-                  <MentionHoverProfile
-                    username={username}
-                    me={me}
-                    innerRef={ref}
-                    style={style}
-                  />
-                )}
-              </Popper>,
-              document.body
-            )}
-        </Manager>
-      </Span>
-    );
+    return this.props.children;
+    // const { children, currentUser, username, style = {} } = this.props;
+    // const me = currentUser && currentUser.username === username;
+    // return (
+    //   <Span
+    //     onMouseEnter={this.handleMouseEnter}
+    //     onMouseLeave={this.handleMouseLeave}
+    //     style={style}
+    //   >
+    //     <Manager>
+    //       <Reference>
+    //         {({ ref }) => (
+    //           <Span innerRef={ref} style={style}>
+    //             {children}
+    //           </Span>
+    //         )}
+    //       </Reference>
+    //       {this.state.visible &&
+    //         document.body &&
+    //         createPortal(
+    //           <Popper
+    //             placement="bottom-end"
+    //             modifiers={{
+    //               preventOverflow: { enabled: false },
+    //               hide: { enabled: false },
+    //             }}
+    //           >
+    //             {({ style, ref }) => (
+    //               <MentionHoverProfile
+    //                 username={username}
+    //                 me={me}
+    //                 innerRef={ref}
+    //                 style={style}
+    //               />
+    //             )}
+    //           </Popper>,
+    //           document.body
+    //         )}
+    //     </Manager>
+    //   </Span>
+    // );
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowFixMe
-  connect(map),
-  withApollo
+  withCurrentUser,
+  withApollo,
+  connect()
 )(UserHoverProfileWrapper);

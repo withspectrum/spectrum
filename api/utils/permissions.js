@@ -6,6 +6,7 @@ import {
   COMMUNITY_SLUG_BLACKLIST,
   CHANNEL_SLUG_BLACKLIST,
 } from 'shared/slug-blacklists';
+import { getThreadById } from '../models/thread';
 
 export const isAdmin = (id: string): boolean => {
   const admins = [
@@ -25,8 +26,14 @@ export const channelSlugIsBlacklisted = (slug: string): boolean => {
 };
 
 // prettier-ignore
-export const isAuthedResolver = (resolver: Function) => (obj: any, args: any, context: GraphQLContext, info: any) => {
+export const isAuthedResolver = (resolver: Function) => async (obj: any, args: any, context: GraphQLContext, info: any) => {
   if (!context.user || !context.user.id) {
+    return new UserError('You must be signed in to do this')
+  }
+
+  const user = await context.loaders.user.load(context.user.id)
+
+  if (!user || user.bannedAt || user.deletedAt) {
     return new UserError('You must be signed in to do this')
   }
 
@@ -81,12 +88,12 @@ export const canModerateChannel = async (userId: string, channelId: string, load
   ]);
 
   if (!communityPermissions) return false;
-  if (communityPermissions.isOwner || communityPermissions.isModerator)
-    return true;
-  if (!channelPermissions) return false;
-  if (channelPermissions.isOwner || channelPermissions.isModerator) return true;
+  if (communityPermissions.isBlocked) return false
+  if (communityPermissions.isOwner || communityPermissions.isModerator) return true
 
-  return false;
+  if (!channelPermissions) return false;
+  if (channelPermissions.isBlocked) return false
+  return channelPermissions.isOwner || channelPermissions.isModerator
 };
 
 // prettier-ignore
@@ -101,8 +108,9 @@ export const canAdministerCommunity = async (userId: string, communityId: string
     communityId,
   ]);
 
-  if (communityPermissions && communityPermissions.isOwner) return true;
-  return false;
+  if (!communityPermissions) return false
+  if (communityPermissions.isBlocked) return false
+  return communityPermissions.isOwner
 };
 
 // prettier-igore
@@ -122,9 +130,8 @@ export const canModerateCommunity = async (
   ]);
 
   if (!communityPermissions) return false;
-  if (communityPermissions.isOwner || communityPermissions.isModerator)
-    return true;
-  return false;
+  if (communityPermissions.isBlocked) return false;
+  return communityPermissions.isOwner || communityPermissions.isModerator;
 };
 
 // prettier-ignore
@@ -144,7 +151,96 @@ export const canViewCommunity = async (user: DBUser, communityId: string, loader
   ]);
 
   if (!communityPermissions) return false;
+  if (communityPermissions.isBlocked) return false
   if (!communityPermissions.isMember) return false
   
   return true;
+}
+
+export const canViewThread = async (
+  userId: string,
+  threadId: string,
+  loaders: any
+) => {
+  const thread = await getThreadById(threadId);
+
+  if (!thread || thread.deletedAt) return false;
+
+  const [
+    channel,
+    community,
+    channelPermissions,
+    communityPermissions,
+  ] = await Promise.all([
+    loaders.channel.load(thread.channelId),
+    loaders.community.load(thread.communityId),
+    loaders.userPermissionsInChannel.load([userId, thread.channelId]),
+    loaders.userPermissionsInCommunity.load([userId, thread.communityId]),
+  ]);
+
+  if (!channel.isPrivate && !community.isPrivate) return true;
+  if (channel.isPrivate)
+    return channelPermissions.isMember && !channelPermissions.isBlocked;
+  if (community.isPrivate)
+    return communityPermissions.isMember && !communityPermissions.isBlocked;
+  return false;
+};
+
+export const canViewDMThread = async (
+  userId: string,
+  threadId: string,
+  loaders: any
+) => {
+  if (!userId) return false;
+
+  const thread = await loaders.directMessageParticipants.load(threadId);
+
+  if (!thread || !thread.reduction || thread.reduction.length === 0)
+    return false;
+
+  const participants = thread.reduction;
+
+  const ids = participants.map(({ userId }) => userId);
+
+  if (ids.indexOf(userId) === -1) return false;
+
+  return true;
+};
+
+// prettier-ignore
+export const canViewChannel = async (user: DBUser, channelId: string, loaders: any) => {
+  if (!channelId) return false;
+
+  const channel = await channelExists(channelId, loaders);
+  if (!channel) return false;
+
+  const community = await communityExists(channel.communityId, loaders);
+  if (!community) return false
+
+  if (!channel.isPrivate && !community.isPrivate) return true
+
+  if (!user) return false
+
+  const [
+    communityPermissions,
+    channelPermissions
+  ] = await Promise.all([
+    loaders.userPermissionsInCommunity.load([
+      user.id,
+      community.id,
+    ]),
+    loaders.userPermissionsInChannel.load([
+      user.id,
+      channel.id,
+    ])
+  ])
+
+  if (channel.isPrivate && !channelPermissions) return false
+  if (community.isPrivate && !communityPermissions) return false
+  if (channel.isPrivate && !channelPermissions.isMember) return false
+  if (community.isPrivate && !communityPermissions.isMember) return false
+  if (channelPermissions && channelPermissions.isBlocked) return false
+  if (communityPermissions && communityPermissions.isBlocked) return false
+  
+  return true
 }

@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
@@ -490,7 +490,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
           <Input
             defaultValue={name}
             onChange={this.changeName}
-            autoFocus={!window.innerWidth < 768}
+            autoFocus={!(window.innerWidth < 768)}
             onBlur={this.checkSuggestedCommunities}
             dataCy="community-name-input"
           >
@@ -545,7 +545,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
                         <CommunityAvatar
                           size={20}
                           community={suggestion}
-                          clickable={false}
+                          isClickable={false}
                           showHoverProfile={false}
                         />
                         <strong>{suggestion.name}</strong>{' '}

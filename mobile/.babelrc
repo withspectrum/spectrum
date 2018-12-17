@@ -1,8 +1,0 @@
-{
-  "presets": ["babel-preset-expo"],
-  "plugins": [
-    "styled-components",
-    "transform-flow-strip-types",
-    "babel-plugin-inline-import-graphql-ast"
-  ]
-}

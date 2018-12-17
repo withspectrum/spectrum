@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import theme from 'shared/theme';
 import { connect } from 'react-redux';
 import { clearActivityIndicator } from '../../actions/newActivityIndicator';
 import styled from 'styled-components';
@@ -7,7 +8,7 @@ import { Gradient } from '../globals';
 const Pill = styled.div`
   padding: ${props => (props.refetching ? '8px' : '8px 16px')};
   border-radius: 20px;
-  color: ${props => props.theme.text.reverse};
+  color: ${theme.text.reverse};
   background: ${props =>
     Gradient(props.theme.brand.alt, props.theme.brand.default)};};
   font-size: 14px;
@@ -57,7 +58,7 @@ const Pill = styled.div`
 const scrollTo = (element, to, duration) => {
   if (duration < 0) return;
   const difference = to - element.scrollTop;
-  const perTick = difference / duration * 2;
+  const perTick = (difference / duration) * 2;
 
   setTimeout(() => {
     element.scrollTop = element.scrollTop + perTick;

@@ -3,13 +3,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Clipboard from 'react-clipboard.js';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { openModal } from '../../../actions/modals';
 import Icon from '../../../components/icons';
 import compose from 'recompose/compose';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import type { Dispatch } from 'redux';
 import { LikeButton } from 'src/components/threadLikes';
+import getThreadLink from 'src/helpers/get-thread-link';
 import {
   FollowButton,
   ShareButtons,
@@ -85,7 +85,7 @@ class WatercoolerActionBar extends React.Component<Props, State> {
                 <a
                   href={`https://www.facebook.com/sharer/sharer.php?t=${encodeURIComponent(
                     thread.content.title
-                  )}&u=https://spectrum.chat/thread/${thread.id}&`}
+                  )}&u=https://spectrum.chat/${getThreadLink(thread)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -102,9 +102,9 @@ class WatercoolerActionBar extends React.Component<Props, State> {
                 <a
                   href={`https://twitter.com/share?text=${encodeURIComponent(
                     thread.content.title
-                  )} on @withspectrum&url=https://spectrum.chat/thread/${
-                    thread.id
-                  }`}
+                  )} on @withspectrum&url=https://spectrum.chat/${getThreadLink(
+                    thread
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -114,9 +114,9 @@ class WatercoolerActionBar extends React.Component<Props, State> {
 
               <Clipboard
                 style={{ background: 'none' }}
-                data-clipboard-text={`https://spectrum.chat/thread/${
-                  thread.id
-                }`}
+                data-clipboard-text={`https://spectrum.chat/${getThreadLink(
+                  thread
+                )}`}
                 onSuccess={() =>
                   this.props.dispatch(
                     addToastWithTimeout('success', 'Copied to clipboard')
@@ -137,7 +137,7 @@ class WatercoolerActionBar extends React.Component<Props, State> {
           )}
         </div>
 
-        {currentUser ? (
+        {currentUser && (
           <FollowButton
             currentUser={currentUser}
             icon={
@@ -154,19 +154,6 @@ class WatercoolerActionBar extends React.Component<Props, State> {
             dataCy="thread-notifications-toggle"
           >
             {thread.receiveNotifications ? 'Subscribed' : 'Get notifications'}
-          </FollowButton>
-        ) : (
-          <FollowButton
-            currentUser={currentUser}
-            icon={'notification'}
-            tipText={'Get notified about replies'}
-            tipLocation={'top-right'}
-            dataCy="thread-notifications-login-capture"
-            onClick={() =>
-              this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}))
-            }
-          >
-            Notify me
           </FollowButton>
         )}
       </WatercoolerActionBarContainer>

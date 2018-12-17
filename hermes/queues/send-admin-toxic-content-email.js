@@ -6,9 +6,9 @@ import {
   ADMIN_TOXIC_MESSAGE_TEMPLATE,
   SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
 } from './constants';
+import type { Job, AdminToxicContentEmailJobData } from 'shared/bull/types';
 
-// $FlowFixMe
-export default job => {
+export default (job: Job<AdminToxicContentEmailJobData>): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const {
     type,
@@ -17,29 +17,22 @@ export default job => {
     thread,
     community,
     channel,
-    toxicityConfidence: { spectrumScore, perspectiveScore },
+    toxicityConfidence: { perspectiveScore },
   } = job.data;
 
-  const toPercent = (num: number) => Math.round(num * 100);
-  const spectrumPercent = spectrumScore ? toPercent(spectrumScore) : null;
-  const perspectivePercent = perspectiveScore
-    ? toPercent(perspectiveScore)
-    : null;
-  let avgPercent;
-  if (spectrumPercent && perspectivePercent) {
-    avgPercent = (spectrumPercent + perspectivePercent) / 2;
-  } else {
-    avgPercent = spectrumPercent || perspectivePercent || 0;
-  }
-
-  const subject = `Toxic alert (${avgPercent.toString()}%): ${text}`;
+  const toPercent = (num: number): number => Math.round(num * 100);
+  const perspectivePercent = toPercent(perspectiveScore);
+  const subject = `Toxic alert (${perspectivePercent.toString()}%): ${text}`;
 
   try {
     return sendEmail({
-      TemplateId: ADMIN_TOXIC_MESSAGE_TEMPLATE,
-      To: 'brian@spectrum.chat, bryn@spectrum.chat, max@spectrum.chat',
-      Tag: SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
-      TemplateModel: {
+      templateId: ADMIN_TOXIC_MESSAGE_TEMPLATE,
+      to: [
+        { email: 'brian@spectrum.chat ' },
+        { email: 'max@spectrum.chat ' },
+        { email: 'bryn@spectrum.chat ' },
+      ],
+      dynamic_template_data: {
         subject,
         preheader: text,
         data: {
@@ -50,15 +43,14 @@ export default job => {
           community,
           channel,
           toxicityConfidence: {
-            spectrumPercent,
             perspectivePercent,
           },
         },
       },
     });
   } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
-    Raven.captureException(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
+    return Raven.captureException(err);
   }
 };

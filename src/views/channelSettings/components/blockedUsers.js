@@ -16,6 +16,7 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { ListContainer, Notice } from 'src/components/listItems/style';
 import EditDropdown from './editDropdown';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   Dropdown,
   DropdownSectionDivider,
@@ -80,9 +81,8 @@ class BlockedUsers extends React.Component<Props> {
                       username={user.username}
                       isCurrentUser={currentUser && user.id === currentUser.id}
                       isOnline={user.isOnline}
-                      onlineSize={'small'}
                       profilePhoto={user.profilePhoto}
-                      avatarSize={32}
+                      avatarSize={40}
                       description={user.description}
                       showHoverProfile={false}
                     >
@@ -156,11 +156,9 @@ class BlockedUsers extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-
 export default compose(
-  // $FlowIssue
-  connect(map),
   getBlockedUsersQuery,
-  viewNetworkHandler
+  withCurrentUser,
+  viewNetworkHandler,
+  connect()
 )(BlockedUsers);

@@ -8,8 +8,7 @@ const author = data.users.find(user => user.id === thread.creatorId);
 
 describe('/messages/new', () => {
   beforeEach(() => {
-    cy.auth(author.id);
-    cy.visit('/messages/new');
+    cy.auth(author.id).then(() => cy.visit('/messages/new'));
   });
 
   it('should allow to continue composing message incase of crash or reload', () => {

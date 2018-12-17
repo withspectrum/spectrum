@@ -5,10 +5,11 @@ import {
   FooterGrid,
   Masthead,
   Support,
+  Apps,
   Safety,
   SocialLinks,
 } from '../style';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { IconButton } from 'src/components/buttons';
 import { Logo } from 'src/components/logo';
 import { track, events } from 'src/helpers/analytics';
@@ -38,6 +39,10 @@ export default () => {
             </a>
           </SocialLinks>
         </Masthead>
+        <Apps>
+          <span>Apps</span>
+          <Link to={`/apps`}>Mac</Link>
+        </Apps>
         <Support>
           <span>Support</span>
           <Link to={`/spectrum`}>Community</Link>

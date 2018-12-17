@@ -1,18 +1,18 @@
 // @flow
 import * as React from 'react';
 import { convertTimestampToTime } from 'shared/time-formatting';
-import Link from 'src/components/link';
+import ConditionalWrap from 'src/components/conditionalWrap';
+import { UserHoverProfile } from 'src/components/hoverProfile';
+import { Link } from 'react-router-dom';
+import { MessagesContext } from 'src/components/messageGroup';
 import Badge from '../badges';
 import {
+  BadgesContainer,
   Byline,
+  GutterTimestamp,
   Name,
   Username,
-  GutterTimestamp,
-  BadgesContainer,
 } from './style';
-import { UserHoverProfile } from 'src/components/hoverProfile';
-import ConditionalWrap from 'src/components/conditionalWrap';
-import { MessagesContext } from 'src/components/messageGroup';
 
 type Props = {
   user: Object,
@@ -58,8 +58,12 @@ export default (props: Props) => {
                     onClick={e => e.stopPropagation()}
                   />
                 ))}
-              {user.isPro && (
-                <Badge type="pro" onClick={e => e.stopPropagation()} />
+              {user.betaSupporter && (
+                <Badge
+                  type="beta-supporter"
+                  label={'β'}
+                  style={{ textTransform: 'none' }}
+                />
               )}
             </BadgesContainer>
             <GutterTimestamp

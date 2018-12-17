@@ -1,36 +1,36 @@
 // @flow
 const debug = require('debug')('athena:queue:moderation-events:message');
-import { getUserById } from '../../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import { getThreadById } from '../../models/thread';
 import { getCommunityById } from '../../models/community';
 import { getChannelById } from '../../models/channel';
 import { toState, toPlainText } from 'shared/draft-utils';
-import getSpectrumScore from './spectrum';
 import getPerspectiveScore from './perspective';
 import { _adminSendToxicContentEmailQueue } from 'shared/bull/queues';
 import type { Job, AdminToxicMessageJobData } from 'shared/bull/types';
 
 export default async (job: Job<AdminToxicMessageJobData>) => {
   debug('new job for admin message moderation');
-  const { data: { message } } = job;
+  const {
+    data: { message },
+  } = job;
 
   const text =
     message.messageType === 'draftjs'
       ? toPlainText(toState(JSON.parse(message.content.body)))
       : message.content.body;
 
-  const scores = await Promise.all([
-    getSpectrumScore(text, message.id, message.senderId),
-    getPerspectiveScore(text),
-  ]).catch(err =>
-    console.error('Error getting message moderation scores from providers', err)
+  const perspectiveScore = await getPerspectiveScore(text).catch(err =>
+    console.error('Error getting message moderation score from providers', {
+      error: err.message,
+      data: {
+        text,
+        threadId: message.id,
+      },
+    })
   );
 
-  const spectrumScore = scores && scores[0];
-  const perspectiveScore = scores && scores[1];
-
-  // if neither models returned results
-  if (!spectrumScore && !perspectiveScore) return;
+  if (!perspectiveScore) return;
 
   const [user, thread] = await Promise.all([
     getUserById(message.senderId),
@@ -50,7 +50,6 @@ export default async (job: Job<AdminToxicMessageJobData>) => {
     community,
     channel,
     toxicityConfidence: {
-      spectrumScore,
       perspectiveScore,
     },
   });

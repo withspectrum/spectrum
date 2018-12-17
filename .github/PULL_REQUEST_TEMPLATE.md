@@ -13,8 +13,7 @@
 - mercury
 - hermes
 - chronos
-- pluto
-- mobile
+- analytics
 
 **Run database migrations (delete if no migration was added)**
 YES
@@ -25,5 +24,5 @@ YES
 **Related issues (delete if you don't know of any)**
 Closes #
 
-<!-- If there are UI changes please share mobile and desktop screenshots or recordings. -->
+<!-- If there are UI changes please share mobile-responsive and desktop screenshots or recordings. -->
 

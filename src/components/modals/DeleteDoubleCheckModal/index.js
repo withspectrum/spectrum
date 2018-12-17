@@ -15,13 +15,12 @@ import type { DeleteThreadType } from 'shared/graphql/mutations/thread/deleteThr
 import deleteMessage from 'shared/graphql/mutations/message/deleteMessage';
 import type { DeleteMessageType } from 'shared/graphql/mutations/message/deleteMessage';
 import archiveChannel from 'shared/graphql/mutations/channel/archiveChannel';
+import removeCommunityMember from 'shared/graphql/mutations/communityMember/removeCommunityMember';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
 import { modalStyles } from '../styles';
 import { Actions, Message } from './style';
-import cancelSubscription from 'shared/graphql/mutations/community/cancelSubscription';
-import disableCommunityAnalytics from 'shared/graphql/mutations/community/disableCommunityAnalytics';
 import type { Dispatch } from 'redux';
 
 /*
@@ -56,9 +55,8 @@ type Props = {
   deleteCommunity: Function,
   deleteThread: Function,
   deleteChannel: Function,
-  cancelSubscription: Function,
-  disableCommunityAnalytics: Function,
   archiveChannel: Function,
+  removeCommunityMember: Function,
   dispatch: Dispatch<Object>,
   isOpen: boolean,
 };
@@ -73,7 +71,10 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
   };
 
   triggerDelete = () => {
-    const { modalProps: { id, entity, redirect }, dispatch } = this.props;
+    const {
+      modalProps: { id, entity, redirect },
+      dispatch,
+    } = this.props;
 
     this.setState({
       isLoading: true,
@@ -191,45 +192,28 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
             });
           });
       }
-      case 'community-subscription': {
-        return this.props
-          .cancelSubscription({ communityId: id })
-          .then(() => {
-            dispatch(addToastWithTimeout('neutral', 'Subscription canceled'));
-            this.setState({
-              isLoading: false,
-            });
-            return this.close();
-          })
-          .catch(err => {
-            dispatch(addToastWithTimeout('error', err.message));
-            this.setState({
-              isLoading: false,
-            });
-          });
-      }
-      case 'community-analytics': {
-        return this.props
-          .disableCommunityAnalytics({ communityId: id })
-          .then(() => {
-            dispatch(addToastWithTimeout('neutral', 'Analytics removed'));
-            this.setState({
-              isLoading: false,
-            });
-            return this.close();
-          })
-          .catch(err => {
-            dispatch(addToastWithTimeout('error', err.message));
-            this.setState({
-              isLoading: false,
-            });
-          });
-      }
       case 'channel-archive': {
         return this.props
           .archiveChannel({ channelId: id })
           .then(() => {
             dispatch(addToastWithTimeout('neutral', 'Channel archived'));
+            this.setState({
+              isLoading: false,
+            });
+            return this.close();
+          })
+          .catch(err => {
+            dispatch(addToastWithTimeout('error', err.message));
+            this.setState({
+              isLoading: false,
+            });
+          });
+      }
+      case 'team-member-leaving-community': {
+        return this.props
+          .removeCommunityMember({ input: { communityId: id } })
+          .then(() => {
+            dispatch(addToastWithTimeout('neutral', 'Left community'));
             this.setState({
               isLoading: false,
             });
@@ -258,7 +242,10 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
   };
 
   render() {
-    const { isOpen, modalProps: { message, buttonLabel } } = this.props;
+    const {
+      isOpen,
+      modalProps: { message, buttonLabel },
+    } = this.props;
     const styles = modalStyles();
 
     return (
@@ -302,10 +289,9 @@ const DeleteDoubleCheckModalWithMutations = compose(
   deleteCommunityMutation,
   deleteChannelMutation,
   deleteThreadMutation,
-  disableCommunityAnalytics,
   deleteMessage,
-  cancelSubscription,
   archiveChannel,
+  removeCommunityMember,
   withRouter
 )(DeleteDoubleCheckModal);
 

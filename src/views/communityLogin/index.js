@@ -5,6 +5,7 @@ import FullscreenView from 'src/components/fullscreenView';
 import LoginButtonSet from 'src/components/loginButtonSet';
 import { Loading } from 'src/components/loading';
 import { CommunityAvatar } from 'src/components/avatar';
+import { CLIENT_URL } from 'src/api/constants';
 import {
   Title,
   Subtitle,
@@ -35,23 +36,28 @@ type Props = {
 };
 
 export class Login extends React.Component<Props> {
+  redirectPath = null;
+
   escape = () => {
     this.props.history.push(`/${this.props.match.params.communitySlug}`);
   };
 
   componentDidMount() {
     const { location } = this.props;
-    let redirectPath;
     if (location) {
       const searchObj = queryString.parse(this.props.location.search);
-      redirectPath = searchObj.r;
+      this.redirectPath = searchObj.r;
     }
 
-    track(events.LOGIN_PAGE_VIEWED, { redirectPath });
+    track(events.LOGIN_PAGE_VIEWED, { redirectPath: this.redirectPath });
   }
 
   render() {
-    const { data: { community }, isLoading, redirectPath } = this.props;
+    const {
+      data: { community },
+      isLoading,
+      match,
+    } = this.props;
 
     if (community && community.id) {
       const { brandedLogin } = community;
@@ -77,7 +83,10 @@ export class Login extends React.Component<Props> {
             </Subtitle>
 
             <LoginButtonSet
-              redirectPath={redirectPath || null}
+              redirectPath={
+                this.redirectPath ||
+                `${CLIENT_URL}/${match.params.communitySlug}`
+              }
               signinType={'signin'}
             />
 
@@ -123,4 +132,7 @@ export class Login extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunityByMatch, viewNetworkHandler)(Login);
+export default compose(
+  getCommunityByMatch,
+  viewNetworkHandler
+)(Login);

@@ -3,16 +3,16 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
-import { closeModal } from '../../../actions/modals';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { closeModal } from 'src/actions/modals';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import restoreChannel from 'shared/graphql/mutations/channel/restoreChannel';
-import StripeCardWell from 'src/components/stripeCardForm/modalWell';
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
 import { modalStyles, Description } from '../styles';
 import { Form, Actions } from './style';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   dispatch: Dispatch<Object>,
@@ -24,19 +24,17 @@ type Props = {
 
 type State = {
   isLoading: boolean,
-  hasChargeableSource: boolean,
 };
 
 class RestoreChannelModal extends React.Component<Props, State> {
-  state = { isLoading: false, hasChargeableSource: false };
-
-  onSourceAvailable = () => this.setState({ hasChargeableSource: true });
+  state = { isLoading: false };
 
   close = () => {
     this.props.dispatch(closeModal());
   };
 
-  restore = () => {
+  restore = (e: any) => {
+    e.preventDefault();
     const { channel, dispatch } = this.props;
 
     return this.props
@@ -57,8 +55,8 @@ class RestoreChannelModal extends React.Component<Props, State> {
   };
 
   render() {
-    const { isOpen, channel } = this.props;
-    const { isLoading, hasChargeableSource } = this.state;
+    const { isOpen } = this.props;
+    const { isLoading } = this.state;
 
     const styles = modalStyles(420);
 
@@ -80,27 +78,15 @@ class RestoreChannelModal extends React.Component<Props, State> {
         <ModalContainer title={'Restore Channel'} closeModal={this.close}>
           <Form>
             <Description>
-              Restoring a private channel will automatically resume your
-              subscription at $10 per month.
+              Are you sure you want to restore this channel? Members will be
+              able to start new conversations and join this channel.
             </Description>
-
-            {channel.isPrivate && (
-              <StripeCardWell
-                id={this.props.id}
-                onSourceAvailable={this.onSourceAvailable}
-                closeModal={this.close}
-              />
-            )}
 
             <Actions>
               <TextButton onClick={this.close} color={'warn.alt'}>
                 Cancel
               </TextButton>
-              <Button
-                disabled={channel.isPrivate && !hasChargeableSource}
-                loading={isLoading}
-                onClick={this.restore}
-              >
+              <Button loading={isLoading} onClick={this.restore}>
                 Restore Channel
               </Button>
             </Actions>
@@ -112,11 +98,11 @@ class RestoreChannelModal extends React.Component<Props, State> {
 }
 
 const map = state => ({
-  currentUser: state.users.currentUser,
   isOpen: state.modals.isOpen,
 });
 export default compose(
   // $FlowIssue
   connect(map),
+  withCurrentUser,
   restoreChannel
 )(RestoreChannelModal);

@@ -3,12 +3,11 @@ import * as React from 'react';
 import Nav from './components/nav';
 import Support from './support';
 import Features from './features';
-import Pricing from './pricing';
-import Concierge from './concierge';
 import Home from './home';
 import Terms from './terms';
 import Privacy from './privacy';
 import Faq from './faq';
+import Apps from './apps';
 import { Page } from './style';
 
 type Props = {
@@ -20,12 +19,6 @@ class Pages extends React.Component<Props> {
     switch (this.props.match.path) {
       case '/support': {
         return <Support {...this.props} />;
-      }
-      case '/pricing/concierge': {
-        return <Concierge {...this.props} />;
-      }
-      case '/pricing': {
-        return <Pricing {...this.props} />;
       }
       case '/features': {
         return <Features {...this.props} />;
@@ -41,6 +34,9 @@ class Pages extends React.Component<Props> {
       case '/faq': {
         return <Faq {...this.props} />;
       }
+      case '/apps': {
+        return <Apps {...this.props} />;
+      }
       case '/':
       case '/about':
       default: {
@@ -50,12 +46,17 @@ class Pages extends React.Component<Props> {
   };
 
   render() {
-    const { match: { path } } = this.props;
+    const {
+      match: { path },
+    } = this.props;
     const dark = path === '/' || path === '/about';
 
     return (
       <Page id="main">
-        <Nav dark={dark} location={this.props.match.path.substr(1)} />
+        <Nav
+          dark={dark ? 'true' : undefined}
+          location={this.props.match.path.substr(1)}
+        />
         {this.renderPage()}
       </Page>
     );

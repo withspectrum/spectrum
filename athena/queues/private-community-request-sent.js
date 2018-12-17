@@ -5,16 +5,17 @@ const debug = require('debug')(
 import Raven from 'shared/raven';
 import { getCommunityById } from '../models/community';
 import { storeNotification } from '../models/notification';
-import { storeUsersNotifications } from '../models/usersNotifications';
+import { storeUsersNotifications } from 'shared/db/queries/usersNotifications';
 import {
   getOwnersInCommunity,
   getModeratorsInCommunity,
 } from '../models/usersCommunities';
-import { getUsers } from '../models/user';
+import { getUsers } from 'shared/db/queries/user';
 import { fetchPayload } from '../utils/payloads';
 import isEmail from 'validator/lib/isEmail';
 import { sendPrivateCommunityRequestEmailQueue } from 'shared/bull/queues';
 import type { Job, PrivateCommunityRequestJobData } from 'shared/bull/types';
+import { signCommunity, signUser } from 'shared/imgix';
 
 export default async (job: Job<PrivateCommunityRequestJobData>) => {
   const { userId, communityId } = job.data;
@@ -72,10 +73,11 @@ export default async (job: Job<PrivateCommunityRequestJobData>) => {
   const community = await getCommunityById(communityId);
   const usersEmailPromises = filteredRecipients.map(recipient =>
     sendPrivateCommunityRequestEmailQueue.add({
-      user: userPayload,
       // $FlowFixMe
-      recipient,
-      community,
+      user: signUser(userPayload),
+      // $FlowFixMe
+      recipient: signUser(recipient),
+      community: signCommunity(community),
     })
   );
 
@@ -83,8 +85,8 @@ export default async (job: Job<PrivateCommunityRequestJobData>) => {
     usersEmailPromises, // handle emails separately
     usersNotificationPromises, // update or store usersNotifications in-app
   ]).catch(err => {
-    debug('❌ Error in job:\n');
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     Raven.captureException(err);
   });
 };

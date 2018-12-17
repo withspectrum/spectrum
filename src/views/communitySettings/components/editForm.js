@@ -380,4 +380,8 @@ class EditForm extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), editCommunityMutation, withRouter)(EditForm);
+export default compose(
+  connect(),
+  editCommunityMutation,
+  withRouter
+)(EditForm);

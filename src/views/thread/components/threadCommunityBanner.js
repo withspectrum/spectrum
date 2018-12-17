@@ -2,20 +2,22 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import {
   CommunityHoverProfile,
   ChannelHoverProfile,
 } from 'src/components/hoverProfile';
 import { LikeButton } from 'src/components/threadLikes';
 import { convertTimestampToDate } from 'shared/time-formatting';
-import { Button } from '../../../components/buttons';
+import { Button } from 'src/components/buttons';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { CommunityAvatar } from '../../../components/avatar';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { CommunityAvatar } from 'src/components/avatar';
 import { CLIENT_URL } from 'src/api/constants';
+import getThreadLink from 'src/helpers/get-thread-link';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   CommunityHeader,
   CommunityHeaderName,
@@ -101,7 +103,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
 
   render() {
     const {
-      thread: { channel, community, watercooler, id },
+      thread: { channel, community, watercooler },
       thread,
       currentUser,
       isVisible,
@@ -110,8 +112,8 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
     const { isLoading } = this.state;
 
     const loginUrl = community.brandedLogin.isEnabled
-      ? `/${community.slug}/login?r=${CLIENT_URL}/thread/${id}`
-      : `/login?r=${CLIENT_URL}/${community.slug}/thread/${id}`;
+      ? `/${community.slug}/login?r=${CLIENT_URL}/${getThreadLink(thread)}`
+      : `/login?r=${CLIENT_URL}/${getThreadLink(thread)}`;
 
     const createdAt = new Date(thread.createdAt).getTime();
     const timestamp = convertTimestampToDate(createdAt);
@@ -137,7 +139,10 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
                     {channel.name}
                   </Link>
                 </ChannelHoverProfile>
-                <Link to={`/thread/${id}`}>&nbsp;{`· ${timestamp}`}</Link>
+                <Link to={'/' + getThreadLink(thread)}>
+                  &nbsp;
+                  {`· ${timestamp}`}
+                </Link>
               </CommunityHeaderSubtitle>
             </CommunityHeaderMetaCol>
           </CommunityHeaderMeta>
@@ -162,8 +167,8 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
     );
   }
 }
-const map = state => ({ currentUser: state.users.currentUser });
-// $FlowIssue
-export default compose(connect(map), toggleChannelSubscriptionMutation)(
-  ThreadCommunityBanner
-);
+export default compose(
+  withCurrentUser,
+  toggleChannelSubscriptionMutation,
+  connect()
+)(ThreadCommunityBanner);

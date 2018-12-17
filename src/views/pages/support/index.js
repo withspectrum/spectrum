@@ -3,7 +3,7 @@ import * as React from 'react';
 import PageFooter from '../components/footer';
 import Section from 'src/components/themedSection';
 import { Wrapper } from '../style';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Button } from 'src/components/buttons';
 import {
   FourUp,
@@ -14,6 +14,7 @@ import {
   PlanDescription,
 } from '../pricing/style';
 import { track, events } from 'src/helpers/analytics';
+import Head from 'src/components/head';
 
 class Support extends React.Component<{}> {
   componentDidMount() {
@@ -23,6 +24,11 @@ class Support extends React.Component<{}> {
   render() {
     return (
       <Wrapper data-cy="support-page">
+        <Head
+          title={'Spectrum · Support'}
+          description={'Questions, feedback, or just need to get in touch?'}
+        />
+
         <Section goop={2} color={'bg.reverse'}>
           <FourUp>
             <div style={{ gridArea: 'copy' }}>

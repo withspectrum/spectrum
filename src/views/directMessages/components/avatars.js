@@ -16,9 +16,8 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
       <AvatarContainer>
         <UserAvatar
           user={users[0]}
-          onlineSize={'large'}
           size={44}
-          clickable={false}
+          isClickable={false}
           showHoverProfile={false}
         />
       </AvatarContainer>
@@ -34,8 +33,9 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
               <UserAvatar
                 user={user}
                 size={34}
-                clickable={false}
+                isClickable={false}
                 showHoverProfile={false}
+                showOnlineStatus={false}
               />
             </TwoAvatarWrap>
           );
@@ -51,11 +51,11 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
           return (
             <UserAvatar
               user={user}
-              onlineSize={'small'}
               key={user.id}
               size={20}
-              clickable={false}
+              isClickable={false}
               showHoverProfile={false}
+              showOnlineStatus={false}
             />
           );
         })}
@@ -70,11 +70,11 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
           return (
             <UserAvatar
               user={user}
-              onlineSize={'small'}
               key={user.id}
               size={19}
-              clickable={false}
+              isClickable={false}
               showHoverProfile={false}
+              showOnlineStatus={false}
             />
           );
         })}
@@ -92,11 +92,11 @@ export const renderAvatars = (users: Array<ParticipantType>) => {
             return (
               <UserAvatar
                 user={user}
-                onlineSize={'small'}
                 key={user.id}
                 size={19}
-                clickable={false}
+                isClickable={false}
                 showHoverProfile={false}
+                showOnlineStatus={false}
               />
             );
           }

@@ -79,7 +79,11 @@ const parseNotification = notification => {
   };
 };
 
-const formatNotification = (incomingNotification, currentUserId) => {
+const formatNotification = (
+  incomingNotification,
+  currentUserId,
+  isDesktop = false
+) => {
   const notification = parseNotification(incomingNotification);
   const actors =
     notification.actors &&
@@ -121,7 +125,7 @@ const formatNotification = (incomingNotification, currentUserId) => {
       break;
     }
     case 'MESSAGE_CREATED': {
-      const entities = notification.entities.filter(
+      let entities = notification.entities.filter(
         ({ payload }) => payload.senderId !== currentUserId
       );
 
@@ -136,11 +140,17 @@ const formatNotification = (incomingNotification, currentUserId) => {
         } new ${entities.length > 1 ? 'replies' : 'reply'})`;
         href = `/thread/${notification.context.id}`;
       }
+      // NOTE(@mxstbr): This is a workaround since MacOS desktop push notifications only show a single line of body
+      // so we reverse all the messages so the latest one is always shown
+      if (isDesktop) {
+        entities = entities.reverse();
+      }
       body = entities
         .map(({ payload }) => {
           const sender = notification.actors.find(
             actor => payload.senderId === actor.id
           );
+
           if (payload.messageType === 'draftjs') {
             let body = payload.content.body;
             if (typeof body === 'string')
@@ -150,28 +160,28 @@ const formatNotification = (incomingNotification, currentUserId) => {
             }): ${toPlainText(toState(body))}`;
           }
 
-          return `${sender.payload.name}: ${payload.content.body}`;
+          return `${sender.payload.name}: ${
+            payload.messageType === 'media' ? '📷 Photo' : payload.content.body
+          }`;
         })
         .join('\n');
       break;
     }
     case 'REACTION_CREATED': {
       const message = notification.context.payload;
-
       href = `/thread/${message.threadId}`;
       body =
         message.messageType.toLowerCase() === 'draftjs'
-          ? toPlainText(toState(message.content.body))
+          ? `${toPlainText(toState(JSON.parse(message.content.body)))}`
           : message.content.body;
       break;
     }
     case 'THREAD_REACTION_CREATED': {
       const thread = notification.context.payload;
-
       href = `/thread/${thread.id}`;
       body =
         thread.type.toLowerCase() === 'draftjs'
-          ? toPlainText(toState(thread.content.body))
+          ? `${toPlainText(toState(JSON.parse(thread.content.body)))}`
           : thread.content.body;
       break;
     }

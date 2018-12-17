@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import theme from 'shared/theme';
 import { Shadow, zIndex } from '../globals';
 
 export const GalleryWrapper = styled.div`
@@ -18,7 +19,7 @@ export const Overlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: ${({ theme }) => theme.bg.reverse};
+  background: ${theme.bg.reverse};
   opacity: 0.95;
   z-index: ${zIndex.fullscreen + 1};
 `;
@@ -30,7 +31,8 @@ export const ActiveImage = styled.img`
   transform: translate(-50%, -50%);
   object-fit: cover;
   max-height: 90%;
-  max-width: 100%;
+  width: 100%;
+  max-width: 768px;
   margin: auto 0 5rem;
   box-shadow: ${Shadow.high};
   z-index: ${zIndex.fullscreen + 2};
@@ -53,6 +55,7 @@ export const MiniImg = styled.img`
   margin: 0.25rem;
   opacity: ${props => (props.active ? 1 : 0.5)};
   transition: opacity 0.2s ease-in-out;
+  max-width: 64px;
 
   &:hover {
     transition: opacity 0.2s ease-in-out;

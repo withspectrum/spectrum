@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import {
@@ -25,7 +26,7 @@ export const CoverPhoto = styled.div`
   position: relative;
   width: 100%;
   height: ${props => (props.large ? '320px' : '96px')};
-  background-color: ${({ theme }) => theme.brand.default};
+  background-color: ${theme.brand.default};
   background-image: url('${props => props.url}');
   background-size: cover;
   background-repeat: no-repeat;
@@ -35,7 +36,7 @@ export const CoverPhoto = styled.div`
 
 export const Container = styled.div`
   background: #fff;
-  box-shadow: inset 0 0 0 2px ${props => props.theme.bg.border};
+  box-shadow: inset 0 0 0 2px ${theme.bg.border};
   flex: 0 0 22%;
   display: flex;
   flex-direction: column;
@@ -60,13 +61,13 @@ export const ProfileAvatar = styled.img`
   margin-right: 16px;
   border-radius: 8px;
   object-fit: cover;
-  background-color: ${({ theme }) => theme.generic.default};
+  background-color: ${theme.generic.default};
   background-image: ${({ theme }) =>
     Gradient(theme.generic.alt, theme.generic.default)};
 `;
 
 export const CoverAvatar = styled(ProfileAvatar)`
-  border: 2px solid ${({ theme }) => theme.text.reverse};
+  border: 2px solid ${theme.text.reverse};
   width: 64px;
   flex: 0 0 64px;
   margin-right: 0;
@@ -75,7 +76,7 @@ export const CoverAvatar = styled(ProfileAvatar)`
 
 export const Title = styled.h3`
   font-size: 16px;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   font-weight: 700;
   line-height: 1.2;
   ${Truncate} transition: ${Transition.hover.off};
@@ -91,7 +92,7 @@ export const CoverDescription = styled.p`
   margin: 0 16px 8px 16px;
   text-align: center;
   font-size: 16px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   display: flex;
   align-self: stretch;
   flex-direction: column;

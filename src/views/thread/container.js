@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
+import idx from 'idx';
+import slugg from 'slugg';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import Titlebar from 'src/views/titlebar';
@@ -12,15 +14,16 @@ import Messages from './components/messages';
 import Head from 'src/components/head';
 import ChatInput from 'src/components/chatInput';
 import ViewError from 'src/components/viewError';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   getThreadByMatch,
   getThreadByMatchQuery,
 } from 'shared/graphql/queries/thread/getThread';
 import { NullState } from 'src/components/upsell';
 import JoinChannel from 'src/components/upsell/joinChannel';
-import LoadingView from './components/loading';
+import LoadingThread from './components/loading';
 import ThreadCommunityBanner from './components/threadCommunityBanner';
 import Sidebar from './components/sidebar';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -35,11 +38,11 @@ import {
   WatercoolerDescription,
   WatercoolerIntroContainer,
   WatercoolerTitle,
-  WatercoolerAvatar,
 } from './style';
+import { CommunityAvatar } from 'src/components/avatar';
 import WatercoolerActionBar from './components/watercoolerActionBar';
 import { ErrorBoundary } from 'src/components/error';
-import generateImageFromText from 'src/helpers/generate-image-from-text';
+import getThreadLink from 'src/helpers/get-thread-link';
 
 type Props = {
   data: {
@@ -51,7 +54,8 @@ type Props = {
   currentUser: Object,
   dispatch: Dispatch<Object>,
   slider: boolean,
-  threadViewContext: 'slider' | 'fullscreen' | 'inbox',
+  // If this is undefined the thread is being viewed in fullscreen
+  threadViewContext?: 'slider' | 'inbox',
   threadSliderIsOpen: boolean,
   client: Object,
 };
@@ -94,26 +98,12 @@ class ThreadContainer extends React.Component<Props, State> {
   // see how to do this here: https://github.com/reactjs/rfcs/blob/master/text/0006-static-lifecycle-methods.md#state-derived-from-propsstate
   // with implementation below
   static getDerivedStateFromProps(nextProps, prevState) {
-    const curr = prevState.derivedState;
-    const newThread = curr.data && !curr.data.thread && nextProps.data.thread;
+    const lastSeen = idx(nextProps, _ => _.data.thread.currentUserLastSeen);
+    if (lastSeen === prevState.lastSeen) return null;
 
-    const threadChanged =
-      curr.data &&
-      curr.data.thread &&
-      nextProps.data.thread &&
-      curr.data.thread.id !== nextProps.data.thread.id;
-
-    // Update the cached lastSeen value when switching threads
-    if (newThread || threadChanged) {
-      return {
-        lastSeen: nextProps.data.thread.currentUserLastSeen
-          ? nextProps.data.thread.currentUserLastSeen
-          : null,
-        derivedState: nextProps,
-      };
-    }
-
-    return null;
+    return {
+      lastSeen,
+    };
   }
 
   toggleEdit = () => {
@@ -173,8 +163,11 @@ class ThreadContainer extends React.Component<Props, State> {
   }
 
   handleScroll = e => {
-    e.persist();
     if (!e || !e.target) return;
+
+    if (e && e.persist) {
+      e.persist();
+    }
 
     // whenever the user scrolls in the thread we determine if they've scrolled
     // past the thread content section - once they've scroll passed it, we
@@ -196,11 +189,36 @@ class ThreadContainer extends React.Component<Props, State> {
         });
       }
     } catch (err) {
-      // no need to do anything here
+      // if theres an error finding the dom node, we should make sure
+      // the banner is not visible to avoid it accidentally covering content
+      this.setState({
+        bannerIsVisible: false,
+      });
     }
   };
 
   componentDidUpdate(prevProps) {
+    // If we're loading the thread for the first time make sure the URL is the right one, and if not
+    // redirect to the right one
+    if (
+      !this.props.threadViewContext &&
+      (!prevProps.data ||
+        !prevProps.data.thread ||
+        !prevProps.data.thread.id) &&
+      this.props.data &&
+      this.props.data.thread &&
+      this.props.data.thread.id
+    ) {
+      const { thread } = this.props.data;
+      const properUrl = `/${thread.community.slug}/${
+        thread.channel.slug
+      }/${slugg(thread.content.title)}~${thread.id}`;
+      // $FlowFixMe
+      if (this.props.location.pathname !== properUrl)
+        // $FlowFixMe
+        return this.props.history.replace(properUrl);
+    }
+
     // if the user is in the inbox and changes threads, it should initially scroll
     // to the top before continuing with logic to force scroll to the bottom
     if (
@@ -340,11 +358,13 @@ class ThreadContainer extends React.Component<Props, State> {
           <WatercoolerIntroContainer
             innerRef={c => (this.threadDetailElem = c)}
           >
-            <WatercoolerAvatar
+            <CommunityAvatar
               community={thread.community}
               showHoverProfile={false}
               size={44}
+              style={{ marginBottom: '16px' }}
             />
+
             <Link to={`/${thread.community.slug}`}>
               <WatercoolerTitle>
                 The {thread.community.name} watercooler
@@ -433,6 +453,7 @@ class ThreadContainer extends React.Component<Props, State> {
       const headDescription = isWatercooler
         ? `Watercooler chat for the ${thread.community.name} community`
         : description;
+      const metaImage = thread.metaImage;
 
       return (
         <ErrorBoundary>
@@ -450,6 +471,7 @@ class ThreadContainer extends React.Component<Props, State> {
                 currentUser={currentUser}
                 slug={thread.community.slug}
                 id={thread.community.id}
+                sort="trending"
               />
             )}
 
@@ -457,12 +479,36 @@ class ThreadContainer extends React.Component<Props, State> {
               <Head
                 title={headTitle}
                 description={headDescription}
-                image={generateImageFromText({
-                  title: headTitle,
-                  footer: `spectrum.chat/${thread.community.slug}`,
-                })}
+                type="article"
+                image={metaImage}
               >
-                <meta name="twitter:card" content="summary_large_image" />
+                <link
+                  rel="canonical"
+                  href={`https://spectrum.chat/${getThreadLink(thread)}`}
+                />
+                {metaImage && (
+                  <meta name="twitter:card" content="summary_large_image" />
+                )}
+                <meta
+                  property="article:published_time"
+                  content={new Date(thread.createdAt).toISOString()}
+                />
+                <meta
+                  property="article:modified_time"
+                  content={new Date(
+                    thread.modifiedAt || thread.createdAt
+                  ).toISOString()}
+                />
+                <meta
+                  property="article:author"
+                  content={`https://spectrum.chat/users/@${
+                    thread.author.user.username
+                  }`}
+                />
+                <meta
+                  property="article:section"
+                  content={`${thread.community.name} community`}
+                />
               </Head>
               <Titlebar
                 title={thread.content.title}
@@ -496,13 +542,12 @@ class ThreadContainer extends React.Component<Props, State> {
                     />
                   )}
 
-                  {!isEditing &&
-                    isLocked && (
-                      <NullState
-                        icon="private"
-                        copy="This conversation has been locked."
-                      />
-                    )}
+                  {!isEditing && isLocked && (
+                    <NullState
+                      icon="private"
+                      copy="This conversation has been locked."
+                    />
+                  )}
                 </Detail>
               </Content>
 
@@ -514,7 +559,7 @@ class ThreadContainer extends React.Component<Props, State> {
     }
 
     if (isLoading) {
-      return <LoadingView threadViewContext={threadViewContext} />;
+      return <LoadingThread threadViewContext={threadViewContext} />;
     }
 
     return (
@@ -543,11 +588,10 @@ class ThreadContainer extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowIssue
-  connect(map),
+  withCurrentUser,
   getThreadByMatch,
   viewNetworkHandler,
-  withApollo
+  withApollo,
+  connect()
 )(ThreadContainer);

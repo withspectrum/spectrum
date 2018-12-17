@@ -1,5 +1,5 @@
 // @flow
-import { db } from './db';
+import { db } from 'shared/db';
 import { parseRange } from './utils';
 
 // prettier-ignore

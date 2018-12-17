@@ -17,7 +17,6 @@ build-chronos
 build-mercury
 build-vulcan
 build-hyperion
-build-pluto
 build-electron
 build-analytics
 package-lock.json
@@ -30,10 +29,9 @@ test-extend.js
 stats.json
 iris/.env
 api/.env
-.expo
-mobile/.expo
 test-results.json
 desktop/release
 public/uploads
 cypress/screenshots/
 cypress/videos/
+cacert

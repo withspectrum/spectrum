@@ -2,13 +2,11 @@
 import type { DBCommunity } from 'shared/types';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-const {
-  getMemberCount,
-  getCommunityGrowth,
-} = require('../../models/community');
+const { getCommunityGrowth } = require('../../models/community');
+import { canModerateCommunity } from '../../utils/permissions';
 
 export default async (
-  { id }: DBCommunity,
+  { id, memberCount }: DBCommunity,
   _: any,
   { user, loaders }: GraphQLContext
 ) => {
@@ -18,19 +16,14 @@ export default async (
     return new UserError('You must be signed in to continue.');
   }
 
-  const { isOwner } = await loaders.userPermissionsInCommunity.load([
-    currentUser.id,
-    id,
-  ]);
-
-  if (!isOwner) {
+  if (!(await canModerateCommunity(currentUser.id, id, loaders))) {
     return new UserError(
-      'You must be the owner of this community to view analytics.'
+      'You must be a team member to view community analytics.'
     );
   }
 
   return {
-    count: await getMemberCount(id),
+    count: memberCount || 1,
     weeklyGrowth: await getCommunityGrowth(
       'usersCommunities',
       'weekly',

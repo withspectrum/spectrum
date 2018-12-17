@@ -1,7 +1,8 @@
 // @flow
+import theme from 'shared/theme';
 import React from 'react';
 import styled from 'styled-components';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Transition, zIndex, Shadow, hexa } from '../../../components/globals';
 import ViewSegment from '../../../components/themedSection';
 import { Button } from '../../../components/buttons';
@@ -19,6 +20,7 @@ const CommunitySearchWrapper = props => {
     margin-top: 40px;
     margin-bottom: 0;
     padding: 16px;
+    padding-bottom: 48px;
 
     @media (max-width: 640px) {
       margin-top: 80px;
@@ -32,15 +34,15 @@ const CommunitySearchWrapper = props => {
     font-weight: 700;
     font-size: 14px;
     border-radius: 12px;
-    background-color: ${props => props.theme.bg.default};
+    background-color: ${theme.bg.default};
     background-image: none;
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
     transition: ${Transition.hover.off};
     z-index: ${zIndex.card};
 
     &:hover {
-      background-color: ${props => props.theme.bg.default};
-      color: ${props => props.theme.brand.default};
+      background-color: ${theme.bg.default};
+      color: ${theme.brand.default};
       box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.5)};
       transition: ${Transition.hover.on};
     }

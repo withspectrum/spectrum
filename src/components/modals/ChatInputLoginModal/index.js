@@ -3,11 +3,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
-import { closeModal } from '../../../actions/modals';
+import { Link } from 'react-router-dom';
+import { closeModal } from 'src/actions/modals';
 import ModalContainer from '../modalContainer';
 import { modalStyles } from '../styles';
 import LoginButtonSet from 'src/components/loginButtonSet';
-import { Container } from './style';
+import { Container, CodeOfConduct } from './style';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
@@ -55,6 +56,24 @@ class ChatInputLoginModal extends React.Component<Props> {
               redirectPath={redirectPath}
               signinType={signinType}
             />
+
+            <CodeOfConduct>
+              By using Spectrum, you agree to our{' '}
+              <a
+                href="https://github.com/withspectrum/code-of-conduct"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  track(events.CODE_OF_CONDUCT_CLICKED, { location: 'login' })
+                }
+              >
+                Code of Conduct
+              </a>
+              {', '}
+              <Link to={'/privacy'}>Privacy Policy</Link>
+              {', and '}
+              <Link to={'/terms'}>Terms of Service</Link>.
+            </CodeOfConduct>
           </Container>
         </ModalContainer>
       </Modal>

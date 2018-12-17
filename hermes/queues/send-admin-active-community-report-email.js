@@ -1,21 +1,27 @@
+// @flow
 const debug = require('debug')(
   'hermes:queue:send-admin-active-community-report-email'
 );
 import sendEmail from '../send-email';
+import Raven from 'shared/raven';
 import {
   ADMIN_ACTIVE_COMMUNITY_REPORT_TEMPLATE,
   SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
 } from './constants';
+import type {
+  AdminActiveCommunityReportEmailJobData,
+  Job,
+} from 'shared/bull/types';
+import formatDate from '../utils/format-date';
 
-export default job => {
+export default (
+  job: Job<AdminActiveCommunityReportEmailJobData>
+): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const {
-    allDac,
-    allWac,
-    allMac,
-    overlappingDac,
-    overlappingWac,
-    overlappingMac,
+    dacCount,
+    wacCount,
+    macCount,
     newDac,
     newWac,
     newMac,
@@ -23,35 +29,34 @@ export default job => {
     lostWac,
     lostMac,
   } = job.data;
+  const { day, month, year } = formatDate();
 
   try {
     return sendEmail({
-      TemplateId: ADMIN_ACTIVE_COMMUNITY_REPORT_TEMPLATE,
-      To: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
-      Tag: SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
-      TemplateModel: {
+      templateId: ADMIN_ACTIVE_COMMUNITY_REPORT_TEMPLATE,
+      to: [
+        { email: 'brian@spectrum.chat ' },
+        { email: 'max@spectrum.chat ' },
+        { email: 'bryn@spectrum.chat ' },
+      ],
+      dynamic_template_data: {
+        subject: `Active Community Report: ${month} ${day}, ${year}`,
         data: {
-          allDac,
-          allDacCount: allDac.length,
-          overlappingDac: overlappingDac.join(', '),
+          dacCount,
+          wacCount,
+          macCount,
           newDac: newDac.join(', '),
-          lostDac: lostDac.join(', '),
-          allWac: allWac.join(', '),
-          allWacCount: allWac.length,
-          overlappingWac: overlappingWac.join(', '),
           newWac: newWac.join(', '),
-          lostWac: lostWac.join(', '),
-          allMac: allMac.join(', '),
-          allMacCount: allMac.length,
-          overlappingMac: overlappingMac.join(', '),
           newMac: newMac.join(', '),
+          lostDac: lostDac.join(', '),
+          lostWac: lostWac.join(', '),
           lostMac: lostMac.join(', '),
         },
       },
     });
   } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
-    Raven.captureException(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
+    return Raven.captureException(err);
   }
 };

@@ -27,8 +27,8 @@ const User = require('./types/User');
 const DirectMessageThread = require('./types/DirectMessageThread');
 const Notification = require('./types/Notification');
 const Meta = require('./types/Meta');
-const Invoice = require('./types/Invoice');
 const Search = require('./types/Search');
+const Invoice = require('./types/Invoice');
 const CommunityMember = require('./types/CommunityMember');
 const ThreadParticipant = require('./types/ThreadParticipant');
 
@@ -49,7 +49,6 @@ const channelSlackSettingsQueries = require('./queries/channelSlackSettings');
 const messageMutations = require('./mutations/message');
 const threadMutations = require('./mutations/thread');
 const reactionMutations = require('./mutations/reaction');
-const recurringPaymentMutations = require('./mutations/recurringPayment');
 const communityMutations = require('./mutations/community');
 const channelMutations = require('./mutations/channel');
 const directMessageThreadMutations = require('./mutations/directMessageThread');
@@ -109,7 +108,6 @@ const resolvers = merge(
   threadMutations,
   directMessageThreadMutations,
   reactionMutations,
-  recurringPaymentMutations,
   communityMutations,
   channelMutations,
   notificationMutations,
@@ -152,5 +150,14 @@ const schema = makeExecutableSchema({
   ],
   resolvers,
 });
+
+if (process.env.REACT_APP_MAINTENANCE_MODE === 'enabled') {
+  console.error('\n\n⚠️ ----MAINTENANCE MODE ENABLED----⚠️\n\n');
+  addSchemaLevelResolveFunction(schema, () => {
+    throw new UserError(
+      "We're currently undergoing planned maintenance. We'll be back soon, please check https://twitter.com/withspectrum for ongoing updates!"
+    );
+  });
+}
 
 module.exports = schema;

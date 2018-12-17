@@ -1,6 +1,6 @@
 // @flow
 import type { DBUsersThreads } from 'shared/types';
-import { db } from './db';
+import { db } from 'shared/db';
 
 export const getThreadNotificationStatusForUser = (
   threadId: string,

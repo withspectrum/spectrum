@@ -2,21 +2,22 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import ViewError from '../../components/viewError';
-import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
-import { CommunityInvitationForm } from '../../components/emailInvitationForm';
+import ViewError from 'src/components/viewError';
+import { Button, OutlineButton, ButtonRow } from 'src/components/buttons';
+import { CommunityInvitationForm } from 'src/components/emailInvitationForm';
 import SlackConnection from '../communitySettings/components/slack';
 import CommunityMembers from './components/communityMembers';
 import JoinTokenSettings from './components/joinTokenSettings';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   SectionsContainer,
   SectionCard,
   SectionTitle,
   Column,
-} from '../../components/settingsViews/style';
+} from 'src/components/settingsViews/style';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
@@ -87,8 +88,7 @@ class CommunityMembersSettings extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowIssue
-  connect(map)
+  withCurrentUser,
+  connect()
 )(CommunityMembersSettings);

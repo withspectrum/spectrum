@@ -2,11 +2,14 @@
 const debug = require('debug')('analytics:queues:identify');
 import Raven from 'shared/raven';
 import type { Job, IdentifyAnalyticsData } from 'shared/bull/types';
-import { getUserById } from '../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import { identify, transformations } from '../utils';
 
 const processJob = async (job: Job<IdentifyAnalyticsData>) => {
   const { userId } = job.data;
+
+  if (!userId) return;
+
   const user = await getUserById(userId);
 
   if (!user) return;
@@ -19,8 +22,8 @@ export default async (job: Job<IdentifyAnalyticsData>) => {
   try {
     await processJob(job);
   } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     Raven.captureException(err);
   }
 };

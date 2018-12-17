@@ -50,8 +50,7 @@ const pinThread = () => {
 const triggerThreadDelete = () => {
   cy.get('[data-cy="thread-dropdown-delete"]').click();
   cy.get('[data-cy="delete-button"]').should('be.visible');
-  cy
-    .get('div.ReactModal__Overlay')
+  cy.get('div.ReactModal__Overlay')
     .should('be.visible')
     .click('topLeft');
 };
@@ -59,15 +58,13 @@ const triggerThreadDelete = () => {
 const triggerMovingThread = () => {
   cy.get('[data-cy="thread-dropdown-move"]').click();
   cy.get('[data-cy="move-thread-modal"]').should('be.visible');
-  cy
-    .get('div.ReactModal__Overlay')
+  cy.get('div.ReactModal__Overlay')
     .should('be.visible')
     .click('topLeft');
 };
 
 const openSettingsDropdown = () => {
-  cy
-    .get('[data-cy="thread-actions-dropdown-trigger"]')
+  cy.get('[data-cy="thread-actions-dropdown-trigger"]')
     .should('be.visible')
     .click();
 };
@@ -80,22 +77,20 @@ describe('action bar renders', () => {
 
     it('should render', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy
-        .get('[data-cy="thread-notifications-login-capture"]')
-        .should('be.visible');
       cy.get('[data-cy="thread-facebook-button"]').should('be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('be.visible');
       cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
-      cy
-        .get('[data-cy="thread-actions-dropdown-trigger"]')
-        .should('not.be.visible');
+      cy.get('[data-cy="thread-actions-dropdown-trigger"]').should(
+        'not.be.visible'
+      );
     });
   });
 
   describe('authed non member', () => {
     beforeEach(() => {
-      cy.auth(nonMemberUser.id);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(nonMemberUser.id).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should render', () => {
@@ -104,16 +99,17 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-facebook-button"]').should('be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('be.visible');
       cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
-      cy
-        .get('[data-cy="thread-actions-dropdown-trigger"]')
-        .should('not.be.visible');
+      cy.get('[data-cy="thread-actions-dropdown-trigger"]').should(
+        'not.be.visible'
+      );
     });
   });
 
   describe('authed member', () => {
     beforeEach(() => {
-      cy.auth(memberInChannelUser.id);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(memberInChannelUser.id).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should render', () => {
@@ -122,16 +118,17 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-facebook-button"]').should('be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('be.visible');
       cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
-      cy
-        .get('[data-cy="thread-actions-dropdown-trigger"]')
-        .should('not.be.visible');
+      cy.get('[data-cy="thread-actions-dropdown-trigger"]').should(
+        'not.be.visible'
+      );
     });
   });
 
   describe('authed private channel member', () => {
     beforeEach(() => {
-      cy.auth(memberInChannelUser.id);
-      cy.visit(`/thread/${privateThread.id}`);
+      cy.auth(memberInChannelUser.id).then(() =>
+        cy.visit(`/thread/${privateThread.id}`)
+      );
     });
 
     it('should render', () => {
@@ -140,16 +137,17 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-facebook-button"]').should('not.be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('not.be.visible');
       cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
-      cy
-        .get('[data-cy="thread-actions-dropdown-trigger"]')
-        .should('not.be.visible');
+      cy.get('[data-cy="thread-actions-dropdown-trigger"]').should(
+        'not.be.visible'
+      );
     });
   });
 
   describe('thread author', () => {
     beforeEach(() => {
-      cy.auth(publicThreadAuthor.id);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(publicThreadAuthor.id).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should render', () => {
@@ -192,8 +190,7 @@ describe('action bar renders', () => {
       cy.get('[data-cy="save-thread-edit-button"]').should('be.visible');
       const title = 'Some new thread';
       cy.get('[data-cy="rich-text-editor"]').should('be.visible');
-      cy
-        .get('[data-cy="thread-editor-title-input"]')
+      cy.get('[data-cy="thread-editor-title-input"]')
         .clear()
         .type(title);
       cy.get('[data-cy="save-thread-edit-button"]').click();
@@ -205,8 +202,7 @@ describe('action bar renders', () => {
       cy.get('[data-cy="save-thread-edit-button"]').should('be.visible');
       const originalTitle = 'The first thread! 🎉';
       cy.get('[data-cy="rich-text-editor"]').should('be.visible');
-      cy
-        .get('[data-cy="thread-editor-title-input"]')
+      cy.get('[data-cy="thread-editor-title-input"]')
         .clear()
         .type(originalTitle);
       cy.get('[data-cy="save-thread-edit-button"]').click();
@@ -217,8 +213,9 @@ describe('action bar renders', () => {
 
   describe('channel moderator', () => {
     beforeEach(() => {
-      cy.auth(constants.CHANNEL_MODERATOR_USER_ID);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(constants.CHANNEL_MODERATOR_USER_ID).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should render', () => {
@@ -257,8 +254,9 @@ describe('action bar renders', () => {
 
   describe('channel owner', () => {
     beforeEach(() => {
-      cy.auth(constants.CHANNEL_MODERATOR_USER_ID);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(constants.CHANNEL_MODERATOR_USER_ID).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should render', () => {
@@ -297,8 +295,9 @@ describe('action bar renders', () => {
 
   describe('community moderator', () => {
     beforeEach(() => {
-      cy.auth(constants.COMMUNITY_MODERATOR_USER_ID);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(constants.COMMUNITY_MODERATOR_USER_ID).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should render', () => {
@@ -351,8 +350,9 @@ describe('action bar renders', () => {
 
   describe('community owner', () => {
     beforeEach(() => {
-      cy.auth(constants.MAX_ID);
-      cy.visit(`/thread/${publicThread.id}`);
+      cy.auth(constants.MAX_ID).then(() =>
+        cy.visit(`/thread/${publicThread.id}`)
+      );
     });
 
     it('should render', () => {

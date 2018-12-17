@@ -4,13 +4,11 @@ import type { GetCurrentUserSettingsType } from 'shared/graphql/queries/user/get
 import UserEditForm from './editForm';
 import EmailSettings from './emailSettings';
 import NotificationSettings from './notificationSettings';
-import Invoices from './invoices';
 import DeleteAccountForm from './deleteAccountForm';
 import DownloadDataForm from './downloadDataForm';
-import RecurringPaymentsList from './recurringPaymentsList';
 import { SectionsContainer, Column } from 'src/components/settingsViews/style';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';
-import { isDesktopApp } from 'src/helpers/is-desktop-app';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 type Props = {
   user: GetCurrentUserSettingsType,
@@ -37,10 +35,6 @@ class Overview extends React.Component<Props> {
         </Column>
         <Column>
           <ErrorBoundary fallbackComponent={SettingsFallback}>
-            <RecurringPaymentsList user={user} />
-          </ErrorBoundary>
-
-          <ErrorBoundary fallbackComponent={SettingsFallback}>
             <EmailSettings user={user} />
           </ErrorBoundary>
 
@@ -48,10 +42,6 @@ class Overview extends React.Component<Props> {
             {!isDesktopApp() &&
               'serviceWorker' in navigator &&
               'PushManager' in window && <NotificationSettings largeOnly />}
-          </ErrorBoundary>
-
-          <ErrorBoundary fallbackComponent={SettingsFallback}>
-            <Invoices />
           </ErrorBoundary>
         </Column>
       </SectionsContainer>

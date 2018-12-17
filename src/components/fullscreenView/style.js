@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { zIndex } from '../globals';
 
@@ -15,7 +16,6 @@ export const FullscreenViewContainer = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  align-items: center;
   z-index: ${zIndex.fullscreen};
   overflow-y: scroll;
   -webkit-transform: translate3d(0, 0, 0);
@@ -34,7 +34,7 @@ export const Illustrations = styled.span`
 `;
 
 export const Close = styled.div`
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   position: absolute;
   top: 8px;
   right: 8px;

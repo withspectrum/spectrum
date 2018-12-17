@@ -1,4 +1,6 @@
 import { getMessageById } from '../../models/message';
+import { signImageUrl } from 'shared/imgix';
+import escapehtml from 'escape-html';
 
 export default async replies => {
   let newReplies = [];
@@ -21,10 +23,10 @@ export default async replies => {
     const reply = replies.filter(r => r.id === message.id)[0];
     const body =
       message.messageType === 'media'
-        ? `<p class='reply-img-container'><img class='reply-img' src='${
-            reply.content.body
-          }?w=600&dpr=2' /></p>`
-        : `<p class='reply'>${reply.content.body}</p>`;
+        ? // prettier-ignore
+          `<p class='reply-img-container' style="background: #E6ECF7; margin-bottom: 2px; border-radius: 12px; overflow: hidden; display: block; max-width: 100%; margin-top: 0!important; color: #16171A;"><img class='reply-img' style="display: block;width: 100%;border-radius: 12px;" src='${signImageUrl(reply.content.body)}' /></p>`
+        : // prettier-ignore
+          `<p class='reply' style="font-weight: 400; font-size: 16px;background: #E6ECF7;margin-bottom: 2px;padding: 8px 12px;border-radius: 12px;display: block;max-width: 100%;margin-top: 0!important;color: #16171A;">${escapehtml(reply.content.body)}</p>`;
 
     const newGroup = {
       ...reply,

@@ -1,8 +1,9 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled, { css } from 'styled-components';
 // $FlowFixMe
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { zIndex } from '../../components/globals';
 
 const animation = css`
@@ -61,10 +62,10 @@ export const Close = styled(Link)`
   display: flex;
   align-items: center;
   flex: 1;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
   padding: 8px 16px;
   flex: 1 0 auto;
-  background: ${props => props.theme.bg.wash};
+  background: ${theme.bg.wash};
   max-height: 48px;
   justify-content: flex-end;
 `;
@@ -76,11 +77,11 @@ export const CloseButton = styled.span`
   width: 32px;
   height: 32px;
   border-radius: 32px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 `;
 
 export const CloseLabel = styled.span`
   font-size: 14px;
   font-weight: 500;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 `;

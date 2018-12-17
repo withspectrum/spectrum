@@ -20,6 +20,7 @@ import {
 import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
 import ThreadActivity from './activity';
 import { ErrorBoundary } from 'src/components/error';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   active: boolean,
@@ -88,7 +89,11 @@ class InboxThread extends React.Component<Props> {
             {viewContext !== 'userProfile' &&
               viewContext !== 'userProfileReplies' && (
                 <AvatarLink>
-                  <UserAvatar user={thread.author.user} size={40} />
+                  <UserAvatar
+                    onlineBorderColor={active ? theme => theme.brand.alt : null}
+                    user={thread.author.user}
+                    size={40}
+                  />
                 </AvatarLink>
               )}
 
@@ -128,5 +133,8 @@ class InboxThread extends React.Component<Props> {
   }
 }
 
-const map = (state): * => ({ currentUser: state.users.currentUser });
-export default compose(connect(map), withRouter)(InboxThread);
+export default compose(
+  withRouter,
+  withCurrentUser,
+  connect()
+)(InboxThread);

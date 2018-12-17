@@ -8,14 +8,15 @@ import idx from 'idx';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
-import ChatMessages from '../../../components/messageGroup';
-import { Loading } from '../../../components/loading';
-import { Button } from '../../../components/buttons';
-import Icon from '../../../components/icons';
-import { NullState } from '../../../components/upsell';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import Head from '../../../components/head';
-import NextPageButton from '../../../components/nextPageButton';
+import ChatMessages from 'src/components/messageGroup';
+import { Loading } from 'src/components/loading';
+import { Button } from 'src/components/buttons';
+import Icon from 'src/components/icons';
+import { NullState } from 'src/components/upsell';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import Head from 'src/components/head';
+import NextPageButton from 'src/components/nextPageButton';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   ChatWrapper,
   NullMessagesWrapper,
@@ -25,8 +26,11 @@ import {
 } from '../style';
 import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import { ErrorBoundary } from 'src/components/error';
+import getThreadLink from 'src/helpers/get-thread-link';
 import type { GetThreadMessageConnectionType } from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
+import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
+import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 
 type State = {
   subscription: ?Function,
@@ -45,9 +49,15 @@ type Props = {
   scrollContainer: any,
   subscribeToNewMessages: Function,
   lastSeen: ?number | ?Date,
-  data: { thread: GetThreadMessageConnectionType },
+  data: {
+    thread: GetThreadMessageConnectionType,
+    refetch: Function,
+  },
   thread: GetThreadType,
   currentUser: ?Object,
+  hasError: boolean,
+  networkOnline: boolean,
+  websocketConnection: WebsocketConnectionType,
 };
 
 class MessagesWithData extends React.Component<Props, State> {
@@ -55,8 +65,13 @@ class MessagesWithData extends React.Component<Props, State> {
     subscription: null,
   };
 
-  componentDidUpdate(prev = {}) {
+  componentDidUpdate(prev: Props) {
     const curr = this.props;
+
+    const didReconnect = useConnectionRestored({ curr, prev });
+    if (didReconnect && curr.data.refetch) {
+      curr.data.refetch();
+    }
 
     if (!curr.data.thread) return;
 
@@ -115,22 +130,18 @@ class MessagesWithData extends React.Component<Props, State> {
     const {
       currentUserLastSeen,
       isAuthor,
-      participants,
       watercooler,
+      messageCount,
     } = data.thread;
 
-    const isParticipant =
-      participants &&
-      participants.length > 0 &&
-      participants.some(
-        participant => participant && participant.id === currentUser.id
-      );
+    // Don't scroll empty threads to bottm
+    if (messageCount === 0) return false;
 
     const searchObj = queryString.parse(location.search);
     const isLoadingMessageFromQueryParam = searchObj && searchObj.m;
     if (isLoadingMessageFromQueryParam) return false;
 
-    return !!(currentUserLastSeen || isAuthor || isParticipant || watercooler);
+    return !!(currentUserLastSeen || isAuthor || watercooler);
   };
 
   componentWillUnmount() {
@@ -158,8 +169,8 @@ class MessagesWithData extends React.Component<Props, State> {
       <NullMessagesWrapper>
         <Icon glyph={'emoji'} size={64} />
         <NullCopy>
-          No messages have been sent in this conversation yet - why don’t you
-          kick things off below?
+          No messages have been sent in this conversation yet—why don’t you kick
+          things off below?
         </NullCopy>
       </NullMessagesWrapper>
     );
@@ -167,19 +178,20 @@ class MessagesWithData extends React.Component<Props, State> {
 
   getAuthorEmptyMessage = () => {
     const threadTitle = idx(this.props, _ => _.data.thread.content.title) || '';
-    const threadId = idx(this.props, _ => _.data.thread.id) || '';
 
     return (
       <NullMessagesWrapper>
         <Icon glyph="share" size={64} />
         <NullCopy>
-          Nobody has replied yet - why don't you share it with your friends?
+          Nobody has replied yet—why don’t you share it with your friends?
         </NullCopy>
         <SocialShareWrapper>
           <A
             href={`https://twitter.com/share?text=${encodeURIComponent(
               threadTitle
-            )} on @withspectrum&url=https://spectrum.chat/thread/${threadId}`}
+            )} on @withspectrum&url=https://spectrum.chat/${getThreadLink(
+              this.props.data.thread
+            )}`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -188,9 +200,9 @@ class MessagesWithData extends React.Component<Props, State> {
             </Button>
           </A>
           <A
-            href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${threadId}&t=${encodeURIComponent(
-              threadTitle
-            )}`}
+            href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/${getThreadLink(
+              this.props.data.thread
+            )}&t=${encodeURIComponent(threadTitle)}`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -217,6 +229,7 @@ class MessagesWithData extends React.Component<Props, State> {
       lastSeen,
       thread,
       currentUser,
+      hasError,
     } = this.props;
 
     const hasMessagesToLoad = thread.messageCount > 0;
@@ -243,7 +256,8 @@ class MessagesWithData extends React.Component<Props, State> {
 
     if (messagesExist) {
       const { edges, pageInfo } = data.thread.messageConnection;
-      const unsortedMessages = edges.map(message => message && message.node);
+      const unsortedMessages =
+        edges && edges.map(message => message && message.node);
 
       const uniqueMessages = deduplicateChildren(unsortedMessages, 'id');
       const sortedMessages = sortAndGroupMessages(uniqueMessages);
@@ -269,7 +283,10 @@ class MessagesWithData extends React.Component<Props, State> {
                       href={`${location.pathname}?msgsbefore=${prevCursor}`}
                     />
                   )}
-                  <link rel="canonical" href={`/thread/${data.thread.id}`} />
+                  <link
+                    rel="canonical"
+                    href={'https://spectrum.chat/' + getThreadLink(thread)}
+                  />
                 </Head>
               </div>
             )}
@@ -281,7 +298,10 @@ class MessagesWithData extends React.Component<Props, State> {
                     href={`${location.pathname}?msgsafter=${nextCursor}`}
                   />
                 )}
-                <link rel="canonical" href={`/thread/${data.thread.id}`} />
+                <link
+                  rel="canonical"
+                  href={'https://spectrum.chat/' + getThreadLink(thread)}
+                />
               </Head>
             )}
             <InfiniteList
@@ -319,7 +339,7 @@ class MessagesWithData extends React.Component<Props, State> {
       );
     }
 
-    if (!messagesExist) {
+    if ((isLoading && !hasMessagesToLoad) || (!isLoading && !messagesExist)) {
       if (isLocked || !this.props.data.thread) return null;
 
       return this.getIsAuthor()
@@ -327,26 +347,36 @@ class MessagesWithData extends React.Component<Props, State> {
         : this.getNonAuthorEmptyMessage();
     }
 
-    return (
-      <NullState
-        heading="Sorry, we lost connection to the server..."
-        copy="Mind reloading the page?"
-      >
-        <Button icon="view-reload" onClick={() => window.location.reload(true)}>
-          Reload
-        </Button>
-      </NullState>
-    );
+    if (hasError) {
+      return (
+        <NullState
+          heading="Sorry, we lost connection to the server..."
+          copy="Mind reloading the page?"
+        >
+          <Button
+            icon="view-reload"
+            onClick={() => window.location.reload(true)}
+          >
+            Reload
+          </Button>
+        </NullState>
+      );
+    }
+
+    return null;
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-const Messages = compose(
-  // $FlowIssue
-  connect(map),
-  withRouter,
-  getThreadMessages,
-  viewNetworkHandler
-)(MessagesWithData);
+const map = state => ({
+  networkOnline: state.connectionStatus.networkOnline,
+  websocketConnection: state.connectionStatus.websocketConnection,
+});
 
-export default Messages;
+export default compose(
+  withRouter,
+  withCurrentUser,
+  getThreadMessages,
+  viewNetworkHandler,
+  // $FlowIssue
+  connect(map)
+)(MessagesWithData);

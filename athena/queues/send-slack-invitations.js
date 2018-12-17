@@ -8,7 +8,7 @@ import {
   resetCommunitySlackSettings,
   updateSlackInvitesMemberCount,
 } from '../models/communitySettings';
-import { getUserById } from '../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import { getCommunityById } from '../models/community';
 import {
   sendCommunityInviteNotificationQueue,
@@ -100,7 +100,7 @@ const processJob = async (job: Job<SendSlackInvitationsJobData>) => {
     ...invitePromises,
     updateSlackInvitesMemberCount(communityId, membersCount),
     _adminProcessSlackImportQueue.add({
-      thisUser: owner,
+      user: owner,
       community,
       invitedCount: membersCount,
       teamName,
@@ -112,8 +112,8 @@ export default async (job: Job<SendSlackInvitationsJobData>) => {
   try {
     await processJob(job);
   } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     Raven.captureException(err);
   }
 };

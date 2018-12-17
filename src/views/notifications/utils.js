@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Query } from 'react-apollo';
 import { timeDifferenceShort } from 'shared/time-difference';
 import { getThreadByIdQuery } from 'shared/graphql/queries/thread/getThread';
@@ -38,30 +38,28 @@ const actorsToString = actors => {
   const data =
     actors && actors.length > 0 && actors.map(actor => actor.payload).reverse();
 
-  if (actors.length === 1) {
+  if (actors && actors.length === 1) {
     return (
       <span>
         <Link to={`/users/${data[0].username}`}>{`${names[0]}`}</Link>
       </span>
     );
-  } else if (actors.length === 2) {
+  } else if (actors && actors.length === 2) {
     return (
       <span>
         <Link to={`/users/${data[0].username}`}>{`${names[0]}`}</Link> and{' '}
         <Link to={`/users/${data[1].username}`}>{`${names[1]}`}</Link>
       </span>
     );
-  } else if (actors.length === 3) {
+  } else if (actors && actors.length === 3) {
     return (
       <span>
-        <Link to={`/users/${data[0].username}`}>{`${names[0]}`}</Link>
-        , <Link to={`/users/${data[1].username}`}>
-          {`${names[1]}`}
-        </Link> and{' '}
+        <Link to={`/users/${data[0].username}`}>{`${names[0]}`}</Link>,{' '}
+        <Link to={`/users/${data[1].username}`}>{`${names[1]}`}</Link> and{' '}
         <Link to={`/users/${data[2].username}`}>{`${names[2]}`}</Link>
       </span>
     );
-  } else if (actors.length >= 4) {
+  } else if (actors && actors.length >= 4) {
     return (
       <span>
         <Link to={`/users/${data[0].username}`}>{`${names[0]}`}</Link> and{' '}
@@ -154,7 +152,7 @@ const threadToString = (context, currentUser) => {
       <Link
         to={{
           pathname: window.location.pathname,
-          search: `?thread=${context.payload.threadId}`,
+          search: `?thread=${context.id}`,
         }}
       >
         {context.payload.content.title}
@@ -193,14 +191,13 @@ const messageToString = context => {
         return (
           <span>
             {' '}
-            your reply in
+            your reply in{' '}
             <Link
               to={{
                 pathname: window.location.pathname,
-                search: `?thread=${context.payload.id}`,
+                search: `?thread=${context.payload.threadId}`,
               }}
             >
-              {' '}
               {data.thread.content.title}
             </Link>
           </span>

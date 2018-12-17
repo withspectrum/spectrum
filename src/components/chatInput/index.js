@@ -6,7 +6,7 @@ import withHandlers from 'recompose/withHandlers';
 import { connect } from 'react-redux';
 import { KeyBindingUtil } from 'draft-js';
 import debounce from 'debounce';
-import Icon from '../../components/icons';
+import Icon from 'src/components/icons';
 import {
   toJSON,
   toState,
@@ -16,9 +16,10 @@ import {
 } from 'shared/draft-utils';
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
 import linksDecorator from 'shared/clients/draft-js/links-decorator/index.web.js';
-import { addToastWithTimeout } from '../../actions/toasts';
-import { openModal } from '../../actions/modals';
-import { replyToMessage } from '../../actions/message';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { openModal } from 'src/actions/modals';
+import { replyToMessage } from 'src/actions/message';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   Form,
   ChatInputContainer,
@@ -642,15 +643,7 @@ class ChatInput extends React.Component<Props, State> {
         <ChatInputContainer focus={isFocused} onClick={this.triggerFocus}>
           {photoSizeError && (
             <PhotoSizeError>
-              <p
-                onClick={() =>
-                  this.props.dispatch(
-                    openModal('UPGRADE_MODAL', { user: currentUser })
-                  )
-                }
-              >
-                {photoSizeError}
-              </p>
+              <p>{photoSizeError}</p>
               <Icon
                 onClick={() => this.clearError()}
                 glyph="view-close"
@@ -726,12 +719,12 @@ class ChatInput extends React.Component<Props, State> {
 }
 
 const map = (state, ownProps) => ({
-  currentUser: state.users.currentUser,
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
   quotedMessage: state.message.quotedMessage[ownProps.thread] || null,
 });
 export default compose(
+  withCurrentUser,
   sendMessage,
   sendDirectMessage,
   // $FlowIssue

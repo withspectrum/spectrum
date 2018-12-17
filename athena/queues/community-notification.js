@@ -12,7 +12,7 @@ import {
 import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
-} from '../models/usersNotifications';
+} from 'shared/db/queries/usersNotifications';
 import type { Job, CommunityNotificationJobData } from 'shared/bull/types';
 
 export default async (job: Job<CommunityNotificationJobData>) => {
@@ -76,8 +76,8 @@ export default async (job: Job<CommunityNotificationJobData>) => {
   try {
     return Promise.all([notificationPromises]);
   } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     Raven.captureException(err);
   }
 };

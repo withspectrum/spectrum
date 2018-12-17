@@ -7,7 +7,7 @@ const HOME = IS_PROD ? '/' : 'http://localhost:3000/';
 const logoutRouter = Router();
 
 logoutRouter.get('/', (req, res) => {
-  req.session = null;
+  req.logout();
   return res.redirect(HOME);
 });
 

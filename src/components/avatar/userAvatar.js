@@ -1,14 +1,13 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import { Query } from 'react-apollo';
-import { optimize } from 'src/helpers/images';
 import {
   getUserByUsernameQuery,
   type GetUserType,
 } from 'shared/graphql/queries/user/getUser';
 import { UserHoverProfile } from 'src/components/hoverProfile';
 import AvatarImage from './image';
-import { Status, AvatarLink } from './style';
+import { Container, AvatarLink, OnlineIndicator } from './style';
 import ConditionalWrap from 'src/components/conditionalWrap';
 
 type HandlerProps = {
@@ -16,12 +15,17 @@ type HandlerProps = {
   username?: string,
   size?: number,
   mobilesize?: number,
-  onlineSize?: 'small' | 'large',
   style?: Object,
   showHoverProfile?: boolean,
   showOnlineStatus?: boolean,
-  clickable?: boolean,
+  isClickable?: boolean,
   dataCy?: string,
+  onlineBorderColor?: ?Function,
+};
+
+type AvatarProps = {
+  ...$Exact<HandlerProps>,
+  user: GetUserType,
 };
 
 const GetUserByUsername = (props: HandlerProps) => {
@@ -29,7 +33,7 @@ const GetUserByUsername = (props: HandlerProps) => {
   return (
     <Query variables={{ username }} query={getUserByUsernameQuery}>
       {({ data }) => {
-        if (!data.user) return null;
+        if (!data || !data.user) return null;
         return (
           <ConditionalWrap
             condition={showHoverProfile}
@@ -47,9 +51,64 @@ const GetUserByUsername = (props: HandlerProps) => {
   );
 };
 
-export default class AvatarHandler extends Component<HandlerProps> {
+class Avatar extends React.Component<AvatarProps> {
   render() {
-    const { showHoverProfile = true, clickable } = this.props;
+    const {
+      user,
+      dataCy,
+      size = 32,
+      mobilesize,
+      style,
+      showOnlineStatus = true,
+      isClickable = true,
+      onlineBorderColor = null,
+    } = this.props;
+
+    const src = user.profilePhoto;
+
+    const userFallback = '/img/default_avatar.svg';
+    const source = [src, userFallback];
+
+    return (
+      <Container
+        style={style}
+        type={'user'}
+        data-cy={dataCy}
+        size={size}
+        mobileSize={mobilesize}
+      >
+        {showOnlineStatus &&
+          user.isOnline && (
+            <OnlineIndicator onlineBorderColor={onlineBorderColor} />
+          )}
+        <ConditionalWrap
+          condition={!!user.username && isClickable}
+          wrap={() => (
+            <AvatarLink to={`/users/${user.username}`}>
+              <AvatarImage
+                src={source}
+                size={size}
+                mobilesize={mobilesize}
+                type={'user'}
+              />
+            </AvatarLink>
+          )}
+        >
+          <AvatarImage
+            src={source}
+            size={size}
+            mobilesize={mobilesize}
+            type={'user'}
+          />
+        </ConditionalWrap>
+      </Container>
+    );
+  }
+}
+
+class AvatarHandler extends React.Component<HandlerProps> {
+  render() {
+    const { showHoverProfile = true, isClickable } = this.props;
 
     if (this.props.user) {
       const user = this.props.user;
@@ -71,7 +130,7 @@ export default class AvatarHandler extends Component<HandlerProps> {
       return (
         <GetUserByUsername
           username={this.props.username}
-          clickable={clickable}
+          isClickable={isClickable}
         />
       );
     }
@@ -80,67 +139,4 @@ export default class AvatarHandler extends Component<HandlerProps> {
   }
 }
 
-type AvatarProps = {
-  ...$Exact<HandlerProps>,
-  user: GetUserType,
-};
-
-class Avatar extends Component<AvatarProps> {
-  render() {
-    const {
-      user,
-      dataCy,
-      size = 32,
-      mobilesize,
-      onlineSize = 'large',
-      style,
-      showOnlineStatus = false,
-      clickable = true,
-    } = this.props;
-
-    const src = user.profilePhoto;
-
-    const optimizedAvatar =
-      src &&
-      optimize(src, {
-        w: size.toString(),
-        dpr: '2',
-        format: 'png',
-      });
-    const userFallback = '/img/default_avatar.svg';
-    const source = [optimizedAvatar, userFallback];
-
-    return (
-      <Status
-        size={size}
-        mobilesize={mobilesize}
-        isOnline={showOnlineStatus && user.isOnline}
-        onlineSize={onlineSize}
-        style={style}
-        type={'user'}
-        data-cy={dataCy}
-      >
-        <ConditionalWrap
-          condition={!!user.username && clickable}
-          wrap={() => (
-            <AvatarLink to={`/users/${user.username}`}>
-              <AvatarImage
-                src={source}
-                size={size}
-                mobilesize={mobilesize}
-                type={'user'}
-              />
-            </AvatarLink>
-          )}
-        >
-          <AvatarImage
-            src={source}
-            size={size}
-            mobilesize={mobilesize}
-            type={'user'}
-          />
-        </ConditionalWrap>
-      </Status>
-    );
-  }
-}
+export default AvatarHandler;

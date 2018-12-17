@@ -29,6 +29,8 @@ type State = {
 };
 
 class SetUsername extends React.Component<Props, State> {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
     const { user } = props;
@@ -52,7 +54,12 @@ class SetUsername extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     track(events.USER_ONBOARDING_SET_USERNAME_STEP_VIEWED);
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   handleUsernameValidation = ({ error, success, username }) => {
@@ -78,6 +85,7 @@ class SetUsername extends React.Component<Props, State> {
     this.props
       .editUser(input)
       .then(() => {
+        if (!this._isMounted) return;
         this.setState({
           isLoading: false,
           success: '',
@@ -89,6 +97,7 @@ class SetUsername extends React.Component<Props, State> {
         return this.props.save();
       })
       .catch(err => {
+        if (!this._isMounted) return;
         this.setState({
           isLoading: false,
           success: '',
@@ -133,4 +142,8 @@ class SetUsername extends React.Component<Props, State> {
   }
 }
 
-export default compose(editUserMutation, withApollo, connect())(SetUsername);
+export default compose(
+  editUserMutation,
+  withApollo,
+  connect()
+)(SetUsername);

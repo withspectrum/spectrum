@@ -6,6 +6,7 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   websocketConnection: string,
@@ -36,6 +37,8 @@ class Status extends React.Component<Props, State> {
   componentDidMount() {
     window.addEventListener('offline', this.handleOnlineChange);
     window.addEventListener('online', this.handleOnlineChange);
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
+
     // Only show the bar after a five second timeout
     setTimeout(() => {
       this.setState({
@@ -48,6 +51,16 @@ class Status extends React.Component<Props, State> {
     window.removeEventListener('offline', this.handleOnlineChange);
     window.removeEventListener('online', this.handleOnlineChange);
   }
+
+  handleVisibilityChange = () => {
+    if (document && document.visibilityState === 'hidden') {
+      return this.props.dispatch({ type: 'PAGE_VISIBILITY', value: 'hidden' });
+    } else if (document && document.visibilityState === 'visible') {
+      return this.props.dispatch({ type: 'PAGE_VISIBILITY', value: 'visible' });
+    } else {
+      return;
+    }
+  };
 
   handleOnlineChange = () => {
     const online = window.navigator.onLine;
@@ -121,12 +134,12 @@ class Status extends React.Component<Props, State> {
 }
 
 const map = state => ({
-  currentUser: state.users.currentUser,
   websocketConnection: state.connectionStatus.websocketConnection,
 });
 
 export default compose(
   // $FlowIssue
   connect(map),
+  withCurrentUser,
   withRouter
 )(Status);

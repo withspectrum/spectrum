@@ -18,7 +18,7 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { Button, TextButton, OutlineButton } from 'src/components/buttons';
 import deleteCurrentUserMutation from 'shared/graphql/mutations/user/deleteCurrentUser';
 import { SERVER_URL } from 'src/api/constants';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Loading } from 'src/components/loading';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
@@ -85,18 +85,9 @@ class DeleteAccountForm extends React.Component<Props, State> {
 
   render() {
     const { isLoading, ownsCommunities, deleteInited } = this.state;
-    const { data: { user } } = this.props;
-
-    if (user && user.isPro) {
-      return (
-        <SectionCard>
-          <SectionTitle>Delete my account</SectionTitle>
-          <SectionSubtitle>
-            Please downgrade from the Pro plan before deleting your account.
-          </SectionSubtitle>
-        </SectionCard>
-      );
-    }
+    const {
+      data: { user },
+    } = this.props;
 
     if (user) {
       return (

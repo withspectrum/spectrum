@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import intersection from 'lodash.intersection';
 import { parseRange } from './utils';
 import { uploadImage } from '../utils/file-storage';
@@ -7,8 +7,9 @@ import getRandomDefaultPhoto from '../utils/get-random-default-photo';
 import {
   sendNewCommunityWelcomeEmailQueue,
   _adminSendCommunityCreatedEmailQueue,
+  searchQueue,
+  trackQueue,
 } from 'shared/bull/queues';
-import { trackQueue } from 'shared/bull/queues';
 import { events } from 'shared/analytics';
 import type { DBCommunity, DBUser } from 'shared/types';
 import type { Timeframe } from './utils';
@@ -60,9 +61,7 @@ export const getCommunitiesByUser = (userId: string): Promise<Array<DBCommunity>
     db
       .table('usersCommunities')
       // get all the user's communities
-      .getAll(userId, { index: 'userId' })
-      // only return communities the user is a member of
-      .filter({ isMember: true })
+      .getAll([userId, true], { index: 'userIdAndIsMember' })
       // get the community objects for each community
       .eqJoin('communityId', db.table('communities'))
       // get rid of unnecessary info from the usersCommunities object on the left
@@ -80,9 +79,7 @@ export const getVisibleCommunitiesByUser = async (evaluatingUserId: string, curr
   const evaluatingUserMemberships = await db
     .table('usersCommunities')
     // get all the user's communities
-    .getAll(evaluatingUserId, { index: 'userId' })
-    // only return communities the user is a member of
-    .filter({ isMember: true })
+    .getAll([evaluatingUserId, true], { index: 'userIdAndIsMember' })
     // get the community objects for each community
     .eqJoin('communityId', db.table('communities'))
     // get rid of unnecessary info from the usersCommunities object on the left
@@ -96,9 +93,7 @@ export const getVisibleCommunitiesByUser = async (evaluatingUserId: string, curr
   const currentUserMemberships = await db
     .table('usersCommunities')
     // get all the user's communities
-    .getAll(currentUserId, { index: 'userId' })
-    // only return communities the user is a member of
-    .filter({ isMember: true })
+    .getAll([currentUserId, true], { index: 'userIdAndIsMember' })
     // get the community objects for each community
     .eqJoin('communityId', db.table('communities'))
     // get rid of unnecessary info from the usersCommunities object on the left
@@ -129,9 +124,7 @@ export const getPublicCommunitiesByUser = async (userId: string) => {
   return await db
     .table('usersCommunities')
     // get all the user's communities
-    .getAll(userId, { index: 'userId' })
-    // only return communities the user is a member of
-    .filter({ isMember: true })
+    .getAll([userId, true], { index: 'userIdAndIsMember' })
     // get the community objects for each community
     .eqJoin('communityId', db.table('communities'))
     // only return public community ids
@@ -158,8 +151,9 @@ export const getCommunitiesChannelCounts = (communityIds: Array<string>) => {
 export const getCommunitiesMemberCounts = (communityIds: Array<string>) => {
   return db
     .table('usersCommunities')
-    .getAll(...communityIds, { index: 'communityId' })
-    .filter({ isBlocked: false, isMember: true })
+    .getAll(...communityIds.map(id => [id, true]), {
+      index: 'communityIdAndIsMember',
+    })
     .group('communityId')
     .count()
     .run();
@@ -170,10 +164,9 @@ export const getCommunitiesOnlineMemberCounts = (
 ) => {
   return db
     .table('usersCommunities')
-    .getAll(...communityIds, {
-      index: 'communityId',
+    .getAll(...communityIds.map(id => [id, true]), {
+      index: 'communityIdAndIsMember',
     })
-    .filter({ isBlocked: false, isMember: true })
     .pluck(['communityId', 'userId'])
     .eqJoin('userId', db.table('users'))
     .pluck('left', { right: ['lastSeen', 'isOnline'] })
@@ -193,34 +186,6 @@ export const getCommunitiesOnlineMemberCounts = (
         )
     )
     .group('communityId')
-    .count()
-    .run();
-};
-
-// prettier-ignore
-export const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
-  const getChannelCount = db
-    .table('channels')
-    .getAll(communityId, { index: 'communityId' })
-    .filter(channel => db.not(channel.hasFields('deletedAt')))
-    .count()
-    .run();
-
-  const getMemberCount = db
-    .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ isBlocked: false, isMember: true })
-    .count()
-    .run();
-
-  return Promise.all([getChannelCount, getMemberCount]);
-};
-
-export const getMemberCount = (communityId: string): Promise<number> => {
-  return db
-    .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ isBlocked: false, isMember: true })
     .count()
     .run();
 };
@@ -267,8 +232,8 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
         modifiedAt: null,
         creatorId: user.id,
         administratorEmail: user.email,
-        stripeCustomerId: null,
-        isPrivate
+        isPrivate,
+        memberCount: 0,
       },
       { returnChanges: true }
     )
@@ -280,6 +245,12 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
         event: events.COMMUNITY_CREATED,
         context: { communityId: community.id },
       });
+
+      searchQueue.add({
+        id: community.id,
+        type: 'community',
+        event: 'created'
+      })
 
       // send a welcome email to the community creator
       sendNewCommunityWelcomeEmailQueue.add({ user, community });
@@ -454,6 +425,12 @@ export const editCommunity = ({ input }: EditCommunityInput, userId: string): Pr
       });
     })
     .then(community => {
+      searchQueue.add({
+        id: community.id,
+        type: 'community',
+        event: 'edited'
+      })
+
       // if no file was uploaded, update the community with new string values
       if (!file && !coverFile) {
         return db
@@ -620,6 +597,12 @@ export const deleteCommunity = (communityId: string, userId: string): Promise<DB
         event: events.COMMUNITY_DELETED,
         context: { communityId },
       });
+
+      searchQueue.add({
+        id: communityId,
+        type: 'community',
+        event: 'deleted'
+      })
     });
 };
 
@@ -763,91 +746,57 @@ export const resetCommunityAdministratorEmail = (communityId: string) => {
     .run();
 };
 
-// prettier-ignore
-export const setStripeCustomerId = (communityId: string, stripeCustomerId: string): Promise<DBCommunity> => {
+export const incrementMemberCount = (
+  communityId: string
+): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
     .update(
       {
-        stripeCustomerId,
+        memberCount: db
+          .row('memberCount')
+          .default(0)
+          .add(1),
       },
-      {
-        returnChanges: 'always',
-      }
+      { returnChanges: true }
     )
     .run()
     .then(result => result.changes[0].new_val || result.changes[0].old_val);
 };
 
-// prettier-ignore
-export const disablePaidFeatureFlags = (communityId: string, userId: string): Promise<DBCommunity> => {
+export const decrementMemberCount = (
+  communityId: string
+): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
-    .update({
-      analyticsEnabled: false,
-      prioritySupportEnabled: false,
-    })
+    .update(
+      {
+        memberCount: db
+          .row('memberCount')
+          .default(1)
+          .sub(1),
+      },
+      { returnChanges: true }
+    )
     .run()
-    .then(async () => {
-      trackQueue.add({
-        userId,
-        event: events.COMMUNITY_ANALYTICS_DISABLED,
-        context: { communityId }
-      })
-
-      trackQueue.add({
-        userId,
-        event: events.COMMUNITY_PRIORITY_SUPPORT_DISABLED,
-        context: { communityId }
-      })
-
-      return await getCommunityById(communityId)
-    })
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
 };
 
-export const updateCommunityPaidFeature = (
+export const setMemberCount = (
   communityId: string,
-  feature: string,
-  value: boolean,
-  userId: string
+  value: number
 ): Promise<DBCommunity> => {
-  const obj = { [feature]: value };
   return db
     .table('communities')
     .get(communityId)
-    .update(obj, { returnChanges: 'always' })
+    .update(
+      {
+        memberCount: value,
+      },
+      { returnChanges: true }
+    )
     .run()
-    .then(result => {
-      if (result && result.changes.length > 0) {
-        switch (feature) {
-          case 'analyticsEnabled': {
-            trackQueue.add({
-              userId,
-              event: value
-                ? events.COMMUNITY_ANALYTICS_ENABLED
-                : events.COMMUNITY_ANALYTICS_DISABLED,
-              context: { communityId },
-            });
-            break;
-          }
-          case 'prioritySupportEnabled': {
-            trackQueue.add({
-              userId,
-              event: value
-                ? events.COMMUNITY_PRIORITY_SUPPORT_ENABLED
-                : events.COMMUNITY_PRIORITY_SUPPORT_DISABLED,
-              context: { communityId },
-            });
-          }
-          default: {
-            break;
-          }
-        }
-
-        return result.changes[0].new_val || result.changes[0].old_val;
-      }
-      return { id: communityId };
-    });
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
 };

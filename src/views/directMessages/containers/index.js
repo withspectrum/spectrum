@@ -1,21 +1,24 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import getCurrentUserDirectMessageThreads from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
 import type { GetCurrentUserDMThreadConnectionType } from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
 import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
-import Icon from '../../../components/icons';
+import Icon from 'src/components/icons';
 import ThreadsList from '../components/threadsList';
 import NewThread from './newThread';
 import ExistingThread from './existingThread';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import ViewError from '../../../components/viewError';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import ViewError from 'src/components/viewError';
 import Titlebar from '../../titlebar';
 import { View, MessagesList, ComposeHeader } from '../style';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
+import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
+import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 
 type Props = {
   subscribeToUpdatedDirectMessageThreads: Function,
@@ -29,8 +32,12 @@ type Props = {
   fetchMore: Function,
   data: {
     user: GetCurrentUserDMThreadConnectionType,
+    refetch: Function,
   },
+  networkOnline: boolean,
+  websocketConnection: WebsocketConnectionType,
 };
+
 type State = {
   activeThread: string,
   subscription: ?Function,
@@ -59,6 +66,25 @@ class DirectMessages extends React.Component<Props, State> {
       subscription();
     }
   };
+
+  shouldComponentUpdate(nextProps: Props) {
+    const curr = this.props;
+
+    // fetching more
+    if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
+      return false;
+
+    return true;
+  }
+
+  componentDidUpdate(prev: Props) {
+    const curr = this.props;
+
+    const didReconnect = useConnectionRestored({ curr, prev });
+    if (didReconnect && curr.data.refetch) {
+      curr.data.refetch();
+    }
+  }
 
   componentDidMount() {
     this.props.markDirectMessageNotificationsSeen();
@@ -171,11 +197,16 @@ class DirectMessages extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
+const map = state => ({
+  networkOnline: state.connectionStatus.networkOnline,
+  websocketConnection: state.connectionStatus.websocketConnection,
+});
+
 export default compose(
-  // $FlowIssue
-  connect(map),
+  withCurrentUser,
   getCurrentUserDirectMessageThreads,
   markDirectMessageNotificationsSeenMutation,
-  viewNetworkHandler
+  viewNetworkHandler,
+  // $FlowIssue
+  connect(map)
 )(DirectMessages);

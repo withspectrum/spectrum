@@ -2,7 +2,7 @@
 require('now-env');
 import axios from 'axios';
 const querystring = require('querystring');
-const { db } = require('./db');
+const { db } = require('shared/db');
 
 let SLACK_SECRET = process.env.SLACK_SECRET;
 if (!SLACK_SECRET) {

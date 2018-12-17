@@ -3,11 +3,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import queryString from 'query-string';
-import Icon from '../../components/icons';
+import Icon from 'src/components/icons';
 import ProfileDropdown from './components/profileDropdown';
 import MessagesTab from './components/messagesTab';
 import NotificationsTab from './components/notificationsTab';
-import Head from '../../components/head';
+import Head from 'src/components/head';
+import { withCurrentUser } from 'src/components/withCurrentUser';
+import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+import { truncateNumber } from 'src/helpers/utils';
 import {
   Nav,
   Logo,
@@ -16,16 +19,17 @@ import {
   ProfileDrop,
   ProfileTab,
   SupportTab,
-  PricingTab,
   Tab,
   Label,
   Navatar,
   SkipLink,
   SigninLink,
+  Reputation,
 } from './style';
 import { track, events } from 'src/helpers/analytics';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
-import { isDesktopApp } from 'src/helpers/is-desktop-app';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
+import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 
 type Props = {
   isLoading: boolean,
@@ -37,8 +41,11 @@ type Props = {
     notifications: number,
     directMessageNotifications: number,
   },
-  currentUser?: Object,
+  currentUser?: GetUserType,
+  isLoadingCurrentUser: boolean,
   activeInboxThread: ?string,
+  networkOnline: boolean,
+  websocketConnection: WebsocketConnectionType,
 };
 
 type State = {
@@ -50,40 +57,48 @@ class Navbar extends React.Component<Props, State> {
     isSkipLinkFocused: false,
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const currProps = this.props;
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
+    const curr = this.props;
+    const isMobile = window && window.innerWidth <= 768;
+
+    if (curr.networkOnline !== nextProps.networkOnline) return true;
+    if (curr.websocketConnection !== nextProps.websocketConnection) return true;
 
     // If the update was caused by the focus on the skip link
     if (nextState.isSkipLinkFocused !== this.state.isSkipLinkFocused)
       return true;
 
     // if route changes
-    if (currProps.location.pathname !== nextProps.location.pathname)
+    if (curr.location.pathname !== nextProps.location.pathname) return true;
+
+    // if route query params change we need to re-render on mobile
+    if (isMobile && curr.location.search !== nextProps.location.search)
       return true;
 
-    // if route query params change
-    if (currProps.location.search !== nextProps.location.search) return true;
-
     // Had no user, now have user or user changed
-    if (nextProps.currentUser !== currProps.currentUser) return true;
+    if (nextProps.currentUser !== curr.currentUser) return true;
+    if (nextProps.isLoadingCurrentUser !== curr.isLoadingCurrentUser)
+      return true;
 
     const newDMNotifications =
-      currProps.notificationCounts.directMessageNotifications !==
+      curr.notificationCounts.directMessageNotifications !==
       nextProps.notificationCounts.directMessageNotifications;
     const newNotifications =
-      currProps.notificationCounts.notifications !==
+      curr.notificationCounts.notifications !==
       nextProps.notificationCounts.notifications;
     if (newDMNotifications || newNotifications) return true;
 
-    // if the user is mobile and is viewing a thread or DM thread, re-render
-    // the navbar when they exit the thread
-    const { thread: thisThreadParam } = queryString.parse(
-      currProps.history.location.search
-    );
-    const { thread: nextThreadParam } = queryString.parse(
-      nextProps.history.location.search
-    );
-    if (thisThreadParam !== nextThreadParam) return true;
+    if (isMobile) {
+      // if the user is mobile and is viewing a thread or DM thread, re-render
+      // the navbar when they exit the thread
+      const { thread: thisThreadParam } = queryString.parse(
+        curr.history.location.search
+      );
+      const { thread: nextThreadParam } = queryString.parse(
+        nextProps.history.location.search
+      );
+      if (thisThreadParam !== nextThreadParam) return true;
+    }
 
     return false;
   }
@@ -114,9 +129,13 @@ class Navbar extends React.Component<Props, State> {
   };
 
   render() {
-    const { history, match, currentUser, notificationCounts } = this.props;
-
-    const loggedInUser = currentUser;
+    const {
+      history,
+      match,
+      currentUser,
+      isLoadingCurrentUser,
+      notificationCounts,
+    } = this.props;
 
     if (isViewingMarketingPage(history, currentUser)) {
       return null;
@@ -139,7 +158,7 @@ class Navbar extends React.Component<Props, State> {
       isViewingDm ||
       isComposingThread;
 
-    if (loggedInUser) {
+    if (currentUser) {
       return (
         <Nav hideOnMobile={hideNavOnMobile} data-cy="navbar">
           <Head>
@@ -165,7 +184,7 @@ class Navbar extends React.Component<Props, State> {
             to="/"
             aria-hidden
             tabIndex="-1"
-            isHidden={this.state.isSkipLinkFocused}
+            ishidden={this.state.isSkipLinkFocused || undefined}
             onClick={() => this.trackNavigationClick('logo')}
             data-cy="navbar-logo"
           >
@@ -207,7 +226,7 @@ class Navbar extends React.Component<Props, State> {
           <NotificationsTab
             onClick={() => this.trackNavigationClick('notifications')}
             location={history.location}
-            currentUser={loggedInUser}
+            currentUser={currentUser}
             active={history.location.pathname.includes('/notifications')}
           />
 
@@ -215,29 +234,40 @@ class Navbar extends React.Component<Props, State> {
             <Tab
               className={'hideOnMobile'}
               {...this.getTabProps(
-                history.location.pathname === `/users/${loggedInUser.username}`
+                history.location.pathname === `/users/${currentUser.username}`
               )}
-              to={loggedInUser ? `/users/${loggedInUser.username}` : '/'}
+              to={currentUser ? `/users/${currentUser.username}` : '/'}
               onClick={() => this.trackNavigationClick('profile')}
             >
+              {currentUser &&
+                typeof currentUser.totalReputation === 'number' && (
+                  <Reputation>
+                    <Icon glyph="rep" />{' '}
+                    {truncateNumber(
+                      parseInt(currentUser.totalReputation, 10),
+                      1
+                    )}
+                  </Reputation>
+                )}
               <Navatar
-                user={loggedInUser}
-                size={28}
+                style={{ gridArea: 'label' }}
+                user={currentUser}
+                size={32}
                 showHoverProfile={false}
                 showOnlineStatus={false}
-                clickable={false}
+                isClickable={false}
                 dataCy="navbar-profile"
               />
             </Tab>
-            <ProfileDropdown user={loggedInUser} />
+            <ProfileDropdown user={currentUser} />
           </ProfileDrop>
 
           <ProfileTab
             className={'hideOnDesktop'}
             {...this.getTabProps(
-              history.location.pathname === `/users/${loggedInUser.username}`
+              history.location.pathname === `/users/${currentUser.username}`
             )}
-            to={loggedInUser ? `/users/${loggedInUser.username}` : '/'}
+            to={currentUser ? `/users/${currentUser.username}` : '/'}
             onClick={() => this.trackNavigationClick('profile')}
           >
             <Icon glyph="profile" />
@@ -246,19 +276,18 @@ class Navbar extends React.Component<Props, State> {
         </Nav>
       );
     }
-
-    if (!loggedInUser) {
+    if (!currentUser && !isLoadingCurrentUser) {
       return (
         <Nav
           hideOnMobile={hideNavOnMobile}
-          loggedOut={!loggedInUser}
+          loggedOut={!currentUser}
           data-cy="navbar"
         >
           <Logo
             to="/"
             aria-hidden
             tabIndex="-1"
-            isHidden={this.state.isSkipLinkFocused}
+            ishidden={this.state.isSkipLinkFocused || undefined}
             data-cy="navbar-logo"
           >
             <Icon glyph="logo" size={28} />
@@ -283,7 +312,7 @@ class Navbar extends React.Component<Props, State> {
           <ExploreTab
             {...this.getTabProps(history.location.pathname === '/explore')}
             to="/explore"
-            loggedOut={!loggedInUser}
+            loggedout={!currentUser ? 'true' : undefined}
             data-cy="navbar-explore"
           >
             <Icon glyph="explore" />
@@ -297,14 +326,6 @@ class Navbar extends React.Component<Props, State> {
             <Icon glyph="like" />
             <Label>Support</Label>
           </SupportTab>
-          <PricingTab
-            {...this.getTabProps(history.location.pathname === '/pricing')}
-            to="/pricing"
-            data-cy="navbar-pricing"
-          >
-            <Icon glyph="payment" />
-            <Label>Pricing</Label>
-          </PricingTab>
           <SigninLink to="/login">Sign In</SigninLink>
         </Nav>
       );
@@ -314,11 +335,13 @@ class Navbar extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
+const map = state => ({
   notificationCounts: state.notifications,
+  networkOnline: state.connectionStatus.networkOnline,
+  websocketConnection: state.connectionStatus.websocketConnection,
 });
 export default compose(
   // $FlowIssue
-  connect(mapStateToProps)
+  connect(map),
+  withCurrentUser
 )(Navbar);

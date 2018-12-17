@@ -1,13 +1,18 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 
 export const getMembersInChannelWithNotifications = (
   channelId: string
 ): Promise<Array<string>> => {
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ isMember: true, receiveNotifications: true })
+    .getAll(
+      [channelId, 'member'],
+      [channelId, 'moderator'],
+      [channelId, 'owner'],
+      { index: 'channelIdAndRole' }
+    )
+    .filter({ receiveNotifications: true })
     .group('userId')
     .run()
     .then(users => users.map(u => u.group));
@@ -19,8 +24,7 @@ export const getUserPermissionsInChannel = (
 ): Promise<Object> => {
   return db
     .table('usersChannels')
-    .getAll(userId, { index: 'userId' })
-    .filter({ channelId })
+    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
     .group('userId')
     .run()
     .then(groups => {
@@ -43,8 +47,7 @@ export const getOwnersInChannel = (
 ): Promise<Array<string>> => {
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ isOwner: true })
+    .getAll([channelId, 'owner'], { index: 'channelIdAndRole' })
     .map(user => user('userId'))
     .run();
 };
@@ -54,8 +57,7 @@ export const getModeratorsInChannel = (
 ): Promise<Array<string>> => {
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ isModerator: true })
+    .getAll([channelId, 'moderator'], { index: 'channelIdAndRole' })
     .map(user => user('userId'))
     .run();
 };

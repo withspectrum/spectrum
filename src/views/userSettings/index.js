@@ -9,6 +9,7 @@ import getCurrentUserSettings, {
 import { Loading } from 'src/components/loading';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
 import ViewError from 'src/components/viewError';
 import { View } from './style';
@@ -53,7 +54,7 @@ class UserSettings extends React.Component<Props> {
     }
 
     // the user is logged in but somehow a user wasnt fetched from the server prompt a refresh to reauth the user
-    if ((currentUser && !user) || (currentUser && !user && !user.id)) {
+    if ((currentUser && !user) || (currentUser && user && !user.id)) {
       return (
         <React.Fragment>
           <Titlebar
@@ -70,29 +71,6 @@ class UserSettings extends React.Component<Props> {
               }
               clearStorage
               refresh
-            />
-          </AppViewWrapper>
-        </React.Fragment>
-      );
-    }
-
-    // if the user isn't logged in, or for some reason the user settings that were returned don't match the user id in the store, we show a warning error state
-    if (!currentUser || user.id !== currentUser.id) {
-      return (
-        <React.Fragment>
-          >
-          <Titlebar
-            title={'No User Found'}
-            provideBack={true}
-            backRoute={'/'}
-            noComposer
-          />
-          <AppViewWrapper>
-            <ViewError
-              heading={'These aren’t the settings you’re looking for.'}
-              subheading={
-                'You can only view your own user settings. Head on back.'
-              }
             />
           </AppViewWrapper>
         </React.Fragment>
@@ -178,10 +156,9 @@ class UserSettings extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowIssue
-  connect(map),
   getCurrentUserSettings,
-  viewNetworkHandler
+  viewNetworkHandler,
+  withCurrentUser,
+  connect()
 )(UserSettings);

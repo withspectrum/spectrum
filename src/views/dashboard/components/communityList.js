@@ -2,17 +2,18 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { CommunityAvatar } from 'src/components/avatar';
 import compose from 'recompose/compose';
-import Link from 'src/components/link';
-import Icon from '../../../components/icons';
-import Reputation from '../../../components/reputation';
+import { Link } from 'react-router-dom';
+import Icon from 'src/components/icons';
+import Reputation from 'src/components/reputation';
 import SidebarChannels from './sidebarChannels';
 import UpsellExploreCommunities from './upsellExploreCommunities';
 import {
   CommunityListItem,
   CommunityListMeta,
   CommunityListName,
-  CommunityListAvatar,
+  CommunityAvatarContainer,
   CommunityListScroller,
   CommunityListWrapper,
   Fixed,
@@ -21,7 +22,7 @@ import {
   changeActiveCommunity,
   changeActiveThread,
   changeActiveChannel,
-} from '../../../actions/dashboardFeed';
+} from 'src/actions/dashboardFeed';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
@@ -110,17 +111,15 @@ class CommunityList extends React.Component<Props> {
                 onClick={() => this.handleOnClick(c.id)}
                 active={c.id === activeCommunity}
               >
-                <CommunityListAvatar
-                  active={c.id === activeCommunity}
-                  src={c.profilePhoto}
-                  showHoverProfile={false}
-                />
+                <CommunityAvatarContainer>
+                  <CommunityAvatar community={c} showHoverProfile={false} />
+                </CommunityAvatarContainer>
                 <CommunityListMeta>
                   <CommunityListName>{c.name}</CommunityListName>
                   <Reputation
                     ignoreClick
                     size={'mini'}
-                    tipText={`Rep in ${c.name}`}
+                    tipText={`Your rep in ${c.name}`}
                     reputation={c.communityPermissions.reputation}
                   />
                 </CommunityListMeta>
@@ -169,4 +168,7 @@ class CommunityList extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), withRouter)(CommunityList);
+export default compose(
+  connect(),
+  withRouter
+)(CommunityList);

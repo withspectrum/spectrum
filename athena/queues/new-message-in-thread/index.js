@@ -15,11 +15,11 @@ import {
 import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
-} from '../../models/usersNotifications';
+} from 'shared/db/queries/usersNotifications';
 import { getThreadNotificationUsers } from '../../models/usersThreads';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
-import { getUserById } from '../../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import { getMessageById } from '../../models/message';
 import { sendMentionNotificationQueue } from 'shared/bull/queues';
 import type { MessageNotificationJobData, Job } from 'shared/bull/types';
@@ -176,8 +176,8 @@ export default async (job: Job<MessageNotificationJobData>) => {
   );
 
   return Promise.all(formatAndBufferPromises).catch(err => {
-    debug('❌ Error in job:\n');
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     Raven.captureException(err);
   });
 };

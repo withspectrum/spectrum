@@ -1,6 +1,6 @@
 // @flow
 import { createAmplitudeHelpers } from 'shared/clients/analytics';
-import { isDesktopApp } from 'src/helpers/is-desktop-app';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 const {
   events,

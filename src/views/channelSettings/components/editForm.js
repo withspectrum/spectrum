@@ -3,7 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import editChannelMutation from 'shared/graphql/mutations/channel/editChannel';
 import type { EditChannelType } from 'shared/graphql/mutations/channel/editChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
@@ -236,21 +236,19 @@ class ChannelWithData extends React.Component<Props, State> {
                 Anyone on Spectrum can join this channel, post threads and
                 messages, and will be able to see other members. If you want to
                 create private channels,{' '}
-                <a href="mailto:hi@spectrum.chat">get in touch</a>
-                .
+                <a href="mailto:hi@spectrum.chat">get in touch</a>.
               </Description>
             )}
 
             {// if the user is moving from private to public
-            this.props.channel.isPrivate &&
-              !isPrivate && (
-                <Notice>
-                  When a private channel is made public all pending users will
-                  be added as members of the channel. Blocked users will remain
-                  blocked from viewing all content in this channel but in the
-                  future any new person will be able to join.
-                </Notice>
-              )}
+            this.props.channel.isPrivate && !isPrivate && (
+              <Notice>
+                When a private channel is made public all pending users will be
+                added as members of the channel. Blocked users will remain
+                blocked from viewing all content in this channel but in the
+                future any new person will be able to join.
+              </Notice>
+            )}
 
             <Actions>
               <Button
@@ -289,7 +287,9 @@ class ChannelWithData extends React.Component<Props, State> {
   }
 }
 
-const Channel = compose(deleteChannelMutation, editChannelMutation, withRouter)(
-  ChannelWithData
-);
+const Channel = compose(
+  deleteChannelMutation,
+  editChannelMutation,
+  withRouter
+)(ChannelWithData);
 export default connect()(Channel);

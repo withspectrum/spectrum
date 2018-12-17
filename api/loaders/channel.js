@@ -3,6 +3,7 @@ import {
   getChannels,
   getChannelsThreadCounts,
   getChannelsMemberCounts,
+  getChannelsOnlineMemberCounts,
 } from '../models/channel';
 import { getChannelsSettings } from '../models/channelSettings';
 import createLoader from './create-loader';
@@ -17,13 +18,18 @@ export const __createChannelThreadCountLoader = createLoader(
   'group'
 );
 
+export const __createChannelPendingMembersLoader = createLoader(
+  channels => getPendingUsersInChannels(channels),
+  'group'
+);
+
 export const __createChannelMemberCountLoader = createLoader(
   channels => getChannelsMemberCounts(channels),
   'group'
 );
 
-export const __createChannelPendingMembersLoader = createLoader(
-  channels => getPendingUsersInChannels(channels),
+export const __createChannelOnlineMemberCountLoader = createLoader(
+  channelIds => getChannelsOnlineMemberCounts(channelIds),
   'group'
 );
 

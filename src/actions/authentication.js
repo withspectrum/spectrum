@@ -1,11 +1,6 @@
 import { setUser, unsetUser } from 'src/helpers/analytics';
-import { removeItemFromStorage, storeItem } from 'src/helpers/localStorage';
-import Raven from 'raven-js';
 
-export const logout = dispatch => {
-  // clear localStorage
-  removeItemFromStorage('spectrum');
-
+export const logout = () => {
   // no longer track analytics
   unsetUser();
 
@@ -19,47 +14,34 @@ export const logout = dispatch => {
         process.env.NODE_ENV === 'production'
           ? '/auth/logout'
           : 'http://localhost:3001/auth/logout';
-      dispatch({
-        type: 'CLEAR_USER',
-      });
     });
 };
 
-export const saveUserDataToLocalStorage = (user: Object) => async dispatch => {
-  const obj = {};
+export const setTrackingContexts = async (user: ?GetUserType) => {
+  if (!user || !user.id) return logout();
 
-  if (!user) {
-    logout();
-  }
-  // construct a clean object that doesn't include any metadata from apollo
-  // like __typename
-  obj['currentUser'] = {
-    id: user.id,
-    name: user.name,
-    username: user.username,
-    profilePhoto: user.profilePhoto,
-    coverPhoto: user.coverPhoto,
-    website: user.website,
-    totalReputation: user.totalReputation,
-  };
-
-  // logs user id to analytics
+  // get an anonymized userId for Sentry and Amplitude
   const response = await fetch(
     `https://micro-anonymizomatic-woewfxwpkp.now.sh?text=${user.id}`
   );
-  const { text } = await response.json();
-  setUser(text);
+  const { text: id } = await response.json();
+  return Promise.all([setAmplitudeUserContext(id), setRavenUserContext(id)]);
+};
 
-  // logs the user id to sentry errors
-  Raven.setUserContext({ id: user.id });
+export const setAmplitudeUserContext = (id: string) => setUser(id);
 
-  // save this object to localstorage. This will be used in the future to hydrate
-  // the store when users visit the homepage
-  storeItem('spectrum', obj);
-
-  // dispatch to the store and save the user
-  dispatch({
-    type: 'SET_USER',
-    user,
-  });
+export const setRavenUserContext = (id: string) => {
+  // logs the user id to Sentry
+  // if Raven hasn't loaded yet, try every 5s until it's loaded
+  if (window.Raven) {
+    return window.Raven.setUserContext({ id });
+  } else {
+    const interval = setInterval(() => {
+      if (window.Raven) {
+        window.Raven.setUserContext({ id });
+        clearInterval(interval);
+        return;
+      }
+    }, 5000);
+  }
 };

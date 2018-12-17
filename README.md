@@ -83,7 +83,7 @@ Want to fix a bug or implement an agreed-upon feature? Great, jump to the [local
 
 With the ground rules out of the way, let's talk about the coarse architecture of this mono repo:
 
-- **Full-stack JavaScript**: We use Node.js to power our servers, and React to power our frontend and mobile apps. Almost all of the code you'll touch in this codebase will be JavaScript.
+- **Full-stack JavaScript**: We use Node.js to power our servers, and React to power our frontend apps. Almost all of the code you'll touch in this codebase will be JavaScript.
 - **Background Jobs**: We leverage background jobs (powered by [`bull`](https://github.com/OptimalBits/bull) and Redis) a lot. These jobs are handled by a handful of small worker servers, each with its own purpose.
 
 Here is a list of all the big technologies we use:
@@ -93,8 +93,7 @@ Here is a list of all the big technologies we use:
 - **GraphQL**: API, powered by the entire Apollo toolchain
 - **Flowtype**: Type-safe JavaScript
 - **PassportJS**: Authentication
-- **React**: Frontend and mobile apps
-- **Expo**: Mobile apps
+- **React**: Frontend React app
 - **DraftJS**: WYSIWYG writing experience on the web
 
 #### Folder structure
@@ -110,8 +109,6 @@ spectrum/
 ├── hermes     # Worker server (email sending)
 ├── hyperion   # Server rendering server
 ├── mercury    # Worker server (reputation)
-├── mobile     # Mobile apps
-├── pluto      # Worker server (payments; syncing with Stripe)
 ├── public     # Public files used on the frontend
 ├── shared     # Shared JavaScript code
 ├── src        # Frontend SPA
@@ -258,31 +255,12 @@ To develop the desktop app you have to have the dev web server running in the ba
 yarn run dev:desktop
 ```
 
-#### Develop the mobile apps
+> Note: If something didn't work or you ran into troubles please submit PRs to improve this doc and keep it up to date!	
 
-To start the mobile apps run:
+<br />	
+<div align="center">	
+  <img height="200px" src="public/img/connect.svg" />	
+</div>	
 
-```
-yarn run dev:mobile
-```
-
-And then open either the iOS simulator or the Android simulator with
-
-```sh
-yarn run open:ios
-# or
-yarn run open:android
-```
-
-Refer to [the Expo documentation on how to install the simulators](https://docs.expo.io/versions/v25.0.0/guides/debugging.html#using-a-simulator--emulator).
-
-> Note: If something didn't work or you ran into troubles please submit PRs to improve this doc and keep it up to date!
-
-<br />
-<div align="center">
-  <img height="200px" src="public/img/connect.svg" />
-</div>
-
-## License
-
+## License	
 BSD 3-Clause, see the [LICENSE](./LICENSE) file.

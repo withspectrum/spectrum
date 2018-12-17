@@ -1,13 +1,13 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import type { DBUsersThreads } from 'shared/types';
 
 export const getThreadNotificationUsers = (
-  id: string
+  threadId: string
 ): Promise<Array<Object>> => {
   return db
     .table('usersThreads')
-    .getAll(id, { index: 'threadId' })
+    .getAll(threadId, { index: 'threadId' })
     .filter({ receiveNotifications: true })
     .eqJoin('userId', db.table('users'))
     .without({ right: ['id', 'createdAt'] })
@@ -21,8 +21,7 @@ export const getUsersThread = (
 ): Promise<?DBUsersThreads> => {
   return db
     .table('usersThreads')
-    .getAll(userId, { index: 'userId' })
-    .filter({ threadId })
+    .getAll([userId, threadId], { index: 'userIdAndThreadId' })
     .run()
     .then(data => {
       // if no record exists
@@ -38,8 +37,7 @@ export const getUserNotificationPermissionsInThread = (
 ): Promise<Boolean> => {
   return db
     .table('usersThreads')
-    .getAll(userId, { index: 'userId' })
-    .filter({ threadId })
+    .getAll([userId, threadId], { index: 'userIdAndThreadId' })
     .run()
     .then(data => data[0].receiveNotifications);
 };
@@ -51,8 +49,7 @@ export const setUserThreadLastSeen = (
 ): Promise<Object> => {
   return db
     .table('usersThreads')
-    .getAll(userId, { index: 'userId' })
-    .filter({ threadId })
+    .getAll([userId, threadId], { index: 'userIdAndThreadId' })
     .update({
       lastSeen,
     })

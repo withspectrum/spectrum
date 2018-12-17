@@ -1,77 +1,33 @@
 // @flow
-const { db } = require('./db');
-import type { DBCommunity } from 'shared/types';
+const { db } = require('shared/db');
+import type { Timeframe } from 'chronos/types';
+import { getRangeFromTimeframe } from 'chronos/models/utils';
 
-export const getCommunityById = (id: string): Promise<Object> => {
+// prettier-ignore
+export const getCommunitiesWithMinimumMembers = (min: number = 2): Promise<Array<string>> => {
   return db
     .table('communities')
-    .get(id)
+    .between(min, db.maxval, { index: 'memberCount' })
+    .filter(community => community.hasFields('deletedAt').not())
+    .map(row => row('id'))
     .run();
 };
 
-export const getCommunities = (
-  ids: Array<string>
-): Promise<Array<DBCommunity>> => {
-  return db
-    .table('communities')
-    .getAll(...ids)
-    .run();
-};
+export const getCommunitiesWithActiveThreadsInTimeframe = async (
+  timeframe: Timeframe
+): Promise<Array<string>> => {
+  const range = getRangeFromTimeframe(timeframe);
 
-export const getTopCommunities = (amount: number): Array<Object> => {
   return db
-    .table('communities')
-    .pluck('id')
-    .run()
-    .then(communities => communities.map(community => community.id))
-    .then(communityIds => {
-      return Promise.all(
-        communityIds.map(community => {
-          return db
-            .table('usersCommunities')
-            .getAll(community, { index: 'communityId' })
-            .filter({ isMember: true })
-            .count()
-            .run()
-            .then(count => {
-              return {
-                id: community,
-                count,
-              };
-            });
-        })
-      );
+    .table('threads')
+    .between(db.now().sub(range), db.now(), {
+      index: 'lastActive',
+      leftBound: 'open',
+      rightBound: 'open',
     })
-    .then(data => {
-      let sortedCommunities = data
-        .sort((x, y) => {
-          return y.count - x.count;
-        })
-        .map(community => community.id)
-        .slice(0, amount);
-
-      return db
-        .table('communities')
-        .getAll(...sortedCommunities)
-        .filter(community => db.not(community.hasFields('deletedAt')))
-        .run();
-    });
-};
-
-export const getCommunitiesWithMinimumMembers = (
-  min: number = 2,
-  communityIds: Array<string>
-) => {
-  return db
-    .table('usersCommunities')
-    .getAll(...communityIds, { index: 'communityId' })
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
     .group('communityId')
     .ungroup()
-    .filter(row =>
-      row('reduction')
-        .count()
-        .gt(min)
-    )
     .map(row => row('group'))
     .run();
 };

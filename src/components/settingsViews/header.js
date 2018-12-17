@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { StyledHeader, Heading, Subheading, HeaderText } from './style';
 import { UserAvatar, CommunityAvatar } from '../avatar';
 
@@ -22,18 +22,21 @@ class Header extends React.Component<Props> {
     const { avatar, subheading, heading } = this.props;
     return (
       <StyledHeader>
-        {avatar &&
-          avatar.community && (
-            <CommunityAvatar
-              community={avatar.community}
-              showHoverProfile={false}
-              size={48}
-            />
-          )}
-        {avatar &&
-          avatar.user && (
-            <UserAvatar showHoverProfile={false} user={avatar.user} size={48} />
-          )}
+        {avatar && avatar.community && (
+          <CommunityAvatar
+            community={avatar.community}
+            showHoverProfile={false}
+            size={48}
+          />
+        )}
+        {avatar && avatar.user && (
+          <UserAvatar
+            showOnlineStatus={false}
+            showHoverProfile={false}
+            user={avatar.user}
+            size={48}
+          />
+        )}
         <HeaderText>
           <Link to={subheading.to}>
             <Subheading>{subheading.label}</Subheading>

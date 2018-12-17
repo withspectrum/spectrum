@@ -1,4 +1,5 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 import {
@@ -12,7 +13,7 @@ import {
 import { Button } from '../../components/buttons';
 
 export const Title = styled.h1`
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   width: 100%;
   font-weight: 800;
   font-size: 24px;
@@ -53,7 +54,7 @@ export const Actions = styled.div`
 
 export const Subtitle = styled.h2`
   width: 100%;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-weight: 500;
   font-size: 16px;
   line-height: 1.4;
@@ -66,7 +67,7 @@ export const Subtitle = styled.h2`
   }
 
   a {
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
   }
 
   li {
@@ -81,7 +82,7 @@ export const LargeSubtitle = styled(Subtitle)`
 
 export const MiniSubtitle = styled(Subtitle)`
   font-weight: 600;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-size: 0.875rem;
   line-height: 1.4;
 `;
@@ -126,13 +127,6 @@ export const NullRow = styled(FlexRow)`
   padding: 1rem 15%;
 `;
 
-export const UpgradeError = styled.p`
-  color: ${props => props.theme.warn.default};
-  font-size: 14px;
-  text-align: center;
-  margin: 16px 0 0;
-`;
-
 export const Profile = styled.div`
   position: relative;
   padding: 16px 0;
@@ -144,13 +138,13 @@ export const Profile = styled.div`
   }
 
   span {
-    background-color: ${({ theme }) => theme.success.default};
+    background-color: ${theme.success.default};
     background-image: ${({ theme }) =>
       Gradient(theme.success.alt, theme.success.default)};
     position: absolute;
     left: 75%;
     top: 48px;
-    color: ${({ theme }) => theme.text.reverse};
+    color: ${theme.text.reverse};
     font-size: 10px;
     font-weight: 800;
     padding: 2px 4px;
@@ -167,13 +161,13 @@ export const UpsellIconContainer = styled.div`
   justify-content: center;
   margin-bottom: 16px;
   margin-top: 32px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 `;
 
 export const SignupButton = styled(Button)`
   font-size: 18px;
   font-weight: 700;
-  color: ${props => props.theme.text.reverse};
+  color: ${theme.text.reverse};
   padding: 16px 88px;
   max-width: 100%;
   box-shadow: ${props =>
@@ -186,15 +180,15 @@ export const SignupFooter = styled.div`
   justify-content: center;
   padding: 16px;
   font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-weight: 500;
-  border-top: 2px solid ${props => props.theme.bg.wash};
+  border-top: 2px solid ${theme.bg.wash};
   margin-top: 40px;
   width: 100%;
 `;
 
 export const SigninLink = styled.span`
-  color: ${props => props.theme.brand.default};
+  color: ${theme.brand.default};
   margin-left: 6px;
   cursor: pointer;
 `;
@@ -213,7 +207,7 @@ export const CodeOfConduct = styled.p`
   display: inline-block;
   font-size: 14px;
   font-weight: 500;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   border-radius: 8px;
   margin-top: 64px;
   margin-left: 32px;
@@ -223,7 +217,7 @@ export const CodeOfConduct = styled.p`
   z-index: ${zIndex.card + 1};
 
   a {
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
     font-weight: 600;
   }
 `;

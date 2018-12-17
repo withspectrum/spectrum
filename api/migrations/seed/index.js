@@ -61,6 +61,7 @@ users.forEach(user => {
 debug('Generating channels...');
 let channels = defaultChannels;
 communities.forEach(community => {
+  if (community.deletedAt) return;
   randomAmount({ max: 10 }, () => {
     channels.push(generateChannel(community.id));
   });
@@ -78,6 +79,11 @@ generatedUsersChannels.map(elem => {
 debug('Generating threads...');
 let threads = defaultThreads;
 channels.forEach(channel => {
+  const community = communities.find(
+    community => community.id === channel.communityId
+  );
+  if (community.deletedAt) return;
+
   randomAmount({ max: 10 }, () => {
     const creator = faker.random.arrayElement(users);
     const thread = generateThread(channel.communityId, channel.id, creator.id);
@@ -149,7 +155,7 @@ messages.map(message => {
 
 debug('Connecting to db...');
 // $FlowFixMe
-const db = require('rethinkdbdash')({
+const db = require('rethinkhaberdashery')({
   db: 'spectrum',
 });
 
@@ -229,5 +235,6 @@ Promise.all([
     debug(
       'Encountered error while inserting data (see below), please run yarn run db:drop and yarn run db:migrate to restore tables to original condition, then run this script again.'
     );
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
   });

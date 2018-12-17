@@ -2,35 +2,38 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Link from '../../components/link';
-import { Button } from '../../components/buttons';
+import { Link } from 'react-router-dom';
+import { Button } from 'src/components/buttons';
 import generateMetaInfo from 'shared/generate-meta-info';
-import ThreadComposer from '../../components/threadComposer';
-import Head from '../../components/head';
-import Icon from '../../components/icons';
-import AppViewWrapper from '../../components/appViewWrapper';
-import ThreadFeed from '../../components/threadFeed';
+import ThreadComposer from 'src/components/threadComposer';
+import Head from 'src/components/head';
+import Icon from 'src/components/icons';
+import AppViewWrapper from 'src/components/appViewWrapper';
+import ThreadFeed from 'src/components/threadFeed';
 import Search from './components/search';
 import CommunityMemberGrid from './components/memberGrid';
-import ToggleCommunityMembership from '../../components/toggleCommunityMembership';
-import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
-import { CoverPhoto } from '../../components/profile/coverPhoto';
+import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
+import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
+import { CoverPhoto } from 'src/components/profile/coverPhoto';
 import Titlebar from '../titlebar';
-import { CommunityProfile } from '../../components/profile';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
-import type { ViewNetworkHandlerType } from '../../components/viewNetworkHandler';
-import ViewError from '../../components/viewError';
-import { LoadingScreen } from '../../components/loading';
-import { CLIENT_URL } from '../../api/constants';
-import { Upsell404Community } from '../../components/upsell';
+import { CommunityProfile } from 'src/components/profile';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import type { ViewNetworkHandlerType } from 'src/components/viewNetworkHandler';
+import ViewError from 'src/components/viewError';
+import { LoadingScreen } from 'src/components/loading';
+import { CLIENT_URL } from 'src/api/constants';
+import { Upsell404Community } from 'src/components/upsell';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   SegmentedControl,
   Segment,
   DesktopSegment,
   MobileSegment,
-} from '../../components/segmentedControl';
+} from 'src/components/segmentedControl';
 import {
   LoginButton,
+  LoginOutlineButton,
+  SettingsButton,
   Grid,
   Meta,
   Content,
@@ -50,7 +53,10 @@ import CommunityLogin from 'src/views/communityLogin';
 import Login from 'src/views/login';
 import { ErrorBoundary } from 'src/components/error';
 
-const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
+const CommunityThreadFeed = compose(
+  connect(),
+  getCommunityThreads
+)(ThreadFeed);
 
 type Props = {
   ...$Exact<ViewNetworkHandlerType>,
@@ -69,7 +75,7 @@ type Props = {
 
 type State = {
   showComposerUpsell: boolean,
-  selectedView: 'threads' | 'search' | 'members',
+  selectedView: 'trending-threads' | 'threads' | 'search' | 'members',
   isLeavingCommunity: boolean,
 };
 
@@ -80,7 +86,7 @@ class CommunityView extends React.Component<Props, State> {
     this.state = {
       isLeavingCommunity: false,
       showComposerUpsell: false,
-      selectedView: 'threads',
+      selectedView: 'trending-threads',
     };
   }
 
@@ -95,30 +101,29 @@ class CommunityView extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
+    const { community: prevCommunity } = prevProps.data;
+    const { community: currCommunity } = this.props.data;
     if (
-      (!prevProps.data.community &&
-        this.props.data.community &&
-        this.props.data.community.id) ||
-      (prevProps.data.community &&
-        prevProps.data.community.id !== this.props.data.community.id)
+      (!prevCommunity && currCommunity && currCommunity.id) ||
+      (prevCommunity && prevCommunity.id !== currCommunity.id)
     ) {
       track(events.COMMUNITY_VIEWED, {
-        community: transformations.analyticsCommunity(
-          this.props.data.community
-        ),
+        community: transformations.analyticsCommunity(currCommunity),
       });
 
       // if the user is new and signed up through a community page, push
       // the community data into the store to hydrate the new user experience
       // with their first community they should join
-      if (this.props.currentUser) return;
-
-      this.props.dispatch(addCommunityToOnboarding(this.props.data.community));
+      if (!this.props.currentUser || !this.props.currentUser.username) {
+        return this.props.dispatch(addCommunityToOnboarding(currCommunity));
+      }
     }
   }
 
   setComposerUpsell = () => {
-    const { data: { community } } = this.props;
+    const {
+      data: { community },
+    } = this.props;
     const communityExists = community && community.communityPermissions;
     if (!communityExists) return;
 
@@ -174,7 +179,7 @@ class CommunityView extends React.Component<Props, State> {
               title={community.name}
               provideBack={true}
               backRoute={'/'}
-              noComposer={!community.communityPermissions.isMember}
+              noComposer
             />
 
             <Head
@@ -265,6 +270,7 @@ class CommunityView extends React.Component<Props, State> {
             provideBack={true}
             backRoute={'/'}
             noComposer={!community.communityPermissions.isMember}
+            activeCommunitySlug={community.slug}
           />
           <Grid id="main">
             <CoverPhoto src={community.coverPhoto} />
@@ -286,37 +292,48 @@ class CommunityView extends React.Component<Props, State> {
               ) : !isOwner ? (
                 <ToggleCommunityMembership
                   community={community}
-                  render={state => (
-                    <LoginButton
-                      isMember={isMember}
-                      gradientTheme={isMember ? null : 'success'}
-                      color={isMember ? 'text.alt' : null}
-                      icon={isMember ? 'checkmark' : null}
-                      loading={state.isLoading}
-                      dataCy={'join-community-button'}
-                      style={{ marginTop: '16px' }}
-                    >
-                      {isMember ? 'Member' : `Join ${community.name}`}
-                    </LoginButton>
-                  )}
+                  render={state => {
+                    if (isMember) {
+                      return (
+                        <LoginOutlineButton
+                          loading={state.isLoading}
+                          dataCy={'leave-community-button'}
+                        >
+                          Leave community
+                        </LoginOutlineButton>
+                      );
+                    } else {
+                      return (
+                        <LoginButton
+                          loading={state.isLoading}
+                          dataCy={'join-community-button'}
+                        >
+                          Join {community.name}
+                        </LoginButton>
+                      );
+                    }
+                  }}
                 />
               ) : null}
 
-              {currentUser &&
-                (isOwner || isModerator) && (
-                  <Link to={`/${community.slug}/settings`}>
-                    <LoginButton
-                      icon={'settings'}
-                      isMember
-                      data-cy="community-settings-button"
-                    >
-                      Settings
-                    </LoginButton>
-                  </Link>
-                )}
+              {currentUser && (isOwner || isModerator) && (
+                <Link to={`/${community.slug}/settings`}>
+                  <SettingsButton
+                    icon={'settings'}
+                    isMember
+                    data-cy="community-settings-button"
+                  >
+                    Settings
+                  </SettingsButton>
+                </Link>
+              )}
             </Meta>
             <Content data-cy="community-view-content">
-              <SegmentedControl style={{ margin: '16px 0 0 0' }}>
+              <SegmentedControl
+                style={{
+                  margin: '16px 0 0 0',
+                }}
+              >
                 <DesktopSegment
                   segmentLabel="search"
                   onClick={() => this.handleSegmentClick('search')}
@@ -326,12 +343,28 @@ class CommunityView extends React.Component<Props, State> {
                   Search
                 </DesktopSegment>
 
+                <MobileSegment
+                  segmentLabel="search"
+                  onClick={() => this.handleSegmentClick('search')}
+                  selected={selectedView === 'search'}
+                >
+                  <Icon glyph={'search'} />
+                </MobileSegment>
+
+                <Segment
+                  segmentLabel="trending-threads"
+                  onClick={() => this.handleSegmentClick('trending-threads')}
+                  selected={selectedView === 'trending-threads'}
+                >
+                  Trending
+                </Segment>
+
                 <Segment
                   segmentLabel="threads"
                   onClick={() => this.handleSegmentClick('threads')}
                   selected={selectedView === 'threads'}
                 >
-                  Threads
+                  Latest
                 </Segment>
 
                 <DesktopSegment
@@ -339,9 +372,7 @@ class CommunityView extends React.Component<Props, State> {
                   onClick={() => this.handleSegmentClick('members')}
                   selected={selectedView === 'members'}
                 >
-                  Members ({community.metaData &&
-                    community.metaData.members &&
-                    community.metaData.members.toLocaleString()})
+                  Members
                 </DesktopSegment>
                 <MobileSegment
                   segmentLabel="members"
@@ -350,20 +381,14 @@ class CommunityView extends React.Component<Props, State> {
                 >
                   Members
                 </MobileSegment>
-                <MobileSegment
-                  segmentLabel="search"
-                  onClick={() => this.handleSegmentClick('search')}
-                  selected={selectedView === 'search'}
-                >
-                  <Icon glyph={'search'} />
-                </MobileSegment>
               </SegmentedControl>
 
               {// if the user is logged in, is viewing the threads,
               // and is a member of the community, they should see a
               // new thread composer
               isLoggedIn &&
-                selectedView === 'threads' &&
+                (selectedView === 'threads' ||
+                  selectedView === 'trending-threads') &&
                 userHasPermissions && (
                   <ErrorBoundary fallbackComponent={null}>
                     <ThreadComposer
@@ -373,8 +398,8 @@ class CommunityView extends React.Component<Props, State> {
                   </ErrorBoundary>
                 )}
 
-              {// thread list
-              selectedView === 'threads' && (
+              {(selectedView === 'threads' ||
+                selectedView === 'trending-threads') && (
                 <CommunityThreadFeed
                   viewContext="communityProfile"
                   slug={communitySlug}
@@ -386,6 +411,9 @@ class CommunityView extends React.Component<Props, State> {
                   isNewAndOwned={isNewAndOwned}
                   community={community}
                   pinnedThreadId={community.pinnedThreadId}
+                  sort={
+                    selectedView === 'trending-threads' ? 'trending' : 'latest'
+                  }
                 />
               )}
 
@@ -469,13 +497,9 @@ class CommunityView extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({
-  currentUser: state.users.currentUser,
-});
-
 export default compose(
-  // $FlowIssue
-  connect(map),
+  withCurrentUser,
   getCommunityByMatch,
-  viewNetworkHandler
+  viewNetworkHandler,
+  connect()
 )(CommunityView);

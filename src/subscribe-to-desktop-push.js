@@ -1,5 +1,5 @@
 // @flow
-import { isDesktopApp } from './helpers/is-desktop-app';
+import { isDesktopApp } from './helpers/desktop-app-utils';
 import { getItemFromStorage } from './helpers/localStorage';
 import { client } from 'shared/graphql';
 import {
@@ -22,7 +22,8 @@ export const subscribeToDesktopPush = (
       const data = getItemFromStorage('spectrum');
       const { title, body, data: notificationData } = formatNotification(
         notification,
-        data && data.currentUser.id
+        data && data.currentUser.id,
+        { isDesktop: true }
       );
       // $FlowIssue Flow doesn't understand the HTML5 Notifications API ref facebook/flow#3784
       const push = new Notification(title, {

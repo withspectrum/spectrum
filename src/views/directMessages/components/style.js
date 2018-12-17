@@ -1,6 +1,7 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { UserAvatar } from 'src/components/avatar';
 import {
   Truncate,
@@ -37,12 +38,12 @@ export const Wrapper = styled(FlexCol)`
     bottom: 0;
     left: 16px;
     width: calc(100% - 16px);
-    border-bottom: 1px solid ${props => props.theme.bg.wash};
+    border-bottom: 1px solid ${theme.bg.wash};
   }
 
   &:hover {
     cursor: pointer;
-    background: ${props => props.theme.bg.wash};
+    background: ${theme.bg.wash};
   }
 `;
 
@@ -84,7 +85,7 @@ export const Meta = styled(H4)`
 export const Description = styled(P)`
   margin-top: 8px;
   font-weight: 400;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
 `;
 
 export const MessageGroupTextContainer = styled.div`
@@ -110,7 +111,7 @@ export const Usernames = styled.span`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   font-weight: ${props => (props.isUnread ? 800 : 600)};
   line-height: 1.1;
   margin-bottom: 1px;
@@ -224,8 +225,8 @@ export const Remainder = styled.span`
   padding: 0 2px;
   font-size: 9px;
   font-weight: 700;
-  color: ${props => props.theme.text.alt};
-  background: ${props => props.theme.bg.wash};
+  color: ${theme.text.alt};
+  background: ${theme.bg.wash};
   margin: 2px 1px 1px 2px;
   overflow: hidden;
   display: flex;
@@ -246,7 +247,7 @@ export const Grow = styled.div`
   flex: 1 1 auto;
   justify-content: center;
   align-items: stretch;
-  background: ${props => props.theme.bg.wash};
+  background: ${theme.bg.wash};
   width: 100%;
   height: 100%;
 `;
@@ -255,7 +256,7 @@ export const ComposerInput = styled.input`
   font-size: 16px;
   padding: 15px 16px;
   width: 100%;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
   position: relative;
   z-index: ${zIndex.search};
 
@@ -296,7 +297,7 @@ export const SearchResultsDropdown = styled.ul`
 export const SearchResult = styled.li`
   display: flex;
   align-items: center;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
   background: ${props => (props.focused ? props.theme.bg.wash : '#fff')};
   width: 100%;
   ${Truncate()} padding: 8px 16px 8px 8px;
@@ -310,7 +311,7 @@ export const SearchResult = styled.li`
   }
 
   &:hover {
-    background: ${props => props.theme.bg.wash};
+    background: ${theme.bg.wash};
     cursor: pointer;
   }
 `;
@@ -327,14 +328,14 @@ export const SearchResultTextContainer = styled.div`
 export const SearchResultDisplayName = styled.p`
   font-size: 14px;
   font-weight: 600;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   line-height: 1.4;
 `;
 
 export const SearchResultUsername = styled.p`
   font-size: 12px;
   font-weight: 500;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   line-height: 1.4;
 `;
 
@@ -342,7 +343,7 @@ export const SearchResultNull = styled.p`
   text-align: center;
   font-size: 14px;
   font-weight: 400;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 `;
 
 export const SelectedUsersPills = styled.ul`
@@ -401,7 +402,7 @@ export const Names = styled.h2`
   display: block;
   font-weight: 800;
   font-size: 24px;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   text-align: center;
   line-height: 1.4;
 `;
@@ -410,7 +411,7 @@ export const Username = styled.h3`
   display: block;
   font-weight: 500;
   font-size: 14px;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
   margin: 0;
   display: flex;
 `;

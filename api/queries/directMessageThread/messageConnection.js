@@ -1,7 +1,7 @@
 // @flow
 import type { PaginationOptions } from '../../utils/paginate-arrays';
 import type { GraphQLContext } from '../../';
-import { canViewDMThread } from './utils';
+import { canViewDMThread } from '../../utils/permissions';
 import { encode, decode } from '../../utils/base64';
 import { getMessages } from '../../models/message';
 
@@ -12,7 +12,7 @@ export default async (
 ) => {
   if (!user || !user.id) return null;
 
-  const canViewThread = await canViewDMThread(id, user.id, { loaders });
+  const canViewThread = await canViewDMThread(user.id, id, loaders);
   if (!canViewThread) return null;
 
   const cursor = parseInt(decode(after), 10);

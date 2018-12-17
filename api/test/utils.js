@@ -16,7 +16,10 @@ export const request = (query: mixed, { context, variables }: Options = {}) => {
     schema,
     query,
     undefined,
-    { loaders: createLoaders(), ...context },
+    {
+      loaders: createLoaders(),
+      ...context,
+    },
     variables
   );
 };

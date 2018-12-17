@@ -1,10 +1,18 @@
+// @flow
+export type WebsocketConnectionType =
+  | 'connected'
+  | 'connecting'
+  | 'reconnected'
+  | 'reconnecting';
+
 type InitialState = {
   networkOnline: boolean,
-  websocketConnection:
-    | 'connected'
-    | 'connecting'
-    | 'reconnected'
-    | 'reconnecting',
+  websocketConnection: WebsocketConnectionType,
+};
+
+type ActionType = {
+  type: 'NETWORK_CONNECTION' | 'WEBSOCKET_CONNECTION' | 'PAGE_VISIBILITY',
+  value: any,
 };
 
 const initialState: InitialState = {
@@ -12,7 +20,10 @@ const initialState: InitialState = {
   websocketConnection: 'connected',
 };
 
-export default function status(state = initialState, action) {
+export default function status(
+  state: InitialState = initialState,
+  action: ActionType
+) {
   switch (action.type) {
     case 'NETWORK_CONNECTION':
       return Object.assign({}, state, {

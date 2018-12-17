@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ThreadListItem } from '../listItems';
 import { ThreadProfileCard } from './style';
@@ -21,7 +21,13 @@ type Props = {
 
 class ThreadWithData extends React.Component<Props> {
   componentDidMount() {
-    const { data: { thread }, data, setName, markAsDeleted, id } = this.props;
+    const {
+      data: { thread },
+      data,
+      setName,
+      markAsDeleted,
+      id,
+    } = this.props;
 
     if (setName && thread) {
       setName(thread.community.name);
@@ -35,7 +41,9 @@ class ThreadWithData extends React.Component<Props> {
   }
 
   render() {
-    const { data: { thread, error } } = this.props;
+    const {
+      data: { thread, error },
+    } = this.props;
     if (error || !thread) {
       return null;
     }
@@ -60,4 +68,7 @@ class ThreadWithData extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), withRouter)(ThreadWithData);
+export default compose(
+  connect(),
+  withRouter
+)(ThreadWithData);

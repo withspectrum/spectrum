@@ -10,8 +10,7 @@ const channels = data.channels
 
 describe('Community settings overview tab', () => {
   beforeEach(() => {
-    cy.auth(ownerId);
-    cy.visit(`/${community.slug}/settings`);
+    cy.auth(ownerId).then(() => cy.visit(`/${community.slug}/settings`));
   });
 
   it('should render the settings overview and allow editing the community metadata', () => {
@@ -24,26 +23,22 @@ describe('Community settings overview tab', () => {
     });
     // Make sure the subnav is rendered correctly
     cy.get(`[href*="settings/analytics"]`).should('be.visible');
-    cy.get(`[href*="settings/billing"]`).should('be.visible');
     cy.get(`[href*="settings/members"]`).should('be.visible');
 
     // Editing
     const name = 'text';
     const description = 'text';
     // Change name
-    cy
-      .get('[data-cy="community-settings-name-input"]')
+    cy.get('[data-cy="community-settings-name-input"]')
       .clear()
       .type(`${name}`);
     // Change description
-    cy
-      .get('[data-cy="community-settings-description-input"]')
+    cy.get('[data-cy="community-settings-description-input"]')
       .clear()
       .type(description);
     const website = 'https://mxstbr.com/bla';
     // Change website
-    cy
-      .get('[data-cy="community-settings-website-input"]')
+    cy.get('[data-cy="community-settings-website-input"]')
       .clear()
       .type(website);
     // Submit changes
@@ -56,16 +51,13 @@ describe('Community settings overview tab', () => {
     cy.contains(website);
     // Revert changes
     cy.visit(`/${community.slug}/settings`);
-    cy
-      .get('[data-cy="community-settings-name-input"]')
+    cy.get('[data-cy="community-settings-name-input"]')
       .clear()
       .type(community.name);
-    cy
-      .get('[data-cy="community-settings-description-input"]')
+    cy.get('[data-cy="community-settings-description-input"]')
       .clear()
       .type(community.description);
-    cy
-      .get('[data-cy="community-settings-website-input"]')
+    cy.get('[data-cy="community-settings-website-input"]')
       .clear()
       .type(community.website);
     cy.get('button[type="submit"]').click();
@@ -80,37 +72,32 @@ describe('Community settings overview tab', () => {
     const brandedLoginString = 'Testing branded login custom message';
 
     // click the enable custom branded login toggle
-    cy
-      .get('[data-cy="community-settings-branded-login"]')
+    cy.get('[data-cy="community-settings-branded-login"]')
       .contains('Enable custom branded login')
       .click();
 
     // should be enabled and input should appear
-    cy
-      .get('[data-cy="community-settings-branded-login-input"]')
-      .should('be.visible');
+    cy.get('[data-cy="community-settings-branded-login-input"]').should(
+      'be.visible'
+    );
 
     // type in a new branded login string
-    cy
-      .get('[data-cy="community-settings-branded-login-input"]')
+    cy.get('[data-cy="community-settings-branded-login-input"]')
       .click()
       .type(brandedLoginString);
 
     // save the string
-    cy
-      .get('[data-cy="community-settings-branded-login-save"]')
+    cy.get('[data-cy="community-settings-branded-login-save"]')
       .should('be.visible')
       .click();
 
     // go to the preview page
-    cy
-      .get('[data-cy="community-settings-branded-login-preview"]')
+    cy.get('[data-cy="community-settings-branded-login-preview"]')
       .should('be.visible')
       .click();
 
     // custom string should be visible
-    cy
-      .get('[data-cy="community-login-page"]')
+    cy.get('[data-cy="community-login-page"]')
       .contains(brandedLoginString)
       .should('be.visible');
 
@@ -118,8 +105,7 @@ describe('Community settings overview tab', () => {
     cy.visit(`/${community.slug}/settings`);
 
     // disable branded login
-    cy
-      .get('[data-cy="community-settings-branded-login"]')
+    cy.get('[data-cy="community-settings-branded-login"]')
       .contains('Enable custom branded login')
       .click();
   });

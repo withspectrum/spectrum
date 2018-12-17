@@ -1,5 +1,5 @@
 // @flow
-import { db } from './db';
+import { db } from 'shared/db';
 import {
   sendThreadReactionNotificationQueue,
   processReputationEventQueue,
@@ -7,6 +7,8 @@ import {
 import type { DBThreadReaction } from 'shared/types';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import { incrementReactionCount, decrementReactionCount } from './thread';
+import { getThreadById } from './thread';
 
 type ThreadReactionType = 'like';
 
@@ -18,6 +20,19 @@ export const getThreadReactions = (threadIds: Array<string>): Promise<Array<DBTh
     .getAll(...distinctMessageIds, { index: 'threadId' })
     .filter(row => row.hasFields('deletedAt').not())
     .group('threadId')
+    .run();
+};
+
+export const hasReactedToThread = (
+  userId: string,
+  threadId: string
+): Promise<boolean> => {
+  return db
+    .table('threadReactions')
+    .getAll([userId, threadId], { index: 'userIdAndThreadId' })
+    .filter(row => row.hasFields('deletedAt').not())
+    .count()
+    .eq(1)
     .run();
 };
 
@@ -34,26 +49,32 @@ export const addThreadReaction = (input: ThreadReactionInput, userId: string): P
     .filter({ userId })
     .run()
     .then(async results => {
+      const thread = await getThreadById(input.threadId)
       // if the reaction already exists in the db, it was previously deleted
       // just remove the deletedAt field
       if (results && results.length > 0) {
         const thisReaction = results[0];
 
-        trackQueue.add({
-          userId,
-          event: events.THREAD_REACTION_CREATED,
-          context: {
-            threadReactionId: thisReaction.id,
-          },
-        });
+        const sendReactionNotification = thread && (thread.creatorId !== userId)
+          ? sendThreadReactionNotificationQueue.add({ threadReaction: thisReaction, userId })
+          : null
 
-        sendThreadReactionNotificationQueue.add({ threadReaction: thisReaction, userId });
-
-        processReputationEventQueue.add({
-          userId,
-          type: 'thread reaction created',
-          entityId: thisReaction.threadId,
-        });
+        await Promise.all([
+          trackQueue.add({
+            userId,
+            event: events.THREAD_REACTION_CREATED,
+            context: {
+              threadReactionId: thisReaction.id,
+            },
+          }),
+          sendReactionNotification,
+          processReputationEventQueue.add({
+            userId,
+            type: 'thread reaction created',
+            entityId: thisReaction.threadId,
+          }),
+          incrementReactionCount(thisReaction.threadId)
+        ])
 
         return db
           .table('threadReactions')
@@ -77,20 +98,25 @@ export const addThreadReaction = (input: ThreadReactionInput, userId: string): P
         )
         .run()
         .then(result => result.changes[0].new_val)
-        .then(threadReaction => {
-          trackQueue.add({
-            userId,
-            event: events.THREAD_REACTION_CREATED,
-            context: { threadReactionId: threadReaction.id },
-          });
+        .then(async threadReaction => {
+          const sendReactionNotification = thread && (thread.creatorId !== userId)
+            ? sendThreadReactionNotificationQueue.add({ threadReaction, userId })
+            : null
 
-          sendThreadReactionNotificationQueue.add({ threadReaction, userId });
-
-          processReputationEventQueue.add({
-            userId,
-            type: 'thread reaction created',
-            entityId: threadReaction.threadId,
-          });
+          await Promise.all([
+            trackQueue.add({
+              userId,
+              event: events.THREAD_REACTION_CREATED,
+              context: { threadReactionId: threadReaction.id },
+            }),
+            processReputationEventQueue.add({
+              userId,
+              type: 'thread reaction created',
+              entityId: threadReaction.threadId,
+            }),
+            sendReactionNotification,
+            incrementReactionCount(threadReaction.threadId)
+          ])
 
           return threadReaction;
         });
@@ -104,23 +130,25 @@ export const removeThreadReaction = (threadId: string, userId: string): Promise<
     .getAll(threadId, { index: 'threadId' })
     .filter({ userId })
     .run()
-    .then(results => {
+    .then(async results => {
       // no reaction exists to be removed
       if (!results || results.length === 0) return null;
 
       const threadReaction = results[0];
 
-      trackQueue.add({
-        userId,
-        event: events.THREAD_REACTION_DELETED,
-        context: { threadReactionId: threadReaction.id },
-      });
-
-      processReputationEventQueue.add({
-        userId,
-        type: 'thread reaction deleted',
-        entityId: threadReaction.threadId,
-      });
+      await Promise.all([
+        trackQueue.add({
+          userId,
+          event: events.THREAD_REACTION_DELETED,
+          context: { threadReactionId: threadReaction.id },
+        }),
+        processReputationEventQueue.add({
+          userId,
+          type: 'thread reaction deleted',
+          entityId: threadReaction.threadId,
+        }),
+        decrementReactionCount(threadId)
+      ])
 
       return db
         .table('threadReactions')

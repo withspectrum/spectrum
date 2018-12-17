@@ -1,9 +1,10 @@
 // @flow
+import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Transition, FlexRow, hexa, zIndex } from 'src/components/globals';
 import { UserAvatar } from 'src/components/avatar';
-import { isDesktopApp } from 'src/helpers/is-desktop-app';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 export const Nav = styled.nav`
   display: grid;
@@ -49,12 +50,12 @@ export const Nav = styled.nav`
   ${props =>
     props.loggedOut &&
     css`
-      grid-template-columns: repeat(4, auto) 1fr auto;
-      grid-template-areas: 'logo explore support pricing . signin';
+      grid-template-columns: repeat(3, auto) 1fr auto;
+      grid-template-areas: 'logo explore support . signin';
 
       @media (max-width: 768px) {
-        grid-template-columns: auto auto auto auto;
-        grid-template-areas: 'home explore support pricing';
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-areas: 'home explore support';
       }
     `} ${props =>
   props.hideOnMobile &&
@@ -111,14 +112,14 @@ export const Tab = styled(Link)`
   @media (min-width: 768px) {
     &[data-active~='true'] {
       box-shadow: inset 0 ${isDesktopApp() ? '-2px' : '-4px'} 0
-        ${({ theme }) => theme.text.reverse};
-      color: ${props => props.theme.text.reverse};
+        ${theme.text.reverse};
+      color: ${theme.text.reverse};
       transition: ${Transition.hover.on};
 
       &:hover,
       &:focus {
         box-shadow: inset 0 ${isDesktopApp() ? '-2px' : '-4px'} 0
-          ${({ theme }) => theme.text.reverse};
+          ${theme.text.reverse};
         transition: ${Transition.hover.on};
       }
     }
@@ -130,7 +131,7 @@ export const Tab = styled(Link)`
           process.env.NODE_ENV === 'production'
             ? theme.text.placeholder
             : theme.warn.border};
-      color: ${props => props.theme.text.reverse};
+      color: ${theme.text.reverse};
       transition: ${Transition.hover.on};
     }
   }
@@ -147,7 +148,7 @@ export const Tab = styled(Link)`
     align-content: center;
 
     &[data-active~='true'] {
-      color: ${props => props.theme.text.reverse};
+      color: ${theme.text.reverse};
       transition: ${Transition.hover.on};
     }
   }
@@ -169,7 +170,7 @@ export const DropTab = styled(FlexRow)`
       props.padOnHover &&
       css`
         @media (min-width: 768px) {
-          color: ${props => props.theme.text.reverse};
+          color: ${theme.text.reverse};
           padding-left: 120px;
         }
       `};
@@ -210,10 +211,19 @@ export const DropTab = styled(FlexRow)`
   }
 `;
 
+export const Reputation = styled.div`
+  display: flex;
+  grid-area: icon;
+  align-items: center;
+  padding-right: 16px;
+  font-size: 14px;
+  font-weight: 700;
+`;
+
 export const Logo = styled(Tab)`
   grid-area: logo;
   padding: ${isDesktopApp() ? '0 32px 0 4px' : '0 24px 0 4px'};
-  color: ${({ theme }) => theme.text.reverse};
+  color: ${theme.text.reverse};
   opacity: 1;
 
   ${isDesktopApp() &&
@@ -228,7 +238,7 @@ export const Logo = styled(Tab)`
   }
 
   ${props =>
-    props.isHidden &&
+    props.ishidden &&
     css`
       display: none;
     `};
@@ -259,7 +269,7 @@ export const ExploreTab = styled(Tab)`
     `};
 
   ${props =>
-    props.loggedOut &&
+    props.loggedout &&
     css`
       grid-area: explore;
     `} ${Label} {
@@ -275,10 +285,6 @@ export const ExploreTab = styled(Tab)`
 
 export const SupportTab = styled(Tab)`
   grid-area: support;
-`;
-
-export const PricingTab = styled(MessageTab)`
-  grid-area: pricing;
 `;
 
 export const NotificationTab = styled(DropTab)`
@@ -324,7 +330,7 @@ export const ProfileTab = styled(Tab)`
 export const Navatar = styled(UserAvatar)`
   margin-top: 0;
   border-radius: 100%;
-  box-shadow: 0 0 0 2px ${props => props.theme.bg.default};
+  box-shadow: 0 0 0 2px ${theme.bg.default};
 `;
 
 export const LoggedOutSection = styled(FlexRow)`
@@ -356,7 +362,7 @@ export const SigninLink = styled(Link)`
 `;
 
 export const DropdownHeader = styled(FlexRow)`
-  border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
+  border-bottom: 2px solid ${theme.bg.wash};
   flex: 0 0 auto;
   align-self: stretch;
   justify-content: space-between;
@@ -364,20 +370,20 @@ export const DropdownHeader = styled(FlexRow)`
   padding: 8px 16px;
   font-weight: 500;
   font-size: 14px;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
 
   a {
     display: flex;
     align-items: center;
 
     &:hover {
-      color: ${props => props.theme.brand.alt};
+      color: ${theme.brand.alt};
     }
   }
 `;
 
 export const DropdownFooter = styled(FlexRow)`
-  border-top: 2px solid ${({ theme }) => theme.bg.wash};
+  border-top: 2px solid ${theme.bg.wash};
   flex: 0 0 32px;
   align-self: stretch;
   justify-content: center;
@@ -393,16 +399,16 @@ export const DropdownFooter = styled(FlexRow)`
     }
 
     &:hover {
-      color: ${props => props.theme.brand.alt};
-      background: ${props => props.theme.bg.wash};
+      color: ${theme.brand.alt};
+      background: ${theme.bg.wash};
     }
   }
 `;
 
 export const Notification = styled.div`
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   padding: 8px;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
   overflow-x: hidden;
 `;
 

@@ -18,7 +18,6 @@ build-chronos
 build-mercury
 build-vulcan
 build-hyperion
-build-pluto
 package-lock.json
 .vscode
 dump.rdb
@@ -29,6 +28,4 @@ test-extend.js
 stats.json
 iris/.env
 api/.env
-.expo
-mobile/.expo
 test-results.json

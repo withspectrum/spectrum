@@ -4,12 +4,13 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import AvatarImage from 'src/components/avatar/image';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Button, OutlineButton } from 'src/components/buttons';
 import ToggleChannelMembership from 'src/components/toggleChannelMembership';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   HoverWrapper,
   ProfileCard,
@@ -71,36 +72,35 @@ class HoverProfile extends Component<ProfileProps> {
           </Content>
 
           <Actions>
-            {!isGlobalModerator &&
-              !isGlobalOwner && (
-                <ToggleChannelMembership
-                  channel={channel}
-                  render={state => {
-                    if (isChannelMember) {
-                      return (
-                        <OutlineButton
-                          isMember={true}
-                          icon={'checkmark'}
-                          loading={state.isLoading}
-                        >
-                          Joined
-                        </OutlineButton>
-                      );
-                    } else {
-                      return (
-                        <Button
-                          isMember={false}
-                          icon={'plus-fill'}
-                          loading={state.isLoading}
-                          gradientTheme={'success'}
-                        >
-                          Join channel
-                        </Button>
-                      );
-                    }
-                  }}
-                />
-              )}
+            {!isGlobalModerator && !isGlobalOwner && (
+              <ToggleChannelMembership
+                channel={channel}
+                render={state => {
+                  if (isChannelMember) {
+                    return (
+                      <OutlineButton
+                        isMember={true}
+                        icon={'checkmark'}
+                        loading={state.isLoading}
+                      >
+                        Joined
+                      </OutlineButton>
+                    );
+                  } else {
+                    return (
+                      <Button
+                        isMember={false}
+                        icon={'plus-fill'}
+                        loading={state.isLoading}
+                        gradientTheme={'success'}
+                      >
+                        Join channel
+                      </Button>
+                    );
+                  }
+                }}
+              />
+            )}
 
             {(isGlobalModerator || isGlobalOwner) && (
               <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
@@ -114,6 +114,8 @@ class HoverProfile extends Component<ProfileProps> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-//$FlowFixMe
-export default compose(connect(map), withRouter)(HoverProfile);
+export default compose(
+  withCurrentUser,
+  withRouter,
+  connect()
+)(HoverProfile);

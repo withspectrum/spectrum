@@ -1,6 +1,4 @@
 // @flow
-// This needs to be imported before everything else
-import './helpers/consolidate-streamed-styles';
 import 'css.escape';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -11,17 +9,14 @@ import queryString from 'query-string';
 import Loadable from 'react-loadable';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import { HelmetProvider } from 'react-helmet-async';
-import webPushManager from './helpers/web-push-manager';
-import { history } from './helpers/history';
+import webPushManager from 'src/helpers/web-push-manager';
+import { history } from 'src/helpers/history';
 import { client } from 'shared/graphql';
-import { initStore } from './store';
-import { getItemFromStorage } from './helpers/localStorage';
-import Routes from './hot-routes';
-import { track, events } from './helpers/analytics';
+import { initStore } from 'src/store';
+import { track, events } from 'src/helpers/analytics';
 import { wsLink } from 'shared/graphql';
-import { subscribeToDesktopPush } from './subscribe-to-desktop-push';
-
-const storedData: ?Object = getItemFromStorage('spectrum');
+import { subscribeToDesktopPush } from 'src/subscribe-to-desktop-push';
+import RedirectHandler from 'src/components/redirectHandler';
 const params = queryString.parse(history.location.search);
 
 // Always redirect ?thread=asdfxyz to the thread view
@@ -32,18 +27,9 @@ if (params.thread) {
     history.replace(`/thread/${params.thread}`);
   }
 }
-
-// Redirect ?t=asdfxyz to the thread view only for anonymous users who wouldn't see it
-// in their inbox view (since they don't have an inbox view)
-if ((!storedData || !storedData.currentUser) && params.t)
-  history.replace(`/thread/${params.t}`);
-
 // If the server passes an initial redux state use that, otherwise construct our own
 const store = initStore(
   window.__SERVER_STATE__ || {
-    users: {
-      currentUser: storedData ? storedData.currentUser : null,
-    },
     dashboardFeed: {
       activeThread: params.t || '',
       mountedWithActiveThread: params.t || '',
@@ -60,7 +46,11 @@ const App = () => {
       <HelmetProvider>
         <ApolloProvider client={client}>
           <Router history={history}>
-            <Routes currentUser={storedData ? storedData.currentUser : null} />
+            <RedirectHandler
+              maintenanceMode={
+                process.env.REACT_APP_MAINTENANCE_MODE === 'enabled'
+              }
+            />
           </Router>
         </ApolloProvider>
       </HelmetProvider>
@@ -68,7 +58,7 @@ const App = () => {
   );
 };
 
-const renderMethod = !!window.__SERVER_STATE__
+const renderMethod = window.__SERVER_STATE__
   ? // $FlowIssue
     ReactDOM.hydrate
   : ReactDOM.render;
@@ -90,10 +80,6 @@ Loadable.preloadReady()
 OfflinePluginRuntime.install({
   // Apply new updates immediately
   onUpdateReady: () => OfflinePluginRuntime.applyUpdate(),
-  // Set a global variable when an update was installed so that we can reload the page when users
-  // go to a new page, leading to no interruption in the workflow.
-  // Idea from https://zach.codes/handling-client-side-app-updates-with-service-workers/
-  onUpdated: () => (window.appUpdateAvailable = true),
 });
 
 if ('serviceWorker' in navigator && 'PushManager' in window) {
