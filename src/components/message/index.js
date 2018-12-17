@@ -164,12 +164,13 @@ class Message extends React.Component<Props, State> {
 
     const canEditMessage = me && message.messageType !== 'media';
     const selectedMessageId = btoa(new Date(message.timestamp).getTime() - 1);
+    const isOptimistic = typeof message.id === 'number';
     const messageUrl =
       threadType === 'story' && thread
         ? `/${getThreadLink(thread)}?m=${selectedMessageId}`
         : threadType === 'directMessageThread'
-          ? `/messages/${threadId}?m=${selectedMessageId}`
-          : `/thread/${threadId}?m=${selectedMessageId}`;
+        ? `/messages/${threadId}?m=${selectedMessageId}`
+        : `/thread/${threadId}?m=${selectedMessageId}`;
 
     return (
       <MessagesContext.Consumer>
@@ -225,11 +226,13 @@ class Message extends React.Component<Props, State> {
                   )}
 
                   {!isEditing ? (
-                    <Body
-                      me={me}
-                      openGallery={e => this.toggleOpenGallery(e, message.id)}
-                      message={message}
-                    />
+                    <div css={isOptimistic ? 'opacity: 0.7;' : 'opacity: 1;'}>
+                      <Body
+                        me={me}
+                        openGallery={e => this.toggleOpenGallery(e, message.id)}
+                        message={message}
+                      />
+                    </div>
                   ) : (
                     <EditingBody
                       message={message}
@@ -237,18 +240,17 @@ class Message extends React.Component<Props, State> {
                     />
                   )}
 
-                  {message.modifiedAt &&
-                    !isEditing && (
-                      <EditedIndicator
-                        data-cy="edited-message-indicator"
-                        tipLocation={'top-right'}
-                        tipText={`Edited ${convertTimestampToDate(
-                          new Date(message.modifiedAt)
-                        )}`}
-                      >
-                        Edited
-                      </EditedIndicator>
-                    )}
+                  {message.modifiedAt && !isEditing && (
+                    <EditedIndicator
+                      data-cy="edited-message-indicator"
+                      tipLocation={'top-right'}
+                      tipText={`Edited ${convertTimestampToDate(
+                        new Date(message.modifiedAt)
+                      )}`}
+                    >
+                      Edited
+                    </EditedIndicator>
+                  )}
 
                   {message.reactions.count > 0 && (
                     <Reaction
