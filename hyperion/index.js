@@ -32,6 +32,9 @@ app.use(toobusy);
 // Security middleware.
 addSecurityMiddleware(app, { enableNonce: true, enableCSP: true });
 
+import bodyParser from 'body-parser';
+app.use(bodyParser.json());
+
 if (process.env.NODE_ENV === 'development') {
   const logging = require('shared/middlewares/logging');
   app.use(logging);
@@ -85,9 +88,6 @@ if (process.env.NODE_ENV === 'development') {
 
 import cookieParser from 'cookie-parser';
 app.use(cookieParser());
-
-import bodyParser from 'body-parser';
-app.use(bodyParser.json());
 
 import session from 'shared/middlewares/session';
 app.use(session);
