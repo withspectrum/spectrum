@@ -102,11 +102,7 @@ export const getLastMessage = (threadId: string): Promise<?DBMessage> => {
     .filter(db.row.hasFields('deletedAt').not())
     .limit(1)
     .run()
-    .then(res =>
-      Array.isArray(res) && res.length > 0
-        ? res[0]
-        : { threadId, content: { body: null } }
-    );
+    .then(res => (Array.isArray(res) && res.length > 0 ? res[0] : null));
 };
 
 export const getLastMessageOfThreads = (
