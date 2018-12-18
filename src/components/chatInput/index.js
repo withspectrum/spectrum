@@ -130,17 +130,11 @@ const ChatInput = React.forwardRef((props: Props, ref) => {
     // and initiate a new group creation with the message being sent
     // in views/directMessages/containers/newThread.js
     if (props.thread === 'newDirectMessageThread') {
-      if (file) {
-        return props.createThread({
-          messageType: 'media',
-          file,
-        });
-      } else {
-        return props.createThread({
-          messageBody: body,
-          messageType: 'text',
-        });
-      }
+      return props.createThread({
+        messageType: file ? 'media' : 'text',
+        file,
+        messageBody: body,
+      });
     }
 
     const method =
