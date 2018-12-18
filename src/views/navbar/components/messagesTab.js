@@ -93,6 +93,15 @@ class MessagesTab extends React.Component<Props, State> {
       curr.data.refetch();
     }
 
+    // if the component updates for the first time
+    if (
+      !prevData.directMessageNotifications &&
+      curr.data.directMessageNotifications
+    ) {
+      this.subscribe();
+      return this.setCount(this.props);
+    }
+
     // never update the badge if the user is viewing the messages tab
     // set the count to 0 if the tab is active so that if a user loads
     // /messages view directly, the badge won't update
@@ -111,15 +120,6 @@ class MessagesTab extends React.Component<Props, State> {
         prevData.directMessageNotifications.edges.length
     )
       return this.markAllAsSeen();
-
-    // if the component updates for the first time
-    if (
-      !prevData.directMessageNotifications &&
-      curr.data.directMessageNotifications
-    ) {
-      this.subscribe();
-      return this.setCount(this.props);
-    }
 
     // if the component updates with changed or new dm notifications
     // if any are unseen, set the counts
