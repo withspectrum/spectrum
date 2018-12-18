@@ -26,6 +26,7 @@ const createLoader = (
 function indexResults(results, indexField, cacheKeyFn) {
   var indexedResults = new Map();
   results.forEach(res => {
+    if (!res || !res[indexField]) return null;
     const key =
       typeof indexField === 'function' ? indexField(res) : res[indexField];
     indexedResults.set(cacheKeyFn(key), res);
