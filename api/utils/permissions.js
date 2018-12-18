@@ -178,11 +178,24 @@ export const canViewThread = async (
     loaders.userPermissionsInCommunity.load([userId, thread.communityId]),
   ]);
 
+  if (!channel || !community) return false;
+  if (channel.deletedAt || community.deletedAt) return false;
+
   if (!channel.isPrivate && !community.isPrivate) return true;
+
   if (channel.isPrivate)
-    return channelPermissions.isMember && !channelPermissions.isBlocked;
+    return (
+      channelPermissions &&
+      channelPermissions.isMember &&
+      !channelPermissions.isBlocked
+    );
   if (community.isPrivate)
-    return communityPermissions.isMember && !communityPermissions.isBlocked;
+    return (
+      communityPermissions &&
+      communityPermissions.isMember &&
+      !communityPermissions.isBlocked
+    );
+
   return false;
 };
 

@@ -57,7 +57,11 @@ class ListCardItemDirectMessageThread extends React.Component<Props> {
     isUnread = active ? false : isUnread;
 
     return (
-      <Wrapper active={active} isUnread={isUnread}>
+      <Wrapper
+        active={active}
+        data-cy={isUnread ? 'unread-dm-list-item' : 'dm-list-item'}
+        isUnread={isUnread}
+      >
         <WrapperLink to={`/messages/${thread.id}`}>
           <Row>
             {avatars}
