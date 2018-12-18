@@ -7,7 +7,7 @@ module.exports = (
   res: express$Response,
   next: express$NextFunction
 ) => {
-  if (req.body.operationName) {
+  if (req.body && req.body.operationName) {
     debug(`requesting ${req.url}: ${req.body.operationName}`);
   } else {
     debug(`requesting ${req.url}`);
