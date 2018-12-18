@@ -16,6 +16,7 @@ if (!process.env.DATADOG_API_KEY) {
     defaultTags: [`server:${process.env.SENTRY_NAME || 'unknown_server'}`],
   });
 
+  // $FlowFixMe
   const stringify = (obj?: { [key: string]: string }) => {
     if (!obj) return obj;
     return Object.keys(obj).reduce((arr, key) => {

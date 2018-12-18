@@ -55,10 +55,12 @@ var r = require('rethinkhaberdashery')(config);
 const poolMaster = r.getPoolMaster();
 
 poolMaster.on('queueing', size => {
+  // $FlowFixMe
   statsd.gauge('db.query_queue.size', size);
 });
 
 poolMaster.on('size', connections => {
+  // $FlowFixMe
   statsd.gauge('db.connection_pool.size', connections);
 });
 
