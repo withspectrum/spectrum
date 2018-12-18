@@ -93,7 +93,7 @@ const server = new ProtectedApolloServer({
           };
         }),
   },
-  playground: {
+  playground: process.env.NODE_ENV !== 'production' && {
     settings: {
       'editor.theme': 'light',
     },
@@ -109,6 +109,7 @@ const server = new ProtectedApolloServer({
       },
     ],
   },
+  introspection: process.env.NODE_ENV !== 'production',
   maxFileSize: 25 * 1024 * 1024, // 25MB
   engine: false,
   tracing: false,
