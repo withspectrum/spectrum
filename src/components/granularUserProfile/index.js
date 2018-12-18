@@ -50,7 +50,12 @@ const LinkHandler = ({
 }: {
   username: ?string,
   children: React.Node,
-}) => (username ? <Link to={`/users/${username}`}>{children}</Link> : children);
+}) =>
+  username ? (
+    <Link to={`/users/${username}`}>{children}</Link>
+  ) : (
+    <span>{children}</span>
+  );
 
 class GranularUserProfileHandler extends React.Component<Props> {
   render() {

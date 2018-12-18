@@ -247,7 +247,6 @@ export const Grow = styled.div`
   flex: 1 1 auto;
   justify-content: center;
   align-items: stretch;
-  background: ${theme.bg.wash};
   width: 100%;
   height: 100%;
 `;

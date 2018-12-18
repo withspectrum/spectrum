@@ -17,6 +17,7 @@ import ViewError from 'src/components/viewError';
 import { ErrorBoundary } from 'src/components/error';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   data: {
@@ -24,7 +25,6 @@ type Props = {
     directMessageThread: GetDirectMessageThreadType,
   },
   isLoading: boolean,
-  setActiveThread: Function,
   setLastSeen: Function,
   match: Object,
   id: ?string,
@@ -39,11 +39,13 @@ class ExistingThread extends React.Component<Props> {
   chatInput: ?ChatInput;
 
   componentDidMount() {
-    const threadId = this.props.id;
-    this.props.setActiveThread(threadId);
+    const { threadId } = this.props.match.params;
+
+    // escape to prevent this from running on mobile
+    if (!threadId) return;
+
     this.props.setLastSeen(threadId);
     this.forceScrollToBottom();
-
     // autofocus on desktop
     if (window && window.innerWidth > 768 && this.chatInput) {
       this.chatInput.triggerFocus();
@@ -74,7 +76,10 @@ class ExistingThread extends React.Component<Props> {
     }
     if (prev.match.params.threadId !== curr.match.params.threadId) {
       const threadId = curr.match.params.threadId;
-      curr.setActiveThread(threadId);
+
+      // prevent unnecessary behavior on mobile
+      if (!threadId) return;
+
       curr.setLastSeen(threadId);
       this.forceScrollToBottom();
       // autofocus on desktop
@@ -110,16 +115,22 @@ class ExistingThread extends React.Component<Props> {
             <ViewContent
               innerRef={scrollBody => (this.scrollBody = scrollBody)}
             >
-              <ErrorBoundary>
-                <Header thread={thread} currentUser={currentUser} />
-              </ErrorBoundary>
+              {!isLoading ? (
+                <React.Fragment>
+                  <ErrorBoundary>
+                    <Header thread={thread} currentUser={currentUser} />
+                  </ErrorBoundary>
 
-              <Messages
-                id={id}
-                currentUser={currentUser}
-                forceScrollToBottom={this.forceScrollToBottom}
-                contextualScrollToBottom={this.contextualScrollToBottom}
-              />
+                  <Messages
+                    id={id}
+                    currentUser={currentUser}
+                    forceScrollToBottom={this.forceScrollToBottom}
+                    contextualScrollToBottom={this.contextualScrollToBottom}
+                  />
+                </React.Fragment>
+              ) : (
+                <Loading />
+              )}
             </ViewContent>
 
             <ChatInput
@@ -164,5 +175,6 @@ export default compose(
   getDirectMessageThread,
   setLastSeenMutation,
   withApollo,
+  withCurrentUser,
   viewNetworkHandler
 )(ExistingThread);
