@@ -102,13 +102,17 @@ export const getLastMessage = (threadId: string): Promise<?DBMessage> => {
     .filter(db.row.hasFields('deletedAt').not())
     .limit(1)
     .run()
-    .then(res => (Array.isArray(res) && res.length > 0 ? res[0] : null));
+    .then(res =>
+      Array.isArray(res) && res.length > 0
+        ? res[0]
+        : { threadId, content: { body: null } }
+    );
 };
 
 export const getLastMessageOfThreads = (
   threadIds: Array<string>
 ): Promise<Array<?DBMessage>> => {
-  return Promise.all(threadIds.map(id => getLastMessage(id)));
+  return Promise.all(threadIds.map(id => id && getLastMessage(id)));
 };
 
 // prettier-ignore
