@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { connect, type Dispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import DirectMessageListItem from './messageThreadListItem';
 import getCurrentUserDMThreadConnection, {
@@ -17,7 +17,6 @@ import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
-import { updateNotificationsCount } from 'src/actions/notifications';
 
 type Props = {
   currentUser: Object,
@@ -25,7 +24,6 @@ type Props = {
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
   activeThreadId: ?string,
-  dispatch: Dispatch<Object>,
   dmData: {
     ...$Exact<GetCurrentUserDMThreadConnectionType>,
   },
