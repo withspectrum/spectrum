@@ -99,7 +99,7 @@ class MessagesTab extends React.Component<Props, State> {
 
     // if the user is viewing /messages, mark any incoming notifications
     // as seen, so that when they navigate away the message count won't shoot up
-    if (!prev.active && this.props.active) {
+    if (this.props.active) {
       return this.markAllAsSeen();
     }
 

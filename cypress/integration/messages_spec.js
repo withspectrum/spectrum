@@ -142,3 +142,19 @@ describe('messages tab badge count', () => {
     cy.get('[data-cy="unread-badge-0"]').should('be.visible');
   });
 });
+
+describe('clearing messages tab', () => {
+  beforeEach(() => {
+    cy.auth(user.id).then(() => cy.visit('/messages'));
+  });
+
+  it('should clear the badge when landing directly on /messages', () => {
+    cy.get('[data-cy="dm-list-item"]').should($p => {
+      expect($p).to.have.length(1);
+    });
+    cy.get('[data-cy="unread-dm-list-item"]').should($p => {
+      expect($p).to.have.length(1);
+    });
+    cy.get('[data-cy="unread-badge-0"]').should('be.visible');
+  });
+});
