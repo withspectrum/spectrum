@@ -1,32 +1,59 @@
 // @flow
 import * as React from 'react';
+import { connect, type Dispatch } from 'react-redux';
+import compose from 'recompose/compose';
 import DirectMessageListItem from './messageThreadListItem';
+import getCurrentUserDMThreadConnection, {
+  type GetCurrentUserDMThreadConnectionType,
+} from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
 import InfiniteList from 'src/components/infiniteScroll';
-import { NullState } from '../../../components/upsell';
+import { NullState } from 'src/components/upsell';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { LoadingDM } from 'src/components/loading';
 import { ThreadsListScrollContainer } from './style';
 import { NoThreads } from '../style';
+import { track, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
-import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
+import { withCurrentUser } from 'src/components/withCurrentUser';
+import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
+import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
+import { updateNotificationsCount } from 'src/actions/notifications';
 
 type Props = {
-  threads: Array<?GetDirectMessageThreadType>,
   currentUser: Object,
-  active: string,
-  fetchMore: Function,
-  hasNextPage: boolean,
-  isFetchingMore: boolean,
-  isLoading: boolean,
+  subscribeToUpdatedDirectMessageThreads: Function,
+  networkOnline: boolean,
+  websocketConnection: WebsocketConnectionType,
+  activeThreadId: ?string,
+  dispatch: Dispatch<Object>,
+  dmData: {
+    ...$Exact<GetCurrentUserDMThreadConnectionType>,
+  },
 };
 
 type State = {
   scrollElement: any,
+  subscription: ?Function,
 };
 
 class ThreadsList extends React.Component<Props, State> {
   state = {
     scrollElement: null,
+    subscription: null,
+  };
+
+  subscribe = () => {
+    this.setState({
+      subscription: this.props.dmData.subscribeToUpdatedDirectMessageThreads(),
+    });
+  };
+
+  unsubscribe = () => {
+    const { subscription } = this.state;
+    if (subscription) {
+      // This unsubscribes the subscription
+      subscription();
+    }
   };
 
   componentDidMount() {
@@ -36,21 +63,61 @@ class ThreadsList extends React.Component<Props, State> {
       // the AppViewWrapper which is the scrolling part of the site.
       scrollElement,
     });
+
+    this.subscribe();
+    track(events.DIRECT_MESSAGES_VIEWED);
+  }
+
+  componentDidUpdate(prev: Props) {
+    const curr = this.props;
+
+    const didReconnect = useConnectionRestored({ curr, prev });
+    if (didReconnect && curr.dmData.refetch) {
+      curr.data.refetch();
+    }
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   render() {
-    const {
-      threads,
-      currentUser,
-      active,
-      fetchMore,
-      hasNextPage,
-      isLoading,
-      isFetchingMore,
-    } = this.props;
+    const { currentUser, dmData, activeThreadId } = this.props;
     const { scrollElement } = this.state;
 
-    if (isLoading) {
+    if (!dmData || !dmData.user) return null;
+
+    const dmDataExists =
+      currentUser && dmData.user && dmData.user.directMessageThreadsConnection;
+    const threads =
+      dmDataExists &&
+      dmData.user.directMessageThreadsConnection.edges &&
+      dmData.user.directMessageThreadsConnection.edges.length > 0
+        ? dmData.user.directMessageThreadsConnection.edges
+            .map(thread => thread && thread.node)
+            .sort((a, b) => {
+              const x =
+                a &&
+                a.threadLastActive &&
+                new Date(a.threadLastActive).getTime();
+              const y =
+                b &&
+                b.threadLastActive &&
+                new Date(b.threadLastActive).getTime();
+              const val = parseInt(y, 10) - parseInt(x, 10);
+              return val;
+            })
+        : [];
+
+    const hasNextPage =
+      dmData.user &&
+      dmData.user.directMessageThreadsConnection &&
+      dmData.user.directMessageThreadsConnection.pageInfo &&
+      dmData.user.directMessageThreadsConnection.pageInfo.hasNextPage;
+
+    const uniqueThreads = deduplicateChildren(threads, 'id');
+
+    if (!dmDataExists && dmData.isLoading) {
       return (
         <div>
           <LoadingDM />
@@ -68,7 +135,7 @@ class ThreadsList extends React.Component<Props, State> {
       );
     }
 
-    if (!threads || threads.length === 0) {
+    if (!uniqueThreads || uniqueThreads.length === 0) {
       return (
         <React.Fragment>
           <NoThreads hideOnDesktop>
@@ -88,14 +155,12 @@ class ThreadsList extends React.Component<Props, State> {
       );
     }
 
-    const uniqueThreads = deduplicateChildren(threads, 'id');
-
     return (
       <ThreadsListScrollContainer id={'scroller-for-dm-threads'}>
         <InfiniteList
           pageStart={0}
-          loadMore={fetchMore}
-          isLoadingMore={isFetchingMore}
+          loadMore={dmData.fetchMore}
+          isLoadingMore={dmData.networkStatus === 3}
           hasMore={hasNextPage}
           loader={<LoadingDM />}
           useWindow={false}
@@ -110,7 +175,7 @@ class ThreadsList extends React.Component<Props, State> {
                 <DirectMessageListItem
                   thread={thread}
                   currentUser={currentUser}
-                  active={active === thread.id}
+                  active={activeThreadId === thread.id}
                 />
               </ErrorBoundary>
             );
@@ -121,4 +186,13 @@ class ThreadsList extends React.Component<Props, State> {
   }
 }
 
-export default ThreadsList;
+const map = state => ({
+  networkOnline: state.connectionStatus.networkOnline,
+  websocketConnection: state.connectionStatus.websocketConnection,
+});
+
+export default compose(
+  withCurrentUser,
+  getCurrentUserDMThreadConnection,
+  connect(map)
+)(ThreadsList);

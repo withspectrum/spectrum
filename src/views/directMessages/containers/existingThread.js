@@ -17,6 +17,7 @@ import ViewError from 'src/components/viewError';
 import { ErrorBoundary } from 'src/components/error';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   data: {
@@ -24,7 +25,6 @@ type Props = {
     directMessageThread: GetDirectMessageThreadType,
   },
   isLoading: boolean,
-  setActiveThread: Function,
   setLastSeen: Function,
   match: Object,
   id: ?string,
@@ -39,8 +39,7 @@ class ExistingThread extends React.Component<Props> {
   chatInput: ?ChatInput;
 
   componentDidMount() {
-    const threadId = this.props.id;
-    this.props.setActiveThread(threadId);
+    const { threadId } = this.props.match.params;
     this.props.setLastSeen(threadId);
     this.forceScrollToBottom();
 
@@ -74,7 +73,6 @@ class ExistingThread extends React.Component<Props> {
     }
     if (prev.match.params.threadId !== curr.match.params.threadId) {
       const threadId = curr.match.params.threadId;
-      curr.setActiveThread(threadId);
       curr.setLastSeen(threadId);
       this.forceScrollToBottom();
       // autofocus on desktop
@@ -101,6 +99,10 @@ class ExistingThread extends React.Component<Props> {
   render() {
     const id = this.props.match.params.threadId;
     const { currentUser, data, isLoading } = this.props;
+
+    if (isLoading) {
+      return <Loading />;
+    }
 
     if (id !== 'new') {
       if (data.directMessageThread) {
@@ -133,10 +135,6 @@ class ExistingThread extends React.Component<Props> {
         );
       }
 
-      if (isLoading) {
-        return <Loading />;
-      }
-
       return (
         <ViewError
           heading={'We had trouble loading this conversation'}
@@ -164,5 +162,6 @@ export default compose(
   getDirectMessageThread,
   setLastSeenMutation,
   withApollo,
+  withCurrentUser,
   viewNetworkHandler
 )(ExistingThread);
