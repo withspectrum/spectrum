@@ -42,7 +42,6 @@ class ExistingThread extends React.Component<Props> {
     const { threadId } = this.props.match.params;
     this.props.setLastSeen(threadId);
     this.forceScrollToBottom();
-
     // autofocus on desktop
     if (window && window.innerWidth > 768 && this.chatInput) {
       this.chatInput.triggerFocus();
@@ -100,10 +99,6 @@ class ExistingThread extends React.Component<Props> {
     const id = this.props.match.params.threadId;
     const { currentUser, data, isLoading } = this.props;
 
-    if (isLoading) {
-      return <Loading />;
-    }
-
     if (id !== 'new') {
       if (data.directMessageThread) {
         const thread = data.directMessageThread;
@@ -112,16 +107,22 @@ class ExistingThread extends React.Component<Props> {
             <ViewContent
               innerRef={scrollBody => (this.scrollBody = scrollBody)}
             >
-              <ErrorBoundary>
-                <Header thread={thread} currentUser={currentUser} />
-              </ErrorBoundary>
+              {!isLoading ? (
+                <React.Fragment>
+                  <ErrorBoundary>
+                    <Header thread={thread} currentUser={currentUser} />
+                  </ErrorBoundary>
 
-              <Messages
-                id={id}
-                currentUser={currentUser}
-                forceScrollToBottom={this.forceScrollToBottom}
-                contextualScrollToBottom={this.contextualScrollToBottom}
-              />
+                  <Messages
+                    id={id}
+                    currentUser={currentUser}
+                    forceScrollToBottom={this.forceScrollToBottom}
+                    contextualScrollToBottom={this.contextualScrollToBottom}
+                  />
+                </React.Fragment>
+              ) : (
+                <Loading />
+              )}
             </ViewContent>
 
             <ChatInput
@@ -133,6 +134,10 @@ class ExistingThread extends React.Component<Props> {
             />
           </MessagesContainer>
         );
+      }
+
+      if (isLoading) {
+        return <Loading />;
       }
 
       return (
