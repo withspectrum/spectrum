@@ -60,7 +60,7 @@ class DirectMessages extends React.Component<Props, State> {
         <MessagesList isViewingThread={isViewingThread || isComposing}>
           <Link to="/messages/new">
             <ComposeHeader>
-              <Icon glyph="message-new" />
+              <Icon glyph="message-new" dataCy="compose-dm" />
             </ComposeHeader>
           </Link>
 

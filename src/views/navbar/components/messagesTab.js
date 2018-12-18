@@ -178,12 +178,14 @@ class MessagesTab extends React.Component<Props, State> {
 
     // bundle dm notifications
     const obj = {};
-    nodes.filter(n => n && !n.isSeen).map(o => {
-      if (!o) return null;
-      if (obj[o.context.id]) return null;
-      obj[o.context.id] = o;
-      return null;
-    });
+    nodes
+      .filter(n => n && !n.isSeen)
+      .map(o => {
+        if (!o) return null;
+        if (obj[o.context.id]) return null;
+        obj[o.context.id] = o;
+        return null;
+      });
 
     // count of unique notifications determined by the thread id
     const count = Object.keys(obj).length;
@@ -242,6 +244,7 @@ class MessagesTab extends React.Component<Props, State> {
         data-cy="navbar-messages"
       >
         <Icon
+          dataCy={`unread-badge-${count}`}
           glyph={count > 0 ? 'message-fill' : 'message'}
           count={count > 10 ? '10+' : count > 0 ? count.toString() : null}
           size={isDesktopApp() ? 28 : 32}
