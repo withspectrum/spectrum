@@ -18,6 +18,9 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import type { Query } from 'react-apollo';
+import viewNetworkHandler, {
+  type ViewNetworkHandlerType,
+} from 'src/components/viewNetworkHandler';
 
 type Props = {
   currentUser: Object,
@@ -25,6 +28,7 @@ type Props = {
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
   activeThreadId: ?string,
+  ...$Exact<ViewNetworkHandlerType>,
   dmData: {
     ...$Exact<Query>,
     user: {
@@ -82,6 +86,21 @@ class ThreadsList extends React.Component<Props, State> {
   componentWillUnmount() {
     this.unsubscribe();
   }
+
+  shouldComponentUpdate(nextProps) {
+    const curr = this.props;
+    // fetching more
+    if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
+      return false;
+    return true;
+  }
+
+  paginate = () => {
+    const { dmData, isFetchingMore, activeThreadId } = this.props;
+    // don't accidentally paginate the threadslist in the background on mobile
+    if (window && window.innerWidth < 768 && activeThreadId) return;
+    return dmData.fetchMore();
+  };
 
   render() {
     const { currentUser, dmData, activeThreadId } = this.props;
@@ -161,13 +180,13 @@ class ThreadsList extends React.Component<Props, State> {
       <ThreadsListScrollContainer id={'scroller-for-dm-threads'}>
         <InfiniteList
           pageStart={0}
-          loadMore={dmData.fetchMore}
+          loadMore={this.paginate}
           isLoadingMore={dmData.networkStatus === 3}
           hasMore={hasNextPage}
           loader={<LoadingDM />}
           useWindow={false}
           scrollElement={scrollElement}
-          threshold={30}
+          threshold={100}
           className={'scroller-for-community-dm-threads-list'}
         >
           {uniqueThreads.map(thread => {
@@ -196,6 +215,7 @@ const map = state => ({
 export default compose(
   withCurrentUser,
   getCurrentUserDMThreadConnection,
+  viewNetworkHandler,
   // $FlowIssue
   connect(map)
 )(ThreadsList);
