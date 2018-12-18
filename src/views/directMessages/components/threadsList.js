@@ -90,7 +90,7 @@ class ThreadsList extends React.Component<Props, State> {
   shouldComponentUpdate(nextProps) {
     const curr = this.props;
     // fetching more
-    if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
+    if (curr.dmData.networkStatus === 7 && nextProps.dmData.networkStatus === 3)
       return false;
     return true;
   }
