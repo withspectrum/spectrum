@@ -76,12 +76,16 @@ type Props = {
   quotedMessage: ?{ messageId: string, threadId: string },
 };
 
+// $FlowFixMe
 const ChatInput = React.forwardRef((props: Props, ref) => {
   const cacheKey = `last-content-${props.thread}`;
+  // $FlowFixMe
   const [text, changeText] = React.useState('');
+  // $FlowFixMe
   const [photoSizeError, setPhotoSizeError] = React.useState('');
 
   // On mount, set the text state to the cached value if one exists
+  // $FlowFixMe
   React.useEffect(
     () => {
       changeText(localStorage.getItem(cacheKey) || '');
@@ -91,6 +95,7 @@ const ChatInput = React.forwardRef((props: Props, ref) => {
   );
 
   // Cache the latest text everytime it changes
+  // $FlowFixMe
   React.useEffect(
     () => {
       localStorage.setItem(cacheKey, text);
@@ -223,10 +228,13 @@ const ChatInput = React.forwardRef((props: Props, ref) => {
       });
   };
 
+  // $FlowFixMe
   const [isSendingMediaMessage, setIsSendingMediaMessage] = React.useState(
     false
   );
+  // $FlowFixMe
   const [mediaPreview, setMediaPreview] = React.useState(null);
+  // $FlowFixMe
   const [mediaPreviewFile, setMediaPreviewFile] = React.useState(null);
 
   const previewMedia = blob => {
