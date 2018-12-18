@@ -147,7 +147,10 @@ export default class InfiniteScroll extends React.Component<Props> {
     ) {
       this.detachScrollListener();
       // Call loadMore after detachScrollListener to allow for non-async loadMore functions
-      if (typeof this.props.loadMore === 'function') {
+      if (
+        typeof this.props.loadMore === 'function' &&
+        !this.props.isLoadingMore
+      ) {
         this.props.loadMore((this.pageLoaded += 1));
       }
     }
@@ -168,7 +171,10 @@ export default class InfiniteScroll extends React.Component<Props> {
     scrollEl.addEventListener('scroll', this.scrollListener);
     scrollEl.addEventListener('resize', this.scrollListener);
 
-    if (fetchMoreOnInfiniteScrollLoad(scrollEl, this.props.className)) {
+    if (
+      fetchMoreOnInfiniteScrollLoad(scrollEl, this.props.className) &&
+      !this.props.isLoadingMore
+    ) {
       this.props.loadMore((this.pageLoaded += 1));
     }
 

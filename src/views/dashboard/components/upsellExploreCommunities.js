@@ -4,7 +4,7 @@ import { getCommunitiesByCuratedContentType } from 'shared/graphql/queries/commu
 import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCommunities';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { connect } from 'react-redux';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { CommunityAvatarContainer, UpsellRow } from '../style';

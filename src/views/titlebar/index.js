@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import ThreadSearch from '../dashboard/components/threadSearch';
 import Icon from '../../components/icons';
 import { IconButton } from '../../components/buttons';

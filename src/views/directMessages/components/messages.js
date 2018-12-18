@@ -60,9 +60,18 @@ class MessagesWithData extends React.Component<Props, State> {
       setTimeout(() => this.props.forceScrollToBottom());
     }
     // force scroll to bottom when a message is sent in the same thread
-    if (prev.data.messages !== data.messages && contextualScrollToBottom) {
+    if (
+      prev.data.directMessageThread &&
+      data.directMessageThread &&
+      prev.data.directMessageThread.id === data.directMessageThread.id &&
+      (prev.data.messages && data.messages) &&
+      prev.data.messages.length < data.messages.length &&
+      contextualScrollToBottom
+    ) {
       // mark this thread as unread when new messages come in and i'm viewing it
-      if (data.directMessageThread) setLastSeen(data.directMessageThread.id);
+      if (data.directMessageThread) {
+        setLastSeen(data.directMessageThread.id);
+      }
       contextualScrollToBottom();
     }
   }

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { CommunityAvatar } from 'src/components/avatar';
 import compose from 'recompose/compose';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
 import Reputation from 'src/components/reputation';
 import SidebarChannels from './sidebarChannels';

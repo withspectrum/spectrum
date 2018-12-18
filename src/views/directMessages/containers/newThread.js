@@ -60,7 +60,6 @@ type Props = {
   createDirectMessageThread: Function,
   threadSliderIsOpen: boolean,
   history: Object,
-  setActiveThread: Function,
 };
 
 class NewThread extends React.Component<Props, State> {
@@ -669,7 +668,6 @@ class NewThread extends React.Component<Props, State> {
             threadIsBeingCreated: false,
           });
 
-          this.props.setActiveThread(createDirectMessageThread.id);
           this.props.history.push(`/messages/${createDirectMessageThread.id}`);
           return;
         })

@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { zIndex, Tooltip } from 'src/components/globals';
 
 export const InboxThreadItem = styled.div`
@@ -110,8 +110,8 @@ export const CountWrapper = styled.div`
         ? props.theme.text.reverse
         : props.theme.warn.alt
       : props.active
-        ? props.theme.text.reverse
-        : props.theme.text.alt};
+      ? props.theme.text.reverse
+      : props.theme.text.alt};
   font-weight: 600;
   align-items: center;
 

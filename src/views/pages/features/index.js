@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Section from 'src/components/themedSection';
 import PageFooter from '../components/footer';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
 import { Easy, Happy, Impact, Ideas } from 'src/components/illustrations';
 import { Wrapper } from '../style';

@@ -36,7 +36,7 @@ const Header = ({ thread, currentUser }) => {
   });
 
   return (
-    <StyledHeader>
+    <StyledHeader data-cy="dm-header">
       <Head title={title} description={description} />
       <PhotosContainer>{photos}</PhotosContainer>
       <Names>{names}</Names>

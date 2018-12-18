@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 import { type History, type Match } from 'react-router';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import Head from 'src/components/head';
 import ThreadFeed from 'src/components/threadFeed';

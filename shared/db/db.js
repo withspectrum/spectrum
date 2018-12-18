@@ -13,6 +13,7 @@ const DEFAULT_CONFIG = {
   max: 1000, // Maximum number of connections, default is 1000
   buffer: 50, // Minimum number of connections open at any given moment, default is 50
   timeoutGb: 60 * 60 * 1000, // How long should an unused connection stick around, default is an hour, this is a minute
+  timeout: 30, // The number of seconds for a connection to be opened, default 20
 };
 
 let ca;
