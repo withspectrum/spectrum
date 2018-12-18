@@ -17,6 +17,7 @@ import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
+import type { Query } from 'react-apollo';
 
 type Props = {
   currentUser: Object,
@@ -25,7 +26,10 @@ type Props = {
   websocketConnection: WebsocketConnectionType,
   activeThreadId: ?string,
   dmData: {
-    ...$Exact<GetCurrentUserDMThreadConnectionType>,
+    ...$Exact<Query>,
+    user: {
+      ...$Exact<GetCurrentUserDMThreadConnectionType>,
+    },
   },
 };
 
@@ -71,7 +75,7 @@ class ThreadsList extends React.Component<Props, State> {
 
     const didReconnect = useConnectionRestored({ curr, prev });
     if (didReconnect && curr.dmData.refetch) {
-      curr.data.refetch();
+      curr.dmData.refetch();
     }
   }
 
@@ -192,5 +196,6 @@ const map = state => ({
 export default compose(
   withCurrentUser,
   getCurrentUserDMThreadConnection,
+  // $FlowIssue
   connect(map)
 )(ThreadsList);
