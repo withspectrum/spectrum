@@ -4,6 +4,7 @@ import Raven from 'shared/raven';
 import sendEmail from '../send-email';
 import truncate from 'shared/truncate';
 import { generateUnsubscribeToken } from '../utils/generate-jwt';
+import smarten from 'hermes/utils/smarten-string';
 import {
   NEW_THREAD_CREATED_TEMPLATE,
   TYPE_NEW_THREAD_CREATED,
@@ -48,7 +49,7 @@ type SendNewThreadEmailJob = {
   id: string,
 };
 
-export default async (job: SendNewThreadEmailJob) => {
+export default async (job: SendNewThreadEmailJob): Promise<void> => {
   const { recipient, thread, primaryActionLabel } = job.data;
 
   debug(`\nnew job: ${job.id}`);
@@ -59,9 +60,12 @@ export default async (job: SendNewThreadEmailJob) => {
     TYPE_NEW_THREAD_CREATED
   );
 
-  if (!unsubscribeToken || !recipient.email) return;
+  if (!unsubscribeToken || !recipient.email) {
+    console.error('Aborting no unsub token or recipient email');
+    return Promise.resolve();
+  }
 
-  const subject = `${truncate(thread.content.title, 80)} by ${
+  const subject = `‘${truncate(smarten(thread.content.title), 80)}’ by ${
     thread.creator.name
   } · ${thread.community.name} (${thread.channel.name})`;
   const preheader = thread.content.body
@@ -70,10 +74,9 @@ export default async (job: SendNewThreadEmailJob) => {
 
   try {
     return sendEmail({
-      TemplateId: NEW_THREAD_CREATED_TEMPLATE,
-      To: recipient.email,
-      Tag: SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
-      TemplateModel: {
+      templateId: NEW_THREAD_CREATED_TEMPLATE,
+      to: [{ email: recipient.email }],
+      dynamic_template_data: {
         subject,
         preheader,
         data: {
@@ -96,8 +99,8 @@ export default async (job: SendNewThreadEmailJob) => {
       userId: recipient.id,
     });
   } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
-    Raven.captureException(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
+    return Raven.captureException(err);
   }
 };

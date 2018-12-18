@@ -2,7 +2,7 @@
 import React from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import Link from '../../../components/link';
+import { Link } from 'react-router-dom';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
 import Icon from '../../../components/icons';
 import { Button } from '../../../components/buttons';

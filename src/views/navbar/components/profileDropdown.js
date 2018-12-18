@@ -3,7 +3,7 @@ import theme from 'shared/theme';
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import Dropdown from 'src/components/dropdown';
 import { SERVER_URL } from 'src/api/constants';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
@@ -74,15 +74,13 @@ class ProfileDropdown extends React.Component<ProfileProps, State> {
             </Link>
           )}
 
-          {didMount &&
-            isMac() &&
-            !isDesktopApp() && (
-              <Link to={`/apps`}>
-                <UserProfileDropdownListItem>
-                  Desktop App
-                </UserProfileDropdownListItem>
-              </Link>
-            )}
+          {didMount && isMac() && !isDesktopApp() && (
+            <Link to={`/apps`}>
+              <UserProfileDropdownListItem>
+                Desktop App
+              </UserProfileDropdownListItem>
+            </Link>
+          )}
 
           <Link to={`/about`}>
             <UserProfileDropdownListItem>

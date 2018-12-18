@@ -14,7 +14,7 @@ import Messages from './components/messages';
 import Head from 'src/components/head';
 import ChatInput from 'src/components/chatInput';
 import ViewError from 'src/components/viewError';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {

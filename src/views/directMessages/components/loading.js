@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
 import { LoadingDM } from '../../../components/loading';
 import { View, MessagesList, ComposeHeader } from '../style';

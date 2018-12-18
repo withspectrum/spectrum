@@ -9,7 +9,9 @@ import {
 } from './constants';
 import type { Job, AdminProcessUserReportedJobData } from 'shared/bull/types';
 
-export default async (job: Job<AdminProcessUserReportedJobData>) => {
+export default async (
+  job: Job<AdminProcessUserReportedJobData>
+): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   const { userId, reason, reportedBy, reportedAt } = job.data;
 
@@ -23,10 +25,13 @@ export default async (job: Job<AdminProcessUserReportedJobData>) => {
 
   try {
     return sendEmail({
-      TemplateId: ADMIN_USER_REPORTED_TEMPLATE,
-      To: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
-      Tag: SEND_ADMIN_USER_REPORTED_EMAIL,
-      TemplateModel: {
+      templateId: ADMIN_USER_REPORTED_TEMPLATE,
+      to: [
+        { email: 'brian@spectrum.chat ' },
+        { email: 'max@spectrum.chat ' },
+        { email: 'bryn@spectrum.chat ' },
+      ],
+      dynamic_template_data: {
         subject,
         preheader,
         reportedUser,
@@ -35,8 +40,8 @@ export default async (job: Job<AdminProcessUserReportedJobData>) => {
       },
     });
   } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
-    Raven.captureException(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
+    return Raven.captureException(err);
   }
 };

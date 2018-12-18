@@ -8,7 +8,7 @@ import { TYPE_DAILY_DIGEST, TYPE_WEEKLY_DIGEST } from './constants';
 import formatDate from '../utils/format-date';
 import type { Job, SendDigestEmailJobData } from 'shared/bull/types';
 
-export default async (job: Job<SendDigestEmailJobData>) => {
+export default async (job: Job<SendDigestEmailJobData>): Promise<void> => {
   const {
     email,
     username,
@@ -17,10 +17,11 @@ export default async (job: Job<SendDigestEmailJobData>) => {
     reputationString,
     communities,
     timeframe,
+    hasOverflowThreads,
   } = job.data;
 
   if (!email || !userId || !username) {
-    return;
+    return Promise.resolve();
   }
 
   const unsubscribeType =
@@ -31,7 +32,7 @@ export default async (job: Job<SendDigestEmailJobData>) => {
     unsubscribeType
   );
 
-  if (!unsubscribeToken) return;
+  if (!unsubscribeToken) return Promise.resolve();
 
   const tag =
     timeframe === 'daily'
@@ -60,14 +61,14 @@ export default async (job: Job<SendDigestEmailJobData>) => {
 
   try {
     return sendEmail({
-      TemplateId: DIGEST_TEMPLATE,
-      To: email,
-      Tag: tag,
-      TemplateModel: {
+      templateId: DIGEST_TEMPLATE,
+      to: [{ email }],
+      dynamic_template_data: {
         subject,
         preheader,
         unsubscribeToken,
         data: {
+          hasOverflowThreads,
           username,
           threads,
           communities,
@@ -81,8 +82,8 @@ export default async (job: Job<SendDigestEmailJobData>) => {
       userId,
     });
   } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
-    Raven.captureException(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
+    return Raven.captureException(err);
   }
 };

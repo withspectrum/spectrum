@@ -32,7 +32,8 @@ export const track = (
   };
 
   return Promise.all([amplitudePromise()]).catch(err => {
-    console.error('Error tracking event: ', err.message);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     Raven.captureException(err);
   });
 };

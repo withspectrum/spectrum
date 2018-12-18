@@ -1,0 +1,23 @@
+{
+  "subject": "New Slack import: 2 invites from the blah Slack team",
+  "preheader": "2 invites sent for the blah community",
+  "data": {
+    "community": {
+      "administratorEmail": "email",
+      "coverPhoto": "",
+      "createdAt": "2018-12-09T16:01:18.435Z",
+      "creatorId": "24695e16-c001-4c66-93fe-0cb69554a212",
+      "description": "description",
+      "id": "1",
+      "isPrivate": false,
+      "memberCount": 1,
+      "modifiedAt": "2018-12-09T16:30:36.422Z",
+      "name": "Community Name",
+      "profilePhoto": "",
+      "slug": "community-slug",
+      "website": "website"
+    },
+    "invitedCount": 2,
+    "teamName": "blah"
+  }
+}

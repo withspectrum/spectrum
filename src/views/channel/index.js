@@ -10,7 +10,7 @@ import Head from 'src/components/head';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import ThreadFeed from 'src/components/threadFeed';
 import PendingUsersNotification from './components/pendingUsersNotification';
 import NotificationsToggle from './components/notificationsToggle';

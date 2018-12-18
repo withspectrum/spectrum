@@ -183,7 +183,7 @@ export const CommunityListItem = styled.div`
   grid-auto-rows: 48px auto;
   grid-template-areas: 'icon title' 'menu menu';
   min-height: 48px;
-  padding: 8px;
+  padding: 8px 16px;
   justify-items: start;
   align-items: center;
   cursor: pointer;

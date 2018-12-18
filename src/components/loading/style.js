@@ -5,7 +5,7 @@ import styled, { keyframes } from 'styled-components';
 import { Card } from '../card';
 import { hexa, FlexCol, zIndex } from '../globals';
 // $FlowFixMe
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 
 const containerFadeIn = keyframes`
   0%{

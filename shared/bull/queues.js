@@ -26,6 +26,7 @@ import {
   SEND_NEW_USER_WELCOME_EMAIL,
   SEND_DIGEST_EMAIL,
   SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
+  SENDGRID_WEBHOOK_EVENT,
 } from 'hermes/queues/constants';
 
 import {
@@ -110,6 +111,7 @@ exports.QUEUE_NAMES = {
   sendPrivateCommunityRequestApprovedEmailQueue: SEND_PRIVATE_COMMUNITY_REQUEST_APPROVED_EMAIL,
   sendThreadCreatedNotificationEmailQueue: SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
   sendDigestEmailQueue: SEND_DIGEST_EMAIL,
+  sendgridEventQueue: SENDGRID_WEBHOOK_EVENT,
 
   // mercury - reputation
   processReputationEventQueue: PROCESS_REPUTATION_EVENT,

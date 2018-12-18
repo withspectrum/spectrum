@@ -75,6 +75,8 @@ export const NoThreads = MessagesContainer.extend`
   top: 50%;
   width: 100%;
   transform: translateY(-50%);
+  background: #fff;
+
   h2 {
     max-width: 600px;
   }

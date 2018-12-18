@@ -326,7 +326,7 @@ export type AdminToxicMessageJobData = { message: DBMessage };
 export type AdminToxicThreadJobData = { thread: DBThread };
 
 export type AdminSlackImportJobData = {
-  thisUser: DBUser,
+  user: DBUser,
   community: DBCommunity,
   invitedCount: number,
   teamName: string,
@@ -424,6 +424,34 @@ export type SendDigestEmailJobData = {
   reputationString: string,
   communities: ?Array<DBCommunity>,
   timeframe: Timeframe,
+  hasOverflowThreads: boolean,
+};
+
+export type SendGridWebhookEventJobData = {
+  event: {
+    email: string,
+    timestamp: number,
+    event: string,
+    category: string,
+    sg_event_id: string,
+    sg_message_id: string,
+    response: string,
+    status: string,
+    reason: string,
+    attempt: string,
+  },
+};
+
+export type AdminToxicContentEmailJobData = {
+  type: string,
+  text: string,
+  user: DBUser,
+  thread: DBThread,
+  community: DBCommunity,
+  channel: DBChannel,
+  toxicityConfidence: {
+    perspectiveScore: number,
+  },
 };
 
 export type Queues = {
@@ -463,6 +491,7 @@ export type Queues = {
   sendPrivateCommunityRequestApprovedEmailQueue: BullQueue<SendPrivateCommunityRequestApprovedEmailJobData>,
   sendThreadCreatedNotificationEmailQueue: BullQueue<SendNewThreadNotificationEmailJobData>,
   sendDigestEmailQueue: BullQueue<SendDigestEmailJobData>,
+  sendgridEventQueue: BullQueue<SendGridWebhookEventJobData>,
 
   // mercury
   processReputationEventQueue: BullQueue<ReputationEventJobData>,
@@ -482,7 +511,7 @@ export type Queues = {
   _adminProcessSlackImportQueue: BullQueue<AdminSlackImportJobData>,
   _adminProcessUserReportedQueue: BullQueue<AdminProcessUserReportedJobData>,
   // TODO: Properly type this
-  _adminSendToxicContentEmailQueue: BullQueue<any>,
+  _adminSendToxicContentEmailQueue: BullQueue<AdminToxicContentEmailJobData>,
   _adminProcessUserSpammingThreadsQueue: BullQueue<AdminUserSpammingThreadsJobData>,
   _adminSendActiveCommunityReportEmailQueue: BullQueue<AdminActiveCommunityReportEmailJobData>,
 
