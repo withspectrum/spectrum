@@ -5,6 +5,7 @@ debug('Hyperion starting...');
 debug('logging with debug enabled');
 require('isomorphic-fetch'); // prevent https://github.com/withspectrum/spectrum/issues/3032
 import fs from 'fs';
+import statsd from 'shared/middlewares/statsd';
 import express from 'express';
 import Loadable from 'react-loadable';
 import path from 'path';
@@ -19,6 +20,9 @@ const PORT = process.env.PORT || 3006;
 const ONE_HOUR = 3600;
 
 const app = express();
+
+// Instantiate the statsd middleware as soon as possible to get accurate time tracking
+app.use(statsd);
 
 // Trust the now proxy
 app.set('trust proxy', true);
