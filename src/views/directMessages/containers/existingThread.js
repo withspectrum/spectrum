@@ -40,6 +40,10 @@ class ExistingThread extends React.Component<Props> {
 
   componentDidMount() {
     const { threadId } = this.props.match.params;
+
+    // escape to prevent this from running on mobile
+    if (!threadId) return;
+
     this.props.setLastSeen(threadId);
     this.forceScrollToBottom();
     // autofocus on desktop
@@ -72,6 +76,10 @@ class ExistingThread extends React.Component<Props> {
     }
     if (prev.match.params.threadId !== curr.match.params.threadId) {
       const threadId = curr.match.params.threadId;
+
+      // prevent unnecessary behavior on mobile
+      if (!threadId) return;
+
       curr.setLastSeen(threadId);
       this.forceScrollToBottom();
       // autofocus on desktop
