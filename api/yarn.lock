@@ -3464,6 +3464,22 @@ draft-js-image-plugin@2.0.0-rc8:
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
 
+draft-js-import-element@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/draft-js-import-element/-/draft-js-import-element-1.2.1.tgz#9a6a56d74690d48d35d8d089564e6d710b4926eb"
+  integrity sha512-T/eCDkaU8wrTCH6c+/2BE7Vx/11GABRNU/UBiHM4D903LNFar8UfjElehpiKVf+F4rxi8dfhvTgaWrpWDfX4MA==
+  dependencies:
+    draft-js-utils "^1.2.0"
+    synthetic-dom "^1.2.0"
+
+draft-js-import-markdown@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-1.2.1.tgz#ec18eb15008bab13d9878d65db50e181dd64a5ce"
+  integrity sha512-hn2+LJ/QdmuM2gc44uqYWjMqRv5Pt6bZFHULi8hGAR7WVWaVk4gaXHM4fE8H4iVE+QFUV6yNITrm4D/fyPkaGQ==
+  dependencies:
+    draft-js-import-element "^1.2.1"
+    synthetic-dom "^1.2.0"
+
 draft-js-linkify-plugin@^2.0.0-beta1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/draft-js-linkify-plugin/-/draft-js-linkify-plugin-2.0.1.tgz#28978b53640ce64c639cd2821a54c24de9f79c3f"
@@ -3538,6 +3554,11 @@ draft-js-prism@ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb:
     extend "^3.0.0"
     immutable "*"
     prismjs "^1.5.0"
+
+draft-js-utils@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-1.2.0.tgz#f5cb23eb167325ffed3d79882fdc317721d2fd12"
+  integrity sha1-9csj6xZzJf/tPXmIL9wxdyHS/RI=
 
 draft-js@0.x, draft-js@^0.10.4, draft-js@^0.10.5, draft-js@~0.10.0:
   version "0.10.5"
@@ -8955,6 +8976,11 @@ symbol-tree@^3.2.1:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.2.tgz#ae27db38f660a7ae2e1c3b7d1bc290819b8519e6"
   integrity sha1-rifbOPZgp64uHDt9G8KQgZuFGeY=
+
+synthetic-dom@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/synthetic-dom/-/synthetic-dom-1.2.0.tgz#f3589aafe2b5e299f337bb32973a9be42dd5625e"
+  integrity sha1-81iar+K14pnzN7sylzqb5C3VYl4=
 
 table@^4.0.2:
   version "4.0.3"
