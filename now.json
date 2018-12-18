@@ -53,3 +53,4 @@
     "IMGIX_SECURITY_KEY": "@imgix-security-key",
     "DATADOG_API_KEY": "@datadog-api-key"
   }
+}
