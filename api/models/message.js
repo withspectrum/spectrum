@@ -112,7 +112,7 @@ export const getLastMessage = (threadId: string): Promise<?DBMessage> => {
 export const getLastMessageOfThreads = (
   threadIds: Array<string>
 ): Promise<Array<?DBMessage>> => {
-  return Promise.all(threadIds.map(id => id && getLastMessage(id)));
+  return Promise.all(threadIds.map(id => getLastMessage(id)));
 };
 
 // prettier-ignore
