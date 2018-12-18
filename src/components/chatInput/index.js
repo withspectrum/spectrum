@@ -77,9 +77,26 @@ type Props = {
 };
 
 const ChatInput = React.forwardRef((props: Props, ref) => {
+  const cacheKey = `last-content-${props.thread}`;
   const [text, changeText] = React.useState('');
-  const [showMarkdownHint, setShowMarkdownHint] = React.useState(false);
   const [photoSizeError, setPhotoSizeError] = React.useState('');
+
+  // On mount, set the text state to the cached value if one exists
+  React.useEffect(
+    () => {
+      changeText(localStorage.getItem(cacheKey) || '');
+      // NOTE(@mxstbr): We ONLY want to run this if we switch between threads, never else!
+    },
+    [props.thread]
+  );
+
+  // Cache the latest text everytime it changes
+  React.useEffect(
+    () => {
+      localStorage.setItem(cacheKey, text);
+    },
+    [text]
+  );
 
   const removeAttachments = () => {
     removeQuotedMessage();
@@ -105,13 +122,10 @@ const ChatInput = React.forwardRef((props: Props, ref) => {
 
   const onChange = e => {
     const text = e.target.value;
-    const newShowMarkdownHint = text.length > 0;
-    if (newShowMarkdownHint !== showMarkdownHint)
-      setShowMarkdownHint(newShowMarkdownHint);
     changeText(text);
   };
 
-  const sendMessage = ({ file, body }) => {
+  const sendMessage = ({ file, body }: { file?: any, body?: string }) => {
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
     // in views/directMessages/containers/newThread.js
@@ -313,7 +327,7 @@ const ChatInput = React.forwardRef((props: Props, ref) => {
           </Form>
         </ChatInputWrapper>
       </ChatInputContainer>
-      <MarkdownHint showHint={showMarkdownHint} data-cy="markdownHint">
+      <MarkdownHint showHint={text.length > 0} data-cy="markdownHint">
         <b>**bold**</b>
         <i>*italic*</i>
         <Preformatted>`code`</Preformatted>
