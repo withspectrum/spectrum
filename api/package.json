@@ -25,6 +25,7 @@
     "cookie-session": "^2.0.0-beta.3",
     "cors": "^2.8.5",
     "cryptr": "^3.0.0",
+    "datadog-metrics": "^0.8.1",
     "dataloader": "^1.4.0",
     "debounce": "^1.2.0",
     "debug": "^4.1.0",
