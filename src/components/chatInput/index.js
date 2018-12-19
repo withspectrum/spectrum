@@ -191,26 +191,22 @@ const ChatInput = (props: Props) => {
     // If a user sends a message, force a scroll to bottom. This doesn't exist if this is a new DM thread
     if (props.forceScrollToBottom) props.forceScrollToBottom();
 
-    if (mediaPreviewFile) {
+    if (mediaFile) {
       setIsSendingMediaMessage(true);
-      let reader = new FileReader();
-      reader.onloadend = () => {
-        if (props.forceScrollToBottom) props.forceScrollToBottom();
-        sendMessage({ file: mediaPreviewFile, body: reader.result })
-          .then(() => setIsSendingMediaMessage(false))
-          .catch(err => {
-            setIsSendingMediaMessage(false);
-            props.dispatch(addToastWithTimeout('error', err.message));
-          });
-      };
-      reader.readAsDataURL(mediaPreviewFile);
+      if (props.forceScrollToBottom) props.forceScrollToBottom();
+      sendMessage({ file: mediaFile, body: '{"blocks":[],"entityMap":{}}' })
+        .then(() => {
+          setIsSendingMediaMessage(false);
+          setMediaPreview(null);
+          setAttachedMediaFile(null);
+        })
+        .catch(err => {
+          setIsSendingMediaMessage(false);
+          props.dispatch(addToastWithTimeout('error', err.message));
+        });
     }
 
     if (text.length === 0) return;
-
-    // Clear the chat input now that we're sending a message for sure
-    onChange({ target: { value: '' } });
-    removeQuotedMessage();
 
     sendMessage({ body: text })
       .then(() => {
@@ -227,6 +223,10 @@ const ChatInput = (props: Props) => {
       .catch(err => {
         props.dispatch(addToastWithTimeout('error', err.message));
       });
+
+    // Clear the chat input now that we're sending a message for sure
+    onChange({ target: { value: '' } });
+    removeQuotedMessage();
   };
 
   // $FlowFixMe
@@ -236,12 +236,12 @@ const ChatInput = (props: Props) => {
   // $FlowFixMe
   const [mediaPreview, setMediaPreview] = React.useState(null);
   // $FlowFixMe
-  const [mediaPreviewFile, setMediaPreviewFile] = React.useState(null);
+  const [mediaFile, setAttachedMediaFile] = React.useState(null);
 
   const previewMedia = blob => {
     if (isSendingMediaMessage) return;
     setIsSendingMediaMessage(true);
-    setMediaPreviewFile(blob);
+    setAttachedMediaFile(blob);
     inputRef && inputRef.focus();
 
     const reader = new FileReader();
