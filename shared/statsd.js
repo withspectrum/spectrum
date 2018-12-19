@@ -2,11 +2,25 @@
 const debug = require('debug')('shared:middlewares:statsd');
 import metrics from 'datadog-metrics';
 
+type Tags = {
+  [key: string]: string,
+};
+
 export let statsd = {
-  histogram: (...args: Array<any>) => {},
-  timing: (...args: Array<any>) => {},
-  increment: (...args: Array<any>) => {},
-  gauge: (...args: Array<any>) => {},
+  histogram: (
+    key: string,
+    value: number,
+    tags?: Tags,
+    timestamp?: number
+  ) => {},
+  timing: (key: string, value: number, tags?: Tags, timestamp?: number) => {},
+  increment: (
+    key: string,
+    value?: number,
+    tags?: Tags,
+    timestamp?: number
+  ) => {},
+  gauge: (key: string, value: number, tags?: Tags, timestamp?: number) => {},
 };
 if (!process.env.DATADOG_API_KEY) {
   console.warn('No DATADOG_API_KEY provided, not tracking metrics.');
