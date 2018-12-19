@@ -1,4 +1,5 @@
 // @flow
+const os = require('os');
 const debug = require('debug')('shared:middlewares:statsd');
 
 type Tags = {
@@ -71,7 +72,10 @@ if (
   console.warn('Tracking metrics to DataDog.');
   const metrics = require('datadog-metrics');
   metrics.init({
-    defaultTags: [`server:${process.env.SENTRY_NAME || 'unknown_server'}`],
+    defaultTags: [
+      `server:${process.env.SENTRY_NAME || 'unknown_server'}`,
+      `hostname: ${os.hostname() || 'unknown_instance_hostname'}`,
+    ],
   });
 
   // This is necessary for express-hot-shots to work
