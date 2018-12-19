@@ -112,6 +112,8 @@ export const Input = styled(({ hasAttachment, networkDisabled, ...rest }) => (
   font-size: 15px;
   font-weight: 500;
   line-height: 20px;
+  background: ${props =>
+    props.networkDisabled ? 'none' : props.theme.bg.default};
 
   @media (max-width: 768px) {
     font-size: 16px;
@@ -120,25 +122,25 @@ export const Input = styled(({ hasAttachment, networkDisabled, ...rest }) => (
   &::placeholder {
     color: ${props =>
       props.networkDisabled
-        ? hexa(props.theme.special.default, 0.5)
+        ? hexa(props.theme.special.default, 0.8)
         : props.theme.text.placeholder};
   }
   &::-webkit-input-placeholder {
     color: ${props =>
       props.networkDisabled
-        ? hexa(props.theme.special.default, 0.5)
+        ? hexa(props.theme.special.default, 0.8)
         : props.theme.text.placeholder};
   }
   &:-moz-placeholder {
     color: ${props =>
       props.networkDisabled
-        ? hexa(props.theme.special.default, 0.5)
+        ? hexa(props.theme.special.default, 0.8)
         : props.theme.text.placeholder};
   }
   &:-ms-input-placeholder {
     color: ${props =>
       props.networkDisabled
-        ? hexa(props.theme.special.default, 0.5)
+        ? hexa(props.theme.special.default, 0.8)
         : props.theme.text.placeholder};
   }
 
