@@ -1,4 +1,5 @@
 // @flow
+import React from 'react';
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import Textarea from 'react-textarea-autosize';
@@ -97,7 +98,9 @@ export const InputWrapper = styled.div`
   }
 `;
 
-export const Input = styled(Textarea).attrs({
+export const Input = styled(({ hasAttachment, networkDisabled, ...rest }) => (
+  <Textarea {...rest} />
+)).attrs({
   spellCheck: true,
   autoCapitalize: 'sentences',
   autoComplete: 'on',

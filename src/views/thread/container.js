@@ -388,7 +388,7 @@ class ThreadContainer extends React.Component<Props, State> {
           toggleEdit={this.toggleEdit}
           thread={thread}
           slider={slider}
-          ref={c => (this.threadDetailElem = c)}
+          innerRef={c => (this.threadDetailElem = c)}
         />
       </React.Fragment>
     );
