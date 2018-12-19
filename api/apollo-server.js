@@ -51,6 +51,10 @@ const server = new ProtectedApolloServer({
       };
     }
 
+    // Add GraphQL operation information to the statsd tags
+    req.statsdTags = {
+      graphqlOperationName: req.body.operationName || 'unknown_operation',
+    };
     const loaders = createLoaders();
     let currentUser = req.user && !req.user.bannedAt ? req.user : null;
 

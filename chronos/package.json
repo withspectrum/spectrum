@@ -5,6 +5,7 @@
   "dependencies": {
     "aws-sdk": "^2.373.0",
     "bull": "^3.5.2",
+    "datadog-metrics": "^0.8.1",
     "debug": "^4.1.0",
     "decode-uri-component": "^0.2.0",
     "draft-js": "^0.10.5",

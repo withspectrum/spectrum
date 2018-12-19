@@ -5,6 +5,7 @@ debug('Hyperion starting...');
 debug('logging with debug enabled');
 require('isomorphic-fetch'); // prevent https://github.com/withspectrum/spectrum/issues/3032
 import fs from 'fs';
+import statsd from 'shared/middlewares/statsd';
 import express from 'express';
 import Loadable from 'react-loadable';
 import path from 'path';
@@ -20,6 +21,9 @@ const ONE_HOUR = 3600;
 
 const app = express();
 
+// Instantiate the statsd middleware as soon as possible to get accurate time tracking
+app.use(statsd);
+
 // Trust the now proxy
 app.set('trust proxy', true);
 
@@ -27,6 +31,9 @@ app.use(toobusy);
 
 // Security middleware.
 addSecurityMiddleware(app, { enableNonce: true, enableCSP: true });
+
+import bodyParser from 'body-parser';
+app.use(bodyParser.json());
 
 if (process.env.NODE_ENV === 'development') {
   const logging = require('shared/middlewares/logging');
@@ -81,9 +88,6 @@ if (process.env.NODE_ENV === 'development') {
 
 import cookieParser from 'cookie-parser';
 app.use(cookieParser());
-
-import bodyParser from 'body-parser';
-app.use(bodyParser.json());
 
 import session from 'shared/middlewares/session';
 app.use(session);
