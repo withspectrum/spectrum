@@ -77,12 +77,13 @@ type Props = {
 };
 
 // $FlowFixMe
-const ChatInput = React.forwardRef((props: Props, ref) => {
+const ChatInput = (props: Props) => {
   const cacheKey = `last-content-${props.thread}`;
   // $FlowFixMe
   const [text, changeText] = React.useState('');
   // $FlowFixMe
   const [photoSizeError, setPhotoSizeError] = React.useState('');
+  const [inputRef, setInputRef] = React.useState(null);
 
   // On mount, set the text state to the cached value if one exists
   // $FlowFixMe
@@ -241,6 +242,7 @@ const ChatInput = React.forwardRef((props: Props, ref) => {
     if (isSendingMediaMessage) return;
     setIsSendingMediaMessage(true);
     setMediaPreviewFile(blob);
+    inputRef && inputRef.focus();
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -317,7 +319,10 @@ const ChatInput = React.forwardRef((props: Props, ref) => {
                 value={text}
                 onChange={onChange}
                 onKeyDown={handleKeyPress}
-                ref={ref}
+                inputRef={node => {
+                  if (props.onRef) props.onRef(node);
+                  setInputRef(node);
+                }}
               />
             </InputWrapper>
             <SendButton
@@ -337,7 +342,7 @@ const ChatInput = React.forwardRef((props: Props, ref) => {
       </MarkdownHint>
     </React.Fragment>
   );
-});
+};
 
 const map = (state, ownProps) => ({
   websocketConnection: state.connectionStatus.websocketConnection,

@@ -259,13 +259,13 @@ class ThreadContainer extends React.Component<Props, State> {
     if (threadAndUser && this.chatInput) {
       // if the user is viewing the inbox, opens the thread slider, and then closes it again, refocus the inbox inpu
       if (prevProps.threadSliderIsOpen && !threadSliderIsOpen) {
-        return this.chatInput.triggerFocus();
+        return this.chatInput.focus();
       }
 
       // if the thread slider is open while in the inbox, don't focus in the inbox
       if (threadSliderIsOpen) return;
 
-      return this.chatInput.triggerFocus();
+      return this.chatInput.focus();
     }
   }
 

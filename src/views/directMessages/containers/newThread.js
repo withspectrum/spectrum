@@ -600,7 +600,7 @@ class NewThread extends React.Component<Props, State> {
       return input && input.focus();
     }
 
-    this.chatInput.triggerFocus();
+    this.chatInput.focus();
   }
 
   componentWillUnmount() {
