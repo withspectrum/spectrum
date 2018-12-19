@@ -12,10 +12,8 @@ export default (
   next: express$NextFunction
 ) => {
   // Set a sensible default req.statsdKey, which is what will be shown in the DataDog UI. Example key:
-  // hyperion.http.get.spectrum.general
-  const pathname = req.path.replace(/\?.*/, '');
+  // hyperion.http.get
   // $FlowFixMe
-  req.statsdKey = `http.${req.method.toLowerCase() ||
-    'unknown_method'}${pathname.toLowerCase().replace('/', '.')}`;
+  req.statsdKey = `http.${req.method.toLowerCase() || 'unknown_method'}`;
   return middleware(req, res, next);
 };
