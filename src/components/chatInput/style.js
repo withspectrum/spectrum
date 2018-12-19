@@ -283,6 +283,14 @@ export const PreviewWrapper = styled.div`
     border-left: 0;
   }
 
+  & + & {
+    padding-top: 16px;
+
+    ${RemovePreviewButton} {
+      top: 16px;
+    }
+  }
+
   & > img {
     border-radius: 8px;
     max-width: 37%;
