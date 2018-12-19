@@ -2,15 +2,14 @@
 const debug = require('debug')('shared:middlewares:statsd');
 import metrics from 'datadog-metrics';
 
-export let statsd;
+export let statsd = {
+  histogram: (...args: Array<any>) => {},
+  timing: (...args: Array<any>) => {},
+  increment: (...args: Array<any>) => {},
+  gauge: (...args: Array<any>) => {},
+};
 if (!process.env.DATADOG_API_KEY) {
   console.warn('No DATADOG_API_KEY provided, not tracking metrics.');
-  statsd = {
-    histogram: () => {},
-    timing: () => {},
-    increment: () => {},
-    gauge: () => {},
-  };
 } else {
   metrics.init({
     defaultTags: [`server:${process.env.SENTRY_NAME || 'unknown_server'}`],
