@@ -20,6 +20,7 @@ import { addToastWithTimeout } from '../../../actions/toasts';
 import { clearDirectMessagesComposer } from '../../../actions/directMessageThreads';
 import createDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/createDirectMessageThread';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   ComposerInputWrapper,
   Grow,
@@ -866,6 +867,7 @@ export default compose(
   withApollo,
   withRouter,
   createDirectMessageThreadMutation,
+  withCurrentUser,
   // $FlowIssue
   connect(mapStateToProps)
 )(NewThread);
