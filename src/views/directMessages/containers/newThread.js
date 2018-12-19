@@ -4,7 +4,6 @@ import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import Head from '../../../components/head';
-import { withCurrentUser } from 'src/components/withCurrentUser';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import Messages from '../components/messages';
@@ -868,7 +867,6 @@ export default compose(
   withApollo,
   withRouter,
   createDirectMessageThreadMutation,
-  withCurrentUser,
   // $FlowIssue
   connect(mapStateToProps)
 )(NewThread);
