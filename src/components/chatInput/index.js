@@ -83,6 +83,7 @@ const ChatInput = (props: Props) => {
   const [text, changeText] = React.useState('');
   // $FlowFixMe
   const [photoSizeError, setPhotoSizeError] = React.useState('');
+  // $FlowFixMe
   const [inputRef, setInputRef] = React.useState(null);
 
   // On mount, set the text state to the cached value if one exists
