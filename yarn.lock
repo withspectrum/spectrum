@@ -1434,14 +1434,14 @@ apollo-cache-control@0.4.0:
     apollo-server-env "2.2.0"
     graphql-extensions "0.4.0"
 
-apollo-cache-inmemory@^1.3.11:
-  version "1.3.11"
-  resolved "https://registry.yarnpkg.com/apollo-cache-inmemory/-/apollo-cache-inmemory-1.3.11.tgz#6cb8f24ec812715169f9acbb0b67833f9a19ec90"
-  integrity sha512-fSoyjBV5RV57J3i/VHDDB74ZgXc0PFiogheNFHEhC0mL6rg5e/DjTx0Vg+csIBk23gvlzTvV+eypx7Q2NJ+dYg==
+apollo-cache-inmemory@1.3.12-beta.0:
+  version "1.3.12-beta.0"
+  resolved "https://registry.yarnpkg.com/apollo-cache-inmemory/-/apollo-cache-inmemory-1.3.12-beta.0.tgz#7c7e659fd0ad41f744ea977f24b471ff5a1ffc8b"
+  integrity sha512-bTQONAbg4KXPw64aj8xeifB4W50Hy2qsRqgsXfSbVDSg/799lFTuz9V3GWVi1PqUFyC7B3rzyEopGCVrRA1GUA==
   dependencies:
     apollo-cache "^1.1.21"
     apollo-utilities "^1.0.26"
-    optimism "^0.6.6"
+    optimism "^0.6.8"
 
 apollo-cache@1.1.21, apollo-cache@^1.1.21:
   version "1.1.21"
@@ -10536,7 +10536,7 @@ opn@^5.1.0:
   dependencies:
     is-wsl "^1.1.0"
 
-optimism@^0.6.6:
+optimism@^0.6.8:
   version "0.6.8"
   resolved "https://registry.yarnpkg.com/optimism/-/optimism-0.6.8.tgz#0780b546da8cd0a72e5207e0c3706c990c8673a6"
   integrity sha512-bN5n1KCxSqwBDnmgDnzMtQTHdL+uea2HYFx1smvtE+w2AMl0Uy31g0aXnP/Nt85OINnMJPRpJyfRQLTCqn5Weg==
