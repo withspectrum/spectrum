@@ -22,10 +22,11 @@ import removeThreadTagsFromCommunity, {
   type RemoveThreadTagsFromCommunityInput,
 } from 'shared/graphql/mutations/community/removeThreadTagsFromCommunity';
 import type { Dispatch } from 'redux';
-import { ListContainer } from '../style';
+import { ListContainer, ThreadTag, RemoveTagButton } from '../style';
 import {
   SectionCard,
   SectionTitle,
+  SectionSubtitle,
   SectionCardFooter,
 } from '../../../components/settingsViews/style';
 import { addToastWithTimeout } from 'src/actions/toasts';
@@ -132,18 +133,22 @@ class ChannelList extends React.Component<Props, State> {
       return (
         <SectionCard data-cy="channel-list">
           <SectionTitle>Thread Tags</SectionTitle>
+          <SectionSubtitle>
+            Team members can add tags to threads, making it easier to find and
+            organize conversations in your community.
+          </SectionSubtitle>
 
           <ListContainer style={{ padding: '0 16px' }}>
             {community.threadTags
               // Fake optimistic update for removing tags
               .filter(({ id }) => id !== this.state.removing)
               .map(tag => (
-                <li key={tag.id}>
+                <ThreadTag key={tag.id}>
                   {tag.title}{' '}
-                  <button onClick={() => this.removeThreadTag(tag.id)}>
+                  <RemoveTagButton onClick={() => this.removeThreadTag(tag.id)}>
                     X
-                  </button>
-                </li>
+                  </RemoveTagButton>
+                </ThreadTag>
               ))}
           </ListContainer>
 
