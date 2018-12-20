@@ -28,6 +28,7 @@ import {
   SectionTitle,
   SectionCardFooter,
 } from '../../../components/settingsViews/style';
+import { addToastWithTimeout } from 'src/actions/toasts';
 
 type Props = {
   data: {
@@ -60,28 +61,33 @@ class ChannelList extends React.Component<Props, State> {
   createThreadTag = e => {
     if (this.state.input.length === 0 || this.state.loading) return;
     if (e) e.preventDefault();
+
+    const { addThreadTagsToCommunity, dispatch } = this.props;
+
     this.setState({
       loading: true,
     });
-    this.props
-      .addThreadTagsToCommunity({
-        communityId: this.props.id,
-        tags: [
-          {
-            title: this.state.input,
-          },
-        ],
-      })
+
+    addThreadTagsToCommunity({
+      communityId: this.props.id,
+      tags: [
+        {
+          title: this.state.input,
+        },
+      ],
+    })
       .then(() => {
         this.setState({
           loading: false,
           input: '',
         });
       })
-      .then(() => {
+      .catch(err => {
         this.setState({
           loading: false,
         });
+
+        return dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
