@@ -596,6 +596,11 @@ object-keys@^1.0.11, object-keys@^1.0.12, object-keys@~1.0.0:
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.0.12.tgz#09c53855377575310cca62f55bb334abff7b3ed2"
   integrity sha512-FTMyFUm2wBcGHnH2eXmz7tC6IwlqQZ6mVZ+6dm6vZ4IQIHjs6FdNsQBuKGPuUUUY6NfJw2PshC08Tn6LzLDOag==
 
+performance-now@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
+  integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
+
 process@~0.5.1:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/process/-/process-0.5.2.tgz#1638d8a8e34c2f440a91db95ab9aeb677fc185cf"
@@ -691,6 +696,11 @@ rethinkdb-changefeed-reconnect@^0.3.2:
   integrity sha1-KZn1MTIFqzXZrC0bBTN2XuM3aSM=
   dependencies:
     babel-runtime "^6.18.0"
+
+rethinkdb-inspector@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/rethinkdb-inspector/-/rethinkdb-inspector-0.3.3.tgz#f0d88c66d17e0234b5518ca51cd8c272cb787003"
+  integrity sha512-1R0S5maattWOptfkHsU5ulXnt6FIKqjgyEdd8WgW9QbYMiHaXNqkHTAsmtXXSAf0j5iFH3F2qq/7eg4xwb8Euw==
 
 rethinkdbdash@^2.3.31:
   version "2.3.31"
