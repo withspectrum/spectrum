@@ -142,11 +142,20 @@ class ChannelList extends React.Component<Props, State> {
             {community.threadTags
               // Fake optimistic update for removing tags
               .filter(({ id }) => id !== this.state.removing)
+              .sort((a, b) => {
+                const x = new Date(a.createdAt).getTime();
+                const y = new Date(b.createdAt).getTime();
+                return x - y;
+              })
               .map(tag => (
                 <ThreadTag key={tag.id}>
                   {tag.title}{' '}
-                  <RemoveTagButton onClick={() => this.removeThreadTag(tag.id)}>
-                    X
+                  <RemoveTagButton
+                    onClick={() => this.removeThreadTag(tag.id)}
+                    tipText={'Remove tag'}
+                    tipLocation={'top'}
+                  >
+                    ×
                   </RemoveTagButton>
                 </ThreadTag>
               ))}
@@ -163,16 +172,14 @@ class ChannelList extends React.Component<Props, State> {
                 placeholder="Enter new tag title"
                 style={{ marginTop: 0, marginRight: 16 }}
               />
-              <TextButton
-                icon={'plus'}
+              <Button
                 loading={this.state.loading}
                 disabled={this.state.input.length === 0}
                 onClick={this.createThreadTag}
-                color="brand.default"
                 dataCy="create-thread-tag-button"
               >
                 Add
-              </TextButton>
+              </Button>
             </form>
           </SectionCardFooter>
         </SectionCard>

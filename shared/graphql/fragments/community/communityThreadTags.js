@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 type ThreadTag = {
   id: string,
   title: string,
+  createdAt: string,
 };
 
 export type CommunityThreadTagsType = {
@@ -15,6 +16,7 @@ export default gql`
     threadTags {
       id
       title
+      createdAt
     }
   }
 `;

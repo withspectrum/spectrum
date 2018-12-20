@@ -45,6 +45,7 @@ const Thread = /* GraphQL */ `
   type ThreadTag {
     id: ID!
     title: String!
+    createdAt: String!
   }
 
   type Thread {

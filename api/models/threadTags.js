@@ -9,6 +9,7 @@ export const addThreadTag = createWriteQuery(
       .insert({
         ...tag,
         communityId,
+        createdAt: new Date(),
       })
       .run(),
     invalidateTags: (tag: DBThreadTag) => communityId,
