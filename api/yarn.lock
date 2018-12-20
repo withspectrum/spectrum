@@ -7746,10 +7746,10 @@ react-loadable@5.2.2:
   resolved "https://registry.yarnpkg.com/react-loadable/-/react-loadable-5.2.2.tgz#1a5ad75841cacb64be12b18a86ac0bc55ccb4dc7"
   integrity sha1-GlrXWEHKy2S+ErGKhqwLxVzLTcc=
 
-react-modal@^3.7.1:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-3.7.1.tgz#342ed170133d0557e6c3e6fc40195bc45c8f09c3"
-  integrity sha512-eSgotXkqOCXi0b27AwLCoJ8yqLepKnbZdMp/zfUmZPnMNoe39pDT0mbAPq9rp+TToqM5GUTv8C36Cuja+ThbhA==
+react-modal@^3.8.1:
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-3.8.1.tgz#7300f94a6f92a2e17994de0be6ccb61734464c9e"
+  integrity sha512-aLKeZM9pgXpIKVwopRHMuvqKWiBajkqisDA8UzocdCF6S4fyKVfLWmZR5G1Q0ODBxxxxf2XIwiCP8G/11GJAuw==
   dependencies:
     exenv "^1.2.0"
     prop-types "^15.5.10"
