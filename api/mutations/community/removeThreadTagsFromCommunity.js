@@ -2,7 +2,7 @@
 import { deleteThreadTags } from '../../models/threadTags';
 import {
   isAuthedResolver,
-  canAdministerCommunity,
+  canModerateCommunity,
 } from '../../utils/permissions';
 import { getCommunityById } from '../../models/community';
 import UserError from '../../utils/UserError';
@@ -21,7 +21,7 @@ export default isAuthedResolver(
     { input }: RemoveThreadTagsFromCommunityInput,
     { user, loaders }: GraphQLContext
   ) => {
-    if (!(await canAdministerCommunity(input.communityId, user.id, loaders)))
+    if (!(await canModerateCommunity(user.id, input.communityId, loaders)))
       return new UserError(
         "You cannot delete thread tags if you're not a team member."
       );
