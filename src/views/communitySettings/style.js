@@ -228,6 +228,31 @@ export const MessageIcon = styled.div`
   ${Tooltip} top: 2px;
 `;
 
-export const ThreadTag = styled.li``;
+export const ThreadTag = styled.li`
+  list-style-type: none;
+  padding: 4px 8px 4px 16px;
+  border-radius: 4px;
+  background: ${theme.bg.wash};
+  display: inline-block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+  font-size: 14px;
+  font-weight: 500;
+`;
 
-export const RemoveTagButton = styled.button``;
+export const RemoveTagButton = styled.button`
+  font-size: 16px;
+  font-weight: 500;
+  background: none;
+  line-height: 1;
+  color: ${theme.text.alt};
+  cursor: pointer;
+  padding: 8px;
+  ${Tooltip};
+
+  &:hover {
+    color: ${theme.text.default};
+  }
+`;
