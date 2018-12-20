@@ -334,6 +334,7 @@ const Community = /* GraphQL */ `
 
   input ThreadTagsInput {
     title: String!
+    hex: String!
   }
 
   input AddThreadTagsToCommunityInput {

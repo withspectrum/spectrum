@@ -5,6 +5,7 @@ type ThreadTag = {
   id: string,
   title: string,
   createdAt: string,
+  hex: string,
 };
 
 export type CommunityThreadTagsType = {
@@ -17,6 +18,7 @@ export default gql`
       id
       title
       createdAt
+      hex
     }
   }
 `;

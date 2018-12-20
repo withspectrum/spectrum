@@ -10,7 +10,7 @@ import type { GraphQLContext } from '../../';
 
 type AddThreadTagsToCommunityInput = {
   input: {
-    tags: Array<{ title: string }>,
+    tags: Array<{ title: string, hex: string }>,
     communityId: string,
   },
 };

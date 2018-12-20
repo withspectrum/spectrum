@@ -423,4 +423,5 @@ export type DBThreadTag = {
   communityId: string,
   id: string,
   title: string,
+  hex: string,
 };

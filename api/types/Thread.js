@@ -46,6 +46,7 @@ const Thread = /* GraphQL */ `
     id: ID!
     title: String!
     createdAt: String!
+    hex: String!
   }
 
   type Thread {

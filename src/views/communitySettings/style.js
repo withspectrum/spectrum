@@ -2,7 +2,15 @@ import styled from 'styled-components';
 import theme from 'shared/theme';
 import Card from '../../components/card';
 import Link from 'src/components/link';
-import { FlexCol, H1, H2, H3, Span, Tooltip } from '../../components/globals';
+import {
+  FlexCol,
+  H1,
+  H2,
+  H3,
+  Span,
+  Tooltip,
+  tint,
+} from '../../components/globals';
 
 export const ListHeader = styled.div`
   display: flex;
@@ -228,18 +236,57 @@ export const MessageIcon = styled.div`
   ${Tooltip} top: 2px;
 `;
 
+// https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
+const getColorFromHexContrast = (hex: string) => {
+  hex = hex.replace('#', '');
+
+  let R, G, B, C, L;
+  console.log({ hex });
+
+  R = parseInt(hex.substring(0, 2), 16);
+  G = parseInt(hex.substring(2, 4), 16);
+  B = parseInt(hex.substring(4, 6), 16);
+
+  console.log({ R, G, B });
+
+  C = [R / 255, G / 255, B / 255];
+
+  console.log({ CBefore: C });
+
+  C = C.map(i => {
+    if (i <= 0.03928) {
+      return i / 12.92;
+    } else {
+      return Math.pow((i + 0.055) / 1.055, 2.4);
+    }
+  });
+
+  console.log({ CAfter: C });
+
+  L = 0.2126 * C[0] + 0.7152 * C[1] + 0.0722 * C[2];
+
+  console.log({ L });
+
+  if (L > 0.179) {
+    return tint(hex, -80);
+  } else {
+    return theme.text.reverse;
+  }
+};
+
 export const ThreadTag = styled.li`
   list-style-type: none;
-  padding: 4px 8px 4px 16px;
+  padding: 2px 8px 2px 16px;
   border-radius: 4px;
-  background: ${theme.bg.wash};
+  background: ${props => props.hex};
   display: inline-block;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
   font-size: 14px;
   font-weight: 500;
+  color: ${props => getColorFromHexContrast(props.hex)};
 `;
 
 export const RemoveTagButton = styled.button`
@@ -247,12 +294,10 @@ export const RemoveTagButton = styled.button`
   font-weight: 500;
   background: none;
   line-height: 1;
-  color: ${theme.text.alt};
+  color: ${props => getColorFromHexContrast(props.hex)};
   cursor: pointer;
   padding: 8px;
   ${Tooltip};
-
-  &:hover {
-    color: ${theme.text.default};
-  }
+  position: relative;
+  top: -1px;
 `;

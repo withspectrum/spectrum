@@ -30,6 +30,7 @@ import {
   SectionCardFooter,
 } from '../../../components/settingsViews/style';
 import { addToastWithTimeout } from 'src/actions/toasts';
+import { getRandomHex } from './tagColors';
 
 type Props = {
   data: {
@@ -48,6 +49,7 @@ type Props = {
 
 type State = {
   input: string,
+  hex: string,
   loading: boolean,
   removing: string,
 };
@@ -57,6 +59,7 @@ class ChannelList extends React.Component<Props, State> {
     input: '',
     loading: false,
     removing: '',
+    hex: getRandomHex(),
   };
 
   createThreadTag = e => {
@@ -74,6 +77,7 @@ class ChannelList extends React.Component<Props, State> {
       tags: [
         {
           title: this.state.input,
+          hex: this.state.hex,
         },
       ],
     })
@@ -81,6 +85,7 @@ class ChannelList extends React.Component<Props, State> {
         this.setState({
           loading: false,
           input: '',
+          hex: getRandomHex(),
         });
       })
       .catch(err => {
@@ -100,14 +105,17 @@ class ChannelList extends React.Component<Props, State> {
 
   removeThreadTag = (id: string) => {
     if (!id) return;
+
+    const { removeThreadTagsFromCommunity, dispatch } = this.props;
+
     this.setState({
       removing: id,
     });
-    this.props
-      .removeThreadTagsFromCommunity({
-        communityId: this.props.id,
-        tagIds: [id],
-      })
+
+    removeThreadTagsFromCommunity({
+      communityId: this.props.id,
+      tagIds: [id],
+    })
       .then(() => {
         this.setState({
           removing: '',
@@ -148,12 +156,13 @@ class ChannelList extends React.Component<Props, State> {
                 return x - y;
               })
               .map(tag => (
-                <ThreadTag key={tag.id}>
-                  {tag.title}{' '}
+                <ThreadTag hex={tag.hex} key={tag.id}>
+                  {tag.title}
                   <RemoveTagButton
                     onClick={() => this.removeThreadTag(tag.id)}
                     tipText={'Remove tag'}
                     tipLocation={'top'}
+                    hex={tag.hex}
                   >
                     ×
                   </RemoveTagButton>

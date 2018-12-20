@@ -3,7 +3,7 @@ import { createWriteQuery, createReadQuery, db } from 'shared/db';
 import type { DBThreadTag } from 'shared/types';
 
 export const addThreadTag = createWriteQuery(
-  (tag: { title: string }, communityId: string) => ({
+  (tag: { title: string, hex: string }, communityId: string) => ({
     query: db
       .table('threadTags')
       .insert({
