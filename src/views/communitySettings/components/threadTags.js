@@ -116,6 +116,8 @@ class ChannelList extends React.Component<Props, State> {
         this.setState({
           removing: '',
         });
+
+        return dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
