@@ -386,6 +386,11 @@ redis-tag-cache@^1.2.1:
   dependencies:
     ioredis "^4.0.0"
 
+rethinkdb-inspector@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/rethinkdb-inspector/-/rethinkdb-inspector-0.3.3.tgz#f0d88c66d17e0234b5518ca51cd8c272cb787003"
+  integrity sha512-1R0S5maattWOptfkHsU5ulXnt6FIKqjgyEdd8WgW9QbYMiHaXNqkHTAsmtXXSAf0j5iFH3F2qq/7eg4xwb8Euw==
+
 rethinkdbdash@^2.3.31:
   version "2.3.31"
   resolved "https://registry.yarnpkg.com/rethinkdbdash/-/rethinkdbdash-2.3.31.tgz#fe2f73d1fa6e6f5d96d8e881292013cf6dca914d"
