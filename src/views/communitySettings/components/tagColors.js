@@ -26,7 +26,7 @@ const colors = [
   theme.success.alt,
   theme.success.dark,
   theme.success.border,
-  ...Object.keys(theme.ios),
+  ...Object.keys(theme.ios).map(key => theme.ios[key]),
 ];
 
 export const getRandomHex = () =>

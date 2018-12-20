@@ -330,6 +330,7 @@ const Community = /* GraphQL */ `
     removeThreadTagsFromCommunity(
       input: RemoveThreadTagsFromCommunityInput!
     ): Community
+    editThreadTagInCommunity(input: EditThreadTagInCommunityInput!): Community
   }
 
   input ThreadTagsInput {
@@ -345,6 +346,13 @@ const Community = /* GraphQL */ `
   input RemoveThreadTagsFromCommunityInput {
     communityId: String!
     tagIds: [ID!]!
+  }
+
+  input EditThreadTagInCommunityInput {
+    communityId: String!
+    tagId: String!
+    title: String!
+    hex: String!
   }
 `;
 

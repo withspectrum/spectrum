@@ -18,6 +18,7 @@ import addThreadTagsToCommunity from './addThreadTagsToCommunity';
 import removeThreadTagsFromCommunity from './removeThreadTagsFromCommunity';
 import addTagsToThread from './addTagsToThread';
 import removeTagsFromThread from './removeTagsFromThread';
+import editThreadTagInCommunity from './editThreadTagInCommunity';
 
 module.exports = {
   Mutation: {
@@ -40,5 +41,6 @@ module.exports = {
     addTagsToThread,
     removeTagsFromThread,
     removeThreadTagsFromCommunity,
+    editThreadTagInCommunity,
   },
 };

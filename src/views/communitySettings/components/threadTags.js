@@ -22,7 +22,7 @@ import removeThreadTagsFromCommunity, {
   type RemoveThreadTagsFromCommunityInput,
 } from 'shared/graphql/mutations/community/removeThreadTagsFromCommunity';
 import type { Dispatch } from 'redux';
-import { ListContainer, ThreadTag, RemoveTagButton } from '../style';
+import { ListContainer } from '../style';
 import {
   SectionCard,
   SectionTitle,
@@ -31,6 +31,7 @@ import {
 } from '../../../components/settingsViews/style';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { getRandomHex } from './tagColors';
+import ThreadTag from './threadTag';
 
 type Props = {
   data: {
@@ -38,9 +39,6 @@ type Props = {
   },
   addThreadTagsToCommunity: (
     input: AddThreadTagsToCommunityInput
-  ) => Promise<void>,
-  removeThreadTagsFromCommunity: (
-    input: RemoveThreadTagsFromCommunityInput
   ) => Promise<void>,
   isLoading: boolean,
   dispatch: Dispatch<Object>,
@@ -103,33 +101,6 @@ class ChannelList extends React.Component<Props, State> {
     });
   };
 
-  removeThreadTag = (id: string) => {
-    if (!id) return;
-
-    const { removeThreadTagsFromCommunity, dispatch } = this.props;
-
-    this.setState({
-      removing: id,
-    });
-
-    removeThreadTagsFromCommunity({
-      communityId: this.props.id,
-      tagIds: [id],
-    })
-      .then(() => {
-        this.setState({
-          removing: '',
-        });
-      })
-      .catch(() => {
-        this.setState({
-          removing: '',
-        });
-
-        return dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
   render() {
     const {
       data: { community },
@@ -156,17 +127,7 @@ class ChannelList extends React.Component<Props, State> {
                 return x - y;
               })
               .map(tag => (
-                <ThreadTag hex={tag.hex} key={tag.id}>
-                  {tag.title}
-                  <RemoveTagButton
-                    onClick={() => this.removeThreadTag(tag.id)}
-                    tipText={'Remove tag'}
-                    tipLocation={'top'}
-                    hex={tag.hex}
-                  >
-                    ×
-                  </RemoveTagButton>
-                </ThreadTag>
+                <ThreadTag communityId={this.props.id} tag={tag} key={tag.id} />
               ))}
           </ListContainer>
 
@@ -219,6 +180,5 @@ export default compose(
   connect(),
   getCommunityThreadTags,
   addThreadTagsToCommunity,
-  removeThreadTagsFromCommunity,
   viewNetworkHandler
 )(ChannelList);

@@ -241,17 +241,11 @@ const getColorFromHexContrast = (hex: string) => {
   hex = hex.replace('#', '');
 
   let R, G, B, C, L;
-  console.log({ hex });
 
   R = parseInt(hex.substring(0, 2), 16);
   G = parseInt(hex.substring(2, 4), 16);
   B = parseInt(hex.substring(4, 6), 16);
-
-  console.log({ R, G, B });
-
   C = [R / 255, G / 255, B / 255];
-
-  console.log({ CBefore: C });
 
   C = C.map(i => {
     if (i <= 0.03928) {
@@ -261,11 +255,7 @@ const getColorFromHexContrast = (hex: string) => {
     }
   });
 
-  console.log({ CAfter: C });
-
   L = 0.2126 * C[0] + 0.7152 * C[1] + 0.0722 * C[2];
-
-  console.log({ L });
 
   if (L > 0.179) {
     return tint(hex, -80);
@@ -274,13 +264,19 @@ const getColorFromHexContrast = (hex: string) => {
   }
 };
 
-export const ThreadTag = styled.li`
+export const ThreadTagContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const StyledThreadTag = styled.li`
   list-style-type: none;
-  padding: 2px 8px 2px 16px;
+  padding: 8px 16px 10px 12px;
   border-radius: 4px;
   background: ${props => props.hex};
-  display: inline-block;
   display: flex;
+  flex: 1 0 auto;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 4px;
@@ -294,10 +290,28 @@ export const RemoveTagButton = styled.button`
   font-weight: 500;
   background: none;
   line-height: 1;
-  color: ${props => getColorFromHexContrast(props.hex)};
+  color: ${theme.text.alt};
   cursor: pointer;
-  padding: 8px;
+  padding: 5px 8px 8px;
   ${Tooltip};
-  position: relative;
-  top: -1px;
+
+  &:hover {
+    color: ${theme.text.default};
+  }
+`;
+
+export const EditTagButton = styled.button`
+  font-size: 16px;
+  font-weight: 500;
+  background: none;
+  line-height: 1;
+  color: ${theme.text.alt};
+  cursor: pointer;
+  padding: 5px 8px 8px;
+  ${Tooltip};
+  margin-left: 8px;
+
+  &:hover {
+    color: ${theme.text.default};
+  }
 `;
