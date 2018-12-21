@@ -169,7 +169,7 @@ const ChatInput = (props: Props) => {
     });
   };
 
-  const submit = e => {
+  const submit = async e => {
     if (e) e.preventDefault();
 
     if (!props.networkOnline) {
@@ -204,7 +204,10 @@ const ChatInput = (props: Props) => {
     if (mediaFile) {
       setIsSendingMediaMessage(true);
       if (props.forceScrollToBottom) props.forceScrollToBottom();
-      sendMessage({ file: mediaFile, body: '{"blocks":[],"entityMap":{}}' })
+      await sendMessage({
+        file: mediaFile,
+        body: '{"blocks":[],"entityMap":{}}',
+      })
         .then(() => {
           setIsSendingMediaMessage(false);
           setMediaPreview(null);
