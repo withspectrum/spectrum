@@ -43,6 +43,12 @@ export const deleteThreadTags = createWriteQuery((tagIds: [string]) => ({
   invalidateTags: () => tagIds,
 }));
 
+type EditInput = {
+  tagId: string,
+  title: string,
+  hex: string,
+};
+
 export const editThreadTag = createWriteQuery(
   ({ tagId, title, hex }: EditInput) => ({
     query: db

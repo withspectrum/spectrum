@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import Icon from 'src/components/icons';
+import type { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import {
@@ -26,6 +27,9 @@ import validateStringAsHexValue from 'shared/validate-string-as-hex-value';
 type Props = {
   communityId: string,
   editable: boolean,
+  tipLocation?: string,
+  size?: 'mini' | 'default',
+  dispatch: Dispatch<Object>,
   tag: {
     id: string,
     createdAt: string,
@@ -44,7 +48,7 @@ type State = {
   title: string,
   hex: string,
   isEditing: boolean,
-  isSaving: false,
+  isSaving: boolean,
 };
 
 class ThreadTag extends React.Component<Props, State> {
@@ -76,7 +80,7 @@ class ThreadTag extends React.Component<Props, State> {
   };
 
   editTag = (e: any) => {
-    if (this.state.title.length === 0 || this.state.isLoading) return;
+    if (this.state.title.length === 0 || this.state.isSaving) return;
     if (e) e.preventDefault();
 
     const { editThreadTagInCommunity, dispatch, tag, communityId } = this.props;
@@ -178,9 +182,9 @@ class ThreadTag extends React.Component<Props, State> {
               )}
             </HexContainer>
             <Button
-              loading={this.state.isLoading}
+              loading={this.state.isSaving}
               disabled={this.state.title.length === 0}
-              onClick={this.editThreadTag}
+              onClick={this.editTag}
               dataCy="edit-thread-tag-button"
             >
               Save

@@ -21,6 +21,7 @@ type Props = {
   data: {
     community: GetCommunityThreadTagsType,
   },
+  isLoading: boolean,
   id: string,
 };
 

@@ -77,7 +77,7 @@ class InboxThread extends React.Component<Props> {
       thread &&
       thread.community.communityPermissions &&
       (thread.community.communityPermissions.isOwner ||
-        thread.community.communityPermissions.isModerater);
+        thread.community.communityPermissions.isModerator);
 
     return (
       <ErrorBoundary fallbackComponent={null}>

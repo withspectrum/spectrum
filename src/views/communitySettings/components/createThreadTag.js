@@ -20,7 +20,7 @@ type Props = {
 };
 
 type State = {
-  input: string,
+  title: string,
   hex: string,
   loading: boolean,
 };
