@@ -1,9 +1,7 @@
 // @flow
 import React from 'react';
-import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { Loading } from 'src/components/loading';
 import { Button } from 'src/components/buttons';
 import { Input } from 'src/components/formElements';
 import addThreadTagsToCommunity, {

@@ -15,7 +15,7 @@ import removeThreadTagsFromCommunity, {
   type RemoveThreadTagsFromCommunityInput,
 } from 'shared/graphql/mutations/community/removeThreadTagsFromCommunity';
 import editThreadTagInCommunity, {
-  type editThreadTagInCommunityInput,
+  type EditThreadTagInCommunityInput,
 } from 'shared/graphql/mutations/community/editThreadTagInCommunity';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { getRandomHex } from './tagColors';
@@ -72,7 +72,7 @@ class ThreadTag extends React.Component<Props, State> {
       tagIds: [tag.id],
     })
       .then(() => dispatch(addToastWithTimeout('success', 'Tag removed')))
-      .catch(() => dispatch(addToastWithTimeout('error', err.message)));
+      .catch(err => dispatch(addToastWithTimeout('error', err.message)));
   };
 
   editTag = (e: any) => {
@@ -132,12 +132,11 @@ class ThreadTag extends React.Component<Props, State> {
   render() {
     const {
       tag,
-      removeTag,
       size = 'default',
       tipLocation = 'top',
       editable = false,
     } = this.props;
-    const { isEditing, isSaving } = this.state;
+    const { isEditing } = this.state;
 
     if (isEditing) {
       return (

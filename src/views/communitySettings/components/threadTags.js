@@ -1,17 +1,10 @@
 // @flow
 import React from 'react';
-import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { Loading } from '../../../components/loading';
-import {
-  TextButton,
-  OutlineButton,
-  IconButton,
-  Button,
-} from '../../../components/buttons';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import ViewError from '../../../components/viewError';
+import { Loading } from 'src/components/loading';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import ViewError from 'src/components/viewError';
 import { getCommunityThreadTags } from 'shared/graphql/queries/community/getCommunityThreadTags';
 import type { GetCommunityThreadTagsType } from 'shared/graphql/queries/community/getCommunityThreadTags';
 import { ListContainer } from '../style';
@@ -20,7 +13,7 @@ import {
   SectionTitle,
   SectionSubtitle,
   SectionCardFooter,
-} from '../../../components/settingsViews/style';
+} from 'src/components/settingsViews/style';
 import ThreadTag from './threadTag';
 import CreateThreadTag from './createThreadTag';
 
