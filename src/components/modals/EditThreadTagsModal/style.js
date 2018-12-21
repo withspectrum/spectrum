@@ -4,7 +4,7 @@ import theme from 'shared/theme';
 import { zIndex } from '../../globals';
 import { isMobile } from '../../../helpers/utils';
 
-const maxWidth = '460px';
+const maxWidth = '540px';
 const mobile = isMobile();
 export const modalStyles = {
   overlay: {
@@ -53,7 +53,7 @@ export const Title = styled.h3`
   font-size: 18px;
   font-weight: 700;
   color: ${theme.text.default};
-  padding: 0 24px 16px;
+  padding: 0 24px 16px 16px;
   border-bottom: 1px solid ${props => props.theme.bg.border};
   line-height: 1.4;
 `;
@@ -91,9 +91,9 @@ export const Actions = styled.div`
   }
 `;
 
-export const TagsContainer = styled.div`
+export const TagsContainer = styled.section`
   width: 100%;
-  padding: 0 32px 16px;
+  padding: 8px 16px;
   max-height: 320px;
   overflow-y: scroll;
 `;

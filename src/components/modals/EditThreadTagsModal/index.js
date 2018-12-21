@@ -155,10 +155,11 @@ class EditThreadTagsModal extends React.Component<Props, State> {
                                       key={tag.id}
                                       id={tag.id}
                                     >
-                                      <span style={{ width: '16px' }} />
+                                      <span style={{ minWidth: '16px' }} />
                                       <ThreadTag
                                         tag={tag}
                                         communityId={data.community.id}
+                                        tipLocation={'left'}
                                       />
                                     </Checkbox>
                                   );

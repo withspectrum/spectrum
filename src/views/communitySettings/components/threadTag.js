@@ -130,7 +130,12 @@ class ThreadTag extends React.Component<Props, State> {
   toggleEdit = () => this.setState(state => ({ isEditing: !state.isEditing }));
 
   render() {
-    const { tag, removeTag, editable } = this.props;
+    const {
+      tag,
+      removeTag,
+      tipLocation = 'top',
+      editable = false,
+    } = this.props;
     const { isEditing, isSaving } = this.state;
 
     if (isEditing) {
@@ -163,7 +168,12 @@ class ThreadTag extends React.Component<Props, State> {
                   onClick={this.randomizeHex}
                   hex={validateStringAsHexValue(this.state.hex)}
                 >
-                  <Icon glyph="view-reload" size="20" />
+                  <Icon
+                    glyph="view-reload"
+                    tipText={'Randomize color'}
+                    tipLocation={tipLocation}
+                    size="20"
+                  />
                 </RandomSwatch>
               )}
             </HexContainer>
@@ -179,7 +189,7 @@ class ThreadTag extends React.Component<Props, State> {
           <RemoveTagButton
             onClick={this.toggleEdit}
             tipText={'Cancel'}
-            tipLocation={'top'}
+            tipLocation={tipLocation}
           >
             ×
           </RemoveTagButton>
@@ -189,13 +199,15 @@ class ThreadTag extends React.Component<Props, State> {
 
     return (
       <ThreadTagContainer>
-        <StyledThreadTag hex={tag.hex}>{tag.title}</StyledThreadTag>
+        <div>
+          <StyledThreadTag hex={tag.hex}>{tag.title}</StyledThreadTag>
+        </div>
 
         {editable && (
-          <React.Fragment>
+          <div>
             <EditTagButton
               tipText={'Edit tag'}
-              tipLocation={'top'}
+              tipLocation={tipLocation}
               onClick={this.toggleEdit}
             >
               <Icon glyph="edit" size={20} />
@@ -204,11 +216,11 @@ class ThreadTag extends React.Component<Props, State> {
             <RemoveTagButton
               onClick={this.deleteTag}
               tipText={'Remove tag'}
-              tipLocation={'top'}
+              tipLocation={tipLocation}
             >
               <Icon glyph="delete" size={20} />
             </RemoveTagButton>
-          </React.Fragment>
+          </div>
         )}
       </ThreadTagContainer>
     );

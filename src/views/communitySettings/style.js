@@ -266,8 +266,10 @@ const getColorFromHexContrast = (hex: string) => {
 
 export const ThreadTagContainer = styled.div`
   display: flex;
+  flex: 1 1 auto;
   justify-content: space-between;
   align-items: center;
+  max-width: 100%;
 `;
 
 export const StyledThreadTag = styled.li`
@@ -283,6 +285,7 @@ export const StyledThreadTag = styled.li`
   font-size: 15px;
   font-weight: 500;
   color: ${props => getColorFromHexContrast(props.hex)};
+  line-height: 1.2;
 `;
 
 export const RemoveTagButton = styled.button`
