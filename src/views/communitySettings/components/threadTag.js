@@ -8,6 +8,8 @@ import {
   StyledThreadTag,
   EditTagButton,
   RemoveTagButton,
+  HexContainer,
+  RandomSwatch,
 } from '../style';
 import removeThreadTagsFromCommunity, {
   type RemoveThreadTagsFromCommunityInput,
@@ -105,11 +107,15 @@ class ThreadTag extends React.Component<Props, State> {
   };
 
   handleTitleChange = (e: any) => {
-    return this.setState({ title: e.target.value });
+    const title = e.target.value;
+    if (title.length >= 24) return;
+    return this.setState({ title });
   };
 
   handleHexChange = (e: any) => {
-    return this.setState({ hex: e.target.value });
+    let val = e.target.value;
+    if (val && val[0] !== '#') val = `#${val}`;
+    return this.setState({ hex: val });
   };
 
   randomizeHex = () => {
@@ -147,9 +153,19 @@ class ThreadTag extends React.Component<Props, State> {
             <Input
               onChange={this.handleHexChange}
               value={this.state.hex}
-              placeholder="Enter hex value"
-              style={{ marginTop: 0, marginRight: 16 }}
+              placeholder="Hex color"
+              style={{ marginTop: 0 }}
             />
+            <HexContainer>
+              {this.state.hex && validateStringAsHexValue(this.state.hex) && (
+                <RandomSwatch
+                  onClick={this.randomizeHex}
+                  hex={validateStringAsHexValue(this.state.hex)}
+                >
+                  <Icon glyph="view-reload" size="20" />
+                </RandomSwatch>
+              )}
+            </HexContainer>
             <Button
               loading={this.state.isLoading}
               disabled={this.state.title.length === 0}

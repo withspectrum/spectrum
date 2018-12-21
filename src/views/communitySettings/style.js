@@ -258,7 +258,7 @@ const getColorFromHexContrast = (hex: string) => {
   L = 0.2126 * C[0] + 0.7152 * C[1] + 0.0722 * C[2];
 
   if (L > 0.179) {
-    return tint(hex, -80);
+    return tint(hex, -90);
   } else {
     return theme.text.reverse;
   }
@@ -280,7 +280,7 @@ export const StyledThreadTag = styled.li`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 4px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   color: ${props => getColorFromHexContrast(props.hex)};
 `;
@@ -294,6 +294,7 @@ export const RemoveTagButton = styled.button`
   cursor: pointer;
   padding: 5px 8px 8px;
   ${Tooltip};
+  margin-left: 8px;
 
   &:hover {
     color: ${theme.text.default};
@@ -314,4 +315,24 @@ export const EditTagButton = styled.button`
   &:hover {
     color: ${theme.text.default};
   }
+`;
+
+export const HexContainer = styled.div`
+  position: relative;
+  margin-right: 16px;
+  margin-left: 8px;
+`;
+
+export const RandomSwatch = styled.div`
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  color: ${props => getColorFromHexContrast(props.hex)};
+  background: ${props => props.hex};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  top: 4px;
 `;
