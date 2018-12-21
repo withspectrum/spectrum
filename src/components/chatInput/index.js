@@ -275,6 +275,11 @@ const ChatInput = (props: Props) => {
       );
   };
 
+  const networkDisabled =
+    !networkOnline ||
+    (websocketConnection !== 'connected' &&
+      websocketConnection !== 'reconnected');
+
   return (
     <React.Fragment>
       <ChatInputContainer>
@@ -301,7 +306,7 @@ const ChatInput = (props: Props) => {
           <Form onSubmit={submit}>
             <InputWrapper
               hasAttachment={!!props.quotedMessage || !!mediaPreview}
-              networkDisabled={!props.networkOnline}
+              networkDisabled={networkDisabled}
             >
               {mediaPreview && (
                 <PreviewWrapper>
@@ -327,7 +332,7 @@ const ChatInput = (props: Props) => {
               )}
               <Input
                 hasAttachment={!!props.quotedMessage || !!mediaPreview}
-                networkDisabled={!props.networkOnline}
+                networkDisabled={networkDisabled}
                 placeholder="Your message here..."
                 value={text}
                 onChange={onChange}
