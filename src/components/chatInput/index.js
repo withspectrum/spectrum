@@ -105,6 +105,15 @@ const ChatInput = (props: Props) => {
     [text]
   );
 
+  // Focus chatInput when quoted message changes
+  // $FlowFixMe
+  React.useEffect(
+    () => {
+      if (inputRef) inputRef.focus();
+    },
+    [props.quotedMessage && props.quotedMessage.messageId]
+  );
+
   const removeAttachments = () => {
     removeQuotedMessage();
     setMediaPreview(null);
