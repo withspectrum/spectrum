@@ -11,7 +11,15 @@ import { TextButton, Button } from '../../buttons';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Icon from '../../icons';
 import { IconContainer } from '../RepExplainerModal/style';
-import { Section, Title, Subtitle, Actions, modalStyles } from './style';
+import {
+  Section,
+  Title,
+  Subtitle,
+  Actions,
+  modalStyles,
+  TagsContainer,
+  CreateTagFooter,
+} from './style';
 import { Checkbox } from 'src/components/formElements';
 import { getThreadByIdQuery } from 'shared/graphql/queries/thread/getThread';
 import {
@@ -25,6 +33,8 @@ import removeTagsFromThread, {
   type RemoveTagsFromThreadProps,
 } from 'shared/graphql/mutations/thread/removeTagsFromThread';
 import type { Dispatch } from 'redux';
+import CreateThreadTag from 'src/views/communitySettings/components/createThreadTag';
+import ThreadTag from 'src/views/communitySettings/components/threadTag';
 
 type Props = {
   thread: any,
@@ -103,9 +113,6 @@ class EditThreadTagsModal extends React.Component<Props, State> {
         >
           <Section data-cy="edit-thread-tags-modal">
             <Title>Edit Thread Tags</Title>
-            <Subtitle>
-              Finely categorize this thread with the community's set of tags.
-            </Subtitle>
 
             {/* Need to load the thread from the Apollo cache anew so we update when tags are changed */}
             <Query
@@ -121,38 +128,48 @@ class EditThreadTagsModal extends React.Component<Props, State> {
                     {({ data, loading, error }) => {
                       if (data && data.community)
                         return (
-                          <div>
-                            {data.community.threadTags.map(tag => {
-                              const checked = thread.tags.some(
-                                ({ id }) => id === tag.id
-                              );
-                              return (
-                                <Checkbox
-                                  disabled={this.state.loading[tag.id]}
-                                  checked={checked}
-                                  onChange={() =>
-                                    this.editTag(
-                                      tag.id,
-                                      checked
-                                        ? 'removeTagsFromThread'
-                                        : 'addTagsToThread'
-                                    )
-                                  }
-                                  key={tag.id}
-                                  id={tag.id}
-                                >
-                                  {tag.title}
-                                </Checkbox>
-                              );
-                            })}
-                            <Subtitle>
-                              Add new tags in your{' '}
-                              <Link to={`/${data.community.slug}/settings`}>
-                                community's settings
-                              </Link>
-                              !
-                            </Subtitle>
-                          </div>
+                          <React.Fragment>
+                            <TagsContainer>
+                              {data.community.threadTags
+                                .sort((a, b) => {
+                                  const x = new Date(a.createdAt).getTime();
+                                  const y = new Date(b.createdAt).getTime();
+                                  return x - y;
+                                })
+                                .map(tag => {
+                                  const checked = thread.tags.some(
+                                    ({ id }) => id === tag.id
+                                  );
+                                  return (
+                                    <Checkbox
+                                      disabled={this.state.loading[tag.id]}
+                                      checked={checked}
+                                      onChange={() =>
+                                        this.editTag(
+                                          tag.id,
+                                          checked
+                                            ? 'removeTagsFromThread'
+                                            : 'addTagsToThread'
+                                        )
+                                      }
+                                      key={tag.id}
+                                      id={tag.id}
+                                    >
+                                      <span style={{ width: '16px' }} />
+                                      <ThreadTag
+                                        tag={tag}
+                                        communityId={data.community.id}
+                                      />
+                                    </Checkbox>
+                                  );
+                                })}
+                            </TagsContainer>
+                            <CreateTagFooter>
+                              <CreateThreadTag
+                                communityId={data.community.id}
+                              />
+                            </CreateTagFooter>
+                          </React.Fragment>
                         );
                       if (loading) return <p>Loading</p>;
                       if (error) return <p>Error! :(</p>;

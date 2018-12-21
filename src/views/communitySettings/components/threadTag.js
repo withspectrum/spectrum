@@ -25,6 +25,7 @@ import validateStringAsHexValue from 'shared/validate-string-as-hex-value';
 
 type Props = {
   communityId: string,
+  editable: boolean,
   tag: {
     id: string,
     createdAt: string,
@@ -129,7 +130,7 @@ class ThreadTag extends React.Component<Props, State> {
   toggleEdit = () => this.setState(state => ({ isEditing: !state.isEditing }));
 
   render() {
-    const { tag, removeTag } = this.props;
+    const { tag, removeTag, editable } = this.props;
     const { isEditing, isSaving } = this.state;
 
     if (isEditing) {
@@ -190,21 +191,25 @@ class ThreadTag extends React.Component<Props, State> {
       <ThreadTagContainer>
         <StyledThreadTag hex={tag.hex}>{tag.title}</StyledThreadTag>
 
-        <EditTagButton
-          tipText={'Edit tag'}
-          tipLocation={'top'}
-          onClick={this.toggleEdit}
-        >
-          <Icon glyph="edit" size={20} />
-        </EditTagButton>
+        {editable && (
+          <React.Fragment>
+            <EditTagButton
+              tipText={'Edit tag'}
+              tipLocation={'top'}
+              onClick={this.toggleEdit}
+            >
+              <Icon glyph="edit" size={20} />
+            </EditTagButton>
 
-        <RemoveTagButton
-          onClick={this.deleteTag}
-          tipText={'Remove tag'}
-          tipLocation={'top'}
-        >
-          <Icon glyph="delete" size={20} />
-        </RemoveTagButton>
+            <RemoveTagButton
+              onClick={this.deleteTag}
+              tipText={'Remove tag'}
+              tipLocation={'top'}
+            >
+              <Icon glyph="delete" size={20} />
+            </RemoveTagButton>
+          </React.Fragment>
+        )}
       </ThreadTagContainer>
     );
   }

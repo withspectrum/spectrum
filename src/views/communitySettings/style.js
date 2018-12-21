@@ -272,7 +272,7 @@ export const ThreadTagContainer = styled.div`
 
 export const StyledThreadTag = styled.li`
   list-style-type: none;
-  padding: 8px 16px 10px 12px;
+  padding: 8px 12px;
   border-radius: 4px;
   background: ${props => props.hex};
   display: flex;

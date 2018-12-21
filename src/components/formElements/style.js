@@ -168,7 +168,7 @@ export const StyledCheckboxWrapper = styled(FlexRow)`
   display: flex;
   align-items: ${props => props.align};
   line-height: 1.4;
-  cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')};
+  cursor: pointer;
 
   &:hover {
     color: ${({ theme, disabled }) =>

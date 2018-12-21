@@ -45,18 +45,16 @@ export const modalStyles = {
 
 export const Section = styled.section`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 16px 32px 32px;
+  padding: 0px;
   flex-direction: column;
 `;
 
 export const Title = styled.h3`
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 700;
   color: ${theme.text.default};
-  margin: 16px 0 8px;
-  text-align: center;
+  padding: 0 24px 16px;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
   line-height: 1.4;
 `;
 
@@ -91,4 +89,17 @@ export const Actions = styled.div`
   button + button {
     margin-left: 8px;
   }
+`;
+
+export const TagsContainer = styled.div`
+  width: 100%;
+  padding: 0 32px 16px;
+  max-height: 320px;
+  overflow-y: scroll;
+`;
+
+export const CreateTagFooter = styled.div`
+  width: 100%;
+  border-top: 1px solid ${props => props.theme.bg.border};
+  padding: 16px;
 `;
