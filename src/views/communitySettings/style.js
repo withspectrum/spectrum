@@ -321,6 +321,8 @@ export const HexContainer = styled.div`
   position: relative;
   margin-right: 16px;
   margin-left: 8px;
+  min-width: 32px;
+  min-height: 32px;
 `;
 
 export const RandomSwatch = styled.div`
