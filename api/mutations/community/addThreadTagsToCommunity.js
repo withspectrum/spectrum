@@ -27,7 +27,9 @@ export default isAuthedResolver(
       );
 
     await Promise.all(
-      input.tags.map(tag => addThreadTag(tag, input.communityId))
+      input.tags
+        .filter(tag => tag.title.length < 24)
+        .map(tag => addThreadTag(tag, input.communityId))
     );
 
     return getCommunityById(input.communityId);

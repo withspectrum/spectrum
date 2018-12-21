@@ -96,9 +96,9 @@ class ChannelList extends React.Component<Props, State> {
   };
 
   changeInput = e => {
-    this.setState({
-      input: e.target.value,
-    });
+    const input = e.target.value;
+    if (input.length >= 24) return;
+    this.setState({ input });
   };
 
   render() {
