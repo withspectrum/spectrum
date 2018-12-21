@@ -274,7 +274,7 @@ export const ThreadTagContainer = styled.div`
 
 export const StyledThreadTag = styled.li`
   list-style-type: none;
-  padding: 8px 12px;
+  padding: ${props => (props.size === 'default' ? '8px 12px' : '2px 4px')};
   border-radius: 4px;
   background: ${props => props.hex};
   display: flex;
@@ -282,7 +282,7 @@ export const StyledThreadTag = styled.li`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 4px;
-  font-size: 15px;
+  font-size: ${props => (props.size === 'default' ? '15px' : '12px')};
   font-weight: 500;
   color: ${props => getColorFromHexContrast(props.hex)};
   line-height: 1.2;

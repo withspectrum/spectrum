@@ -133,6 +133,7 @@ class ThreadTag extends React.Component<Props, State> {
     const {
       tag,
       removeTag,
+      size = 'default',
       tipLocation = 'top',
       editable = false,
     } = this.props;
@@ -198,9 +199,11 @@ class ThreadTag extends React.Component<Props, State> {
     }
 
     return (
-      <ThreadTagContainer>
+      <ThreadTagContainer size={size}>
         <div>
-          <StyledThreadTag hex={tag.hex}>{tag.title}</StyledThreadTag>
+          <StyledThreadTag size={size} hex={tag.hex}>
+            {tag.title}
+          </StyledThreadTag>
         </div>
 
         {editable && (

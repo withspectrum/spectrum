@@ -16,11 +16,13 @@ import {
   Column,
   AvatarLink,
   CommunityAvatarLink,
+  TagsContainer,
 } from './style';
 import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
 import ThreadActivity from './activity';
 import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import ThreadTag from 'src/views/communitySettings/components/threadTag';
 
 type Props = {
   active: boolean,
@@ -71,6 +73,12 @@ class InboxThread extends React.Component<Props> {
       thread.lastActive &&
       thread.currentUserLastSeen < thread.lastActive;
 
+    const canViewTags =
+      thread &&
+      thread.community.communityPermissions &&
+      (thread.community.communityPermissions.isOwner ||
+        thread.community.communityPermissions.isModerater);
+
     return (
       <ErrorBoundary fallbackComponent={null}>
         <InboxThreadItem active={active}>
@@ -113,6 +121,14 @@ class InboxThread extends React.Component<Props> {
                   currentUser={currentUser}
                 />
               </ErrorBoundary>
+
+              {canViewTags && thread.tags && thread.tags.length > 0 && (
+                <TagsContainer>
+                  {thread.tags.map(tag => {
+                    return <ThreadTag key={tag.id} tag={tag} size={'mini'} />;
+                  })}
+                </TagsContainer>
+              )}
 
               <ThreadTitle active={active} new={newMessagesSinceLastViewed}>
                 {truncate(thread.content.title, 80)}

@@ -110,8 +110,8 @@ export const CountWrapper = styled.div`
         ? props.theme.text.reverse
         : props.theme.warn.alt
       : props.active
-        ? props.theme.text.reverse
-        : props.theme.text.alt};
+      ? props.theme.text.reverse
+      : props.theme.text.alt};
   font-weight: 600;
   align-items: center;
 
@@ -151,4 +151,13 @@ export const AvatarLink = styled.div`
 
 export const CommunityAvatarLink = styled.div`
   ${avatarLinkStyles} border-radius: 4px;
+`;
+
+export const TagsContainer = styled.div`
+  display: flex;
+  margin-bottom: 8px;
+
+  > div {
+    margin-right: 4px;
+  }
 `;
