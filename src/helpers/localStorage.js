@@ -1,13 +1,3 @@
-export const localStorageAllowed = () => {
-  try {
-    localStorage.setItem('test', 'test');
-    localStorage.removeItem('test');
-    return true;
-  } catch (e) {
-    return false;
-  }
-};
-
 export const clearStorage = () => localStorage.clear();
 
 export const getItemFromStorage = (key: string) => {
