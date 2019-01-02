@@ -9,7 +9,7 @@
     "aws-sdk": "^2.373.0",
     "bull": "3.3.10",
     "datadog-metrics": "^0.8.1",
-    "debug": "^4.1.0",
+    "debug": "^4.1.1",
     "faker": "^4.1.0",
     "ioredis": "3.2.2",
     "lodash.intersection": "^4.4.0",
