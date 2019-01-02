@@ -10,7 +10,7 @@
     "bull": "3.3.10",
     "cryptr": "^3.0.0",
     "datadog-metrics": "^0.8.1",
-    "debug": "^4.1.0",
+    "debug": "^4.1.1",
     "decode-uri-component": "^0.2.0",
     "draft-js": "^0.10.5",
     "emoji-regex": "^6.5.1",
