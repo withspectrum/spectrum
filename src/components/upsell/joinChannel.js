@@ -98,7 +98,7 @@ class JoinChannel extends React.Component<Props, State> {
 
     if (!currentUser) {
       return (
-        <JoinChannelContainer>
+        <JoinChannelContainer data-cy="join-channel-login-upsell">
           <JoinChannelContent>
             <JoinChannelTitle>Log in or sign up to chat</JoinChannelTitle>
           </JoinChannelContent>
