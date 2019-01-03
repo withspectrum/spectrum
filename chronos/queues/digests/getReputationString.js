@@ -21,6 +21,8 @@ export const getReputationString = ({
   let reputationString;
   if (hasGainedReputation) {
     reputationString = `You gained ${reputationGained} reputation ${during}.`;
+  } else {
+    reputationString = `You didn’t gain any reputation ${during}.`;
   }
 
   if (isFirstReputation) {
