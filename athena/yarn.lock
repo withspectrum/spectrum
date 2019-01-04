@@ -23,10 +23,10 @@ asn1.js@^5.0.0:
     inherits "^2.0.1"
     minimalistic-assert "^1.0.0"
 
-aws-sdk@^2.373.0:
-  version "2.373.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.373.0.tgz#fcc5606634b3b11d80810ad252d1b52b3733d780"
-  integrity sha512-NZYXwXGtFt9jxaKXc+PJsLPnpbD03t0MAZRxh93g36kbFMuRXtY8CDqHYNQ0ZcrgQpXbCQiz1fxT5/wu5Cu70g==
+aws-sdk@^2.383.0:
+  version "2.383.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.383.0.tgz#86045c0a4a4898dca84a4877cbe765b7dc0f8bba"
+  integrity sha512-PN+s+NTABtBloS46c7C2dvoEzrdY2NZ5nsfljL3xDX2rvjJEQxdchS2jcCpyc5ZNudFwta66wY4EGBZqf4Attw==
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
