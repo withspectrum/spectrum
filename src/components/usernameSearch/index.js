@@ -15,7 +15,11 @@ type Props = {
   username: string,
   label: string,
   size: string,
-  onValidationResult: ({ error: string, success: string }) => void,
+  onValidationResult: ({
+    error: string,
+    success: string,
+    username: string,
+  }) => void,
   onError: ?(err: Error) => void,
   dataCy?: string,
 };
