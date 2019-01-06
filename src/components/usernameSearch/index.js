@@ -18,7 +18,7 @@ type Props = {
   onValidationResult: ({
     error: string,
     success: string,
-    username: string,
+    username?: string,
   }) => void,
   onError: ?(err: Error) => void,
   dataCy?: string,
