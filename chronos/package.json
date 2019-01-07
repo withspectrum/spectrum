@@ -3,10 +3,10 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "aws-sdk": "^2.373.0",
+    "aws-sdk": "^2.383.0",
     "bull": "^3.5.2",
     "datadog-metrics": "^0.8.1",
-    "debug": "^4.1.0",
+    "debug": "^4.1.1",
     "decode-uri-component": "^0.2.0",
     "draft-js": "^0.10.5",
     "faker": "^4.1.0",
@@ -15,8 +15,10 @@
     "lodash": "^4.17.11",
     "lodash.intersection": "^4.4.0",
     "now-env": "^3.1.0",
+    "performance-now": "^2.1.0",
     "raven": "^2.6.4",
     "redis-tag-cache": "^1.2.1",
+    "rethinkdb-inspector": "^0.3.3",
     "rethinkdbdash": "^2.3.31",
     "rethinkhaberdashery": "^2.3.32",
     "sanitize-filename": "^1.6.1",

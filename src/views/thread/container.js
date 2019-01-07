@@ -327,21 +327,19 @@ class ThreadContainer extends React.Component<Props, State> {
       </Input>
     );
 
-    if (!currentUser) {
-      return chatInputComponent;
-    }
+    const joinLoginUpsell = (
+      <JoinChannel channel={thread.channel} community={thread.community} />
+    );
 
-    if (currentUser && !currentUser.id) {
-      return chatInputComponent;
+    if (!currentUser || !currentUser.id) {
+      return joinLoginUpsell;
     }
 
     if (channelPermissions.isMember) {
       return chatInputComponent;
     }
 
-    return (
-      <JoinChannel channel={thread.channel} community={thread.community} />
-    );
+    return joinLoginUpsell;
   };
 
   renderPost = () => {

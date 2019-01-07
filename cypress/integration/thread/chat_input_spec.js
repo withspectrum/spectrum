@@ -31,17 +31,14 @@ describe('chat input', () => {
 
     it('should render', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[data-cy="chat-input-send-button"]').should('be.visible');
+      cy.get('[data-cy="chat-input-send-button"]').should('not.be.visible');
       cy.get('[data-cy="chat-input-media-uploader"]').should('not.be.visible');
-      cy.get('[data-cy="markdownHint"]').should('have.css', 'opacity', '0');
-
-      const newMessage = 'A new message!';
-      cy.get('[data-cy="chat-input"]').type(newMessage);
-      cy.get('[data-cy="markdownHint"]').should('have.css', 'opacity', '1');
-      // Wait for the messages to be loaded before sending new message
-      cy.get('[data-cy="message-group"]').should('be.visible');
-      cy.get('[data-cy="chat-input-send-button"]').click();
-      cy.contains('Sign in');
+      cy.get('[data-cy="join-channel-login-upsell"]').should('be.visible');
+      cy.get('[data-cy="thread-join-channel-upsell-button"]').should(
+        'be.visible'
+      );
+      cy.get('[data-cy="thread-join-channel-upsell-button"]').click();
+      cy.get('[data-cy="login-modal"]').should('be.visible');
     });
   });
 
@@ -81,7 +78,7 @@ describe('chat input', () => {
       cy.get('[data-cy="message-group"]').should('be.visible');
       cy.get('[data-cy="chat-input-send-button"]').click();
       // Clear the chat input and make sure the message was sent by matching the text
-      cy.get('[data-cy="chat-input"]').type('');
+      cy.get('[data-cy="chat-input"]').clear();
       cy.contains(newMessage);
     });
 
