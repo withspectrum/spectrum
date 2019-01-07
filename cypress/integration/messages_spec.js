@@ -88,7 +88,7 @@ describe('/messages', () => {
     const newMessage = 'A new message!';
     cy.get('[data-cy="chat-input"]').type(newMessage);
     cy.get('[data-cy="chat-input-send-button"]').click();
-    cy.get('[data-cy="chat-input"]').type('');
+    cy.get('[data-cy="chat-input"]').clear();
     cy.contains(newMessage);
 
     cy.get('[data-cy="unread-dm-list-item"]').should($p => {
