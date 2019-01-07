@@ -1,10 +1,7 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import withState from 'recompose/withState';
-import withHandlers from 'recompose/withHandlers';
 import { connect } from 'react-redux';
-import debounce from 'debounce';
 import Icon from 'src/components/icons';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
@@ -52,11 +49,6 @@ const QuotedMessage = connect()(
     return null;
   })
 );
-
-const LS_KEY = 'last-chat-input-content';
-const LS_KEY_EXPIRE = 'last-chat-input-content-expire';
-const LS_DM_KEY = 'last-chat-input-content-dm';
-const LS_DM_KEY_EXPIRE = 'last-chat-input-content-dm-expire';
 
 type Props = {
   onRef: Function,

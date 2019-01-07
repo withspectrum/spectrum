@@ -12,7 +12,6 @@ import {
   zIndex,
   monoStack,
 } from 'src/components/globals';
-import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
 
 export const ChatInputContainer = styled(FlexRow)`
   flex: none;
