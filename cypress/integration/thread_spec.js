@@ -52,7 +52,7 @@ describe('Thread View', () => {
     it('should prompt logged-out users to log in', () => {
       const newMessage = 'A new message!';
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[contenteditable="true"]').type(newMessage);
+      cy.get('[data-cy="chat-input"]').type(newMessage);
       // Wait for the messages to be loaded before sending new message
       cy.get('[data-cy="message-group"]').should('be.visible');
       cy.get('[data-cy="chat-input-send-button"]').click();
@@ -68,12 +68,12 @@ describe('Thread View', () => {
     it('should allow logged-in users to send public messages', () => {
       const newMessage = 'A new message!';
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[contenteditable="true"]').type(newMessage);
+      cy.get('[data-cy="chat-input"]').type(newMessage);
       // Wait for the messages to be loaded before sending new message
       cy.get('[data-cy="message-group"]').should('be.visible');
       cy.get('[data-cy="chat-input-send-button"]').click();
       // Clear the chat input and make sure the message was sent by matching the text
-      cy.get('[contenteditable="true"]').type('');
+      cy.get('[data-cy="chat-input"]').type('');
       cy.contains(newMessage);
     });
   });
@@ -100,10 +100,10 @@ describe('Thread View', () => {
     it('should allow logged-in users to send private messages if they have permission', () => {
       const newMessage = 'A new private message!';
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[contenteditable="true"]').type(newMessage);
+      cy.get('[data-cy="chat-input"]').type(newMessage);
       cy.get('[data-cy="chat-input-send-button"]').click();
       // Clear the chat input and make sure the message was sent by matching the text
-      cy.get('[contenteditable="true"]').type('');
+      cy.get('[data-cy="chat-input"]').type('');
       cy.contains(newMessage);
     });
   });
@@ -429,7 +429,7 @@ describe('edit message signed in', () => {
       .click({ force: true });
 
     cy.get('[data-cy="edit-message-input"]');
-    cy.get('[contenteditable="true"]').type(' with edits');
+    cy.get('[data-cy="chat-input"]').type(' with edits');
 
     cy.get('[data-cy="edit-message-save"]').click();
 
@@ -455,7 +455,7 @@ describe('/new/thread', () => {
     cy.get('[data-cy="composer-channel-selector"]').should('be.visible');
     // Type title and body
     cy.get('[data-cy="composer-title-input"]').type(title);
-    cy.get('[contenteditable="true"]').type(body);
+    cy.get('[data-cy="chat-input"]').type(body);
     cy.get('[data-cy="composer-publish-button"]').click();
     cy.location('pathname').should('contain', 'thread');
     cy.get('[data-cy="thread-view"]');
@@ -471,12 +471,12 @@ describe('/new/thread', () => {
     cy.get('[data-cy="composer-channel-selector"]').should('be.visible');
     // Type title and body
     cy.get('[data-cy="composer-title-input"]').type(title);
-    cy.get('[contenteditable="true"]').type(body);
+    cy.get('[data-cy="chat-input"]').type(body);
     /////need time as our localstorage is not set
     cy.wait(1000);
     cy.reload();
 
     cy.get('[data-cy="composer-title-input"]').contains(title);
-    cy.get('[contenteditable="true"]').contains(body);
+    cy.get('[data-cy="chat-input"]').contains(body);
   });
 });

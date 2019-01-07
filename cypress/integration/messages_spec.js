@@ -12,13 +12,13 @@ describe('/messages/new', () => {
 
   it('should allow to continue composing message incase of crash or reload', () => {
     const newMessage = 'Persist New Message';
-    cy.get('[contenteditable="true"]').type(newMessage);
-    cy.get('[contenteditable="true"]').contains(newMessage);
+    cy.get('[data-cy="chat-input"]').type(newMessage);
+    cy.get('[data-cy="chat-input"]').contains(newMessage);
 
     cy.wait(2000);
     // Reload page(incase page closed or crashed ,reload should have same effect)
     cy.reload();
-    cy.get('[contenteditable="true"]').contains(newMessage);
+    cy.get('[data-cy="chat-input"]').contains(newMessage);
   });
 });
 
@@ -86,9 +86,9 @@ describe('/messages', () => {
       .click();
 
     const newMessage = 'A new message!';
-    cy.get('[contenteditable="true"]').type(newMessage);
+    cy.get('[data-cy="chat-input"]').type(newMessage);
     cy.get('[data-cy="chat-input-send-button"]').click();
-    cy.get('[contenteditable="true"]').type('');
+    cy.get('[data-cy="chat-input"]').type('');
     cy.contains(newMessage);
 
     cy.get('[data-cy="unread-dm-list-item"]').should($p => {
