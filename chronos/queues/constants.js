@@ -8,6 +8,7 @@ export const COMMUNITY_UPSELL_THRESHOLD = 5;
 // the end weekly digest will have threads sorted by the weight of (TOTAL * WEIGHT) + (NEW * WEIGHT)
 export const TOTAL_MESSAGE_COUNT_WEIGHT = 0.1;
 export const NEW_MESSAGE_COUNT_WEIGHT = 1.5;
+export const WATERCOOLER_WEIGHT_REDUCTION = 0.5;
 
 /*
   Example weighting:
