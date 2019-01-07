@@ -274,7 +274,7 @@ const ChatInput = (props: Props) => {
 
   return (
     <React.Fragment>
-      <ChatInputContainer data-cy="chat-input">
+      <ChatInputContainer>
         {photoSizeError && (
           <PhotoSizeError>
             <p>{photoSizeError}</p>
