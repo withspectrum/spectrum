@@ -276,9 +276,9 @@ const ChatInput = (props: Props) => {
   };
 
   const networkDisabled =
-    !networkOnline ||
-    (websocketConnection !== 'connected' &&
-      websocketConnection !== 'reconnected');
+    !props.networkOnline ||
+    (props.websocketConnection !== 'connected' &&
+      props.websocketConnection !== 'reconnected');
 
   return (
     <React.Fragment>
