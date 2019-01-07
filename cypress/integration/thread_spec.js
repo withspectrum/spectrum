@@ -443,7 +443,7 @@ describe('edit message signed in', () => {
   });
 });
 
-describe.only('/new/thread', () => {
+describe('/new/thread', () => {
   beforeEach(() => {
     cy.auth(author.id).then(() => cy.visit('/new/thread'));
   });
@@ -456,7 +456,7 @@ describe.only('/new/thread', () => {
     cy.get('[data-cy="composer-channel-selector"]').should('be.visible');
     // Type title and body
     cy.get('[data-cy="composer-title-input"]').type(title);
-    cy.get('[data-cy="chat-input"]').type(body);
+    cy.get('[contenteditable="true"]').type(body);
     cy.get('[data-cy="composer-publish-button"]').click();
     cy.location('pathname').should('contain', 'thread');
     cy.get('[data-cy="thread-view"]');
@@ -472,12 +472,12 @@ describe.only('/new/thread', () => {
     cy.get('[data-cy="composer-channel-selector"]').should('be.visible');
     // Type title and body
     cy.get('[data-cy="composer-title-input"]').type(title);
-    cy.get('[data-cy="chat-input"]').type(body);
+    cy.get('[contenteditable="true"]').type(body);
     /////need time as our localstorage is not set
     cy.wait(1000);
     cy.reload();
 
     cy.get('[data-cy="composer-title-input"]').contains(title);
-    cy.get('[data-cy="chat-input"]').contains(body);
+    cy.get('[contenteditable="true"]').contains(body);
   });
 });
