@@ -95,6 +95,7 @@ const EditingChatInput = (props: Props) => {
     <React.Fragment>
       <EditorInput data-cy="edit-message-input">
         <Input
+          dataCy="editing-chat-input"
           placeholder="Your message here..."
           value={text}
           onChange={onChange}

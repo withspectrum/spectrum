@@ -107,7 +107,7 @@ export const Input = styled(({ hasAttachment, networkDisabled, ...rest }) => (
   async: true,
   rows: 1,
   maxRows: 5,
-  'data-cy': 'chat-input',
+  'data-cy': props => props.dataCy || 'chat-input',
 })`
   font-size: 15px;
   font-weight: 500;

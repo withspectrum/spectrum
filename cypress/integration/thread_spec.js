@@ -430,7 +430,7 @@ describe('edit message signed in', () => {
       .click({ force: true });
 
     cy.get('[data-cy="edit-message-input"]');
-    cy.get('[data-cy="chat-input"]').type(' with edits');
+    cy.get('[data-cy="editing-chat-input"]').type(' with edits');
 
     cy.get('[data-cy="edit-message-save"]').click();
 
