@@ -44,10 +44,10 @@ const EditingChatInput = (props: Props) => {
   const handleKeyPress = e => {
     // Submit on Enter unless Shift is pressed
     if (e.key === 'Enter') {
-      if (e.shiftKey) return;
-      e.preventDefault();
-      submit();
-      return;
+      if (e.metaKey) {
+        e.preventDefault();
+        return submit();
+      }
     }
   };
 
