@@ -53,6 +53,7 @@ const Message = /* GraphQL */ `
 
   input EditMessageInput {
     id: ID!
+    messageType: MessageTypes!
     content: MessageContentInput
   }
 

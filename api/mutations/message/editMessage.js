@@ -1,5 +1,7 @@
 // @flow
 import type { GraphQLContext } from '../../';
+import { convertToRaw } from 'draft-js';
+import { stateFromMarkdown } from 'draft-js-import-markdown';
 import UserError from '../../utils/UserError';
 import {
   getMessage,
@@ -18,6 +20,7 @@ import { trackQueue } from 'shared/bull/queues';
 type Args = {
   input: {
     id: string,
+    messageType?: 'draftjs' | 'text' | 'media',
     content: {
       body: string,
     },
@@ -26,7 +29,7 @@ type Args = {
 
 export default requireAuth(async (_: any, args: Args, ctx: GraphQLContext) => {
   const {
-    input: { id, content },
+    input: { id, content, messageType },
   } = args;
   const { user, loaders } = ctx;
 
@@ -43,7 +46,69 @@ export default requireAuth(async (_: any, args: Args, ctx: GraphQLContext) => {
     return new UserError('This message does not exist.');
   }
 
-  if (content.body === message.content.body) {
+  let body = content.body;
+  if (messageType === 'text') {
+    body = JSON.stringify(convertToRaw(stateFromMarkdown(body)));
+    messageType === 'draftjs';
+  }
+
+  if (messageType === 'draftjs') {
+    let parsed;
+    try {
+      parsed = JSON.parse(body);
+    } catch (err) {
+      trackQueue.add({
+        userId: user.id,
+        event: eventFailed,
+        properties: {
+          reason: 'invalid draftjs data',
+          message,
+        },
+      });
+
+      return new UserError(
+        'Please provide serialized raw DraftJS content state as content.body'
+      );
+    }
+    if (!parsed.blocks || !Array.isArray(parsed.blocks) || !parsed.entityMap) {
+      trackQueue.add({
+        userId: user.id,
+        event: eventFailed,
+        properties: {
+          reason: 'invalid draftjs data',
+          message,
+        },
+      });
+
+      return new UserError(
+        'Please provide serialized raw DraftJS content state as content.body'
+      );
+    }
+    if (
+      parsed.blocks.some(
+        ({ type }) =>
+          !type ||
+          (type !== 'unstyled' &&
+            type !== 'code-block' &&
+            type !== 'blockquote')
+      )
+    ) {
+      trackQueue.add({
+        userId: user.id,
+        event: eventFailed,
+        properties: {
+          reason: 'invalid draftjs data',
+          message,
+        },
+      });
+
+      return new UserError(
+        'Invalid DraftJS block type specified. Supported block types: "unstyled", "code-block".'
+      );
+    }
+  }
+
+  if (body === message.content.body) {
     return message;
   }
 
@@ -65,5 +130,14 @@ export default requireAuth(async (_: any, args: Args, ctx: GraphQLContext) => {
     return new UserError('You can only edit your own messages.');
   }
 
-  return editMessage(args.input, user.id);
+  return editMessage(
+    {
+      ...args.input,
+      content: {
+        body,
+      },
+      messageType,
+    },
+    user.id
+  );
 });
