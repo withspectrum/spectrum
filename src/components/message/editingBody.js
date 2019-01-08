@@ -27,11 +27,13 @@ type State = {
 };
 
 const EditingChatInput = (props: Props) => {
+  // $FlowIssue
   const [text, setText] = React.useState(
     stateToMarkdown(
       toState(JSON.parse(props.message.content.body)).getCurrentContent()
     )
   );
+  // $FlowIssue
   const [saving, setSaving] = React.useState(false);
 
   const onChange = e => {
@@ -97,9 +99,7 @@ const EditingChatInput = (props: Props) => {
           value={text}
           onChange={onChange}
           onKeyDown={handleKeyPress}
-          inputRef={node => {
-            if (props.onRef) props.onRef(node);
-          }}
+          inputRef={props.editorRef}
         />
       </EditorInput>
       <EditActions>

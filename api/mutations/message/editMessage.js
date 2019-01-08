@@ -52,6 +52,11 @@ export default requireAuth(async (_: any, args: Args, ctx: GraphQLContext) => {
     messageType === 'draftjs';
   }
 
+  const eventFailed =
+    message.threadType === 'story'
+      ? events.MESSAGE_EDITED_FAILED
+      : events.DIRECT_MESSAGE_EDITED_FAILED;
+
   if (messageType === 'draftjs') {
     let parsed;
     try {
@@ -111,11 +116,6 @@ export default requireAuth(async (_: any, args: Args, ctx: GraphQLContext) => {
   if (body === message.content.body) {
     return message;
   }
-
-  const eventFailed =
-    message.threadType === 'story'
-      ? events.MESSAGE_EDITED_FAILED
-      : events.DIRECT_MESSAGE_EDITED_FAILED;
 
   if (message.senderId !== user.id) {
     trackQueue.add({
