@@ -1,24 +1,8 @@
 // @flow
 import * as React from 'react';
+import { stateToMarkdown } from 'draft-js-export-markdown';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
-import DraftEditor from '../draft-js-plugins-editor';
-import createLinkifyPlugin from 'draft-js-linkify-plugin';
-import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
-import createMarkdownPlugin from 'draft-js-markdown-plugin';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-java';
-import 'prismjs/components/prism-scala';
-import 'prismjs/components/prism-go';
-import 'prismjs/components/prism-sql';
-import 'prismjs/components/prism-bash';
-import 'prismjs/components/prism-c';
-import 'prismjs/components/prism-cpp';
-import 'prismjs/components/prism-kotlin';
-import 'prismjs/components/prism-perl';
-import 'prismjs/components/prism-ruby';
-import 'prismjs/components/prism-swift';
-import createPrismPlugin from 'draft-js-prism-plugin';
-import { customStyleMap } from 'src/components/rich-text-editor/style';
+import { Input } from '../chatInput/style';
 import { EditorInput, EditActions } from './style';
 import { toPlainText, toState, toJSON } from 'shared/draft-utils';
 import { TextButton, Button } from 'src/components/buttons';
@@ -27,7 +11,6 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import editMessageMutation from 'shared/graphql/mutations/message/editMessage';
-import { KeyBindingUtil } from 'draft-js';
 
 type Props = {
   message: MessageInfoType,
@@ -43,97 +26,53 @@ type State = {
   isSavingEdit: boolean,
 };
 
-class Editing extends React.Component<Props, State> {
-  editor: any;
+const EditingChatInput = (props: Props) => {
+  const [text, setText] = React.useState(
+    stateToMarkdown(
+      toState(JSON.parse(props.message.content.body)).getCurrentContent()
+    )
+  );
+  const [saving, setSaving] = React.useState(false);
 
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      plugins: [
-        createPrismPlugin({
-          prism: Prism,
-        }),
-        createMarkdownPlugin({
-          features: {
-            inline: ['BOLD', 'ITALIC', 'CODE'],
-            block: ['CODE', 'blockquote'],
-          },
-          renderLanguageSelect: () => null,
-        }),
-        createCodeEditorPlugin(),
-        createLinkifyPlugin({
-          target: '_blank',
-        }),
-      ],
-      body: toState(JSON.parse(props.message.content.body)),
-      isSavingEdit: false,
-    };
-  }
-
-  componentDidMount() {
-    this.triggerFocus();
-  }
-
-  setRef = (editor: any) => {
-    const { editorRef } = this.props;
-    this.editor = editor;
-    if (editorRef && typeof editorRef === 'function') editorRef(editor);
+  const onChange = e => {
+    const text = e.target.value;
+    setText(text);
   };
 
-  onChange = (state: any) => {
-    this.setState({
-      body: state,
-    });
-  };
-
-  handleReturn = (e: any) => {
-    // Always submit on CMD+Enter
-    if (KeyBindingUtil.hasCommandModifier(e)) {
-      return this.save();
+  const handleKeyPress = e => {
+    // Submit on Enter unless Shift is pressed
+    if (e.key === 'Enter') {
+      if (e.shiftKey) return;
+      e.preventDefault();
+      submit();
+      return;
     }
-
-    return 'not-handled';
   };
 
-  triggerFocus = () => {
-    // NOTE(@mxstbr): This needs to be delayed for a tick, otherwise the
-    // decorators that are passed to the editor are removed from the editor
-    // state
-    setTimeout(() => {
-      this.editor && this.editor.focus && this.editor.focus();
-    }, 0);
-  };
-
-  save = () => {
-    const { message, editMessage, cancelEdit, dispatch } = this.props;
-    const { body } = this.state;
+  const submit = () => {
+    const { message, editMessage, cancelEdit, dispatch } = props;
     const messageId = message.id;
 
-    const jsonBody = toJSON(body);
-
-    // dont let the user edit the message by deleting all the content
-    if (!toPlainText(body) || toPlainText(body).length === 0) {
-      return cancelEdit();
-    }
+    if (!text || text.length === 0) return props.cancelEdit();
 
     const content = {
-      body: JSON.stringify(jsonBody),
+      body: text,
     };
 
     const input = {
       id: messageId,
+      messageType: 'text',
       content,
     };
 
+    setSaving(true);
+
     editMessage(input)
       .then(({ data: { editMessage } }) => {
-        this.setState({
-          isSavingEdit: false,
-        });
+        setSaving(false);
 
         if (editMessage && editMessage !== null) {
-          cancelEdit();
+          props.cancelEdit();
           return dispatch(addToastWithTimeout('success', 'Saved!'));
         } else {
           return dispatch(
@@ -145,52 +84,39 @@ class Editing extends React.Component<Props, State> {
         }
       })
       .catch(err => {
-        this.setState({
-          isSavingEdit: false,
-        });
+        setSaving(false);
         dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
-  render() {
-    const { editorRef, cancelEdit, ...rest } = this.props;
-    const { plugins, body } = this.state;
-
-    return (
-      <React.Fragment>
-        <EditorInput data-cy="edit-message-input">
-          <DraftEditor
-            editorState={body}
-            onChange={this.onChange}
-            plugins={plugins}
-            editorRef={this.setRef}
-            readOnly={false}
-            placeholder={'Your message'}
-            spellCheck={true}
-            autoCapitalize="sentences"
-            autoComplete="on"
-            autoCorrect="on"
-            stripPastedStyles={true}
-            customStyleMap={customStyleMap}
-            handleReturn={this.handleReturn}
-            onEscape={cancelEdit}
-            {...rest}
-          />
-        </EditorInput>
-        <EditActions>
-          <TextButton dataCy="edit-message-cancel" onClick={cancelEdit}>
+  return (
+    <React.Fragment>
+      <EditorInput data-cy="edit-message-input">
+        <Input
+          placeholder="Your message here..."
+          value={text}
+          onChange={onChange}
+          onKeyDown={handleKeyPress}
+          inputRef={node => {
+            if (props.onRef) props.onRef(node);
+          }}
+        />
+      </EditorInput>
+      <EditActions>
+        {!saving && (
+          <TextButton dataCy="edit-message-cancel" onClick={props.cancelEdit}>
             Cancel
           </TextButton>
-          <Button dataCy="edit-message-save" onClick={this.save}>
-            Save
-          </Button>
-        </EditActions>
-      </React.Fragment>
-    );
-  }
-}
+        )}
+        <Button loading={saving} dataCy="edit-message-save" onClick={submit}>
+          Save
+        </Button>
+      </EditActions>
+    </React.Fragment>
+  );
+};
 
 export default compose(
   connect(),
   editMessageMutation
-)(Editing);
+)(EditingChatInput);
