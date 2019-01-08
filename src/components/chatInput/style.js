@@ -97,9 +97,11 @@ export const InputWrapper = styled.div`
   }
 `;
 
-export const Input = styled(({ hasAttachment, networkDisabled, ...rest }) => (
-  <Textarea {...rest} />
-)).attrs({
+export const Input = styled(
+  ({ hasAttachment, networkDisabled, dataCy, ...rest }) => (
+    <Textarea {...rest} />
+  )
+).attrs({
   spellCheck: true,
   autoCapitalize: 'sentences',
   autoComplete: 'on',
