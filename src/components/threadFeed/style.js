@@ -93,4 +93,16 @@ export const UpsellHeader = styled.div`
   }
 `;
 
+export const UpsellBlock = styled.div`
+  margin-top: 16px;
+  ul {
+    padding: 16px 0;
+    padding-left: 32px;
+  }
+
+  li {
+    margin-top: 8px;
+  }
+`;
+
 export const UpsellFooter = styled.div``;
