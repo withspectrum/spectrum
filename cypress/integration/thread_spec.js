@@ -52,11 +52,12 @@ describe('Thread View', () => {
     it('should prompt logged-out users to log in', () => {
       const newMessage = 'A new message!';
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[contenteditable="true"]').type(newMessage);
-      // Wait for the messages to be loaded before sending new message
-      cy.get('[data-cy="message-group"]').should('be.visible');
-      cy.get('[data-cy="chat-input-send-button"]').click();
-      cy.contains('Sign in');
+      cy.get('[data-cy="join-channel-login-upsell"]').should('be.visible');
+      cy.get('[data-cy="thread-join-channel-upsell-button"]').should(
+        'be.visible'
+      );
+      cy.get('[data-cy="thread-join-channel-upsell-button"]').click();
+      cy.get('[data-cy="login-modal"]').should('be.visible');
     });
   });
 
@@ -442,7 +443,7 @@ describe('edit message signed in', () => {
   });
 });
 
-describe('/new/thread', () => {
+describe.only('/new/thread', () => {
   beforeEach(() => {
     cy.auth(author.id).then(() => cy.visit('/new/thread'));
   });

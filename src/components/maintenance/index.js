@@ -35,7 +35,6 @@ const Text = styled(Copy)`
 `;
 
 const MaintenanceDowntime = () => {
-  const timeInUTC = 'September 25, 2017 15:00:00 UTC';
   return (
     <ViewSegment background="constellations">
       <Wrapper>
