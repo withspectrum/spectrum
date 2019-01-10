@@ -72,7 +72,7 @@ const sendEmail = async (options: Options): Promise<void> => {
     });
   }
 
-  if (!userCanReceiveEmail({ to, userId })) return Promise.resolve();
+  if (await !userCanReceiveEmail({ to, userId })) return Promise.resolve();
 
   return sg.send({
     ...defaultOptions,
