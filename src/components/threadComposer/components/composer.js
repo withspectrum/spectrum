@@ -18,6 +18,7 @@ import {
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
+import { ESC } from 'shared/keycodes';
 import { TextButton, Button } from '../../buttons';
 import { FlexRow } from '../../../components/globals';
 import { LoadingComposer } from '../../loading';
@@ -344,8 +345,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
   }
 
   handleKeyPress = e => {
-    // if person taps esc, close the dialog
-    if (e.keyCode === 27) {
+    if (e.keyCode === ESC) {
       this.closeComposer();
     }
   };

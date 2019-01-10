@@ -13,6 +13,7 @@ import {
   CloseButton,
   GalleryWrapper,
 } from './style';
+import { ESC, ARROW_LEFT, ARROW_RIGHT } from 'shared/keycodes';
 
 type State = {
   images: Array<Object>,
@@ -76,17 +77,15 @@ class Browser extends React.Component<Props, State> {
     // if no media, skip on outta here
     if (!images) return;
 
-    // if person taps esc, close the dialog
-    if (e.keyCode === 27) {
+    if (e.keyCode === ESC) {
       this.closeGallery();
     }
 
-    // left arrow key
-    if (e.keyCode === 37) {
+    if (e.keyCode === ARROW_LEFT) {
       this.previousImage();
     }
 
-    if (e.keyCode === 39) {
+    if (e.keyCode === ARROW_RIGHT) {
       this.nextImage();
     }
   };
