@@ -210,6 +210,7 @@ export type EditCommunityInput = {
     website: string,
     file: Object,
     coverFile: Object,
+    coverPhoto: string,
     communityId: string,
   },
 };
