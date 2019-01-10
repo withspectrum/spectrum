@@ -410,7 +410,8 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
 // prettier-ignore
 export const editCommunity = ({ input }: EditCommunityInput, userId: string): Promise<DBCommunity> => {
   const { name, slug, description, website, file, coverFile, communityId } = input
-
+  let { coverPhoto } = input
+  
   return db
     .table('communities')
     .get(communityId)
@@ -433,11 +434,15 @@ export const editCommunity = ({ input }: EditCommunityInput, userId: string): Pr
 
       // if no file was uploaded, update the community with new string values
       if (!file && !coverFile) {
+        // if the coverPhoto was deleted, reset to default
+        if (!coverPhoto) { 
+          ({ coverPhoto } = getRandomDefaultPhoto())
+        }
         return db
           .table('communities')
           .get(communityId)
-          .update({ ...community }, { returnChanges: 'always' })
-          .run()
+          .update({ ...community, coverPhoto }, { returnChanges: 'always' })
+          .run()  
           .then(result => {
             // if an update happened
             if (result.replaced === 1) {
@@ -466,6 +471,10 @@ export const editCommunity = ({ input }: EditCommunityInput, userId: string): Pr
 
       if (file || coverFile) {
         if (file && !coverFile) {
+          // if the coverPhoto was deleted, reset to default
+          if (!coverPhoto) { 
+            ({ coverPhoto } = getRandomDefaultPhoto())
+          }
           return uploadImage(file, 'communities', community.id).then(
             profilePhoto => {
               // update the community with the profilePhoto
@@ -477,6 +486,7 @@ export const editCommunity = ({ input }: EditCommunityInput, userId: string): Pr
                     {
                       ...community,
                       profilePhoto,
+                      coverPhoto
                     },
                     { returnChanges: 'always' }
                   )
