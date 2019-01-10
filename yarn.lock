@@ -5418,10 +5418,10 @@ draft-js-import-element@^1.2.1:
     draft-js-utils "^1.2.0"
     synthetic-dom "^1.2.0"
 
-draft-js-import-markdown@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-1.2.2.tgz#372b2034f1a0558ef4b062570acdfbe1e77e40c9"
-  integrity sha512-ogzu28EaT8PE1cbzxYmf8hwkwJxTsQhWjbXycD5tfI5PQ/dGdzamcEUyKdsOeM9rmz8tIDYNDdQCVPtxXEadvQ==
+draft-js-import-markdown@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-1.2.3.tgz#71ffc8eee1530f0349c22273681fbcb3c659c0c0"
+  integrity sha512-NPcXwWSsIA+uwASzdJWLQM4y+xW1vTDtDdIDHCHfP76i9cx8zYpH75GW8Ezz8L9SW2qetNcFW056Hj2yxRZ+2g==
   dependencies:
     draft-js-import-element "^1.2.1"
     synthetic-dom "^1.2.0"

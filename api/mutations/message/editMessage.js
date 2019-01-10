@@ -48,7 +48,15 @@ export default requireAuth(async (_: any, args: Args, ctx: GraphQLContext) => {
 
   let body = content.body;
   if (messageType === 'text') {
-    body = JSON.stringify(convertToRaw(stateFromMarkdown(body)));
+    body = JSON.stringify(
+      convertToRaw(
+        stateFromMarkdown(body, {
+          parserOptions: {
+            breaks: true,
+          },
+        })
+      )
+    );
     messageType === 'draftjs';
   }
 

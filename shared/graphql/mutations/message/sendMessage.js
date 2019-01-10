@@ -71,7 +71,13 @@ const sendMessageOptions = {
                 message.messageType === 'media'
                   ? message.content.body
                   : JSON.stringify(
-                      convertToRaw(stateFromMarkdown(message.content.body))
+                      convertToRaw(
+                        stateFromMarkdown(message.content.body, {
+                          parserOptions: {
+                            breaks: true,
+                          },
+                        })
+                      )
                     ),
               __typename: 'MessageContent',
             },

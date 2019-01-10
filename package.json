@@ -90,7 +90,7 @@
     "draft-js-export-markdown": "^1.2.0",
     "draft-js-focus-plugin": "^2.2.0",
     "draft-js-image-plugin": "^2.0.6",
-    "draft-js-import-markdown": "^1.2.2",
+    "draft-js-import-markdown": "^1.2.3",
     "draft-js-linkify-plugin": "^2.0.0-beta1",
     "draft-js-markdown-plugin": "^3.0.5",
     "draft-js-plugins-editor": "^2.1.1",
