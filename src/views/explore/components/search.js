@@ -12,6 +12,7 @@ import type { SearchCommunitiesType } from 'shared/graphql/queries/search/search
 import { Spinner } from 'src/components/globals';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import OutsideClickHandler from 'src/components/outsideClickHandler';
+import { ESC, ENTER, ARROW_DOWN, ARROW_UP } from 'src/helpers/keycodes';
 import {
   SearchWrapper,
   SearchInput,
@@ -125,7 +126,7 @@ class Search extends React.Component<Props, State> {
     );
 
     // if person presses escape
-    if (e.keyCode === 27) {
+    if (e.keyCode === ESC) {
       this.setState({
         isFocused: false,
       });
@@ -135,8 +136,7 @@ class Search extends React.Component<Props, State> {
       return;
     }
 
-    // if user presses enter
-    if (e.keyCode === 13) {
+    if (e.keyCode === ENTER) {
       if (
         searchResults.length === 0 ||
         searchResults[indexOfFocusedSearchResult] === undefined
@@ -146,8 +146,7 @@ class Search extends React.Component<Props, State> {
       return this.props.history.push(`/${slug}`);
     }
 
-    // if person presses down
-    if (e.keyCode === 40) {
+    if (e.keyCode === ARROW_DOWN) {
       if (indexOfFocusedSearchResult === searchResults.length - 1) return;
       if (searchResults.length <= 1) return;
 
@@ -159,8 +158,7 @@ class Search extends React.Component<Props, State> {
       });
     }
 
-    // if person presses up
-    if (e.keyCode === 38) {
+    if (e.keyCode === ARROW_UP) {
       if (indexOfFocusedSearchResult === 0) return;
       if (searchResults.length <= 1) return;
 

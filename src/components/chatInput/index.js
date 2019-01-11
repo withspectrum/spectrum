@@ -38,6 +38,7 @@ import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
 import type { Dispatch } from 'redux';
+import { ESC, BACKSPACE, DELETE } from 'src/helpers/keycodes';
 
 const QuotedMessage = connect()(
   getMessageById(props => {
@@ -225,8 +226,8 @@ class ChatInput extends React.Component<Props, State> {
     // Detect esc key or backspace key (and empty message) to remove
     // the previewed image and quoted message
     if (
-      key === 27 ||
-      ((key === 8 || key === 46) &&
+      key === ESC ||
+      ((key === BACKSPACE || key === DELETE) &&
         !this.props.state.getCurrentContent().hasText())
     ) {
       this.removePreviewWrapper();

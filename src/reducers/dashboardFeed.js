@@ -35,14 +35,6 @@ export default function dashboardFeed(state = initialState, action) {
         },
       });
     }
-    case 'SET_SEARCH_VALUE': {
-      return Object.assign({}, state, {
-        search: {
-          ...state.search,
-          queryString: action.value,
-        },
-      });
-    }
     case 'SET_SEARCH_VALUE_FOR_SERVER': {
       return Object.assign({}, state, {
         search: {

@@ -42,6 +42,7 @@ import {
   getDefaultActiveChannel,
 } from './utils';
 import { events, track } from 'src/helpers/analytics';
+import { ESC, ENTER } from 'src/helpers/keycodes';
 
 type State = {
   title: string,
@@ -248,8 +249,9 @@ class ComposerWithData extends Component<Props, State> {
   }
 
   handleKeyPress = e => {
-    const esc = e.keyCode === 27;
-    const cmdEnter = e.keyCode === 13 && KeyBindingUtil.hasCommandModifier(e);
+    const esc = e.keyCode === ESC;
+    const cmdEnter =
+      e.keyCode === ENTER && KeyBindingUtil.hasCommandModifier(e);
 
     if (esc) {
       // Community/channel view
