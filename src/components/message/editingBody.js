@@ -103,6 +103,7 @@ const EditingChatInput = (props: Props) => {
           onChange={onChange}
           onKeyDown={handleKeyPress}
           inputRef={props.editorRef}
+          autoFocus
         />
       </EditorInput>
       <EditActions>
