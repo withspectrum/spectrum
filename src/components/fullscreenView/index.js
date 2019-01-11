@@ -7,7 +7,7 @@ import {
 } from '../../components/illustrations';
 import Icon from '../../components/icons';
 import { FullscreenViewContainer, Illustrations, Close } from './style';
-import { ESC } from 'shared/keycodes';
+import { ESC } from 'src/helpers/keycodes';
 class FullscreenView extends Component {
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress, false);

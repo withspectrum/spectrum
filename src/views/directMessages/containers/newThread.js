@@ -21,7 +21,13 @@ import { clearDirectMessagesComposer } from '../../../actions/directMessageThrea
 import createDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/createDirectMessageThread';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import { BACKSPACE, ESC, ARROW_DOWN, ARROW_UP, ENTER } from 'shared/keycodes';
+import {
+  BACKSPACE,
+  ESC,
+  ARROW_DOWN,
+  ARROW_UP,
+  ENTER,
+} from 'src/helpers/keycodes';
 import {
   ComposerInputWrapper,
   Grow,

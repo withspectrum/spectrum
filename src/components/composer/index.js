@@ -42,7 +42,7 @@ import {
   getDefaultActiveChannel,
 } from './utils';
 import { events, track } from 'src/helpers/analytics';
-import { ESC, ENTER } from 'shared/keycodes';
+import { ESC, ENTER } from 'src/helpers/keycodes';
 
 type State = {
   title: string,

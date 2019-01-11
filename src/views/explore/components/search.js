@@ -12,7 +12,7 @@ import type { SearchCommunitiesType } from 'shared/graphql/queries/search/search
 import { Spinner } from 'src/components/globals';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import OutsideClickHandler from 'src/components/outsideClickHandler';
-import { ESC, ENTER, ARROW_DOWN, ARROW_UP } from 'shared/keycodes';
+import { ESC, ENTER, ARROW_DOWN, ARROW_UP } from 'src/helpers/keycodes';
 import {
   SearchWrapper,
   SearchInput,

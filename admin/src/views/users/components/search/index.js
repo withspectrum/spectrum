@@ -6,7 +6,13 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
-import { ESC, BACKSPACE, ENTER, ARROW_DOWN, ARROW_UP } from 'shared/keycodes';
+import {
+  ESC,
+  BACKSPACE,
+  ENTER,
+  ARROW_DOWN,
+  ARROW_UP,
+} from 'src/helpers/keycodes';
 import { Spinner } from '../../../../components/globals';
 import { throttle } from '../../../../helpers/utils';
 import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';

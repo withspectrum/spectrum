@@ -9,7 +9,7 @@ import {
   openSearch,
   setSearchStringVariable,
 } from '../../../actions/dashboardFeed';
-import { ESC } from 'shared/keycodes';
+import { ESC } from 'src/helpers/keycodes';
 type Props = {
   dispatch: Dispatch<Object>,
   filter: {

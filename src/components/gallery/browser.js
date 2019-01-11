@@ -13,7 +13,7 @@ import {
   CloseButton,
   GalleryWrapper,
 } from './style';
-import { ESC, ARROW_LEFT, ARROW_RIGHT } from 'shared/keycodes';
+import { ESC, ARROW_LEFT, ARROW_RIGHT } from 'src/helpers/keycodes';
 
 type State = {
   images: Array<Object>,

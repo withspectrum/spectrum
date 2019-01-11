@@ -38,7 +38,7 @@ import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
 import type { Dispatch } from 'redux';
-import { ESC, BACKSPACE, DELETE } from 'shared/keycodes';
+import { ESC, BACKSPACE, DELETE } from 'src/helpers/keycodes';
 
 const QuotedMessage = connect()(
   getMessageById(props => {

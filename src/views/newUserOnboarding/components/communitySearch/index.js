@@ -27,7 +27,7 @@ import {
   SearchIcon,
   SearchResultDescription,
 } from './style';
-import { ESC, ARROW_DOWN, ARROW_UP } from 'shared/keycodes';
+import { ESC, ARROW_DOWN, ARROW_UP } from 'src/helpers/keycodes';
 
 type State = {
   searchString: string,

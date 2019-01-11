@@ -18,7 +18,7 @@ import {
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
-import { ESC } from 'shared/keycodes';
+import { ESC } from 'src/helpers/keycodes';
 import { TextButton, Button } from '../../buttons';
 import { FlexRow } from '../../../components/globals';
 import { LoadingComposer } from '../../loading';

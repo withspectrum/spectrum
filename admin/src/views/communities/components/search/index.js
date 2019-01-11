@@ -5,7 +5,7 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
-import { ESC, BACKSPACE, ARROW_DOWN, ARROW_UP } from 'shared/keycodes';
+import { ESC, BACKSPACE, ARROW_DOWN, ARROW_UP } from 'src/helpers/keycodes';
 import { Spinner } from '../../../../components/globals';
 import { throttle } from '../../../../helpers/utils';
 import { SEARCH_COMMUNITIES_QUERY } from '../../../../api/queries';

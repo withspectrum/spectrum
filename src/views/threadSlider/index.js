@@ -18,7 +18,7 @@ import {
 import Icon from '../../components/icons';
 import { SliderThreadView } from '../thread';
 import { ErrorBoundary } from 'src/components/error';
-import { ESC } from 'shared/keycodes';
+import { ESC } from 'src/helpers/keycodes';
 
 const ANIMATION_DURATION = 50;
 
