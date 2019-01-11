@@ -9,7 +9,7 @@ import { trackQueue } from 'shared/bull/queues';
 import { userCanReceiveEmail } from './user-can-receive-email';
 const { SENDGRID_API_KEY } = process.env;
 
-type ToType = {
+export type ToType = {
   email: string,
   name?: string,
 };

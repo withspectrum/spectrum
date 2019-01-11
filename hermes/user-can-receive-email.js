@@ -2,10 +2,11 @@
 import { getUserById } from 'shared/db/queries/user';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import type { ToType } from './send-email';
 
 type Props = {
-  to: string,
-  userId: string,
+  to: Array<ToType>,
+  userId?: string,
 };
 
 export const userCanReceiveEmail = async ({ to, userId }: Props) => {
@@ -27,6 +28,7 @@ export const userCanReceiveEmail = async ({ to, userId }: Props) => {
     return toType.email.substr(to.length - 7) !== '@qq.com';
   });
 
+  if (!userId) return false;
   if (!to || to.length === 0) return false;
 
   const user = await getUserById(userId);
