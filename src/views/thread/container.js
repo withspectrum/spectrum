@@ -574,7 +574,7 @@ class ThreadContainer extends React.Component<Props, State> {
               heading={'We had trouble loading this thread.'}
               subheading={
                 !hasError
-                  ? 'It may be private, or may have been deleted by an author or moderator.'
+                  ? 'It may be private or may have been deleted by the author or a moderator.'
                   : ''
               }
               refresh={hasError}
