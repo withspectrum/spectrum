@@ -63,6 +63,13 @@ const directMessageThreadSubscriptions = require('./subscriptions/directMessageT
 const threadSubscriptions = require('./subscriptions/thread');
 
 const Root = /* GraphQL */ `
+  directive @rateLimit(
+    max: Int
+    window: Int
+    message: String
+    identityArgs: [String]
+  ) on FIELD_DEFINITION
+
   # The dummy queries and mutations are necessary because
   # graphql-js cannot have empty root types and we only extend
   # these types later on

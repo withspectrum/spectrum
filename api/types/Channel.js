@@ -123,6 +123,7 @@ const Channel = /* GraphQL */ `
 
   extend type Mutation {
     createChannel(input: CreateChannelInput!): Channel
+      @rateLimit(max: 10, window: 300000)
     editChannel(input: EditChannelInput!): Channel
     deleteChannel(channelId: ID!): Boolean
     toggleChannelSubscription(channelId: ID!): Channel

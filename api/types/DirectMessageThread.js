@@ -62,7 +62,7 @@ const DirectMessageThread = /* GraphQL */ `
   extend type Mutation {
     createDirectMessageThread(
       input: DirectMessageThreadInput!
-    ): DirectMessageThread
+    ): DirectMessageThread @rateLimit(max: 7, window: 600000)
     setLastSeen(id: ID!): DirectMessageThread
   }
 
