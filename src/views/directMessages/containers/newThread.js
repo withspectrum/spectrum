@@ -22,6 +22,13 @@ import createDirectMessageThreadMutation from 'shared/graphql/mutations/directMe
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
+  BACKSPACE,
+  ESC,
+  ARROW_DOWN,
+  ARROW_UP,
+  ENTER,
+} from 'src/helpers/keycodes';
+import {
   ComposerInputWrapper,
   Grow,
   SelectedUsersPills,
@@ -237,7 +244,7 @@ class NewThread extends React.Component<Props, State> {
          selected to be messaged, we can just return and clear out unneeded
          state
     */
-    if (e.keyCode === 8) {
+    if (e.keyCode === BACKSPACE) {
       // 0. if the chat input is focused, don't do anything
       if (chatInputIsFocused) return;
 
@@ -297,7 +304,7 @@ class NewThread extends React.Component<Props, State> {
       1. If there are focused selected users, clear them
       2. If there are search results, clear them to hide the dropdown
     */
-    if (e.keyCode === 27) {
+    if (e.keyCode === ESC) {
       // 0. if the chat input is focused, don't do anything
       if (chatInputIsFocused) return;
 
@@ -318,7 +325,7 @@ class NewThread extends React.Component<Props, State> {
       do anything
       2. Focus the next user in the search results
     */
-    if (e.keyCode === 40) {
+    if (e.keyCode === ARROW_DOWN) {
       // 0. if the chat input is focused, don't do anything
       if (chatInputIsFocused) return;
 
@@ -340,7 +347,7 @@ class NewThread extends React.Component<Props, State> {
       do anything
       2. Focus the previous user in the search results
     */
-    if (e.keyCode === 38) {
+    if (e.keyCode === ARROW_UP) {
       // 0. if the chat input is focused, don't do anything
       if (chatInputIsFocused) return;
 
@@ -364,7 +371,7 @@ class NewThread extends React.Component<Props, State> {
       existing thread containing the selected users
       2. Otherwise do nothing
     */
-    if (e.keyCode === 13) {
+    if (e.keyCode === ENTER) {
       // 0. if the chat input is focused, don't do anything
       if (chatInputIsFocused) return;
       if (!searchResults || searchResults.length === 0) return;

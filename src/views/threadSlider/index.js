@@ -18,6 +18,7 @@ import {
 import Icon from '../../components/icons';
 import { SliderThreadView } from '../thread';
 import { ErrorBoundary } from 'src/components/error';
+import { ESC } from 'src/helpers/keycodes';
 
 const ANIMATION_DURATION = 50;
 
@@ -45,8 +46,7 @@ class ThreadSlider extends Component {
     const parsed = queryString.parse(this.props.location.search);
     const threadId = parsed.thread;
     if (!threadId) return;
-    // if user presses esc
-    if (e.keyCode === 27) {
+    if (e.keyCode === ESC) {
       this.closeSlider();
       return this.props.history.push(this.props.location.pathname);
     }
