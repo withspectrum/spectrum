@@ -30,7 +30,10 @@ const EditingChatInput = (props: Props) => {
   // $FlowIssue
   const [text, setText] = React.useState(
     stateToMarkdown(
-      toState(JSON.parse(props.message.content.body)).getCurrentContent()
+      toState(JSON.parse(props.message.content.body)).getCurrentContent(),
+      {
+        gfm: true,
+      }
       // NOTE(@mxstbr): draft-js-export-markdown sometimes appends an empty line at the end,
       // which we really never want
     ).replace(/\n$/, '')
