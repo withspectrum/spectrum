@@ -8,7 +8,6 @@ import schema from './schema';
 import { setUserOnline } from 'shared/db/queries/user';
 import { getUserIdFromReq } from './utils/session-store';
 import UserError from './utils/UserError';
-import rateLimitDirective from './utils/rate-limit-directive';
 import type { DBUser } from 'shared/types';
 
 // NOTE(@mxstbr): Evil hack to make graphql-cost-analysis work with Apollo Server v2
@@ -121,9 +120,6 @@ const server = new ProtectedApolloServer({
   tracing: false,
   cacheControl: false,
   validationRules: [depthLimit(10)],
-  schemaDirectives: {
-    rateLimit: rateLimitDirective,
-  },
 });
 
 export default server;

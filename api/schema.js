@@ -62,6 +62,8 @@ const notificationSubscriptions = require('./subscriptions/notification');
 const directMessageThreadSubscriptions = require('./subscriptions/directMessageThread');
 const threadSubscriptions = require('./subscriptions/thread');
 
+const rateLimit = require('./utils/rate-limit-directive').default;
+
 const Root = /* GraphQL */ `
   directive @rateLimit(
     max: Int
@@ -156,6 +158,9 @@ const schema = makeExecutableSchema({
     Search,
   ],
   resolvers,
+  schemaDirectives: {
+    rateLimit,
+  },
 });
 
 if (process.env.REACT_APP_MAINTENANCE_MODE === 'enabled') {
