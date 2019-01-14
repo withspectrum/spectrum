@@ -299,11 +299,7 @@ const Community = /* GraphQL */ `
 
   extend type Mutation {
     createCommunity(input: CreateCommunityInput!): Community
-      @rateLimit(
-        max: 3
-        window: 300000
-        message: "Slow down there cowboy! How about you take care of the three communities you just created instead of creating another one?"
-      )
+      @rateLimit(max: 3, window: 300000)
     editCommunity(input: EditCommunityInput!): Community
     deleteCommunity(communityId: ID!): Boolean
     toggleCommunityMembership(communityId: ID!): Community
