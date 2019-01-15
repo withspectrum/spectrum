@@ -608,7 +608,7 @@ class NewThread extends React.Component<Props, State> {
       return input && input.focus();
     }
 
-    this.chatInput.triggerFocus();
+    this.chatInput.focus();
   }
 
   componentWillUnmount() {
@@ -631,12 +631,13 @@ class NewThread extends React.Component<Props, State> {
     // if no users have been selected, break out of this function and throw
     // an error
     if (selectedUsersForNewThread.length === 0) {
-      return this.props.dispatch(
+      this.props.dispatch(
         addToastWithTimeout(
           'error',
           'Choose some people to send this message to first!'
         )
       );
+      return Promise.reject();
     }
 
     const input = {
@@ -652,13 +653,13 @@ class NewThread extends React.Component<Props, State> {
     };
 
     if (threadIsBeingCreated) {
-      return;
+      return Promise.resolve();
     } else {
       this.setState({
         threadIsBeingCreated: true,
       });
 
-      this.props
+      return this.props
         .createDirectMessageThread(input)
         .then(({ data: { createDirectMessageThread } }) => {
           if (!createDirectMessageThread) {

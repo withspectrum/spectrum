@@ -1,5 +1,6 @@
 // @flow
-import { markdownToDraft } from 'markdown-draft-js';
+import { stateFromMarkdown } from 'draft-js-import-markdown';
+import { convertToRaw } from 'draft-js';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';
@@ -87,7 +88,13 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   if (message.messageType === 'text') {
     message.content.body = JSON.stringify(
-      markdownToDraft(message.content.body)
+      convertToRaw(
+        stateFromMarkdown(message.content.body, {
+          parserOptions: {
+            breaks: true,
+          },
+        })
+      )
     );
     message.messageType = 'draftjs';
   }

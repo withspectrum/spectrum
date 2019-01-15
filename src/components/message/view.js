@@ -46,11 +46,10 @@ export const Body = (props: BodyProps) => {
     case 'draftjs': {
       return (
         <WrapperComponent me={me}>
-          {message.parent &&
-            showParent && (
-              // $FlowIssue
-              <QuotedMessage message={message.parent} />
-            )}
+          {message.parent && showParent && (
+            // $FlowIssue
+            <QuotedMessage message={message.parent} />
+          )}
           {emojiOnly ? (
             <Emoji>
               {toPlainText(toState(JSON.parse(message.content.body)))}
