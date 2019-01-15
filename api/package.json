@@ -104,7 +104,7 @@
     "react-router": "^4.0.0-beta.7",
     "react-router-dom": "^4.0.0-beta.7",
     "react-textarea-autosize": "^4.0.5",
-    "react-transition-group": "^2.5.2",
+    "react-transition-group": "^2.5.3",
     "react-trend": "^1.2.4",
     "recompose": "^0.23.1",
     "redis-tag-cache": "^1.2.1",
