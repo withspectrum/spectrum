@@ -50,7 +50,7 @@ const createGraphQLErrorFormatter = (req?: express$Request) => (
   const isUserError = err[IsUserError] || err instanceof RateLimitError;
 
   let sentryId = 'ID only generated in production';
-  if (!isUserError) {
+  if (!isUserError || err instanceof RateLimitError) {
     if (process.env.NODE_ENV === 'production') {
       sentryId = Raven.captureException(
         error,
