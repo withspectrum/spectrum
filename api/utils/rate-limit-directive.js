@@ -8,8 +8,8 @@ export default createRateLimitDirective({
   identifyContext: ctx => (ctx.user && ctx.user.id) || getClientIp(ctx.request),
   store: new RedisStore(createRedis()),
   formatError: ({ fieldName, fieldIdentity, max, window }) =>
-    `Slow down there cowboy! You've called '${fieldName}' ${max} times in the past ${ms(
+    `Slow down there partner! You've called '${fieldName}' ${max} times in the past ${ms(
       window,
       { long: true }
-    )}, which is too much.`,
+    )}. Relax for a bit and try again later.`,
 });
