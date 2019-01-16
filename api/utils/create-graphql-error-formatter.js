@@ -1,8 +1,8 @@
 // @flow
 const debug = require('debug')('api:utils:error-formatter');
+import { RateLimitError } from 'graphql-rate-limit';
 import Raven from 'shared/raven';
 import { IsUserError } from './UserError';
-import { RateLimitError } from 'graphql-rate-limit/build/main/lib/rate-limit-error';
 import type { GraphQLError } from 'graphql';
 
 const queryRe = /\s*(query|mutation)[^{]*/;

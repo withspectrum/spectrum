@@ -64,6 +64,8 @@ const threadSubscriptions = require('./subscriptions/thread');
 
 const rateLimit = require('./utils/rate-limit-directive').default;
 
+const IS_PROD = process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV;
+
 const Root = /* GraphQL */ `
   directive @rateLimit(
     max: Int
@@ -158,9 +160,11 @@ const schema = makeExecutableSchema({
     Search,
   ],
   resolvers,
-  schemaDirectives: {
-    rateLimit,
-  },
+  schemaDirectives: IS_PROD
+    ? {
+        rateLimit,
+      }
+    : {},
 });
 
 if (process.env.REACT_APP_MAINTENANCE_MODE === 'enabled') {
