@@ -35,6 +35,13 @@ const messageRenderer = {
         <BlockQuote key={keys[index] || index}>{child}</BlockQuote>
       )),
   },
+  entities: {
+    LINK: (children, data, { key }) => (
+      <a key={key} href={data.url}>
+        {children}
+      </a>
+    ),
+  },
   decorators: [mentionsDecorator, linksDecorator],
 };
 

@@ -350,6 +350,7 @@ const ChatInput = (props: Props) => {
         <i>*italic*</i>
         <Preformatted>`code`</Preformatted>
         <Preformatted>```codeblock```</Preformatted>
+        <Preformatted>[name](link)</Preformatted>
       </MarkdownHint>
     </React.Fragment>
   );
