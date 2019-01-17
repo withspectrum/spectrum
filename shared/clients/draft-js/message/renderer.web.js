@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { Link } from 'react-router-dom';
 import mentionsDecorator from '../mentions-decorator/index.web';
 import linksDecorator from '../links-decorator/index.web';
 import { Line, Paragraph, BlockQuote } from 'src/components/message/style';
@@ -34,6 +35,13 @@ const messageRenderer = {
       children.map((child, index) => (
         <BlockQuote key={keys[index] || index}>{child}</BlockQuote>
       )),
+  },
+  entities: {
+    LINK: (children, data, { key }) => (
+      <a key={key} href={data.url}>
+        {children}
+      </a>
+    ),
   },
   decorators: [mentionsDecorator, linksDecorator],
 };

@@ -161,6 +161,7 @@
     "react-image": "^1.5.1",
     "react-infinite-scroller-with-scroll-element": "2.0.2",
     "react-loadable": "^5.5.0",
+    "react-mentions": "^2.4.1",
     "react-modal": "^3.7.1",
     "react-popper": "^1.0.2",
     "react-redux": "^5.0.2",
