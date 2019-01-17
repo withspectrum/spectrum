@@ -17,6 +17,8 @@ import { getCommunityBySlugQuery } from 'shared/graphql/queries/community/getCom
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
 import { Button } from 'src/components/buttons';
 import { CommunityHoverProfile } from 'src/components/hoverProfile';
+import Icon from 'src/components/icons';
+
 import {
   Input,
   UnderlineInput,
@@ -36,6 +38,8 @@ import {
   PrivacyOption,
   PrivacyOptionLabel,
   PrivacyOptionText,
+  DeleteCoverWrapper,
+  DeleteCoverButton,
 } from './style';
 import { FormContainer, Form, Actions } from '../../style';
 import { track, events } from 'src/helpers/analytics';
@@ -350,6 +354,11 @@ class CreateCommunityForm extends React.Component<Props, State> {
     }
   };
 
+  deleteCoverPhoto = e => {
+    e.preventDefault();
+    this.setState({ coverPhoto: '', coverFile: null });
+  };
+
   create = e => {
     e.preventDefault();
     const {
@@ -465,6 +474,13 @@ class CreateCommunityForm extends React.Component<Props, State> {
       <FormContainer data-cy="create-community-form">
         <Form>
           <ImageInputWrapper>
+            {coverPhoto && !/default_images/.test(coverPhoto) && (
+              <DeleteCoverWrapper>
+                <DeleteCoverButton onClick={e => this.deleteCoverPhoto(e)}>
+                  <Icon glyph="view-close-small" size={'16'} />
+                </DeleteCoverButton>
+              </DeleteCoverWrapper>
+            )}
             <CoverInput
               onChange={this.setCommunityCover}
               defaultValue={coverPhoto}

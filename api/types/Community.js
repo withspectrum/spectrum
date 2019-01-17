@@ -242,6 +242,7 @@ const Community = /* GraphQL */ `
     website: String
     file: Upload
     coverFile: Upload
+    coverPhoto: String
     communityId: ID!
   }
 

@@ -48,6 +48,31 @@ export const TertiaryActionContainer = styled(FlexRow)`
   flex-grow: 1;
 `;
 
+export const DeleteCoverWrapper = styled(FlexRow)`
+  justify-content: flex-end;
+  flex-grow: 1;
+  height: 0px;
+`;
+
+export const DeleteCoverButton = styled.button`
+  position: relative;
+  top: 7px;
+  left: 10px;
+  background-color: ${theme.text.placeholder};
+  color: ${theme.text.reverse};
+  border: none;
+  border-radius: 50%;
+  outline: none;
+  padding: 4px;
+  height: 24px;
+  width: 24px;
+  cursor: pointer;
+  z-index: 50;
+  &:hover {
+    background-color: ${theme.warn.alt};
+  }
+`;
+
 export const Actions = styled(FlexRow)`
   margin: 24px -16px 0;
   width: calc(100% + 32px);
