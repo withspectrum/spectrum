@@ -113,6 +113,11 @@ const ChatInput = (props: Props) => {
   };
 
   const handleKeyPress = e => {
+    // We shouldn't do anything during composition of IME.
+    // `keyCode === 229` is a fallback for old browsers like IE.
+    if (e.isComposing || e.keyCode === 229) {
+      return;
+    }
     switch (e.key) {
       // Submit on Enter unless Shift is pressed
       case 'Enter': {
