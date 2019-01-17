@@ -10,13 +10,9 @@ import { UserHoverProfile } from 'src/components/hoverProfile';
 import type { Node } from 'react';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 
-const UsernameWrapper = styled.span`
-  color: ${props =>
-    props.me
-      ? props.theme.special.default
-      : props.theme.space.default}!important;
-  background: ${props =>
-    props.me ? props.theme.special.wash : props.theme.space.wash}!important;
+export const usernameWrapperStyles = css`
+  color: ${theme.space.default}!important;
+  background: ${theme.space.wash}!important;
   padding: 0px 4px 1px;
   border-radius: 4px;
   position: relative;
@@ -31,6 +27,10 @@ const UsernameWrapper = styled.span`
     color: inherit !important;
     text-decoration: none !important;
   }
+`;
+
+const UsernameWrapper = styled.span`
+  ${usernameWrapperStyles}
 `;
 
 type MentionProps = {

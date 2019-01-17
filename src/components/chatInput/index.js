@@ -1,7 +1,9 @@
 // @flow
 import * as React from 'react';
+import styled from 'styled-components';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import { Mention } from 'react-mentions';
 import Icon from 'src/components/icons';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
@@ -24,9 +26,14 @@ import sendMessage from 'shared/graphql/mutations/message/sendMessage';
 import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
 import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
+import { usernameWrapperStyles } from 'src/components/rich-text-editor/style';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
 import type { Dispatch } from 'redux';
 import { ESC, BACKSPACE, DELETE } from 'src/helpers/keycodes';
+
+const MentionComp = styled(Mention)`
+  ${usernameWrapperStyles}
+`;
 
 const QuotedMessage = connect()(
   getMessageById(props => {
@@ -334,7 +341,30 @@ const ChatInput = (props: Props) => {
                   if (props.onRef) props.onRef(node);
                   setInputRef(node);
                 }}
-              />
+                style={{
+                  highlighter: {
+                    zIndex: 999,
+                  },
+                }}
+              >
+                <Mention
+                  style={{
+                    background: '#E5F0FF',
+                    color: '#0062D6',
+                    padding: '0px 2px 1px',
+                    marginLeft: '-2px',
+                    marginTop: '-1px',
+                    borderRadius: '4px',
+                  }}
+                  trigger="@"
+                  data={[
+                    {
+                      id: 'brian',
+                      display: 'brian',
+                    },
+                  ]}
+                />
+              </Input>
             </InputWrapper>
             <SendButton
               data-cy="chat-input-send-button"
