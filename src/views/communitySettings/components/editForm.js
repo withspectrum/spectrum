@@ -277,7 +277,7 @@ class EditForm extends React.Component<Props, State> {
 
   deleteCoverPhoto = e => {
     e.preventDefault();
-    this.setState({ coverPhoto: '' });
+    this.setState({ coverPhoto: '', coverFile: null });
   };
 
   render() {
