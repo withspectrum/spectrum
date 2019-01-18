@@ -16,6 +16,7 @@ import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { events } from 'shared/analytics';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 import { trackQueue } from 'shared/bull/queues';
+import { validateRawContentState } from '../../utils/validate-draft-js-input';
 
 type Args = {
   input: {
@@ -83,7 +84,7 @@ export default requireAuth(async (_: any, args: Args, ctx: GraphQLContext) => {
         'Please provide serialized raw DraftJS content state as content.body'
       );
     }
-    if (!parsed.blocks || !Array.isArray(parsed.blocks) || !parsed.entityMap) {
+    if (!validateRawContentState(body)) {
       trackQueue.add({
         userId: user.id,
         event: eventFailed,
@@ -93,30 +94,8 @@ export default requireAuth(async (_: any, args: Args, ctx: GraphQLContext) => {
         },
       });
 
-      return new UserError(
+      throw new UserError(
         'Please provide serialized raw DraftJS content state as content.body'
-      );
-    }
-    if (
-      parsed.blocks.some(
-        ({ type }) =>
-          !type ||
-          (type !== 'unstyled' &&
-            type !== 'code-block' &&
-            type !== 'blockquote')
-      )
-    ) {
-      trackQueue.add({
-        userId: user.id,
-        event: eventFailed,
-        properties: {
-          reason: 'invalid draftjs data',
-          message,
-        },
-      });
-
-      return new UserError(
-        'Invalid DraftJS block type specified. Supported block types: "unstyled", "code-block".'
       );
     }
   }
