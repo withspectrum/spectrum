@@ -208,6 +208,7 @@ class NewThread extends React.Component<Props, State> {
   handleKeyPress = (e: any) => {
     // if the thread slider is open, we shouldn't be doing anything in DMs
     if (this.props.threadSliderIsOpen) return;
+    if (this.state.chatInputIsFocused) return;
 
     // destructure the whole state object
     const {
@@ -412,7 +413,11 @@ class NewThread extends React.Component<Props, State> {
   };
 
   handleChange = (e: any) => {
-    const { existingThreadBasedOnSelectedUsers } = this.state;
+    const {
+      existingThreadBasedOnSelectedUsers,
+      chatInputIsFocused,
+    } = this.state;
+    if (chatInputIsFocused) return;
 
     // unfocus any selected user pills
     this.setState({

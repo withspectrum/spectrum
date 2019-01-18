@@ -67,6 +67,8 @@ type Props = {
   threadData?: Object,
   refetchThread?: Function,
   quotedMessage: ?{ messageId: string, threadId: string },
+  onFocus: ?Function,
+  onBlur: ?Function,
 };
 
 // $FlowFixMe
@@ -333,6 +335,8 @@ const ChatInput = (props: Props) => {
                 networkDisabled={networkDisabled}
                 placeholder="Your message here..."
                 value={text}
+                onFocus={props.onFocus}
+                onBlur={props.onBlur}
                 onChange={onChange}
                 onKeyDown={handleKeyPress}
                 inputRef={node => {
