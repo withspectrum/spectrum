@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { Mention } from 'react-mentions';
+import { withApollo } from 'react-apollo';
 import Icon from 'src/components/icons';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
@@ -24,6 +25,7 @@ import {
 } from './style';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
 import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
+import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
 import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
 import { usernameWrapperStyles } from 'src/components/rich-text-editor/style';
@@ -275,6 +277,31 @@ const ChatInput = (props: Props) => {
       );
   };
 
+  const searchUsers = async (queryString, callback) => {
+    if (!queryString) return;
+    const {
+      data: { search },
+    } = await props.client.query({
+      query: searchUsersQuery,
+      variables: {
+        queryString,
+        type: 'USERS',
+      },
+    });
+    if (!search || !search.searchResultsConnection) return;
+
+    let searchUsers = search.searchResultsConnection.edges.map(edge => {
+      const user = edge.node;
+      return {
+        id: user.username,
+        display: user.username,
+        username: user.username,
+      };
+    });
+
+    callback(searchUsers);
+  };
+
   const networkDisabled =
     !props.networkOnline ||
     (props.websocketConnection !== 'connected' &&
@@ -341,28 +368,11 @@ const ChatInput = (props: Props) => {
                   if (props.onRef) props.onRef(node);
                   setInputRef(node);
                 }}
-                style={{
-                  highlighter: {
-                    zIndex: 999,
-                  },
-                }}
               >
                 <Mention
-                  style={{
-                    background: '#E5F0FF',
-                    color: '#0062D6',
-                    padding: '0px 2px 1px',
-                    marginLeft: '-2px',
-                    marginTop: '-1px',
-                    borderRadius: '4px',
-                  }}
                   trigger="@"
-                  data={[
-                    {
-                      id: 'brian',
-                      display: 'brian',
-                    },
-                  ]}
+                  data={searchUsers}
+                  renderSuggestion={(entry, search) => <p>{entry.username}</p>}
                 />
               </Input>
             </InputWrapper>
@@ -394,6 +404,7 @@ const map = (state, ownProps) => ({
 
 export default compose(
   withCurrentUser,
+  withApollo,
   sendMessage,
   sendDirectMessage,
   // $FlowIssue
