@@ -10,6 +10,7 @@ import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { Button, IconButton } from '../../../components/buttons';
 import { Notice } from '../../../components/listItems/style';
+import Icon from 'src/components/icons';
 import {
   Input,
   UnderlineInput,
@@ -25,6 +26,8 @@ import {
   Actions,
   TertiaryActionContainer,
   ImageInputWrapper,
+  DeleteCoverWrapper,
+  DeleteCoverButton,
 } from '../../../components/editForm/style';
 import {
   SectionCard,
@@ -188,6 +191,7 @@ class EditForm extends React.Component<Props, State> {
       website,
       file,
       coverFile,
+      coverPhoto,
       communityId,
       photoSizeError,
     } = this.state;
@@ -197,6 +201,7 @@ class EditForm extends React.Component<Props, State> {
       website,
       file,
       coverFile,
+      coverPhoto,
       communityId,
     };
 
@@ -270,6 +275,11 @@ class EditForm extends React.Component<Props, State> {
     );
   };
 
+  deleteCoverPhoto = e => {
+    e.preventDefault();
+    this.setState({ coverPhoto: '', coverFile: null });
+  };
+
   render() {
     const {
       name,
@@ -301,6 +311,13 @@ class EditForm extends React.Component<Props, State> {
         <SectionTitle>Community Settings</SectionTitle>
         <Form onSubmit={this.save}>
           <ImageInputWrapper>
+            {coverPhoto && !/default_images/.test(coverPhoto) && (
+              <DeleteCoverWrapper>
+                <DeleteCoverButton onClick={e => this.deleteCoverPhoto(e)}>
+                  <Icon glyph="view-close-small" size={'16'} />
+                </DeleteCoverButton>
+              </DeleteCoverWrapper>
+            )}
             <CoverInput
               onChange={this.setCommunityCover}
               defaultValue={coverPhoto}

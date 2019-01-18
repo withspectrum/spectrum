@@ -7,3 +7,7 @@ export type KeyObj = {
 export type KeysObj = {
   keys: string[],
 };
+
+export type DataObj = {
+  url: string,
+};

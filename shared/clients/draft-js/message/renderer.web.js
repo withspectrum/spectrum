@@ -4,7 +4,7 @@ import mentionsDecorator from '../mentions-decorator/index.web';
 import linksDecorator from '../links-decorator/index.web';
 import { Line, Paragraph, BlockQuote } from 'src/components/message/style';
 import type { Node } from 'react';
-import type { KeyObj, KeysObj } from './types';
+import type { KeyObj, KeysObj, DataObj } from './types';
 
 const messageRenderer = {
   inline: {
@@ -34,6 +34,13 @@ const messageRenderer = {
       children.map((child, index) => (
         <BlockQuote key={keys[index] || index}>{child}</BlockQuote>
       )),
+  },
+  entities: {
+    LINK: (children: Array<Node>, data: DataObj, { key }: KeyObj) => (
+      <a key={key} href={data.url}>
+        {children}
+      </a>
+    ),
   },
   decorators: [mentionsDecorator, linksDecorator],
 };

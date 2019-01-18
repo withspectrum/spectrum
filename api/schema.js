@@ -62,7 +62,18 @@ const notificationSubscriptions = require('./subscriptions/notification');
 const directMessageThreadSubscriptions = require('./subscriptions/directMessageThread');
 const threadSubscriptions = require('./subscriptions/thread');
 
+const rateLimit = require('./utils/rate-limit-directive').default;
+
+const IS_PROD = process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV;
+
 const Root = /* GraphQL */ `
+  directive @rateLimit(
+    max: Int
+    window: Int
+    message: String
+    identityArgs: [String]
+  ) on FIELD_DEFINITION
+
   # The dummy queries and mutations are necessary because
   # graphql-js cannot have empty root types and we only extend
   # these types later on
@@ -149,6 +160,11 @@ const schema = makeExecutableSchema({
     Search,
   ],
   resolvers,
+  schemaDirectives: IS_PROD
+    ? {
+        rateLimit,
+      }
+    : {},
 });
 
 if (process.env.REACT_APP_MAINTENANCE_MODE === 'enabled') {

@@ -64,6 +64,7 @@ const server = new ProtectedApolloServer({
         new Promise((res, rej) =>
           req.login(data, err => (err ? rej(err) : res()))
         ),
+      req,
       user: currentUser,
     };
   },

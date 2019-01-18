@@ -6,9 +6,10 @@ const debug = require('debug')('hermes:send-email');
 const stringify = require('json-stringify-pretty-compact');
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
+import { userCanReceiveEmail } from './user-can-receive-email';
 const { SENDGRID_API_KEY } = process.env;
 
-type ToType = {
+export type ToType = {
   email: string,
   name?: string,
 };
@@ -32,7 +33,7 @@ const defaultOptions = {
   },
 };
 
-const sendEmail = (options: Options): Promise<void> => {
+const sendEmail = async (options: Options): Promise<void> => {
   let { templateId, to, dynamic_template_data, userId } = options;
 
   if (SENDGRID_API_KEY !== 'undefined') {
@@ -71,25 +72,7 @@ const sendEmail = (options: Options): Promise<void> => {
     });
   }
 
-  if (!to) {
-    if (userId) {
-      trackQueue.add({
-        userId: userId,
-        event: events.EMAIL_BOUNCED,
-        properties: { error: 'To field was not provided' },
-      });
-    }
-
-    return Promise.resolve();
-  }
-
-  // qq.com email addresses are isp blocked, which raises our error rate
-  // on sendgrid. prevent sending these emails at all
-  to = to.filter(toType => {
-    return toType.email.substr(to.length - 7) !== '@qq.com';
-  });
-
-  if (!to || to.length === 0) return Promise.resolve();
+  if (await !userCanReceiveEmail({ to, userId })) return Promise.resolve();
 
   return sg.send({
     ...defaultOptions,

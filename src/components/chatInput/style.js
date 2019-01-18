@@ -1,6 +1,8 @@
 // @flow
+import React from 'react';
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
+import Textarea from 'react-textarea-autosize';
 import { IconButton } from '../buttons';
 import { QuoteWrapper } from '../message/style';
 import {
@@ -10,7 +12,6 @@ import {
   zIndex,
   monoStack,
 } from 'src/components/globals';
-import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
 
 export const ChatInputContainer = styled(FlexRow)`
   flex: none;
@@ -57,18 +58,15 @@ export const Form = styled.form`
   position: relative;
 `;
 
-export const InputWrapper = styled(EditorWrapper)`
+export const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
   flex: auto;
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 20px;
-  min-height: 40px;
-  max-width: calc(100% - 32px);
   padding: ${props => (props.hasAttachment ? '16px' : '8px 16px')};
   transition: padding 0.2s ease-in-out;
+  min-height: 40px;
+  max-width: calc(100% - 32px);
   border-radius: 24px;
   border: 1px solid
     ${props =>
@@ -85,43 +83,67 @@ export const InputWrapper = styled(EditorWrapper)`
       ? hexa(props.theme.special.default, 0.1)
       : props.theme.bg.default};
 
-  @media (max-width: 768px) {
-    font-size: 16px;
-    padding-left: 16px;
-    ${/* width: calc(100% - 72px); */ ''};
-  }
-
-  &::placeholder {
-    color: ${props =>
-      props.networkDisabled
-        ? hexa(props.theme.special.default, 0.5)
-        : props.theme.text.placeholder};
-  }
-  &::-webkit-input-placeholder {
-    color: ${props =>
-      props.networkDisabled
-        ? hexa(props.theme.special.default, 0.5)
-        : props.theme.text.placeholder};
-  }
-  &:-moz-placeholder {
-    color: ${props =>
-      props.networkDisabled
-        ? hexa(props.theme.special.default, 0.5)
-        : props.theme.text.placeholder};
-  }
-  &:-ms-input-placeholder {
-    color: ${props =>
-      props.networkDisabled
-        ? hexa(props.theme.special.default, 0.5)
-        : props.theme.text.placeholder};
-  }
-
-  &:hover {
+  &:hover,
+  &:focus {
     border-color: ${props =>
       props.networkDisabled
         ? props.theme.special.default
         : props.theme.text.alt};
     transition: border-color 0.2s ease-in;
+  }
+
+  @media (max-width: 768px) {
+    padding-left: 16px;
+  }
+`;
+
+export const Input = styled(
+  ({ hasAttachment, networkDisabled, dataCy, ...rest }) => (
+    <Textarea {...rest} />
+  )
+).attrs({
+  spellCheck: true,
+  autoCapitalize: 'sentences',
+  autoComplete: 'on',
+  autoCorrect: 'on',
+  async: true,
+  rows: 1,
+  maxRows: 5,
+  'data-cy': props => props.dataCy || 'chat-input',
+})`
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 20px;
+  background: ${props =>
+    props.networkDisabled ? 'none' : props.theme.bg.default};
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+
+  &::placeholder {
+    color: ${props =>
+      props.networkDisabled
+        ? hexa(props.theme.special.default, 0.8)
+        : props.theme.text.placeholder};
+  }
+  &::-webkit-input-placeholder {
+    color: ${props =>
+      props.networkDisabled
+        ? hexa(props.theme.special.default, 0.8)
+        : props.theme.text.placeholder};
+  }
+  &:-moz-placeholder {
+    color: ${props =>
+      props.networkDisabled
+        ? hexa(props.theme.special.default, 0.8)
+        : props.theme.text.placeholder};
+  }
+  &:-ms-input-placeholder {
+    color: ${props =>
+      props.networkDisabled
+        ? hexa(props.theme.special.default, 0.8)
+        : props.theme.text.placeholder};
   }
 
   pre {
@@ -145,13 +167,10 @@ export const InputWrapper = styled(EditorWrapper)`
   ${props =>
     props.hasAttachment &&
     css`
-      > div:not(:first-of-type) {
-        margin-top: 16px;
-      }
-
-      > div:last-of-type {
+      margin-top: 16px;
+      ${'' /* > div:last-of-type {
         margin-right: 32px;
-      }
+      } */};
     `};
 `;
 
@@ -266,6 +285,14 @@ export const PreviewWrapper = styled.div`
     border-left: 0;
   }
 
+  & + & {
+    padding-top: 16px;
+
+    ${RemovePreviewButton} {
+      top: 16px;
+    }
+  }
+
   & > img {
     border-radius: 8px;
     max-width: 37%;
@@ -281,8 +308,8 @@ export const Preformatted = styled.code`
 export const MarkdownHint = styled.div`
   display: flex;
   flex: 0 0 auto;
-  justify-content: flex-end;
-  margin-right: 12px;
+  justify-content: flex-start;
+  margin-left: 56px;
   font-size: 11px;
   color: ${theme.text.alt};
   line-height: 1;

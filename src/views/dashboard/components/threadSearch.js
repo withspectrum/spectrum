@@ -9,7 +9,7 @@ import {
   openSearch,
   setSearchStringVariable,
 } from '../../../actions/dashboardFeed';
-
+import { ESC } from 'src/helpers/keycodes';
 type Props = {
   dispatch: Dispatch<Object>,
   filter: {
@@ -40,7 +40,7 @@ class ThreadSearch extends React.Component<Props, State> {
 
   handleKeyPress = (e: any) => {
     // escape
-    if (e.keyCode === 27) {
+    if (e.keyCode === ESC) {
       if (!this.props.isOpen) return;
       this.close();
     }
@@ -84,8 +84,8 @@ class ThreadSearch extends React.Component<Props, State> {
     const placeholder = filter.communityId
       ? 'Search this community...'
       : filter.channelId
-        ? 'Search this channel...'
-        : 'Search for conversations...';
+      ? 'Search this channel...'
+      : 'Search for conversations...';
 
     return (
       <SearchForm
