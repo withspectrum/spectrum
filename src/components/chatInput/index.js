@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { Mention } from 'react-mentions';
 import { withApollo } from 'react-apollo';
 import Icon from 'src/components/icons';
+import { FlexRow } from 'src/components/globals';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
 import { replyToMessage } from 'src/actions/message';
@@ -32,6 +33,16 @@ import { usernameWrapperStyles } from 'src/components/rich-text-editor/style';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
 import type { Dispatch } from 'redux';
 import { ESC, BACKSPACE, DELETE } from 'src/helpers/keycodes';
+
+const MentionSuggestion = ({ entry, search, focused }) => (
+  <FlexRow>
+    <img
+      style={{ width: 30, height: 30, borderRadius: '50%' }}
+      src={entry.profilePhoto}
+    />
+    {entry.username}
+  </FlexRow>
+);
 
 const MentionComp = styled(Mention)`
   ${usernameWrapperStyles}
@@ -293,6 +304,7 @@ const ChatInput = (props: Props) => {
     let searchUsers = search.searchResultsConnection.edges.map(edge => {
       const user = edge.node;
       return {
+        ...user,
         id: user.username,
         display: user.username,
         username: user.username,
@@ -372,7 +384,9 @@ const ChatInput = (props: Props) => {
                 <Mention
                   trigger="@"
                   data={searchUsers}
-                  renderSuggestion={(entry, search) => <p>{entry.username}</p>}
+                  renderSuggestion={(...args) => (
+                    <MentionSuggestion {...args} />
+                  )}
                 />
               </Input>
             </InputWrapper>
