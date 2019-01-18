@@ -206,7 +206,7 @@ class NewThread extends React.Component<Props, State> {
   };
 
   handleKeyPress = (e: any) => {
-    // if the thread sliderh is open, we shouldn't be doing anything in DMs
+    // if the thread slider is open, we shouldn't be doing anything in DMs
     if (this.props.threadSliderIsOpen) return;
     if (this.state.chatInputIsFocused) return;
 
