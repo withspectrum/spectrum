@@ -69,12 +69,12 @@ describe('Thread View', () => {
     it('should allow logged-in users to send public messages', () => {
       const newMessage = 'A new message!';
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[contenteditable="true"]').type(newMessage);
+      cy.get('[data-cy="chat-input"]').type(newMessage);
       // Wait for the messages to be loaded before sending new message
       cy.get('[data-cy="message-group"]').should('be.visible');
       cy.get('[data-cy="chat-input-send-button"]').click();
       // Clear the chat input and make sure the message was sent by matching the text
-      cy.get('[contenteditable="true"]').type('');
+      cy.get('[data-cy="chat-input"]').clear();
       cy.contains(newMessage);
     });
   });
@@ -101,10 +101,10 @@ describe('Thread View', () => {
     it('should allow logged-in users to send private messages if they have permission', () => {
       const newMessage = 'A new private message!';
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[contenteditable="true"]').type(newMessage);
+      cy.get('[data-cy="chat-input"]').type(newMessage);
       cy.get('[data-cy="chat-input-send-button"]').click();
       // Clear the chat input and make sure the message was sent by matching the text
-      cy.get('[contenteditable="true"]').type('');
+      cy.get('[data-cy="chat-input"]').clear();
       cy.contains(newMessage);
     });
   });
@@ -430,7 +430,7 @@ describe('edit message signed in', () => {
       .click({ force: true });
 
     cy.get('[data-cy="edit-message-input"]');
-    cy.get('[contenteditable="true"]').type(' with edits');
+    cy.get('[data-cy="editing-chat-input"]').type(' with edits');
 
     cy.get('[data-cy="edit-message-save"]').click();
 
@@ -443,7 +443,7 @@ describe('edit message signed in', () => {
   });
 });
 
-describe.only('/new/thread', () => {
+describe('/new/thread', () => {
   beforeEach(() => {
     cy.auth(author.id).then(() => cy.visit('/new/thread'));
   });

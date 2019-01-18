@@ -1,7 +1,32 @@
 // @flow
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
-import { FlexCol } from '../../../../components/globals';
+import { FlexCol, FlexRow } from '../../../../components/globals';
+
+export const DeleteCoverWrapper = styled(FlexRow)`
+  justify-content: flex-end;
+  flex-grow: 1;
+  height: 0px;
+`;
+
+export const DeleteCoverButton = styled.button`
+  position: relative;
+  top: 7px;
+  left: 10px;
+  background-color: ${theme.text.placeholder};
+  color: ${theme.text.reverse};
+  border: none;
+  border-radius: 50%;
+  outline: none;
+  padding: 4px;
+  height: 24px;
+  width: 24px;
+  cursor: pointer;
+  z-index: 50;
+  &:hover {
+    background-color: ${theme.warn.alt};
+  }
+`;
 
 export const ImageInputWrapper = styled(FlexCol)`
   position: relative;

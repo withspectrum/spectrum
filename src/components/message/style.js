@@ -227,6 +227,13 @@ const Bubble = styled.div`
     border: 1px solid ${theme.bg.border};
     color: ${theme.text.secondary};
   }
+
+  pre code {
+    padding: 0;
+    background: none;
+    border: none;
+    color: inherit;
+  }
 `;
 
 export const Text = styled(Bubble)`

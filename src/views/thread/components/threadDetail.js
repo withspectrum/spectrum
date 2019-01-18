@@ -57,6 +57,7 @@ type Props = {
   dispatch: Dispatch<Object>,
   currentUser: ?Object,
   toggleEdit: Function,
+  innerRef?: any,
 };
 
 class ThreadDetailPure extends React.Component<Props, State> {
@@ -341,7 +342,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
       : null;
 
     return (
-      <ThreadWrapper>
+      <ThreadWrapper innerRef={this.props.innerRef}>
         <ThreadContent isEditing={isEditing}>
           {/* $FlowFixMe */}
           <ErrorBoundary fallbackComponent={null}>

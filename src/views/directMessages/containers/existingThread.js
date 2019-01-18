@@ -48,7 +48,7 @@ class ExistingThread extends React.Component<Props> {
     this.forceScrollToBottom();
     // autofocus on desktop
     if (window && window.innerWidth > 768 && this.chatInput) {
-      this.chatInput.triggerFocus();
+      this.chatInput.focus();
     }
   }
 
@@ -64,7 +64,7 @@ class ExistingThread extends React.Component<Props> {
     if (curr.threadSliderIsOpen) return;
     // if the thread slider is closed and we're viewing DMs, refocus the chat input
     if (prev.threadSliderIsOpen && !curr.threadSliderIsOpen && this.chatInput) {
-      this.chatInput.triggerFocus();
+      this.chatInput.focus();
     }
     // as soon as the direct message thread is loaded, refocus the chat input
     if (
@@ -72,7 +72,7 @@ class ExistingThread extends React.Component<Props> {
       !prev.data.directMessageThread &&
       this.chatInput
     ) {
-      this.chatInput.triggerFocus();
+      this.chatInput.focus();
     }
     if (prev.match.params.threadId !== curr.match.params.threadId) {
       const threadId = curr.match.params.threadId;
@@ -84,7 +84,7 @@ class ExistingThread extends React.Component<Props> {
       this.forceScrollToBottom();
       // autofocus on desktop
       if (window && window.innerWidth > 768 && this.chatInput) {
-        this.chatInput.triggerFocus();
+        this.chatInput.focus();
       }
     }
   }

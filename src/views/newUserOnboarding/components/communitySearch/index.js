@@ -27,6 +27,7 @@ import {
   SearchIcon,
   SearchResultDescription,
 } from './style';
+import { ESC, ARROW_DOWN, ARROW_UP } from 'src/helpers/keycodes';
 
 type State = {
   searchString: string,
@@ -171,8 +172,7 @@ class Search extends React.Component<Props, State> {
       focusedSearchResult
     );
 
-    // if person presses escape
-    if (e.keyCode === 27) {
+    if (e.keyCode === ESC) {
       this.setState({
         isFocused: false,
       });
@@ -182,8 +182,7 @@ class Search extends React.Component<Props, State> {
       return;
     }
 
-    // if person presses down
-    if (e.keyCode === 40) {
+    if (e.keyCode === ARROW_DOWN) {
       if (indexOfFocusedSearchResult === searchResults.length - 1) return;
       if (searchResults.length === 1) return;
 
@@ -195,8 +194,7 @@ class Search extends React.Component<Props, State> {
       });
     }
 
-    // if person presses up
-    if (e.keyCode === 38) {
+    if (e.keyCode === ARROW_UP) {
       if (indexOfFocusedSearchResult === 0) return;
       if (searchResults.length === 1) return;
 

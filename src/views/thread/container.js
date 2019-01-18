@@ -255,17 +255,19 @@ class ThreadContainer extends React.Component<Props, State> {
     if (!thread) return;
 
     // only when the thread has been returned for the first time should evaluate whether or not to focus the chat input
+    if (prevProps.data.thread && prevProps.data.thread.id === thread.id) return;
+
     const threadAndUser = currentUser && thread;
     if (threadAndUser && this.chatInput) {
       // if the user is viewing the inbox, opens the thread slider, and then closes it again, refocus the inbox inpu
       if (prevProps.threadSliderIsOpen && !threadSliderIsOpen) {
-        return this.chatInput.triggerFocus();
+        return this.chatInput.focus();
       }
 
       // if the thread slider is open while in the inbox, don't focus in the inbox
       if (threadSliderIsOpen) return;
 
-      return this.chatInput.triggerFocus();
+      return this.chatInput.focus();
     }
   }
 
@@ -386,7 +388,7 @@ class ThreadContainer extends React.Component<Props, State> {
           toggleEdit={this.toggleEdit}
           thread={thread}
           slider={slider}
-          ref={c => (this.threadDetailElem = c)}
+          innerRef={c => (this.threadDetailElem = c)}
         />
       </React.Fragment>
     );
@@ -574,7 +576,7 @@ class ThreadContainer extends React.Component<Props, State> {
               heading={'We had trouble loading this thread.'}
               subheading={
                 !hasError
-                  ? 'It may be private, or may have been deleted by an author or moderator.'
+                  ? 'It may be private or may have been deleted by the author or a moderator.'
                   : ''
               }
               refresh={hasError}
