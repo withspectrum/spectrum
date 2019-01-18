@@ -118,7 +118,20 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         'Please provide serialized raw DraftJS content state as content.body'
       );
     }
-    validateRawContentState(body);
+    if (!validateRawContentState(body)) {
+      trackQueue.add({
+        userId: user.id,
+        event: eventFailed,
+        properties: {
+          reason: 'invalid draftjs data',
+          message,
+        },
+      });
+
+      throw new UserError(
+        'Please provide serialized raw DraftJS content state as content.body'
+      );
+    }
   }
 
   if (message.parentId) {
