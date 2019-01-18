@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import styled from 'styled-components';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { Mention } from 'react-mentions';
@@ -29,7 +28,6 @@ import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessag
 import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
 import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
-import { usernameWrapperStyles } from 'src/components/rich-text-editor/style';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
 import type { Dispatch } from 'redux';
 import { ESC, BACKSPACE, DELETE } from 'src/helpers/keycodes';
@@ -43,10 +41,6 @@ const MentionSuggestion = ({ entry, search, focused }) => (
     {entry.username}
   </FlexRow>
 );
-
-const MentionComp = styled(Mention)`
-  ${usernameWrapperStyles}
-`;
 
 const QuotedMessage = connect()(
   getMessageById(props => {
