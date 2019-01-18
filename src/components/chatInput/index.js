@@ -377,9 +377,24 @@ const ChatInput = (props: Props) => {
               >
                 <Mention
                   trigger="@"
+                  style={{
+                    fontWeight: 'bold',
+                  }}
                   data={searchUsers}
-                  renderSuggestion={(...args) => (
-                    <MentionSuggestion {...args} />
+                  renderSuggestion={(
+                    entry,
+                    search,
+                    highlightedDisplay,
+                    index,
+                    focused
+                  ) => (
+                    <MentionSuggestion
+                      entry={entry}
+                      highlightedDisplay={highlightedDisplay}
+                      focused={focused}
+                      search={search}
+                      index={index}
+                    />
                   )}
                 />
               </Input>
