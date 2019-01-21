@@ -5,7 +5,7 @@
   "dependencies": {
     "algoliasearch": "^3.32.0",
     "aws-sdk": "^2.383.0",
-    "bull": "^3.5.2",
+    "bull": "^3.5.3",
     "datadog-metrics": "^0.8.1",
     "debug": "^4.1.1",
     "draft-js": "^0.10.3",
