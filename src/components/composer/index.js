@@ -74,7 +74,7 @@ type Props = {
   networkOnline: boolean,
 };
 
-const LS_BODY_KEY = 'last-thread-composer-body';
+const LS_BODY_KEY = 'last-plaintext-thread-composer-body';
 const LS_TITLE_KEY = 'last-thread-composer-title';
 const LS_COMPOSER_EXPIRE = 'last-thread-composer-expire';
 
@@ -98,8 +98,8 @@ class ComposerWithData extends Component<Props, State> {
     );
 
     this.state = {
-      title: storedTitle || '',
-      body: storedBody || fromPlainText(''),
+      title: '',
+      body: '',
       availableCommunities: [],
       availableChannels: [],
       activeCommunity: activeCommunitySlug || '',
@@ -285,7 +285,8 @@ class ComposerWithData extends Component<Props, State> {
     });
   };
 
-  changeBody = body => {
+  changeBody = evt => {
+    const body = evt.target.value;
     this.persistBodyToLocalStorageWithDebounce(body);
     this.setState({
       body,
@@ -345,10 +346,7 @@ class ComposerWithData extends Component<Props, State> {
 
   handleTitleBodyChange = titleOrBody => {
     if (titleOrBody === 'body') {
-      localStorage.setItem(
-        LS_BODY_KEY,
-        JSON.stringify(toJSON(this.state.body))
-      );
+      localStorage.setItem(LS_BODY_KEY, this.state.body);
     } else {
       localStorage.setItem(LS_TITLE_KEY, this.state.title);
     }
@@ -444,22 +442,21 @@ class ComposerWithData extends Component<Props, State> {
     const { activeChannel, activeCommunity, title, body } = this.state;
     const channelId = activeChannel;
     const communityId = activeCommunity;
-    const jsonBody = toJSON(body);
 
     const content = {
       title: title.trim(),
-      body: isAndroid() ? toPlainText(body) : JSON.stringify(jsonBody),
+      body: body,
     };
 
-    // Get the images
-    const filesToUpload = Object.keys(jsonBody.entityMap)
-      .filter(
-        key =>
-          jsonBody.entityMap[key].type.toLowerCase() === 'image' &&
-          jsonBody.entityMap[key].data.file &&
-          jsonBody.entityMap[key].data.file.constructor === File
-      )
-      .map(key => jsonBody.entityMap[key].data.file);
+    // // Get the images
+    // const filesToUpload = Object.keys(jsonBody.entityMap)
+    //   .filter(
+    //     key =>
+    //       jsonBody.entityMap[key].type.toLowerCase() === 'image' &&
+    //       jsonBody.entityMap[key].data.file &&
+    //       jsonBody.entityMap[key].data.file.constructor === File
+    //   )
+    //   .map(key => jsonBody.entityMap[key].data.file);
 
     // this.props.mutate comes from a higher order component defined at the
     // bottom of this file
@@ -468,9 +465,9 @@ class ComposerWithData extends Component<Props, State> {
       communityId,
       // NOTE(@mxstbr): On android we send plain text content
       // which is parsed as markdown to draftjs on the server
-      type: isAndroid() ? 'TEXT' : 'DRAFTJS',
+      type: 'TEXT',
       content,
-      filesToUpload,
+      // filesToUpload,
     };
 
     // one last save to localstorage
@@ -593,13 +590,11 @@ class ComposerWithData extends Component<Props, State> {
             autoFocus={!threadSliderIsOpen}
           />
 
-          <Editor
-            version={2}
+          <Textarea
             onChange={this.changeBody}
             state={this.state.body}
             style={ThreadDescription}
-            editorRef={editor => (this.bodyEditor = editor)}
-            editorKey="thread-composer"
+            ref={editor => (this.bodyEditor = editor)}
             placeholder={'Write more thoughts here...'}
             className={'threadComposer'}
           />
