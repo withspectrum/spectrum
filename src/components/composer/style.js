@@ -165,7 +165,6 @@ export const ThreadDescription = {
   width: '100%',
   display: 'inline-block',
   lineHeight: '1.5',
-  padding: '0 32px 32px',
   outline: 'none',
   border: '0',
   boxShadow: 'none',
