@@ -107,36 +107,40 @@ class CommunityList extends React.Component<Props> {
           </CommunityListItem>
           {sortedCommunities.map(c => (
             <ErrorBoundary fallbackComponent={null} key={c.id}>
-              <CommunityListItem
-                onClick={() => this.handleOnClick(c.id)}
-                active={c.id === activeCommunity}
-              >
-                <CommunityAvatarContainer>
-                  <CommunityAvatar community={c} showHoverProfile={false} />
-                </CommunityAvatarContainer>
-                <CommunityListMeta>
-                  <CommunityListName>{c.name}</CommunityListName>
-                  <Reputation
-                    ignoreClick
-                    size={'mini'}
-                    tipText={`Your rep in ${c.name}`}
-                    reputation={c.communityPermissions.reputation}
-                  />
-                </CommunityListMeta>
-
-                {c.id === activeCommunity && (
-                  <ErrorBoundary>
-                    <SidebarChannels
-                      activeChannel={activeChannel}
-                      communitySlug={c.slug}
-                      permissions={c.communityPermissions}
-                      slug={c.slug}
-                      id={c.id}
-                      setActiveChannelObject={this.props.setActiveChannelObject}
+              <Link to={`/${c.slug}`}>
+                <CommunityListItem
+                  onClick={() => this.handleOnClick(c.id)}
+                  active={c.id === activeCommunity}
+                >
+                  <CommunityAvatarContainer>
+                    <CommunityAvatar community={c} showHoverProfile={false} />
+                  </CommunityAvatarContainer>
+                  <CommunityListMeta>
+                    <CommunityListName>{c.name}</CommunityListName>
+                    <Reputation
+                      ignoreClick
+                      size={'mini'}
+                      tipText={`Your rep in ${c.name}`}
+                      reputation={c.communityPermissions.reputation}
                     />
-                  </ErrorBoundary>
-                )}
-              </CommunityListItem>
+                  </CommunityListMeta>
+
+                  {c.id === activeCommunity && (
+                    <ErrorBoundary>
+                      <SidebarChannels
+                        activeChannel={activeChannel}
+                        communitySlug={c.slug}
+                        permissions={c.communityPermissions}
+                        slug={c.slug}
+                        id={c.id}
+                        setActiveChannelObject={
+                          this.props.setActiveChannelObject
+                        }
+                      />
+                    </ErrorBoundary>
+                  )}
+                </CommunityListItem>
+              </Link>
             </ErrorBoundary>
           ))}
         </CommunityListScroller>
