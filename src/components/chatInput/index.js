@@ -10,6 +10,7 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
 import { replyToMessage } from 'src/actions/message';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import { UserAvatar } from 'src/components/avatar';
 import {
   Form,
   ChatInputContainer,
@@ -22,6 +23,9 @@ import {
   Preformatted,
   PreviewWrapper,
   RemovePreviewButton,
+  StyledMentionSuggestion,
+  SuggestionsWrapper,
+  MentionUsername,
 } from './style';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
 import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
@@ -33,13 +37,10 @@ import type { Dispatch } from 'redux';
 import { ESC, BACKSPACE, DELETE } from 'src/helpers/keycodes';
 
 const MentionSuggestion = ({ entry, search, focused }) => (
-  <FlexRow>
-    <img
-      style={{ width: 30, height: 30, borderRadius: '50%' }}
-      src={entry.profilePhoto}
-    />
-    {entry.username}
-  </FlexRow>
+  <StyledMentionSuggestion focused={focused}>
+    <UserAvatar size={24} user={entry} />
+    <MentionUsername>{entry.username}</MentionUsername>
+  </StyledMentionSuggestion>
 );
 
 const QuotedMessage = connect()(
@@ -81,6 +82,8 @@ type Props = {
   threadData?: Object,
   refetchThread?: Function,
   quotedMessage: ?{ messageId: string, threadId: string },
+  // used to pre-populate the @mention suggestions with participants and the author of the thread
+  participants: Array<?Object>,
 };
 
 // $FlowFixMe
@@ -283,7 +286,9 @@ const ChatInput = (props: Props) => {
   };
 
   const searchUsers = async (queryString, callback) => {
-    if (!queryString) return;
+    if (!queryString || queryString.length === 0) {
+      return props.participants ? callback(props.participants) : null;
+    }
     const {
       data: { search },
     } = await props.client.query({
@@ -312,7 +317,6 @@ const ChatInput = (props: Props) => {
     !props.networkOnline ||
     (props.websocketConnection !== 'connected' &&
       props.websocketConnection !== 'reconnected');
-
   return (
     <React.Fragment>
       <ChatInputContainer>
@@ -377,9 +381,6 @@ const ChatInput = (props: Props) => {
               >
                 <Mention
                   trigger="@"
-                  style={{
-                    fontWeight: 'bold',
-                  }}
                   data={searchUsers}
                   renderSuggestion={(
                     entry,
