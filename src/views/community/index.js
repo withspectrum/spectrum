@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { Button } from 'src/components/buttons';
 import generateMetaInfo from 'shared/generate-meta-info';
 import ThreadComposer from 'src/components/threadComposer';
+import ComposerPlaceholder from 'src/components/threadComposer/components/placeholder';
 import Head from 'src/components/head';
 import Icon from 'src/components/icons';
 import AppViewWrapper from 'src/components/appViewWrapper';
@@ -391,9 +392,14 @@ class CommunityView extends React.Component<Props, State> {
                   selectedView === 'trending-threads') &&
                 userHasPermissions && (
                   <ErrorBoundary fallbackComponent={null}>
+                    <ComposerPlaceholder
+                      isInbox={false}
+                      isOpen={false}
+                      // showCommunityOwnerUpsell={true}
+                    />
                     <ThreadComposer
                       activeCommunity={communitySlug}
-                      showComposerUpsell={showComposerUpsell}
+                      // showComposerUpsell={showComposerUpsell}
                     />
                   </ErrorBoundary>
                 )}

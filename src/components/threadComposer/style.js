@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import theme from 'shared/theme';
 import { hexa, Transition, FlexRow, FlexCol, zIndex } from '../globals';
 
@@ -20,13 +20,18 @@ export const Container = styled(FlexRow)`
 `;
 
 export const Composer = styled.div`
-  position: relative;
-  z-index: ${props => (props.isInbox ? '3001' : zIndex.composer)};
-  width: 100%;
-  display: block;
-  min-height: 64px;
   transition: ${Transition.hover.off};
   background-color: ${theme.bg.default};
+  position: ${props => (props.isOpen ? 'fixed' : 'relative')};
+  min-height: ${props => (props.isOpen ? '100vh' : '64px')};
+  width: ${props => (props.isOpen ? '50%' : '100%')};
+  ${props =>
+    props.isOpen &&
+    css`
+      top: 0;
+      right: 0;
+      z-index: 3002;
+    `}
 
   &:hover {
     transition: none;
@@ -52,7 +57,7 @@ export const Overlay = styled.div`
       bottom: 0;
       width: 100%;
       height: 100%;
-      z-index: ${props.isInbox ? '3000' : zIndex.composer - 1};
+      z-index: ${zIndex.slider + 2};
       background: #000;
       pointer-events: auto;
       opacity: 0.4;
@@ -94,7 +99,9 @@ export const PlaceholderLabel = styled.h3`
 `;
 
 export const ContentContainer = styled.div`
-  display: ${props => (props.isOpen ? 'block' : 'none')};
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 
   @media (max-width: 768px) {
     width: 100%;

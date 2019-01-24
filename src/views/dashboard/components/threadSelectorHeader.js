@@ -98,13 +98,13 @@ class Header extends React.Component<Props> {
             </Menu>
           </NarrowOnly>
           <ThreadSearch filter={filter} />
-          <IconButton
+          {/* <IconButton
             data-e2e-id="inbox-view-post-button"
             glyph={'post'}
             onClick={() => dispatch(changeActiveThread('new'))}
             tipText={'New conversation'}
             tipLocation={'bottom-left'}
-          />
+          /> */}
         </HeaderWrapper>
       </React.Fragment>
     );
