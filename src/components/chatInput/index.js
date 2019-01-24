@@ -84,6 +84,8 @@ type Props = {
   quotedMessage: ?{ messageId: string, threadId: string },
   // used to pre-populate the @mention suggestions with participants and the author of the thread
   participants: Array<?Object>,
+  onFocus: ?Function,
+  onBlur: ?Function,
 };
 
 // $FlowFixMe
@@ -130,6 +132,11 @@ const ChatInput = (props: Props) => {
   };
 
   const handleKeyPress = e => {
+    // We shouldn't do anything during composition of IME.
+    // `keyCode === 229` is a fallback for old browsers like IE.
+    if (e.isComposing || e.keyCode === 229) {
+      return;
+    }
     switch (e.key) {
       // Submit on Enter unless Shift is pressed
       case 'Enter': {
@@ -372,6 +379,8 @@ const ChatInput = (props: Props) => {
                 networkDisabled={networkDisabled}
                 placeholder="Your message here..."
                 value={text}
+                onFocus={props.onFocus}
+                onBlur={props.onBlur}
                 onChange={onChange}
                 onKeyDown={handleKeyPress}
                 inputRef={node => {

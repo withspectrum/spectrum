@@ -18,6 +18,7 @@ import {
   canViewDMThread,
 } from '../../utils/permissions';
 import { trackQueue, calculateThreadScoreQueue } from 'shared/bull/queues';
+import { validateRawContentState } from '../../utils/validate-draft-js-input';
 
 type Input = {
   message: {
@@ -117,7 +118,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         'Please provide serialized raw DraftJS content state as content.body'
       );
     }
-    if (!body.blocks || !Array.isArray(body.blocks) || !body.entityMap) {
+    if (!validateRawContentState(body)) {
       trackQueue.add({
         userId: user.id,
         event: eventFailed,
@@ -127,30 +128,8 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         },
       });
 
-      return new UserError(
+      throw new UserError(
         'Please provide serialized raw DraftJS content state as content.body'
-      );
-    }
-    if (
-      body.blocks.some(
-        ({ type }) =>
-          !type ||
-          (type !== 'unstyled' &&
-            type !== 'code-block' &&
-            type !== 'blockquote')
-      )
-    ) {
-      trackQueue.add({
-        userId: user.id,
-        event: eventFailed,
-        properties: {
-          reason: 'invalid draftjs data',
-          message,
-        },
-      });
-
-      return new UserError(
-        'Invalid DraftJS block type specified. Supported block types: "unstyled", "code-block".'
       );
     }
   }
