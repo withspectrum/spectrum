@@ -156,6 +156,7 @@
     "react-app-rewired": "^1.6.2",
     "react-clipboard.js": "^2.0.1",
     "react-dom": "^16.7.0-alpha.2",
+    "react-dropzone": "^8.0.3",
     "react-flip-move": "^3.0.2",
     "react-helmet-async": "^0.1.0",
     "react-image": "^1.5.1",

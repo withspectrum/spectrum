@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import debounce from 'debounce';
 import queryString from 'query-string';
 import { KeyBindingUtil } from 'draft-js';
+import Dropzone from 'react-dropzone';
 import { closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -21,6 +22,9 @@ import {
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
+import uploadImage, {
+  type UploadImageInput,
+} from 'shared/graphql/mutations/uploadImage';
 import { TextButton, Button } from '../buttons';
 import { FlexRow } from '../../components/globals';
 import { LoadingSelect } from '../loading';
@@ -61,6 +65,7 @@ type Props = {
     refetch: Function,
     loading: boolean,
   },
+  uploadImage: (input: UploadImageInput) => Promise<string>,
   isOpen: boolean,
   dispatch: Dispatch<Object>,
   publishThread: Function,
@@ -403,6 +408,17 @@ class ComposerWithData extends Component<Props, State> {
     });
   };
 
+  uploadFiles = files => {
+    this.props
+      .uploadImage({
+        image: files[0],
+        type: 'threads',
+      })
+      .then(res => {
+        console.log(res);
+      });
+  };
+
   publishThread = () => {
     // if no title and no channel is set, don't allow a thread to be published
     if (!this.state.title || !this.state.activeChannel) {
@@ -579,26 +595,38 @@ class ComposerWithData extends Component<Props, State> {
             </RequiredSelector>
           )}
         </Dropdowns>
-        <ThreadInputs>
-          <Textarea
-            data-cy="composer-title-input"
-            onChange={this.changeTitle}
-            style={ThreadTitle}
-            value={this.state.title}
-            placeholder={"What's up?"}
-            ref={'titleTextarea'}
-            autoFocus={!threadSliderIsOpen}
-          />
+        <Dropzone
+          accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
+          disableClick
+          multiple={false}
+          onDropAccepted={this.uploadFiles}
+        >
+          {({ getRootProps, getInputProps, isDragActive }) => (
+            <div {...getRootProps()}>
+              <ThreadInputs>
+                <input {...getInputProps()} />
+                <Textarea
+                  data-cy="composer-title-input"
+                  onChange={this.changeTitle}
+                  style={ThreadTitle}
+                  value={this.state.title}
+                  placeholder={"What's up?"}
+                  ref={'titleTextarea'}
+                  autoFocus={!threadSliderIsOpen}
+                />
 
-          <Textarea
-            onChange={this.changeBody}
-            state={this.state.body}
-            style={ThreadDescription}
-            ref={editor => (this.bodyEditor = editor)}
-            placeholder={'Write more thoughts here...'}
-            className={'threadComposer'}
-          />
-        </ThreadInputs>
+                <Textarea
+                  onChange={this.changeBody}
+                  state={this.state.body}
+                  style={ThreadDescription}
+                  ref={editor => (this.bodyEditor = editor)}
+                  placeholder={'Write more thoughts here...'}
+                  className={'threadComposer'}
+                />
+              </ThreadInputs>
+            </div>
+          )}
+        </Dropzone>
 
         <Actions>
           {networkDisabled && (
@@ -633,6 +661,7 @@ class ComposerWithData extends Component<Props, State> {
 }
 
 export const ThreadComposer = compose(
+  uploadImage,
   getComposerCommunitiesAndChannels, // query to get data
   publishThread, // mutation to publish a thread
   withRouter // needed to use history.push() as a post-publish action
