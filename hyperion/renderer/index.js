@@ -189,6 +189,8 @@ const renderer = (req: express$Request, res: express$Response) => {
       );
     })
     .catch(err => {
+      // Avoid memory leaks, see https://github.com/styled-components/styled-components/issues/1624#issuecomment-425382979
+      sheet.complete();
       console.error(err);
       const sentryId =
         process.env.NODE_ENV === 'production'
