@@ -163,6 +163,7 @@ class SidebarChannels extends React.Component<Props> {
                     active={activeChannel === channel.id}
                     onClick={evt => {
                       evt.stopPropagation();
+                      evt.preventDefault();
                       this.changeChannel(channel.id);
                       this.setActiveChannelObject(channel);
                     }}
