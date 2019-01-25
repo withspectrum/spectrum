@@ -300,8 +300,8 @@ const ChatInput = (props: Props) => {
   const sortSuggestions = (a, b, queryString) => {
     const aUsernameIndex = a.username.indexOf(queryString || '');
     const bUsernameIndex = b.username.indexOf(queryString || '');
-    const aNameIndex = a.name.indexOf(queryString || '');
-    const bNameIndex = b.name.indexOf(queryString || '');
+    const aNameIndex = a.filterName.indexOf(queryString || '');
+    const bNameIndex = b.filterName.indexOf(queryString || '');
     if (aNameIndex === 0) return -1;
     if (aUsernameIndex === 0) return -1;
     if (aNameIndex === 0) return -1;
@@ -353,7 +353,7 @@ const ChatInput = (props: Props) => {
           id: user.username,
           display: user.username,
           username: user.username,
-          name: user.name.toLowerCase(),
+          filterName: user.name.toLowerCase(),
         };
       });
 

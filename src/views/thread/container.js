@@ -404,7 +404,7 @@ class ThreadContainer extends React.Component<Props, State> {
 
     if (!messageConnection || messageConnection.edges.length === 0)
       return this.setState({
-        participants: [{ ...author.user, name: user.name.toLowerCase() }],
+        participants: [{ ...author.user, filterName: user.name.toLowerCase() }],
       });
 
     const participants = messageConnection.edges
@@ -417,7 +417,7 @@ class ThreadContainer extends React.Component<Props, State> {
         ...user,
         id: user.username,
         display: user.username,
-        name: user.name.toLowerCase(),
+        filterName: user.name.toLowerCase(),
       }));
 
     return this.setState({ participants: participantsWithAuthor });
