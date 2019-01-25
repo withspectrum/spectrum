@@ -54,10 +54,12 @@ class CommunityList extends React.Component<Props> {
     this.props.dispatch(changeActiveChannel(''));
   };
 
-  handleOnClick = id => {
+  handleOnClick = (e, id) => {
     this.clearActiveChannel();
     if (this.props.activeCommunity !== id) {
       this.changeCommunity(id);
+    } else {
+      e.preventDefault();
     }
   };
 
@@ -107,11 +109,11 @@ class CommunityList extends React.Component<Props> {
           </CommunityListItem>
           {sortedCommunities.map(c => (
             <ErrorBoundary fallbackComponent={null} key={c.id}>
-              <Link to={`/${c.slug}`}>
-                <CommunityListItem
-                  onClick={() => this.handleOnClick(c.id)}
-                  active={c.id === activeCommunity}
-                >
+              <Link
+                to={`/${c.slug}`}
+                onClick={e => this.handleOnClick(e, c.id)}
+              >
+                <CommunityListItem active={c.id === activeCommunity}>
                   <CommunityAvatarContainer>
                     <CommunityAvatar community={c} showHoverProfile={false} />
                   </CommunityAvatarContainer>
