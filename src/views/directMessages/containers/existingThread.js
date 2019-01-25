@@ -110,6 +110,13 @@ class ExistingThread extends React.Component<Props> {
     if (id !== 'new') {
       if (data.directMessageThread) {
         const thread = data.directMessageThread;
+        const mentionSuggestions = thread.participants
+          .map(user => ({
+            ...user,
+            id: user.username,
+            display: user.username,
+          }))
+          .filter(user => user.username !== currentUser.username);
         return (
           <MessagesContainer>
             <ViewContent
@@ -139,6 +146,7 @@ class ExistingThread extends React.Component<Props> {
               threadType={'directMessageThread'}
               forceScrollToBottom={this.forceScrollToBottom}
               onRef={chatInput => (this.chatInput = chatInput)}
+              participants={mentionSuggestions}
             />
           </MessagesContainer>
         );

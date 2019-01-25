@@ -1,6 +1,6 @@
 {
   "name": "Spectrum",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@babel/preset-flow": "^7.0.0",
@@ -112,7 +112,7 @@
     "graphql-date": "^1.0.3",
     "graphql-depth-limit": "^1.1.0",
     "graphql-log": "0.1.3",
-    "graphql-rate-limit": "^1.1.0",
+    "graphql-rate-limit": "^1.2.2",
     "graphql-tag": "^2.10.0",
     "graphql-tools": "^4.0.3",
     "helmet": "^3.14.0",
@@ -161,6 +161,7 @@
     "react-image": "^1.5.1",
     "react-infinite-scroller-with-scroll-element": "2.0.2",
     "react-loadable": "^5.5.0",
+    "react-mentions": "^2.4.1",
     "react-modal": "^3.7.1",
     "react-popper": "^1.0.2",
     "react-redux": "^5.0.2",

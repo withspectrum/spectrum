@@ -2,11 +2,15 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import { Mention } from 'react-mentions';
+import { withApollo } from 'react-apollo';
 import Icon from 'src/components/icons';
+import { FlexRow } from 'src/components/globals';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
 import { replyToMessage } from 'src/actions/message';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import { UserAvatar } from 'src/components/avatar';
 import {
   Form,
   ChatInputContainer,
@@ -19,14 +23,25 @@ import {
   Preformatted,
   PreviewWrapper,
   RemovePreviewButton,
+  StyledMentionSuggestion,
+  SuggestionsWrapper,
+  MentionUsername,
 } from './style';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
 import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
+import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
 import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
 import type { Dispatch } from 'redux';
 import { ESC, BACKSPACE, DELETE } from 'src/helpers/keycodes';
+
+const MentionSuggestion = ({ entry, search, focused }) => (
+  <StyledMentionSuggestion focused={focused}>
+    <UserAvatar size={24} user={entry} />
+    <MentionUsername>{entry.username}</MentionUsername>
+  </StyledMentionSuggestion>
+);
 
 const QuotedMessage = connect()(
   getMessageById(props => {
@@ -67,6 +82,8 @@ type Props = {
   threadData?: Object,
   refetchThread?: Function,
   quotedMessage: ?{ messageId: string, threadId: string },
+  // used to pre-populate the @mention suggestions with participants and the author of the thread
+  participants: Array<?Object>,
   onFocus: ?Function,
   onBlur: ?Function,
 };
@@ -275,11 +292,61 @@ const ChatInput = (props: Props) => {
       );
   };
 
+  const searchUsers = async (queryString, callback) => {
+    const filteredParticipants = props.participants
+      ? props.participants
+          .filter(Boolean)
+          .filter(
+            participant => participant.username.indexOf(queryString || '') > -1
+          )
+          .sort(
+            (a, b) =>
+              a.username.indexOf(queryString || '') -
+              b.username.indexOf(queryString || '')
+          )
+      : [];
+    callback(filteredParticipants);
+    if (!queryString || queryString.length === 0) return;
+    const {
+      data: { search },
+    } = await props.client.query({
+      query: searchUsersQuery,
+      variables: {
+        queryString,
+        type: 'USERS',
+      },
+    });
+    if (!search || !search.searchResultsConnection) return;
+
+    let searchUsers = search.searchResultsConnection.edges
+      .filter(Boolean)
+      .map(edge => {
+        const user = edge.node;
+        return {
+          ...user,
+          id: user.username,
+          display: user.username,
+          username: user.username,
+        };
+      });
+    // Prepend the filtered participants in case a user is tabbing down right now
+    const fullResults = [...filteredParticipants, ...searchUsers];
+    const uniqueResults = [];
+    const done = [];
+    fullResults.forEach(item => {
+      if (done.indexOf(item.username) === -1) {
+        uniqueResults.push(item);
+        done.push(item.username);
+      }
+    });
+
+    callback(uniqueResults);
+  };
+
   const networkDisabled =
     !props.networkOnline ||
     (props.websocketConnection !== 'connected' &&
       props.websocketConnection !== 'reconnected');
-
   return (
     <React.Fragment>
       <ChatInputContainer>
@@ -343,7 +410,27 @@ const ChatInput = (props: Props) => {
                   if (props.onRef) props.onRef(node);
                   setInputRef(node);
                 }}
-              />
+              >
+                <Mention
+                  trigger="@"
+                  data={searchUsers}
+                  renderSuggestion={(
+                    entry,
+                    search,
+                    highlightedDisplay,
+                    index,
+                    focused
+                  ) => (
+                    <MentionSuggestion
+                      entry={entry}
+                      highlightedDisplay={highlightedDisplay}
+                      focused={focused}
+                      search={search}
+                      index={index}
+                    />
+                  )}
+                />
+              </Input>
             </InputWrapper>
             <SendButton
               data-cy="chat-input-send-button"
@@ -373,6 +460,7 @@ const map = (state, ownProps) => ({
 
 export default compose(
   withCurrentUser,
+  withApollo,
   sendMessage,
   sendDirectMessage,
   // $FlowIssue
