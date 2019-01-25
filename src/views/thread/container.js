@@ -69,6 +69,9 @@ type State = {
   lastSeen: ?number | ?string,
   bannerIsVisible: boolean,
   derivedState: Object,
+  // set as a callback when messages are loaded for a thread. the participants
+  // array is used to pre-populate @mention suggestions
+  participants: Array<?Object>,
 };
 
 class ThreadContainer extends React.Component<Props, State> {
@@ -90,6 +93,7 @@ class ThreadContainer extends React.Component<Props, State> {
       bannerIsVisible: false,
       scrollOffset: 0,
       derivedState: {},
+      participants: [],
     };
   }
 
@@ -294,7 +298,7 @@ class ThreadContainer extends React.Component<Props, State> {
   };
 
   renderChatInputOrUpsell = () => {
-    const { isEditing } = this.state;
+    const { isEditing, participants } = this.state;
     const {
       data: { thread },
       currentUser,
@@ -324,6 +328,7 @@ class ThreadContainer extends React.Component<Props, State> {
             forceScrollToBottom={this.forceScrollToBottom}
             onRef={chatInput => (this.chatInput = chatInput)}
             refetchThread={this.props.data.refetch}
+            participants={participants}
           />
         </ChatInputWrapper>
       </Input>
@@ -392,6 +397,20 @@ class ThreadContainer extends React.Component<Props, State> {
         />
       </React.Fragment>
     );
+  };
+
+  updateThreadParticipants = thread => {
+    const { messageConnection, author } = thread;
+    if (!messageConnection || messageConnection.edges.length === 0) return;
+    const participants = messageConnection.edges
+      .map(edge => edge.node)
+      .map(node => node.author.user);
+
+    const participantsWithAuthor = [...participants, author.user]
+      .filter((user, index, array) => array.indexOf(user) === index)
+      .map(user => ({ ...user, id: user.username, display: user.username }));
+
+    return this.setState({ participants: participantsWithAuthor });
   };
 
   render() {
@@ -539,6 +558,7 @@ class ThreadContainer extends React.Component<Props, State> {
                       contextualScrollToBottom={this.contextualScrollToBottom}
                       thread={thread}
                       isWatercooler={thread.watercooler} // used in the graphql query to always fetch the latest messages
+                      onMessagesLoaded={this.updateThreadParticipants}
                     />
                   )}
 

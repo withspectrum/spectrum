@@ -22,11 +22,9 @@ const UsernameWrapper = styled.span`
   position: relative;
   display: inline-block;
   line-height: 1.4;
-
   &:hover {
     text-decoration: underline;
   }
-
   a {
     color: inherit !important;
     text-decoration: none !important;

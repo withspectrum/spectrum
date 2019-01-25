@@ -2,7 +2,7 @@
 import React from 'react';
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
-import Textarea from 'react-textarea-autosize';
+import { MentionsInput } from 'react-mentions';
 import { IconButton } from '../buttons';
 import { QuoteWrapper } from '../message/style';
 import {
@@ -11,6 +11,7 @@ import {
   Transition,
   zIndex,
   monoStack,
+  Truncate,
 } from 'src/components/globals';
 
 export const ChatInputContainer = styled(FlexRow)`
@@ -97,18 +98,34 @@ export const InputWrapper = styled.div`
   }
 `;
 
+const MentionsInputStyle = {
+  suggestions: {
+    list: {
+      backgroundColor: theme.bg.default,
+      boxShadow: '1px 0 8px rgba(0,0,0,0.08)',
+      borderRadius: '4px',
+      overflow: 'hidden',
+      bottom: '24px',
+      position: 'absolute',
+    },
+  },
+};
+
+export const SuggestionsWrapper = styled.div``;
+
 export const Input = styled(
   ({ hasAttachment, networkDisabled, dataCy, ...rest }) => (
-    <Textarea {...rest} />
+    <MentionsInput
+      style={MentionsInputStyle}
+      displayTransform={username => `@${username}`}
+      {...rest}
+    />
   )
 ).attrs({
   spellCheck: true,
   autoCapitalize: 'sentences',
   autoComplete: 'on',
   autoCorrect: 'on',
-  async: true,
-  rows: 1,
-  maxRows: 5,
   'data-cy': props => props.dataCy || 'chat-input',
 })`
   font-size: 15px;
@@ -328,4 +345,21 @@ export const MarkdownHint = styled.div`
   @media (max-width: 768px) {
     display: none;
   }
+`;
+
+export const StyledMentionSuggestion = styled.div`
+  display: flex;
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props => (props.focused ? theme.brand.default : theme.text.default)};
+  align-items: center;
+  background: ${props => (props.focused ? theme.brand.wash : theme.bg.default)};
+  min-width: 156px;
+`;
+
+export const MentionUsername = styled.span`
+  margin-left: 8px;
+  width: calc(156px - 62px);
+  ${Truncate};
 `;
