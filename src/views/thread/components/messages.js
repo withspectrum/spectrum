@@ -125,6 +125,14 @@ class MessagesWithData extends React.Component<Props, State> {
   componentDidMount() {
     this.subscribe();
 
+    if (
+      this.props.data &&
+      this.props.data.thread &&
+      this.props.onMessagesLoaded
+    ) {
+      this.props.onMessagesLoaded(this.props.data.thread);
+    }
+
     if (this.shouldForceScrollToBottom()) {
       return setTimeout(() => this.props.forceScrollToBottom());
     }
