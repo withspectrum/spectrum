@@ -306,7 +306,7 @@ const ChatInput = (props: Props) => {
     if (aUsernameIndex === 0) return -1;
     if (aNameIndex === 0) return -1;
     if (aUsernameIndex === 0) return -1;
-    return 1;
+    return aNameIndex - bNameIndex || aUsernameIndex - bUsernameIndex;
   };
 
   const searchUsers = async (queryString, callback) => {
