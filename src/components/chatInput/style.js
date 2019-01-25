@@ -377,6 +377,5 @@ export const MentionUsername = styled.span`
   font-weight: 400;
   width: calc(184px - 62px);
   ${Truncate};
-  color: ${props =>
-    props.focused ? theme.brand.default : theme.text.tertiary};
+  color: ${props => (props.focused ? theme.brand.default : theme.text.alt)};
 `;
