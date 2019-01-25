@@ -295,6 +295,7 @@ const ChatInput = (props: Props) => {
   const searchUsers = async (queryString, callback) => {
     const filteredParticipants = props.participants
       ? props.participants
+          .filter(Boolean)
           .filter(
             participant => participant.username.indexOf(queryString || '') > -1
           )
