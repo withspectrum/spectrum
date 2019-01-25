@@ -104,8 +104,9 @@ export const MediaRow = styled.div`
 export const ComposerBase = styled.div`
   position: relative;
   flex: 1;
-  max-height: calc(100vh - 160px);
-  overflow-y: scroll;
+  max-height: ${props => (props.isOpen ? 'calc(100vh - 160px)' : 'auto')};
+  overflow-y: ${props => (props.isOpen ? 'scroll' : 'auto')};
+  padding-left: ${props => (props.isOpen ? '25px' : '0')};
 
   > label {
     position: absolute;

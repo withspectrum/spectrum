@@ -201,6 +201,7 @@ class Editor extends React.Component<Props, State> {
       version,
       placeholder,
       readOnly,
+      isOpen,
       ...rest
     } = this.props;
     const { embedding, inserting } = this.state;
@@ -210,6 +211,7 @@ class Editor extends React.Component<Props, State> {
         data-cy="rich-text-editor"
         className={`markdown ${className || ''}`}
         focus={focus}
+        isOpen={isOpen}
       >
         <DraftEditor
           data-cy="rich-text-editor"
