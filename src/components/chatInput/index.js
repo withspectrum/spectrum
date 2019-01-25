@@ -296,8 +296,11 @@ const ChatInput = (props: Props) => {
     const filteredParticipants = props.participants
       ? props.participants
           .filter(Boolean)
+          .slice(0, 10)
           .filter(
-            participant => participant.username.indexOf(queryString || '') > -1
+            participant =>
+              participant.username &&
+              participant.username.indexOf(queryString || '') > -1
           )
           .sort(
             (a, b) =>
@@ -320,6 +323,8 @@ const ChatInput = (props: Props) => {
 
     let searchUsers = search.searchResultsConnection.edges
       .filter(Boolean)
+      .filter(edge => edge.node.username)
+      .slice(0, 10)
       .map(edge => {
         const user = edge.node;
         return {
