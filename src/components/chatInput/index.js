@@ -317,7 +317,7 @@ const ChatInput = (props: Props) => {
             return (
               participant.username &&
               (participant.username.indexOf(queryString || '') > -1 ||
-                participant.name.indexOf(queryString || '') > -1)
+                participant.filterName.indexOf(queryString || '') > -1)
             );
           })
           .sort((a, b) => {
@@ -341,7 +341,11 @@ const ChatInput = (props: Props) => {
       },
     });
 
-    if (!search || !search.searchResultsConnection) return;
+    if (!search || !search.searchResultsConnection) {
+      if (filteredParticipants && filteredParticipants.length > 0)
+        return filteredParticipants;
+      return;
+    }
 
     let searchUsers = search.searchResultsConnection.edges
       .filter(Boolean)
