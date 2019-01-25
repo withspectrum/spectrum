@@ -102,10 +102,10 @@ const MentionsInputStyle = {
   suggestions: {
     list: {
       backgroundColor: theme.bg.default,
-      boxShadow: '1px 0 8px rgba(0,0,0,0.08)',
+      boxShadow: '1px 0 12px rgba(0,0,0,0.12)',
       borderRadius: '4px',
       overflow: 'hidden',
-      bottom: '24px',
+      bottom: '28px',
       position: 'absolute',
     },
   },
