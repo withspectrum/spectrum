@@ -26,6 +26,8 @@ import {
   StyledMentionSuggestion,
   SuggestionsWrapper,
   MentionUsername,
+  MentionContent,
+  MentionName,
 } from './style';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
 import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
@@ -38,8 +40,11 @@ import { ESC, BACKSPACE, DELETE } from 'src/helpers/keycodes';
 
 const MentionSuggestion = ({ entry, search, focused }) => (
   <StyledMentionSuggestion focused={focused}>
-    <UserAvatar size={24} user={entry} />
-    <MentionUsername>{entry.username}</MentionUsername>
+    <UserAvatar size={32} user={entry} />
+    <MentionContent>
+      <MentionName focused={focused}>{entry.name}</MentionName>
+      <MentionUsername focused={focused}>@{entry.username}</MentionUsername>
+    </MentionContent>
   </StyledMentionSuggestion>
 );
 
@@ -296,7 +301,7 @@ const ChatInput = (props: Props) => {
     const filteredParticipants = props.participants
       ? props.participants
           .filter(Boolean)
-          .slice(0, 10)
+          .slice(0, 8)
           .filter(
             participant =>
               participant.username &&
@@ -325,7 +330,7 @@ const ChatInput = (props: Props) => {
     let searchUsers = search.searchResultsConnection.edges
       .filter(Boolean)
       .filter(edge => edge.node.username)
-      .slice(0, 10)
+      .slice(0, 8)
       .map(edge => {
         const user = edge.node;
         return {
