@@ -309,7 +309,8 @@ const ChatInput = (props: Props) => {
           )
       : [];
     callback(filteredParticipants);
-    if (!queryString || queryString.length === 0) return;
+    if (!queryString || queryString.length === 0)
+      return callback(filteredParticipants);
     const {
       data: { search },
     } = await props.client.query({
