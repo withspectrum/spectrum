@@ -293,9 +293,19 @@ const ChatInput = (props: Props) => {
   };
 
   const searchUsers = async (queryString, callback) => {
-    if (!queryString || queryString.length === 0) {
-      return props.participants ? callback(props.participants) : null;
-    }
+    const filteredParticipants = props.participants
+      ? props.participants
+          .filter(
+            participant => participant.username.indexOf(queryString || '') > -1
+          )
+          .sort(
+            (a, b) =>
+              a.username.indexOf(queryString || '') -
+              b.username.indexOf(queryString || '')
+          )
+      : [];
+    callback(filteredParticipants);
+    if (!queryString || queryString.length === 0) return;
     const {
       data: { search },
     } = await props.client.query({
@@ -307,17 +317,29 @@ const ChatInput = (props: Props) => {
     });
     if (!search || !search.searchResultsConnection) return;
 
-    let searchUsers = search.searchResultsConnection.edges.map(edge => {
-      const user = edge.node;
-      return {
-        ...user,
-        id: user.username,
-        display: user.username,
-        username: user.username,
-      };
+    let searchUsers = search.searchResultsConnection.edges
+      .filter(Boolean)
+      .map(edge => {
+        const user = edge.node;
+        return {
+          ...user,
+          id: user.username,
+          display: user.username,
+          username: user.username,
+        };
+      });
+    // Prepend the filtered participants in case a user is tabbing down right now
+    const fullResults = [...filteredParticipants, ...searchUsers];
+    const uniqueResults = [];
+    const done = [];
+    fullResults.forEach(item => {
+      if (done.indexOf(item.username) === -1) {
+        uniqueResults.push(item);
+        done.push(item.username);
+      }
     });
 
-    callback(searchUsers);
+    callback(uniqueResults);
   };
 
   const networkDisabled =
