@@ -404,23 +404,16 @@ class ThreadContainer extends React.Component<Props, State> {
 
     if (!messageConnection || messageConnection.edges.length === 0)
       return this.setState({
-        participants: [
-          { ...author.user, filterName: author.user.name.toLowerCase() },
-        ],
+        participants: [author.user],
       });
 
     const participants = messageConnection.edges
       .map(edge => edge.node)
       .map(node => node.author.user);
 
-    const participantsWithAuthor = [...participants, author.user]
-      .filter((user, index, array) => array.indexOf(user) === index)
-      .map(user => ({
-        ...user,
-        id: user.username,
-        display: user.username,
-        filterName: user.name.toLowerCase(),
-      }));
+    const participantsWithAuthor = [...participants, author.user].filter(
+      (user, index, array) => array.indexOf(user) === index
+    );
 
     return this.setState({ participants: participantsWithAuthor });
   };
