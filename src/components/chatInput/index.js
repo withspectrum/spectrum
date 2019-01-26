@@ -93,7 +93,8 @@ type Props = {
   onBlur: ?Function,
 };
 
-export const cleanSuggestionUserObject = user => {
+export const cleanSuggestionUserObject = (user: ?Object) => {
+  if (!user) return null;
   return {
     ...user,
     id: user.username,

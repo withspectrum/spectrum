@@ -112,7 +112,7 @@ class ExistingThread extends React.Component<Props> {
         const thread = data.directMessageThread;
         const mentionSuggestions = thread.participants
           .map(cleanSuggestionUserObject)
-          .filter(user => user.username !== currentUser.username);
+          .filter(user => user && user.username !== currentUser.username);
         return (
           <MessagesContainer>
             <ViewContent
