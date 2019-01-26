@@ -309,9 +309,19 @@ const ChatInput = (props: Props) => {
     return aNameIndex - bNameIndex || aUsernameIndex - bUsernameIndex;
   };
 
+  const cleanSuggestionUserObject = user => {
+    return {
+      ...user,
+      id: user.username,
+      display: user.username,
+      filterName: user.name.toLowerCase(),
+    };
+  };
+
   const searchUsers = async (queryString, callback) => {
     const filteredParticipants = props.participants
       ? props.participants
+          .map(cleanSuggestionUserObject)
           .filter(Boolean)
           .filter(participant => {
             return (
@@ -352,13 +362,7 @@ const ChatInput = (props: Props) => {
       .filter(edge => edge.node.username)
       .map(edge => {
         const user = edge.node;
-        return {
-          ...user,
-          id: user.username,
-          display: user.username,
-          username: user.username,
-          filterName: user.name.toLowerCase(),
-        };
+        return cleanSuggestionUserObject(user);
       });
 
     // Prepend the filtered participants in case a user is tabbing down right now
