@@ -93,6 +93,15 @@ type Props = {
   onBlur: ?Function,
 };
 
+export const cleanSuggestionUserObject = user => {
+  return {
+    ...user,
+    id: user.username,
+    display: user.username,
+    filterName: user.name.toLowerCase(),
+  };
+};
+
 // $FlowFixMe
 const ChatInput = (props: Props) => {
   const cacheKey = `last-content-${props.thread}`;
@@ -307,15 +316,6 @@ const ChatInput = (props: Props) => {
     if (aNameIndex === 0) return -1;
     if (aUsernameIndex === 0) return -1;
     return aNameIndex - bNameIndex || aUsernameIndex - bUsernameIndex;
-  };
-
-  const cleanSuggestionUserObject = user => {
-    return {
-      ...user,
-      id: user.username,
-      display: user.username,
-      filterName: user.name.toLowerCase(),
-    };
   };
 
   const searchUsers = async (queryString, callback) => {
