@@ -97,6 +97,7 @@ export const InputWrapper = styled.div`
 `;
 
 export const Input = styled(MentionsInput).attrs({
+  dataCy: props => props.dataCy || 'chat-input',
   spellCheck: true,
   autoCapitalize: 'sentences',
   autoComplete: 'on',
