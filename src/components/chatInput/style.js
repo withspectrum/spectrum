@@ -1,8 +1,7 @@
 // @flow
-import React from 'react';
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
-import { MentionsInput } from 'react-mentions';
+import MentionsInput from '../mentionsInput';
 import { IconButton } from '../buttons';
 import { QuoteWrapper } from '../message/style';
 import {
@@ -11,7 +10,6 @@ import {
   Transition,
   zIndex,
   monoStack,
-  Truncate,
 } from 'src/components/globals';
 
 export const ChatInputContainer = styled(FlexRow)`
@@ -98,35 +96,12 @@ export const InputWrapper = styled.div`
   }
 `;
 
-const MentionsInputStyle = {
-  suggestions: {
-    list: {
-      backgroundColor: theme.bg.default,
-      boxShadow: '1px 0 12px rgba(0,0,0,0.12)',
-      borderRadius: '4px',
-      overflow: 'hidden',
-      bottom: '28px',
-      position: 'absolute',
-    },
-  },
-};
-
-export const SuggestionsWrapper = styled.div``;
-
-export const Input = styled(
-  ({ hasAttachment, networkDisabled, dataCy, ...rest }) => (
-    <MentionsInput
-      style={MentionsInputStyle}
-      displayTransform={username => `@${username}`}
-      {...rest}
-    />
-  )
-).attrs({
+export const Input = styled(MentionsInput).attrs({
+  dataCy: props => props.dataCy || 'chat-input',
   spellCheck: true,
   autoCapitalize: 'sentences',
   autoComplete: 'on',
   autoCorrect: 'on',
-  'data-cy': props => props.dataCy || 'chat-input',
 })`
   font-size: 15px;
   font-weight: 400;
@@ -345,37 +320,4 @@ export const MarkdownHint = styled.div`
   @media (max-width: 768px) {
     display: none;
   }
-`;
-
-export const StyledMentionSuggestion = styled.div`
-  display: flex;
-  padding: 8px 12px;
-  align-items: center;
-  background: ${props => (props.focused ? theme.brand.wash : theme.bg.default)};
-  min-width: 156px;
-  line-height: 1.3;
-  border-bottom: 1px solid ${theme.bg.border};
-`;
-
-export const MentionContent = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-export const MentionName = styled.span`
-  margin-left: 12px;
-  width: calc(184px - 62px);
-  ${Truncate};
-  font-size: 14px;
-  font-weight: 500;
-  color: ${props => (props.focused ? theme.brand.default : theme.text.default)};
-`;
-
-export const MentionUsername = styled.span`
-  margin-left: 12px;
-  font-size: 13px;
-  font-weight: 400;
-  width: calc(184px - 62px);
-  ${Truncate};
-  color: ${props => (props.focused ? theme.brand.default : theme.text.alt)};
 `;

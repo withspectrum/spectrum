@@ -16,7 +16,8 @@ export default (url: string): boolean => {
     const { hostname, protocol } = new URL(url);
     // hostname might be spectrum.chat or subdomain.spectrum.chat, so we use .endsWith
     // We don't just check .contains because otherwise folks could make spectrum.chat.mydomain.com
-    const IS_SPECTRUM_URL = hostname.endsWith('.spectrum.chat');
+    const IS_SPECTRUM_URL =
+      hostname === 'spectrum.chat' || hostname === 'alpha.spectrum.chat';
     const IS_LOCALHOST = hostname === 'localhost';
     const IS_HTTP = protocol === 'https:' || protocol === 'http:';
     // Make sure the passed redirect URL is a spectrum.chat one or (in development) localhost
