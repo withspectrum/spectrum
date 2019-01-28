@@ -5395,10 +5395,10 @@ draft-js-embed-plugin@^1.2.0:
   dependencies:
     decorate-component-with-props "^1.0.2"
 
-draft-js-export-markdown@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/draft-js-export-markdown/-/draft-js-export-markdown-1.2.2.tgz#1fc65f0b786f2e3107db44be300beb97fab9e231"
-  integrity sha512-lQ74NRWHy+oeG4eEjQBHlKrJtYtlLYCfFdCQDbDX80YvhuRtUwiWey6LMDN/uDc4FttCYM//fVS3c8oTMmn+6g==
+draft-js-export-markdown@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/draft-js-export-markdown/-/draft-js-export-markdown-1.3.0.tgz#e7f0d7aabc1f787c24e1c6dc524b681463aae8c8"
+  integrity sha512-kOiDGQ9KehcbYYcwzlkR+Gja6svEwIgId1gz3EtEVsZ09cxZaV13Qlkydm0J5wPy5Omthvdpj0Iw1B2E4BZRZQ==
   dependencies:
     draft-js-utils "^1.2.0"
 
