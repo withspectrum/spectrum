@@ -52,6 +52,7 @@ type Props = {
   className?: string,
   style?: Object,
   version?: 2,
+  isOpen: boolean,
 };
 
 type State = {

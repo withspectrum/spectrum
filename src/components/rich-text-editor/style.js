@@ -148,9 +148,12 @@ export const Expander = styled.div`
   justify-content: flex-start;
   padding: 4px;
   border-radius: 12px;
+  margin-left: 5px;
 
   > button > div {
     color: ${theme.text.placeholder};
+    background-color: white;
+    border-radius: 12px;
   }
 
   > button:hover > div {
@@ -165,6 +168,7 @@ export const Expander = styled.div`
 
       > button > div {
         color: ${theme.brand.wash};
+        background-color: transparent;
       }
 
       > button:hover > div {
