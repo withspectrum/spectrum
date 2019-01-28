@@ -118,6 +118,7 @@ export const Input = styled(
     <MentionsInput
       style={MentionsInputStyle}
       displayTransform={username => `@${username}`}
+      markup="@[__id__]"
       {...rest}
     />
   )
