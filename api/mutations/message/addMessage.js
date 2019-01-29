@@ -1,6 +1,7 @@
 // @flow
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { convertToRaw } from 'draft-js';
+import convertSlackEmojisTo from 'emojis';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';
@@ -90,7 +91,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   if (message.messageType === 'text') {
     message.content.body = JSON.stringify(
       convertToRaw(
-        stateFromMarkdown(message.content.body, {
+        stateFromMarkdown(convertSlackEmojisTo.unicode(message.content.body), {
           parserOptions: {
             breaks: true,
           },
