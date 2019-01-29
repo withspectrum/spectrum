@@ -2,6 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import convertSlackEmojisTo from 'emojis';
 import Icon from 'src/components/icons';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
@@ -234,7 +235,11 @@ const ChatInput = (props: Props) => {
 
     // workaround react-mentions bug by replacing @[username] with @username
     // @see withspectrum/spectrum#4587
-    sendMessage({ body: text.replace(/@\[([a-z0-9_-]+)\]/g, '@$1') })
+    sendMessage({
+      body: convertSlackEmojisTo.unicode(
+        text.replace(/@\[([a-z0-9_-]+)\]/g, '@$1')
+      ),
+    })
       .then(() => {
         // If we're viewing a thread and the user sends a message as a non-member, we need to refetch the thread data
         if (
