@@ -9,7 +9,7 @@ import {
   LoadingListThreadDetail,
 } from 'src/components/loading';
 import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';

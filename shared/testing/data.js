@@ -10,6 +10,7 @@ const {
   defaultChannelSettings,
   defaultThreads,
   defaultNotifications,
+  defaultUsersNotifications,
   defaultDirectMessageThreads,
   defaultUsersDirectMessageThreads,
   defaultUsersCommunities,
@@ -35,6 +36,7 @@ const data = {
   usersChannels: defaultUsersChannels,
   messages: defaultMessages,
   reactions: defaultReactions,
+  usersNotifications: defaultUsersNotifications,
 };
 
 module.exports = data;

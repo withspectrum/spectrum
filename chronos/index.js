@@ -35,7 +35,6 @@ const server = createWorker(
   {
     settings: {
       lockDuration: 600000, // Key expiration time for job locks.
-      stalledInterval: 0, // How often check for stalled jobs (use 0 for never checking).
       maxStalledCount: 0, // Max amount of times a stalled job will be re-processed.
     },
   }

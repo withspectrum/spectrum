@@ -2,7 +2,7 @@
 import theme from 'shared/theme';
 import React from 'react';
 import styled from 'styled-components';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import Icon from '../../components/icons';
 import { UserAvatar } from '../../components/avatar';
 import {

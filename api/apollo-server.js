@@ -51,6 +51,10 @@ const server = new ProtectedApolloServer({
       };
     }
 
+    // Add GraphQL operation information to the statsd tags
+    req.statsdTags = {
+      graphqlOperationName: req.body.operationName || 'unknown_operation',
+    };
     const loaders = createLoaders();
     let currentUser = req.user && !req.user.bannedAt ? req.user : null;
 
@@ -60,6 +64,7 @@ const server = new ProtectedApolloServer({
         new Promise((res, rej) =>
           req.login(data, err => (err ? rej(err) : res()))
         ),
+      req,
       user: currentUser,
     };
   },
@@ -93,7 +98,7 @@ const server = new ProtectedApolloServer({
           };
         }),
   },
-  playground: {
+  playground: process.env.NODE_ENV !== 'production' && {
     settings: {
       'editor.theme': 'light',
     },
@@ -109,6 +114,7 @@ const server = new ProtectedApolloServer({
       },
     ],
   },
+  introspection: process.env.NODE_ENV !== 'production',
   maxFileSize: 25 * 1024 * 1024, // 25MB
   engine: false,
   tracing: false,

@@ -58,6 +58,7 @@ type Props = {
   hasError: boolean,
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
+  onMessagesLoaded?: Function,
 };
 
 class MessagesWithData extends React.Component<Props, State> {
@@ -92,6 +93,13 @@ class MessagesWithData extends React.Component<Props, State> {
     const newMessageSent = previousMessageCount < newMessageCount;
     const messagesLoadedForFirstTime = !prev.data.thread && curr.data.thread;
 
+    if (
+      (messagesLoadedForFirstTime || threadChanged) &&
+      this.props.onMessagesLoaded
+    ) {
+      this.props.onMessagesLoaded(curr.data.thread);
+    }
+
     if (messagesLoadedForFirstTime && this.shouldForceScrollToBottom()) {
       setTimeout(() => curr.forceScrollToBottom());
     }
@@ -116,6 +124,14 @@ class MessagesWithData extends React.Component<Props, State> {
 
   componentDidMount() {
     this.subscribe();
+
+    if (
+      this.props.data &&
+      this.props.data.thread &&
+      this.props.onMessagesLoaded
+    ) {
+      this.props.onMessagesLoaded(this.props.data.thread);
+    }
 
     if (this.shouldForceScrollToBottom()) {
       return setTimeout(() => this.props.forceScrollToBottom());

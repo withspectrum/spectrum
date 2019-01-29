@@ -5,6 +5,7 @@ export const collections = [
     communities: [
       'spectrum',
       'zeit',
+      'codesandbox',
       'codepen',
       'next-js',
       'figma',
@@ -77,6 +78,7 @@ export const collections = [
           'react',
           'next-js',
           'node',
+          'codesandbox',
           'vue-js',
           'angular',
           'ember-js',

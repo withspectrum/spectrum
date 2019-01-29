@@ -11,6 +11,7 @@ import {
   YOUTUBE_URLS,
   VIMEO_URLS,
   CODEPEN_URLS,
+  CODESANDBOX_URLS,
 } from '../../helpers/regexps';
 import addProtocolToString from 'shared/normalize-url';
 
@@ -79,6 +80,14 @@ export const parseEmbedUrl = incomingUrl => {
     return {
       url,
       height: 300,
+    };
+  }
+
+  const isCodeSandboxUrl = url.match(CODESANDBOX_URLS);
+  if (isCodeSandboxUrl) {
+    return {
+      url,
+      height: 500,
     };
   }
 

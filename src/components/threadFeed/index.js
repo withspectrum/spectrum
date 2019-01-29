@@ -7,14 +7,14 @@ import compose from 'recompose/compose';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { connect } from 'react-redux';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
 import InboxThread from 'src/views/dashboard/components/inboxThread';
 import { NullCard } from '../upsell';
 import { LoadingInboxThread } from '../loading';
 import NewActivityIndicator from '../newActivityIndicator';
 import ViewError from '../viewError';
-import { Upsell, UpsellHeader, UpsellFooter } from './style';
+import { Upsell, UpsellHeader, UpsellFooter, UpsellBlock } from './style';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
@@ -66,7 +66,7 @@ const UpsellState = ({ community }) => (
     <p>
       First things first, you’ll want to <b>start a couple threads</b>.
     </p>
-    <p>
+    <UpsellBlock>
       Open-ended questions are a great start, for example:
       <ul>
         <li>ask new members to introduce themselves</li>
@@ -75,7 +75,7 @@ const UpsellState = ({ community }) => (
         </li>
         <li>ask for suggestions on a problem you’re facing</li>
       </ul>
-    </p>
+    </UpsellBlock>
     <p>
       Once you’ve got a couple threads started, make sure to{' '}
       <b>help people find your community</b>. Talking about your community on

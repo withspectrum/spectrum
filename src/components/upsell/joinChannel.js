@@ -4,21 +4,24 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
-import { addToastWithTimeout } from '../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { openModal } from 'src/actions/modals';
 import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   JoinChannelContainer,
   JoinChannelContent,
   JoinChannelTitle,
   JoinChannelSubtitle,
 } from './style';
-import { Button } from '../buttons';
+import { Button } from 'src/components/buttons';
 
 type Props = {
   channel: Object,
   community: Object,
   toggleChannelSubscription: Function,
   dispatch: Dispatch<Object>,
+  currentUser: ?Object,
 };
 
 type State = {
@@ -33,6 +36,8 @@ class JoinChannel extends React.Component<Props, State> {
       isLoading: false,
     };
   }
+
+  login = () => this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL'));
 
   toggleSubscription = () => {
     const { channel, dispatch } = this.props;
@@ -89,7 +94,26 @@ class JoinChannel extends React.Component<Props, State> {
 
   render() {
     const { isLoading } = this.state;
-    const { channel, community } = this.props;
+    const { channel, community, currentUser } = this.props;
+
+    if (!currentUser) {
+      return (
+        <JoinChannelContainer data-cy="join-channel-login-upsell">
+          <JoinChannelContent>
+            <JoinChannelTitle>Log in or sign up to chat</JoinChannelTitle>
+          </JoinChannelContent>
+
+          <Button
+            loading={isLoading}
+            onClick={this.login}
+            dataCy="thread-join-channel-upsell-button"
+          >
+            Log in or sign up
+          </Button>
+        </JoinChannelContainer>
+      );
+    }
+
     return (
       <JoinChannelContainer>
         <JoinChannelContent>
@@ -116,5 +140,6 @@ class JoinChannel extends React.Component<Props, State> {
 
 export default compose(
   connect(),
+  withCurrentUser,
   toggleChannelSubscriptionMutation
 )(JoinChannel);

@@ -54,21 +54,10 @@ export const withCurrentUser = (
     return (
       <CurrentUser>
         {({ currentUser, isLoading }) => {
-          if (!currentUser) {
-            return (
-              <Component
-                {...remainingProps}
-                currentUser={null}
-                isLoadingCurrentUser={isLoading}
-                ref={wrappedComponentRef}
-              />
-            );
-          }
-
           return (
             <Component
               {...remainingProps}
-              currentUser={currentUser}
+              currentUser={currentUser ? currentUser : null}
               isLoadingCurrentUser={isLoading}
               ref={wrappedComponentRef}
             />

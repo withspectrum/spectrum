@@ -5,7 +5,7 @@ import { getChannelById } from 'shared/graphql/queries/channel/getChannel';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext } from '../utils';
 import Icon from '../../../components/icons';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import {
   SegmentedNotificationCard,
   TextContent,

@@ -1,7 +1,8 @@
 // @flow
 const debug = require('debug')('api:mutations:thread:publish-thread');
 import stringSimilarity from 'string-similarity';
-import { markdownToDraft } from 'markdown-draft-js';
+import { convertToRaw } from 'draft-js';
+import { stateFromMarkdown } from 'draft-js-import-markdown';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';
@@ -71,7 +72,13 @@ export default requireAuth(
       type = 'DRAFTJS';
       if (thread.content.body) {
         thread.content.body = JSON.stringify(
-          markdownToDraft(thread.content.body)
+          convertToRaw(
+            stateFromMarkdown(thread.content.body, {
+              parserOptions: {
+                breaks: true,
+              },
+            })
+          )
         );
       }
     }

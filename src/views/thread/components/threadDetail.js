@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { timeDifference } from 'shared/time-difference';
@@ -57,6 +57,7 @@ type Props = {
   dispatch: Dispatch<Object>,
   currentUser: ?Object,
   toggleEdit: Function,
+  innerRef?: any,
 };
 
 class ThreadDetailPure extends React.Component<Props, State> {
@@ -341,7 +342,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
       : null;
 
     return (
-      <ThreadWrapper>
+      <ThreadWrapper innerRef={this.props.innerRef}>
         <ThreadContent isEditing={isEditing}>
           {/* $FlowFixMe */}
           <ErrorBoundary fallbackComponent={null}>

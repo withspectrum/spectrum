@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import theme from 'shared/theme';
 import Card from '../../components/card';
-import Link from 'src/components/link';
 import {
   FlexCol,
   H1,
@@ -11,6 +10,7 @@ import {
   Tooltip,
   tint,
 } from '../../components/globals';
+import { Link } from 'react-router-dom';
 
 export const ListHeader = styled.div`
   display: flex;

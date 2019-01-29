@@ -1,6 +1,6 @@
 import React from 'react';
 // $FlowFixMe
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Button } from '../../../components/buttons';
 import { NullThreadFeed, NullHeading } from '../style';
 

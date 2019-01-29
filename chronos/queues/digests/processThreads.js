@@ -3,6 +3,7 @@ import { getTotalMessageCount, getNewMessageCount } from '../../models/message';
 import {
   NEW_MESSAGE_COUNT_WEIGHT,
   TOTAL_MESSAGE_COUNT_WEIGHT,
+  WATERCOOLER_WEIGHT_REDUCTION,
 } from '../constants';
 import { getCommunitiesById } from 'shared/db/queries/community';
 import { getChannelsById } from 'shared/db/queries/channel';
@@ -108,9 +109,18 @@ export const attachScoreToThreads = async (
 ): Promise<Array<ThreadWithDigestData>> => {
   const promises = threads
     .map(thread => {
-      const score =
+      let score =
         thread.newMessageCount * NEW_MESSAGE_COUNT_WEIGHT +
         thread.totalMessageCount * TOTAL_MESSAGE_COUNT_WEIGHT;
+
+      // watercooler threads tend to have more messages than the average thread
+      // often in the hundreds. So even with a small weight placed on total
+      // message count, watercoolers are often outranking new threads.
+      // to solve for this, we reduce the overall score of watercooler threads
+      // by a constant percentage to give higher priority to new conversations.
+      if (thread.watercooler) {
+        score = score * WATERCOOLER_WEIGHT_REDUCTION;
+      }
 
       return {
         ...thread,

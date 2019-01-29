@@ -2,6 +2,9 @@ import { Router } from 'express';
 
 const middlewares = Router();
 
+import bodyParser from 'body-parser';
+middlewares.use(bodyParser.json());
+
 if (process.env.NODE_ENV === 'development') {
   const logging = require('shared/middlewares/logging');
   middlewares.use(logging);
@@ -20,9 +23,6 @@ middlewares.options('*', cors);
 
 import cookieParser from 'cookie-parser';
 middlewares.use(cookieParser());
-
-import bodyParser from 'body-parser';
-middlewares.use(bodyParser.json());
 
 import session from 'shared/middlewares/session';
 middlewares.use(session);
