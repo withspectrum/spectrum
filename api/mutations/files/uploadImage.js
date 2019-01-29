@@ -12,11 +12,8 @@ type Args = {
 };
 
 export default isAuthedResolver(
-  (_: void, { image, type, id }: Args, { loaders }: GraphQLContext) => {
-    console.log('wat');
-    return uploadImage(image, type, id || 'draft').then(res => {
-      console.log(res);
-      return res;
-    });
+  async (_: void, { input }: Args, { loaders }: GraphQLContext) => {
+    const { image, type, id } = input;
+    return await uploadImage(image, type, id || 'draft');
   }
 );

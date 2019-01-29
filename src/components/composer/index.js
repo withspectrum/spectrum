@@ -409,13 +409,16 @@ class ComposerWithData extends Component<Props, State> {
   };
 
   uploadFiles = files => {
-    this.props
+    return this.props
       .uploadImage({
         image: files[0],
         type: 'threads',
       })
       .then(res => {
-        console.log(res);
+        console.log({ res });
+      })
+      .catch(err => {
+        console.log({ err });
       });
   };
 

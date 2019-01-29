@@ -10,7 +10,7 @@ export type UploadImageType = {
 };
 
 type UploadImageInput = {
-  file: Object,
+  image: Object,
   type: EntityType,
   id?: string,
 };
