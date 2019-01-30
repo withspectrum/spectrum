@@ -3,7 +3,6 @@ const debug = require('debug')('api:mutations:thread:publish-thread');
 import stringSimilarity from 'string-similarity';
 import { convertToRaw } from 'draft-js';
 import { stateFromMarkdown } from 'draft-js-import-markdown';
-import { convertToRaw } from 'draft-js';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';

@@ -55,7 +55,7 @@ type State = {
   availableChannels: Array<any>,
   activeCommunity: ?string,
   activeChannel: ?string,
-  isPublishing: boolean,
+  isLoading: boolean,
   postWasPublished: boolean,
 };
 
@@ -109,7 +109,7 @@ class ComposerWithData extends Component<Props, State> {
       availableChannels: [],
       activeCommunity: activeCommunitySlug || '',
       activeChannel: activeChannelSlug || '',
-      isPublishing: false,
+      isLoading: false,
       postWasPublished: false,
     };
 
@@ -409,13 +409,28 @@ class ComposerWithData extends Component<Props, State> {
   };
 
   uploadFiles = files => {
+    const uploading = `![Uploading ${files[0].name}...]()`;
+    this.setState({
+      isLoading: true,
+      body: this.state.body + '\n' + uploading + '\n',
+    });
     return this.props
       .uploadImage({
         image: files[0],
         type: 'threads',
       })
-      .then(res => {
-        console.log({ res });
+      .then(({ data }) => {
+        this.setState({
+          isLoading: false,
+        });
+        this.changeBody({
+          target: {
+            value: this.state.body.replace(
+              uploading,
+              `![${files[0].name}](${data.uploadImage})`
+            ),
+          },
+        });
       })
       .catch(err => {
         console.log({ err });
@@ -428,9 +443,9 @@ class ComposerWithData extends Component<Props, State> {
       return;
     }
 
-    // isPublishing will change the publish button to a loading spinner
+    // isLoading will change the publish button to a loading spinner
     this.setState({
-      isPublishing: true,
+      isLoading: true,
     });
 
     const { dispatch, networkOnline, websocketConnection } = this.props;
@@ -467,16 +482,6 @@ class ComposerWithData extends Component<Props, State> {
       body: body,
     };
 
-    // // Get the images
-    // const filesToUpload = Object.keys(jsonBody.entityMap)
-    //   .filter(
-    //     key =>
-    //       jsonBody.entityMap[key].type.toLowerCase() === 'image' &&
-    //       jsonBody.entityMap[key].data.file &&
-    //       jsonBody.entityMap[key].data.file.constructor === File
-    //   )
-    //   .map(key => jsonBody.entityMap[key].data.file);
-
     // this.props.mutate comes from a higher order component defined at the
     // bottom of this file
     const thread = {
@@ -505,7 +510,7 @@ class ComposerWithData extends Component<Props, State> {
 
         // stop the loading spinner on the publish button
         this.setState({
-          isPublishing: false,
+          isLoading: false,
           postWasPublished: true,
         });
 
@@ -527,7 +532,7 @@ class ComposerWithData extends Component<Props, State> {
       })
       .catch(err => {
         this.setState({
-          isPublishing: false,
+          isLoading: false,
         });
         this.props.dispatch(addToastWithTimeout('error', err.message));
       });
@@ -540,7 +545,7 @@ class ComposerWithData extends Component<Props, State> {
       availableCommunities,
       activeCommunity,
       activeChannel,
-      isPublishing,
+      isLoading,
     } = this.state;
 
     const {
@@ -620,7 +625,7 @@ class ComposerWithData extends Component<Props, State> {
 
                 <Textarea
                   onChange={this.changeBody}
-                  state={this.state.body}
+                  value={this.state.body}
                   style={ThreadDescription}
                   ref={editor => (this.bodyEditor = editor)}
                   placeholder={'Write more thoughts here...'}
@@ -645,11 +650,11 @@ class ComposerWithData extends Component<Props, State> {
             <Button
               data-cy="composer-publish-button"
               onClick={this.publishThread}
-              loading={isPublishing}
+              loading={isLoading}
               disabled={
                 !title ||
                 title.trim().length === 0 ||
-                isPublishing ||
+                isLoading ||
                 networkDisabled
               }
               color={'brand'}
