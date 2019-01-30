@@ -444,7 +444,7 @@ export const CommunityHeader = styled.div`
   display: ${props => (props.hide ? 'none' : 'flex')};
   align-items: center;
   justify-content: space-between;
-  padding: 16px 32px;
+  padding: 11px 32px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   flex: 0 0 64px;
   align-self: stretch;
@@ -819,5 +819,15 @@ export const AnimatedContainer = styled.div`
 
   @media (max-width: 768px) {
     display: none;
+  }
+`;
+
+export const TagsContainer = styled.div`
+  display: flex;
+  margin-top: 12px;
+  cursor: pointer;
+
+  > div {
+    margin-right: 4px;
   }
 `;

@@ -266,7 +266,7 @@ const getColorFromHexContrast = (hex: string) => {
 
 export const ThreadTagContainer = styled.div`
   display: flex;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   justify-content: space-between;
   align-items: center;
   max-width: 100%;
@@ -274,7 +274,7 @@ export const ThreadTagContainer = styled.div`
 
 export const StyledThreadTag = styled.li`
   list-style-type: none;
-  padding: ${props => (props.size === 'default' ? '8px 12px' : '2px 4px')};
+  padding: ${props => (props.size === 'default' ? '8px 12px' : '2px 8px')};
   border-radius: 4px;
   background: ${props => props.hex};
   display: flex;
