@@ -413,7 +413,8 @@ class ComposerWithData extends Component<Props, State> {
     const uploading = `![Uploading ${files[0].name}...]()`;
     this.setState({
       isLoading: true,
-      body: this.state.body + '\n' + uploading + '\n',
+      // Only add a newline before ![Uploading...] if there isn't one already
+      body: this.state.body.replace(/([^\r\n])$/, '$1\n') + uploading + '\n',
     });
     return this.props
       .uploadImage({
