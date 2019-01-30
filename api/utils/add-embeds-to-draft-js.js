@@ -1,5 +1,11 @@
 // @flow
-import { EditorState, Entity, AtomicBlockUtils } from 'draft-js';
+import {
+  EditorState,
+  Entity,
+  AtomicBlockUtils,
+  ContentState,
+  convertToRaw,
+} from 'draft-js';
 
 const FIGMA_URLS = /\b((?:https?\/\/)?(?:www\.)?figma.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/.*)?)/gi;
 const YOUTUBE_URLS = /\b(?:\/\/)?(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?[\w\?=]*)?/gi;
@@ -18,7 +24,7 @@ type AddEmbedAttrs = {
 
 // Taken from https://github.com/vacenz/last-draft-js-plugins/blob/master/draft-js-embed-plugin/src/modifiers/addEmbed.js
 // adapted to pass additional attrs onto the iframe
-export const addEmbed = (
+export const addEmbedToEditorState = (
   editorState: typeof EditorState,
   attrs: AddEmbedAttrs
 ) => {
@@ -34,10 +40,32 @@ export const addEmbed = (
     entityKey,
     ' '
   );
-  return EditorState.forceSelection(
-    newEditorState,
-    editorState.getCurrentContent().getSelectionAfter()
-  );
+  // insertAtomicBlock inserts _before_ the current block, which is not what we want,
+  // so we have to manually move the new atomic block one further down
+  const content = newEditorState.getCurrentContent();
+  let newBlocks = [];
+  let moveNext;
+  content.getBlocksAsArray().forEach(block => {
+    if (!moveNext) {
+      newBlocks.push(block);
+    } else {
+      newBlocks = [
+        ...newBlocks.slice(0, newBlocks.length - 1),
+        block,
+        newBlocks[newBlocks.length - 1],
+      ];
+    }
+    if (block.type === 'atomic' && block.getEntityAt(0) === entityKey) {
+      // remove the automatically added empty block above the atomic block
+      newBlocks = [
+        ...newBlocks.slice(0, newBlocks.length - 2),
+        newBlocks[newBlocks.length - 1],
+      ];
+      moveNext = true;
+    }
+  });
+  const newContent = ContentState.createFromBlockArray(newBlocks);
+  return EditorState.push(newEditorState, newContent, 'insert-characters');
 };
 
 // Utility function to return the first capturing group of each unique match

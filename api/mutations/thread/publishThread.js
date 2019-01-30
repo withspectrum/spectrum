@@ -1,11 +1,20 @@
 // @flow
 const debug = require('debug')('api:mutations:thread:publish-thread');
 import stringSimilarity from 'string-similarity';
-import { convertToRaw } from 'draft-js';
+import {
+  convertToRaw,
+  convertFromRaw,
+  EditorState,
+  SelectionState,
+} from 'draft-js';
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';
+import {
+  addEmbedToEditorState,
+  getEmbedsFromText,
+} from '../../utils/add-embeds-to-draft-js';
 import {
   publishThread,
   editThread,
@@ -84,6 +93,23 @@ export default requireAuth(
     }
 
     thread.type = type;
+
+    // Add automatic embeds to body
+    if (type === 'DRAFTJS' && thread.content.body) {
+      let parsed = JSON.parse(thread.content.body);
+      let editorState = EditorState.createWithContent(convertFromRaw(parsed));
+      parsed.blocks.forEach(block => {
+        const embeds = getEmbedsFromText(block.text);
+        if (embeds.length > 0) {
+          embeds.forEach(embed => {
+            const selection = SelectionState.createEmpty(block.key);
+            editorState = addEmbedToEditorState(editorState, embed);
+          });
+        }
+      });
+      const raw = convertToRaw(editorState.getCurrentContent());
+      thread.content.body = JSON.stringify(raw);
+    }
 
     const [
       currentUserChannelPermissions,
