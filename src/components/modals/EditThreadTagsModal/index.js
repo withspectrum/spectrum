@@ -5,11 +5,12 @@ import compose from 'recompose/compose';
 import { Query } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import ModalContainer from '../modalContainer';
-import { closeModal } from '../../../actions/modals';
+import { closeModal } from 'src/actions/modals';
 import { connect } from 'react-redux';
-import { TextButton, Button } from '../../buttons';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import Icon from '../../icons';
+import { TextButton, Button } from 'src/components/buttons';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import Icon from 'src/components/icons';
+import { Loading } from 'src/components/loading';
 import { IconContainer } from '../RepExplainerModal/style';
 import {
   Section,
@@ -172,7 +173,7 @@ class EditThreadTagsModal extends React.Component<Props, State> {
                             </CreateTagFooter>
                           </React.Fragment>
                         );
-                      if (loading) return <p>Loading</p>;
+                      if (loading) return <Loading />;
                       if (error) return <p>Error! :(</p>;
                       return null;
                     }}
