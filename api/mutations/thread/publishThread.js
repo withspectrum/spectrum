@@ -99,6 +99,7 @@ export default requireAuth(
       let parsed = JSON.parse(thread.content.body);
       let editorState = EditorState.createWithContent(convertFromRaw(parsed));
       parsed.blocks.forEach(block => {
+        if (block.type !== 'unstyled') return;
         const embeds = getEmbedsFromText(block.text);
         if (embeds.length > 0) {
           embeds.forEach(embed => {
