@@ -24,6 +24,7 @@ import type { GetComposerType } from 'shared/graphql/queries/composer/getCompose
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
 import uploadImage, {
   type UploadImageInput,
+  type UploadImageType,
 } from 'shared/graphql/mutations/uploadImage';
 import { TextButton, Button } from '../buttons';
 import { FlexRow } from '../../components/globals';
@@ -50,7 +51,7 @@ import { ESC, ENTER } from 'src/helpers/keycodes';
 
 type State = {
   title: string,
-  body: Object,
+  body: string,
   availableCommunities: Array<any>,
   availableChannels: Array<any>,
   activeCommunity: ?string,
@@ -65,7 +66,7 @@ type Props = {
     refetch: Function,
     loading: boolean,
   },
-  uploadImage: (input: UploadImageInput) => Promise<string>,
+  uploadImage: (input: UploadImageInput) => Promise<UploadImageType>,
   isOpen: boolean,
   dispatch: Dispatch<Object>,
   publishThread: Function,

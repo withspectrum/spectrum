@@ -2,13 +2,15 @@
 import { isAuthedResolver } from '../../utils/permissions';
 import { uploadImage } from '../../utils/file-storage';
 import type { EntityTypes } from 'shared/types';
-import type { GraphQLContext } from '../';
+import type { GraphQLContext } from '../../';
 import type { FileUpload } from 'shared/types';
 
 type Args = {
-  image: FileUpload,
-  type: EntityTypes,
-  id?: string,
+  input: {
+    image: FileUpload,
+    type: EntityTypes,
+    id?: string,
+  },
 };
 
 export default isAuthedResolver(

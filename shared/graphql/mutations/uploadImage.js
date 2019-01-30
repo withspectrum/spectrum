@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import type { EntityType } from 'shared/types';
+import type { EntityTypes } from 'shared/types';
 
 export type UploadImageType = {
   data: {
@@ -9,9 +9,9 @@ export type UploadImageType = {
   },
 };
 
-type UploadImageInput = {
+export type UploadImageInput = {
   image: Object,
-  type: EntityType,
+  type: EntityTypes,
   id?: string,
 };
 
