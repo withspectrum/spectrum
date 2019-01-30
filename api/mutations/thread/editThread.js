@@ -138,23 +138,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     },
   });
 
-  // Add automatic embeds to body
-  if (type === 'DRAFTJS' && newInput.content.body) {
-    let parsed = JSON.parse(newInput.content.body);
-    let editorState = EditorState.createWithContent(convertFromRaw(parsed));
-    parsed.blocks.forEach(block => {
-      const embeds = getEmbedsFromText(block.text);
-      if (embeds.length > 0) {
-        embeds.forEach(embed => {
-          const selection = SelectionState.createEmpty(block.key);
-          editorState = addEmbedToEditorState(editorState, embed);
-        });
-      }
-    });
-    const raw = convertToRaw(editorState.getCurrentContent());
-    newInput.content.body = JSON.stringify(raw);
-  }
-
   // $FlowIssue
   const editedThread = await editThread(newInput, user.id);
 

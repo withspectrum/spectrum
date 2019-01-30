@@ -50,16 +50,17 @@ export const addEmbedToEditorState = (
       newBlocks.push(block);
     } else {
       newBlocks = [
-        ...newBlocks.slice(0, newBlocks.length - 1),
+        ...newBlocks.slice(0, newBlocks.length - 2),
         block,
-        newBlocks[newBlocks.length - 1],
+        ...newBlocks.slice(newBlocks.length - 2),
       ];
     }
     if (block.type === 'atomic' && block.getEntityAt(0) === entityKey) {
-      // remove the automatically added empty block above the atomic block
+      // move the automatically added empty block above the atomic block below the atomic block
       newBlocks = [
         ...newBlocks.slice(0, newBlocks.length - 2),
         newBlocks[newBlocks.length - 1],
+        newBlocks[newBlocks.length - 2],
       ];
       moveNext = true;
     }
