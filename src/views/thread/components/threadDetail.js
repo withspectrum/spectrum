@@ -31,11 +31,14 @@ import {
   ThreadContent,
   ThreadHeading,
   ThreadSubtitle,
+  TagsContainer,
 } from '../style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import getThreadLink from 'src/helpers/get-thread-link';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
+import ThreadTag from 'src/views/communitySettings/components/threadTag';
+import theme from 'shared/theme';
 
 type State = {
   isEditing?: boolean,
@@ -317,6 +320,11 @@ class ThreadDetailPure extends React.Component<Props, State> {
       });
   };
 
+  editTags = () => {
+    const { thread, dispatch } = this.props;
+    return dispatch(openModal('EDIT_THREAD_TAGS_MODAL', { thread }));
+  };
+
   render() {
     const { currentUser, thread } = this.props;
 
@@ -340,6 +348,12 @@ class ThreadDetailPure extends React.Component<Props, State> {
     const editedTimestamp = thread.modifiedAt
       ? new Date(thread.modifiedAt).getTime()
       : null;
+
+    const canViewTags =
+      thread &&
+      thread.community.communityPermissions &&
+      (thread.community.communityPermissions.isOwner ||
+        thread.community.communityPermissions.isModerator);
 
     return (
       <ThreadWrapper innerRef={this.props.innerRef}>
@@ -398,6 +412,19 @@ class ThreadDetailPure extends React.Component<Props, State> {
               )}
             </Link>
           </ThreadSubtitle>
+
+          {canViewTags && thread.tags && (
+            <TagsContainer onClick={this.editTags}>
+              {thread.tags.length > 0 &&
+                thread.tags.map(tag => {
+                  return <ThreadTag key={tag.id} tag={tag} size={'mini'} />;
+                })}
+              <ThreadTag
+                tag={{ id: 'new', hex: theme.bg.border, title: 'Manage tags' }}
+                size={'mini'}
+              />
+            </TagsContainer>
+          )}
 
           {/* $FlowFixMe */}
           <Editor
