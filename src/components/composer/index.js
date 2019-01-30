@@ -434,7 +434,7 @@ class ComposerWithData extends Component<Props, State> {
         });
       })
       .catch(err => {
-        console.log({ err });
+        console.error({ err });
       });
   };
 
