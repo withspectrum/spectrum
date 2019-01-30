@@ -5402,10 +5402,10 @@ draft-js-embed-plugin@^1.2.0:
   dependencies:
     decorate-component-with-props "^1.0.2"
 
-draft-js-export-markdown@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/draft-js-export-markdown/-/draft-js-export-markdown-1.2.2.tgz#1fc65f0b786f2e3107db44be300beb97fab9e231"
-  integrity sha512-lQ74NRWHy+oeG4eEjQBHlKrJtYtlLYCfFdCQDbDX80YvhuRtUwiWey6LMDN/uDc4FttCYM//fVS3c8oTMmn+6g==
+draft-js-export-markdown@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/draft-js-export-markdown/-/draft-js-export-markdown-1.3.0.tgz#e7f0d7aabc1f787c24e1c6dc524b681463aae8c8"
+  integrity sha512-kOiDGQ9KehcbYYcwzlkR+Gja6svEwIgId1gz3EtEVsZ09cxZaV13Qlkydm0J5wPy5Omthvdpj0Iw1B2E4BZRZQ==
   dependencies:
     draft-js-utils "^1.2.0"
 
@@ -5431,20 +5431,20 @@ draft-js-image-plugin@^2.0.6:
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
 
-draft-js-import-element@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/draft-js-import-element/-/draft-js-import-element-1.2.1.tgz#9a6a56d74690d48d35d8d089564e6d710b4926eb"
-  integrity sha512-T/eCDkaU8wrTCH6c+/2BE7Vx/11GABRNU/UBiHM4D903LNFar8UfjElehpiKVf+F4rxi8dfhvTgaWrpWDfX4MA==
+draft-js-import-element@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/draft-js-import-element/-/draft-js-import-element-1.3.0.tgz#64ca3b32e770cc0227f563cfb362b19bd5c60e4e"
+  integrity sha512-asRZSsMbqzpQ3xlUX9+HMuOn/DR8OyWYVV9wdcnPw7QwVUqb3L4XGj0XbDCbdQte0aX8W1DU4BV0nhC2KcSCEQ==
   dependencies:
-    draft-js-utils "^1.2.0"
+    draft-js-utils "^1.3.0"
     synthetic-dom "^1.2.0"
 
-draft-js-import-markdown@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-1.2.3.tgz#71ffc8eee1530f0349c22273681fbcb3c659c0c0"
-  integrity sha512-NPcXwWSsIA+uwASzdJWLQM4y+xW1vTDtDdIDHCHfP76i9cx8zYpH75GW8Ezz8L9SW2qetNcFW056Hj2yxRZ+2g==
+draft-js-import-markdown@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-1.3.0.tgz#0f939ecb72c342345e685b37cb43c701c167dc36"
+  integrity sha512-V8JQflHOGYMmHOlrodY/l7zce00juHJ3uhSeL63x7x26sqKgTa75hdAAo7M1Z6ayuL7/AJkTQHP/NKsR4/vujA==
   dependencies:
-    draft-js-import-element "^1.2.1"
+    draft-js-import-element "^1.3.0"
     synthetic-dom "^1.2.0"
 
 draft-js-linkify-plugin@^2.0.0-beta1:
@@ -5510,6 +5510,11 @@ draft-js-utils@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-1.2.0.tgz#f5cb23eb167325ffed3d79882fdc317721d2fd12"
   integrity sha1-9csj6xZzJf/tPXmIL9wxdyHS/RI=
+
+draft-js-utils@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-1.3.0.tgz#9102ca34450da3de2097a074c6cc9c92f72a312e"
+  integrity sha512-wZaY6HQ/jZTh0wshkPzXNrPu0qcE6PuZwIYJp/q8nFAc3elWma7EBtGLXDPkSwvAXEl596mD6GPfk3jnPDuA+w==
 
 draft-js@0.x, draft-js@^0.10.4, "draft-js@npm:draft-js-fork-mxstbr", draft-js@~0.10.0:
   version "0.10.4"
@@ -9594,7 +9599,7 @@ lodash@4.17.10:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
   integrity sha512-UejweD1pDoXu+AD825lWwp4ZGtSwgnpZxb3JDViD7StjQz+Nb/6l093lx4OQ0foGWNRoc19mWy7BzL+UAK2iVg==
 
-"lodash@>=3.5 <5", lodash@^4.13.1, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.7.0:
+"lodash@>=3.5 <5", lodash@^4.13.1, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.5.1, lodash@^4.7.0:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
@@ -11966,6 +11971,15 @@ react-loadable@^5.5.0:
   dependencies:
     prop-types "^15.5.0"
 
+react-mentions@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/react-mentions/-/react-mentions-2.4.1.tgz#08f64ba9450370ab70cb9ca6b84dc60f43edb0c9"
+  integrity sha512-irw5V5IJ5NU+Lr1QVgQd8395gh3Lyrgz9/Uhyp6S2aDR4X4E2gz0Hf4saLvk+bBDJpNmV/j+oJsn28Me0rPIqg==
+  dependencies:
+    lodash "^4.5.1"
+    prop-types "^15.5.8"
+    substyle "^6.1.1"
+
 react-modal@^3.7.1:
   version "3.8.1"
   resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-3.8.1.tgz#7300f94a6f92a2e17994de0be6ccb61734464c9e"
@@ -13711,6 +13725,16 @@ subscriptions-transport-ws@^0.9.11, subscriptions-transport-ws@^0.9.15:
     symbol-observable "^1.0.4"
     ws "^5.2.0"
 
+substyle@^6.1.1:
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/substyle/-/substyle-6.3.1.tgz#29801f06e016dda8df91b531a69338d6e096fa58"
+  integrity sha512-S25YRgVQB25cLXgGAJ7AXTYewkIB/9Fa1Y7jxkN48U4N6rbK9YhVEiF7vtPGLlJl8ebSOJ3N4t8cd6jL8MH7Uw==
+  dependencies:
+    hoist-non-react-statics "^3.1.0"
+    invariant "^2.2.0"
+    prop-types "^15.5.8"
+    warning "^2.1.0"
+
 suffix@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/suffix/-/suffix-0.1.1.tgz#cc58231646a0ef1102f79478ef3a9248fd9c842f"
@@ -14679,6 +14703,13 @@ walker@~1.0.5:
   integrity sha1-L3+bj9ENZ3JisYqITijRlhjgKPs=
   dependencies:
     makeerror "1.0.x"
+
+warning@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/warning/-/warning-2.1.0.tgz#21220d9c63afc77a8c92111e011af705ce0c6901"
+  integrity sha1-ISINnGOvx3qMkhEeARr3Bc4MaQE=
+  dependencies:
+    loose-envify "^1.0.0"
 
 warning@^3.0.0:
   version "3.0.0"

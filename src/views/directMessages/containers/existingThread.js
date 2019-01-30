@@ -6,7 +6,7 @@ import { withApollo } from 'react-apollo';
 import setLastSeenMutation from 'shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';
 import Messages from '../components/messages';
 import Header from '../components/header';
-import ChatInput from 'src/components/chatInput';
+import ChatInput, { cleanSuggestionUserObject } from 'src/components/chatInput';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import getDirectMessageThread, {
   type GetDirectMessageThreadType,
@@ -110,6 +110,9 @@ class ExistingThread extends React.Component<Props> {
     if (id !== 'new') {
       if (data.directMessageThread) {
         const thread = data.directMessageThread;
+        const mentionSuggestions = thread.participants
+          .map(cleanSuggestionUserObject)
+          .filter(user => user && user.username !== currentUser.username);
         return (
           <MessagesContainer>
             <ViewContent
@@ -139,6 +142,7 @@ class ExistingThread extends React.Component<Props> {
               threadType={'directMessageThread'}
               forceScrollToBottom={this.forceScrollToBottom}
               onRef={chatInput => (this.chatInput = chatInput)}
+              participants={mentionSuggestions}
             />
           </MessagesContainer>
         );

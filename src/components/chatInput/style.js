@@ -1,8 +1,7 @@
 // @flow
-import React from 'react';
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
-import Textarea from 'react-textarea-autosize';
+import MentionsInput from '../mentionsInput';
 import { IconButton } from '../buttons';
 import { QuoteWrapper } from '../message/style';
 import {
@@ -97,19 +96,12 @@ export const InputWrapper = styled.div`
   }
 `;
 
-export const Input = styled(
-  ({ hasAttachment, networkDisabled, dataCy, ...rest }) => (
-    <Textarea {...rest} />
-  )
-).attrs({
+export const Input = styled(MentionsInput).attrs({
+  dataCy: props => props.dataCy || 'chat-input',
   spellCheck: true,
   autoCapitalize: 'sentences',
   autoComplete: 'on',
   autoCorrect: 'on',
-  async: true,
-  rows: 1,
-  maxRows: 5,
-  'data-cy': props => props.dataCy || 'chat-input',
 })`
   font-size: 15px;
   font-weight: 400;

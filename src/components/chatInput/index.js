@@ -26,7 +26,6 @@ import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
 import type { Dispatch } from 'redux';
-import { ESC, BACKSPACE, DELETE } from 'src/helpers/keycodes';
 
 const QuotedMessage = connect()(
   getMessageById(props => {
@@ -67,8 +66,20 @@ type Props = {
   threadData?: Object,
   refetchThread?: Function,
   quotedMessage: ?{ messageId: string, threadId: string },
+  // used to pre-populate the @mention suggestions with participants and the author of the thread
+  participants: Array<?Object>,
   onFocus: ?Function,
   onBlur: ?Function,
+};
+
+export const cleanSuggestionUserObject = (user: ?Object) => {
+  if (!user) return null;
+  return {
+    ...user,
+    id: user.username,
+    display: user.username,
+    filterName: user.name.toLowerCase(),
+  };
 };
 
 // $FlowFixMe
@@ -221,7 +232,9 @@ const ChatInput = (props: Props) => {
 
     if (text.length === 0) return;
 
-    sendMessage({ body: text })
+    // workaround react-mentions bug by replacing @[username] with @username
+    // @see withspectrum/spectrum#4587
+    sendMessage({ body: text.replace(/@\[([a-z0-9_-]+)\]/g, '@$1') })
       .then(() => {
         // If we're viewing a thread and the user sends a message as a non-member, we need to refetch the thread data
         if (
@@ -279,7 +292,6 @@ const ChatInput = (props: Props) => {
     !props.networkOnline ||
     (props.websocketConnection !== 'connected' &&
       props.websocketConnection !== 'reconnected');
-
   return (
     <React.Fragment>
       <ChatInputContainer>
@@ -343,6 +355,7 @@ const ChatInput = (props: Props) => {
                   if (props.onRef) props.onRef(node);
                   setInputRef(node);
                 }}
+                staticSuggestions={props.participants}
               />
             </InputWrapper>
             <SendButton

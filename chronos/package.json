@@ -4,7 +4,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.383.0",
-    "bull": "^3.5.3",
+    "bull": "^3.6.0",
     "datadog-metrics": "^0.8.1",
     "debug": "^4.1.1",
     "decode-uri-component": "^0.2.0",

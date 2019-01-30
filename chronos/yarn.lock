@@ -54,12 +54,12 @@ buffer@^5.1.0:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
 
-bull@^3.5.3:
-  version "3.5.3"
-  resolved "https://registry.yarnpkg.com/bull/-/bull-3.5.3.tgz#fb299c3c21123aa619019e7d3c2be5e6fa02a64b"
-  integrity sha512-dnOn90Wq8K4mQFMAxK71/GNtkcNbs9SdXCFChpkVI57QigxljmDnr0C+Opy6Khlk1zAyMxYGrWX54zqdug8AtA==
+bull@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/bull/-/bull-3.6.0.tgz#9d137a4470d9f5a0df54801ca4390656e5054a42"
+  integrity sha512-705Vf3weiRr8D49/+lsPSxV/1NejhjfmVviv9qG2srIYPr7IS2euLwHa+2GNfaVDA2tmx8xyJFW9bPw3fPfHPg==
   dependencies:
-    cron-parser "^2.5.0"
+    cron-parser "^2.7.3"
     debuglog "^1.0.0"
     ioredis "^4.5.1"
     lodash "^4.17.11"
@@ -96,7 +96,7 @@ crc@^3.5.0:
   dependencies:
     buffer "^5.1.0"
 
-cron-parser@^2.5.0:
+cron-parser@^2.7.3:
   version "2.7.3"
   resolved "https://registry.yarnpkg.com/cron-parser/-/cron-parser-2.7.3.tgz#12603f89f5375af353a9357be2543d3172eac651"
   integrity sha512-t9Kc7HWBWPndBzvbdQ1YG9rpPRB37Tb/tTviziUOh1qs3TARGh3b1p+tnkOHNe1K5iI3oheBPgLqwotMM7+lpg==
