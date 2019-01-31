@@ -456,7 +456,7 @@ describe('/new/thread', () => {
     cy.get('[data-cy="composer-channel-selector"]').should('be.visible');
     // Type title and body
     cy.get('[data-cy="composer-title-input"]').type(title);
-    cy.get('[contenteditable="true"]').type(body);
+    cy.get('[data-cy="rich-text-editor"]').type(body);
     cy.get('[data-cy="composer-publish-button"]').click();
     cy.location('pathname').should('contain', 'thread');
     cy.get('[data-cy="thread-view"]');
@@ -472,7 +472,7 @@ describe('/new/thread', () => {
     cy.get('[data-cy="composer-channel-selector"]').should('be.visible');
     // Type title and body
     cy.get('[data-cy="composer-title-input"]').type(title);
-    cy.get('[contenteditable="true"]').type(body);
+    cy.get('[data-cy="rich-text-editor"]').type(body);
     /////need time as our localstorage is not set
     cy.wait(1000);
     cy.reload();
