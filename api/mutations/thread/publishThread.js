@@ -11,7 +11,7 @@ import { stateFromMarkdown } from 'draft-js-import-markdown';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';
-import { addEmbedsToEditorState } from '../../utils/add-embeds-to-draft-js';
+import processThreadContent from 'shared/draft-utils/process-thread-content';
 import {
   publishThread,
   editThread,
@@ -74,31 +74,11 @@ export default requireAuth(
       );
     }
 
-    if (type === 'TEXT') {
-      type = 'DRAFTJS';
-      if (thread.content.body) {
-        thread.content.body = JSON.stringify(
-          convertToRaw(
-            stateFromMarkdown(thread.content.body, {
-              parserOptions: {
-                breaks: true,
-              },
-            })
-          )
-        );
-      }
+    if (thread.content.body) {
+      thread.content.body = processThreadContent(type, thread.content.body);
     }
 
-    thread.type = type;
-
-    // Add automatic embeds to body
-    if (type === 'DRAFTJS' && thread.content.body) {
-      let parsed = JSON.parse(thread.content.body);
-      let editorState = EditorState.createWithContent(convertFromRaw(parsed));
-      thread.content.body = JSON.stringify(
-        convertToRaw(addEmbedsToEditorState(editorState).getCurrentContent())
-      );
-    }
+    thread.type = 'DRAFTJS';
 
     const [
       currentUserChannelPermissions,
