@@ -30,7 +30,7 @@ export const Composer = styled.div`
     css`
       top: 0;
       right: 0;
-      z-index: 3002;
+      z-index: ${zIndex.composer};
     `}
 
   &:hover {

@@ -132,7 +132,7 @@ class Dashboard extends React.Component<Props, State> {
 
       return (
         <DashboardWrapper data-cy="inbox-view" id="main">
-          <ThreadComposer activeCommunity={'test'} showComposerUpsell={true} />
+          <ThreadComposer activeCommunity={''} />
           <Head title={title} description={description} />
           <Titlebar hasChildren hasSearch filter={searchFilter}>
             <Menu darkContext hasTabBar>
@@ -170,12 +170,6 @@ class Dashboard extends React.Component<Props, State> {
                   activeChannelObject={activeChannelObject}
                 />
               </ErrorBoundary>
-
-              <ComposerPlaceholder
-                isInbox={false}
-                isOpen={false}
-                showCommunityOwnerUpsell={false}
-              />
             </FeedHeaderContainer>
             {newActivityIndicator && (
               <NewActivityIndicator elem="scroller-for-inbox" />
