@@ -10,6 +10,7 @@ export const SegmentedControl = styled(FlexRow)`
   border-bottom: 2px solid ${theme.bg.border};
   align-items: stretch;
   min-height: 48px;
+  ${props => props.css};
 
   @media (max-width: 768px) {
     overflow-y: hidden;

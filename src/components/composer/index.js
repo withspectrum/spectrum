@@ -8,10 +8,13 @@ import debounce from 'debounce';
 import queryString from 'query-string';
 import { KeyBindingUtil } from 'draft-js';
 import Dropzone from 'react-dropzone';
+import processThreadContent from 'shared/draft-utils/process-thread-content';
+import { ThreadHeading } from 'src/views/thread/style';
+import Editor from 'src/components/rich-text-editor';
+import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
-import Editor from '../rich-text-editor';
 import {
   toPlainText,
   fromPlainText,
@@ -58,6 +61,7 @@ type State = {
   activeChannel: ?string,
   isLoading: boolean,
   postWasPublished: boolean,
+  preview: boolean,
 };
 
 type Props = {
@@ -112,6 +116,7 @@ class ComposerWithData extends Component<Props, State> {
       activeChannel: activeChannelSlug || '',
       isLoading: false,
       postWasPublished: false,
+      preview: false,
     };
 
     this.persistBodyToLocalStorageWithDebounce = debounce(
@@ -548,6 +553,7 @@ class ComposerWithData extends Component<Props, State> {
       activeCommunity,
       activeChannel,
       isLoading,
+      preview,
     } = this.state;
 
     const {
@@ -605,38 +611,71 @@ class ComposerWithData extends Component<Props, State> {
             </RequiredSelector>
           )}
         </Dropdowns>
-        <Dropzone
-          accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
-          disableClick
-          multiple={false}
-          onDropAccepted={this.uploadFiles}
-        >
-          {({ getRootProps, getInputProps, isDragActive }) => (
-            <div {...getRootProps()}>
-              <ThreadInputs>
-                <input {...getInputProps()} />
-                <Textarea
-                  data-cy="composer-title-input"
-                  onChange={this.changeTitle}
-                  style={ThreadTitle}
-                  value={this.state.title}
-                  placeholder={"What's up?"}
-                  ref={'titleTextarea'}
-                  autoFocus={!threadSliderIsOpen}
-                />
+        <ThreadInputs>
+          <SegmentedControl
+            css={{ marginLeft: 0, marginTop: 0, marginBottom: '32px' }}
+          >
+            <Segment
+              selected={!this.state.preview}
+              onClick={() => this.setState({ preview: false })}
+            >
+              Write
+            </Segment>
+            <Segment
+              selected={this.state.preview}
+              onClick={() => this.setState({ preview: true })}
+            >
+              Preview
+            </Segment>
+          </SegmentedControl>
+          {preview ? (
+            /* $FlowFixMe */
+            <React.Fragment>
+              <ThreadHeading>{this.state.title}</ThreadHeading>
+              {/* $FlowFixMe */}
+              <Editor
+                readOnly
+                state={toState(
+                  JSON.parse(processThreadContent('TEXT', this.state.body))
+                )}
+                onChange={() => {}}
+                placeholder=""
+                version={2}
+              />
+            </React.Fragment>
+          ) : (
+            <Dropzone
+              accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
+              disableClick
+              multiple={false}
+              onDropAccepted={this.uploadFiles}
+            >
+              {({ getRootProps, getInputProps, isDragActive }) => (
+                <div {...getRootProps()}>
+                  <input {...getInputProps()} />
+                  <Textarea
+                    data-cy="composer-title-input"
+                    onChange={this.changeTitle}
+                    style={ThreadTitle}
+                    value={this.state.title}
+                    placeholder={"What's up?"}
+                    ref={'titleTextarea'}
+                    autoFocus={!threadSliderIsOpen}
+                  />
 
-                <Textarea
-                  onChange={this.changeBody}
-                  value={this.state.body}
-                  style={ThreadDescription}
-                  ref={editor => (this.bodyEditor = editor)}
-                  placeholder={'Write more thoughts here...'}
-                  className={'threadComposer'}
-                />
-              </ThreadInputs>
-            </div>
+                  <Textarea
+                    onChange={this.changeBody}
+                    value={this.state.body}
+                    style={ThreadDescription}
+                    ref={editor => (this.bodyEditor = editor)}
+                    placeholder={'Write more thoughts here...'}
+                    className={'threadComposer'}
+                  />
+                </div>
+              )}
+            </Dropzone>
           )}
-        </Dropzone>
+        </ThreadInputs>
 
         <Actions>
           {networkDisabled && (
