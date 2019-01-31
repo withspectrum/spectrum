@@ -670,6 +670,7 @@ class ComposerWithData extends Component<Props, State> {
                     inputRef={editor => (this.bodyEditor = editor)}
                     placeholder={'Write more thoughts here...'}
                     className={'threadComposer'}
+                    dataCy="rich-text-editor"
                   />
                 </div>
               )}
