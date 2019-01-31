@@ -1,7 +1,6 @@
 // @flow
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
-import Raven from 'shared/raven';
 import { addEmbedsToEditorState } from './add-embeds-to-draft-js';
 
 export default (type: 'TEXT' | 'DRAFTJS', body: string): string => {
