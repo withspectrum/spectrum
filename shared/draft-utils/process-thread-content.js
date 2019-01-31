@@ -27,7 +27,7 @@ export default (type: 'TEXT' | 'DRAFTJS', body: string): string => {
     return JSON.stringify(convertToRaw(newEditorState.getCurrentContent()));
     // Ignore errors during automatic embed detection
   } catch (err) {
-    Raven.captureException(err);
+    console.error(err);
     return newBody;
   }
 };
