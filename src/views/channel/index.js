@@ -6,6 +6,7 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import { CommunityAvatar } from 'src/components/avatar';
 import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
 import ThreadComposer from 'src/components/threadComposer';
+import ComposerPlaceholder from 'src/components/threadComposer/components/placeholder';
 import Head from 'src/components/head';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
@@ -499,6 +500,11 @@ class ChannelView extends React.Component<Props, State> {
                 ((channel.isPrivate && !channel.isArchived) ||
                   !channel.isPrivate) && (
                   <ErrorBoundary fallbackComponent={null}>
+                    <ComposerPlaceholder
+                      isInbox={false}
+                      isOpen={false}
+                      showCommunityOwnerUpsell={false}
+                    />
                     <ThreadComposer
                       activeCommunity={communitySlug}
                       activeChannel={channelSlug}
