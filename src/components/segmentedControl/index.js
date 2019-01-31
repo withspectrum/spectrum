@@ -55,7 +55,6 @@ export const Segment = styled(FlexRow)`
   @media (max-width: 768px) {
     flex: auto;
     justify-content: center;
-    margin-top: 32px;
     text-align: center;
 
     .icon {

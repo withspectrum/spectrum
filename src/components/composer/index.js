@@ -31,7 +31,8 @@ import uploadImage, {
   type UploadImageType,
 } from 'shared/graphql/mutations/uploadImage';
 import { TextButton, Button } from '../buttons';
-import { FlexRow } from '../../components/globals';
+import { FlexRow } from 'src/components/globals';
+import { MarkdownHint } from 'src/components/markdownHint';
 import { LoadingSelect } from '../loading';
 import Titlebar from '../../views/titlebar';
 import type { Dispatch } from 'redux';
@@ -614,7 +615,12 @@ class ComposerWithData extends Component<Props, State> {
         </Dropdowns>
         <ThreadInputs>
           <SegmentedControl
-            css={{ marginLeft: 0, marginTop: 0, marginBottom: '32px' }}
+            css={{
+              marginRight: 0,
+              marginLeft: 0,
+              marginTop: 0,
+              marginBottom: '32px',
+            }}
           >
             <Segment
               selected={!this.state.preview}
@@ -631,7 +637,7 @@ class ComposerWithData extends Component<Props, State> {
           </SegmentedControl>
           {preview ? (
             /* $FlowFixMe */
-            <React.Fragment>
+            <div style={{ padding: '0 32px' }}>
               <ThreadHeading>{this.state.title}</ThreadHeading>
               {/* $FlowFixMe */}
               <Editor
@@ -643,38 +649,48 @@ class ComposerWithData extends Component<Props, State> {
                 placeholder=""
                 version={2}
               />
-            </React.Fragment>
+            </div>
           ) : (
-            <Dropzone
-              accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
-              disableClick
-              multiple={false}
-              onDropAccepted={this.uploadFiles}
-            >
-              {({ getRootProps, getInputProps, isDragActive }) => (
-                <div {...getRootProps()}>
-                  <input {...getInputProps()} />
-                  <Textarea
-                    data-cy="composer-title-input"
-                    onChange={this.changeTitle}
-                    style={ThreadTitle}
-                    value={this.state.title}
-                    placeholder={"What's up?"}
-                    autoFocus={!threadSliderIsOpen}
-                  />
+            <div style={{ padding: '0 32px' }}>
+              <Dropzone
+                accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
+                disableClick
+                multiple={false}
+                onDropAccepted={this.uploadFiles}
+              >
+                {({ getRootProps, getInputProps, isDragActive }) => (
+                  <div {...getRootProps()}>
+                    <MarkdownHint
+                      showHint={this.state.body.length > 0}
+                      style={{
+                        marginLeft: 0,
+                        marginTop: '-16px',
+                        marginBottom: '16px',
+                      }}
+                    />
+                    <input {...getInputProps()} />
+                    <Textarea
+                      data-cy="composer-title-input"
+                      onChange={this.changeTitle}
+                      style={ThreadTitle}
+                      value={this.state.title}
+                      placeholder={"What's up?"}
+                      autoFocus={!threadSliderIsOpen}
+                    />
 
-                  <MentionsInput
-                    onChange={this.changeBody}
-                    value={this.state.body}
-                    style={ThreadDescription}
-                    inputRef={editor => (this.bodyEditor = editor)}
-                    placeholder={'Write more thoughts here...'}
-                    className={'threadComposer'}
-                    dataCy="rich-text-editor"
-                  />
-                </div>
-              )}
-            </Dropzone>
+                    <MentionsInput
+                      onChange={this.changeBody}
+                      value={this.state.body}
+                      style={ThreadDescription}
+                      inputRef={editor => (this.bodyEditor = editor)}
+                      placeholder={'Write more thoughts here...'}
+                      className={'threadComposer'}
+                      dataCy="rich-text-editor"
+                    />
+                  </div>
+                )}
+              </Dropzone>
+            </div>
           )}
         </ThreadInputs>
 

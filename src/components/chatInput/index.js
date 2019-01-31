@@ -15,8 +15,6 @@ import {
   InputWrapper,
   SendButton,
   PhotoSizeError,
-  MarkdownHint,
-  Preformatted,
   PreviewWrapper,
   RemovePreviewButton,
 } from './style';
@@ -26,6 +24,7 @@ import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
 import type { Dispatch } from 'redux';
+import { MarkdownHint } from 'src/components/markdownHint';
 
 const QuotedMessage = connect()(
   getMessageById(props => {
@@ -367,13 +366,7 @@ const ChatInput = (props: Props) => {
           </Form>
         </ChatInputWrapper>
       </ChatInputContainer>
-      <MarkdownHint showHint={text.length > 0} data-cy="markdownHint">
-        <b>**bold**</b>
-        <i>*italic*</i>
-        <Preformatted>`code`</Preformatted>
-        <Preformatted>```codeblock```</Preformatted>
-        <Preformatted>[name](link)</Preformatted>
-      </MarkdownHint>
+      <MarkdownHint showHint={text.length > 0} dataCy="markdownHint" />
     </React.Fragment>
   );
 };

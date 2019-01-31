@@ -124,30 +124,21 @@ export const OptionalSelector = styled(Selector)`
 export const ThreadInputs = styled(FlexCol)`
   grid-area: body;
   overflow-y: scroll;
-  padding: 64px;
-  padding-left: 80px;
+  padding: 32px;
+  padding-top: 8px;
+  margin-left: -32px;
+  margin-right: -32px;
+  width: calc(100% + 64px);
   background-color: ${theme.bg.default};
-
-  @media (max-width: 768px) {
-    max-width: 100vw;
-    padding: 32px;
-    padding-left: 48px;
-  }
-
-  @media (max-width: 480px) {
-    max-width: 100vw;
-    padding: 16px;
-    padding-left: 48px;
-  }
 `;
 
 export const ThreadTitle = {
-  fontSize: '24px',
+  fontSize: '28px',
   padding: '0',
   outline: 'none',
   border: '0',
-  lineHeight: '1.4',
-  fontWeight: '800',
+  lineHeight: '1.3',
+  fontWeight: '600',
   boxShadow: 'none',
   width: '100%',
   color: '#16171A',
@@ -161,7 +152,7 @@ export const ThreadTitle = {
 
 export const ThreadDescription = {
   fontSize: '16px',
-  fontWeight: '500',
+  fontWeight: '400',
   width: '100%',
   display: 'inline-block',
   lineHeight: '1.5',
