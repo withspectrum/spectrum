@@ -5,6 +5,7 @@ import {
   AtomicBlockUtils,
   ContentState,
   convertToRaw,
+  SelectionState,
 } from 'draft-js';
 
 const FIGMA_URLS = /\b((?:https?\/\/)?(?:www\.)?figma.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/.*)?)/gi;
@@ -20,6 +21,24 @@ type AddEmbedAttrs = {
   aspectRatio?: string,
   width?: number,
   height?: number,
+};
+
+export const addEmbedsToEditorState = (
+  editorState: typeof EditorState
+): typeof EditorState => {
+  const raw = convertToRaw(editorState.getCurrentContent());
+  let newEditorState = editorState;
+  raw.blocks.forEach(block => {
+    if (block.type !== 'unstyled') return;
+    const embeds = getEmbedsFromText(block.text);
+    if (embeds.length > 0) {
+      embeds.forEach(embed => {
+        const selection = SelectionState.createEmpty(block.key);
+        newEditorState = addEmbedToEditorState(newEditorState, embed);
+      });
+    }
+  });
+  return newEditorState;
 };
 
 // Taken from https://github.com/vacenz/last-draft-js-plugins/blob/master/draft-js-embed-plugin/src/modifiers/addEmbed.js

@@ -11,10 +11,7 @@ import { stateFromMarkdown } from 'draft-js-import-markdown';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';
-import {
-  addEmbedToEditorState,
-  getEmbedsFromText,
-} from '../../utils/add-embeds-to-draft-js';
+import { addEmbedsToEditorState } from '../../utils/add-embeds-to-draft-js';
 import {
   publishThread,
   editThread,
@@ -98,18 +95,9 @@ export default requireAuth(
     if (type === 'DRAFTJS' && thread.content.body) {
       let parsed = JSON.parse(thread.content.body);
       let editorState = EditorState.createWithContent(convertFromRaw(parsed));
-      parsed.blocks.forEach(block => {
-        if (block.type !== 'unstyled') return;
-        const embeds = getEmbedsFromText(block.text);
-        if (embeds.length > 0) {
-          embeds.forEach(embed => {
-            const selection = SelectionState.createEmpty(block.key);
-            editorState = addEmbedToEditorState(editorState, embed);
-          });
-        }
-      });
-      const raw = convertToRaw(editorState.getCurrentContent());
-      thread.content.body = JSON.stringify(raw);
+      thread.content.body = JSON.stringify(
+        convertToRaw(addEmbedsToEditorState(editorState).getCurrentContent())
+      );
     }
 
     const [
