@@ -8,7 +8,11 @@ type Props = {
   style?: Object,
 };
 
-export const MarkdownHint = ({ showHint = true, dataCy = '', style = {} }) => {
+export const MarkdownHint = ({
+  showHint = true,
+  dataCy = '',
+  style = {},
+}: Props) => {
   return (
     <StyledMarkdownHint showHint={showHint} data-cy={dataCy} style={style}>
       <b>**bold**</b>
