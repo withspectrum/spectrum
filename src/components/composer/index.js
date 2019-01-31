@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import Textarea from 'react-textarea-autosize';
+import MentionsInput from 'src/components/mentionsInput';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import debounce from 'debounce';
@@ -659,15 +660,14 @@ class ComposerWithData extends Component<Props, State> {
                     style={ThreadTitle}
                     value={this.state.title}
                     placeholder={"What's up?"}
-                    ref={'titleTextarea'}
                     autoFocus={!threadSliderIsOpen}
                   />
 
-                  <Textarea
+                  <MentionsInput
                     onChange={this.changeBody}
                     value={this.state.body}
                     style={ThreadDescription}
-                    ref={editor => (this.bodyEditor = editor)}
+                    inputRef={editor => (this.bodyEditor = editor)}
                     placeholder={'Write more thoughts here...'}
                     className={'threadComposer'}
                   />

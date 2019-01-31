@@ -108,11 +108,11 @@ const SpectrumMentionsInput = (props: Props) => {
 
   return (
     <MentionsInput
-      style={MentionsInputStyle}
       displayTransform={username => `@${username}`}
       markup="@[__id__]"
       data-cy={props.dataCy}
       {...props}
+      style={{ ...(props.style || {}), ...MentionsInputStyle }}
     >
       <Mention
         trigger="@"
