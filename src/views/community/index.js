@@ -395,12 +395,9 @@ class CommunityView extends React.Component<Props, State> {
                     <ComposerPlaceholder
                       isInbox={false}
                       isOpen={false}
-                      showCommunityOwnerUpsell={false}
+                      showCommunityOwnerUpsell={showComposerUpsell}
                     />
-                    <ThreadComposer
-                      activeCommunity={communitySlug}
-                      // showComposerUpsell={showComposerUpsell}
-                    />
+                    <ThreadComposer activeCommunity={communitySlug} />
                   </ErrorBoundary>
                 )}
 
