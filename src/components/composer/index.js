@@ -12,6 +12,7 @@ import Dropzone from 'react-dropzone';
 import processThreadContent from 'shared/draft-utils/process-thread-content';
 import { ThreadHeading } from 'src/views/thread/style';
 import Editor from 'src/components/rich-text-editor';
+import Image from 'src/components/rich-text-editor/Image';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
@@ -53,6 +54,25 @@ import {
 } from './utils';
 import { events, track } from 'src/helpers/analytics';
 import { ESC, ENTER } from 'src/helpers/keycodes';
+
+const PreviewEditor = (props: { state: typeof EditorState }) => {
+  const [state, setState] = React.useState(props.state);
+
+  const onChange = change => {
+    setState(change);
+  };
+
+  return (
+    <Editor
+      readOnly
+      state={state}
+      onChange={onChange}
+      placeholder=""
+      version={2}
+      editorKey="preview-editor"
+    />
+  );
+};
 
 type State = {
   title: string,
@@ -640,14 +660,10 @@ class ComposerWithData extends Component<Props, State> {
             <div style={{ padding: '0 32px' }}>
               <ThreadHeading>{this.state.title}</ThreadHeading>
               {/* $FlowFixMe */}
-              <Editor
-                readOnly
+              <PreviewEditor
                 state={toState(
                   JSON.parse(processThreadContent('TEXT', this.state.body))
                 )}
-                onChange={() => {}}
-                placeholder=""
-                version={2}
               />
             </div>
           ) : (
