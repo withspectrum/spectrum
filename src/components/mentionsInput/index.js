@@ -106,12 +106,14 @@ const SpectrumMentionsInput = (props: Props) => {
     return callback(uniqueResults.slice(0, 8));
   };
 
+  const { dataCy, ...rest } = props;
+
   return (
     <MentionsInput
       displayTransform={username => `@${username}`}
       markup="@[__id__]"
       data-cy={props.dataCy}
-      {...props}
+      {...rest}
       style={{ ...(props.style || {}), ...MentionsInputStyle }}
     >
       <Mention
