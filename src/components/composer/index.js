@@ -55,7 +55,8 @@ import {
 import { events, track } from 'src/helpers/analytics';
 import { ESC, ENTER } from 'src/helpers/keycodes';
 
-const PreviewEditor = (props: { state: typeof EditorState }) => {
+const PreviewEditor = (props: { state: Object }) => {
+  // $FlowIssue
   const [state, setState] = React.useState(props.state);
 
   const onChange = change => {
