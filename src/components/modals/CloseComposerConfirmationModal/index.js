@@ -17,15 +17,31 @@ type Props = {
 };
 
 class CloseComposerConfirmation extends React.Component<Props> {
+  state = {
+    isLoading: false,
+  };
+
   close = () => {
     this.props.dispatch(closeModal());
+  };
+
+  closeConfirmed = functionsArray => {
+    // functionArgs contains some of the action you want to execute when
+    // confirmation is accepted (yes clicked)
+    for (const func of functionsArray) {
+      func();
+    }
+
+    this.close();
   };
 
   render() {
     const {
       isOpen,
-      modalProps: { message },
+      modalProps: { message, ...callbacks },
     } = this.props;
+
+    const functions = Object.keys(callbacks).map(k => callbacks[k]);
 
     const styles = modalStyles();
 
@@ -38,7 +54,7 @@ class CloseComposerConfirmation extends React.Component<Props> {
         style={styles}
         closeTimeoutMS={330}
       >
-        <ModalContainer title={'Are you sure?'} closeModal={this.close}>
+        <ModalContainer title={'Dismiss Composer'} closeModal={this.close}>
           <Message>
             {message ? message : 'Are you sure you want to dismiss composer?'}
           </Message>
@@ -48,7 +64,7 @@ class CloseComposerConfirmation extends React.Component<Props> {
               No
             </TextButton>
 
-            <Button color="warn" onClick={this.close}>
+            <Button color="warn" onClick={() => this.closeConfirmed(functions)}>
               Yes
             </Button>
           </Actions>

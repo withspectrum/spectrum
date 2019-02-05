@@ -8,6 +8,7 @@ import debounce from 'debounce';
 import queryString from 'query-string';
 import { KeyBindingUtil } from 'draft-js';
 import { closeComposer } from '../../actions/composer';
+import { openModal } from '../../actions/modals';
 import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
 import Editor from '../rich-text-editor';
@@ -254,10 +255,13 @@ class ComposerWithData extends Component<Props, State> {
       e.keyCode === ENTER && KeyBindingUtil.hasCommandModifier(e);
 
     if (esc) {
-      // Community/channel view
-      this.closeComposer();
-      // Dashboard
-      this.activateLastThread();
+      this.props.dispatch(
+        openModal('CLOSE_COMPOSER_CONFIRMATION_MODAL', {
+          message: 'Are you sure you want to dismiss composer?',
+          closeComposerFn: this.closeComposer,
+          activateLastThreadFn: this.activateLastThread,
+        })
+      );
       return;
     }
 
