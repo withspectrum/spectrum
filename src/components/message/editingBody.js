@@ -11,6 +11,8 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import editMessageMutation from 'shared/graphql/mutations/message/editMessage';
+import { ESC } from '../../helpers/keycodes';
+import { openModal } from '../../actions/modals';
 
 type Props = {
   message: MessageInfoType,
@@ -47,6 +49,17 @@ const EditingChatInput = (props: Props) => {
   };
 
   const handleKeyPress = e => {
+    const esc = e.keyCode === ESC;
+    if (esc) {
+      props.dispatch(
+        openModal('CLOSE_COMPOSER_CONFIRMATION_MODAL', {
+          message: 'Are you sure you want to dismiss composer?',
+          cancelEdit: props.cancelEdit,
+        })
+      );
+
+      return;
+    }
     // Submit on Enter unless Shift is pressed
     if (e.key === 'Enter') {
       if (e.metaKey) {
