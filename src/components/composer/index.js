@@ -437,11 +437,24 @@ class ComposerWithData extends Component<Props, State> {
 
   uploadFiles = files => {
     const uploading = `![Uploading ${files[0].name}...]()`;
-    this.setState({
-      isLoading: true,
-      // Only add a newline before ![Uploading...] if there isn't one already
-      body: this.state.body.replace(/([^\r\n])$/, '$1\n') + uploading + '\n',
-    });
+    let caretPos = this.bodyEditor.selectionStart;
+
+    this.setState(
+      ({ body }) => ({
+        isLoading: true,
+        body:
+          body.substring(0, caretPos) +
+          uploading +
+          body.substring(this.bodyEditor.selectionEnd, this.state.body.length),
+      }),
+      () => {
+        caretPos = caretPos + uploading.length;
+        this.bodyEditor.selectionStart = caretPos;
+        this.bodyEditor.selectionEnd = caretPos;
+        this.bodyEditor.focus();
+      }
+    );
+
     return this.props
       .uploadImage({
         image: files[0],
