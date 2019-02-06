@@ -10,6 +10,7 @@ export default (type: 'TEXT' | 'DRAFTJS', body: string): string => {
       convertToRaw(
         stateFromMarkdown(newBody, {
           parserOptions: {
+            atomicImages: true,
             breaks: true,
           },
         })
