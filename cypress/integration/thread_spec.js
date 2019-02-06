@@ -478,6 +478,6 @@ describe('/new/thread', () => {
     cy.reload();
 
     cy.get('[data-cy="composer-title-input"]').contains(title);
-    cy.get('[contenteditable="true"]').contains(body);
+    cy.get('[data-cy="rich-text-editor"]').contains(body);
   });
 });
