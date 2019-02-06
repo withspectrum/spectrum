@@ -32,7 +32,7 @@ export const DropImageOverlayWrapper = styled.div`
   background: ${theme.bg.wash};
   border-radius: 4px;
   border: 1px solid ${theme.bg.border};
-  color: ${theme.text.default};
+  color: ${theme.text.secondary};
   transition: opacity 125ms ease-in-out;
 
   ${props =>
