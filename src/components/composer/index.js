@@ -108,8 +108,8 @@ type Props = {
 };
 
 const LS_BODY_KEY = 'last-plaintext-thread-composer-body';
-const LS_TITLE_KEY = 'last-thread-composer-title';
-const LS_COMPOSER_EXPIRE = 'last-thread-composer-expire';
+const LS_TITLE_KEY = 'last-plaintext-thread-composer-title';
+const LS_COMPOSER_EXPIRE = 'last-plaintext-thread-composer-expire';
 
 const ONE_DAY = (): string => {
   const time = new Date().getTime() + 60 * 60 * 24 * 1000;
@@ -170,10 +170,8 @@ class ComposerWithData extends Component<Props, State> {
         if (expireTime && currTime > expireTime) {
           this.removeStorage();
         } else {
-          storedBody = toState(
-            JSON.parse(localStorage.getItem(LS_BODY_KEY) || '')
-          );
-          storedTitle = localStorage.getItem(LS_TITLE_KEY);
+          storedBody = localStorage.getItem(LS_BODY_KEY) || '';
+          storedTitle = localStorage.getItem(LS_TITLE_KEY) || '';
         }
       } catch (err) {
         this.removeStorage();
