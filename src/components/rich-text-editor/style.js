@@ -58,7 +58,7 @@ export const Mention = compose(
   connect()
 )(MentionWithCurrentUser);
 
-export const customStyleFn = (style, block) => {
+export const customStyleFn = (style: Object, block: Object) => {
   if (style.first() === 'CODE' && block.getType() === 'unstyled')
     return {
       border: `1px solid ${theme.bg.border}`,
