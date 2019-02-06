@@ -3513,7 +3513,7 @@ draft-js-image-plugin@2.0.0-rc8:
 
 draft-js-import-element@^1.3.0:
   version "1.3.0"
-  resolved "https://registry.npmjs.org/draft-js-import-element/-/draft-js-import-element-1.3.0.tgz#64ca3b32e770cc0227f563cfb362b19bd5c60e4e"
+  resolved "https://registry.yarnpkg.com/draft-js-import-element/-/draft-js-import-element-1.3.0.tgz#64ca3b32e770cc0227f563cfb362b19bd5c60e4e"
   integrity sha512-asRZSsMbqzpQ3xlUX9+HMuOn/DR8OyWYVV9wdcnPw7QwVUqb3L4XGj0XbDCbdQte0aX8W1DU4BV0nhC2KcSCEQ==
   dependencies:
     draft-js-utils "^1.3.0"
@@ -3604,7 +3604,7 @@ draft-js-prism@ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb:
 
 draft-js-utils@^1.3.0:
   version "1.3.0"
-  resolved "https://registry.npmjs.org/draft-js-utils/-/draft-js-utils-1.3.0.tgz#9102ca34450da3de2097a074c6cc9c92f72a312e"
+  resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-1.3.0.tgz#9102ca34450da3de2097a074c6cc9c92f72a312e"
   integrity sha512-wZaY6HQ/jZTh0wshkPzXNrPu0qcE6PuZwIYJp/q8nFAc3elWma7EBtGLXDPkSwvAXEl596mD6GPfk3jnPDuA+w==
 
 draft-js@0.x, draft-js@^0.10.4, draft-js@^0.10.5, draft-js@~0.10.0:
@@ -4603,10 +4603,10 @@ graphql-log@^0.1.3:
     deep-for-each "^1.0.6"
     is-function "^1.0.1"
 
-graphql-rate-limit@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/graphql-rate-limit/-/graphql-rate-limit-1.2.2.tgz#4c97e7bcb5b8c8ca1ee67aaf194d22b88bba6f53"
-  integrity sha512-Osns7iZkKLAANZokorAKKIehQ3Wm03nXts2aBBy15r/QhKTNPxVwc71sXTn3IPJ7SzAfoARvPN1Jm3bmblHtiQ==
+graphql-rate-limit@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/graphql-rate-limit/-/graphql-rate-limit-1.2.3.tgz#33a98062bc251ba78eb5e74a8b7b08b1aac596c7"
+  integrity sha512-nhVYmEC/r1uhmCaSdjgOTNuBBbNcgYvdFRqTwWZ/+55tY/gTpEYTwH9ypayoERoqXleXwYsEROGQ9EEumA/uKA==
   dependencies:
     "@types/redis-mock" "^0.17.0"
     graphql-tools "^4.0.3"
@@ -4826,10 +4826,10 @@ hide-powered-by@1.0.0:
   resolved "https://registry.yarnpkg.com/hide-powered-by/-/hide-powered-by-1.0.0.tgz#4a85ad65881f62857fc70af7174a1184dccce32b"
   integrity sha1-SoWtZYgfYoV/xwr3F0oRhNzM4ys=
 
-highlight.js@^9.13.1:
-  version "9.13.1"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.13.1.tgz#054586d53a6863311168488a0f58d6c505ce641e"
-  integrity sha512-Sc28JNQNDzaH6PORtRLMvif9RSn1mYuOoX3omVjnb0+HbpPygU2ALBI0R/wsiqCb4/fcp07Gdo8g+fhtFrQl6A==
+highlight.js@^9.14.2:
+  version "9.14.2"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.14.2.tgz#efbfb22dc701406e4da406056ef8c2b70ebe5b26"
+  integrity sha512-Nc6YNECYpxyJABGYJAyw7dBAYbXEuIzwzkqoJnwbc1nIpCiN+3ioYf0XrBnLiyyG0JLuJhpPtt2iTSbXiKLoyA==
 
 history@^4.6.1, history@^4.7.2:
   version "4.7.2"
@@ -8655,10 +8655,10 @@ slate-markdown@0.1.0:
     react "^0.14.0 || ^15.0.0"
     styled-components "^2.0.0"
 
-slate@^0.44.9:
-  version "0.44.9"
-  resolved "https://registry.yarnpkg.com/slate/-/slate-0.44.9.tgz#0fc9ba9f08b379b86c4c0a1ddebbe6bf28aa3c4b"
-  integrity sha512-PKZUVZU416UJKuOakNvhJ5qh2umjPdkaO41Wf8x1xnkFe4IQcZuw3ZTWWm35rYD7fd0X238uEnxIqF5RuxENlA==
+slate@^0.44.10:
+  version "0.44.10"
+  resolved "https://registry.yarnpkg.com/slate/-/slate-0.44.10.tgz#ac7c3e3cf85570a8723a64a8a7807c881ddbfa8a"
+  integrity sha512-2jMPgOjExjeWfHrYUsYTMLo/ykbXjCwLUFwG3G34Q0vwRsmf4yOf3b0Zx5LoUaNlyvQDdBsOGsF1qi6yTx53DA==
   dependencies:
     debug "^3.1.0"
     direction "^0.1.5"
