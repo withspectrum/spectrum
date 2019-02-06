@@ -40,6 +40,7 @@ import {
   Action,
   EmbedUI,
   customStyleMap,
+  customStyleFn,
 } from './style';
 
 type Props = {
@@ -231,47 +232,47 @@ class Editor extends React.Component<Props, State> {
             stripPastedStyles={true}
             decorators={[mentionsDecorator]}
             customStyleMap={customStyleMap}
+            customStyleFn={customStyleFn}
             {...rest}
           />
-          {!readOnly &&
-            !isAndroid() && (
-              <OutsideClickHandler onOutsideClick={this.closeToolbar}>
-                <SideToolbar editorState={state} editorRef={this.editor}>
-                  <Expander inserting={inserting}>
-                    <IconButton
-                      glyph={'inserter'}
-                      onClick={this.toggleToolbarDisplayState}
+          {!readOnly && !isAndroid() && (
+            <OutsideClickHandler onOutsideClick={this.closeToolbar}>
+              <SideToolbar editorState={state} editorRef={this.editor}>
+                <Expander inserting={inserting}>
+                  <IconButton
+                    glyph={'inserter'}
+                    onClick={this.toggleToolbarDisplayState}
+                  />
+                  <Action>
+                    <MediaInput
+                      onChange={this.addImage}
+                      multiple
+                      tipLocation={'right'}
                     />
-                    <Action>
-                      <MediaInput
-                        onChange={this.addImage}
-                        multiple
-                        tipLocation={'right'}
-                      />
-                    </Action>
-                    <Action embedding={embedding}>
-                      <EmbedUI onSubmit={this.addEmbed} embedding={embedding}>
-                        <label htmlFor="embed-input">
-                          <Icon
-                            glyph={'embed'}
-                            tipText={'Embed a URL'}
-                            onClick={this.toggleEmbedInputState}
-                          />
-                          <input
-                            id="embed-input"
-                            type="url"
-                            placeholder="Enter a URL to embed"
-                            value={this.state.embedUrl}
-                            onChange={this.changeEmbedUrl}
-                          />
-                        </label>
-                        <button onClick={this.addEmbed}>Embed</button>
-                      </EmbedUI>
-                    </Action>
-                  </Expander>
-                </SideToolbar>
-              </OutsideClickHandler>
-            )}
+                  </Action>
+                  <Action embedding={embedding}>
+                    <EmbedUI onSubmit={this.addEmbed} embedding={embedding}>
+                      <label htmlFor="embed-input">
+                        <Icon
+                          glyph={'embed'}
+                          tipText={'Embed a URL'}
+                          onClick={this.toggleEmbedInputState}
+                        />
+                        <input
+                          id="embed-input"
+                          type="url"
+                          placeholder="Enter a URL to embed"
+                          value={this.state.embedUrl}
+                          onChange={this.changeEmbedUrl}
+                        />
+                      </label>
+                      <button onClick={this.addEmbed}>Embed</button>
+                    </EmbedUI>
+                  </Action>
+                </Expander>
+              </SideToolbar>
+            </OutsideClickHandler>
+          )}
         </ComposerBase>
       );
     } else {
@@ -300,6 +301,7 @@ class Editor extends React.Component<Props, State> {
               stripPastedStyles={true}
               decorators={[mentionsDecorator]}
               customStyleMap={customStyleMap}
+              customStyleFn={customStyleFn}
               {...rest}
             />
           </Wrapper>
