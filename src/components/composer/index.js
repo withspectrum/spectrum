@@ -46,6 +46,8 @@ import {
   Dropdowns,
   RequiredSelector,
   DisabledWarning,
+  DropImageOverlay,
+  DropzoneWrapper,
 } from './style';
 import {
   sortCommunities,
@@ -679,46 +681,49 @@ class ComposerWithData extends Component<Props, State> {
               />
             </div>
           ) : (
-            <div style={{ padding: '0 32px' }}>
-              <Dropzone
-                accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
-                disableClick
-                multiple={false}
-                onDropAccepted={this.uploadFiles}
-              >
-                {({ getRootProps, getInputProps, isDragActive }) => (
-                  <div {...getRootProps()}>
-                    <MarkdownHint
-                      showHint={this.state.body.length > 0}
-                      style={{
-                        marginLeft: 0,
-                        marginTop: '-16px',
-                        marginBottom: '16px',
-                      }}
-                    />
-                    <input {...getInputProps()} />
-                    <Textarea
-                      data-cy="composer-title-input"
-                      onChange={this.changeTitle}
-                      style={ThreadTitle}
-                      value={this.state.title}
-                      placeholder={"What's up?"}
-                      autoFocus={!threadSliderIsOpen}
-                    />
+            <Dropzone
+              accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
+              disableClick
+              multiple={false}
+              onDropAccepted={this.uploadFiles}
+            >
+              {({ getRootProps, getInputProps, isDragActive }) => (
+                <DropzoneWrapper
+                  {...getRootProps({
+                    refKey: 'innerRef',
+                  })}
+                >
+                  <MarkdownHint
+                    showHint={this.state.body.length > 0 && !isDragActive}
+                    style={{
+                      marginLeft: 0,
+                      marginTop: '-16px',
+                      marginBottom: '16px',
+                    }}
+                  />
+                  <input {...getInputProps()} />
+                  <Textarea
+                    data-cy="composer-title-input"
+                    onChange={this.changeTitle}
+                    style={ThreadTitle}
+                    value={this.state.title}
+                    placeholder={"What's up?"}
+                    autoFocus={!threadSliderIsOpen}
+                  />
 
-                    <MentionsInput
-                      onChange={this.changeBody}
-                      value={this.state.body}
-                      style={ThreadDescription}
-                      inputRef={editor => (this.bodyEditor = editor)}
-                      placeholder={'Write more thoughts here...'}
-                      className={'threadComposer'}
-                      dataCy="rich-text-editor"
-                    />
-                  </div>
-                )}
-              </Dropzone>
-            </div>
+                  <MentionsInput
+                    onChange={this.changeBody}
+                    value={this.state.body}
+                    style={ThreadDescription}
+                    inputRef={editor => (this.bodyEditor = editor)}
+                    placeholder={'Write more thoughts here...'}
+                    className={'threadComposer'}
+                    dataCy="rich-text-editor"
+                  />
+                  <DropImageOverlay visible={isDragActive} />
+                </DropzoneWrapper>
+              )}
+            </Dropzone>
           )}
         </ThreadInputs>
 

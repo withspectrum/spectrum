@@ -1,6 +1,50 @@
-import styled from 'styled-components';
+import React from 'react';
+import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
+import Icon from '../icons';
 import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
+
+export const DropzoneWrapper = styled.div`
+  padding: 0 32px;
+  position: relative;
+  height: 100%;
+`;
+
+export const DropImageOverlay = (props: { visible: boolean }) => {
+  return (
+    <DropImageOverlayWrapper visible={props.visible}>
+      <Icon glyph="photo" />
+      <h3>Drop image to upload</h3>
+    </DropImageOverlayWrapper>
+  );
+};
+
+export const DropImageOverlayWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: ${theme.bg.wash};
+  border-radius: 4px;
+  border: 1px solid ${theme.bg.border};
+  color: ${theme.text.default};
+  transition: opacity 125ms ease-in-out;
+
+  ${props =>
+    props.visible
+      ? css`
+          opacity: 0.9;
+        `
+      : css`
+          opacity: 0;
+          pointer-events: none;
+        `}
+`;
 
 export const Container = styled(FlexCol)`
   background-color: ${theme.bg.default};
