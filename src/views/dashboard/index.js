@@ -10,8 +10,7 @@ import getChannelThreadConnection from 'shared/graphql/queries/channel/getChanne
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import type { GetUserCommunityConnectionType } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import searchThreadsQuery from 'shared/graphql/queries/search/searchThreads';
-import ComposerPlaceholder from 'src/components/threadComposer/components/placeholder';
-import ThreadComposer from 'src/components/threadComposer/';
+import Composer from 'src/components/composer';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import DashboardThreadFeed from './components/threadFeed';
@@ -132,7 +131,7 @@ class Dashboard extends React.Component<Props, State> {
 
       return (
         <DashboardWrapper data-cy="inbox-view" id="main">
-          <ThreadComposer activeCommunity={''} />
+          <Composer isSlider={true} activeCommunity={activeCommunity} />
           <Head title={title} description={description} />
           <Titlebar hasChildren hasSearch filter={searchFilter}>
             <Menu darkContext hasTabBar>
