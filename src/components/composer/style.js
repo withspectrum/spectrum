@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import Icon from '../icons';
-import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
+import { hexa, Shadow, FlexRow, FlexCol, zIndex, Tooltip } from '../globals';
 
 export const DropzoneWrapper = styled.div`
   padding: 0 32px;
@@ -58,7 +58,7 @@ export const Container = styled(FlexCol)`
   height: calc(100vh - 48px);
 
   @media (max-width: 768px) {
-    grid-template-rows: 48px 64px 1fr 64px;
+    grid-template-rows: 48px 64px 1fr 100px;
     grid-template-areas: 'title' 'header' 'body' 'footer';
     max-width: 100vw;
     height: 100vh;
@@ -68,12 +68,12 @@ export const Container = styled(FlexCol)`
 export const Actions = styled(FlexCol)`
   background: ${theme.bg.wash};
   border-top: 2px solid ${theme.bg.border};
-  padding: 8px;
+  padding: 8px 32px;
   border-radius: 0;
   align-self: stretch;
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   position: relative;
   grid-area: footer;
@@ -85,6 +85,7 @@ export const Actions = styled(FlexCol)`
     border: 0;
     box-shadow: none;
     background-color: transparent;
+    flex-direction: column;
 
     > div {
       width: 100%;
@@ -98,6 +99,11 @@ export const Actions = styled(FlexCol)`
       }
     }
   }
+`;
+
+export const InputHints = styled(FlexRow)`
+  color: ${theme.text.alt};
+  font-size: 14px;
 `;
 
 export const Dropdowns = styled(FlexRow)`
@@ -207,6 +213,9 @@ export const ThreadDescription = {
   whiteSpace: 'pre-wrap',
   overflowY: 'scroll',
   position: 'relative',
+  // NOTE(@mxstbr): Magic value to make the margin between
+  // the thread title and body match the preview
+  marginTop: '12px',
 };
 
 export const DisabledWarning = styled.div`

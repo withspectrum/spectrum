@@ -9,6 +9,7 @@ import debounce from 'debounce';
 import queryString from 'query-string';
 import { KeyBindingUtil } from 'draft-js';
 import Dropzone from 'react-dropzone';
+import Icon from '../icons';
 import processThreadContent from 'shared/draft-utils/process-thread-content';
 import { ThreadHeading } from 'src/views/thread/style';
 import Editor from 'src/components/rich-text-editor';
@@ -33,6 +34,10 @@ import uploadImage, {
 } from 'shared/graphql/mutations/uploadImage';
 import { TextButton, Button } from '../buttons';
 import { FlexRow } from 'src/components/globals';
+import {
+  MediaLabel,
+  MediaInput,
+} from 'src/components/chatInput/components/style';
 import { MarkdownHint } from 'src/components/markdownHint';
 import { LoadingSelect } from '../loading';
 import Titlebar from '../../views/titlebar';
@@ -48,6 +53,7 @@ import {
   DisabledWarning,
   DropImageOverlay,
   DropzoneWrapper,
+  InputHints,
 } from './style';
 import {
   sortCommunities,
@@ -437,6 +443,10 @@ class ComposerWithData extends Component<Props, State> {
     });
   };
 
+  uploadFile = evt => {
+    this.uploadFiles(evt.target.files);
+  };
+
   uploadFiles = files => {
     const uploading = `![Uploading ${files[0].name}...]()`;
     let caretPos = this.bodyEditor.selectionStart;
@@ -693,14 +703,6 @@ class ComposerWithData extends Component<Props, State> {
                     refKey: 'innerRef',
                   })}
                 >
-                  <MarkdownHint
-                    showHint={this.state.body.length > 0 && !isDragActive}
-                    style={{
-                      marginLeft: 0,
-                      marginTop: '-16px',
-                      marginBottom: '16px',
-                    }}
-                  />
                   <input {...getInputProps()} />
                   <Textarea
                     data-cy="composer-title-input"
@@ -727,13 +729,38 @@ class ComposerWithData extends Component<Props, State> {
           )}
         </ThreadInputs>
 
+        {networkDisabled && (
+          <DisabledWarning>
+            Lost connection to the internet or server...
+          </DisabledWarning>
+        )}
         <Actions>
-          {networkDisabled && (
-            <DisabledWarning>
-              Lost connection to the internet or server...
-            </DisabledWarning>
-          )}
-
+          <InputHints>
+            <MediaLabel>
+              <MediaInput
+                type="file"
+                accept={'.png, .jpg, .jpeg, .gif, .mp4'}
+                multiple={false}
+                onChange={this.uploadFile}
+              />
+              <Icon
+                glyph="photo"
+                tipLocation={'top-right'}
+                tipText="Upload photo"
+              />
+            </MediaLabel>
+            <a
+              style={{ display: 'flex' }}
+              target="_blank"
+              href="https://guides.github.com/features/mastering-markdown/"
+            >
+              <Icon
+                tipText="Style with Markdown"
+                tipLocation="top-right"
+                glyph="markdown"
+              />
+            </a>
+          </InputHints>
           <FlexRow>
             <TextButton hoverColor="warn.alt" onClick={this.onCancelClick}>
               Cancel
