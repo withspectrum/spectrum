@@ -3521,7 +3521,7 @@ draft-js-import-element@^1.3.0:
 
 draft-js-import-markdown@^1.3.1:
   version "1.3.1"
-  resolved "https://registry.npmjs.org/draft-js-import-markdown/-/draft-js-import-markdown-1.3.1.tgz#7ed4f95c7f16acdd4703a5d608497857ed4a4ffa"
+  resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-1.3.1.tgz#7ed4f95c7f16acdd4703a5d608497857ed4a4ffa"
   integrity sha512-TTV+X7X5ixPeNWqpGk6CFLYO+5ORCrUENaJPGDOzps7gyT/SMfuILM8DP2FwWjFt3ys2WmFZMlMGKk/M4l/N/Q==
   dependencies:
     draft-js-import-element "^1.3.0"
