@@ -27,6 +27,8 @@ import { LoadingSelect } from '../loading';
 import Titlebar from '../../views/titlebar';
 import type { Dispatch } from 'redux';
 import {
+  ComposerSlider,
+  Overlay,
   Container,
   ThreadDescription,
   ThreadTitle,
@@ -339,8 +341,9 @@ class ComposerWithData extends Component<Props, State> {
     }
   };
 
-  onCancelClick = () => {
-    this.activateLastThread();
+  onCancelClick = async () => {
+    await this.activateLastThread();
+    this.props.dispatch(closeComposer());
   };
 
   handleTitleBodyChange = titleOrBody => {
@@ -493,6 +496,8 @@ class ComposerWithData extends Component<Props, State> {
           postWasPublished: true,
         });
 
+        this.props.dispatch(closeComposer());
+
         // redirect the user to the thread
         // if they are in the inbox, select it
         this.props.dispatch(
@@ -530,8 +535,10 @@ class ComposerWithData extends Component<Props, State> {
     const {
       data: { user },
       threadSliderIsOpen,
+      isOpen,
       networkOnline,
       websocketConnection,
+      isSlider,
     } = this.props;
     const dataExists = user && availableCommunities && availableChannels;
 
@@ -541,98 +548,104 @@ class ComposerWithData extends Component<Props, State> {
         websocketConnection !== 'reconnected');
 
     return (
-      <Container>
-        <Titlebar provideBack title={'New conversation'} noComposer />
-        <Dropdowns>
-          <span>To:</span>
-          {!dataExists ? (
-            <LoadingSelect />
-          ) : (
-            <RequiredSelector
-              data-cy="composer-community-selector"
-              onChange={this.setActiveCommunity}
-              value={activeCommunity}
-            >
-              {availableCommunities.map(community => {
-                return (
-                  <option key={community.id} value={community.id}>
-                    {community.name}
-                  </option>
-                );
-              })}
-            </RequiredSelector>
-          )}
-          {!dataExists ? (
-            <LoadingSelect />
-          ) : (
-            <RequiredSelector
-              data-cy="composer-channel-selector"
-              onChange={this.setActiveChannel}
-              value={activeChannel}
-            >
-              {availableChannels
-                .filter(channel => channel.community.id === activeCommunity)
-                .map(channel => {
+      <ComposerSlider isSlider={isSlider} isOpen={isOpen}>
+        <Overlay
+          isOpen={isOpen}
+          onClick={this.closeComposer}
+          data-cy="thread-composer-overlay"
+        />
+        <Container>
+          <Titlebar provideBack title={'New conversation'} noComposer />
+          <Dropdowns>
+            <span>To:</span>
+            {!dataExists ? (
+              <LoadingSelect />
+            ) : (
+              <RequiredSelector
+                data-cy="composer-community-selector"
+                onChange={this.setActiveCommunity}
+                value={activeCommunity}
+              >
+                {availableCommunities.map(community => {
                   return (
-                    <option key={channel.id} value={channel.id}>
-                      {channel.name}
+                    <option key={community.id} value={community.id}>
+                      {community.name}
                     </option>
                   );
                 })}
-            </RequiredSelector>
-          )}
-        </Dropdowns>
-        <ThreadInputs>
-          <Textarea
-            data-cy="composer-title-input"
-            onChange={this.changeTitle}
-            style={ThreadTitle}
-            value={this.state.title}
-            placeholder={"What's up?"}
-            ref={'titleTextarea'}
-            autoFocus={!threadSliderIsOpen}
-          />
+              </RequiredSelector>
+            )}
+            {!dataExists ? (
+              <LoadingSelect />
+            ) : (
+              <RequiredSelector
+                data-cy="composer-channel-selector"
+                onChange={this.setActiveChannel}
+                value={activeChannel}
+              >
+                {availableChannels
+                  .filter(channel => channel.community.id === activeCommunity)
+                  .map(channel => {
+                    return (
+                      <option key={channel.id} value={channel.id}>
+                        {channel.name}
+                      </option>
+                    );
+                  })}
+              </RequiredSelector>
+            )}
+          </Dropdowns>
+          <ThreadInputs>
+            <Textarea
+              data-cy="composer-title-input"
+              onChange={this.changeTitle}
+              style={ThreadTitle}
+              value={this.state.title}
+              placeholder={"What's up?"}
+              ref={'titleTextarea'}
+              autoFocus={!threadSliderIsOpen}
+            />
 
-          <Editor
-            version={2}
-            onChange={this.changeBody}
-            state={this.state.body}
-            style={ThreadDescription}
-            editorRef={editor => (this.bodyEditor = editor)}
-            editorKey="thread-composer"
-            placeholder={'Write more thoughts here...'}
-            className={'threadComposer'}
-          />
-        </ThreadInputs>
+            <Editor
+              onChange={this.changeBody}
+              state={this.state.body}
+              style={ThreadDescription}
+              editorRef={editor => (this.bodyEditor = editor)}
+              editorKey="thread-composer"
+              placeholder={'Write more thoughts here...'}
+              className={'threadComposer'}
+            />
+          </ThreadInputs>
 
-        <Actions>
-          {networkDisabled && (
-            <DisabledWarning>
-              Lost connection to the internet or server...
-            </DisabledWarning>
-          )}
+          <Actions>
+            {networkDisabled && (
+              <DisabledWarning>
+                Lost connection to the internet or server...
+              </DisabledWarning>
+            )}
 
-          <FlexRow>
-            <TextButton hoverColor="warn.alt" onClick={this.onCancelClick}>
-              Cancel
-            </TextButton>
-            <Button
-              data-cy="composer-publish-button"
-              onClick={this.publishThread}
-              loading={isPublishing}
-              disabled={
-                !title ||
-                title.trim().length === 0 ||
-                isPublishing ||
-                networkDisabled
-              }
-              color={'brand'}
-            >
-              Publish
-            </Button>
-          </FlexRow>
-        </Actions>
-      </Container>
+            <FlexRow>
+              <TextButton hoverColor="warn.alt" onClick={this.onCancelClick}>
+                Cancel
+              </TextButton>
+              <Button
+                data-cy="composer-publish-button"
+                onClick={this.publishThread}
+                loading={isPublishing}
+                disabled={
+                  !title ||
+                  title.trim().length === 0 ||
+                  isPublishing ||
+                  networkDisabled
+                }
+                color={'brand'}
+              >
+                Publish
+              </Button>
+            </FlexRow>
+          </Actions>
+        </Container>
+      </ComposerSlider>
     );
   }
 }
