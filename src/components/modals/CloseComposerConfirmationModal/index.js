@@ -54,18 +54,23 @@ class CloseComposerConfirmation extends React.Component<Props> {
         style={styles}
         closeTimeoutMS={330}
       >
-        <ModalContainer title={'Dismiss Composer'} closeModal={this.close}>
+        <ModalContainer title={'Discard Draft'} closeModal={this.close}>
           <Message>
-            {message ? message : 'Are you sure you want to dismiss composer?'}
+            {message ? message : 'Are you sure you want to discard this draft?'}
           </Message>
 
           <Actions>
             <TextButton onClick={this.close} color={'warn.alt'}>
-              No
+              Cancel
             </TextButton>
 
-            <Button color="warn" onClick={() => this.closeConfirmed(functions)}>
-              Yes
+            <Button
+              gradientTheme={'ios'}
+              color={'ios.red'}
+              hoverColor={'ios.red'}
+              onClick={() => this.closeConfirmed(functions)}
+            >
+              Discard
             </Button>
           </Actions>
         </ModalContainer>

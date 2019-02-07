@@ -257,7 +257,7 @@ class ComposerWithData extends Component<Props, State> {
     if (esc) {
       this.props.dispatch(
         openModal('CLOSE_COMPOSER_CONFIRMATION_MODAL', {
-          message: 'Are you sure you want to dismiss composer?',
+          message: 'Are you sure you want to discard this draft?',
           closeComposerFn: this.closeComposer,
           activateLastThreadFn: this.activateLastThread,
         })
