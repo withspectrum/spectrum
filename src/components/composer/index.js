@@ -54,6 +54,8 @@ import {
   DropImageOverlay,
   DropzoneWrapper,
   InputHints,
+  DesktopLink,
+  ButtonRow,
 } from './style';
 import {
   sortCommunities,
@@ -749,8 +751,7 @@ class ComposerWithData extends Component<Props, State> {
                 tipText="Upload photo"
               />
             </MediaLabel>
-            <a
-              style={{ display: 'flex' }}
+            <DesktopLink
               target="_blank"
               href="https://guides.github.com/features/mastering-markdown/"
             >
@@ -759,9 +760,9 @@ class ComposerWithData extends Component<Props, State> {
                 tipLocation="top-right"
                 glyph="markdown"
               />
-            </a>
+            </DesktopLink>
           </InputHints>
-          <FlexRow>
+          <ButtonRow>
             <TextButton hoverColor="warn.alt" onClick={this.onCancelClick}>
               Cancel
             </TextButton>
@@ -779,7 +780,7 @@ class ComposerWithData extends Component<Props, State> {
             >
               Publish
             </Button>
-          </FlexRow>
+          </ButtonRow>
         </Actions>
       </Container>
     );

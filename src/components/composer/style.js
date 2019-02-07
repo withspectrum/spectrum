@@ -58,10 +58,24 @@ export const Container = styled(FlexCol)`
   height: calc(100vh - 48px);
 
   @media (max-width: 768px) {
-    grid-template-rows: 48px 64px 1fr 100px;
+    grid-template-rows: 48px 64px 1fr 64px;
     grid-template-areas: 'title' 'header' 'body' 'footer';
     max-width: 100vw;
     height: 100vh;
+  }
+`;
+
+export const DesktopLink = styled.a`
+  display: flex;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const ButtonRow = styled(FlexRow)`
+  @media (max-width: 768px) {
+    justify-content: flex-end;
   }
 `;
 
@@ -85,9 +99,8 @@ export const Actions = styled(FlexCol)`
     border: 0;
     box-shadow: none;
     background-color: transparent;
-    flex-direction: column;
 
-    > div {
+    > ${ButtonRow} {
       width: 100%;
 
       > button:first-of-type {
@@ -95,7 +108,8 @@ export const Actions = styled(FlexCol)`
       }
 
       > button:last-of-type {
-        width: 100%;
+        width: calc(100% - 16px);
+        margin-right: 8px;
       }
     }
   }
