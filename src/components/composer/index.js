@@ -725,7 +725,7 @@ class ComposerWithData extends Component<Props, State> {
                       onChange={this.changeTitle}
                       style={ThreadTitle}
                       value={this.state.title}
-                      placeholder={"What's up?"}
+                      placeholder={'What‘s on your mind?'}
                       autoFocus={!threadSliderIsOpen}
                     />
 
@@ -734,7 +734,7 @@ class ComposerWithData extends Component<Props, State> {
                       value={this.state.body}
                       style={ThreadDescription}
                       inputRef={editor => (this.bodyEditor = editor)}
-                      placeholder={'Write more thoughts here...'}
+                      placeholder={'Add more thoughts here...'}
                       className={'threadComposer'}
                       dataCy="rich-text-editor"
                     />
