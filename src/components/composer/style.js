@@ -44,7 +44,7 @@ export const Overlay = styled.div`
 export const Container = styled(FlexCol)`
   background-color: ${theme.bg.default};
   display: grid;
-  grid-template-rows: 60px 1fr 64px;
+  grid-template-rows: 50px 1fr 64px;
   grid-template-columns: 100%;
   grid-template-areas: 'header' 'body' 'footer';
   align-self: stretch;
