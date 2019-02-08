@@ -107,6 +107,7 @@ type Props = {
   },
   uploadImage: (input: UploadImageInput) => Promise<UploadImageType>,
   isOpen: boolean,
+  isSlider?: boolean,
   dispatch: Dispatch<Object>,
   publishThread: Function,
   history: Object,
@@ -631,7 +632,7 @@ class ComposerWithData extends Component<Props, State> {
           onClick={this.closeComposer}
           data-cy="thread-composer-overlay"
         />
-        <Container>
+        <Container isSlider={isSlider}>
           <Titlebar provideBack title={'New conversation'} noComposer />
           <Dropdowns>
             <span>To:</span>

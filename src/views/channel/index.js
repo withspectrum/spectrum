@@ -503,6 +503,7 @@ class ChannelView extends React.Component<Props, State> {
                     <ComposerPlaceholder
                       isInbox={false}
                       showCommunityOwnerUpsell={false}
+                      isOpen={false}
                     />
 
                     <Composer

@@ -94,7 +94,7 @@ export const Container = styled(FlexCol)`
   align-self: stretch;
   flex: auto;
   overflow: hidden;
-  height: 100vh;
+  height: ${props => (props.isSlider ? '100vh' : 'calc(100vh - 48px)')};
 
   @media (max-width: 768px) {
     grid-template-rows: 48px 64px 1fr 64px;
