@@ -121,7 +121,7 @@ export const ButtonRow = styled(FlexRow)`
 export const Actions = styled(FlexCol)`
   background: ${theme.bg.wash};
   border-top: 2px solid ${theme.bg.border};
-  padding: 8px 32px;
+  padding: 8px 32px 8px 16px;
   border-radius: 0;
   align-self: stretch;
   display: flex;
