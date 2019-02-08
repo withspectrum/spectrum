@@ -108,9 +108,10 @@ export const MediaRow = styled.div`
 
 export const ComposerBase = styled.div`
   position: relative;
-  flex: none;
-  flex-direction: column;
-  display: flex;
+  flex: 1;
+  max-height: ${props => (props.isOpen ? 'calc(100vh - 160px)' : 'auto')};
+  overflow-y: ${props => (props.isOpen ? 'scroll' : 'auto')};
+  padding-left: ${props => (props.isOpen ? '25px' : '0')};
 
   > label {
     position: absolute;
@@ -152,9 +153,12 @@ export const Expander = styled.div`
   justify-content: flex-start;
   padding: 4px;
   border-radius: 12px;
+  margin-left: 5px;
 
   > button > div {
     color: ${theme.text.placeholder};
+    background-color: white;
+    border-radius: 12px;
   }
 
   > button:hover > div {
@@ -169,6 +173,7 @@ export const Expander = styled.div`
 
       > button > div {
         color: ${theme.brand.wash};
+        background-color: transparent;
       }
 
       > button:hover > div {

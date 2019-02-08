@@ -632,6 +632,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
 
               <Editor
                 onChange={this.changeBody}
+                isOpen={isOpen}
                 state={this.state.body}
                 style={ThreadDescription}
                 editorRef={editor => (this.bodyEditor = editor)}

@@ -10,6 +10,7 @@ import getChannelThreadConnection from 'shared/graphql/queries/channel/getChanne
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import type { GetUserCommunityConnectionType } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import searchThreadsQuery from 'shared/graphql/queries/search/searchThreads';
+import Composer from 'src/components/composer';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import DashboardThreadFeed from './components/threadFeed';
@@ -130,6 +131,7 @@ class Dashboard extends React.Component<Props, State> {
 
       return (
         <DashboardWrapper data-cy="inbox-view" id="main">
+          <Composer isSlider={true} activeCommunity={activeCommunity} />
           <Head title={title} description={description} />
           <Titlebar hasChildren hasSearch filter={searchFilter}>
             <Menu darkContext hasTabBar>
@@ -171,12 +173,11 @@ class Dashboard extends React.Component<Props, State> {
             {newActivityIndicator && (
               <NewActivityIndicator elem="scroller-for-inbox" />
             )}
-            {searchQueryString &&
-              searchQueryString.length > 0 && (
-                <SearchStringHeader>
-                  Search results for “{searchQueryString}”
-                </SearchStringHeader>
-              )}
+            {searchQueryString && searchQueryString.length > 0 && (
+              <SearchStringHeader>
+                Search results for “{searchQueryString}”
+              </SearchStringHeader>
+            )}
             <InboxScroller id="scroller-for-inbox">
               {searchQueryString &&
                 searchQueryString.length > 0 &&
@@ -191,50 +192,45 @@ class Dashboard extends React.Component<Props, State> {
                 )}
 
               {// no community, no search results
-              !activeCommunity &&
-                !searchQueryString && (
-                  <ErrorBoundary>
-                    <EverythingThreadFeed selectedId={activeThread} />
-                  </ErrorBoundary>
-                )}
+              !activeCommunity && !searchQueryString && (
+                <ErrorBoundary>
+                  <EverythingThreadFeed selectedId={activeThread} />
+                </ErrorBoundary>
+              )}
 
               {// community, no channel, no search results
-              activeCommunity &&
-                !activeChannel &&
-                !searchQueryString && (
-                  <ErrorBoundary>
-                    <CommunityThreadFeed
-                      id={activeCommunity}
-                      selectedId={activeThread}
-                      hasActiveCommunity={activeCommunity}
-                      community={activeCommunityObject}
-                      pinnedThreadId={
-                        activeCommunityObject &&
-                        activeCommunityObject.pinnedThreadId
-                      }
-                    />
-                  </ErrorBoundary>
-                )}
+              activeCommunity && !activeChannel && !searchQueryString && (
+                <ErrorBoundary>
+                  <CommunityThreadFeed
+                    id={activeCommunity}
+                    selectedId={activeThread}
+                    hasActiveCommunity={activeCommunity}
+                    community={activeCommunityObject}
+                    pinnedThreadId={
+                      activeCommunityObject &&
+                      activeCommunityObject.pinnedThreadId
+                    }
+                  />
+                </ErrorBoundary>
+              )}
 
               {// channel and community, no search results
-              activeChannel &&
-                activeCommunity &&
-                !searchQueryString && (
-                  <ErrorBoundary>
-                    <ChannelThreadFeed
-                      id={activeChannel}
-                      selectedId={activeThread}
-                      hasActiveCommunity={activeCommunity}
-                      hasActiveChannel={activeChannel}
-                      community={activeCommunityObject}
-                      pinnedThreadId={
-                        activeCommunityObject &&
-                        activeCommunityObject.pinnedThreadId
-                      }
-                      channelId={activeChannel}
-                    />
-                  </ErrorBoundary>
-                )}
+              activeChannel && activeCommunity && !searchQueryString && (
+                <ErrorBoundary>
+                  <ChannelThreadFeed
+                    id={activeChannel}
+                    selectedId={activeThread}
+                    hasActiveCommunity={activeCommunity}
+                    hasActiveChannel={activeChannel}
+                    community={activeCommunityObject}
+                    pinnedThreadId={
+                      activeCommunityObject &&
+                      activeCommunityObject.pinnedThreadId
+                    }
+                    channelId={activeChannel}
+                  />
+                </ErrorBoundary>
+              )}
             </InboxScroller>
           </InboxWrapper>
 

@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { CommunityAvatar } from 'src/components/avatar';
 import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
-import ThreadComposer from 'src/components/threadComposer';
+import Composer from 'src/components/composer';
+import ComposerPlaceholder from 'src/components/threadComposer/components/placeholder';
 import Head from 'src/components/head';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
@@ -499,7 +500,13 @@ class ChannelView extends React.Component<Props, State> {
                 ((channel.isPrivate && !channel.isArchived) ||
                   !channel.isPrivate) && (
                   <ErrorBoundary fallbackComponent={null}>
-                    <ThreadComposer
+                    <ComposerPlaceholder
+                      isInbox={false}
+                      showCommunityOwnerUpsell={false}
+                    />
+
+                    <Composer
+                      isSlider={true}
                       activeCommunity={communitySlug}
                       activeChannel={channelSlug}
                     />

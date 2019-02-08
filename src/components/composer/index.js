@@ -43,6 +43,8 @@ import { LoadingSelect } from '../loading';
 import Titlebar from '../../views/titlebar';
 import type { Dispatch } from 'redux';
 import {
+  ComposerSlider,
+  Overlay,
   Container,
   ThreadDescription,
   ThreadTitle,
@@ -382,8 +384,9 @@ class ComposerWithData extends Component<Props, State> {
     }
   };
 
-  onCancelClick = () => {
-    this.activateLastThread();
+  onCancelClick = async () => {
+    await this.activateLastThread();
+    this.props.dispatch(closeComposer());
   };
 
   handleTitleBodyChange = titleOrBody => {
@@ -569,6 +572,8 @@ class ComposerWithData extends Component<Props, State> {
           postWasPublished: true,
         });
 
+        this.props.dispatch(closeComposer());
+
         // redirect the user to the thread
         // if they are in the inbox, select it
         this.props.dispatch(
@@ -607,8 +612,10 @@ class ComposerWithData extends Component<Props, State> {
     const {
       data: { user },
       threadSliderIsOpen,
+      isOpen,
       networkOnline,
       websocketConnection,
+      isSlider,
     } = this.props;
     const dataExists = user && availableCommunities && availableChannels;
 
@@ -618,171 +625,178 @@ class ComposerWithData extends Component<Props, State> {
         websocketConnection !== 'reconnected');
 
     return (
-      <Container>
-        <Titlebar provideBack title={'New conversation'} noComposer />
-        <Dropdowns>
-          <span>To:</span>
-          {!dataExists ? (
-            <LoadingSelect />
-          ) : (
-            <RequiredSelector
-              data-cy="composer-community-selector"
-              onChange={this.setActiveCommunity}
-              value={activeCommunity}
-            >
-              {availableCommunities.map(community => {
-                return (
-                  <option key={community.id} value={community.id}>
-                    {community.name}
-                  </option>
-                );
-              })}
-            </RequiredSelector>
-          )}
-          {!dataExists ? (
-            <LoadingSelect />
-          ) : (
-            <RequiredSelector
-              data-cy="composer-channel-selector"
-              onChange={this.setActiveChannel}
-              value={activeChannel}
-            >
-              {availableChannels
-                .filter(channel => channel.community.id === activeCommunity)
-                .map(channel => {
+      <ComposerSlider isSlider={isSlider} isOpen={isOpen}>
+        <Overlay
+          isOpen={isOpen}
+          onClick={this.closeComposer}
+          data-cy="thread-composer-overlay"
+        />
+        <Container>
+          <Titlebar provideBack title={'New conversation'} noComposer />
+          <Dropdowns>
+            <span>To:</span>
+            {!dataExists ? (
+              <LoadingSelect />
+            ) : (
+              <RequiredSelector
+                data-cy="composer-community-selector"
+                onChange={this.setActiveCommunity}
+                value={activeCommunity}
+              >
+                {availableCommunities.map(community => {
                   return (
-                    <option key={channel.id} value={channel.id}>
-                      {channel.name}
+                    <option key={community.id} value={community.id}>
+                      {community.name}
                     </option>
                   );
                 })}
-            </RequiredSelector>
-          )}
-        </Dropdowns>
-        <ThreadInputs>
-          <SegmentedControl
-            css={{
-              marginRight: 0,
-              marginLeft: 0,
-              marginTop: 0,
-              marginBottom: '32px',
-            }}
-          >
-            <Segment
-              selected={!this.state.preview}
-              onClick={() => this.setState({ preview: false })}
-            >
-              Write
-            </Segment>
-            <Segment
-              selected={this.state.preview}
-              onClick={() => this.setState({ preview: true })}
-            >
-              Preview
-            </Segment>
-          </SegmentedControl>
-          {preview ? (
-            /* $FlowFixMe */
-            <div style={{ padding: '0 32px' }}>
-              <ThreadHeading>{this.state.title}</ThreadHeading>
-              {/* $FlowFixMe */}
-              <PreviewEditor
-                state={toState(
-                  JSON.parse(processThreadContent('TEXT', this.state.body))
-                )}
-              />
-            </div>
-          ) : (
-            <Dropzone
-              accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
-              disableClick
-              multiple={false}
-              onDropAccepted={this.uploadFiles}
-            >
-              {({ getRootProps, getInputProps, isDragActive }) => (
-                <DropzoneWrapper
-                  {...getRootProps({
-                    refKey: 'innerRef',
+              </RequiredSelector>
+            )}
+            {!dataExists ? (
+              <LoadingSelect />
+            ) : (
+              <RequiredSelector
+                data-cy="composer-channel-selector"
+                onChange={this.setActiveChannel}
+                value={activeChannel}
+              >
+                {availableChannels
+                  .filter(channel => channel.community.id === activeCommunity)
+                  .map(channel => {
+                    return (
+                      <option key={channel.id} value={channel.id}>
+                        {channel.name}
+                      </option>
+                    );
                   })}
-                >
-                  <input {...getInputProps()} />
-                  <Textarea
-                    data-cy="composer-title-input"
-                    onChange={this.changeTitle}
-                    style={ThreadTitle}
-                    value={this.state.title}
-                    placeholder={"What's up?"}
-                    autoFocus={!threadSliderIsOpen}
-                  />
-
-                  <MentionsInput
-                    onChange={this.changeBody}
-                    value={this.state.body}
-                    style={ThreadDescription}
-                    inputRef={editor => (this.bodyEditor = editor)}
-                    placeholder={'Write more thoughts here...'}
-                    className={'threadComposer'}
-                    dataCy="rich-text-editor"
-                  />
-                  <DropImageOverlay visible={isDragActive} />
-                </DropzoneWrapper>
-              )}
-            </Dropzone>
-          )}
-        </ThreadInputs>
-
-        {networkDisabled && (
-          <DisabledWarning>
-            Lost connection to the internet or server...
-          </DisabledWarning>
-        )}
-        <Actions>
-          <InputHints>
-            <MediaLabel>
-              <MediaInput
-                type="file"
-                accept={'.png, .jpg, .jpeg, .gif, .mp4'}
+              </RequiredSelector>
+            )}
+          </Dropdowns>
+          <ThreadInputs>
+            <SegmentedControl
+              css={{
+                marginRight: 0,
+                marginLeft: 0,
+                marginTop: 0,
+                marginBottom: '32px',
+              }}
+            >
+              <Segment
+                selected={!this.state.preview}
+                onClick={() => this.setState({ preview: false })}
+              >
+                Write
+              </Segment>
+              <Segment
+                selected={this.state.preview}
+                onClick={() => this.setState({ preview: true })}
+              >
+                Preview
+              </Segment>
+            </SegmentedControl>
+            {preview ? (
+              /* $FlowFixMe */
+              <div style={{ padding: '0 32px' }}>
+                <ThreadHeading>{this.state.title}</ThreadHeading>
+                {/* $FlowFixMe */}
+                <PreviewEditor
+                  state={toState(
+                    JSON.parse(processThreadContent('TEXT', this.state.body))
+                  )}
+                />
+              </div>
+            ) : (
+              <Dropzone
+                accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
+                disableClick
                 multiple={false}
-                onChange={this.uploadFile}
-              />
-              <Icon
-                glyph="photo"
-                tipLocation={'top-right'}
-                tipText="Upload photo"
-              />
-            </MediaLabel>
-            <DesktopLink
-              target="_blank"
-              href="https://guides.github.com/features/mastering-markdown/"
-            >
-              <Icon
-                tipText="Style with Markdown"
-                tipLocation="top-right"
-                glyph="markdown"
-              />
-            </DesktopLink>
-          </InputHints>
-          <ButtonRow>
-            <TextButton hoverColor="warn.alt" onClick={this.onCancelClick}>
-              Cancel
-            </TextButton>
-            <Button
-              data-cy="composer-publish-button"
-              onClick={this.publishThread}
-              loading={isLoading}
-              disabled={
-                !title ||
-                title.trim().length === 0 ||
-                isLoading ||
-                networkDisabled
-              }
-              color={'brand'}
-            >
-              Publish
-            </Button>
-          </ButtonRow>
-        </Actions>
-      </Container>
+                onDropAccepted={this.uploadFiles}
+              >
+                {({ getRootProps, getInputProps, isDragActive }) => (
+                  <DropzoneWrapper
+                    {...getRootProps({
+                      refKey: 'innerRef',
+                    })}
+                  >
+                    <input {...getInputProps()} />
+                    <Textarea
+                      data-cy="composer-title-input"
+                      onChange={this.changeTitle}
+                      style={ThreadTitle}
+                      value={this.state.title}
+                      placeholder={"What's up?"}
+                      autoFocus={!threadSliderIsOpen}
+                    />
+
+                    <MentionsInput
+                      onChange={this.changeBody}
+                      value={this.state.body}
+                      style={ThreadDescription}
+                      inputRef={editor => (this.bodyEditor = editor)}
+                      placeholder={'Write more thoughts here...'}
+                      className={'threadComposer'}
+                      dataCy="rich-text-editor"
+                    />
+                    <DropImageOverlay visible={isDragActive} />
+                  </DropzoneWrapper>
+                )}
+              </Dropzone>
+            )}
+          </ThreadInputs>
+
+          {networkDisabled && (
+            <DisabledWarning>
+              Lost connection to the internet or server...
+            </DisabledWarning>
+          )}
+          <Actions>
+            <InputHints>
+              <MediaLabel>
+                <MediaInput
+                  type="file"
+                  accept={'.png, .jpg, .jpeg, .gif, .mp4'}
+                  multiple={false}
+                  onChange={this.uploadFile}
+                />
+                <Icon
+                  glyph="photo"
+                  tipLocation={'top-right'}
+                  tipText="Upload photo"
+                />
+              </MediaLabel>
+              <DesktopLink
+                target="_blank"
+                href="https://guides.github.com/features/mastering-markdown/"
+              >
+                <Icon
+                  tipText="Style with Markdown"
+                  tipLocation="top-right"
+                  glyph="markdown"
+                />
+              </DesktopLink>
+            </InputHints>
+            <ButtonRow>
+              <TextButton hoverColor="warn.alt" onClick={this.onCancelClick}>
+                Cancel
+              </TextButton>
+              <Button
+                data-cy="composer-publish-button"
+                onClick={this.publishThread}
+                loading={isLoading}
+                disabled={
+                  !title ||
+                  title.trim().length === 0 ||
+                  isLoading ||
+                  networkDisabled
+                }
+                color={'brand'}
+              >
+                Publish
+              </Button>
+            </ButtonRow>
+          </Actions>
+        </Container>
+      </ComposerSlider>
     );
   }
 }

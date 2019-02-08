@@ -46,16 +46,55 @@ export const DropImageOverlayWrapper = styled.div`
         `}
 `;
 
+export const ComposerSlider = styled.div`
+  display: ${props => (props.isSlider ? 'none' : 'block')};
+  ${props =>
+    props.isSlider &&
+    props.isOpen &&
+    css`
+      display: block;
+      position: fixed;
+      width: 50%;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: ${zIndex.composer};
+    `}
+`;
+
+export const Overlay = styled.div`
+  ${props =>
+    props.isOpen
+      ? `
+      position: fixed;
+      top: 48px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3000;
+      background: #000;
+      pointer-events: auto;
+      opacity: 0.4;
+    `
+      : `
+      opacity: 0;
+      pointer-events: none;
+
+    `};
+`;
+
 export const Container = styled(FlexCol)`
   background-color: ${theme.bg.default};
   display: grid;
-  grid-template-rows: 60px 1fr 64px;
+  grid-template-rows: 50px 1fr 64px;
   grid-template-columns: 100%;
   grid-template-areas: 'header' 'body' 'footer';
   align-self: stretch;
   flex: auto;
   overflow: hidden;
-  height: calc(100vh - 48px);
+  height: 100vh;
 
   @media (max-width: 768px) {
     grid-template-rows: 48px 64px 1fr 64px;
@@ -91,6 +130,7 @@ export const Actions = styled(FlexCol)`
   align-items: center;
   position: relative;
   grid-area: footer;
+  z-index: ${zIndex.composer};
 
   @media (max-width: 768px) {
     padding: 8px;
@@ -194,6 +234,7 @@ export const ThreadInputs = styled(FlexCol)`
   margin-right: -32px;
   width: calc(100% + 64px);
   background-color: ${theme.bg.default};
+  z-index: ${zIndex.composer};
 `;
 
 export const ThreadTitle = {
