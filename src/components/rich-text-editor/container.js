@@ -210,12 +210,12 @@ class Editor extends React.Component<Props, State> {
 
     return (
       <ComposerBase
+        data-cy="rich-text-editor"
         className={`markdown ${className || ''}`}
         focus={focus}
         isOpen={isOpen}
       >
         <DraftEditor
-          data-cy="rich-text-editor"
           editorState={state}
           onChange={onChange}
           plugins={this.state.plugins}
