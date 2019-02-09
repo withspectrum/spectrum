@@ -43,8 +43,13 @@ export class Login extends React.Component<Props> {
   };
 
   componentDidMount() {
-    const { location } = this.props;
-    if (location) {
+    const { location, redirectPath } = this.props;
+
+    if (redirectPath) {
+      this.redirectPath = redirectPath;
+    }
+
+    if (location && !redirectPath) {
       const searchObj = queryString.parse(this.props.location.search);
       this.redirectPath = searchObj.r;
     }
