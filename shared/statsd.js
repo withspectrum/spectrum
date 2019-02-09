@@ -98,3 +98,13 @@ if (
 
   statsd = metrics;
 }
+
+function collectMemoryStats() {
+  var memory = process.memoryUsage();
+  statsd.gauge('memory.rss', memory.rss);
+  statsd.gauge('memory.heapTotal', memory.heapTotal);
+  statsd.gauge('memory.heapUsed', memory.heapUsed);
+}
+
+// Report memory usage every second
+setInterval(collectMemoryStats, 1000);
