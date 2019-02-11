@@ -26,6 +26,7 @@ import OutsideClickHandler from 'src/components/outsideClickHandler';
 import Icon from 'src/components/icons';
 import { IconButton } from 'src/components/buttons';
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
+import linksDecorator from 'shared/clients/draft-js/links-decorator/index.web.js';
 import { isAndroid } from 'shared/draft-utils';
 import MediaInput from 'src/components/mediaInput';
 import Image from './Image';
@@ -231,7 +232,7 @@ class Editor extends React.Component<Props, State> {
           autoComplete="on"
           autoCorrect="on"
           stripPastedStyles={true}
-          decorators={[mentionsDecorator]}
+          decorators={[mentionsDecorator, linksDecorator]}
           customStyleMap={customStyleMap}
           customStyleFn={customStyleFn}
           {...rest}
