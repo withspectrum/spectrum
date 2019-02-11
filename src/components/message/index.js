@@ -165,7 +165,6 @@ class Message extends React.Component<Props> {
       thread,
     } = this.props;
     const isEditing = this.props.editingMessage === this.props.message.id;
-    console.log(this.props.editingMessage);
 
     const canEditMessage = me && message.messageType !== 'media';
     const selectedMessageId = btoa(new Date(message.timestamp).getTime() - 1);

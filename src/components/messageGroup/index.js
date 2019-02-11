@@ -10,6 +10,7 @@ import type { Dispatch } from 'redux';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { ErrorBoundary } from 'src/components/error';
+import { editMessage } from 'src/actions/message';
 import MessageErrorFallback from '../message/messageErrorFallback';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 
@@ -35,6 +36,7 @@ type Props = {
   lastSeen?: number | Date,
   history: History,
   location: Location,
+  editingMessage: ?string,
 };
 
 type State = {
@@ -166,7 +168,33 @@ class Messages extends React.Component<Props, State> {
       return true;
     }
 
+    if (next.editingMessage !== current.editingMessage) return true;
+
     return false;
+  }
+
+  componentDidUpdate(prev) {
+    const curr = this.props;
+    // Select the latest message for editing if the global state says we should
+    if (
+      prev.editingMessage !== curr.editingMessage &&
+      curr.editingMessage === 'latest' &&
+      Array.isArray(curr.messages)
+    ) {
+      const latest = curr.messages.reverse().reduce((selected, group) => {
+        if (selected) return selected;
+
+        const me = curr.currentUser
+          ? group[0].author.user &&
+            group[0].author.user.id === curr.currentUser.id
+          : false;
+
+        if (me) return group[group.length - 1];
+        return selected;
+      }, null);
+
+      if (latest) this.props.dispatch(editMessage(latest.id));
+    }
   }
 
   render() {
@@ -268,8 +296,12 @@ class Messages extends React.Component<Props, State> {
   }
 }
 
+const mapStateToProps = (state): * => ({
+  editingMessage: state.message.editingMessage,
+});
+
 export default compose(
   withCurrentUser,
   withRouter,
-  connect()
+  connect(mapStateToProps)
 )(Messages);

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Icon from 'src/components/icons';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
-import { replyToMessage } from 'src/actions/message';
+import { replyToMessage, editMessage } from 'src/actions/message';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   Form,
@@ -142,6 +142,12 @@ const ChatInput = (props: Props) => {
       // If backspace is pressed on the empty
       case 'Backspace': {
         if (text.length === 0) removeAttachments();
+        return;
+      }
+      case 'ArrowUp': {
+        if (text.length === 0) {
+          props.dispatch(editMessage('latest'));
+        }
         return;
       }
     }
