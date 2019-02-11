@@ -304,7 +304,16 @@ const init = () => {
           // 1
           // if the user already has a githubProviderId, don't override it
           if (req.user.githubProviderId) {
-            if (!req.user.githubUsername) {
+            /*
+              Update the cached content of the github profile that we store
+              in redis for the graphql resolver. This allows us to put a button
+              on the client for a user to re-connect a github profile from
+              the web app which will update the cache with any changed usernames
+            */
+            if (
+              !req.user.githubUsername ||
+              req.user.githubUsername !== githubUsername
+            ) {
               return saveUserProvider(
                 req.user.id,
                 'githubProviderId',

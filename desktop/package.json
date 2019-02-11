@@ -14,14 +14,14 @@
     "electron-context-menu": "^0.10.1",
     "electron-is-dev": "^1.0.1",
     "electron-log": "^2.2.17",
-    "electron-updater": "^4.0.5",
+    "electron-updater": "^4.0.6",
     "electron-window-state": "^5.0.3"
   },
   "devDependencies": {
-    "electron": "^3.0.10",
-    "electron-builder": "^20.36.2",
-    "nodemon": "^1.18.7",
-    "rimraf": "^2.6.2"
+    "electron": "^3.0.13",
+    "electron-builder": "^20.38.5",
+    "nodemon": "^1.18.9",
+    "rimraf": "^2.6.3"
   },
   "scripts": {
     "dev": "nodemon --exec \"electron ./src/main.js\" -w ./src",

@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Button } from 'src/components/buttons';
 import Icon from 'src/components/icons';
 import { SERVER_URL, CLIENT_URL } from 'src/api/constants';
@@ -435,7 +435,16 @@ class UserWithData extends React.Component<Props, State> {
                     disabled
                     defaultValue={`github.com/${profile.username}`}
                   >
-                    Your GitHub Profile
+                    <div>
+                      Your GitHub Profile ·{' '}
+                      <span>
+                        <a
+                          href={`${SERVER_URL}/auth/github${postAuthRedirectPath}`}
+                        >
+                          Refresh username
+                        </a>
+                      </span>
+                    </div>
                   </Input>
                 );
               }

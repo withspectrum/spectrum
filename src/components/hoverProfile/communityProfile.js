@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import AvatarImage from 'src/components/avatar/image';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Button, OutlineButton } from 'src/components/buttons';
 import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
@@ -67,35 +67,34 @@ class HoverProfile extends Component<ProfileProps> {
           </Content>
 
           <Actions>
-            {!isModerator &&
-              !isOwner && (
-                <ToggleCommunityMembership
-                  community={community}
-                  render={({ isLoading }) => {
-                    if (isMember) {
-                      return (
-                        <OutlineButton
-                          loading={isLoading}
-                          icon={'checkmark'}
-                          gradientTheme="success"
-                        >
-                          Member
-                        </OutlineButton>
-                      );
-                    } else {
-                      return (
-                        <Button
-                          loading={isLoading}
-                          icon={'plus-fill'}
-                          gradientTheme="success"
-                        >
-                          Join
-                        </Button>
-                      );
-                    }
-                  }}
-                />
-              )}
+            {!isModerator && !isOwner && (
+              <ToggleCommunityMembership
+                community={community}
+                render={({ isLoading }) => {
+                  if (isMember) {
+                    return (
+                      <OutlineButton
+                        loading={isLoading}
+                        icon={'checkmark'}
+                        gradientTheme="success"
+                      >
+                        Member
+                      </OutlineButton>
+                    );
+                  } else {
+                    return (
+                      <Button
+                        loading={isLoading}
+                        icon={'plus-fill'}
+                        gradientTheme="success"
+                      >
+                        Join
+                      </Button>
+                    );
+                  }
+                }}
+              />
+            )}
 
             {(isModerator || isOwner) && (
               <Link to={`/${community.slug}/settings`}>

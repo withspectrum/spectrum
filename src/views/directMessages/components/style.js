@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { UserAvatar } from 'src/components/avatar';
 import {
   Truncate,
@@ -247,7 +247,6 @@ export const Grow = styled.div`
   flex: 1 1 auto;
   justify-content: center;
   align-items: stretch;
-  background: ${theme.bg.wash};
   width: 100%;
   height: 100%;
 `;

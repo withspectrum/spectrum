@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { SvgWrapper } from '../icons';
 import { Truncate, monoStack, hexa, Tooltip } from 'src/components/globals';
 import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
@@ -136,8 +136,8 @@ export const OuterMessageContainer = styled.div`
     props.selected
       ? props.theme.special.wash
       : props.error
-        ? props.theme.warn.wash
-        : props.theme.bg.default};
+      ? props.theme.warn.wash
+      : props.theme.bg.default};
 
   ${props =>
     props.selected &&
@@ -158,8 +158,8 @@ export const OuterMessageContainer = styled.div`
         props.selected
           ? props.theme.special.wash
           : props.error
-            ? props.theme.warn.border
-            : props.theme.bg.wash};
+          ? props.theme.warn.border
+          : props.theme.bg.wash};
 
       ${ActionsContainer} {
         opacity: 1;
@@ -226,6 +226,13 @@ const Bubble = styled.div`
     background: ${theme.bg.wash};
     border: 1px solid ${theme.bg.border};
     color: ${theme.text.secondary};
+  }
+
+  pre code {
+    padding: 0;
+    background: none;
+    border: none;
+    color: inherit;
   }
 `;
 

@@ -14,7 +14,9 @@ import type {
   AdministratorEmailValidationEmailJobData,
 } from 'shared/bull/types';
 
-export default async (job: Job<AdministratorEmailValidationEmailJobData>) => {
+export default async (
+  job: Job<AdministratorEmailValidationEmailJobData>
+): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending email validation email to: ${job.data.email}`);
 
@@ -23,7 +25,7 @@ export default async (job: Job<AdministratorEmailValidationEmailJobData>) => {
     debug(
       '\nno email or userId or communityId found for this request, returning'
     );
-    return;
+    return Promise.resolve();
   }
 
   const subject = `Confirm new administrator email for the ${
@@ -38,25 +40,24 @@ export default async (job: Job<AdministratorEmailValidationEmailJobData>) => {
   );
 
   if (!validateToken) {
-    return;
-  } else {
-    try {
-      return sendEmail({
-        TemplateId: ADMINISTRATOR_EMAIL_VALIDATION_TEMPLATE,
-        To: email,
-        Tag: SEND_ADMINISTRATOR_EMAIL_VALIDATION_EMAIL,
-        TemplateModel: {
-          subject,
-          preheader,
-          validateToken,
-          community,
-        },
-        userId,
-      });
-    } catch (err) {
-      debug('❌ Error in job:\n');
-      debug(err);
-      Raven.captureException(err);
-    }
+    return Promise.resolve();
+  }
+
+  try {
+    return sendEmail({
+      templateId: ADMINISTRATOR_EMAIL_VALIDATION_TEMPLATE,
+      to: [{ email }],
+      dynamic_template_data: {
+        subject,
+        preheader,
+        validateToken,
+        community,
+      },
+      userId,
+    });
+  } catch (err) {
+    console.error('❌ Error in job:\n');
+    console.error(err);
+    return Raven.captureException(err);
   }
 };

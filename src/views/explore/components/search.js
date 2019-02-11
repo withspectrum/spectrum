@@ -4,7 +4,7 @@ import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Button } from 'src/components/buttons';
 import { debounce } from 'src/helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
@@ -12,6 +12,7 @@ import type { SearchCommunitiesType } from 'shared/graphql/queries/search/search
 import { Spinner } from 'src/components/globals';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import OutsideClickHandler from 'src/components/outsideClickHandler';
+import { ESC, ENTER, ARROW_DOWN, ARROW_UP } from 'src/helpers/keycodes';
 import {
   SearchWrapper,
   SearchInput,
@@ -125,7 +126,7 @@ class Search extends React.Component<Props, State> {
     );
 
     // if person presses escape
-    if (e.keyCode === 27) {
+    if (e.keyCode === ESC) {
       this.setState({
         isFocused: false,
       });
@@ -135,8 +136,7 @@ class Search extends React.Component<Props, State> {
       return;
     }
 
-    // if user presses enter
-    if (e.keyCode === 13) {
+    if (e.keyCode === ENTER) {
       if (
         searchResults.length === 0 ||
         searchResults[indexOfFocusedSearchResult] === undefined
@@ -146,8 +146,7 @@ class Search extends React.Component<Props, State> {
       return this.props.history.push(`/${slug}`);
     }
 
-    // if person presses down
-    if (e.keyCode === 40) {
+    if (e.keyCode === ARROW_DOWN) {
       if (indexOfFocusedSearchResult === searchResults.length - 1) return;
       if (searchResults.length <= 1) return;
 
@@ -159,8 +158,7 @@ class Search extends React.Component<Props, State> {
       });
     }
 
-    // if person presses up
-    if (e.keyCode === 38) {
+    if (e.keyCode === ARROW_UP) {
       if (indexOfFocusedSearchResult === 0) return;
       if (searchResults.length <= 1) return;
 
@@ -252,69 +250,65 @@ class Search extends React.Component<Props, State> {
         </SearchInputWrapper>
 
         {// user has typed in a search string
-        isFocused &&
-          searchString && (
-            <OutsideClickHandler onOutsideClick={this.hideSearchResults}>
-              <SearchResultsDropdown>
-                {searchResults.length > 0 &&
-                  !searchIsLoading &&
-                  searchResults.map(community => {
-                    return (
-                      <SearchResult
-                        focused={focusedSearchResult === community.id}
-                        key={community.id}
-                      >
-                        <SearchLink to={`/${community.slug}`}>
-                          <SearchResultImage
-                            community={community}
-                            showHoverProfile={false}
-                          />
-                          <SearchResultTextContainer>
-                            <SearchResultMetaWrapper>
-                              <SearchResultName>
-                                {community.name}
-                              </SearchResultName>
-                              {community.metaData && (
-                                <SearchResultMetadata>
-                                  {community.metaData.members.toLocaleString()}{' '}
-                                  members
-                                </SearchResultMetadata>
-                              )}
-                            </SearchResultMetaWrapper>
-                          </SearchResultTextContainer>
-                        </SearchLink>
-                      </SearchResult>
-                    );
-                  })}
-
-                {searchResults.length === 0 &&
-                  !searchIsLoading &&
-                  isFocused && (
-                    <SearchResult>
-                      <SearchResultTextContainer>
-                        <SearchResultNull>
-                          <p>No communities found matching “{searchString}”</p>
-                          <Link to={'/new/community'}>
-                            <Button>Create a Community</Button>
-                          </Link>
-                        </SearchResultNull>
-                      </SearchResultTextContainer>
+        isFocused && searchString && (
+          <OutsideClickHandler onOutsideClick={this.hideSearchResults}>
+            <SearchResultsDropdown>
+              {searchResults.length > 0 &&
+                !searchIsLoading &&
+                searchResults.map(community => {
+                  return (
+                    <SearchResult
+                      focused={focusedSearchResult === community.id}
+                      key={community.id}
+                    >
+                      <SearchLink to={`/${community.slug}`}>
+                        <SearchResultImage
+                          community={community}
+                          showHoverProfile={false}
+                        />
+                        <SearchResultTextContainer>
+                          <SearchResultMetaWrapper>
+                            <SearchResultName>
+                              {community.name}
+                            </SearchResultName>
+                            {community.metaData && (
+                              <SearchResultMetadata>
+                                {community.metaData.members.toLocaleString()}{' '}
+                                members
+                              </SearchResultMetadata>
+                            )}
+                          </SearchResultMetaWrapper>
+                        </SearchResultTextContainer>
+                      </SearchLink>
                     </SearchResult>
-                  )}
+                  );
+                })}
 
-                {searchIsLoading &&
-                  isFocused && (
-                    <SearchResult>
-                      <SearchResultTextContainer>
-                        <SearchResultNull>
-                          <p>Searching for “{searchString}”</p>
-                        </SearchResultNull>
-                      </SearchResultTextContainer>
-                    </SearchResult>
-                  )}
-              </SearchResultsDropdown>
-            </OutsideClickHandler>
-          )}
+              {searchResults.length === 0 && !searchIsLoading && isFocused && (
+                <SearchResult>
+                  <SearchResultTextContainer>
+                    <SearchResultNull>
+                      <p>No communities found matching “{searchString}”</p>
+                      <Link to={'/new/community'}>
+                        <Button>Create a Community</Button>
+                      </Link>
+                    </SearchResultNull>
+                  </SearchResultTextContainer>
+                </SearchResult>
+              )}
+
+              {searchIsLoading && isFocused && (
+                <SearchResult>
+                  <SearchResultTextContainer>
+                    <SearchResultNull>
+                      <p>Searching for “{searchString}”</p>
+                    </SearchResultNull>
+                  </SearchResultTextContainer>
+                </SearchResult>
+              )}
+            </SearchResultsDropdown>
+          </OutsideClickHandler>
+        )}
       </SearchWrapper>
     );
   }

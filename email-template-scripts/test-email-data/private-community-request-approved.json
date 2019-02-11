@@ -1,0 +1,46 @@
+{
+  "subject": "Your request to join the Test community was approved!",
+  "preheader": "You can now join the conversations happening in the Test community!",
+  "data": {
+    "recipient": {
+      "coverPhoto": "",
+      "createdAt": "2018-10-15T15:33:19.045Z",
+      "description": "",
+      "email": "email",
+      "fbProviderId": null,
+      "firstName": null,
+      "githubProviderId": null,
+      "googleProviderId": null,
+      "id": "1",
+      "isOnline": true,
+      "lastName": null,
+      "lastSeen": "2018-11-22T19:10:07.115Z",
+      "modifiedAt": "2018-10-15T15:34:08.611Z",
+      "name": "Full Name",
+      "profilePhoto": "",
+      "providerId": null,
+      "termsLastAcceptedAt": "2018-10-15T15:33:19.045Z",
+      "timezone": 120,
+      "username": "username",
+      "website": ""
+    },
+    "community": {
+      "administratorEmail": "email",
+      "awsStaticReplaced": "2018-11-03T03:42:20.456Z",
+      "coverPhoto": "",
+      "createdAt": "2018-10-04T13:10:23.828Z",
+      "creatorId": "1",
+      "description": "Description",
+      "id": "1",
+      "imageReplaced": "2018-11-03T03:42:00.540Z",
+      "isPrivate": true,
+      "memberCount": 1,
+      "modifiedAt": "2018-10-08T11:23:19.135Z",
+      "name": "Community Name",
+      "pinnedThreadId": "1",
+      "profilePhoto": "",
+      "slug": "community-slug",
+      "website": ""
+    }
+  }
+}

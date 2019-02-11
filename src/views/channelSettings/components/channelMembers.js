@@ -72,15 +72,14 @@ class ChannelMembers extends Component<Props> {
                       description={user.description}
                       showHoverProfile={false}
                     >
-                      {currentUser &&
-                        user.id !== currentUser.id && (
-                          <MessageIconContainer>
-                            <Icon
-                              glyph={'message'}
-                              onClick={() => initMessage(user)}
-                            />
-                          </MessageIconContainer>
-                        )}
+                      {currentUser && user.id !== currentUser.id && (
+                        <MessageIconContainer data-cy="message-user-button">
+                          <Icon
+                            glyph={'message'}
+                            onClick={() => initMessage(user)}
+                          />
+                        </MessageIconContainer>
+                      )}
                     </GranularUserProfile>
                   </UserListItemContainer>
                 );

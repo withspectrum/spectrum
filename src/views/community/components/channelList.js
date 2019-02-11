@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { OutlineButton } from 'src/components/buttons';
@@ -92,45 +92,43 @@ class ChannelList extends React.Component<Props> {
             </ListContainer>
           )}
 
-          {isMember &&
-            !isOwner && (
-              <ListContainer data-cy="channel-list">
-                {sortedChannels.map(channel => {
-                  if (!channel) return null;
-                  return (
-                    <ChannelListItem channel={channel} key={channel.id}>
-                      <ToggleChannelNotifications
-                        channel={channel}
-                        render={state => (
-                          <ToggleNotificationsContainer
-                            tipLocation={'top-left'}
-                            tipText={
-                              channel.channelPermissions.receiveNotifications
-                                ? 'Turn notifications off'
-                                : 'Turn notifications on'
-                            }
-                          >
-                            {state.isLoading ? (
-                              <Loading />
-                            ) : (
-                              <Icon
-                                size={24}
-                                glyph={
-                                  channel.channelPermissions
-                                    .receiveNotifications
-                                    ? 'notification-fill'
-                                    : 'notification'
-                                }
-                              />
-                            )}
-                          </ToggleNotificationsContainer>
-                        )}
-                      />
-                    </ChannelListItem>
-                  );
-                })}
-              </ListContainer>
-            )}
+          {isMember && !isOwner && (
+            <ListContainer data-cy="channel-list">
+              {sortedChannels.map(channel => {
+                if (!channel) return null;
+                return (
+                  <ChannelListItem channel={channel} key={channel.id}>
+                    <ToggleChannelNotifications
+                      channel={channel}
+                      render={state => (
+                        <ToggleNotificationsContainer
+                          tipLocation={'top-left'}
+                          tipText={
+                            channel.channelPermissions.receiveNotifications
+                              ? 'Turn notifications off'
+                              : 'Turn notifications on'
+                          }
+                        >
+                          {state.isLoading ? (
+                            <Loading />
+                          ) : (
+                            <Icon
+                              size={24}
+                              glyph={
+                                channel.channelPermissions.receiveNotifications
+                                  ? 'notification-fill'
+                                  : 'notification'
+                              }
+                            />
+                          )}
+                        </ToggleNotificationsContainer>
+                      )}
+                    />
+                  </ChannelListItem>
+                );
+              })}
+            </ListContainer>
+          )}
 
           {isOwner && (
             <ListContainer data-cy="channel-list">

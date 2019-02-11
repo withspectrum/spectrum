@@ -3,12 +3,17 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "bull": "^3.5.2",
-    "debug": "^4.1.0",
+    "bull": "^3.6.0",
+    "datadog-metrics": "^0.8.1",
+    "debug": "^4.1.1",
+    "ioredis": "3.2.2",
     "now-env": "^3.1.0",
+    "performance-now": "^2.1.0",
     "raven": "^2.6.4",
     "redis-tag-cache": "^1.2.1",
-    "rethinkdbdash": "^2.3.29",
+    "rethinkdb-inspector": "^0.3.3",
+    "rethinkdbdash": "^2.3.31",
+    "rethinkhaberdashery": "^2.3.32",
     "source-map-support": "^0.4.18",
     "toobusy-js": "^0.5.1"
   },

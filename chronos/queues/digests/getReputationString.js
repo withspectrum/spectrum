@@ -19,10 +19,10 @@ export const getReputationString = ({
   const during = timeframe === 'weekly' ? 'last week' : 'yesterday';
 
   let reputationString;
-  if (!hasGainedReputation) {
-    reputationString = `You were a little quiet ${during} and haven't gained any reputation – join some of the conversations below, your communities would love to hear from you.`;
-  } else {
+  if (hasGainedReputation) {
     reputationString = `You gained ${reputationGained} reputation ${during}.`;
+  } else {
+    reputationString = `You didn’t gain any reputation ${during}.`;
   }
 
   if (isFirstReputation) {

@@ -2,6 +2,7 @@
 import { COMMUNITY_UPSELL_THRESHOLD } from '../constants';
 import { getUsersCommunityIds } from '../../models/usersCommunities';
 import type { DBCommunity } from 'shared/types';
+import { signCommunity } from 'shared/imgix';
 
 export const getUpsellCommunities = async (
   userId: string,
@@ -14,7 +15,8 @@ export const getUpsellCommunities = async (
   if (usersCommunityIds.length <= COMMUNITY_UPSELL_THRESHOLD) {
     return topCommunities
       .filter(community => usersCommunityIds.indexOf(community.id) <= -1)
-      .slice(0, 3);
+      .slice(0, 3)
+      .map(community => signCommunity(community));
   }
 
   return null;

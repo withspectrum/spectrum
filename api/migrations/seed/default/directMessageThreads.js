@@ -9,4 +9,10 @@ module.exports = [
     name: null,
     threadLastActive: new Date(DATE),
   },
+  {
+    id: 'dm-2',
+    createdAt: new Date(DATE - 1),
+    name: null,
+    threadLastActive: new Date(DATE - 1),
+  },
 ];

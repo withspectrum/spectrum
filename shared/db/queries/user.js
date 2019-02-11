@@ -533,38 +533,23 @@ export const editUser = createWriteQuery(
   }
 );
 
-export const setUserOnline = createWriteQuery(
-  (id: string, isOnline: boolean) => ({
-    query: db
-      .table('users')
-      .get(id)
-      .update(
-        {
-          isOnline,
-          lastSeen: new Date(),
-        },
-        { returnChanges: 'always' }
-      )
-      .run()
-      .then(
-        ({
-          changes,
-        }: {
-          changes: [{ old_val?: DBUser, new_val?: DBUser }],
-        }) => {
-          const user = changes[0].new_val || changes[0].old_val;
-          if (!user)
-            throw new Error(
-              `Failed to set user online status to ${String(
-                isOnline
-              )} for user ${id}`
-            );
-          return user;
-        }
-      ),
-    invalidateTags: () => [id],
-  })
-);
+export const setUserOnline = async (id: string, isOnline: boolean) => {
+  return await db
+    .table('users')
+    .get(id)
+    .update(
+      {
+        isOnline,
+        lastSeen: new Date(),
+      },
+      { returnChanges: 'always' }
+    )
+    .run()
+    .then(res => {
+      const user = res.changes[0].new_val || res.changes[0].old_val;
+      return user;
+    });
+};
 
 export const setUserPendingEmail = createWriteQuery(
   (userId: string, pendingEmail: string) => ({

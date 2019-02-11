@@ -2,6 +2,8 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { btoa } from 'b2a';
+import { stateFromMarkdown } from 'draft-js-import-markdown';
+import { convertToRaw } from 'draft-js';
 import messageInfoFragment from '../../fragments/message/messageInfo';
 import type { MessageInfoType } from '../../fragments/message/messageInfo';
 import { getThreadMessageConnectionQuery } from '../../queries/thread/getThreadMessageConnection';
@@ -41,7 +43,7 @@ const sendMessageOptions = {
           addMessage: {
             id: fakeId,
             timestamp: JSON.parse(JSON.stringify(new Date())),
-            messageType: message.messageType,
+            messageType: message.messageType === 'media' ? 'media' : 'draftjs',
             modifiedAt: '',
             author: {
               user: {
@@ -65,6 +67,18 @@ const sendMessageOptions = {
               : null,
             content: {
               ...message.content,
+              body:
+                message.messageType === 'media'
+                  ? message.content.body
+                  : JSON.stringify(
+                      convertToRaw(
+                        stateFromMarkdown(message.content.body, {
+                          parserOptions: {
+                            breaks: true,
+                          },
+                        })
+                      )
+                    ),
               __typename: 'MessageContent',
             },
             reactions: {

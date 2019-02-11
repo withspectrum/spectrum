@@ -52,11 +52,12 @@ describe('Thread View', () => {
     it('should prompt logged-out users to log in', () => {
       const newMessage = 'A new message!';
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[contenteditable="true"]').type(newMessage);
-      // Wait for the messages to be loaded before sending new message
-      cy.get('[data-cy="message-group"]').should('be.visible');
-      cy.get('[data-cy="chat-input-send-button"]').click();
-      cy.contains('Sign in');
+      cy.get('[data-cy="join-channel-login-upsell"]').should('be.visible');
+      cy.get('[data-cy="thread-join-channel-upsell-button"]').should(
+        'be.visible'
+      );
+      cy.get('[data-cy="thread-join-channel-upsell-button"]').click();
+      cy.get('[data-cy="login-modal"]').should('be.visible');
     });
   });
 
@@ -68,12 +69,12 @@ describe('Thread View', () => {
     it('should allow logged-in users to send public messages', () => {
       const newMessage = 'A new message!';
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[contenteditable="true"]').type(newMessage);
+      cy.get('[data-cy="chat-input"]').type(newMessage);
       // Wait for the messages to be loaded before sending new message
       cy.get('[data-cy="message-group"]').should('be.visible');
       cy.get('[data-cy="chat-input-send-button"]').click();
       // Clear the chat input and make sure the message was sent by matching the text
-      cy.get('[contenteditable="true"]').type('');
+      cy.get('[data-cy="chat-input"]').clear();
       cy.contains(newMessage);
     });
   });
@@ -100,10 +101,10 @@ describe('Thread View', () => {
     it('should allow logged-in users to send private messages if they have permission', () => {
       const newMessage = 'A new private message!';
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[contenteditable="true"]').type(newMessage);
+      cy.get('[data-cy="chat-input"]').type(newMessage);
       cy.get('[data-cy="chat-input-send-button"]').click();
       // Clear the chat input and make sure the message was sent by matching the text
-      cy.get('[contenteditable="true"]').type('');
+      cy.get('[data-cy="chat-input"]').clear();
       cy.contains(newMessage);
     });
   });
@@ -400,6 +401,7 @@ describe('edit message signed in', () => {
     cy.contains('The next one is an emoji-only one :scream:')
       .scrollIntoView()
       .should('be.visible');
+
     cy.get('[data-cy="edit-message"]')
       .last()
       .click({ force: true });
@@ -407,14 +409,19 @@ describe('edit message signed in', () => {
     cy.get('[data-cy="edit-message-input"]')
       .scrollIntoView()
       .should('be.visible');
+
     cy.get('[data-cy="edit-message-cancel"]')
       .scrollIntoView()
       .should('be.visible');
-    cy.get('[data-cy="edit-message-save"]').should('be.visible');
+
+    cy.get('[data-cy="edit-message-save"]')
+      .scrollIntoView()
+      .should('be.visible');
 
     cy.get('[data-cy="edit-message-cancel"]').click();
 
     cy.get('[data-cy="edit-message-input"]').should('not.be.visible');
+
     cy.get('[data-cy="edit-message-cancel"]').should('not.be.visible');
     cy.get('[data-cy="edit-message-save"]').should('not.be.visible');
 
@@ -423,15 +430,16 @@ describe('edit message signed in', () => {
       .click({ force: true });
 
     cy.get('[data-cy="edit-message-input"]');
-    cy.get('[contenteditable="true"]').type(' with edits');
+    cy.get('[data-cy="editing-chat-input"]').type(' with edits');
 
     cy.get('[data-cy="edit-message-save"]').click();
 
     cy.get('[data-cy="edit-message-input"]').should('not.be.visible');
+
     cy.get('[data-cy="edited-message-indicator"]').should('be.visible');
-    cy.contains('The next one is an emoji-only one :scream: with edits').should(
-      'be.visible'
-    );
+    cy.contains('The next one is an emoji-only one :scream: with edits')
+      .scrollIntoView()
+      .should('be.visible');
   });
 });
 

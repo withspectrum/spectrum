@@ -17,7 +17,7 @@ import {
   SectionCardFooter,
 } from 'src/components/settingsViews/style';
 import BrandedLoginToggle from './brandedLoginToggle';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Button, OutlineButton } from 'src/components/buttons';
 import { TextArea, Error } from 'src/components/formElements';
 import saveBrandedLoginSettings from 'shared/graphql/mutations/community/saveBrandedLoginSettings';
@@ -92,7 +92,10 @@ class BrandedLogin extends React.Component<Props, State> {
   };
 
   render() {
-    const { data: { community }, isLoading } = this.props;
+    const {
+      data: { community },
+      isLoading,
+    } = this.props;
     const { messageLengthError } = this.state;
 
     if (community) {

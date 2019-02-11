@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Section from 'src/components/themedSection';
 import PageFooter from '../components/footer';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
 import { Easy, Happy, Impact, Ideas } from 'src/components/illustrations';
 import { Wrapper } from '../style';
@@ -67,7 +67,7 @@ class Features extends React.Component<Props, State> {
                 </Button>
               </Link>
             </TextContent>
-            <Waterfall src="https://spectrum.imgix.net/marketing/waterfall.png?h=0.25&dpr=2&auto=compress,format" />
+            <Waterfall src="/img/waterfall.png" />
           </Intro>
         </Section>
         <Section background={'brand'} goop={3} color={'space.alt'}>

@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import {
   StyledThreadListItem,
@@ -17,7 +17,9 @@ class ThreadListItem extends React.Component<Props> {
     const {
       thread: {
         id,
-        author: { user: { name, username } },
+        author: {
+          user: { name, username },
+        },
         content: { title },
         messageCount,
       },

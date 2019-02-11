@@ -2,7 +2,7 @@
 import theme from 'shared/theme';
 import React from 'react';
 import styled from 'styled-components';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { Transition, zIndex, Shadow, hexa } from '../../../components/globals';
 import ViewSegment from '../../../components/themedSection';
 import { Button } from '../../../components/buttons';
