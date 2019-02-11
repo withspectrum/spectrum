@@ -234,6 +234,49 @@ class EmailInvitationForm extends React.Component<Props, State> {
     });
   };
 
+  handleFile = evt => {
+    const reader = new FileReader();
+    reader.onload = file => {
+      let parsed;
+      try {
+        if (typeof reader.result !== 'string') return;
+        parsed = JSON.parse(reader.result);
+      } catch (err) {
+        return;
+      }
+      if (!Array.isArray(parsed)) {
+        return;
+      }
+      const formatted = parsed.map(value => {
+        if (typeof value === 'string')
+          return {
+            email: value,
+          };
+
+        return {
+          email: value.email,
+          firstName: value.firstName || value.name,
+          lastName: value.lastName,
+        };
+      });
+      this.setState(prev => ({
+        contacts: [
+          ...prev.contacts.filter(
+            contact =>
+              contact.email.length > 0 ||
+              contact.firstName.length > 0 ||
+              contact.lastName.length > 0
+          ),
+          ...formatted.map(value => ({
+            ...value,
+            error: !isEmail(value.email),
+          })),
+        ],
+      }));
+    };
+    reader.readAsText(evt.target.files[0]);
+  };
+
   render() {
     const {
       contacts,
@@ -294,14 +337,14 @@ class EmailInvitationForm extends React.Component<Props, State> {
           />
         )}
 
-        {hasCustomMessage &&
-          customMessageError && (
-            <Error>
-              Your custom invitation message can be up to 500 characters.
-            </Error>
-          )}
+        {hasCustomMessage && customMessageError && (
+          <Error>
+            Your custom invitation message can be up to 500 characters.
+          </Error>
+        )}
 
         <SectionCardFooter>
+          <input type="file" accept=".json" onChange={this.handleFile} />
           <Button
             loading={isLoading}
             onClick={this.sendInvitations}
