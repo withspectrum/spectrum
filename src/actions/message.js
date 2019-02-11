@@ -13,4 +13,17 @@ export const replyToMessage = (input: ReplyInput) => {
   };
 };
 
+export const editMessage = (id: string) => {
+  return {
+    type: 'EDIT_MESSAGE',
+    messageId: id,
+  };
+};
+
+export const cancelMessageEdit = (id: string) => {
+  return {
+    type: 'EDIT_MESSAGE_CANCEL',
+  };
+};
+
 export type ReplyToMessageActionType = $Call<typeof replyToMessage, ReplyInput>;

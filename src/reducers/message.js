@@ -3,6 +3,7 @@ import type { ReplyToMessageActionType } from '../actions/message';
 
 const initialState = {
   quotedMessage: {},
+  editingMessage: null,
 };
 
 type Actions = ReplyToMessageActionType;
@@ -19,6 +20,18 @@ export default function message(
           [action.threadId]: action.messageId,
         },
       };
+    case 'EDIT_MESSAGE': {
+      return {
+        ...state,
+        editingMessage: action.messageId,
+      };
+    }
+    case 'EDIT_MESSAGE_CANCEL': {
+      return {
+        ...state,
+        editingMessage: null,
+      };
+    }
     default:
       return state;
   }

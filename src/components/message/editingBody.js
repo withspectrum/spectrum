@@ -11,6 +11,7 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import editMessageMutation from 'shared/graphql/mutations/message/editMessage';
+import { cancelMessageEdit } from '../../actions/message';
 
 type Props = {
   message: MessageInfoType,

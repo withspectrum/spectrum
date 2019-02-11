@@ -18,6 +18,7 @@ export const initStore = (initialState?: Object) => {
   let store = createStore(
     getReducers(),
     initialState || {},
+    // $FlowIssue
     composeEnhancers(applyMiddleware(thunkMiddleware, crashReporter))
   );
 

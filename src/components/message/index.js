@@ -12,7 +12,11 @@ import OutsideClickHandler from 'src/components/outsideClickHandler';
 import { Body } from './view';
 import EditingBody from './editingBody';
 import { openModal } from 'src/actions/modals';
-import { replyToMessage } from 'src/actions/message';
+import {
+  replyToMessage,
+  editMessage,
+  cancelMessageEdit,
+} from 'src/actions/message';
 import { CLIENT_URL } from 'src/api/constants';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
@@ -58,23 +62,18 @@ type Props = {|
   history: History,
   dispatch: Dispatch<Object>,
   currentUser: UserInfoType,
+  editingMessage: ?string,
 |};
 
-type State = {
-  isEditing: boolean,
-};
-
-class Message extends React.Component<Props, State> {
+class Message extends React.Component<Props> {
   wrapperRef: React.Node;
-
-  state = { isEditing: false };
 
   setWrapperRef = (node: React.Node) => {
     this.wrapperRef = node;
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    const isEditing = this.state.isEditing !== nextState.isEditing;
+    const isEditing = nextProps.editingMessage !== this.props.editingMessage;
     const newMessage = nextProps.message.id !== this.props.message.id;
     const updatedReactionCount =
       nextProps.message.reactions.count !== this.props.message.reactions.count;
@@ -144,8 +143,13 @@ class Message extends React.Component<Props, State> {
     }
   };
 
-  initEditMessage = () => this.setState({ isEditing: true });
-  cancelEdit = () => this.setState({ isEditing: false });
+  initEditMessage = () => {
+    this.props.dispatch(editMessage(this.props.message.id));
+  };
+
+  cancelEdit = () => {
+    this.props.dispatch(cancelMessageEdit(this.props.message.id));
+  };
 
   render() {
     const {
@@ -160,7 +164,8 @@ class Message extends React.Component<Props, State> {
       threadType,
       thread,
     } = this.props;
-    const { isEditing } = this.state;
+    const isEditing = this.props.editingMessage === this.props.message.id;
+    console.log(this.props.editingMessage);
 
     const canEditMessage = me && message.messageType !== 'media';
     const selectedMessageId = btoa(new Date(message.timestamp).getTime() - 1);
@@ -168,8 +173,8 @@ class Message extends React.Component<Props, State> {
       threadType === 'story' && thread
         ? `/${getThreadLink(thread)}?m=${selectedMessageId}`
         : threadType === 'directMessageThread'
-          ? `/messages/${threadId}?m=${selectedMessageId}`
-          : `/thread/${threadId}?m=${selectedMessageId}`;
+        ? `/messages/${threadId}?m=${selectedMessageId}`
+        : `/thread/${threadId}?m=${selectedMessageId}`;
 
     return (
       <MessagesContext.Consumer>
@@ -237,18 +242,17 @@ class Message extends React.Component<Props, State> {
                     />
                   )}
 
-                  {message.modifiedAt &&
-                    !isEditing && (
-                      <EditedIndicator
-                        data-cy="edited-message-indicator"
-                        tipLocation={'top-right'}
-                        tipText={`Edited ${convertTimestampToDate(
-                          new Date(message.modifiedAt)
-                        )}`}
-                      >
-                        Edited
-                      </EditedIndicator>
-                    )}
+                  {message.modifiedAt && !isEditing && (
+                    <EditedIndicator
+                      data-cy="edited-message-indicator"
+                      tipLocation={'top-right'}
+                      tipText={`Edited ${convertTimestampToDate(
+                        new Date(message.modifiedAt)
+                      )}`}
+                    >
+                      Edited
+                    </EditedIndicator>
+                  )}
 
                   {message.reactions.count > 0 && (
                     <Reaction
@@ -414,9 +418,13 @@ class Message extends React.Component<Props, State> {
   }
 }
 
+const mapStateToProps = (state): * => ({
+  editingMessage: state.message.editingMessage,
+});
+
 export default compose(
   withCurrentUser,
   withRouter,
   toggleReactionMutation,
-  connect()
+  connect(mapStateToProps)
 )(Message);
