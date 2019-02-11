@@ -29,13 +29,15 @@ const createLinksDecorator = (
   ) => {
     if (contentBlock.type === 'code-block') return;
 
-    contentBlock.findEntityRanges(char => {
-      const entityKey = char.getEntity();
-      return (
-        entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === 'LINK'
-      );
-    }, callback);
+    if (contentBlock.findEntityRanges) {
+      contentBlock.findEntityRanges(char => {
+        const entityKey = char.getEntity();
+        return (
+          entityKey !== null &&
+          contentState.getEntity(entityKey).getType() === 'LINK'
+        );
+      }, callback);
+    }
     linkStrategy(contentBlock, callback);
   },
   component: ({
