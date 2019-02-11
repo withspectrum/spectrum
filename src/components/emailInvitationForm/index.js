@@ -11,6 +11,7 @@ import { Button } from '../buttons';
 import { Error } from '../formElements';
 import { SectionCardFooter } from 'src/components/settingsViews/style';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import MediaInput from 'src/components/mediaInput';
 import {
   EmailInviteForm,
   EmailInviteInput,
@@ -18,6 +19,7 @@ import {
   RemoveRow,
   CustomMessageToggle,
   CustomMessageTextAreaStyles,
+  FileUploadWrapper,
 } from './style';
 
 type Props = {
@@ -369,7 +371,15 @@ class EmailInvitationForm extends React.Component<Props, State> {
         )}
 
         <SectionCardFooter>
-          <input type="file" accept=".json" onChange={this.handleFile} />
+          <FileUploadWrapper>
+            <MediaInput
+              multiple={false}
+              accept=".json"
+              glyph="upload"
+              tipText="Import emails from .json file"
+              onChange={this.handleFile}
+            />
+          </FileUploadWrapper>
           <Button
             loading={isLoading}
             onClick={this.sendInvitations}

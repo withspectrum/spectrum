@@ -86,6 +86,10 @@ export const CustomMessageToggle = styled.h4`
   }
 `;
 
+export const FileUploadWrapper = styled.div`
+  margin-right: 16px;
+`;
+
 export const CustomMessageTextAreaStyles = {
   width: '100%',
   borderRadius: '8px',
