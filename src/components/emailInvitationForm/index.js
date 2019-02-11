@@ -37,6 +37,7 @@ type ContactProps = {
 type State = {
   isLoading: boolean,
   contacts: Array<ContactProps>,
+  importError: string,
   hasCustomMessage: boolean,
   customMessageString: string,
   customMessageError: boolean,
@@ -47,6 +48,7 @@ class EmailInvitationForm extends React.Component<Props, State> {
     super();
     this.state = {
       isLoading: false,
+      importError: '',
       contacts: [
         {
           email: '',
@@ -235,6 +237,9 @@ class EmailInvitationForm extends React.Component<Props, State> {
   };
 
   handleFile = evt => {
+    this.setState({
+      importError: '',
+    });
     // Only show loading indicator for large files
     // where it takes > 200ms to load
     const timeout = setTimeout(() => {
@@ -253,9 +258,16 @@ class EmailInvitationForm extends React.Component<Props, State> {
         if (typeof reader.result !== 'string') return;
         parsed = JSON.parse(reader.result);
       } catch (err) {
+        this.setState({
+          importError: 'Only .json files are supported for import.',
+        });
         return;
       }
       if (!Array.isArray(parsed)) {
+        this.setState({
+          importError:
+            'Your JSON data is in the wrong format. Please provide either an array of emails ["hi@me.com"] or an array of objects with an "email" property and (optionally) a "name" property [{ "email": "hi@me.com", "name": "Me" }].',
+        });
         return;
       }
       const formatted = parsed.map(value => {
@@ -295,10 +307,12 @@ class EmailInvitationForm extends React.Component<Props, State> {
       hasCustomMessage,
       customMessageString,
       customMessageError,
+      importError,
     } = this.state;
 
     return (
       <div>
+        {importError && <Error>{importError}</Error>}
         {contacts.map((contact, i) => {
           return (
             <EmailInviteForm key={i}>
