@@ -60,14 +60,18 @@ class CloseComposerConfirmation extends React.Component<Props> {
           </Message>
 
           <Actions>
-            <TextButton onClick={this.close} color={'warn.alt'}>
+            <TextButton
+              color={'text.placeholder'}
+              hoverColor={'warn.default'}
+              onClick={this.close}
+            >
               Cancel
             </TextButton>
 
             <Button
-              gradientTheme={'ios'}
-              color={'ios.red'}
-              hoverColor={'ios.red'}
+              gradientTheme={'warn'}
+              color={'warn.default'}
+              hoverColor={'warn.default'}
               onClick={() => this.closeConfirmed(functions)}
             >
               Discard
