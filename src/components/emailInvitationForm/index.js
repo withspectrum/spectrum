@@ -235,8 +235,19 @@ class EmailInvitationForm extends React.Component<Props, State> {
   };
 
   handleFile = evt => {
+    // Only show loading indicator for large files
+    // where it takes > 200ms to load
+    const timeout = setTimeout(() => {
+      this.setState({
+        isLoading: true,
+      });
+    }, 200);
     const reader = new FileReader();
     reader.onload = file => {
+      clearTimeout(timeout);
+      this.setState({
+        isLoading: false,
+      });
       let parsed;
       try {
         if (typeof reader.result !== 'string') return;
