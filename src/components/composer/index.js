@@ -78,6 +78,7 @@ type Props = {
 const LS_BODY_KEY = 'last-thread-composer-body';
 const LS_TITLE_KEY = 'last-thread-composer-title';
 const LS_COMPOSER_EXPIRE = 'last-thread-composer-expire';
+const LS_DISCARD_DRAFT = 'discard-draft';
 
 const ONE_DAY = (): string => {
   const time = new Date().getTime() + 60 * 60 * 24 * 1000;
@@ -123,6 +124,7 @@ class ComposerWithData extends Component<Props, State> {
     localStorage.removeItem(LS_BODY_KEY);
     localStorage.removeItem(LS_TITLE_KEY);
     localStorage.removeItem(LS_COMPOSER_EXPIRE);
+    localStorage.removeItem(LS_DISCARD_DRAFT);
   };
 
   getTitleAndBody = () => {
@@ -241,9 +243,11 @@ class ComposerWithData extends Component<Props, State> {
     document.removeEventListener('keydown', this.handleKeyPress, false);
     const { postWasPublished } = this.state;
 
-    // if a post was published, in this session, clear redux so that the next
-    // composer open will start fresh
-    if (postWasPublished) return this.closeComposer('clear');
+    const discardDraft = localStorage.getItem(LS_DISCARD_DRAFT);
+
+    // if a post was published or draft is discarded in this session,
+    // clear redux so that the next composer open will start fresh
+    if (postWasPublished || discardDraft) return this.closeComposer('clear');
 
     // otherwise, clear the composer normally and save the state
     return this.closeComposer();
@@ -258,7 +262,7 @@ class ComposerWithData extends Component<Props, State> {
       this.props.dispatch(
         openModal('CLOSE_COMPOSER_CONFIRMATION_MODAL', {
           message: 'Are you sure you want to discard this draft?',
-          closeComposerFn: this.closeComposer,
+          setDiscardDraft: this.setDiscardDraftToLocalStorage,
           activateLastThreadFn: this.activateLastThread,
         })
       );
@@ -267,6 +271,9 @@ class ComposerWithData extends Component<Props, State> {
 
     if (cmdEnter) return this.publishThread();
   };
+
+  setDiscardDraftToLocalStorage = () =>
+    localStorage.setItem(LS_DISCARD_DRAFT, 'true');
 
   activateLastThread = () => {
     // we get the last thread id from the query params and dispatch it
