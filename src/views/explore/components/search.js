@@ -177,12 +177,15 @@ class Search extends React.Component<Props, State> {
     if (e.target.value.length === 0) {
       this.setState({
         searchIsLoading: false,
+        searchString: '',
       });
+      return;
     }
 
     // set the searchstring to state
     this.setState({
       searchString: e.target.value,
+      searchIsLoading: true,
     });
 
     // trigger a new search based on the search input
