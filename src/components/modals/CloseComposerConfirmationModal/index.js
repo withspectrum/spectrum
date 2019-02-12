@@ -16,7 +16,11 @@ type Props = {
   modalProps: any,
 };
 
-class CloseComposerConfirmation extends React.Component<Props> {
+type State = {
+  isLoading: boolean,
+};
+
+class CloseComposerConfirmation extends React.Component<Props, State> {
   state = {
     isLoading: false,
   };
