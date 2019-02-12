@@ -53,6 +53,14 @@ const Embed = (props: EmbedProps) => {
   }
 };
 
+const hasStringElements = (arr: Array<mixed>) => {
+  return arr.some(elem => {
+    if (Array.isArray(elem)) return hasStringElements(elem);
+
+    return typeof elem === 'string';
+  });
+};
+
 const threadRenderer = {
   inline: {
     BOLD: (children: Array<Node>, { key }: KeyObj) => (
@@ -70,10 +78,8 @@ const threadRenderer = {
   blocks: {
     unstyled: (children: Array<Node>, { keys }: KeysObj) => {
       // If the children are text, render a paragraph
-      if (children.some(child => typeof child === 'string')) {
-        return children.map((child, index) => (
-          <Paragraph key={keys[index] || index}>{child}</Paragraph>
-        ));
+      if (hasStringElements(children)) {
+        return <Paragraph key={keys.join('|')}>{children}</Paragraph>;
       }
 
       return children;
@@ -89,6 +95,8 @@ const threadRenderer = {
       children.map(child => <h1>{child}</h1>),
     'header-two': (children: Array<Node>) =>
       children.map(child => <h2>{child}</h2>),
+    'header-three': (children: Array<Node>) =>
+      children.map(child => <h3>{child}</h3>),
     'unordered-list-item': (children: Array<Node>, { depth, keys }) => (
       <ul key={keys.join('|')}>
         {children.map((child, index) => (
