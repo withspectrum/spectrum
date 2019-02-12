@@ -6,6 +6,8 @@ import {
   EmbedContainer,
   EmbedComponent,
 } from 'src/components/rich-text-editor/style';
+import mentionsDecorator from '../mentions-decorator';
+import linksDecorator from '../links-decorator';
 import type { Node } from 'react';
 import type { KeyObj, KeysObj, DataObj } from '../message/types';
 
@@ -112,7 +114,7 @@ const threadRenderer = {
       <Embed key={key} {...data} />
     ),
   },
-  // decorators: [mentionsDecorator, linksDecorator],
+  decorators: [mentionsDecorator, linksDecorator],
 };
 
 export default threadRenderer;
