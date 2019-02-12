@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import { Button } from 'src/components/buttons';
-import { throttle } from 'src/helpers/utils';
+import { debounce } from 'src/helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
 import type { SearchCommunitiesType } from 'shared/graphql/queries/search/searchCommunities';
 import { Spinner } from 'src/components/globals';
@@ -58,8 +58,8 @@ class Search extends React.Component<Props, State> {
       isFocused: true,
     };
 
-    // only kick off search query every 200ms
-    this.search = throttle(this.search, 500);
+    // only kick off search query if 500ms have passed without a consecutive invocation
+    this.search = debounce(this.search, 500, false);
   }
 
   search = (searchString: string) => {
@@ -177,12 +177,15 @@ class Search extends React.Component<Props, State> {
     if (e.target.value.length === 0) {
       this.setState({
         searchIsLoading: false,
+        searchString: '',
       });
+      return;
     }
 
     // set the searchstring to state
     this.setState({
       searchString: e.target.value,
+      searchIsLoading: true,
     });
 
     // trigger a new search based on the search input
