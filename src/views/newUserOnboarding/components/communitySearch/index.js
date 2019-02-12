@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, OutlineButton } from 'src/components/buttons';
 import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
-import { throttle } from 'src/helpers/utils';
+import { debounce } from 'src/helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
 import { Spinner } from 'src/components/globals';
 import OutsideClickHandler from 'src/components/outsideClickHandler';
@@ -59,7 +59,7 @@ class Search extends React.Component<Props, State> {
     };
 
     // only kick off search query every 200ms
-    this.search = throttle(this.search, 500);
+    this.search = debounce(this.search, 500, false);
   }
 
   onJoinComplete = result => {
@@ -210,9 +210,17 @@ class Search extends React.Component<Props, State> {
   handleChange = (e: any) => {
     const string = e.target.value.toLowerCase().trim();
 
+    if (string.length === 0) {
+      return this.setState({
+        searchIsLoading: false,
+        searchString: '',
+      });
+    }
+
     // set the searchstring to state
     this.setState({
       searchString: e.target.value,
+      searchIsLoading: true,
     });
 
     // trigger a new search based on the search input
@@ -343,13 +351,21 @@ class Search extends React.Component<Props, State> {
                   );
                 })}
 
-              {searchResults.length === 0 && isFocused && (
+              {searchResults.length === 0 && !searchIsLoading && isFocused && (
                 <SearchResult>
                   <SearchResultNull>
                     <p>No communities found matching “{searchString}”</p>
                     <Link to={'/new/community'}>
                       <Button>Create a Community</Button>
                     </Link>
+                  </SearchResultNull>
+                </SearchResult>
+              )}
+
+              {searchIsLoading && isFocused && (
+                <SearchResult>
+                  <SearchResultNull>
+                    <p>Searching for “{searchString}”</p>
                   </SearchResultNull>
                 </SearchResult>
               )}

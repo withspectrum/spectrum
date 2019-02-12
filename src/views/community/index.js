@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button } from 'src/components/buttons';
 import generateMetaInfo from 'shared/generate-meta-info';
-import ThreadComposer from 'src/components/threadComposer';
+import Composer from 'src/components/composer';
+import ComposerPlaceholder from 'src/components/threadComposer/components/placeholder';
 import Head from 'src/components/head';
 import Icon from 'src/components/icons';
 import AppViewWrapper from 'src/components/appViewWrapper';
@@ -391,10 +392,12 @@ class CommunityView extends React.Component<Props, State> {
                   selectedView === 'trending-threads') &&
                 userHasPermissions && (
                   <ErrorBoundary fallbackComponent={null}>
-                    <ThreadComposer
-                      activeCommunity={communitySlug}
-                      showComposerUpsell={showComposerUpsell}
+                    <ComposerPlaceholder
+                      isInbox={false}
+                      showCommunityOwnerUpsell={showComposerUpsell}
+                      isOpen={false}
                     />
+                    <Composer isSlider={true} activeCommunity={communitySlug} />
                   </ErrorBoundary>
                 )}
 

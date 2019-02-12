@@ -12,6 +12,7 @@ const getLoading = (threadViewContext: 'fullscreen' | 'inbox' | 'slider') => ({
   pastDelay,
 }) => {
   if (error) {
+    console.error(error);
     return (
       <ViewError
         heading={'We had trouble loading the application, please try again.'}
