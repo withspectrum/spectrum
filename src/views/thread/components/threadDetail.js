@@ -14,7 +14,7 @@ import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
-import Editor from 'src/components/rich-text-editor';
+import ThreadRenderer from 'src/components/threadRenderer';
 import { toJSON, toState } from 'shared/draft-utils';
 import Textarea from 'react-textarea-autosize';
 import ActionBar from './actionBar';
@@ -91,7 +91,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
     return this.setState({
       isEditing: false,
-      body: toState(JSON.parse(thread.content.body)),
+      body: JSON.parse(thread.content.body),
       title: thread.content.title,
       flyoutOpen: false,
       receiveNotifications: thread.receiveNotifications,
@@ -399,16 +399,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
             </Link>
           </ThreadSubtitle>
 
-          {/* $FlowFixMe */}
-          <Editor
-            readOnly={!this.state.isEditing}
-            state={body}
-            onChange={this.changeBody}
-            editorKey="thread-detail"
-            placeholder="Write more thoughts here..."
-            editorRef={editor => (this.bodyEditor = editor)}
-            version={2}
-          />
+          <ThreadRenderer body={body} />
         </ThreadContent>
 
         <ErrorBoundary fallbackComponent={null}>
