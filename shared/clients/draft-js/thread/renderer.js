@@ -116,6 +116,11 @@ const threadRenderer = {
         {children}
       </a>
     ),
+    IMAGE: (
+      children: Array<Node>,
+      data: { src?: string, alt?: string },
+      { key }: KeyObj
+    ) => <img key={key} src={data.src} alt={data.alt} />,
     embed: (children: Array<Node>, data: Object, { key }: KeyObj) => (
       <Embed key={key} {...data} />
     ),
