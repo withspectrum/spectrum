@@ -12,8 +12,6 @@ import Dropzone from 'react-dropzone';
 import Icon from '../icons';
 import processThreadContent from 'shared/draft-utils/process-thread-content';
 import { ThreadHeading } from 'src/views/thread/style';
-import Editor from 'src/components/rich-text-editor';
-import Image from 'src/components/rich-text-editor/Image';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import ThreadRenderer from '../threadRenderer';
 import { closeComposer } from '../../actions/composer';
@@ -67,26 +65,6 @@ import {
 } from './utils';
 import { events, track } from 'src/helpers/analytics';
 import { ESC, ENTER } from 'src/helpers/keycodes';
-
-const PreviewEditor = (props: { state: Object }) => {
-  // $FlowIssue
-  const [state, setState] = React.useState(props.state);
-
-  const onChange = change => {
-    setState(change);
-  };
-
-  return (
-    <Editor
-      readOnly
-      state={state}
-      onChange={onChange}
-      placeholder=""
-      version={2}
-      editorKey="preview-editor"
-    />
-  );
-};
 
 type State = {
   title: string,

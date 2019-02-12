@@ -9,6 +9,7 @@ type Props = {
   body: RawDraftContentState,
 };
 
-export default (props: Props) => (
-  <div className="markdown">{redraft(props.body, threadRenderer)}</div>
-);
+export default (props: Props) =>
+  console.log(props.body) || (
+    <div className="markdown">{redraft(props.body, threadRenderer)}</div>
+  );
