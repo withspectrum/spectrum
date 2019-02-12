@@ -92,4 +92,5 @@ const mapStateToProps = state => ({
   modalProps: state.modals.modalProps,
 });
 
+// $FlowIssue
 export default connect(mapStateToProps)(CloseComposerConfirmation);
