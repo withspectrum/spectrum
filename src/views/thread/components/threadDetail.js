@@ -4,6 +4,8 @@ import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { convertFromRaw } from 'draft-js';
+import { stateToMarkdown } from 'draft-js-export-markdown';
 import { timeDifference } from 'shared/time-difference';
 import { convertTimestampToDate } from 'shared/time-formatting';
 import { openModal } from 'src/actions/modals';
@@ -19,6 +21,7 @@ import { toJSON, toState } from 'shared/draft-utils';
 import Textarea from 'react-textarea-autosize';
 import ActionBar from './actionBar';
 import ConditionalWrap from 'src/components/conditionalWrap';
+import ThreadEditInputs from 'src/components/composer/inputs';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   UserHoverProfile,
@@ -39,12 +42,13 @@ import { ErrorBoundary } from 'src/components/error';
 
 type State = {
   isEditing?: boolean,
-  body?: any,
-  title?: string,
+  body: string,
+  title: string,
   receiveNotifications?: boolean,
   isSavingEdit?: boolean,
   flyoutOpen?: ?boolean,
   error?: ?string,
+  parsedBody: ?Object,
   isLockingThread: boolean,
   isPinningThread: boolean,
 };
@@ -65,7 +69,8 @@ class ThreadDetailPure extends React.Component<Props, State> {
     isLockingThread: false,
     isPinningThread: false,
     isEditing: false,
-    body: null,
+    parsedBody: null,
+    body: '',
     title: '',
     receiveNotifications: false,
     isSavingEdit: false,
@@ -89,10 +94,14 @@ class ThreadDetailPure extends React.Component<Props, State> {
       community: transformations.analyticsCommunity(thread.community),
     });
 
+    const parsedBody = JSON.parse(thread.content.body);
+
     return this.setState({
       isEditing: false,
-      body: JSON.parse(thread.content.body),
+      body: stateToMarkdown(convertFromRaw(parsedBody)),
       title: thread.content.title,
+      // We store this in the state to avoid having to JSON.parse on every render
+      parsedBody,
       flyoutOpen: false,
       receiveNotifications: thread.receiveNotifications,
       isSavingEdit: false,
@@ -186,6 +195,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
     this.setState({
       isEditing: !isEditing,
+      // Reset body and title state
+      body: stateToMarkdown(convertFromRaw(JSON.parse(thread.content.body))),
+      title: thread.content.title,
     });
 
     if (!isEditing) {
@@ -215,27 +227,14 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isSavingEdit: true,
     });
 
-    const jsonBody = toJSON(body);
-
     const content = {
       title: title.trim(),
-      body: JSON.stringify(jsonBody),
+      body,
     };
-
-    // Get the images
-    const filesToUpload = Object.keys(jsonBody.entityMap)
-      .filter(
-        key =>
-          jsonBody.entityMap[key].type.toLowerCase() === 'image' &&
-          jsonBody.entityMap[key].data.file &&
-          jsonBody.entityMap[key].data.file.constructor === File
-      )
-      .map(key => jsonBody.entityMap[key].data.file);
 
     const input = {
       threadId,
       content,
-      filesToUpload,
     };
 
     editThread(input)
@@ -275,9 +274,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
     });
   };
 
-  changeBody = state => {
+  changeBody = evt => {
     this.setState({
-      body: state,
+      body: evt.target.value,
     });
   };
 
@@ -328,12 +327,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isPinningThread,
     } = this.state;
 
-    // if there is no body it means the user is switching threads or the thread
-    // hasnt loaded yet - we need this body for the editor, otherwise the
-    // thread view will crash. If no body exists we return null to wait for
-    // the body to be set in state after the thread loads.
-    if (!body) return null;
-
     const createdAt = new Date(thread.createdAt).getTime();
     const timestamp = convertTimestampToDate(createdAt);
 
@@ -344,62 +337,66 @@ class ThreadDetailPure extends React.Component<Props, State> {
     return (
       <ThreadWrapper innerRef={this.props.innerRef}>
         <ThreadContent isEditing={isEditing}>
-          {/* $FlowFixMe */}
-          <ErrorBoundary fallbackComponent={null}>
-            <ConditionalWrap
-              condition={!!thread.author.user.username}
-              wrap={() => (
-                <UserHoverProfile username={thread.author.user.username}>
-                  <ThreadByline author={thread.author} />
-                </UserHoverProfile>
-              )}
-            >
-              <ThreadByline author={thread.author} />
-            </ConditionalWrap>
-          </ErrorBoundary>
-
           {isEditing ? (
-            <Textarea
-              onChange={this.changeTitle}
-              style={ThreadTitle}
-              value={this.state.title}
-              placeholder={'A title for your thread...'}
-              ref={c => {
-                this.titleTextarea = c;
-              }}
+            <ThreadEditInputs
+              uploadFiles={() => {}}
+              title={this.state.title}
+              body={this.state.body}
               autoFocus
-              data-cy="thread-editor-title-input"
+              bodyRef={ref => (this.bodyEditor = ref)}
+              changeBody={this.changeBody}
+              changeTitle={this.changeTitle}
             />
           ) : (
-            <ThreadHeading>{thread.content.title}</ThreadHeading>
+            <React.Fragment>
+              {/* $FlowFixMe */}
+              <ErrorBoundary fallbackComponent={null}>
+                <ConditionalWrap
+                  condition={!!thread.author.user.username}
+                  wrap={() => (
+                    <UserHoverProfile username={thread.author.user.username}>
+                      <ThreadByline author={thread.author} />
+                    </UserHoverProfile>
+                  )}
+                >
+                  <ThreadByline author={thread.author} />
+                </ConditionalWrap>
+              </ErrorBoundary>
+
+              <ThreadHeading>{thread.content.title}</ThreadHeading>
+
+              <ThreadSubtitle>
+                <CommunityHoverProfile id={thread.community.id}>
+                  <Link to={`/${thread.community.slug}`}>
+                    {thread.community.name}
+                  </Link>
+                </CommunityHoverProfile>
+                <span>&nbsp;/&nbsp;</span>
+                <ChannelHoverProfile id={thread.channel.id}>
+                  <Link to={`/${thread.community.slug}/${thread.channel.slug}`}>
+                    {thread.channel.name}
+                  </Link>
+                </ChannelHoverProfile>
+                <span>&nbsp;·&nbsp;</span>
+                <Link to={'/' + getThreadLink(thread)}>
+                  {timestamp}
+                  {thread.modifiedAt && (
+                    <React.Fragment>
+                      {' '}
+                      (Edited{' '}
+                      {timeDifference(
+                        Date.now(),
+                        editedTimestamp
+                      ).toLowerCase()}
+                      )
+                    </React.Fragment>
+                  )}
+                </Link>
+              </ThreadSubtitle>
+
+              <ThreadRenderer body={JSON.parse(thread.content.body)} />
+            </React.Fragment>
           )}
-
-          <ThreadSubtitle>
-            <CommunityHoverProfile id={thread.community.id}>
-              <Link to={`/${thread.community.slug}`}>
-                {thread.community.name}
-              </Link>
-            </CommunityHoverProfile>
-            <span>&nbsp;/&nbsp;</span>
-            <ChannelHoverProfile id={thread.channel.id}>
-              <Link to={`/${thread.community.slug}/${thread.channel.slug}`}>
-                {thread.channel.name}
-              </Link>
-            </ChannelHoverProfile>
-            <span>&nbsp;·&nbsp;</span>
-            <Link to={'/' + getThreadLink(thread)}>
-              {timestamp}
-              {thread.modifiedAt && (
-                <React.Fragment>
-                  {' '}
-                  (Edited{' '}
-                  {timeDifference(Date.now(), editedTimestamp).toLowerCase()})
-                </React.Fragment>
-              )}
-            </Link>
-          </ThreadSubtitle>
-
-          {isEditing ? <div>Edit</div> : <ThreadRenderer body={body} />}
         </ThreadContent>
 
         <ErrorBoundary fallbackComponent={null}>
