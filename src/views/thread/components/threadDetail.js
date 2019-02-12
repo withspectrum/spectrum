@@ -17,7 +17,6 @@ import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import ThreadRenderer from 'src/components/threadRenderer';
-import { toJSON, toState } from 'shared/draft-utils';
 import Textarea from 'react-textarea-autosize';
 import ActionBar from './actionBar';
 import ConditionalWrap from 'src/components/conditionalWrap';
