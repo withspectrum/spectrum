@@ -226,6 +226,8 @@ injectGlobal`
   .markdown pre {
     margin: 16px 0;
     display: block;
+    border-radius: 4px;
+    background-color: #f5f8fc;
   }
 
   .markdown pre code {
@@ -233,6 +235,9 @@ injectGlobal`
     display: block;
     white-space: pre-wrap;
     position: relative;
+    margin: 0;
+    border: none;
+    background: none;
   }
 
   .markdown div[data-block='true'] {
