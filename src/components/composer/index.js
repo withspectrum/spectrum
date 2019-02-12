@@ -7,7 +7,6 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import debounce from 'debounce';
 import queryString from 'query-string';
-import { KeyBindingUtil } from 'draft-js';
 import Dropzone from 'react-dropzone';
 import Icon from '../icons';
 import processThreadContent from 'shared/draft-utils/process-thread-content';
@@ -275,8 +274,7 @@ class ComposerWithData extends Component<Props, State> {
 
   handleKeyPress = e => {
     const esc = e.keyCode === ESC;
-    const cmdEnter =
-      e.keyCode === ENTER && KeyBindingUtil.hasCommandModifier(e);
+    const cmdEnter = e.keyCode === ENTER && e.metaKey;
 
     if (esc) {
       // Community/channel view
