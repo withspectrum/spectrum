@@ -1,8 +1,55 @@
 // @flow
 import React from 'react';
 import { Line, Paragraph, BlockQuote } from 'src/components/message/style';
+import {
+  AspectRatio,
+  EmbedContainer,
+  EmbedComponent,
+} from 'src/components/rich-text-editor/style';
 import type { Node } from 'react';
 import type { KeyObj, KeysObj, DataObj } from '../message/types';
+
+type EmbedProps = {
+  aspectRatio?: string,
+  src: string,
+  width?: string | number,
+  height?: string | number,
+};
+
+const Embed = (props: EmbedProps) => {
+  const { aspectRatio, src, width = '100%', height = 200 } = props;
+
+  if (!src) return null;
+
+  // if an aspect ratio is passed in, we need to use the EmbedComponent which does some trickery with padding to force an aspect ratio. Otherwise we should just use a regular iFrame
+  if (aspectRatio && aspectRatio !== undefined) {
+    return (
+      <AspectRatio ratio={aspectRatio}>
+        <EmbedComponent
+          title={`iframe-${src}`}
+          width={width}
+          height={height}
+          allowFullScreen={true}
+          frameBorder="0"
+          src={src}
+        />
+      </AspectRatio>
+    );
+  } else {
+    return (
+      <EmbedContainer>
+        <iframe
+          title={`iframe-${src}`}
+          width={width}
+          height={height}
+          allowFullScreen={true}
+          frameBorder="0"
+          src={src}
+        />
+      </EmbedContainer>
+    );
+  }
+};
 
 const threadRenderer = {
   inline: {
@@ -19,14 +66,18 @@ const threadRenderer = {
     ),
   },
   blocks: {
-    unstyled: (children: Array<Node>, { keys }: KeysObj) =>
-      children.map((child, index) => (
-        <Paragraph key={keys[index] || index}>{child}</Paragraph>
-      )),
+    unstyled: (children: Array<Node>, { keys }: KeysObj) => {
+      // If the children are text, render a paragraph
+      if (children.some(child => typeof child === 'string')) {
+        return children.map((child, index) => (
+          <Paragraph key={keys[index] || index}>{child}</Paragraph>
+        ));
+      }
+
+      return children;
+    },
     'code-block': (children: Array<Node>, { keys }: KeysObj) => (
-      <Line key={keys.join('|')}>
-        {children.map((child, i) => [child, <br key={i} />])}
-      </Line>
+      <Line key={keys.join('|')}>{children}</Line>
     ),
     blockquote: (children: Array<Node>, { keys }: KeysObj) =>
       children.map((child, index) => (
@@ -56,6 +107,9 @@ const threadRenderer = {
       <a key={key} href={data.url} target="_blank">
         {children}
       </a>
+    ),
+    embed: (children: Array<Node>, data: Object, { key }: KeyObj) => (
+      <Embed key={key} {...data} />
     ),
   },
   // decorators: [mentionsDecorator, linksDecorator],
