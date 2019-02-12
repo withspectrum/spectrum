@@ -56,6 +56,7 @@ const notificationMutations = require('./mutations/notification');
 const userMutations = require('./mutations/user');
 const metaMutations = require('./mutations/meta');
 const communityMemberMutations = require('./mutations/communityMember');
+const fileMutations = require('./mutations/files');
 
 const messageSubscriptions = require('./subscriptions/message');
 const notificationSubscriptions = require('./subscriptions/notification');
@@ -125,6 +126,7 @@ const resolvers = merge(
   userMutations,
   metaMutations,
   communityMemberMutations,
+  fileMutations,
   // subscriptions
   messageSubscriptions,
   notificationSubscriptions,

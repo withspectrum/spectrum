@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ComposerPlaceholder from './components/placeholder';
 import ComposerEditor from './components/composer';
 
 class ThreadComposerWithData extends Component {
@@ -19,13 +18,7 @@ class ThreadComposerWithData extends Component {
         activeCommunity={activeCommunity}
         activeChannel={activeChannel}
       />
-    ) : (
-      <ComposerPlaceholder
-        isInbox={isInbox}
-        isOpen={isOpen}
-        showCommunityOwnerUpsell={showCommunityOwnerUpsell}
-      />
-    );
+    ) : null;
   }
 }
 

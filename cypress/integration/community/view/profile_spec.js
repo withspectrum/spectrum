@@ -268,7 +268,8 @@ describe('private community signed in with permissions', () => {
       .filter(channel => !channel.isPrivate)
       .filter(channel => !channel.deletedAt)
       .forEach(channel => {
-        cy.contains(channel.name)
+        cy.get('[data-cy="channel-list"]')
+          .contains(channel.name)
           .scrollIntoView()
           .should('be.visible');
       });

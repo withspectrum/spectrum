@@ -1960,6 +1960,13 @@ atob@^2.1.1:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
+attr-accept@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/attr-accept/-/attr-accept-1.1.3.tgz#48230c79f93790ef2775fcec4f0db0f5db41ca52"
+  integrity sha512-iT40nudw8zmCweivz6j58g+RT33I4KbaIvRUhjNmDwO2WmsQUxFEZZYZ5w3vXe5x5MX9D7mfvA/XaLOZYFR9EQ==
+  dependencies:
+    core-js "^2.5.0"
+
 autoprefixer@7.1.6:
   version "7.1.6"
   resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-7.1.6.tgz#fb933039f74af74a83e71225ce78d9fd58ba84d7"
@@ -5432,10 +5439,10 @@ draft-js-import-element@^1.3.0:
     draft-js-utils "^1.3.0"
     synthetic-dom "^1.2.0"
 
-draft-js-import-markdown@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-1.3.0.tgz#0f939ecb72c342345e685b37cb43c701c167dc36"
-  integrity sha512-V8JQflHOGYMmHOlrodY/l7zce00juHJ3uhSeL63x7x26sqKgTa75hdAAo7M1Z6ayuL7/AJkTQHP/NKsR4/vujA==
+draft-js-import-markdown@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.npmjs.org/draft-js-import-markdown/-/draft-js-import-markdown-1.3.1.tgz#7ed4f95c7f16acdd4703a5d608497857ed4a4ffa"
+  integrity sha512-TTV+X7X5ixPeNWqpGk6CFLYO+5ORCrUENaJPGDOzps7gyT/SMfuILM8DP2FwWjFt3ys2WmFZMlMGKk/M4l/N/Q==
   dependencies:
     draft-js-import-element "^1.3.0"
     synthetic-dom "^1.2.0"
@@ -11888,6 +11895,14 @@ react-dom@^16.7.0-alpha.2:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.12.0-alpha.2"
+
+react-dropzone@^8.0.3:
+  version "8.0.3"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-8.0.3.tgz#1fe14a5ce58c390327273c6e766fb0429d51300e"
+  integrity sha512-3zvEH4szxTHjpNIbuSXY3aIByv6fUao8ZYOqtYucmgduRR+r0c94xMJvrPKyAj9hgWZTJ/0I//PMq+SDZp3MCw==
+  dependencies:
+    attr-accept "^1.1.3"
+    prop-types "^15.6.2"
 
 react-error-overlay@^4.0.1:
   version "4.0.1"

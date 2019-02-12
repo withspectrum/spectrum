@@ -76,6 +76,24 @@ const general = /* GraphQL */ `
     createdAt: String
     status: String
   }
+
+  enum EntityTypes {
+    communities
+    channels
+    users
+    threads
+  }
+
+  input UploadImageInput {
+    image: Upload!
+    type: EntityTypes!
+    id: String
+  }
+
+  extend type Mutation {
+    uploadImage(input: UploadImageInput!): String
+      @rateLimit(max: 20, window: "20m")
+  }
 `;
 
 module.exports = general;
