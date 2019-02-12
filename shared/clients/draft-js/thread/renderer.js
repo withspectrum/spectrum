@@ -95,14 +95,14 @@ const threadRenderer = {
       children.map(child => <h2>{child}</h2>),
     'header-three': (children: Array<Node>) =>
       children.map(child => <h3>{child}</h3>),
-    'unordered-list-item': (children: Array<Node>, { depth, keys }) => (
+    'unordered-list-item': (children: Array<Node>, { keys }: KeysObj) => (
       <ul key={keys.join('|')}>
         {children.map((child, index) => (
           <li key={keys[index]}>{child}</li>
         ))}
       </ul>
     ),
-    'ordered-list-item': (children: Array<Node>, { depth, keys }) => (
+    'ordered-list-item': (children: Array<Node>, { keys }: KeysObj) => (
       <ol key={keys.join('|')}>
         {children.map((child, index) => (
           <li key={keys[index]}>{child}</li>
