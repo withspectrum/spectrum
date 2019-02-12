@@ -15,11 +15,13 @@ import MediaInput from 'src/components/mediaInput';
 import {
   EmailInviteForm,
   EmailInviteInput,
-  AddRow,
+  Action,
+  ActionAsLabel,
+  ActionHelpText,
   RemoveRow,
   CustomMessageToggle,
   CustomMessageTextAreaStyles,
-  FileUploadWrapper,
+  HiddenInput,
 } from './style';
 
 type Props = {
@@ -340,14 +342,23 @@ class EmailInvitationForm extends React.Component<Props, State> {
           );
         })}
 
-        <AddRow onClick={this.addRow}>+ Add another</AddRow>
+        <Action onClick={this.addRow}>
+          <Icon glyph="plus" size={20} /> Add row
+        </Action>
+        <ActionAsLabel mb="8px">
+          <HiddenInput type="file" accept=".json" onChange={this.handleFile} />
+          <Icon size={20} glyph="upload" /> Import emails
+        </ActionAsLabel>
+        <ActionHelpText>
+          Upload a .json file with an array of email addresses.
+        </ActionHelpText>
 
-        <CustomMessageToggle onClick={this.toggleCustomMessage}>
+        <Action onClick={this.toggleCustomMessage}>
           <Icon glyph={hasCustomMessage ? 'view-close' : 'post'} size={20} />
           {hasCustomMessage
             ? 'Remove custom message'
             : 'Optional: Add a custom message to your invitation'}
-        </CustomMessageToggle>
+        </Action>
 
         {hasCustomMessage && (
           <Textarea
@@ -371,15 +382,6 @@ class EmailInvitationForm extends React.Component<Props, State> {
         )}
 
         <SectionCardFooter>
-          <FileUploadWrapper>
-            <MediaInput
-              multiple={false}
-              accept=".json"
-              glyph="upload"
-              tipText="Import emails from .json file"
-              onChange={this.handleFile}
-            />
-          </FileUploadWrapper>
           <Button
             loading={isLoading}
             onClick={this.sendInvitations}
