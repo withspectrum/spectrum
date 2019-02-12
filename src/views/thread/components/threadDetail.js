@@ -399,7 +399,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
             </Link>
           </ThreadSubtitle>
 
-          <ThreadRenderer body={body} />
+          {isEditing ? <div>Edit</div> : <ThreadRenderer body={body} />}
         </ThreadContent>
 
         <ErrorBoundary fallbackComponent={null}>

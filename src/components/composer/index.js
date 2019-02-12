@@ -65,6 +65,7 @@ import {
 } from './utils';
 import { events, track } from 'src/helpers/analytics';
 import { ESC, ENTER } from 'src/helpers/keycodes';
+import Inputs from './inputs';
 
 type State = {
   title: string,
@@ -655,74 +656,15 @@ class ComposerWithData extends Component<Props, State> {
             )}
           </Dropdowns>
           <ThreadInputs>
-            <SegmentedControl
-              css={{
-                marginRight: 0,
-                marginLeft: 0,
-                marginTop: 0,
-                marginBottom: '32px',
-              }}
-            >
-              <Segment
-                selected={!this.state.preview}
-                onClick={() => this.setState({ preview: false })}
-              >
-                Write
-              </Segment>
-              <Segment
-                selected={this.state.preview}
-                onClick={() => this.setState({ preview: true })}
-              >
-                Preview
-              </Segment>
-            </SegmentedControl>
-            {preview ? (
-              /* $FlowFixMe */
-              <div style={{ padding: '0 32px' }}>
-                <ThreadHeading>{this.state.title}</ThreadHeading>
-                <ThreadRenderer
-                  body={JSON.parse(
-                    processThreadContent('TEXT', this.state.body)
-                  )}
-                />
-              </div>
-            ) : (
-              <Dropzone
-                accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
-                disableClick
-                multiple={false}
-                onDropAccepted={this.uploadFiles}
-              >
-                {({ getRootProps, getInputProps, isDragActive }) => (
-                  <DropzoneWrapper
-                    {...getRootProps({
-                      refKey: 'innerRef',
-                    })}
-                  >
-                    <input {...getInputProps()} />
-                    <Textarea
-                      data-cy="composer-title-input"
-                      onChange={this.changeTitle}
-                      style={ThreadTitle}
-                      value={this.state.title}
-                      placeholder={'What‘s on your mind?'}
-                      autoFocus={!threadSliderIsOpen}
-                    />
-
-                    <MentionsInput
-                      onChange={this.changeBody}
-                      value={this.state.body}
-                      style={ThreadDescription}
-                      inputRef={editor => (this.bodyEditor = editor)}
-                      placeholder={'Add more thoughts here...'}
-                      className={'threadComposer'}
-                      dataCy="rich-text-editor"
-                    />
-                    <DropImageOverlay visible={isDragActive} />
-                  </DropzoneWrapper>
-                )}
-              </Dropzone>
-            )}
+            <Inputs
+              title={this.state.title}
+              body={this.state.body}
+              changeBody={this.changeBody}
+              changeTitle={this.changeTitle}
+              uploadFiles={this.uploadFiles}
+              autoFocus={!threadSliderIsOpen}
+              bodyRef={ref => (this.bodyEditor = ref)}
+            />
           </ThreadInputs>
 
           {networkDisabled && (

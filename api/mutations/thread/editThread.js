@@ -7,6 +7,7 @@ import { getThreads, editThread } from '../../models/thread';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import processThreadContent from 'shared/draft-utils/process-thread-content';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 import {
@@ -81,6 +82,10 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     return new UserError(
       "You don't have permission to make changes to this thread."
     );
+  }
+
+  if (input.content.body) {
+    input.content.body = processThreadContent('TEXT', input.content.body);
   }
 
   /*
