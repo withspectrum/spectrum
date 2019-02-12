@@ -57,6 +57,10 @@ export const Action = styled.button`
   font-weight: 500;
   border-radius: 4px;
 
+  .icon {
+    margin-right: 4px;
+  }
+
   &:hover {
     color: ${theme.text.secondary};
     cursor: pointer;
@@ -70,7 +74,7 @@ export const ActionHelpText = styled.div`
   font-size: 14px;
   text-align: center;
   margin-top: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 `;
 
 export const RemoveRow = styled.div`
