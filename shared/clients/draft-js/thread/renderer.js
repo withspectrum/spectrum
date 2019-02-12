@@ -53,12 +53,10 @@ const Embed = (props: EmbedProps) => {
   }
 };
 
-const hasStringElements = (arr: Array<mixed>) => {
-  return arr.some(elem => {
-    if (Array.isArray(elem)) return hasStringElements(elem);
+const hasStringElements = (arr: Array<mixed> | mixed) => {
+  if (Array.isArray(arr)) return arr.some(elem => hasStringElements(elem));
 
-    return typeof elem === 'string';
-  });
+  return typeof arr === 'string';
 };
 
 const threadRenderer = {
