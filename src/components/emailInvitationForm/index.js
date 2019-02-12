@@ -48,8 +48,9 @@ type State = {
 };
 
 class EmailInvitationForm extends React.Component<Props, State> {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
     this.state = {
       isLoading: false,
       importError: '',
@@ -76,6 +77,7 @@ class EmailInvitationForm extends React.Component<Props, State> {
       hasCustomMessage: false,
       customMessageString: '',
       customMessageError: false,
+      inputValue: '',
     };
   }
 
@@ -93,7 +95,7 @@ class EmailInvitationForm extends React.Component<Props, State> {
     this.setState({ isLoading: true });
 
     let validContacts = contacts
-      .filter(contact => contact.error === false)
+      .filter(contact => !contact.error)
       .filter(contact => contact.email !== currentUser.email)
       .filter(contact => contact.email.length > 0)
       .filter(contact => isEmail(contact.email))
@@ -244,6 +246,7 @@ class EmailInvitationForm extends React.Component<Props, State> {
     this.setState({
       importError: '',
     });
+
     // Only show loading indicator for large files
     // where it takes > 200ms to load
     const timeout = setTimeout(() => {
@@ -251,12 +254,14 @@ class EmailInvitationForm extends React.Component<Props, State> {
         isLoading: true,
       });
     }, 200);
+
     const reader = new FileReader();
     reader.onload = file => {
       clearTimeout(timeout);
       this.setState({
         isLoading: false,
       });
+
       let parsed;
       try {
         if (typeof reader.result !== 'string') return;
@@ -267,6 +272,7 @@ class EmailInvitationForm extends React.Component<Props, State> {
         });
         return;
       }
+
       if (!Array.isArray(parsed)) {
         this.setState({
           importError:
@@ -274,6 +280,7 @@ class EmailInvitationForm extends React.Component<Props, State> {
         });
         return;
       }
+
       const formatted = parsed.map(value => {
         if (typeof value === 'string')
           return {
@@ -286,21 +293,35 @@ class EmailInvitationForm extends React.Component<Props, State> {
           lastName: value.lastName,
         };
       });
-      this.setState(prev => ({
-        contacts: [
-          ...prev.contacts.filter(
-            contact =>
-              contact.email.length > 0 ||
-              contact.firstName.length > 0 ||
-              contact.lastName.length > 0
-          ),
-          ...formatted.map(value => ({
-            ...value,
-            error: !isEmail(value.email),
-          })),
-        ],
-      }));
+
+      const validated = formatted
+        .map(value => {
+          if (!isEmail(value.email)) return { ...value, error: true };
+          return value;
+        })
+        .filter(Boolean);
+
+      const consolidated = [
+        ...this.state.contacts.filter(
+          contact =>
+            contact.email.length > 0 ||
+            contact.firstName.length > 0 ||
+            contact.lastName.length > 0
+        ),
+        ...validated,
+      ];
+
+      const unique = consolidated.filter(
+        (obj, i) =>
+          consolidated.findIndex(a => a['email'] === obj['email']) === i
+      );
+
+      this.setState({
+        contacts: unique,
+        inputValue: '',
+      });
     };
+
     reader.readAsText(evt.target.files[0]);
   };
 
@@ -346,7 +367,12 @@ class EmailInvitationForm extends React.Component<Props, State> {
           <Icon glyph="plus" size={20} /> Add row
         </Action>
         <ActionAsLabel mb="8px">
-          <HiddenInput type="file" accept=".json" onChange={this.handleFile} />
+          <HiddenInput
+            value={this.state.inputValue}
+            type="file"
+            accept=".json"
+            onChange={this.handleFile}
+          />
           <Icon size={20} glyph="upload" /> Import emails
         </ActionAsLabel>
         <ActionHelpText>
