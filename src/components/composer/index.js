@@ -9,6 +9,7 @@ import debounce from 'debounce';
 import queryString from 'query-string';
 import { KeyBindingUtil } from 'draft-js';
 import Dropzone from 'react-dropzone';
+import redraft from 'redraft';
 import Icon from '../icons';
 import processThreadContent from 'shared/draft-utils/process-thread-content';
 import { ThreadHeading } from 'src/views/thread/style';
@@ -64,6 +65,7 @@ import {
   sortChannels,
   getDefaultActiveChannel,
 } from './utils';
+import threadRenderer from 'shared/clients/draft-js/thread/renderer';
 import { events, track } from 'src/helpers/analytics';
 import { ESC, ENTER } from 'src/helpers/keycodes';
 
@@ -701,12 +703,12 @@ class ComposerWithData extends Component<Props, State> {
               /* $FlowFixMe */
               <div style={{ padding: '0 32px' }}>
                 <ThreadHeading>{this.state.title}</ThreadHeading>
-                {/* $FlowFixMe */}
-                <PreviewEditor
-                  state={toState(
-                    JSON.parse(processThreadContent('TEXT', this.state.body))
+                <div className="markdown">
+                  {redraft(
+                    JSON.parse(processThreadContent('TEXT', this.state.body)),
+                    threadRenderer
                   )}
-                />
+                </div>
               </div>
             ) : (
               <Dropzone
