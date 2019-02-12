@@ -45,6 +45,7 @@ type State = {
   hasCustomMessage: boolean,
   customMessageString: string,
   customMessageError: boolean,
+  inputValue: ?string,
 };
 
 class EmailInvitationForm extends React.Component<Props, State> {
