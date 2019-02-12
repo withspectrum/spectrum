@@ -6,6 +6,9 @@ import { addEmbedsToEditorState } from './add-embeds-to-draft-js';
 export default (type: 'TEXT' | 'DRAFTJS', body: string): string => {
   let newBody = body;
   if (type === 'TEXT') {
+    // workaround react-mentions bug by replacing @[username] with @username
+    // @see withspectrum/spectrum#4587
+    newBody = newBody.replace(/@\[([a-z0-9_-]+)\]/g, '@$1');
     newBody = JSON.stringify(
       convertToRaw(
         stateFromMarkdown(newBody, {

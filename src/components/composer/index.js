@@ -538,7 +538,9 @@ class ComposerWithData extends Component<Props, State> {
 
     const content = {
       title: title.trim(),
-      body: body,
+      // workaround react-mentions bug by replacing @[username] with @username
+      // @see withspectrum/spectrum#4587
+      body: body.replace(/@\[([a-z0-9_-]+)\]/g, '@$1'),
     };
 
     // this.props.mutate comes from a higher order component defined at the
