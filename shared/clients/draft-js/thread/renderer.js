@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import Highlight, { defaultProps } from 'prism-react-renderer';
 import { Line, Paragraph, BlockQuote } from 'src/components/message/style';
 import {
   AspectRatio,
@@ -59,6 +60,24 @@ const hasStringElements = (arr: Array<mixed> | mixed) => {
   return typeof arr === 'string';
 };
 
+const getStringElements = (arr: Array<mixed>): Array<string> => {
+  return arr
+    .map(elem => {
+      if (Array.isArray(elem)) return getStringElements(elem);
+      if (typeof elem === 'string') return elem;
+      // Handle React elements being passed as array elements
+      // $FlowIssue
+      if (elem.props && elem.props.children)
+        return getStringElements(elem.props.children);
+      return null;
+    })
+    .filter(Boolean)
+    .reduce((final, elem) => {
+      if (Array.isArray(elem)) return [...final, ...elem];
+      return [...final, elem];
+    }, []);
+};
+
 const threadRenderer = {
   inline: {
     BOLD: (children: Array<Node>, { key }: KeyObj) => (
@@ -82,9 +101,27 @@ const threadRenderer = {
 
       return children;
     },
-    'code-block': (children: Array<Node>, { keys }: KeysObj) => (
-      <Line key={keys.join('|')}>{children}</Line>
-    ),
+    'code-block': (children: Array<mixed>, { keys, data }: KeysObj) =>
+      console.log(getStringElements(children)) || (
+        <Highlight
+          {...defaultProps}
+          code={getStringElements(children).join('\n')}
+          language={Array.isArray(data) && data[0].language}
+          theme={undefined}
+        >
+          {({ className, style, tokens, getLineProps, getTokenProps }) => (
+            <Line className={className} style={style}>
+              {tokens.map((line, i) => (
+                <div {...getLineProps({ line, key: i })}>
+                  {line.map((token, key) => (
+                    <span {...getTokenProps({ token, key })} />
+                  ))}
+                </div>
+              ))}
+            </Line>
+          )}
+        </Highlight>
+      ),
     blockquote: (children: Array<Node>, { keys }: KeysObj) =>
       children.map((child, index) => (
         <BlockQuote key={keys[index] || index}>{child}</BlockQuote>

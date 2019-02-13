@@ -6,6 +6,7 @@ export type KeyObj = {
 
 export type KeysObj = {
   keys: string[],
+  data?: Object,
 };
 
 export type DataObj = {
