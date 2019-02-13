@@ -1,17 +1,100 @@
-import styled from 'styled-components';
+import React from 'react';
+import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
-import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
+import Icon from '../icons';
+import { hexa, Shadow, FlexRow, FlexCol, zIndex, Tooltip } from '../globals';
+
+export const DropzoneWrapper = styled.div`
+  padding: 0 32px;
+  position: relative;
+  height: 100%;
+`;
+
+export const DropImageOverlay = (props: { visible: boolean }) => {
+  return (
+    <DropImageOverlayWrapper visible={props.visible}>
+      <Icon glyph="photo" />
+      <h3>Drop image to upload</h3>
+    </DropImageOverlayWrapper>
+  );
+};
+
+export const DropImageOverlayWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: ${theme.bg.wash};
+  border-radius: 4px;
+  border: 1px solid ${theme.bg.border};
+  color: ${theme.text.secondary};
+  transition: opacity 125ms ease-in-out;
+
+  ${props =>
+    props.visible
+      ? css`
+          opacity: 0.9;
+        `
+      : css`
+          opacity: 0;
+          pointer-events: none;
+        `}
+`;
+
+export const ComposerSlider = styled.div`
+  display: ${props => (props.isSlider ? 'none' : 'block')};
+  ${props =>
+    props.isSlider &&
+    props.isOpen &&
+    css`
+      display: block;
+      position: fixed;
+      width: 50%;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: ${zIndex.composer};
+    `}
+`;
+
+export const Overlay = styled.div`
+  ${props =>
+    props.isOpen
+      ? `
+      position: fixed;
+      top: 48px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3000;
+      background: #000;
+      pointer-events: auto;
+      opacity: 0.4;
+    `
+      : `
+      opacity: 0;
+      pointer-events: none;
+
+    `};
+`;
 
 export const Container = styled(FlexCol)`
   background-color: ${theme.bg.default};
   display: grid;
-  grid-template-rows: 60px 1fr 64px;
+  grid-template-rows: 50px 1fr 64px;
   grid-template-columns: 100%;
   grid-template-areas: 'header' 'body' 'footer';
   align-self: stretch;
   flex: auto;
   overflow: hidden;
-  height: calc(100vh - 48px);
+  height: ${props => (props.isSlider ? '100vh' : 'calc(100vh - 48px)')};
 
   @media (max-width: 768px) {
     grid-template-rows: 48px 64px 1fr 64px;
@@ -21,18 +104,33 @@ export const Container = styled(FlexCol)`
   }
 `;
 
+export const DesktopLink = styled.a`
+  display: flex;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const ButtonRow = styled(FlexRow)`
+  @media (max-width: 768px) {
+    justify-content: flex-end;
+  }
+`;
+
 export const Actions = styled(FlexCol)`
   background: ${theme.bg.wash};
   border-top: 2px solid ${theme.bg.border};
-  padding: 8px;
+  padding: 8px 32px 8px 16px;
   border-radius: 0;
   align-self: stretch;
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   position: relative;
   grid-area: footer;
+  z-index: ${zIndex.composer};
 
   @media (max-width: 768px) {
     padding: 8px;
@@ -42,7 +140,7 @@ export const Actions = styled(FlexCol)`
     box-shadow: none;
     background-color: transparent;
 
-    > div {
+    > ${ButtonRow} {
       width: 100%;
 
       > button:first-of-type {
@@ -50,10 +148,16 @@ export const Actions = styled(FlexCol)`
       }
 
       > button:last-of-type {
-        width: 100%;
+        width: calc(100% - 16px);
+        margin-right: 8px;
       }
     }
   }
+`;
+
+export const InputHints = styled(FlexRow)`
+  color: ${theme.text.alt};
+  font-size: 14px;
 `;
 
 export const Dropdowns = styled(FlexRow)`
@@ -124,30 +228,22 @@ export const OptionalSelector = styled(Selector)`
 export const ThreadInputs = styled(FlexCol)`
   grid-area: body;
   overflow-y: scroll;
-  padding: 64px;
-  padding-left: 80px;
+  padding: 32px;
+  padding-top: 8px;
+  margin-left: -32px;
+  margin-right: -32px;
+  width: calc(100% + 64px);
   background-color: ${theme.bg.default};
-
-  @media (max-width: 768px) {
-    max-width: 100vw;
-    padding: 32px;
-    padding-left: 48px;
-  }
-
-  @media (max-width: 480px) {
-    max-width: 100vw;
-    padding: 16px;
-    padding-left: 48px;
-  }
+  z-index: ${zIndex.composer};
 `;
 
 export const ThreadTitle = {
-  fontSize: '24px',
+  fontSize: '28px',
   padding: '0',
   outline: 'none',
   border: '0',
-  lineHeight: '1.4',
-  fontWeight: '800',
+  lineHeight: '1.3',
+  fontWeight: '600',
   boxShadow: 'none',
   width: '100%',
   color: '#16171A',
@@ -161,11 +257,10 @@ export const ThreadTitle = {
 
 export const ThreadDescription = {
   fontSize: '16px',
-  fontWeight: '500',
+  fontWeight: '400',
   width: '100%',
   display: 'inline-block',
   lineHeight: '1.5',
-  padding: '0 32px 32px',
   outline: 'none',
   border: '0',
   boxShadow: 'none',
@@ -173,6 +268,9 @@ export const ThreadDescription = {
   whiteSpace: 'pre-wrap',
   overflowY: 'scroll',
   position: 'relative',
+  // NOTE(@mxstbr): Magic value to make the margin between
+  // the thread title and body match the preview
+  marginTop: '12px',
 };
 
 export const DisabledWarning = styled.div`

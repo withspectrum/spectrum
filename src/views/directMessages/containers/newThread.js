@@ -13,7 +13,7 @@ import { NullState } from '../../../components/upsell';
 import { MessagesContainer, ViewContent, NoThreads } from '../style';
 import { getDirectMessageThreadQuery } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
-import { throttle } from '../../../helpers/utils';
+import { debounce } from '../../../helpers/utils';
 import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
 import { Spinner } from '../../../components/globals';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -124,7 +124,7 @@ class NewThread extends React.Component<Props, State> {
     };
 
     // only kick off search query every 200ms
-    this.search = throttle(this.search, 200);
+    this.search = debounce(this.search, 500, false);
   }
 
   /*
@@ -436,6 +436,7 @@ class NewThread extends React.Component<Props, State> {
 
     // set the searchstring to state
     this.setState({
+      searchIsLoading: true,
       searchString: e.target.value,
     });
 
@@ -806,7 +807,9 @@ class NewThread extends React.Component<Props, State> {
                 <SearchResult>
                   <SearchResultTextContainer>
                     <SearchResultNull>
-                      No users found matching “{searchString}”
+                      {searchIsLoading
+                        ? `Searching for "${searchString}"`
+                        : `No users found matching “${searchString}”`}
                     </SearchResultNull>
                   </SearchResultTextContainer>
                 </SearchResult>

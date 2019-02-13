@@ -432,6 +432,8 @@ export const EditorInput = styled(EditorWrapper)`
   transition: border 0.3s ease-out;
   color: ${props => props.theme.text.secondary};
   background: ${props => props.theme.bg.default};
+  max-width: 100%;
+  word-break: break-all;
 
   @media (max-width: 768px) {
     font-size: 16px;

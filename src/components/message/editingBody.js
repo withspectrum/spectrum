@@ -29,17 +29,19 @@ type State = {
 };
 
 const EditingChatInput = (props: Props) => {
+  const initialState =
+    props.message.messageType === 'text'
+      ? props.message.content.body
+      : stateToMarkdown(
+          toState(JSON.parse(props.message.content.body)).getCurrentContent(),
+          {
+            gfm: true,
+          }
+          // NOTE(@mxstbr): draft-js-export-markdown sometimes appends an empty line at the end,
+          // which we really never want
+        ).replace(/\n$/, '');
   // $FlowIssue
-  const [text, setText] = React.useState(
-    stateToMarkdown(
-      toState(JSON.parse(props.message.content.body)).getCurrentContent(),
-      {
-        gfm: true,
-      }
-      // NOTE(@mxstbr): draft-js-export-markdown sometimes appends an empty line at the end,
-      // which we really never want
-    ).replace(/\n$/, '')
-  );
+  const [text, setText] = React.useState(initialState);
   // $FlowIssue
   const [saving, setSaving] = React.useState(false);
 

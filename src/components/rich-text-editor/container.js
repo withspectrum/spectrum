@@ -26,6 +26,7 @@ import OutsideClickHandler from 'src/components/outsideClickHandler';
 import Icon from 'src/components/icons';
 import { IconButton } from 'src/components/buttons';
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
+import linksDecorator from 'shared/clients/draft-js/links-decorator/index.web.js';
 import { isAndroid } from 'shared/draft-utils';
 import MediaInput from 'src/components/mediaInput';
 import Image from './Image';
@@ -40,6 +41,7 @@ import {
   Action,
   EmbedUI,
   customStyleMap,
+  customStyleFn,
 } from './style';
 
 type Props = {
@@ -52,6 +54,7 @@ type Props = {
   className?: string,
   style?: Object,
   version?: 2,
+  isOpen: boolean,
 };
 
 type State = {
@@ -201,118 +204,79 @@ class Editor extends React.Component<Props, State> {
       version,
       placeholder,
       readOnly,
+      isOpen,
       ...rest
     } = this.props;
     const { embedding, inserting } = this.state;
 
-    if (version === 2) {
-      return (
-        <ComposerBase
-          data-cy="rich-text-editor"
-          className={`markdown ${className || ''}`}
-          focus={focus}
-        >
-          <DraftEditor
-            data-cy="rich-text-editor"
-            editorState={state}
-            onChange={onChange}
-            plugins={this.state.plugins}
-            handleDroppedFiles={this.handleDroppedFiles}
-            editorRef={editor => {
-              this.editor = editor;
-              if (editorRef) editorRef(editor);
-            }}
-            readOnly={readOnly}
-            placeholder={!readOnly && placeholder}
-            spellCheck={true}
-            autoCapitalize="sentences"
-            autoComplete="on"
-            autoCorrect="on"
-            stripPastedStyles={true}
-            decorators={[mentionsDecorator]}
-            customStyleMap={customStyleMap}
-            {...rest}
-          />
-          {!readOnly &&
-            !isAndroid() && (
-              <OutsideClickHandler onOutsideClick={this.closeToolbar}>
-                <SideToolbar editorState={state} editorRef={this.editor}>
-                  <Expander inserting={inserting}>
-                    <IconButton
-                      glyph={'inserter'}
-                      onClick={this.toggleToolbarDisplayState}
-                    />
-                    <Action>
-                      <MediaInput
-                        onChange={this.addImage}
-                        multiple
-                        tipLocation={'right'}
+    return (
+      <ComposerBase
+        data-cy="rich-text-editor"
+        className={`markdown ${className || ''}`}
+        focus={focus}
+        isOpen={isOpen}
+      >
+        <DraftEditor
+          editorState={state}
+          onChange={onChange}
+          plugins={this.state.plugins}
+          handleDroppedFiles={this.handleDroppedFiles}
+          editorRef={editor => {
+            this.editor = editor;
+            if (editorRef) editorRef(editor);
+          }}
+          readOnly={readOnly}
+          placeholder={!readOnly && placeholder}
+          spellCheck={true}
+          autoCapitalize="sentences"
+          autoComplete="on"
+          autoCorrect="on"
+          stripPastedStyles={true}
+          decorators={[mentionsDecorator, linksDecorator]}
+          customStyleMap={customStyleMap}
+          customStyleFn={customStyleFn}
+          {...rest}
+        />
+        {!readOnly && !isAndroid() && (
+          <OutsideClickHandler onOutsideClick={this.closeToolbar}>
+            <SideToolbar editorState={state} editorRef={this.editor}>
+              <Expander inserting={inserting}>
+                <IconButton
+                  glyph={'inserter'}
+                  onClick={this.toggleToolbarDisplayState}
+                />
+                <Action>
+                  <MediaInput
+                    onChange={this.addImage}
+                    multiple
+                    tipLocation={'right'}
+                  />
+                </Action>
+                <Action embedding={embedding}>
+                  <EmbedUI onSubmit={this.addEmbed} embedding={embedding}>
+                    <label htmlFor="embed-input">
+                      <Icon
+                        glyph={'embed'}
+                        tipText={'Embed a URL'}
+                        onClick={this.toggleEmbedInputState}
                       />
-                    </Action>
-                    <Action embedding={embedding}>
-                      <EmbedUI onSubmit={this.addEmbed} embedding={embedding}>
-                        <label htmlFor="embed-input">
-                          <Icon
-                            glyph={'embed'}
-                            tipText={'Embed a URL'}
-                            onClick={this.toggleEmbedInputState}
-                          />
-                          <input
-                            id="embed-input"
-                            type="url"
-                            placeholder="Enter a URL to embed"
-                            value={this.state.embedUrl}
-                            onChange={this.changeEmbedUrl}
-                          />
-                        </label>
-                        <button onClick={this.addEmbed}>Embed</button>
-                      </EmbedUI>
-                    </Action>
-                  </Expander>
-                </SideToolbar>
-              </OutsideClickHandler>
-            )}
-        </ComposerBase>
-      );
-    } else {
-      return (
-        <div
-          className={className}
-          style={{ width: '100%', height: '100%', ...style }}
-        >
-          <Wrapper className="markdown" focus={focus}>
-            <DraftEditor
-              data-cy="rich-text-editor"
-              editorState={state}
-              onChange={onChange}
-              plugins={this.state.plugins}
-              handleDroppedFiles={this.handleDroppedFiles}
-              editorRef={editor => {
-                this.editor = editor;
-                if (editorRef) editorRef(editor);
-              }}
-              readOnly={readOnly}
-              placeholder={!readOnly && placeholder}
-              spellCheck={true}
-              autoCapitalize="sentences"
-              autoComplete="on"
-              autoCorrect="on"
-              stripPastedStyles={true}
-              decorators={[mentionsDecorator]}
-              customStyleMap={customStyleMap}
-              {...rest}
-            />
-          </Wrapper>
-          {!readOnly && (
-            <MediaRow>
-              <MediaInput onChange={this.addImage} multiple>
-                Add
-              </MediaInput>
-            </MediaRow>
-          )}
-        </div>
-      );
-    }
+                      <input
+                        id="embed-input"
+                        type="url"
+                        placeholder="Enter a URL to embed"
+                        value={this.state.embedUrl}
+                        onChange={this.changeEmbedUrl}
+                      />
+                    </label>
+                    <button onClick={this.addEmbed}>Embed</button>
+                  </EmbedUI>
+                </Action>
+              </Expander>
+            </SideToolbar>
+          </OutsideClickHandler>
+        )}
+      </ComposerBase>
+    );
   }
 }
 

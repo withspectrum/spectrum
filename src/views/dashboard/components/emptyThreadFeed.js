@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
+import { openComposer } from '../../../actions/composer';
 import Icon from '../../../components/icons';
 import { Button } from '../../../components/buttons';
 import { NullThreadFeed, NullHeading, OutlineButton, Hint } from '../style';
@@ -15,7 +16,8 @@ const EmptyThreadFeed = ({ dispatch }) => (
     </NullHeading>
     <NullHeading>We've got recommendations!</NullHeading>
     <Hint>Kick your community off right!</Hint>
-    <Button icon={'post'} onClick={() => dispatch(changeActiveThread('new'))}>
+    {/* dispatch activethread to 'new'? */}
+    <Button icon={'post'} onClick={() => dispatch(openComposer())}>
       Post your first thread
     </Button>
     <Hint>Find new friends and great conversations!</Hint>
