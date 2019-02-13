@@ -43,6 +43,7 @@ describe('private community invite link settings', () => {
         // grab the input again and compare its previous value
         // to the current value
         cy.get('[data-cy="join-link-input"]')
+          .scrollIntoView()
           .invoke('val')
           .should(val2 => {
             expect(val1).not.to.eq(val2);
@@ -51,6 +52,7 @@ describe('private community invite link settings', () => {
 
     // disable
     cy.get('[data-cy="toggle-token-link-invites-checked"]')
+      .scrollIntoView()
       .should('be.visible')
       .click();
 

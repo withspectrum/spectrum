@@ -40,23 +40,41 @@ export const EmailInviteInput = styled.input`
   }
 `;
 
-export const AddRow = styled.div`
+export const HiddenInput = styled.input`
+  display: none;
+`;
+
+export const Action = styled.button`
   display: flex;
   width: 100%;
   justify-content: center;
   padding: 8px;
   background: ${theme.bg.wash};
   margin-top: 8px;
-  margin-bottom: 16px;
+  margin-bottom: ${props => props.mb || '16px'};
   font-size: 14px;
   color: ${theme.text.alt};
   font-weight: 500;
   border-radius: 4px;
 
+  .icon {
+    margin-right: 4px;
+  }
+
   &:hover {
-    color: ${theme.text.default};
+    color: ${theme.text.secondary};
     cursor: pointer;
   }
+`;
+
+export const ActionAsLabel = Action.withComponent('label');
+
+export const ActionHelpText = styled.div`
+  color: ${theme.text.alt};
+  font-size: 14px;
+  text-align: center;
+  margin-top: 8px;
+  margin-bottom: 24px;
 `;
 
 export const RemoveRow = styled.div`
@@ -84,6 +102,10 @@ export const CustomMessageToggle = styled.h4`
     top: 5px;
     margin-right: 4px;
   }
+`;
+
+export const FileUploadWrapper = styled.div`
+  margin-right: 16px;
 `;
 
 export const CustomMessageTextAreaStyles = {
