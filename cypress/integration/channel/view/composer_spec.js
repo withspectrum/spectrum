@@ -33,7 +33,7 @@ describe('renders composer for logged in members', () => {
 
     cy.get('[data-cy="thread-composer-placeholder"]').click();
 
-    cy.get('[data-cy="thread-composer"]').should('be.visible');
+    cy.get('[data-cy="rich-text-editor"]').should('be.visible');
   });
 });
 

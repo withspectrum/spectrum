@@ -4,7 +4,9 @@ import theme from 'shared/theme';
 import { Truncate } from 'src/components/globals';
 
 export const MentionsInputStyle = {
+  overflow: 'visible',
   suggestions: {
+    zIndex: 99999,
     list: {
       backgroundColor: theme.bg.default,
       boxShadow: '1px 0 12px rgba(0,0,0,0.12)',

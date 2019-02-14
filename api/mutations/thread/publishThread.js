@@ -1,11 +1,17 @@
 // @flow
 const debug = require('debug')('api:mutations:thread:publish-thread');
 import stringSimilarity from 'string-similarity';
-import { convertToRaw } from 'draft-js';
+import {
+  convertToRaw,
+  convertFromRaw,
+  EditorState,
+  SelectionState,
+} from 'draft-js';
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';
+import processThreadContent from 'shared/draft-utils/process-thread-content';
 import {
   publishThread,
   editThread,
@@ -68,22 +74,11 @@ export default requireAuth(
       );
     }
 
-    if (type === 'TEXT') {
-      type = 'DRAFTJS';
-      if (thread.content.body) {
-        thread.content.body = JSON.stringify(
-          convertToRaw(
-            stateFromMarkdown(thread.content.body, {
-              parserOptions: {
-                breaks: true,
-              },
-            })
-          )
-        );
-      }
+    if (thread.content.body) {
+      thread.content.body = processThreadContent(type, thread.content.body);
     }
 
-    thread.type = type;
+    thread.type = 'DRAFTJS';
 
     const [
       currentUserChannelPermissions,

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
+import { openComposer } from '../../../actions/composer';
 import {
   HeaderWrapper,
   NarrowOnly,
@@ -101,7 +102,7 @@ class Header extends React.Component<Props> {
           <IconButton
             data-e2e-id="inbox-view-post-button"
             glyph={'post'}
-            onClick={() => dispatch(changeActiveThread('new'))}
+            onClick={() => dispatch(openComposer())}
             tipText={'New conversation'}
             tipLocation={'bottom-left'}
           />
