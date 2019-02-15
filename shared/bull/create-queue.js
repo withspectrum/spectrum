@@ -56,11 +56,14 @@ function createQueue(name: string, queueOptions?: Object = {}) {
       });
   });
   queue.on('active', (jobId: string, jobPromise: Promise<void>) => {
+    const startTime = new Date().getTime();
     statsd.increment('jobs.active', 1, {
       queue: name,
     });
     jobPromise
       .then(() => {
+        const duration = new Date().getTime() - startTime;
+        statsd.timing('jobs.duration', duration);
         statsd.increment('jobs.active', -1, {
           queue: name,
         });
@@ -69,6 +72,8 @@ function createQueue(name: string, queueOptions?: Object = {}) {
         });
       })
       .catch(() => {
+        const duration = new Date().getTime() - startTime;
+        statsd.timing('jobs.duration', duration);
         statsd.increment('jobs.active', -1, {
           queue: name,
         });
