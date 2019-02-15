@@ -236,16 +236,16 @@ class NotificationsTab extends React.Component<Props, State> {
     const newNotifications =
       notifications &&
       notifications.map(n => Object.assign({}, n, { isSeen: true }));
-    this.processAndMarkSeenNotifications(newNotifications);
+    this.processAndMarkSeenNotifications(newNotifications, false);
     // otherwise
     return markAllNotificationsSeen().catch(err => {
       console.error(err);
       // Undo the optimistic update from above
-      this.processAndMarkSeenNotifications(oldNotifications);
+      this.processAndMarkSeenNotifications(oldNotifications, false);
     });
   };
 
-  processAndMarkSeenNotifications = stateNotifications => {
+  processAndMarkSeenNotifications = (stateNotifications, sync = true) => {
     const {
       data: { notifications },
       location,
@@ -321,12 +321,15 @@ class NotificationsTab extends React.Component<Props, State> {
         });
 
         // and then mark it as seen on the server
-        client.mutate({
-          mutation: markSingleNotificationSeenMutation,
-          variables: {
-            id: n.id,
-          },
-        });
+        console.log('SYNC!');
+        if (sync) {
+          client.mutate({
+            mutation: markSingleNotificationSeenMutation,
+            variables: {
+              id: n.id,
+            },
+          });
+        }
 
         return newNotification;
       } else {
