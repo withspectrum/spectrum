@@ -14,6 +14,7 @@ import path from 'path';
 import { getUserById } from 'shared/db/queries/user';
 import Raven from 'shared/raven';
 import toobusy from 'shared/middlewares/toobusy';
+import rateLimiter from 'shared/middlewares/rate-limiter';
 import addSecurityMiddleware from 'shared/middlewares/security';
 
 const PORT = process.env.PORT || 3006;
@@ -28,6 +29,12 @@ app.use(statsd);
 app.set('trust proxy', true);
 
 app.use(toobusy);
+app.use(
+  rateLimiter({
+    max: 10,
+    duration: '10s',
+  })
+);
 
 // Security middleware.
 addSecurityMiddleware(app, { enableNonce: true, enableCSP: true });
