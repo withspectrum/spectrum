@@ -321,7 +321,6 @@ class NotificationsTab extends React.Component<Props, State> {
         });
 
         // and then mark it as seen on the server
-        console.log('SYNC!');
         if (sync) {
           client.mutate({
             mutation: markSingleNotificationSeenMutation,
