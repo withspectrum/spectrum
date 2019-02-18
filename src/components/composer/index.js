@@ -288,11 +288,9 @@ class ComposerWithData extends Component<Props, State> {
     document.removeEventListener('keydown', this.handleKeyPress, false);
     const { postWasPublished } = this.state;
 
-    const discardDraft = localStorage.getItem(LS_DISCARD_DRAFT);
-
-    // if a post was published or draft is discarded in this session,
+    // if a post was published in this session,
     // clear redux so that the next composer open will start fresh
-    if (postWasPublished || discardDraft) return this.closeComposer('clear');
+    if (postWasPublished) return this.closeComposer('clear');
 
     // otherwise, clear the composer normally and save the state
     return this.closeComposer();
@@ -303,18 +301,24 @@ class ComposerWithData extends Component<Props, State> {
     const cmdEnter =
       e.keyCode === ENTER && KeyBindingUtil.hasCommandModifier(e);
 
-    if (esc) {
-      this.props.dispatch(
-        openModal('CLOSE_COMPOSER_CONFIRMATION_MODAL', {
-          message: 'Are you sure you want to discard this draft?',
-          setDiscardDraft: this.setDiscardDraftToLocalStorage,
-          activateLastThreadFn: this.activateLastThread,
-        })
-      );
+    const sliderOpen = this.props.isOpen;
+    const composerHasContent = this.composerHasContent();
+
+    if (esc && sliderOpen && composerHasContent) {
+      this.discardDraft();
       return;
     }
 
+    if (esc && sliderOpen && !composerHasContent) {
+      return this.props.dispatch(closeComposer());
+    }
+
     if (cmdEnter) return this.publishThread();
+  };
+
+  composerHasContent = () => {
+    let { storedBody, storedTitle } = this.getTitleAndBody();
+    return storedBody !== '' || storedTitle !== '';
   };
 
   setDiscardDraftToLocalStorage = () =>
@@ -379,13 +383,37 @@ class ComposerWithData extends Component<Props, State> {
   closeComposer = (clear?: string) => {
     this.persistBodyToLocalStorage(this.state.body);
     this.persistTitleToLocalStorage(this.state.title);
+
+    const discardDraft = localStorage.getItem(LS_DISCARD_DRAFT);
+
     // we will clear the composer if it unmounts as a result of a post
-    // being published, that way the next composer open will start fresh
-    if (clear) {
+    // being published or draft discarded, that way the next composer open will start fresh
+    if (clear || discardDraft) {
       this.clearEditorStateAfterPublish();
+      this.setState({
+        title: '',
+        body: '',
+      });
     }
 
     return this.props.dispatch(closeComposer());
+  };
+
+  discardDraft = () => {
+    const composerHasContent = this.composerHasContent();
+
+    if (!composerHasContent) {
+      return this.props.dispatch(closeComposer());
+    }
+
+    this.props.dispatch(
+      openModal('CLOSE_COMPOSER_CONFIRMATION_MODAL', {
+        message: 'Are you sure you want to discard this draft?',
+        setDiscardDraftLocalStorage: this.setDiscardDraftToLocalStorage,
+        activateLastThread: this.activateLastThread,
+        closeComposer: this.closeComposer,
+      })
+    );
   };
 
   clearEditorStateAfterPublish = () => {
@@ -397,8 +425,7 @@ class ComposerWithData extends Component<Props, State> {
   };
 
   onCancelClick = async () => {
-    await this.activateLastThread();
-    this.props.dispatch(closeComposer());
+    this.discardDraft();
   };
 
   handleTitleBodyChange = titleOrBody => {
@@ -642,7 +669,7 @@ class ComposerWithData extends Component<Props, State> {
       <ComposerSlider isSlider={isSlider} isOpen={isOpen}>
         <Overlay
           isOpen={isOpen}
-          onClick={this.closeComposer}
+          onClick={this.discardDraft}
           data-cy="thread-composer-overlay"
         />
         <Container isSlider={isSlider}>
@@ -790,7 +817,7 @@ class ComposerWithData extends Component<Props, State> {
               </DesktopLink>
             </InputHints>
             <ButtonRow>
-              <TextButton hoverColor="warn.alt" onClick={this.onCancelClick}>
+              <TextButton hoverColor="warn.alt" onClick={this.discardDraft}>
                 Cancel
               </TextButton>
               <Button
