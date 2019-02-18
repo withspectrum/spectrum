@@ -612,6 +612,8 @@ class ComposerWithData extends Component<Props, State> {
         this.setState({
           isLoading: false,
           postWasPublished: true,
+          title: '',
+          body: '',
         });
 
         this.props.dispatch(closeComposer());
