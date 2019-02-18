@@ -226,6 +226,7 @@ export const OptionalSelector = styled(Selector)`
 `;
 
 export const ThreadInputs = styled(FlexCol)`
+  position: relative;
   grid-area: body;
   overflow-y: scroll;
   padding: 32px;

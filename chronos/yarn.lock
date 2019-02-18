@@ -54,13 +54,14 @@ buffer@^5.1.0:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
 
-bull@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/bull/-/bull-3.6.0.tgz#9d137a4470d9f5a0df54801ca4390656e5054a42"
-  integrity sha512-705Vf3weiRr8D49/+lsPSxV/1NejhjfmVviv9qG2srIYPr7IS2euLwHa+2GNfaVDA2tmx8xyJFW9bPw3fPfHPg==
+bull@^3.7.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/bull/-/bull-3.7.0.tgz#ec9a8721a2cfb0421c501d28553ac1f9f025414d"
+  integrity sha512-DHCALp+OOahK+q2hB3sZQew0CJn4W3zYIQsdMlnBCy7JYCnJ/bdj0MFHjo5k0ZhNZxzwhLErXt1yd3llV494UQ==
   dependencies:
     cron-parser "^2.7.3"
     debuglog "^1.0.0"
+    get-port latest
     ioredis "^4.5.1"
     lodash "^4.17.11"
     p-timeout "^2.0.1"
@@ -256,6 +257,11 @@ function-bind@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
+
+get-port@latest:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/get-port/-/get-port-4.1.0.tgz#93eb3d5552c197497d76e9c389a6ac9920e20192"
+  integrity sha512-4/fqAYrzrzOiqDrdeZRKXGdTGgbkfTEumGlNQPeP6Jy8w0PzN9mzeNQ3XgHaTNie8pQ3hOUkrwlZt2Fzk5H9mA==
 
 has-symbols@^1.0.0:
   version "1.0.0"
