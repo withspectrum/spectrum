@@ -101,27 +101,26 @@ const threadRenderer = {
 
       return children;
     },
-    'code-block': (children: Array<mixed>, { keys, data }: KeysObj) =>
-      console.log(getStringElements(children)) || (
-        <Highlight
-          {...defaultProps}
-          code={getStringElements(children).join('\n')}
-          language={Array.isArray(data) && data[0].language}
-          theme={undefined}
-        >
-          {({ className, style, tokens, getLineProps, getTokenProps }) => (
-            <Line className={className} style={style}>
-              {tokens.map((line, i) => (
-                <div {...getLineProps({ line, key: i })}>
-                  {line.map((token, key) => (
-                    <span {...getTokenProps({ token, key })} />
-                  ))}
-                </div>
-              ))}
-            </Line>
-          )}
-        </Highlight>
-      ),
+    'code-block': (children: Array<mixed>, { keys, data }: KeysObj) => (
+      <Highlight
+        {...defaultProps}
+        code={getStringElements(children).join('\n')}
+        language={Array.isArray(data) && data[0].language}
+        theme={undefined}
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <Line className={className} style={style}>
+            {tokens.map((line, i) => (
+              <div {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </Line>
+        )}
+      </Highlight>
+    ),
     blockquote: (children: Array<Node>, { keys }: KeysObj) =>
       children.map((child, index) => (
         <BlockQuote key={keys[index] || index}>{child}</BlockQuote>
