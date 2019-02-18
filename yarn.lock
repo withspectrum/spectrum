@@ -11773,11 +11773,6 @@ range-parser@^1.0.3, range-parser@~1.2.0:
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
   integrity sha1-9JvmtIeJTdxA3MlKMi9hEJLgDV4=
 
-ratelimiter@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/ratelimiter/-/ratelimiter-3.2.0.tgz#ae74cf9629daae4cc8900ec126ab28d3794070f1"
-  integrity sha512-zMc9X4FNmOk3RBxV95lvp13sZRtf43UJJN1FficbYiusBB09zB6gcJtK2X18dKmH+Gq0C7W6qNCHE+UJx0YwVg==
-
 raven@^2.6.4:
   version "2.6.4"
   resolved "https://registry.yarnpkg.com/raven/-/raven-2.6.4.tgz#458d4a380c8fbb59e0150c655625aaf60c167ea3"
