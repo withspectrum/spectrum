@@ -393,6 +393,7 @@ class ComposerWithData extends Component<Props, State> {
       this.setState({
         title: '',
         body: '',
+        preview: false,
       });
     }
 
