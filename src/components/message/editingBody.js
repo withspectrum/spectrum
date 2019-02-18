@@ -86,7 +86,7 @@ const EditingChatInput = (props: Props) => {
     if (!text || text.length === 0) return props.cancelEdit();
 
     const content = {
-      body: text,
+      body: text.replace(/@\[([a-z0-9_-]+)\]/g, '@$1'),
     };
 
     const input = {
