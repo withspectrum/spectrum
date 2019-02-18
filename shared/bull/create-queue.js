@@ -63,7 +63,9 @@ function createQueue(name: string, queueOptions?: Object = {}) {
     jobPromise
       .then(() => {
         const duration = new Date().getTime() - startTime;
-        statsd.timing('jobs.duration', duration);
+        statsd.timing('jobs.duration', duration, {
+          queue: name,
+        });
         statsd.increment('jobs.active', -1, {
           queue: name,
         });
