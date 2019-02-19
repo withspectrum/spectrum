@@ -79,9 +79,16 @@ if (servers.indexOf('hyperion') > -1) {
     stdio: 'inherit',
   });
   console.log('Clearing cache');
-  exec(now('alias -r rules.json spectrum.chat'), {
-    stdio: 'inherit',
-  });
+  exec(
+    now(
+      `alias -r rules${!flags.prod ? '-alpha' : ''}.json ${
+        !flags.prod ? 'alpha.' : ''
+      }spectrum.chat`
+    ),
+    {
+      stdio: 'inherit',
+    }
+  );
   console.log('hyperion is live!\n');
 }
 
