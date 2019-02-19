@@ -124,7 +124,6 @@ type Props = {
 const LS_BODY_KEY = 'last-thread-composer-body';
 const LS_TITLE_KEY = 'last-thread-composer-title';
 const LS_COMPOSER_EXPIRE = 'last-thread-composer-expire';
-const LS_DISCARD_DRAFT = 'discard-draft';
 
 const DISCARD_DRAFT_MESSAGE = 'Are you sure you want to discard this draft?';
 
@@ -173,7 +172,6 @@ class ComposerWithData extends Component<Props, State> {
     localStorage.removeItem(LS_BODY_KEY);
     localStorage.removeItem(LS_TITLE_KEY);
     localStorage.removeItem(LS_COMPOSER_EXPIRE);
-    localStorage.removeItem(LS_DISCARD_DRAFT);
   };
 
   getTitleAndBody = () => {
@@ -330,8 +328,8 @@ class ComposerWithData extends Component<Props, State> {
   };
 
   composerHasContent = () => {
-    let { storedBody, storedTitle } = this.getTitleAndBody();
-    return storedBody !== '' || storedTitle !== '';
+    const { title, body } = this.state;
+    return title !== '' || body !== '';
   };
 
   setDiscardDraftToLocalStorage = () =>
@@ -397,11 +395,9 @@ class ComposerWithData extends Component<Props, State> {
     this.persistBodyToLocalStorage(this.state.body);
     this.persistTitleToLocalStorage(this.state.title);
 
-    const discardDraft = localStorage.getItem(LS_DISCARD_DRAFT);
-
     // we will clear the composer if it unmounts as a result of a post
     // being published or draft discarded, that way the next composer open will start fresh
-    if (clear || discardDraft) {
+    if (clear) {
       this.clearEditorStateAfterPublish();
       this.setState({
         title: '',
@@ -423,9 +419,8 @@ class ComposerWithData extends Component<Props, State> {
     this.props.dispatch(
       openModal('CLOSE_COMPOSER_CONFIRMATION_MODAL', {
         message: DISCARD_DRAFT_MESSAGE,
-        setDiscardDraftLocalStorage: this.setDiscardDraftToLocalStorage,
         activateLastThread: this.activateLastThread,
-        closeComposer: this.closeComposer,
+        closeComposer: () => this.closeComposer('clear'),
       })
     );
   };
