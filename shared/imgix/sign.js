@@ -1,8 +1,8 @@
 // @flow
 require('now-env');
 import ImgixClient from 'imgix-core-js';
-import decodeUriComponent from 'decode-uri-component';
 import { getDefaultExpires } from './getDefaultExpires';
+import parse from 'url';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 export const LEGACY_PREFIX = 'https://spectrum.imgix.net/';
@@ -13,6 +13,7 @@ const isLocalUpload = (url: string): boolean => url.startsWith('/uploads/', 0) &
 export const hasLegacyPrefix = (url: string): boolean => url.startsWith(LEGACY_PREFIX, 0)
 // prettier-ignore
 const useProxy = (url: string): boolean => url.indexOf('spectrum.imgix.net') < 0 && url.startsWith('http', 0)
+const isSigned = (url: string) => parse(url).hostname === 'spectrum.imgix.net';
 
 /*
   When an image is uploaded to s3, we generate a url to be stored in our db
@@ -52,6 +53,7 @@ const signProxy = (url: string, opts?: Opts = defaultOpts): string => {
 
 export const signImageUrl = (url: string, opts: Opts = defaultOpts): string => {
   if (!url) return '';
+  if (isSigned(url)) return url;
   if (!opts.expires) {
     opts['expires'] = defaultOpts.expires;
   }
