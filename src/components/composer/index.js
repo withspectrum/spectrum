@@ -126,6 +126,8 @@ const LS_TITLE_KEY = 'last-thread-composer-title';
 const LS_COMPOSER_EXPIRE = 'last-thread-composer-expire';
 const LS_DISCARD_DRAFT = 'discard-draft';
 
+const DISCARD_DRAFT_MESSAGE = 'Are you sure you want to discard this draft?';
+
 const ONE_DAY = (): string => {
   const time = new Date().getTime() + 60 * 60 * 24 * 1000;
   return time.toString();
@@ -301,6 +303,17 @@ class ComposerWithData extends Component<Props, State> {
     const cmdEnter =
       e.keyCode === ENTER && KeyBindingUtil.hasCommandModifier(e);
 
+    // we need to verify the source of the keypress event
+    // so that if it comes from the discard draft modal, it should not
+    // listen to the events for composer
+
+    const innerText = e.target.innerText;
+    const modalIsOpen = innerText.indexOf(DISCARD_DRAFT_MESSAGE) >= 0;
+
+    if (modalIsOpen) {
+      return;
+    }
+
     const sliderOpen = this.props.isOpen;
     const composerHasContent = this.composerHasContent();
 
@@ -409,7 +422,7 @@ class ComposerWithData extends Component<Props, State> {
 
     this.props.dispatch(
       openModal('CLOSE_COMPOSER_CONFIRMATION_MODAL', {
-        message: 'Are you sure you want to discard this draft?',
+        message: DISCARD_DRAFT_MESSAGE,
         setDiscardDraftLocalStorage: this.setDiscardDraftToLocalStorage,
         activateLastThread: this.activateLastThread,
         closeComposer: this.closeComposer,

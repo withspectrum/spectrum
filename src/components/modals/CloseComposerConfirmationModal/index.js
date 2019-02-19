@@ -7,6 +7,7 @@ import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
 import { Actions, Message } from './style';
 import { modalStyles } from '../styles';
+import { ENTER } from '../../../helpers/keycodes';
 
 import type { Dispatch } from 'redux';
 
@@ -23,6 +24,29 @@ type State = {
 class CloseComposerConfirmation extends React.Component<Props, State> {
   state = {
     isLoading: false,
+  };
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyPress, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyPress, false);
+    return this.close();
+  }
+
+  handleKeyPress = e => {
+    const enter = e.keyCode === ENTER;
+
+    const {
+      modalProps: { message, ...callbacks },
+    } = this.props;
+
+    const functions = Object.keys(callbacks).map(k => callbacks[k]);
+
+    if (enter) {
+      this.closeConfirmed(functions);
+    }
   };
 
   close = () => {
