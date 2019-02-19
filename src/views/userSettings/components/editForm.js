@@ -65,6 +65,7 @@ type Props = {
   client: Object,
   editUser: Function,
   user: GetCurrentUserSettingsType,
+  githubAuthError: ?string,
 };
 
 class UserWithData extends React.Component<Props, State> {
@@ -305,7 +306,7 @@ class UserWithData extends React.Component<Props, State> {
   };
 
   render() {
-    const { user } = this.props;
+    const { user, githubAuthError } = this.props;
     const {
       name,
       username,
@@ -427,6 +428,12 @@ class UserWithData extends React.Component<Props, State> {
                       onClickHandler={null}
                       verb={'Connect'}
                     />
+                    {githubAuthError && (
+                      <Error>
+                        {githubAuthError} To get help merging these accounts,
+                        please <a href="mailto:hi@spectrum.chat">contact us</a>.
+                      </Error>
+                    )}
                   </GithubSignin>
                 );
               } else {

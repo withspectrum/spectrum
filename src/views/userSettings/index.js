@@ -19,6 +19,8 @@ import Header from 'src/components/settingsViews/header';
 import Subnav from 'src/components/settingsViews/subnav';
 import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
+import queryString from 'query-string';
+import { addToastWithTimeout } from '../../actions/toasts';
 
 type Props = {
   data: {
@@ -30,6 +32,17 @@ type Props = {
 };
 
 class UserSettings extends React.Component<Props> {
+  githubAuthError = '';
+
+  constructor(props) {
+    super(props);
+    const search = queryString.parse(this.props.location.search);
+    if (search && search.githubAuthError) {
+      this.githubAuthError = search.githubAuthError;
+      this.props.dispatch(addToastWithTimeout('error', search.githubAuthError));
+      this.props.history.push(this.props.history.location.pathname);
+    }
+  }
   componentDidMount() {
     track(events.USER_SETTINGS_VIEWED);
   }
@@ -118,7 +131,9 @@ class UserSettings extends React.Component<Props> {
             <Subnav items={subnavItems} activeTab={activeTab} />
 
             <Route path={`${match.url}`}>
-              {() => <Overview user={user} />}
+              {() => (
+                <Overview githubAuthError={this.githubAuthError} user={user} />
+              )}
             </Route>
           </View>
         </AppViewWrapper>
