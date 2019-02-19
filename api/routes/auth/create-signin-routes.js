@@ -53,6 +53,7 @@ export const createSigninRoutes = (
         if (req.authInfo && req.authInfo.message) {
           redirectUrl.searchParams.append(
             'githubAuthError',
+            // $FlowIssue
             req.authInfo.message
           );
         }
