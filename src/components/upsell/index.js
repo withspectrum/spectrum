@@ -92,7 +92,7 @@ export const UpsellMiniCreateCommunity = () => {
 // to create a community rather than joining communities - if they choose
 // to go down the path of creating a community, clicking on the 'get started'
 // button will close the new user onboarding
-export const UpsellCreateCommunity = ({ close }: { close: Function }) => {
+export const UpsellCreateCommunity = () => {
   const title = 'Create a community';
   const subtitle = 'Building communities on Spectrum is easy and free forever';
 
@@ -102,7 +102,7 @@ export const UpsellCreateCommunity = ({ close }: { close: Function }) => {
       <Subtitle>{subtitle}</Subtitle>
       <Actions>
         <Link to="/new/community">
-          <Button onClick={close}>Get Started</Button>
+          <Button>Get Started</Button>
         </Link>
       </Actions>
     </NullCard>

@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import {
   ClusterOne,
@@ -6,9 +7,15 @@ import {
   ClusterFour,
 } from '../../components/illustrations';
 import Icon from '../../components/icons';
-import { FullscreenViewContainer, Illustrations, Close } from './style';
+import { FullscreenViewContainer, Illustrations, CloseLink } from './style';
 import { ESC } from 'src/helpers/keycodes';
-class FullscreenView extends Component {
+
+type Props = {
+  closePath: string,
+  children: any,
+};
+
+class FullscreenView extends Component<Props> {
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress, false);
   }
@@ -17,44 +24,29 @@ class FullscreenView extends Component {
     document.removeEventListener('keydown', this.handleKeyPress, false);
   }
 
-  handleKeyPress = e => {
-    const { close, noCloseButton } = this.props;
-
-    // if we don't want the user to close the onboarding flow - when they
-    // are setting a username - ignore esc key presses
-    if (noCloseButton) return;
-
+  handleKeyPress = (e: any) => {
+    const { closePath } = this.props;
     // if person taps esc, close the dialog
-    if (e.keyCode === ESC) {
-      return close();
+    if (closePath && e.keyCode === ESC) {
+      return (window.location = closePath);
     }
   };
 
   render() {
-    const {
-      close,
-      hasBackground,
-      children,
-      noCloseButton,
-      showBackgroundOnMobile = true,
-    } = this.props;
+    const { closePath, children } = this.props;
 
     return (
       <FullscreenViewContainer>
-        {!noCloseButton && (
-          <Close onClick={close}>
-            <Icon glyph={'view-close'} size={32} />
-          </Close>
-        )}
+        <CloseLink href={closePath}>
+          <Icon glyph={'view-close'} size={32} />
+        </CloseLink>
 
-        {hasBackground && (
-          <Illustrations showBackgroundOnMobile={showBackgroundOnMobile}>
-            <ClusterOne src="/img/cluster-2.svg" role="presentation" />
-            <ClusterTwo src="/img/cluster-1.svg" role="presentation" />
-            <ClusterThree src="/img/cluster-5.svg" role="presentation" />
-            <ClusterFour src="/img/cluster-4.svg" role="presentation" />
-          </Illustrations>
-        )}
+        <Illustrations>
+          <ClusterOne src="/img/cluster-2.svg" role="presentation" />
+          <ClusterTwo src="/img/cluster-1.svg" role="presentation" />
+          <ClusterThree src="/img/cluster-5.svg" role="presentation" />
+          <ClusterFour src="/img/cluster-4.svg" role="presentation" />
+        </Illustrations>
 
         {children}
       </FullscreenViewContainer>
