@@ -6,7 +6,7 @@ import Raven from 'shared/raven';
 import { getCommunityById } from '../models/community';
 import { storeNotification } from '../models/notification';
 import { storeUsersNotifications } from 'shared/db/queries/usersNotifications';
-import { getUsers } from 'shared/db/queries/user';
+import { getUserById } from 'shared/db/queries/user';
 import { fetchPayload } from '../utils/payloads';
 import isEmail from 'validator/lib/isEmail';
 import { sendPrivateCommunityRequestApprovedEmailQueue } from 'shared/bull/queues';
@@ -41,26 +41,26 @@ export default async (job: Job<PrivateCommunityRequestApprovedJobData>) => {
   const updatedNotification = await storeNotification(nextNotificationRecord);
 
   const community = await getCommunityById(communityId);
-  const recipients = await getUsers([userId]);
-  const emailRecipients = recipients
-    .filter(user => user && user.email && isEmail(user.email))
-    .filter(Boolean);
+  const recipient = await getUserById(userId);
 
-  const usersNotificationPromises = recipients.map(recipient =>
-    storeUsersNotifications(updatedNotification.id, recipient.id)
+  const canSendEmail = recipient && recipient.email && isEmail(recipient.email);
+
+  const notificationPromise = storeUsersNotifications(
+    updatedNotification.id,
+    recipient.id
   );
 
-  const usersEmailPromises = emailRecipients.map(recipient =>
+  const emailPromise =
+    canSendEmail &&
     sendPrivateCommunityRequestApprovedEmailQueue.add({
       // $FlowIssue
       recipient,
       community,
-    })
-  );
+    });
 
   return await Promise.all([
-    ...usersEmailPromises, // handle emails separately
-    ...usersNotificationPromises, // update or store usersNotifications in-app
+    emailPromise, // handle emails separately
+    notificationPromise, // update or store usersNotifications in-app
   ]).catch(err => {
     console.error('❌ Error in job:\n');
     console.error(err);
