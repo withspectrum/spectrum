@@ -1,6 +1,7 @@
 // @flow
 const debug = require('debug')('api:mutations:thread:publish-thread');
 import stringSimilarity from 'string-similarity';
+import slugg from 'slugg';
 import {
   convertToRaw,
   convertFromRaw,
@@ -19,7 +20,12 @@ import {
 } from '../../models/thread';
 import { createParticipantInThread } from '../../models/usersThreads';
 import type { FileUpload, DBThread } from 'shared/types';
-import { toPlainText, toState } from 'shared/draft-utils';
+import {
+  toPlainText,
+  toJSON,
+  toState,
+  fromPlainText,
+} from 'shared/draft-utils';
 import {
   processReputationEventQueue,
   sendThreadNotificationQueue,
@@ -30,6 +36,7 @@ import getPerspectiveScore from 'athena/queues/moderationEvents/perspective';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { storeMessage } from '../../models/message';
 
 const threadBodyToPlainText = (body: any): string =>
   toPlainText(toState(JSON.parse(body)));
@@ -333,6 +340,29 @@ export default requireAuth(
     // create a relationship between the thread and the author
     await createParticipantInThread(dbThread.id, user.id);
 
+    // Post a new message with a link to the new thread to the watercooler thread if one exists
+    if (community.watercoolerId) {
+      await storeMessage(
+        {
+          content: {
+            body: JSON.stringify(
+              toJSON(
+                fromPlainText(
+                  `https://spectrum.chat/${community.slug}/${
+                    channel.slug
+                  }/${slugg(dbThread.content.title)}~${dbThread.id}`
+                )
+              )
+            ),
+          },
+          messageType: 'draftjs',
+          threadId: community.watercoolerId,
+          threadType: 'story',
+        },
+        user.id
+      );
+    }
+
     if (!thread.filesToUpload || thread.filesToUpload.length === 0) {
       return dbThread;
     }
@@ -361,8 +391,8 @@ export default requireAuth(
 
     // Replace the local image srcs with the remote image src
     const body = dbThread.content.body && JSON.parse(dbThread.content.body);
-
     if (!body) return dbThread;
+
     const imageKeys = Object.keys(body.entityMap).filter(
       key => body.entityMap[key].type.toLowerCase() === 'image'
     );
