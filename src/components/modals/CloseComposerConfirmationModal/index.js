@@ -27,10 +27,12 @@ class CloseComposerConfirmation extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    // $FlowIssue
     document.addEventListener('keydown', this.handleKeyPress, false);
   }
 
   componentWillUnmount() {
+    // $FlowIssue
     document.removeEventListener('keydown', this.handleKeyPress, false);
     return this.close();
   }

@@ -332,9 +332,6 @@ class ComposerWithData extends Component<Props, State> {
     return title !== '' || body !== '';
   };
 
-  setDiscardDraftToLocalStorage = () =>
-    localStorage.setItem(LS_DISCARD_DRAFT, 'true');
-
   activateLastThread = () => {
     // we get the last thread id from the query params and dispatch it
     // as the active thread.
