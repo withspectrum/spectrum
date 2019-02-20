@@ -14,10 +14,11 @@ export const Grid = styled.main`
   grid-template-areas: 'cover cover cover' 'meta content extras';
   grid-column-gap: 32px;
   width: 100%;
-  min-width: 100%;
-  max-width: 100%;
+  max-width: 1280px;
   min-height: 100vh;
   background-color: ${theme.bg.default};
+  box-shadow: inset 1px 0 0 ${theme.bg.border},
+    inset -1px 0 0 ${theme.bg.border};
 
   @media (max-width: 1280px) {
     grid-template-columns: 240px 1fr;
