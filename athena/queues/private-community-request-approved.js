@@ -42,14 +42,15 @@ export default async (job: Job<PrivateCommunityRequestApprovedJobData>) => {
 
   const community = await getCommunityById(communityId);
   const recipients = await getUsers([userId]);
-  const filteredRecipients = recipients.filter(
-    user => user && isEmail(user.email)
-  );
-  const usersNotificationPromises = filteredRecipients.map(recipient =>
+  const emailRecipients = recipients
+    .filter(user => user && user.email && isEmail(user.email))
+    .filter(Boolean);
+
+  const usersNotificationPromises = recipients.map(recipient =>
     storeUsersNotifications(updatedNotification.id, recipient.id)
   );
 
-  const usersEmailPromises = filteredRecipients.map(recipient =>
+  const usersEmailPromises = emailRecipients.map(recipient =>
     sendPrivateCommunityRequestApprovedEmailQueue.add({
       // $FlowIssue
       recipient,
