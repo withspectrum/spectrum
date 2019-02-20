@@ -17,12 +17,19 @@ import {
 } from '../../models/community';
 import { getChannelsByCommunity } from '../../models/channel';
 
+const rootRedirect = IS_PROD
+  ? `https://spectrum.chat`
+  : `http://localhost:3000`;
+
 // $FlowIssue
 emailRouter.get('/unsubscribe', (req, res) => {
   const { token } = req.query;
 
   // if no token was provided
-  if (!token) return res.status(400).send('No token provided to unsubscribe.');
+  if (!token)
+    return res.redirect(
+      `${rootRedirect}/me/settings?toastType=error&toastMessage=No token provided to unsubscribe.`
+    );
 
   // verify that the token signature matches our env signature
   let decoded;
@@ -38,7 +45,9 @@ emailRouter.get('/unsubscribe', (req, res) => {
       errMessage =
         'This unsubscribe token is invalid. You can unsubscribe from this email type in your user settings.';
     }
-    return res.status(400).send(errMessage);
+    return res.redirect(
+      `${rootRedirect}/me/settings?toastType=error&toastMessage=${errMessage}`
+    );
   }
 
   // once the token is verified, we can decode it to get the userId and type
@@ -46,11 +55,9 @@ emailRouter.get('/unsubscribe', (req, res) => {
 
   // if the token doesn't have the necessary info
   if (!userId || !type) {
-    return res
-      .status(400)
-      .send(
-        'We were not able to verify this request to unsubscribe. You can unsubscribe from this email type in your users settings.'
-      );
+    return res.redirect(
+      `${rootRedirect}/me/settings?toastType=error&toastMessage=We were not able to verify this request to unsubscribe. You can unsubscribe from this email type in your users settings.`
+    );
   }
 
   // and send a database request to unsubscribe from a particular email type
@@ -62,17 +69,15 @@ emailRouter.get('/unsubscribe', (req, res) => {
       case 'newMessageInThreads':
       case 'newDirectMessage':
         return unsubscribeUserFromEmailNotification(userId, type).then(() =>
-          res
-            .status(200)
-            .send('You have been successfully unsubscribed from this email.')
+          res.redirect(
+            `${rootRedirect}/me/settings?toastType=success&toastMessage=You have been successfully unsubscribed from this email.`
+          )
         );
       case 'muteChannel':
         return toggleUserChannelNotifications(userId, dataId, false).then(() =>
-          res
-            .status(200)
-            .send(
-              'You will no longer receive new thread emails from this channel.'
-            )
+          res.redirect(
+            `${rootRedirect}/me/settings?toastType=success&toastMessage=You will no longer receive new thread emails from this channel.`
+          )
         );
       case 'muteCommunity':
         return getChannelsByCommunity(dataId)
@@ -81,11 +86,9 @@ emailRouter.get('/unsubscribe', (req, res) => {
             channels.map(c => toggleUserChannelNotifications(userId, c, false))
           )
           .then(() =>
-            res
-              .status(200)
-              .send(
-                'You will no longer receive new thread emails from this community.'
-              )
+            res.redirect(
+              `${rootRedirect}/me/settings?toastType=success&toastMessage=You will no longer receive new thread emails from this community.`
+            )
           );
       case 'muteThread':
         return updateThreadNotificationStatusForUser(
@@ -93,11 +96,9 @@ emailRouter.get('/unsubscribe', (req, res) => {
           userId,
           false
         ).then(() =>
-          res
-            .status(200)
-            .send(
-              'You will no longer receive emails about new messages in this thread.'
-            )
+          res.redirect(
+            `${rootRedirect}/me/settings?toastType=success&toastMessage=You will no longer receive emails about new messages in this thread.`
+          )
         );
       case 'muteDirectMessageThread':
         return updateDirectMessageThreadNotificationStatusForUser(
@@ -105,25 +106,21 @@ emailRouter.get('/unsubscribe', (req, res) => {
           userId,
           false
         ).then(() =>
-          res
-            .status(200)
-            .send(
-              'You will no longer receive emails about new messages in this direct message conversation.'
-            )
+          res.redirect(
+            `${rootRedirect}/me/settings?toastType=success&toastMessage=You will no longer receive emails about new messages in this direct message conversation.`
+          )
         );
       default: {
-        return res
-          .status(400)
-          .send("We couldn't identify this type of email to unsubscribe.");
+        return res.redirect(
+          `${rootRedirect}/me/settings?toastType=error&toastMessage=We couldn't identify this type of email to unsubscribe.`
+        );
       }
     }
   } catch (err) {
     console.error(err);
-    return res
-      .status(400)
-      .send(
-        'We ran into an issue unsubscribing you from this email. You can always unsubscribe from this email type in your user settings, or get in touch with us at hi@spectrum.chat.'
-      );
+    return res.redirect(
+      `${rootRedirect}/me/settings?toastType=error&toastMessage=We ran into an issue unsubscribing you from this email. You can always unsubscribe from this email type in your user settings, or get in touch with us at hi@spectrum.chat.`
+    );
   }
 });
 
@@ -133,7 +130,9 @@ emailRouter.get('/validate', (req, res) => {
 
   // if no token was provided
   if (!token)
-    return res.status(400).send('No token provided to validate this email.');
+    return res.redirect(
+      `${rootRedirect}?toastType=error&toastMessage=No token provided to validate this email.`
+    );
 
   // verify that the token signature matches our env signature
   let decoded;
@@ -149,7 +148,9 @@ emailRouter.get('/validate', (req, res) => {
       errMessage =
         'This unsubscribe token is invalid. You can re-enter your email address in your user settings to resend a confirmation email.';
     }
-    return res.status(400).send(errMessage);
+    return res.redirect(
+      `${rootRedirect}/me/settings?toastType=error&toastMessage=${errMessage}`
+    );
   }
 
   // once the token is verified, we can decode it to get the userId and email
@@ -157,11 +158,9 @@ emailRouter.get('/validate', (req, res) => {
 
   // if the token doesn't have the necessary info
   if (!userId || !email) {
-    return res
-      .status(400)
-      .send(
-        'We were not able to verify this email validation. You can re-enter your email address in your user settings to resend a confirmation email.'
-      );
+    return res.redirect(
+      `${rootRedirect}/me/settings?toastType=error&toastMessage=We were not able to verify this email validation. You can re-enter your email address in your user settings to resend a confirmation email.`
+    );
   }
 
   // if there is a community id present in the token, the user is trying to
@@ -171,46 +170,46 @@ emailRouter.get('/validate', (req, res) => {
       return updateCommunityAdministratorEmail(communityId, email, userId).then(
         community =>
           IS_PROD
-            ? res.redirect(`https://spectrum.chat/${community.slug}/settings`)
-            : res.redirect(`http://localhost:3000/${community.slug}/settings`)
+            ? res.redirect(
+                `https://spectrum.chat/${
+                  community.slug
+                }/settings?toastType=success&toastMessage=Your email address has been validated!`
+              )
+            : res.redirect(
+                `http://localhost:3000/${
+                  community.slug
+                }/settings?toastType=success&toastMessage=Your email address has been validated!`
+              )
       );
     } catch (err) {
       console.error(err);
-      return res
-        .status(400)
-        .send(
-          'We ran into an issue validating this email address. You can re-enter your email address in your community settings to resend a confirmation email, or get in touch with us at hi@spectrum.chat.'
-        );
+      return res.redirect(
+        `${rootRedirect}/me/settings?toastType=error&toastMessage=We ran into an issue validating this email address. You can re-enter your email address in your community settings to resend a confirmation email, or get in touch with us at hi@spectrum.chat.`
+      );
     }
   }
 
   // and send a database request to update the user record with this email
   try {
     return updateUserEmail(userId, email).then(user => {
-      const rootRedirect = IS_PROD
-        ? `https://spectrum.chat`
-        : `http://localhost:3000`;
-
       req.login(user, err => {
         if (err) {
-          return res
-            .status(400)
-            .send(
-              'We ran into an issue validating this email address. You can re-enter your email address in your community settings to resend a confirmation email, or get in touch with us at hi@spectrum.chat.'
-            );
+          return res.redirect(
+            `${rootRedirect}/me/settings?toastType=error&toastMessage=We ran into an issue validating this email address. You can re-enter your email address in your community settings to resend a confirmation email, or get in touch with us at hi@spectrum.chat.`
+          );
         }
 
         if (!user.username) return res.redirect(rootRedirect);
-        return res.redirect(`${rootRedirect}/users/${user.username}/settings`);
+        return res.redirect(
+          `${rootRedirect}/me/settings?toastType=success&toastMessage=Email updated!`
+        );
       });
     });
   } catch (err) {
     console.error(err);
-    return res
-      .status(400)
-      .send(
-        'We ran into an issue validating this email address. You can re-enter your email address in your user settings to resend a confirmation email, or get in touch with us at hi@spectrum.chat.'
-      );
+    return res.redirect(
+      `${rootRedirect}/me/settings?toastType=error&toastMessage=We ran into an issue validating this email address. You can re-enter your email address in your user settings to resend a confirmation email, or get in touch with us at hi@spectrum.chat.`
+    );
   }
 });
 
