@@ -107,4 +107,6 @@ function collectMemoryStats() {
 }
 
 // Report memory usage every second
-setInterval(collectMemoryStats, 1000);
+if (process.env.NODE_ENV === 'production') {
+  setInterval(collectMemoryStats, 1000);
+}
