@@ -112,13 +112,7 @@ class Dashboard extends React.Component<Props, State> {
     if (user) {
       // if the user hasn't joined any communities yet, we have nothing to show them on the dashboard. So instead just render the onboarding step to upsell popular communities to join
       if (user.communityConnection.edges.length === 0) {
-        return (
-          <NewUserOnboarding
-            noCloseButton
-            close={() => {}}
-            currentUser={user}
-          />
-        );
+        return <NewUserOnboarding currentUser={user} />;
       }
 
       // at this point we have succesfully validated a user, and the user has both a username and joined communities - we can show their thread feed!
