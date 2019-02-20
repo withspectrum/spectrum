@@ -7,6 +7,7 @@ const error = require('./utils/error');
 const exec = process.env.DEBUG
   ? cmd => {
       console.log(`[DEBUG] ${cmd}`);
+      return 'fake-url-asdf123.now.sh';
     }
   : execSync;
 // Append --team space-program to all now commands
@@ -122,6 +123,11 @@ if (servers.length > 0) {
       stdio: 'inherit',
     });
 
-    console.log(`${server} is live!\n`);
+    console.log(`${server} is live!`);
+    console.log('Deleting old deploy(s)...');
+    exec(now(`rm --safe --yes build-${server}`), {
+      stdio: 'inherit',
+    });
+    console.log('Done!\n');
   });
 }
