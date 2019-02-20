@@ -25,6 +25,18 @@ type BodyProps = {
   showParent?: boolean,
 };
 
+// This regexp matches /community/channel/slug~id, /?thread=id, /?t=id etc.
+// see https://regex101.com/r/aGamna/2/
+const MATCH_SPECTRUM_URLS = /(?:(?:https?:\/\/)?|\B)(?:spectrum\.chat|localhost:3000)\/.*?(?:~|(?:\?|&)t=|(?:\?|&)thread=)([^&\s]*)/gim;
+const getSpectrumThreadIds = (text: string) => {
+  let ids = [];
+  let match;
+  while ((match = MATCH_SPECTRUM_URLS.exec(text))) {
+    ids.push(match[1]);
+  }
+  return ids;
+};
+
 export const Body = (props: BodyProps) => {
   const { showParent = true, message, openGallery, me, bubble = true } = props;
   const emojiOnly =
@@ -44,6 +56,9 @@ export const Body = (props: BodyProps) => {
       return <Image onClick={openGallery} src={message.content.body} />;
     }
     case 'draftjs': {
+      const ids = getSpectrumThreadIds(
+        toPlainText(toState(JSON.parse(message.content.body)))
+      );
       return (
         <WrapperComponent me={me}>
           {message.parent && showParent && (
@@ -57,6 +72,7 @@ export const Body = (props: BodyProps) => {
           ) : (
             redraft(JSON.parse(message.content.body), messageRenderer)
           )}
+          {ids}
         </WrapperComponent>
       );
     }
