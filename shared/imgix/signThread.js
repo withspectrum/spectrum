@@ -1,6 +1,7 @@
 // @flow
 import type { DBThread } from 'shared/types';
 import { signImageUrl } from 'shared/imgix';
+const url = require('url');
 
 const signBody = (body?: string, expires?: number): string => {
   if (!body) {
@@ -32,7 +33,17 @@ const signBody = (body?: string, expires?: number): string => {
     const { src } = returnBody.entityMap[key].data;
 
     // transform the body inline with signed image urls
-    returnBody.entityMap[key].data.src = signImageUrl(src, { expires });
+    const imageUrlStoredAsSigned =
+      src.indexOf('https://spectrum.imgix.net') >= 0;
+    // if the image was stored in the db as a signed url (eg. after the plaintext update to the thread editor)
+    // we need to remove all query params from the src, then re-sign in order to avoid duplicate signatures
+    // or sending down a url with an expired signature
+    if (imageUrlStoredAsSigned) {
+      const sanitized = decodeURIComponent(url.parse(src).pathname);
+      returnBody.entityMap[key].data.src = signImageUrl(sanitized, { expires });
+    } else {
+      returnBody.entityMap[key].data.src = signImageUrl(src, { expires });
+    }
   });
 
   return JSON.stringify(returnBody);
