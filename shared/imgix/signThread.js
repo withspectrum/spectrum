@@ -34,7 +34,7 @@ const signBody = (body?: string, expires?: number): string => {
 
     // transform the body inline with signed image urls
     const imageUrlStoredAsSigned =
-      src.indexOf('https://spectrum.imgix.net') >= 0;
+      src && src.indexOf('https://spectrum.imgix.net') >= 0;
     // if the image was stored in the db as a signed url (eg. after the plaintext update to the thread editor)
     // we need to remove all query params from the src, then re-sign in order to avoid duplicate signatures
     // or sending down a url with an expired signature
