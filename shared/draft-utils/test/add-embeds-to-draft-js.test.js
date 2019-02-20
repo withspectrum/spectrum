@@ -259,6 +259,38 @@ describe('sites', () => {
       ]);
     });
   });
+
+  describe('simplecast', () => {
+    it('should handle simplecast urls', () => {
+      const text = 'https://simplecast.com/s/8fb96767';
+      expect(getEmbedsFromText(text)).toEqual([
+        {
+          height: 200,
+          url: 'https://embed.simplecast.com/8fb96767',
+        },
+      ]);
+    });
+
+    it('should handle simplecast urls with query params', () => {
+      const text = 'https://simplecast.com/s/8fb96767?color=000000';
+      expect(getEmbedsFromText(text)).toEqual([
+        {
+          height: 200,
+          url: 'https://embed.simplecast.com/8fb96767?color=000000',
+        },
+      ]);
+    });
+
+    it('should handle embed urls', () => {
+      const text = 'https://embed.simplecast.com/8fb96767';
+      expect(getEmbedsFromText(text)).toEqual([
+        {
+          height: 200,
+          url: 'https://embed.simplecast.com/8fb96767',
+        },
+      ]);
+    });
+  });
 });
 
 describe('complex text', () => {
