@@ -59,9 +59,9 @@ poolMaster.on('queueing', size => {
   statsd.gauge('db.query_queue.size', size);
 });
 
-poolMaster.on('size', size => {
-  statsd.gauge('db.connections.count', size);
-});
+setInterval(() => {
+  statsd.gauge('db.connections.count', poolMaster.getLength());
+}, 5000);
 
 // Exit the process on unhealthy db in test env
 if (process.env.TEST_DB) {
