@@ -12,18 +12,17 @@ import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 type Props = {
   user: GetCurrentUserSettingsType,
-  githubAuthError: ?string,
 };
 
 class Overview extends React.Component<Props> {
   render() {
-    const { user, githubAuthError } = this.props;
+    const { user } = this.props;
 
     return (
       <SectionsContainer>
         <Column>
           <ErrorBoundary fallbackComponent={SettingsFallback}>
-            <UserEditForm githubAuthError={githubAuthError} user={user} />
+            <UserEditForm user={user} />
           </ErrorBoundary>
 
           <ErrorBoundary fallbackComponent={SettingsFallback}>

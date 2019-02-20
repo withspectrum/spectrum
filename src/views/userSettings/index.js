@@ -32,17 +32,6 @@ type Props = {
 };
 
 class UserSettings extends React.Component<Props> {
-  githubAuthError = '';
-
-  constructor(props) {
-    super(props);
-    const search = queryString.parse(this.props.location.search);
-    if (search && search.githubAuthError) {
-      this.githubAuthError = search.githubAuthError;
-      this.props.dispatch(addToastWithTimeout('error', search.githubAuthError));
-      this.props.history.push(this.props.history.location.pathname);
-    }
-  }
   componentDidMount() {
     track(events.USER_SETTINGS_VIEWED);
   }
@@ -131,9 +120,7 @@ class UserSettings extends React.Component<Props> {
             <Subnav items={subnavItems} activeTab={activeTab} />
 
             <Route path={`${match.url}`}>
-              {() => (
-                <Overview githubAuthError={this.githubAuthError} user={user} />
-              )}
+              {() => <Overview user={user} />}
             </Route>
           </View>
         </AppViewWrapper>
