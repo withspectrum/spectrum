@@ -34,37 +34,52 @@ function createQueue(name: string, queueOptions?: Object = {}) {
       queue: name,
     });
   });
-  queue.on('waiting', () => {
+  queue.on('waiting', jobId => {
     statsd.increment('jobs.waiting', 1, {
       queue: name,
     });
+    queue
+      .getJob(jobId)
+      .then(job => {
+        if (!job) return;
+        return job.finished();
+      })
+      .then(() => {
+        statsd.increment('jobs.waiting', -1, {
+          queue: name,
+        });
+      })
+      .catch(() => {
+        statsd.increment('jobs.waiting', -1, {
+          queue: name,
+        });
+      });
   });
-  queue.on('active', () => {
-    statsd.increment('jobs.waiting', -1, {
-      queue: name,
-    });
+  queue.on('active', (jobId: string, jobPromise: Promise<void>) => {
+    const startTime = new Date().getTime();
     statsd.increment('jobs.active', 1, {
       queue: name,
     });
-  });
-  queue.on('completed', () => {
-    statsd.increment('jobs.active', -1, {
-      queue: name,
-    });
-    statsd.increment('jobs.completed', 1, {
-      queue: name,
-    });
-  });
-  queue.on('error', err => {
-    console.error('Job errored');
-    console.error({ err });
-    Raven.captureException(new Error(err));
-    statsd.increment('jobs.active', -1, {
-      queue: name,
-    });
-    statsd.increment('jobs.errored', 1, {
-      queue: name,
-    });
+    jobPromise
+      .then(() => {
+        const duration = new Date().getTime() - startTime;
+        statsd.timing('jobs.duration', duration, {
+          queue: name,
+        });
+        statsd.increment('jobs.active', -1, {
+          queue: name,
+        });
+        statsd.increment('jobs.completed', 1, {
+          queue: name,
+        });
+      })
+      .catch(() => {
+        const duration = new Date().getTime() - startTime;
+        statsd.timing('jobs.duration', duration);
+        statsd.increment('jobs.active', -1, {
+          queue: name,
+        });
+      });
   });
   queue.on('failed', (job, err) => {
     console.error(`Job#${job.id} failed, with following reason`);

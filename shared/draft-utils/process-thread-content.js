@@ -43,11 +43,7 @@ export default (type: 'TEXT' | 'DRAFTJS', body: string): string => {
 
   // Add automatic embeds to body
   try {
-    const editorState = EditorState.createWithContent(
-      convertFromRaw(JSON.parse(newBody))
-    );
-    const newEditorState = addEmbedsToEditorState(editorState);
-    return JSON.stringify(convertToRaw(newEditorState.getCurrentContent()));
+    return JSON.stringify(addEmbedsToEditorState(JSON.parse(newBody)));
     // Ignore errors during automatic embed detection
   } catch (err) {
     console.error(err);

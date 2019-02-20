@@ -68,7 +68,7 @@ export class Login extends React.Component<Props> {
       const { brandedLogin } = community;
 
       return (
-        <FullscreenView hasBackground noCloseButton={true} close={null}>
+        <FullscreenView closePath={`${CLIENT_URL}`}>
           <FullscreenContent
             data-cy="community-login-page"
             style={{ justifyContent: 'center' }}
@@ -117,14 +117,14 @@ export class Login extends React.Component<Props> {
 
     if (isLoading) {
       return (
-        <FullscreenView>
+        <FullscreenView closePath={CLIENT_URL}>
           <Loading />
         </FullscreenView>
       );
     }
 
     return (
-      <FullscreenView close={this.escape}>
+      <FullscreenView closePath={CLIENT_URL}>
         <ViewError
           refresh
           heading={'We had trouble finding this community'}

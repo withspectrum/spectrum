@@ -1,12 +1,6 @@
 // @flow
-import {
-  EditorState,
-  Entity,
-  AtomicBlockUtils,
-  ContentState,
-  convertToRaw,
-  SelectionState,
-} from 'draft-js';
+import genKey from 'draft-js/lib/generateRandomKey';
+import type { RawDraftContentState } from 'draft-js/lib/RawDraftContentState.js';
 
 const FIGMA_URLS = /\b((?:https?\/\/)?(?:www\.)?figma.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/.*)?)/gi;
 const YOUTUBE_URLS = /\b(?:\/\/)?(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?[\w\?=]*)?/gi;
@@ -15,6 +9,7 @@ const IFRAME_TAG = /<iframe.+?src=['"](.+?)['"]/gi;
 const FRAMER_URLS = /\b((?:https?\/\/)?(?:www\.)?(?:framer\.cloud|share\.framerjs\.com)(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?)/gi;
 const CODEPEN_URLS = /\b(?:\/\/)?(?:www\.)?codepen\.io(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
 const CODESANDBOX_URLS = /\b(?:\/\/)?(?:www\.)?codesandbox\.io(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
+const SIMPLECAST_URLS = /\b(?:\/\/)?(?:www\.)?simplecast\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
 
 type AddEmbedAttrs = {
   url: string,
@@ -24,68 +19,71 @@ type AddEmbedAttrs = {
 };
 
 export const addEmbedsToEditorState = (
-  editorState: typeof EditorState
-): typeof EditorState => {
-  const raw = convertToRaw(editorState.getCurrentContent());
-  let newEditorState = editorState;
-  raw.blocks.forEach(block => {
+  input: RawDraftContentState
+): RawDraftContentState => {
+  let lastEntityKey = Math.min(...Object.keys(input.entityMap));
+  if (lastEntityKey === Infinity) lastEntityKey = -1;
+  let newEntityMap = input.entityMap || {};
+  let newBlocks = [];
+
+  // Detect the embeds and add an atomic block and an entity to the
+  // raw content state for each one
+  input.blocks.forEach((block, index) => {
+    newBlocks.push(block);
+
     if (block.type !== 'unstyled') return;
+
     const embeds = getEmbedsFromText(block.text);
-    if (embeds.length > 0) {
-      embeds.forEach(embed => {
-        const selection = SelectionState.createEmpty(block.key);
-        newEditorState = addEmbedToEditorState(newEditorState, embed);
+    if (!embeds.length === 0) return;
+
+    embeds.forEach(embed => {
+      lastEntityKey++;
+      const entityKey = lastEntityKey;
+      newBlocks.push({
+        type: 'atomic',
+        data: {},
+        text: ' ',
+        depth: 0,
+        // TODO
+        entityRanges: [
+          {
+            offset: 0,
+            length: 1,
+            key: entityKey,
+          },
+        ],
+        inlineStyleRanges: [],
+        key: genKey(),
+      });
+      newEntityMap[entityKey] = {
+        data: {
+          ...embed,
+          src: embed.url,
+        },
+        mutability: 'MUTABLE',
+        type: 'embed',
+      };
+    });
+    // If this is the last block we need to add an empty block below the atomic block,
+    // otherwise users cannot remove the embed during editing
+    if (index === input.blocks.length - 1) {
+      newBlocks.push({
+        type: 'unstyled',
+        data: {},
+        text: ' ',
+        depth: 0,
+        entityRanges: [],
+        inlineStyleRanges: [],
+        key: genKey(),
       });
     }
   });
-  return newEditorState;
-};
 
-// Taken from https://github.com/vacenz/last-draft-js-plugins/blob/master/draft-js-embed-plugin/src/modifiers/addEmbed.js
-// adapted to pass additional attrs onto the iframe
-export const addEmbedToEditorState = (
-  editorState: typeof EditorState,
-  attrs: AddEmbedAttrs
-) => {
-  const urlType = 'embed';
-  const entityKey = Entity.create(urlType, 'IMMUTABLE', {
-    src: (attrs && attrs.url) || null,
-    aspectRatio: attrs && attrs.aspectRatio,
-    width: attrs && attrs.width,
-    height: attrs && attrs.height,
-  });
-  const newEditorState = AtomicBlockUtils.insertAtomicBlock(
-    editorState,
-    entityKey,
-    ' '
-  );
-  // insertAtomicBlock inserts _before_ the current block, which is not what we want,
-  // so we have to manually move the new atomic block one further down
-  const content = newEditorState.getCurrentContent();
-  let newBlocks = [];
-  let moveNext;
-  content.getBlocksAsArray().forEach(block => {
-    if (!moveNext) {
-      newBlocks.push(block);
-    } else {
-      newBlocks = [
-        ...newBlocks.slice(0, newBlocks.length - 2),
-        block,
-        ...newBlocks.slice(newBlocks.length - 2),
-      ];
-    }
-    if (block.type === 'atomic' && block.getEntityAt(0) === entityKey) {
-      // move the automatically added empty block above the atomic block below the atomic block
-      newBlocks = [
-        ...newBlocks.slice(0, newBlocks.length - 2),
-        newBlocks[newBlocks.length - 1],
-        newBlocks[newBlocks.length - 2],
-      ];
-      moveNext = true;
-    }
-  });
-  const newContent = ContentState.createFromBlockArray(newBlocks);
-  return EditorState.push(newEditorState, newContent, 'insert-characters');
+  return {
+    ...input,
+    entityMap: newEntityMap,
+    blocks: newBlocks,
+  };
 };
 
 // Utility function to return the first capturing group of each unique match
@@ -145,6 +143,15 @@ export const getEmbedsFromText = (text: string): Array<AddEmbedAttrs> => {
     embeds.push({
       url: `https://codesandbox.io${path.replace('/s/', '/embed/')}`,
       height: 500,
+    });
+  });
+
+  match(SIMPLECAST_URLS, text).forEach(path => {
+    embeds.push({
+      url: `https://embed.simplecast.com/${path
+        .replace('/s/', '')
+        .replace('/', '')}`,
+      height: 200,
     });
   });
 

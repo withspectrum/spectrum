@@ -29,8 +29,9 @@ type Args = {
 };
 
 export default requireAuth(async (_: any, args: Args, ctx: GraphQLContext) => {
+  let messageType = args.input.messageType;
   const {
-    input: { id, content, messageType },
+    input: { id, content },
   } = args;
   const { user, loaders } = ctx;
 
@@ -58,9 +59,8 @@ export default requireAuth(async (_: any, args: Args, ctx: GraphQLContext) => {
         })
       )
     );
-    messageType === 'draftjs';
+    messageType = 'draftjs';
   }
-
   const eventFailed =
     message.threadType === 'story'
       ? events.MESSAGE_EDITED_FAILED
@@ -84,7 +84,7 @@ export default requireAuth(async (_: any, args: Args, ctx: GraphQLContext) => {
         'Please provide serialized raw DraftJS content state as content.body'
       );
     }
-    if (!validateRawContentState(body)) {
+    if (!validateRawContentState(parsed)) {
       trackQueue.add({
         userId: user.id,
         event: eventFailed,
