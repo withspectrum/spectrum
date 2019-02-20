@@ -61,6 +61,7 @@ emailRouter.get('/unsubscribe', (req, res) => {
       case 'newThreadCreated':
       case 'newMessageInThreads':
       case 'newDirectMessage':
+      case 'newMention':
         return unsubscribeUserFromEmailNotification(userId, type).then(() =>
           res
             .status(200)
