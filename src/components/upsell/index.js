@@ -102,7 +102,7 @@ export const UpsellCreateCommunity = () => {
       <Subtitle>{subtitle}</Subtitle>
       <Actions>
         <Link to="/new/community">
-          <Button onClick={close}>Get Started</Button>
+          <Button>Get Started</Button>
         </Link>
       </Actions>
     </NullCard>
