@@ -32,6 +32,7 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import Maintenance from 'src/components/maintenance';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import RedirectOldThreadRoute from './views/thread/redirect-old-route';
+import NewUserOnboarding from './views/newUserOnboarding';
 
 /* prettier-ignore */
 const Explore = Loadable({
@@ -267,6 +268,8 @@ class Routes extends React.Component<Props> {
                       <Redirect
                         to={`/users/${currentUser.username}/settings`}
                       />
+                    ) : currentUser && !currentUser.username ? (
+                      <NewUserOnboarding />
                     ) : isLoadingCurrentUser ? null : (
                       <Login redirectPath={`${CLIENT_URL}/me/settings`} />
                     )

@@ -9,6 +9,7 @@ const IFRAME_TAG = /<iframe.+?src=['"](.+?)['"]/gi;
 const FRAMER_URLS = /\b((?:https?\/\/)?(?:www\.)?(?:framer\.cloud|share\.framerjs\.com)(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?)/gi;
 const CODEPEN_URLS = /\b(?:\/\/)?(?:www\.)?codepen\.io(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
 const CODESANDBOX_URLS = /\b(?:\/\/)?(?:www\.)?codesandbox\.io(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
+const SIMPLECAST_URLS = /\b(?:\/\/)?(?:www\.)?simplecast\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
 
 type AddEmbedAttrs = {
   url: string,
@@ -142,6 +143,15 @@ export const getEmbedsFromText = (text: string): Array<AddEmbedAttrs> => {
     embeds.push({
       url: `https://codesandbox.io${path.replace('/s/', '/embed/')}`,
       height: 500,
+    });
+  });
+
+  match(SIMPLECAST_URLS, text).forEach(path => {
+    embeds.push({
+      url: `https://embed.simplecast.com/${path
+        .replace('/s/', '')
+        .replace('/', '')}`,
+      height: 200,
     });
   });
 
