@@ -49,9 +49,17 @@ const rateLimiter = ({ max, duration }: { max: number, duration: string }) => {
 
       const delta = (limit.reset * 1000 - Date.now()) | 0;
       res.set('Retry-After', String(after));
-      res
-        .status(429)
-        .send('Rate limit exceeded, retry in ' + ms(delta, { long: true }));
+      res.status(429);
+      if (req.method === 'GET') {
+        res.send(
+          `<!DOCTYPE html><html><head><title>Spectrum</title> <style>body{margin: 0;}html{-webkit-font-smoothing: antialiased; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';}h1, p{line-height: 1.5;}.container{background: rgb(56,24,229);background: linear-gradient(90deg, rgba(56,24,229,1) 0%, rgba(56,24,229,0.8029586834733894) 52%, rgba(56,24,229,1) 100%); width: 100%; display: flex; height: 100vh; justify-content: center;}.item{color: white; font-weight: bold; align-self: center; text-align: center;}a{color: white;}span{font-size: 40px; padding: 0; margin: 0;}</style></head><body> <div class="container"> <div class="item"> <span>🚨</span> <h1>Rate Limit Exceeded</h1> <p>Try again in ${ms(
+            delta,
+            { long: true }
+          )}. (if this was a mistake let us know at <a href="mailto:support@spectrum.chat">support@spectrum.chat</a>)</p></div></div></body></html>`
+        );
+      } else {
+        res.send('Rate limit exceeded, retry in ' + ms(delta, { long: true }));
+      }
     });
   };
 };
