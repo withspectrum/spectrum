@@ -257,7 +257,7 @@ class ActionBar extends React.Component<Props, State> {
           <div style={{ display: 'flex' }} />
           <div style={{ display: 'flex' }}>
             <EditDone data-cy="cancel-thread-edit-button">
-              <TextButton onClick={this.props.toggleEdit}>Cancel</TextButton>
+              <TextButton onClick={this.props.cancelEdit}>Cancel</TextButton>
             </EditDone>
             <EditDone>
               <Button

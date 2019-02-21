@@ -40,9 +40,11 @@ import { ErrorBoundary } from 'src/components/error';
 type State = {
   isEditing?: boolean,
   body?: any,
+  editedBody?: any,
   title?: string,
   receiveNotifications?: boolean,
   isSavingEdit?: boolean,
+  cancelEdit?: boolean,
   flyoutOpen?: ?boolean,
   error?: ?string,
   isLockingThread: boolean,
@@ -66,9 +68,11 @@ class ThreadDetailPure extends React.Component<Props, State> {
     isPinningThread: false,
     isEditing: false,
     body: null,
+    editedBody: null,
     title: '',
     receiveNotifications: false,
     isSavingEdit: false,
+    cancelEdit: false,
     flyoutOpen: false,
     error: '',
   };
@@ -92,6 +96,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
     return this.setState({
       isEditing: false,
       body: toState(JSON.parse(thread.content.body)),
+      editedBody: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
       flyoutOpen: false,
       receiveNotifications: thread.receiveNotifications,
@@ -199,9 +204,17 @@ class ThreadDetailPure extends React.Component<Props, State> {
     this.props.toggleEdit();
   };
 
+  cancelEdit = () => {
+    this.setState({
+      cancelEdit: true,
+    });
+
+    this.toggleEdit();
+  };
+
   saveEdit = () => {
     const { dispatch, editThread, thread } = this.props;
-    const { title, body } = this.state;
+    const { title, editedBody } = this.state;
     const threadId = thread.id;
 
     if (!title || title.trim().length === 0) {
@@ -215,7 +228,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isSavingEdit: true,
     });
 
-    const jsonBody = toJSON(body);
+    const jsonBody = toJSON(editedBody);
 
     const content = {
       title: title.trim(),
@@ -245,6 +258,11 @@ class ThreadDetailPure extends React.Component<Props, State> {
         });
 
         if (editThread && editThread !== null) {
+          this.setState({
+            cancelEdit: false,
+            body: toState(JSON.parse(editThread.content.body)),
+          });
+
           this.toggleEdit();
           return dispatch(addToastWithTimeout('success', 'Thread saved!'));
         } else {
@@ -277,7 +295,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
   changeBody = state => {
     this.setState({
-      body: state,
+      editedBody: state,
     });
   };
 
@@ -317,6 +335,26 @@ class ThreadDetailPure extends React.Component<Props, State> {
       });
   };
 
+  getEditorState = () => {
+    const { isEditing, body, editedBody, cancelEdit } = this.state;
+
+    let editorState = null;
+
+    if (isEditing) {
+      editorState = editedBody;
+    }
+
+    if (!isEditing && cancelEdit) {
+      editorState = body;
+    }
+
+    if (!isEditing && !cancelEdit) {
+      editorState = editedBody;
+    }
+
+    return editorState;
+  };
+
   render() {
     const { currentUser, thread } = this.props;
 
@@ -327,6 +365,8 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isLockingThread,
       isPinningThread,
     } = this.state;
+
+    const editorState = this.getEditorState();
 
     // if there is no body it means the user is switching threads or the thread
     // hasnt loaded yet - we need this body for the editor, otherwise the
@@ -402,7 +442,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
           {/* $FlowFixMe */}
           <Editor
             readOnly={!this.state.isEditing}
-            state={body}
+            state={editorState}
             onChange={this.changeBody}
             editorKey="thread-detail"
             placeholder="Write more thoughts here..."
@@ -414,6 +454,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
         <ErrorBoundary fallbackComponent={null}>
           <ActionBar
             toggleEdit={this.toggleEdit}
+            cancelEdit={this.cancelEdit}
             currentUser={currentUser}
             thread={thread}
             saveEdit={this.saveEdit}
