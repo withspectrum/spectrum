@@ -9,7 +9,6 @@ import { openModal } from 'src/actions/modals';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
-  JoinChannelClose,
   JoinChannelContainer,
   JoinChannelContent,
   JoinChannelTitle,

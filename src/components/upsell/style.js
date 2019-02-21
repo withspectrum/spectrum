@@ -429,15 +429,3 @@ export const JoinChannelSubtitle = styled.h4`
   font-weight: 400;
   color: ${theme.text.secondary};
 `;
-
-export const JoinChannelClose = styled.span`
-  cursor: pointer;
-  font-size: 15px;
-  position: absolute;
-  right: 0px;
-  top: -4px;
-  padding: 8px;
-  align-items: center;
-  display: flex;
-  color: ${theme.text.alt};
-`;
