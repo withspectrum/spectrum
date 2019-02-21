@@ -189,7 +189,7 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-dropdown-edit"]').click();
       cy.get('[data-cy="save-thread-edit-button"]').should('be.visible');
       const title = 'Some new thread';
-      cy.get('[data-cy="rich-text-editor"].markdown').should('be.visible');
+      cy.get('[data-cy="rich-text-editor"]').should('be.visible');
       cy.get('[data-cy="thread-editor-title-input"]')
         .clear()
         .type(title);
@@ -201,7 +201,7 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-dropdown-edit"]').click();
       cy.get('[data-cy="save-thread-edit-button"]').should('be.visible');
       const originalTitle = 'The first thread! 🎉';
-      cy.get('[data-cy="rich-text-editor"].markdown').should('be.visible');
+      cy.get('[data-cy="rich-text-editor"]').should('be.visible');
       cy.get('[data-cy="thread-editor-title-input"]')
         .clear()
         .type(originalTitle);
