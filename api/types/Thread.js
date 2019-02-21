@@ -68,6 +68,7 @@ const Thread = /* GraphQL */ `
     currentUserLastSeen: Date @cost(complexity: 1)
     reactions: ThreadReactions @cost(complexity: 1)
     metaImage: String
+    lastMessage: Message
 
     attachments: [Attachment]
       @deprecated(reason: "Attachments no longer used for link previews")

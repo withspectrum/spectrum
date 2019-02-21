@@ -16,6 +16,7 @@ import currentUserLastSeen from './currentUserLastSeen';
 import content from './content';
 import reactions from './reactions';
 import metaImage from './metaImage';
+import lastMessage from './lastMessage';
 
 import type { DBThread } from 'shared/types';
 
@@ -39,6 +40,7 @@ module.exports = {
     content,
     reactions,
     metaImage,
+    lastMessage,
     messageCount: ({ messageCount }: DBThread) => messageCount || 0,
   },
 };
