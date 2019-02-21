@@ -1,7 +1,9 @@
 // @flow
 import gql from 'graphql-tag';
-import threadInfoFragment from '../thread/threadInfo';
-import type { ThreadInfoType } from '../thread/threadInfo';
+import threadInfoFragment, { type ThreadInfoType } from '../thread/threadInfo';
+import watercoolerInfoFragment, {
+  type WatercoolerInfoType,
+} from '../thread/watercoolerInfo';
 
 type Edge = {
   cursor: string,
@@ -23,7 +25,7 @@ export type CommunityThreadConnectionType = {
     ...$Exact<ThreadInfoType>,
   },
   watercooler: {
-    ...$Exact<ThreadInfoType>,
+    ...$Exact<WatercoolerInfoType>,
   },
   threadConnection: ThreadConnectionType,
 };
@@ -34,7 +36,7 @@ export default gql`
       ...threadInfo
     }
     watercooler {
-      ...threadInfo
+      ...watercoolerInfo
     }
     threadConnection(first: 10, after: $after, sort: $sort) {
       pageInfo {
