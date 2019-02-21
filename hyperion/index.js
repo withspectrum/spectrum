@@ -29,15 +29,44 @@ app.use(statsd);
 app.set('trust proxy', true);
 
 app.use(toobusy);
+
+// Security middleware.
+addSecurityMiddleware(app, { enableNonce: true, enableCSP: true });
+
+// Serve static files from the build folder
+app.use(
+  express.static(path.resolve(__dirname, '..', 'build'), {
+    index: false,
+    setHeaders: (res, path) => {
+      // Don't cache the serviceworker in the browser
+      if (path.indexOf('sw.js') > -1) {
+        res.setHeader('Cache-Control', 'no-store, no-cache');
+        return;
+      }
+
+      if (path.endsWith('.js')) {
+        // Cache static files in now CDN for seven days
+        // (the filename changes if the file content changes, so we can cache these forever)
+        res.setHeader('Cache-Control', `s-maxage=${ONE_HOUR}`);
+      }
+    },
+  })
+);
+
+// In dev the static files from the root public folder aren't moved to the build folder by create-react-app
+// so we just tell Express to serve those too
+if (process.env.NODE_ENV === 'development') {
+  app.use(
+    express.static(path.resolve(__dirname, '..', 'public'), { index: false })
+  );
+}
+
 app.use(
   rateLimiter({
     max: 5,
     duration: '20s',
   })
 );
-
-// Security middleware.
-addSecurityMiddleware(app, { enableNonce: true, enableCSP: true });
 
 import bodyParser from 'body-parser';
 app.use(bodyParser.json());
@@ -135,63 +164,6 @@ app.use(passport.session());
 // This needs to come after passport otherwise we'll always redirect logged-in users
 import threadParamRedirect from 'shared/middlewares/thread-param';
 app.use(threadParamRedirect);
-
-// Static files
-// This route handles the case where our ServiceWorker requests main.asdf123.js, but
-// we've deployed a new version of the app so the filename changed to main.dfyt975.js
-let jsFiles;
-try {
-  jsFiles = fs.readdirSync(
-    path.resolve(__dirname, '..', 'build', 'static', 'js')
-  );
-} catch (err) {
-  // In development that folder might not exist, so ignore errors here
-  console.error(err);
-}
-app.use(
-  express.static(path.resolve(__dirname, '..', 'build'), {
-    index: false,
-    setHeaders: (res, path) => {
-      // Don't cache the serviceworker in the browser
-      if (path.indexOf('sw.js') > -1) {
-        res.setHeader('Cache-Control', 'no-store, no-cache');
-        return;
-      }
-
-      if (path.endsWith('.js')) {
-        // Cache static files in now CDN for seven days
-        // (the filename changes if the file content changes, so we can cache these forever)
-        res.setHeader('Cache-Control', `s-maxage=${ONE_HOUR}`);
-      }
-    },
-  })
-);
-app.get('/static/js/:name', (req: express$Request, res, next) => {
-  if (!req.params.name) return next();
-  const existingFile = jsFiles.find(file => file.startsWith(req.params.name));
-  if (existingFile) {
-    if (existingFile.endsWith('.js')) {
-      res.setHeader('Cache-Control', `s-maxage=${ONE_HOUR}`);
-    }
-    return res.sendFile(
-      path.resolve(__dirname, '..', 'build', 'static', 'js', req.params.name)
-    );
-  }
-  // Match the first part of the file name, i.e. from "UserSettings.asdf123.chunk.js" match "UserSettings"
-  const match = req.params.name.match(/(\w+?)\..+js/i);
-  if (!match) return next();
-  const actualFilename = jsFiles.find(file => file.startsWith(match[1]));
-  if (!actualFilename) return next();
-  res.redirect(`/static/js/${actualFilename}`);
-});
-
-// In dev the static files from the root public folder aren't moved to the build folder by create-react-app
-// so we just tell Express to serve those too
-if (process.env.NODE_ENV === 'development') {
-  app.use(
-    express.static(path.resolve(__dirname, '..', 'public'), { index: false })
-  );
-}
 
 app.get('*', (req: express$Request, res, next) => {
   // Electron requests should only be client-side rendered
