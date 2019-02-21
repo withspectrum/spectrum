@@ -71,7 +71,13 @@ class QueryParamToastDispatcher extends React.Component<Props> {
       return null;
     });
     const cleanParams = querystring.stringify(clean);
-    return this.props.history.push({ search: cleanParams });
+    /*
+      We decode the cleanParams in order to preserver special characters in the url
+      For example, the url /spectrum/general/another-thread~thread-2?m=MTQ4MzIyNTIwMDAwMg== 
+      has two equals signs at the end. If we don't decode the cleanParams it will become
+      spectrum/general/another-thread~thread-2?m=MTQ4MzIyNTIwMDAwMg%3D%3D
+    */
+    return this.props.history.push({ search: decodeURIComponent(cleanParams) });
   };
 
   render() {
