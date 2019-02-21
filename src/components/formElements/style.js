@@ -203,6 +203,10 @@ export const StyledError = styled.p`
   padding: 8px 0 16px;
   line-height: 1.4;
   font-weight: 600;
+
+  a {
+    text-decoration: underline;
+  }
 `;
 
 export const StyledSuccess = styled.p`
