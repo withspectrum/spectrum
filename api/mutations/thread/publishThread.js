@@ -199,6 +199,7 @@ export default requireAuth(
         if (!t) return false;
         if (
           usersPreviousPublishedThreads.length === 1 &&
+          usersPreviousPublishedThreads[0] &&
           usersPreviousPublishedThreads[0].deletedAt
         )
           return false;
