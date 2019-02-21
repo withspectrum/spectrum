@@ -131,11 +131,7 @@ export const storeMessage = (message: Object, userId: string): Promise<DBMessage
         timestamp: new Date(),
         senderId: userId,
         content: {
-          body:
-            message.messageType === 'media'
-              ? message.content.body
-              : // For text messages linkify URLs and strip HTML tags
-                message.content.body,
+          body: message.content.body.trim()
         },
       }),
       { returnChanges: true }
