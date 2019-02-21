@@ -1,3 +1,10 @@
+import {
+  getItemFromStorage,
+  storeItem,
+  removeItemFromStorage,
+} from 'src/helpers/localStorage';
+import { LAST_ACTIVE_COMMUNITY_KEY } from 'src/views/dashboard/components/communityList';
+
 const initialState = {
   activeCommunity: null,
   activeThread: null,
@@ -16,6 +23,7 @@ export default function dashboardFeed(state = initialState, action) {
         activeThread: action.threadId,
       });
     case 'SELECT_FEED_COMMUNITY':
+      storeItem(LAST_ACTIVE_COMMUNITY_KEY, action.communityId);
       return Object.assign({}, state, {
         activeCommunity: action.communityId,
       });

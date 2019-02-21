@@ -9,6 +9,7 @@ import Icon from 'src/components/icons';
 import Reputation from 'src/components/reputation';
 import SidebarChannels from './sidebarChannels';
 import UpsellExploreCommunities from './upsellExploreCommunities';
+import { getItemFromStorage } from 'src/helpers/localStorage';
 import {
   CommunityListItem,
   CommunityListMeta,
@@ -37,7 +38,14 @@ type Props = {
   setActiveChannelObject: Function,
 };
 
+export const LAST_ACTIVE_COMMUNITY_KEY = 'last-active-inbox-community';
+
 class CommunityList extends React.Component<Props> {
+  componentDidMount() {
+    const id = getItemFromStorage(LAST_ACTIVE_COMMUNITY_KEY);
+    if (id) this.props.dispatch(changeActiveCommunity(id));
+  }
+
   changeCommunity = id => {
     track(events.INBOX_COMMUNITY_FILTERED);
     this.props.dispatch(changeActiveCommunity(id));
