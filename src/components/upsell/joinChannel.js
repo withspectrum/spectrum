@@ -104,7 +104,11 @@ class JoinChannel extends React.Component<Props, State> {
             hoverColor={'success.default'}
             gradientTheme={'success'}
             onClick={currentUser ? this.toggleSubscription : this.login}
-            dataCy="thread-join-channel-upsell-button"
+            dataCy={
+              currentUser
+                ? 'thread-join-channel-upsell-button'
+                : 'join-channel-login-upsell'
+            }
           >
             {label}
           </Button>
