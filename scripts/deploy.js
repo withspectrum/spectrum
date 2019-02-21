@@ -74,13 +74,18 @@ if (servers.indexOf('hyperion') > -1) {
   exec(now(), {
     stdio: 'inherit',
   });
-  console.log('Aliasing to hyperion.workers.spectrum.chat');
-  exec(
-    now(`alias hyperion.${flags.prod ? 'workers' : 'alpha'}.spectrum.chat`),
-    {
+
+  const alias = `hyperion.${flags.prod ? 'workers' : 'alpha'}.spectrum.chat`;
+  console.log(`Aliasing to ${alias}`);
+  try {
+    exec(now(`alias ${alias}`), {
       stdio: 'inherit',
-    }
-  );
+    });
+  } catch (err) {
+    console.log('ALIAS FAILED!');
+    console.log(err);
+  }
+
   console.log('Clearing cache');
   exec(
     now(
