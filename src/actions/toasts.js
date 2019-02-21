@@ -28,10 +28,11 @@ export const addToastWithTimeout = (kind: Toasts, message: string) => (
   dispatch: Dispatch<Object>
 ) => {
   const timeout = kind === 'success' ? 2000 : 4000;
-  const id = nextToastId++;
+  let id = nextToastId++;
   dispatch(addToast(id, kind, message, timeout));
 
   setTimeout(() => {
     dispatch(removeToast(id));
+    id = nextToastId--;
   }, timeout);
 };
