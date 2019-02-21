@@ -73,6 +73,7 @@ const Root = /* GraphQL */ `
     window: Int
     message: String
     identityArgs: [String]
+    arrayLengthField: String
   ) on FIELD_DEFINITION
 
   # The dummy queries and mutations are necessary because

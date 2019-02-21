@@ -302,6 +302,13 @@ class EmailInvitationForm extends React.Component<Props, State> {
         })
         .filter(Boolean);
 
+      if (validated.length > 5000) {
+        this.setState({
+          importError: 'Cannot invite more than 5,000 emails.',
+        });
+        return;
+      }
+
       const consolidated = [
         ...this.state.contacts.filter(
           contact =>
@@ -377,7 +384,7 @@ class EmailInvitationForm extends React.Component<Props, State> {
           <Icon size={20} glyph="upload" /> Import emails
         </ActionAsLabel>
         <ActionHelpText>
-          Upload a .json file with an array of email addresses.
+          Upload a .json file with an array of up to 5,000 email addresses.
         </ActionHelpText>
 
         <Action onClick={this.toggleCustomMessage}>

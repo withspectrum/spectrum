@@ -15,6 +15,7 @@ import {
 } from './style';
 import queryString from 'query-string';
 import { track, events } from 'src/helpers/analytics';
+import { CLIENT_URL } from 'src/api/constants';
 
 type Props = {
   redirectPath: ?string,
@@ -46,12 +47,7 @@ export class Login extends React.Component<Props> {
         : 'Spectrum is a place where communities can share, discuss, and grow together. Sign in below to get in on the conversation.';
 
     return (
-      <FullscreenView
-        hasBackground
-        // $FlowFixMe
-        noCloseButton={!this.props.close}
-        close={this.props.close && this.props.close}
-      >
+      <FullscreenView closePath={CLIENT_URL}>
         <FullscreenContent
           data-cy="login-page"
           style={{ justifyContent: 'center' }}

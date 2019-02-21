@@ -25,6 +25,7 @@ import { track, events } from 'src/helpers/analytics';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
+import { SERVER_URL } from 'src/api/constants';
 
 type StateProps = {|
   community: CommunityInfoType,
@@ -32,8 +33,6 @@ type StateProps = {|
 
 type Props = StateProps & {|
   currentUser: UserInfoType,
-  close: Function,
-  noCloseButton: boolean,
 |};
 
 type ActiveStep =
@@ -89,18 +88,9 @@ class NewUserOnboarding extends Component<Props, State> {
 
   saveUsername = () => {
     const { community } = this.props;
-
     track(events.USER_ONBOARDING_SET_USERNAME);
-
     if (!isDesktopApp()) return this.toStep('appsUpsell');
 
-    // if the user signed up via a community, channel, or thread view, the first
-    // thing they will be asked to do is set a username. After they save their
-    // username, they should proceed to the 'joinFirstCommunity' step; otherwise
-    // we can just close the onboarding
-    if (community) {
-      return this.props.close();
-    }
     return this.toStep('joinFirstCommunity');
   };
 
@@ -123,28 +113,10 @@ class NewUserOnboarding extends Component<Props, State> {
     // or decrement the joinedCommunities count in state
     let newCount = joinedCommunities + number;
     this.setState({ joinedCommunities: newCount });
-
-    // if the user signed up from a community, channel, or thread view,
-    // they will see an onboarding step to join that community they were
-    // viewing in order to complete their onboarding. when they do join
-    // that community, we pass a finish argument which will push them forward
-    // in the onboarding flow
-    if (done) {
-      return this.props.close();
-    }
   };
 
   appUpsellComplete = () => {
     const { community } = this.props;
-
-    // if the user signed up via a community, channel, or thread view, the first
-    // thing they will be asked to do is set a username. After they save their
-    // username, they should proceed to the 'joinFirstCommunity' step; otherwise
-    // we can just close the onboarding
-    if (!community) return this.props.close();
-    // if the user signed in via a comunity, channel, or thread view, but they
-    // are already members of that community, we can escape the onboarding
-    if (community.communityPermissions.isMember) return this.props.close();
 
     // if the user signed up via a community, channel, or thread view and
     // has not yet joined that community, move them to that step in the onboarding
@@ -192,12 +164,7 @@ class NewUserOnboarding extends Component<Props, State> {
     };
 
     return (
-      <FullscreenView
-        hasBackground
-        showBackgroundOnMobile={false}
-        close={this.props.close}
-        noCloseButton={this.props.noCloseButton}
-      >
+      <FullscreenView closePath={`${SERVER_URL}/auth/logout`}>
         <OnboardingContainer>
           <OnboardingContent>
             <IconContainer>
@@ -228,7 +195,7 @@ class NewUserOnboarding extends Component<Props, State> {
                   curatedContentType={'top-communities-by-members'}
                 />
                 <CreateUpsellContainer extra={joinedCommunities > 0}>
-                  <UpsellCreateCommunity close={this.props.close} />
+                  <UpsellCreateCommunity />
                 </CreateUpsellContainer>
 
                 <StickyRow hasJoined={joinedCommunities > 0}>

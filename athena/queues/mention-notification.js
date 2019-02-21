@@ -46,10 +46,10 @@ export default async ({ data }: Job<MentionNotificationJobData>) => {
   // in a private channel where the user is not a member. Users can still be
   // mentioned in public channels where they are not a member
   const thread = await getThreadById(threadId);
-
   // if for some reason no thread was found, or the thread was deleted
   // dont send any notification about the mention
   if (!thread || thread.deletedAt) return;
+  debug('got thread');
 
   const { isPrivate: channelIsPrivate } = await getChannelById(
     thread.channelId
@@ -74,6 +74,7 @@ export default async ({ data }: Job<MentionNotificationJobData>) => {
   ) {
     return;
   }
+  debug('user is member in community');
 
   // see if a usersThreads record exists. If it does, and notifications are muted, we
   // should not send an email. If the record doesn't exist, it means the person being
@@ -120,8 +121,10 @@ export default async ({ data }: Job<MentionNotificationJobData>) => {
   ]);
 
   // if the user shouldn't get an email, just add an in-app notif
-  if (!shouldEmail)
+  if (!shouldEmail) {
+    debug('recipient doesnt have an email');
     return storeUsersNotifications(storedNotification.id, recipient.id);
+  }
 
   // if the mention was in a message, get the data about the message
   const messagePromise = messageId ? await getMessageById(messageId) : null;
