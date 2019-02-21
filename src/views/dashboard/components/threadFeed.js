@@ -16,6 +16,7 @@ import ErrorThreadFeed from './errorThreadFeed';
 import EmptyThreadFeed from './emptyThreadFeed';
 import EmptySearchFeed from './emptySearchFeed';
 import InboxThread from './inboxThread';
+import WatercoolerThread from './watercoolerThread';
 import DesktopAppUpsell from './desktopAppUpsell';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import type { ViewNetworkHandlerType } from 'src/components/viewNetworkHandler';
@@ -281,29 +282,25 @@ class ThreadFeed extends React.Component<Props, State> {
         >
           <DesktopAppUpsell />
 
-          {community &&
-            community.watercooler &&
-            community.watercooler.id && (
-              <ErrorBoundary fallbackComponent={null}>
-                <InboxThread
-                  data={community.watercooler}
-                  active={selectedId === community.watercooler.id}
-                  viewContext={viewContext}
-                />
-              </ErrorBoundary>
-            )}
+          {community && community.watercooler && community.watercooler.id && (
+            <ErrorBoundary fallbackComponent={null}>
+              <WatercoolerThread
+                data={community.watercooler}
+                active={selectedId === community.watercooler.id}
+                viewContext={viewContext}
+              />
+            </ErrorBoundary>
+          )}
 
-          {community &&
-            community.pinnedThread &&
-            community.pinnedThread.id && (
-              <ErrorBoundary fallbackComponent={null}>
-                <InboxThread
-                  data={community.pinnedThread}
-                  active={selectedId === community.pinnedThread.id}
-                  viewContext={viewContext}
-                />
-              </ErrorBoundary>
-            )}
+          {community && community.pinnedThread && community.pinnedThread.id && (
+            <ErrorBoundary fallbackComponent={null}>
+              <InboxThread
+                data={community.pinnedThread}
+                active={selectedId === community.pinnedThread.id}
+                viewContext={viewContext}
+              />
+            </ErrorBoundary>
+          )}
           <InfiniteList
             pageStart={0}
             loadMore={this.props.data.fetchMore}

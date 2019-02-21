@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
 import InboxThread from 'src/views/dashboard/components/inboxThread';
+import WatercoolerThread from 'src/views/dashboard/components/watercoolerwThread';
 import { NullCard } from '../upsell';
 import { LoadingInboxThread } from '../loading';
 import NewActivityIndicator from '../newActivityIndicator';
@@ -312,7 +313,7 @@ class ThreadFeedPure extends React.Component<Props, State> {
             this.props.data.community.watercooler &&
             this.props.data.community.watercooler.id && (
               <ErrorBoundary fallbackComponent={null}>
-                <InboxThread
+                <WatercoolerThread
                   data={this.props.data.community.watercooler}
                   viewContext={viewContext}
                 />
