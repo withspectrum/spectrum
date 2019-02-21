@@ -34,6 +34,7 @@ type Props = {
   thread: GetThreadType,
   currentUser: Object,
   isEditing: boolean,
+  cancelEdit: Function,
   dispatch: Dispatch<Object>,
   toggleThreadNotifications: Function,
   toggleEdit: Function,
