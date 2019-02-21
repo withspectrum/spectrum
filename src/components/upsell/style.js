@@ -401,9 +401,6 @@ export const JoinChannelContainer = styled.div`
   position: relative;
 
   @media (max-width: 768px) {
-    flex-direction: column;
-    padding: 16px;
-
     button {
       width: 100%;
     }
