@@ -70,9 +70,9 @@ export const LinkWrapper = styled(Link)`
 export const Column = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 12px;
 `;
 
 export const AvatarWrapper = styled.div`
   padding-top: 4px;
+  margin-right: 12px;
 `;

@@ -79,7 +79,7 @@ export const Body = (props: BodyProps) => {
           {uniqueIds && (
             <ThreadAttachmentsContainer>
               {uniqueIds.map(id => (
-                <ThreadAttachment key={id} id={id} />
+                <ThreadAttachment message={message} key={id} id={id} />
               ))}
             </ThreadAttachmentsContainer>
           )}

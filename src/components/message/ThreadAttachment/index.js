@@ -5,9 +5,11 @@ import {
   getThreadById,
   type GetThreadType,
 } from 'shared/graphql/queries/thread/getThread';
+import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
 import Attachment from './Attachment';
 
 export type Props = {
+  message: MessageInfoType,
   data: {
     thread: GetThreadType,
     loading: boolean,
@@ -15,7 +17,9 @@ export type Props = {
   },
 };
 
-const Query = ({ data, ...rest }: Props) => <Attachment data={data} />;
+const Query = ({ data, message, ...rest }: Props) => (
+  <Attachment message={message} data={data} />
+);
 
 const ThreadAttachment = compose(getThreadById)(Query);
 

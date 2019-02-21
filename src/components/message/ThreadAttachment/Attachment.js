@@ -1,16 +1,19 @@
 // @flow
 import React from 'react';
 import type { Props } from './';
+import compose from 'recompose/compose';
 import { Loading } from 'src/components/loading';
 import { Container, LinkWrapper, AvatarWrapper, Column } from './style';
 import { changeActiveThread } from 'src/actions/dashboardFeed';
 import ThreadHeader from 'src/views/dashboard/components/inboxThread/header/threadHeader';
+import Activity from 'src/views/dashboard/components/inboxThread/activity';
 import { ThreadTitle } from 'src/views/dashboard/components/inboxThread/style';
 import { UserAvatar } from 'src/components/avatar';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 class Attachment extends React.Component<Props> {
   render() {
-    const { data } = this.props;
+    const { data, currentUser, message } = this.props;
     const { thread, loading, error } = data;
 
     if (loading)
@@ -29,16 +32,19 @@ class Attachment extends React.Component<Props> {
           onClick={e => e.stopPropagation()}
           to={{ search: `?thread=${thread.id}` }}
         />
-        <AvatarWrapper>
-          <UserAvatar user={thread.author.user} size={32} />
-        </AvatarWrapper>
+        {message.author.user.id !== thread.author.user.id && (
+          <AvatarWrapper>
+            <UserAvatar user={thread.author.user} size={32} />
+          </AvatarWrapper>
+        )}
         <Column>
           <ThreadHeader thread={thread} />
           <ThreadTitle>{thread.content.title}</ThreadTitle>
+          <Activity currentUser={currentUser} thread={thread} active={false} />
         </Column>
       </Container>
     );
   }
 }
 
-export default Attachment;
+export default compose(withCurrentUser)(Attachment);
