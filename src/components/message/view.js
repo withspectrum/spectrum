@@ -9,7 +9,9 @@ import {
   QuoteWrapper,
   QuoteWrapperGradient,
   QuotedParagraph,
+  ThreadAttachmentsContainer,
 } from './style';
+import ThreadAttachment from './ThreadAttachment';
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { draftOnlyContainsEmoji } from 'shared/only-contains-emoji';
@@ -59,6 +61,8 @@ export const Body = (props: BodyProps) => {
       const ids = getSpectrumThreadIds(
         toPlainText(toState(JSON.parse(message.content.body)))
       );
+      const uniqueIds = ids.filter((x, i, a) => a.indexOf(x) === i);
+
       return (
         <WrapperComponent me={me}>
           {message.parent && showParent && (
@@ -72,7 +76,13 @@ export const Body = (props: BodyProps) => {
           ) : (
             redraft(JSON.parse(message.content.body), messageRenderer)
           )}
-          {ids}
+          {uniqueIds && (
+            <ThreadAttachmentsContainer>
+              {uniqueIds.map(id => (
+                <ThreadAttachment key={id} id={id} />
+              ))}
+            </ThreadAttachmentsContainer>
+          )}
         </WrapperComponent>
       );
     }
