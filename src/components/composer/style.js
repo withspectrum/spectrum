@@ -8,6 +8,10 @@ export const DropzoneWrapper = styled.div`
   padding: 0 32px;
   position: relative;
   height: 100%;
+
+  @media (max-width: 768px) {
+    padding: 0 24px;
+  }
 `;
 
 export const DropImageOverlay = (props: { visible: boolean }) => {
@@ -228,7 +232,6 @@ export const OptionalSelector = styled(Selector)`
 export const ThreadInputs = styled(FlexCol)`
   position: relative;
   grid-area: body;
-  overflow-y: scroll;
   padding: 32px;
   padding-top: 8px;
   margin-left: -32px;
@@ -236,6 +239,10 @@ export const ThreadInputs = styled(FlexCol)`
   width: calc(100% + 64px);
   background-color: ${theme.bg.default};
   z-index: ${zIndex.composer};
+
+  @media (max-width: 768px) {
+    padding-top: 0;
+  }
 `;
 
 export const ThreadTitle = {
@@ -261,7 +268,7 @@ export const ThreadDescription = {
   fontWeight: '400',
   width: '100%',
   display: 'inline-block',
-  lineHeight: '1.5',
+  lineHeight: '1.4',
   outline: 'none',
   border: '0',
   boxShadow: 'none',
@@ -285,4 +292,12 @@ export const DisabledWarning = styled.div`
   font-weight: 500;
   background: ${props => hexa(props.theme.warn.default, 0.1)};
   color: ${theme.warn.default};
+`;
+
+export const RenderWrapper = styled.div`
+  padding: 0 32px;
+
+  @media (max-width: 768px) {
+    padding: 0 24px;
+  }
 `;

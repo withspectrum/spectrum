@@ -8,6 +8,7 @@ import {
   ThreadTitle,
   ThreadDescription,
   DropImageOverlay,
+  RenderWrapper,
 } from './style';
 import { ThreadHeading } from 'src/views/thread/style';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
@@ -46,7 +47,7 @@ export default (props: Props) => {
           marginRight: 0,
           marginLeft: 0,
           marginTop: 0,
-          marginBottom: '32px',
+          marginBottom: '24px',
         }}
       >
         <Segment selected={!showPreview} onClick={() => setShowPreview(false)}>
@@ -58,12 +59,12 @@ export default (props: Props) => {
       </SegmentedControl>
       {showPreview ? (
         /* $FlowFixMe */
-        <div style={{ padding: '0 32px' }}>
+        <RenderWrapper>
           <ThreadHeading>{title}</ThreadHeading>
           <ThreadRenderer
             body={JSON.parse(processThreadContent('TEXT', body))}
           />
-        </div>
+        </RenderWrapper>
       ) : (
         <Dropzone
           accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}

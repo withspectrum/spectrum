@@ -334,7 +334,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
       : null;
 
     return (
-      <ThreadWrapper innerRef={this.props.innerRef}>
+      <ThreadWrapper isEditing={isEditing} innerRef={this.props.innerRef}>
         <ThreadContent isEditing={isEditing}>
           {isEditing ? (
             <ThreadEditInputs

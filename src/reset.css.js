@@ -329,4 +329,10 @@ injectGlobal`
     text-transform: lowercase;
     font-variant: small-caps;
   }
+
+  .threadComposer textarea {
+    line-height: 1.5;
+    /* account for bottom save bar when editing */
+    height: calc(100% + 52px)!important;
+  }
 `;
