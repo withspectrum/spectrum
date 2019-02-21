@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type { Location } from 'react-router';
+import type { Location, History } from 'react-router';
 const querystring = require('querystring');
 import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
@@ -8,7 +8,8 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 
 type Props = {
   location: Location,
-  dispatch: Dispatch,
+  history: History,
+  dispatch: Dispatch<Object>,
 };
 
 class QueryParamToastDispatcher extends React.Component<Props> {
