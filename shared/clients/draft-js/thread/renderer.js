@@ -148,7 +148,7 @@ const threadRenderer = {
   },
   entities: {
     LINK: (children: Array<Node>, data: DataObj, { key }: KeyObj) => (
-      <a key={key} href={data.url} target="_blank">
+      <a key={key} href={data.url || data.href} target="_blank">
         {children}
       </a>
     ),
