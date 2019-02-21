@@ -6,9 +6,11 @@ import {
   type GetThreadType,
 } from 'shared/graphql/queries/thread/getThread';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo.js';
 import Attachment from './Attachment';
 
 export type Props = {
+  currentUser: UserInfoType,
   message: MessageInfoType,
   data: {
     thread: GetThreadType,

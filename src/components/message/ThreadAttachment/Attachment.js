@@ -38,7 +38,11 @@ class Attachment extends React.Component<Props> {
           </AvatarWrapper>
         )}
         <Column>
-          <ThreadHeader thread={thread} />
+          <ThreadHeader
+            currentUser={currentUser}
+            active={false}
+            thread={thread}
+          />
           <ThreadTitle>{thread.content.title}</ThreadTitle>
           <Activity currentUser={currentUser} thread={thread} active={false} />
         </Column>
