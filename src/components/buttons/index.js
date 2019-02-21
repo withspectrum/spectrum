@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Label,
+  StyledFloatingButton,
   StyledSolidButton,
   StyledTextButton,
   StyledIconButton,
@@ -53,14 +54,36 @@ export const Button = (props: ButtonProps) => (
     ) : (
       ''
     )}
-    {props.loading &&
-      !props.icon && (
-        <Spinner color="text.reverse" size={props.large ? '18' : '14'} />
-      )}
+    {props.loading && !props.icon && (
+      <Spinner color="text.reverse" size={props.large ? '18' : '14'} />
+    )}
     <Label loading={props.loading} hasIcon={props.icon}>
       {props.children}
     </Label>
   </StyledSolidButton>
+);
+
+export const FloatingButton = (props: ButtonProps) => (
+  <StyledFloatingButton
+    disabled={props.loading}
+    data-cy={props.dataCy}
+    {...props}
+  >
+    {props.icon ? (
+      props.loading ? (
+        <SpinnerContainer>
+          <Spinner color="text.reverse" size={props.large ? '18' : '14'} />
+        </SpinnerContainer>
+      ) : (
+        <Icon glyph={props.icon} />
+      )
+    ) : (
+      ''
+    )}
+    {props.loading && !props.icon && (
+      <Spinner color="text.reverse" size={props.large ? '18' : '14'} />
+    )}
+  </StyledFloatingButton>
 );
 
 export const OutlineButton = (props: ButtonProps) => (
@@ -80,10 +103,9 @@ export const OutlineButton = (props: ButtonProps) => (
     ) : (
       ''
     )}
-    {props.loading &&
-      !props.icon && (
-        <Spinner color="brand.alt" size={props.large ? '18' : '14'} />
-      )}
+    {props.loading && !props.icon && (
+      <Spinner color="brand.alt" size={props.large ? '18' : '14'} />
+    )}
     <Label loading={props.loading} hasIcon={props.icon}>
       {props.children}
     </Label>
@@ -108,10 +130,9 @@ export const FauxOutlineButton = (props: ButtonProps) => (
     ) : (
       ''
     )}
-    {props.loading &&
-      !props.icon && (
-        <Spinner color="brand.alt" size={props.large ? '18' : '14'} />
-      )}
+    {props.loading && !props.icon && (
+      <Spinner color="brand.alt" size={props.large ? '18' : '14'} />
+    )}
     <Label loading={props.loading} hasIcon={props.icon}>
       {props.children}
     </Label>
@@ -131,10 +152,9 @@ export const TextButton = (props: ButtonProps) => (
     ) : (
       ''
     )}
-    {props.loading &&
-      !props.icon && (
-        <Spinner color="text.alt" size={props.large ? '18' : '14'} />
-      )}
+    {props.loading && !props.icon && (
+      <Spinner color="text.alt" size={props.large ? '18' : '14'} />
+    )}
     <Label loading={props.loading} hasIcon={props.icon}>
       {props.children}
     </Label>

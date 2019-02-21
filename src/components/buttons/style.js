@@ -27,8 +27,8 @@ const baseButton = css`
         ? '8px 12px'
         : '4px 8px'
       : props.large
-        ? '16px 32px'
-        : '12px 16px'};
+      ? '16px 32px'
+      : '12px 16px'};
 
   &:hover {
     transition: ${Transition.hover.on};
@@ -65,11 +65,11 @@ export const StyledSolidButton = styled.button`
     props.disabled || props.gradientTheme === 'none'
       ? 'none'
       : props.gradientTheme
-        ? Gradient(
-            eval(`props.theme.${props.gradientTheme}.alt`),
-            eval(`props.theme.${props.gradientTheme}.default`)
-          )
-        : Gradient(props.theme.brand.alt, props.theme.brand.default)};
+      ? Gradient(
+          eval(`props.theme.${props.gradientTheme}.alt`),
+          eval(`props.theme.${props.gradientTheme}.default`)
+        )
+      : Gradient(props.theme.brand.alt, props.theme.brand.default)};
   color: ${theme.text.reverse};
 
   &:hover {
@@ -87,6 +87,13 @@ export const StyledSolidButton = styled.button`
         ? 'none'
         : `${Shadow.low} ${hexa(props.theme.bg.reverse, 0.15)}`};
   }
+`;
+
+export const StyledFloatingButton = styled(StyledSolidButton)`
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  width: auto !important;
 `;
 
 export const StyledTextButton = styled(StyledSolidButton)`
@@ -190,8 +197,8 @@ export const StyledIconButton = styled.button`
     props.disabled
       ? props.theme.bg.inactive
       : props.color
-        ? eval(`props.theme.${props.color}`)
-        : props.theme.text.alt};
+      ? eval(`props.theme.${props.color}`)
+      : props.theme.text.alt};
   opacity: ${props => (props.opacity ? props.opacity : 1)};
 
   &:hover {
@@ -199,10 +206,10 @@ export const StyledIconButton = styled.button`
       props.disabled
         ? props.theme.bg.inactive
         : props.hoverColor
-          ? eval(`props.theme.${props.hoverColor}`)
-          : props.color
-            ? eval(`props.theme.${props.color}`)
-            : props.theme.brand.alt};
+        ? eval(`props.theme.${props.hoverColor}`)
+        : props.color
+        ? eval(`props.theme.${props.color}`)
+        : props.theme.brand.alt};
     transform: ${props => (props.disabled ? 'none' : 'scale(1.05)')};
     box-shadow: none;
     opacity: 1;

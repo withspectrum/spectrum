@@ -9,12 +9,13 @@ import { openModal } from 'src/actions/modals';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
+  JoinChannelClose,
   JoinChannelContainer,
   JoinChannelContent,
   JoinChannelTitle,
   JoinChannelSubtitle,
 } from './style';
-import { Button } from 'src/components/buttons';
+import { Button, FloatingButton } from 'src/components/buttons';
 
 type Props = {
   channel: Object,
@@ -26,6 +27,7 @@ type Props = {
 
 type State = {
   isLoading: boolean,
+  isOpen: boolean,
 };
 
 class JoinChannel extends React.Component<Props, State> {
@@ -34,6 +36,7 @@ class JoinChannel extends React.Component<Props, State> {
 
     this.state = {
       isLoading: false,
+      isOpen: true,
     };
   }
 
@@ -92,13 +95,31 @@ class JoinChannel extends React.Component<Props, State> {
       });
   };
 
+  hideUpsell = () => {
+    this.setState({
+      isOpen: false,
+    });
+  };
+
   render() {
-    const { isLoading } = this.state;
+    const { isLoading, isOpen } = this.state;
     const { channel, community, currentUser } = this.props;
+
+    if (!isOpen) {
+      return (
+        <FloatingButton
+          loading={isLoading}
+          onClick={!currentUser ? this.login : this.toggleSubscription}
+          icon={!currentUser ? 'door-enter' : 'plus'}
+          dataCy="thread-join-channel-upsell-button"
+        />
+      );
+    }
 
     if (!currentUser) {
       return (
         <JoinChannelContainer data-cy="join-channel-login-upsell">
+          <JoinChannelClose onClick={this.hideUpsell}>x</JoinChannelClose>
           <JoinChannelContent>
             <JoinChannelTitle>Log in or sign up to chat</JoinChannelTitle>
           </JoinChannelContent>
@@ -116,6 +137,7 @@ class JoinChannel extends React.Component<Props, State> {
 
     return (
       <JoinChannelContainer>
+        <JoinChannelClose onClick={this.hideUpsell}>x</JoinChannelClose>
         <JoinChannelContent>
           <JoinChannelTitle>
             Join the {channel.name} channel in the {community.name} community

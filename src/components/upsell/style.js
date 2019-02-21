@@ -329,8 +329,8 @@ export const ButtonTwitter = styled(SigninButton)`
     props.whitebg
       ? props.theme.social.twitter.default
       : props.preferred
-        ? '#fff'
-        : 'rgba(255,255,255,0.8)'};
+      ? '#fff'
+      : 'rgba(255,255,255,0.8)'};
 
   &:after {
     color: ${theme.social.twitter.default};
@@ -349,8 +349,8 @@ export const ButtonFacebook = styled(SigninButton)`
     props.whitebg
       ? props.theme.social.facebook.default
       : props.preferred
-        ? '#fff'
-        : 'rgba(255,255,255,0.8)'};
+      ? '#fff'
+      : 'rgba(255,255,255,0.8)'};
 
   &:after {
     color: ${theme.social.facebook.default};
@@ -369,8 +369,8 @@ export const ButtonGoogle = styled(SigninButton)`
     props.whitebg
       ? props.theme.social.google.default
       : props.preferred
-        ? '#fff'
-        : 'rgba(255,255,255,0.8)'};
+      ? '#fff'
+      : 'rgba(255,255,255,0.8)'};
 
   &:after {
     color: ${theme.social.google.default};
@@ -399,12 +399,17 @@ export const JoinChannelContainer = styled.div`
   margin-bottom: 12px;
   background: ${theme.bg.wash};
 
+  & button {
+    margin-right: 16px;
+  }
+
   @media (max-width: 768px) {
     flex-direction: column;
     padding: 16px;
 
     button {
       width: 100%;
+      margin-right: 0;
       margin-top: 16px;
     }
   }
@@ -428,4 +433,15 @@ export const JoinChannelSubtitle = styled.h4`
   font-size: 16px;
   font-weight: 400;
   color: ${theme.text.secondary};
+`;
+
+export const JoinChannelClose = styled.span`
+  cursor: pointer;
+  font-size: 15px;
+  position: absolute;
+  right: 25px;
+  padding: 0 8px;
+  height: 27px;
+  align-items: center;
+  display: flex;
 `;
