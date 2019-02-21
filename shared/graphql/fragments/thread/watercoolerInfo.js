@@ -14,7 +14,7 @@ import type { ChannelInfoType } from '../channel/channelInfo';
 import type { ThreadMessageConnectionType } from 'shared/graphql/fragments/thread/threadMessageConnection';
 import type { ThreadParticipantType } from './threadParticipant';
 
-export type ThreadInfoType = {
+export type WatercoolerInfoType = {
   id: string,
   messageCount: number,
   createdAt: string,
@@ -22,24 +22,17 @@ export type ThreadInfoType = {
   lastActive: ?string,
   receiveNotifications: boolean,
   currentUserLastSeen: ?string,
-  author: {
-    ...$Exact<ThreadParticipantType>,
-  },
-  channel: {
-    ...$Exact<ChannelInfoType>,
-  },
-  community: {
-    ...$Exact<CommunityInfoType>,
-  },
-  // $FlowFixMe: We need to remove `messageConnection` from ThreadMessageConnectionType. This works in the meantime.
-  ...$Exact<ThreadMessageConnectionType>,
   isPublished: boolean,
   isLocked: boolean,
   isAuthor: boolean,
   type: string,
+  community: {
+    metaData: {
+      onlineMembers: number,
+    },
+  },
   content: {
     title: string,
-    body: string,
   },
   watercooler: boolean,
   metaImage: string,
@@ -50,7 +43,7 @@ export type ThreadInfoType = {
 };
 
 export default gql`
-  fragment threadInfo on Thread {
+  fragment watercoolerInfo on Thread {
     id
     messageCount
     createdAt
@@ -58,14 +51,7 @@ export default gql`
     lastActive
     receiveNotifications
     currentUserLastSeen
-    author {
-      ...threadParticipant
-    }
-    channel {
-      ...channelInfo
-    }
     community {
-      ...communityInfo
       metaData {
         onlineMembers
       }
@@ -87,9 +73,5 @@ export default gql`
       ...messageInfo
     }
   }
-  ${threadParticipantFragment}
-  ${userInfoFragment}
-  ${channelInfoFragment}
-  ${communityInfoFragment}
   ${messageInfoFragment}
 `;
