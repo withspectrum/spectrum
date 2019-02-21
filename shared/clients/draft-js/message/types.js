@@ -10,5 +10,6 @@ export type KeysObj = {
 };
 
 export type DataObj = {
-  url: string,
+  url?: string,
+  href?: string,
 };
