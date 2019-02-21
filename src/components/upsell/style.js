@@ -392,16 +392,13 @@ export const JoinChannelContainer = styled.div`
   display: flex;
   border: 1px solid ${theme.bg.border};
   border-radius: 4px;
-  padding: 16px 24px;
+  padding: 8px;
   align-items: center;
-  flex: 1 0 auto;
-  width: calc(100% - 24px);
+  flex: 0 0 auto;
+  width: calc(100% - 16px);
   margin-bottom: 12px;
   background: ${theme.bg.wash};
-
-  & button {
-    margin-right: 16px;
-  }
+  position: relative;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -409,8 +406,6 @@ export const JoinChannelContainer = styled.div`
 
     button {
       width: 100%;
-      margin-right: 0;
-      margin-top: 16px;
     }
   }
 `;
@@ -419,8 +414,8 @@ export const JoinChannelContent = styled.div`
   display: flex;
   flex-direction: column;
   flex: auto;
-  justify-content: center;
-  padding-right: 32px;
+  align-self: flex-start;
+  width: 100%;
 `;
 
 export const JoinChannelTitle = styled.h3`
@@ -439,9 +434,10 @@ export const JoinChannelClose = styled.span`
   cursor: pointer;
   font-size: 15px;
   position: absolute;
-  right: 25px;
-  padding: 0 8px;
-  height: 27px;
+  right: 0px;
+  top: -4px;
+  padding: 8px;
   align-items: center;
   display: flex;
+  color: ${theme.text.alt};
 `;

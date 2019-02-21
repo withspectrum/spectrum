@@ -15,7 +15,7 @@ import {
   JoinChannelTitle,
   JoinChannelSubtitle,
 } from './style';
-import { Button, FloatingButton } from 'src/components/buttons';
+import { Button } from 'src/components/buttons';
 
 type Props = {
   channel: Object,
@@ -27,18 +27,10 @@ type Props = {
 
 type State = {
   isLoading: boolean,
-  isOpen: boolean,
 };
 
 class JoinChannel extends React.Component<Props, State> {
-  constructor() {
-    super();
-
-    this.state = {
-      isLoading: false,
-      isOpen: true,
-    };
-  }
+  state = { isLoading: false };
 
   login = () => this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL'));
 
@@ -95,66 +87,29 @@ class JoinChannel extends React.Component<Props, State> {
       });
   };
 
-  hideUpsell = () => {
-    this.setState({
-      isOpen: false,
-    });
-  };
-
   render() {
-    const { isLoading, isOpen } = this.state;
+    const { isLoading } = this.state;
     const { channel, community, currentUser } = this.props;
-
-    if (!isOpen) {
-      return (
-        <FloatingButton
-          loading={isLoading}
-          onClick={!currentUser ? this.login : this.toggleSubscription}
-          icon={!currentUser ? 'door-enter' : 'plus'}
-          dataCy="thread-join-channel-upsell-button"
-        />
-      );
-    }
-
-    if (!currentUser) {
-      return (
-        <JoinChannelContainer data-cy="join-channel-login-upsell">
-          <JoinChannelClose onClick={this.hideUpsell}>x</JoinChannelClose>
-          <JoinChannelContent>
-            <JoinChannelTitle>Log in or sign up to chat</JoinChannelTitle>
-          </JoinChannelContent>
-
-          <Button
-            loading={isLoading}
-            onClick={this.login}
-            dataCy="thread-join-channel-upsell-button"
-          >
-            Log in or sign up
-          </Button>
-        </JoinChannelContainer>
-      );
-    }
+    const label = !currentUser
+      ? `Join ${community.name} community`
+      : community.communityPermissions.isMember
+      ? `Join ${channel.name} channel`
+      : `Join ${community.name} community`;
 
     return (
       <JoinChannelContainer>
-        <JoinChannelClose onClick={this.hideUpsell}>x</JoinChannelClose>
         <JoinChannelContent>
-          <JoinChannelTitle>
-            Join the {channel.name} channel in the {community.name} community
-          </JoinChannelTitle>
-          <JoinChannelSubtitle>
-            Once you join this channel you’ll be able to post your replies here!
-          </JoinChannelSubtitle>
+          <Button
+            loading={isLoading}
+            color={'success.default'}
+            hoverColor={'success.default'}
+            gradientTheme={'success'}
+            onClick={currentUser ? this.toggleSubscription : this.login}
+            dataCy="thread-join-channel-upsell-button"
+          >
+            {label}
+          </Button>
         </JoinChannelContent>
-
-        <Button
-          loading={isLoading}
-          onClick={this.toggleSubscription}
-          icon="plus"
-          dataCy="thread-join-channel-upsell-button"
-        >
-          Join
-        </Button>
       </JoinChannelContainer>
     );
   }

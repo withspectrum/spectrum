@@ -89,13 +89,6 @@ export const StyledSolidButton = styled.button`
   }
 `;
 
-export const StyledFloatingButton = styled(StyledSolidButton)`
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
-  width: auto !important;
-`;
-
 export const StyledTextButton = styled(StyledSolidButton)`
   background: transparent;
   background-image: none;
