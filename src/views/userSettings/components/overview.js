@@ -6,6 +6,7 @@ import EmailSettings from './emailSettings';
 import NotificationSettings from './notificationSettings';
 import DeleteAccountForm from './deleteAccountForm';
 import DownloadDataForm from './downloadDataForm';
+import Logout from './logout';
 import { SectionsContainer, Column } from 'src/components/settingsViews/style';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
@@ -43,6 +44,8 @@ class Overview extends React.Component<Props> {
               'serviceWorker' in navigator &&
               'PushManager' in window && <NotificationSettings largeOnly />}
           </ErrorBoundary>
+
+          <Logout />
         </Column>
       </SectionsContainer>
     );
