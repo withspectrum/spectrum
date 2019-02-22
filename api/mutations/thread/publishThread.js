@@ -197,6 +197,12 @@ export default requireAuth(
 
       const checkForSpam = usersPreviousPublishedThreads.map(t => {
         if (!t) return false;
+        if (
+          usersPreviousPublishedThreads.length === 1 &&
+          usersPreviousPublishedThreads[0] &&
+          usersPreviousPublishedThreads[0].deletedAt
+        )
+          return false;
 
         const incomingTitle = thread.content.title;
         const thisTitle = t.content.title;
