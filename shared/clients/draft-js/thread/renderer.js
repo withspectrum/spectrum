@@ -103,7 +103,7 @@ const threadRenderer = {
 
       return children;
     },
-    'code-block': (children: Array<mixed>, { keys, data }: KeysObj) => {
+    'code-block': (children: Array<any>, { keys, data }: KeysObj) => {
       return children.map((child, index) => (
         <Highlight
           {...defaultProps}
@@ -132,9 +132,9 @@ const threadRenderer = {
       )),
     'header-one': (children: Array<Node>, { keys }: KeysObj) =>
       children.map((child, index) => <h1 key={keys[index]}>{child}</h1>),
-    'header-two': (children: Array<Node>) =>
+    'header-two': (children: Array<Node>, { keys }: KeysObj) =>
       children.map((child, index) => <h2 key={keys[index]}>{child}</h2>),
-    'header-three': (children: Array<Node>) =>
+    'header-three': (children: Array<Node>, { keys }: KeysObj) =>
       children.map((child, index) => <h3 key={keys[index]}>{child}</h3>),
     'unordered-list-item': (children: Array<Node>, { keys }: KeysObj) => (
       <ul key={keys.join('|')}>
