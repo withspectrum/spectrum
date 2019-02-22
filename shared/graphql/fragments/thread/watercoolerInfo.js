@@ -27,6 +27,7 @@ export type WatercoolerInfoType = {
   isAuthor: boolean,
   type: string,
   community: {
+    ...$Exact<CommunityInfoType>,
     metaData: {
       onlineMembers: number,
     },
@@ -52,6 +53,7 @@ export default gql`
     receiveNotifications
     currentUserLastSeen
     community {
+      ...communityInfo
       metaData {
         onlineMembers
       }
@@ -74,4 +76,5 @@ export default gql`
     }
   }
   ${messageInfoFragment}
+  ${communityInfoFragment}
 `;
