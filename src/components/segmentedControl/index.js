@@ -7,7 +7,7 @@ export const SegmentedControl = styled(FlexRow)`
   align-self: stretch;
   margin: 0 32px;
   margin-top: 16px;
-  border-bottom: 2px solid ${theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
   align-items: stretch;
   min-height: 48px;
   ${props => props.css};
@@ -34,8 +34,8 @@ export const Segment = styled(FlexRow)`
     props.selected ? props.theme.text.default : props.theme.text.alt};
   cursor: pointer;
   position: relative;
-  top: 2px;
-  border-bottom: 2px solid
+  top: 1px;
+  border-bottom: 1px solid
     ${props => (props.selected ? props.theme.text.default : 'transparent')};
 
   .icon {
@@ -45,7 +45,7 @@ export const Segment = styled(FlexRow)`
   ${props =>
     props.selected &&
     css`
-      border-bottom: 2px solid ${theme.bg.reverse};
+      border-bottom: 1px solid ${theme.bg.reverse};
     `};
 
   &:hover {

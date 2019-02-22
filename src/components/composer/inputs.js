@@ -9,6 +9,7 @@ import {
   ThreadDescription,
   DropImageOverlay,
   RenderWrapper,
+  InputsGrid,
 } from './style';
 import { ThreadHeading } from 'src/views/thread/style';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
@@ -43,13 +44,16 @@ export default (props: Props) => {
   } = props;
 
   return (
-    <ThreadInputs>
+    <InputsGrid>
       <SegmentedControl
         css={{
-          marginRight: 0,
-          marginLeft: 0,
-          marginTop: 0,
-          marginBottom: '24px',
+          margin: '0',
+          position: 'sticky',
+          top: '0',
+          left: '0',
+          right: '0',
+          zIndex: '9999',
+          background: '#FFF',
         }}
       >
         <Segment selected={!showPreview} onClick={() => setShowPreview(false)}>
@@ -59,52 +63,54 @@ export default (props: Props) => {
           Preview
         </Segment>
       </SegmentedControl>
-      {showPreview ? (
-        /* $FlowFixMe */
-        <RenderWrapper>
-          <ThreadHeading>{title}</ThreadHeading>
-          <ThreadRenderer
-            body={JSON.parse(processThreadContent('TEXT', body))}
-          />
-        </RenderWrapper>
-      ) : (
-        <Dropzone
-          accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
-          disableClick
-          multiple={false}
-          onDropAccepted={uploadFiles}
-        >
-          {({ getRootProps, getInputProps, isDragActive }) => (
-            <DropzoneWrapper
-              {...getRootProps({
-                refKey: 'innerRef',
-              })}
-            >
-              <input {...getInputProps()} />
-              <Textarea
-                data-cy="composer-title-input"
-                onChange={changeTitle}
-                style={ThreadTitle}
-                value={title}
-                placeholder={'What‘s on your mind?'}
-                autoFocus={autoFocus}
-              />
+      <ThreadInputs>
+        {showPreview ? (
+          /* $FlowFixMe */
+          <RenderWrapper>
+            <ThreadHeading>{title}</ThreadHeading>
+            <ThreadRenderer
+              body={JSON.parse(processThreadContent('TEXT', body))}
+            />
+          </RenderWrapper>
+        ) : (
+          <Dropzone
+            accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
+            disableClick
+            multiple={false}
+            onDropAccepted={uploadFiles}
+          >
+            {({ getRootProps, getInputProps, isDragActive }) => (
+              <DropzoneWrapper
+                {...getRootProps({
+                  refKey: 'innerRef',
+                })}
+              >
+                <input {...getInputProps()} />
+                <Textarea
+                  data-cy="composer-title-input"
+                  onChange={changeTitle}
+                  style={ThreadTitle}
+                  value={title}
+                  placeholder={'What‘s on your mind?'}
+                  autoFocus={autoFocus}
+                />
 
-              <MentionsInput
-                onChange={changeBody}
-                value={body}
-                style={ThreadDescription}
-                inputRef={props.bodyRef}
-                placeholder={'Add more thoughts here...'}
-                className={'threadComposer'}
-                dataCy="rich-text-editor"
-                onKeyDown={onKeyDown}
-              />
-              <DropImageOverlay visible={isDragActive} />
-            </DropzoneWrapper>
-          )}
-        </Dropzone>
-      )}
-    </ThreadInputs>
+                <MentionsInput
+                  onChange={changeBody}
+                  value={body}
+                  style={ThreadDescription}
+                  inputRef={props.bodyRef}
+                  placeholder={'Add more thoughts here...'}
+                  className={'threadComposer'}
+                  dataCy="rich-text-editor"
+                  onKeyDown={onKeyDown}
+                />
+                <DropImageOverlay visible={isDragActive} />
+              </DropzoneWrapper>
+            )}
+          </Dropzone>
+        )}
+      </ThreadInputs>
+    </InputsGrid>
   );
 };

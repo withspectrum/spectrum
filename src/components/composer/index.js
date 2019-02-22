@@ -656,18 +656,17 @@ class ComposerWithData extends Component<Props, State> {
               </RequiredSelector>
             )}
           </Dropdowns>
-          <ThreadInputs>
-            <Inputs
-              title={this.state.title}
-              body={this.state.body}
-              changeBody={this.changeBody}
-              changeTitle={this.changeTitle}
-              uploadFiles={this.uploadFiles}
-              autoFocus={!threadSliderIsOpen}
-              bodyRef={ref => (this.bodyEditor = ref)}
-              onKeyDown={this.handleKeyPress}
-            />
-          </ThreadInputs>
+
+          <Inputs
+            title={this.state.title}
+            body={this.state.body}
+            changeBody={this.changeBody}
+            changeTitle={this.changeTitle}
+            uploadFiles={this.uploadFiles}
+            autoFocus={!threadSliderIsOpen}
+            bodyRef={ref => (this.bodyEditor = ref)}
+            onKeyDown={this.handleKeyPress}
+          />
 
           {networkDisabled && (
             <DisabledWarning>
