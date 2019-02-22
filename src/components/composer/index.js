@@ -256,12 +256,12 @@ class ComposerWithData extends Component<Props, State> {
     this.handleIncomingProps(this.props);
     track(events.THREAD_CREATED_INITED);
     // $FlowIssue
-    document.addEventListener('keydown', this.handleKeyPress, false);
+    document.addEventListener('keydown', this.handleGlobalKeyPress, false);
   }
 
   componentWillUnmount() {
     // $FlowIssue
-    document.removeEventListener('keydown', this.handleKeyPress, false);
+    document.removeEventListener('keydown', this.handleGlobalKeyPress, false);
     const { postWasPublished } = this.state;
 
     // if a post was published, in this session, clear redux so that the next
@@ -272,7 +272,7 @@ class ComposerWithData extends Component<Props, State> {
     return this.closeComposer();
   }
 
-  handleKeyPress = e => {
+  handleGlobalKeyPress = e => {
     const esc = e.keyCode === ESC;
     const cmdEnter = e.keyCode === ENTER && e.metaKey;
 
@@ -283,7 +283,10 @@ class ComposerWithData extends Component<Props, State> {
       this.activateLastThread();
       return;
     }
+  };
 
+  handleKeyPress = e => {
+    const cmdEnter = e.keyCode === ENTER && e.metaKey;
     if (cmdEnter) return this.publishThread();
   };
 
@@ -662,6 +665,7 @@ class ComposerWithData extends Component<Props, State> {
               uploadFiles={this.uploadFiles}
               autoFocus={!threadSliderIsOpen}
               bodyRef={ref => (this.bodyEditor = ref)}
+              onKeyDown={this.handleKeyPress}
             />
           </ThreadInputs>
 

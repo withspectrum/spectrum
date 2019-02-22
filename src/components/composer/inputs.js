@@ -24,6 +24,7 @@ type Props = {
   uploadFiles: Function,
   autoFocus?: boolean,
   bodyRef?: Function,
+  onKeyDown?: Function,
 };
 
 export default (props: Props) => {
@@ -38,6 +39,7 @@ export default (props: Props) => {
     changeBody,
     changeTitle,
     bodyRef,
+    onKeyDown,
   } = props;
 
   return (
@@ -96,6 +98,7 @@ export default (props: Props) => {
                 placeholder={'Add more thoughts here...'}
                 className={'threadComposer'}
                 dataCy="rich-text-editor"
+                onKeyDown={onKeyDown}
               />
               <DropImageOverlay visible={isDragActive} />
             </DropzoneWrapper>

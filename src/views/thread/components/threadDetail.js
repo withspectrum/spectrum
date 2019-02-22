@@ -36,6 +36,7 @@ import {
 } from '../style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import getThreadLink from 'src/helpers/get-thread-link';
+import { ESC, ENTER } from 'src/helpers/keycodes';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
 
@@ -210,6 +211,11 @@ class ThreadDetailPure extends React.Component<Props, State> {
     this.props.toggleEdit();
   };
 
+  handleKeyPress = e => {
+    const cmdEnter = e.keyCode === ENTER && e.metaKey;
+    if (cmdEnter) return this.saveEdit();
+  };
+
   saveEdit = () => {
     const { dispatch, editThread, thread } = this.props;
     const { title, body } = this.state;
@@ -345,6 +351,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
               bodyRef={ref => (this.bodyEditor = ref)}
               changeBody={this.changeBody}
               changeTitle={this.changeTitle}
+              onKeyDown={this.handleKeyPress}
             />
           ) : (
             <React.Fragment>
