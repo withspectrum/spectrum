@@ -1,4 +1,5 @@
 // @flow
+const debug = require('debug')('api:mutations:edit-thread');
 import type { GraphQLContext } from '../../';
 import type { EditThreadInput } from '../../models/thread';
 import UserError from '../../utils/UserError';
@@ -84,9 +85,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     );
   }
 
-  if (input.content.body) {
-    input.content.body = processThreadContent('TEXT', input.content.body);
-  }
+  input.content.body = processThreadContent('TEXT', input.content.body || '');
 
   /*
     When threads are sent to the client, all image urls are signed and proxied
@@ -135,6 +134,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     });
   }
 
+  debug('store new body to database:', initialBody);
   const newInput = Object.assign({}, input, {
     ...input,
     content: {
