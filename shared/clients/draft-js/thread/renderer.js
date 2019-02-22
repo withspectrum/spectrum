@@ -96,41 +96,46 @@ const threadRenderer = {
     unstyled: (children: Array<Node>, { keys }: KeysObj) => {
       // If the children are text, render a paragraph
       if (hasStringElements(children)) {
-        return <Paragraph key={keys.join('|')}>{children}</Paragraph>;
+        return children.map((child, index) => (
+          <Paragraph key={keys[index]}>{child}</Paragraph>
+        ));
       }
 
       return children;
     },
-    'code-block': (children: Array<mixed>, { keys, data }: KeysObj) => (
-      <Highlight
-        {...defaultProps}
-        code={getStringElements(children).join('\n')}
-        language={Array.isArray(data) && data[0].language}
-        theme={undefined}
-      >
-        {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <Line className={className} style={style}>
-            {tokens.map((line, i) => (
-              <div {...getLineProps({ line, key: i })}>
-                {line.map((token, key) => (
-                  <span {...getTokenProps({ token, key })} />
-                ))}
-              </div>
-            ))}
-          </Line>
-        )}
-      </Highlight>
-    ),
+    'code-block': (children: Array<mixed>, { keys, data }: KeysObj) => {
+      return children.map((child, index) => (
+        <Highlight
+          {...defaultProps}
+          code={getStringElements(child).join('\n')}
+          language={Array.isArray(data) && data[0].language}
+          theme={undefined}
+          key={keys[index]}
+        >
+          {({ className, style, tokens, getLineProps, getTokenProps }) => (
+            <Line className={className} style={style}>
+              {tokens.map((line, i) => (
+                <div {...getLineProps({ line, key: i })}>
+                  {line.map((token, key) => (
+                    <span {...getTokenProps({ token, key })} />
+                  ))}
+                </div>
+              ))}
+            </Line>
+          )}
+        </Highlight>
+      ));
+    },
     blockquote: (children: Array<Node>, { keys }: KeysObj) =>
       children.map((child, index) => (
         <BlockQuote key={keys[index] || index}>{child}</BlockQuote>
       )),
-    'header-one': (children: Array<Node>) =>
-      children.map(child => <h1>{child}</h1>),
+    'header-one': (children: Array<Node>, { keys }: KeysObj) =>
+      children.map((child, index) => <h1 key={keys[index]}>{child}</h1>),
     'header-two': (children: Array<Node>) =>
-      children.map(child => <h2>{child}</h2>),
+      children.map((child, index) => <h2 key={keys[index]}>{child}</h2>),
     'header-three': (children: Array<Node>) =>
-      children.map(child => <h3>{child}</h3>),
+      children.map((child, index) => <h3 key={keys[index]}>{child}</h3>),
     'unordered-list-item': (children: Array<Node>, { keys }: KeysObj) => (
       <ul key={keys.join('|')}>
         {children.map((child, index) => (
