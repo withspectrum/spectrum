@@ -98,7 +98,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
     return this.setState({
       isEditing: false,
-      body: stateToMarkdown(convertFromRaw(parsedBody)),
+      body: stateToMarkdown(convertFromRaw(parsedBody), {
+        gfm: true,
+      }),
       title: thread.content.title,
       // We store this in the state to avoid having to JSON.parse on every render
       parsedBody,
@@ -196,7 +198,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
     this.setState({
       isEditing: !isEditing,
       // Reset body and title state
-      body: stateToMarkdown(convertFromRaw(JSON.parse(thread.content.body))),
+      body: stateToMarkdown(convertFromRaw(JSON.parse(thread.content.body)), {
+        gfm: true,
+      }),
       title: thread.content.title,
     });
 
