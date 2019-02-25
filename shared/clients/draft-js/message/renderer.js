@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import mentionsDecorator from '../mentions-decorator/index.web';
-import linksDecorator from '../links-decorator/index.web';
+import mentionsDecorator from '../mentions-decorator/index';
+import linksDecorator from '../links-decorator/index';
 import { Line, Paragraph, BlockQuote } from 'src/components/message/style';
 import type { Node } from 'react';
 import type { KeyObj, KeysObj, DataObj } from './types';

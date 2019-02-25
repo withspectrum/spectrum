@@ -1,6 +1,6 @@
 // @flow
 import { genKey, ContentBlock } from 'draft-js';
-import mentionsDecorator from '../index.web.js';
+import mentionsDecorator from '../index';
 import type { ContentBlock as ContentBlockType } from 'draft-js/lib/ContentBlock';
 
 type Mention = string;
