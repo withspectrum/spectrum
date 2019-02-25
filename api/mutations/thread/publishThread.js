@@ -346,9 +346,11 @@ export default requireAuth(
       await addMessage(
         {
           content: {
-            body: `https://spectrum.chat/${community.slug}/${
-              channel.slug
-            }/${slugg(dbThread.content.title)}~${dbThread.id}`,
+            body: `I just posted a new thread: https://spectrum.chat/${
+              community.slug
+            }/${channel.slug}/${slugg(dbThread.content.title)}~${
+              dbThread.id
+            } (automatically posted message)`,
           },
           messageType: 'text',
           threadId: community.watercoolerId,
