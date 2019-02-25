@@ -19,27 +19,35 @@ const ToastsPure = ({ toasts }): React$Element<any> => {
               cleanedMessage = message.replace('GraphQL error: ', '');
             }
             return (
-              <ErrorToast key={id} timeout={timeout}>
+              <ErrorToast data-cy={'toast-error'} key={id} timeout={timeout}>
                 {cleanedMessage}
               </ErrorToast>
             );
           }
           case 'success': {
             return (
-              <SuccessToast key={id} timeout={timeout}>
+              <SuccessToast
+                data-cy={`toast-success`}
+                key={id}
+                timeout={timeout}
+              >
                 {message}
               </SuccessToast>
             );
           }
           case 'neutral': {
             return (
-              <NeutralToast key={id} timeout={timeout}>
+              <NeutralToast
+                data-cy={`toast-neutral`}
+                key={id}
+                timeout={timeout}
+              >
                 {message}
               </NeutralToast>
             );
           }
           default: {
-            return <span />;
+            return null;
           }
         }
       })}

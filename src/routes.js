@@ -33,6 +33,7 @@ import Maintenance from 'src/components/maintenance';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import RedirectOldThreadRoute from './views/thread/redirect-old-route';
 import NewUserOnboarding from './views/newUserOnboarding';
+import QueryParamToastDispatcher from './views/queryParamToastDispatcher';
 
 /* prettier-ignore */
 const Explore = Loadable({
@@ -198,6 +199,7 @@ class Routes extends React.Component<Props> {
               <AuthViewHandler>{() => null}</AuthViewHandler>
               <ThirdPartyContext />
               <Status />
+              <Route component={QueryParamToastDispatcher} />
               <Route component={Navbar} />
 
               <Route component={ModalRoot} />

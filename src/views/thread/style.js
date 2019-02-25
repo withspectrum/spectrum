@@ -98,9 +98,13 @@ export const Input = styled(FlexRow)`
 `;
 
 export const Detail = styled(Column)`
-  flex: auto;
+  flex: 1 0 auto;
   margin: 0;
+  height: 100%;
   max-width: 100%;
+  max-height: 100%;
+  position: relative;
+  overflow-y: scroll;
 `;
 
 export const ChatInputWrapper = styled(FlexCol)`
@@ -144,13 +148,33 @@ export const ThreadWrapper = styled(FlexCol)`
   font-size: 16px;
   flex: none;
   min-width: 320px;
+
+  ${props =>
+    props.isEditing &&
+    css`
+      height: 100%;
+      max-height: 100%;
+      position: relative;
+      display: block;
+      overflow: hidden;
+      overflow-y: scroll;
+    `}
 `;
 
 export const ThreadContent = styled.div`
-  padding: ${props => (props.isEditing ? '32px 32px 32px 64px' : '32px')};
+  height: 100%;
+  padding: ${props => (props.isEditing ? '0' : '32px')};
+
+  ${props =>
+    props.isEditing &&
+    css`
+      max-height: calc(100% - 52px);
+      overflow: hidden;
+      overflow-y: scroll;
+    `}
 
   @media (max-width: 1024px) {
-    padding: ${props => (props.isEditing ? '16px 16px 16px 48px' : '16px')};
+    padding: ${props => (props.isEditing ? '0' : '16px')};
   }
 `;
 
@@ -396,7 +420,7 @@ export const ThreadDescription = {
   fontWeight: '500',
   width: '100%',
   display: 'inline-block',
-  lineHeight: '1.5',
+  lineHeight: '1.4',
   padding: '0',
   outline: 'none',
   border: '0',
@@ -603,7 +627,7 @@ export const ActionBarContainer = styled.div`
 
   @media (max-width: 768px) {
     margin: 0;
-    margin-top: 16px;
+    margin-top: 0;
     border-radius: 0;
     border-left: 0;
     border-right: 0;
@@ -618,9 +642,8 @@ export const WatercoolerActionBarContainer = styled(ActionBarContainer)`
 
 export const FixedBottomActionBarContainer = styled(ActionBarContainer)`
   z-index: 1;
-  bottom: 0;
-  position: sticky;
   width: 100%;
+  position: sticky;
 `;
 
 export const FollowButton = styled(Button)`

@@ -242,7 +242,7 @@ export const H1 = styled.h1`
   color: ${theme.text.default};
   font-weight: 900;
   font-size: 1.5rem;
-  line-height: 1.25;
+  line-height: 1.3;
   margin: 0;
   padding: 0;
 `;
@@ -252,7 +252,7 @@ export const H2 = styled.h2`
   ${fontStack};
   font-weight: 700;
   font-size: 1.25rem;
-  line-height: 1.25;
+  line-height: 1.3;
   margin: 0;
   padding: 0;
 `;
