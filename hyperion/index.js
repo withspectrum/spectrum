@@ -63,7 +63,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(
   rateLimiter({
-    max: 10,
+    max: 13,
     duration: '20s',
   })
 );
