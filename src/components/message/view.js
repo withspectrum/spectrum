@@ -11,7 +11,6 @@ import {
   QuotedParagraph,
 } from './style';
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
-import { toPlainText, toState } from 'shared/draft-utils';
 import { draftOnlyContainsEmoji } from 'shared/only-contains-emoji';
 import { Byline, Name, Username } from './style';
 import { isShort } from 'shared/clients/draft-js/utils/isShort';
@@ -44,6 +43,7 @@ export const Body = (props: BodyProps) => {
       return <Image onClick={openGallery} src={message.content.body} />;
     }
     case 'draftjs': {
+      const parsed = JSON.parse(message.content.body);
       return (
         <WrapperComponent me={me}>
           {message.parent && showParent && (
@@ -52,10 +52,10 @@ export const Body = (props: BodyProps) => {
           )}
           {emojiOnly ? (
             <Emoji>
-              {toPlainText(toState(JSON.parse(message.content.body)))}
+              {parsed && Array.isArray(parsed.blocks) && parsed.blocks[0].text}
             </Emoji>
           ) : (
-            redraft(JSON.parse(message.content.body), messageRenderer)
+            redraft(parsed, messageRenderer)
           )}
         </WrapperComponent>
       );

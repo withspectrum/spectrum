@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react';
+import { convertFromRaw } from 'draft-js';
 import { stateToMarkdown } from 'draft-js-export-markdown';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
 import { Input } from '../chatInput/style';
 import { EditorInput, EditActions } from './style';
-import { toPlainText, toState, toJSON } from 'shared/draft-utils';
 import { TextButton, Button } from 'src/components/buttons';
 import type { Dispatch } from 'redux';
 import { addToastWithTimeout } from 'src/actions/toasts';
@@ -31,7 +31,7 @@ const EditingChatInput = (props: Props) => {
     props.message.messageType === 'text'
       ? props.message.content.body
       : stateToMarkdown(
-          toState(JSON.parse(props.message.content.body)).getCurrentContent(),
+          convertFromRaw(JSON.parse(props.message.content.body)),
           {
             gfm: true,
           }
