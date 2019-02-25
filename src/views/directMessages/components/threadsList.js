@@ -106,7 +106,7 @@ class ThreadsList extends React.Component<Props, State> {
     const { currentUser, dmData, activeThreadId } = this.props;
     const { scrollElement } = this.state;
 
-    if (!dmData || !dmData.user) return null;
+    if (!dmData) return null;
 
     const dmDataExists =
       currentUser && dmData.user && dmData.user.directMessageThreadsConnection;
@@ -138,7 +138,7 @@ class ThreadsList extends React.Component<Props, State> {
 
     const uniqueThreads = deduplicateChildren(threads, 'id');
 
-    if (!dmDataExists && dmData.isLoading) {
+    if (!dmDataExists && dmData.loading) {
       return (
         <div>
           <LoadingDM />
