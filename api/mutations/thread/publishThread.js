@@ -11,6 +11,7 @@ import {
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
+import { addMessage } from '../message/addMessage';
 import { uploadImage } from '../../utils/file-storage';
 import processThreadContent from 'shared/draft-utils/process-thread-content';
 import {
@@ -342,20 +343,14 @@ export default requireAuth(
 
     // Post a new message with a link to the new thread to the watercooler thread if one exists
     if (community.watercoolerId) {
-      await storeMessage(
+      await addMessage(
         {
           content: {
-            body: JSON.stringify(
-              toJSON(
-                fromPlainText(
-                  `https://spectrum.chat/${community.slug}/${
-                    channel.slug
-                  }/${slugg(dbThread.content.title)}~${dbThread.id}`
-                )
-              )
-            ),
+            body: `https://spectrum.chat/${community.slug}/${
+              channel.slug
+            }/${slugg(dbThread.content.title)}~${dbThread.id}`,
           },
-          messageType: 'draftjs',
+          messageType: 'text',
           threadId: community.watercoolerId,
           threadType: 'story',
         },
