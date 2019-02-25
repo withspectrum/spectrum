@@ -10,7 +10,7 @@ import {
   QuoteWrapperGradient,
   QuotedParagraph,
 } from './style';
-import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
+import { messageRenderer } from 'shared/clients/draft-js/message/renderer';
 import { draftOnlyContainsEmoji } from 'shared/only-contains-emoji';
 import { Byline, Name, Username } from './style';
 import { isShort } from 'shared/clients/draft-js/utils/isShort';

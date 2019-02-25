@@ -17,7 +17,6 @@ suppress_comment=.*\\$FlowIssue
 esproposal.class_instance_fields=enable
 module.system.node.resolve_dirname=node_modules
 module.system.node.resolve_dirname=.
-module.file_ext=.web.js
 module.file_ext=.js
 module.file_ext=.jsx
 module.file_ext=.json

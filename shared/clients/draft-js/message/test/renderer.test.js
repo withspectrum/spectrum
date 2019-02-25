@@ -1,7 +1,7 @@
 // @flow
-import { messageRenderer } from '../renderer.web';
-import mentionsDecorator from '../../mentions-decorator/index.web';
-import linksDecorator from '../../links-decorator/index.web';
+import { messageRenderer } from '../renderer';
+import mentionsDecorator from '../../mentions-decorator/index';
+import linksDecorator from '../../links-decorator/index';
 
 describe('messageRenderer', () => {
   it('should render certain blocks', () => {
