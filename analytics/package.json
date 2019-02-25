@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "amplitude": "^3.5.0",
-    "aws-sdk": "^2.395.0",
+    "aws-sdk": "^2.409.0",
     "bull": "3.3.10",
     "datadog-metrics": "^0.8.1",
     "debug": "^4.1.1",
