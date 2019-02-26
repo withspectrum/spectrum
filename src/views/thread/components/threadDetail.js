@@ -356,6 +356,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
               changeBody={this.changeBody}
               changeTitle={this.changeTitle}
               onKeyDown={this.handleKeyPress}
+              isEditing={isEditing}
             />
           ) : (
             <React.Fragment>

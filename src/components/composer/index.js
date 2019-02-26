@@ -97,6 +97,7 @@ type Props = {
   isInbox: boolean,
   websocketConnection: string,
   networkOnline: boolean,
+  isEditing: boolean,
 };
 
 const LS_BODY_KEY = 'last-plaintext-thread-composer-body';
@@ -600,6 +601,7 @@ class ComposerWithData extends Component<Props, State> {
       networkOnline,
       websocketConnection,
       isSlider,
+      isEditing,
     } = this.props;
     const dataExists = user && availableCommunities && availableChannels;
 
@@ -666,6 +668,7 @@ class ComposerWithData extends Component<Props, State> {
             autoFocus={!threadSliderIsOpen}
             bodyRef={ref => (this.bodyEditor = ref)}
             onKeyDown={this.handleKeyPress}
+            isEditing={isEditing}
           />
 
           {networkDisabled && (

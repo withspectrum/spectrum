@@ -299,4 +299,10 @@ export const InputsGrid = styled.div`
   grid-area: body;
   overflow: hidden;
   overflow-y: scroll;
+
+  ${props =>
+    props.isEditing &&
+    css`
+      height: 100%;
+    `}
 `;
