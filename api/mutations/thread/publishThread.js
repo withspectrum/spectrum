@@ -343,20 +343,24 @@ export default requireAuth(
 
     // Post a new message with a link to the new thread to the watercooler thread if one exists
     if (community.watercoolerId) {
+      const identifier = user.username ? `@${user.username}` : user.name;
+      const sentence =
+        Array.isArray(usersPreviousPublishedThreads) &&
+        usersPreviousPublishedThreads.length === 0
+          ? `their first thread 👋`
+          : 'a new thread 📝';
       await addMessage(
         {
           content: {
-            body: `I just posted a new thread: https://spectrum.chat/${
+            body: `${identifier} just posted ${sentence} https://spectrum.chat/${
               community.slug
-            }/${channel.slug}/${slugg(dbThread.content.title)}~${
-              dbThread.id
-            } (automatically posted message)`,
+            }/${channel.slug}/${slugg(dbThread.content.title)}~${dbThread.id}`,
           },
           messageType: 'text',
           threadId: community.watercoolerId,
           threadType: 'story',
         },
-        user.id
+        'sam'
       );
     }
 
