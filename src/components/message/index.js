@@ -44,6 +44,8 @@ import {
 } from './style';
 import getThreadLink from 'src/helpers/get-thread-link';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
+import deleteMessage from 'shared/graphql/mutations/message/deleteMessage';
+import { deleteMessageWithToast } from 'src/components/modals/DeleteDoubleCheckModal';
 
 type Props = {|
   me: boolean,
@@ -103,6 +105,15 @@ class Message extends React.Component<Props, State> {
 
   deleteMessage = (e: any) => {
     e.stopPropagation();
+
+    if (e.shiftKey) {
+      // If Shift key is pressed, we assume confirmation
+      return deleteMessageWithToast(
+        this.props.dispatch,
+        this.props.deleteMessage,
+        this.props.message.id
+      );
+    }
 
     const message = 'Are you sure you want to delete this message?';
 
@@ -168,8 +179,8 @@ class Message extends React.Component<Props, State> {
       threadType === 'story' && thread
         ? `/${getThreadLink(thread)}?m=${selectedMessageId}`
         : threadType === 'directMessageThread'
-          ? `/messages/${threadId}?m=${selectedMessageId}`
-          : `/thread/${threadId}?m=${selectedMessageId}`;
+        ? `/messages/${threadId}?m=${selectedMessageId}`
+        : `/thread/${threadId}?m=${selectedMessageId}`;
 
     return (
       <MessagesContext.Consumer>
@@ -237,18 +248,17 @@ class Message extends React.Component<Props, State> {
                     />
                   )}
 
-                  {message.modifiedAt &&
-                    !isEditing && (
-                      <EditedIndicator
-                        data-cy="edited-message-indicator"
-                        tipLocation={'top-right'}
-                        tipText={`Edited ${convertTimestampToDate(
-                          new Date(message.modifiedAt)
-                        )}`}
-                      >
-                        Edited
-                      </EditedIndicator>
-                    )}
+                  {message.modifiedAt && !isEditing && (
+                    <EditedIndicator
+                      data-cy="edited-message-indicator"
+                      tipLocation={'top-right'}
+                      tipText={`Edited ${convertTimestampToDate(
+                        new Date(message.modifiedAt)
+                      )}`}
+                    >
+                      Edited
+                    </EditedIndicator>
+                  )}
 
                   {message.reactions.count > 0 && (
                     <Reaction
@@ -415,6 +425,7 @@ class Message extends React.Component<Props, State> {
 }
 
 export default compose(
+  deleteMessage,
   withCurrentUser,
   withRouter,
   toggleReactionMutation,
