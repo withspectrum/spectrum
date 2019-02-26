@@ -58,7 +58,7 @@ export class Login extends React.Component<Props, State> {
       this.setState({ redirectPath: searchObj.r });
     }
 
-    track(events.LOGIN_PAGE_VIEWED, { redirectPath: this.redirectPath });
+    track(events.LOGIN_PAGE_VIEWED, { redirectPath: this.state.redirectPath });
   }
 
   render() {
