@@ -299,4 +299,5 @@ export const InputsGrid = styled.div`
   grid-area: body;
   overflow: hidden;
   overflow-y: scroll;
+  height: 100%;
 `;
