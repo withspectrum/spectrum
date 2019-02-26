@@ -35,8 +35,12 @@ type Props = {
   redirectPath: ?string,
 };
 
-export class Login extends React.Component<Props> {
-  redirectPath = null;
+type State = {
+  redirectPath: ?string,
+};
+
+export class Login extends React.Component<Props, State> {
+  state = { redirectPath: null };
 
   escape = () => {
     this.props.history.push(`/${this.props.match.params.communitySlug}`);
@@ -46,12 +50,12 @@ export class Login extends React.Component<Props> {
     const { location, redirectPath } = this.props;
 
     if (redirectPath) {
-      this.redirectPath = redirectPath;
+      this.setState({ redirectPath });
     }
 
     if (location && !redirectPath) {
       const searchObj = queryString.parse(this.props.location.search);
-      this.redirectPath = searchObj.r;
+      this.setState({ redirectPath: searchObj.r });
     }
 
     track(events.LOGIN_PAGE_VIEWED, { redirectPath: this.redirectPath });
@@ -63,6 +67,7 @@ export class Login extends React.Component<Props> {
       isLoading,
       match,
     } = this.props;
+    const { redirectPath } = this.state;
 
     if (community && community.id) {
       const { brandedLogin } = community;
@@ -89,8 +94,7 @@ export class Login extends React.Component<Props> {
 
             <LoginButtonSet
               redirectPath={
-                this.redirectPath ||
-                `${CLIENT_URL}/${match.params.communitySlug}`
+                redirectPath || `${CLIENT_URL}/${match.params.communitySlug}`
               }
               signinType={'signin'}
             />
