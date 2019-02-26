@@ -26,6 +26,7 @@ type Props = {
   autoFocus?: boolean,
   bodyRef?: Function,
   onKeyDown?: Function,
+  isEditing: boolean,
 };
 
 export default (props: Props) => {
@@ -41,10 +42,11 @@ export default (props: Props) => {
     changeTitle,
     bodyRef,
     onKeyDown,
+    isEditing,
   } = props;
 
   return (
-    <InputsGrid>
+    <InputsGrid isEditing={isEditing}>
       <SegmentedControl
         css={{
           margin: '0',
