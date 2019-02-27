@@ -11852,6 +11852,11 @@ react-app-rewired@^1.2.0, react-app-rewired@^1.6.2:
     cross-spawn "^5.1.0"
     dotenv "^4.0.0"
 
+react-async-hook@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-async-hook/-/react-async-hook-1.0.0.tgz#6a8568114eada1e7d72c366acded703bf5f258d5"
+  integrity sha512-WIZKzMnkjRppGP7NmRMXxCBkt4Knixq3KeYgak/+6rQwQgvVIwzKiO3TIqP8j7UMbTlL3yzELNX3Ky5AykIXyA==
+
 react-click-outside@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/react-click-outside/-/react-click-outside-3.0.1.tgz#6e77e84d2f17afaaac26dbad743cbbf909f5e24c"
