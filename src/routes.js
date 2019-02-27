@@ -160,6 +160,8 @@ type Props = {
   currentUser: ?GetUserType,
   isLoadingCurrentUser: boolean,
   maintenanceMode?: boolean,
+  location: Object,
+  history: Object,
 };
 
 class Routes extends React.Component<Props> {
