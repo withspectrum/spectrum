@@ -270,7 +270,7 @@ class ThreadFeed extends React.Component<Props, State> {
 
       const uniqueThreads = deduplicateChildren(filteredThreads, 'id');
 
-      let viewContext;
+      let viewContext = 'inbox';
       if (activeCommunity) viewContext = 'communityInbox';
       if (activeChannel) viewContext = 'channelInbox';
 
@@ -281,29 +281,25 @@ class ThreadFeed extends React.Component<Props, State> {
         >
           <DesktopAppUpsell />
 
-          {community &&
-            community.watercooler &&
-            community.watercooler.id && (
-              <ErrorBoundary fallbackComponent={null}>
-                <InboxThread
-                  data={community.watercooler}
-                  active={selectedId === community.watercooler.id}
-                  viewContext={viewContext}
-                />
-              </ErrorBoundary>
-            )}
+          {community && community.watercooler && community.watercooler.id && (
+            <ErrorBoundary fallbackComponent={null}>
+              <InboxThread
+                data={community.watercooler}
+                active={selectedId === community.watercooler.id}
+                viewContext={viewContext}
+              />
+            </ErrorBoundary>
+          )}
 
-          {community &&
-            community.pinnedThread &&
-            community.pinnedThread.id && (
-              <ErrorBoundary fallbackComponent={null}>
-                <InboxThread
-                  data={community.pinnedThread}
-                  active={selectedId === community.pinnedThread.id}
-                  viewContext={viewContext}
-                />
-              </ErrorBoundary>
-            )}
+          {community && community.pinnedThread && community.pinnedThread.id && (
+            <ErrorBoundary fallbackComponent={null}>
+              <InboxThread
+                data={community.pinnedThread}
+                active={selectedId === community.pinnedThread.id}
+                viewContext={viewContext}
+              />
+            </ErrorBoundary>
+          )}
           <InfiniteList
             pageStart={0}
             loadMore={this.props.data.fetchMore}

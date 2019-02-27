@@ -1,8 +1,16 @@
 // @flow
+import qs from 'query-string';
 import { storeItem } from 'src/helpers/localStorage';
 import { LAST_ACTIVE_COMMUNITY_KEY } from 'src/views/dashboard/components/communityList';
+import { history } from 'src/helpers/history';
 
 export const changeActiveThread = (threadId: ?string) => {
+  let search = qs.parse(history.location.search);
+  search.t = threadId;
+  history.push({
+    ...history.location,
+    search: qs.stringify(search),
+  });
   return {
     type: 'SELECT_FEED_THREAD',
     threadId,
