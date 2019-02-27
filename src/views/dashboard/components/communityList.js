@@ -107,6 +107,7 @@ class CommunityList extends React.Component<Props> {
       <CommunityListWrapper data-cy="inbox-community-list">
         <CommunityListScroller>
           <CommunityListItem
+            data-cy="inbox-community-list-item"
             active={!activeCommunity}
             onClick={() => this.changeCommunity('')}
           >
@@ -116,6 +117,7 @@ class CommunityList extends React.Component<Props> {
           {sortedCommunities.map(c => (
             <ErrorBoundary fallbackComponent={null} key={c.id}>
               <CommunityListItem
+                data-cy="inbox-community-list-item"
                 onClick={() => this.handleOnClick(c.id)}
                 active={c.id === activeCommunity}
               >

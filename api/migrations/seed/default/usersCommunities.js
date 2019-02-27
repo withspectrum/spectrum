@@ -39,7 +39,7 @@ module.exports = [
     isBlocked: false,
     isPending: false,
     receiveNotifications: true,
-    reputation: 100,
+    reputation: 101,
   },
   {
     id: '3',

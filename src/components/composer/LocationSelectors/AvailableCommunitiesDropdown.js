@@ -55,7 +55,7 @@ const AvailableCommunitiesDropdown = (props: Props) => {
       community => community && community.id === composerCommunityId
     );
     return (
-      <CommunityPreview>
+      <CommunityPreview data-cy="composer-community-selected">
         <CommunityAvatar community={community} size={18} />
         <span style={{ marginLeft: '8px', marginRight: '16px' }}>
           {community.name}

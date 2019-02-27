@@ -89,7 +89,11 @@ class Titlebar extends Component {
           </Link>
         ) : (
           <Link to={`/new/thread${composerQuery}`}>
-            <IconButton glyph="post" color="text.reverse" />
+            <IconButton
+              dataCy="titlebar-compose-button"
+              glyph="post"
+              color="text.reverse"
+            />
           </Link>
         )}
       </TitleBar>

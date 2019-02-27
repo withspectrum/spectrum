@@ -510,7 +510,11 @@ class ComposerWithData extends Component<Props, State> {
               </DesktopLink>
             </InputHints>
             <ButtonRow>
-              <TextButton hoverColor="warn.alt" onClick={this.onCancelClick}>
+              <TextButton
+                data-cy="composer-cancel-button"
+                hoverColor="warn.alt"
+                onClick={this.onCancelClick}
+              >
                 Cancel
               </TextButton>
               <Button

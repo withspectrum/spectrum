@@ -112,7 +112,7 @@ class Header extends React.Component<Props> {
           </NarrowOnly>
           <ThreadSearch filter={filter} />
           <IconButton
-            data-e2e-id="inbox-view-post-button"
+            dataCy="inbox-view-post-button"
             glyph={'post'}
             onClick={this.triggerOpenComposer}
             tipText={'New conversation'}

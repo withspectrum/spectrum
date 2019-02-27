@@ -77,7 +77,7 @@ const ChannelSelector = (props: Props) => {
       channel => channel && channel.id === composerChannelId
     );
     return (
-      <ChannelPreview>
+      <ChannelPreview data-cy="composer-channel-selected">
         <Icon glyph={'channel'} size={32} />
         {channel.name}
       </ChannelPreview>
