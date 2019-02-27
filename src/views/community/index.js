@@ -399,7 +399,7 @@ class CommunityView extends React.Component<Props, State> {
                       communityId={community.id}
                       channelId={null}
                     />
-                    <Composer isSlider={true} activeCommunity={communitySlug} />
+                    <Composer isSlider={true} />
                   </ErrorBoundary>
                 )}
 

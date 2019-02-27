@@ -508,11 +508,7 @@ class ChannelView extends React.Component<Props, State> {
                       channelId={channel.id}
                     />
 
-                    <Composer
-                      isSlider={true}
-                      activeCommunity={communitySlug}
-                      activeChannel={channelSlug}
-                    />
+                    <Composer isSlider={true} />
                   </ErrorBoundary>
                 )}
 
