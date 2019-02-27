@@ -1,8 +1,11 @@
 // @flow
 import * as React from 'react';
+import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { changeActiveThread } from '../../../actions/dashboardFeed';
-import { openComposer } from '../../../actions/composer';
+import { withRouter } from 'react-router-dom';
+import type { History } from 'react-router';
+import { changeActiveThread } from 'src/actions/dashboardFeed';
+import { openComposer } from 'src/actions/composer';
 import {
   HeaderWrapper,
   NarrowOnly,
@@ -10,9 +13,9 @@ import {
   HeaderActiveViewSubtitle,
   ContextHeaderContainer,
 } from '../style';
-import { IconButton } from '../../../components/buttons';
+import { IconButton } from 'src/components/buttons';
 import ThreadSearch from './threadSearch';
-import Menu from '../../../components/menu';
+import Menu from 'src/components/menu';
 import CommunityList from './communityList';
 import { Link } from 'react-router-dom';
 import type { Dispatch } from 'redux';
@@ -26,9 +29,20 @@ type Props = {
   activeChannel: ?string,
   activeCommunityObject: ?Object,
   activeChannelObject: ?Object,
+  history: History,
 };
 
 class Header extends React.Component<Props> {
+  triggerOpenComposer = () => {
+    const { history, activeCommunity, activeChannel } = this.props;
+    history.push({
+      search: `${
+        activeCommunity ? `?composerCommunityId=${activeCommunity}` : ''
+      }${activeChannel ? `&composerChannelId=${activeChannel}` : ''}`,
+    });
+    return this.props.dispatch(openComposer());
+  };
+
   renderContext = () => {
     const {
       activeCommunity,
@@ -102,7 +116,7 @@ class Header extends React.Component<Props> {
           <IconButton
             data-e2e-id="inbox-view-post-button"
             glyph={'post'}
-            onClick={() => dispatch(openComposer())}
+            onClick={this.triggerOpenComposer}
             tipText={'New conversation'}
             tipLocation={'bottom-left'}
           />
@@ -112,4 +126,7 @@ class Header extends React.Component<Props> {
   }
 }
 
-export default connect()(Header);
+export default compose(
+  withRouter,
+  connect()
+)(Header);

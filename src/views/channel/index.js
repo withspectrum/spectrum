@@ -504,6 +504,8 @@ class ChannelView extends React.Component<Props, State> {
                       isInbox={false}
                       showCommunityOwnerUpsell={false}
                       isOpen={false}
+                      communityId={channel.community.id}
+                      channelId={channel.id}
                     />
 
                     <Composer

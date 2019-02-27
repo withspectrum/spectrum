@@ -396,6 +396,8 @@ class CommunityView extends React.Component<Props, State> {
                       isInbox={false}
                       showCommunityOwnerUpsell={showComposerUpsell}
                       isOpen={false}
+                      communityId={community.id}
+                      channelId={null}
                     />
                     <Composer isSlider={true} activeCommunity={communitySlug} />
                   </ErrorBoundary>
