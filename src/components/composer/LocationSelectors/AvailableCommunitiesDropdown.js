@@ -36,12 +36,14 @@ const AvailableCommunitiesDropdown = (props: Props) => {
   if (!edges || edges.length === 0)
     return <ErrorSelect>You’re not a member of any communities</ErrorSelect>;
 
-  const nodes = edges.map(({ node }) => node);
+  const nodes = edges.map(edge => edge && edge.node);
 
   const { search } = location;
   const { composerCommunityId } = querystring.parse(search);
   const communityIsValid = nodes.some(community => {
-    return community.id === id && community.id === composerCommunityId;
+    return (
+      community && community.id === id && community.id === composerCommunityId
+    );
   });
   const shouldDisableCommunitySelect =
     communityIsValid && composerCommunityId === id;
@@ -54,10 +56,12 @@ const AvailableCommunitiesDropdown = (props: Props) => {
       disabled={shouldDisableCommunitySelect}
       value={id}
     >
+      {/* $FlowIssue */}
       <React.Fragment>
         <option value={''}>Choose a community</option>
 
         {sortedNodes.map(community => {
+          if (!community) return null;
           return (
             <option key={community.id} value={community.id}>
               {community.name}

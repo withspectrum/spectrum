@@ -65,8 +65,6 @@ import ComposerLocationSelectors from './LocationSelectors';
 type State = {
   title: string,
   body: string,
-  availableCommunities: Array<any>,
-  availableChannels: Array<any>,
   isLoading: boolean,
   postWasPublished: boolean,
   preview: boolean,
@@ -343,8 +341,8 @@ class ComposerWithData extends Component<Props, State> {
     // if no title and no channel is set, don't allow a thread to be published
     if (
       !this.state.title ||
-      !this.state.selectedCommunity ||
-      !this.state.selectedChannel
+      !this.state.selectedCommunityId ||
+      !this.state.selectedChannelId
     ) {
       return;
     }
@@ -379,9 +377,9 @@ class ComposerWithData extends Component<Props, State> {
 
     // define new constants in order to construct the proper shape of the
     // input for the publishThread mutation
-    const { selectedChannel, selectedCommunity, title, body } = this.state;
-    const channelId = selectedChannel;
-    const communityId = selectedCommunity;
+    const { selectedChannelId, selectedCommunityId, title, body } = this.state;
+    const channelId = selectedChannelId;
+    const communityId = selectedCommunityId;
 
     const content = {
       title: title.trim(),

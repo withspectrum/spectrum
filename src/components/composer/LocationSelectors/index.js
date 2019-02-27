@@ -1,4 +1,5 @@
 // @flow
+// $FlowIssue
 import React, { useState, useEffect } from 'react';
 import { useAsync } from 'react-async-hook';
 import compose from 'recompose/compose';

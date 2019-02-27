@@ -1,4 +1,5 @@
 // @flow
+// $FlowIssue
 import React, { useState, useEffect } from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
@@ -52,7 +53,7 @@ const ChannelSelector = (props: Props) => {
   if (!edges || edges.length === 0)
     return <ErrorSelect>This community doesn’t have any channels</ErrorSelect>;
 
-  const nodes = edges.map(({ node }) => node);
+  const nodes = edges.map(edge => edge && edge.node);
 
   /*
     Selection should be disabled if the channelId was passed as a url query
@@ -62,6 +63,7 @@ const ChannelSelector = (props: Props) => {
   */
   const channelIsValid = nodes.some(channel => {
     return (
+      channel &&
       channel.community.id === selectedCommunityId &&
       channel.id === selectedChannelId &&
       channel.channelPermissions.isMember
@@ -80,10 +82,12 @@ const ChannelSelector = (props: Props) => {
       value={channelIsValid ? selectedChannelId : ''}
       disabled={shouldDisableChannelSelect}
     >
+      {/* $FlowIssue */}
       <React.Fragment>
         <option value={''}>Choose a channel</option>
 
         {sortedNodes.map(channel => {
+          if (!channel) return null;
           return (
             <option key={channel.id} value={channel.id}>
               {channel.name}

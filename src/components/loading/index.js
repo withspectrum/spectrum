@@ -1024,7 +1024,8 @@ export const LoadingSelect = () => (
   </ShimmerSelect>
 );
 
-export const ErrorSelect = ({ children }) => (
+type Props = { children: any };
+export const ErrorSelect = ({ children }: Props) => (
   <StyledErrorSelect>{children}</StyledErrorSelect>
 );
 

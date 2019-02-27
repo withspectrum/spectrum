@@ -1,4 +1,5 @@
 // @flow
+// $FlowIssue
 import React, { useState, useEffect } from 'react';
 import compose from 'recompose/compose';
 import {
@@ -22,6 +23,8 @@ const CommunitySelector = (props: Props) => {
   const { data, onCommunityChange, id } = props;
   const { loading, error, community } = data;
 
+  const onChange = (evt: any) => onCommunityChange(evt.target.value);
+
   if (loading) return <LoadingSelect />;
 
   /*
@@ -34,8 +37,6 @@ const CommunitySelector = (props: Props) => {
     onCommunityChange('');
     return <AvailableCommunitiesDropdown onChange={onChange} />;
   }
-
-  const onChange = (evt: any) => onCommunityChange(evt.target.value);
 
   /*
     if no community was found, the id in the query param was bad or the user
