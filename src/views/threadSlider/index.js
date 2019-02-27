@@ -38,7 +38,6 @@ class ThreadSlider extends Component {
   };
 
   closeSlider = e => {
-    console.log('go back');
     e && e.stopPropagation();
     this.props.history.goBack();
   };
