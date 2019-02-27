@@ -15,22 +15,24 @@ type Props = {
 class LastMessage extends React.Component<Props> {
   render() {
     const { thread, active, currentUser } = this.props;
+    const lastEdge =
+      thread.messageConnection.edges[thread.messageConnection.edges.length - 1];
+    if (!lastEdge) return null;
+    const lastMessage = lastEdge.node;
 
     const isCurrentUser =
-      currentUser && currentUser.id === thread.lastMessage.author.user.id;
-    const name = isCurrentUser
-      ? 'You: '
-      : `${thread.lastMessage.author.user.name}: `;
+      currentUser && currentUser.id === lastMessage.author.user.id;
+    const name = isCurrentUser ? 'You: ' : `${lastMessage.author.user.name}: `;
     const snippet =
-      thread.lastMessage.messageType === 'media'
+      lastMessage.messageType === 'media'
         ? 'Shared a photo'
-        : toPlainText(toState(JSON.parse(thread.lastMessage.content.body, 44)));
+        : toPlainText(toState(JSON.parse(lastMessage.content.body)));
 
     return (
       <LastMessageWrapper active={active}>
         <UserAvatar
           showOnlineStatus={false}
-          user={thread.lastMessage.author.user}
+          user={lastMessage.author.user}
           size={20}
         />
         <span style={{ marginLeft: '8px' }}>

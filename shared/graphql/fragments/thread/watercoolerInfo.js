@@ -32,6 +32,8 @@ export type WatercoolerInfoType = {
       onlineMembers: number,
     },
   },
+  // $FlowFixMe: We need to remove `messageConnection` from ThreadMessageConnectionType. This works in the meantime.
+  ...$Exact<ThreadMessageConnectionType>,
   content: {
     title: string,
   },
@@ -58,6 +60,18 @@ export default gql`
         onlineMembers
       }
     }
+    messageConnection(last: 1) @connection(key: "messageConnection") {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
+      edges {
+        cursor
+        node {
+          ...messageInfo
+        }
+      }
+    }
     isPublished
     isLocked
     isAuthor
@@ -70,9 +84,6 @@ export default gql`
     reactions {
       count
       hasReacted
-    }
-    lastMessage {
-      ...messageInfo
     }
   }
   ${messageInfoFragment}
