@@ -27,29 +27,19 @@ class ThreadSlider extends Component {
     document.addEventListener('keydown', this.handleKeyPress, false);
   }
 
-  componentDidUpdate(prevProps) {
-    const thisThreadId = this.props.match && this.props.match.params.threadId;
-    const prevThreadId = prev.props.match && prev.props.match.params.threadId;
-    if (thisThreadId && !prevThreadId) {
-      this.props.dispatch(openThreadSlider());
-    }
-  }
-
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyPress, false);
-    this.closeSlider();
   }
 
   handleKeyPress = e => {
-    const threadId = this.props.match && this.props.match.params.threadId;
-    if (!threadId) return;
     if (e.keyCode === ESC) {
-      this.closeSlider();
+      this.closeSlider(e);
     }
   };
 
-  closeSlider = () => {
-    this.props.dispatch(closeThreadSlider());
+  closeSlider = e => {
+    console.log('go back');
+    e && e.stopPropagation();
     this.props.history.goBack();
   };
 
@@ -64,16 +54,13 @@ class ThreadSlider extends Component {
               <div>
                 {threadId && (
                   <Container>
-                    <Link
-                      to={this.props.location.pathname}
-                      onClick={this.closeSlider}
-                    >
+                    <div onClick={this.closeSlider}>
                       <Overlay
                         entering={state === 'entering'}
                         entered={state === 'entered'}
                         duration={ANIMATION_DURATION}
                       />
-                    </Link>
+                    </div>
                     <Thread
                       entering={state === 'entering'}
                       entered={state === 'entered'}
