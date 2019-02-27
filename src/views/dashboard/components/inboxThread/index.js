@@ -6,6 +6,7 @@ import { withRouter } from 'react-router';
 import truncate from 'shared/truncate';
 import Header from './header';
 import { changeActiveThread } from 'src/actions/dashboardFeed';
+import getThreadLink from 'src/helpers/get-thread-link';
 import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo';
 import type { Dispatch } from 'redux';
 import {
@@ -76,8 +77,8 @@ class InboxThread extends React.Component<Props> {
         <InboxThreadItem active={active}>
           <InboxLinkWrapper
             to={{
-              pathname: location.pathname,
-              search: `${queryPrefix}=${thread.id}`,
+              pathname: getThreadLink(thread),
+              state: { modal: true },
             }}
             onClick={() =>
               isDesktopInbox &&

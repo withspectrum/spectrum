@@ -191,7 +191,6 @@ class EditForm extends React.Component<Props, State> {
       website,
       file,
       coverFile,
-      coverPhoto,
       communityId,
       photoSizeError,
     } = this.state;
@@ -201,7 +200,6 @@ class EditForm extends React.Component<Props, State> {
       website,
       file,
       coverFile,
-      coverPhoto,
       communityId,
     };
 

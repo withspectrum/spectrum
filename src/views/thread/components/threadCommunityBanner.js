@@ -155,11 +155,16 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
               onClick={this.joinChannel}
               loading={isLoading}
             >
-              Join channel
+              Join{' '}
+              {community.communityPermissions.isMember
+                ? 'channel'
+                : 'community'}
             </Button>
           ) : (
             <Link to={loginUrl}>
-              <Button gradientTheme={'success'}>Join Community</Button>
+              <Button color={'success'} gradientTheme={'success'}>
+                Join community
+              </Button>
             </Link>
           )}
         </CommunityHeader>

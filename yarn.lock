@@ -11493,6 +11493,11 @@ prettyjson@^1.1.2:
     colors "^1.1.2"
     minimist "^1.2.0"
 
+prism-react-renderer@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/prism-react-renderer/-/prism-react-renderer-0.1.5.tgz#1475ced5cfc7f47b7c1611e1cf649b32df2eb1f2"
+  integrity sha512-OoFeWfTYwXP9bdsJItDKK2hCnGZ78AGHism6up7wzBxBuO/0Hcn3nvA8K2LJOb5UxYjXqMOedNhHQuU7ypDdnw==
+
 prismjs@^1.15.0, prismjs@^1.6.0:
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.15.0.tgz#8801d332e472091ba8def94976c8877ad60398d9"
@@ -11772,6 +11777,11 @@ range-parser@^1.0.3, range-parser@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
   integrity sha1-9JvmtIeJTdxA3MlKMi9hEJLgDV4=
+
+ratelimiter@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/ratelimiter/-/ratelimiter-3.2.0.tgz#ae74cf9629daae4cc8900ec126ab28d3794070f1"
+  integrity sha512-zMc9X4FNmOk3RBxV95lvp13sZRtf43UJJN1FficbYiusBB09zB6gcJtK2X18dKmH+Gq0C7W6qNCHE+UJx0YwVg==
 
 raven@^2.6.4:
   version "2.6.4"

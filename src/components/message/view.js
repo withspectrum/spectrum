@@ -58,11 +58,11 @@ export const Body = (props: BodyProps) => {
       return <Image onClick={openGallery} src={message.content.body} />;
     }
     case 'draftjs': {
+      const parsed = JSON.parse(message.content.body);
       const ids = getSpectrumThreadIds(
-        toPlainText(toState(JSON.parse(message.content.body)))
+        toPlainText(toState(parsed))
       );
       const uniqueIds = ids.filter((x, i, a) => a.indexOf(x) === i);
-
       return (
         <WrapperComponent me={me}>
           {message.parent && showParent && (
@@ -71,10 +71,10 @@ export const Body = (props: BodyProps) => {
           )}
           {emojiOnly ? (
             <Emoji>
-              {toPlainText(toState(JSON.parse(message.content.body)))}
+              {parsed && Array.isArray(parsed.blocks) && parsed.blocks[0].text}
             </Emoji>
           ) : (
-            redraft(JSON.parse(message.content.body), messageRenderer)
+            redraft(parsed, messageRenderer)
           )}
           {uniqueIds && (
             <ThreadAttachmentsContainer>

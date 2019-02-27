@@ -267,7 +267,7 @@ export const ThreadDescription = {
   width: '100%',
   height: 'calc(100% - 132px)',
   display: 'inline-block',
-  lineHeight: '1.5',
+  lineHeight: '1.4',
   padding: '0 24px 24px 24px',
   outline: 'none',
   border: '0',

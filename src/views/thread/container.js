@@ -550,7 +550,7 @@ class ThreadContainer extends React.Component<Props, State> {
               />
 
               <Content innerRef={this.setMessagesContainer}>
-                <Detail type={slider ? '' : 'only'}>
+                <Detail isEditing={isEditing} is type={slider ? '' : 'only'}>
                   {this.renderPost()}
 
                   {!isEditing && (

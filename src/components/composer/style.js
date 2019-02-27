@@ -5,9 +5,12 @@ import Icon from '../icons';
 import { hexa, Shadow, FlexRow, FlexCol, zIndex, Tooltip } from '../globals';
 
 export const DropzoneWrapper = styled.div`
-  padding: 0 32px;
-  position: relative;
+  position: sticky;
   height: 100%;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom 0;
 `;
 
 export const DropImageOverlay = (props: { visible: boolean }) => {
@@ -21,10 +24,10 @@ export const DropImageOverlay = (props: { visible: boolean }) => {
 
 export const DropImageOverlayWrapper = styled.div`
   position: absolute;
-  top: 0;
-  left: 16px;
-  right: 16px;
+  top: -32px;
   bottom: 0;
+  left: -32px;
+  right: -32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -95,6 +98,8 @@ export const Container = styled(FlexCol)`
   flex: auto;
   overflow: hidden;
   height: ${props => (props.isSlider ? '100vh' : 'calc(100vh - 48px)')};
+  position: relative;
+  z-index: ${zIndex.composer};
 
   @media (max-width: 768px) {
     grid-template-rows: 48px 64px 1fr 64px;
@@ -121,7 +126,7 @@ export const ButtonRow = styled(FlexRow)`
 export const Actions = styled(FlexCol)`
   background: ${theme.bg.wash};
   border-top: 2px solid ${theme.bg.border};
-  padding: 8px 32px 8px 16px;
+  padding: 8px 16px;
   border-radius: 0;
   align-self: stretch;
   display: flex;
@@ -130,15 +135,14 @@ export const Actions = styled(FlexCol)`
   align-items: center;
   position: relative;
   grid-area: footer;
-  z-index: ${zIndex.composer};
 
   @media (max-width: 768px) {
     padding: 8px;
     z-index: ${zIndex.chrome + 1};
     border-radius: 0;
     border: 0;
-    box-shadow: none;
-    background-color: transparent;
+    background: ${theme.bg.wash};
+    border-top: 1px solid ${theme.bg.border};
 
     > ${ButtonRow} {
       width: 100%;
@@ -166,7 +170,7 @@ export const Dropdowns = styled(FlexRow)`
   grid-area: header;
   background-color: ${theme.bg.wash};
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
-  z-index: ${zIndex.composer};
+  z-index: 9999;
   grid-area: header;
 
   span {
@@ -227,15 +231,15 @@ export const OptionalSelector = styled(Selector)`
 
 export const ThreadInputs = styled(FlexCol)`
   position: relative;
-  grid-area: body;
-  overflow-y: scroll;
   padding: 32px;
-  padding-top: 8px;
-  margin-left: -32px;
-  margin-right: -32px;
-  width: calc(100% + 64px);
+  padding-bottom: 0;
   background-color: ${theme.bg.default};
   z-index: ${zIndex.composer};
+  height: 100%;
+
+  @media (max-width: 768px) {
+    padding: 24px;
+  }
 `;
 
 export const ThreadTitle = {
@@ -261,7 +265,7 @@ export const ThreadDescription = {
   fontWeight: '400',
   width: '100%',
   display: 'inline-block',
-  lineHeight: '1.5',
+  lineHeight: '1.4',
   outline: 'none',
   border: '0',
   boxShadow: 'none',
@@ -285,4 +289,20 @@ export const DisabledWarning = styled.div`
   font-weight: 500;
   background: ${props => hexa(props.theme.warn.default, 0.1)};
   color: ${theme.warn.default};
+`;
+
+export const RenderWrapper = styled.div``;
+
+export const InputsGrid = styled.div`
+  display: grid;
+  grid-template-rows: 48px 1fr;
+  grid-area: body;
+  overflow: hidden;
+  overflow-y: scroll;
+
+  ${props =>
+    props.isEditing &&
+    css`
+      height: 100%;
+    `}
 `;

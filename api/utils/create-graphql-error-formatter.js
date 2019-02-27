@@ -32,6 +32,10 @@ const errorPath = error => {
 const logGraphQLError = (req, error) => {
   debug('---GraphQL Error---');
   debug(error);
+  error &&
+    error.extensions &&
+    error.extensions.exception &&
+    debug(error.extensions.exception.stacktrace.join('\n'));
   if (req) {
     debug(collectQueries(req.body.query));
     debug('variables', JSON.stringify(req.body.variables || {}));
