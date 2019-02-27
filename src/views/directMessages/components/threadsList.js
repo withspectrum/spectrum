@@ -96,7 +96,7 @@ class ThreadsList extends React.Component<Props, State> {
   }
 
   paginate = () => {
-    const { dmData, isFetchingMore, activeThreadId } = this.props;
+    const { dmData, activeThreadId } = this.props;
     // don't accidentally paginate the threadslist in the background on mobile
     if (window && window.innerWidth < 768 && activeThreadId) return;
     return dmData.fetchMore();

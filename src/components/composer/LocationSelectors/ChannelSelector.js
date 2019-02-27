@@ -1,6 +1,5 @@
 // @flow
-// $FlowIssue
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import type { Location } from 'react-router';
@@ -9,7 +8,6 @@ import getCommunityChannelConnection, {
   type GetCommunityChannelConnectionType,
 } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import { LoadingSelect, ErrorSelect } from 'src/components/loading';
-import AvailableCommunitiesDropdown from './AvailableCommunitiesDropdown';
 import { sortChannels } from '../utils';
 import { RequiredSelector } from '../style';
 
@@ -18,7 +16,6 @@ type Props = {
   selectedChannelId: ?string,
   selectedCommunityId: ?string,
   onChannelChange: Function,
-  onInvalidChannelId: Function,
   location: Location,
   data: {
     loading: boolean,
@@ -31,7 +28,6 @@ const ChannelSelector = (props: Props) => {
   const {
     data,
     onChannelChange,
-    onInvalidChannelId,
     selectedChannelId,
     selectedCommunityId,
     location,

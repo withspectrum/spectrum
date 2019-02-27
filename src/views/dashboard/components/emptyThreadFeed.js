@@ -3,12 +3,11 @@ import React from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { changeActiveThread } from '../../../actions/dashboardFeed';
-import { openComposer } from '../../../actions/composer';
-import Icon from '../../../components/icons';
-import { Button } from '../../../components/buttons';
+import { openComposer } from 'src/actions/composer';
+import Icon from 'src/components/icons';
+import { Button } from 'src/components/buttons';
 import { NullThreadFeed, NullHeading, OutlineButton, Hint } from '../style';
-import { isMobile } from '../../../helpers/utils';
+import { isMobile } from 'src/helpers/utils';
 
 const EmptyThreadFeed = ({ dispatch }) => (
   <NullThreadFeed>

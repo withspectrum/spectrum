@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import Icon from '../icons';
-import { hexa, Shadow, FlexRow, FlexCol, zIndex, Tooltip } from '../globals';
+import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
 
 export const DropzoneWrapper = styled.div`
   position: sticky;

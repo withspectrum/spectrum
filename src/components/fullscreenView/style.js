@@ -1,6 +1,6 @@
 // @flow
 import theme from 'shared/theme';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { zIndex } from '../globals';
 
 export const FullscreenViewContainer = styled.div`

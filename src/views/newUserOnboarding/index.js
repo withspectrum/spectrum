@@ -87,7 +87,6 @@ class NewUserOnboarding extends Component<Props, State> {
   }
 
   saveUsername = () => {
-    const { community } = this.props;
     track(events.USER_ONBOARDING_SET_USERNAME);
     if (!isDesktopApp()) return this.toStep('appsUpsell');
 
@@ -116,8 +115,6 @@ class NewUserOnboarding extends Component<Props, State> {
   };
 
   appUpsellComplete = () => {
-    const { community } = this.props;
-
     // if the user signed up via a community, channel, or thread view and
     // has not yet joined that community, move them to that step in the onboarding
     return this.toStep('joinFirstCommunity');

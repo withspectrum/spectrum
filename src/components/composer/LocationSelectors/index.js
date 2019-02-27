@@ -1,13 +1,11 @@
 // @flow
 // $FlowIssue
-import React, { useState, useEffect } from 'react';
-import { useAsync } from 'react-async-hook';
+import React, { useEffect } from 'react';
 import compose from 'recompose/compose';
 import type { Location } from 'react-router';
 import { withRouter } from 'react-router-dom';
 import querystring from 'query-string';
-import { Dropdowns, RequiredSelector, DropdownsLabel } from '../style';
-import { getCommunityByIdQuery } from 'shared/graphql/queries/community/getCommunity';
+import { Dropdowns, DropdownsLabel } from '../style';
 import CommunitySelector from './CommunitySelector';
 import ChannelSelector from './ChannelSelector';
 
@@ -25,6 +23,7 @@ const ComposerLocationSelectors = (props: Props) => {
     selectedChannelId,
     onCommunitySelectionChanged,
     onChannelSelectionChanged,
+    location,
   } = props;
 
   const setStateFromQueryParams = () => {
@@ -68,7 +67,6 @@ const ComposerLocationSelectors = (props: Props) => {
         id={selectedCommunityId}
         selectedChannelId={selectedChannelId}
         selectedCommunityId={selectedCommunityId}
-        onInvalidChannelId={onCommunitySelectionChanged}
         onChannelChange={onChannelSelectionChanged}
       />
     </Dropdowns>

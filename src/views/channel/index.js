@@ -265,7 +265,7 @@ class ChannelView extends React.Component<Props, State> {
       hasError,
     } = this.props;
     const { selectedView } = this.state;
-    const { communitySlug, channelSlug } = match.params;
+    const { communitySlug } = match.params;
     const isLoggedIn = currentUser;
 
     if (channel && channel.id) {

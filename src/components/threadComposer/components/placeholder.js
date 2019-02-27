@@ -31,7 +31,7 @@ class ComposerPlaceholder extends React.Component<Props> {
   };
 
   render() {
-    const { isOpen, showCommunityOwnerUpsell, isInbox, dispatch } = this.props;
+    const { isOpen, showCommunityOwnerUpsell, isInbox } = this.props;
 
     return (
       <Container

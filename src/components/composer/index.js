@@ -1,28 +1,14 @@
 // @flow
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
-import Textarea from 'react-textarea-autosize';
-import MentionsInput from 'src/components/mentionsInput';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import debounce from 'debounce';
 import queryString from 'query-string';
-import Dropzone from 'react-dropzone';
 import Icon from '../icons';
-import processThreadContent from 'shared/draft-utils/process-thread-content';
-import { ThreadHeading } from 'src/views/thread/style';
-import { SegmentedControl, Segment } from 'src/components/segmentedControl';
-import ThreadRenderer from '../threadRenderer';
 import { closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
-import {
-  toPlainText,
-  fromPlainText,
-  toJSON,
-  toState,
-  isAndroid,
-} from 'shared/draft-utils';
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
@@ -31,28 +17,18 @@ import uploadImage, {
   type UploadImageType,
 } from 'shared/graphql/mutations/uploadImage';
 import { TextButton, Button } from '../buttons';
-import { FlexRow } from 'src/components/globals';
 import {
   MediaLabel,
   MediaInput,
 } from 'src/components/chatInput/components/style';
-import { MarkdownHint } from 'src/components/markdownHint';
-import { LoadingSelect } from '../loading';
 import Titlebar from '../../views/titlebar';
 import type { Dispatch } from 'redux';
 import {
   ComposerSlider,
   Overlay,
   Container,
-  ThreadDescription,
-  ThreadTitle,
-  ThreadInputs,
   Actions,
-  Dropdowns,
-  RequiredSelector,
   DisabledWarning,
-  DropImageOverlay,
-  DropzoneWrapper,
   InputHints,
   DesktopLink,
   ButtonRow,
@@ -108,8 +84,6 @@ class ComposerWithData extends Component<Props, State> {
 
   constructor(props) {
     super(props);
-
-    let { storedBody, storedTitle } = this.getTitleAndBody();
 
     this.state = {
       title: '',
@@ -191,7 +165,6 @@ class ComposerWithData extends Component<Props, State> {
 
   handleGlobalKeyPress = e => {
     const esc = e.keyCode === ESC;
-    const cmdEnter = e.keyCode === ENTER && e.metaKey;
 
     if (esc) {
       // Community/channel view
@@ -458,13 +431,11 @@ class ComposerWithData extends Component<Props, State> {
     const {
       title,
       isLoading,
-      preview,
       selectedChannelId,
       selectedCommunityId,
     } = this.state;
 
     const {
-      data: { user },
       threadSliderIsOpen,
       isOpen,
       networkOnline,

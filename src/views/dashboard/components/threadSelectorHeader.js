@@ -4,7 +4,6 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { History } from 'react-router';
-import { changeActiveThread } from 'src/actions/dashboardFeed';
 import { openComposer } from 'src/actions/composer';
 import {
   HeaderWrapper,
@@ -89,7 +88,6 @@ class Header extends React.Component<Props> {
 
   render() {
     const {
-      dispatch,
       filter,
       communities,
       user,
