@@ -76,6 +76,31 @@ const ChannelSelector = (props: Props) => {
     const channel = nodes.find(
       channel => channel && channel.id === composerChannelId
     );
+    if (!channel) {
+      return (
+        <RequiredSelector
+          data-cy="composer-channel-selector"
+          onChange={onChange}
+          value={channelIsValid ? selectedChannelId : ''}
+          disabled={shouldDisableChannelSelect}
+        >
+          {/* $FlowIssue */}
+          <React.Fragment>
+            <option value={''}>Choose a channel</option>
+
+            {sortedNodes.map(channel => {
+              if (!channel) return null;
+              return (
+                <option key={channel.id} value={channel.id}>
+                  {channel.name}
+                </option>
+              );
+            })}
+          </React.Fragment>
+        </RequiredSelector>
+      );
+    }
+
     return (
       <ChannelPreview data-cy="composer-channel-selected">
         <Icon glyph={'channel'} size={32} />

@@ -54,6 +54,31 @@ const AvailableCommunitiesDropdown = (props: Props) => {
     const community = nodes.find(
       community => community && community.id === composerCommunityId
     );
+    if (!community) {
+      return (
+        <RequiredSelector
+          data-cy="composer-community-selector"
+          onChange={onChange}
+          disabled={shouldDisableCommunitySelect}
+          value={id}
+        >
+          {/* $FlowIssue */}
+          <React.Fragment>
+            <option value={''}>Choose a community</option>
+
+            {sortedNodes.map(community => {
+              if (!community) return null;
+              return (
+                <option key={community.id} value={community.id}>
+                  {community.name}
+                </option>
+              );
+            })}
+          </React.Fragment>
+        </RequiredSelector>
+      );
+    }
+
     return (
       <CommunityPreview data-cy="composer-community-selected">
         <CommunityAvatar community={community} size={18} />
