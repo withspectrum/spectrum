@@ -15,8 +15,7 @@ type Props = {
 class LastMessage extends React.Component<Props> {
   render() {
     const { thread, active, currentUser } = this.props;
-    const lastEdge =
-      thread.messageConnection.edges[thread.messageConnection.edges.length - 1];
+    const lastEdge = thread.messageConnection.edges[0];
     if (!lastEdge) return null;
     const lastMessage = lastEdge.node;
 
