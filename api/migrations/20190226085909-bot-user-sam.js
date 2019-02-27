@@ -3,8 +3,7 @@ exports.up = function(r, conn) {
     .table('users')
     .insert({
       id: 'sam',
-      description:
-        "Spectrum Automated Moderator (SAM) is Spectrum's built-in bot.",
+      description: "Spectrum's automated bot.",
       createdAt: new Date(),
       email: null,
       providerId: null,
@@ -15,7 +14,7 @@ exports.up = function(r, conn) {
       isOnline: true,
       lastSeen: new Date(),
       modifiedAt: new Date(),
-      name: 'Sam',
+      name: 'Spectrum Bot',
       termsLastAcceptedAt: new Date(),
       username: 'spectrumbot',
       website: 'https://spectrum.chat',
