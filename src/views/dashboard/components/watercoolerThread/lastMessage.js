@@ -2,6 +2,7 @@
 import * as React from 'react';
 import type { WatercoolerInfoType } from 'shared/graphql/fragments/thread/watercoolerInfo';
 import { LastMessageWrapper } from './style';
+import { sortByDate } from 'src/helpers/utils';
 import truncate from 'shared/truncate';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { UserAvatar } from 'src/components/avatar';
@@ -15,9 +16,17 @@ type Props = {
 class LastMessage extends React.Component<Props> {
   render() {
     const { thread, active, currentUser } = this.props;
-    const lastEdge = thread.messageConnection.edges[0];
-    if (!lastEdge) return null;
-    const lastMessage = lastEdge.node;
+    if (
+      !thread.messageConnection ||
+      thread.messageConnection.edges.length === 0
+    )
+      return null;
+
+    const lastMessage = sortByDate(
+      thread.messageConnection.edges.map(({ node }) => node),
+      'timestamp',
+      'desc'
+    )[0];
 
     const isCurrentUser =
       currentUser && currentUser.id === lastMessage.author.user.id;
