@@ -8,8 +8,9 @@ import getCommunityChannelConnection, {
   type GetCommunityChannelConnectionType,
 } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import { LoadingSelect, ErrorSelect } from 'src/components/loading';
+import Icon from 'src/components/icons';
 import { sortChannels } from '../utils';
-import { RequiredSelector } from '../style';
+import { RequiredSelector, ChannelPreview } from '../style';
 
 type Props = {
   id: string,
@@ -70,6 +71,18 @@ const ChannelSelector = (props: Props) => {
     channelIsValid && composerChannelId === selectedChannelId;
 
   const sortedNodes = sortChannels(nodes);
+
+  if (shouldDisableChannelSelect) {
+    const channel = nodes.find(
+      channel => channel && channel.id === composerChannelId
+    );
+    return (
+      <ChannelPreview>
+        <Icon glyph={'channel'} size={32} />
+        {channel.name}
+      </ChannelPreview>
+    );
+  }
 
   return (
     <RequiredSelector

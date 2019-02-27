@@ -194,6 +194,21 @@ export const DropdownsLabel = styled.span`
   }
 `;
 
+export const CommunityPreview = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${theme.text.secondary};
+  margin-left: 16px;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  position: relative;
+`;
+
+export const ChannelPreview = styled(CommunityPreview)`
+  margin-left: 0;
+`;
+
 const Selector = styled.select`
   max-width: 196px;
   display: inline-block;

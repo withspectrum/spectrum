@@ -8,9 +8,10 @@ import {
   getCurrentUserCommunityConnection,
   type GetUserCommunityConnectionType,
 } from 'shared/graphql/queries/user/getUserCommunityConnection';
+import { CommunityAvatar } from 'src/components/avatar';
 import { LoadingSelect, ErrorSelect } from 'src/components/loading';
 import { sortCommunities } from '../utils';
-import { RequiredSelector } from '../style';
+import { RequiredSelector, CommunityPreview } from '../style';
 
 type Props = {
   onChange: Function,
@@ -48,6 +49,20 @@ const AvailableCommunitiesDropdown = (props: Props) => {
   const shouldDisableCommunitySelect =
     communityIsValid && composerCommunityId === id;
   const sortedNodes = sortCommunities(nodes);
+
+  if (shouldDisableCommunitySelect) {
+    const community = nodes.find(
+      community => community && community.id === composerCommunityId
+    );
+    return (
+      <CommunityPreview>
+        <CommunityAvatar community={community} size={18} />
+        <span style={{ marginLeft: '8px', marginRight: '16px' }}>
+          {community.name}
+        </span>
+      </CommunityPreview>
+    );
+  }
 
   return (
     <RequiredSelector
