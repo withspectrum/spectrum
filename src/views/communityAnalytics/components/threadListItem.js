@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
+import getThreadLink from 'src/shared/get-thread-link';
 import {
   StyledThreadListItem,
   ThreadListItemTitle,
@@ -29,8 +30,8 @@ class ThreadListItem extends React.Component<Props> {
       <StyledThreadListItem>
         <Link
           to={{
-            pathname: window.location.pathname,
-            search: `?thread=${id}`,
+            pathname: getThreadLink(this.props.thread),
+            state: { modal: true },
           }}
         >
           <ThreadListItemTitle>{title}</ThreadListItemTitle>
