@@ -8,7 +8,6 @@ import gallery from './gallery';
 import newUserOnboarding from './newUserOnboarding';
 import newActivityIndicator from './newActivityIndicator';
 import dashboardFeed from './dashboardFeed';
-import threadSlider from './threadSlider';
 import notifications from './notifications';
 import message from './message';
 import connectionStatus from './connectionStatus';
@@ -23,7 +22,6 @@ const getReducers = () => {
     newUserOnboarding,
     newActivityIndicator,
     dashboardFeed,
-    threadSlider,
     notifications,
     connectionStatus,
     message,
