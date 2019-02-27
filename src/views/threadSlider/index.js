@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import {
+  openThreadSlider,
+  closeThreadSlider,
+} from '../../actions/threadSlider';
 import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import Transition from 'react-transition-group/Transition';
