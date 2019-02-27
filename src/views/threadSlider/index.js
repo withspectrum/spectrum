@@ -25,10 +25,12 @@ const ANIMATION_DURATION = 50;
 class ThreadSlider extends Component {
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress, false);
+    this.props.dispatch(openThreadSlider());
   }
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyPress, false);
+    this.props.dispatch(closeThreadSlider());
   }
 
   handleKeyPress = e => {
@@ -40,6 +42,7 @@ class ThreadSlider extends Component {
   closeSlider = e => {
     e && e.stopPropagation();
     this.props.history.goBack();
+    this.props.dispatch(closeThreadSlider());
   };
 
   render() {
@@ -48,41 +51,25 @@ class ThreadSlider extends Component {
     return (
       <ErrorBoundary>
         <div>
-          <Transition in={!!threadId} timeout={ANIMATION_DURATION}>
-            {state => (
-              <div>
-                {threadId && (
-                  <Container>
-                    <div onClick={this.closeSlider}>
-                      <Overlay
-                        entering={state === 'entering'}
-                        entered={state === 'entered'}
-                        duration={ANIMATION_DURATION}
-                      />
-                    </div>
-                    <Thread
-                      entering={state === 'entering'}
-                      entered={state === 'entered'}
-                      duration={ANIMATION_DURATION}
-                    >
-                      <Close onClick={this.closeSlider}>
-                        <CloseLabel>Close</CloseLabel>
-                        <CloseButton>
-                          <Icon glyph="view-forward" size={24} />
-                        </CloseButton>
-                      </Close>
+          <Container>
+            <div onClick={this.closeSlider}>
+              <Overlay entered />
+            </div>
+            <Thread entered>
+              <Close onClick={this.closeSlider}>
+                <CloseLabel>Close</CloseLabel>
+                <CloseButton>
+                  <Icon glyph="view-forward" size={24} />
+                </CloseButton>
+              </Close>
 
-                      <SliderThreadView
-                        threadId={threadId}
-                        threadViewContext={'slider'}
-                        slider
-                      />
-                    </Thread>
-                  </Container>
-                )}
-              </div>
-            )}
-          </Transition>
+              <SliderThreadView
+                threadId={threadId}
+                threadViewContext={'slider'}
+                slider
+              />
+            </Thread>
+          </Container>
         </div>
       </ErrorBoundary>
     );
