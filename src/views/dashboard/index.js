@@ -127,7 +127,13 @@ class Dashboard extends React.Component<Props, State> {
         <DashboardWrapper data-cy="inbox-view" id="main">
           <Composer isSlider={true} activeCommunity={activeCommunity} />
           <Head title={title} description={description} />
-          <Titlebar hasChildren hasSearch filter={searchFilter}>
+          <Titlebar
+            activeCommunityId={activeCommunity}
+            activeChannelId={activeChannel}
+            hasChildren
+            hasSearch
+            filter={searchFilter}
+          >
             <Menu darkContext hasTabBar>
               <ErrorBoundary>
                 <CommunityList

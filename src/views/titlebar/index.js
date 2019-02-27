@@ -58,14 +58,12 @@ class Titlebar extends Component {
       messageComposer,
       activeCommunitySlug,
       activeChannelSlug,
+      activeCommunityId,
+      activeChannelId,
     } = this.props;
-    const query =
-      activeChannelSlug || activeCommunitySlug
-        ? `?${queryString.stringify({
-            activeChannelSlug,
-            activeCommunitySlug,
-          })}`
-        : '';
+    const composerQuery = `${
+      activeCommunityId ? `?composerCommunityId=${activeCommunityId}` : ''
+    }${activeChannelId ? `&composerChannelId=${activeChannelId}` : ''}`;
     return (
       <TitleBar>
         {provideBack ? (
@@ -90,7 +88,7 @@ class Titlebar extends Component {
             <IconButton glyph="message-new" color="text.reverse" />
           </Link>
         ) : (
-          <Link to={`/new/thread${query}`}>
+          <Link to={`/new/thread${composerQuery}`}>
             <IconButton glyph="post" color="text.reverse" />
           </Link>
         )}

@@ -388,6 +388,8 @@ class ChannelView extends React.Component<Props, State> {
             noComposer={!isMember}
             activeCommunitySlug={communitySlug}
             activeChannelSlug={channel.slug}
+            activeCommunityId={channel.community.id}
+            activeChannelId={channel.id}
           />
           <Grid id="main">
             <CoverPhoto src={community.coverPhoto} />
