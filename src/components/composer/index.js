@@ -57,25 +57,21 @@ import {
   DesktopLink,
   ButtonRow,
 } from './style';
-import {
-  sortCommunities,
-  sortChannels,
-  getDefaultActiveChannel,
-} from './utils';
 import { events, track } from 'src/helpers/analytics';
 import { ESC, ENTER } from 'src/helpers/keycodes';
 import Inputs from './inputs';
+import ComposerLocationSelectors from './LocationSelectors';
 
 type State = {
   title: string,
   body: string,
   availableCommunities: Array<any>,
   availableChannels: Array<any>,
-  activeCommunity: ?string,
-  activeChannel: ?string,
   isLoading: boolean,
   postWasPublished: boolean,
   preview: boolean,
+  selectedChannelId: ?string,
+  selectedCommunityId: ?string,
 };
 
 type Props = {
@@ -91,8 +87,6 @@ type Props = {
   publishThread: Function,
   history: Object,
   location: Object,
-  activeCommunity?: string,
-  activeChannel?: string,
   threadSliderIsOpen?: boolean,
   isInbox: boolean,
   websocketConnection: string,
@@ -119,20 +113,14 @@ class ComposerWithData extends Component<Props, State> {
 
     let { storedBody, storedTitle } = this.getTitleAndBody();
 
-    const { activeCommunitySlug, activeChannelSlug } = queryString.parse(
-      props.location.search
-    );
-
     this.state = {
       title: '',
       body: '',
-      availableCommunities: [],
-      availableChannels: [],
-      activeCommunity: activeCommunitySlug || '',
-      activeChannel: activeChannelSlug || '',
       isLoading: false,
       postWasPublished: false,
       preview: false,
+      selectedChannelId: '',
+      selectedCommunityId: '',
     };
 
     this.persistBodyToLocalStorageWithDebounce = debounce(
@@ -176,75 +164,6 @@ class ComposerWithData extends Component<Props, State> {
     };
   };
 
-  handleIncomingProps = props => {
-    const { user } = props.data;
-    // if the user doesn't exist, bust outta here
-    if (!user || !user.id || !user.communityConnection) return;
-
-    const hasCommunities =
-      user.communityConnection.edges &&
-      user.communityConnection.edges.length > 0;
-    const hasChannels =
-      user.channelConnection.edges && user.channelConnection.edges.length > 0;
-
-    if (!hasCommunities || !hasChannels) {
-      return this.setState({
-        availableCommunities: [],
-        availableChannels: [],
-        activeCommunity: null,
-        activeChannel: null,
-      });
-    }
-
-    const communities = sortCommunities(
-      user.communityConnection.edges
-        // $FlowFixMe
-        .map(edge => edge && edge.node)
-        .filter(Boolean)
-    );
-
-    const channels = sortChannels(
-      user.channelConnection.edges
-        // $FlowFixMe
-        .map(edge => edge && edge.node)
-        .filter(channel => channel && !channel.isArchived)
-        .filter(Boolean)
-    );
-
-    const activeSlug = props.activeCommunity || this.state.activeCommunity;
-    let community;
-
-    // User is viewing a community/channel? Use the community from the URL
-    if (activeSlug) {
-      community = communities.find(
-        community => community.slug.toLowerCase() === activeSlug.toLowerCase()
-      );
-    } else {
-      community = communities && communities.length > 0 ? communities[0] : null;
-    }
-
-    if (!community || !community.id) return props.data.refetch();
-
-    // get the channels for the active community
-    const communityChannels = channels
-      .filter(
-        channel => channel && community && channel.community.id === community.id
-      )
-      .filter(channel => channel && !channel.isArchived);
-
-    const activeChannel = getDefaultActiveChannel(
-      communityChannels,
-      props.activeChannel
-    );
-
-    this.setState({
-      availableCommunities: communities,
-      availableChannels: channels,
-      activeCommunity: community ? community.id : null,
-      activeChannel: activeChannel ? activeChannel.id : null,
-    });
-  };
-
   componentWillMount() {
     let { storedBody, storedTitle } = this.getTitleAndBody();
     this.setState({
@@ -254,7 +173,6 @@ class ComposerWithData extends Component<Props, State> {
   }
 
   componentDidMount() {
-    this.handleIncomingProps(this.props);
     track(events.THREAD_CREATED_INITED);
     // $FlowIssue
     document.addEventListener('keydown', this.handleGlobalKeyPress, false);
@@ -320,33 +238,6 @@ class ComposerWithData extends Component<Props, State> {
     });
   };
 
-  componentWillUpdate(next) {
-    const currChannelLength =
-      this.props.data.user &&
-      this.props.data.user.channelConnection &&
-      this.props.data.user.channelConnection.edges.length;
-    const nextChannelLength =
-      next.data.user &&
-      next.data.user.channelConnection &&
-      next.data.user.channelConnection.edges.length;
-    const currCommunityLength =
-      this.props.data.user &&
-      this.props.data.user.communityConnection &&
-      this.props.data.user.communityConnection.edges.length;
-    const nextCommunityLength =
-      next.data.user &&
-      next.data.user.communityConnection &&
-      next.data.user.communityConnection.edges.length;
-
-    if (
-      (this.props.data.loading && !next.data.loading) ||
-      currChannelLength !== nextChannelLength ||
-      currCommunityLength !== nextCommunityLength
-    ) {
-      this.handleIncomingProps(next);
-    }
-  }
-
   closeComposer = (clear?: string) => {
     this.persistBodyToLocalStorage(this.state.body);
     this.persistTitleToLocalStorage(this.state.title);
@@ -401,36 +292,6 @@ class ComposerWithData extends Component<Props, State> {
     this.handleTitleBodyChange('body');
   };
 
-  setActiveCommunity = e => {
-    const newActiveCommunity = e.target.value;
-    const activeCommunityChannels = this.state.availableChannels.filter(
-      channel => channel.community.id === newActiveCommunity
-    );
-    const newActiveCommunityData = this.state.availableCommunities.find(
-      community => community.id === newActiveCommunity
-    );
-    const isActiveCommunity =
-      newActiveCommunityData &&
-      this.props.activeCommunity === newActiveCommunityData.slug;
-    const newActiveChannel = getDefaultActiveChannel(
-      activeCommunityChannels,
-      isActiveCommunity ? this.props.activeChannel : ''
-    );
-
-    this.setState({
-      activeCommunity: newActiveCommunity,
-      activeChannel: newActiveChannel && newActiveChannel.id,
-    });
-  };
-
-  setActiveChannel = e => {
-    const activeChannel = e.target.value;
-
-    this.setState({
-      activeChannel,
-    });
-  };
-
   uploadFile = evt => {
     this.uploadFiles(evt.target.files);
   };
@@ -480,7 +341,11 @@ class ComposerWithData extends Component<Props, State> {
 
   publishThread = () => {
     // if no title and no channel is set, don't allow a thread to be published
-    if (!this.state.title || !this.state.activeChannel) {
+    if (
+      !this.state.title ||
+      !this.state.selectedCommunity ||
+      !this.state.selectedChannel
+    ) {
       return;
     }
 
@@ -514,9 +379,9 @@ class ComposerWithData extends Component<Props, State> {
 
     // define new constants in order to construct the proper shape of the
     // input for the publishThread mutation
-    const { activeChannel, activeCommunity, title, body } = this.state;
-    const channelId = activeChannel;
-    const communityId = activeCommunity;
+    const { selectedChannel, selectedCommunity, title, body } = this.state;
+    const channelId = selectedChannel;
+    const communityId = selectedCommunity;
 
     const content = {
       title: title.trim(),
@@ -583,15 +448,21 @@ class ComposerWithData extends Component<Props, State> {
       });
   };
 
+  setSelectedCommunity = (id: string) => {
+    return this.setState({ selectedCommunityId: id });
+  };
+
+  setSelectedChannel = (id: string) => {
+    return this.setState({ selectedChannelId: id });
+  };
+
   render() {
     const {
       title,
-      availableChannels,
-      availableCommunities,
-      activeCommunity,
-      activeChannel,
       isLoading,
       preview,
+      selectedChannelId,
+      selectedCommunityId,
     } = this.state;
 
     const {
@@ -603,7 +474,6 @@ class ComposerWithData extends Component<Props, State> {
       isSlider,
       isEditing,
     } = this.props;
-    const dataExists = user && availableCommunities && availableChannels;
 
     const networkDisabled =
       !networkOnline ||
@@ -619,45 +489,13 @@ class ComposerWithData extends Component<Props, State> {
         />
         <Container isSlider={isSlider}>
           <Titlebar provideBack title={'New conversation'} noComposer />
-          <Dropdowns>
-            <span>To:</span>
-            {!dataExists ? (
-              <LoadingSelect />
-            ) : (
-              <RequiredSelector
-                data-cy="composer-community-selector"
-                onChange={this.setActiveCommunity}
-                value={activeCommunity}
-              >
-                {availableCommunities.map(community => {
-                  return (
-                    <option key={community.id} value={community.id}>
-                      {community.name}
-                    </option>
-                  );
-                })}
-              </RequiredSelector>
-            )}
-            {!dataExists ? (
-              <LoadingSelect />
-            ) : (
-              <RequiredSelector
-                data-cy="composer-channel-selector"
-                onChange={this.setActiveChannel}
-                value={activeChannel}
-              >
-                {availableChannels
-                  .filter(channel => channel.community.id === activeCommunity)
-                  .map(channel => {
-                    return (
-                      <option key={channel.id} value={channel.id}>
-                        {channel.name}
-                      </option>
-                    );
-                  })}
-              </RequiredSelector>
-            )}
-          </Dropdowns>
+
+          <ComposerLocationSelectors
+            selectedChannelId={selectedChannelId}
+            selectedCommunityId={selectedCommunityId}
+            onCommunitySelectionChanged={this.setSelectedCommunity}
+            onChannelSelectionChanged={this.setSelectedChannel}
+          />
 
           <Inputs
             title={this.state.title}
@@ -714,7 +552,9 @@ class ComposerWithData extends Component<Props, State> {
                   !title ||
                   title.trim().length === 0 ||
                   isLoading ||
-                  networkDisabled
+                  networkDisabled ||
+                  !selectedChannelId ||
+                  !selectedCommunityId
                 }
                 color={'brand'}
               >
