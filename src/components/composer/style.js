@@ -173,24 +173,24 @@ export const Dropdowns = styled(FlexRow)`
   z-index: 9999;
   grid-area: header;
 
-  span {
-    font-size: 14px;
-    font-weight: 500;
-    color: ${theme.text.alt};
-    margin-left: 16px;
-    line-height: 1;
-    vertical-align: middle;
-    position: relative;
-    top: 1px;
-
-    @media (max-width: 768px) {
-      display: none;
-    }
-  }
-
   @media (max-width: 768px) {
     width: 100%;
     justify-content: flex-start;
+  }
+`;
+
+export const DropdownsLabel = styled.span`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${theme.text.secondary};
+  margin-left: 16px;
+  line-height: 1;
+  vertical-align: middle;
+  position: relative;
+  top: 1px;
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
@@ -217,10 +217,16 @@ const Selector = styled.select`
 
 export const RequiredSelector = styled(Selector)`
   padding: 8px 12px;
+  max-height: 38px;
+  display: flex;
+  align-items: center;
+  line-height: 1.2;
   border: 2px solid ${theme.bg.border};
   border-radius: 8px;
-  color: ${theme.text.default};
-  background-color: ${theme.bg.default};
+  color: ${props =>
+    props.disabled ? theme.text.secondary : theme.text.default};
+  background-color: ${props =>
+    props.disabled ? theme.bg.wash : theme.bg.default};
 `;
 
 export const OptionalSelector = styled(Selector)`
