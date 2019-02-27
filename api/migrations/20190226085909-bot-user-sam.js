@@ -18,6 +18,7 @@ exports.up = function(r, conn) {
       termsLastAcceptedAt: new Date(),
       username: 'spectrumbot',
       website: 'https://spectrum.chat',
+      profilePhoto: '/default_images/sam.png',
     })
     .run(conn);
 };
