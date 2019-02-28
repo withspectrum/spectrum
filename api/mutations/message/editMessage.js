@@ -1,6 +1,5 @@
 // @flow
 import type { GraphQLContext } from '../../';
-import { convertToRaw } from 'draft-js';
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 import UserError from '../../utils/UserError';
 import {
@@ -17,6 +16,7 @@ import { events } from 'shared/analytics';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 import { trackQueue } from 'shared/bull/queues';
 import { validateRawContentState } from '../../utils/validate-draft-js-input';
+import processMessageContent from 'shared/draft-utils/process-message-content';
 
 type Args = {
   input: {
@@ -50,15 +50,7 @@ export default requireAuth(async (_: any, args: Args, ctx: GraphQLContext) => {
 
   let body = content.body;
   if (messageType === 'text') {
-    body = JSON.stringify(
-      convertToRaw(
-        stateFromMarkdown(body, {
-          parserOptions: {
-            breaks: true,
-          },
-        })
-      )
-    );
+    body = processMessageContent('TEXT', body);
     messageType = 'draftjs';
   }
   const eventFailed =

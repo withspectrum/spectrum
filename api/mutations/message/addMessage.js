@@ -19,6 +19,7 @@ import {
 } from '../../utils/permissions';
 import { trackQueue, calculateThreadScoreQueue } from 'shared/bull/queues';
 import { validateRawContentState } from '../../utils/validate-draft-js-input';
+import processMessageContent from 'shared/draft-utils/process-message-content';
 
 type Input = {
   message: {
@@ -88,15 +89,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   }
 
   if (message.messageType === 'text') {
-    message.content.body = JSON.stringify(
-      convertToRaw(
-        stateFromMarkdown(message.content.body, {
-          parserOptions: {
-            breaks: true,
-          },
-        })
-      )
-    );
+    message.content.body = processMessageContent('TEXT', message.content.body);
     message.messageType = 'draftjs';
   }
 

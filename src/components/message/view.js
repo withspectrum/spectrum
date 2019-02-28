@@ -55,7 +55,7 @@ export const Body = (props: BodyProps) => {
               {parsed && Array.isArray(parsed.blocks) && parsed.blocks[0].text}
             </Emoji>
           ) : (
-            redraft(parsed, messageRenderer)
+            <div className="markdown">{redraft(parsed, messageRenderer)}</div>
           )}
         </WrapperComponent>
       );
