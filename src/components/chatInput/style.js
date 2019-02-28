@@ -62,7 +62,7 @@ export const InputWrapper = styled.div`
   flex-direction: column;
   align-items: stretch;
   flex: auto;
-  padding: ${props => (props.hasAttachment ? '16px' : '8px 16px')};
+  padding: ${props => (props.hasAttachment ? '16px' : '9px 16px 8px 16px')};
   transition: padding 0.2s ease-in-out;
   min-height: 40px;
   max-width: calc(100% - 32px);
@@ -105,7 +105,7 @@ export const Input = styled(MentionsInput).attrs({
 })`
   font-size: 15px;
   font-weight: 400;
-  line-height: 20px;
+  line-height: 1.4;
   background: ${props =>
     props.networkDisabled ? 'none' : props.theme.bg.default};
 

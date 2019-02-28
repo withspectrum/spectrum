@@ -98,13 +98,15 @@ export const Input = styled(FlexRow)`
 `;
 
 export const Detail = styled(Column)`
-  flex: 1 0 auto;
+  min-width: 100%;
   margin: 0;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  position: relative;
-  overflow-y: scroll;
+
+  ${props =>
+    props.isEditing &&
+    css`
+      height: 100%;
+      overflow-y: scroll;
+    `}
 `;
 
 export const ChatInputWrapper = styled(FlexCol)`
