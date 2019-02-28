@@ -28,10 +28,8 @@ class ThreadSlider extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const thisParsed = queryString.parse(this.props.location.search);
-    const prevParsed = queryString.parse(prevProps.location.search);
-    const thisThreadId = thisParsed.thread;
-    const prevThreadId = prevParsed.thread;
+    const thisThreadId = this.props.match && this.props.match.params.threadId;
+    const prevThreadId = prev.props.match && prev.props.match.params.threadId;
     if (thisThreadId && !prevThreadId) {
       this.props.dispatch(openThreadSlider());
     }
@@ -43,22 +41,20 @@ class ThreadSlider extends Component {
   }
 
   handleKeyPress = e => {
-    const parsed = queryString.parse(this.props.location.search);
-    const threadId = parsed.thread;
+    const threadId = this.props.match && this.props.match.params.threadId;
     if (!threadId) return;
     if (e.keyCode === ESC) {
       this.closeSlider();
-      return this.props.history.push(this.props.location.pathname);
     }
   };
 
   closeSlider = () => {
-    return this.props.dispatch(closeThreadSlider());
+    this.props.dispatch(closeThreadSlider());
+    this.props.history.goBack();
   };
 
   render() {
-    const parsed = queryString.parse(this.props.location.search);
-    const threadId = parsed.thread;
+    const threadId = this.props.match && this.props.match.params.threadId;
 
     return (
       <ErrorBoundary>
@@ -83,10 +79,7 @@ class ThreadSlider extends Component {
                       entered={state === 'entered'}
                       duration={ANIMATION_DURATION}
                     >
-                      <Close
-                        to={this.props.location.pathname}
-                        onClick={this.closeSlider}
-                      >
+                      <Close onClick={this.closeSlider}>
                         <CloseLabel>Close</CloseLabel>
                         <CloseButton>
                           <Icon glyph="view-forward" size={24} />
