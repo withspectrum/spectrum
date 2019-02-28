@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { withRouter } from 'react-router';
+import { withRouter, type History, type Location } from 'react-router';
 import { connect } from 'react-redux';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
@@ -47,7 +47,8 @@ type Props = {
     feed: string,
     refetch: Function,
   },
-  history: Function,
+  history: History,
+  location: Location,
   dispatch: Dispatch<Object>,
   selectedId: string,
   activeCommunity: ?string,
