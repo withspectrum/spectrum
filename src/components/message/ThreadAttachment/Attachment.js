@@ -10,6 +10,7 @@ import Activity from 'src/views/dashboard/components/inboxThread/activity';
 import { ThreadTitle } from 'src/views/dashboard/components/inboxThread/style';
 import { UserAvatar } from 'src/components/avatar';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import getThreadLink from 'src/helpers/get-thread-link';
 
 class Attachment extends React.Component<Props> {
   render() {
@@ -30,7 +31,7 @@ class Attachment extends React.Component<Props> {
       <Container>
         <LinkWrapper
           onClick={e => e.stopPropagation()}
-          to={{ search: `?thread=${thread.id}` }}
+          to={{ pathname: getThreadLink(thread), state: { modal: true } }}
         />
         {message.author.user.id !== thread.author.user.id && (
           <AvatarWrapper>
