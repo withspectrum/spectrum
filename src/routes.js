@@ -41,7 +41,6 @@ import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import RedirectOldThreadRoute from './views/thread/redirect-old-route';
 import NewUserOnboarding from './views/newUserOnboarding';
 import QueryParamToastDispatcher from './views/queryParamToastDispatcher';
-import type { Location, History } from 'react-router';
 
 /* prettier-ignore */
 const Explore = Loadable({
