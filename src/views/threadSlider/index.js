@@ -53,10 +53,14 @@ class ThreadSlider extends Component {
   closeSlider = e => {
     e && e.stopPropagation();
     this.props.history.goBack();
+    this.props.dispatch(closeThreadSlider());
   };
 
   render() {
     const { threadId } = this.props.match.params;
+    const { threadSlider } = this.props;
+
+    if (!threadSlider.isOpen) return null;
 
     return (
       <ErrorBoundary>
@@ -86,4 +90,5 @@ class ThreadSlider extends Component {
   }
 }
 
-export default connect()(ThreadSlider);
+const map = state => ({ threadSlider: state.threadSlider });
+export default connect(map)(ThreadSlider);
