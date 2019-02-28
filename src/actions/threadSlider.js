@@ -1,6 +1,9 @@
-export const openThreadSlider = () => {
+// @flow
+
+export const openThreadSlider = (threadId: string) => {
   return {
     type: 'OPEN_SLIDER',
+    threadId,
   };
 };
 

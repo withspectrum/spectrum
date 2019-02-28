@@ -25,12 +25,23 @@ const ANIMATION_DURATION = 50;
 class ThreadSlider extends Component {
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress, false);
-    this.props.dispatch(openThreadSlider());
+    this.props.dispatch(openThreadSlider(this.props.match.params.threadId));
   }
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyPress, false);
     this.props.dispatch(closeThreadSlider());
+  }
+
+  // Sync the currently open thread to the Redux state
+  componentDidUpdate(prev) {
+    const curr = this.props;
+
+    const prevId = prev.match.params.threadId;
+    const currId = curr.match.params.threadId;
+
+    if (prevId !== currId)
+      this.props.dispatch(openThreadSlider(this.props.match.params.threadId));
   }
 
   handleKeyPress = e => {
@@ -42,11 +53,10 @@ class ThreadSlider extends Component {
   closeSlider = e => {
     e && e.stopPropagation();
     this.props.history.goBack();
-    this.props.dispatch(closeThreadSlider());
   };
 
   render() {
-    const threadId = this.props.match && this.props.match.params.threadId;
+    const { threadId } = this.props.match.params;
 
     return (
       <ErrorBoundary>
