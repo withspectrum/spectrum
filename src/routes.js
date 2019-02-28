@@ -1,7 +1,14 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { Route, Switch, Redirect, withRouter } from 'react-router';
+import {
+  Route,
+  Switch,
+  Redirect,
+  withRouter,
+  type Location,
+  type History,
+} from 'react-router';
 import styled, { ThemeProvider } from 'styled-components';
 import Loadable from 'react-loadable';
 import { ErrorBoundary } from 'src/components/error';
@@ -161,8 +168,8 @@ type Props = {
   currentUser: ?GetUserType,
   isLoadingCurrentUser: boolean,
   maintenanceMode?: boolean,
-  history: History,
   location: Location,
+  history: History,
 };
 
 class Routes extends React.Component<Props> {
