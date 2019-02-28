@@ -34,7 +34,6 @@ type Props = {
   thread: GetThreadType,
   currentUser: Object,
   isEditing: boolean,
-  cancelEdit: Function,
   dispatch: Dispatch<Object>,
   toggleThreadNotifications: Function,
   toggleEdit: Function,
@@ -258,7 +257,7 @@ class ActionBar extends React.Component<Props, State> {
           <div style={{ display: 'flex' }} />
           <div style={{ display: 'flex' }}>
             <EditDone data-cy="cancel-thread-edit-button">
-              <TextButton onClick={this.props.cancelEdit}>Cancel</TextButton>
+              <TextButton onClick={this.props.toggleEdit}>Cancel</TextButton>
             </EditDone>
             <EditDone>
               <Button
