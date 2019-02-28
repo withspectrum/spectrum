@@ -386,8 +386,6 @@ class ChannelView extends React.Component<Props, State> {
             provideBack={true}
             backRoute={`/${communitySlug}`}
             noComposer={!isMember}
-            activeCommunitySlug={communitySlug}
-            activeChannelSlug={channel.slug}
             activeCommunityId={channel.community.id}
             activeChannelId={channel.id}
           />

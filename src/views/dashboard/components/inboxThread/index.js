@@ -45,7 +45,6 @@ class InboxThread extends React.Component<Props> {
   render() {
     const {
       data: thread,
-      location,
       active,
       viewContext = null,
       currentUser,
@@ -58,13 +57,6 @@ class InboxThread extends React.Component<Props> {
       (!viewContext ||
         viewContext === 'communityInbox' ||
         viewContext === 'channelInbox');
-
-    let queryPrefix;
-    if (isDesktopInbox) {
-      queryPrefix = '?t';
-    } else {
-      queryPrefix = '?thread';
-    }
 
     const newMessagesSinceLastViewed =
       !active &&

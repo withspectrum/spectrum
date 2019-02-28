@@ -1,10 +1,7 @@
 // @flow
 import theme from 'shared/theme';
-// $FlowFixMe
 import styled, { css } from 'styled-components';
-// $FlowFixMe
-import { Link } from 'react-router-dom';
-import { zIndex } from '../../components/globals';
+import { zIndex } from 'src/components/globals';
 
 const animation = css`
   opacity: 0;

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
-import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import ThreadSearch from '../dashboard/components/threadSearch';
 import Icon from '../../components/icons';
@@ -56,8 +55,6 @@ class Titlebar extends Component {
       filter,
       children,
       messageComposer,
-      activeCommunitySlug,
-      activeChannelSlug,
       activeCommunityId,
       activeChannelId,
     } = this.props;

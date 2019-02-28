@@ -4,7 +4,6 @@ import {
   openThreadSlider,
   closeThreadSlider,
 } from '../../actions/threadSlider';
-import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import Transition from 'react-transition-group/Transition';
 import {
@@ -29,7 +28,7 @@ class ThreadSlider extends Component {
 
   componentDidUpdate(prevProps) {
     const thisThreadId = this.props.match && this.props.match.params.threadId;
-    const prevThreadId = prev.props.match && prev.props.match.params.threadId;
+    const prevThreadId = prevProps.match && prevProps.match.params.threadId;
     if (thisThreadId && !prevThreadId) {
       this.props.dispatch(openThreadSlider());
     }

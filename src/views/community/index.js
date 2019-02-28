@@ -271,7 +271,6 @@ class CommunityView extends React.Component<Props, State> {
             provideBack={true}
             backRoute={'/'}
             noComposer={!community.communityPermissions.isMember}
-            activeCommunitySlug={community.slug}
             activeCommunityId={community.id}
           />
           <Grid id="main">
