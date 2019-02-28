@@ -13,17 +13,6 @@ class DashboardThread extends Component {
     if (!threadId) {
       return null;
     }
-
-    // composer is selected
-    if (threadId === 'new')
-      return (
-        <Container>
-          <Thread>
-            <Composer isInbox={true} {...this.props} />
-          </Thread>
-        </Container>
-      );
-
     // otherwise return the thread that was selected
     return (
       <Container>

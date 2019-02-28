@@ -501,14 +501,9 @@ class ChannelView extends React.Component<Props, State> {
                   !channel.isPrivate) && (
                   <ErrorBoundary fallbackComponent={null}>
                     <ComposerPlaceholder
-                      isInbox={false}
-                      showCommunityOwnerUpsell={false}
-                      isOpen={false}
                       communityId={channel.community.id}
                       channelId={channel.id}
                     />
-
-                    <Composer isSlider={true} />
                   </ErrorBoundary>
                 )}
 

@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
-import { withRouter } from 'react-router';
+import { withRouter, type History, type Location } from 'react-router';
 import { connect } from 'react-redux';
 import debounce from 'debounce';
 import queryString from 'query-string';
@@ -11,7 +11,6 @@ import { ThreadHeading } from 'src/views/thread/style';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import getThreadLink from 'src/helpers/get-thread-link';
 import ThreadRenderer from '../threadRenderer';
-import { closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
@@ -29,7 +28,6 @@ import {
 import Titlebar from '../../views/titlebar';
 import type { Dispatch } from 'redux';
 import {
-  ComposerSlider,
   Overlay,
   Container,
   Actions,
@@ -60,17 +58,15 @@ type Props = {
     loading: boolean,
   },
   uploadImage: (input: UploadImageInput) => Promise<UploadImageType>,
-  isOpen: boolean,
-  isSlider?: boolean,
   dispatch: Dispatch<Object>,
   publishThread: Function,
-  history: Object,
-  location: Object,
-  threadSliderIsOpen?: boolean,
+  history: History,
+  location: Location,
   isInbox: boolean,
   websocketConnection: string,
   networkOnline: boolean,
   isEditing: boolean,
+  slider?: boolean,
 };
 
 const LS_BODY_KEY = 'last-plaintext-thread-composer-body';
@@ -162,19 +158,18 @@ class ComposerWithData extends Component<Props, State> {
 
     // if a post was published, in this session, clear redux so that the next
     // composer open will start fresh
-    if (postWasPublished) return this.closeComposer('clear');
+    if (postWasPublished) return;
 
     // otherwise, clear the composer normally and save the state
-    return this.closeComposer();
+    return;
   }
 
   handleGlobalKeyPress = e => {
-    const esc = e.keyCode === ESC;
+    const esc = e && e.keyCode === ESC;
 
     if (esc) {
-      // Community/channel view
+      e.stopPropagation();
       this.closeComposer();
-      // Dashboard
       this.activateLastThread();
       return;
     }
@@ -217,13 +212,15 @@ class ComposerWithData extends Component<Props, State> {
   closeComposer = (clear?: string) => {
     this.persistBodyToLocalStorage(this.state.body);
     this.persistTitleToLocalStorage(this.state.title);
+
     // we will clear the composer if it unmounts as a result of a post
     // being published, that way the next composer open will start fresh
     if (clear) {
       this.clearEditorStateAfterPublish();
     }
 
-    return this.props.dispatch(closeComposer());
+    this.props.history.goBack();
+    return;
   };
 
   clearEditorStateAfterPublish = () => {
@@ -232,11 +229,6 @@ class ComposerWithData extends Component<Props, State> {
     } catch (err) {
       console.error(err);
     }
-  };
-
-  onCancelClick = async () => {
-    await this.activateLastThread();
-    this.props.dispatch(closeComposer());
   };
 
   handleTitleBodyChange = titleOrBody => {
@@ -398,8 +390,6 @@ class ComposerWithData extends Component<Props, State> {
           postWasPublished: true,
         });
 
-        this.props.dispatch(closeComposer());
-
         // redirect the user to the thread
         // if they are in the inbox, select it
         this.props.dispatch(
@@ -441,12 +431,10 @@ class ComposerWithData extends Component<Props, State> {
     } = this.state;
 
     const {
-      threadSliderIsOpen,
-      isOpen,
       networkOnline,
       websocketConnection,
-      isSlider,
       isEditing,
+      slider,
     } = this.props;
 
     const networkDisabled =
@@ -455,13 +443,14 @@ class ComposerWithData extends Component<Props, State> {
         websocketConnection !== 'reconnected');
 
     return (
-      <ComposerSlider isSlider={isSlider} isOpen={isOpen}>
+      <React.Fragment>
         <Overlay
-          isOpen={isOpen}
+          slider={slider}
           onClick={this.closeComposer}
           data-cy="thread-composer-overlay"
         />
-        <Container isSlider={isSlider}>
+
+        <Container slider={slider}>
           <Titlebar provideBack title={'New conversation'} noComposer />
 
           <ComposerLocationSelectors
@@ -477,7 +466,7 @@ class ComposerWithData extends Component<Props, State> {
             changeBody={this.changeBody}
             changeTitle={this.changeTitle}
             uploadFiles={this.uploadFiles}
-            autoFocus={!threadSliderIsOpen}
+            autoFocus={true}
             bodyRef={ref => (this.bodyEditor = ref)}
             onKeyDown={this.handleKeyPress}
             isEditing={isEditing}
@@ -518,7 +507,7 @@ class ComposerWithData extends Component<Props, State> {
               <TextButton
                 data-cy="composer-cancel-button"
                 hoverColor="warn.alt"
-                onClick={this.onCancelClick}
+                onClick={this.closeComposer}
               >
                 Cancel
               </TextButton>
@@ -541,25 +530,20 @@ class ComposerWithData extends Component<Props, State> {
             </ButtonRow>
           </Actions>
         </Container>
-      </ComposerSlider>
+      </React.Fragment>
     );
   }
 }
 
-export const ThreadComposer = compose(
-  uploadImage,
-  getComposerCommunitiesAndChannels, // query to get data
-  publishThread, // mutation to publish a thread
-  withRouter // needed to use history.push() as a post-publish action
-)(ComposerWithData);
-
 const mapStateToProps = state => ({
-  isOpen: state.composer.isOpen,
-  threadSliderIsOpen: state.threadSlider.isOpen,
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
 });
 
-// $FlowIssue
-const Composer = connect(mapStateToProps)(ThreadComposer);
-export default Composer;
+export default compose(
+  uploadImage,
+  getComposerCommunitiesAndChannels, // query to get data
+  publishThread, // mutation to publish a thread
+  withRouter, // needed to use history.push() as a post-publish action
+  connect(mapStateToProps)
+)(ComposerWithData);

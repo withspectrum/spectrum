@@ -49,26 +49,10 @@ export const DropImageOverlayWrapper = styled.div`
         `}
 `;
 
-export const ComposerSlider = styled.div`
-  display: ${props => (props.isSlider ? 'none' : 'block')};
-  ${props =>
-    props.isSlider &&
-    props.isOpen &&
-    css`
-      display: block;
-      position: fixed;
-      width: 50%;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      z-index: ${zIndex.composer};
-    `}
-`;
-
 export const Overlay = styled.div`
   ${props =>
-    props.isOpen
-      ? `
+    props.slider &&
+    css`
       position: fixed;
       top: 48px;
       left: 0;
@@ -80,12 +64,7 @@ export const Overlay = styled.div`
       background: #000;
       pointer-events: auto;
       opacity: 0.4;
-    `
-      : `
-      opacity: 0;
-      pointer-events: none;
-
-    `};
+    `}
 `;
 
 export const Container = styled(FlexCol)`
@@ -101,10 +80,21 @@ export const Container = styled(FlexCol)`
   position: relative;
   z-index: ${zIndex.composer};
 
+  ${props =>
+    props.slider &&
+    css`
+      right: 0;
+      position: absolute;
+      width: 650px;
+      top: 0;
+      height: 100%;
+    `}
+
   @media (max-width: 768px) {
     grid-template-rows: 48px 64px 1fr 64px;
     grid-template-areas: 'title' 'header' 'body' 'footer';
     max-width: 100vw;
+    width: 100%;
     height: 100vh;
   }
 `;

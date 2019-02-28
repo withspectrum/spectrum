@@ -393,13 +393,9 @@ class CommunityView extends React.Component<Props, State> {
                 userHasPermissions && (
                   <ErrorBoundary fallbackComponent={null}>
                     <ComposerPlaceholder
-                      isInbox={false}
-                      showCommunityOwnerUpsell={showComposerUpsell}
-                      isOpen={false}
                       communityId={community.id}
                       channelId={null}
                     />
-                    <Composer isSlider={true} />
                   </ErrorBoundary>
                 )}
 

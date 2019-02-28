@@ -125,7 +125,6 @@ class Dashboard extends React.Component<Props, State> {
 
       return (
         <DashboardWrapper data-cy="inbox-view" id="main">
-          <Composer isSlider={true} activeCommunity={activeCommunity} />
           <Head title={title} description={description} />
           <Titlebar
             activeCommunityId={activeCommunity}

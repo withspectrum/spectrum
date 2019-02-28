@@ -4,7 +4,6 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { History } from 'react-router';
-import { openComposer } from 'src/actions/composer';
 import {
   HeaderWrapper,
   NarrowOnly,
@@ -18,6 +17,7 @@ import Menu from 'src/components/menu';
 import CommunityList from './communityList';
 import { Link } from 'react-router-dom';
 import type { Dispatch } from 'redux';
+import getComposerLink from 'src/helpers/get-composer-link';
 
 type Props = {
   dispatch: Dispatch<Object>,
@@ -32,16 +32,6 @@ type Props = {
 };
 
 class Header extends React.Component<Props> {
-  triggerOpenComposer = () => {
-    const { history, activeCommunity, activeChannel } = this.props;
-    history.push({
-      search: `${
-        activeCommunity ? `?composerCommunityId=${activeCommunity}` : ''
-      }${activeChannel ? `&composerChannelId=${activeChannel}` : ''}`,
-    });
-    return this.props.dispatch(openComposer());
-  };
-
   renderContext = () => {
     const {
       activeCommunity,
@@ -95,6 +85,11 @@ class Header extends React.Component<Props> {
       activeChannel,
     } = this.props;
 
+    const { pathname, search } = getComposerLink({
+      communityId: activeCommunity,
+      channelId: activeChannel,
+    });
+
     return (
       <React.Fragment>
         {this.renderContext()}
@@ -111,13 +106,20 @@ class Header extends React.Component<Props> {
             </Menu>
           </NarrowOnly>
           <ThreadSearch filter={filter} />
-          <IconButton
-            dataCy="inbox-view-post-button"
-            glyph={'post'}
-            onClick={this.triggerOpenComposer}
-            tipText={'New conversation'}
-            tipLocation={'bottom-left'}
-          />
+          <Link
+            to={{
+              pathname,
+              search,
+              state: { modal: true },
+            }}
+          >
+            <IconButton
+              dataCy="inbox-view-post-button"
+              glyph={'post'}
+              tipText={'New conversation'}
+              tipLocation={'bottom-left'}
+            />
+          </Link>
         </HeaderWrapper>
       </React.Fragment>
     );
