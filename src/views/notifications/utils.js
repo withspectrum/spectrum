@@ -4,6 +4,7 @@ import { Query } from 'react-apollo';
 import { timeDifferenceShort } from 'shared/time-difference';
 import { getThreadByIdQuery } from 'shared/graphql/queries/thread/getThread';
 import { Timestamp } from './style';
+import getThreadLink from 'src/helpers/get-thread-link';
 
 export const parseNotification = notification => {
   return Object.assign({}, notification, {
