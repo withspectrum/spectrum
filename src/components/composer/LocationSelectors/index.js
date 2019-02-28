@@ -58,12 +58,14 @@ const ComposerLocationSelectors = (props: Props) => {
         onCommunityChange={onCommunitySelectionChanged}
       />
 
-      <ChannelSelector
-        id={selectedCommunityId}
-        selectedChannelId={selectedChannelId}
-        selectedCommunityId={selectedCommunityId}
-        onChannelChange={onChannelSelectionChanged}
-      />
+      {selectedCommunityId && (
+        <ChannelSelector
+          id={selectedCommunityId}
+          selectedChannelId={selectedChannelId}
+          selectedCommunityId={selectedCommunityId}
+          onChannelChange={onChannelSelectionChanged}
+        />
+      )}
     </Dropdowns>
   );
 };

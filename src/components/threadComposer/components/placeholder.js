@@ -29,6 +29,7 @@ class ComposerPlaceholder extends React.Component<Props> {
     const { pathname, search } = getComposerLink({ communityId, channelId });
     return (
       <Placeholder
+        data-cy="thread-composer-placeholder"
         to={{
           pathname,
           search,

@@ -43,7 +43,8 @@ export const LAST_ACTIVE_COMMUNITY_KEY = 'last-active-inbox-community';
 class CommunityList extends React.Component<Props> {
   componentDidMount() {
     const id = getItemFromStorage(LAST_ACTIVE_COMMUNITY_KEY);
-    if (id) this.props.dispatch(changeActiveCommunity(id));
+    if (id) return this.props.dispatch(changeActiveCommunity(id));
+    this.props.dispatch(changeActiveCommunity(''));
   }
 
   changeCommunity = id => {

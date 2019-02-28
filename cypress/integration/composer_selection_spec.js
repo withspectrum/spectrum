@@ -223,6 +223,7 @@ describe('inbox composer', () => {
   });
 
   it('does not select a community or channel if the composer is opened from the everything feed', () => {
+    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
     inboxComposeButton().should('be.visible');
     inboxComposeButton().click();
     communityDropdownIsEnabled();
@@ -230,7 +231,9 @@ describe('inbox composer', () => {
   });
 
   it('selects a community if the composer is opened from a community filter', () => {
+    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
     firstCommunityFilter().click();
+    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
     inboxComposeButton().should('be.visible');
     inboxComposeButton().click();
     communityIsLocked();
@@ -239,6 +242,7 @@ describe('inbox composer', () => {
   });
 
   it('selects both a community and channel if the composer is opened from a channel filter', () => {
+    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
     firstCommunityFilter().click();
     inboxChannelFilter().click();
     inboxComposeButton().should('be.visible');
@@ -250,7 +254,9 @@ describe('inbox composer', () => {
   });
 
   it('updates the community selection in the composer if the community is switched', () => {
+    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
     firstCommunityFilter().click();
+    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
     inboxComposeButton().should('be.visible');
     inboxComposeButton().click();
     communityIsLocked();
@@ -260,6 +266,7 @@ describe('inbox composer', () => {
     cancelButton().click();
 
     secondCommunityFilter().click();
+    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
     inboxComposeButton().should('be.visible');
     inboxComposeButton().click();
     communityIsLocked();
@@ -268,8 +275,11 @@ describe('inbox composer', () => {
   });
 
   it('updates the channel selection in the composer if the channel is switched', () => {
+    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
     firstCommunityFilter().click();
+    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
     inboxChannelFilter().click();
+    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
     inboxComposeButton().should('be.visible');
     inboxComposeButton().click();
     communityIsLocked();
@@ -280,6 +290,7 @@ describe('inbox composer', () => {
     cancelButton().click();
 
     secondInboxChannelFilter().click();
+    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
     inboxComposeButton().should('be.visible');
     inboxComposeButton().click();
     communityIsLocked();
@@ -289,7 +300,7 @@ describe('inbox composer', () => {
   });
 });
 
-describe('mobile tabbar composer', () => {
+describe.only('mobile tabbar composer', () => {
   beforeEach(() => {
     cy.auth(user.id);
     cy.viewport('iphone-6');

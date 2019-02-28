@@ -34,7 +34,6 @@ const ChannelSelector = (props: Props) => {
     location,
   } = props;
   const { loading, error, community } = data;
-
   if (loading) return <LoadingSelect />;
   if (error)
     return <ErrorSelect>Something went wrong, try refreshing</ErrorSelect>;
