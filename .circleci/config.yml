@@ -164,7 +164,7 @@ workflows:
       - test_web:
           requires:
             - checkout_environment
-          parallelism: 9
+          parallelism: 6
       - test_static_js:
           requires:
             - checkout_environment
