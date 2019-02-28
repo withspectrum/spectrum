@@ -59,7 +59,7 @@ describe('Toasts and url query paramaters', () => {
     cy.url().should('eq', 'http://localhost:3000/?t=thread-9');
   });
 
-  it.only('should preserve many existing query parameters', () => {
+  it('should preserve many existing query parameters', () => {
     const url = new URL(
       'http://localhost:3000/spectrum/general/another-thread~thread-2?m=MTQ4MzIyNTIwMDAwMg=='
     );

@@ -300,7 +300,7 @@ describe('inbox composer', () => {
   });
 });
 
-describe.only('mobile tabbar composer', () => {
+describe('mobile tabbar composer', () => {
   beforeEach(() => {
     cy.auth(user.id);
     cy.viewport('iphone-6');
