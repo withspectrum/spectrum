@@ -112,7 +112,7 @@ jobs:
           command: yarn run cypress:install
       - run:
           name: Run E2E Tests
-          command: test $CYPRESS_RECORD_KEY && yarn run test:e2e -- --record || yarn run test:e2e
+          command: test $CYPRESS_RECORD_KEY && yarn run test:e2e -- --record --parallel || yarn run test:e2e
       - run:
           name: Test desktop apps
           command: yarn run test:desktop
@@ -159,6 +159,7 @@ workflows:
       - test_web:
           requires:
             - checkout_environment
+        parallelism: 6
       - test_static_js:
           requires:
             - checkout_environment
