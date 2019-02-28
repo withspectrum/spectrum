@@ -16,6 +16,7 @@ const {
   DELETED_COMMUNITY_DELETED_CHANNEL_ID,
   PAYMENTS_GENERAL_CHANNEL_ID,
   PAYMENTS_PRIVATE_CHANNEL_ID,
+  PAYMENTS_FEATURES_CHANNEL_ID,
   MODERATOR_CREATED_CHANNEL_ID,
 } = constants;
 
@@ -136,6 +137,18 @@ module.exports = [
     userId: BRIAN_ID,
     channelId: PAYMENTS_GENERAL_CHANNEL_ID,
     isOwner: false,
+    isModerator: false,
+    isMember: true,
+    isBlocked: false,
+    isPending: false,
+    receiveNotifications: true,
+  },
+  {
+    id: '32',
+    createdAt: new Date(DATE),
+    userId: BRIAN_ID,
+    channelId: PAYMENTS_FEATURES_CHANNEL_ID,
+    isOwner: true,
     isModerator: false,
     isMember: true,
     isBlocked: false,

@@ -96,6 +96,7 @@ describe('/new/thread community and channel selection', () => {
     communityDropdown().select('Payments');
     channelDropdown().contains('General');
     channelDropdown().contains('Private');
+    channelDropdown().contains('Payments Features');
   });
 
   it('keeps the publish button disabled if either community or channel selector is blank', () => {
