@@ -14,6 +14,7 @@ import {
   CardLink,
   CardContent,
 } from '../../../components/threadFeedCard/style';
+import getThreadLink from 'src/helpers/get-thread-link';
 
 type Props = {
   notification: Object,
@@ -42,8 +43,8 @@ export class MentionMessageNotification extends React.Component<Props, State> {
       <NotificationCard>
         <CardLink
           to={{
-            pathname: window.location.pathname,
-            search: `?thread=${notification.context.id}`,
+            pathname: getThreadLink(notification.context.payload),
+            state: { modal: true },
           }}
         />
         <SpecialContext>
@@ -76,8 +77,8 @@ export class MiniMentionMessageNotification extends React.Component<
       <NotificationListRow isSeen={notification.isSeen}>
         <CardLink
           to={{
-            pathname: window.location.pathname,
-            search: `?thread=${notification.context.id}`,
+            pathname: getThreadLink(notification.context.payload),
+            state: { modal: true },
           }}
         />
         <CardContent>

@@ -6,6 +6,11 @@ import { connect } from 'react-redux';
 import debounce from 'debounce';
 import queryString from 'query-string';
 import Icon from '../icons';
+import processThreadContent from 'shared/draft-utils/process-thread-content';
+import { ThreadHeading } from 'src/views/thread/style';
+import { SegmentedControl, Segment } from 'src/components/segmentedControl';
+import getThreadLink from 'src/helpers/get-thread-link';
+import ThreadRenderer from '../threadRenderer';
 import { closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -404,9 +409,9 @@ class ComposerWithData extends Component<Props, State> {
           this.props.history.replace(`/?t=${id}`);
           this.props.dispatch(changeActiveThread(id));
         } else if (this.props.location.pathname === '/new/thread') {
-          this.props.history.replace(`/?thread=${id}`);
+          this.props.history.replace(`/${getThreadLink(data.publishThread)}`);
         } else {
-          this.props.history.push(`?thread=${id}`);
+          this.props.history.push(`/${getThreadLink(data.publishThread)}`);
           this.props.dispatch(changeActiveThread(null));
         }
         return;

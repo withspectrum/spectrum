@@ -20,6 +20,7 @@ import {
   CardLink,
   CardContent,
 } from '../../../components/threadFeedCard/style';
+import getThreadLink from 'src/helpers/get-thread-link';
 
 type Props = {
   notification: Object,
@@ -43,8 +44,8 @@ export const NewThreadReactionNotification = ({
     <NotificationCard key={notification.id}>
       <CardLink
         to={{
-          pathname: window.location.pathname,
-          search: `?thread=${notification.context.payload.id}`,
+          pathname: getThreadLink(notification.context.payload),
+          state: { modal: true },
         }}
       />
       <CardContent>
@@ -84,8 +85,8 @@ export const MiniNewThreadReactionNotification = ({
     <NotificationListRow isSeen={notification.isSeen}>
       <CardLink
         to={{
-          pathname: window.location.pathname,
-          search: `?thread=${notification.context.payload.id}`,
+          pathname: getThreadLink(notification.context.payload),
+          state: { modal: true },
         }}
       />
       <CardContent>
