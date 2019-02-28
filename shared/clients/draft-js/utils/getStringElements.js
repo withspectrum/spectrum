@@ -1,3 +1,4 @@
+// @flow
 export const getStringElements = (arr: Array<mixed>): Array<string> => {
   return arr
     .map(elem => {
