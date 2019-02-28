@@ -151,8 +151,8 @@ const threadToString = (context, currentUser) => {
       {str}{' '}
       <Link
         to={{
-          pathname: window.location.pathname,
-          search: `?thread=${context.id}`,
+          pathname: getThreadLink(context.payload),
+          state: { modal: true },
         }}
       >
         {context.payload.content.title}
@@ -169,8 +169,8 @@ const threadReactionToString = context => {
       {str}{' '}
       <Link
         to={{
-          pathname: window.location.pathname,
-          search: `?thread=${context.payload.id}`,
+          pathname: getThreadLink(context.payload),
+          state: { modal: true },
         }}
       >
         {context.payload.content.title}
@@ -194,8 +194,8 @@ const messageToString = context => {
             your reply in{' '}
             <Link
               to={{
-                pathname: window.location.pathname,
-                search: `?thread=${context.payload.threadId}`,
+                // TODO(@mxstbr): Make this open in the modal
+                pathname: `/thread/${context.payload.threadId}`,
               }}
             >
               {data.thread.content.title}
