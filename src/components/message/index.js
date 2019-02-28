@@ -60,6 +60,7 @@ type Props = {|
   history: History,
   dispatch: Dispatch<Object>,
   currentUser: UserInfoType,
+  deleteMessage: Function,
 |};
 
 type State = {

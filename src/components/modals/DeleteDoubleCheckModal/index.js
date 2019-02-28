@@ -64,7 +64,7 @@ type Props = {
 export const deleteMessageWithToast = (
   dispatch: Function,
   deleteMessage: Function,
-  id
+  id: string
 ) => {
   return deleteMessage(id)
     .then(({ data }: DeleteMessageType) => {
