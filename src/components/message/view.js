@@ -12,7 +12,7 @@ import {
   ThreadAttachmentsContainer,
 } from './style';
 import ThreadAttachment from './ThreadAttachment';
-import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
+import { messageRenderer } from 'shared/clients/draft-js/message/renderer';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { draftOnlyContainsEmoji } from 'shared/only-contains-emoji';
 import { Byline, Name, Username } from './style';
@@ -59,9 +59,7 @@ export const Body = (props: BodyProps) => {
     }
     case 'draftjs': {
       const parsed = JSON.parse(message.content.body);
-      const ids = getSpectrumThreadIds(
-        toPlainText(toState(parsed))
-      );
+      const ids = getSpectrumThreadIds(toPlainText(toState(parsed)));
       const uniqueIds = ids.filter((x, i, a) => a.indexOf(x) === i);
       return (
         <WrapperComponent me={me}>
