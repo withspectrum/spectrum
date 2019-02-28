@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import compose from 'recompose/compose';
 import { withRouter, type History, type Location } from 'react-router';
 import { connect } from 'react-redux';
@@ -80,7 +80,7 @@ const ONE_DAY = (): string => {
 
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
-class ComposerWithData extends Component<Props, State> {
+class ComposerWithData extends React.Component<Props, State> {
   bodyEditor: any;
 
   constructor(props) {
@@ -535,6 +535,7 @@ class ComposerWithData extends Component<Props, State> {
   }
 }
 
+// $FlowIssue
 const mapStateToProps = state => ({
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,

@@ -2,8 +2,8 @@
 import qs from 'query-string';
 
 type Props = {
-  communityId?: string,
-  channelId?: string,
+  communityId?: ?string,
+  channelId?: ?string,
 };
 
 const getComposerLink = (props: Props) => {
