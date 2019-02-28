@@ -117,9 +117,9 @@ class ThreadFeed extends React.Component<Props, State> {
       return;
     }
 
-    // If we mount with ?t and are on mobile, we have to redirect to ?thread
+    // If we mount with ?t and are on mobile, we have to redirect to the full thread view
     if (!isDesktop && mountedWithActiveThread) {
-      curr.history.replace(`/?thread=${mountedWithActiveThread}`);
+      curr.history.replace(`/thread/${mountedWithActiveThread}`);
       curr.dispatch({ type: 'REMOVE_MOUNTED_THREAD_ID' });
       return;
     }
