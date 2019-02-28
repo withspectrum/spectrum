@@ -172,6 +172,7 @@ export const Dropdowns = styled(FlexRow)`
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   z-index: 9999;
   grid-area: header;
+  border-bottom: 1px solid ${theme.bg.border};
 
   @media (max-width: 768px) {
     width: 100%;
