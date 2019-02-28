@@ -300,8 +300,7 @@ export const GridProfile = styled.div`
   grid-template-areas: 'cover cover' 'meta content';
   grid-column-gap: 32px;
   width: 100%;
-  min-width: 100%;
-  max-width: 100%;
+  max-width: 1280px;
   height: 100%;
   min-height: 100vh;
   background-color: ${theme.bg.default};

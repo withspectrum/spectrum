@@ -1,5 +1,10 @@
 // @flow
 import { injectGlobal } from 'styled-components';
+// $FlowIssue
+import prismGlobalCSS from '!!raw-loader!./components/rich-text-editor/prism-theme.css';
+
+// $FlowIssue
+injectGlobal`${prismGlobalCSS}`;
 
 injectGlobal`
   * {
@@ -30,6 +35,7 @@ injectGlobal`
     padding: 0;
     margin: 0;
     -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
       sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   }
@@ -226,6 +232,8 @@ injectGlobal`
   .markdown pre {
     margin: 16px 0;
     display: block;
+    border-radius: 4px;
+    background-color: #f5f8fc;
   }
 
   .markdown pre code {
@@ -233,6 +241,9 @@ injectGlobal`
     display: block;
     white-space: pre-wrap;
     position: relative;
+    margin: 0;
+    border: none;
+    background: none;
   }
 
   .markdown div[data-block='true'] {
@@ -320,84 +331,9 @@ injectGlobal`
     font-variant: small-caps;
   }
 
-  .hljs {
-    display: block;
-    background: white;
-    padding: 0.5em;
-    color: #333333;
-    overflow-x: auto;
-  }
-
-  .hljs-comment,
-  .hljs-meta {
-    color: #969896;
-  }
-
-  .hljs-string,
-  .hljs-variable,
-  .hljs-template-variable,
-  .hljs-strong,
-  .hljs-emphasis,
-  .hljs-quote {
-    color: #df5000;
-  }
-
-  .hljs-keyword,
-  .hljs-selector-tag,
-  .hljs-type {
-    color: #a71d5d;
-  }
-
-  .hljs-literal,
-  .hljs-symbol,
-  .hljs-bullet,
-  .hljs-attribute {
-    color: #0086b3;
-  }
-
-  .hljs-section,
-  .hljs-name {
-    color: #63a35c;
-  }
-
-  .hljs-tag {
-    color: #333333;
-  }
-
-  .hljs-title,
-  .hljs-attr,
-  .hljs-selector-id,
-  .hljs-selector-class,
-  .hljs-selector-attr,
-  .hljs-selector-pseudo {
-    color: #795da3;
-  }
-
-  .hljs-addition {
-    color: #55a532;
-    background-color: #eaffea;
-  }
-
-  .hljs-deletion {
-    color: #bd2c00;
-    background-color: #ffecec;
-  }
-
-  .hljs-link {
-    text-decoration: underline;
+  .threadComposer textarea {
+    line-height: 1.5;
+    /* account for bottom save bar when editing */
+    height: calc(100% + 52px)!important;
   }
 `;
-
-// NOTE(@mxstbr): This is necessary to make sure the placeholder is aligned
-// and stuff like that. We have to import the raw CSS file and inject it with
-// styled-components to make sure it works when we SSR.
-/* eslint-disable import/first */
-/* eslint-disable import/no-webpack-loader-syntax */
-// $FlowIssue
-import draftGlobalCSS from '!!raw-loader!draft-js/dist/Draft.css';
-// $FlowIssue
-injectGlobal`${draftGlobalCSS}`;
-// $FlowIssue
-import prismGlobalCSS from '!!raw-loader!./components/rich-text-editor/prism-theme.css';
-// $FlowIssue
-injectGlobal`${prismGlobalCSS}`;

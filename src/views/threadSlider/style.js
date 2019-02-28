@@ -58,7 +58,7 @@ export const Thread = styled.div`
   }
 `;
 
-export const Close = styled(Link)`
+export const Close = styled.div`
   display: flex;
   align-items: center;
   flex: 1;

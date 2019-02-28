@@ -7,14 +7,12 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import debounce from 'debounce';
 import queryString from 'query-string';
-import { KeyBindingUtil } from 'draft-js';
 import Dropzone from 'react-dropzone';
 import Icon from '../icons';
 import processThreadContent from 'shared/draft-utils/process-thread-content';
 import { ThreadHeading } from 'src/views/thread/style';
-import Editor from 'src/components/rich-text-editor';
-import Image from 'src/components/rich-text-editor/Image';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
+import ThreadRenderer from '../threadRenderer';
 import { closeComposer } from '../../actions/composer';
 import { openModal } from '../../actions/modals';
 import { changeActiveThread } from '../../actions/dashboardFeed';
@@ -67,26 +65,7 @@ import {
 } from './utils';
 import { events, track } from 'src/helpers/analytics';
 import { ESC, ENTER } from 'src/helpers/keycodes';
-
-const PreviewEditor = (props: { state: Object }) => {
-  // $FlowIssue
-  const [state, setState] = React.useState(props.state);
-
-  const onChange = change => {
-    setState(change);
-  };
-
-  return (
-    <Editor
-      readOnly
-      state={state}
-      onChange={onChange}
-      placeholder=""
-      version={2}
-      editorKey="preview-editor"
-    />
-  );
-};
+import Inputs from './inputs';
 
 type State = {
   title: string,
@@ -119,6 +98,7 @@ type Props = {
   isInbox: boolean,
   websocketConnection: string,
   networkOnline: boolean,
+  isEditing: boolean,
 };
 
 const LS_BODY_KEY = 'last-thread-composer-body';
@@ -280,12 +260,12 @@ class ComposerWithData extends Component<Props, State> {
     this.handleIncomingProps(this.props);
     track(events.THREAD_CREATED_INITED);
     // $FlowIssue
-    document.addEventListener('keydown', this.handleKeyPress, false);
+    document.addEventListener('keydown', this.handleGlobalKeyPress, false);
   }
 
   componentWillUnmount() {
     // $FlowIssue
-    document.removeEventListener('keydown', this.handleKeyPress, false);
+    document.removeEventListener('keydown', this.handleGlobalKeyPress, false);
     const { postWasPublished } = this.state;
 
     // if a post was published in this session,
@@ -296,10 +276,9 @@ class ComposerWithData extends Component<Props, State> {
     return this.closeComposer();
   }
 
-  handleKeyPress = e => {
+  handleGlobalKeyPress = e => {
     const esc = e.keyCode === ESC;
-    const cmdEnter =
-      e.keyCode === ENTER && KeyBindingUtil.hasCommandModifier(e);
+    const cmdEnter = e.keyCode === ENTER && e.metaKey;
 
     // we need to verify the source of the keypress event
     // so that if it comes from the discard draft modal, it should not
@@ -665,6 +644,7 @@ class ComposerWithData extends Component<Props, State> {
       networkOnline,
       websocketConnection,
       isSlider,
+      isEditing,
     } = this.props;
     const dataExists = user && availableCommunities && availableChannels;
 
@@ -721,77 +701,18 @@ class ComposerWithData extends Component<Props, State> {
               </RequiredSelector>
             )}
           </Dropdowns>
-          <ThreadInputs>
-            <SegmentedControl
-              css={{
-                marginRight: 0,
-                marginLeft: 0,
-                marginTop: 0,
-                marginBottom: '32px',
-              }}
-            >
-              <Segment
-                selected={!this.state.preview}
-                onClick={() => this.setState({ preview: false })}
-              >
-                Write
-              </Segment>
-              <Segment
-                selected={this.state.preview}
-                onClick={() => this.setState({ preview: true })}
-              >
-                Preview
-              </Segment>
-            </SegmentedControl>
-            {preview ? (
-              /* $FlowFixMe */
-              <div style={{ padding: '0 32px' }}>
-                <ThreadHeading>{this.state.title}</ThreadHeading>
-                {/* $FlowFixMe */}
-                <PreviewEditor
-                  state={toState(
-                    JSON.parse(processThreadContent('TEXT', this.state.body))
-                  )}
-                />
-              </div>
-            ) : (
-              <Dropzone
-                accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
-                disableClick
-                multiple={false}
-                onDropAccepted={this.uploadFiles}
-              >
-                {({ getRootProps, getInputProps, isDragActive }) => (
-                  <DropzoneWrapper
-                    {...getRootProps({
-                      refKey: 'innerRef',
-                    })}
-                  >
-                    <input {...getInputProps()} />
-                    <Textarea
-                      data-cy="composer-title-input"
-                      onChange={this.changeTitle}
-                      style={ThreadTitle}
-                      value={this.state.title}
-                      placeholder={'What‘s on your mind?'}
-                      autoFocus={!threadSliderIsOpen}
-                    />
 
-                    <MentionsInput
-                      onChange={this.changeBody}
-                      value={this.state.body}
-                      style={ThreadDescription}
-                      inputRef={editor => (this.bodyEditor = editor)}
-                      placeholder={'Add more thoughts here...'}
-                      className={'threadComposer'}
-                      dataCy="rich-text-editor"
-                    />
-                    <DropImageOverlay visible={isDragActive} />
-                  </DropzoneWrapper>
-                )}
-              </Dropzone>
-            )}
-          </ThreadInputs>
+          <Inputs
+            title={this.state.title}
+            body={this.state.body}
+            changeBody={this.changeBody}
+            changeTitle={this.changeTitle}
+            uploadFiles={this.uploadFiles}
+            autoFocus={!threadSliderIsOpen}
+            bodyRef={ref => (this.bodyEditor = ref)}
+            onKeyDown={this.handleGlobalKeyPress}
+            isEditing={isEditing}
+          />
 
           {networkDisabled && (
             <DisabledWarning>

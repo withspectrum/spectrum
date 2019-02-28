@@ -49,6 +49,14 @@ export const createSigninRoutes = (
           ? new URL(req.session.redirectUrl)
           : new URL(FALLBACK_URL);
         redirectUrl.searchParams.append('authed', 'true');
+        if (req.authInfo && req.authInfo.message) {
+          redirectUrl.searchParams.append(
+            'toastMessage',
+            // $FlowIssue
+            req.authInfo.message
+          );
+          redirectUrl.searchParams.append('toastType', 'error');
+        }
 
         // Delete the redirectURL from the session again so we don't redirect
         // to the old URL the next time around

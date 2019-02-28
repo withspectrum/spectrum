@@ -147,9 +147,7 @@ class UserView extends React.Component<Props, State> {
         },
       });
 
-      const nullHeading = `${
-        user.firstName ? user.firstName : user.name
-      } hasn’t ${
+      const nullHeading = `${user.name} hasn’t ${
         selectedView === 'creator' ? 'created' : 'joined'
       } any conversations yet.`;
 

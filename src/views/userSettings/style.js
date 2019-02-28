@@ -137,3 +137,15 @@ export const GithubSignin = styled.div`
     margin-top: 8px;
   }
 `;
+
+export const LogoutWrapper = styled.div`
+  display: none;
+
+  button {
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+`;

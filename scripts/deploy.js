@@ -7,6 +7,7 @@ const error = require('./utils/error');
 const exec = process.env.DEBUG
   ? cmd => {
       console.log(`[DEBUG] ${cmd}`);
+      return 'fake-url-asdf123.now.sh';
     }
   : execSync;
 // Append --team space-program to all now commands
@@ -75,9 +76,12 @@ if (servers.indexOf('hyperion') > -1) {
     stdio: 'inherit',
   });
   console.log('Aliasing to hyperion.workers.spectrum.chat');
-  exec(now('alias hyperion.workers.spectrum.chat'), {
-    stdio: 'inherit',
-  });
+  exec(
+    now(`alias hyperion.${flags.prod ? 'workers' : 'alpha'}.spectrum.chat`),
+    {
+      stdio: 'inherit',
+    }
+  );
   console.log('Clearing cache');
   exec(
     now(
@@ -122,6 +126,11 @@ if (servers.length > 0) {
       stdio: 'inherit',
     });
 
-    console.log(`${server} is live!\n`);
+    console.log(`${server} is live!`);
+    console.log('Deleting old deploy(s)...');
+    exec(now(`rm --safe --yes build-${server}`), {
+      stdio: 'inherit',
+    });
+    console.log('Done!\n');
   });
 }

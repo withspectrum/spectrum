@@ -8,7 +8,19 @@ export const signCommunity = (community: DBCommunity, expires?: number): DBCommu
 
   return {
     ...rest,
-    profilePhoto: signImageUrl(profilePhoto, { w: 256, h: 256, expires }),
-    coverPhoto: signImageUrl(coverPhoto, { w: 1280, h: 384, expires }),
+    profilePhoto: signImageUrl(profilePhoto, { 
+      w: 256, 
+      h: 256, 
+      dpr: 2, 
+      auto: 'compress',
+      expires 
+    }),
+    coverPhoto: signImageUrl(coverPhoto, { 
+      w: 1280, 
+      h: 384, 
+      dpr: 2, 
+      q: 100,
+      expires 
+    }),
   };
 };

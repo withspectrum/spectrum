@@ -53,10 +53,7 @@ describe('Thread View', () => {
       const newMessage = 'A new message!';
       cy.get('[data-cy="thread-view"]').should('be.visible');
       cy.get('[data-cy="join-channel-login-upsell"]').should('be.visible');
-      cy.get('[data-cy="thread-join-channel-upsell-button"]').should(
-        'be.visible'
-      );
-      cy.get('[data-cy="thread-join-channel-upsell-button"]').click();
+      cy.get('[data-cy="join-channel-login-upsell"]').click();
       cy.get('[data-cy="login-modal"]').should('be.visible');
     });
   });
