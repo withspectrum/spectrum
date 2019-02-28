@@ -1,5 +1,6 @@
 // @flow
-import React from 'react';
+// $FlowIssue
+import React, { useEffect } from 'react';
 import compose from 'recompose/compose';
 import {
   getCommunityById,
@@ -31,9 +32,15 @@ const CommunitySelector = (props: Props) => {
     just return the AvailableCommunitiesDropdown which will do a followup
     fetch of all the current user's communities
   */
+  useEffect(
+    () => {
+      // remove any parent selected community id
+      if (error) onCommunityChange('');
+    },
+    [error]
+  );
+
   if (error) {
-    // remove any parent selected community id
-    onCommunityChange('');
     return <AvailableCommunitiesDropdown onChange={onChange} />;
   }
 

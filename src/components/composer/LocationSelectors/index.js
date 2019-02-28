@@ -38,11 +38,6 @@ const ComposerLocationSelectors = (props: Props) => {
     onChannelSelectionChanged(composerChannelId);
   };
 
-  // Run once on mount
-  useEffect(() => {
-    setStateFromQueryParams();
-  }, []);
-
   /*
     Whenever the browser location.search changes, check for query parameters 
     related to the composer and update the state of the composer.
