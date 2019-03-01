@@ -135,9 +135,11 @@ describe('/new/thread community and channel selection', () => {
     publishButtonIsDisabled();
 
     communityDropdown().select('Spectrum');
+    cy.wait(50);
     channelDropdown()
       .should('be.visible')
-      .select('', { force: true });
+      .select('');
+    cy.wait(50);
     publishButtonIsDisabled();
 
     channelDropdown().select('General');
