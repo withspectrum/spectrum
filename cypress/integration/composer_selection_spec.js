@@ -72,7 +72,7 @@ const closeMobileCommunityMenu = () => {
     .click('right', { force: true });
 };
 
-describe.only('/new/thread community and channel selection', () => {
+describe('/new/thread community and channel selection', () => {
   beforeEach(() => {
     cy.auth(user.id);
   });
