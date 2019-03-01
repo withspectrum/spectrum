@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { withApollo } from 'react-apollo';
 import { connect } from 'react-redux';
-import queryString from 'query-string';
 import compose from 'recompose/compose';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import Icon from 'src/components/icons';
@@ -40,6 +39,10 @@ type Props = {
   count: number,
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
+  threadSlider: {
+    isOpen: boolean,
+    threadId: ?string,
+  },
 };
 
 type State = {
@@ -64,8 +67,8 @@ class NotificationsTab extends React.Component<Props, State> {
 
     const prevLocation = curr.location;
     const nextLocation = nextProps.location;
-    const { thread: prevThreadParam } = queryString.parse(prevLocation.search);
-    const { thread: nextThreadParam } = queryString.parse(nextLocation.search);
+    const prevThreadParam = curr.threadSlider.threadId;
+    const nextThreadParam = nextProps.threadSlider.threadId;
     const prevActiveInboxThread = curr.activeInboxThread;
     const nextActiveInboxThread = nextProps.activeInboxThread;
     const prevParts = prevLocation.pathname.split('/');
@@ -171,8 +174,8 @@ class NotificationsTab extends React.Component<Props, State> {
       return this.processAndMarkSeenNotifications();
     }
 
-    const { thread: prevThreadParam } = queryString.parse(prevLocation.search);
-    const { thread: thisThreadParam } = queryString.parse(curr.location.search);
+    const prevThreadParam = prev.threadSlider.threadId;
+    const thisThreadParam = curr.threadSlider.threadId;
     const prevParts = prevLocation.pathname.split('/');
     const thisParts = prevLocation.pathname.split('/');
 
@@ -271,7 +274,7 @@ class NotificationsTab extends React.Component<Props, State> {
     const distinct = deduplicateChildren(nodes, 'id');
 
     /*
-      1. If the user is viewing a ?thread= url, don't display a notification
+      1. If the user is viewing a thread in a modal, don't display a notification
         badge for that thread, and mark any incoming notifications for that
         thread as seen
       2. If the user is viewing a ?t= url in the inbox, same logic
@@ -280,7 +283,7 @@ class NotificationsTab extends React.Component<Props, State> {
 
     const filteredByContext = distinct.map(n => {
       const contextId = n.context.id;
-      const { thread: threadParam } = queryString.parse(location.search);
+      const threadParam = this.props.threadSlider.threadId;
 
       // 1
       const isViewingSlider = threadParam === contextId && !n.isSeen;
@@ -449,6 +452,7 @@ const map = state => ({
   count: state.notifications.notifications,
   networkOnline: state.connectionStatus.networkOnline,
   websocketConnection: state.connectionStatus.websocketConnection,
+  threadSlider: state.threadSlider,
 });
 
 export default compose(

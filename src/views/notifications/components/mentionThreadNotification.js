@@ -22,6 +22,7 @@ import {
   CardLink,
   CardContent,
 } from '../../../components/threadFeedCard/style';
+import getThreadLink from 'src/helpers/get-thread-link';
 
 type Props = {
   notification: Object,
@@ -41,9 +42,10 @@ const ThreadComponent = ({
   return <ThreadProfile profileSize="mini" data={data} {...rest} />;
 };
 
-const ThreadCreated = compose(getThreadById, displayLoadingCard)(
-  ThreadComponent
-);
+const ThreadCreated = compose(
+  getThreadById,
+  displayLoadingCard
+)(ThreadComponent);
 
 /*
   NOTE: @brianlovin
@@ -112,8 +114,8 @@ export class MiniMentionThreadNotification extends React.Component<
       <NotificationListRow isSeen={notification.isSeen}>
         <CardLink
           to={{
-            pathname: window.location.pathname,
-            search: `?thread=${notification.context.id}`,
+            pathname: getThreadLink(notification.context.payload),
+            state: { modal: true },
           }}
         />
         <CardContent>

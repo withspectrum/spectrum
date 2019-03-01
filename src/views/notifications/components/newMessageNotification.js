@@ -20,6 +20,7 @@ import {
   SuccessContext,
   Content,
 } from '../style';
+import getThreadLink from 'src/helpers/get-thread-link';
 
 type Props = {
   notification: Object,
@@ -48,8 +49,8 @@ export const NewMessageNotification = ({
     <NotificationCard isSeen={notification.isSeen}>
       <CardLink
         to={{
-          pathname: window.location.pathname,
-          search: `?thread=${notification.context.id}`,
+          pathname: getThreadLink(notification.context.payload),
+          state: { modal: true },
         }}
       />
       <CardContent>
@@ -82,8 +83,8 @@ export const MiniNewMessageNotification = ({
     <NotificationListRow isSeen={notification.isSeen}>
       <CardLink
         to={{
-          pathname: window.location.pathname,
-          search: `?thread=${notification.context.id}`,
+          pathname: getThreadLink(notification.context.payload),
+          state: { modal: true },
         }}
       />
       <CardContent>
