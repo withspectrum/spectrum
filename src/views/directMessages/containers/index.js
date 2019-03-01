@@ -37,8 +37,6 @@ class DirectMessages extends React.Component<Props, State> {
     const isComposing = activeThreadId === 'new';
     const isViewingThread = !isComposing && !!activeThreadId;
 
-    console.log({ isComposing, isViewingThread, activeThreadId });
-
     return (
       <View>
         <Titlebar
