@@ -10,7 +10,7 @@ import processThreadContent from 'shared/draft-utils/process-thread-content';
 import { ThreadHeading } from 'src/views/thread/style';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import ThreadRenderer from '../threadRenderer';
-import { openModal } from 'src/actions/modals';
+import { openModal, closeModal } from 'src/actions/modals';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import {
   toPlainText,
@@ -177,34 +177,39 @@ class ComposerWithData extends React.Component<Props, State> {
 
   handleGlobalKeyPress = e => {
     const esc = e && e.keyCode === ESC;
+    const enter = e.keyCode === ENTER;
+    const cmdEnter = e.keyCode === ENTER && e.metaKey;
 
     // we need to verify the source of the keypress event
     // so that if it comes from the discard draft modal, it should not
     // listen to the events for composer
-
     const innerText = e.target.innerText;
     const modalIsOpen = innerText.indexOf(DISCARD_DRAFT_MESSAGE) >= 0;
 
-    if (modalIsOpen) {
+    if (esc && modalIsOpen) {
       e.stopPropagation();
-      this.closeComposer();
-      this.activateLastThread();
+      this.props.dispatch(closeModal());
       return;
     }
 
-    const sliderOpen = this.props.isOpen;
-    const composerHasContent = this.composerHasContent();
-
-    if (esc && sliderOpen && composerHasContent) {
+    if (enter && modalIsOpen) {
+      e.stopPropagation();
       this.discardDraft();
       return;
     }
 
-    if (esc && sliderOpen && !composerHasContent) {
+    const composerHasContent = this.composerHasContent();
+
+    if (esc && composerHasContent) {
+      this.discardDraft();
+      return;
+    }
+
+    if (esc && !composerHasContent) {
       return this.closeComposer();
     }
 
-    if (cmdEnter) return this.publishThread();
+    if (cmdEnter && !modalIsOpen) return this.publishThread();
   };
 
   composerHasContent = () => {

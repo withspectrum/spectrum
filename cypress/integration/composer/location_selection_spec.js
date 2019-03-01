@@ -1,4 +1,4 @@
-import data from '../../shared/testing/data';
+import data from '../../../shared/testing/data';
 const user = data.users.find(user => user.username === 'brian');
 const singleCommunityUser = data.users.find(
   user => user.username === 'single-community-user'

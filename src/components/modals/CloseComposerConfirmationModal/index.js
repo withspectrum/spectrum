@@ -84,7 +84,11 @@ class CloseComposerConfirmation extends React.Component<Props, State> {
         style={styles}
         closeTimeoutMS={330}
       >
-        <ModalContainer title={'Discard Draft'} closeModal={this.close}>
+        <ModalContainer
+          dataCy="discard-draft-modal"
+          title={'Discard Draft'}
+          closeModal={this.close}
+        >
           <Message>
             {message ? message : 'Are you sure you want to discard this draft?'}
           </Message>
@@ -94,6 +98,7 @@ class CloseComposerConfirmation extends React.Component<Props, State> {
               color={'text.placeholder'}
               hoverColor={'warn.default'}
               onClick={this.close}
+              dataCy={'discard-draft-cancel'}
             >
               Cancel
             </TextButton>
@@ -102,6 +107,7 @@ class CloseComposerConfirmation extends React.Component<Props, State> {
               gradientTheme={'warn'}
               color={'warn.default'}
               hoverColor={'warn.default'}
+              dataCy={'discard-draft-discard'}
               onClick={() => this.closeConfirmed(functions)}
             >
               Discard

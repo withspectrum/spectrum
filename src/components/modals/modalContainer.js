@@ -12,13 +12,15 @@ const ModalContainer = ({
   children,
   title,
   noHeader,
+  dataCy,
 }: {
   closeModal: Function,
   children?: Object,
   title: string,
+  dataCy?: string,
 }): React$Element<any> => {
   return (
-    <ModalBody>
+    <ModalBody data-cy={dataCy}>
       <Header noHeader={noHeader}>
         <Title>{title}</Title>
         <CloseButton onClick={() => closeModal()} glyph="view-close" />
