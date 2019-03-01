@@ -52,6 +52,17 @@ const ChannelSelector = (props: Props) => {
   const nodes = edges.map(edge => edge && edge.node);
 
   /*
+    If there is no channelId in the url and there is only one channel in the
+    community (eg general) then just select that first community by default
+  */
+  if (!selectedChannelId && nodes.length === 1) {
+    const firstChannel = nodes[0];
+    const fakeEvent = { target: { value: firstChannel.id } };
+    onChange(fakeEvent);
+    return null;
+  }
+
+  /*
     Selection should be disabled if the channelId was passed as a url query
     param and *also* is that query param is actually a channel within the
     selected community. If it's not, then we should clear out the community
