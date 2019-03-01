@@ -84,7 +84,10 @@ describe('composer modal route', () => {
     composerPlaceholder().click();
     threadComposer().should('be.visible');
     threadComposerWrapper().should('be.visible');
-    cy.url().should('eq', 'http://localhost:3000/new/thread?communityId=1');
+    cy.url().should(
+      'eq',
+      'http://localhost:3000/new/thread?composerCommunityId=1'
+    );
 
     pressEscape();
 
@@ -101,7 +104,7 @@ describe('composer modal route', () => {
     threadComposerWrapper().should('be.visible');
     cy.url().should(
       'eq',
-      'http://localhost:3000/new/thread?channelId=1&communityId=1'
+      'http://localhost:3000/new/thread?composerChannelId=1&composerCommunityId=1'
     );
 
     pressEscape();
