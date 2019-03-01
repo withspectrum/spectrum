@@ -1,4 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
 <!-- 
   START_CONFIG
   { 
@@ -13,7 +14,6 @@
   }
   END_CONFIG
 -->
-<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -121,7 +121,7 @@
                 </tr>
                 {{/data.hasOverflowThreads}}
 
-                {{#data.communities}}
+                {{#if data.communities}}
                 <tr>
                   <td style="word-break:break-word">
                     <div class="section-divider" style="border-bottom:1px solid #DAE4F2; display:block; height:1px; margin:32px 0" height="1"></div>
@@ -133,7 +133,7 @@
                     <h2 class="discover-divider" style="color:#16171A; font-size:20px; font-weight:bold; margin-top:0; text-align:left; margin-bottom:0" align="left">Discover more communities:</h2>
                   </td>
                 </tr>
-                {{/data.communities}}
+                {{/if}}
 
                 {{#each data.communities}}
                 <tr>
