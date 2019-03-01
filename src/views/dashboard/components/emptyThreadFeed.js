@@ -11,7 +11,7 @@ const EmptyThreadFeed = ({ dispatch, communityId, channelId }) => {
   const { pathname, search } = getComposerLink({ communityId, channelId });
 
   return (
-    <NullThreadFeed>
+    <NullThreadFeed data-cy="inbox-thread-feed">
       <NullHeading>
         Your feed's a little quiet right now, but don't worry...
       </NullHeading>
