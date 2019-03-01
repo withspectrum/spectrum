@@ -88,10 +88,10 @@ jobs:
       - run: *setup-and-build-web
       - run: *build-api
       - persist_to_workspace:
-        root: .
-        paths:
-          - build-api
-          - build
+          root: .
+          paths:
+            - build-api
+            - build
 
   test_unit:
     <<: *defaults
