@@ -131,6 +131,7 @@ describe('/new/thread community and channel selection', () => {
     publishButtonIsEnabled();
 
     communityDropdown().select('');
+    channelDropdown().should('not.be.visible');
     publishButtonIsDisabled();
 
     communityDropdown().select('Spectrum');
