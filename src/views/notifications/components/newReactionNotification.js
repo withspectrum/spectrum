@@ -14,12 +14,8 @@ import {
   ReactionContext,
   Content,
 } from '../style';
-import Icon from '../../../components/icons';
-import {
-  CardLink,
-  CardContent,
-} from '../../../components/threadFeedCard/style';
-import getThreadLink from 'src/helpers/get-thread-link';
+import Icon from 'src/components/icons';
+import { CardLink, CardContent } from 'src/components/threadFeedCard/style';
 
 type Props = {
   notification: Object,

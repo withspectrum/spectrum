@@ -43,7 +43,8 @@ export const LAST_ACTIVE_COMMUNITY_KEY = 'last-active-inbox-community';
 class CommunityList extends React.Component<Props> {
   componentDidMount() {
     const id = getItemFromStorage(LAST_ACTIVE_COMMUNITY_KEY);
-    if (id) this.props.dispatch(changeActiveCommunity(id));
+    if (id) return this.props.dispatch(changeActiveCommunity(id));
+    this.props.dispatch(changeActiveCommunity(''));
   }
 
   changeCommunity = id => {
@@ -107,6 +108,7 @@ class CommunityList extends React.Component<Props> {
       <CommunityListWrapper data-cy="inbox-community-list">
         <CommunityListScroller>
           <CommunityListItem
+            data-cy="inbox-community-list-item"
             active={!activeCommunity}
             onClick={() => this.changeCommunity('')}
           >
@@ -116,6 +118,7 @@ class CommunityList extends React.Component<Props> {
           {sortedCommunities.map(c => (
             <ErrorBoundary fallbackComponent={null} key={c.id}>
               <CommunityListItem
+                data-cy="inbox-community-list-item"
                 onClick={() => this.handleOnClick(c.id)}
                 active={c.id === activeCommunity}
               >

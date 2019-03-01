@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import Icon from '../icons';
-import { hexa, Shadow, FlexRow, FlexCol, zIndex, Tooltip } from '../globals';
+import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
 
 export const DropzoneWrapper = styled.div`
   position: sticky;
@@ -21,6 +21,17 @@ export const DropImageOverlay = (props: { visible: boolean }) => {
     </DropImageOverlayWrapper>
   );
 };
+
+export const Wrapper = styled.div`
+  position: absolute;
+  width: 100vw;
+  height: calc(100vh - 48px);
+  bottom: 0;
+
+  @media (max-width: 768px) {
+    height: 100vh;
+  }
+`;
 
 export const DropImageOverlayWrapper = styled.div`
   position: absolute;
@@ -49,26 +60,10 @@ export const DropImageOverlayWrapper = styled.div`
         `}
 `;
 
-export const ComposerSlider = styled.div`
-  display: ${props => (props.isSlider ? 'none' : 'block')};
-  ${props =>
-    props.isSlider &&
-    props.isOpen &&
-    css`
-      display: block;
-      position: fixed;
-      width: 50%;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      z-index: ${zIndex.composer};
-    `}
-`;
-
 export const Overlay = styled.div`
   ${props =>
-    props.isOpen
-      ? `
+    props.slider &&
+    css`
       position: fixed;
       top: 48px;
       left: 0;
@@ -80,12 +75,7 @@ export const Overlay = styled.div`
       background: #000;
       pointer-events: auto;
       opacity: 0.4;
-    `
-      : `
-      opacity: 0;
-      pointer-events: none;
-
-    `};
+    `}
 `;
 
 export const Container = styled(FlexCol)`
@@ -101,10 +91,21 @@ export const Container = styled(FlexCol)`
   position: relative;
   z-index: ${zIndex.composer};
 
+  ${props =>
+    props.slider &&
+    css`
+      right: 0;
+      position: absolute;
+      width: 650px;
+      top: 0;
+      height: 100%;
+    `}
+
   @media (max-width: 768px) {
     grid-template-rows: 48px 64px 1fr 64px;
     grid-template-areas: 'title' 'header' 'body' 'footer';
     max-width: 100vw;
+    width: 100%;
     height: 100vh;
   }
 `;
@@ -172,26 +173,42 @@ export const Dropdowns = styled(FlexRow)`
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   z-index: 9999;
   grid-area: header;
-
-  span {
-    font-size: 14px;
-    font-weight: 500;
-    color: ${theme.text.alt};
-    margin-left: 16px;
-    line-height: 1;
-    vertical-align: middle;
-    position: relative;
-    top: 1px;
-
-    @media (max-width: 768px) {
-      display: none;
-    }
-  }
+  border-bottom: 1px solid ${theme.bg.border};
 
   @media (max-width: 768px) {
     width: 100%;
     justify-content: flex-start;
   }
+`;
+
+export const DropdownsLabel = styled.span`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${theme.text.secondary};
+  margin-left: 16px;
+  line-height: 1;
+  vertical-align: middle;
+  position: relative;
+  top: 1px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const CommunityPreview = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${theme.text.secondary};
+  margin-left: 16px;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  position: relative;
+`;
+
+export const ChannelPreview = styled(CommunityPreview)`
+  margin-left: 0;
 `;
 
 const Selector = styled.select`
@@ -217,10 +234,16 @@ const Selector = styled.select`
 
 export const RequiredSelector = styled(Selector)`
   padding: 8px 12px;
-  border: 2px solid ${theme.bg.border};
+  max-height: 38px;
+  display: flex;
+  align-items: center;
+  line-height: 1.2;
+  border: 2px solid
+    ${props => (props.emphasize ? theme.brand.alt : theme.bg.border)};
   border-radius: 8px;
-  color: ${theme.text.default};
-  background-color: ${theme.bg.default};
+  color: ${props => (props.emphasize ? theme.brand.alt : theme.text.default)};
+  background-color: ${props =>
+    props.disabled ? theme.bg.wash : theme.bg.default};
 `;
 
 export const OptionalSelector = styled(Selector)`
