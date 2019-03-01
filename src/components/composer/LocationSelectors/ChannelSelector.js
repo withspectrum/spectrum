@@ -57,6 +57,7 @@ const ChannelSelector = (props: Props) => {
   */
   if (!selectedChannelId && nodes.length === 1) {
     const firstChannel = nodes[0];
+    if (!firstChannel) return;
     const fakeEvent = { target: { value: firstChannel.id } };
     onChange(fakeEvent);
     return null;
