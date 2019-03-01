@@ -83,6 +83,7 @@ jobs:
   test_unit:
     <<: *defaults
     docker:
+      - image: circleci/node:8
       - image: redis:3.2.7
       - image: rethinkdb:2.3.5
     environment:
