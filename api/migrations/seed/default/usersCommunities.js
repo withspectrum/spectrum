@@ -12,6 +12,7 @@ const {
   SPECTRUM_COMMUNITY_ID,
   PAYMENTS_COMMUNITY_ID,
   PRIVATE_COMMUNITY_ID,
+  SINGLE_CHANNEL_COMMUNITY_ID,
 } = constants;
 
 module.exports = [
@@ -198,5 +199,19 @@ module.exports = [
     isPending: false,
     receiveNotifications: true,
     reputation: 100,
+  },
+
+  {
+    id: '16',
+    createdAt: new Date(DATE),
+    userId: BRIAN_ID,
+    communityId: SINGLE_CHANNEL_COMMUNITY_ID,
+    isOwner: false,
+    isModerator: false,
+    isMember: true,
+    isBlocked: false,
+    isPending: false,
+    receiveNotifications: true,
+    reputation: 0,
   },
 ];

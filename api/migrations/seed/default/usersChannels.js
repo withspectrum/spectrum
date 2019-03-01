@@ -18,6 +18,7 @@ const {
   PAYMENTS_PRIVATE_CHANNEL_ID,
   PAYMENTS_FEATURES_CHANNEL_ID,
   MODERATOR_CREATED_CHANNEL_ID,
+  SINGLE_CHANNEL_COMMUNITY_GENERAL_CHANNEL_ID,
 } = constants;
 
 module.exports = [
@@ -403,6 +404,18 @@ module.exports = [
     userId: MAX_ID,
     channelId: PRIVATE_GENERAL_CHANNEL_ID,
     isOwner: true,
+    isModerator: false,
+    isMember: true,
+    isBlocked: false,
+    isPending: false,
+    receiveNotifications: false,
+  },
+  {
+    id: '33',
+    createdAt: new Date(DATE),
+    userId: BRIAN_ID,
+    channelId: SINGLE_CHANNEL_COMMUNITY_GENERAL_CHANNEL_ID,
+    isOwner: false,
     isModerator: false,
     isMember: true,
     isBlocked: false,

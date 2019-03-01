@@ -6,6 +6,7 @@ const {
   PAYMENTS_COMMUNITY_ID,
   DELETED_COMMUNITY_ID,
   PRIVATE_COMMUNITY_ID,
+  SINGLE_CHANNEL_COMMUNITY_ID,
   SPECTRUM_GENERAL_CHANNEL_ID,
   SPECTRUM_PRIVATE_CHANNEL_ID,
   PAYMENTS_GENERAL_CHANNEL_ID,
@@ -16,6 +17,7 @@ const {
   DELETED_COMMUNITY_DELETED_CHANNEL_ID,
   MODERATOR_CREATED_CHANNEL_ID,
   PRIVATE_GENERAL_CHANNEL_ID,
+  SINGLE_CHANNEL_COMMUNITY_GENERAL_CHANNEL_ID,
 } = constants;
 
 module.exports = [
@@ -137,6 +139,18 @@ module.exports = [
     name: 'General',
     description: 'General',
     slug: 'private-general',
+    isPrivate: false,
+    isDefault: false,
+    memberCount: 1,
+  },
+
+  {
+    id: SINGLE_CHANNEL_COMMUNITY_GENERAL_CHANNEL_ID,
+    communityId: SINGLE_CHANNEL_COMMUNITY_ID,
+    createdAt: new Date(DATE),
+    name: 'General',
+    description: 'General',
+    slug: 'general',
     isPrivate: false,
     isDefault: false,
     memberCount: 1,

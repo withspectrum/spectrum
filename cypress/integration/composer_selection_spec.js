@@ -76,6 +76,13 @@ describe('/new/thread community and channel selection', () => {
     cy.auth(user.id);
   });
 
+  it.only('selects an only channel by default if no channel query param is passed', () => {
+    cy.visit('/new/thread?composerCommunityId=5');
+    communityIsLocked();
+    channelDropdownIsEnabled();
+    channelDropdown().contains('General');
+  });
+
   it('does not select a community or channel if no query params are passed', () => {
     cy.visit('/new/thread');
     publishButtonIsDisabled();
