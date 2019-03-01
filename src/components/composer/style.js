@@ -27,6 +27,10 @@ export const Wrapper = styled.div`
   width: 100vw;
   height: calc(100vh - 48px);
   bottom: 0;
+
+  @media (max-width: 768px) {
+    height: 100vh;
+  }
 `;
 
 export const DropImageOverlayWrapper = styled.div`
