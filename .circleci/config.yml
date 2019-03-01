@@ -88,6 +88,8 @@ jobs:
       - image: redis:3.2.7
       - image: cypress/base:6
       - image: rethinkdb:2.3.5
+    parallel: true
+    parallelism: 9
     environment:
       TERM: xterm
     steps:
