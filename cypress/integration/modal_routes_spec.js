@@ -203,5 +203,10 @@ describe('thread modal route', () => {
       .first()
       .click();
     threadSlider().should('be.visible');
+    pressEscape();
+    cy.url(
+      'eq',
+      'http://localhost:3000/spectrum/private/yet-another-thread~thread-6'
+    );
   });
 });
