@@ -22,6 +22,13 @@ export const DropImageOverlay = (props: { visible: boolean }) => {
   );
 };
 
+export const Wrapper = styled.div`
+  position: absolute;
+  width: 100vw;
+  height: calc(100vh - 48px);
+  bottom: 0;
+`;
+
 export const DropImageOverlayWrapper = styled.div`
   position: absolute;
   top: -32px;
@@ -227,10 +234,10 @@ export const RequiredSelector = styled(Selector)`
   display: flex;
   align-items: center;
   line-height: 1.2;
-  border: 2px solid ${theme.bg.border};
+  border: 2px solid
+    ${props => (props.emphasize ? theme.brand.alt : theme.bg.border)};
   border-radius: 8px;
-  color: ${props =>
-    props.disabled ? theme.text.secondary : theme.text.default};
+  color: ${props => (props.emphasize ? theme.brand.alt : theme.text.default)};
   background-color: ${props =>
     props.disabled ? theme.bg.wash : theme.bg.default};
 `;

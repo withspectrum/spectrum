@@ -92,7 +92,7 @@ const ChannelSelector = (props: Props) => {
           data-cy="composer-channel-selector"
           onChange={onChange}
           value={channelIsValid ? selectedChannelId : ''}
-          disabled={shouldDisableChannelSelect}
+          emphasize={!selectedChannelId}
         >
           {/* $FlowIssue */}
           <React.Fragment>
@@ -124,7 +124,7 @@ const ChannelSelector = (props: Props) => {
       data-cy="composer-channel-selector"
       onChange={onChange}
       value={channelIsValid ? selectedChannelId : ''}
-      disabled={shouldDisableChannelSelect}
+      emphasize={!selectedChannelId}
     >
       {/* $FlowIssue */}
       <React.Fragment>

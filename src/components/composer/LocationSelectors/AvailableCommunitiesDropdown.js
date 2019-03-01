@@ -59,8 +59,8 @@ const AvailableCommunitiesDropdown = (props: Props) => {
         <RequiredSelector
           data-cy="composer-community-selector"
           onChange={onChange}
-          disabled={shouldDisableCommunitySelect}
           value={id}
+          emphasize={!id}
         >
           {/* $FlowIssue */}
           <React.Fragment>
@@ -93,8 +93,8 @@ const AvailableCommunitiesDropdown = (props: Props) => {
     <RequiredSelector
       data-cy="composer-community-selector"
       onChange={onChange}
-      disabled={shouldDisableCommunitySelect}
       value={id}
+      emphasize={!id}
     >
       {/* $FlowIssue */}
       <React.Fragment>

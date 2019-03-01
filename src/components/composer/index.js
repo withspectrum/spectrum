@@ -31,6 +31,7 @@ import {
   InputHints,
   DesktopLink,
   ButtonRow,
+  Wrapper,
 } from './style';
 import { events, track } from 'src/helpers/analytics';
 import { ESC, ENTER } from 'src/helpers/keycodes';
@@ -439,14 +440,7 @@ class ComposerWithData extends React.Component<Props, State> {
         websocketConnection !== 'reconnected');
 
     return (
-      <div
-        style={{
-          width: '100vw',
-          height: '100vh',
-          position: 'absolute',
-        }}
-        data-cy="thread-composer-wrapper"
-      >
+      <Wrapper data-cy="thread-composer-wrapper">
         <Overlay
           slider={slider}
           onClick={this.closeComposer}
@@ -533,7 +527,7 @@ class ComposerWithData extends React.Component<Props, State> {
             </ButtonRow>
           </Actions>
         </Container>
-      </div>
+      </Wrapper>
     );
   }
 }
