@@ -443,14 +443,21 @@ class ComposerWithData extends React.Component<Props, State> {
         websocketConnection !== 'reconnected');
 
     return (
-      <React.Fragment>
+      <div
+        style={{
+          width: '100vw',
+          height: '100vh',
+          position: 'absolute',
+        }}
+        data-cy="thread-composer-wrapper"
+      >
         <Overlay
           slider={slider}
           onClick={this.closeComposer}
           data-cy="thread-composer-overlay"
         />
 
-        <Container slider={slider}>
+        <Container data-cy="thread-composer" slider={slider}>
           <Titlebar provideBack title={'New conversation'} noComposer />
 
           <ComposerLocationSelectors
@@ -530,7 +537,7 @@ class ComposerWithData extends React.Component<Props, State> {
             </ButtonRow>
           </Actions>
         </Container>
-      </React.Fragment>
+      </div>
     );
   }
 }

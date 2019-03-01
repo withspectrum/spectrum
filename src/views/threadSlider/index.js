@@ -63,27 +63,25 @@ class ThreadSlider extends Component {
 
     return (
       <ErrorBoundary>
-        <div>
-          <Container>
-            <div onClick={this.closeSlider}>
-              <Overlay entered />
-            </div>
-            <Thread entered>
-              <Close onClick={this.closeSlider}>
-                <CloseLabel>Close</CloseLabel>
-                <CloseButton>
-                  <Icon glyph="view-forward" size={24} />
-                </CloseButton>
-              </Close>
+        <Container data-cy="thread-slider">
+          <div onClick={this.closeSlider}>
+            <Overlay data-cy="thread-slider-overlay" entered />
+          </div>
+          <Thread entered>
+            <Close data-cy="thread-slider-close" onClick={this.closeSlider}>
+              <CloseLabel>Close</CloseLabel>
+              <CloseButton>
+                <Icon glyph="view-forward" size={24} />
+              </CloseButton>
+            </Close>
 
-              <SliderThreadView
-                threadId={threadId}
-                threadViewContext={'slider'}
-                slider
-              />
-            </Thread>
-          </Container>
-        </div>
+            <SliderThreadView
+              threadId={threadId}
+              threadViewContext={'slider'}
+              slider
+            />
+          </Thread>
+        </Container>
       </ErrorBoundary>
     );
   }

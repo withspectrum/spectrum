@@ -8,12 +8,14 @@ type Props = {
 
 const getComposerLink = (props: Props) => {
   const { communityId, channelId } = props;
+
+  const search = {};
+  if (communityId) search.communityId = communityId;
+  if (channelId) search.channelId = channelId;
+
   return {
     pathname: `/new/thread`,
-    search: qs.stringify({
-      composerCommunityId: communityId && communityId,
-      composerChannelId: channelId && channelId,
-    }),
+    search: qs.stringify(search),
   };
 };
 

@@ -65,7 +65,7 @@ class InboxThread extends React.Component<Props> {
 
     return (
       <ErrorBoundary fallbackComponent={null}>
-        <InboxThreadItem active={active}>
+        <InboxThreadItem data-cy="thread-card" active={active}>
           <InboxLinkWrapper
             to={{
               pathname: getThreadLink(thread),

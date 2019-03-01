@@ -26,7 +26,7 @@ class Attachment extends React.Component<Props> {
     if (!thread) return null;
 
     return (
-      <Container>
+      <Container data-cy="thread-attachment">
         <LinkWrapper
           onClick={e => e.stopPropagation()}
           to={{ search: `?thread=${thread.id}` }}

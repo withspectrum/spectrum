@@ -18,7 +18,11 @@ const animation = css`
       : ''};
 `;
 
-export const Container = styled.div``;
+export const Container = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+`;
 
 export const Overlay = styled.div`
   position: fixed;
