@@ -33,7 +33,7 @@ import Navbar from 'src/views/navbar';
 import Status from 'src/views/status';
 import Login from 'src/views/login';
 import DirectMessages from 'src/views/directMessages';
-import { FullscreenThreadView, SliderThreadView } from 'src/views/thread';
+import { FullscreenThreadView } from 'src/views/thread';
 import ThirdPartyContext from 'src/components/thirdPartyContextSetting';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Maintenance from 'src/components/maintenance';

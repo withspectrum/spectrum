@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  openThreadSlider,
-  closeThreadSlider,
-} from '../../actions/threadSlider';
-import { Link } from 'react-router-dom';
-import Transition from 'react-transition-group/Transition';
+import { openThreadSlider, closeThreadSlider } from 'src/actions/threadSlider';
 import {
   Container,
   Overlay,
@@ -14,12 +9,10 @@ import {
   CloseButton,
   CloseLabel,
 } from './style';
-import Icon from '../../components/icons';
+import Icon from 'src/components/icons';
 import { SliderThreadView } from '../thread';
 import { ErrorBoundary } from 'src/components/error';
 import { ESC } from 'src/helpers/keycodes';
-
-const ANIMATION_DURATION = 50;
 
 class ThreadSlider extends Component {
   componentDidMount() {

@@ -6,13 +6,9 @@ import { connect } from 'react-redux';
 import debounce from 'debounce';
 import queryString from 'query-string';
 import Icon from '../icons';
-import processThreadContent from 'shared/draft-utils/process-thread-content';
-import { ThreadHeading } from 'src/views/thread/style';
-import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import getThreadLink from 'src/helpers/get-thread-link';
-import ThreadRenderer from '../threadRenderer';
-import { changeActiveThread } from '../../actions/dashboardFeed';
-import { addToastWithTimeout } from '../../actions/toasts';
+import { changeActiveThread } from 'src/actions/dashboardFeed';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
@@ -25,7 +21,7 @@ import {
   MediaLabel,
   MediaInput,
 } from 'src/components/chatInput/components/style';
-import Titlebar from '../../views/titlebar';
+import Titlebar from 'src/views/titlebar';
 import type { Dispatch } from 'redux';
 import {
   Overlay,

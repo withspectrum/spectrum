@@ -69,7 +69,6 @@ class Sidebar extends React.Component<Props> {
     const {
       thread,
       currentUser,
-      location,
       data: { threads },
     } = this.props;
 

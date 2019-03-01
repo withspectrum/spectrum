@@ -244,7 +244,12 @@ class ThreadFeed extends React.Component<Props, State> {
         if (queryString) {
           return <EmptySearchFeed queryString={queryString} />;
         } else {
-          return <EmptyThreadFeed />;
+          return (
+            <EmptyThreadFeed
+              communityId={activeCommunity}
+              channelId={activeChannel}
+            />
+          );
         }
       }
 

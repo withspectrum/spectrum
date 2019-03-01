@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button } from 'src/components/buttons';
 import generateMetaInfo from 'shared/generate-meta-info';
-import Composer from 'src/components/composer';
 import ComposerPlaceholder from 'src/components/threadComposer/components/placeholder';
 import Head from 'src/components/head';
 import Icon from 'src/components/icons';
@@ -75,7 +74,6 @@ type Props = {
 };
 
 type State = {
-  showComposerUpsell: boolean,
   selectedView: 'trending-threads' | 'threads' | 'search' | 'members',
   isLeavingCommunity: boolean,
 };
@@ -86,7 +84,6 @@ class CommunityView extends React.Component<Props, State> {
 
     this.state = {
       isLeavingCommunity: false,
-      showComposerUpsell: false,
       selectedView: 'trending-threads',
     };
   }
@@ -121,18 +118,6 @@ class CommunityView extends React.Component<Props, State> {
     }
   }
 
-  setComposerUpsell = () => {
-    const {
-      data: { community },
-    } = this.props;
-    const communityExists = community && community.communityPermissions;
-    if (!communityExists) return;
-
-    const isNewAndOwned =
-      community.communityPermissions.isOwner && community.metaData.members < 2;
-    return this.setState({ showComposerUpsell: isNewAndOwned });
-  };
-
   handleSegmentClick = label => {
     if (this.state.selectedView === label) return;
 
@@ -162,7 +147,7 @@ class CommunityView extends React.Component<Props, State> {
         },
       });
 
-      const { showComposerUpsell, selectedView } = this.state;
+      const { selectedView } = this.state;
       const {
         isMember,
         isOwner,
@@ -255,7 +240,6 @@ class CommunityView extends React.Component<Props, State> {
       // we'll mark it as "new and owned" - this tells the downstream
       // components to show nux upsells to create a thread or invite people
       // to the community
-      const isNewAndOwned = isOwner && community.metaData.members < 5;
       const loginUrl = community.brandedLogin.isEnabled
         ? `/${community.slug}/login?r=${CLIENT_URL}/${community.slug}`
         : `/login?r=${CLIENT_URL}/${community.slug}`;
@@ -406,10 +390,6 @@ class CommunityView extends React.Component<Props, State> {
                   slug={communitySlug}
                   id={community.id}
                   currentUser={isLoggedIn}
-                  setThreadsStatus={
-                    !this.showComposerUpsell && this.setComposerUpsell
-                  }
-                  isNewAndOwned={isNewAndOwned}
                   community={community}
                   pinnedThreadId={community.pinnedThreadId}
                   sort={

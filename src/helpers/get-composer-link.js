@@ -10,8 +10,8 @@ const getComposerLink = (props: Props) => {
   const { communityId, channelId } = props;
 
   const search = {};
-  if (communityId) search.communityId = communityId;
-  if (channelId) search.channelId = channelId;
+  if (communityId) search.composerCommunityId = communityId;
+  if (channelId) search.composerChannelId = channelId;
 
   return {
     pathname: `/new/thread`,

@@ -5,27 +5,19 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { History } from 'react-router';
 import Icon from 'src/components/icons';
-import { Container, Composer, Placeholder, PlaceholderLabel } from '../style';
-import Upsell from './upsell';
+import { Placeholder, PlaceholderLabel } from '../style';
 import type { Dispatch } from 'redux';
 import getComposerLink from 'src/helpers/get-composer-link';
 
 type Props = {
   dispatch: Dispatch<Object>,
-  isInbox: boolean,
-  showCommunityOwnerUpsell: boolean,
   history: History,
   communityId: ?string,
   channelId: ?string,
 };
 class ComposerPlaceholder extends React.Component<Props> {
   render() {
-    const {
-      showCommunityOwnerUpsell,
-      isInbox,
-      communityId,
-      channelId,
-    } = this.props;
+    const { communityId, channelId } = this.props;
     const { pathname, search } = getComposerLink({ communityId, channelId });
     return (
       <Placeholder
