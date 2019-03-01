@@ -67,14 +67,26 @@ class InboxThread extends React.Component<Props> {
       <ErrorBoundary fallbackComponent={null}>
         <InboxThreadItem data-cy="thread-card" active={active}>
           <InboxLinkWrapper
-            to={{
-              pathname: getThreadLink(thread),
-              state: { modal: !isInbox },
-            }}
+            to={
+              isInbox
+                ? {
+                    pathname: location.pathname,
+                    search: `?t=${thread.id}`,
+                  }
+                : {
+                    pathname: getThreadLink(thread),
+                    state: { modal: true },
+                  }
+            }
             onClick={evt => {
-              const isDesktopInbox = isInbox && window.innerWidth > 768;
-              if (isDesktopInbox) {
+              const isMobile = window.innerWidth < 768;
+              if (isMobile && isInbox) {
                 evt.preventDefault();
+                this.props.history.push({
+                  pathname: getThreadLink(thread),
+                  state: { modal: true },
+                });
+              } else if (!isMobile) {
                 this.props.dispatch(changeActiveThread(thread.id));
               }
             }}
