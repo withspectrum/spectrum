@@ -16,8 +16,12 @@ const TextHeading = ({ title, subtitle }) => (
 
 class Titlebar extends Component {
   handleBack = () => {
-    const { history } = this.props;
+    const { history, backRoute } = this.props;
     const length = history.length;
+
+    if (backRoute) {
+      return history.push(this.props.backRoute);
+    }
 
     /*
       We don't have a reliable way to know exactly where a user should navigate
@@ -37,11 +41,7 @@ class Titlebar extends Component {
       we can make good assumptions (i.e. if a user lands directly on a channel
       page, the back button can take them to the community for that channel).
     */
-    if (length > 3) {
-      history.goBack();
-    } else {
-      history.push(this.props.backRoute);
-    }
+    return history.goBack();
   };
 
   render() {
