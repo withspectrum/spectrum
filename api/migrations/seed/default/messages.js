@@ -186,4 +186,21 @@ module.exports = [
     senderId: BRYN_ID,
     timestamp: new Date(DATE + 300000),
   },
+  {
+    id: '14',
+    threadId: 'thread-6',
+    threadType: 'story',
+    content: {
+      body: JSON.stringify(
+        toJSON(
+          fromPlainText(
+            'http://localhost:3000/spectrum/general/yet-another-thread~thread-9'
+          )
+        )
+      ),
+    },
+    messageType: 'draftjs',
+    senderId: BRIAN_ID,
+    timestamp: new Date(DATE + 300000),
+  },
 ];
