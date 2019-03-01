@@ -195,7 +195,7 @@ describe('thread modal route', () => {
     threadSlider().should('not.be.visible');
   });
 
-  it.only('handles thread attachment', () => {
+  it('handles thread attachment', () => {
     cy.auth(user.id);
     cy.visit('/spectrum/private/yet-another-thread~thread-6');
     cy.get('[data-cy="thread-attachment"]')
