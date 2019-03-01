@@ -24,6 +24,7 @@ import { getMessageById } from '../../models/message';
 import { sendMentionNotificationQueue } from 'shared/bull/queues';
 import type { MessageNotificationJobData, Job } from 'shared/bull/types';
 import type { DBMessage } from 'shared/types';
+import { messageTypeObj } from 'shared/draft-utils/process-message-content';
 
 export default async (job: Job<MessageNotificationJobData>) => {
   const { message: incomingMessage } = job.data;
@@ -95,7 +96,7 @@ export default async (job: Job<MessageNotificationJobData>) => {
 
   // convert the message body to be checked for mentions
   const body =
-    incomingMessage.messageType === 'draftjs'
+    incomingMessage.messageType === messageTypeObj.draftjs
       ? toPlainText(toState(JSON.parse(incomingMessage.content.body)))
       : incomingMessage.content.body;
 

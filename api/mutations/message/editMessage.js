@@ -16,12 +16,15 @@ import { events } from 'shared/analytics';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 import { trackQueue } from 'shared/bull/queues';
 import { validateRawContentState } from '../../utils/validate-draft-js-input';
-import processMessageContent from 'shared/draft-utils/process-message-content';
+import processMessageContent, {
+  messageTypeObj,
+} from 'shared/draft-utils/process-message-content';
+import type { MessageType } from 'shared/draft-utils/process-message-content';
 
 type Args = {
   input: {
     id: string,
-    messageType?: 'draftjs' | 'text' | 'media',
+    messageType?: MessageType,
     content: {
       body: string,
     },
@@ -49,16 +52,16 @@ export default requireAuth(async (_: any, args: Args, ctx: GraphQLContext) => {
   }
 
   let body = content.body;
-  if (messageType === 'text') {
-    body = processMessageContent('TEXT', body);
-    messageType = 'draftjs';
+  if (messageType === messageTypeObj.text) {
+    body = processMessageContent(messageTypeObj.text, body);
+    messageType = messageTypeObj.draftjs;
   }
   const eventFailed =
     message.threadType === 'story'
       ? events.MESSAGE_EDITED_FAILED
       : events.DIRECT_MESSAGE_EDITED_FAILED;
 
-  if (messageType === 'draftjs') {
+  if (messageType === messageTypeObj.draftjs) {
     let parsed;
     try {
       parsed = JSON.parse(body);

@@ -6,7 +6,9 @@ import { stateFromMarkdown } from 'draft-js-import-markdown';
 import messageInfoFragment from '../../fragments/message/messageInfo';
 import type { MessageInfoType } from '../../fragments/message/messageInfo';
 import { getThreadMessageConnectionQuery } from '../../queries/thread/getThreadMessageConnection';
-import processMessageContent from 'shared/draft-utils/process-message-content';
+import processMessageContent, {
+  messageTypeObj,
+} from 'shared/draft-utils/process-message-content';
 
 export type SendMessageType = {
   data: {
@@ -34,7 +36,10 @@ const sendMessageOptions = {
           message: {
             ...message,
             content: {
-              body: message.messageType === 'media' ? '' : message.content.body,
+              body:
+                message.messageType === messageTypeObj.media
+                  ? ''
+                  : message.content.body,
             },
           },
         },
@@ -43,7 +48,10 @@ const sendMessageOptions = {
           addMessage: {
             id: fakeId,
             timestamp: JSON.parse(JSON.stringify(new Date())),
-            messageType: message.messageType === 'media' ? 'media' : 'draftjs',
+            messageType:
+              message.messageType === messageTypeObj.media
+                ? messageTypeObj.media
+                : messageTypeObj.draftjs,
             modifiedAt: '',
             author: {
               user: {
@@ -68,9 +76,12 @@ const sendMessageOptions = {
             content: {
               ...message.content,
               body:
-                message.messageType === 'media'
+                message.messageType === messageTypeObj.media
                   ? message.content.body
-                  : processMessageContent('TEXT', message.content.body),
+                  : processMessageContent(
+                      messageTypeObj.text,
+                      message.content.body
+                    ),
               __typename: 'MessageContent',
             },
             reactions: {

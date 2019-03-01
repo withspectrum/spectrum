@@ -3,9 +3,16 @@ import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import { addEmbedsToEditorState } from './add-embeds-to-draft-js';
 
-export default (type: 'TEXT' | 'DRAFTJS', body: string): string => {
+export const messageTypeObj = {
+  text: 'text',
+  media: 'media',
+  draftjs: 'draftjs',
+};
+export type MessageType = $Keys<typeof messageTypeObj>;
+
+export default (type: MessageType, body: string): string => {
   let newBody = body;
-  if (type === 'TEXT') {
+  if (type === messageTypeObj.text) {
     // workaround react-mentions bug by replacing @[username] with @username
     // @see withspectrum/spectrum#4587
     newBody = newBody.replace(/@\[([a-z0-9_-]+)\]/g, '@$1');
