@@ -46,15 +46,38 @@ const AvailableCommunitiesDropdown = (props: Props) => {
       community && community.id === id && community.id === composerCommunityId
     );
   });
+
   const shouldDisableCommunitySelect =
     communityIsValid && composerCommunityId === id;
   const sortedNodes = sortCommunities(nodes);
+
+  const shouldSelectSingleCommunityChild = () => {
+    /*
+      If there is no channelId in the url and there is only one channel in the
+      community (eg general) then just select that first community by default
+    */
+    if (!id && sortedNodes.length === 1) return true;
+    return false;
+  };
+
+  const selectSingleCommunityChild = () => {
+    {
+      const firstCommunity = sortedNodes[0];
+      if (!firstCommunity) return null;
+      const fakeEvent = { target: { value: firstCommunity.id } };
+      onChange(fakeEvent);
+      return null;
+    }
+  };
 
   if (shouldDisableCommunitySelect) {
     const community = nodes.find(
       community => community && community.id === composerCommunityId
     );
     if (!community) {
+      if (shouldSelectSingleCommunityChild())
+        return selectSingleCommunityChild();
+
       return (
         <RequiredSelector
           data-cy="composer-community-selector"
@@ -88,6 +111,8 @@ const AvailableCommunitiesDropdown = (props: Props) => {
       </CommunityPreview>
     );
   }
+
+  if (shouldSelectSingleCommunityChild()) return selectSingleCommunityChild();
 
   return (
     <RequiredSelector

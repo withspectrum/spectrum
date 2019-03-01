@@ -52,18 +52,6 @@ const ChannelSelector = (props: Props) => {
   const nodes = edges.map(edge => edge && edge.node);
 
   /*
-    If there is no channelId in the url and there is only one channel in the
-    community (eg general) then just select that first community by default
-  */
-  if (!selectedChannelId && nodes.length === 1) {
-    const firstChannel = nodes[0];
-    if (!firstChannel) return;
-    const fakeEvent = { target: { value: firstChannel.id } };
-    onChange(fakeEvent);
-    return null;
-  }
-
-  /*
     Selection should be disabled if the channelId was passed as a url query
     param and *also* is that query param is actually a channel within the
     selected community. If it's not, then we should clear out the community
@@ -83,11 +71,31 @@ const ChannelSelector = (props: Props) => {
 
   const sortedNodes = sortChannels(nodes);
 
+  const shouldSelectSingleChannelChild = () => {
+    /*
+      If there is no channelId in the url and there is only one channel in the
+      community (eg general) then just select that first community by default
+    */
+    if (!selectedChannelId && sortedNodes.length === 1) return true;
+    return false;
+  };
+
+  const selectSingleChannelChild = () => {
+    {
+      const firstChannel = sortedNodes[0];
+      if (!firstChannel) return null;
+      const fakeEvent = { target: { value: firstChannel.id } };
+      onChange(fakeEvent);
+      return null;
+    }
+  };
+
   if (shouldDisableChannelSelect) {
     const channel = nodes.find(
       channel => channel && channel.id === composerChannelId
     );
     if (!channel) {
+      if (shouldSelectSingleChannelChild()) return selectSingleChannelChild();
       return (
         <RequiredSelector
           data-cy="composer-channel-selector"
@@ -120,6 +128,7 @@ const ChannelSelector = (props: Props) => {
     );
   }
 
+  if (shouldSelectSingleChannelChild()) return selectSingleChannelChild();
   return (
     <RequiredSelector
       data-cy="composer-channel-selector"

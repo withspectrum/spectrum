@@ -1,5 +1,8 @@
 import data from '../../shared/testing/data';
 const user = data.users.find(user => user.username === 'brian');
+const singleCommunityUser = data.users.find(
+  user => user.username === 'single-community-user'
+);
 
 const publishButton = () => cy.get('[data-cy="composer-publish-button"]');
 const cancelButton = () => cy.get('[data-cy="composer-cancel-button"]');
@@ -39,8 +42,6 @@ const titlebarComposeButton = () =>
 const communityDropdownIsEnabled = () => {
   communityDropdown().should('be.visible');
   communityDropdown().contains('Choose a community');
-  communityDropdown().contains('Spectrum');
-  communityDropdown().contains('Payments');
 };
 
 const channelDropdownIsHidden = () => {
@@ -71,14 +72,24 @@ const closeMobileCommunityMenu = () => {
     .click('right', { force: true });
 };
 
-describe('/new/thread community and channel selection', () => {
+describe.only('/new/thread community and channel selection', () => {
   beforeEach(() => {
     cy.auth(user.id);
   });
 
   it('selects an only channel by default if no channel query param is passed', () => {
+    cy.auth(singleCommunityUser.id);
     cy.visit('/new/thread?composerCommunityId=5');
     communityIsLocked();
+    channelDropdownIsEnabled();
+    channelDropdown().contains('General');
+  });
+
+  it('selects an a single community and single channel by default if no query params are passed', () => {
+    cy.auth(singleCommunityUser.id);
+    cy.visit('/new/thread');
+    communityDropdownIsEnabled();
+    communityDropdown().contains('Single channel community');
     channelDropdownIsEnabled();
     channelDropdown().contains('General');
   });

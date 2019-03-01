@@ -17,6 +17,9 @@ const PENDING_USER_ID = '7';
 const CHANNEL_MODERATOR_USER_ID = '8';
 // this user is moderator in all communities
 const COMMUNITY_MODERATOR_USER_ID = '9';
+// this user is only a member of one community, and that community only has
+// one channel - use for testing the composer community+channel selection
+const SINGLE_CHANNEL_COMMUNITY_USER_ID = '10';
 
 // communities
 const SPECTRUM_COMMUNITY_ID = '1';
@@ -49,6 +52,7 @@ module.exports = {
   PENDING_USER_ID,
   CHANNEL_MODERATOR_USER_ID,
   COMMUNITY_MODERATOR_USER_ID,
+  SINGLE_CHANNEL_COMMUNITY_USER_ID,
   SPECTRUM_COMMUNITY_ID,
   PAYMENTS_COMMUNITY_ID,
   DELETED_COMMUNITY_ID,
