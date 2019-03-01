@@ -28,20 +28,29 @@ type State = {
 
 const EditingChatInput = (props: Props) => {
   const initialState =
-    props.message.messageType === 'text'
-      ? props.message.content.body
-      : stateToMarkdown(
-          convertFromRaw(JSON.parse(props.message.content.body)),
-          {
-            gfm: true,
-          }
-          // NOTE(@mxstbr): draft-js-export-markdown sometimes appends an empty line at the end,
-          // which we really never want
-        ).replace(/\n$/, '');
+    props.message.messageType === 'text' ? props.message.content.body : null;
   // $FlowIssue
   const [text, setText] = React.useState(initialState);
   // $FlowIssue
   const [saving, setSaving] = React.useState(false);
+
+  React.useEffect(
+    () => {
+      if (props.message.messageType === 'text') return;
+
+      setText(null);
+      fetch('https://convert.spectrum.chat/to', {
+        method: 'POST',
+        body: props.message.content.body,
+      })
+        .then(res => res.text())
+        .then(md => {
+          console.log(md);
+          setText(md);
+        });
+    },
+    [props.message.id]
+  );
 
   const onChange = e => {
     const text = e.target.value;
@@ -101,15 +110,19 @@ const EditingChatInput = (props: Props) => {
   return (
     <React.Fragment>
       <EditorInput data-cy="edit-message-input">
-        <Input
-          dataCy="editing-chat-input"
-          placeholder="Your message here..."
-          value={text}
-          onChange={onChange}
-          onKeyDown={handleKeyPress}
-          inputRef={props.editorRef}
-          autoFocus
-        />
+        {text !== null ? (
+          <Input
+            dataCy="editing-chat-input"
+            placeholder="Your message here..."
+            value={text}
+            onChange={onChange}
+            onKeyDown={handleKeyPress}
+            inputRef={props.editorRef}
+            autoFocus
+          />
+        ) : (
+          <p>Loading...</p>
+        )}
       </EditorInput>
       <EditActions>
         {!saving && (
