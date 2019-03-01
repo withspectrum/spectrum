@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { withRouter } from 'react-router';
+import { withRouter, type History, type Location } from 'react-router';
 import { connect } from 'react-redux';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
@@ -47,7 +47,8 @@ type Props = {
     feed: string,
     refetch: Function,
   },
-  history: Function,
+  history: History,
+  location: Location,
   dispatch: Dispatch<Object>,
   selectedId: string,
   activeCommunity: ?string,
@@ -105,7 +106,9 @@ class ThreadFeed extends React.Component<Props, State> {
     const isDesktop = window.innerWidth > 768;
     const { scrollElement } = this.state;
     const curr = this.props;
-    const { mountedWithActiveThread, queryString } = curr;
+    const { mountedWithActiveThread, queryString, location } = curr;
+
+    const pathnameIsEmpty = location.pathname === '/';
 
     const didReconnect = useConnectionRestored({ curr, prev });
     if (didReconnect && curr.data.refetch) {
@@ -145,7 +148,8 @@ class ThreadFeed extends React.Component<Props, State> {
       isDesktop &&
       (hasThreadsButNoneSelected || justLoadedThreads) &&
       curr.data.threads.length > 0 &&
-      !prev.isFetchingMore
+      !prev.isFetchingMore &&
+      pathnameIsEmpty
     ) {
       if (
         (curr.data.community &&
@@ -170,7 +174,7 @@ class ThreadFeed extends React.Component<Props, State> {
       const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
       const hasFirstThread = sortedThreadNodes.length > 0;
       const firstThreadId = hasFirstThread ? sortedThreadNodes[0].id : '';
-      if (hasFirstThread) {
+      if (hasFirstThread && pathnameIsEmpty) {
         curr.history.replace(`/?t=${firstThreadId}`);
         curr.dispatch(changeActiveThread(firstThreadId));
       }
@@ -187,7 +191,7 @@ class ThreadFeed extends React.Component<Props, State> {
       const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
       const hasFirstThread = sortedThreadNodes.length > 0;
       const firstThreadId = hasFirstThread ? sortedThreadNodes[0].id : '';
-      if (hasFirstThread) {
+      if (hasFirstThread && pathnameIsEmpty) {
         curr.history.replace(`/?t=${firstThreadId}`);
         curr.dispatch(changeActiveThread(firstThreadId));
       }
@@ -240,7 +244,12 @@ class ThreadFeed extends React.Component<Props, State> {
         if (queryString) {
           return <EmptySearchFeed queryString={queryString} />;
         } else {
-          return <EmptyThreadFeed />;
+          return (
+            <EmptyThreadFeed
+              communityId={activeCommunity}
+              channelId={activeChannel}
+            />
+          );
         }
       }
 

@@ -1,10 +1,7 @@
 // @flow
 import theme from 'shared/theme';
-// $FlowFixMe
 import styled, { css } from 'styled-components';
-// $FlowFixMe
-import { Link } from 'react-router-dom';
-import { zIndex } from '../../components/globals';
+import { zIndex } from 'src/components/globals';
 
 const animation = css`
   opacity: 0;
@@ -21,7 +18,11 @@ const animation = css`
       : ''};
 `;
 
-export const Container = styled.div``;
+export const Container = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+`;
 
 export const Overlay = styled.div`
   position: fixed;

@@ -11,7 +11,6 @@ import { Button } from '../buttons';
 import { Error } from '../formElements';
 import { SectionCardFooter } from 'src/components/settingsViews/style';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import MediaInput from 'src/components/mediaInput';
 import {
   EmailInviteForm,
   EmailInviteInput,
@@ -19,7 +18,6 @@ import {
   ActionAsLabel,
   ActionHelpText,
   RemoveRow,
-  CustomMessageToggle,
   CustomMessageTextAreaStyles,
   HiddenInput,
 } from './style';

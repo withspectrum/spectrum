@@ -124,6 +124,13 @@ const isMemberOfDirectMessageThread = (threadId: string, userId: string) => {
     .run();
 };
 
+const getDirectMessageThreadRecords = (threadId: string) => {
+  return db
+    .table('usersDirectMessageThreads')
+    .getAll(threadId, { index: 'threadId' })
+    .run();
+};
+
 module.exports = {
   createMemberInDirectMessageThread,
   removeMemberInDirectMessageThread,
@@ -134,4 +141,5 @@ module.exports = {
   getMembersInDirectMessageThread,
   getMembersInDirectMessageThreads,
   isMemberOfDirectMessageThread,
+  getDirectMessageThreadRecords,
 };

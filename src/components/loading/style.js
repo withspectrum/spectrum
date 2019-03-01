@@ -169,7 +169,10 @@ export const ShimmerInboxComposer = styled.div`
 
 export const ShimmerSelect = styled.div`
   padding: 10px 12px;
+  display: flex;
+  align-items: center;
   width: 196px;
+  max-height: 38px;
   margin-left: 8px;
   border-radius: 8px;
   background: ${theme.bg.default};
@@ -183,6 +186,18 @@ export const ShimmerSelect = styled.div`
     min-height: 12px;
     width: calc(100% - 16px);
   }
+`;
+
+export const StyledErrorSelect = styled.div`
+  padding: 4px 12px;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  max-height: 38px;
+  border-radius: 8px;
+  background: ${theme.bg.default};
+  border: 2px solid ${theme.warn.default};
+  color: ${theme.warn.default};
 `;
 
 const placeHolderShimmer = keyframes`

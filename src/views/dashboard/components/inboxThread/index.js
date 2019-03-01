@@ -46,7 +46,6 @@ class InboxThread extends React.Component<Props> {
   render() {
     const {
       data: thread,
-      location,
       active,
       viewContext = null,
       currentUser,
@@ -66,7 +65,7 @@ class InboxThread extends React.Component<Props> {
 
     return (
       <ErrorBoundary fallbackComponent={null}>
-        <InboxThreadItem active={active}>
+        <InboxThreadItem data-cy="thread-card" active={active}>
           <InboxLinkWrapper
             to={
               isInbox

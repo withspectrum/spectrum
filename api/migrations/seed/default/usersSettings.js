@@ -2,7 +2,7 @@
 
 module.exports = () => {
   let settings = [];
-  for (let step = 0; step < 10; step++) {
+  for (let step = 0; step < 11; step++) {
     settings.push({
       userId: step.toString(),
       notifications: {
