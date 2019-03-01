@@ -1,8 +1,9 @@
 // @flow
 import * as React from 'react';
+import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { changeActiveThread } from '../../../actions/dashboardFeed';
-import { openComposer } from '../../../actions/composer';
+import { withRouter } from 'react-router-dom';
+import type { History } from 'react-router';
 import {
   HeaderWrapper,
   NarrowOnly,
@@ -10,12 +11,13 @@ import {
   HeaderActiveViewSubtitle,
   ContextHeaderContainer,
 } from '../style';
-import { IconButton } from '../../../components/buttons';
+import { IconButton } from 'src/components/buttons';
 import ThreadSearch from './threadSearch';
-import Menu from '../../../components/menu';
+import Menu from 'src/components/menu';
 import CommunityList from './communityList';
 import { Link } from 'react-router-dom';
 import type { Dispatch } from 'redux';
+import getComposerLink from 'src/helpers/get-composer-link';
 
 type Props = {
   dispatch: Dispatch<Object>,
@@ -26,6 +28,7 @@ type Props = {
   activeChannel: ?string,
   activeCommunityObject: ?Object,
   activeChannelObject: ?Object,
+  history: History,
 };
 
 class Header extends React.Component<Props> {
@@ -75,13 +78,17 @@ class Header extends React.Component<Props> {
 
   render() {
     const {
-      dispatch,
       filter,
       communities,
       user,
       activeCommunity,
       activeChannel,
     } = this.props;
+
+    const { pathname, search } = getComposerLink({
+      communityId: activeCommunity,
+      channelId: activeChannel,
+    });
 
     return (
       <React.Fragment>
@@ -99,17 +106,27 @@ class Header extends React.Component<Props> {
             </Menu>
           </NarrowOnly>
           <ThreadSearch filter={filter} />
-          <IconButton
-            data-e2e-id="inbox-view-post-button"
-            glyph={'post'}
-            onClick={() => dispatch(openComposer())}
-            tipText={'New conversation'}
-            tipLocation={'bottom-left'}
-          />
+          <Link
+            to={{
+              pathname,
+              search,
+              state: { modal: true },
+            }}
+          >
+            <IconButton
+              dataCy="inbox-view-post-button"
+              glyph={'post'}
+              tipText={'New conversation'}
+              tipLocation={'bottom-left'}
+            />
+          </Link>
         </HeaderWrapper>
       </React.Fragment>
     );
   }
 }
 
-export default connect()(Header);
+export default compose(
+  withRouter,
+  connect()
+)(Header);

@@ -1,6 +1,5 @@
 // @flow
 import { combineReducers } from 'redux';
-import composer from './composer';
 import modals from './modals';
 import toasts from './toasts';
 import directMessageThreads from './directMessageThreads';
@@ -19,7 +18,6 @@ const getReducers = () => {
     toasts,
     directMessageThreads,
     gallery,
-    composer,
     newUserOnboarding,
     newActivityIndicator,
     dashboardFeed,

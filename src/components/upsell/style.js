@@ -414,15 +414,3 @@ export const JoinChannelContent = styled.div`
   align-self: flex-start;
   width: 100%;
 `;
-
-export const JoinChannelTitle = styled.h3`
-  font-size: 18px;
-  font-weight: 600;
-  color: ${theme.text.default};
-`;
-
-export const JoinChannelSubtitle = styled.h4`
-  font-size: 16px;
-  font-weight: 400;
-  color: ${theme.text.secondary};
-`;

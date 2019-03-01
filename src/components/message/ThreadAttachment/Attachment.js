@@ -4,7 +4,6 @@ import type { Props } from './';
 import compose from 'recompose/compose';
 import { Loading } from 'src/components/loading';
 import { Container, LinkWrapper, AvatarWrapper, Column } from './style';
-import { changeActiveThread } from 'src/actions/dashboardFeed';
 import ThreadHeader from 'src/views/dashboard/components/inboxThread/header/threadHeader';
 import Activity from 'src/views/dashboard/components/inboxThread/activity';
 import { ThreadTitle } from 'src/views/dashboard/components/inboxThread/style';
@@ -28,7 +27,7 @@ class Attachment extends React.Component<Props> {
     if (!thread) return null;
 
     return (
-      <Container>
+      <Container data-cy="thread-attachment">
         <LinkWrapper
           onClick={e => e.stopPropagation()}
           to={{ pathname: getThreadLink(thread), state: { modal: true } }}

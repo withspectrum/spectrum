@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { CommunityAvatar } from 'src/components/avatar';
 import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
-import Composer from 'src/components/composer';
 import ComposerPlaceholder from 'src/components/threadComposer/components/placeholder';
 import Head from 'src/components/head';
 import AppViewWrapper from 'src/components/appViewWrapper';
@@ -265,7 +264,7 @@ class ChannelView extends React.Component<Props, State> {
       hasError,
     } = this.props;
     const { selectedView } = this.state;
-    const { communitySlug, channelSlug } = match.params;
+    const { communitySlug } = match.params;
     const isLoggedIn = currentUser;
 
     if (channel && channel.id) {
@@ -386,8 +385,8 @@ class ChannelView extends React.Component<Props, State> {
             provideBack={true}
             backRoute={`/${communitySlug}`}
             noComposer={!isMember}
-            activeCommunitySlug={communitySlug}
-            activeChannelSlug={channel.slug}
+            activeCommunityId={channel.community.id}
+            activeChannelId={channel.id}
           />
           <Grid id="main">
             <CoverPhoto src={community.coverPhoto} />
@@ -501,15 +500,8 @@ class ChannelView extends React.Component<Props, State> {
                   !channel.isPrivate) && (
                   <ErrorBoundary fallbackComponent={null}>
                     <ComposerPlaceholder
-                      isInbox={false}
-                      showCommunityOwnerUpsell={false}
-                      isOpen={false}
-                    />
-
-                    <Composer
-                      isSlider={true}
-                      activeCommunity={communitySlug}
-                      activeChannel={channelSlug}
+                      communityId={channel.community.id}
+                      channelId={channel.id}
                     />
                   </ErrorBoundary>
                 )}
