@@ -6,19 +6,8 @@ import { connect } from 'react-redux';
 import debounce from 'debounce';
 import queryString from 'query-string';
 import Icon from '../icons';
-import processThreadContent from 'shared/draft-utils/process-thread-content';
-import { ThreadHeading } from 'src/views/thread/style';
-import { SegmentedControl, Segment } from 'src/components/segmentedControl';
-import ThreadRenderer from '../threadRenderer';
 import { openModal, closeModal } from 'src/actions/modals';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import {
-  toPlainText,
-  fromPlainText,
-  toJSON,
-  toState,
-  isAndroid,
-} from 'shared/draft-utils';
 import getThreadLink from 'src/helpers/get-thread-link';
 import { changeActiveThread } from 'src/actions/dashboardFeed';
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
