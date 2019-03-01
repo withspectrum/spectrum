@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Composer from '../../components/composer';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { InboxThreadView } from '../thread';
@@ -13,17 +12,6 @@ class DashboardThread extends Component {
     if (!threadId) {
       return null;
     }
-
-    // composer is selected
-    if (threadId === 'new')
-      return (
-        <Container>
-          <Thread>
-            <Composer isInbox={true} {...this.props} />
-          </Thread>
-        </Container>
-      );
-
     // otherwise return the thread that was selected
     return (
       <Container>

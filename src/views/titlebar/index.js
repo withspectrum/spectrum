@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
-import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import ThreadSearch from '../dashboard/components/threadSearch';
 import Icon from '../../components/icons';
@@ -56,16 +55,12 @@ class Titlebar extends Component {
       filter,
       children,
       messageComposer,
-      activeCommunitySlug,
-      activeChannelSlug,
+      activeCommunityId,
+      activeChannelId,
     } = this.props;
-    const query =
-      activeChannelSlug || activeCommunitySlug
-        ? `?${queryString.stringify({
-            activeChannelSlug,
-            activeCommunitySlug,
-          })}`
-        : '';
+    const composerQuery = `${
+      activeCommunityId ? `?composerCommunityId=${activeCommunityId}` : ''
+    }${activeChannelId ? `&composerChannelId=${activeChannelId}` : ''}`;
     return (
       <TitleBar>
         {provideBack ? (
@@ -90,8 +85,12 @@ class Titlebar extends Component {
             <IconButton glyph="message-new" color="text.reverse" />
           </Link>
         ) : (
-          <Link to={`/new/thread${query}`}>
-            <IconButton glyph="post" color="text.reverse" />
+          <Link to={`/new/thread${composerQuery}`}>
+            <IconButton
+              dataCy="titlebar-compose-button"
+              glyph="post"
+              color="text.reverse"
+            />
           </Link>
         )}
       </TitleBar>

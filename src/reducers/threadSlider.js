@@ -1,5 +1,6 @@
 const initialState = {
   isOpen: false,
+  threadId: null,
 };
 
 export default function threadSlider(state = initialState, action) {
@@ -7,10 +8,12 @@ export default function threadSlider(state = initialState, action) {
     case 'OPEN_SLIDER':
       return {
         isOpen: true,
+        threadId: action.threadId,
       };
     case 'CLOSE_SLIDER':
       return {
         isOpen: false,
+        threadId: null,
       };
     default:
       return state;

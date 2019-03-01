@@ -33,7 +33,7 @@ import Navbar from 'src/views/navbar';
 import Status from 'src/views/status';
 import Login from 'src/views/login';
 import DirectMessages from 'src/views/directMessages';
-import { FullscreenThreadView, SliderThreadView } from 'src/views/thread';
+import { FullscreenThreadView } from 'src/views/thread';
 import ThirdPartyContext from 'src/components/thirdPartyContextSetting';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Maintenance from 'src/components/maintenance';
@@ -42,9 +42,8 @@ import RedirectOldThreadRoute from './views/thread/redirect-old-route';
 import NewUserOnboarding from './views/newUserOnboarding';
 import QueryParamToastDispatcher from './views/queryParamToastDispatcher';
 
-/* prettier-ignore */
 const Explore = Loadable({
-  loader: () => import('./views/explore'/* webpackChunkName: "Explore" */),
+  loader: () => import('./views/explore' /* webpackChunkName: "Explore" */),
   loading: ({ isLoading }) => isLoading && <Loading />,
 });
 
@@ -361,6 +360,7 @@ class Routes extends React.Component<Props> {
                 />
                 <Route path="/:communitySlug" component={CommunityView} />
               </Switch>
+
               {isModal && (
                 <Route
                   // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.
@@ -370,11 +370,14 @@ class Routes extends React.Component<Props> {
                   // - /~id-123-id => id-123-id => id-123-id, empty custom slug also works
                   // - /some~custom~slug~id-123-id => id-123-id, custom slug with delimiter char in it (~) also works! :tada:
                   path="/:communitySlug/:channelSlug/(.*~)?:threadId"
-                  component={props => (
-                    <ThreadSlider {...props}>
-                      <SliderThreadView />
-                    </ThreadSlider>
-                  )}
+                  component={ThreadSlider}
+                />
+              )}
+
+              {isModal && (
+                <Route
+                  path="/new/thread"
+                  render={props => <ComposerFallback {...props} slider />}
                 />
               )}
             </Body>

@@ -17,7 +17,6 @@ import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import ThreadRenderer from 'src/components/threadRenderer';
-import Textarea from 'react-textarea-autosize';
 import ActionBar from './actionBar';
 import ConditionalWrap from 'src/components/conditionalWrap';
 import ThreadEditInputs from 'src/components/composer/inputs';
@@ -28,7 +27,6 @@ import {
   ChannelHoverProfile,
 } from 'src/components/hoverProfile';
 import {
-  ThreadTitle,
   ThreadWrapper,
   ThreadContent,
   ThreadHeading,
@@ -36,7 +34,7 @@ import {
 } from '../style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import getThreadLink from 'src/helpers/get-thread-link';
-import { ESC, ENTER } from 'src/helpers/keycodes';
+import { ENTER } from 'src/helpers/keycodes';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
 
