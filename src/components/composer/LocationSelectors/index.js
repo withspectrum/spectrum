@@ -58,7 +58,7 @@ const ComposerLocationSelectors = (props: Props) => {
         onCommunityChange={onCommunitySelectionChanged}
       />
 
-      {selectedCommunityId && (
+      {!!selectedCommunityId && (
         <ChannelSelector
           id={selectedCommunityId}
           selectedChannelId={selectedChannelId}
