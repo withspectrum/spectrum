@@ -61,6 +61,28 @@ type Props = {
   isOpen: boolean,
 };
 
+export const deleteMessageWithToast = (
+  dispatch: Function,
+  deleteMessage: Function,
+  id: string
+) => {
+  return deleteMessage(id)
+    .then(({ data }: DeleteMessageType) => {
+      const { deleteMessage } = data;
+      if (deleteMessage) {
+        dispatch(addToastWithTimeout('neutral', 'Message deleted.'));
+      }
+    })
+    .catch(err => {
+      dispatch(
+        addToastWithTimeout(
+          'error',
+          `Sorry, we weren't able to delete this message. ${err.message}`
+        )
+      );
+    });
+};
+
 class DeleteDoubleCheckModal extends React.Component<Props, State> {
   state = {
     isLoading: false,
@@ -82,27 +104,16 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
 
     switch (entity) {
       case 'message':
-        return this.props
-          .deleteMessage(id)
-          .then(({ data }: DeleteMessageType) => {
-            const { deleteMessage } = data;
-            if (deleteMessage) {
-              dispatch(addToastWithTimeout('neutral', 'Message deleted.'));
-              this.setState({
-                isLoading: false,
-              });
-              this.close();
-            }
-            return;
-          })
-          .catch(err => {
-            dispatch(
-              addToastWithTimeout(
-                'error',
-                `Sorry, we weren't able to delete this message. ${err.message}`
-              )
-            );
+        return deleteMessageWithToast(
+          this.props.dispatch,
+          this.props.deleteMessage,
+          id
+        ).then(() => {
+          this.setState({
+            isLoading: false,
           });
+          this.close();
+        });
       case 'thread': {
         return this.props
           .deleteThread(id)

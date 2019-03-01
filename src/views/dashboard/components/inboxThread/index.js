@@ -32,7 +32,8 @@ type Props = {
   staticContext: ?string,
   data: ThreadInfoType,
   viewContext?:
-    | ?'communityInbox'
+    | ?'inbox'
+    | 'communityInbox'
     | 'communityProfile'
     | 'channelInbox'
     | 'channelProfile'
@@ -51,20 +52,11 @@ class InboxThread extends React.Component<Props> {
       currentUser,
     } = this.props;
 
-    // TODO(@mxstbr): Fix this to not use window.innerWidth
-    // which breaks SSR rehydration on mobile devices
-    const isDesktopInbox =
-      window.innerWidth > 768 &&
-      (!viewContext ||
+    const isInbox =
+      viewContext &&
+      (viewContext === 'inbox' ||
         viewContext === 'communityInbox' ||
         viewContext === 'channelInbox');
-
-    let queryPrefix;
-    if (isDesktopInbox) {
-      queryPrefix = '?t';
-    } else {
-      queryPrefix = '?thread';
-    }
 
     const newMessagesSinceLastViewed =
       !active &&
@@ -78,12 +70,15 @@ class InboxThread extends React.Component<Props> {
           <InboxLinkWrapper
             to={{
               pathname: getThreadLink(thread),
-              state: { modal: true },
+              state: { modal: !isInbox },
             }}
-            onClick={() =>
-              isDesktopInbox &&
-              this.props.dispatch(changeActiveThread(thread.id))
-            }
+            onClick={evt => {
+              const isDesktopInbox = isInbox && window.innerWidth > 768;
+              if (isDesktopInbox) {
+                evt.preventDefault();
+                this.props.dispatch(changeActiveThread(thread.id));
+              }
+            }}
           />
 
           <InboxThreadContent>

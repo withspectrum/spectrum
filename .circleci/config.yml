@@ -112,7 +112,12 @@ jobs:
           command: yarn run cypress:install
       - run:
           name: Run E2E Tests
-          command: test $CYPRESS_RECORD_KEY && yarn run test:e2e -- --record || yarn run test:e2e
+          command: |
+            if [ $CYPRESS_RECORD_KEY ]; then 
+              yarn run test:e2e -- --record --parallel
+            else
+              yarn run test:e2e
+            fi
       - run:
           name: Test desktop apps
           command: yarn run test:desktop

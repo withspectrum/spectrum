@@ -1,4 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <!-- 
   START_CONFIG
@@ -14,8 +17,6 @@
   }
   END_CONFIG
 -->
-
-<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -440,7 +441,8 @@
 
                         <td valign="middle">
                           <p>
-                            Posted in <a href="https://spectrum.chat/{{community.slug}}">{{community.name}}</a>&nbsp;·&nbsp;<a
+                            Posted in <a
+                              href="https://spectrum.chat/{{community.slug}}">{{community.name}}</a>&nbsp;·&nbsp;<a
                               href="https://spectrum.chat/{{community.slug}}/{{channel.slug}}">{{channel.name}}</a>
                           </p>
                           <p>
@@ -470,7 +472,7 @@
                 </tr>
                 {{/data.hasOverflowThreads}}
 
-                {{#data.communities}}
+                {{#if data.communities}}
                 <tr>
                   <td>
                     <div class="section-divider"></div>
@@ -482,12 +484,13 @@
                     <h2 class="discover-divider">Discover more communities:</h2>
                   </td>
                 </tr>
-                {{/data.communities}}
+                {{/if}}
 
                 {{#each data.communities}}
                 <tr>
                   <td>
-                    <table width="100%" cellpadding="0" cellspacing="0" class="thread-community-header suggested-community">
+                    <table width="100%" cellpadding="0" cellspacing="0"
+                      class="thread-community-header suggested-community">
                       <tr width="100%" cellpadding="0" cellspacing="0">
                         <td valign="middle" width="32">
                           <a href="https://spectrum.chat/{{slug}}" class="block">
@@ -556,7 +559,8 @@
                 </li>
 
                 <li>
-                  <a href="https://spectrum.chat/spectrum/hugs-n-bugs">Report bugs</a> · <a href="https://spectrum.chat/spectrum/feature-requests">Request
+                  <a href="https://spectrum.chat/spectrum/hugs-n-bugs">Report bugs</a> · <a
+                    href="https://spectrum.chat/spectrum/feature-requests">Request
                     a feature</a>
                 </li>
               </ul>
