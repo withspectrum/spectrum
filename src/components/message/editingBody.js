@@ -45,7 +45,6 @@ const EditingChatInput = (props: Props) => {
       })
         .then(res => res.text())
         .then(md => {
-          console.log(md);
           setText(md);
         });
     },
@@ -109,8 +108,8 @@ const EditingChatInput = (props: Props) => {
 
   return (
     <React.Fragment>
-      <EditorInput data-cy="edit-message-input">
-        {text !== null ? (
+      {text !== null ? (
+        <EditorInput data-cy="edit-message-input">
           <Input
             dataCy="editing-chat-input"
             placeholder="Your message here..."
@@ -120,10 +119,10 @@ const EditingChatInput = (props: Props) => {
             inputRef={props.editorRef}
             autoFocus
           />
-        ) : (
-          <p>Loading...</p>
-        )}
-      </EditorInput>
+        </EditorInput>
+      ) : (
+        <p>Loading...</p>
+      )}
       <EditActions>
         {!saving && (
           <TextButton dataCy="edit-message-cancel" onClick={props.cancelEdit}>
