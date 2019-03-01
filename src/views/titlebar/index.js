@@ -68,6 +68,7 @@ class Titlebar extends Component {
             glyph="view-back"
             color="text.reverse"
             onClick={this.handleBack}
+            dataCy="titlebar-back"
           />
         ) : hasChildren ? (
           children
