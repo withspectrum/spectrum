@@ -49,6 +49,7 @@ class InboxThread extends React.Component<Props> {
       active,
       viewContext = null,
       currentUser,
+      location,
     } = this.props;
 
     const isInbox =
