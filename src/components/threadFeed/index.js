@@ -289,6 +289,23 @@ class ThreadFeedPure extends React.Component<Props, State> {
 
     const uniqueThreads = deduplicateChildren(filteredThreads, 'id');
 
+    if (networkStatus === 2 || networkStatus === 1) {
+      return (
+        <Threads>
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+        </Threads>
+      );
+    }
+
     if (dataExists) {
       return (
         <Threads data-cy="thread-feed">
@@ -339,23 +356,6 @@ class ThreadFeedPure extends React.Component<Props, State> {
               );
             })}
           </InfiniteList>
-        </Threads>
-      );
-    }
-
-    if (networkStatus <= 2) {
-      return (
-        <Threads>
-          <LoadingInboxThread />
-          <LoadingInboxThread />
-          <LoadingInboxThread />
-          <LoadingInboxThread />
-          <LoadingInboxThread />
-          <LoadingInboxThread />
-          <LoadingInboxThread />
-          <LoadingInboxThread />
-          <LoadingInboxThread />
-          <LoadingInboxThread />
         </Threads>
       );
     }
