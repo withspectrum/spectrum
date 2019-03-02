@@ -267,7 +267,6 @@ class Routes extends React.Component<Props> {
 
                 <Route path="/login" component={LoginFallback} />
                 <Route path="/explore" component={Explore} />
-                <Route path="/messages/new" component={MessagesFallback} />
                 <Route
                   path="/messages/:threadId"
                   component={MessagesFallback}
