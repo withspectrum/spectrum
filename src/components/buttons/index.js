@@ -29,6 +29,7 @@ type IconProps = {
   hoverColor?: string,
   disabled?: boolean,
   tipText?: string,
+  size?: number,
   tipLocation?:
     | 'top'
     | 'top-left'
@@ -48,7 +49,7 @@ export const Button = (props: ButtonProps) => (
           <Spinner color="text.reverse" size={props.large ? '18' : '14'} />
         </SpinnerContainer>
       ) : (
-        <Icon glyph={props.icon} />
+        <Icon glyph={props.icon} size={props.large ? 32 : 28} />
       )
     ) : (
       ''
@@ -143,6 +144,7 @@ export const IconButton = (props: IconProps) => (
       glyph={props.glyph}
       tipText={props.tipText}
       tipLocation={props.tipLocation}
+      size={props.size}
     />
   </StyledIconButton>
 );
