@@ -68,7 +68,7 @@ export const Sidebar = styled.section`
   overflow-y: scroll;
   position: sticky;
   top: 0;
-  padding-bottom: 128px;
+  padding-bottom: 64px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     height: auto;
@@ -83,7 +83,16 @@ export const SidebarSection = styled.section`
   border-radius: 4px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
-    display: none;
+    border: 0;
+    margin-top: 0;
+
+    &:last-of-type {
+      border-bottom: 1px solid ${theme.bg.border};
+    }
+
+    &:not(:first-of-type) {
+      border-top: 1px solid ${theme.bg.border};
+    }
   }
 `;
 
@@ -108,12 +117,26 @@ export const SidebarSectionHeader = styled.div`
       color: ${theme.text.default};
     }
   }
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    z-index: 1;
+    background: ${theme.bg.wash};
+    border-bottom: 1px solid ${theme.bg.border};
+    padding: 24px 16px 8px 16px;
+    position: relative;
+  }
 `;
 
 export const SidebarSectionHeading = styled.div`
   font-size: 16px;
   font-weight: 700;
   color: ${theme.text.default};
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    font-size: 14px;
+    font-weight: 600;
+    color: ${theme.text.secondary};
+  }
 `;
 
 export const ProfileContainer = styled.div`
@@ -138,7 +161,7 @@ export const MobileProfileContainer = styled.div`
   position: sticky;
   top: 0;
   z-index: 11;
-  padding: 12px 16px 12px 8px;
+  padding: 12px 16px 8px 8px;
 
   @media (min-width: ${MEDIA_BREAK}px) {
     display: none;
@@ -211,6 +234,10 @@ export const MobileActionsRowContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
+
+  .icon {
+    margin-right: 0;
+  }
 `;
 
 export const MetaContainer = styled.div`
@@ -325,7 +352,7 @@ export const SegmentedControl = styled.div`
 
   @media (max-width: ${MEDIA_BREAK}px) {
     box-shadow: inset 0 -1px ${theme.bg.border};
-    top: 56px;
+    top: 52px;
   }
 `;
 

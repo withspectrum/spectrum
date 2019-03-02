@@ -16,7 +16,6 @@ import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   ToggleNotificationsContainer,
-  SidebarSection,
   SidebarSectionHeader,
   SidebarSectionHeading,
   List,
@@ -79,7 +78,7 @@ class Component extends React.Component<Props> {
       const sortedChannels = this.sortChannels(channels);
 
       return (
-        <SidebarSection>
+        <React.Fragment>
           <SidebarSectionHeader>
             <SidebarSectionHeading>Channels</SidebarSectionHeading>
             {isOwner && (
@@ -113,7 +112,7 @@ class Component extends React.Component<Props> {
               );
             })}
           </List>
-        </SidebarSection>
+        </React.Fragment>
       );
     }
 

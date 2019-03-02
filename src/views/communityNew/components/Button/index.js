@@ -4,6 +4,7 @@ import {
   A,
   StyledLink,
   StyledButton,
+  StyledWhiteIconButton,
   StyledPrimaryButton,
   StyledSmallPrimaryButton,
   StyledOutlineButton,
@@ -29,8 +30,12 @@ const handleLinkWrapping = (Component, props) => {
 
 export const Button = props => handleLinkWrapping(StyledButton, props);
 
+export const WhiteIconButton = props =>
+  handleLinkWrapping(StyledWhiteIconButton, props);
+
 export const PrimaryButton = props =>
   handleLinkWrapping(StyledPrimaryButton, props);
+
 export const SmallPrimaryButton = props =>
   handleLinkWrapping(StyledSmallPrimaryButton, props);
 

@@ -12,15 +12,14 @@ import {
 } from 'src/components/globals';
 import { Button } from 'src/components/buttons';
 
-export const Title = styled.h1`
-  color: ${theme.text.alt};
+export const Title = styled.p`
+  color: ${theme.text.default};
   width: 100%;
-  font-weight: 800;
-  font-size: 24px;
-  line-height: 1.25;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.3;
   margin-bottom: 8px;
   padding: 0;
-  font-size: 24px;
   text-align: center;
   letter-spacing: 0.2px;
 `;
@@ -46,10 +45,10 @@ export const Actions = styled.div`
   }
 `;
 
-export const Subtitle = styled.h2`
+export const Subtitle = styled.p`
   width: 100%;
-  color: ${theme.text.alt};
-  font-weight: 500;
+  color: ${theme.text.secondary};
+  font-weight: 400;
   font-size: 16px;
   line-height: 1.4;
   margin-bottom: 16px;
@@ -413,4 +412,12 @@ export const JoinChannelContent = styled.div`
   flex: auto;
   align-self: flex-start;
   width: 100%;
+`;
+
+export const HeadingIconWrapper = styled.div`
+  display: flex;
+  padding: 32px;
+  align-items: center;
+  justify-content: center;
+  color: ${theme.text.alt};
 `;

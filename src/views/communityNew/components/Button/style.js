@@ -47,6 +47,12 @@ export const StyledButton = styled.button`
   }
 `;
 
+export const StyledWhiteIconButton = styled(StyledButton)`
+  background-color: ${theme.bg.default};
+  padding: 0;
+  color: ${theme.text.default};
+`;
+
 export const StyledPrimaryButton = styled(StyledButton)`
   background-color: ${theme.brand.alt};
   background-image: ${`linear-gradient(to bottom, ${theme.brand.alt}, ${tint(

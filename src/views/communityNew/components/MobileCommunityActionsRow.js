@@ -4,10 +4,10 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import type { CommunityActionsRowType } from '../types';
 import Icon from 'src/components/icons';
-import { Button, SmallPrimaryButton } from './Button';
-import { openComposer } from 'src/actions/composer';
+import { WhiteIconButton, SmallPrimaryButton } from './Button';
 import { openModal } from 'src/actions/modals';
-import Composer from 'src/components/composer';
+import getComposerLink from 'src/helpers/get-composer-link';
+import JoinCommunity from './JoinCommunity';
 import { MobileActionsRowContainer } from '../style';
 
 export const Component = (props: CommunityActionsRowType) => {
@@ -24,26 +24,39 @@ export const Component = (props: CommunityActionsRowType) => {
     );
 
   const { isMember } = community.communityPermissions;
+  const { pathname, search } = getComposerLink({ communityId: community.id });
 
   if (isMember) {
     return (
       <MobileActionsRowContainer>
-        <Button>
-          <Icon onClick={leaveCommunity} glyph={'settings'} size={28} />
-        </Button>
+        <WhiteIconButton>
+          <Icon onClick={leaveCommunity} glyph={'settings'} size={32} />
+        </WhiteIconButton>
 
-        <Button>
-          <Icon onClick={open} glyph={'post'} size={28} />
-        </Button>
+        <span style={{ width: '8px' }} />
 
-        <Composer isSlider={true} activeCommunity={community.slug} />
+        <WhiteIconButton
+          to={{
+            pathname,
+            search,
+          }}
+        >
+          <Icon glyph={'post'} size={32} />
+        </WhiteIconButton>
       </MobileActionsRowContainer>
     );
   }
 
   return (
     <MobileActionsRowContainer>
-      <SmallPrimaryButton>Join</SmallPrimaryButton>
+      <JoinCommunity
+        communityId={community.id}
+        render={({ isLoading }) => (
+          <SmallPrimaryButton isLoading={isLoading} icon={'door-enter'}>
+            {isLoading ? 'Joining...' : 'Join'}
+          </SmallPrimaryButton>
+        )}
+      />
     </MobileActionsRowContainer>
   );
 };

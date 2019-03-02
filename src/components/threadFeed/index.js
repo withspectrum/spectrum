@@ -18,14 +18,17 @@ import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
+import getComposerLink from 'src/helpers/get-composer-link';
+import { OutlineButton } from 'src/views/communityNew/components/Button';
+import Icon from 'src/components/icons';
 
-const NullState = ({ viewContext, search }) => {
+const NullState = ({ viewContext, isSearch, communityId, channelId }) => {
   let hd;
   let cp;
 
   if (viewContext && viewContext === 'communityProfile') {
-    hd = 'This community’s just getting started...';
-    cp = 'Why don’t you kick things off?';
+    hd = 'Start a conversation';
+    cp = 'Ask a question, share a tip, or anything else that’s on your mind.';
   }
 
   if (viewContext && viewContext === 'channelProfile') {
@@ -38,12 +41,25 @@ const NullState = ({ viewContext, search }) => {
     cp = 'But you could message them!';
   }
 
-  if (search) {
+  if (isSearch) {
     hd = 'Sorry, doesn’t ring a bell';
     cp = 'You can always try again, though!';
   }
 
-  return <NullCard bg="post" heading={hd} copy={cp} />;
+  const { pathname, search } = getComposerLink({ communityId, channelId });
+  const headingIcon = (communityId || channelId) && (
+    <Icon glyph={'post'} size={44} />
+  );
+  return (
+    <NullCard headingIcon={headingIcon} bg="post" heading={hd} copy={cp}>
+      {(communityId || channelId) && (
+        <OutlineButton to={{ pathname, search, state: { modal: true } }}>
+          <Icon glyph={'post'} size={24} />
+          New post
+        </OutlineButton>
+      )}
+    </NullCard>
+  );
 };
 
 const Threads = styled.div`
@@ -298,7 +314,20 @@ class ThreadFeedPure extends React.Component<Props, State> {
       );
     }
 
-    return <NullState search={this.props.search} viewContext={viewContext} />;
+    const nullComposerCommunityId = this.props.data.community
+      ? this.props.data.community.id
+      : this.props.data.channel
+      ? this.props.data.channel.community.id
+      : null;
+
+    return (
+      <NullState
+        communityId={nullComposerCommunityId}
+        channelId={this.props.data.channel && this.props.data.channel.id}
+        isSearch={this.props.search}
+        viewContext={viewContext}
+      />
+    );
   }
 }
 

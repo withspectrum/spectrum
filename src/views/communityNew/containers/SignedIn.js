@@ -26,6 +26,8 @@ import {
 const Component = (props: SignedInMemberType) => {
   const { community } = props;
 
+  let containerEl = null;
+
   const { title, description } = generateMetaInfo({
     type: 'community',
     data: {
@@ -34,8 +36,15 @@ const Component = (props: SignedInMemberType) => {
     },
   });
 
+  const scrollToTop = () => {
+    if (containerEl) return containerEl.scrollTo(0, 0);
+  };
+
   return (
-    <AppViewWrapper data-cy="community-view">
+    <AppViewWrapper
+      innerRef={el => (containerEl = el)}
+      data-cy="community-view"
+    >
       <Head
         title={title}
         description={description}
@@ -49,18 +58,23 @@ const Component = (props: SignedInMemberType) => {
               <CommunityProfileHeader community={community} />
             </SidebarSection>
 
-            <TeamMembersList
-              community={community}
-              id={community.id}
-              first={100}
-              filter={{ isModerator: true, isOwner: true }}
-            />
-            <ChannelsList id={community.id} communitySlug={community.slug} />
+            <SidebarSection>
+              <TeamMembersList
+                community={community}
+                id={community.id}
+                first={100}
+                filter={{ isModerator: true, isOwner: true }}
+              />
+            </SidebarSection>
+
+            <SidebarSection>
+              <ChannelsList id={community.id} communitySlug={community.slug} />
+            </SidebarSection>
           </Sidebar>
 
           <Main>
             <MobileCommunityProfileHeader community={community} />
-            <CommunityFeeds community={community} />
+            <CommunityFeeds scrollToTop={scrollToTop} community={community} />
           </Main>
         </TwoColumnGrid>
       </Container>

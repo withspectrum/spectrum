@@ -4,10 +4,9 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import type { CommunityActionsRowType } from '../types';
 import { PrimaryButton, OutlineButton } from './Button';
-import { openComposer } from 'src/actions/composer';
 import { openModal } from 'src/actions/modals';
-import Composer from 'src/components/composer';
 import Icon from 'src/components/icons';
+import getComposerLink from 'src/helpers/get-composer-link';
 import JoinCommunity from './JoinCommunity';
 import { ActionsRowContainer } from '../style';
 
@@ -28,6 +27,7 @@ export const Component = (props: CommunityActionsRowType) => {
 
   const { isMember, isOwner, isModerator } = community.communityPermissions;
   const isTeamMember = isOwner || isModerator;
+  const { pathname, search } = getComposerLink({ communityId: community.id });
 
   if (isMember) {
     return (
@@ -46,11 +46,16 @@ export const Component = (props: CommunityActionsRowType) => {
           </OutlineButton>
         )}
 
-        <PrimaryButton onClick={open}>
+        <PrimaryButton
+          to={{
+            pathname,
+            search,
+            state: { modal: true },
+          }}
+        >
           <Icon glyph={'post'} size={24} />
           New Post
         </PrimaryButton>
-        <Composer isSlider={true} activeCommunity={community.slug} />
       </ActionsRowContainer>
     );
   }

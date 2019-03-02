@@ -2,11 +2,19 @@
 import React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import theme from 'shared/theme';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import ThreadFeed from 'src/components/threadFeed';
 import CommunityMemberGrid from 'src/views/community/components/memberGrid';
 import type { CommunityFeedsType } from '../types';
-import { FeedsContainer, SegmentedControl, Segment } from '../style';
+import { TeamMembersList } from '../components/TeamMembersList';
+import { ChannelsList } from '../components/ChannelsList';
+import {
+  FeedsContainer,
+  SegmentedControl,
+  Segment,
+  SidebarSection,
+} from '../style';
 
 const CommunityThreadFeed = compose(
   connect(),
@@ -14,7 +22,7 @@ const CommunityThreadFeed = compose(
 )(ThreadFeed);
 
 export const CommunityFeeds = (props: CommunityFeedsType) => {
-  const { community } = props;
+  const { community, scrollToTop } = props;
   const [activeSegment, setActiveSegment] = React.useState('trending');
 
   const renderFeed = () => {
@@ -56,9 +64,33 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
         );
       }
       case 'about': {
-        return <p>About!</p>;
+        return (
+          <div style={{ paddingBottom: '64px', background: theme.bg.wash }}>
+            <SidebarSection>
+              <TeamMembersList
+                community={community}
+                id={community.id}
+                first={100}
+                filter={{ isModerator: true, isOwner: true }}
+              />
+            </SidebarSection>
+            <SidebarSection>
+              <ChannelsList id={community.id} communitySlug={community.slug} />
+            </SidebarSection>
+          </div>
+        );
       }
     }
+  };
+
+  /*
+    Segments preserve scroll position when switched by default. We dont want
+    this behavior - if you change the feed (eg threads => members) you should
+    always end up at the top of the list
+  */
+  const changeSegment = (segment: string) => {
+    scrollToTop();
+    return setActiveSegment(segment);
   };
 
   return (
@@ -66,21 +98,21 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
       <SegmentedControl>
         <Segment
           active={activeSegment === 'trending'}
-          onClick={() => setActiveSegment('trending')}
+          onClick={() => changeSegment('trending')}
         >
           Trending
         </Segment>
 
         <Segment
           active={activeSegment === 'latest'}
-          onClick={() => setActiveSegment('latest')}
+          onClick={() => changeSegment('latest')}
         >
           Latest
         </Segment>
 
         <Segment
           active={activeSegment === 'members'}
-          onClick={() => setActiveSegment('members')}
+          onClick={() => changeSegment('members')}
         >
           Members
         </Segment>
@@ -88,7 +120,7 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
         <Segment
           hideOnDesktop
           active={activeSegment === 'about'}
-          onClick={() => setActiveSegment('about')}
+          onClick={() => changeSegment('about')}
         >
           About
         </Segment>

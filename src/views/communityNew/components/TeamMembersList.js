@@ -13,7 +13,6 @@ import type { TeamMemberListType } from '../types';
 import {
   List,
   VerticalScroll,
-  SidebarSection,
   SidebarSectionHeader,
   SidebarSectionHeading,
 } from '../style';
@@ -59,7 +58,7 @@ class Component extends React.Component<TeamMemberListType> {
       .filter(Boolean);
 
     return (
-      <SidebarSection>
+      <React.Fragment>
         <SidebarSectionHeader>
           <SidebarSectionHeading>Team</SidebarSectionHeading>
           {isOwner && (
@@ -90,7 +89,7 @@ class Component extends React.Component<TeamMemberListType> {
             />
           ))}
         </List>
-      </SidebarSection>
+      </React.Fragment>
     );
   }
 }

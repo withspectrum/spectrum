@@ -19,6 +19,7 @@ import {
   SignupButton,
   SignupFooter,
   SigninLink,
+  HeadingIconWrapper,
 } from './style';
 
 type NullCardProps = {
@@ -34,6 +35,9 @@ type NullCardProps = {
 export const NullCard = (props: NullCardProps) => {
   return (
     <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
+      {props.headingIcon && (
+        <HeadingIconWrapper>{props.headingIcon}</HeadingIconWrapper>
+      )}
       {props.heading && <Title>{props.heading}</Title>}
       {props.copy && <Subtitle>{props.copy}</Subtitle>}
       {props.children}
