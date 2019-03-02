@@ -348,7 +348,7 @@ export default requireAuth(
     await createParticipantInThread(dbThread.id, user.id);
 
     // Post a new message with a link to the new thread to the watercooler thread if one exists
-    if (community.watercoolerId) {
+    if (community.watercoolerId && !channel.isPrivate) {
       const identifier = user.username ? `@${user.username}` : user.name;
       const sentence =
         Array.isArray(usersPreviousPublishedThreads) &&
