@@ -7,8 +7,9 @@ import getCommunityThreads from 'shared/graphql/queries/community/getCommunityTh
 import ThreadFeed from 'src/components/threadFeed';
 import CommunityMemberGrid from 'src/views/community/components/memberGrid';
 import type { CommunityFeedsType } from '../types';
-import { TeamMembersList } from '../components/TeamMembersList';
-import { ChannelsList } from '../components/ChannelsList';
+import { TeamMembersList } from './TeamMembersList';
+import { MobileCommunityInfoActions } from './MobileCommunityInfoActions';
+import { ChannelsList } from './ChannelsList';
 import {
   FeedsContainer,
   SegmentedControl,
@@ -76,6 +77,9 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
             </SidebarSection>
             <SidebarSection>
               <ChannelsList id={community.id} communitySlug={community.slug} />
+            </SidebarSection>
+            <SidebarSection>
+              <MobileCommunityInfoActions community={community} />
             </SidebarSection>
           </div>
         );

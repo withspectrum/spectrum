@@ -59,6 +59,7 @@ export const Main = styled.section`
   @media (max-width: ${MEDIA_BREAK}px) {
     border-left: 0;
     border-right: 0;
+    border-bottom: 0;
   }
 `;
 
@@ -435,6 +436,61 @@ export const ChannelListItemContent = styled.div`
 
 export const ChannelName = styled.div`
   color: ${theme.text.default};
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  display: inline-block;
+  ${Truncate};
+`;
+
+export const Name = styled.div`
+  color: ${theme.text.default};
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  display: inline-block;
+  ${Truncate};
+`;
+
+export const ListItem = styled.div`
+  padding: 12px 12px 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid ${theme.bg.divider};
+
+  &:last-of-type {
+    border-bottom: 0;
+  }
+
+  &:hover {
+    background: ${theme.bg.wash};
+  }
+
+  .icon {
+    color: ${theme.text.alt};
+  }
+`;
+
+export const ListItemContent = styled.div`
+  display: flex;
+  align-items: center;
+
+  .icon {
+    color: ${theme.text.secondary};
+    margin-right: 6px;
+    position: relative;
+    top: 1px;
+  }
+`;
+
+export const NameWarn = styled.div`
+  color: ${theme.warn.default};
   font-size: 15px;
   font-weight: 500;
   line-height: 1.2;
