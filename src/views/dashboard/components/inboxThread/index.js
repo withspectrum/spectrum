@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import truncate from 'shared/truncate';
 import Header from './header';
+import { toPlainText, toState } from 'shared/draft-utils';
 import { changeActiveThread } from 'src/actions/dashboardFeed';
 import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo';
 import type { Dispatch } from 'redux';
@@ -13,6 +14,7 @@ import {
   InboxLinkWrapper,
   InboxThreadContent,
   ThreadTitle,
+  ThreadSnippet,
   Column,
   AvatarLink,
   CommunityAvatarLink,
@@ -117,6 +119,13 @@ class InboxThread extends React.Component<Props> {
               <ThreadTitle active={active} new={newMessagesSinceLastViewed}>
                 {truncate(thread.content.title, 80)}
               </ThreadTitle>
+
+              <ThreadSnippet active={active} new={newMessagesSinceLastViewed}>
+                {truncate(
+                  toPlainText(toState(JSON.parse(thread.content.body))),
+                  200
+                )}
+              </ThreadSnippet>
 
               <ErrorBoundary fallbackComponent={null}>
                 <ThreadActivity

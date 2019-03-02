@@ -30,10 +30,11 @@ export const TextRow = styled.span`
 `;
 
 const metaTitleStyles = css`
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
+  line-height: 1.2;
   color: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.text.secondary};
+    props.active ? props.theme.text.reverse : props.theme.text.default};
   pointer-events: auto;
   position: relative;
   z-index: ${zIndex.card};
@@ -62,7 +63,7 @@ const metaSubtitleStyles = css`
   font-weight: 400;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};
-  line-height: 1.28;
+  line-height: 1.2;
   pointer-events: auto;
   position: relative;
   z-index: ${zIndex.card};
@@ -88,7 +89,11 @@ export const MetaSubtitleText = styled.span`
   }
 `;
 
-export const Timestamp = styled(MetaSubtitleText)``;
+export const Timestamp = styled(MetaTitleText)`
+  color: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.text.alt};
+  font-weight: 400;
+`;
 
 export const NewThreadTimestamp = styled(MetaSubtitleText)`
   color: ${props =>

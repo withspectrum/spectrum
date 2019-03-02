@@ -11,7 +11,7 @@ export const InboxThreadItem = styled.div`
   min-width: 0;
   overflow-x: hidden;
   border-bottom: 1px solid
-    ${props => (props.active ? props.theme.brand.alt : props.theme.bg.border)};
+    ${props => (props.active ? props.theme.brand.alt : props.theme.bg.divider)};
   background: ${props =>
     props.active ? props.theme.brand.alt : props.theme.bg.default};
   position: relative;
@@ -24,7 +24,8 @@ export const InboxThreadItem = styled.div`
 
   &:last-of-type {
     border-bottom: 1px solid
-      ${props => (props.active ? props.theme.brand.alt : props.theme.bg.border)};
+      ${props =>
+        props.active ? props.theme.brand.alt : props.theme.bg.divider};
   }
 `;
 
@@ -63,12 +64,23 @@ export const Column = styled.div`
 `;
 
 export const ThreadTitle = styled.h3`
-  font-size: 16px;
+  font-size: 17px;
+  font-weight: ${props => (props.new ? '700' : '500')};
+  color: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.text.default};
+  max-width: 100%;
+  line-height: 1.4;
+`;
+
+export const ThreadSnippet = styled.h4`
+  font-size: 15px;
   font-weight: ${props => (props.new ? '600' : '400')};
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.default};
   max-width: 100%;
   line-height: 1.4;
+  margin-top: 4px;
+  word-break: break-word;
 `;
 
 export const ThreadActivityWrapper = styled.div`

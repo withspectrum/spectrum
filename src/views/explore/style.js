@@ -33,7 +33,7 @@ export const Wrapper = styled.main`
   align-items: stretch;
   flex: 1 0 auto;
   width: 100%;
-  background-color: ${theme.bg.default};
+  background-color: ${theme.bg.wash};
   overflow: auto;
   overflow-x: hidden;
   z-index: ${zIndex.base};
