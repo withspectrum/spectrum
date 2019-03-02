@@ -1,4 +1,5 @@
 // @flow
+import qs from 'query-string';
 import { storeItem } from 'src/helpers/localStorage';
 import { LAST_ACTIVE_COMMUNITY_KEY } from 'src/views/dashboard/components/communityList';
 

@@ -8,12 +8,7 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import {
-  JoinChannelContainer,
-  JoinChannelContent,
-  JoinChannelTitle,
-  JoinChannelSubtitle,
-} from './style';
+import { JoinChannelContainer, JoinChannelContent } from './style';
 import { Button } from 'src/components/buttons';
 
 type Props = {

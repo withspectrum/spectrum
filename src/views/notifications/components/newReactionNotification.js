@@ -14,11 +14,8 @@ import {
   ReactionContext,
   Content,
 } from '../style';
-import Icon from '../../../components/icons';
-import {
-  CardLink,
-  CardContent,
-} from '../../../components/threadFeedCard/style';
+import Icon from 'src/components/icons';
+import { CardLink, CardContent } from 'src/components/threadFeedCard/style';
 
 type Props = {
   notification: Object,
@@ -41,8 +38,8 @@ export const NewReactionNotification = ({
     <NotificationCard key={notification.id}>
       <CardLink
         to={{
-          pathname: window.location.pathname,
-          search: `?thread=${notification.context.payload.threadId}`,
+          // TODO(@mxstbr): Make this open in the modal
+          pathname: `/thread/${notification.context.payload.threadId}`,
         }}
       />
       <CardContent>
@@ -75,8 +72,8 @@ export const MiniNewReactionNotification = ({
     <NotificationListRow isSeen={notification.isSeen}>
       <CardLink
         to={{
-          pathname: window.location.pathname,
-          search: `?thread=${notification.context.payload.threadId}`,
+          // TODO(@mxstbr): Make this open in the modal
+          pathname: `/thread/${notification.context.payload.threadId}`,
         }}
       />
       <CardContent>

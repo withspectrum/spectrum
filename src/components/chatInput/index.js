@@ -143,6 +143,8 @@ const ChatInput = (props: Props) => {
         if (text.length === 0) removeAttachments();
         return;
       }
+      default:
+        return;
     }
   };
 

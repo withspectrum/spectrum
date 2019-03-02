@@ -44,13 +44,16 @@ app.use(statsd);
 // Trust the now proxy
 app.set('trust proxy', true);
 app.use(toobusy);
-// Allow bursts of up to 40 req for initial page loads, but block more than 40 / 10s
-app.use(
-  rateLimiter({
-    max: 40,
-    duration: '10s',
-  })
-);
+
+if (!process.env.TEST_DB) {
+  // Allow bursts of up to 40 req for initial page loads, but block more than 40 / 10s
+  app.use(
+    rateLimiter({
+      max: 40,
+      duration: '10s',
+    })
+  );
+}
 
 // Security middleware.
 addSecurityMiddleware(app, { enableNonce: false, enableCSP: false });

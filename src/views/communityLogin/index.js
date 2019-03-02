@@ -40,7 +40,13 @@ type State = {
 };
 
 export class Login extends React.Component<Props, State> {
-  state = { redirectPath: null };
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      redirectPath: props.redirectPath,
+    };
+  }
 
   escape = () => {
     this.props.history.push(`/${this.props.match.params.communitySlug}`);

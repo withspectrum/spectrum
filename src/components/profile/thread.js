@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import getThreadLink from 'src/helpers/get-thread-link';
 import { ThreadListItem } from '../listItems';
 import { ThreadProfileCard } from './style';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -52,7 +53,10 @@ class ThreadWithData extends React.Component<Props> {
       <ThreadProfileCard>
         <Link
           to={{
-            search: `?thread=${thread.id}`,
+            pathname: getThreadLink(thread),
+            state: {
+              modal: true,
+            },
           }}
         >
           <ThreadListItem

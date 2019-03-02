@@ -5,7 +5,6 @@ import ComposerEditor from './components/composer';
 class ThreadComposerWithData extends Component {
   render() {
     const {
-      isOpen,
       isInbox,
       showComposerUpsell,
       activeCommunity,
@@ -13,14 +12,13 @@ class ThreadComposerWithData extends Component {
     } = this.props;
     const showCommunityOwnerUpsell = showComposerUpsell || false;
 
-    return isOpen ? (
+    return i(
       <ComposerEditor
         activeCommunity={activeCommunity}
         activeChannel={activeChannel}
       />
-    ) : null;
+    );
   }
 }
 
-const map = state => ({ isOpen: state.composer.isOpen });
-export default connect(map)(ThreadComposerWithData);
+export default connect()(ThreadComposerWithData);

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import type { Location, History } from 'react-router';
-const querystring = require('querystring');
+import querystring from 'querystring';
 import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
 import { addToastWithTimeout } from 'src/actions/toasts';

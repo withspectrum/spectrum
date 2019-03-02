@@ -6,6 +6,7 @@ const {
   PAYMENTS_COMMUNITY_ID,
   DELETED_COMMUNITY_ID,
   PRIVATE_COMMUNITY_ID,
+  SINGLE_CHANNEL_COMMUNITY_ID,
 } = constants;
 
 module.exports = [
@@ -64,6 +65,20 @@ module.exports = [
     coverPhoto:
       'https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Header.png.0.3303118636071434',
     slug: 'private',
+    memberCount: 1,
+  },
+  {
+    id: SINGLE_CHANNEL_COMMUNITY_ID,
+    createdAt: new Date(DATE),
+    isPrivate: false,
+    name: 'Single channel community',
+    description: 'Single channel community',
+    website: 'https://spectrum.chat',
+    profilePhoto:
+      'https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Profile.png.0.6225566835336693',
+    coverPhoto:
+      'https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Header.png.0.3303118636071434',
+    slug: 'single',
     memberCount: 1,
   },
 ];
