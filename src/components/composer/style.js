@@ -25,12 +25,8 @@ export const DropImageOverlay = (props: { visible: boolean }) => {
 export const Wrapper = styled.div`
   position: absolute;
   width: 100vw;
-  height: calc(100vh - 48px);
+  height: 100vh;
   bottom: 0;
-
-  @media (max-width: 768px) {
-    height: 100vh;
-  }
 `;
 
 export const DropImageOverlayWrapper = styled.div`
@@ -65,7 +61,7 @@ export const Overlay = styled.div`
     props.slider &&
     css`
       position: fixed;
-      top: 48px;
+      top: 0;
       left: 0;
       right: 0;
       bottom: 0;
@@ -87,7 +83,7 @@ export const Container = styled(FlexCol)`
   align-self: stretch;
   flex: auto;
   overflow: hidden;
-  height: ${props => (props.isSlider ? '100vh' : 'calc(100vh - 48px)')};
+  height: 100vh;
   position: relative;
   z-index: ${zIndex.composer};
 
@@ -98,7 +94,7 @@ export const Container = styled(FlexCol)`
       position: absolute;
       width: 650px;
       top: 0;
-      height: 100%;
+      height: 100vh;
     `}
 
   @media (max-width: 768px) {
