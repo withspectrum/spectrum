@@ -202,7 +202,7 @@ export const Meta = styled.div`
   border-top: 2px solid ${theme.bg.border};
   padding: 8px 16px;
   width: 100%;
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 4px 4px;
 `;
 
 export const MetaList = styled.ul``;
@@ -281,7 +281,7 @@ export const ProfileCard = styled(Card)`
 `;
 
 export const ThreadProfileCard = styled(ProfileCard)`
-  border-radius: 8px;
+  border-radius: 4px;
   box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 `;
 
@@ -294,16 +294,16 @@ export const CoverPhoto = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  border-radius: ${props => (props.large ? '12px' : '12px 12px 0 0')};
+  border-radius: ${props => (props.large ? '4px' : '4px 4px 0 0')};
 `;
 
 export const Container = styled.div`
   background: ${theme.bg.default};
-  box-shadow: ${Shadow.mid} ${props => hexa(props.theme.bg.reverse, 0.15)};
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   flex: 0 0 22%;
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
+  border-radius: 4px;
   position: relative;
   z-index: ${zIndex.card};
   margin: 16px;

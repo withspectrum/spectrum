@@ -14,7 +14,7 @@ import { Card } from 'src/components/card';
 import { Loading, LoadingListItem } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
-import { MessageIconContainer, UserListItemContainer } from '../style';
+import { UserListItemContainer } from '../style';
 import GranularUserProfile from 'src/components/granularUserProfile';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
@@ -100,23 +100,14 @@ class CommunityMemberGrid extends React.Component<Props, State> {
                 userObject={user}
                 name={user.name}
                 username={user.username}
-                profilePhoto={user.profilePhoto}
                 description={user.description}
+                profilePhoto={user.profilePhoto}
                 isCurrentUser={currentUser && user.id === currentUser.id}
                 isOnline={user.isOnline}
-                badges={roles}
-                reputation={reputation}
+                avatarSize={40}
                 showHoverProfile={false}
-              >
-                {currentUser && user.id !== currentUser.id && (
-                  <MessageIconContainer data-cy="message-user-button">
-                    <Icon
-                      glyph={'message'}
-                      onClick={() => this.initMessage(user)}
-                    />
-                  </MessageIconContainer>
-                )}
-              </GranularUserProfile>
+                messageButton={currentUser && user.id !== currentUser.id}
+              />
             );
           })}
         </InfiniteList>

@@ -151,11 +151,10 @@ class CommunityMembers extends React.Component<Props, State> {
         description={user.description}
         isCurrentUser={user.id === this.props.currentUser.id}
         isOnline={user.isOnline}
-        reputation={reputation}
         profilePhoto={user.profilePhoto}
         avatarSize={40}
-        badges={roles}
         showHoverProfile={false}
+        messageButton={user.id !== this.props.currentUser.id}
       >
         {user.id !== this.props.currentUser.id && (
           <EditDropdown
@@ -221,60 +220,58 @@ class CommunityMembers extends React.Component<Props, State> {
           </SearchFilter>
         </Filters>
 
-        {searchIsFocused &&
-          queryString && (
-            <Search
-              queryString={queryString}
-              filter={{ communityId: this.props.id }}
-              render={({ searchResults, isLoading }) => {
-                if (isLoading) {
-                  return <Loading />;
-                }
+        {searchIsFocused && queryString && (
+          <Search
+            queryString={queryString}
+            filter={{ communityId: this.props.id }}
+            render={({ searchResults, isLoading }) => {
+              if (isLoading) {
+                return <Loading />;
+              }
 
-                if (!searchResults || searchResults.length === 0) {
-                  const emoji = ' ';
+              if (!searchResults || searchResults.length === 0) {
+                const emoji = ' ';
 
-                  const heading =
-                    searchString.length > 1
-                      ? `We couldn't find anyone matching "${searchString}"`
-                      : 'Search for people in your community';
+                const heading =
+                  searchString.length > 1
+                    ? `We couldn't find anyone matching "${searchString}"`
+                    : 'Search for people in your community';
 
-                  const subheading =
-                    searchString.length > 1
-                      ? 'Grow your community by inviting people via email, or by importing a Slack team'
-                      : 'Find people by name, username, and profile description - try searching for "designer" or "developer"';
-
-                  return (
-                    <ViewError
-                      emoji={emoji}
-                      heading={heading}
-                      subheading={subheading}
-                    />
-                  );
-                }
+                const subheading =
+                  searchString.length > 1
+                    ? 'Grow your community by inviting people via email, or by importing a Slack team'
+                    : 'Find people by name, username, and profile description - try searching for "designer" or "developer"';
 
                 return (
-                  <ListContainer>
-                    {searchResults.map(communityMember => {
-                      if (!communityMember) return null;
-                      return this.generateUserProfile(communityMember);
-                    })}
-                  </ListContainer>
+                  <ViewError
+                    emoji={emoji}
+                    heading={heading}
+                    subheading={subheading}
+                  />
                 );
-              }}
-            />
-          )}
-
-        {searchIsFocused &&
-          !queryString && (
-            <ViewError
-              emoji={' '}
-              heading={'Search for community members'}
-              subheading={
-                'Find people by name or description - try searching for "designer"!'
               }
-            />
-          )}
+
+              return (
+                <ListContainer>
+                  {searchResults.map(communityMember => {
+                    if (!communityMember) return null;
+                    return this.generateUserProfile(communityMember);
+                  })}
+                </ListContainer>
+              );
+            }}
+          />
+        )}
+
+        {searchIsFocused && !queryString && (
+          <ViewError
+            emoji={' '}
+            heading={'Search for community members'}
+            subheading={
+              'Find people by name or description - try searching for "designer"!'
+            }
+          />
+        )}
 
         {!searchIsFocused && (
           <GetMembers
@@ -289,37 +286,34 @@ class CommunityMembers extends React.Component<Props, State> {
               if (members && members.length > 0) {
                 return (
                   <ListContainer data-cy="community-settings-members-list">
-                    {filter &&
-                      filter.isBlocked &&
-                      !community.isPrivate && (
-                        <Notice>
-                          <strong>A note about blocked users:</strong> Your
-                          community is publicly viewable (except for private
-                          channels). This means that a blocked user may be able
-                          to see the content and conversations in your
-                          community. However, they will be prevented from
-                          creating new conversations, or leaving messages in
-                          existing conversations.
-                        </Notice>
-                      )}
+                    {filter && filter.isBlocked && !community.isPrivate && (
+                      <Notice>
+                        <strong>A note about blocked users:</strong> Your
+                        community is publicly viewable (except for private
+                        channels). This means that a blocked user may be able to
+                        see the content and conversations in your community.
+                        However, they will be prevented from creating new
+                        conversations, or leaving messages in existing
+                        conversations.
+                      </Notice>
+                    )}
 
                     {members.map(communityMember => {
                       if (!communityMember) return null;
                       return this.generateUserProfile(communityMember);
                     })}
 
-                    {community &&
-                      community.members.pageInfo.hasNextPage && (
-                        <SectionCardFooter>
-                          <FetchMore
-                            color={'brand.default'}
-                            loading={isFetchingMore}
-                            onClick={fetchMore}
-                          >
-                            Load more
-                          </FetchMore>
-                        </SectionCardFooter>
-                      )}
+                    {community && community.members.pageInfo.hasNextPage && (
+                      <SectionCardFooter>
+                        <FetchMore
+                          color={'brand.default'}
+                          loading={isFetchingMore}
+                          onClick={fetchMore}
+                        >
+                          Load more
+                        </FetchMore>
+                      </SectionCardFooter>
+                    )}
                   </ListContainer>
                 );
               }

@@ -80,21 +80,12 @@ class ConversationGrowth extends React.Component<Props> {
                     currentUser && member.user.id === currentUser.id
                   }
                   isOnline={member.user.isOnline}
-                  reputation={member.reputation}
                   profilePhoto={member.user.profilePhoto}
                   avatarSize={40}
-                  badges={member.roles}
-                >
-                  {currentUser &&
-                    member.user.id !== currentUser.id && (
-                      <MessageIconContainer>
-                        <Icon
-                          glyph={'message'}
-                          onClick={() => this.initMessage(member.user)}
-                        />
-                      </MessageIconContainer>
-                    )}
-                </GranularUserProfile>
+                  messageButton={
+                    currentUser && member.user.id !== currentUser.id
+                  }
+                />
               </UserListItemContainer>
             );
           })}

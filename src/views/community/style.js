@@ -258,18 +258,6 @@ export const ToggleNotificationsContainer = styled.div`
   ${Tooltip};
 `;
 
-export const MessageIconContainer = styled.div`
-  color: ${theme.text.alt};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-
-  &:hover {
-    color: ${theme.brand.alt};
-  }
-`;
-
 export const UserListItemContainer = styled.div`
   border-bottom: 1px solid ${theme.bg.wash};
 `;
