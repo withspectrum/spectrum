@@ -59,7 +59,7 @@ const EditingChatInput = (props: Props) => {
   };
 
   const submit = () => {
-    const { message, editMessage, cancelEdit, dispatch } = props;
+    const { message, editMessage, dispatch } = props;
     const messageId = message.id;
 
     if (!text || text.length === 0) return props.cancelEdit();

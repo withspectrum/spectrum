@@ -161,6 +161,7 @@ class SidebarChannels extends React.Component<Props> {
                 <ErrorBoundary fallbackComponent={null} key={channel.id}>
                   <ChannelListItem
                     active={activeChannel === channel.id}
+                    data-cy="inbox-channel-list-item"
                     onClick={evt => {
                       evt.stopPropagation();
                       this.changeChannel(channel.id);

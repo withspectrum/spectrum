@@ -490,3 +490,5 @@ export const EditedIndicator = styled.span`
   color: ${props => props.theme.text.alt};
   ${Tooltip};
 `;
+
+export const ThreadAttachmentsContainer = styled.ul``;

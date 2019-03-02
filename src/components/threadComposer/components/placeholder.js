@@ -1,41 +1,40 @@
 // @flow
 import * as React from 'react';
+import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { openComposer } from '../../../actions/composer';
-import Icon from '../../icons';
-import { Container, Composer, Placeholder, PlaceholderLabel } from '../style';
-import Upsell from './upsell';
+import { withRouter } from 'react-router-dom';
+import type { History } from 'react-router';
+import Icon from 'src/components/icons';
+import { Placeholder, PlaceholderLabel } from '../style';
 import type { Dispatch } from 'redux';
+import getComposerLink from 'src/helpers/get-composer-link';
 
 type Props = {
   dispatch: Dispatch<Object>,
-  isOpen: boolean,
-  isInbox: boolean,
-  showCommunityOwnerUpsell: boolean,
+  history: History,
+  communityId: ?string,
+  channelId: ?string,
 };
 class ComposerPlaceholder extends React.Component<Props> {
   render() {
-    const { isOpen, showCommunityOwnerUpsell, isInbox, dispatch } = this.props;
-
+    const { communityId, channelId } = this.props;
+    const { pathname, search } = getComposerLink({ communityId, channelId });
     return (
-      <Container
-        isOpen={isOpen}
-        isInbox={isInbox}
+      <Placeholder
         data-cy="thread-composer-placeholder"
+        to={{
+          pathname,
+          search,
+          state: { modal: true },
+        }}
       >
-        <Composer
-          isOpen={isOpen}
-          onClick={() => dispatch(openComposer())}
-          isInbox={isInbox}
-        >
-          {!isOpen && showCommunityOwnerUpsell && <Upsell />}
-          <Placeholder isOpen={isOpen}>
-            <Icon glyph="post" />
-            <PlaceholderLabel>Start a new conversation...</PlaceholderLabel>
-          </Placeholder>
-        </Composer>
-      </Container>
+        <Icon glyph="post" />
+        <PlaceholderLabel>Start a new conversation...</PlaceholderLabel>
+      </Placeholder>
     );
   }
 }
-export default connect()(ComposerPlaceholder);
+export default compose(
+  withRouter,
+  connect()
+)(ComposerPlaceholder);

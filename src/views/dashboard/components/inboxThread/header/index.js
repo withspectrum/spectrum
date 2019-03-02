@@ -9,7 +9,8 @@ export type HeaderProps = {
   active: boolean,
   currentUser: ?Object,
   viewContext?:
-    | ?'communityInbox'
+    | ?'inbox'
+    | 'communityInbox'
     | 'communityProfile'
     | 'channelInbox'
     | 'channelProfile'
