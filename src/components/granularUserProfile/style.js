@@ -1,17 +1,10 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import { Tooltip, Truncate } from '../globals';
 
-export const Content = styled.div`
-  border-bottom: 1px solid ${theme.bg.wash};
-  padding: 12px 0;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-`;
-
-export const Row = styled.div`
+export const Row = styled(Link)`
   display: grid;
   grid-template-columns: ${props =>
       props.avatarSize ? `${props.avatarSize}px` : '32px'} minmax(0px, 1fr) 32px;
@@ -21,16 +14,15 @@ export const Row = styled.div`
     props.multiAction
       ? `'avatar name message' 'action action action' '. description .'`
       : `'avatar name action' '. description .'`};
-  grid-column-gap: 16px;
-  padding: 12px 16px;
+  grid-column-gap: 12px;
+  padding: 12px;
+  align-items: center;
   width: 100%;
   background: ${theme.bg.default};
-  border-bottom: 1px solid ${theme.bg.wash};
+  border-bottom: 1px solid ${theme.bg.divider};
 
   &:last-of-type {
-    > ${Content} {
-      border-bottom: 0;
-    }
+    border-bottom: 0;
   }
 
   > div {
@@ -49,28 +41,32 @@ export const Row = styled.div`
       max-width: 100%;
     }
   }
-`;
-
-export const Name = styled.span`
-  color: ${theme.text.default};
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.2;
-  vertical-align: middle;
-  display: flex;
-  align-items: center;
 
   &:hover {
-    color: ${theme.brand.alt};
+    background: ${theme.bg.wash};
+    cursor: pointer;
   }
+`;
+
+export const Name = styled.div`
+  color: ${theme.text.default};
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  display: flex;
+  ${Truncate};
 `;
 
 export const Username = styled.span`
   font-size: 14px;
   color: ${theme.text.alt};
   font-weight: 400;
-  margin: 0px 4px;
-  line-height: 1;
+  margin-top: 2px;
+  line-height: 1.2;
 
   &:hover {
     color: ${theme.text.default};
@@ -79,16 +75,24 @@ export const Username = styled.span`
 
 export const Description = styled.p`
   grid-area: description;
-  font-size: 14px;
-  color: ${theme.text.alt};
+  font-size: 15px;
+  line-height: 1.3;
+  color: ${theme.text.default};
+  margin-top: 6px;
 `;
 
 export const MessageIcon = styled.div`
   grid-area: message;
-  height: 32px;
-  color: ${theme.brand.alt};
+  color: ${theme.text.secondary};
   cursor: pointer;
   ${Tooltip};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    color: ${theme.text.default};
+  }
 `;
 
 export const Actions = styled.div`
@@ -97,4 +101,6 @@ export const Actions = styled.div`
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-start;
+  position: relative;
+  z-index: 10;
 `;

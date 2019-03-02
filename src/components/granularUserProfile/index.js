@@ -41,45 +41,15 @@ type Props = {
   showHoverProfile?: boolean,
 };
 
-// Each prop both provides data AND indicates that the element should be included in the instance of the profile,
-// so each instance must manually call out which pieces of the profile it wants included.
-
-const LinkHandler = ({
-  username,
-  children,
-}: {
-  username: ?string,
-  children: React.Node,
-}) =>
-  username ? (
-    <Link to={`/users/${username}`}>{children}</Link>
-  ) : (
-    <span>{children}</span>
-  );
-
 class GranularUserProfileHandler extends React.Component<Props> {
   render() {
-    const { showHoverProfile = true, userObject } = this.props;
-    return (
-      <ConditionalWrap
-        condition={showHoverProfile && !!userObject.username}
-        wrap={() => (
-          <UserHoverProfile
-            username={userObject.username}
-            style={{ flex: '1 1 auto' }}
-          >
-            <GranularUserProfile {...this.props} />
-          </UserHoverProfile>
-        )}
-      >
-        <GranularUserProfile {...this.props} />
-      </ConditionalWrap>
-    );
+    return <GranularUserProfile {...this.props} />;
   }
 }
 
 class GranularUserProfile extends React.Component<Props> {
-  initMessage = () => {
+  initMessage = (e: any) => {
+    e && e.preventDefault() && e.stopPropagation();
     const { name, username, id } = this.props;
     const user = { name, username, id };
 
@@ -95,7 +65,7 @@ class GranularUserProfile extends React.Component<Props> {
       username,
       description,
       reputation,
-      avatarSize = 32,
+      avatarSize = 40,
       badges,
       children,
       messageButton,
@@ -103,39 +73,51 @@ class GranularUserProfile extends React.Component<Props> {
       showHoverProfile = true,
     } = this.props;
 
+    // TODO @brian: decide whether we want to render users without a username at all
+    if (!userObject.username) return null;
+
     return (
-      <Row avatarSize={avatarSize} multiAction={multiAction}>
+      <Row
+        to={`/users/${userObject.username}`}
+        avatarSize={avatarSize}
+        multiAction={multiAction}
+      >
         {profilePhoto && (
           <UserAvatar
             user={userObject}
             size={avatarSize}
             showHoverProfile={!showHoverProfile}
+            isClickable={false}
           />
         )}
-        <LinkHandler username={userObject.username}>
-          {name && (
-            <Name>
-              {name}
-              {username && <Username>@{username}</Username>}
-              {badges && badges.map((b, i) => <Badge key={i} type={b} />)}
-            </Name>
+
+        {name && (
+          <Name>
+            {name}
+            {username && <Username>@{username}</Username>}
+            {badges && badges.map((b, i) => <Badge key={i} type={b} />)}
+          </Name>
+        )}
+
+        {typeof reputation === 'number' && (
+          <Reputation reputation={reputation} />
+        )}
+
+        {description && <Description>{description}</Description>}
+
+        <Actions>
+          {messageButton && (
+            <MessageIcon
+              tipText={'Send message'}
+              tipLocation={'left'}
+              onClick={this.initMessage}
+            >
+              <Icon glyph="message-simple-new" size={24} />
+            </MessageIcon>
           )}
 
-          {typeof reputation === 'number' && (
-            <Reputation reputation={reputation} />
-          )}
-        </LinkHandler>
-        {description && <Description>{description}</Description>}
-        {messageButton && (
-          <MessageIcon
-            tipText={name ? `Message ${name}` : 'Message'}
-            tipLocation={'top-left'}
-            onClick={this.initMessage}
-          >
-            <Icon glyph="message-new" size={32} />
-          </MessageIcon>
-        )}
-        <Actions>{children}</Actions>
+          {children}
+        </Actions>
       </Row>
     );
   }
