@@ -27,6 +27,7 @@ import {
   ShimmerBase,
   ShimmerLine,
   ShimmerSelect,
+  StyledErrorSelect,
   Cover,
   CircularCover,
   LoadingOverlay,
@@ -1021,6 +1022,11 @@ export const LoadingSelect = () => (
   <ShimmerSelect>
     <ShimmerBase />
   </ShimmerSelect>
+);
+
+type Props = { children: any };
+export const ErrorSelect = ({ children }: Props) => (
+  <StyledErrorSelect>{children}</StyledErrorSelect>
 );
 
 export const LoadingScreen = (): React$Element<any> => (

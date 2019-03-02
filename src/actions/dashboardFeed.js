@@ -1,4 +1,8 @@
 // @flow
+import qs from 'query-string';
+import { storeItem } from 'src/helpers/localStorage';
+import { LAST_ACTIVE_COMMUNITY_KEY } from 'src/views/dashboard/components/communityList';
+
 export const changeActiveThread = (threadId: ?string) => {
   return {
     type: 'SELECT_FEED_THREAD',
@@ -7,6 +11,7 @@ export const changeActiveThread = (threadId: ?string) => {
 };
 
 export const changeActiveCommunity = (communityId: string) => {
+  storeItem(LAST_ACTIVE_COMMUNITY_KEY, communityId);
   return {
     type: 'SELECT_FEED_COMMUNITY',
     communityId,

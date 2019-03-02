@@ -1,30 +1,14 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import compose from 'recompose/compose';
-import Textarea from 'react-textarea-autosize';
-import MentionsInput from 'src/components/mentionsInput';
-import { withRouter } from 'react-router';
+import { withRouter, type History, type Location } from 'react-router';
 import { connect } from 'react-redux';
 import debounce from 'debounce';
 import queryString from 'query-string';
-import { KeyBindingUtil } from 'draft-js';
-import Dropzone from 'react-dropzone';
 import Icon from '../icons';
-import processThreadContent from 'shared/draft-utils/process-thread-content';
-import { ThreadHeading } from 'src/views/thread/style';
-import Editor from 'src/components/rich-text-editor';
-import Image from 'src/components/rich-text-editor/Image';
-import { SegmentedControl, Segment } from 'src/components/segmentedControl';
-import { closeComposer } from '../../actions/composer';
-import { changeActiveThread } from '../../actions/dashboardFeed';
-import { addToastWithTimeout } from '../../actions/toasts';
-import {
-  toPlainText,
-  fromPlainText,
-  toJSON,
-  toState,
-  isAndroid,
-} from 'shared/draft-utils';
+import getThreadLink from 'src/helpers/get-thread-link';
+import { changeActiveThread } from 'src/actions/dashboardFeed';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
@@ -33,70 +17,35 @@ import uploadImage, {
   type UploadImageType,
 } from 'shared/graphql/mutations/uploadImage';
 import { TextButton, Button } from '../buttons';
-import { FlexRow } from 'src/components/globals';
 import {
   MediaLabel,
   MediaInput,
 } from 'src/components/chatInput/components/style';
-import { MarkdownHint } from 'src/components/markdownHint';
-import { LoadingSelect } from '../loading';
-import Titlebar from '../../views/titlebar';
+import Titlebar from 'src/views/titlebar';
 import type { Dispatch } from 'redux';
 import {
-  ComposerSlider,
   Overlay,
   Container,
-  ThreadDescription,
-  ThreadTitle,
-  ThreadInputs,
   Actions,
-  Dropdowns,
-  RequiredSelector,
   DisabledWarning,
-  DropImageOverlay,
-  DropzoneWrapper,
   InputHints,
   DesktopLink,
   ButtonRow,
+  Wrapper,
 } from './style';
-import {
-  sortCommunities,
-  sortChannels,
-  getDefaultActiveChannel,
-} from './utils';
 import { events, track } from 'src/helpers/analytics';
 import { ESC, ENTER } from 'src/helpers/keycodes';
-
-const PreviewEditor = (props: { state: Object }) => {
-  // $FlowIssue
-  const [state, setState] = React.useState(props.state);
-
-  const onChange = change => {
-    setState(change);
-  };
-
-  return (
-    <Editor
-      readOnly
-      state={state}
-      onChange={onChange}
-      placeholder=""
-      version={2}
-      editorKey="preview-editor"
-    />
-  );
-};
+import Inputs from './inputs';
+import ComposerLocationSelectors from './LocationSelectors';
 
 type State = {
   title: string,
   body: string,
-  availableCommunities: Array<any>,
-  availableChannels: Array<any>,
-  activeCommunity: ?string,
-  activeChannel: ?string,
   isLoading: boolean,
   postWasPublished: boolean,
   preview: boolean,
+  selectedChannelId: ?string,
+  selectedCommunityId: ?string,
 };
 
 type Props = {
@@ -106,18 +55,15 @@ type Props = {
     loading: boolean,
   },
   uploadImage: (input: UploadImageInput) => Promise<UploadImageType>,
-  isOpen: boolean,
-  isSlider?: boolean,
   dispatch: Dispatch<Object>,
   publishThread: Function,
-  history: Object,
-  location: Object,
-  activeCommunity?: string,
-  activeChannel?: string,
-  threadSliderIsOpen?: boolean,
+  history: History,
+  location: Location,
   isInbox: boolean,
   websocketConnection: string,
   networkOnline: boolean,
+  isEditing: boolean,
+  slider?: boolean,
 };
 
 const LS_BODY_KEY = 'last-plaintext-thread-composer-body';
@@ -131,28 +77,20 @@ const ONE_DAY = (): string => {
 
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
-class ComposerWithData extends Component<Props, State> {
+class ComposerWithData extends React.Component<Props, State> {
   bodyEditor: any;
 
   constructor(props) {
     super(props);
 
-    let { storedBody, storedTitle } = this.getTitleAndBody();
-
-    const { activeCommunitySlug, activeChannelSlug } = queryString.parse(
-      props.location.search
-    );
-
     this.state = {
       title: '',
       body: '',
-      availableCommunities: [],
-      availableChannels: [],
-      activeCommunity: activeCommunitySlug || '',
-      activeChannel: activeChannelSlug || '',
       isLoading: false,
       postWasPublished: false,
       preview: false,
+      selectedChannelId: '',
+      selectedCommunityId: '',
     };
 
     this.persistBodyToLocalStorageWithDebounce = debounce(
@@ -196,75 +134,6 @@ class ComposerWithData extends Component<Props, State> {
     };
   };
 
-  handleIncomingProps = props => {
-    const { user } = props.data;
-    // if the user doesn't exist, bust outta here
-    if (!user || !user.id || !user.communityConnection) return;
-
-    const hasCommunities =
-      user.communityConnection.edges &&
-      user.communityConnection.edges.length > 0;
-    const hasChannels =
-      user.channelConnection.edges && user.channelConnection.edges.length > 0;
-
-    if (!hasCommunities || !hasChannels) {
-      return this.setState({
-        availableCommunities: [],
-        availableChannels: [],
-        activeCommunity: null,
-        activeChannel: null,
-      });
-    }
-
-    const communities = sortCommunities(
-      user.communityConnection.edges
-        // $FlowFixMe
-        .map(edge => edge && edge.node)
-        .filter(Boolean)
-    );
-
-    const channels = sortChannels(
-      user.channelConnection.edges
-        // $FlowFixMe
-        .map(edge => edge && edge.node)
-        .filter(channel => channel && !channel.isArchived)
-        .filter(Boolean)
-    );
-
-    const activeSlug = props.activeCommunity || this.state.activeCommunity;
-    let community;
-
-    // User is viewing a community/channel? Use the community from the URL
-    if (activeSlug) {
-      community = communities.find(
-        community => community.slug.toLowerCase() === activeSlug.toLowerCase()
-      );
-    } else {
-      community = communities && communities.length > 0 ? communities[0] : null;
-    }
-
-    if (!community || !community.id) return props.data.refetch();
-
-    // get the channels for the active community
-    const communityChannels = channels
-      .filter(
-        channel => channel && community && channel.community.id === community.id
-      )
-      .filter(channel => channel && !channel.isArchived);
-
-    const activeChannel = getDefaultActiveChannel(
-      communityChannels,
-      props.activeChannel
-    );
-
-    this.setState({
-      availableCommunities: communities,
-      availableChannels: channels,
-      activeCommunity: community ? community.id : null,
-      activeChannel: activeChannel ? activeChannel.id : null,
-    });
-  };
-
   componentWillMount() {
     let { storedBody, storedTitle } = this.getTitleAndBody();
     this.setState({
@@ -274,38 +143,37 @@ class ComposerWithData extends Component<Props, State> {
   }
 
   componentDidMount() {
-    this.handleIncomingProps(this.props);
     track(events.THREAD_CREATED_INITED);
     // $FlowIssue
-    document.addEventListener('keydown', this.handleKeyPress, false);
+    document.addEventListener('keydown', this.handleGlobalKeyPress, false);
   }
 
   componentWillUnmount() {
     // $FlowIssue
-    document.removeEventListener('keydown', this.handleKeyPress, false);
+    document.removeEventListener('keydown', this.handleGlobalKeyPress, false);
     const { postWasPublished } = this.state;
 
     // if a post was published, in this session, clear redux so that the next
     // composer open will start fresh
-    if (postWasPublished) return this.closeComposer('clear');
+    if (postWasPublished) return;
 
     // otherwise, clear the composer normally and save the state
-    return this.closeComposer();
+    return;
   }
 
-  handleKeyPress = e => {
-    const esc = e.keyCode === ESC;
-    const cmdEnter =
-      e.keyCode === ENTER && KeyBindingUtil.hasCommandModifier(e);
+  handleGlobalKeyPress = e => {
+    const esc = e && e.keyCode === ESC;
 
     if (esc) {
-      // Community/channel view
+      e.stopPropagation();
       this.closeComposer();
-      // Dashboard
       this.activateLastThread();
       return;
     }
+  };
 
+  handleKeyPress = e => {
+    const cmdEnter = e.keyCode === ENTER && e.metaKey;
     if (cmdEnter) return this.publishThread();
   };
 
@@ -338,43 +206,18 @@ class ComposerWithData extends Component<Props, State> {
     });
   };
 
-  componentWillUpdate(next) {
-    const currChannelLength =
-      this.props.data.user &&
-      this.props.data.user.channelConnection &&
-      this.props.data.user.channelConnection.edges.length;
-    const nextChannelLength =
-      next.data.user &&
-      next.data.user.channelConnection &&
-      next.data.user.channelConnection.edges.length;
-    const currCommunityLength =
-      this.props.data.user &&
-      this.props.data.user.communityConnection &&
-      this.props.data.user.communityConnection.edges.length;
-    const nextCommunityLength =
-      next.data.user &&
-      next.data.user.communityConnection &&
-      next.data.user.communityConnection.edges.length;
-
-    if (
-      (this.props.data.loading && !next.data.loading) ||
-      currChannelLength !== nextChannelLength ||
-      currCommunityLength !== nextCommunityLength
-    ) {
-      this.handleIncomingProps(next);
-    }
-  }
-
   closeComposer = (clear?: string) => {
     this.persistBodyToLocalStorage(this.state.body);
     this.persistTitleToLocalStorage(this.state.title);
+
     // we will clear the composer if it unmounts as a result of a post
     // being published, that way the next composer open will start fresh
     if (clear) {
       this.clearEditorStateAfterPublish();
     }
 
-    return this.props.dispatch(closeComposer());
+    this.props.history.goBack();
+    return;
   };
 
   clearEditorStateAfterPublish = () => {
@@ -383,11 +226,6 @@ class ComposerWithData extends Component<Props, State> {
     } catch (err) {
       console.error(err);
     }
-  };
-
-  onCancelClick = async () => {
-    await this.activateLastThread();
-    this.props.dispatch(closeComposer());
   };
 
   handleTitleBodyChange = titleOrBody => {
@@ -417,36 +255,6 @@ class ComposerWithData extends Component<Props, State> {
   persistBodyToLocalStorage = body => {
     if (!localStorage) return;
     this.handleTitleBodyChange('body');
-  };
-
-  setActiveCommunity = e => {
-    const newActiveCommunity = e.target.value;
-    const activeCommunityChannels = this.state.availableChannels.filter(
-      channel => channel.community.id === newActiveCommunity
-    );
-    const newActiveCommunityData = this.state.availableCommunities.find(
-      community => community.id === newActiveCommunity
-    );
-    const isActiveCommunity =
-      newActiveCommunityData &&
-      this.props.activeCommunity === newActiveCommunityData.slug;
-    const newActiveChannel = getDefaultActiveChannel(
-      activeCommunityChannels,
-      isActiveCommunity ? this.props.activeChannel : ''
-    );
-
-    this.setState({
-      activeCommunity: newActiveCommunity,
-      activeChannel: newActiveChannel && newActiveChannel.id,
-    });
-  };
-
-  setActiveChannel = e => {
-    const activeChannel = e.target.value;
-
-    this.setState({
-      activeChannel,
-    });
   };
 
   uploadFile = evt => {
@@ -498,7 +306,11 @@ class ComposerWithData extends Component<Props, State> {
 
   publishThread = () => {
     // if no title and no channel is set, don't allow a thread to be published
-    if (!this.state.title || !this.state.activeChannel) {
+    if (
+      !this.state.title ||
+      !this.state.selectedCommunityId ||
+      !this.state.selectedChannelId
+    ) {
       return;
     }
 
@@ -532,9 +344,9 @@ class ComposerWithData extends Component<Props, State> {
 
     // define new constants in order to construct the proper shape of the
     // input for the publishThread mutation
-    const { activeChannel, activeCommunity, title, body } = this.state;
-    const channelId = activeChannel;
-    const communityId = activeCommunity;
+    const { selectedChannelId, selectedCommunityId, title, body } = this.state;
+    const channelId = selectedChannelId;
+    const communityId = selectedCommunityId;
 
     const content = {
       title: title.trim(),
@@ -575,8 +387,6 @@ class ComposerWithData extends Component<Props, State> {
           postWasPublished: true,
         });
 
-        this.props.dispatch(closeComposer());
-
         // redirect the user to the thread
         // if they are in the inbox, select it
         this.props.dispatch(
@@ -586,9 +396,9 @@ class ComposerWithData extends Component<Props, State> {
           this.props.history.replace(`/?t=${id}`);
           this.props.dispatch(changeActiveThread(id));
         } else if (this.props.location.pathname === '/new/thread') {
-          this.props.history.replace(`/?thread=${id}`);
+          this.props.history.replace(`/${getThreadLink(data.publishThread)}`);
         } else {
-          this.props.history.push(`?thread=${id}`);
+          this.props.history.push(`/${getThreadLink(data.publishThread)}`);
           this.props.dispatch(changeActiveThread(null));
         }
         return;
@@ -601,26 +411,28 @@ class ComposerWithData extends Component<Props, State> {
       });
   };
 
+  setSelectedCommunity = (id: string) => {
+    return this.setState({ selectedCommunityId: id });
+  };
+
+  setSelectedChannel = (id: string) => {
+    return this.setState({ selectedChannelId: id });
+  };
+
   render() {
     const {
       title,
-      availableChannels,
-      availableCommunities,
-      activeCommunity,
-      activeChannel,
       isLoading,
-      preview,
+      selectedChannelId,
+      selectedCommunityId,
     } = this.state;
 
     const {
-      data: { user },
-      threadSliderIsOpen,
-      isOpen,
       networkOnline,
       websocketConnection,
-      isSlider,
+      isEditing,
+      slider,
     } = this.props;
-    const dataExists = user && availableCommunities && availableChannels;
 
     const networkDisabled =
       !networkOnline ||
@@ -628,124 +440,34 @@ class ComposerWithData extends Component<Props, State> {
         websocketConnection !== 'reconnected');
 
     return (
-      <ComposerSlider isSlider={isSlider} isOpen={isOpen}>
+      <Wrapper data-cy="thread-composer-wrapper">
         <Overlay
-          isOpen={isOpen}
+          slider={slider}
           onClick={this.closeComposer}
           data-cy="thread-composer-overlay"
         />
-        <Container isSlider={isSlider}>
-          <Titlebar provideBack title={'New conversation'} noComposer />
-          <Dropdowns>
-            <span>To:</span>
-            {!dataExists ? (
-              <LoadingSelect />
-            ) : (
-              <RequiredSelector
-                data-cy="composer-community-selector"
-                onChange={this.setActiveCommunity}
-                value={activeCommunity}
-              >
-                {availableCommunities.map(community => {
-                  return (
-                    <option key={community.id} value={community.id}>
-                      {community.name}
-                    </option>
-                  );
-                })}
-              </RequiredSelector>
-            )}
-            {!dataExists ? (
-              <LoadingSelect />
-            ) : (
-              <RequiredSelector
-                data-cy="composer-channel-selector"
-                onChange={this.setActiveChannel}
-                value={activeChannel}
-              >
-                {availableChannels
-                  .filter(channel => channel.community.id === activeCommunity)
-                  .map(channel => {
-                    return (
-                      <option key={channel.id} value={channel.id}>
-                        {channel.name}
-                      </option>
-                    );
-                  })}
-              </RequiredSelector>
-            )}
-          </Dropdowns>
-          <ThreadInputs>
-            <SegmentedControl
-              css={{
-                marginRight: 0,
-                marginLeft: 0,
-                marginTop: 0,
-                marginBottom: '32px',
-              }}
-            >
-              <Segment
-                selected={!this.state.preview}
-                onClick={() => this.setState({ preview: false })}
-              >
-                Write
-              </Segment>
-              <Segment
-                selected={this.state.preview}
-                onClick={() => this.setState({ preview: true })}
-              >
-                Preview
-              </Segment>
-            </SegmentedControl>
-            {preview ? (
-              /* $FlowFixMe */
-              <div style={{ padding: '0 32px' }}>
-                <ThreadHeading>{this.state.title}</ThreadHeading>
-                {/* $FlowFixMe */}
-                <PreviewEditor
-                  state={toState(
-                    JSON.parse(processThreadContent('TEXT', this.state.body))
-                  )}
-                />
-              </div>
-            ) : (
-              <Dropzone
-                accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
-                disableClick
-                multiple={false}
-                onDropAccepted={this.uploadFiles}
-              >
-                {({ getRootProps, getInputProps, isDragActive }) => (
-                  <DropzoneWrapper
-                    {...getRootProps({
-                      refKey: 'innerRef',
-                    })}
-                  >
-                    <input {...getInputProps()} />
-                    <Textarea
-                      data-cy="composer-title-input"
-                      onChange={this.changeTitle}
-                      style={ThreadTitle}
-                      value={this.state.title}
-                      placeholder={'What‘s on your mind?'}
-                      autoFocus={!threadSliderIsOpen}
-                    />
 
-                    <MentionsInput
-                      onChange={this.changeBody}
-                      value={this.state.body}
-                      style={ThreadDescription}
-                      inputRef={editor => (this.bodyEditor = editor)}
-                      placeholder={'Add more thoughts here...'}
-                      className={'threadComposer'}
-                      dataCy="rich-text-editor"
-                    />
-                    <DropImageOverlay visible={isDragActive} />
-                  </DropzoneWrapper>
-                )}
-              </Dropzone>
-            )}
-          </ThreadInputs>
+        <Container data-cy="thread-composer" slider={slider}>
+          <Titlebar provideBack title={'New conversation'} noComposer />
+
+          <ComposerLocationSelectors
+            selectedChannelId={selectedChannelId}
+            selectedCommunityId={selectedCommunityId}
+            onCommunitySelectionChanged={this.setSelectedCommunity}
+            onChannelSelectionChanged={this.setSelectedChannel}
+          />
+
+          <Inputs
+            title={this.state.title}
+            body={this.state.body}
+            changeBody={this.changeBody}
+            changeTitle={this.changeTitle}
+            uploadFiles={this.uploadFiles}
+            autoFocus={true}
+            bodyRef={ref => (this.bodyEditor = ref)}
+            onKeyDown={this.handleKeyPress}
+            isEditing={isEditing}
+          />
 
           {networkDisabled && (
             <DisabledWarning>
@@ -779,7 +501,11 @@ class ComposerWithData extends Component<Props, State> {
               </DesktopLink>
             </InputHints>
             <ButtonRow>
-              <TextButton hoverColor="warn.alt" onClick={this.onCancelClick}>
+              <TextButton
+                data-cy="composer-cancel-button"
+                hoverColor="warn.alt"
+                onClick={this.closeComposer}
+              >
                 Cancel
               </TextButton>
               <Button
@@ -790,7 +516,9 @@ class ComposerWithData extends Component<Props, State> {
                   !title ||
                   title.trim().length === 0 ||
                   isLoading ||
-                  networkDisabled
+                  networkDisabled ||
+                  !selectedChannelId ||
+                  !selectedCommunityId
                 }
                 color={'brand'}
               >
@@ -799,25 +527,21 @@ class ComposerWithData extends Component<Props, State> {
             </ButtonRow>
           </Actions>
         </Container>
-      </ComposerSlider>
+      </Wrapper>
     );
   }
 }
 
-export const ThreadComposer = compose(
-  uploadImage,
-  getComposerCommunitiesAndChannels, // query to get data
-  publishThread, // mutation to publish a thread
-  withRouter // needed to use history.push() as a post-publish action
-)(ComposerWithData);
-
+// $FlowIssue
 const mapStateToProps = state => ({
-  isOpen: state.composer.isOpen,
-  threadSliderIsOpen: state.threadSlider.isOpen,
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
 });
 
-// $FlowIssue
-const Composer = connect(mapStateToProps)(ThreadComposer);
-export default Composer;
+export default compose(
+  uploadImage,
+  getComposerCommunitiesAndChannels, // query to get data
+  publishThread, // mutation to publish a thread
+  withRouter, // needed to use history.push() as a post-publish action
+  connect(mapStateToProps)
+)(ComposerWithData);

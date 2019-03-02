@@ -9,6 +9,7 @@ import Icon from 'src/components/icons';
 import Reputation from 'src/components/reputation';
 import SidebarChannels from './sidebarChannels';
 import UpsellExploreCommunities from './upsellExploreCommunities';
+import { getItemFromStorage } from 'src/helpers/localStorage';
 import {
   CommunityListItem,
   CommunityListMeta,
@@ -37,7 +38,15 @@ type Props = {
   setActiveChannelObject: Function,
 };
 
+export const LAST_ACTIVE_COMMUNITY_KEY = 'last-active-inbox-community';
+
 class CommunityList extends React.Component<Props> {
+  componentDidMount() {
+    const id = getItemFromStorage(LAST_ACTIVE_COMMUNITY_KEY);
+    if (id) return this.props.dispatch(changeActiveCommunity(id));
+    this.props.dispatch(changeActiveCommunity(''));
+  }
+
   changeCommunity = id => {
     track(events.INBOX_COMMUNITY_FILTERED);
     this.props.dispatch(changeActiveCommunity(id));
@@ -99,6 +108,7 @@ class CommunityList extends React.Component<Props> {
       <CommunityListWrapper data-cy="inbox-community-list">
         <CommunityListScroller>
           <CommunityListItem
+            data-cy="inbox-community-list-item"
             active={!activeCommunity}
             onClick={() => this.changeCommunity('')}
           >
@@ -108,6 +118,7 @@ class CommunityList extends React.Component<Props> {
           {sortedCommunities.map(c => (
             <ErrorBoundary fallbackComponent={null} key={c.id}>
               <CommunityListItem
+                data-cy="inbox-community-list-item"
                 onClick={() => this.handleOnClick(c.id)}
                 active={c.id === activeCommunity}
               >

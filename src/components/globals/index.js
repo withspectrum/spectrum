@@ -12,18 +12,6 @@ export const Truncate = width => css`
   min-width: 0;
 `;
 
-export const hexa = (hex, alpha) => {
-  var r = parseInt(hex.slice(1, 3), 16),
-    g = parseInt(hex.slice(3, 5), 16),
-    b = parseInt(hex.slice(5, 7), 16);
-
-  if (alpha >= 0) {
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  } else {
-    return `rgb(${r}, ${g}, ${b})`;
-  }
-};
-
 export const tint = (hex: string, amount: number) => {
   let R = parseInt(hex.substring(1, 3), 16);
   let G = parseInt(hex.substring(3, 5), 16);
@@ -50,6 +38,18 @@ export const tint = (hex: string, amount: number) => {
   const BB = getDouble(B);
 
   return `#${RR}${GG}${BB}`;
+};
+
+export const hexa = (hex, alpha) => {
+  var r = parseInt(hex.slice(1, 3), 16),
+    g = parseInt(hex.slice(3, 5), 16),
+    b = parseInt(hex.slice(5, 7), 16);
+
+  if (alpha >= 0) {
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  } else {
+    return `rgb(${r}, ${g}, ${b})`;
+  }
 };
 
 export const Shadow = {
@@ -270,7 +270,7 @@ export const H1 = styled.h1`
   color: ${theme.text.default};
   font-weight: 900;
   font-size: 1.5rem;
-  line-height: 1.25;
+  line-height: 1.3;
   margin: 0;
   padding: 0;
 `;
@@ -280,7 +280,7 @@ export const H2 = styled.h2`
   ${fontStack};
   font-weight: 700;
   font-size: 1.25rem;
-  line-height: 1.25;
+  line-height: 1.3;
   margin: 0;
   padding: 0;
 `;

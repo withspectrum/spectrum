@@ -9,8 +9,10 @@ import {
   QuoteWrapper,
   QuoteWrapperGradient,
   QuotedParagraph,
+  ThreadAttachmentsContainer,
 } from './style';
-import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
+import ThreadAttachment from './ThreadAttachment';
+import { messageRenderer } from 'shared/clients/draft-js/message/renderer';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { draftOnlyContainsEmoji } from 'shared/only-contains-emoji';
 import { Byline, Name, Username } from './style';
@@ -23,6 +25,18 @@ type BodyProps = {
   message: MessageInfoType,
   bubble?: boolean,
   showParent?: boolean,
+};
+
+// This regexp matches /community/channel/slug~id, /?thread=id, /?t=id etc.
+// see https://regex101.com/r/aGamna/2/
+const MATCH_SPECTRUM_URLS = /(?:(?:https?:\/\/)?|\B)(?:spectrum\.chat|localhost:3000)\/.*?(?:~|(?:\?|&)t=|(?:\?|&)thread=)([^&\s]*)/gim;
+const getSpectrumThreadIds = (text: string) => {
+  let ids = [];
+  let match;
+  while ((match = MATCH_SPECTRUM_URLS.exec(text))) {
+    ids.push(match[1]);
+  }
+  return ids;
 };
 
 export const Body = (props: BodyProps) => {
@@ -44,6 +58,9 @@ export const Body = (props: BodyProps) => {
       return <Image onClick={openGallery} src={message.content.body} />;
     }
     case 'draftjs': {
+      const parsed = JSON.parse(message.content.body);
+      const ids = getSpectrumThreadIds(toPlainText(toState(parsed)));
+      const uniqueIds = ids.filter((x, i, a) => a.indexOf(x) === i);
       return (
         <WrapperComponent me={me}>
           {message.parent && showParent && (
@@ -52,10 +69,17 @@ export const Body = (props: BodyProps) => {
           )}
           {emojiOnly ? (
             <Emoji>
-              {toPlainText(toState(JSON.parse(message.content.body)))}
+              {parsed && Array.isArray(parsed.blocks) && parsed.blocks[0].text}
             </Emoji>
           ) : (
-            redraft(JSON.parse(message.content.body), messageRenderer)
+            redraft(parsed, messageRenderer)
+          )}
+          {uniqueIds && (
+            <ThreadAttachmentsContainer>
+              {uniqueIds.map(id => (
+                <ThreadAttachment message={message} key={id} id={id} />
+              ))}
+            </ThreadAttachmentsContainer>
           )}
         </WrapperComponent>
       );

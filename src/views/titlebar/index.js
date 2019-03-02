@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
-import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import ThreadSearch from '../dashboard/components/threadSearch';
 import Icon from '../../components/icons';
@@ -17,8 +16,12 @@ const TextHeading = ({ title, subtitle }) => (
 
 class Titlebar extends Component {
   handleBack = () => {
-    const { history } = this.props;
+    const { history, backRoute } = this.props;
     const length = history.length;
+
+    if (backRoute) {
+      return history.push(this.props.backRoute);
+    }
 
     /*
       We don't have a reliable way to know exactly where a user should navigate
@@ -38,11 +41,7 @@ class Titlebar extends Component {
       we can make good assumptions (i.e. if a user lands directly on a channel
       page, the back button can take them to the community for that channel).
     */
-    if (length > 3) {
-      history.goBack();
-    } else {
-      history.push(this.props.backRoute);
-    }
+    return history.goBack();
   };
 
   render() {
@@ -56,16 +55,12 @@ class Titlebar extends Component {
       filter,
       children,
       messageComposer,
-      activeCommunitySlug,
-      activeChannelSlug,
+      activeCommunityId,
+      activeChannelId,
     } = this.props;
-    const query =
-      activeChannelSlug || activeCommunitySlug
-        ? `?${queryString.stringify({
-            activeChannelSlug,
-            activeCommunitySlug,
-          })}`
-        : '';
+    const composerQuery = `${
+      activeCommunityId ? `?composerCommunityId=${activeCommunityId}` : ''
+    }${activeChannelId ? `&composerChannelId=${activeChannelId}` : ''}`;
     return (
       <TitleBar>
         {provideBack ? (
@@ -73,6 +68,7 @@ class Titlebar extends Component {
             glyph="view-back"
             color="text.reverse"
             onClick={this.handleBack}
+            dataCy="titlebar-back"
           />
         ) : hasChildren ? (
           children
@@ -90,8 +86,12 @@ class Titlebar extends Component {
             <IconButton glyph="message-new" color="text.reverse" />
           </Link>
         ) : (
-          <Link to={`/new/thread${query}`}>
-            <IconButton glyph="post" color="text.reverse" />
+          <Link to={`/new/thread${composerQuery}`}>
+            <IconButton
+              dataCy="titlebar-compose-button"
+              glyph="post"
+              color="text.reverse"
+            />
           </Link>
         )}
       </TitleBar>

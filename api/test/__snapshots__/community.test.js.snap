@@ -94,7 +94,20 @@ Object {
       "members": Object {
         "edges": Array [
           Object {
-            "cursor": "My0x",
+            "cursor": "Mi0x",
+            "node": Object {
+              "isBlocked": false,
+              "isMember": true,
+              "isModerator": false,
+              "isOwner": false,
+              "reputation": 101,
+              "user": Object {
+                "id": "2",
+              },
+            },
+          },
+          Object {
+            "cursor": "My0y",
             "node": Object {
               "isBlocked": false,
               "isMember": true,
@@ -103,19 +116,6 @@ Object {
               "reputation": 100,
               "user": Object {
                 "id": "3",
-              },
-            },
-          },
-          Object {
-            "cursor": "Mi0y",
-            "node": Object {
-              "isBlocked": false,
-              "isMember": true,
-              "isModerator": false,
-              "isOwner": false,
-              "reputation": 100,
-              "user": Object {
-                "id": "2",
               },
             },
           },

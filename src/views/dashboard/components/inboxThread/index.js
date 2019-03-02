@@ -7,6 +7,7 @@ import truncate from 'shared/truncate';
 import Header from './header';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { changeActiveThread } from 'src/actions/dashboardFeed';
+import getThreadLink from 'src/helpers/get-thread-link';
 import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo';
 import type { Dispatch } from 'redux';
 import {
@@ -33,7 +34,8 @@ type Props = {
   staticContext: ?string,
   data: ThreadInfoType,
   viewContext?:
-    | ?'communityInbox'
+    | ?'inbox'
+    | 'communityInbox'
     | 'communityProfile'
     | 'channelInbox'
     | 'channelProfile'
@@ -46,26 +48,17 @@ class InboxThread extends React.Component<Props> {
   render() {
     const {
       data: thread,
-      location,
       active,
       viewContext = null,
       currentUser,
+      location,
     } = this.props;
 
-    // TODO(@mxstbr): Fix this to not use window.innerWidth
-    // which breaks SSR rehydration on mobile devices
-    const isDesktopInbox =
-      window.innerWidth > 768 &&
-      (!viewContext ||
+    const isInbox =
+      viewContext &&
+      (viewContext === 'inbox' ||
         viewContext === 'communityInbox' ||
         viewContext === 'channelInbox');
-
-    let queryPrefix;
-    if (isDesktopInbox) {
-      queryPrefix = '?t';
-    } else {
-      queryPrefix = '?thread';
-    }
 
     const newMessagesSinceLastViewed =
       !active &&
@@ -75,16 +68,31 @@ class InboxThread extends React.Component<Props> {
 
     return (
       <ErrorBoundary fallbackComponent={null}>
-        <InboxThreadItem active={active}>
+        <InboxThreadItem data-cy="thread-card" active={active}>
           <InboxLinkWrapper
-            to={{
-              pathname: location.pathname,
-              search: `${queryPrefix}=${thread.id}`,
-            }}
-            onClick={() =>
-              isDesktopInbox &&
-              this.props.dispatch(changeActiveThread(thread.id))
+            to={
+              isInbox
+                ? {
+                    pathname: location.pathname,
+                    search: `?t=${thread.id}`,
+                  }
+                : {
+                    pathname: getThreadLink(thread),
+                    state: { modal: true },
+                  }
             }
+            onClick={evt => {
+              const isMobile = window.innerWidth < 768;
+              if (isMobile && isInbox) {
+                evt.preventDefault();
+                this.props.history.push({
+                  pathname: getThreadLink(thread),
+                  state: { modal: true },
+                });
+              } else if (!isMobile) {
+                this.props.dispatch(changeActiveThread(thread.id));
+              }
+            }}
           />
 
           <InboxThreadContent>

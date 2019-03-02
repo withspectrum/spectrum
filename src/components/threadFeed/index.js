@@ -7,14 +7,11 @@ import compose from 'recompose/compose';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import Icon from 'src/components/icons';
 import InboxThread from 'src/views/dashboard/components/inboxThread';
 import { NullCard } from '../upsell';
 import { LoadingInboxThread } from '../loading';
 import NewActivityIndicator from '../newActivityIndicator';
 import ViewError from '../viewError';
-import { Upsell, UpsellHeader, UpsellFooter, UpsellBlock } from './style';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
@@ -26,17 +23,17 @@ const NullState = ({ viewContext, search }) => {
   let hd;
   let cp;
 
-  if (viewContext && viewContext === 'community') {
+  if (viewContext && viewContext === 'communityProfile') {
     hd = 'This community’s just getting started...';
     cp = 'Why don’t you kick things off?';
   }
 
-  if (viewContext && viewContext === 'channel') {
+  if (viewContext && viewContext === 'channelProfile') {
     hd = 'There’s nothing in this channel yet';
     cp = 'But you could be the first person to post something here!';
   }
 
-  if (viewContext && viewContext === 'profile') {
+  if (viewContext && viewContext === 'userProfile') {
     hd = 'This user hasn’t posted yet';
     cp = 'But you could message them!';
   }
@@ -48,70 +45,6 @@ const NullState = ({ viewContext, search }) => {
 
   return <NullCard bg="post" heading={hd} copy={cp} />;
 };
-
-const UpsellState = ({ community }) => (
-  <Upsell>
-    <UpsellHeader>
-      <Icon glyph={'welcome'} size={48} />
-      <h3>Welcome to your new community!</h3>
-    </UpsellHeader>
-    <p>
-      You’ve already taken a huge step, but there’s one problem - there’s no one
-      here yet!
-    </p>
-    <p>
-      This is usually the hardest part for new communities, but don’t worry!
-      We’ve got a few suggestions to help you get things started...
-    </p>
-    <p>
-      First things first, you’ll want to <b>start a couple threads</b>.
-    </p>
-    <UpsellBlock>
-      Open-ended questions are a great start, for example:
-      <ul>
-        <li>ask new members to introduce themselves</li>
-        <li>
-          ask people about their favorite tools or what they’re working on
-        </li>
-        <li>ask for suggestions on a problem you’re facing</li>
-      </ul>
-    </UpsellBlock>
-    <p>
-      Once you’ve got a couple threads started, make sure to{' '}
-      <b>help people find your community</b>. Talking about your community on
-      social media like Twitter or Facebook is a great start - or you could add
-      our{' '}
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://github.com/withspectrum/badge"
-      >
-        badge
-      </a>{' '}
-      to a project repo or your website.
-    </p>
-    <p>
-      You can also <b>invite people by email</b> or{' '}
-      <b>import your Slack team</b> in your{' '}
-      <Link to={`/${community.slug}/settings`}>settings</Link>.
-    </p>
-    <UpsellFooter>
-      <p>
-        If you’ve encountered an issue, want a new feature, or just need some
-        help, you can always find the Spectrum team in the{' '}
-        <Link to={'/spectrum'}>Spectrum Support</Link> community or on{' '}
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://twitter.com/withspectrum"
-        >
-          Twitter
-        </a>{' '}
-        and we’d be more than happy to give you a hand.
-      </p>
-    </UpsellFooter>
-  </Upsell>
-);
 
 const Threads = styled.div`
   display: flex;
@@ -142,7 +75,6 @@ type Props = {
     refetch: Function,
   },
   community: GetCommunityType,
-  setThreadsStatus: Function,
   hasThreads: Function,
   hasNoThreads: Function,
   currentUser: ?Object,
@@ -154,7 +86,6 @@ type Props = {
     | 'userProfile',
   slug: string,
   pinnedThreadId: ?string,
-  isNewAndOwned: ?boolean,
   newActivityIndicator: ?boolean,
   dispatch: Dispatch<Object>,
   search?: boolean,
@@ -228,11 +159,6 @@ class ThreadFeedPure extends React.Component<Props, State> {
       curr.data.threads &&
       curr.data.threads.length === 0
     ) {
-      // if there are no threads, tell the parent container so that we can render upsells to community owners in the parent container
-      if (curr.setThreadsStatus) {
-        curr.setThreadsStatus();
-      }
-
       if (curr.hasThreads) {
         curr.hasThreads();
       }
@@ -372,11 +298,7 @@ class ThreadFeedPure extends React.Component<Props, State> {
       );
     }
 
-    if (this.props.isNewAndOwned) {
-      return <UpsellState community={this.props.community} />;
-    } else {
-      return <NullState search={this.props.search} viewContext={viewContext} />;
-    }
+    return <NullState search={this.props.search} viewContext={viewContext} />;
   }
 }
 

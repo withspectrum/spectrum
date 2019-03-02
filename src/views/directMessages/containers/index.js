@@ -19,14 +19,6 @@ type State = {
 };
 
 class DirectMessages extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      activeThreadId: props.match.params.threadId,
-    };
-  }
-
   componentDidUpdate(prevProps: Props) {
     const curr = this.props;
     if (prevProps.match.params.threadId !== curr.match.params.threadId) {
@@ -35,17 +27,15 @@ class DirectMessages extends React.Component<Props, State> {
       } else {
         track(events.DIRECT_MESSAGE_THREAD_VIEWED);
       }
-
-      this.setState({ activeThreadId: curr.match.params.threadId });
     }
   }
 
   render() {
     const { match } = this.props;
-    const { activeThreadId } = this.state;
 
-    const isComposing = match.params.threadId === 'new';
-    const isViewingThread = !!activeThreadId;
+    const activeThreadId = match.params.threadId;
+    const isComposing = activeThreadId === 'new';
+    const isViewingThread = !isComposing && !!activeThreadId;
 
     return (
       <View>
@@ -67,16 +57,16 @@ class DirectMessages extends React.Component<Props, State> {
           <ThreadsList activeThreadId={activeThreadId} />
         </MessagesList>
 
-        {activeThreadId ? (
+        {isViewingThread ? (
           <ExistingThread
             id={activeThreadId}
             match={match}
-            hideOnMobile={!(isComposing || isViewingThread)}
+            hideOnMobile={isComposing}
           />
         ) : (
           <NewThread
             match={match}
-            hideOnMobile={!(isComposing || isViewingThread)}
+            hideOnMobile={isViewingThread || !activeThreadId}
           />
         )}
       </View>

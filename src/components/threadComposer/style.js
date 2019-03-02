@@ -1,5 +1,6 @@
 import styled, { css, keyframes } from 'styled-components';
 import theme from 'shared/theme';
+import { Link } from 'react-router-dom';
 import { hexa, Transition, FlexRow, FlexCol, zIndex } from '../globals';
 
 export const Container = styled(FlexRow)`
@@ -69,7 +70,7 @@ export const Overlay = styled.div`
     `};
 `;
 
-export const Placeholder = styled.div`
+export const Placeholder = styled(Link)`
   ${
     /* either the placeholder *or* the content container shows at a time. */ ''
   } display: ${props => (props.isOpen ? 'none' : 'flex')};
@@ -267,7 +268,7 @@ export const ThreadDescription = {
   width: '100%',
   height: 'calc(100% - 132px)',
   display: 'inline-block',
-  lineHeight: '1.5',
+  lineHeight: '1.4',
   padding: '0 24px 24px 24px',
   outline: 'none',
   border: '0',

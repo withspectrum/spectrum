@@ -17,6 +17,7 @@ import { init as initPassport } from './authentication.js';
 import apolloServer from './apollo-server';
 import { corsOptions } from 'shared/middlewares/cors';
 import errorHandler from 'shared/middlewares/error-handler';
+import rateLimiter from 'shared/middlewares/rate-limiter';
 import middlewares from './routes/middlewares';
 import authRoutes from './routes/auth';
 import apiRoutes from './routes/api';
@@ -43,6 +44,16 @@ app.use(statsd);
 // Trust the now proxy
 app.set('trust proxy', true);
 app.use(toobusy);
+
+if (!process.env.TEST_DB) {
+  // Allow bursts of up to 40 req for initial page loads, but block more than 40 / 10s
+  app.use(
+    rateLimiter({
+      max: 40,
+      duration: '10s',
+    })
+  );
+}
 
 // Security middleware.
 addSecurityMiddleware(app, { enableNonce: false, enableCSP: false });

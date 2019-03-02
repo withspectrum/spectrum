@@ -86,7 +86,14 @@ const processPath = path => {
         .slice(configStart, configEnd)
         .replace('START_CONFIG', '')
         .replace(/(\r\n\t|\n|\r\t)/gm, '');
-      const config = JSON.parse(configString);
+
+      let config;
+      try {
+        config = JSON.parse(configString);
+      } catch (err) {
+        console.error({ err, configString, file, configStart, configEnd });
+        return;
+      }
 
       if (!UPDATE_PROD_TEMPLATES && !config.test) {
         console.error('🔅 No test config for this template, skipping');

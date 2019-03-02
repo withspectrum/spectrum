@@ -2,7 +2,7 @@
 import theme from 'shared/theme';
 // $FlowFixMe
 import styled, { keyframes } from 'styled-components';
-import { zIndex, Gradient } from '../globals';
+import { zIndex } from '../globals';
 
 export const Container = styled.div`
   position: fixed;

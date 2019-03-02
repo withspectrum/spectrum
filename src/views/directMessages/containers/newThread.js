@@ -739,7 +739,7 @@ class NewThread extends React.Component<Props, State> {
         <ComposerInputWrapper>
           {// if users have been selected, show them as pills
           selectedUsersForNewThread.length > 0 && (
-            <SelectedUsersPills>
+            <SelectedUsersPills data-cy="selected-users-pills">
               {selectedUsersForNewThread.map(user => {
                 return (
                   <Pill

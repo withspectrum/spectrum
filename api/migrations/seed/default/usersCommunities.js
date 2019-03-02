@@ -9,9 +9,11 @@ const {
   BLOCKED_USER_ID,
   CHANNEL_MODERATOR_USER_ID,
   COMMUNITY_MODERATOR_USER_ID,
+  SINGLE_CHANNEL_COMMUNITY_USER_ID,
   SPECTRUM_COMMUNITY_ID,
   PAYMENTS_COMMUNITY_ID,
   PRIVATE_COMMUNITY_ID,
+  SINGLE_CHANNEL_COMMUNITY_ID,
 } = constants;
 
 module.exports = [
@@ -39,7 +41,7 @@ module.exports = [
     isBlocked: false,
     isPending: false,
     receiveNotifications: true,
-    reputation: 100,
+    reputation: 101,
   },
   {
     id: '3',
@@ -198,5 +200,33 @@ module.exports = [
     isPending: false,
     receiveNotifications: true,
     reputation: 100,
+  },
+
+  {
+    id: '16',
+    createdAt: new Date(DATE),
+    userId: BRIAN_ID,
+    communityId: SINGLE_CHANNEL_COMMUNITY_ID,
+    isOwner: false,
+    isModerator: false,
+    isMember: true,
+    isBlocked: false,
+    isPending: false,
+    receiveNotifications: true,
+    reputation: 0,
+  },
+
+  {
+    id: '17',
+    createdAt: new Date(DATE),
+    userId: SINGLE_CHANNEL_COMMUNITY_USER_ID,
+    communityId: SINGLE_CHANNEL_COMMUNITY_ID,
+    isOwner: false,
+    isModerator: false,
+    isMember: true,
+    isBlocked: false,
+    isPending: false,
+    receiveNotifications: true,
+    reputation: 0,
   },
 ];
