@@ -66,6 +66,10 @@ class InboxThread extends React.Component<Props> {
       thread.lastActive &&
       thread.currentUserLastSeen < thread.lastActive;
 
+    const rawPlain = toPlainText(toState(JSON.parse(thread.content.body)));
+    const withouteMultipleLineBreaks = rawPlain.replace(/[\r\n]{3,}/g, '\n');
+    const snippet = truncate(withouteMultipleLineBreaks, 280);
+
     return (
       <ErrorBoundary fallbackComponent={null}>
         <InboxThreadItem
@@ -134,10 +138,7 @@ class InboxThread extends React.Component<Props> {
 
               {!isInbox && (
                 <ThreadSnippet active={active} new={newMessagesSinceLastViewed}>
-                  {truncate(
-                    toPlainText(toState(JSON.parse(thread.content.body))),
-                    280
-                  )}
+                  {snippet}
                 </ThreadSnippet>
               )}
 

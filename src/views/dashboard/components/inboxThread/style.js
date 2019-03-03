@@ -87,6 +87,7 @@ export const ThreadSnippet = styled.h4`
   line-height: 1.4;
   margin-top: 4px;
   word-break: break-word;
+  white-space: pre-line;
 `;
 
 export const ThreadActivityWrapper = styled.div`
