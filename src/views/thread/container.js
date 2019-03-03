@@ -511,14 +511,17 @@ class ThreadContainer extends React.Component<Props, State> {
                   content={`${thread.community.name} community`}
                 />
               </Head>
-              <Titlebar
-                title={thread.content.title}
-                subtitle={`${thread.community.name} / ${thread.channel.name}`}
-                provideBack={true}
-                backRoute={'/'}
-                noComposer
-                style={{ gridArea: 'header' }}
-              />
+
+              {!thread.watercooler && (
+                <Titlebar
+                  title={thread.content.title}
+                  subtitle={`${thread.community.name} / ${thread.channel.name}`}
+                  provideBack={true}
+                  backRoute={'/'}
+                  noComposer
+                  style={{ gridArea: 'header' }}
+                />
+              )}
 
               <ThreadCommunityBanner
                 forceScrollToTop={this.forceScrollToTop}

@@ -350,6 +350,14 @@ export const SegmentedControl = styled.div`
   top: 0;
   z-index: 11;
   background: ${theme.bg.default};
+  overflow: hidden;
+  overflow-x: scroll;
+
+  &::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    background: transparent; /* make scrollbar transparent */
+  }
 
   @media (max-width: ${MEDIA_BREAK}px) {
     box-shadow: inset 0 -1px ${theme.bg.border};
@@ -381,6 +389,8 @@ export const Segment = styled.div`
   }
 
   @media (max-width: ${MEDIA_BREAK}px) {
+    flex: 1 0 21%;
+
     &:hover {
       background: ${theme.bg.default};
     }
@@ -577,4 +587,9 @@ export const WatercoolerWrapper = styled.div`
   max-height: calc(100vh - 104px);
   overflow: hidden;
   overflow-y: scroll;
+
+  /* this first div is the thread container */
+  > div {
+    max-height: calc(100vh - 104px);
+  }
 `;
