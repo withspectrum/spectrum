@@ -1,11 +1,32 @@
 import data from '../../../shared/testing/data';
 const user = data.users.find(user => user.username === 'brian');
+import constants from '../../../api/migrations/seed/default/constants';
 
 const pressEscape = () => cy.get('body').trigger('keydown', { keyCode: 27 });
+const pressEscapeMessageInput = () =>
+  cy.get('[data-cy=editing-chat-input]').trigger('keydown', { keyCode: 27 });
+const pressEnter = () => cy.get('body').trigger('keydown', { keyCode: 13 });
 const discardDraftModal = () => cy.get('[data-cy="discard-draft-modal"]');
 const cancelButton = () => cy.get('[data-cy="composer-cancel-button"]');
 const title = 'Some new thread';
 const body = "with some fresh content you've never seen before";
+const message = 'new message';
+
+const publicCommunity = data.communities.find(
+  c => c.id === constants.SPECTRUM_COMMUNITY_ID
+);
+
+const publicChannel = data.channels.find(
+  c => c.id === constants.SPECTRUM_GENERAL_CHANNEL_ID
+);
+
+const publicThread = data.threads.find(
+  t => t.communityId === publicCommunity.id && t.channelId === publicChannel.id
+);
+
+const publicThreadAuthor = data.users.find(
+  u => u.id === publicThread.creatorId
+);
 
 describe('composer content persistence', () => {
   beforeEach(() => {
@@ -155,5 +176,78 @@ describe('discarding drafts', () => {
     cy.get('[data-cy="rich-text-editor"]').should('be.visible');
     cy.get('[data-cy="composer-title-input"]').should('not.contain', title);
     cy.get('[data-cy="rich-text-editor"]').should('not.contain', body);
+  });
+});
+
+describe('discarding drafts message', () => {
+  beforeEach(() => {
+    cy.auth(publicThreadAuthor.id).then(() =>
+      cy.visit(`/thread/${publicThread.id}`)
+    );
+
+    cy.get('[data-cy="edit-message"]')
+      .last()
+      .click({ force: true });
+  });
+
+  it('should prompt with cancel click', () => {
+    cy.get('[data-cy=editing-chat-input]').type(message);
+    cy.get('[data-cy="edit-message-cancel"')
+      .should('be.visible')
+      .click();
+    discardDraftModal().should('be.visible');
+  });
+
+  it('should prompt if esc pressed', () => {
+    cy.get('[data-cy=editing-chat-input]').type(message);
+    pressEscapeMessageInput();
+    discardDraftModal().should('be.visible');
+  });
+
+  it('should not prompt to discard message draft if nothing has been changed', () => {
+    cy.get('[data-cy="edit-message-cancel"')
+      .should('be.visible')
+      .click();
+    discardDraftModal().should('not.be.visible');
+  });
+
+  it('should close discard confirmation modal on esc press', () => {
+    cy.get('[data-cy=editing-chat-input]').type(message);
+    pressEscapeMessageInput();
+    discardDraftModal().should('be.visible');
+    pressEscape();
+    discardDraftModal().should('not.be.visible');
+    cy.get('[data-cy=editing-chat-input]').should('be.visible');
+  });
+
+  it('should discard draft on confirmation when ENTER pressed', () => {
+    cy.get('[data-cy=editing-chat-input]').type(message);
+    pressEscapeMessageInput();
+    discardDraftModal().should('be.visible');
+    pressEnter();
+    discardDraftModal().should('not.be.visible');
+    cy.get('[data-cy="message"]')
+      .last()
+      .should('not.contain', message);
+  });
+
+  it('should close discard confirmation modal on overlay click', () => {
+    cy.get('[data-cy=editing-chat-input]').type(message);
+    pressEscapeMessageInput();
+    discardDraftModal().should('be.visible');
+    cy.get('body').click(200, 200);
+    discardDraftModal().should('not.be.visible');
+    cy.get('[data-cy=editing-chat-input]').should('be.visible');
+  });
+
+  it('should discard draft on discard confirmation', () => {
+    cy.get('[data-cy=editing-chat-input]').type(message);
+    pressEscapeMessageInput();
+    discardDraftModal().should('be.visible');
+    cy.get('[data-cy="discard-draft-discard"]').click();
+    discardDraftModal().should('not.be.visible');
+    cy.get('[data-cy="message"]')
+      .last()
+      .should('not.contain', message);
   });
 });
