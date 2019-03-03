@@ -8,10 +8,10 @@ import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { connect } from 'react-redux';
 import InboxThread from 'src/views/dashboard/components/inboxThread';
-import { NullCard } from '../upsell';
-import { LoadingInboxThread } from '../loading';
-import NewActivityIndicator from '../newActivityIndicator';
-import ViewError from '../viewError';
+import { NullCard } from 'src/components/upsell';
+import { Loading, LoadingInboxThread } from 'src/components/loading';
+import NewActivityIndicator from 'src/components/newActivityIndicator';
+import ViewError from 'src/components/viewError';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
@@ -236,6 +236,12 @@ class ThreadFeedPure extends React.Component<Props, State> {
         <Threads data-cy="thread-feed">
           {newActivityIndicator && (
             <NewActivityIndicator elem="scroller-for-thread-feed" />
+          )}
+
+          {(networkStatus === 2 || networkStatus === 1) && (
+            <div style={{ padding: '16px 32px' }}>
+              <Loading />
+            </div>
           )}
 
           {this.props.data.community &&
