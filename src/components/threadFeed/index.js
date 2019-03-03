@@ -267,17 +267,6 @@ class ThreadFeedPure extends React.Component<Props, State> {
               </ErrorBoundary>
             )}
 
-          {this.props.data.community &&
-            this.props.data.community.watercooler &&
-            this.props.data.community.watercooler.id && (
-              <ErrorBoundary fallbackComponent={null}>
-                <InboxThread
-                  data={this.props.data.community.watercooler}
-                  viewContext={viewContext}
-                />
-              </ErrorBoundary>
-            )}
-
           <InfiniteList
             pageStart={0}
             loadMore={this.props.data.fetchMore}
