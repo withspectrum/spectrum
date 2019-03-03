@@ -585,12 +585,20 @@ export const ActionsRow = styled.div`
 `;
 
 export const WatercoolerWrapper = styled.div`
-  max-height: calc(100vh - 104px);
-  overflow: hidden;
-  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+`;
 
-  /* this first div is the thread container */
-  > div {
-    max-height: calc(100vh - 104px);
-  }
+export const WatercoolerMessages = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
+
+export const WatercoolerChatInput = styled.div`
+  position: sticky;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  right: 0;
 `;

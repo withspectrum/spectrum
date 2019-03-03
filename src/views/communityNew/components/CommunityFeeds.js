@@ -33,7 +33,7 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
     switch (activeSegment) {
       case 'chat': {
         if (!community.watercoolerId) return null;
-        return <WatercoolerChat id={community.watercoolerId} />;
+        return <WatercoolerChat isWatercooler id={community.watercoolerId} />;
       }
       case 'trending': {
         return (
