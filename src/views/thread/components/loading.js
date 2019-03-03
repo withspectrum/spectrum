@@ -15,12 +15,6 @@ type PropTypes = {
 };
 const LoadingView = ({ threadViewContext = 'fullscreen' }: PropTypes) => (
   <ThreadViewContainer threadViewContext={threadViewContext}>
-    <Titlebar
-      provideBack={true}
-      backRoute={`/`}
-      noComposer
-      style={{ gridArea: 'header' }}
-    />
     {threadViewContext === 'fullscreen' && <Sidebar threadViewLoading />}
     <ThreadContentView>
       <Content>
