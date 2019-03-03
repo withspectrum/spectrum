@@ -55,6 +55,7 @@ export const Main = styled.section`
   border-bottom: 1px solid ${theme.bg.border};
   border-radius: 0 0 4px 4px;
   height: 100%;
+  min-width: 100%;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     border-left: 0;
