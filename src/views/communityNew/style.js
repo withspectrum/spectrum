@@ -247,11 +247,6 @@ export const MetaContainer = styled.div`
   flex-direction: column;
   padding: 0 16px;
   margin-top: 24px;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
 `;
 
 export const MobileMetaContainer = styled.div`
@@ -281,11 +276,7 @@ export const CommunityDescription = styled.p`
 `;
 
 export const MetaLinksContainer = styled.div`
-  @media (max-width: ${MEDIA_BREAK}px) {
-    margin-top: 16px;
-    display: flex;
-    flex-wrap: wrap;
-  }
+  margin-top: 8px;
 `;
 
 export const CommunityMetaRow = styled.div`
@@ -311,20 +302,6 @@ export const CommunityMetaRow = styled.div`
 
   .icon {
     margin-right: 8px;
-  }
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    margin-top: 0;
-    margin-right: 16px;
-    margin-bottom: 4px;
-
-    .icon {
-      margin-right: 4px;
-    }
-
-    &:first-of-type {
-      margin-top: 0;
-    }
   }
 `;
 
