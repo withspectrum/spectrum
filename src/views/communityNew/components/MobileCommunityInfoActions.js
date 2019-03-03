@@ -33,6 +33,8 @@ const Component = (props: Props) => {
       })
     );
 
+  if (!isMember && !isOwner && !isModerator) return null;
+
   return (
     <React.Fragment>
       <SidebarSectionHeader>
@@ -49,7 +51,7 @@ const Component = (props: Props) => {
           </ChannelListItem>
         )}
 
-        {!isOwner && (
+        {!isOwner && isMember && (
           <ListItem onClick={leaveCommunity}>
             <ListItemContent>
               <NameWarn>Leave community</NameWarn>
