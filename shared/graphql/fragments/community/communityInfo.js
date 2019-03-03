@@ -24,6 +24,7 @@ export type CommunityInfoType = {
     isEnabled: boolean,
     message: ?string,
   },
+  watercoolerId: ?string,
 };
 
 export default gql`
@@ -38,6 +39,7 @@ export default gql`
     coverPhoto
     pinnedThreadId
     isPrivate
+    watercoolerId
     communityPermissions {
       isMember
       isBlocked
