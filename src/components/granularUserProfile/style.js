@@ -51,7 +51,7 @@ export const Row = styled(Link)`
 export const Name = styled.div`
   color: ${theme.text.default};
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.2;
   display: flex;
   flex-direction: column;
@@ -62,7 +62,7 @@ export const Name = styled.div`
 `;
 
 export const Username = styled.span`
-  font-size: 14px;
+  font-size: 15px;
   color: ${theme.text.alt};
   font-weight: 400;
   margin-top: 2px;
