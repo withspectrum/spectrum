@@ -40,6 +40,13 @@ const Component = (props: SignedInMemberType) => {
     if (containerEl) return containerEl.scrollTo(0, 0);
   };
 
+  const scrollToBottom = () => {
+    if (containerEl) {
+      containerEl.scrollTop =
+        containerEl.scrollHeight - containerEl.clientHeight;
+    }
+  };
+
   return (
     <AppViewWrapper
       innerRef={el => (containerEl = el)}
@@ -74,7 +81,11 @@ const Component = (props: SignedInMemberType) => {
 
           <Main>
             <MobileCommunityProfileHeader community={community} />
-            <CommunityFeeds scrollToTop={scrollToTop} community={community} />
+            <CommunityFeeds
+              scrollToBottom={scrollToBottom}
+              scrollToTop={scrollToTop}
+              community={community}
+            />
           </Main>
         </TwoColumnGrid>
       </Container>

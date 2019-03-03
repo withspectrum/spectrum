@@ -18,6 +18,10 @@ type State = {
   subscription: ?Function,
 };
 
+type Props = {
+  onMessagesLoad: Function,
+};
+
 class Component extends React.Component<Props, State> {
   constructor(props) {
     super(props);
@@ -63,29 +67,34 @@ class Component extends React.Component<Props, State> {
     let count = 0;
     let dummies = [];
     while (count < 100) {
-      dummies.push(<p>Test message</p>);
+      dummies.push(<p key={count}>Test message</p>);
       count++;
     }
+    this.props.onMessagesLoad();
     return dummies;
   };
 
   render() {
-    const { id, currentUser } = this.props;
+    const { id, currentUser, community } = this.props;
+    const { communityPermissions } = community;
+    const { isMember } = communityPermissions;
 
     return (
       <WatercoolerWrapper>
         <WatercoolerMessages>{this.renderDummies()}</WatercoolerMessages>
 
-        <WatercoolerChatInput>
-          <ChatInput
-            thread={id}
-            currentUser={currentUser}
-            threadType={'directMessageThread'}
-            forceScrollToBottom={this.forceScrollToBottom}
-            onRef={chatInput => (this.chatInput = chatInput)}
-            participants={[]}
-          />
-        </WatercoolerChatInput>
+        {isMember && (
+          <WatercoolerChatInput>
+            <ChatInput
+              thread={id}
+              currentUser={currentUser}
+              threadType={'directMessageThread'}
+              forceScrollToBottom={this.forceScrollToBottom}
+              onRef={chatInput => (this.chatInput = chatInput)}
+              participants={[]}
+            />
+          </WatercoolerChatInput>
+        )}
       </WatercoolerWrapper>
     );
   }
