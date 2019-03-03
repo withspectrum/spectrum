@@ -123,6 +123,10 @@ injectGlobal`
     color: #16171a;
   }
 
+  .markdown pre {
+    font-size: 15px;
+  }
+
   .markdown p {
     color: inherit;
     font-size: 16px;
