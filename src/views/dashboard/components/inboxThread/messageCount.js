@@ -28,8 +28,6 @@ class MessageCount extends React.Component<Props> {
       >
         <Icon glyph="message-simple" size={24} />
         <span>{messageCount}</span>
-        {newMessagesSinceLastViewed &&
-          !active && <NewCount active={active}>(New)</NewCount>}
       </CountWrapper>
     );
   }

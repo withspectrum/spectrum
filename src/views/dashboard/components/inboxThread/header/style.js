@@ -31,7 +31,7 @@ export const TextRow = styled.span`
 
 const metaTitleStyles = css`
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.2;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.default};
@@ -59,7 +59,7 @@ export const MetaTitleText = styled.span`
 `;
 
 const metaSubtitleStyles = css`
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 400;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};

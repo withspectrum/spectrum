@@ -363,7 +363,7 @@ export const Segment = styled.div`
   justify-content: center;
   padding: 16px;
   flex: 1 0 auto;
-  font-weight: 500;
+  font-weight: 600;
   color: ${props => (props.active ? theme.text.default : theme.text.alt)};
   box-shadow: ${props =>
     props.active ? `inset 0 -2px 0 ${theme.text.default}` : 'none'};
@@ -378,6 +378,16 @@ export const Segment = styled.div`
     color: ${props =>
       props.active ? theme.text.default : theme.text.secondary};
     cursor: pointer;
+  }
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    &:hover {
+      background: ${theme.bg.default};
+    }
+
+    &:active {
+      background: ${theme.bg.wash};
+    }
   }
 
   @media (min-width: ${MEDIA_BREAK}px) {

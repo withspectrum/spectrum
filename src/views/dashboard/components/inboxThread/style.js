@@ -2,7 +2,7 @@
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { zIndex, Tooltip } from 'src/components/globals';
+import { zIndex, Tooltip, tint } from 'src/components/globals';
 
 export const InboxThreadItem = styled.div`
   display: flex;
@@ -16,6 +16,12 @@ export const InboxThreadItem = styled.div`
     props.active ? props.theme.brand.alt : props.theme.bg.default};
   position: relative;
   padding: 12px 20px 12px 12px;
+
+  ${props =>
+    props.new &&
+    css`
+      box-shadow: inset 2px 0 0 ${theme.brand.alt};
+    `}
 
   &:hover {
     background: ${props =>
@@ -64,8 +70,8 @@ export const Column = styled.div`
 `;
 
 export const ThreadTitle = styled.h3`
-  font-size: 17px;
-  font-weight: ${props => (props.new ? '700' : '500')};
+  font-size: 15px;
+  font-weight: 600;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.default};
   max-width: 100%;
@@ -74,7 +80,7 @@ export const ThreadTitle = styled.h3`
 
 export const ThreadSnippet = styled.h4`
   font-size: 15px;
-  font-weight: ${props => (props.new ? '600' : '400')};
+  font-weight: 400;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.default};
   max-width: 100%;
@@ -85,7 +91,7 @@ export const ThreadSnippet = styled.h4`
 
 export const ThreadActivityWrapper = styled.div`
   display: flex;
-  margin-top: 12px;
+  margin-top: 8px;
   align-items: center;
 
   .icon {
@@ -124,7 +130,7 @@ export const CountWrapper = styled.div`
       : props.active
       ? props.theme.text.reverse
       : props.theme.text.alt};
-  font-weight: 600;
+  font-weight: 500;
   align-items: center;
 
   .icon {

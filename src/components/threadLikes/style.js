@@ -49,6 +49,6 @@ export const LikeCountWrapper = styled.div`
 
   ${CurrentCount} {
     margin-left: 4px;
-    font-weight: 600;
+    font-weight: 500;
   }
 `;

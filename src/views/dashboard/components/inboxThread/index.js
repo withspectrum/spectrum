@@ -68,7 +68,11 @@ class InboxThread extends React.Component<Props> {
 
     return (
       <ErrorBoundary fallbackComponent={null}>
-        <InboxThreadItem data-cy="thread-card" active={active}>
+        <InboxThreadItem
+          new={newMessagesSinceLastViewed}
+          data-cy="thread-card"
+          active={active}
+        >
           <InboxLinkWrapper
             to={
               isInbox
@@ -128,12 +132,14 @@ class InboxThread extends React.Component<Props> {
                 {truncate(thread.content.title, 80)}
               </ThreadTitle>
 
-              <ThreadSnippet active={active} new={newMessagesSinceLastViewed}>
-                {truncate(
-                  toPlainText(toState(JSON.parse(thread.content.body))),
-                  200
-                )}
-              </ThreadSnippet>
+              {!isInbox && (
+                <ThreadSnippet active={active} new={newMessagesSinceLastViewed}>
+                  {truncate(
+                    toPlainText(toState(JSON.parse(thread.content.body))),
+                    280
+                  )}
+                </ThreadSnippet>
+              )}
 
               <ErrorBoundary fallbackComponent={null}>
                 <ThreadActivity
