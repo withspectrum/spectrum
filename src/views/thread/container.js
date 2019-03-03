@@ -2,6 +2,7 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import compose from 'recompose/compose';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import idx from 'idx';
@@ -214,9 +215,11 @@ class ThreadContainer extends React.Component<Props, State> {
       this.props.data.thread.id
     ) {
       const { thread } = this.props.data;
-      const properUrl = `/${thread.community.slug}/${
-        thread.channel.slug
-      }/${slugg(thread.content.title)}~${thread.id}`;
+      const properUrl =
+        !this.props.data.thread.watercooler &&
+        `/${thread.community.slug}/${thread.channel.slug}/${slugg(
+          thread.content.title
+        )}~${thread.id}`;
       // $FlowFixMe
       if (this.props.location.pathname !== properUrl)
         // $FlowFixMe
@@ -358,33 +361,7 @@ class ThreadContainer extends React.Component<Props, State> {
     if (!thread || !thread.id) return null;
 
     if (thread.watercooler) {
-      return (
-        <React.Fragment>
-          <WatercoolerIntroContainer
-            innerRef={c => (this.threadDetailElem = c)}
-          >
-            <CommunityAvatar
-              community={thread.community}
-              showHoverProfile={false}
-              size={44}
-              style={{ marginBottom: '16px' }}
-            />
-
-            <Link to={`/${thread.community.slug}`}>
-              <WatercoolerTitle>
-                The {thread.community.name} watercooler
-              </WatercoolerTitle>
-            </Link>
-            <WatercoolerDescription>
-              Welcome to the {thread.community.name} watercooler, a space for
-              general chat with everyone in the community. Jump in to the
-              conversation below or introduce yourself!
-            </WatercoolerDescription>
-          </WatercoolerIntroContainer>
-
-          <WatercoolerActionBar thread={thread} currentUser={currentUser} />
-        </React.Fragment>
-      );
+      return null;
     }
 
     return (
@@ -618,5 +595,6 @@ export default compose(
   getThreadByMatch,
   viewNetworkHandler,
   withApollo,
+  withRouter,
   connect()
 )(ThreadContainer);
