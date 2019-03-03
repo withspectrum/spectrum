@@ -54,14 +54,14 @@ export const getThreadMessageConnectionOptions = {
     };
 
     // if the thread has less than 25 messages, just load all of them
-    if (thread.messageCount <= 25) {
+    if (thread && thread.messageCount <= 25) {
       variables.after = null;
       variables.before = null;
       // $FlowFixMe
       variables.last = 25;
     }
 
-    if (thread.messageCount > 25) {
+    if (thread && thread.messageCount > 25) {
       //if the thread has more than 25 messages, we'll likely only want to load the latest 25
       // **unless** the current user hasn't seen the thread before
       // $FlowFixMe
