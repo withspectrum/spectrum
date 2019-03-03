@@ -572,3 +572,9 @@ export const ActionsRow = styled.div`
     width: 100%;
   }
 `;
+
+export const WatercoolerWrapper = styled.div`
+  max-height: calc(100vh - 104px);
+  overflow: hidden;
+  overflow-y: scroll;
+`;

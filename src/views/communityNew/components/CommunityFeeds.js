@@ -11,6 +11,7 @@ import { TeamMembersList } from './TeamMembersList';
 import { MobileCommunityInfoActions } from './MobileCommunityInfoActions';
 import { ChannelsList } from './ChannelsList';
 import { CommunityMeta } from './CommunityMeta';
+import { WatercoolerChat } from './WatercoolerChat';
 import {
   FeedsContainer,
   SegmentedControl,
@@ -25,10 +26,15 @@ const CommunityThreadFeed = compose(
 
 export const CommunityFeeds = (props: CommunityFeedsType) => {
   const { community, scrollToTop } = props;
-  const [activeSegment, setActiveSegment] = React.useState('trending');
+  const defaultSegment = community.watercoolerId ? 'chat' : 'trending';
+  const [activeSegment, setActiveSegment] = React.useState(defaultSegment);
 
   const renderFeed = () => {
     switch (activeSegment) {
+      case 'chat': {
+        if (!community.watercoolerId) return null;
+        return <WatercoolerChat id={community.watercoolerId} />;
+      }
       case 'trending': {
         return (
           <CommunityThreadFeed
@@ -108,6 +114,15 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
   return (
     <FeedsContainer>
       <SegmentedControl>
+        {community.watercoolerId && (
+          <Segment
+            active={activeSegment === 'chat'}
+            onClick={() => changeSegment('chat')}
+          >
+            Chat
+          </Segment>
+        )}
+
         <Segment
           active={activeSegment === 'trending'}
           onClick={() => changeSegment('trending')}
