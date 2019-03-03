@@ -2,6 +2,11 @@
 import styled from 'styled-components';
 import theme from 'shared/theme';
 
+export const MarkdownHintContainer = styled.div`
+  width: 100%;
+  background: ${theme.bg.default};
+`;
+
 export const StyledMarkdownHint = styled.div`
   display: flex;
   flex: 0 0 auto;
