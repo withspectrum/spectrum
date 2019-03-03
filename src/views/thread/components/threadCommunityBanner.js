@@ -47,60 +47,6 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
     this.state = { isLoading: false };
   }
 
-  joinChannel = () => {
-    const {
-      thread: { channel },
-      dispatch,
-      toggleChannelSubscription,
-    } = this.props;
-
-    this.setState({
-      isLoading: true,
-    });
-
-    toggleChannelSubscription({ channelId: channel.id })
-      .then(({ data: { toggleChannelSubscription } }) => {
-        this.setState({
-          isLoading: false,
-        });
-
-        const {
-          isMember,
-          isPending,
-        } = toggleChannelSubscription.channelPermissions;
-
-        let str = '';
-        if (isPending) {
-          str = `Your request to join the ${
-            toggleChannelSubscription.name
-          } channel in ${
-            toggleChannelSubscription.community.name
-          } has been sent.`;
-        }
-
-        if (!isPending && isMember) {
-          str = `Joined the ${
-            toggleChannelSubscription.community.name
-          } community!`;
-        }
-
-        if (!isPending && !isMember) {
-          str = `Left the channel ${toggleChannelSubscription.name} in ${
-            toggleChannelSubscription.community.name
-          }.`;
-        }
-
-        const type = isMember || isPending ? 'success' : 'neutral';
-        return dispatch(addToastWithTimeout(type, str));
-      })
-      .catch(err => {
-        this.setState({
-          isLoading: false,
-        });
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
   render() {
     const {
       thread: { channel, community, watercooler },
@@ -147,25 +93,8 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
             </CommunityHeaderMetaCol>
           </CommunityHeaderMeta>
 
-          {channel.channelPermissions.isMember ? (
+          {channel.channelPermissions.isMember && (
             <LikeButton thread={thread} />
-          ) : currentUser ? (
-            <Button
-              gradientTheme={'success'}
-              onClick={this.joinChannel}
-              loading={isLoading}
-            >
-              Join{' '}
-              {community.communityPermissions.isMember
-                ? 'channel'
-                : 'community'}
-            </Button>
-          ) : (
-            <Link to={loginUrl}>
-              <Button color={'success'} gradientTheme={'success'}>
-                Join community
-              </Button>
-            </Link>
           )}
         </CommunityHeader>
       </AnimatedContainer>

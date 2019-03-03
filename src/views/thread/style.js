@@ -466,7 +466,7 @@ export const CommunityHeader = styled.div`
   display: ${props => (props.hide ? 'none' : 'flex')};
   align-items: center;
   justify-content: space-between;
-  padding: 11px 32px;
+  padding: 11px 16px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   flex: 0 0 64px;
   align-self: stretch;
