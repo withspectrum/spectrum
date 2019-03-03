@@ -3,7 +3,7 @@ import React from 'react';
 import type { CommunityProfileHeaderType } from '../types';
 import { MobileCommunityActionsRow } from './MobileCommunityActionsRow';
 import { MobileCommunityMeta } from './MobileCommunityMeta';
-import { MobileProfileContainer, ProfileAvatarContainer } from '../style';
+import { MobileProfileContainer } from '../style';
 
 export const MobileCommunityProfileHeader = (
   props: CommunityProfileHeaderType

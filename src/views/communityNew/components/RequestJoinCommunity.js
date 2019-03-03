@@ -5,7 +5,6 @@ import compose from 'recompose/compose';
 import addPendingCommunityMemberMutation from 'shared/graphql/mutations/communityMember/addPendingCommunityMember';
 import removePendingCommunityMemberMutation from 'shared/graphql/mutations/communityMember/removePendingCommunityMember';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import { openModal } from 'src/actions/modals';
 
 type Props = {
   communityId: string,
@@ -17,15 +16,11 @@ type Props = {
   isPending: boolean,
 };
 
-type State = { isLoading: boolean };
-
 const RequestJoinCommunity = (props: Props) => {
   const {
     communityId,
-    addCommunityMember,
     dispatch,
     render,
-    children,
     isPending,
     addPendingCommunityMember,
     removePendingCommunityMember,

@@ -3,15 +3,12 @@ import * as React from 'react';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { UserHoverProfile } from 'src/components/hoverProfile';
 import { UserAvatar } from 'src/components/avatar';
-import { Link } from 'react-router-dom';
 import Reputation from 'src/components/reputation';
 import Badge from 'src/components/badges';
 import Icon from 'src/components/icons';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import type { Dispatch } from 'redux';
-import ConditionalWrap from 'src/components/conditionalWrap';
 import {
   Row,
   Name,

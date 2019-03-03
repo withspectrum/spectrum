@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import type { CommunityActionsRowType } from '../types';
 import { PrimaryButton, OutlineButton } from './Button';
@@ -12,8 +11,6 @@ import { ActionsRowContainer } from '../style';
 
 export const Component = (props: CommunityActionsRowType) => {
   const { community, dispatch } = props;
-
-  const open = () => dispatch(openComposer());
 
   const leaveCommunity = () =>
     dispatch(

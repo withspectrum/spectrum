@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Icon from 'src/components/icons';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import compose from 'recompose/compose';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
@@ -12,7 +11,7 @@ import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import GranularUserProfile from 'src/components/granularUserProfile';
 import getCommunityTopMembers from 'shared/graphql/queries/community/getCommunityTopMembers';
 import type { GetCommunityTopMembersType } from 'shared/graphql/queries/community/getCommunityTopMembers';
-import { UserListItemContainer, MessageIconContainer } from '../style';
+import { UserListItemContainer } from '../style';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 

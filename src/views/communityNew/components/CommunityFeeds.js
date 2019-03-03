@@ -107,6 +107,8 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
           </div>
         );
       }
+      default:
+        return null;
     }
   };
 

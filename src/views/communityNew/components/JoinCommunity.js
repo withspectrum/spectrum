@@ -5,7 +5,6 @@ import compose from 'recompose/compose';
 import addCommunityMemberMutation from 'shared/graphql/mutations/communityMember/addCommunityMember';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import type { AddCommunityMemberType } from 'shared/graphql/mutations/communityMember/addCommunityMember';
-import { openModal } from 'src/actions/modals';
 
 type Props = {
   communityId: string,
@@ -15,10 +14,8 @@ type Props = {
   dispatch: Dispatch<Object>,
 };
 
-type State = { isLoading: boolean };
-
 const JoinCommunity = (props: Props) => {
-  const { communityId, addCommunityMember, dispatch, render, children } = props;
+  const { communityId, addCommunityMember, dispatch, render } = props;
   const [isLoading, setIsLoading] = React.useState(false);
 
   const addMember = () => {

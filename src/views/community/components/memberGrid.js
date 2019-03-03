@@ -4,7 +4,6 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
-import Icon from 'src/components/icons';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { withRouter } from 'react-router';
 import getCommunityMembersQuery, {
@@ -93,7 +92,7 @@ class CommunityMemberGrid extends React.Component<Props, State> {
           {uniqueNodes.map(node => {
             if (!node) return null;
 
-            const { user, roles, reputation } = node;
+            const { user } = node;
             return (
               <GranularUserProfile
                 key={user.id}

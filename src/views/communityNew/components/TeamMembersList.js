@@ -10,12 +10,7 @@ import GranularUserProfile from 'src/components/granularUserProfile';
 import Icon from 'src/components/icons';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import type { TeamMemberListType } from '../types';
-import {
-  List,
-  VerticalScroll,
-  SidebarSectionHeader,
-  SidebarSectionHeading,
-} from '../style';
+import { List, SidebarSectionHeader, SidebarSectionHeading } from '../style';
 
 class Component extends React.Component<TeamMemberListType> {
   shouldComponentUpdate(nextProps) {

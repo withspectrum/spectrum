@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import compose from 'recompose/compose';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import { OutlineButton, PrimaryButton } from '../components/Button';
 import RequestJoinCommunity from '../components/RequestJoinCommunity';
@@ -37,7 +36,9 @@ export const PrivateCommunity = (props: Props) => {
     <AppViewWrapper>
       <CenteredContainer>
         <SingleColumnSection>
-          <Emoji>🔑</Emoji>
+          <Emoji role="img" aria-label="Private">
+            🔑
+          </Emoji>
           <Heading>{heading}</Heading>
           <Description>{description}</Description>
           <ActionsRow>

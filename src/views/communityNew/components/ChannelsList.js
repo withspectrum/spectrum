@@ -3,19 +3,13 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { OutlineButton } from 'src/components/buttons';
 import Icon from 'src/components/icons';
-import { openModal } from 'src/actions/modals';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import { Loading } from 'src/components/loading';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
-import { StyledCard, ListContainer } from 'src/components/listItems/style';
-import ToggleChannelNotifications from 'src/components/toggleChannelNotifications';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
-  ToggleNotificationsContainer,
   SidebarSectionHeader,
   SidebarSectionHeading,
   List,
@@ -54,15 +48,12 @@ class Component extends React.Component<Props> {
   };
   render() {
     const {
-      isLoading,
-      dispatch,
-      currentUser,
       communitySlug,
       data: { community },
     } = this.props;
 
     if (community && community.channelConnection) {
-      const { isMember, isOwner } = community.communityPermissions;
+      const { isOwner } = community.communityPermissions;
       const channels = community.channelConnection.edges
         .map(channel => channel && channel.node)
         .filter(channel => {

@@ -638,10 +638,6 @@ export const ActionBarContainer = styled.div`
   }
 `;
 
-export const WatercoolerActionBarContainer = styled(ActionBarContainer)`
-  margin-bottom: 16px;
-`;
-
 export const FixedBottomActionBarContainer = styled(ActionBarContainer)`
   z-index: 1;
   width: 100%;
@@ -797,34 +793,6 @@ export const RelatedCount = styled.p`
 
 export const Label = styled.p`
   font-size: 14px;
-`;
-
-export const WatercoolerDescription = styled.h4`
-  font-size: 18px;
-  font-weight: 400;
-  color: ${theme.text.alt};
-  text-align: center;
-  line-height: 1.4;
-  margin: 0;
-  max-width: 600px;
-`;
-
-export const WatercoolerIntroContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px 32px 36px;
-  background: ${theme.bg.default};
-  flex: auto;
-  flex-direction: column;
-`;
-
-export const WatercoolerTitle = styled.h3`
-  text-align: center;
-  font-size: 22px;
-  font-weight: 500;
-  color: ${theme.text.default};
-  margin-bottom: 8px;
 `;
 
 export const AnimatedContainer = styled.div`

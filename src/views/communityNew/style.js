@@ -530,7 +530,7 @@ export const SingleColumnSection = styled.div`
   }
 `;
 
-export const Emoji = styled.h3`
+export const Emoji = styled.span`
   font-size: 40px;
   margin-bottom: 16px;
 `;

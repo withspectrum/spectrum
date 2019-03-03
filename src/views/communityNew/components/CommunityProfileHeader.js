@@ -6,7 +6,6 @@ import { CommunityActionsRow } from './CommunityActionsRow';
 import { CommunityMeta } from './CommunityMeta';
 import {
   ProfileContainer,
-  CoverPhoto,
   CoverPhotoFallback,
   ProfileAvatarContainer,
 } from '../style';

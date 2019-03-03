@@ -6,7 +6,6 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
-import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import ChatInput from 'src/components/chatInput';
 import {
   WatercoolerWrapper,

@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import compose from 'recompose/compose';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import { OutlineButton, PrimaryButton } from '../components/Button';
 import {
@@ -17,7 +16,9 @@ export const ErrorView = () => {
     <AppViewWrapper>
       <CenteredContainer>
         <SingleColumnSection>
-          <Emoji>😣</Emoji>
+          <Emoji role="img" aria-label="Oops">
+            😣
+          </Emoji>
           <Heading>We couldn’t load this community</Heading>
           <Description>
             The community may have been deleted or Spectrum may be running into

@@ -15,7 +15,6 @@ import Messages from './components/messages';
 import Head from 'src/components/head';
 import ChatInput from 'src/components/chatInput';
 import ViewError from 'src/components/viewError';
-import { Link } from 'react-router-dom';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
@@ -36,12 +35,7 @@ import {
   Input,
   Detail,
   ChatInputWrapper,
-  WatercoolerDescription,
-  WatercoolerIntroContainer,
-  WatercoolerTitle,
 } from './style';
-import { CommunityAvatar } from 'src/components/avatar';
-import WatercoolerActionBar from './components/watercoolerActionBar';
 import { ErrorBoundary } from 'src/components/error';
 import getThreadLink from 'src/helpers/get-thread-link';
 
@@ -356,7 +350,6 @@ class ThreadContainer extends React.Component<Props, State> {
     const {
       data: { thread },
       slider,
-      currentUser,
     } = this.props;
     if (!thread || !thread.id) return null;
 

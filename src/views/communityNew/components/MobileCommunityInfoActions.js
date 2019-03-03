@@ -9,8 +9,6 @@ import {
   SidebarSectionHeading,
   List,
   ChannelListItem,
-  ChannelListItemContent,
-  ChannelName,
   Name,
   ListItem,
   ListItemContent,

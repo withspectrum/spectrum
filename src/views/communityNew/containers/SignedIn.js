@@ -3,7 +3,6 @@ import React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
-import Icon from 'src/components/icons';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import Head from 'src/components/head';
@@ -19,8 +18,6 @@ import {
   Main,
   Sidebar,
   SidebarSection,
-  SidebarSectionHeader,
-  SidebarSectionHeading,
 } from '../style';
 
 const Component = (props: SignedInMemberType) => {

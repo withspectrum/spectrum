@@ -13,7 +13,11 @@ export const InboxThreadItem = styled.div`
   border-bottom: 1px solid
     ${props => (props.active ? props.theme.brand.alt : props.theme.bg.divider)};
   background: ${props =>
-    props.active ? props.theme.brand.alt : props.theme.bg.default};
+    props.active
+      ? props.theme.brand.alt
+      : props.new
+      ? tint(theme.brand.wash, 10)
+      : props.theme.bg.default};
   position: relative;
   padding: 12px 20px 12px 12px;
 
@@ -147,12 +151,6 @@ export const CountWrapper = styled.div`
   }
 
   ${Tooltip};
-`;
-
-export const NewCount = styled.span`
-  margin-left: 6px;
-  color: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.warn.alt};
 `;
 
 const avatarLinkStyles = css`

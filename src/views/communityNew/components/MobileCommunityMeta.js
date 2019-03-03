@@ -5,14 +5,7 @@ import { withRouter } from 'react-router-dom';
 import type { CommunityMetaType } from '../types';
 import Icon from 'src/components/icons';
 import { CommunityAvatar } from 'src/components/avatar';
-import {
-  MobileMetaContainer,
-  MobileCommunityName,
-  CommunityDescription,
-  CommunityMetaRow,
-  MetaLinksContainer,
-  OnlineDot,
-} from '../style';
+import { MobileMetaContainer, MobileCommunityName } from '../style';
 
 const Component = (props: CommunityMetaType) => {
   const { community, history } = props;

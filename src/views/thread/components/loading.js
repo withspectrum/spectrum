@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
-import Titlebar from '../../../views/titlebar';
-import { LoadingThreadDetail } from '../../../components/loading';
+import { LoadingThreadDetail } from 'src/components/loading';
 import Sidebar from './sidebar';
 import {
   ThreadViewContainer,
