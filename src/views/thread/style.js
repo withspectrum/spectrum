@@ -183,6 +183,7 @@ export const ThreadContent = styled.div`
 export const ThreadHeading = styled(H1)`
   font-size: 28px;
   font-weight: 600;
+  word-break: break-word;
 `;
 
 export const A = styled.a`
