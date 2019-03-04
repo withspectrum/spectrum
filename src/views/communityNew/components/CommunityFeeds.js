@@ -80,7 +80,7 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
           />
         );
       }
-      case 'about': {
+      case 'info': {
         return (
           <div style={{ paddingBottom: '64px', background: theme.bg.wash }}>
             <SidebarSection>
