@@ -112,8 +112,8 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
     const { isLoading } = this.state;
 
     const loginUrl = community.brandedLogin.isEnabled
-      ? `/${community.slug}/login?r=${CLIENT_URL}/${getThreadLink(thread)}`
-      : `/login?r=${CLIENT_URL}/${getThreadLink(thread)}`;
+      ? `/${community.slug}/login?r=${CLIENT_URL}${getThreadLink(thread)}`
+      : `/login?r=${CLIENT_URL}${getThreadLink(thread)}`;
 
     const createdAt = new Date(thread.createdAt).getTime();
     const timestamp = convertTimestampToDate(createdAt);
@@ -139,7 +139,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
                     {channel.name}
                   </Link>
                 </ChannelHoverProfile>
-                <Link to={'/' + getThreadLink(thread)}>
+                <Link to={getThreadLink(thread)}>
                   &nbsp;
                   {`· ${timestamp}`}
                 </Link>
