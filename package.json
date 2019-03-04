@@ -1,6 +1,6 @@
 {
   "name": "Spectrum",
-  "version": "2.8.1",
+  "version": "2.8.2",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@babel/preset-flow": "^7.0.0",
