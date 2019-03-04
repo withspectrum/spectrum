@@ -54,6 +54,20 @@ const messageRenderer = {
       children.map((child, index) => (
         <BlockQuote key={keys[index] || index}>{child}</BlockQuote>
       )),
+    'unordered-list-item': (children: Array<Node>, { keys }: KeysObj) => (
+      <ul key={keys.join('|')}>
+        {children.map((child, index) => (
+          <li key={keys[index]}>{child}</li>
+        ))}
+      </ul>
+    ),
+    'ordered-list-item': (children: Array<Node>, { keys }: KeysObj) => (
+      <ol key={keys.join('|')}>
+        {children.map((child, index) => (
+          <li key={keys[index]}>{child}</li>
+        ))}
+      </ol>
+    ),
   },
   entities: {
     LINK: (children: Array<Node>, data: DataObj, { key }: KeyObj) => (
