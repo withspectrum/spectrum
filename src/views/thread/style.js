@@ -183,6 +183,7 @@ export const ThreadContent = styled.div`
 export const ThreadHeading = styled(H1)`
   font-size: 28px;
   font-weight: 600;
+  word-break: break-word;
 `;
 
 export const A = styled.a`
@@ -508,6 +509,7 @@ export const CommunityHeaderSubtitle = styled.span`
 export const ThreadSubtitle = styled(CommunityHeaderSubtitle)`
   font-size: 16px;
   margin-top: 8px;
+  margin-bottom: 16px;
   display: flex;
   line-height: 1.5;
   flex-wrap: wrap;

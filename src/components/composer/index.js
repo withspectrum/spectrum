@@ -396,9 +396,9 @@ class ComposerWithData extends React.Component<Props, State> {
           this.props.history.replace(`/?t=${id}`);
           this.props.dispatch(changeActiveThread(id));
         } else if (this.props.location.pathname === '/new/thread') {
-          this.props.history.replace(`/${getThreadLink(data.publishThread)}`);
+          this.props.history.replace(getThreadLink(data.publishThread));
         } else {
-          this.props.history.push(`/${getThreadLink(data.publishThread)}`);
+          this.props.history.push(getThreadLink(data.publishThread));
           this.props.dispatch(changeActiveThread(null));
         }
         return;

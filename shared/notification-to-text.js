@@ -1,6 +1,7 @@
 import sentencify from 'shared/sentencify';
 import sortByDate from 'shared/sort-by-date';
 import { toState, toPlainText } from 'shared/draft-utils';
+import { messageTypeObj } from 'shared/draft-utils/process-message-content';
 
 const sortThreads = (entities, currentUser) => {
   // filter out the current user's threads
@@ -109,7 +110,7 @@ const formatNotification = (
       }
       body = sentencify(
         entities.map(({ payload }) => {
-          if (payload.messageType === 'draftjs') {
+          if (payload.messageType === messageTypeObj.draftjs) {
             let body = payload.content.body;
             if (typeof body === 'string')
               body = JSON.parse(payload.content.body);
@@ -151,7 +152,7 @@ const formatNotification = (
             actor => payload.senderId === actor.id
           );
 
-          if (payload.messageType === 'draftjs') {
+          if (payload.messageType === messageTypeObj.draftjs) {
             let body = payload.content.body;
             if (typeof body === 'string')
               body = JSON.parse(payload.content.body);
@@ -161,7 +162,9 @@ const formatNotification = (
           }
 
           return `${sender.payload.name}: ${
-            payload.messageType === 'media' ? '📷 Photo' : payload.content.body
+            payload.messageType === messageTypeObj.media
+              ? '📷 Photo'
+              : payload.content.body
           }`;
         })
         .join('\n');
@@ -171,7 +174,7 @@ const formatNotification = (
       const message = notification.context.payload;
       href = `/thread/${message.threadId}`;
       body =
-        message.messageType.toLowerCase() === 'draftjs'
+        message.messageType.toLowerCase() === messageTypeObj.draftjs
           ? `${toPlainText(toState(JSON.parse(message.content.body)))}`
           : message.content.body;
       break;
@@ -180,7 +183,7 @@ const formatNotification = (
       const thread = notification.context.payload;
       href = `/thread/${thread.id}`;
       body =
-        thread.type.toLowerCase() === 'draftjs'
+        thread.type.toLowerCase() === messageTypeObj.draftjs
           ? `${toPlainText(toState(JSON.parse(thread.content.body)))}`
           : thread.content.body;
       break;

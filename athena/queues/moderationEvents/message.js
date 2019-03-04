@@ -8,6 +8,7 @@ import { toState, toPlainText } from 'shared/draft-utils';
 import getPerspectiveScore from './perspective';
 import { _adminSendToxicContentEmailQueue } from 'shared/bull/queues';
 import type { Job, AdminToxicMessageJobData } from 'shared/bull/types';
+import { messageTypeObj } from 'shared/draft-utils/process-message-content';
 
 export default async (job: Job<AdminToxicMessageJobData>) => {
   debug('new job for admin message moderation');
@@ -16,7 +17,7 @@ export default async (job: Job<AdminToxicMessageJobData>) => {
   } = job;
 
   const text =
-    message.messageType === 'draftjs'
+    message.messageType === messageTypeObj.draftjs
       ? toPlainText(toState(JSON.parse(message.content.body)))
       : message.content.body;
 

@@ -1,6 +1,6 @@
 {
   "name": "Spectrum",
-  "version": "2.8.1",
+  "version": "2.8.2",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@babel/preset-flow": "^7.0.0",
@@ -22,6 +22,7 @@
     "cheerio": "^1.0.0-rc.2",
     "cpy-cli": "^2.0.0",
     "cross-env": "^5.2.0",
+    "cypress-plugin-retries": "^1.2.0",
     "eslint": "^4.1.1",
     "eslint-config-react-app": "^2.1.0",
     "eslint-plugin-flowtype": "^2.50.3",
@@ -264,7 +265,7 @@
     "jest": "cross-env NODE_PATH=./ jest",
     "test": "npm run jest -- --runInBand --watch",
     "test:ci": "npm run jest -- --forceExit --outputFile test-results.json --json --maxWorkers=2",
-    "test:e2e": "cypress run",
+    "test:e2e": "CYPRESS_RETRIES=2 cypress run",
     "prestart:api:test": "node -e \"require('./shared/testing/setup.js')().then(() => process.exit())\"",
     "start:api:test": "TEST_DB=true FORCE_DEV=true DEBUG=api*,shared* forever build-api/main.js",
     "cypress:open": "cypress open",

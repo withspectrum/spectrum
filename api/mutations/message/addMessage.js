@@ -19,12 +19,16 @@ import {
 } from '../../utils/permissions';
 import { trackQueue, calculateThreadScoreQueue } from 'shared/bull/queues';
 import { validateRawContentState } from '../../utils/validate-draft-js-input';
+import processMessageContent, {
+  messageTypeObj,
+} from 'shared/draft-utils/process-message-content';
+import type { MessageType } from 'shared/draft-utils/process-message-content';
 
 type Input = {
   message: {
     threadId: string,
     threadType: 'story' | 'directMessageThread',
-    messageType: 'text' | 'media' | 'draftjs',
+    messageType: MessageType,
     content: {
       body: string,
     },
@@ -42,20 +46,15 @@ export const addMessage = async (
       ? events.MESSAGE_SENT_FAILED
       : events.DIRECT_MESSAGE_SENT_FAILED;
 
-  if (message.messageType === 'text') {
-    message.content.body = JSON.stringify(
-      convertToRaw(
-        stateFromMarkdown(message.content.body, {
-          parserOptions: {
-            breaks: true,
-          },
-        })
-      )
+  if (message.messageType === messageTypeObj.text) {
+    message.content.body = processMessageContent(
+      messageTypeObj.text,
+      message.content.body
     );
-    message.messageType = 'draftjs';
+    message.messageType = messageTypeObj.draftjs;
   }
 
-  if (message.messageType === 'draftjs') {
+  if (message.messageType === messageTypeObj.draftjs) {
     let body;
     try {
       body = JSON.parse(message.content.body);
@@ -107,7 +106,7 @@ export const addMessage = async (
 
   // construct the shape of the object to be stored in the db
   let messageForDb = Object.assign({}, message);
-  if (message.file && message.messageType === 'media') {
+  if (message.file && message.messageType === messageTypeObj.media) {
     const { file } = message;
 
     const fileMetaData = {
@@ -186,7 +185,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     }
   }
 
-  if (message.messageType === 'media' && !message.file) {
+  if (message.messageType === messageTypeObj.media && !message.file) {
     trackQueue.add({
       userId: user.id,
       event: eventFailed,
