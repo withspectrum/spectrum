@@ -251,6 +251,11 @@ export const Text = styled(Bubble)`
     text-decoration: underline;
     word-break: break-word;
   }
+
+  ul,
+  ol {
+    margin-top: 0;
+  }
 `;
 
 export const Emoji = styled(Bubble)`
