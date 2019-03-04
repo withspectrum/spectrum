@@ -353,7 +353,7 @@ export default requireAuth(
       await addMessage(
         {
           content: {
-            body: `${identifier} just posted a new thread: https://spectrum.chat/${
+            body: `${identifier} just posted a new thread 📝 https://spectrum.chat/${
               community.slug
             }/${channel.slug}/${slugg(dbThread.content.title)}~${dbThread.id}`,
           },
