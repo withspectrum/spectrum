@@ -1,5 +1,7 @@
 // @flow
 import React from 'react';
+import Highlight, { defaultProps } from 'prism-react-renderer';
+import { getStringElements } from '../utils/getStringElements';
 import mentionsDecorator from '../mentions-decorator/index';
 import linksDecorator from '../links-decorator/index';
 import { Line, Paragraph, BlockQuote } from 'src/components/message/style';
@@ -25,11 +27,29 @@ const messageRenderer = {
       children.map((child, index) => (
         <Paragraph key={keys[index] || index}>{child}</Paragraph>
       )),
-    'code-block': (children: Array<Node>, { keys }: KeysObj) => (
-      <Line key={keys.join('|')}>
-        {children.map((child, i) => [child, <br key={i} />])}
-      </Line>
-    ),
+    'code-block': (children: Array<any>, { keys, data }: KeysObj) => {
+      return children.map((child, index) => (
+        <Highlight
+          {...defaultProps}
+          code={getStringElements(child).join('\n')}
+          language={Array.isArray(data) && data[0].language}
+          theme={undefined}
+          key={keys[index]}
+        >
+          {({ className, style, tokens, getLineProps, getTokenProps }) => (
+            <Line className={className} style={style}>
+              {tokens.map((line, i) => (
+                <div {...getLineProps({ line, key: i })}>
+                  {line.map((token, key) => (
+                    <span {...getTokenProps({ token, key })} />
+                  ))}
+                </div>
+              ))}
+            </Line>
+          )}
+        </Highlight>
+      ));
+    },
     blockquote: (children: Array<Node>, { keys }: KeysObj) =>
       children.map((child, index) => (
         <BlockQuote key={keys[index] || index}>{child}</BlockQuote>
