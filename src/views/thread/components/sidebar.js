@@ -84,10 +84,10 @@ class Sidebar extends React.Component<Props> {
     const loginUrl =
       thread && thread.community
         ? thread.community.brandedLogin.isEnabled
-          ? `/${thread.community.slug}/login?r=${CLIENT_URL}/${getThreadLink(
+          ? `/${thread.community.slug}/login?r=${CLIENT_URL}${getThreadLink(
               thread
             )}`
-          : `/login?r=${CLIENT_URL}/${getThreadLink(thread)}`
+          : `/login?r=${CLIENT_URL}${getThreadLink(thread)}`
         : '/login';
 
     return (
