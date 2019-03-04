@@ -4762,6 +4762,11 @@ cycle@1.0.x:
   resolved "https://registry.yarnpkg.com/cycle/-/cycle-1.0.3.tgz#21e80b2be8580f98b468f379430662b046c34ad2"
   integrity sha1-IegLK+hYD5i0aPN5QwZisEbDStI=
 
+cypress-plugin-retries@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/cypress-plugin-retries/-/cypress-plugin-retries-1.2.0.tgz#a4e120c1bc417d1be525632e7d38e52a87bc0578"
+  integrity sha512-seQFI/0j5WCqX7IVN2k0tbd3FLdhbPuSCWdDtdzDmU9oJfUkRUlluV47TYD+qQ/l+fJYkQkpw8csLg8/LohfRg==
+
 cypress@3.1.5:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-3.1.5.tgz#5227b2ce9306c47236d29e703bad9055d7218042"
