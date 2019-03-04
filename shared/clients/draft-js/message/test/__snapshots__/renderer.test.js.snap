@@ -5,5 +5,7 @@ Array [
   "unstyled",
   "code-block",
   "blockquote",
+  "unordered-list-item",
+  "ordered-list-item",
 ]
 `;

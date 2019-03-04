@@ -508,6 +508,7 @@ export const CommunityHeaderSubtitle = styled.span`
 export const ThreadSubtitle = styled(CommunityHeaderSubtitle)`
   font-size: 16px;
   margin-top: 8px;
+  margin-bottom: 16px;
   display: flex;
   line-height: 1.5;
   flex-wrap: wrap;
