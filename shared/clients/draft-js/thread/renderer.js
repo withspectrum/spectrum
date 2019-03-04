@@ -7,6 +7,8 @@ import {
   EmbedContainer,
   EmbedComponent,
 } from 'src/components/rich-text-editor/style';
+import { getStringElements } from '../utils/getStringElements';
+import { hasStringElements } from '../utils/hasStringElements';
 import mentionsDecorator from '../mentions-decorator';
 import linksDecorator from '../links-decorator';
 import type { Node } from 'react';
@@ -52,30 +54,6 @@ const Embed = (props: EmbedProps) => {
       </EmbedContainer>
     );
   }
-};
-
-const hasStringElements = (arr: Array<mixed> | mixed) => {
-  if (Array.isArray(arr)) return arr.some(elem => hasStringElements(elem));
-
-  return typeof arr === 'string';
-};
-
-const getStringElements = (arr: Array<mixed>): Array<string> => {
-  return arr
-    .map(elem => {
-      if (Array.isArray(elem)) return getStringElements(elem);
-      if (typeof elem === 'string') return elem;
-      // Handle React elements being passed as array elements
-      // $FlowIssue
-      if (elem.props && elem.props.children)
-        return getStringElements(elem.props.children);
-      return null;
-    })
-    .filter(Boolean)
-    .reduce((final, elem) => {
-      if (Array.isArray(elem)) return [...final, ...elem];
-      return [...final, elem];
-    }, []);
 };
 
 const threadRenderer = {

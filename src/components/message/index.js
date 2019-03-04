@@ -178,7 +178,7 @@ class Message extends React.Component<Props, State> {
     const selectedMessageId = btoa(new Date(message.timestamp).getTime() - 1);
     const messageUrl =
       threadType === 'story' && thread
-        ? `/${getThreadLink(thread)}?m=${selectedMessageId}`
+        ? `${getThreadLink(thread)}?m=${selectedMessageId}`
         : threadType === 'directMessageThread'
         ? `/messages/${threadId}?m=${selectedMessageId}`
         : `/thread/${threadId}?m=${selectedMessageId}`;
@@ -382,7 +382,7 @@ class Message extends React.Component<Props, State> {
                             }}
                             data-clipboard-text={
                               thread
-                                ? `${CLIENT_URL}/${getThreadLink(
+                                ? `${CLIENT_URL}${getThreadLink(
                                     thread
                                   )}?m=${selectedMessageId}`
                                 : `${CLIENT_URL}/thread/${threadId}?m=${selectedMessageId}`

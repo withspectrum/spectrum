@@ -267,7 +267,6 @@ class Routes extends React.Component<Props> {
 
                 <Route path="/login" component={LoginFallback} />
                 <Route path="/explore" component={Explore} />
-                <Route path="/messages/new" component={MessagesFallback} />
                 <Route
                   path="/messages/:threadId"
                   component={MessagesFallback}
@@ -371,6 +370,13 @@ class Routes extends React.Component<Props> {
                   // - /some~custom~slug~id-123-id => id-123-id, custom slug with delimiter char in it (~) also works! :tada:
                   path="/:communitySlug/:channelSlug/(.*~)?:threadId"
                   component={ThreadSlider}
+                />
+              )}
+
+              {isModal && (
+                <Route
+                  path="/thread/:threadId"
+                  component={RedirectOldThreadRoute}
                 />
               )}
 

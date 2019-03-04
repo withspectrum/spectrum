@@ -85,7 +85,7 @@ class WatercoolerActionBar extends React.Component<Props, State> {
                 <a
                   href={`https://www.facebook.com/sharer/sharer.php?t=${encodeURIComponent(
                     thread.content.title
-                  )}&u=https://spectrum.chat/${getThreadLink(thread)}`}
+                  )}&u=https://spectrum.chat${getThreadLink(thread)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -102,7 +102,7 @@ class WatercoolerActionBar extends React.Component<Props, State> {
                 <a
                   href={`https://twitter.com/share?text=${encodeURIComponent(
                     thread.content.title
-                  )} on @withspectrum&url=https://spectrum.chat/${getThreadLink(
+                  )} on @withspectrum&url=https://spectrum.chat${getThreadLink(
                     thread
                   )}`}
                   target="_blank"
@@ -114,7 +114,7 @@ class WatercoolerActionBar extends React.Component<Props, State> {
 
               <Clipboard
                 style={{ background: 'none' }}
-                data-clipboard-text={`https://spectrum.chat/${getThreadLink(
+                data-clipboard-text={`https://spectrum.chat${getThreadLink(
                   thread
                 )}`}
                 onSuccess={() =>

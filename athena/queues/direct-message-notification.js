@@ -20,6 +20,7 @@ import { toPlainText, toState } from 'shared/draft-utils';
 import { sendNewDirectMessageEmailQueue } from 'shared/bull/queues';
 import type { Job, DirectMessageNotificationJobData } from 'shared/bull/types';
 import { signUser, signMessage } from 'shared/imgix';
+import { messageTypeObj } from 'shared/draft-utils/process-message-content';
 
 export default async (job: Job<DirectMessageNotificationJobData>) => {
   const { message: incomingMessage, userId: currentUserId } = job.data;
@@ -115,7 +116,7 @@ export default async (job: Job<DirectMessageNotificationJobData>) => {
         ...signedMessage,
         content: {
           body:
-            signedMessage.messageType === 'draftjs'
+            signedMessage.messageType === messageTypeObj.draftjs
               ? toPlainText(toState(JSON.parse(signedMessage.content.body)))
               : signedMessage.content.body,
         },

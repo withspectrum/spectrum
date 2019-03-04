@@ -508,7 +508,7 @@ class ThreadContainer extends React.Component<Props, State> {
               >
                 <link
                   rel="canonical"
-                  href={`https://spectrum.chat/${getThreadLink(thread)}`}
+                  href={`https://spectrum.chat${getThreadLink(thread)}`}
                 />
                 {metaImage && (
                   <meta name="twitter:card" content="summary_large_image" />

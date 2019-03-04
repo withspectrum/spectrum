@@ -158,3 +158,62 @@ describe('clearing messages tab', () => {
     cy.get('[data-cy="unread-badge-0"]').should('be.visible');
   });
 });
+
+describe('sending a message from user profile', () => {
+  beforeEach(() => {
+    cy.auth(user.id).then(() => cy.visit('/users/bryn'));
+  });
+
+  const dmButton = () => cy.get('[data-cy="send-dm-button"]');
+  const stagedDMPills = () => cy.get('[data-cy="selected-users-pills"]');
+  const chatInput = () => cy.get('[data-cy="chat-input"]');
+  const sendButton = () => cy.get('[data-cy="chat-input-send-button"]');
+
+  it('sends a direct message from the user profile on desktop', () => {
+    dmButton()
+      .should('be.visible')
+      .click();
+    cy.url('eq', 'http://localhost:3000/messages/new');
+    cy.get('[data-cy="unread-dm-list-item"]').should($p => {
+      expect($p).to.have.length(1);
+    });
+    cy.get('[data-cy="dm-list-item"]').should($p => {
+      expect($p).to.have.length(1);
+    });
+    stagedDMPills()
+      .should('be.visible')
+      .contains('Bryn');
+    chatInput().type('New message');
+    sendButton().click();
+    cy.get('[data-cy="unread-dm-list-item"]').should($p => {
+      expect($p).to.have.length(1);
+    });
+    cy.get('[data-cy="dm-list-item"]').should($p => {
+      expect($p).to.have.length(2);
+    });
+  });
+
+  it('sends a direct message from the user profile on mobile', () => {
+    cy.viewport('iphone-6');
+    dmButton()
+      .should('be.visible')
+      .click();
+    cy.url('eq', 'http://localhost:3000/messages/new');
+    stagedDMPills()
+      .should('be.visible')
+      .contains('Bryn');
+    chatInput().type('New message');
+    sendButton().click();
+    cy.contains('Bryn Jackson');
+    cy.contains('@bryn');
+    cy.contains('New message');
+    cy.get('[data-cy="titlebar-back"]').click();
+    cy.url('eq', 'http://localhost:3000/messages');
+    cy.get('[data-cy="unread-dm-list-item"]').should($p => {
+      expect($p).to.have.length(1);
+    });
+    cy.get('[data-cy="dm-list-item"]').should($p => {
+      expect($p).to.have.length(2);
+    });
+  });
+});
