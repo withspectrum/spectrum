@@ -18,6 +18,7 @@ import { draftOnlyContainsEmoji } from 'shared/only-contains-emoji';
 import { Byline, Name, Username } from './style';
 import { isShort } from 'shared/clients/draft-js/utils/isShort';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
+import { messageTypeObj } from 'shared/draft-utils/process-message-content';
 
 type BodyProps = {
   openGallery: Function,
@@ -42,22 +43,22 @@ const getSpectrumThreadIds = (text: string) => {
 export const Body = (props: BodyProps) => {
   const { showParent = true, message, openGallery, me, bubble = true } = props;
   const emojiOnly =
-    message.messageType === 'draftjs' &&
+    message.messageType === messageTypeObj.draftjs &&
     draftOnlyContainsEmoji(JSON.parse(message.content.body));
   const WrapperComponent = bubble ? Text : QuotedParagraph;
   switch (message.messageType) {
-    case 'text':
+    case messageTypeObj.text:
     default:
       return (
         <WrapperComponent me={me}>{message.content.body}</WrapperComponent>
       );
-    case 'media': {
+    case messageTypeObj.media: {
       if (typeof message.id === 'number' && message.id < 0) {
         return null;
       }
       return <Image onClick={openGallery} src={message.content.body} />;
     }
-    case 'draftjs': {
+    case messageTypeObj.draftjs: {
       const parsed = JSON.parse(message.content.body);
       const ids = getSpectrumThreadIds(toPlainText(toState(parsed)));
       const uniqueIds = ids.filter((x, i, a) => a.indexOf(x) === i);
@@ -72,7 +73,7 @@ export const Body = (props: BodyProps) => {
               {parsed && Array.isArray(parsed.blocks) && parsed.blocks[0].text}
             </Emoji>
           ) : (
-            redraft(parsed, messageRenderer)
+            <div className="markdown">{redraft(parsed, messageRenderer)}</div>
           )}
           {uniqueIds && (
             <ThreadAttachmentsContainer>

@@ -375,6 +375,13 @@ class Routes extends React.Component<Props> {
 
               {isModal && (
                 <Route
+                  path="/thread/:threadId"
+                  component={RedirectOldThreadRoute}
+                />
+              )}
+
+              {isModal && (
+                <Route
                   path="/new/thread"
                   render={props => <ComposerFallback {...props} slider />}
                 />

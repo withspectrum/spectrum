@@ -139,10 +139,6 @@ injectGlobal`
     margin-top: 16px;
   }
 
-  .markdown > *:first-of-type {
-    margin-top: 16px;
-  }
-
   .markdown img {
     margin-top: 16px;
     max-width: 100%;
