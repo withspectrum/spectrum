@@ -255,6 +255,7 @@ export const Text = styled(Bubble)`
   ul,
   ol {
     margin-top: 0;
+    margin-bottom: 0;
   }
 `;
 
