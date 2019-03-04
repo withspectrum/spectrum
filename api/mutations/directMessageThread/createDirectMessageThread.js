@@ -17,12 +17,14 @@ import type { FileUpload } from 'shared/types';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { messageTypeObj } from 'shared/draft-utils/process-message-content';
+import type { MessageType } from 'shared/draft-utils/process-message-content';
 
 export type CreateDirectMessageThreadInput = {
   input: {
     participants: Array<string>,
     message: {
-      messageType: 'text' | 'media' | 'draftjs',
+      messageType: MessageType,
       threadType: string,
       content: {
         body: string,
@@ -80,7 +82,10 @@ export default requireAuth(
     }
 
     const handleStoreMessage = async message => {
-      if (message.messageType === 'text' || message.messageType === 'draftjs') {
+      if (
+        message.messageType === messageTypeObj.text ||
+        message.messageType === messageTypeObj.draftjs
+      ) {
         // once we have an id we can generate a proper message object
         const messageWithThread = {
           ...message,
@@ -88,7 +93,7 @@ export default requireAuth(
         };
 
         return await storeMessage(messageWithThread, user.id);
-      } else if (message.messageType === 'media' && message.file) {
+      } else if (message.messageType === messageTypeObj.media && message.file) {
         let url;
         try {
           url = await uploadImage(message.file, 'threads', threadId);
