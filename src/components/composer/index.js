@@ -301,6 +301,20 @@ class ComposerWithData extends React.Component<Props, State> {
       })
       .catch(err => {
         console.error({ err });
+        this.setState({
+          isLoading: false,
+        });
+        this.changeBody({
+          target: {
+            value: this.state.body.replace(uploading, ''),
+          },
+        });
+        this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            `Uploading image failed - ${err.message}`
+          )
+        );
       });
   };
 
