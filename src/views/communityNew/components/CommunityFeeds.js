@@ -138,6 +138,17 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
   const segments = ['trending', 'latest', 'members', 'info'];
   if (community.watercoolerId) segments.unshift('chat');
 
+  useEffect(
+    () => {
+      if (activeSegment === 'chat') {
+        if (!community.watercoolerId) {
+          setActiveSegment('trending');
+        }
+      }
+    },
+    [community.slug]
+  );
+
   /*
     Allow people to alt + left/right key through tabs
   */
