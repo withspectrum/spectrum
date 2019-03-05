@@ -173,17 +173,6 @@ type Props = {
 class Routes extends React.Component<Props> {
   previousLocation = this.props.location;
 
-  componentDidMount() {
-    const { history } = this.props;
-    // Make sure that when nested modals are open, we close all modals
-    // when going back
-    history.listen((location, action) => {
-      if (action === 'POP' && location.state && location.state.modal) {
-        history.go(-1);
-      }
-    });
-  }
-
   componentWillUpdate(nextProps) {
     const { location } = this.props;
     // set previousLocation if props.location is not modal
@@ -380,7 +369,12 @@ class Routes extends React.Component<Props> {
                   // - /~id-123-id => id-123-id => id-123-id, empty custom slug also works
                   // - /some~custom~slug~id-123-id => id-123-id, custom slug with delimiter char in it (~) also works! :tada:
                   path="/:communitySlug/:channelSlug/(.*~)?:threadId"
-                  component={ThreadSlider}
+                  component={props => (
+                    <ThreadSlider
+                      previousLocation={this.previousLocation}
+                      {...props}
+                    />
+                  )}
                 />
               )}
 
