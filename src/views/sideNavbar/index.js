@@ -16,7 +16,7 @@ import {
 import { SidenavContext } from 'src/views/communityNew/context';
 
 const SideNavbar = (props: Props) => {
-  const { data, match, history } = props;
+  const { data, match, history, setSidenavIsOpen } = props;
   const { user } = data;
 
   if (!user) return null;
@@ -66,7 +66,7 @@ const SideNavbar = (props: Props) => {
         if (index >= 0) {
           const community = sorted[index];
           if (!community) return;
-          setIsOpen(false);
+          setSidenavIsOpen(false);
           return history.push(`/${community.slug}`);
         }
       }

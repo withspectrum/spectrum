@@ -32,7 +32,13 @@ const CommunityView = (props: Props) => {
     return (
       <SidenavContext.Provider value={{ sidenavIsOpen, setSidenavIsOpen }}>
         <React.Fragment>
-          {currentUser && <SideNavbar match={match} history={history} />}
+          {currentUser && (
+            <SideNavbar
+              setSidenavIsOpen={setSidenavIsOpen}
+              match={match}
+              history={history}
+            />
+          )}
 
           {component}
         </React.Fragment>
