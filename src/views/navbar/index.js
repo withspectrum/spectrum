@@ -52,6 +52,29 @@ type State = {
   isSkipLinkFocused: boolean,
 };
 
+const PAGES = [
+  'home',
+  'about',
+  'contact',
+  'terms',
+  'privacy',
+  'terms.html',
+  'privacy.html',
+  'code-of-conduct',
+  'support',
+  'features',
+  'faq',
+  'apps',
+  'new',
+  'login',
+  'explore',
+  'messages',
+  'thread',
+  'users',
+  'notifications',
+  'me',
+];
+
 class Navbar extends React.Component<Props, State> {
   state = {
     isSkipLinkFocused: false,
@@ -151,12 +174,17 @@ class Navbar extends React.Component<Props, State> {
     const isComposingDm = history.location.pathname === '/messages/new';
     const isComposingThread = history.location.pathname === '/new/thread';
     const isViewingThreadSlider = threadParam !== undefined;
+    const isViewingCommunity =
+      history.location.pathname.match(/^\/([^/]+?)(?:\/)?$/i) &&
+      PAGES.indexOf(history.location.pathname.replace('/', '')) === -1;
     const hideNavOnMobile =
       isViewingThreadSlider ||
       isComposingDm ||
       isViewingThread ||
       isViewingDm ||
       isComposingThread;
+
+    if (isViewingCommunity) return null;
 
     if (currentUser) {
       return (
@@ -239,16 +267,12 @@ class Navbar extends React.Component<Props, State> {
               to={currentUser ? `/users/${currentUser.username}` : '/'}
               onClick={() => this.trackNavigationClick('profile')}
             >
-              {currentUser &&
-                typeof currentUser.totalReputation === 'number' && (
-                  <Reputation>
-                    <Icon glyph="rep" />{' '}
-                    {truncateNumber(
-                      parseInt(currentUser.totalReputation, 10),
-                      1
-                    )}
-                  </Reputation>
-                )}
+              {currentUser && typeof currentUser.totalReputation === 'number' && (
+                <Reputation>
+                  <Icon glyph="rep" />{' '}
+                  {truncateNumber(parseInt(currentUser.totalReputation, 10), 1)}
+                </Reputation>
+              )}
               <Navatar
                 style={{ gridArea: 'label' }}
                 user={currentUser}

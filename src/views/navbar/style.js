@@ -7,7 +7,7 @@ import { UserAvatar } from 'src/components/avatar';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 export const Nav = styled.nav`
-  display: none;
+  display: grid;
   grid-template-columns: repeat(4, auto) 1fr repeat(2, auto);
   grid-template-rows: 1fr;
   grid-template-areas: 'logo home messages explore . notifications profile';
