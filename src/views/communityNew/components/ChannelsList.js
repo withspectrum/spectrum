@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import Icon from 'src/components/icons';
+import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
@@ -48,9 +49,14 @@ class Component extends React.Component<Props> {
   };
   render() {
     const {
+      isLoading,
       communitySlug,
       data: { community },
     } = this.props;
+
+    if (isLoading) {
+      return <Loading style={{ padding: '32px' }} />;
+    }
 
     if (community && community.channelConnection) {
       const { isOwner } = community.communityPermissions;
