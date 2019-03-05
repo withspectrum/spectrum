@@ -91,7 +91,7 @@ const SideNavbar = (props: Props) => {
                 size={36}
               />
             </AvatarLink>
-            {index < 10 && <Shortcut>⌥{index + 1}</Shortcut>}
+            {index < 9 && <Shortcut>⌥{index + 1}</Shortcut>}
           </AvatarGrid>
         );
       })}

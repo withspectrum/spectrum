@@ -19,6 +19,8 @@ export const Container = styled.div`
   align-content: start;
   grid-template-rows: auto;
   z-index: 9999;
+  overflow-x: visible;
+  overflow-y: scroll;
 `;
 
 export const AvatarGrid = styled.div`
@@ -56,7 +58,7 @@ export const Avatar = styled.img`
 
 export const Shortcut = styled.span`
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   color: ${theme.text.alt};
   margin-top: 2px;
   text-align: center;
