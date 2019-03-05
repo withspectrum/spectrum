@@ -183,6 +183,7 @@ export const ThreadContent = styled.div`
 export const ThreadHeading = styled(H1)`
   font-size: 28px;
   font-weight: 600;
+  word-break: break-word;
 `;
 
 export const A = styled.a`
@@ -466,7 +467,7 @@ export const CommunityHeader = styled.div`
   display: ${props => (props.hide ? 'none' : 'flex')};
   align-items: center;
   justify-content: space-between;
-  padding: 16px 32px;
+  padding: 11px 32px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   flex: 0 0 64px;
   align-self: stretch;
@@ -508,6 +509,7 @@ export const CommunityHeaderSubtitle = styled.span`
 export const ThreadSubtitle = styled(CommunityHeaderSubtitle)`
   font-size: 16px;
   margin-top: 8px;
+  margin-bottom: 16px;
   display: flex;
   line-height: 1.5;
   flex-wrap: wrap;

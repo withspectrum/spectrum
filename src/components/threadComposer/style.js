@@ -1,5 +1,6 @@
 import styled, { css, keyframes } from 'styled-components';
 import theme from 'shared/theme';
+import { Link } from 'react-router-dom';
 import { hexa, Transition, FlexRow, FlexCol, zIndex } from '../globals';
 
 export const Container = styled(FlexRow)`
@@ -69,7 +70,7 @@ export const Overlay = styled.div`
     `};
 `;
 
-export const Placeholder = styled.div`
+export const Placeholder = styled(Link)`
   ${
     /* either the placeholder *or* the content container shows at a time. */ ''
   } display: ${props => (props.isOpen ? 'none' : 'flex')};
@@ -88,7 +89,7 @@ export const Placeholder = styled.div`
   }
 
   @media (max-width: 768px) {
-    opacity: 0;
+    display: none;
   }
 `;
 

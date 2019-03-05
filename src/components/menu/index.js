@@ -27,7 +27,11 @@ class Menu extends React.Component<Props, State> {
     const { menuIsOpen } = this.state;
     return (
       <Wrapper darkContext={darkContext}>
-        <IconButton glyph={'menu'} onClick={() => this.toggleMenu()} />
+        <IconButton
+          dataCy={'community-menu-open'}
+          glyph={'menu'}
+          onClick={() => this.toggleMenu()}
+        />
         <Absolute open={this.state.menuIsOpen} hasNavBar={hasNavBar}>
           <MenuContainer hasNavBar={hasNavBar} hasTabBar={hasTabBar}>
             {menuIsOpen && this.props.children}
@@ -37,7 +41,10 @@ class Menu extends React.Component<Props, State> {
             onClick={() => this.toggleMenu()}
             hasNavBar={hasNavBar}
           />
-          <MenuOverlay onClick={() => this.toggleMenu()} />
+          <MenuOverlay
+            data-cy={'community-menu-close'}
+            onClick={() => this.toggleMenu()}
+          />
         </Absolute>
       </Wrapper>
     );

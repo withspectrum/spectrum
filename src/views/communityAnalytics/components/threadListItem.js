@@ -17,7 +17,6 @@ class ThreadListItem extends React.Component<Props> {
   render() {
     const {
       thread: {
-        id,
         author: {
           user: { name, username },
         },

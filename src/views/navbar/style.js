@@ -13,7 +13,7 @@ export const Nav = styled.nav`
   grid-template-areas: 'logo home messages explore . notifications profile';
   align-items: stretch;
   width: 100%;
-  flex: 0 0 ${isDesktopApp() ? '38px' : '48px'};
+  flex: 0 0 48px;
   padding: 0 16px;
   line-height: 1;
   box-shadow: 0 4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};

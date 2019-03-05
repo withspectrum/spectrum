@@ -3,7 +3,7 @@ import React from 'react';
 import { SERVER_URL } from 'src/api/constants';
 import { Button } from 'src/components/buttons';
 import { LogoutWrapper } from '../style';
-import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
+import { SectionCard } from 'src/components/settingsViews/style';
 
 export default () => (
   <LogoutWrapper>
