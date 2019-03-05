@@ -25,12 +25,12 @@ export const MessageGroupContainer = styled.div`
 `;
 
 export const Timestamp = styled(HorizontalRule)`
-  margin: 20px 0 0;
+  margin: 24px 0 4px;
   text-align: center;
   user-select: none;
 
   hr {
-    border-color: ${theme.bg.wash};
+    border-color: ${theme.bg.divider};
   }
 `;
 
@@ -43,16 +43,10 @@ export const UnseenRobotext = styled(Timestamp)`
 
 export const Time = styled.span`
   text-align: center;
-  color: ${theme.text.placeholder};
+  color: ${theme.text.default};
   font-size: 14px;
-  font-weight: 400;
-  margin: 0 16px;
-  transition: ${Transition.hover.off};
-
-  &:hover {
-    color: ${theme.text.alt};
-    transiton: ${Transition.hover.on};
-  }
+  font-weight: 600;
+  margin: 0 24px;
 `;
 
 export const UnseenTime = styled(Time)`

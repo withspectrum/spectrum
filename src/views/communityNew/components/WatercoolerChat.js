@@ -10,7 +10,7 @@ import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageCon
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
-import InfiniteList from 'src/components/infiniteScroll';
+import InfiniteScroll from 'react-infinite-scroller';
 import ChatMessages from 'src/components/messageGroup';
 import Head from 'src/components/head';
 import NextPageButton from 'src/components/nextPageButton';
@@ -36,7 +36,7 @@ class Component extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
-    this.firstMessage = null;
+    this.scrollParentRef = null;
     this.state = { subscription: null };
   }
 
@@ -105,6 +105,7 @@ class Component extends React.Component<Props, State> {
 
   componentDidMount() {
     this.subscribe();
+    this.scrollParentRef = document.getElementById('scroller-for-thread-feed');
   }
 
   componentWillUnmount() {
@@ -125,18 +126,12 @@ class Component extends React.Component<Props, State> {
     }
   };
 
-  paginatePreviousMessages = (isVisible: boolean) => {
-    const { isFetchingMore, loadPreviousPage, scrollToPosition } = this.props;
-    if (isFetchingMore || !isVisible) return;
-    if (this.firstMessage) {
-      const scrollPosition = this.firstMessage.offsetTop;
-      scrollToPosition(scrollPosition);
-    }
-    return loadPreviousPage();
+  loadPreviousPage = () => {
+    // console.log('triggered')
+    return this.props.loadPreviousPage();
   };
 
   render() {
-    console.log({ props: this.props });
     const {
       id,
       scrollToBottom,
@@ -150,14 +145,11 @@ class Component extends React.Component<Props, State> {
     const { isMember, isModerator, isOwner } = communityPermissions;
     const isTeamMember = isModerator || isOwner;
 
-    const { isLoading, hasError, thread, isFetchingMore } = data;
+    const { loading, error, thread, isFetchingMore } = data;
 
-    if (isLoading) return <p>Loading ...</p>;
-    if (hasError) return <p>Error ...</p>;
+    if (error) return <p>Error ...</p>;
 
-    const isValidWatercooler = thread && thread.watercooler;
-
-    if (!isValidWatercooler) return <p>Bad watercooler ...</p>;
+    if (!thread) return null;
 
     const { messageConnection } = thread;
     const { edges, pageInfo } = messageConnection;
@@ -197,15 +189,6 @@ class Component extends React.Component<Props, State> {
           <ErrorBoundary>
             {pageInfo.hasPreviousPage && (
               <React.Fragment>
-                <VisibilitySensor
-                  delayedCall
-                  onChange={this.paginatePreviousMessages}
-                >
-                  <PreviousMessagesLoading>
-                    <Loading />
-                  </PreviousMessagesLoading>
-                </VisibilitySensor>
-
                 <Head>
                   {prevCursor && (
                     <link
@@ -234,15 +217,25 @@ class Component extends React.Component<Props, State> {
                 />
               </Head>
             )}
-            <ChatMessages
-              threadId={thread.id}
-              thread={thread}
-              messages={sortedMessages}
-              threadType={'story'}
-              isModerator={isTeamMember}
-              lastSeen={new Date()}
-              onRef={el => (this.firstMessage = el)}
-            />
+            <InfiniteScroll
+              pageStart={0}
+              isReverse
+              initialLoad={false}
+              loadMore={this.loadPreviousPage}
+              hasMore={pageInfo.hasPreviousPage}
+              loader={<Loading key={0} />}
+              useWindow={false}
+              getScrollParent={() => this.scrollParentRef}
+            >
+              <ChatMessages
+                threadId={thread.id}
+                thread={thread}
+                messages={sortedMessages}
+                threadType={'story'}
+                isModerator={isTeamMember}
+                lastSeen={new Date()}
+              />
+            </InfiniteScroll>
           </ErrorBoundary>
         </WatercoolerMessages>
 

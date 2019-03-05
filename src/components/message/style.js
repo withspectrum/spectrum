@@ -127,8 +127,9 @@ export const GutterTimestamp = styled(Link)`
 `;
 
 export const OuterMessageContainer = styled.div`
-  display: flex;
-  flex: 1 0 auto;
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  padding-right: 16px;
   align-self: stretch;
   position: relative;
   padding-right: 16px;

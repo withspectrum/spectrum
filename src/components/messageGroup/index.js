@@ -238,10 +238,7 @@ class Messages extends React.Component<Props, State> {
           return (
             <React.Fragment key={initialMessage.id}>
               {unseenRobo}
-              <MessageGroupContainer
-                innerRef={el => this.props.onRef && this.props.onRef(el)}
-                key={initialMessage.id}
-              >
+              <MessageGroupContainer key={initialMessage.id}>
                 {group.map((message, index) => {
                   return (
                     <ErrorBoundary

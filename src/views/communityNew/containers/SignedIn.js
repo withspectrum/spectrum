@@ -38,6 +38,7 @@ const Component = (props: SignedInMemberType) => {
   };
 
   const scrollToBottom = () => {
+    console.log('scrolling to bottom');
     if (containerEl) {
       containerEl.scrollTop =
         containerEl.scrollHeight - containerEl.clientHeight;

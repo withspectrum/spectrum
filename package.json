@@ -164,6 +164,7 @@
     "react-flip-move": "^3.0.2",
     "react-helmet-async": "^0.1.0",
     "react-image": "^1.5.1",
+    "react-infinite-scroller": "^1.2.4",
     "react-infinite-scroller-with-scroll-element": "2.0.2",
     "react-loadable": "^5.5.0",
     "react-mentions": "^2.4.1",
