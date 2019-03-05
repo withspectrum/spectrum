@@ -119,8 +119,18 @@ jobs:
       - image: redis:3.2.7
       - image: cypress/base:6
       - image: rethinkdb:2.3.5
-    parallel: true
-    parallelism: 9
+    parallel: |
+      if [ $CYPRESS_RECORD_KEY ]; then 
+        true
+      else
+        false
+      fi
+    parallelism: |
+      if [ $CYPRESS_RECORD_KEY ]; then 
+        4
+      else
+        1
+      fi
     environment:
       TERM: xterm
     steps:
