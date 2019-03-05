@@ -2,6 +2,7 @@
 import React from 'react';
 import { Spinner } from '../globals';
 import { HasNextPage, NextPageButton } from './style';
+import VisibilitySensor from 'react-visibility-sensor';
 
 type Props = {
   isFetchingMore?: boolean,
@@ -10,15 +11,17 @@ type Props = {
 
 const NextPageButtonWrapper = (props: Props) => {
   const { isFetchingMore, fetchMore } = props;
+  const onChange = (isVisible: boolean) => {
+    if (isFetchingMore || !isVisible) return;
+    return fetchMore();
+  };
   return (
     <HasNextPage data-cy="load-previous-messages">
-      <NextPageButton loading={isFetchingMore} onClick={() => fetchMore()}>
-        {isFetchingMore ? (
+      <VisibilitySensor delayedCall onChange={onChange}>
+        <NextPageButton loading={isFetchingMore}>
           <Spinner size={16} color={'brand.default'} />
-        ) : (
-          'Load previous messages'
-        )}
-      </NextPageButton>
+        </NextPageButton>
+      </VisibilitySensor>
     </HasNextPage>
   );
 };

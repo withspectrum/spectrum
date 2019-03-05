@@ -27,7 +27,13 @@ const CommunityThreadFeed = compose(
 )(ThreadFeed);
 
 export const CommunityFeeds = (props: CommunityFeedsType) => {
-  const { community, scrollToTop, scrollToBottom } = props;
+  const {
+    community,
+    scrollToTop,
+    scrollToPosition,
+    scrollToBottom,
+    contextualScrollToBottom,
+  } = props;
   const defaultSegment = community.watercoolerId ? 'chat' : 'trending';
   const [activeSegment, setActiveSegment] = React.useState(defaultSegment);
 
@@ -37,7 +43,9 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
         if (!community.watercoolerId) return null;
         return (
           <WatercoolerChat
-            onMessagesLoad={scrollToBottom}
+            scrollToBottom={scrollToBottom}
+            contextualScrollToBottom={contextualScrollToBottom}
+            scrollToPosition={scrollToPosition}
             community={community}
             isWatercooler
             id={community.watercoolerId}

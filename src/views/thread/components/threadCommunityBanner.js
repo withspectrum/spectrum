@@ -14,6 +14,7 @@ import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { CommunityAvatar } from 'src/components/avatar';
 import getThreadLink from 'src/helpers/get-thread-link';
 import type { Dispatch } from 'redux';
+import { CLIENT_URL } from 'src/api/constants';
 import {
   CommunityHeader,
   CommunityHeaderName,

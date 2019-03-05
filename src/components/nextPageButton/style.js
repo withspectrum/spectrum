@@ -13,8 +13,8 @@ export const NextPageButton = styled.div`
   flex: 1;
   justify-content: center;
   padding: 8px;
-  background: ${theme.bg.wash};
-  color: ${theme.text.alt};
+  background: ${theme.bg.default};
+  color: ${theme.text.secondary};
   font-size: 14px;
   font-weight: 500;
   position: relative;

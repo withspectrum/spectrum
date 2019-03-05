@@ -522,7 +522,7 @@ export const SingleColumnSection = styled.div`
   width: 100%;
   max-width: 640px;
 
-  @media (max-width: 768px) {
+  @media (min-width: ${MEDIA_BREAK}px) {
     margin: 0;
     border-radius: 0;
     border: none;
@@ -570,6 +570,10 @@ export const WatercoolerMessages = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    overflow-x: hidden;
+  }
 `;
 
 export const WatercoolerChatInput = styled.div`
@@ -578,4 +582,15 @@ export const WatercoolerChatInput = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
+`;
+
+export const PreviousMessagesLoading = styled.div`
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: ${theme.bg.default};
+  color: ${theme.text.secondary};
+  min-height: 48px;
 `;

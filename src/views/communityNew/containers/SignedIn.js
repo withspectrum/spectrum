@@ -44,6 +44,22 @@ const Component = (props: SignedInMemberType) => {
     }
   };
 
+  const scrollToPosition = (position: number) => {
+    if (containerEl) {
+      containerEl.scrollTop = position;
+    }
+  };
+
+  const contextualScrollToBottom = () => {
+    if (
+      containerEl &&
+      containerEl.scrollHeight - containerEl.clientHeight <
+        containerEl.scrollTop + 280
+    ) {
+      scrollToBottom();
+    }
+  };
+
   return (
     <AppViewWrapper
       innerRef={el => (containerEl = el)}
@@ -80,7 +96,9 @@ const Component = (props: SignedInMemberType) => {
             <MobileCommunityProfileHeader community={community} />
             <CommunityFeeds
               scrollToBottom={scrollToBottom}
+              contextualScrollToBottom={contextualScrollToBottom}
               scrollToTop={scrollToTop}
+              scrollToPosition={scrollToPosition}
               community={community}
             />
           </Main>
