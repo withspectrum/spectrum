@@ -2,6 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { ErrorBoundary } from 'src/components/error';
@@ -140,6 +141,7 @@ class Component extends React.Component<Props, State> {
       data,
       loadPreviousPage,
       loadNextPage,
+      location,
     } = this.props;
     const { communityPermissions } = community;
     const { isMember, isModerator, isOwner } = communityPermissions;
@@ -222,7 +224,8 @@ class Component extends React.Component<Props, State> {
               isReverse
               initialLoad={false}
               loadMore={this.loadPreviousPage}
-              hasMore={pageInfo.hasPreviousPage}
+              // hasMore={pageInfo.hasPreviousPage}
+              hasMore={false}
               loader={<Loading key={0} />}
               useWindow={false}
               getScrollParent={() => this.scrollParentRef}
@@ -263,6 +266,7 @@ const map = state => ({
 export const WatercoolerChat = compose(
   getThreadMessages,
   withCurrentUser,
+  withRouter,
   viewNetworkHandler,
   connect(map)
 )(Component);

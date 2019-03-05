@@ -12,11 +12,15 @@ import {
   Avatar,
   Shortcut,
   CommunityName,
+  IconWrapper,
+  Divider,
+  RedDot,
 } from './style';
+import Icon from 'src/components/icons';
 import { SidenavContext } from 'src/views/communityNew/context';
 
 const SideNavbar = (props: Props) => {
-  const { data, match, history, setSidenavIsOpen } = props;
+  const { data, match, history, setSidenavIsOpen, notificationCounts } = props;
   const { user } = data;
 
   if (!user) return null;
@@ -77,6 +81,8 @@ const SideNavbar = (props: Props) => {
       window.removeEventListener('keydown', handleCommunitySwitch, false);
   }, []);
 
+  const { directMessageNotifications, notifications } = notificationCounts;
+
   return (
     <SidenavContext.Consumer>
       {({ sidenavIsOpen, setSidenavIsOpen }) => (
@@ -86,6 +92,46 @@ const SideNavbar = (props: Props) => {
             onClick={() => setSidenavIsOpen(false)}
           />
           <Container isOpen={sidenavIsOpen}>
+            <AvatarGrid>
+              <AvatarLink to={'/'} onClick={() => setSidenavIsOpen(false)}>
+                <IconWrapper>
+                  <Icon glyph="home" />
+                </IconWrapper>
+
+                <CommunityName>Home</CommunityName>
+              </AvatarLink>
+            </AvatarGrid>
+
+            <AvatarGrid>
+              <AvatarLink
+                to={'/messages'}
+                onClick={() => setSidenavIsOpen(false)}
+              >
+                <IconWrapper>
+                  <Icon glyph="message-simple" />
+                  {directMessageNotifications > 0 && <RedDot />}
+                </IconWrapper>
+
+                <CommunityName>Messages</CommunityName>
+              </AvatarLink>
+            </AvatarGrid>
+
+            <AvatarGrid>
+              <AvatarLink
+                to={'/notifications'}
+                onClick={() => setSidenavIsOpen(false)}
+              >
+                <IconWrapper>
+                  <Icon glyph="notification" />
+                  {notifications > 0 && <RedDot />}
+                </IconWrapper>
+
+                <CommunityName>Notifications</CommunityName>
+              </AvatarLink>
+            </AvatarGrid>
+
+            <Divider />
+
             {sorted.map((community, index) => {
               if (!community) return null;
 
@@ -95,13 +141,10 @@ const SideNavbar = (props: Props) => {
 
               const isActive = community.slug === match.params.communitySlug;
               return (
-                <AvatarGrid key={community.id}>
+                <AvatarGrid key={community.id} isActive={isActive}>
                   <AvatarLink
-                    tipText={community.name}
-                    tipLocation={'right'}
                     to={`/${community.slug}`}
                     onClick={() => setSidenavIsOpen(false)}
-                    isActive={isActive}
                   >
                     <Avatar
                       isActive={isActive}
@@ -124,9 +167,13 @@ const SideNavbar = (props: Props) => {
   );
 };
 
+const map = state => ({
+  notificationCounts: state.notifications,
+});
+
 export default compose(
   // $FlowIssue
-  connect(),
+  connect(map),
   getCurrentUserCommunityConnection,
   viewNetworkHandler
 )(SideNavbar);

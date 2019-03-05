@@ -1,7 +1,6 @@
 // @flow
 import styled from 'styled-components';
 import theme from 'shared/theme';
-import { Tooltip } from 'src/components/globals';
 import { Link } from 'react-router-dom';
 import { MEDIA_BREAK } from 'src/views/communityNew/style';
 
@@ -54,14 +53,14 @@ export const AvatarGrid = styled.div`
   grid-gap: 4px;
   grid-template-columns: minmax(0, 1fr);
   align-content: start;
-  padding: 0 12px;
 
-  @media (max-width: ${MEDIA_BREAK}px) {
-    padding: 8px 20px 8px 12px;
+  a img {
+    opacity: ${props => (props.isActive ? '1' : '0.4')};
+    filter: ${props => (props.isActive ? 'none' : 'grayscale(100%)')};
   }
 
-  &:hover {
-    background: ${theme.bg.wash};
+  a:hover img {
+    opacity: ${props => (props.isActive ? '1' : '0.5')};
   }
 `;
 
@@ -70,9 +69,7 @@ export const AvatarLink = styled(Link)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  ${Tooltip};
-  opacity: ${props => (props.isActive ? '1' : '0.4')};
-  filter: ${props => (props.isActive ? 'none' : 'grayscale(100%)')};
+  padding: 0 12px;
 
   &:hover {
     filter: grayscale(0%);
@@ -82,7 +79,7 @@ export const AvatarLink = styled(Link)`
   @media (max-width: ${MEDIA_BREAK}px) {
     flex-direction: row;
     justify-content: flex-start;
-    opacity: ${props => (props.isActive ? '1' : '0.5')};
+    padding: 8px 20px 8px 12px;
   }
 `;
 
@@ -121,4 +118,35 @@ export const CommunityName = styled.span`
   @media (min-width: ${MEDIA_BREAK}px) {
     display: none;
   }
+`;
+
+export const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  opacity: 1;
+  color: ${theme.text.secondary};
+  position: relative;
+
+  &:hover {
+    color: ${theme.text.default};
+  }
+`;
+
+export const Divider = styled.div`
+  height: 1px;
+  background: ${theme.bg.border};
+  margin: 8px 0;
+`;
+
+export const RedDot = styled.span`
+  width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  border: 3px solid ${theme.bg.default};
+  position: absolute;
+  background: ${theme.warn.alt};
+  top: 0;
+  right: -4px;
 `;

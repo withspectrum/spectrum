@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { UserAvatar } from 'src/components/avatar';
@@ -74,48 +75,46 @@ class GranularUserProfile extends React.Component<Props> {
     if (!userObject.username) return null;
 
     return (
-      <Row
-        to={`/users/${userObject.username}`}
-        avatarSize={avatarSize}
-        multiAction={multiAction}
-      >
-        {profilePhoto && (
-          <UserAvatar
-            user={userObject}
-            size={avatarSize}
-            showHoverProfile={!showHoverProfile}
-            isClickable={false}
-          />
-        )}
-
-        {name && (
-          <Name>
-            {name}
-            {username && <Username>@{username}</Username>}
-            {badges && badges.map((b, i) => <Badge key={i} type={b} />)}
-          </Name>
-        )}
-
-        {typeof reputation === 'number' && (
-          <Reputation reputation={reputation} />
-        )}
-
-        {description && <Description>{description}</Description>}
-
-        <Actions>
-          {messageButton && (
-            <MessageIcon
-              tipText={'Send message'}
-              tipLocation={'left'}
-              onClick={this.initMessage}
-            >
-              <Icon glyph="message-simple-new" size={24} />
-            </MessageIcon>
+      <Link to={`/users/${userObject.username}`}>
+        <Row avatarSize={avatarSize} multiAction={multiAction}>
+          {profilePhoto && (
+            <UserAvatar
+              user={userObject}
+              size={avatarSize}
+              showHoverProfile={!showHoverProfile}
+              isClickable={false}
+            />
           )}
 
-          {children}
-        </Actions>
-      </Row>
+          {name && (
+            <Name>
+              {name}
+              {username && <Username>@{username}</Username>}
+              {badges && badges.map((b, i) => <Badge key={i} type={b} />)}
+            </Name>
+          )}
+
+          {typeof reputation === 'number' && (
+            <Reputation reputation={reputation} />
+          )}
+
+          {description && <Description>{description}</Description>}
+
+          <Actions>
+            {messageButton && (
+              <MessageIcon
+                tipText={'Send message'}
+                tipLocation={'left'}
+                onClick={this.initMessage}
+              >
+                <Icon glyph="message-simple-new" size={24} />
+              </MessageIcon>
+            )}
+
+            {children}
+          </Actions>
+        </Row>
+      </Link>
     );
   }
 }

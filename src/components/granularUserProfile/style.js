@@ -1,10 +1,9 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import { Tooltip, Truncate } from '../globals';
 
-export const Row = styled(Link)`
+export const Row = styled.div`
   display: grid;
   grid-template-columns: ${props =>
       props.avatarSize ? `${props.avatarSize}px` : '32px'} minmax(0px, 1fr) 32px;

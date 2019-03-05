@@ -313,10 +313,6 @@ export const OnlineDot = styled.div`
   background-color: ${theme.success.default};
   margin-right: 16px;
   margin-left: 6px;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    margin-right: 10px;
-  }
 `;
 
 export const FeedsContainer = styled.section``;

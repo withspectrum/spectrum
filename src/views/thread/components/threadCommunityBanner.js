@@ -14,7 +14,6 @@ import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { CommunityAvatar } from 'src/components/avatar';
 import getThreadLink from 'src/helpers/get-thread-link';
 import type { Dispatch } from 'redux';
-import { CLIENT_URL } from 'src/api/constants';
 import {
   CommunityHeader,
   CommunityHeaderName,
@@ -50,11 +49,6 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
       isVisible,
       forceScrollToTop,
     } = this.props;
-    const { isLoading } = this.state;
-
-    const loginUrl = community.brandedLogin.isEnabled
-      ? `/${community.slug}/login?r=${CLIENT_URL}${getThreadLink(thread)}`
-      : `/login?r=${CLIENT_URL}${getThreadLink(thread)}`;
 
     const createdAt = new Date(thread.createdAt).getTime();
     const timestamp = convertTimestampToDate(createdAt);
