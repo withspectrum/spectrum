@@ -27,14 +27,24 @@ export const sendMessageMutation = gql`
 
 const sendMessageOptions = {
   props: ({ ownProps, mutate }) => ({
-    sendMessage: (message, author) => {
+    sendMessage: async (message, author) => {
       const fakeId = Math.round(Math.random() * -1000000);
+      let body = message.content.body;
+      if (message.messageType === messageTypeObj.text) {
+        body = await fetch('https://convert.spectrum.chat/from', {
+          method: 'POST',
+          body,
+        })
+          .then(res => res.json())
+          .then(json => JSON.stringify(json));
+      }
       return mutate({
         variables: {
           message: {
             ...message,
+            messageType: messageTypeObj.draftjs,
             content: {
-              body: message.messageType === 'media' ? '' : message.content.body,
+              body: message.messageType === messageTypeObj.media ? '' : body,
             },
           },
         },
@@ -70,15 +80,7 @@ const sendMessageOptions = {
               body:
                 message.messageType === 'media'
                   ? message.content.body
-                  : JSON.stringify(
-                      convertToRaw(
-                        stateFromMarkdown(message.content.body, {
-                          parserOptions: {
-                            breaks: true,
-                          },
-                        })
-                      )
-                    ),
+                  : processMessageContent(messageTypeObj.draftjs, body),
               __typename: 'MessageContent',
             },
             reactions: {
