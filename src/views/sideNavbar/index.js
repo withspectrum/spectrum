@@ -4,7 +4,16 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
-import { Container, AvatarGrid, AvatarLink, Avatar, Shortcut } from './style';
+import {
+  Overlay,
+  Container,
+  AvatarGrid,
+  AvatarLink,
+  Avatar,
+  Shortcut,
+  CommunityName,
+} from './style';
+import { SidenavContext } from 'src/views/communityNew/context';
 
 const SideNavbar = (props: Props) => {
   const { data, match, history } = props;
@@ -57,6 +66,7 @@ const SideNavbar = (props: Props) => {
         if (index >= 0) {
           const community = sorted[index];
           if (!community) return;
+          setIsOpen(false);
           return history.push(`/${community.slug}`);
         }
       }
@@ -68,34 +78,49 @@ const SideNavbar = (props: Props) => {
   }, []);
 
   return (
-    <Container>
-      {sorted.map((community, index) => {
-        if (!community) return null;
+    <SidenavContext.Consumer>
+      {({ sidenavIsOpen, setSidenavIsOpen }) => (
+        <React.Fragment>
+          <Overlay
+            isOpen={sidenavIsOpen}
+            onClick={() => setSidenavIsOpen(false)}
+          />
+          <Container isOpen={sidenavIsOpen}>
+            {sorted.map((community, index) => {
+              if (!community) return null;
 
-        const { communityPermissions } = community;
-        const { isMember, isBlocked } = communityPermissions;
-        if (!isMember || isBlocked) return null;
+              const { communityPermissions } = community;
+              const { isMember, isBlocked } = communityPermissions;
+              if (!isMember || isBlocked) return null;
 
-        const isActive = community.slug === match.params.communitySlug;
-        return (
-          <AvatarGrid>
-            <AvatarLink
-              tipText={community.name}
-              tipLocation={'right'}
-              to={`/${community.slug}`}
-              key={community.id}
-            >
-              <Avatar
-                isActive={isActive}
-                src={community.profilePhoto}
-                size={36}
-              />
-            </AvatarLink>
-            {index < 9 && <Shortcut>⌥{index + 1}</Shortcut>}
-          </AvatarGrid>
-        );
-      })}
-    </Container>
+              const isActive = community.slug === match.params.communitySlug;
+              return (
+                <AvatarGrid key={community.id}>
+                  <AvatarLink
+                    tipText={community.name}
+                    tipLocation={'right'}
+                    to={`/${community.slug}`}
+                    onClick={() => setSidenavIsOpen(false)}
+                    isActive={isActive}
+                  >
+                    <Avatar
+                      isActive={isActive}
+                      src={community.profilePhoto}
+                      size={sidenavIsOpen ? 32 : 36}
+                    />
+
+                    <CommunityName isActive={isActive}>
+                      {community.name}
+                    </CommunityName>
+                  </AvatarLink>
+                  {index < 9 && <Shortcut>⌥{index + 1}</Shortcut>}
+                </AvatarGrid>
+              );
+            })}
+          </Container>
+        </React.Fragment>
+      )}
+    </SidenavContext.Consumer>
   );
 };
 

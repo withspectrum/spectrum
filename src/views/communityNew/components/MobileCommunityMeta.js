@@ -1,24 +1,28 @@
 // @flow
 import React from 'react';
-import compose from 'recompose/compose';
-import { withRouter } from 'react-router-dom';
 import type { CommunityMetaType } from '../types';
 import Icon from 'src/components/icons';
 import { CommunityAvatar } from 'src/components/avatar';
 import { MobileMetaContainer, MobileCommunityName } from '../style';
+import { SidenavContext } from '../context';
 
-const Component = (props: CommunityMetaType) => {
-  const { community, history } = props;
-  const goBack = () => history.goBack();
+export const MobileCommunityMeta = (props: CommunityMetaType) => {
+  const { community } = props;
 
   return (
-    <MobileMetaContainer>
-      <Icon onClick={goBack} glyph={'view-back'} size={28} />
-      <div style={{ width: '8px' }} />
-      <CommunityAvatar size={24} community={community} />
-      <MobileCommunityName>{community.name}</MobileCommunityName>
-    </MobileMetaContainer>
+    <SidenavContext.Consumer>
+      {({ setSidenavIsOpen }) => (
+        <MobileMetaContainer>
+          <Icon
+            onClick={() => setSidenavIsOpen(true)}
+            glyph={'menu'}
+            size={28}
+          />
+          <div style={{ width: '8px' }} />
+          <CommunityAvatar size={24} community={community} />
+          <MobileCommunityName>{community.name}</MobileCommunityName>
+        </MobileMetaContainer>
+      )}
+    </SidenavContext.Consumer>
   );
 };
-
-export const MobileCommunityMeta = compose(withRouter)(Component);

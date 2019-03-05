@@ -8,7 +8,8 @@ const MAIN_WIDTH = 600;
 const SIDEBAR_WIDTH = 340;
 const COL_GAP = 16;
 const MAX_WIDTH = MAIN_WIDTH + SIDEBAR_WIDTH + COL_GAP;
-const MEDIA_BREAK = MAIN_WIDTH + SIDEBAR_WIDTH + COL_GAP;
+// add 122 to account for the left side nav
+export const MEDIA_BREAK = MAIN_WIDTH + SIDEBAR_WIDTH + COL_GAP + 122;
 
 export const Container = styled.section`
   display: grid;
@@ -23,7 +24,7 @@ export const Container = styled.section`
 
 export const TwoColumnGrid = styled.section`
   display: grid;
-  grid-template-columns: ${SIDEBAR_WIDTH}px ${MAIN_WIDTH}px;
+  grid-template-columns: ${MAIN_WIDTH}px ${SIDEBAR_WIDTH}px;
   grid-template-rows: 100%;
   grid-gap: ${COL_GAP}px;
   max-width: ${MAX_WIDTH}px;

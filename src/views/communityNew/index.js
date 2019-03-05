@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { useState } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
@@ -9,12 +9,12 @@ import CommunityLogin from 'src/views/communityLogin';
 import Login from 'src/views/login';
 import { CLIENT_URL } from 'src/api/constants';
 import type { Props } from './types';
-
 import { LoadingView } from './containers/Loading';
 import { ErrorView } from './containers/Error';
 import { SignedIn } from './containers/SignedIn';
 import { PrivateCommunity } from './containers/PrivateCommunity';
-import SideNavbar from '../sideNavbar';
+import SideNavbar from 'src/views/sideNavbar';
+import { SidenavContext } from './context';
 
 const CommunityView = (props: Props) => {
   const {
@@ -26,12 +26,17 @@ const CommunityView = (props: Props) => {
     history,
   } = props;
 
+  const [sidenavIsOpen, setSidenavIsOpen] = useState(false);
+
   const wrapWithSidenav = component => {
     return (
-      <React.Fragment>
-        {currentUser && <SideNavbar match={match} history={history} />}
-        {component}
-      </React.Fragment>
+      <SidenavContext.Provider value={{ sidenavIsOpen, setSidenavIsOpen }}>
+        <React.Fragment>
+          {currentUser && <SideNavbar match={match} history={history} />}
+
+          {component}
+        </React.Fragment>
+      </SidenavContext.Provider>
     );
   };
 

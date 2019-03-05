@@ -74,6 +74,17 @@ const Component = (props: SignedInMemberType) => {
 
       <Container>
         <TwoColumnGrid>
+          <Main>
+            <MobileCommunityProfileHeader community={community} />
+            <CommunityFeeds
+              scrollToBottom={scrollToBottom}
+              contextualScrollToBottom={contextualScrollToBottom}
+              scrollToTop={scrollToTop}
+              scrollToPosition={scrollToPosition}
+              community={community}
+            />
+          </Main>
+
           <Sidebar>
             <SidebarSection>
               <CommunityProfileHeader community={community} />
@@ -92,17 +103,6 @@ const Component = (props: SignedInMemberType) => {
               <ChannelsList id={community.id} communitySlug={community.slug} />
             </SidebarSection>
           </Sidebar>
-
-          <Main>
-            <MobileCommunityProfileHeader community={community} />
-            <CommunityFeeds
-              scrollToBottom={scrollToBottom}
-              contextualScrollToBottom={contextualScrollToBottom}
-              scrollToTop={scrollToTop}
-              scrollToPosition={scrollToPosition}
-              community={community}
-            />
-          </Main>
         </TwoColumnGrid>
       </Container>
     </AppViewWrapper>
