@@ -58,10 +58,6 @@ export const AvatarGrid = styled.div`
     opacity: ${props => (props.isActive ? '1' : '0.4')};
     filter: ${props => (props.isActive ? 'none' : 'grayscale(100%)')};
   }
-
-  a:hover img {
-    opacity: ${props => (props.isActive ? '1' : '0.5')};
-  }
 `;
 
 export const AvatarLink = styled(Link)`
@@ -71,7 +67,7 @@ export const AvatarLink = styled(Link)`
   justify-content: center;
   padding: 0 12px;
 
-  &:hover {
+  &:hover img {
     filter: grayscale(0%);
     opacity: 1;
   }
