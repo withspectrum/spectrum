@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import getCommunityMembersQuery from 'shared/graphql/queries/community/getCommunityMembers';
+import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import GranularUserProfile from 'src/components/granularUserProfile';
 import Icon from 'src/components/icons';
@@ -13,22 +14,6 @@ import type { TeamMemberListType } from '../types';
 import { List, SidebarSectionHeader, SidebarSectionHeading } from '../style';
 
 class Component extends React.Component<TeamMemberListType> {
-  shouldComponentUpdate(nextProps) {
-    // NOTE(@brian) This is needed to avoid conflicting the the members tab in
-    // the community view. See https://github.com/withspectrum/spectrum/pull/2613#pullrequestreview-105861623
-    // for discussion
-    // never update once we have the list of team members
-    if (
-      this.props.data.community &&
-      nextProps.data.community &&
-      this.props.data.community.id === nextProps.data.community.id
-    ) {
-      return false;
-    }
-
-    return true;
-  }
-
   render() {
     const {
       isLoading,
@@ -40,8 +25,9 @@ class Component extends React.Component<TeamMemberListType> {
 
     const isOwner = this.props.community.communityPermissions.isOwner;
 
-    if (isLoading || queryVarIsChanging) return <p>Loading</p>;
-    if (hasError) return <p>Error</p>;
+    if (isLoading || queryVarIsChanging)
+      return <Loading style={{ padding: '32px' }} />;
+    if (hasError) return null;
 
     const { community } = data;
 
@@ -50,7 +36,19 @@ class Component extends React.Component<TeamMemberListType> {
     const nodes = members
       .map(member => member && member.node)
       .filter(node => node && (node.isOwner || node.isModerator))
-      .filter(Boolean);
+      .filter(Boolean)
+      .sort((a, b) => {
+        const bc = parseInt(b.reputation, 10);
+        const ac = parseInt(a.reputation, 10);
+
+        // sort same-reputation communities alphabetically
+        if (ac === bc) {
+          return a.name.toUpperCase() <= b.name.toUpperCase() ? -1 : 1;
+        }
+
+        // otherwise sort by reputation
+        return bc <= ac ? -1 : 1;
+      });
 
     return (
       <React.Fragment>

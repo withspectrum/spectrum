@@ -71,11 +71,12 @@ const LoadingCardContainer = styled(Card)`
 export const Loading = ({
   size,
   color,
+  ...rest
 }: {
   size?: number,
   color?: string,
 }): React$Element<any> => (
-  <LoadingContainer>
+  <LoadingContainer {...rest}>
     <Spinner size={size} color={color} />
   </LoadingContainer>
 );
