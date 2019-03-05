@@ -8,6 +8,7 @@ const {
   getPublicThreadsByUser,
   getPublicParticipantThreadsByUser,
   getViewableParticipantThreadsByUser,
+  getLikedThreadsByUser,
 } = require('../../models/thread');
 
 export default (
@@ -16,7 +17,7 @@ export default (
     first,
     after,
     kind,
-  }: { ...PaginationOptions, kind: 'creator' | 'participant' },
+  }: { ...PaginationOptions, kind: 'creator' | 'participant' | 'favorites' },
   { user }: GraphQLContext
 ) => {
   const currentUser = user;
@@ -29,18 +30,22 @@ export default (
 
   let getThreads;
   if (currentUser) {
-    getThreads =
-      kind === 'creator'
-        ? // $FlowIssue
-          getViewableThreadsByUser(id, currentUser.id, {
-            first,
-            after: lastThreadIndex,
-          })
-        : // $FlowIssue
-          getViewableParticipantThreadsByUser(id, currentUser.id, {
-            first,
-            after: lastThreadIndex,
-          });
+    if (kind === 'creator') {
+      getThreads = getViewableThreadsByUser(id, currentUser.id, {
+        first,
+        after: lastThreadIndex,
+      });
+    } else if (kind === 'participant') {
+      getThreads = getViewableParticipantThreadsByUser(id, currentUser.id, {
+        first,
+        after: lastThreadIndex,
+      });
+    } else if (kind === 'favorites') {
+      getThreads = getLikedThreadsByUser(id, currentUser.id, {
+        first,
+        after: lastThreadIndex,
+      });
+    }
   } else {
     getThreads =
       kind === 'creator'

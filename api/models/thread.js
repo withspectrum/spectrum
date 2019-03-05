@@ -270,6 +270,30 @@ export const getPublicThreadsByUser = (evalUser: string, options: PaginationOpti
     .run();
 };
 
+export const getLikedThreadsByUser = async (
+  evalUser: string,
+  options: PaginationOptions
+): Promise<Array<DBThread>> => {
+  const { first, after } = options;
+
+  // add filter by type of threadreaction
+  const currentUserThreadReactions = db
+    .table('threadReactions')
+    .getAll(evalUser, { index: 'userId' })
+    .run();
+
+  const threadReactions = await currentUserThreadReactions;
+  const threadIds = threadReactions.map(item => {
+    return item.threadId;
+  });
+
+  return db
+    .table('threads')
+    .getAll(...threadIds)
+    .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+    .run();
+};
+
 export const getViewableParticipantThreadsByUser = async (
   evalUser: string,
   currentUser: string,

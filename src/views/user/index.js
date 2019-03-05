@@ -243,6 +243,14 @@ class UserView extends React.Component<Props, State> {
                 >
                   Threads
                 </DesktopSegment>
+
+                <DesktopSegment
+                  segmentLabel="favorites"
+                  onClick={() => this.handleSegmentClick('favorites')}
+                  selected={selectedView === 'favorites'}
+                >
+                  Liked
+                </DesktopSegment>
                 <MobileSegment
                   segmentLabel="search"
                   onClick={() => this.handleSegmentClick('search')}
@@ -264,6 +272,14 @@ class UserView extends React.Component<Props, State> {
                 >
                   Threads
                 </MobileSegment>
+
+                <MobileSegment
+                  segmentLabel="favorites"
+                  onClick={() => this.handleSegmentClick('favorites')}
+                  selected={selectedView === 'favorites'}
+                >
+                  Liked
+                </MobileSegment>
               </SegmentedControl>
 
               {hasThreads &&
@@ -283,6 +299,18 @@ class UserView extends React.Component<Props, State> {
                     id={user.id}
                   />
                 )}
+
+              {selectedView === 'favorites' && (
+                <Feed
+                  userId={user.id}
+                  username={username}
+                  viewContext={'userProfileReplies'}
+                  hasNoThreads={this.hasNoThreads}
+                  hasThreads={this.hasThreads}
+                  kind={selectedView}
+                  id={user.id}
+                />
+              )}
 
               {selectedView === 'search' && <Search user={user} />}
 
