@@ -21,7 +21,7 @@ type AddEmbedAttrs = {
 export const addEmbedsToEditorState = (
   input: RawDraftContentState
 ): RawDraftContentState => {
-  let lastEntityKey = Math.min(...Object.keys(input.entityMap));
+  let lastEntityKey = Math.max(...Object.keys(input.entityMap));
   if (lastEntityKey === Infinity) lastEntityKey = -1;
   let newEntityMap = input.entityMap || {};
   let newBlocks = [];
