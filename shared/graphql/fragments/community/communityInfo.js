@@ -11,6 +11,7 @@ export type CommunityInfoType = {
   profilePhoto: string,
   coverPhoto: string,
   pinnedThreadId: ?string,
+  watercoolerId: ?string,
   isPrivate: boolean,
   communityPermissions: {
     isMember: boolean,
