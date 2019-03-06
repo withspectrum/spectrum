@@ -141,7 +141,7 @@ const SideNavbar = (props: Props) => {
             <Tooltip title="Profile">
               <AvatarGrid style={{ marginTop: '4px' }}>
                 <AvatarLink to={'/me'} onClick={() => setSidenavIsOpen(false)}>
-                  <UserAvatar user={user} />
+                  <UserAvatar user={user} isClickable={false} />
                   <CommunityName>Profile</CommunityName>
                 </AvatarLink>
               </AvatarGrid>
