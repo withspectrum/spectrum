@@ -29,7 +29,11 @@ export const InboxThreadItem = styled.div`
 
   &:hover {
     background: ${props =>
-      props.active ? props.theme.brand.alt : props.theme.bg.wash};
+      props.active
+        ? props.theme.brand.alt
+        : props.new
+        ? hexa(theme.brand.default, 0.06)
+        : props.theme.bg.wash};
   }
 
   &:last-of-type {
