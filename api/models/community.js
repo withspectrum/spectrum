@@ -412,7 +412,7 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
 export const editCommunity = async ({ input }: EditCommunityInput, userId: string): Promise<DBCommunity> => {
   const { name, slug, description, website, file, coverPhoto, coverFile, communityId } = input
 
-  const community = await db.table('communities').get(communityId).run()
+  let community = await db.table('communities').get(communityId).run()
 
   // if the input comes in with a coverPhoto of length 0 (empty string), it means
   // the user was trying to delete or reset their cover photo from the front end.
@@ -442,7 +442,6 @@ export const editCommunity = async ({ input }: EditCommunityInput, userId: strin
     }, { returnChanges: 'always' })
     .run()
     .then(result => {
-      let community
       if (result.replaced === 1) {
         community = result.changes[0].new_val;
         trackQueue.add({
@@ -466,7 +465,7 @@ export const editCommunity = async ({ input }: EditCommunityInput, userId: strin
       }
 
       searchQueue.add({
-        id: community.id,
+        id: communityId,
         type: 'community',
         event: 'edited'
       })
