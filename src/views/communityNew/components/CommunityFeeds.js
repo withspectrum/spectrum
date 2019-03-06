@@ -4,8 +4,6 @@ import React, { useEffect } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import theme from 'shared/theme';
-import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
-import ThreadFeed from 'src/components/threadFeed';
 import CommunityMemberGrid from 'src/views/community/components/memberGrid';
 import type { CommunityFeedsType } from '../types';
 import { TeamMembersList } from './TeamMembersList';
@@ -13,6 +11,7 @@ import { MobileCommunityInfoActions } from './MobileCommunityInfoActions';
 import { ChannelsList } from './ChannelsList';
 import { CommunityMeta } from './CommunityMeta';
 import { WatercoolerChat } from './WatercoolerChat';
+import { PostsFeeds } from './PostsFeeds';
 import { ARROW_LEFT, ARROW_RIGHT } from 'src/helpers/keycodes';
 import {
   FeedsContainer,
@@ -20,11 +19,6 @@ import {
   Segment,
   SidebarSection,
 } from '../style';
-
-const CommunityThreadFeed = compose(
-  connect(),
-  getCommunityThreads
-)(ThreadFeed);
 
 export const CommunityFeeds = (props: CommunityFeedsType) => {
   const {
@@ -34,7 +28,7 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
     scrollToBottom,
     contextualScrollToBottom,
   } = props;
-  const defaultSegment = community.watercoolerId ? 'chat' : 'trending';
+  const defaultSegment = community.watercoolerId ? 'chat' : 'posts';
   const [activeSegment, setActiveSegment] = React.useState(defaultSegment);
 
   const renderFeed = () => {
@@ -52,33 +46,8 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
           />
         );
       }
-      case 'trending': {
-        return (
-          <CommunityThreadFeed
-            viewContext="communityProfile"
-            slug={community.slug}
-            id={community.id}
-            setThreadsStatus={false}
-            isNewAndOwned={false}
-            community={community}
-            pinnedThreadId={community.pinnedThreadId}
-            sort={'trending'}
-          />
-        );
-      }
-      case 'latest': {
-        return (
-          <CommunityThreadFeed
-            viewContext="communityProfile"
-            slug={community.slug}
-            id={community.id}
-            setThreadsStatus={false}
-            isNewAndOwned={false}
-            community={community}
-            pinnedThreadId={community.pinnedThreadId}
-            sort={'latest'}
-          />
-        );
+      case 'posts': {
+        return <PostsFeeds community={community} />;
       }
       case 'members': {
         return (
@@ -135,14 +104,14 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
     [activeSegment]
   );
 
-  const segments = ['trending', 'latest', 'members', 'info'];
+  const segments = ['posts', 'members', 'info'];
   if (community.watercoolerId) segments.unshift('chat');
 
   useEffect(
     () => {
       if (activeSegment === 'chat') {
         if (!community.watercoolerId) {
-          setActiveSegment('trending');
+          setActiveSegment('posts');
         }
       }
     },

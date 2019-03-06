@@ -27,7 +27,7 @@ export const Container = styled.div`
   border-right: 1px solid ${theme.bg.border};
   display: grid;
   padding: 12px 0;
-  grid-gap: 12px;
+  grid-gap: 16px;
   grid-template-columns: minmax(0, 1fr);
   align-content: start;
   grid-template-rows: auto;

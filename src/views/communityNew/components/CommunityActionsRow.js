@@ -5,7 +5,6 @@ import type { CommunityActionsRowType } from '../types';
 import { PrimaryButton, OutlineButton } from './Button';
 import { openModal } from 'src/actions/modals';
 import Icon from 'src/components/icons';
-import getComposerLink from 'src/helpers/get-composer-link';
 import JoinCommunity from './JoinCommunity';
 import { ActionsRowContainer } from '../style';
 
@@ -24,7 +23,6 @@ export const Component = (props: CommunityActionsRowType) => {
 
   const { isMember, isOwner, isModerator } = community.communityPermissions;
   const isTeamMember = isOwner || isModerator;
-  const { pathname, search } = getComposerLink({ communityId: community.id });
 
   if (isMember) {
     return (
@@ -42,17 +40,6 @@ export const Component = (props: CommunityActionsRowType) => {
             Leave community
           </OutlineButton>
         )}
-
-        <PrimaryButton
-          to={{
-            pathname,
-            search,
-            state: { modal: true },
-          }}
-        >
-          <Icon glyph={'post'} size={24} />
-          New Post
-        </PrimaryButton>
       </ActionsRowContainer>
     );
   }

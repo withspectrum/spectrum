@@ -591,3 +591,78 @@ export const PreviousMessagesLoading = styled.div`
   color: ${theme.text.secondary};
   min-height: 48px;
 `;
+
+export const SubSegmentsContainer = styled.div`
+  display: flex;
+  width: 100%;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04),
+    inset 0 -1px ${theme.bg.border}, 0 1px 2px rgba(0, 0, 0, 0.04);
+  background: ${theme.bg.default};
+  position: sticky;
+  top: 56px;
+  z-index: 11;
+  justify-content: space-between;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    top: 0px;
+    z-index: 1;
+    position: relative;
+  }
+`;
+
+export const SubSegment = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  flex: 1 0 auto;
+  font-weight: 600;
+  color: ${props => (props.active ? theme.text.default : theme.text.alt)};
+  box-shadow: ${props =>
+    props.active ? `inset 0 -2px 0 ${theme.text.default}` : 'none'};
+  text-align: center;
+
+  &:hover {
+    background: ${theme.bg.wash};
+    box-shadow: ${props =>
+      props.active
+        ? `inset 0 -2px 0 ${theme.text.default}`
+        : `inset 0 -2px 0 ${tint(theme.bg.wash, -16)}`};
+    color: ${props =>
+      props.active ? theme.text.default : theme.text.secondary};
+    cursor: pointer;
+  }
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    flex: 1 0 21%;
+
+    &:hover {
+      background: ${theme.bg.default};
+    }
+
+    &:active {
+      background: ${theme.bg.wash};
+    }
+  }
+
+  @media (min-width: ${MEDIA_BREAK}px) {
+    ${props =>
+      props.hideOnDesktop &&
+      css`
+        display: none;
+      `}
+  }
+`;
+
+export const LeftActions = styled.div`
+  display: flex;
+`;
+
+export const RightActions = styled.div`
+  display: flex;
+  align-items: center;
+  padding-right: 8px;
+  @media (max-width: ${MEDIA_BREAK}px) {
+    display: none;
+  }
+`;
