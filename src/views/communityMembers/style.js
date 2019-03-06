@@ -213,3 +213,13 @@ export const TokenInputWrapper = styled.div`
     }
   }
 `;
+
+export const Row = styled.div`
+  display: flex;
+  align-items: flex-start;
+
+  a {
+    display: flex;
+    flex: 1 1 auto;
+  }
+`;

@@ -180,8 +180,8 @@ export const GrowthText = styled.span`
     props.positive
       ? props.theme.success.default
       : props.negative
-        ? props.theme.warn.alt
-        : props.theme.text.alt};
+      ? props.theme.warn.alt
+      : props.theme.text.alt};
   display: inline-block;
   margin-right: 6px;
   font-size: 14px;
@@ -195,11 +195,12 @@ export const MessageIcon = styled.div`
 
 export const EditDropdownContainer = styled.div`
   position: relative;
-  color: ${theme.text.alt};
+  color: ${theme.text.secondary};
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-top: 16px;
 `;
 
 export const Dropdown = styled.div`

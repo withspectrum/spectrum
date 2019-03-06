@@ -190,11 +190,8 @@ class EditDropdown extends React.Component<Props, State> {
     }
   };
 
-  toggleOpen = (e: any) =>
-    e &&
-    e.stopPropogation() &&
-    e.preventDefault() &&
-    this.setState({ isOpen: true });
+  toggleOpen = (e: any) => this.setState({ isOpen: true });
+
   close = () => this.setState({ isOpen: false });
 
   render() {

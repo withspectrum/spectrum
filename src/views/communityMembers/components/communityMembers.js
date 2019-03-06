@@ -23,6 +23,7 @@ import {
   SearchInput,
   SearchForm,
   FetchMore,
+  Row,
 } from '../style';
 import { ListContainer } from 'src/components/listItems/style';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
@@ -142,28 +143,31 @@ class CommunityMembers extends React.Component<Props, State> {
   generateUserProfile = communityMember => {
     const { user, roles, reputation, ...permissions } = communityMember;
     return (
-      <GranularUserProfile
-        userObject={user}
-        key={user.id}
-        id={user.id}
-        name={user.name}
-        username={user.username}
-        description={user.description}
-        isCurrentUser={user.id === this.props.currentUser.id}
-        isOnline={user.isOnline}
-        profilePhoto={user.profilePhoto}
-        avatarSize={40}
-        showHoverProfile={false}
-        messageButton={user.id !== this.props.currentUser.id}
-      >
-        {user.id !== this.props.currentUser.id && (
-          <EditDropdown
-            user={user}
-            permissions={permissions}
-            community={this.props.community}
+      <React.Fragment>
+        <Row>
+          <GranularUserProfile
+            userObject={user}
+            key={user.id}
+            id={user.id}
+            name={user.name}
+            username={user.username}
+            description={user.description}
+            isCurrentUser={user.id === this.props.currentUser.id}
+            isOnline={user.isOnline}
+            profilePhoto={user.profilePhoto}
+            avatarSize={40}
+            showHoverProfile={false}
+            messageButton={user.id !== this.props.currentUser.id}
           />
-        )}
-      </GranularUserProfile>
+          {user.id !== this.props.currentUser.id && (
+            <EditDropdown
+              user={user}
+              permissions={permissions}
+              community={this.props.community}
+            />
+          )}
+        </Row>
+      </React.Fragment>
     );
   };
 
