@@ -6,7 +6,7 @@ import {
 } from '../../utils/permissions';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
-import { publishThread } from '../../models/thread';
+import { publishThread, getWatercoolerThread } from '../../models/thread';
 import { getChannelBySlug } from '../../models/channel';
 import { setCommunityWatercoolerId } from '../../models/community';
 import type { DBCommunity } from 'shared/types';
@@ -46,6 +46,11 @@ export default requireAuth(async (_: any, args: Args, ctx: GraphQLContext) => {
       `Community ${community.slug} does not have general channel.`
     );
   }
+
+  const existingWatercooler = await getWatercoolerThread(community.id);
+
+  if (existingWatercooler)
+    return setCommunityWatercoolerId(community.id, existingWatercooler.id);
 
   const watercooler = await publishThread(
     {
