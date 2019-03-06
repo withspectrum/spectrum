@@ -79,7 +79,7 @@ const Watercooler = (props: Props) => {
           Display an open chat feed on your community’s profile.
         </SectionSubtitle>
         <SectionCardFooter>
-          {community.watercoolerId && (
+          {community && community.watercoolerId && (
             <Link
               style={{ marginRight: '8px' }}
               to={`/${community.slug}/general/${community.watercoolerId}`}
@@ -92,7 +92,7 @@ const Watercooler = (props: Props) => {
             onClick={community.watercoolerId ? disable : enable}
             type="submit"
           >
-            {community.watercoolerId ? 'Disable' : 'Enable'}
+            {community && community.watercoolerId ? 'Disable' : 'Enable'}
           </Button>
         </SectionCardFooter>
       </SectionCard>
