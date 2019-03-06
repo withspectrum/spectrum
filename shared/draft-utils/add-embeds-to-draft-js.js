@@ -12,12 +12,20 @@ const CODESANDBOX_URLS = /\b(?:\/\/)?(?:www\.)?codesandbox\.io(\/[A-Za-z0-9\-\._
 const SIMPLECAST_URLS = /\b(?:\/\/)?(?:www\.)?simplecast\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
 const THREAD_URLS = /(?:(?:https?:\/\/)?|\B)(?:spectrum\.chat|localhost:3000)\/.*?(?:~|(?:\?|&)t=|(?:\?|&)thread=|thread\/)([^&\s]*)/gi;
 
-type AddEmbedAttrs = {
+type InternalEmbedData = {|
+  type: 'internal',
+  entity: 'thread',
+  id: string,
+|};
+
+type ExternalEmbedData = {|
   url: string,
   aspectRatio?: string,
   width?: number,
   height?: number,
-};
+|};
+
+type EmbedData = InternalEmbedData | ExternalEmbedData;
 
 export const addEmbedsToEditorState = (
   input: RawDraftContentState
@@ -59,7 +67,7 @@ export const addEmbedsToEditorState = (
       newEntityMap[entityKey] = {
         data: {
           ...embed,
-          src: embed.url,
+          ...(embed.url ? { src: embed.url } : {}),
         },
         mutability: 'MUTABLE',
         type: 'embed',
@@ -97,7 +105,7 @@ const match = (regex: RegExp, text: string) => {
   });
 };
 
-export const getEmbedsFromText = (text: string): Array<AddEmbedAttrs> => {
+export const getEmbedsFromText = (text: string): Array<EmbedData> => {
   let embeds = [];
 
   match(IFRAME_TAG, text).forEach(url => {
@@ -158,8 +166,9 @@ export const getEmbedsFromText = (text: string): Array<AddEmbedAttrs> => {
 
   match(THREAD_URLS, text).forEach(id => {
     embeds.push({
+      type: 'internal',
       id,
-      type: 'thread',
+      entity: 'thread',
     });
   });
 
