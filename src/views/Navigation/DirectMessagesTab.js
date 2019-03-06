@@ -171,8 +171,6 @@ class DirectMessagesTab extends React.Component<Props, State> {
   render() {
     const { count, match } = this.props;
 
-    console.log({ props: this.props });
-
     // Keep the dock icon notification count indicator of the desktop app in sync
     if (isDesktopApp()) {
       window.interop.setBadgeCount(count);
