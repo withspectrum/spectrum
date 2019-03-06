@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import { Tooltip } from './Tooltip';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import {
@@ -92,43 +93,49 @@ const SideNavbar = (props: Props) => {
             onClick={() => setSidenavIsOpen(false)}
           />
           <Container isOpen={sidenavIsOpen}>
-            <AvatarGrid>
-              <AvatarLink to={'/'} onClick={() => setSidenavIsOpen(false)}>
-                <IconWrapper>
-                  <Icon glyph="home" />
-                </IconWrapper>
+            <Tooltip title="Home">
+              <AvatarGrid>
+                <AvatarLink to={'/'} onClick={() => setSidenavIsOpen(false)}>
+                  <IconWrapper>
+                    <Icon glyph="home" />
+                  </IconWrapper>
 
-                <CommunityName>Home</CommunityName>
-              </AvatarLink>
-            </AvatarGrid>
+                  <CommunityName>Home</CommunityName>
+                </AvatarLink>
+              </AvatarGrid>
+            </Tooltip>
 
-            <AvatarGrid>
-              <AvatarLink
-                to={'/messages'}
-                onClick={() => setSidenavIsOpen(false)}
-              >
-                <IconWrapper>
-                  <Icon glyph="message-simple" />
-                  {directMessageNotifications > 0 && <RedDot />}
-                </IconWrapper>
+            <Tooltip title="Messages">
+              <AvatarGrid>
+                <AvatarLink
+                  to={'/messages'}
+                  onClick={() => setSidenavIsOpen(false)}
+                >
+                  <IconWrapper>
+                    <Icon glyph="message-simple" />
+                    {directMessageNotifications > 0 && <RedDot />}
+                  </IconWrapper>
 
-                <CommunityName>Messages</CommunityName>
-              </AvatarLink>
-            </AvatarGrid>
+                  <CommunityName>Messages</CommunityName>
+                </AvatarLink>
+              </AvatarGrid>
+            </Tooltip>
 
-            <AvatarGrid>
-              <AvatarLink
-                to={'/notifications'}
-                onClick={() => setSidenavIsOpen(false)}
-              >
-                <IconWrapper>
-                  <Icon glyph="notification" />
-                  {notifications > 0 && <RedDot />}
-                </IconWrapper>
+            <Tooltip title="Notifications">
+              <AvatarGrid>
+                <AvatarLink
+                  to={'/notifications'}
+                  onClick={() => setSidenavIsOpen(false)}
+                >
+                  <IconWrapper>
+                    <Icon glyph="notification" />
+                    {notifications > 0 && <RedDot />}
+                  </IconWrapper>
 
-                <CommunityName>Notifications</CommunityName>
-              </AvatarLink>
-            </AvatarGrid>
+                  <CommunityName>Notifications</CommunityName>
+                </AvatarLink>
+              </AvatarGrid>
+            </Tooltip>
 
             <Divider />
 
@@ -141,23 +148,25 @@ const SideNavbar = (props: Props) => {
 
               const isActive = community.slug === match.params.communitySlug;
               return (
-                <AvatarGrid key={community.id} isActive={isActive}>
-                  <AvatarLink
-                    to={`/${community.slug}`}
-                    onClick={() => setSidenavIsOpen(false)}
-                  >
-                    <Avatar
-                      isActive={isActive}
-                      src={community.profilePhoto}
-                      size={sidenavIsOpen ? 32 : 36}
-                    />
+                <Tooltip title={community.name}>
+                  <AvatarGrid key={community.id} isActive={isActive}>
+                    <AvatarLink
+                      to={`/${community.slug}`}
+                      onClick={() => setSidenavIsOpen(false)}
+                    >
+                      <Avatar
+                        isActive={isActive}
+                        src={community.profilePhoto}
+                        size={sidenavIsOpen ? 32 : 36}
+                      />
 
-                    <CommunityName isActive={isActive}>
-                      {community.name}
-                    </CommunityName>
-                  </AvatarLink>
-                  {index < 9 && <Shortcut>⌥{index + 1}</Shortcut>}
-                </AvatarGrid>
+                      <CommunityName isActive={isActive}>
+                        {community.name}
+                      </CommunityName>
+                    </AvatarLink>
+                    {index < 9 && <Shortcut>⌥{index + 1}</Shortcut>}
+                  </AvatarGrid>
+                </Tooltip>
               );
             })}
           </Container>
