@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import type { CommunityActionsRowType } from '../types';
-import { OutlineButton, HoverWarnOutlineButton } from './Button';
+import { PrimaryButton, OutlineButton, HoverWarnOutlineButton } from './Button';
 import { openModal } from 'src/actions/modals';
 import Icon from 'src/components/icons';
 import JoinCommunity from './JoinCommunity';
