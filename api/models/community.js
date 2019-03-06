@@ -409,180 +409,70 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
 };
 
 // prettier-ignore
-export const editCommunity = ({ input }: EditCommunityInput, userId: string): Promise<DBCommunity> => {
-  const { name, slug, description, website, file, coverFile, communityId } = input
-  let { coverPhoto } = input
-  
+export const editCommunity = async ({ input }: EditCommunityInput, userId: string): Promise<DBCommunity> => {
+  const { name, slug, description, website, file, coverPhoto, coverFile, communityId } = input
+
+  const community = await db.table('communities').get(communityId).run()
+
+  // if the input comes in with a coverPhoto of length 0 (empty string), it means
+  // the user was trying to delete or reset their cover photo from the front end.
+  // in this case we can just set a new default. Otherwise, just keep their
+  // original cover photo
+  let updatedCoverPhoto = community.coverPhoto
+  if (input.coverPhoto.length === 0) {
+    ({ coverPhoto: updatedCoverPhoto } = getRandomDefaultPhoto())
+  }
+
   return db
     .table('communities')
     .get(communityId)
+    .update({
+      ...community,
+      name,
+      slug,
+      description,
+      website,
+      coverPhoto: coverFile 
+        ? await uploadImage(coverFile, 'communities', community.id) 
+        : updatedCoverPhoto,
+      profilePhoto: file 
+        ? await uploadImage(file, 'communities', community.id) 
+        : community.profilePhoto,
+      modifiedAt: new Date()
+    }, { returnChanges: 'always' })
     .run()
     .then(result => {
-      return Object.assign({}, result, {
-        name,
-        slug,
-        description,
-        website,
-        modifiedAt: new Date(),
-      });
-    })
-    .then(community => {
+      let community
+      if (result.replaced === 1) {
+        community = result.changes[0].new_val;
+        trackQueue.add({
+          userId,
+          event: events.COMMUNITY_EDITED,
+          context: { communityId }
+        })
+      }
+
+      // an update was triggered from the client, but no data was changed
+      if (result.unchanged === 1) {
+        community = result.changes[0].old_val;
+        trackQueue.add({
+          userId,
+          event: events.COMMUNITY_EDITED_FAILED,
+          context: { communityId },
+          properties: {
+            reason: 'no changes'
+          }
+        })
+      }
+
       searchQueue.add({
         id: community.id,
         type: 'community',
         event: 'edited'
       })
 
-      // if no file was uploaded, update the community with new string values
-      if (!file && !coverFile) {
-        // if the coverPhoto was deleted, reset to default
-        if (!coverPhoto) { 
-          ({ coverPhoto } = getRandomDefaultPhoto())
-        }
-        return db
-          .table('communities')
-          .get(communityId)
-          .update({ ...community, coverPhoto }, { returnChanges: 'always' })
-          .run()  
-          .then(result => {
-            // if an update happened
-            if (result.replaced === 1) {
-              trackQueue.add({
-                userId,
-                event: events.COMMUNITY_EDITED,
-                context: { communityId }
-              })
-              return result.changes[0].new_val;
-            }
-
-            // an update was triggered from the client, but no data was changed
-            if (result.unchanged === 1) {
-              trackQueue.add({
-                userId,
-                event: events.COMMUNITY_EDITED_FAILED,
-                context: { communityId },
-                properties: {
-                  reason: 'no changes'
-                }
-              })
-              return result.changes[0].old_val;
-            }
-          });
-      }
-
-      if (file || coverFile) {
-        if (file && !coverFile) {
-          // if the coverPhoto was deleted, reset to default
-          if (!coverPhoto) { 
-            ({ coverPhoto } = getRandomDefaultPhoto())
-          }
-          return uploadImage(file, 'communities', community.id).then(
-            profilePhoto => {
-              // update the community with the profilePhoto
-              return (
-                db
-                  .table('communities')
-                  .get(community.id)
-                  .update(
-                    {
-                      ...community,
-                      profilePhoto,
-                      coverPhoto
-                    },
-                    { returnChanges: 'always' }
-                  )
-                  .run()
-                  // return the resulting community with the profilePhoto set
-                  .then(result => {
-                    // if an update happened
-                    if (result.replaced === 1) {
-                      return result.changes[0].new_val;
-                    }
-
-                    // an update was triggered from the client, but no data was changed
-                    if (result.unchanged === 1) {
-                      return result.changes[0].old_val;
-                    }
-                  })
-              );
-            }
-          );
-        } else if (!file && coverFile) {
-          return uploadImage(coverFile, 'communities', community.id).then(
-            coverPhoto => {
-              // update the community with the profilePhoto
-              return (
-                db
-                  .table('communities')
-                  .get(community.id)
-                  .update(
-                    {
-                      ...community,
-                      coverPhoto,
-                    },
-                    { returnChanges: 'always' }
-                  )
-                  .run()
-                  // return the resulting community with the profilePhoto set
-                  .then(result => {
-                    // if an update happened
-                    if (result.replaced === 1) {
-                      return result.changes[0].new_val;
-                    }
-
-                    // an update was triggered from the client, but no data was changed
-                    if (result.unchanged === 1) {
-                      return result.changes[0].old_val;
-                    }
-                  })
-              );
-            }
-          );
-        } else if (file && coverFile) {
-          const uploadFile = file => {
-            return uploadImage(file, 'communities', community.id);
-          };
-
-          const uploadCoverFile = coverFile => {
-            return uploadImage(coverFile, 'communities', community.id);
-          };
-
-          return Promise.all([
-            uploadFile(file),
-            uploadCoverFile(coverFile),
-          ]).then(([profilePhoto, coverPhoto]) => {
-            return (
-              db
-                .table('communities')
-                .get(community.id)
-                .update(
-                  {
-                    ...community,
-                    coverPhoto,
-                    profilePhoto,
-                  },
-                  { returnChanges: 'always' }
-                )
-                .run()
-                // return the resulting community with the profilePhoto set
-                .then(result => {
-                  // if an update happened
-                  if (result.replaced === 1) {
-                    return result.changes[0].new_val;
-                  }
-
-                  // an update was triggered from the client, but no data was changed
-                  if (result.unchanged === 1) {
-                    return result.changes[0].old_val;
-                  }
-
-                  return null;
-                })
-            );
-          });
-        }
-      }
-    });
+      return community
+    })
 };
 
 // prettier-ignore
