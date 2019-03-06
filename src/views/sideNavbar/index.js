@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Tooltip from 'src/components/Tooltip';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
+import { UserAvatar } from 'src/components/avatar';
 import {
   Overlay,
   Container,
@@ -137,6 +138,15 @@ const SideNavbar = (props: Props) => {
               </AvatarGrid>
             </Tooltip>
 
+            <Tooltip title="Profile">
+              <AvatarGrid style={{ marginTop: '4px' }}>
+                <AvatarLink to={'/me'} onClick={() => setSidenavIsOpen(false)}>
+                  <UserAvatar user={user} />
+                  <CommunityName>Profile</CommunityName>
+                </AvatarLink>
+              </AvatarGrid>
+            </Tooltip>
+
             <Divider />
 
             {sorted.map((community, index) => {
@@ -148,8 +158,8 @@ const SideNavbar = (props: Props) => {
 
               const isActive = community.slug === match.params.communitySlug;
               return (
-                <Tooltip title={community.name}>
-                  <AvatarGrid key={community.id} isActive={isActive}>
+                <Tooltip title={community.name} key={community.id}>
+                  <AvatarGrid isActive={isActive}>
                     <AvatarLink
                       to={`/${community.slug}`}
                       onClick={() => setSidenavIsOpen(false)}
