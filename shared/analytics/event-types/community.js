@@ -44,3 +44,4 @@ export const COMMUNITY_ANALYTICS_VIEWED_UPSELL = 'Community Analytics Viewed Ups
 export const COMMUNITY_ANALYTICS_LEARN_MORE_CLICKED = 'Community Analytics Learn More Clicked'
 
 export const COMMUNITY_WATERCOOLER_ENABLED_FAILED = 'Community Watercooler Enabled Failed';
+export const COMMUNITY_WATERCOOLER_DISABLED_FAILED = 'Community Watercooler Disabled Failed'

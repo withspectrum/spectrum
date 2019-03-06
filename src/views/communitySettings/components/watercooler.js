@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 import { Button, OutlineButton } from 'src/components/buttons';
 import { TextArea, Error } from 'src/components/formElements';
 import enableCommunityWatercooler from 'shared/graphql/mutations/community/enableCommunityWatercooler';
+import disableCommunityWatercooler from 'shared/graphql/mutations/community/disableCommunityWatercooler';
 import getThreadLink from 'src/helpers/get-thread-link';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import type { Dispatch } from 'redux';
@@ -32,6 +33,7 @@ type Props = {
   },
   ...$Exact<ViewNetworkHandlerType>,
   enableCommunityWatercooler: Function,
+  disableCommunityWatercooler: Function,
   dispatch: Dispatch<Object>,
   history: History,
 };
@@ -44,35 +46,34 @@ const Watercooler = (props: Props) => {
     isLoading,
   } = props;
 
-  const onClick = () => {
+  const enable = () => {
     setSaving(true);
-    const method = community.watercoolerId
-      ? ({ id }) => Promise.resolve()
-      : props.enableCommunityWatercooler;
-    method({
-      id: community.id,
-    }).then(({ data }) => {
-      setSaving(false);
-      const watercoolerId = data.enableCommunityWatercooler
-        ? data.enableCommunityWatercooler.watercoolerId
-        : data.disableCommunityWatercooler.id;
-      props.history.push({
-        // $FlowIssue we are faking full thread info here
-        pathname: getThreadLink({
-          id: watercoolerId,
-          content: {
-            title: `${community.name} watercooler`,
-          },
-          community: {
-            slug: community.slug,
-          },
-          channel: {
-            slug: 'general',
-          },
-        }),
-        state: { modal: true },
+    props
+      .enableCommunityWatercooler({
+        id: community.id,
+      })
+      .then(({ data }) => {
+        setSaving(false);
+        const watercoolerId = data.enableCommunityWatercooler
+          ? data.enableCommunityWatercooler.watercoolerId
+          : data.disableCommunityWatercooler.id;
+        props.history.push({
+          // $FlowIssue we are faking full thread info here
+          pathname: `/thread/${watercoolerId}`,
+          state: { modal: true },
+        });
       });
-    });
+  };
+
+  const disable = () => {
+    setSaving(true);
+    props
+      .disableCommunityWatercooler({
+        id: community.id,
+      })
+      .then(({ data }) => {
+        setSaving(false);
+      });
   };
 
   if (community) {
@@ -83,7 +84,11 @@ const Watercooler = (props: Props) => {
           Display an open chat feed on your community's profile.
         </SectionSubtitle>
         <SectionCardFooter>
-          <Button loading={saving} onClick={onClick} type="submit">
+          <Button
+            loading={saving}
+            onClick={community.watercoolerId ? disable : enable}
+            type="submit"
+          >
             {community.watercoolerId ? 'Disable' : 'Enable'}
           </Button>
         </SectionCardFooter>
@@ -106,6 +111,7 @@ export default compose(
   getCommunityById,
   viewNetworkHandler,
   enableCommunityWatercooler,
+  disableCommunityWatercooler,
   withRouter,
   connect()
 )(Watercooler);
