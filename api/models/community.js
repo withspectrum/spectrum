@@ -212,6 +212,7 @@ export type EditCommunityInput = {
     coverFile: Object,
     coverPhoto: string,
     communityId: string,
+    watercoolerId?: boolean,
   },
 };
 
@@ -410,7 +411,7 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
 
 // prettier-ignore
 export const editCommunity = ({ input }: EditCommunityInput, userId: string): Promise<DBCommunity> => {
-  const { name, slug, description, website, file, coverFile, communityId } = input
+  const { name, slug, description, watercoolerId, website, file, coverFile, communityId } = input
   let { coverPhoto } = input
   
   return db
@@ -423,6 +424,7 @@ export const editCommunity = ({ input }: EditCommunityInput, userId: string): Pr
         slug,
         description,
         website,
+        watercoolerId: watercoolerId || result.watercoolerId,
         modifiedAt: new Date(),
       });
     })
@@ -582,6 +584,29 @@ export const editCommunity = ({ input }: EditCommunityInput, userId: string): Pr
           });
         }
       }
+    });
+};
+
+export const setCommunityWatercoolerId = (
+  communityId: string,
+  threadId: ?string
+) => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update(
+      {
+        watercoolerId: threadId,
+      },
+      {
+        returnChanges: true,
+      }
+    )
+    .run()
+    .then(result => {
+      if (!Array.isArray(result.changes) || result.changes.length === 0)
+        return getCommunityById(communityId);
+      return result.changes[0].new_val;
     });
 };
 
