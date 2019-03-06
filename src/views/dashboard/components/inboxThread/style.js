@@ -2,7 +2,7 @@
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { zIndex, Tooltip, tint } from 'src/components/globals';
+import { zIndex, Tooltip, hexa } from 'src/components/globals';
 
 export const InboxThreadItem = styled.div`
   display: flex;
@@ -16,7 +16,7 @@ export const InboxThreadItem = styled.div`
     props.active
       ? props.theme.brand.alt
       : props.new
-      ? tint(theme.brand.wash, 10)
+      ? hexa(theme.brand.default, 0.04)
       : props.theme.bg.default};
   position: relative;
   padding: 12px 20px 12px 12px;
@@ -24,7 +24,7 @@ export const InboxThreadItem = styled.div`
   ${props =>
     props.new &&
     css`
-      box-shadow: inset 2px 0 0 ${theme.brand.alt};
+      box-shadow: inset 2px 0 0 ${theme.brand.default};
     `}
 
   &:hover {
