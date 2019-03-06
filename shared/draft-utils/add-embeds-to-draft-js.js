@@ -10,6 +10,7 @@ const FRAMER_URLS = /\b((?:https?\/\/)?(?:www\.)?(?:framer\.cloud|share\.framerj
 const CODEPEN_URLS = /\b(?:\/\/)?(?:www\.)?codepen\.io(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
 const CODESANDBOX_URLS = /\b(?:\/\/)?(?:www\.)?codesandbox\.io(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
 const SIMPLECAST_URLS = /\b(?:\/\/)?(?:www\.)?simplecast\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
+const THREAD_URLS = /(?:(?:https?:\/\/)?|\B)(?:spectrum\.chat|localhost:3000)\/.*?(?:~|(?:\?|&)t=|(?:\?|&)thread=|thread\/)([^&\s]*)/gi;
 
 type AddEmbedAttrs = {
   url: string,
@@ -152,6 +153,13 @@ export const getEmbedsFromText = (text: string): Array<AddEmbedAttrs> => {
         .replace('/s/', '')
         .replace('/', '')}`,
       height: 200,
+    });
+  });
+
+  match(THREAD_URLS, text).forEach(id => {
+    embeds.push({
+      id,
+      type: 'thread',
     });
   });
 
