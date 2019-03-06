@@ -23,7 +23,7 @@ import { TextArea, Error } from 'src/components/formElements';
 import enableCommunityWatercooler from 'shared/graphql/mutations/community/enableCommunityWatercooler';
 import disableCommunityWatercooler from 'shared/graphql/mutations/community/disableCommunityWatercooler';
 import getThreadLink from 'src/helpers/get-thread-link';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import type { Dispatch } from 'redux';
 import type { History } from 'react-router';
 
@@ -42,6 +42,7 @@ const Watercooler = (props: Props) => {
   // $FlowIssue
   const [saving, setSaving] = React.useState(false);
   const {
+    dispatch,
     data: { community },
     isLoading,
   } = props;
@@ -54,14 +55,7 @@ const Watercooler = (props: Props) => {
       })
       .then(({ data }) => {
         setSaving(false);
-        const watercoolerId = data.enableCommunityWatercooler
-          ? data.enableCommunityWatercooler.watercoolerId
-          : data.disableCommunityWatercooler.id;
-        props.history.push({
-          // $FlowIssue we are faking full thread info here
-          pathname: `/thread/${watercoolerId}`,
-          state: { modal: true },
-        });
+        dispatch(addToastWithTimeout('success', 'Open chat enabled!'));
       });
   };
 
@@ -72,6 +66,7 @@ const Watercooler = (props: Props) => {
         id: community.id,
       })
       .then(({ data }) => {
+        dispatch(addToastWithTimeout('neutral', 'Open chat disabled.'));
         setSaving(false);
       });
   };
@@ -79,11 +74,19 @@ const Watercooler = (props: Props) => {
   if (community) {
     return (
       <SectionCard data-cy="community-settings-branded-login">
-        <SectionTitle>Open Chat</SectionTitle>
+        <SectionTitle>Open chat</SectionTitle>
         <SectionSubtitle>
           Display an open chat feed on your community's profile.
         </SectionSubtitle>
         <SectionCardFooter>
+          {community.watercoolerId && (
+            <Link
+              style={{ marginRight: '8px' }}
+              to={`/${community.slug}/general/${community.watercoolerId}`}
+            >
+              <OutlineButton>Go to open chat</OutlineButton>
+            </Link>
+          )}
           <Button
             loading={saving}
             onClick={community.watercoolerId ? disable : enable}
