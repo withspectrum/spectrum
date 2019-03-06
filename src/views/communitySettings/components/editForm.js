@@ -367,6 +367,7 @@ class EditForm extends React.Component<Props, State> {
               onClick={this.save}
               disabled={photoSizeError}
               type="submit"
+              dataCy="community-settings-edit-save-button"
             >
               Save
             </Button>
