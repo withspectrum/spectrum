@@ -21,7 +21,7 @@ const CommunityThreadFeed = compose(
 
 export const PostsFeeds = (props: Props) => {
   const { community } = props;
-  const [activeFeed, setActiveFeed] = useState('trending');
+  const [activeFeed, setActiveFeed] = useState('latest');
 
   const { pathname, search } = getComposerLink({ communityId: community.id });
 
@@ -30,16 +30,17 @@ export const PostsFeeds = (props: Props) => {
       <SubSegmentsContainer>
         <LeftActions>
           <SubSegment
-            active={activeFeed === 'trending'}
-            onClick={() => setActiveFeed('trending')}
-          >
-            Popular
-          </SubSegment>
-          <SubSegment
             active={activeFeed === 'latest'}
             onClick={() => setActiveFeed('latest')}
           >
             Latest
+          </SubSegment>
+
+          <SubSegment
+            active={activeFeed === 'trending'}
+            onClick={() => setActiveFeed('trending')}
+          >
+            Popular
           </SubSegment>
         </LeftActions>
 
