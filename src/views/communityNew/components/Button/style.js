@@ -96,6 +96,7 @@ export const StyledOutlineButton = styled(StyledButton)`
 export const StyledHoverWarnOutlineButton = styled(StyledOutlineButton)`
   &:hover {
     background: ${theme.warn.default};
+    border: 1px solid ${theme.warn.default};
     color: ${theme.text.reverse};
   }
 
