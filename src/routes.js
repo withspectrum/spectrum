@@ -233,6 +233,7 @@ class Routes extends React.Component<Props> {
           <ErrorBoundary fallbackComponent={ErrorFallback}>
             <ScrollManager>
               <Body>
+                <Status />
                 <AppViewWrapper>
                   {/* Default meta tags, get overriden by anything further down the tree */}
                   <Head title={title} description={description} />
@@ -244,7 +245,6 @@ class Routes extends React.Component<Props> {
                   */}
                   <AuthViewHandler>{() => null}</AuthViewHandler>
                   <ThirdPartyContext />
-                  <Status />
                   <Route component={QueryParamToastDispatcher} />
                   <Route component={Navigation} />
 
