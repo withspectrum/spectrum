@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Tooltip from './Tooltip';
+import Tooltip from 'src/components/Tooltip';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import {

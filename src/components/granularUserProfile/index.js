@@ -8,6 +8,7 @@ import { UserAvatar } from 'src/components/avatar';
 import Reputation from 'src/components/reputation';
 import Badge from 'src/components/badges';
 import Icon from 'src/components/icons';
+import Tooltip from 'src/components/Tooltip';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import type { Dispatch } from 'redux';
 import {
@@ -102,13 +103,11 @@ class GranularUserProfile extends React.Component<Props> {
 
           <Actions>
             {messageButton && (
-              <MessageIcon
-                tipText={'Send message'}
-                tipLocation={'left'}
-                onClick={this.initMessage}
-              >
-                <Icon glyph="message-simple-new" size={24} />
-              </MessageIcon>
+              <Tooltip title="Send message" position="top">
+                <MessageIcon onClick={this.initMessage}>
+                  <Icon glyph="message-simple-new" size={24} />
+                </MessageIcon>
+              </Tooltip>
             )}
 
             {children}

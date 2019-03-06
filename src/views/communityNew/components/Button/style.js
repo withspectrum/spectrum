@@ -92,3 +92,15 @@ export const StyledOutlineButton = styled(StyledButton)`
     box-shadow: 0 0 0 1px ${theme.bg.default}, 0 0 0 3px ${theme.bg.border};
   }
 `;
+
+export const StyledHoverWarnOutlineButton = styled(StyledOutlineButton)`
+  &:hover {
+    background: ${theme.warn.default};
+    color: ${theme.text.reverse};
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 1px ${theme.bg.default},
+      0 0 0 3px ${hexa(theme.warn.default, 0.12)};
+  }
+`;

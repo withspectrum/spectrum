@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { Tooltip, Truncate } from '../globals';
+import { Truncate } from '../globals';
 
 export const Row = styled.div`
   display: grid;
@@ -84,7 +84,6 @@ export const MessageIcon = styled.div`
   grid-area: message;
   color: ${theme.text.secondary};
   cursor: pointer;
-  ${Tooltip};
   display: flex;
   align-items: center;
   justify-content: center;

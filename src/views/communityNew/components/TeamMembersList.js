@@ -11,6 +11,7 @@ import GranularUserProfile from 'src/components/granularUserProfile';
 import Icon from 'src/components/icons';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import type { TeamMemberListType } from '../types';
+import Tooltip from 'src/components/Tooltip';
 import { List, SidebarSectionHeader, SidebarSectionHeading } from '../style';
 
 class Component extends React.Component<TeamMemberListType> {
@@ -55,14 +56,11 @@ class Component extends React.Component<TeamMemberListType> {
         <SidebarSectionHeader>
           <SidebarSectionHeading>Team</SidebarSectionHeading>
           {isOwner && (
-            <Link to={`/${community.slug}/settings/members`}>
-              <Icon
-                glyph={'settings'}
-                tipLocation={'left'}
-                tipText={'Add team members'}
-                size={24}
-              />
-            </Link>
+            <Tooltip title={'Manage team'} position="top">
+              <Link to={`/${community.slug}/settings/members`}>
+                <Icon glyph={'settings'} size={24} />
+              </Link>
+            </Tooltip>
           )}
         </SidebarSectionHeader>
 

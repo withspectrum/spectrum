@@ -10,6 +10,7 @@ import getCommunityChannels from 'shared/graphql/queries/community/getCommunityC
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import Tooltip from 'src/components/Tooltip';
 import {
   SidebarSectionHeader,
   SidebarSectionHeading,
@@ -79,14 +80,11 @@ class Component extends React.Component<Props> {
           <SidebarSectionHeader>
             <SidebarSectionHeading>Channels</SidebarSectionHeading>
             {isOwner && (
-              <Link to={`/${community.slug}/settings`}>
-                <Icon
-                  glyph={'settings'}
-                  tipLocation={'left'}
-                  tipText={'Manage channels'}
-                  size={24}
-                />
-              </Link>
+              <Tooltip title={'Manage channels'} position="top">
+                <Link to={`/${community.slug}/settings`}>
+                  <Icon glyph={'settings'} size={24} />
+                </Link>
+              </Tooltip>
             )}
           </SidebarSectionHeader>
 

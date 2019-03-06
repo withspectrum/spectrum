@@ -4,7 +4,6 @@ import { Tooltip } from 'react-tippy';
 
 const Tip = (props: Props) => (
   <Tooltip
-    {...props}
     position="left-start"
     arrow={true}
     arrowSize={'small'}
@@ -19,6 +18,7 @@ const Tip = (props: Props) => (
         },
       },
     }}
+    {...props}
   />
 );
 

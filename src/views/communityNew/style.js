@@ -2,7 +2,7 @@
 import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import { Link } from 'react-router-dom';
-import { tint, Tooltip, Truncate } from 'src/components/globals';
+import { tint, Truncate } from 'src/components/globals';
 
 const MAIN_WIDTH = 600;
 const SIDEBAR_WIDTH = 340;
@@ -33,6 +33,7 @@ export const TwoColumnGrid = styled.section`
     grid-template-columns: 1fr;
     grid-template-rows: min-content 1fr;
     grid-gap: 0;
+    max-width: 100%;
   }
 `;
 
@@ -72,6 +73,7 @@ export const Sidebar = styled.section`
   position: sticky;
   top: 0;
   padding-bottom: 64px;
+  padding-right: 16px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     height: auto;
@@ -224,7 +226,7 @@ export const ActionsRowContainer = styled.div`
   align-items: center;
   grid-gap: 12px;
   padding: 12px;
-  margin-top: 16px;
+  margin-top: 8px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     border-bottom: 1px solid ${theme.bg.border};
@@ -289,7 +291,7 @@ export const CommunityMetaRow = styled.div`
   margin-top: 8px;
 
   &:first-of-type {
-    margin-top: 16px;
+    margin-top: 8px;
   }
 
   a {
@@ -395,7 +397,6 @@ export const ToggleNotificationsContainer = styled.div`
   align-items: center;
   height: 100%;
   cursor: pointer;
-  ${Tooltip};
 `;
 
 export const ChannelListItem = styled(Link)`
@@ -614,7 +615,7 @@ export const SubSegment = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 16px 24px;
   flex: 1 0 auto;
   font-weight: 600;
   color: ${props => (props.active ? theme.text.default : theme.text.alt)};

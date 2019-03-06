@@ -8,6 +8,7 @@ import {
   StyledPrimaryButton,
   StyledSmallPrimaryButton,
   StyledOutlineButton,
+  StyledHoverWarnOutlineButton,
 } from './style';
 
 const handleLinkWrapping = (Component, props) => {
@@ -41,3 +42,6 @@ export const SmallPrimaryButton = props =>
 
 export const OutlineButton = props =>
   handleLinkWrapping(StyledOutlineButton, props);
+
+export const HoverWarnOutlineButton = props =>
+  handleLinkWrapping(StyledHoverWarnOutlineButton, props);
