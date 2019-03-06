@@ -6,10 +6,10 @@ import { withRouter } from 'react-router';
 import editCommunityMutation from 'shared/graphql/mutations/community/editCommunity';
 import type { EditCommunityType } from 'shared/graphql/mutations/community/editCommunity';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import { openModal } from '../../../actions/modals';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { Button, IconButton } from '../../../components/buttons';
-import { Notice } from '../../../components/listItems/style';
+import { openModal } from 'src/actions/modals';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { Button, IconButton } from 'src/components/buttons';
+import { Notice } from 'src/components/listItems/style';
 import Icon from 'src/components/icons';
 import {
   Input,
@@ -18,7 +18,7 @@ import {
   PhotoInput,
   Error,
   CoverInput,
-} from '../../../components/formElements';
+} from 'src/components/formElements';
 import {
   Form,
   FormTitle,
@@ -28,11 +28,8 @@ import {
   ImageInputWrapper,
   DeleteCoverWrapper,
   DeleteCoverButton,
-} from '../../../components/editForm/style';
-import {
-  SectionCard,
-  SectionTitle,
-} from '../../../components/settingsViews/style';
+} from 'src/components/editForm/style';
+import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
@@ -191,6 +188,7 @@ class EditForm extends React.Component<Props, State> {
       website,
       file,
       coverFile,
+      coverPhoto,
       communityId,
       photoSizeError,
     } = this.state;
@@ -200,6 +198,7 @@ class EditForm extends React.Component<Props, State> {
       website,
       file,
       coverFile,
+      coverPhoto,
       communityId,
     };
 
