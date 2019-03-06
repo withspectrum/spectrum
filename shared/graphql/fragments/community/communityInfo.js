@@ -37,6 +37,7 @@ export default gql`
     profilePhoto
     coverPhoto
     pinnedThreadId
+    watercoolerId
     isPrivate
     communityPermissions {
       isMember

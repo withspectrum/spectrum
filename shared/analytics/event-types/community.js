@@ -42,3 +42,5 @@ export const COMMUNITY_SETTINGS_VIEWED = 'Community Settings Viewed'
 export const COMMUNITY_ANALYTICS_VIEWED = 'Community Analytics Viewed'
 export const COMMUNITY_ANALYTICS_VIEWED_UPSELL = 'Community Analytics Viewed Upsell'
 export const COMMUNITY_ANALYTICS_LEARN_MORE_CLICKED = 'Community Analytics Learn More Clicked'
+
+export const COMMUNITY_WATERCOOLER_ENABLED_FAILED = 'Community Watercooler Enabled Failed';
