@@ -2,42 +2,24 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
+import { withRouter } from 'react-router-dom';
 import Icon from 'src/components/icons';
+import Tooltip from 'src/components/Tooltip';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { updateNotificationsCount } from 'src/actions/notifications';
 import getUnreadDMQuery from 'shared/graphql/queries/notification/getDirectMessageNotifications';
-import type { GetDirectMessageNotificationsType } from 'shared/graphql/queries/notification/getDirectMessageNotifications';
 import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
-import { MessageTab, Label } from '../style';
-import { track, events } from 'src/helpers/analytics';
-import type { Dispatch } from 'redux';
-import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
+import { getAccessibilityActiveState } from './Accessibility';
+import { NavigationContext } from 'src/routes';
+import { AvatarGrid, AvatarLink, Label, IconWrapper, RedDot } from './style';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
-
-type Props = {
-  active: boolean,
-  isLoading: boolean,
-  hasError: boolean,
-  isRefetching: boolean,
-  markDirectMessageNotificationsSeen: Function,
-  data: {
-    directMessageNotifications: GetDirectMessageNotificationsType,
-    refetch: Function,
-  },
-  subscribeToDMs: Function,
-  refetch: Function,
-  count: number,
-  dispatch: Dispatch<Object>,
-  networkOnline: boolean,
-  websocketConnection: WebsocketConnectionType,
-};
 
 type State = {
   subscription: ?Function,
 };
 
-class MessagesTab extends React.Component<Props, State> {
+class DirectMessagesTab extends React.Component<Props, State> {
   state = {
     subscription: null,
   };
@@ -45,43 +27,6 @@ class MessagesTab extends React.Component<Props, State> {
   componentDidMount() {
     this.subscribe();
     return this.setCount(this.props);
-  }
-
-  shouldComponentUpdate(nextProps) {
-    const curr = this.props;
-
-    if (curr.networkOnline !== nextProps.networkOnline) return true;
-    if (curr.websocketConnection !== nextProps.websocketConnection) return true;
-
-    // if a refetch completes
-    if (curr.isRefetching !== nextProps.isRefetching) return true;
-
-    // once the initial query finishes loading
-    if (
-      !curr.data.directMessageNotifications &&
-      nextProps.data.directMessageNotifications
-    )
-      return true;
-
-    // if a subscription updates the number of records returned
-    if (
-      curr.data &&
-      curr.data.directMessageNotifications &&
-      curr.data.directMessageNotifications.edges &&
-      nextProps.data &&
-      nextProps.data.directMessageNotifications &&
-      nextProps.data.directMessageNotifications.edges &&
-      curr.data.directMessageNotifications.edges.length !==
-        nextProps.data.directMessageNotifications.edges.length
-    )
-      return true;
-    // if the user clicks on the messages tab
-    if (curr.active !== nextProps.active) return true;
-
-    // any time the count changes
-    if (curr.count !== nextProps.count) return true;
-
-    return false;
   }
 
   componentDidUpdate(prev: Props) {
@@ -224,7 +169,9 @@ class MessagesTab extends React.Component<Props, State> {
   };
 
   render() {
-    const { active, count } = this.props;
+    const { count, match } = this.props;
+
+    console.log({ props: this.props });
 
     // Keep the dock icon notification count indicator of the desktop app in sync
     if (isDesktopApp()) {
@@ -232,25 +179,29 @@ class MessagesTab extends React.Component<Props, State> {
     }
 
     return (
-      <MessageTab
-        data-active={active}
-        aria-current={active ? 'page' : undefined}
-        to="/messages"
-        rel="nofollow"
-        onClick={() => {
-          track(events.NAVIGATION_MESSAGES_CLICKED);
-          this.markAllAsSeen();
-        }}
-        data-cy="navbar-messages"
-      >
-        <Icon
-          dataCy={`unread-badge-${count}`}
-          glyph={count > 0 ? 'message-fill' : 'message'}
-          count={count > 10 ? '10+' : count > 0 ? count.toString() : null}
-          size={isDesktopApp() ? 28 : 32}
-        />
-        <Label>Messages</Label>
-      </MessageTab>
+      <NavigationContext.Consumer>
+        {({ setNavigationIsOpen }) => (
+          <Tooltip title="Messages">
+            <AvatarGrid>
+              <AvatarLink
+                to={'/messages'}
+                data-cy="navbar-messages"
+                onClick={() => setNavigationIsOpen(false)}
+                {...getAccessibilityActiveState(
+                  match.url === '/messages' && match.isExact
+                )}
+              >
+                <IconWrapper>
+                  <Icon glyph="message-simple" />
+                  {count > 0 && <RedDot style={{ right: '-3px' }} />}
+                </IconWrapper>
+
+                <Label>Messages</Label>
+              </AvatarLink>
+            </AvatarGrid>
+          </Tooltip>
+        )}
+      </NavigationContext.Consumer>
     );
   }
 }
@@ -260,10 +211,12 @@ const map = state => ({
   networkOnline: state.connectionStatus.networkOnline,
   websocketConnection: state.connectionStatus.websocketConnection,
 });
+
 export default compose(
   // $FlowIssue
   connect(map),
   getUnreadDMQuery,
   markDirectMessageNotificationsSeenMutation,
-  viewNetworkHandler
-)(MessagesTab);
+  viewNetworkHandler,
+  withRouter
+)(DirectMessagesTab);

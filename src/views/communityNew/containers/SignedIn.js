@@ -1,10 +1,9 @@
 // @flow
-import React from 'react';
+import React, { useEffect } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import AppViewWrapper from 'src/components/appViewWrapper';
 import Head from 'src/components/head';
 import type { SignedInMemberType } from '../types';
 import { CommunityProfileHeader } from '../components/CommunityProfileHeader';
@@ -24,6 +23,10 @@ const Component = (props: SignedInMemberType) => {
   const { community } = props;
 
   let containerEl = null;
+
+  useEffect(() => {
+    containerEl = document.getElementById('scroller-for-thread-feed');
+  }, []);
 
   const { title, description } = generateMetaInfo({
     type: 'community',
@@ -62,17 +65,14 @@ const Component = (props: SignedInMemberType) => {
   };
 
   return (
-    <AppViewWrapper
-      innerRef={el => (containerEl = el)}
-      data-cy="community-view"
-    >
+    <React.Fragment>
       <Head
         title={title}
         description={description}
         image={community.profilePhoto}
       />
 
-      <Container>
+      <Container data-cy="community-view">
         <TwoColumnGrid>
           <Main>
             <MobileCommunityProfileHeader community={community} />
@@ -105,7 +105,7 @@ const Component = (props: SignedInMemberType) => {
           </Sidebar>
         </TwoColumnGrid>
       </Container>
-    </AppViewWrapper>
+    </React.Fragment>
   );
 };
 

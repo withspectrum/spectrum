@@ -5,7 +5,6 @@ import { type History, type Match } from 'react-router';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { Link } from 'react-router-dom';
-import AppViewWrapper from 'src/components/appViewWrapper';
 import Head from 'src/components/head';
 import ThreadFeed from 'src/components/threadFeed';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
@@ -157,7 +156,7 @@ class UserView extends React.Component<Props, State> {
           : ThreadParticipantFeedWithData;
 
       return (
-        <AppViewWrapper data-cy="user-view">
+        <React.Fragment>
           <Head
             title={title}
             description={description}
@@ -174,7 +173,7 @@ class UserView extends React.Component<Props, State> {
             backRoute={'/'}
             noComposer
           />
-          <Grid id="main">
+          <Grid data-cy="user-view" id="main">
             <CoverPhoto src={user.coverPhoto} />
             <Meta>
               <ErrorBoundary fallbackComponent={null}>
@@ -302,7 +301,7 @@ class UserView extends React.Component<Props, State> {
               </ErrorBoundary>
             </Extras>
           </Grid>
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 
@@ -312,7 +311,7 @@ class UserView extends React.Component<Props, State> {
 
     if (!user) {
       return (
-        <AppViewWrapper>
+        <React.Fragment>
           <Titlebar
             title={'User not found'}
             provideBack={true}
@@ -329,12 +328,12 @@ class UserView extends React.Component<Props, State> {
               </Link>
             </ButtonRow>
           </ViewError>
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 
     return (
-      <AppViewWrapper>
+      <React.Fragment>
         <Titlebar
           title={'User not found'}
           provideBack={true}
@@ -345,7 +344,7 @@ class UserView extends React.Component<Props, State> {
           heading={'We ran into an error loading this user.'}
           refresh
         />
-      </AppViewWrapper>
+      </React.Fragment>
     );
   }
 }

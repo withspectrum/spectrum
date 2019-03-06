@@ -8,7 +8,6 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import ComposerPlaceholder from 'src/components/threadComposer/components/placeholder';
 import Head from 'src/components/head';
 import Icon from 'src/components/icons';
-import AppViewWrapper from 'src/components/appViewWrapper';
 import ThreadFeed from 'src/components/threadFeed';
 import Search from './components/search';
 import CommunityMemberGrid from './components/memberGrid';
@@ -160,7 +159,7 @@ class CommunityView extends React.Component<Props, State> {
 
       if (isBlocked) {
         return (
-          <AppViewWrapper data-cy="community-view">
+          <React.Fragment>
             <Titlebar
               title={community.name}
               provideBack={true}
@@ -184,7 +183,7 @@ class CommunityView extends React.Component<Props, State> {
                 <Button large>Take me home</Button>
               </Link>
             </ViewError>
-          </AppViewWrapper>
+          </React.Fragment>
         );
       }
 
@@ -200,7 +199,7 @@ class CommunityView extends React.Component<Props, State> {
 
       if (community.isPrivate && (!isLoggedIn || !userHasPermissions)) {
         return (
-          <AppViewWrapper data-cy="community-view-blocked">
+          <React.Fragment>
             <Head
               title={title}
               description={`The ${community.name} community on Spectrum`}
@@ -228,11 +227,11 @@ class CommunityView extends React.Component<Props, State> {
                       community.name
                     } will be notified.`
               }
-              dataCy={'community-view-is-restricted'}
+              dataCy="community-view-blocked"
             >
               <RequestToJoinCommunity community={community} />
             </ViewError>
-          </AppViewWrapper>
+          </React.Fragment>
         );
       }
 
@@ -244,7 +243,7 @@ class CommunityView extends React.Component<Props, State> {
         ? `/${community.slug}/login?r=${CLIENT_URL}/${community.slug}`
         : `/login?r=${CLIENT_URL}/${community.slug}`;
       return (
-        <AppViewWrapper data-cy="community-view">
+        <React.Fragment>
           <Head
             title={title}
             description={description}
@@ -257,7 +256,7 @@ class CommunityView extends React.Component<Props, State> {
             noComposer={!community.communityPermissions.isMember}
             activeCommunityId={community.id}
           />
-          <Grid id="main">
+          <Grid data-cy="community-view" id="main">
             <CoverPhoto src={community.coverPhoto} />
             <Meta>
               <ErrorBoundary fallbackComponent={null}>
@@ -434,7 +433,7 @@ class CommunityView extends React.Component<Props, State> {
               </ErrorBoundary>
             </Extras>
           </Grid>
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 
@@ -444,7 +443,7 @@ class CommunityView extends React.Component<Props, State> {
 
     if (hasError) {
       return (
-        <AppViewWrapper>
+        <React.Fragment>
           <Titlebar
             title={'Community not found'}
             provideBack={true}
@@ -455,12 +454,12 @@ class CommunityView extends React.Component<Props, State> {
             heading={'We weren’t able to load this community.'}
             refresh
           />
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 
     return (
-      <AppViewWrapper>
+      <React.Fragment>
         <Titlebar
           title={'Community not found'}
           provideBack={true}
@@ -473,7 +472,7 @@ class CommunityView extends React.Component<Props, State> {
         >
           <Upsell404Community />
         </ViewError>
-      </AppViewWrapper>
+      </React.Fragment>
     );
   }
 }

@@ -17,34 +17,54 @@ export const Overlay = styled.div`
   background: rgba(0, 0, 0, 0.4);
 `;
 
-export const Container = styled.div`
-  position: fixed;
-  left: 0;
+export const NavigationWrapper = styled.div`
+  grid-area: navigation;
+  position: sticky;
   top: 0;
-  bottom: 0;
-  height: 100%;
-  background: ${theme.bg.default};
-  border-right: 1px solid ${theme.bg.border};
+  overflow: hidden;
+  overflow-y: scroll;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    display: ${props => (props.isOpen ? 'block' : 'none')};
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+    height: 100vh;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.16);
+  }
+`;
+
+export const NavigationGrid = styled.div`
   display: grid;
-  padding: 12px 0;
   grid-gap: 16px;
   grid-template-columns: minmax(0, 1fr);
   align-content: start;
   grid-template-rows: auto;
-  z-index: 100;
+  height: 100%;
+  background: ${theme.bg.default};
+  border-right: 1px solid ${theme.bg.border};
+  position: fixed;
+  top: 0;
+  width: 100%;
+  max-width: 72px;
+  overflow: hidden;
   overflow-y: scroll;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    display: ${props => (props.isOpen ? 'grid' : 'none')};
-    grid-gap: 0px;
-    border-right: 1px solid ${theme.bg.border};
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.16);
-  }
+  padding: 16px 0;
 
   &::-webkit-scrollbar {
     width: 0px;
     height: 0px;
     background: transparent; /* make scrollbar transparent */
+  }
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    max-width: 256px;
+    grid-gap: 0px;
+    padding: 12px 0;
   }
 `;
 
@@ -104,7 +124,7 @@ export const Shortcut = styled.span`
   }
 `;
 
-export const CommunityName = styled.span`
+export const Label = styled.span`
   font-size: 14px;
   font-weight: ${props => (props.isActive ? '600' : '500')};
   color: ${props =>
@@ -144,5 +164,18 @@ export const RedDot = styled.span`
   position: absolute;
   background: ${theme.warn.alt};
   top: 0;
-  right: -4px;
+  right: 0px;
+`;
+
+// We make it a real link element because anchor links don’t work properly with React Router.
+// Ref: https://github.com/ReactTraining/react-router/issues/394.
+export const SkipLink = styled.a`
+  overflow: hidden;
+  height: 1px;
+  width: 1px;
+
+  &:focus {
+    height: auto;
+    width: auto;
+  }
 `;

@@ -4,12 +4,11 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import queryString from 'query-string';
-import { Button, TextButton } from '../../components/buttons';
-import AppViewWrapper from '../../components/appViewWrapper';
-import Column from '../../components/column';
-import { Loading } from '../../components/loading';
+import { Button, TextButton } from 'src/components/buttons';
+import Column from 'src/components/column';
+import { Loading } from 'src/components/loading';
 import SlackConnection from '../communitySettings/components/slack';
-import { CommunityInvitationForm } from '../../components/emailInvitationForm';
+import { CommunityInvitationForm } from 'src/components/emailInvitationForm';
 import CreateCommunityForm from './components/createCommunityForm';
 import EditCommunityForm from './components/editCommunityForm';
 import Titlebar from '../titlebar';
@@ -21,7 +20,7 @@ import type { GetCommunityType } from 'shared/graphql/queries/community/getCommu
 import getCurrentUserSettings, {
   type GetCurrentUserSettingsType,
 } from 'shared/graphql/queries/user/getCurrentUserSettings';
-import UserEmailConfirmation from '../../components/userEmailConfirmation';
+import UserEmailConfirmation from 'src/components/userEmailConfirmation';
 import {
   Actions,
   Container,
@@ -32,7 +31,7 @@ import {
 } from './style';
 import viewNetworkHandler, {
   type ViewNetworkHandlerType,
-} from '../../components/viewNetworkHandler';
+} from 'src/components/viewNetworkHandler';
 
 type State = {
   activeStep: number,
@@ -177,7 +176,7 @@ class NewCommunity extends React.Component<Props, State> {
     const description = this.description();
     if (user && user.email) {
       return (
-        <AppViewWrapper>
+        <React.Fragment>
           <Titlebar
             title={'Create a Community'}
             provideBack={true}
@@ -194,31 +193,25 @@ class NewCommunity extends React.Component<Props, State> {
               </Description>
 
               {// gather community meta info
-              activeStep === 1 &&
-                !community && (
-                  <CreateCommunityForm
-                    communityCreated={this.communityCreated}
-                  />
-                )}
+              activeStep === 1 && !community && (
+                <CreateCommunityForm communityCreated={this.communityCreated} />
+              )}
 
-              {activeStep === 1 &&
-                community && (
-                  <EditCommunityForm
-                    communityUpdated={this.communityCreated}
-                    community={community}
-                  />
-                )}
+              {activeStep === 1 && community && (
+                <EditCommunityForm
+                  communityUpdated={this.communityCreated}
+                  community={community}
+                />
+              )}
 
-              {activeStep === 2 &&
-                community &&
-                community.id && (
-                  <ContentContainer data-cy="community-creation-invitation-step">
-                    <Divider />
-                    <SlackConnection isOnboarding={true} id={community.id} />
-                    <Divider />
-                    <CommunityInvitationForm id={community.id} />
-                  </ContentContainer>
-                )}
+              {activeStep === 2 && community && community.id && (
+                <ContentContainer data-cy="community-creation-invitation-step">
+                  <Divider />
+                  <SlackConnection isOnboarding={true} id={community.id} />
+                  <Divider />
+                  <CommunityInvitationForm id={community.id} />
+                </ContentContainer>
+              )}
 
               {// connect a slack team or invite via email
               activeStep === 2 && (
@@ -247,13 +240,13 @@ class NewCommunity extends React.Component<Props, State> {
               )}
             </Container>
           </Column>
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 
     if (user && !user.email) {
       return (
-        <AppViewWrapper>
+        <React.Fragment>
           <Titlebar
             title={'Create a Community'}
             provideBack={true}
@@ -278,13 +271,13 @@ class NewCommunity extends React.Component<Props, State> {
               </div>
             </Container>
           </Column>
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 
     if (isLoading) {
       return (
-        <AppViewWrapper>
+        <React.Fragment>
           <Titlebar
             title={'Create a Community'}
             provideBack={true}
@@ -293,7 +286,7 @@ class NewCommunity extends React.Component<Props, State> {
           />
 
           <Loading />
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 

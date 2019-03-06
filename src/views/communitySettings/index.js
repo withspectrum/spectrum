@@ -6,7 +6,6 @@ import { Route, Switch } from 'react-router-dom';
 import { getCommunitySettingsByMatch } from 'shared/graphql/queries/community/getCommunitySettings';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { Loading } from '../../components/loading';
-import AppViewWrapper from '../../components/appViewWrapper';
 import { Upsell404Community } from '../../components/upsell';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Head from '../../components/head';
@@ -63,7 +62,7 @@ class CommunitySettings extends React.Component<Props> {
 
       if (!canViewCommunitySettings) {
         return (
-          <AppViewWrapper>
+          <React.Fragment>
             <Titlebar
               title={'No Permission'}
               provideBack={true}
@@ -79,7 +78,7 @@ class CommunitySettings extends React.Component<Props> {
             >
               <Upsell404Community />
             </ViewError>
-          </AppViewWrapper>
+          </React.Fragment>
         );
       }
 
@@ -121,7 +120,7 @@ class CommunitySettings extends React.Component<Props> {
         title += ' Settings';
       }
       return (
-        <AppViewWrapper data-cy="community-settings">
+        <React.Fragment>
           <Titlebar
             title={community.name}
             subtitle={'Settings'}
@@ -131,7 +130,7 @@ class CommunitySettings extends React.Component<Props> {
           />
           <Head title={title} />
 
-          <View id="main">
+          <View data-cy="community-settings" id="main">
             <Header
               avatar={avatar}
               subheading={subheading}
@@ -156,7 +155,7 @@ class CommunitySettings extends React.Component<Props> {
               </Route>
             </Switch>
           </View>
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 
@@ -166,7 +165,7 @@ class CommunitySettings extends React.Component<Props> {
 
     if (hasError) {
       return (
-        <AppViewWrapper>
+        <React.Fragment>
           <Titlebar
             title={'Error fetching community'}
             provideBack={true}
@@ -178,12 +177,12 @@ class CommunitySettings extends React.Component<Props> {
             error={hasError}
             heading={'There was an error fetching this community’s settings.'}
           />
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 
     return (
-      <AppViewWrapper>
+      <React.Fragment>
         <Titlebar
           title={'No Community Found'}
           provideBack={true}
@@ -196,7 +195,7 @@ class CommunitySettings extends React.Component<Props> {
         >
           <Upsell404Community />
         </ViewError>
-      </AppViewWrapper>
+      </React.Fragment>
     );
   }
 }

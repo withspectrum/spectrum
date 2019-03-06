@@ -7,7 +7,6 @@ import { CommunityAvatar } from 'src/components/avatar';
 import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
 import ComposerPlaceholder from 'src/components/threadComposer/components/placeholder';
 import Head from 'src/components/head';
-import AppViewWrapper from 'src/components/appViewWrapper';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { Link } from 'react-router-dom';
@@ -302,7 +301,7 @@ class ChannelView extends React.Component<Props, State> {
         !hasCommunityPermissions
       ) {
         return (
-          <AppViewWrapper>
+          <React.Fragment>
             <Titlebar
               title={'Private channel'}
               provideBack={true}
@@ -317,14 +316,14 @@ class ChannelView extends React.Component<Props, State> {
             >
               <Upsell404Channel community={communitySlug} />
             </ViewError>
-          </AppViewWrapper>
+          </React.Fragment>
         );
       }
 
       // channel is private and the user is not a member or owner
       if (isRestricted) {
         return (
-          <AppViewWrapper>
+          <React.Fragment>
             <Titlebar
               title={channel.name}
               subtitle={community.name}
@@ -356,7 +355,7 @@ class ChannelView extends React.Component<Props, State> {
                 isPending={isPending}
               />
             </ViewError>
-          </AppViewWrapper>
+          </React.Fragment>
         );
       }
 
@@ -373,7 +372,7 @@ class ChannelView extends React.Component<Props, State> {
       const actionButton = this.renderActionButton(channel);
 
       return (
-        <AppViewWrapper data-cy="channel-view">
+        <React.Fragment>
           <Head
             title={title}
             description={description}
@@ -388,7 +387,7 @@ class ChannelView extends React.Component<Props, State> {
             activeCommunityId={channel.community.id}
             activeChannelId={channel.id}
           />
-          <Grid id="main">
+          <Grid id="main" data-cy="channel-view">
             <CoverPhoto src={community.coverPhoto} />
             <Meta data-cy="channel-profile-full">
               <CommunityContext>
@@ -537,7 +536,7 @@ class ChannelView extends React.Component<Props, State> {
               </ErrorBoundary>
             </Extras>
           </Grid>
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 
@@ -547,7 +546,7 @@ class ChannelView extends React.Component<Props, State> {
 
     if (hasError) {
       return (
-        <AppViewWrapper>
+        <React.Fragment>
           <Titlebar
             title={'Channel not found'}
             provideBack={true}
@@ -558,12 +557,12 @@ class ChannelView extends React.Component<Props, State> {
             refresh
             heading={'There was an error fetching this channel.'}
           />
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 
     return (
-      <AppViewWrapper>
+      <React.Fragment>
         <Titlebar
           title={'Channel not found'}
           provideBack={true}
@@ -577,7 +576,7 @@ class ChannelView extends React.Component<Props, State> {
         >
           <Upsell404Channel community={communitySlug} />
         </ViewError>
-      </AppViewWrapper>
+      </React.Fragment>
     );
   }
 }

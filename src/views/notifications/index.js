@@ -19,30 +19,29 @@ import { PrivateChannelRequestApproved } from './components/privateChannelReques
 import { PrivateChannelRequestSent } from './components/privateChannelRequestSentNotification';
 import { PrivateCommunityRequestApproved } from './components/privateCommunityRequestApprovedNotification';
 import { PrivateCommunityRequestSent } from './components/privateCommunityRequestSentNotification';
-import { Column } from '../../components/column';
-import AppViewWrapper from '../../components/appViewWrapper';
-import Head from '../../components/head';
-import Titlebar from '../../views/titlebar';
+import { Column } from 'src/components/column';
+import Head from 'src/components/head';
+import Titlebar from 'src/views/titlebar';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   displayLoadingNotifications,
   LoadingThread,
   Loading,
-} from '../../components/loading';
-import { FlexCol } from '../../components/globals';
-import { sortByDate } from '../../helpers/utils';
-import WebPushManager from '../../helpers/web-push-manager';
-import { addToastWithTimeout } from '../../actions/toasts';
+} from 'src/components/loading';
+import { FlexCol } from 'src/components/globals';
+import { sortByDate } from 'src/helpers/utils';
+import WebPushManager from 'src/helpers/web-push-manager';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import getNotifications from 'shared/graphql/queries/notification/getNotifications';
 import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
 import { subscribeToWebPush } from 'shared/graphql/subscriptions';
-import { UpsellNullNotifications } from '../../components/upsell';
-import ViewError from '../../components/viewError';
+import { UpsellNullNotifications } from 'src/components/upsell';
+import ViewError from 'src/components/viewError';
 import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
 import viewNetworkHandler, {
   type ViewNetworkHandlerType,
-} from '../../components/viewNetworkHandler';
+} from 'src/components/viewNetworkHandler';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
@@ -99,7 +98,7 @@ class NotificationsPure extends React.Component<Props, State> {
     this.markAllNotificationsSeen();
     this.setState({
       // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
-      // the AppViewWrapper which is the scrolling part of the site.
+      // the React.Fragment which is the scrolling part of the site.
       scrollElement,
     });
 
@@ -208,19 +207,18 @@ class NotificationsPure extends React.Component<Props, State> {
       const { scrollElement } = this.state;
 
       return (
-        <FlexCol style={{ flex: '1 1 auto', maxHeight: 'calc(100% - 48px)' }}>
+        <FlexCol style={{ flex: '1 1 auto' }}>
           <Head title={title} description={description} />
           <Titlebar title={'Notifications'} provideBack={false} noComposer />
-          <AppViewWrapper>
+          <React.Fragment>
             <Column type={'primary'}>
-              {!isDesktopApp() &&
-                this.state.showWebPushPrompt && (
-                  <BrowserNotificationRequest
-                    onSubscribe={this.subscribeToWebPush}
-                    onDismiss={this.dismissWebPushRequest}
-                    loading={this.state.webPushPromptLoading}
-                  />
-                )}
+              {!isDesktopApp() && this.state.showWebPushPrompt && (
+                <BrowserNotificationRequest
+                  onSubscribe={this.subscribeToWebPush}
+                  onDismiss={this.dismissWebPushRequest}
+                  loading={this.state.webPushPromptLoading}
+                />
+              )}
               <InfiniteList
                 pageStart={0}
                 loadMore={data.fetchMore}
@@ -394,36 +392,36 @@ class NotificationsPure extends React.Component<Props, State> {
                 })}
               </InfiniteList>
             </Column>
-          </AppViewWrapper>
+          </React.Fragment>
         </FlexCol>
       );
     }
 
     if (isLoading) {
       return (
-        <AppViewWrapper>
+        <React.Fragment>
           <Head title={title} description={description} />
           <Loading />
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 
     if (!data || (data && data.error)) {
       return (
-        <AppViewWrapper>
+        <React.Fragment>
           <Head title={title} description={description} />
           <ViewError />
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 
     return (
-      <AppViewWrapper>
+      <React.Fragment>
         <Column type={'primary'}>
           <Head title={title} description={description} />
           <UpsellNullNotifications />
         </Column>
-      </AppViewWrapper>
+      </React.Fragment>
     );
   }
 }

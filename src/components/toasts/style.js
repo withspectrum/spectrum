@@ -6,7 +6,7 @@ import { zIndex } from '../globals';
 
 export const Container = styled.div`
   position: fixed;
-  top: 48px;
+  top: 0;
   right: 0;
   padding: 16px;
   width: 100%;

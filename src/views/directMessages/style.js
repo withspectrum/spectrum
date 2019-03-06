@@ -10,7 +10,7 @@ export const View = styled.main`
   align-items: stretch;
   background: #fff;
   flex: auto;
-  height: calc(100vh - 48px);
+  height: 100vh;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -40,7 +40,6 @@ export const MessagesList = styled(FlexCol)`
   max-height: 100%;
 
   @media (max-width: 768px) {
-    max-height: calc(100% - 48px);
     min-width: 320px;
     border-right: none;
     max-width: 100%;
@@ -61,7 +60,6 @@ export const MessagesContainer = styled(FlexCol)`
   }
 
   @media (max-width: 768px) {
-    max-height: calc(100% - 48px);
     ${props =>
       props.hideOnMobile &&
       css`

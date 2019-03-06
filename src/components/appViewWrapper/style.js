@@ -1,18 +1,16 @@
 import styled from 'styled-components';
-import { FlexRow } from '../globals';
+import { MEDIA_BREAK } from 'src/views/communityNew/style';
 
-export const Wrapper = styled(FlexRow)`
-  order: 2;
-  align-items: flex-start;
-  justify-content: center;
+export const StyledAppViewWrapper = styled.div`
+  display: grid;
+  grid-template-columns: ${props =>
+    props.isSignedIn ? `72px minmax(100%, 1fr)` : 'minMax(100%, 1fr)'};
+  grid-template-areas: 'navigation' 'view';
   overflow: hidden;
   overflow-y: auto;
-  flex: auto;
   width: 100%;
 
-  @media (max-width: 768px) {
-    padding: 0;
-    justify-content: flex-start;
-    flex-direction: column;
+  @media (max-width: ${MEDIA_BREAK}px) {
+    grid-template-columns: minmax(100%, 1fr);
   }
 `;

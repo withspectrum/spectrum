@@ -1,8 +1,6 @@
 // @flow
 // $FlowIssue
 import React, { useEffect } from 'react';
-import compose from 'recompose/compose';
-import { connect } from 'react-redux';
 import theme from 'shared/theme';
 import CommunityMemberGrid from 'src/views/community/components/memberGrid';
 import type { CommunityFeedsType } from '../types';

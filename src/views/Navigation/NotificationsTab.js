@@ -1,132 +1,33 @@
 // @flow
 import * as React from 'react';
 import { withApollo } from 'react-apollo';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Tooltip from 'src/components/Tooltip';
 import compose from 'recompose/compose';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import Icon from 'src/components/icons';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { updateNotificationsCount } from 'src/actions/notifications';
-import { NotificationDropdown } from './notificationDropdown';
 import getNotifications from 'shared/graphql/queries/notification/getNotifications';
-import type { GetNotificationsType } from 'shared/graphql/queries/notification/getNotifications';
 import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
 import { markSingleNotificationSeenMutation } from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
-import { Tab, NotificationTab, Label } from '../style';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
-import { track, events } from 'src/helpers/analytics';
-import type { Dispatch } from 'redux';
-import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
-
-type Props = {
-  active: boolean,
-  currentUser: Object,
-  isLoading: boolean,
-  hasError: boolean,
-  isRefetching: boolean,
-  markAllNotificationsSeen: Function,
-  activeInboxThread: ?string,
-  location: Object,
-  data: {
-    notifications: GetNotificationsType,
-    subscribeToNewNotifications: Function,
-    refetch: Function,
-  },
-  refetch: Function,
-  client: Function,
-  dispatch: Dispatch<Object>,
-  count: number,
-  networkOnline: boolean,
-  websocketConnection: WebsocketConnectionType,
-  threadSlider: {
-    isOpen: boolean,
-    threadId: ?string,
-  },
-};
+import { getAccessibilityActiveState } from './Accessibility';
+import { NavigationContext } from 'src/routes';
+import { AvatarGrid, AvatarLink, Label, IconWrapper, RedDot } from './style';
 
 type State = {
   notifications: ?Array<any>,
   subscription: ?Function,
-  shouldRenderDropdown: boolean,
 };
 
 class NotificationsTab extends React.Component<Props, State> {
   state = {
     notifications: null,
     subscription: null,
-    shouldRenderDropdown: false,
   };
-
-  shouldComponentUpdate(nextProps: Props, nextState: State) {
-    const curr = this.props;
-    const prevState = this.state;
-
-    if (curr.networkOnline !== nextProps.networkOnline) return true;
-    if (curr.websocketConnection !== nextProps.websocketConnection) return true;
-
-    const prevLocation = curr.location;
-    const nextLocation = nextProps.location;
-    const prevThreadParam = curr.threadSlider.threadId;
-    const nextThreadParam = nextProps.threadSlider.threadId;
-    const prevActiveInboxThread = curr.activeInboxThread;
-    const nextActiveInboxThread = nextProps.activeInboxThread;
-    const prevParts = prevLocation.pathname.split('/');
-    const nextParts = nextLocation.pathname.split('/');
-
-    // changing slider
-    if (prevThreadParam !== nextThreadParam) return true;
-
-    // changing inbox thread
-    if (prevActiveInboxThread !== nextActiveInboxThread) return true;
-
-    // changing thread detail view
-    if (prevParts[2] !== nextParts[2]) return true;
-
-    // if a refetch completes
-    if (curr.isRefetching !== nextProps.isRefetching) return true;
-
-    // once the initial query finishes loading
-    if (!curr.data.notifications && nextProps.data.notifications) return true;
-
-    // after refetch
-    if (curr.isRefetching !== nextProps.isRefetching) return true;
-
-    // if a subscription updates the number of records returned
-    if (
-      curr.data &&
-      curr.data.notifications &&
-      curr.data.notifications.edges &&
-      nextProps.data.notifications &&
-      nextProps.data.notifications.edges &&
-      curr.data.notifications.edges.length !==
-        nextProps.data.notifications.edges.length
-    )
-      return true;
-
-    // if the user clicks on the notifications tab
-    if (curr.active !== nextProps.active) return true;
-
-    // when the notifications get set for the first time
-    if (!prevState.notifications && nextState.notifications) return true;
-
-    // when hovered
-    if (!prevState.shouldRenderDropdown && nextState.shouldRenderDropdown)
-      return true;
-
-    // any time the count changes
-    if (curr.count !== nextProps.count) return true;
-
-    // any time the count changes
-    if (
-      prevState.notifications &&
-      nextState.notifications &&
-      prevState.notifications.length !== nextState.notifications.length
-    )
-      return true;
-
-    return false;
-  }
 
   componentDidUpdate(prev: Props) {
     const {
@@ -389,15 +290,8 @@ class NotificationsTab extends React.Component<Props, State> {
     return this.setCount(newNotifications);
   };
 
-  setHover = () => {
-    return this.setState({
-      shouldRenderDropdown: true,
-    });
-  };
-
   render() {
-    const { active, currentUser, isLoading, count } = this.props;
-    const { notifications, shouldRenderDropdown } = this.state;
+    const { count, match } = this.props;
 
     // Keep the dock icon notification count indicator of the desktop app in sync
     if (isDesktopApp()) {
@@ -405,44 +299,29 @@ class NotificationsTab extends React.Component<Props, State> {
     }
 
     return (
-      <NotificationTab
-        padOnHover
-        onMouseOver={this.setHover}
-        data-cy="navbar-notifications"
-      >
-        <Tab
-          data-active={active}
-          aria-current={active ? 'page' : undefined}
-          to="/notifications"
-          rel="nofollow"
-          onClick={() => {
-            this.markAllAsSeen();
-            track(events.NAVIGATION_NOTIFICATIONS_CLICKED);
-          }}
-        >
-          <Icon
-            glyph={count > 0 ? 'notification-fill' : 'notification'}
-            count={count > 10 ? '10+' : count > 0 ? count.toString() : null}
-            size={isDesktopApp() ? 28 : 32}
-          />
-          <Label hideOnDesktop>Notifications</Label>
-        </Tab>
+      <NavigationContext.Consumer>
+        {({ setNavigationIsOpen }) => (
+          <Tooltip title="Notifications">
+            <AvatarGrid>
+              <AvatarLink
+                to={'/notifications'}
+                data-cy="navbar-notifications"
+                onClick={() => setNavigationIsOpen(false)}
+                {...getAccessibilityActiveState(
+                  match.url === '/notifications' && match.isExact
+                )}
+              >
+                <IconWrapper>
+                  <Icon glyph="notification" />
+                  {count > 0 && <RedDot />}
+                </IconWrapper>
 
-        {shouldRenderDropdown && (
-          <NotificationDropdown
-            rawNotifications={notifications}
-            count={count}
-            markAllAsSeen={this.markAllAsSeen}
-            currentUser={currentUser}
-            width={'480px'}
-            loading={isLoading}
-            error={false}
-            markSingleNotificationAsSeenInState={
-              this.markSingleNotificationAsSeenInState
-            }
-          />
+                <Label>Notifications</Label>
+              </AvatarLink>
+            </AvatarGrid>
+          </Tooltip>
         )}
-      </NotificationTab>
+      </NavigationContext.Consumer>
     );
   }
 }
@@ -461,5 +340,6 @@ export default compose(
   withApollo,
   getNotifications,
   markNotificationsSeenMutation,
-  viewNetworkHandler
+  viewNetworkHandler,
+  withRouter
 )(NotificationsTab);

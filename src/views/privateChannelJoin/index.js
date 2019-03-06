@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import joinChannelWithToken from 'shared/graphql/mutations/channel/joinChannelWithToken';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import CommunityLogin from 'src/views/communityLogin';
-import AppViewWrapper from 'src/components/appViewWrapper';
 import { Loading } from 'src/components/loading';
 import { CLIENT_URL } from 'src/api/constants';
 import type { Dispatch } from 'redux';
@@ -87,9 +86,9 @@ class PrivateChannelJoin extends React.Component<Props, State> {
 
     if (isLoading) {
       return (
-        <AppViewWrapper>
+        <React.Fragment>
           <Loading />
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 

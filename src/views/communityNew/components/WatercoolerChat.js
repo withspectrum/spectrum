@@ -3,7 +3,6 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import VisibilitySensor from 'react-visibility-sensor';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { ErrorBoundary } from 'src/components/error';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
@@ -14,7 +13,6 @@ import { sortAndGroupMessages } from 'shared/clients/group-messages';
 import InfiniteScroll from 'react-infinite-scroller';
 import ChatMessages from 'src/components/messageGroup';
 import Head from 'src/components/head';
-import NextPageButton from 'src/components/nextPageButton';
 import getThreadLink from 'src/helpers/get-thread-link';
 import { Loading } from 'src/components/loading';
 import ChatInput from 'src/components/chatInput';
@@ -22,7 +20,6 @@ import {
   WatercoolerWrapper,
   WatercoolerMessages,
   WatercoolerChatInput,
-  PreviousMessagesLoading,
 } from '../style';
 
 type State = {
@@ -43,13 +40,7 @@ class Component extends React.Component<Props, State> {
 
   componentDidUpdate(prev: Props) {
     const curr = this.props;
-    const {
-      data: currData,
-      scrollToBottom,
-      contextualScrollToBottom,
-      isFetchingMore,
-      fetchMore,
-    } = curr;
+    const { data: currData, scrollToBottom, contextualScrollToBottom } = curr;
     const { data: prevData } = prev;
 
     const didReconnect = useConnectionRestored({ curr, prev });
@@ -139,15 +130,13 @@ class Component extends React.Component<Props, State> {
       currentUser,
       community,
       data,
-      loadPreviousPage,
-      loadNextPage,
       location,
     } = this.props;
     const { communityPermissions } = community;
     const { isMember, isModerator, isOwner } = communityPermissions;
     const isTeamMember = isModerator || isOwner;
 
-    const { loading, error, thread, isFetchingMore } = data;
+    const { error, thread } = data;
 
     if (error) return <p>Error ...</p>;
 

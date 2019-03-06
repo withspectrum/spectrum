@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import addCommunityMemberWithTokenMutation from 'shared/graphql/mutations/communityMember/addCommunityMemberWithToken';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import CommunityLogin from 'src/views/communityLogin';
-import AppViewWrapper from 'src/components/appViewWrapper';
 import { Loading } from 'src/components/loading';
 import { CLIENT_URL } from 'src/api/constants';
 import { withCurrentUser } from 'src/components/withCurrentUser';
@@ -92,9 +91,9 @@ class PrivateCommunityJoin extends React.Component<Props, State> {
 
     if (isLoading) {
       return (
-        <AppViewWrapper>
+        <React.Fragment>
           <Loading />
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 

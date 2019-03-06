@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import type { CommunityActionsRowType } from '../types';
 import { PrimaryButton, OutlineButton, HoverWarnOutlineButton } from './Button';
 import { openModal } from 'src/actions/modals';
-import Icon from 'src/components/icons';
 import JoinCommunity from './JoinCommunity';
 import { ActionsRowContainer } from '../style';
 

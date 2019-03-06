@@ -5,7 +5,6 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
-import AppViewWrapper from 'src/components/appViewWrapper';
 import { Loading } from 'src/components/loading';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { Upsell404Channel } from 'src/components/upsell';
@@ -67,7 +66,10 @@ class ChannelSettings extends React.Component<Props> {
   };
 
   togglePending = (userId, action) => {
-    const { data: { channel }, dispatch } = this.props;
+    const {
+      data: { channel },
+      dispatch,
+    } = this.props;
     const input = {
       channelId: channel.id,
       userId,
@@ -96,7 +98,10 @@ class ChannelSettings extends React.Component<Props> {
   };
 
   unblock = (userId: string) => {
-    const { data: { channel }, dispatch } = this.props;
+    const {
+      data: { channel },
+      dispatch,
+    } = this.props;
 
     const input = {
       channelId: channel.id,
@@ -143,7 +148,7 @@ class ChannelSettings extends React.Component<Props> {
 
       if (!userHasPermissions) {
         return (
-          <AppViewWrapper>
+          <React.Fragment>
             <Titlebar
               title={'Channel settings'}
               provideBack={true}
@@ -158,7 +163,7 @@ class ChannelSettings extends React.Component<Props> {
             >
               <Upsell404Channel community={communitySlug} />
             </ViewError>
-          </AppViewWrapper>
+          </React.Fragment>
         );
       }
 
@@ -194,7 +199,7 @@ class ChannelSettings extends React.Component<Props> {
       };
 
       return (
-        <AppViewWrapper>
+        <React.Fragment>
           <Titlebar
             title={`${channel.name} · ${channel.community.name}`}
             subtitle={'Settings'}
@@ -214,7 +219,7 @@ class ChannelSettings extends React.Component<Props> {
 
             <ActiveView />
           </View>
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 
@@ -224,7 +229,7 @@ class ChannelSettings extends React.Component<Props> {
 
     if (hasError) {
       return (
-        <AppViewWrapper>
+        <React.Fragment>
           <Titlebar
             title={'Channel not found'}
             provideBack={true}
@@ -235,12 +240,12 @@ class ChannelSettings extends React.Component<Props> {
             refresh
             heading={'There was an error fetching this channel.'}
           />
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 
     return (
-      <AppViewWrapper>
+      <React.Fragment>
         <Titlebar
           title={'Channel not found'}
           provideBack={true}
@@ -253,7 +258,7 @@ class ChannelSettings extends React.Component<Props> {
         >
           <Upsell404Channel community={communitySlug} />
         </ViewError>
-      </AppViewWrapper>
+      </React.Fragment>
     );
   }
 }

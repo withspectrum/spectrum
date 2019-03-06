@@ -7,7 +7,6 @@ import getCurrentUserSettings, {
   type GetCurrentUserSettingsType,
 } from 'shared/graphql/queries/user/getCurrentUserSettings';
 import { Loading } from 'src/components/loading';
-import AppViewWrapper from 'src/components/appViewWrapper';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
@@ -63,7 +62,7 @@ class UserSettings extends React.Component<Props> {
             backRoute={'/'}
             noComposer
           />
-          <AppViewWrapper>
+          <React.Fragment>
             <ViewError
               heading={'We ran into an error finding this user’s settings.'}
               subheading={
@@ -72,7 +71,7 @@ class UserSettings extends React.Component<Props> {
               clearStorage
               refresh
             />
-          </AppViewWrapper>
+          </React.Fragment>
         </React.Fragment>
       );
     }
@@ -98,7 +97,7 @@ class UserSettings extends React.Component<Props> {
       };
 
       return (
-        <AppViewWrapper data-cy="user-settings">
+        <React.Fragment>
           <Titlebar
             title={'Settings'}
             subtitle={user.name}
@@ -108,7 +107,7 @@ class UserSettings extends React.Component<Props> {
           />
           <Head title={`Settings for ${user.name}`} />
 
-          <View id="main">
+          <View data-cy="user-settings" id="main">
             <Header
               avatar={avatar}
               subheading={subheading}
@@ -121,13 +120,13 @@ class UserSettings extends React.Component<Props> {
               {() => <Overview user={user} />}
             </Route>
           </View>
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 
     if (hasError) {
       return (
-        <AppViewWrapper>
+        <React.Fragment>
           <Titlebar
             title={'Error fetching user'}
             provideBack={true}
@@ -138,12 +137,12 @@ class UserSettings extends React.Component<Props> {
             refresh
             heading={'There was an error fetching this user’s settings.'}
           />
-        </AppViewWrapper>
+        </React.Fragment>
       );
     }
 
     return (
-      <AppViewWrapper>
+      <React.Fragment>
         <Titlebar
           title={'No User Found'}
           provideBack={true}
@@ -151,7 +150,7 @@ class UserSettings extends React.Component<Props> {
           noComposer
         />
         <ViewError heading={'We weren’t able to find this user’s settings.'} />
-      </AppViewWrapper>
+      </React.Fragment>
     );
   }
 }

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import generateMetaInfo from 'shared/generate-meta-info';
 import Titlebar from '../titlebar';
-import AppViewWrapper from 'src/components/appViewWrapper';
 import Head from 'src/components/head';
 import Search from './components/search';
 import CommunitySearchWrapper from './components/communitySearchWrapper';
@@ -33,7 +32,7 @@ class Explore extends React.Component<Props> {
     // const featureNotes = `Crypto is a place to discuss crypto-currencies and tokens. As blockchain technology becomes more and more mainstream, communities like Crypto allow more people to get involved, learn, and share what they know. We're all for that, so if you're an existing investor, a newcomer to crypto-currencies, or just interested in learning about blockchain, check out Crypto!`;
 
     return (
-      <AppViewWrapper>
+      <React.Fragment>
         <Wrapper data-cy="explore-page" id="main">
           <Head title={title} description={description} />
           <Titlebar title={'Explore'} noComposer />
@@ -50,7 +49,7 @@ class Explore extends React.Component<Props> {
             <Charts />
           </ErrorBoundary>
         </Wrapper>
-      </AppViewWrapper>
+      </React.Fragment>
     );
   }
 }

@@ -3,6 +3,7 @@ import { injectGlobal } from 'styled-components';
 // $FlowIssue
 import prismGlobalCSS from '!!raw-loader!./components/rich-text-editor/prism-theme.css';
 import tippy from '!!raw-loader!brianlovin-react-tippy/dist/tippy.css';
+import theme from 'shared/theme';
 
 // $FlowIssue
 injectGlobal`${prismGlobalCSS}`;
@@ -32,7 +33,7 @@ injectGlobal`
     box-sizing: border-box;
     font-size: 16px;
     line-height: 1.5;
-    background-color: #ffffff;
+    background-color: ${theme.bg.wash};
     color: #16171a;
     padding: 0;
     margin: 0;

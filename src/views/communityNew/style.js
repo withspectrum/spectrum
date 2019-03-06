@@ -14,7 +14,6 @@ export const MEDIA_BREAK = MAIN_WIDTH + SIDEBAR_WIDTH + COL_GAP + 122;
 export const Container = styled.section`
   display: grid;
   justify-content: center;
-  height: calc(100% - 48px); /* navbar */
 
   @media (max-width: ${MEDIA_BREAK}px) {
     grid-template-columns: 1fr;

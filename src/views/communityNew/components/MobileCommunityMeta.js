@@ -4,17 +4,17 @@ import type { CommunityMetaType } from '../types';
 import Icon from 'src/components/icons';
 import { CommunityAvatar } from 'src/components/avatar';
 import { MobileMetaContainer, MobileCommunityName } from '../style';
-import { SidenavContext } from '../context';
+import { NavigationContext } from 'src/routes';
 
 export const MobileCommunityMeta = (props: CommunityMetaType) => {
   const { community } = props;
 
   return (
-    <SidenavContext.Consumer>
-      {({ setSidenavIsOpen }) => (
+    <NavigationContext.Consumer>
+      {({ setNavigationIsOpen }) => (
         <MobileMetaContainer>
           <Icon
-            onClick={() => setSidenavIsOpen(true)}
+            onClick={() => setNavigationIsOpen(true)}
             glyph={'menu'}
             size={32}
           />
@@ -23,6 +23,6 @@ export const MobileCommunityMeta = (props: CommunityMetaType) => {
           <MobileCommunityName>{community.name}</MobileCommunityName>
         </MobileMetaContainer>
       )}
-    </SidenavContext.Consumer>
+    </NavigationContext.Consumer>
   );
 };

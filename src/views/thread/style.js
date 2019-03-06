@@ -21,7 +21,7 @@ export const ThreadViewContainer = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-  max-height: ${props => (props.constrain ? 'calc(100% - 48px)' : '100%')};
+  max-height: 100%;
   max-width: 1024px;
   background-color: ${theme.bg.wash};
   margin: ${props =>
