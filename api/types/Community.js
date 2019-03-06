@@ -169,6 +169,7 @@ const Community = /* GraphQL */ `
     brandedLogin: BrandedLogin
     joinSettings: JoinSettings
     slackSettings: CommunitySlackSettings @cost(complexity: 2)
+    watercoolerId: String
     slackImport: SlackImport
       @cost(complexity: 2)
       @deprecated(reason: "Use slack settings field instead")
@@ -298,6 +299,14 @@ const Community = /* GraphQL */ `
     id: ID!
   }
 
+  input EnableCommunityWatercoolerInput {
+    id: ID!
+  }
+
+  input DisableCommunityWatercoolerInput {
+    id: ID!
+  }
+
   extend type Mutation {
     createCommunity(input: CreateCommunityInput!): Community
       @rateLimit(max: 3, window: "15m")
@@ -328,6 +337,12 @@ const Community = /* GraphQL */ `
     enableCommunityTokenJoin(input: EnableCommunityTokenJoinInput!): Community
     disableCommunityTokenJoin(input: DisableCommunityTokenJoinInput!): Community
     resetCommunityJoinToken(input: ResetCommunityJoinTokenInput!): Community
+    enableCommunityWatercooler(
+      input: EnableCommunityWatercoolerInput!
+    ): Community
+    disableCommunityWatercooler(
+      input: DisableCommunityWatercoolerInput!
+    ): Community
   }
 `;
 

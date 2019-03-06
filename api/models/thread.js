@@ -418,6 +418,19 @@ export const getPublicParticipantThreadsByUser = (evalUser: string, options: Pag
     });
 };
 
+export const getWatercoolerThread = (
+  communityId: string
+): Promise<?DBThread> => {
+  return db
+    .table('threads')
+    .getAll([communityId, true], { index: 'communityIdAndWatercooler' })
+    .run()
+    .then(result => {
+      if (!Array.isArray(result) || result.length === 0) return null;
+      return result[0];
+    });
+};
+
 export const publishThread = (
   // eslint-disable-next-line
   { filesToUpload, ...thread }: Object,
