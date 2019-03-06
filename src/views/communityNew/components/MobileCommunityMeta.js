@@ -16,7 +16,7 @@ export const MobileCommunityMeta = (props: CommunityMetaType) => {
           <Icon
             onClick={() => setSidenavIsOpen(true)}
             glyph={'menu'}
-            size={28}
+            size={32}
           />
           <div style={{ width: '8px' }} />
           <CommunityAvatar size={24} community={community} />

@@ -43,18 +43,20 @@ export const PostsFeeds = (props: Props) => {
           </SubSegment>
         </LeftActions>
 
-        <RightActions>
-          <SmallPrimaryButton
-            to={{
-              pathname,
-              search,
-              state: { modal: true },
-            }}
-          >
-            <Icon glyph={'post'} size={24} />
-            New Post
-          </SmallPrimaryButton>
-        </RightActions>
+        {community.communityPermissions.isMember && (
+          <RightActions>
+            <SmallPrimaryButton
+              to={{
+                pathname,
+                search,
+                state: { modal: true },
+              }}
+            >
+              <Icon glyph={'post'} size={24} />
+              New Post
+            </SmallPrimaryButton>
+          </RightActions>
+        )}
       </SubSegmentsContainer>
 
       <CommunityThreadFeed

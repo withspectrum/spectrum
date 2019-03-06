@@ -56,7 +56,7 @@ export const AvatarGrid = styled.div`
 
   a img {
     opacity: ${props => (props.isActive ? '1' : '0.4')};
-    filter: ${props => (props.isActive ? 'none' : 'grayscale(100%)')};
+    filter: ${props => (props.isActive ? 'none' : 'grayscale(80%)')};
   }
 `;
 
@@ -84,11 +84,11 @@ export const Avatar = styled.img`
   height: ${props => props.size}px;
   border-radius: 6px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16);
-  transition: all 0.2s ease-in-out;
+  transition: box-shadow 0.2s ease-in-out;
 
   &:hover {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    transition: all 0.2s ease-in-out;
+    transition: box-shadow 0.2s ease-in-out;
   }
 `;
 
