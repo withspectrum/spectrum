@@ -44,7 +44,7 @@ class ThreadSlider extends Component {
 
   closeSlider = e => {
     e && e.stopPropagation();
-    this.props.history.goBack();
+    this.props.history.push(this.props.previousLocation);
     this.props.dispatch(closeThreadSlider());
   };
 

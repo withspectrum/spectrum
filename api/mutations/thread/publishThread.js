@@ -348,22 +348,22 @@ export default requireAuth(
     await createParticipantInThread(dbThread.id, user.id);
 
     // Post a new message with a link to the new thread to the watercooler thread if one exists
-    if (community.watercoolerId && !channel.isPrivate) {
-      const identifier = user.username ? `@${user.username}` : user.name;
-      await addMessage(
-        {
-          content: {
-            body: `${identifier} just posted a new thread 📝 https://spectrum.chat/${
-              community.slug
-            }/${channel.slug}/${slugg(dbThread.content.title)}~${dbThread.id}`,
-          },
-          messageType: 'text',
-          threadId: community.watercoolerId,
-          threadType: 'story',
-        },
-        'sam'
-      );
-    }
+    // if (community.watercoolerId && !channel.isPrivate) {
+    //   const identifier = user.username ? `@${user.username}` : user.name;
+    //   await addMessage(
+    //     {
+    //       content: {
+    //         body: `${identifier} just posted a new thread 📝 https://spectrum.chat/${
+    //           community.slug
+    //         }/${channel.slug}/${slugg(dbThread.content.title)}~${dbThread.id}`,
+    //       },
+    //       messageType: 'text',
+    //       threadId: community.watercoolerId,
+    //       threadType: 'story',
+    //     },
+    //     'sam'
+    //   );
+    // }
 
     if (!thread.filesToUpload || thread.filesToUpload.length === 0) {
       return dbThread;
