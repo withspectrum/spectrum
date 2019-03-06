@@ -11,6 +11,7 @@ export type CommunityInfoType = {
   profilePhoto: string,
   coverPhoto: string,
   pinnedThreadId: ?string,
+  watercoolerId: ?string,
   isPrivate: boolean,
   communityPermissions: {
     isMember: boolean,
@@ -38,6 +39,7 @@ export default gql`
     profilePhoto
     coverPhoto
     pinnedThreadId
+    watercoolerId
     isPrivate
     watercoolerId
     communityPermissions {

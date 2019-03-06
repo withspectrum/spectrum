@@ -345,4 +345,15 @@ describe('complex text', () => {
   it('should handle text without embeds', () => {
     expect(getEmbedsFromText('no embeds here')).toEqual([]);
   });
+
+  it('should handle embeds with duplicate other links (#4778)', () => {
+    const text =
+      'https://simplecast.com/s/a1f11d11\n\n[Sentry.io](http://www.sentry.io) [Sentry](https://sentry.io)';
+    expect(getEmbedsFromText(text)).toEqual([
+      {
+        height: 200,
+        url: 'https://embed.simplecast.com/a1f11d11',
+      },
+    ]);
+  });
 });

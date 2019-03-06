@@ -68,32 +68,32 @@ injectGlobal`
 
   ::-moz-selection {
     /* Code for Firefox */
-    background: #3818e5;
-    color: #ffffff;
+    background: ${theme.brand.alt};
+    color: ${theme.text.reverse};
   }
 
   ::selection {
-    background: #3818e5;
-    color: #ffffff;
+    background: ${theme.brand.alt};
+    color: ${theme.text.reverse};
   }
 
   ::-webkit-input-placeholder {
     /* WebKit, Blink, Edge */
-    color: #a3afbf;
+    color: ${theme.text.placeholder};
   }
   :-moz-placeholder {
     /* Mozilla Firefox 4 to 18 */
-    color: #a3afbf;
+    color: ${theme.text.placeholder};
     opacity: 1;
   }
   ::-moz-placeholder {
     /* Mozilla Firefox 19+ */
-    color: #a3afbf;
+    color: ${theme.text.placeholder};
     opacity: 1;
   }
   :-ms-input-placeholder {
     /* Internet Explorer 10-11 */
-    color: #a3afbf;
+    color: ${theme.text.placeholder};
   }
 
   #root {
@@ -121,9 +121,9 @@ injectGlobal`
   }
 
   .markdown {
-    font-size: 16px;
-    line-height: 24px;
-    color: #16171a;
+    font-size: 15px;
+    line-height: 1.4;
+    color: ${theme.text.default};
   }
 
   .markdown pre {
@@ -132,8 +132,7 @@ injectGlobal`
 
   .markdown p {
     color: inherit;
-    font-size: 16px;
-    line-height: 1.5;
+    font-size: 15px;
     font-weight: 400;
     display: block;
   }
@@ -179,19 +178,19 @@ injectGlobal`
 
   .markdown li {
     color: inherit;
-    font-size: 16px;
+    font-size: 15px;
     margin-bottom: 4px;
     line-height: 1.5;
     font-weight: 400;
   }
 
   .markdown blockquote {
-    color: #828c99;
-    border-left: 4px solid #7b16ff;
+    color: ${theme.text.secondary};
+    border-left: 4px solid ${theme.text.secondary};
+    background: ${theme.bg.wash};
     padding: 4px 8px 4px 16px;
-    font-size: 24px;
-    font-weight: 300;
-    font-style: italic;
+    font-size: 15px;
+    font-weight: 400;
     line-height: 1.4;
     margin: 16px 0;
   }
@@ -201,7 +200,7 @@ injectGlobal`
   }
 
   .markdown a {
-    color: #3818e5;
+    color: ${theme.brand.alt};
     font-weight: 500;
     text-decoration: none;
     font-size: inherit;
@@ -222,12 +221,12 @@ injectGlobal`
     font-family: 'Input Mono', 'Menlo', 'Inconsolata', 'Roboto Mono', monospace;
     font-weight: 500;
     font-size: 14px;
-    line-height: 20px;
-    background-color: #f5f8fc;
+    line-height: 1.4px;
+    background-color: ${theme.bg.wash};
     padding: 2px 4px;
     display: inline;
     width: 100%;
-    border: 1px solid #dfe7ef;
+    border: 1px solid ${theme.bg.border};
     border-radius: 4px;
     margin-bottom: 16px;
   }
@@ -236,7 +235,7 @@ injectGlobal`
     margin: 16px 0;
     display: block;
     border-radius: 4px;
-    background-color: #f5f8fc;
+    background-color: ${theme.bg.wash};
   }
 
   .markdown pre code {
@@ -274,7 +273,7 @@ injectGlobal`
   .markdown hr {
     width: 100%;
     height: 1px;
-    background: #dfe7ef;
+    background: ${theme.bg.border};
     display: block;
     margin: 32px 0;
   }
@@ -282,7 +281,7 @@ injectGlobal`
   .markdown h1 {
     font-size: 24px;
     line-height: 40px;
-    border-bottom: 1px solid #dfe7ef;
+    border-bottom: 1px solid ${theme.bg.border};
     font-weight: 800;
     margin-top: 1rem;
     margin-bottom: 8px;
