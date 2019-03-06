@@ -42,7 +42,7 @@ describe('Community settings overview tab', () => {
       .clear()
       .type(website);
     // Submit changes
-    cy.get('button[type="submit"]').click();
+    cy.get('[data-cy="community-settings-edit-save-button"]').click();
     cy.visit(`/${community.slug}`);
     cy.location('pathname').should('eq', `/${community.slug}`);
     // Make sure changes were applied
@@ -60,7 +60,7 @@ describe('Community settings overview tab', () => {
     cy.get('[data-cy="community-settings-website-input"]')
       .clear()
       .type(community.website);
-    cy.get('button[type="submit"]').click();
+    cy.get('[data-cy="community-settings-edit-save-button"]').click();
     cy.visit(`/${community.slug}`);
     cy.location('pathname').should('eq', `/${community.slug}`);
     cy.contains(community.name);

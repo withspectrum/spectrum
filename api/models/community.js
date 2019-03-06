@@ -212,6 +212,7 @@ export type EditCommunityInput = {
     coverFile: Object,
     coverPhoto: string,
     communityId: string,
+    watercoolerId?: boolean,
   },
 };
 
@@ -410,7 +411,7 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
 
 // prettier-ignore
 export const editCommunity = async ({ input }: EditCommunityInput, userId: string): Promise<DBCommunity> => {
-  const { name, slug, description, website, file, coverPhoto, coverFile, communityId } = input
+  const { name, slug, description, website, watercoolerId, file, coverPhoto, coverFile, communityId } = input
 
   let community = await db.table('communities').get(communityId).run()
 
@@ -432,6 +433,7 @@ export const editCommunity = async ({ input }: EditCommunityInput, userId: strin
       slug,
       description,
       website,
+      watercoolerId: watercoolerId || community.watercoolerId,
       coverPhoto: coverFile 
         ? await uploadImage(coverFile, 'communities', community.id) 
         : updatedCoverPhoto,
@@ -472,6 +474,29 @@ export const editCommunity = async ({ input }: EditCommunityInput, userId: strin
 
       return community
     })
+};
+
+export const setCommunityWatercoolerId = (
+  communityId: string,
+  threadId: ?string
+) => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update(
+      {
+        watercoolerId: threadId,
+      },
+      {
+        returnChanges: true,
+      }
+    )
+    .run()
+    .then(result => {
+      if (!Array.isArray(result.changes) || result.changes.length === 0)
+        return getCommunityById(communityId);
+      return result.changes[0].new_val;
+    });
 };
 
 // prettier-ignore
