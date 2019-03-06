@@ -7,15 +7,20 @@ import idx from 'idx';
 import { getThreadByMatch } from 'shared/graphql/queries/thread/getThread';
 import { FullscreenThreadView } from 'src/views/thread';
 import LoadingThread from 'src/views/thread/components/loading';
+import getThreadLink from 'src/helpers/get-thread-link';
 
 export default getThreadByMatch(props => {
   if (props.data && props.data.thread && props.data.thread.id) {
     const { thread } = props.data;
     return (
       <Redirect
-        to={`/${thread.community.slug}/${thread.channel.slug}/${slugg(
-          thread.content.title
-        )}~${thread.id}${idx(props, _ => _.location.search) || ''}`}
+        to={{
+          pathname: `${getThreadLink(thread)}${idx(
+            props,
+            _ => _.location.search
+          ) || ''}`,
+          state: props.location.state,
+        }}
       />
     );
   }
