@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import type { CommunityActionsRowType } from '../types';
-import { PrimaryButton, OutlineButton } from './Button';
+import { OutlineButton, HoverWarnOutlineButton } from './Button';
 import { openModal } from 'src/actions/modals';
 import Icon from 'src/components/icons';
 import JoinCommunity from './JoinCommunity';
@@ -29,16 +29,14 @@ export const Component = (props: CommunityActionsRowType) => {
       <ActionsRowContainer>
         {isTeamMember && (
           <OutlineButton to={`/${community.slug}/settings`}>
-            <Icon glyph={'settings'} size={24} />
             Settings
           </OutlineButton>
         )}
 
         {!isOwner && (
-          <OutlineButton onClick={leaveCommunity}>
-            <Icon glyph={'door-leave'} size={24} />
+          <HoverWarnOutlineButton onClick={leaveCommunity}>
             Leave community
-          </OutlineButton>
+          </HoverWarnOutlineButton>
         )}
       </ActionsRowContainer>
     );

@@ -70,7 +70,7 @@ export const theme = {
     secondary: '#606D7A',
   },
   warn: {
-    default: '#C21F3A',
+    default: '#E22F2F',
     alt: '#E2197A',
     dark: '#85000C',
     wash: '#FFEDF6',
