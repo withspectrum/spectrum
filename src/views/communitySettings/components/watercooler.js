@@ -76,7 +76,7 @@ const Watercooler = (props: Props) => {
       <SectionCard data-cy="community-settings-branded-login">
         <SectionTitle>Open chat</SectionTitle>
         <SectionSubtitle>
-          Display an open chat feed on your community's profile.
+          Display an open chat feed on your community’s profile.
         </SectionSubtitle>
         <SectionCardFooter>
           {community.watercoolerId && (
