@@ -3190,6 +3190,13 @@ brackets2dots@^1.1.0:
   resolved "https://registry.yarnpkg.com/brackets2dots/-/brackets2dots-1.1.0.tgz#3f3d40375fc660ce0fd004fa27d67b34f9469ac3"
   integrity sha1-Pz1AN1/GYM4P0AT6J9Z7NPlGmsM=
 
+brianlovin-react-tippy@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/brianlovin-react-tippy/-/brianlovin-react-tippy-1.2.4.tgz#c5423eb372cc5d31df6ab836300a61cb0fbbbf18"
+  integrity sha512-zAUXo2Y5a5hHl5f4Ye7GbRFnN0FBvykEUaLP15pvl9ONvDfDC24LRKZQ0zgxandrhB3PK0fwb2XO0hTH9gMIjQ==
+  dependencies:
+    popper.js "^1.11.1"
+
 broadway@~0.3.2, broadway@~0.3.6:
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/broadway/-/broadway-0.3.6.tgz#7dbef068b954b7907925fd544963b578a902ba7a"
@@ -12126,13 +12133,6 @@ react-textarea-autosize@^6.1.0:
   integrity sha512-F6bI1dgib6fSvG8so1HuArPUv+iVEfPliuLWusLF+gAKz0FbB4jLrWUrTAeq1afnPT2c9toEZYUdz/y1uKMy4A==
   dependencies:
     prop-types "^15.6.0"
-
-react-tippy@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/react-tippy/-/react-tippy-1.2.3.tgz#8aef183ec4986ca7c5c556465013d95196fecfd8"
-  integrity sha512-cEmhw29DbVP33n9ayo0nLzibuSz6o0A77cZtzno7zGsfOH8tUEGai/8a7TXRIKHPYDooW8iJkJBIPDnxmEu00g==
-  dependencies:
-    popper.js "^1.11.1"
 
 react-transition-group@^2.5.0:
   version "2.5.1"

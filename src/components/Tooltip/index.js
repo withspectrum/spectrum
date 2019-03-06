@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { Tooltip } from 'react-tippy';
+import { Tooltip } from 'brianlovin-react-tippy';
 
 const Tip = (props: Props) => (
   <Tooltip
