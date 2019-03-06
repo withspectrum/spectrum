@@ -248,7 +248,7 @@ const ChatInput = (props: Props) => {
         }
       })
       .catch(err => {
-        props.dispatch(addToastWithTimeout('error', err.message));
+        // props.dispatch(addToastWithTimeout('error', err.message));
       });
 
     // Clear the chat input now that we're sending a message for sure
