@@ -2,10 +2,11 @@
 import { injectGlobal } from 'styled-components';
 // $FlowIssue
 import prismGlobalCSS from '!!raw-loader!./components/rich-text-editor/prism-theme.css';
-import 'react-tippy/dist/tippy.css';
+import tippy from '!!raw-loader!react-tippy/dist/tippy.css';
 
 // $FlowIssue
 injectGlobal`${prismGlobalCSS}`;
+injectGlobal`${tippy}`;
 
 injectGlobal`
   * {
