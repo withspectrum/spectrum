@@ -12,26 +12,27 @@ const CODESANDBOX_URLS = /\b(?:\/\/)?(?:www\.)?codesandbox\.io(\/[A-Za-z0-9\-\._
 const SIMPLECAST_URLS = /\b(?:\/\/)?(?:www\.)?simplecast\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
 const THREAD_URLS = /(?:(?:https?:\/\/)?|\B)(?:spectrum\.chat|localhost:3000)\/.*?(?:~|(?:\?|&)t=|(?:\?|&)thread=|thread\/)([^&\s]*)/gi;
 
-type InternalEmbedData = {|
+export type InternalEmbedData = {
   type: 'internal',
   entity: 'thread',
   id: string,
-|};
+};
 
-type ExternalEmbedData = {|
+export type ExternalEmbedData = {
   url: string,
   aspectRatio?: string,
   width?: number,
   height?: number,
-|};
+};
 
-type EmbedData = InternalEmbedData | ExternalEmbedData;
+export type EmbedData = InternalEmbedData | ExternalEmbedData;
 
 export const addEmbedsToEditorState = (
   input: RawDraftContentState
 ): RawDraftContentState => {
   let lastEntityKey = Math.max(...Object.keys(input.entityMap));
-  if (lastEntityKey === Infinity) lastEntityKey = -1;
+  if (lastEntityKey === -Infinity || lastEntityKey === Infinity)
+    lastEntityKey = -1;
   let newEntityMap = input.entityMap || {};
   let newBlocks = [];
 

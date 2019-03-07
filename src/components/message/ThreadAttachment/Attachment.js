@@ -13,7 +13,7 @@ import getThreadLink from 'src/helpers/get-thread-link';
 
 class Attachment extends React.Component<Props> {
   render() {
-    const { data, currentUser, message } = this.props;
+    const { data, currentUser } = this.props;
     const { thread, loading, error } = data;
 
     if (loading)
@@ -32,11 +32,9 @@ class Attachment extends React.Component<Props> {
           onClick={e => e.stopPropagation()}
           to={{ pathname: getThreadLink(thread), state: { modal: true } }}
         />
-        {message.author.user.id !== thread.author.user.id && (
-          <AvatarWrapper>
-            <UserAvatar user={thread.author.user} size={32} />
-          </AvatarWrapper>
-        )}
+        <AvatarWrapper>
+          <UserAvatar user={thread.author.user} size={32} />
+        </AvatarWrapper>
         <Column>
           <ThreadHeader
             currentUser={currentUser}

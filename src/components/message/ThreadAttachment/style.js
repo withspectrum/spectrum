@@ -4,7 +4,7 @@ import theme from 'shared/theme';
 import { Link } from 'react-router-dom';
 import { tint, zIndex } from 'src/components/globals';
 
-export const Container = styled.li`
+export const Container = styled.div`
   position: relative;
   list-style-type: none;
   border-left: 1px solid ${theme.bg.border};
