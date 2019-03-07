@@ -60,6 +60,7 @@ type Props = {
   dispatch: Dispatch<Object>,
   currentUser: ?Object,
   toggleEdit: Function,
+  uploadImage: Function,
   innerRef?: any,
 };
 
