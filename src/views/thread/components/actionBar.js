@@ -272,21 +272,13 @@ class ActionBar extends React.Component<Props, State> {
                   multiple={false}
                   onChange={this.uploadFiles}
                 />
-                <Icon
-                  glyph="photo"
-                  tipLocation={'top-right'}
-                  tipText="Upload photo"
-                />
+                <Icon glyph="photo" />
               </MediaLabel>
               <DesktopLink
                 target="_blank"
                 href="https://guides.github.com/features/mastering-markdown/"
               >
-                <Icon
-                  tipText="Style with Markdown"
-                  tipLocation="top-right"
-                  glyph="markdown"
-                />
+                <Icon glyph="markdown" />
               </DesktopLink>
             </InputHints>
           </div>
