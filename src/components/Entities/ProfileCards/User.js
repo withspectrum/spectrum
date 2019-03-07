@@ -27,6 +27,7 @@ export const UserProfileCard = (props: Props) => {
             showHoverProfile={false}
             size={60}
             user={user}
+            showOnlineStatus={false}
           />
         </RoundProfileAvatarContainer>
 
