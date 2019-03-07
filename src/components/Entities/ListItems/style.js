@@ -8,7 +8,7 @@ export const Row = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   padding: 12px;
-  flex: 1 0 auto;
+  flex: 1 1 auto;
   background: ${theme.bg.default};
   border-bottom: 1px solid ${theme.bg.divider};
 
