@@ -66,6 +66,7 @@ class Badge extends React.Component<Props> {
             Team
           </TeamBadge>
         );
+      case 'bot':
       default:
         return (
           <Span
