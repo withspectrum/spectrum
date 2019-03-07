@@ -22,7 +22,7 @@ export const StyledButton = styled.button`
   font-size: 16px;
   font-weight: 600;
   color: ${theme.text.secondary};
-  border-radius: 4px;
+  border-radius: 24px;
   padding: 10px 16px;
   background: ${theme.bg.wash};
   display: flex;
