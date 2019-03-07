@@ -56,11 +56,13 @@ const Navigation = (props: Props) => {
                       data-cy="navbar-explore"
                       onClick={() => setNavigationIsOpen(false)}
                       {...getAccessibilityActiveState(
-                        match.url === '/explore' && match.isExact
+                        match && match.url === '/explore' && match.isExact
                       )}
                     >
                       <IconWrapper
-                        isActive={match.url === '/explore' && match.isExact}
+                        isActive={
+                          match && match.url === '/explore' && match.isExact
+                        }
                       >
                         <Icon glyph="explore" />
                       </IconWrapper>
