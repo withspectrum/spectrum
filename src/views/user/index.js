@@ -45,7 +45,7 @@ import { openModal } from 'src/actions/modals';
 import { isAdmin } from 'src/helpers/is-admin';
 import {
   ViewGrid,
-  PrimarySecondaryColumnGrid,
+  SecondaryPrimaryColumnGrid,
   PrimaryColumn,
   SecondaryColumn,
 } from 'src/components/Layout';
@@ -179,7 +179,22 @@ class UserView extends React.Component<Props, State> {
             <meta property="profile:username" content={user.username} />
           </Head>
           <ViewGrid data-cy="user-view">
-            <PrimarySecondaryColumnGrid>
+            <SecondaryPrimaryColumnGrid>
+              <SecondaryColumn>
+                <UserProfileCard user={user} />
+
+                <SidebarSection>
+                  <SidebarSectionHeader>
+                    <SidebarSectionHeading>Communities</SidebarSectionHeading>
+                  </SidebarSectionHeader>
+
+                  <CommunityList
+                    currentUser={currentUser}
+                    user={user}
+                    id={user.id}
+                  />
+                </SidebarSection>
+              </SecondaryColumn>
               <PrimaryColumn>
                 <MobileUserProfileCard user={user} />
 
@@ -230,22 +245,7 @@ class UserView extends React.Component<Props, State> {
 
                 {!hasThreads && <NullState bg="null" heading={nullHeading} />}
               </PrimaryColumn>
-              <SecondaryColumn>
-                <UserProfileCard user={user} />
-
-                <SidebarSection>
-                  <SidebarSectionHeader>
-                    <SidebarSectionHeading>Communities</SidebarSectionHeading>
-                  </SidebarSectionHeader>
-
-                  <CommunityList
-                    currentUser={currentUser}
-                    user={user}
-                    id={user.id}
-                  />
-                </SidebarSection>
-              </SecondaryColumn>
-            </PrimarySecondaryColumnGrid>
+            </SecondaryPrimaryColumnGrid>
           </ViewGrid>
         </React.Fragment>
       );
