@@ -17,7 +17,11 @@ import OutsideClickHandler from 'src/components/outsideClickHandler';
 import { track, events, transformations } from 'src/helpers/analytics';
 import getThreadLink from 'src/helpers/get-thread-link';
 import type { Dispatch } from 'redux';
-
+import { InputHints, DesktopLink } from 'src/components/composer/style';
+import {
+  MediaLabel,
+  MediaInput,
+} from 'src/components/chatInput/components/style';
 import {
   FollowButton,
   ShareButtons,
@@ -236,6 +240,7 @@ class ActionBar extends React.Component<Props, State> {
       title,
       isLockingThread,
       isPinningThread,
+      uploadFiles,
     } = this.props;
     const {
       notificationStateLoading,
@@ -254,7 +259,33 @@ class ActionBar extends React.Component<Props, State> {
     if (isEditing) {
       return (
         <FixedBottomActionBarContainer>
-          <div style={{ display: 'flex' }} />
+          <div style={{ display: 'flex' }}>
+            <InputHints>
+              <MediaLabel>
+                <MediaInput
+                  type="file"
+                  accept={'.png, .jpg, .jpeg, .gif, .mp4'}
+                  multiple={false}
+                  onChange={uploadFiles}
+                />
+                <Icon
+                  glyph="photo"
+                  tipLocation={'top-right'}
+                  tipText="Upload photo"
+                />
+              </MediaLabel>
+              <DesktopLink
+                target="_blank"
+                href="https://guides.github.com/features/mastering-markdown/"
+              >
+                <Icon
+                  tipText="Style with Markdown"
+                  tipLocation="top-right"
+                  glyph="markdown"
+                />
+              </DesktopLink>
+            </InputHints>
+          </div>
           <div style={{ display: 'flex' }}>
             <EditDone data-cy="cancel-thread-edit-button">
               <TextButton onClick={this.props.toggleEdit}>Cancel</TextButton>

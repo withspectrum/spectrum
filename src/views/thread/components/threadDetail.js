@@ -479,6 +479,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
             title={this.state.title}
             isLockingThread={isLockingThread}
             isPinningThread={isPinningThread}
+            uploadFiles={this.uploadFiles}
           />
         </ErrorBoundary>
       </ThreadWrapper>
