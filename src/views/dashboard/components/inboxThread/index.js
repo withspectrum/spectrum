@@ -66,8 +66,11 @@ class InboxThread extends React.Component<Props> {
       thread.lastActive &&
       thread.currentUserLastSeen < thread.lastActive;
 
-    const rawPlain = toPlainText(toState(JSON.parse(thread.content.body)));
-    const withouteMultipleLineBreaks = rawPlain.replace(/[\r\n]{3,}/g, '\n');
+    const paragraphs = JSON.parse(thread.content.body).blocks.filter(
+      ({ type }) => type === 'unstyled'
+    );
+    const raw = paragraphs.map(block => block.text).join('\n');
+    const withouteMultipleLineBreaks = raw.replace(/[\r\n]{3,}/g, '\n');
     const snippet = truncate(withouteMultipleLineBreaks, 280);
 
     return (
