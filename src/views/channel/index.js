@@ -23,7 +23,6 @@ import RequestToJoinChannel from 'src/components/upsell/requestToJoinChannel';
 import Titlebar from '../titlebar';
 import Icon from 'src/components/icons';
 import Search from './components/search';
-import ChannelMemberGrid from './components/memberGrid';
 import { CLIENT_URL } from 'src/api/constants';
 import CommunityLogin from 'src/views/communityLogin';
 import { withCurrentUser } from 'src/components/withCurrentUser';
@@ -403,11 +402,7 @@ class ChannelView extends React.Component<Props, State> {
                     onClick={() => this.handleSegmentClick('members')}
                     isActive={selectedView === 'members'}
                   >
-                    Members (
-                    {channel.metaData &&
-                      channel.metaData.members &&
-                      channel.metaData.members.toLocaleString()}
-                    )
+                    Members
                   </Segment>
                 </SegmentedControl>
 
@@ -513,10 +508,6 @@ class ChannelView extends React.Component<Props, State> {
                     </ErrorBoundary>
                   )}
                 </Meta>
-                <ErrorBoundary fallbackComponent={null}>
-                  <ColumnHeading>Members</ColumnHeading>
-                  <ChannelMemberGrid first={5} id={channel.id} />
-                </ErrorBoundary>
               </SecondaryColumn>
             </PrimarySecondaryColumnGrid>
           </ViewGrid>
