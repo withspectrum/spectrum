@@ -1,4 +1,4 @@
-# CircleCI configuration for Spectrum
+# CircleCI configuration for Spectrum 
 version: 2.1
 
 # Aliases
