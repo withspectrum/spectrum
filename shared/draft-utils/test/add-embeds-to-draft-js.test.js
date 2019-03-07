@@ -299,7 +299,8 @@ describe('sites', () => {
       expect(getEmbedsFromText(text)).toEqual([
         {
           id: '4026b1bd-3896-46a4-9ade-e621a90e64ad',
-          type: 'thread',
+          entity: 'thread',
+          type: 'internal',
         },
       ]);
     });
@@ -310,7 +311,8 @@ describe('sites', () => {
       expect(getEmbedsFromText(text)).toEqual([
         {
           id: '4026b1bd-3896-46a4-9ade-e621a90e64ad',
-          type: 'thread',
+          entity: 'thread',
+          type: 'internal',
         },
       ]);
     });
@@ -321,7 +323,8 @@ describe('sites', () => {
       expect(getEmbedsFromText(text)).toEqual([
         {
           id: '4026b1bd-3896-46a4-9ade-e621a90e64ad',
-          type: 'thread',
+          entity: 'thread',
+          type: 'internal',
         },
       ]);
     });
@@ -332,7 +335,8 @@ describe('sites', () => {
       expect(getEmbedsFromText(text)).toEqual([
         {
           id: '4026b1bd-3896-46a4-9ade-e621a90e64ad',
-          type: 'thread',
+          entity: 'thread',
+          type: 'internal',
         },
       ]);
     });
@@ -343,7 +347,8 @@ describe('sites', () => {
       expect(getEmbedsFromText(text)).toEqual([
         {
           id: '4026b1bd-3896-46a4-9ade-e621a90e64ad',
-          type: 'thread',
+          entity: 'thread',
+          type: 'internal',
         },
       ]);
     });
@@ -354,7 +359,8 @@ describe('sites', () => {
       expect(getEmbedsFromText(text)).toEqual([
         {
           id: '4026b1bd-3896-46a4-9ade-e621a90e64ad',
-          type: 'thread',
+          entity: 'thread',
+          type: 'internal',
         },
       ]);
     });
@@ -365,7 +371,8 @@ describe('sites', () => {
       expect(getEmbedsFromText(text)).toEqual([
         {
           id: '4026b1bd-3896-46a4-9ade-e621a90e64ad',
-          type: 'thread',
+          entity: 'thread',
+          type: 'internal',
         },
       ]);
     });
@@ -376,7 +383,8 @@ describe('sites', () => {
       expect(getEmbedsFromText(text)).toEqual([
         {
           id: '4026b1bd-3896-46a4-9ade-e621a90e64ad',
-          type: 'thread',
+          entity: 'thread',
+          type: 'internal',
         },
       ]);
     });
