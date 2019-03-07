@@ -13,7 +13,6 @@ import ViewError from '../../components/viewError';
 import Analytics from '../communityAnalytics';
 import Members from '../communityMembers';
 import Overview from './components/overview';
-import Titlebar from '../titlebar';
 import Header from '../../components/settingsViews/header';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { View } from './style';
@@ -64,13 +63,6 @@ class CommunitySettings extends React.Component<Props> {
       if (!canViewCommunitySettings) {
         return (
           <React.Fragment>
-            <Titlebar
-              title={'No Permission'}
-              provideBack={true}
-              backRoute={`/${communitySlug}`}
-              noComposer
-            />
-
             <ViewError
               heading={'You don’t have permission to manage this community.'}
               subheading={
@@ -122,13 +114,6 @@ class CommunitySettings extends React.Component<Props> {
       }
       return (
         <React.Fragment>
-          <Titlebar
-            title={community.name}
-            subtitle={'Settings'}
-            provideBack={true}
-            backRoute={`/${communitySlug}`}
-            noComposer
-          />
           <Head title={title} />
 
           <View data-cy="community-settings" id="main">

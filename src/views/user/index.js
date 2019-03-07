@@ -10,10 +10,8 @@ import ThreadFeed from 'src/components/threadFeed';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { UserProfile } from 'src/components/profile';
 import { NullState } from 'src/components/upsell';
-import {
-  UserProfileCard,
-  MobileUserProfileCard,
-} from 'src/components/Entities';
+import { UserProfileCard } from 'src/components/Entities';
+import { MobileUserTitlebar } from 'src/components/mobileTitlebar';
 import {
   PrimaryButton,
   OutlineButton,
@@ -27,7 +25,6 @@ import {
 } from 'shared/graphql/queries/user/getUser';
 import getUserThreads from 'shared/graphql/queries/user/getUserThreadConnection';
 import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
-import Titlebar from '../titlebar';
 import { CoverPhoto } from 'src/components/profile/coverPhoto';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import type { Dispatch } from 'redux';
@@ -179,6 +176,8 @@ class UserView extends React.Component<Props, State> {
             <meta property="profile:username" content={user.username} />
           </Head>
           <ViewGrid data-cy="user-view">
+            <MobileUserTitlebar user={user} />
+
             <SecondaryPrimaryColumnGrid>
               <SecondaryColumn>
                 <UserProfileCard user={user} />
@@ -196,8 +195,6 @@ class UserView extends React.Component<Props, State> {
                 </SidebarSection>
               </SecondaryColumn>
               <PrimaryColumn>
-                <MobileUserProfileCard user={user} />
-
                 <SegmentedControl>
                   <Segment
                     segmentLabel="participant"

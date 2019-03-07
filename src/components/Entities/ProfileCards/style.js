@@ -36,22 +36,6 @@ export const ProfileContainer = styled.div`
   }
 `;
 
-export const MobileProfileContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  background: ${theme.bg.default};
-  position: sticky;
-  top: 0;
-  z-index: 11;
-  padding: 12px 16px 8px 8px;
-
-  @media (min-width: ${MEDIA_BREAK}px) {
-    display: none;
-  }
-`;
-
 export const CoverPhoto = styled.div`
   position: relative;
   width: 100%;
@@ -108,16 +92,6 @@ export const ActionsRowContainer = styled.div`
   }
 `;
 
-export const MobileActionsRowContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-
-  .icon {
-    margin-right: 0;
-  }
-`;
-
 export const MetaContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -125,22 +99,10 @@ export const MetaContainer = styled.div`
   margin-top: 24px;
 `;
 
-export const MobileMetaContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
 export const Name = styled.h1`
   font-size: 24px;
   font-weight: 800;
   color: ${theme.text.default};
-`;
-
-export const MobileName = styled.h1`
-  font-size: 20px;
-  font-weight: 700;
-  color: ${theme.text.default};
-  margin-left: 12px;
 `;
 
 export const Description = styled.p`

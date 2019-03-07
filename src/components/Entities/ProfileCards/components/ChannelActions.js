@@ -8,8 +8,8 @@ import {
   HoverWarnOutlineButton,
 } from 'src/views/Community/components/Button';
 import { openModal } from 'src/actions/modals';
-import JoinChannel from './JoinChannelWrapper';
-import LeaveChannel from './LeaveChannelWrapper';
+import JoinChannel from 'src/components/joinChannelWrapper';
+import LeaveChannel from 'src/components/leaveChannelWrapper';
 import { ActionsRowContainer } from '../style';
 
 export const UnconnectedChannelActions = (props: ChannelActionsRowType) => {

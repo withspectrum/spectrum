@@ -9,10 +9,8 @@ import getComposerLink from 'src/helpers/get-composer-link';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
 import Fab from 'src/components/fab';
-import {
-  CommunityProfileCard,
-  MobileCommunityProfileCard,
-} from 'src/components/Entities';
+import { CommunityProfileCard } from 'src/components/Entities';
+import { MobileCommunityTitlebar } from 'src/components/mobileTitlebar';
 import type { SignedInMemberType } from '../types';
 import { TeamMembersList } from '../components/TeamMembersList';
 import { CommunityFeeds } from '../components/CommunityFeeds';
@@ -112,6 +110,8 @@ const Component = (props: SignedInMemberType) => {
           image={community.profilePhoto}
         />
 
+        <MobileCommunityTitlebar community={community} />
+
         <SecondaryPrimaryColumnGrid>
           <SecondaryColumn>
             <CommunityProfileCard community={community} />
@@ -131,8 +131,6 @@ const Component = (props: SignedInMemberType) => {
           </SecondaryColumn>
 
           <PrimaryColumn>
-            <MobileCommunityProfileCard community={community} />
-
             <CommunityFeeds
               scrollToBottom={scrollToBottom}
               contextualScrollToBottom={contextualScrollToBottom}

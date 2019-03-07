@@ -21,7 +21,6 @@ import { PrivateCommunityRequestApproved } from './components/privateCommunityRe
 import { PrivateCommunityRequestSent } from './components/privateCommunityRequestSentNotification';
 import { Column } from 'src/components/column';
 import Head from 'src/components/head';
-import Titlebar from 'src/views/titlebar';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { LoadingThread, Loading } from 'src/components/loading';
 import { FlexCol } from 'src/components/globals';
@@ -208,7 +207,6 @@ class NotificationsPure extends React.Component<Props, State> {
         <ViewGrid>
           <SingleColumnGrid>
             <Head title={title} description={description} />
-            <Titlebar title={'Notifications'} provideBack={false} noComposer />
             <React.Fragment>
               <Column type={'primary'}>
                 {!isDesktopApp() && this.state.showWebPushPrompt && (

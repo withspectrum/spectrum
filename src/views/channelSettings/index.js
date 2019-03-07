@@ -13,7 +13,6 @@ import togglePendingUserInChannelMutation from 'shared/graphql/mutations/channel
 import type { ToggleChannelPendingUserType } from 'shared/graphql/mutations/channel/toggleChannelPendingUser';
 import unblockUserInChannelMutation from 'shared/graphql/mutations/channel/unblockChannelBlockedUser';
 import type { UnblockChannelBlockedUserType } from 'shared/graphql/mutations/channel/unblockChannelBlockedUser';
-import Titlebar from '../titlebar';
 import ViewError from 'src/components/viewError';
 import { View } from 'src/components/settingsViews/style';
 import Header from 'src/components/settingsViews/header';
@@ -149,12 +148,6 @@ class ChannelSettings extends React.Component<Props> {
       if (!userHasPermissions) {
         return (
           <React.Fragment>
-            <Titlebar
-              title={'Channel settings'}
-              provideBack={true}
-              backRoute={`/${communitySlug}`}
-              noComposer
-            />
             <ViewError
               heading={'You don’t have permission to manage this channel.'}
               subheading={`Head back to the ${
@@ -192,14 +185,6 @@ class ChannelSettings extends React.Component<Props> {
 
       return (
         <React.Fragment>
-          <Titlebar
-            title={`${channel.name} · ${channel.community.name}`}
-            subtitle={'Settings'}
-            provideBack={true}
-            backRoute={`/${channel.community.slug}/${channel.slug}`}
-            noComposer
-          />
-
           <View id="main">
             <Header
               subheading={subheading}

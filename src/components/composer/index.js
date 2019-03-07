@@ -20,7 +20,6 @@ import {
   MediaLabel,
   MediaInput,
 } from 'src/components/chatInput/components/style';
-import Titlebar from 'src/views/titlebar';
 import type { Dispatch } from 'redux';
 import {
   Overlay,
@@ -457,8 +456,6 @@ class ComposerWithData extends React.Component<Props, State> {
         />
 
         <Container data-cy="thread-composer" slider={slider}>
-          <Titlebar provideBack title={'New conversation'} noComposer />
-
           <ComposerLocationSelectors
             selectedChannelId={selectedChannelId}
             selectedCommunityId={selectedCommunityId}

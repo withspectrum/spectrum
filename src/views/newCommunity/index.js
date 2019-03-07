@@ -11,7 +11,6 @@ import SlackConnection from '../communitySettings/components/slack';
 import { CommunityInvitationForm } from 'src/components/emailInvitationForm';
 import CreateCommunityForm from './components/createCommunityForm';
 import EditCommunityForm from './components/editCommunityForm';
-import Titlebar from '../titlebar';
 import Stepper from './components/stepper';
 import Share from './components/share';
 import { Login } from '../../views/login';
@@ -177,13 +176,6 @@ class NewCommunity extends React.Component<Props, State> {
     if (user && user.email) {
       return (
         <React.Fragment>
-          <Titlebar
-            title={'Create a Community'}
-            provideBack={true}
-            backRoute={'/'}
-            noComposer
-          />
-
           <Column type="primary">
             <Container bg={activeStep === 3 ? 'onboarding' : null} repeat>
               <Stepper activeStep={activeStep} />
@@ -247,13 +239,6 @@ class NewCommunity extends React.Component<Props, State> {
     if (user && !user.email) {
       return (
         <React.Fragment>
-          <Titlebar
-            title={'Create a Community'}
-            provideBack={true}
-            backRoute={'/'}
-            noComposer
-          />
-
           <Column type="primary">
             <Container bg={null}>
               <Title>
@@ -278,13 +263,6 @@ class NewCommunity extends React.Component<Props, State> {
     if (isLoading) {
       return (
         <React.Fragment>
-          <Titlebar
-            title={'Create a Community'}
-            provideBack={true}
-            backRoute={'/'}
-            noComposer
-          />
-
           <Loading />
         </React.Fragment>
       );

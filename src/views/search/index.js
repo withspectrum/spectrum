@@ -2,7 +2,6 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Titlebar from '../titlebar';
 import { View } from './style';
 import searchThreadsQuery from 'shared/graphql/queries/search/searchThreads';
 import ThreadFeed from 'src/components/threadFeed';
@@ -32,13 +31,6 @@ class Search extends React.Component<Props, State> {
 
     return (
       <View>
-        <Titlebar
-          provideBack
-          noComposer
-          title={'Search'}
-          style={{ gridArea: 'header' }}
-        />
-
         <SearchInput handleSubmit={this.handleSubmit} />
 
         {searchQueryString && searchQueryString.length > 0 && searchFilter && (

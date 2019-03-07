@@ -8,7 +8,7 @@ import {
   HoverWarnOutlineButton,
 } from 'src/views/Community/components/Button';
 import { openModal } from 'src/actions/modals';
-import JoinCommunity from './JoinCommunityWrapper';
+import JoinCommunity from 'src/components/joinCommunityWrapper';
 import { ActionsRowContainer } from '../style';
 
 export const UnconnectedCommunityActions = (props: CommunityActionsRowType) => {

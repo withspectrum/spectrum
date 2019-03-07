@@ -18,7 +18,6 @@ import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import Login from '../login';
 import { Upsell404Channel } from 'src/components/upsell';
 import RequestToJoinChannel from 'src/components/upsell/requestToJoinChannel';
-import Titlebar from '../titlebar';
 import Icon from 'src/components/icons';
 import Search from './components/search';
 import { CLIENT_URL } from 'src/api/constants';
@@ -26,10 +25,8 @@ import CommunityLogin from 'src/views/communityLogin';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
-import {
-  ChannelProfileCard,
-  MobileChannelProfileCard,
-} from 'src/components/Entities';
+import { ChannelProfileCard } from 'src/components/Entities';
+import { MobileChannelTitlebar } from 'src/components/mobileTitlebar';
 import {
   Grid,
   Content,
@@ -300,12 +297,6 @@ class ChannelView extends React.Component<Props, State> {
       ) {
         return (
           <ViewGrid>
-            <Titlebar
-              title={'Private channel'}
-              provideBack={true}
-              backRoute={`/${communitySlug}`}
-              noComposer
-            />
             <ViewError
               emoji={'✋'}
               heading={'You don’t have permission to view this channel.'}
@@ -322,13 +313,6 @@ class ChannelView extends React.Component<Props, State> {
       if (isRestricted) {
         return (
           <ViewGrid>
-            <Titlebar
-              title={channel.name}
-              subtitle={community.name}
-              provideBack={true}
-              backRoute={`/${communitySlug}`}
-              noComposer
-            />
             <ViewError
               emoji={isPending ? '🕓' : '🔑'}
               heading={
@@ -377,6 +361,8 @@ class ChannelView extends React.Component<Props, State> {
             image={community.profilePhoto}
           />
           <ViewGrid>
+            <MobileChannelTitlebar channel={channel} />
+
             <SecondaryPrimaryColumnGrid data-cy="channel-view">
               <SecondaryColumn>
                 <ChannelProfileCard channel={channel} />
@@ -402,7 +388,6 @@ class ChannelView extends React.Component<Props, State> {
               </SecondaryColumn>
 
               <PrimaryColumn>
-                <MobileChannelProfileCard channel={channel} />
                 <SegmentedControl>
                   <Segment
                     segmentLabel="threads"

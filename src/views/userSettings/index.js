@@ -13,7 +13,6 @@ import Head from 'src/components/head';
 import ViewError from 'src/components/viewError';
 import { View } from './style';
 import Overview from './components/overview';
-import Titlebar from '../titlebar';
 import Header from 'src/components/settingsViews/header';
 import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
@@ -56,12 +55,6 @@ class UserSettings extends React.Component<Props> {
     if ((currentUser && !user) || (currentUser && user && !user.id)) {
       return (
         <React.Fragment>
-          <Titlebar
-            title={'No User Found'}
-            provideBack={true}
-            backRoute={'/'}
-            noComposer
-          />
           <React.Fragment>
             <ViewError
               heading={'We ran into an error finding this user’s settings.'}
@@ -90,13 +83,6 @@ class UserSettings extends React.Component<Props> {
 
       return (
         <React.Fragment>
-          <Titlebar
-            title={'Settings'}
-            subtitle={user.name}
-            provideBack={true}
-            backRoute={`/users/${user.username}`}
-            noComposer
-          />
           <Head title={`Settings for ${user.name}`} />
 
           <View data-cy="user-settings" id="main">

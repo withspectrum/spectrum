@@ -11,7 +11,6 @@ import {
 } from 'src/views/Community/components/Button';
 import { openModal } from 'src/actions/modals';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
-import JoinUser from './JoinCommunityWrapper';
 import { ActionsRowContainer } from '../style';
 
 export const UnconnectedUserActions = (props: UserActionsRowType) => {
