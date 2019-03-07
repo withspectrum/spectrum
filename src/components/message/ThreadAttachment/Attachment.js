@@ -18,7 +18,10 @@ class Attachment extends React.Component<Props> {
 
     if (loading)
       return (
-        <Container style={{ padding: '16px 12px' }}>
+        <Container
+          className="attachment-container"
+          style={{ padding: '16px 12px' }}
+        >
           <Loading />
         </Container>
       );
@@ -27,24 +30,25 @@ class Attachment extends React.Component<Props> {
     if (!thread) return null;
 
     return (
-      <Container data-cy="thread-attachment">
-        <LinkWrapper
-          onClick={e => e.stopPropagation()}
-          to={{ pathname: getThreadLink(thread), state: { modal: true } }}
-        />
-        <AvatarWrapper>
-          <UserAvatar user={thread.author.user} size={32} />
-        </AvatarWrapper>
-        <Column>
-          <ThreadHeader
-            currentUser={currentUser}
-            active={false}
-            thread={thread}
+      <div className="attachment-container">
+        <Container data-cy="thread-attachment">
+          <LinkWrapper
+            onClick={e => e.stopPropagation()}
+            to={{ pathname: getThreadLink(thread), state: { modal: true } }}
           />
-          <ThreadTitle>{thread.content.title}</ThreadTitle>
-          <Activity currentUser={currentUser} thread={thread} active={false} />
-        </Column>
-      </Container>
+          <AvatarWrapper>
+            <UserAvatar user={thread.author.user} size={32} />
+          </AvatarWrapper>
+          <Column>
+            <ThreadTitle>{thread.content.title}</ThreadTitle>
+            <Activity
+              currentUser={currentUser}
+              thread={thread}
+              active={false}
+            />
+          </Column>
+        </Container>
+      </div>
     );
   }
 }
