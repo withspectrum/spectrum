@@ -23,11 +23,7 @@ import { Column } from 'src/components/column';
 import Head from 'src/components/head';
 import Titlebar from 'src/views/titlebar';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import {
-  displayLoadingNotifications,
-  LoadingThread,
-  Loading,
-} from 'src/components/loading';
+import { LoadingThread, Loading } from 'src/components/loading';
 import { FlexCol } from 'src/components/globals';
 import { sortByDate } from 'src/helpers/utils';
 import WebPushManager from 'src/helpers/web-push-manager';
@@ -417,7 +413,6 @@ const map = state => ({
 export default compose(
   subscribeToWebPush,
   getNotifications,
-  displayLoadingNotifications,
   markNotificationsSeenMutation,
   viewNetworkHandler,
   withCurrentUser,

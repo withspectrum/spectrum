@@ -1068,11 +1068,6 @@ export const displayLoadingThreadView = branch(
   renderComponent(LoadingThreadView)
 );
 
-export const displayLoadingNotifications = branch(
-  props => !props.data || props.data.loading,
-  renderComponent(LoadingNotifications)
-);
-
 export const displayLoadingComposer = branch(
   props => !props.data.user && !props.data.error,
   renderComponent(LoadingComposer)
