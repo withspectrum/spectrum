@@ -99,8 +99,6 @@ class InboxThread extends React.Component<Props> {
                   pathname: getThreadLink(thread),
                   state: { modal: true },
                 });
-              } else if (!isMobile) {
-                this.props.dispatch(changeActiveThread(thread.id));
               }
             }}
           />

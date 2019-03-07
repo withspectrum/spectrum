@@ -1,10 +1,14 @@
 // @flow
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import compose from 'recompose/compose';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
+import Icon from 'src/components/icons';
+import getComposerLink from 'src/helpers/get-composer-link';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
+import Fab from 'src/components/fab';
 import {
   CommunityProfileCard,
   MobileCommunityProfileCard,
@@ -30,13 +34,32 @@ const Component = (props: SignedInMemberType) => {
     containerEl = document.getElementById('scroller-for-thread-feed');
   }, []);
 
-  const { title, description } = generateMetaInfo({
-    type: 'community',
-    data: {
-      name: community.name,
-      description: community.description,
+  const [metaInfo, setMetaInfo] = useState(
+    generateMetaInfo({
+      type: 'community',
+      data: {
+        name: community.name,
+        description: community.description,
+      },
+    })
+  );
+
+  useEffect(
+    () => {
+      setMetaInfo(
+        generateMetaInfo({
+          type: 'community',
+          data: {
+            name: community.name,
+            description: community.description,
+          },
+        })
+      );
     },
-  });
+    [community.id]
+  );
+
+  const { title, description } = metaInfo;
 
   const scrollToTop = () => {
     if (containerEl) return containerEl.scrollTo(0, 0);
@@ -65,6 +88,8 @@ const Component = (props: SignedInMemberType) => {
     }
   };
 
+  const { pathname, search } = getComposerLink({ communityId: community.id });
+
   return (
     <React.Fragment>
       <Head
@@ -72,6 +97,19 @@ const Component = (props: SignedInMemberType) => {
         description={description}
         image={community.profilePhoto}
       />
+
+      {community.communityPermissions.isMember && (
+        <Fab
+          title="New post"
+          to={{
+            pathname,
+            search,
+            state: { modal: true },
+          }}
+        >
+          <Icon glyph={'post'} size={32} />
+        </Fab>
+      )}
 
       <ViewGrid data-cy="community-view">
         <SecondaryPrimaryColumnGrid>

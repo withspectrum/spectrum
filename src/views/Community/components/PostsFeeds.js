@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
-import getComposerLink from 'src/helpers/get-composer-link';
 import ThreadFeed from 'src/components/threadFeed';
 import { SmallPrimaryButton } from './Button';
 import Icon from 'src/components/icons';
@@ -17,8 +16,6 @@ const CommunityThreadFeed = compose(
 export const PostsFeeds = (props: Props) => {
   const { community } = props;
   const [activeFeed, setActiveFeed] = useState('latest');
-
-  const { pathname, search } = getComposerLink({ communityId: community.id });
 
   return (
     <React.Fragment>
@@ -36,19 +33,6 @@ export const PostsFeeds = (props: Props) => {
         >
           Popular
         </Segment>
-
-        {community.communityPermissions.isMember && (
-          <SmallPrimaryButton
-            to={{
-              pathname,
-              search,
-              state: { modal: true },
-            }}
-          >
-            <Icon glyph={'post'} size={24} />
-            New Post
-          </SmallPrimaryButton>
-        )}
       </SegmentedControl>
 
       <CommunityThreadFeed

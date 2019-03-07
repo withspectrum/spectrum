@@ -154,7 +154,7 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
 
   return (
     <FeedsContainer>
-      <SegmentedControl>
+      <SegmentedControl mobileStickyOffset={52}>
         {segments.map(segment => {
           return (
             <Segment
