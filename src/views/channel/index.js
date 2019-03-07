@@ -24,7 +24,7 @@ import Search from './components/search';
 import { CLIENT_URL } from 'src/api/constants';
 import CommunityLogin from 'src/views/communityLogin';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
+import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
 import {
   ChannelProfileCard,

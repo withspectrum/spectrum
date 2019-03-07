@@ -39,7 +39,7 @@ import {
   ColumnHeading,
   MetaMemberships,
 } from './style';
-import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
+import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { ErrorBoundary } from 'src/components/error';
 import { openModal } from 'src/actions/modals';
 import { isAdmin } from 'src/helpers/is-admin';

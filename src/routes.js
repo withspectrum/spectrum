@@ -17,7 +17,7 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import './reset.css.js';
 import { theme } from 'shared/theme';
 import { FlexCol } from './components/globals';
-import AppViewWrapper from 'src/components/AppViewWrapper';
+import AppViewWrapper from 'src/components/appViewWrapper';
 import ScrollManager from 'src/components/scrollManager';
 import Head from 'src/components/head';
 import ModalRoot from 'src/components/modals/modalRoot';

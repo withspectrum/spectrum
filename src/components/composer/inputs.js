@@ -12,7 +12,7 @@ import {
   InputsGrid,
 } from './style';
 import { ThreadHeading } from 'src/views/thread/style';
-import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
+import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import MentionsInput from 'src/components/mentionsInput';
 import ThreadRenderer from '../threadRenderer';
 import processThreadContent from 'shared/draft-utils/process-thread-content';

@@ -15,7 +15,7 @@ import Members from '../communityMembers';
 import Overview from './components/overview';
 import Titlebar from '../titlebar';
 import Header from '../../components/settingsViews/header';
-import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
+import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { View } from './style';
 import type { ContextRouter } from 'react-router';
 import { track, events, transformations } from 'src/helpers/analytics';

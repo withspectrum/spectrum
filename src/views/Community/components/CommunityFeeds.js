@@ -11,7 +11,7 @@ import { CommunityMeta } from 'src/components/Entities/ProfileCards/components/C
 import { WatercoolerChat } from './WatercoolerChat';
 import { PostsFeeds } from './PostsFeeds';
 import { ARROW_LEFT, ARROW_RIGHT } from 'src/helpers/keycodes';
-import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
+import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { FeedsContainer, SidebarSection } from '../style';
 
 export const CommunityFeeds = (props: CommunityFeedsType) => {

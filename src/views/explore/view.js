@@ -20,7 +20,7 @@ import {
 import { getCommunitiesBySlug } from 'shared/graphql/queries/community/getCommunities';
 import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCommunities';
 import { Loading } from 'src/components/loading';
-import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
+import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { track, transformations, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
 

@@ -7,7 +7,7 @@ import getComposerLink from 'src/helpers/get-composer-link';
 import ThreadFeed from 'src/components/threadFeed';
 import { SmallPrimaryButton } from './Button';
 import Icon from 'src/components/icons';
-import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
+import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 
 const CommunityThreadFeed = compose(
   connect(),
