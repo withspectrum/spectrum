@@ -38,7 +38,6 @@ import {
   ChannelDescription,
   MetadataContainer,
 } from './style';
-import { ExtLink, OnlineIndicator } from 'src/components/profile/style';
 import { CoverPhoto } from 'src/components/profile/coverPhoto';
 import {
   LoginButton,
@@ -467,11 +466,11 @@ class ChannelView extends React.Component<Props, State> {
 
                   <MetadataContainer>
                     {channel.metaData && channel.metaData.members && (
-                      <ExtLink>
+                      <React.Fragment>
                         <Icon glyph="person" size={24} />
                         {channel.metaData.members.toLocaleString()}
                         {channel.metaData.members > 1 ? ' members' : ' member'}
-                      </ExtLink>
+                      </React.Fragment>
                     )}
 
                     {channel.metaData &&

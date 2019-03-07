@@ -56,7 +56,7 @@ const UserView = Loadable({
 
 /* prettier-ignore */
 const CommunityView = Loadable({
-  loader: () => import('./views/communityNew'/* webpackChunkName: "CommunityView" */),
+  loader: () => import('./views/Community'/* webpackChunkName: "CommunityView" */),
   loading: ({ isLoading }) => isLoading && <LoadingScreen />,
 });
 
