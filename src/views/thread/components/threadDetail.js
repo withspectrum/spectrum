@@ -15,6 +15,7 @@ import ThreadByline from './threadByline';
 import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
+import uploadImageMutation from 'shared/graphql/mutations/uploadImage';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import ThreadRenderer from 'src/components/threadRenderer';
 import ActionBar from './actionBar';
@@ -287,6 +288,63 @@ class ThreadDetailPure extends React.Component<Props, State> {
     });
   };
 
+  uploadFiles = files => {
+    const uploading = `![Uploading ${files[0].name}...]()`;
+    let caretPos = this.bodyEditor.selectionStart;
+
+    this.setState(
+      ({ body }) => ({
+        isSavingEdit: true,
+        body:
+          body.substring(0, caretPos) +
+          uploading +
+          body.substring(this.bodyEditor.selectionEnd, this.state.body.length),
+      }),
+      () => {
+        caretPos = caretPos + uploading.length;
+        this.bodyEditor.selectionStart = caretPos;
+        this.bodyEditor.selectionEnd = caretPos;
+        this.bodyEditor.focus();
+      }
+    );
+
+    return this.props
+      .uploadImage({
+        image: files[0],
+        type: 'threads',
+      })
+      .then(({ data }) => {
+        this.setState({
+          isSavingEdit: false,
+        });
+        this.changeBody({
+          target: {
+            value: this.state.body.replace(
+              uploading,
+              `![${files[0].name}](${data.uploadImage})`
+            ),
+          },
+        });
+      })
+      .catch(err => {
+        console.error({ err });
+        this.setState({
+          isSavingEdit: false,
+        });
+        this.changeBody({
+          target: {
+            value: this.state.body.replace(uploading, ''),
+          },
+        });
+        this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            `Uploading image failed - ${err.message}`
+          )
+        );
+      });
+  };
+
   togglePinThread = () => {
     const { pinThread, thread, dispatch } = this.props;
     const isPinned = thread.community.pinnedThreadId === thread.id;
@@ -345,7 +403,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
         <ThreadContent isEditing={isEditing}>
           {isEditing ? (
             <ThreadEditInputs
-              uploadFiles={() => {}}
+              uploadFiles={this.uploadFiles}
               title={this.state.title}
               body={this.state.body}
               autoFocus
@@ -433,6 +491,7 @@ const ThreadDetail = compose(
   deleteThreadMutation,
   editThreadMutation,
   pinThreadMutation,
+  uploadImageMutation,
   withRouter
 )(ThreadDetailPure);
 
