@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Route } from 'react-router-dom';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import Icon from 'src/components/icons';
@@ -178,33 +177,29 @@ class DirectMessagesTab extends React.Component<Props, State> {
     }
 
     return (
-      <Route path="/messages">
-        {({ match }) => (
-          <NavigationContext.Consumer>
-            {({ setNavigationIsOpen }) => (
-              <Tooltip title="Messages">
-                <AvatarGrid>
-                  <AvatarLink
-                    to={'/messages'}
-                    data-cy="navbar-messages"
-                    onClick={() => setNavigationIsOpen(false)}
-                    {...getAccessibilityActiveState(
-                      match.url === '/messages' && match.isExact
-                    )}
-                  >
-                    <IconWrapper>
-                      <Icon glyph="message-simple" />
-                      {count > 0 && <RedDot style={{ right: '-3px' }} />}
-                    </IconWrapper>
+      <NavigationContext.Consumer>
+        {({ setNavigationIsOpen }) => (
+          <Tooltip title="Messages">
+            <AvatarGrid>
+              <AvatarLink
+                to={'/messages'}
+                data-cy="navbar-messages"
+                onClick={() => setNavigationIsOpen(false)}
+                {...getAccessibilityActiveState(
+                  match.url === '/messages' && match.isExact
+                )}
+              >
+                <IconWrapper>
+                  <Icon glyph="message-simple" />
+                  {count > 0 && <RedDot style={{ right: '-3px' }} />}
+                </IconWrapper>
 
-                    <Label>Messages</Label>
-                  </AvatarLink>
-                </AvatarGrid>
-              </Tooltip>
-            )}
-          </NavigationContext.Consumer>
+                <Label>Messages</Label>
+              </AvatarLink>
+            </AvatarGrid>
+          </Tooltip>
         )}
-      </Route>
+      </NavigationContext.Consumer>
     );
   }
 }
