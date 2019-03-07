@@ -5,6 +5,7 @@ import { ChannelActions } from './components/ChannelActions';
 import { MobileChannelActions } from './components/MobileChannelActions';
 import { ChannelMeta } from './components/ChannelMeta';
 import { MobileChannelMeta } from './components/MobileChannelMeta';
+import { ChannelCommunityMeta } from './components/ChannelCommunityMeta';
 import {
   SidebarSection,
   ProfileContainer,
@@ -19,6 +20,7 @@ export const ChannelProfileCard = (props: Props) => {
   return (
     <SidebarSection>
       <ProfileContainer>
+        <ChannelCommunityMeta channel={channel} />
         <ChannelMeta channel={channel} />
         <ChannelActions channel={channel} />
       </ProfileContainer>

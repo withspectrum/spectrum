@@ -8,32 +8,47 @@ import {
   HoverWarnOutlineButton,
 } from 'src/views/Community/components/Button';
 import { openModal } from 'src/actions/modals';
-import JoinChannel from './JoinCommunityWrapper';
+import JoinChannel from './JoinChannelWrapper';
+import LeaveChannel from './LeaveChannelWrapper';
 import { ActionsRowContainer } from '../style';
 
 export const UnconnectedChannelActions = (props: ChannelActionsRowType) => {
   const { channel, dispatch } = props;
-  const { isMember, isOwner, isModerator } = channel.channelPermissions;
+  const { community } = channel;
+  const { isMember, isOwner, isModerator } = community.communityPermissions;
   const isTeamMember = isOwner || isModerator;
 
-  if (isMember) {
+  const { channelPermissions } = channel;
+
+  if (channelPermissions.isMember) {
     return (
       <ActionsRowContainer>
         {isTeamMember && (
-          <OutlineButton to={`/${channel.slug}/settings`}>
+          <OutlineButton to={`/${community.slug}/${channel.slug}/settings`}>
             Settings
           </OutlineButton>
         )}
 
-        {!isOwner && (
-          <HoverWarnOutlineButton>Leave channel</HoverWarnOutlineButton>
-        )}
+        <LeaveChannel
+          channelId={channel.id}
+          render={({ isLoading }) => (
+            <HoverWarnOutlineButton isLoading={isLoading} icon={'door-enter'}>
+              {isLoading ? 'Leaving...' : 'Leave channel'}
+            </HoverWarnOutlineButton>
+          )}
+        />
       </ActionsRowContainer>
     );
   }
 
   return (
     <ActionsRowContainer>
+      {isTeamMember && (
+        <OutlineButton to={`/${community.slug}/${channel.slug}/settings`}>
+          Settings
+        </OutlineButton>
+      )}
+
       <JoinChannel
         channelId={channel.id}
         render={({ isLoading }) => (

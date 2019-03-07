@@ -97,8 +97,8 @@ export const RoundProfileAvatarContainer = styled.div`
 export const ActionsRowContainer = styled.div`
   display: grid;
   align-items: center;
-  grid-gap: 12px;
-  padding: 12px;
+  grid-gap: 16px;
+  padding: 16px 16px 20px;
   margin-top: 8px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
@@ -145,6 +145,7 @@ export const MobileName = styled.h1`
 
 export const Description = styled.p`
   margin-top: 8px;
+  margin-bottom: 4px;
   font-size: 16px;
   font-weight: 400;
   line-height: 1.4;
@@ -152,7 +153,7 @@ export const Description = styled.p`
 `;
 
 export const MetaLinksContainer = styled.div`
-  margin-top: 8px;
+  margin-top: 4px;
 `;
 
 export const MetaRow = styled.div`
@@ -188,4 +189,31 @@ export const OnlineDot = styled.div`
   background-color: ${theme.success.default};
   margin-right: 16px;
   margin-left: 6px;
+`;
+
+export const ChannelCommunityMetaRow = styled.div`
+  display: flex;
+  padding: 16px;
+  margin-bottom: -12px;
+  align-items: center;
+  border-bottom: 1px solid ${theme.bg.border};
+  background: transparent;
+
+  &:hover {
+    background: ${theme.bg.wash};
+  }
+`;
+
+export const ChannelCommunityName = styled.div`
+  font-size: 18px;
+  font-weight: 500;
+  color: ${theme.text.alt};
+  margin-left: 16px;
+`;
+
+export const Username = styled.div`
+  font-size: 18px;
+  font-weight: 500;
+  color: ${theme.text.alt};
+  margin-bottom: 4px;
 `;
