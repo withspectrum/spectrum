@@ -11,7 +11,10 @@ import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { UserProfile } from 'src/components/profile';
 import { LoadingScreen } from 'src/components/loading';
 import { NullState } from 'src/components/upsell';
-import { Button, ButtonRow, TextButton } from 'src/components/buttons';
+import {
+  PrimaryButton,
+  OutlineButton,
+} from 'src/views/Community/components/Button';
 import CommunityList from './components/communityList';
 import Search from './components/search';
 import { withCurrentUser } from 'src/components/withCurrentUser';
@@ -23,7 +26,6 @@ import getUserThreads from 'shared/graphql/queries/user/getUserThreadConnection'
 import ViewError from 'src/components/viewError';
 import Titlebar from '../titlebar';
 import { CoverPhoto } from 'src/components/profile/coverPhoto';
-import { LoginButton, SettingsButton } from '../community/style';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import type { Dispatch } from 'redux';
 import {
@@ -173,18 +175,11 @@ class UserView extends React.Component<Props, State> {
               <PrimaryColumn>
                 <SegmentedControl>
                   <Segment
-                    onClick={() => this.handleSegmentClick('search')}
-                    isActive={selectedView === 'search'}
-                  >
-                    Search
-                  </Segment>
-
-                  <Segment
                     segmentLabel="participant"
                     onClick={() => this.handleSegmentClick('participant')}
                     isActive={selectedView === 'participant'}
                   >
-                    Replies
+                    Conversations
                   </Segment>
 
                   <Segment
@@ -192,7 +187,14 @@ class UserView extends React.Component<Props, State> {
                     onClick={() => this.handleSegmentClick('creator')}
                     isActive={selectedView === 'creator'}
                   >
-                    Threads
+                    Author
+                  </Segment>
+
+                  <Segment
+                    onClick={() => this.handleSegmentClick('search')}
+                    isActive={selectedView === 'search'}
+                  >
+                    Search
                   </Segment>
                 </SegmentedControl>
 
@@ -232,27 +234,27 @@ class UserView extends React.Component<Props, State> {
 
                   {currentUser && user.id !== currentUser.id && (
                     <React.Fragment>
-                      <LoginButton
+                      <PrimaryButton
                         dataCy={'send-dm-button'}
                         onClick={() => this.initMessage(user)}
                       >
                         Message {user.name}
-                      </LoginButton>
-                      <TextButton onClick={this.initReport}>Report</TextButton>
+                      </PrimaryButton>
+                      <OutlineButton onClick={this.initReport}>
+                        Report
+                      </OutlineButton>
                     </React.Fragment>
                   )}
 
                   {currentUser &&
                     user.id !== currentUser.id &&
                     isAdmin(currentUser.id) && (
-                      <TextButton onClick={this.initBan}>Ban</TextButton>
+                      <OutlineButton onClick={this.initBan}>Ban</OutlineButton>
                     )}
 
                   {currentUser && user.id === currentUser.id && (
                     <Link to={`/users/${username}/settings`}>
-                      <SettingsButton icon={'settings'}>
-                        Settings
-                      </SettingsButton>
+                      <OutlineButton icon={'settings'}>Settings</OutlineButton>
                     </Link>
                   )}
 

@@ -19,7 +19,7 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import getComposerLink from 'src/helpers/get-composer-link';
-import { OutlineButton } from 'src/views/communityNew/components/Button';
+import { OutlineButton } from 'src/views/Community/components/Button';
 import Icon from 'src/components/icons';
 
 const NullState = ({ viewContext, isSearch, communityId, channelId }) => {

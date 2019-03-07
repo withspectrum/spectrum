@@ -40,12 +40,9 @@ import {
 } from './style';
 import { CoverPhoto } from 'src/components/profile/coverPhoto';
 import {
-  LoginButton,
-  ColumnHeading,
-  MidSegment,
-  SettingsButton,
-  LoginOutlineButton,
-} from '../community/style';
+  PrimaryButton,
+  OutlineButton,
+} from 'src/views/Community/components/Button';
 import ToggleChannelMembership from 'src/components/toggleChannelMembership';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
@@ -159,9 +156,9 @@ class ChannelView extends React.Component<Props, State> {
       // user isnt logged in, prompt a login-join
       return (
         <Link to={loginUrl}>
-          <LoginButton data-cy="channel-login-join-button">
+          <PrimaryButton data-cy="channel-login-join-button">
             Join {channel.name}
-          </LoginButton>
+          </PrimaryButton>
         </Link>
       );
     }
@@ -172,13 +169,13 @@ class ChannelView extends React.Component<Props, State> {
       if (isGlobalOwner) {
         return (
           <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
-            <SettingsButton
+            <OutlineButton
               icon={'settings'}
               isMember
               data-cy="channel-settings-button"
             >
               Settings
-            </SettingsButton>
+            </OutlineButton>
           </Link>
         );
       }
@@ -191,34 +188,34 @@ class ChannelView extends React.Component<Props, State> {
               render={state => {
                 if (isChannelMember) {
                   return (
-                    <LoginOutlineButton
+                    <OutlineButton
                       loading={state.isLoading}
                       dataCy={'channel-leave-button'}
                     >
                       Leave channel
-                    </LoginOutlineButton>
+                    </OutlineButton>
                   );
                 } else {
                   return (
-                    <LoginButton
+                    <PrimaryButton
                       loading={state.isLoading}
                       dataCy="channel-join-button"
                     >
                       Join {channel.name}
-                    </LoginButton>
+                    </PrimaryButton>
                   );
                 }
               }}
             />
 
             <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
-              <SettingsButton
+              <OutlineButton
                 icon={'settings'}
                 isMember
                 data-cy="channel-settings-button"
               >
                 Settings
-              </SettingsButton>
+              </OutlineButton>
             </Link>
           </React.Fragment>
         );
@@ -231,21 +228,21 @@ class ChannelView extends React.Component<Props, State> {
           render={state => {
             if (isChannelMember) {
               return (
-                <LoginOutlineButton
+                <OutlineButton
                   loading={state.isLoading}
                   dataCy={'channel-leave-button'}
                 >
                   Leave channel
-                </LoginOutlineButton>
+                </OutlineButton>
               );
             } else {
               return (
-                <LoginButton
+                <PrimaryButton
                   loading={state.isLoading}
                   dataCy="channel-join-button"
                 >
                   Join {channel.name}
-                </LoginButton>
+                </PrimaryButton>
               );
             }
           }}
@@ -472,17 +469,6 @@ class ChannelView extends React.Component<Props, State> {
                         {channel.metaData.members > 1 ? ' members' : ' member'}
                       </React.Fragment>
                     )}
-
-                    {channel.metaData &&
-                      typeof channel.metaData.onlineMembers === 'number' && (
-                        <ExtLink>
-                          <OnlineIndicator
-                            offline={channel.metaData.onlineMembers === 0}
-                          />
-                          {channel.metaData.onlineMembers.toLocaleString()}{' '}
-                          online
-                        </ExtLink>
-                      )}
 
                     <div style={{ height: '8px' }} />
 

@@ -24,7 +24,6 @@ import {
   FullProfile,
   Subtitle,
   FullDescription,
-  ExtLink,
   ProfileCard,
   Container,
   CoverPhoto,
@@ -32,7 +31,6 @@ import {
   CoverTitle,
   CoverDescription,
   ButtonContainer,
-  OnlineIndicator,
 } from './style';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 
@@ -173,25 +171,15 @@ class CommunityWithData extends React.Component<Props> {
               )}
 
               {community.metaData && community.metaData.members && (
-                <ExtLink>
+                <span>
                   <Icon glyph="person" size={24} />
                   {community.metaData.members.toLocaleString()}
                   {community.metaData.members > 1 ? ' members' : ' member'}
-                </ExtLink>
+                </span>
               )}
 
-              {community.metaData &&
-                typeof community.metaData.onlineMembers === 'number' && (
-                  <ExtLink>
-                    <OnlineIndicator
-                      offline={community.metaData.onlineMembers === 0}
-                    />
-                    {community.metaData.onlineMembers.toLocaleString()} online
-                  </ExtLink>
-                )}
-
               {community.website && (
-                <ExtLink>
+                <span>
                   <Icon glyph="link" size={24} />
                   <a
                     target="_blank"
@@ -200,7 +188,7 @@ class CommunityWithData extends React.Component<Props> {
                   >
                     {community.website}
                   </a>
-                </ExtLink>
+                </span>
               )}
             </FullDescription>
           </FullProfile>

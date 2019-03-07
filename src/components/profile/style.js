@@ -152,30 +152,6 @@ export const FullDescription = styled.div`
   }
 `;
 
-export const ExtLink = styled(FlexRow)`
-  align-items: center;
-  font-weight: 400;
-  transition: ${Transition.hover.off};
-  ${Truncate};
-  font-size: 16px;
-  margin: 12px 0;
-  color: ${theme.text.alt};
-
-  a {
-    color: ${theme.text.secondary};
-  }
-
-  > a:hover {
-    color: ${theme.text.default};
-  }
-
-  > div {
-    color: ${theme.text.alt};
-    margin-right: 4px;
-    margin-top: 1px;
-  }
-`;
-
 export const Actions = styled(FlexRow)`
   padding: 16px;
   padding-top: 0;
@@ -339,14 +315,4 @@ export const MessageButtonContainer = styled.div`
     justify-content: center;
     text-align: center;
   }
-`;
-
-export const OnlineIndicator = styled.span`
-  width: 10px;
-  height: 10px;
-  border-radius: 5px;
-  background: ${props => (props.offline ? theme.text.alt : theme.success.alt)};
-  margin-right: 12px;
-  display: inline-block;
-  margin-left: 6px;
 `;

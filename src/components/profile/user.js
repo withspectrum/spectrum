@@ -34,8 +34,6 @@ import {
   Subtitle,
   FullDescription,
   Title,
-  ExtLink,
-  OnlineIndicator,
 } from './style';
 
 type CurrentUserProps = {
@@ -105,12 +103,6 @@ const UserWithData = ({
           <FullDescription>
             {user.description && <p>{renderTextWithLinks(user.description)}</p>}
 
-            {user.isOnline && (
-              <ExtLink>
-                <OnlineIndicator /> Online now
-              </ExtLink>
-            )}
-
             <Reputation
               reputation={
                 user.contextPermissions
@@ -119,7 +111,7 @@ const UserWithData = ({
               }
             />
             {user.website && (
-              <ExtLink>
+              <span>
                 <Icon glyph="link" size={24} />
                 <a
                   target="_blank"
@@ -128,7 +120,7 @@ const UserWithData = ({
                 >
                   {user.website}
                 </a>
-              </ExtLink>
+              </span>
             )}
             <GithubProfile
               id={user.id}
@@ -137,7 +129,7 @@ const UserWithData = ({
                   return null;
                 } else {
                   return (
-                    <ExtLink>
+                    <span>
                       <Icon glyph="github" size={24} />
                       <a
                         target="_blank"
@@ -147,7 +139,7 @@ const UserWithData = ({
                         github.com/
                         {profile.username}
                       </a>
-                    </ExtLink>
+                    </span>
                   );
                 }
               }}
