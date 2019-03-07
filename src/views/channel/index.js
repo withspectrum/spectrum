@@ -27,12 +27,7 @@ import ChannelMemberGrid from './components/memberGrid';
 import { CLIENT_URL } from 'src/api/constants';
 import CommunityLogin from 'src/views/communityLogin';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import {
-  SegmentedControl,
-  DesktopSegment,
-  Segment,
-  MobileSegment,
-} from 'src/components/segmentedControl';
+import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
 import {
   Grid,
   Meta,
@@ -57,7 +52,12 @@ import ToggleChannelMembership from 'src/components/toggleChannelMembership';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
-import { ViewGrid, PrimarySecondaryColumnGrid } from 'src/components/Layout';
+import {
+  ViewGrid,
+  PrimarySecondaryColumnGrid,
+  PrimaryColumn,
+  SecondaryColumn,
+} from 'src/components/Layout';
 
 const ThreadFeedWithData = compose(
   connect(),
@@ -381,49 +381,34 @@ class ChannelView extends React.Component<Props, State> {
           />
           <ViewGrid>
             <PrimarySecondaryColumnGrid data-cy="channel-view">
-              <Content>
-                <SegmentedControl style={{ margin: '16px 0 0 0' }}>
-                  <DesktopSegment
-                    segmentLabel="search"
+              <PrimaryColumn>
+                <SegmentedControl>
+                  <Segment
                     onClick={() => this.handleSegmentClick('search')}
-                    selected={selectedView === 'search'}
+                    isActive={selectedView === 'search'}
                     data-cy="channel-search-tab"
                   >
                     <Icon glyph={'search'} />
                     Search
-                  </DesktopSegment>
+                  </Segment>
                   <Segment
                     segmentLabel="threads"
                     onClick={() => this.handleSegmentClick('threads')}
-                    selected={selectedView === 'threads'}
+                    isActive={selectedView === 'threads'}
                   >
                     Threads
                   </Segment>
-                  <MidSegment
+                  <Segment
                     segmentLabel="members"
                     onClick={() => this.handleSegmentClick('members')}
-                    selected={selectedView === 'members'}
+                    isActive={selectedView === 'members'}
                   >
                     Members (
                     {channel.metaData &&
                       channel.metaData.members &&
                       channel.metaData.members.toLocaleString()}
                     )
-                  </MidSegment>
-                  <MobileSegment
-                    segmentLabel="members"
-                    onClick={() => this.handleSegmentClick('members')}
-                    selected={selectedView === 'members'}
-                  >
-                    Members
-                  </MobileSegment>
-                  <MobileSegment
-                    segmentLabel="search"
-                    onClick={() => this.handleSegmentClick('search')}
-                    selected={selectedView === 'search'}
-                  >
-                    <Icon glyph={'search'} />
-                  </MobileSegment>
+                  </Segment>
                 </SegmentedControl>
 
                 {/* if the user is logged in and has permissions to post, and the channel is either private + paid, or is not private, show the composer */}
@@ -464,8 +449,8 @@ class ChannelView extends React.Component<Props, State> {
                     <ChannelMemberGrid id={channel.id} />
                   </ErrorBoundary>
                 )}
-              </Content>
-              <Extras>
+              </PrimaryColumn>
+              <SecondaryColumn>
                 <Meta data-cy="channel-profile-full">
                   <CommunityContext>
                     <CommunityAvatar community={community} />
@@ -532,7 +517,7 @@ class ChannelView extends React.Component<Props, State> {
                   <ColumnHeading>Members</ColumnHeading>
                   <ChannelMemberGrid first={5} id={channel.id} />
                 </ErrorBoundary>
-              </Extras>
+              </SecondaryColumn>
             </PrimarySecondaryColumnGrid>
           </ViewGrid>
         </React.Fragment>

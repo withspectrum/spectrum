@@ -8,8 +8,12 @@ import NewThread from './newThread';
 import ExistingThread from './existingThread';
 import { View, MessagesList, ComposeHeader } from '../style';
 import { track, events } from 'src/helpers/analytics';
-import { ViewGrid, PrimarySecondaryColumnGrid } from 'src/components/Layout';
-import { SecondaryPrimaryColumnGrid } from '../../../components/Layout';
+import {
+  ViewGrid,
+  SecondaryPrimaryColumnGrid,
+  PrimaryColumn,
+  SecondaryColumn,
+} from 'src/components/Layout';
 
 type Props = {
   match: Match,
@@ -41,7 +45,7 @@ class DirectMessages extends React.Component<Props, State> {
     return (
       <ViewGrid>
         <SecondaryPrimaryColumnGrid>
-          <MessagesList isViewingThread={isViewingThread || isComposing}>
+          <SecondaryColumn isViewingThread={isViewingThread || isComposing}>
             <Link to="/messages/new">
               <ComposeHeader>
                 <Icon glyph="message-new" dataCy="compose-dm" />
@@ -49,20 +53,22 @@ class DirectMessages extends React.Component<Props, State> {
             </Link>
 
             <ThreadsList activeThreadId={activeThreadId} />
-          </MessagesList>
+          </SecondaryColumn>
 
-          {isViewingThread ? (
-            <ExistingThread
-              id={activeThreadId}
-              match={match}
-              hideOnMobile={isComposing}
-            />
-          ) : (
-            <NewThread
-              match={match}
-              hideOnMobile={isViewingThread || !activeThreadId}
-            />
-          )}
+          <PrimaryColumn>
+            {isViewingThread ? (
+              <ExistingThread
+                id={activeThreadId}
+                match={match}
+                hideOnMobile={isComposing}
+              />
+            ) : (
+              <NewThread
+                match={match}
+                hideOnMobile={isViewingThread || !activeThreadId}
+              />
+            )}
+          </PrimaryColumn>
         </SecondaryPrimaryColumnGrid>
       </ViewGrid>
     );

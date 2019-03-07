@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { FlexRow, FlexCol } from '../../components/globals';
 import Card from '../../components/card';
 import { Transition, zIndex } from '../../components/globals';
-import { SegmentedControl } from '../../components/segmentedControl';
 
 export const Row = styled(FlexRow)`
   padding: 8px 16px;
@@ -144,10 +143,6 @@ export const MetaMemberships = styled.div`
     display: none;
   }
 `;
-
-export const Content = styled.div``;
-
-export const Extras = styled.div``;
 
 export const ColumnHeading = styled.div`
   display: flex;

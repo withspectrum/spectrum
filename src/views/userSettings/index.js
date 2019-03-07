@@ -15,7 +15,6 @@ import { View } from './style';
 import Overview from './components/overview';
 import Titlebar from '../titlebar';
 import Header from 'src/components/settingsViews/header';
-import Subnav from 'src/components/settingsViews/subnav';
 import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
 
@@ -78,14 +77,6 @@ class UserSettings extends React.Component<Props> {
 
     // user is viewing their own settings, validated on the server
     if (user && user.id && currentUser.id === user.id) {
-      const subnavItems = [
-        {
-          to: `/users/${user.username}/settings`,
-          label: 'Overview',
-          activeLabel: 'settings',
-        },
-      ];
-
       const subheading = {
         to: `/users/${user.username}`,
         label: `Return to profile`,
@@ -113,8 +104,6 @@ class UserSettings extends React.Component<Props> {
               subheading={subheading}
               heading={'My Settings'}
             />
-
-            <Subnav items={subnavItems} activeTab={activeTab} />
 
             <Route path={`${match.url}`}>
               {() => <Overview user={user} />}

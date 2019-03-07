@@ -12,7 +12,12 @@ import { TeamMembersList } from '../components/TeamMembersList';
 import { CommunityFeeds } from '../components/CommunityFeeds';
 import { ChannelsList } from '../components/ChannelsList';
 import { Main, Sidebar, SidebarSection } from '../style';
-import { ViewGrid, PrimarySecondaryColumnGrid } from 'src/components/Layout';
+import {
+  ViewGrid,
+  PrimarySecondaryColumnGrid,
+  PrimaryColumn,
+  SecondaryColumn,
+} from 'src/components/Layout';
 
 const Component = (props: SignedInMemberType) => {
   const { community } = props;
@@ -69,7 +74,7 @@ const Component = (props: SignedInMemberType) => {
 
       <ViewGrid data-cy="community-view">
         <PrimarySecondaryColumnGrid>
-          <Main>
+          <PrimaryColumn>
             <MobileCommunityProfileHeader community={community} />
             <CommunityFeeds
               scrollToBottom={scrollToBottom}
@@ -78,9 +83,9 @@ const Component = (props: SignedInMemberType) => {
               scrollToPosition={scrollToPosition}
               community={community}
             />
-          </Main>
+          </PrimaryColumn>
 
-          <Sidebar>
+          <SecondaryColumn>
             <SidebarSection>
               <CommunityProfileHeader community={community} />
             </SidebarSection>
@@ -97,7 +102,7 @@ const Component = (props: SignedInMemberType) => {
             <SidebarSection>
               <ChannelsList id={community.id} communitySlug={community.slug} />
             </SidebarSection>
-          </Sidebar>
+          </SecondaryColumn>
         </PrimarySecondaryColumnGrid>
       </ViewGrid>
     </React.Fragment>

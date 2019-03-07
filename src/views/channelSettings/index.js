@@ -18,7 +18,6 @@ import ViewError from 'src/components/viewError';
 import { View } from 'src/components/settingsViews/style';
 import Header from 'src/components/settingsViews/header';
 import Overview from './components/overview';
-import Subnav from 'src/components/settingsViews/subnav';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
@@ -185,14 +184,6 @@ class ChannelSettings extends React.Component<Props> {
         }
       };
 
-      const subnavItems = [
-        {
-          to: `/${channel.community.slug}/${channel.slug}/settings`,
-          label: 'Overview',
-          activeLabel: 'settings',
-        },
-      ];
-
       const subheading = {
         to: `/${channel.community.slug}/settings`,
         label: `Return to ${channel.community.name} settings`,
@@ -215,8 +206,6 @@ class ChannelSettings extends React.Component<Props> {
                 channel.isArchived ? '(Archived)' : ''
               }`}
             />
-            <Subnav items={subnavItems} activeTab={activeTab} />
-
             <ActiveView />
           </View>
         </React.Fragment>

@@ -12,7 +12,7 @@ import {
   InputsGrid,
 } from './style';
 import { ThreadHeading } from 'src/views/thread/style';
-import { SegmentedControl, Segment } from 'src/components/segmentedControl';
+import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
 import MentionsInput from 'src/components/mentionsInput';
 import ThreadRenderer from '../threadRenderer';
 import processThreadContent from 'shared/draft-utils/process-thread-content';
@@ -58,10 +58,10 @@ export default (props: Props) => {
           background: '#FFF',
         }}
       >
-        <Segment selected={!showPreview} onClick={() => setShowPreview(false)}>
+        <Segment isActive={!showPreview} onClick={() => setShowPreview(false)}>
           Write
         </Segment>
-        <Segment selected={showPreview} onClick={() => setShowPreview(true)}>
+        <Segment isActive={showPreview} onClick={() => setShowPreview(true)}>
           Preview
         </Segment>
       </SegmentedControl>

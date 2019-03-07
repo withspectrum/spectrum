@@ -20,7 +20,7 @@ import {
 import { getCommunitiesBySlug } from 'shared/graphql/queries/community/getCommunities';
 import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCommunities';
 import { Loading } from 'src/components/loading';
-import { SegmentedControl, Segment } from 'src/components/segmentedControl';
+import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
 import { track, transformations, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
 
@@ -28,18 +28,6 @@ const ChartGrid = styled.div`
   display: flex;
   flex-direction: column;
   flex: auto;
-`;
-
-const ThisSegment = styled(Segment)`
-  @media (max-width: 768px) {
-    &:first-of-type {
-      color: ${theme.text.alt};
-      border-bottom: 2px solid ${theme.bg.border};
-    }
-    &:not(:first-of-type) {
-      display: none;
-    }
-  }
 `;
 
 export const Charts = () => {
@@ -71,17 +59,17 @@ class CollectionSwitcher extends React.Component<Props, State> {
       <Collections>
         <SegmentedControl>
           {collections.map((collection, i) => (
-            <ThisSegment
+            <Segment
               key={i}
               onClick={() =>
                 this.handleSegmentClick(collection.curatedContentType)
               }
-              selected={
+              isActive={
                 collection.curatedContentType === this.state.selectedView
               }
             >
               {collection.title}
-            </ThisSegment>
+            </Segment>
           ))}
         </SegmentedControl>
 

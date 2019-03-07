@@ -34,15 +34,16 @@ import {
   ColumnHeading,
   MetaMemberships,
 } from './style';
-import {
-  SegmentedControl,
-  DesktopSegment,
-  MobileSegment,
-} from 'src/components/segmentedControl';
+import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
 import { ErrorBoundary } from 'src/components/error';
 import { openModal } from 'src/actions/modals';
 import { isAdmin } from 'src/helpers/is-admin';
-import { ViewGrid, PrimarySecondaryColumnGrid } from 'src/components/Layout';
+import {
+  ViewGrid,
+  PrimarySecondaryColumnGrid,
+  PrimaryColumn,
+  SecondaryColumn,
+} from 'src/components/Layout';
 
 const ThreadFeedWithData = compose(
   connect(),
@@ -169,52 +170,30 @@ class UserView extends React.Component<Props, State> {
           </Head>
           <ViewGrid data-cy="user-view">
             <PrimarySecondaryColumnGrid>
-              <Content>
-                <SegmentedControl style={{ margin: '16px 0 0 0' }}>
-                  <DesktopSegment
-                    segmentLabel="search"
+              <PrimaryColumn>
+                <SegmentedControl>
+                  <Segment
                     onClick={() => this.handleSegmentClick('search')}
-                    selected={selectedView === 'search'}
+                    isActive={selectedView === 'search'}
                   >
                     Search
-                  </DesktopSegment>
+                  </Segment>
 
-                  <DesktopSegment
+                  <Segment
                     segmentLabel="participant"
                     onClick={() => this.handleSegmentClick('participant')}
-                    selected={selectedView === 'participant'}
+                    isActive={selectedView === 'participant'}
                   >
                     Replies
-                  </DesktopSegment>
+                  </Segment>
 
-                  <DesktopSegment
+                  <Segment
                     segmentLabel="creator"
                     onClick={() => this.handleSegmentClick('creator')}
-                    selected={selectedView === 'creator'}
+                    isActive={selectedView === 'creator'}
                   >
                     Threads
-                  </DesktopSegment>
-                  <MobileSegment
-                    segmentLabel="search"
-                    onClick={() => this.handleSegmentClick('search')}
-                    selected={selectedView === 'search'}
-                  >
-                    Search
-                  </MobileSegment>
-                  <MobileSegment
-                    segmentLabel="participant"
-                    onClick={() => this.handleSegmentClick('participant')}
-                    selected={selectedView === 'participant'}
-                  >
-                    Replies
-                  </MobileSegment>
-                  <MobileSegment
-                    segmentLabel="creator"
-                    onClick={() => this.handleSegmentClick('creator')}
-                    selected={selectedView === 'creator'}
-                  >
-                    Threads
-                  </MobileSegment>
+                  </Segment>
                 </SegmentedControl>
 
                 {hasThreads &&
@@ -238,8 +217,8 @@ class UserView extends React.Component<Props, State> {
                 {selectedView === 'search' && <Search user={user} />}
 
                 {!hasThreads && <NullState bg="null" heading={nullHeading} />}
-              </Content>
-              <Extras>
+              </PrimaryColumn>
+              <SecondaryColumn>
                 <CoverPhoto src={user.coverPhoto} />
                 <Meta>
                   <ErrorBoundary fallbackComponent={null}>
@@ -296,7 +275,7 @@ class UserView extends React.Component<Props, State> {
                     id={user.id}
                   />
                 </ErrorBoundary>
-              </Extras>
+              </SecondaryColumn>
             </PrimarySecondaryColumnGrid>
           </ViewGrid>
         </React.Fragment>

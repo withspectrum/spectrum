@@ -1,76 +1,53 @@
 // @flow
-import theme from 'shared/theme';
-import styled, { css } from 'styled-components';
-import { FlexRow } from '../globals';
+import React from 'react';
+import { StyledSegmentedControl, StyledSegment } from './style';
+import { Link } from 'react-router-dom';
 
-export const SegmentedControl = styled(FlexRow)`
-  align-self: stretch;
-  margin: 0 32px;
-  margin-top: 16px;
-  border-bottom: 1px solid ${theme.bg.border};
-  align-items: stretch;
-  min-height: 48px;
-  ${props => props.css};
+type ControlProps = {
+  sticky?: boolean,
+  stickyOffset?: number,
+  mobileStickyOffset?: number,
+};
 
-  @media (max-width: 768px) {
-    overflow-y: hidden;
-    overflow-x: scroll;
-    background-color: ${theme.bg.default};
-    align-self: stretch;
-    margin: 0;
-    margin-bottom: 2px;
-  }
-`;
+export const SegmentedControl = (props: ControlProps) => {
+  const {
+    sticky = true,
+    stickyOffset = 0,
+    mobileSticky = true,
+    mobileStickyOffset = 0,
+    ...rest
+  } = props;
+  return (
+    <StyledSegmentedControl
+      sticky={sticky}
+      mobileSticky={mobileSticky}
+      stickyOffset={stickyOffset}
+      mobileStickyOffset={mobileStickyOffset}
+      {...rest}
+    />
+  );
+};
 
-export const Segment = styled(FlexRow)`
-  padding: 8px 24px;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  line-height: 1;
-  font-size: 18px;
-  font-weight: 500;
-  color: ${props =>
-    props.selected ? props.theme.text.default : props.theme.text.alt};
-  cursor: pointer;
-  position: relative;
-  top: 1px;
-  border-bottom: 1px solid
-    ${props => (props.selected ? props.theme.text.default : 'transparent')};
+type SegmentProps = {
+  isActive: boolean,
+  hideOnDesktop?: boolean,
+  to?: string,
+};
 
-  .icon {
-    margin-right: 8px;
-  }
+export const Segment = (props: SegmentProps) => {
+  const { isActive = false, hideOnDesktop = false, to, ...rest } = props;
 
-  ${props =>
-    props.selected &&
-    css`
-      border-bottom: 1px solid ${theme.bg.reverse};
-    `};
+  const component = (
+    <StyledSegment
+      isActive={isActive}
+      hideOnDesktop={hideOnDesktop}
+      {...rest}
+    />
+  );
 
-  &:hover {
-    color: ${theme.text.default};
+  if (to) {
+    return <Link to={to}>{component}</Link>;
   }
 
-  @media (max-width: 768px) {
-    flex: auto;
-    justify-content: center;
-    text-align: center;
-
-    .icon {
-      margin-right: 0;
-    }
-  }
-`;
-
-export const DesktopSegment = styled(Segment)`
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-export const MobileSegment = styled(Segment)`
-  @media (min-width: 768px) {
-    display: none;
-  }
-`;
+  return component;
+};

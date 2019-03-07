@@ -3,7 +3,6 @@ import theme from 'shared/theme';
 import styled from 'styled-components';
 import Card from '../../components/card';
 import { Transition, zIndex, Truncate } from '../../components/globals';
-import { SegmentedControl } from '../../components/segmentedControl';
 import { FullProfile, FullDescription } from 'src/components/profile/style';
 import { ListContainer } from 'src/components/listItems/style';
 
@@ -88,19 +87,6 @@ export const Meta = styled(Column)`
     }
   }
 `;
-export const Content = styled.div`
-  @media (max-width: 1280px) and (min-width: 768px) {
-    padding-right: 32px;
-  }
-
-  @media (max-width: 768px) {
-    > ${SegmentedControl} > div {
-      margin-top: 0;
-    }
-  }
-`;
-
-export const Extras = styled.div``;
 
 export const ColumnHeading = styled.div`
   display: flex;

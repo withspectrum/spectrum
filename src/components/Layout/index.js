@@ -1,5 +1,6 @@
 // @flow
 import styled from 'styled-components';
+import theme from 'shared/theme';
 
 export const NAVBAR_WIDTH = 72;
 export const PRIMARY_COLUMN_WIDTH = 600;
@@ -91,5 +92,36 @@ export const CenteredGrid = styled(SingleColumnGrid)`
 
   @media (max-width: ${PRIMARY_COLUMN_WIDTH + NAVBAR_WIDTH}px) {
     align-self: start;
+  }
+`;
+
+export const PrimaryColumn = styled.section`
+  background: ${theme.bg.default};
+  border-left: 1px solid ${theme.bg.border};
+  border-right: 1px solid ${theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
+  border-radius: 0 0 4px 4px;
+  height: 100%;
+  min-width: 100%;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+  }
+`;
+
+export const SecondaryColumn = styled.section`
+  height: 100vh;
+  overflow: hidden;
+  overflow-y: scroll;
+  position: sticky;
+  top: 0;
+  padding-bottom: 64px;
+  padding-right: 16px;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    height: auto;
+    display: none;
   }
 `;

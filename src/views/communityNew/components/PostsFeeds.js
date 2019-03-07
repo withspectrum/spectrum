@@ -7,12 +7,8 @@ import getComposerLink from 'src/helpers/get-composer-link';
 import ThreadFeed from 'src/components/threadFeed';
 import { SmallPrimaryButton } from './Button';
 import Icon from 'src/components/icons';
-import {
-  SubSegmentsContainer,
-  SubSegment,
-  LeftActions,
-  RightActions,
-} from '../style';
+import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
+import { LeftActions, RightActions } from '../style';
 
 const CommunityThreadFeed = compose(
   connect(),
@@ -27,21 +23,21 @@ export const PostsFeeds = (props: Props) => {
 
   return (
     <React.Fragment>
-      <SubSegmentsContainer>
+      <SegmentedControl>
         <LeftActions>
-          <SubSegment
-            active={activeFeed === 'latest'}
+          <Segment
+            isActive={activeFeed === 'latest'}
             onClick={() => setActiveFeed('latest')}
           >
             Latest
-          </SubSegment>
+          </Segment>
 
-          <SubSegment
-            active={activeFeed === 'trending'}
+          <Segment
+            isActive={activeFeed === 'trending'}
             onClick={() => setActiveFeed('trending')}
           >
             Popular
-          </SubSegment>
+          </Segment>
         </LeftActions>
 
         {community.communityPermissions.isMember && (
@@ -58,7 +54,7 @@ export const PostsFeeds = (props: Props) => {
             </SmallPrimaryButton>
           </RightActions>
         )}
-      </SubSegmentsContainer>
+      </SegmentedControl>
 
       <CommunityThreadFeed
         viewContext="communityProfile"

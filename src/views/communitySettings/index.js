@@ -15,7 +15,7 @@ import Members from '../communityMembers';
 import Overview from './components/overview';
 import Titlebar from '../titlebar';
 import Header from '../../components/settingsViews/header';
-import Subnav from '../../components/settingsViews/subnav';
+import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
 import { View } from './style';
 import type { ContextRouter } from 'react-router';
 import { track, events, transformations } from 'src/helpers/analytics';
@@ -136,7 +136,18 @@ class CommunitySettings extends React.Component<Props> {
               subheading={subheading}
               heading={'Settings'}
             />
-            <Subnav items={subnavItems} activeTab={activeTab} />
+
+            <SegmentedControl>
+              {subnavItems.map(item => (
+                <Segment
+                  key={item.label}
+                  to={item.to}
+                  isActive={activeTab === item.activeLabel}
+                >
+                  {item.label}
+                </Segment>
+              ))}
+            </SegmentedControl>
 
             <Switch>
               <Route path={`${match.url}/analytics`}>

@@ -11,12 +11,8 @@ import { CommunityMeta } from './CommunityMeta';
 import { WatercoolerChat } from './WatercoolerChat';
 import { PostsFeeds } from './PostsFeeds';
 import { ARROW_LEFT, ARROW_RIGHT } from 'src/helpers/keycodes';
-import {
-  FeedsContainer,
-  SegmentedControl,
-  Segment,
-  SidebarSection,
-} from '../style';
+import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
+import { FeedsContainer, SidebarSection } from '../style';
 
 export const CommunityFeeds = (props: CommunityFeedsType) => {
   const {
@@ -165,7 +161,7 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
             <Segment
               key={segment}
               hideOnDesktop={segment === 'info'}
-              active={segment === activeSegment}
+              isActive={segment === activeSegment}
               onClick={() => setActiveSegment(segment)}
             >
               {segment[0].toUpperCase() + segment.substr(1)}
