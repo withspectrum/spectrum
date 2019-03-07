@@ -145,44 +145,9 @@ export const MetaMemberships = styled.div`
   }
 `;
 
-export const Content = styled(Column)`
-  grid-area: content;
-  min-width: 0;
-  align-items: stretch;
+export const Content = styled.div``;
 
-  @media (max-width: 1028px) and (min-width: 768px) {
-    padding-right: 32px;
-  }
-
-  @media (max-width: 768px) {
-    > ${SegmentedControl} > div {
-      margin-top: 0;
-    }
-  }
-`;
-
-export const Extras = styled(Column)`
-  grid-area: extras;
-
-  > ${FlexCol} > div {
-    border-top: 0;
-    padding: 0;
-    padding-top: 24px;
-
-    h3 {
-      font-size: 16px;
-      line-height: 1.2;
-    }
-  }
-
-  @media (max-width: 1280px) {
-    display: none;
-  }
-
-  @media (min-width: 768px) {
-    padding-right: 32px;
-  }
-`;
+export const Extras = styled.div``;
 
 export const ColumnHeading = styled.div`
   display: flex;

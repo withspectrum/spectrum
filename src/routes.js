@@ -234,6 +234,10 @@ class Routes extends React.Component<Props> {
             <ScrollManager>
               <Body>
                 <Status />
+                <Route component={ModalRoot} />
+                <Route component={Toasts} />
+                <Route component={Gallery} />
+
                 <AppViewWrapper>
                   {/* Default meta tags, get overriden by anything further down the tree */}
                   <Head title={title} description={description} />
@@ -247,10 +251,6 @@ class Routes extends React.Component<Props> {
                   <ThirdPartyContext />
                   <Route component={QueryParamToastDispatcher} />
                   <Route component={Navigation} />
-
-                  <Route component={ModalRoot} />
-                  <Route component={Toasts} />
-                  <Route component={Gallery} />
 
                   {/*
                       Switch only renders the first match. Subrouting happens downstream

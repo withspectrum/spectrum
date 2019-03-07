@@ -42,6 +42,7 @@ import {
 import { ErrorBoundary } from 'src/components/error';
 import { openModal } from 'src/actions/modals';
 import { isAdmin } from 'src/helpers/is-admin';
+import { ViewGrid, PrimarySecondaryColumnGrid } from 'src/components/Layout';
 
 const ThreadFeedWithData = compose(
   connect(),
@@ -166,141 +167,138 @@ class UserView extends React.Component<Props, State> {
             <meta property="profile:last_name" content={user.name} />
             <meta property="profile:username" content={user.username} />
           </Head>
-          <Titlebar
-            title={user.name}
-            subtitle={'Posts By'}
-            provideBack={true}
-            backRoute={'/'}
-            noComposer
-          />
-          <Grid data-cy="user-view" id="main">
-            <CoverPhoto src={user.coverPhoto} />
-            <Meta>
-              <ErrorBoundary fallbackComponent={null}>
-                <UserProfile
-                  data={{ user }}
-                  username={username}
-                  profileSize="full"
-                  showHoverProfile={false}
-                />
-              </ErrorBoundary>
-
-              {currentUser && user.id !== currentUser.id && (
-                <React.Fragment>
-                  <LoginButton
-                    dataCy={'send-dm-button'}
-                    onClick={() => this.initMessage(user)}
+          <ViewGrid data-cy="user-view">
+            <PrimarySecondaryColumnGrid>
+              <Content>
+                <SegmentedControl style={{ margin: '16px 0 0 0' }}>
+                  <DesktopSegment
+                    segmentLabel="search"
+                    onClick={() => this.handleSegmentClick('search')}
+                    selected={selectedView === 'search'}
                   >
-                    Message {user.name}
-                  </LoginButton>
-                  <TextButton onClick={this.initReport}>Report</TextButton>
-                </React.Fragment>
-              )}
+                    Search
+                  </DesktopSegment>
 
-              {currentUser &&
-                user.id !== currentUser.id &&
-                isAdmin(currentUser.id) && (
-                  <TextButton onClick={this.initBan}>Ban</TextButton>
-                )}
+                  <DesktopSegment
+                    segmentLabel="participant"
+                    onClick={() => this.handleSegmentClick('participant')}
+                    selected={selectedView === 'participant'}
+                  >
+                    Replies
+                  </DesktopSegment>
 
-              {currentUser && user.id === currentUser.id && (
-                <Link to={`/users/${username}/settings`}>
-                  <SettingsButton icon={'settings'}>Settings</SettingsButton>
-                </Link>
-              )}
+                  <DesktopSegment
+                    segmentLabel="creator"
+                    onClick={() => this.handleSegmentClick('creator')}
+                    selected={selectedView === 'creator'}
+                  >
+                    Threads
+                  </DesktopSegment>
+                  <MobileSegment
+                    segmentLabel="search"
+                    onClick={() => this.handleSegmentClick('search')}
+                    selected={selectedView === 'search'}
+                  >
+                    Search
+                  </MobileSegment>
+                  <MobileSegment
+                    segmentLabel="participant"
+                    onClick={() => this.handleSegmentClick('participant')}
+                    selected={selectedView === 'participant'}
+                  >
+                    Replies
+                  </MobileSegment>
+                  <MobileSegment
+                    segmentLabel="creator"
+                    onClick={() => this.handleSegmentClick('creator')}
+                    selected={selectedView === 'creator'}
+                  >
+                    Threads
+                  </MobileSegment>
+                </SegmentedControl>
 
-              <ErrorBoundary fallbackComponent={null}>
-                <MetaMemberships>
+                {hasThreads &&
+                  (selectedView === 'creator' ||
+                    selectedView === 'participant') && (
+                    <Feed
+                      userId={user.id}
+                      username={username}
+                      viewContext={
+                        selectedView === 'participant'
+                          ? 'userProfileReplies'
+                          : 'userProfile'
+                      }
+                      hasNoThreads={this.hasNoThreads}
+                      hasThreads={this.hasThreads}
+                      kind={selectedView}
+                      id={user.id}
+                    />
+                  )}
+
+                {selectedView === 'search' && <Search user={user} />}
+
+                {!hasThreads && <NullState bg="null" heading={nullHeading} />}
+              </Content>
+              <Extras>
+                <CoverPhoto src={user.coverPhoto} />
+                <Meta>
+                  <ErrorBoundary fallbackComponent={null}>
+                    <UserProfile
+                      data={{ user }}
+                      username={username}
+                      profileSize="full"
+                      showHoverProfile={false}
+                    />
+                  </ErrorBoundary>
+
+                  {currentUser && user.id !== currentUser.id && (
+                    <React.Fragment>
+                      <LoginButton
+                        dataCy={'send-dm-button'}
+                        onClick={() => this.initMessage(user)}
+                      >
+                        Message {user.name}
+                      </LoginButton>
+                      <TextButton onClick={this.initReport}>Report</TextButton>
+                    </React.Fragment>
+                  )}
+
+                  {currentUser &&
+                    user.id !== currentUser.id &&
+                    isAdmin(currentUser.id) && (
+                      <TextButton onClick={this.initBan}>Ban</TextButton>
+                    )}
+
+                  {currentUser && user.id === currentUser.id && (
+                    <Link to={`/users/${username}/settings`}>
+                      <SettingsButton icon={'settings'}>
+                        Settings
+                      </SettingsButton>
+                    </Link>
+                  )}
+
+                  <ErrorBoundary fallbackComponent={null}>
+                    <MetaMemberships>
+                      <ColumnHeading>Member of</ColumnHeading>
+                      <CommunityList
+                        currentUser={currentUser}
+                        user={user}
+                        id={user.id}
+                      />
+                    </MetaMemberships>
+                  </ErrorBoundary>
+                </Meta>
+                <ErrorBoundary fallbackComponent={null}>
                   <ColumnHeading>Member of</ColumnHeading>
                   <CommunityList
                     currentUser={currentUser}
                     user={user}
                     id={user.id}
                   />
-                </MetaMemberships>
-              </ErrorBoundary>
-            </Meta>
-            <Content>
-              <SegmentedControl style={{ margin: '16px 0 0 0' }}>
-                <DesktopSegment
-                  segmentLabel="search"
-                  onClick={() => this.handleSegmentClick('search')}
-                  selected={selectedView === 'search'}
-                >
-                  Search
-                </DesktopSegment>
-
-                <DesktopSegment
-                  segmentLabel="participant"
-                  onClick={() => this.handleSegmentClick('participant')}
-                  selected={selectedView === 'participant'}
-                >
-                  Replies
-                </DesktopSegment>
-
-                <DesktopSegment
-                  segmentLabel="creator"
-                  onClick={() => this.handleSegmentClick('creator')}
-                  selected={selectedView === 'creator'}
-                >
-                  Threads
-                </DesktopSegment>
-                <MobileSegment
-                  segmentLabel="search"
-                  onClick={() => this.handleSegmentClick('search')}
-                  selected={selectedView === 'search'}
-                >
-                  Search
-                </MobileSegment>
-                <MobileSegment
-                  segmentLabel="participant"
-                  onClick={() => this.handleSegmentClick('participant')}
-                  selected={selectedView === 'participant'}
-                >
-                  Replies
-                </MobileSegment>
-                <MobileSegment
-                  segmentLabel="creator"
-                  onClick={() => this.handleSegmentClick('creator')}
-                  selected={selectedView === 'creator'}
-                >
-                  Threads
-                </MobileSegment>
-              </SegmentedControl>
-
-              {hasThreads &&
-                (selectedView === 'creator' ||
-                  selectedView === 'participant') && (
-                  <Feed
-                    userId={user.id}
-                    username={username}
-                    viewContext={
-                      selectedView === 'participant'
-                        ? 'userProfileReplies'
-                        : 'userProfile'
-                    }
-                    hasNoThreads={this.hasNoThreads}
-                    hasThreads={this.hasThreads}
-                    kind={selectedView}
-                    id={user.id}
-                  />
-                )}
-
-              {selectedView === 'search' && <Search user={user} />}
-
-              {!hasThreads && <NullState bg="null" heading={nullHeading} />}
-            </Content>
-            <Extras>
-              <ErrorBoundary fallbackComponent={null}>
-                <ColumnHeading>Member of</ColumnHeading>
-                <CommunityList
-                  currentUser={currentUser}
-                  user={user}
-                  id={user.id}
-                />
-              </ErrorBoundary>
-            </Extras>
-          </Grid>
+                </ErrorBoundary>
+              </Extras>
+            </PrimarySecondaryColumnGrid>
+          </ViewGrid>
         </React.Fragment>
       );
     }
@@ -312,12 +310,6 @@ class UserView extends React.Component<Props, State> {
     if (!user) {
       return (
         <React.Fragment>
-          <Titlebar
-            title={'User not found'}
-            provideBack={true}
-            backRoute={'/'}
-            noComposer
-          />
           <ViewError
             dataCy="user-not-found"
             heading={'We couldn’t find anyone with this username.'}
@@ -334,12 +326,6 @@ class UserView extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <Titlebar
-          title={'User not found'}
-          provideBack={true}
-          backRoute={'/'}
-          noComposer
-        />
         <ViewError
           heading={'We ran into an error loading this user.'}
           refresh

@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 import theme from 'shared/theme';
 import { Link } from 'react-router-dom';
-import { MEDIA_BREAK } from 'src/views/communityNew/style';
+import { MEDIA_BREAK } from 'src/components/Layout';
 
 export const Overlay = styled.div`
   position: fixed;
@@ -21,6 +21,8 @@ export const NavigationWrapper = styled.div`
   grid-area: navigation;
   position: sticky;
   top: 0;
+  width: 72px;
+  height: 100vh;
   overflow: hidden;
   overflow-y: scroll;
 
@@ -171,6 +173,7 @@ export const RedDot = styled.span`
 // Ref: https://github.com/ReactTraining/react-router/issues/394.
 export const SkipLink = styled.a`
   overflow: hidden;
+  position: absolute;
   height: 1px;
   width: 1px;
 

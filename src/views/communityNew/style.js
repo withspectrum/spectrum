@@ -3,42 +3,16 @@ import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import { Link } from 'react-router-dom';
 import { tint, Truncate } from 'src/components/globals';
-
-const MAIN_WIDTH = 600;
-const SIDEBAR_WIDTH = 340;
-const COL_GAP = 16;
-const MAX_WIDTH = MAIN_WIDTH + SIDEBAR_WIDTH + COL_GAP;
-// add 122 to account for the left side nav
-export const MEDIA_BREAK = MAIN_WIDTH + SIDEBAR_WIDTH + COL_GAP + 122;
-
-export const Container = styled.section`
-  display: grid;
-  justify-content: center;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    grid-template-columns: 1fr;
-    width: 100%;
-  }
-`;
-
-export const TwoColumnGrid = styled.section`
-  display: grid;
-  grid-template-columns: ${MAIN_WIDTH}px ${SIDEBAR_WIDTH}px;
-  grid-template-rows: 100%;
-  grid-gap: ${COL_GAP}px;
-  max-width: ${MAX_WIDTH}px;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    grid-template-columns: 1fr;
-    grid-template-rows: min-content 1fr;
-    grid-gap: 0;
-    max-width: 100%;
-  }
-`;
+import {
+  PRIMARY_COLUMN_WIDTH,
+  MEDIA_BREAK,
+  MAX_WIDTH,
+  SECONDARY_COLUMN_WIDTH,
+} from 'src/components/Layout';
 
 export const OneColumnGrid = styled.section`
   display: grid;
-  grid-template-columns: ${MAIN_WIDTH}px;
+  grid-template-columns: ${PRIMARY_COLUMN_WIDTH}px;
   grid-template-rows: 100%;
   max-width: ${MAX_WIDTH}px;
 
@@ -176,8 +150,8 @@ export const CoverPhotoFallback = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: ${SIDEBAR_WIDTH / 3}px;
-  max-height: ${SIDEBAR_WIDTH / 3}px;
+  min-height: ${SECONDARY_COLUMN_WIDTH / 3}px;
+  max-height: ${SECONDARY_COLUMN_WIDTH / 3}px;
   background-color: ${theme.text.default};
   overflow: hidden;
   background-image: url(${props => props.src});
@@ -196,8 +170,8 @@ export const CoverPhoto = styled.img`
   right: 0;
   top: 0;
   bottom: 0;
-  max-height: ${SIDEBAR_WIDTH / 3}px;
-  max-height: ${SIDEBAR_WIDTH / 3}px;
+  max-height: ${SECONDARY_COLUMN_WIDTH / 3}px;
+  max-height: ${SECONDARY_COLUMN_WIDTH / 3}px;
   max-width: 100%;
 `;
 
@@ -508,22 +482,19 @@ export const CenteredContainer = styled.div`
   }
 `;
 
-export const SingleColumnSection = styled.div`
-  display: flex;
-  flex-direction: column;
+export const Card = styled.div`
   background: ${theme.bg.default};
   border: 1px solid ${theme.bg.border};
-  margin: 16px 0;
   border-radius: 4px;
-  padding: 16px;
-  width: 100%;
-  max-width: 640px;
 
-  @media (min-width: ${MEDIA_BREAK}px) {
-    margin: 0;
+  ${props =>
+    props.withPadding &&
+    css`
+      padding: 16px;
+    `}
+
+  @media (max-width: ${MEDIA_BREAK}px) {
     border-radius: 0;
-    border: none;
-    border-bottom: 1px solid ${theme.bg.border};
   }
 `;
 

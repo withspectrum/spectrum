@@ -88,11 +88,7 @@ export const Meta = styled(Column)`
     }
   }
 `;
-export const Content = styled(Column)`
-  grid-area: content;
-  min-width: 0;
-  align-items: stretch;
-
+export const Content = styled.div`
   @media (max-width: 1280px) and (min-width: 768px) {
     padding-right: 32px;
   }
@@ -104,17 +100,7 @@ export const Content = styled(Column)`
   }
 `;
 
-export const Extras = styled(Column)`
-  grid-area: extras;
-
-  @media (max-width: 1280px) {
-    display: none;
-  }
-
-  @media (min-width: 768px) {
-    padding-right: 32px;
-  }
-`;
+export const Extras = styled.div``;
 
 export const ColumnHeading = styled.div`
   display: flex;

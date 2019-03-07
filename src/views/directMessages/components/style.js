@@ -15,11 +15,9 @@ import {
 } from '../../../components/globals';
 
 export const ThreadsListScrollContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  overflow-y: auto;
-  max-height: 100%;
+  max-height: 100vh;
+  overflow: hidden;
+  overflow-y: scroll;
 `;
 
 export const Wrapper = styled(FlexCol)`

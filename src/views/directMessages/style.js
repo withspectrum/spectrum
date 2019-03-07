@@ -4,40 +4,23 @@ import styled, { css } from 'styled-components';
 import { FlexCol, FlexRow } from '../../components/globals';
 
 export const View = styled.main`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: stretch;
-  background: #fff;
-  flex: auto;
-  height: 100vh;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    flex: auto;
-  }
+  grid-area: view;
+  display: grid;
+  grid-template-columns: minmax(320px, 400px) 1fr;
 `;
 
-export const ViewContent = styled(FlexCol)`
-  display: flex;
-  flex-direction: column;
-  flex: auto;
-  overflow-y: auto;
-  align-items: center;
-  align-content: flex-start;
+export const ViewContent = styled.div`
+  max-height: 100vh;
+  overflow: hidden;
+  overflow-y: scroll;
 `;
 
-export const MessagesList = styled(FlexCol)`
-  position: relative;
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-width: 400px;
-  flex: 0 0 25%;
-  min-width: 320px;
+export const MessagesList = styled.div`
+  max-height: 100vh;
+  overflow: hidden;
+  overflow-y: scroll;
   background: ${theme.bg.default};
   border-right: 1px solid ${theme.bg.border};
-  flex: 1 0 auto;
-  max-height: 100%;
 
   @media (max-width: 768px) {
     min-width: 320px;
@@ -47,9 +30,13 @@ export const MessagesList = styled(FlexCol)`
   }
 `;
 
-export const MessagesContainer = styled(FlexCol)`
-  flex: auto;
-  max-height: 100%;
+export const MessagesContainer = styled.div`
+  max-height: 100vh;
+  overflow: hidden;
+  overflow-y: scroll;
+  display: grid;
+  grid-template-rows: 1fr 48px 25px;
+  background: ${theme.bg.default};
 
   @media (min-width: 768px) {
     ${props =>
@@ -80,7 +67,10 @@ export const NoThreads = MessagesContainer.extend`
   }
 `;
 
-export const ComposeHeader = styled(FlexRow)`
+export const ComposeHeader = styled.div`
+  position: sticky;
+  top: 0;
+  z-index: 10;
   justify-content: flex-end;
   padding: 8px;
   border-bottom: 1px solid ${theme.bg.border};

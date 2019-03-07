@@ -48,6 +48,7 @@ import { ErrorBoundary } from 'src/components/error';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
+import { ViewGrid, SingleColumnGrid } from 'src/components/Layout';
 
 type Props = {
   markAllNotificationsSeen?: Function,
@@ -207,221 +208,223 @@ class NotificationsPure extends React.Component<Props, State> {
       const { scrollElement } = this.state;
 
       return (
-        <FlexCol style={{ flex: '1 1 auto' }}>
-          <Head title={title} description={description} />
-          <Titlebar title={'Notifications'} provideBack={false} noComposer />
-          <React.Fragment>
-            <Column type={'primary'}>
-              {!isDesktopApp() && this.state.showWebPushPrompt && (
-                <BrowserNotificationRequest
-                  onSubscribe={this.subscribeToWebPush}
-                  onDismiss={this.dismissWebPushRequest}
-                  loading={this.state.webPushPromptLoading}
-                />
-              )}
-              <InfiniteList
-                pageStart={0}
-                loadMore={data.fetchMore}
-                isLoadingMore={this.props.isFetchingMore}
-                hasMore={data.hasNextPage}
-                loader={<LoadingThread />}
-                useWindow={false}
-                initialLoad={false}
-                scrollElement={scrollElement}
-                threshold={750}
-                className={'scroller-for-notifications'}
-              >
-                {notifications.map(notification => {
-                  switch (notification.event) {
-                    case 'MESSAGE_CREATED': {
-                      return (
-                        <ErrorBoundary
-                          fallbackComponent={null}
-                          key={notification.id}
-                        >
-                          <NewMessageNotification
+        <ViewGrid>
+          <SingleColumnGrid>
+            <Head title={title} description={description} />
+            <Titlebar title={'Notifications'} provideBack={false} noComposer />
+            <React.Fragment>
+              <Column type={'primary'}>
+                {!isDesktopApp() && this.state.showWebPushPrompt && (
+                  <BrowserNotificationRequest
+                    onSubscribe={this.subscribeToWebPush}
+                    onDismiss={this.dismissWebPushRequest}
+                    loading={this.state.webPushPromptLoading}
+                  />
+                )}
+                <InfiniteList
+                  pageStart={0}
+                  loadMore={data.fetchMore}
+                  isLoadingMore={this.props.isFetchingMore}
+                  hasMore={data.hasNextPage}
+                  loader={<LoadingThread />}
+                  useWindow={false}
+                  initialLoad={false}
+                  scrollElement={scrollElement}
+                  threshold={750}
+                  className={'scroller-for-notifications'}
+                >
+                  {notifications.map(notification => {
+                    switch (notification.event) {
+                      case 'MESSAGE_CREATED': {
+                        return (
+                          <ErrorBoundary
+                            fallbackComponent={null}
+                            key={notification.id}
+                          >
+                            <NewMessageNotification
+                              notification={notification}
+                              currentUser={currentUser}
+                            />
+                          </ErrorBoundary>
+                        );
+                      }
+                      case 'REACTION_CREATED': {
+                        return (
+                          <ErrorBoundary
+                            fallbackComponent={null}
+                            key={notification.id}
+                          >
+                            <NewReactionNotification
+                              notification={notification}
+                              currentUser={currentUser}
+                            />
+                          </ErrorBoundary>
+                        );
+                      }
+                      case 'THREAD_REACTION_CREATED': {
+                        return (
+                          <ErrorBoundary
+                            fallbackComponent={null}
+                            key={notification.id}
+                          >
+                            <NewThreadReactionNotification
+                              notification={notification}
+                              currentUser={currentUser}
+                            />
+                          </ErrorBoundary>
+                        );
+                      }
+                      case 'CHANNEL_CREATED': {
+                        return (
+                          <ErrorBoundary
+                            fallbackComponent={null}
+                            key={notification.id}
+                          >
+                            <NewChannelNotification
+                              notification={notification}
+                              currentUser={currentUser}
+                            />
+                          </ErrorBoundary>
+                        );
+                      }
+                      case 'USER_JOINED_COMMUNITY': {
+                        return (
+                          <ErrorBoundary
+                            fallbackComponent={null}
+                            key={notification.id}
+                          >
+                            <NewUserInCommunityNotification
+                              notification={notification}
+                              currentUser={currentUser}
+                            />
+                          </ErrorBoundary>
+                        );
+                      }
+                      case 'THREAD_CREATED': {
+                        // deprecated - we no longer show this notification type in-app
+                        return null;
+                      }
+                      case 'COMMUNITY_INVITE': {
+                        return (
+                          <ErrorBoundary
+                            fallbackComponent={null}
+                            key={notification.id}
+                          >
+                            <CommunityInviteNotification
+                              notification={notification}
+                              currentUser={currentUser}
+                            />
+                          </ErrorBoundary>
+                        );
+                      }
+                      case 'MENTION_MESSAGE': {
+                        return (
+                          <ErrorBoundary
+                            fallbackComponent={null}
+                            key={notification.id}
+                          >
+                            <MentionMessageNotification
+                              notification={notification}
+                              currentUser={currentUser}
+                            />
+                          </ErrorBoundary>
+                        );
+                      }
+                      case 'MENTION_THREAD': {
+                        return (
+                          <ErrorBoundary
+                            fallbackComponent={null}
+                            key={notification.id}
+                          >
+                            <MentionThreadNotification
+                              notification={notification}
+                              currentUser={currentUser}
+                            />
+                          </ErrorBoundary>
+                        );
+                      }
+                      case 'PRIVATE_CHANNEL_REQUEST_SENT': {
+                        return (
+                          <ErrorBoundary
+                            fallbackComponent={null}
+                            key={notification.id}
+                          >
+                            <PrivateChannelRequestSent
+                              notification={notification}
+                              currentUser={currentUser}
+                            />
+                          </ErrorBoundary>
+                        );
+                      }
+                      case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
+                        return (
+                          <ErrorBoundary
+                            fallbackComponent={null}
+                            key={notification.id}
+                          >
+                            <PrivateChannelRequestApproved
+                              notification={notification}
+                              currentUser={currentUser}
+                            />
+                          </ErrorBoundary>
+                        );
+                      }
+                      case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
+                        return (
+                          <PrivateCommunityRequestSent
+                            key={notification.id}
                             notification={notification}
                             currentUser={currentUser}
                           />
-                        </ErrorBoundary>
-                      );
-                    }
-                    case 'REACTION_CREATED': {
-                      return (
-                        <ErrorBoundary
-                          fallbackComponent={null}
-                          key={notification.id}
-                        >
-                          <NewReactionNotification
+                        );
+                      }
+                      case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
+                        return (
+                          <PrivateCommunityRequestApproved
+                            key={notification.id}
                             notification={notification}
                             currentUser={currentUser}
                           />
-                        </ErrorBoundary>
-                      );
+                        );
+                      }
+                      default: {
+                        return null;
+                      }
                     }
-                    case 'THREAD_REACTION_CREATED': {
-                      return (
-                        <ErrorBoundary
-                          fallbackComponent={null}
-                          key={notification.id}
-                        >
-                          <NewThreadReactionNotification
-                            notification={notification}
-                            currentUser={currentUser}
-                          />
-                        </ErrorBoundary>
-                      );
-                    }
-                    case 'CHANNEL_CREATED': {
-                      return (
-                        <ErrorBoundary
-                          fallbackComponent={null}
-                          key={notification.id}
-                        >
-                          <NewChannelNotification
-                            notification={notification}
-                            currentUser={currentUser}
-                          />
-                        </ErrorBoundary>
-                      );
-                    }
-                    case 'USER_JOINED_COMMUNITY': {
-                      return (
-                        <ErrorBoundary
-                          fallbackComponent={null}
-                          key={notification.id}
-                        >
-                          <NewUserInCommunityNotification
-                            notification={notification}
-                            currentUser={currentUser}
-                          />
-                        </ErrorBoundary>
-                      );
-                    }
-                    case 'THREAD_CREATED': {
-                      // deprecated - we no longer show this notification type in-app
-                      return null;
-                    }
-                    case 'COMMUNITY_INVITE': {
-                      return (
-                        <ErrorBoundary
-                          fallbackComponent={null}
-                          key={notification.id}
-                        >
-                          <CommunityInviteNotification
-                            notification={notification}
-                            currentUser={currentUser}
-                          />
-                        </ErrorBoundary>
-                      );
-                    }
-                    case 'MENTION_MESSAGE': {
-                      return (
-                        <ErrorBoundary
-                          fallbackComponent={null}
-                          key={notification.id}
-                        >
-                          <MentionMessageNotification
-                            notification={notification}
-                            currentUser={currentUser}
-                          />
-                        </ErrorBoundary>
-                      );
-                    }
-                    case 'MENTION_THREAD': {
-                      return (
-                        <ErrorBoundary
-                          fallbackComponent={null}
-                          key={notification.id}
-                        >
-                          <MentionThreadNotification
-                            notification={notification}
-                            currentUser={currentUser}
-                          />
-                        </ErrorBoundary>
-                      );
-                    }
-                    case 'PRIVATE_CHANNEL_REQUEST_SENT': {
-                      return (
-                        <ErrorBoundary
-                          fallbackComponent={null}
-                          key={notification.id}
-                        >
-                          <PrivateChannelRequestSent
-                            notification={notification}
-                            currentUser={currentUser}
-                          />
-                        </ErrorBoundary>
-                      );
-                    }
-                    case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
-                      return (
-                        <ErrorBoundary
-                          fallbackComponent={null}
-                          key={notification.id}
-                        >
-                          <PrivateChannelRequestApproved
-                            notification={notification}
-                            currentUser={currentUser}
-                          />
-                        </ErrorBoundary>
-                      );
-                    }
-                    case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
-                      return (
-                        <PrivateCommunityRequestSent
-                          key={notification.id}
-                          notification={notification}
-                          currentUser={currentUser}
-                        />
-                      );
-                    }
-                    case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
-                      return (
-                        <PrivateCommunityRequestApproved
-                          key={notification.id}
-                          notification={notification}
-                          currentUser={currentUser}
-                        />
-                      );
-                    }
-                    default: {
-                      return null;
-                    }
-                  }
-                })}
-              </InfiniteList>
-            </Column>
-          </React.Fragment>
-        </FlexCol>
+                  })}
+                </InfiniteList>
+              </Column>
+            </React.Fragment>
+          </SingleColumnGrid>
+        </ViewGrid>
       );
     }
 
     if (isLoading) {
       return (
-        <React.Fragment>
+        <ViewGrid>
           <Head title={title} description={description} />
           <Loading />
-        </React.Fragment>
+        </ViewGrid>
       );
     }
 
     if (!data || (data && data.error)) {
       return (
-        <React.Fragment>
+        <ViewGrid>
           <Head title={title} description={description} />
           <ViewError />
-        </React.Fragment>
+        </ViewGrid>
       );
     }
 
     return (
-      <React.Fragment>
-        <Column type={'primary'}>
+      <ViewGrid>
+        <SingleColumnGrid>
           <Head title={title} description={description} />
           <UpsellNullNotifications />
-        </Column>
-      </React.Fragment>
+        </SingleColumnGrid>
+      </ViewGrid>
     );
   }
 }

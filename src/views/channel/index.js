@@ -57,6 +57,7 @@ import ToggleChannelMembership from 'src/components/toggleChannelMembership';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
+import { ViewGrid, PrimarySecondaryColumnGrid } from 'src/components/Layout';
 
 const ThreadFeedWithData = compose(
   connect(),
@@ -301,7 +302,7 @@ class ChannelView extends React.Component<Props, State> {
         !hasCommunityPermissions
       ) {
         return (
-          <React.Fragment>
+          <ViewGrid>
             <Titlebar
               title={'Private channel'}
               provideBack={true}
@@ -316,14 +317,14 @@ class ChannelView extends React.Component<Props, State> {
             >
               <Upsell404Channel community={communitySlug} />
             </ViewError>
-          </React.Fragment>
+          </ViewGrid>
         );
       }
 
       // channel is private and the user is not a member or owner
       if (isRestricted) {
         return (
-          <React.Fragment>
+          <ViewGrid>
             <Titlebar
               title={channel.name}
               subtitle={community.name}
@@ -355,7 +356,7 @@ class ChannelView extends React.Component<Props, State> {
                 isPending={isPending}
               />
             </ViewError>
-          </React.Fragment>
+          </ViewGrid>
         );
       }
 
@@ -378,164 +379,162 @@ class ChannelView extends React.Component<Props, State> {
             description={description}
             image={community.profilePhoto}
           />
-          <Titlebar
-            title={channel.name}
-            subtitle={community.name}
-            provideBack={true}
-            backRoute={`/${communitySlug}`}
-            noComposer={!isMember}
-            activeCommunityId={channel.community.id}
-            activeChannelId={channel.id}
-          />
-          <Grid id="main" data-cy="channel-view">
-            <CoverPhoto src={community.coverPhoto} />
-            <Meta data-cy="channel-profile-full">
-              <CommunityContext>
-                <CommunityAvatar community={community} />
-                <Link to={`/${community.slug}`}>
-                  <CommunityName>{community.name}</CommunityName>
-                </Link>
-              </CommunityContext>
+          <ViewGrid>
+            <PrimarySecondaryColumnGrid data-cy="channel-view">
+              <Content>
+                <SegmentedControl style={{ margin: '16px 0 0 0' }}>
+                  <DesktopSegment
+                    segmentLabel="search"
+                    onClick={() => this.handleSegmentClick('search')}
+                    selected={selectedView === 'search'}
+                    data-cy="channel-search-tab"
+                  >
+                    <Icon glyph={'search'} />
+                    Search
+                  </DesktopSegment>
+                  <Segment
+                    segmentLabel="threads"
+                    onClick={() => this.handleSegmentClick('threads')}
+                    selected={selectedView === 'threads'}
+                  >
+                    Threads
+                  </Segment>
+                  <MidSegment
+                    segmentLabel="members"
+                    onClick={() => this.handleSegmentClick('members')}
+                    selected={selectedView === 'members'}
+                  >
+                    Members (
+                    {channel.metaData &&
+                      channel.metaData.members &&
+                      channel.metaData.members.toLocaleString()}
+                    )
+                  </MidSegment>
+                  <MobileSegment
+                    segmentLabel="members"
+                    onClick={() => this.handleSegmentClick('members')}
+                    selected={selectedView === 'members'}
+                  >
+                    Members
+                  </MobileSegment>
+                  <MobileSegment
+                    segmentLabel="search"
+                    onClick={() => this.handleSegmentClick('search')}
+                    selected={selectedView === 'search'}
+                  >
+                    <Icon glyph={'search'} />
+                  </MobileSegment>
+                </SegmentedControl>
 
-              <ChannelName>
-                {channel.name}
-                {channel.isArchived && ' (Archived)'}
-              </ChannelName>
-              {channel.description && (
-                <ChannelDescription>{channel.description}</ChannelDescription>
-              )}
-
-              <MetadataContainer>
-                {channel.metaData && channel.metaData.members && (
-                  <ExtLink>
-                    <Icon glyph="person" size={24} />
-                    {channel.metaData.members.toLocaleString()}
-                    {channel.metaData.members > 1 ? ' members' : ' member'}
-                  </ExtLink>
-                )}
-
-                {channel.metaData &&
-                  typeof channel.metaData.onlineMembers === 'number' && (
-                    <ExtLink>
-                      <OnlineIndicator
-                        offline={channel.metaData.onlineMembers === 0}
+                {/* if the user is logged in and has permissions to post, and the channel is either private + paid, or is not private, show the composer */}
+                {isLoggedIn &&
+                  !channel.isArchived &&
+                  selectedView === 'threads' &&
+                  userHasPermissions &&
+                  ((channel.isPrivate && !channel.isArchived) ||
+                    !channel.isPrivate) && (
+                    <ErrorBoundary fallbackComponent={null}>
+                      <ComposerPlaceholder
+                        communityId={channel.community.id}
+                        channelId={channel.id}
                       />
-                      {channel.metaData.onlineMembers.toLocaleString()} online
-                    </ExtLink>
+                    </ErrorBoundary>
                   )}
 
-                <div style={{ height: '8px' }} />
-
-                {actionButton}
-              </MetadataContainer>
-
-              {isLoggedIn && userHasPermissions && !channel.isArchived && (
-                <ErrorBoundary fallbackComponent={null}>
-                  <NotificationsToggle
-                    value={channel.channelPermissions.receiveNotifications}
-                    channel={channel}
+                {// thread list
+                selectedView === 'threads' && (
+                  <ThreadFeedWithData
+                    viewContext="channelProfile"
+                    id={channel.id}
+                    currentUser={isLoggedIn}
+                    channelId={channel.id}
                   />
-                </ErrorBoundary>
-              )}
+                )}
 
-              {/* user is signed in and has permissions to view pending users */}
-              {isLoggedIn && (isOwner || isGlobalOwner) && (
-                <ErrorBoundary fallbackComponent={null}>
-                  <PendingUsersNotification channel={channel} id={channel.id} />
-                </ErrorBoundary>
-              )}
-            </Meta>
-            <Content>
-              <SegmentedControl style={{ margin: '16px 0 0 0' }}>
-                <DesktopSegment
-                  segmentLabel="search"
-                  onClick={() => this.handleSegmentClick('search')}
-                  selected={selectedView === 'search'}
-                  data-cy="channel-search-tab"
-                >
-                  <Icon glyph={'search'} />
-                  Search
-                </DesktopSegment>
-                <Segment
-                  segmentLabel="threads"
-                  onClick={() => this.handleSegmentClick('threads')}
-                  selected={selectedView === 'threads'}
-                >
-                  Threads
-                </Segment>
-                <MidSegment
-                  segmentLabel="members"
-                  onClick={() => this.handleSegmentClick('members')}
-                  selected={selectedView === 'members'}
-                >
-                  Members (
-                  {channel.metaData &&
-                    channel.metaData.members &&
-                    channel.metaData.members.toLocaleString()}
-                  )
-                </MidSegment>
-                <MobileSegment
-                  segmentLabel="members"
-                  onClick={() => this.handleSegmentClick('members')}
-                  selected={selectedView === 'members'}
-                >
-                  Members
-                </MobileSegment>
-                <MobileSegment
-                  segmentLabel="search"
-                  onClick={() => this.handleSegmentClick('search')}
-                  selected={selectedView === 'search'}
-                >
-                  <Icon glyph={'search'} />
-                </MobileSegment>
-              </SegmentedControl>
-
-              {/* if the user is logged in and has permissions to post, and the channel is either private + paid, or is not private, show the composer */}
-              {isLoggedIn &&
-                !channel.isArchived &&
-                selectedView === 'threads' &&
-                userHasPermissions &&
-                ((channel.isPrivate && !channel.isArchived) ||
-                  !channel.isPrivate) && (
-                  <ErrorBoundary fallbackComponent={null}>
-                    <ComposerPlaceholder
-                      communityId={channel.community.id}
-                      channelId={channel.id}
-                    />
+                {//search
+                selectedView === 'search' && (
+                  <ErrorBoundary>
+                    <Search channel={channel} />
                   </ErrorBoundary>
                 )}
 
-              {// thread list
-              selectedView === 'threads' && (
-                <ThreadFeedWithData
-                  viewContext="channelProfile"
-                  id={channel.id}
-                  currentUser={isLoggedIn}
-                  channelId={channel.id}
-                />
-              )}
+                {// members grid
+                selectedView === 'members' && (
+                  <ErrorBoundary>
+                    <ChannelMemberGrid id={channel.id} />
+                  </ErrorBoundary>
+                )}
+              </Content>
+              <Extras>
+                <Meta data-cy="channel-profile-full">
+                  <CommunityContext>
+                    <CommunityAvatar community={community} />
+                    <Link to={`/${community.slug}`}>
+                      <CommunityName>{community.name}</CommunityName>
+                    </Link>
+                  </CommunityContext>
 
-              {//search
-              selectedView === 'search' && (
-                <ErrorBoundary>
-                  <Search channel={channel} />
-                </ErrorBoundary>
-              )}
+                  <ChannelName>
+                    {channel.name}
+                    {channel.isArchived && ' (Archived)'}
+                  </ChannelName>
+                  {channel.description && (
+                    <ChannelDescription>
+                      {channel.description}
+                    </ChannelDescription>
+                  )}
 
-              {// members grid
-              selectedView === 'members' && (
-                <ErrorBoundary>
-                  <ChannelMemberGrid id={channel.id} />
+                  <MetadataContainer>
+                    {channel.metaData && channel.metaData.members && (
+                      <ExtLink>
+                        <Icon glyph="person" size={24} />
+                        {channel.metaData.members.toLocaleString()}
+                        {channel.metaData.members > 1 ? ' members' : ' member'}
+                      </ExtLink>
+                    )}
+
+                    {channel.metaData &&
+                      typeof channel.metaData.onlineMembers === 'number' && (
+                        <ExtLink>
+                          <OnlineIndicator
+                            offline={channel.metaData.onlineMembers === 0}
+                          />
+                          {channel.metaData.onlineMembers.toLocaleString()}{' '}
+                          online
+                        </ExtLink>
+                      )}
+
+                    <div style={{ height: '8px' }} />
+
+                    {actionButton}
+                  </MetadataContainer>
+
+                  {isLoggedIn && userHasPermissions && !channel.isArchived && (
+                    <ErrorBoundary fallbackComponent={null}>
+                      <NotificationsToggle
+                        value={channel.channelPermissions.receiveNotifications}
+                        channel={channel}
+                      />
+                    </ErrorBoundary>
+                  )}
+
+                  {/* user is signed in and has permissions to view pending users */}
+                  {isLoggedIn && (isOwner || isGlobalOwner) && (
+                    <ErrorBoundary fallbackComponent={null}>
+                      <PendingUsersNotification
+                        channel={channel}
+                        id={channel.id}
+                      />
+                    </ErrorBoundary>
+                  )}
+                </Meta>
+                <ErrorBoundary fallbackComponent={null}>
+                  <ColumnHeading>Members</ColumnHeading>
+                  <ChannelMemberGrid first={5} id={channel.id} />
                 </ErrorBoundary>
-              )}
-            </Content>
-            <Extras>
-              <ErrorBoundary fallbackComponent={null}>
-                <ColumnHeading>Members</ColumnHeading>
-                <ChannelMemberGrid first={5} id={channel.id} />
-              </ErrorBoundary>
-            </Extras>
-          </Grid>
+              </Extras>
+            </PrimarySecondaryColumnGrid>
+          </ViewGrid>
         </React.Fragment>
       );
     }
@@ -546,7 +545,7 @@ class ChannelView extends React.Component<Props, State> {
 
     if (hasError) {
       return (
-        <React.Fragment>
+        <ViewGrid>
           <Titlebar
             title={'Channel not found'}
             provideBack={true}
@@ -557,12 +556,12 @@ class ChannelView extends React.Component<Props, State> {
             refresh
             heading={'There was an error fetching this channel.'}
           />
-        </React.Fragment>
+        </ViewGrid>
       );
     }
 
     return (
-      <React.Fragment>
+      <ViewGrid>
         <Titlebar
           title={'Channel not found'}
           provideBack={true}
@@ -576,7 +575,7 @@ class ChannelView extends React.Component<Props, State> {
         >
           <Upsell404Channel community={communitySlug} />
         </ViewError>
-      </React.Fragment>
+      </ViewGrid>
     );
   }
 }

@@ -11,13 +11,8 @@ import { MobileCommunityProfileHeader } from '../components/MobileCommunityProfi
 import { TeamMembersList } from '../components/TeamMembersList';
 import { CommunityFeeds } from '../components/CommunityFeeds';
 import { ChannelsList } from '../components/ChannelsList';
-import {
-  Container,
-  TwoColumnGrid,
-  Main,
-  Sidebar,
-  SidebarSection,
-} from '../style';
+import { Main, Sidebar, SidebarSection } from '../style';
+import { ViewGrid, PrimarySecondaryColumnGrid } from 'src/components/Layout';
 
 const Component = (props: SignedInMemberType) => {
   const { community } = props;
@@ -72,8 +67,8 @@ const Component = (props: SignedInMemberType) => {
         image={community.profilePhoto}
       />
 
-      <Container data-cy="community-view">
-        <TwoColumnGrid>
+      <ViewGrid data-cy="community-view">
+        <PrimarySecondaryColumnGrid>
           <Main>
             <MobileCommunityProfileHeader community={community} />
             <CommunityFeeds
@@ -103,8 +98,8 @@ const Component = (props: SignedInMemberType) => {
               <ChannelsList id={community.id} communitySlug={community.slug} />
             </SidebarSection>
           </Sidebar>
-        </TwoColumnGrid>
-      </Container>
+        </PrimarySecondaryColumnGrid>
+      </ViewGrid>
     </React.Fragment>
   );
 };

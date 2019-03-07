@@ -2,14 +2,8 @@
 import React from 'react';
 import { OutlineButton, PrimaryButton } from '../components/Button';
 import RequestJoinCommunity from '../components/RequestJoinCommunity';
-import {
-  CenteredContainer,
-  SingleColumnSection,
-  Emoji,
-  Heading,
-  Description,
-  ActionsRow,
-} from '../style';
+import { Emoji, Heading, Description, ActionsRow, Card } from '../style';
+import { ViewGrid, CenteredGrid } from 'src/components/Layout';
 
 export const PrivateCommunity = (props: Props) => {
   const { community } = props;
@@ -32,9 +26,9 @@ export const PrivateCommunity = (props: Props) => {
     );
 
   return (
-    <React.Fragment>
-      <CenteredContainer>
-        <SingleColumnSection>
+    <ViewGrid>
+      <CenteredGrid>
+        <Card withPadding>
           <Emoji role="img" aria-label="Private">
             🔑
           </Emoji>
@@ -49,8 +43,8 @@ export const PrivateCommunity = (props: Props) => {
               render={({ isLoading }) => primaryAction({ isLoading })}
             />
           </ActionsRow>
-        </SingleColumnSection>
-      </CenteredContainer>
-    </React.Fragment>
+        </Card>
+      </CenteredGrid>
+    </ViewGrid>
   );
 };
