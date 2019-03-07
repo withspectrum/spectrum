@@ -11,14 +11,8 @@ import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/c
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Tooltip from 'src/components/Tooltip';
-import {
-  SidebarSectionHeader,
-  SidebarSectionHeading,
-  List,
-  ChannelListItem,
-  ChannelListItemContent,
-  ChannelName,
-} from '../style';
+import { ChannelListItem } from 'src/components/Entities';
+import { SidebarSectionHeader, SidebarSectionHeading, List } from '../style';
 
 type Props = {
   data: {
@@ -93,17 +87,10 @@ class Component extends React.Component<Props> {
               if (!channel) return null;
               return (
                 <ChannelListItem
-                  to={`/${communitySlug}/${channel.slug}`}
                   key={channel.id}
-                >
-                  <ChannelListItemContent>
-                    {channel.isPrivate && (
-                      <Icon glyph="private-outline" size={14} />
-                    )}
-                    <ChannelName>{channel.name}</ChannelName>
-                  </ChannelListItemContent>
-                  <Icon glyph="view-forward" size={24} />
-                </ChannelListItem>
+                  channelObject={channel}
+                  name={channel.name}
+                />
               );
             })}
           </List>

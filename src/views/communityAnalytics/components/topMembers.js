@@ -8,7 +8,7 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { Loading } from 'src/components/loading';
 import ViewError from 'src/components/viewError';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
-import GranularUserProfile from 'src/components/granularUserProfile';
+import { UserListItem } from 'src/components/Entities';
 import getCommunityTopMembers from 'shared/graphql/queries/community/getCommunityTopMembers';
 import type { GetCommunityTopMembersType } from 'shared/graphql/queries/community/getCommunityTopMembers';
 import { UserListItemContainer } from '../style';
@@ -69,7 +69,7 @@ class ConversationGrowth extends React.Component<Props> {
             if (!member) return null;
             return (
               <UserListItemContainer key={member.user.id}>
-                <GranularUserProfile
+                <UserListItem
                   userObject={member.user}
                   id={member.user.id}
                   name={member.user.name}

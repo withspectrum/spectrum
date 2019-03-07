@@ -2,12 +2,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import type { CommunityActionsRowType } from '../types';
-import { PrimaryButton, OutlineButton, HoverWarnOutlineButton } from './Button';
+import {
+  PrimaryButton,
+  OutlineButton,
+  HoverWarnOutlineButton,
+} from 'src/views/Community/components/Button';
 import { openModal } from 'src/actions/modals';
-import JoinCommunity from './JoinCommunity';
+import JoinCommunity from './JoinCommunityWrapper';
 import { ActionsRowContainer } from '../style';
 
-export const Component = (props: CommunityActionsRowType) => {
+export const UnconnectedCommunityActions = (props: CommunityActionsRowType) => {
   const { community, dispatch } = props;
 
   const leaveCommunity = () =>
@@ -55,4 +59,4 @@ export const Component = (props: CommunityActionsRowType) => {
   );
 };
 
-export const CommunityActionsRow = connect()(Component);
+export const CommunityActions = connect()(UnconnectedCommunityActions);

@@ -5,9 +5,11 @@ import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
+import {
+  CommunityProfileCard,
+  MobileCommunityProfileCard,
+} from 'src/components/Entities';
 import type { SignedInMemberType } from '../types';
-import { CommunityProfileHeader } from '../components/CommunityProfileHeader';
-import { MobileCommunityProfileHeader } from '../components/MobileCommunityProfileHeader';
 import { TeamMembersList } from '../components/TeamMembersList';
 import { CommunityFeeds } from '../components/CommunityFeeds';
 import { ChannelsList } from '../components/ChannelsList';
@@ -41,7 +43,6 @@ const Component = (props: SignedInMemberType) => {
   };
 
   const scrollToBottom = () => {
-    console.log('scrolling to bottom');
     if (containerEl) {
       containerEl.scrollTop =
         containerEl.scrollHeight - containerEl.clientHeight;
@@ -75,7 +76,8 @@ const Component = (props: SignedInMemberType) => {
       <ViewGrid data-cy="community-view">
         <PrimarySecondaryColumnGrid>
           <PrimaryColumn>
-            <MobileCommunityProfileHeader community={community} />
+            <MobileCommunityProfileCard community={community} />
+
             <CommunityFeeds
               scrollToBottom={scrollToBottom}
               contextualScrollToBottom={contextualScrollToBottom}
@@ -86,9 +88,7 @@ const Component = (props: SignedInMemberType) => {
           </PrimaryColumn>
 
           <SecondaryColumn>
-            <SidebarSection>
-              <CommunityProfileHeader community={community} />
-            </SidebarSection>
+            <CommunityProfileCard community={community} />
 
             <SidebarSection>
               <TeamMembersList

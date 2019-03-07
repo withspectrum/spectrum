@@ -11,6 +11,10 @@ import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { UserProfile } from 'src/components/profile';
 import { NullState } from 'src/components/upsell';
 import {
+  UserProfileCard,
+  MobileUserProfileCard,
+} from 'src/components/Entities';
+import {
   PrimaryButton,
   OutlineButton,
 } from 'src/views/Community/components/Button';
@@ -45,6 +49,11 @@ import {
   PrimaryColumn,
   SecondaryColumn,
 } from 'src/components/Layout';
+import {
+  SidebarSection,
+  SidebarSectionHeader,
+  SidebarSectionHeading,
+} from 'src/views/Community/style';
 
 const ThreadFeedWithData = compose(
   connect(),
@@ -172,6 +181,8 @@ class UserView extends React.Component<Props, State> {
           <ViewGrid data-cy="user-view">
             <PrimarySecondaryColumnGrid>
               <PrimaryColumn>
+                <MobileUserProfileCard user={user} />
+
                 <SegmentedControl>
                   <Segment
                     segmentLabel="participant"
@@ -220,62 +231,19 @@ class UserView extends React.Component<Props, State> {
                 {!hasThreads && <NullState bg="null" heading={nullHeading} />}
               </PrimaryColumn>
               <SecondaryColumn>
-                <CoverPhoto src={user.coverPhoto} />
-                <Meta>
-                  <ErrorBoundary fallbackComponent={null}>
-                    <UserProfile
-                      data={{ user }}
-                      username={username}
-                      profileSize="full"
-                      showHoverProfile={false}
-                    />
-                  </ErrorBoundary>
+                <UserProfileCard user={user} />
 
-                  {currentUser && user.id !== currentUser.id && (
-                    <React.Fragment>
-                      <PrimaryButton
-                        dataCy={'send-dm-button'}
-                        onClick={() => this.initMessage(user)}
-                      >
-                        Message {user.name}
-                      </PrimaryButton>
-                      <OutlineButton onClick={this.initReport}>
-                        Report
-                      </OutlineButton>
-                    </React.Fragment>
-                  )}
+                <SidebarSection>
+                  <SidebarSectionHeader>
+                    <SidebarSectionHeading>Communities</SidebarSectionHeading>
+                  </SidebarSectionHeader>
 
-                  {currentUser &&
-                    user.id !== currentUser.id &&
-                    isAdmin(currentUser.id) && (
-                      <OutlineButton onClick={this.initBan}>Ban</OutlineButton>
-                    )}
-
-                  {currentUser && user.id === currentUser.id && (
-                    <Link to={`/users/${username}/settings`}>
-                      <OutlineButton icon={'settings'}>Settings</OutlineButton>
-                    </Link>
-                  )}
-
-                  <ErrorBoundary fallbackComponent={null}>
-                    <MetaMemberships>
-                      <ColumnHeading>Member of</ColumnHeading>
-                      <CommunityList
-                        currentUser={currentUser}
-                        user={user}
-                        id={user.id}
-                      />
-                    </MetaMemberships>
-                  </ErrorBoundary>
-                </Meta>
-                <ErrorBoundary fallbackComponent={null}>
-                  <ColumnHeading>Member of</ColumnHeading>
                   <CommunityList
                     currentUser={currentUser}
                     user={user}
                     id={user.id}
                   />
-                </ErrorBoundary>
+                </SidebarSection>
               </SecondaryColumn>
             </PrimarySecondaryColumnGrid>
           </ViewGrid>

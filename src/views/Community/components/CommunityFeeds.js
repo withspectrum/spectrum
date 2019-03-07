@@ -7,7 +7,7 @@ import type { CommunityFeedsType } from '../types';
 import { TeamMembersList } from './TeamMembersList';
 import { MobileCommunityInfoActions } from './MobileCommunityInfoActions';
 import { ChannelsList } from './ChannelsList';
-import { CommunityMeta } from './CommunityMeta';
+import { CommunityMeta } from 'src/components/Entities/ProfileCards/components/CommunityMeta';
 import { WatercoolerChat } from './WatercoolerChat';
 import { PostsFeeds } from './PostsFeeds';
 import { ARROW_LEFT, ARROW_RIGHT } from 'src/helpers/keycodes';
@@ -56,7 +56,6 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
           <div style={{ paddingBottom: '64px', background: theme.bg.wash }}>
             <SidebarSection>
               <CommunityMeta community={community} />
-              <div style={{ height: '24px' }} />
             </SidebarSection>
 
             <SidebarSection>

@@ -7,7 +7,7 @@ import { withRouter } from 'react-router';
 import getCommunityMembersQuery from 'shared/graphql/queries/community/getCommunityMembers';
 import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import GranularUserProfile from 'src/components/granularUserProfile';
+import { UserListItem } from 'src/components/Entities';
 import Icon from 'src/components/icons';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import type { TeamMemberListType } from '../types';
@@ -66,7 +66,7 @@ class Component extends React.Component<TeamMemberListType> {
 
         <List>
           {nodes.map(({ user }) => (
-            <GranularUserProfile
+            <UserListItem
               key={user.id}
               userObject={user}
               name={user.name}

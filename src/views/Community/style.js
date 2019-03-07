@@ -24,6 +24,49 @@ export const OneColumnGrid = styled.section`
   }
 `;
 
+export const ListItem = styled(Link)`
+  padding: 12px 12px 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid ${theme.bg.divider};
+
+  &:last-of-type {
+    border-bottom: 0;
+  }
+
+  &:hover {
+    background: ${theme.bg.wash};
+  }
+
+  .icon {
+    color: ${theme.text.alt};
+  }
+`;
+
+export const ListItemContent = styled.div`
+  display: flex;
+  align-items: center;
+
+  .icon {
+    color: ${theme.text.secondary};
+    margin-right: 6px;
+    position: relative;
+    top: 1px;
+  }
+`;
+
+export const ListItemLabel = styled.div`
+  color: ${theme.text.default};
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  display: inline-block;
+  ${Truncate};
+`;
+
 export const Main = styled.section`
   background: ${theme.bg.default};
   border-left: 1px solid ${theme.bg.border};
@@ -118,247 +161,7 @@ export const SidebarSectionHeading = styled.div`
   }
 `;
 
-export const ProfileContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  position: relative;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    border-radius: 0;
-    margin-top: 0;
-    border: 0;
-  }
-`;
-
-export const MobileProfileContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  background: ${theme.bg.default};
-  position: sticky;
-  top: 0;
-  z-index: 11;
-  padding: 12px 16px 8px 8px;
-
-  @media (min-width: ${MEDIA_BREAK}px) {
-    display: none;
-  }
-`;
-
-export const CoverPhotoFallback = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-height: ${SECONDARY_COLUMN_WIDTH / 3}px;
-  max-height: ${SECONDARY_COLUMN_WIDTH / 3}px;
-  background-color: ${theme.text.default};
-  overflow: hidden;
-  background-image: url(${props => props.src});
-  background-size: cover;
-  background-position: center center;
-  border-radius: 4px 4px 0 0;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    border-radius: 0;
-  }
-`;
-
-export const CoverPhoto = styled.img`
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  max-height: ${SECONDARY_COLUMN_WIDTH / 3}px;
-  max-height: ${SECONDARY_COLUMN_WIDTH / 3}px;
-  max-width: 100%;
-`;
-
-export const ProfileAvatarContainer = styled.div`
-  position: relative;
-  top: -36px;
-  width: 68px;
-  height: 68px;
-  margin-left: 12px;
-  border-radius: 10px;
-  background: ${theme.bg.default};
-  border: 4px solid ${theme.bg.default};
-  margin-bottom: -56px;
-`;
-
-export const List = styled.div`
-  display: flex;
-  flex-direction: column;
-  border-radius: 0 0 4px 4px;
-  overflow: hidden;
-`;
-
-export const ActionsRowContainer = styled.div`
-  display: grid;
-  align-items: center;
-  grid-gap: 12px;
-  padding: 12px;
-  margin-top: 8px;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    border-bottom: 1px solid ${theme.bg.border};
-    margin-top: 0;
-    padding-bottom: 16px;
-  }
-`;
-
-export const MobileActionsRowContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-
-  .icon {
-    margin-right: 0;
-  }
-`;
-
-export const MetaContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 0 16px;
-  margin-top: 24px;
-`;
-
-export const MobileMetaContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-export const CommunityName = styled.h1`
-  font-size: 24px;
-  font-weight: 800;
-  color: ${theme.text.default};
-`;
-
-export const MobileCommunityName = styled.h1`
-  font-size: 20px;
-  font-weight: 700;
-  color: ${theme.text.default};
-  margin-left: 12px;
-`;
-
-export const CommunityDescription = styled.p`
-  margin-top: 8px;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.4;
-  color: ${theme.text.secondary};
-`;
-
-export const MetaLinksContainer = styled.div`
-  margin-top: 8px;
-`;
-
-export const CommunityMetaRow = styled.div`
-  display: flex;
-  font-size: 16px;
-  font-weight: 400;
-  color: ${theme.text.secondary};
-  align-items: center;
-  margin-top: 8px;
-
-  &:first-of-type {
-    margin-top: 8px;
-  }
-
-  a {
-    display: flex;
-    align-items: center;
-  }
-
-  a:hover {
-    color: ${theme.text.default};
-  }
-
-  .icon {
-    margin-right: 8px;
-  }
-`;
-
-export const OnlineDot = styled.div`
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
-  background-color: ${theme.success.default};
-  margin-right: 16px;
-  margin-left: 6px;
-`;
-
 export const FeedsContainer = styled.section``;
-
-export const SegmentedControl = styled.div`
-  display: flex;
-  width: 100%;
-  box-shadow: inset 0 -1px ${theme.bg.border};
-  position: sticky;
-  top: 0;
-  z-index: 11;
-  background: ${theme.bg.default};
-  overflow: hidden;
-  overflow-x: scroll;
-
-  &::-webkit-scrollbar {
-    width: 0px;
-    height: 0px;
-    background: transparent; /* make scrollbar transparent */
-  }
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    box-shadow: inset 0 -1px ${theme.bg.border};
-    top: 52px;
-  }
-`;
-
-export const Segment = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  flex: 1 0 auto;
-  font-weight: 600;
-  color: ${props => (props.active ? theme.text.default : theme.text.alt)};
-  box-shadow: ${props =>
-    props.active ? `inset 0 -2px 0 ${theme.text.default}` : 'none'};
-  text-align: center;
-
-  &:hover {
-    background: ${theme.bg.wash};
-    box-shadow: ${props =>
-      props.active
-        ? `inset 0 -2px 0 ${theme.text.default}`
-        : `inset 0 -2px 0 ${tint(theme.bg.wash, -16)}`};
-    color: ${props =>
-      props.active ? theme.text.default : theme.text.secondary};
-    cursor: pointer;
-  }
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    flex: 1 0 21%;
-
-    &:hover {
-      background: ${theme.bg.default};
-    }
-
-    &:active {
-      background: ${theme.bg.wash};
-    }
-  }
-
-  @media (min-width: ${MEDIA_BREAK}px) {
-    ${props =>
-      props.hideOnDesktop &&
-      css`
-        display: none;
-      `}
-  }
-`;
 
 export const Row = styled.div`
   display: flex;
@@ -373,49 +176,6 @@ export const ToggleNotificationsContainer = styled.div`
   cursor: pointer;
 `;
 
-export const ChannelListItem = styled(Link)`
-  padding: 12px 12px 12px 16px;
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid ${theme.bg.divider};
-
-  &:last-of-type {
-    border-bottom: 0;
-  }
-
-  &:hover {
-    background: ${theme.bg.wash};
-  }
-
-  .icon {
-    color: ${theme.text.alt};
-  }
-`;
-
-export const ChannelListItemContent = styled.div`
-  display: flex;
-  align-items: center;
-
-  .icon {
-    color: ${theme.text.secondary};
-    margin-right: 6px;
-    position: relative;
-    top: 1px;
-  }
-`;
-
-export const ChannelName = styled.div`
-  color: ${theme.text.default};
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 1.2;
-  vertical-align: middle;
-  display: flex;
-  align-items: center;
-  display: inline-block;
-  ${Truncate};
-`;
-
 export const Name = styled.div`
   color: ${theme.text.default};
   font-size: 15px;
@@ -426,37 +186,6 @@ export const Name = styled.div`
   align-items: center;
   display: inline-block;
   ${Truncate};
-`;
-
-export const ListItem = styled.div`
-  padding: 12px 12px 12px 16px;
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid ${theme.bg.divider};
-
-  &:last-of-type {
-    border-bottom: 0;
-  }
-
-  &:hover {
-    background: ${theme.bg.wash};
-  }
-
-  .icon {
-    color: ${theme.text.alt};
-  }
-`;
-
-export const ListItemContent = styled.div`
-  display: flex;
-  align-items: center;
-
-  .icon {
-    color: ${theme.text.secondary};
-    margin-right: 6px;
-    position: relative;
-    top: 1px;
-  }
 `;
 
 export const NameWarn = styled.div`
@@ -517,79 +246,11 @@ export const PreviousMessagesLoading = styled.div`
   min-height: 48px;
 `;
 
-export const SubSegmentsContainer = styled.div`
+export const List = styled.div`
   display: flex;
-  width: 100%;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04),
-    inset 0 -1px ${theme.bg.border}, 0 1px 2px rgba(0, 0, 0, 0.04);
-  background: ${theme.bg.default};
-  position: sticky;
-  top: 56px;
-  z-index: 11;
-  justify-content: space-between;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    top: 0px;
-    z-index: 1;
-    position: relative;
-  }
-`;
-
-export const SubSegment = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px 24px;
-  flex: 1 0 auto;
-  font-weight: 600;
-  color: ${props => (props.active ? theme.text.default : theme.text.alt)};
-  box-shadow: ${props =>
-    props.active ? `inset 0 -2px 0 ${theme.text.default}` : 'none'};
-  text-align: center;
-
-  &:hover {
-    background: ${theme.bg.wash};
-    box-shadow: ${props =>
-      props.active
-        ? `inset 0 -2px 0 ${theme.text.default}`
-        : `inset 0 -2px 0 ${tint(theme.bg.wash, -16)}`};
-    color: ${props =>
-      props.active ? theme.text.default : theme.text.secondary};
-    cursor: pointer;
-  }
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    flex: 1 0 21%;
-
-    &:hover {
-      background: ${theme.bg.default};
-    }
-
-    &:active {
-      background: ${theme.bg.wash};
-    }
-  }
-
-  @media (min-width: ${MEDIA_BREAK}px) {
-    ${props =>
-      props.hideOnDesktop &&
-      css`
-        display: none;
-      `}
-  }
-`;
-
-export const LeftActions = styled.div`
-  display: flex;
-`;
-
-export const RightActions = styled.div`
-  display: flex;
-  align-items: center;
-  padding-right: 8px;
-  @media (max-width: ${MEDIA_BREAK}px) {
-    display: none;
-  }
+  flex-direction: column;
+  border-radius: 0 0 4px 4px;
+  overflow: hidden;
 `;
 
 export const PrivateCommunityWrapper = styled.div`

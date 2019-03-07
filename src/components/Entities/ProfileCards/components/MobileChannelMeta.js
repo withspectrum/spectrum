@@ -1,13 +1,13 @@
 // @flow
 import React from 'react';
-import type { CommunityMetaType } from '../types';
+import type { ChannelMetaType } from '../types';
 import Icon from 'src/components/icons';
 import { CommunityAvatar } from 'src/components/avatar';
-import { MobileMetaContainer, MobileCommunityName } from '../style';
+import { MobileMetaContainer, MobileName } from '../style';
 import { NavigationContext } from 'src/routes';
 
-export const MobileCommunityMeta = (props: CommunityMetaType) => {
-  const { community } = props;
+export const MobileChannelMeta = (props: ChannelMetaType) => {
+  const { channel } = props;
 
   return (
     <NavigationContext.Consumer>
@@ -19,8 +19,8 @@ export const MobileCommunityMeta = (props: CommunityMetaType) => {
             size={32}
           />
           <div style={{ width: '8px' }} />
-          <CommunityAvatar size={24} community={community} />
-          <MobileCommunityName>{community.name}</MobileCommunityName>
+          <CommunityAvatar size={24} community={channel.community} />
+          <MobileName>{channel.name}</MobileName>
         </MobileMetaContainer>
       )}
     </NavigationContext.Consumer>

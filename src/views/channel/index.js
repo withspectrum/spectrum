@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { CommunityAvatar } from 'src/components/avatar';
 import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
-import ComposerPlaceholder from 'src/components/threadComposer/components/placeholder';
 import Head from 'src/components/head';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
@@ -28,8 +27,11 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
 import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
 import {
+  ChannelProfileCard,
+  MobileChannelProfileCard,
+} from 'src/components/Entities';
+import {
   Grid,
-  Meta,
   Content,
   Extras,
   CommunityContext,
@@ -38,7 +40,6 @@ import {
   ChannelDescription,
   MetadataContainer,
 } from './style';
-import { CoverPhoto } from 'src/components/profile/coverPhoto';
 import {
   PrimaryButton,
   OutlineButton,
@@ -378,15 +379,8 @@ class ChannelView extends React.Component<Props, State> {
           <ViewGrid>
             <PrimarySecondaryColumnGrid data-cy="channel-view">
               <PrimaryColumn>
+                <MobileChannelProfileCard channel={channel} />
                 <SegmentedControl>
-                  <Segment
-                    onClick={() => this.handleSegmentClick('search')}
-                    isActive={selectedView === 'search'}
-                    data-cy="channel-search-tab"
-                  >
-                    <Icon glyph={'search'} />
-                    Search
-                  </Segment>
                   <Segment
                     segmentLabel="threads"
                     onClick={() => this.handleSegmentClick('threads')}
@@ -394,6 +388,7 @@ class ChannelView extends React.Component<Props, State> {
                   >
                     Threads
                   </Segment>
+
                   <Segment
                     segmentLabel="members"
                     onClick={() => this.handleSegmentClick('members')}
@@ -401,22 +396,15 @@ class ChannelView extends React.Component<Props, State> {
                   >
                     Members
                   </Segment>
-                </SegmentedControl>
 
-                {/* if the user is logged in and has permissions to post, and the channel is either private + paid, or is not private, show the composer */}
-                {isLoggedIn &&
-                  !channel.isArchived &&
-                  selectedView === 'threads' &&
-                  userHasPermissions &&
-                  ((channel.isPrivate && !channel.isArchived) ||
-                    !channel.isPrivate) && (
-                    <ErrorBoundary fallbackComponent={null}>
-                      <ComposerPlaceholder
-                        communityId={channel.community.id}
-                        channelId={channel.id}
-                      />
-                    </ErrorBoundary>
-                  )}
+                  <Segment
+                    onClick={() => this.handleSegmentClick('search')}
+                    isActive={selectedView === 'search'}
+                    data-cy="channel-search-tab"
+                  >
+                    Search
+                  </Segment>
+                </SegmentedControl>
 
                 {// thread list
                 selectedView === 'threads' && (
@@ -443,57 +431,26 @@ class ChannelView extends React.Component<Props, State> {
                 )}
               </PrimaryColumn>
               <SecondaryColumn>
-                <Meta data-cy="channel-profile-full">
-                  <CommunityContext>
-                    <CommunityAvatar community={community} />
-                    <Link to={`/${community.slug}`}>
-                      <CommunityName>{community.name}</CommunityName>
-                    </Link>
-                  </CommunityContext>
+                <ChannelProfileCard channel={channel} />
 
-                  <ChannelName>
-                    {channel.name}
-                    {channel.isArchived && ' (Archived)'}
-                  </ChannelName>
-                  {channel.description && (
-                    <ChannelDescription>
-                      {channel.description}
-                    </ChannelDescription>
-                  )}
+                {isLoggedIn && userHasPermissions && !channel.isArchived && (
+                  <ErrorBoundary fallbackComponent={null}>
+                    <NotificationsToggle
+                      value={channel.channelPermissions.receiveNotifications}
+                      channel={channel}
+                    />
+                  </ErrorBoundary>
+                )}
 
-                  <MetadataContainer>
-                    {channel.metaData && channel.metaData.members && (
-                      <React.Fragment>
-                        <Icon glyph="person" size={24} />
-                        {channel.metaData.members.toLocaleString()}
-                        {channel.metaData.members > 1 ? ' members' : ' member'}
-                      </React.Fragment>
-                    )}
-
-                    <div style={{ height: '8px' }} />
-
-                    {actionButton}
-                  </MetadataContainer>
-
-                  {isLoggedIn && userHasPermissions && !channel.isArchived && (
-                    <ErrorBoundary fallbackComponent={null}>
-                      <NotificationsToggle
-                        value={channel.channelPermissions.receiveNotifications}
-                        channel={channel}
-                      />
-                    </ErrorBoundary>
-                  )}
-
-                  {/* user is signed in and has permissions to view pending users */}
-                  {isLoggedIn && (isOwner || isGlobalOwner) && (
-                    <ErrorBoundary fallbackComponent={null}>
-                      <PendingUsersNotification
-                        channel={channel}
-                        id={channel.id}
-                      />
-                    </ErrorBoundary>
-                  )}
-                </Meta>
+                {/* user is signed in and has permissions to view pending users */}
+                {isLoggedIn && (isOwner || isGlobalOwner) && (
+                  <ErrorBoundary fallbackComponent={null}>
+                    <PendingUsersNotification
+                      channel={channel}
+                      id={channel.id}
+                    />
+                  </ErrorBoundary>
+                )}
               </SecondaryColumn>
             </PrimarySecondaryColumnGrid>
           </ViewGrid>

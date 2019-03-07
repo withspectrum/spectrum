@@ -4,12 +4,11 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-import { CommunityListItem } from 'src/components/listItems';
+import { CommunityListItem } from 'src/components/Entities';
+import { Loading } from 'src/components/loading';
 import Icon from 'src/components/icons';
 import { getUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import type { GetUserCommunityConnectionType } from 'shared/graphql/queries/user/getUserCommunityConnection';
-
-import { ListContainer } from 'src/components/listItems/style';
 
 type Props = {
   data: {
@@ -22,6 +21,10 @@ type Props = {
 class CommunityList extends React.Component<Props> {
   render() {
     const { data } = this.props;
+
+    if (data.loading) {
+      return <Loading style={{ padding: '32px' }} />;
+    }
 
     if (
       !data.user ||
@@ -49,25 +52,19 @@ class CommunityList extends React.Component<Props> {
     }
 
     return (
-      <ListContainer>
+      <div>
         {sortedCommunities.map(community => {
           if (!community) return null;
           return (
-            <Link key={community.id} to={`/${community.slug}`}>
-              <CommunityListItem
-                community={community}
-                reputation={
-                  community.contextPermissions
-                    ? community.contextPermissions.reputation
-                    : 0
-                }
-              >
-                <Icon glyph="view-forward" />
-              </CommunityListItem>
-            </Link>
+            <CommunityListItem
+              key={community.id}
+              communityObject={community}
+              profilePhoto={community.profilePhoto}
+              name={community.name}
+            />
           );
         })}
-      </ListContainer>
+      </div>
     );
   }
 }

@@ -8,9 +8,8 @@ import {
   SidebarSectionHeader,
   SidebarSectionHeading,
   List,
-  ChannelListItem,
-  Name,
   ListItem,
+  ListItemLabel,
   ListItemContent,
   NameWarn,
 } from '../style';
@@ -41,12 +40,12 @@ const Component = (props: Props) => {
 
       <List>
         {isTeamMember && (
-          <ChannelListItem to={`/${community.slug}/settings`}>
+          <ListItem to={`/${community.slug}/settings`}>
             <ListItemContent>
-              <Name>Community settings</Name>
+              <ListItemLabel>Community settings</ListItemLabel>
             </ListItemContent>
             <Icon glyph="view-forward" size={24} />
-          </ChannelListItem>
+          </ListItem>
         )}
 
         {!isOwner && isMember && (

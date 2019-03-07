@@ -3,7 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { UserListItemContainer } from '../style';
-import GranularUserProfile from 'src/components/granularUserProfile';
+import { UserListItem } from 'src/components/Entities';
 import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import getPendingUsersQuery from 'shared/graphql/queries/channel/getChannelPendingUsers';
@@ -54,14 +54,13 @@ class PendingUsers extends React.Component<Props> {
       return (
         <SectionCard>
           <SectionTitle>Pending Members</SectionTitle>
-          {pendingUsers &&
-            pendingUsers.length > 0 && (
-              <SectionSubtitle>
-                Approving requests will allow a person to view all threads and
-                messages in this channel, as well as allow them to post their
-                own threads.
-              </SectionSubtitle>
-            )}
+          {pendingUsers && pendingUsers.length > 0 && (
+            <SectionSubtitle>
+              Approving requests will allow a person to view all threads and
+              messages in this channel, as well as allow them to post their own
+              threads.
+            </SectionSubtitle>
+          )}
 
           <ListContainer>
             {pendingUsers &&
@@ -69,7 +68,7 @@ class PendingUsers extends React.Component<Props> {
                 if (!user) return null;
                 return (
                   <UserListItemContainer key={user.id}>
-                    <GranularUserProfile
+                    <UserListItem
                       userObject={user}
                       id={user.id}
                       name={user.name}
@@ -139,17 +138,16 @@ class PendingUsers extends React.Component<Props> {
                           </Dropdown>
                         )}
                       />
-                    </GranularUserProfile>
+                    </UserListItem>
                   </UserListItemContainer>
                 );
               })}
 
-            {pendingUsers &&
-              pendingUsers.length <= 0 && (
-                <SectionSubtitle>
-                  There are no pending requests to join this channel.
-                </SectionSubtitle>
-              )}
+            {pendingUsers && pendingUsers.length <= 0 && (
+              <SectionSubtitle>
+                There are no pending requests to join this channel.
+              </SectionSubtitle>
+            )}
           </ListContainer>
         </SectionCard>
       );

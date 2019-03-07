@@ -28,7 +28,7 @@ import {
 import { ListContainer } from 'src/components/listItems/style';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import ViewError from 'src/components/viewError';
-import GranularUserProfile from 'src/components/granularUserProfile';
+import { UserListItem } from 'src/components/Entities';
 import { Notice } from 'src/components/listItems/style';
 import type { Dispatch } from 'redux';
 
@@ -145,7 +145,7 @@ class CommunityMembers extends React.Component<Props, State> {
     return (
       <React.Fragment>
         <Row>
-          <GranularUserProfile
+          <UserListItem
             userObject={user}
             key={user.id}
             id={user.id}

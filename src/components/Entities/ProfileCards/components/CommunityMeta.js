@@ -2,14 +2,13 @@
 import React from 'react';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import addProtocolToString from 'shared/normalize-url';
-import type { CommunityMetaType } from '../types';
 import Icon from 'src/components/icons';
 import {
   MetaContainer,
-  CommunityName,
-  CommunityDescription,
-  CommunityMetaRow,
+  Name,
+  Description,
   MetaLinksContainer,
+  MetaRow,
   OnlineDot,
 } from '../style';
 
@@ -22,15 +21,15 @@ export const CommunityMeta = (props: CommunityMetaType) => {
 
   return (
     <MetaContainer>
-      <CommunityName>{community.name}</CommunityName>
+      <Name>{community.name}</Name>
 
       {formattedDescription && (
-        <CommunityDescription>{formattedDescription}</CommunityDescription>
+        <Description>{formattedDescription}</Description>
       )}
 
       <MetaLinksContainer>
         {formattedWebsite && (
-          <CommunityMetaRow>
+          <MetaRow>
             <a
               target="_blank"
               rel="noopener noreferrer"
@@ -38,16 +37,16 @@ export const CommunityMeta = (props: CommunityMetaType) => {
             >
               <Icon glyph={'link'} size={20} /> {website}
             </a>
-          </CommunityMetaRow>
+          </MetaRow>
         )}
 
-        <CommunityMetaRow>
+        <MetaRow>
           <Icon glyph={'person'} size={20} /> {members.toLocaleString()} members
-        </CommunityMetaRow>
+        </MetaRow>
 
-        <CommunityMetaRow>
+        <MetaRow>
           <OnlineDot /> {onlineMembers.toLocaleString()} members online
-        </CommunityMetaRow>
+        </MetaRow>
       </MetaLinksContainer>
     </MetaContainer>
   );

@@ -14,7 +14,7 @@ import { Loading, LoadingListItem } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { UserListItemContainer } from '../style';
-import GranularUserProfile from 'src/components/granularUserProfile';
+import { UserListItem } from 'src/components/Entities';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 
@@ -89,7 +89,7 @@ class MembersList extends React.Component<Props, State> {
             if (!user) return null;
 
             return (
-              <GranularUserProfile
+              <UserListItem
                 key={user.id}
                 userObject={user}
                 name={user.name}

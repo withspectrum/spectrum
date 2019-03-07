@@ -39,55 +39,6 @@ const Column = styled.div`
   flex-direction: column;
 `;
 
-export const Meta = styled(Column)`
-  grid-area: meta;
-
-  > ${FullProfile} {
-    margin-top: 16px;
-    margin-bottom: 16px;
-  }
-
-  @media (max-width: 768px) {
-    > ${FullProfile} {
-      margin-top: 0;
-      margin-bottom: 8px;
-    }
-
-    ${FullDescription} {
-      display: none;
-    }
-  }
-
-  ${ListContainer} {
-    margin: 8px 0 0 32px;
-    width: auto;
-
-    @media (max-width: 768px) {
-      margin-left: 0;
-    }
-  }
-
-  > button,
-  > a > button {
-    margin-top: 16px;
-    margin-left: 32px;
-    width: calc(100% - 32px);
-
-    @media (max-width: 768px) {
-      margin-left: 0;
-      width: 100%;
-    }
-  }
-
-  @media (max-width: 768px) {
-    padding: 0 16px;
-
-    > div {
-      margin-left: 0;
-    }
-  }
-`;
-
 export const ColumnHeading = styled.div`
   display: flex;
   align-items: center;
@@ -100,18 +51,16 @@ export const ColumnHeading = styled.div`
 `;
 
 export const SearchContainer = styled(Card)`
-  border-bottom: 2px solid ${theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
+  background: ${theme.bg.wash};
   position: relative;
   z-index: ${zIndex.search};
   width: 100%;
-  display: block;
-  min-height: 64px;
+  display: flex;
+  padding: 8px 12px;
   transition: ${Transition.hover.off};
-
-  &:hover {
-    transition: none;
-    border-bottom: 2px solid ${theme.brand.alt};
-  }
+  display: flex;
+  align-items: center;
 
   @media (max-width: 768px) {
     border-radius: 0;
@@ -121,17 +70,22 @@ export const SearchContainer = styled(Card)`
 `;
 
 export const SearchInput = styled.input`
-  justify-content: flex-start;
+  display: flex;
+  flex: 1 0 auto;
   align-items: center;
-  cursor: pointer;
-  padding: 20px;
+  width: 100%;
+  padding: 12px 16px;
   color: ${theme.text.default};
   transition: ${Transition.hover.off};
-  font-size: 20px;
-  font-weight: 800;
-  margin-left: 8px;
-  width: 97%;
-  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 100px;
+  background: ${theme.bg.default};
+  border: 1px solid ${theme.bg.border};
+
+  &:focus {
+    border: 1px solid ${theme.text.secondary};
+  }
 `;
 
 export const MessageIconContainer = styled.div`

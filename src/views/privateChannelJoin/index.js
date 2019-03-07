@@ -9,6 +9,7 @@ import { Loading } from 'src/components/loading';
 import { CLIENT_URL } from 'src/api/constants';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import { LoadingView, ErrorView } from 'src/views/ViewHelpers';
 
 type Props = {
   match: Object,

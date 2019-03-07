@@ -8,7 +8,6 @@ import ThreadFeed from 'src/components/threadFeed';
 import { SmallPrimaryButton } from './Button';
 import Icon from 'src/components/icons';
 import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
-import { LeftActions, RightActions } from '../style';
 
 const CommunityThreadFeed = compose(
   connect(),
@@ -24,35 +23,31 @@ export const PostsFeeds = (props: Props) => {
   return (
     <React.Fragment>
       <SegmentedControl>
-        <LeftActions>
-          <Segment
-            isActive={activeFeed === 'latest'}
-            onClick={() => setActiveFeed('latest')}
-          >
-            Latest
-          </Segment>
+        <Segment
+          isActive={activeFeed === 'latest'}
+          onClick={() => setActiveFeed('latest')}
+        >
+          Latest
+        </Segment>
 
-          <Segment
-            isActive={activeFeed === 'trending'}
-            onClick={() => setActiveFeed('trending')}
-          >
-            Popular
-          </Segment>
-        </LeftActions>
+        <Segment
+          isActive={activeFeed === 'trending'}
+          onClick={() => setActiveFeed('trending')}
+        >
+          Popular
+        </Segment>
 
         {community.communityPermissions.isMember && (
-          <RightActions>
-            <SmallPrimaryButton
-              to={{
-                pathname,
-                search,
-                state: { modal: true },
-              }}
-            >
-              <Icon glyph={'post'} size={24} />
-              New Post
-            </SmallPrimaryButton>
-          </RightActions>
+          <SmallPrimaryButton
+            to={{
+              pathname,
+              search,
+              state: { modal: true },
+            }}
+          >
+            <Icon glyph={'post'} size={24} />
+            New Post
+          </SmallPrimaryButton>
         )}
       </SegmentedControl>
 

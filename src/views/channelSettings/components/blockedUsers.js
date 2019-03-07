@@ -3,7 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { UserListItemContainer } from '../style';
-import GranularUserProfile from 'src/components/granularUserProfile';
+import { UserListItem } from 'src/components/Entities';
 import { Loading } from 'src/components/loading';
 import getBlockedUsersQuery from 'shared/graphql/queries/channel/getChannelBlockedUsers';
 import type { GetChannelBlockedUsersType } from 'shared/graphql/queries/channel/getChannelBlockedUsers';
@@ -48,24 +48,22 @@ class BlockedUsers extends React.Component<Props> {
       return (
         <SectionCard>
           <SectionTitle>Blocked Users</SectionTitle>
-          {blockedUsers &&
-            blockedUsers.length > 0 && (
-              <SectionSubtitle>
-                Blocked users can not see threads or messages posted in this
-                channel. They will still be able to join any other public
-                channels in the Spectrum community and request access to other
-                private channels.
-              </SectionSubtitle>
-            )}
+          {blockedUsers && blockedUsers.length > 0 && (
+            <SectionSubtitle>
+              Blocked users can not see threads or messages posted in this
+              channel. They will still be able to join any other public channels
+              in the Spectrum community and request access to other private
+              channels.
+            </SectionSubtitle>
+          )}
 
-          {blockedUsers &&
-            blockedUsers.length > 0 && (
-              <Notice>
-                Unblocking a user will <b>not</b> add them to this channel. It
-                will only allow them to re-request access in the future as long
-                as this channel remains private.
-              </Notice>
-            )}
+          {blockedUsers && blockedUsers.length > 0 && (
+            <Notice>
+              Unblocking a user will <b>not</b> add them to this channel. It
+              will only allow them to re-request access in the future as long as
+              this channel remains private.
+            </Notice>
+          )}
 
           <ListContainer>
             {blockedUsers &&
@@ -74,7 +72,7 @@ class BlockedUsers extends React.Component<Props> {
 
                 return (
                   <UserListItemContainer key={user.id}>
-                    <GranularUserProfile
+                    <UserListItem
                       userObject={user}
                       id={user.id}
                       name={user.name}
@@ -124,17 +122,16 @@ class BlockedUsers extends React.Component<Props> {
                           </Dropdown>
                         )}
                       />
-                    </GranularUserProfile>
+                    </UserListItem>
                   </UserListItemContainer>
                 );
               })}
 
-            {blockedUsers &&
-              blockedUsers.length <= 0 && (
-                <SectionSubtitle>
-                  There are no blocked users in this channel.
-                </SectionSubtitle>
-              )}
+            {blockedUsers && blockedUsers.length <= 0 && (
+              <SectionSubtitle>
+                There are no blocked users in this channel.
+              </SectionSubtitle>
+            )}
           </ListContainer>
         </SectionCard>
       );

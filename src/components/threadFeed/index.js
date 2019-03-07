@@ -42,8 +42,8 @@ const NullState = ({ viewContext, isSearch, communityId, channelId }) => {
   }
 
   if (isSearch) {
-    hd = 'Sorry, doesn’t ring a bell';
-    cp = 'You can always try again, though!';
+    hd = 'We didn’t find any relevant posts...';
+    cp = 'Try searching again or create a new post';
   }
 
   const { pathname, search } = getComposerLink({ communityId, channelId });

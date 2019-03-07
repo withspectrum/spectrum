@@ -13,8 +13,10 @@ import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import type { Dispatch } from 'redux';
 import {
   Row,
-  Name,
-  Username,
+  UserAvatarContainer,
+  Content,
+  Label,
+  Sublabel,
   Description,
   MessageIcon,
   Actions,
@@ -40,85 +42,85 @@ type Props = {
   showHoverProfile?: boolean,
 };
 
-class GranularUserProfileHandler extends React.Component<Props> {
-  render() {
-    return <GranularUserProfile {...this.props} />;
-  }
-}
+export const UserListItem = (props: Props) => {
+  const { history, dispatch } = props;
 
-class GranularUserProfile extends React.Component<Props> {
-  initMessage = (e: any) => {
+  const initMessage = (e: any) => {
     e && e.preventDefault() && e.stopPropagation();
+
     const { name, username, id } = this.props;
     const user = { name, username, id };
 
-    this.props.dispatch(initNewThreadWithUser(user));
-    this.props.history.push('/messages/new');
+    dispatch(initNewThreadWithUser(user));
+    history.push('/messages/new');
   };
 
-  render() {
-    const {
-      userObject,
-      profilePhoto,
-      name,
-      username,
-      description,
-      reputation,
-      avatarSize = 40,
-      badges,
-      children,
-      messageButton,
-      multiAction,
-      showHoverProfile = true,
-    } = this.props;
+  const {
+    userObject,
+    profilePhoto,
+    name,
+    username,
+    description,
+    reputation,
+    avatarSize = 40,
+    badges,
+    children,
+    messageButton,
+    multiAction,
+    showHoverProfile = true,
+  } = props;
 
-    // TODO @brian: decide whether we want to render users without a username at all
-    if (!userObject.username) return null;
+  // TODO @brian: decide whether we want to render users without a username at all
+  if (!userObject.username) return null;
 
-    return (
-      <Link to={`/users/${userObject.username}`}>
-        <Row avatarSize={avatarSize} multiAction={multiAction}>
-          {profilePhoto && (
+  return (
+    <Link to={`/users/${userObject.username}`}>
+      <Row>
+        {profilePhoto && (
+          <UserAvatarContainer>
             <UserAvatar
               user={userObject}
               size={avatarSize}
               showHoverProfile={!showHoverProfile}
               isClickable={false}
             />
+          </UserAvatarContainer>
+        )}
+
+        <Content>
+          {name && (
+            <Label>
+              {name}
+              {badges && badges.map((b, i) => <Badge key={i} type={b} />)}
+            </Label>
           )}
 
-          {name && (
-            <Name>
-              {name}
-              {username && <Username>@{username}</Username>}
-              {badges && badges.map((b, i) => <Badge key={i} type={b} />)}
-            </Name>
-          )}
+          {username && <Sublabel>@{username}</Sublabel>}
 
           {typeof reputation === 'number' && (
             <Reputation reputation={reputation} />
           )}
 
           {description && <Description>{description}</Description>}
+        </Content>
 
-          <Actions>
-            {messageButton && (
-              <Tooltip title="Send message" position="top">
-                <MessageIcon onClick={this.initMessage}>
-                  <Icon glyph="message-simple-new" size={24} />
-                </MessageIcon>
-              </Tooltip>
-            )}
+        <Actions>
+          {messageButton && (
+            <Tooltip title="Send message" position="top">
+              <MessageIcon onClick={this.initMessage}>
+                <Icon glyph="message-simple-new" size={24} />
+              </MessageIcon>
+            </Tooltip>
+          )}
 
-            {children}
-          </Actions>
-        </Row>
-      </Link>
-    );
-  }
-}
+          {children}
+        </Actions>
+      </Row>
+    </Link>
+  );
+};
 
 export default compose(
   connect(),
   withRouter
-)(GranularUserProfileHandler);
+)(UserListItem);
