@@ -16,7 +16,7 @@ import { ChannelsList } from '../components/ChannelsList';
 import { Main, Sidebar, SidebarSection } from '../style';
 import {
   ViewGrid,
-  PrimarySecondaryColumnGrid,
+  SecondaryPrimaryColumnGrid,
   PrimaryColumn,
   SecondaryColumn,
 } from 'src/components/Layout';
@@ -74,19 +74,7 @@ const Component = (props: SignedInMemberType) => {
       />
 
       <ViewGrid data-cy="community-view">
-        <PrimarySecondaryColumnGrid>
-          <PrimaryColumn>
-            <MobileCommunityProfileCard community={community} />
-
-            <CommunityFeeds
-              scrollToBottom={scrollToBottom}
-              contextualScrollToBottom={contextualScrollToBottom}
-              scrollToTop={scrollToTop}
-              scrollToPosition={scrollToPosition}
-              community={community}
-            />
-          </PrimaryColumn>
-
+        <SecondaryPrimaryColumnGrid>
           <SecondaryColumn>
             <CommunityProfileCard community={community} />
 
@@ -103,7 +91,19 @@ const Component = (props: SignedInMemberType) => {
               <ChannelsList id={community.id} communitySlug={community.slug} />
             </SidebarSection>
           </SecondaryColumn>
-        </PrimarySecondaryColumnGrid>
+
+          <PrimaryColumn>
+            <MobileCommunityProfileCard community={community} />
+
+            <CommunityFeeds
+              scrollToBottom={scrollToBottom}
+              contextualScrollToBottom={contextualScrollToBottom}
+              scrollToTop={scrollToTop}
+              scrollToPosition={scrollToPosition}
+              community={community}
+            />
+          </PrimaryColumn>
+        </SecondaryPrimaryColumnGrid>
       </ViewGrid>
     </React.Fragment>
   );

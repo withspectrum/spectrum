@@ -51,7 +51,7 @@ import { ErrorBoundary } from 'src/components/error';
 import MembersList from './components/MembersList';
 import {
   ViewGrid,
-  PrimarySecondaryColumnGrid,
+  SecondaryPrimaryColumnGrid,
   PrimaryColumn,
   SecondaryColumn,
 } from 'src/components/Layout';
@@ -377,7 +377,30 @@ class ChannelView extends React.Component<Props, State> {
             image={community.profilePhoto}
           />
           <ViewGrid>
-            <PrimarySecondaryColumnGrid data-cy="channel-view">
+            <SecondaryPrimaryColumnGrid data-cy="channel-view">
+              <SecondaryColumn>
+                <ChannelProfileCard channel={channel} />
+
+                {isLoggedIn && userHasPermissions && !channel.isArchived && (
+                  <ErrorBoundary fallbackComponent={null}>
+                    <NotificationsToggle
+                      value={channel.channelPermissions.receiveNotifications}
+                      channel={channel}
+                    />
+                  </ErrorBoundary>
+                )}
+
+                {/* user is signed in and has permissions to view pending users */}
+                {isLoggedIn && (isOwner || isGlobalOwner) && (
+                  <ErrorBoundary fallbackComponent={null}>
+                    <PendingUsersNotification
+                      channel={channel}
+                      id={channel.id}
+                    />
+                  </ErrorBoundary>
+                )}
+              </SecondaryColumn>
+
               <PrimaryColumn>
                 <MobileChannelProfileCard channel={channel} />
                 <SegmentedControl>
@@ -430,29 +453,7 @@ class ChannelView extends React.Component<Props, State> {
                   </ErrorBoundary>
                 )}
               </PrimaryColumn>
-              <SecondaryColumn>
-                <ChannelProfileCard channel={channel} />
-
-                {isLoggedIn && userHasPermissions && !channel.isArchived && (
-                  <ErrorBoundary fallbackComponent={null}>
-                    <NotificationsToggle
-                      value={channel.channelPermissions.receiveNotifications}
-                      channel={channel}
-                    />
-                  </ErrorBoundary>
-                )}
-
-                {/* user is signed in and has permissions to view pending users */}
-                {isLoggedIn && (isOwner || isGlobalOwner) && (
-                  <ErrorBoundary fallbackComponent={null}>
-                    <PendingUsersNotification
-                      channel={channel}
-                      id={channel.id}
-                    />
-                  </ErrorBoundary>
-                )}
-              </SecondaryColumn>
-            </PrimarySecondaryColumnGrid>
+            </SecondaryPrimaryColumnGrid>
           </ViewGrid>
         </React.Fragment>
       );
