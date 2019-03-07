@@ -67,6 +67,16 @@ class Badge extends React.Component<Props> {
           </TeamBadge>
         );
       case 'bot':
+        return (
+          <Span
+            tipText="Automatically posted"
+            tipLocation={'top-left'}
+            onClick={this.props.onClick && this.props.onClick}
+            {...rest}
+          >
+            {label || type}
+          </Span>
+        );
       default:
         return (
           <Span
