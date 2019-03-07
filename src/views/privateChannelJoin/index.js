@@ -84,15 +84,9 @@ class PrivateChannelJoin extends React.Component<Props, State> {
       return <CommunityLogin match={match} redirectPath={redirectPath} />;
     }
 
-    if (isLoading) {
-      return (
-        <React.Fragment>
-          <Loading />
-        </React.Fragment>
-      );
-    }
+    if (isLoading) return <LoadingView />;
 
-    return null;
+    return <ErrorView />;
   }
 }
 

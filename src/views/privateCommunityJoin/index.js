@@ -9,6 +9,7 @@ import CommunityLogin from 'src/views/communityLogin';
 import { Loading } from 'src/components/loading';
 import { CLIENT_URL } from 'src/api/constants';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
 
 type Props = {
   match: Object,
@@ -89,15 +90,9 @@ class PrivateCommunityJoin extends React.Component<Props, State> {
       return <CommunityLogin match={match} redirectPath={redirectPath} />;
     }
 
-    if (isLoading) {
-      return (
-        <React.Fragment>
-          <Loading />
-        </React.Fragment>
-      );
-    }
+    if (isLoading) return <LoadingView />;
 
-    return null;
+    return <ErrorView />;
   }
 }
 

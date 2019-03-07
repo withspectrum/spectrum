@@ -11,7 +11,6 @@ import { Card } from '../card';
 import { Column } from '../column';
 import { ThreadViewContainer, Detail, Content } from '../../views/thread/style';
 import {
-  LoadingScreenContainer,
   ShimmerList,
   ShimmerListLite,
   ShimmerInboxThread,
@@ -1030,20 +1029,6 @@ export const ErrorSelect = ({ children }: Props) => (
   <StyledErrorSelect>{children}</StyledErrorSelect>
 );
 
-export const LoadingScreen = (): React$Element<any> => (
-  <LoadingScreenContainer>
-    <GridProfile>
-      <LoadingCoverPhoto />
-      <Meta>
-        <LoadingProfile />
-      </Meta>
-      <GridContent>
-        <Loading />
-      </GridContent>
-    </GridProfile>
-  </LoadingScreenContainer>
-);
-
 export const LoadingThreadView = (): React$Element<any> => (
   <ThreadViewContainer>
     <Content>
@@ -1052,14 +1037,6 @@ export const LoadingThreadView = (): React$Element<any> => (
       </Detail>
     </Content>
   </ThreadViewContainer>
-);
-
-export const LoadingNotifications = (): React$Element<any> => (
-  <LoadingScreenContainer>
-    <Column type="primary" alignItems="center">
-      <LoadingFeed />
-    </Column>
-  </LoadingScreenContainer>
 );
 
 export const displayLoadingState = branch(
@@ -1084,11 +1061,6 @@ export const displayLoadingNavbar = branch(
 export const displayLoadingCard = branch(
   props => !props.data || props.data.loading,
   renderComponent(LoadingCard)
-);
-
-export const displayLoadingScreen = branch(
-  props => !props.data || props.data.loading,
-  renderComponent(LoadingScreen)
 );
 
 export const displayLoadingThreadView = branch(

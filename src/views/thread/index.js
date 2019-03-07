@@ -1,8 +1,7 @@
 // @flow
 import React from 'react';
 import Loadable from 'react-loadable';
-import LoadingThread from './components/loading';
-import ViewError from 'src/components/viewError';
+import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
 
 /* prettier-ignore */
 const loader = () => import('./container'/* webpackChunkName: "Thread" */);
@@ -13,14 +12,9 @@ const getLoading = (threadViewContext: 'fullscreen' | 'inbox' | 'slider') => ({
 }) => {
   if (error) {
     console.error(error);
-    return (
-      <ViewError
-        heading={'We had trouble loading the application, please try again.'}
-        subheading={''}
-      />
-    );
+    return <ErrorView />;
   } else if (pastDelay) {
-    return <LoadingThread threadViewContext={threadViewContext} />;
+    return <LoadingView />;
   }
 
   return null;

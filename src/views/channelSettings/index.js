@@ -21,6 +21,7 @@ import Overview from './components/overview';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
+import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
 
 type Props = {
   data: {
@@ -213,42 +214,10 @@ class ChannelSettings extends React.Component<Props> {
     }
 
     if (isLoading) {
-      return <Loading />;
+      return <LoadingView />;
     }
 
-    if (hasError) {
-      return (
-        <React.Fragment>
-          <Titlebar
-            title={'Channel not found'}
-            provideBack={true}
-            backRoute={`/${communitySlug}/${channelSlug}`}
-            noComposer
-          />
-          <ViewError
-            refresh
-            heading={'There was an error fetching this channel.'}
-          />
-        </React.Fragment>
-      );
-    }
-
-    return (
-      <React.Fragment>
-        <Titlebar
-          title={'Channel not found'}
-          provideBack={true}
-          backRoute={`/${communitySlug}`}
-          noComposer
-        />
-        <ViewError
-          heading={'We couldn’t find a channel with this name.'}
-          subheading={`Head back to the ${communitySlug} community to get back on track.`}
-        >
-          <Upsell404Channel community={communitySlug} />
-        </ViewError>
-      </React.Fragment>
-    );
+    return <ErrorView />;
   }
 }
 

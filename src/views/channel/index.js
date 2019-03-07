@@ -17,7 +17,6 @@ import getChannelThreadConnection from 'shared/graphql/queries/channel/getChanne
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import Login from '../login';
-import { LoadingScreen } from 'src/components/loading';
 import { Upsell404Channel } from 'src/components/upsell';
 import RequestToJoinChannel from 'src/components/upsell/requestToJoinChannel';
 import Titlebar from '../titlebar';
@@ -27,6 +26,7 @@ import { CLIENT_URL } from 'src/api/constants';
 import CommunityLogin from 'src/views/communityLogin';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
+import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
 import {
   Grid,
   Meta,
@@ -502,43 +502,10 @@ class ChannelView extends React.Component<Props, State> {
     }
 
     if (isLoading) {
-      return <LoadingScreen />;
+      return <LoadingView />;
     }
 
-    if (hasError) {
-      return (
-        <ViewGrid>
-          <Titlebar
-            title={'Channel not found'}
-            provideBack={true}
-            backRoute={`/${communitySlug}`}
-            noComposer
-          />
-          <ViewError
-            refresh
-            heading={'There was an error fetching this channel.'}
-          />
-        </ViewGrid>
-      );
-    }
-
-    return (
-      <ViewGrid>
-        <Titlebar
-          title={'Channel not found'}
-          provideBack={true}
-          backRoute={`/${communitySlug}`}
-          noComposer
-        />
-        <ViewError
-          heading={'We couldn’t find a channel with this name.'}
-          subheading={`Head back to the ${communitySlug} community to get back on track.`}
-          dataCy="channel-not-found"
-        >
-          <Upsell404Channel community={communitySlug} />
-        </ViewError>
-      </ViewGrid>
-    );
+    return <ErrorView />;
   }
 }
 

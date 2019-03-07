@@ -49,6 +49,7 @@ import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import { ViewGrid, SingleColumnGrid } from 'src/components/Layout';
+import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
 
 type Props = {
   markAllNotificationsSeen?: Function,
@@ -401,31 +402,10 @@ class NotificationsPure extends React.Component<Props, State> {
     }
 
     if (isLoading) {
-      return (
-        <ViewGrid>
-          <Head title={title} description={description} />
-          <Loading />
-        </ViewGrid>
-      );
+      return <LoadingView />;
     }
 
-    if (!data || (data && data.error)) {
-      return (
-        <ViewGrid>
-          <Head title={title} description={description} />
-          <ViewError />
-        </ViewGrid>
-      );
-    }
-
-    return (
-      <ViewGrid>
-        <SingleColumnGrid>
-          <Head title={title} description={description} />
-          <UpsellNullNotifications />
-        </SingleColumnGrid>
-      </ViewGrid>
-    );
+    return <ErrorView />;
   }
 }
 

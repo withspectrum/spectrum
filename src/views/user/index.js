@@ -9,7 +9,6 @@ import Head from 'src/components/head';
 import ThreadFeed from 'src/components/threadFeed';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { UserProfile } from 'src/components/profile';
-import { LoadingScreen } from 'src/components/loading';
 import { NullState } from 'src/components/upsell';
 import {
   PrimaryButton,
@@ -23,7 +22,7 @@ import {
   type GetUserType,
 } from 'shared/graphql/queries/user/getUser';
 import getUserThreads from 'shared/graphql/queries/user/getUserThreadConnection';
-import ViewError from 'src/components/viewError';
+import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
 import Titlebar from '../titlebar';
 import { CoverPhoto } from 'src/components/profile/coverPhoto';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
@@ -137,7 +136,7 @@ class UserView extends React.Component<Props, State> {
     const { hasThreads, selectedView } = this.state;
 
     if (queryVarIsChanging) {
-      return <LoadingScreen />;
+      return <LoadingView />;
     }
 
     if (user && user.id) {
@@ -285,34 +284,21 @@ class UserView extends React.Component<Props, State> {
     }
 
     if (isLoading) {
-      return <LoadingScreen />;
+      return <LoadingView />;
     }
 
     if (!user) {
       return (
-        <React.Fragment>
-          <ViewError
-            dataCy="user-not-found"
-            heading={'We couldn’t find anyone with this username.'}
-          >
-            <ButtonRow>
-              <Link to={'/'}>
-                <Button large>Take me home</Button>
-              </Link>
-            </ButtonRow>
-          </ViewError>
-        </React.Fragment>
+        <ErrorView
+          heading={'We couldn’t find a user with this username'}
+          subheading={
+            'You may be trying to view a profile that is deleted, or Spectrum is just having a hiccup. If you think something has gone wrong, please contact us.'
+          }
+        />
       );
     }
 
-    return (
-      <React.Fragment>
-        <ViewError
-          heading={'We ran into an error loading this user.'}
-          refresh
-        />
-      </React.Fragment>
-    );
+    return <ErrorView />;
   }
 }
 

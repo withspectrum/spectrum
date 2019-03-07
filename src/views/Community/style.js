@@ -9,6 +9,7 @@ import {
   MAX_WIDTH,
   SECONDARY_COLUMN_WIDTH,
 } from 'src/components/Layout';
+import { CardStyles } from 'src/views/ViewHelpers';
 
 export const OneColumnGrid = styled.section`
   display: grid;
@@ -482,53 +483,6 @@ export const CenteredContainer = styled.div`
   }
 `;
 
-export const Card = styled.div`
-  background: ${theme.bg.default};
-  border: 1px solid ${theme.bg.border};
-  border-radius: 4px;
-
-  ${props =>
-    props.withPadding &&
-    css`
-      padding: 16px;
-    `}
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    border-radius: 0;
-  }
-`;
-
-export const Emoji = styled.span`
-  font-size: 40px;
-  margin-bottom: 16px;
-`;
-
-export const Heading = styled.h3`
-  font-size: 24px;
-  font-weight: 700;
-  color: ${theme.text.default};
-`;
-export const Description = styled.p`
-  margin-top: 8px;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.4;
-  color: ${theme.text.secondary};
-`;
-
-export const ActionsRow = styled.div`
-  display: grid;
-  grid-gap: 16px;
-  grid-template-columns: repeat(2, 1fr);
-  margin-top: 32px;
-
-  button {
-    display: flex;
-    flex: 1 0 auto;
-    width: 100%;
-  }
-`;
-
 export const WatercoolerWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -636,4 +590,39 @@ export const RightActions = styled.div`
   @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
+`;
+
+export const PrivateCommunityWrapper = styled.div`
+  ${CardStyles};
+`;
+
+export const ActionsRow = styled.div`
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: 32px;
+
+  button {
+    display: flex;
+    flex: 1 0 auto;
+    width: 100%;
+  }
+`;
+
+export const Emoji = styled.span`
+  font-size: 40px;
+  margin-bottom: 16px;
+`;
+
+export const Heading = styled.h3`
+  font-size: 24px;
+  font-weight: 700;
+  color: ${theme.text.default};
+`;
+export const Description = styled.p`
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: ${theme.text.secondary};
 `;

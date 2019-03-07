@@ -19,6 +19,7 @@ import {
   Column,
 } from 'src/components/settingsViews/style';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';
+import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
 
 type Props = {
   currentUser: Object,
@@ -67,24 +68,7 @@ class CommunityMembersSettings extends React.Component<Props> {
       );
     }
 
-    return (
-      <ViewError
-        heading={'You don’t have permission to manage this community.'}
-        subheading={
-          'If you want to create your own community, you can get started below.'
-        }
-      >
-        <ButtonRow>
-          <Link to={'/'}>
-            <OutlineButton large>Take me back</OutlineButton>
-          </Link>
-
-          <Link to={'/new/community'}>
-            <Button large>Create a community</Button>
-          </Link>
-        </ButtonRow>
-      </ViewError>
-    );
+    return <ErrorView />;
   }
 }
 

@@ -19,6 +19,7 @@ import { SegmentedControl, Segment } from 'src/components/SegmentedControl';
 import { View } from './style';
 import type { ContextRouter } from 'react-router';
 import { track, events, transformations } from 'src/helpers/analytics';
+import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
 
 type Props = {
   data: {
@@ -171,43 +172,10 @@ class CommunitySettings extends React.Component<Props> {
     }
 
     if (isLoading) {
-      return <Loading />;
+      return <LoadingView />;
     }
 
-    if (hasError) {
-      return (
-        <React.Fragment>
-          <Titlebar
-            title={'Error fetching community'}
-            provideBack={true}
-            backRoute={`/${communitySlug}`}
-            noComposer
-          />
-          <ViewError
-            refresh
-            error={hasError}
-            heading={'There was an error fetching this community’s settings.'}
-          />
-        </React.Fragment>
-      );
-    }
-
-    return (
-      <React.Fragment>
-        <Titlebar
-          title={'No Community Found'}
-          provideBack={true}
-          backRoute={`/${communitySlug}`}
-          noComposer
-        />
-        <ViewError
-          heading={'We weren’t able to find this community.'}
-          subheading={`If you want to start the ${communitySlug} community yourself, you can get started below.`}
-        >
-          <Upsell404Community />
-        </ViewError>
-      </React.Fragment>
-    );
+    return <ErrorView />;
   }
 }
 

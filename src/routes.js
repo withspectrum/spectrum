@@ -23,7 +23,7 @@ import Head from 'src/components/head';
 import ModalRoot from 'src/components/modals/modalRoot';
 import Gallery from 'src/components/gallery';
 import Toasts from 'src/components/toasts';
-import { Loading, LoadingScreen } from 'src/components/loading';
+import { Loading } from 'src/components/loading';
 import Composer from 'src/components/composer';
 import AuthViewHandler from 'src/views/authViewHandler';
 import signedOutFallback from 'src/helpers/signed-out-fallback';
@@ -42,70 +42,71 @@ import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import RedirectOldThreadRoute from './views/thread/redirect-old-route';
 import NewUserOnboarding from './views/newUserOnboarding';
 import QueryParamToastDispatcher from './views/queryParamToastDispatcher';
+import { LoadingView } from 'src/views/ViewHelpers';
 
 const Explore = Loadable({
   loader: () => import('./views/explore' /* webpackChunkName: "Explore" */),
-  loading: ({ isLoading }) => isLoading && <Loading />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const UserView = Loadable({
   loader: () => import('./views/user'/* webpackChunkName: "UserView" */),
-  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const CommunityView = Loadable({
   loader: () => import('./views/Community'/* webpackChunkName: "CommunityView" */),
-  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const CommunityLoginView = Loadable({
   loader: () => import('./views/communityLogin'/* webpackChunkName: "CommunityView" */),
-  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const ChannelView = Loadable({
   loader: () => import('./views/channel'/* webpackChunkName: "ChannelView" */),
-  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const Dashboard = Loadable({
   loader: () => import('./views/dashboard'/* webpackChunkName: "Dashboard" */),
-  loading: ({ isLoading }) => isLoading && null,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const Notifications = Loadable({
   loader: () => import('./views/notifications'/* webpackChunkName: "Notifications" */),
-  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const UserSettings = Loadable({
   loader: () => import('./views/userSettings'/* webpackChunkName: "UserSettings" */),
-  loading: ({ isLoading }) => isLoading && <Loading />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const CommunitySettings = Loadable({
   loader: () => import('./views/communitySettings'/* webpackChunkName: "communitySettings" */),
-  loading: ({ isLoading }) => isLoading && <Loading />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const ChannelSettings = Loadable({
   loader: () => import('./views/channelSettings'/* webpackChunkName: "channelSettings" */),
-  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const NewCommunity = Loadable({
   loader: () => import('./views/newCommunity'/* webpackChunkName: "NewCommunity" */),
-  loading: ({ isLoading }) => isLoading && <Loading />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
@@ -117,13 +118,13 @@ const Pages = Loadable({
 /* prettier-ignore */
 const Search = Loadable({
   loader: () => import('./views/search'/* webpackChunkName: "Search" */),
-  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const ErrorFallback = Loadable({
   loader: () => import('./components/error'/* webpackChunkName: "Error" */),
-  loading: ({ isLoading }) => isLoading && <Loading />
+  loading: ({ isLoading }) => isLoading && <LoadingView />
 });
 
 const Body = styled(FlexCol)`

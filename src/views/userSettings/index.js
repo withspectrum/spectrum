@@ -17,6 +17,7 @@ import Titlebar from '../titlebar';
 import Header from 'src/components/settingsViews/header';
 import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
+import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
 
 type Props = {
   data: {
@@ -48,7 +49,7 @@ class UserSettings extends React.Component<Props> {
     const activeTab = pathname.substr(lastIndex + 1);
 
     if (isLoading) {
-      return <Loading />;
+      return <LoadingView />;
     }
 
     // the user is logged in but somehow a user wasnt fetched from the server prompt a refresh to reauth the user
@@ -113,34 +114,7 @@ class UserSettings extends React.Component<Props> {
       );
     }
 
-    if (hasError) {
-      return (
-        <React.Fragment>
-          <Titlebar
-            title={'Error fetching user'}
-            provideBack={true}
-            backRoute={`/`}
-            noComposer
-          />
-          <ViewError
-            refresh
-            heading={'There was an error fetching this user’s settings.'}
-          />
-        </React.Fragment>
-      );
-    }
-
-    return (
-      <React.Fragment>
-        <Titlebar
-          title={'No User Found'}
-          provideBack={true}
-          backRoute={`/`}
-          noComposer
-        />
-        <ViewError heading={'We weren’t able to find this user’s settings.'} />
-      </React.Fragment>
-    );
+    return <ErrorView />;
   }
 }
 

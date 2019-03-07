@@ -19,19 +19,6 @@ const containerFadeIn = keyframes`
   }
 `;
 
-export const LoadingScreenContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 32px;
-  animation-duration: 1s;
-  animation-fill-mode: forwards;
-  animation-iteration-count: 1;
-  animation-timing-function: ease-out;
-  animation-name: ${containerFadeIn};
-`;
-
 export const ShimmerList = styled(Card)`
   padding: 16px;
 

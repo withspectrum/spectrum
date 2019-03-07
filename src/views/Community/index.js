@@ -9,8 +9,7 @@ import CommunityLogin from 'src/views/communityLogin';
 import Login from 'src/views/login';
 import { CLIENT_URL } from 'src/api/constants';
 import type { Props } from './types';
-import { LoadingView } from './containers/Loading';
-import { ErrorView } from './containers/Error';
+import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
 import { SignedIn } from './containers/SignedIn';
 import { PrivateCommunity } from './containers/PrivateCommunity';
 
@@ -29,7 +28,16 @@ const CommunityView = (props: Props) => {
   if (currentUser && !isBlocked && !isPrivate && !isMember)
     return <SignedIn community={community} />;
 
-  if (isBlocked) return <ErrorView />;
+  if (isBlocked)
+    return (
+      <Error
+        heading={'We couldn’t load this community'}
+        subheading={
+          'The community may have been deleted or Spectrum may be running into problems loading it. If you think something has gone wrong, please contact us.'
+        }
+      />
+    );
+
   if (isPrivate && !currentUser) {
     const redirectPath = `${CLIENT_URL}/${community.slug}`;
     if (community.brandedLogin.isEnabled) {
@@ -43,7 +51,6 @@ const CommunityView = (props: Props) => {
     return <PrivateCommunity community={community} />;
   }
 
-  // happy path
   return <SignedIn community={community} />;
 };
 
