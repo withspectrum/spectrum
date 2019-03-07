@@ -74,8 +74,8 @@ const ChannelView = Loadable({
 });
 
 /* prettier-ignore */
-const Dashboard = Loadable({
-  loader: () => import('./views/dashboard'/* webpackChunkName: "Dashboard" */),
+const HomeViewRedirect = Loadable({
+  loader: () => import('./views/homeViewRedirect'/* webpackChunkName: "HomeViewRedirect" */),
   loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
@@ -135,8 +135,10 @@ const Body = styled(FlexCol)`
   background: ${theme.bg.wash};
 `;
 
-const DashboardFallback = signedOutFallback(Dashboard, Pages);
-const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
+const HomeViewRedirectFallback = signedOutFallback(HomeViewRedirect, Pages);
+const HomeFallback = signedOutFallback(HomeViewRedirect, () => (
+  <Redirect to="/" />
+));
 const LoginFallback = signedOutFallback(() => <Redirect to="/" />, Login);
 const CommunityLoginFallback = signedOutFallback(
   props => <Redirect to={`/${props.match.params.communitySlug}`} />,
@@ -258,7 +260,11 @@ class Routes extends React.Component<Props> {
                       https://reacttraining.com/react-router/web/api/Switch
                     */}
                   <Switch location={isModal ? this.previousLocation : location}>
-                    <Route exact path="/" component={DashboardFallback} />
+                    <Route
+                      exact
+                      path="/"
+                      component={HomeViewRedirectFallback}
+                    />
                     <Route exact path="/home" component={HomeFallback} />
 
                     {/* Public Business Pages */}

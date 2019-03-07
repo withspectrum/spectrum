@@ -6,7 +6,6 @@ import directMessageThreads from './directMessageThreads';
 import gallery from './gallery';
 import newUserOnboarding from './newUserOnboarding';
 import newActivityIndicator from './newActivityIndicator';
-import dashboardFeed from './dashboardFeed';
 import threadSlider from './threadSlider';
 import notifications from './notifications';
 import message from './message';
@@ -20,7 +19,6 @@ const getReducers = () => {
     gallery,
     newUserOnboarding,
     newActivityIndicator,
-    dashboardFeed,
     threadSlider,
     notifications,
     connectionStatus,

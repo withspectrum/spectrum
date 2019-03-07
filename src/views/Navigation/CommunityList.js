@@ -4,6 +4,8 @@ import compose from 'recompose/compose';
 import Tooltip from 'src/components/Tooltip';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
+import { storeItem } from 'src/helpers/localStorage';
+import { LAST_ACTIVE_COMMUNITY_KEY } from 'src/views/homeViewRedirect';
 import { AvatarGrid, AvatarLink, Avatar, Shortcut, Label } from './style';
 
 const CommunityList = (props: Props) => {
@@ -58,6 +60,7 @@ const CommunityList = (props: Props) => {
           const community = sorted[index];
           if (!community) return;
           setNavigationIsOpen(false);
+          storeItem(LAST_ACTIVE_COMMUNITY_KEY, community.id);
           return history.push(`/${community.slug}`);
         }
       }
@@ -67,6 +70,11 @@ const CommunityList = (props: Props) => {
     return () =>
       window.removeEventListener('keydown', handleCommunitySwitch, false);
   }, []);
+
+  const handleCommunityClick = (id: string) => () => {
+    storeItem(LAST_ACTIVE_COMMUNITY_KEY, id);
+    setNavigationIsOpen(false);
+  };
 
   return sorted.map((community, index) => {
     if (!community) return null;
@@ -82,7 +90,7 @@ const CommunityList = (props: Props) => {
         <AvatarGrid isActive={isActive}>
           <AvatarLink
             to={`/${community.slug}`}
-            onClick={() => setNavigationIsOpen(false)}
+            onClick={handleCommunityClick(community.id)}
           >
             <Avatar
               isActive={isActive}

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
-import ThreadSearch from '../dashboard/components/threadSearch';
 import Icon from '../../components/icons';
 import { IconButton } from '../../components/buttons';
 import { TitleBar, Text, Subtitle, Title } from './style';
@@ -78,8 +77,6 @@ class Titlebar extends Component {
         ) : null}
         {title || subtitle ? (
           <TextHeading subtitle={subtitle} title={title} />
-        ) : hasSearch ? (
-          <ThreadSearch filter={filter} darkContext />
         ) : (
           <Icon glyph="logo" />
         )}

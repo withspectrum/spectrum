@@ -5,13 +5,13 @@ import { connect } from 'react-redux';
 import Titlebar from '../titlebar';
 import { View } from './style';
 import searchThreadsQuery from 'shared/graphql/queries/search/searchThreads';
-import DashboardThreadFeed from '../dashboard/components/threadFeed';
-import { InboxScroller } from '../dashboard/style';
+import ThreadFeed from 'src/components/threadFeed';
 import SearchInput from './searchInput';
 
-const SearchThreadFeed = compose(connect(), searchThreadsQuery)(
-  DashboardThreadFeed
-);
+const SearchThreadFeed = compose(
+  connect(),
+  searchThreadsQuery
+)(ThreadFeed);
 
 type Props = {};
 type State = {
@@ -41,16 +41,12 @@ class Search extends React.Component<Props, State> {
 
         <SearchInput handleSubmit={this.handleSubmit} />
 
-        <InboxScroller id="scroller-for-inbox">
-          {searchQueryString &&
-            searchQueryString.length > 0 &&
-            searchFilter && (
-              <SearchThreadFeed
-                queryString={searchQueryString}
-                filter={searchFilter}
-              />
-            )}
-        </InboxScroller>
+        {searchQueryString && searchQueryString.length > 0 && searchFilter && (
+          <SearchThreadFeed
+            queryString={searchQueryString}
+            filter={searchFilter}
+          />
+        )}
       </View>
     );
   }

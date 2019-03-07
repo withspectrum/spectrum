@@ -7,7 +7,7 @@ import compose from 'recompose/compose';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { connect } from 'react-redux';
-import InboxThread from 'src/views/dashboard/components/inboxThread';
+import InboxThread from 'src/components/inboxThread';
 import { NullCard } from 'src/components/upsell';
 import { Loading, LoadingInboxThread } from 'src/components/loading';
 import NewActivityIndicator from 'src/components/newActivityIndicator';

@@ -327,7 +327,6 @@ class NotificationsTab extends React.Component<Props, State> {
 }
 
 const map = state => ({
-  activeInboxThread: state.dashboardFeed.activeThread,
   count: state.notifications.notifications,
   networkOnline: state.connectionStatus.networkOnline,
   websocketConnection: state.connectionStatus.websocketConnection,

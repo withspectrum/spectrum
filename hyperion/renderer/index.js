@@ -86,15 +86,7 @@ const renderer = (req: express$Request, res: express$Response) => {
   // Define the initial redux state
   const { t } = req.query;
 
-  const initialReduxState = {
-    dashboardFeed: {
-      activeThread: t ? t : '',
-      mountedWithActiveThread: t ? t : '',
-      search: {
-        isOpen: false,
-      },
-    },
-  };
+  const initialReduxState = {};
   // Create the Redux store
   const store = initStore(initialReduxState);
   let modules = [];

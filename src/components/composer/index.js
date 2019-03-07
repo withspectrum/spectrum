@@ -7,7 +7,6 @@ import debounce from 'debounce';
 import queryString from 'query-string';
 import Icon from '../icons';
 import getThreadLink from 'src/helpers/get-thread-link';
-import { changeActiveThread } from 'src/actions/dashboardFeed';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
@@ -182,8 +181,6 @@ class ComposerWithData extends React.Component<Props, State> {
     // as the active thread.
     const { location } = this.props;
     const { t: threadId } = queryString.parse(location.search);
-
-    this.props.dispatch(changeActiveThread(threadId));
   };
 
   changeTitle = e => {
@@ -408,12 +405,10 @@ class ComposerWithData extends React.Component<Props, State> {
         );
         if (this.props.isInbox) {
           this.props.history.replace(`/?t=${id}`);
-          this.props.dispatch(changeActiveThread(id));
         } else if (this.props.location.pathname === '/new/thread') {
           this.props.history.replace(getThreadLink(data.publishThread));
         } else {
           this.props.history.push(getThreadLink(data.publishThread));
-          this.props.dispatch(changeActiveThread(null));
         }
         return;
       })

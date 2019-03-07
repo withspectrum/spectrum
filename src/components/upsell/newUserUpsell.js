@@ -4,7 +4,6 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import SetUsername from '../../components/setUsername';
 import { Button, OutlineButton } from '../../components/buttons';
-import TopCommunities from '../../views/dashboard/components/topCommunities';
 import { NullCard } from './index';
 import {
   LargeEmoji,
@@ -134,8 +133,6 @@ class UpsellNewUser extends Component {
             Join communities that look interesting or fun, and threads posted to
             those communities will start showing up in your home feed!
           </SmallSubtitle>
-
-          <TopCommunities join={this.joined} leave={this.left} />
         </Section>
 
         <Section>
@@ -222,4 +219,7 @@ class UpsellNewUser extends Component {
   }
 }
 
-export default compose(withRouter, connect())(UpsellNewUser);
+export default compose(
+  withRouter,
+  connect()
+)(UpsellNewUser);

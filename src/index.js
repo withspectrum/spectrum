@@ -29,17 +29,7 @@ if (params.thread) {
   }
 }
 // If the server passes an initial redux state use that, otherwise construct our own
-const store = initStore(
-  window.__SERVER_STATE__ || {
-    dashboardFeed: {
-      activeThread: params.t || '',
-      mountedWithActiveThread: params.t || '',
-      search: {
-        isOpen: false,
-      },
-    },
-  }
-);
+const store = initStore(window.__SERVER_STATE__ || {});
 
 const App = () => {
   return (
