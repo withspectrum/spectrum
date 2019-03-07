@@ -92,12 +92,6 @@ const Component = (props: SignedInMemberType) => {
 
   return (
     <React.Fragment>
-      <Head
-        title={title}
-        description={description}
-        image={community.profilePhoto}
-      />
-
       {community.communityPermissions.isMember && (
         <Fab
           title="New post"
@@ -112,6 +106,12 @@ const Component = (props: SignedInMemberType) => {
       )}
 
       <ViewGrid data-cy="community-view">
+        <Head
+          title={title}
+          description={description}
+          image={community.profilePhoto}
+        />
+
         <SecondaryPrimaryColumnGrid>
           <SecondaryColumn>
             <CommunityProfileCard community={community} />
