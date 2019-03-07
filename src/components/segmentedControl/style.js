@@ -12,12 +12,12 @@ export const StyledSegmentedControl = styled.div`
   overflow: hidden;
   overflow-x: scroll;
   position: ${props => (props.sticky ? 'sticky' : 'relative')};
-  z-index: 11;
+  z-index: ${props => (props.sticky ? '11' : '1')};
 
   ${props =>
     props.sticky &&
     css`
-      top: ${props => (props.stickyOffset ? props.stickyOffset : '0')};
+      top: ${props => (props.stickyOffset ? `${props.stickyOffset}px` : '0')};
     `};
 
   &::-webkit-scrollbar {
@@ -28,7 +28,8 @@ export const StyledSegmentedControl = styled.div`
 
   @media (max-width: ${MEDIA_BREAK}px) {
     position: ${props => (props.mobileSticky ? 'sticky' : 'relative')};
-    top: ${props => (props.stickyOffset ? props.stickyOffset : '0')};
+    top: ${props =>
+      props.mobileStickyOffset ? `${props.mobileStickyOffset}px` : '0'};
   }
 `;
 

@@ -74,6 +74,7 @@ export const SecondaryPrimaryColumnGrid = styled.div`
     grid-template-columns: 1fr;
     grid-template-rows: min-content 1fr;
     grid-gap: 0;
+    min-width: 100%;
     max-width: 100%;
   }
 `;

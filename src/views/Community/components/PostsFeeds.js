@@ -19,7 +19,7 @@ export const PostsFeeds = (props: Props) => {
 
   return (
     <React.Fragment>
-      <SegmentedControl>
+      <SegmentedControl sticky={false}>
         <Segment
           isActive={activeFeed === 'latest'}
           onClick={() => setActiveFeed('latest')}

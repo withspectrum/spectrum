@@ -24,7 +24,7 @@ export const OneColumnGrid = styled.section`
   }
 `;
 
-export const ListItem = styled(Link)`
+const listItemStyles = css`
   padding: 12px 12px 12px 16px;
   display: flex;
   justify-content: space-between;
@@ -41,6 +41,12 @@ export const ListItem = styled(Link)`
   .icon {
     color: ${theme.text.alt};
   }
+`;
+export const ListItem = styled.div`
+  ${listItemStyles};
+`;
+export const ListItemLink = styled(Link)`
+  ${listItemStyles};
 `;
 
 export const ListItemContent = styled.div`
@@ -255,6 +261,7 @@ export const List = styled.div`
 
 export const PrivateCommunityWrapper = styled.div`
   ${CardStyles};
+  padding: 16px;
 `;
 
 export const ActionsRow = styled.div`

@@ -152,6 +152,7 @@ class Component extends React.Component<Props, State> {
     if (!hasMessages) {
       return (
         <WatercoolerWrapper>
+          <WatercoolerMessages />
           {isMember && (
             <WatercoolerChatInput>
               <ChatInput

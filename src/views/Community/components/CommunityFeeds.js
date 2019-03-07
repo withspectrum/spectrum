@@ -54,7 +54,7 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
       case 'info': {
         return (
           <div style={{ paddingBottom: '64px', background: theme.bg.wash }}>
-            <SidebarSection>
+            <SidebarSection style={{ paddingBottom: '16px' }}>
               <CommunityMeta community={community} />
             </SidebarSection>
 

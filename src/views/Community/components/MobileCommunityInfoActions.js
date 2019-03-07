@@ -9,6 +9,7 @@ import {
   SidebarSectionHeading,
   List,
   ListItem,
+  ListItemLink,
   ListItemLabel,
   ListItemContent,
   NameWarn,
@@ -40,12 +41,12 @@ const Component = (props: Props) => {
 
       <List>
         {isTeamMember && (
-          <ListItem to={`/${community.slug}/settings`}>
+          <ListItemLink to={`/${community.slug}/settings`}>
             <ListItemContent>
               <ListItemLabel>Community settings</ListItemLabel>
             </ListItemContent>
             <Icon glyph="view-forward" size={24} />
-          </ListItem>
+          </ListItemLink>
         )}
 
         {!isOwner && isMember && (
