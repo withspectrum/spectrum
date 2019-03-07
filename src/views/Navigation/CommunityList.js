@@ -1,16 +1,18 @@
 // @flow
 import React, { useEffect } from 'react';
 import compose from 'recompose/compose';
+import { Route } from 'react-router-dom';
 import Tooltip from 'src/components/Tooltip';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import { storeItem } from 'src/helpers/localStorage';
 import { LAST_ACTIVE_COMMUNITY_KEY } from 'src/views/homeViewRedirect';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
+import { getAccessibilityActiveState } from './Accessibility';
 import { AvatarGrid, AvatarLink, Avatar, Shortcut, Label } from './style';
 
 const CommunityList = (props: Props) => {
-  const { data, match, history, sidenavIsOpen, setNavigationIsOpen } = props;
+  const { data, history, sidenavIsOpen, setNavigationIsOpen } = props;
   const { user } = data;
 
   if (!user) return null;
@@ -88,31 +90,44 @@ const CommunityList = (props: Props) => {
     const { isMember, isBlocked } = communityPermissions;
     if (!isMember || isBlocked) return null;
 
-    const isActive = community.slug === match.params.communitySlug;
-
     return (
-      <Tooltip title={community.name} key={community.id}>
-        <AvatarGrid isActive={isActive}>
-          <AvatarLink
-            to={`/${community.slug}`}
-            onClick={handleCommunityClick(community.id)}
-          >
-            <Avatar
-              isActive={isActive}
-              src={community.profilePhoto}
-              size={sidenavIsOpen ? 32 : 36}
-            />
+      <Route path="/:communitySlug">
+        {({ match }) => (
+          <Tooltip title={community.name} key={community.id}>
+            <AvatarGrid
+              isActive={
+                match &&
+                match.params &&
+                match.params.communitySlug === community.slug
+              }
+            >
+              <AvatarLink
+                to={`/${community.slug}`}
+                onClick={handleCommunityClick(community.id)}
+                {...getAccessibilityActiveState(
+                  match &&
+                    match.params &&
+                    match.params.communitySlug === community.slug
+                )}
+              >
+                <Avatar
+                  src={community.profilePhoto}
+                  size={sidenavIsOpen ? 32 : 36}
+                />
 
-            <Label isActive={isActive}>{community.name}</Label>
-          </AvatarLink>
-          {index < 9 && (
-            <Shortcut>
-              {appControlSymbol}
-              {index + 1}
-            </Shortcut>
-          )}
-        </AvatarGrid>
-      </Tooltip>
+                <Label>{community.name}</Label>
+
+                {index < 9 && (
+                  <Shortcut>
+                    {appControlSymbol}
+                    {index + 1}
+                  </Shortcut>
+                )}
+              </AvatarLink>
+            </AvatarGrid>
+          </Tooltip>
+        )}
+      </Route>
     );
   });
 };

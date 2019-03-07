@@ -46,7 +46,6 @@ export const NavigationWrapper = styled.div`
 
 export const NavigationGrid = styled.div`
   display: grid;
-  grid-gap: 16px;
   grid-template-columns: minmax(0, 1fr);
   align-content: start;
   grid-template-rows: auto;
@@ -59,7 +58,7 @@ export const NavigationGrid = styled.div`
   max-width: ${NAVBAR_WIDTH}px;
   overflow: hidden;
   overflow-y: scroll;
-  padding: 16px 0;
+  padding: 0 0 16px;
 
   ${isDesktopApp() &&
     css`
@@ -85,13 +84,40 @@ export const NavigationGrid = styled.div`
 
 export const AvatarGrid = styled.div`
   display: grid;
-  grid-gap: 4px;
   grid-template-columns: minmax(0, 1fr);
   align-content: start;
+  color: ${props => (props.isActive ? theme.text.default : theme.text.alt)};
+  background: ${props => (props.isActive ? theme.bg.wash : theme.bg.default)};
 
   a img {
     opacity: ${props => (props.isActive ? '1' : '0.4')};
     filter: ${props => (props.isActive ? 'none' : 'grayscale(80%)')};
+  }
+
+  ${props =>
+    props.isActive &&
+    css`
+      box-shadow: inset 3px 0 0 ${theme.text.secondary};
+
+      img,
+      a img {
+        filter: grayscale(0%) !important;
+        opacity: 1 !important;
+      }
+    `}
+
+  &:hover {
+    box-shadow: inset 3px 0 0
+      ${props => (props.isActive ? theme.text.secondary : theme.bg.border)};
+    background: ${props => (props.isActive ? theme.bg.wash : theme.bg.wash)};
+    color: ${props =>
+      props.isActive ? theme.text.default : theme.text.secondary};
+
+    img,
+    a img {
+      filter: grayscale(0%);
+      opacity: 1;
+    }
   }
 `;
 
@@ -100,12 +126,7 @@ export const AvatarLink = styled(Link)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0 12px;
-
-  &:hover img {
-    filter: grayscale(0%);
-    opacity: 1;
-  }
+  padding: 8px 12px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     flex-direction: row;
@@ -130,7 +151,6 @@ export const Avatar = styled.img`
 export const Shortcut = styled.span`
   font-size: 12px;
   font-weight: 500;
-  color: ${theme.text.alt};
   margin-top: 2px;
   text-align: center;
 
@@ -157,7 +177,6 @@ export const IconWrapper = styled.div`
   justify-content: center;
   border-radius: 6px;
   opacity: 1;
-  color: ${props => (props.isActive ? theme.brand.alt : theme.text.secondary)};
   position: relative;
 
   &:hover {

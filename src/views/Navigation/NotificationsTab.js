@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { withApollo } from 'react-apollo';
-import { withRouter } from 'react-router-dom';
+import { Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Tooltip from 'src/components/Tooltip';
 import compose from 'recompose/compose';
@@ -291,7 +291,7 @@ class NotificationsTab extends React.Component<Props, State> {
   };
 
   render() {
-    const { count, match } = this.props;
+    const { count } = this.props;
 
     // Keep the dock icon notification count indicator of the desktop app in sync
     if (isDesktopApp()) {
@@ -301,25 +301,31 @@ class NotificationsTab extends React.Component<Props, State> {
     return (
       <NavigationContext.Consumer>
         {({ setNavigationIsOpen }) => (
-          <Tooltip title="Notifications">
-            <AvatarGrid>
-              <AvatarLink
-                to={'/notifications'}
-                data-cy="navbar-notifications"
-                onClick={() => setNavigationIsOpen(false)}
-                {...getAccessibilityActiveState(
-                  match.url === '/notifications' && match.isExact
-                )}
-              >
-                <IconWrapper>
-                  <Icon glyph="notification" />
-                  {count > 0 && <RedDot />}
-                </IconWrapper>
+          <Route path="/notifications">
+            {({ match }) => (
+              <Tooltip title="Notifications">
+                <AvatarGrid
+                  isActive={match && match.url.includes('/notifications')}
+                >
+                  <AvatarLink
+                    to={'/notifications'}
+                    data-cy="navbar-notifications"
+                    onClick={() => setNavigationIsOpen(false)}
+                    {...getAccessibilityActiveState(
+                      match && match.url.includes('/notifications')
+                    )}
+                  >
+                    <IconWrapper>
+                      <Icon glyph="notification" />
+                      {count > 0 && <RedDot />}
+                    </IconWrapper>
 
-                <Label>Notifications</Label>
-              </AvatarLink>
-            </AvatarGrid>
-          </Tooltip>
+                    <Label>Notifications</Label>
+                  </AvatarLink>
+                </AvatarGrid>
+              </Tooltip>
+            )}
+          </Route>
         )}
       </NavigationContext.Consumer>
     );

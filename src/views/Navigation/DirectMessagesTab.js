@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { withRouter } from 'react-router-dom';
+import { Route, withRouter } from 'react-router-dom';
 import Icon from 'src/components/icons';
 import Tooltip from 'src/components/Tooltip';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
@@ -169,7 +169,7 @@ class DirectMessagesTab extends React.Component<Props, State> {
   };
 
   render() {
-    const { count, match } = this.props;
+    const { count } = this.props;
 
     // Keep the dock icon notification count indicator of the desktop app in sync
     if (isDesktopApp()) {
@@ -179,25 +179,29 @@ class DirectMessagesTab extends React.Component<Props, State> {
     return (
       <NavigationContext.Consumer>
         {({ setNavigationIsOpen }) => (
-          <Tooltip title="Messages">
-            <AvatarGrid>
-              <AvatarLink
-                to={'/messages'}
-                data-cy="navbar-messages"
-                onClick={() => setNavigationIsOpen(false)}
-                {...getAccessibilityActiveState(
-                  match.url === '/messages' && match.isExact
-                )}
-              >
-                <IconWrapper>
-                  <Icon glyph="message-simple" />
-                  {count > 0 && <RedDot style={{ right: '-3px' }} />}
-                </IconWrapper>
+          <Route path="/messages">
+            {({ match }) => (
+              <Tooltip title="Messages">
+                <AvatarGrid isActive={match && match.url.includes('/messages')}>
+                  <AvatarLink
+                    to={'/messages'}
+                    data-cy="navbar-messages"
+                    onClick={() => setNavigationIsOpen(false)}
+                    {...getAccessibilityActiveState(
+                      match && match.url.includes('/messages')
+                    )}
+                  >
+                    <IconWrapper>
+                      <Icon glyph="message-simple" />
+                      {count > 0 && <RedDot style={{ right: '-3px' }} />}
+                    </IconWrapper>
 
-                <Label>Messages</Label>
-              </AvatarLink>
-            </AvatarGrid>
-          </Tooltip>
+                    <Label>Messages</Label>
+                  </AvatarLink>
+                </AvatarGrid>
+              </Tooltip>
+            )}
+          </Route>
         )}
       </NavigationContext.Consumer>
     );
