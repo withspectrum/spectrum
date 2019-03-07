@@ -58,7 +58,7 @@ export const NavigationGrid = styled.div`
   max-width: ${NAVBAR_WIDTH}px;
   overflow: hidden;
   overflow-y: scroll;
-  padding: 0 0 16px;
+  padding: 12px 0 16px;
 
   ${isDesktopApp() &&
     css`
