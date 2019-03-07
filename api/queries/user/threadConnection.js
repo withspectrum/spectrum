@@ -17,7 +17,7 @@ export default (
     first,
     after,
     kind,
-  }: { ...PaginationOptions, kind: 'creator' | 'participant' | 'favorites' },
+  }: { ...PaginationOptions, kind: 'creator' | 'participant' | 'liked' },
   { user }: GraphQLContext
 ) => {
   const currentUser = user;
@@ -40,7 +40,7 @@ export default (
         first,
         after: lastThreadIndex,
       });
-    } else if (kind === 'favorites') {
+    } else if (kind === 'liked') {
       getThreads = getLikedThreadsByUser(id, currentUser.id, {
         first,
         after: lastThreadIndex,

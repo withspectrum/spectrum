@@ -72,7 +72,7 @@ const User = /* GraphQL */ `
   enum ThreadConnectionType {
     participant
     creator
-    favorites
+    liked
   }
 
   type GithubProfile {

@@ -245,9 +245,9 @@ class UserView extends React.Component<Props, State> {
                 </DesktopSegment>
 
                 <DesktopSegment
-                  segmentLabel="favorites"
-                  onClick={() => this.handleSegmentClick('favorites')}
-                  selected={selectedView === 'favorites'}
+                  segmentLabel="liked"
+                  onClick={() => this.handleSegmentClick('liked')}
+                  selected={selectedView === 'liked'}
                 >
                   Liked
                 </DesktopSegment>
@@ -274,9 +274,9 @@ class UserView extends React.Component<Props, State> {
                 </MobileSegment>
 
                 <MobileSegment
-                  segmentLabel="favorites"
-                  onClick={() => this.handleSegmentClick('favorites')}
-                  selected={selectedView === 'favorites'}
+                  segmentLabel="liked"
+                  onClick={() => this.handleSegmentClick('liked')}
+                  selected={selectedView === 'liked'}
                 >
                   Liked
                 </MobileSegment>
@@ -300,7 +300,7 @@ class UserView extends React.Component<Props, State> {
                   />
                 )}
 
-              {selectedView === 'favorites' && (
+              {selectedView === 'liked' && (
                 <Feed
                   userId={user.id}
                   username={username}
