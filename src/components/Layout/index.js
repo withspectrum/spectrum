@@ -1,8 +1,9 @@
 // @flow
 import styled from 'styled-components';
 import theme from 'shared/theme';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
-export const NAVBAR_WIDTH = 72;
+export const NAVBAR_WIDTH = isDesktopApp() ? 80 : 72;
 export const PRIMARY_COLUMN_WIDTH = 600;
 export const SECONDARY_COLUMN_WIDTH = 340;
 export const COL_GAP = 16;
@@ -11,7 +12,7 @@ export const MAX_WIDTH =
 export const SINGLE_COLUMN_WIDTH = MAX_WIDTH;
 // add 144 (72 * 2) to account for the left side nav
 export const MEDIA_BREAK =
-  PRIMARY_COLUMN_WIDTH + SECONDARY_COLUMN_WIDTH + COL_GAP + 144;
+  PRIMARY_COLUMN_WIDTH + SECONDARY_COLUMN_WIDTH + COL_GAP + NAVBAR_WIDTH * 2;
 
 export const ViewGrid = styled.div.attrs({ id: 'main' })`
   display: grid;

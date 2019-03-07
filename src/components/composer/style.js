@@ -90,7 +90,7 @@ export const Container = styled(FlexCol)`
   ${props =>
     props.slider &&
     css`
-      right: left;
+      right: 0;
       position: absolute;
       width: 650px;
       top: 0;

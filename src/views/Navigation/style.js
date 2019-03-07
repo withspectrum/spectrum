@@ -1,8 +1,9 @@
 // @flow
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import { Link } from 'react-router-dom';
-import { MEDIA_BREAK } from 'src/components/Layout';
+import { MEDIA_BREAK, NAVBAR_WIDTH } from 'src/components/Layout';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 export const Overlay = styled.div`
   position: fixed;
@@ -21,10 +22,17 @@ export const NavigationWrapper = styled.div`
   grid-area: navigation;
   position: sticky;
   top: 0;
-  width: 72px;
+  width: ${NAVBAR_WIDTH}px;
   height: 100vh;
   overflow: hidden;
   overflow-y: scroll;
+  
+  ${isDesktopApp() &&
+    css`
+      -webkit-app-region: drag;
+      user-select: none;
+    `}
+
 
   @media (max-width: ${MEDIA_BREAK}px) {
     display: ${props => (props.isOpen ? 'block' : 'none')};
@@ -48,10 +56,15 @@ export const NavigationGrid = styled.div`
   position: fixed;
   top: 0;
   width: 100%;
-  max-width: 72px;
+  max-width: ${NAVBAR_WIDTH}px;
   overflow: hidden;
   overflow-y: scroll;
   padding: 16px 0;
+
+  ${isDesktopApp() &&
+    css`
+      padding-top: 48px;
+    `}
 
   &::-webkit-scrollbar {
     width: 0px;
