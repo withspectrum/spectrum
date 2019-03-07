@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import compose from 'recompose/compose';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Route } from 'react-router-dom';
 import Tooltip from 'src/components/Tooltip';
 import { UserAvatar } from 'src/components/avatar';
 import { withCurrentUser } from 'src/components/withCurrentUser';
@@ -25,7 +25,7 @@ import CommunityList from './CommunityList';
 import { NavigationContext } from 'src/routes';
 
 const Navigation = (props: Props) => {
-  const { currentUser, match, history } = props;
+  const { currentUser, history } = props;
 
   if (!currentUser) return <div />;
 
@@ -47,24 +47,30 @@ const Navigation = (props: Props) => {
             <DirectMessagesTab />
             <NotificationsTab />
 
-            <Tooltip title="Explore">
-              <AvatarGrid>
-                <AvatarLink
-                  to={'/explore'}
-                  data-cy="navbar-explore"
-                  onClick={() => setNavigationIsOpen(false)}
-                  {...getAccessibilityActiveState(
-                    match.url === '/explore' && match.isExact
-                  )}
-                >
-                  <IconWrapper>
-                    <Icon glyph="explore" />
-                  </IconWrapper>
+            <Route path="/explore">
+              {({ match }) => (
+                <Tooltip title="Explore">
+                  <AvatarGrid>
+                    <AvatarLink
+                      to={'/explore'}
+                      data-cy="navbar-explore"
+                      onClick={() => setNavigationIsOpen(false)}
+                      {...getAccessibilityActiveState(
+                        match.url === '/explore' && match.isExact
+                      )}
+                    >
+                      <IconWrapper
+                        isActive={match.url === '/explore' && match.isExact}
+                      >
+                        <Icon glyph="explore" />
+                      </IconWrapper>
 
-                  <Label>Explore</Label>
-                </AvatarLink>
-              </AvatarGrid>
-            </Tooltip>
+                      <Label>Explore</Label>
+                    </AvatarLink>
+                  </AvatarGrid>
+                </Tooltip>
+              )}
+            </Route>
 
             <Tooltip title="Profile">
               <AvatarGrid style={{ marginTop: '4px' }}>

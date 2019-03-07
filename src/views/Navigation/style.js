@@ -144,7 +144,7 @@ export const IconWrapper = styled.div`
   justify-content: center;
   border-radius: 6px;
   opacity: 1;
-  color: ${theme.text.secondary};
+  color: ${props => (props.isActive ? theme.brand.alt : theme.text.secondary)};
   position: relative;
 
   &:hover {
