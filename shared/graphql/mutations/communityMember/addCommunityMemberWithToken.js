@@ -25,7 +25,7 @@ export const addCommunityMemberWithTokenMutation = gql`
 
 const addCommunityMemberWithTokenOptions = {
   options: {
-    refetchQueries: ['getCurrentUserProfile', 'getEverythingThreads'],
+    refetchQueries: ['getCurrentUserCommunityConnection'],
   },
   props: ({ mutate }) => ({
     addCommunityMemberWithToken: input =>

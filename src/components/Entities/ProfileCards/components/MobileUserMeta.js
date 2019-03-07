@@ -19,7 +19,7 @@ export const MobileUserMeta = (props: UserMetaType) => {
             size={32}
           />
           <div style={{ width: '8px' }} />
-          <UserAvatar size={24} user={user} />
+          <UserAvatar showOnlineStatus={false} size={24} user={user} />
           <MobileName>{user.name}</MobileName>
         </MobileMetaContainer>
       )}

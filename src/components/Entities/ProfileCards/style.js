@@ -97,7 +97,7 @@ export const RoundProfileAvatarContainer = styled.div`
 export const ActionsRowContainer = styled.div`
   display: grid;
   align-items: center;
-  grid-gap: 16px;
+  grid-gap: 12px;
   padding: 16px 16px 20px;
   margin-top: 8px;
 

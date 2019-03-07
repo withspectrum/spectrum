@@ -19,9 +19,9 @@ export type RemoveCommunityMemberType = {
 };
 
 export type RemoveCommunityMemberProps = {
-  removeCommunityMember: ({ input: { communityId: string } }) => Promise<
-    RemoveCommunityMemberType
-  >,
+  removeCommunityMember: ({
+    input: { communityId: string },
+  }) => Promise<RemoveCommunityMemberType>,
 };
 
 export const removeCommunityMemberQuery = gql`
@@ -38,6 +38,9 @@ export const removeCommunityMemberQuery = gql`
 `;
 
 const removeCommunityMemberOptions = {
+  options: {
+    refetchQueries: ['getCurrentUserCommunityConnection'],
+  },
   props: ({ mutate }) => ({
     removeCommunityMember: ({ input }) =>
       mutate({

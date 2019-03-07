@@ -20,6 +20,7 @@ const CommunityList = (props: Props) => {
   const { communityConnection } = user;
   const { edges } = communityConnection;
   const communities = edges.map(edge => edge && edge.node);
+
   const sorted = communities.slice().sort((a, b) => {
     const bc = parseInt(b.communityPermissions.reputation, 10);
     const ac = parseInt(a.communityPermissions.reputation, 10);
@@ -91,9 +92,9 @@ const CommunityList = (props: Props) => {
     if (!isMember || isBlocked) return null;
 
     return (
-      <Route path="/:communitySlug">
+      <Route path="/:communitySlug" key={community.id}>
         {({ match }) => (
-          <Tooltip title={community.name} key={community.id}>
+          <Tooltip title={community.name}>
             <AvatarGrid
               isActive={
                 match &&

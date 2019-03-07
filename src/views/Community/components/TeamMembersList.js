@@ -33,7 +33,6 @@ class Component extends React.Component<TeamMemberListType> {
     const { community } = data;
 
     const { edges: members } = community.members;
-
     const nodes = members
       .map(member => member && member.node)
       .filter(node => node && (node.isOwner || node.isModerator))
@@ -44,7 +43,9 @@ class Component extends React.Component<TeamMemberListType> {
 
         // sort same-reputation communities alphabetically
         if (ac === bc) {
-          return a.name.toUpperCase() <= b.name.toUpperCase() ? -1 : 1;
+          return a.user.name.toUpperCase() <= b.user.name.toUpperCase()
+            ? -1
+            : 1;
         }
 
         // otherwise sort by reputation
