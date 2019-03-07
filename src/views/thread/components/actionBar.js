@@ -50,6 +50,7 @@ type Props = {
   title: string,
   isLockingThread: boolean,
   isPinningThread: boolean,
+  uploadFiles: Function,
 };
 type State = {
   notificationStateLoading: boolean,
@@ -231,6 +232,10 @@ class ActionBar extends React.Component<Props, State> {
     );
   };
 
+  uploadFiles = evt => {
+    this.props.uploadFiles(evt.target.files);
+  };
+
   render() {
     const {
       thread,
@@ -240,7 +245,6 @@ class ActionBar extends React.Component<Props, State> {
       title,
       isLockingThread,
       isPinningThread,
-      uploadFiles,
     } = this.props;
     const {
       notificationStateLoading,
@@ -266,7 +270,7 @@ class ActionBar extends React.Component<Props, State> {
                   type="file"
                   accept={'.png, .jpg, .jpeg, .gif, .mp4'}
                   multiple={false}
-                  onChange={uploadFiles}
+                  onChange={this.uploadFiles}
                 />
                 <Icon
                   glyph="photo"
