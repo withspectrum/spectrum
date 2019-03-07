@@ -20,6 +20,7 @@ import getCurrentUserSettings, {
   type GetCurrentUserSettingsType,
 } from 'shared/graphql/queries/user/getCurrentUserSettings';
 import UserEmailConfirmation from 'src/components/userEmailConfirmation';
+import { LoadingView } from 'src/views/ViewHelpers';
 import {
   Actions,
   Container,
@@ -260,13 +261,7 @@ class NewCommunity extends React.Component<Props, State> {
       );
     }
 
-    if (isLoading) {
-      return (
-        <React.Fragment>
-          <Loading />
-        </React.Fragment>
-      );
-    }
+    if (isLoading) return <LoadingView />;
 
     return <Login redirectPath={`${window.location.href}`} />;
   }

@@ -23,6 +23,7 @@ import {
 import ViewError from 'src/components/viewError';
 import queryString from 'query-string';
 import { track, events } from 'src/helpers/analytics';
+import { LoadingView, ErrorView } from 'src/views/ViewHelpers';
 
 type Props = {
   data: {
@@ -125,25 +126,9 @@ export class Login extends React.Component<Props, State> {
       );
     }
 
-    if (isLoading) {
-      return (
-        <FullscreenView closePath={CLIENT_URL}>
-          <Loading />
-        </FullscreenView>
-      );
-    }
+    if (isLoading) return <LoadingView />;
 
-    return (
-      <FullscreenView closePath={CLIENT_URL}>
-        <ViewError
-          refresh
-          heading={'We had trouble finding this community'}
-          subheading={
-            'Double check that this community exists or refresh to try again'
-          }
-        />
-      </FullscreenView>
-    );
+    return <ErrorView />;
   }
 }
 

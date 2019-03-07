@@ -23,6 +23,7 @@ import { Loading } from 'src/components/loading';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { track, transformations, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
+import { LoadingView, ErrorView } from 'src/views/ViewHelpers';
 
 const ChartGrid = styled.div`
   display: flex;
@@ -201,14 +202,10 @@ class CategoryList extends React.Component<CategoryListProps> {
     }
 
     if (isLoading) {
-      return (
-        <LoadingContainer>
-          <Loading />
-        </LoadingContainer>
-      );
+      return <LoadingView />;
     }
 
-    return null;
+    return <ErrorView />;
   }
 }
 
