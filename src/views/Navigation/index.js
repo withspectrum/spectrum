@@ -47,46 +47,54 @@ const Navigation = (props: Props) => {
             <DirectMessagesTab />
             <NotificationsTab />
 
-            <Tooltip title="Explore">
-              <AvatarGrid>
-                <AvatarLink
-                  to={'/explore'}
-                  data-cy="navbar-explore"
-                  onClick={() => setNavigationIsOpen(false)}
-                  {...getAccessibilityActiveState(
-                    match.url === '/explore' && match.isExact
-                  )}
-                >
-                  <IconWrapper>
-                    <Icon glyph="explore" />
-                  </IconWrapper>
+            <Route path="/explore">
+              {({ match }) => (
+                <Tooltip title="Explore">
+                  <AvatarGrid>
+                    <AvatarLink
+                      to={'/explore'}
+                      data-cy="navbar-explore"
+                      onClick={() => setNavigationIsOpen(false)}
+                      {...getAccessibilityActiveState(
+                        match.url === '/explore' && match.isExact
+                      )}
+                    >
+                      <IconWrapper>
+                        <Icon glyph="explore" />
+                      </IconWrapper>
 
-                  <Label>Explore</Label>
-                </AvatarLink>
-              </AvatarGrid>
-            </Tooltip>
+                      <Label>Explore</Label>
+                    </AvatarLink>
+                  </AvatarGrid>
+                </Tooltip>
+              )}
+            </Route>
 
-            <Tooltip title="Profile">
-              <AvatarGrid style={{ marginTop: '4px' }}>
-                <AvatarLink
-                  to={'/me'}
-                  data-cy="navbar-profile"
-                  onClick={() => setNavigationIsOpen(false)}
-                  {...getAccessibilityActiveState(
-                    history.location.pathname ===
-                      `/users/${currentUser.username}`
-                  )}
-                >
-                  <UserAvatar
-                    size={32}
-                    showOnlineStatus={false}
-                    user={currentUser}
-                    isClickable={false}
-                  />
-                  <Label>Profile</Label>
-                </AvatarLink>
-              </AvatarGrid>
-            </Tooltip>
+            <Route path={`/users/${currentUser.username}`}>
+              {({ match }) => (
+                <Tooltip title="Profile">
+                  <AvatarGrid style={{ marginTop: '4px' }}>
+                    <AvatarLink
+                      to={'/me'}
+                      data-cy="navbar-profile"
+                      onClick={() => setNavigationIsOpen(false)}
+                      {...getAccessibilityActiveState(
+                        history.location.pathname ===
+                          `/users/${currentUser.username}`
+                      )}
+                    >
+                      <UserAvatar
+                        size={32}
+                        showOnlineStatus={false}
+                        user={currentUser}
+                        isClickable={false}
+                      />
+                      <Label>Profile</Label>
+                    </AvatarLink>
+                  </AvatarGrid>
+                </Tooltip>
+              )}
+            </Route>
 
             <Divider />
 

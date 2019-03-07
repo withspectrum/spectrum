@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { withApollo } from 'react-apollo';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Tooltip from 'src/components/Tooltip';
 import compose from 'recompose/compose';
@@ -299,29 +299,33 @@ class NotificationsTab extends React.Component<Props, State> {
     }
 
     return (
-      <NavigationContext.Consumer>
-        {({ setNavigationIsOpen }) => (
-          <Tooltip title="Notifications">
-            <AvatarGrid>
-              <AvatarLink
-                to={'/notifications'}
-                data-cy="navbar-notifications"
-                onClick={() => setNavigationIsOpen(false)}
-                {...getAccessibilityActiveState(
-                  match.url === '/notifications' && match.isExact
-                )}
-              >
-                <IconWrapper>
-                  <Icon glyph="notification" />
-                  {count > 0 && <RedDot />}
-                </IconWrapper>
+      <Route path="/notifications">
+        {({ match }) => (
+          <NavigationContext.Consumer>
+            {({ setNavigationIsOpen }) => (
+              <Tooltip title="Notifications">
+                <AvatarGrid>
+                  <AvatarLink
+                    to={'/notifications'}
+                    data-cy="navbar-notifications"
+                    onClick={() => setNavigationIsOpen(false)}
+                    {...getAccessibilityActiveState(
+                      match.url === '/notifications' && match.isExact
+                    )}
+                  >
+                    <IconWrapper>
+                      <Icon glyph="notification" />
+                      {count > 0 && <RedDot />}
+                    </IconWrapper>
 
-                <Label>Notifications</Label>
-              </AvatarLink>
-            </AvatarGrid>
-          </Tooltip>
+                    <Label>Notifications</Label>
+                  </AvatarLink>
+                </AvatarGrid>
+              </Tooltip>
+            )}
+          </NavigationContext.Consumer>
         )}
-      </NavigationContext.Consumer>
+      </Route>
     );
   }
 }
