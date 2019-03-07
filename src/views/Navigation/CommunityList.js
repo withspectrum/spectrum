@@ -6,6 +6,7 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import { storeItem } from 'src/helpers/localStorage';
 import { LAST_ACTIVE_COMMUNITY_KEY } from 'src/views/homeViewRedirect';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import { AvatarGrid, AvatarLink, Avatar, Shortcut, Label } from './style';
 
 const CommunityList = (props: Props) => {
@@ -54,7 +55,9 @@ const CommunityList = (props: Props) => {
         NINE,
       ];
 
-      if (e.altKey) {
+      const appControlKey = isDesktopApp() ? e.metaKey : e.altKey;
+
+      if (appControlKey) {
         const index = possibleKeys.indexOf(e.keyCode);
         if (index >= 0) {
           const community = sorted[index];
@@ -75,6 +78,8 @@ const CommunityList = (props: Props) => {
     storeItem(LAST_ACTIVE_COMMUNITY_KEY, id);
     setNavigationIsOpen(false);
   };
+
+  const appControlSymbol = isDesktopApp() ? '⌘' : '⌥';
 
   return sorted.map((community, index) => {
     if (!community) return null;
@@ -100,7 +105,12 @@ const CommunityList = (props: Props) => {
 
             <Label isActive={isActive}>{community.name}</Label>
           </AvatarLink>
-          {index < 9 && <Shortcut>⌥{index + 1}</Shortcut>}
+          {index < 9 && (
+            <Shortcut>
+              {appControlSymbol}
+              {index + 1}
+            </Shortcut>
+          )}
         </AvatarGrid>
       </Tooltip>
     );
