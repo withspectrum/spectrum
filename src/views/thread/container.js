@@ -218,7 +218,7 @@ class ThreadContainer extends React.Component<Props, State> {
         thread.channel.slug
       }/${slugg(thread.content.title)}~${thread.id}`;
       // $FlowFixMe
-      if (this.props.location.pathname !== properUrl)
+      if (this.props.history.location.pathname !== properUrl)
         // $FlowFixMe
         return this.props.history.replace(properUrl);
     }
