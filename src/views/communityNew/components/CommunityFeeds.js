@@ -2,7 +2,7 @@
 // $FlowIssue
 import React, { useEffect } from 'react';
 import theme from 'shared/theme';
-import CommunityMemberGrid from 'src/views/community/components/memberGrid';
+import MembersList from './MembersList';
 import type { CommunityFeedsType } from '../types';
 import { TeamMembersList } from './TeamMembersList';
 import { MobileCommunityInfoActions } from './MobileCommunityInfoActions';
@@ -45,7 +45,7 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
       }
       case 'members': {
         return (
-          <CommunityMemberGrid
+          <MembersList
             id={community.id}
             filter={{ isMember: true, isBlocked: false }}
           />

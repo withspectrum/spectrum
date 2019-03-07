@@ -51,6 +51,7 @@ import ToggleChannelMembership from 'src/components/toggleChannelMembership';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
+import MembersList from './components/MembersList';
 import {
   ViewGrid,
   PrimarySecondaryColumnGrid,
@@ -441,7 +442,7 @@ class ChannelView extends React.Component<Props, State> {
                 {// members grid
                 selectedView === 'members' && (
                   <ErrorBoundary>
-                    <ChannelMemberGrid id={channel.id} />
+                    <MembersList id={channel.id} />
                   </ErrorBoundary>
                 )}
               </PrimaryColumn>
