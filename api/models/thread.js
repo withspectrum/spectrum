@@ -280,6 +280,7 @@ export const getLikedThreadsByUser = async (
   const currentUserThreadReactions = db
     .table('threadReactions')
     .getAll(evalUser, { index: 'userId' })
+    .filter(threadReaction => db.not(threadReaction.hasFields('deletedAt')))
     .run();
 
   const threadReactions = await currentUserThreadReactions;
