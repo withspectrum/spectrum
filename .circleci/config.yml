@@ -120,7 +120,7 @@ jobs:
       - image: cypress/base:6
       - image: rethinkdb:2.3.5
     parallel: true
-    parallelism: 9
+    parallelism: 4
     environment:
       TERM: xterm
     steps:

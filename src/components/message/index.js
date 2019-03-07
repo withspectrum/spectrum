@@ -231,6 +231,7 @@ class Message extends React.Component<Props, State> {
                       timestamp={message.timestamp}
                       user={message.author.user}
                       roles={message.author.roles}
+                      bot={message.bot}
                       messageUrl={messageUrl}
                       selectedMessage={selectedMessage}
                     />
