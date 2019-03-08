@@ -174,19 +174,24 @@ workflows:
       - build_web:
           requires:
             - checkout_environment
-      # Run internal branches on 4 machines
-      - test_e2e:
+      # Run pull requests from internal contributors in parallel
+      - test_e2e_parallel:
           requires:
             - build_web
           parallelism: 4
           filters:
             branches:
               ignore: /pull.*/
-      # Run pull requests on one machine
-      - test_e2e:
+      # Run pull requests from external contributors on one machine
+      - test_e2e_single:
           requires:
             - build_web
           parallelism: 1
           filters:
             branches:
               only: /pull.*/
+      # If either of the test_e2e_* jobs pass, this one passes so we can mark it as required on GitHub
+      - test_e2e:
+        requires:
+          - test_e2e_internal
+          - test_e2e_external
