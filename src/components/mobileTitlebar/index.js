@@ -10,7 +10,7 @@ import {
 } from './actions';
 import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
 
-const MobileCommunityTitlebar = (props: Props) => {
+export const MobileCommunityTitlebar = (props: Props) => {
   const { community } = props;
   return (
     <BaseTitlebar
@@ -24,7 +24,7 @@ const MobileCommunityTitlebar = (props: Props) => {
   );
 };
 
-const MobileChannelTitlebar = (props: Props) => {
+export const MobileChannelTitlebar = (props: Props) => {
   const { channel } = props;
 
   return (
@@ -43,7 +43,7 @@ const MobileChannelTitlebar = (props: Props) => {
   );
 };
 
-const MobileUserTitlebar = (props: Props) => {
+export const MobileUserTitlebar = (props: Props) => {
   const { user } = props;
   return (
     <BaseTitlebar
