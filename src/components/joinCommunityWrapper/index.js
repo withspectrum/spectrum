@@ -4,7 +4,10 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import addCommunityMemberMutation from 'shared/graphql/mutations/communityMember/addCommunityMember';
 import { addToastWithTimeout } from 'src/actions/toasts';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import type { AddCommunityMemberType } from 'shared/graphql/mutations/communityMember/addCommunityMember';
+import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+import { openModal } from 'src/actions/modals';
 
 type Props = {
   communityId: string,
@@ -12,13 +15,24 @@ type Props = {
   children: any,
   addCommunityMember: Function,
   dispatch: Dispatch<Object>,
+  currentUser: ?GetUserType,
 };
 
 const JoinCommunity = (props: Props) => {
-  const { communityId, addCommunityMember, dispatch, render } = props;
+  const {
+    communityId,
+    addCommunityMember,
+    dispatch,
+    currentUser,
+    render,
+  } = props;
   const [isLoading, setIsLoading] = React.useState(false);
 
   const addMember = () => {
+    if (!currentUser || !currentUser.id) {
+      return dispatch(openModal('LOGIN_MODAL'));
+    }
+
     const input = { communityId };
 
     setIsLoading(true);
@@ -50,5 +64,6 @@ const JoinCommunity = (props: Props) => {
 
 export default compose(
   connect(),
-  addCommunityMemberMutation
+  addCommunityMemberMutation,
+  withCurrentUser
 )(JoinCommunity);

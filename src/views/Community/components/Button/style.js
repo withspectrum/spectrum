@@ -32,6 +32,7 @@ export const StyledButton = styled.button`
   cursor: pointer;
   -webkit-display: none;
   opacity: ${props => (props.disabled ? '0.6' : '1')};
+  line-height: 1.2;
 
   .icon {
     margin-right: 4px;

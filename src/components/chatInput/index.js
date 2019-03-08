@@ -207,7 +207,7 @@ const ChatInput = (props: Props) => {
 
     if (!props.currentUser) {
       // user is trying to send a message without being signed in
-      return props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}));
+      return props.dispatch(openModal('LOGIN_MODAL', {}));
     }
 
     // If a user sends a message, force a scroll to bottom. This doesn't exist if this is a new DM thread

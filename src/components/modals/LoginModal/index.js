@@ -18,7 +18,7 @@ type Props = {
   modalProps: any,
 };
 
-class ChatInputLoginModal extends React.Component<Props> {
+class LoginModal extends React.Component<Props> {
   close = () => {
     this.props.dispatch(closeModal());
   };
@@ -87,4 +87,4 @@ const map = state => ({
 });
 
 // $FlowIssue
-export default compose(connect(map))(ChatInputLoginModal);
+export default compose(connect(map))(LoginModal);

@@ -26,7 +26,7 @@ type State = {
 class JoinChannel extends React.Component<Props, State> {
   state = { isLoading: false };
 
-  login = () => this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL'));
+  login = () => this.props.dispatch(openModal('LOGIN_MODAL'));
 
   toggleSubscription = () => {
     const { channel, dispatch } = this.props;

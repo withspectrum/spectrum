@@ -25,7 +25,7 @@ class LikeButtonPure extends React.Component<LikeButtonProps> {
     const { thread, dispatch, currentUser } = this.props;
 
     if (!currentUser || !currentUser.id) {
-      return dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}));
+      return dispatch(openModal('LOGIN_MODAL', {}));
     }
 
     const { hasReacted } = thread.reactions;
