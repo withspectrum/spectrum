@@ -218,7 +218,7 @@ export const SearchWrapper = styled(Card)`
   padding: 12px 16px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   transition: ${Transition.hover.off};
-  z-index: ${zIndex.search};
+  z-index: 12;
   border-radius: 8px;
 
   &:hover {
