@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Loadable from 'react-loadable';
-import { ErrorView, LoadingView } from 'src/views/viewHelpers';
+import { LoadingView } from 'src/views/viewHelpers';
 
 /* prettier-ignore */
 const loader = () => import('./container'/* webpackChunkName: "Thread" */);
