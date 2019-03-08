@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { convertFromRaw } from 'draft-js';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
 import { Input } from '../chatInput/style';
 import { EditorInput, EditActions } from './style';
