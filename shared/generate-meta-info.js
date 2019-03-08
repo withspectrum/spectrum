@@ -9,6 +9,7 @@
  */
 var truncate = require('./truncate');
 var striptags = require('striptags');
+var toPlainText = require('./clients/draft-js/utils/plaintext').toPlainText;
 
 var DEFAULT_META = {
   title: 'Spectrum',
@@ -103,9 +104,7 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
         data &&
         data.body &&
         (data.type === 'DRAFTJS'
-          ? JSON.parse(data.body)
-              .blocks.filter(block => block.type === 'unstyled')
-              .map(block => block.text)
+          ? toPlainText(JSON.parse(data.body))
           : data.body);
       return setDefault({
         title: data && data.title + ' · ' + data.communityName,

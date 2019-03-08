@@ -1,14 +1,7 @@
 import sentencify from 'shared/sentencify';
 import sortByDate from 'shared/sort-by-date';
 import { messageTypeObj } from 'shared/draft-utils/message-types';
-
-const toPlainText = raw => {
-  return raw.blocks
-    .filter(block => block.type === 'unstyled')
-    .map(block => block.text);
-};
-
-const toState = input => input;
+import { toPlainText } from 'shared/clients/draft-js/utils/plaintext';
 
 const sortThreads = (entities, currentUser) => {
   // filter out the current user's threads
@@ -121,10 +114,7 @@ const formatNotification = (
             let body = payload.content.body;
             if (typeof body === 'string')
               body = JSON.parse(payload.content.body);
-            return `"${toPlainText(toState(body)).replace(
-              /[ \n\r\v]+/g,
-              ' '
-            )}"`;
+            return `"${toPlainText(body).replace(/[ \n\r\v]+/g, ' ')}"`;
           }
 
           return `"${payload.content.body.replace(/[ \n\r\v]+/g, ' ')}"`;
@@ -165,7 +155,7 @@ const formatNotification = (
               body = JSON.parse(payload.content.body);
             return `${sender.payload.name} (@${
               sender.payload.username
-            }): ${toPlainText(toState(body))}`;
+            }): ${toPlainText(body)}`;
           }
 
           return `${sender.payload.name}: ${
@@ -182,7 +172,7 @@ const formatNotification = (
       href = `/thread/${message.threadId}`;
       body =
         message.messageType.toLowerCase() === messageTypeObj.draftjs
-          ? `${toPlainText(toState(JSON.parse(message.content.body)))}`
+          ? `${toPlainText(JSON.parse(message.content.body))}`
           : message.content.body;
       break;
     }
@@ -191,7 +181,7 @@ const formatNotification = (
       href = `/thread/${thread.id}`;
       body =
         thread.type.toLowerCase() === messageTypeObj.draftjs
-          ? `${toPlainText(toState(JSON.parse(thread.content.body)))}`
+          ? `${toPlainText(JSON.parse(thread.content.body))}`
           : thread.content.body;
       break;
     }
