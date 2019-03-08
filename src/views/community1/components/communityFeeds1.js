@@ -8,7 +8,7 @@ import { TeamMembersList } from './teamMembersList1';
 import { MobileCommunityInfoActions } from './mobileCommunityInfoActions1';
 import { ChannelsList } from './channelsList';
 import { CommunityMeta } from 'src/components/entities/profileCards/components/communityMeta';
-import { WatercoolerChat } from './watercoolerChat';
+import { WatercoolerChat } from './watercoolerChat1';
 import { PostsFeeds } from './postsFeeds1';
 import { ARROW_LEFT, ARROW_RIGHT } from 'src/helpers/keycodes';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
