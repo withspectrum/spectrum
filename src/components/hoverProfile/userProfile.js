@@ -11,8 +11,8 @@ import ConditionalWrap from 'src/components/conditionalWrap';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import type { Dispatch } from 'redux';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
-import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import {
   HoverWrapper,
   ProfileCard,
@@ -34,11 +34,6 @@ type ProfileProps = {
 };
 
 class HoverProfile extends Component<ProfileProps> {
-  initMessage = () => {
-    const { dispatch, user } = this.props;
-    dispatch(initNewThreadWithUser(user));
-  };
-
   render() {
     const { user, currentUser, innerRef, style } = this.props;
     const me = currentUser && currentUser.id === user.id;
@@ -83,11 +78,10 @@ class HoverProfile extends Component<ProfileProps> {
 
           <Actions>
             {!me && (
-              <Link to={'/messages/new'}>
-                <Button icon={'message'} onClick={this.initMessage}>
-                  Message
-                </Button>
-              </Link>
+              <InitDirectMessageWrapper
+                user={user}
+                render={<Button icon={'message-simple-new'}>Message</Button>}
+              />
             )}
 
             {me && (

@@ -12,6 +12,7 @@ import {
   SectionTitle,
   SectionSubtitle,
 } from 'src/components/settingsViews/style';
+import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { ListContainer, Notice } from 'src/components/listItems/style';
@@ -34,13 +35,12 @@ type Props = {
   },
   unblock: Function,
   isLoading: boolean,
-  initMessage: Function,
   currentUser: ?Object,
 };
 
 class BlockedUsers extends React.Component<Props> {
   render() {
-    const { data, isLoading, currentUser, unblock, initMessage } = this.props;
+    const { data, isLoading, currentUser, unblock } = this.props;
 
     if (data && data.channel) {
       const { blockedUsers } = data.channel;
@@ -87,19 +87,24 @@ class BlockedUsers extends React.Component<Props> {
                       <EditDropdown
                         render={() => (
                           <Dropdown>
-                            <DropdownSection
-                              style={{ borderBottom: '0' }}
-                              onClick={() => initMessage(user)}
-                            >
-                              <DropdownAction>
-                                <Icon glyph={'message'} size={'32'} />
-                              </DropdownAction>
-                              <DropdownSectionText>
-                                <DropdownSectionTitle>
-                                  Send Direct Message
-                                </DropdownSectionTitle>
-                              </DropdownSectionText>
-                            </DropdownSection>
+                            <InitDirectMessageWrapper
+                              user={user}
+                              render={
+                                <DropdownSection style={{ borderBottom: '0' }}>
+                                  <DropdownAction>
+                                    <Icon
+                                      glyph={'message-simple-new'}
+                                      size={'32'}
+                                    />
+                                  </DropdownAction>
+                                  <DropdownSectionText>
+                                    <DropdownSectionTitle>
+                                      Send Direct Message
+                                    </DropdownSectionTitle>
+                                  </DropdownSectionText>
+                                </DropdownSection>
+                              }
+                            />
 
                             <DropdownSectionDivider />
 

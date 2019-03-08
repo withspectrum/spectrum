@@ -4,7 +4,6 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
-import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { withRouter } from 'react-router';
 import getCommunityMembersQuery, {
   type GetCommunityMembersType,
@@ -44,11 +43,6 @@ class MembersList extends React.Component<Props, State> {
       scrollElement: document.getElementById('scroller-for-thread-feed'),
     });
   }
-
-  initMessage = user => {
-    this.props.dispatch(initNewThreadWithUser(user));
-    return this.props.history.push('/messages/new');
-  };
 
   shouldComponentUpdate(nextProps) {
     const curr = this.props;

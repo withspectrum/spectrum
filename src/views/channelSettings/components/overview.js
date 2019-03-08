@@ -19,11 +19,10 @@ type Props = {
   communitySlug: string,
   togglePending: Function,
   unblock: Function,
-  initMessage: Function,
 };
 class Overview extends React.Component<Props> {
   render() {
-    const { channel, initMessage, community } = this.props;
+    const { channel, community } = this.props;
 
     return (
       <SectionsContainer data-cy="channel-overview">
@@ -55,11 +54,7 @@ class Overview extends React.Component<Props> {
           {channel.isPrivate && (
             <span>
               <ErrorBoundary fallbackComponent={SettingsFallback}>
-                <ChannelMembers
-                  channel={channel}
-                  id={channel.id}
-                  initMessage={initMessage}
-                />
+                <ChannelMembers channel={channel} id={channel.id} />
               </ErrorBoundary>
 
               <ErrorBoundary fallbackComponent={SettingsFallback}>
@@ -67,7 +62,6 @@ class Overview extends React.Component<Props> {
                   togglePending={this.props.togglePending}
                   channel={channel}
                   id={channel.id}
-                  initMessage={initMessage}
                 />
               </ErrorBoundary>
 
@@ -76,7 +70,6 @@ class Overview extends React.Component<Props> {
                   unblock={this.props.unblock}
                   channel={channel}
                   id={channel.id}
-                  initMessage={initMessage}
                 />
               </ErrorBoundary>
             </span>
@@ -84,11 +77,7 @@ class Overview extends React.Component<Props> {
 
           <ErrorBoundary fallbackComponent={SettingsFallback}>
             {!channel.isPrivate && (
-              <ChannelMembers
-                channel={channel}
-                initMessage={initMessage}
-                id={channel.id}
-              />
+              <ChannelMembers channel={channel} id={channel.id} />
             )}
           </ErrorBoundary>
         </Column>

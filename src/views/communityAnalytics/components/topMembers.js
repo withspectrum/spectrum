@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import compose from 'recompose/compose';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { Loading } from 'src/components/loading';
@@ -26,11 +25,6 @@ type Props = {
 };
 
 class ConversationGrowth extends React.Component<Props> {
-  initMessage = user => {
-    this.props.dispatch(initNewThreadWithUser(user));
-    this.props.history.push('/messages/new');
-  };
-
   render() {
     const {
       data: { community },

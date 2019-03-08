@@ -10,6 +10,7 @@ import getPendingUsersQuery from 'shared/graphql/queries/channel/getChannelPendi
 import type { GetChannelPendingUsersType } from 'shared/graphql/queries/channel/getChannelPendingUsers';
 import ViewError from 'src/components/viewError';
 import { ListContainer } from 'src/components/listItems/style';
+import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import {
   SectionCard,
   SectionTitle,
@@ -34,19 +35,12 @@ type Props = {
   },
   togglePending: Function,
   isLoading: boolean,
-  initMessage: Function,
   currentUser: ?Object,
 };
 
 class PendingUsers extends React.Component<Props> {
   render() {
-    const {
-      data,
-      isLoading,
-      currentUser,
-      togglePending,
-      initMessage,
-    } = this.props;
+    const { data, isLoading, currentUser, togglePending } = this.props;
 
     if (data && data.channel) {
       const { pendingUsers } = data.channel;
@@ -83,19 +77,24 @@ class PendingUsers extends React.Component<Props> {
                       <EditDropdown
                         render={() => (
                           <Dropdown>
-                            <DropdownSection
-                              style={{ borderBottom: '0' }}
-                              onClick={() => initMessage(user)}
-                            >
-                              <DropdownAction>
-                                <Icon glyph={'message'} size={'32'} />
-                              </DropdownAction>
-                              <DropdownSectionText>
-                                <DropdownSectionTitle>
-                                  Send Direct Message
-                                </DropdownSectionTitle>
-                              </DropdownSectionText>
-                            </DropdownSection>
+                            <InitDirectMessageWrapper
+                              user={user}
+                              render={
+                                <DropdownSection style={{ borderBottom: '0' }}>
+                                  <DropdownAction>
+                                    <Icon
+                                      glyph={'message-simple-new'}
+                                      size={'32'}
+                                    />
+                                  </DropdownAction>
+                                  <DropdownSectionText>
+                                    <DropdownSectionTitle>
+                                      Send Direct Message
+                                    </DropdownSectionTitle>
+                                  </DropdownSectionText>
+                                </DropdownSection>
+                              }
+                            />
 
                             <DropdownSectionDivider />
 

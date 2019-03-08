@@ -26,7 +26,6 @@ import {
   Row,
 } from '../style';
 import { ListContainer } from 'src/components/listItems/style';
-import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import ViewError from 'src/components/viewError';
 import { UserListItem } from 'src/components/Entities';
 import { Notice } from 'src/components/listItems/style';
@@ -135,13 +134,8 @@ class CommunityMembers extends React.Component<Props, State> {
     return this.setState({ queryString: searchString });
   };
 
-  initMessage = user => {
-    this.props.dispatch(initNewThreadWithUser(user));
-    this.props.history.push('/messages/new');
-  };
-
   generateUserProfile = communityMember => {
-    const { user, roles, reputation, ...permissions } = communityMember;
+    const { user, ...permissions } = communityMember;
     return (
       <React.Fragment>
         <Row>

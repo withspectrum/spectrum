@@ -9,8 +9,8 @@ import Reputation from 'src/components/reputation';
 import Badge from 'src/components/badges';
 import Icon from 'src/components/icons';
 import Tooltip from 'src/components/Tooltip';
-import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import type { Dispatch } from 'redux';
+import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import {
   Row,
   UserAvatarContainer,
@@ -55,15 +55,7 @@ const User = (props: Props) => {
     children,
     messageButton,
     showHoverProfile = true,
-    history,
-    dispatch,
   } = props;
-
-  const initMessage = (e: any) => {
-    e && e.preventDefault() && e.stopPropagation();
-    dispatch(initNewThreadWithUser(userObject));
-    history.push('/messages/new');
-  };
 
   if (!userObject.username) return null;
 
@@ -101,9 +93,14 @@ const User = (props: Props) => {
         <Actions>
           {messageButton && (
             <Tooltip title="Send message" position="top">
-              <MessageIcon onClick={initMessage}>
-                <Icon glyph="message-simple-new" size={24} />
-              </MessageIcon>
+              <InitDirectMessageWrapper
+                user={userObject}
+                render={
+                  <MessageIcon>
+                    <Icon glyph="message-simple-new" size={24} />
+                  </MessageIcon>
+                }
+              />
             </Tooltip>
           )}
 

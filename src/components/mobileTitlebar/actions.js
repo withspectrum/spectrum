@@ -1,14 +1,11 @@
 // @flow
 import React from 'react';
-import { connect } from 'react-redux';
-import compose from 'recompose/compose';
-import { withRouter } from 'react-router-dom';
-import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import Icon from 'src/components/icons';
 import {
   WhiteIconButton,
   SmallPrimaryButton,
 } from 'src/views/Community/components/Button';
+import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import getComposerLink from 'src/helpers/get-composer-link';
 import JoinChannel from 'src/components/joinCommunityWrapper';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
@@ -76,21 +73,17 @@ export const MobileChannelAction = (props: Props) => {
   );
 };
 
-const UserAction = (props: Props) => {
-  const { user, dispatch, history } = props;
-
-  const initMessage = () => {
-    dispatch(initNewThreadWithUser(user));
-    history.push('/messages/new');
-  };
+export const MobileUserAction = (props: Props) => {
+  const { user } = props;
 
   return (
-    <WhiteIconButton onClick={initMessage}>
-      <Icon glyph={'message-simple'} size={32} />
-    </WhiteIconButton>
+    <InitDirectMessageWrapper
+      user={user}
+      render={
+        <WhiteIconButton>
+          <Icon glyph={'message-simple-new'} size={28} />
+        </WhiteIconButton>
+      }
+    />
   );
 };
-export const MobileUserAction = compose(
-  withRouter,
-  connect()
-)(UserAction);

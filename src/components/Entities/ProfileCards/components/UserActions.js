@@ -1,22 +1,18 @@
 // @flow
 import React from 'react';
-import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import type { UserActionsRowType } from '../types';
 import {
   PrimaryButton,
   OutlineButton,
 } from 'src/views/Community/components/Button';
-import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
+import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import { ActionsRowContainer } from '../style';
 
-export const UnconnectedUserActions = (props: UserActionsRowType) => {
-  const { user, currentUser, dispatch } = props;
+export const UnconnectedUserActions = (props: Props) => {
+  const { user, currentUser } = props;
 
-  const initMessage = () => {
-    dispatch(initNewThreadWithUser(user));
-  };
+  if (!user) return null;
 
   return (
     <ActionsRowContainer>
@@ -26,14 +22,12 @@ export const UnconnectedUserActions = (props: UserActionsRowType) => {
         </OutlineButton>
       )}
 
-      <PrimaryButton to={'/messages/new'} onClick={initMessage}>
-        Message
-      </PrimaryButton>
+      <InitDirectMessageWrapper
+        user={user}
+        render={<PrimaryButton>Message</PrimaryButton>}
+      />
     </ActionsRowContainer>
   );
 };
 
-export const UserActions = compose(
-  withCurrentUser,
-  connect()
-)(UnconnectedUserActions);
+export const UserActions = compose(withCurrentUser)(UnconnectedUserActions);

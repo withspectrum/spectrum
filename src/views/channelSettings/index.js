@@ -16,7 +16,6 @@ import ViewError from 'src/components/viewError';
 import { View } from 'src/components/settingsViews/style';
 import Header from 'src/components/settingsViews/header';
 import Overview from './components/overview';
-import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
@@ -57,11 +56,6 @@ class ChannelSettings extends React.Component<Props> {
       });
     }
   }
-
-  initMessage = user => {
-    this.props.dispatch(initNewThreadWithUser(user));
-    return this.props.history.push('/messages/new');
-  };
 
   togglePending = (userId, action) => {
     const {
@@ -168,7 +162,6 @@ class ChannelSettings extends React.Component<Props> {
                 communitySlug={communitySlug}
                 togglePending={this.togglePending}
                 unblock={this.unblock}
-                initMessage={this.initMessage}
               />
             );
           default:

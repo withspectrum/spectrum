@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import Head from 'src/components/head';
 import ThreadFeed from 'src/components/threadFeed';
-import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { NullState } from 'src/components/upsell';
 import { UserProfileCard } from 'src/components/Entities';
 import { MobileUserTitlebar } from 'src/components/mobileTitlebar';
@@ -89,11 +88,6 @@ class UserView extends React.Component<Props, State> {
       selectedView: label,
       hasThreads: true,
     });
-  };
-
-  initMessage = user => {
-    this.props.dispatch(initNewThreadWithUser(user));
-    this.props.history.push('/messages/new');
   };
 
   initReport = () => {
