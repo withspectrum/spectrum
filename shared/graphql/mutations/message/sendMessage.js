@@ -2,6 +2,7 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { btoa } from 'b2a';
+import snarkdown from 'snarkdown';
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 import messageInfoFragment from '../../fragments/message/messageInfo';
 import type { MessageInfoType } from '../../fragments/message/messageInfo';
@@ -31,22 +32,16 @@ const sendMessageOptions = {
   props: ({ ownProps, mutate }) => ({
     sendMessage: async (message, author) => {
       const fakeId = Math.round(Math.random() * -1000000);
-      let body = message.content.body;
-      if (message.messageType === messageTypeObj.text) {
-        body = await fetch('https://convert.spectrum.chat/from', {
-          method: 'POST',
-          body,
-        })
-          .then(res => res.json())
-          .then(json => JSON.stringify(json));
-      }
       return mutate({
         variables: {
           message: {
             ...message,
-            messageType: messageTypeObj.draftjs,
+            messageType: messageTypeObj.text,
             content: {
-              body: message.messageType === messageTypeObj.media ? '' : body,
+              body:
+                message.messageType === messageTypeObj.media
+                  ? ''
+                  : message.content.body,
             },
           },
         },
@@ -58,7 +53,7 @@ const sendMessageOptions = {
             messageType:
               message.messageType === messageTypeObj.media
                 ? messageTypeObj.media
-                : messageTypeObj.draftjs,
+                : 'optimistic',
             modifiedAt: '',
             author: {
               user: {
@@ -85,7 +80,7 @@ const sendMessageOptions = {
               body:
                 message.messageType === messageTypeObj.media
                   ? message.content.body
-                  : processMessageContent(messageTypeObj.draftjs, body),
+                  : snarkdown(message.content.body),
               __typename: 'MessageContent',
             },
             reactions: {

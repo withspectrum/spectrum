@@ -47,6 +47,14 @@ export const Body = (props: BodyProps) => {
     draftOnlyContainsEmoji(JSON.parse(message.content.body));
   const WrapperComponent = bubble ? Text : QuotedParagraph;
   switch (message.messageType) {
+    case 'optimistic':
+      return (
+        <div class="markdown">
+          <WrapperComponent me={me}>
+            <div dangerouslySetInnerHTML={{ __html: message.content.body }} />
+          </WrapperComponent>
+        </div>
+      );
     case messageTypeObj.text:
     default:
       return (
