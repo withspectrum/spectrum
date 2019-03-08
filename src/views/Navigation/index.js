@@ -27,7 +27,7 @@ import { NavigationContext } from 'src/routes';
 const Navigation = (props: Props) => {
   const { currentUser, history } = props;
 
-  if (!currentUser) return <div />;
+  if (!currentUser) return null;
 
   return (
     <NavigationContext.Consumer>

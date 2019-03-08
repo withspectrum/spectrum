@@ -3,7 +3,7 @@ import { MEDIA_BREAK } from 'src/components/Layout';
 
 export const StyledAppViewWrapper = styled.div`
   display: grid;
-  grid-template-columns: ${props => (props.isSignedIn ? `72px 1fr` : '1fr')};
+  grid-template-columns: 72px 1fr;
   grid-template-areas: 'navigation view';
   overflow: hidden;
   overflow-y: auto;
