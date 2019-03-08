@@ -12,8 +12,8 @@ import { CommunityProfileCard } from 'src/components/entities';
 import { MobileCommunityTitlebar } from 'src/components/mobileTitlebar';
 import type { SignedInMemberType } from '../types';
 import { TeamMembersList } from '../components/teamMembersList';
-import { CommunityFeeds } from '../components/communityFeeds';
-import { ChannelsList } from '../components/channelsList';
+import { CommunityFeeds } from '../components/communityFeeds1';
+import { ChannelsList } from '../components/channelsList1';
 import { SidebarSection } from '../style';
 import {
   ViewGrid,
