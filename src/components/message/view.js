@@ -13,7 +13,6 @@ import {
 } from './style';
 import ThreadAttachment from './ThreadAttachment';
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer';
-import { toPlainText, toState } from 'shared/draft-utils';
 import { draftOnlyContainsEmoji } from 'shared/only-contains-emoji';
 import { Byline, Name, Username } from './style';
 import { isShort } from 'shared/clients/draft-js/utils/isShort';
@@ -68,7 +67,9 @@ export const Body = (props: BodyProps) => {
     }
     case messageTypeObj.draftjs: {
       const parsed = JSON.parse(message.content.body);
-      const ids = getSpectrumThreadIds(toPlainText(toState(parsed)));
+      const ids = getSpectrumThreadIds(
+        parsed.blocks.map(block => block.text).join('\n')
+      );
       const uniqueIds = ids.filter((x, i, a) => a.indexOf(x) === i);
       return (
         <WrapperComponent me={me}>
