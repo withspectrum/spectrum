@@ -18,8 +18,6 @@ const JoinChannel = (props: Props) => {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const join = () => {
-    const input = { channelId };
-
     setIsLoading(true);
 
     return toggleChannelSubscription({ channelId })

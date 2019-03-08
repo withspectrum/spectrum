@@ -18,8 +18,6 @@ const LeaveChannel = (props: Props) => {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const leave = () => {
-    const input = { channelId };
-
     setIsLoading(true);
 
     return toggleChannelSubscription({ channelId })

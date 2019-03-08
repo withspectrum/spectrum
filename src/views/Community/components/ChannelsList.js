@@ -45,7 +45,6 @@ class Component extends React.Component<Props> {
   render() {
     const {
       isLoading,
-      communitySlug,
       data: { community },
     } = this.props;
 

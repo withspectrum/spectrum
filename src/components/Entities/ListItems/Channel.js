@@ -2,16 +2,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
-import Tooltip from 'src/components/Tooltip';
-import {
-  Row,
-  Content,
-  Label,
-  Sublabel,
-  Description,
-  MessageIcon,
-  Actions,
-} from './style';
+import { Row, Content, Label, Description, Actions } from './style';
 
 type Props = {
   channelObject: Object,

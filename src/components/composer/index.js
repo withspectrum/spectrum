@@ -4,7 +4,6 @@ import compose from 'recompose/compose';
 import { withRouter, type History, type Location } from 'react-router';
 import { connect } from 'react-redux';
 import debounce from 'debounce';
-import queryString from 'query-string';
 import Icon from '../icons';
 import getThreadLink from 'src/helpers/get-thread-link';
 import { addToastWithTimeout } from 'src/actions/toasts';
@@ -165,7 +164,6 @@ class ComposerWithData extends React.Component<Props, State> {
     if (esc) {
       e.stopPropagation();
       this.closeComposer();
-      this.activateLastThread();
       return;
     }
   };
@@ -173,13 +171,6 @@ class ComposerWithData extends React.Component<Props, State> {
   handleKeyPress = e => {
     const cmdEnter = e.keyCode === ENTER && e.metaKey;
     if (cmdEnter) return this.publishThread();
-  };
-
-  activateLastThread = () => {
-    // we get the last thread id from the query params and dispatch it
-    // as the active thread.
-    const { location } = this.props;
-    const { t: threadId } = queryString.parse(location.search);
   };
 
   changeTitle = e => {
@@ -233,22 +224,22 @@ class ComposerWithData extends React.Component<Props, State> {
     localStorage.setItem(LS_COMPOSER_EXPIRE, ONE_DAY());
   };
 
-  persistBodyToLocalStorageWithDebounce = body => {
+  persistBodyToLocalStorageWithDebounce = () => {
     if (!localStorage) return;
     this.handleTitleBodyChange('body');
   };
 
-  persistTitleToLocalStorageWithDebounce = title => {
+  persistTitleToLocalStorageWithDebounce = () => {
     if (!localStorage) return;
     this.handleTitleBodyChange('title');
   };
 
-  persistTitleToLocalStorage = title => {
+  persistTitleToLocalStorage = () => {
     if (!localStorage) return;
     this.handleTitleBodyChange('title');
   };
 
-  persistBodyToLocalStorage = body => {
+  persistBodyToLocalStorage = () => {
     if (!localStorage) return;
     this.handleTitleBodyChange('body');
   };

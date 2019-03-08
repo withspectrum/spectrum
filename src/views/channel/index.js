@@ -3,7 +3,6 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
-import { CommunityAvatar } from 'src/components/avatar';
 import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
 import Head from 'src/components/head';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
@@ -18,7 +17,6 @@ import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import Login from '../login';
 import { Upsell404Channel } from 'src/components/upsell';
 import RequestToJoinChannel from 'src/components/upsell/requestToJoinChannel';
-import Icon from 'src/components/icons';
 import Search from './components/search';
 import { CLIENT_URL } from 'src/api/constants';
 import CommunityLogin from 'src/views/communityLogin';
@@ -27,16 +25,6 @@ import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
 import { ChannelProfileCard } from 'src/components/Entities';
 import { MobileChannelTitlebar } from 'src/components/mobileTitlebar';
-import {
-  Grid,
-  Content,
-  Extras,
-  CommunityContext,
-  CommunityName,
-  ChannelName,
-  ChannelDescription,
-  MetadataContainer,
-} from './style';
 import {
   PrimaryButton,
   OutlineButton,
@@ -255,7 +243,6 @@ class ChannelView extends React.Component<Props, State> {
       data: { channel },
       currentUser,
       isLoading,
-      hasError,
     } = this.props;
     const { selectedView } = this.state;
     const { communitySlug } = match.params;
@@ -350,8 +337,6 @@ class ChannelView extends React.Component<Props, State> {
           description: channel.description,
         },
       });
-
-      const actionButton = this.renderActionButton(channel);
 
       return (
         <React.Fragment>

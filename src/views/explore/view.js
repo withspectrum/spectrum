@@ -1,5 +1,4 @@
 // @flow
-import theme from 'shared/theme';
 import * as React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
@@ -14,11 +13,9 @@ import {
   CategoryWrapper,
   Collections,
   CollectionWrapper,
-  LoadingContainer,
 } from './style';
 import { getCommunitiesBySlug } from 'shared/graphql/queries/community/getCommunities';
 import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCommunities';
-import { Loading } from 'src/components/loading';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { track, transformations, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
@@ -129,7 +126,6 @@ class CategoryList extends React.Component<CategoryListProps> {
       title,
       slugs,
       isLoading,
-      currentUser,
       categories,
     } = this.props;
 
@@ -173,14 +169,8 @@ class CategoryList extends React.Component<CategoryListProps> {
                 <ListWrapper>
                   {filteredCommunities.map((community, i) => (
                     // $FlowFixMe
-                    <ErrorBoundary fallbackComponent={null}>
-                      <CommunityProfile
-                        key={i}
-                        profileSize={'upsell'}
-                        data={{ community }}
-                        currentUser={currentUser}
-                        showHoverProfile={false}
-                      />
+                    <ErrorBoundary key={i} fallbackComponent={null}>
+                      {/* TODO @Brian */}
                     </ErrorBoundary>
                   ))}
                 </ListWrapper>

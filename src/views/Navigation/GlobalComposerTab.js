@@ -3,7 +3,7 @@ import React from 'react';
 import Icon from 'src/components/icons';
 import Tooltip from 'src/components/Tooltip';
 import { NavigationContext } from 'src/routes';
-import { AvatarGrid, AvatarLink, Label, IconWrapper, RedDot } from './style';
+import { AvatarGrid, AvatarLink, Label, IconWrapper } from './style';
 
 const GlobalComposerTab = () => {
   return (

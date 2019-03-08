@@ -5,7 +5,6 @@ import Icon from 'src/components/icons';
 import { storeItem } from 'src/helpers/localStorage';
 import { Button, OutlineButton } from 'src/components/buttons';
 import { Login } from 'src/views/login';
-import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import {
   Title,
   MiniTitle,

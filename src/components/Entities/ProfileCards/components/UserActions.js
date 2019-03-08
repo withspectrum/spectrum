@@ -7,9 +7,7 @@ import type { UserActionsRowType } from '../types';
 import {
   PrimaryButton,
   OutlineButton,
-  HoverWarnOutlineButton,
 } from 'src/views/Community/components/Button';
-import { openModal } from 'src/actions/modals';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { ActionsRowContainer } from '../style';
 

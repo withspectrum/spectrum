@@ -23,7 +23,6 @@ import Head from 'src/components/head';
 import ModalRoot from 'src/components/modals/modalRoot';
 import Gallery from 'src/components/gallery';
 import Toasts from 'src/components/toasts';
-import { Loading } from 'src/components/loading';
 import Composer from 'src/components/composer';
 import AuthViewHandler from 'src/views/authViewHandler';
 import signedOutFallback from 'src/helpers/signed-out-fallback';

@@ -2,13 +2,8 @@
 import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import { Link } from 'react-router-dom';
-import { tint, Truncate } from 'src/components/globals';
-import {
-  PRIMARY_COLUMN_WIDTH,
-  MEDIA_BREAK,
-  MAX_WIDTH,
-  SECONDARY_COLUMN_WIDTH,
-} from 'src/components/Layout';
+import { Truncate } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/Layout';
 import { CardStyles } from 'src/views/ViewHelpers';
 
 const listItemStyles = css`

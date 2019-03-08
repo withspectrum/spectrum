@@ -1,7 +1,6 @@
 // @flow
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
-import { FlexCol, FlexRow } from '../../components/globals';
 
 export const View = styled.main`
   grid-area: view;

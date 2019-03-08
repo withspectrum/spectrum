@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import addCommunityMemberWithTokenMutation from 'shared/graphql/mutations/communityMember/addCommunityMemberWithToken';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import CommunityLogin from 'src/views/communityLogin';
-import { Loading } from 'src/components/loading';
 import { CLIENT_URL } from 'src/api/constants';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
@@ -64,7 +63,7 @@ class PrivateCommunityJoin extends React.Component<Props, State> {
     this.setState({ isLoading: true });
 
     addCommunityMemberWithToken({ communitySlug, token })
-      .then(data => {
+      .then(() => {
         this.setState({ isLoading: false });
         dispatch(addToastWithTimeout('success', 'Welcome!'));
         return history.push(`/${communitySlug}`);

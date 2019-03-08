@@ -3,7 +3,6 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import FullscreenView from 'src/components/fullscreenView';
 import LoginButtonSet from 'src/components/loginButtonSet';
-import { Loading } from 'src/components/loading';
 import { CommunityAvatar } from 'src/components/avatar';
 import { CLIENT_URL } from 'src/api/constants';
 import {
@@ -20,7 +19,6 @@ import {
   getCommunityByMatch,
   type GetCommunityType,
 } from 'shared/graphql/queries/community/getCommunity';
-import ViewError from 'src/components/viewError';
 import queryString from 'query-string';
 import { track, events } from 'src/helpers/analytics';
 import { LoadingView, ErrorView } from 'src/views/ViewHelpers';

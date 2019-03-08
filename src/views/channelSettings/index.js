@@ -5,7 +5,6 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
-import { Loading } from 'src/components/loading';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { Upsell404Channel } from 'src/components/upsell';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
@@ -128,9 +127,8 @@ class ChannelSettings extends React.Component<Props> {
       match,
       location,
       isLoading,
-      hasError,
     } = this.props;
-    const { communitySlug, channelSlug } = match.params;
+    const { communitySlug } = match.params;
 
     // this is hacky, but will tell us if we're viewing analytics or the root settings view
     const pathname = location.pathname;

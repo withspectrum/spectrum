@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { getCommunitySettingsByMatch } from 'shared/graphql/queries/community/getCommunitySettings';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import { Loading } from '../../components/loading';
 import { Upsell404Community } from '../../components/upsell';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Head from '../../components/head';
@@ -45,7 +44,6 @@ class CommunitySettings extends React.Component<Props> {
       location,
       match,
       isLoading,
-      hasError,
       history,
     } = this.props;
 

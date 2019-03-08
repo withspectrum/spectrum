@@ -4,18 +4,12 @@ import compose from 'recompose/compose';
 import { type History, type Match } from 'react-router';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
-import { Link } from 'react-router-dom';
 import Head from 'src/components/head';
 import ThreadFeed from 'src/components/threadFeed';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
-import { UserProfile } from 'src/components/profile';
 import { NullState } from 'src/components/upsell';
 import { UserProfileCard } from 'src/components/Entities';
 import { MobileUserTitlebar } from 'src/components/mobileTitlebar';
-import {
-  PrimaryButton,
-  OutlineButton,
-} from 'src/views/Community/components/Button';
 import CommunityList from './components/communityList';
 import Search from './components/search';
 import { withCurrentUser } from 'src/components/withCurrentUser';
@@ -25,21 +19,10 @@ import {
 } from 'shared/graphql/queries/user/getUser';
 import getUserThreads from 'shared/graphql/queries/user/getUserThreadConnection';
 import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
-import { CoverPhoto } from 'src/components/profile/coverPhoto';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import type { Dispatch } from 'redux';
-import {
-  Grid,
-  Meta,
-  Content,
-  Extras,
-  ColumnHeading,
-  MetaMemberships,
-} from './style';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
-import { ErrorBoundary } from 'src/components/error';
 import { openModal } from 'src/actions/modals';
-import { isAdmin } from 'src/helpers/is-admin';
 import {
   ViewGrid,
   SecondaryPrimaryColumnGrid,

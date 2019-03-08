@@ -1,23 +1,9 @@
 // @flow
 import theme from 'shared/theme';
-// $FlowFixMe
 import styled, { keyframes } from 'styled-components';
 import { Card } from '../card';
 import { hexa, FlexCol, zIndex } from '../globals';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
-
-const containerFadeIn = keyframes`
-  0%{
-    opacity: 0;
-  }
-  99% {
-    opacity: 0;
-  }
-  100%{
-    opacity: 1
-  }
-`;
 
 export const ShimmerList = styled(Card)`
   padding: 16px;

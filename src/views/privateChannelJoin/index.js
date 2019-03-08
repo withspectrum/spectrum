@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import joinChannelWithToken from 'shared/graphql/mutations/channel/joinChannelWithToken';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import CommunityLogin from 'src/views/communityLogin';
-import { Loading } from 'src/components/loading';
 import { CLIENT_URL } from 'src/api/constants';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
@@ -59,7 +58,7 @@ class PrivateChannelJoin extends React.Component<Props, State> {
     this.setState({ isLoading: true });
 
     joinChannelWithToken({ channelSlug, token, communitySlug })
-      .then(data => {
+      .then(() => {
         this.setState({ isLoading: false });
         dispatch(addToastWithTimeout('success', 'Welcome!'));
         return history.push(`/${communitySlug}/${channelSlug}`);

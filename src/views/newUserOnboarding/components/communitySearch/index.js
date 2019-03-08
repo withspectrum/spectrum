@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, OutlineButton } from 'src/components/buttons';
+import { Button } from 'src/components/buttons';
 import { debounce } from 'src/helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
 import { Spinner } from 'src/components/globals';

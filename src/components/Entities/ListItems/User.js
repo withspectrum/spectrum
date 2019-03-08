@@ -42,19 +42,7 @@ type Props = {
   showHoverProfile?: boolean,
 };
 
-export const UserListItem = (props: Props) => {
-  const { history, dispatch } = props;
-
-  const initMessage = (e: any) => {
-    e && e.preventDefault() && e.stopPropagation();
-
-    const { name, username, id } = this.props;
-    const user = { name, username, id };
-
-    dispatch(initNewThreadWithUser(user));
-    history.push('/messages/new');
-  };
-
+const User = (props: Props) => {
   const {
     userObject,
     profilePhoto,
@@ -66,11 +54,17 @@ export const UserListItem = (props: Props) => {
     badges,
     children,
     messageButton,
-    multiAction,
     showHoverProfile = true,
+    history,
+    dispatch,
   } = props;
 
-  // TODO @brian: decide whether we want to render users without a username at all
+  const initMessage = (e: any) => {
+    e && e.preventDefault() && e.stopPropagation();
+    dispatch(initNewThreadWithUser(userObject));
+    history.push('/messages/new');
+  };
+
   if (!userObject.username) return null;
 
   return (
@@ -107,7 +101,7 @@ export const UserListItem = (props: Props) => {
         <Actions>
           {messageButton && (
             <Tooltip title="Send message" position="top">
-              <MessageIcon onClick={this.initMessage}>
+              <MessageIcon onClick={initMessage}>
                 <Icon glyph="message-simple-new" size={24} />
               </MessageIcon>
             </Tooltip>
@@ -120,7 +114,7 @@ export const UserListItem = (props: Props) => {
   );
 };
 
-export default compose(
-  connect(),
-  withRouter
-)(UserListItem);
+export const UserListItem = compose(
+  withRouter,
+  connect()
+)(User);

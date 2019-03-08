@@ -2,10 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import ViewError from 'src/components/viewError';
-import { Button, OutlineButton, ButtonRow } from 'src/components/buttons';
 import { CommunityInvitationForm } from 'src/components/emailInvitationForm';
 import SlackConnection from '../communitySettings/components/slack';
 import CommunityMembers from './components/communityMembers';
@@ -19,7 +16,7 @@ import {
   Column,
 } from 'src/components/settingsViews/style';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';
-import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
+import { ErrorView } from 'src/views/ViewHelpers';
 
 type Props = {
   currentUser: Object,

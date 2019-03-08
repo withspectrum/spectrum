@@ -1,5 +1,9 @@
 // @flow
 import React from 'react';
+import { connect } from 'react-redux';
+import compose from 'recompose/compose';
+import { withRouter } from 'react-router-dom';
+import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import Icon from 'src/components/icons';
 import {
   WhiteIconButton,
@@ -72,12 +76,21 @@ export const MobileChannelAction = (props: Props) => {
   );
 };
 
-export const MobileUserAction = (props: Props) => {
-  const { user } = props;
+const UserAction = (props: Props) => {
+  const { user, dispatch, history } = props;
+
+  const initMessage = () => {
+    dispatch(initNewThreadWithUser(user));
+    history.push('/messages/new');
+  };
 
   return (
-    <WhiteIconButton>
+    <WhiteIconButton onClick={initMessage}>
       <Icon glyph={'message-simple'} size={32} />
     </WhiteIconButton>
   );
 };
+export const MobileUserAction = compose(
+  withRouter,
+  connect()
+)(UserAction);

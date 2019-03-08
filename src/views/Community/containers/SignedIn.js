@@ -1,7 +1,6 @@
 // @flow
 import React, { useState, useEffect } from 'react';
 import compose from 'recompose/compose';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import Icon from 'src/components/icons';
@@ -15,7 +14,7 @@ import type { SignedInMemberType } from '../types';
 import { TeamMembersList } from '../components/TeamMembersList';
 import { CommunityFeeds } from '../components/CommunityFeeds';
 import { ChannelsList } from '../components/ChannelsList';
-import { Main, Sidebar, SidebarSection } from '../style';
+import { SidebarSection } from '../style';
 import {
   ViewGrid,
   SecondaryPrimaryColumnGrid,

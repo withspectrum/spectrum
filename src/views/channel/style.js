@@ -3,8 +3,6 @@ import theme from 'shared/theme';
 import styled from 'styled-components';
 import Card from '../../components/card';
 import { Transition, zIndex, Truncate } from '../../components/globals';
-import { FullProfile, FullDescription } from 'src/components/profile/style';
-import { ListContainer } from 'src/components/listItems/style';
 
 export const Grid = styled.main`
   display: grid;
@@ -32,11 +30,6 @@ export const Grid = styled.main`
     grid-row-gap: 16px;
     grid-template-areas: 'cover' 'meta' 'content';
   }
-`;
-
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
 `;
 
 export const ColumnHeading = styled.div`

@@ -10,9 +10,8 @@ import ViewError from 'src/components/viewError';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { UserListItem } from 'src/components/Entities';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
-import { MessageIconContainer, UserListItemContainer } from '../style';
+import { UserListItemContainer } from '../style';
 import { ListContainer, ListFooter } from 'src/components/listItems/style';
-import Icon from 'src/components/icons';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 

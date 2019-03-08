@@ -2,7 +2,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import { SERVER_URL } from 'src/api/constants';
 import { LoadingView } from 'src/views/ViewHelpers';

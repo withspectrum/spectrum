@@ -6,7 +6,6 @@ import { withApollo } from 'react-apollo';
 import queryString from 'query-string';
 import { Button, TextButton } from 'src/components/buttons';
 import Column from 'src/components/column';
-import { Loading } from 'src/components/loading';
 import SlackConnection from '../communitySettings/components/slack';
 import { CommunityInvitationForm } from 'src/components/emailInvitationForm';
 import CreateCommunityForm from './components/createCommunityForm';

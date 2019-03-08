@@ -19,10 +19,8 @@ import {
 } from 'src/components/settingsViews/style';
 import { Link } from 'react-router-dom';
 import { Button, OutlineButton } from 'src/components/buttons';
-import { TextArea, Error } from 'src/components/formElements';
 import enableCommunityWatercooler from 'shared/graphql/mutations/community/enableCommunityWatercooler';
 import disableCommunityWatercooler from 'shared/graphql/mutations/community/disableCommunityWatercooler';
-import getThreadLink from 'src/helpers/get-thread-link';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import type { Dispatch } from 'redux';
 import type { History } from 'react-router';
@@ -53,7 +51,7 @@ const Watercooler = (props: Props) => {
       .enableCommunityWatercooler({
         id: community.id,
       })
-      .then(({ data }) => {
+      .then(() => {
         setSaving(false);
         dispatch(addToastWithTimeout('success', 'Open chat enabled!'));
       });
@@ -65,7 +63,7 @@ const Watercooler = (props: Props) => {
       .disableCommunityWatercooler({
         id: community.id,
       })
-      .then(({ data }) => {
+      .then(() => {
         dispatch(addToastWithTimeout('neutral', 'Open chat disabled.'));
         setSaving(false);
       });

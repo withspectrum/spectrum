@@ -16,7 +16,7 @@ import {
 
 export const UserMeta = (props: UserMetaType) => {
   const { user } = props;
-  const { description, website, githubUsername, isOnline } = user;
+  const { description, website, isOnline } = user;
   const formattedDescription = description && renderTextWithLinks(description);
   const formattedWebsite = website && addProtocolToString(website);
 

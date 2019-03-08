@@ -36,7 +36,7 @@ class HoverProfile extends Component<ProfileProps> {
     const { community, innerRef, style } = this.props;
 
     const { communityPermissions } = community;
-    const { isMember, isOwner, isModerator } = communityPermissions;
+    const { isOwner, isModerator } = communityPermissions;
 
     return (
       <HoverWrapper popperStyle={style} innerRef={innerRef}>
@@ -68,6 +68,7 @@ class HoverProfile extends Component<ProfileProps> {
 
           <Actions>
             {!isModerator && !isOwner && (
+              // TODO @Brian
               <JoinCommunityWrapper
                 community={community}
                 render={({ isLoading }) => {

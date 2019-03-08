@@ -6,7 +6,7 @@ import Icon from 'src/components/icons';
 import ThreadsList from '../components/threadsList';
 import NewThread from './newThread';
 import ExistingThread from './existingThread';
-import { View, MessagesList, ComposeHeader } from '../style';
+import { ComposeHeader } from '../style';
 import { track, events } from 'src/helpers/analytics';
 import {
   ViewGrid,

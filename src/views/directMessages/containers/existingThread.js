@@ -13,7 +13,6 @@ import getDirectMessageThread, {
 } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import { MessagesContainer, ViewContent } from '../style';
 import { Loading } from 'src/components/loading';
-import ViewError from 'src/components/viewError';
 import { ErrorBoundary } from 'src/components/error';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';

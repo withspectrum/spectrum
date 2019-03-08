@@ -22,16 +22,13 @@ import { PrivateCommunityRequestSent } from './components/privateCommunityReques
 import { Column } from 'src/components/column';
 import Head from 'src/components/head';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import { LoadingThread, Loading } from 'src/components/loading';
-import { FlexCol } from 'src/components/globals';
+import { LoadingThread } from 'src/components/loading';
 import { sortByDate } from 'src/helpers/utils';
 import WebPushManager from 'src/helpers/web-push-manager';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import getNotifications from 'shared/graphql/queries/notification/getNotifications';
 import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
 import { subscribeToWebPush } from 'shared/graphql/subscriptions';
-import { UpsellNullNotifications } from 'src/components/upsell';
-import ViewError from 'src/components/viewError';
 import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
 import viewNetworkHandler, {

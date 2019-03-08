@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import { withRouter } from 'react-router';
 import theme from 'shared/theme';
 import BaseTitlebar from './base';
 import {

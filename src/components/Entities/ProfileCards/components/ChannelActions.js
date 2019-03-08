@@ -7,15 +7,14 @@ import {
   OutlineButton,
   HoverWarnOutlineButton,
 } from 'src/views/Community/components/Button';
-import { openModal } from 'src/actions/modals';
 import JoinChannel from 'src/components/joinChannelWrapper';
 import LeaveChannel from 'src/components/leaveChannelWrapper';
 import { ActionsRowContainer } from '../style';
 
 export const UnconnectedChannelActions = (props: ChannelActionsRowType) => {
-  const { channel, dispatch } = props;
+  const { channel } = props;
   const { community } = channel;
-  const { isMember, isOwner, isModerator } = community.communityPermissions;
+  const { isOwner, isModerator } = community.communityPermissions;
   const isTeamMember = isOwner || isModerator;
 
   const { channelPermissions } = channel;

@@ -22,8 +22,7 @@ type Props = {
 
 class JoinFirstCommunityPure extends React.Component<Props> {
   render() {
-    const { community, joinedCommunity } = this.props;
-
+    // TODO @brian
     return <Row style={{ alignItems: 'flex-start' }} />;
   }
 }

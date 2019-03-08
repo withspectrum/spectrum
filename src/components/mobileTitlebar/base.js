@@ -1,5 +1,5 @@
 // @flow
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import compose from 'recompose/compose';
 import { withRouter, type History } from 'react-router-dom';
 import { NavigationContext } from 'src/routes';

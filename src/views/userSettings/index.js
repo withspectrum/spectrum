@@ -6,7 +6,6 @@ import { Route } from 'react-router-dom';
 import getCurrentUserSettings, {
   type GetCurrentUserSettingsType,
 } from 'shared/graphql/queries/user/getCurrentUserSettings';
-import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
@@ -35,17 +34,10 @@ class UserSettings extends React.Component<Props> {
   render() {
     const {
       data: { user },
-      location,
       match,
       isLoading,
-      hasError,
       currentUser,
     } = this.props;
-
-    // this is hacky, but will tell us if we're viewing analytics or the root settings view
-    const pathname = location.pathname;
-    const lastIndex = pathname.lastIndexOf('/');
-    const activeTab = pathname.substr(lastIndex + 1);
 
     if (isLoading) {
       return <LoadingView />;

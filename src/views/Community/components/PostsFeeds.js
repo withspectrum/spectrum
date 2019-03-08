@@ -4,8 +4,6 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import ThreadFeed from 'src/components/threadFeed';
-import { SmallPrimaryButton } from './Button';
-import Icon from 'src/components/icons';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 
 const CommunityThreadFeed = compose(

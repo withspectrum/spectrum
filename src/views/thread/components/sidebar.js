@@ -20,7 +20,6 @@ import {
   SidebarSection,
   SidebarSectionTitle,
   SidebarSectionBody,
-  SidebarSectionActions,
   SidebarSectionAuth,
   ThreadSidebarView,
   SidebarCommunityCover,
@@ -56,7 +55,7 @@ type Props = {
 const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
 const renderDescriptionWithLinks = text => {
   return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
-    <a href={url} target="_blank" rel="noopener nofollower" key={url}>
+    <a href={url} target="_blank" rel="noopener noreferrer" key={url}>
       {text}
     </a>
   ));
