@@ -11,7 +11,7 @@ import {
   QuotedParagraph,
   ThreadAttachmentsContainer,
 } from './style';
-import ThreadAttachment from './ThreadAttachment';
+import ThreadAttachment from './threadAttachment';
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { draftOnlyContainsEmoji } from 'shared/only-contains-emoji';
