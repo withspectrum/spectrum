@@ -21,11 +21,11 @@ export const MessageGroupContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   position: relative;
-  margin-top: 20px;
+  margin-top: 8px;
 `;
 
 export const Timestamp = styled(HorizontalRule)`
-  margin: 24px 0 4px;
+  margin: 24px 0;
   text-align: center;
   user-select: none;
 
@@ -43,9 +43,9 @@ export const UnseenRobotext = styled(Timestamp)`
 
 export const Time = styled.span`
   text-align: center;
-  color: ${theme.text.default};
+  color: ${theme.text.alt};
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   margin: 0 24px;
 `;
 
