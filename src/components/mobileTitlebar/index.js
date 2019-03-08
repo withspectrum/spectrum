@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
+import theme from 'shared/theme';
 import BaseTitlebar from './base';
 import {
   MobileCommunityAction,
@@ -10,11 +10,10 @@ import {
 } from './actions';
 import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
 
-const Community = (props: Props) => {
-  const { community, history } = props;
+const MobileCommunityTitlebar = (props: Props) => {
+  const { community } = props;
   return (
     <BaseTitlebar
-      history={history}
       title={community.name}
       titlebarMenuAction={'menu'}
       titlebarIcon={
@@ -25,13 +24,11 @@ const Community = (props: Props) => {
   );
 };
 
-export const MobileCommunityTitlebar = compose(withRouter)(Community);
+const MobileChannelTitlebar = (props: Props) => {
+  const { channel } = props;
 
-const Channel = (props: Props) => {
-  const { channel, history } = props;
   return (
     <BaseTitlebar
-      history={history}
       title={`# ${channel.name}`}
       titlebarMenuAction={'view-back'}
       titlebarIcon={
@@ -46,13 +43,10 @@ const Channel = (props: Props) => {
   );
 };
 
-export const MobileChannelTitlebar = compose(withRouter)(Channel);
-
-const User = (props: Props) => {
-  const { user, history } = props;
+const MobileUserTitlebar = (props: Props) => {
+  const { user } = props;
   return (
     <BaseTitlebar
-      history={history}
       title={user.name}
       titlebarMenuAction={'view-back'}
       titlebarIcon={
@@ -68,4 +62,26 @@ const User = (props: Props) => {
   );
 };
 
-export const MobileUserTitlebar = compose(withRouter)(User);
+export const LoadingTitlebar = () => {
+  return (
+    <BaseTitlebar
+      style={{
+        borderBottom: `1px solid ${theme.bg.border}`,
+        padding: '28px',
+      }}
+    />
+  );
+};
+
+export const ErrorTitlebar = () => {
+  return (
+    <BaseTitlebar
+      style={{
+        borderBottom: `1px solid ${theme.bg.border}`,
+        padding: '12px',
+      }}
+      title="Error"
+      titlebarMenuAction={'view-back'}
+    />
+  );
+};

@@ -19,6 +19,10 @@ export const ViewGrid = styled.div.attrs({ id: 'main' })`
   grid-area: view;
   height: 100vh;
   max-height: 100vh;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    grid-template-rows: min-content 1fr;
+  }
 `;
 
 export const SingleColumnGrid = styled.div`

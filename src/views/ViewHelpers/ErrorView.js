@@ -5,6 +5,7 @@ import {
   PrimaryButton,
 } from 'src/views/Community/components/Button';
 import { Emoji, Heading, Description, ActionsRow, Card } from './style';
+import { ErrorTitlebar } from 'src/components/mobileTitlebar';
 import { ViewGrid, CenteredGrid } from 'src/components/Layout';
 
 type Props = {
@@ -22,6 +23,7 @@ export const ErrorView = (props: Props) => {
 
   return (
     <ViewGrid>
+      <ErrorTitlebar />
       <CenteredGrid>
         <Card>
           <Emoji role="img" aria-label="Oops">

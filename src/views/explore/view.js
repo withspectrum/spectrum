@@ -4,7 +4,6 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { CommunityProfile } from 'src/components/profile';
 import { collections } from './collections';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { withCurrentUser } from 'src/components/withCurrentUser';
@@ -151,16 +150,7 @@ class CategoryList extends React.Component<CategoryListProps> {
             <ListWrapper>
               {filteredCommunities.map((community, i) => (
                 // $FlowFixMe
-                <ErrorBoundary fallbackComponent={null} key={i}>
-                  <CommunityProfile
-                    profileSize={'upsell'}
-                    data={{ community }}
-                    currentUser={currentUser}
-                    onLeave={this.onLeave}
-                    onJoin={this.onJoin}
-                    showHoverProfile={false}
-                  />
-                </ErrorBoundary>
+                <ErrorBoundary fallbackComponent={null} key={i} />
               ))}
             </ListWrapper>
           </ListWithTitle>

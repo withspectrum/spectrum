@@ -11,19 +11,6 @@ import {
 } from 'src/components/Layout';
 import { CardStyles } from 'src/views/ViewHelpers';
 
-export const OneColumnGrid = styled.section`
-  display: grid;
-  grid-template-columns: ${PRIMARY_COLUMN_WIDTH}px;
-  grid-template-rows: 100%;
-  max-width: ${MAX_WIDTH}px;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    grid-template-columns: 1fr;
-    grid-template-rows: min-content 1fr;
-    grid-gap: 0;
-  }
-`;
-
 const listItemStyles = css`
   padding: 12px 12px 12px 16px;
   display: flex;
@@ -71,37 +58,6 @@ export const ListItemLabel = styled.div`
   align-items: center;
   display: inline-block;
   ${Truncate};
-`;
-
-export const Main = styled.section`
-  background: ${theme.bg.default};
-  border-left: 1px solid ${theme.bg.border};
-  border-right: 1px solid ${theme.bg.border};
-  border-bottom: 1px solid ${theme.bg.border};
-  border-radius: 0 0 4px 4px;
-  height: 100%;
-  min-width: 100%;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    border-left: 0;
-    border-right: 0;
-    border-bottom: 0;
-  }
-`;
-
-export const Sidebar = styled.section`
-  height: 100vh;
-  overflow: hidden;
-  overflow-y: scroll;
-  position: sticky;
-  top: 0;
-  padding-bottom: 64px;
-  padding-right: 16px;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    height: auto;
-    display: none;
-  }
 `;
 
 export const SidebarSection = styled.section`
@@ -204,18 +160,6 @@ export const NameWarn = styled.div`
   align-items: center;
   display: inline-block;
   ${Truncate};
-`;
-
-export const CenteredContainer = styled.div`
-  display: grid;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
-
-  @media (max-width: 768px) {
-    align-items: flex-start;
-  }
 `;
 
 export const WatercoolerWrapper = styled.div`

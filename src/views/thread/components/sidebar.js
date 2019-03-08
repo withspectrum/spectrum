@@ -8,7 +8,6 @@ import {
   LoadingProfileThreadDetail,
   LoadingListThreadDetail,
 } from 'src/components/loading';
-import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
 import { Link } from 'react-router-dom';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { connect } from 'react-redux';
@@ -51,7 +50,6 @@ type Props = {
   data: {
     threads: Array<RecommendedThread>,
   },
-  toggleCommunityMembership: Function,
   dispatch: Dispatch<Object>,
 };
 
@@ -150,40 +148,6 @@ class Sidebar extends React.Component<Props> {
                 <SidebarCommunityDescription>
                   {renderDescriptionWithLinks(thread.community.description)}
                 </SidebarCommunityDescription>
-
-                <SidebarSectionActions>
-                  {thread.community.communityPermissions.isMember ? (
-                    <Link to={`/${thread.community.slug}`}>
-                      <TextButton dataCy="thread-sidebar-view-community-button">
-                        View community
-                      </TextButton>
-                    </Link>
-                  ) : currentUser ? (
-                    <ToggleCommunityMembership
-                      community={thread.community}
-                      render={({ isLoading }) => (
-                        <Button
-                          gradientTheme={'success'}
-                          color={'success.default'}
-                          loading={isLoading}
-                          dataCy="thread-sidebar-join-community-button"
-                        >
-                          Join community
-                        </Button>
-                      )}
-                    />
-                  ) : (
-                    <Link to={loginUrl}>
-                      <Button
-                        gradientTheme={'success'}
-                        color={'success.default'}
-                        dataCy="thread-sidebar-join-login-button"
-                      >
-                        Join community
-                      </Button>
-                    </Link>
-                  )}
-                </SidebarSectionActions>
               </SidebarSection>
             </React.Fragment>
           ) : (

@@ -1,6 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
+import { MEDIA_BREAK } from 'src/components/Layout';
 
 export const Emoji = styled.span`
   font-size: 40px;
@@ -10,6 +11,8 @@ export const Emoji = styled.span`
 export const Heading = styled.h3`
   font-size: 24px;
   font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 8px;
   color: ${theme.text.default};
 `;
 export const Description = styled.p`
@@ -43,4 +46,10 @@ export const CardStyles = css`
 export const Card = styled.div`
   ${CardStyles};
   padding: 16px;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid ${theme.bg.border};
+  }
 `;

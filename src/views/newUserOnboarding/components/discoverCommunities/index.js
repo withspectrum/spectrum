@@ -6,7 +6,6 @@ import { getCommunitiesByCuratedContentType } from 'shared/graphql/queries/commu
 import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCommunities';
 import { displayLoadingState } from '../../../../components/loading';
 import { Row } from './style';
-import { CommunityProfile } from '../../../../components/profile';
 import { track, events } from 'src/helpers/analytics';
 
 type Props = {
@@ -39,15 +38,7 @@ class TopCommunitiesPure extends React.Component<Props> {
         <Row hasJoined={hasJoined > 0}>
           {filteredCommunities.map(community => {
             if (!community) return null;
-            return (
-              <CommunityProfile
-                profileSize={'upsell'}
-                data={{ community }}
-                key={community.id}
-                joinedCommunity={joinedCommunity}
-                showHoverProfile={false}
-              />
-            );
+            return null;
           })}
         </Row>
       );

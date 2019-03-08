@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
 import { storeItem } from 'src/helpers/localStorage';
-import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
 import { Button, OutlineButton } from 'src/components/buttons';
 import { Login } from 'src/views/login';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
@@ -218,29 +217,6 @@ export const Upsell404Community = () => {
         <Button large>Create a community</Button>
       </Link>
     </Actions>
-  );
-};
-
-export const UpsellJoinCommunity = ({
-  community,
-}: {
-  community: GetCommunityType,
-}) => {
-  return (
-    <NullCard
-      bg="chat"
-      heading="Want to be a part of the conversation?"
-      copy={`Join ${community.name} to get involved!`}
-    >
-      <ToggleCommunityMembership
-        community={community}
-        render={({ isLoading }) => (
-          <Button loading={isLoading} icon="plus">
-            Join {community.name}
-          </Button>
-        )}
-      />
-    </NullCard>
   );
 };
 

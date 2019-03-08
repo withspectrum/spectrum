@@ -15,19 +15,20 @@ import {
   CreatedContext,
   ContentWash,
 } from '../style';
-import { CommunityProfile } from '../../../components/profile';
 
 const CommunityInviteComponent = ({
   data,
 }: {
   data: { community: GetCommunityType },
 }) => {
-  return <CommunityProfile profileSize={'miniWithAction'} data={data} />;
+  // TODO @brian
+  return null;
 };
 
-const CommunityInvite = compose(getCommunityById, displayLoadingCard)(
-  CommunityInviteComponent
-);
+const CommunityInvite = compose(
+  getCommunityById,
+  displayLoadingCard
+)(CommunityInviteComponent);
 
 export const CommunityInviteNotification = ({
   notification,
@@ -65,9 +66,7 @@ type Props = {
   markSingleNotificationAsSeenInState: Function,
 };
 
-class MiniCommunityInviteNotificationWithMutation extends React.Component<
-  Props
-> {
+class MiniCommunityInviteNotificationWithMutation extends React.Component<Props> {
   markAsSeen = () => {
     const {
       markSingleNotificationSeen,

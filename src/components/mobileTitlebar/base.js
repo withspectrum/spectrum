@@ -1,12 +1,13 @@
 // @flow
 import React, { useState, useEffect } from 'react';
-import type { History } from 'react-router-dom';
+import compose from 'recompose/compose';
+import { withRouter, type History } from 'react-router-dom';
 import { NavigationContext } from 'src/routes';
 import Icon from 'src/components/icons';
 import { Container, Content, Actions, Title } from './style';
 
 type Props = {
-  title: string,
+  title?: string,
   history: History,
   titlebarIcon?: any,
   titlebarAction?: any,
@@ -20,6 +21,7 @@ const MobileTitlebar = (props: Props) => {
     titlebarAction,
     titlebarMenuAction,
     history,
+    ...rest
   } = props;
 
   const handleMenuClick = setNavOpen => () => {
@@ -39,13 +41,15 @@ const MobileTitlebar = (props: Props) => {
   return (
     <NavigationContext.Consumer>
       {({ setNavigationIsOpen }) => (
-        <Container hasAction={titlebarAction}>
+        <Container {...rest} hasAction={titlebarAction}>
           <Content>
-            <Icon
-              onClick={handleMenuClick(setNavigationIsOpen)}
-              glyph={titlebarMenuAction}
-              size={32}
-            />
+            {titlebarMenuAction && (
+              <Icon
+                onClick={handleMenuClick(setNavigationIsOpen)}
+                glyph={titlebarMenuAction}
+                size={32}
+              />
+            )}
 
             <div style={{ width: '12px' }} />
 
@@ -56,7 +60,7 @@ const MobileTitlebar = (props: Props) => {
               </React.Fragment>
             )}
 
-            <Title>{title}</Title>
+            {title && <Title>{title}</Title>}
           </Content>
 
           {titlebarAction && <Actions>{titlebarAction}</Actions>}
@@ -66,4 +70,4 @@ const MobileTitlebar = (props: Props) => {
   );
 };
 
-export default MobileTitlebar;
+export default compose(withRouter)(MobileTitlebar);

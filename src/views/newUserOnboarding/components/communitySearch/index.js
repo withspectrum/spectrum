@@ -6,7 +6,6 @@ import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, OutlineButton } from 'src/components/buttons';
-import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
 import { debounce } from 'src/helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
 import { Spinner } from 'src/components/globals';
@@ -38,7 +37,6 @@ type State = {
 };
 
 type Props = {
-  toggleCommunityMembership: Function,
   dispatch: Dispatch<Object>,
   client: Object,
   joinedCommunity: Function,
@@ -311,42 +309,6 @@ class Search extends React.Component<Props, State> {
                           {community.description}
                         </SearchResultDescription>
                       </SearchResultMetaWrapper>
-
-                      <div>
-                        {community.communityPermissions.isMember ? (
-                          <ToggleCommunityMembership
-                            onJoin={this.onJoinComplete}
-                            onLeave={this.onJoinComplete}
-                            community={community}
-                            render={({ isLoading }) => (
-                              <OutlineButton
-                                gradientTheme="none"
-                                color={'success.alt'}
-                                hoverColor={'success.default'}
-                                loading={isLoading}
-                              >
-                                Joined!
-                              </OutlineButton>
-                            )}
-                          />
-                        ) : (
-                          <ToggleCommunityMembership
-                            onJoin={this.onJoinComplete}
-                            onLeave={this.onJoinComplete}
-                            community={community}
-                            render={({ isLoading }) => (
-                              <Button
-                                loading={isLoading}
-                                gradientTheme={'success'}
-                                style={{ fontSize: '16px' }}
-                                icon={'plus'}
-                              >
-                                Join
-                              </Button>
-                            )}
-                          />
-                        )}
-                      </div>
                     </SearchResult>
                   );
                 })}
