@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import theme from 'shared/theme';
 import MembersList from './membersList1';
 import type { CommunityFeedsType } from '../types';
-import { TeamMembersList } from './teamMembersList';
+import { TeamMembersList } from './teamMembersList1';
 import { MobileCommunityInfoActions } from './mobileCommunityInfoActions1';
 import { ChannelsList } from './channelsList';
 import { CommunityMeta } from 'src/components/entities/profileCards/components/communityMeta';

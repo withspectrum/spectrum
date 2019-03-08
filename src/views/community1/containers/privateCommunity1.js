@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { OutlineButton, PrimaryButton } from '../components/button';
-import RequestJoinCommunity from '../components/requestJoinCommunity';
+import RequestJoinCommunity from '../components/requestJoinCommunity1';
 import {
   Emoji,
   Heading,
