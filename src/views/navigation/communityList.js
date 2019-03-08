@@ -8,7 +8,7 @@ import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/g
 import { storeItem } from 'src/helpers/localStorage';
 import { LAST_ACTIVE_COMMUNITY_KEY } from 'src/views/homeViewRedirect';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
-import { getAccessibilityActiveState } from './Accessibility';
+import { getAccessibilityActiveState } from './accessibility';
 import { AvatarGrid, AvatarLink, Avatar, Shortcut, Label } from './style';
 
 const CommunityList = (props: Props) => {

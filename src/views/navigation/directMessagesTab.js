@@ -10,7 +10,7 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { updateNotificationsCount } from 'src/actions/notifications';
 import getUnreadDMQuery from 'shared/graphql/queries/notification/getDirectMessageNotifications';
 import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
-import { getAccessibilityActiveState } from './Accessibility';
+import { getAccessibilityActiveState } from './accessibility';
 import { NavigationContext } from 'src/routes';
 import { AvatarGrid, AvatarLink, Label, IconWrapper, RedDot } from './style';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';

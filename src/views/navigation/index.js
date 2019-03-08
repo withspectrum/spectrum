@@ -16,12 +16,12 @@ import {
   Divider,
 } from './style';
 import Icon from 'src/components/icons';
-import NavHead from './NavHead';
-import DirectMessagesTab from './DirectMessagesTab';
-import NotificationsTab from './NotificationsTab';
-import GlobalComposerTab from './GlobalComposerTab';
-import { Skip, getAccessibilityActiveState } from './Accessibility';
-import CommunityList from './CommunityList';
+import NavHead from './navHead';
+import DirectMessagesTab from './directMessagesTab';
+import NotificationsTab from './notificationsTab';
+import GlobalComposerTab from './globalComposerTab';
+import { Skip, getAccessibilityActiveState } from './accessibility';
+import CommunityList from './communityList';
 import { NavigationContext } from 'src/routes';
 
 const Navigation = (props: Props) => {

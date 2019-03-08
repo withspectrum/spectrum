@@ -14,7 +14,7 @@ import markNotificationsSeenMutation from 'shared/graphql/mutations/notification
 import { markSingleNotificationSeenMutation } from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
-import { getAccessibilityActiveState } from './Accessibility';
+import { getAccessibilityActiveState } from './accessibility';
 import { NavigationContext } from 'src/routes';
 import { AvatarGrid, AvatarLink, Label, IconWrapper, RedDot } from './style';
 
