@@ -23,5 +23,6 @@ module.exports = {
     'no-extra-boolean-cast': 1,
     'react/prop-types': 0,
     'react/no-deprecated': 0,
+    'react/display-name': 0,
   },
 };
