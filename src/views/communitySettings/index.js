@@ -17,7 +17,7 @@ import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { View } from './style';
 import type { ContextRouter } from 'react-router';
 import { track, events, transformations } from 'src/helpers/analytics';
-import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
+import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 
 type Props = {
   data: {

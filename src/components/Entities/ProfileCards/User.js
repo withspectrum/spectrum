@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import { UserAvatar } from 'src/components/avatar';
-import { UserActions } from './components/UserActions';
-import { UserMeta } from './components/UserMeta';
+import { UserActions } from './components/userActions';
+import { UserMeta } from './components/userMeta';
 import {
   SidebarSection,
   ProfileContainer,

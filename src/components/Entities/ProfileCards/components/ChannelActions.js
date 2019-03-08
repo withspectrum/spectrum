@@ -6,7 +6,7 @@ import {
   PrimaryButton,
   OutlineButton,
   HoverWarnOutlineButton,
-} from 'src/views/Community/components/Button';
+} from 'src/views/community/components/button';
 import JoinChannel from 'src/components/joinChannelWrapper';
 import LeaveChannel from 'src/components/leaveChannelWrapper';
 import { ActionsRowContainer } from '../style';

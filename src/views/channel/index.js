@@ -22,13 +22,13 @@ import { CLIENT_URL } from 'src/api/constants';
 import CommunityLogin from 'src/views/communityLogin';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
-import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
-import { ChannelProfileCard } from 'src/components/Entities';
+import { ErrorView, LoadingView } from 'src/views/viewHelpers';
+import { ChannelProfileCard } from 'src/components/entities';
 import { MobileChannelTitlebar } from 'src/components/mobileTitlebar';
 import {
   PrimaryButton,
   OutlineButton,
-} from 'src/views/Community/components/Button';
+} from 'src/views/community/components/button';
 import ToggleChannelMembership from 'src/components/toggleChannelMembership';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
@@ -39,7 +39,7 @@ import {
   SecondaryPrimaryColumnGrid,
   PrimaryColumn,
   SecondaryColumn,
-} from 'src/components/Layout';
+} from 'src/components/layout';
 
 const ThreadFeedWithData = compose(
   connect(),

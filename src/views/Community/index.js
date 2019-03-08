@@ -9,9 +9,9 @@ import CommunityLogin from 'src/views/communityLogin';
 import Login from 'src/views/login';
 import { CLIENT_URL } from 'src/api/constants';
 import type { Props } from './types';
-import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
-import { SignedIn } from './containers/SignedIn';
-import { PrivateCommunity } from './containers/PrivateCommunity';
+import { ErrorView, LoadingView } from 'src/views/viewHelpers';
+import { SignedIn } from './containers/signedIn';
+import { PrivateCommunity } from './containers/privateCommunity';
 
 const CommunityView = (props: Props) => {
   const { isLoading, queryVarIsChanging, hasError, currentUser, match } = props;

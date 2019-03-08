@@ -7,7 +7,7 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { Loading } from 'src/components/loading';
 import ViewError from 'src/components/viewError';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
-import { UserListItem } from 'src/components/Entities';
+import { UserListItem } from 'src/components/entities';
 import getCommunityTopMembers from 'shared/graphql/queries/community/getCommunityTopMembers';
 import type { GetCommunityTopMembersType } from 'shared/graphql/queries/community/getCommunityTopMembers';
 import { UserListItemContainer } from '../style';

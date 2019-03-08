@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { MEDIA_BREAK } from 'src/components/Layout';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const StyledAppViewWrapper = styled.div`
   display: grid;

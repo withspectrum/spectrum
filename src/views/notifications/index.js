@@ -40,8 +40,8 @@ import { ErrorBoundary } from 'src/components/error';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
-import { ViewGrid, SingleColumnGrid } from 'src/components/Layout';
-import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
+import { ViewGrid, SingleColumnGrid } from 'src/components/layout';
+import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 
 type Props = {
   markAllNotificationsSeen?: Function,

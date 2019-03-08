@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Loadable from 'react-loadable';
-import { LoadingView } from 'src/views/ViewHelpers';
+import { LoadingView } from 'src/views/viewHelpers';
 
 /* prettier-ignore */
 const DirectMessages = Loadable({

@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import { CommunityAvatar } from 'src/components/avatar';
-import { CommunityActions } from './components/CommunityActions';
-import { CommunityMeta } from './components/CommunityMeta';
+import { CommunityActions } from './components/communityActions';
+import { CommunityMeta } from './components/communityMeta';
 import {
   SidebarSection,
   ProfileContainer,

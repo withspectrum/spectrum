@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Tooltip from 'src/components/Tooltip';
+import Tooltip from 'src/components/tooltip';
 import { StyledLinkFab, StyledFab } from './style';
 
 const Fab = (props: Props) => {

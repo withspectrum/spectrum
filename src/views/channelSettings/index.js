@@ -18,7 +18,7 @@ import Header from 'src/components/settingsViews/header';
 import Overview from './components/overview';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
-import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
+import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 
 type Props = {
   data: {

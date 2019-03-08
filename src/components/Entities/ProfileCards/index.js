@@ -1,6 +1,6 @@
 // @flow
-import { ChannelProfileCard } from './Channel';
-import { UserProfileCard } from './User';
-import { CommunityProfileCard } from './Community';
+import { ChannelProfileCard } from './channel';
+import { UserProfileCard } from './user';
+import { CommunityProfileCard } from './community';
 
 export { ChannelProfileCard, CommunityProfileCard, UserProfileCard };

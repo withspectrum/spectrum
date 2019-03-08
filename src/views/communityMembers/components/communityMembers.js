@@ -27,7 +27,7 @@ import {
 } from '../style';
 import { ListContainer } from 'src/components/listItems/style';
 import ViewError from 'src/components/viewError';
-import { UserListItem } from 'src/components/Entities';
+import { UserListItem } from 'src/components/entities';
 import { Notice } from 'src/components/listItems/style';
 import type { Dispatch } from 'redux';
 

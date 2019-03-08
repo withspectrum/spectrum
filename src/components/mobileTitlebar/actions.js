@@ -4,7 +4,7 @@ import Icon from 'src/components/icons';
 import {
   WhiteIconButton,
   SmallPrimaryButton,
-} from 'src/views/Community/components/Button';
+} from 'src/views/community/components/button';
 import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import getComposerLink from 'src/helpers/get-composer-link';
 import JoinChannel from 'src/components/joinCommunityWrapper';

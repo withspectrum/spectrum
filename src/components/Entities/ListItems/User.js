@@ -8,7 +8,7 @@ import { UserAvatar } from 'src/components/avatar';
 import Reputation from 'src/components/reputation';
 import Badge from 'src/components/badges';
 import Icon from 'src/components/icons';
-import Tooltip from 'src/components/Tooltip';
+import Tooltip from 'src/components/tooltip';
 import type { Dispatch } from 'redux';
 import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import {

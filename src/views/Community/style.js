@@ -3,8 +3,8 @@ import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import { Link } from 'react-router-dom';
 import { Truncate } from 'src/components/globals';
-import { MEDIA_BREAK } from 'src/components/Layout';
-import { CardStyles } from 'src/views/ViewHelpers';
+import { MEDIA_BREAK } from 'src/components/layout';
+import { CardStyles } from 'src/views/viewHelpers';
 
 const listItemStyles = css`
   padding: 12px 12px 12px 16px;

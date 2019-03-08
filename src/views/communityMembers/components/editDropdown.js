@@ -190,6 +190,7 @@ class EditDropdown extends React.Component<Props, State> {
   close = () => this.setState({ isOpen: false });
 
   render() {
+    const { user } = this.props;
     const { isOpen } = this.state;
     const configuration = this.getRolesConfiguration();
 

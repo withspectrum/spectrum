@@ -8,19 +8,19 @@ import getComposerLink from 'src/helpers/get-composer-link';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
 import Fab from 'src/components/fab';
-import { CommunityProfileCard } from 'src/components/Entities';
+import { CommunityProfileCard } from 'src/components/entities';
 import { MobileCommunityTitlebar } from 'src/components/mobileTitlebar';
 import type { SignedInMemberType } from '../types';
-import { TeamMembersList } from '../components/TeamMembersList';
-import { CommunityFeeds } from '../components/CommunityFeeds';
-import { ChannelsList } from '../components/ChannelsList';
+import { TeamMembersList } from '../components/teamMembersList';
+import { CommunityFeeds } from '../components/communityFeeds';
+import { ChannelsList } from '../components/channelsList';
 import { SidebarSection } from '../style';
 import {
   ViewGrid,
   SecondaryPrimaryColumnGrid,
   PrimaryColumn,
   SecondaryColumn,
-} from 'src/components/Layout';
+} from 'src/components/layout';
 
 const Component = (props: SignedInMemberType) => {
   const { community } = props;

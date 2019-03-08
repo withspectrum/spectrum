@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import { SERVER_URL } from 'src/api/constants';
-import { LoadingView } from 'src/views/ViewHelpers';
+import { LoadingView } from 'src/views/viewHelpers';
 import { storeItem, getItemFromStorage } from 'src/helpers/localStorage';
 
 export const LAST_ACTIVE_COMMUNITY_KEY = 'last-active-inbox-community';

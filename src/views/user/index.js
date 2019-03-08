@@ -7,7 +7,7 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import Head from 'src/components/head';
 import ThreadFeed from 'src/components/threadFeed';
 import { NullState } from 'src/components/upsell';
-import { UserProfileCard } from 'src/components/Entities';
+import { UserProfileCard } from 'src/components/entities';
 import { MobileUserTitlebar } from 'src/components/mobileTitlebar';
 import CommunityList from './components/communityList';
 import Search from './components/search';
@@ -17,7 +17,7 @@ import {
   type GetUserType,
 } from 'shared/graphql/queries/user/getUser';
 import getUserThreads from 'shared/graphql/queries/user/getUserThreadConnection';
-import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
+import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import type { Dispatch } from 'redux';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
@@ -27,12 +27,12 @@ import {
   SecondaryPrimaryColumnGrid,
   PrimaryColumn,
   SecondaryColumn,
-} from 'src/components/Layout';
+} from 'src/components/layout';
 import {
   SidebarSection,
   SidebarSectionHeader,
   SidebarSectionHeading,
-} from 'src/views/Community/style';
+} from 'src/views/community/style';
 
 const ThreadFeedWithData = compose(
   connect(),

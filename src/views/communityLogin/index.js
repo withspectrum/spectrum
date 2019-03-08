@@ -21,7 +21,7 @@ import {
 } from 'shared/graphql/queries/community/getCommunity';
 import queryString from 'query-string';
 import { track, events } from 'src/helpers/analytics';
-import { LoadingView, ErrorView } from 'src/views/ViewHelpers';
+import { LoadingView, ErrorView } from 'src/views/viewHelpers';
 
 type Props = {
   data: {

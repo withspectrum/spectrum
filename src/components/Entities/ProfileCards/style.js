@@ -1,7 +1,7 @@
 // @flow
 import styled from 'styled-components';
 import theme from 'shared/theme';
-import { MEDIA_BREAK, SECONDARY_COLUMN_WIDTH } from 'src/components/Layout';
+import { MEDIA_BREAK, SECONDARY_COLUMN_WIDTH } from 'src/components/layout';
 
 export const SidebarSection = styled.section`
   background: ${theme.bg.default};

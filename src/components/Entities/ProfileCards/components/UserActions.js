@@ -5,7 +5,7 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   PrimaryButton,
   OutlineButton,
-} from 'src/views/Community/components/Button';
+} from 'src/views/community/components/button';
 import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import { ActionsRowContainer } from '../style';
 

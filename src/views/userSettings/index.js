@@ -15,7 +15,7 @@ import Overview from './components/overview';
 import Header from 'src/components/settingsViews/header';
 import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
-import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
+import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 
 type Props = {
   data: {

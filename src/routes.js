@@ -29,7 +29,7 @@ import signedOutFallback from 'src/helpers/signed-out-fallback';
 import PrivateChannelJoin from 'src/views/privateChannelJoin';
 import PrivateCommunityJoin from 'src/views/privateCommunityJoin';
 import ThreadSlider from 'src/views/threadSlider';
-import Navigation from 'src/views/Navigation';
+import Navigation from 'src/views/navigation';
 import Status from 'src/views/status';
 import Login from 'src/views/login';
 import DirectMessages from 'src/views/directMessages';
@@ -41,7 +41,7 @@ import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import RedirectOldThreadRoute from './views/thread/redirect-old-route';
 import NewUserOnboarding from './views/newUserOnboarding';
 import QueryParamToastDispatcher from './views/queryParamToastDispatcher';
-import { LoadingView } from 'src/views/ViewHelpers';
+import { LoadingView } from 'src/views/viewHelpers';
 
 const Explore = Loadable({
   loader: () => import('./views/explore' /* webpackChunkName: "Explore" */),
@@ -56,7 +56,7 @@ const UserView = Loadable({
 
 /* prettier-ignore */
 const CommunityView = Loadable({
-  loader: () => import('./views/Community'/* webpackChunkName: "CommunityView" */),
+  loader: () => import('./views/community'/* webpackChunkName: "CommunityView" */),
   loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 

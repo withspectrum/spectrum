@@ -1,5 +1,5 @@
 // @flow
-import { UserListItem, CommunityListItem, ChannelListItem } from './ListItems';
+import { UserListItem, CommunityListItem, ChannelListItem } from './listItems';
 import {
   ChannelProfileCard,
   MobileChannelProfileCard,
@@ -7,7 +7,7 @@ import {
   MobileCommunityProfileCard,
   UserProfileCard,
   MobileUserProfileCard,
-} from './ProfileCards';
+} from './profileCards';
 
 export {
   UserListItem,

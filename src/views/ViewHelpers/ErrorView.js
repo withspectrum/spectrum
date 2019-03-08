@@ -3,10 +3,10 @@ import React from 'react';
 import {
   OutlineButton,
   PrimaryButton,
-} from 'src/views/Community/components/Button';
+} from 'src/views/community/components/button';
 import { Emoji, Heading, Description, ActionsRow, Card } from './style';
 import { ErrorTitlebar } from 'src/components/mobileTitlebar';
-import { ViewGrid, CenteredGrid } from 'src/components/Layout';
+import { ViewGrid, CenteredGrid } from 'src/components/layout';
 
 type Props = {
   emoji?: string,

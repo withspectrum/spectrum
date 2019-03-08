@@ -2,7 +2,7 @@
 import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import { Link } from 'react-router-dom';
-import { MEDIA_BREAK, NAVBAR_WIDTH } from 'src/components/Layout';
+import { MEDIA_BREAK, NAVBAR_WIDTH } from 'src/components/layout';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 export const Overlay = styled.div`

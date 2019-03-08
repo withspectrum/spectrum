@@ -16,7 +16,7 @@ import {
   Column,
 } from 'src/components/settingsViews/style';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';
-import { ErrorView } from 'src/views/ViewHelpers';
+import { ErrorView } from 'src/views/viewHelpers';
 
 type Props = {
   currentUser: Object,

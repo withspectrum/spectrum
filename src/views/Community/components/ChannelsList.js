@@ -10,8 +10,8 @@ import getCommunityChannels from 'shared/graphql/queries/community/getCommunityC
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import Tooltip from 'src/components/Tooltip';
-import { ChannelListItem } from 'src/components/Entities';
+import Tooltip from 'src/components/tooltip';
+import { ChannelListItem } from 'src/components/entities';
 import { SidebarSectionHeader, SidebarSectionHeading, List } from '../style';
 
 type Props = {

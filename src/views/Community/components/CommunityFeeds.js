@@ -2,14 +2,14 @@
 // $FlowIssue
 import React, { useEffect } from 'react';
 import theme from 'shared/theme';
-import MembersList from './MembersList';
+import MembersList from './membersList';
 import type { CommunityFeedsType } from '../types';
-import { TeamMembersList } from './TeamMembersList';
-import { MobileCommunityInfoActions } from './MobileCommunityInfoActions';
-import { ChannelsList } from './ChannelsList';
-import { CommunityMeta } from 'src/components/Entities/ProfileCards/components/CommunityMeta';
-import { WatercoolerChat } from './WatercoolerChat';
-import { PostsFeeds } from './PostsFeeds';
+import { TeamMembersList } from './teamMembersList';
+import { MobileCommunityInfoActions } from './mobileCommunityInfoActions';
+import { ChannelsList } from './channelsList';
+import { CommunityMeta } from 'src/components/entities/profileCards/components/communityMeta';
+import { WatercoolerChat } from './watercoolerChat';
+import { PostsFeeds } from './postsFeeds';
 import { ARROW_LEFT, ARROW_RIGHT } from 'src/helpers/keycodes';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { FeedsContainer, SidebarSection } from '../style';

@@ -1,36 +1,22 @@
 // @flow
 import React from 'react';
 import Loadable from 'react-loadable';
-import { ErrorView, LoadingView } from 'src/views/ViewHelpers';
+import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 
 /* prettier-ignore */
 const loader = () => import('./container'/* webpackChunkName: "Thread" */);
 
-const getLoading = (threadViewContext: 'fullscreen' | 'inbox' | 'slider') => ({
-  error,
-  pastDelay,
-}) => {
-  if (error) {
-    console.error(error);
-    return <ErrorView />;
-  } else if (pastDelay) {
-    return <LoadingView />;
-  }
-
-  return null;
-};
-
 export const InboxThreadView = Loadable({
   loader,
-  loading: getLoading('inbox'),
+  loading: <LoadingView />,
 });
 
 export const SliderThreadView = Loadable({
   loader,
-  loading: getLoading('slider'),
+  loading: <LoadingView />,
 });
 
 export const FullscreenThreadView = Loadable({
   loader,
-  loading: getLoading('fullscreen'),
+  loading: <LoadingView />,
 });

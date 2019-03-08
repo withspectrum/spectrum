@@ -19,7 +19,7 @@ import getCurrentUserSettings, {
   type GetCurrentUserSettingsType,
 } from 'shared/graphql/queries/user/getCurrentUserSettings';
 import UserEmailConfirmation from 'src/components/userEmailConfirmation';
-import { LoadingView } from 'src/views/ViewHelpers';
+import { LoadingView } from 'src/views/viewHelpers';
 import {
   Actions,
   Container,

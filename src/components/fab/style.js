@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import { Link } from 'react-router-dom';
 import { tint } from 'src/components/globals';
-import { MEDIA_BREAK } from 'src/components/Layout';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 const styles = css`
   position: fixed;

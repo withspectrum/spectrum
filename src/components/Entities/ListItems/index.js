@@ -1,6 +1,6 @@
 // @flow
-import { ChannelListItem } from './Channel';
-import { UserListItem } from './User';
-import { CommunityListItem } from './Community';
+import { ChannelListItem } from './channel';
+import { UserListItem } from './user';
+import { CommunityListItem } from './community';
 
 export { ChannelListItem, UserListItem, CommunityListItem };

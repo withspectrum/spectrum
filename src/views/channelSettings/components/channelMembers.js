@@ -8,7 +8,7 @@ import type { GetChannelMemberConnectionType } from 'shared/graphql/queries/chan
 import { FetchMoreButton } from 'src/components/threadFeed/style';
 import ViewError from 'src/components/viewError';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import { UserListItem } from 'src/components/Entities';
+import { UserListItem } from 'src/components/entities';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import { UserListItemContainer } from '../style';
 import { ListContainer, ListFooter } from 'src/components/listItems/style';

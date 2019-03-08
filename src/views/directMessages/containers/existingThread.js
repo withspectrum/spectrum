@@ -17,7 +17,7 @@ import { ErrorBoundary } from 'src/components/error';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import { LoadingView, ErrorView } from 'src/views/ViewHelpers';
+import { LoadingView, ErrorView } from 'src/views/viewHelpers';
 
 type Props = {
   data: {

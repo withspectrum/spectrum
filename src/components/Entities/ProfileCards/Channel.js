@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
-import { ChannelActions } from './components/ChannelActions';
-import { ChannelMeta } from './components/ChannelMeta';
-import { ChannelCommunityMeta } from './components/ChannelCommunityMeta';
+import { ChannelActions } from './components/channelActions';
+import { ChannelMeta } from './components/channelMeta';
+import { ChannelCommunityMeta } from './components/channelCommunityMeta';
 import { SidebarSection, ProfileContainer } from './style';
 
 export const ChannelProfileCard = (props: Props) => {

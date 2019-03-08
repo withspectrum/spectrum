@@ -3,7 +3,7 @@ import * as React from 'react';
 import { withApollo } from 'react-apollo';
 import { Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Tooltip from 'src/components/Tooltip';
+import Tooltip from 'src/components/tooltip';
 import compose from 'recompose/compose';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import Icon from 'src/components/icons';

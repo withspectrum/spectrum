@@ -13,7 +13,7 @@ import {
   SecondaryPrimaryColumnGrid,
   PrimaryColumn,
   SecondaryColumn,
-} from 'src/components/Layout';
+} from 'src/components/layout';
 
 type Props = {
   match: Match,

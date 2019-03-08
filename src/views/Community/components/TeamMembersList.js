@@ -7,11 +7,11 @@ import { withRouter } from 'react-router';
 import getCommunityMembersQuery from 'shared/graphql/queries/community/getCommunityMembers';
 import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import { UserListItem } from 'src/components/Entities';
+import { UserListItem } from 'src/components/entities';
 import Icon from 'src/components/icons';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import type { TeamMemberListType } from '../types';
-import Tooltip from 'src/components/Tooltip';
+import Tooltip from 'src/components/tooltip';
 import { List, SidebarSectionHeader, SidebarSectionHeading } from '../style';
 
 class Component extends React.Component<TeamMemberListType> {

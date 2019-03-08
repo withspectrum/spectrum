@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import { OutlineButton, PrimaryButton } from '../components/Button';
-import RequestJoinCommunity from '../components/RequestJoinCommunity';
+import { OutlineButton, PrimaryButton } from '../components/button';
+import RequestJoinCommunity from '../components/requestJoinCommunity';
 import {
   Emoji,
   Heading,
@@ -9,7 +9,7 @@ import {
   ActionsRow,
   PrivateCommunityWrapper,
 } from '../style';
-import { ViewGrid, CenteredGrid } from 'src/components/Layout';
+import { ViewGrid, CenteredGrid } from 'src/components/layout';
 
 export const PrivateCommunity = (props: Props) => {
   const { community } = props;

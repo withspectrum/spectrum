@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import compose from 'recompose/compose';
 import { Route } from 'react-router-dom';
-import Tooltip from 'src/components/Tooltip';
+import Tooltip from 'src/components/tooltip';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import { storeItem } from 'src/helpers/localStorage';

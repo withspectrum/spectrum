@@ -6,7 +6,7 @@ import {
   PrimaryButton,
   OutlineButton,
   HoverWarnOutlineButton,
-} from 'src/views/Community/components/Button';
+} from 'src/views/community/components/button';
 import { openModal } from 'src/actions/modals';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
 import { ActionsRowContainer } from '../style';
