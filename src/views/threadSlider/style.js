@@ -1,27 +1,16 @@
 // @flow
+import styled from 'styled-components';
 import theme from 'shared/theme';
-import styled, { css } from 'styled-components';
 import { zIndex } from 'src/components/globals';
-
-const animation = css`
-  opacity: 0;
-  transform: translateX(1em) translate3d(0, 0, 0);
-  transition: opacity ${props => props.duration}ms ease-out,
-    transform ${props => props.duration}ms ease-in-out;
-
-  ${props =>
-    props.entering || props.entered
-      ? css`
-          opacity: 1;
-          transform: translateX(0em) translate3d(0, 0, 0);
-        `
-      : ''};
-`;
+import { MEDIA_BREAK, MAX_WIDTH } from 'src/components/layout';
 
 export const Container = styled.div`
   width: 100vw;
   height: 100vh;
   position: absolute;
+  display: flex;
+  justify-content: center;
+  z-index: ${zIndex.slider + 1};
 `;
 
 export const Overlay = styled.div`
@@ -30,59 +19,63 @@ export const Overlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.24);
   z-index: ${zIndex.slider + 2};
-
-  ${animation};
 `;
 
-export const Thread = styled.div`
+export const ThreadContainerBackground = styled.div`
   display: flex;
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 650px;
-  background: #fff;
-  z-index: ${zIndex.slider + 3};
-  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
-  flex-direction: column;
-  max-width: 100%;
-
-  @media (max-width: 768px) {
-    top: -48px;
-    width: 100%;
-  }
-
-  @media (min-width: 768px) {
-    ${animation};
-  }
-`;
-
-export const Close = styled.div`
-  display: flex;
-  align-items: center;
-  flex: 1;
-  border-bottom: 1px solid ${theme.bg.border};
-  padding: 8px 16px;
-  flex: 1 0 auto;
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  max-width: ${MAX_WIDTH + 32}px;
   background: ${theme.bg.wash};
-  max-height: 48px;
-  justify-content: flex-end;
+  z-index: ${zIndex.slider + 3};
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08), 4px 0 12px rgba(0, 0, 0, 0.08);
+  transform: translateX(36px);
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    max-width: 100%;
+    transform: translateX(0);
+    padding: 0;
+    box-shadow: 0;
+  }
+`;
+
+export const ThreadContainer = styled.div`
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  max-width: ${MAX_WIDTH + 32}px;
+  z-index: ${zIndex.slider + 4};
+  padding: 0 16px;
+  transform: translateX(36px);
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    max-width: 100%;
+    transform: translateX(0);
+    padding: 0;
+    box-shadow: 0;
+  }
 `;
 
 export const CloseButton = styled.span`
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 32px;
-  color: ${theme.text.alt};
-`;
+  background: ${theme.bg.reverse};
+  color: ${theme.text.reverse};
+  z-index: ${zIndex.slider + 4};
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 
-export const CloseLabel = styled.span`
-  font-size: 14px;
-  font-weight: 500;
-  color: ${theme.text.alt};
+  @media (max-width: ${MEDIA_BREAK}px) {
+    display: none;
+  }
 `;

@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { Link } from 'react-router-dom';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import addProtocolToString from 'shared/normalize-url';
 import Icon from 'src/components/icons';
@@ -21,7 +22,9 @@ export const CommunityMeta = (props: CommunityMetaType) => {
 
   return (
     <MetaContainer>
-      <Name>{community.name}</Name>
+      <Link to={`/${community.slug}`}>
+        <Name>{community.name}</Name>
+      </Link>
 
       {formattedDescription && (
         <Description>{formattedDescription}</Description>

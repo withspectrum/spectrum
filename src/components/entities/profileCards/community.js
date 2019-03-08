@@ -14,7 +14,6 @@ export const CommunityProfileCard = (props: Props) => {
 
       <ProfileAvatarContainer>
         <CommunityAvatar
-          isClickable={false}
           showHoverProfile={false}
           size={60}
           community={community}

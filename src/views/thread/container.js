@@ -22,9 +22,7 @@ import {
 } from 'shared/graphql/queries/thread/getThread';
 import { NullState } from 'src/components/upsell';
 import JoinChannel from 'src/components/upsell/joinChannel';
-import LoadingThread from './components/loading';
 import ThreadCommunityBanner from './components/threadCommunityBanner';
-import Sidebar from './components/sidebar';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import type { Dispatch } from 'redux';
 import {
@@ -37,6 +35,18 @@ import {
 } from './style';
 import { ErrorBoundary } from 'src/components/error';
 import getThreadLink from 'src/helpers/get-thread-link';
+import {
+  ViewGrid,
+  SecondaryPrimaryColumnGrid,
+  PrimaryColumn,
+  SecondaryColumn,
+} from 'src/components/layout';
+import {
+  CommunityProfileCard,
+  ChannelProfileCard,
+} from 'src/components/entities';
+import { LoadingView, ErrorView } from 'src/views/viewHelpers';
+import { SidebarSection } from 'src/views/community/style';
 
 type Props = {
   data: {
@@ -390,9 +400,7 @@ class ThreadContainer extends React.Component<Props, State> {
   render() {
     const {
       data: { thread },
-      currentUser,
       isLoading,
-      hasError,
       slider,
       threadViewContext = 'fullscreen',
     } = this.props;
@@ -414,7 +422,6 @@ class ThreadContainer extends React.Component<Props, State> {
       const { channelPermissions } = thread.channel;
       const { communityPermissions } = thread.community;
       const { isLocked } = thread;
-      const shouldRenderThreadSidebar = threadViewContext === 'fullscreen';
 
       if (channelPermissions.isBlocked || communityPermissions.isBlocked) {
         return (
@@ -450,127 +457,107 @@ class ThreadContainer extends React.Component<Props, State> {
 
       return (
         <ErrorBoundary>
-          <ThreadViewContainer
-            data-cy="thread-view"
-            constrain={
-              threadViewContext === 'slider' ||
-              threadViewContext === 'fullscreen'
-            }
-            threadViewContext={threadViewContext}
-          >
-            {shouldRenderThreadSidebar && (
-              <Sidebar
-                thread={thread}
-                currentUser={currentUser}
-                slug={thread.community.slug}
-                id={thread.community.id}
-                sort="trending"
-              />
-            )}
+          <ViewGrid data-cy="thread-view">
+            <SecondaryPrimaryColumnGrid>
+              <SecondaryColumn>
+                <SidebarSection>
+                  <CommunityProfileCard community={thread.community} />
+                </SidebarSection>
+                <SidebarSection>
+                  <ChannelProfileCard channel={thread.channel} />
+                </SidebarSection>
+              </SecondaryColumn>
 
-            <ThreadContentView slider={slider} onScroll={this.handleScroll}>
-              <Head
-                title={headTitle}
-                description={headDescription}
-                type="article"
-                image={metaImage}
-              >
-                <link
-                  rel="canonical"
-                  href={`https://spectrum.chat${getThreadLink(thread)}`}
-                />
-                {metaImage && (
-                  <meta name="twitter:card" content="summary_large_image" />
-                )}
-                <meta
-                  property="article:published_time"
-                  content={new Date(thread.createdAt).toISOString()}
-                />
-                <meta
-                  property="article:modified_time"
-                  content={new Date(
-                    thread.modifiedAt || thread.createdAt
-                  ).toISOString()}
-                />
-                <meta
-                  property="article:author"
-                  content={`https://spectrum.chat/users/@${
-                    thread.author.user.username
-                  }`}
-                />
-                <meta
-                  property="article:section"
-                  content={`${thread.community.name} community`}
-                />
-              </Head>
-
-              <ThreadCommunityBanner
-                forceScrollToTop={this.forceScrollToTop}
-                thread={thread}
-                isVisible={this.state.bannerIsVisible}
-              />
-
-              <Content innerRef={this.setMessagesContainer}>
-                <Detail isEditing={isEditing} is type={slider ? '' : 'only'}>
-                  {this.renderPost()}
-
-                  {!isEditing && (
-                    <Messages
-                      id={thread.id}
-                      scrollContainer={this.state.messagesContainer}
-                      lastSeen={lastSeen}
-                      forceScrollToBottom={this.forceScrollToBottom}
-                      forceScrollToTop={this.forceScrollToTop}
-                      contextualScrollToBottom={this.contextualScrollToBottom}
-                      thread={thread}
-                      isWatercooler={thread.watercooler} // used in the graphql query to always fetch the latest messages
-                      onMessagesLoaded={this.updateThreadParticipants}
+              <PrimaryColumn>
+                <ThreadContentView slider={slider} onScroll={this.handleScroll}>
+                  <Head
+                    title={headTitle}
+                    description={headDescription}
+                    type="article"
+                    image={metaImage}
+                  >
+                    <link
+                      rel="canonical"
+                      href={`https://spectrum.chat${getThreadLink(thread)}`}
                     />
-                  )}
-
-                  {!isEditing && isLocked && (
-                    <NullState
-                      icon="private"
-                      copy="This conversation has been locked."
+                    {metaImage && (
+                      <meta name="twitter:card" content="summary_large_image" />
+                    )}
+                    <meta
+                      property="article:published_time"
+                      content={new Date(thread.createdAt).toISOString()}
                     />
-                  )}
-                </Detail>
-              </Content>
+                    <meta
+                      property="article:modified_time"
+                      content={new Date(
+                        thread.modifiedAt || thread.createdAt
+                      ).toISOString()}
+                    />
+                    <meta
+                      property="article:author"
+                      content={`https://spectrum.chat/users/@${
+                        thread.author.user.username
+                      }`}
+                    />
+                    <meta
+                      property="article:section"
+                      content={`${thread.community.name} community`}
+                    />
+                  </Head>
 
-              {this.renderChatInputOrUpsell()}
-            </ThreadContentView>
-          </ThreadViewContainer>
+                  <ThreadCommunityBanner
+                    forceScrollToTop={this.forceScrollToTop}
+                    thread={thread}
+                    isVisible={this.state.bannerIsVisible}
+                  />
+
+                  <Content innerRef={this.setMessagesContainer}>
+                    <Detail
+                      isEditing={isEditing}
+                      is
+                      type={slider ? '' : 'only'}
+                    >
+                      {this.renderPost()}
+
+                      {!isEditing && (
+                        <Messages
+                          id={thread.id}
+                          scrollContainer={this.state.messagesContainer}
+                          lastSeen={lastSeen}
+                          forceScrollToBottom={this.forceScrollToBottom}
+                          forceScrollToTop={this.forceScrollToTop}
+                          contextualScrollToBottom={
+                            this.contextualScrollToBottom
+                          }
+                          thread={thread}
+                          isWatercooler={thread.watercooler} // used in the graphql query to always fetch the latest messages
+                          onMessagesLoaded={this.updateThreadParticipants}
+                        />
+                      )}
+
+                      {!isEditing && isLocked && (
+                        <NullState
+                          icon="private"
+                          copy="This conversation has been locked."
+                        />
+                      )}
+                    </Detail>
+                  </Content>
+
+                  {this.renderChatInputOrUpsell()}
+                </ThreadContentView>
+              </PrimaryColumn>
+            </SecondaryPrimaryColumnGrid>
+          </ViewGrid>
         </ErrorBoundary>
       );
     }
 
     if (isLoading) {
-      return <LoadingThread threadViewContext={threadViewContext} />;
+      return <LoadingView />;
     }
 
-    return (
-      <ErrorBoundary>
-        <ThreadViewContainer
-          threadViewContext={threadViewContext}
-          data-cy="null-thread-view"
-        >
-          <ThreadContentView
-            threadViewContext={threadViewContext}
-            slider={slider}
-          >
-            <ViewError
-              heading={'We had trouble loading this thread.'}
-              subheading={
-                !hasError
-                  ? 'It may be private or may have been deleted by the author or a moderator.'
-                  : ''
-              }
-              refresh={hasError}
-            />
-          </ThreadContentView>
-        </ThreadViewContainer>
-      </ErrorBoundary>
-    );
+    return <ErrorView />;
   }
 }
 

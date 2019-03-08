@@ -247,9 +247,7 @@ class EditForm extends React.Component<Props, State> {
         </p>{' '}
         <p>
           <b>{communityData.metaData.members} members</b> will be removed from
-          the community and the{' '}
-          <b>{communityData.metaData.channels} channels</b> you’ve created will
-          be deleted.
+          the community and the channels you’ve created will be deleted.
         </p>
         <p>
           All threads, messages, reactions, and media shared in your community

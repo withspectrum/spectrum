@@ -141,12 +141,7 @@ class ChannelWithData extends React.Component<Props, State> {
           </b>
           ?
         </p>
-        {channelData.metaData.threads > 0 && (
-          <p>
-            The <b>{channelData.metaData.threads} threads</b> posted in this
-            channel will be deleted.
-          </p>
-        )}
+        <p>All conversations posted in this channel will be deleted.</p>
         <p>
           All messages, reactions, and media shared in this channel will be
           deleted.
@@ -276,7 +271,7 @@ class ChannelWithData extends React.Component<Props, State> {
             {slug === 'general' && (
               <GeneralNotice>
                 The General channel is the default channel for your community.
-                It can't be deleted or private, but you can still change the
+                It can’t be deleted or private, but you can still change the
                 name and description.
               </GeneralNotice>
             )}

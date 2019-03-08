@@ -1,84 +1,66 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { openThreadSlider, closeThreadSlider } from 'src/actions/threadSlider';
+import React, { useEffect } from 'react';
+import type { Location, History, Match } from 'react-router';
 import {
   Container,
   Overlay,
-  Thread,
-  Close,
+  ThreadContainer,
   CloseButton,
-  CloseLabel,
+  ThreadContainerBackground,
 } from './style';
 import Icon from 'src/components/icons';
-import { SliderThreadView } from '../thread';
+import { ThreadView } from '../thread';
 import { ErrorBoundary } from 'src/components/error';
 import { ESC } from 'src/helpers/keycodes';
 
-class ThreadSlider extends Component {
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyPress, false);
-    this.props.dispatch(openThreadSlider(this.props.match.params.threadId));
-  }
+type Props = {
+  previousLocation: Location,
+  history: History,
+  match: Match,
+};
 
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyPress, false);
-    this.props.dispatch(closeThreadSlider());
-  }
+const ThreadSlider = (props: Props) => {
+  const { previousLocation, history, match } = props;
+  const { params } = match;
+  const { threadId } = params;
 
-  // Sync the currently open thread to the Redux state
-  componentDidUpdate(prev) {
-    const curr = this.props;
+  const closeSlider = (e: any) => {
+    e && e.stopPropagation();
+    history.push(previousLocation);
+  };
 
-    const prevId = prev.match.params.threadId;
-    const currId = curr.match.params.threadId;
-
-    if (prevId !== currId)
-      this.props.dispatch(openThreadSlider(this.props.match.params.threadId));
-  }
-
-  handleKeyPress = e => {
+  const handleKeyPress = (e: any) => {
     if (e.keyCode === ESC) {
-      this.closeSlider(e);
+      e.stopPropagation();
+      closeSlider();
     }
   };
 
-  closeSlider = e => {
-    e && e.stopPropagation();
-    this.props.history.push(this.props.previousLocation);
-    this.props.dispatch(closeThreadSlider());
-  };
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress, false);
+    return () => document.removeEventListener('keydown', handleKeyPress, false);
+  }, []);
 
-  render() {
-    const { threadId } = this.props.match.params;
-    const { threadSlider } = this.props;
+  return (
+    <ErrorBoundary>
+      <Container data-cy="thread-slider">
+        <Overlay
+          onClick={closeSlider}
+          data-cy="thread-slider-overlay"
+          entered
+        />
 
-    if (!threadSlider.isOpen) return null;
+        <CloseButton data-cy="thread-slider-close" onClick={closeSlider}>
+          <Icon glyph="view-close" size={32} />
+        </CloseButton>
 
-    return (
-      <ErrorBoundary>
-        <Container data-cy="thread-slider">
-          <div onClick={this.closeSlider}>
-            <Overlay data-cy="thread-slider-overlay" entered />
-          </div>
-          <Thread entered>
-            <Close data-cy="thread-slider-close" onClick={this.closeSlider}>
-              <CloseLabel>Close</CloseLabel>
-              <CloseButton>
-                <Icon glyph="view-forward" size={24} />
-              </CloseButton>
-            </Close>
+        <ThreadContainerBackground />
 
-            <SliderThreadView
-              threadId={threadId}
-              threadViewContext={'slider'}
-              slider
-            />
-          </Thread>
-        </Container>
-      </ErrorBoundary>
-    );
-  }
-}
+        <ThreadContainer>
+          <ThreadView threadId={threadId} threadViewContext={'slider'} slider />
+        </ThreadContainer>
+      </Container>
+    </ErrorBoundary>
+  );
+};
 
-const map = state => ({ threadSlider: state.threadSlider });
-export default connect(map)(ThreadSlider);
+export default ThreadSlider;

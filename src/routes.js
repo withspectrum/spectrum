@@ -33,7 +33,7 @@ import Navigation from 'src/views/navigation';
 import Status from 'src/views/status';
 import Login from 'src/views/login';
 import DirectMessages from 'src/views/directMessages';
-import { FullscreenThreadView } from 'src/views/thread';
+import { ThreadView } from 'src/views/thread';
 import ThirdPartyContext from 'src/components/thirdPartyContextSetting';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Maintenance from 'src/components/maintenance';
@@ -382,7 +382,7 @@ class Routes extends React.Component<Props> {
                       // - /~id-123-id => id-123-id => id-123-id, empty custom slug also works
                       // - /some~custom~slug~id-123-id => id-123-id, custom slug with delimiter char in it (~) also works! :tada:
                       path="/:communitySlug/:channelSlug/(.*~)?:threadId"
-                      component={FullscreenThreadView}
+                      component={ThreadView}
                     />
                     <Route
                       path="/:communitySlug/:channelSlug"

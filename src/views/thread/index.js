@@ -8,7 +8,6 @@ const loader = () => import('./container'/* webpackChunkName: "Thread" */);
 
 const getLoading = () => ({ error, pastDelay }) => {
   if (error) {
-    console.error(error);
     return <ErrorView />;
   } else if (pastDelay) {
     return <LoadingView />;
@@ -17,17 +16,7 @@ const getLoading = () => ({ error, pastDelay }) => {
   return null;
 };
 
-export const InboxThreadView = Loadable({
-  loader,
-  loading: () => getLoading(),
-});
-
-export const SliderThreadView = Loadable({
-  loader,
-  loading: () => getLoading(),
-});
-
-export const FullscreenThreadView = Loadable({
+export const ThreadView = Loadable({
   loader,
   loading: () => getLoading(),
 });

@@ -5,8 +5,7 @@ import { Redirect } from 'react-router';
 import slugg from 'slugg';
 import idx from 'idx';
 import { getThreadByMatch } from 'shared/graphql/queries/thread/getThread';
-import { FullscreenThreadView } from 'src/views/thread';
-import LoadingThread from 'src/views/thread/components/loading';
+import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 
 export default getThreadByMatch(props => {
   if (props.data && props.data.thread && props.data.thread.id) {
@@ -21,15 +20,12 @@ export default getThreadByMatch(props => {
   }
 
   if (props.loading) {
-    return <LoadingThread threadViewContext="fullscreen" />;
+    return <LoadingView />;
   }
 
   // If we don't have a thread, but also aren't loading anymore it's either a private or a non-existant thread
-  // In that case, or if it's an error, render the thread container empty state
   if (!props.loading || props.error) {
-    return (
-      <FullscreenThreadView threadId={props.data.variables.id} slider={false} />
-    );
+    return <ErrorView />;
   }
 
   return null;
