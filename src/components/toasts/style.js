@@ -3,6 +3,7 @@ import theme from 'shared/theme';
 // $FlowFixMe
 import styled, { keyframes } from 'styled-components';
 import { zIndex } from '../globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Container = styled.div`
   position: fixed;
@@ -16,6 +17,11 @@ export const Container = styled.div`
   background: transparent;
   pointer-events: none;
   z-index: ${zIndex.toast};
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    /* titlebars are ~56px */
+    top: 60px;
+  }
 `;
 
 const toastFade = keyframes`

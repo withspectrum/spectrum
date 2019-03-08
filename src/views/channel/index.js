@@ -40,6 +40,7 @@ import {
   PrimaryColumn,
   SecondaryColumn,
 } from 'src/components/layout';
+import { SidebarSection } from 'src/views/community/style';
 
 const ThreadFeedWithData = compose(
   connect(),
@@ -350,14 +351,18 @@ class ChannelView extends React.Component<Props, State> {
 
             <SecondaryPrimaryColumnGrid data-cy="channel-view">
               <SecondaryColumn>
-                <ChannelProfileCard channel={channel} />
+                <SidebarSection>
+                  <ChannelProfileCard channel={channel} />
+                </SidebarSection>
 
                 {isLoggedIn && userHasPermissions && !channel.isArchived && (
                   <ErrorBoundary fallbackComponent={null}>
-                    <NotificationsToggle
-                      value={channel.channelPermissions.receiveNotifications}
-                      channel={channel}
-                    />
+                    <SidebarSection>
+                      <NotificationsToggle
+                        value={channel.channelPermissions.receiveNotifications}
+                        channel={channel}
+                      />
+                    </SidebarSection>
                   </ErrorBoundary>
                 )}
 

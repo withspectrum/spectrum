@@ -44,11 +44,13 @@ const MobileTitlebar = (props: Props) => {
         <Container {...rest} hasAction={titlebarAction}>
           <Content>
             {titlebarMenuAction && (
-              <Icon
-                onClick={handleMenuClick(setNavigationIsOpen)}
-                glyph={titlebarMenuAction}
-                size={32}
-              />
+              <span style={{ cursor: 'hover' }}>
+                <Icon
+                  onClick={handleMenuClick(setNavigationIsOpen)}
+                  glyph={titlebarMenuAction}
+                  size={32}
+                />
+              </span>
             )}
 
             <div style={{ width: '12px' }} />

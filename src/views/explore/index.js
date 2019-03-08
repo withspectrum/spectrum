@@ -6,11 +6,12 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import Head from 'src/components/head';
 import Search from './components/search';
 import CommunitySearchWrapper from './components/communitySearchWrapper';
-import { Wrapper } from './style';
 import { Charts } from './view';
 import { track, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import { ViewGrid } from 'src/components/layout';
+import MobileTitlebar from 'src/components/mobileTitlebar';
 
 type Props = {
   currentUser?: Object,
@@ -32,8 +33,9 @@ class Explore extends React.Component<Props> {
 
     return (
       <React.Fragment>
-        <Wrapper data-cy="explore-page" id="main">
+        <ViewGrid data-cy="explore-page">
           <Head title={title} description={description} />
+          <MobileTitlebar title={'Explore'} titlebarMenuAction={'menu'} />
           <ErrorBoundary fallbackComponent={null}>
             <CommunitySearchWrapper
               currentUser={this.props.currentUser}
@@ -46,7 +48,7 @@ class Explore extends React.Component<Props> {
           <ErrorBoundary>
             <Charts />
           </ErrorBoundary>
-        </Wrapper>
+        </ViewGrid>
       </React.Fragment>
     );
   }

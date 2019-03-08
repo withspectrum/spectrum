@@ -157,7 +157,9 @@ class UserView extends React.Component<Props, State> {
 
             <SecondaryPrimaryColumnGrid>
               <SecondaryColumn>
-                <UserProfileCard user={user} />
+                <SidebarSection>
+                  <UserProfileCard user={user} />
+                </SidebarSection>
 
                 <SidebarSection>
                   <SidebarSectionHeader>

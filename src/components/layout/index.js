@@ -14,7 +14,7 @@ export const SINGLE_COLUMN_WIDTH = MAX_WIDTH;
 export const MEDIA_BREAK =
   PRIMARY_COLUMN_WIDTH + SECONDARY_COLUMN_WIDTH + COL_GAP + NAVBAR_WIDTH * 2;
 
-export const ViewGrid = styled.div.attrs({ id: 'main' })`
+export const ViewGrid = styled.main.attrs({ id: 'main' })`
   display: grid;
   grid-area: view;
   height: 100vh;

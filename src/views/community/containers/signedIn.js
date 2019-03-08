@@ -113,7 +113,9 @@ const Component = (props: SignedInMemberType) => {
 
         <SecondaryPrimaryColumnGrid>
           <SecondaryColumn>
-            <CommunityProfileCard community={community} />
+            <SidebarSection>
+              <CommunityProfileCard community={community} />
+            </SidebarSection>
 
             <SidebarSection>
               <TeamMembersList

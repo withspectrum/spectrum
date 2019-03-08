@@ -10,9 +10,9 @@ import {
   ListWithTitle,
   ListTitle,
   ListWrapper,
-  CategoryWrapper,
   Collections,
   CollectionWrapper,
+  ProfileCardWrapper,
 } from './style';
 import { getCommunitiesBySlug } from 'shared/graphql/queries/community/getCommunities';
 import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCommunities';
@@ -20,6 +20,7 @@ import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { track, transformations, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
 import { LoadingView, ErrorView } from 'src/views/viewHelpers';
+import { CommunityProfileCard } from 'src/components/entities';
 
 const ChartGrid = styled.div`
   display: flex;
@@ -72,23 +73,16 @@ class CollectionSwitcher extends React.Component<Props, State> {
 
         <CollectionWrapper>
           {collections.map((collection, index) => {
-            // NOTE(@mxstbr): [].concat.apply([], ...) flattens the array
-            const communitySlugs = collection.categories
-              ? [].concat.apply(
-                  [],
-                  collection.categories.map(({ communities }) => communities)
-                )
-              : collection.communities || [];
+            const communitySlugs = collection.communities;
             return (
-              <CategoryWrapper key={index}>
+              <div key={index}>
                 {collection.curatedContentType === this.state.selectedView && (
                   <Category
-                    categories={collection.categories}
                     slugs={communitySlugs}
                     curatedContentType={collection.curatedContentType}
                   />
                 )}
-              </CategoryWrapper>
+              </div>
             );
           })}
         </CollectionWrapper>
@@ -105,7 +99,6 @@ type CategoryListProps = {
     communities?: GetCommunitiesType,
   },
   isLoading: boolean,
-  categories?: Array<any>,
 };
 class CategoryList extends React.Component<CategoryListProps> {
   onLeave = community => {
@@ -126,7 +119,6 @@ class CategoryList extends React.Component<CategoryListProps> {
       title,
       slugs,
       isLoading,
-      categories,
     } = this.props;
 
     if (communities) {
@@ -139,50 +131,25 @@ class CategoryList extends React.Component<CategoryListProps> {
         });
       }
 
-      if (!categories) {
-        return (
-          <ListWithTitle>
-            {title ? <ListTitle>{title}</ListTitle> : null}
-            <ListWrapper>
-              {filteredCommunities.map((community, i) => (
-                // $FlowFixMe
-                <ErrorBoundary fallbackComponent={null} key={i} />
-              ))}
-            </ListWrapper>
-          </ListWithTitle>
-        );
-      }
-
       return (
-        <div>
-          {categories.map((cat, i) => {
-            if (cat.communities) {
-              filteredCommunities = communities.filter(c => {
-                if (!c) return null;
-                if (cat.communities.indexOf(c.slug) > -1) return c;
-                return null;
-              });
-            }
-            return (
-              <ListWithTitle key={i}>
-                {cat.title ? <ListTitle>{cat.title}</ListTitle> : null}
-                <ListWrapper>
-                  {filteredCommunities.map((community, i) => (
-                    // $FlowFixMe
-                    <ErrorBoundary key={i} fallbackComponent={null}>
-                      {/* TODO @Brian */}
-                    </ErrorBoundary>
-                  ))}
-                </ListWrapper>
-              </ListWithTitle>
-            );
-          })}
-        </div>
+        <ListWithTitle>
+          {title ? <ListTitle>{title}</ListTitle> : null}
+          <ListWrapper>
+            {filteredCommunities.map((community, i) => (
+              // $FlowFixMe
+              <ErrorBoundary fallbackComponent={null} key={i}>
+                <ProfileCardWrapper>
+                  <CommunityProfileCard community={community} />
+                </ProfileCardWrapper>
+              </ErrorBoundary>
+            ))}
+          </ListWrapper>
+        </ListWithTitle>
       );
     }
 
     if (isLoading) {
-      return <LoadingView />;
+      return null;
     }
 
     return <ErrorView />;

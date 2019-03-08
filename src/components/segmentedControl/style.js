@@ -12,7 +12,7 @@ export const StyledSegmentedControl = styled.div`
   overflow: hidden;
   overflow-x: scroll;
   position: ${props => (props.sticky ? 'sticky' : 'relative')};
-  z-index: ${props => (props.sticky ? '11' : '1')};
+  z-index: ${props => (props.sticky ? '1' : '1')};
 
   ${props =>
     props.sticky &&
@@ -27,6 +27,7 @@ export const StyledSegmentedControl = styled.div`
   }
 
   @media (max-width: ${MEDIA_BREAK}px) {
+    max-width: 100vw;
     position: ${props => (props.mobileSticky ? 'sticky' : 'relative')};
     top: ${props =>
       props.mobileStickyOffset ? `${props.mobileStickyOffset}px` : '0'};
@@ -57,8 +58,6 @@ export const StyledSegment = styled.div`
   }
 
   @media (max-width: ${MEDIA_BREAK}px) {
-    flex: 1 0 25%;
-
     &:hover {
       background: ${theme.bg.default};
     }

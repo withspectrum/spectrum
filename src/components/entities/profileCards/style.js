@@ -3,26 +3,6 @@ import styled from 'styled-components';
 import theme from 'shared/theme';
 import { MEDIA_BREAK, SECONDARY_COLUMN_WIDTH } from 'src/components/layout';
 
-export const SidebarSection = styled.section`
-  background: ${theme.bg.default};
-  border: 1px solid ${theme.bg.border};
-  margin-top: 16px;
-  border-radius: 4px;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    border: 0;
-    margin-top: 0;
-
-    &:last-of-type {
-      border-bottom: 1px solid ${theme.bg.border};
-    }
-
-    &:not(:first-of-type) {
-      border-top: 1px solid ${theme.bg.border};
-    }
-  }
-`;
-
 export const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;

@@ -9,6 +9,13 @@ import {
 } from './actions';
 import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
 
+export default (props: Props) => (
+  <BaseTitlebar
+    style={{ borderBottom: `1px solid ${theme.bg.border}` }}
+    {...props}
+  />
+);
+
 export const MobileCommunityTitlebar = (props: Props) => {
   const { community } = props;
   return (

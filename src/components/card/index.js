@@ -16,15 +16,6 @@ const StyledCard = styled(FlexCol)`
   overflow: visible;
   flex: none;
 
-  + div,
-  + span {
-    margin-top: 16px;
-
-    @media (max-width: 768px) {
-      margin-top: 2px;
-    }
-  }
-
   @media (max-width: 768px) {
     border-radius: 0;
     box-shadow: none;
