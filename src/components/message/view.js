@@ -18,7 +18,7 @@ import { draftOnlyContainsEmoji } from 'shared/only-contains-emoji';
 import { Byline, Name, Username } from './style';
 import { isShort } from 'shared/clients/draft-js/utils/isShort';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
-import { messageTypeObj } from 'shared/draft-utils/process-message-content';
+import { messageTypeObj } from 'shared/draft-utils/message-types';
 
 type BodyProps = {
   openGallery: Function,

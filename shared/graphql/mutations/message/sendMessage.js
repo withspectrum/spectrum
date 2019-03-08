@@ -3,13 +3,10 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { btoa } from 'b2a';
 import snarkdown from 'snarkdown';
-import { stateFromMarkdown } from 'draft-js-import-markdown';
 import messageInfoFragment from '../../fragments/message/messageInfo';
 import type { MessageInfoType } from '../../fragments/message/messageInfo';
 import { getThreadMessageConnectionQuery } from '../../queries/thread/getThreadMessageConnection';
-import processMessageContent, {
-  messageTypeObj,
-} from 'shared/draft-utils/process-message-content';
+import { messageTypeObj } from 'shared/draft-utils/message-types';
 
 export type SendMessageType = {
   data: {

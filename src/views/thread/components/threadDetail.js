@@ -4,8 +4,6 @@ import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { convertFromRaw } from 'draft-js';
-import { stateToMarkdown } from 'draft-js-export-markdown';
 import { timeDifference } from 'shared/time-difference';
 import { convertTimestampToDate } from 'shared/time-formatting';
 import { openModal } from 'src/actions/modals';
