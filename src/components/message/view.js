@@ -43,7 +43,7 @@ export const Body = (props: BodyProps) => {
   const { showParent = true, message, openGallery, me, bubble = true } = props;
   const emojiOnly =
     message.messageType === messageTypeObj.draftjs &&
-    draftOnlyContainsEmoji(JSON.parse(message.content.body));
+    draftOnlyContainsEmoji(message.content.body);
   const WrapperComponent = bubble ? Text : QuotedParagraph;
   switch (message.messageType) {
     case 'optimistic':
@@ -66,9 +66,8 @@ export const Body = (props: BodyProps) => {
       return <Image onClick={openGallery} src={message.content.body} />;
     }
     case messageTypeObj.draftjs: {
-      const parsed = JSON.parse(message.content.body);
       const ids = getSpectrumThreadIds(
-        parsed.blocks.map(block => block.text).join('\n')
+        message.content.body.blocks.map(block => block.text).join('\n')
       );
       const uniqueIds = ids.filter((x, i, a) => a.indexOf(x) === i);
       return (
@@ -79,10 +78,14 @@ export const Body = (props: BodyProps) => {
           )}
           {emojiOnly ? (
             <Emoji>
-              {parsed && Array.isArray(parsed.blocks) && parsed.blocks[0].text}
+              {message.content.body &&
+                Array.isArray(parsed.blocks) &&
+                parsed.blocks[0].text}
             </Emoji>
           ) : (
-            <div className="markdown">{redraft(parsed, messageRenderer)}</div>
+            <div className="markdown">
+              {redraft(message.content.body, messageRenderer)}
+            </div>
           )}
           {uniqueIds && (
             <ThreadAttachmentsContainer>

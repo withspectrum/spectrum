@@ -90,7 +90,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
       community: transformations.analyticsCommunity(thread.community),
     });
 
-    const parsedBody = JSON.parse(thread.content.body);
+    const parsedBody = thread.content.body;
 
     return this.setState({
       isEditing: false,
@@ -419,7 +419,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
                 </Link>
               </ThreadSubtitle>
 
-              <ThreadRenderer body={JSON.parse(thread.content.body)} />
+              <ThreadRenderer body={thread.content.body} />
             </React.Fragment>
           )}
         </ThreadContent>

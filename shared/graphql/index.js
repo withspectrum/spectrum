@@ -2,6 +2,7 @@
 import { ApolloClient } from 'apollo-client';
 import { createUploadLink } from 'apollo-upload-client';
 import { RetryLink } from 'apollo-link-retry';
+import { withResponseResolver } from 'apollo-link-response-resolver';
 import {
   InMemoryCache,
   IntrospectionFragmentMatcher,
@@ -27,6 +28,27 @@ export const wsLink = new WebSocketLink({
   uri: WS_URI,
   options: {
     reconnect: true,
+  },
+});
+
+export const responseResolverLink = withResponseResolver({
+  Thread: {
+    content: content => ({
+      ...content,
+      body:
+        typeof content.body === 'string'
+          ? JSON.parse(content.body)
+          : content.body,
+    }),
+  },
+  Message: {
+    content: content => ({
+      ...content,
+      body:
+        typeof content.body === 'string'
+          ? JSON.parse(content.body)
+          : content.body,
+    }),
   },
 });
 
@@ -71,12 +93,14 @@ export const createClient = (options?: CreateClientOptions = {}) => {
   });
 
   // HTTP Link for queries and mutations including file uploads
-  const httpLink = retryLink.concat(
-    createUploadLink({
-      uri: API_URI,
-      credentials: 'include',
-      headers,
-    })
+  const httpLink = responseResolverLink.concat(
+    retryLink.concat(
+      createUploadLink({
+        uri: API_URI,
+        credentials: 'include',
+        headers,
+      })
+    )
   );
 
   // Switch between the two links based on operation

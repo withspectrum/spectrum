@@ -103,9 +103,7 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
       var body =
         data &&
         data.body &&
-        (data.type === 'DRAFTJS'
-          ? toPlainText(JSON.parse(data.body))
-          : data.body);
+        (data.type === 'DRAFTJS' ? toPlainText(data.body) : data.body);
       return setDefault({
         title: data && data.title + ' · ' + data.communityName,
         description: body,
