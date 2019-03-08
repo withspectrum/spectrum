@@ -10,7 +10,6 @@ import { ChannelsList } from './channelsList';
 import { CommunityMeta } from 'src/components/entities/profileCards/components/communityMeta';
 import { WatercoolerChat } from './watercoolerChat';
 import { PostsFeeds } from './postsFeeds';
-import { ARROW_LEFT, ARROW_RIGHT } from 'src/helpers/keycodes';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { FeedsContainer, SidebarSection } from '../style';
 
@@ -109,47 +108,6 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
       }
     },
     [community.slug]
-  );
-
-  /*
-    Allow people to alt + left/right key through tabs
-  */
-  useEffect(
-    () => {
-      const handleKeyDown = (e: any) => {
-        if (e.altKey) {
-          // info tab is only available on mobile where keydowns are not likely
-          // to happen
-          const segmentsWithoutInfo = segments.filter(s => s !== 'info');
-          const currentSegmentIndex = segmentsWithoutInfo.indexOf(
-            activeSegment
-          );
-
-          if (e.keyCode === ARROW_LEFT) {
-            if (currentSegmentIndex === 0)
-              return setActiveSegment(
-                segmentsWithoutInfo[segmentsWithoutInfo.length - 1]
-              );
-            return setActiveSegment(
-              segmentsWithoutInfo[currentSegmentIndex - 1]
-            );
-          }
-
-          if (e.keyCode === ARROW_RIGHT) {
-            if (currentSegmentIndex === segmentsWithoutInfo.length - 1)
-              return setActiveSegment(segmentsWithoutInfo[0]);
-            return setActiveSegment(
-              segmentsWithoutInfo[currentSegmentIndex + 1]
-            );
-          }
-        }
-      };
-
-      document.addEventListener('keydown', handleKeyDown, false);
-      return () =>
-        document.removeEventListener('keydown', handleKeyDown, false);
-    },
-    [segments, activeSegment]
   );
 
   return (
