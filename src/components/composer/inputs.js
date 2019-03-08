@@ -19,7 +19,7 @@ import processThreadContent from 'shared/draft-utils/process-thread-content';
 
 type Props = {
   title: string,
-  body: string,
+  body: ?string,
   changeBody: Function,
   changeTitle: Function,
   uploadFiles: Function,
@@ -99,7 +99,8 @@ export default (props: Props) => {
 
                 <MentionsInput
                   onChange={changeBody}
-                  value={body}
+                  value={body === null ? 'Loading...' : body}
+                  disabled={body === null}
                   style={ThreadDescription}
                   inputRef={bodyRef}
                   placeholder={'Add more thoughts here...'}

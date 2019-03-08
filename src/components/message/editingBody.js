@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { convertFromRaw } from 'draft-js';
-import { stateToMarkdown } from 'draft-js-export-markdown';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
 import { Input } from '../chatInput/style';
 import { EditorInput, EditActions } from './style';
@@ -34,6 +33,7 @@ const EditingChatInput = (props: Props) => {
   // $FlowIssue
   const [saving, setSaving] = React.useState(false);
 
+  // $FlowIssue
   React.useEffect(
     () => {
       if (props.message.messageType === 'text') return;

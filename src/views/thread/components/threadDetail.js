@@ -40,7 +40,7 @@ import { ErrorBoundary } from 'src/components/error';
 
 type State = {
   isEditing?: boolean,
-  body: string,
+  body: ?string,
   title: string,
   receiveNotifications?: boolean,
   isSavingEdit?: boolean,
@@ -96,9 +96,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
     return this.setState({
       isEditing: false,
-      body: stateToMarkdown(convertFromRaw(parsedBody), {
-        gfm: true,
-      }),
+      body: '',
       title: thread.content.title,
       // We store this in the state to avoid having to JSON.parse on every render
       parsedBody,
@@ -195,12 +193,35 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
     this.setState({
       isEditing: !isEditing,
-      // Reset body and title state
-      body: stateToMarkdown(convertFromRaw(JSON.parse(thread.content.body)), {
-        gfm: true,
-      }),
       title: thread.content.title,
+      body: null,
     });
+
+    fetch('https://convert.spectrum.chat/to', {
+      method: 'POST',
+      body: thread.content.body,
+    })
+      .then(res => {
+        if (res.status >= 300 || res.status < 200)
+          throw new Error('Oops, something went wrong.');
+        return res;
+      })
+      .then(res => res.text())
+      .then(md => {
+        this.setState({
+          body: md,
+        });
+      })
+      .catch(err => {
+        this.props.dispatch(addToastWithTimeout('error', err.message));
+        this.setState({
+          isEditing,
+          body: '',
+        });
+        this.props.toggleEdit();
+      });
+
+    this.props.toggleEdit();
 
     if (!isEditing) {
       track(events.THREAD_EDITED_INITED, {
@@ -209,8 +230,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
         community: transformations.analyticsCommunity(thread.community),
       });
     }
-
-    this.props.toggleEdit();
   };
 
   handleKeyPress = e => {
