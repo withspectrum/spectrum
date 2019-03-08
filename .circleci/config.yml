@@ -112,7 +112,7 @@ jobs:
 
 
   # Start db and servers, then run e2e and unit tests
-  test_e2e:
+  test_integration:
     <<: *defaults
     docker:
       - image: circleci/node:8-browsers
@@ -148,6 +148,14 @@ jobs:
               yarn run test:e2e
             fi
 
+  # This runs after the above and is only here to hack around missing support for varying jobs based on external vs internal PRs
+  # See https://github.com/withspectrum/spectrum/pull/4820
+  test_e2e:
+    docker:
+      - image: cypress/base:10
+    steps:
+      - run: echo "pass"
+
   # Run eslint, flow etc.
   test_static_js:
     <<: *js_defaults
@@ -175,7 +183,8 @@ workflows:
           requires:
             - checkout_environment
       # Run pull requests from internal contributors in parallel
-      - test_e2e_parallel:
+      - test_integration:
+          name: test_e2e_internal
           requires:
             - build_web
           parallelism: 4
@@ -183,7 +192,8 @@ workflows:
             branches:
               ignore: /pull.*/
       # Run pull requests from external contributors on one machine
-      - test_e2e_single:
+      - test_integration:
+          name: test_e2e_external
           requires:
             - build_web
           parallelism: 1
@@ -192,6 +202,6 @@ workflows:
               only: /pull.*/
       # If either of the test_e2e_* jobs pass, this one passes so we can mark it as required on GitHub
       - test_e2e:
-        requires:
-          - test_e2e_internal
-          - test_e2e_external
+          requires:
+            - test_e2e_internal
+            - test_e2e_external
