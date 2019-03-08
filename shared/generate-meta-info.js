@@ -7,7 +7,6 @@
  * so it chokes on the Flow syntax.
  * More info: https://flow.org/en/docs/types/comments/
  */
-var draft = require('./draft-utils');
 var truncate = require('./truncate');
 var striptags = require('striptags');
 
@@ -104,7 +103,9 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
         data &&
         data.body &&
         (data.type === 'DRAFTJS'
-          ? draft.toPlainText(draft.toState(JSON.parse(data.body)))
+          ? JSON.parse(data.body)
+              .blocks.filter(block => block.type === 'unstyled')
+              .map(block => block.text)
           : data.body);
       return setDefault({
         title: data && data.title + ' · ' + data.communityName,

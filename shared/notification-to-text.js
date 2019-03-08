@@ -1,7 +1,14 @@
 import sentencify from 'shared/sentencify';
 import sortByDate from 'shared/sort-by-date';
-import { toState, toPlainText } from 'shared/draft-utils';
 import { messageTypeObj } from 'shared/draft-utils/message-types';
+
+const toPlainText = raw => {
+  return raw.blocks
+    .filter(block => block.type === 'unstyled')
+    .map(block => block.text);
+};
+
+const toState = input => input;
 
 const sortThreads = (entities, currentUser) => {
   // filter out the current user's threads
