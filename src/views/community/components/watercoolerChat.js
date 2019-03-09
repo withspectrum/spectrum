@@ -119,7 +119,6 @@ class Component extends React.Component<Props, State> {
   };
 
   loadPreviousPage = () => {
-    // console.log('triggered')
     return this.props.loadPreviousPage();
   };
 
