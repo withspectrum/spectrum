@@ -83,6 +83,7 @@ export const Name = styled.h1`
   font-size: 24px;
   font-weight: 800;
   color: ${theme.text.default};
+  word-break: break-word;
 `;
 
 export const Description = styled.p`
@@ -92,6 +93,7 @@ export const Description = styled.p`
   font-weight: 400;
   line-height: 1.4;
   color: ${theme.text.secondary};
+  word-break: break-word;
 `;
 
 export const MetaLinksContainer = styled.div`
@@ -105,6 +107,7 @@ export const MetaRow = styled.div`
   color: ${theme.text.secondary};
   align-items: center;
   margin-top: 8px;
+  word-break: break-word;
 
   &:first-of-type {
     margin-top: 8px;
