@@ -18,5 +18,5 @@ const getLoading = () => ({ error, pastDelay }) => {
 
 export const ThreadView = Loadable({
   loader,
-  loading: () => getLoading(),
+  loading: getLoading(),
 });
