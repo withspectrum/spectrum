@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { CommunityAvatar } from 'src/components/avatar';
 import { CommunityActions } from './components/communityActions';
 import { CommunityMeta } from './components/communityMeta';
@@ -10,7 +11,9 @@ export const CommunityProfileCard = (props: Props) => {
 
   return (
     <ProfileContainer>
-      <CoverPhoto src={community.coverPhoto} />
+      <Link to={`/${community.slug}`}>
+        <CoverPhoto src={community.coverPhoto} />
+      </Link>
 
       <ProfileAvatarContainer>
         <CommunityAvatar

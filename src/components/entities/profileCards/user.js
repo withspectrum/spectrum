@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { UserAvatar } from 'src/components/avatar';
 import { UserActions } from './components/userActions';
 import { UserMeta } from './components/userMeta';
@@ -14,11 +15,12 @@ export const UserProfileCard = (props: Props) => {
 
   return (
     <ProfileContainer>
-      <CoverPhoto src={user.coverPhoto} />
+      <Link to={`/users/${user.username}`}>
+        <CoverPhoto src={user.coverPhoto} />
+      </Link>
 
       <RoundProfileAvatarContainer>
         <UserAvatar
-          isClickable={false}
           showHoverProfile={false}
           size={60}
           user={user}
