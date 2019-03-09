@@ -30,6 +30,8 @@ const EditingChatInput = (props: Props) => {
   // $FlowIssue
   const [text, setText] = React.useState(initialState);
   // $FlowIssue
+  const [loading, setLoading] = React.useState(false);
+  // $FlowIssue
   const [saving, setSaving] = React.useState(false);
 
   // $FlowIssue
@@ -38,12 +40,17 @@ const EditingChatInput = (props: Props) => {
       if (props.message.messageType === 'text') return;
 
       setText(null);
+      const loadingTimeout = setTimeout(() => {
+        setLoading(true);
+      }, 300);
       fetch('https://convert.spectrum.chat/to', {
         method: 'POST',
         body: props.message.content.body,
       })
         .then(res => res.text())
         .then(md => {
+          clearTimeout(loadingTimeout);
+          setLoading(false);
           setText(md);
         });
     },
@@ -107,7 +114,9 @@ const EditingChatInput = (props: Props) => {
 
   return (
     <React.Fragment>
-      {text !== null ? (
+      {!loading && text === null ? (
+        <p />
+      ) : !loading ? (
         <EditorInput data-cy="edit-message-input">
           <Input
             dataCy="editing-chat-input"
