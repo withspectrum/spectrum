@@ -261,7 +261,7 @@ export const ThreadTitle = {
 };
 
 export const ThreadDescription = {
-  fontSize: '16px',
+  fontSize: '15px',
   fontWeight: '400',
   width: '100%',
   display: 'inline-block',
@@ -275,7 +275,7 @@ export const ThreadDescription = {
   position: 'relative',
   // NOTE(@mxstbr): Magic value to make the margin between
   // the thread title and body match the preview
-  marginTop: '12px',
+  marginTop: '9px',
 };
 
 export const DisabledWarning = styled.div`

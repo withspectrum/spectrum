@@ -190,6 +190,7 @@ export const ThreadHeading = styled(H1)`
   font-size: 28px;
   font-weight: 600;
   word-break: break-word;
+  margin-bottom: 16px;
 `;
 
 export const A = styled.a`
@@ -424,7 +425,7 @@ export const ThreadTitle = {
 };
 
 export const ThreadDescription = {
-  fontSize: '16px',
+  fontSize: '15px',
   fontWeight: '500',
   width: '100%',
   display: 'inline-block',
