@@ -14,7 +14,14 @@ export const SINGLE_COLUMN_WIDTH = MAX_WIDTH;
 export const MEDIA_BREAK =
   PRIMARY_COLUMN_WIDTH + SECONDARY_COLUMN_WIDTH + COL_GAP + NAVBAR_WIDTH * 2;
 
-export const ViewGrid = styled.main.attrs({ id: 'main' })`
+/* 
+  do not remove this className.
+  see `src/routes.js` for an explanation of what's going on here
+*/
+export const ViewGrid = styled.main.attrs({
+  id: 'main',
+  className: 'view-grid',
+})`
   display: grid;
   grid-area: view;
   height: 100vh;
@@ -46,6 +53,7 @@ export const PrimarySecondaryColumnGrid = styled.div`
   justify-self: center;
   grid-template-columns: ${PRIMARY_COLUMN_WIDTH}px ${SECONDARY_COLUMN_WIDTH}px;
   grid-template-rows: 100%;
+  grid-template-areas: 'primary secondary';
   grid-gap: ${COL_GAP}px;
   max-width: ${MAX_WIDTH}px;
 
@@ -71,6 +79,7 @@ export const SecondaryPrimaryColumnGrid = styled.div`
   justify-self: center;
   grid-template-columns: ${SECONDARY_COLUMN_WIDTH}px ${PRIMARY_COLUMN_WIDTH}px;
   grid-template-rows: 100%;
+  grid-template-areas: 'secondary primary';
   grid-gap: ${COL_GAP}px;
   max-width: ${MAX_WIDTH}px;
 
@@ -109,6 +118,7 @@ export const PrimaryColumn = styled.section`
   border-radius: 0 0 4px 4px;
   height: 100%;
   min-width: 100%;
+  grid-area: primary;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     border-left: 0;
@@ -125,6 +135,7 @@ export const SecondaryColumn = styled.section`
   top: 0;
   padding-bottom: 64px;
   padding-right: 16px;
+  grid-area: secondary;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     height: auto;
