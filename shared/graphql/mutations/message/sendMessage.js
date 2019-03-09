@@ -48,6 +48,7 @@ const sendMessageOptions = {
           addMessage: {
             id: fakeId,
             timestamp: JSON.parse(JSON.stringify(new Date())),
+            bot: false,
             messageType:
               message.messageType === messageTypeObj.media
                 ? messageTypeObj.media
