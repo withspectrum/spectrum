@@ -34,7 +34,7 @@ export const addEmbedsToEditorState = (
     if (block.type !== 'unstyled') return;
 
     const embeds = getEmbedsFromText(block.text);
-    if (!embeds.length === 0) return;
+    if (embeds.length === 0) return;
 
     embeds.forEach(embed => {
       lastEntityKey++;
@@ -64,19 +64,6 @@ export const addEmbedsToEditorState = (
         type: 'embed',
       };
     });
-    // If this is the last block we need to add an empty block below the atomic block,
-    // otherwise users cannot remove the embed during editing
-    if (index === input.blocks.length - 1) {
-      newBlocks.push({
-        type: 'unstyled',
-        data: {},
-        text: ' ',
-        depth: 0,
-        entityRanges: [],
-        inlineStyleRanges: [],
-        key: genKey(),
-      });
-    }
   });
 
   return {
