@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import Icon from '../icons';
 import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
+import { MAX_WIDTH, MEDIA_BREAK } from 'src/components/layout';
 
 export const DropzoneWrapper = styled.div`
   position: sticky;
@@ -23,10 +24,12 @@ export const DropImageOverlay = (props: { visible: boolean }) => {
 };
 
 export const Wrapper = styled.div`
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  bottom: 0;
+  grid-area: view;
+  display: flex;
+  justify-content: center;
+  z-index: ${zIndex.slider + 1};
+  position: sticky;
+  top: 0;
 `;
 
 export const DropImageOverlayWrapper = styled.div`
@@ -57,89 +60,62 @@ export const DropImageOverlayWrapper = styled.div`
 `;
 
 export const Overlay = styled.div`
-  ${props =>
-    props.slider &&
-    css`
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 3000;
-      background: #000;
-      pointer-events: auto;
-      opacity: 0.4;
-    `}
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.24);
+  z-index: ${zIndex.slider + 2};
 `;
 
 export const Container = styled(FlexCol)`
-  background-color: ${theme.bg.default};
-  display: grid;
-  grid-template-rows: 50px 1fr 64px;
-  grid-template-columns: 100%;
-  grid-template-areas: 'header' 'body' 'footer';
-  align-self: stretch;
-  flex: auto;
-  overflow: hidden;
+  display: flex;
   height: 100vh;
-  position: relative;
-  z-index: ${zIndex.composer};
+  width: 100%;
+  position: fixed;
+  max-width: ${MAX_WIDTH + 32}px;
+  background: ${theme.bg.wash};
+  z-index: ${zIndex.slider + 3};
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08), 4px 0 12px rgba(0, 0, 0, 0.08);
 
-  ${props =>
-    props.slider &&
-    css`
-      right: 0;
-      position: absolute;
-      width: 650px;
-      top: 0;
-      height: 100vh;
-    `}
-
-  @media (max-width: 768px) {
-    grid-template-rows: 48px 64px 1fr 64px;
-    grid-template-areas: 'title' 'header' 'body' 'footer';
-    max-width: 100vw;
-    width: 100%;
-    height: 100vh;
+  @media (max-width: ${MEDIA_BREAK}px) {
+    max-width: 100%;
+    padding: 0;
+    box-shadow: 0;
   }
 `;
 
 export const DesktopLink = styled.a`
   display: flex;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
 
 export const ButtonRow = styled(FlexRow)`
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     justify-content: flex-end;
   }
 `;
 
-export const Actions = styled(FlexCol)`
+export const Actions = styled.div`
   background: ${theme.bg.wash};
-  border-top: 2px solid ${theme.bg.border};
+  border-top: 1px solid ${theme.bg.border};
   padding: 8px 16px;
-  border-radius: 0;
   align-self: stretch;
-  display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   position: relative;
-  grid-area: footer;
+  display: flex;
+  flex: 1 0 auto;
+  height: 56px;
+  max-height: 56px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 8px;
     z-index: ${zIndex.chrome + 1};
-    border-radius: 0;
-    border: 0;
-    background: ${theme.bg.wash};
-    border-top: 1px solid ${theme.bg.border};
 
     > ${ButtonRow} {
       width: 100%;
@@ -163,15 +139,17 @@ export const InputHints = styled(FlexRow)`
 
 export const Dropdowns = styled(FlexRow)`
   display: flex;
+  flex: 1 0 auto;
+  height: 48px;
+  max-height: 48px;
   align-items: center;
-  grid-area: header;
   background-color: ${theme.bg.wash};
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   z-index: 9999;
-  grid-area: header;
   border-bottom: 1px solid ${theme.bg.border};
+  padding: 8px 16px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     width: 100%;
     justify-content: flex-start;
   }
@@ -181,13 +159,12 @@ export const DropdownsLabel = styled.span`
   font-size: 14px;
   font-weight: 500;
   color: ${theme.text.secondary};
-  margin-left: 16px;
   line-height: 1;
   vertical-align: middle;
   position: relative;
   top: 1px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -201,6 +178,10 @@ export const CommunityPreview = styled.div`
   display: flex;
   align-items: center;
   position: relative;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    margin-left: 0;
+  }
 `;
 
 export const ChannelPreview = styled(CommunityPreview)`
@@ -222,7 +203,7 @@ const Selector = styled.select`
   font-weight: 500;
   font-size: 14px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex: auto;
     max-width: calc(50% - 12px);
   }
@@ -256,7 +237,7 @@ export const ThreadInputs = styled(FlexCol)`
   z-index: ${zIndex.composer};
   height: 100%;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 24px;
   }
 `;
@@ -313,15 +294,11 @@ export const DisabledWarning = styled.div`
 export const RenderWrapper = styled.div``;
 
 export const InputsGrid = styled.div`
-  display: grid;
-  grid-template-rows: 48px 1fr;
-  grid-area: body;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   overflow: hidden;
   overflow-y: scroll;
-
-  ${props =>
-    props.isEditing &&
-    css`
-      height: 100%;
-    `}
+  background: ${theme.bg.default};
+  padding-bottom: 48px;
 `;

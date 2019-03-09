@@ -335,7 +335,6 @@ injectGlobal`
 
   .threadComposer textarea {
     line-height: 1.5;
-    /* account for bottom save bar when editing */
-    height: calc(100% + 52px)!important;
+    height: calc(100% + 48px)!important;
   }
 `;

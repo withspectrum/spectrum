@@ -14,7 +14,8 @@ import uploadImage, {
   type UploadImageInput,
   type UploadImageType,
 } from 'shared/graphql/mutations/uploadImage';
-import { TextButton, Button } from '../buttons';
+import { TextButton } from '../buttons';
+import { PrimaryButton } from 'src/views/community/components/button';
 import {
   MediaLabel,
   MediaInput,
@@ -203,7 +204,7 @@ class ComposerWithData extends React.Component<Props, State> {
       this.clearEditorStateAfterPublish();
     }
 
-    this.props.history.goBack();
+    this.props.history.goBack({ state: { modal: false } });
     return;
   };
 
@@ -505,7 +506,7 @@ class ComposerWithData extends React.Component<Props, State> {
               >
                 Cancel
               </TextButton>
-              <Button
+              <PrimaryButton
                 data-cy="composer-publish-button"
                 onClick={this.publishThread}
                 loading={isLoading}
@@ -517,10 +518,9 @@ class ComposerWithData extends React.Component<Props, State> {
                   !selectedChannelId ||
                   !selectedCommunityId
                 }
-                color={'brand'}
               >
                 Publish
-              </Button>
+              </PrimaryButton>
             </ButtonRow>
           </Actions>
         </Container>

@@ -35,7 +35,6 @@ export const ThreadContainerBackground = styled.div`
 
   @media (max-width: ${MEDIA_BREAK}px) {
     max-width: 100%;
-    transform: translateX(0);
     padding: 0;
     box-shadow: 0;
   }
