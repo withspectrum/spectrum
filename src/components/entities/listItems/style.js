@@ -68,6 +68,7 @@ export const Description = styled.p`
   color: ${theme.text.default};
   margin-top: 6px;
   padding-right: 24px;
+  word-break: break-word;
 `;
 
 export const MessageIcon = styled.div`
