@@ -25,6 +25,7 @@ import MediaUploader from './components/mediaUploader';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
 import type { Dispatch } from 'redux';
 import { MarkdownHint } from 'src/components/markdownHint';
+import { useAppScroller } from 'src/hooks/useAppScroller';
 
 const QuotedMessage = connect()(
   getMessageById(props => {
@@ -41,7 +42,7 @@ const QuotedMessage = connect()(
         )
       );
       props.dispatch(
-        replyToMessage({ threadId: props.threadId, messageId: null })
+        replyToMessage({ threadId: props.thread.id, messageId: null })
       );
     }
 
@@ -56,13 +57,12 @@ type Props = {
   createThread: Function,
   sendMessage: Function,
   sendDirectMessage: Function,
-  forceScrollToBottom: Function,
   threadType: string,
-  thread: string,
+  threadId: string,
   clear: Function,
   websocketConnection: string,
   networkOnline: boolean,
-  threadData?: Object,
+  thread?: Object,
   refetchThread?: Function,
   quotedMessage: ?{ messageId: string, threadId: string },
   // used to pre-populate the @mention suggestions with participants and the author of the thread
@@ -81,15 +81,12 @@ export const cleanSuggestionUserObject = (user: ?Object) => {
   };
 };
 
-// $FlowFixMe
 const ChatInput = (props: Props) => {
-  const cacheKey = `last-content-${props.thread}`;
-  // $FlowFixMe
+  const cacheKey = `last-content-${props.thread.id}`;
   const [text, changeText] = React.useState('');
-  // $FlowFixMe
   const [photoSizeError, setPhotoSizeError] = React.useState('');
-  // $FlowFixMe
   const [inputRef, setInputRef] = React.useState(null);
+  const { scrollToBottom } = useAppScroller();
 
   // On mount, set the text state to the cached value if one exists
   // $FlowFixMe
@@ -98,7 +95,7 @@ const ChatInput = (props: Props) => {
       changeText(localStorage.getItem(cacheKey) || '');
       // NOTE(@mxstbr): We ONLY want to run this if we switch between threads, never else!
     },
-    [props.thread]
+    [props.thread.id]
   );
 
   // Cache the latest text everytime it changes
@@ -157,7 +154,7 @@ const ChatInput = (props: Props) => {
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
     // in views/directMessages/containers/newThread.js
-    if (props.thread === 'newDirectMessageThread') {
+    if (props.thread.id === 'newDirectMessageThread') {
       return props.createThread({
         messageType: file ? 'media' : 'text',
         file,
@@ -170,7 +167,7 @@ const ChatInput = (props: Props) => {
         ? props.sendMessage
         : props.sendDirectMessage;
     return method({
-      threadId: props.thread,
+      threadId: props.thread.id,
       messageType: file ? 'media' : 'text',
       threadType: props.threadType,
       parentId: props.quotedMessage,
@@ -210,12 +207,11 @@ const ChatInput = (props: Props) => {
       return props.dispatch(openModal('LOGIN_MODAL', {}));
     }
 
-    // If a user sends a message, force a scroll to bottom. This doesn't exist if this is a new DM thread
-    if (props.forceScrollToBottom) props.forceScrollToBottom();
+    scrollToBottom();
 
     if (mediaFile) {
       setIsSendingMediaMessage(true);
-      if (props.forceScrollToBottom) props.forceScrollToBottom();
+      scrollToBottom();
       await sendMessage({
         file: mediaFile,
         body: '{"blocks":[],"entityMap":{}}',
@@ -240,8 +236,8 @@ const ChatInput = (props: Props) => {
         // If we're viewing a thread and the user sends a message as a non-member, we need to refetch the thread data
         if (
           props.threadType === 'story' &&
-          props.threadData &&
-          !props.threadData.channel.channelPermissions.isMember &&
+          props.thread.id &&
+          !props.thread.channel.channelPermissions.isMember &&
           props.refetchThread
         ) {
           return props.refetchThread();
@@ -285,7 +281,7 @@ const ChatInput = (props: Props) => {
   const removeQuotedMessage = () => {
     if (props.quotedMessage)
       props.dispatch(
-        replyToMessage({ threadId: props.thread, messageId: null })
+        replyToMessage({ threadId: props.thread.id, messageId: null })
       );
   };
 
@@ -333,7 +329,7 @@ const ChatInput = (props: Props) => {
                 <PreviewWrapper data-cy="staged-quoted-message">
                   <QuotedMessage
                     id={props.quotedMessage}
-                    threadId={props.thread}
+                    threadId={props.thread.id}
                   />
                   <RemovePreviewButton
                     data-cy="remove-staged-quoted-message"
@@ -352,6 +348,7 @@ const ChatInput = (props: Props) => {
                 onBlur={props.onBlur}
                 onChange={onChange}
                 onKeyDown={handleKeyPress}
+                autoFocus={true}
                 inputRef={node => {
                   if (props.onRef) props.onRef(node);
                   setInputRef(node);
@@ -376,7 +373,7 @@ const ChatInput = (props: Props) => {
 const map = (state, ownProps) => ({
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
-  quotedMessage: state.message.quotedMessage[ownProps.thread] || null,
+  quotedMessage: state.message.quotedMessage[ownProps.thread.id] || null,
 });
 
 export default compose(

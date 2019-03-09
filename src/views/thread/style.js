@@ -12,10 +12,10 @@ import {
   Transition,
   zIndex,
   Tooltip,
-  Shadow,
   hexa,
   Truncate,
 } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const ThreadViewContainer = styled.div`
   display: flex;
@@ -109,13 +109,13 @@ export const Detail = styled(Column)`
     `}
 `;
 
-export const ChatInputWrapper = styled(FlexCol)`
-  align-self: stretch;
-  align-items: stretch;
-  margin: 0;
-  flex: auto;
-  position: relative;
-  max-width: 100%;
+export const ChatInputWrapper = styled.div`
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  grid-area: primary;
+  z-index: 3;
 `;
 
 export const DetailViewWrapper = styled(FlexCol)`
@@ -150,6 +150,12 @@ export const ThreadWrapper = styled(FlexCol)`
   font-size: 16px;
   flex: none;
   min-width: 320px;
+  position: relative;
+  z-index: ${zIndex.card + 1};
+  background: ${theme.bg.default};
+  /* manually nudge up 60px to cover the sliding header in the thread view */
+  top: -60px;
+  margin-bottom: -60px;
 
   ${props =>
     props.isEditing &&
@@ -383,8 +389,7 @@ export const NullMessagesWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px;
-  padding-top: 64px;
+  padding: 64px 32px;
   flex: 1;
   color: ${theme.text.alt};
   flex-direction: column;
@@ -463,21 +468,25 @@ export const ShareButton = styled.span`
   ${Tooltip};
 `;
 
-export const CommunityHeader = styled.div`
-  display: ${props => (props.hide ? 'none' : 'flex')};
-  align-items: center;
-  justify-content: space-between;
-  padding: 11px 16px;
-  box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
-  flex: 0 0 64px;
-  align-self: stretch;
-  background: ${theme.bg.default};
+export const StickyHeaderContent = styled.div`
+  display: flex;
+  padding: 12px 16px;
+  cursor: pointer;
+  max-width: 70%;
 
   @media (max-width: 728px) {
     padding: 16px;
     display: flex;
   }
 `;
+
+export const StickyHeaderActionsContainer = styled.div`
+  padding: 12px 0;
+  display: flex;
+  align-items: center;
+  flex: 0 1 auto;
+`;
+
 export const CommunityHeaderName = styled.h3`
   font-size: 16px;
   font-weight: 600;
@@ -542,7 +551,7 @@ export const CommunityHeaderChannelTag = styled.div`
 export const CommunityHeaderMeta = styled.div`
   display: flex;
   align-items: center;
-  max-width: 80%;
+  max-width: 100%;
 `;
 
 export const CommunityHeaderMetaCol = styled.div`
@@ -560,7 +569,7 @@ export const PillLink = styled(Link)`
   font-size: 12px;
   box-shadow: 0 0 0 1px ${theme.bg.border};
   background: ${theme.bg.wash};
-  font-weight: ${props => '400'};
+  font-weight: 400;
   color: ${theme.text.alt};
   display: flex;
   flex: none;
@@ -797,18 +806,42 @@ export const Label = styled.p`
   font-size: 14px;
 `;
 
-export const AnimatedContainer = styled.div`
-  transform: translateY(${props => (props.isVisible ? '0' : '-64px')});
-  opacity: ${props => (props.isVisible ? '1' : '0')};
-  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  width: 100%;
-  position: absolute;
+export const StickyHeaderContainer = styled.div`
+  position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
+  width: 100%;
   z-index: ${zIndex.card};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px ${props => hexa(props.theme.bg.reverse, 0.08)};
+  flex: 0 0 64px;
+  align-self: stretch;
+  background: ${theme.bg.wash};
+  padding-right: 16px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
+`;
+
+export const Stretch = styled.div`
+  min-height: calc(100vh - 74px);
+`;
+
+export const LockedWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  color: ${theme.text.secondary};
+  background: ${theme.bg.wash};
+  border-top: 1px solid ${theme.bg.border};
+`;
+
+export const LockedText = styled.div`
+  font-size: 15px;
+  font-weight: 500;
+  margin-left: 16px;
 `;

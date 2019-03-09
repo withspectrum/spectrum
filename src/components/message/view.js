@@ -73,7 +73,9 @@ export const Body = (props: BodyProps) => {
               {parsed && Array.isArray(parsed.blocks) && parsed.blocks[0].text}
             </Emoji>
           ) : (
-            <div className="markdown">{redraft(parsed, messageRenderer)}</div>
+            <div key={message.id} className="markdown">
+              {redraft(parsed, messageRenderer)}
+            </div>
           )}
           {uniqueIds && (
             <ThreadAttachmentsContainer>

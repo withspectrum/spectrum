@@ -22,11 +22,7 @@ import ActionBar from './actionBar';
 import ConditionalWrap from 'src/components/conditionalWrap';
 import ThreadEditInputs from 'src/components/composer/inputs';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import {
-  UserHoverProfile,
-  CommunityHoverProfile,
-  ChannelHoverProfile,
-} from 'src/components/hoverProfile';
+import { UserHoverProfile } from 'src/components/hoverProfile';
 import {
   ThreadWrapper,
   ThreadContent,
@@ -433,18 +429,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
               <ThreadHeading>{thread.content.title}</ThreadHeading>
 
               <ThreadSubtitle>
-                <CommunityHoverProfile id={thread.community.id}>
-                  <Link to={`/${thread.community.slug}`}>
-                    {thread.community.name}
-                  </Link>
-                </CommunityHoverProfile>
-                <span>&nbsp;/&nbsp;</span>
-                <ChannelHoverProfile id={thread.channel.id}>
-                  <Link to={`/${thread.community.slug}/${thread.channel.slug}`}>
-                    {thread.channel.name}
-                  </Link>
-                </ChannelHoverProfile>
-                <span>&nbsp;·&nbsp;</span>
                 <Link to={getThreadLink(thread)}>
                   {timestamp}
                   {thread.modifiedAt && (
