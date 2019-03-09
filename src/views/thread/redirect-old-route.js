@@ -16,10 +16,7 @@ export default getThreadByMatch(props => {
       <Redirect
         to={{
           ...props.location,
-          pathname: `${getThreadLink(thread)}${idx(
-            props,
-            _ => _.location.search
-          ) || ''}`,
+          pathname: `${getThreadLink(thread)}`,
         }}
       />
     );
