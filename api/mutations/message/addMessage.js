@@ -34,6 +34,7 @@ type Input = {
     },
     parentId?: string,
     file?: FileUpload,
+    bot?: boolean,
   },
 };
 

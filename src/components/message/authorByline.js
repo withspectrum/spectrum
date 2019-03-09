@@ -18,6 +18,7 @@ type Props = {
   user: Object,
   timestamp: string,
   roles?: Array<string>,
+  bot?: boolean,
   messageUrl: string,
   selectedMessageId: string,
 };
@@ -65,6 +66,7 @@ export default (props: Props) => {
                   style={{ textTransform: 'none' }}
                 />
               )}
+              {props.bot && <Badge type="bot" label={'BOT'} />}
             </BadgesContainer>
             <GutterTimestamp
               to={messageUrl}

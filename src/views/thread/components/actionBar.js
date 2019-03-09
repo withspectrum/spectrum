@@ -17,7 +17,11 @@ import OutsideClickHandler from 'src/components/outsideClickHandler';
 import { track, events, transformations } from 'src/helpers/analytics';
 import getThreadLink from 'src/helpers/get-thread-link';
 import type { Dispatch } from 'redux';
-
+import { InputHints, DesktopLink } from 'src/components/composer/style';
+import {
+  MediaLabel,
+  MediaInput,
+} from 'src/components/chatInput/components/style';
 import {
   FollowButton,
   ShareButtons,
@@ -46,6 +50,7 @@ type Props = {
   title: string,
   isLockingThread: boolean,
   isPinningThread: boolean,
+  uploadFiles: Function,
 };
 type State = {
   notificationStateLoading: boolean,
@@ -227,6 +232,10 @@ class ActionBar extends React.Component<Props, State> {
     );
   };
 
+  uploadFiles = evt => {
+    this.props.uploadFiles(evt.target.files);
+  };
+
   render() {
     const {
       thread,
@@ -254,7 +263,25 @@ class ActionBar extends React.Component<Props, State> {
     if (isEditing) {
       return (
         <FixedBottomActionBarContainer>
-          <div style={{ display: 'flex' }} />
+          <div style={{ display: 'flex' }}>
+            <InputHints>
+              <MediaLabel>
+                <MediaInput
+                  type="file"
+                  accept={'.png, .jpg, .jpeg, .gif, .mp4'}
+                  multiple={false}
+                  onChange={this.uploadFiles}
+                />
+                <Icon glyph="photo" />
+              </MediaLabel>
+              <DesktopLink
+                target="_blank"
+                href="https://guides.github.com/features/mastering-markdown/"
+              >
+                <Icon glyph="markdown" />
+              </DesktopLink>
+            </InputHints>
+          </div>
           <div style={{ display: 'flex' }}>
             <EditDone data-cy="cancel-thread-edit-button">
               <TextButton onClick={this.props.toggleEdit}>Cancel</TextButton>
