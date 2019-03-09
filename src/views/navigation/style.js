@@ -126,7 +126,7 @@ export const AvatarLink = styled(Link)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px;
+  padding: 8px 12px 6px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     flex-direction: row;
