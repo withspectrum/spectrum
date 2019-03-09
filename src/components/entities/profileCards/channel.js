@@ -6,11 +6,11 @@ import { ChannelCommunityMeta } from './components/channelCommunityMeta';
 import { ProfileContainer } from './style';
 
 export const ChannelProfileCard = (props: Props) => {
-  const { channel } = props;
+  const { channel, hideCommunityMeta } = props;
 
   return (
     <ProfileContainer>
-      <ChannelCommunityMeta channel={channel} />
+      {!hideCommunityMeta && <ChannelCommunityMeta channel={channel} />}
       <ChannelMeta channel={channel} />
       <ChannelActions channel={channel} />
     </ProfileContainer>
