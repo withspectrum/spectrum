@@ -30,9 +30,8 @@ const EditingChatInput = (props: Props) => {
   // $FlowIssue
   const [text, setText] = React.useState(initialState);
   // $FlowIssue
-  const [loading, setLoading] = React.useState(false);
-  // $FlowIssue
   const [saving, setSaving] = React.useState(false);
+  let input = null;
 
   // $FlowIssue
   React.useEffect(
@@ -40,18 +39,14 @@ const EditingChatInput = (props: Props) => {
       if (props.message.messageType === 'text') return;
 
       setText(null);
-      const loadingTimeout = setTimeout(() => {
-        setLoading(true);
-      }, 300);
       fetch('https://convert.spectrum.chat/to', {
         method: 'POST',
         body: props.message.content.body,
       })
         .then(res => res.text())
         .then(md => {
-          clearTimeout(loadingTimeout);
-          setLoading(false);
           setText(md);
+          input && input.focus();
         });
     },
     [props.message.id]
@@ -114,23 +109,21 @@ const EditingChatInput = (props: Props) => {
 
   return (
     <React.Fragment>
-      {!loading && text === null ? (
-        <p />
-      ) : !loading ? (
-        <EditorInput data-cy="edit-message-input">
-          <Input
-            dataCy="editing-chat-input"
-            placeholder="Your message here..."
-            value={text}
-            onChange={onChange}
-            onKeyDown={handleKeyPress}
-            inputRef={props.editorRef}
-            autoFocus
-          />
-        </EditorInput>
-      ) : (
-        <p>Loading...</p>
-      )}
+      <EditorInput data-cy="edit-message-input">
+        <Input
+          dataCy="editing-chat-input"
+          placeholder={text === null ? 'Loading...' : 'Your message here...'}
+          disabled={text === null}
+          value={text === null ? '' : text}
+          onChange={onChange}
+          onKeyDown={handleKeyPress}
+          inputRef={ref => {
+            props.editorRef && props.editorRef(ref);
+            input = ref;
+          }}
+          autoFocus
+        />
+      </EditorInput>
       <EditActions>
         {!saving && (
           <TextButton dataCy="edit-message-cancel" onClick={props.cancelEdit}>
