@@ -8,6 +8,8 @@ const config =
         host: process.env.REDIS_CACHE_URL,
         password: process.env.REDIS_CACHE_PASSWORD,
       }
-    : undefined;
+      : {
+          host: process.env.REDIS_CACHE_URL,
+      };
 
 export default new Redis(config);

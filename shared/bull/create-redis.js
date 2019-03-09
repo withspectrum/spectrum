@@ -8,7 +8,9 @@ const config =
         host: process.env.COMPOSE_REDIS_URL,
         password: process.env.COMPOSE_REDIS_PASSWORD,
       }
-    : undefined; // Use the local instance of Redis in development by not passing any connection string
+      : {
+          host: process.env.COMPOSE_REDIS_URL || 'localhost',
+      }; // Use the local instance of Redis in development by not passing any connection string
 
 export default (extraConfig?: Object) =>
   new Redis({

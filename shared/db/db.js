@@ -11,6 +11,7 @@ const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
 const CONNECTIONS = 20;
 const DEFAULT_CONFIG = {
+  host: process.env.COMPOSE_RETHINKDB_URL,
   // Connect to the test database when, well, testing
   db: !process.env.TEST_DB ? 'spectrum' : 'testing',
   max: CONNECTIONS, // Maximum number of connections, default is 1000

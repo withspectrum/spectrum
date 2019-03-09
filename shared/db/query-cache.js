@@ -5,6 +5,7 @@ const IS_PROD = process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV;
 
 const DEFAULT_REDIS_OPTIONS = {
   keyPrefix: 'query-cache',
+  host: process.env.REDIS_CACHE_URL,
 };
 
 const PRODUCTION_REDIS_OPTIONS = {
