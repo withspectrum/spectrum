@@ -1,7 +1,5 @@
 // @flow
 import * as React from 'react';
-import { convertFromRaw } from 'draft-js';
-import { stateToMarkdown } from 'draft-js-export-markdown';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
 import { Input } from '../chatInput/style';
 import { EditorInput, EditActions } from './style';
@@ -28,20 +26,31 @@ type State = {
 
 const EditingChatInput = (props: Props) => {
   const initialState =
-    props.message.messageType === 'text'
-      ? props.message.content.body
-      : stateToMarkdown(
-          convertFromRaw(JSON.parse(props.message.content.body)),
-          {
-            gfm: true,
-          }
-          // NOTE(@mxstbr): draft-js-export-markdown sometimes appends an empty line at the end,
-          // which we really never want
-        ).replace(/\n$/, '');
+    props.message.messageType === 'text' ? props.message.content.body : null;
   // $FlowIssue
   const [text, setText] = React.useState(initialState);
   // $FlowIssue
   const [saving, setSaving] = React.useState(false);
+  let input = null;
+
+  // $FlowIssue
+  React.useEffect(
+    () => {
+      if (props.message.messageType === 'text') return;
+
+      setText(null);
+      fetch('https://convert.spectrum.chat/to', {
+        method: 'POST',
+        body: props.message.content.body,
+      })
+        .then(res => res.text())
+        .then(md => {
+          setText(md);
+          input && input.focus();
+        });
+    },
+    [props.message.id]
+  );
 
   const onChange = e => {
     const text = e.target.value;
@@ -103,11 +112,15 @@ const EditingChatInput = (props: Props) => {
       <EditorInput data-cy="edit-message-input">
         <Input
           dataCy="editing-chat-input"
-          placeholder="Your message here..."
-          value={text}
+          placeholder={text === null ? 'Loading...' : 'Your message here...'}
+          disabled={text === null}
+          value={text === null ? '' : text}
           onChange={onChange}
           onKeyDown={handleKeyPress}
-          inputRef={props.editorRef}
+          inputRef={ref => {
+            props.editorRef && props.editorRef(ref);
+            input = ref;
+          }}
           autoFocus
         />
       </EditorInput>
