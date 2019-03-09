@@ -88,9 +88,21 @@ class MessagesWithData extends React.Component<Props, State> {
     const previousMessageCount =
       previousMessagesHaveLoaded &&
       prev.data.thread.messageConnection.edges.length;
+    const previousOptimistic =
+      previousMessagesHaveLoaded &&
+      prev.data.thread.messageConnection.edges.some(
+        ({ node }) => node.messageType === 'optimistic'
+      );
+    const newOptimistic =
+      newMessagesHaveLoaded &&
+      curr.data.thread.messageConnection.edges.some(
+        ({ node }) => node.messageType === 'optimistic'
+      );
     const newMessageCount =
       newMessagesHaveLoaded && curr.data.thread.messageConnection.edges.length;
-    const newMessageSent = previousMessageCount < newMessageCount;
+    const newMessageSent =
+      previousMessageCount < newMessageCount ||
+      previousOptimistic !== newOptimistic;
     const messagesLoadedForFirstTime = !prev.data.thread && curr.data.thread;
 
     if (
