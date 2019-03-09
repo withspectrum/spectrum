@@ -29,7 +29,7 @@ const ExternalEmbed = (props: { ...ExternalEmbedData, src?: string }) => {
   // if an aspect ratio is passed in, we need to use the EmbedComponent which does some trickery with padding to force an aspect ratio. Otherwise we should just use a regular iFrame
   if (aspectRatio && aspectRatio !== undefined) {
     return (
-      <AspectRatio ratio={aspectRatio}>
+      <AspectRatio style={{ height }} ratio={aspectRatio}>
         <EmbedComponent
           title={`iframe-${src}`}
           width={width}
@@ -42,7 +42,7 @@ const ExternalEmbed = (props: { ...ExternalEmbedData, src?: string }) => {
     );
   } else {
     return (
-      <EmbedContainer>
+      <EmbedContainer style={{ height }}>
         <iframe
           title={`iframe-${src}`}
           width={width}
