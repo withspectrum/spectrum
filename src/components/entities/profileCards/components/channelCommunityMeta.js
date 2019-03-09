@@ -11,7 +11,7 @@ export const ChannelCommunityMeta = (props: Props) => {
   return (
     <Link to={`/${community.slug}`}>
       <ChannelCommunityMetaRow>
-        <CommunityAvatar size={24} community={community} />
+        <CommunityAvatar isClickable={false} size={24} community={community} />
         <ChannelCommunityName>{community.name}</ChannelCommunityName>
       </ChannelCommunityMetaRow>
     </Link>
