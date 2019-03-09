@@ -165,6 +165,10 @@ const ComposerFallback = signedOutFallback(Composer, () => (
   <Login redirectPath={`${CLIENT_URL}/new/thread`} />
 ));
 
+export const RouteModalContext = React.createContext({
+  hasModal: false,
+});
+
 export const NavigationContext = React.createContext({
   navigationIsOpen: false,
   setNavigationIsOpen: () => {},
@@ -240,189 +244,218 @@ class Routes extends React.Component<Props> {
                 <Route component={Toasts} />
                 <Route component={Gallery} />
 
-                <AppViewWrapper>
-                  {/* Default meta tags, get overriden by anything further down the tree */}
-                  <Head title={title} description={description} />
-                  {/* Global navigation, notifications, message notifications, etc */}
-                  {/*
-                    AuthViewHandler often returns null, but is responsible for triggering
-                    things like the 'set username' prompt when a user auths and doesn't
-                    have a username set.
-                  */}
-                  <AuthViewHandler>{() => null}</AuthViewHandler>
-                  <ThirdPartyContext />
-                  <Route component={QueryParamToastDispatcher} />
-                  <Route component={Navigation} />
+                {/*
+                    The AppViewWrapper controls the *global* grid for the entire
+                    app, accounting for whether the user is signed in or not to
+                    determine whether or not to render the side navigation bar.
 
-                  {/*
-                      Switch only renders the first match. Subrouting happens downstream
-                      https://reacttraining.com/react-router/web/api/Switch
+                    It also accounts for every view in the app containing a wrapping
+                    div called <ViewGrid> from `src/components/layout`. The problem
+                    is that when we load a thread in the modal view, we actually
+                    want the *modal* itself to take over that grid area.
+
+                    To do this, we tell the AppViewWrapper if a modal is present;
+                    if so, we `display:none` the original view so that the modal
+                    appears perfectly aligned, yet takes up the original `grid-area`.
+                    This makes it so that all original scroll behavior of the app 
+                    works exactly the same.
+
+                    tl;dr: do not touch this.
+                */}
+                <RouteModalContext.Provider value={{ hasModal: isModal }}>
+                  <AppViewWrapper hasModal={isModal}>
+                    {/* Default meta tags, get overriden by anything further down the tree */}
+                    <Head title={title} description={description} />
+                    {/* Global navigation, notifications, message notifications, etc */}
+                    {/*
+                      AuthViewHandler often returns null, but is responsible for triggering
+                      things like the 'set username' prompt when a user auths and doesn't
+                      have a username set.
                     */}
-                  <Switch location={isModal ? this.previousLocation : location}>
-                    <Route
-                      exact
-                      path="/"
-                      component={HomeViewRedirectFallback}
-                    />
-                    <Route exact path="/home" component={HomeFallback} />
-
-                    {/* Public Business Pages */}
-                    <Route path="/about" component={Pages} />
-                    <Route path="/contact" component={Pages} />
-                    <Route path="/terms" component={Pages} />
-                    <Route path="/privacy" component={Pages} />
-                    <Route path="/terms.html" component={Pages} />
-                    <Route path="/privacy.html" component={Pages} />
-                    <Route path="/code-of-conduct" component={Pages} />
-                    <Route path="/support" component={Pages} />
-                    <Route path="/features" component={Pages} />
-                    <Route path="/faq" component={Pages} />
-                    <Route path="/apps" component={Pages} />
-
-                    {/* App Pages */}
-                    <Route
-                      path="/new/community"
-                      component={NewCommunityFallback}
-                    />
-                    <Route path="/new/thread" component={ComposerFallback} />
-                    <Route path="/new/search" component={Search} />
-
-                    <Route
-                      path="/new"
-                      render={() => <Redirect to="/new/community" />}
-                    />
-
-                    <Route path="/login" component={LoginFallback} />
-                    <Route path="/explore" component={Explore} />
-                    <Route
-                      path="/messages/:threadId"
-                      component={MessagesFallback}
-                    />
-                    <Route path="/messages" component={MessagesFallback} />
-                    <Route
-                      path="/thread/:threadId"
-                      component={RedirectOldThreadRoute}
-                    />
-                    <Route path="/thread" render={() => <Redirect to="/" />} />
-                    <Route
-                      exact
-                      path="/users"
-                      render={() => <Redirect to="/" />}
-                    />
-                    <Route exact path="/users/:username" component={UserView} />
-                    <Route
-                      exact
-                      path="/users/:username/settings"
-                      component={UserSettingsFallback}
-                    />
-                    <Route
-                      path="/notifications"
-                      component={NotificationsFallback}
-                    />
-
-                    <Route
-                      path="/me/settings"
-                      render={() =>
-                        currentUser && currentUser.username ? (
-                          <Redirect
-                            to={`/users/${currentUser.username}/settings`}
-                          />
-                        ) : currentUser && !currentUser.username ? (
-                          <NewUserOnboarding />
-                        ) : isLoadingCurrentUser ? null : (
-                          <Login redirectPath={`${CLIENT_URL}/me/settings`} />
-                        )
-                      }
-                    />
-                    <Route
-                      path="/me"
-                      render={() =>
-                        currentUser && currentUser.username ? (
-                          <Redirect to={`/users/${currentUser.username}`} />
-                        ) : isLoadingCurrentUser ? null : (
-                          <Login redirectPath={`${CLIENT_URL}/me`} />
-                        )
-                      }
-                    />
+                    <AuthViewHandler>{() => null}</AuthViewHandler>
+                    <ThirdPartyContext />
+                    <Route component={QueryParamToastDispatcher} />
+                    <Route component={Navigation} />
 
                     {/*
-                        We check communitySlug last to ensure none of the above routes
-                        pass. We handle null communitySlug values downstream by either
-                        redirecting to home or showing a 404
+                        Switch only renders the first match. Subrouting happens downstream
+                        https://reacttraining.com/react-router/web/api/Switch
                       */}
-                    <Route
-                      path="/:communitySlug/:channelSlug/settings"
-                      component={ChannelSettingsFallback}
-                    />
-                    <Route
-                      path="/:communitySlug/:channelSlug/join/:token"
-                      component={PrivateChannelJoin}
-                    />
-                    <Route
-                      path="/:communitySlug/:channelSlug/join"
-                      component={PrivateChannelJoin}
-                    />
-                    <Route
-                      path="/:communitySlug/settings"
-                      component={CommunitySettingsFallback}
-                    />
-                    <Route
-                      path="/:communitySlug/join/:token"
-                      component={PrivateCommunityJoin}
-                    />
-                    <Route
-                      path="/:communitySlug/login"
-                      component={CommunityLoginFallback}
-                    />
-                    <Route
-                      // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.
-                      // Imagine our threadId is "id-123-id" (similar in shape to an actual UUID)
-                      // - /id-123-id => id-123-id, easy start that works
-                      // - /some-custom-slug~id-123-id => id-123-id, custom slug also works
-                      // - /~id-123-id => id-123-id => id-123-id, empty custom slug also works
-                      // - /some~custom~slug~id-123-id => id-123-id, custom slug with delimiter char in it (~) also works! :tada:
-                      path="/:communitySlug/:channelSlug/(.*~)?:threadId"
-                      component={ThreadView}
-                    />
-                    <Route
-                      path="/:communitySlug/:channelSlug"
-                      component={ChannelView}
-                    />
-                    <Route path="/:communitySlug" component={CommunityView} />
-                  </Switch>
+                    <Switch
+                      location={isModal ? this.previousLocation : location}
+                    >
+                      <Route
+                        exact
+                        path="/"
+                        component={HomeViewRedirectFallback}
+                      />
+                      <Route exact path="/home" component={HomeFallback} />
 
-                  {isModal && (
-                    <Route
-                      // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.
-                      // Imagine our threadId is "id-123-id" (similar in shape to an actual UUID)
-                      // - /id-123-id => id-123-id, easy start that works
-                      // - /some-custom-slug~id-123-id => id-123-id, custom slug also works
-                      // - /~id-123-id => id-123-id => id-123-id, empty custom slug also works
-                      // - /some~custom~slug~id-123-id => id-123-id, custom slug with delimiter char in it (~) also works! :tada:
-                      path="/:communitySlug/:channelSlug/(.*~)?:threadId"
-                      component={props => (
-                        <ThreadSlider
-                          previousLocation={this.previousLocation}
-                          {...props}
-                        />
-                      )}
-                    />
-                  )}
+                      {/* Public Business Pages */}
+                      <Route path="/about" component={Pages} />
+                      <Route path="/contact" component={Pages} />
+                      <Route path="/terms" component={Pages} />
+                      <Route path="/privacy" component={Pages} />
+                      <Route path="/terms.html" component={Pages} />
+                      <Route path="/privacy.html" component={Pages} />
+                      <Route path="/code-of-conduct" component={Pages} />
+                      <Route path="/support" component={Pages} />
+                      <Route path="/features" component={Pages} />
+                      <Route path="/faq" component={Pages} />
+                      <Route path="/apps" component={Pages} />
 
-                  {isModal && (
-                    <Route
-                      path="/thread/:threadId"
-                      component={RedirectOldThreadRoute}
-                    />
-                  )}
+                      {/* App Pages */}
+                      <Route
+                        path="/new/community"
+                        component={NewCommunityFallback}
+                      />
+                      <Route path="/new/thread" component={ComposerFallback} />
+                      <Route path="/new/search" component={Search} />
 
-                  {isModal && (
-                    <Route
-                      path="/new/thread"
-                      render={props => <ComposerFallback {...props} slider />}
-                    />
-                  )}
-                </AppViewWrapper>
+                      <Route
+                        path="/new"
+                        render={() => <Redirect to="/new/community" />}
+                      />
+
+                      <Route path="/login" component={LoginFallback} />
+                      <Route path="/explore" component={Explore} />
+                      <Route
+                        path="/messages/:threadId"
+                        component={MessagesFallback}
+                      />
+                      <Route path="/messages" component={MessagesFallback} />
+                      <Route
+                        path="/thread/:threadId"
+                        component={RedirectOldThreadRoute}
+                      />
+                      <Route
+                        path="/thread"
+                        render={() => <Redirect to="/" />}
+                      />
+                      <Route
+                        exact
+                        path="/users"
+                        render={() => <Redirect to="/" />}
+                      />
+                      <Route
+                        exact
+                        path="/users/:username"
+                        component={UserView}
+                      />
+                      <Route
+                        exact
+                        path="/users/:username/settings"
+                        component={UserSettingsFallback}
+                      />
+                      <Route
+                        path="/notifications"
+                        component={NotificationsFallback}
+                      />
+
+                      <Route
+                        path="/me/settings"
+                        render={() =>
+                          currentUser && currentUser.username ? (
+                            <Redirect
+                              to={`/users/${currentUser.username}/settings`}
+                            />
+                          ) : currentUser && !currentUser.username ? (
+                            <NewUserOnboarding />
+                          ) : isLoadingCurrentUser ? null : (
+                            <Login redirectPath={`${CLIENT_URL}/me/settings`} />
+                          )
+                        }
+                      />
+                      <Route
+                        path="/me"
+                        render={() =>
+                          currentUser && currentUser.username ? (
+                            <Redirect to={`/users/${currentUser.username}`} />
+                          ) : isLoadingCurrentUser ? null : (
+                            <Login redirectPath={`${CLIENT_URL}/me`} />
+                          )
+                        }
+                      />
+
+                      {/*
+                          We check communitySlug last to ensure none of the above routes
+                          pass. We handle null communitySlug values downstream by either
+                          redirecting to home or showing a 404
+                        */}
+                      <Route
+                        path="/:communitySlug/:channelSlug/settings"
+                        component={ChannelSettingsFallback}
+                      />
+                      <Route
+                        path="/:communitySlug/:channelSlug/join/:token"
+                        component={PrivateChannelJoin}
+                      />
+                      <Route
+                        path="/:communitySlug/:channelSlug/join"
+                        component={PrivateChannelJoin}
+                      />
+                      <Route
+                        path="/:communitySlug/settings"
+                        component={CommunitySettingsFallback}
+                      />
+                      <Route
+                        path="/:communitySlug/join/:token"
+                        component={PrivateCommunityJoin}
+                      />
+                      <Route
+                        path="/:communitySlug/login"
+                        component={CommunityLoginFallback}
+                      />
+                      <Route
+                        // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.
+                        // Imagine our threadId is "id-123-id" (similar in shape to an actual UUID)
+                        // - /id-123-id => id-123-id, easy start that works
+                        // - /some-custom-slug~id-123-id => id-123-id, custom slug also works
+                        // - /~id-123-id => id-123-id => id-123-id, empty custom slug also works
+                        // - /some~custom~slug~id-123-id => id-123-id, custom slug with delimiter char in it (~) also works! :tada:
+                        path="/:communitySlug/:channelSlug/(.*~)?:threadId"
+                        component={ThreadView}
+                      />
+                      <Route
+                        path="/:communitySlug/:channelSlug"
+                        component={ChannelView}
+                      />
+                      <Route path="/:communitySlug" component={CommunityView} />
+                    </Switch>
+
+                    {isModal && (
+                      <Route
+                        // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.
+                        // Imagine our threadId is "id-123-id" (similar in shape to an actual UUID)
+                        // - /id-123-id => id-123-id, easy start that works
+                        // - /some-custom-slug~id-123-id => id-123-id, custom slug also works
+                        // - /~id-123-id => id-123-id => id-123-id, empty custom slug also works
+                        // - /some~custom~slug~id-123-id => id-123-id, custom slug with delimiter char in it (~) also works! :tada:
+                        path="/:communitySlug/:channelSlug/(.*~)?:threadId"
+                        component={props => (
+                          <ThreadSlider
+                            previousLocation={this.previousLocation}
+                            {...props}
+                          />
+                        )}
+                      />
+                    )}
+
+                    {isModal && (
+                      <Route
+                        path="/thread/:threadId"
+                        component={RedirectOldThreadRoute}
+                      />
+                    )}
+
+                    {isModal && (
+                      <Route
+                        path="/new/thread"
+                        render={props => <ComposerFallback {...props} slider />}
+                      />
+                    )}
+                  </AppViewWrapper>
+                </RouteModalContext.Provider>
               </Body>
             </ScrollManager>
           </ErrorBoundary>
