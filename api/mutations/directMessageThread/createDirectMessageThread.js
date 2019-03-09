@@ -17,8 +17,8 @@ import type { FileUpload } from 'shared/types';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
-import { messageTypeObj } from 'shared/draft-utils/process-message-content';
-import type { MessageType } from 'shared/draft-utils/process-message-content';
+import { messageTypeObj } from 'shared/draft-utils/message-types';
+import type { MessageType } from 'shared/draft-utils/message-types';
 
 export type CreateDirectMessageThreadInput = {
   input: {
