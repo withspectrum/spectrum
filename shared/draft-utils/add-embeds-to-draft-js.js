@@ -64,19 +64,6 @@ export const addEmbedsToEditorState = (
         type: 'embed',
       };
     });
-    // If this is the last block we need to add an empty block below the atomic block,
-    // otherwise users cannot remove the embed during editing
-    if (index === input.blocks.length - 1) {
-      newBlocks.push({
-        type: 'unstyled',
-        data: {},
-        text: ' ',
-        depth: 0,
-        entityRanges: [],
-        inlineStyleRanges: [],
-        key: genKey(),
-      });
-    }
   });
 
   return {

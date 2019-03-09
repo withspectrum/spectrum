@@ -27,15 +27,6 @@ Object {
       "text": " ",
       "type": "atomic",
     },
-    Object {
-      "data": Object {},
-      "depth": 0,
-      "entityRanges": Array [],
-      "inlineStyleRanges": Array [],
-      "key": "oldvrah",
-      "text": " ",
-      "type": "unstyled",
-    },
   ],
   "entityMap": Object {
     "-Infinity": Object {
