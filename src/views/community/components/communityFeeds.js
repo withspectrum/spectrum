@@ -11,16 +11,11 @@ import { CommunityMeta } from 'src/components/entities/profileCards/components/c
 import { WatercoolerChat } from './watercoolerChat';
 import { PostsFeeds } from './postsFeeds';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
+import { useAppScroller } from 'src/hooks/useAppScroller';
 import { FeedsContainer, SidebarSection } from '../style';
 
 export const CommunityFeeds = (props: CommunityFeedsType) => {
-  const {
-    community,
-    scrollToTop,
-    scrollToPosition,
-    scrollToBottom,
-    contextualScrollToBottom,
-  } = props;
+  const { community, scrollToPosition, contextualScrollToBottom } = props;
   const defaultSegment = community.watercoolerId ? 'chat' : 'posts';
   const [activeSegment, setActiveSegment] = React.useState(defaultSegment);
 
@@ -88,10 +83,14 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
     is chat, we want that scrolled to the bottom by default, since the behavior
     of chat is to scroll up for older messages
   */
+  const { scrollToBottom, scrollToTop } = useAppScroller();
   useEffect(
     () => {
-      if (activeSegment === 'chat') scrollToBottom();
-      scrollToTop();
+      if (activeSegment === 'chat') {
+        scrollToBottom();
+      } else {
+        scrollToTop();
+      }
     },
     [activeSegment]
   );
