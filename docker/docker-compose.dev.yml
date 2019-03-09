@@ -2,6 +2,26 @@ version: "3"
 
 services:
 
+  nginx:
+    image: nginx:1.13.11-alpine
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=sicilia-io"
+      - "traefik.frontend.rule=HostRegexp:spectrum.localhost,{subdomain:[a-z]+}.spectrum.localhost"
+      - "traefik.frontend.entryPoints=http"
+      - "traefik.docker.network=infrastructure_proxy"
+
+  traefik:
+    image: traefik:latest
+    ports:
+      - 8080:8080
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/etc/traefik/traefik.toml
+
   rethinkdb:
     image: rethinkdb
     volumes:
