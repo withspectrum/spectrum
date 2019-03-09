@@ -40,6 +40,8 @@ const ThreadContainer = (props: Props) => {
   const { thread } = data;
   if (!thread) return <ErrorView />;
 
+  const { id } = thread;
+
   /*
     update the last seen timestamp of the current thread whenever it first
     loads, as well as when it unmounts as the user closes the thread. This
@@ -84,7 +86,7 @@ const ThreadContainer = (props: Props) => {
     [id]
   );
 
-  const { community, channel, id, isLocked } = thread;
+  const { community, channel, isLocked } = thread;
   const { communityPermissions } = community;
   const { isMember } = communityPermissions;
   const canChat = !isLocked && isMember;
