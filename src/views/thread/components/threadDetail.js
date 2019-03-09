@@ -4,8 +4,6 @@ import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { convertFromRaw } from 'draft-js';
-import { stateToMarkdown } from 'draft-js-export-markdown';
 import { timeDifference } from 'shared/time-difference';
 import { convertTimestampToDate } from 'shared/time-formatting';
 import { openModal } from 'src/actions/modals';
@@ -37,7 +35,7 @@ import { ErrorBoundary } from 'src/components/error';
 
 type State = {
   isEditing?: boolean,
-  body: string,
+  body: ?string,
   title: string,
   receiveNotifications?: boolean,
   isSavingEdit?: boolean,
@@ -94,9 +92,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
     return this.setState({
       isEditing: false,
-      body: stateToMarkdown(convertFromRaw(parsedBody), {
-        gfm: true,
-      }),
+      body: '',
       title: thread.content.title,
       // We store this in the state to avoid having to JSON.parse on every render
       parsedBody,
@@ -193,12 +189,35 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
     this.setState({
       isEditing: !isEditing,
-      // Reset body and title state
-      body: stateToMarkdown(convertFromRaw(JSON.parse(thread.content.body)), {
-        gfm: true,
-      }),
       title: thread.content.title,
+      body: null,
     });
+
+    fetch('https://convert.spectrum.chat/to', {
+      method: 'POST',
+      body: thread.content.body,
+    })
+      .then(res => {
+        if (res.status >= 300 || res.status < 200)
+          throw new Error('Oops, something went wrong.');
+        return res;
+      })
+      .then(res => res.text())
+      .then(md => {
+        this.setState({
+          body: md,
+        });
+      })
+      .catch(err => {
+        this.props.dispatch(addToastWithTimeout('error', err.message));
+        this.setState({
+          isEditing,
+          body: '',
+        });
+        this.props.toggleEdit();
+      });
+
+    this.props.toggleEdit();
 
     if (!isEditing) {
       track(events.THREAD_EDITED_INITED, {
@@ -207,8 +226,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
         community: transformations.analyticsCommunity(thread.community),
       });
     }
-
-    this.props.toggleEdit();
   };
 
   handleKeyPress = e => {
@@ -288,15 +305,17 @@ class ThreadDetailPure extends React.Component<Props, State> {
   uploadFiles = files => {
     const uploading = `![Uploading ${files[0].name}...]()`;
     let caretPos = this.bodyEditor.selectionStart;
+    const { body } = this.state;
+    if (!body) return;
 
     this.setState(
-      ({ body }) => ({
+      {
         isSavingEdit: true,
         body:
           body.substring(0, caretPos) +
           uploading +
-          body.substring(this.bodyEditor.selectionEnd, this.state.body.length),
-      }),
+          body.substring(this.bodyEditor.selectionEnd, body.length),
+      },
       () => {
         caretPos = caretPos + uploading.length;
         this.bodyEditor.selectionStart = caretPos;
@@ -314,6 +333,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
         this.setState({
           isSavingEdit: false,
         });
+        if (!this.state.body) return;
         this.changeBody({
           target: {
             value: this.state.body.replace(
@@ -328,6 +348,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
         this.setState({
           isSavingEdit: false,
         });
+        if (!this.state.body) return;
         this.changeBody({
           target: {
             value: this.state.body.replace(uploading, ''),

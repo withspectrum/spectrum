@@ -7,9 +7,9 @@
  * so it chokes on the Flow syntax.
  * More info: https://flow.org/en/docs/types/comments/
  */
-var draft = require('./draft-utils');
 var truncate = require('./truncate');
 var striptags = require('striptags');
+var toPlainText = require('./clients/draft-js/utils/plaintext').toPlainText;
 
 var DEFAULT_META = {
   title: 'Spectrum',
@@ -104,7 +104,7 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
         data &&
         data.body &&
         (data.type === 'DRAFTJS'
-          ? draft.toPlainText(draft.toState(JSON.parse(data.body)))
+          ? toPlainText(JSON.parse(data.body))
           : data.body);
       return setDefault({
         title: data && data.title + ' · ' + data.communityName,

@@ -2,13 +2,11 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { btoa } from 'b2a';
-import { stateFromMarkdown } from 'draft-js-import-markdown';
+import snarkdown from 'snarkdown';
 import messageInfoFragment from '../../fragments/message/messageInfo';
 import type { MessageInfoType } from '../../fragments/message/messageInfo';
 import { getThreadMessageConnectionQuery } from '../../queries/thread/getThreadMessageConnection';
-import processMessageContent, {
-  messageTypeObj,
-} from 'shared/draft-utils/process-message-content';
+import { messageTypeObj } from 'shared/draft-utils/message-types';
 
 export type SendMessageType = {
   data: {
@@ -29,12 +27,13 @@ export const sendMessageMutation = gql`
 
 const sendMessageOptions = {
   props: ({ ownProps, mutate }) => ({
-    sendMessage: (message, author) => {
+    sendMessage: async (message, author) => {
       const fakeId = Math.round(Math.random() * -1000000);
       return mutate({
         variables: {
           message: {
             ...message,
+            messageType: messageTypeObj.text,
             content: {
               body:
                 message.messageType === messageTypeObj.media
@@ -52,7 +51,7 @@ const sendMessageOptions = {
             messageType:
               message.messageType === messageTypeObj.media
                 ? messageTypeObj.media
-                : messageTypeObj.draftjs,
+                : 'optimistic',
             modifiedAt: '',
             author: {
               user: {
@@ -79,10 +78,7 @@ const sendMessageOptions = {
               body:
                 message.messageType === messageTypeObj.media
                   ? message.content.body
-                  : processMessageContent(
-                      messageTypeObj.text,
-                      message.content.body
-                    ),
+                  : snarkdown(message.content.body),
               __typename: 'MessageContent',
             },
             reactions: {

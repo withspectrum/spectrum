@@ -196,6 +196,7 @@
     "slate": "^0.20.1",
     "slate-markdown": "0.1.1",
     "slugg": "^1.1.0",
+    "snarkdown": "^1.2.2",
     "stopword": "^0.1.13",
     "string-replace-to-array": "^1.0.3",
     "string-similarity": "^2.0.0",
