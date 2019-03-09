@@ -22,7 +22,7 @@ import { validateRawContentState } from '../../utils/validate-draft-js-input';
 import processMessageContent, {
   messageTypeObj,
 } from 'shared/draft-utils/process-message-content';
-import type { MessageType } from 'shared/draft-utils/process-message-content';
+import type { MessageType } from 'shared/draft-utils/message-types';
 
 type Input = {
   message: {
@@ -34,6 +34,7 @@ type Input = {
     },
     parentId?: string,
     file?: FileUpload,
+    bot?: boolean,
   },
 };
 
