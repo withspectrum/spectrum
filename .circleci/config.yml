@@ -1,4 +1,5 @@
-# CircleCI configuration for Spectrum
+# CircleCI configuration for Spectrum 
+version: 2.1
 
 # Aliases
 aliases:
@@ -63,7 +64,6 @@ js_defaults: &js_defaults
   docker:
     - image: circleci/node:8
 
-version: 2
 jobs:
 
   # Set up environment and install required dependencies
@@ -72,9 +72,9 @@ jobs:
     steps:
       - checkout
 
-      - restore-cache: *restore-yarn-cache
+      - restore_cache: *restore-yarn-cache
       - run: *yarn
-      - save-cache: *save-yarn-cache
+      - save_cache: *save-yarn-cache
 
       - persist_to_workspace:
           root: .
@@ -112,15 +112,19 @@ jobs:
 
 
   # Start db and servers, then run e2e and unit tests
-  test_e2e:
+  test_integration:
     <<: *defaults
     docker:
       - image: circleci/node:8-browsers
       - image: redis:3.2.7
       - image: cypress/base:6
       - image: rethinkdb:2.3.5
-    parallel: true
-    parallelism: 9
+    parameters:
+      parallelism:
+        type: integer
+        default: 1
+        description: Number of boxes to use to run this job
+    parallelism: <<parameters.parallelism>>
     environment:
       TERM: xterm
     steps:
@@ -144,6 +148,14 @@ jobs:
               yarn run test:e2e
             fi
 
+  # This runs after the above and is only here to hack around missing support for varying jobs based on external vs internal PRs
+  # See https://github.com/withspectrum/spectrum/pull/4820
+  test_e2e:
+    docker:
+      - image: cypress/base:10
+    steps:
+      - run: echo "pass"
+
   # Run eslint, flow etc.
   test_static_js:
     <<: *js_defaults
@@ -158,8 +170,6 @@ jobs:
           command: yarn run lint
 
 workflows:
-  version: 2
-
   test:
     jobs:
       - checkout_environment
@@ -172,6 +182,26 @@ workflows:
       - build_web:
           requires:
             - checkout_environment
-      - test_e2e:
+      # Run pull requests from internal contributors in parallel
+      - test_integration:
+          name: test_e2e_internal
           requires:
             - build_web
+          parallelism: 4
+          filters:
+            branches:
+              ignore: /pull.*/
+      # Run pull requests from external contributors on one machine
+      - test_integration:
+          name: test_e2e_external
+          requires:
+            - build_web
+          parallelism: 1
+          filters:
+            branches:
+              only: /pull.*/
+      # If either of the test_e2e_* jobs pass, this one passes so we can mark it as required on GitHub
+      - test_e2e:
+          requires:
+            - test_e2e_internal
+            - test_e2e_external

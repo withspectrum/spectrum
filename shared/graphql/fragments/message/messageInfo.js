@@ -8,6 +8,7 @@ export type MessageInfoType = {
   timestamp: string,
   messageType: string,
   modifiedAt: string,
+  bot?: boolean,
   parent: {
     id: string,
     timestamp: Date,
@@ -37,6 +38,7 @@ export default gql`
     timestamp
     modifiedAt
     messageType
+    bot
     parent {
       id
       timestamp

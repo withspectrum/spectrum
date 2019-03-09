@@ -30,6 +30,7 @@ const Message = /* GraphQL */ `
     messageType: MessageTypes!
     parent: Message
     modifiedAt: Date
+    bot: Boolean
     sender: User! @deprecated(reason: "Use Message.author field instead")
   }
 

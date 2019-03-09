@@ -25,7 +25,7 @@
     "rethinkhaberdashery": "^2.3.32",
     "sanitize-filename": "^1.6.1",
     "source-map-support": "^0.4.15",
-    "stopword": "^0.1.13",
+    "stopword": "^0.1.15",
     "toobusy-js": "^0.5.1"
   },
   "devDependencies": {

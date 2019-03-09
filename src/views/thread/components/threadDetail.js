@@ -4,8 +4,6 @@ import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { convertFromRaw } from 'draft-js';
-import { stateToMarkdown } from 'draft-js-export-markdown';
 import { timeDifference } from 'shared/time-difference';
 import { convertTimestampToDate } from 'shared/time-formatting';
 import { openModal } from 'src/actions/modals';
@@ -15,6 +13,7 @@ import ThreadByline from './threadByline';
 import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
+import uploadImageMutation from 'shared/graphql/mutations/uploadImage';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import ThreadRenderer from 'src/components/threadRenderer';
 import ActionBar from './actionBar';
@@ -40,7 +39,7 @@ import { ErrorBoundary } from 'src/components/error';
 
 type State = {
   isEditing?: boolean,
-  body: string,
+  body: ?string,
   title: string,
   receiveNotifications?: boolean,
   isSavingEdit?: boolean,
@@ -59,6 +58,7 @@ type Props = {
   dispatch: Dispatch<Object>,
   currentUser: ?Object,
   toggleEdit: Function,
+  uploadImage: Function,
   innerRef?: any,
 };
 
@@ -96,9 +96,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
     return this.setState({
       isEditing: false,
-      body: stateToMarkdown(convertFromRaw(parsedBody), {
-        gfm: true,
-      }),
+      body: '',
       title: thread.content.title,
       // We store this in the state to avoid having to JSON.parse on every render
       parsedBody,
@@ -195,12 +193,35 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
     this.setState({
       isEditing: !isEditing,
-      // Reset body and title state
-      body: stateToMarkdown(convertFromRaw(JSON.parse(thread.content.body)), {
-        gfm: true,
-      }),
       title: thread.content.title,
+      body: null,
     });
+
+    fetch('https://convert.spectrum.chat/to', {
+      method: 'POST',
+      body: thread.content.body,
+    })
+      .then(res => {
+        if (res.status >= 300 || res.status < 200)
+          throw new Error('Oops, something went wrong.');
+        return res;
+      })
+      .then(res => res.text())
+      .then(md => {
+        this.setState({
+          body: md,
+        });
+      })
+      .catch(err => {
+        this.props.dispatch(addToastWithTimeout('error', err.message));
+        this.setState({
+          isEditing,
+          body: '',
+        });
+        this.props.toggleEdit();
+      });
+
+    this.props.toggleEdit();
 
     if (!isEditing) {
       track(events.THREAD_EDITED_INITED, {
@@ -209,8 +230,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
         community: transformations.analyticsCommunity(thread.community),
       });
     }
-
-    this.props.toggleEdit();
   };
 
   handleKeyPress = e => {
@@ -287,6 +306,67 @@ class ThreadDetailPure extends React.Component<Props, State> {
     });
   };
 
+  uploadFiles = files => {
+    const uploading = `![Uploading ${files[0].name}...]()`;
+    let caretPos = this.bodyEditor.selectionStart;
+    const { body } = this.state;
+    if (!body) return;
+
+    this.setState(
+      {
+        isSavingEdit: true,
+        body:
+          body.substring(0, caretPos) +
+          uploading +
+          body.substring(this.bodyEditor.selectionEnd, body.length),
+      },
+      () => {
+        caretPos = caretPos + uploading.length;
+        this.bodyEditor.selectionStart = caretPos;
+        this.bodyEditor.selectionEnd = caretPos;
+        this.bodyEditor.focus();
+      }
+    );
+
+    return this.props
+      .uploadImage({
+        image: files[0],
+        type: 'threads',
+      })
+      .then(({ data }) => {
+        this.setState({
+          isSavingEdit: false,
+        });
+        if (!this.state.body) return;
+        this.changeBody({
+          target: {
+            value: this.state.body.replace(
+              uploading,
+              `![${files[0].name}](${data.uploadImage})`
+            ),
+          },
+        });
+      })
+      .catch(err => {
+        console.error({ err });
+        this.setState({
+          isSavingEdit: false,
+        });
+        if (!this.state.body) return;
+        this.changeBody({
+          target: {
+            value: this.state.body.replace(uploading, ''),
+          },
+        });
+        this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            `Uploading image failed - ${err.message}`
+          )
+        );
+      });
+  };
+
   togglePinThread = () => {
     const { pinThread, thread, dispatch } = this.props;
     const isPinned = thread.community.pinnedThreadId === thread.id;
@@ -345,7 +425,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
         <ThreadContent isEditing={isEditing}>
           {isEditing ? (
             <ThreadEditInputs
-              uploadFiles={() => {}}
+              uploadFiles={this.uploadFiles}
               title={this.state.title}
               body={this.state.body}
               autoFocus
@@ -421,6 +501,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
             title={this.state.title}
             isLockingThread={isLockingThread}
             isPinningThread={isPinningThread}
+            uploadFiles={this.uploadFiles}
           />
         </ErrorBoundary>
       </ThreadWrapper>
@@ -433,6 +514,7 @@ const ThreadDetail = compose(
   deleteThreadMutation,
   editThreadMutation,
   pinThreadMutation,
+  uploadImageMutation,
   withRouter
 )(ThreadDetailPure);
 
