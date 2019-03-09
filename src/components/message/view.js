@@ -47,7 +47,7 @@ export const Body = (props: BodyProps) => {
   switch (message.messageType) {
     case 'optimistic':
       return (
-        <div class="markdown">
+        <div className="markdown">
           <WrapperComponent me={me}>
             <div dangerouslySetInnerHTML={{ __html: message.content.body }} />
           </WrapperComponent>
