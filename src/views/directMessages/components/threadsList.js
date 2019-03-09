@@ -179,15 +179,10 @@ class ThreadsList extends React.Component<Props, State> {
     return (
       <ThreadsListScrollContainer id={'scroller-for-dm-threads'}>
         <InfiniteList
-          pageStart={0}
           loadMore={this.paginate}
-          isLoadingMore={dmData.networkStatus === 3}
           hasMore={hasNextPage}
-          loader={<LoadingDM />}
-          useWindow={false}
-          scrollElement={scrollElement}
-          threshold={100}
-          className={'scroller-for-community-dm-threads-list'}
+          loader={<LoadingDM key={0} />}
+          getScrollParent={() => scrollElement}
         >
           {uniqueThreads.map(thread => {
             if (!thread) return null;

@@ -2,8 +2,6 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-// NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
-// I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { parseNotification } from './utils';
@@ -66,7 +64,6 @@ type Props = {
 type State = {
   showWebPushPrompt: boolean,
   webPushPromptLoading: boolean,
-  scrollElement: any,
 };
 
 class NotificationsPure extends React.Component<Props, State> {
@@ -76,7 +73,6 @@ class NotificationsPure extends React.Component<Props, State> {
     this.state = {
       showWebPushPrompt: false,
       webPushPromptLoading: false,
-      scrollElement: null,
     };
   }
 
@@ -88,13 +84,7 @@ class NotificationsPure extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    const scrollElement = document.getElementById('scroller-for-thread-feed');
     this.markAllNotificationsSeen();
-    this.setState({
-      // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
-      // the React.Fragment which is the scrolling part of the site.
-      scrollElement,
-    });
 
     WebPushManager.getPermissionState()
       .then(result => {
@@ -198,8 +188,6 @@ class NotificationsPure extends React.Component<Props, State> {
       notifications = deduplicateChildren(notifications, 'id');
       notifications = sortByDate(notifications, 'modifiedAt', 'desc');
 
-      const { scrollElement } = this.state;
-
       return (
         <ViewGrid>
           <SingleColumnGrid>
@@ -214,16 +202,9 @@ class NotificationsPure extends React.Component<Props, State> {
                   />
                 )}
                 <InfiniteList
-                  pageStart={0}
                   loadMore={data.fetchMore}
-                  isLoadingMore={this.props.isFetchingMore}
                   hasMore={data.hasNextPage}
-                  loader={<LoadingThread />}
-                  useWindow={false}
-                  initialLoad={false}
-                  scrollElement={scrollElement}
-                  threshold={750}
-                  className={'scroller-for-notifications'}
+                  loader={<LoadingThread key={0} />}
                 >
                   {notifications.map(notification => {
                     switch (notification.event) {

@@ -24,8 +24,11 @@ const InfiniteScroller = (props: Props) => {
 
         return (
           <InfiniteScroll
+            pageStart={0}
             loadMore={loadMore}
             useWindow={false}
+            initialLoad={false}
+            threshold={750}
             getScrollParent={() => scrollElement}
             {...rest}
           />

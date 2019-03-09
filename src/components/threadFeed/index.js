@@ -2,8 +2,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import compose from 'recompose/compose';
-// NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
-// I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { connect } from 'react-redux';
@@ -110,13 +108,11 @@ type Props = {
 };
 
 type State = {
-  scrollElement: any,
   subscription: ?Function,
 };
 
 class ThreadFeedPure extends React.Component<Props, State> {
   state = {
-    scrollElement: null,
     subscription: null,
   };
 
@@ -151,14 +147,6 @@ class ThreadFeedPure extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const scrollElement = document.getElementById('scroller-for-thread-feed');
-
-    this.setState({
-      // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
-      // the AppViewWrapper which is the scrolling part of the site.
-      scrollElement,
-    });
-
     this.subscribe();
   }
 
@@ -192,7 +180,6 @@ class ThreadFeedPure extends React.Component<Props, State> {
       newActivityIndicator,
     } = this.props;
 
-    const { scrollElement } = this.state;
     const dataExists = threads && threads.length > 0;
 
     const threadNodes =
@@ -257,16 +244,9 @@ class ThreadFeedPure extends React.Component<Props, State> {
             )}
 
           <InfiniteList
-            pageStart={0}
             loadMore={this.props.data.fetchMore}
-            isLoadingMore={this.props.data.networkStatus === 3}
             hasMore={this.props.data.hasNextPage}
-            loader={<LoadingInboxThread />}
-            useWindow={false}
-            initialLoad={false}
-            scrollElement={scrollElement}
-            threshold={750}
-            className={'threadfeed-infinite-scroll-div'}
+            loader={<LoadingInboxThread key={0} />}
           >
             {uniqueThreads.map(thread => {
               return (
