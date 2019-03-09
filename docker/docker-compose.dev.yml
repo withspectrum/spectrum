@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+
+  rethinkdb:
+    image: rethinkdb
+    volumes:
+      - rethinkdb:/data
+
+  redis:
+    image: redis
+    volumes:
+      - redis:/data
+
+  spectrum:
+    image: node:10-alpine
+    volumes:
+      - ./..:/spectrum
+      - node-modules-spectrum:/spectrum/node_modules
+    working_dir: /spectrum
+    command: ['npm', 'run', 'dev']
+    environment:
+      COMPOSE_REDIS_URL: redis
+      REDIS_CACHE_URL: redis
+      COMPOSE_RETHINKDB_URL: rethinkdb
+      AWS_RETHINKDB_URL: rethinkdb
+
+# Names our volume
+volumes:
+  redis:
+  rethinkdb:
+  node-modules-spectrum:
