@@ -8,24 +8,30 @@ import { getThreadByMatch } from 'shared/graphql/queries/thread/getThread';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 
 export default getThreadByMatch(props => {
-  if (props.data && props.data.thread && props.data.thread.id) {
-    const { thread } = props.data;
-    return (
-      <Redirect
-        to={`/${thread.community.slug}/${thread.channel.slug}/${slugg(
-          thread.content.title
-        )}~${thread.id}${idx(props, _ => _.location.search) || ''}`}
-      />
-    );
-  }
+  const { data } = props;
+  if (data) {
+    const { thread, loading, error } = data;
 
-  if (props.loading) {
-    return <LoadingView />;
-  }
+    if (thread && thread.id) {
+      return (
+        <Redirect
+          to={`/${thread.community.slug}/${thread.channel.slug}/${slugg(
+            thread.content.title
+          )}~${thread.id}${idx(props, _ => _.location.search) || ''}`}
+        />
+      );
+    }
 
-  // If we don't have a thread, but also aren't loading anymore it's either a private or a non-existant thread
-  if (!props.loading || props.error) {
-    return <ErrorView />;
+    if (loading) {
+      return <LoadingView />;
+    }
+
+    // If we don't have a thread, but also aren't loading anymore it's either a private or a non-existant thread
+    if (error) {
+      return <ErrorView />;
+    }
+
+    return null;
   }
 
   return null;
