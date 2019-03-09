@@ -1,5 +1,9 @@
 import React, { useEffect } from 'react';
 import type { Location, History, Match } from 'react-router';
+import Icon from 'src/components/icons';
+import { ThreadView } from 'src/views/thread';
+import { ErrorBoundary } from 'src/components/error';
+import { ESC } from 'src/helpers/keycodes';
 import {
   Container,
   Overlay,
@@ -7,10 +11,6 @@ import {
   CloseButton,
   ThreadContainerBackground,
 } from './style';
-import Icon from 'src/components/icons';
-import { ThreadView } from '../thread';
-import { ErrorBoundary } from 'src/components/error';
-import { ESC } from 'src/helpers/keycodes';
 
 type Props = {
   previousLocation: Location,
@@ -28,26 +28,24 @@ const ThreadSlider = (props: Props) => {
     history.push(previousLocation);
   };
 
-  const handleKeyPress = (e: any) => {
-    if (e.keyCode === ESC) {
-      e.stopPropagation();
-      closeSlider();
-    }
-  };
-
   useEffect(() => {
+    const handleKeyPress = (e: any) => {
+      if (e.keyCode === ESC) {
+        e.stopPropagation();
+        closeSlider();
+      }
+    };
+
     document.addEventListener('keydown', handleKeyPress, false);
-    return () => document.removeEventListener('keydown', handleKeyPress, false);
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress, false);
+    };
   }, []);
 
   return (
     <ErrorBoundary>
       <Container data-cy="thread-slider">
-        <Overlay
-          onClick={closeSlider}
-          data-cy="thread-slider-overlay"
-          entered
-        />
+        <Overlay onClick={closeSlider} data-cy="thread-slider-overlay" />
 
         <CloseButton data-cy="thread-slider-close" onClick={closeSlider}>
           <Icon glyph="view-close" size={32} />
@@ -56,7 +54,7 @@ const ThreadSlider = (props: Props) => {
         <ThreadContainerBackground />
 
         <ThreadContainer>
-          <ThreadView threadId={threadId} threadViewContext={'slider'} slider />
+          <ThreadView threadId={threadId} />
         </ThreadContainer>
       </Container>
     </ErrorBoundary>

@@ -5,12 +5,12 @@ import { zIndex } from 'src/components/globals';
 import { MEDIA_BREAK, MAX_WIDTH } from 'src/components/layout';
 
 export const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
-  position: absolute;
+  grid-area: view;
   display: flex;
   justify-content: center;
   z-index: ${zIndex.slider + 1};
+  position: sticky;
+  top: 0;
 `;
 
 export const Overlay = styled.div`
@@ -32,7 +32,6 @@ export const ThreadContainerBackground = styled.div`
   background: ${theme.bg.wash};
   z-index: ${zIndex.slider + 3};
   box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08), 4px 0 12px rgba(0, 0, 0, 0.08);
-  transform: translateX(36px);
 
   @media (max-width: ${MEDIA_BREAK}px) {
     max-width: 100%;
@@ -44,12 +43,11 @@ export const ThreadContainerBackground = styled.div`
 
 export const ThreadContainer = styled.div`
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   max-width: ${MAX_WIDTH + 32}px;
   z-index: ${zIndex.slider + 4};
   padding: 0 16px;
-  transform: translateX(36px);
 
   @media (max-width: ${MEDIA_BREAK}px) {
     max-width: 100%;
