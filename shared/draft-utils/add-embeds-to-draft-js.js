@@ -34,7 +34,7 @@ export const addEmbedsToEditorState = (
     if (block.type !== 'unstyled') return;
 
     const embeds = getEmbedsFromText(block.text);
-    if (!embeds.length === 0) return;
+    if (embeds.length === 0) return;
 
     embeds.forEach(embed => {
       lastEntityKey++;

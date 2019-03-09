@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should add embeds 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "data": Object {},
+      "depth": 0,
+      "entityRanges": Array [],
+      "inlineStyleRanges": Array [],
+      "key": "g0000",
+      "text": "https://simplecast.com/s/a1f11d11",
+      "type": "unstyled",
+    },
+    Object {
+      "data": Object {},
+      "depth": 0,
+      "entityRanges": Array [
+        Object {
+          "key": -Infinity,
+          "length": 1,
+          "offset": 0,
+        },
+      ],
+      "inlineStyleRanges": Array [],
+      "key": "0",
+      "text": " ",
+      "type": "atomic",
+    },
+    Object {
+      "data": Object {},
+      "depth": 0,
+      "entityRanges": Array [],
+      "inlineStyleRanges": Array [],
+      "key": "oldvrah",
+      "text": " ",
+      "type": "unstyled",
+    },
+  ],
+  "entityMap": Object {
+    "-Infinity": Object {
+      "data": Object {
+        "height": 200,
+        "src": "https://embed.simplecast.com/a1f11d11",
+        "url": "https://embed.simplecast.com/a1f11d11",
+      },
+      "mutability": "MUTABLE",
+      "type": "embed",
+    },
+  },
+}
+`;
