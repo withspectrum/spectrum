@@ -16,7 +16,8 @@ import { FeedsContainer, SidebarSection } from '../style';
 
 export const CommunityFeeds = (props: CommunityFeedsType) => {
   const { community, scrollToPosition, contextualScrollToBottom } = props;
-  const defaultSegment = community.watercoolerId ? 'chat' : 'posts';
+  // const defaultSegment = community.watercoolerId ? 'chat' : 'posts';
+  const defaultSegment = 'posts';
   const [activeSegment, setActiveSegment] = React.useState(defaultSegment);
 
   const renderFeed = () => {
@@ -96,8 +97,10 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
   );
 
   const segments = ['posts', 'members', 'info'];
-  if (community.watercoolerId) segments.unshift('chat');
+  // if (community.watercoolerId) segments.unshift('chat');
 
+  // if the community being viewed changes, and the previous community had
+  // a watercooler but the next one doesn't, select the posts tab on the new one
   useEffect(
     () => {
       if (activeSegment === 'chat') {

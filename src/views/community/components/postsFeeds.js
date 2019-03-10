@@ -17,7 +17,7 @@ export const PostsFeeds = (props: Props) => {
 
   return (
     <React.Fragment>
-      <SegmentedControl sticky={false}>
+      {/* <SegmentedControl sticky={false}>
         <Segment
           isActive={activeFeed === 'latest'}
           onClick={() => setActiveFeed('latest')}
@@ -31,7 +31,7 @@ export const PostsFeeds = (props: Props) => {
         >
           Popular
         </Segment>
-      </SegmentedControl>
+      </SegmentedControl> */}
 
       <CommunityThreadFeed
         viewContext="communityProfile"
