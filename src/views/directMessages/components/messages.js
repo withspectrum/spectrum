@@ -14,8 +14,6 @@ import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   id: string,
-  forceScrollToBottom: Function,
-  contextualScrollToBottom: Function,
   data: {
     loading: boolean,
     directMessageThread: GetDirectMessageThreadMessageConnectionType,
@@ -40,12 +38,11 @@ class MessagesWithData extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    this.props.forceScrollToBottom();
     this.subscribe();
   }
 
   componentDidUpdate(prev) {
-    const { contextualScrollToBottom, data, setLastSeen } = this.props;
+    const { data, setLastSeen } = this.props;
 
     if (this.props.data.loading) {
       this.unsubscribe();
@@ -57,7 +54,6 @@ class MessagesWithData extends React.Component<Props, State> {
       !this.props.data.loading
     ) {
       this.subscribe();
-      setTimeout(() => this.props.forceScrollToBottom());
     }
     // force scroll to bottom when a message is sent in the same thread
     if (
@@ -65,14 +61,12 @@ class MessagesWithData extends React.Component<Props, State> {
       data.directMessageThread &&
       prev.data.directMessageThread.id === data.directMessageThread.id &&
       (prev.data.messages && data.messages) &&
-      prev.data.messages.length < data.messages.length &&
-      contextualScrollToBottom
+      prev.data.messages.length < data.messages.length
     ) {
       // mark this thread as unread when new messages come in and i'm viewing it
       if (data.directMessageThread) {
         setLastSeen(data.directMessageThread.id);
       }
-      contextualScrollToBottom();
     }
   }
 
@@ -100,6 +94,7 @@ class MessagesWithData extends React.Component<Props, State> {
       hasError,
       isLoading,
       isFetchingMore,
+      thread,
     } = this.props;
 
     if (hasError) {
@@ -139,10 +134,9 @@ class MessagesWithData extends React.Component<Props, State> {
             )}
             <ChatMessages
               messages={sortedMessages}
-              forceScrollToBottom={this.props.forceScrollToBottom}
-              contextualScrollToBottom={this.props.contextualScrollToBottom}
-              threadId={this.props.id}
+              uniqueMessageCount={uniqueMessages.length}
               threadType={'directMessageThread'}
+              thread={thread}
             />
           </ErrorBoundary>
         </MessagesScrollWrapper>

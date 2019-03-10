@@ -3,21 +3,26 @@ import * as React from 'react';
 import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-import Head from '../../../components/head';
+import Head from 'src/components/head';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import Messages from '../components/messages';
 import Header from '../components/header';
-import ChatInput from '../../../components/chatInput';
-import { NullState } from '../../../components/upsell';
-import { MessagesContainer, ViewContent, NoThreads } from '../style';
+import ChatInput from 'src/components/chatInput';
+import { NullState } from 'src/components/upsell';
+import {
+  MessagesContainer,
+  ViewContent,
+  NoThreads,
+  ChatInputWrapper,
+} from '../style';
 import { getDirectMessageThreadQuery } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
-import { debounce } from '../../../helpers/utils';
+import { debounce } from 'src/helpers/utils';
 import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
-import { Spinner } from '../../../components/globals';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { clearDirectMessagesComposer } from '../../../actions/directMessageThreads';
+import { Spinner } from 'src/components/globals';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { clearDirectMessagesComposer } from 'src/actions/directMessageThreads';
 import createDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/createDirectMessageThread';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
@@ -859,16 +864,19 @@ class NewThread extends React.Component<Props, State> {
             </Grow>
           )}
         </ViewContent>
-        <ChatInput
-          thread={
-            existingThreadBasedOnSelectedUsers || 'newDirectMessageThread'
-          }
-          createThread={this.createThread}
-          onFocus={this.onChatInputFocus}
-          onBlur={this.onChatInputBlur}
-          threadType={'directMessageThread'}
-          onRef={chatInput => (this.chatInput = chatInput)}
-        />
+
+        <ChatInputWrapper>
+          <ChatInput
+            thread={
+              existingThreadBasedOnSelectedUsers || 'newDirectMessageThread'
+            }
+            createThread={this.createThread}
+            onFocus={this.onChatInputFocus}
+            onBlur={this.onChatInputBlur}
+            threadType={'directMessageThread'}
+            onRef={chatInput => (this.chatInput = chatInput)}
+          />
+        </ChatInputWrapper>
       </MessagesContainer>
     );
   }

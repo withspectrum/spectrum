@@ -11,7 +11,7 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import getDirectMessageThread, {
   type GetDirectMessageThreadType,
 } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
-import { MessagesContainer, ViewContent } from '../style';
+import { MessagesContainer, ViewContent, ChatInputWrapper } from '../style';
 import { Loading } from 'src/components/loading';
 import { ErrorBoundary } from 'src/components/error';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
@@ -45,7 +45,6 @@ class ExistingThread extends React.Component<Props> {
     if (!threadId) return;
 
     this.props.setLastSeen(threadId);
-    this.forceScrollToBottom();
     // autofocus on desktop
     if (window && window.innerWidth > 768 && this.chatInput) {
       this.chatInput.focus();
@@ -81,27 +80,12 @@ class ExistingThread extends React.Component<Props> {
       if (!threadId) return;
 
       curr.setLastSeen(threadId);
-      this.forceScrollToBottom();
       // autofocus on desktop
       if (window && window.innerWidth > 768 && this.chatInput) {
         this.chatInput.focus();
       }
     }
   }
-
-  forceScrollToBottom = () => {
-    if (!this.scrollBody) return;
-    let node = this.scrollBody;
-    node.scrollTop = node.scrollHeight - node.clientHeight;
-  };
-
-  contextualScrollToBottom = () => {
-    if (!this.scrollBody) return;
-    let node = this.scrollBody;
-    if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
-      node.scrollTop = node.scrollHeight - node.clientHeight;
-    }
-  };
 
   render() {
     const id = this.props.match.params.threadId;
@@ -124,26 +108,22 @@ class ExistingThread extends React.Component<Props> {
                     <Header thread={thread} currentUser={currentUser} />
                   </ErrorBoundary>
 
-                  <Messages
-                    id={id}
-                    currentUser={currentUser}
-                    forceScrollToBottom={this.forceScrollToBottom}
-                    contextualScrollToBottom={this.contextualScrollToBottom}
-                  />
+                  <Messages id={id} currentUser={currentUser} thread={thread} />
                 </React.Fragment>
               ) : (
                 <Loading />
               )}
             </ViewContent>
 
-            <ChatInput
-              thread={id}
-              currentUser={currentUser}
-              threadType={'directMessageThread'}
-              forceScrollToBottom={this.forceScrollToBottom}
-              onRef={chatInput => (this.chatInput = chatInput)}
-              participants={mentionSuggestions}
-            />
+            <ChatInputWrapper>
+              <ChatInput
+                thread={id}
+                currentUser={currentUser}
+                threadType={'directMessageThread'}
+                onRef={chatInput => (this.chatInput = chatInput)}
+                participants={mentionSuggestions}
+              />
+            </ChatInputWrapper>
           </MessagesContainer>
         );
       }

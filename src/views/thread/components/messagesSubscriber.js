@@ -34,9 +34,8 @@ const Messages = (props: Props) => {
 
   return (
     <ChatMessages
-      threadId={thread.id}
       thread={thread}
-      messageCount={unsortedMessages.length}
+      uniqueMessageCount={unsortedMessages.length}
       messages={sortedMessages}
       threadType={'story'}
     />

@@ -9,9 +9,7 @@ export const View = styled.main`
 `;
 
 export const ViewContent = styled.div`
-  max-height: 100vh;
-  overflow: hidden;
-  overflow-y: scroll;
+  min-height: 100vh;
 `;
 
 export const MessagesList = styled.div`
@@ -30,11 +28,9 @@ export const MessagesList = styled.div`
 `;
 
 export const MessagesContainer = styled.div`
-  max-height: 100vh;
-  overflow: hidden;
-  overflow-y: scroll;
-  display: grid;
-  grid-template-rows: 1fr 48px 25px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: ${theme.bg.default};
 
   @media (min-width: 768px) {
@@ -78,4 +74,13 @@ export const ComposeHeader = styled.div`
   @media (max-width: 768px) {
     display: none;
   }
+`;
+
+export const ChatInputWrapper = styled.div`
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  grid-area: primary;
+  z-index: 3;
 `;
