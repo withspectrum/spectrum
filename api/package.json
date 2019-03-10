@@ -64,7 +64,7 @@
     "hot-shots": "^5.9.2",
     "hpp": "^0.2.2",
     "hsts": "^2.1.0",
-    "imgix-core-js": "^1.2.0",
+    "imgix-core-js": "^1.2.1",
     "immutability-helper": "^2.9.1",
     "ioredis": "3.2.2",
     "isomorphic-fetch": "^2.2.1",
