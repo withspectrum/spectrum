@@ -92,4 +92,5 @@ export const LoadingMessagesWrapper = styled(MessagesScrollWrapper)`
   display: flex;
   align-items: center;
   justify-content: center;
+  background: ${theme.bg.wash};
 `;

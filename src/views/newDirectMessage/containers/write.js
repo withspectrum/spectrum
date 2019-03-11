@@ -6,6 +6,7 @@ import { MobileTitlebar, DesktopTitlebar } from 'src/components/titlebar';
 import { UserAvatar } from 'src/components/avatar';
 import { SmallOutlineButton } from 'src/views/community/components/button';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
+import { ErrorBoundary } from 'src/components/error';
 import MessagesCheck from '../components/messagesCheck';
 import { ChatInputWrapper } from '../style';
 
@@ -31,12 +32,12 @@ const Write = (props: Props) => {
   return (
     <React.Fragment>
       <MobileTitlebar
-        title={`Message ${titlebarTitle}`}
+        title={titlebarTitle}
         titleIcon={titlebarIcon}
         menuAction={'view-back'}
       />
       <DesktopTitlebar
-        title={`Message ${titlebarTitle}`}
+        title={titlebarTitle}
         titleIcon={titlebarIcon}
         rightAction={
           !hadInitialUser && (
@@ -44,7 +45,14 @@ const Write = (props: Props) => {
           )
         }
       />
-      <MessagesCheck userIds={usersForMessage.map(({ id }) => id)} {...props} />
+
+      <ErrorBoundary>
+        <MessagesCheck
+          userIds={usersForMessage.map(({ id }) => id)}
+          {...props}
+        />
+      </ErrorBoundary>
+
       <ChatInputWrapper>
         <ChatInput
           thread={'newDirectMessageThread'}

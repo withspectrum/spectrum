@@ -5,11 +5,16 @@ import getDirectMessageThreadByUserIds from 'shared/graphql/queries/directMessag
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import MessagesSubscriber from './messagesSubscriber';
+import { LoadingMessagesWrapper } from '../style';
 
 const MessagesCheck = (props: Props) => {
-  const { data, currentUser } = props;
+  const { data, isLoading, hasError, currentUser } = props;
   const { directMessageThreadByUserIds: thread } = data;
-  if (!thread) return null;
+
+  if (isLoading) return <LoadingMessagesWrapper />;
+
+  if (!thread || hasError) return null;
+
   return (
     <MessagesSubscriber
       id={thread.id}
