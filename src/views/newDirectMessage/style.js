@@ -86,10 +86,6 @@ export const MessagesScrollWrapper = styled.div`
   overflow: hidden;
   overflow-y: scroll;
   background: ${theme.bg.default};
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    max-height: calc(100% - 62px - 58px);
-  }
 `;
 
 export const LoadingMessagesWrapper = styled(MessagesScrollWrapper)`

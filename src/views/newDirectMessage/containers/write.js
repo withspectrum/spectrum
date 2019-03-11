@@ -100,7 +100,7 @@ const Write = (props: Props) => {
       ) : (
         <ErrorBoundary>
           <MessagesCheck
-            userIds={usersForMessage.map(({ id }) => id)}
+            userIds={usersForMessage.map(user => user && user.id)}
             onExistingThreadId={setExistingThreadId}
             {...props}
           />
