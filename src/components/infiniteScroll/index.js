@@ -20,7 +20,9 @@ const InfiniteScroller = (props: Props) => {
     <RouteModalContext.Consumer>
       {({ hasModal }) => {
         let { loadMore, allowPagination, ...rest } = props;
-        if (hasModal && !allowPagination) loadMore = () => {};
+        if (hasModal && !allowPagination) {
+          loadMore = () => {};
+        }
 
         return (
           <InfiniteScroll

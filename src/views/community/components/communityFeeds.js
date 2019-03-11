@@ -17,7 +17,7 @@ import { FeedsContainer, SidebarSection } from '../style';
 import { Stretch, ChatInputWrapper } from '../../thread/style';
 
 export const CommunityFeeds = (props: CommunityFeedsType) => {
-  const { community, scrollToPosition, contextualScrollToBottom } = props;
+  const { community } = props;
   const defaultSegment = community.watercoolerId ? 'chat' : 'posts';
   const [activeSegment, setActiveSegment] = React.useState(defaultSegment);
 

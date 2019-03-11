@@ -57,9 +57,9 @@ const Messages = (props: Props) => {
   return (
     <InfiniteScroller
       hasMore={
-        !isWatercooler
-          ? messageConnection.pageInfo.hasNextPage
-          : messageConnection.pageInfo.hasPreviousPage
+        isWatercooler
+          ? messageConnection.pageInfo.hasPreviousPage
+          : messageConnection.pageInfo.hasNextPage
       }
       isReverse={!!isWatercooler}
       loadMore={loadMore}
