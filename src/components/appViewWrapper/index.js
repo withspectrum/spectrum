@@ -24,9 +24,7 @@ class AppViewWrapper extends React.Component<Props> {
     if (!prevModal && currModal) {
       const offset = this.ref.scrollTop;
       this.prevScrollOffset = offset;
-
-      // return 0 so that the modal starts out scrolled to the top by default
-      return 0;
+      return null;
     }
 
     if (prevModal && !currModal) {
