@@ -155,7 +155,7 @@ class Component extends React.Component<Props, State> {
           {isMember && (
             <WatercoolerChatInput>
               <ChatInput
-                thread={id}
+                threadId={id}
                 currentUser={currentUser}
                 threadType={'directMessageThread'}
                 forceScrollToBottom={scrollToBottom}
@@ -234,7 +234,7 @@ class Component extends React.Component<Props, State> {
         {isMember && (
           <WatercoolerChatInput>
             <ChatInput
-              thread={id}
+              threadId={id}
               currentUser={currentUser}
               threadType={'directMessageThread'}
               forceScrollToBottom={scrollToBottom}

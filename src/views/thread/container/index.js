@@ -163,7 +163,7 @@ const ThreadContainer = (props: Props) => {
 
           {canChat && (
             <ChatInputWrapper>
-              <ChatInput threadType="story" thread={thread} />
+              <ChatInput threadType="story" threadId={thread.id} />
             </ChatInputWrapper>
           )}
 
