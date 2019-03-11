@@ -12,6 +12,8 @@ export const View = styled.main`
 export const ViewContent = styled.div`
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 `;
 
 export const MessagesList = styled.div`
