@@ -21,6 +21,7 @@ import type { Query } from 'react-apollo';
 import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from 'src/components/viewNetworkHandler';
+import { DesktopTitlebar } from 'src/components/titlebar';
 
 type Props = {
   currentUser: Object,
@@ -159,6 +160,7 @@ class ThreadsList extends React.Component<Props, State> {
     if (!uniqueThreads || uniqueThreads.length === 0) {
       return (
         <React.Fragment>
+          <DesktopTitlebar title={'Messages'} />
           <NoThreads hideOnDesktop>
             <NullState
               icon="message"
@@ -177,27 +179,30 @@ class ThreadsList extends React.Component<Props, State> {
     }
 
     return (
-      <ThreadsListScrollContainer id={'scroller-for-dm-threads'}>
-        <InfiniteList
-          loadMore={this.paginate}
-          hasMore={hasNextPage}
-          loader={<LoadingDM key={0} />}
-          getScrollParent={() => scrollElement}
-        >
-          {uniqueThreads.map(thread => {
-            if (!thread) return null;
-            return (
-              <ErrorBoundary fallbackComponent={null} key={thread.id}>
-                <DirectMessageListItem
-                  thread={thread}
-                  currentUser={currentUser}
-                  active={activeThreadId === thread.id}
-                />
-              </ErrorBoundary>
-            );
-          })}
-        </InfiniteList>
-      </ThreadsListScrollContainer>
+      <React.Fragment>
+        <DesktopTitlebar title={'Messages'} />
+        <ThreadsListScrollContainer id={'scroller-for-dm-threads'}>
+          <InfiniteList
+            loadMore={this.paginate}
+            hasMore={hasNextPage}
+            loader={<LoadingDM key={0} />}
+            getScrollParent={() => scrollElement}
+          >
+            {uniqueThreads.map(thread => {
+              if (!thread) return null;
+              return (
+                <ErrorBoundary fallbackComponent={null} key={thread.id}>
+                  <DirectMessageListItem
+                    thread={thread}
+                    currentUser={currentUser}
+                    active={activeThreadId === thread.id}
+                  />
+                </ErrorBoundary>
+              );
+            })}
+          </InfiniteList>
+        </ThreadsListScrollContainer>
+      </React.Fragment>
     );
   }
 }

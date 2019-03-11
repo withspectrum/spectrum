@@ -128,10 +128,7 @@ class ExistingThread extends React.Component<Props> {
             <DesktopTitlebar
               title={names}
               titleIcon={titleIcon}
-              menuAction="view-back"
               rightAction={rightAction}
-              previousHistoryBackFallback={'/messages'}
-              forceHistoryBack={'/messages'}
             />
             <MessagesContainer>
               <ViewContent
