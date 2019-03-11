@@ -194,7 +194,7 @@ injectGlobal`
   }
 
   .markdown a {
-    color: ${theme.brand.alt};
+    color: ${theme.brand.default};
     font-weight: 500;
     text-decoration: none;
     font-size: inherit;

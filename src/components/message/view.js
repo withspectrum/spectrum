@@ -11,7 +11,6 @@ import {
   QuotedParagraph,
   ThreadAttachmentsContainer,
 } from './style';
-import ThreadAttachment from './ThreadAttachment';
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer';
 import { draftOnlyContainsEmoji } from 'shared/only-contains-emoji';
 import { Byline, Name, Username } from './style';
@@ -67,10 +66,6 @@ export const Body = (props: BodyProps) => {
     }
     case messageTypeObj.draftjs: {
       const parsed = JSON.parse(message.content.body);
-      const ids = getSpectrumThreadIds(
-        parsed.blocks.map(block => block.text).join('\n')
-      );
-      const uniqueIds = ids.filter((x, i, a) => a.indexOf(x) === i);
       return (
         <WrapperComponent me={me}>
           {message.parent && showParent && (
@@ -83,13 +78,6 @@ export const Body = (props: BodyProps) => {
             </Emoji>
           ) : (
             <div className="markdown">{redraft(parsed, messageRenderer)}</div>
-          )}
-          {uniqueIds && (
-            <ThreadAttachmentsContainer>
-              {uniqueIds.map(id => (
-                <ThreadAttachment message={message} key={id} id={id} />
-              ))}
-            </ThreadAttachmentsContainer>
           )}
         </WrapperComponent>
       );

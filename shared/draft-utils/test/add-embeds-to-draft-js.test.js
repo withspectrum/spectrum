@@ -299,6 +299,104 @@ describe('sites', () => {
       ]);
     });
   });
+
+  describe('thread urls', () => {
+    it('should handle full thread urls', () => {
+      const text =
+        'https://spectrum.chat/spectrum/general/hello~4026b1bd-3896-46a4-9ade-e621a90e64ad';
+      expect(getEmbedsFromText(text)).toEqual([
+        {
+          id: '4026b1bd-3896-46a4-9ade-e621a90e64ad',
+          entity: 'thread',
+          type: 'internal',
+        },
+      ]);
+    });
+
+    it('should handle /thread/:id urls', () => {
+      const text =
+        'https://spectrum.chat/thread/4026b1bd-3896-46a4-9ade-e621a90e64ad';
+      expect(getEmbedsFromText(text)).toEqual([
+        {
+          id: '4026b1bd-3896-46a4-9ade-e621a90e64ad',
+          entity: 'thread',
+          type: 'internal',
+        },
+      ]);
+    });
+
+    it('should handle ?thread urls', () => {
+      const text =
+        'https://spectrum.chat/?thread=4026b1bd-3896-46a4-9ade-e621a90e64ad';
+      expect(getEmbedsFromText(text)).toEqual([
+        {
+          id: '4026b1bd-3896-46a4-9ade-e621a90e64ad',
+          entity: 'thread',
+          type: 'internal',
+        },
+      ]);
+    });
+
+    it('should handle ?thread urls with query params before', () => {
+      const text =
+        'https://spectrum.chat/?m=asdf&thread=4026b1bd-3896-46a4-9ade-e621a90e64ad';
+      expect(getEmbedsFromText(text)).toEqual([
+        {
+          id: '4026b1bd-3896-46a4-9ade-e621a90e64ad',
+          entity: 'thread',
+          type: 'internal',
+        },
+      ]);
+    });
+
+    it('should handle ?thread urls with query params after', () => {
+      const text =
+        'https://spectrum.chat/?thread=4026b1bd-3896-46a4-9ade-e621a90e64ad&m=asdf';
+      expect(getEmbedsFromText(text)).toEqual([
+        {
+          id: '4026b1bd-3896-46a4-9ade-e621a90e64ad',
+          entity: 'thread',
+          type: 'internal',
+        },
+      ]);
+    });
+
+    it('should handle ?t urls', () => {
+      const text =
+        'https://spectrum.chat/?t=4026b1bd-3896-46a4-9ade-e621a90e64ad';
+      expect(getEmbedsFromText(text)).toEqual([
+        {
+          id: '4026b1bd-3896-46a4-9ade-e621a90e64ad',
+          entity: 'thread',
+          type: 'internal',
+        },
+      ]);
+    });
+
+    it('should handle ?t urls with query params before', () => {
+      const text =
+        'https://spectrum.chat/?m=asdf&t=4026b1bd-3896-46a4-9ade-e621a90e64ad';
+      expect(getEmbedsFromText(text)).toEqual([
+        {
+          id: '4026b1bd-3896-46a4-9ade-e621a90e64ad',
+          entity: 'thread',
+          type: 'internal',
+        },
+      ]);
+    });
+
+    it('should handle ?t urls with query params after', () => {
+      const text =
+        'https://spectrum.chat/?t=4026b1bd-3896-46a4-9ade-e621a90e64ad&m=asdf';
+      expect(getEmbedsFromText(text)).toEqual([
+        {
+          id: '4026b1bd-3896-46a4-9ade-e621a90e64ad',
+          entity: 'thread',
+          type: 'internal',
+        },
+      ]);
+    });
+  });
 });
 
 describe('complex text', () => {

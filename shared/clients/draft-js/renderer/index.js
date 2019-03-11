@@ -7,29 +7,29 @@ import {
   EmbedContainer,
   EmbedComponent,
 } from 'src/components/rich-text-editor/style';
+import ThreadAttachment from 'src/components/message/ThreadAttachment';
 import { getStringElements } from '../utils/getStringElements';
 import { hasStringElements } from '../utils/hasStringElements';
 import mentionsDecorator from '../mentions-decorator';
 import linksDecorator from '../links-decorator';
 import type { Node } from 'react';
 import type { KeyObj, KeysObj, DataObj } from '../message/types';
+import type {
+  EmbedData,
+  ExternalEmbedData,
+  InternalEmbedData,
+} from '../../../draft-utils/add-embeds-to-draft-js';
 
-type EmbedProps = {
-  aspectRatio?: string,
-  src: string,
-  width?: string | number,
-  height?: string | number,
-};
+const ExternalEmbed = (props: { ...ExternalEmbedData, src?: string }) => {
+  let { aspectRatio, url, src, width = '100%', height = 200 } = props;
 
-const Embed = (props: EmbedProps) => {
-  const { aspectRatio, src, width = '100%', height = 200 } = props;
-
-  if (!src) return null;
+  if (!src && url) src = url;
+  if (typeof src !== 'string') return null;
 
   // if an aspect ratio is passed in, we need to use the EmbedComponent which does some trickery with padding to force an aspect ratio. Otherwise we should just use a regular iFrame
   if (aspectRatio && aspectRatio !== undefined) {
     return (
-      <AspectRatio ratio={aspectRatio}>
+      <AspectRatio style={{ height }} ratio={aspectRatio}>
         <EmbedComponent
           title={`iframe-${src}`}
           width={width}
@@ -42,7 +42,7 @@ const Embed = (props: EmbedProps) => {
     );
   } else {
     return (
-      <EmbedContainer>
+      <EmbedContainer style={{ height }}>
         <iframe
           title={`iframe-${src}`}
           width={width}
@@ -54,6 +54,20 @@ const Embed = (props: EmbedProps) => {
       </EmbedContainer>
     );
   }
+};
+
+const InternalEmbed = (props: InternalEmbedData) => {
+  if (props.entity !== 'thread') return null;
+
+  return <ThreadAttachment id={props.id} />;
+};
+
+const Embed = (props: EmbedData) => {
+  if (typeof props.type === 'string' && props.type === 'internal') {
+    return <InternalEmbed {...props} />;
+  }
+
+  return <ExternalEmbed {...props} />;
 };
 
 type Options = {
