@@ -4,29 +4,41 @@ import compose from 'recompose/compose';
 import { withRouter, type History } from 'react-router-dom';
 import { NavigationContext } from 'src/routes';
 import Icon from 'src/components/icons';
-import { Container, Content, Actions, Title } from './style';
+import {
+  Container,
+  Content,
+  Actions,
+  Title,
+  MenuActionContainer,
+} from './style';
 
 type Props = {
   title?: string,
   history: History,
-  titlebarIcon?: any,
-  titlebarAction?: any,
-  titlebarMenuAction: 'view-back' | 'menu',
+  titleIcon?: any,
+  rightAction?: any,
+  menuAction: 'view-back' | 'menu',
 };
 
 const MobileTitlebar = (props: Props) => {
   const {
     title,
-    titlebarIcon,
-    titlebarAction,
-    titlebarMenuAction,
+    titleIcon,
+    rightAction,
+    menuAction,
     history,
+    previousHistoryBackFallback,
+    forceHistoryBack,
     ...rest
   } = props;
 
   const handleMenuClick = setNavOpen => () => {
-    if (titlebarMenuAction === 'menu') {
+    if (menuAction === 'menu') {
       return setNavOpen(true);
+    }
+
+    if (forceHistoryBack) {
+      return history.push(forceHistoryBack);
     }
 
     if (history.length >= 3) {
@@ -35,29 +47,29 @@ const MobileTitlebar = (props: Props) => {
 
     // if there is not history, redirect back to the home view of the app
     // and let the redirect handler push the user to their last-viewed community
-    return history.push('/');
+    return history.push(previousHistoryBackFallback || '/');
   };
 
   return (
     <NavigationContext.Consumer>
       {({ setNavigationIsOpen }) => (
-        <Container {...rest} hasAction={titlebarAction}>
+        <Container {...rest} hasAction={rightAction}>
           <Content>
-            {titlebarMenuAction && (
-              <span style={{ cursor: 'hover' }}>
+            {menuAction && (
+              <MenuActionContainer>
                 <Icon
                   onClick={handleMenuClick(setNavigationIsOpen)}
-                  glyph={titlebarMenuAction}
+                  glyph={menuAction}
                   size={32}
                 />
-              </span>
+              </MenuActionContainer>
             )}
 
             <div style={{ width: '12px' }} />
 
-            {titlebarIcon && (
+            {titleIcon && (
               <React.Fragment>
-                {titlebarIcon}
+                {titleIcon}
                 <div style={{ width: '12px' }} />
               </React.Fragment>
             )}
@@ -65,7 +77,7 @@ const MobileTitlebar = (props: Props) => {
             {title && <Title>{title}</Title>}
           </Content>
 
-          {titlebarAction && <Actions>{titlebarAction}</Actions>}
+          {rightAction && <Actions>{rightAction}</Actions>}
         </Container>
       )}
     </NavigationContext.Consumer>

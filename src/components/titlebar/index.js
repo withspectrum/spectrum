@@ -9,8 +9,25 @@ import {
 } from './actions';
 import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
 
-export default (props: Props) => (
+type Props = {
+  title: string,
+  menuAction: 'menu' | 'view-back',
+  titleIcon?: any,
+  rightAction?: any,
+  forceHistoryBack?: string,
+  previousHistoryBackFallback?: string,
+};
+
+export const MobileTitlebar = (props: Props) => (
   <BaseTitlebar
+    style={{ borderBottom: `1px solid ${theme.bg.border}` }}
+    {...props}
+  />
+);
+
+export const DesktopTitlebar = (props: Props) => (
+  <BaseTitlebar
+    desktop
     style={{ borderBottom: `1px solid ${theme.bg.border}` }}
     {...props}
   />
@@ -21,11 +38,11 @@ export const MobileCommunityTitlebar = (props: Props) => {
   return (
     <BaseTitlebar
       title={community.name}
-      titlebarMenuAction={'menu'}
-      titlebarIcon={
+      menuAction={'menu'}
+      titleIcon={
         <CommunityAvatar isClickable={false} community={community} size={24} />
       }
-      titlebarAction={<MobileCommunityAction community={community} />}
+      rightAction={<MobileCommunityAction community={community} />}
     />
   );
 };
@@ -36,15 +53,15 @@ export const MobileChannelTitlebar = (props: Props) => {
   return (
     <BaseTitlebar
       title={`# ${channel.name}`}
-      titlebarMenuAction={'view-back'}
-      titlebarIcon={
+      menuAction={'view-back'}
+      titleIcon={
         <CommunityAvatar
           isClickable={false}
           community={channel.community}
           size={24}
         />
       }
-      titlebarAction={<MobileChannelAction channel={channel} />}
+      rightAction={<MobileChannelAction channel={channel} />}
     />
   );
 };
@@ -54,8 +71,8 @@ export const MobileUserTitlebar = (props: Props) => {
   return (
     <BaseTitlebar
       title={user.name}
-      titlebarMenuAction={'view-back'}
-      titlebarIcon={
+      menuAction={'view-back'}
+      titleIcon={
         <UserAvatar
           isClickable={false}
           showOnlineStatus={false}
@@ -63,7 +80,7 @@ export const MobileUserTitlebar = (props: Props) => {
           size={24}
         />
       }
-      titlebarAction={<MobileUserAction user={user} />}
+      rightAction={<MobileUserAction user={user} />}
     />
   );
 };
@@ -87,7 +104,7 @@ export const ErrorTitlebar = () => {
         padding: '12px',
       }}
       title="Error"
-      titlebarMenuAction={'view-back'}
+      menuAction={'view-back'}
     />
   );
 };

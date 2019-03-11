@@ -5,7 +5,7 @@ import {
   PrimaryButton,
 } from 'src/views/community/components/button';
 import { Emoji, Heading, Description, ActionsRow, Card } from './style';
-import { ErrorTitlebar } from 'src/components/mobileTitlebar';
+import { ErrorTitlebar } from 'src/components/titlebar';
 import { ViewGrid, CenteredGrid } from 'src/components/layout';
 
 type Props = {

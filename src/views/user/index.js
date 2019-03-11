@@ -8,7 +8,7 @@ import Head from 'src/components/head';
 import ThreadFeed from 'src/components/threadFeed';
 import { NullState } from 'src/components/upsell';
 import { UserProfileCard } from 'src/components/entities';
-import { MobileUserTitlebar } from 'src/components/mobileTitlebar';
+import { MobileUserTitlebar } from 'src/components/titlebar';
 import CommunityList from './components/communityList';
 import Search from './components/search';
 import { withCurrentUser } from 'src/components/withCurrentUser';
