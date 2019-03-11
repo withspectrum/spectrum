@@ -169,7 +169,7 @@ export const getThreadMessageConnectionOptions = {
           after: undefined,
           first: undefined,
           before: cursor,
-          last: undefined,
+          last: 25,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult || !fetchMoreResult.thread) return prev;
