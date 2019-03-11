@@ -9,7 +9,7 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
 import Fab from 'src/components/fab';
 import { CommunityProfileCard } from 'src/components/entities';
-import { MobileCommunityTitlebar } from 'src/components/mobileTitlebar';
+import { MobileCommunityTitlebar } from 'src/components/titlebar';
 import type { SignedInMemberType } from '../types';
 import { TeamMembersList } from '../components/teamMembersList';
 import { CommunityFeeds } from '../components/communityFeeds';

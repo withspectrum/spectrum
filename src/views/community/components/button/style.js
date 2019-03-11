@@ -94,6 +94,11 @@ export const StyledOutlineButton = styled(StyledButton)`
   }
 `;
 
+export const StyledSmallOutlineButton = styled(StyledOutlineButton)`
+  padding: 6px 12px;
+  font-size: 15px;
+`;
+
 export const StyledHoverWarnOutlineButton = styled(StyledOutlineButton)`
   &:hover {
     background: ${theme.warn.default};
