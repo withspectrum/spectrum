@@ -11,7 +11,7 @@ import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
 
 type Props = {
   title: string,
-  menuAction: 'menu' | 'view-back',
+  menuAction: 'menu' | 'view-back' | $React.Element,
   titleIcon?: any,
   rightAction?: any,
   forceHistoryBack?: string,
