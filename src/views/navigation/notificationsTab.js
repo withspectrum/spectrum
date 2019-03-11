@@ -21,7 +21,7 @@ import { NavigationContext } from 'src/routes';
 import { AvatarGrid, AvatarLink, Label, IconWrapper, RedDot } from './style';
 
 type Props = {
-  active: boolean,
+  isActive: boolean,
   count: number,
   data: {
     notifications?: GetNotificationsType,
@@ -32,7 +32,7 @@ type Props = {
 };
 
 const NotificationsTab = (props: Props) => {
-  const { count, data } = props;
+  const { count, data, isActive, match } = props;
 
   // $FlowIssue Subscribe on mount
   React.useEffect(() => {
@@ -63,10 +63,10 @@ const NotificationsTab = (props: Props) => {
       props.dispatch(
         updateNotificationsCount('notifications', props.active ? 0 : count)
       );
-      if (props.active) props.markAllNotificationsSeen();
+      if (isActive) props.markAllNotificationsSeen();
     },
     [
-      props.active,
+      isActive,
       data.notifications && data.notifications.edges.length,
       unseenCount,
     ]
@@ -80,31 +80,25 @@ const NotificationsTab = (props: Props) => {
   return (
     <NavigationContext.Consumer>
       {({ setNavigationIsOpen }) => (
-        <Route path="/notifications">
-          {({ match }) => (
-            <Tooltip title="Notifications">
-              <AvatarGrid
-                isActive={match && match.url.includes('/notifications')}
-              >
-                <AvatarLink
-                  to={'/notifications'}
-                  data-cy="navbar-notifications"
-                  onClick={() => setNavigationIsOpen(false)}
-                  {...getAccessibilityActiveState(
-                    match && match.url.includes('/notifications')
-                  )}
-                >
-                  <IconWrapper>
-                    <Icon glyph="notification" />
-                    {count > 0 && <RedDot />}
-                  </IconWrapper>
+        <Tooltip title="Notifications">
+          <AvatarGrid isActive={isActive}>
+            <AvatarLink
+              to={'/notifications'}
+              data-cy="navbar-notifications"
+              onClick={() => setNavigationIsOpen(false)}
+              {...getAccessibilityActiveState(
+                match && match.url.includes('/notifications')
+              )}
+            >
+              <IconWrapper>
+                <Icon glyph="notification" />
+                {count > 0 && <RedDot />}
+              </IconWrapper>
 
-                  <Label>Notifications</Label>
-                </AvatarLink>
-              </AvatarGrid>
-            </Tooltip>
-          )}
-        </Route>
+              <Label>Notifications</Label>
+            </AvatarLink>
+          </AvatarGrid>
+        </Tooltip>
       )}
     </NavigationContext.Consumer>
   );
