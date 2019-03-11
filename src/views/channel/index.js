@@ -64,12 +64,12 @@ type Props = {
 };
 
 type State = {
-  selectedView: 'threads' | 'search' | 'members',
+  selectedView: 'posts' | 'search' | 'members',
 };
 
 class ChannelView extends React.Component<Props, State> {
   state = {
-    selectedView: 'threads',
+    selectedView: 'posts',
   };
 
   componentDidMount() {
@@ -382,9 +382,9 @@ class ChannelView extends React.Component<Props, State> {
                   <Segment
                     segmentLabel="threads"
                     onClick={() => this.handleSegmentClick('threads')}
-                    isActive={selectedView === 'threads'}
+                    isActive={selectedView === 'posts'}
                   >
-                    Threads
+                    Posts
                   </Segment>
 
                   <Segment
