@@ -1,6 +1,9 @@
 // @flow
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import createDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/createDirectMessageThread';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import ChatInput from 'src/components/chatInput';
 import { MobileTitlebar, DesktopTitlebar } from 'src/components/titlebar';
 import { UserAvatar } from 'src/components/avatar';
@@ -10,9 +13,18 @@ import { ErrorBoundary } from 'src/components/error';
 import Icon from 'src/components/icons';
 import MessagesCheck from '../components/messagesCheck';
 import { ChatInputWrapper } from '../style';
+import MessagesSubscriber from '../components/messagesSubscriber';
 
 const Write = (props: Props) => {
-  const { usersForMessage, hadInitialUser, setActiveStep, dispatch } = props;
+  const {
+    usersForMessage,
+    hadInitialUser,
+    setActiveStep,
+    dispatch,
+    createDirectMessageThread,
+  } = props;
+
+  const [existingThreadId, setExistingThreadId] = useState(null);
 
   const titlebarTitle =
     usersForMessage.length > 1
@@ -23,12 +35,42 @@ const Write = (props: Props) => {
       <UserAvatar user={usersForMessage[0]} size={24} />
     ) : null;
 
-  const create = () => {};
   const toSearch = () => setActiveStep('search');
 
   useEffect(() => {
     if (hadInitialUser) dispatch(initNewThreadWithUser(null));
   }, []);
+
+  const createThread = ({ messageBody, messageType, file }) => {
+    const input = {
+      participants: usersForMessage.map(user => user && user.id),
+      message: {
+        messageType: messageType,
+        threadType: 'directMessageThread',
+        content: {
+          body: messageBody || '',
+        },
+        file: file && file,
+      },
+    };
+
+    return createDirectMessageThread(input)
+      .then(({ data: { createDirectMessageThread } }) => {
+        if (!createDirectMessageThread) {
+          return dispatch(
+            addToastWithTimeout(
+              'error',
+              'Failed to create direct message thread, please try again!'
+            )
+          );
+        }
+
+        setExistingThreadId(createDirectMessageThread.id);
+      })
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
 
   return (
     <React.Fragment>
@@ -53,22 +95,30 @@ const Write = (props: Props) => {
         }
       />
 
-      <ErrorBoundary>
-        <MessagesCheck
-          userIds={usersForMessage.map(({ id }) => id)}
-          {...props}
-        />
-      </ErrorBoundary>
+      {existingThreadId ? (
+        <MessagesSubscriber id={existingThreadId} />
+      ) : (
+        <ErrorBoundary>
+          <MessagesCheck
+            userIds={usersForMessage.map(({ id }) => id)}
+            onExistingThreadId={setExistingThreadId}
+            {...props}
+          />
+        </ErrorBoundary>
+      )}
 
       <ChatInputWrapper>
         <ChatInput
-          threadId={'newDirectMessageThread'}
+          threadId={existingThreadId || 'newDirectMessageThread'}
           threadType={'directMessageThread'}
-          createThread={create}
+          createThread={createThread}
         />
       </ChatInputWrapper>
     </React.Fragment>
   );
 };
 
-export default connect()(Write);
+export default compose(
+  createDirectMessageThreadMutation,
+  connect()
+)(Write);

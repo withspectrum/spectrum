@@ -31,14 +31,13 @@ const MessagesSubscriber = (props: Props) => {
   const {
     subscribeToNewMessages,
     setLastSeen,
-    thread,
     id,
     data,
     isLoading,
     hasError,
   } = props;
 
-  const { messages } = data;
+  const { messages, directMessageThread } = data;
   const [subscription, setSubscription] = useState(null);
 
   let ref = null;
@@ -98,7 +97,7 @@ const MessagesSubscriber = (props: Props) => {
           messages={sortedMessages}
           uniqueMessageCount={uniqueMessages.length}
           threadType={'directMessageThread'}
-          thread={thread}
+          thread={directMessageThread}
         />
       </ErrorBoundary>
     </MessagesScrollWrapper>
