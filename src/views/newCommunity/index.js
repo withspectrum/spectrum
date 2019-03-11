@@ -31,6 +31,7 @@ import {
 import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from 'src/components/viewNetworkHandler';
+import { ViewGrid, SingleColumnGrid } from 'src/components/layout';
 
 type State = {
   activeStep: number,
@@ -175,8 +176,8 @@ class NewCommunity extends React.Component<Props, State> {
     const description = this.description();
     if (user && user.email) {
       return (
-        <React.Fragment>
-          <Column type="primary">
+        <ViewGrid>
+          <SingleColumnGrid>
             <Container bg={activeStep === 3 ? 'onboarding' : null} repeat>
               <Stepper activeStep={activeStep} />
               <Title centered={activeStep === 3}>{title}</Title>
@@ -231,15 +232,15 @@ class NewCommunity extends React.Component<Props, State> {
                 </ContentContainer>
               )}
             </Container>
-          </Column>
-        </React.Fragment>
+          </SingleColumnGrid>
+        </ViewGrid>
       );
     }
 
     if (user && !user.email) {
       return (
-        <React.Fragment>
-          <Column type="primary">
+        <ViewGrid>
+          <SingleColumnGrid>
             <Container bg={null}>
               <Title>
                 {user.pendingEmail ? 'Confirm' : 'Add'} Your Email Address
@@ -255,8 +256,8 @@ class NewCommunity extends React.Component<Props, State> {
                 <UserEmailConfirmation user={user} />
               </div>
             </Container>
-          </Column>
-        </React.Fragment>
+          </SingleColumnGrid>
+        </ViewGrid>
       );
     }
 
