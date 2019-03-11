@@ -50,6 +50,22 @@ const MobileTitlebar = (props: Props) => {
     return history.push(previousHistoryBackFallback || '/');
   };
 
+  const menuActionComponent = setNavigationIsOpen => {
+    if (typeof menuAction === 'string') {
+      return (
+        <Icon
+          onClick={handleMenuClick(setNavigationIsOpen)}
+          glyph={menuAction}
+          size={32}
+        />
+      );
+    }
+
+    // if the menu action is a component, just render the component being passed
+    // from the view directly
+    return menuAction;
+  };
+
   return (
     <NavigationContext.Consumer>
       {({ setNavigationIsOpen }) => (
@@ -57,11 +73,7 @@ const MobileTitlebar = (props: Props) => {
           <Content>
             {menuAction && (
               <MenuActionContainer>
-                <Icon
-                  onClick={handleMenuClick(setNavigationIsOpen)}
-                  glyph={menuAction}
-                  size={32}
-                />
+                {menuActionComponent(setNavigationIsOpen)}
               </MenuActionContainer>
             )}
 
