@@ -124,6 +124,7 @@ export const PrimaryColumn = styled.section`
     border-left: 0;
     border-right: 0;
     border-bottom: 0;
+    grid-column-start: 1;
   }
 `;
 

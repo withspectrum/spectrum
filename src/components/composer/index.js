@@ -61,7 +61,7 @@ type Props = {
   websocketConnection: string,
   networkOnline: boolean,
   isEditing: boolean,
-  slider?: boolean,
+  isModal?: boolean,
 };
 
 const LS_BODY_KEY = 'last-plaintext-thread-composer-body';
@@ -431,7 +431,7 @@ class ComposerWithData extends React.Component<Props, State> {
       networkOnline,
       websocketConnection,
       isEditing,
-      slider,
+      isModal,
     } = this.props;
 
     const networkDisabled =
@@ -442,12 +442,12 @@ class ComposerWithData extends React.Component<Props, State> {
     return (
       <Wrapper data-cy="thread-composer-wrapper">
         <Overlay
-          slider={slider}
+          isModal={isModal}
           onClick={this.closeComposer}
           data-cy="thread-composer-overlay"
         />
 
-        <Container data-cy="thread-composer" slider={slider}>
+        <Container data-cy="thread-composer" isModal={isModal}>
           <ComposerLocationSelectors
             selectedChannelId={selectedChannelId}
             selectedCommunityId={selectedCommunityId}
