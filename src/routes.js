@@ -109,6 +109,12 @@ const NewCommunity = Loadable({
 });
 
 /* prettier-ignore */
+const NewDirectMessage = Loadable({
+  loader: () => import('./views/newDirectMessage'/* webpackChunkName: "NewDirectMessage" */),
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
+});
+
+/* prettier-ignore */
 const Pages = Loadable({
   loader: () => import('./views/pages'/* webpackChunkName: "Splash" */),
   loading: ({ isLoading }) => isLoading && null,
@@ -145,6 +151,9 @@ const CommunityLoginFallback = signedOutFallback(
 );
 const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
   <Login redirectPath={`${CLIENT_URL}/new/community`} />
+));
+const NewDirectMessageFallback = signedOutFallback(NewDirectMessage, () => (
+  <Login redirectPath={`${CLIENT_URL}/messages/new`} />
 ));
 const MessagesFallback = signedOutFallback(DirectMessages, () => (
   <Login redirectPath={`${CLIENT_URL}/messages`} />
@@ -245,24 +254,17 @@ class Routes extends React.Component<Props> {
                 <Route component={Gallery} />
 
                 {/*
-                    The AppViewWrapper controls the *global* grid for the entire
-                    app, accounting for whether the user is signed in or not to
-                    determine whether or not to render the side navigation bar.
-
-                    It also accounts for every view in the app containing a wrapping
-                    div called <ViewGrid> from `src/components/layout`. The problem
-                    is that when we load a thread in the modal view, we actually
-                    want the *modal* itself to take over that grid area.
-
-                    To do this, we tell the AppViewWrapper if a modal is present;
-                    if so, we `display:none` the original view so that the modal
-                    appears perfectly aligned, yet takes up the original `grid-area`.
-                    This makes it so that all original scroll behavior of the app 
-                    works exactly the same.
-
-                    tl;dr: do not touch this.
+                  This context provider allows children views to determine
+                  how they should behave if a modal is open. For example,
+                  you could tell a community view to not paginate the thread
+                  feed if a thread modal is open.
                 */}
                 <RouteModalContext.Provider value={{ hasModal: isModal }}>
+                  {/*
+                    We tell the app view wrapper any time the modal state
+                    changes so that we can restore the scroll position to where
+                    it was before the modal was opened
+                  */}
                   <AppViewWrapper hasModal={isModal}>
                     {/* Default meta tags, get overriden by anything further down the tree */}
                     <Head title={title} description={description} />
@@ -319,6 +321,10 @@ class Routes extends React.Component<Props> {
 
                       <Route path="/login" component={LoginFallback} />
                       <Route path="/explore" component={Explore} />
+                      <Route
+                        path="/messages/new"
+                        component={NewDirectMessageFallback}
+                      />
                       <Route
                         path="/messages/:threadId"
                         component={MessagesFallback}
@@ -451,7 +457,26 @@ class Routes extends React.Component<Props> {
                     {isModal && (
                       <Route
                         path="/new/thread"
-                        render={props => <ComposerFallback {...props} slider />}
+                        render={props => (
+                          <ComposerFallback
+                            {...props}
+                            previousLocation={this.previousLocation}
+                            isModal
+                          />
+                        )}
+                      />
+                    )}
+
+                    {isModal && (
+                      <Route
+                        path="/messages/new"
+                        render={props => (
+                          <NewDirectMessageFallback
+                            {...props}
+                            previousLocation={this.previousLocation}
+                            isModal
+                          />
+                        )}
                       />
                     )}
                   </AppViewWrapper>

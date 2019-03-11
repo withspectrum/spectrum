@@ -4,29 +4,29 @@ import { graphql } from 'react-apollo';
 import directMessageThreadInfoFragment from '../../fragments/directMessageThread/directMessageThreadInfo';
 import type { DirectMessageThreadInfoType } from '../../fragments/directMessageThread/directMessageThreadInfo';
 
-export type GetDirectMessageThreadByUserIdType = {
+export type GetDirectMessageThreadByUserIdsType = {
   ...$Exact<DirectMessageThreadInfoType>,
 };
 
-export const getDirectMessageThreadByUserIdQuery = gql`
-  query getDirectMessageThreadByUserId($userId: ID!) {
-    directMessageThreadByUserId(userId: $userId) {
+export const getDirectMessageThreadByUserIdsQuery = gql`
+  query getDirectMessageThreadByUserIds($userIds: [ID!]) {
+    directMessageThreadByUserIds(userIds: $userIds) {
       ...directMessageThreadInfo
     }
   }
   ${directMessageThreadInfoFragment}
 `;
 
-export const getDirectMessageThreadByUserIdOptions = {
-  options: ({ userId }: { userId: string }) => ({
+export const getDirectMessageThreadByUserIdsOptions = {
+  options: ({ userIds }: { userIds: Array<string> }) => ({
     variables: {
-      userId,
+      userIds,
     },
     fetchPolicy: 'cache-and-network',
   }),
 };
 
 export default graphql(
-  getDirectMessageThreadByUserIdQuery,
-  getDirectMessageThreadByUserIdOptions
+  getDirectMessageThreadByUserIdsQuery,
+  getDirectMessageThreadByUserIdsOptions
 );

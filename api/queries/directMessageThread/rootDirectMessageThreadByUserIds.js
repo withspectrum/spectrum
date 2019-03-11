@@ -10,10 +10,14 @@ type Args = {
 export default requireAuth(async (_: any, args: Args, ctx: GraphQLContext) => {
   // signed out users will never be able to view a dm thread
   const { user: currentUser, loaders } = ctx;
-  const { userId } = args;
+  const { userIds } = args;
 
-  const allMemberIds = [userId, currentUser.id];
+  console.log({ userIds });
+
+  const allMemberIds = [...userIds, currentUser.id];
   const existingThread = await checkForExistingDMThread(allMemberIds);
+
+  console.log({ existingThread });
 
   if (!existingThread) return null;
 
