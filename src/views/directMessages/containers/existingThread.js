@@ -21,7 +21,7 @@ import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { LoadingView, ErrorView } from 'src/views/viewHelpers';
-import { MobileTitlebar } from 'src/components/titlebar';
+import { MobileTitlebar, DesktopTitlebar } from 'src/components/titlebar';
 
 type Props = {
   data: {
@@ -118,6 +118,14 @@ class ExistingThread extends React.Component<Props> {
         return (
           <React.Fragment>
             <MobileTitlebar
+              title={names}
+              titleIcon={titleIcon}
+              menuAction="view-back"
+              rightAction={rightAction}
+              previousHistoryBackFallback={'/messages'}
+              forceHistoryBack={'/messages'}
+            />
+            <DesktopTitlebar
               title={names}
               titleIcon={titleIcon}
               menuAction="view-back"
