@@ -37,7 +37,9 @@ class NotificationsTogglePure extends React.Component<Props, State> {
   }
 
   handleChange = () => {
-    const { channel: { id } } = this.props;
+    const {
+      channel: { id },
+    } = this.props;
     const { isReceiving } = this.state;
     this.setState({
       isReceiving: !isReceiving,
@@ -66,7 +68,7 @@ class NotificationsTogglePure extends React.Component<Props, State> {
     const { channel } = this.props;
 
     return (
-      <ListContainer>
+      <ListContainer style={{ padding: '0 16px 16px' }}>
         <Checkbox
           id="isPrivate"
           checked={isReceiving}

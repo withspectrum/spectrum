@@ -168,7 +168,7 @@ class CategoryList extends React.Component<CategoryListProps> {
       return <Loading style={{ padding: '64px 32px', minHeight: '100vh' }} />;
     }
 
-    return <ErrorView />;
+    return <ErrorView titlebarTitle={'Explore'} />;
   }
 }
 

@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import Head from 'src/components/head';
 import ThreadFeed from 'src/components/threadFeed';
-import { NullState } from 'src/components/upsell';
 import { UserProfileCard } from 'src/components/entities';
 import { MobileUserTitlebar } from 'src/components/titlebar';
 import CommunityList from './components/communityList';
@@ -33,6 +32,13 @@ import {
   SidebarSectionHeader,
   SidebarSectionHeading,
 } from 'src/views/community/style';
+import {
+  NullColumn,
+  NullColumnHeading,
+  NullColumnSubheading,
+} from 'src/components/threadFeed/style';
+import { PrimaryButton } from 'src/views/community/components/button';
+import Icon from 'src/components/icons';
 
 const ThreadFeedWithData = compose(
   connect(),
@@ -123,6 +129,7 @@ class UserView extends React.Component<Props, State> {
     }
 
     if (user && user.id) {
+      const isCurrentUser = currentUser && user.id === currentUser.id;
       const { title, description } = generateMetaInfo({
         type: 'user',
         data: {
@@ -131,10 +138,6 @@ class UserView extends React.Component<Props, State> {
           description: user.description,
         },
       });
-
-      const nullHeading = `${user.name} hasn’t ${
-        selectedView === 'creator' ? 'created' : 'joined'
-      } any conversations yet.`;
 
       const Feed =
         selectedView === 'creator'
@@ -153,7 +156,7 @@ class UserView extends React.Component<Props, State> {
             <meta property="profile:username" content={user.username} />
           </Head>
           <ViewGrid data-cy="user-view">
-            <MobileUserTitlebar user={user} />
+            <MobileUserTitlebar currentUser={currentUser} user={user} />
 
             <SecondaryPrimaryColumnGrid>
               <SecondaryColumn>
@@ -174,7 +177,7 @@ class UserView extends React.Component<Props, State> {
                 </SidebarSection>
               </SecondaryColumn>
               <PrimaryColumn>
-                <SegmentedControl>
+                <SegmentedControl mobileStickyOffset={62}>
                   <Segment
                     segmentLabel="creator"
                     onClick={() => this.handleSegmentClick('creator')}
@@ -219,7 +222,28 @@ class UserView extends React.Component<Props, State> {
 
                 {selectedView === 'search' && <Search user={user} />}
 
-                {!hasThreads && <NullState bg="null" heading={nullHeading} />}
+                {!hasThreads && (
+                  <NullColumn>
+                    <span>
+                      <NullColumnHeading>No posts yet</NullColumnHeading>
+                      <NullColumnSubheading>
+                        Posts will show up here as they are published and when
+                        conversations are joined.
+                      </NullColumnSubheading>
+                      {isCurrentUser && (
+                        <PrimaryButton
+                          to={{
+                            pathname: '/new/thread',
+                            state: { modal: true },
+                          }}
+                        >
+                          <Icon glyph={'post'} size={24} />
+                          New post
+                        </PrimaryButton>
+                      )}
+                    </span>
+                  </NullColumn>
+                )}
               </PrimaryColumn>
             </SecondaryPrimaryColumnGrid>
           </ViewGrid>
@@ -234,6 +258,7 @@ class UserView extends React.Component<Props, State> {
     if (!user) {
       return (
         <ErrorView
+          titlebarTitle={'Profile'}
           heading={'We couldn’t find a user with this username'}
           subheading={
             'You may be trying to view a profile that is deleted, or Spectrum is just having a hiccup. If you think something has gone wrong, please contact us.'
@@ -242,7 +267,7 @@ class UserView extends React.Component<Props, State> {
       );
     }
 
-    return <ErrorView />;
+    return <ErrorView titlebarTitle={'Profile'} />;
   }
 }
 

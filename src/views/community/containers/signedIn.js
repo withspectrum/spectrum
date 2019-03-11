@@ -21,6 +21,7 @@ import {
   PrimaryColumn,
   SecondaryColumn,
 } from 'src/components/layout';
+import { RouteModalContext } from 'src/routes';
 
 const Component = (props: SignedInMemberType) => {
   const { community } = props;
@@ -88,61 +89,71 @@ const Component = (props: SignedInMemberType) => {
   const { pathname, search } = getComposerLink({ communityId: community.id });
 
   return (
-    <React.Fragment>
-      {community.communityPermissions.isMember && (
-        <Fab
-          title="New post"
-          to={{
-            pathname,
-            search,
-            state: { modal: true },
-          }}
-        >
-          <Icon glyph={'post'} size={32} />
-        </Fab>
-      )}
+    <RouteModalContext.Consumer>
+      {({ hasModal }) => (
+        <React.Fragment>
+          {community.communityPermissions.isMember && (
+            <Fab
+              title="New post"
+              to={{
+                pathname,
+                search,
+                state: { modal: true },
+              }}
+            >
+              <Icon glyph={'post'} size={32} />
+            </Fab>
+          )}
 
-      <ViewGrid data-cy="community-view">
-        <Head
-          title={title}
-          description={description}
-          image={community.profilePhoto}
-        />
-
-        <MobileCommunityTitlebar community={community} />
-
-        <SecondaryPrimaryColumnGrid>
-          <SecondaryColumn>
-            <SidebarSection>
-              <CommunityProfileCard community={community} />
-            </SidebarSection>
-
-            <SidebarSection>
-              <TeamMembersList
-                community={community}
-                id={community.id}
-                first={100}
-                filter={{ isModerator: true, isOwner: true }}
-              />
-            </SidebarSection>
-
-            <SidebarSection>
-              <ChannelsList id={community.id} communitySlug={community.slug} />
-            </SidebarSection>
-          </SecondaryColumn>
-
-          <PrimaryColumn>
-            <CommunityFeeds
-              scrollToBottom={scrollToBottom}
-              contextualScrollToBottom={contextualScrollToBottom}
-              scrollToTop={scrollToTop}
-              scrollToPosition={scrollToPosition}
-              community={community}
+          <ViewGrid
+            style={{ overflowY: hasModal ? 'hidden' : 'scroll' }}
+            data-cy="community-view"
+          >
+            <Head
+              title={title}
+              description={description}
+              image={community.profilePhoto}
             />
-          </PrimaryColumn>
-        </SecondaryPrimaryColumnGrid>
-      </ViewGrid>
-    </React.Fragment>
+
+            <SecondaryPrimaryColumnGrid>
+              <SecondaryColumn>
+                <SidebarSection>
+                  <CommunityProfileCard community={community} />
+                </SidebarSection>
+
+                <SidebarSection>
+                  <TeamMembersList
+                    community={community}
+                    id={community.id}
+                    first={100}
+                    filter={{ isModerator: true, isOwner: true }}
+                  />
+                </SidebarSection>
+
+                <SidebarSection>
+                  <ChannelsList
+                    id={community.id}
+                    communitySlug={community.slug}
+                  />
+                </SidebarSection>
+              </SecondaryColumn>
+
+              <PrimaryColumn>
+                <MobileCommunityTitlebar community={community} />
+
+                <CommunityFeeds
+                  scrollToBottom={scrollToBottom}
+                  contextualScrollToBottom={contextualScrollToBottom}
+                  scrollToTop={scrollToTop}
+                  scrollToPosition={scrollToPosition}
+                  community={community}
+                />
+              </PrimaryColumn>
+            </SecondaryPrimaryColumnGrid>
+          </ViewGrid>
+        </React.Fragment>
+      )}
+    </RouteModalContext.Consumer>
   );
 };
 

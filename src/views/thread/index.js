@@ -8,7 +8,7 @@ const loader = () => import('./container'/* webpackChunkName: "Thread" */);
 
 const getLoading = () => ({ error, pastDelay }) => {
   if (error) {
-    return <ErrorView />;
+    return <ErrorView titlebarTitle={'Conversation'} />;
   } else if (pastDelay) {
     return <LoadingView />;
   }

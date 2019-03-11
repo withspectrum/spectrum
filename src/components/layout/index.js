@@ -134,6 +134,7 @@ export const PrimaryColumn = styled.section`
     border-right: 0;
     border-bottom: 0;
     grid-column-start: 1;
+    min-height: 100vh;
   }
 `;
 

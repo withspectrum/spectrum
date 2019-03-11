@@ -6,7 +6,6 @@ import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { connect } from 'react-redux';
 import InboxThread from 'src/components/inboxThread';
-import { NullCard } from 'src/components/upsell';
 import { Loading, LoadingInboxThread } from 'src/components/loading';
 import NewActivityIndicator from 'src/components/newActivityIndicator';
 import ViewError from 'src/components/viewError';
@@ -19,6 +18,7 @@ import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import getComposerLink from 'src/helpers/get-composer-link';
 import { OutlineButton } from 'src/views/community/components/button';
 import Icon from 'src/components/icons';
+import { NullColumn, NullColumnHeading, NullColumnSubheading } from './style';
 
 const NullState = ({ viewContext, isSearch, communityId, channelId }) => {
   let hd;
@@ -48,15 +48,21 @@ const NullState = ({ viewContext, isSearch, communityId, channelId }) => {
   const headingIcon = (communityId || channelId) && (
     <Icon glyph={'post'} size={44} />
   );
+
   return (
-    <NullCard headingIcon={headingIcon} bg="post" heading={hd} copy={cp}>
-      {(communityId || channelId) && (
-        <OutlineButton to={{ pathname, search, state: { modal: true } }}>
-          <Icon glyph={'post'} size={24} />
-          New post
-        </OutlineButton>
-      )}
-    </NullCard>
+    <NullColumn>
+      <span>
+        {headingIcon && headingIcon}
+        {hd && <NullColumnHeading>{hd}</NullColumnHeading>}
+        {cp && <NullColumnSubheading>{cp}</NullColumnSubheading>}
+        {(communityId || channelId) && (
+          <OutlineButton to={{ pathname, search, state: { modal: true } }}>
+            <Icon glyph={'post'} size={24} />
+            New post
+          </OutlineButton>
+        )}
+      </span>
+    </NullColumn>
   );
 };
 
@@ -180,8 +186,6 @@ class ThreadFeedPure extends React.Component<Props, State> {
       newActivityIndicator,
     } = this.props;
 
-    const dataExists = threads && threads.length > 0;
-
     const threadNodes =
       threads && threads.length > 0
         ? threads
@@ -215,10 +219,19 @@ class ThreadFeedPure extends React.Component<Props, State> {
         t => t.id !== this.props.data.community.pinnedThread.id
       );
     }
+    if (
+      this.props.data.channel &&
+      this.props.data.channel.community &&
+      this.props.data.channel.community.watercoolerId
+    ) {
+      filteredThreads = filteredThreads.filter(
+        // $FlowIssue
+        t => t.id !== this.props.data.channel.community.watercoolerId
+      );
+    }
 
     const uniqueThreads = deduplicateChildren(filteredThreads, 'id');
-
-    if (dataExists) {
+    if (uniqueThreads && uniqueThreads.length > 0) {
       return (
         <Threads data-cy="thread-feed">
           {newActivityIndicator && (

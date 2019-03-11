@@ -159,7 +159,7 @@ class CommunitySettings extends React.Component<Props> {
       return <LoadingView />;
     }
 
-    return <ErrorView />;
+    return <ErrorView titlebarTitle={'Settings'} />;
   }
 }
 

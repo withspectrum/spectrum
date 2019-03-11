@@ -12,10 +12,12 @@ type Props = {
   emoji?: string,
   heading?: string,
   subheading?: string,
+  titlebarTitle?: string,
 };
 
 export const ErrorView = (props: Props) => {
   const {
+    titlebarTitle = 'Error',
     emoji = '😣',
     heading = 'We ran into trouble loading this page',
     subheading = 'You may be trying to view something that is deleted, or Spectrum is just having a hiccup. If you think something has gone wrong, please contact us.',
@@ -23,7 +25,7 @@ export const ErrorView = (props: Props) => {
 
   return (
     <ViewGrid>
-      <ErrorTitlebar />
+      <ErrorTitlebar title={titlebarTitle} />
       <CenteredGrid>
         <Card>
           <Emoji role="img" aria-label="Oops">

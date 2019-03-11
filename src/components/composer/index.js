@@ -16,6 +16,7 @@ import uploadImage, {
 } from 'shared/graphql/mutations/uploadImage';
 import { TextButton } from '../buttons';
 import { PrimaryButton } from 'src/views/community/components/button';
+import { MobileTitlebar } from 'src/components/titlebar';
 import {
   MediaLabel,
   MediaInput,
@@ -454,6 +455,11 @@ class ComposerWithData extends React.Component<Props, State> {
         />
 
         <Container data-cy="thread-composer" isModal={isModal}>
+          <MobileTitlebar
+            title={'New post'}
+            menuAction={'view-close'}
+            previousHistoryBackFallback={'/'}
+          />
           <ComposerLocationSelectors
             selectedChannelId={selectedChannelId}
             selectedCommunityId={selectedCommunityId}

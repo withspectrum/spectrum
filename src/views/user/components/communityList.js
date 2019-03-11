@@ -5,6 +5,7 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { CommunityListItem } from 'src/components/entities';
 import { Loading } from 'src/components/loading';
+import { OutlineButton } from 'src/views/community/components/button';
 import { getUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import type { GetUserCommunityConnectionType } from 'shared/graphql/queries/user/getUserCommunityConnection';
 
@@ -30,7 +31,11 @@ class CommunityList extends React.Component<Props> {
       !data.user.communityConnection.edges ||
       data.user.communityConnection.edges.length === 0
     ) {
-      return null;
+      return (
+        <div style={{ padding: '16px' }}>
+          <OutlineButton to={'/explore'}>Explore communities</OutlineButton>
+        </div>
+      );
     }
 
     const communities = data.user.communityConnection.edges.map(

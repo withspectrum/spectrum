@@ -1,6 +1,5 @@
 // @flow
 import theme from 'shared/theme';
-// $FlowFixMe
 import styled from 'styled-components';
 import { OutlineButton } from '../buttons';
 
@@ -33,4 +32,35 @@ export const Divider = styled.div`
   display: block;
   padding-top: 24px;
   margin-bottom: 24px;
+`;
+
+export const NullColumn = styled.div`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  padding: 24px;
+  background: ${theme.bg.default};
+  border-bottom: 1px solid ${theme.bg.border};
+  min-height: calc(100vh - 56px);
+`;
+
+export const NullColumnHeading = styled.h3`
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 8px;
+  color: ${theme.text.default};
+  max-width: 540px;
+`;
+export const NullColumnSubheading = styled.p`
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: ${theme.text.secondary};
+  margin-bottom: 24px;
+  max-width: 360px;
 `;

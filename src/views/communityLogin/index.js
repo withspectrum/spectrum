@@ -126,7 +126,7 @@ export class Login extends React.Component<Props, State> {
 
     if (isLoading) return <LoadingView />;
 
-    return <ErrorView />;
+    return <ErrorView titlebarTitle={'Login'} />;
   }
 }
 

@@ -1,5 +1,5 @@
 // @flow
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import compose from 'recompose/compose';
 import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
@@ -63,7 +63,8 @@ const Messages = (props: Props) => {
       }
       isReverse={!!isWatercooler}
       loadMore={loadMore}
-      loader={<p key="loader">Loading...</p>}
+      allowPagination={true}
+      loader={<Loading key={0} />}
     >
       <ChatMessages
         thread={thread}

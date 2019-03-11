@@ -378,12 +378,13 @@ class NotificationsPure extends React.Component<Props, State> {
     }
 
     if (hasError) {
-      return <ErrorView />;
+      return <ErrorView titlebarTitle={'Notifications'} />;
     }
 
     // no issues loading, but the user doesnt have notifications yet
     return (
       <ErrorView
+        titlebarTitle={'Notifications'}
         emoji="😙"
         heading="No notifications...yet"
         subheading="Looks like you’re new around here! When you start receiving notifications about conversations on Spectrum, they'll show up here."

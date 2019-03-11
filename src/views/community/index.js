@@ -20,7 +20,7 @@ const CommunityView = (props: Props) => {
 
   const { community } = props.data;
 
-  if (!community || hasError) return <ErrorView />;
+  if (!community || hasError) return <ErrorView titlebarTitle={'Not found'} />;
 
   const { isPrivate, communityPermissions } = community;
   const { isMember, isBlocked } = communityPermissions;
@@ -28,7 +28,7 @@ const CommunityView = (props: Props) => {
   if (currentUser && !isBlocked && !isPrivate && !isMember)
     return <SignedIn community={community} />;
 
-  if (isBlocked) return <ErrorView />;
+  if (isBlocked) return <ErrorView titlebarTitle={'Community'} />;
 
   if (isPrivate && !currentUser) {
     const redirectPath = `${CLIENT_URL}/${community.slug}`;

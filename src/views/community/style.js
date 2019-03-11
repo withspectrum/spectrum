@@ -118,7 +118,9 @@ export const SidebarSectionHeading = styled.div`
   }
 `;
 
-export const FeedsContainer = styled.section``;
+export const FeedsContainer = styled.section`
+  min-height: calc(100vh);
+`;
 
 export const Row = styled.div`
   display: flex;

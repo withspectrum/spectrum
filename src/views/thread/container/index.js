@@ -12,6 +12,9 @@ import { markSingleNotificationSeenMutation } from 'shared/graphql/mutations/not
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { LoadingView, ErrorView } from 'src/views/viewHelpers';
+import JoinCommunity from 'src/components/joinCommunityWrapper';
+import Icon from 'src/components/icons';
+import { PrimaryButton } from 'src/views/community/components/button';
 import {
   SecondaryPrimaryColumnGrid,
   PrimaryColumn,
@@ -23,13 +26,14 @@ import {
 } from 'src/components/entities';
 import { SidebarSection } from 'src/views/community/style';
 import ChatInput from 'src/components/chatInput';
+import { MobileTitlebar } from 'src/components/titlebar';
 import MessagesSubscriber from '../components/messagesSubscriber';
 import StickyHeader from '../components/stickyHeader';
 import ThreadDetail from '../components/threadDetail';
 import ThreadHead from '../components/threadHead';
 import LockedMessages from '../components/lockedMessages';
 import DesktopAppUpsell from '../components/desktopAppUpsell';
-import { Stretch, ChatInputWrapper } from '../style';
+import { Stretch, ChatInputWrapper, LockedText } from '../style';
 
 const ThreadContainer = (props: Props) => {
   const { data, isLoading, client, currentUser } = props;
@@ -37,7 +41,7 @@ const ThreadContainer = (props: Props) => {
   if (isLoading) return <LoadingView />;
 
   const { thread } = data;
-  if (!thread) return <ErrorView />;
+  if (!thread) return <ErrorView titlebarTitle={'Conversation'} />;
 
   const { id } = thread;
 
@@ -141,6 +145,7 @@ const ThreadContainer = (props: Props) => {
         </SecondaryColumn>
 
         <PrimaryColumn>
+          <MobileTitlebar title={'Conversation'} menuAction={'view-back'} />
           {/*
             This <Stretch> container makes sure that the thread detail and messages
             component are always at least the height of the screen, minus the
@@ -165,9 +170,27 @@ const ThreadContainer = (props: Props) => {
             </ChatInputWrapper>
           )}
 
+          {!canChat && !isLocked && (
+            <ChatInputWrapper>
+              <JoinCommunity
+                communityId={community.id}
+                render={({ isLoading }) => (
+                  <LockedMessages>
+                    <PrimaryButton isLoading={isLoading} icon={'door-enter'}>
+                      {isLoading ? 'Joining...' : 'Join community to chat'}
+                    </PrimaryButton>
+                  </LockedMessages>
+                )}
+              />
+            </ChatInputWrapper>
+          )}
+
           {isLocked && (
             <ChatInputWrapper>
-              <LockedMessages />
+              <LockedMessages>
+                <Icon glyph={'private'} size={24} />
+                <LockedText>This conversation has been locked</LockedText>
+              </LockedMessages>
             </ChatInputWrapper>
           )}
         </PrimaryColumn>

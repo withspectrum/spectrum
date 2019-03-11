@@ -68,14 +68,11 @@ class MembersList extends React.Component<Props, State> {
         <InfiniteList
           pageStart={0}
           loadMore={this.props.data.fetchMore}
-          isLoadingMore={this.props.isFetchingMore}
           hasMore={hasNextPage}
-          loader={<LoadingListItem />}
+          loader={<LoadingListItem key={0} />}
           useWindow={false}
           initialLoad={false}
-          scrollElement={scrollElement}
           threshold={750}
-          className={'scroller-for-community-members-list'}
         >
           {uniqueNodes.map(user => {
             if (!user) return null;

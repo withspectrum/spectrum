@@ -20,6 +20,7 @@ import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { ViewGrid } from 'src/components/layout';
+import { MobileTitlebar } from 'src/components/titlebar';
 
 type Props = {
   data: {
@@ -176,17 +177,26 @@ class ChannelSettings extends React.Component<Props> {
       };
 
       return (
-        <ViewGrid>
-          <View>
-            <Header
-              subheading={subheading}
-              heading={`${channel.name} Settings ${
-                channel.isArchived ? '(Archived)' : ''
+        <React.Fragment>
+          <ViewGrid>
+            <MobileTitlebar
+              title={'Settings'}
+              menuAction={'view-back'}
+              previousHistoryBackFallback={`/${channel.community.slug}/${
+                channel.slug
               }`}
             />
-            <ActiveView />
-          </View>
-        </ViewGrid>
+            <View>
+              <Header
+                subheading={subheading}
+                heading={`${channel.name} Settings ${
+                  channel.isArchived ? '(Archived)' : ''
+                }`}
+              />
+              <ActiveView />
+            </View>
+          </ViewGrid>
+        </React.Fragment>
       );
     }
 
@@ -194,7 +204,7 @@ class ChannelSettings extends React.Component<Props> {
       return <LoadingView />;
     }
 
-    return <ErrorView />;
+    return <ErrorView titlebarTitle={'Settings'} />;
   }
 }
 

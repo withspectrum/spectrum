@@ -378,10 +378,10 @@ class ChannelView extends React.Component<Props, State> {
               </SecondaryColumn>
 
               <PrimaryColumn>
-                <SegmentedControl>
+                <SegmentedControl mobileStickyOffset={62}>
                   <Segment
-                    segmentLabel="threads"
-                    onClick={() => this.handleSegmentClick('threads')}
+                    segmentLabel="posts"
+                    onClick={() => this.handleSegmentClick('posts')}
                     isActive={selectedView === 'posts'}
                   >
                     Posts
@@ -405,7 +405,7 @@ class ChannelView extends React.Component<Props, State> {
                 </SegmentedControl>
 
                 {// thread list
-                selectedView === 'threads' && (
+                selectedView === 'posts' && (
                   <ThreadFeedWithData
                     viewContext="channelProfile"
                     id={channel.id}
@@ -438,7 +438,7 @@ class ChannelView extends React.Component<Props, State> {
       return <LoadingView />;
     }
 
-    return <ErrorView />;
+    return <ErrorView titlebarTitle={'Channel'} />;
   }
 }
 

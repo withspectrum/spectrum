@@ -28,7 +28,7 @@ export default getThreadByMatch(props => {
 
     // If we don't have a thread, but also aren't loading anymore it's either a private or a non-existant thread
     if (error) {
-      return <ErrorView />;
+      return <ErrorView titlebarTitle={'Conversation'} />;
     }
 
     return null;

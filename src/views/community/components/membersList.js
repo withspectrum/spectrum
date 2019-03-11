@@ -29,21 +29,7 @@ type Props = {
   currentUser: ?Object,
 };
 
-type State = {
-  scrollElement: any,
-};
-
-class MembersList extends React.Component<Props, State> {
-  state = { scrollElement: null };
-
-  componentDidMount() {
-    this.setState({
-      // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
-      // the AppViewWrapper which is the scrolling part of the site.
-      scrollElement: document.getElementById('scroller-for-thread-feed'),
-    });
-  }
-
+class MembersList extends React.Component<Props> {
   shouldComponentUpdate(nextProps) {
     const curr = this.props;
     // fetching more
@@ -58,7 +44,6 @@ class MembersList extends React.Component<Props, State> {
       isLoading,
       currentUser,
     } = this.props;
-    const { scrollElement } = this.state;
 
     if (community) {
       const { edges: members } = community.members;
@@ -70,14 +55,11 @@ class MembersList extends React.Component<Props, State> {
         <InfiniteList
           pageStart={0}
           loadMore={this.props.data.fetchMore}
-          isLoadingMore={this.props.isFetchingMore}
           hasMore={hasNextPage}
-          loader={<LoadingListItem />}
+          loader={<LoadingListItem key={0} />}
           useWindow={false}
           initialLoad={false}
-          scrollElement={scrollElement}
           threshold={750}
-          className={'scroller-for-community-members-list'}
         >
           {uniqueNodes.map(node => {
             if (!node) return null;

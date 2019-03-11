@@ -67,11 +67,12 @@ export const MobileChannelTitlebar = (props: Props) => {
 };
 
 export const MobileUserTitlebar = (props: Props) => {
-  const { user } = props;
+  const { user, currentUser } = props;
+  const isCurrentUser = currentUser && currentUser.id === user.id;
   return (
     <BaseTitlebar
       title={user.name}
-      menuAction={'view-back'}
+      menuAction={isCurrentUser ? 'menu' : 'view-back'}
       titleIcon={
         <UserAvatar
           isClickable={false}
@@ -96,15 +97,15 @@ export const LoadingTitlebar = () => {
   );
 };
 
-export const ErrorTitlebar = () => {
+export const ErrorTitlebar = ({ title }: Props) => {
   return (
     <BaseTitlebar
       style={{
         borderBottom: `1px solid ${theme.bg.border}`,
         padding: '12px',
       }}
-      title="Error"
-      menuAction={'view-back'}
+      title={title}
+      menuAction={'menu'}
     />
   );
 };

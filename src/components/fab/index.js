@@ -12,6 +12,7 @@ const Fab = (props: Props) => {
     right: 0,
     width: '108px',
     height: '90px',
+    zIndex: '999',
   };
 
   if (to)
