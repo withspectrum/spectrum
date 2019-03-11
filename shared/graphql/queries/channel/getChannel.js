@@ -3,23 +3,18 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import channelInfoFragment from '../../fragments/channel/channelInfo';
 import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
-import channelMetaDataFragment from '../../fragments/channel/channelMetaData';
-import type { ChannelMetaDataType } from '../../fragments/channel/channelMetaData';
 
 export type GetChannelType = {
   ...$Exact<ChannelInfoType>,
-  ...$Exact<ChannelMetaDataType>,
 };
 
 export const getChannelByIdQuery = gql`
   query getChannelById($id: ID) {
     channel(id: $id) {
       ...channelInfo
-      ...channelMetaData
     }
   }
   ${channelInfoFragment}
-  ${channelMetaDataFragment}
 `;
 
 const getChannelByIdOptions = {
@@ -49,11 +44,9 @@ export const getChannelBySlugAndCommunitySlugQuery = gql`
   ) {
     channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
       ...channelInfo
-      ...channelMetaData
     }
   }
   ${channelInfoFragment}
-  ${channelMetaDataFragment}
 `;
 
 const getChannelBySlugAndCommunitySlugOptions = {
@@ -72,7 +65,11 @@ export const getChannelBySlugAndCommunitySlug = graphql(
 );
 
 const getChannelByMatchOptions = {
-  options: ({ match: { params: { channelSlug, communitySlug } } }) => ({
+  options: ({
+    match: {
+      params: { channelSlug, communitySlug },
+    },
+  }) => ({
     variables: {
       channelSlug: channelSlug,
       communitySlug: communitySlug,

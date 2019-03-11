@@ -8,8 +8,6 @@ import type { CommunityMetaDataType } from '../community/communityMetaData';
 import threadParticipantFragment from './threadParticipant';
 import channelInfoFragment from '../channel/channelInfo';
 import type { ChannelInfoType } from '../channel/channelInfo';
-import channelMetaDataFragment from '../channel/channelMetaData';
-import type { ChannelMetaDataType } from '../channel/channelMetaData';
 import type { ThreadMessageConnectionType } from 'shared/graphql/fragments/thread/threadMessageConnection';
 import type { ThreadParticipantType } from './threadParticipant';
 
@@ -32,7 +30,6 @@ export type ThreadInfoType = {
   },
   channel: {
     ...$Exact<ChannelInfoType>,
-    ...$Exact<ChannelMetaDataType>,
   },
   community: {
     ...$Exact<CommunityInfoType>,
@@ -71,7 +68,6 @@ export default gql`
     }
     channel {
       ...channelInfo
-      ...channelMetaData
     }
     community {
       ...communityInfo
@@ -100,6 +96,5 @@ export default gql`
   ${userInfoFragment}
   ${channelInfoFragment}
   ${communityInfoFragment}
-  ${channelMetaDataFragment}
   ${communityMetaDataFragment}
 `;

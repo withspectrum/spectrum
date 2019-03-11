@@ -40,16 +40,10 @@ class ChannelMembers extends Component<Props> {
       const members =
         channel.memberConnection &&
         channel.memberConnection.edges.map(member => member && member.node);
-      const totalCount =
-        channel.metaData && channel.metaData.members.toLocaleString();
 
       return (
         <SectionCard>
-          <SectionTitle>
-            {totalCount === 1
-              ? `${totalCount} member`
-              : `${totalCount} members`}
-          </SectionTitle>
+          <SectionTitle>Members</SectionTitle>
 
           <ListContainer>
             {members &&

@@ -2,20 +2,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
-import Icon from 'src/components/icons';
-import {
-  MetaContainer,
-  Name,
-  Description,
-  MetaLinksContainer,
-  MetaRow,
-  OnlineDot,
-} from '../style';
+import { MetaContainer, Name, Description } from '../style';
 
 export const ChannelMeta = (props: ChannelMetaType) => {
   const { channel } = props;
-  const { description, metaData, community } = channel;
-  const { members, onlineMembers } = metaData;
+  const { description, community } = channel;
   const formattedDescription = description && renderTextWithLinks(description);
 
   return (
@@ -27,16 +18,6 @@ export const ChannelMeta = (props: ChannelMetaType) => {
       {formattedDescription && (
         <Description>{formattedDescription}</Description>
       )}
-
-      <MetaLinksContainer>
-        <MetaRow>
-          <Icon glyph={'person'} size={20} /> {members.toLocaleString()} members
-        </MetaRow>
-
-        <MetaRow>
-          <OnlineDot /> {onlineMembers.toLocaleString()} members online
-        </MetaRow>
-      </MetaLinksContainer>
     </MetaContainer>
   );
 };
