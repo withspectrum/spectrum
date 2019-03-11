@@ -8,7 +8,7 @@ import { View, MessagesList, ComposeHeader } from '../style';
 export default () => (
   <View>
     <MessagesList>
-      <Link to="/messages/new">
+      <Link to="/new/message">
         <ComposeHeader>
           <Icon glyph="message-new" />
         </ComposeHeader>

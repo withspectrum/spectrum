@@ -23,7 +23,7 @@ const InitDirectMessage = (props: Props) => {
     e && e.preventDefault() && e.stopPropogation();
     dispatch(initNewThreadWithUser(user));
     history.push({
-      pathname: currentUser ? `/messages/new` : '/login',
+      pathname: currentUser ? `/new/message` : '/login',
       state: { modal: !!currentUser },
     });
   };

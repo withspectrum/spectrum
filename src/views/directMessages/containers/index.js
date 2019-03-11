@@ -32,7 +32,7 @@ class DirectMessages extends React.Component<Props, State> {
         <Fab
           title="New message"
           to={{
-            pathname: '/messages/new',
+            pathname: '/new/message',
             state: { modal: true },
           }}
         >
@@ -45,7 +45,7 @@ class DirectMessages extends React.Component<Props, State> {
               title="Messages"
               menuAction="menu"
               rightAction={
-                <Link to={'/messages/new'}>
+                <Link to={'/new/message'}>
                   <Icon glyph={'message-simple-new'} />
                 </Link>
               }

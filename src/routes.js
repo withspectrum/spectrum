@@ -153,7 +153,7 @@ const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
   <Login redirectPath={`${CLIENT_URL}/new/community`} />
 ));
 const NewDirectMessageFallback = signedOutFallback(NewDirectMessage, () => (
-  <Login redirectPath={`${CLIENT_URL}/messages/new`} />
+  <Login redirectPath={`${CLIENT_URL}/new/message`} />
 ));
 const MessagesFallback = signedOutFallback(DirectMessages, () => (
   <Login redirectPath={`${CLIENT_URL}/messages`} />
@@ -322,7 +322,7 @@ class Routes extends React.Component<Props> {
                       <Route path="/login" component={LoginFallback} />
                       <Route path="/explore" component={Explore} />
                       <Route
-                        path="/messages/new"
+                        path="/new/message"
                         component={NewDirectMessageFallback}
                       />
                       <Route
@@ -469,7 +469,7 @@ class Routes extends React.Component<Props> {
 
                     {isModal && (
                       <Route
-                        path="/messages/new"
+                        path="/new/message"
                         render={props => (
                           <NewDirectMessageFallback
                             {...props}
