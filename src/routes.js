@@ -313,6 +313,10 @@ class Routes extends React.Component<Props> {
                       />
                       <Route path="/new/thread" component={ComposerFallback} />
                       <Route path="/new/search" component={Search} />
+                      <Route
+                        path="/new/message"
+                        component={NewDirectMessageFallback}
+                      />
 
                       <Route
                         path="/new"
@@ -321,10 +325,6 @@ class Routes extends React.Component<Props> {
 
                       <Route path="/login" component={LoginFallback} />
                       <Route path="/explore" component={Explore} />
-                      <Route
-                        path="/new/message"
-                        component={NewDirectMessageFallback}
-                      />
                       <Route
                         path="/messages/:threadId"
                         component={MessagesFallback}
