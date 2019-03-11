@@ -144,7 +144,11 @@ class MessagesWithData extends React.Component<Props, State> {
     }
 
     if (isLoading) {
-      return <Loading />;
+      return (
+        <MessagesScrollWrapper>
+          <Loading />
+        </MessagesScrollWrapper>
+      );
     }
 
     return null;

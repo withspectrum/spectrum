@@ -15,6 +15,9 @@ const Header = ({ thread, currentUser }) => {
     user => user.userId !== currentUser.id
   );
 
+  // don't show the header in a 1:1 dm because we already have the titlebar
+  if (trimmedUsers.length === 1) return null;
+
   const photos = trimmedUsers.map(user => (
     <PhotoWrapper key={user.id}>
       <Photo user={user} size={56} showOnlineStatus={false} />

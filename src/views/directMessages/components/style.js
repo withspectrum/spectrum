@@ -418,4 +418,5 @@ export const MessagesScrollWrapper = styled.div`
   width: 100%;
   flex: 1 0 auto;
   padding-top: 24px;
+  align-self: flex-end;
 `;
