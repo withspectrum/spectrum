@@ -9,7 +9,6 @@ import { Loading } from 'src/components/loading';
 import InfiniteScroller from 'src/components/infiniteScroll';
 import NullMessages from './nullMessages';
 
-const elem = document.getElementById('scroller-for-thread-feed');
 const Messages = (props: Props) => {
   const {
     subscribeToNewMessages,
@@ -20,8 +19,11 @@ const Messages = (props: Props) => {
     isWatercooler,
   } = props;
 
+  let ref = null;
+
   useEffect(() => {
     const unsubscribe = subscribeToNewMessages();
+    ref = document.getElementById('scroller-for-thread-feed');
     return () => Promise.resolve(unsubscribe());
   }, []);
 
@@ -44,13 +46,12 @@ const Messages = (props: Props) => {
     if (isFetchingMore) return Promise.resolve();
     if (!isWatercooler) return props.loadNextPage();
 
-    if (!elem) return props.loadPreviousPage();
+    if (!ref) return props.loadPreviousPage();
 
     // Preserve scroll position after load
-    const previousScrollPosition = elem.scrollHeight;
+    const previousScrollPosition = ref.scrollHeight;
     return props.loadPreviousPage().then(() => {
-      elem.scrollTop =
-        elem.scrollHeight - previousScrollPosition + elem.scrollTop;
+      ref.scrollTop = ref.scrollHeight - previousScrollPosition + ref.scrollTop;
     });
   };
 
