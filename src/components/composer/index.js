@@ -62,6 +62,7 @@ type Props = {
   networkOnline: boolean,
   isEditing: boolean,
   isModal?: boolean,
+  previousLocation?: Location,
 };
 
 const LS_BODY_KEY = 'last-plaintext-thread-composer-body';
@@ -204,8 +205,13 @@ class ComposerWithData extends React.Component<Props, State> {
       this.clearEditorStateAfterPublish();
     }
 
-    this.props.history.goBack({ state: { modal: false } });
-    return;
+    if (this.props.previousLocation)
+      return this.props.history.push({
+        ...this.props.previousLocation,
+        state: { modal: false },
+      });
+
+    return this.props.history.goBack({ state: { modal: false } });
   };
 
   clearEditorStateAfterPublish = () => {

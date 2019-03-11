@@ -129,7 +129,7 @@ const ThreadContainer = (props: Props) => {
     <React.Fragment>
       <ThreadHead thread={thread} />
 
-      <SecondaryPrimaryColumnGrid>
+      <SecondaryPrimaryColumnGrid style={{ gridArea: 'view' }}>
         <SecondaryColumn>
           <DesktopAppUpsell />
 
