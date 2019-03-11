@@ -102,3 +102,38 @@ export const StyledSecondaryColumn = styled(SecondaryColumn)`
     display: ${props => (props.shouldHideThreadList ? 'none' : 'block')};
   }
 `;
+
+export const NoCommunitySelected = styled.div`
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 24px;
+
+  @media (min-width: ${MEDIA_BREAK}px) {
+    ${props =>
+      props.hideOnDesktop &&
+      css`
+        display: none;
+      `}
+  }
+`;
+
+export const NoCommunityHeading = styled.h3`
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 8px;
+  color: ${theme.text.default};
+`;
+export const NoCommunitySubheading = styled.p`
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: ${theme.text.secondary};
+  padding-right: 24px;
+  margin-bottom: 24px;
+`;

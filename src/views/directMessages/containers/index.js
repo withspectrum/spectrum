@@ -1,18 +1,24 @@
 // @flow
 import * as React from 'react';
 import type { Match } from 'react-router';
+import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
 import Fab from 'src/components/fab';
 import ThreadsList from '../components/threadsList';
 import ExistingThread from './existingThread';
-import { Link } from 'react-router-dom';
+import { PrimaryButton } from 'src/views/community/components/button';
 import { MobileTitlebar } from 'src/components/titlebar';
 import {
   ViewGrid,
   SecondaryPrimaryColumnGrid,
   PrimaryColumn,
 } from 'src/components/layout';
-import { StyledSecondaryColumn } from '../style';
+import {
+  StyledSecondaryColumn,
+  NoCommunitySelected,
+  NoCommunityHeading,
+  NoCommunitySubheading,
+} from '../style';
 
 type Props = {
   match: Match,
@@ -57,8 +63,27 @@ class DirectMessages extends React.Component<Props, State> {
             </StyledSecondaryColumn>
 
             <PrimaryColumn>
-              {!!activeThreadId && (
+              {activeThreadId ? (
                 <ExistingThread id={activeThreadId} match={match} />
+              ) : (
+                <NoCommunitySelected>
+                  <div>
+                    <NoCommunityHeading>
+                      No conversation selected
+                    </NoCommunityHeading>
+                    <NoCommunitySubheading>
+                      Choose from an existing conversation, or start a new one.
+                    </NoCommunitySubheading>
+                    <PrimaryButton
+                      to={{
+                        pathname: '/new/message',
+                        state: { modal: true },
+                      }}
+                    >
+                      New message
+                    </PrimaryButton>
+                  </div>
+                </NoCommunitySelected>
               )}
             </PrimaryColumn>
           </SecondaryPrimaryColumnGrid>

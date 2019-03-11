@@ -7,11 +7,9 @@ import getCurrentUserDMThreadConnection, {
   type GetCurrentUserDMThreadConnectionType,
 } from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
 import InfiniteList from 'src/components/infiniteScroll';
-import { NullState } from 'src/components/upsell';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { LoadingDM } from 'src/components/loading';
 import { ThreadsListScrollContainer } from './style';
-import { NoThreads } from '../style';
 import { track, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
@@ -22,6 +20,12 @@ import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from 'src/components/viewNetworkHandler';
 import { DesktopTitlebar } from 'src/components/titlebar';
+import { PrimaryButton } from 'src/views/community/components/button';
+import {
+  NoCommunitySelected,
+  NoCommunityHeading,
+  NoCommunitySubheading,
+} from '../style';
 
 type Props = {
   currentUser: Object,
@@ -159,22 +163,25 @@ class ThreadsList extends React.Component<Props, State> {
 
     if (!uniqueThreads || uniqueThreads.length === 0) {
       return (
-        <React.Fragment>
+        <ThreadsListScrollContainer>
           <DesktopTitlebar title={'Messages'} />
-          <NoThreads hideOnDesktop>
-            <NullState
-              icon="message"
-              heading={`Send direct messages`}
-              copy={`Direct messages are private conversations between you and anyone else, including groups. Search for a person above to start a new conversation.`}
-            />
-          </NoThreads>
-          <NoThreads hideOnMobile>
-            <NullState
-              heading={`You haven't messaged anyone yet...`}
-              copy={`Once you do, your conversations will show up here.`}
-            />
-          </NoThreads>
-        </React.Fragment>
+          <NoCommunitySelected hideOnDesktop>
+            <div>
+              <NoCommunityHeading>No conversation selected</NoCommunityHeading>
+              <NoCommunitySubheading>
+                Choose from an existing conversation, or start a new one.
+              </NoCommunitySubheading>
+              <PrimaryButton
+                to={{
+                  pathname: '/new/message',
+                  state: { modal: true },
+                }}
+              >
+                New message
+              </PrimaryButton>
+            </div>
+          </NoCommunitySelected>
+        </ThreadsListScrollContainer>
       );
     }
 

@@ -105,7 +105,7 @@ export const SearchInput = styled.input`
   font-size: 16px;
   display: block;
   width: 100%;
-  padding: 12px 16px;
+  padding: 16px;
 `;
 
 export const SearchResultsWrapper = styled.div`

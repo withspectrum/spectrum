@@ -15,9 +15,11 @@ import {
 } from '../../../components/globals';
 
 export const ThreadsListScrollContainer = styled.div`
+  height: 100vh;
   max-height: 100vh;
   overflow: hidden;
   overflow-y: scroll;
+  background: ${theme.bg.default};
 `;
 
 export const Wrapper = styled(FlexCol)`
