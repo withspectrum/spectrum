@@ -149,7 +149,7 @@ class CategoryList extends React.Component<CategoryListProps> {
     }
 
     if (isLoading) {
-      return null;
+      return <LoadingView />;
     }
 
     return <ErrorView />;
