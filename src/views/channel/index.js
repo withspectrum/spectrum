@@ -24,7 +24,7 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { ChannelProfileCard } from 'src/components/entities';
-import { MobileChannelTitlebar } from 'src/components/mobileTitlebar';
+import { MobileChannelTitlebar } from 'src/components/titlebar';
 import {
   PrimaryButton,
   OutlineButton,
