@@ -42,7 +42,7 @@ const QuotedMessage = connect()(
         )
       );
       props.dispatch(
-        replyToMessage({ threadId: props.thread.id, messageId: null })
+        replyToMessage({ threadId: props.threadId, messageId: null })
       );
     }
 
@@ -62,7 +62,6 @@ type Props = {
   clear: Function,
   websocketConnection: string,
   networkOnline: boolean,
-  thread?: Object,
   refetchThread?: Function,
   quotedMessage: ?{ messageId: string, threadId: string },
   // used to pre-populate the @mention suggestions with participants and the author of the thread
@@ -82,7 +81,7 @@ export const cleanSuggestionUserObject = (user: ?Object) => {
 };
 
 const ChatInput = (props: Props) => {
-  const cacheKey = `last-content-${props.thread.id}`;
+  const cacheKey = `last-content-${props.threadId}`;
   const [text, changeText] = React.useState('');
   const [photoSizeError, setPhotoSizeError] = React.useState('');
   const [inputRef, setInputRef] = React.useState(null);
@@ -95,7 +94,7 @@ const ChatInput = (props: Props) => {
       changeText(localStorage.getItem(cacheKey) || '');
       // NOTE(@mxstbr): We ONLY want to run this if we switch between threads, never else!
     },
-    [props.thread.id]
+    [props.threadId]
   );
 
   // Cache the latest text everytime it changes
@@ -154,7 +153,7 @@ const ChatInput = (props: Props) => {
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
     // in views/directMessages/containers/newThread.js
-    if (props.thread.id === 'newDirectMessageThread') {
+    if (props.threadId === 'newDirectMessageThread') {
       return props.createThread({
         messageType: file ? 'media' : 'text',
         file,
@@ -167,7 +166,7 @@ const ChatInput = (props: Props) => {
         ? props.sendMessage
         : props.sendDirectMessage;
     return method({
-      threadId: props.thread.id,
+      threadId: props.threadId,
       messageType: file ? 'media' : 'text',
       threadType: props.threadType,
       parentId: props.quotedMessage,
@@ -232,17 +231,16 @@ const ChatInput = (props: Props) => {
     // workaround react-mentions bug by replacing @[username] with @username
     // @see withspectrum/spectrum#4587
     sendMessage({ body: text.replace(/@\[([a-z0-9_-]+)\]/g, '@$1') })
-      .then(() => {
-        // If we're viewing a thread and the user sends a message as a non-member, we need to refetch the thread data
-        if (
-          props.threadType === 'story' &&
-          props.thread.id &&
-          !props.thread.channel.channelPermissions.isMember &&
-          props.refetchThread
-        ) {
-          return props.refetchThread();
-        }
-      })
+      // .then(() => {
+      //   // If we're viewing a thread and the user sends a message as a non-member, we need to refetch the thread data
+      //   if (
+      //     props.threadType === 'story' &&
+      //     props.threadId &&
+      //     props.refetchThread
+      //   ) {
+      //     return props.refetchThread();
+      //   }
+      // })
       .catch(err => {
         // props.dispatch(addToastWithTimeout('error', err.message));
       });
@@ -281,7 +279,7 @@ const ChatInput = (props: Props) => {
   const removeQuotedMessage = () => {
     if (props.quotedMessage)
       props.dispatch(
-        replyToMessage({ threadId: props.thread.id, messageId: null })
+        replyToMessage({ threadId: props.threadId, messageId: null })
       );
   };
 
@@ -329,7 +327,7 @@ const ChatInput = (props: Props) => {
                 <PreviewWrapper data-cy="staged-quoted-message">
                   <QuotedMessage
                     id={props.quotedMessage}
-                    threadId={props.thread.id}
+                    threadId={props.threadId}
                   />
                   <RemovePreviewButton
                     data-cy="remove-staged-quoted-message"
@@ -373,7 +371,7 @@ const ChatInput = (props: Props) => {
 const map = (state, ownProps) => ({
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
-  quotedMessage: state.message.quotedMessage[ownProps.thread.id] || null,
+  quotedMessage: state.message.quotedMessage[ownProps.threadId] || null,
 });
 
 export default compose(
