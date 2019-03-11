@@ -7,7 +7,7 @@ export const StyledAppViewWrapper = styled.div`
   grid-template-areas: ${props =>
     props.isSignedIn ? "'navigation view'" : "'view'"};
   overflow: hidden;
-  overflow-y: auto;
+  overflow-y: ${props => (props.hasModal ? 'hidden' : 'scroll')};
   width: 100%;
   max-height: 100vh;
 
