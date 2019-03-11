@@ -1,6 +1,7 @@
 const initialState = {
   directMessageNotifications: 0,
   notifications: 0,
+  notificationsData: [],
 };
 
 export default function notifications(state = initialState, action) {
@@ -9,6 +10,12 @@ export default function notifications(state = initialState, action) {
       const obj = Object.assign({}, state);
       obj[action.countType] = action.count;
       return obj;
+    }
+    case 'SET_NOTIFICATIONS': {
+      return {
+        ...state,
+        notificationsData: action.notifications,
+      };
     }
     default:
       return state;

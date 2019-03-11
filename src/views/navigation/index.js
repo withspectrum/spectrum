@@ -44,7 +44,9 @@ const Navigation = (props: Props) => {
           <NavigationGrid isOpen={navigationIsOpen}>
             <GlobalComposerTab />
             <DirectMessagesTab />
-            <NotificationsTab />
+            <Route path="/notifications">
+              {({ match }) => <NotificationsTab active={!!match} />}
+            </Route>
 
             <Route path="/explore">
               {({ match }) => (
