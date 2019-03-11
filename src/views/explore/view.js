@@ -19,7 +19,8 @@ import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCom
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { track, transformations, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
-import { LoadingView, ErrorView } from 'src/views/viewHelpers';
+import { Loading } from 'src/components/loading';
+import { ErrorView } from 'src/views/viewHelpers';
 import { CommunityProfileCard } from 'src/components/entities';
 
 const ChartGrid = styled.div`
@@ -42,6 +43,13 @@ class CollectionSwitcher extends React.Component<Props, State> {
     selectedView: 'top-communities-by-members',
   };
 
+  parentRef = null;
+  ref = null;
+
+  componentDidMount() {
+    this.parentRef = document.getElementById('scroller-for-thread-feed');
+  }
+
   handleSegmentClick(selectedView) {
     if (this.state.selectedView === selectedView) return;
 
@@ -52,10 +60,18 @@ class CollectionSwitcher extends React.Component<Props, State> {
     return this.setState({ selectedView });
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const currState = this.state;
+    if (prevState.selectedView !== currState.selectedView) {
+      if (!this.parentRef || !this.ref) return;
+      return (this.parentRef.scrollTop = this.ref.offsetTop);
+    }
+  }
+
   render() {
     return (
-      <Collections>
-        <SegmentedControl>
+      <Collections innerRef={el => (this.ref = el)}>
+        <SegmentedControl mobileStickyOffset={56}>
           {collections.map((collection, i) => (
             <Segment
               key={i}
@@ -149,7 +165,7 @@ class CategoryList extends React.Component<CategoryListProps> {
     }
 
     if (isLoading) {
-      return <LoadingView />;
+      return <Loading style={{ padding: '64px 32px', minHeight: '100vh' }} />;
     }
 
     return <ErrorView />;

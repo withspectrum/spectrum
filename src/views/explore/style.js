@@ -218,7 +218,7 @@ export const SearchWrapper = styled(Card)`
   padding: 12px 16px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   transition: ${Transition.hover.off};
-  z-index: 12;
+  z-index: 14;
   border-radius: 8px;
 
   &:hover {
@@ -236,13 +236,10 @@ export const SearchIcon = styled(Icon)``;
 
 export const SearchInput = styled.input`
   font-size: 16px;
-  padding: 4px 20px;
+  padding: 4px 20px 4px 12px;
   flex: auto;
   position: relative;
   z-index: ${zIndex.search};
-
-  &:hover {
-  }
 `;
 
 export const SearchSpinnerContainer = styled.span`
@@ -268,10 +265,6 @@ export const SearchResultsDropdown = styled.ul`
   overflow-y: auto;
   background: ${theme.bg.default};
   z-index: 12;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    border-radius: 0 0 8px 8px;
-  }
 `;
 
 export const SearchResultTextContainer = styled.div`

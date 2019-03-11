@@ -12,7 +12,7 @@ export const StyledSegmentedControl = styled.div`
   overflow: hidden;
   overflow-x: scroll;
   position: ${props => (props.sticky ? 'sticky' : 'relative')};
-  z-index: ${props => (props.sticky ? '11' : '1')};
+  z-index: ${props => (props.sticky ? '13' : '1')};
 
   ${props =>
     props.sticky &&

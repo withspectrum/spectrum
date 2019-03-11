@@ -13,7 +13,7 @@ export const Container = styled.div`
   background: ${theme.bg.default};
   position: sticky;
   top: 0;
-  z-index: 11;
+  z-index: 15;
   padding: 12px 16px 12px 8px;
   flex: none;
   min-height: 62px;
