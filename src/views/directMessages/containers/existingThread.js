@@ -3,6 +3,8 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
+import { Link } from 'react-router-dom';
+import Icon from 'src/components/icons';
 import setLastSeenMutation from 'shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';
 import Messages from '../components/messages';
 import Header from '../components/header';
@@ -11,6 +13,7 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import getDirectMessageThread, {
   type GetDirectMessageThreadType,
 } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
+import { UserAvatar } from 'src/components/avatar';
 import { MessagesContainer, ViewContent, ChatInputWrapper } from '../style';
 import { Loading } from 'src/components/loading';
 import { ErrorBoundary } from 'src/components/error';
@@ -18,6 +21,7 @@ import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { LoadingView, ErrorView } from 'src/views/viewHelpers';
+import { MobileTitlebar } from 'src/components/titlebar';
 
 type Props = {
   data: {
@@ -94,37 +98,65 @@ class ExistingThread extends React.Component<Props> {
     if (id !== 'new') {
       if (data.directMessageThread) {
         const thread = data.directMessageThread;
+        const trimmedUsers = thread.participants.filter(
+          user => user.userId !== currentUser.id
+        );
+        const titleIcon =
+          trimmedUsers.length === 1 ? (
+            <UserAvatar user={trimmedUsers[0]} size={24} />
+          ) : null;
+        const rightAction =
+          trimmedUsers.length === 1 ? (
+            <Link to={`/users/${trimmedUsers[0].username}`}>
+              <Icon glyph={'info'} />
+            </Link>
+          ) : null;
+        const names = trimmedUsers.map(user => user.name).join(', ');
         const mentionSuggestions = thread.participants
           .map(cleanSuggestionUserObject)
           .filter(user => user && user.username !== currentUser.username);
         return (
-          <MessagesContainer>
-            <ViewContent
-              innerRef={scrollBody => (this.scrollBody = scrollBody)}
-            >
-              {!isLoading ? (
-                <React.Fragment>
-                  <ErrorBoundary>
-                    <Header thread={thread} currentUser={currentUser} />
-                  </ErrorBoundary>
+          <React.Fragment>
+            <MobileTitlebar
+              title={names}
+              titleIcon={titleIcon}
+              menuAction="view-back"
+              rightAction={rightAction}
+              previousHistoryBackFallback={'/messages'}
+              forceHistoryBack={'/messages'}
+            />
+            <MessagesContainer>
+              <ViewContent
+                innerRef={scrollBody => (this.scrollBody = scrollBody)}
+              >
+                {!isLoading ? (
+                  <React.Fragment>
+                    <ErrorBoundary>
+                      <Header thread={thread} currentUser={currentUser} />
+                    </ErrorBoundary>
 
-                  <Messages id={id} currentUser={currentUser} thread={thread} />
-                </React.Fragment>
-              ) : (
-                <Loading />
-              )}
-            </ViewContent>
+                    <Messages
+                      id={id}
+                      currentUser={currentUser}
+                      thread={thread}
+                    />
+                  </React.Fragment>
+                ) : (
+                  <Loading />
+                )}
+              </ViewContent>
 
-            <ChatInputWrapper>
-              <ChatInput
-                thread={id}
-                currentUser={currentUser}
-                threadType={'directMessageThread'}
-                onRef={chatInput => (this.chatInput = chatInput)}
-                participants={mentionSuggestions}
-              />
-            </ChatInputWrapper>
-          </MessagesContainer>
+              <ChatInputWrapper>
+                <ChatInput
+                  thread={id}
+                  currentUser={currentUser}
+                  threadType={'directMessageThread'}
+                  onRef={chatInput => (this.chatInput = chatInput)}
+                  participants={mentionSuggestions}
+                />
+              </ChatInputWrapper>
+            </MessagesContainer>
+          </React.Fragment>
         );
       }
 

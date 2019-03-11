@@ -24,9 +24,10 @@ export const Wrapper = styled(FlexCol)`
   flex: 0 0 auto;
   justify-content: center;
   max-width: 100%;
-  height: 64px;
+  min-height: 64px;
   position: relative;
-  background: ${props => (props.active ? props.theme.bg.wash : '#fff')};
+  background: ${props => (props.active ? theme.bg.wash : theme.bg.default)};
+  border-bottom: 1px solid ${theme.bg.divider};
   box-shadow: ${props =>
     props.isUnread ? `inset -2px 0 0 ${props.theme.brand.default}` : 'none'};
 
@@ -49,7 +50,7 @@ export const WrapperLink = styled(Link)`
   height: 100%;
   display: flex;
   align-items: center;
-  padding-left: 16px;
+  padding: 16px 12px 16px 16px;
 `;
 
 export const Col = styled(FlexCol)`
@@ -60,7 +61,6 @@ export const Row = styled(FlexRow)`
   flex: 1 0 auto;
   align-items: center;
   max-width: 100%;
-  padding-right: 16px;
 
   a {
     display: flex;
@@ -73,6 +73,7 @@ export const Heading = styled(H3)`
 `;
 
 export const Meta = styled(H4)`
+  font-size: 15px;
   font-weight: ${props => (props.isUnread ? 600 : 400)};
   color: ${props =>
     props.isUnread ? props.theme.text.default : props.theme.text.alt};
@@ -113,7 +114,7 @@ export const Usernames = styled.span`
   font-weight: ${props => (props.isUnread ? 800 : 600)};
   line-height: 1.1;
   margin-bottom: 1px;
-  font-size: 14px;
+  font-size: 15px;
   flex: 1 1 100%;
 
   p {
@@ -122,7 +123,7 @@ export const Usernames = styled.span`
 `;
 
 export const Timestamp = styled.span`
-  font-size: 12px;
+  font-size: 14px;
   text-align: right;
   color: ${props => (props.isUnread ? props.theme.brand.default : '#909aa7')};
   padding-right: 4px;
@@ -132,7 +133,7 @@ export const Timestamp = styled.span`
 `;
 
 export const Snippet = styled.p`
-  font-size: 13px;
+  font-size: 15px;
   font-weight: ${props => (props.unread ? 700 : 500)};
   color: ${props =>
     props.unread ? props.theme.text.default : props.theme.text.alt};

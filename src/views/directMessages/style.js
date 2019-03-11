@@ -1,6 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
+import { SecondaryColumn, MEDIA_BREAK } from 'src/components/layout';
 
 export const View = styled.main`
   grid-area: view;
@@ -83,4 +84,18 @@ export const ChatInputWrapper = styled.div`
   flex-direction: column;
   grid-area: primary;
   z-index: 3;
+`;
+
+export const StyledSecondaryColumn = styled(SecondaryColumn)`
+  border-left: 1px solid ${theme.bg.border};
+  border-right: 1px solid ${theme.bg.border};
+  padding-right: 0;
+  padding-bottom: 0;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    border-left: 0;
+    border-right: 0;
+    display: grid;
+    display: ${props => (props.shouldHideThreadList ? 'none' : 'block')};
+  }
 `;

@@ -1,19 +1,18 @@
 // @flow
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import type { Match } from 'react-router';
 import Icon from 'src/components/icons';
+import Fab from 'src/components/fab';
 import ThreadsList from '../components/threadsList';
-import NewThread from './newThread';
 import ExistingThread from './existingThread';
-import { ComposeHeader } from '../style';
-import { track, events } from 'src/helpers/analytics';
+import { Link } from 'react-router-dom';
+import { MobileTitlebar } from 'src/components/titlebar';
 import {
   ViewGrid,
   SecondaryPrimaryColumnGrid,
   PrimaryColumn,
-  SecondaryColumn,
 } from 'src/components/layout';
+import { StyledSecondaryColumn } from '../style';
 
 type Props = {
   match: Match,
@@ -24,53 +23,47 @@ type State = {
 };
 
 class DirectMessages extends React.Component<Props, State> {
-  componentDidUpdate(prevProps: Props) {
-    const curr = this.props;
-    if (prevProps.match.params.threadId !== curr.match.params.threadId) {
-      if (curr.match.params.threadId === 'new') {
-        track(events.DIRECT_MESSAGE_THREAD_COMPOSER_VIEWED);
-      } else {
-        track(events.DIRECT_MESSAGE_THREAD_VIEWED);
-      }
-    }
-  }
-
   render() {
     const { match } = this.props;
-
     const activeThreadId = match.params.threadId;
-    const isComposing = activeThreadId === 'new';
-    const isViewingThread = !isComposing && !!activeThreadId;
 
     return (
-      <ViewGrid>
-        <SecondaryPrimaryColumnGrid>
-          <SecondaryColumn isViewingThread={isViewingThread || isComposing}>
-            <Link to="/messages/new">
-              <ComposeHeader>
-                <Icon glyph="message-new" dataCy="compose-dm" />
-              </ComposeHeader>
-            </Link>
+      <React.Fragment>
+        <Fab
+          title="New message"
+          to={{
+            pathname: '/messages/new',
+            state: { modal: true },
+          }}
+        >
+          <Icon glyph={'message-simple-new'} size={32} />
+        </Fab>
 
-            <ThreadsList activeThreadId={activeThreadId} />
-          </SecondaryColumn>
+        <ViewGrid>
+          {!activeThreadId && (
+            <MobileTitlebar
+              title="Messages"
+              menuAction="menu"
+              rightAction={
+                <Link to={'/messages/new'}>
+                  <Icon glyph={'message-simple-new'} />
+                </Link>
+              }
+            />
+          )}
+          <SecondaryPrimaryColumnGrid>
+            <StyledSecondaryColumn shouldHideThreadList={!!activeThreadId}>
+              <ThreadsList activeThreadId={activeThreadId} />
+            </StyledSecondaryColumn>
 
-          <PrimaryColumn>
-            {isViewingThread ? (
-              <ExistingThread
-                id={activeThreadId}
-                match={match}
-                hideOnMobile={isComposing}
-              />
-            ) : (
-              <NewThread
-                match={match}
-                hideOnMobile={isViewingThread || !activeThreadId}
-              />
-            )}
-          </PrimaryColumn>
-        </SecondaryPrimaryColumnGrid>
-      </ViewGrid>
+            <PrimaryColumn>
+              {!!activeThreadId && (
+                <ExistingThread id={activeThreadId} match={match} />
+              )}
+            </PrimaryColumn>
+          </SecondaryPrimaryColumnGrid>
+        </ViewGrid>
+      </React.Fragment>
     );
   }
 }
