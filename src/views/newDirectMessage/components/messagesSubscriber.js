@@ -1,5 +1,5 @@
 // @flow
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import compose from 'recompose/compose';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
 import ChatMessages from 'src/components/messageGroup';
@@ -38,7 +38,6 @@ const MessagesSubscriber = (props: Props) => {
   } = props;
 
   const { messages, directMessageThread } = data;
-  const [subscription, setSubscription] = useState(null);
 
   let ref = null;
 
@@ -50,12 +49,15 @@ const MessagesSubscriber = (props: Props) => {
     return (ref.scrollTop = scrollHeight - clientHeight);
   };
 
-  useEffect(() => {
-    setLastSeen(id);
-    setSubscription(subscribeToNewMessages());
-    scrollToBottom();
-    return () => subscription && subscription();
-  }, []);
+  useEffect(
+    () => {
+      setLastSeen(id);
+      scrollToBottom();
+      const unsubscribe = subscribeToNewMessages();
+      return () => Promise.resolve(unsubscribe());
+    },
+    [id]
+  );
 
   const refHeight = ref && ref.scrollHeight;
   useEffect(
