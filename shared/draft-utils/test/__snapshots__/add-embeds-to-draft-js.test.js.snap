@@ -17,7 +17,7 @@ Object {
       "depth": 0,
       "entityRanges": Array [
         Object {
-          "key": -Infinity,
+          "key": 0,
           "length": 1,
           "offset": 0,
         },
@@ -29,7 +29,7 @@ Object {
     },
   ],
   "entityMap": Object {
-    "-Infinity": Object {
+    "0": Object {
       "data": Object {
         "height": 200,
         "src": "https://embed.simplecast.com/a1f11d11",

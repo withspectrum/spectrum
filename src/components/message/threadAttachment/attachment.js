@@ -4,7 +4,6 @@ import type { Props } from './';
 import compose from 'recompose/compose';
 import { Loading } from 'src/components/loading';
 import { Container, LinkWrapper, AvatarWrapper, Column } from './style';
-import ThreadHeader from 'src/components/inboxThread/header/threadHeader';
 import Activity from 'src/components/inboxThread/activity';
 import { ThreadTitle } from 'src/components/inboxThread/style';
 import { UserAvatar } from 'src/components/avatar';
@@ -13,12 +12,15 @@ import getThreadLink from 'src/helpers/get-thread-link';
 
 class Attachment extends React.Component<Props> {
   render() {
-    const { data, currentUser, message } = this.props;
+    const { data, currentUser } = this.props;
     const { thread, loading, error } = data;
 
     if (loading)
       return (
-        <Container style={{ padding: '16px 12px' }}>
+        <Container
+          className="attachment-container"
+          style={{ padding: '16px 12px' }}
+        >
           <Loading />
         </Container>
       );
@@ -27,26 +29,25 @@ class Attachment extends React.Component<Props> {
     if (!thread) return null;
 
     return (
-      <Container data-cy="thread-attachment">
-        <LinkWrapper
-          onClick={e => e.stopPropagation()}
-          to={{ pathname: getThreadLink(thread), state: { modal: true } }}
-        />
-        {message.author.user.id !== thread.author.user.id && (
+      <div className="attachment-container">
+        <Container data-cy="thread-attachment">
+          <LinkWrapper
+            onClick={e => e.stopPropagation()}
+            to={{ pathname: getThreadLink(thread), state: { modal: true } }}
+          />
           <AvatarWrapper>
             <UserAvatar user={thread.author.user} size={32} />
           </AvatarWrapper>
-        )}
-        <Column>
-          <ThreadHeader
-            currentUser={currentUser}
-            active={false}
-            thread={thread}
-          />
-          <ThreadTitle>{thread.content.title}</ThreadTitle>
-          <Activity currentUser={currentUser} thread={thread} active={false} />
-        </Column>
-      </Container>
+          <Column>
+            <ThreadTitle>{thread.content.title}</ThreadTitle>
+            <Activity
+              currentUser={currentUser}
+              thread={thread}
+              active={false}
+            />
+          </Column>
+        </Container>
+      </div>
     );
   }
 }

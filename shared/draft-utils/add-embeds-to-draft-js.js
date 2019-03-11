@@ -10,19 +10,29 @@ const FRAMER_URLS = /\b((?:https?\/\/)?(?:www\.)?(?:framer\.cloud|share\.framerj
 const CODEPEN_URLS = /\b(?:\/\/)?(?:www\.)?codepen\.io(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
 const CODESANDBOX_URLS = /\b(?:\/\/)?(?:www\.)?codesandbox\.io(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
 const SIMPLECAST_URLS = /\b(?:\/\/)?(?:www\.)?simplecast\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
+const THREAD_URLS = /(?:(?:https?:\/\/)?|\B)(?:spectrum\.chat|localhost:3000)\/.*?(?:~|(?:\?|&)t=|(?:\?|&)thread=|thread\/)([^&\s]*)/gi;
 
-type AddEmbedAttrs = {
+export type InternalEmbedData = {
+  type: 'internal',
+  entity: 'thread',
+  id: string,
+};
+
+export type ExternalEmbedData = {
   url: string,
   aspectRatio?: string,
   width?: number,
   height?: number,
 };
 
+export type EmbedData = InternalEmbedData | ExternalEmbedData;
+
 export const addEmbedsToEditorState = (
   input: RawDraftContentState
 ): RawDraftContentState => {
   let lastEntityKey = Math.max(...Object.keys(input.entityMap));
-  if (lastEntityKey === Infinity) lastEntityKey = -1;
+  if (lastEntityKey === -Infinity || lastEntityKey === Infinity)
+    lastEntityKey = -1;
   let newEntityMap = input.entityMap || {};
   let newBlocks = [];
 
@@ -58,7 +68,7 @@ export const addEmbedsToEditorState = (
       newEntityMap[entityKey] = {
         data: {
           ...embed,
-          src: embed.url,
+          ...(embed.url ? { src: embed.url } : {}),
         },
         mutability: 'MUTABLE',
         type: 'embed',
@@ -83,7 +93,7 @@ const match = (regex: RegExp, text: string) => {
   });
 };
 
-export const getEmbedsFromText = (text: string): Array<AddEmbedAttrs> => {
+export const getEmbedsFromText = (text: string): Array<EmbedData> => {
   let embeds = [];
 
   match(IFRAME_TAG, text).forEach(url => {
@@ -139,6 +149,14 @@ export const getEmbedsFromText = (text: string): Array<AddEmbedAttrs> => {
         .replace('/s/', '')
         .replace('/', '')}`,
       height: 200,
+    });
+  });
+
+  match(THREAD_URLS, text).forEach(id => {
+    embeds.push({
+      type: 'internal',
+      id,
+      entity: 'thread',
     });
   });
 

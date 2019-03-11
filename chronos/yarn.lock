@@ -292,10 +292,10 @@ ieee754@^1.1.4:
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.12.tgz#50bf24e5b9c8bb98af4964c941cdb0918da7b60b"
   integrity sha512-GguP+DRY+pJ3soyIiGPTvdiVXjZ+DbXOxGpXn3eMvNW4x4irjqXm4wHKscC+TfxSJ0yw/S1F24tqdMNsMZTiLA==
 
-imgix-core-js@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/imgix-core-js/-/imgix-core-js-1.2.0.tgz#72163ebd312b25cdae077340d13cf94dc09327f2"
-  integrity sha512-Eq8IabyhZwwP1m+E26L4AJLCznqckFuL2nvOFmtYESmyFEv4IXa/UU58DHegnmMYoPqHunmG9ttL6NDdB0ddbg==
+imgix-core-js@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/imgix-core-js/-/imgix-core-js-1.2.1.tgz#069244b6cb53d70ffcba7560fd883b72cfeb3862"
+  integrity sha512-5lQTZGQislkRl0zdOQfZsKxlkn/d8YJJXhnmbLUvGX5XJX1iEVGWPlWxsj2iJDqMWzMmxarBtxMtnD4PJvM1ww==
   dependencies:
     crc "^3.5.0"
     js-base64 "^2.1.9"

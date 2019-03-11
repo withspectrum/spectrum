@@ -9,9 +9,7 @@ import {
   QuoteWrapper,
   QuoteWrapperGradient,
   QuotedParagraph,
-  ThreadAttachmentsContainer,
 } from './style';
-import ThreadAttachment from './threadAttachment';
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer';
 import { draftOnlyContainsEmoji } from 'shared/only-contains-emoji';
 import { Byline, Name, Username } from './style';
@@ -29,16 +27,6 @@ type BodyProps = {
 
 // This regexp matches /community/channel/slug~id, /?thread=id, /?t=id etc.
 // see https://regex101.com/r/aGamna/2/
-const MATCH_SPECTRUM_URLS = /(?:(?:https?:\/\/)?|\B)(?:spectrum\.chat|localhost:3000)\/.*?(?:~|(?:\?|&)t=|(?:\?|&)thread=)([^&\s]*)/gim;
-const getSpectrumThreadIds = (text: string) => {
-  let ids = [];
-  let match;
-  while ((match = MATCH_SPECTRUM_URLS.exec(text))) {
-    ids.push(match[1]);
-  }
-  return ids;
-};
-
 export const Body = (props: BodyProps) => {
   const { showParent = true, message, openGallery, me, bubble = true } = props;
   const emojiOnly =
@@ -48,7 +36,7 @@ export const Body = (props: BodyProps) => {
   switch (message.messageType) {
     case 'optimistic':
       return (
-        <div className="markdown">
+        <div key={message.id} className="markdown">
           <WrapperComponent me={me}>
             <div dangerouslySetInnerHTML={{ __html: message.content.body }} />
           </WrapperComponent>
@@ -57,22 +45,26 @@ export const Body = (props: BodyProps) => {
     case messageTypeObj.text:
     default:
       return (
-        <WrapperComponent me={me}>{message.content.body}</WrapperComponent>
+        <WrapperComponent key={message.id} me={me}>
+          {message.content.body}
+        </WrapperComponent>
       );
     case messageTypeObj.media: {
       if (typeof message.id === 'number' && message.id < 0) {
         return null;
       }
-      return <Image onClick={openGallery} src={message.content.body} />;
+      return (
+        <Image
+          key={message.id}
+          onClick={openGallery}
+          src={message.content.body}
+        />
+      );
     }
     case messageTypeObj.draftjs: {
       const parsed = JSON.parse(message.content.body);
-      const ids = getSpectrumThreadIds(
-        parsed.blocks.map(block => block.text).join('\n')
-      );
-      const uniqueIds = ids.filter((x, i, a) => a.indexOf(x) === i);
       return (
-        <WrapperComponent me={me}>
+        <WrapperComponent key={message.id} me={me}>
           {message.parent && showParent && (
             // $FlowIssue
             <QuotedMessage message={message.parent} />
@@ -85,13 +77,6 @@ export const Body = (props: BodyProps) => {
             <div key={message.id} className="markdown">
               {redraft(parsed, messageRenderer)}
             </div>
-          )}
-          {uniqueIds && (
-            <ThreadAttachmentsContainer>
-              {uniqueIds.map(id => (
-                <ThreadAttachment message={message} key={id} id={id} />
-              ))}
-            </ThreadAttachmentsContainer>
           )}
         </WrapperComponent>
       );
