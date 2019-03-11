@@ -40,6 +40,11 @@ const NotificationsTab = (props: Props) => {
     return unsubscribe;
   }, []);
 
+  const unseenCount =
+    data.notifications &&
+    data.notifications.edges
+      .filter(Boolean)
+      .reduce((count, { node }) => (node.isSeen ? count : count + 1), 0);
   // $FlowIssue Mark all as seen when the tab becomes active
   React.useEffect(
     () => {
@@ -60,7 +65,11 @@ const NotificationsTab = (props: Props) => {
       );
       if (props.active) props.markAllNotificationsSeen();
     },
-    [props.active, data.notifications && data.notifications.edges.length]
+    [
+      props.active,
+      data.notifications && data.notifications.edges.length,
+      unseenCount,
+    ]
   );
 
   // Keep the dock icon notification count indicator of the desktop app in sync

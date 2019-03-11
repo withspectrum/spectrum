@@ -8,6 +8,7 @@ import {
   getThreadByMatch,
   getThreadByMatchQuery,
 } from 'shared/graphql/queries/thread/getThread';
+import { markSingleNotificationSeenMutation } from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { LoadingView, ErrorView } from 'src/views/viewHelpers';
@@ -47,7 +48,7 @@ const ThreadContainer = (props: Props) => {
     loads, as well as when it unmounts as the user closes the thread. This
     should provide the effect of locally marking the thread as "seen" while
     athena handles storing the actual lastSeen timestamp update in the background
-    asynchronously
+    asynchronously.
   */
   const updateThreadLastSeen = () => {
     if (!currentUser || !thread) return;
@@ -78,6 +79,39 @@ const ThreadContainer = (props: Props) => {
       console.error(err);
     }
   };
+
+  const markCurrentThreadNotificationsAsSeen = () => {
+    if (!currentUser || !thread) return;
+    try {
+      props.notifications.forEach(notification => {
+        if (notification.isSeen) return;
+
+        const notificationContextIds =
+          notification.type === 'THREAD_CREATED'
+            ? notification.entities.map(entity => entity.id)
+            : [notification.context.id];
+
+        if (notificationContextIds.indexOf(id) === -1) return;
+
+        props.client.mutate({
+          mutation: markSingleNotificationSeenMutation,
+          variables: {
+            id: notification.id,
+          },
+        });
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(
+    () => {
+      markCurrentThreadNotificationsAsSeen();
+    },
+    [id, props.notifications.length]
+  );
+
   useEffect(
     () => {
       updateThreadLastSeen();
@@ -144,11 +178,15 @@ const ThreadContainer = (props: Props) => {
   );
 };
 
+const mapStateToProps = state => ({
+  notifications: state.notifications.notificationsData,
+});
+
 export default compose(
   getThreadByMatch,
   viewNetworkHandler,
   withRouter,
   withApollo,
   withCurrentUser,
-  connect()
+  connect(mapStateToProps)
 )(ThreadContainer);
