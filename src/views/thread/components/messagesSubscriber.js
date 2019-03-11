@@ -6,6 +6,7 @@ import { sortAndGroupMessages } from 'shared/clients/group-messages';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ChatMessages from 'src/components/messageGroup';
 import { Loading } from 'src/components/loading';
+import InfiniteScroller from 'src/components/infiniteScroll';
 import NullMessages from './nullMessages';
 
 const Messages = (props: Props) => {
@@ -38,13 +39,24 @@ const Messages = (props: Props) => {
   if (!sortedMessages || sortedMessages.length === 0) return <NullMessages />;
 
   return (
-    <ChatMessages
-      thread={thread}
-      uniqueMessageCount={unsortedMessages.length}
-      messages={sortedMessages}
-      threadType={'story'}
-      isWatercooler={isWatercooler}
-    />
+    <InfiniteScroller
+      hasMore={
+        !isWatercooler
+          ? messageConnection.pageInfo.hasNextPage
+          : messageConnection.pageInfo.hasPreviousPage
+      }
+      isReverse={!!isWatercooler}
+      loadMore={isWatercooler ? props.loadPreviousPage : props.loadNextPage}
+      loader={<p>Loading...</p>}
+    >
+      <ChatMessages
+        thread={thread}
+        uniqueMessageCount={unsortedMessages.length}
+        messages={sortedMessages}
+        threadType={'story'}
+        isWatercooler={isWatercooler}
+      />
+    </InfiniteScroller>
   );
 };
 
