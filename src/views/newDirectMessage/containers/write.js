@@ -62,7 +62,7 @@ const Write = (props: Props) => {
 
       <ChatInputWrapper>
         <ChatInput
-          thread={'newDirectMessageThread'}
+          threadId={'newDirectMessageThread'}
           threadType={'directMessageThread'}
           createThread={create}
         />

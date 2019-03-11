@@ -29,9 +29,7 @@ import ThreadDetail from '../components/threadDetail';
 import ThreadHead from '../components/threadHead';
 import LockedMessages from '../components/lockedMessages';
 import DesktopAppUpsell from '../components/desktopAppUpsell';
-import { Stretch } from '../style';
-
-import { ChatInputWrapper } from '../style';
+import { Stretch, ChatInputWrapper } from '../style';
 
 const ThreadContainer = (props: Props) => {
   const { data, isLoading, client, currentUser } = props;
@@ -163,7 +161,7 @@ const ThreadContainer = (props: Props) => {
 
           {canChat && (
             <ChatInputWrapper>
-              <ChatInput threadType="story" thread={thread} />
+              <ChatInput threadType="story" threadId={thread.id} />
             </ChatInputWrapper>
           )}
 

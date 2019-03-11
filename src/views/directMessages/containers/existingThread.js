@@ -39,7 +39,6 @@ type Props = {
 };
 
 class ExistingThread extends React.Component<Props> {
-  scrollBody: ?HTMLDivElement;
   chatInput: ?ChatInput;
 
   componentDidMount() {
@@ -131,9 +130,7 @@ class ExistingThread extends React.Component<Props> {
               rightAction={rightAction}
             />
             <MessagesContainer>
-              <ViewContent
-                innerRef={scrollBody => (this.scrollBody = scrollBody)}
-              >
+              <ViewContent>
                 {!isLoading ? (
                   <React.Fragment>
                     <ErrorBoundary>
@@ -153,7 +150,7 @@ class ExistingThread extends React.Component<Props> {
 
               <ChatInputWrapper>
                 <ChatInput
-                  thread={id}
+                  threadId={id}
                   currentUser={currentUser}
                   threadType={'directMessageThread'}
                   onRef={chatInput => (this.chatInput = chatInput)}

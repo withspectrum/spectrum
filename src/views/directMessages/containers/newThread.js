@@ -867,8 +867,10 @@ class NewThread extends React.Component<Props, State> {
 
         <ChatInputWrapper>
           <ChatInput
-            thread={
-              existingThreadBasedOnSelectedUsers || 'newDirectMessageThread'
+            threadId={
+              (existingThreadBasedOnSelectedUsers &&
+                existingThreadBasedOnSelectedUsers.id) ||
+              'newDirectMessageThread'
             }
             createThread={this.createThread}
             onFocus={this.onChatInputFocus}
