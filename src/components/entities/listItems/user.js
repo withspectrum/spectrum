@@ -11,6 +11,7 @@ import Icon from 'src/components/icons';
 import Tooltip from 'src/components/tooltip';
 import type { Dispatch } from 'redux';
 import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
+import ConditionalWrap from 'src/components/conditionalWrap';
 import {
   Row,
   UserAvatarContainer,
@@ -40,7 +41,11 @@ type Props = {
   history: Object,
   dispatch: Dispatch<Object>,
   showHoverProfile?: boolean,
+  isLink?: boolean,
+  onClick?: Function,
 };
+
+const noop = () => {};
 
 const User = (props: Props) => {
   const {
@@ -55,13 +60,20 @@ const User = (props: Props) => {
     children,
     messageButton,
     showHoverProfile = true,
+    isLink = true,
+    onClick = noop,
   } = props;
 
   if (!userObject.username) return null;
 
   return (
-    <Link to={`/users/${userObject.username}`}>
-      <Row>
+    <ConditionalWrap
+      condition={isLink}
+      wrap={children => (
+        <Link to={`/users/${userObject.username}`}>{children}</Link>
+      )}
+    >
+      <Row onClick={() => onClick(userObject)}>
         {profilePhoto && (
           <UserAvatarContainer>
             <UserAvatar
@@ -107,7 +119,7 @@ const User = (props: Props) => {
           {children}
         </Actions>
       </Row>
-    </Link>
+    </ConditionalWrap>
   );
 };
 
