@@ -25,7 +25,7 @@ const ThreadSlider = (props: Props) => {
 
   const closeSlider = (e: any) => {
     e && e.stopPropagation();
-    history.push(previousLocation);
+    history.push({ ...previousLocation, state: { modal: false } });
   };
 
   useEffect(() => {
