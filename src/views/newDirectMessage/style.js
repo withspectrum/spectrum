@@ -1,7 +1,7 @@
 // @flow
 import styled from 'styled-components';
 import theme from 'shared/theme';
-import { zIndex } from 'src/components/globals';
+import { zIndex, hexa } from 'src/components/globals';
 import { MEDIA_BREAK, MAX_WIDTH } from 'src/components/layout';
 
 export const Container = styled.div`
@@ -86,6 +86,10 @@ export const MessagesScrollWrapper = styled.div`
   overflow: hidden;
   overflow-y: scroll;
   background: ${theme.bg.default};
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    max-height: calc(100% - 62px - 58px);
+  }
 `;
 
 export const LoadingMessagesWrapper = styled(MessagesScrollWrapper)`
@@ -93,4 +97,70 @@ export const LoadingMessagesWrapper = styled(MessagesScrollWrapper)`
   align-items: center;
   justify-content: center;
   background: ${theme.bg.wash};
+`;
+
+export const SearchInputWrapper = styled.div`
+  background: ${theme.bg.default};
+  border-bottom: 1px solid ${theme.bg.border};
+`;
+
+export const SearchInput = styled.input`
+  background: ${theme.bg.default};
+  font-size: 16px;
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+`;
+
+export const SearchResultsWrapper = styled.div`
+  /* height of container minus titlebart */
+  height: 100%;
+  max-height: calc(100% - 62px);
+  overflow: hidden;
+  overflow-y: scroll;
+  background: ${theme.bg.default};
+`;
+
+export const SelectedPillsWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid ${theme.bg.border};
+  padding: 12px 16px;
+  padding-bottom: 4px;
+  align-items: center;
+  flex: none;
+`;
+
+export const Pill = styled.div`
+  display: flex;
+  border-radius: 24px;
+  align-items: center;
+  justify-content: space-between;
+  color: ${theme.brand.default};
+  padding: 2px;
+  padding-right: 6px;
+  background: ${hexa(theme.brand.default, 0.04)};
+  margin-right: 8px;
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    background: ${hexa(theme.brand.default, 0.08)};
+  }
+
+  img {
+    margin-right: 12px;
+  }
+
+  .icon {
+    margin-left: 8px;
+  }
+`;
+
+export const PillAvatar = styled.img`
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
 `;

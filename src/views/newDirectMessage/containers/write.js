@@ -7,6 +7,7 @@ import { UserAvatar } from 'src/components/avatar';
 import { SmallOutlineButton } from 'src/views/community/components/button';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { ErrorBoundary } from 'src/components/error';
+import Icon from 'src/components/icons';
 import MessagesCheck from '../components/messagesCheck';
 import { ChatInputWrapper } from '../style';
 
@@ -15,7 +16,7 @@ const Write = (props: Props) => {
 
   const titlebarTitle =
     usersForMessage.length > 1
-      ? usersForMessage.map(user => user.name).join(', ')
+      ? usersForMessage.map(user => user && user.name).join(', ')
       : usersForMessage[0].name;
   const titlebarIcon =
     usersForMessage.length === 1 ? (
@@ -34,7 +35,13 @@ const Write = (props: Props) => {
       <MobileTitlebar
         title={titlebarTitle}
         titleIcon={titlebarIcon}
-        menuAction={'view-back'}
+        menuAction={
+          !hadInitialUser ? (
+            <Icon glyph={'view-back'} onClick={toSearch} />
+          ) : (
+            'view-back'
+          )
+        }
       />
       <DesktopTitlebar
         title={titlebarTitle}
