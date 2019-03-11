@@ -16,6 +16,7 @@ import Header from 'src/components/settingsViews/header';
 import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
+import { ViewGrid } from 'src/components/layout';
 
 type Props = {
   data: {
@@ -47,16 +48,14 @@ class UserSettings extends React.Component<Props> {
     if ((currentUser && !user) || (currentUser && user && !user.id)) {
       return (
         <React.Fragment>
-          <React.Fragment>
-            <ViewError
-              heading={'We ran into an error finding this user’s settings.'}
-              subheading={
-                'If you are trying to view your own settings, refresh the page below to sign in again.'
-              }
-              clearStorage
-              refresh
-            />
-          </React.Fragment>
+          <ViewError
+            heading={'We ran into an error finding this user’s settings.'}
+            subheading={
+              'If you are trying to view your own settings, refresh the page below to sign in again.'
+            }
+            clearStorage
+            refresh
+          />
         </React.Fragment>
       );
     }
@@ -74,10 +73,10 @@ class UserSettings extends React.Component<Props> {
       };
 
       return (
-        <React.Fragment>
+        <ViewGrid>
           <Head title={`Settings for ${user.name}`} />
 
-          <View data-cy="user-settings" id="main">
+          <View data-cy="user-settings">
             <Header
               avatar={avatar}
               subheading={subheading}
@@ -88,7 +87,7 @@ class UserSettings extends React.Component<Props> {
               {() => <Overview user={user} />}
             </Route>
           </View>
-        </React.Fragment>
+        </ViewGrid>
       );
     }
 

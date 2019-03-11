@@ -18,6 +18,7 @@ import { View } from './style';
 import type { ContextRouter } from 'react-router';
 import { track, events, transformations } from 'src/helpers/analytics';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
+import { ViewGrid } from 'src/components/layout';
 
 type Props = {
   data: {
@@ -111,10 +112,10 @@ class CommunitySettings extends React.Component<Props> {
         title += ' Settings';
       }
       return (
-        <React.Fragment>
+        <ViewGrid>
           <Head title={title} />
 
-          <View data-cy="community-settings" id="main">
+          <View data-cy="community-settings">
             <Header
               avatar={avatar}
               subheading={subheading}
@@ -150,7 +151,7 @@ class CommunitySettings extends React.Component<Props> {
               </Route>
             </Switch>
           </View>
-        </React.Fragment>
+        </ViewGrid>
       );
     }
 

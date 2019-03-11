@@ -32,6 +32,15 @@ export const ViewGrid = styled.main.attrs({
   }
 `;
 
+/*
+┌──┬────────┬──┐
+│  │   xx   │  │
+│  │        │  │
+│  │   xx   │  │
+│  │        │  │
+│  │   xx   │  │
+└──┴────────┴──┘
+*/
 export const SingleColumnGrid = styled.div`
   display: grid;
   justify-self: center;

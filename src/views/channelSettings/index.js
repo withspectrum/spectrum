@@ -19,6 +19,7 @@ import Overview from './components/overview';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
+import { ViewGrid } from 'src/components/layout';
 
 type Props = {
   data: {
@@ -175,8 +176,8 @@ class ChannelSettings extends React.Component<Props> {
       };
 
       return (
-        <React.Fragment>
-          <View id="main">
+        <ViewGrid>
+          <View>
             <Header
               subheading={subheading}
               heading={`${channel.name} Settings ${
@@ -185,7 +186,7 @@ class ChannelSettings extends React.Component<Props> {
             />
             <ActiveView />
           </View>
-        </React.Fragment>
+        </ViewGrid>
       );
     }
 
