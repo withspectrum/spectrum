@@ -9,12 +9,17 @@ import { Loading } from 'src/components/loading';
 import NullMessages from './nullMessages';
 
 const Messages = (props: Props) => {
-  const { subscribeToNewMessages, data, isLoading, hasError } = props;
-  const [subscription, setSubscription] = useState(null);
+  const {
+    subscribeToNewMessages,
+    data,
+    isLoading,
+    hasError,
+    isWatercooler,
+  } = props;
 
   useEffect(() => {
-    setSubscription({ subscription: subscribeToNewMessages() });
-    return () => subscription && Promise.resolve(subscription());
+    const unsubscribe = subscribeToNewMessages();
+    return () => Promise.resolve(unsubscribe());
   }, []);
 
   if (isLoading) return <Loading style={{ padding: '32px' }} />;
@@ -38,6 +43,7 @@ const Messages = (props: Props) => {
       uniqueMessageCount={unsortedMessages.length}
       messages={sortedMessages}
       threadType={'story'}
+      isWatercooler={isWatercooler}
     />
   );
 };
