@@ -64,7 +64,7 @@ type State = {
 class UserView extends React.Component<Props, State> {
   state = {
     hasNoThreads: false,
-    selectedView: 'participant',
+    selectedView: 'creator',
     hasThreads: true,
   };
 
@@ -176,19 +176,19 @@ class UserView extends React.Component<Props, State> {
               <PrimaryColumn>
                 <SegmentedControl>
                   <Segment
-                    segmentLabel="participant"
-                    onClick={() => this.handleSegmentClick('participant')}
-                    isActive={selectedView === 'participant'}
-                  >
-                    Conversations
-                  </Segment>
-
-                  <Segment
                     segmentLabel="creator"
                     onClick={() => this.handleSegmentClick('creator')}
                     isActive={selectedView === 'creator'}
                   >
-                    Author
+                    Posts
+                  </Segment>
+
+                  <Segment
+                    segmentLabel="participant"
+                    onClick={() => this.handleSegmentClick('participant')}
+                    isActive={selectedView === 'participant'}
+                  >
+                    Activity
                   </Segment>
 
                   <Segment
