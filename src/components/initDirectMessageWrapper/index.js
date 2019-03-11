@@ -6,7 +6,6 @@ import { withRouter, type History } from 'react-router-dom';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
-import { openModal } from 'src/actions/modals';
 
 type Props = {
   render: Function,
@@ -18,17 +17,15 @@ type Props = {
 };
 
 const InitDirectMessage = (props: Props) => {
-  const { dispatch, currentUser, render, user, history } = props;
+  const { dispatch, history, currentUser, render, user } = props;
 
   const init = (e: any) => {
-    e && e.preventDefault() && e.stopPropagation();
-
-    if (!currentUser || !currentUser.id) {
-      return dispatch(openModal('LOGIN_MODAL'));
-    }
-
+    e && e.preventDefault() && e.stopPropogation();
     dispatch(initNewThreadWithUser(user));
-    history.push('/messages/new');
+    history.push({
+      pathname: currentUser ? `/messages/new` : '/login',
+      state: { modal: !!currentUser },
+    });
   };
 
   if (currentUser && currentUser.id === user.id) return null;
