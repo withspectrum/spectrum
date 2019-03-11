@@ -173,7 +173,7 @@ class NotificationsPure extends React.Component<Props, State> {
   };
 
   render() {
-    const { currentUser, data, isLoading } = this.props;
+    const { currentUser, data, isLoading, hasError } = this.props;
     const { title, description } = generateMetaInfo({
       type: 'notifications',
     });
@@ -377,7 +377,18 @@ class NotificationsPure extends React.Component<Props, State> {
       return <LoadingView />;
     }
 
-    return <ErrorView />;
+    if (hasError) {
+      return <ErrorView />;
+    }
+
+    // no issues loading, but the user doesnt have notifications yet
+    return (
+      <ErrorView
+        emoji="😙"
+        heading="No notifications...yet"
+        subheading="Looks like you’re new around here! When you start receiving notifications about conversations on Spectrum, they'll show up here."
+      />
+    );
   }
 }
 
