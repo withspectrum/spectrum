@@ -309,15 +309,17 @@ class ThreadDetailPure extends React.Component<Props, State> {
   uploadFiles = files => {
     const uploading = `![Uploading ${files[0].name}...]()`;
     let caretPos = this.bodyEditor.selectionStart;
+    const { body } = this.state;
+    if (!body) return;
 
     this.setState(
-      ({ body }) => ({
+      {
         isSavingEdit: true,
         body:
           body.substring(0, caretPos) +
           uploading +
-          body.substring(this.bodyEditor.selectionEnd, this.state.body.length),
-      }),
+          body.substring(this.bodyEditor.selectionEnd, body.length),
+      },
       () => {
         caretPos = caretPos + uploading.length;
         this.bodyEditor.selectionStart = caretPos;
@@ -335,6 +337,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
         this.setState({
           isSavingEdit: false,
         });
+        if (!this.state.body) return;
         this.changeBody({
           target: {
             value: this.state.body.replace(
@@ -349,6 +352,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
         this.setState({
           isSavingEdit: false,
         });
+        if (!this.state.body) return;
         this.changeBody({
           target: {
             value: this.state.body.replace(uploading, ''),

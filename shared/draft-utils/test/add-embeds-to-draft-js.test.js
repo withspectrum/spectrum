@@ -1,5 +1,13 @@
 // @flow
-import { getEmbedsFromText } from '../add-embeds-to-draft-js';
+jest.mock('draft-js/lib/generateRandomKey', () => {
+  let last = 0;
+  const multiplier = Math.exp(24);
+  return () => Math.floor(last++ * multiplier).toString(32);
+});
+import {
+  getEmbedsFromText,
+  addEmbedsToEditorState,
+} from '../add-embeds-to-draft-js';
 
 describe('sites', () => {
   describe('<iframe>', () => {
@@ -454,4 +462,40 @@ describe('complex text', () => {
       },
     ]);
   });
+});
+
+it('should not change anything if there are not embeds to add', () => {
+  const input = {
+    blocks: [
+      {
+        type: 'unstyled',
+        key: 'g0000',
+        data: {},
+        depth: 0,
+        inlineStyleRanges: [],
+        entityRanges: [],
+        text: 'Hello world!',
+      },
+    ],
+    entityMap: {},
+  };
+  expect(addEmbedsToEditorState(input)).toEqual(input);
+});
+
+it('should add embeds', () => {
+  const input = {
+    blocks: [
+      {
+        type: 'unstyled',
+        key: 'g0000',
+        data: {},
+        depth: 0,
+        inlineStyleRanges: [],
+        entityRanges: [],
+        text: 'https://simplecast.com/s/a1f11d11',
+      },
+    ],
+    entityMap: {},
+  };
+  expect(addEmbedsToEditorState(input)).toMatchSnapshot();
 });
