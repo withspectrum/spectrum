@@ -11,7 +11,7 @@ import { track, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { ViewGrid } from 'src/components/layout';
-import MobileTitlebar from 'src/components/mobileTitlebar';
+import { MobileTitlebar } from 'src/components/titlebar';
 
 type Props = {
   currentUser?: Object,
@@ -35,7 +35,7 @@ class Explore extends React.Component<Props> {
       <React.Fragment>
         <ViewGrid data-cy="explore-page">
           <Head title={title} description={description} />
-          <MobileTitlebar title={'Explore'} titlebarMenuAction={'menu'} />
+          <MobileTitlebar title={'Explore'} menuAction={'menu'} />
           <ErrorBoundary fallbackComponent={null}>
             <CommunitySearchWrapper
               currentUser={this.props.currentUser}
