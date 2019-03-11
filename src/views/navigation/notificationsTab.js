@@ -8,7 +8,10 @@ import compose from 'recompose/compose';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import Icon from 'src/components/icons';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import { updateNotificationsCount } from 'src/actions/notifications';
+import {
+  updateNotificationsCount,
+  setNotifications,
+} from 'src/actions/notifications';
 import getNotifications, {
   type GetNotificationsType,
 } from 'shared/graphql/queries/notification/getNotifications';
@@ -19,6 +22,7 @@ import { AvatarGrid, AvatarLink, Label, IconWrapper, RedDot } from './style';
 
 type Props = {
   active: boolean,
+  count: number,
   data: {
     notifications?: GetNotificationsType,
     subscribeToNewNotifications: Function,
@@ -44,6 +48,13 @@ const NotificationsTab = (props: Props) => {
             .filter(Boolean)
             .filter(({ node }) => !node.isSeen).length
         : 0;
+      props.dispatch(
+        setNotifications(
+          data.notifications
+            ? data.notifications.edges.filter(Boolean).map(({ node }) => node)
+            : []
+        )
+      );
       props.dispatch(
         updateNotificationsCount('notifications', props.active ? 0 : count)
       );
