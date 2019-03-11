@@ -8,16 +8,17 @@ import { TeamMembersList } from './teamMembersList';
 import { MobileCommunityInfoActions } from './mobileCommunityInfoActions';
 import { ChannelsList } from './channelsList';
 import { CommunityMeta } from 'src/components/entities/profileCards/components/communityMeta';
-import { WatercoolerChat } from './watercoolerChat';
+import MessagesSubscriber from '../../thread/components/messagesSubscriber';
 import { PostsFeeds } from './postsFeeds';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { useAppScroller } from 'src/hooks/useAppScroller';
+import ChatInput from 'src/components/chatInput';
 import { FeedsContainer, SidebarSection } from '../style';
+import { Stretch, ChatInputWrapper } from '../../thread/style';
 
 export const CommunityFeeds = (props: CommunityFeedsType) => {
   const { community, scrollToPosition, contextualScrollToBottom } = props;
-  // const defaultSegment = community.watercoolerId ? 'chat' : 'posts';
-  const defaultSegment = 'posts';
+  const defaultSegment = community.watercoolerId ? 'chat' : 'posts';
   const [activeSegment, setActiveSegment] = React.useState(defaultSegment);
 
   const renderFeed = () => {
@@ -25,14 +26,17 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
       case 'chat': {
         if (!community.watercoolerId) return null;
         return (
-          <WatercoolerChat
-            scrollToBottom={scrollToBottom}
-            contextualScrollToBottom={contextualScrollToBottom}
-            scrollToPosition={scrollToPosition}
-            community={community}
-            isWatercooler
-            id={community.watercoolerId}
-          />
+          <React.Fragment>
+            <Stretch>
+              <MessagesSubscriber isWatercooler id={community.watercoolerId} />
+            </Stretch>
+            <ChatInputWrapper>
+              <ChatInput
+                threadType="story"
+                threadId={community.watercoolerId}
+              />
+            </ChatInputWrapper>
+          </React.Fragment>
         );
       }
       case 'posts': {
@@ -97,7 +101,7 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
   );
 
   const segments = ['posts', 'members', 'info'];
-  // if (community.watercoolerId) segments.unshift('chat');
+  if (community.watercoolerId) segments.unshift('chat');
 
   // if the community being viewed changes, and the previous community had
   // a watercooler but the next one doesn't, select the posts tab on the new one
