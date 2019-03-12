@@ -103,7 +103,7 @@ export const Input = styled(MentionsInput).attrs({
   autoComplete: 'on',
   autoCorrect: 'on',
 })`
-  font-size: 15px;
+  font-size: 16px; /* has to be 16px to avoid zoom on iOS */
   font-weight: 400;
   line-height: 1.4;
   background: ${props =>

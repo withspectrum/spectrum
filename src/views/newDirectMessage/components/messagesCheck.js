@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 import getDirectMessageThreadByUserIds from 'shared/graphql/queries/directMessageThread/getDirectMessageThreadByUserIds';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import MessagesSubscriber from './messagesSubscriber';
-import { LoadingMessagesWrapper } from '../style';
+import { LoadingMessagesWrapper, NullMessagesWrapper } from '../style';
 
 const MessagesCheck = (props: Props) => {
   const { data, isLoading, hasError, onExistingThreadId } = props;
@@ -13,7 +13,7 @@ const MessagesCheck = (props: Props) => {
 
   if (isLoading) return <LoadingMessagesWrapper />;
 
-  if (!thread || hasError) return null;
+  if (!thread || hasError) return <NullMessagesWrapper />;
 
   if (thread && thread.id) {
     onExistingThreadId(thread.id);

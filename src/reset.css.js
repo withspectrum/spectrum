@@ -121,7 +121,7 @@ injectGlobal`
   }
 
   .markdown {
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.4;
     color: ${theme.text.default};
   }
@@ -132,7 +132,7 @@ injectGlobal`
 
   .markdown p {
     color: inherit;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 400;
     display: block;
   }
@@ -178,7 +178,7 @@ injectGlobal`
 
   .markdown li {
     color: inherit;
-    font-size: 15px;
+    font-size: 16px;
     margin-bottom: 4px;
     line-height: 1.5;
     font-weight: 400;
@@ -189,7 +189,7 @@ injectGlobal`
     border-left: 4px solid ${theme.text.secondary};
     background: ${theme.bg.wash};
     padding: 4px 8px 4px 16px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 400;
     line-height: 1.4;
     margin: 16px 0;

@@ -107,7 +107,8 @@ export const Actions = styled.div`
   align-self: stretch;
   justify-content: space-between;
   align-items: center;
-  position: relative;
+  position: sticky;
+  bottom: 0;
   display: flex;
   flex: 1 0 auto;
   height: 56px;
@@ -147,7 +148,8 @@ export const Dropdowns = styled(FlexRow)`
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   z-index: 9999;
   border-bottom: 1px solid ${theme.bg.border};
-  padding: 8px 16px;
+  padding: 8px;
+  font-size: 16px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     width: 100%;
@@ -206,6 +208,7 @@ const Selector = styled.select`
   @media (max-width: ${MEDIA_BREAK}px) {
     flex: auto;
     max-width: calc(50% - 12px);
+    font-size: 16px; /* has to be 16px to avoid zoom on iOS */
   }
 `;
 
@@ -261,7 +264,7 @@ export const ThreadTitle = {
 };
 
 export const ThreadDescription = {
-  fontSize: '15px',
+  fontSize: '16px', // has to be 16px to avoid zoom on iOS
   fontWeight: '400',
   width: '100%',
   display: 'inline-block',

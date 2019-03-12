@@ -73,8 +73,8 @@ export const CloseButton = styled.span`
 export const ChatInputWrapper = styled.div`
   bottom: 0;
   width: calc(100% + 2px); /* hide left and right borders */
-  position: absolute;
-  left: -1px
+  position: sticky;
+  left: -1px;
   border-radius: 0 0 4px 4px;
   z-index: 100;
 `;
@@ -82,13 +82,20 @@ export const ChatInputWrapper = styled.div`
 export const MessagesScrollWrapper = styled.div`
   /* height of container minus titlebar minus chat input */
   height: 100%;
-  max-height: calc(100% - 62px - 74px);
+  max-height: calc(100% - 62px - 58px);
   overflow: hidden;
   overflow-y: scroll;
   background: ${theme.bg.default};
 `;
 
 export const LoadingMessagesWrapper = styled(MessagesScrollWrapper)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${theme.bg.wash};
+`;
+
+export const NullMessagesWrapper = styled(MessagesScrollWrapper)`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -102,7 +109,7 @@ export const SearchInputWrapper = styled.div`
 
 export const SearchInput = styled.input`
   background: ${theme.bg.default};
-  font-size: 16px;
+  font-size: 16px; /* has to be 16px to avoid zoom on iOS */
   display: block;
   width: 100%;
   padding: 16px;

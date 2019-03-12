@@ -425,7 +425,7 @@ export const ThreadTitle = {
 };
 
 export const ThreadDescription = {
-  fontSize: '15px',
+  fontSize: '16px', // has to be 16px to avoid zoom on iOS
   fontWeight: '500',
   width: '100%',
   display: 'inline-block',

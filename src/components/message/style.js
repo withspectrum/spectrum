@@ -238,7 +238,7 @@ const Bubble = styled.div`
 `;
 
 export const Text = styled(Bubble)`
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.4;
   color: ${props =>
     props.error ? props.theme.warn.default : props.theme.text.default};
