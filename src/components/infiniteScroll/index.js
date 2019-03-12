@@ -1,6 +1,6 @@
 // @flow
 import React, { useState, useEffect } from 'react';
-import InfiniteScroll from '@mxstbr/react-infinite-scroller';
+import InfiniteScroll from 'react-infinite-scroller';
 import { useAppScroller } from 'src/hooks/useAppScroller';
 
 type Props = {
