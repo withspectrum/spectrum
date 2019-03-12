@@ -59,8 +59,7 @@ const getPublicChannelsByCommunity = (communityId: string): Promise<Array<string
 */
 // prettier-ignore
 const getChannelsByUserAndCommunity = async (communityId: string, userId: string): Promise<Array<string>> => {
-  const channels = await getChannelsByCommunity(communityId);
-  const channelIds = channels.map(c => c.id);
+  const channelIds = await channelsByCommunitiesQuery(communityId)('id').run();
 
   return db
     .table('usersChannels')
