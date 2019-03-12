@@ -14,7 +14,6 @@ export type Props = {
   thread?: GetThreadType | GetDirectMessageThreadType,
   messages: Array<?MessageInfoType>,
   uniqueMessageCount: number,
-  isWatercooler?: boolean,
 };
 
 const ChatMessages = (props: Props) => {
@@ -24,15 +23,9 @@ const ChatMessages = (props: Props) => {
 
   useEffect(
     () => {
-      if (threadType === 'story' && thread.currentUserLastSeen) {
-        scrollToBottom();
-      }
-
-      if (props.isWatercooler) {
-        scrollToBottom();
-      }
-
       if (threadType === 'directMessageThread') {
+        scrollToBottom();
+      } else if (thread && (thread.currentUserLastSeen || thread.watercooler)) {
         scrollToBottom();
       }
     },
