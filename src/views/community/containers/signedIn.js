@@ -105,10 +105,7 @@ const Component = (props: SignedInMemberType) => {
             </Fab>
           )}
 
-          <ViewGrid
-            style={{ overflowY: hasModal ? 'hidden' : 'scroll' }}
-            data-cy="community-view"
-          >
+          <ViewGrid data-cy="community-view">
             <Head
               title={title}
               description={description}

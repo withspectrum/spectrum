@@ -31,7 +31,7 @@ const Messages = (props: Props) => {
 
   useEffect(() => {
     const unsubscribe = subscribeToNewMessages();
-    const elem = document.getElementById('main');
+    const elem = document.getElementById('scroller-for-thread-feed');
     setRef(elem);
     elem.scrollTop = elem.scrollHeight;
     return () => Promise.resolve(unsubscribe());
