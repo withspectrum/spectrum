@@ -9,6 +9,15 @@ import { Loading } from 'src/components/loading';
 import InfiniteScroller from 'src/components/infiniteScroll';
 import NullMessages from './nullMessages';
 
+// See https://stackoverflow.com/a/53446665
+function usePrevious(value) {
+  const ref = React.useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
 const Messages = (props: Props) => {
   const {
     subscribeToNewMessages,
@@ -18,14 +27,31 @@ const Messages = (props: Props) => {
     hasError,
     isWatercooler,
   } = props;
-
-  let ref = null;
+  const [ref, setRef] = React.useState(null);
 
   useEffect(() => {
     const unsubscribe = subscribeToNewMessages();
-    ref = document.getElementById('scroller-for-thread-feed');
+    const elem = document.getElementById('main');
+    setRef(elem);
+    elem.scrollTop = elem.scrollHeight;
     return () => Promise.resolve(unsubscribe());
   }, []);
+
+  const previousCount = usePrevious(
+    props.data.thread ? props.data.thread.messageConnection.edges.length : 0
+  );
+  useEffect(
+    () => {
+      const currCount = props.data.thread
+        ? props.data.thread.messageConnection.edges.length
+        : 0;
+      // Scroll watercooler to the bottom when messages first load
+      if (isWatercooler && currCount > 0 && previousCount === 0) {
+        ref.scrollTop = ref.scrollHeight;
+      }
+    },
+    [props.data.thread && props.data.thread.messageConnection.edges.length]
+  );
 
   if (isLoading) return <Loading style={{ padding: '32px' }} />;
 
@@ -49,9 +75,12 @@ const Messages = (props: Props) => {
     if (!ref) return props.loadPreviousPage();
 
     // Preserve scroll position after load
-    const previousScrollPosition = ref.scrollHeight;
+    const prevScrollTop = ref.scrollTop;
+    const prevHeight = ref.scrollHeight;
     return props.loadPreviousPage().then(() => {
-      ref.scrollTop = ref.scrollHeight - previousScrollPosition + ref.scrollTop;
+      const currHeight = ref.scrollHeight;
+      const newScrollTop = prevScrollTop + (currHeight - prevHeight);
+      ref.scrollTop = newScrollTop;
     });
   };
 
@@ -64,8 +93,9 @@ const Messages = (props: Props) => {
       }
       isReverse={!!isWatercooler}
       loadMore={loadMore}
-      allowPagination={true}
       loader={<Loading key={0} />}
+      scrollElementId="main"
+      threshold={50}
     >
       <ChatMessages
         thread={thread}
