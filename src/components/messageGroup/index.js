@@ -16,20 +16,36 @@ export type Props = {
   uniqueMessageCount: number,
 };
 
+// See https://stackoverflow.com/a/53446665
+function usePrevious(value) {
+  const ref = React.useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
 const ChatMessages = (props: Props) => {
   const { uniqueMessageCount, threadType, thread } = props;
 
   const { ref, scrollToBottom } = useAppScroller();
 
+  const previousCount = usePrevious(uniqueMessageCount) || 0;
+  // Scroll to bottom once the initial messages load
   useEffect(
     () => {
-      if (threadType === 'directMessageThread') {
-        scrollToBottom();
-      } else if (thread && (thread.currentUserLastSeen || thread.watercooler)) {
-        scrollToBottom();
+      if (previousCount === 0 && uniqueMessageCount > 0) {
+        if (threadType === 'directMessageThread') {
+          scrollToBottom();
+        } else if (
+          thread &&
+          (thread.currentUserLastSeen || thread.watercooler)
+        ) {
+          scrollToBottom();
+        }
       }
     },
-    [ref]
+    [uniqueMessageCount, ref]
   );
 
   /*

@@ -8,15 +8,7 @@ import ChatMessages from 'src/components/messageGroup';
 import { Loading } from 'src/components/loading';
 import InfiniteScroller from 'src/components/infiniteScroll';
 import NullMessages from './nullMessages';
-
-// See https://stackoverflow.com/a/53446665
-function usePrevious(value) {
-  const ref = React.useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
+import { useAppScroller } from 'src/hooks/useAppScroller';
 
 const Messages = (props: Props) => {
   const {
@@ -27,31 +19,9 @@ const Messages = (props: Props) => {
     hasError,
     isWatercooler,
   } = props;
-  const [ref, setRef] = React.useState(null);
+  const { ref } = useAppScroller();
 
-  useEffect(() => {
-    const unsubscribe = subscribeToNewMessages();
-    const elem = document.getElementById('scroller-for-thread-feed');
-    setRef(elem);
-    elem.scrollTop = elem.scrollHeight;
-    return () => Promise.resolve(unsubscribe());
-  }, []);
-
-  const previousCount = usePrevious(
-    props.data.thread ? props.data.thread.messageConnection.edges.length : 0
-  );
-  useEffect(
-    () => {
-      const currCount = props.data.thread
-        ? props.data.thread.messageConnection.edges.length
-        : 0;
-      // Scroll watercooler to the bottom when messages first load
-      if (isWatercooler && currCount > 0 && previousCount === 0) {
-        ref.scrollTop = ref.scrollHeight;
-      }
-    },
-    [props.data.thread && props.data.thread.messageConnection.edges.length]
-  );
+  useEffect(subscribeToNewMessages, []);
 
   if (isLoading) return <Loading style={{ padding: '32px' }} />;
 
@@ -74,9 +44,8 @@ const Messages = (props: Props) => {
   const loadMore = () => {
     if (isFetchingMore) return Promise.resolve();
     if (!hasMore) return Promise.resolve();
-    if (!isWatercooler) return props.loadNextPage();
 
-    return props.loadPreviousPage();
+    return isWatercooler ? props.loadPreviousPage() : props.loadNextPage();
   };
 
   return (
@@ -85,7 +54,6 @@ const Messages = (props: Props) => {
       isReverse={!!isWatercooler}
       loadMore={loadMore}
       loader={<Loading key={0} />}
-      scrollElementId="main"
       threshold={50}
     >
       <ChatMessages

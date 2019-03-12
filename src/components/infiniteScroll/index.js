@@ -1,13 +1,13 @@
 // @flow
 import React, { useState, useEffect } from 'react';
 import InfiniteScroll from '@mxstbr/react-infinite-scroller';
+import { useAppScroller } from 'src/hooks/useAppScroller';
 
 type Props = {
   loadMore: Function,
   hasMore: boolean,
   loader: React$Node,
   isReverse?: boolean,
-  scrollElementId?: string,
 };
 
 /*
@@ -16,23 +16,15 @@ type Props = {
   aren't performing unnecessary pagination in the background
 */
 const InfiniteScroller = (props: Props) => {
-  const [scrollElement, setScrollElement] = useState(null);
-  const { scrollElementId, ...rest } = props;
-
-  useEffect(() => {
-    setScrollElement(
-      document.getElementById(scrollElementId || 'scroller-for-thread-feed')
-    );
-    return () => setScrollElement(null);
-  }, []);
+  const { ref } = useAppScroller();
 
   return (
     <InfiniteScroll
       useWindow={false}
       initialLoad={false}
       threshold={750}
-      getScrollParent={() => scrollElement}
-      {...rest}
+      getScrollParent={() => ref}
+      {...props}
     />
   );
 };
