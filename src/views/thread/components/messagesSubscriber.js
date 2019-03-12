@@ -68,8 +68,12 @@ const Messages = (props: Props) => {
 
   if (!sortedMessages || sortedMessages.length === 0) return <NullMessages />;
 
+  const hasMore = isWatercooler
+    ? messageConnection.pageInfo.hasPreviousPage
+    : messageConnection.pageInfo.hasNextPage;
   const loadMore = () => {
     if (isFetchingMore) return Promise.resolve();
+    if (!hasMore) return Promise.resolve();
     if (!isWatercooler) return props.loadNextPage();
 
     if (!ref) return props.loadPreviousPage();
@@ -86,11 +90,7 @@ const Messages = (props: Props) => {
 
   return (
     <InfiniteScroller
-      hasMore={
-        isWatercooler
-          ? messageConnection.pageInfo.hasPreviousPage
-          : messageConnection.pageInfo.hasNextPage
-      }
+      hasMore={hasMore}
       isReverse={!!isWatercooler}
       loadMore={loadMore}
       loader={<Loading key={0} />}
