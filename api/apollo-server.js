@@ -1,4 +1,5 @@
 // @flow
+const debug = require('debug')('api:graphql');
 import { ApolloServer } from 'apollo-server-express';
 import depthLimit from 'graphql-depth-limit';
 import costAnalysis from 'graphql-cost-analysis';
@@ -55,6 +56,7 @@ const server = new ProtectedApolloServer({
     req.statsdTags = {
       graphqlOperationName: req.body.operationName || 'unknown_operation',
     };
+    debug(req.body.operationName || 'unknown_operation');
     const loaders = createLoaders();
     let currentUser = req.user && !req.user.bannedAt ? req.user : null;
 
