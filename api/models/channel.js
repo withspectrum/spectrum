@@ -60,23 +60,15 @@ const getPublicChannelsByCommunity = (communityId: string): Promise<Array<string
 // prettier-ignore
 const getChannelsByUserAndCommunity = async (communityId: string, userId: string): Promise<Array<string>> => {
   const channels = await getChannelsByCommunity(communityId);
-
   const channelIds = channels.map(c => c.id);
-  const publicChannels = channels.filter(c => !c.isPrivate).map(c => c.id);
 
-  const usersChannels = await db
+  return db
     .table('usersChannels')
-    .getAll(userId, { index: 'userId' })
-    .filter(usersChannel =>
-      db.expr(channelIds).contains(usersChannel('channelId'))
-    )
-    .filter({ isMember: true })
+    .getAll(...channelIds.map(id => ([userId, id])), {
+      index: 'userIdAndChannelId',
+    })
+    .filter({ isMember: true })('channelId')
     .run();
-
-  const usersChannelsIds = usersChannels.map(c => c.channelId);
-  const allPossibleChannels = [...publicChannels, ...usersChannelsIds];
-  const distinct = allPossibleChannels.filter((x, i, a) => a.indexOf(x) === i);
-  return distinct;
 };
 
 const getChannelsByUser = (userId: string): Promise<Array<DBChannel>> => {
