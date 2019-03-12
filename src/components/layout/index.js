@@ -28,7 +28,7 @@ const StyledViewGrid = styled.main.attrs({
   grid-area: view;
   height: 100vh;
   max-height: 100vh;
-  overflow-y: ${props => (props.hasModal ? 'hidden' : 'auto')};
+  overflow-y: ${props => (props.hasModal ? 'hidden' : 'visible')};
 
   @media (max-width: ${MEDIA_BREAK}px) {
     grid-template-rows: min-content 1fr;
