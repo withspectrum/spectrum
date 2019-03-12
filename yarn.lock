@@ -11998,10 +11998,10 @@ react-dev-utils@^5.0.2:
     strip-ansi "3.0.1"
     text-table "0.2.0"
 
-react-dom@^16.7.0-alpha.2:
+"react-dom@npm:@hot-loader/react-dom":
   version "16.8.4"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.8.4.tgz#1061a8e01a2b3b0c8160037441c3bf00a0e3bc48"
-  integrity sha512-Ob2wK7XG2tUDt7ps7LtLzGYYB6DXMCLj0G5fO6WeEICtT4/HdpOi7W/xLzZnR6RCG1tYza60nMdqtxzA8FaPJQ==
+  resolved "https://registry.yarnpkg.com/@hot-loader/react-dom/-/react-dom-16.8.4.tgz#aefe598ca26005c1ec3ac11d92d54ff3c1cd219c"
+  integrity sha512-S+5x4HJEMV7p2FzgUBEzrgiNJJeN4m5auTL3rZbmGsuyGt3Tgg8zgz6Mt1Udj8dKDxaryixDSNh0d/63TMqizg==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
@@ -12043,7 +12043,7 @@ react-helmet-async@^0.2.0:
     react-fast-compare "^2.0.2"
     shallowequal "^1.0.2"
 
-react-hot-loader@^4.6.0:
+react-hot-loader@^4.8.0:
   version "4.8.0"
   resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.8.0.tgz#0b7c7dd9407415e23eb8246fdd28b0b839f54cb6"
   integrity sha512-HY9F0vITYSVmXhAR6tPkMk240nxmoH8+0rca9iO2B82KVguiCiBJkieS0Wb4CeSIzLWecYx3iOcq8dcbnp0bxA==
@@ -12065,6 +12065,13 @@ react-image@^1.5.1:
   dependencies:
     "@babel/runtime" "^7.0.0"
     prop-types "15.6.2"
+
+react-infinite-scroller-fork-mxstbr@^1.2.7:
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/react-infinite-scroller-fork-mxstbr/-/react-infinite-scroller-fork-mxstbr-1.2.7.tgz#8704bf036d94abeefe345bd1aeb2b7d2929d9dce"
+  integrity sha512-LX9pxQTD+9gVzahap0xSoqw3YM+LDWN1ygd1Sek13zZv3prq8R6BYm5R5vX18NYl0hmXImBHGXNtLBH3Va8NTg==
+  dependencies:
+    prop-types "^15.5.8"
 
 react-infinite-scroller-with-scroll-element@2.0.2:
   version "2.0.2"
@@ -12250,7 +12257,7 @@ react-visibility-sensor@^5.0.1:
   dependencies:
     prop-types "^15.6.2"
 
-react@*, react@^16.7.0-alpha.2:
+react@*, react@^16.8.4:
   version "16.8.4"
   resolved "https://registry.yarnpkg.com/react/-/react-16.8.4.tgz#fdf7bd9ae53f03a9c4cd1a371432c206be1c4768"
   integrity sha512-0GQ6gFXfUH7aZcjGVymlPOASTuSjlQL4ZtVC5YKH+3JL6bBLCVO21DknzmaPlI90LN253ojj02nsapy+j7wIjg==
