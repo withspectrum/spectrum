@@ -29,41 +29,30 @@ const ChatMessages = (props: Props) => {
   const { uniqueMessageCount, threadType, thread } = props;
 
   const { ref, scrollToBottom } = useAppScroller();
-
-  const previousCount = usePrevious(uniqueMessageCount) || 0;
   // Scroll to bottom once the initial messages load
-  useEffect(
-    () => {
-      if (previousCount === 0 && uniqueMessageCount > 0) {
-        if (threadType === 'directMessageThread') {
-          scrollToBottom();
-        } else if (
-          thread &&
-          (thread.currentUserLastSeen || thread.watercooler)
-        ) {
-          scrollToBottom();
-        }
-      }
-    },
-    [uniqueMessageCount, ref]
-  );
+  // useEffect(
+  //   () => {
+  //     if (threadType === 'directMessageThread') {
+  //       scrollToBottom();
+  //     } else if (thread && (thread.currentUserLastSeen || thread.watercooler)) {
+  //       scrollToBottom();
+  //     }
+  //   },
+  //   [uniqueMessageCount > 0]
+  // );
 
   /*
     Listen for additional messages and conditionally keep the user scrolled
     to the bottom so they always see new messages
   */
-  useEffect(
-    () => {
-      if (ref) {
-        const isNearBottom =
-          ref.scrollHeight - ref.clientHeight < ref.scrollTop + 400;
-        if (isNearBottom) {
-          scrollToBottom();
-        }
+  useEffect(() => {
+    if (ref) {
+      const isNearBottom = ref.scrollHeight < ref.scrollTop + 400;
+      if (isNearBottom) {
+        scrollToBottom();
       }
-    },
-    [uniqueMessageCount]
-  );
+    }
+  }, [uniqueMessageCount]);
 
   if (threadType === 'story') return <ThreadMessages {...props} />;
   if (threadType === 'directMessageThread')

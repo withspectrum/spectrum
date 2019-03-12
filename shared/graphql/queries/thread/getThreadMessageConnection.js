@@ -124,7 +124,7 @@ export const getThreadMessageConnectionOptions = {
       return props.data.fetchMore({
         variables: {
           after: cursor,
-          first: undefined,
+          first: 25,
           before: undefined,
           last: undefined,
         },
