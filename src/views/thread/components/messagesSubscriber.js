@@ -76,16 +76,7 @@ const Messages = (props: Props) => {
     if (!hasMore) return Promise.resolve();
     if (!isWatercooler) return props.loadNextPage();
 
-    if (!ref) return props.loadPreviousPage();
-
-    // Preserve scroll position after load
-    const prevScrollTop = ref.scrollTop;
-    const prevHeight = ref.scrollHeight;
-    return props.loadPreviousPage().then(() => {
-      const currHeight = ref.scrollHeight;
-      const newScrollTop = prevScrollTop + (currHeight - prevHeight);
-      ref.scrollTop = newScrollTop;
-    });
+    return props.loadPreviousPage();
   };
 
   return (
