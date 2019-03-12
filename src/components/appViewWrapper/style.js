@@ -9,6 +9,7 @@ export const StyledAppViewWrapper = styled.div`
   overflow: hidden;
   overflow-y: scroll;
   width: 100%;
+  height: 100%;
   max-height: 100vh;
 
   @media (max-width: ${MEDIA_BREAK}px) {
