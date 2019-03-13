@@ -198,7 +198,7 @@ class ThreadsList extends React.Component<Props, State> {
             {uniqueThreads.map(thread => {
               if (!thread) return null;
               return (
-                <ErrorBoundary fallbackComponent={null} key={thread.id}>
+                <ErrorBoundary key={thread.id}>
                   <DirectMessageListItem
                     thread={thread}
                     currentUser={currentUser}

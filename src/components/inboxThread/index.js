@@ -82,7 +82,7 @@ class InboxThread extends React.Component<Props> {
     const snippet = truncate(withouteMultipleLineBreaks, 280);
 
     return (
-      <ErrorBoundary fallbackComponent={null}>
+      <ErrorBoundary>
         <InboxThreadItem
           new={newMessagesSinceLastViewed || newUnseenThreadInPastDay}
           data-cy="thread-card"
@@ -132,7 +132,7 @@ class InboxThread extends React.Component<Props> {
             )}
 
             <Column>
-              <ErrorBoundary fallbackComponent={null}>
+              <ErrorBoundary>
                 <Header
                   thread={thread}
                   active={active}
@@ -149,7 +149,7 @@ class InboxThread extends React.Component<Props> {
                 <ThreadSnippet active={active}>{snippet}</ThreadSnippet>
               )}
 
-              <ErrorBoundary fallbackComponent={null}>
+              <ErrorBoundary>
                 <ThreadActivity
                   thread={thread}
                   active={active}

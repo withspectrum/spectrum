@@ -152,8 +152,7 @@ class CategoryList extends React.Component<CategoryListProps> {
           {title ? <ListTitle>{title}</ListTitle> : null}
           <ListWrapper>
             {filteredCommunities.map((community, i) => (
-              // $FlowFixMe
-              <ErrorBoundary fallbackComponent={null} key={i}>
+              <ErrorBoundary key={i}>
                 <ProfileCardWrapper>
                   <CommunityProfileCard community={community} />
                 </ProfileCardWrapper>

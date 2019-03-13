@@ -39,7 +39,7 @@ class Explore extends React.Component<Props> {
           style={{ height: '100%', maxHeight: '100%' }}
           data-cy="explore-page"
         >
-          <ErrorBoundary fallbackComponent={null}>
+          <ErrorBoundary>
             <CommunitySearchWrapper
               currentUser={this.props.currentUser}
               redirectPath={window.location}

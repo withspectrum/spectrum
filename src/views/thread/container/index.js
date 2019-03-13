@@ -176,7 +176,7 @@ const ThreadContainer = (props: Props) => {
                 {!canChat && !isLocked && (
                   <ChatInputWrapper>
                     <JoinCommunity
-                      communityId={community.id}
+                      community={community}
                       render={({ isLoading }) => (
                         <LockedMessages>
                           <PrimaryButton

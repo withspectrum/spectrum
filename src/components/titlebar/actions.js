@@ -30,7 +30,7 @@ export const MobileCommunityAction = (props: Props) => {
 
   return (
     <JoinCommunity
-      communityId={community.id}
+      community={community}
       render={({ isLoading }) => (
         <SmallPrimaryButton isLoading={isLoading} icon={'door-enter'}>
           {isLoading ? 'Joining...' : 'Join'}

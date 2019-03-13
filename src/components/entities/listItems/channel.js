@@ -1,45 +1,97 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
+import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
+import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelIfno';
+import { ErrorBoundary } from 'src/components/error';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import Icon from 'src/components/icons';
+import JoinChannelWrapper from 'src/components/joinChannelWrapper';
+import LeaveChannelWrapper from 'src/components/leaveChannelWrapper';
+import {
+  SmallHoverWarnOutlineButton,
+  SmallPrimaryButton,
+} from 'src/views/community/components/button';
 import { Row, Content, Label, Description, Actions } from './style';
 
 type Props = {
-  channelObject: Object,
+  channel: ?ChannelInfoType,
   id: string,
   name?: string,
   description?: ?string,
+  currentUser: ?Object,
   children?: React.Node,
 };
 
-export const ChannelListItem = (props: Props) => {
-  const { channelObject, name, description, children } = props;
+const Channel = (props: Props) => {
+  const { channel, name, description, children, currentUser } = props;
+  if (!channel) return null;
+
+  const renderAction = () => {
+    const chevron = <Icon glyph="view-forward" size={24} />;
+    if (!currentUser) return chevron;
+
+    const { community, channelPermissions } = channel;
+    const { communityPermissions } = community;
+
+    const isCommunityMember = communityPermissions.isMember;
+    if (!isCommunityMember) return chevron;
+
+    const { isMember } = channelPermissions;
+    if (isMember)
+      return (
+        <LeaveChannelWrapper
+          channel={channel}
+          render={({ isLoading, isHovering }) => (
+            <SmallHoverWarnOutlineButton>
+              {isLoading
+                ? 'Leaving...'
+                : isHovering
+                ? 'Leave channel'
+                : 'Member'}
+            </SmallHoverWarnOutlineButton>
+          )}
+        />
+      );
+
+    return (
+      <JoinChannelWrapper
+        channel={channel}
+        render={({ isLoading }) => (
+          <SmallPrimaryButton>
+            {isLoading ? 'Joining...' : 'Join'}
+          </SmallPrimaryButton>
+        )}
+      />
+    );
+  };
 
   return (
-    <Link to={`/${channelObject.community.slug}/${channelObject.slug}`}>
-      <Row>
-        <Content>
-          {name && (
-            <Label>
-              {channelObject.isPrivate && (
-                <Icon glyph="private-outline" size={14} />
-              )}
+    <ErrorBoundary>
+      <Link to={`/${channel.community.slug}/${channel.slug}`}>
+        <Row>
+          <Content>
+            {name && (
+              <Label>
+                {channel.isPrivate && (
+                  <Icon glyph="private-outline" size={14} />
+                )}
 
-              {name}
-            </Label>
-          )}
+                {name}
+              </Label>
+            )}
 
-          {description && <Description>{description}</Description>}
-        </Content>
+            {description && <Description>{description}</Description>}
+          </Content>
 
-        <Actions>
-          <Icon glyph="view-forward" size={24} />
-
-          {children}
-        </Actions>
-      </Row>
-    </Link>
+          <Actions>
+            {renderAction()}
+            {children}
+          </Actions>
+        </Row>
+      </Link>
+    </ErrorBoundary>
   );
 };
 
-export default ChannelListItem;
+export const ChannelListItem = compose(withCurrentUser)(Channel);

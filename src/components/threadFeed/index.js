@@ -247,7 +247,7 @@ class ThreadFeedPure extends React.Component<Props, State> {
           {this.props.data.community &&
             this.props.data.community.pinnedThread &&
             this.props.data.community.pinnedThread.id && (
-              <ErrorBoundary fallbackComponent={null}>
+              <ErrorBoundary>
                 <InboxThread
                   data={this.props.data.community.pinnedThread}
                   viewContext={viewContext}
@@ -263,7 +263,7 @@ class ThreadFeedPure extends React.Component<Props, State> {
           >
             {uniqueThreads.map(thread => {
               return (
-                <ErrorBoundary fallbackComponent={null} key={thread.id}>
+                <ErrorBoundary key={thread.id}>
                   <InboxThread data={thread} viewContext={viewContext} />
                 </ErrorBoundary>
               );

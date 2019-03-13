@@ -102,16 +102,16 @@ const Component = (props: SignedInMemberType) => {
             </SidebarSection>
 
             <SidebarSection>
+              <ChannelsList id={community.id} communitySlug={community.slug} />
+            </SidebarSection>
+
+            <SidebarSection>
               <TeamMembersList
                 community={community}
                 id={community.id}
                 first={100}
                 filter={{ isModerator: true, isOwner: true }}
               />
-            </SidebarSection>
-
-            <SidebarSection>
-              <ChannelsList id={community.id} communitySlug={community.slug} />
             </SidebarSection>
           </SecondaryColumn>
 

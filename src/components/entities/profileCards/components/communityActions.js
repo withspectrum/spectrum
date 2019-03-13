@@ -48,7 +48,7 @@ export const UnconnectedCommunityActions = (props: CommunityActionsRowType) => {
   return (
     <ActionsRowContainer>
       <JoinCommunity
-        communityId={community.id}
+        community={community}
         render={({ isLoading }) => (
           <PrimaryButton isLoading={isLoading} icon={'door-enter'}>
             {isLoading ? 'Joining...' : 'Join community'}

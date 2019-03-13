@@ -3,13 +3,14 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
+import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 
 type Props = {
-  channelId: string,
+  channel: ChannelInfoType,
   render: Function,
   children: any,
   toggleChannelSubscription: Function,
@@ -19,7 +20,7 @@ type Props = {
 
 const JoinChannel = (props: Props) => {
   const {
-    channelId,
+    channel,
     toggleChannelSubscription,
     currentUser,
     dispatch,
@@ -27,14 +28,16 @@ const JoinChannel = (props: Props) => {
   } = props;
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const join = () => {
+  const join = (e: any) => {
+    e && e.preventDefault() && e.stopPropogation();
+
     if (!currentUser || !currentUser.id) {
       return dispatch(openModal('LOGIN_MODAL'));
     }
 
     setIsLoading(true);
 
-    return toggleChannelSubscription({ channelId })
+    return toggleChannelSubscription({ channelId: channel.id })
       .then(({ data }: Props) => {
         const { toggleChannelSubscription: channel } = data;
         dispatch(

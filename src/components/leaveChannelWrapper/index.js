@@ -3,10 +3,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
+import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
 import { addToastWithTimeout } from 'src/actions/toasts';
 
 type Props = {
-  channelId: string,
+  channel: ChannelInfoType,
   render: Function,
   children: any,
   toggleChannelSubscription: Function,
@@ -14,13 +15,19 @@ type Props = {
 };
 
 const LeaveChannel = (props: Props) => {
-  const { channelId, toggleChannelSubscription, dispatch, render } = props;
+  const { channel, toggleChannelSubscription, dispatch, render } = props;
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isHovering, setHover] = React.useState(false);
 
-  const leave = () => {
+  const onMouseEnter = () => setHover(true);
+  const onMouseLeave = () => setHover(false);
+
+  const leave = (e: any) => {
+    e && e.preventDefault() && e.stopPropogation();
+
     setIsLoading(true);
 
-    return toggleChannelSubscription({ channelId })
+    return toggleChannelSubscription({ channelId: channel.id })
       .then(({ data }: Props) => {
         const { toggleChannelSubscription: channel } = data;
         dispatch(
@@ -36,8 +43,13 @@ const LeaveChannel = (props: Props) => {
   };
 
   return (
-    <span style={{ display: 'flex' }} onClick={leave}>
-      {render({ isLoading })}
+    <span
+      style={{ display: 'flex' }}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onClick={leave}
+    >
+      {render({ isLoading, isHovering })}
     </span>
   );
 };

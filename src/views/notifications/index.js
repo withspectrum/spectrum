@@ -213,10 +213,7 @@ class NotificationsPure extends React.Component<Props, State> {
                       switch (notification.event) {
                         case 'MESSAGE_CREATED': {
                           return (
-                            <ErrorBoundary
-                              fallbackComponent={null}
-                              key={notification.id}
-                            >
+                            <ErrorBoundary key={notification.id}>
                               <NewMessageNotification
                                 notification={notification}
                                 currentUser={currentUser}
@@ -226,10 +223,7 @@ class NotificationsPure extends React.Component<Props, State> {
                         }
                         case 'REACTION_CREATED': {
                           return (
-                            <ErrorBoundary
-                              fallbackComponent={null}
-                              key={notification.id}
-                            >
+                            <ErrorBoundary key={notification.id}>
                               <NewReactionNotification
                                 notification={notification}
                                 currentUser={currentUser}
@@ -239,10 +233,7 @@ class NotificationsPure extends React.Component<Props, State> {
                         }
                         case 'THREAD_REACTION_CREATED': {
                           return (
-                            <ErrorBoundary
-                              fallbackComponent={null}
-                              key={notification.id}
-                            >
+                            <ErrorBoundary key={notification.id}>
                               <NewThreadReactionNotification
                                 notification={notification}
                                 currentUser={currentUser}
@@ -252,10 +243,7 @@ class NotificationsPure extends React.Component<Props, State> {
                         }
                         case 'CHANNEL_CREATED': {
                           return (
-                            <ErrorBoundary
-                              fallbackComponent={null}
-                              key={notification.id}
-                            >
+                            <ErrorBoundary key={notification.id}>
                               <NewChannelNotification
                                 notification={notification}
                                 currentUser={currentUser}
@@ -265,10 +253,7 @@ class NotificationsPure extends React.Component<Props, State> {
                         }
                         case 'USER_JOINED_COMMUNITY': {
                           return (
-                            <ErrorBoundary
-                              fallbackComponent={null}
-                              key={notification.id}
-                            >
+                            <ErrorBoundary key={notification.id}>
                               <NewUserInCommunityNotification
                                 notification={notification}
                                 currentUser={currentUser}
@@ -282,10 +267,7 @@ class NotificationsPure extends React.Component<Props, State> {
                         }
                         case 'COMMUNITY_INVITE': {
                           return (
-                            <ErrorBoundary
-                              fallbackComponent={null}
-                              key={notification.id}
-                            >
+                            <ErrorBoundary key={notification.id}>
                               <CommunityInviteNotification
                                 notification={notification}
                                 currentUser={currentUser}
@@ -295,10 +277,7 @@ class NotificationsPure extends React.Component<Props, State> {
                         }
                         case 'MENTION_MESSAGE': {
                           return (
-                            <ErrorBoundary
-                              fallbackComponent={null}
-                              key={notification.id}
-                            >
+                            <ErrorBoundary key={notification.id}>
                               <MentionMessageNotification
                                 notification={notification}
                                 currentUser={currentUser}
@@ -308,10 +287,7 @@ class NotificationsPure extends React.Component<Props, State> {
                         }
                         case 'MENTION_THREAD': {
                           return (
-                            <ErrorBoundary
-                              fallbackComponent={null}
-                              key={notification.id}
-                            >
+                            <ErrorBoundary key={notification.id}>
                               <MentionThreadNotification
                                 notification={notification}
                                 currentUser={currentUser}
@@ -321,10 +297,7 @@ class NotificationsPure extends React.Component<Props, State> {
                         }
                         case 'PRIVATE_CHANNEL_REQUEST_SENT': {
                           return (
-                            <ErrorBoundary
-                              fallbackComponent={null}
-                              key={notification.id}
-                            >
+                            <ErrorBoundary key={notification.id}>
                               <PrivateChannelRequestSent
                                 notification={notification}
                                 currentUser={currentUser}
@@ -334,10 +307,7 @@ class NotificationsPure extends React.Component<Props, State> {
                         }
                         case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
                           return (
-                            <ErrorBoundary
-                              fallbackComponent={null}
-                              key={notification.id}
-                            >
+                            <ErrorBoundary key={notification.id}>
                               <PrivateChannelRequestApproved
                                 notification={notification}
                                 currentUser={currentUser}

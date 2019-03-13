@@ -76,7 +76,7 @@ export const StyledPrimaryButton = styled(StyledButton)`
 `;
 
 export const StyledSmallPrimaryButton = styled(StyledPrimaryButton)`
-  padding: 6px 12px;
+  padding: 5px 12px 6px 12px;
   font-size: 15px;
 `;
 
@@ -95,7 +95,7 @@ export const StyledOutlineButton = styled(StyledButton)`
 `;
 
 export const StyledSmallOutlineButton = styled(StyledOutlineButton)`
-  padding: 6px 12px;
+  padding: 5px 12px 6px 12px;
   font-size: 15px;
 `;
 
@@ -110,4 +110,11 @@ export const StyledHoverWarnOutlineButton = styled(StyledOutlineButton)`
     box-shadow: 0 0 0 1px ${theme.bg.default},
       0 0 0 3px ${hexa(theme.warn.default, 0.12)};
   }
+`;
+
+export const StyledSmallHoverWarnOutlineButton = styled(
+  StyledHoverWarnOutlineButton
+)`
+  padding: 5px 12px 6px 12px;
+  font-size: 15px;
 `;

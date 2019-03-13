@@ -356,7 +356,7 @@ class ChannelView extends React.Component<Props, State> {
                 </SidebarSection>
 
                 {isLoggedIn && userHasPermissions && !channel.isArchived && (
-                  <ErrorBoundary fallbackComponent={null}>
+                  <ErrorBoundary>
                     <SidebarSection>
                       <NotificationsToggle
                         value={channel.channelPermissions.receiveNotifications}
@@ -368,7 +368,7 @@ class ChannelView extends React.Component<Props, State> {
 
                 {/* user is signed in and has permissions to view pending users */}
                 {isLoggedIn && (isOwner || isGlobalOwner) && (
-                  <ErrorBoundary fallbackComponent={null}>
+                  <ErrorBoundary>
                     <PendingUsersNotification
                       channel={channel}
                       id={channel.id}

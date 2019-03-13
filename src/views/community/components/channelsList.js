@@ -48,6 +48,8 @@ class Component extends React.Component<Props> {
       data: { community },
     } = this.props;
 
+    console.log({ community });
+
     if (isLoading) {
       return <Loading style={{ padding: '32px' }} />;
     }
@@ -89,7 +91,7 @@ class Component extends React.Component<Props> {
               return (
                 <ChannelListItem
                   key={channel.id}
-                  channelObject={channel}
+                  channel={channel}
                   name={channel.name}
                 />
               );

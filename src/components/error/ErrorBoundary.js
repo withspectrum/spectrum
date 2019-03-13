@@ -32,7 +32,7 @@ class ErrorBoundary extends React.Component<Props, State> {
         return <FallbackComponent />;
       }
 
-      if (this.props.fallbackComponent === null) {
+      if (!this.props.fallbackComponent) {
         return null;
       }
 

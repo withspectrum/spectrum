@@ -29,10 +29,14 @@ export const UnconnectedChannelActions = (props: ChannelActionsRowType) => {
         )}
 
         <LeaveChannel
-          channelId={channel.id}
-          render={({ isLoading }) => (
+          channel={channel}
+          render={({ isLoading, isHovering }) => (
             <HoverWarnOutlineButton isLoading={isLoading} icon={'door-enter'}>
-              {isLoading ? 'Leaving...' : 'Leave channel'}
+              {isLoading
+                ? 'Leaving...'
+                : isHovering
+                ? 'Leave channel'
+                : 'Member'}
             </HoverWarnOutlineButton>
           )}
         />
@@ -49,7 +53,7 @@ export const UnconnectedChannelActions = (props: ChannelActionsRowType) => {
       )}
 
       <JoinChannel
-        channelId={channel.id}
+        channel={channel}
         render={({ isLoading }) => (
           <PrimaryButton isLoading={isLoading} icon={'door-enter'}>
             {isLoading ? 'Joining...' : 'Join channel'}

@@ -433,8 +433,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
             />
           ) : (
             <React.Fragment>
-              {/* $FlowFixMe */}
-              <ErrorBoundary fallbackComponent={null}>
+              <ErrorBoundary>
                 <ConditionalWrap
                   condition={!!thread.author.user.username}
                   wrap={() => (
@@ -471,7 +470,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
           )}
         </ThreadContent>
 
-        <ErrorBoundary fallbackComponent={null}>
+        <ErrorBoundary>
           <ActionBar
             toggleEdit={this.toggleEdit}
             currentUser={currentUser}

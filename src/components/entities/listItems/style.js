@@ -35,6 +35,8 @@ export const Content = styled.div`
   flex-direction: column;
   justify-content: center;
   align-self: center;
+  width: 100%;
+  padding-right: 16px;
 `;
 
 export const Label = styled.div`
@@ -92,4 +94,5 @@ export const Actions = styled.div`
   position: relative;
   z-index: 10;
   color: ${theme.text.alt};
+  flex: 1 0 auto;
 `;
